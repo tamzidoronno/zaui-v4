@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://activemq.apache.org/schema/core/activemq-core-5.2.0.xsd" uri="activemq.apache.org/schema/core/activemq-core-5.2.0.xsd"/>
+    <system systemId="http://activemq.apache.org/schema/core/activemq-core.xsd" uri="activemq.apache.org/schema/core/activemq-core.xsd"/>
+    <system systemId="http://www.springframework.org/schema/task" uri="www.springframework.org/schema/task/index"/>
+    <system systemId="http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" uri="www.springframework.org/schema/beans/spring-beans-3.0.xsd"/>
+    <system systemId="http://www.springframework.org/schema/tool/spring-tool-3.0.xsd" uri="www.springframework.org/schema/tool/spring-tool-3.0.xsd"/>
+    <system systemId="http://activemq.apache.org/schema/core" uri="activemq.apache.org/schema/core/index"/>
+</catalog>

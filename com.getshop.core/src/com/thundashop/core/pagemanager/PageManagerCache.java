@@ -32,6 +32,9 @@ public class PageManagerCache implements IPageManager {
     @Override
     public Page getPage(String id) throws ErrorException {
         Page result = manager.getPage(id);
+        if(result.userLevel > 0) {
+            return result;
+        }
         
         CachingKey key = new CachingKey();
         
@@ -40,9 +43,6 @@ public class PageManagerCache implements IPageManager {
         key.args = keys;
         key.interfaceName = this.getClass().getInterfaces()[0].getCanonicalName().replace("com.thundashop.", "");
         key.sessionId = "";
-        if(result.userLevel > 0) {
-            key.sessionId = manager.getSession().id;
-        }
         key.method = "getPage";
         
         manager.getCacheManager().addToCache(key, result, manager.storeId, addr);

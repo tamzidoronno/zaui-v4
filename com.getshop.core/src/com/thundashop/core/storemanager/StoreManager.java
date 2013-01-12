@@ -242,6 +242,9 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     }
 
     public void connectStoreToPartner(String id, String partner) throws ErrorException {
+        if(partner.equals("") || partner.trim().length() == 0) {
+            throw new ErrorException(26);
+        }
         Store store = stores.get(id);
         if(store == null) {
             throw new ErrorException(23);

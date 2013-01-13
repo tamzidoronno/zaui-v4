@@ -11,9 +11,11 @@ import com.thundashop.core.common.DataCommon;
  * @author ktonder
  */
 public class ChatMessage extends DataCommon implements Comparable<ChatMessage> {
+    public boolean operator = false;
     public String message;
     public String userId;
-
+    public int numericValue;
+    
     @Override
     public int compareTo(ChatMessage o) {
         if (o.rowCreatedDate.after(rowCreatedDate))

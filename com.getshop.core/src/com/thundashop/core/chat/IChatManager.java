@@ -7,6 +7,7 @@ package com.thundashop.core.chat;
 import com.thundashop.core.chatmanager.ChatMessage;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -16,5 +17,5 @@ import java.util.Set;
 @GetShopApi
 public interface IChatManager {
     public void sendMessage(String message) throws ErrorException;
-    public Set<ChatMessage> getMessages();
+    public List<ChatMessage> getMessages();
 }

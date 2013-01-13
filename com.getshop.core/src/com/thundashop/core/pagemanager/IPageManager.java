@@ -32,6 +32,16 @@ public interface IPageManager {
     public Page createPage(int layout, String parentId) throws ErrorException;
     
     /**
+     * Create a new page with the specified id.
+     * For layouts available, see layouts for createPage function
+     * 
+     * @param id
+     * @return 
+     */
+    @Administrator
+    public Page createPageWithId(int layout, String parentId, String id)  throws ErrorException;
+    
+    /**
      * fetch an existing page.
      * @param id The id for the page to fetch.
      * @return
@@ -170,4 +180,23 @@ public interface IPageManager {
      * @return 
      */
     public List<AppConfiguration> getApplications();
+    
+    /**
+     * Delete the page with the id.
+     * 
+     * @param id 
+     */
+    @Administrator
+    public void deletePage(String id) throws ErrorException;
+    
+    /**
+     * Add an existing application to the application area
+     * 
+     * @param pageId
+     * @param appId
+     * @param area
+     * @throws ErrorException 
+     */
+    @Administrator
+    public void addExistingApplicationToPageArea(String pageId, String appId, String area) throws ErrorException;
 }

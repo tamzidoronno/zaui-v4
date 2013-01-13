@@ -70,16 +70,7 @@ public class PagePoolImpl {
     }
 
     public Page createNewPage(int layout, String parentId) throws ErrorException {
-        Page page = createPage(layout, UUID.randomUUID().toString());
-        Page parentPage = pages.get(parentId);
-
-        if (parentPage != null) {
-            page.parent = parentPage;
-        }
-
-        databaseSaver.saveObject(page, credentials);
-        pages.put(page.id, page);
-        return finalizePage(page);
+        return createNewPage(layout, parentId, UUID.randomUUID().toString());
     }
 
     public Page get(String id) throws ErrorException {
@@ -201,17 +192,27 @@ public class PagePoolImpl {
         }
     }
 
-    private Page createPage(int type, String pageId) {
-        Page page = new Page();
-        page.type = type;
-        page.id = pageId;
-        page.addAllPageAreas();
-        page.storeId = storeId;
-        return page;
+    private Page createPage(int type, String pageId) throws ErrorException {
+        try {
+            get(pageId);
+        } catch (ErrorException ex) {
+            Page page = new Page();
+            page.type = type;
+            page.id = pageId;
+            page.addAllPageAreas();
+            page.storeId = storeId;
+            return page;
+        }
+        
+        throw new ErrorException(90);
     }
 
     private AppConfiguration addApplication(String appName, Page page, String pageArea) throws ErrorException {
         AppConfiguration app = applicationPool.createNewApplication(appName);
+        return addExistingApplication(app, page, pageArea);
+    }
+    
+    private AppConfiguration addExistingApplication(AppConfiguration app, Page page, String pageArea) {
         PageArea area = page.pageAreas.get(pageArea);
         area.applicationsList.add(app.id);
         return app;
@@ -314,4 +315,31 @@ public class PagePoolImpl {
         databaseSaver.saveObject(page, credentials);
         return finalizePage(page);
     }
+
+    public Page createNewPage(int layout, String parentId, String id) throws ErrorException {
+        Page page = createPage(layout, id);
+        Page parentPage = pages.get(parentId);
+
+        if (parentPage != null) {
+            page.parent = parentPage;
+        }
+
+        databaseSaver.saveObject(page, credentials);
+        pages.put(page.id, page);
+        return finalizePage(page);
+    }
+
+    public void deletePage(String id) throws ErrorException {
+        Page page = get(id);
+        pages.remove(page);
+        databaseSaver.deleteObject(page, credentials);
+    }
+
+    public void addExistingApplicationToArea(String pageId, String appId, String area) throws ErrorException {
+        AppConfiguration app = applicationPool.get(appId);
+        Page page = get(pageId);
+        addExistingApplication(app, page, area);
+        databaseSaver.saveObject(page, credentials);
+    }
+
 }

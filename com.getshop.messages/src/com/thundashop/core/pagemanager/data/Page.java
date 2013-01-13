@@ -82,29 +82,11 @@ public class Page extends DataCommon implements Cloneable {
     public HashMap<String, PageArea> pageAreas = new HashMap<String, PageArea>();
     
     public void populateApplications(Map<String, AppConfiguration> applications, boolean onlyExtraApplications) {
-        removeChatApplication(applications);
-        
         for (PageArea pageArea : pageAreas.values()) {
             pageArea.populateApplications(applications, onlyExtraApplications);
         }
     }
 
-    /*
-     * Function created to keep backward compability after removing the failed chat application.
-     * This one should be removed in the future.
-     */
-    private void removeChatApplication(Map<String, AppConfiguration> applications) {
-        String toRemoveKey = null;
-        for(String key : applications.keySet()) {
-            if(applications.get(key).appName.equals("Chat")) {
-                toRemoveKey = key;
-            }
-        }
-        if(toRemoveKey != null) {
-            applications.remove(toRemoveKey);
-        }
-    }
-    
     public HashMap<String, AppConfiguration> getApplications() {
         HashMap<String, AppConfiguration> applications = new HashMap();
         for (PageArea pageArea : pageAreas.values()) {

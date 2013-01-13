@@ -137,4 +137,17 @@ public class PageManagerCache implements IPageManager {
         }
     }
 
+    @Override
+    public Page createPageWithId(int layout, String parentId, String id) {
+        return null;
+    }
+
+    @Override
+    public void deletePage(String id) throws ErrorException {
+    }
+
+    @Override
+    public void addExistingApplicationToPageArea(String pageId, String appId, String area) throws ErrorException {
+    }
+
 }

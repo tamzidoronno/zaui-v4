@@ -29,7 +29,7 @@ public class GeneratePhpApiNew {
     
     private static Iterable<Class> list;
 
-    /**
+    /*
      * Scans all classes accessible from the context class loader which belong
      * to the given package and subpackages.
      *
@@ -207,6 +207,7 @@ public class GeneratePhpApiNew {
      * @throws Exception
      */
     public static void main(String[] args) throws InterruptedException, Exception {
+        GeneratePhpApi.main(args);
         File file = new File("../com.getshop.core/build/classes/");
         String result = BuildApi(GeneratePhpApi.findClasses(file, ""));
         writePHPApi(result);

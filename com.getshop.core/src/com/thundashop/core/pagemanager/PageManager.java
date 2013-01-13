@@ -138,4 +138,20 @@ public class PageManager extends ManagerBase implements IPageManager {
         applicationPool.deleteApplication(id);
         pagePool.removeApplication(storeId);
     }
+
+    @Override
+    public Page createPageWithId(int layout, String parentId, String id) throws ErrorException {
+        return pagePool.createNewPage(layout, parentId, id);
+    }
+
+    @Override
+    public void deletePage(String id) throws ErrorException {
+        pagePool.deletePage(id);
+    }
+
+    @Override
+    public void addExistingApplicationToPageArea(String pageId, String appId, String area) throws ErrorException {
+        pagePool.addExistingApplicationToArea(pageId, appId, area);
+    }
+
 }

@@ -9,6 +9,7 @@ import com.thundashop.core.reportingmanager.data.OrderCreated;
 import com.thundashop.core.reportingmanager.data.PageView;
 import com.thundashop.core.reportingmanager.data.ProductViewed;
 import com.thundashop.core.reportingmanager.data.Report;
+import com.thundashop.core.reportingmanager.data.ReportFilter;
 import com.thundashop.core.reportingmanager.data.UserConnected;
 import java.util.List;
 
@@ -74,11 +75,12 @@ public interface IReportingManager {
      * These are users who has been logging on to your store.
      * @param startdate "yyyy-mm-dd"
      * @param stopDate "yyyy-mm-dd"
+     * @param filter A report filter if you want to filter out more information, use null to avoid the filter.
      * @return
      * @throws ErrorException 
      */
     @Administrator
-    public List<UserConnected> getConnectedUsers(String startdate, String stopDate) throws ErrorException;
+    public List<UserConnected> getConnectedUsers(String startdate, String stopDate, ReportFilter filter) throws ErrorException;
     
     /**
      * Fetch all activity data for a given session at a given period in time.

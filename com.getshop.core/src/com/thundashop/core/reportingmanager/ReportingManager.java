@@ -23,6 +23,7 @@ import com.thundashop.core.reportingmanager.data.OrderCreated;
 import com.thundashop.core.reportingmanager.data.PageView;
 import com.thundashop.core.reportingmanager.data.ProductViewed;
 import com.thundashop.core.reportingmanager.data.Report;
+import com.thundashop.core.reportingmanager.data.ReportFilter;
 import com.thundashop.core.reportingmanager.data.UserConnected;
 import com.thundashop.core.socket.JsonObject2;
 import com.thundashop.core.usermanager.UserManager;
@@ -318,13 +319,14 @@ public class ReportingManager extends ManagerBase implements IReportingManager {
     }
 
     @Override
-    public List<UserConnected> getConnectedUsers(String startDate, String stopDate) throws ErrorException {
+    public List<UserConnected> getConnectedUsers(String startDate, String stopDate, ReportFilter filter) throws ErrorException {
         resetManagersAndCachedData();
         List<DataCommon> result = findFilteredData(startDate, stopDate, "", "");
         
         LinkedHashMap<String, UserConnected> sessionIds = new LinkedHashMap();
 
-        List<UserConnected> retval = new ArrayList();
+        LinkedHashMap<String, ArrayList<String>> filteredUsers = new LinkedHashMap();
+        
         for (DataCommon common : result) {
             if (common instanceof LoggerData) {
                 LoggerData loggerData = (LoggerData) common;
@@ -336,6 +338,7 @@ public class ReportingManager extends ManagerBase implements IReportingManager {
                         connected.sessionId = jsonObject.sessionId;
                         connected.connectedWhen = common.rowCreatedDate;
                         sessionIds.put(jsonObject.sessionId, connected);
+                        filteredUsers.put(jsonObject.sessionId, new ArrayList());
                     }
 
                     if (makesSenseToAdd(jsonObject)) {
@@ -347,14 +350,30 @@ public class ReportingManager extends ManagerBase implements IReportingManager {
                         connected.username = jsonObject.args.get("username").replace("\"", "");
                     }
                     
-                    if (jsonObject.method.equals("getPage") && connected.firstPage == null) {
-                        connected.firstPage = translateEntry(jsonObject.args.get("id").replace("\"", ""));
+                    if (jsonObject.method.equals("getPage") && jsonObject.interfaceName.contains("PageManager")) {
+                        String translated = translateEntry(jsonObject.args.get("id").replace("\"", ""));
+                        if(translated != null) {
+                            if(connected.firstPage == null) {
+                                connected.firstPage = translated;
+                            }
+                            if(!filteredUsers.get(connected.sessionId).contains(translated)) {
+                                filteredUsers.get(connected.sessionId).add(translated);
+                            }
+                        }
                     }
                 }
             }
         }
 
-        retval.addAll(sessionIds.values());
+        List<UserConnected> retval = new ArrayList();
+        if(filter.includeOnlyPages.size() > 0) {
+            List<String> compared = compareResultWithPages(filter.includeOnlyPages, filteredUsers);
+            for(String id : compared) {
+                retval.add(sessionIds.get(id));
+            }
+        } else {
+            retval.addAll(sessionIds.values());
+        }
 
         return retval;
     }
@@ -532,5 +551,32 @@ public class ReportingManager extends ManagerBase implements IReportingManager {
         prodManager = getManager(ProductManager.class);
         listManager = getManager(ListManager.class);
         cachedNames = new HashMap();
+    }
+
+    private ArrayList<String> compareResultWithPages(List<String> pages, LinkedHashMap<String, ArrayList<String>> filteredUsers) {
+        ArrayList<String> retval = new ArrayList();
+        for(String sessionId : filteredUsers.keySet()) {
+            ArrayList<String> pagesFound = filteredUsers.get(sessionId);
+            boolean isOk = true;
+            for(String page : pages) {
+                boolean foundPage = false;
+                for(String found : pagesFound) {
+                    if(found.equals(page)) {
+                        foundPage = true;
+                        break;
+                    }
+                }
+                if(!foundPage) {
+                    isOk = false;
+                    break;
+                }
+            }
+            
+            if(isOk) {
+                retval.add(sessionId);
+            }
+        }
+        
+        return retval;
     }
 }

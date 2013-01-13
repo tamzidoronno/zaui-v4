@@ -366,7 +366,7 @@ public class ReportingManager extends ManagerBase implements IReportingManager {
         }
 
         List<UserConnected> retval = new ArrayList();
-        if(filter.includeOnlyPages.size() > 0) {
+        if(filter.includeOnlyPages != null && filter.includeOnlyPages.size() > 0) {
             List<String> compared = compareResultWithPages(filter.includeOnlyPages, filteredUsers);
             for(String id : compared) {
                 retval.add(sessionIds.get(id));

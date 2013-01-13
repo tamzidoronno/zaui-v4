@@ -177,7 +177,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
                 + "<br><b> Username: </b> " + store.configuration.emailAdress
                 + "<br>"
                 + "<br>"
-                + "<br><b> To get started we recommend you to <a href='http://www.getshop.com/index.php?page=8b951f8c-d84a-42dd-8fde-797180de7992'>watch our introduction movie</a></b>"
+                + "<br><b> To get started we recommend you to <a href='http://www.youtube.com/watch?v=01EHOSHfTs4'>watch our introduction movie</a></b>"
                 + "<br>"
                 + "<br>"
                 + "We wish you the best of luck towards your webshop! <br><br>If you have any questions on your mind, you can simply hit reply on this email.<br><br>"

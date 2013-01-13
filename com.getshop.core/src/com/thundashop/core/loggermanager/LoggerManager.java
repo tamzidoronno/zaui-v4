@@ -51,6 +51,10 @@ class LoggerManagerThread extends Thread {
     @Override
     public void run() {
         try {
+            if(object.interfaceName.equals("core.chat.ChatManager") && object.method.equals("getMessages")) {
+                return;
+            }
+            
             LoggerData data = new LoggerData();
             data.data = object;
             data.type = LoggerData.Types.API;

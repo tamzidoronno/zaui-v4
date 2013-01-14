@@ -193,18 +193,16 @@ public class PagePoolImpl {
     }
 
     private Page createPage(int type, String pageId) throws ErrorException {
-        try {
-            get(pageId);
-        } catch (ErrorException ex) {
-            Page page = new Page();
-            page.type = type;
-            page.id = pageId;
-            page.addAllPageAreas();
-            page.storeId = storeId;
-            return page;
-        }
+        Page existingPage = pages.get(pageId);
+        if (existingPage != null)
+            throw new ErrorException(90);
         
-        throw new ErrorException(90);
+        Page page = new Page();
+        page.type = type;
+        page.id = pageId;
+        page.addAllPageAreas();
+        page.storeId = storeId;
+        return page;    
     }
 
     private AppConfiguration addApplication(String appName, Page page, String pageArea) throws ErrorException {

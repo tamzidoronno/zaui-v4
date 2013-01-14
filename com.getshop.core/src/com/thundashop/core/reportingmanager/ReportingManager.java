@@ -561,7 +561,7 @@ public class ReportingManager extends ManagerBase implements IReportingManager {
             for(String page : pages) {
                 boolean foundPage = false;
                 for(String found : pagesFound) {
-                    if(found.equals(page)) {
+                    if(found.equalsIgnoreCase(page)) {
                         foundPage = true;
                         break;
                     }

@@ -154,4 +154,13 @@ public class PageManager extends ManagerBase implements IPageManager {
         pagePool.addExistingApplicationToArea(pageId, appId, area);
     }
 
+    @Override
+    public void setParentPage(String pageId, String parentPageId) throws ErrorException {
+        Page page = pagePool.get(pageId);
+        Page toBeParent = pagePool.get(parentPageId);
+        
+        page.parent = toBeParent;
+        pagePool.savePage(page);
+    }
+
 }

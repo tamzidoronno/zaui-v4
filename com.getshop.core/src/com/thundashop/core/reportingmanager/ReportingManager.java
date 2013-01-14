@@ -425,7 +425,7 @@ public class ReportingManager extends ManagerBase implements IReportingManager {
         return result;
     }
 
-    private List<ProductViewed> generateProductViewLog(JsonObject2 jsobj, LoggerData collection, Gson gson) {
+    private List<ProductViewed> generateProductViewLog(JsonObject2 jsobj, LoggerData collection, Gson gson) throws ErrorException {
         String object = jsobj.args.get("core_productmanager_data_ProductCriteria");
         if (object != null) {
             ProductCriteria criteria = gson.fromJson(object, ProductCriteria.class);

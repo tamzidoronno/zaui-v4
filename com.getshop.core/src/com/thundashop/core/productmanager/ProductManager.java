@@ -4,6 +4,7 @@ import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
- * ProductManager is essential for a webshop. You can threat productmanager <br>
+ * ProductManager is essential for a webshop. You can look at productmanager <br>
  * as a productcontainer, this container contains all the products for the webshop<br>
  * <br>
  * It has a set of API functions that can be used to receive data from it, and should<br>
@@ -49,10 +50,10 @@ public class ProductManager extends AProductManager implements IProductManager {
     }
 
     @Override
-    public List<Product> getProducts(ProductCriteria searchCriteria) {
+    public List<Product> getProducts(ProductCriteria searchCriteria) throws ErrorException {
         return super.getProducts(searchCriteria);
     }
-
+    
     @Override
     public void removeProduct(String productId) throws ErrorException {
         Product product = products.get(productId);
@@ -76,7 +77,7 @@ public class ProductManager extends AProductManager implements IProductManager {
     }
     
     @Override
-    public ArrayList<Product> getRandomProducts(Integer fetchSize, String ignoreProductId) {
+    public ArrayList<Product> getRandomProducts(Integer fetchSize, String ignoreProductId) throws ErrorException {
         return randomProducts(ignoreProductId, fetchSize);
     }
 

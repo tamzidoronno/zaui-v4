@@ -199,4 +199,14 @@ public interface IPageManager {
      */
     @Administrator
     public void addExistingApplicationToPageArea(String pageId, String appId, String area) throws ErrorException;
+    
+    /**
+     * Update a page and give it a parent page. <br>
+     * This is used to figure out a hiarcy for the menues.<br>
+     * @param pageId The page to have a parent page.
+     * @param parentPageId The id of the page to be set as the parent page.
+     * @throws ErrorException 
+     */
+    @Administrator
+    public void setParentPage(String pageId, String parentPageId) throws ErrorException;
 }

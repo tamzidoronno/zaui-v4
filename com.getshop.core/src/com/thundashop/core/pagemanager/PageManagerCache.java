@@ -150,4 +150,9 @@ public class PageManagerCache implements IPageManager {
     public void addExistingApplicationToPageArea(String pageId, String appId, String area) throws ErrorException {
     }
 
+    @Override
+    public void setParentPage(String pageId, String parentPageId) throws ErrorException {
+        getPage(pageId);
+    }
+
 }

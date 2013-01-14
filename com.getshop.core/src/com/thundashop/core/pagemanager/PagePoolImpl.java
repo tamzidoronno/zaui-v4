@@ -342,4 +342,8 @@ public class PagePoolImpl {
         databaseSaver.saveObject(page, credentials);
     }
 
+    void savePage(Page page) throws ErrorException {
+         databaseSaver.saveObject(page, credentials);
+    }
+
 }

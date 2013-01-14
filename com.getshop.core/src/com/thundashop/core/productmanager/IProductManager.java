@@ -44,7 +44,7 @@ public interface IProductManager {
      * @return
      * @throws ErrorException 
      */
-    public List<Product> getProducts(ProductCriteria productCriteria);
+    public List<Product> getProducts(ProductCriteria productCriteria) throws ErrorException;
     
     /**
      * Remove an existing product.
@@ -73,7 +73,7 @@ public interface IProductManager {
      * @param ignoreProductId Will skip this id, can be the productId or the productPageId.
      * @return 
      */
-    public ArrayList<Product> getRandomProducts(Integer fetchSize, String ignoreProductId);
+    public ArrayList<Product> getRandomProducts(Integer fetchSize, String ignoreProductId) throws ErrorException ;
     
     
     /**

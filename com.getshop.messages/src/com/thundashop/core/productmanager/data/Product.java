@@ -4,11 +4,13 @@
  */
 package com.thundashop.core.productmanager.data;
 
+import com.google.code.morphia.annotations.Transient;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.pagemanager.data.Page;
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +28,9 @@ public class Product extends DataCommon {
     public String name;
     public int stockQuantity;
     
+    @Transient
     public Page page;
+    public String pageId;
     
     /**
      * Should always be in gram.

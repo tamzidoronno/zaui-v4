@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * @author ktonder
@@ -22,6 +23,11 @@ public class AProductManager extends ManagerBase {
         super(log, databaseSaver);
     }
     
+    private void finalize(Product product) throws ErrorException {
+        PageManager manager = getManager(PageManager.class);
+        product.page = manager.getPage(product.pageId);
+    }
+
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon object : data.data) {
@@ -36,22 +42,25 @@ public class AProductManager extends ManagerBase {
         if (product.page == null) {
             IPageManager pageManager = getManager(PageManager.class);
             product.page = pageManager.createPage(Page.PageType.HeaderFooterLeftMiddleRight, "");
+            product.pageId = product.page.id;
             pageManager.addApplicationToPage(product.page.id, "ProductManager", "middle");
         }
     }
     
     protected Product getProduct(String productId) throws ErrorException {
         Product product = products.get(productId);
+        finalize(product);
         if (product == null)
             throw new ErrorException(1011);
         
         return product;
     }   
     
-    protected ArrayList<Product> randomProducts(String ignoreProductId, int fetchSize) {
+    protected ArrayList<Product> randomProducts(String ignoreProductId, int fetchSize) throws ErrorException {
         List<Product> randomProducts = new ArrayList<>();
         
         for (Product product : products.values()) {
+            finalize(product);
             if (product.page.id.equals(ignoreProductId) || product.id.equals(ignoreProductId))
                 continue;
             
@@ -65,9 +74,10 @@ public class AProductManager extends ManagerBase {
         return new ArrayList<>(randomProducts.subList(0, fetchSize));
     }
 
-    protected List<Product> getProducts(ProductCriteria searchCriteria) {
+    protected List<Product> getProducts(ProductCriteria searchCriteria) throws ErrorException {
         ArrayList<Product> retProducts = new ArrayList();
         for (Product product : products.values()) {
+            finalize(product);
             if (product.check(searchCriteria))
                 retProducts.add(product);
         }

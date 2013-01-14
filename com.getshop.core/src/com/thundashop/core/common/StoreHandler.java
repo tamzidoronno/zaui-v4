@@ -4,7 +4,6 @@
  */
 package com.thundashop.core.common;
 
-import com.thundashop.core.common.*;
 import com.thundashop.core.loggermanager.LoggerManager;
 import com.thundashop.core.reportingmanager.ReportingManager;
 import com.thundashop.core.socket.JsonObject2;
@@ -16,7 +15,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 /**
  *

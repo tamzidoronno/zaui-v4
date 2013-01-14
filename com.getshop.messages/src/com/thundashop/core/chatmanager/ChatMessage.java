@@ -4,17 +4,17 @@
  */
 package com.thundashop.core.chatmanager;
 
-import com.thundashop.core.common.DataCommon;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  *
  * @author ktonder
  */
-public class ChatMessage extends DataCommon implements Comparable<ChatMessage> {
+public class ChatMessage implements Serializable, Comparable<ChatMessage> {
     public boolean operator = false;
     public String message;
-    public String userId;
-    public int numericValue;
+    public Date rowCreatedDate = new Date();
     
     @Override
     public int compareTo(ChatMessage o) {

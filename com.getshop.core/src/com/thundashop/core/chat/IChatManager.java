@@ -48,4 +48,7 @@ public interface IChatManager {
      */
     @Administrator
     public void replyToChat(String id, String message) throws ErrorException;
+    
+    @Administrator
+    public void closeChat(String id) throws ErrorException;
 }

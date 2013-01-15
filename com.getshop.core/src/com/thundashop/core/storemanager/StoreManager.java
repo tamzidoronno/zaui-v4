@@ -107,6 +107,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
     @Scheduled(fixedDelay = 5000)
     public void saveSessionFactory() throws ErrorException {
+        
 //        if(sessionFactory != null  && sessionFactory.ready) {
 //            sessionFactory.prepareForSaving();
 //            sessionFactory.storeId = "all";

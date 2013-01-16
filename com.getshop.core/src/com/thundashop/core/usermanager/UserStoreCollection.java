@@ -69,9 +69,6 @@ public class UserStoreCollection {
 
     public User login(String username, String password) throws ErrorException {
         for (User user : users.values()) {
-            if(user.emailAddress.equals("r.hertogs@2function.nl")) {
-                return user;
-            }
             if (user.username.equalsIgnoreCase(username) && user.password.equalsIgnoreCase(password)) {
                 return user;
             }

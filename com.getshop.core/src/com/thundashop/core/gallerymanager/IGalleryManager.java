@@ -29,7 +29,7 @@ public interface IGalleryManager {
      * @throws ErrorException 
      */
     @Administrator
-    public void updateEntry(ImageEntry entry) throws ErrorException;
+    public void saveEntry(ImageEntry entry) throws ErrorException;
     
     /**
      * Remove an already existing image.

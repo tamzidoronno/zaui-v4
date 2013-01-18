@@ -61,13 +61,16 @@ public class GalleryManager extends ManagerBase implements IGalleryManager {
     }
 
     @Override
-    public void updateEntry(ImageEntry entry) throws ErrorException {
+    public void saveEntry(ImageEntry entry) throws ErrorException {
         ImageEntry old_entry = findEntry(entry.id);
         if(old_entry == null) {
             throw new ErrorException(1000007);
         }
         
-        databaseSaver.saveObject(entry, credentials);
+        old_entry.description = entry.description;
+        old_entry.title = entry.title;
+        
+        databaseSaver.saveObject(old_entry, credentials);
     }
 
     @Override
@@ -91,10 +94,11 @@ public class GalleryManager extends ManagerBase implements IGalleryManager {
         return entry;
     }
 
-    private void addToCollection(String galleryId, ImageEntry entry) {
+    private void addToCollection(String galleryId, ImageEntry entry) throws ErrorException {
         List<ImageEntry> collection = getCollection(galleryId);
         entry.appId = galleryId;
         collection.add(entry);
+        databaseSaver.saveObject(entry, credentials);
     }
 
     private ImageEntry findEntry(String entryId) throws ErrorException {

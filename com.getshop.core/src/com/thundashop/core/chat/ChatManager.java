@@ -19,11 +19,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
@@ -137,7 +135,6 @@ public class ChatManager extends ManagerBase implements IChatManager, Runnable {
     public void closeChat(String id) throws ErrorException {
         Chatter chatter = getChatterById(id);
         if (chatter != null) {
-            System.out.println("Closing chatter: " + chatter.username);
             chatter.closed = true;
             databaseSaver.saveObject(chatter, credentials);
             chatters.remove(chatter.sessionId);

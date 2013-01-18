@@ -124,7 +124,10 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
             logger.error(this, "Could not send sms to " + to + " from " + from + " message: " + message, ex);
             return;
         } finally {
-            try { is.close(); } catch (IOException ioe) {}
+            try { 
+                if (is != null)
+                    is.close(); 
+            } catch (IOException ioe) {}
         }
         
         try {
@@ -154,8 +157,6 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         for (DataCommon msg : messages) {
             if (msg instanceof Message) {
                 Message sendtMessage = (Message)msg;
-                if (sendtMessage.type.equals(Message.Type.SMS))
-                    System.out.println(sendtMessage.to + " :-: " +msg.rowCreatedDate);
                 if (sendtMessage.type.equals(Message.Type.SMS) 
                         && sendtMessage.rowCreatedDate.after(startDate) 
                         && sendtMessage.rowCreatedDate.before(stopDate)) 

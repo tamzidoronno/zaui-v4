@@ -25,7 +25,9 @@ public class AProductManager extends ManagerBase {
     
     private void finalize(Product product) throws ErrorException {
         PageManager manager = getManager(PageManager.class);
-        product.page = manager.getPage(product.pageId);
+        if(product != null && product.pageId != null) {
+            product.page = manager.getPage(product.pageId);
+        }
     }
 
     @Override

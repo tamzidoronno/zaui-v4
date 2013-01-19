@@ -54,7 +54,10 @@ class LoggerManagerThread extends Thread {
             if(object.interfaceName.equals("core.chat.ChatManager") && object.method.equals("getMessages")) {
                 return;
             }
-            
+            if(object.interfaceName.equals("core.storemanager.StoreManager") && object.method.equals("initializeStore")) {
+                return;
+            }
+
             LoggerData data = new LoggerData();
             data.data = object;
             data.type = LoggerData.Types.API;

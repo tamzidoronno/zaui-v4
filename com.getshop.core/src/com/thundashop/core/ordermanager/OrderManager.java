@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 public class OrderManager extends ManagerBase implements IOrderManager {
-    public HashMap<String, Order> orders = new HashMap<String, Order>();
+    public HashMap<String, Order> orders = new HashMap();
     
     @Autowired
     public MailFactory mailFactory;
@@ -38,8 +38,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private void saveOrderInternal(Order order) throws ErrorException {
-        MessageBase messageBase = new MessageBase();
-        messageBase.sessionId = getSession().id;
         User user = getSession().currentUser;
         if (user != null) {
             order.userId = user.id;
@@ -124,12 +122,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 result.add(order);
             }
         }
+        
+        Collections.sort(result);
+        Collections.reverse(result);
         return result;
     }
 
     @Override
     public void saveOrder(Order order) throws ErrorException {
-        orders.put(order.id, order);
         saveOrderInternal(order);
     }
 }

@@ -29,15 +29,24 @@ public class TranslationComparor {
         //First load them all.
         loadTranslationFiles();
         
-        TranslationFile f_base = new TranslationFile("f_base");
-        TranslationFile w_base = new TranslationFile("w_base");
+        for(TranslationFile webshopTranslation : webShopTranslationFiles) {
+            TranslationFile strippedTransFile = new TranslationFile("stripped/"+webshopTranslation.filename);
+            webshopTranslation.merge(strippedTransFile.translationMatrix);
+        }
         
+        for(TranslationFile frameWorkTranslation : frameworkTranslationFiles) {
+            TranslationFile strippedTransFile = new TranslationFile("stripped/"+frameWorkTranslation.filename);
+            frameWorkTranslation.merge(strippedTransFile.translationMatrix);
+        }
+        
+        TranslationFile w_base = new TranslationFile("w_base");
         for(TranslationFile webshopTranslation : webShopTranslationFiles) {
             webshopTranslation.compareWithBase(w_base.translationMatrix.keySet());
             webshopTranslation.save(true);
             webshopTranslation.save(false);
         }
         
+        TranslationFile f_base = new TranslationFile("f_base");
         for(TranslationFile webshopTranslation : frameworkTranslationFiles) {
             webshopTranslation.compareWithBase(f_base.translationMatrix.keySet());
             webshopTranslation.save(true);

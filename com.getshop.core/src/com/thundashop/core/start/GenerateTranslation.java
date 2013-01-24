@@ -95,20 +95,30 @@ public class GenerateTranslation {
 
         String strLine;
         int linenumber = 0;
+        
         while ((strLine = br.readLine()) != null) {
-            String key = "";
-            // Print the content on the console
-            if (strLine.contains("__(")) {
-                key = getTranslationKey(strLine);
-                addTranslationKey(key, filePath, linenumber, "framework");
-            } else if (strLine.contains("__w(")) {
-                key = getTranslationKey(strLine);
-                addTranslationKey(key, filePath, linenumber, "webshop");
-            } else if (strLine.contains("__f(")) {
-                key = getTranslationKey(strLine);
-                addTranslationKey(key, filePath, linenumber, "framework");
-            }
-            linenumber++;
+            //Check if there is more translation at the same line
+            int offset = 0;
+            do {
+                offset = strLine.indexOf("->__", offset);
+                if(offset > 0) {
+                    strLine = strLine.substring(offset);
+                    offset = 5;
+                    String key = "";
+                    // Print the content on the console
+                    if (strLine.contains("__(")) {
+                        key = getTranslationKey(strLine);
+                        addTranslationKey(key, filePath, linenumber, "framework");
+                    } else if (strLine.contains("__w(")) {
+                        key = getTranslationKey(strLine);
+                        addTranslationKey(key, filePath, linenumber, "webshop");
+                    } else if (strLine.contains("__f(")) {
+                        key = getTranslationKey(strLine);
+                        addTranslationKey(key, filePath, linenumber, "framework");
+                    }
+                    linenumber++;
+                }
+            }while(offset >= 0);
         }
     }
 

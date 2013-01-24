@@ -22,7 +22,7 @@ import java.util.Set;
  */
 public class TranslationFile {
     public HashMap<String,String> translationMatrix = new HashMap();
-    private String filename;
+    public String filename;
     
     public TranslationFile(String fileName) throws FileNotFoundException, IOException {
         readFile(fileName);
@@ -62,18 +62,27 @@ public class TranslationFile {
     
     public void save(boolean translation) {
         try {
-            FileWriter fstream = new FileWriter("../com.getshop.client/ROOT/translation/" + filename+".csv");
+            String path = "../com.getshop.client/ROOT/translation/" + filename+".csv";
             if(translation) {
-                fstream = new FileWriter("../com.getshop.client/ROOT/translation/stripped/" + filename+".csv");
+                path = "../com.getshop.client/ROOT/translation/stripped/" + filename+".csv";
             }
+            FileWriter fstream = new FileWriter(path);
             BufferedWriter out = new BufferedWriter(fstream);
+            boolean foundEntries = false;
             for(String key : translationMatrix.keySet()) {
                 if(translation && translationMatrix.get(key).trim().length() > 0) {
                     continue;
                 }
+                foundEntries = true;
                 out.write(key + ";-;" + translationMatrix.get(key) + "\n");
             }
             out.close();
+            
+            if(!foundEntries) {
+                File file = new File(path);
+                file.delete();
+            }
+            
         } catch (Exception e) {//Catch exception if any
             System.err.println("Error: " + e.getMessage());
         }
@@ -125,5 +134,19 @@ public class TranslationFile {
             newSet.add(key);
         }
         compareWithBase(newSet);
+    }
+
+    void dump() {
+        for(String key : translationMatrix.keySet()) {
+            System.out.println(key + ";-;" + translationMatrix.get(key));
+        }
+    }
+
+    void merge(HashMap<String, String> translationMatrix) {
+        for(String key : translationMatrix.keySet()) {
+            if(translationMatrix.get(key).trim().length() > 0) {
+                addKey(key, translationMatrix.get(key));
+            }
+        }
     }
 }

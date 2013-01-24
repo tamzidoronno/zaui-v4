@@ -49,6 +49,7 @@ public class GenerateTranslation {
         System.out.println(gt.fileCount + " files parsed");
         System.out.println(frameworkTranslation.size() + " framework text lines found");
         System.out.println(webShopTranslation.size() + " webshop text lines found");
+        gt.printSummary();
     }
     
     private static void writeTranslationFile(String w_base, ArrayList<String> webShopTranslation, boolean includeSuffix) {
@@ -56,6 +57,7 @@ public class GenerateTranslation {
             // Create file 
             FileWriter fstream = new FileWriter("../com.getshop.client/ROOT/translation/" + w_base+".csv");
             BufferedWriter out = new BufferedWriter(fstream);
+            
             for(String key : webShopTranslation) {
                 if(includeSuffix) {
                     out.write(key + ";-;\n");
@@ -214,5 +216,16 @@ public class GenerateTranslation {
         
         java.util.Collections.sort(toAddList);
         return toAddList;
+    }
+
+    private void printSummary() {
+        int count = 0;
+        for(TranslationKey key : keyMap.values()) {
+            if(key.files.size() > 2) {
+                System.out.println(key.key + ";-;" + key.type + " ( " + key.files.size() + ")");
+                count++;
+            }
+        }
+        System.out.println("Duplicates: " + count);
     }
 }

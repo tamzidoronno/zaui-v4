@@ -59,7 +59,8 @@ public class TranslationComparor {
         List<String> languages = new ArrayList();
         languages.add("nb_NO");
         languages.add("en_en");
-        languages.add("fi_fi");
+        languages.add("fi_FI");
+        languages.add("nl_NL");
 
         for (String language : languages) {
             webShopTranslationFiles.add(new TranslationFile("w_" + language));

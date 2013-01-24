@@ -69,7 +69,17 @@ public class TranslationFile {
             FileWriter fstream = new FileWriter(path);
             BufferedWriter out = new BufferedWriter(fstream);
             boolean foundEntries = false;
+            
+            List<String> keyList = new ArrayList();
+            
             for(String key : translationMatrix.keySet()) {
+                keyList.add(key);
+            }
+        
+            java.util.Collections.sort(keyList);
+            
+            
+            for(String key : keyList) {
                 if(translation && translationMatrix.get(key).trim().length() > 0) {
                     continue;
                 }

@@ -92,4 +92,22 @@ public interface IListManager {
      * @throws ErrorException 
      */
     public HashMap<String, String> translateEntries(List<String> entryIds) throws ErrorException;
+    
+    /**
+     * If you would like to combine more lists to a current list, you can do it by using this call.<br>
+     * 
+     * @param toListId The current list to be appended on.
+     * @param newListId The list which you would like to combine.
+     * @throws ErrorException 
+     */
+    public void combineList(String toListId, String newListId) throws ErrorException;
+    
+    /**
+     * Does the exact opposite as combineList(...), removes a list from a combined list.
+     * @param fromListId The id of the list to be removed from.
+     * @param toRemoveId The id of the list to remove.
+     * @throws ErrorException 
+     */
+    public void unCombineList(String fromListId, String toRemoveId) throws ErrorException;
+    
 }

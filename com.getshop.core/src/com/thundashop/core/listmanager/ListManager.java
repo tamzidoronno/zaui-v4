@@ -105,7 +105,7 @@ public class ListManager extends ManagerBase implements IListManager {
             return new ArrayList<Entry>();
         }
         unsetNull(entries.entries);
-        return entries.entries;
+        return combineLists(entries);
     }
 
     private Entry getEntry(String id) throws ErrorException {
@@ -396,5 +396,56 @@ public class ListManager extends ManagerBase implements IListManager {
         }
         
         return addresses;
+    }
+
+    @Override
+    public void combineList(String toListId, String newListId) throws ErrorException {
+        EntryList list = getEntryList(toListId);
+        
+        if(list.extendedLists == null) {
+            list.extendedLists = new ArrayList();
+        }
+        
+        list.extendedLists.add(newListId);
+        databaseSaver.saveObject(list, credentials);
+    }
+
+    private List<Entry> combineLists(EntryList entries) {
+        if(entries.extendedLists == null) {
+            return entries.entries;
+        }
+        
+        List<Entry> newList = entries.entries;
+        for(String listId : entries.extendedLists) {
+            newList.addAll(getList(listId));
+        }
+        
+        return newList;
+    }
+
+    @Override
+    public void unCombineList(String fromListId, String toRemoveId) throws ErrorException {
+        EntryList list = getEntryList(fromListId);
+        if(list.extendedLists == null) {
+            throw new ErrorException(1000011);
+        }
+        
+        int number = 0;
+        boolean found = false;
+        for(String key : list.extendedLists) {
+            if(key.equals(toRemoveId)) {
+                found = true;
+                break;
+            }
+            number++;
+        }
+        
+        if(!found) {
+            throw new ErrorException(1000011);
+        }
+        
+        list.extendedLists.remove(number);
+        
+        databaseSaver.saveObject(list, credentials);
     }
 }

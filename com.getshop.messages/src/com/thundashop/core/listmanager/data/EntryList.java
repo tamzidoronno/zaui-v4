@@ -14,4 +14,5 @@ import java.util.List;
 public class EntryList extends DataCommon {
     public List<Entry> entries;
     public String appId;
+    public List<String> extendedLists; 
 }

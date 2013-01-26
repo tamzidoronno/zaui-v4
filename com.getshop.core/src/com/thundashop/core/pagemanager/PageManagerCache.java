@@ -155,4 +155,8 @@ public class PageManagerCache implements IPageManager {
         getPage(pageId);
     }
 
+    @Override
+    public HashMap<String, List<String>> getPagesForApplications(List<String> appIds) throws ErrorException {
+        return null;
+    }
 }

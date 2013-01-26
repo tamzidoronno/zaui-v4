@@ -163,4 +163,39 @@ public class PageManager extends ManagerBase implements IPageManager {
         pagePool.savePage(page);
     }
 
+    @Override
+    public HashMap<String, List<String>> getPagesForApplications(List<String> appIds) throws ErrorException {
+        if(appIds == null) {
+            throw new ErrorException(1000012);
+        }
+        
+        
+        if(appIds.size() == 0) {
+            throw new ErrorException(1000012);
+        }
+        
+        HashMap<String, List<String>> retval = new HashMap();
+        for(String appId : appIds) {
+            List<String> pages = findPagesForApplication(appId);
+            retval.put(appId, pages);
+        }
+        
+        return retval;
+    }
+
+    private List<String> findPagesForApplication(String appId) {
+        List<String> pages = new ArrayList();
+        for(Page page : pagePool.pages.values()) {
+            HashMap<String, AppConfiguration> apps = page.getApplications();
+            for(String appIdOnPage : apps.keySet()) {
+                if(appIdOnPage.equals(appId)) {
+                    pages.add(page.id);
+                    continue;
+                }
+            }
+        }
+        
+        return pages;
+    }
+
 }

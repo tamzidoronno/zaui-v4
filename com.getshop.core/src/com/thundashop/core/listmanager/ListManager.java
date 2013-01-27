@@ -76,6 +76,10 @@ public class ListManager extends ManagerBase implements IListManager {
             allEntries.get(listId).appId = listId;
             allEntries.get(listId).entries = new ArrayList();
         }
+        if(allEntries.get(listId).entries == null) {
+            allEntries.get(listId).entries = new ArrayList();
+        }
+        
         if (entry.parentId == null || entry.parentId.trim().length() == 0) {
             allEntries.get(listId).entries.add(entry);
         } else {
@@ -104,6 +108,10 @@ public class ListManager extends ManagerBase implements IListManager {
         if (entries == null) {
             return new ArrayList<Entry>();
         }
+        if(entries.entries == null) {
+            return new ArrayList();
+        }
+        
         unsetNull(entries.entries);
         return combineLists(entries);
     }

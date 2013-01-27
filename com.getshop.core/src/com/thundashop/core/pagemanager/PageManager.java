@@ -7,7 +7,9 @@ package com.thundashop.core.pagemanager;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.pagemanager.data.Page;
+import com.thundashop.core.productmanager.ProductManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -183,10 +185,11 @@ public class PageManager extends ManagerBase implements IPageManager {
         return retval;
     }
 
-    private List<String> findPagesForApplication(String appId) {
+    private List<String> findPagesForApplication(String appId) throws ErrorException {
         List<String> pages = new ArrayList();
         for(Page page : pagePool.pages.values()) {
-            HashMap<String, AppConfiguration> apps = page.getApplications();
+            Page finalizedPage = pagePool.get(page.id);
+            HashMap<String, AppConfiguration> apps = finalizedPage.getApplications();
             for(String appIdOnPage : apps.keySet()) {
                 if(appIdOnPage.equals(appId)) {
                     pages.add(page.id);
@@ -196,6 +199,36 @@ public class PageManager extends ManagerBase implements IPageManager {
         }
         
         return pages;
+    }
+
+    @Override
+    public HashMap<String, String> translatePages(List<String> pages) throws ErrorException {
+        if(pages == null) {
+            throw new ErrorException(1000013);
+        }
+        
+        ListManager listManager = getManager(ListManager.class);
+        ProductManager prodManager = getManager(ProductManager.class);
+        
+        HashMap<String, String> translated = listManager.translateEntries(pages);
+        HashMap<String, String> translatedByProduct = prodManager.translateEntries(pages);
+        
+        HashMap<String, String> result = new HashMap();
+        
+        for(String pageId : pages) {
+            String translationProduct = translatedByProduct.get(pageId);
+            String translation = translated.get(pageId);
+            
+            if(translation != null && translation.trim().length() > 0) {
+                result.put(pageId, translation);
+            }
+            
+            if(translationProduct != null && translationProduct.trim().length() > 0) {
+                result.put(pageId, translationProduct);
+            }
+        }
+        
+        return result;
     }
 
 }

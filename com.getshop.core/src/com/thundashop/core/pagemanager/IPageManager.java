@@ -219,4 +219,12 @@ public interface IPageManager {
      */
     @Administrator
     public HashMap<String, List<String>> getPagesForApplications(List<String> appIds) throws ErrorException;
+    
+    /**
+     * Need to translate a set of page ids?
+     * @param pages A list (array) of page ids to translate.
+     * @return A list of human readable strings, the key is the page id.
+     * @throws ErrorException 
+     */
+    public HashMap<String, String> translatePages(List<String> pages) throws ErrorException;
 }

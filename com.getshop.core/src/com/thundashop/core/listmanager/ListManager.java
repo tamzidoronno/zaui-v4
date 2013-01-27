@@ -406,6 +406,7 @@ public class ListManager extends ManagerBase implements IListManager {
             list.extendedLists = new ArrayList();
         }
         
+        list.storeId = storeId;
         list.extendedLists.add(newListId);
         databaseSaver.saveObject(list, credentials);
     }
@@ -417,6 +418,9 @@ public class ListManager extends ManagerBase implements IListManager {
         
         List<Entry> newList = entries.entries;
         for(String listId : entries.extendedLists) {
+            if(entries.appId.equals(listId)) {
+                continue;
+            }
             newList.addAll(getList(listId));
         }
         

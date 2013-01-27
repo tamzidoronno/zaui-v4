@@ -20,6 +20,7 @@ public class Entry implements Serializable {
     public String hardLink;
     public int userLevel;
     public String id;
+    public String productId;
     
     //Appended when fetching the list.
     public List<Entry> subentries;

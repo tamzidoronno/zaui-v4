@@ -424,7 +424,12 @@ public class ListManager extends ManagerBase implements IListManager {
             return entries.entries;
         }
         
-        List<Entry> newList = entries.entries;
+        List<Entry> newList = new ArrayList();
+        
+        for(Entry entry : entries.entries) {
+            newList.add(entry);
+        }
+        
         for(String listId : entries.extendedLists) {
             if(entries.appId.equals(listId)) {
                 continue;
@@ -459,5 +464,19 @@ public class ListManager extends ManagerBase implements IListManager {
         list.extendedLists.remove(number);
         
         databaseSaver.saveObject(list, credentials);
+    }
+
+    @Override
+    public List<String> getCombinedLists(String listId) throws ErrorException {
+        EntryList entries = getEntryList(listId);
+        if(entries == null) {
+            throw new ErrorException(1000014);
+        }
+        
+        if(entries.extendedLists == null) {
+            return new ArrayList();
+        }
+        
+        return entries.extendedLists;
     }
 }

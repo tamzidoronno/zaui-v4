@@ -137,4 +137,9 @@ public class ListManagerCache implements IListManager {
     public void unCombineList(String fromListId, String toRemoveId) throws ErrorException {
         getList(fromListId);
     }
+
+    @Override
+    public List<String> getCombinedLists(String listId) throws ErrorException {
+        return null;
+    }
 }

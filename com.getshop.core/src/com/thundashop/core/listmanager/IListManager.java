@@ -110,4 +110,12 @@ public interface IListManager {
      */
     public void unCombineList(String fromListId, String toRemoveId) throws ErrorException;
     
+    /**
+     * Fetch a list of all lists combined with a given list.
+     * @param listId
+     * @throws ErrorException 
+     */
+    
+    public List<String> getCombinedLists(String listId) throws ErrorException;
+    
 }

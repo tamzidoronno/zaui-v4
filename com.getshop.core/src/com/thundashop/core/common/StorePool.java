@@ -65,6 +65,6 @@ public class StorePool {
     }
 
     public StoreHandler getStorePool(String storeId) {
-        return storeHandlers.get(storeId);
+        return get(storeId);
     }
 }

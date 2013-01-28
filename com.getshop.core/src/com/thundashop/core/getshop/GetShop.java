@@ -137,6 +137,15 @@ public class GetShop extends ManagerBase implements IGetShop {
         }
         return partnerList;
     }
+    
+    public boolean isPartner(String partnerId, String userId) {
+        for (Partner partner : getPartnerList(partnerId)) {
+            if (partner.userId.equals(userId))
+                return true;
+        }
+        
+        return false;
+    }
 
     @Override
     public List<GetshopStore> getStoresConnectedToMe() throws ErrorException {

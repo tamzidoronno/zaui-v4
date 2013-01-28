@@ -87,6 +87,11 @@ public class ManagerBase {
         return storeHandler.getManager(managerType);
     }
     
+    public <T> T getManager(Class managerType, String storeId) {
+        StoreHandler storeHandler = AppContext.storePool.getStorePool(storeId);
+        return storeHandler.getManager(managerType);
+    }
+    
     public Store getStore() throws ErrorException {
         StoreManager storeMgr = getManager(StoreManager.class);
         return storeMgr.getStoreBySessionId(getSession().id);

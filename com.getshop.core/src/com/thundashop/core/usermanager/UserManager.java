@@ -6,7 +6,9 @@ package com.thundashop.core.usermanager;
 
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.messagemanager.MailFactory;
+import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.data.User;
 import java.security.MessageDigest;
 import java.util.ArrayList;
@@ -33,6 +35,9 @@ public class UserManager extends ManagerBase implements IUserManager {
     }
     @Autowired
     public MailFactory mailfactory;
+    
+    @Autowired
+    public GetShop getShop;
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -58,7 +63,7 @@ public class UserManager extends ManagerBase implements IUserManager {
         }
 
         if (!userStoreCollections.containsKey(storeId)) {
-            UserStoreCollection collection = new UserStoreCollection(storeId, databaseSaver, credentials);
+            UserStoreCollection collection = new UserStoreCollection(storeId, databaseSaver, credentials, this);
             userStoreCollections.put(storeId, collection);
         }
 

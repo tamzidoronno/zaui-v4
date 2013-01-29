@@ -393,13 +393,9 @@ public class ListManager extends ManagerBase implements IListManager {
         HashMap<String, String> addresses = new HashMap();
         
         for (String address : entryIds) {
-            if(address.equals("home")) {
-                addresses.put(address, "Home");
-            } else {
-                Entry entry = getEntryByPageId(address);
-                if(entry != null) {
-                    addresses.put(address, entry.name);
-                }
+            Entry entry = getEntryByPageId(address);
+            if(entry != null) {
+                addresses.put(address, entry.name);
             }
         }
         

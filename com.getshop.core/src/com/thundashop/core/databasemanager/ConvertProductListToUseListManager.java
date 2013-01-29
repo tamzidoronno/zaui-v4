@@ -125,6 +125,7 @@ public class ConvertProductListToUseListManager {
             Entry entry = new Entry();
             entry.name = prod.name;
             entry.productId = prod.id;
+            entry.id = UUID.randomUUID().toString();
 
             list.entries.add(entry);
         }

@@ -212,6 +212,9 @@ public class PagePoolImpl {
     
     private AppConfiguration addExistingApplication(AppConfiguration app, Page page, String pageArea) {
         PageArea area = page.pageAreas.get(pageArea);
+        if(area.applicationsList == null) {
+            area.applicationsList = new ArrayList();
+        }
         area.applicationsList.add(app.id);
         return app;
     }

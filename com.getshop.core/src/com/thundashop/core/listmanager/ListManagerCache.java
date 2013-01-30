@@ -127,4 +127,19 @@ public class ListManagerCache implements IListManager {
     private String getInterfaceName() {
         return this.getClass().getInterfaces()[0].getCanonicalName().replace("com.thundashop.", "");
     }
+
+    @Override
+    public void combineList(String toListId, String newListId) throws ErrorException {
+        getList(toListId);
+    }
+
+    @Override
+    public void unCombineList(String fromListId, String toRemoveId) throws ErrorException {
+        getList(fromListId);
+    }
+
+    @Override
+    public List<String> getCombinedLists(String listId) throws ErrorException {
+        return null;
+    }
 }

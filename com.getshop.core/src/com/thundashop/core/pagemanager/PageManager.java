@@ -7,7 +7,9 @@ package com.thundashop.core.pagemanager;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.pagemanager.data.Page;
+import com.thundashop.core.productmanager.ProductManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -161,6 +163,72 @@ public class PageManager extends ManagerBase implements IPageManager {
         
         page.parent = toBeParent;
         pagePool.savePage(page);
+    }
+
+    @Override
+    public HashMap<String, List<String>> getPagesForApplications(List<String> appIds) throws ErrorException {
+        if(appIds == null) {
+            throw new ErrorException(1000012);
+        }
+        
+        
+        if(appIds.size() == 0) {
+            throw new ErrorException(1000012);
+        }
+        
+        HashMap<String, List<String>> retval = new HashMap();
+        for(String appId : appIds) {
+            List<String> pages = findPagesForApplication(appId);
+            retval.put(appId, pages);
+        }
+        
+        return retval;
+    }
+
+    private List<String> findPagesForApplication(String appId) throws ErrorException {
+        List<String> pages = new ArrayList();
+        for(Page page : pagePool.pages.values()) {
+            Page finalizedPage = pagePool.get(page.id);
+            HashMap<String, AppConfiguration> apps = finalizedPage.getApplications();
+            for(String appIdOnPage : apps.keySet()) {
+                if(appIdOnPage.equals(appId)) {
+                    pages.add(page.id);
+                    continue;
+                }
+            }
+        }
+        
+        return pages;
+    }
+
+    @Override
+    public HashMap<String, String> translatePages(List<String> pages) throws ErrorException {
+        if(pages == null) {
+            throw new ErrorException(1000013);
+        }
+        
+        ListManager listManager = getManager(ListManager.class);
+        ProductManager prodManager = getManager(ProductManager.class);
+        
+        HashMap<String, String> translated = listManager.translateEntries(pages);
+        HashMap<String, String> translatedByProduct = prodManager.translateEntries(pages);
+        
+        HashMap<String, String> result = new HashMap();
+        
+        for(String pageId : pages) {
+            String translationProduct = translatedByProduct.get(pageId);
+            String translation = translated.get(pageId);
+            
+            if(translation != null && translation.trim().length() > 0) {
+                result.put(pageId, translation);
+            }
+            
+            if(translationProduct != null && translationProduct.trim().length() > 0) {
+                result.put(pageId, translationProduct);
+            }
+        }
+        
+        return result;
     }
 
 }

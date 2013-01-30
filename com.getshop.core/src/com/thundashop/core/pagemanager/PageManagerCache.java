@@ -70,6 +70,7 @@ public class PageManagerCache implements IPageManager {
 
     @Override
     public Page removeApplication(String applicationId, String pageid) throws ErrorException {
+        getApplications();
         getPage(pageid);
         return null;
     }
@@ -148,6 +149,8 @@ public class PageManagerCache implements IPageManager {
 
     @Override
     public void addExistingApplicationToPageArea(String pageId, String appId, String area) throws ErrorException {
+        getApplications();
+        getPage(pageId);
     }
 
     @Override
@@ -155,4 +158,13 @@ public class PageManagerCache implements IPageManager {
         getPage(pageId);
     }
 
+    @Override
+    public HashMap<String, List<String>> getPagesForApplications(List<String> appIds) throws ErrorException {
+        return null;
+    }
+
+    @Override
+    public HashMap<String, String> translatePages(List<String> pages) throws ErrorException {
+        return null;
+    }
 }

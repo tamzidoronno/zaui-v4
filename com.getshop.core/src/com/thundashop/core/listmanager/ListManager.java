@@ -76,6 +76,10 @@ public class ListManager extends ManagerBase implements IListManager {
             allEntries.get(listId).appId = listId;
             allEntries.get(listId).entries = new ArrayList();
         }
+        if(allEntries.get(listId).entries == null) {
+            allEntries.get(listId).entries = new ArrayList();
+        }
+        
         if (entry.parentId == null || entry.parentId.trim().length() == 0) {
             allEntries.get(listId).entries.add(entry);
         } else {
@@ -104,8 +108,12 @@ public class ListManager extends ManagerBase implements IListManager {
         if (entries == null) {
             return new ArrayList<Entry>();
         }
+        if(entries.entries == null) {
+            return new ArrayList();
+        }
+        
         unsetNull(entries.entries);
-        return entries.entries;
+        return combineLists(entries);
     }
 
     private Entry getEntry(String id) throws ErrorException {
@@ -396,5 +404,79 @@ public class ListManager extends ManagerBase implements IListManager {
         }
         
         return addresses;
+    }
+
+    @Override
+    public void combineList(String toListId, String newListId) throws ErrorException {
+        EntryList list = getEntryList(toListId);
+        
+        if(list.extendedLists == null) {
+            list.extendedLists = new ArrayList();
+        }
+        
+        list.storeId = storeId;
+        list.extendedLists.add(newListId);
+        databaseSaver.saveObject(list, credentials);
+    }
+
+    private List<Entry> combineLists(EntryList entries) {
+        if(entries.extendedLists == null) {
+            return entries.entries;
+        }
+        
+        List<Entry> newList = new ArrayList();
+        
+        for(Entry entry : entries.entries) {
+            newList.add(entry);
+        }
+        
+        for(String listId : entries.extendedLists) {
+            if(entries.appId.equals(listId)) {
+                continue;
+            }
+            newList.addAll(getList(listId));
+        }
+        
+        return newList;
+    }
+
+    @Override
+    public void unCombineList(String fromListId, String toRemoveId) throws ErrorException {
+        EntryList list = getEntryList(fromListId);
+        if(list.extendedLists == null) {
+            throw new ErrorException(1000011);
+        }
+        
+        int number = 0;
+        boolean found = false;
+        for(String key : list.extendedLists) {
+            if(key.equals(toRemoveId)) {
+                found = true;
+                break;
+            }
+            number++;
+        }
+        
+        if(!found) {
+            throw new ErrorException(1000011);
+        }
+        
+        list.extendedLists.remove(number);
+        
+        databaseSaver.saveObject(list, credentials);
+    }
+
+    @Override
+    public List<String> getCombinedLists(String listId) throws ErrorException {
+        EntryList entries = getEntryList(listId);
+        if(entries == null) {
+            throw new ErrorException(1000014);
+        }
+        
+        if(entries.extendedLists == null) {
+            return new ArrayList();
+        }
+        
+        return entries.extendedLists;
     }
 }

@@ -209,4 +209,22 @@ public interface IPageManager {
      */
     @Administrator
     public void setParentPage(String pageId, String parentPageId) throws ErrorException;
+    
+    
+    /**
+     * Fetch a list of all pages found for a list of applications.<br>
+     * The key is the application id, the list combined with the key a list of page ids found for the specified applications.
+     * @param appIds A list of application ids to resolve pages for.
+     * @throws ErrorException 
+     */
+    @Administrator
+    public HashMap<String, List<String>> getPagesForApplications(List<String> appIds) throws ErrorException;
+    
+    /**
+     * Need to translate a set of page ids?
+     * @param pages A list (array) of page ids to translate.
+     * @return A list of human readable strings, the key is the page id.
+     * @throws ErrorException 
+     */
+    public HashMap<String, String> translatePages(List<String> pages) throws ErrorException;
 }

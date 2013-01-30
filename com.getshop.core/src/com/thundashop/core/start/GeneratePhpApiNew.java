@@ -43,8 +43,8 @@ public class GeneratePhpApiNew {
             throws ClassNotFoundException, IOException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         assert classLoader != null;
-        String path = packageName.replace('.', '/');
-        Enumeration<URL> resources = classLoader.getResources(path);
+        String path = packageName.replace('.', '/'); 
+       Enumeration<URL> resources = classLoader.getResources(path);
         List<File> dirs = new ArrayList<File>();
         while (resources.hasMoreElements()) {
             URL resource = resources.nextElement();
@@ -209,9 +209,10 @@ public class GeneratePhpApiNew {
     public static void main(String[] args) throws InterruptedException, Exception {
         GeneratePhpApi.main(args);
         File file = new File("../com.getshop.core/build/classes/");
-        String result = BuildApi(GeneratePhpApi.findClasses(file, ""));
+        List<Class> classes = GeneratePhpApi.findClasses(file, "");
+        classes = sortClasses(classes);
+        String result = BuildApi(classes);
         writePHPApi(result);
-        
         File messages = new File("../com.getshop.messages/build/classes/");
         dataObjects = GeneratePhpApi.findClasses(messages, "");
         
@@ -477,6 +478,7 @@ public class GeneratePhpApiNew {
                     content += "      }\r\n\r\n";
                     apiclasses.add(entry.getSimpleName().substring(1));
                     Method[] methods = entry.getMethods();
+                    methods = sortMethods(methods);
                     for (Method method : methods) {
                         String path = entry.getCanonicalName();
                         path = path.replace(".", "/") + ".java";
@@ -801,5 +803,22 @@ public class GeneratePhpApiNew {
             }
         }
         return html;
+    }
+
+    private static List<Class> sortClasses(List<Class> classes) {
+        List<String> toSort = new ArrayList();
+        HashMap<String, Class> map = new HashMap();
+        for(Class theClass : classes) {
+            toSort.add(theClass.getName());
+            map.put(theClass.getName(), theClass);
+        }
+        
+        java.util.Collections.sort(toSort);
+        List<Class> sortedList = new ArrayList();
+        for(String key : toSort) {
+            sortedList.add(map.get(key));
+        }
+        
+        return sortedList;
     }
 }

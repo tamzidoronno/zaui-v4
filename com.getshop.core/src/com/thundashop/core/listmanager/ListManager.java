@@ -323,6 +323,10 @@ public class ListManager extends ManagerBase implements IListManager {
     }
 
     private Entry recursiveEntrySearch(String id, List<Entry> entries) {
+        if(entries == null) {
+            return null;
+        }
+        
         for (Entry entry : entries) {
             if (entry.id.equals(id)) {
                 return entry;

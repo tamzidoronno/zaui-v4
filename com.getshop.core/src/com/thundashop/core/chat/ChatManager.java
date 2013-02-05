@@ -12,6 +12,7 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Date;
@@ -107,6 +108,16 @@ public class ChatManager extends ManagerBase implements IChatManager, Runnable {
     public void sendMessage(String message) throws ErrorException {
         Chatter chatter = getChatter();
         ChatMessage chatMessage = createChateMessage(message);
+        
+        if(chatter.messages.size() == 0) {
+            MessageManager mgr = getManager(MessageManager.class);
+            String msg = message;
+            if(msg.length() >= 127) {
+                msg = msg.substring(0, 126);
+            }
+            mgr.smsFactory.send("GetShop", "48311484", "GS Chat: " + msg);
+        }
+        
         chatter.messages.add(chatMessage);
         databaseSaver.saveObject(chatter, credentials);
     }

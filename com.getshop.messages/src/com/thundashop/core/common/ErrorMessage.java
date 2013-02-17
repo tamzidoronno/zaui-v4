@@ -4,11 +4,13 @@
  */
 package com.thundashop.core.common;
 
+import java.io.Serializable;
+
 /**
  *
  * @author ktonder
  */
-public class ErrorMessage {
+public class ErrorMessage implements Serializable {
     public String additionalInformation;
     public int errorCode;
     

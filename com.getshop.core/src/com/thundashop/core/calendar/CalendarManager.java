@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 public class CalendarManager extends ManagerBase implements ICalendarManager {
-    private List<Month> months = new ArrayList();
+    private HashMap<String, Month> months = new HashMap();
     
     @Autowired
     public MailFactory mailFactory;
@@ -39,13 +39,14 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataObject : data.data) {
             if (dataObject instanceof Month) {
-                months.add((Month) dataObject);
+                Month month = (Month)dataObject;
+                months.put(month.id, month);
             }
         }
     }
 
     private Month getMonth(int year, int month) {
-        for (Month mountObject : months) {
+        for (Month mountObject : months.values()) {
             if (mountObject.is(year, month)) {
                 return mountObject;
             }
@@ -55,7 +56,6 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         mountObject.year = year;
         mountObject.month = month;
         mountObject.storeId = storeId;
-        months.add(mountObject);
         return mountObject;
     }
 
@@ -69,6 +69,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         mymonth.addEntry(day, entry);
         mymonth.storeId = storeId;
         databaseSaver.saveObject(mymonth, credentials);
+        months.put(mymonth.id, mymonth);
     }
 
     private boolean isNewerOrEquals(Day day, Month month, int compareMonth, int compareDay, int compareYear) {
@@ -151,7 +152,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     private Entry removeUserAttendee(String userId, String entryId) throws ErrorException {
         Entry retentry = null;
 
-        for (Month month : months) {
+        for (Month month : months.values()) {
             for (Day day : month.days.values()) {
                 for (Entry entry : day.entries) {
                     if (entryId.equals("")) {
@@ -220,7 +221,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             return mymonth;
         }
 
-        for (Month checkMonth : this.months) {
+        for (Month checkMonth : this.months.values()) {
             for (Day checkDay : checkMonth.days.values()) {
                 for (Entry checkEntry : checkDay.entries) {
                     for (ExtraDay extraDay : checkEntry.otherDays) {
@@ -248,7 +249,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         Entry removeEntry = null;
         Month onMonth = null;
 
-        for (Month month : months) {
+        for (Month month : months.values()) {
             onMonth = month;
 
             for (Day day : month.days.values()) {
@@ -300,7 +301,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     private List<Entry> getEntriesInternal(int year, int month, int day) {
         List<Entry> entries = new ArrayList();
 
-        for (Month myMonth : months) {
+        for (Month myMonth : months.values()) {
             if (myMonth.isNewerOrEqual(year, month)) {
                 for (Day myDay : myMonth.days.values()) {
                     if (isNewerOrEquals(myDay, myMonth, month, day, year)) {
@@ -322,7 +323,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     }
 
     private void addUserToEventInternal(String userId, String eventId, String password, String username) throws ErrorException {
-        for (Month month : months) {
+        for (Month month : months.values()) {
             for (Day day : month.days.values()) {
                 for (Entry entry : day.entries) {
                     if (entry.entryId.equals(eventId)) {
@@ -350,7 +351,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
     @Override
     public Entry getEntry(String entryId) {
-        for (Month month : months) {
+        for (Month month : months.values()) {
             for (Day day : month.days.values()) {
                 for (Entry entry : day.entries) {
                     if (entry.entryId.equals(entryId))
@@ -369,7 +370,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             throw new ErrorException(1012);
         }
         
-        for (Month month : months) {
+        for (Month month : months.values()) {
             for (Day day : month.days.values()) {
                 Entry toRemove = null;
                 for (Entry tmpEntry : day.entries) {

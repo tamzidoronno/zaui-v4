@@ -12,6 +12,7 @@ import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.getshop.data.Partner;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
+import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,7 +68,7 @@ public class GetShop extends ManagerBase implements IGetShop {
     }
     
     private void addUserInformation(GetshopStore getshopstore, Store store) {
-        Credentials credentials = new Credentials();
+        Credentials credentials = new Credentials(UserManager.class);
         credentials.manangerName = "UserManager";
         credentials.storeid = store.id;
         
@@ -161,7 +162,7 @@ public class GetShop extends ManagerBase implements IGetShop {
     }
 
     private List<GetshopStore> fetchStoreFromDB(String partnerId) {
-        Credentials credentials = new Credentials();
+        Credentials credentials = new Credentials(StoreManager.class);
         credentials.manangerName = StoreManager.class.getSimpleName();
         credentials.storeid = "all";
         

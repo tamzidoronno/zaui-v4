@@ -45,7 +45,7 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
     public DatabaseSaver databaseSaver;
 
     public SMSFactoryImpl() {
-        credentials = new Credentials();
+        credentials = new Credentials(MessageManager.class);
         credentials.manangerName = "MessageManager";
         credentials.storeid = storeId;
     }
@@ -148,7 +148,7 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         cal.add(Calendar.MINUTE, 59);
         Date startDate = cal.getTime();
         
-        Credentials credentials = new Credentials();
+        Credentials credentials = new Credentials(MessageManager.class);
         credentials.storeid = storeId;
         credentials.manangerName = "MessageManager";
                 

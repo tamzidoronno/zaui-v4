@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 public class ListManager extends ManagerBase implements IListManager {
-    public Map<String, EntryList> allEntries;
+    public Map<String, EntryList> allEntries = new HashMap();
     
     @Autowired
     public ListManager(Logger log, DatabaseSaver databaseSaver) {
@@ -37,7 +37,6 @@ public class ListManager extends ManagerBase implements IListManager {
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
-        allEntries = new HashMap();
         for (DataCommon entry : data.data) {
             if (entry instanceof EntryList) {
                 EntryList listObject = (EntryList) entry;

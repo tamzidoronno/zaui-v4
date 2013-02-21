@@ -1,4 +1,4 @@
-package com.thundashop.core.applicationmanager;
+package com.thundashop.core.appmanager.data;
 
 import com.thundashop.core.common.DataCommon;
 import java.util.List;

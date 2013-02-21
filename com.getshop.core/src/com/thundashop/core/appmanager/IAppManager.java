@@ -5,7 +5,7 @@
  */
 package com.thundashop.core.appmanager;
 
-import com.thundashop.core.applicationmanager.ApplicationSettings;
+import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
@@ -47,5 +47,14 @@ public interface IAppManager {
      */
     @Administrator
     public void deleteApplication(String id) throws ErrorException;
+    
+    /**
+     * Fetch the settings for a given id.
+     * @param id
+     * @return
+     * @throws ErrorException 
+     */
+    @Administrator
+    public ApplicationSettings getApplication(String id) throws ErrorException;
     
 }

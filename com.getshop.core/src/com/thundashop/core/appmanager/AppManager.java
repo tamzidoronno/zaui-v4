@@ -1,6 +1,6 @@
 package com.thundashop.core.appmanager;
 
-import com.thundashop.core.applicationmanager.ApplicationSettings;
+import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
@@ -88,12 +88,18 @@ public class AppManager extends ManagerBase implements IAppManager {
 
     @Override
     public void deleteApplication(String id) throws ErrorException {
-        ApplicationSettings setting = getApplication(id);
+        ApplicationSettings setting = getApplicationInternal(id);
         settings.get(getSession().currentUser.id).remove(id);
         databaseSaver.deleteObject(setting, credentials);
     }
 
-    private ApplicationSettings getApplication(String id) throws ErrorException {
+    @Override
+    public ApplicationSettings getApplication(String id) throws ErrorException {
+        return getApplicationInternal(id);
+        
+    }
+    
+    private ApplicationSettings getApplicationInternal(String id) throws ErrorException {
         if(settings.get(getSession().currentUser.id) == null) {
             throw new ErrorException(1015);
         }

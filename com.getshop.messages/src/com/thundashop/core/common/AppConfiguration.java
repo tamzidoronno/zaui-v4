@@ -1,15 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thundashop.core.common;
 
+import com.thundashop.core.appmanager.data.ApplicationSettings;
 import java.util.HashMap;
 
-/**
- *
- * @author privat
- */
 public class AppConfiguration extends DataCommon {
     public HashMap<String, Setting> settings = new HashMap<>();
     public int sticky;
@@ -17,6 +10,7 @@ public class AppConfiguration extends DataCommon {
     public String appName;
     public int inheritate;
     public String originalPageId;
+    public String appSettingsId;
 
     public AppConfiguration secureClone() {
         AppConfiguration appConfig = new AppConfiguration();
@@ -25,6 +19,8 @@ public class AppConfiguration extends DataCommon {
         appConfig.appName = appName;
         appConfig.inheritate = inheritate;
         appConfig.originalPageId = originalPageId;
+        appConfig.appSettingsId = appSettingsId;
+        
         
         appConfig.id = id;
         appConfig.storeId = storeId;

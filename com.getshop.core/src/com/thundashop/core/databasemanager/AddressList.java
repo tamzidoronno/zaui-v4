@@ -133,4 +133,8 @@ public class AddressList implements Serializable {
         addresses = new ArrayList();
         saveToDisk();
     }
+
+    public List<String> getAllAddresses() {
+        return addresses;
+    }
 }

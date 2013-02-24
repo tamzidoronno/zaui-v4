@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.databasemanager;
 
+import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.MessageBase;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,8 @@ import java.util.List;
  *
  * @author ktonder
  */
-public class DatabaseSyncMessage extends MessageBase {
-    public List<String> completeNetwork = new ArrayList();
-    public List<ManagerData> managerDatas = new ArrayList();  
+public class ManagerData extends MessageBase {
+    public String database;
+    public String collection;
+    public List<DataCommon> datas = new ArrayList();
 }

@@ -24,6 +24,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -89,6 +90,7 @@ public class Database {
 
         addDataCommonToDatabase(data, credentials);
         databaseSocketHandler.objectSaved(data, credentials);
+        
     }
     
     private void createDataFolder() throws IOException {
@@ -118,28 +120,41 @@ public class Database {
     private void addDataCommonToDatabase(DataCommon data, Credentials credentials) {
         DBObject dbObject = morphia.toDBObject(data);
         mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + data.storeId).save(dbObject);
+        System.out.println("added: " + dbObject);
     }
 
     public List<DataCommon> retreiveData(Credentials credentials) {
-        List<DataCommon> all = new ArrayList<DataCommon>();
         DB mongoDb = mongo.getDB(credentials.manangerName);
         DBCollection collection = mongoDb.getCollection("col_" + credentials.storeid);
+        return getData(collection);
+    }
+    
+    private List<DataCommon> getData(DBCollection collection) {
         DBCursor cur = collection.find();
+        List<DataCommon> all = new ArrayList<DataCommon>();
         while (cur.hasNext()) {
             DBObject dbObject = cur.next();
-
+            String className = (String)dbObject.get("className");
+            if (className != null) {
+                try {
+                    Class.forName(className);
+                } catch (ClassNotFoundException ex) {
+                    logger.warning(this, "Database object has references to object that does not exists: " + className + " collection: " + collection.getName() + " manager: " + collection.getDB().getName());
+                    continue;
+                }
+            }
+            
             try {
                 DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, dbObject);
                 if (dataCommon.deleted == null) {
                     all.add(dataCommon);
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
-                System.out.println("Figure out this: " + credentials.manangerName);
+                System.out.println("Figure out this : " + collection.getName() + " " + collection.getDB().getName());
                 System.out.println(dbObject);
             }
         }
-
+        cur.close();
         return all;
     }
 
@@ -208,6 +223,36 @@ public class Database {
         }
         
         return null;
+    }
+    
+    public DatabaseSyncMessage getSyncMessage() {
+        DatabaseSyncMessage syncMessage = new DatabaseSyncMessage();
+        List<String> databases = mongo.getDatabaseNames();
+        for (String managerName : databases) {
+            if (managerName.equals("LoggerManager")) {
+                continue;
+            }
+            Set<String> collectionNames = mongo.getDB(managerName).getCollectionNames();
+            for (String colName : collectionNames) {
+                DBCollection collection = mongo.getDB(managerName).getCollection(colName);
+                ManagerData data = new ManagerData();
+                data.collection = colName;
+                data.database = managerName;
+                data.datas = getData(collection);
+                syncMessage.managerDatas.add(data);
+            }
+        }
+        return syncMessage;
+    }
+
+    public void save(DatabaseSyncMessage sync) {
+        for (ManagerData managerData : sync.managerDatas) {
+            DBCollection col = mongo.getDB(managerData.database).getCollection(managerData.collection);
+            for (DataCommon data : managerData.datas) {
+                DBObject dbObject = morphia.toDBObject(data);
+                col.save(dbObject);
+            }
+        }
     }
 }
 class DataCommonSorter implements Comparator<DataCommon> {

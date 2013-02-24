@@ -4,10 +4,8 @@
  */
 package com.thundashop.core.databasemanager;
 
-import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ErrorMessage;
-import com.thundashop.core.databasemanager.data.Credentials;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -32,10 +30,11 @@ public class DatabaseSocketThread implements Runnable {
 
     private void processNormalMessage(Object object) {
         if (object instanceof DataObjectSavedMessage) {
+            System.out.println("Testing the thingy");
+            
             DataObjectSavedMessage objectSaved = (DataObjectSavedMessage)object;
-            DataCommon data = objectSaved.data;
-            Credentials credentials = objectSaved.credentials;
-            database.objectFromOtherSource(data, credentials);
+            socketHandler.processNormalMessage(objectSaved);
+            System.out.println("Testing the thingy completed");
         }
     }
     
@@ -84,8 +83,8 @@ public class DatabaseSocketThread implements Runnable {
             Paused paused = (Paused)object;            
             DatabaseSocketHandler.hookupHandler.serverResponded(paused);
             if (DatabaseSocketHandler.hookupHandler.ready()) {
-                socketHandler.sendContinueMessage();
-                socketHandler.sendDatabase(DatabaseSocketHandler.hookupHandler.getClientServerAddress());
+                socketHandler.waitForSingleThreadRunning();
+                socketHandler.sendContinueMessageAndDatabase(DatabaseSocketHandler.hookupHandler.getClientServerAddress());
                 DatabaseSocketHandler.hookupHandler = null;
             }
         }
@@ -113,6 +112,7 @@ public class DatabaseSocketThread implements Runnable {
         }
         
         socketHandler.remove(this);
+       
     } 
 
     private void sendErrorMessage(ErrorException ex) {
@@ -130,7 +130,11 @@ public class DatabaseSocketThread implements Runnable {
 
     private void handleSyncMessage(Object object) {
         if (object instanceof DatabaseSyncMessage) {
-            System.out.println("YES, I GOT THE DATA");
+            DatabaseSyncMessage sync = (DatabaseSyncMessage)object;
+            socketHandler.syncServer(sync);
+            socketHandler.remove(this);
+            System.out.println("Sync completed, ready to start server");
+            System.exit(0);
         }
     }
 

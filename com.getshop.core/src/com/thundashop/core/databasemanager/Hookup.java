@@ -5,6 +5,7 @@
 package com.thundashop.core.databasemanager;
 
 import com.thundashop.core.common.AppContext;
+import com.thundashop.core.common.StorePool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -53,12 +54,15 @@ public class Hookup {
     
     public static void main(String args[]) {
         args = new String[2];
-        args[0] = "10.0.0.130";
-        args[1] = "10.0.0.123";
+        args[0] = "10.0.0.123";
+        args[1] = "10.0.0.130";
         
         ApplicationContext context = new ClassPathXmlApplicationContext("All.xml");
         AppContext.appContext = context;
-        context.getBean(DatabaseSocketHandler.class).startListener(args[0]);
+        AppContext.storePool = new StorePool();
+        DatabaseSocketHandler handler2 = context.getBean(DatabaseSocketHandler.class);
+        handler2.startListener(args[0]);
+        
         Hookup handler = context.getBean(Hookup.class);
         handler.start(args);
     }

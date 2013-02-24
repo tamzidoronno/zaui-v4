@@ -4,20 +4,30 @@
  */
 package com.thundashop.core.databasemanager;
 
+import com.thundashop.core.common.ASyncHandler;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.loggermanager.data.LoggerData;
+import com.thundashop.core.reportingmanager.data.Report;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayDeque;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.ReentrantLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,11 +37,13 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class DatabaseSocketHandler implements Runnable {
+    private File messageQueueFile = new File("data/messagesToProcess.txt");
+    public ReentrantLock fairLock = new ReentrantLock(true);
     public static HookupHandler hookupHandler;
     private ConcurrentLinkedQueue<DatabaseSocketThread> currentlyRunning = new ConcurrentLinkedQueue();
     private HashMap<String, UnsentMessageQueue> unsentQueues = new HashMap();
     private AddressList addressList;
-    
+    private ArrayDeque messageQueue = new ArrayDeque();
     public AtomicBoolean paused = new AtomicBoolean(false);
     
    
@@ -44,6 +56,22 @@ public class DatabaseSocketHandler implements Runnable {
     public DatabaseSocketHandler(Logger log) {
         this.log = log;
         addressList = new AddressList(log);
+        loadMessageQueueFromDisk();
+        
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() { 
+                System.out.println("Checking if there is now currently running data transfer before exiting, please wait");
+                int i = 0;
+                while(!currentlyRunning.isEmpty()) {
+                    i++;
+                    try { Thread.sleep(100); } catch (Exception ex) { }
+                    if (i > 20) {
+                        i=0;
+                        System.out.println("Running: " + currentlyRunning.size());
+                    }
+                }
+            }
+         });
     }
     
     public void startListener(String localAddress) {
@@ -68,18 +96,65 @@ public class DatabaseSocketHandler implements Runnable {
      * is able to be processed by the 
      * rest
      */
-    public synchronized void objectSaved(DataCommon data, Credentials credentials) {
-        if (ignoreSyncData(data)) {
-            return;
+    public void objectSaved(DataCommon data, Credentials credentials) {
+        ASyncHandler handler = new ASyncHandler(data, credentials);
+        messageQueue.add(handler);
+        saveMessageQueueToDisk();
+        handler.handleMessage(this);
+    }
+    
+    public void handleMessage(DataCommon data, Credentials credentials, ASyncHandler handler) {
+        fairLock.lock();
+        if (!ignoreSyncData(data)) {
+            for (String address : addressList.getIpaddressesThatAreNotMine()) {
+                DataObjectSavedMessage saved = createObjectSaved(data, credentials);
+                sendMessage(saved, address);
+            }            
         }
-            
-        for (String address : addressList.getIpaddressesThatAreNotMine()) {
-            DataObjectSavedMessage saved = createObjectSaved(data, credentials);
-            sendMessage(saved, address);
+        messageQueue.remove(handler);
+        saveMessageQueueToDisk();
+        fairLock.unlock();
+    }
+    
+    private void saveMessageQueueToDisk() {
+        try (
+            FileOutputStream outFileStream = new FileOutputStream(messageQueueFile);
+            ObjectOutputStream outStream = new ObjectOutputStream(outFileStream);
+        ) {
+            outStream.writeObject(messageQueue);
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex2) {
+            ex2.printStackTrace();
         }
     }
     
-    public synchronized void resend(String address) {
+    private void loadMessageQueueFromDisk() {
+        if (!messageQueueFile.exists()) {
+            return;
+        }
+        
+        try (
+            FileInputStream inStream = new FileInputStream(messageQueueFile);
+            ObjectInputStream objectStream = new ObjectInputStream(inStream);
+        ) {
+            messageQueue = (ArrayDeque)objectStream.readObject();
+            Iterator<ASyncHandler> i = messageQueue.iterator();
+            while(i.hasNext()) {
+                ASyncHandler handler = i.next();
+                handler.handleMessage(this);
+            }
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (FileNotFoundException ex2) {
+            ex2.printStackTrace();
+        } catch (IOException ex3) {
+            ex3.printStackTrace();
+        }
+    }
+    
+    public void resend(String address) {
+        fairLock.lock();
         UnsentMessageQueue messageQueue = getUnsentQueue(address);
         List<DataObjectSavedMessage> savedObjects = messageQueue.getObjects();
         unsentQueues.remove(address);
@@ -90,9 +165,11 @@ public class DatabaseSocketHandler implements Runnable {
             DataObjectSavedMessage saved = createObjectSaved(data, objectSaved.credentials);
             sendMessage(saved, address);
         }
+        fairLock.unlock();
     }
     
-    public synchronized void hookup(String localAddress, String remoteAddress) {
+    public void hookup(String localAddress, String remoteAddress) {
+        fairLock.lock();
         addressList.clear();
         addressList.register(localAddress);
         addressList.register(remoteAddress);
@@ -109,17 +186,22 @@ public class DatabaseSocketHandler implements Runnable {
         
         log.info(this, "Starting hookup procedure, connecting to " + remoteAddress);
         HookupMessage hookup = new HookupMessage();
+        hookup.connectedToIpaddress = remoteAddress;
         hookup.ownerIpaddress = addressList.getMyAddress();
+        
         
         boolean success = sendMessage(hookup, remoteAddress);
         if (!success) {
             System.out.println("Was not able start hookup process, connection refused: " + remoteAddress);
             System.exit(0);
         }
+        fairLock.unlock();
     }
     
-    public synchronized void hookupMessageRetreived(HookupHandler hookupHandler) throws ErrorException { 
+    public void hookupMessageRetreived(HookupHandler hookupHandler) throws ErrorException { 
+        fairLock.lock();
         addressList.register(hookupHandler.getClientServerAddress());
+        addressList.register(hookupHandler.getClientConnectedToAddress());
         for (String address : addressList.getIpaddressesThatAreNotMine()) {
             AddServerMessage message = new AddServerMessage();
             message.fromServer = addressList.getMyAddress();
@@ -129,9 +211,11 @@ public class DatabaseSocketHandler implements Runnable {
                 throw new ErrorException(1);
             }
         }
+        fairLock.unlock();
     }
     
-    public synchronized void addServer(String serverAddress, String fromServer) {
+    public void addServer(String serverAddress, String fromServer) {
+        fairLock.lock();
         addressList.register(serverAddress);
         Paused pausedMessage = new Paused();
         pausedMessage.ipaddress = addressList.getMyAddress();
@@ -150,6 +234,7 @@ public class DatabaseSocketHandler implements Runnable {
         }
         
         log.info(this, "Continued");
+        fairLock.unlock();
     }
    
     private void handleSockets(ServerSocket serverSocket) {
@@ -201,7 +286,7 @@ public class DatabaseSocketHandler implements Runnable {
     }
 
     private boolean ignoreSyncData(DataCommon data) {
-        if (data instanceof LoggerData) {
+        if (data instanceof LoggerData || data instanceof Report) {
             return true;
         }
             
@@ -222,7 +307,6 @@ public class DatabaseSocketHandler implements Runnable {
 
         if (address.equals("")) {
             log.error(this, "Could not send startup message, not able to find local ipaddress");
-            System.exit(-1);
         } else {
             ServerStartedMessage serverStarted = new ServerStartedMessage();
             serverStarted.address = address;
@@ -244,16 +328,44 @@ public class DatabaseSocketHandler implements Runnable {
         currentlyRunning.remove(remove);
     }
 
-    public synchronized void sendContinueMessage() {
+    /**
+     * This function will ensure that
+     * all threads are finished processing before
+     * exporting of database.
+     */
+    public void waitForSingleThreadRunning() {
+        while (currentlyRunning.size() > 1) {
+            try {Thread.sleep(1000);} catch (Exception ex) {}
+        }
+    }
+    
+    public void sendContinueMessageAndDatabase(String clientServerAddress) {
+        fairLock.lock();
         for (String address : addressList.getIpaddressesThatAreNotMine()) {
             ContinueMessage continueMessage = new ContinueMessage();
             sendMessage(continueMessage, address);
         }
-    }
-    
-    public synchronized void sendDatabase(String clientServerAddress) {
-        DatabaseSyncMessage syncMessage = new DatabaseSyncMessage();
+        
+        DatabaseSyncMessage syncMessage = database.getSyncMessage();
+        syncMessage.completeNetwork = addressList.getAllAddresses();
         sendMessage(syncMessage, clientServerAddress);
+        fairLock.unlock();
     }
 
+    public void processNormalMessage(DataObjectSavedMessage objectSaved) {
+        fairLock.lock();
+        DataCommon data = objectSaved.data;
+        Credentials credentials = objectSaved.credentials;
+        database.objectFromOtherSource(data, credentials);
+        fairLock.unlock();
+    }
+
+    public void syncServer(DatabaseSyncMessage sync) {
+        fairLock.lock();
+        database.save(sync);
+        for (String address : sync.completeNetwork) {
+            addressList.register(address);
+        }
+        fairLock.unlock();
+    }
 }

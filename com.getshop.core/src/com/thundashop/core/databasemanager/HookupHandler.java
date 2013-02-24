@@ -47,5 +47,9 @@ public class HookupHandler {
         
         return true;
     }
+
+    public String getClientConnectedToAddress() {
+        return message.connectedToIpaddress;
+    }
     
 }

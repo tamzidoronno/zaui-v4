@@ -11,5 +11,6 @@ import com.thundashop.core.common.MessageBase;
  * @author ktonder
  */
 public class HookupMessage extends MessageBase {
+    public String connectedToIpaddress;
     public String ownerIpaddress;
 }

@@ -267,10 +267,10 @@ public class GeneratePhpApi {
             String filePath = getPath(entry);
             String classname = createPhpClassName(entry, filename);
             content += "\t/**\r\n";
-            content += "\t * @return " + classname + "\r\n";
+            content += "\t * @return \\" + classname + "\r\n";
             content += "\t */\r\n";
             content += "\tpublic static function " + classname + "() {\r\n";
-            content += "\t\treturn new " + classname + "();\r\n";
+            content += "\t\treturn new \\" + classname + "();\r\n";
             content += "\t}\r\n";
             content += "\t\r\n";
         }

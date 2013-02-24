@@ -4,6 +4,8 @@
  */
 package com.thundashop.core.pagemanager;
 
+import com.thundashop.core.appmanager.AppManager;
+import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
@@ -194,25 +196,26 @@ public class PagePoolImpl {
 
     private Page createPage(int type, String pageId) throws ErrorException {
         Page existingPage = pages.get(pageId);
-        if (existingPage != null)
+        if (existingPage != null) {
             throw new ErrorException(90);
-        
+        }
+
         Page page = new Page();
         page.type = type;
         page.id = pageId;
         page.addAllPageAreas();
         page.storeId = storeId;
-        return page;    
+        return page;
     }
 
     private AppConfiguration addApplication(String appName, Page page, String pageArea) throws ErrorException {
         AppConfiguration app = applicationPool.createNewApplication(appName);
         return addExistingApplication(app, page, pageArea);
     }
-    
+
     private AppConfiguration addExistingApplication(AppConfiguration app, Page page, String pageArea) {
         PageArea area = page.pageAreas.get(pageArea);
-        if(area.applicationsList == null) {
+        if (area.applicationsList == null) {
             area.applicationsList = new ArrayList();
         }
         area.applicationsList.add(app.id);
@@ -344,7 +347,7 @@ public class PagePoolImpl {
     }
 
     void savePage(Page page) throws ErrorException {
-         databaseSaver.saveObject(page, credentials);
+        databaseSaver.saveObject(page, credentials);
     }
 
 }

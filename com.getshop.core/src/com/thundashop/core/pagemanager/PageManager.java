@@ -4,6 +4,8 @@
  */
 package com.thundashop.core.pagemanager;
 
+import com.thundashop.core.appmanager.AppManager;
+import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -113,7 +115,8 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     @Override
     public List<AppConfiguration> getApplications() {
-        return new ArrayList(applicationPool.getApplications().values());
+        List<AppConfiguration> result = new ArrayList(applicationPool.getApplications().values());
+        return result;
     }
 
     @Override
@@ -230,5 +233,4 @@ public class PageManager extends ManagerBase implements IPageManager {
         
         return result;
     }
-
 }

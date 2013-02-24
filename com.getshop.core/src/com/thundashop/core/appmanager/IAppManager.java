@@ -22,7 +22,6 @@ public interface IAppManager {
      * Fetch all the applications connected to you.
      * @return 
      */
-    @Administrator
     public List<ApplicationSettings> getAllApplications() throws ErrorException;
     
     /**

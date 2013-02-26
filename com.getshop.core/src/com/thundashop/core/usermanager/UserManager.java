@@ -1,14 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thundashop.core.usermanager;
 
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.messagemanager.MailFactory;
-import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.data.User;
 import java.security.MessageDigest;
 import java.util.ArrayList;

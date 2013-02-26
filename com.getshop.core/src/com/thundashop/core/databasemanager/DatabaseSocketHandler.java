@@ -97,22 +97,26 @@ public class DatabaseSocketHandler implements Runnable {
      * rest
      */
     public void objectSaved(DataCommon data, Credentials credentials) {
-        ASyncHandler handler = new ASyncHandler(data, credentials);
-        messageQueue.add(handler);
-        saveMessageQueueToDisk();
-        handler.handleMessage(this);
+        synchronized(messageQueue) {
+            ASyncHandler handler = new ASyncHandler(data, credentials);
+            messageQueue.add(handler);
+            saveMessageQueueToDisk();
+            handler.handleMessage(this);
+        }
     }
     
     public void handleMessage(DataCommon data, Credentials credentials, ASyncHandler handler) {
         fairLock.lock();
-        if (!ignoreSyncData(data)) {
-            for (String address : addressList.getIpaddressesThatAreNotMine()) {
-                DataObjectSavedMessage saved = createObjectSaved(data, credentials);
-                sendMessage(saved, address);
-            }            
+        synchronized(messageQueue) {
+            if (!ignoreSyncData(data)) {
+                for (String address : addressList.getIpaddressesThatAreNotMine()) {
+                    DataObjectSavedMessage saved = createObjectSaved(data, credentials);
+                    sendMessage(saved, address);
+                }            
+            }
+            messageQueue.remove(handler);
+            saveMessageQueueToDisk();
         }
-        messageQueue.remove(handler);
-        saveMessageQueueToDisk();
         fairLock.unlock();
     }
     
@@ -223,7 +227,7 @@ public class DatabaseSocketHandler implements Runnable {
         paused.set(true);
         
         int counter = 0;
-        log.info(this, "Paused");
+        log.debug(this, "Paused");
         while(paused.get()) {
             try { Thread.sleep(100); } catch (Exception ex) {}
             counter++;
@@ -233,7 +237,7 @@ public class DatabaseSocketHandler implements Runnable {
             }
         }
         
-        log.info(this, "Continued");
+        log.debug(this, "Continued");
         fairLock.unlock();
     }
    
@@ -241,7 +245,7 @@ public class DatabaseSocketHandler implements Runnable {
         while(true) {
             try {
                 Socket socket = serverSocket.accept();
-                DatabaseSocketThread thread = new DatabaseSocketThread(socket, database, this);
+                DatabaseSocketThread thread = new DatabaseSocketThread(socket, this);
                 currentlyRunning.add(thread);
                 new Thread(thread).start();
             } catch (IOException ex) {
@@ -273,7 +277,7 @@ public class DatabaseSocketHandler implements Runnable {
             Socket socket = new Socket(address, 31337); 
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream())
         ) {
-            log.info(this, "sending message " + object);
+            log.debug(this, "sending message " + object);
             objectOutputStream.writeObject(object);
         } catch (Exception ex) {
             if (object instanceof DataObjectSavedMessage) {

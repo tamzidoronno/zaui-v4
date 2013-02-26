@@ -19,22 +19,17 @@ import java.util.logging.Logger;
  */
 public class DatabaseSocketThread implements Runnable {
     private Socket socket;
-    private Database database;
     private DatabaseSocketHandler socketHandler;
     
-    public DatabaseSocketThread(Socket socket, Database database, DatabaseSocketHandler socketHandler) {
-        this.database = database;
+    public DatabaseSocketThread(Socket socket, DatabaseSocketHandler socketHandler) {
         this.socket = socket;
         this.socketHandler = socketHandler;
     }
 
     private void processNormalMessage(Object object) {
         if (object instanceof DataObjectSavedMessage) {
-            System.out.println("Testing the thingy");
-            
             DataObjectSavedMessage objectSaved = (DataObjectSavedMessage)object;
             socketHandler.processNormalMessage(objectSaved);
-            System.out.println("Testing the thingy completed");
         }
     }
     

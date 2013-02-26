@@ -14,6 +14,7 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.StoreHandler;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.storemanager.StoreManager;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -120,7 +121,6 @@ public class Database {
     private void addDataCommonToDatabase(DataCommon data, Credentials credentials) {
         DBObject dbObject = morphia.toDBObject(data);
         mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + data.storeId).save(dbObject);
-        System.out.println("added: " + dbObject);
     }
 
     public List<DataCommon> retreiveData(Credentials credentials) {
@@ -203,8 +203,14 @@ public class Database {
 
     public void objectFromOtherSource(DataCommon dataCommon, Credentials credentials) {
         addDataCommonToDatabase(dataCommon, credentials);
-        StoreHandler storeHandler = AppContext.storePool.getStorePool(credentials.storeid);
-        ManagerBase managerBase = storeHandler.getManager(credentials.getManager());
+        ManagerBase managerBase;
+        if (credentials.manangerName.equals(StoreManager.class.getSimpleName())) {
+            managerBase = AppContext.appContext.getBean(StoreManager.class);
+        } else {
+            StoreHandler storeHandler = AppContext.storePool.getStorePool(credentials.storeid);
+            managerBase = storeHandler.getManager(credentials.getManager());
+        }
+        
         DataRetreived dataRetreived = new DataRetreived();
         dataRetreived.data = new ArrayList();
         dataRetreived.data.add(dataCommon);

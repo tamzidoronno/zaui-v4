@@ -3,6 +3,7 @@ package com.thundashop.core.socket;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.thundashop.core.common.CachingKey;
+import com.thundashop.core.common.Logger;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -23,6 +24,7 @@ public class CacheManager extends Thread {
     int port = 25555;
     private ServerSocket serverSocket;
 
+    @Override
     public void run() {
         startListener();
     }
@@ -32,7 +34,6 @@ public class CacheManager extends Thread {
             connections = new ArrayList();
             serverSocket = new ServerSocket(this.port);
             storeCacheKeys = new HashMap();
-            System.out.println("Listening for chaching connections on: " + this.port);
         } catch (IOException ex) {
             System.out.println("");
             System.out.println("=============================================================================================");

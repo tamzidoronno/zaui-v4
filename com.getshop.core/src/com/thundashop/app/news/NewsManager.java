@@ -20,8 +20,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 public class NewsManager extends ManagerBase implements INewsManager {
-    public List<NewsEntry> entries = new ArrayList<NewsEntry>();
-    public List<MailSubscription> subscribers = new ArrayList<MailSubscription>();
+    public HashMap<String, NewsEntry> entries = new HashMap();
+    public HashMap<String, MailSubscription> subscribers = new HashMap();
     
     @Autowired
     public NewsManager(DatabaseSaver databaseSaver, Logger logger) throws ErrorException {
@@ -32,23 +32,25 @@ public class NewsManager extends ManagerBase implements INewsManager {
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon retData : data.data) {
             if (retData instanceof NewsEntry) {
-                entries.add((NewsEntry) retData);
+                NewsEntry newEntry = (NewsEntry)retData;
+                entries.put(newEntry.id, newEntry);
             }
             if (retData instanceof MailSubscription) {
-                subscribers.add((MailSubscription) retData);
+                MailSubscription subscription = (MailSubscription)retData;
+                subscribers.put(subscription.id, subscription);
             }
         }
     }
 
     public List<MailSubscription> getNewsSubscriptors() {
-        return subscribers;
+        return new ArrayList<MailSubscription>(subscribers.values());
     }
 
     @Override
     public List<NewsEntry> getAllNews() throws ErrorException {
         List<NewsEntry> data;
         if (entries != null) {
-            data = entries;
+            data = new ArrayList<NewsEntry>(entries.values());
         } else {
             data = new ArrayList();
         }
@@ -100,12 +102,12 @@ public class NewsManager extends ManagerBase implements INewsManager {
 
     @Override
     public List<MailSubscription> getAllSubscribers() throws ErrorException {
-        return subscribers;
+        return new ArrayList<MailSubscription>(subscribers.values());
     }
 
     private NewsEntry createNewsEntry(String news) throws ErrorException {
         if (entries == null) {
-            entries = new ArrayList();
+            entries = new HashMap();
         }
         
         NewsEntry entry = new NewsEntry();
@@ -114,13 +116,13 @@ public class NewsManager extends ManagerBase implements INewsManager {
         entry.storeId = storeId;
         
         databaseSaver.saveObject(entry, credentials);
-        entries.add(entry);
+        entries.put(entry.id, entry);
         
         return entry;
     }
 
     private NewsEntry getNewsEntry(String id) {
-        for(NewsEntry entry : entries) {
+        for(NewsEntry entry : entries.values()) {
             if(entry.id.equals(id)) {
                 return entry;
             }
@@ -140,15 +142,16 @@ public class NewsManager extends ManagerBase implements INewsManager {
         databaseSaver.saveObject(sub, credentials);
         
         if(subscribers == null) {
-            subscribers = new ArrayList();
+            subscribers = new HashMap();
         }
-        subscribers.add(sub);
+        
+        subscribers.put(sub.id, sub);
         
         return sub;
     }
 
     private MailSubscription findMailSubscriber(String id) {
-        for(MailSubscription sub : subscribers) {
+        for(MailSubscription sub : subscribers.values()) {
             if(sub.id.equals(id)) {
                 return sub;
             }

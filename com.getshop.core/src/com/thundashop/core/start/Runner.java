@@ -1,11 +1,13 @@
 package com.thundashop.core.start;
 
 
-import com.thundashop.core.socket.WebInterface2;
-import com.thundashop.core.common.StorePool;
 import com.thundashop.core.common.AppContext;
+import com.thundashop.core.common.Logger;
+import com.thundashop.core.common.StorePool;
 import com.thundashop.core.databasemanager.Database;
+import com.thundashop.core.databasemanager.DatabaseSocketHandler;
 import com.thundashop.core.socket.CacheManager;
+import com.thundashop.core.socket.WebInterface2;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -21,8 +23,7 @@ public class Runner {
     public static void main(String[] args) throws InterruptedException, Exception {  
         ApplicationContext context = new ClassPathXmlApplicationContext("All.xml");
         AppContext.appContext = context;
-        
-        
+        Logger log = context.getBean(Logger.class);
         
         StorePool storePool = new StorePool();
         AppContext.storePool = storePool;
@@ -32,10 +33,11 @@ public class Runner {
             context.getBean(Database.class).activateSandBox();
         }
         
-        new WebInterface2(storePool, port); //Version 2.
+        new WebInterface2(log, storePool, port); //Version 2.
         CacheManager cache = new CacheManager();
         cache.start();
-        
         AppContext.cacheManager = cache;
+        
+        context.getBean(DatabaseSocketHandler.class).startListener("");
     }
 }

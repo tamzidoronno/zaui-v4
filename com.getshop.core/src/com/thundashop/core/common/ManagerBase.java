@@ -38,14 +38,14 @@ public class ManagerBase {
     }
     
     public void initialize() {
-        Credentials credentials = new Credentials();
+        Credentials credentials = new Credentials(this.getClass());
         credentials.manangerName = this.getClass().getSimpleName();
         credentials.password = UUID.randomUUID().toString();
         credentials.storeid = storeId;
         
         this.credentials = credentials;
         
-        if (databaseSaver != null && database != null) {
+        if (databaseSaver != null && database != null && !credentials.manangerName.equals("LoggerManager")) {
             DataRetreived dataRetreived = new DataRetreived();
             dataRetreived.data = database.retreiveData(credentials);
             ((ManagerBase)this).dataFromDatabase(dataRetreived);

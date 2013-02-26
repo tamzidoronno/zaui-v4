@@ -35,7 +35,7 @@ public class PageManager extends ManagerBase implements IPageManager {
     @Autowired
     public PageManager(Logger log, DatabaseSaver databaseSaver) {
         super(log, databaseSaver);
-        credentials = new Credentials();
+        credentials = new Credentials(getClass());
         credentials.manangerName = this.getClass().getSimpleName();
     }
     

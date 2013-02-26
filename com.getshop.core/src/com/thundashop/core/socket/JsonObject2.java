@@ -1,13 +1,13 @@
 package com.thundashop.core.socket;
 
-import java.util.List;
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  *
  * @author boggi
  */
-public class JsonObject2 {
+public class JsonObject2 implements Serializable {
     public String method;
     public String interfaceName;
     public String sessionId;

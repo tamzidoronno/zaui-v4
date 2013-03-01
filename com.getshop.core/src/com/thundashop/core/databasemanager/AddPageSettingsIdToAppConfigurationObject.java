@@ -83,21 +83,11 @@ public class AddPageSettingsIdToAppConfigurationObject {
             DBCursor allDocs = selectedCollection.find();
             while (allDocs.hasNext()) {
                 DataCommon dataCommon = convert(allDocs.next());
-                if (dataCommon instanceof Page) {
-                    Page page = (Page) dataCommon;
-                    for (String area : page.pageAreas.keySet()) {
-                        PageArea pageArea = page.pageAreas.get(area);
-
-                        for (String appId : pageArea.applicationsList) {
-                            AppConfiguration app = pool.get(appId);
-                            if (app != null && check.get(app.appName) != null) {
-                                System.out.println("Setting " + app.id + " : " + app.appName + " to : " + check.get(app.appName));
-                                app.appSettingsId = check.get(app.appName);
-                                selectedCollection.save(morphia.toDBObject(app));
-                            }
-                        }
-                    }
-
+                if (dataCommon instanceof AppConfiguration) {
+                    AppConfiguration config = (AppConfiguration)dataCommon;
+                    config.appSettingsId = check.get(config.appName);
+                    System.out.println("Setting : " + config.id + " : " + check.get(config.appName));
+                    selectedCollection.save(morphia.toDBObject(config));
                 }
             }
         }

@@ -32,6 +32,14 @@ public interface IPageManager {
     public Page createPage(int layout, String parentId) throws ErrorException;
     
     /**
+     * Same as add application just by using its id.
+     * @param id
+     * @return
+     * @throws ErrorException 
+     */
+    public AppConfiguration addApplicationBySettingsId(String id) throws ErrorException;
+    
+    /**
      * Create a new page with the specified id.
      * For layouts available, see layouts for createPage function
      * 
@@ -73,23 +81,42 @@ public interface IPageManager {
     
     /**
      * Add an application to a given page area.
+     * This is function is deprecated due to new application management system where id is used instead.
+     * Use addApplicationToPageBySettingsId instead.
      * @param pageId The id of the page to add it to.
      * @param applicationName The name of the application to add.
      * @param pageArea The area to attach it to on the page. ("header","left","middle","right","footer")
      * @return
      * @throws ErrorException 
      */
+    @Deprecated
     @Editor
     public AppConfiguration addApplicationToPage(String pageId, String applicationName, String pageArea) throws ErrorException;
+    
+    
+    /**
+     * If you know the id of the application you want to add, we strongly recommend to use this call.
+     * This function 
+     * @param pageId The id of the page to add the application to
+     * @param settingsId The settings id which identify what applications is being added.
+     * @param pageArea The area this application should be added to.
+     * @return AppConfiguration
+     * @throws ErrorException 
+     */
+    @Editor
+    public AppConfiguration addApplicationToPageBySettingsId(String pageId, String settingsId, String pageArea) throws ErrorException;
+    
     
     /**
      * Add application to store, this is usually singleton applications<br>
      * A singleton application is not being attached to a page.
-     * 
+     * This is function is deprecated due to new application management system where id is used instead.
+     * use addApplicationBySettingsId instead.
      * @param appName
      * @return
      * @throws ErrorException 
      */
+    @Deprecated
     @Editor
     public AppConfiguration addApplication(String appName) throws ErrorException;
     

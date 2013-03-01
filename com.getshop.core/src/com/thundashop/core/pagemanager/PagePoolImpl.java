@@ -99,6 +99,14 @@ public class PagePoolImpl {
         databaseSaver.saveObject(page, credentials);
         return app;
     }
+    
+    AppConfiguration addApplicationToPage(String pageId, String appName, String pageArea, String settingsId) throws ErrorException {
+        AppConfiguration app = addApplicationToPage(pageId, appName, pageArea);
+        Page page = get(pageId);
+        app.appSettingsId = settingsId;
+        databaseSaver.saveObject(page, credentials);
+        return app;
+    }
 
     public Page removeApplication(String applicationId) throws ErrorException {
         for (Page page : pages.values()) {
@@ -349,5 +357,7 @@ public class PagePoolImpl {
     void savePage(Page page) throws ErrorException {
         databaseSaver.saveObject(page, credentials);
     }
+
+    
 
 }

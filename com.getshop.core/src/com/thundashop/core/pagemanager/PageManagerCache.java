@@ -167,4 +167,17 @@ public class PageManagerCache implements IPageManager {
     public HashMap<String, String> translatePages(List<String> pages) throws ErrorException {
         return null;
     }
+
+    @Override
+    public AppConfiguration addApplicationToPageBySettingsId(String pageId, String settingsId, String pageArea) throws ErrorException {
+        getApplications();
+        getPage(pageId);
+        return null;
+    }
+
+    @Override
+    public AppConfiguration addApplicationBySettingsId(String id) throws ErrorException {
+        getApplications();
+        return null;
+    }
 }

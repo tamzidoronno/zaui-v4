@@ -95,7 +95,7 @@ public class AddPageSettingsIdToAppConfigurationObject {
                                 app.appSettingsId = check.get(app.appName);
                                 selectedCollection.save(morphia.toDBObject(app));
                             }
-                        }
+                        } 
                     }
 
                 }

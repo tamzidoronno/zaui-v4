@@ -120,6 +120,7 @@ public class Database {
     
     private void addDataCommonToDatabase(DataCommon data, Credentials credentials) {
         DBObject dbObject = morphia.toDBObject(data);
+        System.out.println(credentials.manangerName);
         mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + data.storeId).save(dbObject);
     }
 

@@ -1,7 +1,6 @@
 package com.thundashop.core.appmanager.data;
 
 import com.thundashop.core.common.DataCommon;
-import java.util.Comparator;
 import java.util.List;
 
 public class ApplicationSettings extends DataCommon {
@@ -14,5 +13,6 @@ public class ApplicationSettings extends DataCommon {
     public Double price;
     public String userId;
     public String type;
+    public String ownerStoreId;
 
 }

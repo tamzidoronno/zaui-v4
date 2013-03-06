@@ -125,6 +125,15 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     @Override
+    public AppConfiguration addApplicationBySettingsId(String id) throws ErrorException {
+        AppManager manager = getManager(AppManager.class);
+        AppConfiguration res = applicationPool.createNewApplication(manager.getApplication(id).appName);
+        res.appSettingsId = id;
+        databaseSaver.saveObject(res, credentials);
+        return res;
+    }
+
+    @Override
     public void saveApplicationConfiguration(AppConfiguration config) throws ErrorException {
         applicationPool.saveApplicationConfiguration(config);
     }
@@ -232,5 +241,12 @@ public class PageManager extends ManagerBase implements IPageManager {
         }
         
         return result;
+    }
+
+    @Override
+    public AppConfiguration addApplicationToPageBySettingsId(String pageId, String settingsId, String pageArea) throws ErrorException {
+        AppManager app = getManager(AppManager.class);
+        ApplicationSettings settings = app.getApplication(settingsId);
+        return pagePool.addApplicationToPage(pageId, settings.appName, pageArea, settingsId);
     }
 }

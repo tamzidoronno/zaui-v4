@@ -71,9 +71,6 @@ public class GeneratePhpApi {
         }
         File[] files = directory.listFiles();
         for (File file : files) {
-            if(file.getAbsolutePath().contains("/api/")) {
-                continue;
-            }
             String fileName = file.getName();
             if (file.isDirectory()) {
                 assert !fileName.contains(".");

@@ -8,6 +8,8 @@ public class GetShopApi {
            this.transport.port = port;
            this.transport.host = host;
            this.transport.sessionId = sessionId;
+           this.transport.webaddress = webaddress;
+           this.transport.api = this;
            this.transport.connect();
            getStoreManager().initializeStore(webaddress, sessionId);
       }

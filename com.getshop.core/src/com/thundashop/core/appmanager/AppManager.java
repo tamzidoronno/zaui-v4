@@ -1,6 +1,7 @@
 package com.thundashop.core.appmanager;
 
 import com.thundashop.core.appmanager.data.ApplicationSettings;
+import com.thundashop.core.appmanager.data.ApplicationSynchronization;
 import com.thundashop.core.appmanager.data.AvailableApplications;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
@@ -22,6 +23,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 public class AppManager extends ManagerBase implements IAppManager {
+    public List<ApplicationSynchronization> toSync;
+    
 //    TODO
 //    US this variable to retreive data.
 //    private AvailableApplications applications = new AvailableApplications();
@@ -36,16 +39,16 @@ public class AppManager extends ManagerBase implements IAppManager {
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
-//        for (DataCommon dataObject : data.data) {
-//            if (dataObject instanceof AvailableApplications) {
-//                applications = (AvailableApplications) dataObject;
-//            }
-//        }
+        for (DataCommon dataObject : data.data) {
+            if (dataObject instanceof ApplicationSynchronization) {
+                addToSync((ApplicationSynchronization)dataObject);
+            }
+        }
     }
 
     @Override
     public List<ApplicationSettings> getAllApplications() throws ErrorException {
-        return applicationPool.getAll();
+        return applicationPool.getAll(this.getSession().storeId);
     }
 
     @Override
@@ -87,13 +90,55 @@ public class AppManager extends ManagerBase implements IAppManager {
 
     @Override
     public ApplicationSettings getApplication(String id) throws ErrorException {
-        for (ApplicationSettings appSettings : applicationPool.getAll()) {
+        for (ApplicationSettings appSettings : getAllApplications()) {
             String appId = appSettings.id;
             if (appId.equals(id)) {
                 return applicationPool.get(appId);
             }
         }
-        return null;
+        throw new ErrorException(18);
+    }
+
+    @Override
+    public void setSyncApplication(String id) throws ErrorException {
+        ApplicationSettings app = this.getApplication(id);
+        ApplicationSynchronization sync = new ApplicationSynchronization();
+        sync.appId = app.id;
+        sync.userId = getSession().currentUser.id;
+        addToSync(sync);
+        sync.storeId = storeId;
+        databaseSaver.saveObject(sync, credentials);
+    }
+
+    private void addToSync(ApplicationSynchronization sync) {
+        if(toSync == null) {
+            toSync = new ArrayList();
+        }
+        
+        toSync.add(sync);
+    }
+
+    @Override
+    public List<ApplicationSynchronization> getSyncApplications() throws ErrorException {
+        if(toSync == null) {
+            return new ArrayList();
+        }
+        
+        List<ApplicationSynchronization> result = new ArrayList();
+        String loggedOnuserId = getSession().currentUser.id;
+        for(ApplicationSynchronization sync : toSync) {
+            if(sync.userId.equals(loggedOnuserId)) {
+                result.add(sync);
+            }
+        }
+        
+        //Cleaning time.
+        for(ApplicationSynchronization syncer : result) {
+            databaseSaver.deleteObject(syncer, credentials);
+            toSync.remove(syncer);
+        }
+        
+        return result;
     }
 
 }

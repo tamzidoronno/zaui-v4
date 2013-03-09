@@ -64,10 +64,20 @@ public class ApplicationPool extends ManagerBase {
         }
     }
 
-    public List<ApplicationSettings> getAll() {
+    public List<ApplicationSettings> getAll(String storeid) {
         ArrayList<ApplicationSettings> list = new ArrayList(applications.values());
-        Collections.sort(list, new ApplicationSettings());
-        return list;
+        
+        ArrayList<ApplicationSettings> returnlist = new ArrayList();
+        for(ApplicationSettings settings : list) {
+            if(settings.isPublic) {
+                returnlist.add(settings);
+            } else if(settings.ownerStoreId.equals(storeid)) {
+                returnlist.add(settings);
+            }
+        }
+        
+        Collections.sort(returnlist, new ApplicationSettings());
+        return returnlist;
     }
     
     

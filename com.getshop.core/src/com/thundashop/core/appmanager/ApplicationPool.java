@@ -13,6 +13,7 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -65,7 +66,7 @@ public class ApplicationPool extends ManagerBase {
 
     public List<ApplicationSettings> getAll() {
         ArrayList<ApplicationSettings> list = new ArrayList(applications.values());
-        System.out.println(list.size());
+        Collections.sort(list, new ApplicationSettings());
         return list;
     }
     

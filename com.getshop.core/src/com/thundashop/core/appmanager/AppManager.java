@@ -77,7 +77,6 @@ public class AppManager extends ManagerBase implements IAppManager {
         if (settings.ownerStoreId == null || !settings.ownerStoreId.equals(getStore().id)) {
             throw new ErrorException(26);
         }
-        
         applicationPool.addApplicationSettings(settings);
     }
 

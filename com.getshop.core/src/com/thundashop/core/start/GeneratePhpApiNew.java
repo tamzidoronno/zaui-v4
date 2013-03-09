@@ -926,6 +926,8 @@ public class GeneratePhpApiNew {
         content += "           this.transport.port = port;\r\n";
         content += "           this.transport.host = host;\r\n";
         content += "           this.transport.sessionId = sessionId;\r\n";
+        content += "           this.transport.webaddress = webaddress;\r\n";
+        content += "           this.transport.api = this;\r\n";
         content += "           this.transport.connect();\r\n";
         content += "           getStoreManager().initializeStore(webaddress, sessionId);\r\n";
         content += "      }\r\n";

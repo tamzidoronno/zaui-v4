@@ -25,7 +25,7 @@ import com.thundashop.core.reportingmanager.data.ProductViewed;
 import com.thundashop.core.reportingmanager.data.Report;
 import com.thundashop.core.reportingmanager.data.ReportFilter;
 import com.thundashop.core.reportingmanager.data.UserConnected;
-import com.thundashop.core.socket.JsonObject2;
+import com.thundashop.core.common.JsonObject2;
 import com.thundashop.core.usermanager.UserManager;
 import java.util.ArrayList;
 import java.util.Calendar;

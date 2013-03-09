@@ -1,5 +1,7 @@
 package com.getshop.syncserver;
 
+import com.thundashop.api.managers.GetShopApi;
+import com.thundashop.core.usermanager.data.User;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,6 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,9 +24,10 @@ class ClientHandler extends Thread {
     private final Socket socket;
     private final PrintWriter out;
     private final BufferedReader in;
-    private String storeId;
+    private String storeAddress;
     private String username;
     private String password;
+    private GetShopApi api;
 
     ClientHandler(Socket socket) throws IOException {
         this.socket = socket;
@@ -34,19 +38,24 @@ class ClientHandler extends Thread {
 
     @Override
     public void run() {
-        if(!authenticate()) {
-            return;
-        }
         try {
+            if(!authenticate()) {
+                return;
+            }
+            MonitorOutgoingEvents outgoing = new MonitorOutgoingEvents(socket, api);
+            outgoing.start();
             monitorIncomingEvents();
         } catch (IOException ex) {
             try {
                 //Failed reading should cause disconnect.
                 socket.close();
             } catch (IOException ex1) {
+                ex1.printStackTrace();
                 Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex1);
             }
             return;
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -59,15 +68,26 @@ class ClientHandler extends Thread {
         return null;
     }
 
-    private boolean authenticate() {
-        storeId = readSocketLine();
+    private boolean authenticate() throws Exception {
+        storeAddress = readSocketLine();
         username = readSocketLine();
         password = readSocketLine();
         
-        System.out.println("Got connection:" + storeId + " : " + username + " : " + password);
+        System.out.println("Got connection:" + storeAddress + " : " + username + " : " + password);
         
-        writeLineToSocket("OK");
-        return true;
+        UUID idOne = UUID.randomUUID();
+        
+        api = new GetShopApi(25554, "localhost", idOne.toString(), storeAddress);
+        System.out.println("Logging on");
+        User result = api.getUserManager().logOn(username, password);
+        System.out.println("Logged on as : " + result.fullName);
+        if(api.getUserManager().isLoggedIn()) {
+            writeLineToSocket("OK");
+            return true;
+        } else {
+            writeLineToSocket("Logon failed, please check your input");
+            return false;
+        }
     }
 
     private void writeLineToSocket(String message) {
@@ -147,7 +167,7 @@ class ClientHandler extends Thread {
             path = path.substring(path.indexOf("\\apps\\")+6);
         }
         
-        return "/getshop/" + storeId + "/" + path;
+        return "/getshop/" + storeAddress + "/" + path;
     }
 
     private void removeFile() {

@@ -6,7 +6,6 @@ package com.thundashop.core.common;
 
 import com.thundashop.core.loggermanager.LoggerManager;
 import com.thundashop.core.reportingmanager.ReportingManager;
-import com.thundashop.core.socket.JsonObject2;
 import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;

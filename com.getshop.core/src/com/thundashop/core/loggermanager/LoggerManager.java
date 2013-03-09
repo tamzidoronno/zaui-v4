@@ -6,7 +6,7 @@ import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.loggermanager.data.LoggerData;
-import com.thundashop.core.socket.JsonObject2;
+import com.thundashop.core.common.JsonObject2;
 import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;

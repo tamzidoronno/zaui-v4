@@ -14,5 +14,5 @@ public class ApplicationSettings extends DataCommon {
     public String userId;
     public String type;
     public String ownerStoreId;
-
+    public String clonedFrom;
 }

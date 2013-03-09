@@ -1,15 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.getshop.syncserver;
 
 import com.thundashop.api.managers.GetShopApi;
 import com.thundashop.core.appmanager.data.ApplicationSettings;
+import com.thundashop.core.appmanager.data.ApplicationSynchronization;
 import java.net.Socket;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -28,14 +23,12 @@ public class MonitorOutgoingEvents extends Thread {
     public void run() {
         while(true) {
             try {
-                List<ApplicationSettings> allApps = api.getAppManager().getAllApplications();
-                for(ApplicationSettings settings : allApps) {
-                    if(settings.synchronize) {
-                        System.out.println("Need to be synchronized: " + settings.appName);
-                        uploadApplication(settings);
-                        settings.synchronize = false;
-                        api.getAppManager().saveApplication(settings);
-                    }
+                List<ApplicationSynchronization> allApps = api.getAppManager().getSyncApplications();
+                for(ApplicationSynchronization sync : allApps) {
+                    ApplicationSettings settings = api.getAppManager().getApplication(sync.appId);
+                    System.out.println("Need to be synchronized: " + settings.appName);
+                    uploadApplication(settings);
+                    api.getAppManager().saveApplication(settings);
                 }
             
                 sleep(2000);
@@ -48,7 +41,8 @@ public class MonitorOutgoingEvents extends Thread {
     }
 
     private void uploadApplication(ApplicationSettings settings) {
-        System.out.println("Uploading application: " + settings.appName);
+        System.out.println("Uploading application: " + settings.appName +  " id: " + settings.id);
+        
     }
    
 }

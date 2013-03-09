@@ -22,7 +22,9 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 public class AppManager extends ManagerBase implements IAppManager {
-    private AvailableApplications applications = new AvailableApplications();
+//    TODO
+//    US this variable to retreive data.
+//    private AvailableApplications applications = new AvailableApplications();
 
     @Autowired
     private ApplicationPool applicationPool;
@@ -34,22 +36,16 @@ public class AppManager extends ManagerBase implements IAppManager {
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
-        for (DataCommon dataObject : data.data) {
-            if (dataObject instanceof AvailableApplications) {
-                applications = (AvailableApplications) dataObject;
-            }
-        }
+//        for (DataCommon dataObject : data.data) {
+//            if (dataObject instanceof AvailableApplications) {
+//                applications = (AvailableApplications) dataObject;
+//            }
+//        }
     }
 
     @Override
     public List<ApplicationSettings> getAllApplications() throws ErrorException {
-//        List<ApplicationSettings> appSettings = new ArrayList();
-//        for (String appId : applications.applications) {
-//            applicationPool.get(appId);
-//        }
-        
         return applicationPool.getAll();
-//        return appSettings;
     }
 
     @Override
@@ -65,6 +61,7 @@ public class AppManager extends ManagerBase implements IAppManager {
         settings.price = 0.0;
         settings.userId = getSession().currentUser == null ? "" : getSession().currentUser.id;
         settings.ownerStoreId = storeId;
+        settings.storeId = storeId;
 
         applicationPool.addApplicationSettings(settings);
         return settings;
@@ -77,13 +74,11 @@ public class AppManager extends ManagerBase implements IAppManager {
     }
 
     private void saveSettings(ApplicationSettings settings) throws ErrorException {
-        String userid = getSession().currentUser.id;
-        if (!settings.ownerStoreId.equals(getStore().id)) {
+        if (settings.ownerStoreId == null || !settings.ownerStoreId.equals(getStore().id)) {
             throw new ErrorException(26);
         }
-        settings.ownerStoreId = getStore().id;
-        settings.userId = userid;
-        databaseSaver.saveObject(settings, credentials);
+        
+        applicationPool.addApplicationSettings(settings);
     }
 
     @Override
@@ -93,7 +88,8 @@ public class AppManager extends ManagerBase implements IAppManager {
 
     @Override
     public ApplicationSettings getApplication(String id) throws ErrorException {
-        for (String appId : applications.applications) {
+        for (ApplicationSettings appSettings : applicationPool.getAll()) {
+            String appId = appSettings.id;
             if (appId.equals(id)) {
                 return applicationPool.get(appId);
             }

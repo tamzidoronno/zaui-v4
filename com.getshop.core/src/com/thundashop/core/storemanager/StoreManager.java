@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 public class StoreManager extends ManagerBase implements IStoreManager {
 
     private SessionFactory sessionFactory = new SessionFactory();
-    public ConcurrentHashMap<String, Store> stores = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Store> stores = new ConcurrentHashMap<>();
     @Autowired
     public MailFactory mailFactory;
 
@@ -190,7 +190,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         mailFactory.send(from, to, title, content);
     }
 
-    private Store createStoreObject(String webAddress, String shopname, String email) throws ErrorException {
+    private Store createStoreObject(String webAddress, String shopname, String email) throws ErrorException {   
         Store store = new Store();
         store.storeId = storeId;
         store.webAddress = webAddress;
@@ -253,5 +253,15 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         
         store.partnerId = partner;
         databaseSaver.saveObject(store, credentials);
+    }
+    
+    public boolean isSmsActivate(String storeId) {
+        Store store = stores.get(storeId);
+        
+        if (store != null) {
+            return getStore(storeId).configuration.hasSMSPriviliges;
+        }
+        
+        return false;
     }
 }

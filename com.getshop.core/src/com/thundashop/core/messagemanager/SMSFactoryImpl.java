@@ -12,6 +12,7 @@ import com.thundashop.core.common.StoreComponent;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.messagehandler.data.Message;
+import com.thundashop.core.storemanager.StoreManager;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -44,6 +45,9 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
     @Autowired
     public DatabaseSaver databaseSaver;
 
+    @Autowired
+    public StoreManager storeManager;
+    
     public SMSFactoryImpl() {
         credentials = new Credentials(MessageManager.class);
         credentials.manangerName = "MessageManager";
@@ -59,6 +63,8 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         impl.databaseSaver = databaseSaver;
         impl.credentials = credentials;
         impl.database = database;
+        impl.logger = logger;
+        impl.storeManager = storeManager;
         impl.setStoreId(storeId);
         new Thread(impl).start();
     }
@@ -105,6 +111,12 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
             logger.error(this, "Could not send sms, the storeId is empty for the component.");
             return;
         }
+        
+        if (!checkSecurity()) {
+            logger.warning(this, "ACCESS DENIED! Tried to send sms : " + message + " from store: " + storeId + " to: " + to);
+            return;
+        }
+            
         
         if (!validateNumber())
             return;
@@ -167,5 +179,9 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         }
         
         return count;
+    }
+
+    private boolean checkSecurity() {
+        return storeManager.isSmsActivate(storeId);
     }
 }

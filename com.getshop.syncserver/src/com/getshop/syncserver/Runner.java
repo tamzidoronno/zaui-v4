@@ -1,5 +1,6 @@
 package com.getshop.syncserver;
 
+import java.io.File;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -10,16 +11,18 @@ import java.net.Socket;
 public class Runner {
 
     public static void main(String[] args) {
-                ServerSocket serverSocket = null;
+        ServerSocket serverSocket = null;
+        
+        File file = new File("");
+        System.out.println(file.getAbsolutePath());
         try {
             serverSocket = new ServerSocket(25557);
-            while(true) {
+            while (true) {
                 Socket socket = serverSocket.accept();
                 ClientHandler handler = new ClientHandler(socket);
                 handler.start();
             }
-        }catch(Exception e) {
-            
+        } catch (Exception e) {
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.getshop.syncserver;
 
 import com.thundashop.api.managers.GetShopApi;
+import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.usermanager.data.User;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -11,6 +12,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,7 +41,7 @@ class ClientHandler extends Thread {
     @Override
     public void run() {
         try {
-            if(!authenticate()) {
+            if (!authenticate()) {
                 return;
             }
             MonitorOutgoingEvents outgoing = new MonitorOutgoingEvents(socket, api);
@@ -62,7 +64,7 @@ class ClientHandler extends Thread {
     private String readSocketLine() {
         try {
             return in.readLine();
-        }catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -72,16 +74,16 @@ class ClientHandler extends Thread {
         storeAddress = readSocketLine();
         username = readSocketLine();
         password = readSocketLine();
-        
+
         System.out.println("Got connection:" + storeAddress + " : " + username + " : " + password);
-        
+
         UUID idOne = UUID.randomUUID();
-        
+
         api = new GetShopApi(25554, "localhost", idOne.toString(), storeAddress);
         System.out.println("Logging on");
         User result = api.getUserManager().logOn(username, password);
         System.out.println("Logged on as : " + result.fullName);
-        if(api.getUserManager().isLoggedIn()) {
+        if (api.getUserManager().isLoggedIn()) {
             writeLineToSocket("OK");
             return true;
         } else {
@@ -91,19 +93,19 @@ class ClientHandler extends Thread {
     }
 
     private void writeLineToSocket(String message) {
-        out.write(message+ "\n");
+        out.write(message + "\n");
         out.flush();
     }
 
-    private void monitorIncomingEvents() throws IOException {
-        while(true) {
+    private void monitorIncomingEvents() throws IOException, Exception {
+        while (true) {
             String line = readSocketLine();
             System.out.println(line);
-            if(line == null) {
+            if (line == null) {
                 return;
             }
-            
-            switch(line) {
+
+            switch (line) {
                 case "IN_CLOSE_WRITE":
                     fetchFile();
                     break;
@@ -114,10 +116,10 @@ class ClientHandler extends Thread {
         }
     }
 
-    private void fetchFile() throws IOException {
+    private void fetchFile() throws IOException, Exception {
         String path = readSocketLine();
-        System.out.println("Path: " + path);
         path = translatePath(path);
+        System.out.println("Put in: " + path);
         long length = Long.parseLong(readSocketLine());
         InputStream stream = socket.getInputStream();
         byte[] by = new byte[1024];
@@ -128,19 +130,19 @@ class ClientHandler extends Thread {
         File fPath = new File(folderPath);
         fPath.mkdirs();
         file.delete();
-        
-        if(length == 0) {
+
+        if (length == 0) {
             file.createNewFile();
         } else {
             try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(path))) {
-                while(true){
+                while (true) {
                     int size = stream.read(by);
-                    if(size > 0) {
+                    if (size > 0) {
                         System.out.println(size);
                         bos.write(by, 0, size);
                         bos.flush();
                         total += size;
-                        if(total == length) {
+                        if (total == length) {
                             break;
                         }
                     } else {
@@ -150,31 +152,62 @@ class ClientHandler extends Thread {
                 }
             }
         }
-        
+
         System.out.println("Total bytes read: " + total);
         this.writeLineToSocket("OK");
     }
 
-    private String translatePath(String path) {
-        if(!path.contains("/apps/") && !path.contains("\\apps\\")) {
+    private String translatePath(String path) throws Exception {
+        if (!path.contains("/apps/") && !path.contains("\\apps\\")) {
             writeLineToSocket("Invalid path in file trying to be sent, the apps folder has to be its root");
         }
-        
-        if(path.contains("/apps/")) {
-            path = path.substring(path.indexOf("/apps/")+6);
+
+        String appName = "";
+        if (path.contains("/apps/")) {
+            path = path.substring(path.indexOf("/apps/") + 6);
+            appName = path.substring(0,path.indexOf("/"));
+            path = path.substring(path.indexOf("/"));
         }
-        if(path.contains("\\apps\\")) {
-            path = path.substring(path.indexOf("\\apps\\")+6);
+        if (path.contains("\\apps\\")) {
+            path = path.substring(path.indexOf("\\apps\\") + 6);
+            appName = path.substring(0,path.indexOf("\\"));
+            path = path.substring(path.indexOf("\\"));
         }
         
-        return "/getshop/" + storeAddress + "/" + path;
+        List<ApplicationSettings> allApps = api.getAppManager().getAllApplications();
+        ApplicationSettings settings = null;
+        String storeId = api.getStoreManager().getStoreId();
+        System.out.println("My store id: " + storeId + " and appname: " + appName);
+        for (ApplicationSettings apps : allApps) {
+            if (apps.appName.equals(appName) && apps.ownerStoreId.equals(storeId)) {
+                settings = apps;
+            }
+        }
+        return "../com.getshop.client/app/" + convertUUID(settings.id) + "/" + path;
     }
 
-    private void removeFile() {
+    private void removeFile() throws Exception {
         String path = readSocketLine();
         path = translatePath(path);
         File file = new File(path);
-        file.delete();
+        if(file.exists()) {
+            file.delete();
+        }
         writeLineToSocket("OK");
+    }
+
+    private String convertUUID(String uuid) {
+        uuid = uuid.replace("0", "i");
+        uuid = uuid.replace("1", "j");
+        uuid = uuid.replace("2", "k");
+        uuid = uuid.replace("3", "l");
+        uuid = uuid.replace("4", "m");
+        uuid = uuid.replace("5", "n");
+        uuid = uuid.replace("6", "o");
+        uuid = uuid.replace("7", "p");
+        uuid = uuid.replace("8", "q");
+        uuid = uuid.replace("9", "r");
+        uuid = uuid.replace("-", "");
+        return uuid;
     }
 }

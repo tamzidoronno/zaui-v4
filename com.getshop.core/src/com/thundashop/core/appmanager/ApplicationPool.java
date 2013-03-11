@@ -37,12 +37,16 @@ public class ApplicationPool extends ManagerBase {
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
+        
         for (DataCommon dataObject : data.data) {
             if (dataObject instanceof ApplicationSettings) {
                 ApplicationSettings settings = (ApplicationSettings)dataObject;
                 applications.put(settings.id, settings);
+                System.out.println("DATA: " + settings.id);
             }
         }
+        
+        System.out.println("DONE: " + data.data.size());
     }
 
     public synchronized void addApplicationSettings(ApplicationSettings settings) throws ErrorException {

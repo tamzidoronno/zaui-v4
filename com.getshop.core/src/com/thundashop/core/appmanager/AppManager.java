@@ -2,12 +2,12 @@ package com.thundashop.core.appmanager;
 
 import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.appmanager.data.AvailableApplications;
-import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.PageArea;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,8 +44,23 @@ public class AppManager extends ManagerBase implements IAppManager {
     }
 
     @Override
-    public List<ApplicationSettings> getAllApplications() throws ErrorException {
-        return applicationPool.getAll();
+    public AvailableApplications getAllApplications() throws ErrorException {
+        AvailableApplications retMessage = new AvailableApplications();
+        retMessage.applications = applicationPool.getAll();
+        retMessage.addedApplications = getAddedApplications();
+        
+        return retMessage;
+    }
+    
+    private ArrayList<ApplicationSettings> getAddedApplications() {
+        ArrayList<ApplicationSettings> appSettings = new ArrayList();
+        PageManager pageManager = getManager(PageManager.class);
+        for (ApplicationSettings app : applicationPool.getAll()) {
+            if (pageManager.applicationPool.isApplicationAdded(app)) {
+                appSettings.add(app);
+            }
+        }
+        return appSettings;
     }
 
     @Override
@@ -88,7 +103,7 @@ public class AppManager extends ManagerBase implements IAppManager {
 
     @Override
     public ApplicationSettings getApplication(String id) throws ErrorException {
-        for (ApplicationSettings appSettings : applicationPool.getAll()) {
+        for (ApplicationSettings appSettings : getAllApplications().applications) {
             String appId = appSettings.id;
             if (appId.equals(id)) {
                 return applicationPool.get(appId);

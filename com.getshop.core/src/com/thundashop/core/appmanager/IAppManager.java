@@ -72,4 +72,15 @@ public interface IAppManager {
      */
     public List<ApplicationSynchronization> getSyncApplications() throws ErrorException;
     
+    
+    /**
+     * If you clone an application, you would prefer to switch all already added applications
+     * into an existing application.
+     * @param fromAppId
+     * @param toAppId
+     * @throws ErrorException 
+     */
+    public void swapApplication(String fromAppId, String toAppId) throws ErrorException;
+    
+    
 }

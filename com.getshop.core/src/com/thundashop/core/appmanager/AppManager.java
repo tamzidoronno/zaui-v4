@@ -3,15 +3,19 @@ package com.thundashop.core.appmanager;
 import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.appmanager.data.ApplicationSynchronization;
 import com.thundashop.core.appmanager.data.AvailableApplications;
+import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.pagemanager.ApplicationPoolImpl;
+import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.PageArea;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -73,7 +77,6 @@ public class AppManager extends ManagerBase implements IAppManager {
     @Override
     public void saveApplication(ApplicationSettings settings) throws ErrorException {
         saveSettings(settings);
-        applicationPool.addApplicationSettings(settings);
     }
 
     private void saveSettings(ApplicationSettings settings) throws ErrorException {
@@ -139,6 +142,23 @@ public class AppManager extends ManagerBase implements IAppManager {
         }
         
         return result;
+    }
+
+    @Override
+    public void swapApplication(String fromAppId, String toAppId) throws ErrorException {
+        PageManager manager = getManager(PageManager.class);
+        ApplicationSettings toApp = getApplication(toAppId);
+        
+        ApplicationPoolImpl pool = manager.applicationPool;
+        Map<String, AppConfiguration> allAddedApplications = pool.getApplications();
+        for(String instanceId : allAddedApplications.keySet()) {
+            AppConfiguration config = allAddedApplications.get(instanceId);
+            if(config.appSettingsId != null && config.appSettingsId.equals(fromAppId)) {
+                System.out.println("Changing: " + config.id);
+                config.appSettingsId = toApp.id;
+                databaseSaver.saveObject(config, credentials);
+            }
+        }
     }
 
 }

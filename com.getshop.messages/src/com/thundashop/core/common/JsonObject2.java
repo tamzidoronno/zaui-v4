@@ -1,4 +1,4 @@
-package com.thundashop.core.socket;
+package com.thundashop.core.common;
 
 import java.io.Serializable;
 import java.util.Map;

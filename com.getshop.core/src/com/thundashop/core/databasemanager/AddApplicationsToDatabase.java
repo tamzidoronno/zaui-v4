@@ -39,6 +39,7 @@ public class AddApplicationsToDatabase {
         applicationSettings.description = description;
         applicationSettings.price = 0.0;
         applicationSettings.type = type;
+        applicationSettings.isPublic = true;
         applicationSettings.ownerStoreId = "cdae85c1-35b9-45e6-a6b9-fd95c18bb291";
         applicationSettings.userId = "3241047c-4c78-4465-a0ae-588111c570ff";
         return applicationSettings;

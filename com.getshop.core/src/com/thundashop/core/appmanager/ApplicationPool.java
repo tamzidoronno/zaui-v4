@@ -13,9 +13,9 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,6 +41,7 @@ public class ApplicationPool extends ManagerBase {
         for (DataCommon dataObject : data.data) {
             if (dataObject instanceof ApplicationSettings) {
                 ApplicationSettings settings = (ApplicationSettings)dataObject;
+                System.out.println("adding: " + settings.id + " appname: " + settings.appName + " clonedfrom: " + settings.clonedFrom);
                 applications.put(settings.id, settings);
                 System.out.println("DATA: " + settings.id);
             }
@@ -50,6 +51,7 @@ public class ApplicationPool extends ManagerBase {
     }
 
     public synchronized void addApplicationSettings(ApplicationSettings settings) throws ErrorException {
+        System.out.println("Saving: " + settings.id +  " name: " + settings.appName);
         databaseSaver.saveObject(settings, credentials);
         applications.put(settings.id, settings);
     }
@@ -67,10 +69,25 @@ public class ApplicationPool extends ManagerBase {
         }
     }
 
-    public List<ApplicationSettings> getAll() {
+    public List<ApplicationSettings> getAll(String storeid) {
         ArrayList<ApplicationSettings> list = new ArrayList(applications.values());
-        System.out.println(list.size());
-        return list;
+        
+        ArrayList<ApplicationSettings> returnlist = new ArrayList();
+        for(ApplicationSettings settings : list) {
+            if(settings.isPublic) {
+                returnlist.add(settings);
+            } else if(settings.ownerStoreId.equals(storeid)) {
+                returnlist.add(settings);
+            }
+            if(settings.appName.equals("Account")) {
+                System.out.println("ID: " + settings.id);
+                System.out.println("Clonedfrom: " + settings.clonedFrom);
+            }
+        }
+        System.out.println("-----");
+        
+        Collections.sort(returnlist, new ApplicationSettings());
+        return returnlist;
     }
     
     

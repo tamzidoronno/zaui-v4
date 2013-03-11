@@ -7,6 +7,7 @@ package com.thundashop.core.appmanager;
 
 import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.appmanager.data.AvailableApplications;
+import com.thundashop.core.appmanager.data.ApplicationSynchronization;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
@@ -56,5 +57,31 @@ public interface IAppManager {
      */
     @Administrator
     public ApplicationSettings getApplication(String id) throws ErrorException;
+    
+    /**
+     * Notify the synchronization server to synchronize this application for the logged on user.
+     * @param id
+     * @throws ErrorException 
+     */
+    public void setSyncApplication(String id) throws ErrorException;
+    
+    /**
+     * Fetch all application that has been marked for synchronization.
+     * When this method is called all objects related to this will unqueued.
+     * @return
+     * @throws ErrorException 
+     */
+    public List<ApplicationSynchronization> getSyncApplications() throws ErrorException;
+    
+    
+    /**
+     * If you clone an application, you would prefer to switch all already added applications
+     * into an existing application.
+     * @param fromAppId
+     * @param toAppId
+     * @throws ErrorException 
+     */
+    public void swapApplication(String fromAppId, String toAppId) throws ErrorException;
+    
     
 }

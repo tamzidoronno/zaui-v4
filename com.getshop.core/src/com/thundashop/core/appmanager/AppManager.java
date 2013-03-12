@@ -12,6 +12,7 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pagemanager.ApplicationPoolImpl;
 import com.thundashop.core.pagemanager.PageManager;
+import com.thundashop.core.pagemanager.PageManagerCache;
 import com.thundashop.core.pagemanager.data.PageArea;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +69,6 @@ public class AppManager extends ManagerBase implements IAppManager {
         settings.price = 0.0;
         settings.userId = getSession().currentUser == null ? "" : getSession().currentUser.id;
         settings.ownerStoreId = storeId;
-        settings.storeId = storeId;
 
         applicationPool.addApplicationSettings(settings);
         return settings;
@@ -144,21 +144,5 @@ public class AppManager extends ManagerBase implements IAppManager {
         return result;
     }
 
-    @Override
-    public void swapApplication(String fromAppId, String toAppId) throws ErrorException {
-        PageManager manager = getManager(PageManager.class);
-        ApplicationSettings toApp = getApplication(toAppId);
-        
-        ApplicationPoolImpl pool = manager.applicationPool;
-        Map<String, AppConfiguration> allAddedApplications = pool.getApplications();
-        for(String instanceId : allAddedApplications.keySet()) {
-            AppConfiguration config = allAddedApplications.get(instanceId);
-            if(config.appSettingsId != null && config.appSettingsId.equals(fromAppId)) {
-                System.out.println("Changing: " + config.id);
-                config.appSettingsId = toApp.id;
-                databaseSaver.saveObject(config, credentials);
-            }
-        }
-    }
 
 }

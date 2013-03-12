@@ -62,7 +62,10 @@ public class WebInterfaceSocketThread2 implements Runnable {
                     method = tmpMethod;
                 }
             }
-
+            if(method == null) {
+                System.out.println("Failed on obj: " + object.interfaceName);
+                System.out.println("Failed on obj: " + object.method);
+            }
             Class<?>[] parameters = method.getParameterTypes();
             return parameters;
         } catch (ClassNotFoundException ex) {

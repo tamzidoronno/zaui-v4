@@ -121,7 +121,7 @@ public class ApplicationPoolImpl {
         databaseSaver.deleteObject(app, credentials);
     }
 
-    void saveApplicationConfiguration(AppConfiguration config) throws ErrorException {
+    public void saveApplicationConfiguration(AppConfiguration config) throws ErrorException {
         AppConfiguration app = get(config.id);
         if(app == null) {
             ErrorException error = new ErrorException(18);

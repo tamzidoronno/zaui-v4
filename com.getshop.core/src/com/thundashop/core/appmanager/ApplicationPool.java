@@ -51,7 +51,7 @@ public class ApplicationPool extends ManagerBase {
     }
     
     public synchronized void addApplicationSettings(ApplicationSettings settings) throws ErrorException {
-        System.out.println("Saving: " + settings.id +  " name: " + settings.appName);
+        settings.storeId = storeId;
         databaseSaver.saveObject(settings, credentials);
         applications.put(settings.id, settings);
     }
@@ -79,12 +79,7 @@ public class ApplicationPool extends ManagerBase {
             } else if(storeid.equals(settings.ownerStoreId)) {
                 returnlist.add(settings);
             }
-            if(settings.appName.equals("Account")) {
-                System.out.println("ID: " + settings.id);
-                System.out.println("Clonedfrom: " + settings.clonedFrom);
-            }
         }
-        System.out.println("-----");
         
         Collections.sort(returnlist, new ApplicationSettings());
         return returnlist;

@@ -180,4 +180,17 @@ public class PageManagerCache implements IPageManager {
         getApplications();
         return null;
     }
+
+    @Override
+    public void swapApplication(String fromAppId, String toAppId) throws ErrorException {
+        getApplications();
+        for (CachingKey key : manager.getCacheManager().getAllCachedObjects(manager.storeId).keySet()) {
+            String interfaceName = this.getClass().getInterfaces()[0].getCanonicalName().replace("com.thundashop.", "");
+            if (key.method.equals("getPage") && interfaceName.equals(key.interfaceName)) {
+                manager.getCacheManager().removeFromCache(key, manager.storeId, addr);
+            }
+        }
+    }
+    
+
 }

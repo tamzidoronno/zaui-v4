@@ -15,6 +15,7 @@ import com.thundashop.core.productmanager.ProductManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -249,4 +250,24 @@ public class PageManager extends ManagerBase implements IPageManager {
         ApplicationSettings settings = app.getApplication(settingsId);
         return pagePool.addApplicationToPage(pageId, settings.appName, pageArea, settingsId);
     }
+    
+
+    @Override
+    public void swapApplication(String fromAppId, String toAppId) throws ErrorException {
+        AppManager appman = getManager(AppManager.class);
+        PageManager manager = getManager(PageManager.class);
+        ApplicationSettings toApp = appman.getApplication(toAppId);
+        
+        ApplicationPoolImpl pool = manager.applicationPool;
+        Map<String, AppConfiguration> allAddedApplications = pool.getApplications();
+        for(String instanceId : allAddedApplications.keySet()) {
+            AppConfiguration config = allAddedApplications.get(instanceId);
+            if(config.appSettingsId != null && config.appSettingsId.equals(fromAppId)) {
+                System.out.println("Changing: " + config.id + " to " + toAppId + " from: " + fromAppId);
+                config.appSettingsId = toApp.id;
+                pool.saveApplicationConfiguration(config);
+            }
+        }
+    }    
+        
 }

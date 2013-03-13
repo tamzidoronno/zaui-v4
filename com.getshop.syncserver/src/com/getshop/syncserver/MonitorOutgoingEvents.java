@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,7 +46,7 @@ public class MonitorOutgoingEvents extends Thread {
                     String namespace = convertToNameSpace(settings.id);
                     System.out.println("Namespace: " + namespace);
                     writeLineToSocket("STARTSYNC");
-                    pushAllFiles(new File(appPath + "/" + namespace), settings);
+                    pushAllFiles(new File(appPath + "/" + namespace), settings, null);
                     writeLineToSocket("ENDSYNC");
                 }
                 if(disconnected) {
@@ -82,7 +83,7 @@ public class MonitorOutgoingEvents extends Thread {
 
     }
 
-    private void pushAllFiles(File allFiles, ApplicationSettings settings) throws IOException {
+    private void pushAllFiles(File allFiles, ApplicationSettings settings, ArrayList<String> excludeList) throws IOException {
         if (!allFiles.exists()) {
             System.out.println("Could not find app path: " + allFiles.getAbsolutePath());
             return;
@@ -90,12 +91,25 @@ public class MonitorOutgoingEvents extends Thread {
         File[] fileList = allFiles.listFiles();
         for (File file : fileList) {
             if (file.isDirectory()) {
-                pushAllFiles(file, settings);
+                pushAllFiles(file, settings, excludeList);
             } else {
                 String uploadPath = file.getAbsolutePath().replace(appPath, "");
                 String namespace = convertToNameSpace(settings.id);
                 uploadPath = uploadPath.replace(namespace, settings.appName);
-                pushFile(uploadPath, file);
+                boolean ignore = false;
+                if(excludeList != null) {
+                    for(String localPath : excludeList) {
+                        if(localPath.endsWith(uploadPath)) {
+                            System.out.println("Ignored pushing file: "+ localPath);
+                            ignore = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if(!ignore) {
+                    pushFile(uploadPath, file);
+                }
             }
         }
     }
@@ -132,4 +146,19 @@ public class MonitorOutgoingEvents extends Thread {
     void setDisconnected(boolean disconnected) {
         this.disconnected = disconnected;
     }
+
+    void doPush(ArrayList<String> excludeList) throws Exception {
+        List<ApplicationSettings> allapps = api.getAppManager().getAllApplications();
+        String storeid = api.getStoreManager().getStoreId();
+        writeLineToSocket("STARTSYNC");
+        for(ApplicationSettings settings : allapps) {
+            if(settings.ownerStoreId.equals(storeid)) {
+                String namespace = convertToNameSpace(settings.id);           
+                pushAllFiles(new File(appPath + "/" + namespace), settings, excludeList);
+                System.out.println(settings.appName + " needs to be checked");
+            }
+        }
+        writeLineToSocket("ENDSYNC");
+    }
+    
 }

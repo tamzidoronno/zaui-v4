@@ -1,5 +1,8 @@
 package com.getshop.syncserver;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.thundashop.api.managers.GetShopApi;
 import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.usermanager.data.User;
@@ -11,7 +14,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.lang.reflect.Type;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -112,6 +117,8 @@ class ClientHandler extends Thread {
                     break;
                 case "IN_DELETE":
                     removeFile();
+                case "FETCH_UNKNOWN":
+                    fetchUnknown();
                     break;
             }
         }
@@ -210,5 +217,15 @@ class ClientHandler extends Thread {
         uuid = uuid.replace("9", "r");
         uuid = uuid.replace("-", "");
         return uuid;
+    }
+
+    private void fetchUnknown() throws Exception {
+        String existingFiles = readSocketLine();
+        System.out.println(existingFiles);
+        
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        Type theType = new TypeToken<ArrayList>() {}.getType();
+        ArrayList<String> object = gson.fromJson(existingFiles, theType);
+        monitoroutgoing.doPush(object);
     }
 }

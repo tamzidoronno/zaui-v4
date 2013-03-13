@@ -30,12 +30,12 @@ class ClientHandler extends Thread {
     private String username;
     private String password;
     private GetShopApi api;
+    private MonitorOutgoingEvents monitoroutgoing;
 
     ClientHandler(Socket socket) throws IOException {
         this.socket = socket;
         out = new PrintWriter(socket.getOutputStream(), true);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
     }
 
     @Override
@@ -44,8 +44,8 @@ class ClientHandler extends Thread {
             if (!authenticate()) {
                 return;
             }
-            MonitorOutgoingEvents outgoing = new MonitorOutgoingEvents(socket, api);
-            outgoing.start();
+            monitoroutgoing = new MonitorOutgoingEvents(socket, api);
+            monitoroutgoing.start();
             monitorIncomingEvents();
         } catch (IOException ex) {
             try {
@@ -102,6 +102,7 @@ class ClientHandler extends Thread {
             String line = readSocketLine();
             System.out.println(line);
             if (line == null) {
+                monitoroutgoing.setDisconnected(true);
                 return;
             }
 

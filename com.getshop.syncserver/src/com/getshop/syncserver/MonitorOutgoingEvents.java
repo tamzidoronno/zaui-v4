@@ -23,6 +23,7 @@ public class MonitorOutgoingEvents extends Thread {
     private String appPath = "/home/boggi/projects/core/com.getshop.client/app/";
     private PrintWriter out;
     private final DataOutputStream output;
+    private boolean disconnected = false;
 
     public MonitorOutgoingEvents(Socket socket, GetShopApi api) throws IOException {
         this.socket = socket;
@@ -43,7 +44,12 @@ public class MonitorOutgoingEvents extends Thread {
                     api.getAppManager().saveApplication(settings);
                     String namespace = convertToNameSpace(settings.id);
                     System.out.println("Namespace: " + namespace);
+                    writeLineToSocket("STARTSYNC");
                     pushAllFiles(new File(appPath + "/" + namespace), settings);
+                    writeLineToSocket("ENDSYNC");
+                }
+                if(disconnected) {
+                    break;
                 }
 
                 sleep(2000);
@@ -53,6 +59,7 @@ public class MonitorOutgoingEvents extends Thread {
                 break;
             }
         }
+        System.out.println("Cleaning up outgoing events");
     }
 
     private String convertToNameSpace(String uuid) {
@@ -120,5 +127,9 @@ public class MonitorOutgoingEvents extends Thread {
     private void writeLineToSocket(String line) throws IOException {
         out.println(line);
         out.flush();
+    }
+
+    void setDisconnected(boolean disconnected) {
+        this.disconnected = disconnected;
     }
 }

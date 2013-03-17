@@ -2,6 +2,7 @@ package com.thundashop.api.examples;
 
 import com.thundashop.api.managers.GetShopApi;
 import com.thundashop.core.appmanager.data.ApplicationSettings;
+import com.thundashop.core.appmanager.data.AvailableApplications;
 import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageArea;
@@ -43,8 +44,8 @@ public class Examples {
 
     private void printAllApplications() throws Exception {
         System.out.println("This is my applications");
-        List<ApplicationSettings> apps = api.getAppManager().getAllApplications();
-        for (ApplicationSettings settings : apps) {
+        AvailableApplications apps = api.getAppManager().getAllApplications();
+        for (ApplicationSettings settings : apps.applications) {
             System.out.println("application name: " + settings.appName);
         }
     }
@@ -91,8 +92,8 @@ public class Examples {
     }
 
     private ApplicationSettings findContentApp() throws Exception {
-        List<ApplicationSettings> apps = api.getAppManager().getAllApplications();
-        for(ApplicationSettings settings : apps) {
+        AvailableApplications apps = api.getAppManager().getAllApplications();
+        for(ApplicationSettings settings : apps.applications) {
             if(settings.appName.equals("ContentManager")) {
                 return settings;
             }

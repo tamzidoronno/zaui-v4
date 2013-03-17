@@ -484,6 +484,24 @@ public class APIPageManager {
      }
 
      /**
+     * If you clone an application, you would prefer to switch all already added applications
+     * into an existing application.
+     * @param fromAppId
+     * @param toAppId
+     * @throws ErrorException 
+     */
+
+     public void swapApplication(String fromAppId, String toAppId)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new HashMap();
+          data.args.put("fromAppId",new Gson().toJson(fromAppId));
+          data.args.put("toAppId",new Gson().toJson(toAppId));
+          data.method = "swapApplication";
+          data.interfaceName = "core.pagemanager.IPageManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Need to translate a set of page ids?
      * @param pages A list (array) of page ids to translate.
      * @return HashMap<String,String>

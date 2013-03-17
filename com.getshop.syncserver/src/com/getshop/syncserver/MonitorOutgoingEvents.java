@@ -22,7 +22,7 @@ public class MonitorOutgoingEvents extends Thread {
 
     private final Socket socket;
     private final GetShopApi api;
-    private String appPath = "/home/boggi/projects/core/com.getshop.client/app/";
+    private String appPath = "../com.getshop.client/app/";
     private PrintWriter out;
     private final DataOutputStream output;
     private boolean disconnected = false;
@@ -84,7 +84,7 @@ public class MonitorOutgoingEvents extends Thread {
             if (file.isDirectory()) {
                 pushAllFiles(file, settings, excludeList);
             } else {
-                String uploadPath = file.getAbsolutePath().replace(appPath, "");
+                String uploadPath = file.getAbsolutePath().replace(new File(appPath).getAbsolutePath(), "");
                 String namespace = convertToNameSpace(settings.id);
                 uploadPath = uploadPath.replace(namespace, settings.appName);
                 boolean ignore = false;
@@ -144,7 +144,7 @@ public class MonitorOutgoingEvents extends Thread {
         writeLineToSocket("STARTSYNC");
         for(ApplicationSettings settings : allapps.applications) {
             if(settings.ownerStoreId.equals(storeid)) {
-                String namespace = convertToNameSpace(settings.id);           
+                String namespace = convertToNameSpace(settings.id);   
                 pushAllFiles(new File(appPath + "/" + namespace), settings, excludeList);
                 System.out.println(settings.appName + " needs to be checked");
             }

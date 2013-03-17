@@ -348,6 +348,34 @@ public class AddApplicationsToDatabase {
                 ApplicationSettings.Type.System));
         
         apps.add(createSettings(
+                "TheRedTheme", 
+                "d147f6a0-8f31-11e2-9e96-0800200c9a66", 
+                emtpy, 
+                "", 
+                ApplicationSettings.Type.Theme));
+        
+        apps.add(createSettings(
+                "WideScreenTheme", 
+                "c2da56a0-8f2f-11e2-9e96-0800200c9a66", 
+                emtpy, 
+                "", 
+                ApplicationSettings.Type.Theme));
+        
+        apps.add(createSettings(
+                "SlickTheme", 
+                "a84cbbb0-8f21-11e2-9e96-0800200c9a66", 
+                emtpy, 
+                "", 
+                ApplicationSettings.Type.Theme));
+       
+        apps.add(createSettings(
+                "WhiteAndBlueTheme", 
+                "a84cbbb0-8f21-11e2-9e96-0800200c9a66", 
+                emtpy, 
+                "", 
+                ApplicationSettings.Type.Theme));
+       
+        apps.add(createSettings(
                 "GetShopTheme", 
                 "7a4f3750-895a-11e2-9e96-0800200c9a66", 
                 emtpy, 

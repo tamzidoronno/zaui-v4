@@ -5,6 +5,16 @@ import java.util.Comparator;
 import java.util.List;
 
 public class ApplicationSettings extends DataCommon implements Comparator<ApplicationSettings> {
+    public static class Type {
+        public static String Marketing = "MarketingApplication";
+        public static String System = "SystemApplication";
+        public static String Webshop = "WebshopApplication";
+        public static String Payment = "PaymentApplication";
+        public static String Reporting = "ReportingApplication";
+        public static String Shipment = "ShipmentApplication";
+        public static String Theme = "ThemeApplication";
+    }
+    
     public String appName;
     public String description;
     public List<String> allowedAreas;

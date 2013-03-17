@@ -6,6 +6,7 @@
 package com.thundashop.core.appmanager;
 
 import com.thundashop.core.appmanager.data.ApplicationSettings;
+import com.thundashop.core.appmanager.data.AvailableApplications;
 import com.thundashop.core.appmanager.data.ApplicationSynchronization;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ErrorException;
@@ -23,7 +24,7 @@ public interface IAppManager {
      * Fetch all the applications connected to you.
      * @return 
      */
-    public List<ApplicationSettings> getAllApplications() throws ErrorException;
+    public AvailableApplications getAllApplications() throws ErrorException;
     
     /**
      * Create a new application.

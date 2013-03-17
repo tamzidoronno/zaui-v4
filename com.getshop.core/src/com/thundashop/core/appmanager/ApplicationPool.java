@@ -36,16 +36,20 @@ public class ApplicationPool extends ManagerBase {
     }
     
     @Override
-    public void dataFromDatabase(DataRetreived data) {
+    public void dataFromDatabase(DataRetreived data) { 
+        
         for (DataCommon dataObject : data.data) {
             if (dataObject instanceof ApplicationSettings) {
                 ApplicationSettings settings = (ApplicationSettings)dataObject;
                 System.out.println("adding: " + settings.id + " appname: " + settings.appName + " clonedfrom: " + settings.clonedFrom);
                 applications.put(settings.id, settings);
+                System.out.println("DATA: " + settings.id);
             }
         }
+        
+        System.out.println("DONE: " + data.data.size());
     }
-
+    
     public synchronized void addApplicationSettings(ApplicationSettings settings) throws ErrorException {
         settings.storeId = storeId;
         databaseSaver.saveObject(settings, credentials);
@@ -72,7 +76,7 @@ public class ApplicationPool extends ManagerBase {
         for(ApplicationSettings settings : list) {
             if(settings.isPublic) {
                 returnlist.add(settings);
-            } else if(settings.ownerStoreId.equals(storeid)) {
+            } else if(storeid.equals(settings.ownerStoreId)) {
                 returnlist.add(settings);
             }
         }

@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.pagemanager;
 
+import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.Credentials;
 import java.util.ArrayList;
@@ -139,6 +140,16 @@ public class ApplicationPoolImpl {
         }
         
         return null;
+    }
+
+    public boolean isApplicationAdded(ApplicationSettings appSetting) {
+        for (AppConfiguration appConfig : applications.values()) {
+            if (appSetting.id.equals(appConfig.appSettingsId)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
 }

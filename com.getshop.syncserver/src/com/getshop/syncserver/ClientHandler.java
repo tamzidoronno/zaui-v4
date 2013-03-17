@@ -1,7 +1,11 @@
 package com.getshop.syncserver;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.thundashop.api.managers.GetShopApi;
 import com.thundashop.core.appmanager.data.ApplicationSettings;
+import com.thundashop.core.appmanager.data.AvailableApplications;
 import com.thundashop.core.usermanager.data.User;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -11,7 +15,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.lang.reflect.Type;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -30,12 +36,12 @@ class ClientHandler extends Thread {
     private String username;
     private String password;
     private GetShopApi api;
+    private MonitorOutgoingEvents monitoroutgoing;
 
     ClientHandler(Socket socket) throws IOException {
         this.socket = socket;
         out = new PrintWriter(socket.getOutputStream(), true);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
     }
 
     @Override
@@ -44,8 +50,8 @@ class ClientHandler extends Thread {
             if (!authenticate()) {
                 return;
             }
-            MonitorOutgoingEvents outgoing = new MonitorOutgoingEvents(socket, api);
-            outgoing.start();
+            monitoroutgoing = new MonitorOutgoingEvents(socket, api);
+            monitoroutgoing.start();
             monitorIncomingEvents();
         } catch (IOException ex) {
             try {
@@ -102,6 +108,7 @@ class ClientHandler extends Thread {
             String line = readSocketLine();
             System.out.println(line);
             if (line == null) {
+                monitoroutgoing.setDisconnected(true);
                 return;
             }
 
@@ -111,6 +118,8 @@ class ClientHandler extends Thread {
                     break;
                 case "IN_DELETE":
                     removeFile();
+                case "FETCH_UNKNOWN":
+                    fetchUnknown();
                     break;
             }
         }
@@ -174,11 +183,11 @@ class ClientHandler extends Thread {
             path = path.substring(path.indexOf("\\"));
         }
         
-        List<ApplicationSettings> allApps = api.getAppManager().getAllApplications();
+        AvailableApplications allApps = api.getAppManager().getAllApplications();
         ApplicationSettings settings = null;
         String storeId = api.getStoreManager().getStoreId();
         System.out.println("My store id: " + storeId + " and appname: " + appName);
-        for (ApplicationSettings apps : allApps) {
+        for (ApplicationSettings apps : allApps.applications) {
             if (apps.appName.equals(appName) && apps.ownerStoreId.equals(storeId)) {
                 settings = apps;
             }
@@ -197,17 +206,17 @@ class ClientHandler extends Thread {
     }
 
     private String convertUUID(String uuid) {
-        uuid = uuid.replace("0", "i");
-        uuid = uuid.replace("1", "j");
-        uuid = uuid.replace("2", "k");
-        uuid = uuid.replace("3", "l");
-        uuid = uuid.replace("4", "m");
-        uuid = uuid.replace("5", "n");
-        uuid = uuid.replace("6", "o");
-        uuid = uuid.replace("7", "p");
-        uuid = uuid.replace("8", "q");
-        uuid = uuid.replace("9", "r");
-        uuid = uuid.replace("-", "");
+        uuid = "ns_" + uuid.replace("-", "_");
         return uuid;
+    }
+
+    private void fetchUnknown() throws Exception {
+        String existingFiles = readSocketLine();
+        System.out.println(existingFiles);
+        
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        Type theType = new TypeToken<ArrayList>() {}.getType();
+        ArrayList<String> object = gson.fromJson(existingFiles, theType);
+        monitoroutgoing.doPush(object);
     }
 }

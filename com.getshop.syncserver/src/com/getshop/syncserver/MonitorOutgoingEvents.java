@@ -3,6 +3,7 @@ package com.getshop.syncserver;
 import com.thundashop.api.managers.GetShopApi;
 import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.appmanager.data.ApplicationSynchronization;
+import com.thundashop.core.appmanager.data.AvailableApplications;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +25,7 @@ public class MonitorOutgoingEvents extends Thread {
     private String appPath = "/home/boggi/projects/core/com.getshop.client/app/";
     private PrintWriter out;
     private final DataOutputStream output;
+    private boolean disconnected = false;
 
     public MonitorOutgoingEvents(Socket socket, GetShopApi api) throws IOException {
         this.socket = socket;
@@ -43,7 +46,12 @@ public class MonitorOutgoingEvents extends Thread {
                     api.getAppManager().saveApplication(settings);
                     String namespace = convertToNameSpace(settings.id);
                     System.out.println("Namespace: " + namespace);
-                    pushAllFiles(new File(appPath + "/" + namespace), settings);
+                    writeLineToSocket("STARTSYNC");
+                    pushAllFiles(new File(appPath + "/" + namespace), settings, null);
+                    writeLineToSocket("ENDSYNC");
+                }
+                if(disconnected) {
+                    break;
                 }
 
                 sleep(2000);
@@ -53,20 +61,11 @@ public class MonitorOutgoingEvents extends Thread {
                 break;
             }
         }
+        System.out.println("Cleaning up outgoing events");
     }
 
     private String convertToNameSpace(String uuid) {
-        uuid = uuid.replace("0", "i");
-        uuid = uuid.replace("1", "j");
-        uuid = uuid.replace("2", "k");
-        uuid = uuid.replace("3", "l");
-        uuid = uuid.replace("4", "m");
-        uuid = uuid.replace("5", "n");
-        uuid = uuid.replace("6", "o");
-        uuid = uuid.replace("7", "p");
-        uuid = uuid.replace("8", "q");
-        uuid = uuid.replace("9", "r");
-        uuid = uuid.replace("-", "");
+        uuid = "ns_" + uuid.replace("-", "_");
         return uuid;
     }
 
@@ -75,7 +74,7 @@ public class MonitorOutgoingEvents extends Thread {
 
     }
 
-    private void pushAllFiles(File allFiles, ApplicationSettings settings) throws IOException {
+    private void pushAllFiles(File allFiles, ApplicationSettings settings, ArrayList<String> excludeList) throws IOException {
         if (!allFiles.exists()) {
             System.out.println("Could not find app path: " + allFiles.getAbsolutePath());
             return;
@@ -83,12 +82,25 @@ public class MonitorOutgoingEvents extends Thread {
         File[] fileList = allFiles.listFiles();
         for (File file : fileList) {
             if (file.isDirectory()) {
-                pushAllFiles(file, settings);
+                pushAllFiles(file, settings, excludeList);
             } else {
                 String uploadPath = file.getAbsolutePath().replace(appPath, "");
                 String namespace = convertToNameSpace(settings.id);
                 uploadPath = uploadPath.replace(namespace, settings.appName);
-                pushFile(uploadPath, file);
+                boolean ignore = false;
+                if(excludeList != null) {
+                    for(String localPath : excludeList) {
+                        if(localPath.endsWith(uploadPath)) {
+                            System.out.println("Ignored pushing file: "+ localPath);
+                            ignore = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if(!ignore) {
+                    pushFile(uploadPath, file);
+                }
             }
         }
     }
@@ -121,4 +133,23 @@ public class MonitorOutgoingEvents extends Thread {
         out.println(line);
         out.flush();
     }
+
+    void setDisconnected(boolean disconnected) {
+        this.disconnected = disconnected;
+    }
+
+    void doPush(ArrayList<String> excludeList) throws Exception {
+        AvailableApplications allapps = api.getAppManager().getAllApplications();
+        String storeid = api.getStoreManager().getStoreId();
+        writeLineToSocket("STARTSYNC");
+        for(ApplicationSettings settings : allapps.applications) {
+            if(settings.ownerStoreId.equals(storeid)) {
+                String namespace = convertToNameSpace(settings.id);           
+                pushAllFiles(new File(appPath + "/" + namespace), settings, excludeList);
+                System.out.println(settings.appName + " needs to be checked");
+            }
+        }
+        writeLineToSocket("ENDSYNC");
+    }
+    
 }

@@ -66,7 +66,7 @@ public class AddApplicationsToDatabase {
                 "b0db6ad0-8cc2-11e2-9e96-0800200c9a66", 
                 Arrays.asList(PageArea.Type.MIDDLE, PageArea.Type.LEFT, PageArea.Type.RIGHT), 
                 "", 
-                System));
+                ApplicationSettings.Type.System));
         
         apps.add(createSettings(
                 "Facebook", 

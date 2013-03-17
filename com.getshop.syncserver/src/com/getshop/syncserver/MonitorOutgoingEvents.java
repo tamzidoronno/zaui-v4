@@ -3,6 +3,7 @@ package com.getshop.syncserver;
 import com.thundashop.api.managers.GetShopApi;
 import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.appmanager.data.ApplicationSynchronization;
+import com.thundashop.core.appmanager.data.AvailableApplications;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -64,17 +65,7 @@ public class MonitorOutgoingEvents extends Thread {
     }
 
     private String convertToNameSpace(String uuid) {
-        uuid = uuid.replace("0", "i");
-        uuid = uuid.replace("1", "j");
-        uuid = uuid.replace("2", "k");
-        uuid = uuid.replace("3", "l");
-        uuid = uuid.replace("4", "m");
-        uuid = uuid.replace("5", "n");
-        uuid = uuid.replace("6", "o");
-        uuid = uuid.replace("7", "p");
-        uuid = uuid.replace("8", "q");
-        uuid = uuid.replace("9", "r");
-        uuid = uuid.replace("-", "");
+        uuid = "ns_" + uuid.replace("-", "_");
         return uuid;
     }
 
@@ -148,10 +139,10 @@ public class MonitorOutgoingEvents extends Thread {
     }
 
     void doPush(ArrayList<String> excludeList) throws Exception {
-        List<ApplicationSettings> allapps = api.getAppManager().getAllApplications();
+        AvailableApplications allapps = api.getAppManager().getAllApplications();
         String storeid = api.getStoreManager().getStoreId();
         writeLineToSocket("STARTSYNC");
-        for(ApplicationSettings settings : allapps) {
+        for(ApplicationSettings settings : allapps.applications) {
             if(settings.ownerStoreId.equals(storeid)) {
                 String namespace = convertToNameSpace(settings.id);           
                 pushAllFiles(new File(appPath + "/" + namespace), settings, excludeList);

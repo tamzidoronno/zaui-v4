@@ -3,20 +3,17 @@ package com.thundashop.core.appmanager;
 import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.appmanager.data.ApplicationSynchronization;
 import com.thundashop.core.appmanager.data.AvailableApplications;
-import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.pagemanager.ApplicationPoolImpl;
 import com.thundashop.core.pagemanager.PageManager;
-import com.thundashop.core.pagemanager.PageManagerCache;
 import com.thundashop.core.pagemanager.data.PageArea;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -29,6 +26,8 @@ import org.springframework.stereotype.Component;
 @Scope("prototype")
 public class AppManager extends ManagerBase implements IAppManager {
     public List<ApplicationSynchronization> toSync;
+    
+    private Date lastConnected = new Date();
     
 //    TODO
 //    US this variable to retreive data.
@@ -138,6 +137,7 @@ public class AppManager extends ManagerBase implements IAppManager {
 
     @Override
     public List<ApplicationSynchronization> getSyncApplications() throws ErrorException {
+        lastConnected = new Date();
         if(toSync == null) {
             return new ArrayList();
         }
@@ -157,6 +157,17 @@ public class AppManager extends ManagerBase implements IAppManager {
         }
         
         return result;
+    }
+
+    @Override
+    public boolean isSyncToolConnected() throws ErrorException {
+        long now = new Date().getTime();
+        long lastTime = lastConnected.getTime();
+        long diff = now - lastTime;
+        if(diff < (1000*10*2)) {
+            return true;
+        }
+        return false;
     }
 
 

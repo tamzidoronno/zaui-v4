@@ -63,6 +63,7 @@ public interface IAppManager {
      * @param id
      * @throws ErrorException 
      */
+    @Administrator
     public void setSyncApplication(String id) throws ErrorException;
     
     /**
@@ -71,8 +72,15 @@ public interface IAppManager {
      * @return
      * @throws ErrorException 
      */
+    @Administrator
     public List<ApplicationSynchronization> getSyncApplications() throws ErrorException;
     
-    
+    /**
+     * Check if the synchronization client is connected or not.
+     * @return boolean
+     * @throws ErrorException 
+     */
+    @Administrator
+    public boolean isSyncToolConnected() throws ErrorException;
     
 }

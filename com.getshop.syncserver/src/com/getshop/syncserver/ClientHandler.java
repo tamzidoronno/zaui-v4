@@ -7,6 +7,7 @@ import com.thundashop.api.managers.GetShopApi;
 import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.appmanager.data.AvailableApplications;
 import com.thundashop.core.usermanager.data.User;
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,8 +18,12 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.net.Socket;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,11 +42,16 @@ class ClientHandler extends Thread {
     private String password;
     private GetShopApi api;
     private MonitorOutgoingEvents monitoroutgoing;
+    private final InputStream stream;
+    private final BufferedInputStream bis;
 
     ClientHandler(Socket socket) throws IOException {
         this.socket = socket;
+        this.socket.setTcpNoDelay(true);
         out = new PrintWriter(socket.getOutputStream(), true);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        bis = new BufferedInputStream(socket.getInputStream());
+        stream = socket.getInputStream();
     }
 
     @Override
@@ -56,6 +66,7 @@ class ClientHandler extends Thread {
         } catch (IOException ex) {
             try {
                 //Failed reading should cause disconnect.
+                System.out.println("Disconnecting");
                 socket.close();
             } catch (IOException ex1) {
                 ex1.printStackTrace();
@@ -69,6 +80,7 @@ class ClientHandler extends Thread {
 
     private String readSocketLine() {
         try {
+            System.out.println("Raeding line");
             return in.readLine();
         } catch (Exception e) {
             e.printStackTrace();
@@ -118,6 +130,7 @@ class ClientHandler extends Thread {
                     break;
                 case "IN_DELETE":
                     removeFile();
+                    break;
                 case "FETCH_UNKNOWN":
                     fetchUnknown();
                     break;
@@ -128,9 +141,10 @@ class ClientHandler extends Thread {
     private void fetchFile() throws IOException, Exception {
         String path = readSocketLine();
         path = translatePath(path);
-        System.out.println("Put in: " + path);
+        if (path == null) {
+            return;
+        }
         long length = Long.parseLong(readSocketLine());
-        InputStream stream = socket.getInputStream();
         byte[] by = new byte[1024];
 
         long total = 0;
@@ -139,24 +153,26 @@ class ClientHandler extends Thread {
         File fPath = new File(folderPath);
         fPath.mkdirs();
         file.delete();
+        System.out.println("Put in: " + path + " size: " + length);
 
         if (length == 0) {
             file.createNewFile();
         } else {
             try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(path))) {
                 while (true) {
-                    int size = stream.read(by);
+                    int size = bis.read(by);
+                    System.out.println(size);
                     if (size > 0) {
-                        System.out.println(size);
                         bos.write(by, 0, size);
                         bos.flush();
                         total += size;
+                        System.out.println(size + "(" + total + ")");
                         if (total == length) {
                             break;
                         }
-                    } else {
-                        writeLineToSocket("An error occured while streaming the file.");
-                        return;
+                    }
+                    if(size < 0) {
+                        break;
                     }
                 }
             }
@@ -172,17 +188,27 @@ class ClientHandler extends Thread {
         }
 
         String appName = "";
+        System.out.println("To translate: " + path);
         if (path.contains("/apps/")) {
+            System.out.println(path);
             path = path.substring(path.indexOf("/apps/") + 6);
-            appName = path.substring(0,path.indexOf("/"));
-            path = path.substring(path.indexOf("/"));
+            if (path.indexOf("/") > 0) {
+                appName = path.substring(0, path.indexOf("/"));
+                path = path.substring(path.indexOf("/"));
+            } else {
+                appName = path;
+            }
         }
         if (path.contains("\\apps\\")) {
             path = path.substring(path.indexOf("\\apps\\") + 6);
-            appName = path.substring(0,path.indexOf("\\"));
-            path = path.substring(path.indexOf("\\"));
+            if (path.indexOf("\\") > 0) {
+                appName = path.substring(0, path.indexOf("\\"));
+                path = path.substring(path.indexOf("\\"));
+            } else {
+                appName = path;
+            }
         }
-        
+
         AvailableApplications allApps = api.getAppManager().getAllApplications();
         ApplicationSettings settings = null;
         String storeId = api.getStoreManager().getStoreId();
@@ -192,15 +218,61 @@ class ClientHandler extends Thread {
                 settings = apps;
             }
         }
-        return "../com.getshop.client/app/" + convertUUID(settings.id) + "/" + path;
+
+        if (settings == null) {
+            return null;
+        }
+
+        String translated = "../com.getshop.client/app/" + convertUUID(settings.id) + "/" + path;
+        System.out.println("Translated path: " + translated);
+        return translated;
+    }
+
+    public static void removeRecursive(Path path) throws IOException {
+        Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+                    throws IOException {
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                // try to delete the file anyway, even if its attributes
+                // could not be read, since delete-only access is
+                // theoretically possible
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                if (exc == null) {
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                } else {
+                    // directory iteration failed; propagate exception
+                    throw exc;
+                }
+            }
+        });
     }
 
     private void removeFile() throws Exception {
         String path = readSocketLine();
         path = translatePath(path);
+        if (path == null) {
+            return;
+        }
         File file = new File(path);
-        if(file.exists()) {
+        if (file.isDirectory()) {
+            removeRecursive(file.toPath());
+        } else if (file.exists()) {
+            System.out.println("Deleting: " + file.getAbsolutePath());
             file.delete();
+        } else {
+            System.out.println("Failed to delete: " + file.getAbsolutePath());
         }
         writeLineToSocket("OK");
     }
@@ -213,9 +285,10 @@ class ClientHandler extends Thread {
     private void fetchUnknown() throws Exception {
         String existingFiles = readSocketLine();
         System.out.println(existingFiles);
-        
+
         Gson gson = new GsonBuilder().serializeNulls().create();
-        Type theType = new TypeToken<ArrayList>() {}.getType();
+        Type theType = new TypeToken<ArrayList>() {
+        }.getType();
         ArrayList<String> object = gson.fromJson(existingFiles, theType);
         monitoroutgoing.doPush(object);
     }

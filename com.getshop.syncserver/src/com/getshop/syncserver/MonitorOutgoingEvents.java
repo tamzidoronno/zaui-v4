@@ -91,7 +91,6 @@ public class MonitorOutgoingEvents extends Thread {
                 if(excludeList != null) {
                     for(String localPath : excludeList) {
                         if(localPath.endsWith(uploadPath)) {
-                            System.out.println("Ignored pushing file: "+ localPath);
                             ignore = true;
                             break;
                         }

@@ -44,6 +44,8 @@ class ClientHandler extends Thread {
     private MonitorOutgoingEvents monitoroutgoing;
     private final InputStream stream;
     private final BufferedInputStream bis;
+    private String storeId;
+    private AvailableApplications allApps;
 
     ClientHandler(Socket socket) throws IOException {
         this.socket = socket;
@@ -80,8 +82,17 @@ class ClientHandler extends Thread {
 
     private String readSocketLine() {
         try {
-            System.out.println("Raeding line");
-            return in.readLine();
+            String result = "";
+            while(true) {
+                byte[] b = new byte[1];
+                bis.read(b);
+                String character = new String(b);
+                if(character.equals("\n")) {
+                    break;
+                }
+                result += character;
+            }
+            return result;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -103,6 +114,8 @@ class ClientHandler extends Thread {
         System.out.println("Logged on as : " + result.fullName);
         if (api.getUserManager().isLoggedIn()) {
             writeLineToSocket("OK");
+            storeId = api.getStoreManager().getStoreId();
+            allApps = api.getAppManager().getAllApplications();
             return true;
         } else {
             writeLineToSocket("Logon failed, please check your input");
@@ -142,6 +155,7 @@ class ClientHandler extends Thread {
         String path = readSocketLine();
         path = translatePath(path);
         if (path == null) {
+            this.writeLineToSocket("OK");
             return;
         }
         long length = Long.parseLong(readSocketLine());
@@ -154,19 +168,16 @@ class ClientHandler extends Thread {
         fPath.mkdirs();
         file.delete();
         System.out.println("Put in: " + path + " size: " + length);
-
         if (length == 0) {
             file.createNewFile();
         } else {
             try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(path))) {
                 while (true) {
                     int size = bis.read(by);
-                    System.out.println(size);
                     if (size > 0) {
                         bos.write(by, 0, size);
                         bos.flush();
                         total += size;
-                        System.out.println(size + "(" + total + ")");
                         if (total == length) {
                             break;
                         }
@@ -177,8 +188,6 @@ class ClientHandler extends Thread {
                 }
             }
         }
-
-        System.out.println("Total bytes read: " + total);
         this.writeLineToSocket("OK");
     }
 
@@ -188,9 +197,7 @@ class ClientHandler extends Thread {
         }
 
         String appName = "";
-        System.out.println("To translate: " + path);
         if (path.contains("/apps/")) {
-            System.out.println(path);
             path = path.substring(path.indexOf("/apps/") + 6);
             if (path.indexOf("/") > 0) {
                 appName = path.substring(0, path.indexOf("/"));
@@ -209,10 +216,7 @@ class ClientHandler extends Thread {
             }
         }
 
-        AvailableApplications allApps = api.getAppManager().getAllApplications();
         ApplicationSettings settings = null;
-        String storeId = api.getStoreManager().getStoreId();
-        System.out.println("My store id: " + storeId + " and appname: " + appName);
         for (ApplicationSettings apps : allApps.applications) {
             if (apps.appName.equals(appName) && apps.ownerStoreId.equals(storeId)) {
                 settings = apps;
@@ -220,11 +224,18 @@ class ClientHandler extends Thread {
         }
 
         if (settings == null) {
+            allApps = api.getAppManager().getAllApplications();
+            for (ApplicationSettings apps : allApps.applications) {
+                if (apps.appName.equals(appName) && apps.ownerStoreId.equals(storeId)) {
+                    settings = apps;
+                }
+            }
+        }
+        if (settings == null) {
             return null;
         }
 
         String translated = "../com.getshop.client/app/" + convertUUID(settings.id) + "/" + path;
-        System.out.println("Translated path: " + translated);
         return translated;
     }
 
@@ -284,7 +295,6 @@ class ClientHandler extends Thread {
 
     private void fetchUnknown() throws Exception {
         String existingFiles = readSocketLine();
-        System.out.println(existingFiles);
 
         Gson gson = new GsonBuilder().serializeNulls().create();
         Type theType = new TypeToken<ArrayList>() {

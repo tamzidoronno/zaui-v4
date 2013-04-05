@@ -24,6 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -148,7 +149,8 @@ class ClientHandler extends Thread {
                     moveFile();
                     break;
                 case "FETCH_UNKNOWN":
-                    fetchUnknown();
+                    ArrayList<String> filesOnClient = fetchUnknown();
+                    checkNewFiles(filesOnClient);
                     break;
             }
         }
@@ -296,7 +298,7 @@ class ClientHandler extends Thread {
         return uuid;
     }
 
-    private void fetchUnknown() throws Exception {
+    private ArrayList<String> fetchUnknown() throws Exception {
         String existingFiles = readSocketLine();
 
         Gson gson = new GsonBuilder().serializeNulls().create();
@@ -304,6 +306,7 @@ class ClientHandler extends Thread {
         }.getType();
         ArrayList<String> object = gson.fromJson(existingFiles, theType);
         monitoroutgoing.doPush(object);
+        return object;
     }
 
     private void moveFile() throws Exception {
@@ -312,5 +315,27 @@ class ClientHandler extends Thread {
         
         File src = new File(source);
         src.renameTo(new File(dest));
+    }
+
+    private void checkNewFiles(ArrayList<String> filesOnClient) throws Exception {
+        
+        List<String> newFiles = new ArrayList();
+        for(String file : filesOnClient) {
+            File fileobj = new File(file);
+            String translated = translatePath(fileobj.getCanonicalPath());
+            if(translated != null) {
+                fileobj = new File(translated);
+                if(!fileobj.exists()) {
+                    newFiles.add(file);
+                }
+            }
+        }
+        
+        if(newFiles.size() > 0) {
+            writeLineToSocket("FETCHFILES");
+            Gson gson = new Gson();
+            String toSend = gson.toJson(newFiles);
+            writeLineToSocket(toSend);
+        }
     }
 }

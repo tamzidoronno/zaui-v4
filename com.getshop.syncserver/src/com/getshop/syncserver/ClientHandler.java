@@ -144,6 +144,9 @@ class ClientHandler extends Thread {
                 case "IN_DELETE":
                     removeFile();
                     break;
+                case "IN_MOVE":
+                    moveFile();
+                    break;
                 case "FETCH_UNKNOWN":
                     fetchUnknown();
                     break;
@@ -301,5 +304,13 @@ class ClientHandler extends Thread {
         }.getType();
         ArrayList<String> object = gson.fromJson(existingFiles, theType);
         monitoroutgoing.doPush(object);
+    }
+
+    private void moveFile() throws Exception {
+        String source = translatePath(this.readSocketLine());
+        String dest = translatePath(this.readSocketLine());
+        
+        File src = new File(source);
+        src.renameTo(new File(dest));
     }
 }

@@ -91,7 +91,6 @@ public class MonitorOutgoingEvents extends Thread {
                 if(excludeList != null) {
                     for(String localPath : excludeList) {
                         if(localPath.endsWith(uploadPath)) {
-                            System.out.println("Ignored pushing file: "+ localPath);
                             ignore = true;
                             break;
                         }
@@ -144,9 +143,8 @@ public class MonitorOutgoingEvents extends Thread {
         writeLineToSocket("STARTSYNC");
         for(ApplicationSettings settings : allapps.applications) {
             if(settings.ownerStoreId.equals(storeid)) {
-                String namespace = convertToNameSpace(settings.id);   
+                String namespace = convertToNameSpace(settings.id);
                 pushAllFiles(new File(appPath + "/" + namespace), settings, excludeList);
-                System.out.println(settings.appName + " needs to be checked");
             }
         }
         writeLineToSocket("ENDSYNC");

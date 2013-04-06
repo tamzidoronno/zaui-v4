@@ -138,6 +138,7 @@ class ClientHandler extends Thread {
                 return;
             }
 
+            System.out.println("TEST");
             switch (line) {
                 case "IN_CLOSE_WRITE":
                     fetchFile();
@@ -193,6 +194,9 @@ class ClientHandler extends Thread {
                 }
             }
         }
+        
+        file = null;
+        
         this.writeLineToSocket("OK");
     }
 

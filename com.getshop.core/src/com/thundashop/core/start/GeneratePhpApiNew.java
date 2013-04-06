@@ -103,7 +103,7 @@ public class GeneratePhpApiNew {
 
     static String getPath(Class entry) {
         String[] paths = entry.getName().split("\\.");
-        String thePath = "../com.getshop.client/events/";
+        String thePath = "../../com.getshop.fontend/events/";
         int i = 0;
 
         for (String path : paths) {
@@ -437,7 +437,7 @@ public class GeneratePhpApiNew {
         Class manager = (Class) parsedMethod.get("manager");
         String methodName = method.getName();
         String managerName = manager.getSimpleName().substring(1);
-        String path = "../com.getshop.client/integrationtest/managers/" + managerName + ".php";
+        String path = "../../com.getshop.frontend/integrationtest/managers/" + managerName + ".php";
         File check = new File(path);
         String html = "";
         String comment = "";
@@ -554,7 +554,7 @@ public class GeneratePhpApiNew {
     }
 
     private static void writePHPApi(String result) throws IOException {
-        String thePath = "../com.getshop.client/events/API2.php";
+        String thePath = "../../com.getshop.frontend/events/API2.php";
 
         String content = "<?php\n\r";
         content += result;
@@ -729,7 +729,7 @@ public class GeneratePhpApiNew {
     }
 
     private static void writeDocumentation(String html) throws IOException {
-        File path = new File("../com.getshop.client/ROOT/documentation/index.html");
+        File path = new File("../../com.getshop.frontend/ROOT/documentation/index.html");
 
         html = "<link rel=\"stylesheet\" type=\"text/css\" href=\"styles.css\" />" + html;
         html = "<script type=\"text/javascript\" src=\"doc.js\"></script>" + html;

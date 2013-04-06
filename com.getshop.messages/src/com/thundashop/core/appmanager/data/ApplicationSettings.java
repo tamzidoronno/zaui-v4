@@ -1,6 +1,7 @@
 package com.thundashop.core.appmanager.data;
 
 import com.thundashop.core.common.DataCommon;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -32,4 +33,11 @@ public class ApplicationSettings extends DataCommon implements Comparator<Applic
         return o1.appName.compareTo(o2.appName);
     }
 
+    public void complete() {
+        if (type.equals(Type.Theme)) {
+            allowedAreas = new ArrayList();
+            allowedAreas.add("themes");
+            System.out.println("TEST");
+        }
+    }
 }

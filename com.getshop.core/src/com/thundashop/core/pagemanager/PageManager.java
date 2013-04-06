@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 public class PageManager extends ManagerBase implements IPageManager {
+    
     @Autowired
     public ApplicationPoolImpl applicationPool;
 
@@ -44,10 +46,11 @@ public class PageManager extends ManagerBase implements IPageManager {
     public void onReady() {
         pagePool.pageManager = this;
         pagePool.setApplicationPool(applicationPool);
+        applicationPool.setPageManager(this);
         applicationPool.initialize(credentials, storeId);
         pagePool.initialize(credentials, storeId);
     }
-    
+
     @Override
     public void dataFromDatabase(DataRetreived dataRetreived) {
         for (DataCommon data : dataRetreived.data) {
@@ -72,11 +75,6 @@ public class PageManager extends ManagerBase implements IPageManager {
     @Override
     public Page createPage(int layout, String parentId) throws ErrorException {
         return pagePool.createNewPage(layout, parentId);
-    }
-
-    @Override
-    public AppConfiguration addApplicationToPage(String pageId, String applicationName, String type) throws ErrorException {
-        return pagePool.addApplicationToPage(pageId, applicationName, type);
     }
 
     @Override
@@ -115,21 +113,14 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     @Override
-    public List<AppConfiguration> getApplications() {
+    public List<AppConfiguration> getApplications() throws ErrorException {
         List<AppConfiguration> result = new ArrayList(applicationPool.getApplications().values());
         return result;
     }
 
     @Override
-    public AppConfiguration addApplication(String appName) throws ErrorException {
-        return applicationPool.createNewApplication(appName);
-    }
-
-    @Override
-    public AppConfiguration addApplicationBySettingsId(String id) throws ErrorException {
-        AppManager manager = getManager(AppManager.class);
-        AppConfiguration res = applicationPool.createNewApplication(manager.getApplication(id).appName);
-        res.appSettingsId = id;
+    public AppConfiguration addApplication(String applicationSettingId) throws ErrorException {
+        AppConfiguration res = applicationPool.createNewApplication(applicationSettingId);
         databaseSaver.saveObject(res, credentials);
         return res;
     }
@@ -245,12 +236,9 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     @Override
-    public AppConfiguration addApplicationToPageBySettingsId(String pageId, String settingsId, String pageArea) throws ErrorException {
-        AppManager app = getManager(AppManager.class);
-        ApplicationSettings settings = app.getApplication(settingsId);
-        return pagePool.addApplicationToPage(pageId, settings.appName, pageArea, settingsId);
+    public AppConfiguration addApplicationToPage(String pageId, String applicationSettingId, String pageArea) throws ErrorException {
+        return pagePool.addApplicationToPage(pageId, pageArea, applicationSettingId);
     }
-    
 
     @Override
     public void swapApplication(String fromAppId, String toAppId) throws ErrorException {
@@ -268,6 +256,5 @@ public class PageManager extends ManagerBase implements IPageManager {
                 pool.saveApplicationConfiguration(config);
             }
         }
-    }    
-        
+    }
 }

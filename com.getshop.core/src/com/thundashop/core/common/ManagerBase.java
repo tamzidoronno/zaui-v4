@@ -77,6 +77,10 @@ public class ManagerBase {
     }
     
     public <T> T getManager(Class managerType) {
+        if (getSession() == null) {
+            throw new NullPointerException("This function cat not be used from a component is not store");    
+        }
+        
         String storeId = getSession().storeId;
         
         // TODO : Use storeId from userloggedin object.
@@ -135,3 +139,4 @@ public class ManagerBase {
     
     public void dataFromDatabase(DataRetreived data) {}
 }
+

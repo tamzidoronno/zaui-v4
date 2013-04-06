@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.pagemanager;
 
+import com.thundashop.core.appmanager.AppManager;
 import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.Credentials;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -22,6 +24,9 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 public class ApplicationPoolImpl {
+    /**
+     * Applications that are added to the corresponding store.
+     */
     private HashMap<String, AppConfiguration> applications = new HashMap<String, AppConfiguration>();
     
     @Autowired
@@ -33,6 +38,8 @@ public class ApplicationPoolImpl {
     @Autowired
     public DatabaseSaver databaseSaver;
     
+    private PageManager pageManager;
+
     public void initialize(Credentials credentials, String storeId) {
         this.credentials = credentials;
         this.storeId = storeId;
@@ -42,13 +49,20 @@ public class ApplicationPoolImpl {
         applications.put(appConfiguration.id, appConfiguration);
     }
     
-    public AppConfiguration createNewApplication(String applicationName) throws ErrorException {
+    public AppConfiguration createNewApplication(String applicationSettingsId) throws ErrorException {
+        AppManager appManager = pageManager.getManager(AppManager.class);
+        ApplicationSettings setting = appManager.getApplication(applicationSettingsId);
+        if (setting.type.equals(ApplicationSettings.Type.Theme)) {
+            removeAllThemeApplications();
+        }
         AppConfiguration appConfiguration = new AppConfiguration();
         appConfiguration.sticky = 0;
-        appConfiguration.appName = applicationName;
+        appConfiguration.appName = setting.appName;
         appConfiguration.storeId = storeId;
+        appConfiguration.appSettingsId = setting.id;
         databaseSaver.saveObject(appConfiguration, credentials);
         applications.put(appConfiguration.id, appConfiguration);
+        
         return appConfiguration;
     }
 
@@ -81,6 +95,7 @@ public class ApplicationPoolImpl {
         
         return null;
     }
+    
     public List<AppConfiguration> getStickedApplications() {
         List<AppConfiguration> ret = new ArrayList<AppConfiguration>();
         
@@ -92,13 +107,14 @@ public class ApplicationPoolImpl {
         return ret;
     }
     
-    public Map<String, AppConfiguration> getApplications() {
+    public Map<String, AppConfiguration> getApplications() throws ErrorException {
         Map<String, AppConfiguration> retApps = new HashMap();
         for (String key : applications.keySet()) {
             AppConfiguration app = applications.get(key);
             retApps.put(key, app.secureClone());
         }
         
+        addDefaultThemeIfNotExists(retApps);
         return retApps;
     }
 
@@ -150,6 +166,48 @@ public class ApplicationPoolImpl {
         }
         
         return false;
+    }
+
+    private void addDefaultThemeIfNotExists(Map<String, AppConfiguration> retApps) throws ErrorException {
+        AppManager appManager = pageManager.getManager(AppManager.class);
+        for (AppConfiguration app : retApps.values()) {
+            ApplicationSettings setting;
+            try {
+                setting = appManager.getApplication(app.appSettingsId);
+                if (setting.type.equals(ApplicationSettings.Type.Theme)) {
+                    System.out.println("Theme: " + setting.appName);
+                    return;
+                }
+            } catch (ErrorException ex) {
+                logger.warning(this, "application added but does not exists: " + app.appName + " applicationSettingsId: " + app.appSettingsId);
+            }
+            
+        }
+        
+        AppConfiguration themeApp = createNewApplication("efcbb450-8f26-11e2-9e96-0800200c9a66");
+        retApps.put(themeApp.id, themeApp.secureClone());
+    }
+
+    public void setPageManager(PageManager pageManager) {
+        this.pageManager = pageManager;
+    }
+
+    private void removeAllThemeApplications() throws ErrorException {
+        AppManager appManager = pageManager.getManager(AppManager.class);
+        
+        List<String> remove = new ArrayList<String>();
+        try {
+            for (AppConfiguration appConfig : getApplications().values()) {
+                ApplicationSettings setting = appManager.getApplication(appConfig.appSettingsId);
+                if (setting.type.equals(ApplicationSettings.Type.Theme)) {
+                    remove.add(appConfig.id);
+                }
+            }
+        } catch (ErrorException ex) {}
+        
+        for (String rem : remove) {
+            deleteApplication(rem);
+        }
     }
 
 }

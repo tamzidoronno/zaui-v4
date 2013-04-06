@@ -37,7 +37,7 @@ public interface IPageManager {
      * @return
      * @throws ErrorException 
      */
-    public AppConfiguration addApplicationBySettingsId(String id) throws ErrorException;
+    public AppConfiguration addApplication(String applicationSettingId) throws ErrorException;
     
     /**
      * Create a new page with the specified id.
@@ -78,22 +78,6 @@ public interface IPageManager {
     @Administrator
     public void saveApplicationConfiguration(AppConfiguration config) throws ErrorException;
     
-    
-    /**
-     * Add an application to a given page area.
-     * This is function is deprecated due to new application management system where id is used instead.
-     * Use addApplicationToPageBySettingsId instead.
-     * @param pageId The id of the page to add it to.
-     * @param applicationName The name of the application to add.
-     * @param pageArea The area to attach it to on the page. ("header","left","middle","right","footer")
-     * @return
-     * @throws ErrorException 
-     */
-    @Deprecated
-    @Editor
-    public AppConfiguration addApplicationToPage(String pageId, String applicationName, String pageArea) throws ErrorException;
-    
-    
     /**
      * If you know the id of the application you want to add, we strongly recommend to use this call.
      * This function 
@@ -104,22 +88,8 @@ public interface IPageManager {
      * @throws ErrorException 
      */
     @Editor
-    public AppConfiguration addApplicationToPageBySettingsId(String pageId, String settingsId, String pageArea) throws ErrorException;
-    
-    
-    /**
-     * Add application to store, this is usually singleton applications<br>
-     * A singleton application is not being attached to a page.
-     * This is function is deprecated due to new application management system where id is used instead.
-     * use addApplicationBySettingsId instead.
-     * @param appName
-     * @return
-     * @throws ErrorException 
-     */
-    @Deprecated
-    @Editor
-    public AppConfiguration addApplication(String appName) throws ErrorException;
-    
+    public AppConfiguration addApplicationToPage(String pageId, String applicationSettingId, String pageArea) throws ErrorException;
+   
     /**
      * Remove an application
      * 
@@ -143,7 +113,6 @@ public interface IPageManager {
     
     /**
      * Set a given set of settings to a given application.
-     * @param appName The php equivelant name of the application.
      * @param settings The settings for the application.
      * @throws ErrorException 
      */
@@ -206,7 +175,7 @@ public interface IPageManager {
      * 
      * @return 
      */
-    public List<AppConfiguration> getApplications();
+    public List<AppConfiguration> getApplications() throws ErrorException;
     
     /**
      * Delete the page with the id.

@@ -53,7 +53,7 @@ public class AppManager extends ManagerBase implements IAppManager {
     @Override
     public AvailableApplications getAllApplications() throws ErrorException {
         AvailableApplications retMessage = new AvailableApplications();
-        retMessage.applications = applicationPool.getAll(this.getSession().storeId);
+        retMessage.applications = applicationPool.getAll(storeId);
         retMessage.addedApplications = getAddedApplications();
         
         return retMessage;
@@ -169,6 +169,5 @@ public class AppManager extends ManagerBase implements IAppManager {
         }
         return false;
     }
-
 
 }

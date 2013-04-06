@@ -87,7 +87,7 @@ public class Examples {
     private void createNewPage() throws Exception {
         Page page = api.getPageManager().createPage(Page.PageType.HeaderMiddleFooter, "home");
         ApplicationSettings contentApp = findContentApp();
-        AppConfiguration app = api.getPageManager().addApplicationToPageBySettingsId(page.id, contentApp.id, PageArea.Type.MIDDLE);
+        AppConfiguration app = api.getPageManager().addApplicationToPage(page.id, contentApp.id, PageArea.Type.MIDDLE);
         api.getContentManager().saveContent(app.id, "Hello world!");
     }
 

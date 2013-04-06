@@ -92,18 +92,9 @@ public class PagePoolImpl {
         return finalizePage(page);
     }
 
-    public AppConfiguration addApplicationToPage(String pageId, String applicationName, String pageAreaType) throws ErrorException {
-        AppConfiguration app = applicationPool.createNewApplication(applicationName);
+    public AppConfiguration addApplicationToPage(String pageId, String pageArea, String applicationSettingsId) throws ErrorException {
+        AppConfiguration app = applicationPool.createNewApplication(applicationSettingsId);
         Page page = get(pageId);
-        page.pageAreas.get(pageAreaType).applicationsList.add(app.id);
-        databaseSaver.saveObject(page, credentials);
-        return app;
-    }
-    
-    AppConfiguration addApplicationToPage(String pageId, String appName, String pageArea, String settingsId) throws ErrorException {
-        AppConfiguration app = addApplicationToPage(pageId, appName, pageArea);
-        Page page = get(pageId);
-        app.appSettingsId = settingsId;
         databaseSaver.saveObject(page, credentials);
         return app;
     }
@@ -247,7 +238,7 @@ public class PagePoolImpl {
         return false;
     }
 
-    public Page finalizePage(Page page) {
+    public Page finalizePage(Page page) throws ErrorException {
         page.clear();
         addInheritatedApplications(page, page.parent);
         addStickedApplications(page);

@@ -370,7 +370,7 @@ public class AddApplicationsToDatabase {
         
         apps.add(createSettings(
                 "SlickTheme", 
-                "a84cbbb0-8f21-11e2-9e96-0800200c9a66", 
+                "efcbb450-8f26-11e2-9e96-0800200c9a66", 
                 emtpy, 
                 "", 
                 ApplicationSettings.Type.Theme));
@@ -404,9 +404,17 @@ public class AddApplicationsToDatabase {
         }
     }
     
+    public void showLinks() {
+        for (ApplicationSettings app : addApplications()) {
+            System.out.println("ln -s ../../com.getshop.applications/apps/"+app.appName + " " + "ns_"+app.id.replace("-", "_"));
+        }
+    }
+    
     public static void main(String args[]) throws ErrorException {
+        
         ApplicationContext context = new ClassPathXmlApplicationContext("All.xml");
-        context.getBean(AddApplicationsToDatabase.class).insert();
+//        context.getBean(AddApplicationsToDatabase.class).insert();
+        context.getBean(AddApplicationsToDatabase.class).showLinks();
         java.lang.System.exit(1);
     }
 }

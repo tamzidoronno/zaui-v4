@@ -45,7 +45,8 @@ public class AProductManager extends ManagerBase {
             IPageManager pageManager = getManager(PageManager.class);
             product.page = pageManager.createPage(Page.PageType.HeaderFooterLeftMiddleRight, "");
             product.pageId = product.page.id;
-            pageManager.addApplicationToPage(product.page.id, "ProductManager", "middle");
+            //
+            pageManager.addApplicationToPage(product.page.id, "dcd22afc-79ba-4463-bb5c-38925468ae26", "middle");
         }
     }
     

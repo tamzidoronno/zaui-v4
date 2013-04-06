@@ -56,19 +56,6 @@ public class PageManagerCache implements IPageManager {
     }
 
     @Override
-    public AppConfiguration addApplicationToPage(String pageId, String applicationName, String pageArea) throws ErrorException {
-        getApplications();
-        getPage(pageId);
-        return null;
-    }
-
-    @Override
-    public AppConfiguration addApplication(String appName) throws ErrorException {
-        getApplications();
-        return null;
-    }
-
-    @Override
     public Page removeApplication(String applicationId, String pageid) throws ErrorException {
         getApplications();
         getPage(pageid);
@@ -113,7 +100,7 @@ public class PageManagerCache implements IPageManager {
     }
 
     @Override
-    public List<AppConfiguration> getApplications() {
+    public List<AppConfiguration> getApplications() throws ErrorException {
         List<AppConfiguration> result = manager.getApplications();
         
         ArrayList<Object> keys = new ArrayList();
@@ -169,14 +156,14 @@ public class PageManagerCache implements IPageManager {
     }
 
     @Override
-    public AppConfiguration addApplicationToPageBySettingsId(String pageId, String settingsId, String pageArea) throws ErrorException {
+    public AppConfiguration addApplicationToPage(String pageId, String applicationSettingId, String pageArea) throws ErrorException {
         getApplications();
         getPage(pageId);
         return null;
     }
 
     @Override
-    public AppConfiguration addApplicationBySettingsId(String id) throws ErrorException {
+    public AppConfiguration addApplication(String applicationSettingId) throws ErrorException {
         getApplications();
         return null;
     }

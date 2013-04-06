@@ -41,13 +41,10 @@ public class ApplicationPool extends ManagerBase {
         for (DataCommon dataObject : data.data) {
             if (dataObject instanceof ApplicationSettings) {
                 ApplicationSettings settings = (ApplicationSettings)dataObject;
-                System.out.println("adding: " + settings.id + " appname: " + settings.appName + " clonedfrom: " + settings.clonedFrom);
                 applications.put(settings.id, settings);
-                System.out.println("DATA: " + settings.id);
             }
         }
         
-        System.out.println("DONE: " + data.data.size());
     }
     
     public synchronized void addApplicationSettings(ApplicationSettings settings) throws ErrorException {
@@ -56,7 +53,14 @@ public class ApplicationPool extends ManagerBase {
         applications.put(settings.id, settings);
     }
 
+    private void updateApplicationSet() {
+        for (ApplicationSettings appSettings : applications.values()) {
+            appSettings.complete();
+        }
+    }
+    
     public synchronized ApplicationSettings get(String appId) {
+        updateApplicationSet();
         return applications.get(appId);
     }
 
@@ -70,6 +74,7 @@ public class ApplicationPool extends ManagerBase {
     }
 
     public List<ApplicationSettings> getAll(String storeid) {
+        updateApplicationSet();
         ArrayList<ApplicationSettings> list = new ArrayList(applications.values());
         
         ArrayList<ApplicationSettings> returnlist = new ArrayList();
@@ -84,6 +89,8 @@ public class ApplicationPool extends ManagerBase {
         Collections.sort(returnlist, new ApplicationSettings());
         return returnlist;
     }
+
+    
     
     
 }

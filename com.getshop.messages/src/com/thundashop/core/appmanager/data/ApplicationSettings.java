@@ -37,7 +37,6 @@ public class ApplicationSettings extends DataCommon implements Comparator<Applic
         if (type.equals(Type.Theme)) {
             allowedAreas = new ArrayList();
             allowedAreas.add("themes");
-            System.out.println("TEST");
         }
     }
 }

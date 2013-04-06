@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -175,7 +174,6 @@ public class ApplicationPoolImpl {
             try {
                 setting = appManager.getApplication(app.appSettingsId);
                 if (setting.type.equals(ApplicationSettings.Type.Theme)) {
-                    System.out.println("Theme: " + setting.appName);
                     return;
                 }
             } catch (ErrorException ex) {
@@ -196,15 +194,14 @@ public class ApplicationPoolImpl {
         AppManager appManager = pageManager.getManager(AppManager.class);
         
         List<String> remove = new ArrayList<String>();
-        try {
-            for (AppConfiguration appConfig : getApplications().values()) {
+        for (AppConfiguration appConfig : getApplications().values()) {
+            try {
                 ApplicationSettings setting = appManager.getApplication(appConfig.appSettingsId);
                 if (setting.type.equals(ApplicationSettings.Type.Theme)) {
                     remove.add(appConfig.id);
                 }
-            }
-        } catch (ErrorException ex) {}
-        
+            } catch (ErrorException ex) {}
+        }
         for (String rem : remove) {
             deleteApplication(rem);
         }

@@ -6,6 +6,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
+import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
@@ -68,6 +69,12 @@ public class AddPageSettingsIdToAppConfigurationObject {
         check.put("Translation", "ee1f3649-cfd8-41d5-aa5b-682216f376b6");
         check.put("Users", "ba6f5e74-87c7-4825-9606-f2d3c93d292f");
         check.put("WebShopList", "e9864616-96d6-485f-8cb0-e17cdffbcfec");
+        
+        check.put("TheRedTheme", "d147f6a0-8f31-11e2-9e96-0800200c9a66");
+        check.put("WideScreenTheme", "c2da56a0-8f2f-11e2-9e96-0800200c9a66");
+        check.put("SlickTheme", "efcbb450-8f26-11e2-9e96-0800200c9a66");
+        check.put("WhiteAndBlueTheme", "a84cbbb0-8f21-11e2-9e96-0800200c9a66");
+        check.put("GetShopTheme", "7a4f3750-895a-11e2-9e96-0800200c9a66");
 
         Morphia morphia = new Morphia();
         morphia.map(DataCommon.class);

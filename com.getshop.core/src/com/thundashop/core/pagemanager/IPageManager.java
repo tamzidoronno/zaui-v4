@@ -32,11 +32,12 @@ public interface IPageManager {
     public Page createPage(int layout, String parentId) throws ErrorException;
     
     /**
-     * Same as add application just by using its id.
+     * Add application
      * @param id
      * @return
      * @throws ErrorException 
      */
+    @Administrator
     public AppConfiguration addApplication(String applicationSettingId) throws ErrorException;
     
     /**

@@ -95,6 +95,7 @@ public class PagePoolImpl {
     public AppConfiguration addApplicationToPage(String pageId, String pageArea, String applicationSettingsId) throws ErrorException {
         AppConfiguration app = applicationPool.createNewApplication(applicationSettingsId);
         Page page = get(pageId);
+        page.pageAreas.get(pageArea).applicationsList.add(app.id);
         databaseSaver.saveObject(page, credentials);
         return app;
     }

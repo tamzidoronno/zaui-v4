@@ -194,7 +194,7 @@ public class ApplicationPoolImpl {
         AppManager appManager = pageManager.getManager(AppManager.class);
         
         List<String> remove = new ArrayList<String>();
-        for (AppConfiguration appConfig : getApplications().values()) {
+        for (AppConfiguration appConfig : applications.values()) {
             try {
                 ApplicationSettings setting = appManager.getApplication(appConfig.appSettingsId);
                 if (setting.type.equals(ApplicationSettings.Type.Theme)) {

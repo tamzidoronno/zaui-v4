@@ -19,10 +19,12 @@ public class Runner {
             serverSocket = new ServerSocket(25557);
             while (true) {
                 Socket socket = serverSocket.accept();
+                System.out.println("Starting processor");
                 ClientHandler handler = new ClientHandler(socket);
                 handler.start();
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

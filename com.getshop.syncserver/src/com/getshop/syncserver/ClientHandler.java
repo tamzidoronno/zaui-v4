@@ -86,7 +86,10 @@ class ClientHandler extends Thread {
             String result = "";
             while(true) {
                 byte[] b = new byte[1];
-                bis.read(b);
+                int read = bis.read(b);
+                if(read <= 0) {
+                    return null;
+                }
                 String character = new String(b);
                 if(character.equals("\n")) {
                     break;
@@ -95,7 +98,6 @@ class ClientHandler extends Thread {
             }
             return result;
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return null;
     }
@@ -132,13 +134,11 @@ class ClientHandler extends Thread {
     private void monitorIncomingEvents() throws IOException, Exception {
         while (true) {
             String line = readSocketLine();
-            System.out.println(line);
             if (line == null) {
                 monitoroutgoing.setDisconnected(true);
                 return;
             }
 
-            System.out.println("TEST");
             switch (line) {
                 case "IN_CLOSE_WRITE":
                     fetchFile();
@@ -161,9 +161,15 @@ class ClientHandler extends Thread {
         String path = readSocketLine();
         path = translatePath(path);
         if (path == null) {
-            this.writeLineToSocket("OK");
+            this.writeLineToSocket("FAILED");
             return;
         }
+        
+        
+        System.out.println(path);
+        this.writeLineToSocket("OK");
+        
+        
         long length = Long.parseLong(readSocketLine());
         byte[] by = new byte[1024];
 
@@ -177,26 +183,29 @@ class ClientHandler extends Thread {
         if (length == 0) {
             file.createNewFile();
         } else {
-            try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(path))) {
-                while (true) {
-                    int size = bis.read(by);
-                    if (size > 0) {
-                        bos.write(by, 0, size);
-                        bos.flush();
-                        total += size;
-                        if (total == length) {
-                            break;
-                        }
+            FileOutputStream fos = new FileOutputStream(path);
+            BufferedOutputStream bos = new BufferedOutputStream(fos);
+            while (true) {
+                int size = bis.read(by);
+                if (size > 0) {
+                    bos.write(by, 0, size);
+                    bos.flush();
+                    total += size;
+                    if (total == length) {
+                        break;
                     }
-                    if(size < 0) {
+                    if(total > length) {
+                        System.out.println("Failed transferring path: " + path);
                         break;
                     }
                 }
+                if(size < 0) {
+                    break;
+                }
             }
+            bos.close();
+            fos.close();
         }
-        
-        file = null;
-        
         this.writeLineToSocket("OK");
     }
 
@@ -233,11 +242,15 @@ class ClientHandler extends Thread {
         }
 
         if (settings == null) {
-            allApps = api.getAppManager().getAllApplications();
-            for (ApplicationSettings apps : allApps.applications) {
-                if (apps.appName.equals(appName) && apps.ownerStoreId.equals(storeId)) {
-                    settings = apps;
+            try {
+                allApps = api.getAppManager().getAllApplications();
+                for (ApplicationSettings apps : allApps.applications) {
+                    if (apps.appName.equals(appName) && apps.ownerStoreId.equals(storeId)) {
+                        settings = apps;
+                    }
                 }
+            }catch(Exception e) {
+                settings = null;
             }
         }
         if (settings == null) {
@@ -324,7 +337,9 @@ class ClientHandler extends Thread {
     private void checkNewFiles(ArrayList<String> filesOnClient) throws Exception {
         
         List<String> newFiles = new ArrayList();
-        for(String file : filesOnClient) {
+        boolean hash = true;
+        for (int i = 0; i < filesOnClient.size(); i += 2) {
+            String file = filesOnClient.get(i);
             File fileobj = new File(file);
             String translated = translatePath(fileobj.getCanonicalPath());
             if(translated != null) {

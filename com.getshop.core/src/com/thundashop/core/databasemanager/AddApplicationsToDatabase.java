@@ -413,8 +413,8 @@ public class AddApplicationsToDatabase {
     public static void main(String args[]) throws ErrorException {
         
         ApplicationContext context = new ClassPathXmlApplicationContext("All.xml");
-//        context.getBean(AddApplicationsToDatabase.class).insert();
-        context.getBean(AddApplicationsToDatabase.class).showLinks();
+        context.getBean(AddApplicationsToDatabase.class).insert();
+//        context.getBean(AddApplicationsToDatabase.class).showLinks();
         java.lang.System.exit(1);
     }
 }

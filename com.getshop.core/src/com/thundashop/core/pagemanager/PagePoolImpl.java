@@ -156,11 +156,11 @@ public class PagePoolImpl {
 
     private void addDefaultApplications(Page page) throws ErrorException {
         if (Page.DefaultPages.Home.equals(page.id)) {
-            AppConfiguration topMenu = addApplication("TopMenu", page, PageArea.Type.TOP);
-            AppConfiguration logo = addApplication("Logo", page, PageArea.Type.TOP);
+            AppConfiguration topMenu = addApplication("1051b4cf-6e9f-475d-aa12-fc83a89d2fd4", page, PageArea.Type.TOP);
+            AppConfiguration logo = addApplication("974beda7-eb6e-4474-b991-5dbc9d24db8e", page, PageArea.Type.TOP);
 
-            AppConfiguration footer = addApplication("Footer", page, PageArea.Type.BOTTOM);
-            AppConfiguration search = addApplication("Search", page, PageArea.Type.TOP);
+            AppConfiguration footer = addApplication("d54f339d-e1b7-412f-bc34-b1bd95036d83", page, PageArea.Type.BOTTOM);
+            AppConfiguration search = addApplication("626ff5c4-60d4-4faf-ac2e-d0f21ffa9e87", page, PageArea.Type.TOP);
 
             applicationPool.stickApplication(logo.id, 1);
             applicationPool.stickApplication(topMenu.id, 1);
@@ -169,27 +169,27 @@ public class PagePoolImpl {
         }
 
         if (Page.DefaultPages.Users.equals(page.id)) {
-            addApplication("Users", page, PageArea.Type.MIDDLE);
+            addApplication("ba6f5e74-87c7-4825-9606-f2d3c93d292f", page, PageArea.Type.MIDDLE);
         }
 
         if (Page.DefaultPages.CartPage.equals(page.id) || Page.DefaultPages.CheckOut.equals(page.id)) {
-            addApplication("CartManager", page, PageArea.Type.MIDDLE);
+            addApplication("900e5f6b-4113-46ad-82df-8dafe7872c99", page, PageArea.Type.MIDDLE);
         }
 
         if (Page.DefaultPages.OrderOverviewPageId.equals(page.id)) {
-            addApplication("OrderManager", page, PageArea.Type.MIDDLE);
+            addApplication("27716a58-0749-4601-a1bc-051a43a16d14", page, PageArea.Type.MIDDLE);
         }
 
         if (Page.DefaultPages.MyAccount.equals(page.id)) {
-            addApplication("Account", page, PageArea.Type.MIDDLE);
+            addApplication("6c245631-effb-4fe2-abf7-f44c57cb6c5b", page, PageArea.Type.MIDDLE);
         }
 
         if (Page.DefaultPages.Settings.equals(page.id)) {
-            addApplication("Settings", page, PageArea.Type.MIDDLE);
+            addApplication("d755efca-9e02-4e88-92c2-37a3413f3f41", page, PageArea.Type.MIDDLE);
         }
 
         if (Page.DefaultPages.Domain.equals(page.id)) {
-            addApplication("OpenSRS", page, PageArea.Type.MIDDLE);
+            addApplication("fb076580-c7df-471c-b6b7-9540e4212441", page, PageArea.Type.MIDDLE);
         }
     }
 

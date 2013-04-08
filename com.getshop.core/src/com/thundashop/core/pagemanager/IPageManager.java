@@ -32,11 +32,12 @@ public interface IPageManager {
     public Page createPage(int layout, String parentId) throws ErrorException;
     
     /**
-     * Same as add application just by using its id.
+     * Add application
      * @param id
      * @return
      * @throws ErrorException 
      */
+    @Administrator
     public AppConfiguration addApplication(String applicationSettingId) throws ErrorException;
     
     /**
@@ -235,4 +236,13 @@ public interface IPageManager {
      */
     @Administrator
     public void swapApplication(String fromAppId, String toAppId) throws ErrorException;
+    
+    /**
+     * Remove all applications for specified page area at specified page.
+     * 
+     * @param pageId
+     * @throws ErrorException 
+     */
+    @Administrator
+    public void clearPageArea(String pageId, String pageArea) throws ErrorException;
 }

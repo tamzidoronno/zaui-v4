@@ -6,12 +6,18 @@ package com.thundashop.core.databasemanager;
 
 import com.thundashop.core.appmanager.ApplicationPool;
 import com.thundashop.core.appmanager.data.ApplicationSettings;
+import com.thundashop.core.common.AppConfiguration;
+import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.data.Credentials;
+import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.PageArea;
+import com.thundashop.core.storemanager.StoreManager;
+import com.thundashop.core.storemanager.data.Store;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -411,10 +417,63 @@ public class AddApplicationsToDatabase {
     }
     
     public static void main(String args[]) throws ErrorException {
-        
         ApplicationContext context = new ClassPathXmlApplicationContext("All.xml");
         context.getBean(AddApplicationsToDatabase.class).insert();
 //        context.getBean(AddApplicationsToDatabase.class).showLinks();
         java.lang.System.exit(1);
     }
+
+    private void updateThemes() {
+        Credentials credentials = new Credentials(StoreManager.class);
+        credentials.manangerName = "StoreManager";
+        credentials.storeid = "all";
+        credentials.password = "ADSFASDF";
+        for (DataCommon data : database.retreiveData(credentials)) {
+            if (data instanceof Store) {
+                Store store = (Store)data;
+                if (store.configuration != null && store.configuration.theeme != null) {
+                    if (store.configuration.theeme.equals("blueandwhite")) {
+                        createNewApplication("WhiteAndBlueTheme", "a84cbbb0-8f21-11e2-9e96-0800200c9a66", store.id);
+                    }
+                    
+                    if (store.configuration.theeme.equals("slick")) {
+                        createNewApplication("SlickTheme", "efcbb450-8f26-11e2-9e96-0800200c9a66", store.id);
+                    } 
+                    
+                    if (store.configuration.theeme.equals("thered")) {
+                        createNewApplication("TheRedTheme", "d147f6a0-8f31-11e2-9e96-0800200c9a66", store.id);
+                    } 
+                    
+                    if (store.configuration.theeme.equals("widescreen")) {
+                        createNewApplication("WideScreenTheme", "c2da56a0-8f2f-11e2-9e96-0800200c9a66", store.id);
+                    } 
+                    
+                    if (store.configuration.theeme.equals("getshop")) {
+                        createNewApplication("GetShopTheme", "7a4f3750-895a-11e2-9e96-0800200c9a66", store.id);
+                    } 
+                    
+                }
+            }
+            
+        }
+    }
+    
+    private void createNewApplication(String appName, String appsettingsid, String storeid) {
+        AppConfiguration appConfiguration = new AppConfiguration();
+        appConfiguration.sticky = 0;
+        appConfiguration.appName = appName;
+        appConfiguration.storeId = storeid;
+        appConfiguration.appSettingsId = appsettingsid;
+        Credentials credentials = new Credentials(PageManager.class);
+        credentials.storeid = storeid;
+        credentials.manangerName = "PageManager";
+        credentials.password = "ASDFASFD";
+        try {
+            appConfiguration.id = UUID.randomUUID().toString();
+            database.save(appConfiguration, credentials);
+        } catch (ErrorException ex) {
+            ex.printStackTrace();
+        }
+    }
+
 }

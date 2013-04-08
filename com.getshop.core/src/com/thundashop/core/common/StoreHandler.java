@@ -40,7 +40,6 @@ public class StoreHandler {
 
     private void init() {
         for (ManagerBase base : messageHandler) {
-            System.out.println(base.getClass().getSimpleName());
             base.session = session;
             if (!base.isSingleton) {
                 base.storeId = storeId;

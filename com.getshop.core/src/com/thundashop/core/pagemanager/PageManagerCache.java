@@ -178,6 +178,11 @@ public class PageManagerCache implements IPageManager {
             }
         }
     }
-    
+
+    @Override
+    public void clearPageArea(String pageId, String pageArea) throws ErrorException {
+        getApplications();
+        getPage(pageId);
+    }
 
 }

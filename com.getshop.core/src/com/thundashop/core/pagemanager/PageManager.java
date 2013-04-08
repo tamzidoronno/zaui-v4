@@ -11,6 +11,7 @@ import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.pagemanager.data.Page;
+import com.thundashop.core.pagemanager.data.PageArea;
 import com.thundashop.core.productmanager.ProductManager;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -254,6 +255,21 @@ public class PageManager extends ManagerBase implements IPageManager {
                 config.appSettingsId = toApp.id;
                 pool.saveApplicationConfiguration(config);
             }
+        }
+    }
+
+    @Override
+    public void clearPageArea(String pageId, String pageAreaName) throws ErrorException {
+        Page page = pagePool.get(pageId);
+        PageArea pageArea = page.pageAreas.get(pageAreaName);
+        
+        List<String> apps = new ArrayList();
+        for (AppConfiguration app : pageArea.applications.values()) {
+            apps.add(app.id);
+        }
+        
+        for (String appid : apps) {
+            removeApplication(appid, pageId);
         }
     }
 }

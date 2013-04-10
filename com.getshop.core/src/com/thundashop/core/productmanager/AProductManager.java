@@ -80,9 +80,10 @@ public class AProductManager extends ManagerBase {
     protected List<Product> getProducts(ProductCriteria searchCriteria) throws ErrorException {
         ArrayList<Product> retProducts = new ArrayList();
         for (Product product : products.values()) {
-            finalize(product);
-            if (product.check(searchCriteria))
+            if (product.check(searchCriteria)) {
+                finalize(product);
                 retProducts.add(product);
+            }
         }
         
         return retProducts;

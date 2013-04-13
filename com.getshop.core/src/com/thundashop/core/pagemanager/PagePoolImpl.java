@@ -4,8 +4,6 @@
  */
 package com.thundashop.core.pagemanager;
 
-import com.thundashop.core.appmanager.AppManager;
-import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
@@ -170,7 +168,7 @@ public class PagePoolImpl {
         }
 
         if (Page.DefaultPages.Users.equals(page.id)) {
-            
+            AppConfiguration app = addApplication("00d8f5ce-ed17-4098-8925-5697f6159f66", page, PageArea.Type.LEFT);
             addApplication("ba6f5e74-87c7-4825-9606-f2d3c93d292f", page, PageArea.Type.MIDDLE);
         }
 
@@ -244,7 +242,6 @@ public class PagePoolImpl {
         page.clear();
         addInheritatedApplications(page, page.parent);
         addStickedApplications(page);
-
         boolean onlyExtraApplications = shouldOnlyContainExtraApplications(page);
         page.populateApplications(applicationPool.getApplications(), onlyExtraApplications);
         page.sortApplications();

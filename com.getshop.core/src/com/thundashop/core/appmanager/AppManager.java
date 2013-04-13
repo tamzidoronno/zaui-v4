@@ -54,8 +54,6 @@ public class AppManager extends ManagerBase implements IAppManager {
     public AvailableApplications getAllApplications() throws ErrorException {
         AvailableApplications retMessage = new AvailableApplications();
         retMessage.applications = applicationPool.getAll(storeId);
-        retMessage.addedApplications = getAddedApplications();
-        
         return retMessage;
     }
     

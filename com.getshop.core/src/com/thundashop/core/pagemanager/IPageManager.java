@@ -179,6 +179,15 @@ public interface IPageManager {
     public List<AppConfiguration> getApplications() throws ErrorException;
     
     /**
+     * Get all applications that is needed to render a page.
+     * 
+     * @param pageId
+     * @return
+     * @throws ErrorException 
+     */
+    public List<AppConfiguration> getApplicationsForPage(String pageId) throws ErrorException;
+    
+    /**
      * Delete the page with the id.
      * 
      * @param id 
@@ -245,4 +254,5 @@ public interface IPageManager {
      */
     @Administrator
     public void clearPageArea(String pageId, String pageArea) throws ErrorException;
+
 }

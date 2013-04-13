@@ -52,6 +52,7 @@ public class BannerManager extends ManagerBase implements IBannerManager {
         
         savedSet.height = set.height;
         savedSet.width = set.width;
+        savedSet.interval = set.interval;
         
         databaseSaver.saveObject(savedSet, credentials);
         return savedSet;

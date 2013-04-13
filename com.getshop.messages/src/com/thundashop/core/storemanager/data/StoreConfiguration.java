@@ -33,4 +33,5 @@ public class StoreConfiguration extends DataCommon {
     public Colors colors = new Colors();
     
     public boolean hasSMSPriviliges = false;
+    public boolean hasSelectedDesign = false;
 }

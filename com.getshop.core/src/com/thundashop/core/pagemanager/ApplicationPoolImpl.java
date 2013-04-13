@@ -8,6 +8,8 @@ import com.thundashop.core.appmanager.AppManager;
 import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.Credentials;
+import com.thundashop.core.storemanager.StoreManager;
+import com.thundashop.core.storemanager.data.Store;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +32,9 @@ public class ApplicationPoolImpl {
     
     @Autowired
     public Logger logger;
+    
+    @Autowired
+    public StoreManager storeManager;
     
     private String storeId;
     private Credentials credentials;
@@ -204,6 +209,16 @@ public class ApplicationPoolImpl {
         }
         for (String rem : remove) {
             deleteApplication(rem);
+        }
+    }
+
+    public void setThemeSelectedToStoreConfiguration(AppConfiguration res) throws ErrorException {
+        AppManager appManager = pageManager.getManager(AppManager.class);
+        ApplicationSettings setting = appManager.getApplication(res.appSettingsId);
+        if (setting.type.equals(ApplicationSettings.Type.Theme)) {
+            Store store = pageManager.getStore();
+            store.configuration.hasSelectedDesign = true;
+            storeManager.saveStore(store.configuration);
         }
     }
 

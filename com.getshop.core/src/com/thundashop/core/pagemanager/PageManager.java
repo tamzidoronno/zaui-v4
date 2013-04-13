@@ -14,7 +14,6 @@ import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageArea;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.storemanager.StoreManager;
-import com.thundashop.core.storemanager.data.Store;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

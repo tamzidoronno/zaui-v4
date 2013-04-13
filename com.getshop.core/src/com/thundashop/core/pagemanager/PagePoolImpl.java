@@ -57,7 +57,7 @@ public class PagePoolImpl {
         pageLayout.put(Page.DefaultPages.Home, Page.PageType.HeaderFooterLeftMiddleRight);
         pageLayout.put(Page.DefaultPages.MyAccount, Page.PageType.HeaderMiddleFooter);
         pageLayout.put(Page.DefaultPages.OrderOverviewPageId, Page.PageType.HeaderMiddleFooter);
-        pageLayout.put(Page.DefaultPages.Users, Page.PageType.HeaderMiddleFooter);
+        pageLayout.put(Page.DefaultPages.Users, Page.PageType.HeaderLeftMiddleFooter);
         pageLayout.put(Page.DefaultPages.Settings, Page.PageType.HeaderMiddleFooter);
         pageLayout.put(Page.DefaultPages.Domain, Page.PageType.HeaderMiddleFooter);
     }
@@ -170,6 +170,7 @@ public class PagePoolImpl {
         }
 
         if (Page.DefaultPages.Users.equals(page.id)) {
+            
             addApplication("ba6f5e74-87c7-4825-9606-f2d3c93d292f", page, PageArea.Type.MIDDLE);
         }
 

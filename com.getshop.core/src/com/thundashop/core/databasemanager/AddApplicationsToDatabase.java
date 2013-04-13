@@ -360,12 +360,15 @@ public class AddApplicationsToDatabase {
                 "", 
                 ApplicationSettings.Type.System));
         
-        apps.add(createSettings(
+        ApplicationSettings theRedTheme = createSettings(
                 "TheRedTheme", 
                 "d147f6a0-8f31-11e2-9e96-0800200c9a66", 
                 emtpy, 
                 "", 
-                ApplicationSettings.Type.Theme));
+                ApplicationSettings.Type.Theme);
+        theRedTheme.isPublic = false;
+        theRedTheme.ownerStoreId = "8f833449-a8aa-4f3f-a18d-de0a909d0882";
+        apps.add(theRedTheme);
         
         apps.add(createSettings(
                 "WideScreenTheme", 
@@ -381,19 +384,26 @@ public class AddApplicationsToDatabase {
                 "", 
                 ApplicationSettings.Type.Theme));
        
-        apps.add(createSettings(
+        ApplicationSettings whiteAndBlueTheme = createSettings(
                 "WhiteAndBlueTheme", 
                 "a84cbbb0-8f21-11e2-9e96-0800200c9a66", 
                 emtpy, 
                 "", 
-                ApplicationSettings.Type.Theme));
+                ApplicationSettings.Type.Theme);
+        
+        whiteAndBlueTheme.ownerStoreId = "42361a75-e581-49b7-b409-c970d5adaa39";
+        whiteAndBlueTheme.isPublic = false;
+        apps.add(whiteAndBlueTheme);
        
-        apps.add(createSettings(
+        ApplicationSettings getshopTheme = createSettings(
                 "GetShopTheme", 
                 "7a4f3750-895a-11e2-9e96-0800200c9a66", 
                 emtpy, 
                 "", 
-                ApplicationSettings.Type.Theme));
+                ApplicationSettings.Type.Theme);
+        getshopTheme.isPublic = false;
+        getshopTheme.ownerStoreId = "cdae85c1-35b9-45e6-a6b9-fd95c18bb291";
+        apps.add(getshopTheme);
 
         return apps;
     }

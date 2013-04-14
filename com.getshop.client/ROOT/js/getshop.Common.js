@@ -140,7 +140,7 @@ thundashop.common.saveCKEditor = function(data, target) {
         "content": data,
         "altid": altid
     });
-    var text=$(data).text();
+    var text=$("<p>" + data + "</p>").text();
     text=text.replace(/^\s+|\s+$/g, "");
     console.log(text.length);
     if(text.length === 0) {

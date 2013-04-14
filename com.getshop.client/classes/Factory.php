@@ -155,12 +155,12 @@ class Factory extends FactoryBase {
     }
     
     public function getConfigurationFlag($flag) {
-        return $this->store->configurationFlags[$flag];
+        return $this->store->configuration->configurationFlags->{$flag};
     }
     
     public function setConfigurationFlag($flag, $setting) {
-        $this->store->configurationFlags[$flag] = $setting;
-        $this->getApi()->getStoreManager()->saveStore($this->store);
+        $this->store->configuration->configurationFlags->{$flag} = $setting;
+        $this->getApi()->getStoreManager()->saveStore($this->store->configuration);
     }
     
     public function showNotExistsMessage() {

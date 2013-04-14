@@ -1,0 +1,31 @@
+<div class="skeleton2">
+<?php
+$this->includefile('mainmenu');
+$this->includefile('header');
+?>
+
+<div class="mainarea-outer">
+    <div class="mainarea 2col-left-layout"> 
+        <div class="main-area-top"></div>
+        <div class="mainareacontent">
+            <div area='left' id="apparea-left" class="applicationarea left inline">
+                <?php 
+                if (!$this->emptySkeleton)    
+                    $this->getPage()->getLeftApplicationArea()->render(); 
+                ?>
+            </div>
+            <div area='middle' id="apparea-middle" class="applicationarea middle inline">
+                <?php
+                if (!$this->emptySkeleton)    
+                    $this->getPage()->getMiddleApplicationArea()->render(); 
+                ?>
+            </div>
+        </div>
+        <div class="main-area-bottom"></div>
+    </div>
+</div>
+
+<?php
+    $this->includefile('footer');
+?>
+</div>

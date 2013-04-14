@@ -1,0 +1,17 @@
+<?php
+/* @var $this Factory */
+$apps = $this->getApplicationPool()->getSingletonInstances();
+
+foreach ($apps as $app) {
+    if (method_exists($app, "renderBottom")) {
+        $id = $app->configuration->id;
+        $appClass = get_class($app);
+        if(strpos($appClass, "\\") >= 0) {
+            $appClass = substr($appClass, strpos($appClass, "\\")+1);
+        }
+        echo "<div appid='$id' app='$appClass' class='app $appClass'>";
+        $app->renderBottom();
+        echo "</div>";        
+    }
+}
+?>

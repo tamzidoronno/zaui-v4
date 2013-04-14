@@ -1,0 +1,71 @@
+<?
+/* @var $this \ns_c841f5a5_ecd5_4007_b9da_2c7538c07212\ApplicationDisplayer */
+/* @var $factory \Factory */
+$factory = $this->getFactory();
+$pool = $factory->getApplicationPool();
+/* @var $pool ApplicationPool */
+
+if($this->isEditorMode()) {
+    $allApps = $pool->getNotAddedSingletonApplicationSettings();
+    printApplications(false, $allApps, $this, $pool);
+} else {
+    printApplications("Web shop applications", $pool->getAllApplicationSettingsByType("WebshopApplication"), $this, $pool);
+    printApplications("Payment applications", $pool->getAllApplicationSettingsByType("PaymentApplication"), $this, $pool);
+    printApplications("Marketing applications", $pool->getAllApplicationSettingsByType("MarketingApplication"), $this, $pool);
+    printApplications("Reporting applications", $pool->getAllApplicationSettingsByType("ReportingApplication"), $this, $pool);
+}
+
+function printApplications($appNames, $apps, \ns_c841f5a5_ecd5_4007_b9da_2c7538c07212\ApplicationDisplayer $appDisplayer, $pool) {
+    $activebutton = true;
+    if ($appNames) {
+        echo "<div class='app_type'>$appNames</div>";
+        $activebutton = false;
+    }
+    $i=0;
+    echo "<div class='features'>";
+    foreach($apps as $app) {
+        /* @var $app core_common_AppConfiguration */
+
+        $i++;
+        print_app_for_getshop($app, $i%2, $activebutton, $pool);
+    }     
+    echo "</div>";
+}
+
+function print_app_for_getshop($app, $even, $displayActivateButton, ApplicationPool $pool) {
+    $name = $app->appName;
+    $supportStandalone = method_exists($app, "renderStandalone") ? "true" : "false";
+?>
+    <div class="appbox inline" style="width: 425px; border: solid 1px #DDD; height: 250px; margin-bottom: 15px; <? echo ($even) ? 'margin-right: 11px;'  : ""; ?>" class="inline" >
+        <div class="app_title">
+            <? echo $name; ?>
+        </div> 
+        <div style="padding-bottom: 20px; margin-bottom: 10px; padding-left:10px;">
+            <table>
+                <td style="width:150px;" align="center">
+                    <img width="150" src="<?php 
+                    echo \ApplicationHelper::getApplicationImage($app);
+                    ?>">
+                </td>
+                <td valign="top">
+                    <div style="font-size:14px; padding-left: 10px;">
+                        <?
+                        $instance = IocContainer::getFactorySingelton()->convertUUIDtoString($app->id) . "\\" . $app->appName;
+                        $instance = new $instance();
+                        if(method_exists($instance, "getDescription")) {
+                            echo $instance->getDescription(); 
+                        }
+                        ?>
+                    <div>
+                </td>
+            </table>
+        </div>
+        <? if ($displayActivateButton): ?>
+        <div id="activateSingletonApplication" class="button-large" renderStandalone="<? echo $supportStandalone; ?>" appId="<? echo $app->id;?>">
+            <div class="rightglare"></div>
+            <div class="filler" style="background-color: green !important"></div>
+            <ins>Activate</ins>
+        </div>        
+        <? endif; ?>
+    </div>
+<?php } ?>

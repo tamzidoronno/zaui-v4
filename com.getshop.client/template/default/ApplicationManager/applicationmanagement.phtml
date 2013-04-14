@@ -1,0 +1,55 @@
+<div class="applicationamanagement">
+    <div class="tabs">
+        <div class="tabset inline">
+                <div method="displayApplicationManagement" gsname="id" gsvalue="overview" gstype="clicksubmit" output="informationbox" class="tab <? if($this->getSettingsId() == "overview") { echo "active"; } ?>"><? echo $this->__f("Overview"); ?></div>
+            <?
+                $myApps = $this->getMyApplications();
+                $notPrint = array();
+                foreach($myApps as $app) {
+                    /* @var $app core_appmanager_data_ApplicationSettings */
+                    if(isset($app->clonedFrom)) {
+                        $notPrint[] = $app->clonedFrom;
+                    }
+                }
+                
+                if(is_array($myApps)) {
+                    foreach($myApps as $myApp) {
+                        /* @var $myApp core_appmanager_data_ApplicationSettings */
+                        $active = "";
+                        if($this->getSettingsId() == $myApp->id) {
+                            $active = "active";
+                        }
+                        if(in_array($myApp->id, $notPrint)) {
+                            continue;
+                        }
+                        ?>
+                        <div method="displayApplicationManagement" gsname="id" gsvalue="<? echo $myApp->id; ?>" gstype="clicksubmit" output="informationbox" class="tab <? echo $active; ?>"><? echo $myApp->appName; 
+                        if(isset($myApp->clonedFrom)) {
+                            echo " ".$this->__f("(cloned)");
+                        }
+                        
+                        ?></div>
+                        <?
+                    }
+                }
+            ?>
+            <div method="displayApplicationManagement" gsname="id" gsvalue="newapp" gstype="clicksubmit" output="informationbox" class="tab <? if($this->getSettingsId() == "newapp") { echo "active"; } ?>"><? echo $this->__f("Create application"); ?></div>
+        </div>
+        <div class="tab_content inline">
+                <div class="content_holder active" id="createapp">
+                    <div class="inner_content ">
+                        <?
+                        if($this->getSettingsId() == "overview") {
+                            $this->includefile("applicationoverview", "ApplicationManager");
+                        } else {
+                            $this->includefile("editapplication", "ApplicationManager");
+                        }
+                        ?>
+                </div>
+                </div>
+            </div>
+    </div>
+
+<!--    <div gstype="clicksubmit" method="displayApplicationManagement" gsname="id" gsvalue="somevalue" output="informationbox">TMP REFRESH</div>-->
+</div>
+<div style="height: 200px;"></div>

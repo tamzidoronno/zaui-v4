@@ -1,0 +1,49 @@
+<div class="helpbox" style='left: 20px;'>
+    <span class="helpboxarrow"></span>
+    <div class="step1 step">
+        <?php
+        echo "<div class='title'>" .$this->__("page_layout_config") . "</div>";
+        echo "<div>" . $this->__("choose_layout") . "</div>";
+        echo "<div class='number'>" ."1. " . $this->__("one_col", "mainmenu") . "</div>";
+        echo "<div class='number'>" ."2. " . $this->__("two_col_left", "mainmenu") . "</div>";
+        echo "<div class='number'>" ."3. " . $this->__("two_col_right", "mainmenu") . "</div>";
+        echo "<div class='number'>" ."4. " . $this->__("three_col", "mainmenu") . "</div>";
+        ?>
+        <span class="steps"><?php echo $this->__("step1of4"); ?></span>
+    </div>
+    <div class="step2 step">
+        <?php
+        echo "<div class='title'>" .$this->__("add_remove_apps") . "</div>";
+        echo "<div>" .$this->__("add_remove_apps_desc") . "</div>";
+        echo "<div class='number'>" ."1. " . $this->__("add_remove_apps_desc_1") . "</div>";
+        echo "<div class='number'>" ."2. " . $this->__("add_remove_apps_desc_2") . "</div>";
+        ?>
+        <span class="steps"><?php echo $this->__("step2of4"); ?></span>
+    </div>
+    <div class="step3 step">
+        <?php
+        echo "<div class='title'>" .$this->__("store_configuration") . "</div>";
+        echo "<div>" .$this->__("store_configuration_title") . "</div>";
+        echo "<div class='number'>" ."1. " . $this->__("setup_design") . "</div>";
+        echo "<div class='number'>" ."2. " . $this->__("digg_into_settings") . "</div>";
+        echo "<div class='number'>" ."3. " . $this->__("setup_your_domain") . "</div>";
+        ?>
+        <span class="steps"><?php echo $this->__("step3of4"); ?></span>
+    </div>
+    <div class="step4 step">
+        <?php
+        echo "<div class='title'>" .$this->__("we_are_here") . "</div>";
+        echo "<div>" .$this->__("help_buttons") . "</div>";
+        echo "<div class='number'>" ."1. " . $this->__("look_at_intro") . "</div>";
+        echo "<div class='number'>" ."2. " . $this->__("send_feedback") . "</div>";
+        echo "<div><b>" . $this->__("intro_suggestion") . "</b></div>";
+        ?>
+        <span class="steps"><?php echo $this->__("step4of4"); ?></span>
+    </div>
+    <span class="prev"><?php echo $this->__("back", "common"); ?></span>
+    <span class="next"><?php echo $this->__("next", "common"); ?></span>
+    
+    <?php
+        $this->includefile("feedback");
+    ?>
+</div>

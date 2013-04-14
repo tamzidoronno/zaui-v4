@@ -1,0 +1,170 @@
+For each time we are moving from beta to production the following shall be tested:
+
+--------------------------- Programmatically tests ------------------------------
+* Integration tests shall pass.
+
+
+---------------------------- Applications (oficially supported by GetShop)  -----
+
+* Content manager
+    - Add some content
+    - Update it.
+
+* Left Menu
+    - Add a left menu   
+    - Add a menu entry
+    - Add a subentry
+    - Rename a menu entry
+    - Delete a menu entry
+    - Hardlink a menu entry
+    - Reorder menu entries
+    - Move menu entry into subentry
+
+
+* Category list
+    - Add a category list
+    - Add atleast two categories.
+    - Upload a image to the category
+    - Remove the image
+    - Remove a category
+    - Rename a category
+    - Hardlink a category
+
+* Contact form
+    - Add a contact form
+    - Configure it
+    - Send a message
+    - Check if the message receives.
+
+* Chat
+    - Just chat at a regular basis.
+
+* Banner slider
+    - Add the banner manager
+    - Upload a image
+    - Remove an image
+    - Change the size.
+
+* Booking
+    - 
+    -
+    - 
+
+* Event calendar
+    - 
+    - 
+    -
+
+* Footer
+    - Edit the content in the footer.
+
+* Gallery
+    - Add a gallery
+    - Add atleast two images
+    - Check if the images displays correclty
+    - Remove a image
+
+* News
+    - Add a news.
+    - Remove a news
+
+* Product
+    - Add a product
+    - Edit a product, add a image.
+    - Set advanced options (weight, stock, taxes)
+    - Check if the values are set correctly.
+
+* Related products
+    - Add a related product and see if the products appear.
+
+* Product list
+    - Add a product
+    - Remove a image
+    - Remove a product
+    - Edit a product, add a image.
+    - Set advanced options (weight, stock, taxes)
+    - Check if the values are set correctly.
+    - Combine a product list
+    - Uncombine a product list
+
+
+* Reporting (this should be tested on a database with sane data)
+    - Select a date range
+    - Display daily / hourly / weekly / monthly views
+    - Display page views
+    - Display users logged on
+    - Display product viewed
+    - Orders created
+    - Traffic tracking
+
+* Topmenu
+    - Add a menu entry
+    - Rename a menu entry
+    - Delete a menu entry
+    - Set a menu entry as home page
+    - Hard link the menu entry
+    - Reorder menu entry
+
+* Logo
+    - Upload a logo
+    - Remove a logo
+
+
+--------------------------- Navigation ------------------------------------------
+* Top menu
+* Footer
+* Internet explorer 
+
+--------------------------- Checkout --------------------------------------------
+* Adding a product and pay for it
+    - PayPal
+    - Dibs
+
+* Check if the product is put under orders
+    - For admin
+    - And for the user processed the order.
+
+--------------------------- Admin functions -------------------------------------
+* Adding settings applications (singleton applications )
+    - Add a singleton application.
+    - Remove a singleton application
+
+* Adding regular applications
+    - Add an application
+    - Remove an application
+    - Reorder applications
+
+* Adding users
+    - Create a new user and try to logon using the new user.
+    - Change the password for the as a regular user user and logon again.
+    - Change the password for the user as admininstrator.
+
+* Updating my account
+
+* Change skin
+   - Test changing all the colors.
+
+* Domain name
+    - Try adding a domain name.
+
+* Security
+    - Set a page not available.
+
+* Feedback
+    - Send feedback to getshop using the envelope in the admin menu
+    - check if the introduction movie works.
+
+* Create a web shop
+    - From getshop.com
+    - From local page
+
+-------------------------- Regular user functions -------------------------------
+* Recover the password
+
+-------------------------- Browser testing --------------------------------------
+* Chrome for admin users
+* Internet explorer / firefox for regular users.
+
+-------------------------- Other testing ----------------------------------------
+* Test a couple of new web shops (both chrome an ie)
+* Test a couple of old web shops (both chrome an ie)

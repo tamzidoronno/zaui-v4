@@ -1,0 +1,31 @@
+/* 
+    Document   : ckeditor
+    Created on : Jan 28, 2012, 6:16:52 PM
+    Author     : boggi
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.cke_top {
+/*    position:fixed;
+    top:0px;
+    left:0px;
+    z-index:1000;
+    display:none;
+    left: 25%;*/
+}
+.cke_bottom {
+    display:none;
+}
+
+.cke_toolbox_collapser {
+    display:none;
+}
+
+.cke_editor html {
+    margin:0px;
+}
+.cke_show_borders p  {
+    margin:0px;
+    padding:0px;
+}

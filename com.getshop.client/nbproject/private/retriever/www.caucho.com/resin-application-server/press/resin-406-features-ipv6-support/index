@@ -1,0 +1,220 @@
+<!-- press release template -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+
+<head profile="http://gmpg.org/xfn/11">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="alexaVerifyID" content="G1gJN6ZPAZX4JJdhHiBmqUw9J8s" />
+
+<!-- header template updated jan 2012  edit 14 -->
+
+<!-- 
+-->
+
+ 
+<title>Caucho Resin | Java Application Server | Web Server | Java EE Certified | PaaS/Cloud Ready   &raquo; Resin 4.0.6 features IPv6 support </title>
+
+<meta name="google-site-verification" content="lUpJCurr434IWXUzIXhmdihlcyE7l80W5mOU6Jvytns" />
+
+<link rel="stylesheet" href="http://www.caucho.com/wp-content/themes/caucho/default.css" type="text/css" media="screen" />
+<link rel="alternate" type="application/rss+xml" title="Caucho Resin | Java Application Server | Web Server | Java EE Certified | PaaS/Cloud Ready RSS Feed" href="http://blog.caucho.com/feed/" />
+<link rel="pingback" href="http://www.caucho.com/xmlrpc.php" />
+
+<meta name="robots" content="noodp,noydir"/>
+
+
+
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.caucho.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.caucho.com/wp-includes/wlwmanifest.xml" /> 
+<script type='text/javascript' src='http://www.caucho.com/wp-includes/js/jquery/jquery.js?ver=1.2.6'></script>
+<script type='text/javascript' src='http://www.caucho.com/wp-includes/js/jquery/jquery.form.js?ver=2.02'></script>
+<script type='text/javascript' src='http://www.caucho.com/wp-content/plugins/contact-form-7/contact-form-7.js?ver=1.10.0.1'></script>
+<meta name="generator" content="WordPress 2.7.1" />
+
+<link rel="stylesheet" href="http://www.caucho.com/wp-content/plugins/contact-form-7/stylesheet.css" type="text/css" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-27887123-1']);
+  _gaq.push(['_setDomainName', 'caucho.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+<div class="cauchomain">
+<table class="nav">
+<tbody>
+  <tr>
+      <td class="search" style="vertical-align:top"> <br />
+<a href="http://www.caucho.com"><img width="400" height="60" alt="Caucho home of Resin DevOps friendly, cloud optimized, Java EE, Java Application Server that supports Servlets, JMS, JCache, Distributed Caching, and Java Monitoring" src="http://www.caucho.com/wp-content/themes/caucho/images/caucho-logo.png" border="0"/></a>
+<br />
+<br />
+      </td>
+      <td align="right">
+        <!-- search form template 12  -->
+<form method="get" id="searchform" action="http://www.caucho.com/">
+    <input type="text" value=" Search" name="s" id="s"  onFocus="this.value=''" style="width: 150px;height: 20px;"/>
+    <input name="submit" type="submit" class="submit" value="search" style="height: 20px;"/>
+</form>         
+      </td>
+</tr>
+</table>
+<!-- get tabs new 8 --><ul class="main">
+<li class="page_item page-item-3"><a href="http://www.caucho.com" title="Home">Home</a></li>
+<li class="page_item page-item-683 current_page_ancestor"><a href="http://www.caucho.com/resin-application-server/" title="Resin">Resin</a></li>
+<li class="page_item page-item-1682"><a href="http://www.caucho.com/resin-web-server/" title="Resin Web Server">Resin Web Server</a></li>
+<li class="page_item page-item-186"><a href="http://www.caucho.com/documentation-resin-app-server/" title="Documentation">Documentation</a></li>
+<li class="page_item page-item-185"><a href="http://forum.caucho.com" title="Forum">Forum</a></li>
+<li class="page_item page-item-188"><a href="http://www.caucho.com/projects-open-source/" title="Projects">Projects</a></li>
+<li class="page_item page-item-2"><a href="http://www.caucho.com/about/" title="Company">Company</a></li>
+<li class="page_item page-item-24"><a href="http://store.caucho.com/" title="Online Store">Online Store</a></li>
+<li class="page_item page-item-177"><a href="http://www.caucho.com/download/" title="Download">Download</a></li>
+
+</ul><div class="submain"><ul class="submain">
+<li class="page_item page-item-745"><a href="http://www.caucho.com/resin-application-server/java-ee-web-profile/" title="web profile">web profile</a></li>
+<li class="page_item page-item-796"><a href="http://www.caucho.com/resin-application-server/server-monitoring-watchdog-health-system/" title="health">health</a></li>
+<li class="page_item page-item-804"><a href="http://www.caucho.com/resin-application-server/3g-java-clustering-cloud/" title="cloud">cloud</a></li>
+<li class="page_item page-item-824"><a href="http://www.caucho.com/resin-application-server/resin-professional-application-server/" title="resin pro">resin pro</a></li>
+<li class="page_item page-item-22"><a href="http://www.caucho.com/resin-application-server/sales-price-list/" title="price list">price list</a></li>
+<li class="page_item page-item-202"><a href="http://www.caucho.com/resin-application-server/candi-java-dependency-injection/" title="candi">candi</a></li>
+<li class="page_item page-item-821"><a href="http://www.caucho.com/resin-application-server/messaging/" title="integration">integration</a></li>
+<li class="page_item page-item-28 current_page_ancestor current_page_parent"><a href="http://www.caucho.com/resin-application-server/press/" title="press">press</a></li>
+<li class="page_item page-item-82"><a href="http://www.caucho.com/resin-application-server/newsletter/" title="newsletter">newsletter</a></li>
+<li class="page_item page-item-1723"><a href="http://www.caucho.com/resin-application-server/java-caching/" title="cache">cache</a></li>
+<li class="page_item page-item-1729"><a href="http://www.caucho.com/resin-application-server/queue/" title="queue">queue</a></li>
+
+</ul></div><table class="nav">
+<tr>
+
+<!-- sidebar template -->
+
+    <td class="leftnav" valign="top">
+		<ul class="leftnav">
+			<li id="search" class="widget widget_search"></li>		<li id="text-423942651" class="widget widget_text">						<div class="textwidget"><br />
+<br />
+<a href="/resin/"><img src="http://s3.amazonaws.com/caucho-web/resin_logo_small.jpg" title="Resin | Java Application Server | Java EE Web Profile Certified"/></a>
+<br />
+<br />
+<ul class="leftnav">
+  <li><h1>products</h1></li>
+  <li><a href="/resin-4.0/" title="Java EE, Java Application Server that is Cloud Optimized and DevOps Friendly | Java Monitoring built in">resin 4.0</a></li>
+  <li><a href="/resin-3.1/doc/">resin 3.1</a></li>
+  <li><a href="/resin-3.0/">resin 3.0</a></li>
+  <li><h1>quick links</h1></li>
+  <li><a href="http://caucho.com/resin-4.0/admin/starting-resin.xtp"><strong>getting started</strong></a></li>
+  <li><a href="http://caucho.com/resin-4.0/changes/changes.xtp">changes</a></li>
+<li><hr /></li>
+<li>
+<img width="61" height="101" src="http://s3.amazonaws.com/caucho-web/Java_Compatible_EE_Edition-logo.gif" 
+title="Resin Java Application Server was first Java EE Web Profile Application Server"/>
+</li>
+<li><hr /></li>
+<li>&nbsp;</li>
+  <li><a href="http://hessian.caucho.com/">hessian</a></li>
+  <li><a href="http://quercus.caucho.com/">quercus (php)</a></li>
+  <li><h1>resin topics</h1></li>
+  <li><a href="http://caucho.com/resin-4.0/admin/resin-admin.xtp"
+  title="Advanced Admin with Cloud Deployment and Java Monitoring built in">admin</a> </li>
+  <li><a href="http://caucho.com/resin-4.0/admin/clustering.xtp"
+  title="3rd generation clustering that is cloud optimized">clustering</a> </li>
+  <li><a href="http://caucho.com/resin-4.0/admin/database.xtp"
+  title="instructions how to setup JDBC datasources in Resin Java
+  Application Server">database</a> </li>
+  <li><a href="http://caucho.com/resin-4.0/admin/deploy.xtp"
+  title="Covers cloud deployment, CLI deployment, Staging, Versioned Deployments">deployment</a> </li>
+<li><a href="http://caucho.com/resin-4.0/admin/logging.xtp"
+  title="Powerful logging system that is Ops and DevOps ready">logging</a> </li>
+ <li><a href="http://caucho.com/resin-4.0/admin/security.xtp"
+  title="SSL, Java EE Security, Authentication, Authorization and
+  OpenSSL support">security</a> </li>
+ <li><a
+  href="http://caucho.com/resin-4.0/admin/http.xtp"
+  title="Resin is a full, faster than Apache httpd, web server with URL rewrites, proxy cache and
+  virtual hosts">full web server</a> </li>
+<li><a
+  href="http://www.caucho.com/resin-4.0/admin/health.xtp" title="Resin
+  Health System: 
+  Java Monitoring System with Watchdog, Reports, Baselines, Anomaly
+  detection with rules and actions">health</a></li>
+  <li><h1>follow us!</h1></li>
+  <li><a href="http://www.facebook.com/pages/Caucho-Technology/8671323790"><img src="/images/facebook-logo.png"/></a></li>
+ <li><a href="http://twitter.com/#!/cauchoresin"><img src="http://twitter-badges.s3.amazonaws.com/t_logo-a.png" alt="Follow cauchoresin on Twitter"/></a></li>
+ <li><a href="http://blog.caucho.com" title="Blog for Caucho, Resin, Java EE, Cloud, PaaS, Memcached"><img src="http://www.caucho.com/images/cauchoresin-logo.png"/></a></li>
+<li>
+<a href="/news/newsletter/"><img src="http://s3.amazonaws.com/caucho-web/Caucho_newsletter.png"/></a>
+</li>
+<li>
+<a href="http://www.caucho.com/#video"><img src="http://s3.amazonaws.com/caucho-web/Caucho_video.png"/></a>
+</li>
+
+</ul>
+</div>
+		</li>		</ul>
+	</td>
+<td>
+<div id="content" class="news">
+
+		    <div class="post" id="post-370">
+    <div style="text-align: center; width: 100%">
+      <img src="http://caucho.com/images/caucho-press.jpg" alt="" />
+    </div>
+		<tt><strong>Resin 4.0.6 features IPv6 support</strong></tt>
+			<div class="entry">
+      <tt>
+				<p><strong>LA JOLLA, CA - April 13, 2010 - <a title="Caucho Technology" href="http://www.caucho.com/" target="_blank">Caucho Technology</a>,</strong> the open source Web Profile leader for Java EE application server, announced today that Resin 4.0.6 features support for IPv6, Internet Protocol Version 6.</p>
+<p>IPv6 is the next-generation Internet protocol that addresses the issue of IPv4 address exhaustion with added benefits of improved network auto-configuration, routing and security. Government and business mandates across the globe are increasing demand for the technology in a variety of applications, including the web and enterprise spaces. Rapid growth in Asian network infrastructure is driving heavy regional investment, requiring compatibility throughout hardware and software stacks.</p>
+<p>&#8220;Caucho is poised to support our international customers and partners in their transitions to IPv6,&#8221; said Emil Ong, Chief Evangelist of Caucho Technology. &#8220;We share a close technological relationship with our customers. When one of our partners in Japan recently requested enhanced IPv6 support, we responded quickly with the release of Resin 4.0.6.&#8221; Ong added, &#8220;because of our developer-driven culture at Caucho, we are able to address our users&#8217; needs with incredibly fast turnaround.&#8221;</p>
+<p>Resin, Caucho&#8217;s open source Java application server, features Hessian serialization protocol and Quercus Java-PHP solutions. Resin is the Web Profile of choice for high performance Java EE applications. Leading companies including Salesforce, the Toronto Stock Exchange and CNET uses Resin to power web applications with high demands for reliability and performance.</p>
+<p><strong>About Caucho Technology, Inc.</strong><br />
+Caucho Technology is an industry leading open source Java ISV with over ten years of proven market success and over 360,000 global commercial deployments as reported by Netcraft. Caucho is the leader in Web Profile and is a Sun Microsystems Java EE licensee. Caucho Technology was founded in 1998 and has offices in La Jolla and San Francisco, California.</p>
+<p><strong>Contact Information</strong><br />
+Theresa Nguyen<br />
+Director of Sales and Marketing<br />
+Caucho Technology, Inc.<br />
+Telephone (858) 456-0300<br />
+theresa@caucho.com</p>
+
+				
+      </tt>
+      </div>
+		</div>
+			</div>
+</td>
+</tr>
+
+
+
+<tr>
+<td colspan="2">
+<div id="footer">
+  <ul class="bottom">
+  <li><a href="/">HOME</a> |
+  <li><a href="/about/contact/">CONTACT US</a> |
+  <li><a href="/resin-4.0/">DOCUMENTATION</a> |
+  <li><a href="http://blog.caucho.com/">BLOG</a> |
+  <li><a href="http://wiki.caucho.com/">WIKI</a>
+
+  </ul>
+  <div class="about">
+Copyright (c) 1998-2012 Caucho Technology, Inc. All rights reserved.<br><span class="caucho">caucho<sub>®</sub></span> ,
+<span class="resin">resin<sub>®</sub></span> and
+<span class="quercus">quercus<sub>®</sub></span>
+
+are registered trademarks of Caucho Technology, Inc.
+  </div>
+
+  <div class="about">
+     resin<sub>®</sub> is a cloud optimized, java<sub>®</sub> application server that supports the java ee webprofile <sub>®</sub>
+  </div>
+		</td></tr>
+</tbody></table>
+</div>
+</body>
+</html>

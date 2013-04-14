@@ -1,0 +1,169 @@
+<div gstype="form" method="saveApplication" output="informationbox">
+    <?
+    /* @var $this ApplicationManagement */
+    $settings = $this->getApplicationSettings();
+    $name = "";
+    $disabled = " DISABLED";
+    if ($settings) {
+        $name = $settings->appName;
+        $id = $settings->id;
+        $namespace = $this->getFactory()->convertUUIDtoString($id);
+        if($this->getFactory()->getStore()->id == $settings->ownerStoreId) {
+            $disabled = false;
+        }
+    } else {
+        $disabled = false;
+    }
+    ?>
+    <div class="description">
+        <div class="title">
+            <? echo $this->__f("Create your own application and start building your own web shop."); ?>
+        </div>
+        <? echo $this->__f("The code for this application will automatically be synced to your code base after you click the start building application button."); ?>
+        <br>
+    </div>
+    <br>
+    <div class="title">
+        <? echo $this->__f("Name of the application"); ?>
+        <input type="txt" class="appname" gsname="appname" value="<? echo $name; ?>" <? echo $disabled; ?>>
+        <div class="additonaltext"><? echo $this->__f("Specify the name of the application."); ?></div>
+    </div>
+    <?if(isset($id)) { ?>
+        <div class="title">
+            <? echo $this->__f("Application id"); ?>
+            <span style="float:right;"><? echo $id; ?></span>
+        </div>
+        <div class="additonaltext">Namespace: <? echo $namespace; ?></div>
+    <? } ?>
+
+    <?
+    if (!$settings) {
+        ?>
+        <div class="button-large" id="buildapplication" style="margin-top:8px;" gstype="submit">
+            <div class="rightglare"></div>
+            <div class="filler" style="background-color: green"></div>
+            <ins><? echo $this->__f("Start building application"); ?></ins>
+        </div>
+        <?
+        if ($this->getErrorMessage()) {
+            echo "<div style='padding-top: 60px;text-align:right; font-size:16px;'>* " . $this->__f("Please specify a name") . "</div>";
+        }
+    } else {
+        ?>
+        <div class="title">
+            <div style="float:right;">
+                <select gsname="apptype" <? echo $disabled; ?>>
+                    <option value="WebshopApplication" <? if($this->isAppType("WebshopApplication")) { echo "SELECTED"; } ?> ><? echo $this->__f("Standard"); ?></option>
+                    <option value="ReportingApplication" <? if($this->isAppType("ReportingApplication")) { echo "SELECTED"; } ?> ><? echo $this->__f("Reporting"); ?></option>
+                    <option value="PaymentApplication" <? if($this->isAppType("PaymentApplication")) { echo "SELECTED"; } ?> ><? echo $this->__f("Payment"); ?></option>
+                    <option value="MarketingApplication" <? if($this->isAppType("MarketingApplication")) { echo "SELECTED"; } ?> ><? echo $this->__f("Marketing"); ?></option>
+                    <option value="SystemApplication" <? if($this->isAppType("SystemApplication")) { echo "SELECTED"; } ?> ><? echo $this->__f("System"); ?></option>
+                </select>
+            </div>
+            <div><? echo $this->__f("What kind of application is this?"); ?></div>
+            <div class="additonaltext"><? echo $this->__f("Standard is the most common type of application."); ?></div>
+            <div class="additonaltext"><? echo $this->__f("Reporting is analytichal application like google analytichs, traffic application, etc."); ?></div>
+            <div class="additonaltext"><? echo $this->__f("Payment is transactional applications like paypal, dibs, visa, etc."); ?></div>
+            <div class="additonaltext"><? echo $this->__f("Marketing is applications like news, and other application used for marketing."); ?></div>
+        </div>
+
+        <div class="title">
+            <div style="float:right;">
+                <input type="checkbox" gsname="apparea_left" <? if ($this->hasArea('left')) {
+            echo "CHECKED";
+        } ?> <? echo $disabled; ?>><? echo $this->__f("Left"); ?>
+                <input type="checkbox" gsname="apparea_middle" <? if ($this->hasArea('middle')) {
+            echo "CHECKED";
+        } ?> <? echo $disabled; ?>><? echo $this->__f("Middle"); ?>
+                <input type="checkbox" gsname="apparea_right" <? if ($this->hasArea('right')) {
+            echo "CHECKED";
+        } ?> <? echo $disabled; ?>><? echo $this->__f("Right"); ?>
+            </div>
+
+    <? echo $this->__f("What areas does this application support?"); ?>
+            <div class="additonaltext"><? echo $this->__f("Specify what areas you want to be able to add this application to."); ?></div>
+        </div>
+
+        <div class="title">
+            <div style="float:right;">
+                <select gsname="singleton"<? echo $disabled; ?>>
+                    <option value="false"><? echo $this->__f("No"); ?></option>
+                    <option value="true" <? if ($settings->isSingleton == "true") { echo "SELECTED"; } ?>><? echo $this->__f("Yes"); ?></option>
+                </select>
+            </div>
+    <? echo $this->__f("Is this a singleton application?"); ?>
+            <div class="additonaltext"><? echo $this->__f("A singleton application is a application that can only be added once to each store"); ?></div>
+            <div class="additonaltext"><? echo $this->__f("A singleton application can also be used for configuration under settings."); ?></div>
+        </div>
+
+        <div class="title">
+            <div style="float:right;">
+                <select gsname="standalone"<? echo $disabled; ?>>
+                    <option value="false"><? echo $this->__f("No"); ?></option>
+                    <option value="true" <? if ($settings->renderStandalone == "true") { echo "SELECTED"; } ?>><? echo $this->__f("Yes"); ?></option>
+                </select>
+            </div>
+    <? echo $this->__f("Render this application standalone?"); ?>
+            <div class="additonaltext"><? echo $this->__f("A standalone application is not rendered into a page but as a stand alone application."); ?></div>
+            <div class="additonaltext"><? echo $this->__f("When a standalone application is added, a new icon will be added to top taskbar and launched from there."); ?></div>
+        </div>
+
+        <div class="title">
+            <div style="float:right;">
+                <select gsname="public" <? echo $disabled; ?>>
+                    <option value="false"><? echo $this->__f("No"); ?></option>
+                    <option value="true" <? if ($settings->isPublic == "true") { echo "SELECTED"; } ?>><? echo $this->__f("Yes"); ?></option>
+                </select>
+            </div>
+    <? echo $this->__f("Should this application be public available?"); ?>
+            <div class="additonaltext"><? echo $this->__f("A public application is available for everyone to use."); ?></div>
+        </div>
+
+        <div class="title"">
+            <div style="float:right;">
+                <input type="txt" class="appname" gsname="price" style="width: 50px;margin-right:10px;" value="<? if(isset($settings->price)) { echo $settings->price; }?>"\ <? echo $disabled; ?>>$
+            </div>
+    <? echo $this->__f("Price?"); ?>
+            <div class="additonaltext"><? echo $this->__f("If you want to charge for this application, specify the price you want for it (one time cost)."); ?></div>
+        </div>
+
+        <hr>
+        <div style="height: 60px;">
+            <? if(!$disabled) { ?>
+                <div class="button-large deleteapp" style="margin-top:8px;">
+                    <div class="rightglare"></div>
+                    <div class="filler"></div>
+                    <ins><? echo $this->__f("Delete this application"); ?></ins>
+                </div>
+                <div class="button-large synchronizeapp" style="margin-top:8px;">
+                    <div class="rightglare"></div>
+                    <div class="filler"></div>
+                    <ins><? echo $this->__f("Synchronize this application"); ?></ins>
+                </div>
+            <? } ?>
+            <? if(!$disabled) { ?>
+                <div class="button-large" id="buildapplication" style="margin-top:8px;" gstype="submit">
+                    <div class="rightglare"></div>
+                    <div class="filler" style="background-color: green"></div>
+                    <ins><? echo $this->__f("Save settings"); ?></ins>
+                </div>
+            <? } else { ?>
+            <? } ?>
+        </div>
+        <div class="showdeleteappwarning" style="display:none;">
+    <? echo $this->__f("Are you sure you want to delete this application? You will not be able to recover this!"); ?><br>
+            <span gstype="clicksubmit" method="deleteMyApplication" output="informationbox" gsname="id" gsvalue="<? echo $settings->id; ?>" style="color:#FF0000; font-weight: bold; cursor:pointer;"><? echo $this->__f("Yes, delete this application"); ?></span>
+        </div>
+        <div class="showsyncwarning" style="display:none;">
+    <? echo $this->__f("Are you sure you want to synchronize this application? All files which already exists for application will be overwritten!"); ?><br>
+            <span gstype="clicksubmit" method="syncApp" output="informationbox" gsname="id" gsvalue="<? echo $settings->id; ?>" style="color:#FF0000; font-weight: bold; cursor:pointer;"><? echo $this->__f("Yes, synchronize this application"); ?></span>
+        </div>
+<? } ?>
+</div>
+<? if($disabled) { ?>
+    <div gstype="clicksubmit" class="button-large" id="buildapplication" style="margin-top:8px;" gsname="id">
+        <div class="rightglare"></div>
+        <div class="filler" style="background-color: green"></div>
+        <ins method="cloneapplication" output="informationbox" gsname="id" gsvalue="<? echo $settings->id; ?>" method="cloneapplication"><? echo $this->__f("Clone this application"); ?></ins>
+    </div>
+<? } ?>

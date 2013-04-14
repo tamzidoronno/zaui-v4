@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://caucho.com/ns/resin" uri="www.caucho.com/resin-application-server/press/resin-406-features-ipv6-support/index"/>
+</catalog>

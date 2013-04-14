@@ -1,0 +1,13 @@
+<?php
+if ($this->isEditorMode()) {
+?>
+<div class="mainmenu-outer">
+    <div id="mainmenu" class="mainmenu systemapplication app" appid="bf35979f-6965-4fec-9cc4-c42afd3efdd7" >
+        <?php 
+        if (!$this->emptySkeleton)    
+            $this->getFactory()->getApplicationPool()->getApplicationInstance("bf35979f-6965-4fec-9cc4-c42afd3efdd7")->render(); 
+        ?>
+    </div>
+</div>
+<div class="spacingtop"></div>
+<?php }?>

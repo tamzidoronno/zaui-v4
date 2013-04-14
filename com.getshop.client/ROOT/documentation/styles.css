@@ -1,0 +1,129 @@
+.method {
+}
+
+body {
+}
+
+
+.methodname_text {
+    font-weight: bold;
+    padding-right: 10px;
+}
+
+.parameter_type {
+    width: 200px;
+    display:inline-block;
+}
+
+.method_name {
+    font-weight: bold;
+}
+
+.header .active_manager {
+    font-weight: bold;
+    background-color:#000000;
+    color:#FFFFFF;
+}
+
+.method_container {
+    border:solid 1px;
+    margin-bottom: 80px;
+    padding: 10px;
+    background-color:#FFFFFF;
+}
+
+.method_name_header {
+    font-size: 20px;
+    font-weight: bold;
+    border: solid 1px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    background-color :#9fa8f1;
+}
+
+.header span {
+    display:block;
+}
+.header {
+    position:fixed;
+    top: 10px;
+    width: 190px;
+    border: solid 1px;
+}
+
+.manager {
+    /*display:none;*/
+}
+
+.ListManager {
+    display:block;
+}
+
+.manager_header {
+    cursor:pointer;
+    line-height: 25px;
+    padding-left: 2px;
+    background-color: #EFEFEF;
+    border-bottom: solid 1px #BBBBBB;
+}
+
+.manager_header:hover {
+    font-weight: bold;
+}
+
+.manager {
+    margin-left: 200px;
+    width: 700px;
+}
+
+.class_description td {
+    font-size: 12px;
+    padding: 3px;
+}
+
+
+.parameter_desc {
+    padding-left: 10px;
+    display:block;
+}
+
+.userlevel {
+    float:right;
+    color : #4d4d4d;
+}
+
+.header .manager_header_function {
+    font-size: 12px;
+    padding-left: 10px;
+    display:none;
+    cursor: pointer;
+    border-bottom: solid 1px #BBBBBB;
+}
+
+.manager_header_text {
+    border: solid 1px;
+    padding: 10px;
+    font-size: 18px;
+    background-color: #16bc00;
+    text-align:center;
+}
+
+.class_description {
+   margin-bottom: 40px;
+   border: solid 1px;
+   padding: 10px;
+   background-color:#FFFFFF;
+}
+
+.method_container td {
+    font-size: 12px;
+}
+
+.example_code_heading {
+    border-bottom: solid 1px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}

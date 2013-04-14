@@ -1,0 +1,25 @@
+
+<div class="header-outer">
+    <div class="header_semi">
+        <div area='header' id="apparea-header" class="applicationarea header">
+            <?php
+            if (!$this->emptySkeleton) {
+                $this->getPage()->getApplicationArea('header')->render();
+            }
+            ?>
+        </div>
+    </div>
+</div>
+
+<div class="breadcrumb-outer">
+    <div class="breadcrumb_semi">
+        <div class="breadcrumb">
+            <div class="breadcrum-area-content" id="apparea-breadcrumb">
+                <?php
+                if (!$this->emptySkeleton)
+                    $this->getFactory()->getApplicationPool()->getApplicationInstance("7093535d-f842-4746-9256-beff0860dbdf")->render();
+                ?>
+            </div>
+        </div>
+    </div>
+</div>

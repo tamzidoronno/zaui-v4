@@ -1,0 +1,7 @@
+<div class="applications"> 
+<?
+$i = 0;
+foreach (AppRegister::getShippingApplications() as $application) 
+    include 'application.php';
+?>
+</div>

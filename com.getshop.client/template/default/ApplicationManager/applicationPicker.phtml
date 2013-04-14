@@ -1,0 +1,183 @@
+<?
+if (isset($_POST['data']['appName'])) {
+    $appName = $_POST['data']['appName'];
+} else {
+    $appName = false;
+}
+
+if(isset($_POST['data']['list'])) {
+    $list = $_POST['data']['list'];
+} else {
+    $list = array();
+}
+
+$area = null;
+if(isset($_POST['data']['area'])) {
+    $area = $_POST['data']['area'];
+}
+
+?>
+
+<div class="jqueryApplicationPicker">
+    <div class='previewArea'>
+        <div class="title"><? echo $this->__f("Application preview"); ?><span class="close"></span></div>
+        <div class='previewArea-inner'></div>
+        
+    </div>
+    <table width="100%">
+        <tr>
+            <td valign="top" width='10'>
+                <div class="left_col">
+                    <div class='title'><? echo $this->__f("Applications"); ?> </div>
+                    <?
+                    $appList = array();
+                    foreach (AppRegister::$register as $app) {
+                        $toPront = new $app();
+                        if(sizeof($list) == 0) {
+                            $appList[$app] = $toPront->getName();
+                        } else if(in_array($app, $list)) {
+                            $appList[$app] = $toPront->getName();
+                        }
+                    }
+
+                    asort($appList);
+                    foreach ($appList as $app => $name) {
+                        $toPront = new $app();
+                        
+                        $positions = false;
+                        $found = false;
+                        if(method_exists($toPront, "getAvailablePositions") && $area) {
+                            $pos = $toPront->getAvailablePositions();
+                            $positions = explode(" ", $pos);
+                            foreach($positions as $pos) {
+                                if($pos == $area) {
+                                    $found = true;
+                                    break;
+                                }
+                            }
+                        } else {
+                            $found = true;
+                        }
+                        
+                        if(!$found) {
+                            continue;
+                        }
+                        
+                        if ($toPront instanceof \SystemApplication) {
+                            continue;
+                        }
+                        if (@$toPront->singleton) {
+                            continue;
+                        }
+
+                        if ($appName == $app) {
+                            $selected = "selected";
+                        } else {
+                            $selected = "";
+                        }
+                        ?>
+                        <div class="entry_container <? echo $selected; ?>" appName="<? echo $app; ?>">
+                            <span>
+                                
+                                <img src='<? echo ApplicationHelper::getApplicationImage($app); ?>' class="entry_image">
+                                <span class="entry_text"> <? echo $toPront->getName(); ?></span>
+                            </span>
+                        </div>
+                        <?
+                    }
+                    ?>
+                </div>
+            </td>
+            <td valign="top">
+                <?
+                if ($appName) {
+                    $appObject = new $appName();
+                    $title = $appObject->getName();
+                } else {
+                    $title = "Selection area";
+                }
+                ?>
+
+                <div class='title selectedAppName' appName='<? echo $title; ?>'><? echo $title; ?></div>
+                <div class="pickerArea">
+                    <?
+                    echo "<span style='display:block;font-size:14px;margin-bottom: 15px;'>" . $this->__f("Please select one or more of the already added applications listed below.") . "</span>";
+                    if (!$appName) {
+                        echo $this->__f("Please select an application in the left menu.");
+                    } else {
+                        $app = $appName;
+
+
+
+                        $allApps = $this->getAllAddedApplications($app);
+                        if (sizeof($allApps) == 0) {
+                            echo $this->__f("This application has not been added to any pages yet.");
+                        } else {
+                            $appIds = array();
+                            $added = array();
+                            foreach ($allApps as $app) {
+                                $appIds[] = $app->{'id'};
+                                $added[$app->{'id'}] = $app->{'rowCreatedDate'};
+                            }
+
+                            $api = IocContainer::getFactorySingelton()->getApi();
+                            $pages = $api->getPageManager()->getPagesForApplications($appIds);
+                            $pagesToTranslate = array();
+                            foreach ($pages as $appId => $pageIds) {
+                                foreach ($pageIds as $pageId) {
+                                    $pagesToTranslate[] = $pageId;
+                                }
+                            }
+                            $result = $api->getPageManager()->translatePages($pagesToTranslate);
+
+                            foreach ($pages as $appId => $pageIds) {
+                                $toPrint = "<div style='text-align:left;applicationList'>";
+                                $toPrint .= "<span class='foundOnPages'>" . $this->__f("This application is added to the following pages") . "</span>";
+                                $toPrint .= "<span class='selectApp' appId='$appId'>" . $this->__f("Select application") . "</span>";
+                                $toPrint .= "<span class='previewApp' appId='$appId'>" . $this->__f("Preview") . "</span>";
+                                $toPrint .= "</div>";
+                                $toPrint .= "<div class='applicationList' appId='$appId'>";
+                                $found = false;
+                                foreach ($pageIds as $pageId) {
+                                    if (isset($result->{$pageId})) {
+                                        $found = true;
+                                        $toPrint .= "<div class='pageName' pageId='".$pageId."' pageName='" . $result->{$pageId} . "'>" . $result->{$pageId} . "</div>";
+                                    }
+                                }
+                                $toPrint .= "</div>";
+                                $toPrint .= "<div class='creationDate'>";
+                                $toPrint .= "<span>Creation date : " . $added[$appId] . "</span>";
+                                $toPrint .= "</div>";
+                                if ($found) {
+                                    echo $toPrint;
+                                }
+                            }
+                        }
+                    }
+                    ?>
+                </div>
+            </td>
+            <td valign="top">
+                <div class="selectionArea">
+                    <div class='title'><? echo $this->__f("Selected applications"); ?> </div>
+                    <div class='selectedAppArea'>
+                    </div>
+                    <div class='emptySelectionArea'><? echo $this->__f("Please select one or more application before you can continue."); ?></div>
+                    <div class='continue'>
+                        <div class="button-large" id="importApplications">
+                            <div class="rightglare"></div>
+                            <div class="filler"></div>
+                            <ins><? echo $this->__f("Import applications"); ?></ins>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<? if(!$appName) { ?>
+    <script>
+        thundashop.common.applicationPicker.selectDefaultApplication();
+    </script>
+<? } ?>

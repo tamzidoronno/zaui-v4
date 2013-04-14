@@ -1,0 +1,26 @@
+<?php
+/* @var $this Factory */
+$languageHandler = new LanguageHandler();
+
+$errormsg = "";
+foreach ($this->getApi()->transport->errors as $error) {
+    $errormsg = $error['error']."<br>";
+}
+?>
+
+<div class="close"></div>
+<div class="image inline"></div>
+<div class="inline wrapper">
+    <div class="title">Error</div>
+    <div class="errormessage "><?php echo $errormsg; ?></div>  
+    <?
+    if (isset($error['error_additional_info'])):
+    ?>
+    <hr>
+    <div style="width: 100px; padding-left: 10px;" class="additional">
+        <?php echo $error['error_additional_info']; ?>
+    </div>
+    <?
+    endif;
+    ?>
+</div>

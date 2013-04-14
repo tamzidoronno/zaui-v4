@@ -1,0 +1,22 @@
+<?
+/* @var $this PageArea */
+$shouldDisplay = $this->shouldDisplayAddMenu() ? 'style="display: block;"' : '';
+?>
+
+<center>
+    <div <? echo $shouldDisplay; ?> class="add_application_menu">
+        <br>
+        <div class="button-large"  type="<?php echo $this->getBackendPageArea()->type ?>">
+            <div class="rightglare"></div>
+            <div class="filler"></div>
+            <ins><? echo $this->__f("Click to add application"); ?></ins>
+        </div>
+        <div class="infotext">
+            <? echo $this->__f("By clicking the button above you will be able to add an application to this area."); ?>
+        </div>
+        <div class="infotext">or</div>
+        <div class="infotext importtext">
+            <? echo $this->__f("Import an existing application."); ?>
+        </div>
+    </div>
+</center>

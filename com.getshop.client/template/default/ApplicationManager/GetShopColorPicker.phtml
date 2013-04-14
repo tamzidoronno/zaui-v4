@@ -1,0 +1,71 @@
+<?php
+$config = $this->getFactory()->getStoreConfiguration();
+$theme = $this->getFactory()->getTheeme();
+?>
+<div class="GetShopColorPicker">
+    <input type='hidden' id='theeme' value="<?php echo $theme; ?>">
+    <span class="colorbox">
+        <div><? echo $this->__f("Background color"); ?></div>
+        <input title="Background color" id="bgcolor" class="cpicker" value="<?php echo $config->colors->backgroundColor; ?>"></input>
+    </span>
+    <span class="colorbox">
+        <div><? echo $this->__f("Base color"); ?></div>
+        <input title="Base color" id="basecolor" class="cpicker" value="<?php echo $config->colors->baseColor; ?>"></input>
+    </span>
+    <span class="colorbox">
+        <div><? echo $this->__f("Base text color"); ?></div>
+        <input title="Base text color" id="textcolor" class="cpicker" value="<?php echo $config->colors->textColor; ?>"></input>
+    </span>
+    <span class="colorbox">
+        <div><? echo $this->__f("Button color"); ?></div>
+        <input title="Button color" id="buttoncolor" class="cpicker" value="<?php echo $config->colors->buttonBackgroundColor; ?>"></input>
+    </span>
+    <span class="colorbox">
+        <div><? echo $this->__f("Button text color"); ?></div>
+        <input title="Button text color" id="buttontextcolor" class="cpicker" value="<?php echo $config->colors->buttonTextColor; ?>"></input>
+    </span>
+</div>
+<script>
+    var gscpmousedown = false;
+    var gscpcolorSelected = false;
+    $('.mask').hide();
+    
+    setColorPickerForField($(".cpicker[title='Background color']"), 30, 0);
+    setColorPickerForField($(".cpicker[title='Base color']"), 30, 0);
+    setColorPickerForField($(".cpicker[title='Base text color']"), 30, 0);
+    setColorPickerForField($(".cpicker[title='Button color']"), 30, 0);
+    setColorPickerForField($(".cpicker[title='Button text color']"), 30, 0);
+    
+    $(function() {
+        $('.jPicker').css('top','200px');
+    });
+    $(document).live('mouseup', function(e) {
+        if(gscpcolorSelected) {
+            gscpcolorSelected = false;
+            thundashop.common.updateColorsFromPicker();
+        }
+    });
+    
+    function setColorPickerForField(field, y, x) {
+        var title = field.attr('title');
+        field.jPicker({  
+            window: {
+                title : title,
+                position: {
+                    'y':y,
+                    'x':x
+                }
+            }
+        },
+        function(color, context) {
+        },
+        function(color, context) {
+            gscpcolorSelected = true;
+        },
+        function(color, context) {
+            thundashop.common.updateColorsFromPicker();
+        }
+    );
+}
+    
+</script>

@@ -1,0 +1,155 @@
+.jqueryApplicationPicker {
+    position: relative;
+}
+
+.jqueryApplicationPicker .left_col {
+    display:inline-block;
+    width: 202px;
+    float:left;
+    clear: both;
+    margin-right: 10px;
+}
+
+.jqueryApplicationPicker .left_col .entry_container {
+    display:inline-block;
+    margin-bottom: 2px;
+    height:26px;
+    position:relative; 
+    width:200px; 
+    border:solid 1px #BBBBBB;
+    cursor: pointer;
+}
+
+.jqueryApplicationPicker .left_col .entry_container:hover {
+    background-color:#EFEFEF;
+}
+
+.jqueryApplicationPicker .left_col .entry_image {
+    width:20px;
+    height:20px;
+    margin-right: 3px;
+    padding: 3px;
+    border-right: solid 1px #BBBBBB;
+}
+
+.jqueryApplicationPicker .left_col .entry_text {
+    display:inline-block; 
+    line-height:25px; 
+    position:absolute; 
+    top:0px;
+    font-size: 14px;
+}
+
+.jqueryApplicationPicker .pickerArea {
+    width: 500px;
+    display:inline-block;
+    clear: both;
+    padding: 5px;
+}
+
+.jqueryApplicationPicker .title {
+    border-bottom: solid 1px #DDDDDD;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+}
+
+.jqueryApplicationPicker .selectedAppArea .onPage {
+    margin-left: 10px;
+    font-size: 10px;
+    display:inline-block;
+}
+
+.jqueryApplicationPicker .selectedAppArea .selectedApplication {
+    margin-bottom: 5px;
+    border: solid 1px #BBBBBB;
+}
+
+.jqueryApplicationPicker .selectedAppArea .selectedAppName {
+    background-color:#BBBBBB;
+    padding-left: 3px;
+    position:relative;
+    color:#FFFFFF;
+}
+
+.jqueryApplicationPicker .selected, .jqueryApplicationPicker .left_col .selected:hover {
+    background-color:#72c160;
+}
+
+.jqueryApplicationPicker .selectionArea {
+    display:inline-block;
+    width: 200px;
+}
+
+.jqueryApplicationPicker .pickerArea .selectApp, .jqueryApplicationPicker .pickerArea .previewApp {
+    background-color: #BBBBBB;
+    color:#FFFFFF; 
+    padding-left: 3px;
+    padding-right: 3px; 
+    border-left: solid 1px #BBBBBB; 
+    float:right ; 
+    border-top: solid 1px #BBBBBB; 
+    border-right: solid 1px #BBBBBB;
+    cursor:pointer;
+}
+
+.jqueryApplicationPicker .previewArea {
+    position:fixed;
+    border: solid 1px;
+    z-index:2;
+    background-color:#FFFFFF;
+    margin-left: 220px;
+    max-width: 600px;
+    padding: 10px;
+    display:none;
+}
+
+.jqueryApplicationPicker .pickerArea .previewApp {
+    margin-right: 5px;
+}
+
+.jqueryApplicationPicker .pickerArea .selectApp:hover, .jqueryApplicationPicker .pickerArea .previewApp:hover {
+    color:#000000;
+}
+
+.jqueryApplicationPicker .pickerArea .applicationList {
+    border:solid 1px #BBBBBB; 
+    padding:2px;
+}
+
+.jqueryApplicationPicker .pickerArea .foundOnPages {
+    color:#BBBBBB;
+}
+
+.jqueryApplicationPicker .pickerArea .creationDate {
+    text-align:right; 
+    margin-bottom: 15px;
+    color:#BBBBBB;
+}
+
+
+.jqueryApplicationPicker .selectedAppArea .remove, .jqueryApplicationPicker .previewArea .close {
+    position:absolute;
+    right: 1px;
+    background-image: url('/skin/default/elements/closebutton.png');
+    background-size: 15px;
+    background-repeat: no-repeat;
+    width: 15px;
+    height: 15px;
+    cursor:pointer;
+    display:inline-block;
+}
+
+.jqueryApplicationPicker .previewArea .close {
+    right: 10px;
+}
+.jqueryApplicationPicker .previewArea .title {
+    padding-right: 20px;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.jqueryApplicationPicker .selectionArea .continue ins {
+    width:170px;
+}

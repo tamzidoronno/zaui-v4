@@ -1,0 +1,15 @@
+<div class="skeleton5">
+    <div class="mainarea-outer">
+        <div class="mainarea"> 
+            <div class="main-area-top"></div>
+            <div class="mainareacontent">
+                <div area='middle' id="apparea-middle" class="applicationarea middle inline">
+                    <?php
+                    if (!$this->emptySkeleton)
+                        $this->getPage()->getMiddleApplicationArea()->render(); 
+                    ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+<?
+$buttonText = "Create application";
+
+if (isset($_POST['data']) && isset($_POST['data']['type']) && isset($_POST['data']['type']) && $_POST['data']['type'] == "themes") {
+    $buttonText = "Set theme";
+}
+    
+?>
+<div style="text-align: right; margin-top: 10px;">
+    <div class="button-large" id="addApplicationToArea" area="<? echo isset($_POST['data']) && isset($_POST['data']['type']) ? $_POST['data']['type'] : ""; ?>">
+        <div class="rightglare"></div>
+        <div class="filler" style="background-color: green"></div>
+        <ins><? echo $this->__f($buttonText); ?></ins>
+    </div>    
+</div>

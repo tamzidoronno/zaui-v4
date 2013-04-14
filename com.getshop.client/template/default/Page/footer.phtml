@@ -1,0 +1,17 @@
+<?
+/* @var $this Page */
+
+if (!$this->getFactory()->isExtendedMode())
+    return;
+?>
+
+<div class="footer-outer">
+    <div class="semi_footer">
+        <div area='footer' id="apparea-footer" class="applicationarea footer">
+            <?php 
+            if (!$this->emptySkeleton)    
+                $this->getPage()->getApplicationArea('footer')->render(); 
+            ?>
+        </div>
+    </div>
+</div>

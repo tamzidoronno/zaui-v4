@@ -1,0 +1,86 @@
+<?
+/* @var $factory Factory */
+$factory = $this->getFactory();
+$allApps = $factory->getApplicationPool()->getAllApplicationSettings();
+$area = $_POST['data']['type'];
+$apps = array();
+foreach($allApps as $myApp) {
+    /* @var $myApp core_appmanager_data_ApplicationSettings */
+    if(isset($myApp->allowedAreas) && is_array($myApp->allowedAreas) && in_array($area, $myApp->allowedAreas)) {
+        $namespace = $factory->convertUUIDtoString($myApp->id);
+        $instance = $namespace."\\".$myApp->appName;
+        if(class_exists($instance)) {
+            $instance = new $instance();
+            $instance->configuration = API::core_common_AppConfiguration();
+            $instance->configuration->appSettingsId = $myApp->id;
+            $instance->configuration->appName = $myApp->appName;
+            $apps[] = $instance;
+        }
+    }
+}
+?>
+<div class="tabs">
+    <div class="tabset inline">
+        <? 
+        foreach ($apps as $app) {
+            if(!$app->getName()) {
+                continue;
+            }
+            
+            $active = isset($notFirst) ? "" : "active";
+            $name = str_replace(" ", "", $app->getName());
+            echo "<div activate='$name' class='tab $active'>";
+                echo $app->getName();
+            echo "</div>";
+            $notFirst = false;
+        }
+        ?>
+    </div>
+    <div class="tab_content inline">
+        <? foreach ($apps as $app) { 
+            if(!$app->getName()) {
+                continue;
+            }
+            $appimagename = ApplicationHelper::getApplicationImage($app);
+            $active2 = isset($notFirst2) ? "" : "active";
+            $notFirst2 = false;
+        /* @var $app Application */    
+        ?>
+
+        <div class="content_holder <? echo $active2; ?>" id="<? echo str_replace(" ", "", $app->getName()); ?>">
+            <div class="application">
+                <div class="title">
+                    <? echo $instance->configuration->appName; ?>
+                </div>
+                <div class="descriptionholder">
+                    <div class="description inline">
+                        <? echo $app->getDescription(); ?>
+                    </div>
+                    <div class="image inline">
+                        <img src="<? echo $appimagename; ?>"/>
+                    </div>                    
+                </div>
+                <br>
+                <div class="title">
+                    <? echo $this->__f("Get Started"); ?>
+                </div>
+                <div class="descriptionholder" gstype="form" method="addApplicationToArea" id="applicationform">
+                     <input type="hidden" gsname="applicationName" value="<? echo get_class($app); ?>" type="<? echo $_POST['data']['type']; ?>">
+                     <input type="hidden" gsname="applicationArea" value="<? echo $_POST['data']['type']; ?>">
+                     <input type="hidden" gsname="appSettingsId" value="<? echo $app->getConfiguration()->appSettingsId; ?>">
+                     <? 
+                     if(method_exists($app, "getStartedExtended")) {
+                         ?>
+                         <input type="hidden" gsname="getshop_extended_application_add" value="true">
+                         <?
+                     }
+                     $app->getStarted(); 
+                     ?>
+                </div>
+                <span class="allFieldsNeedToBeFilled">* <? echo $this->__f("All fields need to be filled before you continue"); ?></span> 
+                <? $app->includefile("add_app_button", 'ApplicationManager'); ?>
+            </div>
+        </div>
+        <? } ?>
+    </div>
+</div>

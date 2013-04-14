@@ -1,0 +1,39 @@
+attribute gstypes;
+    form, need method attribute
+        example: <div gstype="form" method="addEntry">
+                    <input gstype="submit" type="button">
+                 </div>
+
+    submit, when click event is triggered, form is submitted
+        example: <input gstype="submit" type="button">
+
+    value, attributes to attach to the form. need gsname attribute aswell.
+        example: <input gstype="value" type="txt" name='example' placeholder="Enter a menu name">
+
+    ckeditor, attributes to attach to the form. if you are using the thundashop.common.createCkeditor(), use this to identfy its content.
+        example: <div gstype="ckeditor" type="txt" gsname='content'>Some content</div>
+
+    submitenter, makes it to submit when pressing enter. 
+        example: <input gstype="submitenter" type="txt" name='example' placeholder="Enter a menu name">
+
+    clicksubmit, submit whenever someone click this element:
+        example: <div gstype="clicksubmit" method="renameEntry" gsname="id" gsvalue="somevalue">
+        example submits on enter: <input gstype="clicksubmit" method="renameEntry" gsname="id" gsvalue="somevalue">
+       
+
+attribute output:
+    standard / not set: The default output.
+    informationbox : Forward the result into an informationbox.
+        informationtitle : This attribute helps the informationbox to be titled.
+
+Attribute gsname:
+    This attribute signales that this is a value that is being supposed as to php backend using gsname as the post variable.
+
+Naming convension:
+    Application: LeftMenu.java
+    Style: LeftMenu.less
+    Javascript: LeftMenu.js
+    Templates: LeftMenuTemplate*
+
+Framework translation: __f("");
+

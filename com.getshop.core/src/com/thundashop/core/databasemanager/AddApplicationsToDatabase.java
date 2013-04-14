@@ -7,10 +7,12 @@ package com.thundashop.core.databasemanager;
 import com.thundashop.core.appmanager.ApplicationPool;
 import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.common.AppConfiguration;
+import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.pagemanager.PageManager;
+import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageArea;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
@@ -429,6 +431,8 @@ public class AddApplicationsToDatabase {
     
     public static void main(String args[]) throws ErrorException {
         ApplicationContext context = new ClassPathXmlApplicationContext("All.xml");
+        AppContext.appContext = context;
+        
         context.getBean(AddApplicationsToDatabase.class).insert();
         context.getBean(AddApplicationsToDatabase.class).updateThemes();
         context.getBean(AddApplicationsToDatabase.class).updateUserPages();
@@ -436,16 +440,30 @@ public class AddApplicationsToDatabase {
         java.lang.System.exit(1);
     }
     
-    private void updateUserPages() {
+    private void updateUserPages() throws ErrorException {
         Credentials credentials = new Credentials(StoreManager.class);
         credentials.manangerName = "StoreManager";
         credentials.storeid = "all";
         credentials.password = "ADSFASDF";
         
+        
         for (DataCommon data : database.retreiveData(credentials)) {
             if (data instanceof Store) {
                 Store store = (Store)data;
-                System.out.println(store.id);
+                Credentials credentials2 = new Credentials(PageManager.class);
+                credentials2.manangerName = "PageManager";
+                credentials2.storeid = store.id;
+                credentials2.password = "ADSFASDF";
+
+                List<DataCommon> pages = database.retreiveData(credentials2);
+                for (DataCommon pageData : pages) {
+                    if (pageData instanceof Page) {
+                        Page page = (Page)pageData;
+                        if (page.id.equals("users")) {
+                            database.delete(page, credentials2);
+                        }
+                    }
+                }
             }
         }
                 

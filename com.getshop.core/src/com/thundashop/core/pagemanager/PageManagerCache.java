@@ -185,4 +185,9 @@ public class PageManagerCache implements IPageManager {
         getPage(pageId);
     }
 
+    @Override
+    public List<AppConfiguration> getApplicationsForPage(String pageId) throws ErrorException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

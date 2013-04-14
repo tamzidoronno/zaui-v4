@@ -8,12 +8,15 @@ import com.thundashop.core.appmanager.AppManager;
 import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.Credentials;
+import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -220,6 +223,25 @@ public class ApplicationPoolImpl {
             store.configuration.hasSelectedDesign = true;
             storeManager.saveStore(store.configuration);
         }
+    }
+
+    public List<AppConfiguration> getThemeApplications() {
+        List<AppConfiguration> apps = new ArrayList();
+        for (AppConfiguration config : applications.values()) {
+            try {
+                AppManager appManager = pageManager.getManager(AppManager.class);
+                ApplicationSettings appSettings = appManager.getApplication(config.appSettingsId);
+                if (appSettings.isSingleton || 
+                        appSettings.type.equals(ApplicationSettings.Type.Theme) ||
+                        appSettings.type.equals(ApplicationSettings.Type.System)) {
+                    apps.add(config);
+                }
+            } catch (ErrorException ex) {
+                java.util.logging.Logger.getLogger(ApplicationPoolImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return apps;
     }
 
 }

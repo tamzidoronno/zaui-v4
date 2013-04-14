@@ -121,6 +121,14 @@ public class PageManager extends ManagerBase implements IPageManager {
         List<AppConfiguration> result = new ArrayList(applicationPool.getApplications().values());
         return result;
     }
+    
+    @Override
+    public List<AppConfiguration> getApplicationsForPage(String pageId) throws ErrorException {
+        Page page = pagePool.get(pageId);
+        List<AppConfiguration> result = new ArrayList(page.getApplications().values());
+        result.addAll(applicationPool.getThemeApplications());
+        return result;
+    }
 
     @Override
     public AppConfiguration addApplication(String applicationSettingId) throws ErrorException {
@@ -277,4 +285,5 @@ public class PageManager extends ManagerBase implements IPageManager {
             removeApplication(appid, pageId);
         }
     }
+
 }

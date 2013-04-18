@@ -206,6 +206,13 @@
 	}
 	
 	/**
+	 * @return \core_appmanager_data_ApplicationSubscription
+	 */
+	public static function core_appmanager_data_ApplicationSubscription() {
+		return new \core_appmanager_data_ApplicationSubscription();
+	}
+	
+	/**
 	 * @return \core_appmanager_data_ApplicationSettings
 	 */
 	public static function core_appmanager_data_ApplicationSettings() {

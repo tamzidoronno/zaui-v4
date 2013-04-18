@@ -24,8 +24,5 @@ class core_storemanager_data_Store extends core_common_DataCommon  {
 	/** @var String */
 	public $partnerId;
 
-	/** @var String */
-	public $configurationFlags;
-
 }
 ?>

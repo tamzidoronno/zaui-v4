@@ -31,7 +31,10 @@ class PaymentApplication extends ApplicationBase {
         return true;
     }
     
-    public function getYoutubeId() {
+    /**
+     * Callback system for payments.
+     */
+    public function paymentCallback() {
         
     }
 }

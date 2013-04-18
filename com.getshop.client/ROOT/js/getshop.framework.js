@@ -13,8 +13,8 @@ thundashop.framework = {
             }
         });
         $('*[gstype="form"] *[gstype="submitenter"], *[gstype="clicksubmit"]').live('keyup', function(e) {
-            if(e.keyCode == 13) {
-                if($(e.target).attr('gsType') == "clicksubmit") {
+            if(e.keyCode === 13) {
+                if($(e.target).attr('gsType') === "clicksubmit") {
                     thundashop.framework.submitElement(e);
                 } else {
                     thundashop.framework.submitFromEvent(e);
@@ -23,10 +23,14 @@ thundashop.framework = {
         });
         $('*[gstype="clicksubmit"]').live('click', function(e) {
             var target = $(e.target);
-            if(target.prop("tagName") == "INPUT") {
+            if(target.prop("tagName") === "INPUT") {
                 return;
             }
             thundashop.framework.submitElement(e);
+        });
+        
+        $('.informationbox .payforapplications').live('click', function(e) {
+             $(this).closest('.informationbox').find('#paypalform').submit();
         });
     },
     

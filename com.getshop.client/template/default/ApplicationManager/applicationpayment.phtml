@@ -1,0 +1,71 @@
+<?php
+echo "<div class='unpayedappheader'>";
+echo $this->__w("You have expired applications that requires payment.") . "<bR>";
+echo $this->__w("To continue using this feature, you will need to pay, or remove the application.") . "<bR>";
+echo "</div>";
+
+$unpayed = $this->getApi()->getAppManager()->getUnpayedSubscription();
+
+echo "<table width='100%' class='unpayedapptable'>";
+echo "<tr>";
+echo "<th width='100'>" . $this->__w("Count") . "</th>";
+echo "<th>" . $this->__w("Name of the application") . "</th>";
+echo "<th>" . $this->__w("Expire date") . "</th>";
+echo "<th>" . $this->__w("Price") . "</th>";
+echo "</tr>";
+$price = 0;
+foreach ($unpayed as $data) {
+    /* @var $data core_appmanager_data_ApplicationSubscription */
+    echo "<tr>";
+    echo "<td>" . $data->numberOfInstancesAdded . "</td>";
+    echo "<td>" . $data->app->appName . "</td>";
+    echo "<td>" . $data->to_date . "</td>";
+    echo "<td width='50'>\$ " . $data->app->price . "</td>";
+    echo "<td width='50'>".$this->__w("Remove")."</td>";
+    echo "</tr>";
+    $price += $data->app->price;
+}
+echo "<tr>";
+echo "<td></td>";
+echo "<td>Total</td>";
+echo "<td></td>";
+echo "<td>\$ $price,-</td>";
+echo "</table>";
+
+function curPageURL() {
+    $pageURL = 'http';
+    if (@$_SERVER["HTTPS"] == "on") {
+        $pageURL .= "s";
+    }
+    $pageURL .= "://";
+    if ($_SERVER["SERVER_PORT"] != "80") {
+        $pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
+    } else {
+        $pageURL .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
+    }
+    return $pageURL;
+}
+
+$returnAddress = curPageURL();
+?>
+
+<form action='https://www.paypal.com/cgi-bin/webscr' method='POST' id='paypalform'>
+    <input type="hidden" name="notify_url" value="notifier">
+    <INPUT TYPE="hidden" NAME="return" value="<? echo $returnAddress; ?>">
+
+    <input type="hidden" name="cmd" value="_cart"> 
+    <input type="hidden" name="upload" value="1">
+    <input type="hidden" name="currency_code" value="USD">
+    <input type="hidden" name="business" value="post@getshop.com">
+
+    <input type="hidden" name="item_name_1" value="Payment for applications">
+    <input type="hidden" name="amount_1" value="<? echo $price; ?>">
+</form>
+
+<div style="text-align:right; padding-right:10px;border-top: solid 1px #BBBBBB;">
+    <div class="button-large payforapplications">
+        <div class="rightglare"></div>
+        <div class="filler" ></div>
+        <ins><? echo $this->__w("Checkout"); ?></ins>
+    </div>
+</div>

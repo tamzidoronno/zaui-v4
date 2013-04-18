@@ -338,12 +338,19 @@ class Factory extends FactoryBase {
         if (count($this->getApi()->transport->errors) == 0) {
             return "";
         }
-
         ob_start();
         $this->includefile('errors', 'Common');
         $errors = ob_get_contents();
         ob_end_clean();
         return $errors;
+    }
+    
+    public function getErrorCodes() {
+        if (count($this->getApi()->transport->errorCodes) == 0) {
+            return "";
+        }
+        
+        return $this->getApi()->transport->errorCodes;
     }
 
     /**

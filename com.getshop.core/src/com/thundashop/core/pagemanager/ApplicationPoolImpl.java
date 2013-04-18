@@ -230,6 +230,9 @@ public class ApplicationPoolImpl {
         for (AppConfiguration config : applications.values()) {
             try {
                 AppManager appManager = pageManager.getManager(AppManager.class);
+                if(config.appSettingsId == null) {
+                    continue;
+                }
                 ApplicationSettings appSettings = appManager.getApplication(config.appSettingsId);
                 if (appSettings.isSingleton || 
                         appSettings.type.equals(ApplicationSettings.Type.Theme) ||

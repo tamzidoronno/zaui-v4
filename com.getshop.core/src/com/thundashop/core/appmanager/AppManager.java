@@ -1,8 +1,10 @@
 package com.thundashop.core.appmanager;
 
 import com.thundashop.core.appmanager.data.ApplicationSettings;
+import com.thundashop.core.appmanager.data.ApplicationSubscription;
 import com.thundashop.core.appmanager.data.ApplicationSynchronization;
 import com.thundashop.core.appmanager.data.AvailableApplications;
+import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
@@ -12,8 +14,11 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.PageArea;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -25,27 +30,34 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 public class AppManager extends ManagerBase implements IAppManager {
+
     public List<ApplicationSynchronization> toSync;
-    
     private Date lastConnected = new Date();
+    Map<String, ApplicationSubscription> addedApps;
+    private UnpayedAppCache cache;
+
     
 //    TODO
 //    US this variable to retreive data.
 //    private AvailableApplications applications = new AvailableApplications();
-
     @Autowired
     private ApplicationPool applicationPool;
-    
+
     @Autowired
     public AppManager(Logger log, DatabaseSaver databaseSaver) {
         super(log, databaseSaver);
-    }
+        addedApps = new HashMap();
+   }
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataObject : data.data) {
             if (dataObject instanceof ApplicationSynchronization) {
-                addToSync((ApplicationSynchronization)dataObject);
+                addToSync((ApplicationSynchronization) dataObject);
+            }
+            if(dataObject instanceof ApplicationSubscription) {
+                ApplicationSubscription sub = (ApplicationSubscription) dataObject;
+                addedApps.put(sub.appSettingsId, sub);
             }
         }
     }
@@ -56,7 +68,7 @@ public class AppManager extends ManagerBase implements IAppManager {
         retMessage.applications = applicationPool.getAll(storeId);
         return retMessage;
     }
-    
+
     private ArrayList<ApplicationSettings> getAddedApplications() {
         ArrayList<ApplicationSettings> appSettings = new ArrayList();
         PageManager pageManager = getManager(PageManager.class);
@@ -123,37 +135,37 @@ public class AppManager extends ManagerBase implements IAppManager {
         addToSync(sync);
         sync.storeId = storeId;
         databaseSaver.saveObject(sync, credentials);
-    }
+    }    
 
     private void addToSync(ApplicationSynchronization sync) {
-        if(toSync == null) {
+        if (toSync == null) {
             toSync = new ArrayList();
         }
-        
+
         toSync.add(sync);
     }
 
     @Override
     public List<ApplicationSynchronization> getSyncApplications() throws ErrorException {
         lastConnected = new Date();
-        if(toSync == null) {
+        if (toSync == null) {
             return new ArrayList();
         }
-        
+
         List<ApplicationSynchronization> result = new ArrayList();
         String loggedOnuserId = getSession().currentUser.id;
-        for(ApplicationSynchronization sync : toSync) {
-            if(sync.userId.equals(loggedOnuserId)) {
+        for (ApplicationSynchronization sync : toSync) {
+            if (sync.userId.equals(loggedOnuserId)) {
                 result.add(sync);
             }
         }
-        
+
         //Cleaning time.
-        for(ApplicationSynchronization syncer : result) {
+        for (ApplicationSynchronization syncer : result) {
             databaseSaver.deleteObject(syncer, credentials);
             toSync.remove(syncer);
         }
-        
+
         return result;
     }
 
@@ -162,10 +174,84 @@ public class AppManager extends ManagerBase implements IAppManager {
         long now = new Date().getTime();
         long lastTime = lastConnected.getTime();
         long diff = now - lastTime;
-        if(diff < (1000*10*2)) {
+        if (diff < (1000 * 10 * 2)) {
             return true;
         }
         return false;
     }
 
+    
+    
+    @Override
+    public Map<String, ApplicationSubscription> getAllApplicationSubscriptions() throws ErrorException {
+        PageManager pagemanager = this.getManager(PageManager.class);
+        for(ApplicationSubscription sub : addedApps.values()) {
+            sub.numberOfInstancesAdded = 0;
+        }
+        
+        for (AppConfiguration config : pagemanager.getApplications()) {
+            if(config.appSettingsId == null) {
+                continue;
+            }
+            ApplicationSubscription subscription = addedApps.get(config.appSettingsId);
+            if (subscription == null) {
+                subscription = new ApplicationSubscription();
+                subscription.appSettingsId = config.appSettingsId;
+            }
+            subscription.app = getApplication(subscription.appSettingsId);
+            if (subscription.from_date == null || subscription.from_date.after(config.rowCreatedDate)) {
+                updateSubscription(subscription, config);
+            }
+            if(subscription.appSettingsId == null) {
+                continue;
+            }
+            
+            subscription.numberOfInstancesAdded++;
+            
+            if(subscription.app.price == 0) {
+                subscription.payedfor = true;
+            }
+            
+            addedApps.put(config.appSettingsId, subscription);
+        }
+
+        return addedApps;
+    }
+
+    private void updateSubscription(ApplicationSubscription subscription, AppConfiguration config) throws ErrorException {
+        Calendar cal = Calendar.getInstance();
+        subscription.from_date = config.rowCreatedDate;
+        cal.setTime(subscription.from_date);
+        cal.add(Calendar.DAY_OF_YEAR, subscription.app.trialPeriode);
+        subscription.to_date = cal.getTime();
+        subscription.storeId = storeId;
+        subscription.payedfor = false;
+        databaseSaver.saveObject(subscription, credentials);
+    }
+
+    @Override
+    public List<ApplicationSubscription> getUnpayedSubscription() throws ErrorException {
+        List<ApplicationSubscription> result = new ArrayList();
+        if(cache != null) {
+            if(cache.expire.after(new Date())) {
+                return cache.cache;
+            }
+        }
+        
+        for(ApplicationSubscription apsub : getAllApplicationSubscriptions().values()) {
+//            if(!apsub.payedfor && apsub.to_date.before(new Date())) {
+                result.add(apsub);
+//            }
+        }
+        
+        cache = new UnpayedAppCache();
+        cache.cache = result;
+        
+        Calendar expire = Calendar.getInstance();
+        expire.setTime(new Date());
+        expire.add(Calendar.HOUR, 1);
+        cache.expire = expire.getTime();
+        
+        return result;
+    }
 }

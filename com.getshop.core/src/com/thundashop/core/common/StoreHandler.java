@@ -4,6 +4,9 @@
  */
 package com.thundashop.core.common;
 
+import com.thundashop.core.appmanager.AppManager;
+import com.thundashop.core.appmanager.UnpayedAppCache;
+import com.thundashop.core.appmanager.data.ApplicationSubscription;
 import com.thundashop.core.loggermanager.LoggerManager;
 import com.thundashop.core.reportingmanager.ReportingManager;
 import com.thundashop.core.usermanager.IUserManager;
@@ -56,7 +59,13 @@ public class StoreHandler {
         setSessionObject(inObject.sessionId);
         Class aClass = loadClass(inObject.interfaceName);
         Method executeMethod = getMethodToExecute(aClass, inObject.method, types);
-        authenticateUserLevel(executeMethod);
+        Annotation annotation = authenticateUserLevel(executeMethod);
+        AppManager appManager = getManager(AppManager.class);
+        List<ApplicationSubscription> unpayedApps = appManager.getUnpayedSubscription();
+        if(annotation instanceof Administrator && unpayedApps.size() > 0) {
+            throw new ErrorException(93);
+        }
+        
         Object result = invokeMethod(executeMethod, aClass, argumentValues);
         clearSessionObject();
         return result;
@@ -188,7 +197,7 @@ public class StoreHandler {
         throw retex;
     }
 
-    public void authenticateUserLevel(Method executeMethod) throws ErrorException {
+    public Annotation authenticateUserLevel(Method executeMethod) throws ErrorException {
         executeMethod = getCorrectMethod(executeMethod);
 
         if (executeMethod.getAnnotation(Internal.class) != null) {
@@ -209,6 +218,7 @@ public class StoreHandler {
                 throw new ErrorException(26);
             }
         }
+        return userLevel;
     }
 
     private User findUser() throws ErrorException {

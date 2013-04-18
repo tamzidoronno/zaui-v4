@@ -132,4 +132,23 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public void saveOrder(Order order) throws ErrorException {
         saveOrderInternal(order);
     }
+    
+    @Override
+    public void setOrderStatus(String password, String orderId, String currency, double price, int status) throws ErrorException {
+        if(password.equals("fdasfseec½&&%ddez__e00")) {
+            Order order = orders.get(orderId);
+            if(order.cart.getTotal() == price) {
+                order.status = status;
+                saveOrderInternal(order);
+            } else {
+                String content = "Hi.<br>";
+                content += "We received a payment notification from paypal for order: " + orderId + " which is incorrect.<br>";
+                content += "The price or the currency differ from what has been registered to the order.<br>";
+                
+                String to = getStore().configuration.emailAdress;
+                mailFactory.send("post@getshop.com", to, "Possible fraud attempt", content);
+                mailFactory.send("post@getshop.com", "post@getshop.com", "Possible fraud attempt", content);
+            }
+        }
+    }
 }

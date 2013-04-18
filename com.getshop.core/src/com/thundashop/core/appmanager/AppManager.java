@@ -226,8 +226,13 @@ public class AppManager extends ManagerBase implements IAppManager {
         subscription.to_date = cal.getTime();
         subscription.storeId = storeId;
         subscription.payedfor = false;
+        saveSubscription(subscription);
+    }
+    
+    private void saveSubscription(ApplicationSubscription subscription) throws ErrorException {
         databaseSaver.saveObject(subscription, credentials);
     }
+    
 
     @Override
     public List<ApplicationSubscription> getUnpayedSubscription() throws ErrorException {
@@ -239,9 +244,9 @@ public class AppManager extends ManagerBase implements IAppManager {
         }
         
         for(ApplicationSubscription apsub : getAllApplicationSubscriptions().values()) {
-//            if(!apsub.payedfor && apsub.to_date.before(new Date())) {
+            if(!apsub.payedfor && apsub.to_date.before(new Date())) {
                 result.add(apsub);
-//            }
+            }
         }
         
         cache = new UnpayedAppCache();
@@ -253,5 +258,19 @@ public class AppManager extends ManagerBase implements IAppManager {
         cache.expire = expire.getTime();
         
         return result;
+    }
+
+    public void renewAllApplications(String password) throws ErrorException {
+        if(password.equals("fdder9bbvnfif909ereXXff")) {
+            for(ApplicationSubscription sub : addedApps.values()) {
+                sub.from_date = new Date();
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(sub.from_date);
+                cal.add(Calendar.YEAR, 1);
+                sub.to_date = cal.getTime();
+                sub.payedfor = true;
+                saveSubscription(sub);
+            }
+        }
     }
 }

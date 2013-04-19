@@ -290,4 +290,9 @@ public class PageManager extends ManagerBase implements IPageManager {
         }
     }
 
+    @Override
+    public List<AppConfiguration> getApplicationsBasedOnApplicationSettingsId(String appSettingsId) throws ErrorException {
+        return applicationPool.getApplications(appSettingsId);
+    }
+
 }

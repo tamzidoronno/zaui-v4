@@ -259,4 +259,20 @@ public class ApplicationPoolImpl {
         return apps;
     }
 
+    public List<AppConfiguration> getApplications(String appSettingsId) {
+        List<AppConfiguration> retApps = new ArrayList();
+        
+        if (appSettingsId == null) {
+            return retApps;
+        }
+        
+        for (AppConfiguration app : applications.values()) {
+            if (appSettingsId.equals(app.appSettingsId)) {
+                retApps.add(app);
+            }
+        }
+        
+        return retApps;
+    }
+
 }

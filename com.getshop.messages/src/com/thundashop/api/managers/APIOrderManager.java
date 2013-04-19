@@ -79,4 +79,26 @@ public class APIOrderManager {
           String result = transport.send(data);
      }
 
+     /**
+     * If everything is ok, the price is the same as the order and the currency, then update the status.
+     * @param password A predefined password needed to update the status.
+     * @param orderId The id of the order to update
+     * @param currency The currency the transaction returned
+     * @param price The price.
+     * @throws ErrorException 
+     */
+
+     public void setOrderStatus(String password, String orderId, String currency, double price, int status)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new HashMap();
+          data.args.put("password",new Gson().toJson(password));
+          data.args.put("orderId",new Gson().toJson(orderId));
+          data.args.put("currency",new Gson().toJson(currency));
+          data.args.put("price",new Gson().toJson(price));
+          data.args.put("status",new Gson().toJson(status));
+          data.method = "setOrderStatus";
+          data.interfaceName = "core.ordermanager.IOrderManager";
+          String result = transport.send(data);
+     }
+
 }

@@ -16,6 +16,7 @@ import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageArea;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -326,7 +327,7 @@ public class AddApplicationsToDatabase {
         apps.add(createSettings(
                 "Booking", 
                 "74ea4e90-2d5a-4290-af0c-230a66e09c78", 
-                emtpy, 
+                Arrays.asList(PageArea.Type.MIDDLE), 
                 "give your customers ability to book into your events or appointments", 
                 ApplicationSettings.Type.Marketing, false));
         
@@ -431,16 +432,19 @@ public class AddApplicationsToDatabase {
         }
     }
     
-    public static void main(String args[]) throws ErrorException {
+    public static void main(String args[]) throws ErrorException, UnknownHostException {
         ApplicationContext context = new ClassPathXmlApplicationContext("All.xml");
         AppContext.appContext = context;
         
         context.getBean(AddApplicationsToDatabase.class).insert();
         context.getBean(AddApplicationsToDatabase.class).updateThemes();
         context.getBean(AddApplicationsToDatabase.class).updateUserPages();
+        
+        AddPageSettingsIdToAppConfigurationObject.main(args);
 //        context.getBean(AddApplicationsToDatabase.class).showLinks();
         java.lang.System.exit(1);
     }
+    
     
     private void updateUserPages() throws ErrorException {
         Credentials credentials = new Credentials(StoreManager.class);
@@ -471,7 +475,7 @@ public class AddApplicationsToDatabase {
                 
     }
 
-    private void updateThemes() {
+    private void updateThemes() throws ErrorException {
         Credentials credentials = new Credentials(StoreManager.class);
         credentials.manangerName = "StoreManager";
         credentials.storeid = "all";
@@ -480,6 +484,9 @@ public class AddApplicationsToDatabase {
             if (data instanceof Store) {
                 Store store = (Store)data;
                 if (store.configuration != null && store.configuration.theeme != null) {
+                    store.configuration.hasSelectedDesign = true;
+                    database.save(store, credentials);
+                    
                     if (store.configuration.theeme.equals("blueandwhite")) {
                         createNewApplication("WhiteAndBlueTheme", "a84cbbb0-8f21-11e2-9e96-0800200c9a66", store.id);
                     }
@@ -499,6 +506,7 @@ public class AddApplicationsToDatabase {
                     if (store.configuration.theeme.equals("getshop")) {
                         createNewApplication("GetShopTheme", "7a4f3750-895a-11e2-9e96-0800200c9a66", store.id);
                     } 
+                    
                     
                 }
             }

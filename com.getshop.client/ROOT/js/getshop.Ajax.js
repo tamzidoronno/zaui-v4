@@ -20,13 +20,13 @@ thundashop.Ajax = {
         PubSub.publish('NAVIGATED', {});
     },
     postWithCallBack: function(data, callback, dontShowLoaderbox, useFile) {
-        if (!(typeof(dontShowLoaderbox) != "undefined" && dontShowLoaderbox === true))
+        if (!(typeof(dontShowLoaderbox) !== "undefined" && dontShowLoaderbox === true))
             $('#loaderbox').show();
 
         data['synchron'] = true;
         $.ajax({
             type: "POST",
-            url: typeof(useFile) != "undefined" ? useFile : this.ajaxFile,
+            url: typeof(useFile) !== "undefined" ? useFile : this.ajaxFile,
             data: data,
             context: document.body,
             success: function(response) {
@@ -39,20 +39,20 @@ thundashop.Ajax = {
         if (callback === undefined && dontUpdate !== true) {
             this.doPreProcess();
         }
-        if (!(typeof(dontShowLoaderBox) != "undefined" && dontShowLoaderBox === true))
+        if (!(typeof(dontShowLoaderBox) !== "undefined" && dontShowLoaderBox === true))
             $('#loaderbox').show();
 
         $.ajax({
             type: "POST",
-            url: typeof(useFile) != "undefined" ? useFile : this.ajaxFile,
+            url: typeof(useFile) !== "undefined" ? useFile : this.ajaxFile,
             data: thundashop.base64.encodeForAjax(data),
             dataType: "json",
             context: document.body,
             success: function(response) {
-                if (typeof(dontUpdate) == "undefined" || dontUpdate === false) {
+                if (typeof(dontUpdate) === "undefined" || dontUpdate === false) {
                     thundashop.Ajax.updateFromResponse(response);
                 }
-                if (typeof(callback) == "function") {
+                if (typeof(callback) === "function") {
                     callback(response, extraArg);
                     $('#loaderbox').hide();
                 }
@@ -88,7 +88,7 @@ thundashop.Ajax = {
             dataType: "json",
             success: function(response) {
                 thundashop.Ajax.updateFromResponse(response);
-                if (response.errors && response.errors != "")
+                if (response.errors && response.errors !== "")
                     result = false;
             }
         });
@@ -107,12 +107,15 @@ thundashop.Ajax = {
         return retevent;
     },
     updateFromResponse: function(response) {
-//        if (typeof(CKEDITOR) != "undefined")
-//            this.doPreProcess();
-
         var scrolltop = $(window).scrollTop();
         if (response.errors) {
-            thundashop.Ajax.showErrorMessage(response.errors)
+            console.log(response.errorCodes);
+            if(response.errorCodes[0] === 93) {
+                var event = thundashop.Ajax.createEvent('','loadpaymentinfo',$(this), {});
+                thundashop.common.showInformationBox(event,'Payment information');
+            } else {
+                thundashop.Ajax.showErrorMessage(response.errors)
+            }
         } else {
             for (var divid in response) {
                 if (response[divid] !== null) {

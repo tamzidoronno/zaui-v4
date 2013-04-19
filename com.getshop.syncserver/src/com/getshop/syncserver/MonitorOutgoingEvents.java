@@ -226,6 +226,8 @@ public class MonitorOutgoingEvents extends Thread {
         allFiles.add(new File(classesPath + "/SystemApplication.php"));
         allFiles.add(new File(classesPath + "/ThemeApplication.php"));
         allFiles.add(new File(classesPath + "/WebshopApplication.php"));
+        allFiles.add(new File(classesPath + "/MarketingApplication.php"));
+        allFiles.add(new File(classesPath + "/ApplicationPool.php"));
 
         return allFiles;
     }

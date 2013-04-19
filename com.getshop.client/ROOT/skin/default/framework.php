@@ -34,7 +34,8 @@
     cursor: pointer; 
     right: 0px;
 }
-
+.informationbox .unpayedappheader { font-size:16px; padding-left: 10px; border: solid 1px #BBBBBB; padding-top:10px; padding-bottom: 10px; }
+.informationbox .unpayedapptable tr:hover td { background-color: #EFEFEF; }
 .inline {
     min-height: 10px;
     display: -moz-inline-stack;

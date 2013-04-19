@@ -11,6 +11,7 @@ class CommunicationHelper {
     var $socket;
     var $connected = false;
     var $port = 25554;
+    public $errorCodes = array();
     public $host = "";
     
     private function getClass($array) {
@@ -146,6 +147,7 @@ class CommunicationHelper {
             $result['error_method'] = $event['method'];
             $result['interfaceName'] = $event['interfaceName'];
             $this->errors[] = $result;
+            $this->errorCodes[] = $object->errorCode;
             return null;
         } else {
             return $this->createThundashopObject($object);

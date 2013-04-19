@@ -328,5 +328,10 @@ class ApplicationManager extends FactoryBase {
         $appMan->display();
     }
     
+    public function loadpaymentinfo() {
+        $unpayed = $this->getApi()->getAppManager()->getUnpayedSubscription();
+        $this->includefile("applicationpayment");
+    }
+    
 }
 ?>

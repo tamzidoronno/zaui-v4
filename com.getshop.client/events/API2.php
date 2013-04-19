@@ -476,6 +476,19 @@ class APIAppManager {
      }
 
      /**
+     * Get all the applications added to this store.
+     * @throws ErrorException 
+     */
+
+     public function getAllApplicationSubscriptions() {
+          $data = array();
+          $data['args'] = array();
+          $data["method"] = "getAllApplicationSubscriptions";
+          $data["interfaceName"] = "core.appmanager.IAppManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Fetch all the applications connected to you.
      * @return core_appmanager_data_AvailableApplications
      */
@@ -515,6 +528,20 @@ class APIAppManager {
           $data = array();
           $data['args'] = array();
           $data["method"] = "getSyncApplications";
+          $data["interfaceName"] = "core.appmanager.IAppManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
+     * Fetch all application that needs to be payed for.
+     * @return List
+     * @throws ErrorException 
+     */
+
+     public function getUnpayedSubscription() {
+          $data = array();
+          $data['args'] = array();
+          $data["method"] = "getUnpayedSubscription";
           $data["interfaceName"] = "core.appmanager.IAppManager";
           return $this->transport->sendMessage($data);
      }
@@ -1408,6 +1435,28 @@ class APIOrderManager {
           $data['args'] = array();
           $data['args']["core_ordermanager_data_Order"] = json_encode($this->transport->object_unset_nulls($core_ordermanager_data_Order));
           $data["method"] = "saveOrder";
+          $data["interfaceName"] = "core.ordermanager.IOrderManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
+     * If everything is ok, the price is the same as the order and the currency, then update the status.
+     * @param password A predefined password needed to update the status.
+     * @param orderId The id of the order to update
+     * @param currency The currency the transaction returned
+     * @param price The price.
+     * @throws ErrorException 
+     */
+
+     public function setOrderStatus($password, $orderId, $currency, $price, $status) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+          $data['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+          $data['args']["currency"] = json_encode($this->transport->object_unset_nulls($currency));
+          $data['args']["price"] = json_encode($this->transport->object_unset_nulls($price));
+          $data['args']["status"] = json_encode($this->transport->object_unset_nulls($status));
+          $data["method"] = "setOrderStatus";
           $data["interfaceName"] = "core.ordermanager.IOrderManager";
           return $this->transport->sendMessage($data);
      }

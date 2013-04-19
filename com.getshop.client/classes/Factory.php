@@ -155,12 +155,12 @@ class Factory extends FactoryBase {
     }
     
     public function getConfigurationFlag($flag) {
-        return $this->store->configurationFlags[$flag];
+        return $this->store->configuration->configurationFlags->{$flag};
     }
     
     public function setConfigurationFlag($flag, $setting) {
-        $this->store->configurationFlags[$flag] = $setting;
-        $this->getApi()->getStoreManager()->saveStore($this->store);
+        $this->store->configuration->configurationFlags->{$flag} = $setting;
+        $this->getApi()->getStoreManager()->saveStore($this->store->configuration);
     }
     
     public function showNotExistsMessage() {
@@ -338,12 +338,19 @@ class Factory extends FactoryBase {
         if (count($this->getApi()->transport->errors) == 0) {
             return "";
         }
-
         ob_start();
         $this->includefile('errors', 'Common');
         $errors = ob_get_contents();
         ob_end_clean();
         return $errors;
+    }
+    
+    public function getErrorCodes() {
+        if (count($this->getApi()->transport->errorCodes) == 0) {
+            return "";
+        }
+        
+        return $this->getApi()->transport->errorCodes;
     }
 
     /**

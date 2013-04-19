@@ -20,6 +20,8 @@ function getBrowser() {
     return $ub;
 }
 
+curl_init();
+
 function init($factory) {
     ob_start();
     $factory->run();

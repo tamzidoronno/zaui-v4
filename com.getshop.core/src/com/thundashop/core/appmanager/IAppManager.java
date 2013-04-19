@@ -6,12 +6,14 @@
 package com.thundashop.core.appmanager;
 
 import com.thundashop.core.appmanager.data.ApplicationSettings;
+import com.thundashop.core.appmanager.data.ApplicationSubscription;
 import com.thundashop.core.appmanager.data.AvailableApplications;
 import com.thundashop.core.appmanager.data.ApplicationSynchronization;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -48,6 +50,20 @@ public interface IAppManager {
      */
     @Administrator
     public void deleteApplication(String id) throws ErrorException;
+    
+    /**
+     * Fetch all application that needs to be payed for.
+     * @return
+     * @throws ErrorException 
+     */
+    public List<ApplicationSubscription> getUnpayedSubscription() throws ErrorException;
+    
+    /**
+     * Get all the applications added to this store.
+     * @throws ErrorException 
+     */
+    @Administrator
+    public Map<String, ApplicationSubscription> getAllApplicationSubscriptions() throws ErrorException;
     
     /**
      * Fetch the settings for a given id.

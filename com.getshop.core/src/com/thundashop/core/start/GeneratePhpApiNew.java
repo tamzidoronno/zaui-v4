@@ -554,7 +554,7 @@ public class GeneratePhpApiNew {
     }
 
     private static void writePHPApi(String result) throws IOException {
-        String thePath = "../../com.getshop.frontend/events/API2.php";
+        String thePath = "../com.getshop.client/events/API2.php";
 
         String content = "<?php\n\r";
         content += result;
@@ -729,7 +729,7 @@ public class GeneratePhpApiNew {
     }
 
     private static void writeDocumentation(String html) throws IOException {
-        File path = new File("../../com.getshop.frontend/ROOT/documentation/index.html");
+        File path = new File("../com.getshop.client/ROOT/documentation/index.html");
 
         html = "<link rel=\"stylesheet\" type=\"text/css\" href=\"styles.css\" />" + html;
         html = "<script type=\"text/javascript\" src=\"doc.js\"></script>" + html;

@@ -6,6 +6,7 @@ package com.thundashop.core.storemanager.data;
 
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -29,6 +30,7 @@ public class StoreConfiguration extends DataCommon {
     public String state;
     public String country;
     public List<TranslationObject> translationMatrix = new ArrayList();
+    public HashMap<String, String> configurationFlags;
     
     public Colors colors = new Colors();
     

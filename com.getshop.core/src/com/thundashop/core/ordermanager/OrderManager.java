@@ -1,5 +1,7 @@
 package com.thundashop.core.ordermanager;
 
+import com.thundashop.core.appmanager.AppManager;
+import com.thundashop.core.appmanager.data.ApplicationSubscription;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -17,8 +19,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 public class OrderManager extends ManagerBase implements IOrderManager {
+
     public HashMap<String, Order> orders = new HashMap();
-    
     @Autowired
     public MailFactory mailFactory;
 
@@ -51,7 +53,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private void updateStockQuantity(Order order, String key) throws ErrorException {
         HashMap<String, Setting> map = this.getSettings("StockControl");
         String setting = null;
-        if(map != null) {
+        if (map != null) {
             setting = map.get(key).value;
         }
 
@@ -94,10 +96,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         order.createdDate = new Date();
         order.cart = cart;
 
-        if(order.cart.address == null) {
+        if (order.cart.address == null) {
             throw new ErrorException(53);
         }
-        
+
         saveOrder(order);
 
         updateStockQuantity(order, "trackControl");
@@ -115,14 +117,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public List<Order> getOrders(ArrayList<String> orderIds, Integer page, Integer pageSize) throws ErrorException {
         User user = getSession().currentUser;
         List<Order> result = new ArrayList();
-        for(Order order : orders.values()) {
-            if(user.isAdministrator() || user.isEditor()) {
+        for (Order order : orders.values()) {
+            if (user.isAdministrator() || user.isEditor()) {
                 result.add(order);
-            } else if(order.userId.equals(user.id)) {
+            } else if (order.userId.equals(user.id)) {
                 result.add(order);
             }
         }
-        
+
         Collections.sort(result);
         Collections.reverse(result);
         return result;
@@ -131,5 +133,50 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public void saveOrder(Order order) throws ErrorException {
         saveOrderInternal(order);
+    }
+
+    @Override
+    public void setOrderStatus(String password, String orderId, String currency, double price, int status) throws ErrorException {
+        if (password.equals("fdasfseec½&&%ddez__e00")) {
+            Order order = orders.get(orderId);
+
+            if (orderId.equals("applications")) {
+                handleApplicationPayment(currency, price);
+            } else if (order.cart.getTotal() == price) {
+                order.status = status;
+                saveOrderInternal(order);
+            } else {
+                String content = "Hi.<br>";
+                content += "We received a payment notification from paypal for order: " + orderId + " which is incorrect.<br>";
+                content += "The price or the currency differ from what has been registered to the order.<br>";
+
+                String to = getStore().configuration.emailAdress;
+                mailFactory.send("post@getshop.com", to, "Possible fraud attempt", content);
+                mailFactory.send("post@getshop.com", "post@getshop.com", "Possible fraud attempt", content);
+            }
+        }
+    }
+
+    private void handleApplicationPayment(String currency, double price) throws ErrorException {
+        System.out.println(currency);
+        AppManager appManager = getManager(AppManager.class);
+        List<ApplicationSubscription> subscriptions = appManager.getUnpayedSubscription();
+        double total = 0;
+        for (ApplicationSubscription appsub : subscriptions) {
+            total += appsub.app.price;
+        }
+
+        if (total == price && currency.equals("USD")) {
+            appManager.renewAllApplications("fdder9bbvnfif909ereXXff");
+        } else {
+                String content = "Hi.<br>";
+                content += "We received a payment notification from paypal for order for applications which is incorrect.<br>";
+                content += "The price or the currency differ from what has been registered to the order <br>";
+                content += "Price : " + price+ " <br>";
+                content += "Currency : " + currency+ " <br>";
+
+                String to = getStore().configuration.emailAdress;
+                mailFactory.send("post@getshop.com", "post@getshop.com", "Application fraud attempt", content);
+        }
     }
 }

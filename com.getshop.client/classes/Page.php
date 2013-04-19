@@ -175,6 +175,7 @@ class Page extends FactoryBase {
         }
         
         $contents['errors'] = $this->getFactory()->getErrorsHtml();
+        $contents['errorCodes'] = $this->getFactory()->getErrorCodes();
         echo json_encode($contents);
     }
     

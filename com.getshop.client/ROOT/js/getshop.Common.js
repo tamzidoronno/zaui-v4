@@ -140,7 +140,14 @@ thundashop.common.saveCKEditor = function(data, target) {
         "content": data,
         "altid": altid
     });
-    thundashop.Ajax.post(event, 'ContentManager');
+    var text=$("<p>" + data + "</p>").text();
+    text=text.replace(/^\s+|\s+$/g, "");
+    console.log(text.length);
+    if(text.length === 0) {
+        thundashop.Ajax.post(event);
+    } else {
+        thundashop.Ajax.postSynchron(event);
+    }
     thundashop.common.removeNotificationProgress('contentmanager');
 };
 

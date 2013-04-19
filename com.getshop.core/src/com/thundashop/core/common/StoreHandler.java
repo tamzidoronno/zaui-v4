@@ -54,6 +54,7 @@ public class StoreHandler {
     
     public synchronized Object executeMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
         setSessionObject(inObject.sessionId);
+        
         Class aClass = loadClass(inObject.interfaceName);
         Method executeMethod = getMethodToExecute(aClass, inObject.method, types);
         authenticateUserLevel(executeMethod);

@@ -9,6 +9,8 @@ import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.databasemanager.data.Credentials;
+import com.thundashop.core.listmanager.ListManager;
+import com.thundashop.core.listmanager.data.Entry;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageArea;
 import com.thundashop.core.usermanager.data.User;
@@ -143,12 +145,13 @@ public class PagePoolImpl {
         for (String pageId : getDefaultPageList()) {
             if (pages.get(pageId) == null) {
                 Page page = createPage(pageLayout.get(pageId), pageId);
+                databaseSaver.saveObject(page, credentials);
+                pages.put(page.id, page);
+                
                 addDefaultApplications(page);
                 if (page.id.endsWith("contact")) {
                     page.parent = pages.get("about");
                 }
-                databaseSaver.saveObject(page, credentials);
-                pages.put(page.id, page);
             }
         }
     }
@@ -168,7 +171,17 @@ public class PagePoolImpl {
         }
 
         if (Page.DefaultPages.Users.equals(page.id)) {
-            AppConfiguration app = addApplication("00d8f5ce-ed17-4098-8925-5697f6159f66", page, PageArea.Type.LEFT);
+            AppConfiguration app = applicationPool.createNewApplication("00d8f5ce-ed17-4098-8925-5697f6159f66", "users_admin_menu");
+            addExistingApplication(app, page, PageArea.Type.LEFT);
+            
+            app.inheritate = 1;
+            app.originalPageId = "users";
+            applicationPool.saveApplicationConfiguration(app);
+            
+            ListManager listManager = pageManager.getManager(ListManager.class);
+            Entry entry = new Entry();
+            entry.name = "All users";
+            listManager.addEntry("users_admin_menu", entry, page.id);
             addApplication("ba6f5e74-87c7-4825-9606-f2d3c93d292f", page, PageArea.Type.MIDDLE);
         }
 
@@ -255,8 +268,12 @@ public class PagePoolImpl {
 
         for (PageArea pageArea : page.pageAreas.values()) {
             for (String application : pageArea.applicationsList) {
+                System.out.println(application);
                 try {
                     AppConfiguration appConfig = applicationPool.get(application);
+                    if (appConfig.inheritate > 0) {
+                        System.out.println(appConfig.appName);
+                    }
                     if (appConfig != null
                             && appConfig.inheritate > 0
                             && currentPage.pageAreas.get(pageArea.type) != null
@@ -265,6 +282,7 @@ public class PagePoolImpl {
                         currentPage.pageAreas.get(pageArea.type).extraApplicationList.put(appConfig.id, page.id);
                     }
                 } catch (ErrorException ex) {
+                    ex.printStackTrace();
                 }
             }
         }

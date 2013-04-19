@@ -162,12 +162,14 @@ public class AddApplicationsToDatabase {
                 "", 
                 ApplicationSettings.Type.System, false));
         
-        apps.add(createSettings(
+        ApplicationSettings settings = createSettings(
                 "Translation", 
                 "ee1f3649-cfd8-41d5-aa5b-682216f376b6", 
                 emtpy, 
                 "Not satisfied with the text \\\"hardcoded\\\" on your page?<br>Add this application and tune the text yourself.", 
-                ApplicationSettings.Type.Reporting, true));
+                ApplicationSettings.Type.Reporting, true);
+        settings.renderStandalone = true;
+        apps.add(settings);
         
         apps.add(createSettings(
                 "CreateStore", 

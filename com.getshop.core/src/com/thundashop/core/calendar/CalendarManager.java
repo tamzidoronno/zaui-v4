@@ -109,7 +109,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
     private void sendMailNotification(String username, String password, Month month, Day day, Entry entry, Map<String, Setting> settings, User user) throws ErrorException {
         String sendmail = null;
-        if(settings != null) {
+        if(settings != null && settings.get("sendmail") != null) {
             sendmail = settings.get("sendmail").value;
         }
 
@@ -134,7 +134,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
     private void sendSms(String username, String password, Month month, Day day, Entry entry, Map<String, Setting> settings, User user) throws ErrorException {
         String sendsms = null;
-        if(settings != null) {
+        if(settings != null && settings.get("sendsms") != null) {
             sendsms = settings.get("sendsms").value;
         }
         if (sendsms == null || sendsms.equals("") || sendsms.equals("false")) {

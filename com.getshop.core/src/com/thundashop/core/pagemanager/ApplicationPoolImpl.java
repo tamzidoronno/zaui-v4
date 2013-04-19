@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -57,12 +58,23 @@ public class ApplicationPoolImpl {
     }
     
     public AppConfiguration createNewApplication(String applicationSettingsId) throws ErrorException {
+        String appid = UUID.randomUUID().toString();
+        return createNewApplication(applicationSettingsId, appid);
+    }
+    
+    public AppConfiguration createNewApplication(String applicationSettingsId, String applicationId) throws ErrorException {
         AppManager appManager = pageManager.getManager(AppManager.class);
         ApplicationSettings setting = appManager.getApplication(applicationSettingsId);
         if (setting.type.equals(ApplicationSettings.Type.Theme)) {
             removeAllThemeApplications();
         }
+        
+        if (applicationId == null || applicationId.equals("")) {
+            applicationId = UUID.randomUUID().toString();
+        }
+        
         AppConfiguration appConfiguration = new AppConfiguration();
+        appConfiguration.id = applicationId;
         appConfiguration.sticky = 0;
         appConfiguration.appName = setting.appName;
         appConfiguration.storeId = storeId;

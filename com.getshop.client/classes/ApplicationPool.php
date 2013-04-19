@@ -30,7 +30,6 @@ class ApplicationPool {
      * @param core_common_AppConfiguration[] $appConfigurations
      */
     public function setApplicationInstances($appConfigurations) {
-        $this->addedApplicationInstances = array();
         foreach ($appConfigurations as $appConfig) {
             /* @var $appConfig core_common_AppConfiguration */
             $settings = $this->getApplicationSetting($appConfig->appSettingsId);
@@ -43,7 +42,7 @@ class ApplicationPool {
                 $appInstance = new $instance();
                 $appInstance->setConfiguration($appConfig);
                 $appInstance->setApplicationSettings($settings);
-                $this->addedApplicationInstances[] = $appInstance;
+                $this->addedApplicationInstances[$settings->id] = $appInstance;
             }
         }
         $this->addMainMenu();

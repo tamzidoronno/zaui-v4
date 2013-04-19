@@ -82,7 +82,7 @@ class Factory extends FactoryBase {
 
     public function loadJavascriptFiles() {
         $scopid = $_POST['scopeid'];
-        echo "<script>scopeid='$scopid'</script>";
+        echo "<script>GetShop = {}; scopeid='$scopid'</script>";
 //        echo '<script src="http://connect.facebook.net/en_US/all.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jquery-1.8.3.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.Namespace.js"></script>';

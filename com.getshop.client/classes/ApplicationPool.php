@@ -30,6 +30,7 @@ class ApplicationPool {
      * @param core_common_AppConfiguration[] $appConfigurations
      */
     public function setApplicationInstances($appConfigurations) {
+        $this->addedApplicationInstances = array();
         foreach ($appConfigurations as $appConfig) {
             /* @var $appConfig core_common_AppConfiguration */
             $settings = $this->getApplicationSetting($appConfig->appSettingsId);
@@ -137,7 +138,6 @@ class ApplicationPool {
     public function getStandaloneInstances() {
         $retval = array();
         foreach($this->addedApplicationInstances as $app) {
-            
             if (isset($app->getApplicationSettings()->renderStandalone) && $app->getApplicationSettings()->renderStandalone) {
                  $retval[] = $app;
             }

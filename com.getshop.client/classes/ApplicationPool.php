@@ -32,21 +32,44 @@ class ApplicationPool {
     public function setApplicationInstances($appConfigurations) {
         foreach ($appConfigurations as $appConfig) {
             /* @var $appConfig core_common_AppConfiguration */
-            $settings = $this->getApplicationSetting($appConfig->appSettingsId);
-            if ($settings == null) {
-                continue;
-            }
-            
-            $instance = $this->factory->convertUUIDtoString($settings->id) . "\\" . $settings->appName;
-            if(class_exists($instance)) {
-                $appInstance = new $instance();
-                $appInstance->setConfiguration($appConfig);
-                $appInstance->setApplicationSettings($settings);
-                $this->addedApplicationInstances[$settings->id] = $appInstance;
-            }
+            $appInstance = $this->createAppInstance($appConfig);
+            $this->addedApplicationInstances[$appInstance->getApplicationSettings()->id] = $appInstance;    
         }
+        
         $this->addMainMenu();
         $this->addBreadCrumb();
+    }
+    
+    public function createAppInstance($appConfig) {
+        $settings = $this->getApplicationSetting($appConfig->appSettingsId);
+        if ($settings == null) {
+            continue;
+        }
+
+        $appInstance = $this->createInstace($settings);
+        if($appInstance != null) {
+            $appInstance->setConfiguration($appConfig);
+            return $appInstance;
+        }
+
+        return null;
+    }
+    
+    /**
+     * Creates an empty instance 
+     * 
+     * @param type $applicationSetting
+     * @return ApplicationBase 
+     */
+    public function createInstace($applicationSetting) {
+        $instance = $this->factory->convertUUIDtoString($applicationSetting->id) . "\\" . $applicationSetting->appName;
+        if(class_exists($instance)) {
+            $appInstance = new $instance();
+            $appInstance->setApplicationSettings($applicationSetting);
+            return $appInstance;
+        }
+        
+        return null;
     }
     
     /**

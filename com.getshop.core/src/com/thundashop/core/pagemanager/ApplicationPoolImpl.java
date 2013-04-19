@@ -249,7 +249,7 @@ public class ApplicationPoolImpl {
                 if (appSettings.isSingleton || 
                         appSettings.type.equals(ApplicationSettings.Type.Theme) ||
                         appSettings.type.equals(ApplicationSettings.Type.System)) {
-                    apps.add(config);
+                    apps.add(config.secureClone());
                 }
             } catch (ErrorException ex) {
                 java.util.logging.Logger.getLogger(ApplicationPoolImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -257,6 +257,22 @@ public class ApplicationPoolImpl {
         }
         
         return apps;
+    }
+
+    public List<AppConfiguration> getApplications(String appSettingsId) {
+        List<AppConfiguration> retApps = new ArrayList();
+        
+        if (appSettingsId == null) {
+            return retApps;
+        }
+        
+        for (AppConfiguration app : applications.values()) {
+            if (appSettingsId.equals(app.appSettingsId)) {
+                retApps.add(app.secureClone());
+            }
+        }
+        
+        return retApps;
     }
 
 }

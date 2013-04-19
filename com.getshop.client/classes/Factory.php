@@ -56,6 +56,10 @@ class Factory extends FactoryBase {
         return $this->translation->getTranslationMatrix();
     }
     
+    public function reloadStoreObject() {
+        $this->store = $this->getApi()->getStoreManager()->getMyStore();
+    }
+
 
     public function getTranslationMatrix() {
         return $this->translationMatrix;
@@ -155,7 +159,9 @@ class Factory extends FactoryBase {
     }
     
     public function getConfigurationFlag($flag) {
-        return $this->store->configuration->configurationFlags->{$flag};
+        if(isset($this->store->configuration->configurationFlags->{$flag}))
+            return $this->store->configuration->configurationFlags->{$flag};
+        return null;
     }
     
     public function setConfigurationFlag($flag, $setting) {

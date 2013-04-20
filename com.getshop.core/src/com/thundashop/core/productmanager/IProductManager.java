@@ -47,6 +47,14 @@ public interface IProductManager {
     public List<Product> getProducts(ProductCriteria productCriteria) throws ErrorException;
     
     /**
+     * Fetch a list of all the latest products.
+     * @param count Number of products to fetch.
+     * @return
+     * @throws ErrorException 
+     */
+    public List<Product> getLatestProducts(int count) throws ErrorException;
+    
+    /**
      * Remove an existing product.
      * 
      * @param productId The id of the product to remove.

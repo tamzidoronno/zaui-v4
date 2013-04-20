@@ -621,6 +621,22 @@ class APICalendarManager {
      }
 
      /**
+     * Confirms a entry.
+     * 
+     * @param entryId
+     * @throws ErrorException 
+     */
+
+     public function confirmEntry($entryId) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["entryId"] = json_encode($this->transport->object_unset_nulls($entryId));
+          $data["method"] = "confirmEntry";
+          $data["interfaceName"] = "core.calendar.ICalendarManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Create a new entry to the calendar on a given date.
      * @param year The year to attach the entry to
      * @param month The month to attach the entry to

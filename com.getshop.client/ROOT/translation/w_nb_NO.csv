@@ -28,7 +28,7 @@ Logout;-;Logg ut
 Lost your password?;-;Glemt ditt passord?
 My Account;-;Min konto
 My name is:;-;Mitt navn er
-Name;-;
+Name;-;Navn
 New password;-;Nytt passord
 Next;-; Neste
 Old password;-;Gammelt passord
@@ -90,9 +90,9 @@ You do not have any products in your cart;-;Du har ingen produkter i din handlek
 Your address;-;Din adresse
 Your personal information;-;Din personlige informasjon
 course;-;
-email;-;
+email;-;E-post
 if we dont answer, please leave your email here and we will return your message asap.;-;
 in stock;-;på lager
-org;-;
-orgnummer;-;
-phone;-;
+org;-;Firma
+orgnummer;-;Org.nr.
+phone;-;Mob.Tlf.

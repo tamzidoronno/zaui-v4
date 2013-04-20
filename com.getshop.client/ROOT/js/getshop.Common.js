@@ -67,11 +67,6 @@ $('.errorform .close').live('click', function(event) {
     $("#errorbox").hide();
 });
 
-thundashop.common.getRecover = function(id) {
-    var event = thundashop.Ajax.createEvent("", "recoverPassword", $('.Login'), null);
-    thundashop.common.showInformationBox(event, '');
-
-};
 
 thundashop.common.addNotificationProgress = function(id, text) {
     var infoPanel = $('.upload_information_panel');

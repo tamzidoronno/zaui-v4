@@ -29,7 +29,7 @@ class ApplicationManager extends FactoryBase {
 
         $this->getFactory()->getApi()->getPageManager()->reorderApplication($pageId, $appId, $moveUp);
     }
-
+    
     public function uploadImage() {
         foreach ($_FILES as $file) {
             $content = file_get_contents($file['tmp_name'][0]);

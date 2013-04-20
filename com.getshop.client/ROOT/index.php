@@ -97,17 +97,6 @@ if(isset($_GET['logonwithkey'])) {
     <body>
         <input name="storeid" type="hidden"  value="<?php echo $factory->getStore()->id; ?>"/>
         <input name="userid" type="hidden"  value="<?php echo \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id; ?>"/>
-        <?        
-        if ($factory->isEditorMode() && $factory->isExtendedMode()) {
-             $factory->includefile("helpbox");
-             
-             if(!$factory->getStore()->readIntroduction) {
-                 echo "<script>";
-                 echo "$('.helpbox').fadeIn();";
-                 echo "</script>";
-             }
-        }
-        ?>
 
         <div id="messagebox" class="ok">
             <div class="inner">

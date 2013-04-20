@@ -1981,6 +1981,22 @@ class APIProductManager {
      }
 
      /**
+     * Fetch a list of all the latest products.
+     * @param count Number of products to fetch.
+     * @return List
+     * @throws ErrorException 
+     */
+
+     public function getLatestProducts($count) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["count"] = json_encode($this->transport->object_unset_nulls($count));
+          $data["method"] = "getLatestProducts";
+          $data["interfaceName"] = "core.productmanager.IProductManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Fetch one single product by id
      * 
      * @param id

@@ -114,13 +114,13 @@ class Factory extends FactoryBase {
 
         echo "\n" . '<script type="text/javascript" src="https://www.google.com/jsapi"></script>';
         echo "<script>google.load('visualization', '1.0', {'packages':['corechart']});</script>";
-        echo "<script>$(function() { $( document ).tooltip({ 
-            show : { delay : 250 },
-            open: function() { setTimeout(function(){
-                \$(\".tooltip\").remove();}, \"2000\"); 
-                } 
-            }); 
-            });</script>";
+        ?>
+        <script>
+            $( document ).tooltip({ 
+                show : { delay : 250 }
+            });
+        </script>
+        <?
         
         include 'javascripts.php';
     

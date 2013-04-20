@@ -159,9 +159,10 @@ thundashop.common.activateCKEditor = function(id, autogrow, showMenu, width) {
                 thundashop.common.addNotificationProgress('contentmanager', "Saving content");
                 thundashop.common.saveCKEditor(data, target);
                 event.editor.destroy();
+                $( document ).tooltip("enable");
             },
-            focus : function(e) {
-                 $(".ui-tooltip").remove();
+            focus : function() {
+                $( document ).tooltip("disable");
             }
         }
     }

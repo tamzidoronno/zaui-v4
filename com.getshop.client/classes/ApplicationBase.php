@@ -99,6 +99,21 @@ class ApplicationBase extends FactoryBase {
         return $answers;
     }
 
+    public function setConfigurationSetting($key, $value, $secure = false) {
+        $newSettings = array();
+        
+        $setting = new core_common_Setting();
+        $setting->id = $key;
+        $setting->value = $value;
+        $setting->secure = $secure;
+        $newSettings[] = $setting;
+        
+        $sendCore = $this->getApiObject()->core_common_Settings();
+        $sendCore->settings = $newSettings; 
+        $sendCore->appId = $this->getConfiguration()->id;
+        $this->getApi()->getPageManager()->setApplicationSettings($sendCore);
+    }
+    
     public function showConfigurationMenu() {
         $this->includefile('ApplicationConfiguration', 'Common');
         $this->includefile('ConfigurationMenu');

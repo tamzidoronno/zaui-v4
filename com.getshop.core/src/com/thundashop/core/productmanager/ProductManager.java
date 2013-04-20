@@ -104,4 +104,9 @@ public class ProductManager extends AProductManager implements IProductManager {
     public Product getProduct(String productId) throws ErrorException {
         return super.getProduct(productId);
     }
+
+    @Override
+    public List<Product> getLatestProducts(int count) throws ErrorException {
+        return super.latestProducts(count);
+    }
 }

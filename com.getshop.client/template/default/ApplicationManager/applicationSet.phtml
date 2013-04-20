@@ -74,8 +74,10 @@ foreach($allApps as $myApp) {
                          <input type="hidden" gsname="getshop_extended_application_add" value="true">
                          <?
                      }
-                     $app->getStarted(); 
-                     ?>
+                     echo "<div class='getstarted'>";
+                         $app->getStarted(); 
+                    echo "</div>";
+                    ?>
                 </div>
                 <span class="allFieldsNeedToBeFilled">* <? echo $this->__f("All fields need to be filled before you continue"); ?></span> 
                 <? $app->includefile("add_app_button", 'ApplicationManager'); ?>

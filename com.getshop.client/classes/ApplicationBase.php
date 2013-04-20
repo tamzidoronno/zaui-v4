@@ -92,6 +92,13 @@ class ApplicationBase extends FactoryBase {
         }
         return $pageArea;
     }
+    
+    public function getConfigurationSetting($key) {
+        if(isset($this->configuration->settings->{$key}->value)) {
+            return $this->configuration->settings->{$key}->value;
+        }
+        return null;
+    }
 
     public function getAnswersImmediatly() {
         $answers = IocContainer::getFactorySingelton()->getEventHandler()->sendRequests($this->getEvents());

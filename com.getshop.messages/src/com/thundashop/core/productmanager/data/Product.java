@@ -20,7 +20,7 @@ import java.util.Map;
  *
  * @author ktonder
  */
-public class Product extends DataCommon {
+public class Product extends DataCommon implements Comparable<Product>  {
     public Map<String, ProductImage> images = new HashMap<String, ProductImage>();    
     public String description;
     public String shortDescription;
@@ -163,6 +163,12 @@ public class Product extends DataCommon {
             return true;
         
         return false;
+    }
+
+
+    @Override
+    public int compareTo(Product t) {
+        return t.rowCreatedDate.compareTo(rowCreatedDate);
     }
     
 }

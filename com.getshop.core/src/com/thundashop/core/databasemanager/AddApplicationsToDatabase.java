@@ -103,7 +103,7 @@ public class AddApplicationsToDatabase {
         apps.add(createSettings(
                 "ApplicationDisplayer", 
                 "c841f5a5-ecd5-4007-b9da-2c7538c07212", 
-                Arrays.asList(PageArea.Type.MIDDLE), 
+                emtpy, 
                 "", 
                 ApplicationSettings.Type.System, false));
         
@@ -341,7 +341,7 @@ public class AddApplicationsToDatabase {
         apps.add(createSettings(
                 "ProductList", 
                 "8402f800-1e7e-43b5-b3f7-6c7cabbf8942", 
-                emtpy, 
+                Arrays.asList(PageArea.Type.MIDDLE), 
                 "this applications lists products for you webshop, in the body of every page (except for system pages). from this application you can also add products. combine this application with a leftmenu, and/or a category displayer to create a powerful webshop.", 
                 ApplicationSettings.Type.Webshop, false));
         
@@ -390,6 +390,14 @@ public class AddApplicationsToDatabase {
                 "", 
                 ApplicationSettings.Type.Theme, false));
        
+        ApplicationSettings amandus = createSettings(
+                "Amandus", 
+                "902cccc1-c315-4a93-8005-d080d414ecee", 
+                emtpy, 
+                "", 
+                ApplicationSettings.Type.Theme, false);
+        apps.add(amandus);
+        
         ApplicationSettings whiteAndBlueTheme = createSettings(
                 "WhiteAndBlueTheme", 
                 "a84cbbb0-8f21-11e2-9e96-0800200c9a66", 

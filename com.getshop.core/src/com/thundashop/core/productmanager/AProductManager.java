@@ -9,6 +9,7 @@ import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
@@ -17,15 +18,16 @@ import java.util.logging.Level;
  * @author ktonder
  */
 public class AProductManager extends ManagerBase {
+
     protected HashMap<String, Product> products = new HashMap();
 
     public AProductManager(Logger log, DatabaseSaver databaseSaver) {
         super(log, databaseSaver);
     }
-    
+
     private void finalize(Product product) throws ErrorException {
         PageManager manager = getManager(PageManager.class);
-        if(product != null && product.pageId != null) {
+        if (product != null && product.pageId != null) {
             product.page = manager.getPage(product.pageId);
         }
     }
@@ -39,7 +41,7 @@ public class AProductManager extends ManagerBase {
             }
         }
     }
-    
+
     protected void createProductPage(Product product) throws ErrorException {
         if (product.page == null) {
             IPageManager pageManager = getManager(PageManager.class);
@@ -49,31 +51,34 @@ public class AProductManager extends ManagerBase {
             pageManager.addApplicationToPage(product.page.id, "dcd22afc-79ba-4463-bb5c-38925468ae26", "middle");
         }
     }
-    
+
     protected Product getProduct(String productId) throws ErrorException {
         Product product = products.get(productId);
         finalize(product);
-        if (product == null)
+        if (product == null) {
             throw new ErrorException(1011);
-        
+        }
+
         return product;
-    }   
-    
+    }
+
     protected ArrayList<Product> randomProducts(String ignoreProductId, int fetchSize) throws ErrorException {
         List<Product> randomProducts = new ArrayList<>();
-        
+
         for (Product product : products.values()) {
             finalize(product);
-            if (product.page.id.equals(ignoreProductId) || product.id.equals(ignoreProductId))
+            if (product.page.id.equals(ignoreProductId) || product.id.equals(ignoreProductId)) {
                 continue;
-            
+            }
+
             randomProducts.add(product);
         }
-        
+
         Collections.shuffle(randomProducts);
-        if (randomProducts.size() < fetchSize)
+        if (randomProducts.size() < fetchSize) {
             fetchSize = randomProducts.size();
-        
+        }
+
         return new ArrayList<>(randomProducts.subList(0, fetchSize));
     }
 
@@ -85,7 +90,24 @@ public class AProductManager extends ManagerBase {
                 retProducts.add(product);
             }
         }
-        
+
         return retProducts;
+    }
+
+    protected List<Product> latestProducts(int count) {
+        ArrayList<Product> result = new ArrayList();
+        for(Product product : products.values()) {
+            result.add(product);
+        } 
+        
+        Collections.sort(result);
+        ArrayList<Product> limitedResult = new ArrayList();
+        for(int i = 0; i < result.size(); i++) {
+            if(i == count) {
+                break;
+            }
+            limitedResult.add(result.get(i));
+        }
+        return limitedResult;
     }
 }

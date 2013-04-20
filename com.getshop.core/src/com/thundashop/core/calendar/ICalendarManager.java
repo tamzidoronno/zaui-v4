@@ -23,7 +23,6 @@ public interface ICalendarManager {
      * @return
      * @throws ErrorException 
      */
-    @Editor
     public Entry createEntry(int year, int month, int day) throws ErrorException;
     
     /**

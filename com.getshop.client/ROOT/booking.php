@@ -32,7 +32,8 @@ function getEntries(Factory $factory) {
 }
 
 if (isset($_GET['register']) && $_GET['register'] == true) {
-    $application = $factory->getApplicationPool()->getApplicationByName('Booking');
+    $apps = $factory->getApi()->getPageManager()->getApplicationsBasedOnApplicationSettingsId("74ea4e90-2d5a-4290-af0c-230a66e09c78");
+    $application = $factory->getApplicationPool()->createAppInstance($apps[0]);
     $application->registerEvent($_POST);
     return;
 }

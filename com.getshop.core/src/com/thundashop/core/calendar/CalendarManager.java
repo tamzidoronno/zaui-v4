@@ -198,6 +198,12 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     public Entry createEntry(int year, int month, int day) throws ErrorException {
         Entry entry = new Entry();
         
+        if (getSession() == null || 
+                getSession().currentUser == null || 
+                getSession().currentUser.isCustomer()) {
+            entry.needConfirmation = true;
+        }
+        
         registerEntryInternal(year, month, day, entry);
         
         return entry;
@@ -392,6 +398,10 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         Entry oldEntry = getEntry(entry.entryId);
         if(oldEntry == null) {
             throw new ErrorException(1012);
+        }
+        
+        if (!entry.needConfirmation && !getSession().currentUser.isAdministrator()) {
+            throw new ErrorException(26);
         }
         
         for (Month month : months.values()) {

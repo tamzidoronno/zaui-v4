@@ -16,6 +16,9 @@ class core_calendarmanager_data_Entry {
 	public $isOriginal;
 
 	/** @var String */
+	public $needConfirmation;
+
+	/** @var String */
 	public $description;
 
 	/** @var String */

@@ -2,6 +2,7 @@ package com.thundashop.core.calendar;
 
 import com.thundashop.core.calendarmanager.data.Entry;
 import com.thundashop.core.calendarmanager.data.Month;
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
@@ -22,7 +23,6 @@ public interface ICalendarManager {
      * @return
      * @throws ErrorException 
      */
-    @Editor
     public Entry createEntry(int year, int month, int day) throws ErrorException;
     
     /**
@@ -103,4 +103,13 @@ public interface ICalendarManager {
      * @throws ErrorException 
      */
     public void saveEntry(Entry entry) throws ErrorException;
+    
+    /**
+     * Confirms a entry.
+     * 
+     * @param entryId
+     * @throws ErrorException 
+     */
+    @Administrator
+    public void confirmEntry(String entryId) throws ErrorException;
 }

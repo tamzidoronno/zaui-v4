@@ -66,6 +66,10 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             entry.entryId = UUID.randomUUID().toString();
         }
 
+        entry.year = year;
+        entry.month = month;
+        entry.day = day;
+        
         mymonth.addEntry(day, entry);
         mymonth.storeId = storeId;
         databaseSaver.saveObject(mymonth, credentials);
@@ -87,28 +91,42 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         return false;
     }
 
-    private String mutateText(String username, String password, String text, Month month, Day day, Entry entry, User user) {
-        String date = day.day + "/" + month.month + "-" + month.year + " : " + entry.starttime+"->"+entry.stoptime;
+    private String mutateText(String password, String text, Entry entry, User user) {
+        String date = entry.day + "/" + entry.month + "-" + entry.year + " : " + entry.starttime;
        
+        if (entry.stoptime != null) {
+            date += "->"+entry.stoptime;
+        }
+        
         Collections.sort(entry.otherDays);
         for (ExtraDay extraDay : entry.otherDays) {
             date += "<br>" + extraDay.day + "/" + extraDay.month + "-" + extraDay.year + " : " +extraDay.starttime + "->" + extraDay.stoptime;
         }
+        
         String time = entry.starttime + "-" + entry.stoptime;
 
-        text = text.replace("{USERNAME}", username);
-        text = text.replace("{PASSWORD}", password);
-        text = text.replace("{FULLNAME}", user.fullName);
-        text = text.replace("{EVENT_TITLE}", entry.title);
-        text = text.replace("{EVENT_DATE}", date);
-        text = text.replace("{EVENT_TIME}", time);
-        text = text.replace("{EVENT_LOCATION}", entry.location.replaceAll("\n", "<BR />"));
-        text = text.replace("{EVENT_DESCRIPTION}", entry.description.replaceAll("\n", "<BR />"));
+        if (user.username != null)
+            text = text.replace("{USERNAME}", user.username);
+        if (password != null)
+            text = text.replace("{PASSWORD}", password);
+        if (user.fullName != null)
+            text = text.replace("{FULLNAME}", user.fullName);
+        if (entry.title != null)
+            text = text.replace("{EVENT_TITLE}", entry.title);
+        if (date != null)
+            text = text.replace("{EVENT_DATE}", date);
+        if (time != null)
+            text = text.replace("{EVENT_TIME}", time);
+        if (entry.location != null)
+            text = text.replace("{EVENT_LOCATION}", entry.location.replaceAll("\n", "<BR />"));
+        if (entry.description != null)
+            text = text.replace("{EVENT_DESCRIPTION}", entry.description.replaceAll("\n", "<BR />"));
         return text;
     }
 
-    private void sendMailNotification(String username, String password, Month month, Day day, Entry entry, Map<String, Setting> settings, User user) throws ErrorException {
+    private void sendMailNotification(String password, Entry entry, User user) throws ErrorException {
         String sendmail = null;
+        HashMap<String, Setting> settings = getSettings("Booking");
         if(settings != null && settings.get("sendmail") != null) {
             sendmail = settings.get("sendmail").value;
         }
@@ -128,12 +146,13 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             throw new ErrorException(73);
         }
 
-        text = mutateText(username, password, text, month, day, entry, user);
+        text = mutateText(password, text, entry, user);
         mailFactory.send("noreply@getshop.com", user.emailAddress, subject, text);
     }
 
-    private void sendSms(String username, String password, Month month, Day day, Entry entry, Map<String, Setting> settings, User user) throws ErrorException {
+    private void sendSms(String password, Entry entry, User user) throws ErrorException {
         String sendsms = null;
+        HashMap<String, Setting> settings = getSettings("Booking");
         if(settings != null && settings.get("sendsms") != null) {
             sendsms = settings.get("sendsms").value;
         }
@@ -142,7 +161,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         }
 
         String text = settings.get("smstext").value;
-        text = mutateText(username, password, text, month, day, entry, user);
+        text = mutateText(password, text, entry, user);
         String from = settings.get("smsfrom").value;
         String message = text;
         String phoneNumber = user.cellPhone;
@@ -178,6 +197,12 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     @Override
     public Entry createEntry(int year, int month, int day) throws ErrorException {
         Entry entry = new Entry();
+        
+        if (getSession() == null || 
+                getSession().currentUser == null || 
+                getSession().currentUser.isCustomer()) {
+            entry.needConfirmation = true;
+        }
         
         registerEntryInternal(year, month, day, entry);
         
@@ -338,17 +363,22 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                         entry.attendees.add(userId);
                         databaseSaver.saveObject(month, credentials);
 
-                        HashMap<String, Setting> settings = getSettings("Booking");
                         UserManager usrmgr = getManager(UserManager.class);
                         User user = usrmgr.getUserById(userId);
-                        sendMailNotification(username, password, month, day, entry, settings, user);
-                        sendSms(username, password, month, day, entry, settings, user);
+                        sendMessages(user, entry, password);
                     }
                 }
             }
         }
     }
 
+    private void sendMessages(User user, Entry entry, String password) throws ErrorException {
+        if (!entry.needConfirmation) {
+            sendMailNotification(password, entry, user);
+            sendSms(password, entry, user);
+        }
+    }
+    
     @Override
     public Entry getEntry(String entryId) {
         for (Month month : months.values()) {
@@ -370,6 +400,10 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             throw new ErrorException(1012);
         }
         
+        if (!entry.needConfirmation && !getSession().currentUser.isAdministrator()) {
+            throw new ErrorException(26);
+        }
+        
         for (Month month : months.values()) {
             for (Day day : month.days.values()) {
                 Entry toRemove = null;
@@ -385,6 +419,19 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             }
             
             databaseSaver.saveObject(month, credentials);
+        }
+    }
+
+    @Override
+    public void confirmEntry(String entryId) throws ErrorException {
+        Entry entry = getEntry(entryId);
+        entry.needConfirmation = false;
+        saveEntry(entry);
+        
+        for (String userId : entry.attendees) {
+            UserManager usermanager = getManager(UserManager.class);
+            User user = usermanager.getUserById(userId);
+            sendMessages(user, entry, "");
         }
     }
 }

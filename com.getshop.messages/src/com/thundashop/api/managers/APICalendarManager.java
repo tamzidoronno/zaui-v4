@@ -41,6 +41,22 @@ public class APICalendarManager {
      }
 
      /**
+     * Confirms a entry.
+     * 
+     * @param entryId
+     * @throws ErrorException 
+     */
+
+     public void confirmEntry(String entryId)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new HashMap();
+          data.args.put("entryId",new Gson().toJson(entryId));
+          data.method = "confirmEntry";
+          data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Create a new entry to the calendar on a given date.
      * @param year The year to attach the entry to
      * @param month The month to attach the entry to

@@ -106,6 +106,11 @@ public class ApplicationPoolImpl {
         return app.secureClone();
     }
     
+    /**
+     * Dont use this one, please use 
+     * List<AppConfiguration> getApplications(appsettingsid);
+     */
+    @Deprecated
     public AppConfiguration getByName(String applicationName) {
         for (AppConfiguration app : applications.values()) {
             if (app.appName.equals(applicationName))

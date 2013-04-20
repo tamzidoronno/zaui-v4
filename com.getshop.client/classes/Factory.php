@@ -191,7 +191,9 @@ class Factory extends FactoryBase {
             $this->loadLanguage($this->getStoreConfiguration()->translationMatrix);
         }
         
-        $this->styleSheet = new StyleSheet();
+        if (!$loadPages) {
+            $this->styleSheet = new StyleSheet();
+        }
     }
     
     public function loadLanguage($matrix) {
@@ -247,6 +249,8 @@ class Factory extends FactoryBase {
         $this->page = new Page($page);
         $this->initApplicationsPool();
         $this->javaPage = $page;
+        
+        $this->styleSheet = new StyleSheet();
     }
     
     public function initApplicationsPool() {

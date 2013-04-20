@@ -208,7 +208,7 @@ public class AppManager extends ManagerBase implements IAppManager {
             
             subscription.numberOfInstancesAdded++;
             
-            if(subscription.app.price == 0) {
+            if(subscription.app.price == null || subscription.app.price == 0) {
                 subscription.payedfor = true;
             }
             

@@ -29,7 +29,7 @@ public class FooterManager extends ManagerBase implements IFooterManager {
         for (DataCommon dbobj : data.data) {
             if (dbobj instanceof Configuration) {
                 Configuration confobj = (Configuration)dbobj;
-                if(confobj.columnIds == null || confobj == null) {
+                if(confobj.columnIds == null) {
                     try {
                         databaseSaver.deleteObject(confobj, credentials);
                     }catch(ErrorException e) {
@@ -62,6 +62,7 @@ public class FooterManager extends ManagerBase implements IFooterManager {
                 this.configObject.columnIds.put(i, UUID.randomUUID().toString());
             }
             this.configObject.storeId = storeId;
+            databaseSaver.saveObject(this.configObject, credentials);
         }
         return configObject;
     }

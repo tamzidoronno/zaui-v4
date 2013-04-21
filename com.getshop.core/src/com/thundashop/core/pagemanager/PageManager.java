@@ -127,10 +127,6 @@ public class PageManager extends ManagerBase implements IPageManager {
         Page page = pagePool.get(pageId);
         List<AppConfiguration> result = new ArrayList(page.getApplications().values());
         result.addAll(applicationPool.getThemeApplications());
-        
-        for (AppConfiguration appSetting : page.getApplications().values()) {
-            System.out.println(appSetting.appName);
-        }
         return result;
     }
 

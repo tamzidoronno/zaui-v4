@@ -471,6 +471,21 @@ public class AddApplicationsToDatabase {
 
                 List<DataCommon> pages = database.retreiveData(credentials2);
                 for (DataCommon pageData : pages) {
+                    if (pageData instanceof AppConfiguration) {
+                        AppConfiguration appConfig = (AppConfiguration)pageData;
+                        if (appConfig.appName.equals("Users")) {
+                            database.delete(appConfig, credentials2);
+                        } 
+                        
+                        if (appConfig.appName.equals("Crm")) {
+                            database.delete(appConfig, credentials2);
+                        }
+                        
+                        if (appConfig.id.equals("users_admin_menu")) {
+                            database.delete(appConfig, credentials2);
+                        }
+                        
+                    }
                     if (pageData instanceof Page) {
                         Page page = (Page)pageData;
                         if (page.id.equals("users")) {

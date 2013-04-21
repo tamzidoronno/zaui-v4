@@ -113,7 +113,7 @@ thundashop.Skeleton = {
         data.appId = appSettingsId;
         
         var callback = function() {
-            jQuery.history.load("page=home");
+            window.location.hash="page=home&app="+appSettingsId;
             document.getElementById('mainlessstyle').href='StyleSheet.php';
             thundashop.common.hideInformationBox(null);
         }

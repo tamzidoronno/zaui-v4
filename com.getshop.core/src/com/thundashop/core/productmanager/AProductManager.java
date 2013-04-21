@@ -27,7 +27,7 @@ public class AProductManager extends ManagerBase {
 
     private void finalize(Product product) throws ErrorException {
         PageManager manager = getManager(PageManager.class);
-        if (product != null && product.pageId != null) {
+        if (product != null && product.pageId != null && product.page == null) {
             product.page = manager.getPage(product.pageId);
         }
     }
@@ -94,9 +94,10 @@ public class AProductManager extends ManagerBase {
         return retProducts;
     }
 
-    protected List<Product> latestProducts(int count) {
+    protected List<Product> latestProducts(int count) throws ErrorException {
         ArrayList<Product> result = new ArrayList();
         for(Product product : products.values()) {
+            finalize(product);
             result.add(product);
         } 
         

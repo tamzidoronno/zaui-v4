@@ -225,12 +225,14 @@ public class PagePoolImpl {
         return addExistingApplication(app, page, pageArea);
     }
 
-    private AppConfiguration addExistingApplication(AppConfiguration app, Page page, String pageArea) {
+    private AppConfiguration addExistingApplication(AppConfiguration app, Page page, String pageArea) throws ErrorException {
         PageArea area = page.pageAreas.get(pageArea);
         if (area.applicationsList == null) {
             area.applicationsList = new ArrayList();
         }
+        
         area.applicationsList.add(app.id);
+        databaseSaver.saveObject(page, credentials);
         return app;
     }
 
@@ -359,7 +361,6 @@ public class PagePoolImpl {
         AppConfiguration app = applicationPool.get(appId);
         Page page = get(pageId);
         addExistingApplication(app, page, area);
-        databaseSaver.saveObject(page, credentials);
     }
 
     void savePage(Page page) throws ErrorException {

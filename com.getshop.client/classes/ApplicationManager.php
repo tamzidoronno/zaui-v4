@@ -215,7 +215,7 @@ class ApplicationManager extends FactoryBase {
         
         $this->invokeApplicationAdded($appConfiguration);
         
-        die($appConfiguration->id);
+//        die($appConfiguration->id);
     }
 
     public function displayIntroductionMovie() {

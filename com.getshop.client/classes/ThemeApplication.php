@@ -98,6 +98,10 @@ class ThemeApplication extends ApplicationBase {
         return $this->variables[$namespace];
     }
     
+    public function getSiteBuilder() {
+        return new \SiteBuilder();
+    }
+    
 }
 
 ?>

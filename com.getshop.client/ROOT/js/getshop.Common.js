@@ -137,7 +137,6 @@ thundashop.common.saveCKEditor = function(data, target) {
     });
     var text=$("<p>" + data + "</p>").text();
     text=text.replace(/^\s+|\s+$/g, "");
-    console.log(text.length);
     if(text.length === 0) {
         thundashop.Ajax.post(event);
     } else {

@@ -59,12 +59,16 @@ public class UserStoreCollection {
 
     public List<User> searchForUser(String searchCriteria) {
         Map<String, User> retusers = new TreeMap<String, User>();
-
+        searchCriteria = searchCriteria.toLowerCase();
+        
         for (User user : users.values()) {
             if (checkIfContainsFullName(user, searchCriteria)) {
                 retusers.put(user.id, user);
             }
             if (checkIfEmail(user, searchCriteria)) {
+                retusers.put(user.id, user);
+            }
+            if (checkPhoneNumer(user, searchCriteria)) {
                 retusers.put(user.id, user);
             }
         }
@@ -131,5 +135,9 @@ public class UserStoreCollection {
 
     private boolean checkIfEmail(User user, String searchCriteria) {
         return user.emailAddress != null && user.emailAddress.toLowerCase().contains(searchCriteria.toLowerCase());
+    }
+
+    private boolean checkPhoneNumer(User user, String searchCriteria) {
+        return user.cellPhone != null && user.cellPhone.replace(" ", "").contains(searchCriteria);
     }
 }

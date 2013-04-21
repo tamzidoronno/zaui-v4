@@ -36,7 +36,6 @@ public class AppManager extends ManagerBase implements IAppManager {
     Map<String, ApplicationSubscription> addedApps;
     private UnpayedAppCache cache;
 
-    
 //    TODO
 //    US this variable to retreive data.
 //    private AvailableApplications applications = new AvailableApplications();
@@ -47,7 +46,7 @@ public class AppManager extends ManagerBase implements IAppManager {
     public AppManager(Logger log, DatabaseSaver databaseSaver) {
         super(log, databaseSaver);
         addedApps = new HashMap();
-   }
+    }
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -55,7 +54,7 @@ public class AppManager extends ManagerBase implements IAppManager {
             if (dataObject instanceof ApplicationSynchronization) {
                 addToSync((ApplicationSynchronization) dataObject);
             }
-            if(dataObject instanceof ApplicationSubscription) {
+            if (dataObject instanceof ApplicationSubscription) {
                 ApplicationSubscription sub = (ApplicationSubscription) dataObject;
                 addedApps.put(sub.appSettingsId, sub);
             }
@@ -135,7 +134,7 @@ public class AppManager extends ManagerBase implements IAppManager {
         addToSync(sync);
         sync.storeId = storeId;
         databaseSaver.saveObject(sync, credentials);
-    }    
+    }
 
     private void addToSync(ApplicationSynchronization sync) {
         if (toSync == null) {
@@ -180,17 +179,15 @@ public class AppManager extends ManagerBase implements IAppManager {
         return false;
     }
 
-    
-    
     @Override
     public Map<String, ApplicationSubscription> getAllApplicationSubscriptions() throws ErrorException {
         PageManager pagemanager = this.getManager(PageManager.class);
-        for(ApplicationSubscription sub : addedApps.values()) {
+        for (ApplicationSubscription sub : addedApps.values()) {
             sub.numberOfInstancesAdded = 0;
         }
-        
+
         for (AppConfiguration config : pagemanager.getApplications()) {
-            if(config.appSettingsId == null) {
+            if (config.appSettingsId == null) {
                 continue;
             }
             ApplicationSubscription subscription = addedApps.get(config.appSettingsId);
@@ -202,16 +199,12 @@ public class AppManager extends ManagerBase implements IAppManager {
             if (subscription.from_date == null || subscription.from_date.after(config.rowCreatedDate)) {
                 updateSubscription(subscription, config);
             }
-            if(subscription.appSettingsId == null) {
+            if (subscription.appSettingsId == null) {
                 continue;
             }
-            
+
             subscription.numberOfInstancesAdded++;
-            
-            if(subscription.app.price == null || subscription.app.price == 0) {
-                subscription.payedfor = true;
-            }
-            
+
             addedApps.put(config.appSettingsId, subscription);
         }
 
@@ -228,41 +221,42 @@ public class AppManager extends ManagerBase implements IAppManager {
         subscription.payedfor = false;
         saveSubscription(subscription);
     }
-    
+
     private void saveSubscription(ApplicationSubscription subscription) throws ErrorException {
         databaseSaver.saveObject(subscription, credentials);
     }
-    
 
     @Override
     public List<ApplicationSubscription> getUnpayedSubscription() throws ErrorException {
         List<ApplicationSubscription> result = new ArrayList();
-        if(cache != null) {
-            if(cache.expire.after(new Date())) {
+        if (cache != null) {
+            if (cache.expire.after(new Date())) {
                 return cache.cache;
             }
         }
-        
-        for(ApplicationSubscription apsub : getAllApplicationSubscriptions().values()) {
-            if(!apsub.payedfor && apsub.to_date.before(new Date())) {
-                result.add(apsub);
+
+        for (ApplicationSubscription apsub : getAllApplicationSubscriptions().values()) {
+            if (!apsub.payedfor && apsub.to_date.before(new Date()) && apsub.numberOfInstancesAdded > 0) {
+                if (apsub.app.price != null && apsub.app.price > 0) {
+                    result.add(apsub);
+                }
             }
         }
-        
+
         cache = new UnpayedAppCache();
         cache.cache = result;
-        
+
         Calendar expire = Calendar.getInstance();
         expire.setTime(new Date());
         expire.add(Calendar.HOUR, 1);
         cache.expire = expire.getTime();
-        
+
         return result;
     }
 
     public void renewAllApplications(String password) throws ErrorException {
-        if(password.equals("fdder9bbvnfif909ereXXff")) {
-            for(ApplicationSubscription sub : addedApps.values()) {
+        if (password.equals("fdder9bbvnfif909ereXXff")) {
+            for (ApplicationSubscription sub : addedApps.values()) {
                 sub.from_date = new Date();
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(sub.from_date);

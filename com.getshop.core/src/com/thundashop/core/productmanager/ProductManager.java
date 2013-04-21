@@ -4,6 +4,7 @@ import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
@@ -63,6 +64,10 @@ public class ProductManager extends AProductManager implements IProductManager {
         
         products.remove(product.id);
         databaseSaver.deleteObject(product, credentials);
+        
+        ListManager manager = getManager(ListManager.class);
+        manager.removeProductFromListsIfExists(productId);
+
     }
 
     @Override

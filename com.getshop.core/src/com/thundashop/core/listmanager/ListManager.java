@@ -362,9 +362,11 @@ public class ListManager extends ManagerBase implements IListManager {
 
     private String getListIdFromEntry(Entry entry) {
         for (String key : allEntries.keySet()) {
-            Entry result = recursiveEntrySearch(entry.id, allEntries.get(key).entries);
-            if (result != null) {
-                return key;
+            if(entry != null && entry.id != null && allEntries != null && allEntries.get(key) != null) {
+                Entry result = recursiveEntrySearch(entry.id, allEntries.get(key).entries);
+                if (result != null) {
+                    return key;
+                }
             }
         }
         return null;
@@ -493,6 +495,23 @@ public class ListManager extends ManagerBase implements IListManager {
         }
         for (String id : ids) {
             removeEntry(id);
+        }
+    }
+    
+     public void removeProductFromListsIfExists(String productId) throws ErrorException {
+        List<String> lists = getLists();
+        for(String listId : lists) {
+            List<String> toDelete = new ArrayList();
+            List<Entry> list = getList(listId);
+            for(Entry entry : list) {
+                if(entry.productId != null && entry.productId.equals(productId)) {
+                    toDelete.add(entry.id);
+                }
+            }
+            
+            for(String entryId : toDelete) {
+                deleteEntry(listId, entryId);
+            }
         }
     }
 }

@@ -35,7 +35,7 @@
 
                 canvas.width = img.width * ratio;
                 canvas.height = img.height * ratio;
-                
+                console.log(maxHeight);
                 if(canvas.height > maxHeight) {
                     ratio = maxHeight / canvas.height;
                     canvas.width = canvas.width * ratio;

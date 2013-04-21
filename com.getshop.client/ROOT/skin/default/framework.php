@@ -891,7 +891,7 @@ a img {
 .tabs .tab_content .application .descriptionholder { font-size: 14px; background-color:#EFEFEF; padding: 5px; border: solid 1px #DDD; padding:10px; padding-right: 0px; }
 .tabs .tab_content .application .description { width: 218px; padding-right: 10px; }
 #informationbox .application .allFieldsNeedToBeFilled { font-size: 16px; float:left; padding-top: 10px; display:none; font-weight: bold; color:#FF0000; }
-.tabs .tab_content .application .image { width: 520px; height: 320px; text-align:center; border-left: solid 1px #DDD; }
+.tabs .tab_content .application .image { width: 520px; height: 320px; text-align:center; }
 
 .commonleftmenu { margin-left: 8px; width: 150px; border-left: solid 1px #a4a4a4; border-right: solid 1px #a4a4a4; border-top: solid 1px #a4a4a4; }
 .commonleftmenu .entry { width: 150px; background-image: url('/skin/default/images/standardleftmenuitembackground.png'); height: 34px; line-height: 34px; text-align: center; border-bottom: solid 1px #a4a4a4; border-top: solid 1px #efefef; }

@@ -32,6 +32,13 @@ class SiteBuilder extends ApplicationBase {
         $this->api->getBannerManager()->saveSet($set);
     }
 
+    public function addFooterContent($content) {
+        $config = $this->api->getFooterManager()->getConfiguration();
+        $id = $config->columnIds->{0};
+        $this->api->getFooterManager()->setLayout(1);
+        $this->api->getContentManager()->saveContent($id, $content);
+    }
+    
     /**
      * Add a view
      * @param type $pageId
@@ -54,7 +61,7 @@ class SiteBuilder extends ApplicationBase {
         $appConfig = $this->api->getPageManager()->addApplicationToPage($pageId, "96de3d91-41f2-4236-a469-cd1015b233fc", "middle");
     }
     
-    public function addContentManager($pageId, $content) {
+    public function addContentManager($pageId, $content, $where = "middle") {
         $appConfig = $this->api->getPageManager()->addApplicationToPage($pageId, "320ada5b-a53a-46d2-99b2-9b0b26a7105a", "middle");
         if ($content) {
             $this->api->getContentManager()->saveContent($appConfig->id, $content);
@@ -63,6 +70,7 @@ class SiteBuilder extends ApplicationBase {
             $app->setConfiguration($appConfig);
             $app->applicationAdded();
         }
+        return $appConfig;
     }
 
     public function clearTopMenu() {
@@ -75,6 +83,7 @@ class SiteBuilder extends ApplicationBase {
             }
         }
     }
+    
 
     /**
      * Create a new page.
@@ -96,10 +105,11 @@ class SiteBuilder extends ApplicationBase {
         $this->api->getPageManager()->clearPageArea($id, "left");
         $this->api->getPageManager()->clearPageArea($id, "middle");
         $this->api->getPageManager()->clearPageArea($id, "right");
+        $this->api->getPageManager()->clearPageArea($id, "bottom");
         $this->api->getPageManager()->changePageLayout($id, 4);
     }
 
-    public function getTopMenu() {
+   public function getTopMenu() {
         $added = $this->getFactory()->getApplicationPool()->getAllAddedInstances();
         $topmenu = null;
         foreach ($added as $instance) {

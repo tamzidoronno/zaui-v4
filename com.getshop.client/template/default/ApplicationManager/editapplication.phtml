@@ -120,6 +120,17 @@
             <div class="additonaltext"><? echo $this->__f("A public application is available for everyone to use."); ?></div>
         </div>
 
+        <div class="title">
+            <div style="float:right;">
+                <select gsname="pagesingelton" <? echo $disabled; ?>>
+                    <option value="false"><? echo $this->__f("No"); ?></option>
+                    <option value="true" <? if ($settings->pageSingelton == "true") {echo"SELECTED";}?>><?echo $this->__f("Yes"); ?></option>
+                </select>
+            </div>
+    <? echo $this->__f("Is this a page singleton application?"); ?>
+            <div class="additonaltext"><? echo $this->__f("Are you limited to only one instance of this applications for each page?"); ?></div>
+        </div>
+
         <div class="title"">
             <div style="float:right;">
                 <input type="txt" class="appname" gsname="price" style="width: 50px;margin-right:10px;" value="<? if(isset($settings->price)) { echo $settings->price; }?>"\ <? echo $disabled; ?>>$

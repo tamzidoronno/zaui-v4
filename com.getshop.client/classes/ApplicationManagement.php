@@ -158,6 +158,7 @@ class ApplicationManagement extends ApplicationBase {
         if ($data['apparea_right'] == "true") {
             $settings->allowedAreas[] = "right";
         }
+        $settings->pageSingelton = $data['pagesingelton'];
 
         $this->getFactory()->getApi()->getAppManager()->saveApplication($settings);
         $this->settings = $settings;

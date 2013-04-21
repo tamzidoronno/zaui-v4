@@ -131,6 +131,14 @@
             <div class="additonaltext"><? echo $this->__f("Are you limited to only one instance of this applications for each page?"); ?></div>
         </div>
 
+        <div class="title">
+            <div style="float:right;">
+                <input style='width:20px;' type="text" value="<? echo $settings->trialPeriode; ?>" gsname="trialPeriode">
+            </div>
+    <? echo $this->__f("Expire days?"); ?>
+            <div class="additonaltext"><? echo $this->__f("How many days for a free trial?"); ?></div>
+        </div>
+
         <div class="title"">
             <div style="float:right;">
                 <input type="txt" class="appname" gsname="price" style="width: 50px;margin-right:10px;" value="<? if(isset($settings->price)) { echo $settings->price; }?>"\ <? echo $disabled; ?>>$

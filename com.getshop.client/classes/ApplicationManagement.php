@@ -159,9 +159,12 @@ class ApplicationManagement extends ApplicationBase {
             $settings->allowedAreas[] = "right";
         }
         $settings->pageSingelton = $data['pagesingelton'];
-
+        $settings->trialPeriode = $data['trialPeriode'];
+        
+        
         $this->getFactory()->getApi()->getAppManager()->saveApplication($settings);
         $this->settings = $settings;
+        
 
         echo "<script>";
         echo "thundashop.common.Alert('Configuration save','The configuration has been saved');";

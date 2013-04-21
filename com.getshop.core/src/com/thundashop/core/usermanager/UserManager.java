@@ -351,4 +351,28 @@ public class UserManager extends ManagerBase implements IUserManager {
             throw new ErrorException(89);
         }
     }
+
+    private int getUserCount(int type) throws ErrorException {
+        int i = 0;
+        for (User user : getUserStoreCollection(storeId).getAllUsers()) 
+            if (user.type == type) 
+                i++;
+            
+        return i;
+    }
+    
+    @Override
+    public int getCustomersCount() throws ErrorException {
+        return getUserCount(User.Type.CUSTOMER);
+    }
+
+    @Override
+    public int getEditorCount() throws ErrorException {
+        return getUserCount(User.Type.EDITOR);
+    }
+
+    @Override
+    public int getAdministratorCount() throws ErrorException {
+        return getUserCount(User.Type.ADMINISTRATOR);
+    }
 }

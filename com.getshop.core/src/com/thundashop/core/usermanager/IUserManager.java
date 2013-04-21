@@ -157,5 +157,28 @@ public interface IUserManager {
      */
     public void updatePassword(String userId, String oldPassword, String newPassword) throws ErrorException;
     
+    /**
+     * Gets the count of how many customers 
+     * is available for the page
+     * @return 
+     */
+    @Administrator
+    public int getCustomersCount() throws ErrorException;
+    
+    /**
+     * Gets the count of how many editors
+     * is available for the page
+     * @return 
+     */
+    @Administrator
+    public int getEditorCount() throws ErrorException;
+    
+    /**
+     * Gets the count of how many adminsitrators
+     * is available for the page
+     * @return 
+     */
+    @Administrator
+    public int getAdministratorCount() throws ErrorException;
 }
 

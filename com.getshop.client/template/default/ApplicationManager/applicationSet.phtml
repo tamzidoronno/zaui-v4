@@ -77,6 +77,18 @@ foreach($allApps as $myApp) {
                      echo "<div class='getstarted'>";
                          $app->getStarted(); 
                     echo "</div>";
+                    
+                    $settings = $factory->getApplicationPool()->getApplicationSetting($instance->configuration->appSettingsId);
+                    if($settings->type == "ThemeApplication") {
+                        $creationdate=strtotime($factory->getStore()->rowCreatedDate);
+                        $diff = time() - $creationdate;
+                        if($diff > 86400) {
+                            $checked = "";
+                        } else {
+                            $checked = "CHECKED";
+                        }
+                        echo "<input type='checkbox' gsname='prepopulate' $checked> Prepopulate example data";
+                    }
                     ?>
                 </div>
                 <span class="allFieldsNeedToBeFilled">* <? echo $this->__f("All fields need to be filled before you continue"); ?></span> 

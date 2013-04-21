@@ -488,7 +488,7 @@ public class AddApplicationsToDatabase {
                     }
                     if (pageData instanceof Page) {
                         Page page = (Page)pageData;
-                        if (page.id.equals("users")) {
+                        if (page.id.equals("users") || page.id.equals("users_all_users")) {
                             database.delete(page, credentials2);
                         }
                     }

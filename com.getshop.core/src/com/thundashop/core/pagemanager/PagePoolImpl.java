@@ -178,11 +178,16 @@ public class PagePoolImpl {
             app.originalPageId = "users";
             applicationPool.saveApplicationConfiguration(app);
             
+            Page allUsers = createNewPage(Page.PageType.HeaderLeftMiddleFooter, page.id, "users_all_users");
+            
             ListManager listManager = pageManager.getManager(ListManager.class);
             Entry entry = new Entry();
             entry.name = "All users";
+            entry.pageId = "users_all_users";
+            listManager.clearList("users_admin_menu");
             listManager.addEntry("users_admin_menu", entry, page.id);
-            addApplication("ba6f5e74-87c7-4825-9606-f2d3c93d292f", page, PageArea.Type.MIDDLE);
+            AppConfiguration appConfig = addApplication("ba6f5e74-87c7-4825-9606-f2d3c93d292f", page, PageArea.Type.MIDDLE);
+            addExistingApplication(appConfig, allUsers, PageArea.Type.MIDDLE);
         }
 
         if (Page.DefaultPages.CartPage.equals(page.id) || Page.DefaultPages.CheckOut.equals(page.id)) {

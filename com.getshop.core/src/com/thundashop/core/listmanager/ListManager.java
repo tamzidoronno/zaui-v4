@@ -13,6 +13,7 @@ import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -477,5 +478,21 @@ public class ListManager extends ManagerBase implements IListManager {
         }
         
         return entries.extendedLists;
+    }
+
+    @Override
+    public void clearList(String listId) throws ErrorException {
+        EntryList entries = getEntryList(listId);
+        if (entries == null || entries.entries == null) {
+            return;
+        }
+        
+        List<String> ids = new ArrayList();
+        for(Entry entry : entries.entries) {
+            ids.add(entry.id);
+        }
+        for (String id : ids) {
+            removeEntry(id);
+        }
     }
 }

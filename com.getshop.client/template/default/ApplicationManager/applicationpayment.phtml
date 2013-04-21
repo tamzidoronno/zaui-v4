@@ -13,7 +13,9 @@ echo "<th>" . $this->__w("Name of the application") . "</th>";
 echo "<th>" . $this->__w("Expire date") . "</th>";
 echo "<th>" . $this->__w("Price") . "</th>";
 echo "</tr>";
+echo "<pre>";
 $price = 0;
+print_r($unpayed);
 foreach ($unpayed as $data) {
     /* @var $data core_appmanager_data_ApplicationSubscription */
     echo "<tr>";

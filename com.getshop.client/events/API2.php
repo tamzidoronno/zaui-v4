@@ -2513,6 +2513,20 @@ class APIUserManager {
      }
 
      /**
+     * Gets the count of how many adminsitrators
+     * is available for the page
+     * @return int
+     */
+
+     public function getAdministratorCount() {
+          $data = array();
+          $data['args'] = array();
+          $data["method"] = "getAdministratorCount";
+          $data["interfaceName"] = "core.usermanager.IUserManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Fetch all the users registered to this webshop.
      * @return List
      * @throws ErrorException 
@@ -2522,6 +2536,34 @@ class APIUserManager {
           $data = array();
           $data['args'] = array();
           $data["method"] = "getAllUsers";
+          $data["interfaceName"] = "core.usermanager.IUserManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
+     * Gets the count of how many customers 
+     * is available for the page
+     * @return int
+     */
+
+     public function getCustomersCount() {
+          $data = array();
+          $data['args'] = array();
+          $data["method"] = "getCustomersCount";
+          $data["interfaceName"] = "core.usermanager.IUserManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
+     * Gets the count of how many editors
+     * is available for the page
+     * @return int
+     */
+
+     public function getEditorCount() {
+          $data = array();
+          $data['args'] = array();
+          $data["method"] = "getEditorCount";
           $data["interfaceName"] = "core.usermanager.IUserManager";
           return $this->transport->sendMessage($data);
      }

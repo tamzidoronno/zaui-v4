@@ -115,7 +115,15 @@ public interface IListManager {
      * @param listId
      * @throws ErrorException 
      */
-    
     public List<String> getCombinedLists(String listId) throws ErrorException;
+
     
+    /**
+     * Remove all list entries for a specified list
+     * 
+     * @param listId
+     * @throws ErrorException 
+     */
+    @Administrator
+    public void clearList(String listId) throws ErrorException;
 }

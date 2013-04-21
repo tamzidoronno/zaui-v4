@@ -50,7 +50,7 @@ public class UserStoreCollection {
 
 
     private boolean checkIfContainsFullName(User user, String searchCriteria) {
-        if (user.fullName != null && user.fullName.contains(searchCriteria)) {
+        if (user.fullName != null && user.fullName.toLowerCase().contains(searchCriteria.toLowerCase())) {
             return true;
         }
 
@@ -62,6 +62,9 @@ public class UserStoreCollection {
 
         for (User user : users.values()) {
             if (checkIfContainsFullName(user, searchCriteria)) {
+                retusers.put(user.id, user);
+            }
+            if (checkIfEmail(user, searchCriteria)) {
                 retusers.put(user.id, user);
             }
         }
@@ -124,5 +127,9 @@ public class UserStoreCollection {
             return user;
         }
         return null;
+    }
+
+    private boolean checkIfEmail(User user, String searchCriteria) {
+        return user.emailAddress != null && user.emailAddress.toLowerCase().contains(searchCriteria.toLowerCase());
     }
 }

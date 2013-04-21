@@ -36,17 +36,19 @@ thundashop.Ajax = {
         });
     },
     post: function(data, callback, extraArg, dontUpdate, dontShowLoaderBox, useFile) {
+        
         if (callback === undefined && dontUpdate !== true) {
             this.doPreProcess();
         }
         if (!(typeof(dontShowLoaderBox) !== "undefined" && dontShowLoaderBox === true))
             $('#loaderbox').show();
-
+        
+        var dataType = (data['synchron']) ? "html" : "json";
         $.ajax({
             type: "POST",
             url: typeof(useFile) !== "undefined" ? useFile : this.ajaxFile,
             data: thundashop.base64.encodeForAjax(data),
-            dataType: "json",
+            dataType: dataType,
             context: document.body,
             success: function(response) {
                 if (typeof(dontUpdate) === "undefined" || dontUpdate === false) {
@@ -56,6 +58,9 @@ thundashop.Ajax = {
                     callback(response, extraArg);
                     $('#loaderbox').hide();
                 }
+            }, 
+            error: function(tesT, resp) {
+                console.log(resp);
             }
         });
     },

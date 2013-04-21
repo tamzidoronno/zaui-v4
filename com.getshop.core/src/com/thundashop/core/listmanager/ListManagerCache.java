@@ -3,7 +3,6 @@ package com.thundashop.core.listmanager;
 import com.thundashop.core.common.CachingKey;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.listmanager.data.Entry;
-import com.thundashop.core.pagemanager.data.Page;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -141,5 +140,10 @@ public class ListManagerCache implements IListManager {
     @Override
     public List<String> getCombinedLists(String listId) throws ErrorException {
         return null;
+    }
+
+    @Override
+    public void clearList(String listId) throws ErrorException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

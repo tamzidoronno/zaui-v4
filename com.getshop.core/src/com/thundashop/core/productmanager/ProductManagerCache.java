@@ -108,5 +108,10 @@ public class ProductManagerCache implements IProductManager {
         }
         
     }    
+
+    @Override
+    public List<Product> getLatestProducts(int count) throws ErrorException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

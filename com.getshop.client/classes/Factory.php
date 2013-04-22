@@ -149,6 +149,11 @@ class Factory extends FactoryBase {
 
     public function initialize() {
         $this->store = $this->getApi()->getStoreManager()->initializeStore($_SERVER['HTTP_HOST'], session_id());
+        
+        if(!strstr(strtolower($_SERVER['HTTP_USER_AGENT']), "chrome") && $this->isEditorMode()) {
+            $this->includefile("chromeonly");
+            exit(0);
+        }
     }
 
     function __construct() {

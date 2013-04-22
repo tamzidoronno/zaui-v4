@@ -1,7 +1,7 @@
 <?
 /* @var $factory Factory */
 $factory = $this->getFactory();
-$subscriptions = $factory->getApi()->getAppManager()->getUnpayedSubscription();
+$paidSubscriptions = $factory->getApi()->getAppManager()->getAllApplicationSubscriptions();
 
 $allApps = $factory->getApplicationPool()->getAllApplicationSettings();
 $area = $_POST['data']['type'];
@@ -93,22 +93,28 @@ foreach($allApps as $myApp) {
                     }
                     ?>
                 </div>
-                
-                <div class="title">
-                    <? echo $this->__f("Price"); ?>
-                </div>
-                <div class="descriptionholder" id="applicationform">
-                     <?
-                     $price = $app->applicationSettings->price;
-                     $trialPeriod =  $app->applicationSettings->trialPeriode;
-                     if ($price == null || $price == 0) {
-                         echo $this->__f("This application can be used free of charge");
-                     } else {
-                         echo $this->__f("This application costs").": ".$price."$ / ".$this->__f("year")."<br>";
-                         echo $this->__f("Trial period").": ".$trialPeriod." ".$this->__f("days");
-                     }
-                     ?>
-                </div>
+                <? if (isset($paidSubscriptions->{$app->applicationSettings->id})) { ?>
+                    <div class="title">
+                        <? echo $this->__f("Price"); ?>
+                    </div>
+                    <div class="descriptionholder" id="applicationform">
+
+                      <?$subscription = $paidSubscriptions->{$app->applicationSettings->id};
+                         if ($subscription->payedfor != null) {
+                             echo "This applications has been paid<br>";
+                             echo "Expires: ".$subscription->to_date;
+                         } else {
+                           $price = $app->applicationSettings->price;
+                           $trialPeriod =  $app->applicationSettings->trialPeriode;
+                           if ($price == null || $price == 0) {
+                               echo $this->__f("This application can be used free of charge");
+                           } else {
+                               echo $this->__f("This application costs").": ".$price."$ / ".$this->__f("year")."<br>";
+                               echo $this->__f("Trial period").": ".$trialPeriod." ".$this->__f("days");
+                           }
+                        } ?>    
+                    </div>
+                <? } ?>
                 
                 <span class="allFieldsNeedToBeFilled">* <? echo $this->__f("All fields need to be filled before you continue"); ?></span> 
                 <? $app->includefile("add_app_button", 'ApplicationManager'); ?>

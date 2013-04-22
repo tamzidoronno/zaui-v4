@@ -6,17 +6,17 @@
  * @author ktonder
  */
 class ApplicationManager extends FactoryBase {
+
     var $port;
 
     function __construct() {
         $configReader = new ConfigReader();
         $this->port = $configReader->getConfig("port");
     }
- 
+
     public function getApplications() {
         return $this->getFactory()->getApplicationPool()->getAllApplicationSettings();
     }
-
 
     public function systemReloadPage() {
         
@@ -29,7 +29,7 @@ class ApplicationManager extends FactoryBase {
 
         $this->getFactory()->getApi()->getPageManager()->reorderApplication($pageId, $appId, $moveUp);
     }
-    
+
     public function uploadImage() {
         foreach ($_FILES as $file) {
             $content = file_get_contents($file['tmp_name'][0]);
@@ -38,30 +38,30 @@ class ApplicationManager extends FactoryBase {
             return;
         }
     }
-    
+
     public function previewApplication() {
         $appId = $_POST['data']['appId'];
         $api = IocContainer::getFactorySingelton()->getApi();
         $apps = $api->getPageManager()->getApplications();
-        foreach($apps as $app) {
+        foreach ($apps as $app) {
             /* @var $app core_common_AppConfiguration */
-            if($app->id == $appId) {
-               $toPrint = new $app->{'appName'}();
-               /* @var $toPrint ApplicationBase */
-               $toPrint->setConfiguration($app);
-               $toPrint->preProcess();
-               $this->isEditorMode();
-               
-               $tmp = $_SESSION['loggedin'];
-               $_SESSION['loggedin'] = null;
+            if ($app->id == $appId) {
+                $toPrint = new $app->{'appName'}();
+                /* @var $toPrint ApplicationBase */
+                $toPrint->setConfiguration($app);
+                $toPrint->preProcess();
+                $this->isEditorMode();
 
-               echo "<div class='app " . $app->{'appName'} . "'>";
-               $toPrint->render();
-               echo "</div>";
-               $toPrint->postProcess();
-               
-               $_SESSION['loggedin'] = $tmp;
-               break;
+                $tmp = $_SESSION['loggedin'];
+                $_SESSION['loggedin'] = null;
+
+                echo "<div class='app " . $app->{'appName'} . "'>";
+                $toPrint->render();
+                echo "</div>";
+                $toPrint->postProcess();
+
+                $_SESSION['loggedin'] = $tmp;
+                break;
             }
         }
     }
@@ -85,7 +85,7 @@ class ApplicationManager extends FactoryBase {
             }
         }
     }
-    
+
     public function cloneapplication() {
         $appToCloneId = $_POST['data']['id'];
         $appMan = new ApplicationManagement();
@@ -100,7 +100,7 @@ class ApplicationManager extends FactoryBase {
         echo $this->__f("This application has been marked for synchronization");
         $appMan->display();
     }
-    
+
     public function getStartedExtended() {
         $name = $_POST['data']['applicationName'];
         $area = $_POST['data']['applicationArea'];
@@ -130,24 +130,24 @@ class ApplicationManager extends FactoryBase {
         $area = $_POST['data']['applicationArea'];
         $settingsId = $_POST['data']['appSettingsId'];
         $pageId = $this->getFactory()->getPage()->getId();
-        
+
         $pool = $this->getFactory()->getApplicationPool();
         $app = $pool->getApplicationSetting($settingsId);
-        
+
         if ($app == null || $app->isSingleton) {
             return;
         }
-        
+
         $application = $this->getFactory()->getApi()->getPageManager()->addApplicationToPage($pageId, $settingsId, $area);
         $this->invokeApplicationAdded($application);
     }
-    
+
     private function invokeApplicationAdded($application) {
         $applications = array();
         $applications[] = $application;
         $this->getFactory()->getApplicationPool()->setApplicationInstances($applications);
         $app = $this->getFactory()->getApplicationPool()->getApplicationInstance($application->id);
-        if(isset($_POST['data']['prepopulate']) && $_POST['data']['prepopulate'] == "false") {
+        if (isset($_POST['data']['prepopulate']) && $_POST['data']['prepopulate'] == "false") {
             return;
         }
         $app->applicationAdded();
@@ -191,7 +191,7 @@ class ApplicationManager extends FactoryBase {
     public function loadApplicationPicker() {
         $this->includefile("applicationPicker");
     }
-    
+
     public function displayAllUsers() {
         $userManager = new UserManager();
         $userManager->displayAllUsers();
@@ -201,23 +201,23 @@ class ApplicationManager extends FactoryBase {
         if (!isset($_POST['data']['appId']))
             return;
 
-        if ($this->getFactory()->getApplicationPool()->getApplicationInstance($_POST['data']['appId']) != null) 
+        if ($this->getFactory()->getApplicationPool()->getApplicationInstance($_POST['data']['appId']) != null)
             return;
-        
+
         $appConfiguration = $this->getFactory()->getApi()->getPageManager()->addApplication($_POST['data']['appId']);
-        
+
         $namespace = $this->getFactory()->convertUUIDtoString($appConfiguration->appSettingsId);
-        $appName = $namespace."\\".$appConfiguration->appName;
-        
+        $appName = $namespace . "\\" . $appConfiguration->appName;
+
         $app = new $appName();
         if (method_exists($app, "renderStandalone")) {
             $pageManager = $this->getFactory()->getApi()->getPageManager();
-            $pageManager->createPageWithId(5, "home", $appConfiguration->id."_standalone");
-            $pageManager->addExistingApplicationToPageArea($appConfiguration->id."_standalone", $appConfiguration->id, "middle");
+            $pageManager->createPageWithId(5, "home", $appConfiguration->id . "_standalone");
+            $pageManager->addExistingApplicationToPageArea($appConfiguration->id . "_standalone", $appConfiguration->id, "middle");
         }
-        
+
         $this->invokeApplicationAdded($appConfiguration);
-        
+
 //        die($appConfiguration->id);
     }
 
@@ -249,26 +249,26 @@ class ApplicationManager extends FactoryBase {
         $api = IocContainer::getFactorySingelton()->getApi();
         $api->getStoreManager()->enableExtendedMode($toggle, $password);
     }
-    
+
     public function connectUserToPartner() {
         $password = $_POST['data']['password'];
         $userId = $_POST['data']['userId'];
         $partner = $_POST['data']['partner'];
-        
+
         $api = IocContainer::getFactorySingelton()->getApi();
         $api->getGetShop()->addUserToPartner($userId, $partner, $password);
     }
-    
+
     public function importApplication() {
-        if(!isset($_POST['data']['list'])) {
+        if (!isset($_POST['data']['list'])) {
             return;
         }
         $list = $_POST['data']['list'];
         $area = $_POST['core']['apparea'];
-        
+
         $api = IocContainer::getFactorySingelton()->getApi();
         $pageId = $this->getPage()->id;
-        foreach($list as $appId) {
+        foreach ($list as $appId) {
             $api->getPageManager()->addExistingApplicationToPageArea($pageId, $appId, $area);
         }
     }
@@ -276,53 +276,52 @@ class ApplicationManager extends FactoryBase {
     public function displayColorPickers() {
         $this->includefile("GetShopColorPicker");
     }
-    
+
     public function deleteApplication() {
         $appId = $_POST['data']['appId'];
         $app = $this->getFactory()->getApplicationPool()->getApplicationSetting($appId);
         $this->getFactory()->getApi()->getPageManager()->deleteApplication($appId);
-        
+
         if (method_exists($app, "renderStandalone"))
             $this->getFactory()->getApi()->getPageManager()->deletePage($appId);
-        
     }
-    
+
     public function getAllAddedApplications($appName) {
         $api = IocContainer::getFactorySingelton();
         $apps = $api->getApi()->getPageManager()->getApplications();
         $retval = array();
-        foreach($apps as $app) {
-            if($app->{'appName'} == $appName) {
+        foreach ($apps as $app) {
+            if ($app->{'appName'} == $appName) {
                 $retval[] = $app;
             }
         }
-        
+
         return $retval;
     }
-    
+
     public function displayApplicationManagement() {
         $appMan = new ApplicationManagement();
-        if(isset($_POST['data']['id'])) {
+        if (isset($_POST['data']['id'])) {
             $appMan->setApplicationSettingsId($_POST['data']['id']);
         }
         $appMan->display();
     }
-    
+
     public function deleteMyApplication() {
         $id = $_POST['data']['id'];
         $appMan = new ApplicationManagement();
         $appMan->deleteApp($id);
         $appMan->display();
     }
-    
+
     public function saveApplication() {
         $appMan = new ApplicationManagement();
         $appName = $_POST['data']['appname'];
-        if(!$appName) {
+        if (!$appName) {
             $appMan->setErrorMessage($this->__f("Please specify a name"));
             $appMan->setShowCreatePage();
         } else {
-            if(isset($_POST['data']['id'])) {
+            if (isset($_POST['data']['id'])) {
                 $appMan->saveSettingsConfiguration($_POST['data']);
             } else {
                 $appMan->createApplication($appName);
@@ -330,11 +329,16 @@ class ApplicationManager extends FactoryBase {
         }
         $appMan->display();
     }
-    
+
     public function loadpaymentinfo() {
-        $unpayed = $this->getApi()->getAppManager()->getUnpayedSubscription();
         $this->includefile("applicationpayment");
     }
-    
+
+    public function removeAllInstances() {
+        $appSettingsId = $_POST['data']['id'];
+        $this->getApi()->getPageManager()->removeAllApplications($appSettingsId);
+        $this->includefile("applicationpayment");
+    }
+
 }
 ?>

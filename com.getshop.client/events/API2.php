@@ -1170,6 +1170,22 @@ class APIListManager {
      }
 
      /**
+     * Remove all list entries for a specified list
+     * 
+     * @param listId
+     * @throws ErrorException 
+     */
+
+     public function clearList($listId) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["listId"] = json_encode($this->transport->object_unset_nulls($listId));
+          $data["method"] = "clearList";
+          $data["interfaceName"] = "core.listmanager.IListManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * If you would like to combine more lists to a current list, you can do it by using this call.<br>
      * 
      * @param toListId The current list to be appended on.
@@ -1787,6 +1803,21 @@ class APIPageManager {
           $data['args'] = array();
           $data['args']["appName"] = json_encode($this->transport->object_unset_nulls($appName));
           $data["method"] = "getSecuredSettings";
+          $data["interfaceName"] = "core.pagemanager.IPageManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
+     * Remove instances of applications added for a specific page id.
+     * @param appSettingsId The id of the application row
+     * @throws ErrorException 
+     */
+
+     public function removeAllApplications($appSettingsId) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["appSettingsId"] = json_encode($this->transport->object_unset_nulls($appSettingsId));
+          $data["method"] = "removeAllApplications";
           $data["interfaceName"] = "core.pagemanager.IPageManager";
           return $this->transport->sendMessage($data);
      }

@@ -15,7 +15,6 @@ echo "<th>" . $this->__w("Price") . "</th>";
 echo "</tr>";
 echo "<pre>";
 $price = 0;
-print_r($unpayed);
 foreach ($unpayed as $data) {
     /* @var $data core_appmanager_data_ApplicationSubscription */
     echo "<tr>";
@@ -23,7 +22,7 @@ foreach ($unpayed as $data) {
     echo "<td>" . $data->app->appName . "</td>";
     echo "<td>" . $data->to_date . "</td>";
     echo "<td width='50'>\$ " . $data->app->price . "</td>";
-    echo "<td width='50'>".$this->__w("Remove")."</td>";
+    echo "<td width='50' method='removeAllInstances' gstype='clicksubmit' gsname='id' gsvalue='".$data->appSettingsId."' output='informationbox'>".$this->__w("Remove")."</td>";
     echo "</tr>";
     $price += $data->app->price;
 }

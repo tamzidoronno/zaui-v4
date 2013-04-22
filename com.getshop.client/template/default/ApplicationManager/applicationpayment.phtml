@@ -6,14 +6,14 @@ echo "</div>";
 
 $unpayed = $this->getApi()->getAppManager()->getUnpayedSubscription();
 
-echo "<table width='100%' class='unpayedapptable'>";
+echo "<table width='970px' class='unpayedapptable'>";
 echo "<tr>";
 echo "<th width='100'>" . $this->__w("Count") . "</th>";
 echo "<th>" . $this->__w("Name of the application") . "</th>";
 echo "<th>" . $this->__w("Expire date") . "</th>";
 echo "<th>" . $this->__w("Price") . "</th>";
 echo "</tr>";
-echo "<pre>";
+
 $price = 0;
 foreach ($unpayed as $data) {
     /* @var $data core_appmanager_data_ApplicationSubscription */
@@ -21,8 +21,8 @@ foreach ($unpayed as $data) {
     echo "<td>" . $data->numberOfInstancesAdded . "</td>";
     echo "<td>" . $data->app->appName . "</td>";
     echo "<td>" . $data->to_date . "</td>";
-    echo "<td width='50'>\$ " . $data->app->price . "</td>";
-    echo "<td width='50' method='removeAllInstances' gstype='clicksubmit' gsname='id' gsvalue='".$data->appSettingsId."' output='informationbox'>".$this->__w("Remove")."</td>";
+    echo "<td width='150'>\$ " . $data->app->price ." / ".$this->__f("year"). "</td>";
+    echo "<td width='50' method='removeAllInstances' gstype='clicksubmit' style='cursor: pointer' gsname='id' gsvalue='".$data->appSettingsId."' output='informationbox'>".$this->__w("Remove")."</td>";
     echo "</tr>";
     $price += $data->app->price;
 }

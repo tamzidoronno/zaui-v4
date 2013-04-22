@@ -35,7 +35,10 @@
     right: 0px;
 }
 .informationbox .unpayedappheader { font-size:16px; padding-left: 10px; border: solid 1px #BBBBBB; padding-top:10px; padding-bottom: 10px; }
+.informationbox .unpayedapptable { margin-left: 10px; margin-right: 10px; }
 .informationbox .unpayedapptable tr:hover td { background-color: #EFEFEF; }
+.informationbox .unpayedapptable th,
+.informationbox .unpayedapptable td { font-size: 14px; }
 .inline {
     min-height: 10px;
     display: -moz-inline-stack;
@@ -887,7 +890,7 @@ a img {
 .tabs .tab_content .active { display: block; }
 
 .tabs .tab_content .application { padding-left: 10px; }
-.tabs .tab_content .application .title { line-height: 40px; font-size: 15px; font-weight: bold; }
+.tabs .tab_content .application .title { margin-top: 10px; line-height: 43px; font-size: 15px; font-weight: bold; padding-left: 10px; }
 .tabs .tab_content .application .descriptionholder { font-size: 14px; background-color:#EFEFEF; padding: 5px; border: solid 1px #DDD; padding:10px; padding-right: 0px; }
 .tabs .tab_content .application .description { width: 218px; padding-right: 10px; }
 #informationbox .application .allFieldsNeedToBeFilled { font-size: 16px; float:left; padding-top: 10px; display:none; font-weight: bold; color:#FF0000; }

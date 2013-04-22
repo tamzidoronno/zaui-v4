@@ -64,7 +64,7 @@ $returnAddress = curPageURL();
 </form>
 
 <div style="text-align:right; padding-right:10px;border-top: solid 1px #BBBBBB;">
-    <div class="button-large payforapplications">
+    <div class="button-large payforapplications" onclick="$('#paypalform').submit();">
         <div class="rightglare"></div>
         <div class="filler" ></div>
         <ins><? echo $this->__w("Checkout"); ?></ins>

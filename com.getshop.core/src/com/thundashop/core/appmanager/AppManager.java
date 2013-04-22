@@ -8,6 +8,7 @@ import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.Events;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -265,6 +266,13 @@ public class AppManager extends ManagerBase implements IAppManager {
                 sub.payedfor = true;
                 saveSubscription(sub);
             }
+        }
+    }
+    
+    @Override
+    public void onEvent(String eventName, String eventReferance) throws ErrorException {
+        if (Events.ALL_APPS_REMOVED.equals(eventName)) {
+            cache = null;
         }
     }
 }

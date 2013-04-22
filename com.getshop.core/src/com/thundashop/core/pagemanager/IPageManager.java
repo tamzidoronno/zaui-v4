@@ -102,6 +102,13 @@ public interface IPageManager {
     public Page removeApplication(String applicationId, String pageid) throws ErrorException;
     
     /**
+     * Remove instances of applications added for a specific page id.
+     * @param appSettingsId The id of the application row
+     * @throws ErrorException 
+     */
+    public void removeAllApplications(String appSettingsId) throws ErrorException;
+    
+    /**
      * Rearrange a given application for a given page.
      * @param pageId The id of the page where the application is located.
      * @param appId The id of application id to rearrange.

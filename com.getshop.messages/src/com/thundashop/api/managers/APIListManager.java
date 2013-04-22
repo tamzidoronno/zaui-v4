@@ -45,6 +45,22 @@ public class APIListManager {
      }
 
      /**
+     * Remove all list entries for a specified list
+     * 
+     * @param listId
+     * @throws ErrorException 
+     */
+
+     public void clearList(String listId)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new HashMap();
+          data.args.put("listId",new Gson().toJson(listId));
+          data.method = "clearList";
+          data.interfaceName = "core.listmanager.IListManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * If you would like to combine more lists to a current list, you can do it by using this call.<br>
      * 
      * @param toListId The current list to be appended on.

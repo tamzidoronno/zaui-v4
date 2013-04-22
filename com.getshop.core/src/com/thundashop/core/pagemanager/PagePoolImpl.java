@@ -100,9 +100,9 @@ public class PagePoolImpl {
         return app;
     }
 
-    public Page removeApplication(String applicationId) throws ErrorException {
+    public Page removeApplication(String instanceId) throws ErrorException {
         for (Page page : pages.values()) {
-            Page pageres = removeApplicationFromPage(page, applicationId);
+            Page pageres = removeApplicationFromPage(page, instanceId);
             if (pageres != null) {
                 return pageres;
             }

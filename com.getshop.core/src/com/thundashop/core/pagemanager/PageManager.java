@@ -153,9 +153,9 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     @Override
-    public void deleteApplication(String id) throws ErrorException {
-        applicationPool.deleteApplication(id);
-        pagePool.removeApplication(storeId);
+    public void deleteApplication(String instanceId) throws ErrorException {
+        applicationPool.deleteApplication(instanceId);
+        pagePool.removeApplication(instanceId);
     }
 
     @Override
@@ -289,6 +289,18 @@ public class PageManager extends ManagerBase implements IPageManager {
     @Override
     public List<AppConfiguration> getApplicationsBasedOnApplicationSettingsId(String appSettingsId) throws ErrorException {
         return applicationPool.getApplications(appSettingsId);
+    }
+
+    @Override
+    public void removeAllApplications(String appSettingsId) throws ErrorException {
+        List<AppConfiguration> allApps = this.getApplications();
+        
+        for(AppConfiguration config : allApps) {
+            if(config.appSettingsId != null && config.appSettingsId.equals(appSettingsId)) {
+                deleteApplication(config.id);
+            }
+        }
+        throwEvent(Events.ALL_APPS_REMOVED, appSettingsId);
     }
 
 }

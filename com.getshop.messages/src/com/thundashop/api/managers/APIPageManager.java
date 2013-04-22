@@ -375,6 +375,21 @@ public class APIPageManager {
      }
 
      /**
+     * Remove instances of applications added for a specific page id.
+     * @param appSettingsId The id of the application row
+     * @throws ErrorException 
+     */
+
+     public void removeAllApplications(String appSettingsId)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new HashMap();
+          data.args.put("appSettingsId",new Gson().toJson(appSettingsId));
+          data.method = "removeAllApplications";
+          data.interfaceName = "core.pagemanager.IPageManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Remove an application
      * 
      * @param applicationId The id to the application.

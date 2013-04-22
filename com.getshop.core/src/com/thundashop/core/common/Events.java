@@ -22,4 +22,8 @@ public class Events {
      * This event is fired when a product has been deleted.
      */
     public static String PRODUCT_DELETED = "product_deleted";
+    /**
+     * When all instances for a given applications is removed.
+     */
+    public static String ALL_APPS_REMOVED = "all_apps_removed";
 }

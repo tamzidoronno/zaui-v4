@@ -20,6 +20,9 @@ class ImageLoader {
 
     function load($id) {
         $filename = "../uploadedfiles/" . $id;
+        if (!file_exists($filename)) {
+            $filename = "../demoimages/$id";
+        }
         $image_info = getimagesize($filename);
         $this->raw = file_get_contents($filename);
         $this->image_type = $image_info[2];

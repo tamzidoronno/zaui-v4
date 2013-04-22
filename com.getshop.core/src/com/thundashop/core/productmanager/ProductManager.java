@@ -2,12 +2,14 @@ package com.thundashop.core.productmanager;
 
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.Events;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
+import java.security.interfaces.ECPrivateKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -65,6 +67,7 @@ public class ProductManager extends AProductManager implements IProductManager {
         products.remove(product.id);
         databaseSaver.deleteObject(product, credentials);
         
+        throwEvent(Events.PRODUCT_DELETED, productId);
         ListManager manager = getManager(ListManager.class);
         manager.removeProductFromListsIfExists(productId);
 

@@ -18,4 +18,8 @@ public class Events {
      * This event is fired after a user has been deleted
      */
     public static String USER_DELETED = "getshop_user_deleted";
+    /**
+     * This event is fired when a product has been deleted.
+     */
+    public static String PRODUCT_DELETED = "product_deleted";
 }

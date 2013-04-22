@@ -4,6 +4,7 @@ import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.Events;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -498,6 +499,14 @@ public class ListManager extends ManagerBase implements IListManager {
         }
     }
     
+    
+    @Override
+    public void onEvent(String eventName, String eventReferance) throws ErrorException {
+        if (Events.PRODUCT_DELETED.equals(eventName))
+            removeProductFromListsIfExists(eventReferance);
+    }
+
+    
      public void removeProductFromListsIfExists(String productId) throws ErrorException {
         List<String> lists = getLists();
         for(String listId : lists) {
@@ -510,7 +519,7 @@ public class ListManager extends ManagerBase implements IListManager {
             }
             
             for(String entryId : toDelete) {
-                deleteEntry(listId, entryId);
+                deleteEntry(entryId, listId);
             }
         }
     }

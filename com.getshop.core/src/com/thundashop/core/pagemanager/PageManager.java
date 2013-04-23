@@ -276,6 +276,10 @@ public class PageManager extends ManagerBase implements IPageManager {
         Page page = pagePool.get(pageId);
         PageArea pageArea = page.pageAreas.get(pageAreaName);
         
+        if(pageArea == null) {
+            return;
+        }
+        
         List<String> apps = new ArrayList();
         for (AppConfiguration app : pageArea.applications.values()) {
             apps.add(app.id);

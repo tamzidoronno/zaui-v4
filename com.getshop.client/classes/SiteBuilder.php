@@ -111,11 +111,9 @@ class SiteBuilder extends ApplicationBase {
 
    public function getTopMenu() {
         $added = $this->getFactory()->getApplicationPool()->getAllAddedInstances();
-        $topmenu = null;
         foreach ($added as $instance) {
             if ($instance->applicationSettings->id == "1051b4cf-6e9f-475d-aa12-fc83a89d2fd4") {
                 return $instance;
-                break;
             }
         }
     }

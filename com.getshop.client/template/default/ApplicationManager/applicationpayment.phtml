@@ -33,26 +33,24 @@ echo "<td></td>";
 echo "<td>\$ $price,-</td>";
 echo "</table>";
 
-function curPageURL() {
-    $pageURL = 'http';
-    if (@$_SERVER["HTTPS"] == "on") {
-        $pageURL .= "s";
-    }
-    $pageURL .= "://";
-    if ($_SERVER["SERVER_PORT"] != "80") {
-        $pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
-    } else {
-        $pageURL .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
-    }
-    return $pageURL;
-}
 
-$returnAddress = curPageURL();
+$notifyAddress = "http://". $_SERVER["SERVER_NAME"]."/callback.php?orderid=applications&app=c7736539-4523-4691-8453-a6aa1e784fc1";
+
+/* @var $factory Factory */
+$factory = $this->getFactory();
+$instances = $factory->getApplicationPool()->getApplicationsInstancesByNamespace("ns_c7736539_4523_4691_8453_a6aa1e784fc1");
+$instance = $instances[0];
+$mode = $instance->configuration->settings;
+if(isset($mode->{'sandbox'}) && $mode->{'sandbox'}==true) {
+    $url = "https://www.sandbox.paypal.com/cgi-bin/webscr";
+} else {
+    $url = "https://www.paypal.com/cgi-bin/webscr";
+}
 ?>
 
-<form action='https://www.paypal.com/cgi-bin/webscr' method='POST' id='paypalform'>
-    <input type="hidden" name="notify_url" value="notifier">
-    <INPUT TYPE="hidden" NAME="return" value="<? echo $returnAddress; ?>">
+<form action='<? echo $url; ?>' method='POST' id='paypalform'>
+    <input type="hidden" name="notify_url" value="<? echo $notifyAddress; ?>">
+    <INPUT TYPE="hidden" NAME="return" value="<? echo "http://". $_SERVER["SERVER_NAME"]; ?>">
 
     <input type="hidden" name="cmd" value="_cart"> 
     <input type="hidden" name="upload" value="1">
@@ -60,7 +58,7 @@ $returnAddress = curPageURL();
     <input type="hidden" name="business" value="post@getshop.com">
 
     <input type="hidden" name="item_name_1" value="Payment for applications">
-    <input type="hidden" name="amount_1" value="<? echo $price; ?>">
+    <input type="hidden" name="amount_1" value="<? echo 1; ?>">
 </form>
 
 <div style="text-align:right; padding-right:10px;border-top: solid 1px #BBBBBB;">

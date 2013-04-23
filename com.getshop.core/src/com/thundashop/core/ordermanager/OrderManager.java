@@ -136,6 +136,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
+
     public void setOrderStatus(String password, String orderId, String currency, double price, int status) throws ErrorException {
         if (password.equals("fdasfseec½&&%ddez__e00")) {
             Order order = orders.get(orderId);
@@ -163,7 +164,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<ApplicationSubscription> subscriptions = appManager.getUnpayedSubscription();
         double total = 0;
         for (ApplicationSubscription appsub : subscriptions) {
-            total += appsub.app.price;
+            if(appsub.app != null && appsub.app.price != null) {
+                total += appsub.app.price;
+            }
         }
 
         if (total == price && currency.equals("USD")) {

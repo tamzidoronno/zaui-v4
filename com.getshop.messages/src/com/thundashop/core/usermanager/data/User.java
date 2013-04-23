@@ -43,6 +43,9 @@ public class User extends DataCommon  {
     public String cellPhone;
     
     public String key;
+    
+    public String userAgent;
+    public boolean hasChrome;
 
     public void ValidateUserFields() throws ErrorException {
         if (fullName.equals("")) {

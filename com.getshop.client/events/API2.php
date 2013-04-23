@@ -2421,6 +2421,21 @@ class APIStoreManager {
      }
 
      /**
+     * Check if a web shop address has already been taken.
+     * @param address The address to check for.
+     * @throws ErrorException 
+     */
+
+     public function isAddressTaken($address) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["address"] = json_encode($this->transport->object_unset_nulls($address));
+          $data["method"] = "isAddressTaken";
+          $data["interfaceName"] = "core.storemanager.IStoreManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Remove an already added domain name.
      * @param domainName The domain name to remove.
      * @return core_storemanager_data_Store

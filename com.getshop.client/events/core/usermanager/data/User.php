@@ -42,5 +42,11 @@ class core_usermanager_data_User extends core_common_DataCommon  {
 	/** @var String */
 	public $key;
 
+	/** @var String */
+	public $userAgent;
+
+	/** @var String */
+	public $hasChrome;
+
 }
 ?>

@@ -23,6 +23,13 @@ public interface IStoreManager {
     public Store initializeStore(String webAddress, String initSessionId) throws ErrorException;
     
     /**
+     * Check if a web shop address has already been taken.
+     * @param address The address to check for.
+     * @throws ErrorException 
+     */
+    public boolean isAddressTaken(String address) throws ErrorException;
+    
+    /**
      * Get the store added to this session.
      * @return
      * @throws ErrorException 

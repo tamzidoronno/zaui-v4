@@ -219,4 +219,6 @@ public class GetShop extends ManagerBase implements IGetShop {
         
         return "";
     }
+
+    
 }

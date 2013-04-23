@@ -2,6 +2,7 @@ package com.thundashop.core.storemanager;
 
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
@@ -164,9 +165,35 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     @Override
     public Store createStore(String shopname, String email, String password) throws ErrorException {
         String webAddress = shopname.replace(" ", "").toLowerCase();
+        
+        GetShop getshopManager = getManager(GetShop.class);
+        if(isAddressTaken(webAddress)) {
+            throw new ErrorException(94);
+        }
+        
         Store store = createStoreObject(webAddress, shopname, email);
         notifyUsByEmail(store);
         return store;
+    }
+    
+    @Override
+    public boolean isAddressTaken(String address) throws ErrorException {
+        for(Store store : stores.values()) {
+            if(store.webAddress!= null &&store.webAddress.equalsIgnoreCase(address)) {
+                return true;
+            }
+            if(store.webAddressPrimary != null && store.webAddressPrimary.equalsIgnoreCase(address)) {
+                return true;
+            }
+            if(store.additionalDomainNames != null) {
+                for(String additional : store.additionalDomainNames) {
+                    if(additional.equalsIgnoreCase(address)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     private void notifyUsByEmail(Store store) throws ErrorException {

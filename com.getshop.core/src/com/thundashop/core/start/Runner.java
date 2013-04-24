@@ -25,11 +25,19 @@ public class Runner {
         AppContext.appContext = context;
         Logger log = context.getBean(Logger.class);
         
+        System.out.println(args[0]);
+        
         StorePool storePool = new StorePool();
         AppContext.storePool = storePool;
         int port = 25554;
         if(args.length > 0) {
-            port = Integer.parseInt(args[0]);
+            AppContext.devMode = false;
+            if(args[0].equals("dev")) {
+                AppContext.devMode = true;
+            }
+        }
+        if(args.length > 1) {
+            port = Integer.parseInt(args[1]);
             context.getBean(Database.class).activateSandBox();
         }
         

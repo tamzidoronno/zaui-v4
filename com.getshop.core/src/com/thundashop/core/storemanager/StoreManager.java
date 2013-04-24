@@ -7,6 +7,7 @@ import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,6 +104,15 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         if (!sessionFactory.exists(sessionId)) {
             sessionFactory.addToSession(sessionId, "storeId", store.id);
         }
+        
+        if(store.configuration.configurationFlags == null) {
+            store.configuration.configurationFlags = new HashMap();
+        }
+        
+        if(AppContext.devMode) {
+            store.configuration.configurationFlags.put("devMode","true");
+        }
+        
         return store;
     }
 

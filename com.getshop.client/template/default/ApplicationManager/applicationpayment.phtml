@@ -41,10 +41,12 @@ $factory = $this->getFactory();
 $instances = $factory->getApplicationPool()->getApplicationsInstancesByNamespace("ns_c7736539_4523_4691_8453_a6aa1e784fc1");
 $instance = $instances[0];
 $mode = $instance->configuration->settings;
-if(isset($mode->{'sandbox'}) && $mode->{'sandbox'}==true) {
+if($factory->getConfigurationFlag("devMode") == "true") {
     $url = "https://www.sandbox.paypal.com/cgi-bin/webscr";
+    $address = "payment@getshop.com";
 } else {
     $url = "https://www.paypal.com/cgi-bin/webscr";
+    $address = "post@getshop.com";
 }
 ?>
 
@@ -55,7 +57,7 @@ if(isset($mode->{'sandbox'}) && $mode->{'sandbox'}==true) {
     <input type="hidden" name="cmd" value="_cart"> 
     <input type="hidden" name="upload" value="1">
     <input type="hidden" name="currency_code" value="USD">
-    <input type="hidden" name="business" value="post@getshop.com">
+    <input type="hidden" name="business" value="<? echo $address;?>">
 
     <input type="hidden" name="item_name_1" value="Payment for applications">
     <input type="hidden" name="amount_1" value="<? echo 1; ?>">

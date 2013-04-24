@@ -202,6 +202,11 @@ class ApplicationManagement extends ApplicationBase {
 
     function copyDirectory($source, $destination, $oldNameSpace, $newNameSpace) {
         if (is_dir($source)) {
+            //Paths which contains private is not to be cloned.
+            if(stristr($source, "private")) {
+                return;
+            }
+            
             @mkdir($destination);
             $directory = dir($source);
             while (FALSE !== ( $readdirectory = $directory->read() )) {

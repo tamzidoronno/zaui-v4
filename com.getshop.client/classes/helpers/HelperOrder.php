@@ -15,7 +15,7 @@ class HelperOrder {
 //        echo "<pre>";
 //        print_r($this->order);
 //        echo "</pre>";
-        if ($this->order->shipping != null && isset($this->order->shipping->cost))
+        if (isset($this->order->shipping) && isset($this->order->shipping->cost))
             $total = $this->order->shipping->cost;
 
         if ($this->order->cart != null) {

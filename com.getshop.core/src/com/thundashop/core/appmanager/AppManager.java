@@ -237,11 +237,11 @@ public class AppManager extends ManagerBase implements IAppManager {
         }
 
         for (ApplicationSubscription apsub : getAllApplicationSubscriptions().values()) {
-//            if (!apsub.payedfor && apsub.to_date.before(new Date()) && apsub.numberOfInstancesAdded > 0) {
-//                if (apsub.app.price != null && apsub.app.price > 0) {
+            if (!apsub.payedfor && apsub.to_date.before(new Date()) && apsub.numberOfInstancesAdded > 0) {
+                if (apsub.app.price != null && apsub.app.price > 0) {
                     result.add(apsub);
-//                }
-//            }
+                }
+            }
         }
 
         cache = new UnpayedAppCache();

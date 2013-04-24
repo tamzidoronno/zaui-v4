@@ -80,6 +80,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         newOrder += "<br> Name: " + order.cart.address.fullName;
         newOrder += "<br> Email: " + order.cart.address.emailAddress;
         newOrder += "<br> Address: " + order.cart.address.address;
+        newOrder += "<br> Phone: " + order.cart.address.phone;
         newOrder += "<br> PostCode: " + order.cart.address.postCode + " " + order.cart.address.city;
         newOrder += "<br>";
         newOrder += "<br> <b>Items:</b> ";

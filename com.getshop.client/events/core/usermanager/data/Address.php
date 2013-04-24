@@ -1,6 +1,9 @@
 <?php
 class core_usermanager_data_Address extends core_common_DataCommon  {
 	/** @var String */
+	public $phone;
+
+	/** @var String */
 	public $emailAddress;
 
 	/** @var String */

@@ -17,6 +17,7 @@ public class Address extends DataCommon {
         public static String MAIN = "main";
     }
     
+    public String phone;
     public String emailAddress;
     public String fullName;
     public String postCode;

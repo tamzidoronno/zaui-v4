@@ -8,6 +8,7 @@ import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Logger;
+import com.thundashop.core.common.Setting;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.Entry;
@@ -176,6 +177,12 @@ public class PagePoolImpl {
             
             app.inheritate = 1;
             app.originalPageId = "users";
+            app.settings = new HashMap();
+            
+            Setting setting = new Setting();
+            setting.id = "disableedit";
+            setting.value = "true";
+            app.settings.put("disableedit", setting);
             applicationPool.saveApplicationConfiguration(app);
             
             Page allUsers = createNewPage(Page.PageType.HeaderLeftMiddleFooter, page.id, "users_all_users");

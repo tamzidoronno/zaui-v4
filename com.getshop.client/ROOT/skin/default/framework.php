@@ -1108,3 +1108,7 @@ a img {
 .ui-timepicker-rtl{ direction: rtl; }
 .ui-timepicker-rtl dl { text-align: right; }
 .ui-timepicker-rtl dl dd { margin: 0 65px 10px 10px; }
+.OrderManager .odd, tr.odd td.sorting_1 { background-color:#EFEFEF; cursor:pointer; }
+.OrderManager tr.even td.sorting_1 { background-color:#FFFFFF; cursor:pointer; }
+.OrderManager tr:hover { background-color:#dedede;cursor:pointer; }
+.OrderManager tr:hover td.sorting_1 { background-color:#dedede;cursor:pointer; }

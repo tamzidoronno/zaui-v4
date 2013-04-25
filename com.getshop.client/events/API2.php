@@ -1743,6 +1743,23 @@ class APIPageManager {
      }
 
      /**
+     * Get all applications from the applicationPool. 
+     * based on the specified ApplicationSettingsId
+     * 
+     * @return List
+     */
+
+     public function getApplicationsByPageAreaAndSettingsId($appSettingsId, $pageArea) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["appSettingsId"] = json_encode($this->transport->object_unset_nulls($appSettingsId));
+          $data['args']["pageArea"] = json_encode($this->transport->object_unset_nulls($pageArea));
+          $data["method"] = "getApplicationsByPageAreaAndSettingsId";
+          $data["interfaceName"] = "core.pagemanager.IPageManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Get all applications that is needed to render a page.
      * 
      * @param pageId

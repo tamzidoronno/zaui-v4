@@ -192,6 +192,15 @@ public interface IPageManager {
      * @return 
      */
     public List<AppConfiguration> getApplicationsBasedOnApplicationSettingsId(String appSettingsId) throws ErrorException;
+
+    /**
+     * Get all applications from the applicationPool. 
+     * based on the specified ApplicationSettingsId
+     * 
+     * @return 
+     */
+    public List<AppConfiguration> getApplicationsByPageAreaAndSettingsId(String appSettingsId, String pageArea) throws ErrorException;
+
     
     /**
      * Get all applications that is needed to render a page.

@@ -141,6 +141,31 @@ $('.sticking').live('click', function() {
     thundashop.Ajax.post(event, null);
 })
 
+$('#importApplicationToArea').live('click', function() {
+    var appSettingsId = $(this).attr('appSettingsId');
+    var area = $(this).attr('area');
+    var data = {
+        appSettingsId : appSettingsId,
+        area : area
+    };
+    var event = thundashop.Ajax.createEvent("ApplicationManager", "importExistingApplication", null, data);
+    event['synchron'] = true;
+    var callBack = function(response) {
+        $('#informationbox-holder').fadeOut(200);
+        response = JSON.parse(response);
+        GetShop.ImportApplication.setApps(response, area);
+        GetShop.ImportApplication.next();
+        
+        $('.add_application_menu').each(function() {
+           $(this).hide(); 
+        });
+        
+    }
+    
+    thundashop.Ajax.post(event, callBack);
+    
+});
+
 $('#addApplicationToArea').live('click', function() {
     var form = $(this).closest('.application').find('#applicationform');
     

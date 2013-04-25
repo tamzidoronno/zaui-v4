@@ -103,5 +103,10 @@ public class StoreManagerCache implements IStoreManager {
     public String getStoreId() throws ErrorException {
         return null;
     }
+
+    @Override
+    public boolean isAddressTaken(String address) throws ErrorException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

@@ -372,6 +372,14 @@ public class PagePoolImpl {
         databaseSaver.saveObject(page, credentials);
     }
 
+    boolean applicationExistsInArea(AppConfiguration appConfig, String pageAreaCompare) {
+        PageArea pageArea = getPageArea(appConfig);
+        if (pageArea != null && pageArea.type.equals(pageAreaCompare)) {
+            return true;
+        }
+        return false;
+    }
+
     
 
 }

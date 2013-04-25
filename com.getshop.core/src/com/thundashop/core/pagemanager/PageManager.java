@@ -307,4 +307,16 @@ public class PageManager extends ManagerBase implements IPageManager {
         throwEvent(Events.ALL_APPS_REMOVED, appSettingsId);
     }
 
+    @Override
+    public List<AppConfiguration> getApplicationsByPageAreaAndSettingsId(String appSettingsId, String pageArea) throws ErrorException {
+        List<AppConfiguration> applications = getApplicationsBasedOnApplicationSettingsId(appSettingsId);
+        List<AppConfiguration> returnList = new ArrayList();
+        for (AppConfiguration appConfig : applications) {
+            if (pagePool.applicationExistsInArea(appConfig, pageArea)) {
+                returnList.add(appConfig.secureClone());
+            }
+        }
+        return returnList;
+    }
+
 }

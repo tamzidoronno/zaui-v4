@@ -3,29 +3,23 @@
 $factory = $this->getFactory();
 $paidSubscriptions = $factory->getApi()->getAppManager()->getAllApplicationSubscriptions();
 
-$allApps = $factory->getApplicationPool()->getAllApplicationSettings();
 $area = $_POST['data']['type'];
-$apps = array();
-foreach($allApps as $myApp) {
-    /* @var $myApp core_appmanager_data_ApplicationSettings */
-    if(isset($myApp->allowedAreas) && is_array($myApp->allowedAreas) && in_array($area, $myApp->allowedAreas)) {
-        $namespace = $factory->convertUUIDtoString($myApp->id);
-        $instance = $namespace."\\".$myApp->appName;
-        if(class_exists($instance)) {
-            $instance = new $instance();
-            $instance->configuration = API::core_common_AppConfiguration();
-            $instance->configuration->appSettingsId = $myApp->id;
-            $instance->configuration->appName = $myApp->appName;
-            $instance->applicationSettings = $myApp;
-            $apps[] = $instance;
-        }
-    }
-}
+$import = isset($_POST['data']['action']) && $_POST['data']['action'] == "import" ? true : false; 
+$allApps = $factory->getApplicationPool()->getAllApplicationSettingsForArea($area);
+$apps = $factory->getApplicationPool()->convertApplicationsSettingsToAppinstances($allApps);
+
 ?>
 <div class="tabs">
     <div class="tabset inline">
         <? 
         foreach ($apps as $app) {
+            if ($import) {
+                $apps2 = $factory->getApi()->getPageManager()->getApplicationsByPageAreaAndSettingsId($app->getApplicationSettings()->id, $_POST['data']['type']);
+                if (count($apps2) == 0) {
+                    continue;
+                }
+            }
+            
             if(!$app->getName()) {
                 continue;
             }
@@ -44,81 +38,20 @@ foreach($allApps as $myApp) {
             if(!$app->getName()) {
                 continue;
             }
-            $appimagename = ApplicationHelper::getApplicationImage($app);
             $active2 = isset($notFirst2) ? "" : "active";
             $notFirst2 = false;
         /* @var $app Application */    
         ?>
 
         <div class="content_holder <? echo $active2; ?>" id="<? echo str_replace(" ", "", $app->getName()); ?>">
-            <div class="application">
-                <div class="title">
-                    <? echo $app->configuration->appName; ?>
-                </div>
-                <div class="descriptionholder">
-                    <div class="description inline">
-                        <? echo $app->getDescription(); ?>
-                    </div>
-                    <div class="image inline">
-                        <img src="<? echo $appimagename; ?>"/>
-                    </div>                    
-                </div>
-                <div class="title">
-                    <? echo $this->__f("Get Started"); ?>
-                </div>
-                <div class="descriptionholder" gstype="form" method="addApplicationToArea" id="applicationform">
-                     <input type="hidden" gsname="applicationName" value="<? echo get_class($app); ?>" type="<? echo $_POST['data']['type']; ?>">
-                     <input type="hidden" gsname="applicationArea" value="<? echo $_POST['data']['type']; ?>">
-                     <input type="hidden" gsname="appSettingsId" value="<? echo $app->getConfiguration()->appSettingsId; ?>">
-                     <? 
-                     if(method_exists($app, "getStartedExtended")) {
-                         ?>
-                         <input type="hidden" gsname="getshop_extended_application_add" value="true">
-                         <?
-                     }
-                     echo "<div class='getstarted'>";
-                         $app->getStarted(); 
-                    echo "</div>";
-                    
-                    $settings = $factory->getApplicationPool()->getApplicationSetting($instance->configuration->appSettingsId);
-                    if($settings->type == "ThemeApplication") {
-                        $creationdate=strtotime($factory->getStore()->rowCreatedDate);
-                        $diff = time() - $creationdate;
-                        if($diff > 86400) {
-                            $checked = "";
-                        } else {
-                            $checked = "CHECKED";
-                        }
-                        echo "<input type='checkbox' gsname='prepopulate' $checked> Prepopulate example data";
-                    }
-                    ?>
-                </div>
-                <? if (isset($paidSubscriptions->{$app->applicationSettings->id})) { ?>
-                    <div class="title">
-                        <? echo $this->__f("Price"); ?>
-                    </div>
-                    <div class="descriptionholder" id="applicationform">
-
-                      <?$subscription = $paidSubscriptions->{$app->applicationSettings->id};
-                         if ($subscription->payedfor != null) {
-                             echo "This applications has been paid<br>";
-                             echo "Expires: ".$subscription->to_date;
-                         } else {
-                           $price = $app->applicationSettings->price;
-                           $trialPeriod =  $app->applicationSettings->trialPeriode;
-                           if ($price == null || $price == 0) {
-                               echo $this->__f("This application can be used free of charge");
-                           } else {
-                               echo $this->__f("This application costs").": ".$price."$ / ".$this->__f("year")."<br>";
-                               echo $this->__f("Trial period").": ".$trialPeriod." ".$this->__f("days");
-                           }
-                        } ?>    
-                    </div>
-                <? } ?>
-                
-                <span class="allFieldsNeedToBeFilled">* <? echo $this->__f("All fields need to be filled before you continue"); ?></span> 
-                <? $app->includefile("add_app_button", 'ApplicationManager'); ?>
-            </div>
+            <? 
+            $this->setCurrentApp($app);
+            if ($import) {
+                $this->includeFile("applicationPicker"); 
+            } else {
+                $this->includeFile("addApplicationContent"); 
+            }
+            ?>
         </div>
         <? } ?>
     </div>

@@ -253,9 +253,20 @@ thundashop.common.mask = function() {
 }
 
 thundashop.common.unmask = function() {
-    $('#informationbox-holder').fadeOut(200);
-    $('#fullscreenmask').fadeOut(200);
-    thundashop.MainMenu.unlockScroll();
+    var attr = $('#fullscreenmask').attr('locked');
+    if (typeof(attr) === "undefined" || attr === "false") {
+        $('#informationbox-holder').fadeOut(200);
+        $('#fullscreenmask').fadeOut(200);
+        thundashop.MainMenu.unlockScroll();
+    }
+}
+
+thundashop.common.lockMask = function() {
+    $('#fullscreenmask').attr('locked', 'true');
+}
+
+thundashop.common.unlockMask = function() {
+    $('#fullscreenmask').attr('locked', 'false');
 }
 
 thundashop.common.confirm = function(content) {

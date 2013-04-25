@@ -6,9 +6,17 @@
  * @author ktonder
  */
 class ApplicationManager extends FactoryBase {
-
+    var $app;
     var $port;
 
+    function setCurrentApp($app) {
+        $this->app = $app;
+    }
+    
+    function getCurrentApp() {
+        return $this->app;
+    }
+    
     function __construct() {
         $configReader = new ConfigReader();
         $this->port = $configReader->getConfig("port");
@@ -264,13 +272,16 @@ class ApplicationManager extends FactoryBase {
             return;
         }
         $list = $_POST['data']['list'];
-        $area = $_POST['core']['apparea'];
+        $area = $_POST['data']['apparea'];
 
         $api = IocContainer::getFactorySingelton()->getApi();
         $pageId = $this->getPage()->id;
+        
         foreach ($list as $appId) {
             $api->getPageManager()->addExistingApplicationToPageArea($pageId, $appId, $area);
         }
+        
+        $this->getFactory()->initPage();
     }
 
     public function displayColorPickers() {
@@ -340,5 +351,18 @@ class ApplicationManager extends FactoryBase {
         $this->includefile("applicationpayment");
     }
 
+    public function importExistingApplication() {
+        $appSettingsId = $_POST['data']['appSettingsId'];
+        $area = $_POST['data']['area'];
+        $import = new ImportApplication($appSettingsId, $area);
+        echo $import->getControlPanel();
+    }
+    
+    /*
+     * Dont remove this. it is used for ping!
+     */
+    public function ping() {
+        
+    }
 }
 ?>

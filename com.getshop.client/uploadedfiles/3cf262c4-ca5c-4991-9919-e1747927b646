@@ -1,0 +1,317 @@
+<?php
+$domain_maxlength=20;
+$domain_maxdashes=3;
+
+$domain_phpmask="^([A-Za-z0-9]+)([-]{0,1}[A-Za-z0-9]+){0,".$domain_maxdashes."}$";    //no stringlength testing
+
+//not used in the eventual JavaScript validation, but good to know since it's hard to come by when you need it.
+//use this in JavaScript as:
+/* if (document.myformname.myinputname.value.search(<?php echo $domain_javascriptmask1; ?>)==-1) ///if match failed
+{ // do something
+} */
+$domain_javascriptmask1="/^[a-zA-Z0-9]+([-][a-zA-Z0-9]+){0,".$domain_maxdashes."}$/"; //no stringlength testing
+$domain_javascriptmask2="/^([a-zA-Z0-9]([-](?![-])|[a-zA-Z0-9]){0,".($domain_maxlength-2)."}[a-zA-Z0-9]|[a-zA-Z0-9]){0,".$domain_maxdashes."}$/"; //with stringlength testing, I have not tested if the strenglength testing is stable at thew point of the number of dashes or not
+
+function checkdomain ($name) {
+  global $domain_maxlength,$domain_phpmask;
+  if ((strlen($name)<=$domain_maxlength) && (ereg($domain_phpmask, $name))) return 1; //if match is successful
+}
+
+function getdomain ($name) { // if needed, automatic truncation is performed. The user can correct it later
+  global $domain_maxlength,$domain_autotruncate;
+  $name=trim(strtolower($name));
+  $j=strlen($name);
+  $test="";
+  for ($i=0;$i<$j;$i++) {
+    if (($name[$i]==' ') || ($name[$i]=='_')) $name[$i]='-';
+    if (eregi("[0-9a-zA-Z-]", $name[$i])) $test=$test.$name[$i];
+  }
+  $name=str_replace(array('----------','---------','--------','-------','------','-----','----','---','--'),array('-','-','-','-','-','-','-','-','-'),$test);
+  $j=strlen($name);
+  $dash_count=0;
+  $test="";
+  for ($i=0;$i<$j; $i++) {
+    if ($name[$i]=='-') {
+      if (($i==0) || (strlen($test)>$domain_maxlength-1) || ($i==$j-1) ) {} else
+      if (($dash_count<3) && (strlen($test)<$domain_maxlength-1)) {
+        $test=$test.$name[$i];
+        $dash_count=$dash_count+1;
+      }
+    } else if (strlen($test)<$domain_maxlength) $test=$test.$name[$i];
+  }
+  if (checkdomain($test)) return $test;
+  else return "bad-domainname";//$name;
+}
+?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>Sans Titre</title>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+<meta name="generator" content="HAPedit 3.1">
+<script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+
+
+
+
+<script type="text/javascript">
+<!--
+var acceptable_nr_of_dashes=<?php echo $domain_maxdashes ?>;
+
+lang_count_0="none";
+lang_count_1="one";
+lang_count_2="two";
+lang_count_3="three";
+lang_count_4="four";
+
+function input_error_message(what) {
+       if (what==1) return "Use alphanumeric characters and the dash";
+  else if (what==2) return "Use the dash only between two characters";
+  else if (what==3) return "Use maximally one dash in a row";
+  else if (what==4) return "The maximum number of dashes allowed is "+lang_count_<?php echo $domain_maxdashes; ?>;
+  else if (what==5) return "Use the dash only between two characters";
+  else if (what==6) return "Use the characters A-Z and a-z, and the dash";
+  else return "PS: You can always change this later to an address you see fit.";
+}
+
+function to_be_or_not_to_be (input_id) {
+    var test=$(input_id).val();
+    test.toLowerCase()
+    var test_ok=0; // 0 = no error
+    var i=0;
+    var dash_count=0;
+    if (test.length<1) test_ok=6;
+    else {
+      while (!test[i]=="") {
+        if (
+          (test[i]<'-') || (test[i]=='.') || (test[i]=='/') || ((test[i]>'9') && (test[i]<'A')) || ((test[i]>'Z') && (test[i]<'a')) || (test[i]>'z')
+          ) test_ok=1;
+        else if (test[i]=='-') {
+          if (i==0) test_ok=2;
+          else if (test[i-1]=='-') test_ok=3;
+         dash_count++; if (dash_count>acceptable_nr_of_dashes) test_ok=4;
+        }
+        i++;
+      }
+      if (test[i-1]=='-') test_ok=5;
+    }
+    document.getElementById("myinputerror").innerHTML=input_error_message(test_ok);
+    if (test_ok<1) {
+    document.location.href='http://'+$(input_id).val()+'.getshop.com';
+    return true;
+    } else return false;
+    return test_ok;
+}
+
+function interceptkey(event,thiselement) {
+  key_ok=0;
+  var dash_count=0;
+  address=thiselement.value;//document.webshopaddressform.webshopaddress.value;
+  addresslength=address.length;
+  for (i=0; i<addresslength; i++) {
+    if ((address[i]=='-') || (address[i]=='_')) dash_count=dash_count+1;
+  }
+  pressedkey=event.keyCode; //not what we are looking for
+  pressedcharacter = String.fromCharCode(pressedkey); //not what we are looking for
+  if (
+       ( (pressedkey==13)
+         || (pressedkey<59)
+         || ((pressedkey>59) && (pressedkey<106))
+         || (pressedkey==109)
+         || (pressedkey==189)
+         || ((pressedkey>111) && (pressedkey<146))
+       )
+       && (pressedkey!==32)
+     )
+  {
+    if (
+         (
+           ((pressedkey==189) || (pressedkey==109))
+           &&
+           (
+             (addresslength<1)
+             || (address[0]=='-')
+             || (address[0]=='_')
+             || (address[addresslength-1]=='-')
+             || (address[addresslength-1]=='_')
+             || (dash_count>=acceptable_nr_of_dashes)
+           )
+         )
+       )
+    {
+      if (dash_count>=acceptable_nr_of_dashes) key_ok=4;
+      else if ((addresslength<1) || (address[0]=='-') || (address[0]=='_')) key_ok=2;
+      else if ((address[addresslength-1]=='-') || (address[addresslength-1]=='_')) key_ok=3;
+      else key_ok=6;
+  document.getElementById("myinputerror").innerHTML=input_error_message(key_ok);
+    if (event.preventDefault) //supports preventDefault?  //works fine in FireFox and Chrome
+  event.preventDefault();
+    else //IE browser
+  event.returnValue=false; //works fine now in IE
+    }
+    else {
+      key_ok=0;
+    }
+  document.getElementById("myinputerror").innerHTML=input_error_message(key_ok);
+  }
+  else {
+    key_ok=6;
+  document.getElementById("myinputerror").innerHTML=input_error_message(key_ok);
+    if (event.preventDefault) //supports preventDefault?  //works fine in FireFox and Chrome
+  event.preventDefault();
+    else //IE browser
+  event.returnValue=false; //works fine now in IE
+  }
+  return key_ok;
+}
+
+function validate_the_subdomainname (thistext) {
+    var test=thistext;
+    test.toLowerCase()
+    var length=thistext.length;
+    var test_ok=0; // 0 = no error
+    var i=0;
+    var dash_count=0;
+    var test2="";
+    if (length<1) test_ok=6; else
+    for (i=0; i<length; i++) {
+      if (
+        (test[i]<'-') || (test[i]=='.') || (test[i]=='/') || ((test[i]>'9') && (test[i]<'A')) || ((test[i]>'Z') && (test[i]<'a')) || (test[i]>'z')
+        ) test_ok=1;
+      else if (test[i]=='-') {
+        dash_count++;
+        if (dash_count>acceptable_nr_of_dashes) test_ok=4;
+        else if (i==length-1) test_ok=5;
+        else if (i==0) test_ok=2;
+        else if (test[i-1]=='-') test_ok=3;
+        else test2=test2+test[i];
+      } else test2=test2+test[i];
+    }
+
+    if (test_ok==6) document.getElementById("myinputerror").innerHTML=input_error_message(test_ok);
+    document.getElementById("webshopaddress").value=test2;
+    return test_ok;
+}
+//-->
+</script>
+
+
+
+
+</head>
+<body bgcolor="#FFFFFF" onLoad="self.focus();document.webshopaddressform.webshopaddress.focus()">
+
+
+<!--------- Start of the webshop address form (and its styling) -------------------->
+
+<style type="text/css">
+<!--
+  label.myinputerror {
+    /*position:static;
+    bottom: 20px; left: 495px; width: 250px; display: inline; color: red; */
+    }
+
+.button {
+  position:absolute;
+  top:0px;
+  background:url(http://www.getshop.com/skin/default/images/button.png) no-repeat right top;
+  background-position: 100% -0.5%;
+  margin-top:2px;
+  margin-bottom:10px;
+  cursor:pointer;
+  height:21px;
+  padding-right:8px;
+  display:inline-block;
+  text-align:center;
+  }
+
+.button ins{
+  width:75px;
+  background:url(http://www.getshop.com/skin/default/images/button.png) no-repeat left bottom;
+  height:19px;
+  line-height:19px;
+  color:#333;
+  font-weight:bold;
+  font-size:10px;
+  display:inline-block;
+  padding-left:7px;
+  text-decoration:none;
+}
+
+.button.disabled {
+  cursor:default;
+  background:url(http://www.getshop.com/skin/default/images/button-grey.png) no-repeat right top
+}
+.button.disabled ins {
+  background:url(http://www.getshop.com/skin/default/images/button-grey.png) no-repeat left bottom
+}
+-->
+</style>
+
+<form id="webshopaddressform" name="webshopaddressform" method=post action="javascript:void(0)">
+<div Id='axvaifnzyekkc' class='content' style='min-height: 40px;'>
+  <div style="position: relative; width: 940px; height: 380px; background-image: url('http://www.getshop.com/shopbanners/getshop/banner.png')">
+    <div style="position: absolute; bottom: 20px; color: #FFF; font-weight: bold; font-size: 14px; left: 200px;">
+      <center>
+        Start your webshop now: http://<input id="webshopaddress" tabindex=1 onkeydown="interceptkey(event,this);if (event.keyCode==13) {test_ok=validate_the_subdomainname (this.value);to_be_or_not_to_be ('#webshopaddress');}" onchange="validate_the_subdomainname (this.value);" onmousemove="validate_the_subdomainname(this.value);" name="webshopaddress" type="text" value="" maxlength="<?php echo $domain_maxlength; ?>" size=20 />.getshop.com&nbsp;<span tabindex=2 onkeydown="if (event.keyCode==13) to_be_or_not_to_be ('#webshopaddress');" class="button"><ins onclick="to_be_or_not_to_be ('#webshopaddress');">Start now</ins></span>
+     </center>
+      <center>
+        <label class="myinputerror" id="myinputerror">
+          PS: You can always change this later to an address you see fit.
+        </label>
+      </center>
+    </div>
+  </div>
+  <br>
+</div>
+</form>
+
+<!--------- end of the webshop address form (and its styling) ------------->
+
+
+
+
+
+
+<!----------------------------- Area for testing some JavaScript variables and results and adding explanationary texts -------------------------------------------
+----------------------------------- Don't forget to leave this part out of the production version ---------------------------------------------------->
+<script>
+    /* This is the testing area for the input function "to_be_or_not_to_be(input_id) */
+    var test_id='#webshopaddress';
+    var test=$(test_id).val();
+    var test_ok=0;
+    var i=0;
+    var dash_count=0;
+    //test.toLowerCase()
+    while (!test[i]=="") {
+      if (
+        (test[i]<'-') || (test[i]=='.') || (test[i]=='/') || ((test[i]>'9') && (test[i]<'A')) || ((test[i]>'Z') && (test[i]<'a')) || (test[i]>'z')
+        ) test_ok=1;
+      else if (test[i]=='-') {
+        if (i==0) test_ok=2;
+        else if (test[i-1]=='-') test_ok=3;
+        dash_count++; if (dash_count>3) test_ok=4;
+      }
+      i++;
+    }
+    if (test[i-1]=='-') test_ok=5;
+
+    testing=input_error_message(test_ok);
+    if (testing=="") testing="Name is OK (errorcode 0)";
+    myaddress=document.webshopaddressform.webshopaddress.value+"";
+    document.write("Input value: "+myaddress+"<br>Validation: "+testing+"<br>First character = "+test[0]+" - Dash count = "+dash_count+" - Last character = "+test[(i-1)]+"<br>");
+    document.write(input_error_message(4)+"<br>");
+</script>
+<!-------------------------------------------------------------------- Testing the PHP ----------------------------------------------------------------------->
+
+<?php
+$trythis='hjp-pp---/&$___pp-psfgdfsdspppp--p';
+echo "\n<br><font color=blue>PHP: </font>My domain <font color=red>$trythis</font> is ";
+if (checkdomain($trythis)) echo "OK"; else echo "not OK";
+$thisdomain=getdomain($trythis);
+echo " and becomes ".$thisdomain.". OK, I'll correct my nag nag error later and stop trying to be so funny :(.<br>";
+
+?>
+<!-------------------------------------------------------------------- The End ------------------------------------------------------------------------------->
+</body>
+</html>

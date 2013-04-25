@@ -38,9 +38,14 @@ class ApplicationBase extends FactoryBase {
     }
 
     public function renderApplication() {
+        
         $changeable = !isset($this->applicationSettings) || $this->getApplicationSettings()->type == "SystemApplication" ? 'systemapplication' : '';
         $appSettingsId = $this->getApplicationSettings() ? $this->getApplicationSettings()->id : "";
         $id = isset($this->configuration) ? $this->configuration->id : "";
+        
+        if (isset($_GET['onlyShowApp']) && isset($id) && $id != $_GET['onlyShowApp']) {
+            return;
+        }
         
         $className = get_class($this);
         if(strrpos($className, "\\")) {

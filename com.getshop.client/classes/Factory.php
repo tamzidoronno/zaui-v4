@@ -107,6 +107,7 @@ class Factory extends FactoryBase {
         echo "\n" . '<script type="text/javascript" src="js/getshop.Administration.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.base64.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.framework.js"></script>';
+        echo "\n" . '<script type="text/javascript" src="js/getshop.ImportApplication.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/datatables/jquery.dataTables.min.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jPicker/jpicker-1.1.6.min.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jquery.applicationPicker.js"></script>';

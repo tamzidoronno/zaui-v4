@@ -81,6 +81,44 @@ class ApplicationPool {
     public function getAllApplicationSettings() {
         return $this->applicationList;
     }
+    
+    /**
+     * Returns of all available applications settings that 
+     * this webpage has access to for a specified area.
+     * 
+     * @return core_appmanager_data_ApplicationSettings[]
+     */
+    public function getAllApplicationSettingsForArea($area) {
+        $apps = array();
+        
+        foreach ($this->applicationList as $myApp) {
+            if(isset($myApp->allowedAreas) && is_array($myApp->allowedAreas) && in_array($area, $myApp->allowedAreas)) {
+                $apps[] = $myApp;
+            }
+        }
+        
+        return $apps;
+    }
+    
+    
+    public function convertApplicationsSettingsToAppinstances($applicationSettingArray) {
+        $apps = array();
+        foreach($applicationSettingArray as $myApp) {
+            /* @var $myApp core_appmanager_data_ApplicationSettings */
+            $namespace = $this->factory->convertUUIDtoString($myApp->id);
+            $instance = $namespace."\\".$myApp->appName;
+            if(class_exists($instance)) {
+                $instance = new $instance();
+                $instance->configuration = API::core_common_AppConfiguration();
+                $instance->configuration->appSettingsId = $myApp->id;
+                $instance->configuration->appName = $myApp->appName;
+                $instance->applicationSettings = $myApp;
+                $apps[] = $instance;
+            }
+        }
+        
+        return $apps;
+    }
 
     /**
      * Return a specified application setting specified by id

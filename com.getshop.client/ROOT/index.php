@@ -47,6 +47,9 @@ include '../loader.php';
     </div>
 </div>
 <?
+$importApplication = new ImportApplication(null, null);
+$importApplication->showMenu();
+
 $factory = IocContainer::getFactorySingelton();
 
 if(!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
@@ -130,7 +133,7 @@ if(isset($_GET['logonwithkey'])) {
     ?>
 
 </html>
-<div style='position:fixed; text-align:right;  bottom:0px; right:0px; display:block;background-color:#FFFFFF; padding: 1px; margin-top: 3px;'>
+<div id="getshoppower" style='position:fixed; text-align:right;  bottom:0px; right:0px; display:block;background-color:#FFFFFF; padding: 1px; margin-top: 3px;'>
     &nbsp;&nbsp;&nbsp;<a href='http://www.getshop.com'>Powered by GetShop</a>&nbsp;&nbsp;&nbsp;
 </div>
 
@@ -148,3 +151,29 @@ if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() && !$factor
     echo "<script>$('#mainmenu #displaytheemesbutton').click();</script>";
 }
 ?>
+
+<? if (isset($_GET["onlyShowApp"])) { ?>
+<script>
+    $('.applicationarea').each(function() { 
+       if($(this).find('.app').size() === 0) {
+           $(this).hide();
+       }
+    });
+    
+    $('.app').each(function() {
+        if ($(this).html() == "") {
+            $(this).hide();
+        }
+    });
+    $('.breadcrumb').hide();
+    $('.mainmenu').hide();
+    $('.spacingtop').hide();
+    var app = $('[appid=<?echo $_GET['onlyShowApp'];?>]');
+    $('skeleton').removeAttr("editormode");
+    $('html').width(app.width());
+    $('#getshoppower').hide();
+//    console.log(app.width());
+//    console.log(app.height());
+    
+</script>
+<? } ?>

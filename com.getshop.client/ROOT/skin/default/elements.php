@@ -119,3 +119,36 @@
 .systembutton ins {
     text-decoration: none;
 }
+
+
+#ImportNextApp,
+#ImportPrevApp {
+    height: 40px;
+    width: 50px;
+    cursor: pointer;
+}
+
+#ImportPrevApp { background-image: url('skin/default/elements/ImportButtonLeft.png'); }
+#ImportNextApp { background-image: url('skin/default/elements/ImportButtonRight.png'); }
+
+#ImportPrevApp:hover { background-image: url('skin/default/elements/ImportButtonLeft-hover.png'); }
+#ImportNextApp:hover { background-image: url('skin/default/elements/ImportButtonRight-hover.png'); }
+
+#ImportPrevApp.disabled { background-image: url('skin/default/elements/ImportButtonLeft-disabled.png') !important; }
+#ImportNextApp.disabled { background-image: url('skin/default/elements/ImportButtonRight-disabled.png') !important; }
+
+#ImportSave,
+#ImportCancel {
+    width: 100px;
+    height: 40px;
+    background-image: url('skin/default/elements/ImportButton.png');
+    text-align: center;
+    line-height: 40px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#ImportSave:hover,
+#ImportCancel:hover {
+    background-image: url('skin/default/elements/ImportButton-hover.png');
+}

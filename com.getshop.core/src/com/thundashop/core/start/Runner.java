@@ -25,8 +25,6 @@ public class Runner {
         AppContext.appContext = context;
         Logger log = context.getBean(Logger.class);
         
-        System.out.println(args[0]);
-        
         StorePool storePool = new StorePool();
         AppContext.storePool = storePool;
         int port = 25554;

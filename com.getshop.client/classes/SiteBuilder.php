@@ -50,7 +50,7 @@ class SiteBuilder extends ApplicationBase {
         $appConfig = $this->api->getPageManager()->addApplicationToPage($pageId, "8402f800-1e7e-43b5-b3f7-6c7cabbf8942", "middle");
         $app = new ns_8402f800_1e7e_43b5_b3f7_6c7cabbf8942\ProductList();
         $app->setConfiguration($appConfig);
-        $_POST['data']['type' . $type] = true;
+        $_POST['data']['type' . $type] = "true";
         $_POST['data'][$view] = 1;
         $app->applicationAdded();
         unset($_POST['data']['type' . $type]);

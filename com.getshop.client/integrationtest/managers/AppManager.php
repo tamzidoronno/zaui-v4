@@ -97,6 +97,22 @@ class AppManager extends TestBase {
         
         // $settings === $myapp
     }
+    
+    /**
+     * Do you need a list of all the applications which has expired and are not payed for yet?
+     */
+    public function test_getUnpayedSubscription() {
+        $manager = $this->getApi()->getAppManager();
+        $unpayedapps = $manager->getUnpayedSubscription();
+    }
+    
+    /**
+     * Fetch a list of all subscription added to this store.
+     */
+    public function test_getAllApplicationSubscriptions() {
+        $manager = $this->getApi()->getAppManager();
+        $subscriptions = $manager->getAllApplicationSubscriptions();
+    }
 }
 
 ?>

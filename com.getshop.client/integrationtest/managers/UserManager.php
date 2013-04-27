@@ -216,6 +216,27 @@ class UserManager extends TestBase {
         $newPassword = "mynewpassword";
         $userManager->updatePassword($userId, $oldPassword, $newPassword);
     }
+    
+    /**
+     * How many administrators are connected to this webshop?
+     */
+    public function test_getAdministratorCount() {
+        $count = $this->getApi()->getUserManager()->getAdministratorCount();
+    }
+    
+    /**
+     * How many customers are connected to this webshop?
+     */
+    public function test_getCustomersCount() {
+        $count = $this->getApi()->getUserManager()->getCustomersCount();
+    }
+    
+    /**
+     * How many editors are connected to this webshop?
+     */
+    public function test_getEditorCount() {
+        $count = $this->getApi()->getUserManager()->getEditorCount();
+    }
 
 }
 

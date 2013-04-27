@@ -3,6 +3,9 @@
 class ProductManager extends TestBase {
     public $api;
     
+    /**
+     * @param GetShopApi $api
+     */
     public function __construct($api) {
         $this->api = $api;
     }
@@ -147,6 +150,17 @@ class ProductManager extends TestBase {
         
         $productManager->setMainImage($product1->id, "imageid_from_filemanager");
     }
+    
+    /**
+     * Fetch a list of all the latest / newest products.
+     */
+    public function test_getLatestProducts() {
+        $productManager = $this->api->getProductManager();
+        //Get the 10 latest products.
+        $latestProducts = $productManager->getLatestProducts(10);
+        
+    }
+    
     
     /**
      * Internal usage only 

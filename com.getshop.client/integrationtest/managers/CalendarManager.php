@@ -151,6 +151,20 @@ class CalendarManager extends TestBase {
         $entry->description = "A new description";
         $manager->saveEntry($entry);
     }
+    
+    /**
+     * If an administrator / editor need to confirm the entry in the calendar.
+     * This might be due to someone else which is not editor has tried to add an entry
+     * to the calendar. Then the editor need to confirm that this entry is valid.
+     */
+    public function test_confirmEntry() {
+        $manager = $this->getApi()->getCalendarManager();
+        
+        //First create an entry.
+        $entry = $manager->createEntry(2015, 01, 01);
+        $manager->confirmEntry($entry->entryId);
+    }
+    
 }
 
 ?>

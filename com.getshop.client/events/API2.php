@@ -2759,17 +2759,17 @@ class APIUserManager {
      /**
      * When the reset code has been sent, you can reset your password with the given reset code.
      * @param resetCode The code sent by sendResetCode call.
-     * @param email The email for the user to update.
+     * @param username The username for the user to update, the email address is the most common username.
      * @param newPassword The new password to send as plain text.
      * @return void
      * @throws ErrorException 
      */
 
-     public function resetPassword($resetCode, $email, $newPassword) {
+     public function resetPassword($resetCode, $username, $newPassword) {
           $data = array();
           $data['args'] = array();
           $data['args']["resetCode"] = json_encode($this->transport->object_unset_nulls($resetCode));
-          $data['args']["email"] = json_encode($this->transport->object_unset_nulls($email));
+          $data['args']["username"] = json_encode($this->transport->object_unset_nulls($username));
           $data['args']["newPassword"] = json_encode($this->transport->object_unset_nulls($newPassword));
           $data["method"] = "resetPassword";
           $data["interfaceName"] = "core.usermanager.IUserManager";
@@ -2797,17 +2797,17 @@ class APIUserManager {
      * If you need to reset the password for a given user, you need fetch a reset code by calling this call.
      * @param title The title of the message to attach to the reset code.
      * @param text The text to attach to the mail being sent with the reset code.
-     * @param email The email to identify the user.
+     * @param username The username to identify the user, the email address is the most common username.
      * @return void
      * @throws ErrorException 
      */
 
-     public function sendResetCode($title, $text, $email) {
+     public function sendResetCode($title, $text, $username) {
           $data = array();
           $data['args'] = array();
           $data['args']["title"] = json_encode($this->transport->object_unset_nulls($title));
           $data['args']["text"] = json_encode($this->transport->object_unset_nulls($text));
-          $data['args']["email"] = json_encode($this->transport->object_unset_nulls($email));
+          $data['args']["username"] = json_encode($this->transport->object_unset_nulls($username));
           $data["method"] = "sendResetCode";
           $data["interfaceName"] = "core.usermanager.IUserManager";
           return $this->transport->sendMessage($data);

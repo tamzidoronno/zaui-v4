@@ -75,6 +75,13 @@ class OrderManager extends TestBase {
         $orderManager->saveOrder($order);
     }
     
+    /**
+     * This function is not available in public.
+     */
+    public function test_setOrderStatus() {
+        
+    }
+    
 }
 
 ?>

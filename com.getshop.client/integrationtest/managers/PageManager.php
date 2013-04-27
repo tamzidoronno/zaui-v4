@@ -31,6 +31,85 @@ class PageManager extends TestBase {
     }
     
     /**
+     * Do you need to remove all applications added to a given page?
+     */
+    public function test_clearPageArea() {
+        $manager = $this->getApi()->getPageManager();
+        $page = $manager->createPage(1, "");
+
+        $manager->clearPageArea($page->id, "left");
+        $manager->clearPageArea($page->id, "middle");
+        $manager->clearPageArea($page->id, "right");
+    }
+    
+    
+    /**
+     * Fetch all instances of a given application.
+     * The applicationsettings id is the id identifying the application. 
+     */
+    public function test_getApplicationsBasedOnApplicationSettingsId() {
+        $manager = $this->getApi()->getPageManager();
+        
+        //The app settings id is the id generated when you create an application
+        //Remember the instanceid is the id of the instance using this applications.
+        //Have a look at appmanager for more information about this.
+        $appSettingsId = "someappsettingsid";
+        $instances = $manager->getApplicationsBasedOnApplicationSettingsId($appSettingsId);
+    }
+    
+    
+    /**
+     * Do you need all instances created by a given application for a given area?
+     */
+    public function test_getApplicationsByPageAreaAndSettingsId() {
+        $manager = $this->getApi()->getPageManager();
+        
+        //The app settings id is the id generated when you create an application
+        //Remember the instanceid is the id of the instance using this applications.
+        //Have a look at appmanager for more information about this.
+        $appSettingsId = "someappsettingsid";
+        $pageArea = "left";
+        $instances = $manager->getApplicationsByPageAreaAndSettingsId($appSettingsId, $pageArea);
+    }
+    
+    
+    /**
+     * Do you need all instances for a given page?
+     */
+    public function test_getApplicationsForPage() {
+        $manager = $this->getApi()->getPageManager();
+        
+        //This will get all applications for the homepage.
+        $pageid = "home";
+        $instances = $manager->getApplicationsForPage($pageid);
+    }
+    
+    
+    /**
+     * Somethimes it is useful to remove all instances for a given application.
+     */
+    public function test_removeAllApplications() {
+        $manager = $this->getApi()->getPageManager();
+        $appsettingsid = "someappsettingsid";
+        $manager->removeAllApplications($appsettingsid);
+    }
+    
+    /**
+     * When cloning an application... you need to change all the current instances into the clone.
+     * This is done so that you can modify the already added instances with the new cloned one.
+     * 
+     * This is how it is done.
+     */
+    public function test_swapApplication() {
+        $manager = $this->getApi()->getPageManager();
+        //In this case, we just swap it to itself.
+        $appsettingsid = "0cf21aa0-5a46-41c0-b5a6-fd52fb90216f";
+        $clonedid = "0cf21aa0-5a46-41c0-b5a6-fd52fb90216f";
+        $manager->swapApplication($appsettingsid, $clonedid);
+    }
+    
+    
+    /**
      * Adding a singleton application
      */
     public function test_addApplication() {

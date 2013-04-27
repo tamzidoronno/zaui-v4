@@ -120,6 +120,17 @@ class StoreManager extends TestBase {
         $storeManager = $this->getApi()->getStoreManager();
         $storeManager->setIntroductionRead();
     }
+    
+    /**
+     * Check if the web shop address is taken.
+     */
+    public function test_isAddressTaken() {
+        $storeManager = $this->getApi()->getStoreManager();
+        $isTaken = $storeManager->isAddressTaken("www.getshop.com");
+        if($isTaken) {
+            //This address is taken.
+        }
+    }
 }
 
 ?>

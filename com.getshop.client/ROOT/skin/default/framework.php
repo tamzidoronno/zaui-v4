@@ -1094,9 +1094,25 @@ a img {
     cursor: pointer;
 }
 
+
+.colors .color.red { background-color: red; }
+.colors .color.yellow { background-color: yellow; }
+.colors .color.white { background-color: white; border:solid 1px; }
+.colors .color.green { background-color: green; }
+.colors .color.blue { background-color: blue; }
+.colors .color.orange { background-color: orange; }
+
 .selectablegroup .selectable.selected {
     border: solid 2px #000;
 }
+
+
+.colors .color {
+    width: 50px;
+    height: 50px;
+    margin: 10px;
+}
+
 
 .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
 .ui-timepicker-div dl { text-align: left; }

@@ -147,9 +147,6 @@ class ApplicationManager extends FactoryBase {
         $applications[] = $application;
         $this->getFactory()->getApplicationPool()->setApplicationInstances($applications);
         $app = $this->getFactory()->getApplicationPool()->getApplicationInstance($application->id);
-        if (isset($_POST['data']['prepopulate']) && $_POST['data']['prepopulate'] == "false") {
-            return;
-        }
         $app->applicationAdded();
     }
 

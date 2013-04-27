@@ -218,7 +218,7 @@ public class UserManager extends ManagerBase implements IUserManager {
         List<User> allUsers = users.getAllUsers();
         User toReset = null;
         for (User user : allUsers) {
-            if (user.emailAddress.equalsIgnoreCase(email)) {
+            if (user.username.equalsIgnoreCase(email)) {
                 toReset = user;
             }
         }
@@ -236,12 +236,12 @@ public class UserManager extends ManagerBase implements IUserManager {
     }
 
     @Override
-    public void resetPassword(Integer resetCode, String email, String newPassword) throws ErrorException {
+    public void resetPassword(Integer resetCode, String username, String newPassword) throws ErrorException {
         UserStoreCollection users = getUserStoreCollection(storeId);
         List<User> allUsers = users.getAllUsers();
         User toReset = null;
         for (User user : allUsers) {
-            if (user.emailAddress.equalsIgnoreCase(email)) {
+            if (user.username.equalsIgnoreCase(username)) {
                 toReset = user;
             }
         }

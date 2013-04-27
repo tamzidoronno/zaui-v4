@@ -100,21 +100,21 @@ public interface IUserManager {
      * If you need to reset the password for a given user, you need fetch a reset code by calling this call.
      * @param title The title of the message to attach to the reset code.
      * @param text The text to attach to the mail being sent with the reset code.
-     * @param email The email to identify the user.
+     * @param username The username to identify the user, the email address is the most common username.
      * @return
      * @throws ErrorException 
      */
-    public void sendResetCode(String title, String text, String email) throws ErrorException;
+    public void sendResetCode(String title, String text, String username) throws ErrorException;
     
     /**
      * When the reset code has been sent, you can reset your password with the given reset code.
      * @param resetCode The code sent by sendResetCode call.
-     * @param email The email for the user to update.
+     * @param username The username for the user to update, the email address is the most common username.
      * @param newPassword The new password to send as plain text.
      * @return
      * @throws ErrorException 
      */
-    public void resetPassword(Integer resetCode, String email, String newPassword) throws ErrorException;
+    public void resetPassword(Integer resetCode, String username, String newPassword) throws ErrorException;
     
     /**
      * Delete a registered user.

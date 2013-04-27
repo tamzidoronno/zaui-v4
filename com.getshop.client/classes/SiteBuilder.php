@@ -26,6 +26,10 @@ class SiteBuilder extends ApplicationBase {
         $fileId2 = \FileUpload::storeFile($data2);
         $this->api->getBannerManager()->addImage($id, $fileId2);
 
+        $data3 = file_get_contents($path . "banner3.png");
+        $fileId3 = \FileUpload::storeFile($data3);
+        $this->api->getBannerManager()->addImage($id, $fileId3);        
+        
         $set = $this->api->getBannerManager()->getSet($id);
         $set->height = $height;
         $set->width = 998;

@@ -209,6 +209,19 @@ public class AppManager extends ManagerBase implements IAppManager {
 
             addedApps.put(config.appSettingsId, subscription);
         }
+        
+        List<String> toRemove = new ArrayList();
+        
+        for(String key : addedApps.keySet()) {
+            ApplicationSubscription sub = addedApps.get(key);
+            if(sub.numberOfInstancesAdded == 0) {
+                toRemove.add(key);
+            }
+        }
+        
+        for(String key : toRemove) {
+            addedApps.remove(key);
+        }
 
         return addedApps;
     }

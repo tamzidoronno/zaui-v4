@@ -58,7 +58,6 @@ class AppManager extends TestBase {
     public function test_saveApplication() {
         $api = $this->getApi();
         $appManager = $api->getAppManager();
-        print_r($appManager->createApplication("My new application 2"));
 //        $myapp = $appManager->createApplication("My new application 2");
 //        $myapp->price = 10.0;
 //        $appManager->saveApplication($myapp);

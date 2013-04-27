@@ -1,6 +1,7 @@
 <?php
 
 class UserManager extends TestBase {
+
     var $hasResetCode = false;
     var $isNotLoggedOn = false;
 
@@ -22,7 +23,7 @@ class UserManager extends TestBase {
 
         //Now verify the boss!
         $res = $userManager->isCaptain($user->id);
-        if($res) {
+        if ($res) {
             echo "Captain on Deck!";
         }
     }
@@ -32,11 +33,8 @@ class UserManager extends TestBase {
      */
     public function test_createUser() {
         $userManager = $this->getApi()->getUserManager();
-
         $user = $this->getApiObject()->core_usermanager_data_User();
         $user->fullName = "Ola Norman";
-        $user = $userManager->createUser($user);
-
         $userManager->createUser($user);
     }
 
@@ -49,10 +47,6 @@ class UserManager extends TestBase {
         $user = $this->getApiObject()->core_usermanager_data_User();
         $user->fullName = "Ola Norman";
         $user = $userManager->createUser($user);
-
-        //Just create a user to delete.
-        $user = $userManager->createUser($user);
-
         $userManager->deleteUser($user->id);
     }
 
@@ -64,9 +58,6 @@ class UserManager extends TestBase {
 
         $user = $this->getApiObject()->core_usermanager_data_User();
         $user->fullName = "Ola Norman";
-        $user = $userManager->createUser($user);
-
-        //Just create a user to search for
         $user = $userManager->createUser($user);
 
         $userManager->deleteUser($user->id);
@@ -96,7 +87,7 @@ class UserManager extends TestBase {
         $userManager = $this->getApi()->getUserManager();
         $thisIsMe = $userManager->getLoggedOnUser();
     }
-    
+
     /**
      * Fetch myself by userid.
      */
@@ -105,50 +96,50 @@ class UserManager extends TestBase {
         $thisIsMe = $userManager->getLoggedOnUser();
         $me = $userManager->getUserById($thisIsMe->id);
     }
-    
+
     /**
      * Fetch a list of given users.
      */
     public function test_getUserList() {
         $userManager = $this->getApi()->getUserManager();
-        
+
         //First create a user to fetch in the list.
         $user = $this->getApiObject()->core_usermanager_data_User();
         $user->fullName = "Ola Norman";
         $user = $userManager->createUser($user);
-        
+
         //Fill this list will the id of all users you want to fetch.
         $userIds = array();
         $userIds[] = $user->id;
-        
+
         $allUsers = $userManager->getUserList($userIds);
         foreach ($allUsers as $user) {
             /* @var $user core_usermanager_data_User */
         }
     }
-    
+
     /**
      * Check if i am logged on or not.
      */
     public function test_isLoggedIn() {
         $userManager = $this->getApi()->getUserManager();
         $loggedIn = $userManager->isLoggedIn();
-        if(!$loggedIn) {
+        if (!$loggedIn) {
             echo "Sorry mate, you are not logged on!";
         }
     }
-    
+
     /**
      * Doh, my name is really Homer Simpson!
      */
     public function test_saveUser() {
         $userManager = $this->getApi()->getUserManager();
-        
+
         $me = $userManager->getLoggedOnUser();
         $me->fullName = "Homer Simpson";
         $userManager->saveUser($me);
     }
-    
+
     /**
      * I am sick and tired of this, log me out please!
      */
@@ -156,24 +147,24 @@ class UserManager extends TestBase {
         $userManager = $this->getApi()->getUserManager();
         $userManager->logout();
     }
-    
+
     /**
      * Doh, i really need to log on to the system.
      */
     public function test_logOn() {
         $userManager = $this->getApi()->getUserManager();
-        
+
         $username = "test@getshop.com";
         $password = "getshoptestpassword";
         $userManager->logOn($username, $password);
     }
-    
+
     /**
      * Send me a rest code to use when resetting.
      */
     public function test_sendResetCode() {
         $userManager = $this->getApi()->getUserManager();
-        
+
         $title = "Your new reset code";
         $desc = "This is your reset code";
         $email = "test@getshop.com";
@@ -185,46 +176,47 @@ class UserManager extends TestBase {
      */
     public function test_resetPassword() {
         $userManager = $this->getApi()->getUserManager();
-        
+
         $resetCode = 123322; //The reset code sent by sendResetCode();
         $email = "test@getshop.com";
         $newPassword = "getshoptestpassword";
-        
+
         //Reset the password if you got the reset code.
-        if($this->hasResetCode) {
+        if ($this->hasResetCode) {
             $userManager->resetPassword($resetCode, $email, $newPassword);
         }
     }
-    
+
     /**
      * Logon using a key.
      */
     public function test_logonUsingKey() {
         $userManager = $this->getApi()->getUserManager();
-        
+
         //First create a user to fetch in the list.
         $user = $this->getApiObject()->core_usermanager_data_User();
         $user->fullName = "Ola Norman";
         $user->key = "asdfasfasdfasdf";
         $user = $userManager->createUser($user);
-        
+
         //logon with they key.
-        if($this->isNotLoggedOn) {
+        if ($this->isNotLoggedOn) {
             $userManager->logonUsingKey($user->key);
         }
     }
-    
+
     /**
      * Update your own password for example.
      */
     public function test_updatePassword() {
         $userManager = $this->getApi()->getUserManager();
-        
+
         $userId = $userManager->getLoggedOnUser()->id;
         $oldPassword = "getshoptestpassword";
         $newPassword = "mynewpassword";
         $userManager->updatePassword($userId, $oldPassword, $newPassword);
     }
+
 }
 
 ?>

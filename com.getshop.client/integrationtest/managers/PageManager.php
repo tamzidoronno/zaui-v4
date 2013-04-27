@@ -23,7 +23,7 @@ class PageManager extends TestBase {
         $manager = $this->getApi()->getPageManager();
 
         //First create an application you want to add.";
-        $config = $manager->addApplication("LeftMenu");
+        $config = $manager->addApplication("00d8f5ce-ed17-4098-8925-5697f6159f66");
 
         //Now make it inheritated.
         $config->inheritate = 1;
@@ -34,8 +34,7 @@ class PageManager extends TestBase {
      * Adding a singleton application
      */
     public function test_addApplication() {
-        $manager = $this->getApi()->getPageManager();
-        $manager->addApplication("GoogleAnalytics");
+        $this->addApp("0cf21aa0-5a46-41c0-b5a6-fd52fb90216f");
     }
     
     /**
@@ -47,7 +46,7 @@ class PageManager extends TestBase {
         //Create a page to attach the app to.
         $page = $manager->createPage(1, "");
         
-        $manager->addApplicationToPage($page->id, "LeftMenu", "middle");
+        $app = $this->addAppToPage($page->id);
     }
    
     /**
@@ -122,7 +121,7 @@ class PageManager extends TestBase {
         
         //Create a page to attach the app to.
         $page = $manager->createPage(1, "");
-        $app = $manager->addApplicationToPage($page->id, "LeftMenu", "middle");
+        $app = $this->addAppToPage($page->id);
         
         //remove the application.
         $manager->removeApplication($app->id, $page->id);
@@ -136,7 +135,7 @@ class PageManager extends TestBase {
         
         //Create a page to attach the app to.
         $page = $manager->createPage(1, "");
-        $app = $manager->addApplicationToPage($page->id, "LeftMenu", "middle");
+        $app = $this->addAppToPage($page->id);
         
         $manager->reorderApplication($page->id, $app->id, true);
     }
@@ -148,7 +147,7 @@ class PageManager extends TestBase {
         $manager = $this->getApi()->getPageManager();
         
         //Add a singleton application
-        $app = $manager->addApplication("GoogleAnalytics");
+        $app = $this->addApp("0cf21aa0-5a46-41c0-b5a6-fd52fb90216f");
         
         $setting = $this->getApiObject()->core_common_Setting();
         $setting->id = "google_ad_key";
@@ -169,7 +168,7 @@ class PageManager extends TestBase {
         
         //Create an application instance.
         $page = $manager->createPage(1, "");
-        $app = $manager->addApplicationToPage($page->id, "LeftMenu", "middle");
+        $app = $this->addAppToPage($page->id);
         $manager->setApplicationSticky($app->id, 1);
     }
 
@@ -182,7 +181,7 @@ class PageManager extends TestBase {
         $manager = $this->getApi()->getPageManager();
         
         // Need to add a application first before we can delete it.
-        $app = $manager->addApplication("Bring");
+        $app = $manager->addApplication("2da52bbc-a392-4125-92b6-eec1dc4879e9");
         
         // Deleting the bring application
         $manager->deleteApplication($app->id);
@@ -208,7 +207,7 @@ class PageManager extends TestBase {
      */
     public function test_addExistingApplicationToPageArea() {
         $manager = $this->getApi()->getPageManager();
-        $appConfiguration = $manager->addApplicationToPage("home", "LeftMenu", "left");
+        $appConfiguration = $this->addAppToPage("home");
         $manager->addExistingApplicationToPageArea("checkout", $appConfiguration->id, "left");
     }
     
@@ -240,9 +239,7 @@ class PageManager extends TestBase {
         
         //Create a page to attach the app to.
         $page = $manager->createPage(1, "");
-        
-        $app = $manager->addApplicationToPage($page->id, "LeftMenu", "middle");
-       
+        $app = $this->addAppToPage($page->id);
         $appIds = array();
         $appIds[] = $app->id;
         
@@ -282,6 +279,16 @@ class PageManager extends TestBase {
             echo "Failed to find page name";
             exit(0);
         }
+    }
+    
+    public function addApp($appSettingsId) {
+        $manager = $this->getApi()->getPageManager();
+        return $manager->addApplication($appSettingsId);
+    }
+
+    public function addAppToPage($pageid) {
+        $manager = $this->getApi()->getPageManager();
+        return $manager->addApplicationToPage($pageid, "00d8f5ce-ed17-4098-8925-5697f6159f66", "middle");
     }
 }
 

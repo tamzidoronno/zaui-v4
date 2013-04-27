@@ -80,13 +80,6 @@ public class AddApplicationsToDatabase {
                 ApplicationSettings.Type.System, false));
         
         apps.add(createSettings(
-                "Cleanish", 
-                "0cec32f4-d7eb-45bf-a58e-6ca3b79ee72d", 
-                emtpy, 
-                "", 
-                ApplicationSettings.Type.Theme, false));
-        
-        apps.add(createSettings(
                 "Facebook", 
                 "ba885f72-f571-4a2e-8770-e91cbb16b4ad", 
                 emtpy, 
@@ -426,6 +419,24 @@ public class AddApplicationsToDatabase {
         getshopTheme.ownerStoreId = "cdae85c1-35b9-45e6-a6b9-fd95c18bb291";
         apps.add(getshopTheme);
 
+        ApplicationSettings cleanish = createSettings(
+                "Cleanish", 
+                "0cec32f4-d7eb-45bf-a58e-6ca3b79ee72d", 
+                emtpy, 
+                "", 
+                ApplicationSettings.Type.Theme, false);
+        cleanish.isPublic = true;
+        apps.add(cleanish);
+        
+        ApplicationSettings bluesky = createSettings(
+                "BlueSkyTheme", 
+                "929e10e0-af3b-11e2-9e96-0800200c9a66", 
+                emtpy, 
+                "", 
+                ApplicationSettings.Type.Theme, false);
+        bluesky.isPublic = true;
+        apps.add(bluesky);
+        
         return apps;
     }
     

@@ -80,6 +80,13 @@ public class AddApplicationsToDatabase {
                 ApplicationSettings.Type.System, false));
         
         apps.add(createSettings(
+                "Cleanish", 
+                "0cec32f4-d7eb-45bf-a58e-6ca3b79ee72d", 
+                emtpy, 
+                "", 
+                ApplicationSettings.Type.Theme, false));
+        
+        apps.add(createSettings(
                 "Facebook", 
                 "ba885f72-f571-4a2e-8770-e91cbb16b4ad", 
                 emtpy, 

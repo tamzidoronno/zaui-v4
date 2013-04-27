@@ -176,7 +176,6 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     public Store createStore(String shopname, String email, String password) throws ErrorException {
         String webAddress = shopname.replace(" ", "").toLowerCase();
         
-        GetShop getshopManager = getManager(GetShop.class);
         if(isAddressTaken(webAddress)) {
             throw new ErrorException(94);
         }

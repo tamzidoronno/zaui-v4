@@ -306,17 +306,17 @@ public class APIUserManager {
      /**
      * When the reset code has been sent, you can reset your password with the given reset code.
      * @param resetCode The code sent by sendResetCode call.
-     * @param email The email for the user to update.
+     * @param username The username for the user to update, the email address is the most common username.
      * @param newPassword The new password to send as plain text.
      * @return void
      * @throws ErrorException 
      */
 
-     public void resetPassword(Integer resetCode, String email, String newPassword)  throws Exception  {
+     public void resetPassword(Integer resetCode, String username, String newPassword)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new HashMap();
           data.args.put("resetCode",new Gson().toJson(resetCode));
-          data.args.put("email",new Gson().toJson(email));
+          data.args.put("username",new Gson().toJson(username));
           data.args.put("newPassword",new Gson().toJson(newPassword));
           data.method = "resetPassword";
           data.interfaceName = "core.usermanager.IUserManager";
@@ -344,17 +344,17 @@ public class APIUserManager {
      * If you need to reset the password for a given user, you need fetch a reset code by calling this call.
      * @param title The title of the message to attach to the reset code.
      * @param text The text to attach to the mail being sent with the reset code.
-     * @param email The email to identify the user.
+     * @param username The username to identify the user, the email address is the most common username.
      * @return void
      * @throws ErrorException 
      */
 
-     public void sendResetCode(String title, String text, String email)  throws Exception  {
+     public void sendResetCode(String title, String text, String username)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new HashMap();
           data.args.put("title",new Gson().toJson(title));
           data.args.put("text",new Gson().toJson(text));
-          data.args.put("email",new Gson().toJson(email));
+          data.args.put("username",new Gson().toJson(username));
           data.method = "sendResetCode";
           data.interfaceName = "core.usermanager.IUserManager";
           String result = transport.send(data);

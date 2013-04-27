@@ -25,8 +25,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
- *
- * @author boggi
+ * The appmanager manage and keep track of the applications in getshop.
+ * Each application has an appsettingsid, and an instanceid. The appsettings
+ * id is the id of the main application, the instanceid is the id of the instances to the application.
  */
 @Component
 @Scope("prototype")

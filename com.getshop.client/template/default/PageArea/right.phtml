@@ -1,6 +1,10 @@
-<?php
-/* @var $this PageArea */
-foreach ($this->getApplications() as $application) {
-    $application->renderApplication();
-}
-?>
+<div class='righttop'></div>
+<div class='rightmiddle'>
+    <?php
+    /* @var $this PageArea */
+    foreach ($this->getApplications() as $application) {
+        $application->renderApplication();
+    }
+    ?>    
+</div>
+<div class='rightbottom'></div>

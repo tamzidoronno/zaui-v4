@@ -66,7 +66,7 @@ class SiteBuilder extends ApplicationBase {
     }
     
     public function addContentManager($pageId, $content, $where = "middle") {
-        $appConfig = $this->api->getPageManager()->addApplicationToPage($pageId, "320ada5b-a53a-46d2-99b2-9b0b26a7105a", "middle");
+        $appConfig = $this->api->getPageManager()->addApplicationToPage($pageId, "320ada5b-a53a-46d2-99b2-9b0b26a7105a", $where);
         if ($content) {
             $this->api->getContentManager()->saveContent($appConfig->id, $content);
         } else {
@@ -94,8 +94,8 @@ class SiteBuilder extends ApplicationBase {
      * @param type $name The name of the page
      * @return String the id of the page
      */
-    public function createPage($name) {
-        $page = $this->api->getPageManager()->createPage(4, "");
+    public function createPage($name, $layout=4) {
+        $page = $this->api->getPageManager()->createPage($layout, "");
         $topmenu = $this->getTopMenu();
         $entry = new core_listmanager_data_Entry();
         $entry->name = $name;

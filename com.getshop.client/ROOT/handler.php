@@ -40,7 +40,7 @@ class handler {
     }
 
 }
-
+ob_start();
 checkCreateApp();
 
 $factory = IocContainer::getFactorySingelton();
@@ -54,4 +54,12 @@ if (isset($_POST['core']['appid']) && $_POST['core']['appid']) {
 if (!isset($_POST['synchron'])) {
     $factory->run(true);
 }
+
+foreach($factory->getApi()->transport->errorCodes as $code) {
+    if($code === 93) {
+        header($_SERVER['SERVER_PROTOCOL'] . ' 402 payment needed', true, 402);
+    }
+}
+ob_end_flush();
+
 ?>

@@ -185,7 +185,7 @@ thundashop.common.activateCKEditor = function(id, autogrow, showMenu, width) {
 }
 
 thundashop.common.hideInformationBox = function(event) {
-    thundashop.common.unmask();
+    return thundashop.common.unmask();
 }
 
 thundashop.common.showLargeInformationBox = function(event, title) {
@@ -257,12 +257,16 @@ thundashop.common.mask = function() {
 }
 
 thundashop.common.unmask = function() {
+    var result = $.Deferred();
     var attr = $('#fullscreenmask').attr('locked');
     if (typeof(attr) === "undefined" || attr === "false") {
         $('#informationbox-holder').fadeOut(200);
-        $('#fullscreenmask').fadeOut(200);
+        $('#fullscreenmask').fadeOut(200, function() {
+            result.resolve();
+        });
         thundashop.MainMenu.unlockScroll();
     }
+    return result;
 }
 
 thundashop.common.lockMask = function() {

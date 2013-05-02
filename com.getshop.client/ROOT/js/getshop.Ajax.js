@@ -10,8 +10,8 @@ var hasFadeInEffect = false;
 thundashop.Namespace.Register("thundashop.Ajax");
 
 thundashop.handleAjaxError = function(error, textstatus) {
-    $('#loaderbox').hide();
-    if(error.status === 402) {
+    $('#loaderbox').hide(); 
+   if(error.status === 402) {
         var result = thundashop.common.hideInformationBox();
         result.done(function() {
             var event = thundashop.Ajax.createEvent('','loadpaymentinfo',$(this), {});

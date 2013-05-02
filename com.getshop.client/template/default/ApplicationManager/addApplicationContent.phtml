@@ -43,7 +43,9 @@ $subscriptions = $factory->getApi()->getAppManager()->getAllApplicationSubscript
             } else {
                 $checked = "CHECKED";
             }
-            echo "<input type='checkbox' gsname='prepopulate' $checked> Prepopulate example data";
+            $disabled = !$factory->hasSelectedDesign() ? "disabled" : "";
+            $checked = !$factory->hasSelectedDesign() ? "checked" : $checked;
+            echo "<input type='checkbox' gsname='prepopulate' $checked $disabled> Prepopulate example data";
         }
         ?>
     </div>

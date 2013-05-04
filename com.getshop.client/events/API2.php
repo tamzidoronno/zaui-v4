@@ -2361,6 +2361,23 @@ class APIStoreManager {
      * Extended mode is a more advanced version of the ui where there is no limitation to what can be created / made.
      * @param toggle True or false depending if this webshop should have access to the extended mode.
      * @param password A password given by getshop to toggle this option.
+     * @return void
+     * @throws ErrorException 
+     */
+
+     public function delete() {
+          $data = array();
+          $data['args'] = array();
+          $data["method"] = "delete";
+          $data["interfaceName"] = "core.storemanager.IStoreManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
+     * Enable extended support for this webshop.
+     * Extended mode is a more advanced version of the ui where there is no limitation to what can be created / made.
+     * @param toggle True or false depending if this webshop should have access to the extended mode.
+     * @param password A password given by getshop to toggle this option.
      * @return core_storemanager_data_Store
      * @throws ErrorException 
      */

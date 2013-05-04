@@ -46,6 +46,23 @@ public class APIStoreManager {
      * Extended mode is a more advanced version of the ui where there is no limitation to what can be created / made.
      * @param toggle True or false depending if this webshop should have access to the extended mode.
      * @param password A password given by getshop to toggle this option.
+     * @return void
+     * @throws ErrorException 
+     */
+
+     public void delete()  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new HashMap();
+          data.method = "delete";
+          data.interfaceName = "core.storemanager.IStoreManager";
+          String result = transport.send(data);
+     }
+
+     /**
+     * Enable extended support for this webshop.
+     * Extended mode is a more advanced version of the ui where there is no limitation to what can be created / made.
+     * @param toggle True or false depending if this webshop should have access to the extended mode.
+     * @param password A password given by getshop to toggle this option.
      * @return Store
      * @throws ErrorException 
      */

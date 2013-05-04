@@ -109,4 +109,7 @@ public interface IStoreManager {
      */
     @Administrator
     public Store enableExtendedMode(boolean toggle, String password) throws ErrorException;
+    
+    @Administrator
+    public void delete() throws ErrorException;
 }

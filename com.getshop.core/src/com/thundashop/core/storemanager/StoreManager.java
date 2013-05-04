@@ -75,7 +75,9 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
     private Store getStore(String id) {
         Store store = stores.get(id);
-        store.storeId = storeId;
+        if (store != null) {
+            store.storeId = storeId;
+        }
         return store;
     }
 
@@ -302,5 +304,16 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         }
         
         return false;
+    }
+
+    @Override
+    public void delete() throws ErrorException {
+        Store store = getMyStore();
+        if (store == null) {
+            throw new ErrorException(26);
+        }
+        
+        stores.remove(store.id);
+        databaseSaver.deleteObject(store, credentials);
     }
 }

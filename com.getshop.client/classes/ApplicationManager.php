@@ -361,5 +361,9 @@ class ApplicationManager extends FactoryBase {
     public function ping() {
         
     }
+    
+    public function deleteStore() {
+        $this->getFactory()->getApi()->getStoreManager()->delete();
+    }
 }
 ?>

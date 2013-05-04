@@ -1,14 +1,11 @@
 package com.thundashop.core.storemanager;
 
-import com.thundashop.app.logomanager.data.SavedLogo;
 import com.thundashop.core.common.CachingKey;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 public class StoreManagerCache implements IStoreManager {
     private StoreManager manager;
@@ -108,5 +105,10 @@ public class StoreManagerCache implements IStoreManager {
     public boolean isAddressTaken(String address) throws ErrorException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
+    @Override
+    public void delete() throws ErrorException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+   
 }

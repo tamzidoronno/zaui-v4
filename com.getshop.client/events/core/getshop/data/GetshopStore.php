@@ -18,5 +18,11 @@ class core_getshop_data_GetshopStore {
 	/** @var String */
 	public $configEmail;
 
+	/** @var String */
+	public $hasChrome;
+
+	/** @var String */
+	public $userAgents;
+
 }
 ?>

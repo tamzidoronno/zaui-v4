@@ -114,7 +114,8 @@ thundashop.Skeleton = {
         
         var callback = function() {
             window.location.hash="page=home&app="+appSettingsId;
-            document.getElementById('mainlessstyle').href='StyleSheet.php';
+            var random = Math.random();
+            document.getElementById('mainlessstyle').href='StyleSheet.php?rand=' + random;
             thundashop.common.unlockMask();
             thundashop.common.hideInformationBox(null);
         }

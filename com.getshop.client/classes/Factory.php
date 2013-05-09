@@ -151,8 +151,7 @@ class Factory extends FactoryBase {
     public function initialize() {
         $this->store = $this->getApi()->getStoreManager()->initializeStore($_SERVER['HTTP_HOST'], session_id());
         if($this->isEditorMode()) {
-            $this->checkUserAgentAndUpdate();
-            if(!strstr(strtolower($_SERVER['HTTP_USER_AGENT']), "chrome")) {
+            if(!$this->checkUserAgentAndUpdate()) {
                 $this->includefile("chromeonly");
                 exit(0);
             }
@@ -547,15 +546,24 @@ class Factory extends FactoryBase {
     public function checkUserAgentAndUpdate() {
         $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
         $save = false;
+        $agent = false;
+        
+        $ua = strtolower($_SERVER['HTTP_USER_AGENT']);
+        
+        if(strstr($ua, "chrome")) {
+            $agent = "chrome";
+        }
+        if(strstr($ua, "firefox")) {
+            $agent = "firefox";
+            
+        }
         if(!$user->userAgent) {
             $user->userAgent = $_SERVER['HTTP_USER_AGENT'];
             $save = true;
         }
-        if(!$user->hasChrome) {
-            if(strstr(strtolower($_SERVER['HTTP_USER_AGENT']), "chrome")) {
-                $user->hasChrome = true;
-                $save = true;
-            }
+        if(!$user->hasChrome && strstr($ua, "chrome")) {
+            $user->hasChrome = true;
+            $save = true;
         }
         
         if($save) {
@@ -563,8 +571,8 @@ class Factory extends FactoryBase {
             \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::setLoggedOn($user);
         }
         
+        return $agent;
     }
-
 }
 
 ?>

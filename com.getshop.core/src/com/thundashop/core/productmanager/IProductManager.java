@@ -129,5 +129,13 @@ public interface IProductManager {
      */
     public void addAttributeGroupToProduct(String productId, String attributeGroup, String attribute) throws ErrorException;
     
+    /**
+     * Oh, so you added an attribute to a product which where not ment to be?
+     * @param productId The id of the product.
+     * @param attributeGroupId The id for the product group attached.
+     */
+    public void removeAttributeGroupFromProduct(String productId, String attributeGroupId) throws ErrorException;
+
+    
     
 }

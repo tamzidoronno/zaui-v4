@@ -139,4 +139,12 @@ public class ProductManager extends AProductManager implements IProductManager {
         product.addAttribute(group.id, value);
         saveProduct(product);
     }
+
+    @Override
+    public void removeAttributeGroupFromProduct(String productId, String attributeGroupId) throws ErrorException {
+        Product product = getProduct(productId);
+        product.attributes.remove(attributeGroupId);
+        saveProduct(product);
+    }
+    
 }

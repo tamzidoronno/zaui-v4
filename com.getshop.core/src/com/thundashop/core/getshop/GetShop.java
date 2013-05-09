@@ -71,7 +71,9 @@ public class GetShop extends ManagerBase implements IGetShop {
         Credentials credentials = new Credentials(UserManager.class);
         credentials.manangerName = "UserManager";
         credentials.storeid = store.id;
-        
+        getshopstore.userAgents = new ArrayList();
+                
+                
         List<DataCommon> users = database.retreiveData(credentials);
         for (DataCommon duser : users) {
             if (duser instanceof User) {
@@ -80,6 +82,12 @@ public class GetShop extends ManagerBase implements IGetShop {
                     getshopstore.email = user.emailAddress;
                     getshopstore.lastLoggedIn = user.lastLoggedIn;
                     getshopstore.username = user.username;
+                }
+                if(user.type == User.Type.ADMINISTRATOR) {
+                    if(user.hasChrome) {
+                        getshopstore.hasChrome = true;
+                    }
+                    getshopstore.userAgents.add(user.userAgent);
                 }
             }
         }

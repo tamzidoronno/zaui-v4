@@ -365,5 +365,10 @@ class ApplicationManager extends FactoryBase {
     public function deleteStore() {
         $this->getFactory()->getApi()->getStoreManager()->delete();
     }
+    
+    public function updateSmallCart() {
+        $small = new \ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager();
+        $small->renderSmallCartView();
+    }
 }
 ?>

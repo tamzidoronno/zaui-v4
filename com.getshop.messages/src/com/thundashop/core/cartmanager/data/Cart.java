@@ -45,8 +45,10 @@ public class Cart extends DataCommon {
     
     public void removeProduct(String productId) {
         Product product = getProductById(productId);
-        if (product != null)
-            products.remove(product);
+        if (product != null) {
+            products.remove(product.id);
+            counter.remove(product.id);
+        }
     }
 
     public int getProductCount(Product product) {

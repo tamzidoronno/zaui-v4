@@ -21,6 +21,25 @@ public class APIProductManager {
       }
 
      /**
+     * Add an attribute to a product.
+     * @param productId The id of the product to attach it to.
+     * @param attributeGroup The name of the attribute group, if it does not exists, it is being added to the attribute pool.
+     * @param attribute The name of the attribute, leave this empty to create a new attribute group.
+     * @throws ErrorException 
+     */
+
+     public void addAttributeGroupToProduct(String productId, String attributeGroup, String attribute)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new HashMap();
+          data.args.put("productId",new Gson().toJson(productId));
+          data.args.put("attributeGroup",new Gson().toJson(attributeGroup));
+          data.args.put("attribute",new Gson().toJson(attribute));
+          data.method = "addAttributeGroupToProduct";
+          data.interfaceName = "core.productmanager.IProductManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * add image to specified product
      * 
      * @param productId

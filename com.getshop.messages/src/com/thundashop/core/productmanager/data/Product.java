@@ -27,10 +27,16 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public double price;
     public String name;
     public int stockQuantity;
+    public String pageId;
+    
+    //AttributegroupId, AttributeSelected
+    public HashMap<String, String> attributes;
     
     @Transient
     public Page page;
-    public String pageId;
+    
+    @Transient
+    public HashMap<String, AttributeGroup> attributesList;
     
     /**
      * Should always be in gram.
@@ -169,6 +175,13 @@ public class Product extends DataCommon implements Comparable<Product>  {
     @Override
     public int compareTo(Product t) {
         return t.rowCreatedDate.compareTo(rowCreatedDate);
+    }
+
+    public void addAttribute(String id, String value) {
+        if(attributes == null) {
+            attributes = new HashMap();
+        }
+        attributes.put(id, value);
     }
     
 }

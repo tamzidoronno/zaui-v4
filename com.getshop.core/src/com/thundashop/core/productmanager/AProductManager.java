@@ -5,14 +5,13 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pagemanager.IPageManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
+import com.thundashop.core.productmanager.data.AttributeGroup;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
 
 /**
  * @author ktonder
@@ -20,7 +19,8 @@ import java.util.logging.Level;
 public class AProductManager extends ManagerBase {
 
     protected HashMap<String, Product> products = new HashMap();
-
+    AttributePool pool;
+    
     public AProductManager(Logger log, DatabaseSaver databaseSaver) {
         super(log, databaseSaver);
     }
@@ -30,14 +30,22 @@ public class AProductManager extends ManagerBase {
         if (product != null && product.pageId != null && product.page == null) {
             product.page = manager.getPage(product.pageId);
         }
+        
+        if(product != null && pool != null) {
+            product.attributesList = pool.attributeGroups;
+        }
     }
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
+        pool = new AttributePool();
         for (DataCommon object : data.data) {
             if (object instanceof Product) {
                 Product product = (Product) object;
                 products.put(product.id, product);
+            }
+            if (object instanceof AttributeGroup) {
+                pool.addFromDatabase((AttributeGroup) object);
             }
         }
     }

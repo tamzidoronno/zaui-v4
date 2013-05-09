@@ -5,6 +5,7 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Events;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.listmanager.ListManager;
+import com.thundashop.core.productmanager.data.AttributeGroup;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
 import java.util.ArrayList;
@@ -30,12 +31,16 @@ public class ProductManager extends AProductManager implements IProductManager {
     public ProductManager(Logger log, DatabaseSaver databaseSaver) {
         super(log, databaseSaver);
     }
+    
+    @Override
+     public void onReady() {
+        pool.initialize(credentials, storeId, databaseSaver);
+     }
 
     @Override
     public Product saveProduct(Product product) throws ErrorException {
         if (product.id == null || product.id.equals(""))
-            throw new ErrorException(87);
-        
+            throw new ErrorException(87);        
         product.storeId = storeId;
         databaseSaver.saveObject(product, credentials);
         products.put(product.id, product);
@@ -121,5 +126,14 @@ public class ProductManager extends AProductManager implements IProductManager {
     @Override
     public List<Product> getLatestProducts(int count) throws ErrorException {
         return super.latestProducts(count);
+    }
+
+    @Override
+    public void addAttributeGroupToProduct(String productId, String attributeGroup, String attribute) throws ErrorException {
+        Product product = getProduct(productId);
+        String value = pool.getAttribute(attributeGroup, attribute);
+        AttributeGroup group = pool.getAttributeGroup(attributeGroup);
+        product.addAttribute(group.id, value);
+        saveProduct(product);
     }
 }

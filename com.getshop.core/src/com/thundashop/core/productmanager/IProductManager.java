@@ -119,4 +119,15 @@ public interface IProductManager {
      * @throws ErrorException 
      */
     public void addImage(String productId, String productImageId, String description) throws ErrorException;
+    
+    /**
+     * Add an attribute to a product.
+     * @param productId The id of the product to attach it to.
+     * @param attributeGroup The name of the attribute group, if it does not exists, it is being added to the attribute pool.
+     * @param attribute The name of the attribute, leave this empty to create a new attribute group.
+     * @throws ErrorException 
+     */
+    public void addAttributeGroupToProduct(String productId, String attributeGroup, String attribute) throws ErrorException;
+    
+    
 }

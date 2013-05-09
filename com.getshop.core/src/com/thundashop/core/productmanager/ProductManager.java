@@ -130,6 +130,9 @@ public class ProductManager extends AProductManager implements IProductManager {
 
     @Override
     public void addAttributeGroupToProduct(String productId, String attributeGroup, String attribute) throws ErrorException {
+        if(attributeGroup.trim().length() == 0) {
+            return;
+        }
         Product product = getProduct(productId);
         String value = pool.getAttribute(attributeGroup, attribute);
         AttributeGroup group = pool.getAttributeGroup(attributeGroup);

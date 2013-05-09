@@ -353,6 +353,13 @@
 	}
 	
 	/**
+	 * @return \core_productmanager_data_AttributeGroup
+	 */
+	public static function core_productmanager_data_AttributeGroup() {
+		return new \core_productmanager_data_AttributeGroup();
+	}
+	
+	/**
 	 * @return \core_productmanager_data_ProductCriteria
 	 */
 	public static function core_productmanager_data_ProductCriteria() {

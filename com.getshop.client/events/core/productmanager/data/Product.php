@@ -18,11 +18,17 @@ class core_productmanager_data_Product extends core_common_DataCommon  {
 	/** @var String */
 	public $stockQuantity;
 
+	/** @var String */
+	public $pageId;
+
+	/** @var String */
+	public $attributes;
+
 	/** @var core_pagemanager_data_Page */
 	public $page;
 
 	/** @var String */
-	public $pageId;
+	public $attributesList;
 
 	/** @var String */
 	public $weight;

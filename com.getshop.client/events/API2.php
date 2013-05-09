@@ -1994,6 +1994,25 @@ class APIProductManager {
       }
 
      /**
+     * Add an attribute to a product.
+     * @param productId The id of the product to attach it to.
+     * @param attributeGroup The name of the attribute group, if it does not exists, it is being added to the attribute pool.
+     * @param attribute The name of the attribute, leave this empty to create a new attribute group.
+     * @throws ErrorException 
+     */
+
+     public function addAttributeGroupToProduct($productId, $attributeGroup, $attribute) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+          $data['args']["attributeGroup"] = json_encode($this->transport->object_unset_nulls($attributeGroup));
+          $data['args']["attribute"] = json_encode($this->transport->object_unset_nulls($attribute));
+          $data["method"] = "addAttributeGroupToProduct";
+          $data["interfaceName"] = "core.productmanager.IProductManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * add image to specified product
      * 
      * @param productId

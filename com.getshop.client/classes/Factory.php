@@ -113,8 +113,6 @@ class Factory extends FactoryBase {
         echo "\n" . '<script type="text/javascript" src="js/jquery.applicationPicker.js"></script>';
         echo "\n" . '<!--[if gte IE 8]><script src="js/jquery.xdr-transport.js"></script><![endif]-->';
 
-        echo "\n" . '<script type="text/javascript" src="https://www.google.com/jsapi"></script>';
-        echo "<script>google.load('visualization', '1.0', {'packages':['corechart']});</script>";
         ?>
         <script>
             $( document ).tooltip({ 

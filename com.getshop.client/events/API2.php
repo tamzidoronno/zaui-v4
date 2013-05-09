@@ -2136,6 +2136,22 @@ class APIProductManager {
      }
 
      /**
+     * Oh, so you added an attribute to a product which where not ment to be?
+     * @param productId The id of the product.
+     * @param attributeGroupId The id for the product group attached.
+     */
+
+     public function removeAttributeGroupFromProduct($productId, $attributeGroupId) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+          $data['args']["attributeGroupId"] = json_encode($this->transport->object_unset_nulls($attributeGroupId));
+          $data["method"] = "removeAttributeGroupFromProduct";
+          $data["interfaceName"] = "core.productmanager.IProductManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Remove an existing product.
      * 
      * @param productId The id of the product to remove.

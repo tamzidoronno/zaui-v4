@@ -5,7 +5,7 @@
 package com.thundashop.core.common;
 
 import com.thundashop.core.appmanager.AppManager;
-import com.thundashop.core.appmanager.UnpayedAppCache;
+import com.thundashop.core.appmanager.ApplicationPool;
 import com.thundashop.core.appmanager.data.ApplicationSubscription;
 import com.thundashop.core.loggermanager.LoggerManager;
 import com.thundashop.core.reportingmanager.ReportingManager;
@@ -121,32 +121,6 @@ public class StoreHandler {
         }
     }
     
-
-    public void invokeCache(JsonObject2 obj, Class[] types, Object[] argumentValues) throws ErrorException {
-        setSessionObject(obj.sessionId);
-        try {
-            Class cacheClass = loadCacheClass(obj.interfaceName);
-            if(cacheClass == null) {
-                return;
-            }
-            
-            Class aClass = loadClass(obj.interfaceName);
-            
-            ManagerBase manager = getManager(aClass);
-            Method executeMethod = getMethodToExecute(cacheClass, obj.method, types);
-            try {
-                Object toExcetute = cacheClass.getConstructor(manager.getClass(), String.class).newInstance(manager, obj.addr);
-                executeMethod.invoke(toExcetute, argumentValues);
-            }catch(Exception e) {
-//               e.printStackTrace();
-            }
-            
-        } catch (IllegalArgumentException ex) {
-            throw new ErrorException(85);
-        }
-        clearSessionObject();
-    }
-
     private String stackTraceToString(Throwable e) {
         String stackTrace = "";
         for (StackTraceElement element : e.getStackTrace()) {
@@ -163,6 +137,14 @@ public class StoreHandler {
         session.id = sessionId;
 
         for (ManagerBase base : messageHandler) {
+            /**
+             * We dont want to set the session for storemanager, 
+             * it is not scoped to prototype
+             */
+            if(base instanceof ApplicationPool ) {
+                continue;
+            }
+            
             base.session = session;
         }
 
@@ -198,7 +180,7 @@ public class StoreHandler {
         throw retex;
     }
 
-    public Annotation authenticateUserLevel(Method executeMethod) throws ErrorException {
+    public synchronized Annotation authenticateUserLevel(Method executeMethod) throws ErrorException {
         executeMethod = getCorrectMethod(executeMethod);
 
         if (executeMethod.getAnnotation(Internal.class) != null) {

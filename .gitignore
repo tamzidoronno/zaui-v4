@@ -9,6 +9,11 @@ com.getshop.messages/built-jar.properties
 com.getshop.messages/nbproject/private/private.properties
 com.getshop.messages/build/
 
-/com.getshop.core/nbproject/private/
-/com.getshop.messages/nbproject/private/
-com.getshop.client
+com.getshop.client/app
+com.getshop.client/uploadedfiles
+com.getshop.core/nbproject/private/
+com.getshop.messages/nbproject/private/
+
+com.getshop.client/app/
+com.getshop.client/uploadedfiles
+com.getshop.client/nbproject/private/

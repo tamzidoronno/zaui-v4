@@ -12,7 +12,7 @@ import com.thundashop.core.common.StoreComponent;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.messagehandler.data.Message;
-import com.thundashop.core.storemanager.StoreManager;
+import com.thundashop.core.storemanager.StorePool;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -22,6 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
+@Scope("prototype")
 public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnable {
     @Autowired
     public Logger logger;
@@ -46,7 +48,7 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
     public DatabaseSaver databaseSaver;
 
     @Autowired
-    public StoreManager storeManager;
+    public StorePool storeManager;
     
     public SMSFactoryImpl() {
         credentials = new Credentials(MessageManager.class);

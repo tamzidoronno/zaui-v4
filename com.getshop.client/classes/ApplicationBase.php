@@ -219,5 +219,17 @@ class ApplicationBase extends FactoryBase {
     public function setApplicationSettings($applicationSettings) {
         $this->applicationSettings = $applicationSettings;
     }
+    
+    public function renderWidgetArea($widgetAreaName, $dataObject) {
+        $apps = $this->getFactory()->getApplicationPool()->getApplicationsByWidgetArea($widgetAreaName);
+        foreach ($apps as $function => $app) {
+            if (!method_exists($app, $function)) {
+                continue;
+            }
+            echo "<div class='widget'>";
+                $app->$function($dataObject);
+            echo "</div>";
+        }
+    }
 }
 ?>

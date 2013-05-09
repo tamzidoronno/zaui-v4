@@ -4,7 +4,6 @@
  */
 package com.thundashop.core.common;
 
-import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
 import java.util.HashMap;
 
@@ -14,20 +13,20 @@ import java.util.HashMap;
  */
 public class StorePool {
     private HashMap<String, StoreHandler> storeHandlers = new HashMap();
-    private StoreManager storeManager;
+    private com.thundashop.core.storemanager.StorePool storePool;
 
     public StorePool() {
         if(AppContext.appContext != null) {
-            this.storeManager = AppContext.appContext.getBean(StoreManager.class);
+            this.storePool = AppContext.appContext.getBean(com.thundashop.core.storemanager.StorePool.class);
         }
     }
     
     public Object ExecuteMethod(JsonObject2 object, Class[] types, Object[] argumentValues) throws ErrorException {
         Object res;
         if (object.interfaceName.equals("core.storemanager.StoreManager") && object.method.equals("initializeStore")) {
-            res = storeManager.initializeStore((String)argumentValues[0], (String)argumentValues[1]);
+            res = storePool.initialize((String)argumentValues[0], (String)argumentValues[1]);
         } else if (object.interfaceName.equals("core.storemanager.StoreManager") && object.method.equals("createStore")) {
-            res = storeManager.createStore((String)argumentValues[0], (String)argumentValues[1], (String)argumentValues[2]);
+            res = storePool.createStoreObject((String)argumentValues[0], (String)argumentValues[1], (String)argumentValues[2]);
         } else {
             StoreHandler handler = getStoreHandler(object.sessionId);
             if(handler == null) {
@@ -38,14 +37,13 @@ public class StorePool {
         
         StoreHandler handler = getStoreHandler(object.sessionId);
         if(handler != null) {
-            handler.invokeCache(object, types, argumentValues);
             handler.logApiCall(object);
         }
         return res;
     }
 
-    public StoreHandler getStoreHandler(String sessionId) throws ErrorException {
-        Store store = storeManager.getStoreBySessionId(sessionId);
+    private StoreHandler getStoreHandler(String sessionId) throws ErrorException {
+        Store store = storePool.getStoreBySessionId(sessionId);
         if(store == null) {
             return null;
         }

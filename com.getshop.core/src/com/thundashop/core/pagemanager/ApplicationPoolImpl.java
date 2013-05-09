@@ -10,7 +10,6 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
-import com.thundashop.core.storemanager.data.StoreConfiguration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,9 +35,6 @@ public class ApplicationPoolImpl {
     @Autowired
     public Logger logger;
     
-    @Autowired
-    public StoreManager storeManager;
-    
     private String storeId;
     private Credentials credentials;
             
@@ -53,7 +49,6 @@ public class ApplicationPoolImpl {
     }
     
     public void addFromDatabase(AppConfiguration appConfiguration) {
-        System.out.println(appConfiguration.appName + " " + appConfiguration.id + " " + appConfiguration.appSettingsId);
         applications.put(appConfiguration.id, appConfiguration);
     }
     
@@ -210,7 +205,8 @@ public class ApplicationPoolImpl {
             }
         }
         
-        Store store = storeManager.getMyStore();
+        StoreManager storeManger = pageManager.getManager(StoreManager.class);
+        Store store = storeManger.getMyStore();
         store.configuration.colors.baseColor = "FF6103";
         store.configuration.colors.backgroundColor = "FF9955";
         store.configuration.colors.textColor = "000000";
@@ -246,6 +242,7 @@ public class ApplicationPoolImpl {
         if (setting.type.equals(ApplicationSettings.Type.Theme)) {
             Store store = pageManager.getStore();
             store.configuration.hasSelectedDesign = true;
+            StoreManager storeManager = pageManager.getManager(StoreManager.class);
             storeManager.saveStore(store.configuration);
         }
     }

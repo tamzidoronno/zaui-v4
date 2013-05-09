@@ -467,7 +467,7 @@ public class AddApplicationsToDatabase {
     
     public void showLinks() {
         for (ApplicationSettings app : addApplications()) {
-            System.out.println("ln -s ../../com.getshop.applications/apps/"+app.appName + " " + "ns_"+app.id.replace("-", "_"));
+            System.out.println("ln -s ../../../applications/apps/"+app.appName + " " + "ns_"+app.id.replace("-", "_"));
         }
     }
     
@@ -476,10 +476,10 @@ public class AddApplicationsToDatabase {
         AppContext.appContext = context;
         
         context.getBean(AddApplicationsToDatabase.class).insert();
-        context.getBean(AddApplicationsToDatabase.class).updateThemes();
-        context.getBean(AddApplicationsToDatabase.class).updateUserPages();
-        
-        AddPageSettingsIdToAppConfigurationObject.main(args);
+//        context.getBean(AddApplicationsToDatabase.class).updateThemes();
+//        context.getBean(AddApplicationsToDatabase.class).updateUserPages();
+//        
+//        AddPageSettingsIdToAppConfigurationObject.main(args);
 //        context.getBean(AddApplicationsToDatabase.class).showLinks();
         java.lang.System.exit(1);
     }

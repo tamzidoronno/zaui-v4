@@ -160,7 +160,7 @@ class ApplicationManagement extends ApplicationBase {
         }
         $settings->pageSingelton = $data['pagesingelton'];
         $settings->trialPeriode = $data['trialPeriode'];
-        
+        $settings = $this->setWidgets($settings);
         
         $this->getFactory()->getApi()->getAppManager()->saveApplication($settings);
         $this->settings = $settings;
@@ -169,6 +169,18 @@ class ApplicationManagement extends ApplicationBase {
         echo "<script>";
         echo "thundashop.common.Alert('Configuration save','The configuration has been saved');";
         echo "</script>";
+    }
+    
+    public function setWidgets($settings) {
+        $settings->connectedWidgets = array();
+        foreach ($_POST['data'] as $key => $value) {
+            if (strstr($key, "widget") && !strstr($key, "value") && isset($_POST['data'][$key."_value"]) && $_POST['data'][$key."_value"] != "") {
+                $valuekey = $value;
+                $value = $_POST['data'][$key."_value"];
+                $settings->connectedWidgets[$valuekey] = $value;
+            }
+        }
+        return $settings;
     }
 
     public function syncApplication() {

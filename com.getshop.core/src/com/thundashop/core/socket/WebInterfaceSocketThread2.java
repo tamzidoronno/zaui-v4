@@ -5,7 +5,6 @@ import com.thundashop.core.common.JsonObject2;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ErrorMessage;
 import com.thundashop.core.common.MessageBase;
@@ -113,9 +112,7 @@ public class WebInterfaceSocketThread2 implements Runnable {
         } catch (ErrorException d) {
             sendMessage(new ErrorMessage(d));
         }
-        
-        AppContext.cacheManager.executeOKSignal(object.addr);
-        
+   
         List<MessageBase> messages = new ArrayList();
         return messages;
     }

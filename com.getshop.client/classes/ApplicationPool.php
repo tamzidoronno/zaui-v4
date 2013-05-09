@@ -12,6 +12,8 @@ class ApplicationPool {
 
     /** @var Factory */
     private $factory;
+    
+    /** @var core_applicationmanager_ApplicationSettings[] */
     private $applicationList;
 
     function __construct($factory) {
@@ -330,6 +332,34 @@ class ApplicationPool {
         $appSettings->type = "SystemApplication";
         $breadCrumb->setApplicationSettings($appSettings);
         $this->addedApplicationInstances[] = $breadCrumb;
+    }
+
+    /**
+     * Returns a list of applications that 
+     * wants to print data for the application widget
+     * area
+     * 
+     * PS: This is a static application instance.
+     * It will not have an appConfiguration object.
+     * 
+     * @param ApplicationBase[]
+     */
+    public function getApplicationsByWidgetArea($widgetAreaName) {
+        $apps = array();
+        
+        foreach($this->addedApplicationInstances as $app) {
+            $settings = $app->getApplicationSettings();
+            
+            if (!isset($settings->connectedWidgets) || !$settings->connectedWidgets)
+                continue;
+
+            if(array_key_exists($widgetAreaName, $app->getApplicationSettings()->connectedWidgets)) {
+                $function = $app->getApplicationSettings()->connectedWidgets->{$widgetAreaName};
+                $apps[$function] = $app;
+            }
+        } 
+        
+        return $apps;
     }
     
 }

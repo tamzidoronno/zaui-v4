@@ -74,9 +74,10 @@ if(isset($_GET['logonwithkey'])) {
         <?php
         $html = init($factory);
 
-        $facebook = $factory->getApplicationPool()->getApplicationInstance("ba885f72-f571-4a2e-8770-e91cbb16b4ad");
-        if ($facebook) {
-            echo $facebook->renderIncludeFacebookApi();
+        $google = $factory->getApplicationPool()->getApplicationsInstancesByNamespace("ns_0cf21aa0_5a46_41c0_b5a6_fd52fb90216f");
+        if($google) {
+            /* @var $google \ns_0cf21aa0_5a46_41c0_b5a6_fd52fb90216f\GoogleAnalytics */
+            $google[0]->render();
         }
         
         $google = $factory->getApplicationPool()->getApplicationsInstancesByNamespace("ns_0cf21aa0_5a46_41c0_b5a6_fd52fb90216f");

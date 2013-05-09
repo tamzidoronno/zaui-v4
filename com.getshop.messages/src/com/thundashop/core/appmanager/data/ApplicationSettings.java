@@ -3,6 +3,7 @@ package com.thundashop.core.appmanager.data;
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 public class ApplicationSettings extends DataCommon implements Comparator<ApplicationSettings> {
@@ -15,6 +16,15 @@ public class ApplicationSettings extends DataCommon implements Comparator<Applic
         public static String Shipment = "ShipmentApplication";
         public static String Theme = "ThemeApplication";
     }
+
+    /**
+     * Widgets is allocated spaces in an app.
+     * A app is defining the widgets it has, and thereby allows other 
+     * applications to give data to the widgets.
+     * This maps has the widgetid as key and the value as the function on 
+     * this application it should try to run.
+     */
+    public HashMap<String,String> connectedWidgets = new HashMap();
     
     public String appName;
     public String description;

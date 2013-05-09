@@ -6,7 +6,6 @@ import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.StorePool;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.DatabaseSocketHandler;
-import com.thundashop.core.socket.CacheManager;
 import com.thundashop.core.socket.WebInterface2;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -39,11 +38,7 @@ public class Runner {
             context.getBean(Database.class).activateSandBox();
         }
         
-        new WebInterface2(log, storePool, port); //Version 2.
-        CacheManager cache = new CacheManager();
-        cache.start();
-        AppContext.cacheManager = cache;
-        
+        new WebInterface2(log, storePool, port); //Version 2.        
         context.getBean(DatabaseSocketHandler.class).startListener("");
     }
 }

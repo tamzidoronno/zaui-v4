@@ -48,7 +48,7 @@ public class ApplicationPool extends ManagerBase {
     }
     
     public synchronized void addApplicationSettings(ApplicationSettings settings) throws ErrorException {
-        settings.storeId = storeId;
+        settings.storeId = "all";
         databaseSaver.saveObject(settings, credentials);
         applications.put(settings.id, settings);
     }
@@ -89,8 +89,4 @@ public class ApplicationPool extends ManagerBase {
         Collections.sort(returnlist, new ApplicationSettings());
         return returnlist;
     }
-
-    
-    
-    
 }

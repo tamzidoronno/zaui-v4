@@ -5,6 +5,7 @@
 package com.thundashop.core.getshop.data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -17,4 +18,6 @@ public class GetshopStore {
     public String email;
     public String username;
     public String configEmail;
+    public boolean hasChrome;
+    public List<String> userAgents;
 }

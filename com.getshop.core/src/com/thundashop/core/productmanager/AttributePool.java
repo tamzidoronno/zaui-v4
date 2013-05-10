@@ -78,4 +78,41 @@ public class AttributePool {
         return attributeGroups.get(groupId);
     }
 
+    void renameGroup(String oldName, String newName) throws ErrorException {
+        AttributeGroup group = getAttributeGroup(oldName);
+        group.groupName = newName;
+        databaseSaver.saveObject(group, credentials);
+    }
+
+    void renameAttribute(String groupName, String oldAttributeName, String newAttributeName) throws ErrorException {
+        oldAttributeName = getAttribute(groupName, oldAttributeName);
+        newAttributeName = newAttributeName.trim();
+        AttributeGroup group = getAttributeGroup(groupName);
+        int index = 0;
+        if(group.attributes != null) {
+            for(int i = 0; i < group.attributes.size(); i++) {
+                String old = group.attributes.get(i);
+                if(old.equals(oldAttributeName)) {
+                    index = i;
+                    break;
+                }
+            }
+            group.attributes.add(index, newAttributeName);
+            group.attributes.remove(oldAttributeName);
+        }
+    }
+
+    void deleteGroup(String groupName) throws ErrorException {
+        AttributeGroup attribute = getAttributeGroup(groupName);
+        attributeGroups.remove(attribute.id);
+        databaseSaver.deleteObject(attribute, credentials);
+    }
+
+    void deleteAttribute(String groupName, String attribute) throws ErrorException {
+        AttributeGroup group = getAttributeGroup(groupName);
+        if(group.attributes != null) {
+            group.attributes.remove(attribute);
+        }
+    }
+
 }

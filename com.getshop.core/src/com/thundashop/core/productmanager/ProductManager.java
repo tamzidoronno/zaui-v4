@@ -146,5 +146,60 @@ public class ProductManager extends AProductManager implements IProductManager {
         product.attributes.remove(attributeGroupId);
         saveProduct(product);
     }
+
+    @Override
+    public void renameAttributeGroupName(String oldName, String newName) throws ErrorException {
+        pool.renameGroup(oldName, newName);
+    }
+
+    @Override
+    public void renameAttribute(String groupName, String oldAttributeName, String newAttributeName) throws ErrorException {
+        AttributeGroup group = pool.getAttributeGroup(groupName);
+        oldAttributeName = pool.getAttribute(groupName, oldAttributeName);
+        pool.renameAttribute(groupName, oldAttributeName, newAttributeName);
+        
+        //Check all products and rename them.
+        for(Product prod : products.values()) {
+            if(prod.attributes != null) {
+                String value = prod.attributes.get(group.id);
+                if(value != null && value.equals(oldAttributeName)) {
+                    prod.attributes.put(group.id, newAttributeName);
+                    saveProduct(prod);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void deleteGroup(String groupName) throws ErrorException {
+        AttributeGroup group = pool.getAttributeGroup(groupName);
+        pool.deleteGroup(groupName);
+        for(Product prod : products.values()) {
+            if(prod.attributes != null) {
+                if(prod.attributes.containsKey(group.id)) {
+                    prod.attributes.remove(group.id);
+                    saveProduct(prod);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void deleteAttribute(String groupName, String attribute) throws ErrorException {
+        AttributeGroup group = pool.getAttributeGroup(groupName);
+        attribute = pool.getAttribute(groupName, attribute);
+        pool.deleteAttribute(groupName, attribute);
+        
+        //Check all products and rename them.
+        for(Product prod : products.values()) {
+            if(prod.attributes != null) {
+                String value = prod.attributes.get(group.id);
+                if(value != null && value.equals(attribute)) {
+                    prod.attributes.remove(group.id);
+                    saveProduct(prod);
+                }
+            }
+        }
+    }
     
 }

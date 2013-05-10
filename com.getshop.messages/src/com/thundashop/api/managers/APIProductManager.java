@@ -183,6 +183,22 @@ public class APIProductManager {
      }
 
      /**
+     * Oh, so you added an attribute to a product which where not ment to be?
+     * @param productId The id of the product.
+     * @param attributeGroupId The id for the product group attached.
+     */
+
+     public void removeAttributeGroupFromProduct(String productId, String attributeGroupId)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new HashMap();
+          data.args.put("productId",new Gson().toJson(productId));
+          data.args.put("attributeGroupId",new Gson().toJson(attributeGroupId));
+          data.method = "removeAttributeGroupFromProduct";
+          data.interfaceName = "core.productmanager.IProductManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Remove an existing product.
      * 
      * @param productId The id of the product to remove.

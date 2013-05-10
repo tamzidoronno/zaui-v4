@@ -136,6 +136,37 @@ public interface IProductManager {
      */
     public void removeAttributeGroupFromProduct(String productId, String attributeGroupId) throws ErrorException;
 
+    /**
+     * Typically, i just enter in incorrect group name, and i just figured it out... :(<br>
+     * Well, this one helps you.
+     * @param oldName The old group name.
+     * @param newName The new group name.
+     * @throws ErrorException 
+     */
+    public void renameAttributeGroupName(String oldName, String newName) throws ErrorException;
     
     
+    /**
+     * Oh, I incorrectly wrote my attribute, i need to rename it for a specific group.
+     * @param groupName The name of the group where the attribute is located.
+     * @param oldAttributeName The old attribute text
+     * @param newAttributeName The new attribute text.
+     * @throws ErrorException 
+     */
+    public void renameAttribute(String groupName, String oldAttributeName, String newAttributeName) throws ErrorException;
+    
+    /**
+     * This attribute is not even in use, I want to delete it.
+     * @param groupName The name of the group to delete.
+     * @throws ErrorException 
+     */
+    public void deleteGroup(String groupName) throws ErrorException;
+    
+    /**
+     * I have an attribute attached to a group, but it does not seems to be in use, and i want to delete it.
+     * @param groupName The name of the group where the attribute is located.
+     * @param attribute The name of the attribute to remove.
+     * @throws ErrorException 
+     */
+    public void deleteAttribute(String groupName, String attribute) throws ErrorException;
 }

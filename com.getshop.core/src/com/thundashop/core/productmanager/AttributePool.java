@@ -115,4 +115,12 @@ public class AttributePool {
         }
     }
 
+    boolean attributeExists(String groupName, String newAttributeName) throws ErrorException {
+        AttributeGroup group = getAttributeGroup(groupName);
+        if(group.attributes != null) {
+            return group.attributes.contains(newAttributeName);
+        }
+        return false;
+    }
+
 }

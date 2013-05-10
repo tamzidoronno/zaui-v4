@@ -154,6 +154,11 @@ public class ProductManager extends AProductManager implements IProductManager {
 
     @Override
     public void renameAttribute(String groupName, String oldAttributeName, String newAttributeName) throws ErrorException {
+        
+        if(pool.attributeExists(groupName, newAttributeName)) {
+            throw new ErrorException(96);
+        }
+        
         AttributeGroup group = pool.getAttributeGroup(groupName);
         oldAttributeName = pool.getAttribute(groupName, oldAttributeName);
         pool.renameAttribute(groupName, oldAttributeName, newAttributeName);

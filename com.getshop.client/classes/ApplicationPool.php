@@ -111,9 +111,10 @@ class ApplicationPool {
             $instance = $namespace."\\".$myApp->appName;
             if(class_exists($instance)) {
                 $instance = new $instance();
-                $instance->configuration = API::core_common_AppConfiguration();
-                $instance->configuration->appSettingsId = $myApp->id;
-                $instance->configuration->appName = $myApp->appName;
+                $configuration = API::core_common_AppConfiguration();
+                $configuration->appSettingsId = $myApp->id;
+                $configuration->appName = $myApp->appName;
+                $instance->setConfiguration($configuration);
                 $instance->applicationSettings = $myApp;
                 $apps[] = $instance;
             }

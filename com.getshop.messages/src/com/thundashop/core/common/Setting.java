@@ -9,6 +9,7 @@ package com.thundashop.core.common;
  * @author ktonder
  */
 public class Setting extends DataCommon {
+    public String type = "";
     public String value = "";
     public boolean secure = false;
 }

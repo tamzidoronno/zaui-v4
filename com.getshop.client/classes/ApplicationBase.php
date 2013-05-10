@@ -80,6 +80,14 @@ class ApplicationBase extends FactoryBase {
     }
 
     public function setConfiguration($configuration) {
+        if(isset($configuration->settings)) {
+            foreach ($configuration->settings as $config) {
+                if (isset($config->type) && $config->type == "table") {
+                    $config->value = json_decode($config->value, true);
+                }
+            }
+        }
+
         $this->configuration = $configuration;
     }
 

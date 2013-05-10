@@ -33,6 +33,7 @@ public class AppConfiguration extends DataCommon {
             
             Setting clonedSetting = new Setting();
             clonedSetting.value = setting.value;
+            clonedSetting.type = setting.type;
             
             if (setting.secure)
                 clonedSetting.value = "****************";

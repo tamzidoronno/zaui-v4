@@ -97,6 +97,38 @@ public class APIProductManager {
      }
 
      /**
+     * I have an attribute attached to a group, but it does not seems to be in use, and i want to delete it.
+     * @param groupName The name of the group where the attribute is located.
+     * @param attribute The name of the attribute to remove.
+     * @throws ErrorException 
+     */
+
+     public void deleteAttribute(String groupName, String attribute)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new HashMap();
+          data.args.put("groupName",new Gson().toJson(groupName));
+          data.args.put("attribute",new Gson().toJson(attribute));
+          data.method = "deleteAttribute";
+          data.interfaceName = "core.productmanager.IProductManager";
+          String result = transport.send(data);
+     }
+
+     /**
+     * This attribute is not even in use, I want to delete it.
+     * @param groupName The name of the group to delete.
+     * @throws ErrorException 
+     */
+
+     public void deleteGroup(String groupName)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new HashMap();
+          data.args.put("groupName",new Gson().toJson(groupName));
+          data.method = "deleteGroup";
+          data.interfaceName = "core.productmanager.IProductManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Fetch a list of all the latest products.
      * @param count Number of products to fetch.
      * @return List<Product>
@@ -211,6 +243,43 @@ public class APIProductManager {
           data.args = new HashMap();
           data.args.put("productId",new Gson().toJson(productId));
           data.method = "removeProduct";
+          data.interfaceName = "core.productmanager.IProductManager";
+          String result = transport.send(data);
+     }
+
+     /**
+     * Oh, I incorrectly wrote my attribute, i need to rename it for a specific group.
+     * @param groupName The name of the group where the attribute is located.
+     * @param oldAttributeName The old attribute text
+     * @param newAttributeName The new attribute text.
+     * @throws ErrorException 
+     */
+
+     public void renameAttribute(String groupName, String oldAttributeName, String newAttributeName)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new HashMap();
+          data.args.put("groupName",new Gson().toJson(groupName));
+          data.args.put("oldAttributeName",new Gson().toJson(oldAttributeName));
+          data.args.put("newAttributeName",new Gson().toJson(newAttributeName));
+          data.method = "renameAttribute";
+          data.interfaceName = "core.productmanager.IProductManager";
+          String result = transport.send(data);
+     }
+
+     /**
+     * Typically, i just enter in incorrect group name, and i just figured it out... :(<br>
+     * Well, this one helps you.
+     * @param oldName The old group name.
+     * @param newName The new group name.
+     * @throws ErrorException 
+     */
+
+     public void renameAttributeGroupName(String oldName, String newName)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new HashMap();
+          data.args.put("oldName",new Gson().toJson(oldName));
+          data.args.put("newName",new Gson().toJson(newName));
+          data.method = "renameAttributeGroupName";
           data.interfaceName = "core.productmanager.IProductManager";
           String result = transport.send(data);
      }

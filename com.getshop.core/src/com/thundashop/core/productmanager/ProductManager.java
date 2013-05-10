@@ -1,5 +1,6 @@
 package com.thundashop.core.productmanager;
 
+import com.thundashop.core.productmanager.data.AttributeSummary;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Events;
@@ -205,6 +206,11 @@ public class ProductManager extends AProductManager implements IProductManager {
                 }
             }
         }
+    }
+
+    @Override
+    public AttributeSummary getAttributeSummary() throws ErrorException {
+        return cachedResult;
     }
     
 }

@@ -1,5 +1,6 @@
 package com.thundashop.core.productmanager;
 
+import com.thundashop.core.productmanager.data.AttributeSummary;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
@@ -169,4 +170,12 @@ public interface IProductManager {
      * @throws ErrorException 
      */
     public void deleteAttribute(String groupName, String attribute) throws ErrorException;
+    
+    /**
+     * Whenever you use the getproducts function call, you will be able to fetch a summary of the attributes.
+     * Comes in handy to filter result when fetching data from for example a product list.
+     * @return
+     * @throws ErrorException 
+     */
+    public AttributeSummary getAttributeSummary() throws ErrorException;
 }

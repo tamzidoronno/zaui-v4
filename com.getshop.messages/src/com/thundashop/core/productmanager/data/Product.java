@@ -30,13 +30,13 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public String pageId;
     
     //AttributegroupId, AttributeSelected
-    public HashMap<String, String> attributes;
+    public HashMap<String, String> attributes = new HashMap();
     
     @Transient
     public Page page;
     
     @Transient
-    public HashMap<String, AttributeGroup> attributesList;
+    public HashMap<String, AttributeGroup> attributesList = new HashMap();
     
     /**
      * Should always be in gram.

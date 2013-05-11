@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 public class AttributePool {
 
-    HashMap<String, AttributeGroup> attributeGroups;
+    HashMap<String, AttributeGroup> attributeGroups = new HashMap();
 
     private DatabaseSaver databaseSaver;
     private Credentials credentials;

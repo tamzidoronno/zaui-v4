@@ -1,7 +1,10 @@
 package com.thundashop.core.productmanager;
 
+import com.thundashop.core.productmanager.data.AttributeSummary;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.listmanager.ListManager;
+import com.thundashop.core.listmanager.data.Entry;
 import com.thundashop.core.pagemanager.IPageManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
@@ -20,6 +23,7 @@ public class AProductManager extends ManagerBase {
 
     protected HashMap<String, Product> products = new HashMap();
     AttributePool pool;
+    AttributeSummary cachedResult;
     
     public AProductManager(Logger log, DatabaseSaver databaseSaver) {
         super(log, databaseSaver);
@@ -98,6 +102,18 @@ public class AProductManager extends ManagerBase {
                 retProducts.add(product);
             }
         }
+        
+        if(searchCriteria.listId != null && searchCriteria.listId.trim().length() > 0) {
+            ListManager manager = getManager(ListManager.class);
+            List<Entry> list = manager.getList(searchCriteria.listId);
+            for(Entry entry : list) {
+                Product product = products.get(entry.productId);
+                finalize(product);
+                retProducts.add(product);
+            }
+        }
+        
+        buildAttributeCache(retProducts);
 
         return retProducts;
     }
@@ -118,5 +134,30 @@ public class AProductManager extends ManagerBase {
             limitedResult.add(result.get(i));
         }
         return limitedResult;
+    }
+
+    private void buildAttributeCache(ArrayList<Product> retProducts) {
+        AttributeSummary cache = new AttributeSummary();
+        cache.attributeCount = new HashMap();
+        for(Product prod : retProducts) {
+            if(prod.attributes != null) {
+                for(String groupId : prod.attributes.keySet()) {
+                    AttributeGroup group = pool.getAttributeGroupById(groupId);
+                    groupId = group.groupName;
+                    if(cache.attributeCount.get(groupId) == null) {
+                        cache.attributeCount.put(groupId, new HashMap());
+                    }
+                    
+                    String value = prod.attributes.get(group.id);
+                    HashMap<String, Integer> attributeCount = cache.attributeCount.get(groupId);
+                    if(attributeCount.get(value) == null) {
+                        attributeCount.put(value, 1);
+                    } else {
+                        attributeCount.put(value,attributeCount.get(value)+1);
+                    }
+                }
+            }
+        }
+        cachedResult = cache;
     }
 }

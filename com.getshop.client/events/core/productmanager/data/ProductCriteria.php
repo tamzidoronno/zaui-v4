@@ -10,6 +10,9 @@ class core_productmanager_data_ProductCriteria extends core_common_DataCommon  {
 	public $ids;
 
 	/** @var String */
+	public $listId;
+
+	/** @var String */
 	public $search;
 
 }

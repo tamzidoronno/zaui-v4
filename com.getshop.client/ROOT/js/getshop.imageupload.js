@@ -25,6 +25,14 @@
             } else if(oldHeight > maxHeight) {
                 ratio = maxHeight / oldHeight; 
             }
+            
+            if((oldHeight * ratio) > maxHeight) {
+                ratio = maxHeight / oldHeight; 
+            }
+            if((oldWidth * ratio) > maxWidth) {
+                ratio = maxWidth / oldWidth; 
+            }
+            
             return ratio;
         }
 
@@ -41,6 +49,8 @@
 
             img.onload = function() {
                 var ratio = getRatio(img.width, img.height, maxWidth, maxHeight);
+                console.log(img.width);
+                console.log(img.height);
                 canvas.width = img.width * ratio;
                 canvas.height = img.height * ratio;
                 canvas.hide();

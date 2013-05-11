@@ -15,5 +15,6 @@ public class ProductCriteria extends DataCommon {
     public ArrayList<String> parentPageIds = new ArrayList();
     public ArrayList<String> pageIds = new ArrayList();
     public ArrayList<String> ids = new ArrayList();
+    public String listId; //Fetch products from the listmanager.
     public String search = "";
 }

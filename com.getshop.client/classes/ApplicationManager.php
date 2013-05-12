@@ -155,6 +155,11 @@ class ApplicationManager extends FactoryBase {
         $applications[] = $application;
         $this->getFactory()->getApplicationPool()->setApplicationInstances($applications);
         $app = $this->getFactory()->getApplicationPool()->getApplicationInstance($application->id);
+        
+        if ($app instanceof \ShipmentApplication || $app instanceof \PaymentApplication) {
+            \HelperCart::clearSession(false);
+        }
+        
         $app->applicationAdded();
     }
 
@@ -287,7 +292,12 @@ class ApplicationManager extends FactoryBase {
 
     public function deleteApplication() {
         $appId = $_POST['data']['appId'];
-        $app = $this->getFactory()->getApplicationPool()->getApplicationSetting($appId);
+        $app = $this->getFactory()->getApplicationPool()->getApplicationInstance($appId);
+
+        if ($app instanceof \ShipmentApplication || $app instanceof \PaymentApplication) {
+            \HelperCart::clearSession(false);
+        }
+        
         $this->getFactory()->getApi()->getPageManager()->deleteApplication($appId);
 
         if (method_exists($app, "renderStandalone"))

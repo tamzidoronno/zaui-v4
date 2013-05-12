@@ -29,6 +29,16 @@ class HelperCart {
     public function getProductList() {
         return $this->cart->products;
     }
+    
+    public static function clearSession($includeAddress=true) {
+        if ($includeAddress) {
+            unset($_SESSION['tempaddress']);
+        }
+        unset($_SESSION['checkoutstep']);
+        unset($_SESSION['paymentMethod']);
+        unset($_SESSION['shippingtype']);
+        unset($_SESSION['shippingproduct']);
+    }
 
 }
 

@@ -17,7 +17,8 @@ thundashop.handleAjaxError = function(error, textstatus) {
             var event = thundashop.Ajax.createEvent('','loadpaymentinfo',$(this), {});
             thundashop.common.showInformationBox(event,'Payment information');
         });
-    }
+    };
+    PubSub.publish("AJAXERROR", error);
 };
 
 thundashop.Ajax = {

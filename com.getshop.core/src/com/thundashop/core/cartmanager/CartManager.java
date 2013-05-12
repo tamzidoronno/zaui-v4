@@ -85,4 +85,17 @@ public class CartManager extends ManagerBase implements ICartManager {
     public Cart getCart() throws ErrorException {
         return getCart(getSession().id);
     }
+
+    @Override
+    public Double getCartTotalAmount() throws ErrorException {
+        return getCart(getSession().id).getTotal();
+    }
+
+    @Override
+    public void clear() throws ErrorException {
+        Cart cart = getCart(getSession().id);
+        for (Product product : cart.getProductList()) {
+            removeProduct(product.id);
+        }
+    }
 }

@@ -20,5 +20,9 @@ class ShipmentApplication extends ApplicationBase {
     public function getDefaultShipmentType() {
         return "";
     }
+    
+    public function hasSubProducts() {
+        return false;
+    }
 }
 ?>

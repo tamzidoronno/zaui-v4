@@ -43,4 +43,18 @@ public interface ICartManager {
      * @throws ErrorException 
      */
     public Cart getCart() throws ErrorException;
+    
+    /**
+     * Returns the current total amount
+     * note, this does not include shipping.
+     * 
+     * @return
+     * @throws ErrorException 
+     */
+    public Double getCartTotalAmount() throws ErrorException;
+    
+    /**
+     * Clear the current shopping cart.
+     */
+    public void clear() throws ErrorException;
 }

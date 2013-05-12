@@ -816,6 +816,18 @@ class APICartManager {
      }
 
      /**
+     * Clear the current shopping cart.
+     */
+
+     public function clear() {
+          $data = array();
+          $data['args'] = array();
+          $data["method"] = "clear";
+          $data["interfaceName"] = "core.cartmanager.ICartManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Fetch the current cart.
      * @return core_cartmanager_data_Cart
      * @throws ErrorException 
@@ -827,6 +839,22 @@ class APICartManager {
           $data["method"] = "getCart";
           $data["interfaceName"] = "core.cartmanager.ICartManager";
           return $this->transport->cast(API::core_cartmanager_data_Cart(), $this->transport->sendMessage($data));
+     }
+
+     /**
+     * Returns the current total amount
+     * note, this does not include shipping.
+     * 
+     * @return Double
+     * @throws ErrorException 
+     */
+
+     public function getCartTotalAmount() {
+          $data = array();
+          $data['args'] = array();
+          $data["method"] = "getCartTotalAmount";
+          $data["interfaceName"] = "core.cartmanager.ICartManager";
+          return $this->transport->sendMessage($data);
      }
 
      /**

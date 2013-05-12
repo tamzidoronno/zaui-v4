@@ -8,13 +8,8 @@ class HelperOrder {
         $this->order = $order;
     }
 
-    public
-
-    function getTotal() {
+    public function getTotal() {
         $total = 0;
-//        echo "<pre>";
-//        print_r($this->order);
-//        echo "</pre>";
         if (isset($this->order->shipping) && isset($this->order->shipping->cost))
             $total = $this->order->shipping->cost;
 

@@ -10,5 +10,5 @@ import java.util.List;
  */
 public class AttributeSummary {
     //Attributegroupid, / count
-    public HashMap<String, HashMap<String, Integer>> attributeCount;
+    public HashMap<String, AttributeSummaryEntry> attributeCount;
 }

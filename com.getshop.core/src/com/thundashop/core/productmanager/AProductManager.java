@@ -9,6 +9,7 @@ import com.thundashop.core.pagemanager.IPageManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.productmanager.data.AttributeGroup;
+import com.thundashop.core.productmanager.data.AttributeSummaryEntry;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
 import java.util.ArrayList;
@@ -114,6 +115,33 @@ public class AProductManager extends ManagerBase {
         }
         
         buildAttributeCache(retProducts);
+        
+        if(searchCriteria.attributeFilter.size() > 0) {
+            ArrayList<Product> filteredProducts = new ArrayList();
+            for(Product prod : retProducts) {
+                boolean found = true;
+                for(String groupId : searchCriteria.attributeFilter.keySet()) {
+                    String filterValue = searchCriteria.attributeFilter.get(groupId);
+                    String prodValue = prod.attributes.get(groupId);
+                    if(prodValue == null) {
+                        found = false;
+                        break;
+                    }
+                    
+                    if(!prodValue.equals(filterValue)) {
+                        found = false;
+                        break;
+                    }
+                }
+                
+                if(found) {
+                    filteredProducts.add(prod);
+                }
+            }
+            retProducts = filteredProducts;
+            cleanFilterCache(retProducts);
+            
+        }
 
         return retProducts;
     }
@@ -143,21 +171,48 @@ public class AProductManager extends ManagerBase {
             if(prod.attributes != null) {
                 for(String groupId : prod.attributes.keySet()) {
                     AttributeGroup group = pool.getAttributeGroupById(groupId);
-                    groupId = group.groupName;
                     if(cache.attributeCount.get(groupId) == null) {
-                        cache.attributeCount.put(groupId, new HashMap());
+                        AttributeSummaryEntry entry = new AttributeSummaryEntry();
+                        entry.groupName = group.groupName;
+                        cache.attributeCount.put(groupId, entry);
                     }
                     
                     String value = prod.attributes.get(group.id);
-                    HashMap<String, Integer> attributeCount = cache.attributeCount.get(groupId);
-                    if(attributeCount.get(value) == null) {
-                        attributeCount.put(value, 1);
+                    
+                    AttributeSummaryEntry attributeCount = cache.attributeCount.get(groupId);
+                    if(!value.isEmpty()) {
+                        attributeCount.totalCount++;
+                    }
+                    if(attributeCount.attributeCount.get(value) == null) {
+                        attributeCount.attributeCount.put(value, 1);
                     } else {
-                        attributeCount.put(value,attributeCount.get(value)+1);
+                        attributeCount.attributeCount.put(value,attributeCount.attributeCount.get(value)+1);
                     }
                 }
             }
         }
         cachedResult = cache;
+    }
+
+    private void cleanFilterCache(ArrayList<Product> retProducts) {
+        for(String groupId : cachedResult.attributeCount.keySet()) {
+            AttributeSummaryEntry group = cachedResult.attributeCount.get(groupId);
+            for(String attr : group.attributeCount.keySet()) {
+                group.attributeCount.put(attr, 0);
+            }
+            group.totalCount = 0;
+        }
+        
+        for(Product prod : retProducts) {
+            for(String groupId : prod.attributes.keySet()) {
+                String value = prod.attributes.get(groupId);
+                if(cachedResult.attributeCount.get(groupId) == null) {
+                    continue;
+                }
+                int count = cachedResult.attributeCount.get(groupId).attributeCount.get(value);
+                cachedResult.attributeCount.get(groupId).attributeCount.put(value,count+1);
+                cachedResult.attributeCount.get(groupId).totalCount++;
+            }
+        }
     }
 }

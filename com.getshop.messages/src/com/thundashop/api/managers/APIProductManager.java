@@ -6,11 +6,11 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import com.thundashop.core.common.JsonObject2;
-import com.thundashop.core.productmanager.data.AttributeSummary;
 import java.util.ArrayList;
 import com.thundashop.core.productmanager.data.ProductCriteria;
 import com.thundashop.core.productmanager.data.Product;
 import java.util.List;
+import com.thundashop.core.productmanager.data.AttributeSummary;
 import java.util.HashMap;
 
 public class APIProductManager {

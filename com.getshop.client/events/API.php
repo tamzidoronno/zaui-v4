@@ -346,6 +346,13 @@
 	}
 	
 	/**
+	 * @return \core_productmanager_data_AttributeSummaryEntry
+	 */
+	public static function core_productmanager_data_AttributeSummaryEntry() {
+		return new \core_productmanager_data_AttributeSummaryEntry();
+	}
+	
+	/**
 	 * @return \core_productmanager_data_ProductImage
 	 */
 	public static function core_productmanager_data_ProductImage() {
@@ -364,6 +371,13 @@
 	 */
 	public static function core_productmanager_data_ProductCriteria() {
 		return new \core_productmanager_data_ProductCriteria();
+	}
+	
+	/**
+	 * @return \core_productmanager_data_AttributeSummary
+	 */
+	public static function core_productmanager_data_AttributeSummary() {
+		return new \core_productmanager_data_AttributeSummary();
 	}
 	
 	/**

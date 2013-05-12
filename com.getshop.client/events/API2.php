@@ -2100,7 +2100,7 @@ class APIProductManager {
      /**
      * Whenever you use the getproducts function call, you will be able to fetch a summary of the attributes.
      * Comes in handy to filter result when fetching data from for example a product list.
-     * @return core_productmanager_AttributeSummary
+     * @return core_productmanager_data_AttributeSummary
      * @throws ErrorException 
      */
 
@@ -2109,7 +2109,7 @@ class APIProductManager {
           $data['args'] = array();
           $data["method"] = "getAttributeSummary";
           $data["interfaceName"] = "core.productmanager.IProductManager";
-          return $this->transport->sendMessage($data);
+          return $this->transport->cast(API::core_productmanager_data_AttributeSummary(), $this->transport->sendMessage($data));
      }
 
      /**

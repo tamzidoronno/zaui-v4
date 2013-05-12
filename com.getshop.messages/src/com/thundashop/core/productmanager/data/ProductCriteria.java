@@ -6,6 +6,7 @@ package com.thundashop.core.productmanager.data;
 
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -15,6 +16,8 @@ public class ProductCriteria extends DataCommon {
     public ArrayList<String> parentPageIds = new ArrayList();
     public ArrayList<String> pageIds = new ArrayList();
     public ArrayList<String> ids = new ArrayList();
+    public HashMap<String,String> attributeFilter = new HashMap();
+    
     public String listId; //Fetch products from the listmanager.
     public String search = "";
 }

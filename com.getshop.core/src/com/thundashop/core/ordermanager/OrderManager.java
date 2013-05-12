@@ -109,7 +109,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         String orderText = getCustomerOrderText(order);
 
         mailFactory.send(store.configuration.emailAdress, order.cart.address.emailAddress, "Thank you for your order", orderText);
-        mailFactory.send(store.configuration.emailAdress, store.configuration.emailAdress, "Thank you for your order", orderText);
+        
+        if (!store.configuration.emailAdress.equals(order.cart.address.emailAddress)) {
+            mailFactory.send(store.configuration.emailAdress, store.configuration.emailAdress, "Thank you for your order", orderText);
+        }
 
         return order;
     }

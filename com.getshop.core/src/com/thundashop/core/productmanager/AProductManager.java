@@ -168,7 +168,7 @@ public class AProductManager extends ManagerBase {
         AttributeSummary cache = new AttributeSummary();
         cache.attributeCount = new HashMap();
         for(Product prod : retProducts) {
-            if(prod.attributes != null) {
+            if(prod != null && prod.attributes != null) {
                 for(String groupId : prod.attributes.keySet()) {
                     AttributeGroup group = pool.getAttributeGroupById(groupId);
                     if(cache.attributeCount.get(groupId) == null) {

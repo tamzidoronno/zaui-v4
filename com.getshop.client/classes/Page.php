@@ -11,7 +11,7 @@ class Page extends FactoryBase {
     public $areas;
     public $emptySkeleton = false;
     
-    public static $systemPages = array("orderoverview", "checkout", "myaccount", "users", "settings", "domain");
+    public static $systemPages = array("orderoverview", "checkout", "myaccount", "users", "settings", "domain", "cart");
 
     /** @var core_pagemanager_data_Page */
     private $parentPage;

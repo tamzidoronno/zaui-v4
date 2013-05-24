@@ -1132,3 +1132,48 @@ a img {
 .OrderManager tr.even td.sorting_1 { background-color:#FFFFFF; cursor:pointer; }
 .OrderManager tr:hover { background-color:#dedede;cursor:pointer; }
 .OrderManager tr:hover td.sorting_1 { background-color:#dedede;cursor:pointer; }
+
+.GetShopToolbox {
+    z-index: 500;
+    background-color : #FFF;
+    border: solid 1px #BBB;
+}
+
+.GetShopToolbox .title {
+    text-align: center;
+    font-size: 12px;
+    background-color: #DDD;
+    cursor: move;
+}
+
+.GetShopToolbox .item {
+    width: 50px;
+    height: 45px;
+    text-align: center;
+    padding-top: 5px;
+}
+
+.GetShopToolbox .item:hover {
+    cursor: pointer;
+    background-image: url('/skin/default/images/toolboxrowbackground-hover.png');
+}
+
+.GetShopToolbox .row {
+    background-image: url('/skin/default/images/toolboxrowbackground.png');
+}
+
+.GetShopToolbox .close {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    background-image: url('/skin/default/elements/close2.png');
+    position: absolute;
+    top: -10px;
+    right: -10px;
+}
+
+.GetShopToolbox .item img {
+    width: 40px;
+    height: 40px;
+    
+}

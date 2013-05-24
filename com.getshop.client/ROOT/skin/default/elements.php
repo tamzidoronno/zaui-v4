@@ -68,7 +68,7 @@
     height: 38px;
     top: 6px;
     width: 7px;
-    z-index: 1000000;
+    z-index: 1;
     background: url(/skin/default/elements/button-large-glare-right.png);
 }
 

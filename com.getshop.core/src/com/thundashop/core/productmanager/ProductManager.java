@@ -9,6 +9,7 @@ import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.productmanager.data.AttributeGroup;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
+import com.thundashop.core.productmanager.data.ProductVariation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -211,6 +212,24 @@ public class ProductManager extends AProductManager implements IProductManager {
     @Override
     public AttributeSummary getAttributeSummary() throws ErrorException {
         return cachedResult;
+    }
+
+    @Override
+    public Double getPrice(String productId, List<String> variations) throws ErrorException {
+        Product product = getProduct(productId);
+        if (variations == null || variations.isEmpty()) {
+            return product.price;
+        }
+        
+        double price = product.price;
+        for (String variation : variations) {
+            ProductVariation productVariation = product.getVariation(variation);
+            if (productVariation != null) {
+                price += productVariation.priceDifference;
+            }
+        }
+        
+        return price;
     }
     
 }

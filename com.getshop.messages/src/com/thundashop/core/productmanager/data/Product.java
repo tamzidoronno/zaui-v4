@@ -183,5 +183,15 @@ public class Product extends DataCommon implements Comparable<Product>  {
         }
         attributes.put(id, value);
     }
+
+    public ProductVariation getVariation(String variationId) {
+        for (ProductVariation variation : variations) {
+            ProductVariation ivariation = variation.get(variationId);
+            if (ivariation != null) {
+                return ivariation;
+            }
+        }
+        return null;
+    }
     
 }

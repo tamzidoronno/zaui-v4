@@ -66,6 +66,11 @@ if(isset($_GET['logonwithkey'])) {
     $_SESSION['loggedin'] = serialize($factory->getApi()->getUserManager()->logonUsingKey($key));
     header('location:index.php');
 }
+
+if(isset($_GET['prepopulate'])) {
+    $siteBuilder = new \SiteBuilder();
+    $siteBuilder->prepopulateData();
+}
 ?>
 
 <html xmlns:fb="http://ogp.me/ns/fb#">

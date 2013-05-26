@@ -121,7 +121,30 @@ class SiteBuilder extends ApplicationBase {
             }
         }
     }
-
+    
+    public function prepopulateData() {
+        //Set default color to blue.
+        $this->getFactory()->setConfigurationFlag("color", "blue");
+        
+        $store = $this->getApi()->getStoreManager()->getMyStore();
+        $store->configuration->colors->textColor = "000000";
+        $store->configuration->colors->buttonBackgroundColor = "BBBBBB";
+        $store->configuration->colors->buttonTextColor = "FFFFFF";
+        $store->configuration->colors->backgroundColor = "FFFFFF";
+        $this->getApi()->getStoreManager()->saveStore($store->configuration);
+         
+        $this->clearTopMenu();
+        $this->clearPage('home');
+        $this->addBannerSlider("home", "designimages/banners/", 400);
+        $this->addProductList('home', 2, "rowview");
+        $productPage = $this->createPage("My products");
+        $this->addProductList($productPage, 1, "listview");
+        $aboutus = $this->createPage("About us");
+        $this->addContentManager($aboutus, null);
+        $contact = $this->createPage("Contact us");
+        $this->addContactForm($contact);
+        $this->addFooterContent('<table border="0" cellpadding="0" cellspacing="0" style="width: 100%;" class=" cke_show_border"><tbody><tr><td style="vertical-align: top;"><br><span><span style="font-size:12px;">My web shop name<br>My street 1<br>My country</span></span></td><td style="text-align: right;"><br><span><span style="font-size:12px;">Some other information<br>Conact information<br>1234567<br>post@mail.com</span></span><br><br></td></tr></tbody></table>');
+    }
 }
 
 ?>

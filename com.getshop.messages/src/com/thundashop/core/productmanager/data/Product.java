@@ -22,6 +22,7 @@ import java.util.Map;
  */
 public class Product extends DataCommon implements Comparable<Product>  {
     public Map<String, ProductImage> images = new HashMap<String, ProductImage>();    
+    public List<ProductVariation> variations = new ArrayList();
     public String description;
     public String shortDescription;
     public double price;

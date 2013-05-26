@@ -4,6 +4,7 @@ import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.usermanager.data.Address;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public interface IOrderManager {
      * @return
      * @throws ErrorException 
      */
-    public Order createOrder(Cart cart) throws ErrorException;
+    public Order createOrder(Address address) throws ErrorException;
     
     /**
      * Get a list of already created orders.

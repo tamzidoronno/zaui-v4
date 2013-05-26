@@ -4,10 +4,10 @@
  */
 package com.thundashop.core.cartmanager.data;
 
+import com.thundashop.core.common.CartCompositeKey;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.data.Address;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -17,54 +17,56 @@ import java.util.List;
  */
 public class Cart extends DataCommon {
     public Address address;
-    public HashMap<String, Product> products = new HashMap<String, Product>();
-    public HashMap<String, Integer> counter = new HashMap<String, Integer>();    
+    public HashMap<CartCompositeKey, Product> products = new HashMap();
+    public HashMap<CartCompositeKey, Integer> counter = new HashMap();
     
     public double getTotal() {
         double price = 0;
         
-        for (Product product : products.values()) 
-            price += product.price * getProductCount(product);
+        for (CartCompositeKey productKey : products.keySet()) {
+            Product product = products.get(productKey);
+            price += product.getPrice(productKey.getVariations()) * getProductCount(productKey);
+        }
 
         return price;
     }
     
-    public void addProduct(Product product) {
-        products.put(product.id, product);
-        int count = getProductCount(product);
-        counter.put(product.id, ++count);
+    public void addProduct(Product product, List<String> variations) {
+        CartCompositeKey compkey = new CartCompositeKey(product.id, variations);
+        products.put(compkey, product);
+        int count = getProductCount(compkey);
+        counter.put(compkey, ++count);
     }
     
-    public List<Product> getProductList() {
-        return new ArrayList<Product>(products.values());
+    public void removeProduct(String productId, List<String> variations) {
+        CartCompositeKey key = new CartCompositeKey(productId, variations);
+        products.remove(key);
+        counter.remove(key);
     }
 
-    public Product getProductById(String productId) {
-        return products.get(productId);
-    }
-    
-    public void removeProduct(String productId) {
-        Product product = getProductById(productId);
-        if (product != null) {
-            products.remove(product.id);
-            counter.remove(product.id);
-        }
+    public int getProductCount(CartCompositeKey productid) {
+        return (counter.get(productid) != null) ? counter.get(productid) : 0;
     }
 
-    public int getProductCount(Product product) {
-        return (counter.get(product.id) != null) ? counter.get(product.id) : 0;
+    public void setProductCount(String productId, List<String> variations, int count) {
+        CartCompositeKey cartKey = new CartCompositeKey(productId, variations);
+        counter.put(cartKey, count);
     }
 
-    public void setProductCount(String productId, int count) {
-        counter.put(productId, count);
-    }
-
-    public HashMap<Product, Integer> getProducts() {
-        HashMap<Product, Integer> returns = new HashMap<Product, Integer>();
-        for (Product product : products.values()) {
-            returns.put(product, getProductCount(product));
+    public HashMap<CartCompositeKey, Integer> getProducts() {
+        HashMap<CartCompositeKey, Integer> returns = new HashMap<CartCompositeKey, Integer>();
+        for (CartCompositeKey productKey : products.keySet()) {
+            returns.put(productKey, getProductCount(productKey));
         }
         return returns;
     }
-    
+
+    public int getProductCount(Product product) {
+        return 1;
+    }
+
+    public void clear() {
+        products.clear();
+        counter.clear();
+    }
 }

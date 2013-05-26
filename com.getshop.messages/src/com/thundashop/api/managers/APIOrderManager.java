@@ -7,9 +7,9 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import com.thundashop.core.common.JsonObject2;
 import java.util.ArrayList;
+import com.thundashop.core.usermanager.data.Address;
 import java.util.List;
 import com.thundashop.core.ordermanager.data.Order;
-import com.thundashop.core.cartmanager.data.Cart;
 
 public class APIOrderManager {
 
@@ -26,10 +26,10 @@ public class APIOrderManager {
      * @throws ErrorException 
      */
 
-     public Order createOrder(Cart cart)  throws Exception  {
+     public Order createOrder(Address address)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new HashMap();
-          data.args.put("cart",new Gson().toJson(cart));
+          data.args.put("address",new Gson().toJson(address));
           data.method = "createOrder";
           data.interfaceName = "core.ordermanager.IOrderManager";
           String result = transport.send(data);

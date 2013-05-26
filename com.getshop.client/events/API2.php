@@ -1459,10 +1459,10 @@ class APIOrderManager {
      * @throws ErrorException 
      */
 
-     public function createOrder($core_cartmanager_data_Cart) {
+     public function createOrder($core_usermanager_data_Address) {
           $data = array();
           $data['args'] = array();
-          $data['args']["core_cartmanager_data_Cart"] = json_encode($this->transport->object_unset_nulls($core_cartmanager_data_Cart));
+          $data['args']["core_usermanager_data_Address"] = json_encode($this->transport->object_unset_nulls($core_usermanager_data_Address));
           $data["method"] = "createOrder";
           $data["interfaceName"] = "core.ordermanager.IOrderManager";
           return $this->transport->cast(API::core_ordermanager_data_Order(), $this->transport->sendMessage($data));

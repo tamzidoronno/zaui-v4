@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import com.thundashop.core.common.JsonObject2;
+import java.util.List;
 import com.thundashop.core.cartmanager.data.Cart;
 
 public class APICartManager {
@@ -24,11 +25,12 @@ public class APICartManager {
      * @throws ErrorException 
      */
 
-     public Cart addProduct(String productId, int count)  throws Exception  {
+     public Cart addProduct(String productId, int count, List<String> variations)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new HashMap();
           data.args.put("productId",new Gson().toJson(productId));
           data.args.put("count",new Gson().toJson(count));
+          data.args.put("variations",new Gson().toJson(variations));
           data.method = "addProduct";
           data.interfaceName = "core.cartmanager.ICartManager";
           String result = transport.send(data);
@@ -95,10 +97,11 @@ public class APICartManager {
      * @throws ErrorException 
      */
 
-     public Cart removeProduct(String productId)  throws Exception  {
+     public Cart removeProduct(String productId, List<String> variations)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new HashMap();
           data.args.put("productId",new Gson().toJson(productId));
+          data.args.put("variations",new Gson().toJson(variations));
           data.method = "removeProduct";
           data.interfaceName = "core.cartmanager.ICartManager";
           String result = transport.send(data);
@@ -116,11 +119,12 @@ public class APICartManager {
      * @throws ErrorException 
      */
 
-     public Cart updateProductCount(String productId, int count)  throws Exception  {
+     public Cart updateProductCount(String productId, int count, List<String> variations)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new HashMap();
           data.args.put("productId",new Gson().toJson(productId));
           data.args.put("count",new Gson().toJson(count));
+          data.args.put("variations",new Gson().toJson(variations));
           data.method = "updateProductCount";
           data.interfaceName = "core.cartmanager.ICartManager";
           String result = transport.send(data);

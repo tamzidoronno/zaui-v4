@@ -2,6 +2,7 @@ package com.thundashop.core.ordermanager;
 
 import com.thundashop.core.appmanager.AppManager;
 import com.thundashop.core.appmanager.data.ApplicationSubscription;
+import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -9,7 +10,9 @@ import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.ProductVariation;
 import com.thundashop.core.storemanager.data.Store;
+import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,15 +87,32 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         newOrder += "<br> PostCode: " + order.cart.address.postCode + " " + order.cart.address.city;
         newOrder += "<br>";
         newOrder += "<br> <b>Items:</b> ";
-//        for (Product product : order.cart.getProductList()) {
-//            newOrder += "<br> " + order.cart.getProductCount(product) + "  x " + product.name;
-//        }
+        for (CartCompositeKey compKey : order.cart.products.keySet()) {
+            Product product = order.cart.products.get(compKey);
+            newOrder += "<br> " + order.cart.getProductCount(compKey) + "  x " + product.name;
+            newOrder += "<br><b>You selected: </b>";
+            for (String variation : compKey.getVariations()) {
+                if (variation.equals("")) {
+                    continue;
+                }
+                
+                ProductVariation variation2 = product.getVariation(variation);
+                newOrder += variation2.title+", ";
+            }
+            
+            newOrder = newOrder.substring(0, newOrder.length() - 2);
+            newOrder += "<br>";
+        }
 
         return newOrder;
     }
 
     @Override
-    public Order createOrder(Cart cart) throws ErrorException {
+    public Order createOrder(Address address) throws ErrorException {
+        CartManager cartManager = getManager(CartManager.class);
+        Cart cart = cartManager.getCart();
+        cart.address = address;
+        
         Order order = new Order();
         order.createdDate = new Date();
         order.cart = cart;

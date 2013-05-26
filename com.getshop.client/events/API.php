@@ -150,6 +150,13 @@
 	}
 	
 	/**
+	 * @return \core_common_CartCompositeKey
+	 */
+	public static function core_common_CartCompositeKey() {
+		return new \core_common_CartCompositeKey();
+	}
+	
+	/**
 	 * @return \core_calendarmanager_data_Month
 	 */
 	public static function core_calendarmanager_data_Month() {

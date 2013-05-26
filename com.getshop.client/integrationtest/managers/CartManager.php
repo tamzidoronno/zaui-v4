@@ -55,7 +55,7 @@ class CartManager extends TestBase {
         $manager->addProduct($product->id, 1);
         
         //Set a new count.
-        $manager->updateProductCount($product->id, 2);
+        $manager->updateProductCount($product->id, 2, array());
     }
 }
 

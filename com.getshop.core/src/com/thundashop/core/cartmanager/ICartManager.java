@@ -3,6 +3,7 @@ package com.thundashop.core.cartmanager;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
+import java.util.List;
 
 /**
  * The cartmanager is a manager helping you keep track of your shopping cart.<br>
@@ -18,7 +19,7 @@ public interface ICartManager {
      * @return
      * @throws ErrorException 
      */
-    public Cart addProduct(String productId, int count) throws ErrorException;
+    public Cart addProduct(String productId, int count, List<String> variations) throws ErrorException;
     
     /**
      * Change the number of instances added to the product.
@@ -27,7 +28,7 @@ public interface ICartManager {
      * @return
      * @throws ErrorException 
      */
-    public Cart updateProductCount(String productId, int count) throws ErrorException;
+    public Cart updateProductCount(String productId, int count, List<String> variations) throws ErrorException;
     
     /**
      * Remove an added product from the cart.
@@ -35,7 +36,7 @@ public interface ICartManager {
      * @return
      * @throws ErrorException 
      */
-    public Cart removeProduct(String productId) throws ErrorException;
+    public Cart removeProduct(String productId, List<String> variations) throws ErrorException;
     
     /**
      * Fetch the current cart.

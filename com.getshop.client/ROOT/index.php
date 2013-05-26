@@ -218,3 +218,9 @@ if(isset($_GET['page'])) {
 }
 
 ?>
+
+
+<?
+$book = new stdClass;
+
+?>

@@ -805,11 +805,12 @@ class APICartManager {
      * @throws ErrorException 
      */
 
-     public function addProduct($productId, $count) {
+     public function addProduct($productId, $count, $variations) {
           $data = array();
           $data['args'] = array();
           $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
           $data['args']["count"] = json_encode($this->transport->object_unset_nulls($count));
+          $data['args']["variations"] = json_encode($this->transport->object_unset_nulls($variations));
           $data["method"] = "addProduct";
           $data["interfaceName"] = "core.cartmanager.ICartManager";
           return $this->transport->cast(API::core_cartmanager_data_Cart(), $this->transport->sendMessage($data));
@@ -864,10 +865,11 @@ class APICartManager {
      * @throws ErrorException 
      */
 
-     public function removeProduct($productId) {
+     public function removeProduct($productId, $variations) {
           $data = array();
           $data['args'] = array();
           $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+          $data['args']["variations"] = json_encode($this->transport->object_unset_nulls($variations));
           $data["method"] = "removeProduct";
           $data["interfaceName"] = "core.cartmanager.ICartManager";
           return $this->transport->cast(API::core_cartmanager_data_Cart(), $this->transport->sendMessage($data));
@@ -881,11 +883,12 @@ class APICartManager {
      * @throws ErrorException 
      */
 
-     public function updateProductCount($productId, $count) {
+     public function updateProductCount($productId, $count, $variations) {
           $data = array();
           $data['args'] = array();
           $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
           $data['args']["count"] = json_encode($this->transport->object_unset_nulls($count));
+          $data['args']["variations"] = json_encode($this->transport->object_unset_nulls($variations));
           $data["method"] = "updateProductCount";
           $data["interfaceName"] = "core.cartmanager.ICartManager";
           return $this->transport->cast(API::core_cartmanager_data_Cart(), $this->transport->sendMessage($data));

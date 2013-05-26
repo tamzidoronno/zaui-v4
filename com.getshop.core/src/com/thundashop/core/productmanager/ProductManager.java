@@ -217,19 +217,11 @@ public class ProductManager extends AProductManager implements IProductManager {
     @Override
     public Double getPrice(String productId, List<String> variations) throws ErrorException {
         Product product = getProduct(productId);
-        if (variations == null || variations.isEmpty()) {
+        if (variations == null || variations.isEmpty() || product == null) {
             return product.price;
         }
         
-        double price = product.price;
-        for (String variation : variations) {
-            ProductVariation productVariation = product.getVariation(variation);
-            if (productVariation != null) {
-                price += productVariation.priceDifference;
-            }
-        }
-        
-        return price;
+        return product.getPrice(variations);
     }
     
 }

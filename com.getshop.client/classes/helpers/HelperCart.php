@@ -19,8 +19,9 @@ class HelperCart {
     }
 
     public function getProductCount($product) {
-        if (isset($this->cart->counter->{$product->id})) {
-            return $this->cart->counter->{$product->id};
+        
+        if (isset($this->cart->counter->{$product->jsonKey})) {
+            return $this->cart->counter->{$product->jsonKey};
         }
 
         return 0;

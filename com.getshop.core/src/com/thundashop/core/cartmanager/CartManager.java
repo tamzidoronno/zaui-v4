@@ -7,6 +7,7 @@ import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -46,11 +47,11 @@ public class CartManager extends ManagerBase implements ICartManager {
     }
 
     @Override
-    public Cart addProduct(String productId, int count) throws ErrorException {
+    public Cart addProduct(String productId, int count, List<String> variations) throws ErrorException {
         Product product = getProduct(productId);
         if (product != null) {
             Cart cart = getCart(getSession().id);
-            cart.addProduct(product);
+            cart.addProduct(product, variations);
             return cart;
         } else {
             throw new ErrorException(1011);
@@ -58,11 +59,11 @@ public class CartManager extends ManagerBase implements ICartManager {
     }
 
     @Override
-    public Cart updateProductCount(String productId, int count) throws ErrorException {
+    public Cart updateProductCount(String productId, int count, List<String> variations) throws ErrorException {
         Product product = getProduct(productId);
         if (product != null) {
             Cart cart = getCart(getSession().id);
-            cart.setProductCount(productId, count);
+            cart.setProductCount(productId, variations, count);
             return cart;
         } else {
             throw new ErrorException(1011);
@@ -70,11 +71,11 @@ public class CartManager extends ManagerBase implements ICartManager {
     }
 
     @Override
-    public Cart removeProduct(String productId) throws ErrorException {
+    public Cart removeProduct(String productId, List<String> variations) throws ErrorException {
         Product product = getProduct(productId);
         if (product != null) {
             Cart cart = getCart(getSession().id);
-            cart.removeProduct(productId);
+            cart.removeProduct(productId, variations);
             return cart;
         } else {
             throw new ErrorException(1011);
@@ -94,8 +95,6 @@ public class CartManager extends ManagerBase implements ICartManager {
     @Override
     public void clear() throws ErrorException {
         Cart cart = getCart(getSession().id);
-        for (Product product : cart.getProductList()) {
-            removeProduct(product.id);
-        }
+        cart.clear();
     }
 }

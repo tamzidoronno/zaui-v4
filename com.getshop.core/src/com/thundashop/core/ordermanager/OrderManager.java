@@ -58,16 +58,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
 
         if (setting != null && setting.equals("true")) {
-            for (Product product : order.cart.getProductList()) {
-                int factor = -1;
-                if (order.status == Order.Status.CANCELED) {
-                    factor = 1;
-                }
-
-                int change = order.cart.getProductCount(product) * factor;
-                ProductManager productManager = getManager(ProductManager.class);
-                productManager.changeStockQuantity(product.id, change);
-            }
+//            for (Product product : order.cart.getProductList()) {
+//                int factor = -1;
+//                if (order.status == Order.Status.CANCELED) {
+//                    factor = 1;
+//                }
+//
+//                int change = order.cart.getProductCount(product) * factor;
+//                ProductManager productManager = getManager(ProductManager.class);
+//                productManager.changeStockQuantity(product.id, change);
+//            }
         }
     }
 
@@ -84,9 +84,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         newOrder += "<br> PostCode: " + order.cart.address.postCode + " " + order.cart.address.city;
         newOrder += "<br>";
         newOrder += "<br> <b>Items:</b> ";
-        for (Product product : order.cart.getProductList()) {
-            newOrder += "<br> " + order.cart.getProductCount(product) + "  x " + product.name;
-        }
+//        for (Product product : order.cart.getProductList()) {
+//            newOrder += "<br> " + order.cart.getProductCount(product) + "  x " + product.name;
+//        }
 
         return newOrder;
     }

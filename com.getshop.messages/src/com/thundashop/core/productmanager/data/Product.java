@@ -10,7 +10,6 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.pagemanager.data.Page;
-import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

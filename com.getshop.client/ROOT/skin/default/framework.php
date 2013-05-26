@@ -1139,6 +1139,7 @@ box-shadow: 0px 0px 10px #000000;
 background-color: #EFEFEF; z-index: 2000; position:fixed; left:0px; bottom:0px;width: 100%; display:none; height: 150px; }
 .designselectionbox .design {
     position:relative;
+    border: solid 1px #876200;
    background-color:#FFF;
    display:inline-block; width: 150px; height: 130px; margin:5px; 
    -moz-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.4);
@@ -1153,9 +1154,9 @@ background-color: #EFEFEF; z-index: 2000; position:fixed; left:0px; bottom:0px;w
 
 
 .designselectionbox .selecteddesign {
-   -moz-box-shadow: 0px 0px 3px rgba(22, 52, 239, 0.9);
-   -webkit-box-shadow: 0px 0px 3px rgba(22, 52, 239, 0.9);
-   box-shadow: 0px 0px 3px rgba(22, 52, 239, 0.9);
+   -moz-box-shadow: 0px 0px 5px rgba(22, 52, 239, 0.9);
+   -webkit-box-shadow: 0px 0px 5px rgba(22, 52, 239, 0.9);
+   box-shadow: 0px 0px 5px rgba(22, 52, 239, 0.9);
 }
 
 .designselectionbox .design:hover {
@@ -1216,7 +1217,7 @@ background-color: #EFEFEF; z-index: 2000; position:fixed; left:0px; bottom:0px;w
     
 }
 
-.designselectionbox .design .price { position:absolute; border-top: solid 1px #BBB; border-right: solid 1px #BBB; bottom: 0px; left:0px; background-color:#FFF; padding:3px;border-top-right-radius: 5px; }
+.designselectionbox .design .price { opacity:0.8; position:absolute; border: solid 1px #BBB; bottom: 4px; right:4px; background-color:#FFF; padding:1px;border-radius: 5px; }
 .designselectionbox .close { cursor:pointer; position:absolute; top: 0px; right:0px; background-color:#FFF; padding: 3px; border: solid 1px #DDD;border-bottom-left-radius: 10px; }
 .designselectionbox .colorselection { position:absolute; width: 300; height: 150px; right: 0px; border-left:solid 1px #BBB; bottom: 0px; background-color:#EFEFEF; }
 .designselectionbox .colorselection .innerbox{ display:inline-block; width: 140px; padding: 5px; float:left; }

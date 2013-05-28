@@ -137,10 +137,14 @@ thundashop.common.saveCKEditor = function(data, target) {
     });
     var text=$("<p>" + data + "</p>").text();
     text=text.replace(/^\s+|\s+$/g, "");
+    var notify = function() {
+        PubSub.publish("CKEDITOR_SAVED", {});
+    }
     if(text.length === 0) {
-        thundashop.Ajax.post(event);
+        thundashop.Ajax.post(event, notify);
     } else {
         thundashop.Ajax.postSynchron(event);
+        notify();
     }
     thundashop.common.removeNotificationProgress('contentmanager');
 };

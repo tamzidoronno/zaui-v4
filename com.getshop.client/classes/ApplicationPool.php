@@ -299,7 +299,7 @@ class ApplicationPool {
             }
         }
         
-        throw new Exception("No theme app ? that would be a pretty ugly design I guess. :D");
+//        throw new Exception("No theme app ? that would be a pretty ugly design I guess. :D");
     }
     
     /**

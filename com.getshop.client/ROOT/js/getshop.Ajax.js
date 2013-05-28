@@ -35,6 +35,16 @@ thundashop.Ajax = {
             }
         });
     },
+    
+    IsJsonString : function (str) {
+        try {
+            JSON.parse(str);
+        } catch (e) {
+            return false;
+        }
+        return true;
+    },
+            
     post: function(data, callback, extraArg, dontUpdate, dontShowLoaderBox, useFile) {
         
         if (callback === undefined && dontUpdate !== true) {
@@ -55,8 +65,13 @@ thundashop.Ajax = {
                     thundashop.Ajax.updateFromResponse(response);
                 }
                 if (typeof(callback) === "function") {
-                    callback(response, extraArg);
-                    $('#loaderbox').hide();
+                    if (thundashop.Ajax.IsJsonString(response)) {
+                        response = JSON.parse(response);
+                        callback(response, extraArg);
+                    } else {
+                        callback(response, extraArg);
+                        $('#loaderbox').hide();
+                    }
                 }
             }, 
             error: function(tesT, resp) {
@@ -124,17 +139,17 @@ thundashop.Ajax = {
         } else {
             for (var divid in response) {
                 if (response[divid] !== null) {
-                    if (hasFadeInEffect) {
-                        if (divid === "apparea-middle") {
-                            $('#' + divid).hide();
-                            $('#' + divid).html(response[divid]);
-                            $('#' + divid).fadeIn(600);
-                        } else {
-                            $('#' + divid).html(response[divid]);
-                        }
-                    } else {
+//                    if (hasFadeInEffect) {
+//                        if (divid === "apparea-middle") {
+//                            $('#' + divid).hide();
+//                            $('#' + divid).html(response[divid]);
+//                            $('#' + divid).fadeIn(600);
+//                        } else {
+//                            $('#' + divid).html(response[divid]);
+//                        }
+//                    } else {
                         $('#' + divid).html(response[divid]);
-                    }
+//                    }
 
                     if (thundashop.MainMenu.hidden) {
                         $('.mainmenu .content').hide();
@@ -142,6 +157,7 @@ thundashop.Ajax = {
                     }
                 }
             }
+            PubSub.publish('NAVIGATION_COMPLETED', { response: response });
         }
         $(window).scrollTop(scrolltop);
         $('#loaderbox').hide();

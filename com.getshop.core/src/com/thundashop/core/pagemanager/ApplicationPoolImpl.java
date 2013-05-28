@@ -10,6 +10,7 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
+import com.thundashop.core.storemanager.data.StoreConfiguration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -200,6 +201,10 @@ public class ApplicationPoolImpl {
             ApplicationSettings setting;
             try {
                 setting = appManager.getApplication(app.appSettingsId);
+                Store store = storeManager.getMyStore();
+                store.configuration.colors.baseColor = "FF6103";
+                store.configuration.colors.backgroundColor = "FF9955";
+                store.configuration.colors.textColor = "000000";
                 
                 if (setting.type.equals(ApplicationSettings.Type.Theme)) {
                     return;

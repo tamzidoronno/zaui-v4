@@ -207,6 +207,11 @@ thundashop.Ajax = {
             }
         })
     },
+    
+    reloadCss: function() {
+        document.getElementById('mainlessstyle').href = 'StyleSheet.php';
+    },
+            
     changeTheeme: function(template, colors) {
         $('#loaderbox').show();
         url = 'colorloader.php?setTheeme=' + template + '&colors=' + colors;
@@ -214,7 +219,7 @@ thundashop.Ajax = {
             type: "POST",
             url: url,
             success: function(response) {
-                document.getElementById('mainlessstyle').href = 'StyleSheet.php';
+                thundashop.Ajax.reloadCss();
                 $('#loaderbox').hide();
             }
         })

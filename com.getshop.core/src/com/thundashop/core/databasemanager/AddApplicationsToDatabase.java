@@ -251,6 +251,7 @@ public class AddApplicationsToDatabase {
                 "Answering your customers questions, means more sale. By adding this excellent chat application, you can answer on request at any time from you mobile devices or your stationary computer.", 
                 ApplicationSettings.Type.Webshop, true);
         chatsettings.isSingleton = true;
+        chatsettings.renderStandalone = true;
         apps.add(chatsettings);
         
         apps.add(createSettings(
@@ -435,6 +436,8 @@ public class AddApplicationsToDatabase {
                 "", 
                 ApplicationSettings.Type.Theme, false);
         bluesky.isPublic = true;
+        bluesky.price = 99D;
+        bluesky.trialPeriode = 7;
         apps.add(bluesky);
         
         return apps;

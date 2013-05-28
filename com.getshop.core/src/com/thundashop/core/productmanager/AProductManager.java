@@ -45,7 +45,7 @@ public class AProductManager extends ManagerBase {
     protected void createProductPage(Product product) throws ErrorException {
         if (product.page == null) {
             IPageManager pageManager = getManager(PageManager.class);
-            product.page = pageManager.createPage(Page.PageType.HeaderLeftMiddleFooter, "");
+            product.page = pageManager.createPage(Page.PageType.HeaderMiddleFooter, "");
             product.pageId = product.page.id;
             //
             pageManager.addApplicationToPage(product.page.id, "dcd22afc-79ba-4463-bb5c-38925468ae26", "middle");

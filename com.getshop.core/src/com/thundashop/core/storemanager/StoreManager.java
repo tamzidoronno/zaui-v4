@@ -2,7 +2,6 @@ package com.thundashop.core.storemanager;
 
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
@@ -133,6 +132,10 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
     @Override
     public Store saveStore(StoreConfiguration config) throws ErrorException {
+        if (config == null) {
+            throw new ErrorException(95);
+        }
+        
         Store store = getStore();
         store.configuration = config;
         databaseSaver.saveObject(store, credentials);

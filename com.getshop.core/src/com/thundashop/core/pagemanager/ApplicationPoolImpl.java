@@ -200,6 +200,7 @@ public class ApplicationPoolImpl {
             ApplicationSettings setting;
             try {
                 setting = appManager.getApplication(app.appSettingsId);
+                
                 if (setting.type.equals(ApplicationSettings.Type.Theme)) {
                     return;
                 }

@@ -153,7 +153,6 @@ $('#importApplicationToArea').live('click', function() {
     event['synchron'] = true;
     var callBack = function(response) {
         $('#informationbox-holder').fadeOut(200);
-        response = JSON.parse(response);
         GetShop.ImportApplication.setApps(response, area);
         GetShop.ImportApplication.next();
         

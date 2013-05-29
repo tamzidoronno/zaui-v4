@@ -148,7 +148,7 @@ if (count($factory->getApi()->transport->errors) > 0) {
 }
 
 if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() && !$factory->hasSelectedDesign()) {
-    echo "<script>$('#mainmenu #displaytheemesbutton').click();</script>";
+    echo "<script>thundashop.common.lockMask(); $('#mainmenu #displaytheemesbutton').click();</script>";
 }
 ?>
 

@@ -143,6 +143,14 @@ class Page extends FactoryBase {
         return $html;
     }
     
+    public function getThemeApplicationSettingsId() {
+        $theme = $this->getFactory()->getApplicationPool()->getSelectedThemeApp();
+        if ($theme != null) {
+            return $theme->getApplicationSettings()->id;
+        }
+        return "";
+    }
+    
     private function getSkeletonLayout() {
         ob_start();
         $this->emptySkeleton = true;

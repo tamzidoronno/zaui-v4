@@ -266,10 +266,12 @@ thundashop.common.unmask = function() {
 }
 
 thundashop.common.lockMask = function() {
+    $('#infomrationboxclosebutton').hide();
     $('#fullscreenmask').attr('locked', 'true');
 }
 
 thundashop.common.unlockMask = function() {
+    $('#infomrationboxclosebutton').show();
     $('#fullscreenmask').attr('locked', 'false');
 }
 

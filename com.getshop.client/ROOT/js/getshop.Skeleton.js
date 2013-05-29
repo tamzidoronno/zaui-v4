@@ -115,6 +115,7 @@ thundashop.Skeleton = {
         var callback = function() {
             window.location.hash="page=home&app="+appSettingsId;
             document.getElementById('mainlessstyle').href='StyleSheet.php';
+            thundashop.common.unlockMask();
             thundashop.common.hideInformationBox(null);
         }
         

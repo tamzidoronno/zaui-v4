@@ -213,6 +213,7 @@ thundashop.Ajax = {
     },
             
     changeTheeme: function(template, colors) {
+        thundashop.common.unlockMask();
         $('#loaderbox').show();
         url = 'colorloader.php?setTheeme=' + template + '&colors=' + colors;
         $.ajax({

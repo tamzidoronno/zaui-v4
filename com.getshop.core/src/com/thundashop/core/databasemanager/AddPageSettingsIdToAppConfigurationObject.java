@@ -74,6 +74,7 @@ public class AddPageSettingsIdToAppConfigurationObject {
         check.put("SlickTheme", "efcbb450-8f26-11e2-9e96-0800200c9a66");
         check.put("WhiteAndBlueTheme", "a84cbbb0-8f21-11e2-9e96-0800200c9a66");
         check.put("GetShopTheme", "7a4f3750-895a-11e2-9e96-0800200c9a66");
+        check.put("KingroidsTheme", "161644b0-b095-11e2-9e96-0800200c9a66");
 
         Morphia morphia = new Morphia();
         morphia.map(DataCommon.class);

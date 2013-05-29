@@ -53,6 +53,7 @@ public class ApplicationPoolImpl {
     }
     
     public void addFromDatabase(AppConfiguration appConfiguration) {
+        System.out.println(appConfiguration.appName + " " + appConfiguration.id + " " + appConfiguration.appSettingsId);
         applications.put(appConfiguration.id, appConfiguration);
     }
     
@@ -205,7 +206,7 @@ public class ApplicationPoolImpl {
                     return;
                 }
             } catch (ErrorException ex) {
-                logger.warning(this, "application added but does not exists: " + app.appName + " applicationSettingsId: " + app.appSettingsId);
+                logger.warning(this, "Applicatoin added,  " + app.appName + " but does not have a ApplicationSetting object, appsettingsid: " + app.appSettingsId);
             }
         }
         

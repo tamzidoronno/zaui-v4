@@ -377,6 +377,16 @@ public class AddApplicationsToDatabase {
         theRedTheme.ownerStoreId = "8f833449-a8aa-4f3f-a18d-de0a909d0882";
         apps.add(theRedTheme);
         
+        ApplicationSettings kingRoidsTheme = createSettings(
+                "KingroidsTheme", 
+                "161644b0-b095-11e2-9e96-0800200c9a66", 
+                emtpy, 
+                "", 
+                ApplicationSettings.Type.Theme, false);
+        kingRoidsTheme.isPublic = false;
+        kingRoidsTheme.ownerStoreId = "82cb5657-6e89-42a4-8ac9-c51fa299695e";
+        apps.add(kingRoidsTheme);
+        
         apps.add(createSettings(
                 "WideScreenTheme", 
                 "c2da56a0-8f2f-11e2-9e96-0800200c9a66", 
@@ -551,10 +561,11 @@ public class AddApplicationsToDatabase {
                         createNewApplication("GetShopTheme", "7a4f3750-895a-11e2-9e96-0800200c9a66", store.id);
                     } 
                     
-                    
+                    if (store.configuration.theeme.equals("kingroids")) {
+                        createNewApplication("KingroidsTheme", "161644b0-b095-11e2-9e96-0800200c9a66", store.id);
+                    } 
                 }
             }
-            
         }
     }
     
@@ -570,6 +581,7 @@ public class AddApplicationsToDatabase {
         credentials.password = "ASDFASFD";
         try {
             appConfiguration.id = UUID.randomUUID().toString();
+            System.out.println(appConfiguration.appSettingsId);
             database.save(appConfiguration, credentials);
         } catch (ErrorException ex) {
             ex.printStackTrace();

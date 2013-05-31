@@ -8,29 +8,6 @@ class HelperCart {
         $this->cart = $cart;
     }
 
-    public function getTotal() {
-        $price = 0;
-
-        foreach ($this->cart->products as $product) {
-            $price += $product->price * $this->getProductCount($product);
-        }
-
-        return $price;
-    }
-
-    public function getProductCount($product) {
-        
-        if (isset($this->cart->counter->{$product->jsonKey})) {
-            return $this->cart->counter->{$product->jsonKey};
-        }
-
-        return 0;
-    }
-
-    public function getProductList() {
-        return $this->cart->products;
-    }
-    
     public static function clearSession($includeAddress=true) {
         if ($includeAddress) {
             unset($_SESSION['tempaddress']);
@@ -41,14 +18,18 @@ class HelperCart {
         unset($_SESSION['shippingproduct']);
     }
 
-    public static function getVartionsText($product) {
+    public static function getVartionsText($cartItem) {
+        if (count($cartItem->variations) == 0) {
+            return;
+        }
+        
         $variationsprint = array();
-        foreach ($product->compKey->variations as $variation) {
+        foreach ($cartItem->variations as $variation) {
             if ($variation == "") {
                 continue;
             }
 
-            $object = HelperCart::getVariationObject($product, $variation);
+            $object = HelperCart::getVariationObject($cartItem->product, $variation);
             if ($object) {
                 $variationsprint[] = $object->title;
             }
@@ -74,6 +55,7 @@ class HelperCart {
     private static function getVariationObject($product, $variation) {
         return HelperCart::getText($product->variations, $variation);
     }
+    
 }
 
 ?>

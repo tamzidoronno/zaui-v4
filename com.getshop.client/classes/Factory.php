@@ -132,6 +132,8 @@ class Factory extends FactoryBase {
                 echo "\n" . '<script type="text/javascript" src="js/jPicker/jpicker-1.1.6.min.js"></script>';
             }
         }
+        
+        echo "\n" . '<script type="text/javascript" src="js/getshop.MainMenuToolbox.js"></script>';
     }
 
     public function loadJavascriptFilesEditorMode() {

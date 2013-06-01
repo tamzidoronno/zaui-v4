@@ -1176,8 +1176,19 @@ background-color: #EFEFEF; z-index: 2000; position:fixed; left:0px; bottom:0px;w
     z-index: 500;
     background-color : #FFF;
     border: solid 1px #BBB;
+}   
+
+.GetShopToolbox .toolboxgroup .toolboxgroup {
+    border: solid 1px;
+    width: 100px;
+    position: absolute;
+    left: 30px;
+    top: 30px;
+    z-index: 501;
+    display: none;
 }
 
+.GetShopToolbox .seperator,
 .GetShopToolbox .title {
     text-align: center;
     font-size: 12px;
@@ -1189,6 +1200,7 @@ background-color: #EFEFEF; z-index: 2000; position:fixed; left:0px; bottom:0px;w
     width: 50px;
     height: 45px;
     text-align: center;
+    position: relative;
     padding-top: 5px;
 }
 

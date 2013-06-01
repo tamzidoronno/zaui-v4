@@ -116,7 +116,8 @@ if(isset($_GET['prepopulate'])) {
     <body>
         <input name="storeid" type="hidden"  value="<?php echo $factory->getStore()->id; ?>"/>
         <input name="userid" type="hidden"  value="<?php echo \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id; ?>"/>
-
+        
+        <div id="mainmenutoolbox"></div>
         <div id="messagebox" class="ok">
             <div class="inner">
                 <div class="title"></div>
@@ -216,11 +217,5 @@ if(isset($_GET['page'])) {
         <?
     }
 }
-
-?>
-
-
-<?
-$book = new stdClass;
 
 ?>

@@ -7,7 +7,8 @@ GetShopToolbox.prototype = {
     init: function() {
         this.createContainer();
         this.addTitle();
-        this.createEntries();
+        var entryGroup = this.createEntries(this.config.items);
+        this.container.append(entryGroup);
         this.addToPage();
         this.enableDrag();
         this.addCloseButton();
@@ -46,36 +47,82 @@ GetShopToolbox.prototype = {
         this.outerContainer.append(this.container);
     },
                         
-    createEntries: function() {
-        for (var i = 0; i < this.config.items.length; i++) {
-            if (i%2 == false) {
-                var row = $('<div/>');
-                row.addClass('row');
+    createEntries: function(items, sub) {
+        var entryGroup = $('<div/>');
+        var j = 0;
+        for (var i = 0; i < items.length; i++) {
+            var config = items[i];
+            if (config.type && config.type === "seperator") {
+                j = 1;
             }
             
-            this.container.append(row);
-            var item = this.createItem(i);
+            if (j%2 === 0) {
+                var row = $('<div/>');
+                row.addClass('row');
+                entryGroup.append(row);
+            }
+            
+            var item = this.createItem(config);
             row.append(item);
+            
+            j++;
         }
+        
+        entryGroup.addClass('toolboxgroup');
+        return entryGroup;
+    },
+
+    createItem: function(config) {
+        var item = null;
+        
+        if (config.type && config.type === "seperator") {
+            item = this.createSeperator(config);
+        } else {
+            item = this.createButton(config);
+        }
+        
+        if (config.items) {
+            var group = this.createEntries(config.items);
+            item.append(group);
+            item.hover(this.buttonWithChildHover, this.buttonWithChildHoverOut);
+        }
+        
+        return item;
     },
             
-    createItem: function(index) {
-        var config = this.config.items[index];
+    buttonWithChildHover : function() {
+        $(this).children('.toolboxgroup').fadeIn(300);
+    },
+            
+    buttonWithChildHoverOut: function() {
+        $(this).children('.toolboxgroup').hide();
+    },
+
+    createSeperator: function(config) {
+        var seperator = $('<div/>');
+        seperator.html(config.title);
+        seperator.addClass('seperator');
+        return seperator;
+    },
+            
+    createButton: function(config) {
         var item = $('<div/>');
         item.addClass('inline');
         item.addClass('item');
         item.attr('title', config.title);
-        
+
         var me = this;
         item.click(function() {
+            if (me.config.closeOnClick !== false) 
+                me.outerContainer.hide();
             config.click(config.extraArgs);
-            me.outerContainer.hide();
         });
-        
+
         var img = $('<img/>');
         img.attr('src', config.icon);
         img.attr('alt', config.title);
         item.append(img);
+        
         return item;
     },
             

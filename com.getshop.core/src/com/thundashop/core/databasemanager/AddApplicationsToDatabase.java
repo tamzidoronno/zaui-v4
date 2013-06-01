@@ -82,7 +82,7 @@ public class AddApplicationsToDatabase {
         apps.add(hovyTheme);
         
         ApplicationSettings yovyTheme = createSettings(
-                "HovyTheme", 
+                    "YovyTheme", 
                 "43d02b7f-cde1-4e10-8e8e-8a6ba17dfc9c", 
                 emtpy, 
                 "", 

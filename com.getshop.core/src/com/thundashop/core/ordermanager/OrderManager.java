@@ -95,7 +95,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             newOrder += "<br> " + cartItem.getCount() + "  x " + product.name;
             
             if (cartItem.getVariations().size() > 0) {
-                newOrder += "<br><b>You selected: </b>";
+                newOrder += " (";
                 for (String variation : cartItem.getVariations()) {
                     if (variation.equals("")) {
                         continue;
@@ -103,9 +103,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
                     newOrder += product.getVariation(variation).title+", ";
                 }
+                newOrder = newOrder.substring(0, newOrder.length() - 2) + ")";
             }
             
-            newOrder = newOrder.substring(0, newOrder.length() - 2);
             newOrder += "<br>";
         }
 

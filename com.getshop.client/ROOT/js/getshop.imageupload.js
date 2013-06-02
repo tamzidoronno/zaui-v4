@@ -53,8 +53,10 @@
                 console.log(img.height);
                 canvas.width = img.width * ratio;
                 canvas.height = img.height * ratio;
+                htmlCanvas.width = img.width * ratio;
+                htmlCanvas.height = img.height * ratio;
                 canvas.hide();
-                ctx.clearRect(0, 0, maxWidth, maxWidth);
+                ctx.clearRect(0, 0, maxWidth, maxHeight);
                 ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);
                 url.revokeObjectURL(src);
                 container.hide();

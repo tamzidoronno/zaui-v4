@@ -125,6 +125,7 @@ class SiteBuilder extends ApplicationBase {
     public function prepopulateData() {
         //Set default color to blue.
         $this->getFactory()->setConfigurationFlag("color", "blue");
+        $this->getFactory()->setConfigurationFlag("bgimage", "grey_wash_wall");
         
         $store = $this->getApi()->getStoreManager()->getMyStore();
         $store->configuration->colors->textColor = "000000";

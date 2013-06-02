@@ -35,7 +35,7 @@ class HelperCart {
             }
         }
         $translator = new \ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager();
-        return  $translator->__w("Your selected").": ".implode(", ", $variationsprint);
+        return  implode(", ", $variationsprint);
     }
     
     private static function getText($variation, $id) {

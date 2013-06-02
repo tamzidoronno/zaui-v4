@@ -26,6 +26,9 @@ class Page extends FactoryBase {
         return $apps;
     }
 
+    public function isSystemPage() {
+        return in_array($this->id, Page::$systemPages);
+    }
     /**
      * Get the specified area.
      * 

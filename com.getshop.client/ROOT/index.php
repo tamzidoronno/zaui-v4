@@ -202,6 +202,7 @@ if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() && !$factor
 
 if(isset($_GET['page'])) {
     if(strstr($_GET['page'], "_standalone")) {
+        
         ?>
 <script>
     $(function() {
@@ -212,10 +213,19 @@ if(isset($_GET['page'])) {
             $('body').css('height',$(window).height());
             $('body').css('width',$(window).width());
         });
+        mainmenu.hide();
     });
+    
 </script>
         <?
     }
 }
 
 ?>
+
+<script>
+$(document).ready(function() {
+    PubSub.publish('NAVIGATION_COMPLETED', {});
+});
+
+</script>

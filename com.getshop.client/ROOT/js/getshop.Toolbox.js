@@ -6,21 +6,35 @@ GetShopToolbox = function(config) {
 GetShopToolbox.prototype = {
     init: function() {
         this.createContainer();
+        this.refresh();
+        this.addToPage();
+        this.enableDrag();
+    },
+            
+    refresh: function() {
+        this.container.html("");
         this.addTitle();
         var entryGroup = this.createEntries(this.config.items);
         this.container.append(entryGroup);
-        this.addToPage();
-        this.enableDrag();
         this.addCloseButton();
     },
-            
+
     addCloseButton: function() {
         var me = this;
         var close = $('<div/>');
+        this.closeButton = close;
+        
         close.addClass('close');
         close.click(function() {
-            me.outerContainer.hide();
+            if (me.config.closeOnClick === false) {
+                me.outerContainer.find('.toolboxgroup:first').slideUp();
+                me.closeButton.hide();
+            } else {
+                me.outerContainer.hide();
+            }
         });
+        
+        
         this.container.append(close);
     },
     
@@ -29,9 +43,14 @@ GetShopToolbox.prototype = {
     },
 
     addTitle: function() {
+        var me = this;
         var title = $('<div/>');
         title.addClass('title');
         title.html(this.config.title);
+        title.click(function() {
+            me.outerContainer.find('.toolboxgroup:first').slideDown();
+            me.closeButton.show();
+        });
         this.container.append(title);
     },
             
@@ -47,7 +66,7 @@ GetShopToolbox.prototype = {
         this.outerContainer.append(this.container);
     },
                         
-    createEntries: function(items, sub) {
+    createEntries: function(items, parent) {
         var entryGroup = $('<div/>');
         var j = 0;
         for (var i = 0; i < items.length; i++) {
@@ -62,7 +81,7 @@ GetShopToolbox.prototype = {
                 entryGroup.append(row);
             }
             
-            var item = this.createItem(config);
+            var item = this.createItem(config, parent);
             row.append(item);
             
             j++;
@@ -72,19 +91,23 @@ GetShopToolbox.prototype = {
         return entryGroup;
     },
 
-    createItem: function(config) {
+    createItem: function(config, selfContainer) {
         var item = null;
         
         if (config.type && config.type === "seperator") {
             item = this.createSeperator(config);
         } else {
-            item = this.createButton(config);
+            item = this.createButton(config, selfContainer);
         }
         
         if (config.items) {
-            var group = this.createEntries(config.items);
+            var group = this.createEntries(config.items, item);
             item.append(group);
             item.hover(this.buttonWithChildHover, this.buttonWithChildHoverOut);
+        }
+             
+        if (config.disableOnSystemPages) {
+            item.addClass('disableOnSystemPages');
         }
         
         return item;
@@ -105,23 +128,46 @@ GetShopToolbox.prototype = {
         return seperator;
     },
             
-    createButton: function(config) {
+    createButton: function(config, parent) {
         var item = $('<div/>');
         item.addClass('inline');
         item.addClass('item');
         item.attr('title', config.title);
+   
+        if (typeof(config.extraArgs) !== "undefined")
+            item.attr('extraarg', config.extraArgs);
+        
+        if (config.class)
+            item.addClass(config.class);
 
         var me = this;
         item.click(function() {
             if (me.config.closeOnClick !== false) 
                 me.outerContainer.hide();
+            
+            if (parent) {
+                parent.find('.toolboxgroup').hide();
+            }
+            
             config.click(config.extraArgs);
         });
 
-        var img = $('<img/>');
-        img.attr('src', config.icon);
-        img.attr('alt', config.title);
-        item.append(img);
+        if (config.icon) {
+            var img = $('<img/>');
+            img.attr('src', config.icon);
+            img.attr('alt', config.title);
+            item.append(img);
+        }
+        
+        if (config.text) {
+            var div = $('<div/>');
+            div.html(config.text);
+            item.append(div);
+        }
+        
+        if (config.appid) {
+            item.attr('appid', config.appid);
+        }
         
         return item;
     },
@@ -180,5 +226,14 @@ GetShopToolbox.prototype = {
             
     show: function() {
         this.outerContainer.fadeIn(300);
+    },
+            
+    getConfig: function() {
+        return this.config;
+    },
+            
+    setConfig: function(config) {
+        this.config = config;
+        this.refresh();
     }
 };

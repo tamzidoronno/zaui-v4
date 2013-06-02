@@ -2,36 +2,45 @@ $(document).ready(function() {
     var config = {
         draggable : true,
         closeOnClick: false,
-        title : "Layout",
+        title : "MainMenu",
         items : [
             {
                 icon : "/skin/default/images/one-column-icon.png",
                 title : "One column layout",
                 click : thundashop.MainMenu.changeLayout,
-                extraArgs: 4
+                extraArgs: 4,
+                class: 'layout',
+                disableOnSystemPages: true
             },
             
             {
                 icon : "/skin/default/images/two-column-left-icon.png",
                 title : "Two column layout with a left sidebar",
                 click : thundashop.MainMenu.changeLayout,
-                extraArgs: 2
+                extraArgs: 2,
+                class: 'layout',
+                disableOnSystemPages: true
             },
             {
                 icon : "/skin/default/images/two-column-rigth-icon.png",
                 title : "Two column layout with a right sidebar",
                 click : thundashop.MainMenu.changeLayout,
-                extraArgs: 3
+                extraArgs: 3,
+                class: 'layout',
+                disableOnSystemPages: true
             },
             {
                 icon : "/skin/default/images/three-column-icon.png",
                 title : "Three column layout",
                 click : thundashop.MainMenu.changeLayout,
-                extraArgs: 1
+                extraArgs: 1,
+                class: 'layout',
+                disableOnSystemPages: true
             },
             {
                 type: 'seperator',
-                title: 'Security'
+                title: 'Security',
+                disableOnSystemPages: true
             },
             {
                 icon : "/skin/default/images/lock.png",
@@ -39,44 +48,62 @@ $(document).ready(function() {
                 extraArgs: {},
                 items : [
                     {
-                        icon : "/skin/default/images/two-column-rigth-icon.png",
-                        title : "Two column layout with a right sidebar",
-                        click : thundashop.MainMenu.changeLayout,
-                        extraArgs: 3
+                        text : 'All',
+                        class: 'security',
+                        click : thundashop.MainMenu.updateUserLevel,
+                        extraArgs: 0,
                     },
                     {
-                        icon : "/skin/default/images/three-column-icon.png",
-                        title : "Three column layout",
-                        click : thundashop.MainMenu.changeLayout,
-                        extraArgs: 1
+                        text : 'Customers',
+                        class: 'security',
+                        click : thundashop.MainMenu.updateUserLevel,
+                        extraArgs: 10,
+                    },
+                    {
+                        text : 'Editors',
+                        class: 'security',
+                        click : thundashop.MainMenu.updateUserLevel,
+                        extraArgs: 50,
+                    },
+                    {
+                        text : 'Admins',
+                        class: 'security',
+                        click : thundashop.MainMenu.updateUserLevel,
+                        extraArgs: 100
                     }        
-                ]
+                ],
+                disableOnSystemPages: true
             },
             {
                 type: 'seperator',
-                title: 'Applications'
+                title: 'Applications',
+                disableOnSystemPages: true
             }, 
             {
                 icon : "/skin/default/images/add_plus.png",
                 title : "Add more applications to this page.",
                 click : thundashop.MainMenu.showAddApplication,
-                extraArgs: {}
+                extraArgs: {},
+                disableOnSystemPages: true
             },
             {
                 icon : "/skin/default/images/trash-can.png",
                 title : "Remove applications that are added",
                 click : thundashop.MainMenu.deleteApplicationClicked,
-                extraArgs: {}
+                extraArgs: {},
+                disableOnSystemPages: true
             },
             {
                 icon : "/skin/default/images/reorder.png",
                 title : "Move applications",
                 click : thundashop.MainMenu.reorderApplicationClicked,
-                extraArgs: {}
+                extraArgs: {},
+                disableOnSystemPages: true
             },
             {
                 type: 'seperator',
-                title: 'Webshop'
+                title: 'Webshop',
+                disableOnSystemPages: true
             },
             {
                 icon : "/skin/default/images/color-palette.png",
@@ -106,7 +133,8 @@ $(document).ready(function() {
                 icon : "/skin/default/images/page.png",
                 title : "Page settings",
                 click : thundashop.MainMenu.goToStoresettings,
-                extraArgs: {}
+                extraArgs: {},
+                disableOnSystemPages: true
             }
         ]
     };
@@ -115,4 +143,89 @@ $(document).ready(function() {
     
     $(mainmenu.outerContainer).css('left', '100px');
     $(mainmenu.outerContainer).css('top', '100px');
+});
+
+// Updates the menu on navigation.
+PubSub.subscribe('NAVIGATION_COMPLETED', function() {
+    
+    var moreApps = $('.moreapps').find('.renderstandalone');
+    
+    var config = mainmenu.getConfig();
+    var items = [];
+    $(config.items).each(function() {
+        if (!this.addon) {
+            items.push(this);
+        }
+    });
+    config.items = items;
+        
+    if (moreApps.length > 0 ) {
+        var seperator = {
+            type: 'seperator',
+            title: 'More',
+            addon : true
+        };
+        
+        config.items.push(seperator);
+        
+        moreApps.each(function() {
+            var appName = $(this).attr('app');
+            var appId =  $(this).attr('appid');
+            var item = {
+                icon : $(this).find('img').attr('src'),
+                title : appName,
+                click : function() {},
+                class: 'renderstandalone',
+                appid: appId,
+                addon : true
+            };
+            console.log("TEST");
+            config.items.push(item);
+        });
+    }
+    
+    mainmenu.setConfig(config);
+    
+    var type = $('.skelholder').find('#skeletontype').attr('value');
+    mainmenu.outerContainer.find('.layout').removeClass('active');
+    mainmenu.outerContainer.find(".layout[extraarg='"+type+"']").addClass("active");
+    
+    var userlevel = $('.skelholder').find('#securitylevel').attr('value');
+    mainmenu.outerContainer.find('.security').removeClass('active');
+    mainmenu.outerContainer.find(".security[extraarg='"+userlevel+"']").addClass("active");
+    
+    var systemPage = $('.skelholder').find('#systempage').attr('value');
+    if (systemPage) {
+        mainmenu.outerContainer.find('.disableOnSystemPages').hide();
+    } else {
+        mainmenu.outerContainer.find('.disableOnSystemPages').show();
+    }
+});
+
+var lastScrollTop = 0;
+var totalMove = 0;
+// Make menu follow when scrolling
+
+$(window).scroll(function(e){     
+    var st = $(this).scrollTop();
+    var positiontop = $(mainmenu.outerContainer).position().top;
+    
+    var move = 0;
+    var moveText = "";
+    if (st > lastScrollTop){
+        var diff = st - lastScrollTop;
+        move = positiontop + diff;
+    } else {
+        var diff = lastScrollTop - st ;
+        move =  positiontop - diff;
+    }
+    
+    var diff = st - lastScrollTop;
+    totalMove += diff;
+    
+    $(mainmenu.outerContainer).animate({
+        top: "+="+diff+"px"
+    }, 70, 'linear');
+    
+    lastScrollTop = st;
 });

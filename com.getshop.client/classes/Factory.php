@@ -133,7 +133,8 @@ class Factory extends FactoryBase {
             }
         }
         
-        echo "\n" . '<script type="text/javascript" src="js/getshop.MainMenuToolbox.js"></script>';
+        if ($this->isEditorMode())
+            echo "\n" . '<script type="text/javascript" src="js/getshop.MainMenuToolbox.js"></script>';
     }
 
     public function loadJavascriptFilesEditorMode() {

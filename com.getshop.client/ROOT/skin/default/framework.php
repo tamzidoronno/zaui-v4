@@ -1083,6 +1083,7 @@ a img {
 
 .mainmenu-outer .content {
     z-index: 500;
+    display:none;
 }
 
 #informationbox .applicationamanagement .title { font-size: 20px; color:#0A0A0A;margin-top: 5px; border-top: solid 1px #DDDDDD;padding-top: 5px; }
@@ -1213,6 +1214,10 @@ background-color: #EFEFEF; z-index: 2000; position:fixed; left:0px; bottom:0px;w
     background-image: url('/skin/default/images/toolboxrowbackground.png');
 }
 
+.GetShopToolbox .item.active {
+    background-color: green;
+}
+
 .GetShopToolbox .close {
     cursor: pointer;
     width: 20px;
@@ -1226,7 +1231,12 @@ background-color: #EFEFEF; z-index: 2000; position:fixed; left:0px; bottom:0px;w
 .GetShopToolbox .item img {
     width: 40px;
     height: 40px;
-    
+}
+
+.GetShopToolbox .item div {
+    color: #333;
+    font-size: 10px;
+    line-height: 40px;
 }
 
 .designselectionbox .design .price { opacity:0.8; position:absolute; border: solid 1px #BBB; bottom: 4px; right:4px; background-color:#FFF; padding:1px;border-radius: 5px; }

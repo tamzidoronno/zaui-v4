@@ -70,7 +70,7 @@ public class AddApplicationsToDatabase {
                 "29fbf912-8d65-41f3-abbb-259354cf0322", 
                 emtpy, 
                 "", 
-                ApplicationSettings.Type.Theme, true);
+                ApplicationSettings.Type.Theme, false);
         apps.add(galius);
         
         ApplicationSettings hovyTheme = createSettings(
@@ -78,7 +78,7 @@ public class AddApplicationsToDatabase {
                 "f49636a8-b50b-4ec1-a569-d2a72e14f5cb", 
                 emtpy, 
                 "", 
-                ApplicationSettings.Type.Theme, true);
+                ApplicationSettings.Type.Theme, false);
         apps.add(hovyTheme);
         
         ApplicationSettings yovyTheme = createSettings(
@@ -86,7 +86,7 @@ public class AddApplicationsToDatabase {
                 "43d02b7f-cde1-4e10-8e8e-8a6ba17dfc9c", 
                 emtpy, 
                 "", 
-                ApplicationSettings.Type.Theme, true);
+                ApplicationSettings.Type.Theme, false);
         apps.add(yovyTheme);
         
 //        apps.add(createSettings(
@@ -245,14 +245,15 @@ public class AddApplicationsToDatabase {
 //                "Get started building yourself a left / right menu, you can do it by adding this application!<br><br>This menu support subentries and hardlinking, and for each entry a page is created where you can add products / other applications.", 
 //                ApplicationSettings.Type.Webshop, false));
 //        
-//        ApplicationSettings reporting = createSettings(
-//                "Reporting", 
-//                "04259325-abfa-4311-ab81-b89c60893ce1", 
-//                emtpy, 
-//                "Keep track of your products, orders, pages, etc with this application. Generate reports on a hourly, daily, weekly and monthly basis.", 
-//                ApplicationSettings.Type.Reporting, true);
-//        reporting.isSingleton = true;
-//        apps.add(reporting);
+        ApplicationSettings reporting = createSettings(
+                "Reporting", 
+                "04259325-abfa-4311-ab81-b89c60893ce1", 
+                emtpy, 
+                "Keep track of your products, orders, pages, etc with this application. Generate reports on a hourly, daily, weekly and monthly basis.", 
+                ApplicationSettings.Type.Reporting, true);
+        reporting.isSingleton = true;
+        reporting.renderStandalone = true;
+        apps.add(reporting);
 //        
 //        apps.add(createSettings(
 //                "Shipper", 
@@ -504,7 +505,7 @@ public class AddApplicationsToDatabase {
 //        context.getBean(AddApplicationsToDatabase.class).updateUserPages();
 //        
 //        AddPageSettingsIdToAppConfigurationObject.main(args);
-//        context.getBean(AddApplicationsToDatabase.class).showLinks();
+        context.getBean(AddApplicationsToDatabase.class).showLinks();
         java.lang.System.exit(1);
     }
     

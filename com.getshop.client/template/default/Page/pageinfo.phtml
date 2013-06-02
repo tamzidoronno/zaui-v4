@@ -1,0 +1,6 @@
+<div>
+    <input type="hidden" id="pageid" value="<?echo $this->getPage()->id; ?>" />
+    <input type="hidden" id="skeletontype" value="<?echo $this->getPage()->skeletonType; ?>" />
+    <input type="hidden" id="securitylevel" value="<?echo $this->getPage()->getUserLevel(); ?>" />
+    <input type="hidden" id="systempage" value="<?echo $this->getPage()->isSystemPage(); ?>" />    
+</div>

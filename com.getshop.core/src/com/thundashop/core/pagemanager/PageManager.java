@@ -179,7 +179,9 @@ public class PageManager extends ManagerBase implements IPageManager {
         Page toBeParent = pagePool.get(parentPageId);
         
         page.parent = toBeParent;
+        page.type = toBeParent.type;
         pagePool.savePage(page);
+        
     }
 
     @Override

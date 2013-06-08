@@ -137,25 +137,28 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
-
     public void setOrderStatus(String password, String orderId, String currency, double price, int status) throws ErrorException {
-        if (password.equals("mlorrkfc¤czx!%$$2@¡")) {
-            Order order = orders.get(orderId);
-
+        if (password.equals("asimpleButP0werfulPassw0rD")) {
             if (orderId.equals("applications")) {
                 handleApplicationPayment(currency, price);
-            } else if (order.cart.getTotal() == price) {
-                order.status = status;
-                saveOrderInternal(order);
             } else {
-                String content = "Hi.<br>";
-                content += "We received a payment notification from paypal for order: " + orderId + " which is incorrect.<br>";
-                content += "The price or the currency differ from what has been registered to the order.<br>";
+                Order order = orders.get(orderId);
+                if (order.cart.getTotal() == price) {
+                    order.status = status;
+                    saveOrderInternal(order);
+                } else {
+                    String content = "Hi.<br>";
+                    content += "We received a payment notification from paypal for order: " + orderId + " which is incorrect.<br>";
+                    content += "The price or the currency differ from what has been registered to the order.<br>";
 
-                String to = getStore().configuration.emailAdress;
-                mailFactory.send("post@getshop.com", to, "Possible fraud attempt", content);
-                mailFactory.send("post@getshop.com", "post@getshop.com", "Possible fraud attempt", content);
+                    String to = getStore().configuration.emailAdress;
+                    mailFactory.send("post@getshop.com", to, "Possible fraud attempt", content);
+                    mailFactory.send("post@getshop.com", "post@getshop.com", "Possible fraud attempt", content);
+                }
             }
+        } else {
+            mailFactory.send("post@getshop.com", "post@getshop.com", "Status update failure", "tried to use password:" + password);
+            
         }
     }
 
@@ -165,7 +168,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<ApplicationSubscription> subscriptions = appManager.getUnpayedSubscription();
         double total = 0;
         for (ApplicationSubscription appsub : subscriptions) {
-            if(appsub.app != null && appsub.app.price != null) {
+            if (appsub.app != null && appsub.app.price != null) {
                 total += appsub.app.price;
             }
         }
@@ -173,14 +176,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (total == price && currency.equals("USD")) {
             appManager.renewAllApplications("fdder9bbvnfif909ereXXff");
         } else {
-                String content = "Hi.<br>";
-                content += "We received a payment notification from paypal for order for applications which is incorrect.<br>";
-                content += "The price or the currency differ from what has been registered to the order <br>";
-                content += "Price : " + price+ " <br>";
-                content += "Currency : " + currency+ " <br>";
+            String content = "Hi.<br>";
+            content += "We received a payment notification from paypal for order for applications which is incorrect.<br>";
+            content += "The price or the currency differ from what has been registered to the order <br>";
+            content += "Price : " + price + " <br>";
+            content += "Currency : " + currency + " <br>";
 
-                String to = getStore().configuration.emailAdress;
-                mailFactory.send("post@getshop.com", "post@getshop.com", "Application fraud attempt", content);
+            String to = getStore().configuration.emailAdress;
+            mailFactory.send("post@getshop.com", "post@getshop.com", "Application fraud attempt", content);
         }
     }
 }

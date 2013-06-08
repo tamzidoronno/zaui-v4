@@ -6,11 +6,9 @@ import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,18 +16,17 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
+@Scope("prototype")
 public class StoreManager extends ManagerBase implements IStoreManager {
-
-    private SessionFactory sessionFactory = new SessionFactory();
-    private ConcurrentHashMap<String, Store> stores = new ConcurrentHashMap<>();
+    @Autowired
+    public StorePool storePool;
+    
     @Autowired
     public MailFactory mailFactory;
 
     @Autowired
     public StoreManager(Logger log, DatabaseSaver databaseSaver) {
         super(log, databaseSaver);
-        isSingleton = true;
-        storeId = "all";
     }
 
     @PostConstruct
@@ -39,97 +36,16 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
-        for (DataCommon dataCommon : data.data) {
-            if (dataCommon instanceof Store) {
-                Store store = (Store) dataCommon;
-                stores.put(store.id, store);
-            }
-            if (dataCommon instanceof SessionFactory) {
-                sessionFactory = (SessionFactory) dataCommon;
-                sessionFactory.ready = true;
-            }
-        }
-    }
-
-    private Store getStoreByWebaddress(String webAddress) throws ErrorException {
-        Store store = null;
-
-        for (Store istore : stores.values()) {
-            if (istore.webAddress != null && istore.webAddress.equalsIgnoreCase(webAddress)) {
-                store = istore;
-            }
-            if (istore.webAddressPrimary != null && istore.webAddressPrimary.equalsIgnoreCase(webAddress)) {
-                store = istore;
-            }
-            if (istore.additionalDomainNames != null) {
-                for (String storeAddr : istore.additionalDomainNames) {
-                    if (storeAddr.equalsIgnoreCase(webAddress)) {
-                        store = istore;
-                    }
-                }
-            }
-        }
-
-        return store;
-    }
-
-    private Store getStore(String id) {
-        Store store = stores.get(id);
-        if (store != null) {
-            store.storeId = storeId;
-        }
-        return store;
-    }
-
-    public Store getStoreBySessionId(String sessionId) throws ErrorException {
-        String storeId = sessionFactory.getObject(sessionId, "storeId");
-        if (storeId == null) {
-            return null;
-        }
-
-        Store store = getStore(storeId);
-
-        if (store == null) {
-            throw new ErrorException(23);
-        }
-
-        return store;
     }
 
     @Override
     public Store initializeStore(String webAddress, String sessionId) throws ErrorException {
-        Store store = getStoreByWebaddress(webAddress);
-        if (store == null) {
-            return null;
-        }
-        if (!sessionFactory.exists(sessionId)) {
-            sessionFactory.addToSession(sessionId, "storeId", store.id);
-        }
-        
-        if(store.configuration.configurationFlags == null) {
-            store.configuration.configurationFlags = new HashMap();
-        }
-        
-        if(AppContext.devMode) {
-            store.configuration.configurationFlags.put("devMode","true");
-        }
-        
-        return store;
-    }
-
-    @Scheduled(fixedDelay = 5000)
-    public void saveSessionFactory() throws ErrorException {
-        
-//        if(sessionFactory != null  && sessionFactory.ready) {
-//            sessionFactory.prepareForSaving();
-//            sessionFactory.storeId = "all";
-//            databaseSaver.saveObject(sessionFactory, credentials);
-//        }
+        return storePool.initialize(webAddress, sessionId);
     }
 
     @Override
     public Store getMyStore() throws ErrorException {
-        return this.getStore();
+        return storePool.getStoreBySessionId(getSession().id);
     }
 
     @Override
@@ -140,7 +56,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         
         Store store = getStore();
         store.configuration = config;
-        databaseSaver.saveObject(store, credentials);
+        storePool.saveStore(store);
         return store;
     }
 
@@ -156,7 +72,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         }
 
         store.webAddressPrimary = domainName;
-        databaseSaver.saveObject(store, credentials);
+        storePool.saveStore(store);
         return store;
     }
 
@@ -173,83 +89,21 @@ public class StoreManager extends ManagerBase implements IStoreManager {
                 store.additionalDomainNames.remove(store.webAddressPrimary);
             }
         }
-        databaseSaver.saveObject(store, credentials);
-        return store;
-    }
-
-    @Override
-    public Store createStore(String shopname, String email, String password) throws ErrorException {
-        String webAddress = shopname.replace(" ", "").toLowerCase();
-        
-        if(isAddressTaken(webAddress)) {
-            throw new ErrorException(94);
-        }
-        
-        Store store = createStoreObject(webAddress, shopname, email);
-        notifyUsByEmail(store);
+        storePool.saveStore(store);
         return store;
     }
     
+    
     @Override
     public boolean isAddressTaken(String address) throws ErrorException {
-        for(Store store : stores.values()) {
-            if(store.webAddress!= null &&store.webAddress.equalsIgnoreCase(address)) {
-                return true;
-            }
-            if(store.webAddressPrimary != null && store.webAddressPrimary.equalsIgnoreCase(address)) {
-                return true;
-            }
-            if(store.additionalDomainNames != null) {
-                for(String additional : store.additionalDomainNames) {
-                    if(additional.equalsIgnoreCase(address)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    private void notifyUsByEmail(Store store) throws ErrorException {
-        String to = store.configuration.emailAdress;
-        String from = "post@getshop.com";
-        String title = "Your webshop is ready.";
-        String content = "Thank you for trying a webshop solution from GetShop. <br><br> Below you find information necessary to access your webshop. <br>"
-                + "<br><b> Your webshop address is: </b> <a href='http://" + store.webAddress + "'>" + store.webAddress + "</a>"
-                + "<br><b> Username: </b> " + store.configuration.emailAdress
-                + "<br>"
-                + "<br>"
-                + "<br><b> To get started we recommend you to <a href='http://www.youtube.com/watch?v=01EHOSHfTs4'>watch our introduction movie</a></b>"
-                + "<br>"
-                + "<br>"
-                + "We wish you the best of luck towards your webshop! <br><br>If you have any questions on your mind, you can simply hit reply on this email.<br><br>"
-                + "<div style='color: #BBB'>Best Regards"
-                + "<br> Kai Toender"
-                + "<br> COF GetShop</div>";
-
-        mailFactory.setStoreId(storeId);
-        mailFactory.send(from, to, title, content);
-    }
-
-    private Store createStoreObject(String webAddress, String shopname, String email) throws ErrorException {   
-        Store store = new Store();
-        store.storeId = storeId;
-        store.webAddress = webAddress;
-        store.configuration = new StoreConfiguration();
-        store.configuration.shopName = shopname;
-        store.configuration.emailAdress = email;
-        store.partnerId = "GetShop";
-
-        databaseSaver.saveObject(store, credentials);
-        stores.put(store.id, store);
-        return store;
+        return storePool.isAddressTaken(address);
     }
 
     @Override
     public Store setIntroductionRead() throws ErrorException {
         Store store = getStore();
         store.readIntroduction = true;
-        databaseSaver.saveObject(store, credentials);
+        storePool.saveStore(store);
         return store;
     }
 
@@ -258,7 +112,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         Store store = getStore();
         if (password.equals("3322xcEE-_239%")) {
             store.configuration.hasSMSPriviliges = toggle;
-            databaseSaver.saveObject(store, credentials);
+            storePool.saveStore(store);
         } else {
             throw new ErrorException(70);
         }
@@ -270,7 +124,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         Store store = getStore();
         if (password.equals("32_9066_cdWDxzRF")) {
             store.isExtendedMode = toggle;
-            databaseSaver.saveObject(store, credentials);
+            storePool.saveStore(store);
         } else {
             throw new ErrorException(70);
         }
@@ -287,33 +141,32 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         if(partner.equals("") || partner.trim().length() == 0) {
             throw new ErrorException(26);
         }
-        Store store = stores.get(id);
+        
+        Store store = storePool.getStore(id);
         if(store == null) {
             throw new ErrorException(23);
         }
         
         store.partnerId = partner;
-        databaseSaver.saveObject(store, credentials);
+        storePool.saveStore(store);
     }
     
-    public boolean isSmsActivate(String storeId) {
-        Store store = stores.get(storeId);
-        
-        if (store != null) {
-            return getStore(storeId).configuration.hasSMSPriviliges;
-        }
-        
-        return false;
-    }
-
     @Override
     public void delete() throws ErrorException {
         Store store = getMyStore();
-        if (store == null) {
-            throw new ErrorException(26);
-        }
-        
-        stores.remove(store.id);
-        databaseSaver.deleteObject(store, credentials);
+        storePool.delete(store);
     }
+
+    @Override
+    public Store createStore(String hostname, String email, String password) throws ErrorException {
+        /**
+         * This function is not really in use. 
+         * It skips StoreManager, and goes directly to StorePool 
+         * and executes the createStore function there.
+         * 
+         * Its added here to support our api.
+         */
+        throw new UnsupportedOperationException("Not in use."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

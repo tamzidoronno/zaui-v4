@@ -4,7 +4,6 @@
  */
 package com.thundashop.core.common;
 
-import com.thundashop.core.socket.CacheManager;
 import org.springframework.context.ApplicationContext;
 
 /**
@@ -14,6 +13,5 @@ import org.springframework.context.ApplicationContext;
 public class AppContext {
     public static ApplicationContext appContext;
     public static StorePool storePool;
-    public static CacheManager cacheManager;
     public static boolean devMode;
 }

@@ -13,7 +13,6 @@ import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageArea;
 import com.thundashop.core.productmanager.ProductManager;
-import com.thundashop.core.storemanager.StoreManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,9 +34,6 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     @Autowired
     public PagePoolImpl pagePool;
-    
-    @Autowired
-    public StoreManager storeManager;
     
     @Autowired
     public PageManager(Logger log, DatabaseSaver databaseSaver) {

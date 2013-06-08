@@ -12,13 +12,12 @@ import com.thundashop.core.common.StoreComponent;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.messagehandler.data.Message;
-import com.thundashop.core.storemanager.StoreManager;
+import com.thundashop.core.storemanager.StorePool;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -49,7 +48,7 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
     public DatabaseSaver databaseSaver;
 
     @Autowired
-    public StoreManager storeManager;
+    public StorePool storeManager;
     
     public SMSFactoryImpl() {
         credentials = new Credentials(MessageManager.class);

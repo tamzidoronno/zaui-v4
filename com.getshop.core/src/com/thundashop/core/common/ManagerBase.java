@@ -8,7 +8,6 @@ import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pagemanager.IPageManager;
-import com.thundashop.core.socket.CacheManager;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
 import java.lang.reflect.Field;
@@ -61,10 +60,6 @@ public class ManagerBase {
         this.ready = true;
     }
     
-    public CacheManager getCacheManager() {
-        return AppContext.cacheManager;
-    }
-   
     public void onReady() {}
         
     public HashMap<String, Setting> getSettings(String phpApplicationName) throws ErrorException {
@@ -98,7 +93,7 @@ public class ManagerBase {
     
     public Store getStore() throws ErrorException {
         StoreManager storeMgr = getManager(StoreManager.class);
-        return storeMgr.getStoreBySessionId(getSession().id);
+        return storeMgr.getMyStore();
     }
     
     public void setStoreIdToMailFactories() throws IllegalArgumentException, IllegalAccessException {

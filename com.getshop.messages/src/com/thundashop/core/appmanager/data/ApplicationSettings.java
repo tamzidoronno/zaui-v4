@@ -39,6 +39,7 @@ public class ApplicationSettings extends DataCommon implements Comparator<Applic
     public String clonedFrom;
     public int trialPeriode = 7;
     public boolean pageSingelton;
+    public List<String> allowedStoreIds = new ArrayList();
     
     @Override
     public int compare(ApplicationSettings o1, ApplicationSettings o2) {

@@ -77,6 +77,11 @@ public class ApplicationPool extends ManagerBase {
         updateApplicationSet();
         ArrayList<ApplicationSettings> list = new ArrayList(applications.values());
         
+        //Getshop owns them all. this is the getshop id.
+        if(storeid.equals("cdae85c1-35b9-45e6-a6b9-fd95c18bb291")) {
+            return list;
+        }
+        
         ArrayList<ApplicationSettings> returnlist = new ArrayList();
         for(ApplicationSettings settings : list) {
             if(settings.isPublic) {

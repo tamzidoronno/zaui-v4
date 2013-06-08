@@ -15,6 +15,8 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.PageArea;
 import com.thundashop.core.storemanager.data.Store;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;

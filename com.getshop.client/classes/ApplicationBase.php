@@ -124,6 +124,7 @@ class ApplicationBase extends FactoryBase {
         $sendCore->settings = $newSettings; 
         $sendCore->appId = $this->getConfiguration()->id;
         $this->getApi()->getPageManager()->setApplicationSettings($sendCore);
+        $this->configuration->settings->{$key} = $setting;
     }
     
     public function showConfigurationMenu() {

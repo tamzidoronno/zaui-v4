@@ -9,6 +9,17 @@ var hasFadeInEffect = false;
 
 thundashop.Namespace.Register("thundashop.Ajax");
 
+thundashop.handleAjaxError = function(error, textstatus) {
+    $('#loaderbox').hide(); 
+   if(error.status === 402) {
+        var result = thundashop.common.hideInformationBox();
+        result.done(function() {
+            var event = thundashop.Ajax.createEvent('','loadpaymentinfo',$(this), {});
+            thundashop.common.showInformationBox(event,'Payment information');
+        });
+    }
+};
+
 thundashop.Ajax = {
     ajaxFile: 'handler.php',
     showErrorMessage: function(message) {
@@ -32,7 +43,8 @@ thundashop.Ajax = {
             success: function(response) {
                 callback(response);
                 $('#loaderbox').hide();
-            }
+            },
+            error: thundashop.handleAjaxError
         });
     },
     
@@ -73,10 +85,8 @@ thundashop.Ajax = {
                         $('#loaderbox').hide();
                     }
                 }
-            }, 
-            error: function(tesT, resp) {
-                console.log(resp);
-            }
+            },
+            error: thundashop.handleAjaxError
         });
     },
     postSynchron: function(event) {
@@ -91,7 +101,8 @@ thundashop.Ajax = {
             context: document.body,
             success: function(response) {
                 result = response;
-            }
+            },
+            error: thundashop.handleAjaxError
         });
 
         return result;
@@ -110,7 +121,8 @@ thundashop.Ajax = {
                 thundashop.Ajax.updateFromResponse(response);
                 if (response.errors && response.errors !== "")
                     result = false;
-            }
+            },
+            error: thundashop.handleAjaxError
         });
         return result;
     },
@@ -129,13 +141,7 @@ thundashop.Ajax = {
     updateFromResponse: function(response) {
         var scrolltop = $(window).scrollTop();
         if (response.errors) {
-            console.log(response.errorCodes);
-            if(response.errorCodes[0] === 93) {
-                var event = thundashop.Ajax.createEvent('','loadpaymentinfo',$(this), {});
-                thundashop.common.showInformationBox(event,'Payment information');
-            } else {
-                thundashop.Ajax.showErrorMessage(response.errors)
-            }
+            thundashop.Ajax.showErrorMessage(response.errors)
         } else {
             for (var divid in response) {
                 if (response[divid] !== null) {
@@ -204,7 +210,8 @@ thundashop.Ajax = {
                 if (typeof(callback) !== "undefined" && typeof(callback) !== "boolean") {
                     callback();
                 }
-            }
+            },
+            error: thundashop.handleAjaxError
         })
     },
     
@@ -222,7 +229,8 @@ thundashop.Ajax = {
             success: function(response) {
                 thundashop.Ajax.reloadCss();
                 $('#loaderbox').hide();
-            }
+            },
+            error: thundashop.handleAjaxError
         })
     }
 }

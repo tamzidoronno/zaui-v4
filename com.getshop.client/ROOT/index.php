@@ -73,6 +73,12 @@ if(isset($_GET['logonwithkey'])) {
         <?php
         $html = init($factory);
 
+        $google = $factory->getApplicationPool()->getApplicationsInstancesByNamespace("ns_0cf21aa0_5a46_41c0_b5a6_fd52fb90216f");
+        if($google) {
+            /* @var $google \ns_0cf21aa0_5a46_41c0_b5a6_fd52fb90216f\GoogleAnalytics */
+            $google[0]->render();
+        }
+
         $factory->loadJavascriptFiles();
         include "js/getshop.translation.php";
         $factory->showCssFiles();

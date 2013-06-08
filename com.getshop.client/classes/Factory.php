@@ -150,7 +150,6 @@ class Factory extends FactoryBase {
 
     public function initialize() {
         $this->store = $this->getApi()->getStoreManager()->initializeStore($_SERVER['HTTP_HOST'], session_id());
-        
         if($this->isEditorMode()) {
             $this->checkUserAgentAndUpdate();
             if(!strstr(strtolower($_SERVER['HTTP_USER_AGENT']), "chrome")) {

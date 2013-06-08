@@ -11,6 +11,9 @@ com.getshop.messages/build/
 
 com.getshop.client/app
 com.getshop.client/uploadedfiles
-/com.getshop.core/nbproject/private/
-/com.getshop.messages/nbproject/private/
-!/com.getshop.client/ROOT/index.php
+com.getshop.core/nbproject/private/
+com.getshop.messages/nbproject/private/
+
+com.getshop.client/app/
+com.getshop.client/uploadedfiles
+com.getshop.client/nbproject/private/

@@ -1,73 +1,59 @@
 package com.getshop.syncserver;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.thundashop.api.managers.GetShopApi;
 import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.appmanager.data.AvailableApplications;
 import com.thundashop.core.usermanager.data.User;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.lang.reflect.Type;
 import java.net.Socket;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author boggi
+ * TODO : Monitor server push messages, whenever a user wants to sync existing app.
+ * TODO : Handle move files better.
+ *    - Whenver a file is deleted, wait and see if a create file event is instantly being added, then it is a move event.
+ *    - Whenever a folder is being moved, wait and check if subfolders is being moved as well.
+ *    - Getshop user should be able to handle all applications, no mather what.
+ * 
  */
 class ClientHandler extends Thread {
 
     private final Socket socket;
-    private final PrintWriter out;
-    private final BufferedReader in;
-    private String storeAddress;
-    private String username;
-    private String password;
+    private Message authObject;
     private GetShopApi api;
     private MonitorOutgoingEvents monitoroutgoing;
-    private final InputStream stream;
-    private final BufferedInputStream bis;
+    private final DataInputStream reader;
+    private User loggedOnUser;
+    private String sessid;
     private String storeId;
-    private AvailableApplications allApps;
+    private final DataOutputStream writer;
+    AvailableApplications allApps;
+
 
     ClientHandler(Socket socket) throws IOException {
         this.socket = socket;
         this.socket.setTcpNoDelay(true);
-        out = new PrintWriter(socket.getOutputStream(), true);
-        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        bis = new BufferedInputStream(socket.getInputStream());
-        stream = socket.getInputStream();
+        reader = new DataInputStream(socket.getInputStream());
+        writer = new DataOutputStream(socket.getOutputStream());
     }
 
     @Override
     public void run() {
         try {
-            if (!authenticate()) {
-                return;
-            }
             monitoroutgoing = new MonitorOutgoingEvents(socket, api);
             monitoroutgoing.start();
             monitorIncomingEvents();
         } catch (IOException ex) {
             try {
+                ex.printStackTrace();
                 //Failed reading should cause disconnect.
                 System.out.println("Disconnecting");
                 socket.close();
@@ -81,137 +67,96 @@ class ClientHandler extends Thread {
         }
     }
 
-    private String readSocketLine() {
-        try {
-            String result = "";
-            while(true) {
-                byte[] b = new byte[1];
-                int read = bis.read(b);
-                if(read <= 0) {
-                    return null;
-                }
-                String character = new String(b);
-                if(character.equals("\n")) {
-                    break;
-                }
-                result += character;
-            }
-            return result;
-        } catch (Exception e) {
-        }
-        return null;
-    }
-
-    private boolean authenticate() throws Exception {
-        storeAddress = readSocketLine();
-        username = readSocketLine();
-        password = readSocketLine();
-
-        System.out.println("Got connection:" + storeAddress + " : " + username + " : " + password);
-
-        UUID idOne = UUID.randomUUID();
-
-        api = new GetShopApi(25554, "localhost", idOne.toString(), storeAddress);
-        System.out.println("Logging on");
-        User result = api.getUserManager().logOn(username, password);
-        System.out.println("Logged on as : " + result.fullName);
-        if (api.getUserManager().isLoggedIn()) {
-            writeLineToSocket("OK");
-            storeId = api.getStoreManager().getStoreId();
-            allApps = api.getAppManager().getAllApplications();
-            return true;
-        } else {
-            writeLineToSocket("Logon failed, please check your input");
-            return false;
-        }
-    }
-
-    private void writeLineToSocket(String message) {
-        out.write(message + "\n");
-        out.flush();
-    }
-
     private void monitorIncomingEvents() throws IOException, Exception {
         while (true) {
-            String line = readSocketLine();
-            if (line == null) {
-                monitoroutgoing.setDisconnected(true);
-                return;
-            }
-
-            switch (line) {
-                case "IN_CLOSE_WRITE":
-                    fetchFile();
-                    break;
-                case "IN_DELETE":
-                    removeFile();
-                    break;
-                case "IN_MOVE":
-                    moveFile();
-                    break;
-                case "FETCH_UNKNOWN":
-                    ArrayList<String> filesOnClient = fetchUnknown();
-                    checkNewFiles(filesOnClient);
-                    break;
+            Message msg = readMessageFromSocket();
+            if (msg.type == Message.Types.authenticate) {
+                authenticate(msg);
+            } else if(msg.type == Message.Types.sendfile) {
+                writeFile(msg);
+            } else if(msg.type == Message.Types.ping) {
+                pong(msg);
+            } else if(msg.type == Message.Types.deletefile) {
+                deleteFile(msg);
+            } else if(msg.type == Message.Types.movefile) {
+                moveFile(msg);
             }
         }
     }
 
-    private void fetchFile() throws IOException, Exception {
-        String path = readSocketLine();
-        path = translatePath(path);
-        if (path == null) {
-            this.writeLineToSocket("FAILED");
-            return;
-        }
-        
-        
-        System.out.println(path);
-        this.writeLineToSocket("OK");
-        
-        
-        long length = Long.parseLong(readSocketLine());
-        byte[] by = new byte[1024];
 
-        long total = 0;
-        File file = new File(path);
-        String folderPath = path.replace(file.getName(), "");
-        File fPath = new File(folderPath);
-        fPath.mkdirs();
-        file.delete();
-        System.out.println("Put in: " + path + " size: " + length);
-        if (length == 0) {
-            file.createNewFile();
+    private void authenticate(Message msg) throws Exception {
+        System.out.println("Authenticating : " + msg.username);
+
+        sessid = UUID.randomUUID().toString();
+        api = new GetShopApi(25554, "localhost", sessid, msg.address);
+        api.getStoreManager().initializeStore(msg.address, sessid);
+        this.loggedOnUser = api.getUserManager().logOn(msg.username, msg.password);
+        System.out.println("Logged on as : " + msg.username);
+
+        Message response = new Message();
+        if (api.getUserManager().isLoggedIn()) {
+            response.type = Message.Types.authenticated;
         } else {
-            FileOutputStream fos = new FileOutputStream(path);
-            BufferedOutputStream bos = new BufferedOutputStream(fos);
-            while (true) {
-                int size = bis.read(by);
-                if (size > 0) {
-                    bos.write(by, 0, size);
-                    bos.flush();
-                    total += size;
-                    if (total == length) {
-                        break;
-                    }
-                    if(total > length) {
-                        System.out.println("Failed transferring path: " + path);
-                        break;
-                    }
-                }
-                if(size < 0) {
-                    break;
-                }
-            }
-            bos.close();
-            fos.close();
+            response.type = Message.Types.failed;
         }
-        this.writeLineToSocket("OK");
+        storeId = api.getStoreManager().getStoreId();
+        sendMessage(response);
     }
 
+    private Message readMessageFromSocket() throws IOException {
+        int length = reader.readInt();
+        int totalsize = 0;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        do {
+            int maxsizearray = length - totalsize;
+            byte buffer[] = new byte[maxsizearray];
+            int s = reader.read(buffer);
+            baos.write(buffer, 0, s);
+            totalsize += s;
+            System.out.println(totalsize);
+        } while (totalsize != length);
+        byte result[] = baos.toByteArray();
+
+        Gson gson = new Gson();
+        return gson.fromJson(new String(result), Message.class);
+    }
+    
+    private void sendMessage(Message response) throws IOException {
+        Gson gson = new Gson();
+        byte[] result = gson.toJson(response).getBytes();
+
+        writer.writeInt(result.length);
+        writer.write(result);
+    }
+
+    private void writeFile(Message msg) throws Exception {
+        System.out.println("Writing : " + msg.filepath);
+        String translated = translatePath(msg.filepath);
+        Message response = new Message();
+        if(translated == null) {
+            response.type = Message.Types.failed;
+            response.errorMessage = "Invalid path in file trying to be sent, the apps folder has to be its root";
+        } else {
+            System.out.println("Translated to : " + translated);
+
+            File file = new File(translated);
+            if(!file.canWrite()) {
+                file.getParentFile().mkdirs();
+            }
+            FileOutputStream output = new FileOutputStream(file);
+            output.write(msg.data);
+            output.flush();
+            output.close();
+            response.type = Message.Types.ok;
+        }
+        sendMessage(response);
+    }
+    
     private String translatePath(String path) throws Exception {
         if (!path.contains("/apps/") && !path.contains("\\apps\\")) {
-            writeLineToSocket("Invalid path in file trying to be sent, the apps folder has to be its root");
+            return null;
         }
 
         String appName = "";
@@ -235,9 +180,11 @@ class ClientHandler extends Thread {
         }
 
         ApplicationSettings settings = null;
-        for (ApplicationSettings apps : allApps.applications) {
-            if (apps.appName.equals(appName) && apps.ownerStoreId.equals(storeId)) {
-                settings = apps;
+        if(allApps != null) {
+            for (ApplicationSettings apps : allApps.applications) {
+                if (apps.appName.equals(appName)) {
+                    settings = apps;
+                }
             }
         }
 
@@ -245,11 +192,11 @@ class ClientHandler extends Thread {
             try {
                 allApps = api.getAppManager().getAllApplications();
                 for (ApplicationSettings apps : allApps.applications) {
-                    if (apps.appName.equals(appName) && apps.ownerStoreId.equals(storeId)) {
+                    if (apps.appName.equals(appName)) {
                         settings = apps;
                     }
                 }
-            }catch(Exception e) {
+            } catch (Exception e) {
                 settings = null;
             }
         }
@@ -261,100 +208,56 @@ class ClientHandler extends Thread {
         return translated;
     }
 
-    public static void removeRecursive(Path path) throws IOException {
-        Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
-                    throws IOException {
-                Files.delete(file);
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-                // try to delete the file anyway, even if its attributes
-                // could not be read, since delete-only access is
-                // theoretically possible
-                Files.delete(file);
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                if (exc == null) {
-                    Files.delete(dir);
-                    return FileVisitResult.CONTINUE;
-                } else {
-                    // directory iteration failed; propagate exception
-                    throw exc;
-                }
-            }
-        });
-    }
-
-    private void removeFile() throws Exception {
-        String path = readSocketLine();
-        path = translatePath(path);
-        if (path == null) {
-            return;
-        }
-        File file = new File(path);
-        if (file.isDirectory()) {
-            removeRecursive(file.toPath());
-        } else if (file.exists()) {
-            System.out.println("Deleting: " + file.getAbsolutePath());
-            file.delete();
-        } else {
-            System.out.println("Failed to delete: " + file.getAbsolutePath());
-        }
-        writeLineToSocket("OK");
-    }
-
+    
     private String convertUUID(String uuid) {
         uuid = "ns_" + uuid.replace("-", "_");
         return uuid;
     }
 
-    private ArrayList<String> fetchUnknown() throws Exception {
-        String existingFiles = readSocketLine();
-
-        Gson gson = new GsonBuilder().serializeNulls().create();
-        Type theType = new TypeToken<ArrayList>() {
-        }.getType();
-        ArrayList<String> object = gson.fromJson(existingFiles, theType);
-        monitoroutgoing.doPush(object);
-        return object;
+    private void deleteFile(Message msg) throws Exception {
+          String translated = translatePath(msg.filepath);
+          Message response = new Message();
+          if(translated == null) {
+            response.type = Message.Types.failed;
+            response.errorMessage = "Path does not exists";
+          } else {
+              File file = new File(translated);
+              file.delete();
+              response.type = Message.Types.ok;
+          }
+          
+          sendMessage(response);
     }
 
-    private void moveFile() throws Exception {
-        String source = translatePath(this.readSocketLine());
-        String dest = translatePath(this.readSocketLine());
-        
-        File src = new File(source);
-        src.renameTo(new File(dest));
+    private void pong(Message msg) throws IOException {
+        msg.type = Message.Types.pong;
+        sendMessage(msg);
     }
 
-    private void checkNewFiles(ArrayList<String> filesOnClient) throws Exception {
+    private void moveFile(Message msg) throws Exception {
         
-        List<String> newFiles = new ArrayList();
-        boolean hash = true;
-        for (int i = 0; i < filesOnClient.size(); i += 2) {
-            String file = filesOnClient.get(i);
-            File fileobj = new File(file);
-            String translated = translatePath(fileobj.getCanonicalPath());
-            if(translated != null) {
-                fileobj = new File(translated);
-                if(!fileobj.exists()) {
-                    newFiles.add(file);
-                }
-            }
+        String from = translatePath(msg.fromPath);
+        String to = translatePath(msg.toPath);
+        
+        File curFile = new File(from);
+        Message response = new Message();
+        if(from == null || to == null) {
+            response.type = Message.Types.failed;
+            response.errorMessage = "Invalid path";
+            sendMessage(response);
+            return;
         }
         
-        if(newFiles.size() > 0) {
-            writeLineToSocket("FETCHFILES");
-            Gson gson = new Gson();
-            String toSend = gson.toJson(newFiles);
-            writeLineToSocket(toSend);
+        if(!curFile.exists()) {
+            response.type = Message.Types.failed;
+            response.errorMessage = "Source file does not exists";
+            sendMessage(response);
+            return;
         }
+        System.out.println("Moving:" + from + " -> " + to);
+        
+        curFile.renameTo(new File(to));
+        response.type = Message.Types.ok;
+        sendMessage(response);
     }
 }

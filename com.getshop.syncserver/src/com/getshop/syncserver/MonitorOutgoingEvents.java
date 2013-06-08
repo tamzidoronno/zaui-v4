@@ -48,29 +48,29 @@ public class MonitorOutgoingEvents extends Thread {
 
     @Override
     public void run() {
-        while (true) {
-            try {
-                List<ApplicationSynchronization> allApps = api.getAppManager().getSyncApplications();
-                for (ApplicationSynchronization sync : allApps) {
-                    ApplicationSettings settings = api.getAppManager().getApplication(sync.appId);
-                    uploadApplication(settings);
-                    api.getAppManager().saveApplication(settings);
-                    String namespace = convertToNameSpace(settings.id);
-                    writeLineToSocket("STARTSYNC");
-                    pushAllFiles(new File(appPath + "/" + namespace), settings, null);
-                    writeLineToSocket("ENDSYNC");
-                }
-                if (disconnected) {
-                    break;
-                }
-
-                sleep(2000);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                System.out.println("Connection broken");
-                break;
-            }
-        }
+//        while (true) {
+//            try {
+//                List<ApplicationSynchronization> allApps = api.getAppManager().getSyncApplications();
+//                for (ApplicationSynchronization sync : allApps) {
+//                    ApplicationSettings settings = api.getAppManager().getApplication(sync.appId);
+//                    uploadApplication(settings);
+//                    api.getAppManager().saveApplication(settings);
+//                    String namespace = convertToNameSpace(settings.id);
+//                    writeLineToSocket("STARTSYNC");
+//                    pushAllFiles(new File(appPath + "/" + namespace), settings, null);
+//                    writeLineToSocket("ENDSYNC");
+//                }
+//                if (disconnected) {
+//                    break;
+//                }
+//
+//                sleep(2000);
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//                System.out.println("Connection broken");
+//                break;
+//            }
+//        }
         System.out.println("Cleaning up outgoing events");
     }
 

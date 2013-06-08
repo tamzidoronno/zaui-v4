@@ -146,9 +146,26 @@
     <? echo $this->__f("Price?"); ?>
             <div class="additonaltext"><? echo $this->__f("If you want to charge for this application, specify the price you want for it (one time cost)."); ?></div>
         </div>
-
-        <hr>
-        <div style="height: 60px;">
+         <div class="title">
+            Use widgets?
+            <div class="additonaltext"><? echo $this->__f(""); ?></div>
+            <table>
+                <th>Widget id</th>
+                <th>Your function name</th>
+                <?
+                $i=0;
+                foreach($settings->connectedWidgets as $key => $appSetting) {
+                    $i++;
+                    ?>
+                    <tr><td><input gsname="widget<? echo $i; ?>" value="<? echo $key; ?>" type="text"/></td><td><input gsname="widget<? echo $i; ?>_value" type="text" value="<? echo $appSetting; ?>"/></td></tr>
+                    <?
+                }
+                $i++;
+                ?>
+                <tr><td><input gsname="widget<? echo $i; ?>" type="text"/></td><td><input gsname="widget<? echo $i; ?>_value" type="text" /></td></tr>
+            </table>
+        </div>
+        <hr>        <div style="height: 60px;">
             <? if(!$disabled) { ?>
                 <div class="button-large deleteapp" style="margin-top:8px;">
                     <div class="rightglare"></div>

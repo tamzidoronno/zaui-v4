@@ -1,6 +1,9 @@
 <?php
 class core_appmanager_data_ApplicationSettings extends core_common_DataCommon  {
 	/** @var String */
+	public $connectedWidgets;
+
+	/** @var String */
 	public $appName;
 
 	/** @var String */

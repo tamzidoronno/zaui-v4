@@ -73,11 +73,6 @@ if(isset($_GET['logonwithkey'])) {
         <?php
         $html = init($factory);
 
-        $facebook = $factory->getApplicationPool()->getApplicationInstance("ba885f72-f571-4a2e-8770-e91cbb16b4ad");
-        if ($facebook) {
-            echo $facebook->renderIncludeFacebookApi();
-        }
-
         $factory->loadJavascriptFiles();
         include "js/getshop.translation.php";
         $factory->showCssFiles();

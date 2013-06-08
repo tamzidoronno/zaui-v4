@@ -18,10 +18,12 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -29,6 +31,7 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
+@Scope("prototype")
 public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnable {
     @Autowired
     public Logger logger;

@@ -39,7 +39,7 @@ function print_app_for_getshop($app, $even, $displayActivateButton, ApplicationP
     <div class="appbox inline" style="width: 425px; border: solid 1px #DDD; height: 250px; margin-bottom: 15px; <? echo ($even) ? 'margin-right: 11px;'  : ""; ?>" class="inline" >
         <div class="app_title">
             <? echo $name; ?>
-        </div> 
+        </div>
         <div style="padding-bottom: 20px; margin-bottom: 10px; padding-left:10px;">
             <table>
                 <td style="width:150px;" align="center">
@@ -60,6 +60,17 @@ function print_app_for_getshop($app, $even, $displayActivateButton, ApplicationP
                 </td>
             </table>
         </div>
+                  
+        <div class="price">
+            <?
+            if ($app->price) {
+                echo "<b>Price</b> $".$app->price." / year";
+            } else {
+                echo "<b>Free</b> $0 / year";
+            }    
+            ?>
+        </div>
+                        
         <? if ($displayActivateButton): ?>
         <div id="activateSingletonApplication" class="button-large" renderStandalone="<? echo $supportStandalone; ?>" appId="<? echo $app->id;?>">
             <div class="rightglare"></div>

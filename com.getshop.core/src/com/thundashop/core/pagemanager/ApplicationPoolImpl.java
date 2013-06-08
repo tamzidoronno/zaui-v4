@@ -53,7 +53,6 @@ public class ApplicationPoolImpl {
     }
     
     public void addFromDatabase(AppConfiguration appConfiguration) {
-        System.out.println(appConfiguration.appName + " " + appConfiguration.id + " " + appConfiguration.appSettingsId);
         applications.put(appConfiguration.id, appConfiguration);
     }
     

@@ -52,6 +52,7 @@ $importApplication->showMenu();
 
 $factory = IocContainer::getFactorySingelton();
 
+
 if(!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
     $result = $factory->getApi()->getUserManager()->getLoggedOnUser();
     if ($result && !ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {
@@ -73,6 +74,12 @@ if(isset($_GET['logonwithkey'])) {
         <?php
         $html = init($factory);
 
+        $google = $factory->getApplicationPool()->getApplicationsInstancesByNamespace("ns_0cf21aa0_5a46_41c0_b5a6_fd52fb90216f");
+        if($google) {
+            /* @var $google \ns_0cf21aa0_5a46_41c0_b5a6_fd52fb90216f\GoogleAnalytics */
+            $google[0]->render();
+        }
+        
         $google = $factory->getApplicationPool()->getApplicationsInstancesByNamespace("ns_0cf21aa0_5a46_41c0_b5a6_fd52fb90216f");
         if($google) {
             /* @var $google \ns_0cf21aa0_5a46_41c0_b5a6_fd52fb90216f\GoogleAnalytics */

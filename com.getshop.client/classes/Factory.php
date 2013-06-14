@@ -84,7 +84,7 @@ class Factory extends FactoryBase {
         $this->errors = $errors;
     }
 
-    public function loadJavascriptFiles() {
+    public function loadJavascriptFiles($includetoolbox = true) {
         $scopid = $_POST['scopeid'];
         echo "<script>GetShop = {}; scopeid='$scopid'</script>";
 //        echo '<script src="http://connect.facebook.net/en_US/all.js"></script>';
@@ -133,7 +133,7 @@ class Factory extends FactoryBase {
             }
         }
         
-        if ($this->isEditorMode())
+        if ($this->isEditorMode() && $includetoolbox)
             echo "\n" . '<script type="text/javascript" src="js/getshop.MainMenuToolbox.js"></script>';
     }
 
@@ -154,8 +154,8 @@ class Factory extends FactoryBase {
         $this->store = $this->getApi()->getStoreManager()->initializeStore($_SERVER['HTTP_HOST'], session_id());
         if($this->isEditorMode()) {
             if(!$this->checkUserAgentAndUpdate()) {
-                $this->includefile("chromeonly");
-                exit(0);
+//                $this->includefile("chromeonly");
+//                exit(0);
             }
         }
     }

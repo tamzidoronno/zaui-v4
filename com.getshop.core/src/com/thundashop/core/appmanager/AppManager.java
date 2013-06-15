@@ -14,6 +14,7 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.PageArea;
+import com.thundashop.core.storemanager.data.Store;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -236,6 +237,10 @@ public class AppManager extends ManagerBase implements IAppManager {
 
     @Override
     public List<ApplicationSubscription> getUnpayedSubscription() throws ErrorException {
+        Store store = getStore();
+        if(store.isVIS) {
+            return new ArrayList();
+        }
         List<ApplicationSubscription> result = new ArrayList();
         if (cache != null) {
             if (cache.expire.after(new Date())) {

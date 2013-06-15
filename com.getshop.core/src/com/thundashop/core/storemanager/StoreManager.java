@@ -169,4 +169,13 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         throw new UnsupportedOperationException("Not in use."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public void setVIS(boolean toggle, String password) throws ErrorException {
+        if(password.equals("fdasfddefdvcx_33%ccZss")) {
+            Store store = getStore();
+            store.isVIS = toggle;
+            storePool.saveStore(store);
+        }
+    }
+
 }

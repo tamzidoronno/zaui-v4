@@ -112,4 +112,14 @@ public interface IStoreManager {
     
     @Administrator
     public void delete() throws ErrorException;
+    
+    /**
+     * Is this a very important shop or not?
+     * 
+     * @param toggle True / False
+     * @param password And internal password needed to toggle this option.
+     * @throws ErrorException 
+     */
+    public void setVIS(boolean toggle, String password) throws ErrorException;
+    
 }

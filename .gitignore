@@ -17,3 +17,8 @@ com.getshop.messages/nbproject/private/
 com.getshop.client/app/
 com.getshop.client/uploadedfiles
 com.getshop.client/nbproject/private/
+
+com.getshop.syncserver/dist/
+com.getshop.syncserver/built-jar.properties
+com.getshop.syncserver/nbproject/private/private.properties
+com.getshop.syncserver/build/

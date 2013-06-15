@@ -103,6 +103,13 @@ public class AddApplicationsToDatabase {
                 "Airgram allows you to push important notifications to your phone, use this application to push notifications to your cell phone when something important is happening, for example if someone is starting to chat with you, you will be instantly notified and can responde accordingly.", 
                 ApplicationSettings.Type.Reporting, true));
         
+        apps.add(createSettings(
+                "GoogleMaps", 
+                "17c48891-6f7a-47a0-849d-b50de9af218f", 
+                emtpy, 
+                "Add google maps to your page, pin point locatins and restrict it to a given area, and even connect the locations to a given page.", 
+                ApplicationSettings.Type.Marketing, true));
+        
 //        apps.add(createSettings(
 //                "Users", 
 //                "ba6f5e74-87c7-4825-9606-f2d3c93d292f", 

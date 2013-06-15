@@ -1,5 +1,7 @@
 package com.getshop.syncserver;
 
+import java.util.List;
+
 public class Message {
 
     public static class Types {
@@ -12,6 +14,8 @@ public class Message {
         public static int ping = 7;
         public static int pong = 8;
         public static int movefile = 9;
+        public static int listfiles = 10;
+        public static int shutdown = 11;
     }
 
     public String errorMessage;
@@ -21,6 +25,7 @@ public class Message {
 
     public byte[] data;
     public String filepath;
+    public List<FileSummary> filelist;
     public int type;
     public String fromPath;
     public String toPath;

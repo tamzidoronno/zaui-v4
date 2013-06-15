@@ -3,15 +3,21 @@ package com.getshop.syncserver;
 import com.google.gson.Gson;
 import com.thundashop.api.managers.GetShopApi;
 import com.thundashop.core.appmanager.data.ApplicationSettings;
+import com.thundashop.core.appmanager.data.ApplicationSynchronization;
 import com.thundashop.core.appmanager.data.AvailableApplications;
 import com.thundashop.core.usermanager.data.User;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.Socket;
+import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,13 +35,14 @@ class ClientHandler extends Thread {
     private final Socket socket;
     private Message authObject;
     private GetShopApi api;
-    private MonitorOutgoingEvents monitoroutgoing;
     private final DataInputStream reader;
     private User loggedOnUser;
     private String sessid;
     private String storeId;
     private final DataOutputStream writer;
+    private boolean disconnected = false;
     AvailableApplications allApps;
+    private String rootpath = "../com.getshop.client/app/";
 
 
     ClientHandler(Socket socket) throws IOException {
@@ -48,9 +55,8 @@ class ClientHandler extends Thread {
     @Override
     public void run() {
         try {
-            monitoroutgoing = new MonitorOutgoingEvents(socket, api);
-            monitoroutgoing.start();
             monitorIncomingEvents();
+            System.out.println("Quiting client");
         } catch (IOException ex) {
             try {
                 ex.printStackTrace();
@@ -67,19 +73,51 @@ class ClientHandler extends Thread {
         }
     }
 
+      public static byte[] createChecksum(String filename) throws Exception {
+        MessageDigest complete;
+        try (InputStream fis = new FileInputStream(filename)) {
+            byte[] buffer = new byte[1024];
+            complete = MessageDigest.getInstance("MD5");
+            int numRead;
+            do {
+                numRead = fis.read(buffer);
+                if (numRead > 0) {
+                    complete.update(buffer, 0, numRead);
+                }
+            } while (numRead != -1);
+        }
+       return complete.digest();
+   }
+
+    
     private void monitorIncomingEvents() throws IOException, Exception {
+        int i = 0;
         while (true) {
-            Message msg = readMessageFromSocket();
-            if (msg.type == Message.Types.authenticate) {
-                authenticate(msg);
-            } else if(msg.type == Message.Types.sendfile) {
-                writeFile(msg);
-            } else if(msg.type == Message.Types.ping) {
-                pong(msg);
-            } else if(msg.type == Message.Types.deletefile) {
-                deleteFile(msg);
-            } else if(msg.type == Message.Types.movefile) {
-                moveFile(msg);
+            if(reader.available() > 0) {
+                if(disconnected) {
+                    break;
+                }
+                Message msg = readMessageFromSocket();
+                if (msg.type == Message.Types.authenticate) {
+                    authenticate(msg);
+                } else if(msg.type == Message.Types.sendfile) {
+                    writeFile(msg);
+                } else if(msg.type == Message.Types.ping) {
+                    pong(msg);
+                } else if(msg.type == Message.Types.deletefile) {
+                    deleteFile(msg);
+                } else if(msg.type == Message.Types.listfiles) {
+                    listFiles();
+                } else if(msg.type == Message.Types.movefile) {
+                    moveFile(msg);
+                }
+            } else {
+                if(i == 200) {
+                    checkForSyncRequests();
+                    i = 0;
+                }
+                i++;
+                try { Thread.sleep(10); }catch(Exception e) {}
             }
         }
     }
@@ -89,18 +127,22 @@ class ClientHandler extends Thread {
         System.out.println("Authenticating : " + msg.username);
 
         sessid = UUID.randomUUID().toString();
-        api = new GetShopApi(25554, "localhost", sessid, msg.address);
-        api.getStoreManager().initializeStore(msg.address, sessid);
-        this.loggedOnUser = api.getUserManager().logOn(msg.username, msg.password);
-        System.out.println("Logged on as : " + msg.username);
-
         Message response = new Message();
-        if (api.getUserManager().isLoggedIn()) {
-            response.type = Message.Types.authenticated;
-        } else {
-            response.type = Message.Types.failed;
+        try {
+            api = new GetShopApi(25554, "localhost", sessid, msg.address);
+            api.getStoreManager().initializeStore(msg.address, sessid);
+            this.loggedOnUser = api.getUserManager().logOn(msg.username, msg.password);
+            System.out.println("Logged on as : " + msg.username);
+
+            if (api.getUserManager().isLoggedIn()) {
+                response.type = Message.Types.authenticated;
+                storeId = api.getStoreManager().getStoreId();
+            } else {
+                response.type = Message.Types.failed;
+            }
+        }catch(Exception e) {
+            response.type = Message.Types.shutdown;
         }
-        storeId = api.getStoreManager().getStoreId();
         sendMessage(response);
     }
 
@@ -190,7 +232,7 @@ class ClientHandler extends Thread {
 
         if (settings == null) {
             try {
-                allApps = api.getAppManager().getAllApplications();
+                buildAllApps();
                 for (ApplicationSettings apps : allApps.applications) {
                     if (apps.appName.equals(appName)) {
                         settings = apps;
@@ -204,7 +246,7 @@ class ClientHandler extends Thread {
             return null;
         }
 
-        String translated = "../com.getshop.client/app/" + convertUUID(settings.id) + "/" + path;
+        String translated = rootpath + convertUUID(settings.id) + "/" + path;
         return translated;
     }
 
@@ -259,5 +301,65 @@ class ClientHandler extends Thread {
         curFile.renameTo(new File(to));
         response.type = Message.Types.ok;
         sendMessage(response);
+    }
+
+    private void listFiles() throws Exception {
+        System.out.println("Asked for filelist");
+        Message msg = new Message();
+        
+        if(allApps == null) {
+            buildAllApps();
+        }
+        List<FileSummary> summary = new ArrayList();
+        msg.filelist = summary;
+        for(ApplicationSettings app : allApps.applications) {
+             getFileSummaryForApp(new File(rootpath + "/" + "ns_"+app.id.replaceAll("-", "_")).listFiles(), summary, app);
+        }
+        msg.type = Message.Types.ok;
+        sendMessage(msg);
+    }
+
+    private List<FileSummary> getFileSummaryForApp(File[] files, List<FileSummary> result, ApplicationSettings app) throws Exception {
+        for(File file : files) {
+            if(file.isDirectory()) {
+                getFileSummaryForApp(file.listFiles(), result, app);
+            } else {
+                result.add(buildSummary(file, app));
+            }
+        }
+        return result;
+    }
+
+    private FileSummary buildSummary(File file, ApplicationSettings app) throws Exception {
+        FileSummary summary = new FileSummary();
+        summary.md5 = createChecksum(file.getAbsolutePath());
+        String path = file.getAbsolutePath();
+        summary.path = app.appName + path.substring(path.indexOf("ns_"+app.id.replaceAll("-","_"))+app.id.length()+3);
+        return summary;
+    }
+
+    private void buildAllApps() {
+        try {
+            allApps = api.getAppManager().getAllApplications();
+        }catch(Exception e) {
+            e.printStackTrace();
+            try { Thread.sleep(1000); }catch(Exception d) {}
+        }
+    }
+
+    private void checkForSyncRequests() {
+        if(api != null) {
+            try {
+                List<ApplicationSynchronization> appsToSync = api.getAppManager().getSyncApplications();
+                if(appsToSync.size()>0) {
+                    System.out.println("We got applications to sync");
+                } else {
+                    System.out.println("nothing to sync");
+                }
+            }catch(Exception e) {
+                System.out.println("Problem connecting to core server, disconnecting.");
+                disconnected = true;
+            }
+        }
     }
 }

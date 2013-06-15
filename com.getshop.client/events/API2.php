@@ -2680,6 +2680,24 @@ class APIStoreManager {
           return $this->transport->cast(API::core_storemanager_data_Store(), $this->transport->sendMessage($data));
      }
 
+     /**
+     * Is this a very important shop or not?
+     * 
+     * @param toggle True / False
+     * @param password And internal password needed to toggle this option.
+     * @throws ErrorException 
+     */
+
+     public function setVIS($toggle, $password) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["toggle"] = json_encode($this->transport->object_unset_nulls($toggle));
+          $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+          $data["method"] = "setVIS";
+          $data["interfaceName"] = "core.storemanager.IStoreManager";
+          return $this->transport->sendMessage($data);
+     }
+
 }
 class APIUserManager {
 

@@ -269,6 +269,12 @@ class ApplicationManager extends FactoryBase {
         $api->getGetShop()->addUserToPartner($userId, $partner, $password);
     }
 
+    public function setVIS() {
+        $password = $_POST['data']['password'];
+        $toggle = $_POST['data']['toggle'];
+        $this->getApi()->getStoreManager()->setVis($password, $toggle);
+    }
+    
     public function importApplication() {
         if (!isset($_POST['data']['list'])) {
             return;

@@ -51,4 +51,14 @@ public interface IChatManager {
     
     @Administrator
     public void closeChat(String id) throws ErrorException;
+    
+    
+    /**
+     * Notify the manager that someone is online, this will effectivly stop the notification to continue.
+     * 
+     * No need to notify everyone if the chat is handeled properly anyway.
+     * @throws ErrorException 
+     */
+    @Administrator
+    public void pingMobileChat(String chatterid) throws ErrorException;
 }

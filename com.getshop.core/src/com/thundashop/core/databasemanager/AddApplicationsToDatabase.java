@@ -64,30 +64,44 @@ public class AddApplicationsToDatabase {
 //                "This application gives you the ability to control your stocks, simply change how many you have in stock on each product.", 
 //                ApplicationSettings.Type.Marketing, true);
 //        apps.add(stockControl);
+//        
+//        ApplicationSettings galius = createSettings(
+//                "GaliusTheme", 
+//                "29fbf912-8d65-41f3-abbb-259354cf0322", 
+//                emtpy, 
+//                "", 
+//                ApplicationSettings.Type.Theme, false);
+//        apps.add(galius);
+//        
+//        ApplicationSettings hovyTheme = createSettings(
+//                "HovyTheme", 
+//                "f49636a8-b50b-4ec1-a569-d2a72e14f5cb", 
+//                emtpy, 
+//                "", 
+//                ApplicationSettings.Type.Theme, false);
+//        apps.add(hovyTheme);
+//        
+//        ApplicationSettings yovyTheme = createSettings(
+//                    "YovyTheme", 
+//                "43d02b7f-cde1-4e10-8e8e-8a6ba17dfc9c", 
+//                emtpy, 
+//                "", 
+//                ApplicationSettings.Type.Theme, false);
+//        apps.add(yovyTheme);
         
-        ApplicationSettings galius = createSettings(
-                "GaliusTheme", 
-                "29fbf912-8d65-41f3-abbb-259354cf0322", 
+        apps.add(createSettings(
+                "Bring", 
+                "2da52bbc-a392-4125-92b6-eec1dc4879e9", 
                 emtpy, 
-                "", 
-                ApplicationSettings.Type.Theme, false);
-        apps.add(galius);
+                "fraktguiden is a norwegian application for keeping track of norwegian shipment prices, shipment tracking etc.", 
+                ApplicationSettings.Type.Shipment, true));
         
-        ApplicationSettings hovyTheme = createSettings(
-                "HovyTheme", 
-                "f49636a8-b50b-4ec1-a569-d2a72e14f5cb", 
+        apps.add(createSettings(
+                "Airgram", 
+                "ee96fe89-e09d-4f7b-921a-3272462e9b7e", 
                 emtpy, 
-                "", 
-                ApplicationSettings.Type.Theme, false);
-        apps.add(hovyTheme);
-        
-        ApplicationSettings yovyTheme = createSettings(
-                    "YovyTheme", 
-                "43d02b7f-cde1-4e10-8e8e-8a6ba17dfc9c", 
-                emtpy, 
-                "", 
-                ApplicationSettings.Type.Theme, false);
-        apps.add(yovyTheme);
+                "Airgram allows you to push important notifications to your phone, use this application to push notifications to your cell phone when something important is happening, for example if someone is starting to chat with you, you will be instantly notified and can responde accordingly.", 
+                ApplicationSettings.Type.Reporting, true));
         
 //        apps.add(createSettings(
 //                "Users", 
@@ -245,15 +259,15 @@ public class AddApplicationsToDatabase {
 //                "Get started building yourself a left / right menu, you can do it by adding this application!<br><br>This menu support subentries and hardlinking, and for each entry a page is created where you can add products / other applications.", 
 //                ApplicationSettings.Type.Webshop, false));
 //        
-        ApplicationSettings reporting = createSettings(
-                "Reporting", 
-                "04259325-abfa-4311-ab81-b89c60893ce1", 
-                emtpy, 
-                "Keep track of your products, orders, pages, etc with this application. Generate reports on a hourly, daily, weekly and monthly basis.", 
-                ApplicationSettings.Type.Reporting, true);
-        reporting.isSingleton = true;
-        reporting.renderStandalone = true;
-        apps.add(reporting);
+//        ApplicationSettings reporting = createSettings(
+//                "Reporting", 
+//                "04259325-abfa-4311-ab81-b89c60893ce1", 
+//                emtpy, 
+//                "Keep track of your products, orders, pages, etc with this application. Generate reports on a hourly, daily, weekly and monthly basis.", 
+//                ApplicationSettings.Type.Reporting, true);
+//        reporting.isSingleton = true;
+//        reporting.renderStandalone = true;
+//        apps.add(reporting);
 //        
 //        apps.add(createSettings(
 //                "Shipper", 

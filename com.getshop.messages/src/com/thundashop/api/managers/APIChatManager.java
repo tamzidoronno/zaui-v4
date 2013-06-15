@@ -70,6 +70,22 @@ public class APIChatManager {
      }
 
      /**
+     * Notify the manager that someone is online, this will effectivly stop the notification to continue.
+     * 
+     * No need to notify everyone if the chat is handeled properly anyway.
+     * @throws ErrorException 
+     */
+
+     public void pingMobileChat(String chatterid)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new HashMap();
+          data.args.put("chatterid",new Gson().toJson(chatterid));
+          data.method = "pingMobileChat";
+          data.interfaceName = "core.chat.IChatManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Reply to a chat message.
      * 
      * @param id - Chatters id

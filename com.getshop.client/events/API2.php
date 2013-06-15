@@ -971,6 +971,22 @@ class APIChatManager {
      }
 
      /**
+     * Notify the manager that someone is online, this will effectivly stop the notification to continue.
+     * 
+     * No need to notify everyone if the chat is handeled properly anyway.
+     * @throws ErrorException 
+     */
+
+     public function pingMobileChat($chatterid) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["chatterid"] = json_encode($this->transport->object_unset_nulls($chatterid));
+          $data["method"] = "pingMobileChat";
+          $data["interfaceName"] = "core.chat.IChatManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Reply to a chat message.
      * 
      * @param id - Chatters id

@@ -80,13 +80,6 @@
 	}
 	
 	/**
-	 * @return \core_common_CartCompositeKey
-	 */
-	public static function core_common_CartCompositeKey() {
-		return new \core_common_CartCompositeKey();
-	}
-	
-	/**
 	 * @return \core_common_AppConfiguration
 	 */
 	public static function core_common_AppConfiguration() {
@@ -280,6 +273,13 @@
 	 */
 	public static function core_chatmanager_ChatMessage() {
 		return new \core_chatmanager_ChatMessage();
+	}
+	
+	/**
+	 * @return \core_chatmanager_SubscribedToAirgram
+	 */
+	public static function core_chatmanager_SubscribedToAirgram() {
+		return new \core_chatmanager_SubscribedToAirgram();
 	}
 	
 	/**

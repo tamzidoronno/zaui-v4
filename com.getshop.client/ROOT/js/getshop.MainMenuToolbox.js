@@ -200,6 +200,8 @@ PubSub.subscribe('NAVIGATION_COMPLETED', function() {
     } else {
         mainmenu.outerContainer.find('.disableOnSystemPages').show();
     }
+    
+    
 });
 
 var lastScrollTop = 0;

@@ -53,7 +53,7 @@ public class PagePoolImpl {
     }
 
     private void setupDefaultLayouts() {
-        pageLayout.put(Page.DefaultPages.CartPage, Page.PageType.HeaderLeftMiddleFooter);
+        pageLayout.put(Page.DefaultPages.CartPage, Page.PageType.HeaderMiddleFooter);
         pageLayout.put(Page.DefaultPages.CheckOut, Page.PageType.HeaderMiddleFooter);
         pageLayout.put(Page.DefaultPages.Home, Page.PageType.HeaderFooterLeftMiddleRight);
         pageLayout.put(Page.DefaultPages.MyAccount, Page.PageType.HeaderMiddleFooter);

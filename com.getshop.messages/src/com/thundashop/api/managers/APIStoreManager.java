@@ -258,4 +258,22 @@ public class APIStoreManager {
           return object;
      }
 
+     /**
+     * Is this a very important shop or not?
+     * 
+     * @param toggle True / False
+     * @param password And internal password needed to toggle this option.
+     * @throws ErrorException 
+     */
+
+     public void setVIS(boolean toggle, String password)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new HashMap();
+          data.args.put("toggle",new Gson().toJson(toggle));
+          data.args.put("password",new Gson().toJson(password));
+          data.method = "setVIS";
+          data.interfaceName = "core.storemanager.IStoreManager";
+          String result = transport.send(data);
+     }
+
 }

@@ -79,6 +79,7 @@ public class Page extends DataCommon implements Cloneable {
     public Page parent;
     public int type;
     public int userLevel = 0;
+    public String description = "";
     public HashMap<String, PageArea> pageAreas = new HashMap<String, PageArea>();
     
     public void populateApplications(Map<String, AppConfiguration> applications, boolean onlyExtraApplications) {

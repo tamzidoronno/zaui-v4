@@ -16,4 +16,5 @@ public class Store extends DataCommon {
     public boolean isExtendedMode=true;
     public StoreConfiguration configuration;
     public String partnerId;
+    public boolean isVIS = false; //Very important shop.
 }

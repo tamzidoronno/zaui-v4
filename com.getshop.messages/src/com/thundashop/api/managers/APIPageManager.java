@@ -510,6 +510,23 @@ public class APIPageManager {
      }
 
      /**
+     * Set the page description.
+     * @param description The description to add.
+     * @param pageId The id of the page.
+     * @throws ErrorException 
+     */
+
+     public void setPageDescription(String pageId, String description)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new HashMap();
+          data.args.put("pageId",new Gson().toJson(pageId));
+          data.args.put("description",new Gson().toJson(description));
+          data.method = "setPageDescription";
+          data.interfaceName = "core.pagemanager.IPageManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Update a page and give it a parent page. <br>
      * This is used to figure out a hiarcy for the menues.<br>
      * @param pageId The page to have a parent page.

@@ -41,6 +41,14 @@ public interface IPageManager {
     public AppConfiguration addApplication(String applicationSettingId) throws ErrorException;
     
     /**
+     * Set the page description.
+     * @param description The description to add.
+     * @param pageId The id of the page.
+     * @throws ErrorException 
+     */
+    public void setPageDescription(String pageId, String description) throws ErrorException;
+    
+    /**
      * Create a new page with the specified id.
      * For layouts available, see layouts for createPage function
      * 

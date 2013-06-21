@@ -317,4 +317,11 @@ public class PageManager extends ManagerBase implements IPageManager {
         return returnList;
     }
 
+    @Override
+    public void setPageDescription(String pageId, String description) throws ErrorException {
+        Page page = pagePool.get(pageId);
+        page.description = description;
+        pagePool.savePage(page);
+    }
+
 }

@@ -1961,6 +1961,23 @@ class APIPageManager {
      }
 
      /**
+     * Set the page description.
+     * @param description The description to add.
+     * @param pageId The id of the page.
+     * @throws ErrorException 
+     */
+
+     public function setPageDescription($pageId, $description) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+          $data['args']["description"] = json_encode($this->transport->object_unset_nulls($description));
+          $data["method"] = "setPageDescription";
+          $data["interfaceName"] = "core.pagemanager.IPageManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Update a page and give it a parent page. <br>
      * This is used to figure out a hiarcy for the menues.<br>
      * @param pageId The page to have a parent page.

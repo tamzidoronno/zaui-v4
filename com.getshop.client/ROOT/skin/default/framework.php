@@ -537,6 +537,10 @@ a img {
 .mainmenu .group .entry .domain {
     background-image: url('/skin/default/images/domain-names.png');
 }
+.mainmenu .group .entry .page {
+    background-image: url('/skin/default/images/page.png');
+    height: 23px;
+}
 .mainmenu .group .entry .intromovie {
     background-image: url('/skin/default/images/movie.png');
 }

@@ -382,6 +382,16 @@ class ApplicationManager extends FactoryBase {
         $this->getFactory()->getApi()->getStoreManager()->delete();
     }
     
+    public function displayPageSettings() {
+        $this->includefile("pagesettings");
+    }
+    
+    public function savePageDescription() {
+        $desc = $_POST['data']['description'];
+        $pageid = $this->getPage()->id;
+        $this->getApi()->getPageManager()->setPageDescription($pageid, $desc);
+    }
+    
     public function updateSmallCart() {
         $small = new \ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager();
         $small->renderSmallCartView();

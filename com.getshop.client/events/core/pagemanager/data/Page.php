@@ -10,6 +10,9 @@ class core_pagemanager_data_Page extends core_common_DataCommon  {
 	public $userLevel;
 
 	/** @var String */
+	public $description;
+
+	/** @var String */
 	public $pageAreas;
 
 }

@@ -1,0 +1,16 @@
+<div class="information">
+    <? echo $this->__f("This is where you can configure your current page, special settings like search engine optimization for the current page you are browser"); ?>
+    <? echo $this->__f("Some settings are important for google and other search engines, and this is where you can configure them."); ?>
+</div>
+
+<div style='font-size: 16px; text-align:center; font-weight: bold;border-bottom: solid 1px;'>
+    <? echo $this->__f("Page description"); ?>
+</div>
+<span gstype='form' method="savePageDescription">
+    <textarea style='width:985px; height: 200px;' gsname='description'><? echo $this->getFactory()->getPage()->description; ?></textarea>
+    <div  gstype="submit" class="button add_to_cart_small_view">
+        <div class="rightglare"></div>
+        <div class="filler"></div>
+        <ins gstype="submit"><? echo $this->__f("Save"); ?></ins>
+    </div>
+</span>

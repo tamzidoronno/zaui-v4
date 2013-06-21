@@ -73,7 +73,10 @@ if(isset($_GET['logonwithkey'])) {
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <?php
         $html = init($factory);
+        $pageDescription = $factory->getPage()->description;
 
+        echo "<meta name=\"description\" content=\"$pageDescription\">";
+        
         $google = $factory->getApplicationPool()->getApplicationsInstancesByNamespace("ns_0cf21aa0_5a46_41c0_b5a6_fd52fb90216f");
         if($google) {
             /* @var $google \ns_0cf21aa0_5a46_41c0_b5a6_fd52fb90216f\GoogleAnalytics */

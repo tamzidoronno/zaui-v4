@@ -9,6 +9,7 @@ class Page extends FactoryBase {
     public $id;
     public $skeletonType;
     public $areas;
+    public $description;
     public $emptySkeleton = false;
     
     public static $systemPages = array("orderoverview", "checkout", "myaccount", "users", "settings", "domain", "cart");
@@ -43,7 +44,7 @@ class Page extends FactoryBase {
     }
     
     /**
-     * @param Page $page
+     * @param core_pagemanager_data_Page $page
      */
     function __construct($page) {
         if (!$page) {
@@ -53,6 +54,7 @@ class Page extends FactoryBase {
             $this->id = $page->id;
             $this->areas = array();
             $this->userLevel = $page->userLevel;
+            $this->description = $page->description;
             $this->createAllPageAreas($page);    
             if (!isset($this->userLevel))
                 $this->userLevel = 0;

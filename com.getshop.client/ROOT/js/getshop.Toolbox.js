@@ -206,6 +206,9 @@ GetShopToolbox.prototype = {
         
         if (position === 2) 
             left = offset.left + $(element).width() - this.outerContainer.width() -2;
+            
+        if (position === 3) 
+            left = offset.left + $(element).outerWidth() + 30;
         
         this.outerContainer.css('left', left);
         this.outerContainer.css('top', offset.top);   

@@ -1182,3 +1182,13 @@ background-color: #EFEFEF; z-index: 2000; position:fixed; left:0px; bottom:0px;w
 .designselectionbox .colorselection .background { display: inline-block; width: 30px; height: 25px; margin: 1px; float; left; border:solid 1px #BBB; cursor:pointer; }
 .designselectionbox .colorselection .designattributes_color { display: none; }
 .designselectionbox .colorselection .active { display: block; }
+.designselectionbox .designpreviews { overflow:hidden; position:absolute; width: 100000px; }
+.designselectionbox .designpreviews .slider { position:fixed;
+bottom: 0px;
+height: 150px;
+width: 25px;
+display:none;
+cursor:pointer;
+}
+.designselectionbox .designpreviews .next { right: 240px; background-image:url('skin/default/bgs/designright.png'); }
+.designselectionbox .designpreviews .prev { left: 0px; background-image:url('skin/default/bgs/designleft.png'); }

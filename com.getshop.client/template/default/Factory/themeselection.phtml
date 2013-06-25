@@ -18,6 +18,8 @@ foreach ($added as $add) {
     }
 }
 
+echo "<div class='designpreviews'>";
+
 foreach ($designs as $design) {
     $selected = "";
     if ($design->id === $addedTheme) {
@@ -33,6 +35,11 @@ foreach ($designs as $design) {
     echo "<span class='price'>" . $design->price . "$ / ".$this->__f("year")."</span>";
     echo "</div>";
 }
+
+echo "<span class='prev slider'></span>";
+echo "<span class='next slider'></span>";
+
+echo "</div>";
 
 $designArray = array();
 ?>

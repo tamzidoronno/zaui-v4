@@ -1170,6 +1170,52 @@ background-color: #EFEFEF; z-index: 2000; position:fixed; left:0px; bottom:0px;w
    -webkit-box-shadow: 0px 0px 3px rgba(22, 52, 239, 0.9);
    box-shadow: 0px 0px 3px rgba(22, 52, 239, 0.9);
 }
+
+.GetShopToolbox {
+    z-index: 500;
+    background-color : #FFF;
+    border: solid 1px #BBB;
+}
+
+.GetShopToolbox .title {
+    text-align: center;
+    font-size: 12px;
+    background-color: #DDD;
+    cursor: move;
+}
+
+.GetShopToolbox .item {
+    width: 50px;
+    height: 45px;
+    text-align: center;
+    padding-top: 5px;
+}
+
+.GetShopToolbox .item:hover {
+    cursor: pointer;
+    background-image: url('/skin/default/images/toolboxrowbackground-hover.png');
+}
+
+.GetShopToolbox .row {
+    background-image: url('/skin/default/images/toolboxrowbackground.png');
+}
+
+.GetShopToolbox .close {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    background-image: url('/skin/default/elements/close2.png');
+    position: absolute;
+    top: -10px;
+    right: -10px;
+}
+
+.GetShopToolbox .item img {
+    width: 40px;
+    height: 40px;
+    
+}
+
 .designselectionbox .design .price { position:absolute; border-top: solid 1px #BBB; border-right: solid 1px #BBB; bottom: 0px; left:0px; background-color:#FFF; padding:3px;border-top-right-radius: 5px; }
 .designselectionbox .close { cursor:pointer; position:absolute; top: 0px; right:0px; background-color:#FFF; padding: 3px; border: solid 1px #DDD;border-bottom-left-radius: 10px; }
 .designselectionbox .colorselection { position:absolute; width: 300; height: 150px; right: 0px; border-left:solid 1px #BBB; bottom: 0px; background-color:#EFEFEF; }

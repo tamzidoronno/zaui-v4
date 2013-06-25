@@ -247,6 +247,12 @@ class ApplicationPool {
         return $this->factory->convertUUIDtoString($id);
     }
 
+    
+    /**
+     * 
+     * @param type $type
+     * @return core_appmanager_data_ApplicationSettings[]
+     */
     public function getAllApplicationSettingsByType($type) {
         $retval = array();
         foreach($this->applicationList as $app) {
@@ -358,7 +364,7 @@ class ApplicationPool {
                 $function = $app->getApplicationSettings()->connectedWidgets->{$widgetAreaName};
                 $apps[$function] = $app;
             }
-        } 
+        }
         
         return $apps;
     }

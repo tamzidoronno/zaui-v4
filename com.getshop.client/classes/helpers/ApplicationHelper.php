@@ -1,10 +1,5 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of ApplicationHelper
  *
@@ -25,6 +20,48 @@ class ApplicationHelper {
         $namespace = $pool->getNameSpace($id);
         
         return "/showApplicationImages.php?appNamespace=".$namespace."&image=$appName".".png";
+    }
+    
+    public static function getApplicationColors($app) {
+        $namespace= "ns_".str_replace("-", "_", $app->id);
+        $colors = array();
+        $backgrounds = array();
+        
+        if(file_exists("../app/$namespace/skin/colors.css")) {
+            $content = explode("\n", file_get_contents("../app/$namespace/skin/colors.css"));
+            foreach($content as $line) {
+                if($line && stristr($line, "//color:")) {
+                    $color = explode(":", $line);
+                    $colors[] = $color;
+                }
+            }
+        }
+        
+        return $colors;
+    }
+
+    public static function printColorStyle($theme, $color) {
+        $namespace= "ns_".str_replace("-", "_", $theme->id);
+        $colors = array();
+        $backgrounds = array();
+        
+        if(file_exists("../app/$namespace/skin/colors.css")) {
+            $content = explode("\n", file_get_contents("../app/$namespace/skin/colors.css"));
+            $found = false;
+            foreach($content as $line) {
+                if($found) {
+                    echo $line;
+                }
+                
+                if(stristr($line, "//color:") && $found) {
+                    break;
+                }
+                
+                if(stristr($line, "//color:$color")) {
+                    $found = true;
+                }
+            }
+        }
     }
 }
 

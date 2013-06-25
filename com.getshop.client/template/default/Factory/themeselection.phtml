@@ -1,0 +1,77 @@
+<?php
+/* @var $factory Factory */
+$factory = $this->getFactory();
+$pool = $factory->getApplicationPool();
+$added = $factory->getApplicationPool()->getAllAddedInstances();
+$designs = $pool->getAllApplicationSettingsByType("ThemeApplication");
+
+
+$addedTheme = "";
+foreach($added as $add) {
+    if($add instanceof ThemeApplication) {
+        $addedTheme = $add->applicationSettings->id;
+        break;
+    }
+}
+
+foreach($designs as $design) {
+    $selected = "";
+    if($design->id === $addedTheme) {
+        $selected = "selecteddesign";
+    }
+    $appname = $design->appName;
+    $appid = $design->id;
+    $namespace = "ns_".str_replace("-","_",$design->id);
+    echo "<div class='design $selected' id='$appid' style='background-size:160px 140px; background-image:url(\"/showApplicationImages.php?appNamespace=$namespace&image=$appname.png\")'>";
+    echo "<span class='price'>".$design->price . "$ / year</span>";
+    echo "</div>";
+}
+
+$designArray = array();
+?>
+<div class='colorselection'>
+    <div class='innerbox colorselectbox'>
+        <div class='title'><? echo $this->__f("Colors"); ?></div>
+        <? 
+            foreach($designs as $design) {
+                echo "<div class='designattributes_color' panel='".$design->id."'>";
+                $result = ApplicationHelper::getApplicationColors($design);
+                foreach($result as $color) {
+                    echo "<div class='color' color='$color[1]'>";
+                    echo "<span class='preview' style='background-color:".$color[2].";'></span>";
+                    echo "<span class='colortext'>".$color[1] . "</span>";
+                    echo "</div>";
+                }
+                echo "</div>";
+        } 
+        ?>
+    </div>
+    <div class='innerbox'>
+        <div class='title'><? echo $this->__f("Backgrounds"); ?></div>
+        <? 
+        $backgrounds = array();
+        $backgrounds[] = "none";
+        $backgrounds[] = "ticks";
+        $backgrounds[] = "mooning";
+        $backgrounds[] = "squairy_light";
+        $backgrounds[] = "binding_dark";
+        $backgrounds[] = "grey_wash_wall";
+        $backgrounds[] = "knitting";
+        $backgrounds[] = "honey_im_subtle";
+        $backgrounds[] = "retina_wood";
+        $backgrounds[] = "strange_bullseyes";
+        $backgrounds[] = "carbon_fibre";
+        $backgrounds[] = "always_grey";
+        $backgrounds[] = "grunge_wall";
+        $backgrounds[] = "concrete_wall_2";
+        $backgrounds[] = "rubber_grip";
+        $backgrounds[] = "inflicted";
+        
+        foreach($backgrounds as $bgs) {
+            echo "<span class='background' image='$bgs' type='skin/default/bgs/$bgs.png' style='background-image:url(\"skin/default/bgs/$bgs.png\");'></span>";
+        }
+        ?>
+    </div>
+</div>
+<span class='close'><? echo $this->__f("Close"); ?></span>
+

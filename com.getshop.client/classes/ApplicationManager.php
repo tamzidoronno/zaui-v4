@@ -216,10 +216,16 @@ class ApplicationManager extends FactoryBase {
 
         $appConfiguration = $this->getFactory()->getApi()->getPageManager()->addApplication($_POST['data']['appId']);
 
+        
         $namespace = $this->getFactory()->convertUUIDtoString($appConfiguration->appSettingsId);
         $appName = $namespace . "\\" . $appConfiguration->appName;
 
         $app = new $appName();
+        if($app instanceof ThemeApplication) {
+            $this->getFactory()->setConfigurationFlag("color", false);
+            $this->getFactory()->setConfigurationFlag("bgimage", false);
+        }
+        
         if (method_exists($app, "renderStandalone")) {
             $pageManager = $this->getFactory()->getApi()->getPageManager();
             $pageManager->createPageWithId(5, "home", $appConfiguration->id . "_standalone");
@@ -395,6 +401,16 @@ class ApplicationManager extends FactoryBase {
     public function updateSmallCart() {
         $small = new \ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager();
         $small->renderSmallCartView();
+    }
+    
+    public function setDesignVariation() {
+        if(isset($_POST['data']['bg'])) {
+            $bg = $_POST['data']['bg'];
+            $this->getFactory()->setConfigurationFlag("bgimage", $bg);
+        } else {
+            $bg = $_POST['data']['color'];
+            $this->getFactory()->setConfigurationFlag("color", $bg);
+        }
     }
 }
 ?>

@@ -133,6 +133,14 @@ if(isset($_GET['logonwithkey'])) {
         
         <div id="errorbox"></div>
         <?php echo $html; ?>
+        
+        <? if($factory->isEditorMode()) { ?>
+        <div class="designselectionbox">
+            <? $factory->includefile("themeselection"); ?>
+        </div>
+        
+        <? } ?>
+        
     </body>
 
     

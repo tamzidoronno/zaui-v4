@@ -156,6 +156,7 @@ thundashop.common.activateCKEditor = function(id, autogrow, showMenu, width) {
     var config = {
         filebrowserImageUploadUrl: 'uploadFile.php',
         enterMode: CKEDITOR.ENTER_BR,
+        removePlugins : 'magiclines',
         on: {
             blur: function(event) {
                 var data = event.editor.getData();

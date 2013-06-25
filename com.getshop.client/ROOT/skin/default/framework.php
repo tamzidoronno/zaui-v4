@@ -1132,3 +1132,52 @@ a img {
 .OrderManager tr.even td.sorting_1 { background-color:#FFFFFF; cursor:pointer; }
 .OrderManager tr:hover { background-color:#dedede;cursor:pointer; }
 .OrderManager tr:hover td.sorting_1 { background-color:#dedede;cursor:pointer; }
+.designselectionbox {
+-moz-box-shadow: 0px 0px 10px #000000;
+-webkit-box-shadow: 0px 0px 10px #000000;
+box-shadow: 0px 0px 10px #000000;
+background-color: #EFEFEF; z-index: 2000; position:fixed; left:0px; bottom:0px;width: 100%; display:none; height: 150px; }
+.designselectionbox .design {
+    position:relative;
+   background-color:#FFF;
+   display:inline-block; width: 150px; height: 130px; margin:5px; 
+   -moz-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.4);
+   -webkit-box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.4);
+   box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.4);
+   border-radius: 3px;
+   padding: 5px;
+   
+   font-family: "11px/1.55 Tahoma", "Arial", "Helvetica", "sans-serif"
+   
+}
+
+
+.designselectionbox .selecteddesign {
+   -moz-box-shadow: 0px 0px 3px rgba(22, 52, 239, 0.9);
+   -webkit-box-shadow: 0px 0px 3px rgba(22, 52, 239, 0.9);
+   box-shadow: 0px 0px 3px rgba(22, 52, 239, 0.9);
+}
+
+.designselectionbox .design:hover {
+  cursor:pointer; 
+  -moz-box-shadow: 0px 0px 3px rgba(255, 255, 255, 0.4);
+   -webkit-box-shadow: 0px 0px 3px rgba(255, 255, 255, 0.4);
+   box-shadow: 0px 0px 3px rgba(255, 255, 255, 0.4);
+}
+
+.designselectionbox .selecteddesign:hover {
+   -moz-box-shadow: 0px 0px 3px rgba(22, 52, 239, 0.9);
+   -webkit-box-shadow: 0px 0px 3px rgba(22, 52, 239, 0.9);
+   box-shadow: 0px 0px 3px rgba(22, 52, 239, 0.9);
+}
+.designselectionbox .design .price { position:absolute; border-top: solid 1px #BBB; border-right: solid 1px #BBB; bottom: 0px; left:0px; background-color:#FFF; padding:3px;border-top-right-radius: 5px; }
+.designselectionbox .close { cursor:pointer; position:absolute; top: 0px; right:0px; background-color:#FFF; padding: 3px; border: solid 1px #DDD;border-bottom-left-radius: 10px; }
+.designselectionbox .colorselection { position:absolute; width: 300; height: 150px; right: 0px; border-left:solid 1px #BBB; bottom: 0px; background-color:#EFEFEF; }
+.designselectionbox .colorselection .innerbox{ display:inline-block; width: 140px; padding: 5px; float:left; }
+.designselectionbox .colorselection .innerbox .title {  color: #767676; }
+.designselectionbox .colorselection .colorselectbox { border-right:solid 1px #BBB; height: 100%; width: 80px; }
+.designselectionbox .colorselection .colorselectbox .color { height: 15px; }
+.designselectionbox .colorselection .colorselectbox .preview { margin: 3px; border:solid 1px #BBB; height:7px; width: 7px; float:left; display:inline-block; }
+.designselectionbox .colorselection .colorselectbox .colortext { cursor:pointer; line-height: 14px; display:inline-block; height: 15px; color: #4d4d4d; }
+.designselectionbox .colorselection .background { display: inline-block; width: 30px; height: 25px; margin: 1px; float; left; border:solid 1px #BBB; cursor:pointer; }
+.designselectionbox .colorselection .colorselectbox .colortext:hover { color:#000; }

@@ -105,23 +105,6 @@ thundashop.Skeleton = {
         thundashop.Ajax.post(event, function() {
             window.location.hash = '?page=settings&applicationId=aisdf29-asdf712-asdf23451-asdf-asdfasfd-asdf23-54-das-12';
         }, null, true);
-    },
-
-    changeTheme: function(form) {
-        var appSettingsId = form.find('[gsname=appSettingsId]').val();
-        var data = thundashop.framework.createGsArgs(form);
-        data.appId = appSettingsId;
-        
-        var callback = function() {
-            window.location.hash="page=home&app="+appSettingsId;
-            var random = Math.random();
-            document.getElementById('mainlessstyle').href='StyleSheet.php?rand=' + random;
-            thundashop.common.unlockMask();
-            thundashop.common.hideInformationBox(null);
-        }
-        
-        var event = thundashop.Ajax.createEvent('ApplicationManager', 'addApplicationDirect', $(document), data);
-        thundashop.Ajax.postWithCallBack(event, callback);
     }
 }
 

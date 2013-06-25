@@ -7,23 +7,30 @@ $designs = $pool->getAllApplicationSettingsByType("ThemeApplication");
 
 
 $addedTheme = "";
-foreach($added as $add) {
-    if($add instanceof ThemeApplication) {
+$curdesignbg = "inline-block";
+foreach ($added as $add) {
+    if ($add instanceof ThemeApplication) {
         $addedTheme = $add->applicationSettings->id;
+        if(!ApplicationHelper::checkForBackground($add->applicationSettings)) {
+            $curdesignbg = "none";
+        }
         break;
     }
 }
 
-foreach($designs as $design) {
+foreach ($designs as $design) {
     $selected = "";
-    if($design->id === $addedTheme) {
+    if ($design->id === $addedTheme) {
         $selected = "selecteddesign";
     }
     $appname = $design->appName;
     $appid = $design->id;
-    $namespace = "ns_".str_replace("-","_",$design->id);
-    echo "<div class='design $selected' id='$appid' style='background-size:160px 140px; background-image:url(\"/showApplicationImages.php?appNamespace=$namespace&image=$appname.png\")'>";
-    echo "<span class='price'>".$design->price . "$ / year</span>";
+    $namespace = "ns_" . str_replace("-", "_", $design->id);
+    
+    $hasbg = ApplicationHelper::checkForBackground($design);
+    
+    echo "<div class='design $selected' id='$appid' hasbg='$hasbg' style='background-size:160px 140px; background-image:url(\"/showApplicationImages.php?appNamespace=$namespace&image=$appname.png\")'>";
+    echo "<span class='price'>" . $design->price . "$ / ".$this->__f("year")."</span>";
     echo "</div>";
 }
 
@@ -32,23 +39,31 @@ $designArray = array();
 <div class='colorselection'>
     <div class='innerbox colorselectbox'>
         <div class='title'><? echo $this->__f("Colors"); ?></div>
-        <? 
-            foreach($designs as $design) {
-                echo "<div class='designattributes_color' panel='".$design->id."'>";
-                $result = ApplicationHelper::getApplicationColors($design);
-                foreach($result as $color) {
-                    echo "<div class='color' color='$color[1]'>";
-                    echo "<span class='preview' style='background-color:".$color[2].";'></span>";
-                    echo "<span class='colortext'>".$color[1] . "</span>";
-                    echo "</div>";
-                }
+        <?
+        foreach ($designs as $design) {
+            $selected = "";
+            if ($design->id === $addedTheme) {
+                $selected = "active";
+            }
+
+            echo "<div class='designattributes_color $selected' panel='" . $design->id . "'>";
+            $result = ApplicationHelper::getApplicationColors($design);
+            foreach ($result as $color) {
+                echo "<div class='color' color='$color[1]'>";
+                echo "<span class='preview' style='background-color:" . $color[2] . ";'></span>";
+                echo "<span class='colortext'>" . $color[1] . "</span>";
                 echo "</div>";
-        } 
+            }
+            if (sizeof($result) == 0) {
+                echo $this->__f("No colors available for this design.");
+            }
+            echo "</div>";
+        }
         ?>
     </div>
     <div class='innerbox'>
         <div class='title'><? echo $this->__f("Backgrounds"); ?></div>
-        <? 
+        <?
         $backgrounds = array();
         $backgrounds[] = "none";
         $backgrounds[] = "ticks";
@@ -66,10 +81,11 @@ $designArray = array();
         $backgrounds[] = "concrete_wall_2";
         $backgrounds[] = "rubber_grip";
         $backgrounds[] = "inflicted";
-        
-        foreach($backgrounds as $bgs) {
-            echo "<span class='background' image='$bgs' type='skin/default/bgs/$bgs.png' style='background-image:url(\"skin/default/bgs/$bgs.png\");'></span>";
+
+        foreach ($backgrounds as $bgs) {
+            echo "<span class='background' image='$bgs' type='skin/default/bgs/$bgs.png' style='background-image:url(\"skin/default/bgs/$bgs.png\"); display:$curdesignbg;'></span>";
         }
+        echo "<span class='nobackground'>No background selection available for this design.</span>";
         ?>
     </div>
 </div>

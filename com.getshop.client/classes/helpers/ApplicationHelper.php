@@ -63,6 +63,19 @@ class ApplicationHelper {
             }
         }
     }
+
+    public static function checkForBackground($theme) {
+        $namespace= "ns_".str_replace("-", "_", $theme->id);
+        if(file_exists("../app/$namespace/skin/colors.css")) {
+            $content = explode("\n", file_get_contents("../app/$namespace/skin/colors.css"));
+            foreach($content as $line) {
+                if(stristr($line, "//nobg")) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }
 
 ?>

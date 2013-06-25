@@ -1180,4 +1180,5 @@ background-color: #EFEFEF; z-index: 2000; position:fixed; left:0px; bottom:0px;w
 .designselectionbox .colorselection .colorselectbox .preview { margin: 3px; border:solid 1px #BBB; height:7px; width: 7px; float:left; display:inline-block; }
 .designselectionbox .colorselection .colorselectbox .colortext { cursor:pointer; line-height: 14px; display:inline-block; height: 15px; color: #4d4d4d; }
 .designselectionbox .colorselection .background { display: inline-block; width: 30px; height: 25px; margin: 1px; float; left; border:solid 1px #BBB; cursor:pointer; }
-.designselectionbox .colorselection .colorselectbox .colortext:hover { color:#000; }
+.designselectionbox .colorselection .designattributes_color { display: none; }
+.designselectionbox .colorselection .active { display: block; }

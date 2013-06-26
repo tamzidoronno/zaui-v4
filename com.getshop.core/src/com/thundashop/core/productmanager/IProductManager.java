@@ -178,4 +178,9 @@ public interface IProductManager {
      * @throws ErrorException 
      */
     public AttributeSummary getAttributeSummary() throws ErrorException;
+    
+    /**
+     * Get price for a product with variations
+     */
+    public Double getPrice(String productId, List<String> variations) throws ErrorException;
 }

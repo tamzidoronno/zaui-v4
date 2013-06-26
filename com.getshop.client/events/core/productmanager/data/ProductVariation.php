@@ -7,6 +7,9 @@ class core_productmanager_data_ProductVariation {
 	public $priceDifference;
 
 	/** @var String */
+	public $id;
+
+	/** @var String */
 	public $title;
 
 }

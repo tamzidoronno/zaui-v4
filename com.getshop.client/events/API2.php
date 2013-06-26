@@ -2174,6 +2174,20 @@ class APIProductManager {
      }
 
      /**
+     * Get price for a product with variations
+     */
+
+     public function getPrice($productId, $variations) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+          $data['args']["variations"] = json_encode($this->transport->object_unset_nulls($variations));
+          $data["method"] = "getPrice";
+          $data["interfaceName"] = "core.productmanager.IProductManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Fetch one single product by id
      * 
      * @param id

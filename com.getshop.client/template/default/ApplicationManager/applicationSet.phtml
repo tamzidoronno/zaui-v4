@@ -1,7 +1,6 @@
 <?
 /* @var $factory Factory */
 $factory = $this->getFactory();
-$paidSubscriptions = $factory->getApi()->getAppManager()->getAllApplicationSubscriptions();
 
 $area = $_POST['data']['type'];
 $import = isset($_POST['data']['action']) && $_POST['data']['action'] == "import" ? true : false; 

@@ -477,12 +477,14 @@ class APIAppManager {
 
      /**
      * Get all the applications added to this store.
+     * @param includeAppSettings Do you need the application settings object or not?
      * @throws ErrorException 
      */
 
-     public function getAllApplicationSubscriptions() {
+     public function getAllApplicationSubscriptions($includeAppSettings) {
           $data = array();
           $data['args'] = array();
+          $data['args']["includeAppSettings"] = json_encode($this->transport->object_unset_nulls($includeAppSettings));
           $data["method"] = "getAllApplicationSubscriptions";
           $data["interfaceName"] = "core.appmanager.IAppManager";
           return $this->transport->sendMessage($data);

@@ -57,12 +57,14 @@ public class APIAppManager {
 
      /**
      * Get all the applications added to this store.
+     * @param includeAppSettings Do you need the application settings object or not?
      * @throws ErrorException 
      */
 
-     public Map<String,ApplicationSubscription> getAllApplicationSubscriptions()  throws Exception  {
+     public Map<String,ApplicationSubscription> getAllApplicationSubscriptions(boolean includeAppSettings)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new HashMap();
+          data.args.put("includeAppSettings",new Gson().toJson(includeAppSettings));
           data.method = "getAllApplicationSubscriptions";
           data.interfaceName = "core.appmanager.IAppManager";
           String result = transport.send(data);

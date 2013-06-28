@@ -182,7 +182,7 @@ public class AppManager extends ManagerBase implements IAppManager {
     }
 
     @Override
-    public Map<String, ApplicationSubscription> getAllApplicationSubscriptions() throws ErrorException {
+    public Map<String, ApplicationSubscription> getAllApplicationSubscriptions(boolean include) throws ErrorException {
         PageManager pagemanager = this.getManager(PageManager.class);
         for (ApplicationSubscription sub : addedApps.values()) {
             sub.numberOfInstancesAdded = 0;
@@ -206,27 +206,20 @@ public class AppManager extends ManagerBase implements IAppManager {
             }
 
             subscription.numberOfInstancesAdded++;
-
+            if(!include) {  
+                subscription.app = null;
+            }
             addedApps.put(config.appSettingsId, subscription);
         }
         
-        List<String> toRemove = new ArrayList();
-        
-        for(String key : addedApps.keySet()) {
-            ApplicationSubscription sub = addedApps.get(key);
-            if(sub.numberOfInstancesAdded == 0) {
-                toRemove.add(key);
-            }
-        }
-        
-        for(String key : toRemove) {
-            addedApps.remove(key);
-        }
 
         return addedApps;
     }
 
     private void updateSubscription(ApplicationSubscription subscription, AppConfiguration config) throws ErrorException {
+        if(subscription.to_date != null) {
+            return;
+        }
         Calendar cal = Calendar.getInstance();
         subscription.from_date = config.rowCreatedDate;
         cal.setTime(subscription.from_date);
@@ -250,7 +243,7 @@ public class AppManager extends ManagerBase implements IAppManager {
             }
         }
 
-        for (ApplicationSubscription apsub : getAllApplicationSubscriptions().values()) {
+        for (ApplicationSubscription apsub : getAllApplicationSubscriptions(true).values()) {
             if (!apsub.payedfor && apsub.to_date.before(new Date()) && apsub.numberOfInstancesAdded > 0) {
                 if (apsub.app.price != null && apsub.app.price > 0) {
                     result.add(apsub);
@@ -263,7 +256,7 @@ public class AppManager extends ManagerBase implements IAppManager {
 
         Calendar expire = Calendar.getInstance();
         expire.setTime(new Date());
-        expire.add(Calendar.HOUR, 1);
+        expire.add(Calendar.SECOND, 30);
         cache.expire = expire.getTime();
 
         return result;
@@ -271,7 +264,7 @@ public class AppManager extends ManagerBase implements IAppManager {
 
     public void renewAllApplications(String password) throws ErrorException {
         if (password.equals("fdder9bbvnfif909ereXXff")) {
-            for (ApplicationSubscription sub : addedApps.values()) {
+            for (ApplicationSubscription sub : getUnpayedSubscription()) {
                 sub.from_date = new Date();
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(sub.from_date);
@@ -280,6 +273,7 @@ public class AppManager extends ManagerBase implements IAppManager {
                 sub.payedfor = true;
                 saveSubscription(sub);
             }
+            cache = null;
         }
     }
     

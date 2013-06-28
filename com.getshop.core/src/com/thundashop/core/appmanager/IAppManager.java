@@ -60,10 +60,11 @@ public interface IAppManager {
     
     /**
      * Get all the applications added to this store.
+     * @param includeAppSettings Do you need the application settings object or not?
      * @throws ErrorException 
      */
     @Administrator
-    public Map<String, ApplicationSubscription> getAllApplicationSubscriptions() throws ErrorException;
+    public Map<String, ApplicationSubscription> getAllApplicationSubscriptions(boolean includeAppSettings) throws ErrorException;
     
     /**
      * Fetch the settings for a given id.

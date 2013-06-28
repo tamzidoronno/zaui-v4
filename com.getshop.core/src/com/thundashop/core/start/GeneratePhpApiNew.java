@@ -11,7 +11,7 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopApi;
 import java.io.*;
-import java.lang.annotation.Annotation;
+    import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;

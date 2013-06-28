@@ -88,7 +88,15 @@ public class ProductManager extends AProductManager implements IProductManager {
 
     @Override
     public HashMap<String, String> translateEntries(List<String> entryIds) throws ErrorException {
-        return new HashMap();
+        HashMap result = new HashMap();
+        for(String id : entryIds) {
+            for(Product prod : products.values()) {
+                if(prod.pageId.equals(id)) {
+                    result.put(id, prod.name);
+                }
+            }
+        }
+        return result;
     }
 
     @Override

@@ -201,19 +201,18 @@ public class ApplicationPoolImpl {
             ApplicationSettings setting;
             try {
                 setting = appManager.getApplication(app.appSettingsId);
-                Store store = storeManager.getMyStore();
-                store.configuration.colors.baseColor = "FF6103";
-                store.configuration.colors.backgroundColor = "FF9955";
-                store.configuration.colors.textColor = "000000";
-                
                 if (setting.type.equals(ApplicationSettings.Type.Theme)) {
                     return;
                 }
             } catch (ErrorException ex) {
                 logger.warning(this, "application added but does not exists: " + app.appName + " applicationSettingsId: " + app.appSettingsId);
             }
-            
         }
+        
+        Store store = storeManager.getMyStore();
+        store.configuration.colors.baseColor = "FF6103";
+        store.configuration.colors.backgroundColor = "FF9955";
+        store.configuration.colors.textColor = "000000";
         
         AppConfiguration themeApp = createNewApplication("efcbb450-8f26-11e2-9e96-0800200c9a66");
         retApps.put(themeApp.id, themeApp.secureClone());

@@ -28,10 +28,8 @@ CKEDITOR.plugins.registered['save'] = {
                 {
                     modes: {wysiwyg: 1, source: 1},
                     exec: function(editor) {
-                        thundashop.common.addNotificationProgress('contentmanager', "Saving content");
-                        console.log(editor);
-                        thundashop.common.saveCKEditor(editor.getData(), $('#'+editor.name));
-                        thundashop.common.Alert('Saved', 'content has been saved');
+                       $('#'+editor.name).attr('contenteditable',null);
+                       $('#'+editor.name).blur();
                     }
                 }
         );

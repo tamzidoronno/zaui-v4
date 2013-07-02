@@ -150,13 +150,6 @@
 	}
 	
 	/**
-	 * @return \core_common_CartCompositeKey
-	 */
-	public static function core_common_CartCompositeKey() {
-		return new \core_common_CartCompositeKey();
-	}
-	
-	/**
 	 * @return \core_calendarmanager_data_Month
 	 */
 	public static function core_calendarmanager_data_Month() {
@@ -287,6 +280,13 @@
 	 */
 	public static function core_chatmanager_Chatter() {
 		return new \core_chatmanager_Chatter();
+	}
+	
+	/**
+	 * @return \core_cartmanager_data_CartItem
+	 */
+	public static function core_cartmanager_data_CartItem() {
+		return new \core_cartmanager_data_CartItem();
 	}
 	
 	/**

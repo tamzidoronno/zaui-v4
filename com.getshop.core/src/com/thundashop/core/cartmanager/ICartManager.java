@@ -3,6 +3,7 @@ package com.thundashop.core.cartmanager;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.usermanager.data.Address;
 import java.util.List;
 
 /**
@@ -28,7 +29,7 @@ public interface ICartManager {
      * @return
      * @throws ErrorException 
      */
-    public Cart updateProductCount(String productId, int count, List<String> variations) throws ErrorException;
+    public Cart updateProductCount(String cartItemId, int count) throws ErrorException;
     
     /**
      * Remove an added product from the cart.
@@ -36,7 +37,7 @@ public interface ICartManager {
      * @return
      * @throws ErrorException 
      */
-    public Cart removeProduct(String productId, List<String> variations) throws ErrorException;
+    public Cart removeProduct(String cartItemId) throws ErrorException;
     
     /**
      * Fetch the current cart.
@@ -58,4 +59,14 @@ public interface ICartManager {
      * Clear the current shopping cart.
      */
     public void clear() throws ErrorException;
+    
+    /**
+     * Send in a cart and you shall have the total price for all products.
+     */
+    public Double calculateTotalCost(Cart cart);
+    
+    /**
+     * Set a new address to the current cart.
+     */
+    public void setAddress(Address address) throws ErrorException;
 }

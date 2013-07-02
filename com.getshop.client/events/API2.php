@@ -817,6 +817,19 @@ class APICartManager {
      }
 
      /**
+     * Send in a cart and you shall have the total price for all products.
+     */
+
+     public function calculateTotalCost($core_cartmanager_data_Cart) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["core_cartmanager_data_Cart"] = json_encode($this->transport->object_unset_nulls($core_cartmanager_data_Cart));
+          $data["method"] = "calculateTotalCost";
+          $data["interfaceName"] = "core.cartmanager.ICartManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Clear the current shopping cart.
      */
 
@@ -865,14 +878,26 @@ class APICartManager {
      * @throws ErrorException 
      */
 
-     public function removeProduct($productId, $variations) {
+     public function removeProduct($cartItemId) {
           $data = array();
           $data['args'] = array();
-          $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
-          $data['args']["variations"] = json_encode($this->transport->object_unset_nulls($variations));
+          $data['args']["cartItemId"] = json_encode($this->transport->object_unset_nulls($cartItemId));
           $data["method"] = "removeProduct";
           $data["interfaceName"] = "core.cartmanager.ICartManager";
           return $this->transport->cast(API::core_cartmanager_data_Cart(), $this->transport->sendMessage($data));
+     }
+
+     /**
+     * Set a new address to the current cart.
+     */
+
+     public function setAddress($core_usermanager_data_Address) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["core_usermanager_data_Address"] = json_encode($this->transport->object_unset_nulls($core_usermanager_data_Address));
+          $data["method"] = "setAddress";
+          $data["interfaceName"] = "core.cartmanager.ICartManager";
+          return $this->transport->sendMessage($data);
      }
 
      /**
@@ -883,12 +908,11 @@ class APICartManager {
      * @throws ErrorException 
      */
 
-     public function updateProductCount($productId, $count, $variations) {
+     public function updateProductCount($cartItemId, $count) {
           $data = array();
           $data['args'] = array();
-          $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+          $data['args']["cartItemId"] = json_encode($this->transport->object_unset_nulls($cartItemId));
           $data['args']["count"] = json_encode($this->transport->object_unset_nulls($count));
-          $data['args']["variations"] = json_encode($this->transport->object_unset_nulls($variations));
           $data["method"] = "updateProductCount";
           $data["interfaceName"] = "core.cartmanager.ICartManager";
           return $this->transport->cast(API::core_cartmanager_data_Cart(), $this->transport->sendMessage($data));

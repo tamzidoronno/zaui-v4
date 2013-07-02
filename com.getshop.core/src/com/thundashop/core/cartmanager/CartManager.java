@@ -5,6 +5,7 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.usermanager.data.Address;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,8 +20,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 public class CartManager extends ManagerBase implements ICartManager {
-
-    private HashMap<String, Cart> carts = new HashMap<String, Cart>();
+    private HashMap<String, Cart> carts = new HashMap();
 
     @Autowired
     public CartManager(Logger log, DatabaseSaver databaseSaver) {
@@ -59,27 +59,17 @@ public class CartManager extends ManagerBase implements ICartManager {
     }
 
     @Override
-    public Cart updateProductCount(String productId, int count, List<String> variations) throws ErrorException {
-        Product product = getProduct(productId);
-        if (product != null) {
-            Cart cart = getCart(getSession().id);
-            cart.setProductCount(productId, variations, count);
-            return cart;
-        } else {
-            throw new ErrorException(1011);
-        }
+    public Cart updateProductCount(String cartItemId, int count) throws ErrorException {
+        Cart cart = getCart(getSession().id);
+        cart.setProductCount(cartItemId, count);
+        return cart;
     }
 
     @Override
-    public Cart removeProduct(String productId, List<String> variations) throws ErrorException {
-        Product product = getProduct(productId);
-        if (product != null) {
-            Cart cart = getCart(getSession().id);
-            cart.removeProduct(productId, variations);
-            return cart;
-        } else {
-            throw new ErrorException(1011);
-        }
+    public Cart removeProduct(String cartItemId) throws ErrorException {
+        Cart cart = getCart(getSession().id);
+        cart.removeProduct(cartItemId);
+        return cart;
     }
 
     @Override
@@ -96,5 +86,16 @@ public class CartManager extends ManagerBase implements ICartManager {
     public void clear() throws ErrorException {
         Cart cart = getCart(getSession().id);
         cart.clear();
+    }
+
+    @Override
+    public Double calculateTotalCost(Cart cart) {
+        return cart.getTotal();
+    }
+
+    @Override
+    public void setAddress(Address address) throws ErrorException {
+        Cart cart = this.getCart();
+        cart.address = address;
     }
 }

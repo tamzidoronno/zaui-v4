@@ -1,9 +1,11 @@
 package com.thundashop.core.ordermanager;
 
+import com.google.gson.Gson;
 import com.thundashop.core.appmanager.AppManager;
 import com.thundashop.core.appmanager.data.ApplicationSubscription;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.Cart;
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
@@ -15,6 +17,7 @@ import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
 import java.util.*;
+import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -87,17 +90,19 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         newOrder += "<br> PostCode: " + order.cart.address.postCode + " " + order.cart.address.city;
         newOrder += "<br>";
         newOrder += "<br> <b>Items:</b> ";
-        for (CartCompositeKey compKey : order.cart.products.keySet()) {
-            Product product = order.cart.products.get(compKey);
-            newOrder += "<br> " + order.cart.getProductCount(compKey) + "  x " + product.name;
-            newOrder += "<br><b>You selected: </b>";
-            for (String variation : compKey.getVariations()) {
-                if (variation.equals("")) {
-                    continue;
+        for (CartItem cartItem : order.cart.getItems()) {
+            Product product = cartItem.getProduct();
+            newOrder += "<br> " + cartItem.getCount() + "  x " + product.name;
+            
+            if (cartItem.getVariations().size() > 0) {
+                newOrder += "<br><b>You selected: </b>";
+                for (String variation : cartItem.getVariations()) {
+                    if (variation.equals("")) {
+                        continue;
+                    }
+
+                    newOrder += product.getVariation(variation).title+", ";
                 }
-                
-                ProductVariation variation2 = product.getVariation(variation);
-                newOrder += variation2.title+", ";
             }
             
             newOrder = newOrder.substring(0, newOrder.length() - 2);
@@ -115,8 +120,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         Order order = new Order();
         order.createdDate = new Date();
-        order.cart = cart;
-
+        order.cart = cart.clone();
+        
         if (order.cart.address == null) {
             throw new ErrorException(53);
         }

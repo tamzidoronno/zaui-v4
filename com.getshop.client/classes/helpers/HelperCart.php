@@ -19,7 +19,7 @@ class HelperCart {
     }
 
     public static function getVartionsText($cartItem) {
-        if (count($cartItem->variations) == 0) {
+        if (count(@$cartItem->variations) == 0) {
             return;
         }
         
@@ -44,7 +44,7 @@ class HelperCart {
             if ($varobject->id == $id) {
                 $retobject = $varobject;
             }
-            if ($retobject == null && $varobject->children) {
+            if ($retobject == null && isset($varobject->children) && $varobject->children) {
                 $retobject =  HelperCart::getText($varobject->children, $id);
             }
         }

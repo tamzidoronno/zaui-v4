@@ -1,5 +1,5 @@
 <?php
-class core_common_CartCompositeKey extends core_common_DataCommon  {
+class core_common_CartCompositeKey {
 	/** @var String */
 	public $productId;
 

@@ -161,6 +161,8 @@ class ApplicationManagement extends ApplicationBase {
         $settings->pageSingelton = $data['pagesingelton'];
         $settings->trialPeriode = $data['trialPeriode'];
         $settings = $this->setWidgets($settings);
+        $settings->allowedStoreIds = explode(",", $data['storeids']);
+        
         
         $this->getFactory()->getApi()->getAppManager()->saveApplication($settings);
         $this->settings = $settings;

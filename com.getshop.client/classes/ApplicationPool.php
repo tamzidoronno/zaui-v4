@@ -45,7 +45,7 @@ class ApplicationPool {
     public function createAppInstance($appConfig) {
         $settings = $this->getApplicationSetting($appConfig->appSettingsId);
         if ($settings == null) {
-            continue;
+            return;
         }
 
         $appInstance = $this->createInstace($settings);

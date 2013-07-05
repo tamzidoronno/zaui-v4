@@ -81,7 +81,7 @@ public class ApplicationPool extends ManagerBase {
         for(ApplicationSettings settings : list) {
             if(settings.isPublic) {
                 returnlist.add(settings);
-            } else if(storeid.equals(settings.ownerStoreId)) {
+            } else if(storeid.equals(settings.ownerStoreId) || settings.allowedStoreIds.contains(storeid)) {
                 returnlist.add(settings);
             }
         }

@@ -1,0 +1,32 @@
+<div class="skelholder skeleton6" theme='<? echo $this->getThemeApplicationSettingsId(); ?>'>
+<?php
+$this->includefile('pageinfo');
+$this->includefile('mainmenu');
+$this->includefile('header');
+?>
+<div class="subheader-outer">
+    <div area='subheader' id="apparea-subheader" class="applicationarea subheader">
+        <?php
+        if (!$this->emptySkeleton)    
+            $this->getPage()->getSubHeaderArea()->render(); 
+        ?>
+    </div>
+</div>
+<div class="mainarea-outer">
+    <div class="mainarea"> 
+        <div class="main-area-top"></div>
+        <div class="mainareacontent">
+            <div area='middle' id="apparea-middle" class="applicationarea middle inline">
+                <?php   
+                if (!$this->emptySkeleton)    
+                    $this->getPage()->getMiddleApplicationArea()->render(); 
+                ?>
+            </div>
+        </div>
+        <div class="main-area-bottom"></div>
+    </div>
+</div>
+<?php
+    $this->includefile('footer');
+?>
+</div>

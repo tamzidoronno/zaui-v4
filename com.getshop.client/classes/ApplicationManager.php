@@ -278,7 +278,7 @@ class ApplicationManager extends FactoryBase {
     public function setVIS() {
         $password = $_POST['data']['password'];
         $toggle = $_POST['data']['toggle'];
-        $this->getApi()->getStoreManager()->setVis($password, $toggle);
+        $this->getApi()->getStoreManager()->setVis($toggle, $password);
     }
     
     public function importApplication() {

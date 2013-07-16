@@ -1,6 +1,12 @@
 <?
 /* @var $this PageArea */
+
+if ($this->isSystemArea()) {
+    return;
+}
+
 $shouldDisplay = $this->shouldDisplayAddMenu() ? 'style="display: block;"' : '';
+
 ?>
 
 <center>

@@ -70,18 +70,13 @@
 
         <div class="title">
             <div style="float:right;">
-                <input type="checkbox" gsname="apparea_left" <? if ($this->hasArea('left')) {
-            echo "CHECKED";
-        } ?> <? echo $disabled; ?>><? echo $this->__f("Left"); ?>
-                <input type="checkbox" gsname="apparea_middle" <? if ($this->hasArea('middle')) {
-            echo "CHECKED";
-        } ?> <? echo $disabled; ?>><? echo $this->__f("Middle"); ?>
-                <input type="checkbox" gsname="apparea_right" <? if ($this->hasArea('right')) {
-            echo "CHECKED";
-        } ?> <? echo $disabled; ?>><? echo $this->__f("Right"); ?>
+                <input type="checkbox" gsname="apparea_left" <? if ($this->hasArea('left')) { echo "CHECKED"; }  echo $disabled; ?>><? echo $this->__f("Left"); ?>
+                <input type="checkbox" gsname="apparea_middle" <? if ($this->hasArea('middle')) { echo "CHECKED"; } echo $disabled; ?>><? echo $this->__f("Middle"); ?>
+                <input type="checkbox" gsname="apparea_right" <? if ($this->hasArea('right')) { echo "CHECKED"; } echo $disabled; ?>><? echo $this->__f("Right"); ?>
+                <input type="checkbox" gsname="apparea_subheader" <? if ($this->hasArea('subheader')) { echo "CHECKED"; } echo $disabled; ?>><? echo $this->__f("Subheader"); ?>
             </div>
 
-    <? echo $this->__f("What areas does this application support?"); ?>
+            <? echo $this->__f("What areas does this application support?"); ?>
             <div class="additonaltext"><? echo $this->__f("Specify what areas you want to be able to add this application to."); ?></div>
         </div>
 

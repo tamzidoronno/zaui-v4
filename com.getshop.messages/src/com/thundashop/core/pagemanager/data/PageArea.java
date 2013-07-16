@@ -136,6 +136,7 @@ public class PageArea implements Serializable {
         public static String MIDDLE = "middle";
         public static String RIGHT = "right";
         public static String BOTTOM = "footer";
+        public static String SUBHEADER = "subheader";
     }
     
     private void addApplicationsWithNoSequence() {

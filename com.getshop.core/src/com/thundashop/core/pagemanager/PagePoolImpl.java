@@ -227,7 +227,6 @@ public class PagePoolImpl {
         Page page = new Page();
         page.type = type;
         page.id = pageId;
-        page.addAllPageAreas();
         page.storeId = storeId;
         return page;
     }
@@ -267,6 +266,7 @@ public class PagePoolImpl {
 
     public Page finalizePage(Page page) throws ErrorException {
         page.clear();
+        page.addAllPageAreas();
         addInheritatedApplications(page, page.parent);
         addStickedApplications(page);
         boolean onlyExtraApplications = shouldOnlyContainExtraApplications(page);

@@ -25,7 +25,8 @@ class PageArea extends FactoryBase {
     /** @var core_pagemanager_data_PageArea */
     private $backendPageArea;
     private $applications = array();
-
+    private $systemArea = array('header', 'footer');
+    
     public function getApplication($id) {
         return $this->applications[$id];
     }
@@ -153,7 +154,13 @@ class PageArea extends FactoryBase {
         unset($this->applications[$param0]);
     }
 
-   
+    public function isSystemArea() {
+        return in_array($this->backendPageArea->type, $this->systemArea);
+    }
+    
+    public function getType() {
+        return $this->backendPageArea->type;
+    }
 }
 
 ?>

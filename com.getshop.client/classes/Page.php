@@ -66,9 +66,11 @@ class Page extends FactoryBase {
     }
     
     private function createAllPageAreas($page) {
+        
         foreach ($page->pageAreas as $pagearea) {
             $this->areas[$pagearea->type] = new PageArea($this, $pagearea);
         }
+        
         $this->skeletonType = $page->type;
     }
 
@@ -89,10 +91,6 @@ class Page extends FactoryBase {
         return $this->areas;
     }
 
-    public function setAreas($areas) {
-        $this->areas = $areas;
-    }
-    
     public function getLeftApplicationArea() {
         return $this->areas['left'];
     }
@@ -102,6 +100,13 @@ class Page extends FactoryBase {
      */
     public function getMiddleApplicationArea() {
         return $this->areas['middle'];
+    }
+    
+    /**
+     * @return PageArea
+     */
+    public function getSubHeaderArea() {
+        return $this->areas['subheader'];
     }
     
     /**
@@ -174,14 +179,16 @@ class Page extends FactoryBase {
     }
     
     public function loadJsonContent() {
+        
+        
         $contents['skeleton'] = $this->getSkeletonLayout();
         $contents['mainmenu'] = $this->getMainMenuContent();
         $contents['apparea-breadcrumb'] = $this->getBreadCrumbContent();
-        $contents['apparea-header'] = $this->getAppAreaHtml($this->getApplicationArea('header'));
-        $contents['apparea-left'] = $this->getAppAreaHtml($this->getApplicationArea('left'));
-        $contents['apparea-middle'] = $this->getAppAreaHtml($this->getApplicationArea('middle'));
-        $contents['apparea-right'] = $this->getAppAreaHtml($this->getApplicationArea('right'));
-        $contents['apparea-footer'] = $this->getAppAreaHtml($this->getApplicationArea('footer'));
+        
+        foreach ($this->areas as $area) {
+            $type = $area->getType();
+            $contents['apparea-'.$type] = $this->getAppAreaHtml($this->getApplicationArea($type));
+        }
         
         if (isset($_GET['page']) && $_GET['page'] == "settings") {
             $contents['apparea-bottom'] = $this->getFactory()->getBottomHtml();

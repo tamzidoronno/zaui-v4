@@ -19,6 +19,7 @@ body {
 .header,
 .footer,
 .breadcrumb,
+.subheader,
 .mainarea {
     width: <? echo $this->getWidthTotal();?>px;
     margin: 0 auto;
@@ -41,6 +42,9 @@ body {
 
 .skeleton5 .mainarea { width: 100%; }
 .skeleton5 .mainarea .middle { width: 100%; }
+
+.skeleton6 .mainarea .middle { width: <? echo $this->getWidthTotal();?>px; }
+.skeleton6 .subheader-outer .subheader { min-height: 80px; width: <? echo $this->getWidthTotal();?>px; }
 
 .header { height: <? echo $this->getHeaderHeight();?>px; }
 .footer-outer { width: 100% }

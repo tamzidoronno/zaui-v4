@@ -1,0 +1,10 @@
+<div class='subheadertop'></div>
+<div class='subheadermiddle'>
+    <?php
+    /* @var $this PageArea */
+    foreach ($this->getApplications() as $application) {
+        $application->renderApplication();
+    }
+    ?>    
+</div>
+<div class='subheaderbottom'></div>

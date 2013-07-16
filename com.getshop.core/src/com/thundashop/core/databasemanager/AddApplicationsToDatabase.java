@@ -58,52 +58,15 @@ public class AddApplicationsToDatabase {
     private List<ApplicationSettings> addApplications() {
         List<ApplicationSettings> apps = new ArrayList();
 
-        
-        ApplicationSettings bring = createSettings(
-                "Bring", 
-                "2da52bbc-a392-4125-92b6-eec1dc4879e9", 
-                emtpy,
-                "fraktguiden is a norwegian application for keeping track of norwegian shipment prices, shipment tracking etc.", 
-                ApplicationSettings.Type.Shipment, true);
-        bring.isPublic = true;
-        apps.add(bring);
-        
-        ApplicationSettings airgram = createSettings(
-                "Airgram", 
-                "ee96fe89-e09d-4f7b-921a-3272462e9b7e", 
-                emtpy, 
-                "Airgram allows you to push important notifications to your phone, use this application to push notifications to your cell phone when something important is happening, for example if someone is starting to chat with you, you will be instantly notified and can responde accordingly.", 
-                ApplicationSettings.Type.Reporting, true);
-        airgram.isPublic = true;
-        apps.add(airgram);
-
-        ApplicationSettings googleMaps = createSettings(
-                "GoogleMaps", 
-                "17c48891-6f7a-47a0-849d-b50de9af218f", 
-                Arrays.asList(PageArea.Type.LEFT,PageArea.Type.MIDDLE,PageArea.Type.RIGHT), 
-                "Add google maps to your page, pin point locatins and restrict it to a given area, and even connect the locations to a given page.", 
-                ApplicationSettings.Type.Marketing, false);
-        googleMaps.isPublic = true;
-        apps.add(googleMaps);
-        
-        ApplicationSettings realEstate = createSettings(
-                "RealEstate", 
-                "32c15c30-d665-11e2-8b8b-0800200c9a66", 
-                Arrays.asList(PageArea.Type.MIDDLE), 
-                "", 
-                ApplicationSettings.Type.Webshop, false);
-        realEstate.isPublic = true;
-        apps.add(realEstate);
-        
-        ApplicationSettings mtbTheme = createSettings(
-                "MtbTheme", 
-                "1fd7f850-d5c4-11e2-8b8b-0800200c9a66", 
+        ApplicationSettings akad = createSettings(
+                "AutoAkademietTheme", 
+                "b9cc5940-edef-11e2-91e2-0800200c9a66", 
                 emtpy, 
                 "", 
                 ApplicationSettings.Type.Theme, false);
-        mtbTheme.isPublic = false;
-        mtbTheme.allowedStoreIds.add("e9e2e632-4066-4ecb-a6c3-1612f5997c5d");
-        apps.add(mtbTheme);
+        akad.isPublic = false;
+        akad.allowedStoreIds.add("2fac0e57-de1d-4fdf-b7e4-5f93e3225445");
+        apps.add(akad);
         
         return apps;
     }

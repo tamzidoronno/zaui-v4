@@ -179,7 +179,6 @@ PubSub.subscribe('NAVIGATION_COMPLETED', function() {
                 appid: appId,
                 addon : true
             };
-            console.log("TEST");
             config.items.push(item);
         });
     }

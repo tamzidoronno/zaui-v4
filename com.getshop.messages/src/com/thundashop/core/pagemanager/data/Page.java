@@ -8,8 +8,11 @@ package com.thundashop.core.pagemanager.data;
 
 import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.DataCommon;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -49,24 +52,20 @@ public class Page extends DataCommon implements Cloneable {
     }
 
     public void addAllPageAreas() {
-        PageArea middle = new PageArea(this);
-        PageArea bottom = new PageArea(this);
-        PageArea right = new PageArea(this);
-        PageArea left = new PageArea(this);
-        PageArea top = new PageArea(this);
-
-        middle.type = PageArea.Type.MIDDLE;
-        bottom.type = PageArea.Type.BOTTOM;
-        right.type = PageArea.Type.RIGHT;
-        left.type = PageArea.Type.LEFT;
-        top.type = PageArea.Type.TOP;
-
-        this.pageAreas = new HashMap<String, PageArea>();
-        this.pageAreas.put(top.type, top);
-        this.pageAreas.put(bottom.type, bottom);
-        this.pageAreas.put(left.type, left);
-        this.pageAreas.put(middle.type, middle);
-        this.pageAreas.put(right.type, right);
+        for (Field field : PageArea.Type.class.getFields()) {
+            try {
+                String type = (String) field.get(null);
+                if (this.pageAreas.get(type) == null) {
+                    PageArea pageArea = new PageArea(this);
+                    pageArea.type = (String)type;
+                    this.pageAreas.put(pageArea.type, pageArea);
+                }
+            } catch (IllegalAccessException ex) {
+                ex.printStackTrace();
+            } catch (IllegalArgumentException ex) {
+                ex.printStackTrace();
+            } 
+        }
     }
     
     public static class PageType {

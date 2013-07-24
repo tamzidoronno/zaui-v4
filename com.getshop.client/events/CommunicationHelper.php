@@ -148,6 +148,8 @@ class CommunicationHelper {
             $result['interfaceName'] = $event['interfaceName'];
             $this->errors[] = $result;
             $this->errorCodes[] = $object->errorCode;
+            print_r($this->errors);
+            print_r($this->errorCodes);
             return null;
         } else {
             return $this->createThundashopObject($object);

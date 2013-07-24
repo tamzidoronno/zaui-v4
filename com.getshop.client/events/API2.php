@@ -1167,6 +1167,22 @@ class APIGetShop {
      }
 
      /**
+     * Need to figure out what address is connected to a specific uuid?
+     * @param uuid
+     * @return String
+     * @throws ErrorException 
+     */
+
+     public function findAddressForUUID($uuid) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["uuid"] = json_encode($this->transport->object_unset_nulls($uuid));
+          $data["method"] = "findAddressForUUID";
+          $data["interfaceName"] = "core.getshop.IGetShop";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Get the partner id attached to this user.
      * @return String
      * @throws ErrorException 
@@ -1509,6 +1525,22 @@ class APIOrderManager {
      }
 
      /**
+     * Fetch a single order based on its id.
+     * @param orderId
+     * @return core_ordermanager_data_Order
+     * @throws ErrorException 
+     */
+
+     public function getOrder($orderId) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+          $data["method"] = "getOrder";
+          $data["interfaceName"] = "core.ordermanager.IOrderManager";
+          return $this->transport->cast(API::core_ordermanager_data_Order(), $this->transport->sendMessage($data));
+     }
+
+     /**
      * Get a list of already created orders.
      * @param orderIds A list of all orders you want to fetch, all orders are retrieved if this list is empty.
      * @param page What page are you fetching (default 0)
@@ -1828,6 +1860,22 @@ class APIPageManager {
           $data['args']["appSettingsId"] = json_encode($this->transport->object_unset_nulls($appSettingsId));
           $data['args']["pageArea"] = json_encode($this->transport->object_unset_nulls($pageArea));
           $data["method"] = "getApplicationsByPageAreaAndSettingsId";
+          $data["interfaceName"] = "core.pagemanager.IPageManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
+     * Fetch all application from the applicationPool (added applications) which has a given type.
+     * @param type
+     * @return List
+     * @throws ErrorException 
+     */
+
+     public function getApplicationsByType($type) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["type"] = json_encode($this->transport->object_unset_nulls($type));
+          $data["method"] = "getApplicationsByType";
           $data["interfaceName"] = "core.pagemanager.IPageManager";
           return $this->transport->sendMessage($data);
      }

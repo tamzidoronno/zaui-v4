@@ -14,8 +14,8 @@ class CartManager extends TestBase {
         //Create a test product.
         $product = $this->getApi()->getProductManager()->createProduct();
         
-        //Add the product.
-        $manager->addProduct($product->id, 1);
+        //Add the product without any variation to it.
+        $manager->addProduct($product->id, 1, array());
     }
     
     /**

@@ -51,7 +51,8 @@ $importApplication = new ImportApplication(null, null);
 $importApplication->showMenu();
 
 $factory = IocContainer::getFactorySingelton();
-
+echo $factory->getApi()->getGetShop()->findAddressForUUID("fb0a0872-0cb2-42f6-8284-230aac47feea");
+exit(0);
 
 if(!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
     $result = $factory->getApi()->getUserManager()->getLoggedOnUser();

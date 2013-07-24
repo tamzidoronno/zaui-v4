@@ -33,6 +33,15 @@ public interface IOrderManager {
     public List<Order> getOrders(ArrayList<String> orderIds, Integer page, Integer pageSize) throws ErrorException;
     
     /**
+     * Fetch a single order based on its id.
+     * @param orderId
+     * @return
+     * @throws ErrorException 
+     */
+    
+    public Order getOrder(String orderId) throws ErrorException;
+    
+    /**
      * Update or modify an existing order. 
      * @param order The order to modify
      * @return

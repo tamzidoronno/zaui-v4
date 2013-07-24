@@ -39,13 +39,10 @@ public class Database {
     private Mongo mongo;
     private Morphia morphia;
     private String collectionPrefix = "col_";
-    
     @Autowired
     public Logger logger;
-    
     @Autowired
     public DatabaseSocketHandler databaseSocketHandler;
-    
     private boolean sandbox = false;
 
     public void activateSandBox() {
@@ -91,33 +88,33 @@ public class Database {
 
         addDataCommonToDatabase(data, credentials);
         databaseSocketHandler.objectSaved(data, credentials);
-        
+
     }
-    
+
     private void createDataFolder() throws IOException {
         File file = new File("data");
-        
+
         if (file.exists() && file.canWrite() && file.isDirectory()) {
             return;
         }
-            
+
 
         if (file.exists() && !file.isDirectory()) {
             System.out.println("The file " + file.getPath() + " is not a folder");
             System.exit(-1);
         }
-        
+
         file.mkdir();
-        
+
         if (!file.exists()) {
             System.out.println("=======================================================================================================");
             System.out.println("Was not able to create folder " + file.getCanonicalPath());
             System.out.println("=======================================================================================================");
             System.exit(-1);
         }
-                
+
     }
-    
+
     private void addDataCommonToDatabase(DataCommon data, Credentials credentials) {
         DBObject dbObject = morphia.toDBObject(data);
         mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + data.storeId).save(dbObject);
@@ -128,13 +125,13 @@ public class Database {
         DBCollection collection = mongoDb.getCollection("col_" + credentials.storeid);
         return getData(collection);
     }
-    
+
     private List<DataCommon> getData(DBCollection collection) {
         DBCursor cur = collection.find();
         List<DataCommon> all = new ArrayList<DataCommon>();
         while (cur.hasNext()) {
             DBObject dbObject = cur.next();
-            String className = (String)dbObject.get("className");
+            String className = (String) dbObject.get("className");
             if (className != null) {
                 try {
                     Class.forName(className);
@@ -143,7 +140,7 @@ public class Database {
                     continue;
                 }
             }
-            
+
             try {
                 DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, dbObject);
                 if (dataCommon.deleted == null) {
@@ -174,9 +171,9 @@ public class Database {
         BasicDBObject query = new BasicDBObject();
         query.put("rowCreatedDate", BasicDBObjectBuilder.start("$gte", startDate).add("$lte", endDate).get());
         DBCursor cursor = dbCollection.find(query);
-        
-        if(searchCriteria != null) {
-            for(String key : searchCriteria.keySet()) {
+
+        if (searchCriteria != null) {
+            for (String key : searchCriteria.keySet()) {
                 query.put(key, searchCriteria.get(key));
             }
         }
@@ -194,7 +191,7 @@ public class Database {
                 ex.printStackTrace();
             }
         }
-        
+
         Collections.sort(all, new DataCommonSorter());
 
         return all;
@@ -210,7 +207,7 @@ public class Database {
             StoreHandler storeHandler = AppContext.storePool.getStorePool(credentials.storeid);
             managerBase = storeHandler.getManager(credentials.getManager());
         }
-        
+
         DataRetreived dataRetreived = new DataRetreived();
         dataRetreived.data = new ArrayList();
         dataRetreived.data.add(dataCommon);
@@ -221,16 +218,16 @@ public class Database {
         DBCollection collection = mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + credentials.storeid);
         DBObject searchById = new BasicDBObject("_id", id);
         DBObject found = collection.findOne(searchById);
-        
+
         try {
             return morphia.fromDBObject(DataCommon.class, found);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        
+
         return null;
     }
-    
+
     public DatabaseSyncMessage getSyncMessage() {
         DatabaseSyncMessage syncMessage = new DatabaseSyncMessage();
         List<String> databases = mongo.getDatabaseNames();
@@ -251,6 +248,26 @@ public class Database {
         return syncMessage;
     }
 
+    public DataCommon findObject(String uuid) {
+        List<String> dbs = mongo.getDatabaseNames();
+        for (String db : dbs) {
+            DB tmpdb = mongo.getDB(db);
+            Set<String> collections = tmpdb.getCollectionNames();
+            for (String collection : collections) {
+                DBCollection tmpcollection = tmpdb.getCollection(collection);
+                BasicDBObject field = new BasicDBObject();
+                field.put("_id", uuid);
+                DBCursor res = tmpcollection.find(field);
+                if (res.size() == 1) {
+                    Morphia morphia = new Morphia();
+                    morphia.map(DataCommon.class);
+                    return morphia.fromDBObject(DataCommon.class, res.next());
+                }
+            }
+        }
+        return new DataCommon();
+    }
+
     public void save(DatabaseSyncMessage sync) {
         for (ManagerData managerData : sync.managerDatas) {
             DBCollection col = mongo.getDB(managerData.database).getCollection(managerData.collection);
@@ -261,7 +278,9 @@ public class Database {
         }
     }
 }
+
 class DataCommonSorter implements Comparator<DataCommon> {
+
     @Override
     public int compare(DataCommon o1, DataCommon o2) {
         return o1.rowCreatedDate.compareTo(o2.rowCreatedDate);

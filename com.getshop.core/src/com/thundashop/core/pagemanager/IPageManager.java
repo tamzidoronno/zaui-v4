@@ -193,6 +193,16 @@ public interface IPageManager {
      */
     public List<AppConfiguration> getApplications() throws ErrorException;
     
+    
+    /**
+     * Fetch all application from the applicationPool (added applications) which has a given type.
+     * @param type
+     * @return
+     * @throws ErrorException 
+     */
+    public List<AppConfiguration> getApplicationsByType(String type) throws ErrorException;
+    
+    
     /**
      * Get all applications from the applicationPool. 
      * based on the specified ApplicationSettingsId

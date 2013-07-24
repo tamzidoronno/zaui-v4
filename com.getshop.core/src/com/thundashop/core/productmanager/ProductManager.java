@@ -9,7 +9,6 @@ import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.productmanager.data.AttributeGroup;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
-import com.thundashop.core.productmanager.data.ProductVariation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

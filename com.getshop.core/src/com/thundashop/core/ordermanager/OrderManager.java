@@ -50,6 +50,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (user != null) {
             order.userId = user.id;
         }
+        order.session = getSession().id;
 
         order.storeId = storeId;
         databaseSaver.saveObject(order, credentials);
@@ -93,7 +94,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for (CartItem cartItem : order.cart.getItems()) {
             Product product = cartItem.getProduct();
             newOrder += "<br> " + cartItem.getCount() + "  x " + product.name;
-            
+
             if (cartItem.getVariations().size() > 0) {
                 newOrder += " (";
                 for (String variation : cartItem.getVariations()) {
@@ -101,11 +102,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                         continue;
                     }
 
-                    newOrder += product.getVariation(variation).title+", ";
+                    newOrder += product.getVariation(variation).title + ", ";
                 }
                 newOrder = newOrder.substring(0, newOrder.length() - 2) + ")";
             }
-            
+
             newOrder += "<br>";
         }
 
@@ -117,11 +118,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         CartManager cartManager = getManager(CartManager.class);
         Cart cart = cartManager.getCart();
         cart.address = address;
-        
+
         Order order = new Order();
         order.createdDate = new Date();
         order.cart = cart.clone();
-        
+
         if (order.cart.address == null) {
             throw new ErrorException(53);
         }
@@ -134,7 +135,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         String orderText = getCustomerOrderText(order);
 
         mailFactory.send(store.configuration.emailAdress, order.cart.address.emailAddress, "Thank you for your order", orderText);
-        
+
         if (!store.configuration.emailAdress.equals(order.cart.address.emailAddress)) {
             mailFactory.send(store.configuration.emailAdress, store.configuration.emailAdress, "Thank you for your order", orderText);
         }
@@ -147,7 +148,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         User user = getSession().currentUser;
         List<Order> result = new ArrayList();
         for (Order order : orders.values()) {
-            if (user.isAdministrator() || user.isEditor()) {
+            if (user == null) {
+                if (order.session != null && order.session.equals(getSession().id)) {
+                    result.add(order);
+                }
+            } else if (user.isAdministrator() || user.isEditor()) {
                 result.add(order);
             } else if (order.userId.equals(user.id)) {
                 result.add(order);
@@ -186,7 +191,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         } else {
             mailFactory.send("post@getshop.com", "post@getshop.com", "Status update failure", "tried to use password:" + password);
-            
+
         }
     }
 
@@ -213,5 +218,26 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             String to = getStore().configuration.emailAdress;
             mailFactory.send("post@getshop.com", "post@getshop.com", "Application fraud attempt", content);
         }
+    }
+
+    @Override
+    public Order getOrder(String orderId) throws ErrorException {
+        User user = getSession().currentUser;
+        for (Order order : orders.values()) {
+            if(!order.id.equals(orderId)) {
+                continue;
+            }
+            if (user == null) {
+                if (order.session != null && order.session.equals(getSession().id)) {
+                    return order;
+                }
+            } else if (user.isAdministrator() || user.isEditor()) {
+                return order;
+            } else if (order.userId.equals(user.id)) {
+                return order;
+            }
+        }
+        
+        throw new ErrorException(61);
     }
 }

@@ -228,5 +228,12 @@ public class GetShop extends ManagerBase implements IGetShop {
         return "";
     }
 
+    @Override
+    public String findAddressForUUID(String uuid) throws ErrorException {
+        DataCommon obj = database.findObject(uuid);
+        Store store = (Store)database.findObject(obj.storeId);
+        return store.webAddress;
+    }
+
     
 }

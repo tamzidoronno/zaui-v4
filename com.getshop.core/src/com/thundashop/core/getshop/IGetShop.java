@@ -36,6 +36,15 @@ public interface IGetShop {
     public void connectStoreToPartner(String partner) throws ErrorException;
     
     /**
+     * Need to figure out what address is connected to a specific uuid?
+     * Remember this is query is quite slow. so cache the result.
+     * @param uuid
+     * @return
+     * @throws ErrorException 
+     */
+    public String findAddressForUUID(String uuid) throws ErrorException;
+    
+    /**
      * Get the partner id attached to this user.
      * @return
      * @throws ErrorException 

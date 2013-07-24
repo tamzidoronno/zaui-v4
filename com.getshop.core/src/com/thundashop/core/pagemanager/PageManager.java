@@ -76,7 +76,7 @@ public class PageManager extends ManagerBase implements IPageManager {
     public Page createPage(int layout, String parentId) throws ErrorException {
         return pagePool.createNewPage(layout, parentId);
     }
-
+    
     @Override
     public Page removeApplication(String applicationId, String pageid) throws ErrorException {
         Page page = pagePool.get(pageid);
@@ -322,6 +322,28 @@ public class PageManager extends ManagerBase implements IPageManager {
         Page page = pagePool.get(pageId);
         page.description = description;
         pagePool.savePage(page);
+    }
+
+    @Override
+    public List<AppConfiguration> getApplicationsByType(String type) throws ErrorException {
+        AppManager manager = getManager(AppManager.class);
+        List<AppConfiguration> apps = getApplications();
+        List<AppConfiguration> toReturn = new ArrayList();
+        for(AppConfiguration config : apps) {
+            try {
+                ApplicationSettings settings = manager.getApplication(config.appSettingsId);
+                if(settings.type.equals(type)) {
+                    toReturn.add(config);
+                }
+            }catch(ErrorException e) {
+                //If the application does not exists, the ignore it.
+                if(e.code != 18) {
+                    throw e;
+                }
+            }
+        }
+        
+        return toReturn;
     }
 
 }

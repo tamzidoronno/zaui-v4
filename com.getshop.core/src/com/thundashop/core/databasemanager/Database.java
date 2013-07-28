@@ -248,9 +248,17 @@ public class Database {
         return syncMessage;
     }
 
-    public DataCommon findObject(String uuid) {
+    public DataCommon findObject(String uuid, String manager) {
         List<String> dbs = mongo.getDatabaseNames();
         for (String db : dbs) {
+            if(db.equals("LoggerManager")) {
+                continue;
+            }
+            
+            if(manager != null && !db.equals(manager)) {
+                continue;
+            }
+            
             DB tmpdb = mongo.getDB(db);
             Set<String> collections = tmpdb.getCollectionNames();
             for (String collection : collections) {

@@ -3,34 +3,46 @@ A red theme that can be used when selling exciting things;-;
 Add to cart;-;Legg i handlekurv
 Address;-;Adresse
 All orders;-;Alle bestilinger
-An elegant and slick design that is suitable for most of the webshops.;-;
+Application;-;
 Birth Date;-;Bursdag
-Buy;-;Kjøp
 Cancel order;-;Kanselert ordre
 Canceled;-;Kanselert
+Cart overview;-;
 Cell phone;-;Mobil tlf
 Change password;-;Endre passord
 Chat with us;-;Chat med oss
+Checkout;-;
 City;-;By
 Click here to edit the text.;-;
+Click next to select shipping options;-;
 Completed;-;Gjennomført
 Confirm order;-;Bekreft ordre
+Count;-;
 Customer information;-;Kunde detaljer
+Date;-;
+Delete image;-;
+Delete product;-;
+Details;-;
 Email;-;Epost
+End date;-;
 Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.
+Expire date;-;
 Extended Description;-;Utvidet beskrivelse
 Fixed price;-;Fikset pris
 Full name;-;Hele navnet
+Group;-;
 How can I help you today ?;-;Hva kan jeg hjelpe deg med?
-If you like that the webshop fills the screen widly, then you should use this design.;-;
+Les mer;-;
 Login;-;Logg inn
 Logout;-;Logg ut
 Lost your password?;-;Glemt ditt passord?
 My Account;-;Min konto
 My name is:;-;Mitt navn er
 Name;-;Navn
+Name of the application;-;
 New password;-;Nytt passord
 Next;-; Neste
+Number of instances added;-;
 Old password;-;Gammelt passord
 Order;-;Ordre
 Order Created;-; Ordre opprettet
@@ -41,19 +53,20 @@ Original (hp) ;-;
 Original (nm) ;-;
 Other images;-;
 Our local time is: ;-;
-Overview;-;Oversikt
 Password;-;Passord
+Payment;-;
 Payment failed;-;Betaling feilet
 Phone;-;Telefon
 Place order;-;Legg inn ordre
 Please enter your email address:;-;Vennligst skriv inn din epost
 Please following theese steps to recover your password.;-;Vennligst følgt instruksjonen under.
 Please select a shipment method.;-;Vennligst velg en forendelsemetode
+Please select department;-;
 Postal code;-;Postnummer
 Previous;-;Forrige
 Price;-;Pris
-Proceed to checkout;-;Fortsett til utsjekking
-Products;-;Produkter
+Price and plans;-;
+Product count;-;
 Recover password;-;Gjennopprett passord
 Register;-;Registrer
 Related products;-;Relaterte produkter
@@ -61,13 +74,15 @@ Remove;-;Fjern
 Repeat password;-;Gjenta passord
 Search for a product;-;Søk etter et produkt
 Send me a code;-;Send meg koden
-Send us mail;-;Send oss en epost
-What's on your mind?;-;Hva ønsker du å formidle?
 Send message;-;Send melding
+Send us mail;-;Send oss en epost
 Set new password;-;Sett nytt passord
+Setup product variations;-;
 Shipment information;-;Forsendelse informasjon
+Shipment settings;-;
 Shipping;-;Utsendelse
-Shopping cart;-;Handlekurv
+Shipping cost;-;
+Shipping price;-;
 Sign up;-;
 Stage 1 (hp): ;-;
 Stage 1 (nm): ;-;
@@ -75,24 +90,33 @@ Stage 2 (hp): ;-;
 Stage 2 (nm): ;-;
 Stage 3 (hp): ;-;
 Stage 3 (nm): ;-;
+Start date;-;
+Status;-;
 Taxes;-;Skatter
 This design is private to getshop only.;-;
 This page is only available for adminsitrators;-;Denne siden er kun tilgjengelig for adminstratorer.
 This page is only available for editors.;-;Denne siden er kun tilgjengelig for editorer.
 This page is only available for registered users.;-;Denne siden er kun tilgjengelig for registrerte brukere
-Title;-;Tittel
+To continue using this feature, you will need to pay, or remove the application.;-;
 Top speed ;-;
+Total;-;
 Update;-;Oppdater
 Upload image;-;
 Username / Email;-;Brukernavn / Epost
 Waiting for payment;-;Venter på betaling
+Weight;-;
+What's on your mind?;-;Hva ønsker du å formidle?
+You are being transferred to paypal, please wait...;-;
 You are here:;-;Du er her:
 You do not have any orders.;-;Du har ingen bestillinger
 You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
-Your address;-;Din adresse
+You have expired applications that requires payment.;-;
 Your personal information;-;Din personlige informasjon
+change;-;
 course;-;
 email;-;E-post
+gram;-;
+help;-;
 if we dont answer, please leave your email here and we will return your message asap.;-;
 in stock;-;på lager
 org;-;Firma

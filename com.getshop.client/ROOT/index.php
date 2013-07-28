@@ -51,7 +51,6 @@ $importApplication = new ImportApplication(null, null);
 $importApplication->showMenu();
 
 $factory = IocContainer::getFactorySingelton();
-
 if(!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
     $result = $factory->getApi()->getUserManager()->getLoggedOnUser();
     if ($result && !ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {

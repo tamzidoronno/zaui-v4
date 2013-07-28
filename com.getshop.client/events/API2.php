@@ -1167,6 +1167,22 @@ class APIGetShop {
      }
 
      /**
+     * Find the store address for a given application.
+     * @param uuid The appid.
+     * @return String
+     * @throws ErrorException 
+     */
+
+     public function findAddressForApplication($uuid) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["uuid"] = json_encode($this->transport->object_unset_nulls($uuid));
+          $data["method"] = "findAddressForApplication";
+          $data["interfaceName"] = "core.getshop.IGetShop";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Need to figure out what address is connected to a specific uuid?
      * Remember this is query is quite slow. so cache the result.
      * @param uuid
@@ -2292,6 +2308,22 @@ class APIProductManager {
           $data['args'] = array();
           $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
           $data["method"] = "getProduct";
+          $data["interfaceName"] = "core.productmanager.IProductManager";
+          return $this->transport->cast(API::core_productmanager_data_Product(), $this->transport->sendMessage($data));
+     }
+
+     /**
+     * Find the product uuid set for an application.
+     * @param uuid
+     * @return core_productmanager_data_Product
+     * @throws ErrorException 
+     */
+
+     public function getProductFromApplicationId($app_uuid) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["app_uuid"] = json_encode($this->transport->object_unset_nulls($app_uuid));
+          $data["method"] = "getProductFromApplicationId";
           $data["interfaceName"] = "core.productmanager.IProductManager";
           return $this->transport->cast(API::core_productmanager_data_Product(), $this->transport->sendMessage($data));
      }

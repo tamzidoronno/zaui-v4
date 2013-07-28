@@ -230,10 +230,16 @@ public class GetShop extends ManagerBase implements IGetShop {
 
     @Override
     public String findAddressForUUID(String uuid) throws ErrorException {
-        DataCommon obj = database.findObject(uuid);
-        Store store = (Store)database.findObject(obj.storeId);
+        DataCommon obj = database.findObject(uuid, null);
+        Store store = (Store)database.findObject(obj.storeId, "StoreManager");
         return store.webAddress;
     }
 
-    
+    @Override
+    public String findAddressForApplication(String uuid) throws ErrorException {
+        DataCommon obj = database.findObject(uuid, "PageManager");
+        DataCommon store = database.findObject(obj.storeId, "StoreManager");
+        Store toreturn = (Store)store;
+        return toreturn.webAddress;
+    }
 }

@@ -7,6 +7,7 @@ package com.thundashop.core.usermanager.data;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -46,6 +47,12 @@ public class User extends DataCommon  {
     
     public String userAgent;
     public boolean hasChrome;
+    
+    /**
+     * This user can be connected to
+     * a group(s).
+     */
+    public List<String> groups;
 
     public void ValidateUserFields() throws ErrorException {
         if (fullName.equals("")) {

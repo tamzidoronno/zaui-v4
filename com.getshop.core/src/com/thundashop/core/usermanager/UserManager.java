@@ -4,6 +4,7 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.messagemanager.MailFactory;
+import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
 import java.security.MessageDigest;
 import java.util.ArrayList;
@@ -41,6 +42,9 @@ public class UserManager extends ManagerBase implements IUserManager {
                 UserStoreCollection userStoreCollection = getUserStoreCollection(dataCommon.storeId);
                 if (dataCommon instanceof User) {
                     userStoreCollection.addUserDirect((User) dataCommon);
+                }
+                if (dataCommon instanceof Group) {
+                    userStoreCollection.addGroup((Group)dataCommon);
                 }
                 if (dataCommon instanceof SessionFactory) {
                     sessionFactory = (SessionFactory) dataCommon;
@@ -123,7 +127,8 @@ public class UserManager extends ManagerBase implements IUserManager {
     @Override
     public List<User> findUsers(String searchCriteria) throws ErrorException {
         UserStoreCollection users = getUserStoreCollection(storeId);
-        return users.searchForUser(searchCriteria);
+        List<User> searchResult = users.searchForUser(searchCriteria);
+        return getUserStoreCollection(storeId).filterUsersBasedOnGroup(getSession().currentUser, searchResult);
     }
 
     @Override
@@ -172,13 +177,19 @@ public class UserManager extends ManagerBase implements IUserManager {
         for (String userId : userIds) {
             retUsers.add(collection.getUser(userId));
         }
-        return retUsers;
+        
+        return getUserStoreCollection(storeId).filterUsersBasedOnGroup(getSession().currentUser, retUsers);
     }
 
     @Override
     public List<User> getAllUsers() throws ErrorException {
         UserStoreCollection collection = getUserStoreCollection(storeId);
-        return collection.getAllUsers();
+        List<User> allUsers = collection.getAllUsers();
+        if (getSession() == null) {
+            return collection.getAllUsers();
+        }
+        
+        return collection.filterUsersBasedOnGroup(getSession().currentUser, allUsers);
     }
 
     @Override
@@ -194,11 +205,20 @@ public class UserManager extends ManagerBase implements IUserManager {
             throw new ErrorException(26);
         }
 
-        if (getSession().currentUser.type == user.type) {
+        if (getSession().currentUser.type > User.Type.ADMINISTRATOR && getSession().currentUser.id != user.id) {
             if(!getSession().currentUser.id.equals(user.id)) {
-                ErrorException ex = new ErrorException(26);
-                ex.additionalInformation = "A user with the same user rights cannot modify each other.";
-                throw ex;
+                throw new ErrorException(26);
+            }
+        }
+        
+        // Check group access.
+        if (user != null && user.groups != null) {
+            for (String group : user.groups) {
+                if (getSession().currentUser.groups != null 
+                        && getSession().currentUser.groups.size() > 0 
+                        && !getSession().currentUser.groups.contains(group)) {
+                    throw new ErrorException(97);
+                }
             }
         }
         
@@ -357,7 +377,7 @@ public class UserManager extends ManagerBase implements IUserManager {
         UserStoreCollection collection = getUserStoreCollection(storeId);
         User user = collection.getUser(userId);
         
-        if(user.password.equals(oldPassword) || getSession().currentUser.type > user.type) {
+        if(user.password.equals(oldPassword) || getSession().currentUser.type  == User.Type.ADMINISTRATOR) {
             user.password = newPassword;
             collection.addUser(user);
         } else {
@@ -367,7 +387,7 @@ public class UserManager extends ManagerBase implements IUserManager {
 
     private int getUserCount(int type) throws ErrorException {
         int i = 0;
-        for (User user : getUserStoreCollection(storeId).getAllUsers()) 
+        for (User user : getUserStoreCollection(storeId).filterUsersBasedOnGroup(getSession().currentUser, getUserStoreCollection(storeId).getAllUsers())) 
             if (user.type == type) 
                 i++;
             
@@ -398,5 +418,21 @@ public class UserManager extends ManagerBase implements IUserManager {
                 throw error;
             }
         }
+    }
+
+    @Override
+    public void saveGroup(Group group) throws ErrorException {
+        UserStoreCollection collection = getUserStoreCollection(storeId);
+        collection.saveGroup(group);
+    }
+    
+    @Override
+    public List<Group> getAllGroups() throws ErrorException {
+        return getUserStoreCollection(storeId).getGroups();
+    }
+
+    @Override
+    public void removeGroup(String groupId) throws ErrorException {
+        getUserStoreCollection(storeId).removeGroup(groupId);
     }
 }

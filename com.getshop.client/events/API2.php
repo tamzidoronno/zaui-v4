@@ -1168,6 +1168,7 @@ class APIGetShop {
 
      /**
      * Need to figure out what address is connected to a specific uuid?
+     * Remember this is query is quite slow. so cache the result.
      * @param uuid
      * @return String
      * @throws ErrorException 
@@ -2896,6 +2897,22 @@ class APIUserManager {
      }
 
      /**
+     * Returns all the groups
+     * that has been created for this
+     * webpage.
+     * 
+     * @return List
+     */
+
+     public function getAllGroups() {
+          $data = array();
+          $data['args'] = array();
+          $data["method"] = "getAllGroups";
+          $data["interfaceName"] = "core.usermanager.IUserManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Fetch all the users registered to this webshop.
      * @return List
      * @throws ErrorException 
@@ -3063,6 +3080,22 @@ class APIUserManager {
      }
 
      /**
+     * Delete a specified group.
+     * 
+     * @param groupId
+     * @throws ErrorException 
+     */
+
+     public function removeGroup($groupId) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["groupId"] = json_encode($this->transport->object_unset_nulls($groupId));
+          $data["method"] = "removeGroup";
+          $data["interfaceName"] = "core.usermanager.IUserManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * When the reset code has been sent, you can reset your password with the given reset code.
      * @param resetCode The code sent by sendResetCode call.
      * @param username The username for the user to update, the email address is the most common username.
@@ -3078,6 +3111,27 @@ class APIUserManager {
           $data['args']["username"] = json_encode($this->transport->object_unset_nulls($username));
           $data['args']["newPassword"] = json_encode($this->transport->object_unset_nulls($newPassword));
           $data["method"] = "resetPassword";
+          $data["interfaceName"] = "core.usermanager.IUserManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
+     * Create a new group. 
+     * A group is a way to collect all users
+     * together. If an administrator belongs to a 
+     * group, it will only be able to see/modify the
+     * users that are within the same group.
+     * 
+     * @param groupName
+     * @param imageId
+     * @throws ErrorException 
+     */
+
+     public function saveGroup($core_usermanager_data_Group) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["core_usermanager_data_Group"] = json_encode($this->transport->object_unset_nulls($core_usermanager_data_Group));
+          $data["method"] = "saveGroup";
           $data["interfaceName"] = "core.usermanager.IUserManager";
           return $this->transport->sendMessage($data);
      }

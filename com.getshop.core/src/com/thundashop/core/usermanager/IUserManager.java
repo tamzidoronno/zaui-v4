@@ -3,6 +3,7 @@ package com.thundashop.core.usermanager;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -180,5 +181,36 @@ public interface IUserManager {
      */
     @Administrator
     public int getAdministratorCount() throws ErrorException;
+    
+    /**
+     * Create a new group. 
+     * A group is a way to collect all users
+     * together. If an administrator belongs to a 
+     * group, it will only be able to see/modify the
+     * users that are within the same group.
+     * 
+     * @param groupName
+     * @param imageId
+     * @throws ErrorException 
+     */
+    @Administrator
+    public void saveGroup(Group group) throws ErrorException;
+    
+    /**
+     * Returns all the groups
+     * that has been created for this
+     * webpage.
+     * 
+     * @return 
+     */
+    public List<Group> getAllGroups() throws ErrorException;
+    
+    /**
+     * Delete a specified group.
+     * 
+     * @param groupId
+     * @throws ErrorException 
+     */
+    @Administrator
+    public void removeGroup(String groupId) throws ErrorException;
 }
-

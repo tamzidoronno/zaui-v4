@@ -87,7 +87,8 @@
             thundashop.common.addNotificationProgress(id, uploadText);
             
             var postData = {
-                "data" : data
+                "data" : data,
+                config : config
             };
             
             var event = thundashop.Ajax.createEvent('', 'uploadImage', container, postData);

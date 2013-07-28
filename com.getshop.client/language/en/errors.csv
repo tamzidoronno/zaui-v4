@@ -91,10 +91,10 @@
 "91","Please check your email account for more information."
 "92","Multiple theme applications has been added, please contact support";
 "93","You have added application that requires payment."
-"94","The web address is already taken",
-"95","The store configuration can not be null",
-"96","Can not rename attribute to an attribute which already exists.";
-
+"94","The web address is already taken"
+"95","The store configuration can not be null"
+"96","Can not rename attribute to an attribute which already exists."
+"97","The users you try to modify is not in your group."
 "1000","Left menu entry already exists."
 "1001","Menu entry does not exists."
 "1002","App configuration does not exists."

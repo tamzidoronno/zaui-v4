@@ -7,6 +7,7 @@ package com.thundashop.core.usermanager;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.data.Credentials;
+import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
 import java.util.*;
 
@@ -19,6 +20,7 @@ public class UserStoreCollection {
     private Credentials credentials;
     private String storeId;
     private UserManager userManager;
+    private HashMap<String, Group> groups = new HashMap<String, Group>();
     
     private HashMap<String, User> users = new HashMap<String, User>();
 
@@ -41,10 +43,6 @@ public class UserStoreCollection {
     }
 
     public User getUser(String userId) throws ErrorException {
-//        if (!users.containsKey(userId)) {
-//            throw new ErrorException(10);
-//        }
-
         return users.get(userId);
     }
 
@@ -139,5 +137,58 @@ public class UserStoreCollection {
 
     private boolean checkPhoneNumer(User user, String searchCriteria) {
         return user.cellPhone != null && user.cellPhone.replace(" ", "").contains(searchCriteria);
+    }
+    
+    /**
+     * Invoke this function to 
+     * sort users collection. Based
+     * on the logged in user, it will remove all users that 
+     * should not be in the users collection.
+     * 
+     * @param logedInUser
+     * @param users
+     * @return 
+     */
+    public List<User> filterUsersBasedOnGroup(User logedInUser, List<User> users) {
+        if (logedInUser == null || logedInUser.groups == null || logedInUser.groups.size() == 0) {
+            return users;
+        }
+        
+        HashMap<String, User> retUsers = new HashMap();
+        for (String groupId : logedInUser.groups) {
+            for (User user : users) {
+                if (user.groups != null && user.groups.contains(groupId)) {
+                    retUsers.put(user.id, user);
+                }
+            }
+        }
+        
+        return new ArrayList<User>(retUsers.values());
+    }
+    
+    public List<Group> getGroups() {
+        return new ArrayList(groups.values());
+    }
+    
+    public void addGroup(Group group) {
+        groups.put(group.id, group);
+    }
+    
+    public void saveGroup(Group group) throws ErrorException {
+        group.storeId = storeId;
+        
+        if (group.id == null || group.id.equals("")) 
+            group.id = UUID.randomUUID().toString();
+        
+        databaseSaver.saveObject(group, credentials);
+        groups.put(group.id, group);
+    }
+
+    void removeGroup(String groupId) throws ErrorException {
+        Group foundGroup = groups.remove(groupId);
+        
+        if (foundGroup != null) {
+            databaseSaver.deleteObject(foundGroup, credentials);
+        }
     }
 }

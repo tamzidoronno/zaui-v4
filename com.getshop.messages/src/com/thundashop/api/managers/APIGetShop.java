@@ -51,6 +51,7 @@ public class APIGetShop {
 
      /**
      * Need to figure out what address is connected to a specific uuid?
+     * Remember this is query is quite slow. so cache the result.
      * @param uuid
      * @return String
      * @throws ErrorException 

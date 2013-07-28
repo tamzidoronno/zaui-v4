@@ -90,16 +90,16 @@ public class AddApplicationsToDatabase {
     }
     
     public static void main(String args[]) throws ErrorException, UnknownHostException {
-        ApplicationContext context = new ClassPathXmlApplicationContext("All.xml");
-        AppContext.appContext = context;
-        
-        context.getBean(AddApplicationsToDatabase.class).insert();
+//        ApplicationContext context = new ClassPathXmlApplicationContext("All.xml");
+//        AppContext.appContext = context;
+//        
+//        context.getBean(AddApplicationsToDatabase.class).insert();
 //        context.getBean(AddApplicationsToDatabase.class).updateThemes();
 //        context.getBean(AddApplicationsToDatabase.class).updateUserPages();
 //        
 //        AddPageSettingsIdToAppConfigurationObject.main(args);
-        context.getBean(AddApplicationsToDatabase.class).showLinks();
-        java.lang.System.exit(1);
+//        context.getBean(AddApplicationsToDatabase.class).showLinks();
+//        java.lang.System.exit(1);
     }
     
     

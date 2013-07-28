@@ -2,6 +2,11 @@
 include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
 
+if (isset($_GET['setGroup'])) {
+    $_SESSION['group'] = $_GET['setGroup'];
+    header('location:booking.php');
+}
+
 function getLogo(   ) {
     $api = IocContainer::getFactorySingelton()->getApi();
     return $api->getLogoManager()->getLogo()->LogoId;
@@ -48,6 +53,40 @@ Config = {
 }
 </script>
 
+<style>
+    .selectGroup {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        width: 100%;
+        background-color: #000;
+        z-index: 2;
+        background: rgba(0, 0, 0, 0.5);
+    }
+    
+    .selectGroup .inner {
+        margin: 10 auto;
+        text-align: center;
+        padding-top: 10px;
+    }
+
+    
+    .selectGroup .inner .selectbox {
+        width: 90%;
+        heigth: 80px;
+        padding: 10px;
+        cursor: pointer;
+        border: solid 5px;
+        border-radius: 10px;
+        background: #FFF;
+        opacity: inherit;
+        margin: 10px auto;
+        background: rgba(255, 255, 255, 1);
+    }
+</style>
+
 <!DOCTYPE html> 
 <html> 
     <head> 
@@ -60,4 +99,26 @@ Config = {
         <script src="js/app/touch/booking/app.js" type="text/javascript"></script>
     </head> 
     <body></body> 
+    <?
+    $groups = $factory->getApi()->getUserManager()->getAllGroups();
+    if (count($groups > 0) && !isset($_SESSION['group'])) { ?>
+        <div class='selectGroup'>
+            <div class="inner">
+                <?
+                foreach ($groups as $group) {
+                    $img = "";
+                    if ($group->imageId != "") {
+                        $img = '<img  border="none" width="150" src="displayImage.php?id='.$group->imageId.'"/>';
+                    } else {
+                        $img = $group->groupName;
+                    }
+                    $groupid = $group->id;
+                    echo '<div class="selectbox"><a href="?setGroup='.$groupid.'"><div>'.$img.'</div></a></div>';
+                }
+                ?>
+            </div>
+        </div>
+    <?
+    }
+    ?>
 </html>

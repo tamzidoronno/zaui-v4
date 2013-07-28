@@ -1261,3 +1261,9 @@ cursor:pointer;
 }
 .designselectionbox .designpreviews .next { right: 240px; background-image:url('skin/default/bgs/designright.png'); }
 .designselectionbox .designpreviews .prev { left: 0px; background-image:url('skin/default/bgs/designleft.png'); }
+
+.sepbox {
+    padding: 5px; 
+    margin: 5px;
+    border: dashed 1px #DDD;
+}

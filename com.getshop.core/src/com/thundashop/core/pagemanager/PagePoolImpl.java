@@ -228,6 +228,7 @@ public class PagePoolImpl {
         page.type = type;
         page.id = pageId;
         page.storeId = storeId;
+        page.addAllPageAreas();
         return page;
     }
 
@@ -282,12 +283,8 @@ public class PagePoolImpl {
 
         for (PageArea pageArea : page.pageAreas.values()) {
             for (String application : pageArea.applicationsList) {
-                System.out.println(application);
                 try {
                     AppConfiguration appConfig = applicationPool.get(application);
-                    if (appConfig.inheritate > 0) {
-                        System.out.println(appConfig.appName);
-                    }
                     if (appConfig != null
                             && appConfig.inheritate > 0
                             && currentPage.pageAreas.get(pageArea.type) != null

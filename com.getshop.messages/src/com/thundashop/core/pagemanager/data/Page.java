@@ -11,14 +11,16 @@ import com.thundashop.core.common.DataCommon;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author ktonder
  */
 public class Page extends DataCommon implements Cloneable {
+
+    public Page() {
+        addAllPageAreas();
+    }
 
     public void clear() {
         for (PageArea pageArea : pageAreas.values()) {

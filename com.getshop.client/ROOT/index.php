@@ -1,4 +1,5 @@
 <?php
+
 function getBrowser() {
     $u_agent = $_SERVER['HTTP_USER_AGENT'];
     $ub = '';
@@ -20,6 +21,37 @@ function getBrowser() {
     return $ub;
 }
 
+function ismobile() {
+    $is_mobile = '0';
+
+    if (preg_match('/(android|up.browser|up.link|mmp|symbian|smartphone|midp|wap|phone)/i', strtolower($_SERVER['HTTP_USER_AGENT']))) {
+        $is_mobile = 1;
+    }
+
+    if ((strpos(strtolower($_SERVER['HTTP_ACCEPT']), 'application/vnd.wap.xhtml+xml') > 0) or ((isset($_SERVER['HTTP_X_WAP_PROFILE']) or isset($_SERVER['HTTP_PROFILE'])))) {
+        $is_mobile = 1;
+    }
+
+    $mobile_ua = strtolower(substr($_SERVER['HTTP_USER_AGENT'], 0, 4));
+    $mobile_agents = array('w3c ', 'acs-', 'alav', 'alca', 'amoi', 'andr', 'audi', 'avan', 'benq', 'bird', 'blac', 'blaz', 'brew', 'cell', 'cldc', 'cmd-', 'dang', 'doco', 'eric', 'hipt', 'inno', 'ipaq', 'java', 'jigs', 'kddi', 'keji', 'leno', 'lg-c', 'lg-d', 'lg-g', 'lge-', 'maui', 'maxo', 'midp', 'mits', 'mmef', 'mobi', 'mot-', 'moto', 'mwbp', 'nec-', 'newt', 'noki', 'oper', 'palm', 'pana', 'pant', 'phil', 'play', 'port', 'prox', 'qwap', 'sage', 'sams', 'sany', 'sch-', 'sec-', 'send', 'seri', 'sgh-', 'shar', 'sie-', 'siem', 'smal', 'smar', 'sony', 'sph-', 'symb', 't-mo', 'teli', 'tim-', 'tosh', 'tsm-', 'upg1', 'upsi', 'vk-v', 'voda', 'wap-', 'wapa', 'wapi', 'wapp', 'wapr', 'webc', 'winw', 'winw', 'xda', 'xda-');
+
+    if (in_array($mobile_ua, $mobile_agents)) {
+        $is_mobile = 1;
+    }
+
+    if (isset($_SERVER['ALL_HTTP'])) {
+        if (strpos(strtolower($_SERVER['ALL_HTTP']), 'OperaMini') > 0) {
+            $is_mobile = 1;
+        }
+    }
+
+    if (strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'windows') > 0) {
+        $is_mobile = 0;
+    }
+
+    return $is_mobile;
+}
+
 curl_init();
 
 function init($factory) {
@@ -29,7 +61,7 @@ function init($factory) {
     ob_end_clean();
 
     return $html;
-} 
+}
 
 include '../loader.php';
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -51,7 +83,7 @@ $importApplication = new ImportApplication(null, null);
 $importApplication->showMenu();
 
 $factory = IocContainer::getFactorySingelton();
-if(!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
+if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
     $result = $factory->getApi()->getUserManager()->getLoggedOnUser();
     if ($result && !ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {
         $factory->getApi()->getUserManager()->logout();
@@ -59,13 +91,17 @@ if(!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
     $_SESSION['checkifloggedout'] = true;
 }
 
-if(isset($_GET['logonwithkey'])) {
+if($factory->getStore()->id == "2fac0e57-de1d-4fdf-b7e4-5f93e3225445" && ismobile()) {
+    header('location:booking.php');
+}
+
+if (isset($_GET['logonwithkey'])) {
     $key = $_GET['logonwithkey'];
     $_SESSION['loggedin'] = serialize($factory->getApi()->getUserManager()->logonUsingKey($key));
     header('location:index.php');
 }
 
-if(isset($_GET['prepopulate'])) {
+if (isset($_GET['prepopulate'])) {
     $siteBuilder = new \SiteBuilder();
     $siteBuilder->prepopulateData();
 }
@@ -79,15 +115,15 @@ if(isset($_GET['prepopulate'])) {
         $pageDescription = $factory->getPage()->description;
 
         echo "<meta name=\"description\" content=\"$pageDescription\">";
-        
+
         $google = $factory->getApplicationPool()->getApplicationsInstancesByNamespace("ns_0cf21aa0_5a46_41c0_b5a6_fd52fb90216f");
-        if($google) {
+        if ($google) {
             /* @var $google \ns_0cf21aa0_5a46_41c0_b5a6_fd52fb90216f\GoogleAnalytics */
             $google[0]->render();
         }
-        
+
         $google = $factory->getApplicationPool()->getApplicationsInstancesByNamespace("ns_0cf21aa0_5a46_41c0_b5a6_fd52fb90216f");
-        if($google) {
+        if ($google) {
             /* @var $google \ns_0cf21aa0_5a46_41c0_b5a6_fd52fb90216f\GoogleAnalytics */
             $google[0]->render();
         }
@@ -100,7 +136,7 @@ if(isset($_GET['prepopulate'])) {
         $factory->loadJavascriptFilesEditorMode();
         $settings = $factory->getSettings();
         $title = isset($settings->title) ? $settings->title->value : "GetShop";
-       
+
         echo "<script>";
         if (isset($settings->fadein) && $settings->fadein == "true") {
             echo "hasFadeInEffect = true";
@@ -114,7 +150,7 @@ if(isset($_GET['prepopulate'])) {
     <body>
         <input name="storeid" type="hidden"  value="<?php echo $factory->getStore()->id; ?>"/>
         <input name="userid" type="hidden"  value="<?php echo \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id; ?>"/>
-        
+
         <div id="mainmenutoolbox"></div>
         <div id="messagebox" class="ok">
             <div class="inner">
@@ -124,30 +160,30 @@ if(isset($_GET['prepopulate'])) {
                 <div class="okbutton"></div>
             </div>
         </div>
-        
+
         <div id="loaderbox" style="display: none; position: absolute; z-index: 9999999999999999;"><img src="skin/default/images/loader.gif"/></div>
         <script>
-        $(document).bind('mousemove', function(e){
-            $('#loaderbox').css({
-            left:  e.pageX+15,
-            top:   e.pageY+15
+            $(document).bind('mousemove', function(e) {
+                $('#loaderbox').css({
+                    left: e.pageX + 15,
+                    top: e.pageY + 15
+                });
             });
-        });
         </script>
-        
+
         <div id="errorbox"></div>
         <?php echo $html; ?>
-        
-        <? if($factory->isEditorMode()) { ?>
-        <div class="designselectionbox">
-            <? $factory->includefile("themeselection"); ?>
-        </div>
-        
+
+        <? if ($factory->isEditorMode()) { ?>
+            <div class="designselectionbox">
+                <? $factory->includefile("themeselection"); ?>
+            </div>
+
         <? } ?>
-        
+
     </body>
 
-    
+
     <?php
     $analytics = $factory->getApplicationPool()->getApplicationInstance("ba885f72-f571-4a2e-8770-e91cbb16b4ad");
     if ($analytics) {
@@ -179,54 +215,53 @@ if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() && !$factor
 ?>
 
 <? if (isset($_GET["onlyShowApp"])) { ?>
-<script>
-    $('.applicationarea').each(function() { 
-       if($(this).find('.app').size() === 0) {
-           $(this).hide();
-       }
-    });
-    
-    $('.app').each(function() {
-        if ($(this).html() == "") {
-            $(this).hide();
-        }
-    });
-    $('.breadcrumb').hide();
-    $('.mainmenu').hide();
-    $('.spacingtop').hide();
-    var app = $('[appid=<?echo $_GET['onlyShowApp'];?>]');
-    $('skeleton').removeAttr("editormode");
-    $('html').width(app.width());
-    $('#getshoppower').hide();
-</script>
-<? } 
-
-if(isset($_GET['page'])) {
-    if(strstr($_GET['page'], "_standalone")) {
-        
-        ?>
-<script>
-    $(function() {
-        $('html').css('overflow-y','auto');
-        $('body').css('height',$(window).height());
-        $('body').css('width',$(window).width());
-        $(window).on('resize', function() {
-            $('body').css('height',$(window).height());
-            $('body').css('width',$(window).width());
+    <script>
+        $('.applicationarea').each(function() {
+            if ($(this).find('.app').size() === 0) {
+                $(this).hide();
+            }
         });
-        mainmenu.hide();
-    });
-    
-</script>
+
+        $('.app').each(function() {
+            if ($(this).html() == "") {
+                $(this).hide();
+            }
+        });
+        $('.breadcrumb').hide();
+        $('.mainmenu').hide();
+        $('.spacingtop').hide();
+        var app = $('[appid=<? echo $_GET['onlyShowApp']; ?>]');
+        $('skeleton').removeAttr("editormode");
+        $('html').width(app.width());
+        $('#getshoppower').hide();
+    </script>
+    <?
+}
+
+if (isset($_GET['page'])) {
+    if (strstr($_GET['page'], "_standalone")) {
+        ?>
+        <script>
+            $(function() {
+                $('html').css('overflow-y', 'auto');
+                $('body').css('height', $(window).height());
+                $('body').css('width', $(window).width());
+                $(window).on('resize', function() {
+                    $('body').css('height', $(window).height());
+                    $('body').css('width', $(window).width());
+                });
+                mainmenu.hide();
+            });
+
+        </script>
         <?
     }
 }
-
 ?>
 
 <script>
-$(document).ready(function() {
-    PubSub.publish('NAVIGATION_COMPLETED', {});
-});
+    $(document).ready(function() {
+        PubSub.publish('NAVIGATION_COMPLETED', {});
+    });
 
 </script>

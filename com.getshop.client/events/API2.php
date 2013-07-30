@@ -1,5 +1,11 @@
 <?php
-class APIBannerManager {
+/**
+ * This library is built by GetShop and are used to communicate with the GetShop backend. 
+ * License: GPLv2
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
+*/
+
+class APIBannerManager {
 
       var $transport;
 

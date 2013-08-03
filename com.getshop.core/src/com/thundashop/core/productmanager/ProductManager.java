@@ -5,7 +5,9 @@ import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Events;
 import com.thundashop.core.common.Logger;
+import com.thundashop.core.common.Setting;
 import com.thundashop.core.listmanager.ListManager;
+import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.productmanager.data.AttributeGroup;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
@@ -221,6 +223,24 @@ public class ProductManager extends AProductManager implements IProductManager {
         }
         
         return product.getPrice(variations);
+    }
+
+    @Override
+    public Product getProductFromApplicationId(String app_uuid) throws ErrorException {
+        PageManager pmgr = getManager(PageManager.class);
+        List<String> uuidlist = new ArrayList();
+        uuidlist.add(app_uuid);
+        HashMap<String, List<String>> result = pmgr.getPagesForApplications(uuidlist);
+        if(result.isEmpty()) {
+            throw new ErrorException(1011);
+        }
+        ProductCriteria criteria = new ProductCriteria();
+        criteria.pageIds.add(result.get(app_uuid).get(0));
+        List<Product> foundresult = getProducts(criteria);
+        if(foundresult.isEmpty()) {
+            throw new ErrorException(1011);
+        }
+        return foundresult.get(0);
     }
     
 }

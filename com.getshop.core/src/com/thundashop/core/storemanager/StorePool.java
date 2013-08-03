@@ -130,6 +130,14 @@ public class StorePool {
         
         if (!getSessionFactory().exists(sessionId)) {
             getSessionFactory().addToSession(sessionId, "storeId", store.id);
+        } else {
+            //Check if the store has been chaged.
+            Store curStore = getStoreBySessionId(sessionId);
+            if(curStore.storeId.equals(store.storeId)) {
+                //Store has been changed.
+                getSessionFactory().removeFromSession(sessionId);
+                getSessionFactory().addToSession(sessionId, "storeId", store.id);
+            }
         }
         
         if(store.configuration.configurationFlags == null) {

@@ -43,6 +43,14 @@ public interface IGetShop {
      * @throws ErrorException 
      */
     public String findAddressForUUID(String uuid) throws ErrorException;
+
+    /**
+     * Find the store address for a given application.
+     * @param uuid The appid.
+     * @return
+     * @throws ErrorException 
+     */
+    public String findAddressForApplication(String uuid) throws ErrorException;
     
     /**
      * Get the partner id attached to this user.

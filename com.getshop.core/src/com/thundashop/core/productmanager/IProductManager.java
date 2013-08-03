@@ -28,6 +28,14 @@ public interface IProductManager {
     public void changeStockQuantity(String productId, int count) throws ErrorException;
     
     /**
+     * Find the product uuid set for an application.
+     * @param uuid
+     * @return
+     * @throws ErrorException 
+     */
+    public Product getProductFromApplicationId(String app_uuid) throws ErrorException;
+    
+    /**
      * Save a product.
      * 
      * @param product The product to save, if the id for the product is not set.

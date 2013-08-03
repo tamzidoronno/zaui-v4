@@ -39,7 +39,7 @@ GetShopToolbox.prototype = {
     },
     
     enableDrag: function() {
-        this.outerContainer.draggable();
+        this.outerContainer.draggable({ distance: 5 });
     },
 
     addTitle: function() {

@@ -615,13 +615,13 @@ a img {
     background-image: url('/skin/default/images/black-transparent.png');
 }
 
-.mask .inner,.order_mask .inner {
+.mask .inner,.order_mask .inner, .appinfo_mask .inner {
     display: table-cell;
     vertical-align: middle;
 }
 
 
-.order_mask .inner .reorder_up, .order_mask .inner .reorder_down {
+.order_mask .inner .reorder_up, .order_mask .inner .reorder_down, .appinfo_mask {
     display:inline-block;
     width: 15px;
     cursor:pointer;
@@ -630,7 +630,7 @@ a img {
 .order_mask .inner .reorder_up { float:left; margin-left: 5px; background-image: url('/skin/default/images/arrow_green_up.png'); }
 .order_mask .inner .reorder_down { float:right; margin-right: 10px; background-image: url('/skin/default/images/arrow_green_down.png'); }
 
-.applicationarea .mask, .applicationarea .order_mask {
+.applicationarea .mask, .applicationarea .order_mask, .applicationarea .appinfo_mask {
     z-index: 10;
     position: absolute;
     display: none;

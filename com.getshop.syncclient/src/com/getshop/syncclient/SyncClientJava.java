@@ -145,6 +145,7 @@ public class SyncClientJava {
             WatchKey key;
             try {
                 key = watcher.take();
+                System.out.print("Got key, processing: ");
             } catch (InterruptedException x) {
                 return;
             }

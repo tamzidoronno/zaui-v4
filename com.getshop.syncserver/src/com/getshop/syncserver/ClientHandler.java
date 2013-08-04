@@ -130,6 +130,7 @@ class ClientHandler extends Thread {
         Message response = new Message();
         try {
             api = new GetShopApi(25554, "localhost", sessid, msg.address);
+            api.transport.setAutoReconnect(false);
             api.getStoreManager().initializeStore(msg.address, sessid);
             this.loggedOnUser = api.getUserManager().logOn(msg.username, msg.password);
             System.out.println("Logged on as : " + msg.username);
@@ -320,6 +321,10 @@ class ClientHandler extends Thread {
     }
 
     private List<FileSummary> getFileSummaryForApp(File[] files, List<FileSummary> result, ApplicationSettings app) throws Exception {
+        if(files == null) {
+            System.out.println("Failed to find file summery for app" + app.appName);
+            return new ArrayList();
+        }
         for(File file : files) {
             if(file.isDirectory()) {
                 getFileSummaryForApp(file.listFiles(), result, app);
@@ -350,15 +355,23 @@ class ClientHandler extends Thread {
     private void checkForSyncRequests() {
         if(api != null) {
             try {
-                List<ApplicationSynchronization> appsToSync = api.getAppManager().getSyncApplications();
-                if(appsToSync.size()>0) {
-                    System.out.println("We got applications to sync");
+                if(!api.transport.isConnected()) {
+                    System.out.print("Disconnected from core server, ");
+                    if(api.transport.reconnect()) {
+                        System.out.println(" reconnected to core.");
+                    } else {
+                        System.out.println(" not able to connect");
+                    }
                 } else {
-                    System.out.println("nothing to sync");
+                    List<ApplicationSynchronization> appsToSync = api.getAppManager().getSyncApplications();
+                    if(appsToSync != null && appsToSync.size()>0) {
+                        System.out.println("We got applications to sync");
+                    }
                 }
             }catch(Exception e) {
                 System.out.println("Problem connecting to core server, disconnecting.");
                 disconnected = true;
+                e.printStackTrace();
             }
         }
     }

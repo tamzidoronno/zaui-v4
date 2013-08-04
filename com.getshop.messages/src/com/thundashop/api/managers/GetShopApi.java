@@ -2,7 +2,7 @@ package com.thundashop.api.managers;
 
 public class GetShopApi {
 
-      private Transporter transport;
+      public Transporter transport;
       public GetShopApi(int port, String host, String sessionId, String webaddress) throws Exception {
            this.transport = new Transporter();
            this.transport.port = port;

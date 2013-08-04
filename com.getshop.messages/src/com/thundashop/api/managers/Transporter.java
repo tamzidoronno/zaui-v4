@@ -13,6 +13,7 @@ public class Transporter {
 
     private Socket socket;
     private boolean connected = false;
+    private boolean autoReconnect = true;
     public int port = 25554;
     public String host = "backend.getshop.com";
     public String sessionId;
@@ -21,14 +22,24 @@ public class Transporter {
     private PrintWriter out;
     private BufferedReader in;
 
-    public void connect() throws UnknownHostException, IOException {
+    public boolean connect() throws UnknownHostException, IOException {
         try {
             socket = new Socket(host, port);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream());
             connected = true;
+            return true;
         } catch (Exception e) {
+            return false;
         }
+    }
+    
+    public void setAutoReconnect(boolean auto) {
+        autoReconnect = auto;
+    }
+    
+    public boolean isConnected() {
+        return connected;
     }
 
     public String send(JsonObject2 message) throws Exception {
@@ -50,22 +61,33 @@ public class Transporter {
             if (result != null) {
                 break;
             } else {
-                reconnect();
-            }
+                if(!reconnect()) {
+                    return null;
+                }
+            } 
         }
         return result;
     }
     
-    private void reconnect() throws Exception {
+    public boolean reconnect() throws Exception {
         connected = false;
         while (true) {
-            System.out.println("Reconnecting to java backend");
+            if(autoReconnect) {
+                System.out.println("Reconnecting to java backend");
+            }
             if (connected) {
                 break;
             }
             connect();
+            if(!autoReconnect) {
+                break;
+            }
             Thread.sleep(2000);
         }
-        api.getStoreManager().initializeStore(webaddress, sessionId);
+        if(connected) {
+            api.getStoreManager().initializeStore(webaddress, sessionId);
+            return true;
+        }
+        return false;
     }
 }

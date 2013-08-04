@@ -897,7 +897,7 @@ public class GeneratePhpApiNew {
             for (Annotation annotation : annotations) {
                 if (annotation instanceof GetShopApi) {
                     content += "public class API" + entry.getSimpleName().substring(1) + " {\r\n\r\n";
-                    content += "      private Transporter transport;\r\n\r\n";
+                    content += "      public Transporter transport;\r\n\r\n";
                     content += "      public API" + entry.getSimpleName().substring(1) + "(Transporter transport){\r\n";
                     content += "           this.transport = transport;\r\n";
                     content += "      }\r\n\r\n";

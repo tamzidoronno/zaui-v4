@@ -15,7 +15,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
-import java.net.SocketException;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +22,14 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * TODO : Monitor server push messages, whenever a user wants to sync existing app.
+ * TODO : Handle move files better.
+ *    - Whenver a file is deleted, wait and see if a create file event is instantly being added, then it is a move event.
+ *    - Whenever a folder is being moved, wait and check if subfolders is being moved as well.
+ *    - Getshop user should be able to handle all applications, no mather what.
+ * 
+ */
 class ClientHandler extends Thread {
 
     private final Socket socket;
@@ -105,10 +112,7 @@ class ClientHandler extends Thread {
                     moveFile(msg);
                 }
             } else {
-                if(i == 1000) {
-                    if(!pingClient()) {
-                        break;
-                    }
+                if(i == 200) {
                     checkForSyncRequests();
                     i = 0;
                 }
@@ -309,12 +313,7 @@ class ClientHandler extends Thread {
         List<FileSummary> summary = new ArrayList();
         msg.filelist = summary;
         for(ApplicationSettings app : allApps.applications) {
-            File[] filelist = new File(rootpath + "/" + "ns_"+app.id.replaceAll("-", "_")).listFiles();
-            if(filelist == null) {
-                System.out.println("Failed to list files for app: " + app.id + " does the logged on user has access to this application?");
-            } else {
-                getFileSummaryForApp(filelist, summary, app);
-            }
+             getFileSummaryForApp(new File(rootpath + "/" + "ns_"+app.id.replaceAll("-", "_")).listFiles(), summary, app);
         }
         msg.type = Message.Types.ok;
         sendMessage(msg);
@@ -362,17 +361,5 @@ class ClientHandler extends Thread {
                 disconnected = true;
             }
         }
-    }
-
-    private boolean pingClient() throws IOException {
-        Message msg = new Message();
-        msg.type = Message.Types.ping;
-        try {
-            sendMessage(msg);
-            return true;
-        }catch(SocketException e) {
-            System.out.println("Client has been disconnected");
-        }
-        return false;
     }
 }

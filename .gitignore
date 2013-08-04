@@ -19,3 +19,9 @@ com.getshop.syncserver/built-jar.properties
 com.getshop.syncserver/nbproject/private/private.properties
 com.getshop.syncserver/build/
 com.getshop.client/nbproject/private/private.xml
+/com.getshop.combined/nbproject/private/
+/com.getshop.syncclient/nbproject/private/
+/com.getshop.syncclient/build/
+/com.getshop.syncclient/dist/
+/com.getshop.combined/build/
+/com.getshop.combined/dist/

@@ -557,6 +557,11 @@ public class GeneratePhpApiNew {
         String thePath = "../com.getshop.client/events/API2.php";
 
         String content = "<?php\n\r";
+        content += "/**\r\n";
+        content += " * This library is built by GetShop and are used to communicate with the GetShop backend. \n";
+        content += " * License: GPLv2\n";
+        content += " * License URI: http://www.gnu.org/licenses/gpl-2.0.html\r\n";
+        content += "*/\r\n\r\n";
         content += result;  
         content += "?>";
 

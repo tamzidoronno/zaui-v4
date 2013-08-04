@@ -328,6 +328,13 @@ class ApplicationManager extends FactoryBase {
 
         return $retval;
     }
+    
+    public function syncapplication() {
+        $id = $_POST['data']['id'];
+        $this->getApi()->getAppManager()->setSyncApplication($id);
+        
+        $this->displayApplicationManagement();
+    }
 
     public function displayApplicationManagement() {
         $appMan = new ApplicationManagement();

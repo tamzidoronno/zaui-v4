@@ -14,7 +14,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,14 +29,12 @@ public class GetShopCom extends Thread {
     BufferedReader in = null;
     DataOutputStream writer = null;
     SyncClientJava client = null;
-
-    
-    
     Date lastping = new Date();
     private HashMap<Long, Path> movedFiles = new HashMap();
     public String user;
     public String password;
     public String address;
+    private boolean ignoreNextPush = false;
     private DataInputStream reader;
 
     GetShopCom(SyncClientJava client) {
@@ -46,30 +46,42 @@ public class GetShopCom extends Thread {
         if (object.file != null && (object.file.getAbsolutePath().contains("/.") || object.file.getAbsolutePath().contains("\\."))) {
             return;
         }
+        if(ignoreNextPush) {
+            ignoreNextPush = false;
+            return;
+        }
+        
         filesToPush.add(object);
     }
 
     public void run() {
         connectToServer();
+        int i = 0;
         while (true) {
             clearMovedFiles();
             if (filesToPush.isEmpty()) {
                 try {
-                    if(reader.available() > 0) {
-                        readMessageFromSocket();
+                    if (reader.available() > 0) {
+                        processIncomingMessage(readMessageFromSocket());
+                        i = 0;
                     }
                     Thread.sleep(100);
                 } catch (Exception d) {
                 }
-            } else {
-                if (!ping()) {
-                    connectToServer();
+                if (i == 50) {
+                    i = 0;
+                    if (!ping()) {
+                        connectToServer();
+                    }
                 }
+                i++;
+            } else {
                 FileObject object = filesToPush.get(0);
                 filesToPush.remove(0);
+                i = 0;
                 try {
-                   object = preProcessEvent(object);
-                    if(object != null) {
+                    object = preProcessEvent(object);
+                    if (object != null) {
                         processObject(object);
                     }
                 } catch (Exception e) {
@@ -96,9 +108,9 @@ public class GetShopCom extends Thread {
                 pushMessage(msg);
                 Message response = readMessageFromSocket();
                 if (response.type == Message.Types.authenticated) {
-                     System.out.println("Authentication sucessful, writing configuration to config.txt");
-                    
-                     try (BufferedWriter bw = new BufferedWriter(new FileWriter(new File("config.txt"), false))) {
+                    System.out.println("Authentication sucessful, writing configuration to config.txt");
+
+                    try (BufferedWriter bw = new BufferedWriter(new FileWriter(new File("config.txt"), false))) {
                         bw.write(user);
                         bw.newLine();
                         bw.write(password);
@@ -106,18 +118,17 @@ public class GetShopCom extends Thread {
                         bw.write(address);
                         bw.newLine();
                     }
-                    
+
                     checkAllFiles();
                     break;
                 } else {
                     System.out.println("Failed to log on to server");
-                    if(response.type == Message.Types.shutdown) {
+                    if (response.type == Message.Types.shutdown) {
                         System.exit(0);
                     }
                 }
                 Thread.sleep(2000);
             } catch (Exception e) {
-                e.printStackTrace();
                 try {
                     Thread.sleep(2000);
                 } catch (Exception d) {
@@ -219,7 +230,7 @@ public class GetShopCom extends Thread {
 
         Message result = readMessageFromSocket();
         if (result.type != Message.Types.ok) {
-            System.out.println("Failed to delete file: " + result.errorMessage);
+            System.out.println("Failed to delete file: " + result.errorMessage + " got type: " + result.type);
         } else {
             System.out.println("success");
         }
@@ -268,7 +279,10 @@ public class GetShopCom extends Thread {
             if (!filesToPush.isEmpty()) {
                 return filesToPush.get(0);
             }
-            try {Thread.sleep(10); } catch(Exception e) {}
+            try {
+                Thread.sleep(10);
+            } catch (Exception e) {
+            }
             i++;
         } while (i != 100);
         return null;
@@ -276,8 +290,8 @@ public class GetShopCom extends Thread {
 
     private FileObject preProcessEvent(FileObject object) {
         if (object.state.equals("ENTRY_MOVE")) {
-            for(Path movedPath : movedFiles.values()) {
-                if(object.cur.startsWith(movedPath)) {
+            for (Path movedPath : movedFiles.values()) {
+                if (object.cur.startsWith(movedPath)) {
                     return null;
                 }
             }
@@ -308,14 +322,14 @@ public class GetShopCom extends Thread {
     private void clearMovedFiles() {
         List<Long> toremove = new ArrayList();
         long now = new Date().getTime();
-        for(Long time : movedFiles.keySet()) {
+        for (Long time : movedFiles.keySet()) {
             long diff = now - time;
-            if(diff >= 10000) {
+            if (diff >= 10000) {
                 toremove.add(time);
             }
         }
-        
-        for(Long remove : toremove) {
+
+        for (Long remove : toremove) {
             movedFiles.remove(remove);
         }
     }
@@ -323,15 +337,40 @@ public class GetShopCom extends Thread {
     private void checkAllFiles() throws Exception {
         Message msg = new Message();
         msg.type = Message.Types.listfiles;
-       
+
         pushMessage(msg);
-        
+
         msg = readMessageFromSocket();
-        
-        if(msg.type == Message.Types.ok) {
-           client.checkFileDirectory(msg.filelist);
+
+        if (msg.type == Message.Types.ok) {
+            client.checkFileDirectory(msg.filelist);
         } else {
             System.out.println("Asked for filelist, but got something else in response");
         }
-     }
+    }
+
+    private void processIncomingMessage(Message msg) throws IOException {
+        if(msg.type == Message.Types.sendfile) {
+            //A new file is incoming.
+            writeFile(msg.filepath, msg.data);
+        }
+        if(msg.type == Message.Types.ping) {
+            msg = new Message();
+            msg.type = Message.Types.pong;
+            pushMessage(msg);
+        }
+    }
+
+    private void writeFile(String filepath, byte[] data) {
+        String completepath = client.rootpath + "/" + filepath;
+        System.out.print("Writing : " + completepath);
+        File f = new File(completepath);
+        try {
+            ignoreNextPush = true;
+            Files.write(f.toPath(), data, StandardOpenOption.CREATE);
+        }catch(Exception e) {
+            System.out.println(" - failed to write file.");
+        }
+        System.out.println(" - success");
+    }
 }

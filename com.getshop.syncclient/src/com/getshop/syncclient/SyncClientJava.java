@@ -34,12 +34,12 @@ public class SyncClientJava {
     private boolean trace = true;
     private GetShopCom com = new GetShopCom(this);
     private boolean running;
+    public final Path rootpath;
 
     @SuppressWarnings("unchecked")
     static <T> WatchEvent<T> cast(WatchEvent<?> event) {
         return (WatchEvent<T>) event;
     }
-    private final Path rootpath;
 
     private void register(Path dir) throws IOException {
 
@@ -145,7 +145,6 @@ public class SyncClientJava {
             WatchKey key;
             try {
                 key = watcher.take();
-                System.out.print("Got key, processing: ");
             } catch (InterruptedException x) {
                 return;
             }

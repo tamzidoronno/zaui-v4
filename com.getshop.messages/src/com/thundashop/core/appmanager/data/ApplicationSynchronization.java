@@ -6,4 +6,5 @@ public class ApplicationSynchronization extends DataCommon {
     public String userId;
     public String appId;
     public String filename;
+    public String appName;
 }

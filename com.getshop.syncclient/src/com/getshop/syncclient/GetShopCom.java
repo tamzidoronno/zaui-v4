@@ -34,7 +34,8 @@ public class GetShopCom extends Thread {
     public String user;
     public String password;
     public String address;
-    private boolean ignoreNextPush = false;
+    //All filepaths found in this map will be ignored pushed to the server for 5 seconds.
+    private HashMap<String, Date> disablePushFile = new HashMap();
     private DataInputStream reader;
 
     GetShopCom(SyncClientJava client) {
@@ -46,11 +47,15 @@ public class GetShopCom extends Thread {
         if (object.file != null && (object.file.getAbsolutePath().contains("/.") || object.file.getAbsolutePath().contains("\\."))) {
             return;
         }
-        if(ignoreNextPush) {
-            ignoreNextPush = false;
-            return;
+        if (disablePushFile.containsKey(object.file.getAbsolutePath())) {
+            Date waiter = disablePushFile.get(object.file.getAbsolutePath());
+            if ((System.currentTimeMillis() - waiter.getTime()) > 5000) {
+                disablePushFile.remove(object.file.getAbsolutePath());
+            } else {
+                return;
+            }
         }
-        
+
         filesToPush.add(object);
     }
 
@@ -215,7 +220,7 @@ public class GetShopCom extends Thread {
 
         Message result = readMessageFromSocket();
         if (result.type != Message.Types.ok) {
-            System.out.println("Failed sending file: " + result.errorMessage);
+            System.out.println("Failed sending file: " + result.errorMessage + " Type got : " + result.type);
         } else {
             System.out.println("File sent successfully");
         }
@@ -243,15 +248,11 @@ public class GetShopCom extends Thread {
                 return true;
             }
             lastping = new Date();
-
+            
             Message msg = new Message();
             msg.type = Message.Types.ping;
             pushMessage(msg);
-            Message response = readMessageFromSocket();
-            if (response.type == Message.Types.pong) {
-                return true;
-            }
-            return false;
+            return true;
         } catch (Exception e) {
             return false;
         }
@@ -350,11 +351,11 @@ public class GetShopCom extends Thread {
     }
 
     private void processIncomingMessage(Message msg) throws IOException {
-        if(msg.type == Message.Types.sendfile) {
+        if (msg.type == Message.Types.sendfile) {
             //A new file is incoming.
             writeFile(msg.filepath, msg.data);
         }
-        if(msg.type == Message.Types.ping) {
+        if (msg.type == Message.Types.ping) {
             msg = new Message();
             msg.type = Message.Types.pong;
             pushMessage(msg);
@@ -365,10 +366,14 @@ public class GetShopCom extends Thread {
         String completepath = client.rootpath + "/" + filepath;
         System.out.print("Writing : " + completepath);
         File f = new File(completepath);
+        if (!f.getParentFile().exists()) {
+            f.getParentFile().mkdirs();
+        }
         try {
-            ignoreNextPush = true;
+            disablePushFile.put(f.getAbsolutePath(), new Date());
             Files.write(f.toPath(), data, StandardOpenOption.CREATE);
-        }catch(Exception e) {
+            disablePushFile.put(f.getAbsolutePath(), new Date());
+        } catch (Exception e) {
             System.out.println(" - failed to write file.");
         }
         System.out.println(" - success");

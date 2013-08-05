@@ -18,6 +18,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -45,10 +46,12 @@ class ClientHandler extends Thread {
     private boolean disconnected = false;
     AvailableApplications allApps;
     private String rootpath = "../com.getshop.client/app/";
+    private Date lastActive;
 
     ClientHandler(Socket socket) throws IOException {
         this.socket = socket;
         this.socket.setTcpNoDelay(true);
+        lastActive = new Date();
         reader = new DataInputStream(socket.getInputStream());
         writer = new DataOutputStream(socket.getOutputStream());
     }
@@ -94,6 +97,7 @@ class ClientHandler extends Thread {
         int i = 0;
         while (true) {
             if (reader.available() > 0) {
+                lastActive = new Date();
                 Message msg = readMessageFromSocket();
                 if (msg.type == Message.Types.authenticate) {
                     authenticate(msg);
@@ -111,7 +115,7 @@ class ClientHandler extends Thread {
                 i = 0;
             } else {
                 if (i == 200) {
-                    ping();
+                    checkActive();
                     checkForSyncRequests();
                     i = 0;
                 }
@@ -388,8 +392,8 @@ class ClientHandler extends Thread {
                 }
             } catch (Exception e) {
                 System.out.println("Problem connecting to core server, disconnecting.");
-                disconnected = true;
-                e.printStackTrace();
+//                disconnected = true;
+//                e.printStackTrace();
             }
         }
     }
@@ -434,6 +438,9 @@ class ClientHandler extends Thread {
     }
 
     private void sendFiles(File file, String namespace, String appname) {
+        if(file.listFiles() == null) {
+            return;
+        }
         for (File toSend : file.listFiles()) {
             if (toSend.isDirectory()) {
                 sendFiles(toSend, namespace, appname);
@@ -457,20 +464,10 @@ class ClientHandler extends Thread {
         }
     }
 
-    private void ping() {
-        Message msg = new Message();
-        msg.type = Message.Types.ping;
-        try {
-            sendMessage(msg);
-            Message response = readMessageFromSocket();
-            if(response.type == Message.Types.pong) {
-                return;
-            }
-        }catch(Exception e) {
-            if(e instanceof SocketException) {
-                e.printStackTrace();
-            }
+    private void checkActive() {
+        if((System.currentTimeMillis() - lastActive.getTime()) > 15000) {
+            System.out.println("Client pinged out");
+            disconnected = true;
         }
-        disconnected = true;
     }
 }

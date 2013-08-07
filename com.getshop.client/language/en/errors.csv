@@ -111,6 +111,7 @@
 "1013","Product can have only one main image",
 "1014","Product must have one main image",
 "1015","Could not find the application.",
+"1016","Unable to calculate price for product.",
 
 "1000001","The name attribute is invalid",
 "1000002","The entry you are trying to fecth does not exists.",

@@ -30,7 +30,7 @@ public class ApplicationPoolImpl {
     /**
      * Applications that are added to the corresponding store.
      */
-    private HashMap<String, AppConfiguration> applications = new HashMap<String, AppConfiguration>();
+    private HashMap<String, AppConfiguration> applicationInstances = new HashMap<String, AppConfiguration>();
     
     @Autowired
     public Logger logger;
@@ -49,7 +49,7 @@ public class ApplicationPoolImpl {
     }
     
     public void addFromDatabase(AppConfiguration appConfiguration) {
-        applications.put(appConfiguration.id, appConfiguration);
+        applicationInstances.put(appConfiguration.id, appConfiguration);
     }
     
     public AppConfiguration createNewApplication(String applicationSettingsId) throws ErrorException {
@@ -75,30 +75,41 @@ public class ApplicationPoolImpl {
         appConfiguration.storeId = storeId;
         appConfiguration.appSettingsId = setting.id;
         databaseSaver.saveObject(appConfiguration, credentials);
-        applications.put(appConfiguration.id, appConfiguration);
+        applicationInstances.put(appConfiguration.id, appConfiguration);
         
         return appConfiguration;
     }
 
     public AppConfiguration stickApplication(String appId, int sticky) throws ErrorException {
-        AppConfiguration appConfig = applications.get(appId);
+        AppConfiguration appConfig = applicationInstances.get(appId);
         appConfig.sticky = sticky;
         databaseSaver.saveObject(appConfig, credentials);
-        return appConfig.secureClone();
+        return finalizeApplication(appConfig);
+    }
+    
+    private AppConfiguration finalizeApplication(AppConfiguration app) throws ErrorException {
+        HashMap<String, Setting> settings = new HashMap();
+        
+        for (AppConfiguration iapp : applicationInstances.values()) {
+            if (iapp.appName.equals("Settings"))
+                settings = iapp.settings;
+        }
+        
+        return app.secureClone();
     }
 
     /**
-     * Returns an application given by the Id.
+     * Returns an application instance given by the Id.
      * @param applicationId
      * @return
      * @throws ErrorException 
      */
     public AppConfiguration get(String application) throws ErrorException {
-        AppConfiguration app = applications.get(application);
+        AppConfiguration app = applicationInstances.get(application);
         if (app == null) {
             throw new ErrorException(58);
         }
-        return app.secureClone();
+        return finalizeApplication(app);
     }
     
     /**
@@ -106,21 +117,21 @@ public class ApplicationPoolImpl {
      * List<AppConfiguration> getApplications(appsettingsid);
      */
     @Deprecated
-    public AppConfiguration getByName(String applicationName) {
-        for (AppConfiguration app : applications.values()) {
+    public AppConfiguration getByName(String applicationName) throws ErrorException {
+        for (AppConfiguration app : applicationInstances.values()) {
             if (app.appName.equals(applicationName))
-                return app.secureClone();
+                return finalizeApplication(app);
         }
         
         return null;
     }
     
-    public List<AppConfiguration> getStickedApplications() {
+    public List<AppConfiguration> getStickedApplications() throws ErrorException {
         List<AppConfiguration> ret = new ArrayList<AppConfiguration>();
         
-        for (AppConfiguration app : applications.values()) {
+        for (AppConfiguration app : applicationInstances.values()) {
             if (app.sticky > 0) 
-                ret.add(app.secureClone());
+                ret.add(finalizeApplication(app));
         }
         
         return ret;
@@ -128,9 +139,9 @@ public class ApplicationPoolImpl {
     
     public Map<String, AppConfiguration> getApplications() throws ErrorException {
         Map<String, AppConfiguration> retApps = new HashMap();
-        for (String key : applications.keySet()) {
-            AppConfiguration app = applications.get(key);
-            retApps.put(key, app.secureClone());
+        for (String key : applicationInstances.keySet()) {
+            AppConfiguration app = applicationInstances.get(key);
+            retApps.put(key, finalizeApplication(app));
         }
         
         addDefaultThemeIfNotExists(retApps);
@@ -138,7 +149,7 @@ public class ApplicationPoolImpl {
     }
 
     public AppConfiguration saveSettings(Settings settings) throws ErrorException {
-        AppConfiguration application = applications.get(settings.appId);        
+        AppConfiguration application = applicationInstances.get(settings.appId);        
         
         HashMap<String, Setting> saveSettings = application.settings;
         if (saveSettings == null) {
@@ -156,7 +167,7 @@ public class ApplicationPoolImpl {
 
     public void deleteApplication(String applicationId) throws ErrorException {
         AppConfiguration app = get(applicationId);
-        applications.remove(applicationId);
+        applicationInstances.remove(applicationId);
         databaseSaver.deleteObject(app, credentials);
     }
 
@@ -168,12 +179,12 @@ public class ApplicationPoolImpl {
             throw error;
         }
         
-        applications.put(config.id, config);
+        applicationInstances.put(config.id, config);
         databaseSaver.saveObject(config, credentials);
     }
 
     public AppConfiguration getSecured(String appName) {
-        for (AppConfiguration app : applications.values()) {
+        for (AppConfiguration app : applicationInstances.values()) {
             if (app.appName.equals(appName))
                 return app;
         }
@@ -182,7 +193,7 @@ public class ApplicationPoolImpl {
     }
 
     public boolean isApplicationAdded(ApplicationSettings appSetting) {
-        for (AppConfiguration appConfig : applications.values()) {
+        for (AppConfiguration appConfig : applicationInstances.values()) {
             if (appSetting.id.equals(appConfig.appSettingsId)) {
                 return true;
             }
@@ -212,7 +223,7 @@ public class ApplicationPoolImpl {
         store.configuration.colors.textColor = "000000";
         
         AppConfiguration themeApp = createNewApplication("efcbb450-8f26-11e2-9e96-0800200c9a66");
-        retApps.put(themeApp.id, themeApp.secureClone());
+        retApps.put(themeApp.id, finalizeApplication(themeApp));
     }
 
     public void setPageManager(PageManager pageManager) {
@@ -223,7 +234,7 @@ public class ApplicationPoolImpl {
         AppManager appManager = pageManager.getManager(AppManager.class);
         
         List<String> remove = new ArrayList<String>();
-        for (AppConfiguration appConfig : applications.values()) {
+        for (AppConfiguration appConfig : applicationInstances.values()) {
             try {
                 ApplicationSettings setting = appManager.getApplication(appConfig.appSettingsId);
                 if (setting.type.equals(ApplicationSettings.Type.Theme)) {
@@ -249,7 +260,7 @@ public class ApplicationPoolImpl {
 
     public List<AppConfiguration> getThemeApplications() {
         List<AppConfiguration> apps = new ArrayList();
-        for (AppConfiguration config : applications.values()) {
+        for (AppConfiguration config : applicationInstances.values()) {
             try {
                 AppManager appManager = pageManager.getManager(AppManager.class);
                 if(config.appSettingsId == null) {
@@ -259,7 +270,7 @@ public class ApplicationPoolImpl {
                 if (appSettings.isSingleton || 
                         appSettings.type.equals(ApplicationSettings.Type.Theme) ||
                         appSettings.type.equals(ApplicationSettings.Type.System)) {
-                    apps.add(config.secureClone());
+                    apps.add(finalizeApplication(config));
                 }
             } catch (ErrorException ex) {
                 java.util.logging.Logger.getLogger(ApplicationPoolImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -269,16 +280,16 @@ public class ApplicationPoolImpl {
         return apps;
     }
 
-    public List<AppConfiguration> getApplications(String appSettingsId) {
+    public List<AppConfiguration> getApplications(String appSettingsId) throws ErrorException {
         List<AppConfiguration> retApps = new ArrayList();
         
         if (appSettingsId == null) {
             return retApps;
         }
         
-        for (AppConfiguration app : applications.values()) {
+        for (AppConfiguration app : applicationInstances.values()) {
             if (appSettingsId.equals(app.appSettingsId)) {
-                retApps.add(app.secureClone());
+                retApps.add(finalizeApplication(app));
             }
         }
         

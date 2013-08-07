@@ -74,12 +74,17 @@ public class CartManager extends ManagerBase implements ICartManager {
 
     @Override
     public Cart getCart() throws ErrorException {
-        return getCart(getSession().id);
+        Cart cart = getCart(getSession().id);
+        return cart;
     }
 
     @Override
     public Double getCartTotalAmount() throws ErrorException {
-        return getCart(getSession().id).getTotal();
+        double conversionRate = 1.0;
+        if (getSession().currentUser == null || !getSession().currentUser.isAdministrator()) {
+            conversionRate = ExchangeConvert.getExchangeRate(getSettings("Settings"));
+        }
+        return getCart(getSession().id).getTotal(conversionRate);
     }
 
     @Override
@@ -89,13 +94,32 @@ public class CartManager extends ManagerBase implements ICartManager {
     }
 
     @Override
-    public Double calculateTotalCost(Cart cart) {
-        return cart.getTotal();
+    public Double calculateTotalCost(Cart cart) throws ErrorException {
+        double conversionRate = 1.0;
+        if (getSession().currentUser == null || !getSession().currentUser.isAdministrator()) {
+            conversionRate = ExchangeConvert.getExchangeRate(getSettings("Settings"));
+        }
+        return cart.getTotal(conversionRate);
     }
 
     @Override
     public void setAddress(Address address) throws ErrorException {
-        Cart cart = this.getCart();
+        Cart cart = this.getCart();        
         cart.address = address;
+    }
+
+    @Override
+    public Double getShippingCost() throws ErrorException {
+        Cart cart = this.getCart();
+        return cart.getShippingCost();
+    }
+
+    @Override
+        public void setShippingCost(double shippingCost) throws ErrorException {
+        if (getSession().currentUser == null || !getSession().currentUser.isAdministrator()) {
+            shippingCost = ExchangeConvert.calculateExchangeRate(getSettings("Settings"), shippingCost);
+        } 
+        Cart cart = this.getCart();
+        cart.setShippingCost(shippingCost);
     }
 }

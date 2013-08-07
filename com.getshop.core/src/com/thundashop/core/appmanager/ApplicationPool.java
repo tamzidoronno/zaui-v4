@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ApplicationPool extends ManagerBase {
+
     public HashMap<String, ApplicationSettings> applications = new HashMap();
 
     @Autowired
@@ -34,19 +35,19 @@ public class ApplicationPool extends ManagerBase {
         this.database = database;
         initialize();
     }
-    
+
     @Override
-    public void dataFromDatabase(DataRetreived data) { 
-        
+    public void dataFromDatabase(DataRetreived data) {
+
         for (DataCommon dataObject : data.data) {
             if (dataObject instanceof ApplicationSettings) {
-                ApplicationSettings settings = (ApplicationSettings)dataObject;
+                ApplicationSettings settings = (ApplicationSettings) dataObject;
                 applications.put(settings.id, settings);
             }
         }
-        
+
     }
-    
+
     public synchronized void addApplicationSettings(ApplicationSettings settings) throws ErrorException {
         settings.storeId = "all";
         databaseSaver.saveObject(settings, credentials);
@@ -58,7 +59,7 @@ public class ApplicationPool extends ManagerBase {
             appSettings.complete();
         }
     }
-    
+
     public synchronized ApplicationSettings get(String appId) {
         updateApplicationSet();
         return applications.get(appId);
@@ -76,21 +77,22 @@ public class ApplicationPool extends ManagerBase {
     public List<ApplicationSettings> getAll(String storeid) {
         updateApplicationSet();
         ArrayList<ApplicationSettings> list = new ArrayList(applications.values());
-        
+
         //Getshop owns them all. this is the getshop id.
-        if(storeid.equals("cdae85c1-35b9-45e6-a6b9-fd95c18bb291")) {
+        if (storeid.equals("cdae85c1-35b9-45e6-a6b9-fd95c18bb291")) {
+            Collections.sort(list, new ApplicationSettings());
             return list;
         }
-        
+
         ArrayList<ApplicationSettings> returnlist = new ArrayList();
-        for(ApplicationSettings settings : list) {
-            if(settings.isPublic) {
+        for (ApplicationSettings settings : list) {
+            if (settings.isPublic) {
                 returnlist.add(settings);
-            } else if(storeid.equals(settings.ownerStoreId) || settings.allowedStoreIds.contains(storeid)) {
+            } else if (storeid.equals(settings.ownerStoreId) || settings.allowedStoreIds.contains(storeid)) {
                 returnlist.add(settings);
             }
         }
-        
+
         Collections.sort(returnlist, new ApplicationSettings());
         return returnlist;
     }

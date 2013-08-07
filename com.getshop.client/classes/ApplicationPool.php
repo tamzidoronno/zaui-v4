@@ -35,7 +35,9 @@ class ApplicationPool {
         foreach ($appConfigurations as $appConfig) {
             /* @var $appConfig core_common_AppConfiguration */
             $appInstance = $this->createAppInstance($appConfig);
-            $this->addedApplicationInstances[$appConfig->id] = $appInstance;  
+            if($appInstance != null) {
+                $this->addedApplicationInstances[$appConfig->id] = $appInstance; 
+            }
         }
         
         $this->addMainMenu();

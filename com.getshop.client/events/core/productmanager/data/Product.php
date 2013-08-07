@@ -31,6 +31,9 @@ class core_productmanager_data_Product extends core_common_DataCommon  {
 	public $page;
 
 	/** @var String */
+	public $setPrice;
+
+	/** @var String */
 	public $attributesList;
 
 	/** @var String */

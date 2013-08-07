@@ -271,10 +271,13 @@ class ApplicationManagement extends ApplicationBase {
         rename($path."/HelloWorld.php", $path."/".$appName.".php");
         rename($path."/javascript/HelloWorld.js", $path."/javascript/".$appName.".js");
         rename($path."/HelloWorld.png", $path."/".$appName.".png");
+        rename($path."/skin/HelloWorld.css", $path."/skin/".$appName.".css");
+        rename($path."/template/helloworld.phtml", $path."/template/".$appName.".phtml");
         
         $fileContent = file_get_contents($path."/".$appName.".php");
         $content = str_replace("class HelloWorld extends", "class ".$appName." extends", $fileContent);
         $content = str_replace("return \"My application\";", "return \"$appName\";", $content);
+        $content = str_replace("\$this->includefile(\"helloworld\")", "\$this->includefile(\"$appName\")", $content);
         file_put_contents($path."/".$appName.".php", $content);
         
         $this->getFactory()->getApi()->getAppManager()->setSyncApplication($settings->id);

@@ -925,7 +925,7 @@ public class GeneratePhpApiNew {
         content = "package com.thundashop.api.managers;\n\n";
         content += "public class GetShopApi {\r\n";
         content += "\r\n";
-        content += "      private Transporter transport;\r\n";
+        content += "      public Transporter transport;\r\n";
         content += "      public GetShopApi(int port, String host, String sessionId, String webaddress) throws Exception {\r\n";
         content += "           this.transport = new Transporter();\r\n";
         content += "           this.transport.port = port;\r\n";

@@ -301,7 +301,7 @@ public class PagePoolImpl {
         addInheritatedApplications(currentPage, page.parent);
     }
 
-    private void addStickedApplications(Page page) {
+    private void addStickedApplications(Page page) throws ErrorException {
         List<AppConfiguration> applications = applicationPool.getStickedApplications();
         for (AppConfiguration application : applications) {
             PageArea onPageArea = getPageArea(application);

@@ -4,6 +4,7 @@ import com.thundashop.core.productmanager.data.AttributeSummary;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Events;
+import com.thundashop.core.common.ExchangeConvert;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.listmanager.ListManager;
@@ -222,7 +223,12 @@ public class ProductManager extends AProductManager implements IProductManager {
             return product.price;
         }
         
-        return product.getPrice(variations);
+        double conversionRate = 1.0;
+        if (getSession().currentUser == null || !getSession().currentUser.isAdministrator()) {
+            conversionRate = ExchangeConvert.getExchangeRate(getSettings("Settings"));
+        }
+        
+        return product.getPrice(variations, conversionRate);
     }
 
     @Override

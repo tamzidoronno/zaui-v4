@@ -63,10 +63,22 @@ public interface ICartManager {
     /**
      * Send in a cart and you shall have the total price for all products.
      */
-    public Double calculateTotalCost(Cart cart);
+    public Double calculateTotalCost(Cart cart) throws ErrorException;
     
     /**
      * Set a new address to the current cart.
      */
     public void setAddress(Address address) throws ErrorException;
+    
+    /**
+     * Returns the shipping cost
+     * @return 
+     */
+    public Double getShippingCost() throws ErrorException;
+    
+    /**
+     * Sets the shipping cost.
+     * Should be in base currency.
+     */
+    public void setShippingCost(double shippingCost) throws ErrorException;
 }

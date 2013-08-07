@@ -59,6 +59,13 @@
 	}
 	
 	/**
+	 * @return \core_common_ExchangeConvert
+	 */
+	public static function core_common_ExchangeConvert() {
+		return new \core_common_ExchangeConvert();
+	}
+	
+	/**
 	 * @return \core_common_ErrorException
 	 */
 	public static function core_common_ErrorException() {
@@ -84,6 +91,13 @@
 	 */
 	public static function core_common_AppConfiguration() {
 		return new \core_common_AppConfiguration();
+	}
+	
+	/**
+	 * @return \core_common_ExchangeRate
+	 */
+	public static function core_common_ExchangeRate() {
+		return new \core_common_ExchangeRate();
 	}
 	
 	/**

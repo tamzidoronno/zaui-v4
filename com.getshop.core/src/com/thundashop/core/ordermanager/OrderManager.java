@@ -60,7 +60,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private void updateStockQuantity(Order order, String key) throws ErrorException {
         HashMap<String, Setting> map = this.getSettings("StockControl");
         String setting = null;
-        if (map != null) {
+        if (map != null && map.containsKey(key)) {
             setting = map.get(key).value;
         }
 
@@ -171,12 +171,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void setOrderStatus(String password, String orderId, String currency, double price, int status) throws ErrorException {
+        double conversionRate = 1.0;
+        if (getSession().currentUser == null || !getSession().currentUser.isAdministrator()) {
+            conversionRate = ExchangeConvert.getExchangeRate(getSettings("Settings"));
+        }
+        
         if (password.equals("asimpleButP0werfulPassw0rD")) {
             if (orderId.equals("applications")) {
                 handleApplicationPayment(currency, price);
             } else {
                 Order order = orders.get(orderId);
-                if (order.cart.getTotal() == price) {
+                if (order.cart.getTotal(conversionRate) == price) {
                     order.status = status;
                     saveOrderInternal(order);
                 } else {

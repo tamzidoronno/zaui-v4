@@ -85,7 +85,7 @@ public class Cart extends DataCommon {
     public Double getTotal() {
         Double total = 0D;
         for (CartItem cartItem : items) {
-            total += cartItem.getProduct().price;
+            total += cartItem.getProduct().price * cartItem.getCount();
         }
         return total;
     }

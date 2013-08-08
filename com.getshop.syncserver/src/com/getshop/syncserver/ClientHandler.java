@@ -104,7 +104,7 @@ class ClientHandler extends Thread {
                 } else if (msg.type == Message.Types.sendfile) {
                     writeFile(msg);
                 } else if (msg.type == Message.Types.ping) {
-                    pong(msg);
+                    //Well, lastactive has been updated
                 } else if (msg.type == Message.Types.deletefile) {
                     deleteFile(msg);
                 } else if (msg.type == Message.Types.listfiles) {
@@ -287,11 +287,6 @@ class ClientHandler extends Thread {
         }
 
         sendMessage(response);
-    }
-
-    private void pong(Message msg) throws IOException {
-        msg.type = Message.Types.pong;
-        sendMessage(msg);
     }
 
     private void moveFile(Message msg) throws Exception {

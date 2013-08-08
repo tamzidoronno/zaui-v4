@@ -33,11 +33,12 @@ public class CartManager extends ManagerBase implements ICartManager {
     }
 
     private Cart getCart(String sessionId) {
-        if (carts.get(sessionId) == null) {
+        if (!carts.containsKey(sessionId)) {
             carts.put(sessionId, new Cart());
         }
-
-        return carts.get(sessionId);
+        Cart cart = carts.get(sessionId);
+        cart.finalizeCart();
+        return cart;
     }
 
     private Product getProduct(String productId) throws ErrorException {
@@ -84,7 +85,7 @@ public class CartManager extends ManagerBase implements ICartManager {
         Cart cart  = getCart(getSession().id).clone();
         OrderManager orderManager = getManager(OrderManager.class);
         orderManager.finalizeCart(cart);
-        return cart.getTotal();
+        return cart.getTotal(false);
     }
 
     @Override
@@ -95,7 +96,7 @@ public class CartManager extends ManagerBase implements ICartManager {
 
     @Override
     public Double calculateTotalCost(Cart cart) throws ErrorException {
-        return cart.getTotal();
+        return cart.getTotal(false);
     }
 
     @Override
@@ -117,5 +118,13 @@ public class CartManager extends ManagerBase implements ICartManager {
         } 
         Cart cart = this.getCart();
         cart.setShippingCost(shippingCost);
+    }
+
+    @Override
+    public Double getShippingPriceBasis() throws ErrorException {
+        Cart cart  = getCart(getSession().id).clone();
+        OrderManager orderManager = getManager(OrderManager.class);
+        orderManager.finalizeCart(cart);
+        return cart.getTotal(true);
     }
 }

@@ -6,7 +6,6 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Events;
 import com.thundashop.core.common.ExchangeConvert;
 import com.thundashop.core.common.Logger;
-import com.thundashop.core.common.Setting;
 import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.productmanager.data.AttributeGroup;

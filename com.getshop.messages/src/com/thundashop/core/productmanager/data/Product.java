@@ -29,6 +29,7 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public String name;
     public int stockQuantity;
     public String pageId;
+    public boolean freeShipping = false;
     
     //AttributegroupId, AttributeSelected
     public HashMap<String, String> attributes = new HashMap();

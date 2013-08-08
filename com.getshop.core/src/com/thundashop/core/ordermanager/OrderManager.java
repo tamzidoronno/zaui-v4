@@ -112,6 +112,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
         return newOrder;
     }
+    
+    public void finalizeCart(Cart cart) throws ErrorException {
+        ProductManager productManager = getManager(ProductManager.class);
+        
+        for (CartItem item : cart.getItems()) {
+            double price = productManager.getPrice(item.getProduct().id, item.getVariations());
+            item.getProduct().price = price;
+        }
+    }
 
     @Override
     public Order createOrder(Address address) throws ErrorException {
@@ -127,6 +136,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             throw new ErrorException(53);
         }
 
+        finalizeCart(order.cart);
+        
         saveOrder(order);
 
         updateStockQuantity(order, "trackControl");
@@ -171,17 +182,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void setOrderStatus(String password, String orderId, String currency, double price, int status) throws ErrorException {
-        double conversionRate = 1.0;
-        if (getSession().currentUser == null || !getSession().currentUser.isAdministrator()) {
-            conversionRate = ExchangeConvert.getExchangeRate(getSettings("Settings"));
-        }
-        
         if (password.equals("asimpleButP0werfulPassw0rD")) {
             if (orderId.equals("applications")) {
                 handleApplicationPayment(currency, price);
             } else {
                 Order order = orders.get(orderId);
-                if (order.cart.getTotal(conversionRate) == price) {
+                if (order.cart.getTotal() == price) {
                     order.status = status;
                     saveOrderInternal(order);
                 } else {

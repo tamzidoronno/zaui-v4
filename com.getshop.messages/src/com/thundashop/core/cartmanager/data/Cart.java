@@ -7,9 +7,12 @@ package com.thundashop.core.cartmanager.data;
 import com.google.gson.Gson;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.ExchangeConvert;
+import com.thundashop.core.common.Setting;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.data.Address;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -79,10 +82,10 @@ public class Cart extends DataCommon {
         items.clear();
     }
 
-    public Double getTotal(double conversion_rate) {
+    public Double getTotal() {
         Double total = 0D;
         for (CartItem cartItem : items) {
-            total += cartItem.getPrice(conversion_rate);
+            total += cartItem.getProduct().price;
         }
         return total;
     }

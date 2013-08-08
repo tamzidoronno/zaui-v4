@@ -3,6 +3,7 @@ package com.thundashop.core.cartmanager;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.data.Address;
@@ -80,11 +81,10 @@ public class CartManager extends ManagerBase implements ICartManager {
 
     @Override
     public Double getCartTotalAmount() throws ErrorException {
-        double conversionRate = 1.0;
-        if (getSession().currentUser == null || !getSession().currentUser.isAdministrator()) {
-            conversionRate = ExchangeConvert.getExchangeRate(getSettings("Settings"));
-        }
-        return getCart(getSession().id).getTotal(conversionRate);
+        Cart cart  = getCart(getSession().id).clone();
+        OrderManager orderManager = getManager(OrderManager.class);
+        orderManager.finalizeCart(cart);
+        return cart.getTotal();
     }
 
     @Override
@@ -95,11 +95,7 @@ public class CartManager extends ManagerBase implements ICartManager {
 
     @Override
     public Double calculateTotalCost(Cart cart) throws ErrorException {
-        double conversionRate = 1.0;
-        if (getSession().currentUser == null || !getSession().currentUser.isAdministrator()) {
-            conversionRate = ExchangeConvert.getExchangeRate(getSettings("Settings"));
-        }
-        return cart.getTotal(conversionRate);
+        return cart.getTotal();
     }
 
     @Override

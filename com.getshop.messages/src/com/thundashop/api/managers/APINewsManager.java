@@ -12,7 +12,7 @@ import com.thundashop.app.newsmanager.data.MailSubscription;
 
 public class APINewsManager {
 
-      private Transporter transport;
+      public Transporter transport;
 
       public APINewsManager(Transporter transport){
            this.transport = transport;

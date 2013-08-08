@@ -13,7 +13,7 @@ import com.thundashop.core.ordermanager.data.Order;
 
 public class APIOrderManager {
 
-      private Transporter transport;
+      public Transporter transport;
 
       public APIOrderManager(Transporter transport){
            this.transport = transport;

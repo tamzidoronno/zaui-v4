@@ -15,7 +15,7 @@ import com.thundashop.core.common.AppConfiguration;
 
 public class APIPageManager {
 
-      private Transporter transport;
+      public Transporter transport;
 
       public APIPageManager(Transporter transport){
            this.transport = transport;

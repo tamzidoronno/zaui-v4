@@ -11,7 +11,7 @@ import java.util.List;
 
 public class APIGetShop {
 
-      private Transporter transport;
+      public Transporter transport;
 
       public APIGetShop(Transporter transport){
            this.transport = transport;

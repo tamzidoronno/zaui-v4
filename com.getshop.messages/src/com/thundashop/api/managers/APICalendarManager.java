@@ -12,7 +12,7 @@ import com.thundashop.core.calendarmanager.data.Month;
 
 public class APICalendarManager {
 
-      private Transporter transport;
+      public Transporter transport;
 
       public APICalendarManager(Transporter transport){
            this.transport = transport;

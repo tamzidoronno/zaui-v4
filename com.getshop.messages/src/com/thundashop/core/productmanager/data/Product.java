@@ -5,6 +5,7 @@
 package com.thundashop.core.productmanager.data;
 
 import com.google.code.morphia.annotations.Transient;
+import com.google.gson.Gson;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Editor;
@@ -194,17 +195,23 @@ public class Product extends DataCommon implements Comparable<Product>  {
         return null;
     }
     
-    public double getPrice(List<String> variations) {
+    public double getPrice(List<String> variations, double conversionRate) {
         double retprice = this.price;
         for (String variation : variations) {
             ProductVariation productVariation = getVariation(variation);
             if (productVariation != null) {
-                retprice += productVariation.priceDifference;
+                retprice += (productVariation.priceDifference * conversionRate);
+                retprice *= 100;
+                retprice = Math.round(retprice);
+                retprice /= 100;
             }
         }
         
         return retprice;
     }
 
-    
+    public Product clone() {
+        Gson gson = new Gson();
+        return gson.fromJson(gson.toJson(this), this.getClass());
+    }
 }

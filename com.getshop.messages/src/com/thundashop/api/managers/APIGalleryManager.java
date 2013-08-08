@@ -11,7 +11,7 @@ import java.util.List;
 
 public class APIGalleryManager {
 
-      private Transporter transport;
+      public Transporter transport;
 
       public APIGalleryManager(Transporter transport){
            this.transport = transport;

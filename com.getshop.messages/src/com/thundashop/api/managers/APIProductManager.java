@@ -15,7 +15,7 @@ import java.util.HashMap;
 
 public class APIProductManager {
 
-      private Transporter transport;
+      public Transporter transport;
 
       public APIProductManager(Transporter transport){
            this.transport = transport;

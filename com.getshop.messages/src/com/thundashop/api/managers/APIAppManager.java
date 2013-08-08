@@ -15,7 +15,7 @@ import com.thundashop.core.appmanager.data.AvailableApplications;
 
 public class APIAppManager {
 
-      private Transporter transport;
+      public Transporter transport;
 
       public APIAppManager(Transporter transport){
            this.transport = transport;

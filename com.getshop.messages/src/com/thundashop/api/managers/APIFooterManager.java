@@ -10,7 +10,7 @@ import com.thundashop.app.footermanager.data.Configuration;
 
 public class APIFooterManager {
 
-      private Transporter transport;
+      public Transporter transport;
 
       public APIFooterManager(Transporter transport){
            this.transport = transport;

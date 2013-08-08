@@ -73,8 +73,12 @@ public class CartItem implements Serializable {
         this.variations = variations;
     }
 
-    public Double getPrice() {
-        return product.getPrice(variations) * count;
+    public Double getPrice(double conversion_rate) {
+        double result = product.getPrice(variations, conversion_rate) * count;
+        result *= 100;
+        result = Math.round(result);
+        result /= 100;
+        return result;
     }
 
     public Product getProduct() {

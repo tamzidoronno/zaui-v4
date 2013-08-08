@@ -10,7 +10,7 @@ import com.thundashop.app.logomanager.data.SavedLogo;
 
 public class APILogoManager {
 
-      private Transporter transport;
+      public Transporter transport;
 
       public APILogoManager(Transporter transport){
            this.transport = transport;

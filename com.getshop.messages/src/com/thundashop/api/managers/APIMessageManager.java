@@ -9,7 +9,7 @@ import com.thundashop.core.common.JsonObject2;
 
 public class APIMessageManager {
 
-      private Transporter transport;
+      public Transporter transport;
 
       public APIMessageManager(Transporter transport){
            this.transport = transport;

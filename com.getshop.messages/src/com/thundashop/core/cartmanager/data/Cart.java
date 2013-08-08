@@ -22,6 +22,7 @@ import java.util.List;
 public class Cart extends DataCommon {
     private List<CartItem> items = new ArrayList();
     private double shippingCost = 0;
+    public boolean isShippingFree = false;
     
     public Address address;
     
@@ -82,9 +83,12 @@ public class Cart extends DataCommon {
         items.clear();
     }
 
-    public Double getTotal() {
+    public Double getTotal(boolean excludeFreeShipping) {
         Double total = 0D;
         for (CartItem cartItem : items) {
+            if(excludeFreeShipping && cartItem.getProduct().freeShipping) {
+                continue;
+            }
             total += cartItem.getProduct().price * cartItem.getCount();
         }
         return total;
@@ -108,6 +112,23 @@ public class Cart extends DataCommon {
 
     public double getShippingCost() {
         return shippingCost;
+    }
+
+    public void finalizeCart() {
+        List<CartItem> allItems = items;
+        if(allItems == null || allItems.isEmpty()) {
+            isShippingFree = false;
+            return;
+        }
+        
+        for(CartItem item : allItems) {
+            if(!item.getProduct().freeShipping) {
+                isShippingFree = false;
+                return;
+            }
+        }
+        
+        isShippingFree = true;
     }
       
 }

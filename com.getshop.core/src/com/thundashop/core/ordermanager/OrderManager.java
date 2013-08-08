@@ -187,7 +187,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 handleApplicationPayment(currency, price);
             } else {
                 Order order = orders.get(orderId);
-                if (order.cart.getTotal() == price) {
+                if (order.cart.getTotal(false) == price) {
                     order.status = status;
                     saveOrderInternal(order);
                 } else {

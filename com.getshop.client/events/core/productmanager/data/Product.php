@@ -25,13 +25,13 @@ class core_productmanager_data_Product extends core_common_DataCommon  {
 	public $pageId;
 
 	/** @var String */
+	public $freeShipping;
+
+	/** @var String */
 	public $attributes;
 
 	/** @var core_pagemanager_data_Page */
 	public $page;
-
-	/** @var String */
-	public $setPrice;
 
 	/** @var String */
 	public $attributesList;

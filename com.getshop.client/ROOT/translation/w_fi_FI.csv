@@ -29,6 +29,7 @@ Enter the code sent to your email.;-;Syötä koodi, mikä lähetettiin sinulle s
 Expire date;-;
 Extended Description;-;Laajennettu kuvaus
 Fixed price;-;Kiinteä hinta
+Free shipping;-;
 Full name;-;Koko nimi
 Group;-;
 How can I help you today ?;-;Kuinka voin auttaa tänään?
@@ -122,3 +123,4 @@ in stock;-;Varastossa
 org;-;
 orgnummer;-;
 phone;-;
+shipping;-;

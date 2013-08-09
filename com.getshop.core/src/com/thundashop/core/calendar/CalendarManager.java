@@ -225,8 +225,28 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     }
 
     @Override
-    public List<Entry> getEntries(int year, int month, int day) throws ErrorException {
-        return getEntriesInternal(year, month, day);
+    public List<Entry> getEntries(int year, int month, int day, List<String> filters) throws ErrorException {
+        List<Entry> entries = new ArrayList();
+
+        for (Month myMonth : months.values()) {
+            if (myMonth.isNewerOrEqual(year, month)) {
+                for (Day myDay : myMonth.days.values()) {
+                    if (isNewerOrEquals(myDay, myMonth, month, day, year)) {
+                        for (Entry entry : myDay.entries) {
+                            entry.year = myMonth.year;
+                            entry.month = myMonth.month;
+                            entry.day = myDay.day;
+                        }
+
+                        entries.addAll(myDay.entries);
+                    }
+                }
+            }
+        }
+
+        Collections.sort(entries);
+
+        return entries;
     }
 
     @Override
@@ -266,7 +286,8 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             }
         }
 
-        return mymonth;
+        
+        return finalizeMonth(mymonth);
     }
 
     private Month deleteEntryInternal(String id) throws ErrorException {
@@ -321,30 +342,6 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                 smsFactory.send(from, phoneNumber, message);
             }
         }
-    }
-
-    private List<Entry> getEntriesInternal(int year, int month, int day) {
-        List<Entry> entries = new ArrayList();
-
-        for (Month myMonth : months.values()) {
-            if (myMonth.isNewerOrEqual(year, month)) {
-                for (Day myDay : myMonth.days.values()) {
-                    if (isNewerOrEquals(myDay, myMonth, month, day, year)) {
-                        for (Entry entry : myDay.entries) {
-                            entry.year = myMonth.year;
-                            entry.month = myMonth.month;
-                            entry.day = myDay.day;
-                        }
-
-                        entries.addAll(myDay.entries);
-                    }
-                }
-            }
-        }
-
-        Collections.sort(entries);
-
-        return entries;
     }
 
     private void addUserToEventInternal(String userId, String eventId, String password, String username) throws ErrorException {
@@ -433,5 +430,89 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             User user = usermanager.getUserById(userId);
             sendMessages(user, entry, "");
         }
+    }
+
+    @Override
+    public List<String> getFilters() throws ErrorException {
+        List<String> filters = new ArrayList();
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH) + 1;
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+       
+        for (Entry entry : getEntries(year, month, day, null)) {
+            String camelCasedLocation = toCamelCase(entry.location);
+            if (!filters.contains(camelCasedLocation)) {
+                filters.add(camelCasedLocation);
+            }
+
+        }
+        return filters;
+    }
+    
+    private String toCamelCase(String s){
+        String[] parts = s.split("_");
+        String camelCaseString = "";
+        for (String part : parts){
+           camelCaseString = camelCaseString + toProperCase(part);
+        }
+        return camelCaseString;
+     }
+    
+    private String toProperCase(String s) {
+        return s.substring(0, 1).toUpperCase() +
+                   s.substring(1).toLowerCase();
+    }
+
+    private void filterResult(List<Entry> entries, List<String> filters) {
+        List<Entry> removeEntries = new ArrayList();
+        for (Entry entry : entries) {
+            String camelCasedLocation = toCamelCase(entry.location);
+            if (!filters.contains(camelCasedLocation)) {
+                removeEntries.add(entry);
+            }
+        }
+        
+        for (Entry entry : removeEntries) {
+            entries.remove(entry);
+        }
+    }
+
+    @Override
+    public void applyFilter(List<String> filters) {
+        if (getSession() != null) {
+            getSession().put("filters", filters);
+        }
+    }
+
+    private Month finalizeMonth(Month mymonth) {
+        Session lsession = getSession();
+        if (lsession == null) {
+            return mymonth;
+        }
+        
+        List<String> filters = (List<String>) lsession.get("filters");
+        
+        if (filters == null || filters.isEmpty()) {
+            return mymonth;
+        }
+        
+        mymonth = mymonth.clone();
+        for (Day day : mymonth.days.values()) {
+            filterResult(day.entries, (List)lsession.get("filters"));
+        }
+        
+        return mymonth;
+    }
+
+    @Override
+    public List<String> getActiveFilters() {
+        List<String> filters = (List<String>) getSession().get("filters");
+        if (filters == null) {
+            filters = new ArrayList<String>();
+        }
+        return filters;
     }
 }

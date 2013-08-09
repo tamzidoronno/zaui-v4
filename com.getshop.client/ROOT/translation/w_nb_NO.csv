@@ -29,6 +29,7 @@ Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.
 Expire date;-;
 Extended Description;-;Utvidet beskrivelse
 Fixed price;-;Fikset pris
+Free shipping;-;
 Full name;-;Hele navnet
 Group;-;
 How can I help you today ?;-;Hva kan jeg hjelpe deg med?
@@ -122,3 +123,4 @@ in stock;-;på lager
 org;-;Firma
 orgnummer;-;Org.nr.
 phone;-;Mob.Tlf.
+shipping;-;

@@ -29,6 +29,7 @@ Enter the code sent to your email.;-;Code invoeren die u per sms is gestuurd
 Expire date;-;
 Extended Description;-;Uitgebreide beschrijving
 Fixed price;-;Vaste prijs
+Free shipping;-;
 Full name;-;Volledige naam
 Group;-;
 How can I help you today ?;-;Waarmee kunnen we u van dienst zijn?
@@ -122,3 +123,4 @@ in stock;-;op voorraad
 org;-;
 orgnummer;-;
 phone;-;
+shipping;-;

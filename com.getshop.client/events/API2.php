@@ -629,6 +629,21 @@ class APICalendarManager {
      }
 
      /**
+     * Apply a set of filters, 
+     * if this filters are applied, it will not return entries
+     * that does not match the filter criteria.
+     */
+
+     public function applyFilter($filters) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["filters"] = json_encode($this->transport->object_unset_nulls($filters));
+          $data["method"] = "applyFilter";
+          $data["interfaceName"] = "core.calendar.ICalendarManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Confirms a entry.
      * 
      * @param entryId
@@ -681,6 +696,22 @@ class APICalendarManager {
      }
 
      /**
+     * Returns a set of filters that 
+     * has been applied to the current session
+     * calendar.
+     * 
+     * @return List
+     */
+
+     public function getActiveFilters() {
+          $data = array();
+          $data['args'] = array();
+          $data["method"] = "getActiveFilters";
+          $data["interfaceName"] = "core.calendar.ICalendarManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Get all entries to a given day
      * @param year The year to fetch the entries on.
      * @param month The month to fetch the entries on.
@@ -689,12 +720,13 @@ class APICalendarManager {
      * @throws ErrorException 
      */
 
-     public function getEntries($year, $month, $day) {
+     public function getEntries($year, $month, $day, $filters) {
           $data = array();
           $data['args'] = array();
           $data['args']["year"] = json_encode($this->transport->object_unset_nulls($year));
           $data['args']["month"] = json_encode($this->transport->object_unset_nulls($month));
           $data['args']["day"] = json_encode($this->transport->object_unset_nulls($day));
+          $data['args']["filters"] = json_encode($this->transport->object_unset_nulls($filters));
           $data["method"] = "getEntries";
           $data["interfaceName"] = "core.calendar.ICalendarManager";
           return $this->transport->sendMessage($data);
@@ -714,6 +746,19 @@ class APICalendarManager {
           $data["method"] = "getEntry";
           $data["interfaceName"] = "core.calendar.ICalendarManager";
           return $this->transport->cast(API::core_calendarmanager_data_Entry(), $this->transport->sendMessage($data));
+     }
+
+     /**
+     * Returns a set of filters that
+     * can be applied to the Calendar.
+     */
+
+     public function getFilters() {
+          $data = array();
+          $data['args'] = array();
+          $data["method"] = "getFilters";
+          $data["interfaceName"] = "core.calendar.ICalendarManager";
+          return $this->transport->sendMessage($data);
      }
 
      /**

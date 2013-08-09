@@ -16,6 +16,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -26,7 +28,7 @@ public class StoreHandler {
 
     public List<ManagerBase> messageHandler;
     private String storeId;
-    private Session session;
+    private HashMap<String, Session> sessions = new HashMap();
     // remove this.
     private User testUser;
 
@@ -43,7 +45,6 @@ public class StoreHandler {
 
     private void init() {
         for (ManagerBase base : messageHandler) {
-            base.session = session;
             if (!base.isSingleton) {
                 base.storeId = storeId;
                 base.initialize();
@@ -132,10 +133,18 @@ public class StoreHandler {
     private void setSessionObject(String sessionId) {
         IUserManager userManager = getManager(IUserManager.class);
 
-        session = new Session();
-        session.storeId = storeId;
-        session.id = sessionId;
-
+        Session session = null;
+        if (!sessions.containsKey(sessionId)) {
+            session = new Session();
+            session.storeId = storeId;
+            session.id = sessionId;
+            sessions.put(sessionId, session);
+        } else {
+            session = sessions.get(sessionId);
+        }
+        
+        session.lastActive = new Date();
+        
         for (ManagerBase base : messageHandler) {
             /**
              * We dont want to set the session for storemanager, 
@@ -251,5 +260,9 @@ public class StoreHandler {
         //Process it.
         ReportingManager reporting = getManager(ReportingManager.class);
         reporting.processApiCall(object);
+    }
+
+    public void removeSession(String id) {
+        sessions.remove(id);
     }
 }

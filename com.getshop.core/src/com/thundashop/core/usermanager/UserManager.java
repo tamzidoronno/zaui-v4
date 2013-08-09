@@ -159,6 +159,9 @@ public class UserManager extends ManagerBase implements IUserManager {
     @Override
     public void logout() throws ErrorException {
         sessionFactory.removeFromSession(getSession().id);
+        if (AppContext.storePool != null && getSession() != null && AppContext.storePool.getStorePool(getSession().id) != null) {
+            AppContext.storePool.getStorePool(storeId).removeSession(getSession().id);
+        }
         saveSessionFactory();
     }
 

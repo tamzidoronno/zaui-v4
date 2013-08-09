@@ -434,6 +434,9 @@ class Factory extends FactoryBase {
         if ($currency == "USD")
             return "$";
 
+        if ($currency == "AUD")
+            return "$";
+
         return $this->__w("Price");
     }
 

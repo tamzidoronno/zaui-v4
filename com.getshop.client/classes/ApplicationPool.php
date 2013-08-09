@@ -24,6 +24,19 @@ class ApplicationPool {
         }
     }
     
+    
+    public function getShipmentApplicationInstances() {
+        $instances = $this->getSingletonInstances();
+        $apps = array();
+        foreach($instances as $instance) {
+            if($instance->applicationSettings->type == "ShipmentApplication") {
+                $apps[] = $instance;
+            }
+        }
+        return $apps;
+    }
+    
+    
     /**
      * Used for setting the application instances that should be
      * available from the applicationpool. Should be invoked once 

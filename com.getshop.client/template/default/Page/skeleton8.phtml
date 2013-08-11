@@ -1,0 +1,33 @@
+<div class="skelholder skeleton7" theme='<? echo $this->getThemeApplicationSettingsId(); ?>'>
+    <?php
+    $this->includefile('pageinfo');
+    $this->includefile('mainmenu');
+    $this->includefile('header');
+    ?>
+    <div class="mainarea">
+        <div class='main_col'>
+            <div area='main_1' class="applicationarea apparea-main-1">
+                <?php
+                $this->getPage()->getApplicationArea('main_1')->render();
+                ?>
+            </div>
+            <div area='main_2' class="applicationarea apparea-main-2">
+                <?php
+                $this->getPage()->getApplicationArea('main_2')->render();
+                ?>
+            </div>
+        </div>
+        <div class='left_col'>
+            <div area='left_1' class="applicationarea apparea-left-1">
+                <?php
+                $this->getPage()->getApplicationArea('left_1')->render();
+                ?>
+            </div>
+            <div area='left_2' class="applicationarea apparea-left-2">
+                <?php
+                $this->getPage()->getApplicationArea('left_2')->render();
+                ?>
+            </div>
+        </div>
+    </div>
+</div>

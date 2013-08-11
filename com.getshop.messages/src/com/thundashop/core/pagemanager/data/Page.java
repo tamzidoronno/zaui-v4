@@ -20,7 +20,6 @@ import java.util.Set;
 public class Page extends DataCommon implements Cloneable {
 
     public Page() {
-        addAllPageAreas();
     }
 
     public void clear() {
@@ -68,23 +67,6 @@ public class Page extends DataCommon implements Cloneable {
         public static String Domain = "domain";
     }
 
-    public void addAllPageAreas() {
-        for (Field field : PageArea.Type.class.getFields()) {
-            try {
-                String type = (String) field.get(null);
-                if (this.pageAreas.get(type) == null) {
-                    PageArea pageArea = new PageArea(this);
-                    pageArea.type = (String)type;
-                    this.pageAreas.put(pageArea.type, pageArea);
-                }
-            } catch (IllegalAccessException ex) {
-                ex.printStackTrace();
-            } catch (IllegalArgumentException ex) {
-                ex.printStackTrace();
-            } 
-        }
-    }
-    
     public static class PageType {
         public static int HeaderFooterLeftMiddleRight = 1;
         public static int HeaderLeftMiddleFooter = 2;

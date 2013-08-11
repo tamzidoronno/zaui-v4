@@ -332,7 +332,7 @@ class ApplicationManager extends FactoryBase {
     public function syncapplication() {
         $id = $_POST['data']['id'];
         $this->getApi()->getAppManager()->setSyncApplication($id);
-        
+        echo "synching application with id: " . $id;
         $this->displayApplicationManagement();
     }
 

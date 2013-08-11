@@ -4,36 +4,140 @@ $(document).ready(function() {
         closeOnClick: false,
         title : "MainMenu",
         items : [
+//            {
+//                icon : "/skin/default/images/one-column-icon.png",
+//                title : "One column layout",
+//                click : thundashop.MainMenu.changeLayout,
+//                extraArgs: 1,
+//                class: 'layout',
+//                disableOnSystemPages: true
+//            },
+//            {
+//                icon : "/skin/default/images/one-column-icon.png",
+//                title : "One column layout",
+//                click : thundashop.MainMenu.changeLayout,
+//                extraArgs: 2,
+//                class: 'layout',
+//                disableOnSystemPages: true
+//            },
+//            {
+//                icon : "/skin/default/images/one-column-icon.png",
+//                title : "One column layout",
+//                click : thundashop.MainMenu.changeLayout,
+//                extraArgs: 3,
+//                class: 'layout',
+//                disableOnSystemPages: true
+//            },
+//            {
+//                icon : "/skin/default/images/one-column-icon.png",
+//                title : "One column layout",
+//                click : thundashop.MainMenu.changeLayout,
+//                extraArgs: 4,
+//                class: 'layout',
+//                disableOnSystemPages: true
+//            },
+//            {
+//                icon : "/skin/default/images/one-column-icon.png",
+//                title : "One column layout",
+//                click : thundashop.MainMenu.changeLayout,
+//                extraArgs: 5,
+//                class: 'layout',
+//                disableOnSystemPages: true
+//            },
+//            {
+//                icon : "/skin/default/images/one-column-icon.png"
+//                title : "One column layout",
+//                click : thundashop.MainMenu.changeLayout,
+//                extraArgs: 6,
+//                class: 'layout',
+//                disableOnSystemPages: true
+//            },
             {
                 icon : "/skin/default/images/one-column-icon.png",
-                title : "One column layout",
+                title : "7",
                 click : thundashop.MainMenu.changeLayout,
-                extraArgs: 4,
+                extraArgs: 7,
+                class: 'layout',
+                disableOnSystemPages: true
+            },
+            {
+                icon : "/skin/default/images/one-column-icon.png",
+                title : "8",
+                click : thundashop.MainMenu.changeLayout,
+                extraArgs: 8,
+                class: 'layout',
+                disableOnSystemPages: true
+            },
+            {
+                icon : "/skin/default/images/one-column-icon.png",
+                title : "9",
+                click : thundashop.MainMenu.changeLayout,
+                extraArgs: 9,
+                class: 'layout',
+                disableOnSystemPages: true
+            },
+            {
+                icon : "/skin/default/images/one-column-icon.png",
+                title : "10",
+                click : thundashop.MainMenu.changeLayout,
+                extraArgs: 10,
                 class: 'layout',
                 disableOnSystemPages: true
             },
             
             {
                 icon : "/skin/default/images/two-column-left-icon.png",
-                title : "Two column layout with a left sidebar",
+                title : "11",
                 click : thundashop.MainMenu.changeLayout,
-                extraArgs: 2,
+                extraArgs: 11,
                 class: 'layout',
                 disableOnSystemPages: true
             },
             {
                 icon : "/skin/default/images/two-column-rigth-icon.png",
-                title : "Two column layout with a right sidebar",
+                title : "12",
                 click : thundashop.MainMenu.changeLayout,
-                extraArgs: 3,
+                extraArgs: 12,
                 class: 'layout',
                 disableOnSystemPages: true
             },
             {
                 icon : "/skin/default/images/three-column-icon.png",
-                title : "Three column layout",
+                title : "13",
                 click : thundashop.MainMenu.changeLayout,
-                extraArgs: 1,
+                extraArgs: 13,
+                class: 'layout',
+                disableOnSystemPages: true
+            },
+            {
+                icon : "/skin/default/images/three-column-icon.png",
+                title : "14",
+                click : thundashop.MainMenu.changeLayout,
+                extraArgs: 14,
+                class: 'layout',
+                disableOnSystemPages: true
+            },
+            {
+                icon : "/skin/default/images/three-column-icon.png",
+                title : "15",
+                click : thundashop.MainMenu.changeLayout,
+                extraArgs: 15,
+                class: 'layout',
+                disableOnSystemPages: true
+            },
+            {
+                icon : "/skin/default/images/three-column-icon.png",
+                title : "16",
+                click : thundashop.MainMenu.changeLayout,
+                extraArgs: 16,
+                class: 'layout',
+                disableOnSystemPages: true
+            },
+            {
+                icon : "/skin/default/images/three-column-icon.png",
+                title : "16",
+                click : thundashop.MainMenu.changeLayout,
+                extraArgs: 17,
                 class: 'layout',
                 disableOnSystemPages: true
             },

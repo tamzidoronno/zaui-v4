@@ -379,6 +379,7 @@ class ClientHandler extends Thread {
                     }
                 } else {
                     List<ApplicationSynchronization> appsToSync = api.getAppManager().getSyncApplications();
+                    System.out.println(appsToSync.size());
                     if (appsToSync != null && appsToSync.size() > 0) {
                         for (ApplicationSynchronization appToSync : appsToSync) {
                             publishServer(appToSync);

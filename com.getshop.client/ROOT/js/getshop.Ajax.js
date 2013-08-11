@@ -86,6 +86,7 @@ thundashop.Ajax = {
                         $('#loaderbox').hide();
                     }
                 }
+                thundashop.common.setSizeClasses();
             },
             error: thundashop.handleAjaxError
         });

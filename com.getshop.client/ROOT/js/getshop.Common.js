@@ -33,9 +33,11 @@ $('.gray').live('focus', function() {
 
 $(function() {
     $('#skeleton a').live('click', function(event) {
-        if ($(this).attr('hardlink') == "true") {
+        var comp = new RegExp(location.host);
+        if(!comp.test($(this).attr('href')) && !($(this).attr('href').indexOf('?') === 0)){
             return;
         }
+        
         event.stopPropagation();
         event.preventDefault();
 

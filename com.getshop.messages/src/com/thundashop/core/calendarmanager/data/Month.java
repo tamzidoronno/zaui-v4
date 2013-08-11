@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.calendarmanager.data;
 
+import com.google.gson.Gson;
 import com.thundashop.core.common.DataCommon;
 import java.util.TreeMap;
 
@@ -59,5 +60,12 @@ public class Month extends DataCommon {
             Day newDay = new Day(day);
             this.days.put(newDay.day, newDay);
         }
+    }
+    
+    @Override
+    public Month clone() {
+        Gson gson = new Gson();
+        String json = gson.toJson(this);
+        return gson.fromJson(json, Month.class);
     }
 }

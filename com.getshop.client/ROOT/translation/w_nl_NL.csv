@@ -4,6 +4,8 @@ Add to cart;-;Aan winkelwagen toevoegen
 Address;-;Addres
 All orders;-;Alle bestellingen
 Application;-;
+April;-;
+August;-;
 Birth Date;-;Geboortedatum
 Cancel order;-;Bestelling afbreken
 Canceled;-;Afgebroken
@@ -20,6 +22,7 @@ Confirm order;-;Bestelling bevestigen
 Count;-;
 Customer information;-;Klanteninformatie
 Date;-;
+December;-;
 Delete image;-;
 Delete product;-;
 Details;-;
@@ -28,21 +31,32 @@ End date;-;
 Enter the code sent to your email.;-;Code invoeren die u per sms is gestuurd
 Expire date;-;
 Extended Description;-;Uitgebreide beschrijving
+February;-;
 Fixed price;-;Vaste prijs
+Free shipping;-;
+Friday;-;
 Full name;-;Volledige naam
 Group;-;
 How can I help you today ?;-;Waarmee kunnen we u van dienst zijn?
+January;-;
+July;-;
+June;-;
 Les mer;-;
 Login;-;Inloggen
 Logout;-;Uitloggen
 Lost your password?;-;Wachtwoord vergeten?
+March;-;
+May;-;
+Monday;-;
 My Account;-;Mijn account
 My name is:;-;Mijn naam is:
 Name;-;
 Name of the application;-;
 New password;-;Nieuw wachtwoord
 Next;-;Volgende
+November;-;
 Number of instances added;-;
+October;-;
 Old password;-;oude wachtwoord
 Order;-;Bestelling
 Order Created;-;Bestelling aangemaakt
@@ -72,10 +86,12 @@ Register;-;Aanmelden
 Related products;-;Gerelateerde producten
 Remove;-;Verwijderen
 Repeat password;-;Wachtwoord nogmaals
+Saturday;-;
 Search for a product;-;Product zoeken
 Send me a code;-;Stuur mij de code
 Send message;-;Bericht versturen
 Send us mail;-;
+September;-;
 Set new password;-;Nieuw wachtwoord vastleggen
 Setup product variations;-;
 Shipment information;-;Verzendinformatie
@@ -92,18 +108,23 @@ Stage 3 (hp): ;-;
 Stage 3 (nm): ;-;
 Start date;-;
 Status;-;
+Sunday;-;
 Taxes;-;BTW
 This design is private to getshop only.;-;
 This page is only available for adminsitrators;-;Deze pagina is alleen voor beheerders toegangkelijk
 This page is only available for editors.;-;Deze pagina is alleen voor redacteuren toegangkelijk
 This page is only available for registered users.;-;Deze pagina is alleen voor geregistreerde gebruikers toegangkelijk
+Thursday;-;
 To continue using this feature, you will need to pay, or remove the application.;-;
 Top speed ;-;
 Total;-;
+Tuesday;-;
 Update;-;Updaten
 Upload image;-;
 Username / Email;-;Gebruikersnaam / E-mail
 Waiting for payment;-;Wachten op betaling
+We host events at the following locations, click on the location to filter the calendar by location(s);-;
+Wednesday;-;
 Weight;-;
 What's on your mind?;-;
 You are being transferred to paypal, please wait...;-;
@@ -114,11 +135,14 @@ You have expired applications that requires payment.;-;
 Your personal information;-;Uw persoonlijke informatie
 change;-;
 course;-;
+description;-;
 email;-;
 gram;-;
 help;-;
 if we dont answer, please leave your email here and we will return your message asap.;-;
 in stock;-;op voorraad
+location;-;
 org;-;
 orgnummer;-;
 phone;-;
+shipping;-;

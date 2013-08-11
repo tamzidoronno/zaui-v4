@@ -4,6 +4,8 @@ Add to cart;-;Lisää ostoskoriin
 Address;-;Osoite
 All orders;-;Kaikki tilaukset
 Application;-;
+April;-;
+August;-;
 Birth Date;-;Syntymäaika
 Cancel order;-;Peruuta tilaus
 Canceled;-;Peruttu
@@ -20,6 +22,7 @@ Confirm order;-;Vahvista tilaus
 Count;-;
 Customer information;-;Asiakastiedot
 Date;-;
+December;-;
 Delete image;-;
 Delete product;-;
 Details;-;
@@ -28,21 +31,32 @@ End date;-;
 Enter the code sent to your email.;-;Syötä koodi, mikä lähetettiin sinulle sähköpostiin
 Expire date;-;
 Extended Description;-;Laajennettu kuvaus
+February;-;
 Fixed price;-;Kiinteä hinta
+Free shipping;-;
+Friday;-;
 Full name;-;Koko nimi
 Group;-;
 How can I help you today ?;-;Kuinka voin auttaa tänään?
+January;-;
+July;-;
+June;-;
 Les mer;-;
 Login;-;Sisään kirjautuminen
 Logout;-;Ulos kirjautuminen
 Lost your password?;-;Salasana hukassa?
+March;-;
+May;-;
+Monday;-;
 My Account;-;Minun tili
 My name is:;-;Minun nimeni on:
 Name;-;
 Name of the application;-;
 New password;-;Uusi salasana
 Next;-;Seuraava
+November;-;
 Number of instances added;-;
+October;-;
 Old password;-;Vanha salasana
 Order;-;Tilaus
 Order Created;-;Tilaus luotu
@@ -72,10 +86,12 @@ Register;-;Rekisteröidy
 Related products;-;Vastaavat tuotteet
 Remove;-;Poista
 Repeat password;-;Toista salasana
+Saturday;-;
 Search for a product;-;Etsi tuote
 Send me a code;-;Lähetä minulle koodi
 Send message;-;Lähetä viesti
 Send us mail;-;
+September;-;
 Set new password;-;Luo uusi salasana
 Setup product variations;-;
 Shipment information;-;Toimitusehdot
@@ -92,18 +108,23 @@ Stage 3 (hp): ;-;
 Stage 3 (nm): ;-;
 Start date;-;
 Status;-;
+Sunday;-;
 Taxes;-;Verot
 This design is private to getshop only.;-;
 This page is only available for adminsitrators;-;Tämä sivu on saattavilla ainoastaan pääkäyttäjälle.
 This page is only available for editors.;-;Tämä sivu on saattavilla ainoastaan toimittajalle
 This page is only available for registered users.;-;Tämä sivu on saattavilla ainoastaan rekisteröityille käyttäjille
+Thursday;-;
 To continue using this feature, you will need to pay, or remove the application.;-;
 Top speed ;-;
 Total;-;
+Tuesday;-;
 Update;-;Päivitys
 Upload image;-;
 Username / Email;-;Käyttäjätunnus / Sähköposti
 Waiting for payment;-;Odotettaan maksua
+We host events at the following locations, click on the location to filter the calendar by location(s);-;
+Wednesday;-;
 Weight;-;
 What's on your mind?;-;
 You are being transferred to paypal, please wait...;-;
@@ -114,11 +135,14 @@ You have expired applications that requires payment.;-;
 Your personal information;-;Sinun henkilökohtaiset tiedot
 change;-;
 course;-;
+description;-;
 email;-;
 gram;-;
 help;-;
 if we dont answer, please leave your email here and we will return your message asap.;-;
 in stock;-;Varastossa
+location;-;
 org;-;
 orgnummer;-;
 phone;-;
+shipping;-;

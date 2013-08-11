@@ -38,7 +38,6 @@ public class ExchangeConvert {
                 Gson gson = new Gson();
                 ExchangeRate rate = gson.fromJson(data, ExchangeRate.class);
                 rate.lastUpdated = new Date();
-                System.out.println(data);
                 rates.put(key, rate);
                 return rates.get(key).rate;
             }catch(Exception e) {

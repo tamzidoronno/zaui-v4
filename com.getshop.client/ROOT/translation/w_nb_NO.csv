@@ -4,6 +4,8 @@ Add to cart;-;Legg i handlekurv
 Address;-;Adresse
 All orders;-;Alle bestilinger
 Application;-;
+April;-;April
+August;-;August
 Birth Date;-;Bursdag
 Cancel order;-;Kanselert ordre
 Canceled;-;Kanselert
@@ -20,6 +22,7 @@ Confirm order;-;Bekreft ordre
 Count;-;
 Customer information;-;Kunde detaljer
 Date;-;
+December;-;Desember
 Delete image;-;
 Delete product;-;
 Details;-;
@@ -28,21 +31,32 @@ End date;-;
 Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.
 Expire date;-;
 Extended Description;-;Utvidet beskrivelse
+February;-;Februar
 Fixed price;-;Fikset pris
+Free shipping;-;
+Friday;-;Fredag
 Full name;-;Hele navnet
 Group;-;
 How can I help you today ?;-;Hva kan jeg hjelpe deg med?
+January;-;
+July;-;Juli
+June;-;Juni
 Les mer;-;
 Login;-;Logg inn
 Logout;-;Logg ut
 Lost your password?;-;Glemt ditt passord?
+March;-;Mars
+May;-;Mai
+Monday;-;Mandag
 My Account;-;Min konto
 My name is:;-;Mitt navn er
 Name;-;Navn
 Name of the application;-;
 New password;-;Nytt passord
 Next;-; Neste
+November;-;November
 Number of instances added;-;
+October;-;Oktober
 Old password;-;Gammelt passord
 Order;-;Ordre
 Order Created;-; Ordre opprettet
@@ -72,10 +86,12 @@ Register;-;Registrer
 Related products;-;Relaterte produkter
 Remove;-;Fjern
 Repeat password;-;Gjenta passord
+Saturday;-;Lørdag
 Search for a product;-;Søk etter et produkt
 Send me a code;-;Send meg koden
 Send message;-;Send melding
 Send us mail;-;Send oss en epost
+September;-;September
 Set new password;-;Sett nytt passord
 Setup product variations;-;
 Shipment information;-;Forsendelse informasjon
@@ -92,18 +108,23 @@ Stage 3 (hp): ;-;
 Stage 3 (nm): ;-;
 Start date;-;
 Status;-;
+Sunday;-;Søndag
 Taxes;-;Skatter
 This design is private to getshop only.;-;
 This page is only available for adminsitrators;-;Denne siden er kun tilgjengelig for adminstratorer.
 This page is only available for editors.;-;Denne siden er kun tilgjengelig for editorer.
 This page is only available for registered users.;-;Denne siden er kun tilgjengelig for registrerte brukere
+Thursday;-;Torsdag
 To continue using this feature, you will need to pay, or remove the application.;-;
 Top speed ;-;
 Total;-;
+Tuesday;-;Tirsdag
 Update;-;Oppdater
 Upload image;-;
 Username / Email;-;Brukernavn / Epost
 Waiting for payment;-;Venter på betaling
+We host events at the following locations, click on the location to filter the calendar by location(s);-;
+Wednesday;-;Onsdag
 Weight;-;
 What's on your mind?;-;Hva ønsker du å formidle?
 You are being transferred to paypal, please wait...;-;
@@ -114,11 +135,14 @@ You have expired applications that requires payment.;-;
 Your personal information;-;Din personlige informasjon
 change;-;
 course;-;
+description;-;Beskrivelse
 email;-;E-post
 gram;-;
 help;-;
 if we dont answer, please leave your email here and we will return your message asap.;-;
 in stock;-;på lager
+location;-;Sted
 org;-;Firma
 orgnummer;-;Org.nr.
 phone;-;Mob.Tlf.
+shipping;-;

@@ -65,7 +65,7 @@ public interface ICalendarManager {
      * @return
      * @throws ErrorException 
      */
-    public List<Entry> getEntries(int year, int month, int day) throws ErrorException;
+    public List<Entry> getEntries(int year, int month, int day, List<String> filters) throws ErrorException;
     
     /**
      * Add a given user to a given event.
@@ -112,4 +112,26 @@ public interface ICalendarManager {
      */
     @Administrator
     public void confirmEntry(String entryId) throws ErrorException;
+    
+    /**
+     * Returns a set of filters that
+     * can be applied to the Calendar.
+     */
+    public List<String> getFilters() throws ErrorException;
+    
+    /**
+     * Apply a set of filters, 
+     * if this filters are applied, it will not return entries
+     * that does not match the filter criteria.
+     */
+    public void applyFilter(List<String> filters);
+    
+    /**
+     * Returns a set of filters that 
+     * has been applied to the current session
+     * calendar.
+     * 
+     * @return 
+     */
+    public List<String> getActiveFilters();
 }

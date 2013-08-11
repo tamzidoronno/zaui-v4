@@ -32,6 +32,7 @@ com.getshop.syncserver/nbproject/genfiles.properties
 com.getshop.syncserver/nbproject/private/private.xml
 com.getshop.syncclient/build.xml
 com.getshop.combined/build.xml
+com.getshop.syncserver/nbproject/private/config.properties
 
 /com.getshop.combined/nbproject/private/
 /com.getshop.syncclient/nbproject/private/
@@ -40,3 +41,5 @@ com.getshop.combined/build.xml
 /com.getshop.combined/build/
 /com.getshop.combined/dist/
 /fuck/nbproject/private/
+/fuck/dist/
+/fuck/build/

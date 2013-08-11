@@ -483,7 +483,13 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     @Override
     public void applyFilter(List<String> filters) {
         if (getSession() != null) {
-            getSession().put("filters", filters);
+            if (filters != null) {
+                if (filters.size() > 0) {
+                    getSession().put("filters", filters);
+                } else {
+                    getSession().remove("filters");
+                }
+            }
         }
     }
 

@@ -340,7 +340,6 @@ Users logged on;-;
 VIP user - $0;-;
 Viewed when;-;
 Warning. you are not connected as a partner yet, please contact getshop support!;-;
-We host events at the following locations, click on the location to filter the calendar by location(s)<hr>;-;
 Web address;-;
 What address are you using for the test enviroment to paypal?;-;
 What areas does this application support?;-;
@@ -428,7 +427,6 @@ delete_app;-;Delete application
 delete_image;-;Delete image
 delete_user;-;Delete user
 desc_to_image;-;Description to image:
-description;-;Add this left or right column at a product, and a new related products will be displayed.
 design;-;Design
 detailed_desc;-;A more detailed description
 dibs payment services allows you to start charging with visa / mastercard / and other card vendors. its extremly easy to use. prices for using this application is provided by dibs, and you will be contacted by dibs when adding this application.;-;
@@ -478,7 +476,6 @@ latitude;-;
 like_button;-;Like button
 like_button_desc;-;Enables or disables a like button to all your products
 link_menu;-;Link to menu
-location;-;Location
 longitide;-;
 max_atandees;-;Max attendees
 merch_id_desc;-;"The Merchant-ID is provided by Dibs, please contact us for more information."

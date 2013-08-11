@@ -515,6 +515,10 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
     @Override
     public List<String> getActiveFilters() {
+        if (getSession() == null) {
+            return new ArrayList<String>();
+        }
+        
         List<String> filters = (List<String>) getSession().get("filters");
         if (filters == null) {
             filters = new ArrayList<String>();

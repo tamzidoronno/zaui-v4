@@ -340,7 +340,6 @@ Users logged on;-;Brukere logget på
 VIP user - $0;-;
 Viewed when;-;Vist sist
 Warning. you are not connected as a partner yet, please contact getshop support!;-;Advarsel. du er ikke koblet til en partner enda, vennligst kontakt getshop support!
-We host events at the following locations, click on the location to filter the calendar by location(s)<hr>;-;
 Web address;-;Web adresse
 What address are you using for the test enviroment to paypal?;-;
 What areas does this application support?;-;
@@ -428,7 +427,6 @@ delete_app;-;Slett applikasjon
 delete_image;-;Slett bilde
 delete_user;-;Slett bruker
 desc_to_image;-;Beskrivelse til bilde:
-description;-;Legg denne til i venstre eller høyre kolonne for et produkt og relaterte produkter vil bli vist.
 design;-;Design
 detailed_desc;-;En mer detaljert beskrivelse
 dibs payment services allows you to start charging with visa / mastercard / and other card vendors. its extremly easy to use. prices for using this application is provided by dibs, and you will be contacted by dibs when adding this application.;-;Dibs er en betalingstjeneste som gjør det mulig for deg å ta betalt fra visa / mastercard og andre kortleverandører. Det er ekstremt enkelt å bruke. Priser for å bruke denne applikasjonen er levert av dibs, og du vil bli kontaktet av Dibs når du legger til denne applikasjonen.
@@ -478,7 +476,6 @@ latitude;-;
 like_button;-;Liker knappen
 like_button_desc;-;Aktiver eller dekativer lik knappen på alle dine produkter.
 link_menu;-;Link til meny
-location;-;Lokasjon
 longitide;-;
 max_atandees;-;Maks deltagere
 merch_id_desc;-;"Merchant-ID er levert av Dibs, vennligst kontakt oss for mer informasjon."

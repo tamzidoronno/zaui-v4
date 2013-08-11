@@ -18,6 +18,10 @@ class ApplicationBase extends FactoryBase {
     public function postProcess() {
     }
 
+    public function getApplications() {
+        
+    }
+    
     public function setSkinVariable($variableName, $defaultValue, $description) {
         $this->skinVariables[$variableName] = $defaultValue;
     }

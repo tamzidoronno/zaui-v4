@@ -272,7 +272,7 @@ public class PageManager extends ManagerBase implements IPageManager {
     @Override
     public void clearPageArea(String pageId, String pageAreaName) throws ErrorException {
         Page page = pagePool.get(pageId);
-        PageArea pageArea = page.pageAreas.get(pageAreaName);
+        PageArea pageArea = page.getPageArea(pageAreaName);
         
         if(pageArea == null) {
             return;

@@ -11,6 +11,7 @@ import com.thundashop.core.common.DataCommon;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -40,6 +41,20 @@ public class Page extends DataCommon implements Cloneable {
         for (PageArea pageArea : pageAreas.values()) {
             pageArea.moveApplicationDown(appid);
         }
+    }
+
+    public PageArea getPageArea(String pageArea) {
+        if(!pageAreas.containsKey(pageArea)) {
+            PageArea newPageArea = new PageArea(this);
+            newPageArea.type = pageArea;
+            
+            pageAreas.put(pageArea, newPageArea);
+        }
+        return pageAreas.get(pageArea);
+    }
+
+    public Set<String> getAllPageAreas() {
+        return pageAreas.keySet();
     }
     
     public static class DefaultPages {
@@ -81,7 +96,7 @@ public class Page extends DataCommon implements Cloneable {
     public int type;
     public int userLevel = 0;
     public String description = "";
-    public HashMap<String, PageArea> pageAreas = new HashMap<String, PageArea>();
+    private HashMap<String, PageArea> pageAreas = new HashMap<String, PageArea>();
     
     public void populateApplications(Map<String, AppConfiguration> applications, boolean onlyExtraApplications) {
         for (PageArea pageArea : pageAreas.values()) {

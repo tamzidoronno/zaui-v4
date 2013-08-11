@@ -96,7 +96,7 @@ public class PagePoolImpl {
     public AppConfiguration addApplicationToPage(String pageId, String pageArea, String applicationSettingsId) throws ErrorException {
         AppConfiguration app = applicationPool.createNewApplication(applicationSettingsId);
         Page page = get(pageId);
-        page.pageAreas.get(pageArea).applicationsList.add(app.id);
+        page.getPageArea(pageArea).applicationsList.add(app.id);
         databaseSaver.saveObject(page, credentials);
         return app;
     }
@@ -112,8 +112,9 @@ public class PagePoolImpl {
     }
 
     public Page removeApplicationFromPage(Page page, String applicationId) throws ErrorException {
-        for (PageArea pageArea : page.pageAreas.values()) {
-            if (pageArea.applicationsList.contains(applicationId)) {
+        for (String pageAreaKey : page.getAllPageAreas()) {
+            PageArea pageArea = page.getPageArea(pageAreaKey);
+           if (pageArea.applicationsList.contains(applicationId)) {
                 pageArea.applicationsList.remove(applicationId);
             }
             if (pageArea.extraApplicationList.containsKey(applicationId)) {
@@ -238,7 +239,7 @@ public class PagePoolImpl {
     }
 
     private AppConfiguration addExistingApplication(AppConfiguration app, Page page, String pageArea) throws ErrorException {
-        PageArea area = page.pageAreas.get(pageArea);
+        PageArea area = page.getPageArea(pageArea);
         if (area.applicationsList == null) {
             area.applicationsList = new ArrayList();
         }
@@ -281,16 +282,17 @@ public class PagePoolImpl {
             return;
         }
 
-        for (PageArea pageArea : page.pageAreas.values()) {
+        for (String pageAreaKey : page.getAllPageAreas()) {
+            PageArea pageArea = page.getPageArea(pageAreaKey);
             for (String application : pageArea.applicationsList) {
                 try {
                     AppConfiguration appConfig = applicationPool.get(application);
                     if (appConfig != null
                             && appConfig.inheritate > 0
-                            && currentPage.pageAreas.get(pageArea.type) != null
-                            && currentPage.pageAreas.get(pageArea.type).applicationsList != null
-                            && !currentPage.pageAreas.get(pageArea.type).applicationsList.contains(appConfig.id)) {
-                        currentPage.pageAreas.get(pageArea.type).extraApplicationList.put(appConfig.id, page.id);
+                            && currentPage.getPageArea(pageArea.type) != null
+                            && currentPage.getPageArea(pageArea.type).applicationsList != null
+                            && !currentPage.getPageArea(pageArea.type).applicationsList.contains(appConfig.id)) {
+                        currentPage.getPageArea(pageArea.type).extraApplicationList.put(appConfig.id, page.id);
                     }
                 } catch (ErrorException ex) {
                     ex.printStackTrace();
@@ -306,7 +308,7 @@ public class PagePoolImpl {
         for (AppConfiguration application : applications) {
             PageArea onPageArea = getPageArea(application);
             if (onPageArea != null) {
-                PageArea addToPageArea = page.pageAreas.get(onPageArea.type);
+                PageArea addToPageArea = page.getPageArea(onPageArea.type);
                 if (addToPageArea != null
                         && !addToPageArea.applicationsList.contains(application.id)
                         && !addToPageArea.extraApplicationList.containsKey(application.id)) {
@@ -318,7 +320,8 @@ public class PagePoolImpl {
 
     private PageArea getPageArea(AppConfiguration application) {
         for (Page page : pages.values()) {
-            for (PageArea pageArea : page.pageAreas.values()) {
+            for (String pageAreaKey : page.getAllPageAreas()) {
+                PageArea pageArea = page.getPageArea(pageAreaKey);
                 if (pageArea.applicationsList.contains(application.id)) {
                     return pageArea;
                 }

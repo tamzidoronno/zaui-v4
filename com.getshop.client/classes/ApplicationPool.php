@@ -109,7 +109,7 @@ class ApplicationPool {
         $apps = array();
         
         foreach ($this->applicationList as $myApp) {
-            if(isset($myApp->allowedAreas) && is_array($myApp->allowedAreas) && in_array($area, $myApp->allowedAreas)) {
+            if(isset($myApp->allowedAreas) && is_array($myApp->allowedAreas) && ($area == null || in_array($area, $myApp->allowedAreas))) {
                 $apps[] = $myApp;
             }
         }

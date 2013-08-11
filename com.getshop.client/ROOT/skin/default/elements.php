@@ -24,7 +24,6 @@
     top: 5px;
     right: 3px;
     bottom: 3px;
-    background-color:#<? echo $this->getColors()->buttonBackgroundColor; ?>;
 }   
 
 .button ins {
@@ -38,7 +37,6 @@
     font-size: 10px;
     font-weight: bold;
     text-decoration: none;
-    color:#<? echo $this->getColors()->buttonTextColor; ?>;
     display: inline-block;
     background:url(/skin/default/elements/button-small-glare.png) no-repeat left bottom;
 }
@@ -59,7 +57,6 @@
     bottom: 5px;
     border: 0px;
     border: solid 1px;
-    background-color:#<? echo $this->getColors()->buttonBackgroundColor; ?>;
 }  
 
 .button-large .rightglare {
@@ -84,7 +81,6 @@
     font-size: 13px;
     font-weight: bold;
     text-decoration: none;
-    color:#<? echo $this->getColors()->buttonTextColor; ?>;
     display: inline-block;
     background:url(/skin/default/elements/button-large-glare.png) no-repeat left bottom;
 }

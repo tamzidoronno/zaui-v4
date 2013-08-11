@@ -4,7 +4,7 @@ $factory = $this->getFactory();
 
 $area = $_POST['data']['type'];
 $import = isset($_POST['data']['action']) && $_POST['data']['action'] == "import" ? true : false; 
-$allApps = $factory->getApplicationPool()->getAllApplicationSettingsForArea($area);
+$allApps = $factory->getApplicationPool()->getAllApplicationSettingsForArea(null);
 $apps = $factory->getApplicationPool()->convertApplicationsSettingsToAppinstances($allApps);
 
 ?>

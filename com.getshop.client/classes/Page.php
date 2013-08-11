@@ -37,7 +37,13 @@ class Page extends FactoryBase {
      */
     public function getApplicationArea($area) {
         if (!isset($this->areas[$area])) {
-            return null;
+            $backendarea = new core_pagemanager_data_PageArea();
+            $backendarea->type = $area;
+            $backendarea->applications = array();
+            $backendarea->applicationsList = array();
+            $backendarea->applicationsSequenceList = array();
+            $backendarea->extraApplicationList = array();
+            return new PageArea($this, $backendarea);
         }
         return $this->areas[$area];
     }
@@ -66,7 +72,8 @@ class Page extends FactoryBase {
     }
     
     private function createAllPageAreas($page) {
-        
+//        echo "<pre>";
+//        print_r($page);
         foreach ($page->pageAreas as $pagearea) {
             $this->areas[$pagearea->type] = new PageArea($this, $pagearea);
         }

@@ -3,7 +3,6 @@ root {
 }
 
 body {
-    background-color: #<? echo $this->getColors()->{'backgroundColor'}; ?>;
 }
 
 body,table,td,th  {

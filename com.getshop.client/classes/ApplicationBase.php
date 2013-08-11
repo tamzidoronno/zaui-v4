@@ -14,7 +14,7 @@ class ApplicationBase extends FactoryBase {
     public function getYoutubeId() {
         return false;
     }
-
+    
     public function postProcess() {
     }
 

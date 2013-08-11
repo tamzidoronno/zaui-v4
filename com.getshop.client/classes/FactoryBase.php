@@ -7,7 +7,7 @@
  */
 class FactoryBase {
     private static $api;
-  
+
     /**
      * @return Factory
      */
@@ -25,11 +25,11 @@ class FactoryBase {
             $config = new ConfigReader();
             $port = $config->getConfig("port");
             $host = $config->getConfig("backenddb");
-            FactoryBase::$api = new GetShopApi($port, $host);   
+            FactoryBase::$api = new GetShopApi($port, $host);
         }
         return FactoryBase::$api;
     }
-    
+
     /**
      * 
      * @return GetShopApi
@@ -52,30 +52,25 @@ class FactoryBase {
             $appname = $this->getFactory()->getApplicationPool()->getNamespaceByApplicationName($overrideappname);
             $appname = ($appname == null) ? $overrideappname : $appname;
         }
-        
-        if(strpos($appname, "\\")) {
-            $appname = substr($appname,0,  strpos($appname, "\\"));
+
+        if (strpos($appname, "\\")) {
+            $appname = substr($appname, 0, strpos($appname, "\\"));
         }
-        
+
         $file = '../template/default/' . $appname . '/' . $filename . ".phtml";
         if (file_exists($file)) {
             include $file;
         } else {
             $appTemplateFile = '../app/' . $appname . '/template/' . $filename . ".phtml";
             if (file_exists($appTemplateFile)) {
-                include $appTemplateFile ;
+                include $appTemplateFile;
             } else {
-                if ($printError) {
-                    echo "<font color='red'>";
-                    echo "<b>Not able to render template file: ". $filename.".phtml, please check that is exists<br>";
-                    echo "<b>Appname: $appname<br>"; 
-                    echo "<b>Override: $overrideappname<br>"; 
-                    echo "</font>";
+                foreach ($this->getApplications() as $application) {
+                    $application->renderApplication();
                 }
-                return false;
             }
         }
-        
+
         return true;
     }
 
@@ -86,7 +81,7 @@ class FactoryBase {
     public function __f($string) {
         return $this->__($string);
     }
-    
+
     /**
      * Translate the text into correct language.
      * 
@@ -94,12 +89,12 @@ class FactoryBase {
      * @return string
      */
     public function __($string, $app = null) {
-        if(!$app)
+        if (!$app)
             $app = get_class($this);
 
         return trim($this->getFactory()->getTranslationForKey($app, $string));
     }
-    
+
     public function __w($string, $app = null) {
         return $this->getFactory()->translateKey($string);
     }

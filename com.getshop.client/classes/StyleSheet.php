@@ -66,11 +66,13 @@ class StyleSheet {
     }
 
     function getHeaderHeight() {
-        return $this->selectedThemeApplication->getDimension()->headerHeight;
+        if(method_exists($this->selectedThemeApplication, "getDimension"))
+            return $this->selectedThemeApplication->getDimension()->headerHeight;
     }
 
     function getFooterHeight() {
-        return $this->selectedThemeApplication->getDimension()->footerHeight;
+        if(method_exists($this->selectedThemeApplication, "getDimension"))
+            return $this->selectedThemeApplication->getDimension()->footerHeight;
     }
 
     private function initialize() {

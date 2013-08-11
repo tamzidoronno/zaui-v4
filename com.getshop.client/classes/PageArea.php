@@ -90,7 +90,7 @@ class PageArea extends FactoryBase {
     public function render() {
         $this->includefile('applicationareamenu');
         $this->includefile('add_application_menu');
-        
+
         if($this->backendPageArea->type == "middle") 
             $this->showAccessDeniedMessage();
         

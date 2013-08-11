@@ -1,7 +1,6 @@
 .header .applicationinner .logged_on_menu a {
     padding-right:4px;
     font-size:12px;
-    color:#<? echo $this->getColors()->textColor; ?>;
     font-weight: bold;
 }
 
@@ -10,8 +9,8 @@
 .upload_information_panel { display:none; position: fixed; bottom: 10px; left: 10px; border: 1px solid; padding: 2px; z-index: 10000000; background-color: rgb(255, 255, 255); border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; }
 .upload_information_panel .uploading { padding-left: 30px; padding-right: 10px; }
 .upload_information_panel .uploading img { position:absolute; left: 5px; }
-.header .Login .applicationinner { margin-right: 0px; background-color: #<? echo $this->getColors()->baseColor; ?>; color: #<?  echo $this->getColors()->textColor; ?> }
-.header .Login {border: solid 1px #<? echo $this->getColors()->baseColor; ?>; position: absolute; right: 0px; text-align: right; top: 0px;  z-index: 1;}
+.header .Login .applicationinner { margin-right: 0px; }
+.header .Login { position: absolute; right: 0px; text-align: right; top: 0px;  z-index: 1;}
 .header .Login form { margin: 0px; padding: 0px; }
 .header .Login .form { text-align: left; height: 80px; width: 250px ; position: relative; display: none;} 
 .header .Login .form .username { position:absolute; left: 5px; top: 5px;} 
@@ -1047,13 +1046,8 @@ a img {
 
 .navigation span.breadcrumbentry  {
     display: inline-block;
-    padding: 5px;
     padding-left: 3px;    
     padding-right: 10px;    
-}
-
-.breadcrumb-inner .navigation .breadcrumbentry a {
-    color:#<? echo $this->getColors()->textColor; ?>;
 }
 
 .cke_dialog_body {

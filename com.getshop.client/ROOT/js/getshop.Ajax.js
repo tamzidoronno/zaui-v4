@@ -211,6 +211,7 @@ thundashop.Ajax = {
                 if (typeof(callback) !== "undefined" && typeof(callback) !== "boolean") {
                     callback();
                 }
+                thundashop.common.setSizeClasses();
             },
             error: thundashop.handleAjaxError
         })

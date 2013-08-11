@@ -275,6 +275,23 @@ thundashop.common.lockMask = function() {
     $('#fullscreenmask').attr('locked', 'true');
 }
 
+thundashop.common.setSizeClasses = function() {
+    $(document).find('.applicationarea').each(function() {
+        var width = $(this).innerWidth();
+        var css = "";
+         if(width > 750) {
+             css = "xlarge";
+         } else if (width > 400) {
+             css = "large";
+         } else if(width > 200) {
+             css = "medium";
+         } else {
+             css = "small";
+         }
+         $(this).addClass(css);
+    });
+}
+
 thundashop.common.unlockMask = function() {
     $('#infomrationboxclosebutton').show();
     $('#fullscreenmask').attr('locked', 'false');
@@ -519,4 +536,7 @@ $('.getshop_ckeditorcontent').live({
 $('.getshop_ckeditorcontent').live('mouseover', function(e) {
 
 
+});
+$(function() {
+   thundashop.common.setSizeClasses(); 
 });

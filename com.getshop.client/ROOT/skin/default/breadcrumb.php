@@ -21,4 +21,5 @@
     position: absolute;
     right: 0px;
     bottom: 0px;
+    line-height: 20px;
 }

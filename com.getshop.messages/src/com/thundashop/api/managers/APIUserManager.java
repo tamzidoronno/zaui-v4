@@ -13,7 +13,7 @@ import com.thundashop.core.usermanager.data.User;
 
 public class APIUserManager {
 
-      private Transporter transport;
+      public Transporter transport;
 
       public APIUserManager(Transporter transport){
            this.transport = transport;

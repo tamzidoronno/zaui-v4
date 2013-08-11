@@ -60,7 +60,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private void updateStockQuantity(Order order, String key) throws ErrorException {
         HashMap<String, Setting> map = this.getSettings("StockControl");
         String setting = null;
-        if (map != null) {
+        if (map != null && map.containsKey(key)) {
             setting = map.get(key).value;
         }
 
@@ -112,6 +112,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
         return newOrder;
     }
+    
+    public void finalizeCart(Cart cart) throws ErrorException {
+        ProductManager productManager = getManager(ProductManager.class);
+        
+        for (CartItem item : cart.getItems()) {
+            double price = productManager.getPrice(item.getProduct().id, item.getVariations());
+            item.getProduct().price = price;
+        }
+    }
 
     @Override
     public Order createOrder(Address address) throws ErrorException {
@@ -127,6 +136,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             throw new ErrorException(53);
         }
 
+        finalizeCart(order.cart);
+        
         saveOrder(order);
 
         updateStockQuantity(order, "trackControl");
@@ -176,7 +187,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 handleApplicationPayment(currency, price);
             } else {
                 Order order = orders.get(orderId);
-                if (order.cart.getTotal() == price) {
+                if (order.cart.getTotal(false) == price) {
                     order.status = status;
                     saveOrderInternal(order);
                 } else {

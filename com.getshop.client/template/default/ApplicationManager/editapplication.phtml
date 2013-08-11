@@ -167,7 +167,7 @@
              <div class="additonaltext"><? echo $this->__f("Add additional stores that should have access to this application (comma seperated)"); ?></div>
              
              <?
-             if(is_array($settings->allowedStoreIds)) {
+             if(@is_array($settings->allowedStoreIds)) {
                  $ids =  implode(",", $settings->allowedStoreIds);
              } else {
                  $ids = "";
@@ -187,7 +187,9 @@
                 <div class="button-large synchronizeapp" style="margin-top:8px;">
                     <div class="rightglare"></div>
                     <div class="filler"></div>
-                    <ins><? echo $this->__f("Synchronize this application"); ?></ins>
+                    <ins gstype="clicksubmit" method="syncapplication" output="informationbox" gsname="id" gsvalue="<? echo $settings->id; ?>">
+                        
+                        <? echo $this->__f("Synchronize this application"); ?></ins>
                 </div>
             <? } ?>
             <? if(!$disabled) { ?>

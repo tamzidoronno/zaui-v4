@@ -434,7 +434,10 @@ class Factory extends FactoryBase {
         if ($currency == "USD")
             return "$";
 
-        return $this->__w("Price") . ": ";
+        if ($currency == "AUD")
+            return "$";
+
+        return $this->__w("Price");
     }
 
     public function getTranslationForKey($app, $key) {

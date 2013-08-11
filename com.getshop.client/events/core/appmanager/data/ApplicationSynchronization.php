@@ -9,5 +9,8 @@ class core_appmanager_data_ApplicationSynchronization extends core_common_DataCo
 	/** @var String */
 	public $filename;
 
+	/** @var String */
+	public $appName;
+
 }
 ?>

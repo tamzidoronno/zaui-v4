@@ -4,9 +4,13 @@
  */
 package com.thundashop.core.cartmanager.data;
 
+import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.ExchangeConvert;
+import com.thundashop.core.common.Setting;
 import com.thundashop.core.productmanager.data.Product;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -71,10 +75,6 @@ public class CartItem implements Serializable {
 
     public void setVariations(List<String> variations) {
         this.variations = variations;
-    }
-
-    public Double getPrice() {
-        return product.getPrice(variations) * count;
     }
 
     public Product getProduct() {

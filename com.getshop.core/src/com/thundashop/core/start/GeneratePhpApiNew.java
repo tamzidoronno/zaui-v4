@@ -557,6 +557,11 @@ public class GeneratePhpApiNew {
         String thePath = "../com.getshop.client/events/API2.php";
 
         String content = "<?php\n\r";
+        content += "/**\r\n";
+        content += " * This library is built by GetShop and are used to communicate with the GetShop backend. \n";
+        content += " * License: GPLv2\n";
+        content += " * License URI: http://www.gnu.org/licenses/gpl-2.0.html\r\n";
+        content += "*/\r\n\r\n";
         content += result;  
         content += "?>";
 
@@ -892,7 +897,7 @@ public class GeneratePhpApiNew {
             for (Annotation annotation : annotations) {
                 if (annotation instanceof GetShopApi) {
                     content += "public class API" + entry.getSimpleName().substring(1) + " {\r\n\r\n";
-                    content += "      private Transporter transport;\r\n\r\n";
+                    content += "      public Transporter transport;\r\n\r\n";
                     content += "      public API" + entry.getSimpleName().substring(1) + "(Transporter transport){\r\n";
                     content += "           this.transport = transport;\r\n";
                     content += "      }\r\n\r\n";
@@ -920,7 +925,7 @@ public class GeneratePhpApiNew {
         content = "package com.thundashop.api.managers;\n\n";
         content += "public class GetShopApi {\r\n";
         content += "\r\n";
-        content += "      private Transporter transport;\r\n";
+        content += "      public Transporter transport;\r\n";
         content += "      public GetShopApi(int port, String host, String sessionId, String webaddress) throws Exception {\r\n";
         content += "           this.transport = new Transporter();\r\n";
         content += "           this.transport.port = port;\r\n";

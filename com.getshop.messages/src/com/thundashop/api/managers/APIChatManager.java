@@ -12,7 +12,7 @@ import com.thundashop.core.chatmanager.Chatter;
 
 public class APIChatManager {
 
-      private Transporter transport;
+      public Transporter transport;
 
       public APIChatManager(Transporter transport){
            this.transport = transport;

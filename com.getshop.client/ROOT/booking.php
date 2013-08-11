@@ -101,7 +101,7 @@ Config = {
     <body></body> 
     <?
     $groups = $factory->getApi()->getUserManager()->getAllGroups();
-    if (count($groups) > 0 && !isset($_SESSION['group'])) { ?>
+    if (count($groups > 0) && !isset($_SESSION['group'])) { ?>
         <div class='selectGroup'>
             <div class="inner">
                 <?

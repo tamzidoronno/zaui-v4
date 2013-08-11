@@ -136,6 +136,7 @@ public class AppManager extends ManagerBase implements IAppManager {
         ApplicationSynchronization sync = new ApplicationSynchronization();
         sync.appId = app.id;
         sync.userId = getSession().currentUser.id;
+        sync.appName = app.appName;
         addToSync(sync);
         sync.storeId = storeId;
         databaseSaver.saveObject(sync, credentials);

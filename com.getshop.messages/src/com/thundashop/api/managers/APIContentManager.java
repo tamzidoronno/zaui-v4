@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class APIContentManager {
 
-      private Transporter transport;
+      public Transporter transport;
 
       public APIContentManager(Transporter transport){
            this.transport = transport;

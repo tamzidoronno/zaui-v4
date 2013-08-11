@@ -159,6 +159,7 @@ public class UserManager extends ManagerBase implements IUserManager {
     @Override
     public void logout() throws ErrorException {
         sessionFactory.removeFromSession(getSession().id);
+        saveSessionFactory();
     }
 
     @Override

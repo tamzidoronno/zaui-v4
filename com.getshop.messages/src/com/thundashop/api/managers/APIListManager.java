@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 public class APIListManager {
 
-      private Transporter transport;
+      public Transporter transport;
 
       public APIListManager(Transporter transport){
            this.transport = transport;

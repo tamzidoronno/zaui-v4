@@ -10,7 +10,7 @@ import com.thundashop.app.bannermanager.data.BannerSet;
 
 public class APIBannerManager {
 
-      private Transporter transport;
+      public Transporter transport;
 
       public APIBannerManager(Transporter transport){
            this.transport = transport;

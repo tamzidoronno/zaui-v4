@@ -885,8 +885,8 @@ a img {
 
 .errors { background-color: #FFF; font-weight: bold; margin: 0 auto; width: <?php echo $this->getWidthTotal(); ?>; border-left: solid 2px red; border-bottom: solid 2px red; border-right: solid 2px red; margin-bottom: 5px; text-align: center}
 
-.tabs .tabset { width: 200px; padding-top:10px;}
-.tabs .tabset .tab {  border-top: solid 1px transparent;  border-bottom: solid 1px transparent; border-right: solid 1px transparent;  cursor: pointer; font-size: 15px; line-height: 40px; padding-left: 10px; padding-right: 10px; }
+.tabs .tabset { width: 200px; padding-top:10px; overflow : auto; max-height: 500px;}
+.tabs .tabset .tab {  border-top: solid 1px transparent;  border-bottom: solid 1px transparent; border-right: solid 1px transparent;  cursor: pointer; font-size: 15px; line-height: 20px; padding-left: 10px; padding-right: 10px; }
 .tabs .tabset .tab:hover { background-color: #EFEFEF; }
 .tabs .tabset .tab.active { background-color: #DDD; border-top: solid 1px #BBB;  border-bottom: solid 1px #BBB; border-right: solid 1px #BBB; }
 

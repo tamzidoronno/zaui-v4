@@ -11,7 +11,7 @@ import com.thundashop.core.storemanager.data.StoreConfiguration;
 
 public class APIStoreManager {
 
-      private Transporter transport;
+      public Transporter transport;
 
       public APIStoreManager(Transporter transport){
            this.transport = transport;

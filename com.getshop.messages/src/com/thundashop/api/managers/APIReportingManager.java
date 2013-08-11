@@ -18,7 +18,7 @@ import com.thundashop.core.reportingmanager.data.UserConnected;
 
 public class APIReportingManager {
 
-      private Transporter transport;
+      public Transporter transport;
 
       public APIReportingManager(Transporter transport){
            this.transport = transport;

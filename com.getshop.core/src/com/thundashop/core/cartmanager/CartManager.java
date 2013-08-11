@@ -3,6 +3,7 @@ package com.thundashop.core.cartmanager;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.data.Address;
@@ -32,11 +33,12 @@ public class CartManager extends ManagerBase implements ICartManager {
     }
 
     private Cart getCart(String sessionId) {
-        if (carts.get(sessionId) == null) {
+        if (!carts.containsKey(sessionId)) {
             carts.put(sessionId, new Cart());
         }
-
-        return carts.get(sessionId);
+        Cart cart = carts.get(sessionId);
+        cart.finalizeCart();
+        return cart;
     }
 
     private Product getProduct(String productId) throws ErrorException {
@@ -74,12 +76,16 @@ public class CartManager extends ManagerBase implements ICartManager {
 
     @Override
     public Cart getCart() throws ErrorException {
-        return getCart(getSession().id);
+        Cart cart = getCart(getSession().id);
+        return cart;
     }
 
     @Override
     public Double getCartTotalAmount() throws ErrorException {
-        return getCart(getSession().id).getTotal();
+        Cart cart  = getCart(getSession().id).clone();
+        OrderManager orderManager = getManager(OrderManager.class);
+        orderManager.finalizeCart(cart);
+        return cart.getTotal(false);
     }
 
     @Override
@@ -89,13 +95,36 @@ public class CartManager extends ManagerBase implements ICartManager {
     }
 
     @Override
-    public Double calculateTotalCost(Cart cart) {
-        return cart.getTotal();
+    public Double calculateTotalCost(Cart cart) throws ErrorException {
+        return cart.getTotal(false);
     }
 
     @Override
     public void setAddress(Address address) throws ErrorException {
-        Cart cart = this.getCart();
+        Cart cart = this.getCart();        
         cart.address = address;
+    }
+
+    @Override
+    public Double getShippingCost() throws ErrorException {
+        Cart cart = this.getCart();
+        return cart.getShippingCost();
+    }
+
+    @Override
+        public void setShippingCost(double shippingCost) throws ErrorException {
+        if (getSession().currentUser == null || !getSession().currentUser.isAdministrator()) {
+            shippingCost = ExchangeConvert.calculateExchangeRate(getSettings("Settings"), shippingCost);
+        } 
+        Cart cart = this.getCart();
+        cart.setShippingCost(shippingCost);
+    }
+
+    @Override
+    public Double getShippingPriceBasis() throws ErrorException {
+        Cart cart  = getCart(getSession().id).clone();
+        OrderManager orderManager = getManager(OrderManager.class);
+        orderManager.finalizeCart(cart);
+        return cart.getTotal(true);
     }
 }

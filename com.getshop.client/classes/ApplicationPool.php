@@ -24,6 +24,19 @@ class ApplicationPool {
         }
     }
     
+    
+    public function getShipmentApplicationInstances() {
+        $instances = $this->getSingletonInstances();
+        $apps = array();
+        foreach($instances as $instance) {
+            if($instance->applicationSettings->type == "ShipmentApplication") {
+                $apps[] = $instance;
+            }
+        }
+        return $apps;
+    }
+    
+    
     /**
      * Used for setting the application instances that should be
      * available from the applicationpool. Should be invoked once 
@@ -35,7 +48,9 @@ class ApplicationPool {
         foreach ($appConfigurations as $appConfig) {
             /* @var $appConfig core_common_AppConfiguration */
             $appInstance = $this->createAppInstance($appConfig);
-            $this->addedApplicationInstances[$appConfig->id] = $appInstance;  
+            if($appInstance != null) {
+                $this->addedApplicationInstances[$appConfig->id] = $appInstance; 
+            }
         }
         
         $this->addMainMenu();

@@ -22,10 +22,7 @@ mongo <<< 'db.adminCommand("listDatabases").databases.forEach( function (d) {   
 #Dumping online database and compressing it.
 echo -e " Dumping and compressing database on server";
 ssh -T naxa@backend.getshop.com << EOF > /dev/null
-rm -rf dump;
-mongodump;
-rm -rf dump.tar.gz;
-tar zcvf dump.tar.gz dump;
+/home/naxa/backup.sh
 EOF
 
 #transfer file

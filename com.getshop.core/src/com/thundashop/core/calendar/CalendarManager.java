@@ -443,6 +443,9 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         int day = cal.get(Calendar.DAY_OF_MONTH);
        
         for (Entry entry : getEntries(year, month, day, null)) {
+            if (entry.location == null) {
+                continue;
+            }
             String camelCasedLocation = toCamelCase(entry.location);
             if (!filters.contains(camelCasedLocation)) {
                 filters.add(camelCasedLocation);
@@ -453,6 +456,9 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     }
     
     private String toCamelCase(String s){
+        if (s == null) {
+            return "";
+        }
         String[] parts = s.split("_");
         String camelCaseString = "";
         for (String part : parts){

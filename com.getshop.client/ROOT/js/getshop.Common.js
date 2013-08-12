@@ -34,10 +34,10 @@ $('.gray').live('focus', function() {
 $(function() {
     $('#skeleton a').live('click', function(event) {
         var comp = new RegExp(location.host);
-        if(!comp.test($(this).attr('href')) && !($(this).attr('href').indexOf('?') === 0)){
+        if (!comp.test($(this).attr('href')) && !($(this).attr('href').indexOf('?') === 0)) {
             return;
         }
-        
+
         event.stopPropagation();
         event.preventDefault();
 
@@ -137,12 +137,12 @@ thundashop.common.saveCKEditor = function(data, target) {
         "content": data,
         "altid": altid
     });
-    var text=$("<p>" + data + "</p>").text();
-    text=text.replace(/^\s+|\s+$/g, "");
+    var text = $("<p>" + data + "</p>").text();
+    text = text.replace(/^\s+|\s+$/g, "");
     var notify = function() {
         PubSub.publish("CKEDITOR_SAVED", {});
     }
-    if(text.length === 0) {
+    if (text.length === 0) {
         thundashop.Ajax.post(event, notify);
     } else {
         thundashop.Ajax.postSynchron(event);
@@ -158,17 +158,17 @@ thundashop.common.activateCKEditor = function(id, autogrow, showMenu, width) {
     var config = {
         filebrowserImageUploadUrl: 'uploadFile.php',
         enterMode: CKEDITOR.ENTER_BR,
-        removePlugins : 'magiclines',
+        removePlugins: 'magiclines',
         on: {
             blur: function(event) {
                 var data = event.editor.getData();
                 thundashop.common.addNotificationProgress('contentmanager', "Saving content");
                 thundashop.common.saveCKEditor(data, target);
                 event.editor.destroy();
-                $( document ).tooltip("enable");
+                $(document).tooltip("enable");
             },
-            focus : function() {
-                $( document ).tooltip("disable");
+            focus: function() {
+                $(document).tooltip("disable");
             }
         }
     }
@@ -469,6 +469,14 @@ $('.tabset .tab').live('click', function() {
     tabs.find('#' + activate).addClass('active');
 });
 
+$(function() {
+    $(document).on('click','#getshop_logout', function() {
+        var event = thundashop.Ajax.createEvent(null, 'logout', $(this),{});
+        thundashop.Ajax.postSynchron(event);
+        thundashop.framework.reprintPage();
+    });
+});
+
 $('.add_application_menu .button-large').live(
         {
             mouseover: function() {
@@ -503,16 +511,16 @@ $('.getshop_ckeditorcontent').live({
             return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
                     s4() + '-' + s4() + s4() + s4();
         }
-        if(!$(this).hasClass('cke_editable')) {
+        if (!$(this).hasClass('cke_editable')) {
             var id = guid();
             $(this).attr('id', id);
-            $(this).attr('title','Click to edit, the text is being saved automatically.');
+            $(this).attr('title', 'Click to edit, the text is being saved automatically.');
             thundashop.common.activateCKEditor(id, true, true);
             $(this).addClass('cke_focus');
         }
     },
     mouseleave: function() {
-        if(!$(this).hasClass('cke_focus')) {
+        if (!$(this).hasClass('cke_focus')) {
             var id = $(this).attr('id');
             CKEDITOR.instances[id].destroy();
         }

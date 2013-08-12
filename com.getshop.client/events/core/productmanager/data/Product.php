@@ -31,6 +31,9 @@ class core_productmanager_data_Product extends core_common_DataCommon  {
 	public $promoted;
 
 	/** @var String */
+	public $hideShippingPrice;
+
+	/** @var String */
 	public $attributes;
 
 	/** @var core_pagemanager_data_Page */

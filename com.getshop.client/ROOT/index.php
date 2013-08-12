@@ -265,3 +265,11 @@ if (isset($_GET['page'])) {
     });
 
 </script>
+
+<?
+if (isset($_GET['logout'])) {
+    ?>
+<script>window.location.reload()</script>
+<?
+}
+?>

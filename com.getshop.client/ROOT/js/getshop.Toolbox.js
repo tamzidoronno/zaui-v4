@@ -149,7 +149,9 @@ GetShopToolbox.prototype = {
                 parent.find('.toolboxgroup').hide();
             }
             
-            config.click(config.extraArgs);
+            if (config.click) {
+                config.click(config.extraArgs);
+            }
         });
 
         if (config.icon) {

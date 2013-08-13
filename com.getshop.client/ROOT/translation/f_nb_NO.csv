@@ -90,6 +90,7 @@ Confirm delete;-;Bekreft sletting
 Confirm entry;-;
 Connected;-;Tilkoblet
 Contact form;-;Kontaktskjema
+Contact form configuration;-;
 Contact information;-;Kontaktinformasjon
 Content Manager;-;Innhold manager
 Conversion rate addition;-;
@@ -148,12 +149,14 @@ Google maps configuration;-;
 Hardlink;-;Hardlink
 Hardlink configuration for menu entry;-;Hardlink konfigurasjons meny for valgt innlegg.
 Hide cart;-;
+Hide shipping price from this product?;-;
 History;-;Hostorikk
 How many days for a free trial?;-;
 If converting to a different currency, you can specify a percentage of how much more you would like to append to conversion when the conversion calculation is done. For example 10 will give you a 10% higher conversion rate.;-;
 If the total amount in the basket is outside of the range above, use this price.;-;
 If this email address is specified, it will send notificition to this one if a requested event has been made.;-;
 If this function is enabled, it will show filter left for the calendar.;-;
+If this function is enabled, it will show the company field.;-;
 If this is set, getshop will automatically convert from this currency to the currency above for all other customers.;-;
 If you want to charge for this application, specify the price you want for it (one time cost).;-;
 Images;-;Bilder
@@ -262,6 +265,8 @@ Set as homepage;-;Sett som hjemmeside
 Set date;-;Sett dato
 Set icon;-;Sett ikon
 Should this application be public available?;-;
+Should this product listed as a featured product?;-;
+Show company field;-;
 Show location filter left for calendar;-;
 Sms Statistic;-;Sms statistikk
 Some settings are important for google and other search engines, and this is where you can configure them.;-;

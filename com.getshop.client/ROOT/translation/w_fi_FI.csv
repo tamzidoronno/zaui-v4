@@ -17,6 +17,7 @@ Checkout;-;
 City;-;Kaupunki
 Click here to edit the text.;-;
 Click next to select shipping options;-;
+Company;-;
 Completed;-;Valmis
 Confirm order;-;Vahvista tilaus
 Count;-;
@@ -31,6 +32,7 @@ End date;-;
 Enter the code sent to your email.;-;Syötä koodi, mikä lähetettiin sinulle sähköpostiin
 Expire date;-;
 Extended Description;-;Laajennettu kuvaus
+Featured Product;-;
 February;-;
 Fixed price;-;Kiinteä hinta
 Free shipping;-;

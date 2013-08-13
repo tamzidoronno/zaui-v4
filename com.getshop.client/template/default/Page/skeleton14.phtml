@@ -5,25 +5,25 @@
     $this->includefile('header');
     ?>
     <div class="mainarea">
-        <div class='row'>
-            <div area='top_1' class="applicationarea apparea-top-1 left_box">
+        <div class='col'>
+            <div area='top_1' class="applicationarea apparea-top-1 left_box gs_margin_right gs_margin_bottom  gs_margin_right">
                 <?php
                 $this->getPage()->getApplicationArea('top_1')->render();
                 ?>
             </div>
-            <div area='top_2' class="applicationarea apparea-top-2 right_box">
-                <?php
-                $this->getPage()->getApplicationArea('top_2')->render();
-                ?>
-            </div>
-        </div>
-        <div class='row'>
-            <div area='second_1' class="applicationarea apparea-second-1 left_box">
+            <div area='second_1' class="applicationarea apparea-second-1 left_box gs_margin_right">
                 <?php
                 $this->getPage()->getApplicationArea('main_1')->render();
                 ?>
             </div>
-            <div area='second_2' class="applicationarea apparea-second-1 right_box">
+        </div>
+        <div class='col'>
+            <div area='top_2' class="applicationarea apparea-top-2 right_box  gs_margin_bottom gs_margin_left">
+                <?php
+                $this->getPage()->getApplicationArea('top_2')->render();
+                ?>
+            </div>
+            <div area='second_2' class="applicationarea apparea-second-1 right_box gs_margin_left">
                 <?php
                 $this->getPage()->getApplicationArea('main_2')->render();
                 ?>

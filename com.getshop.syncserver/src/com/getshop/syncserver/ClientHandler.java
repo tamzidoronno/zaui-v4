@@ -49,6 +49,7 @@ class ClientHandler extends Thread {
     private Date lastActive;
 
     ClientHandler(Socket socket) throws IOException {
+        File test = new File(".");
         this.socket = socket;
         this.socket.setTcpNoDelay(true);
         lastActive = new Date();
@@ -326,7 +327,11 @@ class ClientHandler extends Thread {
         List<FileSummary> summary = new ArrayList();
         msg.filelist = summary;
         for (ApplicationSettings app : allApps.applications) {
-            getFileSummaryForApp(new File(rootpath + "/" + "ns_" + app.id.replaceAll("-", "_")).listFiles(), summary, app);
+            File file = new File(rootpath + "/" + "ns_" + app.id.replaceAll("-", "_"));
+            if(!file.exists()) {
+                file.mkdirs();
+            }
+            getFileSummaryForApp(file.listFiles(), summary, app);
         }
         msg.type = Message.Types.ok;
         sendMessage(msg);
@@ -334,7 +339,7 @@ class ClientHandler extends Thread {
 
     private List<FileSummary> getFileSummaryForApp(File[] files, List<FileSummary> result, ApplicationSettings app) throws Exception {
         if (files == null) {
-            System.out.println("Failed to find file summery for app" + app.appName);
+            System.out.println("Failed to find file summery for app " + app.appName);
             return new ArrayList();
         }
         for (File file : files) {

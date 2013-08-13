@@ -3,6 +3,7 @@
         var maxWidth = config.maxWidth;
         var maxHeight = config.maxHeight;
         var uploadText = config.uploadText;
+        var extra = config.extra;
         var container = $(this);
         var callback = config.callback;
         var target = config.target;
@@ -49,8 +50,6 @@
 
             img.onload = function() {
                 var ratio = getRatio(img.width, img.height, maxWidth, maxHeight);
-                console.log(img.width);
-                console.log(img.height);
                 canvas.width = img.width * ratio;
                 canvas.height = img.height * ratio;
                 htmlCanvas.width = img.width * ratio;
@@ -88,7 +87,7 @@
             
             var postData = {
                 "data" : data,
-                config : config
+                "extra" : extra
             };
             
             var event = thundashop.Ajax.createEvent('', 'uploadImage', container, postData);

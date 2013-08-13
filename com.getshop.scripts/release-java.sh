@@ -1,6 +1,7 @@
 #transfer file
 cat << EOF > batchfile
 cd dist/lib
+lcd ../
 put com.getshop.core/dist/com.thundashop.core.jar
 put com.getshop.messages/dist/com.thundashop.messages.jar
 EOF

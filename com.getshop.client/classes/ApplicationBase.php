@@ -87,7 +87,7 @@ class ApplicationBase extends FactoryBase {
     public final function getConfiguration() {
         return $this->configuration;
     }
-
+   
     public function setConfiguration($configuration) {
         if(isset($configuration->settings)) {
             foreach ($configuration->settings as $config) {
@@ -122,6 +122,10 @@ class ApplicationBase extends FactoryBase {
         return null;
     }
 
+    public function getSettings() {
+        return $this->getConfiguration()->settings;
+    }
+    
     public function getAnswersImmediatly() {
         $answers = IocContainer::getFactorySingelton()->getEventHandler()->sendRequests($this->getEvents());
         $this->events = array();

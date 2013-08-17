@@ -25,8 +25,6 @@ body {
     border: 0px;
 }
 
-.mainarea { overflow: hidden; }
-
 .skeleton1 .mainarea .left { width: <? echo $this->getWidthLeft() - 4;?>px; }
 .skeleton1 .mainarea .middle { width: <? echo $this->getWidthMidle() - 4;?>px; }
 .skeleton1 .mainarea .right { width: <? echo $this->getWidthRight() - 4;?>px; }

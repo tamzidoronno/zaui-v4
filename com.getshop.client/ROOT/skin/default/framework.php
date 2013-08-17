@@ -147,7 +147,6 @@
 .informationbox-outer {
     position:absolute; 
     width:100%;
-    text-align:center;
     z-index: 99999999;
     height: 1px;
 }
@@ -607,6 +606,7 @@ a img {
     border: dotted 1px;
     cursor: pointer;
     display: none;
+    left:0px;
     position: absolute;
     width: 99.9%;
     height: 100%;

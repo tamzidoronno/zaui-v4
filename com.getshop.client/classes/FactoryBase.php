@@ -65,6 +65,11 @@ class FactoryBase {
             if (file_exists($appTemplateFile)) {
                 include $appTemplateFile;
             } else {
+                if(!$this->getApplications()) {
+                    echo "Is the template file: " . $filename . " missing?";
+                    return;
+                }
+                
                 foreach ($this->getApplications() as $application) {
                     $application->renderApplication();
                 }

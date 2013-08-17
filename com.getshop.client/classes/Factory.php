@@ -94,6 +94,7 @@ class Factory extends FactoryBase {
         echo "\n" . '<script type="text/javascript" src="js/getshop.Common.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.Skeleton.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jquery.history.js"></script>';
+        echo "\n" . '<script type="text/javascript" src="js/jcrop/js/jquery.Jcrop.min.js"></script>';
 
         echo "\n" . '<script type="text/javascript" src="js/jquery.ui/js/jquery-ui-1.9.2.custom.min.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jquery.ui/js/timepickeraddon.js"></script>';
@@ -102,6 +103,8 @@ class Factory extends FactoryBase {
         echo "\n" . '<script type="text/javascript" src="js/jquery.fileupload-ui.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.imageupload.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/PubSub.js"></script>';
+        echo "\n" . '<script type="text/javascript" src="js/mutate.events.js"></script>';
+        echo "\n" . '<script type="text/javascript" src="js/mutate.min.js"></script>';
 //        
         echo "\n" . '<script type="text/javascript" src="js/getshop.ApplicationManager.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.Administration.js"></script>';
@@ -112,8 +115,11 @@ class Factory extends FactoryBase {
         echo "\n" . '<script type="text/javascript" src="js/datatables/jquery.dataTables.min.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jPicker/jpicker-1.1.6.min.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jquery.applicationPicker.js"></script>';
+        echo "\n" . '<script type="text/javascript" src="js/imagesloaded.pkgd.min.js"></script>';
         echo "\n" . '<!--[if gte IE 8]><script src="js/jquery.xdr-transport.js"></script><![endif]-->';
         echo "\n" . '<link id="google_webfont_1" rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600">';
+        echo "\n" . '<link rel="stylesheet" type="text/css" href="js/jcrop/css/jquery.Jcrop.css">';
+        
         ?>
         <script>
             $( document ).tooltip({ 
@@ -166,6 +172,10 @@ class Factory extends FactoryBase {
         $this->initialize();
         $this->applicationPool = new ApplicationPool($this);
         $this->pageManager = $this->getApi()->getPageManager();
+    }
+    
+    public function getConfigurationFlags() {
+        return $this->store->configuration->configurationFlags;
     }
     
     public function getConfigurationFlag($flag) {

@@ -84,7 +84,7 @@ thundashop.common.removeNotificationProgress = function(id) {
             infoPanel.hide();
         }
     });
-}
+};
 
 thundashop.common.updateColorsFromPicker = function() {
     var bgcolor = $('.GetShopColorPicker #bgcolor').val();
@@ -197,31 +197,39 @@ thundashop.common.showLargeInformationBox = function(event, title) {
 //    box.addClass('largeinformationbox');
 }
 
+thundashop.common.createInformationBox = function(appid, title, open) {
+    var infoBoxHolder = $('#informationbox-holder');
+    var infoBox = $('#informationbox');
+    if(open) {
+        thundashop.MainMenu.lockScroll();
+        thundashop.common.mask();
+        infoBoxHolder.css('display', 'inline-block');
+    }
+    infoBox.attr('class', '');
+    infoBox.addClass('informationboxbackground');
+    infoBox.addClass('informationbox');
+    infoBox.attr('appid', appid);
+    infoBox.addClass('app');
+    $('#informationboxtitle').html(title);
+    infoBox.addClass('normalinformationbox');
+    infoBox.removeClass('largeinformationbox');
+    return infoBox;
+    
+}
+
 thundashop.common.showInformationBox = function(event, title) {
     if (typeof(title) === "undefined")
         title = "";
     $(window).scrollTop(0);
-    var infoBoxHolder = $('#informationbox-holder');
-    var infoBox = $('#informationbox');
-    thundashop.MainMenu.lockScroll();
-    thundashop.common.mask();
-    infoBoxHolder.css('display', 'inline-block');
+    var appid = null;
     if (event.core.appid !== undefined) {
-        infoBox.attr('appid', event.core.appid);
-    } else {
-        infoBox.attr('appid', null);
+        appid = event.core.appid;
     }
+    var infoBox = thundashop.common.createInformationBox(appid, title, true);
     infoBox.attr('app', event.core.appname);
     infoBox.attr('apparea', event.core.apparea);
-    infoBox.attr('class', '');
     infoBox.addClass(event.core.appname);
-    infoBox.addClass('informationboxbackground');
-    infoBox.addClass('informationbox');
-    infoBox.addClass('app');
-    infoBox.addClass('normalinformationbox');
-    infoBox.removeClass('largeinformationbox');
 
-    $('#informationboxtitle').html(title);
     var result = thundashop.Ajax.postSynchron(event);
     infoBox.html(result);
     setTimeout(thundashop.common.setMaskHeight, "200");
@@ -281,16 +289,16 @@ thundashop.common.setSizeClasses = function() {
     $(document).find('.applicationarea').each(function() {
         var width = $(this).innerWidth();
         var css = "";
-         if(width > 750) {
-             css = "xlarge";
-         } else if (width > 400) {
-             css = "large";
-         } else if(width > 200) {
-             css = "medium";
-         } else {
-             css = "small";
-         }
-         $(this).addClass(css);
+        if (width > 750) {
+            css = "xlarge";
+        } else if (width > 400) {
+            css = "large";
+        } else if (width > 200) {
+            css = "medium";
+        } else {
+            css = "small";
+        }
+        $(this).addClass(css);
     });
 }
 
@@ -487,8 +495,8 @@ $('.tabset .tab').live('click', function() {
 });
 
 $(function() {
-    $(document).on('click','#getshop_logout', function() {
-        var event = thundashop.Ajax.createEvent(null, 'logout', $(this),{});
+    $(document).on('click', '#getshop_logout', function() {
+        var event = thundashop.Ajax.createEvent(null, 'logout', $(this), {});
         thundashop.Ajax.postSynchron(event);
         thundashop.framework.reprintPage();
     });
@@ -548,5 +556,27 @@ $('.getshop_ckeditorcontent').live('mouseover', function(e) {
 
 });
 $(function() {
-   thundashop.common.setSizeClasses(); 
+    thundashop.common.setSizeClasses();
+
+    $(document).on('click', '.add_content_img', function() {
+        var appid = $(this).attr('appid');
+        var area = $(this).closest('.applicationarea').attr('area');
+        var event = thundashop.Ajax.createEvent('', 'addApplicationToArea', null, {
+            "appSettingsId": appid,
+            "applicationArea": area
+        });
+        thundashop.Ajax.post(event);
+    });
+    $(document).on('click', '.empty_app_area_browse_apps', function() {
+        var area = $(this).closest('.applicationarea').attr('area');
+        var event = thundashop.Ajax.createEvent('', 'showApplications', null, {
+            "type": area
+        });
+        thundashop.common.showInformationBox(event);
+    });
+    $(document).on('click', '.empty_app_area_browse_importapps', function() {
+        var area = $(this).closest('.applicationarea').attr('area');
+        thundashop.MainMenu.importApplicationClicked(area);
+    });
 });
+

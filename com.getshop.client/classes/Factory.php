@@ -116,6 +116,7 @@ class Factory extends FactoryBase {
         echo "\n" . '<script type="text/javascript" src="js/jPicker/jpicker-1.1.6.min.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jquery.applicationPicker.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/imagesloaded.pkgd.min.js"></script>';
+        echo "\n" . '<script type="text/javascript" src="js/getshop.doImageUpload.js"></script>';
         echo "\n" . '<!--[if gte IE 8]><script src="js/jquery.xdr-transport.js"></script><![endif]-->';
         echo "\n" . '<link id="google_webfont_1" rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600">';
         echo "\n" . '<link rel="stylesheet" type="text/css" href="js/jcrop/css/jquery.Jcrop.css">';

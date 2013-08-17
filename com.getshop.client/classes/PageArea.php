@@ -96,14 +96,16 @@ class PageArea extends FactoryBase {
         if ($this->backendPageArea->type == "middle")
             $this->showAccessDeniedMessage();
 
+        $isEmpty = $this->checkIfEmptyPage();
         if ($this->isEditorMode()) {
-            $isEmpty = $this->checkIfEmptyPage();
             if ($isEmpty && $this->backendPageArea->type != "bottom") {
                 $this->includefile('emptyapparea');
                 return;
             }
         }
-        $this->includefile($this->backendPageArea->type);
+        if(!$isEmpty) {
+            $this->includefile($this->backendPageArea->type);
+        }
     }
 
     /**

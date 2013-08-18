@@ -1261,3 +1261,24 @@ cursor:pointer;
     margin: 5px;
     border: dashed 1px #DDD;
 }
+
+.application_settings {
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    height: 30px;
+    width: 30px;
+    border: solid 1px #DDD;
+    cursor: pointer;
+    background-image: url('/skin/default/images/settings.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 1;
+    border-radius: 3px;
+    background-color: #FFF;
+    display:none;
+}
+
+.app:hover .application_settings {
+    display:block;
+}

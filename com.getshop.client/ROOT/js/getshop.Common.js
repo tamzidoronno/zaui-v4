@@ -2,6 +2,7 @@
 
 thundashop.app = {};
 thundashop.common = {};
+app = {};
 isNavigating = false;
 mousePositionX = 0;
 mousePositionY = 0;
@@ -577,6 +578,12 @@ $(function() {
     $(document).on('click', '.empty_app_area_browse_importapps', function() {
         var area = $(this).closest('.applicationarea').attr('area');
         thundashop.MainMenu.importApplicationClicked(area);
+    });
+    $(document).on('click','.application_settings', function(event) {
+        var app = $(this).closest('.app');
+        var appname = app.attr('app');
+        $('.GetShopToolbox[attached_to_app="true"]').remove();
+        window["app"][appname]["loadSettings"]($(this), app);
     });
 });
 

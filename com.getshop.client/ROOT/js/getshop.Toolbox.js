@@ -1,9 +1,11 @@
-GetShopToolbox = function(config) {
+GetShopToolbox = function(config, app) {
     this.config = config;
+    this.application = app;
     this.init();
 };
 
 GetShopToolbox.prototype = {
+    
     init: function() {
         this.createContainer();
         this.refresh();
@@ -80,8 +82,7 @@ GetShopToolbox.prototype = {
                 row.addClass('row');
                 entryGroup.append(row);
             }
-            
-            var item = this.createItem(config, parent);
+            var item = this.createItem(config, parent, this);
             row.append(item);
             
             j++;
@@ -91,13 +92,13 @@ GetShopToolbox.prototype = {
         return entryGroup;
     },
 
-    createItem: function(config, selfContainer) {
+    createItem: function(config, selfContainer, scope) {
         var item = null;
         
         if (config.type && config.type === "seperator") {
             item = this.createSeperator(config);
         } else {
-            item = this.createButton(config, selfContainer);
+            item = this.createButton(config, selfContainer, scope);
         }
         
         if (config.items) {
@@ -128,12 +129,11 @@ GetShopToolbox.prototype = {
         return seperator;
     },
             
-    createButton: function(config, parent) {
+    createButton: function(config, parent, scope) {
         var item = $('<div/>');
         item.addClass('inline');
         item.addClass('item');
         item.attr('title', config.title);
-   
         if (typeof(config.extraArgs) !== "undefined")
             item.attr('extraarg', config.extraArgs);
         
@@ -150,7 +150,7 @@ GetShopToolbox.prototype = {
             }
             
             if (config.click) {
-                config.click(config.extraArgs);
+                config.click(config.extraArgs, scope.application);
             }
         });
 
@@ -215,7 +215,7 @@ GetShopToolbox.prototype = {
         this.outerContainer.css('left', left);
         this.outerContainer.css('top', offset.top);   
         var me = this;
-        
+        this.outerContainer.attr('attached_to_app','true');
         element.on("remove", function () {
             me.destroy();
         });

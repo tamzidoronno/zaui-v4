@@ -152,7 +152,7 @@ thundashop.common.saveCKEditor = function(data, target) {
     thundashop.common.removeNotificationProgress('contentmanager');
 };
 
-thundashop.common.activateCKEditor = function(id, autogrow, showMenu, width) {
+thundashop.common.activateCKEditor = function(id, autogrow, showMenu, autofocus) {
     var target = $('#' + id);
     target.attr('contenteditable', true);
 
@@ -170,6 +170,11 @@ thundashop.common.activateCKEditor = function(id, autogrow, showMenu, width) {
             },
             focus: function() {
                 $(document).tooltip("disable");
+            },
+            instanceReady: function(ev) {
+                if(autofocus) {
+                    ev.editor.focus();
+                }
             }
         }
     }
@@ -201,7 +206,7 @@ thundashop.common.showLargeInformationBox = function(event, title) {
 thundashop.common.createInformationBox = function(appid, title, open) {
     var infoBoxHolder = $('#informationbox-holder');
     var infoBox = $('#informationbox');
-    if(open) {
+    if (open) {
         thundashop.MainMenu.lockScroll();
         thundashop.common.mask();
         infoBoxHolder.css('display', 'inline-block');
@@ -215,7 +220,7 @@ thundashop.common.createInformationBox = function(appid, title, open) {
     infoBox.addClass('normalinformationbox');
     infoBox.removeClass('largeinformationbox');
     return infoBox;
-    
+
 }
 
 thundashop.common.showInformationBox = function(event, title) {
@@ -541,7 +546,7 @@ $('.getshop_ckeditorcontent').live({
             var id = guid();
             $(this).attr('id', id);
             $(this).attr('title', 'Click to edit, the text is being saved automatically.');
-            thundashop.common.activateCKEditor(id, true, true);
+            thundashop.common.activateCKEditor(id, true, true, false);
             $(this).addClass('cke_focus');
         }
     },
@@ -579,7 +584,7 @@ $(function() {
         var area = $(this).closest('.applicationarea').attr('area');
         thundashop.MainMenu.importApplicationClicked(area);
     });
-    $(document).on('click','.application_settings', function(event) {
+    $(document).on('click', '.application_settings', function(event) {
         var app = $(this).closest('.app');
         var appname = app.attr('app');
         $('.GetShopToolbox[attached_to_app="true"]').remove();

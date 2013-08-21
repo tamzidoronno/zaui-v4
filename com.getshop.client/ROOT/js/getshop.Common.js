@@ -219,6 +219,9 @@ thundashop.common.createInformationBox = function(appid, title, open) {
     $('#informationboxtitle').html(title);
     infoBox.addClass('normalinformationbox');
     infoBox.removeClass('largeinformationbox');
+    $('body').css('overflow','hidden');
+    $('.informationbox-outer').show();
+
     return infoBox;
 
 }
@@ -226,7 +229,6 @@ thundashop.common.createInformationBox = function(appid, title, open) {
 thundashop.common.showInformationBox = function(event, title) {
     if (typeof(title) === "undefined")
         title = "";
-    $(window).scrollTop(0);
     var appid = null;
     if (event.core.appid !== undefined) {
         appid = event.core.appid;
@@ -276,6 +278,8 @@ thundashop.common.mask = function() {
 thundashop.common.unmask = function() {
     var result = $.Deferred();
     var attr = $('#fullscreenmask').attr('locked');
+    $('.informationbox-outer').hide();
+    $('body').css('overflow','auto');
     if (typeof(attr) === "undefined" || attr === "false") {
         $('#informationbox-holder').fadeOut(200);
         $('#fullscreenmask').fadeOut(200, function() {
@@ -319,7 +323,12 @@ thundashop.common.confirm = function(content) {
 
 $("#fullscreenmask").live('click', function() {
     thundashop.common.unmask();
-})
+});
+$(".informationbox-outer").live('click', function(event) {
+    if($(event.target).hasClass('informationbox-outer')) {
+        thundashop.common.unmask();
+    }
+});
 
 $('.display_menu_application_button').live('click', function() {
     $('.mainmenu').slideDown();

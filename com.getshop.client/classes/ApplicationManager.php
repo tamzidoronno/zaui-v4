@@ -29,7 +29,12 @@ class ApplicationManager extends FactoryBase {
     public function systemReloadPage() {
         
     }
-
+    
+    public function listproducts() {
+        $mgr = new ns_dcd22afc_79ba_4463_bb5c_38925468ae26\ProductManager();
+        $mgr->listProducts();
+    }
+    
     public function moveApplication() {
         $pageId = $this->getPage()->getId();
         $appId = $_POST['data']['appid'];

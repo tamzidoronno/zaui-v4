@@ -26,7 +26,7 @@ class ApplicationManagement extends ApplicationBase {
     public function isSynchToolConnected() {
         return $this->getFactory()->getApi()->getAppManager()->isSyncToolConnected();
     }
-
+    
     public function getLastCreatedApp() {
         $settings =  $this->getFactory()->getApplicationPool()->getAllApplicationSettings();
         $retval = null;

@@ -145,10 +145,13 @@
 }
 
 .informationbox-outer {
-    position:absolute; 
+ position:fixed;top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.2);
+ display:none;
+ overflow-y: scroll;
     width:100%;
+    margin:auto;
     z-index: 99999999;
-    height: 1px;
+    text-align:center;
 }
 
 #informationbox-holder {
@@ -156,7 +159,6 @@
     padding-top: 5px;
     padding-left: 7px;
     margin: 0 auto;
-    overflow:auto;
     display:none;
     width: 1007px;
     text-align:left;

@@ -6,17 +6,18 @@
  * @author ktonder
  */
 class ApplicationManager extends FactoryBase {
+
     var $app;
     var $port;
 
     function setCurrentApp($app) {
         $this->app = $app;
     }
-    
+
     function getCurrentApp() {
         return $this->app;
     }
-    
+
     function __construct() {
         $configReader = new ConfigReader();
         $this->port = $configReader->getConfig("port");
@@ -29,12 +30,36 @@ class ApplicationManager extends FactoryBase {
     public function systemReloadPage() {
         
     }
-    
+
     public function listproducts() {
+        echo "<div class='ProductManager'>";
         $mgr = new ns_dcd22afc_79ba_4463_bb5c_38925468ae26\ProductManager();
         $mgr->listProducts();
+        echo "</div>";
     }
-    
+    public function editProduct() {
+        echo "<div class='ProductManager'>";
+        $mgr = new ns_dcd22afc_79ba_4463_bb5c_38925468ae26\ProductManager();
+        $mgr->editProduct();
+        echo "</div>";
+    }
+
+    public function deleteProduct() {
+        echo "<div class='ProductManager'>";
+        $mgr = new ns_dcd22afc_79ba_4463_bb5c_38925468ae26\ProductManager();
+        $mgr->deleteProduct();
+        $mgr->listProducts();
+        echo "</div>";
+    }
+
+    public function createProduct() {
+        echo "<div class='ProductManager'>";
+        $mgr = new ns_dcd22afc_79ba_4463_bb5c_38925468ae26\ProductManager();
+        $mgr->createProduct();
+        $mgr->listProducts();
+        echo "</div>";
+    }
+
     public function moveApplication() {
         $pageId = $this->getPage()->getId();
         $appId = $_POST['data']['appid'];
@@ -160,11 +185,11 @@ class ApplicationManager extends FactoryBase {
         $applications[] = $application;
         $this->getFactory()->getApplicationPool()->setApplicationInstances($applications);
         $app = $this->getFactory()->getApplicationPool()->getApplicationInstance($application->id);
-        
+
         if ($app instanceof \ShipmentApplication || $app instanceof \PaymentApplication) {
             \HelperCart::clearSession(false);
         }
-        
+
         $app->applicationAdded();
     }
 
@@ -221,16 +246,16 @@ class ApplicationManager extends FactoryBase {
 
         $appConfiguration = $this->getFactory()->getApi()->getPageManager()->addApplication($_POST['data']['appId']);
 
-        
+
         $namespace = $this->getFactory()->convertUUIDtoString($appConfiguration->appSettingsId);
         $appName = $namespace . "\\" . $appConfiguration->appName;
 
         $app = new $appName();
-        if($app instanceof ThemeApplication) {
+        if ($app instanceof ThemeApplication) {
             $this->getFactory()->setConfigurationFlag("color", false);
             $this->getFactory()->setConfigurationFlag("bgimage", false);
         }
-        
+
         if (method_exists($app, "renderStandalone")) {
             $pageManager = $this->getFactory()->getApi()->getPageManager();
             $pageManager->createPageWithId(5, "home", $appConfiguration->id . "_standalone");
@@ -285,7 +310,7 @@ class ApplicationManager extends FactoryBase {
         $toggle = $_POST['data']['toggle'];
         $this->getApi()->getStoreManager()->setVis($toggle, $password);
     }
-    
+
     public function importApplication() {
         if (!isset($_POST['data']['list'])) {
             return;
@@ -295,11 +320,11 @@ class ApplicationManager extends FactoryBase {
 
         $api = IocContainer::getFactorySingelton()->getApi();
         $pageId = $this->getPage()->id;
-        
+
         foreach ($list as $appId) {
             $api->getPageManager()->addExistingApplicationToPageArea($pageId, $appId, $area);
         }
-        
+
         $this->getFactory()->initPage();
     }
 
@@ -314,7 +339,7 @@ class ApplicationManager extends FactoryBase {
         if ($app instanceof \ShipmentApplication || $app instanceof \PaymentApplication) {
             \HelperCart::clearSession(false);
         }
-        
+
         $this->getFactory()->getApi()->getPageManager()->deleteApplication($appId);
 
         if (method_exists($app, "renderStandalone"))
@@ -333,7 +358,7 @@ class ApplicationManager extends FactoryBase {
 
         return $retval;
     }
-    
+
     public function syncapplication() {
         $id = $_POST['data']['id'];
         $this->getApi()->getAppManager()->setSyncApplication($id);
@@ -388,35 +413,36 @@ class ApplicationManager extends FactoryBase {
         $import = new ImportApplication($appSettingsId, $area);
         echo $import->getControlPanel();
     }
-    
+
     /*
      * Dont remove this. it is used for ping!
      */
+
     public function ping() {
         
     }
-    
+
     public function deleteStore() {
         $this->getFactory()->getApi()->getStoreManager()->delete();
     }
-    
+
     public function displayPageSettings() {
         $this->includefile("pagesettings");
     }
-    
+
     public function savePageDescription() {
         $desc = $_POST['data']['description'];
         $pageid = $this->getPage()->id;
         $this->getApi()->getPageManager()->setPageDescription($pageid, $desc);
     }
-    
+
     public function updateSmallCart() {
         $small = new \ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager();
         $small->renderSmallCartView();
     }
-    
+
     public function setDesignVariation() {
-        if(isset($_POST['data']['bg'])) {
+        if (isset($_POST['data']['bg'])) {
             $bg = $_POST['data']['bg'];
             $this->getFactory()->setConfigurationFlag("bgimage", $bg);
         } else {
@@ -424,5 +450,6 @@ class ApplicationManager extends FactoryBase {
             $this->getFactory()->setConfigurationFlag("color", $bg);
         }
     }
+
 }
 ?>

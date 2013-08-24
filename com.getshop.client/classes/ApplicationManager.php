@@ -77,6 +77,13 @@ class ApplicationManager extends FactoryBase {
         }
     }
 
+    public function saveProductImage() {
+        $content = $_POST['data']['data'];
+        $content = base64_decode(str_replace("data:image/png;base64,", "", $content));
+        $imgId = \FileUpload::storeFile($content);
+        echo $imgId;
+    }
+    
     public function previewApplication() {
         $appId = $_POST['data']['appId'];
         $api = IocContainer::getFactorySingelton()->getApi();

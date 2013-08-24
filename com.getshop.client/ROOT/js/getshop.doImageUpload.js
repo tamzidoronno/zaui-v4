@@ -12,6 +12,7 @@
         var saveCropped = true;
         var callback = false;
         var source = false;
+        var autohideinfobox = true;
         var autosave = false;
         var selectedCropArea = [0, 0, previewWidth, previewHeight];
         var extra = {};
@@ -30,6 +31,8 @@
             source = config.source;
         if (config.extra !== undefined)
             extra = config.extra;
+        if (config.autohideinfobox !== undefined)
+            autohideinfobox = config.autohideinfobox;
         if (config.selectedCropArea !== undefined)
             selectedCropArea = config.selectedCropArea;
         if (config.autosave !== undefined)
@@ -123,7 +126,9 @@
             } else {
                 imagebox.find('.imagecontainer').html('<img src="' + data + '" class="displayed_image">');
             }
-            thundashop.common.hideInformationBox();
+            if(autohideinfobox) {
+                thundashop.common.hideInformationBox();
+            }
 
             //Saving image.
             var id = "saveorgimg_" + parseInt(Math.random() * 100);

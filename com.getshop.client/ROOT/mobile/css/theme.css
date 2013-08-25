@@ -1,0 +1,41 @@
+/* 
+    Document   : theme
+    Created on : Aug 12, 2013, 9:21:54 PM
+    Author     : ktonder
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.col1,
+.col2 { 
+    display: inline-block;
+    padding: 5px; 
+}
+
+.row:not(:first-child) {
+    border-top: dashed 1px #CCC;
+}
+
+.entry {
+    border: dashed 1px #ccc;
+    margin-bottom: 10px;
+}
+
+.col1 {
+    width: 100px;
+    font-weight: bold;
+    position: absolute;
+    top: 0px;
+}
+
+.row {
+    position: relative;
+}
+.col2 {
+    margin-left: 100px;
+    width: 500px;
+}
+
+.ContentManager {
+    text-align: left;
+}

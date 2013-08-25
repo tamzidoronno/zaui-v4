@@ -63,6 +63,7 @@ class ApplicationManager extends FactoryBase {
     public function saveProduct() {
         $mgr = new ns_dcd22afc_79ba_4463_bb5c_38925468ae26\ProductManager();
         $mgr->saveProduct();
+        $_POST['data']['productid'] = null;
     }
     
     public function moveApplication() {

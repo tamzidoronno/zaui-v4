@@ -126,6 +126,13 @@ $(document).ready(function() {
                 disableOnSystemPages: true
             },
             {
+                icon : "/skin/default/images/add_product.png",
+                title : "Product list",
+                click : app.ProductManager.loadImportProduct,
+                class: 'layout',
+                disableOnSystemPages: true
+            },
+            {
                 type: 'seperator',
                 title: 'Security',
                 disableOnSystemPages: true

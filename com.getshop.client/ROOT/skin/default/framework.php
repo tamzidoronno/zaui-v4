@@ -150,7 +150,7 @@ display:none;
 overflow-y: scroll;
 width:100%;
 margin:auto;
-z-index: 99999999;
+z-index: 100;
 text-align:center;
 }
 
@@ -612,7 +612,7 @@ left:0px;
 position: absolute;
 width: 99.9%;
 height: 100%;
-z-index: 99999999;
+z-index: 99;
 background-image: url('/skin/default/images/black-transparent.png');
 }
 
@@ -1170,7 +1170,7 @@ box-shadow: 0px 0px 3px rgba(22, 52, 239, 0.9);
 }
 
 .GetShopToolbox {
-z-index: 500;
+z-index: 10;
 background-color : #FFF;
 border: solid 1px #BBB;
 }   

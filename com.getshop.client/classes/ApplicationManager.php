@@ -60,6 +60,11 @@ class ApplicationManager extends FactoryBase {
         echo "</div>";
     }
 
+    public function saveProduct() {
+        $mgr = new ns_dcd22afc_79ba_4463_bb5c_38925468ae26\ProductManager();
+        $mgr->saveProduct();
+    }
+    
     public function moveApplication() {
         $pageId = $this->getPage()->getId();
         $appId = $_POST['data']['appid'];
@@ -83,6 +88,7 @@ class ApplicationManager extends FactoryBase {
         $imgId = \FileUpload::storeFile($content);
         echo $imgId;
     }
+    
     
     public function previewApplication() {
         $appId = $_POST['data']['appId'];

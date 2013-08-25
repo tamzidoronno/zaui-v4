@@ -81,7 +81,7 @@
     <div data-role="navbar">
         <ul>
             <li><a href="#">Forrige</a></li>
-            <li><a href="#">Velg sted</a></li>
+            <li><a href="#filter" data-rel="dialog">Velg sted</a></li>
             <li><a href="#">Neste</a></li>
         </ul>
     </div>

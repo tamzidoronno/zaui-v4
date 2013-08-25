@@ -45,8 +45,12 @@ and open the template in the editor.
     <div data-role="page" id="signup">
         <? include 'header.html' ?>
     </div>
-
     
+    <div data-role="page" id="filter">
+        <? include 'header.html' ?>
+        <? include 'filter.php' ?>
+    </div>
+
     <?
     include 'coursepages.php';
     ?>

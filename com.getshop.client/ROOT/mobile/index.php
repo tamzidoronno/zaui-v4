@@ -44,6 +44,7 @@ and open the template in the editor.
     
     <div data-role="page" id="signup">
         <? include 'header.html' ?>
+        <? include 'signup.html' ?>
     </div>
     
     <div data-role="page" id="filter">

@@ -13,7 +13,7 @@
     $days_in_this_week = 1;
     $day_counter = 0;
     ?>
-    <p>Du har nå tatt et steg i riktig retning for kompetansepåfyll. Under ser du vår kurskalender for måneden vi er i, så her er det bare å velge å vrake i. Klikk på dagen for mer informasjon om kurs den dagen.</p>
+    <p>Auto Akademiet er en frittstående gruppe som samarbeider med ulike grossister. Dette gjør at kursbredden og aktiviteter er blant bransjens største. Våre kurs har stort fokus på læringsutbytte. Det benyttes de mest riktige og effektive læringsmodellene</p>
     <table cellspacing="0">
         <thead>
             <tr>
@@ -71,12 +71,16 @@
             <th>Tor</th><th>Fre</th><th>Lør</th>
         </tfoot>
     </table>
+    <p>
+        Ønsker du å bare se kursene vi tilbyr for et spesielt sted, så kan du trykke på velg sted knappen under.
+    </p>
 </div>
 
 <div data-role="footer" data-theme="b" data-tap-toggle="false" data-id="foo1" data-position="fixed">
     <div data-role="navbar">
         <ul>
             <li><a href="#">Forrige</a></li>
+            <li><a href="#">Velg sted</a></li>
             <li><a href="#">Neste</a></li>
         </ul>
     </div>

@@ -14,6 +14,7 @@
     $day_counter = 0;
     ?>
     <p>Auto Akademiet er en frittstående gruppe som samarbeider med ulike grossister. Dette gjør at kursbredden og aktiviteter er blant bransjens største. Våre kurs har stort fokus på læringsutbytte. Det benyttes de mest riktige og effektive læringsmodellene</p>
+    <h2>Kurs kalender</h2>
     <table cellspacing="0">
         <thead>
             <tr>

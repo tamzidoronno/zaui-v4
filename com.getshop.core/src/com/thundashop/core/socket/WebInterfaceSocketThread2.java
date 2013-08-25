@@ -31,83 +31,10 @@ public class WebInterfaceSocketThread2 implements Runnable {
         this.storePool = storePool;
         this.socket = socket;
     }
-
-    private Class getClass(String className) throws ErrorException {
-        try {
-            Class classLoaded = null;
-            switch(className) {
-                case "int": classLoaded = int.class; break;
-                case "boolean": classLoaded = boolean.class; break;
-                case "double": classLoaded = double.class; break;
-                case "float": classLoaded = float.class; break;
-                default: classLoaded = this.getClass().getClassLoader().loadClass(className); break;
-            }
-
-            return classLoaded;
-        } catch (ClassNotFoundException ex) {
-            throw new ErrorException(81);
-        }
-    }
-    
-    private Class<?>[] getArguments(JsonObject2 object) throws ErrorException {
-        try {
-            Class aClass = getClass().getClassLoader().loadClass("com.thundashop." + object.interfaceName);
-        
-            Method[] methods = aClass.getMethods();
-            Method method = null;
-
-            for (Method tmpMethod : methods) {
-                if (tmpMethod.getName().equals(object.method)) {
-                    method = tmpMethod;
-                }
-            }
-            if(method == null) {
-                System.out.println("Failed on obj: " + object.interfaceName);
-                System.out.println("Failed on obj: " + object.method);
-            }
-            Class<?>[] parameters = method.getParameterTypes();
-            return parameters;
-        } catch (ClassNotFoundException ex) {
-            throw new ErrorException(81);
-        }
-    }
     
     private List<MessageBase> executeMessage(String message, String addr) {
-        Gson gson = new GsonBuilder().serializeNulls().create();
-        
-        Type type = new TypeToken<JsonObject2>() {}.getType();
-        
-        message = message.replace("\"args\":[]", "\"args\":{}");
-        
-        JsonObject2 object = gson.fromJson(message, type);
-        object.addr = addr;
-
-        int i = 0;
-        Object[] executeArgs = new Object[object.args.size()];
         try {
-            Class[] types = getArguments(object);
-            for (String parameter : object.args.keySet()) {
-                Class classLoaded = getClass(types[i].getCanonicalName());
-                try {
-                    Object argument = gson.fromJson(object.args.get(parameter), classLoaded);
-                    executeArgs[i] = argument;
-                }catch(Exception e) {
-                    e.printStackTrace();
-                    System.out.println("From json param: " + object.args.get(parameter));
-                    System.out.println("From json message: " + message);
-                }
-                i++;
-            }
-
-            object.interfaceName = object.interfaceName.replace(".I", ".");
-            long start = System.currentTimeMillis();
-            Object result = storePool.ExecuteMethod(object, types, executeArgs);
-            long end = System.currentTimeMillis();
-            long diff = end-start;
-            if(diff > 40) {
-                System.out.println("" + diff + " : " + object.interfaceName + " method: " + object.method);
-            }
-            result = (result == null) ? new ArrayList() : result;
+            Object result = storePool.ExecuteMethod(message, addr);
             sendMessage(result);
         } catch (ErrorException d) {
             sendMessage(new ErrorMessage(d));

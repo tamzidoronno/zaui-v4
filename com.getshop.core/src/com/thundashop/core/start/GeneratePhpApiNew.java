@@ -596,7 +596,7 @@ public class GeneratePhpApiNew {
         return output;
     }
 
-    private static Map<String, Object> parseMethod(String path, Method method, String type) {
+    public static Map<String, Object> parseMethod(String path, Method method, String type) {
         String content = readFile(path, true);
 
         List<String> splittedArgs = new ArrayList();
@@ -823,7 +823,7 @@ public class GeneratePhpApiNew {
         return null;
     }
 
-    private static Method[] sortMethods(Method[] methods) {
+    public static Method[] sortMethods(Method[] methods) {
         List<String> entries = new ArrayList();
         for (Method method : methods) {
             entries.add(method.getName());
@@ -865,7 +865,7 @@ public class GeneratePhpApiNew {
         return html;
     }
 
-    private static List<Class> sortClasses(List<Class> classes) {
+    public static List<Class> sortClasses(List<Class> classes) {
         List<String> toSort = new ArrayList();
         HashMap<String, Class> map = new HashMap();
         for (Class theClass : classes) {
@@ -995,7 +995,6 @@ public class GeneratePhpApiNew {
         for (Type typeArgument : typeArguments) {
             if (typeArgument instanceof Class) {
                 Class typeArgClass = (Class) typeArgument;
-                System.out.println("typeArgClass = " + typeArgClass.getSimpleName());
                 generics += typeArgClass.getSimpleName() + ",";
                 allImportClasses.put(typeArgClass.getCanonicalName(), "");
             }

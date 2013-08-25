@@ -273,3 +273,27 @@ if (isset($_GET['logout'])) {
 <?
 }
 ?>
+
+<script>
+var getShopApiWebSocket = new GetShopApiWebSocket("mecademo.getshop.com");
+getShopApiWebSocket.connectedCallback = function() {
+    var logon = getShopApiWebSocket.UserManager.logOn("kjell.teige@meca.no", "abcd1234");
+    logon.done(function() {
+        console.log("Logged in");
+        var isLoggedIn = getShopApiWebSocket.UserManager.isLoggedIn();
+        isLoggedIn.done(function (result) {
+            console.log("is logged in? " + result);
+            var logout = getShopApiWebSocket.UserManager.logout();
+            logout.done(function() {
+                console.log("Logged out");
+                var isLoggedIn = getShopApiWebSocket.UserManager.isLoggedIn();
+                isLoggedIn.done(function (result) {
+                    console.log("is logged in? " + result);
+                });
+            })
+        });
+        
+    })
+}
+getShopApiWebSocket.connect();
+</script>

@@ -1,0 +1,115 @@
+GetShopApiWebSocket = function(address) {
+    this.sentMessages =  [];
+    this.address = address;
+};
+
+GetShopApiWebSocket.prototype = {
+    websocket: null,
+    connectionEstablished: null,
+    
+    connect: function() {
+        
+        var me = this;
+        if (this.connectionEstablished === null) {
+            this.fireDisconnectedEvent();
+        }
+        var address = "ws://"+this.address+":31330/";
+        this.socket = new WebSocket(address);
+        this.socket.onopen = function() {
+            me.connected();
+        };
+        this.socket.onclose = function() {
+            me.disconnected();
+        };
+        this.socket.onmessage = function(msg) {
+            me.handleMessage(msg);
+        };
+        
+        this.createManagers();
+    },
+            
+    handleMessage: function(msg) {
+        var data = msg.data;
+        var jsonObject = JSON.parse(data);
+        var corrolatingMessage = this.getMessage(jsonObject.id);
+        corrolatingMessage.resolve(jsonObject.object);
+    },
+            
+    reconnect: function() {
+        var me = this;
+        exec = function() {
+            me.connect();
+        };
+        setTimeout(exec, 300);
+    },
+            
+    initializeStore: function() {
+        this.socket.send('initstore:'+this.address);
+    },
+            
+    connected: function() {
+        this.initializeStore();
+        this.fireConnectedEvent();
+        this.connectionEstablished = true;
+    },
+            
+    disconnected: function() {
+        this.fireDisconnectedEvent();
+        this.connectionEstablished = false;
+        this.reconnect();
+    },
+            
+    fireDisconnectedEvent: function() {
+        if (this.connectionEstablished === null || this.connectionEstablished && typeof(this.disconnectedCallback) === "function") {
+            if (this.disconnectedCallback) {
+                this.disconnectedCallback();
+            }
+        }
+    },
+            
+    fireConnectedEvent: function() {
+        if (this.connectionEstablished === null || !this.connectionEstablished && typeof(this.connectedCallback) === "function") {
+            if (this.connectedCallback) {
+                this.connectedCallback();
+            }
+        }
+    },
+            
+    setDisconnectedEvent: function(callback) {
+        this.disconnectedCallback = callback;
+    },
+            
+    setConnectedEvent: function(callback) {
+        this.connectedCallback = callback;
+    },
+        
+    send: function(message) {
+        var deferred = $.Deferred();
+        message.messageId = this.makeid();
+        deferred.messageId = message.messageId;
+        messageJson = JSON.stringify(message);
+        this.sentMessages.push(deferred);
+        this.socket.send(messageJson);
+        return deferred;
+    },
+
+    getMessage: function(id) {
+        for (i=0;i<this.sentMessages.length; i++) {
+            if (this.sentMessages[i].id === id) {
+                var message = this.sentMessages[i];
+                this.sentMessages.pop(i);
+                return message;
+            }
+        }
+    },
+            
+    makeid :  function () {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for( var i=0; i < 35; i++ )
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
+    }
+};

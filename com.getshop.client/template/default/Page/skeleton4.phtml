@@ -1,25 +1,16 @@
 <div class="skelholder skeleton4" theme='<? echo $this->getThemeApplicationSettingsId(); ?>'>
-<?php
-$this->includefile('pageinfo');
-$this->includefile('mainmenu');
-$this->includefile('header');
-?>
+    <?php
+    $this->includefile('pageinfo');
+    $this->includefile('mainmenu');
+    $this->includefile('header');
+    ?>
 
-<div class="mainarea-outer 1col-layout">
-    <div class="mainarea"> 
-        <div class="main-area-top"></div>
-        <div class="mainareacontent">
-            <div area='middle' id="apparea-middle" class="applicationarea middle inline">
-                <?php
-                if (!$this->emptySkeleton)    
-                    $this->getPage()->getMiddleApplicationArea()->render(); 
-                ?>
-            </div>    
+    <div class="mainarea-outer 1col-layout">
+        <div class="mainarea"> 
+            <div class="main-area-top"></div>
+                <div area='main_1'  class="applicationarea">
+                    <?php $this->getPage()->getApplicationArea('main_1')->render(); ?>
+                </div>    
         </div>
-        <div class="main-area-bottom"></div>
     </div>
-</div>
-<?php
-    $this->includefile('footer');
-?>
 </div>

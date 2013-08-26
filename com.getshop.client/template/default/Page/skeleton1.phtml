@@ -10,31 +10,27 @@
         <div class="mainarea 3col-layout">
             <div class="main-area-top"></div>
             <div class="mainareacontent">
-                <div area='left' id="apparea-left" class="applicationarea left inline">
-                    <?php 
-                    if (!$this->emptySkeleton)    
-                        $this->getPage()->getLeftApplicationArea()->render(); 
-                    ?>
-                </div>
-                <div area='middle' id="apparea-middle" class="applicationarea middle inline">
-                    <?php
-                    if (!$this->emptySkeleton)    
-                        $this->getPage()->getMiddleApplicationArea()->render(); 
-                    ?>
-                </div>
-                <div area='right' id="apparea-right" class="applicationarea right inline">
-                    <?php  
-                    if (!$this->emptySkeleton)    
-                        if($this->getPage()->getApplicationArea('right')) {
-                            $this->getPage()->getApplicationArea('right')->render();
-                        }
-                    ?>
-                </div>
+                <table width="100%">
+                    <tr>
+                        <td width="20%" valign="top"  class='app_row_entry'>
+                            <div area='left_1' class="applicationarea gs_margin_right">
+                                <?php $this->getPage()->getApplicationArea('left_1')->render(); ?>
+                            </div>
+                        </td>
+                        <td valign="top"  class='app_row_entry'>
+                            <div area='main_1' class="applicationarea">
+                                <?php $this->getPage()->getApplicationArea('main_1')->render(); ?>
+                            </div>
+                        </td>
+                        <td width="20%" valign="top"  class='app_row_entry'>
+                            <div area='right_1' class="applicationarea gs_margin_left">
+                                <?php $this->getPage()->getApplicationArea('right_1')->render(); ?>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             </div>
-            <div class="main-area-bottom"></div>
         </div>
-
-
     </div>
 
     <?php

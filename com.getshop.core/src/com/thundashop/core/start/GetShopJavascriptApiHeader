@@ -97,7 +97,7 @@ GetShopApiWebSocket.prototype = {
         for (i=0;i<this.sentMessages.length; i++) {
             if (this.sentMessages[i].id === id) {
                 var message = this.sentMessages[i];
-                this.sentMessages.pop(i);
+                this.sentMessages.splice(i, 1);
                 return message;
             }
         }

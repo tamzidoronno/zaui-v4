@@ -36,6 +36,31 @@
     width: 500px;
 }
 
+.CourseDayEntry,
 .ContentManager {
     text-align: left;
+}
+
+.kursentry {
+    padding: 10px;
+    border: dashed 2px #CCC; 
+    margin-bottom: 20px;
+    background-color: #DDD;
+}
+
+.disabled {
+    background-position: 0px -0px !important;
+    color: #222 !important;
+}
+
+.displayActiveFilter {
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    display: none;
+}
+
+label.error { 
+    color: red; 
+    font-weight:bold
 }

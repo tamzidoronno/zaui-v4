@@ -59,7 +59,7 @@ App = {
                 $('#select-native-1').append(course);
             });
             $('#select-native-1').selectmenu('refresh', true);
-            $('#select-native-1').change(function() {
+            $('#select-native-1').on('change', function() {
                 var positions = $(this).find(':selected').attr('availablepositions');
                 $('.availablepositions_course_selected').hide();
                 if (typeof(positions) !== "undefined") {

@@ -108,7 +108,7 @@ public class GenerateJavascriptApi {
                 javascriptFile += "        data = {\n";
                 javascriptFile += "            args : {\n";
                 for (String arg : arguments) {
-                    javascriptFile += "                " + arg + " : " + arg + ",\n";
+                    javascriptFile += "                " + arg + " : JSON.stringify(" + arg + "),\n";
                 }
                 javascriptFile += "            " + "},\n";
                 javascriptFile += "            method: '" + method.getName() + "',\n";

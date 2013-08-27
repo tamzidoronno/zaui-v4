@@ -31,7 +31,7 @@ GetShopApiWebSocket.prototype = {
     handleMessage: function(msg) {
         var data = msg.data;
         var jsonObject = JSON.parse(data);
-        var corrolatingMessage = this.getMessage(jsonObject.messageId);
+        var corrolatingMessage = this.getMessage(jsonObject.id);
         corrolatingMessage.resolve(jsonObject.object);
     },
             
@@ -94,15 +94,13 @@ GetShopApiWebSocket.prototype = {
     },
 
     getMessage: function(id) {
-        var message = null;
         for (i=0;i<this.sentMessages.length; i++) {
-            if (this.sentMessages[i].messageId === id) {
-                message = this.sentMessages[i];
+            if (this.sentMessages[i].id === id) {
+                var message = this.sentMessages[i];
                 this.sentMessages.splice(i, 1);
+                return message;
             }
         }
-        
-        return message;
     },
             
     makeid :  function () {
@@ -114,9 +112,7 @@ GetShopApiWebSocket.prototype = {
 
         return text;
     }
-}
-
-;GetShopApiWebSocket.BannerManager = function(communication) {
+};GetShopApiWebSocket.BannerManager = function(communication) {
     this.communication = communication;
 }
 
@@ -124,8 +120,8 @@ GetShopApiWebSocket.BannerManager.prototype = {
     addImage : function(id,fileId) {
         data = {
             args : {
-                id : id,
-                fileId : fileId,
+                id : JSON.stringify(id),
+                fileId : JSON.stringify(fileId),
             },
             method: 'addImage',
             interfaceName: 'app.banner.IBannerManager',
@@ -136,9 +132,9 @@ GetShopApiWebSocket.BannerManager.prototype = {
     createSet : function(width,height,id) {
         data = {
             args : {
-                width : width,
-                height : height,
-                id : id,
+                width : JSON.stringify(width),
+                height : JSON.stringify(height),
+                id : JSON.stringify(id),
             },
             method: 'createSet',
             interfaceName: 'app.banner.IBannerManager',
@@ -149,7 +145,7 @@ GetShopApiWebSocket.BannerManager.prototype = {
     deleteSet : function(id) {
         data = {
             args : {
-                id : id,
+                id : JSON.stringify(id),
             },
             method: 'deleteSet',
             interfaceName: 'app.banner.IBannerManager',
@@ -160,7 +156,7 @@ GetShopApiWebSocket.BannerManager.prototype = {
     getSet : function(id) {
         data = {
             args : {
-                id : id,
+                id : JSON.stringify(id),
             },
             method: 'getSet',
             interfaceName: 'app.banner.IBannerManager',
@@ -171,9 +167,9 @@ GetShopApiWebSocket.BannerManager.prototype = {
     linkProductToImage : function(bannerSetId,imageId,productId) {
         data = {
             args : {
-                bannerSetId : bannerSetId,
-                imageId : imageId,
-                productId : productId,
+                bannerSetId : JSON.stringify(bannerSetId),
+                imageId : JSON.stringify(imageId),
+                productId : JSON.stringify(productId),
             },
             method: 'linkProductToImage',
             interfaceName: 'app.banner.IBannerManager',
@@ -184,8 +180,8 @@ GetShopApiWebSocket.BannerManager.prototype = {
     removeImage : function(bannerSetId,fileId) {
         data = {
             args : {
-                bannerSetId : bannerSetId,
-                fileId : fileId,
+                bannerSetId : JSON.stringify(bannerSetId),
+                fileId : JSON.stringify(fileId),
             },
             method: 'removeImage',
             interfaceName: 'app.banner.IBannerManager',
@@ -196,7 +192,7 @@ GetShopApiWebSocket.BannerManager.prototype = {
     saveSet : function(set) {
         data = {
             args : {
-                set : set,
+                set : JSON.stringify(set),
             },
             method: 'saveSet',
             interfaceName: 'app.banner.IBannerManager',
@@ -213,7 +209,7 @@ GetShopApiWebSocket.ContentManager.prototype = {
     createContent : function(content) {
         data = {
             args : {
-                content : content,
+                content : JSON.stringify(content),
             },
             method: 'createContent',
             interfaceName: 'app.content.IContentManager',
@@ -224,7 +220,7 @@ GetShopApiWebSocket.ContentManager.prototype = {
     deleteContent : function(id) {
         data = {
             args : {
-                id : id,
+                id : JSON.stringify(id),
             },
             method: 'deleteContent',
             interfaceName: 'app.content.IContentManager',
@@ -245,7 +241,7 @@ GetShopApiWebSocket.ContentManager.prototype = {
     getContent : function(id) {
         data = {
             args : {
-                id : id,
+                id : JSON.stringify(id),
             },
             method: 'getContent',
             interfaceName: 'app.content.IContentManager',
@@ -256,8 +252,8 @@ GetShopApiWebSocket.ContentManager.prototype = {
     saveContent : function(id,content) {
         data = {
             args : {
-                id : id,
-                content : content,
+                id : JSON.stringify(id),
+                content : JSON.stringify(content),
             },
             method: 'saveContent',
             interfaceName: 'app.content.IContentManager',
@@ -284,7 +280,7 @@ GetShopApiWebSocket.FooterManager.prototype = {
     setLayout : function(numberOfColumns) {
         data = {
             args : {
-                numberOfColumns : numberOfColumns,
+                numberOfColumns : JSON.stringify(numberOfColumns),
             },
             method: 'setLayout',
             interfaceName: 'app.footer.IFooterManager',
@@ -295,8 +291,8 @@ GetShopApiWebSocket.FooterManager.prototype = {
     setType : function(column,type) {
         data = {
             args : {
-                column : column,
-                type : type,
+                column : JSON.stringify(column),
+                type : JSON.stringify(type),
             },
             method: 'setType',
             interfaceName: 'app.footer.IFooterManager',
@@ -333,7 +329,7 @@ GetShopApiWebSocket.LogoManager.prototype = {
     setLogo : function(fileId) {
         data = {
             args : {
-                fileId : fileId,
+                fileId : JSON.stringify(fileId),
             },
             method: 'setLogo',
             interfaceName: 'app.logo.ILogoManager',
@@ -350,7 +346,7 @@ GetShopApiWebSocket.NewsManager.prototype = {
     addNews : function(news) {
         data = {
             args : {
-                news : news,
+                news : JSON.stringify(news),
             },
             method: 'addNews',
             interfaceName: 'app.news.INewsManager',
@@ -361,7 +357,7 @@ GetShopApiWebSocket.NewsManager.prototype = {
     addSubscriber : function(email) {
         data = {
             args : {
-                email : email,
+                email : JSON.stringify(email),
             },
             method: 'addSubscriber',
             interfaceName: 'app.news.INewsManager',
@@ -372,7 +368,7 @@ GetShopApiWebSocket.NewsManager.prototype = {
     deleteNews : function(id) {
         data = {
             args : {
-                id : id,
+                id : JSON.stringify(id),
             },
             method: 'deleteNews',
             interfaceName: 'app.news.INewsManager',
@@ -403,7 +399,7 @@ GetShopApiWebSocket.NewsManager.prototype = {
     removeSubscriber : function(subscriberId) {
         data = {
             args : {
-                subscriberId : subscriberId,
+                subscriberId : JSON.stringify(subscriberId),
             },
             method: 'removeSubscriber',
             interfaceName: 'app.news.INewsManager',
@@ -420,7 +416,7 @@ GetShopApiWebSocket.AppManager.prototype = {
     createApplication : function(appName) {
         data = {
             args : {
-                appName : appName,
+                appName : JSON.stringify(appName),
             },
             method: 'createApplication',
             interfaceName: 'core.appmanager.IAppManager',
@@ -431,7 +427,7 @@ GetShopApiWebSocket.AppManager.prototype = {
     deleteApplication : function(id) {
         data = {
             args : {
-                id : id,
+                id : JSON.stringify(id),
             },
             method: 'deleteApplication',
             interfaceName: 'core.appmanager.IAppManager',
@@ -442,7 +438,7 @@ GetShopApiWebSocket.AppManager.prototype = {
     getAllApplicationSubscriptions : function(includeAppSettings) {
         data = {
             args : {
-                includeAppSettings : includeAppSettings,
+                includeAppSettings : JSON.stringify(includeAppSettings),
             },
             method: 'getAllApplicationSubscriptions',
             interfaceName: 'core.appmanager.IAppManager',
@@ -463,7 +459,7 @@ GetShopApiWebSocket.AppManager.prototype = {
     getApplication : function(id) {
         data = {
             args : {
-                id : id,
+                id : JSON.stringify(id),
             },
             method: 'getApplication',
             interfaceName: 'core.appmanager.IAppManager',
@@ -504,7 +500,7 @@ GetShopApiWebSocket.AppManager.prototype = {
     saveApplication : function(settings) {
         data = {
             args : {
-                settings : settings,
+                settings : JSON.stringify(settings),
             },
             method: 'saveApplication',
             interfaceName: 'core.appmanager.IAppManager',
@@ -515,7 +511,7 @@ GetShopApiWebSocket.AppManager.prototype = {
     setSyncApplication : function(id) {
         data = {
             args : {
-                id : id,
+                id : JSON.stringify(id),
             },
             method: 'setSyncApplication',
             interfaceName: 'core.appmanager.IAppManager',
@@ -532,10 +528,10 @@ GetShopApiWebSocket.CalendarManager.prototype = {
     addUserToEvent : function(userId,eventId,password,username) {
         data = {
             args : {
-                userId : userId,
-                eventId : eventId,
-                password : password,
-                username : username,
+                userId : JSON.stringify(userId),
+                eventId : JSON.stringify(eventId),
+                password : JSON.stringify(password),
+                username : JSON.stringify(username),
             },
             method: 'addUserToEvent',
             interfaceName: 'core.calendar.ICalendarManager',
@@ -546,7 +542,7 @@ GetShopApiWebSocket.CalendarManager.prototype = {
     applyFilter : function(filters) {
         data = {
             args : {
-                filters : filters,
+                filters : JSON.stringify(filters),
             },
             method: 'applyFilter',
             interfaceName: 'core.calendar.ICalendarManager',
@@ -557,7 +553,7 @@ GetShopApiWebSocket.CalendarManager.prototype = {
     confirmEntry : function(entryId) {
         data = {
             args : {
-                entryId : entryId,
+                entryId : JSON.stringify(entryId),
             },
             method: 'confirmEntry',
             interfaceName: 'core.calendar.ICalendarManager',
@@ -568,9 +564,9 @@ GetShopApiWebSocket.CalendarManager.prototype = {
     createEntry : function(year,month,day) {
         data = {
             args : {
-                year : year,
-                month : month,
-                day : day,
+                year : JSON.stringify(year),
+                month : JSON.stringify(month),
+                day : JSON.stringify(day),
             },
             method: 'createEntry',
             interfaceName: 'core.calendar.ICalendarManager',
@@ -581,7 +577,7 @@ GetShopApiWebSocket.CalendarManager.prototype = {
     deleteEntry : function(id) {
         data = {
             args : {
-                id : id,
+                id : JSON.stringify(id),
             },
             method: 'deleteEntry',
             interfaceName: 'core.calendar.ICalendarManager',
@@ -602,10 +598,10 @@ GetShopApiWebSocket.CalendarManager.prototype = {
     getEntries : function(year,month,day,filters) {
         data = {
             args : {
-                year : year,
-                month : month,
-                day : day,
-                filters : filters,
+                year : JSON.stringify(year),
+                month : JSON.stringify(month),
+                day : JSON.stringify(day),
+                filters : JSON.stringify(filters),
             },
             method: 'getEntries',
             interfaceName: 'core.calendar.ICalendarManager',
@@ -616,7 +612,7 @@ GetShopApiWebSocket.CalendarManager.prototype = {
     getEntry : function(entryId) {
         data = {
             args : {
-                entryId : entryId,
+                entryId : JSON.stringify(entryId),
             },
             method: 'getEntry',
             interfaceName: 'core.calendar.ICalendarManager',
@@ -637,9 +633,9 @@ GetShopApiWebSocket.CalendarManager.prototype = {
     getMonth : function(year,month,includeExtraEvents) {
         data = {
             args : {
-                year : year,
-                month : month,
-                includeExtraEvents : includeExtraEvents,
+                year : JSON.stringify(year),
+                month : JSON.stringify(month),
+                includeExtraEvents : JSON.stringify(includeExtraEvents),
             },
             method: 'getMonth',
             interfaceName: 'core.calendar.ICalendarManager',
@@ -650,8 +646,8 @@ GetShopApiWebSocket.CalendarManager.prototype = {
     removeUserFromEvent : function(userId,eventId) {
         data = {
             args : {
-                userId : userId,
-                eventId : eventId,
+                userId : JSON.stringify(userId),
+                eventId : JSON.stringify(eventId),
             },
             method: 'removeUserFromEvent',
             interfaceName: 'core.calendar.ICalendarManager',
@@ -662,7 +658,7 @@ GetShopApiWebSocket.CalendarManager.prototype = {
     saveEntry : function(entry) {
         data = {
             args : {
-                entry : entry,
+                entry : JSON.stringify(entry),
             },
             method: 'saveEntry',
             interfaceName: 'core.calendar.ICalendarManager',
@@ -673,11 +669,11 @@ GetShopApiWebSocket.CalendarManager.prototype = {
     sendReminderToUser : function(byEmail,bySMS,users,text,subject) {
         data = {
             args : {
-                byEmail : byEmail,
-                bySMS : bySMS,
-                users : users,
-                text : text,
-                subject : subject,
+                byEmail : JSON.stringify(byEmail),
+                bySMS : JSON.stringify(bySMS),
+                users : JSON.stringify(users),
+                text : JSON.stringify(text),
+                subject : JSON.stringify(subject),
             },
             method: 'sendReminderToUser',
             interfaceName: 'core.calendar.ICalendarManager',
@@ -694,9 +690,9 @@ GetShopApiWebSocket.CartManager.prototype = {
     addProduct : function(productId,count,variations) {
         data = {
             args : {
-                productId : productId,
-                count : count,
-                variations : variations,
+                productId : JSON.stringify(productId),
+                count : JSON.stringify(count),
+                variations : JSON.stringify(variations),
             },
             method: 'addProduct',
             interfaceName: 'core.cartmanager.ICartManager',
@@ -707,7 +703,7 @@ GetShopApiWebSocket.CartManager.prototype = {
     calculateTotalCost : function(cart) {
         data = {
             args : {
-                cart : cart,
+                cart : JSON.stringify(cart),
             },
             method: 'calculateTotalCost',
             interfaceName: 'core.cartmanager.ICartManager',
@@ -768,7 +764,7 @@ GetShopApiWebSocket.CartManager.prototype = {
     removeProduct : function(cartItemId) {
         data = {
             args : {
-                cartItemId : cartItemId,
+                cartItemId : JSON.stringify(cartItemId),
             },
             method: 'removeProduct',
             interfaceName: 'core.cartmanager.ICartManager',
@@ -779,7 +775,7 @@ GetShopApiWebSocket.CartManager.prototype = {
     setAddress : function(address) {
         data = {
             args : {
-                address : address,
+                address : JSON.stringify(address),
             },
             method: 'setAddress',
             interfaceName: 'core.cartmanager.ICartManager',
@@ -790,7 +786,7 @@ GetShopApiWebSocket.CartManager.prototype = {
     setShippingCost : function(shippingCost) {
         data = {
             args : {
-                shippingCost : shippingCost,
+                shippingCost : JSON.stringify(shippingCost),
             },
             method: 'setShippingCost',
             interfaceName: 'core.cartmanager.ICartManager',
@@ -801,8 +797,8 @@ GetShopApiWebSocket.CartManager.prototype = {
     updateProductCount : function(cartItemId,count) {
         data = {
             args : {
-                cartItemId : cartItemId,
-                count : count,
+                cartItemId : JSON.stringify(cartItemId),
+                count : JSON.stringify(count),
             },
             method: 'updateProductCount',
             interfaceName: 'core.cartmanager.ICartManager',
@@ -819,7 +815,7 @@ GetShopApiWebSocket.ChatManager.prototype = {
     closeChat : function(id) {
         data = {
             args : {
-                id : id,
+                id : JSON.stringify(id),
             },
             method: 'closeChat',
             interfaceName: 'core.chat.IChatManager',
@@ -850,7 +846,7 @@ GetShopApiWebSocket.ChatManager.prototype = {
     pingMobileChat : function(chatterid) {
         data = {
             args : {
-                chatterid : chatterid,
+                chatterid : JSON.stringify(chatterid),
             },
             method: 'pingMobileChat',
             interfaceName: 'core.chat.IChatManager',
@@ -861,8 +857,8 @@ GetShopApiWebSocket.ChatManager.prototype = {
     replyToChat : function(id,message) {
         data = {
             args : {
-                id : id,
-                message : message,
+                id : JSON.stringify(id),
+                message : JSON.stringify(message),
             },
             method: 'replyToChat',
             interfaceName: 'core.chat.IChatManager',
@@ -873,7 +869,7 @@ GetShopApiWebSocket.ChatManager.prototype = {
     sendMessage : function(message) {
         data = {
             args : {
-                message : message,
+                message : JSON.stringify(message),
             },
             method: 'sendMessage',
             interfaceName: 'core.chat.IChatManager',
@@ -890,10 +886,10 @@ GetShopApiWebSocket.GalleryManager.prototype = {
     addImageToGallery : function(galleryId,imageId,description,title) {
         data = {
             args : {
-                galleryId : galleryId,
-                imageId : imageId,
-                description : description,
-                title : title,
+                galleryId : JSON.stringify(galleryId),
+                imageId : JSON.stringify(imageId),
+                description : JSON.stringify(description),
+                title : JSON.stringify(title),
             },
             method: 'addImageToGallery',
             interfaceName: 'core.gallerymanager.IGalleryManager',
@@ -914,7 +910,7 @@ GetShopApiWebSocket.GalleryManager.prototype = {
     deleteImage : function(entryId) {
         data = {
             args : {
-                entryId : entryId,
+                entryId : JSON.stringify(entryId),
             },
             method: 'deleteImage',
             interfaceName: 'core.gallerymanager.IGalleryManager',
@@ -925,7 +921,7 @@ GetShopApiWebSocket.GalleryManager.prototype = {
     getAllImages : function(id) {
         data = {
             args : {
-                id : id,
+                id : JSON.stringify(id),
             },
             method: 'getAllImages',
             interfaceName: 'core.gallerymanager.IGalleryManager',
@@ -936,7 +932,7 @@ GetShopApiWebSocket.GalleryManager.prototype = {
     getEntry : function(id) {
         data = {
             args : {
-                id : id,
+                id : JSON.stringify(id),
             },
             method: 'getEntry',
             interfaceName: 'core.gallerymanager.IGalleryManager',
@@ -947,7 +943,7 @@ GetShopApiWebSocket.GalleryManager.prototype = {
     saveEntry : function(entry) {
         data = {
             args : {
-                entry : entry,
+                entry : JSON.stringify(entry),
             },
             method: 'saveEntry',
             interfaceName: 'core.gallerymanager.IGalleryManager',
@@ -964,9 +960,9 @@ GetShopApiWebSocket.GetShop.prototype = {
     addUserToPartner : function(userId,partner,password) {
         data = {
             args : {
-                userId : userId,
-                partner : partner,
-                password : password,
+                userId : JSON.stringify(userId),
+                partner : JSON.stringify(partner),
+                password : JSON.stringify(password),
             },
             method: 'addUserToPartner',
             interfaceName: 'core.getshop.IGetShop',
@@ -977,7 +973,7 @@ GetShopApiWebSocket.GetShop.prototype = {
     connectStoreToPartner : function(partner) {
         data = {
             args : {
-                partner : partner,
+                partner : JSON.stringify(partner),
             },
             method: 'connectStoreToPartner',
             interfaceName: 'core.getshop.IGetShop',
@@ -988,7 +984,7 @@ GetShopApiWebSocket.GetShop.prototype = {
     findAddressForApplication : function(uuid) {
         data = {
             args : {
-                uuid : uuid,
+                uuid : JSON.stringify(uuid),
             },
             method: 'findAddressForApplication',
             interfaceName: 'core.getshop.IGetShop',
@@ -999,7 +995,7 @@ GetShopApiWebSocket.GetShop.prototype = {
     findAddressForUUID : function(uuid) {
         data = {
             args : {
-                uuid : uuid,
+                uuid : JSON.stringify(uuid),
             },
             method: 'findAddressForUUID',
             interfaceName: 'core.getshop.IGetShop',
@@ -1020,7 +1016,7 @@ GetShopApiWebSocket.GetShop.prototype = {
     getStores : function(code) {
         data = {
             args : {
-                code : code,
+                code : JSON.stringify(code),
             },
             method: 'getStores',
             interfaceName: 'core.getshop.IGetShop',
@@ -1047,9 +1043,9 @@ GetShopApiWebSocket.ListManager.prototype = {
     addEntry : function(listId,entry,parentPageId) {
         data = {
             args : {
-                listId : listId,
-                entry : entry,
-                parentPageId : parentPageId,
+                listId : JSON.stringify(listId),
+                entry : JSON.stringify(entry),
+                parentPageId : JSON.stringify(parentPageId),
             },
             method: 'addEntry',
             interfaceName: 'core.listmanager.IListManager',
@@ -1060,7 +1056,7 @@ GetShopApiWebSocket.ListManager.prototype = {
     clearList : function(listId) {
         data = {
             args : {
-                listId : listId,
+                listId : JSON.stringify(listId),
             },
             method: 'clearList',
             interfaceName: 'core.listmanager.IListManager',
@@ -1071,8 +1067,8 @@ GetShopApiWebSocket.ListManager.prototype = {
     combineList : function(toListId,newListId) {
         data = {
             args : {
-                toListId : toListId,
-                newListId : newListId,
+                toListId : JSON.stringify(toListId),
+                newListId : JSON.stringify(newListId),
             },
             method: 'combineList',
             interfaceName: 'core.listmanager.IListManager',
@@ -1093,8 +1089,8 @@ GetShopApiWebSocket.ListManager.prototype = {
     deleteEntry : function(id,listId) {
         data = {
             args : {
-                id : id,
-                listId : listId,
+                id : JSON.stringify(id),
+                listId : JSON.stringify(listId),
             },
             method: 'deleteEntry',
             interfaceName: 'core.listmanager.IListManager',
@@ -1105,7 +1101,7 @@ GetShopApiWebSocket.ListManager.prototype = {
     getCombinedLists : function(listId) {
         data = {
             args : {
-                listId : listId,
+                listId : JSON.stringify(listId),
             },
             method: 'getCombinedLists',
             interfaceName: 'core.listmanager.IListManager',
@@ -1116,7 +1112,7 @@ GetShopApiWebSocket.ListManager.prototype = {
     getList : function(listId) {
         data = {
             args : {
-                listId : listId,
+                listId : JSON.stringify(listId),
             },
             method: 'getList',
             interfaceName: 'core.listmanager.IListManager',
@@ -1127,7 +1123,7 @@ GetShopApiWebSocket.ListManager.prototype = {
     getListEntry : function(id) {
         data = {
             args : {
-                id : id,
+                id : JSON.stringify(id),
             },
             method: 'getListEntry',
             interfaceName: 'core.listmanager.IListManager',
@@ -1148,9 +1144,9 @@ GetShopApiWebSocket.ListManager.prototype = {
     orderEntry : function(id,after,parentId) {
         data = {
             args : {
-                id : id,
-                after : after,
-                parentId : parentId,
+                id : JSON.stringify(id),
+                after : JSON.stringify(after),
+                parentId : JSON.stringify(parentId),
             },
             method: 'orderEntry',
             interfaceName: 'core.listmanager.IListManager',
@@ -1161,7 +1157,7 @@ GetShopApiWebSocket.ListManager.prototype = {
     translateEntries : function(entryIds) {
         data = {
             args : {
-                entryIds : entryIds,
+                entryIds : JSON.stringify(entryIds),
             },
             method: 'translateEntries',
             interfaceName: 'core.listmanager.IListManager',
@@ -1172,8 +1168,8 @@ GetShopApiWebSocket.ListManager.prototype = {
     unCombineList : function(fromListId,toRemoveId) {
         data = {
             args : {
-                fromListId : fromListId,
-                toRemoveId : toRemoveId,
+                fromListId : JSON.stringify(fromListId),
+                toRemoveId : JSON.stringify(toRemoveId),
             },
             method: 'unCombineList',
             interfaceName: 'core.listmanager.IListManager',
@@ -1184,7 +1180,7 @@ GetShopApiWebSocket.ListManager.prototype = {
     updateEntry : function(entry) {
         data = {
             args : {
-                entry : entry,
+                entry : JSON.stringify(entry),
             },
             method: 'updateEntry',
             interfaceName: 'core.listmanager.IListManager',
@@ -1201,8 +1197,8 @@ GetShopApiWebSocket.MessageManager.prototype = {
     getSmsCount : function(year,month) {
         data = {
             args : {
-                year : year,
-                month : month,
+                year : JSON.stringify(year),
+                month : JSON.stringify(month),
             },
             method: 'getSmsCount',
             interfaceName: 'core.messagemanager.IMessageManager',
@@ -1213,12 +1209,12 @@ GetShopApiWebSocket.MessageManager.prototype = {
     sendMail : function(to,toName,subject,content,from,fromName) {
         data = {
             args : {
-                to : to,
-                toName : toName,
-                subject : subject,
-                content : content,
-                from : from,
-                fromName : fromName,
+                to : JSON.stringify(to),
+                toName : JSON.stringify(toName),
+                subject : JSON.stringify(subject),
+                content : JSON.stringify(content),
+                from : JSON.stringify(from),
+                fromName : JSON.stringify(fromName),
             },
             method: 'sendMail',
             interfaceName: 'core.messagemanager.IMessageManager',
@@ -1235,7 +1231,7 @@ GetShopApiWebSocket.OrderManager.prototype = {
     createOrder : function(address) {
         data = {
             args : {
-                address : address,
+                address : JSON.stringify(address),
             },
             method: 'createOrder',
             interfaceName: 'core.ordermanager.IOrderManager',
@@ -1246,7 +1242,7 @@ GetShopApiWebSocket.OrderManager.prototype = {
     getOrder : function(orderId) {
         data = {
             args : {
-                orderId : orderId,
+                orderId : JSON.stringify(orderId),
             },
             method: 'getOrder',
             interfaceName: 'core.ordermanager.IOrderManager',
@@ -1257,9 +1253,9 @@ GetShopApiWebSocket.OrderManager.prototype = {
     getOrders : function(orderIds,page,pageSize) {
         data = {
             args : {
-                orderIds : orderIds,
-                page : page,
-                pageSize : pageSize,
+                orderIds : JSON.stringify(orderIds),
+                page : JSON.stringify(page),
+                pageSize : JSON.stringify(pageSize),
             },
             method: 'getOrders',
             interfaceName: 'core.ordermanager.IOrderManager',
@@ -1270,7 +1266,7 @@ GetShopApiWebSocket.OrderManager.prototype = {
     saveOrder : function(order) {
         data = {
             args : {
-                order : order,
+                order : JSON.stringify(order),
             },
             method: 'saveOrder',
             interfaceName: 'core.ordermanager.IOrderManager',
@@ -1281,11 +1277,11 @@ GetShopApiWebSocket.OrderManager.prototype = {
     setOrderStatus : function(password,orderId,currency,price,status) {
         data = {
             args : {
-                password : password,
-                orderId : orderId,
-                currency : currency,
-                price : price,
-                status : status,
+                password : JSON.stringify(password),
+                orderId : JSON.stringify(orderId),
+                currency : JSON.stringify(currency),
+                price : JSON.stringify(price),
+                status : JSON.stringify(status),
             },
             method: 'setOrderStatus',
             interfaceName: 'core.ordermanager.IOrderManager',
@@ -1302,7 +1298,7 @@ GetShopApiWebSocket.PageManager.prototype = {
     addApplication : function(applicationSettingId) {
         data = {
             args : {
-                applicationSettingId : applicationSettingId,
+                applicationSettingId : JSON.stringify(applicationSettingId),
             },
             method: 'addApplication',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1313,9 +1309,9 @@ GetShopApiWebSocket.PageManager.prototype = {
     addApplicationToPage : function(pageId,applicationSettingId,pageArea) {
         data = {
             args : {
-                pageId : pageId,
-                applicationSettingId : applicationSettingId,
-                pageArea : pageArea,
+                pageId : JSON.stringify(pageId),
+                applicationSettingId : JSON.stringify(applicationSettingId),
+                pageArea : JSON.stringify(pageArea),
             },
             method: 'addApplicationToPage',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1326,9 +1322,9 @@ GetShopApiWebSocket.PageManager.prototype = {
     addExistingApplicationToPageArea : function(pageId,appId,area) {
         data = {
             args : {
-                pageId : pageId,
-                appId : appId,
-                area : area,
+                pageId : JSON.stringify(pageId),
+                appId : JSON.stringify(appId),
+                area : JSON.stringify(area),
             },
             method: 'addExistingApplicationToPageArea',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1339,8 +1335,8 @@ GetShopApiWebSocket.PageManager.prototype = {
     changePageLayout : function(pageId,layout) {
         data = {
             args : {
-                pageId : pageId,
-                layout : layout,
+                pageId : JSON.stringify(pageId),
+                layout : JSON.stringify(layout),
             },
             method: 'changePageLayout',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1351,8 +1347,8 @@ GetShopApiWebSocket.PageManager.prototype = {
     changePageUserLevel : function(pageId,userLevel) {
         data = {
             args : {
-                pageId : pageId,
-                userLevel : userLevel,
+                pageId : JSON.stringify(pageId),
+                userLevel : JSON.stringify(userLevel),
             },
             method: 'changePageUserLevel',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1363,8 +1359,8 @@ GetShopApiWebSocket.PageManager.prototype = {
     clearPageArea : function(pageId,pageArea) {
         data = {
             args : {
-                pageId : pageId,
-                pageArea : pageArea,
+                pageId : JSON.stringify(pageId),
+                pageArea : JSON.stringify(pageArea),
             },
             method: 'clearPageArea',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1375,8 +1371,8 @@ GetShopApiWebSocket.PageManager.prototype = {
     createPage : function(layout,parentId) {
         data = {
             args : {
-                layout : layout,
-                parentId : parentId,
+                layout : JSON.stringify(layout),
+                parentId : JSON.stringify(parentId),
             },
             method: 'createPage',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1387,9 +1383,9 @@ GetShopApiWebSocket.PageManager.prototype = {
     createPageWithId : function(layout,parentId,id) {
         data = {
             args : {
-                layout : layout,
-                parentId : parentId,
-                id : id,
+                layout : JSON.stringify(layout),
+                parentId : JSON.stringify(parentId),
+                id : JSON.stringify(id),
             },
             method: 'createPageWithId',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1400,7 +1396,7 @@ GetShopApiWebSocket.PageManager.prototype = {
     deleteApplication : function(id) {
         data = {
             args : {
-                id : id,
+                id : JSON.stringify(id),
             },
             method: 'deleteApplication',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1411,7 +1407,7 @@ GetShopApiWebSocket.PageManager.prototype = {
     deletePage : function(id) {
         data = {
             args : {
-                id : id,
+                id : JSON.stringify(id),
             },
             method: 'deletePage',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1422,7 +1418,7 @@ GetShopApiWebSocket.PageManager.prototype = {
     getApplicationSettings : function(name) {
         data = {
             args : {
-                name : name,
+                name : JSON.stringify(name),
             },
             method: 'getApplicationSettings',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1443,7 +1439,7 @@ GetShopApiWebSocket.PageManager.prototype = {
     getApplicationsBasedOnApplicationSettingsId : function(appSettingsId) {
         data = {
             args : {
-                appSettingsId : appSettingsId,
+                appSettingsId : JSON.stringify(appSettingsId),
             },
             method: 'getApplicationsBasedOnApplicationSettingsId',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1454,8 +1450,8 @@ GetShopApiWebSocket.PageManager.prototype = {
     getApplicationsByPageAreaAndSettingsId : function(appSettingsId,pageArea) {
         data = {
             args : {
-                appSettingsId : appSettingsId,
-                pageArea : pageArea,
+                appSettingsId : JSON.stringify(appSettingsId),
+                pageArea : JSON.stringify(pageArea),
             },
             method: 'getApplicationsByPageAreaAndSettingsId',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1466,7 +1462,7 @@ GetShopApiWebSocket.PageManager.prototype = {
     getApplicationsByType : function(type) {
         data = {
             args : {
-                type : type,
+                type : JSON.stringify(type),
             },
             method: 'getApplicationsByType',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1477,7 +1473,7 @@ GetShopApiWebSocket.PageManager.prototype = {
     getApplicationsForPage : function(pageId) {
         data = {
             args : {
-                pageId : pageId,
+                pageId : JSON.stringify(pageId),
             },
             method: 'getApplicationsForPage',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1488,7 +1484,7 @@ GetShopApiWebSocket.PageManager.prototype = {
     getPage : function(id) {
         data = {
             args : {
-                id : id,
+                id : JSON.stringify(id),
             },
             method: 'getPage',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1499,7 +1495,7 @@ GetShopApiWebSocket.PageManager.prototype = {
     getPagesForApplications : function(appIds) {
         data = {
             args : {
-                appIds : appIds,
+                appIds : JSON.stringify(appIds),
             },
             method: 'getPagesForApplications',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1510,7 +1506,7 @@ GetShopApiWebSocket.PageManager.prototype = {
     getSecuredSettings : function(appName) {
         data = {
             args : {
-                appName : appName,
+                appName : JSON.stringify(appName),
             },
             method: 'getSecuredSettings',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1521,7 +1517,7 @@ GetShopApiWebSocket.PageManager.prototype = {
     removeAllApplications : function(appSettingsId) {
         data = {
             args : {
-                appSettingsId : appSettingsId,
+                appSettingsId : JSON.stringify(appSettingsId),
             },
             method: 'removeAllApplications',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1532,8 +1528,8 @@ GetShopApiWebSocket.PageManager.prototype = {
     removeApplication : function(applicationId,pageid) {
         data = {
             args : {
-                applicationId : applicationId,
-                pageid : pageid,
+                applicationId : JSON.stringify(applicationId),
+                pageid : JSON.stringify(pageid),
             },
             method: 'removeApplication',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1544,9 +1540,9 @@ GetShopApiWebSocket.PageManager.prototype = {
     reorderApplication : function(pageId,appId,moveUp) {
         data = {
             args : {
-                pageId : pageId,
-                appId : appId,
-                moveUp : moveUp,
+                pageId : JSON.stringify(pageId),
+                appId : JSON.stringify(appId),
+                moveUp : JSON.stringify(moveUp),
             },
             method: 'reorderApplication',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1557,7 +1553,7 @@ GetShopApiWebSocket.PageManager.prototype = {
     saveApplicationConfiguration : function(config) {
         data = {
             args : {
-                config : config,
+                config : JSON.stringify(config),
             },
             method: 'saveApplicationConfiguration',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1568,7 +1564,7 @@ GetShopApiWebSocket.PageManager.prototype = {
     setApplicationSettings : function(settings) {
         data = {
             args : {
-                settings : settings,
+                settings : JSON.stringify(settings),
             },
             method: 'setApplicationSettings',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1579,8 +1575,8 @@ GetShopApiWebSocket.PageManager.prototype = {
     setApplicationSticky : function(appId,toggle) {
         data = {
             args : {
-                appId : appId,
-                toggle : toggle,
+                appId : JSON.stringify(appId),
+                toggle : JSON.stringify(toggle),
             },
             method: 'setApplicationSticky',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1591,8 +1587,8 @@ GetShopApiWebSocket.PageManager.prototype = {
     setPageDescription : function(pageId,description) {
         data = {
             args : {
-                pageId : pageId,
-                description : description,
+                pageId : JSON.stringify(pageId),
+                description : JSON.stringify(description),
             },
             method: 'setPageDescription',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1603,8 +1599,8 @@ GetShopApiWebSocket.PageManager.prototype = {
     setParentPage : function(pageId,parentPageId) {
         data = {
             args : {
-                pageId : pageId,
-                parentPageId : parentPageId,
+                pageId : JSON.stringify(pageId),
+                parentPageId : JSON.stringify(parentPageId),
             },
             method: 'setParentPage',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1615,8 +1611,8 @@ GetShopApiWebSocket.PageManager.prototype = {
     swapApplication : function(fromAppId,toAppId) {
         data = {
             args : {
-                fromAppId : fromAppId,
-                toAppId : toAppId,
+                fromAppId : JSON.stringify(fromAppId),
+                toAppId : JSON.stringify(toAppId),
             },
             method: 'swapApplication',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1627,7 +1623,7 @@ GetShopApiWebSocket.PageManager.prototype = {
     translatePages : function(pages) {
         data = {
             args : {
-                pages : pages,
+                pages : JSON.stringify(pages),
             },
             method: 'translatePages',
             interfaceName: 'core.pagemanager.IPageManager',
@@ -1644,9 +1640,9 @@ GetShopApiWebSocket.ProductManager.prototype = {
     addAttributeGroupToProduct : function(productId,attributeGroup,attribute) {
         data = {
             args : {
-                productId : productId,
-                attributeGroup : attributeGroup,
-                attribute : attribute,
+                productId : JSON.stringify(productId),
+                attributeGroup : JSON.stringify(attributeGroup),
+                attribute : JSON.stringify(attribute),
             },
             method: 'addAttributeGroupToProduct',
             interfaceName: 'core.productmanager.IProductManager',
@@ -1657,9 +1653,9 @@ GetShopApiWebSocket.ProductManager.prototype = {
     addImage : function(productId,productImageId,description) {
         data = {
             args : {
-                productId : productId,
-                productImageId : productImageId,
-                description : description,
+                productId : JSON.stringify(productId),
+                productImageId : JSON.stringify(productImageId),
+                description : JSON.stringify(description),
             },
             method: 'addImage',
             interfaceName: 'core.productmanager.IProductManager',
@@ -1670,8 +1666,8 @@ GetShopApiWebSocket.ProductManager.prototype = {
     changeStockQuantity : function(productId,count) {
         data = {
             args : {
-                productId : productId,
-                count : count,
+                productId : JSON.stringify(productId),
+                count : JSON.stringify(count),
             },
             method: 'changeStockQuantity',
             interfaceName: 'core.productmanager.IProductManager',
@@ -1692,8 +1688,8 @@ GetShopApiWebSocket.ProductManager.prototype = {
     deleteAttribute : function(groupName,attribute) {
         data = {
             args : {
-                groupName : groupName,
-                attribute : attribute,
+                groupName : JSON.stringify(groupName),
+                attribute : JSON.stringify(attribute),
             },
             method: 'deleteAttribute',
             interfaceName: 'core.productmanager.IProductManager',
@@ -1704,7 +1700,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
     deleteGroup : function(groupName) {
         data = {
             args : {
-                groupName : groupName,
+                groupName : JSON.stringify(groupName),
             },
             method: 'deleteGroup',
             interfaceName: 'core.productmanager.IProductManager',
@@ -1725,7 +1721,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
     getLatestProducts : function(count) {
         data = {
             args : {
-                count : count,
+                count : JSON.stringify(count),
             },
             method: 'getLatestProducts',
             interfaceName: 'core.productmanager.IProductManager',
@@ -1736,8 +1732,8 @@ GetShopApiWebSocket.ProductManager.prototype = {
     getPrice : function(productId,variations) {
         data = {
             args : {
-                productId : productId,
-                variations : variations,
+                productId : JSON.stringify(productId),
+                variations : JSON.stringify(variations),
             },
             method: 'getPrice',
             interfaceName: 'core.productmanager.IProductManager',
@@ -1748,7 +1744,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
     getProduct : function(id) {
         data = {
             args : {
-                id : id,
+                id : JSON.stringify(id),
             },
             method: 'getProduct',
             interfaceName: 'core.productmanager.IProductManager',
@@ -1759,7 +1755,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
     getProductFromApplicationId : function(app_uuid) {
         data = {
             args : {
-                app_uuid : app_uuid,
+                app_uuid : JSON.stringify(app_uuid),
             },
             method: 'getProductFromApplicationId',
             interfaceName: 'core.productmanager.IProductManager',
@@ -1770,7 +1766,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
     getProducts : function(productCriteria) {
         data = {
             args : {
-                productCriteria : productCriteria,
+                productCriteria : JSON.stringify(productCriteria),
             },
             method: 'getProducts',
             interfaceName: 'core.productmanager.IProductManager',
@@ -1781,8 +1777,8 @@ GetShopApiWebSocket.ProductManager.prototype = {
     getRandomProducts : function(fetchSize,ignoreProductId) {
         data = {
             args : {
-                fetchSize : fetchSize,
-                ignoreProductId : ignoreProductId,
+                fetchSize : JSON.stringify(fetchSize),
+                ignoreProductId : JSON.stringify(ignoreProductId),
             },
             method: 'getRandomProducts',
             interfaceName: 'core.productmanager.IProductManager',
@@ -1793,8 +1789,8 @@ GetShopApiWebSocket.ProductManager.prototype = {
     removeAttributeGroupFromProduct : function(productId,attributeGroupId) {
         data = {
             args : {
-                productId : productId,
-                attributeGroupId : attributeGroupId,
+                productId : JSON.stringify(productId),
+                attributeGroupId : JSON.stringify(attributeGroupId),
             },
             method: 'removeAttributeGroupFromProduct',
             interfaceName: 'core.productmanager.IProductManager',
@@ -1805,7 +1801,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
     removeProduct : function(productId) {
         data = {
             args : {
-                productId : productId,
+                productId : JSON.stringify(productId),
             },
             method: 'removeProduct',
             interfaceName: 'core.productmanager.IProductManager',
@@ -1816,9 +1812,9 @@ GetShopApiWebSocket.ProductManager.prototype = {
     renameAttribute : function(groupName,oldAttributeName,newAttributeName) {
         data = {
             args : {
-                groupName : groupName,
-                oldAttributeName : oldAttributeName,
-                newAttributeName : newAttributeName,
+                groupName : JSON.stringify(groupName),
+                oldAttributeName : JSON.stringify(oldAttributeName),
+                newAttributeName : JSON.stringify(newAttributeName),
             },
             method: 'renameAttribute',
             interfaceName: 'core.productmanager.IProductManager',
@@ -1829,8 +1825,8 @@ GetShopApiWebSocket.ProductManager.prototype = {
     renameAttributeGroupName : function(oldName,newName) {
         data = {
             args : {
-                oldName : oldName,
-                newName : newName,
+                oldName : JSON.stringify(oldName),
+                newName : JSON.stringify(newName),
             },
             method: 'renameAttributeGroupName',
             interfaceName: 'core.productmanager.IProductManager',
@@ -1841,7 +1837,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
     saveProduct : function(product) {
         data = {
             args : {
-                product : product,
+                product : JSON.stringify(product),
             },
             method: 'saveProduct',
             interfaceName: 'core.productmanager.IProductManager',
@@ -1852,8 +1848,8 @@ GetShopApiWebSocket.ProductManager.prototype = {
     setMainImage : function(productId,imageId) {
         data = {
             args : {
-                productId : productId,
-                imageId : imageId,
+                productId : JSON.stringify(productId),
+                imageId : JSON.stringify(imageId),
             },
             method: 'setMainImage',
             interfaceName: 'core.productmanager.IProductManager',
@@ -1864,7 +1860,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
     translateEntries : function(entryIds) {
         data = {
             args : {
-                entryIds : entryIds,
+                entryIds : JSON.stringify(entryIds),
             },
             method: 'translateEntries',
             interfaceName: 'core.productmanager.IProductManager',
@@ -1881,9 +1877,9 @@ GetShopApiWebSocket.ReportingManager.prototype = {
     getAllEventsFromSession : function(startDate,stopDate,searchSessionId) {
         data = {
             args : {
-                startDate : startDate,
-                stopDate : stopDate,
-                searchSessionId : searchSessionId,
+                startDate : JSON.stringify(startDate),
+                stopDate : JSON.stringify(stopDate),
+                searchSessionId : JSON.stringify(searchSessionId),
             },
             method: 'getAllEventsFromSession',
             interfaceName: 'core.reportingmanager.IReportingManager',
@@ -1894,9 +1890,9 @@ GetShopApiWebSocket.ReportingManager.prototype = {
     getConnectedUsers : function(startdate,stopDate,filter) {
         data = {
             args : {
-                startdate : startdate,
-                stopDate : stopDate,
-                filter : filter,
+                startdate : JSON.stringify(startdate),
+                stopDate : JSON.stringify(stopDate),
+                filter : JSON.stringify(filter),
             },
             method: 'getConnectedUsers',
             interfaceName: 'core.reportingmanager.IReportingManager',
@@ -1907,8 +1903,8 @@ GetShopApiWebSocket.ReportingManager.prototype = {
     getOrdersCreated : function(startDate,stopDate) {
         data = {
             args : {
-                startDate : startDate,
-                stopDate : stopDate,
+                startDate : JSON.stringify(startDate),
+                stopDate : JSON.stringify(stopDate),
             },
             method: 'getOrdersCreated',
             interfaceName: 'core.reportingmanager.IReportingManager',
@@ -1919,8 +1915,8 @@ GetShopApiWebSocket.ReportingManager.prototype = {
     getPageViews : function(startDate,stopDate) {
         data = {
             args : {
-                startDate : startDate,
-                stopDate : stopDate,
+                startDate : JSON.stringify(startDate),
+                stopDate : JSON.stringify(stopDate),
             },
             method: 'getPageViews',
             interfaceName: 'core.reportingmanager.IReportingManager',
@@ -1931,8 +1927,8 @@ GetShopApiWebSocket.ReportingManager.prototype = {
     getProductViewed : function(startDate,stopDate) {
         data = {
             args : {
-                startDate : startDate,
-                stopDate : stopDate,
+                startDate : JSON.stringify(startDate),
+                stopDate : JSON.stringify(stopDate),
             },
             method: 'getProductViewed',
             interfaceName: 'core.reportingmanager.IReportingManager',
@@ -1943,9 +1939,9 @@ GetShopApiWebSocket.ReportingManager.prototype = {
     getReport : function(startDate,stopDate,type) {
         data = {
             args : {
-                startDate : startDate,
-                stopDate : stopDate,
-                type : type,
+                startDate : JSON.stringify(startDate),
+                stopDate : JSON.stringify(stopDate),
+                type : JSON.stringify(type),
             },
             method: 'getReport',
             interfaceName: 'core.reportingmanager.IReportingManager',
@@ -1956,8 +1952,8 @@ GetShopApiWebSocket.ReportingManager.prototype = {
     getUserLoggedOn : function(startDate,stopDate) {
         data = {
             args : {
-                startDate : startDate,
-                stopDate : stopDate,
+                startDate : JSON.stringify(startDate),
+                stopDate : JSON.stringify(stopDate),
             },
             method: 'getUserLoggedOn',
             interfaceName: 'core.reportingmanager.IReportingManager',
@@ -1974,9 +1970,9 @@ GetShopApiWebSocket.StoreManager.prototype = {
     createStore : function(hostname,email,password) {
         data = {
             args : {
-                hostname : hostname,
-                email : email,
-                password : password,
+                hostname : JSON.stringify(hostname),
+                email : JSON.stringify(email),
+                password : JSON.stringify(password),
             },
             method: 'createStore',
             interfaceName: 'core.storemanager.IStoreManager',
@@ -1997,8 +1993,8 @@ GetShopApiWebSocket.StoreManager.prototype = {
     enableExtendedMode : function(toggle,password) {
         data = {
             args : {
-                toggle : toggle,
-                password : password,
+                toggle : JSON.stringify(toggle),
+                password : JSON.stringify(password),
             },
             method: 'enableExtendedMode',
             interfaceName: 'core.storemanager.IStoreManager',
@@ -2009,8 +2005,8 @@ GetShopApiWebSocket.StoreManager.prototype = {
     enableSMSAccess : function(toggle,password) {
         data = {
             args : {
-                toggle : toggle,
-                password : password,
+                toggle : JSON.stringify(toggle),
+                password : JSON.stringify(password),
             },
             method: 'enableSMSAccess',
             interfaceName: 'core.storemanager.IStoreManager',
@@ -2041,8 +2037,8 @@ GetShopApiWebSocket.StoreManager.prototype = {
     initializeStore : function(webAddress,initSessionId) {
         data = {
             args : {
-                webAddress : webAddress,
-                initSessionId : initSessionId,
+                webAddress : JSON.stringify(webAddress),
+                initSessionId : JSON.stringify(initSessionId),
             },
             method: 'initializeStore',
             interfaceName: 'core.storemanager.IStoreManager',
@@ -2053,7 +2049,7 @@ GetShopApiWebSocket.StoreManager.prototype = {
     isAddressTaken : function(address) {
         data = {
             args : {
-                address : address,
+                address : JSON.stringify(address),
             },
             method: 'isAddressTaken',
             interfaceName: 'core.storemanager.IStoreManager',
@@ -2064,7 +2060,7 @@ GetShopApiWebSocket.StoreManager.prototype = {
     removeDomainName : function(domainName) {
         data = {
             args : {
-                domainName : domainName,
+                domainName : JSON.stringify(domainName),
             },
             method: 'removeDomainName',
             interfaceName: 'core.storemanager.IStoreManager',
@@ -2075,7 +2071,7 @@ GetShopApiWebSocket.StoreManager.prototype = {
     saveStore : function(config) {
         data = {
             args : {
-                config : config,
+                config : JSON.stringify(config),
             },
             method: 'saveStore',
             interfaceName: 'core.storemanager.IStoreManager',
@@ -2096,7 +2092,7 @@ GetShopApiWebSocket.StoreManager.prototype = {
     setPrimaryDomainName : function(domainName) {
         data = {
             args : {
-                domainName : domainName,
+                domainName : JSON.stringify(domainName),
             },
             method: 'setPrimaryDomainName',
             interfaceName: 'core.storemanager.IStoreManager',
@@ -2107,8 +2103,8 @@ GetShopApiWebSocket.StoreManager.prototype = {
     setVIS : function(toggle,password) {
         data = {
             args : {
-                toggle : toggle,
-                password : password,
+                toggle : JSON.stringify(toggle),
+                password : JSON.stringify(password),
             },
             method: 'setVIS',
             interfaceName: 'core.storemanager.IStoreManager',
@@ -2125,7 +2121,7 @@ GetShopApiWebSocket.UserManager.prototype = {
     createUser : function(user) {
         data = {
             args : {
-                user : user,
+                user : JSON.stringify(user),
             },
             method: 'createUser',
             interfaceName: 'core.usermanager.IUserManager',
@@ -2136,7 +2132,7 @@ GetShopApiWebSocket.UserManager.prototype = {
     deleteUser : function(userId) {
         data = {
             args : {
-                userId : userId,
+                userId : JSON.stringify(userId),
             },
             method: 'deleteUser',
             interfaceName: 'core.usermanager.IUserManager',
@@ -2147,7 +2143,7 @@ GetShopApiWebSocket.UserManager.prototype = {
     findUsers : function(searchCriteria) {
         data = {
             args : {
-                searchCriteria : searchCriteria,
+                searchCriteria : JSON.stringify(searchCriteria),
             },
             method: 'findUsers',
             interfaceName: 'core.usermanager.IUserManager',
@@ -2218,7 +2214,7 @@ GetShopApiWebSocket.UserManager.prototype = {
     getUserById : function(id) {
         data = {
             args : {
-                id : id,
+                id : JSON.stringify(id),
             },
             method: 'getUserById',
             interfaceName: 'core.usermanager.IUserManager',
@@ -2229,7 +2225,7 @@ GetShopApiWebSocket.UserManager.prototype = {
     getUserList : function(userIds) {
         data = {
             args : {
-                userIds : userIds,
+                userIds : JSON.stringify(userIds),
             },
             method: 'getUserList',
             interfaceName: 'core.usermanager.IUserManager',
@@ -2240,7 +2236,7 @@ GetShopApiWebSocket.UserManager.prototype = {
     isCaptain : function(id) {
         data = {
             args : {
-                id : id,
+                id : JSON.stringify(id),
             },
             method: 'isCaptain',
             interfaceName: 'core.usermanager.IUserManager',
@@ -2261,8 +2257,8 @@ GetShopApiWebSocket.UserManager.prototype = {
     logOn : function(username,password) {
         data = {
             args : {
-                username : username,
-                password : password,
+                username : JSON.stringify(username),
+                password : JSON.stringify(password),
             },
             method: 'logOn',
             interfaceName: 'core.usermanager.IUserManager',
@@ -2273,7 +2269,7 @@ GetShopApiWebSocket.UserManager.prototype = {
     logonUsingKey : function(logonKey) {
         data = {
             args : {
-                logonKey : logonKey,
+                logonKey : JSON.stringify(logonKey),
             },
             method: 'logonUsingKey',
             interfaceName: 'core.usermanager.IUserManager',
@@ -2294,7 +2290,7 @@ GetShopApiWebSocket.UserManager.prototype = {
     removeGroup : function(groupId) {
         data = {
             args : {
-                groupId : groupId,
+                groupId : JSON.stringify(groupId),
             },
             method: 'removeGroup',
             interfaceName: 'core.usermanager.IUserManager',
@@ -2305,9 +2301,9 @@ GetShopApiWebSocket.UserManager.prototype = {
     resetPassword : function(resetCode,username,newPassword) {
         data = {
             args : {
-                resetCode : resetCode,
-                username : username,
-                newPassword : newPassword,
+                resetCode : JSON.stringify(resetCode),
+                username : JSON.stringify(username),
+                newPassword : JSON.stringify(newPassword),
             },
             method: 'resetPassword',
             interfaceName: 'core.usermanager.IUserManager',
@@ -2318,7 +2314,7 @@ GetShopApiWebSocket.UserManager.prototype = {
     saveGroup : function(group) {
         data = {
             args : {
-                group : group,
+                group : JSON.stringify(group),
             },
             method: 'saveGroup',
             interfaceName: 'core.usermanager.IUserManager',
@@ -2329,7 +2325,7 @@ GetShopApiWebSocket.UserManager.prototype = {
     saveUser : function(user) {
         data = {
             args : {
-                user : user,
+                user : JSON.stringify(user),
             },
             method: 'saveUser',
             interfaceName: 'core.usermanager.IUserManager',
@@ -2340,9 +2336,9 @@ GetShopApiWebSocket.UserManager.prototype = {
     sendResetCode : function(title,text,username) {
         data = {
             args : {
-                title : title,
-                text : text,
-                username : username,
+                title : JSON.stringify(title),
+                text : JSON.stringify(text),
+                username : JSON.stringify(username),
             },
             method: 'sendResetCode',
             interfaceName: 'core.usermanager.IUserManager',
@@ -2353,9 +2349,9 @@ GetShopApiWebSocket.UserManager.prototype = {
     updatePassword : function(userId,oldPassword,newPassword) {
         data = {
             args : {
-                userId : userId,
-                oldPassword : oldPassword,
-                newPassword : newPassword,
+                userId : JSON.stringify(userId),
+                oldPassword : JSON.stringify(oldPassword),
+                newPassword : JSON.stringify(newPassword),
             },
             method: 'updatePassword',
             interfaceName: 'core.usermanager.IUserManager',

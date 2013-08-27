@@ -50,12 +50,23 @@ App = {
         
         this.getshopApi.CalendarManager.getEntries(year, month, day, null).done(function(entries) {
             $(entries).each(function() {
+                var availablePositions = this.maxAttendees - this.attendees.length;
                 course = course.clone();
                 course.attr('value', this.entryId);
+                course.attr('location', this.location);
+                course.attr('availablepositions', availablePositions);
                 course.html(me.pad(this.day, 2) + " / " + me.pad(this.month,2) + " - " + this.year + " : " +this.location + " - " + this.title);
                 $('#select-native-1').append(course);
             });
             $('#select-native-1').selectmenu('refresh', true);
+            $('#select-native-1').change(function() {
+                var positions = $(this).find(':selected').attr('availablepositions');
+                $('.availablepositions_course_selected').hide();
+                if (typeof(positions) !== "undefined") {
+                    $('.availablepositions_course_selected').show();
+                    $('.availablepositions_course_selected').html("Ledige plasser på valgt kurs: <b>" + positions + "</b>");
+                }
+            });
         });
         this.getshopApi.UserManager.getAllGroups().done(function(groups) {
             groups = me.shuffle(groups);
@@ -107,6 +118,7 @@ App = {
     },
             
     signOnClicked: function() {
+        var me = this;
         var name = $('#name').val();
         var email = $('#email').val();
         var phone = $('#phone').val();
@@ -144,9 +156,34 @@ App = {
         if (groupId === "") 
             $('label[for=select-native-2]').addClass('error');
         
+        var positions = $('#select-native-1').find(':selected').attr('availablepositions');
+        
+        if (positions === "0") {
+            alert('Beklager, det er ingen ledige plasser på valgt kurs.');
+            return;
+        }
+        
         if ($('label.error').length > 0) {
             alert('Vennligst rett feltene i rødt');
-            return;
+        } else {
+            var password = Math.floor(Math.random()*90000) + 10000;
+            var user = {
+                fullName : name,
+                emailAddress : email,
+                type : 10,
+                password : password,
+                birthDay : vatnr,
+                companyName : company,
+                cellPhone : phone, 
+                groups : [groupId]
+            };
+            
+            me.getshopApi.UserManager.createUser(user).done(function(createUser) {
+                me.getshopApi.CalendarManager.addUserToEvent(createUser.id, courseId, password, createUser.username).done(function() {
+                    alert('Du er nå påmeldt kurset');
+                    document.location.href = document.URL.substring(0, document.URL.indexOf("#"));
+                });
+            });
         }
     },
             
@@ -213,20 +250,38 @@ App = {
             $(filters).each(function() {
                 var filter = $("<a href='#' data-rel='back' data-role='button'>" + this + "</a>");
                 var filterName = this;
-                filter.click(function() { me.activeFilter(filterName) });
+                filter.click(function() { me.activateFilter(filterName) });
                 filterHolder.append(filter);
             });
         });
     },
-    activeFilter: function(filter) {
+    activateFilter: function(filter) {
+        filter = filter.replace(/'/g, "\\'");
         $('td.date_has_event').removeClass('disabled');
         $('td.date_has_event').each(function() {
-            if ($(this).attr('locations').indexOf(filter) < 0) {
+            if ($(this).attr('locations').toUpperCase().indexOf(filter.toUpperCase()) < 0) {
                 $(this).addClass('disabled');
             }
         });
         $('.displayActiveFilter').fadeIn(500);
         $('#displayActiveFilter').html(filter);
+        
+        //Hide select options
+        if (!this.options) {
+            this.options = $('#select-native-1').find('option');
+        }
+        
+        var selectValue = $('<div/>').html(this.options).find('option[value=]');
+        $('#select-native-1').html("");
+        $('#select-native-1').append(selectValue.clone());
+        $(this.options).each(function() {
+            if ($(this).attr('location') && $(this).attr('location').toUpperCase() === filter.toUpperCase()) {
+                $(this).removeAttr('selected');
+                $('#select-native-1').append(this);
+            }
+        });
+        
+        $('#select-native-1').selectmenu('refresh', true);
     },
     loadCourses: function() {
         var topEntry = $('<div data-role="collapsible" data-theme="b" data-content-theme="d"  data-inset="false"/>');
@@ -309,7 +364,6 @@ App.Calendar.prototype = {
     },
             
     createTable: function() {
-        
         var outer = $("<div class='calendar'>"+this.getMonthName()+" - " + this.year +"</div>");
         outer.attr('year', this.year);
         outer.attr('month', this.month);
@@ -402,7 +456,14 @@ App.Calendar.prototype = {
                         endTime = " - " + entry.stoptime;
                     }
                     entryDetails.append("<b>Tidspunkt:</b> " + entry.starttime + endTime);
-                    entryDetails.append("<br><b>Tilgjenelige plasser:</b> " + (entry.maxAttendees - entry.attendees.length));
+                    var availablePositions = entry.maxAttendees - entry.attendees.length;
+                    var clazz = "notavailable";
+                    
+                    if (availablePositions > 0) {
+                        clazz = "available";
+                    } 
+                        
+                    entryDetails.append("<div class='freespots "+clazz+"'><div class='label'>Ledige plasser</div><div class='number'>" + availablePositions + "</div></div>");
                     entryDetails.append("<br>");
                     entryDetails.append("<br><b>Sted</b>");
                     entryDetails.append("<br>"+entry.location);
@@ -419,6 +480,5 @@ App.Calendar.prototype = {
     init: function() {
         this.createTable();
         this.loadData();
-        
     }
 };

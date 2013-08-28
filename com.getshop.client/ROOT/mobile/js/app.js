@@ -11,7 +11,7 @@ App = {
     monthIndex : 1,
     
     start: function() {
-        this.getshopApi = new GetShopApiWebSocket(window.location.hostname);
+        this.getshopApi = new GetShopApiWebSocket("www.autoakademiet.no");
         var me = this;
 
         this.getshopApi.connectedCallback = function() {

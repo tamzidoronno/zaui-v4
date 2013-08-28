@@ -11,7 +11,7 @@
 .upload_information_panel .uploading { padding-left: 30px; padding-right: 10px; }
 .upload_information_panel .uploading img { position:absolute; left: 5px; }
 .header .Login .applicationinner { margin-right: 0px; background-color: #<? echo $this->getColors()->baseColor; ?>; color: #<?  echo $this->getColors()->textColor; ?> }
-.header .Login {border: solid 1px #<? echo $this->getColors()->baseColor; ?>; position: absolute; right: 0px; text-align: right; top: 0px;  z-index: 1;}
+.header .Login {border: solid 1px #<? echo $this->getColors()->baseColor; ?>; position: absolute; right: 0px; text-align: right; top: 0px;  z-index: 402;}
 .header .Login form { margin: 0px; padding: 0px; }
 .header .Login .form { text-align: left; height: 80px; width: 250px ; position: relative; display: none;} 
 .header .Login .form .username { position:absolute; left: 5px; top: 5px;} 
@@ -33,6 +33,15 @@
     text-align: center; 
     cursor: pointer; 
     right: 0px;
+}
+.header .Login .form {
+    background-color: #FFF;
+    border: solid 1px #BBB;
+}
+.header .Login .form .loginbutton {
+    position: absolute;
+    right: 10px; 
+    bottom: 5px;
 }
 .informationbox .unpayedappheader { font-size:16px; padding-left: 10px; border: solid 1px #BBBBBB; padding-top:10px; padding-bottom: 10px; }
 .informationbox .unpayedapptable { margin-left: 10px; margin-right: 10px; }

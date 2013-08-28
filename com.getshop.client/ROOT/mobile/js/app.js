@@ -231,7 +231,10 @@ App = {
 
                             if (application.appName === "ContentManager") {
                                 me.getshopApi.ContentManager.getContent(application.id).done(function(content) {
-                                    contentHolder.html(content);
+                                    var contentHtml = $(content);
+                                    contentHtml.find('img').css('height','100%');
+                                    contentHtml.find('img').css('width','100%');
+                                    contentHolder.html(contentHtml);
                                 });
                             }
                         }

@@ -36,6 +36,68 @@
     width: 500px;
 }
 
+.CourseDayEntry,
 .ContentManager {
     text-align: left;
+}
+
+.kursentry {
+    position: relative;
+    padding: 10px;
+    border: dashed 2px #CCC; 
+    margin-bottom: 20px;
+    background-color: #DDD;
+}
+
+.disabled {
+    background-position: 0px -0px !important;
+    color: #222 !important;
+}
+
+.displayActiveFilter {
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    display: none;
+}
+
+label.error { 
+    color: red; 
+    font-weight:bold
+}
+
+.freespots {
+    border: solid 2px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background-color: green;
+    padding: 5px;
+    text-align: center;
+    border-radius: 3px;
+    box-shadow: 5px 5px 3px #888888;
+}
+
+.freespots .label {
+    font-size: 10px;
+}
+
+.freespots .number {
+    font-size: 20px;
+    padding: 5px;
+}
+
+.available {
+    background: -webkit-linear-gradient(#0acf59, #009b3e);
+}
+
+.notavailable {
+    background: -webkit-linear-gradient(#cf4b41, #ff1200);
+}
+
+.availablepositions_course_selected {
+    text-align: center;
+    padding: 5px;
+    margin-top: 20px;
+    display: none;
 }

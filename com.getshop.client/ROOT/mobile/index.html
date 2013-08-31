@@ -1,0 +1,124 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Auto Akademiet AS</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+        <link rel="stylesheet" href="css/jquerymobile.css" charset="utf-8" />
+        <script src="js/jquery.js" charset="utf-8" ></script>
+        <script src="js/date.js" charset="utf-8" ></script>
+        <script src="js/jquerymobile.js" charset="utf-8" ></script>
+        <script src="js/GetShopApiWebSocket.js" charset="utf-8" ></script>
+        <script src="js/app.js" charset="utf-8" ></script>
+
+        <link rel="stylesheet" href="ical/css/master.css" type="text/css" media="screen" charset="utf-8" />
+        <script src="ical/js/coda.js" type="text/javascript" charset="utf-8" ></script>
+
+        <link rel="stylesheet" href="css/theme.css" type="text/css" media="screen" charset="utf-8" />
+    </head>
+
+    <div data-role="page" id="home">
+        <div data-role="header" data-theme="b">
+            <img border="0" src="css/images/logo.png" style="margin-top: 10px; margin-bottom: 10px; float:center; display:inline"/>
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="#courses" data-transition="flip">Kurser</a></li>
+                    <li><a href="#signup" data-transition="flip">Påmelding</a></li>
+                </ul>
+            </div>
+        </div>
+        <div data-role="content">
+            <p>
+                Autoakademiet leverer kurs til ulike grossister. Kurskalenderen viser en oversikt over kurs aktiviteter på ulike steder.
+                <br>Klikk på aktuellt kurs og få utfyllende informasjon om sted, klokkeslett og restplasser.
+            </p>
+            <h2>Kurs kalender</h2>
+            <div id="calender"></div>
+            <div class="displayActiveFilter">Resultatet er filterert på: <span id="displayActiveFilter"></span></div>
+        </div>
+        
+        <!-- INCLUDE FRONT HERE -->
+        <div data-role="footer" data-theme="b" data-tap-toggle="false" data-id="foo1" data-position="fixed">
+            <div data-role="navbar">
+                <ul>
+                    <li><a id="prev" href="#">Forrige</a></li>
+                    <li><a href="#filter" data-rel="dialog">Velg sted</a></li>
+                    <li><a id="next" href="#">Neste</a></li>
+                </ul>
+            </div>
+        </div>
+        <div data-role="popup" id="noCalenderEventBack">
+            <p>Det finnes ikke noe kurstilbud lengre tilbake i tid.</p>
+        </div>
+        <div data-role="popup" id="noCalenderEventForward">
+            <p>For å se kalenderen lengre fram i tid, vennligst benytt websiden.</p>
+        </div>
+    </div>
+
+    <div data-role="page" id="courses">
+        <div class="header"></div>
+        <div data-role="content" id="courselist">
+            <p> Oversikt over kurs levert av Autoakademiet.
+            <br>Klikk på kurset for utfyllende informasjon.</p>
+        </div>
+    </div>
+
+    <div data-role="page" id="signup">
+        <div class="header"></div>
+        <div data-role="content" style="text-align:left">
+            <p>
+                Fyll ut skjemaet under for å melde deg på et av våre kurs.
+            </p>
+            <form>
+                <label for="name">Navn:</label>
+                <input type="text" data-clear-btn="true" name="text-6" id="name" value="" >
+                <label for="email">E-post</label>
+                <input type="text" data-clear-btn="true" name="text-6" id="email" value="" >
+                <label for="phone">Mob.Tlf.</label>
+                <input type="text" data-clear-btn="true" name="text-6" id="phone" value="" >
+                <label for="vatnr">Org.nr.</label>
+                <input type="text" data-clear-btn="true" name="text-6" id="vatnr" value="" >
+                <label for="company">Firma.</label>
+                <input type="text" data-clear-btn="true" name="text-19" id="company">
+
+                <div data-role="fieldcontain">
+                    <label for="select-native-1">Velg kurs: </label>
+                    <select name="select-native-1" id="select-native-1">
+                    </select>
+                </div>
+
+                <div data-role="fieldcontain">
+                    <label for="select-native-2">Velg grossist: </label>
+                    <select name="select-native-1" id="select-native-2"></select>
+                </div>
+
+                <div class="availablepositions_course_selected"></div>
+                <br>
+                <a id="signon" href="#" data-role="button">Meld på</a>
+            </form>
+        </div>
+
+    </div>
+
+    <div data-role="page" id="filter">
+        <div class="header"></div>
+        <div data-role="content"> 
+            Velg et av stedene under. 
+            <div data-role="controlgroup" id="filterholdergroup"></div>
+        </div>
+    </div>
+</html>
+
+<script>
+    $(document).ready(function() {
+        App.start();
+    });
+</script>
+

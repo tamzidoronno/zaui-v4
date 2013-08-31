@@ -33,6 +33,15 @@ text-align: center;
 cursor: pointer; 
 right: 0px;
 }
+.header .Login .form {
+    background-color: #FFF;
+    border: solid 1px #BBB;
+}
+.header .Login .form .loginbutton {
+    position: absolute;
+    right: 10px; 
+    bottom: 5px;
+}
 .informationbox .unpayedappheader { font-size:16px; padding-left: 10px; border: solid 1px #BBBBBB; padding-top:10px; padding-bottom: 10px; }
 .informationbox .unpayedapptable { margin-left: 10px; margin-right: 10px; }
 .informationbox .unpayedapptable tr:hover td { background-color: #EFEFEF; }

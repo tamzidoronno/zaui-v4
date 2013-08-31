@@ -14,4 +14,5 @@ public class JsonObject2 implements Serializable {
     public Map<String,String> args;
     
     public String addr;
+    public String messageId = "";
 }

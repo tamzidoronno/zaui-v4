@@ -77,15 +77,7 @@
     </p>
 </div>
 
-<div data-role="footer" data-theme="b" data-tap-toggle="false" data-id="foo1" data-position="fixed">
-    <div data-role="navbar">
-        <ul>
-            <li><a href="#">Forrige</a></li>
-            <li><a href="#filter" data-rel="dialog">Velg sted</a></li>
-            <li><a href="#">Neste</a></li>
-        </ul>
-    </div>
-</div>
+
 
 <script>
 $('.date_has_event').click(function() {

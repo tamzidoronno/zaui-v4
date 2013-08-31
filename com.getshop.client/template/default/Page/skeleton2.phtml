@@ -4,10 +4,9 @@
     $this->includefile('mainmenu');
     $this->includefile('header');
     ?>
-
-    <div class="mainarea-outer">
-        <div class="mainarea"> 
-            <table width="100%">
+    <div class="gs_row r1 gs_outer ">
+        <div class="gs_inner gs_margin_bottom">
+            <table width="100%"  cellspacing='0' cellpadding='0'>
                 <tr>
                     <td width="20%" valign="top"  class='app_row_entry'>
                         <div area='left_1' class="applicationarea gs_margin_right">
@@ -15,7 +14,7 @@
                         </div>
                     </td>
                     <td valign="top"  class='app_row_entry'>
-                        <div area='main_1' class="applicationarea">
+                        <div area='main_1' class="applicationarea gs_margin_left">
                             <?php $this->getPage()->getApplicationArea('main_1')->render(); ?>
                         </div>
                     </td>

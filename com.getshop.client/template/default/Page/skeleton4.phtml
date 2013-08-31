@@ -5,12 +5,15 @@
     $this->includefile('header');
     ?>
 
-    <div class="mainarea-outer 1col-layout">
-        <div class="mainarea"> 
-            <div class="main-area-top"></div>
-                <div area='main_1'  class="applicationarea">
+    <div class="gs_row r1 gs_outer">
+        <div class="gs_inner">
+                <div area='main_1'  class="applicationarea gs_margin_bottom">
                     <?php $this->getPage()->getApplicationArea('main_1')->render(); ?>
                 </div>    
         </div>
     </div>
 </div>
+
+<?php
+$this->includefile('footer');
+?>

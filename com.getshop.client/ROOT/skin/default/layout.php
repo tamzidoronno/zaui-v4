@@ -20,7 +20,6 @@ body {
 .breadcrumb,
 .subheader,
 .mainarea {
-    width: <? echo $this->getWidthTotal();?>px;
     margin: 0 auto;
     border: 0px;
 }

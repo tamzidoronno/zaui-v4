@@ -5,33 +5,26 @@
     $this->includefile('header');
     ?>
 
-    <div class="mainarea-outer">
-        <div class="mainarea"> 
-            <div class="main-area-top"></div>
-            <div class="mainareacontent">
-                <div class="mainarea-outer">
-                    <div class="mainarea 2col-left-layout"> 
-                        <table width="100%">
-                            <tr>
-                                <td valign="top"  class='app_row_entry'>
-                                    <div area='main_1' class="applicationarea">
-                                        <?php $this->getPage()->getApplicationArea('main_1')->render(); ?>
-                                    </div>
-                                </td>
-                                <td width="20%" valign="top" class='app_row_entry'>
-                                    <div area='right_1' class="applicationarea gs_margin_left">
-                                        <?php $this->getPage()->getApplicationArea('right_1')->render(); ?>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="main-area-bottom"></div>
+    <div class="gs_row r1 gs_outer">
+        <div class="gs_inner">
+            <table width="100%"  cellspacing='0' cellpadding='0'>
+                <tr>
+                    <td valign="top"  class='app_row_entry'>
+                        <div area='main_1' class="applicationarea gs_margin_right">
+                            <?php $this->getPage()->getApplicationArea('main_1')->render(); ?>
+                        </div>
+                    </td>
+                    <td width="20%" valign="top" class='app_row_entry'>
+                        <div area='right_1' class="applicationarea gs_margin_left">
+                            <?php $this->getPage()->getApplicationArea('right_1')->render(); ?>
+                        </div>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
+</div>
 
-    <?php
-    $this->includefile('footer');
-    ?>
+<?php
+$this->includefile('footer');
+?>

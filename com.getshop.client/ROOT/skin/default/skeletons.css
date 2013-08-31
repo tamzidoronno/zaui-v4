@@ -1,0 +1,57 @@
+
+.skelholder .application_row .app_row_entry {
+    height: 200px;
+}
+.skelholder .application_row .app_row_entry .applicationarea {
+    height:100%;
+}
+
+
+.empty_app_area {
+     background-color:rgba(255,235,205, 0.1); 
+     width: 100%; 
+     border: dotted 1px #666;
+     height: 100%; 
+     position:absolute; 
+     top:0px; 
+     left: 0px; 
+}
+
+
+.empty_app_area .content_box {
+    position:absolute; top: 25%; text-align: center;width:100%;
+}
+.empty_app_area .add_content_img,.empty_app_area .add_content_img_noclick {
+    border:solid 1px #666; background-color:#666; border-radius:3px;
+    width:40px;
+    height:40px;
+    cursor:pointer;
+}
+.empty_app_area .title {
+    font-size:14px;
+}
+
+.skeleton1 .app_row_entry, .skeleton2 .app_row_entry, .skeleton3 .app_row_entry { height: 300px; }
+.skeleton1 .applicationarea, .skeleton2 .applicationarea, .skeleton3 .applicationarea { height: 100%; }
+
+.skeleton4 .applicationarea { min-height: 400px; }
+
+.skeleton7 .applicationarea,
+.skeleton8 .applicationarea, 
+.skeleton9 .applicationarea  
+    { min-height: 150px; }
+.skeleton7 .applicationarea { min-height: 200px; }
+.skeleton10 .top_row { clear: both; position:relative; }
+.skeleton10 .top_row .applicationarea  {
+   height: 100%;
+}
+.skeleton10 .gs_row.r3 .applicationarea, .skeleton10 .gs_row.r2 .applicationarea { min-height: 300px; }
+
+.skeleton11 .midle_row { clear: both; position:relative; }.skeleton11 .main_col .applicationarea, .skeleton11 .apparea-main-1 { min-height: 300px; }
+
+.skeleton14 .mainarea .applicationarea { min-height: 200px; }
+.skeleton14 .col { width: 50%; float: left; }
+
+.skeleton16 .main_col .applicationarea,.skeleton17 .main_col .applicationarea { min-height: 200px; }
+
+#apparea-bottom { display:none; }

@@ -55,6 +55,16 @@ public class Page extends DataCommon implements Cloneable {
     public Set<String> getAllPageAreas() {
         return pageAreas.keySet();
     }
+
+    public void moveApplicationToArea(String fromarea, String toarea) {
+        if(pageAreas.containsKey(fromarea)) {
+            PageArea area = pageAreas.get(fromarea);
+            area = pageAreas.get(fromarea);
+            area.type = toarea;
+            pageAreas.remove(fromarea);
+            pageAreas.put(toarea, area);
+        }
+    }
     
     public static class DefaultPages {
         public static String OrderOverviewPageId = "orderoverview";

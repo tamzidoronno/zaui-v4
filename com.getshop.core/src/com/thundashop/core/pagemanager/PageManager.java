@@ -54,8 +54,10 @@ public class PageManager extends ManagerBase implements IPageManager {
     @Override
     public void dataFromDatabase(DataRetreived dataRetreived) {
         for (DataCommon data : dataRetreived.data) {
-            if (data instanceof Page)
-                pagePool.addFromDatabase((Page)data);
+            if (data instanceof Page) {
+                Page p = (Page) data;
+                pagePool.addFromDatabase(p);
+            }
             
             if (data instanceof AppConfiguration)
                 applicationPool.addFromDatabase((AppConfiguration)data);

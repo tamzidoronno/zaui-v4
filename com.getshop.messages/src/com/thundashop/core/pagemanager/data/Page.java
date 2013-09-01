@@ -8,7 +8,6 @@ package com.thundashop.core.pagemanager.data;
 
 import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.DataCommon;
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -46,7 +45,6 @@ public class Page extends DataCommon implements Cloneable {
         if(!pageAreas.containsKey(pageArea)) {
             PageArea newPageArea = new PageArea(this);
             newPageArea.type = pageArea;
-            
             pageAreas.put(pageArea, newPageArea);
         }
         return pageAreas.get(pageArea);
@@ -59,7 +57,6 @@ public class Page extends DataCommon implements Cloneable {
     public void moveApplicationToArea(String fromarea, String toarea) {
         if(pageAreas.containsKey(fromarea)) {
             PageArea area = pageAreas.get(fromarea);
-            area = pageAreas.get(fromarea);
             area.type = toarea;
             pageAreas.remove(fromarea);
             pageAreas.put(toarea, area);

@@ -267,6 +267,9 @@ public class PagePoolImpl {
     }
 
     public Page finalizePage(Page page) throws ErrorException {
+        if(page.parent != null) {
+            page.parent = pages.get(page.parent.id);
+        }
         page.clear();
         addInheritatedApplications(page, page.parent);
         addStickedApplications(page);

@@ -7,30 +7,17 @@
     <div class="gs_outer gs_row r1">
         <div class='gs_inner'>
             <table width="100%" cellspacing="0" cellpadding="0">
-
-            <td class='gs_col c1 gs_margin_right' valign="top">
-                <div area='main_1' class="applicationarea gs_margin_bottom">
-                    <?php
-                    $this->getPage()->getApplicationArea('main_1')->render();
-                    ?>
-                </div>
-                <div area='main_2' class="applicationarea">
-                    <?php
-                    $this->getPage()->getApplicationArea('main_2')->render();
-                    ?>
-                </div>
-            </td>
-            <td class='gs_col c2 gs_margin_left' valign="top">
-                <div area='left_1' class="applicationarea">
-                    <?php
-                    $this->getPage()->getApplicationArea('left_1')->render();
-                    ?>
-                </div>
-            </td>
+                <td class='gs_col c1 gs_margin_right' valign="top">
+                    <? AppAreaHelper::printAppArea($this->getPage(), "main_1", true); ?>
+                    <? AppAreaHelper::printAppArea($this->getPage(), "main_2", false); ?>
+                </td>
+                <td class='gs_col c2 gs_margin_left' valign="top">
+                    <? AppAreaHelper::printAppArea($this->getPage(), "left_1", false); ?>
+                </td>
             </table>
         </div>
     </div>
-    
+
     <?php
     $this->includefile('footer');
     ?>

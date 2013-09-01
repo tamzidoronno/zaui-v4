@@ -10,14 +10,10 @@
             <table width="100%"  cellspacing='0' cellpadding='0'>
                 <tr>
                     <td valign="top"  class='gs_col c1 gs_margin_right'>
-                        <div area='main_1' class="applicationarea">
-                            <?php $this->getPage()->getApplicationArea('main_1')->render(); ?>
-                        </div>
+                        <? AppAreaHelper::printAppArea($this->getPage(), "main_1"); ?>
                     </td>
                     <td width="20%" valign="top" class='gs_col c2 gs_margin_left'>
-                        <div area='right_1' class="applicationarea">
-                            <?php $this->getPage()->getApplicationArea('right_1')->render(); ?>
-                        </div>
+                        <? AppAreaHelper::printAppArea($this->getPage(), "right_1"); ?>
                     </td>
                 </tr>
             </table>

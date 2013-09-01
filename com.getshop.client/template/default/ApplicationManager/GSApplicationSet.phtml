@@ -5,32 +5,26 @@ $factory = $this->getFactory();
 $pool = $factory->getApplicationPool();
 /* @var $pool ApplicationPool */
 
-if($this->isEditorMode()) {
-    $allApps = $pool->getNotAddedSingletonApplicationSettings();
-    printApplications(false, $allApps, $this, $pool);
-} else {
-    printApplications("Web shop applications", $pool->getAllApplicationSettingsByType("WebshopApplication"), $this, $pool);
-    printApplications("Payment applications", $pool->getAllApplicationSettingsByType("PaymentApplication"), $this, $pool);
-    printApplications("Marketing applications", $pool->getAllApplicationSettingsByType("MarketingApplication"), $this, $pool);
-    printApplications("Reporting applications", $pool->getAllApplicationSettingsByType("ReportingApplication"), $this, $pool);
-}
 
-function printApplications($appNames, $apps, \ns_c841f5a5_ecd5_4007_b9da_2c7538c07212\ApplicationDisplayer $appDisplayer, $pool) {
-    $activebutton = true;
-    if ($appNames) {
-        echo "<div class='app_type'>$appNames</div>";
-        $activebutton = false;
+if(!function_exists("printApplications")) {
+    function printApplications($appNames, $apps, \ns_c841f5a5_ecd5_4007_b9da_2c7538c07212\ApplicationDisplayer $appDisplayer, $pool) {
+        $activebutton = true;
+        if ($appNames) {
+            echo "<div class='app_type'>$appNames</div>";
+            $activebutton = false;
+        }
+        $i=0;
+        echo "<div class='features'>";
+        foreach($apps as $app) {
+            /* @var $app core_common_AppConfiguration */
+
+            $i++;
+            print_app_for_getshop($app, $i%2, $activebutton, $pool);
+        }     
+        echo "</div>";
     }
-    $i=0;
-    echo "<div class='features'>";
-    foreach($apps as $app) {
-        /* @var $app core_common_AppConfiguration */
-
-        $i++;
-        print_app_for_getshop($app, $i%2, $activebutton, $pool);
-    }     
-    echo "</div>";
 }
+
 
 function print_app_for_getshop($app, $even, $displayActivateButton, ApplicationPool $pool) {
     $name = $app->appName;
@@ -79,4 +73,16 @@ function print_app_for_getshop($app, $even, $displayActivateButton, ApplicationP
         </div>        
         <? endif; ?>
     </div>
-<?php } ?>
+<?php } 
+
+
+if($this->isEditorMode()) {
+    $allApps = $pool->getNotAddedSingletonApplicationSettings();
+    printApplications(false, $allApps, $this, $pool);
+} else {
+    printApplications("Web shop applications", $pool->getAllApplicationSettingsByType("WebshopApplication"), $this, $pool);
+    printApplications("Payment applications", $pool->getAllApplicationSettingsByType("PaymentApplication"), $this, $pool);
+    printApplications("Marketing applications", $pool->getAllApplicationSettingsByType("MarketingApplication"), $this, $pool);
+    printApplications("Reporting applications", $pool->getAllApplicationSettingsByType("ReportingApplication"), $this, $pool);
+}
+?>

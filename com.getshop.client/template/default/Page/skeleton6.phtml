@@ -12,15 +12,12 @@ $this->includefile('header');
         ?>
     </div>
 </div>
-<div class="mainarea-outer">
-    <div class="mainarea"> 
+<div class="gs_outer">
+    <div class="gs_inner"> 
         <div class="main-area-top"></div>
         <div class="mainareacontent">
             <div area='middle' id="apparea-middle" class="applicationarea middle inline">
-                <?php   
-                if (!$this->emptySkeleton)    
-                    $this->getPage()->getMiddleApplicationArea()->render(); 
-                ?>
+                <?php $this->getPage()->getApplicationArea('main_1')->render(); ?>
             </div>
         </div>
         <div class="main-area-bottom"></div>

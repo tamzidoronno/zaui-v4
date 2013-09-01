@@ -1,7 +1,7 @@
 
-<div class="gs_outer">
+<div class="gs_outer header">
     <div class="gs_inner">
-        <div area='header' id="apparea-header" class="applicationarea header">
+        <div area='header' id="apparea-header" class="applicationarea">
             <?php
             if (!$this->emptySkeleton) {
                 $this->getPage()->getApplicationArea('header')->render();
@@ -11,15 +11,13 @@
     </div>
 </div>
 
-<div class="gs_outer">
+<div class="gs_outer breadcrumb">
     <div class="gs_inner">
-        <div class="breadcrumb">
-            <div class="breadcrum-area-content" id="apparea-breadcrumb">
-                <?php
-                if (!$this->emptySkeleton)
-                    $this->getFactory()->getApplicationPool()->getApplicationInstance("7093535d-f842-4746-9256-beff0860dbdf")->render();
-                ?>
-            </div>
+        <div class="breadcrum-area-content" id="apparea-breadcrumb">
+            <?php
+            if (!$this->emptySkeleton)
+                $this->getFactory()->getApplicationPool()->getApplicationInstance("7093535d-f842-4746-9256-beff0860dbdf")->render();
+            ?>
         </div>
     </div>
 </div>

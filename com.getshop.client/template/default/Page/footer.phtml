@@ -5,9 +5,9 @@ if (!$this->getFactory()->isExtendedMode())
     return;
 ?>
 
-<div class="footer-outer">
-    <div class="semi_footer">
-        <div area='footer' id="apparea-footer" class="applicationarea footer">
+<div class="gs_outer footer">
+    <div class="gs_inner">
+        <div area='footer' id="apparea-footer" class="applicationarea">
             <?php 
             if (!$this->emptySkeleton)    
                 $this->getPage()->getApplicationArea('footer')->render(); 

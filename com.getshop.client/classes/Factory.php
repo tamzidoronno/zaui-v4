@@ -344,6 +344,7 @@ class Factory extends FactoryBase {
 
         // LA STÅ!
         echo '<link rel="stylesheet" type="text/css" href="/js/jquery.ui/css/smoothness/jquery-ui-1.9.2.custom.min.css">';
+        echo '<link rel="stylesheet" type="text/css" href="/skin/default/skeletons.css">';
         echo '<link id=\'mainlessstyle\' rel="stylesheet" type="text/css" media="all" href="StyleSheet.php">';
     }
 

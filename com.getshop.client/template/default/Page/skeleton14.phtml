@@ -4,29 +4,15 @@
     $this->includefile('mainmenu');
     $this->includefile('header');
     ?>
-    <div class="mainarea">
-        <div class='col'>
-            <div area='top_1' class="applicationarea apparea-top-1 left_box gs_margin_right gs_margin_bottom  gs_margin_right">
-                <?php
-                $this->getPage()->getApplicationArea('top_1')->render();
-                ?>
+    <div class="gs_row r1">
+        <div class='gs_inner'>
+            <div class="gs_col c1">
+                <? AppAreaHelper::printAppArea($this->getPage(), "main_1", true, true); ?>
+                <? AppAreaHelper::printAppArea($this->getPage(), "main_2", false, true); ?>
             </div>
-            <div area='second_1' class="applicationarea apparea-second-1 left_box gs_margin_right">
-                <?php
-                $this->getPage()->getApplicationArea('second_1')->render();
-                ?>
-            </div>
-        </div>
-        <div class='col'>
-            <div area='top_2' class="applicationarea apparea-top-2 right_box  gs_margin_bottom gs_margin_left">
-                <?php
-                $this->getPage()->getApplicationArea('top_2')->render();
-                ?>
-            </div>
-            <div area='second_2' class="applicationarea apparea-second-1 right_box gs_margin_left">
-                <?php
-                $this->getPage()->getApplicationArea('second_2')->render();
-                ?>
+            <div class="gs_col c2">
+                <? AppAreaHelper::printAppArea($this->getPage(), "left_1", true, false, true); ?>
+                <? AppAreaHelper::printAppArea($this->getPage(), "left_2", false, false, true); ?>
             </div>
         </div>
     </div>

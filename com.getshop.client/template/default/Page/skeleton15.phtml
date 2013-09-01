@@ -1,45 +1,23 @@
-<div class="skelholder skeleton14" theme='<? echo $this->getThemeApplicationSettingsId(); ?>'>
+<div class="skelholder skeleton15" theme='<? echo $this->getThemeApplicationSettingsId(); ?>'>
     <?php
     $this->includefile('pageinfo');
     $this->includefile('mainmenu');
     $this->includefile('header');
     ?>
-    <div class="mainarea">
-        <div class='row'>
-            <div area='top_1' class="applicationarea apparea-top-1 left_box gs_margin_bottom">
-                <?php
-                $this->getPage()->getApplicationArea('top_1')->render();
-                ?>
-            </div>
-            <div area='top_2' class="applicationarea apparea-top-2 right_box gs_margin_bottom">
-                <?php
-                $this->getPage()->getApplicationArea('top_2')->render();
-                ?>
-            </div>
+
+    <div class="gs_outer gs_row r1">
+        <div class="gs_inner">
+            <? AppAreaHelper::printRows($this->getPage(), 2, 1); ?>
         </div>
-        <div class='row'>
-            <div area='top_3' class="applicationarea apparea-second-1 left_box gs_margin_bottom">
-                <?php
-                $this->getPage()->getApplicationArea('top_3')->render();
-                ?>
-            </div>
-            <div area='top_4' class="applicationarea apparea-second-1 right_box gs_margin_bottom">
-                <?php
-                $this->getPage()->getApplicationArea('top_4')->render();
-                ?>
-            </div>
+    </div>
+    <div class="gs_outer gs_row r2">
+        <div class="gs_inner">
+            <? AppAreaHelper::printRows($this->getPage(), 2, 3); ?>
         </div>
-        <div class='row'>
-            <div area='top_5' class="applicationarea apparea-second-1 left_box gs_margin_bottom">
-                <?php
-                $this->getPage()->getApplicationArea('top_5')->render();
-                ?>
-            </div>
-            <div area='top_6' class="applicationarea apparea-second-1 right_box gs_margin_bottom">
-                <?php
-                $this->getPage()->getApplicationArea('top_6')->render();
-                ?>
-            </div>
+    </div>
+    <div class="gs_outer gs_row r3">
+        <div class="gs_inner">
+            <? AppAreaHelper::printRows($this->getPage(), 2, 5); ?>
         </div>
     </div>
 </div>

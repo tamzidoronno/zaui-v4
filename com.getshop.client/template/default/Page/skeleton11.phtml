@@ -1,28 +1,17 @@
-<div class="skelholder skeleton11" theme='<? echo $this->getThemeApplicationSettingsId(); ?>'>
-    <?php
-    $this->includefile('pageinfo');
-    $this->includefile('mainmenu');
-    $this->includefile('header');
-    ?>
-    <div class="gs_outer gs_row r1">
-        <div class="gs_inner">
-            <? AppAreaHelper::printAppArea($this->getPage(), "main_1"); ?>
-        </div>  
-    </div>
+<div class="gs_outer gs_row r1">
+    <div class="gs_inner">
+        <? AppAreaHelper::printAppArea($this->getPage(), "main_1"); ?>
+    </div>  
+</div>
 
-    <div class="gs_outer gs_row r2">
-        <div class="gs_inner">
-            <? AppAreaHelper::printRows($this->getPage(), 3); ?>
-        </div>
+<div class="gs_outer gs_row r2">
+    <div class="gs_inner">
+        <? AppAreaHelper::printRows($this->getPage(), 3); ?>
     </div>
+</div>
 
-    <div class="gs_outer gs_row r2">
-        <div class="gs_inner">
-            <? AppAreaHelper::printAppArea($this->getPage(), "main_2"); ?>
-        </div>
+<div class="gs_outer gs_row r2">
+    <div class="gs_inner">
+        <? AppAreaHelper::printAppArea($this->getPage(), "main_2"); ?>
     </div>
-    
-     <?php
-    $this->includefile('footer');
-    ?>
 </div>

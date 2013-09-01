@@ -1,26 +1,16 @@
-<div class="skelholder skeleton7" theme='<? echo $this->getThemeApplicationSettingsId(); ?>'>
-    <?php
-    $this->includefile('pageinfo');
-    $this->includefile('mainmenu');
-    $this->includefile('header');
-    ?>
-    <div class="gs_outer gs_row r1">
-        <div class="gs_inner">
-            <table cellspacing="0" cellpadding="0" width="100%">
-                <td class='gs_col c1 gs_margin_right' valign="top">
-                    <? AppAreaHelper::printAppArea($this->getPage(), "main_1", true); ?>
-                    <? AppAreaHelper::printAppArea($this->getPage(), "main_2"); ?>
-                </td>
-                <td class='gs_col c2 gs_margin_left' valign="top">
-                    <? AppAreaHelper::printAppArea($this->getPage(), "left_1", true); ?>
-                    <? AppAreaHelper::printAppArea($this->getPage(), "left_2", true); ?>
-                    <? AppAreaHelper::printAppArea($this->getPage(), "left_3"); ?>
-                </td>
-            </table>
-        </div>
+
+<div class="gs_outer gs_row r1">
+    <div class="gs_inner">
+        <table cellspacing="0" cellpadding="0" width="100%">
+            <td class='gs_col c1 gs_margin_right' valign="top">
+                <? AppAreaHelper::printAppArea($this->getPage(), "main_1", true); ?>
+                <? AppAreaHelper::printAppArea($this->getPage(), "main_2"); ?>
+            </td>
+            <td class='gs_col c2 gs_margin_left' valign="top">
+                <? AppAreaHelper::printAppArea($this->getPage(), "left_1", true); ?>
+                <? AppAreaHelper::printAppArea($this->getPage(), "left_2", true); ?>
+                <? AppAreaHelper::printAppArea($this->getPage(), "left_3"); ?>
+            </td>
+        </table>
     </div>
-    
-    <?php
-        $this->includefile('footer');
-    ?>
 </div>

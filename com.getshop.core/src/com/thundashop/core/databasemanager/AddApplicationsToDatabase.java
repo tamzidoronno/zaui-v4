@@ -13,12 +13,10 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
-import com.thundashop.core.pagemanager.data.PageArea;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,13 +57,12 @@ public class AddApplicationsToDatabase {
         List<ApplicationSettings> apps = new ArrayList();
 
         ApplicationSettings akad = createSettings(
-                "AutoAkademietTheme", 
-                "b9cc5940-edef-11e2-91e2-0800200c9a66", 
+                "ImageDisplayer", 
+                "831647b5-6a63-4c46-a3a3-1b4a7c36710a", 
                 emtpy, 
                 "", 
-                ApplicationSettings.Type.Theme, false);
-        akad.isPublic = false;
-        akad.allowedStoreIds.add("2fac0e57-de1d-4fdf-b7e4-5f93e3225445");
+                ApplicationSettings.Type.Webshop, false);
+        akad.isPublic = true;
         apps.add(akad);
         
         return apps;
@@ -99,7 +96,7 @@ public class AddApplicationsToDatabase {
 //        
 //        AddPageSettingsIdToAppConfigurationObject.main(args);
 //        context.getBean(AddApplicationsToDatabase.class).showLinks();
-//        java.lang.System.exit(1);
+        java.lang.System.exit(1);
     }
     
     

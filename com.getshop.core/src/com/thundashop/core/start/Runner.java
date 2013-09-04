@@ -7,6 +7,8 @@ import com.thundashop.core.common.StorePool;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.DatabaseSocketHandler;
 import com.thundashop.core.socket.WebInterface2;
+import com.thundashop.core.socket.WebSocketServerImpl;
+import org.java_websocket.server.WebSocketServer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -37,8 +39,11 @@ public class Runner {
             port = Integer.parseInt(args[1]);
             context.getBean(Database.class).activateSandBox();
         }
+
         
         new WebInterface2(log, storePool, port); //Version 2.        
         context.getBean(DatabaseSocketHandler.class).startListener("");
+        WebSocketServer server = context.getBean(WebSocketServerImpl.class);
+        server.start();
     }
 }

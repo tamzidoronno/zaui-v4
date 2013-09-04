@@ -15,5 +15,8 @@ class core_common_JsonObject2 {
 	/** @var String */
 	public $addr;
 
+	/** @var String */
+	public $messageId;
+
 }
 ?>

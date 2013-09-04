@@ -58,15 +58,14 @@ public class AddApplicationsToDatabase {
     private List<ApplicationSettings> addApplications() {
         List<ApplicationSettings> apps = new ArrayList();
 
-        ApplicationSettings akad = createSettings(
-                "AutoAkademietTheme", 
-                "b9cc5940-edef-11e2-91e2-0800200c9a66", 
+        ApplicationSettings blueEnergyTheme = createSettings(
+                "BlueEnergyTheme", 
+                "9ffcc6a0-130e-11e3-8ffd-0800200c9a66", 
                 emtpy, 
                 "", 
                 ApplicationSettings.Type.Theme, false);
-        akad.isPublic = false;
-        akad.allowedStoreIds.add("2fac0e57-de1d-4fdf-b7e4-5f93e3225445");
-        apps.add(akad);
+        blueEnergyTheme.isPublic = true;
+        apps.add(blueEnergyTheme);
         
         return apps;
     }
@@ -94,12 +93,13 @@ public class AddApplicationsToDatabase {
         AppContext.appContext = context;
 //        
         context.getBean(AddApplicationsToDatabase.class).insert();
+
 //        context.getBean(AddApplicationsToDatabase.class).updateThemes();
 //        context.getBean(AddApplicationsToDatabase.class).updateUserPages();
 //        
 //        AddPageSettingsIdToAppConfigurationObject.main(args);
-//        context.getBean(AddApplicationsToDatabase.class).showLinks();
-//        java.lang.System.exit(1);
+        context.getBean(AddApplicationsToDatabase.class).showLinks();
+        java.lang.System.exit(1);
     }
     
     

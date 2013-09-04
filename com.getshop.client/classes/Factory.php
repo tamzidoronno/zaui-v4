@@ -114,6 +114,8 @@ class Factory extends FactoryBase {
         echo "\n" . '<script type="text/javascript" src="js/jquery.applicationPicker.js"></script>';
         echo "\n" . '<!--[if gte IE 8]><script src="js/jquery.xdr-transport.js"></script><![endif]-->';
         echo "\n" . '<link id="google_webfont_1" rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600">';
+        
+        echo "\n" . '<script type="text/javascript" src="js/getshopwebsocketapi/GetShopApiWebSocket.js"></script>';
         ?>
         <script>
             $( document ).tooltip({ 

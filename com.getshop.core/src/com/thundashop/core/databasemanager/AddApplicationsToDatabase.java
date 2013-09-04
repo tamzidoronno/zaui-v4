@@ -64,6 +64,15 @@ public class AddApplicationsToDatabase {
                 ApplicationSettings.Type.Webshop, false);
         akad.isPublic = true;
         apps.add(akad);
+
+        ApplicationSettings blueEnergyTheme = createSettings(
+                "BlueEnergyTheme", 
+                "9ffcc6a0-130e-11e3-8ffd-0800200c9a66", 
+                emtpy, 
+                "", 
+                ApplicationSettings.Type.Theme, false);
+        blueEnergyTheme.isPublic = true;
+        apps.add(blueEnergyTheme);
         
         return apps;
     }
@@ -91,11 +100,12 @@ public class AddApplicationsToDatabase {
         AppContext.appContext = context;
 //        
         context.getBean(AddApplicationsToDatabase.class).insert();
+
 //        context.getBean(AddApplicationsToDatabase.class).updateThemes();
 //        context.getBean(AddApplicationsToDatabase.class).updateUserPages();
 //        
 //        AddPageSettingsIdToAppConfigurationObject.main(args);
-//        context.getBean(AddApplicationsToDatabase.class).showLinks();
+        context.getBean(AddApplicationsToDatabase.class).showLinks();
         java.lang.System.exit(1);
     }
     

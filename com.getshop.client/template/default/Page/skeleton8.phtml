@@ -1,15 +1,14 @@
 
 <div class="gs_outer gs_row r1">
     <div class="gs_inner">
-        <table width="100%" cellspacing="0" cellpadding="0">
-            <td class='gs_col c1 gs_margin_right' valign="top">
-                <? AppAreaHelper::printAppArea($this->getPage(), "main_1", true); ?>
-                <? AppAreaHelper::printAppArea($this->getPage(), "main_2", false); ?>
-            </td>
-            <td class='gs_col c2 gs_margin_left' valign="top">
-                <? AppAreaHelper::printAppArea($this->getPage(), "left_1", true); ?>
-                <? AppAreaHelper::printAppArea($this->getPage(), "left_2", false); ?>
-            </td>
-        </table>
+        <div class='gs_col c1 gs_margin_right'>
+            <? AppAreaHelper::printAppArea($this->getPage(), "main_1", true); ?>
+            <? AppAreaHelper::printAppArea($this->getPage(), "main_2", false); ?>
+        </div>
+        <div class='gs_col c2 gs_margin_left'>
+            <? AppAreaHelper::printAppArea($this->getPage(), "left_1", true); ?>
+            <? AppAreaHelper::printAppArea($this->getPage(), "left_2", false); ?>
+        </div>
+        <div class='gs_bottom'></div>
     </div>
 </div>

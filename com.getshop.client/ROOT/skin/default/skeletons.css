@@ -8,13 +8,13 @@
 
 
 .empty_app_area {
-     background-color:rgba(255,235,205, 0.1); 
-     width: 100%; 
-     border: dotted 1px #666;
-     height: 100%; 
-     position:absolute; 
-     top:0px; 
-     left: 0px; 
+    background-color:rgba(255,235,205, 0.1); 
+    width: 100%; 
+    border: dotted 1px #666;
+    height: 100%; 
+    position:absolute; 
+    top:0px; 
+    left: 0px; 
 }
 .applicationarea { min-height: 150px; }
 
@@ -31,22 +31,36 @@
     font-size:14px;
 }
 
+td.gs_col { height: 100px ; }
+td.gs_col .applicationarea { height: 100%; }
+
 .skeleton1 .gs_col { min-height: 300px; }
 .skeleton1 .applicationarea, .skeleton2 .applicationarea, .skeleton3 .applicationarea { height: 100%; }
 
 .skeleton4 .applicationarea { min-height: 400px; }
 
-.skeleton7 .gs_col.c1,.skeleton8 .gs_col.c1,.skeleton9 .gs_col.c1 { width: 70%; }
-.skeleton7 .gs_col.c2,.skeleton8 .gs_col.c2,.skeleton9 .gs_col.c2 { width: 30%; }
+.skeleton7 .gs_bottom,.skeleton8 .gs_bottom,.skeleton9 .gs_bottom {clear: both; }
+.skeleton7 .gs_col.c1,.skeleton8 .gs_col.c1,.skeleton9 .gs_col.c1 {
+    box-sizing: border-box;
+    ms-box-sizing: border-box;
+    webkit-box-sizing: border-box;
+    moz-box-sizing: border-box;
+    width: 70%; display:inline-block; float: left; }
+.skeleton7 .gs_col.c2,.skeleton8 .gs_col.c2,.skeleton9 .gs_col.c2 { 
+    box-sizing: border-box;
+    ms-box-sizing: border-box;
+    webkit-box-sizing: border-box;
+    moz-box-sizing: border-box;
+    width: 30%; display:inline-block;  }
 
 .skeleton7 .applicationarea,
 .skeleton8 .applicationarea, 
 .skeleton9 .applicationarea  
-    { min-height: 150px; }
+{ min-height: 150px; }
 .skeleton7 .applicationarea { min-height: 200px; }
 .skeleton10 .top_row { clear: both; position:relative; }
 .skeleton10 .top_row .applicationarea  {
-   height: 100%;
+    height: 100%;
 }
 .skeleton10 .gs_row.r3 .applicationarea, .skeleton10 .gs_row.r2 .applicationarea { min-height: 300px; }
 

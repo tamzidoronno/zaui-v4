@@ -460,8 +460,11 @@ class ApplicationManager extends FactoryBase {
                 }
                 $this->getFactory()->setConfigurationFlag("getshop_colors", json_encode($config));
             }
-            
-            $this->getFactory()->setConfigurationFlag("bgimage", $bg);
+            if($bg == "none") {
+                $this->getFactory()->setConfigurationFlag("bgimage", false);
+            } else {
+                $this->getFactory()->setConfigurationFlag("bgimage", $bg);
+            }
         } else {
             $this->getFactory()->setConfigurationFlag("getshop_colors", json_encode(array()));
             $bg = $_POST['data']['color'];

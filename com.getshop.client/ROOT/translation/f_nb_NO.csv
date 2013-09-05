@@ -191,10 +191,13 @@ Method;-;Metode
 Middle;-;
 Minimum activity;-;Minimum aktivitet
 More Categories?;-;Mer kategorier?
+More color options;-;
 More...;-;Mer...
 Need to display your realestates? well, here is the application that allows you to do that, simply add the application to your page and start editing your realestate;-;
 News;-;Nyheter
 No;-;
+No advanced color options for this design;-;
+No background selection available for this design.;-;
 No colors available for this design.;-;
 No locations available;-;
 No orders where found for this time range.;-;Ingen ordre ble funnet for denne tidsperioden.
@@ -389,6 +392,7 @@ add_text_desc;-;"Ikke noe innhold har blitt lagt inn enda, vennligst endre innho
 addnew;-;[ Legg til ]
 address;-;Adresse
 administrator;-;Administrator
+adv;-;
 all_fields;-;* All felt må fylles ut før du kan fortsette
 all_users;-;Alle brukere
 allow_access_administrators;-;Gi tilgang til administratorere kun.

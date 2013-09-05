@@ -6,17 +6,18 @@
  * @author ktonder
  */
 class ApplicationManager extends FactoryBase {
+
     var $app;
     var $port;
 
     function setCurrentApp($app) {
         $this->app = $app;
     }
-    
+
     function getCurrentApp() {
         return $this->app;
     }
-    
+
     function __construct() {
         $configReader = new ConfigReader();
         $this->port = $configReader->getConfig("port");
@@ -45,6 +46,38 @@ class ApplicationManager extends FactoryBase {
             echo json_encode($result);
             return;
         }
+    }
+
+    public function saveColorAttribute() {
+        $color = $_POST['data']['color'];
+        $path = $_POST['data']['path'];
+        $type = $_POST['data']['type'];
+
+        $config = json_decode($this->getFactory()->getConfigurationFlag("getshop_colors"), true);
+        if (!$config) {
+            $config = array();
+        } else {
+            foreach ($config as $index => $entry) {
+                if ($entry['path'] == $path && $entry['type'] == $type) {
+                    unset($config[$index]);
+                }
+            }
+        }
+
+        $entry = array();
+        $entry['color'] = $color;
+        $entry['path'] = $path;
+        $entry['type'] = $type;
+
+        $config[] = $entry;
+
+        echo "<style id='set_colors'>";
+        foreach ($config as $name => $entry) {
+            echo $entry['path'] . " {" . $entry['type'] . " : #" . $entry['color'] . " }\n";
+        }
+        echo "</style>";
+
+        $this->getFactory()->setConfigurationFlag("getshop_colors", json_encode($config));
     }
 
     public function previewApplication() {
@@ -155,11 +188,11 @@ class ApplicationManager extends FactoryBase {
         $applications[] = $application;
         $this->getFactory()->getApplicationPool()->setApplicationInstances($applications);
         $app = $this->getFactory()->getApplicationPool()->getApplicationInstance($application->id);
-        
+
         if ($app instanceof \ShipmentApplication || $app instanceof \PaymentApplication) {
             \HelperCart::clearSession(false);
         }
-        
+
         $app->applicationAdded();
     }
 
@@ -216,19 +249,19 @@ class ApplicationManager extends FactoryBase {
 
         $appConfiguration = $this->getFactory()->getApi()->getPageManager()->addApplication($_POST['data']['appId']);
 
-        
+
         $namespace = $this->getFactory()->convertUUIDtoString($appConfiguration->appSettingsId);
         $appName = $namespace . "\\" . $appConfiguration->appName;
 
         $app = new $appName();
-        if($app instanceof ThemeApplication) {
+        if ($app instanceof ThemeApplication) {
             $this->getFactory()->setConfigurationFlag("color", false);
             $this->getFactory()->setConfigurationFlag("bgimage", false);
+            $this->getFactory()->setConfigurationFlag("getshop_colors", json_encode(array()));
         }
-        
+
         if (method_exists($app, "renderStandalone")) {
             $pageManager = $this->getFactory()->getApi()->getPageManager();
-            $pageManager->createPageWithId(5, "home", $appConfiguration->id . "_standalone");
             $pageManager->addExistingApplicationToPageArea($appConfiguration->id . "_standalone", $appConfiguration->id, "middle");
         }
 
@@ -280,7 +313,7 @@ class ApplicationManager extends FactoryBase {
         $toggle = $_POST['data']['toggle'];
         $this->getApi()->getStoreManager()->setVis($toggle, $password);
     }
-    
+
     public function importApplication() {
         if (!isset($_POST['data']['list'])) {
             return;
@@ -290,11 +323,11 @@ class ApplicationManager extends FactoryBase {
 
         $api = IocContainer::getFactorySingelton()->getApi();
         $pageId = $this->getPage()->id;
-        
+
         foreach ($list as $appId) {
             $api->getPageManager()->addExistingApplicationToPageArea($pageId, $appId, $area);
         }
-        
+
         $this->getFactory()->initPage();
     }
 
@@ -309,7 +342,7 @@ class ApplicationManager extends FactoryBase {
         if ($app instanceof \ShipmentApplication || $app instanceof \PaymentApplication) {
             \HelperCart::clearSession(false);
         }
-        
+
         $this->getFactory()->getApi()->getPageManager()->deleteApplication($appId);
 
         if (method_exists($app, "renderStandalone"))
@@ -328,11 +361,11 @@ class ApplicationManager extends FactoryBase {
 
         return $retval;
     }
-    
+
     public function syncapplication() {
         $id = $_POST['data']['id'];
         $this->getApi()->getAppManager()->setSyncApplication($id);
-        
+
         $this->displayApplicationManagement();
     }
 
@@ -383,35 +416,36 @@ class ApplicationManager extends FactoryBase {
         $import = new ImportApplication($appSettingsId, $area);
         echo $import->getControlPanel();
     }
-    
+
     /*
      * Dont remove this. it is used for ping!
      */
+
     public function ping() {
         
     }
-    
+
     public function deleteStore() {
         $this->getFactory()->getApi()->getStoreManager()->delete();
     }
-    
+
     public function displayPageSettings() {
         $this->includefile("pagesettings");
     }
-    
+
     public function savePageDescription() {
         $desc = $_POST['data']['description'];
         $pageid = $this->getPage()->id;
         $this->getApi()->getPageManager()->setPageDescription($pageid, $desc);
     }
-    
+
     public function updateSmallCart() {
         $small = new \ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager();
         $small->renderSmallCartView();
     }
-    
+
     public function setDesignVariation() {
-        if(isset($_POST['data']['bg'])) {
+        if (isset($_POST['data']['bg'])) {
             $bg = $_POST['data']['bg'];
             $this->getFactory()->setConfigurationFlag("bgimage", $bg);
         } else {
@@ -419,5 +453,6 @@ class ApplicationManager extends FactoryBase {
             $this->getFactory()->setConfigurationFlag("color", $bg);
         }
     }
+
 }
 ?>

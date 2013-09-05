@@ -11,7 +11,7 @@ $curdesignbg = "inline-block";
 foreach ($added as $add) {
     if ($add instanceof ThemeApplication) {
         $addedTheme = $add->applicationSettings->id;
-        if(!ApplicationHelper::checkForBackground($add->applicationSettings)) {
+        if (!ApplicationHelper::checkForBackground($add->applicationSettings)) {
             $curdesignbg = "none";
         }
         break;
@@ -28,11 +28,10 @@ foreach ($designs as $design) {
     $appname = $design->appName;
     $appid = $design->id;
     $namespace = "ns_" . str_replace("-", "_", $design->id);
-    
     $hasbg = ApplicationHelper::checkForBackground($design);
-    
+
     echo "<div class='design $selected' id='$appid' hasbg='$hasbg' style='background-size:160px 140px; background-image:url(\"/showApplicationImages.php?appNamespace=$namespace&image=$appname.png\")'>";
-    echo "<span class='price'>" . $design->price . "$ / ".$this->__f("year")."</span>";
+    echo "<span class='price'>" . $design->price . "$ / " . $this->__f("year") . "</span>";
     echo "</div>";
 }
 
@@ -44,28 +43,25 @@ echo "</div>";
 $designArray = array();
 ?>
 <div class='colorselection'>
-    <div class='innerbox colorselectbox'>
-        <div class='title'><? echo $this->__f("Colors"); ?></div>
+    <div class='colorpicker_selection'><span class='selection_text'></span><span class="colorpickerinput"><input type='text'></span></div>
+    <div class="advanced_options innerbox">
         <?
+        echo "<div class='title'>" . $this->__f("More color options") ." <span class='close_advanced_options'>x</span></div>";
+        echo "<div class='advanced_options_inner'>";
         foreach ($designs as $design) {
-            $selected = "";
-            if ($design->id === $addedTheme) {
-                $selected = "active";
+            echo "<div panel='" . $design->id . "' class='advanced_colors'>";
+            $result = ApplicationHelper::getAdvancedColors($design);
+            $found = false;
+            foreach($result as $res) {
+                echo "<div class='advanced-color' path='".$res[0] ."' type='".$res[1]."'>".$res[2]."</div>";
+                $found = true;
             }
-
-            echo "<div class='designattributes_color $selected' panel='" . $design->id . "'>";
-            $result = ApplicationHelper::getApplicationColors($design);
-            foreach ($result as $color) {
-                echo "<div class='color' color='$color[1]'>";
-                echo "<span class='preview' style='background-color:" . $color[2] . ";'></span>";
-                echo "<span class='colortext'>" . $color[1] . "</span>";
-                echo "</div>";
-            }
-            if (sizeof($result) == 0) {
-                echo $this->__f("No colors available for this design.");
+            if(!$found) {
+                echo $this->__f("No advanced color options for this design");
             }
             echo "</div>";
         }
+        echo "</div>";
         ?>
     </div>
     <div class='innerbox'>
@@ -92,7 +88,31 @@ $designArray = array();
         foreach ($backgrounds as $bgs) {
             echo "<span class='background' image='$bgs' type='skin/default/bgs/$bgs.png' style='background-image:url(\"skin/default/bgs/$bgs.png\"); display:$curdesignbg;'></span>";
         }
-        echo "<span class='nobackground'>No background selection available for this design.</span>";
+        echo "<span class='nobackground'>" . $this->__f("No background selection available for this design.") . "</span>";
+        ?>
+    </div>
+    <div class='innerbox colorselectbox'>
+        <div class='title'><? echo $this->__f("Colors"); ?><span class='advanced_color_selection'><? echo $this->__f("adv"); ?></span></div>
+        <?
+        foreach ($designs as $design) {
+            $selected = "";
+            if ($design->id === $addedTheme) {
+                $selected = "active";
+            }
+
+            echo "<div class='designattributes_color $selected' panel='" . $design->id . "'>";
+            $result = ApplicationHelper::getApplicationColors($design);
+            foreach ($result as $color) {
+                echo "<div class='color' color='$color[1]'>";
+                echo "<span class='preview' style='background-color:" . $color[2] . ";'></span>";
+                echo "<span class='colortext'>" . $color[1] . "</span>";
+                echo "</div>";
+            }
+            if (sizeof($result) == 0) {
+                echo $this->__f("No colors available for this design.");
+            }
+            echo "</div>";
+        }
         ?>
     </div>
 </div>

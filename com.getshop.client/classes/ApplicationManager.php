@@ -70,14 +70,18 @@ class ApplicationManager extends FactoryBase {
         $entry['type'] = $type;
 
         $config[] = $entry;
-
+        $this->getFactory()->setConfigurationFlag("getshop_colors", json_encode($config));
+        $this->loadColorAttributes();
+    }
+    
+    public function loadColorAttributes() {
+        $config = json_decode($this->getFactory()->getConfigurationFlag("getshop_colors"), true);
         echo "<style id='set_colors'>";
         foreach ($config as $name => $entry) {
             echo $entry['path'] . " {" . $entry['type'] . " : #" . $entry['color'] . " }\n";
         }
         echo "</style>";
-
-        $this->getFactory()->setConfigurationFlag("getshop_colors", json_encode($config));
+        
     }
 
     public function previewApplication() {
@@ -445,11 +449,21 @@ class ApplicationManager extends FactoryBase {
     }
 
     public function setDesignVariation() {
-        $this->getFactory()->setConfigurationFlag("getshop_colors", json_encode(array()));
         if (isset($_POST['data']['bg'])) {
             $bg = $_POST['data']['bg'];
+            $config = json_decode($this->getFactory()->getConfigurationFlag("getshop_colors"), true);
+            if($config) {
+                foreach($config as $index => $entry) {
+                    if($entry['path'] == 'body') {
+                        unset($config[$index]);
+                    }
+                }
+                $this->getFactory()->setConfigurationFlag("getshop_colors", json_encode($config));
+            }
+            
             $this->getFactory()->setConfigurationFlag("bgimage", $bg);
         } else {
+            $this->getFactory()->setConfigurationFlag("getshop_colors", json_encode(array()));
             $bg = $_POST['data']['color'];
             $this->getFactory()->setConfigurationFlag("color", $bg);
         }

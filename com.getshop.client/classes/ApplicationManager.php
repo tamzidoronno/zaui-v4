@@ -83,14 +83,38 @@ class ApplicationManager extends FactoryBase {
         }
     }
 
-    public function saveProductImage() {
-        $content = $_POST['data']['data'];
-        $content = base64_decode(str_replace("data:image/png;base64,", "", $content));
-        $imgId = \FileUpload::storeFile($content);
-        echo $imgId;
+    public function saveColorAttribute() {
+        $color = $_POST['data']['color'];
+        $path = $_POST['data']['path'];
+        $type = $_POST['data']['type'];
+
+        $config = json_decode($this->getFactory()->getConfigurationFlag("getshop_colors"), true);
+        if (!$config) {
+            $config = array();
+        } else {
+            foreach ($config as $index => $entry) {
+                if ($entry['path'] == $path && $entry['type'] == $type) {
+                    unset($config[$index]);
+                }
+            }
+        }
+
+        $entry = array();
+        $entry['color'] = $color;
+        $entry['path'] = $path;
+        $entry['type'] = $type;
+
+        $config[] = $entry;
+
+        echo "<style id='set_colors'>";
+        foreach ($config as $name => $entry) {
+            echo $entry['path'] . " {" . $entry['type'] . " : #" . $entry['color'] . " }\n";
+        }
+        echo "</style>";
+
+        $this->getFactory()->setConfigurationFlag("getshop_colors", json_encode($config));
     }
-    
-    
+
     public function previewApplication() {
         $appId = $_POST['data']['appId'];
         $api = IocContainer::getFactorySingelton()->getApi();
@@ -268,11 +292,11 @@ class ApplicationManager extends FactoryBase {
         if ($app instanceof ThemeApplication) {
             $this->getFactory()->setConfigurationFlag("color", false);
             $this->getFactory()->setConfigurationFlag("bgimage", false);
+            $this->getFactory()->setConfigurationFlag("getshop_colors", json_encode(array()));
         }
 
         if (method_exists($app, "renderStandalone")) {
             $pageManager = $this->getFactory()->getApi()->getPageManager();
-            $pageManager->createPageWithId(5, "home", $appConfiguration->id . "_standalone");
             $pageManager->addExistingApplicationToPageArea($appConfiguration->id . "_standalone", $appConfiguration->id, "middle");
         }
 
@@ -376,7 +400,7 @@ class ApplicationManager extends FactoryBase {
     public function syncapplication() {
         $id = $_POST['data']['id'];
         $this->getApi()->getAppManager()->setSyncApplication($id);
-        echo "synching application with id: " . $id;
+
         $this->displayApplicationManagement();
     }
 
@@ -456,6 +480,7 @@ class ApplicationManager extends FactoryBase {
     }
 
     public function setDesignVariation() {
+        $this->getFactory()->setConfigurationFlag("getshop_colors", json_encode(array()));
         if (isset($_POST['data']['bg'])) {
             $bg = $_POST['data']['bg'];
             $this->getFactory()->setConfigurationFlag("bgimage", $bg);

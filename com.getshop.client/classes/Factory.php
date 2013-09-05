@@ -113,7 +113,7 @@ class Factory extends FactoryBase {
         echo "\n" . '<script type="text/javascript" src="js/getshop.ImportApplication.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.Toolbox.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/datatables/jquery.dataTables.min.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="js/jPicker/jpicker-1.1.6.min.js"></script>';
+        echo "\n" . '<script type="text/javascript" src="js/colorpicker/js/colorpicker.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jquery.applicationPicker.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/imagesloaded.pkgd.min.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.doImageUpload.js"></script>';
@@ -133,14 +133,6 @@ class Factory extends FactoryBase {
         include 'javascripts.php';
     
         // TODO - find a better solution for this.
-        if ($this->getApplicationPool() != null) {
-            $app = $this->getApplicationPool()->getApplicationInstance("74ea4e90-2d5a-4290-af0c-230a66e09c78");
-            if (get_class($app) == "Booking") {
-                echo "\n" . '<link rel="stylesheet" type="text/css" href="js/jPicker/css/jPicker-1.1.6.min.css">';
-                echo "\n" . '<script type="text/javascript" src="js/jPicker/jpicker-1.1.6.min.js"></script>';
-            }
-        }
-        
         if ($this->isEditorMode() && $includetoolbox)
             echo "\n" . '<script type="text/javascript" src="js/getshop.MainMenuToolbox.js"></script>';
     }
@@ -335,7 +327,7 @@ class Factory extends FactoryBase {
     public function showCssFiles() {
         if ($this->isEditorMode()) {
             echo '<link rel="stylesheet" type="text/css" href="skin/default/ckeditor.css" />';
-            echo '<link rel="stylesheet" type="text/css" href="js/jPicker/css/jPicker-1.1.6.css" />';
+            echo '<link rel="stylesheet" type="text/css" href="js/colorpicker/css/colorpicker.css" />';
         }
 
         echo '<link rel="stylesheet" type="text/css" href="js/datatables/demo_table.css" />';
@@ -346,6 +338,16 @@ class Factory extends FactoryBase {
         echo '<link rel="stylesheet" type="text/css" href="/js/jquery.ui/css/smoothness/jquery-ui-1.9.2.custom.min.css">';
         echo '<link rel="stylesheet" type="text/css" href="/skin/default/skeletons.css">';
         echo '<link id=\'mainlessstyle\' rel="stylesheet" type="text/css" media="all" href="StyleSheet.php">';
+        
+        
+        $config = json_decode($this->getFactory()->getConfigurationFlag("getshop_colors"), true);
+        if($config) {
+            echo "<style id='set_colors'>";
+            foreach($config as $name => $entry) {
+                echo $entry['path'] . " {" .$entry['type'] . " : #" . $entry['color'] ." }\n";
+            }
+            echo "</style>";
+        }
     }
 
     /*

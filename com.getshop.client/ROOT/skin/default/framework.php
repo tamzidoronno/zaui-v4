@@ -1247,10 +1247,19 @@ line-height: 40px;
 .designselectionbox .design .price { opacity:0.8; position:absolute; border: solid 1px #BBB; bottom: 4px; right:4px; background-color:#FFF; padding:1px;border-radius: 5px; }
 .designselectionbox .close { cursor:pointer; position:absolute; top: 0px; right:0px; background-color:#FFF; padding: 3px; border: solid 1px #DDD;border-bottom-left-radius: 10px; }
 .designselectionbox .colorselection { position:absolute; width: 300; height: 150px; right: 0px; border-left:solid 1px #BBB; bottom: 0px; background-color:#EFEFEF; }
-.designselectionbox .colorselection .innerbox{ display:inline-block; width: 140px; padding: 5px; float:left; }
+.designselectionbox .colorselection .innerbox{ display:inline-block; width: 140px; padding: 5px; float:right;  z-index:2;height: 150px; background-color:#EFEFEF; }
 .designselectionbox .colorselection .innerbox .title {  color: #767676; }
+.designselectionbox .colorselection .advanced_options { position:absolute; left:0px; top:0px; border-right:solid 1px #BBB; height: 100%; display:none; z-index:1; }
+.designselectionbox .colorselection .advanced_options .advanced_options_inner { overflow-y: auto; height:125px; }
 .designselectionbox .colorselection .colorselectbox { border-right:solid 1px #BBB; height: 100%; width: 80px; }
 .designselectionbox .colorselection .colorselectbox .color { height: 15px; }
+.designselectionbox .advanced-color { cursor: pointer; }
+.designselectionbox .advanced_color_selection { float:right; }
+.designselectionbox .colorpicker_selection { display:none; width: 100%; position:absolute; top:-28px; padding: 3px; border: solid 1px #BBB; border-top-left-radius: 3px; height: 20px; background-color:#EFEFEF; }
+.designselectionbox .colorpicker_selection .colorpickerinput { position:absolute; right: 12px; }
+.designselectionbox .colorpicker_selection .colorpickerinput input { width: 70px; font-size:10px; border: solid 1px #000; }
+.designselectionbox .close_advanced_options { position:absolute; right: 5px; top: 0px; cursor:pointer; }
+.designselectionbox .advanced-color.selected { font-weight: bold; }
 .designselectionbox .colorselection .colorselectbox .preview { margin: 3px; border:solid 1px #BBB; height:7px; width: 7px; float:left; display:inline-block; }
 .designselectionbox .colorselection .colorselectbox .colortext { cursor:pointer; line-height: 14px; display:inline-block; height: 15px; color: #4d4d4d; }
 .designselectionbox .colorselection .background { display: inline-block; width: 30px; height: 25px; margin: 1px; float; left; border:solid 1px #BBB; cursor:pointer; }

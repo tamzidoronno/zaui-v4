@@ -30,9 +30,9 @@ class ApplicationHelper {
         if(file_exists("../app/$namespace/skin/colors.css")) {
             $content = explode("\n", file_get_contents("../app/$namespace/skin/colors.css"));
             foreach($content as $line) {
-                if($line && stristr($line, "//color:")) {
+                if($line && stristr($line, "/* color:")) {
                     $color = explode(":", $line);
-                    $colors[] = $color;
+                    $colors[] = str_replace(" */", "", $color);
                 }
             }
         }
@@ -53,11 +53,11 @@ class ApplicationHelper {
                     echo $line;
                 }
                 
-                if(stristr($line, "//color:") && $found) {
+                if(stristr($line, "/* color:") && $found) {
                     break;
                 }
                 
-                if(stristr($line, "//color:$color")) {
+                if(stristr($line, "/* color:$color")) {
                     $found = true;
                 }
             }
@@ -69,12 +69,30 @@ class ApplicationHelper {
         if(file_exists("../app/$namespace/skin/colors.css")) {
             $content = explode("\n", file_get_contents("../app/$namespace/skin/colors.css"));
             foreach($content as $line) {
-                if(stristr($line, "//nobg")) {
+                if(stristr($line, "/* nobg */")) {
                     return false;
                 }
             }
         }
         return true;
+    }
+
+    public static function getAdvancedColors($design) {
+        $namespace= "ns_".str_replace("-", "_", $design->id);
+        $colors = array();
+        
+        if(file_exists("../app/$namespace/skin/colors.css")) {
+            $content = explode("\n", file_get_contents("../app/$namespace/skin/colors.css"));
+            foreach($content as $line) {
+                if($line && stristr($line, "/* colorpicker:")) {
+                    $color = str_replace("*/", "", str_replace("/* colorpicker:", "", $line));
+                    $result = explode(":", $color);
+                    $colors[] = $result;
+                }
+            }
+        }
+        
+        return $colors;
     }
 }
 

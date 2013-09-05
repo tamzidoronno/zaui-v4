@@ -445,6 +445,7 @@ class ApplicationManager extends FactoryBase {
     }
 
     public function setDesignVariation() {
+        $this->getFactory()->setConfigurationFlag("getshop_colors", json_encode(array()));
         if (isset($_POST['data']['bg'])) {
             $bg = $_POST['data']['bg'];
             $this->getFactory()->setConfigurationFlag("bgimage", $bg);

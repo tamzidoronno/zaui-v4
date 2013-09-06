@@ -77,7 +77,14 @@ public class AProductManager extends ManagerBase {
             product.page = pageManager.createPage(Page.PageType.HeaderMiddleFooter, "");
             product.pageId = product.page.id;
             //
-            pageManager.addApplicationToPage(product.page.id, "dcd22afc-79ba-4463-bb5c-38925468ae26", "middle");
+            AppConfiguration config = pageManager.addApplicationToPage(product.page.id, "dcd22afc-79ba-4463-bb5c-38925468ae26", "main_1");
+            
+            Setting setting = new Setting();
+            setting.type = "productid";
+            setting.secure = false;
+            setting.value = product.id;
+            config.settings.put(setting.type, setting);
+            pageManager.saveApplicationConfiguration(config);
         }
     }
 

@@ -138,6 +138,14 @@ public interface IProductManager {
      */
     public void addAttributeGroupToProduct(String productId, String attributeGroup, String attribute) throws ErrorException;
     
+    
+    /**
+     * Fetch all products the store has available.
+     * @return
+     * @throws ErrorException 
+     */
+    public List<Product> getAllProducts() throws ErrorException;
+    
     /**
      * Oh, so you added an attribute to a product which where not ment to be?
      * @param productId The id of the product.

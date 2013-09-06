@@ -43,7 +43,6 @@ public class ConvertToVersion2 {
                 DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, allDocs.next());
                 if (dataCommon instanceof Page) {
                     Page page = (Page) dataCommon;
-                    System.out.println(page.id);
                     page.moveApplicationToArea("middle", "main_1");
                     page.moveApplicationToArea("left", "left_1");
                     page.moveApplicationToArea("right", "right_1");

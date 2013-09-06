@@ -132,9 +132,9 @@ public class PageArea implements Serializable {
     
     public static class Type {
         public static String TOP = "header";
-        public static String LEFT = "left";
-        public static String MIDDLE = "middle";
-        public static String RIGHT = "right";
+        public static String LEFT = "left_1";
+        public static String MIDDLE = "main_1";
+        public static String RIGHT = "right_1";
         public static String BOTTOM = "footer";
         public static String SUBHEADER = "subheader";
     }

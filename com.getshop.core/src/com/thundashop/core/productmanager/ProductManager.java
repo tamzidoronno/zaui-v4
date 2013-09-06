@@ -247,5 +247,10 @@ public class ProductManager extends AProductManager implements IProductManager {
         }
         return foundresult.get(0);
     }
+
+    @Override
+    public List<Product> getAllProducts() throws ErrorException {
+        return new ArrayList(products.values());
+    }
     
 }

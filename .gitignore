@@ -2,15 +2,17 @@ com.getshop.core/data/
 com.getshop.core/dist/
 com.getshop.core/built-jar.properties
 com.getshop.core/nbproject/private/private.properties
+com.getshop.core/nbproject/private/private.xml
 com.getshop.core/build/
 com.getshop.messages/dist/
 com.getshop.messages/built-jar.properties
 com.getshop.messages/nbproject/private/private.properties
+com.getshop.messages/nbproject/private/private.xml
+com.getshop.messages/nbproject/private/
 com.getshop.messages/build/
 com.getshop.client/app
 com.getshop.client/uploadedfiles
 com.getshop.core/nbproject/private/
-com.getshop.messages/nbproject/private/
 com.getshop.client/app/
 com.getshop.client/uploadedfiles
 com.getshop.client/nbproject/private/
@@ -20,6 +22,8 @@ com.getshop.syncserver/nbproject/private/private.properties
 com.getshop.syncserver/build/
 com.getshop.client/nbproject/private/private.xml
 com.getshop.combined/nbproject/
+com.getshop.combined/nbproject/build-impl.xml
+com.getshop.combined/nbproject/genfiles.properties
 com.getshop.core/nbproject/build-impl.xml
 com.getshop.core/nbproject/genfiles.properties
 com.getshop.messages/nbproject/build-impl.xml
@@ -43,3 +47,5 @@ com.getshop.syncserver/nbproject/private/config.properties
 /fuck/nbproject/private/
 /fuck/dist/
 /fuck/build/
+
+

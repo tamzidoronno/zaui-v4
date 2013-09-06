@@ -123,7 +123,7 @@ public class StorePool {
     }
     
     public synchronized Store initialize(String webAddress, String sessionId) throws ErrorException {
-        webAddress = webAddress.replaceAll(".local.getshop.com", ".getshop.com");
+        webAddress = webAddress.replace(".local.getshop.com", ".getshop.com");
         Store store = getStoreByWebaddress(webAddress);
         if (store == null) {
             return null;

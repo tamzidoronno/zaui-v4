@@ -75,7 +75,7 @@ class ApplicationBase extends FactoryBase {
         }
         
         echo "<div class='applicationinner'>";
-        if($this->isEditorMode() && !$changeable) {
+        if($this->isEditorMode() && !$changeable && !$this->getPage()->isSystemPage()) {
             echo "<div class='application_settings inline'></div>";
         }
         $this->render();

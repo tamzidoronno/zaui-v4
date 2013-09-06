@@ -37,7 +37,6 @@ td.gs_col .applicationarea { height: 100%; }
 .skeleton1 .gs_col { min-height: 300px; }
 .skeleton1 .applicationarea, .skeleton2 .applicationarea, .skeleton3 .applicationarea { height: 100%; }
 
-.skeleton4 .applicationarea { min-height: 400px; }
 
 .skeleton7 .gs_bottom,.skeleton8 .gs_bottom,.skeleton9 .gs_bottom {clear: both; }
 .skeleton7 .gs_col.c1,.skeleton8 .gs_col.c1,.skeleton9 .gs_col.c1 {

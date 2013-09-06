@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.listmanager.data;
 
+import com.google.code.morphia.annotations.Transient;
 import java.io.Serializable;
 import java.util.List;
 
@@ -24,4 +25,8 @@ public class Entry implements Serializable {
     
     //Appended when fetching the list.
     public List<Entry> subentries;
+    
+    @Transient
+    //If you don't want it to use the default page type 1, then specify it here on creation.
+    public int pageType = 1;
 }

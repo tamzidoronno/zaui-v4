@@ -93,7 +93,7 @@ public class ListManager extends ManagerBase implements IListManager {
 
         PageManager myPageManager = getManager(PageManager.class);
         if (entry.pageId == null && AppContext.storePool != null) {
-            Page page = myPageManager.createPage(1, parentPageId);
+            Page page = myPageManager.createPage(entry.pageType, parentPageId);
             entry.pageId = page.id;
         }
 

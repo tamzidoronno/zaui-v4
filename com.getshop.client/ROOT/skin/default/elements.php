@@ -148,3 +148,7 @@
 #ImportCancel:hover {
     background-image: url('skin/default/elements/ImportButton-hover.png');
 }
+
+.informationbox-outer {
+    z-index: 401;
+}

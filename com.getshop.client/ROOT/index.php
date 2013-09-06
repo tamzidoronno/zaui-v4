@@ -101,10 +101,6 @@ if (isset($_GET['logonwithkey'])) {
     header('location:index.php');
 }
 
-if (isset($_GET['prepopulate'])) {
-    $siteBuilder = new \SiteBuilder();
-    $siteBuilder->prepopulateData();
-}
 ?>
 
 <html xmlns:fb="http://ogp.me/ns/fb#">

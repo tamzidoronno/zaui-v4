@@ -65,7 +65,7 @@ class ApplicationManager extends FactoryBase {
         $mgr->saveProduct();
         $_POST['data']['productid'] = null;
     }
-    
+
     public function moveApplication() {
         $pageId = $this->getPage()->getId();
         $appId = $_POST['data']['appid'];
@@ -81,6 +81,13 @@ class ApplicationManager extends FactoryBase {
             echo json_encode($result);
             return;
         }
+    }
+
+    public function saveProductImage() {
+        $content = $_POST['data']['data'];
+        $content = base64_decode(str_replace("data:image/png;base64,", "", $content));
+        $imgId = \FileUpload::storeFile($content);
+        echo $imgId;
     }
 
     public function saveColorAttribute() {

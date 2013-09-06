@@ -1,9 +1,10 @@
 <?
+global $subscriptions;
 $app = $this->getCurrentApp();
+$subscriptions = $this->getSubscriptions();
 $appimagename = ApplicationHelper::getApplicationImage($app);
 /* @var $factory Factory */
 $factory = $this->getFactory();
-$subscriptions = $factory->getApi()->getAppManager()->getAllApplicationSubscriptions(false);
 ?>
 <div class="application">
     <div class="title">

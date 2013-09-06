@@ -2343,7 +2343,7 @@ class APIProductManager {
      }
 
      /**
-     * Fetch all products in your product pool.
+     * Fetch all products the store has available.
      * @return List
      * @throws ErrorException 
      */

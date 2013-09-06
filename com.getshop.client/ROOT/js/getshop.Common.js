@@ -291,7 +291,7 @@ thundashop.common.unmask = function() {
     var result = $.Deferred();
     var attr = $('#fullscreenmask').attr('locked');
     $('.informationbox-outer').hide();
-    $('body').css('overflow','auto');
+    $('body').css('overflow','scroll');
     if (typeof(attr) === "undefined" || attr === "false") {
         $('#informationbox-holder').fadeOut(200);
         $('#fullscreenmask').fadeOut(200, function() {
@@ -610,6 +610,17 @@ $(function() {
         var appname = app.attr('app');
         $('.GetShopToolbox[attached_to_app="true"]').remove();
         window["app"][appname]["loadSettings"]($(this), app);
+    });
+    
+    $(document).on('mouseenter','.app', function() {
+        var appname = $(this).attr('app');
+        if(app[appname]['loadSettings'] !== undefined) {
+            var settingsbox = $(this).find('.application_settings');
+            $(this).find('.application_settings').show();
+        }
+    });
+    $(document).on('mouseleave','.app', function() {
+        $(this).find('.application_settings').hide();
     });
 });
 

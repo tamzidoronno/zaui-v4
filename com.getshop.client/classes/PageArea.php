@@ -103,9 +103,27 @@ class PageArea extends FactoryBase {
                 return;
             }
         }
-        if(!$isEmpty) {
+        if (!$isEmpty) {
             $this->includefile($this->backendPageArea->type);
         }
+    }
+
+    public function getApplicationCount() {
+        $settings = $this->getFactory()->getApplicationPool()->getAllApplicationSettings();
+        $count = 0;
+        foreach ($settings as $setting) {
+            if ($setting->type === "ThemeApplication") {
+                continue;
+            }
+            if ($setting->type === "SystemApplication") {
+                continue;
+            }
+            if($setting->isSingleton) {
+                continue;
+            }
+            $count++;
+        }
+        return $count;
     }
 
     /**

@@ -30,5 +30,8 @@ class core_listmanager_data_Entry {
 	/** @var String */
 	public $subentries;
 
+	/** @var String */
+	public $pageType;
+
 }
 ?>

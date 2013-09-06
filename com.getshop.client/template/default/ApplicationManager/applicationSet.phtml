@@ -3,14 +3,13 @@
 $factory = $this->getFactory();
 
 $area = $_POST['data']['type'];
-$import = isset($_POST['data']['action']) && $_POST['data']['action'] == "import" ? true : false; 
+$import = isset($_POST['data']['action']) && $_POST['data']['action'] == "import" ? true : false;
 $allApps = $factory->getApplicationPool()->getAllApplicationSettingsForArea(null);
 $apps = $factory->getApplicationPool()->convertApplicationsSettingsToAppinstances($allApps);
-
 ?>
 <div class="tabs">
     <div class="tabset inline">
-        <? 
+        <?
         foreach ($apps as $app) {
             if ($import) {
                 $apps2 = $factory->getApi()->getPageManager()->getApplicationsByPageAreaAndSettingsId($app->getApplicationSettings()->id, $_POST['data']['type']);
@@ -18,40 +17,48 @@ $apps = $factory->getApplicationPool()->convertApplicationsSettingsToAppinstance
                     continue;
                 }
             }
-            
-            if(!$app->getName()) {
+
+            if (!$app->getName()) {
                 continue;
             }
-            
+            if ($app->applicationSettings->type === "ThemeApplication") {
+                continue;
+            }
+            if ($app->applicationSettings->type === "SystemApplication") {
+                continue;
+            }
+
+
             $active = isset($notFirst) ? "" : "active";
             $name = str_replace(" ", "", $app->getName());
             echo "<div activate='$name' class='tab $active'>";
-                echo $app->getName();
+            echo $app->getName();
             echo "</div>";
             $notFirst = false;
         }
         ?>
     </div>
     <div class="tab_content inline">
-        <? foreach ($apps as $app) { 
-            if(!$app->getName()) {
+        <?
+        foreach ($apps as $app) {
+            if (!$app->getName()) {
                 continue;
             }
             $active2 = isset($notFirst2) ? "" : "active";
             $notFirst2 = false;
-        /* @var $app Application */    
-        ?>
-
-        <div class="content_holder <? echo $active2; ?>" id="<? echo str_replace(" ", "", $app->getName()); ?>">
-            <? 
-            $this->setCurrentApp($app);
-            if ($import) {
-                $this->includeFile("applicationPicker"); 
-            } else {
-                $this->includeFile("addApplicationContent"); 
-            }
+            /* @var $app Application */
             ?>
-        </div>
+
+            <div class="content_holder <? echo $active2; ?>" id="<? echo str_replace(" ", "", $app->getName()); ?>">
+                <?
+                $this->setCurrentApp($app);
+                if ($import) {
+                    $this->includeFile("applicationPicker");
+                } else {
+                    $this->includeFile("addApplicationContent");
+                }
+                ?>
+            </div>
         <? } ?>
     </div>
 </div>

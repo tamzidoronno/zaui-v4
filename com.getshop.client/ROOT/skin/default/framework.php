@@ -1299,9 +1299,6 @@ background-color: #FFF;
 display:none;
 }
 
-.app:hover .application_settings {
-display:block;
-}
 
 
 #loadingProgressG{

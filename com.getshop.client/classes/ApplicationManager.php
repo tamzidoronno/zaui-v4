@@ -9,6 +9,7 @@ class ApplicationManager extends FactoryBase {
 
     var $app;
     var $port;
+    var $subscriptions;
 
     function setCurrentApp($app) {
         $this->app = $app;
@@ -16,6 +17,10 @@ class ApplicationManager extends FactoryBase {
 
     function getCurrentApp() {
         return $this->app;
+    }
+    
+    public function getSubscriptions() {
+        return $this->subscriptions;
     }
 
     function __construct() {
@@ -269,6 +274,7 @@ class ApplicationManager extends FactoryBase {
     }
 
     public function showApplications() {
+        $this->subscriptions = $this->getFactory()->getApi()->getAppManager()->getAllApplicationSubscriptions(false);
         $this->includefile('applicationSet');
     }
 

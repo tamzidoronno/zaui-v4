@@ -12,7 +12,7 @@ $apps = $factory->getApplicationPool()->convertApplicationsSettingsToAppinstance
         <?
         foreach ($apps as $app) {
             if ($import) {
-                $apps2 = $factory->getApi()->getPageManager()->getApplicationsByPageAreaAndSettingsId($app->getApplicationSettings()->id, $_POST['data']['type']);
+                $apps2 = $factory->getApi()->getPageManager()->getApplicationsBasedOnApplicationSettingsId($app->getApplicationSettings()->id);
                 if (count($apps2) == 0) {
                     continue;
                 }

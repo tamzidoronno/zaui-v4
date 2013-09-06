@@ -31,7 +31,7 @@
     font-size:14px;
 }
 
-td.gs_col { height: 100px ; }
+td.gs_col { min-height: 100px ; }
 td.gs_col .applicationarea { height: 100%; }
 
 .skeleton1 .gs_col { min-height: 300px; }
@@ -70,5 +70,3 @@ td.gs_col .applicationarea { height: 100%; }
 .skeleton14 .gs_col.c2 { float: right; }
 
 .skeleton16 .gs_col .applicationarea,.skeleton17 .gs_col .applicationarea { min-height: 200px; }
-
-#apparea-bottom { display:none; }

@@ -614,7 +614,7 @@ $(function() {
     
     $(document).on('mouseenter','.app', function() {
         var appname = $(this).attr('app');
-        if(app[appname]['loadSettings'] !== undefined) {
+        if(app[appname] !== undefined && app[appname]['loadSettings'] !== undefined) {
             var settingsbox = $(this).find('.application_settings');
             $(this).find('.application_settings').show();
         }

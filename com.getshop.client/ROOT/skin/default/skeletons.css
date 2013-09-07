@@ -6,11 +6,14 @@
     height:100%;
 }
 
+.app {
+    position: relative;
+}
 
 .empty_app_area {
-    background-color:rgba(255,235,205, 0.1); 
-    width: 100%; 
-    border: dotted 1px #666;
+    background-color:rgba(255,255,255, 0.1); 
+    width: 100%;
+    border: dashed 2px #CCC;
     height: 100%; 
     position:absolute; 
     top:0px; 
@@ -18,14 +21,38 @@
 }
 .applicationarea { min-height: 150px; }
 
-.empty_app_area .content_box {
-    position:absolute; top: 25%; text-align: center;width:100%;
+.empty_app_area .content_box .appiconoption {
+    background-image: url('images/application_box_background_empty_area.png');
+    height: 54px;
+    width: 57px;
+    border-right: solid 1px #9b9b9b;
+    border-left: solid 1px #DDD;
+    cursor: pointer;
 }
-.empty_app_area .add_content_img,.empty_app_area .add_content_img_noclick {
-    border:solid 1px #666; background-color:#666; border-radius:3px;
-    width:40px;
-    height:40px;
-    cursor:pointer;
+
+.empty_app_area .content_box .row div:last-child { border-right: solid 0px; }
+.empty_app_area .content_box .row div:first-child { border-left: solid 0px; }
+
+.empty_app_area .content_box .appiconoption:hover {
+    background-image: url('images/application_box_background_empty_area_hover.png');
+}
+
+.empty_app_area .content_box {
+    position:absolute; 
+    top: 50%;
+    margin-top: -50px;
+    text-align: center;
+    width:100%;
+    left: 50%;
+    margin-left: -88px;
+    width: 175px; 
+    border: solid 1px #9b9b9b;
+    border-bottom: solid 0px;
+}
+.empty_app_area img {
+    width:45px;
+    height:45px;
+    margin-top: 3px;
 }
 .empty_app_area .title {
     font-size:14px;

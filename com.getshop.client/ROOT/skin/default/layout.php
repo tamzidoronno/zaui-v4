@@ -45,6 +45,3 @@ body {
 .header { height: <? echo $this->getHeaderHeight();?>px; }
 .footer-outer { width: 100% }
 
-.left,
-.middle,
-.right { padding-bottom: 10000px; margin-bottom: -10000px; min-height: 400px; overflow: auto; } 

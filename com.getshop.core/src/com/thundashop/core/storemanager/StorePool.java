@@ -191,6 +191,7 @@ public class StorePool {
         
         stores.remove(store.id);
         database.delete(store, credentials);
+        stopStore(store);
     }
     
      private void notifyUsByEmail(Store store) throws ErrorException {
@@ -214,13 +215,17 @@ public class StorePool {
         mailFactory.send(from, to, title, content);
     }
      
-    @Scheduled(cron = "0 */1 * * * *")
+    private void stopStore(Store store) {
+        if (AppContext.storePool != null) {
+            AppContext.storePool.stop(store);
+        }
+    }
+    
+    @Scheduled(cron = "0 0 */1 * * *")
     public void test() {
         for (Store store : stores.values()) {
             if (store.isDeepFreezed) {
-                if (AppContext.storePool != null) {
-                    AppContext.storePool.stop(store);
-                }
+                stopStore(store);
             }
         }
     }

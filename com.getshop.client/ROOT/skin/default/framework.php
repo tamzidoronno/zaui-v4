@@ -122,7 +122,7 @@ left: 0px;
 right: 0px;
 bottom: 0px;
 top: 0px;
-z-index: 400;
+z-index: 2;
 display: none;
 background-image: url('/skin/default/images/carbon-glare.png');
 }

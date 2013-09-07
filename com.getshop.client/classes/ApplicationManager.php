@@ -369,6 +369,15 @@ class ApplicationManager extends FactoryBase {
         $toggle = $_POST['data']['toggle'];
         $this->getApi()->getStoreManager()->setVis($toggle, $password);
     }
+    
+    public function toggleDeepfreeze() {
+        $store = $this->getFactory()->getStore();
+        if ($store != null && $store->isDeepFreezed) {
+            $this->getFactory()->getApi()->getStoreManager()->setDeepFreeze(false);
+        } elseif ($store != null && !$store->isDeepFreezed) {
+            $this->getFactory()->getApi()->getStoreManager()->setDeepFreeze(true);
+        }
+    }
 
     public function importApplication() {
         if (!isset($_POST['data']['list'])) {

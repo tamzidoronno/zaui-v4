@@ -147,6 +147,15 @@ if (isset($_GET['logonwithkey'])) {
         <title><?php echo $title; ?></title>
     </head>
     <body>
+        <?
+        if ($factory->getStore()->isDeepFreezed) {
+            $date = date("i:s");
+            list($cur_min, $cur_sec) = explode(':', $date);
+            $mins_left = ($cur_min == 59) ? 0 : 60 - $cur_min;
+            $secs_left = 60 - $cur_sec;
+        ?>
+        <div class='deepfreezedActivated'><? echo $factory->__f("Warning! this store will automatically be reset to original state in")." ".$mins_left." ".$factory->__f("minutes"); ?></div>
+        <? } ?>
         <input name="storeid" type="hidden"  value="<?php echo $factory->getStore()->id; ?>"/>
         <input name="userid" type="hidden"  value="<?php echo \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id; ?>"/>
 

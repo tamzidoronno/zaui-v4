@@ -176,4 +176,8 @@ public class StorePool {
     public StoreHandler getStorePool(String storeId) {
         return get(storeId);
     }
+
+    public void stop(Store store) {
+        storeHandlers.remove(store.id);
+    }    
 }

@@ -27,5 +27,8 @@ class core_storemanager_data_Store extends core_common_DataCommon  {
 	/** @var String */
 	public $isVIS;
 
+	/** @var String */
+	public $isDeepFreezed;
+
 }
 ?>

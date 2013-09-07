@@ -1,6 +1,7 @@
 package com.thundashop.core.storemanager;
 
 import com.thundashop.core.common.*;
+import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.storemanager.data.Store;
@@ -20,6 +21,9 @@ import org.springframework.stereotype.Component;
 public class StoreManager extends ManagerBase implements IStoreManager {
     @Autowired
     public StorePool storePool;
+    
+    @Autowired
+    public Database database;
     
     @Autowired
     public MailFactory mailFactory;
@@ -177,6 +181,14 @@ public class StoreManager extends ManagerBase implements IStoreManager {
             store.isVIS = toggle;
             storePool.saveStore(store);
         }
+    }
+
+    @Override
+    public void setDeepFreeze(boolean mode) throws ErrorException {
+        Store store = getMyStore();
+        store.isDeepFreezed = mode;
+        storePool.saveStore(store);
+        database.saveWithOverrideDeepfreeze(store, credentials);
     }
 
 }

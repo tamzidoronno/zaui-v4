@@ -19,6 +19,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
@@ -158,7 +159,6 @@ public class StorePool {
         database.save(store, credentials);
     }
     
-    
     public synchronized Store getStoreBySessionId(String sessionId) throws ErrorException {
         String storeId = getSessionFactory().getObject(sessionId, "storeId");
         if (storeId == null) {
@@ -212,5 +212,16 @@ public class StorePool {
 
         mailFactory.setStoreId(store.id);
         mailFactory.send(from, to, title, content);
+    }
+     
+    @Scheduled(cron = "0 */1 * * * *")
+    public void test() {
+        for (Store store : stores.values()) {
+            if (store.isDeepFreezed) {
+                if (AppContext.storePool != null) {
+                    AppContext.storePool.stop(store);
+                }
+            }
+        }
     }
 }

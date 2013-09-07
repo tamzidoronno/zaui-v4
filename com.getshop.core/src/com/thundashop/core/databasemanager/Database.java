@@ -12,9 +12,11 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.StoreHandler;
+import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.storemanager.StoreManager;
+import com.thundashop.core.storemanager.data.Store;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -45,6 +47,9 @@ public class Database {
     public DatabaseSocketHandler databaseSocketHandler;
     private boolean sandbox = false;
 
+    @Autowired
+    private StorePool storePool;
+    
     public void activateSandBox() {
         sandbox = true;
     }
@@ -75,6 +80,15 @@ public class Database {
     }
 
     public synchronized void save(DataCommon data, Credentials credentials) throws ErrorException {
+        Store store = storePool.getStore(data.storeId);
+        if (store != null && store.isDeepFreezed) {
+            return;
+        }
+        
+        saveWithOverrideDeepfreeze(data, credentials);
+    }
+    
+    public synchronized void saveWithOverrideDeepfreeze(DataCommon data, Credentials credentials) throws ErrorException {
         checkId(data);
         data.onSaveValidate();
 
@@ -88,7 +102,6 @@ public class Database {
 
         addDataCommonToDatabase(data, credentials);
         databaseSocketHandler.objectSaved(data, credentials);
-
     }
 
     private void createDataFolder() throws IOException {

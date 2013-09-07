@@ -221,6 +221,23 @@ public class APIStoreManager {
      }
 
      /**
+     * This option will enable / disable the deepfreeze mode.
+     * if a websolution is set to deepfreeze, it will automatically be 
+     * reverted to the original state each hour. No options will be stored.
+     * 
+     * @param mode - true / false
+     */
+
+     public void setDeepFreeze(boolean mode)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new HashMap();
+          data.args.put("mode",new Gson().toJson(mode));
+          data.method = "setDeepFreeze";
+          data.interfaceName = "core.storemanager.IStoreManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * This will set the readintroduction variable in the Store object to true.
      * @return Store
      * @throws ErrorException 

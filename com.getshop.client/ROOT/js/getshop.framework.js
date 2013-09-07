@@ -28,6 +28,7 @@ thundashop.framework = {
             }
             thundashop.framework.submitElement(e);
         });
+        $('.toogleDeepfreeze').live('click', this.toggleDeepFreeze);
     },
     
     submitElement : function(event) {
@@ -119,8 +120,15 @@ thundashop.framework = {
     reprintPage : function() {
         var event = thundashop.Ajax.createEvent("", "systemReloadPage", null, null);
         thundashop.Ajax.post(event);
+    },
+            
+    toggleDeepFreeze: function() {
+        var event = thundashop.Ajax.createEvent(null, "toggleDeepfreeze");
+        thundashop.Ajax.post(event, function() {
+            location.reload();
+        });
+        
     }
-    
 };
 
 thundashop.framework.bindEvents();

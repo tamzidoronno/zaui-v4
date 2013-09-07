@@ -1395,3 +1395,15 @@ margin-left:256px;
 }
 
 }
+
+.deepfreezedActivated {
+    width: 100%;
+    height: 30px;
+    background-color: red;
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 30px;
+    color: #FFF;
+    border-bottom: solid 1px #000;
+}

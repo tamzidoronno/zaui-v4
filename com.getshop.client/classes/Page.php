@@ -140,9 +140,9 @@ class Page extends FactoryBase {
         $this->includefile('mainmenu');
         $this->includefile('header');
         
-        echo "<div class='mainarea'>";
+        echo "<div class='gs_outer_mainarea'><div class='mainarea'>";
         $this->includefile('skeleton' . $this->skeletonType);
-        echo "</div>";
+        echo "</div></div>";
 
         $this->includefile('footer');
         echo "</div>";

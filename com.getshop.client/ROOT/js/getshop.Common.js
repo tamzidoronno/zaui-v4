@@ -566,7 +566,6 @@ $('.getshop_ckeditorcontent').live({
         if (!$(this).hasClass('cke_editable')) {
             var id = guid();
             $(this).attr('id', id);
-            $(this).attr('title', 'Click to edit, the text is being saved automatically.');
             thundashop.common.activateCKEditor(id, true, true, false);
             $(this).addClass('cke_focus');
         }

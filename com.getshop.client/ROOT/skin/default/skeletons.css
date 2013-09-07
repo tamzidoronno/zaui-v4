@@ -65,7 +65,7 @@ td.gs_col .applicationarea { height: 100%; }
 .skeleton1 .applicationarea, .skeleton2 .applicationarea, .skeleton3 .applicationarea { height: 100%; }
 
 
-.skeleton7 .gs_bottom,.skeleton8 .gs_bottom,.skeleton9 .gs_bottom {clear: both; }
+.gs_bottom {clear: both; }
 .skeleton7 .gs_col.c1,.skeleton8 .gs_col.c1,.skeleton9 .gs_col.c1 {
     box-sizing: border-box;
     ms-box-sizing: border-box;

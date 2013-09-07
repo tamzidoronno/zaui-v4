@@ -28,7 +28,13 @@ thundashop.framework = {
             }
             thundashop.framework.submitElement(e);
         });
-        $('.toogleDeepfreeze').live('click', this.toggleDeepFreeze);
+        $('.toogleDeepfreeze').live('click', this.showDeepFreezOption);
+        $('.savedeepfreeze').live('click', this.toggleDeepFreeze);
+    },
+            
+    showDeepFreezOption: function() {
+        var event = thundashop.Ajax.createEvent(null, "showDeepFreeze", null);
+        thundashop.common.showInformationBox(event, "Lock/Unlock deepfreeze");
     },
     
     submitElement : function(event) {
@@ -123,11 +129,16 @@ thundashop.framework = {
     },
             
     toggleDeepFreeze: function() {
-        var event = thundashop.Ajax.createEvent(null, "toggleDeepfreeze");
-        thundashop.Ajax.post(event, function() {
-            location.reload();
-        });
+        var data = {
+            password: $('#deepfreezepassword').val()
+        };
         
+        var event = thundashop.Ajax.createEvent(null, "toggleDeepfreeze", null, data);
+        thundashop.Ajax.post(event, function(response) {
+            if (response.errorCodes.length === 0) {
+                location.reload();    
+            }
+        });
     }
 };
 

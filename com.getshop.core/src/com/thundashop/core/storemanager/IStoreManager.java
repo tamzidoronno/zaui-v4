@@ -130,6 +130,6 @@ public interface IStoreManager {
      * @param mode - true / false
      */
     @Administrator
-    public void setDeepFreeze(boolean mode) throws ErrorException;
+    public void setDeepFreeze(boolean mode, String password) throws ErrorException;
     
 }

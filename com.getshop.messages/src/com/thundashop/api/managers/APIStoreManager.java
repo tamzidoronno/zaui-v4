@@ -228,10 +228,11 @@ public class APIStoreManager {
      * @param mode - true / false
      */
 
-     public void setDeepFreeze(boolean mode)  throws Exception  {
+     public void setDeepFreeze(boolean mode, String password)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new HashMap();
           data.args.put("mode",new Gson().toJson(mode));
+          data.args.put("password",new Gson().toJson(password));
           data.method = "setDeepFreeze";
           data.interfaceName = "core.storemanager.IStoreManager";
           String result = transport.send(data);

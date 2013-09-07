@@ -1407,3 +1407,13 @@ margin-left:256px;
     color: #FFF;
     border-bottom: solid 1px #000;
 }
+
+.deepfreezeinformation {
+    background-image: url('skin/default/images/deepfreeze.png');
+    height: 256px;
+    padding-left: 256px;
+    background-repeat: no-repeat;
+    padding-top: 20px;
+    padding-right: 20px;
+    font-size: 16px;
+}

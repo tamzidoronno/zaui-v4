@@ -2919,10 +2919,11 @@ class APIStoreManager {
      * @param mode - true / false
      */
 
-     public function setDeepFreeze($mode) {
+     public function setDeepFreeze($mode, $password) {
           $data = array();
           $data['args'] = array();
           $data['args']["mode"] = json_encode($this->transport->object_unset_nulls($mode));
+          $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
           $data["method"] = "setDeepFreeze";
           $data["interfaceName"] = "core.storemanager.IStoreManager";
           return $this->transport->sendMessage($data);

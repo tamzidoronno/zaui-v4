@@ -187,10 +187,14 @@ public class StorePool {
     public synchronized void delete(Store store) throws ErrorException {
         if (store == null) {
             throw new ErrorException(26);
+        } 
+        
+        if (store.isDeepFreezed) {
+            return;
         }
         
-        stores.remove(store.id);
         database.delete(store, credentials);
+        stores.remove(store.id);
         stopStore(store);
     }
     

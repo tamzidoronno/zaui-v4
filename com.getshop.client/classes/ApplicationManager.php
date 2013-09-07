@@ -371,11 +371,12 @@ class ApplicationManager extends FactoryBase {
     }
     
     public function toggleDeepfreeze() {
+        $password = $_POST['data']['password'];
         $store = $this->getFactory()->getStore();
         if ($store != null && $store->isDeepFreezed) {
-            $this->getFactory()->getApi()->getStoreManager()->setDeepFreeze(false);
+            $this->getFactory()->getApi()->getStoreManager()->setDeepFreeze(false, $password);
         } elseif ($store != null && !$store->isDeepFreezed) {
-            $this->getFactory()->getApi()->getStoreManager()->setDeepFreeze(true);
+            $this->getFactory()->getApi()->getStoreManager()->setDeepFreeze(true, $password);
         }
     }
 
@@ -533,5 +534,9 @@ class ApplicationManager extends FactoryBase {
         }
     }
 
+    
+    public function showDeepFreeze() {
+        $this->includefile("deepfreeze");
+    }
 }
 ?>

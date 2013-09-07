@@ -79,9 +79,21 @@ public class Database {
         }
     }
 
-    public synchronized void save(DataCommon data, Credentials credentials) throws ErrorException {
-        Store store = storePool.getStore(data.storeId);
+    private boolean isDeepFreezed(DataCommon data) {
+        String storeId = data.storeId;
+        if(data instanceof Store) {
+            storeId = data.id;
+        }
+        Store store = storePool.getStore(storeId);
         if (store != null && store.isDeepFreezed) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public synchronized void save(DataCommon data, Credentials credentials) throws ErrorException {
+        if (isDeepFreezed(data)) {
             return;
         }
         
@@ -170,6 +182,10 @@ public class Database {
 
     public synchronized void delete(DataCommon data, Credentials credentials) throws ErrorException {
         if (sandbox) {
+            return;
+        }
+        
+        if (isDeepFreezed(data)) {
             return;
         }
 

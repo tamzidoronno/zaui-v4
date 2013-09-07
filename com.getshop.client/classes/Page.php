@@ -73,8 +73,6 @@ class Page extends FactoryBase {
     }
 
     private function createAllPageAreas($page) {
-//        echo "<pre>";
-//        print_r($page);
         foreach ($page->pageAreas as $pagearea) {
             $this->areas[$pagearea->type] = new PageArea($this, $pagearea);
         }

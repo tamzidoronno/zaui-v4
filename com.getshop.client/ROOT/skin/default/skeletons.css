@@ -40,7 +40,7 @@
 .empty_app_area .content_box {
     position:absolute; 
     top: 50%;
-    margin-top: -50px;
+    margin-top: -54px;
     text-align: center;
     width:100%;
     left: 50%;
@@ -97,3 +97,69 @@ td.gs_col .applicationarea { height: 100%; }
 .skeleton14 .gs_col.c2 { float: right; }
 
 .skeleton16 .gs_col .applicationarea,.skeleton17 .gs_col .applicationarea { min-height: 200px; }
+
+.skeletondisplayer {
+    text-align: center;
+    padding-bottom: 20px;
+}
+.skeletondisplayer .skeletondisplay {
+    width: 200px;
+    height: 200px;
+    border: solid 1px #BBB;
+    display: inline-block;
+    cursor: pointer;
+    background: linear-gradient( 0deg, #BBB, #DDD);
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.skeletondisplayer .skeletondisplay:hover {
+    background: linear-gradient( 0deg, #AAA, #DDD);
+}
+
+.skeletondisplayer .information { 
+    border: solid 1px #DDD;
+    width: 872px;
+    margin-left: 55px;
+    font-size: 16px;
+    background-position: 10px 10px;
+    padding-left: 0px;
+    background-image: url('none');
+}
+.skeletondisplayer .skeletondisplay .innerskeletondisplayer  { 
+    width: 200px;
+    height: 200px;
+   
+}
+
+.skeletondisplayer .skeletondisplay .skeleton1 { background-image: url('/skin/default/images/layouts/layout1.png'); }
+.skeletondisplayer .skeletondisplay .skeleton1:hover { background-image: url('/skin/default/images/layouts/layout1_hover.png'); }
+.skeletondisplayer .skeletondisplay .skeleton2 { background-image: url('/skin/default/images/layouts/layout2.png'); }
+.skeletondisplayer .skeletondisplay .skeleton2:hover { background-image: url('/skin/default/images/layouts/layout2_hover.png'); }
+.skeletondisplayer .skeletondisplay .skeleton3 { background-image: url('/skin/default/images/layouts/layout3.png'); }
+.skeletondisplayer .skeletondisplay .skeleton3:hover { background-image: url('/skin/default/images/layouts/layout3_hover.png'); }
+.skeletondisplayer .skeletondisplay .skeleton4 { background-image: url('/skin/default/images/layouts/layout4.png'); }
+.skeletondisplayer .skeletondisplay .skeleton4:hover { background-image: url('/skin/default/images/layouts/layout4_hover.png'); }
+.skeletondisplayer .skeletondisplay .skeleton7 { background-image: url('/skin/default/images/layouts/layout7.png'); }
+.skeletondisplayer .skeletondisplay .skeleton7:hover { background-image: url('/skin/default/images/layouts/layout7_hover.png'); }
+.skeletondisplayer .skeletondisplay .skeleton8 { background-image: url('/skin/default/images/layouts/layout8.png'); }
+.skeletondisplayer .skeletondisplay .skeleton8:hover { background-image: url('/skin/default/images/layouts/layout8_hover.png'); }
+.skeletondisplayer .skeletondisplay .skeleton9 { background-image: url('/skin/default/images/layouts/layout9.png'); }
+.skeletondisplayer .skeletondisplay .skeleton9:hover { background-image: url('/skin/default/images/layouts/layout9_hover.png'); }
+.skeletondisplayer .skeletondisplay .skeleton10 { background-image: url('/skin/default/images/layouts/layout10.png'); }
+.skeletondisplayer .skeletondisplay .skeleton10:hover { background-image: url('/skin/default/images/layouts/layout10_hover.png'); }
+.skeletondisplayer .skeletondisplay .skeleton11 { background-image: url('/skin/default/images/layouts/layout11.png'); }
+.skeletondisplayer .skeletondisplay .skeleton11:hover { background-image: url('/skin/default/images/layouts/layout11_hover.png'); }
+.skeletondisplayer .skeletondisplay .skeleton12 { background-image: url('/skin/default/images/layouts/layout12.png'); }
+.skeletondisplayer .skeletondisplay .skeleton12:hover { background-image: url('/skin/default/images/layouts/layout12_hover.png'); }
+.skeletondisplayer .skeletondisplay .skeleton13 { background-image: url('/skin/default/images/layouts/layout13.png'); }
+.skeletondisplayer .skeletondisplay .skeleton13:hover { background-image: url('/skin/default/images/layouts/layout13_hover.png'); }
+.skeletondisplayer .skeletondisplay .skeleton14 { background-image: url('/skin/default/images/layouts/layout14.png'); }
+.skeletondisplayer .skeletondisplay .skeleton14:hover { background-image: url('/skin/default/images/layouts/layout14_hover.png'); }
+.skeletondisplayer .skeletondisplay .skeleton15 { background-image: url('/skin/default/images/layouts/layout15.png'); }
+.skeletondisplayer .skeletondisplay .skeleton15:hover { background-image: url('/skin/default/images/layouts/layout15_hover.png'); }
+.skeletondisplayer .skeletondisplay .skeleton16 { background-image: url('/skin/default/images/layouts/layout16.png'); }
+.skeletondisplayer .skeletondisplay .skeleton16:hover { background-image: url('/skin/default/images/layouts/layout16_hover.png'); }
+.skeletondisplayer .skeletondisplay .skeleton17 { background-image: url('/skin/default/images/layouts/layout17.png'); }
+.skeletondisplayer .skeletondisplay .skeleton17:hover { background-image: url('/skin/default/images/layouts/layout17_hover.png'); }

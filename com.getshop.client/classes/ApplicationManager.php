@@ -273,6 +273,10 @@ class ApplicationManager extends FactoryBase {
         $api->getMessageManager()->sendMail($to, $toName, $title, $text, $from, $fromName);
     }
 
+    public function showPageLayoutSelection() {
+        $this->includefile("applicationSelectionLayout");
+    }
+    
     public function showApplications() {
         $this->subscriptions = $this->getFactory()->getApi()->getAppManager()->getAllApplicationSubscriptions(false);
         $this->includefile('applicationSet');

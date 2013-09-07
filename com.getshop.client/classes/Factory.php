@@ -442,12 +442,15 @@ class Factory extends FactoryBase {
         if (isset($settings->currencycode)) {
             $currency = $settings->currencycode->value;
         }
+        
+        if ($currency == "USD")
+            return "$";
+        
+        if ($currency == "EUR")
+            return "€";
 
         if ($currency == "NOK")
             return "Kr";
-
-        if ($currency == "USD")
-            return "$";
 
         if ($currency == "AUD")
             return "$";

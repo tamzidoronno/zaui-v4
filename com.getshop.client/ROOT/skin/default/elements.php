@@ -14,7 +14,7 @@
     height: 20px;
     top: 5px;
     width: 3px;
-    z-index: 100;
+    z-index: 2;
     background: url(/skin/default/elements/button-small-glare-right.png) no-repeat right top;
 }
 

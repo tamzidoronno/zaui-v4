@@ -10,9 +10,9 @@ font-weight: bold;
 .upload_information_panel .uploading { padding-left: 30px; padding-right: 10px; }
 .upload_information_panel .uploading img { position:absolute; left: 5px; }
 .header .Login .applicationinner { margin-right: 0px; }
-.header .Login { position: absolute; right: 0px; text-align: right; top: 0px;  z-index: 1;}
+.header .Login { position: absolute; right: 0px; text-align: right; top: 0px;  z-index: 6;}
 .header .Login form { margin: 0px; padding: 0px; }
-.header .Login .form { text-align: left; height: 80px; width: 250px ; position: relative; display: none;} 
+.header .Login .form { text-align: left; height: 80px; width: 250px ; position: relative; display: none; font-size: 11px; } 
 .header .Login .form .username { position:absolute; left: 5px; top: 5px;} 
 .header .Login .form .password { position:absolute; right: 5px; top: 5px; } 
 .header .Login .form .tstextfield { height: 18px; font-size: 13px; width: 100px;} 

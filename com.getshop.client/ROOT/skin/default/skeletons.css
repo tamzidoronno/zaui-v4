@@ -62,7 +62,7 @@ td.gs_col { min-height: 100px ; }
 td.gs_col .applicationarea { height: 100%; }
 
 .skeleton1 .gs_col { min-height: 300px; }
-.skeleton1 .applicationarea, .skeleton2 .applicationarea, .skeleton3 .applicationarea { height: 100%; }
+.gs_outer.header .applicationarea { height: 100%; }
 
 
 .gs_bottom {clear: both; }

@@ -31,6 +31,7 @@ public class StoreHandler {
     private HashMap<String, Session> sessions = new HashMap();
     // remove this.
     private User testUser;
+    private boolean isPaymentActivated = false;
 
     @Deprecated
     public void setTestUser(User user) {
@@ -61,16 +62,24 @@ public class StoreHandler {
         
         Class aClass = loadClass(inObject.interfaceName);
         Method executeMethod = getMethodToExecute(aClass, inObject.method, types);
-        Annotation annotation = authenticateUserLevel(executeMethod);
-        AppManager appManager = getManager(AppManager.class);
-        List<ApplicationSubscription> unpayedApps = appManager.getUnpayedSubscription();
-        if(annotation instanceof Administrator && unpayedApps.size() > 0) {
-            throw new ErrorException(93);
+        
+        if (isPaymentActivated) {
+            checkPayMent(executeMethod);
         }
         
         Object result = invokeMethod(executeMethod, aClass, argumentValues);
         clearSessionObject();
         return result;
+    }
+    
+    private void checkPayMent(Method executeMethod) throws ErrorException {
+        Annotation annotation = authenticateUserLevel(executeMethod);
+        AppManager appManager = getManager(AppManager.class);
+        
+        List<ApplicationSubscription> unpayedApps = appManager.getUnpayedSubscription();
+        if(annotation instanceof Administrator && unpayedApps.size() > 0) {
+            throw new ErrorException(93);
+        }
     }
 
     private Class loadClass(String objectName) throws ErrorException {

@@ -122,7 +122,7 @@ left: 0px;
 right: 0px;
 bottom: 0px;
 top: 0px;
-z-index: 2;
+z-index: 15;
 display: none;
 background-image: url('/skin/default/images/carbon-glare.png');
 }
@@ -1179,7 +1179,7 @@ box-shadow: 0px 0px 3px rgba(22, 52, 239, 0.9);
 }
 
 .GetShopToolbox {
-z-index: 10;
+z-index: 20;
 background-color : #FFF;
 border: solid 1px #BBB;
 }   

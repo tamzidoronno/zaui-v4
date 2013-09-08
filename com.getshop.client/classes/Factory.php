@@ -450,7 +450,7 @@ class Factory extends FactoryBase {
             return "€";
 
         if ($currency == "NOK")
-            return "Kr";
+            return "Kr ";
 
         if ($currency == "AUD")
             return "$";

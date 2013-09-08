@@ -28,24 +28,20 @@ public class StorePool {
         }
     }
 
+    private Type[] getArgumentsTypes(JsonObject2 object) throws ErrorException {
+        try {
+            Method method = getMethod(object);
+            return method.getGenericParameterTypes();
+        } catch (ClassNotFoundException ex) {
+            throw new ErrorException(81);
+        }
+        
+    }
+    
     private Class<?>[] getArguments(JsonObject2 object) throws ErrorException {
         try {
-            Class aClass = getClass().getClassLoader().loadClass("com.thundashop." + object.interfaceName);
-
-            Method[] methods = aClass.getMethods();
-            Method method = null;
-
-            for (Method tmpMethod : methods) {
-                if (tmpMethod.getName().equals(object.method)) {
-                    method = tmpMethod;
-                }
-            }
-            if (method == null) {
-                System.out.println("Failed on obj: " + object.interfaceName);
-                System.out.println("Failed on obj: " + object.method);
-            }
-            Class<?>[] parameters = method.getParameterTypes();
-            return parameters;
+            Method method = getMethod(object);
+            return (Class<?>[])method.getParameterTypes();
         } catch (ClassNotFoundException ex) {
             throw new ErrorException(81);
         }
@@ -96,10 +92,11 @@ public class StorePool {
         int i = 0;
         Object[] executeArgs = new Object[object.args.size()];
         Class[] types = getArguments(object);
+        Type[] casttypes = getArgumentsTypes(object);
         for (String parameter : object.args.keySet()) {
             Class classLoaded = getClass(types[i].getCanonicalName());
             try {
-                Object argument = gson.fromJson(object.args.get(parameter), classLoaded);
+                Object argument = gson.fromJson(object.args.get(parameter), casttypes[i]);
                 executeArgs[i] = argument;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -175,5 +172,21 @@ public class StorePool {
 
     public StoreHandler getStorePool(String storeId) {
         return get(storeId);
+    }
+
+    private Method getMethod(JsonObject2 object) throws ClassNotFoundException, SecurityException {
+        Class aClass = getClass().getClassLoader().loadClass("com.thundashop." + object.interfaceName);
+        Method[] methods = aClass.getMethods();
+        Method method = null;
+        for (Method tmpMethod : methods) {
+            if (tmpMethod.getName().equals(object.method)) {
+                method = tmpMethod;
+            }
+        }
+        if (method == null) {
+            System.out.println("Failed on obj: " + object.interfaceName);
+            System.out.println("Failed on obj: " + object.method);
+        }
+        return method;
     }
 }

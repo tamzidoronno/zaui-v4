@@ -50,6 +50,13 @@ $apps = $factory->getApplicationPool()->convertApplicationsSettingsToAppinstance
             if ($app->applicationSettings->appName === "ProductManager") {
                 continue;
             }
+            if ($app->applicationSettings->type === "ThemeApplication") {
+                continue;
+            }
+            if ($app->applicationSettings->type === "SystemApplication") {
+                continue;
+            }
+                        
             $active2 = isset($notFirst2) ? "" : "active";
             $notFirst2 = false;
             /* @var $app Application */

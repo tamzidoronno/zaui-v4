@@ -58,7 +58,7 @@
     font-size:14px;
 }
 
-td.gs_col { min-height: 100px ; }
+td.gs_col { height: 10px; min-height: 100px; }
 td.gs_col .applicationarea { height: 100%; }
 
 .skeleton1 .gs_col { min-height: 300px; }

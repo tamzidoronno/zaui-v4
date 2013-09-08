@@ -1510,6 +1510,23 @@ class APIListManager {
      }
 
      /**
+     * This function flushes all entries in the list and set this as new entries instead.
+     * @param listId The id of the list to be updated
+     * @param entries All entries to be included in the list.
+     * @throws ErrorException 
+     */
+
+     public function setEntries($listId, $entries) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["listId"] = json_encode($this->transport->object_unset_nulls($listId));
+          $data['args']["entries"] = json_encode($this->transport->object_unset_nulls($entries));
+          $data["method"] = "setEntries";
+          $data["interfaceName"] = "core.listmanager.IListManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Translate all antries found in a given list of entry ids.
      * @param entryIds A list of entries id to translate.
      * @return HashMap

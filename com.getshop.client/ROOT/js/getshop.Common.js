@@ -222,6 +222,8 @@ thundashop.common.createInformationBox = function(appid, title, open) {
         thundashop.MainMenu.lockScroll();
         thundashop.common.mask();
         infoBoxHolder.css('display', 'inline-block');
+    } else {
+        infoBox = infoBox.clone();
     }
     infoBox.attr('class', '');
     infoBox.addClass('informationboxbackground');

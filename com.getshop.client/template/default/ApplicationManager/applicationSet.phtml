@@ -27,6 +27,9 @@ $apps = $factory->getApplicationPool()->convertApplicationsSettingsToAppinstance
             if ($app->applicationSettings->type === "SystemApplication") {
                 continue;
             }
+            if ($app->applicationSettings->appName === "ProductManager") {
+                continue;
+            }
 
 
             $active = isset($notFirst) ? "" : "active";
@@ -42,6 +45,9 @@ $apps = $factory->getApplicationPool()->convertApplicationsSettingsToAppinstance
         <?
         foreach ($apps as $app) {
             if (!$app->getName()) {
+                continue;
+            }
+            if ($app->applicationSettings->appName === "ProductManager") {
                 continue;
             }
             $active2 = isset($notFirst2) ? "" : "active";

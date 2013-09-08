@@ -86,7 +86,6 @@ thundashop.Ajax = {
                         $('#loaderbox').hide();
                     }
                 }
-                thundashop.common.setSizeClasses();
             },
             error: thundashop.handleAjaxError
         });
@@ -212,7 +211,6 @@ thundashop.Ajax = {
                 if (typeof(callback) !== "undefined" && typeof(callback) !== "boolean") {
                     callback();
                 }
-                thundashop.common.setSizeClasses();
             },
             error: thundashop.handleAjaxError
         })

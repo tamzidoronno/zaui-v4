@@ -584,6 +584,8 @@ $('.getshop_ckeditorcontent').live('mouseover', function(e) {
 
 });
 $(function() {
+    
+    PubSub.subscribe('NAVIGATION_COMPLETED', thundashop.common.setSizeClasses);
     thundashop.common.setSizeClasses();
 
     $(document).on('click', '.add_content_img', function() {

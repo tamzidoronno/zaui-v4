@@ -97,7 +97,7 @@ public class ListManager extends ManagerBase implements IListManager {
             entry.pageId = page.id;
         }
 
-        saveMenu(listId);
+        saveList(listId);
     }
 
     private List<Entry> buildEntries(String listId) {
@@ -145,7 +145,7 @@ public class ListManager extends ManagerBase implements IListManager {
         parent.subentries.add(entry);
     }
 
-    private void saveMenu(String listId) throws ErrorException {
+    private void saveList(String listId) throws ErrorException {
         EntryList entry = allEntries.get(listId);
         entry.storeId = storeId;
         saveToDatabase(entry);
@@ -259,7 +259,7 @@ public class ListManager extends ManagerBase implements IListManager {
 
         toRemove.remove(entry);
 
-        saveMenu(listId);
+        saveList(listId);
     }
 
     @Override
@@ -303,7 +303,7 @@ public class ListManager extends ManagerBase implements IListManager {
         sortList(id, after);
 
         //Save updates
-        saveMenu(getListIdFromEntry(getEntry(id)));
+        saveList(getListIdFromEntry(getEntry(id)));
 
         return getEntry(id);
     }
@@ -320,7 +320,7 @@ public class ListManager extends ManagerBase implements IListManager {
         oldEntry.navigateByPages = entry.navigateByPages;
         oldEntry.pageId = entry.pageId;
         
-        saveMenu(getListIdFromEntry(entry));
+        saveList(getListIdFromEntry(entry));
     }
 
     private Entry recursiveEntrySearch(String id, List<Entry> entries) {
@@ -521,6 +521,14 @@ public class ListManager extends ManagerBase implements IListManager {
             for(String entryId : toDelete) {
                 deleteEntry(entryId, listId);
             }
+        }
+    }
+
+    @Override
+    public void setEntries(String listId, ArrayList<Entry> entries) throws ErrorException {
+        allEntries.put(listId, new EntryList());
+        for(Entry entry : entries) {
+           addEntry(listId, entry, "");
         }
     }
 }

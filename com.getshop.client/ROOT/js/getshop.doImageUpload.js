@@ -37,7 +37,6 @@
             selectedCropArea = config.selectedCropArea;
         if (config.autosave !== undefined)
             autosave = config.autosave;
-
         var compression = null;
         var cords = null;
         var originalCanvas = null;
@@ -47,14 +46,11 @@
         if (autosave) {
             open = false;
         }
+        
         var infobox = thundashop.common.createInformationBox($(this).closest('.app').attr('appid'), 'Crop image', open);
-        if (autosave) {
-            infobox = infobox.clone();
-        }
         infobox.html('<center id="uploadedimagerow"></center>');
         infobox.find('#uploadedimagerow').html('<img id="uploadedimage">');
         infobox.find('#uploadedimagerow').append('<div class="button add_image_button"><div class="rightglare"></div><div class="filler"></div><ins>Save image</ins></div>');
-
 
         function generateCompressionRate(img, width, height) {
             if (img.width >= img.height) {

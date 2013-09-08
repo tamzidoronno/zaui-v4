@@ -4,6 +4,7 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.listmanager.data.Entry;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,6 +31,14 @@ public interface IListManager {
      * @return List of lists ids
      */
     public List<String> getLists();
+    
+    /**
+     * This function flushes all entries in the list and set this as new entries instead.
+     * @param listId The id of the list to be updated
+     * @param entries All entries to be included in the list.
+     * @throws ErrorException 
+     */
+    public void setEntries(String listId, ArrayList<Entry> entries) throws ErrorException;
     
     /**
      * Add a new entry to a given list.<br>

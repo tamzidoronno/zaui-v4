@@ -211,6 +211,23 @@ public class APIListManager {
      }
 
      /**
+     * This function flushes all entries in the list and set this as new entries instead.
+     * @param listId The id of the list to be updated
+     * @param entries All entries to be included in the list.
+     * @throws ErrorException 
+     */
+
+     public void setEntries(String listId, List<Entry> entries)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new HashMap();
+          data.args.put("listId",new Gson().toJson(listId));
+          data.args.put("entries",new Gson().toJson(entries));
+          data.method = "setEntries";
+          data.interfaceName = "core.listmanager.IListManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Translate all antries found in a given list of entry ids.
      * @param entryIds A list of entries id to translate.
      * @return HashMap<String,String>

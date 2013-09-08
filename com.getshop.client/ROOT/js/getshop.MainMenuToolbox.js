@@ -5,17 +5,17 @@ $(document).ready(function() {
         title: "MainMenu",
         items: [
             {
-                icon: "/skin/default/images/icons/layouts.png",
-                click: thundashop.MainMenu.showPageLayoutSelection,
-                title: "Select different page layouts",
-                extraArgs: {}
-            },
-            {
                 icon: "/skin/default/images/add_product.png",
                 title: "Product list",
                 click: app.ProductManager.loadImportProduct,
-                class: 'layout',
-                disableOnSystemPages: true
+                class: 'layout'
+            },
+            {
+                icon: "/skin/default/images/icons/layouts.png",
+                click: thundashop.MainMenu.showPageLayoutSelection,
+                title: "Select different page layouts",
+                disableOnSystemPages: true,
+                extraArgs: {}
             },
             {
                 type: 'seperator',
@@ -89,8 +89,7 @@ $(document).ready(function() {
             },
             {
                 type: 'seperator',
-                title: 'Webshop',
-                disableOnSystemPages: true
+                title: 'Webshop'
             },
             {
                 icon: "/skin/default/images/color-palette.png",

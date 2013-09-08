@@ -1,6 +1,5 @@
 package com.thundashop.core.ordermanager;
 
-import com.google.gson.Gson;
 import com.thundashop.core.appmanager.AppManager;
 import com.thundashop.core.appmanager.data.ApplicationSubscription;
 import com.thundashop.core.cartmanager.CartManager;
@@ -12,12 +11,10 @@ import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
-import com.thundashop.core.productmanager.data.ProductVariation;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
 import java.util.*;
-import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -77,23 +74,37 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 //            }
         }
     }
-
+    
+    private String formatText(Order order, String text) throws ErrorException {
+        text = text.replace("/displayImage", "http://"+getStore().webAddress+"/displayImage");
+        text = text.replace("{Order.Id}", order.id);
+        text = text.replace("{Order.Lines}", getOrderLines(order));
+        text = text.replace("{Customer.Name}", order.cart.address.fullName);
+        text = text.replace("{Customer.Email}", order.cart.address.emailAddress);
+        text = text.replace("{Customer.Address}", order.cart.address.address);
+        text = text.replace("{Customer.City}", order.cart.address.city);
+        text = text.replace("{Customer.Phone}", order.cart.address.phone);
+        text = text.replace("{Customer.Postcode}", order.cart.address.postCode);
+        return text;
+    }
+    
     public String getCustomerOrderText(Order order) throws ErrorException {
-        String newOrder = "Your order has been saved and will be processed by us as soon as possible";
-        newOrder += "<br>";
-        newOrder += "<br> <b>Order id:</b> " + order.id;
-        newOrder += "<br>";
-        newOrder += "<br> <b>Shipment information:</b>";
-        newOrder += "<br> Name: " + order.cart.address.fullName;
-        newOrder += "<br> Email: " + order.cart.address.emailAddress;
-        newOrder += "<br> Address: " + order.cart.address.address;
-        newOrder += "<br> Phone: " + order.cart.address.phone;
-        newOrder += "<br> PostCode: " + order.cart.address.postCode + " " + order.cart.address.city;
-        newOrder += "<br>";
-        newOrder += "<br> <b>Items:</b> ";
+        HashMap<String, Setting> settings = getSettings("MailManager");
+        if (settings != null && settings.get("ordermail") != null) {
+            Setting setting = settings.get("ordermail");
+            String value = setting.value;
+            if (value != null && !value.equals("")) {
+                return formatText(order, value);
+            }
+        }
+        return getDefaultOrderText(order);
+    }
+    
+    private String getOrderLines(Order order) {
+        String newOrder = "";
         for (CartItem cartItem : order.cart.getItems()) {
             Product product = cartItem.getProduct();
-            newOrder += "<br> " + cartItem.getCount() + "  x " + product.name;
+            newOrder += cartItem.getCount() + "  x " + product.name;
 
             if (cartItem.getVariations().size() > 0) {
                 newOrder += " (";
@@ -109,7 +120,23 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
             newOrder += "<br>";
         }
-
+        return newOrder;
+    }
+    
+    private String getDefaultOrderText(Order order) throws ErrorException {
+        String newOrder = "Your order has been saved and will be processed by us as soon as possible";
+        newOrder += "<br>";
+        newOrder += "<br> <b>Order id:</b> " + order.id;
+        newOrder += "<br>";
+        newOrder += "<br> <b>Shipment information:</b>";
+        newOrder += "<br> Name: " + order.cart.address.fullName;
+        newOrder += "<br> Email: " + order.cart.address.emailAddress;
+        newOrder += "<br> Address: " + order.cart.address.address;
+        newOrder += "<br> Phone: " + order.cart.address.phone;
+        newOrder += "<br> PostCode: " + order.cart.address.postCode + " " + order.cart.address.city;
+        newOrder += "<br>";
+        newOrder += "<br> <b>Items:</b> ";
+        newOrder += getOrderLines(order);
         return newOrder;
     }
     
@@ -122,6 +149,18 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
     }
 
+    private String getSubject() throws ErrorException {
+        HashMap<String, Setting> settings = getSettings("MailManager");
+        if (settings != null && settings.get("ordermail_subject") != null) {
+            Setting setting = settings.get("ordermail_subject");
+            String value = setting.value;
+            if (value != null && !value.equals(""))
+                return value;
+        }
+        
+        return "Thank you for your order";
+    }
+    
     @Override
     public Order createOrder(Address address) throws ErrorException {
         CartManager cartManager = getManager(CartManager.class);
@@ -145,10 +184,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Store store = this.getStore();
         String orderText = getCustomerOrderText(order);
 
-        mailFactory.send(store.configuration.emailAdress, order.cart.address.emailAddress, "Thank you for your order", orderText);
+        mailFactory.send(store.configuration.emailAdress, order.cart.address.emailAddress, getSubject() , orderText);
 
         if (!store.configuration.emailAdress.equals(order.cart.address.emailAddress)) {
-            mailFactory.send(store.configuration.emailAdress, store.configuration.emailAdress, "Thank you for your order", orderText);
+            mailFactory.send(store.configuration.emailAdress, store.configuration.emailAdress, getSubject(), orderText);
         }
 
         return order;

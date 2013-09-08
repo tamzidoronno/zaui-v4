@@ -64,6 +64,15 @@ public class AddApplicationsToDatabase {
                 ApplicationSettings.Type.Webshop, false);
         akad.isPublic = true;
         apps.add(akad);
+        
+        ApplicationSettings mailApplication = createSettings(
+                "MailManager", 
+                "eb03c660-186a-11e3-8ffd-0800200c9a66", 
+                emtpy, 
+                "", 
+                ApplicationSettings.Type.Marketing, true);
+        mailApplication.isPublic = true;
+        apps.add(mailApplication);
 
         ApplicationSettings blueEnergyTheme = createSettings(
                 "BlueEnergyTheme", 
@@ -73,6 +82,15 @@ public class AddApplicationsToDatabase {
                 ApplicationSettings.Type.Theme, false);
         blueEnergyTheme.isPublic = true;
         apps.add(blueEnergyTheme);
+        
+        ApplicationSettings sisow = createSettings(
+                "Sisow", 
+                "c4d7bec0-185f-11e3-8ffd-0800200c9a66", 
+                emtpy, 
+                "", 
+                ApplicationSettings.Type.Payment, true);
+        sisow.isPublic = true;
+        apps.add(sisow);
         
         return apps;
     }

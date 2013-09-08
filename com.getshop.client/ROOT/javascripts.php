@@ -10,8 +10,21 @@ function endsWith($haystack, $needle)
     return (substr($haystack, -$length) === $needle);
 }
 
-$apps = IocContainer::getFactorySingelton(false)->getApplicationPool()->getAllApplicationSettings();
+$factory = IocContainer::getFactorySingelton(false);
+$apps = $factory->getApplicationPool()->getAllApplicationSettings();
 foreach ($apps as $app) {
+    $appInstance = $factory->getApplicationPool()->createInstace($app);
+    if($appInstance) {
+        if (method_exists($appInstance, "includeExtraJavascript")) {
+            $extraJavascript = $appInstance->includeExtraJavascript();
+            if (is_array($extraJavascript)) {
+                foreach ($extraJavascript as $extraJavascript) {
+                    echo "<script src='$extraJavascript'></script>";
+                }
+            }
+        }
+    }
+    
     $namespace = $this->convertUUIDtoString($app->id);
     $javascriptFolder = "../app/$namespace/javascript";
 

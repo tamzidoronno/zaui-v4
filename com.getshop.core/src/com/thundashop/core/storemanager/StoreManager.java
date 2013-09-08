@@ -1,10 +1,12 @@
 package com.thundashop.core.storemanager;
 
 import com.thundashop.core.common.*;
+import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ import org.springframework.stereotype.Component;
 public class StoreManager extends ManagerBase implements IStoreManager {
     @Autowired
     public StorePool storePool;
+    
+    @Autowired
+    public Database database;
     
     @Autowired
     public MailFactory mailFactory;
@@ -176,6 +181,44 @@ public class StoreManager extends ManagerBase implements IStoreManager {
             Store store = getStore();
             store.isVIS = toggle;
             storePool.saveStore(store);
+        }
+    }
+
+    private String encrypt(String password) throws ErrorException {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes("UTF-8"));
+            
+            StringBuilder sb = new StringBuilder();
+            for (byte b : hash) {
+                sb.append(String.format("%02X", b));
+            }
+            return sb.toString();
+        } catch (Exception ex) {
+            throw new ErrorException(88);
+        }
+    }
+    
+    @Override
+    public void setDeepFreeze(boolean mode, String password) throws ErrorException {
+        Store store = getMyStore();
+        
+        if (!store.isDeepFreezed && mode) {
+            store.isDeepFreezed = true;
+            store.deepFreezePassword = encrypt(password);
+            storePool.saveStore(store);
+            database.saveWithOverrideDeepfreeze(store, credentials);
+        }
+        
+        if (store.isDeepFreezed && !mode && store.deepFreezePassword != null && !store.deepFreezePassword.equals(encrypt(password))) {
+            throw new ErrorException(98);
+        }
+        
+        if (store.isDeepFreezed && !mode && store.deepFreezePassword != null && store.deepFreezePassword.equals(encrypt(password))) {
+            store.isDeepFreezed = false;
+            store.deepFreezePassword = null;
+            storePool.saveStore(store);
+            database.saveWithOverrideDeepfreeze(store, credentials);
         }
     }
 

@@ -1395,3 +1395,25 @@ margin-left:256px;
 }
 
 }
+
+.deepfreezedActivated {
+    width: 100%;
+    height: 30px;
+    background-color: red;
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 30px;
+    color: #FFF;
+    border-bottom: solid 1px #000;
+}
+
+.deepfreezeinformation {
+    background-image: url('skin/default/images/deepfreeze.png');
+    height: 256px;
+    padding-left: 256px;
+    background-repeat: no-repeat;
+    padding-top: 20px;
+    padding-right: 20px;
+    font-size: 16px;
+}

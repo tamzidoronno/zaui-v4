@@ -122,4 +122,14 @@ public interface IStoreManager {
      */
     public void setVIS(boolean toggle, String password) throws ErrorException;
     
+    /**
+     * This option will enable / disable the deepfreeze mode.
+     * if a websolution is set to deepfreeze, it will automatically be 
+     * reverted to the original state each hour. No options will be stored.
+     * 
+     * @param mode - true / false
+     */
+    @Administrator
+    public void setDeepFreeze(boolean mode, String password) throws ErrorException;
+    
 }

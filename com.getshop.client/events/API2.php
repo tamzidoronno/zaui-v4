@@ -2929,6 +2929,24 @@ class APIStoreManager {
      }
 
      /**
+     * This option will enable / disable the deepfreeze mode.
+     * if a websolution is set to deepfreeze, it will automatically be 
+     * reverted to the original state each hour. No options will be stored.
+     * 
+     * @param mode - true / false
+     */
+
+     public function setDeepFreeze($mode, $password) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["mode"] = json_encode($this->transport->object_unset_nulls($mode));
+          $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+          $data["method"] = "setDeepFreeze";
+          $data["interfaceName"] = "core.storemanager.IStoreManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * This will set the readintroduction variable in the Store object to true.
      * @return core_storemanager_data_Store
      * @throws ErrorException 

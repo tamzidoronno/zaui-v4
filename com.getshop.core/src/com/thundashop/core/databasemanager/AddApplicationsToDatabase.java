@@ -93,6 +93,11 @@ public class AddApplicationsToDatabase {
         for (ApplicationSettings app : addApplications()) {
             System.out.println("ln -s ../../../applications/apps/"+app.appName + " " + "ns_"+app.id.replace("-", "_"));
         }
+        System.out.println("Or for kai: ");
+        for (ApplicationSettings app : addApplications()) {
+            System.out.println("ln -s ../../../com.getshop.applications/apps/"+app.appName + " " + "ns_"+app.id.replace("-", "_"));
+        }
+        
     }
     
     public static void main(String args[]) throws ErrorException, UnknownHostException {

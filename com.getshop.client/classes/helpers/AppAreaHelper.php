@@ -15,7 +15,7 @@ class AppAreaHelper {
         }
         $numberOfEntries = $numberOfEntries + $offset-1;
         ?>
-        <table width="100%" cellspacing='0' cellpadding='0'>
+        <table width="100%" cellspacing='0' cellpadding='0' class='gs_rowtable'>
             <tr>
                 <?
                 for ($i = $offset; $i <= $numberOfEntries; $i++) {

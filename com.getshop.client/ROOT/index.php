@@ -91,7 +91,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
     $_SESSION['checkifloggedout'] = true;
 }
 
-if($factory->getStore()->id == "2fac0e57-de1d-4fdf-b7e4-5f93e3225445" && ismobile()) {
+if ($factory->getStore()->id == "2fac0e57-de1d-4fdf-b7e4-5f93e3225445" && ismobile()) {
     header('location:booking.php');
 }
 
@@ -100,18 +100,21 @@ if (isset($_GET['logonwithkey'])) {
     $_SESSION['loggedin'] = serialize($factory->getApi()->getUserManager()->logonUsingKey($key));
     header('location:index.php');
 }
-
 ?>
 
 <html xmlns:fb="http://ogp.me/ns/fb#">
     <head>
+        <!--[if gte IE 8]>
+        <link rel="stylesheet" type="text/css" href="ie8plus.css" />
+<![endif]-->
+
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <?php
         $html = init($factory);
         $pageDescription = $factory->getPage()->description;
-        if(isset($factory->getSettings()->{'favicon'})) {
-            echo '<link rel="shortcut icon" href="'.$factory->getSettings()->{'favicon'}->value.'" type="image/png">';
-            echo '<link rel="shortcut icon" type="image/png" href="'.$factory->getSettings()->{'favicon'}->value.'" />';
+        if (isset($factory->getSettings()->{'favicon'})) {
+            echo '<link rel="shortcut icon" href="' . $factory->getSettings()->{'favicon'}->value . '" type="image/png">';
+            echo '<link rel="shortcut icon" type="image/png" href="' . $factory->getSettings()->{'favicon'}->value . '" />';
         }
         echo "<meta name=\"description\" content=\"$pageDescription\">";
 
@@ -148,7 +151,7 @@ if (isset($_GET['logonwithkey'])) {
     </head>
     <body>
         <? if ($factory->getStore()->isDeepFreezed) { ?>
-        <div class='deepfreezedActivated'><? echo $factory->__f("Warning! this store will automatically be reset to original state each hour") ?></div>
+            <div class='deepfreezedActivated'><? echo $factory->__f("Warning! this store will automatically be reset to original state each hour") ?></div>
         <? } ?>
         <input name="storeid" type="hidden"  value="<?php echo $factory->getStore()->id; ?>"/>
         <input name="userid" type="hidden"  value="<?php echo \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id; ?>"/>
@@ -196,11 +199,11 @@ if (isset($_GET['logonwithkey'])) {
 </html>
 <?
 if ($factory->getApi()->getStoreManager()->getMyStore()->partnerId == "GetShop") {
-?>
+    ?>
     <div id="getshoppower" style='position:fixed; text-align:right;  bottom:0px; right:0px; display:block;background-color:#FFFFFF; padding: 1px; margin-top: 3px;'>
         &nbsp;&nbsp;&nbsp;<a href='http://www.getshop.com'>Powered by GetShop</a>&nbsp;&nbsp;&nbsp;
     </div>
-<?
+    <?
 }
 if (count($factory->getApi()->transport->errors) > 0) {
     echo "<script>";

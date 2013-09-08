@@ -58,8 +58,17 @@
     font-size:14px;
 }
 
-td.gs_col { height: 10px; min-height: 100px; }
+
+td.gs_col { min-height: 100px; }
 td.gs_col .applicationarea { height: 100%; }
+
+@-moz-document url-prefix() {
+    .gs_rowtable tr,.gs_rowtable td { height: 100%; }
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) { 
+    td.gs_col { height: 10px; }
+}
 
 .skeleton1 .gs_col { min-height: 300px; }
 .gs_outer.header .applicationarea { height: 100%; }

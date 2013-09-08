@@ -115,6 +115,7 @@ td.gs_col .applicationarea { height: 100%; }
     width: 200px;
     height: 200px;
     border: solid 1px #BBB;
+    border-radius: 5px;
     display: inline-block;
     cursor: pointer;
     background: linear-gradient( 0deg, #BBB, #DDD);
@@ -125,6 +126,11 @@ td.gs_col .applicationarea { height: 100%; }
 }
 .skeletondisplayer .skeletondisplay:hover {
     background: linear-gradient( 0deg, #AAA, #DDD);
+    box-shadow: 0px 0px 5px #888888;
+}
+
+.skeletondisplayer .skeletondisplay:active {
+    box-shadow: inherit;
 }
 
 .skeletondisplayer .information { 

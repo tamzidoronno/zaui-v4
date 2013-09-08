@@ -35,13 +35,13 @@ public class StorePool {
         } catch (ClassNotFoundException ex) {
             throw new ErrorException(81);
         }
-        
+
     }
-    
+
     private Class<?>[] getArguments(JsonObject2 object) throws ErrorException {
         try {
             Method method = getMethod(object);
-            return (Class<?>[])method.getParameterTypes();
+            return (Class<?>[]) method.getParameterTypes();
         } catch (ClassNotFoundException ex) {
             throw new ErrorException(81);
         }
@@ -77,7 +77,7 @@ public class StorePool {
     public Object ExecuteMethod(String message, String addr) throws ErrorException {
         return ExecuteMethod(message, addr, null);
     }
-    
+
     public Object ExecuteMethod(String message, String addr, String sessionId) throws ErrorException {
         Gson gson = new GsonBuilder().serializeNulls().create();
 
@@ -107,28 +107,28 @@ public class StorePool {
         }
 
         object.interfaceName = object.interfaceName.replace(".I", ".");
-        
+
         if (sessionId != null) {
             object.sessionId = sessionId;
         }
-        
+
         long start = System.currentTimeMillis();
         Object result = ExecuteMethod(object, types, executeArgs);
-        
+
         long end = System.currentTimeMillis();
-        long diff = end-start;
-        if(diff > 40) {
+        long diff = end - start;
+        if (diff > 40) {
             System.out.println("" + diff + " : " + object.interfaceName + " method: " + object.method);
         }
         result = (result == null) ? new ArrayList() : result;
-        
+
         if (!object.messageId.equals("")) {
             WebSocketReturnMessage returnmessage = new WebSocketReturnMessage();
             returnmessage.messageId = object.messageId;
             returnmessage.object = result;
             return returnmessage;
         }
-        
+
         return result;
     }
 
@@ -188,5 +188,9 @@ public class StorePool {
             System.out.println("Failed on obj: " + object.method);
         }
         return method;
+    }
+
+    public void stop(Store store) {
+        storeHandlers.remove(store.id);
     }
 }

@@ -10,6 +10,7 @@ import com.thundashop.core.common.ErrorMessage;
 import com.thundashop.core.common.MessageBase;
 import com.thundashop.core.common.StorePool;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -71,9 +72,9 @@ public class WebInterfaceSocketThread2 implements Runnable {
         try {
             Gson gson = new GsonBuilder().serializeNulls().disableInnerClassSerialization().create();
             String json = gson.toJson((Object) result);
-            PrintWriter bw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
-            bw.println(json);
-            bw.flush();
+            DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+            dos.writeUTF(json + "\n");
+            dos.flush();
         } catch (Exception d) {
             d.printStackTrace();
         }

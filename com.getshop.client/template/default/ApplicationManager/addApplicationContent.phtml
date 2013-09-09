@@ -50,42 +50,7 @@ $factory = $this->getFactory();
         }
         ?>
     </div>
-    <div class="title">
-        <? echo $this->__f("Price"); ?>
-    </div>
-    <div class="descriptionholder" id="applicationform">
-        <?
-        $appsettings = $factory->getApplicationPool()->getApplicationSetting($app->applicationSettings->id);
-        $subscription = @$subscriptions->{$app->applicationSettings->id};
-        $price = $appsettings->price;
-        $trialPeriod = $appsettings->trialPeriode;
-        $printed = false;
-        if (isset($subscription)) {
-            $end = strtotime($subscription->to_date);
-            $diff = $end - time();
-            $days = round($diff / 86400);
-            
-            if($days < 0) {
-                $trialPeriod = 0;
-            }
-            
-            if($subscription->payedfor != null) {
-                echo $this->__f("You have already paid for this application.") . "<br>";
-                echo $this->__f("Expires") . ": " . $subscription->to_date . " ($days " . $this->__f("days until expiration date") . ")";
-                $printed = true;
-            }
-        }
-        
-        if(!$printed) {
-            if ($price == null || $price == 0) {
-                echo $this->__f("This application can be used free of charge");
-            } else {
-                echo $this->__f("Application price") . ": " . $price . "$ / " . $this->__f("year") . "<br>";
-                echo $this->__f("Trial period") . ": " . $trialPeriod . " " . $this->__f("days");
-            }
-        }
-        ?>
-    </div>
+
 
     <span class="allFieldsNeedToBeFilled">* <? echo $this->__f("All fields need to be filled before you continue"); ?></span> 
     <? $app->includefile("add_app_button", 'ApplicationManager'); ?>

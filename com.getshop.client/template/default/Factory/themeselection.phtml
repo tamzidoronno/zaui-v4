@@ -31,7 +31,6 @@ foreach ($designs as $design) {
     $hasbg = ApplicationHelper::checkForBackground($design);
 
     echo "<div class='design $selected' id='$appid' hasbg='$hasbg' style='background-size:160px 140px; background-image:url(\"/showApplicationImages.php?appNamespace=$namespace&image=$appname.png\")'>";
-    echo "<span class='price'>" . $design->price . "$ / " . $this->__f("year") . "</span>";
     echo "</div>";
 }
 

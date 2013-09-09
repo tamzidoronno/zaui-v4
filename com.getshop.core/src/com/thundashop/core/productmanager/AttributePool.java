@@ -6,6 +6,7 @@ import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.productmanager.data.AttributeGroup;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class AttributePool {
 
@@ -116,12 +117,54 @@ public class AttributePool {
         if(group.attributes != null) {
             group.attributes.remove(attribute);
         }
+        System.out.println(group);
+        if(group.attributes == null || group.attributes.isEmpty()) {
+            deleteGroup(groupName);
+        }
     }
 
     boolean attributeExists(String groupName, String newAttributeName) throws ErrorException {
         AttributeGroup group = getAttributeGroup(groupName);
         if(group.attributes != null) {
             return group.attributes.contains(newAttributeName);
+        }
+        return false;
+    }
+
+    void compareAndRemove(List<AttributeGroup> groups) throws ErrorException {
+        HashMap<String, List<String>> toRemove = new HashMap();
+        for(AttributeGroup group : attributeGroups.values()) {
+            if(group.attributes != null) {
+                for(String attr : group.attributes) {
+                    if(!checkIfExists(groups, group.groupName, attr)) {
+                        List<String> list = toRemove.get(group.groupName);
+                        if(list == null) {
+                            list = new ArrayList();
+                        }
+                        list.add(attr);
+                        toRemove.put(group.groupName, list);
+                    }
+                }
+            }
+        }
+        
+        for(String key : toRemove.keySet()) {
+            System.out.println("Removing : " + key + " " + toRemove.get(key));
+            for(String value : toRemove.get(key)) {
+                deleteAttribute(key, value);
+            }
+        }
+    }
+
+    private boolean checkIfExists(List<AttributeGroup> groups, String groupName, String value) {
+        for(AttributeGroup tmpgroup : groups) {
+            if(tmpgroup.groupName.equalsIgnoreCase(groupName)) {
+                for(String val : tmpgroup.attributes) {
+                    if(val.equalsIgnoreCase(value)) {
+                        return true;
+                    }
+                }
+            }
         }
         return false;
     }

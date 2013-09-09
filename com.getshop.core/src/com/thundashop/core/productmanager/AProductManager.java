@@ -187,20 +187,23 @@ public class AProductManager extends ManagerBase {
         return limitedResult;
     }
 
-    private void buildAttributeCache(ArrayList<Product> retProducts) {
+    private void buildAttributeCache(ArrayList<Product> retProducts) throws ErrorException {
         AttributeSummary cache = new AttributeSummary();
         cache.attributeCount = new HashMap();
         for (Product prod : retProducts) {
             if (prod != null && prod.attributes != null) {
                 for (String groupId : prod.attributes.keySet()) {
-                    AttributeGroup group = pool.getAttributeGroupById(groupId);
+                    AttributeGroup group = pool.getAttributeGroup(groupId);
+                    if(group == null) {
+                        continue;
+                    }
                     if (cache.attributeCount.get(groupId) == null) {
                         AttributeSummaryEntry entry = new AttributeSummaryEntry();
                         entry.groupName = group.groupName;
                         cache.attributeCount.put(groupId, entry);
                     }
 
-                    String value = prod.attributes.get(group.id);
+                    String value = prod.attributes.get(group.groupName);
 
                     AttributeSummaryEntry attributeCount = cache.attributeCount.get(groupId);
                     if (!value.isEmpty()) {

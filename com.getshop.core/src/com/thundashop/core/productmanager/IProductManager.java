@@ -72,22 +72,11 @@ public interface IProductManager {
     public List<Product> getLatestProducts(int count) throws ErrorException;
     
     /**
-     * Add an attribute to the current stores attribute pool.
-     * @param groupName The group name to add the value to (Color, year, other categories)
-     * @param value The value to add (red, green, other values to the category)
+     * Update the attribute pool. This will replace the old one, so all entries has to be included here.
+     * @param groups
      * @throws ErrorException 
      */
-    public void addAttributeToPool(String groupName, String value) throws ErrorException;
-    
-    
-    /**
-     * Remove an attribute from the attribute pool.
-     * @param groupName The group name to add the value to
-     * @param value
-     * @throws ErrorException 
-     */
-    public void removeAttributeFromPool(String groupName, String value) throws ErrorException;
-    
+    public void updateAttributePool(List<AttributeGroup> groups) throws ErrorException;
     
     /**
      * Remove an existing product.

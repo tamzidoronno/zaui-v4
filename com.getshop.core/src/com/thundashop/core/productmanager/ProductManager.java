@@ -44,9 +44,12 @@ public class ProductManager extends AProductManager implements IProductManager {
     public Product saveProduct(Product product) throws ErrorException {
         if (product.id == null || product.id.equals(""))
             throw new ErrorException(87);        
+        
+        
         product.storeId = storeId;
         databaseSaver.saveObject(product, credentials);
         products.put(product.id, product);
+                
         return product;
     }
 
@@ -259,13 +262,18 @@ public class ProductManager extends AProductManager implements IProductManager {
     }
 
     @Override
-    public void addAttributeToPool(String groupName, String value) throws ErrorException {
-        pool.getAttribute(groupName, value);
-    }
-
-    @Override
-    public void removeAttributeFromPool(String groupName, String value) throws ErrorException {
-        pool.deleteAttribute(groupName, value);
+    public void updateAttributePool(List<AttributeGroup> groups) throws ErrorException {
+        //Adding all attributes.
+        
+        List<String> allvalues = new ArrayList();
+        for(AttributeGroup group : groups) {
+            for(String value : group.attributes) {
+                pool.getAttribute(group.groupName, value);
+            }
+        }
+        
+        pool.compareAndRemove(groups);
+        
     }
     
 }

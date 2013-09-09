@@ -2624,6 +2624,21 @@ class APIProductManager {
           return $this->transport->sendMessage($data);
      }
 
+     /**
+     * Update the attribute pool. This will replace the old one, so all entries has to be included here.
+     * @param groups
+     * @throws ErrorException 
+     */
+
+     public function updateAttributePool($groups) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["groups"] = json_encode($this->transport->object_unset_nulls($groups));
+          $data["method"] = "updateAttributePool";
+          $data["interfaceName"] = "core.productmanager.IProductManager";
+          return $this->transport->sendMessage($data);
+     }
+
 }
 class APIReportingManager {
 

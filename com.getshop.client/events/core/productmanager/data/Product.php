@@ -43,6 +43,9 @@ class core_productmanager_data_Product extends core_common_DataCommon  {
 	public $attributesList;
 
 	/** @var String */
+	public $attributesToSave;
+
+	/** @var String */
 	public $weight;
 
 	/** @var String */

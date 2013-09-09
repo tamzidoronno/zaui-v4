@@ -73,7 +73,7 @@ public class WebInterfaceSocketThread2 implements Runnable {
             Gson gson = new GsonBuilder().serializeNulls().disableInnerClassSerialization().create();
             String json = gson.toJson((Object) result);
             DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-            dos.writeUTF(json + "\n");
+            dos.write((json + "\n").getBytes("UTF8"));
             dos.flush();
         } catch (Exception d) {
             d.printStackTrace();

@@ -77,6 +77,7 @@ public class PagePoolImpl {
     }
 
     public Page get(String id) throws ErrorException {
+        long start = System.currentTimeMillis();
         setDefaultPages();
         Page page = pages.get(id);
         if (page == null) {
@@ -267,6 +268,7 @@ public class PagePoolImpl {
     }
 
     public Page finalizePage(Page page) throws ErrorException {
+        long start = System.currentTimeMillis();
         if(page.parent != null) {
             page.parent = pages.get(page.parent.id);
         }

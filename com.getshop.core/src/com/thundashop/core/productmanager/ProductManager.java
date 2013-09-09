@@ -144,6 +144,11 @@ public class ProductManager extends AProductManager implements IProductManager {
     }
 
     @Override
+    public HashMap<String, AttributeGroup> getAllAttributes() throws ErrorException {
+        return pool.getAll();
+    }
+    
+    @Override
     public void removeAttributeGroupFromProduct(String productId, String attributeGroupId) throws ErrorException {
         Product product = getProduct(productId);
         product.attributes.remove(attributeGroupId);
@@ -251,6 +256,16 @@ public class ProductManager extends AProductManager implements IProductManager {
     @Override
     public List<Product> getAllProducts() throws ErrorException {
         return new ArrayList(products.values());
+    }
+
+    @Override
+    public void addAttributeToPool(String groupName, String value) throws ErrorException {
+        pool.getAttribute(groupName, value);
+    }
+
+    @Override
+    public void removeAttributeFromPool(String groupName, String value) throws ErrorException {
+        pool.deleteAttribute(groupName, value);
     }
     
 }

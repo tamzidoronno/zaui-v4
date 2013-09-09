@@ -256,8 +256,12 @@ public class ListManager extends ManagerBase implements IListManager {
         } else {
             toRemove = parent.subentries;
         }
-
-        toRemove.remove(entry);
+        
+        if(toRemove == null) {
+            allEntries.get(listId).entries.remove(entry);
+        } else {
+            toRemove.remove(entry);
+        }
 
         saveList(listId);
     }

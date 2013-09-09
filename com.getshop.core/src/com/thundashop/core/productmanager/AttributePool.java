@@ -15,6 +15,10 @@ public class AttributePool {
     private Credentials credentials;
     private String storeId;
 
+    public HashMap<String, AttributeGroup> getAll() {
+        return attributeGroups;
+    }
+    
     public void addFromDatabase(AttributeGroup group) {
         if (attributeGroups == null) {
             attributeGroups = new HashMap();
@@ -25,7 +29,6 @@ public class AttributePool {
     }
 
     public void initialize(Credentials credentials, String storeId, DatabaseSaver saver) {
-        System.out.println(storeId);
         this.credentials = credentials;
         this.storeId = storeId;
         this.databaseSaver = saver;

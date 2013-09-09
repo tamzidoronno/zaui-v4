@@ -4,6 +4,7 @@ import com.thundashop.core.productmanager.data.AttributeSummary;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.productmanager.data.AttributeGroup;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
 import java.util.ArrayList;
@@ -26,6 +27,13 @@ public interface IProductManager {
      */
     @Editor
     public void changeStockQuantity(String productId, int count) throws ErrorException;
+    
+    /**
+     * Fetch all attributes connected to all products.
+     * @return
+     * @throws ErrorException 
+     */
+    public HashMap<String, AttributeGroup> getAllAttributes() throws ErrorException;
     
     /**
      * Find the product uuid set for an application.
@@ -62,6 +70,24 @@ public interface IProductManager {
      * @throws ErrorException 
      */
     public List<Product> getLatestProducts(int count) throws ErrorException;
+    
+    /**
+     * Add an attribute to the current stores attribute pool.
+     * @param groupName The group name to add the value to (Color, year, other categories)
+     * @param value The value to add (red, green, other values to the category)
+     * @throws ErrorException 
+     */
+    public void addAttributeToPool(String groupName, String value) throws ErrorException;
+    
+    
+    /**
+     * Remove an attribute from the attribute pool.
+     * @param groupName The group name to add the value to
+     * @param value
+     * @throws ErrorException 
+     */
+    public void removeAttributeFromPool(String groupName, String value) throws ErrorException;
+    
     
     /**
      * Remove an existing product.

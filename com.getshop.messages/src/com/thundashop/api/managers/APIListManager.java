@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import com.thundashop.core.common.JsonObject2;
+import java.util.ArrayList;
 import java.util.List;
 import com.thundashop.core.listmanager.data.Entry;
 import java.util.HashMap;
@@ -217,7 +218,7 @@ public class APIListManager {
      * @throws ErrorException 
      */
 
-     public void setEntries(String listId, List<Entry> entries)  throws Exception  {
+     public void setEntries(String listId, ArrayList<Entry> entries)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new HashMap();
           data.args.put("listId",new Gson().toJson(listId));

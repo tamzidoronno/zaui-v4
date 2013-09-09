@@ -49,7 +49,7 @@ class CommunicationHelper {
         if ($this->connected) {
             return;
         }
-        
+        file_put_contents("/tmp/test.txt", "");
         $this->socket = @fsockopen($this->host, $this->port, $erstr, $errno, 120);
         if (!$this->socket) {
             echo "This page is down for maintance, please come back later.";
@@ -107,7 +107,6 @@ class CommunicationHelper {
         $event["sessionId"] = session_id();
         $data = json_encode($event);
         $res = "";
-        $start = microtime(true);
         $this->connect();
         $len = fputs($this->socket, $data . "\n");
         if($len != strlen($data)+1) {
@@ -115,9 +114,11 @@ class CommunicationHelper {
             $this->errors[] = "failed on " . $data . " sent: " . $len . " size compared to : " . strlen($data)+1;
         }
         
-        $res = fgets($this->socket);
+        $start = microtime(true);
+        $res = stream_get_line($this->socket, 1000000, "\n");
+        $res = substr($res, 2);
+        file_put_contents("/tmp/test.txt", $res . "\n\n", FILE_APPEND);
         $stop = microtime(true);
-
         $diff = $stop - $start;
 
         $object = json_decode($res, false);

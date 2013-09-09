@@ -2360,6 +2360,20 @@ class APIProductManager {
      }
 
      /**
+     * Fetch all attributes connected to all products.
+     * @return HashMap
+     * @throws ErrorException 
+     */
+
+     public function getAllAttributes() {
+          $data = array();
+          $data['args'] = array();
+          $data["method"] = "getAllAttributes";
+          $data["interfaceName"] = "core.productmanager.IProductManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Fetch all products the store has available.
      * @return List
      * @throws ErrorException 

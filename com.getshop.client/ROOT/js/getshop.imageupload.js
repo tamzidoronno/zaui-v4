@@ -6,6 +6,7 @@
         var extra = config.extra;
         var container = $(this);
         var callback = config.callback;
+        var onupdate = config.onupdate;
         var target = config.target;
         var loaded = false;
         var keepScalingOnUpload = config.keepScalingOnUpload;
@@ -49,6 +50,11 @@
                     src = url.createObjectURL(f);
 
             img.onload = function() {
+                
+                if(typeof(onupdate) === "function") {
+                    onupdate(img);
+                }
+                
                 var ratio = getRatio(img.width, img.height, maxWidth, maxHeight);
                 canvas.width = img.width * ratio;
                 canvas.height = img.height * ratio;

@@ -234,9 +234,14 @@ class Factory extends FactoryBase {
 
     public function initPage() {
         if (isset($_GET['page'])) {
-            $navigation = Navigation::getNavigation();
-            $navigation->currentPageId = $_GET['page'];
-            unset($navigation->currentCatId);
+            if($_GET['page'] == "clear_page") {
+                $navigation = Navigation::getNavigation();
+                $navigation->currentPageId = null;
+            } else {
+                $navigation = Navigation::getNavigation();
+                $navigation->currentPageId = $_GET['page'];
+                unset($navigation->currentCatId);
+            }
             $navigation->saveToSession();
         }
 

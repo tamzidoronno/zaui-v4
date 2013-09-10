@@ -363,10 +363,17 @@ $('.display_menu_application_button').live('click', function() {
 
 });
 
+getshop_firstload = true;
 jQuery(document).ready(function($) {
 
     $.history.init(function(hash) {
-        if (hash != "") {
+        
+        if(hash === "") {
+            if(!getshop_firstload) {
+                thundashop.Ajax.doJavascriptNavigation('?page=clear_page', null, true);
+            }
+            getshop_firstload = false;
+        } else if (hash !== "") {
             thundashop.Ajax.doJavascriptNavigation(hash, null, true);
         }
     },

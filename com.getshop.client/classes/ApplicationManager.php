@@ -60,7 +60,7 @@ class ApplicationManager extends FactoryBase {
     public function createProduct() {
         echo "<div class='ProductManager'>";
         $mgr = new ns_dcd22afc_79ba_4463_bb5c_38925468ae26\ProductManager();
-        $mgr->createProduct();
+        $product = $mgr->createProduct();
         $mgr->listProducts();
         echo "</div>";
     }

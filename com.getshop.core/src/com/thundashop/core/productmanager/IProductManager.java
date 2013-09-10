@@ -4,7 +4,7 @@ import com.thundashop.core.productmanager.data.AttributeSummary;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
-import com.thundashop.core.productmanager.data.AttributeGroup;
+import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public interface IProductManager {
      * @return
      * @throws ErrorException 
      */
-    public HashMap<String, AttributeGroup> getAllAttributes() throws ErrorException;
+    public List<AttributeValue> getAllAttributes() throws ErrorException;
     
     /**
      * Find the product uuid set for an application.
@@ -76,7 +76,7 @@ public interface IProductManager {
      * @param groups
      * @throws ErrorException 
      */
-    public void updateAttributePool(List<AttributeGroup> groups) throws ErrorException;
+    public void updateAttributePool(List<AttributeValue> groups) throws ErrorException;
     
     /**
      * Remove an existing product.
@@ -145,62 +145,11 @@ public interface IProductManager {
     public void addImage(String productId, String productImageId, String description) throws ErrorException;
     
     /**
-     * Add an attribute to a product.
-     * @param productId The id of the product to attach it to.
-     * @param attributeGroup The name of the attribute group, if it does not exists, it is being added to the attribute pool.
-     * @param attribute The name of the attribute, leave this empty to create a new attribute group.
-     * @throws ErrorException 
-     */
-    public void addAttributeGroupToProduct(String productId, String attributeGroup, String attribute) throws ErrorException;
-    
-    
-    /**
      * Fetch all products the store has available.
      * @return
      * @throws ErrorException 
      */
     public List<Product> getAllProducts() throws ErrorException;
-    
-    /**
-     * Oh, so you added an attribute to a product which where not ment to be?
-     * @param productId The id of the product.
-     * @param attributeGroupId The id for the product group attached.
-     */
-    public void removeAttributeGroupFromProduct(String productId, String attributeGroupId) throws ErrorException;
-
-    /**
-     * Typically, i just enter in incorrect group name, and i just figured it out... :(<br>
-     * Well, this one helps you.
-     * @param oldName The old group name.
-     * @param newName The new group name.
-     * @throws ErrorException 
-     */
-    public void renameAttributeGroupName(String oldName, String newName) throws ErrorException;
-    
-    
-    /**
-     * Oh, I incorrectly wrote my attribute, i need to rename it for a specific group.
-     * @param groupName The name of the group where the attribute is located.
-     * @param oldAttributeName The old attribute text
-     * @param newAttributeName The new attribute text.
-     * @throws ErrorException 
-     */
-    public void renameAttribute(String groupName, String oldAttributeName, String newAttributeName) throws ErrorException;
-    
-    /**
-     * This attribute is not even in use, I want to delete it.
-     * @param groupName The name of the group to delete.
-     * @throws ErrorException 
-     */
-    public void deleteGroup(String groupName) throws ErrorException;
-    
-    /**
-     * I have an attribute attached to a group, but it does not seems to be in use, and i want to delete it.
-     * @param groupName The name of the group where the attribute is located.
-     * @param attribute The name of the attribute to remove.
-     * @throws ErrorException 
-     */
-    public void deleteAttribute(String groupName, String attribute) throws ErrorException;
     
     /**
      * Whenever you use the getproducts function call, you will be able to fetch a summary of the attributes.

@@ -8,7 +8,7 @@ import com.thundashop.core.common.ExchangeConvert;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.pagemanager.PageManager;
-import com.thundashop.core.productmanager.data.AttributeGroup;
+import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
 import java.util.ArrayList;
@@ -37,7 +37,6 @@ public class ProductManager extends AProductManager implements IProductManager {
     
     @Override
      public void onReady() {
-        pool.initialize(credentials, storeId, databaseSaver);
      }
 
     @Override
@@ -45,11 +44,18 @@ public class ProductManager extends AProductManager implements IProductManager {
         if (product.id == null || product.id.equals(""))
             throw new ErrorException(87);        
         
+
+        product.attributes = new ArrayList();
+        for(String group : product.attributesToSave.keySet()) {
+            AttributeValue value = pool.findAttributeValue(group, product.attributesToSave.get(group));
+            product.attributes.add(value.id);
+            
+        }
         
         product.storeId = storeId;
         databaseSaver.saveObject(product, credentials);
         products.put(product.id, product);
-                
+        
         return product;
     }
 
@@ -134,90 +140,12 @@ public class ProductManager extends AProductManager implements IProductManager {
         return super.latestProducts(count);
     }
 
-    @Override
-    public void addAttributeGroupToProduct(String productId, String attributeGroup, String attribute) throws ErrorException {
-        if(attributeGroup.trim().length() == 0) {
-            return;
-        }
-        Product product = getProduct(productId);
-        String value = pool.getAttribute(attributeGroup, attribute);
-        AttributeGroup group = pool.getAttributeGroup(attributeGroup);
-        product.addAttribute(group.id, value);
-        saveProduct(product);
-    }
 
     @Override
-    public HashMap<String, AttributeGroup> getAllAttributes() throws ErrorException {
+    public List<AttributeValue> getAllAttributes() throws ErrorException {
         return pool.getAll();
     }
     
-    @Override
-    public void removeAttributeGroupFromProduct(String productId, String attributeGroupId) throws ErrorException {
-        Product product = getProduct(productId);
-        product.attributes.remove(attributeGroupId);
-        saveProduct(product);
-    }
-
-    @Override
-    public void renameAttributeGroupName(String oldName, String newName) throws ErrorException {
-        pool.renameGroup(oldName, newName);
-    }
-
-    @Override
-    public void renameAttribute(String groupName, String oldAttributeName, String newAttributeName) throws ErrorException {
-        
-        if(pool.attributeExists(groupName, newAttributeName)) {
-            throw new ErrorException(96);
-        }
-        
-        AttributeGroup group = pool.getAttributeGroup(groupName);
-        oldAttributeName = pool.getAttribute(groupName, oldAttributeName);
-        pool.renameAttribute(groupName, oldAttributeName, newAttributeName);
-        
-        //Check all products and rename them.
-        for(Product prod : products.values()) {
-            if(prod.attributes != null) {
-                String value = prod.attributes.get(group.id);
-                if(value != null && value.equals(oldAttributeName)) {
-                    prod.attributes.put(group.id, newAttributeName);
-                    saveProduct(prod);
-                }
-            }
-        }
-    }
-
-    @Override
-    public void deleteGroup(String groupName) throws ErrorException {
-        AttributeGroup group = pool.getAttributeGroup(groupName);
-        pool.deleteGroup(groupName);
-        for(Product prod : products.values()) {
-            if(prod.attributes != null) {
-                if(prod.attributes.containsKey(group.id)) {
-                    prod.attributes.remove(group.id);
-                    saveProduct(prod);
-                }
-            }
-        }
-    }
-
-    @Override
-    public void deleteAttribute(String groupName, String attribute) throws ErrorException {
-        AttributeGroup group = pool.getAttributeGroup(groupName);
-        attribute = pool.getAttribute(groupName, attribute);
-        pool.deleteAttribute(groupName, attribute);
-        
-        //Check all products and rename them.
-        for(Product prod : products.values()) {
-            if(prod.attributes != null) {
-                String value = prod.attributes.get(group.id);
-                if(value != null && value.equals(attribute)) {
-                    prod.attributes.remove(group.id);
-                    saveProduct(prod);
-                }
-            }
-        }
-    }
-
     @Override
     public AttributeSummary getAttributeSummary() throws ErrorException {
         return cachedResult;
@@ -262,18 +190,29 @@ public class ProductManager extends AProductManager implements IProductManager {
     }
 
     @Override
-    public void updateAttributePool(List<AttributeGroup> groups) throws ErrorException {
-        //Adding all attributes.
+    public void updateAttributePool(List<AttributeValue> groups) throws ErrorException {
+        List<String> valuesAdded = new ArrayList();
+        for(AttributeValue val : groups) {
+            val.storeId = storeId;
+            databaseSaver.saveObject(val, credentials);
+            pool.addAttributeValue(val);
+            valuesAdded.add(val.id);
+        }
         
-        List<String> allvalues = new ArrayList();
-        for(AttributeGroup group : groups) {
-            for(String value : group.attributes) {
-                pool.getAttribute(group.groupName, value);
+        for(AttributeValue value : pool.getAll()) {
+            if(!valuesAdded.contains(value.id)) {
+                databaseSaver.deleteObject(value, credentials);
+                pool.remove(value.id);
+                
+                for(Product product : products.values()) {
+                    if(product.attributes != null && product.attributes.contains(value.id)) {
+                        product.attributes.remove(value.id);
+                        databaseSaver.saveObject(product, credentials);
+                    }
+                }
             }
         }
         
-        pool.compareAndRemove(groups);
-        
     }
-    
+
 }

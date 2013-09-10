@@ -8,16 +8,12 @@ import com.thundashop.core.listmanager.data.Entry;
 import com.thundashop.core.pagemanager.IPageManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
-import com.thundashop.core.productmanager.data.AttributeGroup;
 import com.thundashop.core.productmanager.data.AttributeSummaryEntry;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
 import com.thundashop.core.common.ExchangeConvert;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.security.Permission;
+import com.thundashop.core.productmanager.data.AttributeData;
+import com.thundashop.core.productmanager.data.AttributeValue;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,7 +25,7 @@ import java.util.List;
 public class AProductManager extends ManagerBase {
 
     protected HashMap<String, Product> products = new HashMap();
-    AttributePool pool;
+    AttributeData pool = new AttributeData();
     AttributeSummary cachedResult;
 
     public AProductManager(Logger log, DatabaseSaver databaseSaver) {
@@ -43,14 +39,18 @@ public class AProductManager extends ManagerBase {
             product.page = manager.getPage(product.pageId);
         }
 
-        if (product != null && pool != null) {
-            product.attributesList = pool.attributeGroups;
-        }
-
         if (product != null) {
             product = product.clone();
             if (getSession().currentUser == null || !getSession().currentUser.isAdministrator()) {
                 product.price = ExchangeConvert.calculateExchangeRate(getSettings("Settings"), product.price);
+            }
+        }
+        
+        product.attributesAdded = new HashMap();
+        for(String attrid : product.attributes) {
+            AttributeValue val = pool.getAttributeByValueId(attrid);
+            if(val != null) {
+                product.attributesAdded.put(val.groupName, val.value);
             }
         }
         
@@ -59,14 +59,13 @@ public class AProductManager extends ManagerBase {
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
-        pool = new AttributePool();
         for (DataCommon object : data.data) {
             if (object instanceof Product) {
                 Product product = (Product) object;
                 products.put(product.id, product);
             }
-            if (object instanceof AttributeGroup) {
-                pool.addFromDatabase((AttributeGroup) object);
+            if (object instanceof AttributeValue) {
+                pool.addAttributeValue((AttributeValue)object);
             }
         }
     }
@@ -126,44 +125,42 @@ public class AProductManager extends ManagerBase {
                 retProducts.add(product);
             }
         }
+        
+        cachedResult = new AttributeSummary(pool);
 
         if (searchCriteria.listId != null && searchCriteria.listId.trim().length() > 0) {
             ListManager manager = getManager(ListManager.class);
             List<Entry> list = manager.getList(searchCriteria.listId);
             for (Entry entry : list) {
                 Product product = products.get(entry.productId);
+                if(product == null) {
+                    continue;
+                }
                 product = finalize(product);
                 retProducts.add(product);
+                
+                if(searchCriteria.attributeFilter.isEmpty()) {
+                    cachedResult.addToSummary(product);
+                }
+                
             }
         }
 
-        buildAttributeCache(retProducts);
 
         if (searchCriteria.attributeFilter.size() > 0) {
             ArrayList<Product> filteredProducts = new ArrayList();
             for (Product prod : retProducts) {
                 boolean found = true;
                 for (String groupId : searchCriteria.attributeFilter.keySet()) {
-                    String filterValue = searchCriteria.attributeFilter.get(groupId);
-                    String prodValue = prod.attributes.get(groupId);
-                    if (prodValue == null) {
-                        found = false;
-                        break;
+                    if(prod.attributes.contains(groupId)) {
+                        if(!filteredProducts.contains(prod)) {
+                            filteredProducts.add(prod);
+                        }
+                        cachedResult.addToSummary(prod);
                     }
-
-                    if (!prodValue.equals(filterValue)) {
-                        found = false;
-                        break;
-                    }
-                }
-
-                if (found) {
-                    filteredProducts.add(prod);
                 }
             }
             retProducts = filteredProducts;
-            cleanFilterCache(retProducts);
-
         }
 
         return retProducts;
@@ -185,60 +182,5 @@ public class AProductManager extends ManagerBase {
             limitedResult.add(result.get(i));
         }
         return limitedResult;
-    }
-
-    private void buildAttributeCache(ArrayList<Product> retProducts) throws ErrorException {
-        AttributeSummary cache = new AttributeSummary();
-        cache.attributeCount = new HashMap();
-        for (Product prod : retProducts) {
-            if (prod != null && prod.attributes != null) {
-                for (String groupId : prod.attributes.keySet()) {
-                    AttributeGroup group = pool.getAttributeGroup(groupId);
-                    if(group == null) {
-                        continue;
-                    }
-                    if (cache.attributeCount.get(groupId) == null) {
-                        AttributeSummaryEntry entry = new AttributeSummaryEntry();
-                        entry.groupName = group.groupName;
-                        cache.attributeCount.put(groupId, entry);
-                    }
-
-                    String value = prod.attributes.get(group.groupName);
-
-                    AttributeSummaryEntry attributeCount = cache.attributeCount.get(groupId);
-                    if (!value.isEmpty()) {
-                        attributeCount.totalCount++;
-                    }
-                    if (attributeCount.attributeCount.get(value) == null) {
-                        attributeCount.attributeCount.put(value, 1);
-                    } else {
-                        attributeCount.attributeCount.put(value, attributeCount.attributeCount.get(value) + 1);
-                    }
-                }
-            }
-        }
-        cachedResult = cache;
-    }
-
-    private void cleanFilterCache(ArrayList<Product> retProducts) {
-        for (String groupId : cachedResult.attributeCount.keySet()) {
-            AttributeSummaryEntry group = cachedResult.attributeCount.get(groupId);
-            for (String attr : group.attributeCount.keySet()) {
-                group.attributeCount.put(attr, 0);
-            }
-            group.totalCount = 0;
-        }
-
-        for (Product prod : retProducts) {
-            for (String groupId : prod.attributes.keySet()) {
-                String value = prod.attributes.get(groupId);
-                if (cachedResult.attributeCount.get(groupId) == null) {
-                    continue;
-                }
-                int count = cachedResult.attributeCount.get(groupId).attributeCount.get(value);
-                cachedResult.attributeCount.get(groupId).attributeCount.put(value, count + 1);
-                cachedResult.attributeCount.get(groupId).totalCount++;
-            }
-        }
     }
 }

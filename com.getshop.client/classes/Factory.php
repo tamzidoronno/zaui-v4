@@ -185,7 +185,12 @@ class Factory extends FactoryBase {
     
     public function showNotExistsMessage() {
         if ($this->store == null) {
-            echo "<br><br><center><b> The webpage that you are trying to access does not exists, please check your address or go to <a href='http://www.getshop.com'>http://www.getshop.com</a> for more information</b></center>";
+            $name = $_SERVER['SERVER_NAME'];
+            
+            $addr = explode(".", $name);
+            
+            $addr = $addr[sizeof($addr)-2] ."." . $addr[sizeof($addr)-1];
+            header('location:http://'.$addr);
             exit();
         }
     }

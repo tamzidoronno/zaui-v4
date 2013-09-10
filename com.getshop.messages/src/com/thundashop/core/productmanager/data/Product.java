@@ -34,13 +34,16 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public boolean hideShippingPrice = false;
     
     //AttributegroupId, AttributeSelected
-    public HashMap<String, String> attributes = new HashMap();
+    public List<String> attributes = new ArrayList();
     
     @Transient
     public Page page;
     
     @Transient
-    public HashMap<String, AttributeGroup> attributesList = new HashMap();
+    public HashMap<String, String> attributesAdded = new HashMap();
+    
+    @Transient
+    public HashMap<String, String> attributesToSave = new HashMap();
     
     /**
      * Should always be in gram.
@@ -179,13 +182,6 @@ public class Product extends DataCommon implements Comparable<Product>  {
     @Override
     public int compareTo(Product t) {
         return t.rowCreatedDate.compareTo(rowCreatedDate);
-    }
-
-    public void addAttribute(String id, String value) {
-        if(attributes == null) {
-            attributes = new HashMap();
-        }
-        attributes.put(id, value);
     }
 
     public ProductVariation getVariation(String variationId) {

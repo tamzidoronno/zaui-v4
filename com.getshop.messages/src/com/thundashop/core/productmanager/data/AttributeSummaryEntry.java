@@ -12,7 +12,10 @@ import java.util.HashMap;
  * @author boggi
  */
 public class AttributeSummaryEntry {
-    public String groupName = "";
-    public HashMap<String, Integer> attributeCount = new HashMap();
+    public AttributeValue value;
     public int totalCount = 0;
+
+    void increaseCount() {
+        totalCount++;
+    }
 }

@@ -388,6 +388,20 @@
 	}
 	
 	/**
+	 * @return \core_productmanager_data_AttributeData
+	 */
+	public static function core_productmanager_data_AttributeData() {
+		return new \core_productmanager_data_AttributeData();
+	}
+	
+	/**
+	 * @return \core_productmanager_data_AttributeValue
+	 */
+	public static function core_productmanager_data_AttributeValue() {
+		return new \core_productmanager_data_AttributeValue();
+	}
+	
+	/**
 	 * @return \core_productmanager_data_AttributeSummaryEntry
 	 */
 	public static function core_productmanager_data_AttributeSummaryEntry() {

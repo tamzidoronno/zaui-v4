@@ -2256,25 +2256,6 @@ class APIProductManager {
       }
 
      /**
-     * Add an attribute to a product.
-     * @param productId The id of the product to attach it to.
-     * @param attributeGroup The name of the attribute group, if it does not exists, it is being added to the attribute pool.
-     * @param attribute The name of the attribute, leave this empty to create a new attribute group.
-     * @throws ErrorException 
-     */
-
-     public function addAttributeGroupToProduct($productId, $attributeGroup, $attribute) {
-          $data = array();
-          $data['args'] = array();
-          $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
-          $data['args']["attributeGroup"] = json_encode($this->transport->object_unset_nulls($attributeGroup));
-          $data['args']["attribute"] = json_encode($this->transport->object_unset_nulls($attribute));
-          $data["method"] = "addAttributeGroupToProduct";
-          $data["interfaceName"] = "core.productmanager.IProductManager";
-          return $this->transport->sendMessage($data);
-     }
-
-     /**
      * add image to specified product
      * 
      * @param productId
@@ -2328,40 +2309,8 @@ class APIProductManager {
      }
 
      /**
-     * I have an attribute attached to a group, but it does not seems to be in use, and i want to delete it.
-     * @param groupName The name of the group where the attribute is located.
-     * @param attribute The name of the attribute to remove.
-     * @throws ErrorException 
-     */
-
-     public function deleteAttribute($groupName, $attribute) {
-          $data = array();
-          $data['args'] = array();
-          $data['args']["groupName"] = json_encode($this->transport->object_unset_nulls($groupName));
-          $data['args']["attribute"] = json_encode($this->transport->object_unset_nulls($attribute));
-          $data["method"] = "deleteAttribute";
-          $data["interfaceName"] = "core.productmanager.IProductManager";
-          return $this->transport->sendMessage($data);
-     }
-
-     /**
-     * This attribute is not even in use, I want to delete it.
-     * @param groupName The name of the group to delete.
-     * @throws ErrorException 
-     */
-
-     public function deleteGroup($groupName) {
-          $data = array();
-          $data['args'] = array();
-          $data['args']["groupName"] = json_encode($this->transport->object_unset_nulls($groupName));
-          $data["method"] = "deleteGroup";
-          $data["interfaceName"] = "core.productmanager.IProductManager";
-          return $this->transport->sendMessage($data);
-     }
-
-     /**
      * Fetch all attributes connected to all products.
-     * @return HashMap
+     * @return List
      * @throws ErrorException 
      */
 
@@ -2503,22 +2452,6 @@ class APIProductManager {
      }
 
      /**
-     * Oh, so you added an attribute to a product which where not ment to be?
-     * @param productId The id of the product.
-     * @param attributeGroupId The id for the product group attached.
-     */
-
-     public function removeAttributeGroupFromProduct($productId, $attributeGroupId) {
-          $data = array();
-          $data['args'] = array();
-          $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
-          $data['args']["attributeGroupId"] = json_encode($this->transport->object_unset_nulls($attributeGroupId));
-          $data["method"] = "removeAttributeGroupFromProduct";
-          $data["interfaceName"] = "core.productmanager.IProductManager";
-          return $this->transport->sendMessage($data);
-     }
-
-     /**
      * Remove an existing product.
      * 
      * @param productId The id of the product to remove.
@@ -2531,43 +2464,6 @@ class APIProductManager {
           $data['args'] = array();
           $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
           $data["method"] = "removeProduct";
-          $data["interfaceName"] = "core.productmanager.IProductManager";
-          return $this->transport->sendMessage($data);
-     }
-
-     /**
-     * Oh, I incorrectly wrote my attribute, i need to rename it for a specific group.
-     * @param groupName The name of the group where the attribute is located.
-     * @param oldAttributeName The old attribute text
-     * @param newAttributeName The new attribute text.
-     * @throws ErrorException 
-     */
-
-     public function renameAttribute($groupName, $oldAttributeName, $newAttributeName) {
-          $data = array();
-          $data['args'] = array();
-          $data['args']["groupName"] = json_encode($this->transport->object_unset_nulls($groupName));
-          $data['args']["oldAttributeName"] = json_encode($this->transport->object_unset_nulls($oldAttributeName));
-          $data['args']["newAttributeName"] = json_encode($this->transport->object_unset_nulls($newAttributeName));
-          $data["method"] = "renameAttribute";
-          $data["interfaceName"] = "core.productmanager.IProductManager";
-          return $this->transport->sendMessage($data);
-     }
-
-     /**
-     * Typically, i just enter in incorrect group name, and i just figured it out... :(<br>
-     * Well, this one helps you.
-     * @param oldName The old group name.
-     * @param newName The new group name.
-     * @throws ErrorException 
-     */
-
-     public function renameAttributeGroupName($oldName, $newName) {
-          $data = array();
-          $data['args'] = array();
-          $data['args']["oldName"] = json_encode($this->transport->object_unset_nulls($oldName));
-          $data['args']["newName"] = json_encode($this->transport->object_unset_nulls($newName));
-          $data["method"] = "renameAttributeGroupName";
           $data["interfaceName"] = "core.productmanager.IProductManager";
           return $this->transport->sendMessage($data);
      }

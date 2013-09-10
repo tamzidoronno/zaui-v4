@@ -40,7 +40,7 @@ class core_productmanager_data_Product extends core_common_DataCommon  {
 	public $page;
 
 	/** @var String */
-	public $attributesList;
+	public $attributesAdded;
 
 	/** @var String */
 	public $attributesToSave;

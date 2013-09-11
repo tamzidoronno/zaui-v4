@@ -43,7 +43,7 @@ class PageArea extends FactoryBase {
         if ($this->backendPageArea->type == "header") {
             $this->applications[0] = new \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login();
         }
-
+        
         $apps = $this->backendPageArea->applications;
         $copy = array();
 
@@ -93,9 +93,10 @@ class PageArea extends FactoryBase {
         $this->includefile('applicationareamenu');
         $this->includefile('add_application_menu');
 
-        if ($this->backendPageArea->type == "middle")
+        if ($this->backendPageArea->type == "main_1")
             $this->showAccessDeniedMessage();
 
+        
         $isEmpty = $this->checkIfEmptyPage();
         if ($this->isEditorMode()) {
             if ($isEmpty && $this->backendPageArea->type != "bottom") {
@@ -153,7 +154,7 @@ class PageArea extends FactoryBase {
     }
 
     public function checkIfEmptyPage() {
-        if (sizeof((array) $this->backendPageArea->applications) == 0) {
+        if (sizeof((array) $this->applications) == 0) {
             return true;
         }
         return false;
@@ -166,16 +167,13 @@ class PageArea extends FactoryBase {
         if (!$this->checkIfEmptyPage())
             return false;
 
-        if ($this->backendPageArea->type == "middle")
-            return true;
+        if ($this->backendPageArea->type == "footer")
+            return false;
 
-        if ($this->backendPageArea->type == "left")
-            return true;
+        if ($this->backendPageArea->type == "header")
+            return false;
 
-        if ($this->backendPageArea->type == "right")
-            return true;
-
-        return false;
+        return true;
     }
 
     public function remove($param0) {

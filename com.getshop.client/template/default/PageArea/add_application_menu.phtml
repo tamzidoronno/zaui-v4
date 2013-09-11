@@ -5,12 +5,10 @@ if ($this->isSystemArea()) {
     return;
 }
 
-$shouldDisplay = $this->shouldDisplayAddMenu() ? 'style="display: block;"' : '';
-
 ?>
 
 <center>
-    <div <? echo $shouldDisplay; ?> class="add_application_menu">
+    <div class="add_application_menu">
         <br>
         <div class="button-large"  type="<?php echo $this->getBackendPageArea()->type ?>">
             <div class="rightglare"></div>

@@ -318,7 +318,7 @@ class ApplicationManager extends FactoryBase {
 
         if (method_exists($app, "renderStandalone")) {
             $pageManager = $this->getFactory()->getApi()->getPageManager();
-            $pageManager->addExistingApplicationToPageArea($appConfiguration->id . "_standalone", $appConfiguration->id, "middle");
+            $pageManager->addExistingApplicationToPageArea($appConfiguration->id . "_standalone", $appConfiguration->id, "main_1");
         }
 
         $this->invokeApplicationAdded($appConfiguration);

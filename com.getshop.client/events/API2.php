@@ -2691,16 +2691,18 @@ class APIStoreManager {
      * @param hostname The hostname to the webshop.
      * @param email The email to identify the first user with,
      * @param password The password to logon the first user added to this webshop.
+     * @param notify Notify the web shop owner by email about this new store.
      * @return core_storemanager_data_Store
      * @throws ErrorException 
      */
 
-     public function createStore($hostname, $email, $password) {
+     public function createStore($hostname, $email, $password, $notify) {
           $data = array();
           $data['args'] = array();
           $data['args']["hostname"] = json_encode($this->transport->object_unset_nulls($hostname));
           $data['args']["email"] = json_encode($this->transport->object_unset_nulls($email));
           $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+          $data['args']["notify"] = json_encode($this->transport->object_unset_nulls($notify));
           $data["method"] = "createStore";
           $data["interfaceName"] = "core.storemanager.IStoreManager";
           return $this->transport->cast(API::core_storemanager_data_Store(), $this->transport->sendMessage($data));

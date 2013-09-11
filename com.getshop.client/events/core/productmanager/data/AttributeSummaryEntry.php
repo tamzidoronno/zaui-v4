@@ -1,10 +1,7 @@
 <?php
 class core_productmanager_data_AttributeSummaryEntry {
-	/** @var String */
-	public $groupName;
-
-	/** @var String */
-	public $attributeCount;
+	/** @var core_productmanager_data_AttributeValue */
+	public $value;
 
 	/** @var String */
 	public $totalCount;

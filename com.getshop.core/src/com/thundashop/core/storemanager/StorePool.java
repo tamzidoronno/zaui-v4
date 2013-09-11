@@ -102,7 +102,7 @@ public class StorePool {
         return false;
     }
     
-    public synchronized Store getStore(String id) {
+    public Store getStore(String id) {
         Store store = stores.get(id);
         return store;
     }

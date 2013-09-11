@@ -7,6 +7,8 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.loggermanager.data.LoggerData;
 import com.thundashop.core.common.JsonObject2;
+import com.thundashop.core.databasemanager.Database;
+import java.util.UUID;
 import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ public class LoggerManager extends ManagerBase {
     public LoggerManager(Logger log, DatabaseSaver databaseSaver) {
         super(log, databaseSaver);
     }
+    
+    @Autowired
+    private Database database;
 
     @PostConstruct
     public void init() {
@@ -34,7 +39,7 @@ public class LoggerManager extends ManagerBase {
     public void logApiCall(JsonObject2 object) throws ErrorException {
         LoggerManagerThread thread = new LoggerManagerThread();
         thread.object = object;
-        thread.databaseSaver = databaseSaver;
+        thread.database = database;
         thread.storeId = storeId;
         thread.credentials = credentials;
         
@@ -45,8 +50,8 @@ public class LoggerManager extends ManagerBase {
 class LoggerManagerThread extends Thread {
     public JsonObject2 object;
     public String storeId;
-    public DatabaseSaver databaseSaver;
     public Credentials credentials;
+    public Database database;
     
     @Override
     public void run() {
@@ -62,7 +67,8 @@ class LoggerManagerThread extends Thread {
             data.data = object;
             data.type = LoggerData.Types.API;
             data.storeId = storeId;
-            databaseSaver.saveObject(data, credentials);
+            data.id = UUID.randomUUID().toString();
+            database.saveWithOverrideDeepfreeze(data, credentials);
         } catch (ErrorException ex) {
             java.util.logging.Logger.getLogger(LoggerManagerThread.class.getName()).log(Level.SEVERE, null, ex);
         }

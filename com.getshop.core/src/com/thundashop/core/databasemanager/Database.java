@@ -81,20 +81,15 @@ public class Database {
     }
 
     private synchronized boolean isDeepFreezed(DataCommon data) {
-        System.out.print(" - isdeepfreezed");
-        
         String storeId = data.storeId;
         if(data instanceof Store) {
             storeId = data.id;
         }
-        System.out.print(" - getstore");
         Store store = storePool.getStore(storeId);
         if (store != null && store.isDeepFreezed) {
-            System.out.print(" - gotstoretrue");
             return true;
         }
         
-        System.out.print(" - gotstorefalse");
         return false;
     }
     

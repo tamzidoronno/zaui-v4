@@ -22,16 +22,18 @@ public class APIStoreManager {
      * @param hostname The hostname to the webshop.
      * @param email The email to identify the first user with,
      * @param password The password to logon the first user added to this webshop.
+     * @param notify Notify the web shop owner by email about this new store.
      * @return Store
      * @throws ErrorException 
      */
 
-     public Store createStore(String hostname, String email, String password)  throws Exception  {
+     public Store createStore(String hostname, String email, String password, boolean notify)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new HashMap();
           data.args.put("hostname",new Gson().toJson(hostname));
           data.args.put("email",new Gson().toJson(email));
           data.args.put("password",new Gson().toJson(password));
+          data.args.put("notify",new Gson().toJson(notify));
           data.method = "createStore";
           data.interfaceName = "core.storemanager.IStoreManager";
           String result = transport.send(data);

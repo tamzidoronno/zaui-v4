@@ -55,9 +55,7 @@ public class WebInterfaceSocketThread2 implements Runnable {
                 if (json == null) {
                     return;
                 }
-                System.out.print(json);
                 executeMessage(json, socket.getInetAddress().getHostAddress());
-                System.out.println(" - done");
             }
         } catch (Exception ex) {
             ex.printStackTrace();

@@ -53,7 +53,7 @@ public class DatabaseSaverImpl implements DatabaseSaver {
                 + " Object: " + data.getClass().getSimpleName());
         
         registerIdToDataObject(data, credentials);
-        database.save(data, credentials);
+        database.saveWithOverrideDeepfreeze(data, credentials);
     }
 
     @Override

@@ -31,6 +31,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+
 /**
  *
  * @author ktonder
@@ -79,16 +80,21 @@ public class Database {
         }
     }
 
-    private boolean isDeepFreezed(DataCommon data) {
+    private synchronized boolean isDeepFreezed(DataCommon data) {
+        System.out.print(" - isdeepfreezed");
+        
         String storeId = data.storeId;
         if(data instanceof Store) {
             storeId = data.id;
         }
+        System.out.print(" - getstore");
         Store store = storePool.getStore(storeId);
         if (store != null && store.isDeepFreezed) {
+            System.out.print(" - gotstoretrue");
             return true;
         }
         
+        System.out.print(" - gotstorefalse");
         return false;
     }
     
@@ -315,7 +321,6 @@ public class Database {
         }
     }
 }
-
 class DataCommonSorter implements Comparator<DataCommon> {
 
     @Override

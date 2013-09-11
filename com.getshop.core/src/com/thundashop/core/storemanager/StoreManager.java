@@ -164,7 +164,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     }
 
     @Override
-    public Store createStore(String hostname, String email, String password) throws ErrorException {
+    public Store createStore(String hostname, String email, String password, boolean notify) throws ErrorException {
         /**
          * This function is not really in use. 
          * It skips StoreManager, and goes directly to StorePool 

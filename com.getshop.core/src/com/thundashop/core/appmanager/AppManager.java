@@ -159,6 +159,11 @@ public class AppManager extends ManagerBase implements IAppManager {
         }
 
         List<ApplicationSynchronization> result = new ArrayList();
+        
+        if(getSession().currentUser == null) {
+            return result;
+        }
+        
         String loggedOnuserId = getSession().currentUser.id;
         for (ApplicationSynchronization sync : toSync) {
             if (sync.userId.equals(loggedOnuserId)) {

@@ -22,6 +22,8 @@ public interface IStoreManager {
      */
     public Store initializeStore(String webAddress, String initSessionId) throws ErrorException;
     
+    
+    
     /**
      * Check if a web shop address has already been taken.
      * @param address The address to check for.
@@ -75,10 +77,11 @@ public interface IStoreManager {
      * @param hostname The hostname to the webshop.
      * @param email The email to identify the first user with,
      * @param password The password to logon the first user added to this webshop.
+     * @param notify Notify the web shop owner by email about this new store.
      * @return 
      * @throws ErrorException 
      */
-    public Store createStore(String hostname, String email, String password) throws ErrorException;
+    public Store createStore(String hostname, String email, String password, boolean notify) throws ErrorException;
     
     /**
      * This will set the readintroduction variable in the Store object to true.

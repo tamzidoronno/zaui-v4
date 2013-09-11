@@ -137,7 +137,7 @@ public class StorePool {
         if (object.interfaceName.equals("core.storemanager.StoreManager") && object.method.equals("initializeStore")) {
             res = storePool.initialize((String) argumentValues[0], (String) argumentValues[1]);
         } else if (object.interfaceName.equals("core.storemanager.StoreManager") && object.method.equals("createStore")) {
-            res = storePool.createStoreObject((String) argumentValues[0], (String) argumentValues[1], (String) argumentValues[2]);
+            res = storePool.createStoreObject((String) argumentValues[0], (String) argumentValues[1], (String) argumentValues[2], (boolean) argumentValues[3]);
         } else {
             StoreHandler handler = getStoreHandler(object.sessionId);
             if (handler == null) {

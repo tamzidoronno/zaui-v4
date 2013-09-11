@@ -13,6 +13,7 @@ import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
+import com.thundashop.core.usermanager.data.User;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -106,7 +107,7 @@ public class StorePool {
         return store;
     }
     
-    public synchronized Store createStoreObject(String shopname, String email, String password) throws ErrorException {   
+    public synchronized Store createStoreObject(String shopname, String email, String password, boolean notify) throws ErrorException {   
         String webAddress = shopname.replace(" ", "").toLowerCase();
         Store store = new Store();
         store.storeId = "all";
@@ -119,7 +120,8 @@ public class StorePool {
 
         database.save(store, credentials);
         stores.put(store.id, store);
-        notifyUsByEmail(store);
+        if(notify) 
+            notifyUsByEmail(store);
         return store;
     }
     
@@ -198,7 +200,7 @@ public class StorePool {
         stopStore(store);
     }
     
-     private void notifyUsByEmail(Store store) throws ErrorException {
+     public void notifyUsByEmail(Store store) throws ErrorException {
         String to = store.configuration.emailAdress;
         String from = "post@getshop.com";
         String title = "Your webshop is ready.";

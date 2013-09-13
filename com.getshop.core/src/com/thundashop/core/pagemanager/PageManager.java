@@ -264,7 +264,6 @@ public class PageManager extends ManagerBase implements IPageManager {
         for(String instanceId : allAddedApplications.keySet()) {
             AppConfiguration config = allAddedApplications.get(instanceId);
             if(config.appSettingsId != null && config.appSettingsId.equals(fromAppId)) {
-                System.out.println("Changing: " + config.id + " to " + toAppId + " from: " + fromAppId);
                 config.appSettingsId = toApp.id;
                 pool.saveApplicationConfiguration(config);
             }

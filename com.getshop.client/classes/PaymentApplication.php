@@ -37,6 +37,18 @@ class PaymentApplication extends ApplicationBase {
     public function paymentCallback() {
         
     }
+    
+    public function hasSubProducts() {
+        return false;
+    }
+    
+    public function isReadyToPay() {
+        return true;
+    }
+    
+    public function doSubProductProccessing() {
+        
+    }
 }
 
 ?>

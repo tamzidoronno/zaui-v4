@@ -22,7 +22,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 public class OrderManager extends ManagerBase implements IOrderManager {
-
+    private long incrementingOrderId = 100000;
+    
     public HashMap<String, Order> orders = new HashMap();
     @Autowired
     public MailFactory mailFactory;
@@ -37,6 +38,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for (DataCommon dataFromDatabase : data.data) {
             if (dataFromDatabase instanceof Order) {
                 Order order = (Order) dataFromDatabase;
+                if (order.incrementOrderId > incrementingOrderId) {
+                    incrementingOrderId = order.incrementOrderId;
+                }
                 orders.put(order.id, order);
             }
         }
@@ -170,13 +174,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Order order = new Order();
         order.createdDate = new Date();
         order.cart = cart.clone();
-
+        
         if (order.cart.address == null) {
             throw new ErrorException(53);
         }
 
         finalizeCart(order.cart);
         
+        incrementingOrderId++;
+        order.incrementOrderId = incrementingOrderId;
         saveOrder(order);
 
         updateStockQuantity(order, "trackControl");

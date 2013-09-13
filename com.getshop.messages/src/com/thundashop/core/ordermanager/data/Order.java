@@ -17,6 +17,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public String paymentType;
     public Shipping shipping;
     public String session;
+    public long incrementOrderId = 0;
     
     public static class Status  {
         public static int CREATED = 1;

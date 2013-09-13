@@ -69,7 +69,11 @@ public class AppManager extends ManagerBase implements IAppManager {
     @Override
     public AvailableApplications getAllApplications() throws ErrorException {
         AvailableApplications retMessage = new AvailableApplications();
-        retMessage.applications = applicationPool.getAll(getStore());
+        String partnerid = getStore().partnerId;
+        if(getSession() != null && getSession().currentUser != null && getSession().currentUser.partnerid != null) {
+            partnerid = getSession().currentUser.partnerid;
+        }
+        retMessage.applications = applicationPool.getAll(getStore(), partnerid);
         return retMessage;
     }
 

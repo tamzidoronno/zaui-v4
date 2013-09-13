@@ -81,15 +81,24 @@ public class ApplicationPool extends ManagerBase {
     
     private void addToAppList(ApplicationSettings setting, Store store, List<ApplicationSettings> list) {
         List<String> partnerapps = getshop.getPartnerApplicationList(store.partnerId);
-        if(store.id.equals("6acac00e-ef8a-4213-a75b-557c5d1cd150")) {
+        if(store.id.equals("6acac00e-ef8a-4213-a75b-557c5d1cd150") || store.partnerId.equalsIgnoreCase("getshop")) {
             //Ignore filtering applications when the partner portal is asking for applications.
             list.add(setting);
-        } else if(partnerapps.contains(setting.id) || setting.type.equals(ApplicationSettings.Type.System) || setting.appName.equals("SlickTheme")) {
+        } else if(partnerapps.contains(setting.id) || setting.type.equals(ApplicationSettings.Type.System) || 
+                setting.appName.equals("PayPal") || 
+                setting.appName.equals("ProductManager") ||
+                setting.appName.equals("ProductList") ||
+                setting.appName.equals("ImageDisplayer") ||
+                setting.appName.equals("LeftMenu") ||
+                setting.appName.equals("Footer") ||
+                setting.appName.equals("ContentManager") ||
+                setting.appName.equals("SlickTheme")) 
+        {
             list.add(setting);
         }
     }
 
-    public List<ApplicationSettings> getAll(Store store) {
+    public List<ApplicationSettings> getAll(Store store, String partnerid) {
         updateApplicationSet();
         ArrayList<ApplicationSettings> list = new ArrayList(applications.values());
 
@@ -104,7 +113,7 @@ public class ApplicationPool extends ManagerBase {
             
             if (settings.isPublic) {
                 addToAppList(settings, store, returnlist);
-            } else if (store.id.equals(settings.ownerStoreId) || settings.allowedStoreIds.contains(store.id)) {
+            } else if (store.id.equals(settings.ownerStoreId) || settings.allowedStoreIds.contains(store.id) || settings.allowedStoreIds.contains(partnerid)) {
                 addToAppList(settings, store, returnlist);
             }
         }

@@ -91,12 +91,21 @@ public class AddApplicationsToDatabase {
                 ApplicationSettings.Type.Payment, true);
         sisow.isPublic = true;
         
-        ApplicationSettings partnerselection = createSettings(
-                "PartnerApplicationSelection", 
-                "a109b0f1-97c3_4292-a46f4c6894a9841c", 
+        ApplicationSettings shopshopdesign1 = createSettings(
+                "ShopSoDesign1", 
+                "d71779ff-1d32-4c45-86cc-e576ee103f1c", 
                 emtpy, 
                 "", 
-                ApplicationSettings.Type.System, true);
+                ApplicationSettings.Type.Theme, false);
+        shopshopdesign1.isPublic = false;
+        apps.add(shopshopdesign1);
+        
+        ApplicationSettings partnerselection = createSettings(
+                "PartnerApplicationSelection", 
+                "a109b0f1-97c3-4292-a46f-4c6894a9841c", 
+                emtpy, 
+                "", 
+                ApplicationSettings.Type.System, false);
         partnerselection.isPublic = true;
         apps.add(partnerselection);
         

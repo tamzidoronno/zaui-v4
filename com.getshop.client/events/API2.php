@@ -2131,6 +2131,19 @@ class APIPageManager {
      }
 
      /**
+     * Save the page
+     */
+
+     public function savePage($core_pagemanager_data_Page) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["core_pagemanager_data_Page"] = json_encode($this->transport->object_unset_nulls($core_pagemanager_data_Page));
+          $data["method"] = "savePage";
+          $data["interfaceName"] = "core.pagemanager.IPageManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Set a given set of settings to a given application.
      * @param settings The settings for the application.
      * @throws ErrorException 

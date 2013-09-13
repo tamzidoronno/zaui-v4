@@ -381,6 +381,7 @@ public class PagePoolImpl {
 
     void savePage(Page page) throws ErrorException {
         databaseSaver.saveObject(page, credentials);
+        pages.put(page.id, page);
     }
 
     boolean applicationExistsInArea(AppConfiguration appConfig, String pageAreaCompare) {

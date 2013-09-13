@@ -305,7 +305,6 @@ class ApplicationManager extends FactoryBase {
 
         $appConfiguration = $this->getFactory()->getApi()->getPageManager()->addApplication($_POST['data']['appId']);
 
-
         $namespace = $this->getFactory()->convertUUIDtoString($appConfiguration->appSettingsId);
         $appName = $namespace . "\\" . $appConfiguration->appName;
 
@@ -318,7 +317,12 @@ class ApplicationManager extends FactoryBase {
 
         if (method_exists($app, "renderStandalone")) {
             $pageManager = $this->getFactory()->getApi()->getPageManager();
-            $pageManager->addExistingApplicationToPageArea($appConfiguration->id . "_standalone", $appConfiguration->id, "main_1");
+            $pageId = $appConfiguration->id . "_standalone";
+            $page = $pageManager->createPageWithId(5, "", $pageId);
+            $page->hideHeader = true;
+            $page->hideFooter = true;
+            $pageManager->savePage($page);
+            $pageManager->addExistingApplicationToPageArea($pageId, $appConfiguration->id, "main_1");
         }
 
         $this->invokeApplicationAdded($appConfiguration);

@@ -145,8 +145,9 @@ td.gs_col .applicationarea { height: 100%; }
 .skeletondisplayer .skeletondisplay .innerskeletondisplayer  { 
     width: 200px;
     height: 200px;
-   
 }
+
+.skeleton5 .order_mask { display: none; }
 
 .skeletondisplayer .skeletondisplay .skeleton1 { background-image: url('/skin/default/images/layouts/layout1.png'); }
 .skeletondisplayer .skeletondisplay .skeleton1:hover { background-image: url('/skin/default/images/layouts/layout1_hover.png'); }

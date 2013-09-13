@@ -297,4 +297,9 @@ public interface IPageManager {
     @Administrator
     public void clearPageArea(String pageId, String pageArea) throws ErrorException;
 
+    /**
+     * Save the page
+     */
+    @Administrator
+    public void savePage(Page page) throws ErrorException;
 }

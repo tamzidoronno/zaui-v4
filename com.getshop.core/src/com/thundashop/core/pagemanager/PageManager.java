@@ -347,4 +347,14 @@ public class PageManager extends ManagerBase implements IPageManager {
         return toReturn;
     }
 
+    @Override
+    public void savePage(Page page) throws ErrorException {
+        Page savedPage = getPage(page.id);
+        if (savedPage == null) {
+            throw new ErrorException(30);
+        }
+
+        pagePool.savePage(page);
+    }
+
 }

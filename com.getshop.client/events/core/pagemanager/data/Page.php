@@ -1,5 +1,11 @@
 <?php
 class core_pagemanager_data_Page extends core_common_DataCommon  {
+	/** @var String */
+	public $hideHeader;
+
+	/** @var String */
+	public $hideFooter;
+
 	/** @var core_pagemanager_data_Page */
 	public $parent;
 

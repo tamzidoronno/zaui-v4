@@ -493,6 +493,19 @@ public class APIPageManager {
      }
 
      /**
+     * Save the page
+     */
+
+     public void savePage(Page page)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new HashMap();
+          data.args.put("page",new Gson().toJson(page));
+          data.method = "savePage";
+          data.interfaceName = "core.pagemanager.IPageManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Set a given set of settings to a given application.
      * @param settings The settings for the application.
      * @throws ErrorException 

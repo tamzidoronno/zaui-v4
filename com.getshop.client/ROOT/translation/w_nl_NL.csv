@@ -7,6 +7,8 @@ Application;-;Applicatie
 April;-;April
 August;-;Augustus
 Birth Date;-;Geboortedatum
+Buy;-;
+By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;
 Cancel order;-;Bestelling afbreken
 Canceled;-;Afgebroken
 Cart overview;-;Overzicht winkelwagen
@@ -25,7 +27,6 @@ Customer information;-;Klanteninformatie
 Date;-;Datum
 December;-;December
 Delete image;-;Verwijder afbeelding
-Delete product;-;Verwijder product
 Details;-;Details
 Email;-;Email
 End date;-;Einddatum
@@ -95,7 +96,6 @@ Send message;-;Bericht versturen
 Send us mail;-;Stuur ons een email
 September;-;September
 Set new password;-;Nieuw wachtwoord vastleggen
-Setup product variations;-;Bepaal product variaties
 Shipment information;-;Verzendinformatie
 Shipment settings;-;Verzendingsmogelijkheden
 Shipping;-;Verzending	 
@@ -122,7 +122,6 @@ Top speed ;-;Top snelheid
 Total;-;Totaal
 Tuesday;-;Dinsdag
 Update;-;Updaten
-Upload image;-;Upload afbeelding
 Username / Email;-;Gebruikersnaam / E-mail
 Waiting for payment;-;Wachten op betaling
 We host events at the following locations, click on the location to filter the calendar by location(s);-;We organiseren events op de volgende locaties. Klik op de locatie om de kalender op locatie te filteren.
@@ -139,8 +138,6 @@ change;-;
 course;-;
 description;-;
 email;-;
-gram;-;
-help;-;
 if we dont answer, please leave your email here and we will return your message asap.;-;Indien we niet antwoorden, gelieve een email te sturen. We reageren zo snel mogelijk.
 in stock;-;op voorraad
 location;-;

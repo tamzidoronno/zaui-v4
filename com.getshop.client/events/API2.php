@@ -1246,19 +1246,6 @@ class APIGetShop {
      }
 
      /**
-     * When an administrator has logged on, it can call on this call to connect its store to a partner.
-     */
-
-     public function connectStoreToPartner($partner) {
-          $data = array();
-          $data['args'] = array();
-          $data['args']["partner"] = json_encode($this->transport->object_unset_nulls($partner));
-          $data["method"] = "connectStoreToPartner";
-          $data["interfaceName"] = "core.getshop.IGetShop";
-          return $this->transport->sendMessage($data);
-     }
-
-     /**
      * Find the store address for a given application.
      * @param uuid The appid.
      * @return String
@@ -1292,17 +1279,19 @@ class APIGetShop {
      }
 
      /**
-     * Get the partner id attached to this user.
-     * @return String
+     * Get partner data for this user.
+     * @return core_getshop_data_PartnerData
      * @throws ErrorException 
      */
 
-     public function getPartnerId() {
+     public function getPartnerData($partnerId, $password) {
           $data = array();
           $data['args'] = array();
-          $data["method"] = "getPartnerId";
+          $data['args']["partnerId"] = json_encode($this->transport->object_unset_nulls($partnerId));
+          $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+          $data["method"] = "getPartnerData";
           $data["interfaceName"] = "core.getshop.IGetShop";
-          return $this->transport->sendMessage($data);
+          return $this->transport->cast(API::core_getshop_data_PartnerData(), $this->transport->sendMessage($data));
      }
 
      /**
@@ -1322,16 +1311,17 @@ class APIGetShop {
 
      /**
      * 
-     * @param userId
-     * @param partner
-     * @param password
+     * @param ids
      * @throws ErrorException 
      */
 
-     public function getStoresConnectedToMe() {
+     public function setApplicationList($ids, $partnerId, $password) {
           $data = array();
           $data['args'] = array();
-          $data["method"] = "getStoresConnectedToMe";
+          $data['args']["ids"] = json_encode($this->transport->object_unset_nulls($ids));
+          $data['args']["partnerId"] = json_encode($this->transport->object_unset_nulls($partnerId));
+          $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+          $data["method"] = "setApplicationList";
           $data["interfaceName"] = "core.getshop.IGetShop";
           return $this->transport->sendMessage($data);
      }
@@ -2687,6 +2677,19 @@ class APIStoreManager {
       }
 
      /**
+     * When an administrator has logged on, it can call on this call to connect its store to a partner.
+     */
+
+     public function connectStoreToPartner($partner) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["partner"] = json_encode($this->transport->object_unset_nulls($partner));
+          $data["method"] = "connectStoreToPartner";
+          $data["interfaceName"] = "core.storemanager.IStoreManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Create a new store / webshop with a given name.
      * @param hostname The hostname to the webshop.
      * @param email The email to identify the first user with,
@@ -3065,6 +3068,24 @@ class APIUserManager {
           $data["method"] = "getLoggedOnUser";
           $data["interfaceName"] = "core.usermanager.IUserManager";
           return $this->transport->cast(API::core_usermanager_data_User(), $this->transport->sendMessage($data));
+     }
+
+     /**
+     * Create a new user to your webshop.<br>
+     * This will fail if you are trying to create a user which is granted more access then you have yourself.<br>
+     * If no users has been created, then the user object will automatically be set as an administrator.<br>
+     * That is how you create your first user, set the User.type field to 0.
+     * @param user The new user to be created. and the password is sent as plain text.
+     * @return List
+     * @throws ErrorException 
+     */
+
+     public function getStoresConnectedToMe() {
+          $data = array();
+          $data['args'] = array();
+          $data["method"] = "getStoresConnectedToMe";
+          $data["interfaceName"] = "core.usermanager.IUserManager";
+          return $this->transport->sendMessage($data);
      }
 
      /**

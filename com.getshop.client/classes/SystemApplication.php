@@ -1,5 +1,5 @@
 <?php
-class SystemApplication extends ApplicationBase {
+class SystemApplication extends \ApplicationBase {
     public function dummy() {
     }
 }

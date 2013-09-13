@@ -1,46 +1,47 @@
 0-100 km/h ;-;
-A red theme that can be used when selling exciting things;-;
+A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
 Add to cart;-;Legg i handlekurv
 Address;-;Adresse
 All orders;-;Alle bestilinger
-Application;-;
+Application;-;Applikasjoner
 April;-;April
 August;-;August
 Birth Date;-;Bursdag
+Buy;-;Kjøp
+By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;Ved å bruke sisow som din betnalings leverandør vil du få muligheten til å selge ved hjelp av iDeal/Visa og mye mer. For mer informasjon: https://www.sisow.nl
 Cancel order;-;Kanselert ordre
 Canceled;-;Kanselert
-Cart overview;-;
+Cart overview;-;Handlekurv oversikt
 Cell phone;-;Mobil tlf
 Change password;-;Endre passord
 Chat with us;-;Chat med oss
-Checkout;-;
+Checkout;-;Utsjekking
 City;-;By
-Click here to edit the text.;-;
-Click next to select shipping options;-;
-Company;-;
+Click here to edit the text.;-;Trykk her for å editere tekst.
+Click next to select shipping options;-;Trykk neste for å velge en betalings metode
+Company;-;Selskap
 Completed;-;Gjennomført
 Confirm order;-;Bekreft ordre
-Count;-;
+Count;-;Antall
 Customer information;-;Kunde detaljer
-Date;-;
+Date;-;Dato
 December;-;Desember
-Delete image;-;
-Delete product;-;
-Details;-;
+Delete image;-;Slett bilde
+Details;-;Detaljer
 Email;-;Epost
-End date;-;
+End date;-;Slutt dato
 Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.
-Expire date;-;
+Expire date;-;Utløpsdato
 Extended Description;-;Utvidet beskrivelse
-Featured Product;-;
+Featured Product;-;Fremhevet produkt
 February;-;Februar
 Fixed price;-;Fikset pris
-Free shipping;-;
+Free shipping;-;Gratis frakt
 Friday;-;Fredag
 Full name;-;Hele navnet
-Group;-;
+Group;-;Gruppe
 How can I help you today ?;-;Hva kan jeg hjelpe deg med?
-January;-;
+January;-;Januar
 July;-;Juli
 June;-;Juni
 Les mer;-;
@@ -53,11 +54,11 @@ Monday;-;Mandag
 My Account;-;Min konto
 My name is:;-;Mitt navn er
 Name;-;Navn
-Name of the application;-;
+Name of the application;-;Antall applikasjoner
 New password;-;Nytt passord
 Next;-; Neste
 November;-;November
-Number of instances added;-;
+Number of instances added;-;Antall av instanser lagt til
 October;-;Oktober
 Old password;-;Gammelt passord
 Order;-;Ordre
@@ -67,22 +68,22 @@ Orders;-;Alle ordre
 Organisation name;-;Selskapnavn
 Original (hp) ;-;
 Original (nm) ;-;
-Other images;-;
-Our local time is: ;-;
+Other images;-;Andre bilder
+Our local time is: ;-;Vår lokale tid er
 Password;-;Passord
-Payment;-;
+Payment;-;Betaling
 Payment failed;-;Betaling feilet
 Phone;-;Telefon
 Place order;-;Legg inn ordre
 Please enter your email address:;-;Vennligst skriv inn din epost
 Please following theese steps to recover your password.;-;Vennligst følgt instruksjonen under.
 Please select a shipment method.;-;Vennligst velg en forendelsemetode
-Please select department;-;
+Please select department;-;Velg en avdeling
 Postal code;-;Postnummer
 Previous;-;Forrige
 Price;-;Pris
-Price and plans;-;
-Product count;-;
+Price and plans;-;Priser og oversikter
+Product count;-;Antall produkter
 Recover password;-;Gjennopprett passord
 Register;-;Registrer
 Related products;-;Relaterte produkter
@@ -95,21 +96,20 @@ Send message;-;Send melding
 Send us mail;-;Send oss en epost
 September;-;September
 Set new password;-;Sett nytt passord
-Setup product variations;-;
 Shipment information;-;Forsendelse informasjon
-Shipment settings;-;
+Shipment settings;-;Betaling instillinger
 Shipping;-;Utsendelse
-Shipping cost;-;
+Shipping cost;-;Fraktkostnader
 Shipping price;-;
-Sign up;-;
+Sign up;-;Logg in
 Stage 1 (hp): ;-;
 Stage 1 (nm): ;-;
 Stage 2 (hp): ;-;
 Stage 2 (nm): ;-;
 Stage 3 (hp): ;-;
 Stage 3 (nm): ;-;
-Start date;-;
-Status;-;
+Start date;-;Start dato
+Status;-;Status
 Sunday;-;Søndag
 Taxes;-;Skatter
 This design is private to getshop only.;-;
@@ -119,17 +119,16 @@ This page is only available for registered users.;-;Denne siden er kun tilgjenge
 Thursday;-;Torsdag
 To continue using this feature, you will need to pay, or remove the application.;-;
 Top speed ;-;
-Total;-;
+Total;-;Total
 Tuesday;-;Tirsdag
 Update;-;Oppdater
-Upload image;-;
 Username / Email;-;Brukernavn / Epost
 Waiting for payment;-;Venter på betaling
-We host events at the following locations, click on the location to filter the calendar by location(s);-;
+We host events at the following locations, click on the location to filter the calendar by location(s);-;We har events på følgende steder, trykk på stedet for å filtere kalenderen på stedet(ene)
 Wednesday;-;Onsdag
-Weight;-;
+Weight;-;Vekt
 What's on your mind?;-;Hva ønsker du å formidle?
-You are being transferred to paypal, please wait...;-;
+You are being transferred to paypal, please wait...;-;Du  blir nå overført til paypal, vennligst vent.
 You are here:;-;Du er her:
 You do not have any orders.;-;Du har ingen bestillinger
 You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
@@ -139,12 +138,10 @@ change;-;
 course;-;
 description;-;Beskrivelse
 email;-;E-post
-gram;-;
-help;-;
-if we dont answer, please leave your email here and we will return your message asap.;-;
+if we dont answer, please leave your email here and we will return your message asap.;-;Hvis vi ikke svarer, legg igjen en din epost, og vi vil kontakte deg så snart som mulig.
 in stock;-;på lager
 location;-;Sted
 org;-;Firma
 orgnummer;-;Org.nr.
 phone;-;Mob.Tlf.
-shipping;-;
+shipping;-;frakt

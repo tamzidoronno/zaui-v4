@@ -1,381 +1,436 @@
 (cloned);-;
 1. Download the synchronization program;-;
-2. Create an application;-;
-3. The application will automatically be synched to your own computer.;-;
-4. Add the application wherever you want it.;-;
-5. Modify the code locally on your computer.;-;
-6. Reload the page and see it has been updated.;-;
-A content manager allows you to add content to whatever page you would like to add content to. It supports text, images, and even basic HTML, its like word for web.;-;
-A description to the image;-;
-A news application makes you push news to your WebShop. And share to subscribers and push to facebook if the Facebook application has been added.;-;
-A public application is available for everyone to use.;-;
-A single users browsing activity.;-;
-A singleton application can also be used for configuration under settings.;-;
-A singleton application is a application that can only be added once to each store;-;
-A standalone application is not rendered into a page but as a stand alone application.;-;
-A text area will be shown when you click on the text you want to edit.;-;
-A topmenu enables you to display top menu entries;-;
-About app management!;-;
-About this attribute group:;-;
-Accessed when;-;
-Action;-;
-Activity;-;
-Add;-;
-Add Menu entry;-;
-Add a new boundary;-;
-Add a new marker;-;
-Add a product to a page, add description, price, title, and other attributes. And you are ready to start selling the product. Combine it with a left menu, a category list to create a flexible and powerful webshop.;-;
-Add additional stores that should have access to this application (comma seperated);-;
-Add an attribute group to the product i.e;;-;
-Add new;-;
-Add sub entry;-;
-Add this application and get started adding content to your page.;-;
-Add this contact form, configure it, and you are ready to start receiving questions and feedback from your users per email.;-;
-Add this left or right column at a product, and a new related products will be displayed.;-;
-Add to your page;-;
-Additional domain names;-;
-Additional info;-;
-Admin functions;-;
-Administrators only;-;
-Advanced Options;-;
-All fields need to be filled before you continue;-;
-All page views listed;-;
-All text is edited inline in the getshop framework, this means that you can edit the text where you are.;-;
-Allow guests to add events.;-;
-Already created instances of this app;-;
-An introduction to application management in GetShop.;-;
-Anonymous user;-;
-Answering your customers questions, means more sale. By adding this excellent chat application, you can answer on request at any time from you mobile devices or your stationary computer.;-;
-Application id;-;
-Application overview;-;
-Application price;-;
-Are you limited to only one instance of this applications for each page?;-;
-Are you sure you want to delete this application? You will not be able to recover this!;-;
-Are you sure you want to synchronize this application? All files which already exists for application will be overwritten!;-;
-Attendees;-;
-Attribute administration;-;
-Attributes attached to this group:;-;
-Automatic location;-;
-Background color;-;
-Backgrounds;-;
-Banner Slider;-;
-Base color;-;
-Base currency;-;
-Base text color;-;
-Booking;-;
-Booking configuration;-;
-Boundaries;-;
-Button color;-;
-Button text color;-;
-By adding this application you will see some static over your sms usage.;-;
-By clicking the button above you will be able to add an application to this area.;-;
-By turning on this feature you will set this application to be visible on all pages.;-;
-Cart (%s);-;
-Category list;-;
-Change image;-;
-Chat;-;
-Chrome?;-;
-Click on create application to get started, you will then get an input form to start filling out your product.;-;
-Click on the chat icon in the top menu and start translating.;-;
-Click on the icon in the top admin menu under category More to gain access to your reporting page.;-;
-Click the create application button and you will automatically get a form which sends you email directly to your email address when someone use this form.;-;
-Click to add application;-;
-Clone this application;-;
-Close;-;
-Colors;-;
-Column;-;
-Configure banners;-;
-Configure your starting point;-;
-Confirm delete;-;
-Confirm entry;-;
-Connected;-;
-Contact form;-;
-Contact form configuration;-;
-Contact information;-;
-Content Manager;-;
-Conversion rate addition;-;
-Create a new user;-;
-Create application;-;
-Create categories and add a list of products to the category, attach images to the categories, and name them as you want.;-;
-Create new category;-;
-Create new group;-;
-Create news;-;
-Create shop;-;
-Create this application and get started, you will automatically be shown the editors view for this application to start adding your text.;-;
-Create this application and start book events to given dates.;-;
-Create this application and start showing events on given dates.;-;
-Create user;-;
-Create your own application and start building your own web shop.;-;
-Created when;-;
-Data saved;-;
-Default price;-;
-Delete;-;
-Delete attribute;-;
-Delete group;-;
-Delete my store;-;
-Delete selected application;-;
-Delete this application;-;
-Delete this image;-;
-Delete this product;-;
-Description to image:;-;
-Description when adding;-;
-Display shipping price on products;-;
-Do you want to display the shipping price in the detailed product view?;-;
-Domain name;-;
-Domain name configuration;-;
-Edit google maps;-;
-Editors and adminstrators only;-;
-Email / username;-;
-Email address;-;
-End hour;-;
-Enter a menu name;-;
-Enter an address to link this to;-;
-Enter email;-;
-Event calendar;-;
-Everyone;-;
-Everyone will be able to access and see this menu entry.;-;
-Expire days?;-;
-Expires;-;
-First Page;-;
-Footer;-;
-Free;-;
-Gallery;-;
-Get Started;-;
-Get started building yourself a left / right menu, you can do it by adding this application!<br><br>This menu support subentries and hardlinking, and for each entry a page is created where you can add products / other applications.;-;
-Get started, add this application and start adding news and updates to your page.;-;
-Google Analytics;-;
-Google analytics is by far the best reporting tool for webadministrator, by adding this application you will enable your googla analytics account to communicate with your webshop.;-;
-Google maps configuration;-;
-Hardlink;-;
-Hardlink configuration for menu entry;-;
-Hide cart;-;
-Hide shipping price from this product?;-;
-History;-;
-How many days for a free trial?;-;
-If converting to a different currency, you can specify a percentage of how much more you would like to append to conversion when the conversion calculation is done. For example 10 will give you a 10% higher conversion rate.;-;
-If the total amount in the basket is outside of the range above, use this price.;-;
-If this email address is specified, it will send notificition to this one if a requested event has been made.;-;
-If this function is enabled, it will show filter left for the calendar.;-;
-If this function is enabled, it will show the company field.;-;
-If this is set, getshop will automatically convert from this currency to the currency above for all other customers.;-;
-If you want to charge for this application, specify the price you want for it (one time cost).;-;
-Images;-;
-Import an existing application.;-;
-Import to area;-;
-Install the synchronization client (linux);-;
-Interval;-;
-Is this a page singleton application?;-;
-Is this a singleton application?;-;
-Item price;-;
-Just add it;-;
-Just click the button below;-;
-Keep track of your products, orders, pages, etc with this application. Generate reports on a hourly, daily, weekly and monthly basis.;-;
-Keep your customers up to date of what events you are hosting with this application;-;
-Last application was created at :;-;
-Last application was named :;-;
-Last hour of the day that people should be able to make a booking (example: 23);-;
-Last logged on;-;
-Layout;-;
-Left;-;
-Left Menu;-;
-Lets you easily connect to paypal, and give your customers option to pay using paypal.;-;
-Link to menu;-;
-Mail;-;
-Manage applications;-;
-Manually select a color;-;
-Markers;-;
-Marketing;-;
-Marketing is applications like news, and other application used for marketing.;-;
-Menu hardlink for;-;
-Method;-;
-Middle;-;
-Minimum activity;-;
-More Categories?;-;
+2. Create an application;-;2. Maak de applicatie aan.
+3. The application will automatically be synched to your own computer.;-;3. De applicatie wordt automatisch gesynchroniseerd met je computer.
+4. Add the application wherever you want it.;-;4. Voeg de applicatie toe eender waar je wil
+5. Modify the code locally on your computer.;-;5. Pas de code aan lokaal op je computer
+6. Reload the page and see it has been updated.;-;6. Refresh de pagina en zie de update.
+A content manager allows you to add content to whatever page you would like to add content to. It supports text, images, and even basic HTML, its like word for web.;-;Een content manager staat je toe inhoud toe te voegen op eender welke pagina. Het ondersteunt tekst, afbeeldingen, html. Vergelijkbaar met Word.
+A description to the image;-;Een beschrijving voor de afbeelding.
+A news application makes you push news to your WebShop. And share to subscribers and push to facebook if the Facebook application has been added.;-;Een nieuws applicatie om nieuws op je webwinkel te plaatsen. Share het nieuws met nieuwsbrief leden of deel het via facebook, als je de Facebook app hebt toegevoegd.
+A public application is available for everyone to use.;-;Een publieke applicate is door iedereen te gebruiken
+A quick tip; when the mouse is hovering the image, you will see a settings box where you can configure the image.;-;
+A single users browsing activity.;-;Een unieke bezoeker surfactiviteit
+A singleton application can also be used for configuration under settings.;-;Een enkele applicatie kan geconfigureerd worden onder settings
+A singleton application is a application that can only be added once to each store;-;Een enkele applicatie kan eenmalig toegevoegd worden aan uw webwinkel
+A standalone application is not rendered into a page but as a stand alone application.;-;Een enkele applicatie is niet gerenderd in een pagina maar als een aparte applicatie
+A text area will be shown when you click on the text you want to edit.;-;Een tekst veld verschijnt als je op de tekst klikt die je wil aanpassen
+A topmenu enables you to display top menu entries;-;Een hoofdmenu maakt het mogelijk menu items toe te voegen
+About app management!;-;Over app management
+About this attribute group:;-;Over deze attributen groep:
+Accessed when;-;Wanneer geopenend
+Action;-;Actie
+Activate Deepfreeze;-;
+Activity;-;Activiteit
+Add;-;Toevoegen
+Add Menu entry;-;Voeg menu link toe
+Add a new boundary;-;Voeg nieuwe grens toe
+Add a new marker;-;Voeg nieuwe markering toe
+Add a product to a page, add description, price, title, and other attributes. And you are ready to start selling the product. Combine it with a left menu, a category list to create a flexible and powerful webshop.;-;Voeg een product, een omschrijving, prijs en titel toe aan een pagina, en je bent klaar om een product te verkopen. Combineer het met een menu link, een categorie lijst om een Flexibele en professionele webwinkel te bekomen.
+Add additional stores that should have access to this application (comma seperated);-;Voeg meedere webwinkels toe die toegang hebben tot deze applicatie (komma gescheiden)
+Add an image by clicking the button below to start your image upload progress.;-;
+Add images to the product;-;
+Add new;-;Voeg nieuw toe
+Add sub entry;-;Voeg sub titel toe
+Add this application and get started adding content to your page.;-;Voeg deze applicatie toe en start met toevoegen van inhoud aan je pagina.
+Add this contact form, configure it, and you are ready to start receiving questions and feedback from your users per email.;-;Voeg dit contact formulier toe, pas het aan, en je ben klaar om vragen en feedback te ontvangen van bezoekers/klanten via email.
+Add this left or right column at a product, and a new related products will be displayed.;-;Voeg een kolom links of rechts toe bij een product, en een gerelateerd product zal daarin zichtbaar zijn
+Add to list;-;
+Add to your page;-;Voeg toe aan je pagina
+Additional domain names;-;Bijkomende domeinnamen
+Additional info;-;Meer info
+Admin functions;-;Beheer  functies
+Administrators only;-;Beheerder  
+Advanced Options;-;Geavanceerde opties
+Advanced settings;-;
+Advanced settings allows you to finetune different aspects to your product. For example, if shipping is configured and you would like this product to be shipped for free.;-;
+All fields need to be filled before you continue;-;Alle velden moet ingevuld zijn alvorens verder te gaan
+All page views listed;-;Lijst van pageviews
+All products available;-;
+All text is edited inline in the getshop framework, this means that you can edit the text where you are.;-;Alle text kan aangepast worden ‘inline’ in het shopso framework, dit betekent dat je alles kan aanpassen op de site zelf.
+All text that you enter in the box below will be sent out as order confirmation emails. You can write anything you wish here, and enter variables. See bottom of page for variable defenitions.;-;
+Allow guests to add events.;-;Sta gasten toe een event toe te voegen.
+Already created instances of this app;-;Bestaande zaken van deze app
+An introduction to application management in GetShop.;-;Een introductie van het applicatie management in Shopso
+Anonymous user;-;Anonieme gebruiker
+Answering your customers questions, means more sale. By adding this excellent chat application, you can answer on request at any time from you mobile devices or your stationary computer.;-;Beantwoorden van klanten vragen, betekent stijgende verkoop. Door deze chat applicatie toe te voegen, kan je ten alle tijde vragen van je klanten via pc of smartphone beantwoorden.
+Application id;-;Applicatie ID
+Application overview;-;Applicatie overzicht
+Are you limited to only one instance of this applications for each page?;-;Ben je gelimiteerd tot maar 1 applicatie per pagina?
+Are you sure you want to delete this application? You will not be able to recover this!;-;Zeker dat je deze applicatie wil verwijderen? De gegevens hiervan gaan verloren na verwijdering.
+Are you sure you want to synchronize this application? All files which already exists for application will be overwritten!;-;Ben je zker dat je deze applicatie wil synchroniseren? Alle bestaande bestanden  zullen overschreven worden.
+Attendees;-;Deelnemers
+Attribute administration;-;Beheer attributen
+Attribute settings;-;
+Attribute settings enables you to attach different kind of attributes to the product. Theese attributes will be used to filter your products in a product list.;-;
+Attributes;-;
+Attributes added to this product;-;
+Attributes attached to this group:;-;Attributen vast in deze groep:
+Automatic location;-;Automatische locatie
+Background color;-;Achtergrond kleur
+Backgrounds;-;Achtergronden
+Banner Slider;-;Banner slider
+Base color;-;Basis kleur
+Base currency;-;Munteenheid
+Base text color;-;Basis tekst kleur
+Booking;-;Booking
+Booking configuration;-;Booking configureren
+Boundaries;-;Grenzen
+Button color;-;Knop kleur
+Button text color;-;Knop tekst kleur
+By adding this application you will see some static over your sms usage.;-;Als je deze applicatie toevoegt zal je het statische sms gebruik overzicht kunnen zien.
+By clicking the button above you will be able to add an application to this area.;-;Door de knop hierboven aan te klikken, kan je een applicatie in deze zone toevoegen.
+By enabling testmode for sisow, you will be able to test the payment solutions in sandbox mode.;-;
+By turning on this feature you will set this application to be visible on all pages.;-;Als je deze functie aanzet, zal deze zichtbaar zijn op alle pagina’s.
+Cancel;-;
+Cart (%s);-;Winkelwagen
+Category list;-;Category lijst
+Change image;-;Verander afbeelding
+Chat;-;Chat
+Chrome?;-;Chrome?
+Click on create application to get started, you will then get an input form to start filling out your product.;-;Klik op ‘Maak applicatie aan’ om te beginnen. Je krijgt dan een input formulier om gegevens toe te voegen.
+Click on the chat icon in the top menu and start translating.;-;Klik op het chat icoontje in het top menu en start met vertalen.
+Click on the icon in the top admin menu under category More to gain access to your reporting page.;-;Klik op het icon in het top beheer menu onder ‘Meer’ voor je report pagina te bekijken.
+Click the create application button and you will automatically get a form which sends you email directly to your email address when someone use this form.;-;Klik de ‘Maak  applicatie’ knop en je krijgt automatisch email in je inbox als een bezoekers contact met je opneemt via het formulier
+Click to add application;-;Klik om een applicatie toe  te voegen
+Click to change subject;-;
+Clone this application;-;Clone deze applicatie
+Close;-;Sluiter
+Colors;-;Kleuren
+Column;-;Kolom
+Configure banners;-;Stel banners in
+Configure your starting point;-;Stel je startpunt in
+Confirm delete;-;Bevestig verwijderen
+Confirm entry;-;Bevestig tekst
+Congratulation, you have added your first image.;-;
+Connected;-;Aangesloten
+Contact form;-;Contact formulier
+Contact form configuration;-;Contact forumlier configuratie
+Contact information;-;Contact informatie
+Content Manager;-;Contact manager
+Conversion rate addition;-;Conversie percentage
+Create;-;
+Create a new product;-;
+Create a new user;-;Maak nieuwe gebruiker aan
+Create application;-;Maak applicatie aan
+Create categories and add a list of products to the category, attach images to the categories, and name them as you want.;-;Maak categorieën aan en voeg een lijst van producten toe aan de categorie, voeg afbeeldingen toe en geef een titel op.
+Create new category;-;Maak nieuwe categorie aan
+Create new group;-;Maak nieuwe groep aan.
+Create news;-;Maak nieuws aan
+Create product;-;
+Create shop;-;Maak een webwinkel aan
+Create this application and get started, you will automatically be shown the editors view for this application to start adding your text.;-;Maak deze applicatie aan en je krijgt automatisch een editor te zien om je tekst toe te voegen.
+Create this application and start book events to given dates.;-;Maak deze applicatie aan en maak events op data aan.
+Create this application and start showing events on given dates.;-;Maak deze applicatie aan en bekijk events op data
+Create user;-;Maak gebruiker aan.
+Create your own application and start building your own web shop.;-;Maak je eigen applicatie aan en start met je webwinkel te bouwen.
+Created when;-;Aangemaakt op
+Customer address;-;
+Customer city;-;
+Customer email;-;
+Customer name;-;
+Customer phone;-;
+Deactivate Deepfreeze;-;
+Default price;-;Standaard prijs
+Delete;-;Verwijderen
+Delete attribute;-;Verwijder attribuut
+Delete group;-;Verwijder groep
+Delete my store;-;Verwijder mijn webwinkel
+Delete selected application;-;Verwijder geselecteerde applicatie
+Delete this application;-;Verwijder deze applicatie
+Delete this image;-;Verwijder deze afbeelding
+Description when adding;-;Omschrijving bij het toevoegen
+Different variables that is available;-;
+Display shipping price on products;-;Toon verzendkosten bij producten
+Do you want to display the shipping price in the detailed product view?;-;Wil je dat de verzendkosten vertoond worden op de product pagina?
+Domain name;-;Domeinnaam
+Domain name configuration;-;Domeinnaam configuratie
+Edit;-;Bewerk
+Edit google maps;-;Bewerk google maps
+Edit product;-;
+Edit the data below and write a description, the name of the product and a more detailed description. This data will be displayed on your product when viewing it.;-;
+Edit your product.;-;
+Editors and adminstrators only;-;Enkel voor editors en beheerders
+Email / username;-;Email / gebruikersnaam
+Email address;-;Email adres
+Enable test mode for sisow;-;
+End hour;-;Eind uur
+Enter a menu name;-;Typ een menu naam
+Enter an address to link this to;-;Typ een emailadres om deze te linken
+Enter an address to your favicon.;-;
+Enter email;-;Typ je email
+Event calendar;-;Event kalender
+Everyone;-;Iedereen
+Everyone will be able to access and see this menu entry.;-;Iedereen heeft toegang tot dit menu
+Expire days?;-;Dagen tot aflopen
+Favicon;-;
+First Page;-;Eerste pagina
+Footer;-;Footer
+Free;-;Gratis
+Gallery;-;Gallery
+Get Started;-;Start
+Get started building yourself a left / right menu, you can do it by adding this application!<br><br>This menu support subentries and hardlinking, and for each entry a page is created where you can add products / other applications.;-;Bouw zelf een linker / rechter menu, door deze applicatie toe te voegen. Dit menu ondersteund subtekst en hardlinking. Voor elke input wordt een pagina aangemaakt waar je Producten en andere categorieën kan toevoegen.
+Get started, add this application and start adding news and updates to your page.;-;Voeg deze applicatie toe en voeg nieuws en updates toe aan je pagina.
+Google Analytics;-;Google Analytics
+Google analytics is by far the best reporting tool for webadministrator, by adding this application you will enable your googla analytics account to communicate with your webshop.;-;Google Analytics is de beste rapportage tool voor webmasters/webwinkeliers. Voeg deze applicatie toe en link je google analytics account aan je webwinkel.
+Google maps configuration;-;Google maps configuratie
+Hardlink;-;Hardlink
+Hardlink configuration for menu entry;-;Hardlink configuratie voor menu tekst
+Here you can configure all the settings required to get sisow to work properly with your account. Enter the fields below and press save, as soon as everything here is set correctly you will see that a new payment options is available in the checkout area.;-;
+Hide cart;-;Toon winkelwagen niet
+Hide shipping price from this product?;-;Toon geen verzendkosten bij dit product?
+History;-;Geschiedenis
+How many days for a free trial?;-;Hoeveel dagen voor een gratis demo?
+If converting to a different currency, you can specify a percentage of how much more you would like to append to conversion when the conversion calculation is done. For example 10 will give you a 10% higher conversion rate.;-;Indien je omzet naar een andere munteenheid, kan je een omzetpercentage ingeven. Bijvoorbeeld 10 zal je 10% hogere omzetfee geven.
+If the total amount in the basket is outside of the range above, use this price.;-;Als het totaal bedrag in het winkelmandje boven een bepaalde grens is, gebruik dan deze prijs.
+If this email address is specified, it will send notificition to this one if a requested event has been made.;-;Als dit emailadres is ingesteld, zal je een bericht ontvangen als een aangevraagd event is gemaakt.
+If this function is enabled, it will show filter left for the calendar.;-;Als deze functie aan staat, dan vertoont de filter links van de kalender.
+If this function is enabled, it will show the company field.;-;Als deze functie aan staat, dan zie je het bedrijfs info veld.
+If this is set, getshop will automatically convert from this currency to the currency above for all other customers.;-;Als deze aan staat, zal automatisch de munteenheid omgezet worden naar bovenstaande munteenheid voor alle bezoekers / klanten.
+If you want to charge for this application, specify the price you want for it (one time cost).;-;Als je kosten wil aanrekenen voor deze applicatie, vermeld dan een prijs. (eenmalige kost).
+Images;-;Afbeeldingen.
+Import;-;
+Import an existing application.;-;Importeer een bestaande applicatie
+Import to area;-;Importeer naar veld
+Install the synchronization client (linux);-;Installeer de sychronisatie client (Linux)
+Interval;-;Interval
+Is this a page singleton application?;-;Is deze pagina singleton applicatie?
+Is this a singleton application?;-;Is dit een singleton applicatie?
+Is this your default picture to the product?;-;
+Item price;-;Product prijs
+Just add it;-;Toevoegen
+Just click the button below;-;Klik de knop onderaan
+Keep track of your products, orders, pages, etc with this application. Generate reports on a hourly, daily, weekly and monthly basis.;-;Hou je producten, bestellingen, pagina’s,… bij met deze applicatie. Maak rapporten per uur, dagelijk, wekelijks en maandelijks.
+Keep your customers up to date of what events you are hosting with this application;-;Hou je klanten up to date van welke events je organiseert met deze applicatie
+Last application was created at :;-;Laatste applicatie was aangemaakt op:
+Last application was named :;-;Laatste applicatie heet:
+Last hour of the day that people should be able to make a booking (example: 23);-;Op welk uur kan een bezoeker ten laatste een booking maken (bijvoorbeeld: 23)
+Last logged on;-;Laatst ingelogd
+Layout;-;Layout
+Left;-;Links
+Left Menu;-;Linker menu
+Lets you easily connect to paypal, and give your customers option to pay using paypal.;-;Connecteer makkelijk met PayPal, zo kunnen bezoekers betalen via Paypal.
+Link to menu;-;Link naar menu
+Mail;-;Post
+MailManager;-;
+Manage applications;-;Beheer applicaties
+Manually select a color;-;Selecteer een kleur
+Markers;-;Markers
+Marketing;-;Marketing
+Marketing is applications like news, and other application used for marketing.;-;Marketing, applicaties zoals nieuws en andere gebruikt voor marketing
+Menu hardlink for;-;Menu hardlink voor
+Merchant id;-;
+Merchant key;-;
+Method;-;Methode
+Middle;-;Midden
+Minimum activity;-;Minimum activiteit
+More Categories?;-;Meer categoriën?
 More color options;-;
-More...;-;
-Need to display your realestates? well, here is the application that allows you to do that, simply add the application to your page and start editing your realestate;-;
-News;-;
-No;-;
+More...;-;Meer...
+My product list;-;
+Need to display your realestates? well, here is the application that allows you to do that, simply add the application to your page and start editing your realestate;-;Wil je huizen verkopen? Dit is een applicatie om huizen te verkopen. Voeg ze toe aan je pagina en plaats alle info er op.
+New product / untitled product;-;
+News;-;Nieuws
+No;-;Neen
 No advanced color options for this design;-;
 No background selection available for this design.;-;
-No colors available for this design.;-;
-No locations available;-;
-No orders where found for this time range.;-;
-No page views where found for this time range.;-;
-No products where found for this time range.;-;
-No traffic where found for this time range.;-;
-No users found;-;
-No users where found for this time range.;-;
-North east corner latitude;-;
-North east corner longitude;-;
-Not satisfied with the text "hardcoded" on your page?<br>Add this application and tune the text yourself.;-;
-Note: minumum 3 chars before search start;-;
-Number of application created by you:;-;
-Number of columns;-;
-Number of products;-;
-Number of public applications :;-;
-Number of views;-;
-Only logged on administrators or editors will be able to see this menu entry.;-;
-Only logged on administrators will be able to see this menu entry.;-;
-Open attributes admin panel;-;
-Open for everyone;-;
-Orders added;-;
-Orders created summary;-;
-Other settings;-;
-Other stores has acces?;-;
-Overall;-;
-Overview;-;
-Page Settings;-;
-Page description;-;
-Page id;-;
-Page name;-;
-Page view summary;-;
-Page views;-;
-Payment is transactional applications like paypal, dibs, visa, etc.;-;
-Paypal address;-;
-Pictures;-;
-Please select someone to chat with at the right side;-;
-Please specify a name;-;
-Price?;-;
-Product Information;-;
-Product List;-;
-Product Manager;-;
-Product name;-;
-Product views;-;
-Push the create application button to get you started.;-;
-Real estate;-;
-Remove application;-;
-Remove icon;-;
-Remove image;-;
-Rename;-;
-Render this application standalone?;-;
-Reporting;-;
-Reporting is analytichal application like google analytichs, traffic application, etc.;-;
-Reset code is;-;
-Restrict to administrators;-;
-Restrict to administrators and editors;-;
-Right;-;
-Sandbox;-;
-Save;-;
-Save changes;-;
-Save settings;-;
-Save translation;-;
-Search;-;
-Select a group in the left hand area;-;
-Select a group:;-;
-Set application sticky;-;
-Set as homepage;-;
-Set date;-;
-Set icon;-;
-Should this application be public available?;-;
-Should this product listed as a featured product?;-;
-Show company field;-;
-Show location filter left for calendar;-;
-Sms Statistic;-;
-Some settings are important for google and other search engines, and this is where you can configure them.;-;
-South west corner latitude;-;
-South west corner longitude;-;
-Specify an airgram account.;-;
-Specify the name of the application.;-;
-Specify what areas you want to be able to add this application to.;-;
-Standard;-;
-Standard is the most common type of application.;-;
-Start adding pictures to your webshop, create this application and start uploading images.;-;
-Start building application;-;
-Start hour;-;
-Start hour when people should be able to request booking (example: 16);-;
-Start up price;-;
-Status - connnected!;-;
-Status - not connnected!;-;
-Stock Control;-;
-Store currency;-;
-Subentry name;-;
-Subheader;-;
-Subscribe for news;-;
-Summary;-;
-Summary!;-;
-Synchronize this application;-;
-System;-;
-Text description;-;
-Text title;-;
-Thank you for your order.;-;
-The address is already taken or invalid.;-;
-The application management tool enables you to develope your own applications directly into getshop, and modify your web shop as you see fit. From this point you basically has access to do everything you want to, and if you can proove us that you can't. Then we will modify it to make sure you can.;-;
-The code for this application will automatically be synced to your code base after you click the start building application button.;-;
-The paypal account has not been configured correctly. Go to settings and configure it properly;-;
-The settings has been saved;-;
-Theme;-;
-Themes;-;
-Then click on the save button, or click outside of the text area to save the text.;-;
-This application can be used free of charge;-;
-This application gives you the ability to control your stocks, simply change how many you have in stock on each product.;-;
-This application has been marked for synchronization;-;
-This application is added to the following pages;-;
-This category displayer is currently empty. To create a new category please click the create new category button below.;-;
-This content has been updated!;-;
-This entry is currently hardlinked to;-;
-This footer application contains the footer information for your webshop, all menu entries are sorted.;-;
-This gallery gives you the ability to display images into a gallery, and even connect the images to products, categorise them by combining a category displayer, or by using a left menu.;-;
-This is the perfect application if you need to stash your page a bit more, simply create banners and add them to this application and then it will rotate;-;
-This is where you can configure your current page, special settings like search engine optimization for the current page you are browser;-;
-This option enables the posibility to restrict access to you menu entries to a given group of users.;-;
-This product has been deleted;-;
-This will be displayed as description if someone adds event;-;
-This will be displayed as the location if someone adds event;-;
-Tightly integrates facebook into your webshop, give users options to comment product, like products, share discounts, etc;-;
-Title for the image;-;
-To edit this product, click to open it and edit it from there.;-;
-To translate all visible text for your users, translate the entries below, and hit the save translation button.;-;
-Top menu;-;
-Total orders registered;-;
-Total page views;-;
-Total product views;-;
-Total users created;-;
-Total views;-;
-Translation;-;
-Trial period;-;
-Turn this featur on if you wish to allow guests to add events to your calendar. Events needs to be confirmed by an adminstrator;-;
-UA;-;
-Un-combine product list;-;
-Updated;-;
-Updating;-;
-Uploading logo;-;
-Use widgets?;-;
-User/Customers overview;-;
-Username;-;
-Users created;-;
-Users logged on;-;
-VIP user - $0;-;
-Viewed when;-;
-Warning. you are not connected as a partner yet, please contact getshop support!;-;
-Web address;-;
-What address are you using for the test enviroment to paypal?;-;
-What areas does this application support?;-;
-What kind of application is this?;-;
-When;-;
-When a standalone application is added, a new icon will be added to top taskbar and launched from there.;-;
-When creating this application, you will be able to add banners which will slide on a time interval.;-;
-When you have added this application, it will automatically start relating products related to the main product added to this page.;-;
-Widget id;-;
-Would you like to use paypal in sandbox mode?;-;
-Yes;-;
-Yes, delete this application;-;
-Yes, synchronize this application;-;
-You are not logged on, please log on.;-;
-You can choose between three types of user levels.;-;
-You can filter your customers by entering som text in the textbox;-;
-You currently have the following users added to your system;-;
-You do not have any lists combined with this list yet...;-;
-You do not want to display the cart.. sure enable this then.;-;
-You have already paid for this application.;-;
-You have not yet added any attributes to this group, they will automatically be added when you starting to add attributes to a product.;-;
-You have not yet created any web shops, create one and they will be listed here.;-;
-You have successfully been added or removed from the email list.;-;
-You need this application if you want this webshop send emails from your email account;-;
-You simply modify the text, you would like to edit.;-;
-Your function name;-;
-Your reset code;-;
-Your synchronization client is connected, and you are ready to start developing your applications.;-;
+No colors available for this design.;-;Geen kleuren beschikbaar voor deze layout
+No locations available;-;Geen locatie beschikbaar
+No orders where found for this time range.;-;Geen bestellingen gevonden voor deze tijdzone
+No page views where found for this time range.;-;Geen pageviews gevonden voor deze tijdzone
+No products has been added to this list yet, please add one from the list on the right hand side.;-;
+No products where found for this time range.;-;Geen producten gevonden voor deze tijdzone
+No short description set yet;-;
+No traffic where found for this time range.;-;Geen bezoekers gevonden voor deze tijdzone
+No users found;-;Geen gebruikers gevonden
+No users where found for this time range.;-;Geen gebruiksers gevonden voor deze tijdzone
+North east corner latitude;-;Noord-Oosten latitude
+North east corner longitude;-;Noord-Oosten Longitude
+Not satisfied with the text "hardcoded" on your page?<br>Add this application and tune the text yourself.;-;Niet tevreden met de tekst op je webwinkel? Pas deze zelf aan met deze applicatie
+Note: minumum 3 chars before search start;-;Opgelet: minimum 3 tekens om het zoeken te starten
+Number of application created by you:;-;Aantal applicaties aangemaak door jou:
+Number of columns;-;Aantal kolommen:
+Number of products;-;Aantal producten
+Number of public applications :;-;Aantal publieke applicaties:
+Number of views;-;Aantal views:
+Only logged on administrators or editors will be able to see this menu entry.;-;Enkel ingelogde administrators kunnen deze menu input zien
+Only logged on administrators will be able to see this menu entry.;-;Enkel ingelogde administators kunnen deze menu input zien
+Open for everyone;-;Open voor iedereen
+Order email;-;
+Order lines;-;
+OrderId;-;
+Orders added;-;Bestellingen toegevoegd
+Orders created summary;-;Aangemaakte bestellingen samenvatting
+Other stores has acces?;-;Andere webwinkels hebben toegang?
+Overall;-;Algemeen
+Overview;-;Overzicht
+Page Settings;-;Pagina settings
+Page description;-;Pagina omschrijving
+Page id;-;Pagina ID
+Page name;-;Pagina naam
+Page view summary;-;Pagina bezoekers overzicht
+Page views;-;Page views
+Payment is transactional applications like paypal, dibs, visa, etc.;-;Betaling met transactie applicaties als Paypal, visa, etc.
+Paypal address;-;Paypal emailadres
+Please select someone to chat with at the right side;-;Klik iemand aan om mee te chatten
+Please select your language;-;
+Please specify a name;-;Geef een naam op
+Price?;-;Prijs?
+Product Information;-;Product informatie
+Product List;-;Product lijst
+Product Manager;-;Product beheerder
+Product name;-;Product naam
+Product views;-;Product views
+Products already added to your list;-;
+Push the create application button to get you started.;-;Klik ‘maak applicatie aan’ om te starten.
+Real estate;-;Immo 
+Remove application;-;Verwijder applicatie
+Remove from list;-;
+Remove icon;-;Verwijder icoon
+Remove image;-;Verwijder afbeelding
+Rename;-;Hernoemen
+Render this application standalone?;-;Render deze standalone applicatie?
+Reporting;-;Rapport
+Reporting is analytichal application like google analytichs, traffic application, etc.;-;Rapportage is zoals google analytics,..
+Reset code is;-;Reset code is
+Restrict to administrators;-;Enkel adminstrator bevoegd
+Restrict to administrators and editors;-;Enkel administrators en editors bevoegd
+Right;-;Rechts
+Sandbox;-;Sandbox
+Save;-;Opslaan
+Save changes;-;Aanpassingen opslaan
+Save product;-;
+Save product list;-;
+Save settings;-;Settings opslaan
+Save translation;-;Vertaling opslaan
+Search;-;Zoeken
+Select a group in the left hand area;-;Selecteer een groep in de linker zone
+Select a group:;-;Selecteer een groep:
+Set application sticky;-;Maak applicatie sticky
+Set as homepage;-;Stel als homepage in
+Set date;-;Stel datum in
+Set icon;-;Stel icoon in
+Should this application be public available?;-;Moet deze applicatie publiek zijn?
+Should this product listed as a featured product?;-;Dit product ‘in de kijker’ plaatsen?
+Show company field;-;Toon bedrijfsveld
+Show location filter left for calendar;-;Toon locatie filter links van kalender
+Sms Statistic;-;Sms statistieken
+Some settings are important for google and other search engines, and this is where you can configure them.;-;Sommige settings zijn belangrijk voor Google en andere zoekmachines. Hier kan je ze instellen.
+South west corner latitude;-;Zuid – west corner latitude
+South west corner longitude;-;Zuid – west corner longitude
+Specify an airgram account.;-;Stel een airgram account in
+Specify the name of the application.;-;Geef de applicatie een naam.
+Specify what areas you want to be able to add this application to.;-;Waar wil je deze applicatie plaatsen?
+Standard;-;Standaard
+Standard is the most common type of application.;-;Standaard is de meest voorkomende applicatie
+Start adding pictures to your webshop, create this application and start uploading images.;-;Voeg afbeeldingen toe aan je webshop. Voeg deze applicatie toe en start het toevoegen van afbeeldingen.
+Start building application;-;Maak applicatie aan
+Start hour;-;Begin uur
+Start hour when people should be able to request booking (example: 16);-;Begin uur wanneer bezoekers kunnen boeken (Bvb 16)
+Start up price;-;Opstart prijs
+Status - connnected!;-;Status: verbonden!
+Status - not connnected!;-;Status: niet verbonden!
+Stock Control;-;Voorraad controle
+Store currency;-;Munteenheid webwinkel
+Subentry name;-;Subtekst naam
+Subheader;-;Subheader
+Subject;-;
+Subscribe for news;-;Inschrijven voor nieuws
+Summary;-;Samenvatting
+Summary!;-;Samenvatting!
+Synchronize this application;-;Synchroniseer deze applicatie
+System;-;Systeem
+Text description;-;Omschrijving tekst
+Text title;-;Titel
+Thank you for your order.;-;Bedankt voor de bestelling
+The address is already taken or invalid.;-;Dit adres is al gebruikt of niet geldig.
+The application management tool enables you to develope your own applications directly into getshop, and modify your web shop as you see fit. From this point you basically has access to do everything you want to, and if you can proove us that you can't. Then we will modify it to make sure you can.;-;Met de applicatie beheer tool kan je je eigen applicaties in je webwinkel invoegen en aanpassen zoals jij het wil. Vanaf dit punt kan je alles doen wat je wil, lukt er toch iets niet? Dan Passen wij het aan zodat het wel kan ;-)!
+The code for this application will automatically be synced to your code base after you click the start building application button.;-;De code van deze applicatie zal automatisch gesynched worden met de basiscode, nadat je ‘maak applicatie aan’ hebt geklikt.
+The paypal account has not been configured correctly. Go to settings and configure it properly;-;Je paypal account is niet goed ingesteld, ga naar settings en doe de nodige aanpassingen.
+Theme;-;Thema
+Themes;-;Layouts
+Then click on the save button, or click outside of the text area to save the text.;-;Klik op opslaan, of buiten het tekstkader om de tekst op te slaan.
+There is one layout defined for each page, a layout can have multiple of rows and multiple of columns.;-;
+This application gives you the ability to control your stocks, simply change how many you have in stock on each product.;-;Met deze applicatie kan je de voorraad bijhouden. Pas je voorraad aan per product.
+This application has been marked for synchronization;-;Deze applicatie is klaar voor synchronisatie.
+This application is added to the following pages;-;Deze applicatie is toegevoegd aan de pagina’s
+This category displayer is currently empty. To create a new category please click the create new category button below.;-;Deze category is momenteel leeg. Om een nieuwe categorie toe te voegen, klik ‘maak nieuwe categorie aan’
+This content has been updated!;-;Deze inhoud is upgedate!
+This entry is currently hardlinked to;-;Deze tekst is momenteel gelinkt aan
+This footer application contains the footer information for your webshop, all menu entries are sorted.;-;Deze footer applicatie omvat alle informatie over je webwinkel. Alle menu tekst is gesorteerd.
+This gallery gives you the ability to display images into a gallery, and even connect the images to products, categorise them by combining a category displayer, or by using a left menu.;-;Je kan afbeeldingen in een gallerij laten vertonen, en de afbeeldingen linken met producten in de webwinkel. Maak en category lijst aan, laat deze op de pagina zelf vertonen of in een linker menu
+This is the perfect application if you need to stash your page a bit more, simply create banners and add them to this application and then it will rotate;-;Met deze applicatie kan je je pagina wat meer invullen. Maak banners aan, voeg ze toe en laat ze roteren op de webwinkel
+This is where you can configure your current page, special settings like search engine optimization for the current page you are browser;-;Pas je huidige pagina aan met SEO tekst.
+This option enables the posibility to restrict access to you menu entries to a given group of users.;-;Met deze optie geef je een bepaalde groep toegant tot het menu
+This product has been deleted;-;Dit product is verwijderd
+This will be displayed as description if someone adds event;-;Dit zal vertoond worden als omschrijving als iemand een event toevoegt.
+This will be displayed as the location if someone adds event;-;Dit zal vertoond worden als locatie als iemand een event toevoegt.
+Tightly integrates facebook into your webshop, give users options to comment product, like products, share discounts, etc;-;Integreer Facebook in je webwinkel. Bezoekers / klanten kunnen comments posten, je producten liken / delen,...
+Title;-;Titel
+Title for the image;-;Naam van de afbeelding
+To change a layout for the current page, please select one from the list below.;-;
+To translate all visible text for your users, translate the entries below, and hit the save translation button.;-;Om alle tekst aan te passen voor je bezoekers, typ hier je tekst en sla alles op.
+Top menu;-;Hoofdmenu
+Total orders registered;-;Totaal van geregistreerde bestellingen
+Total page views;-;Totaal pageviews
+Total product views;-;Totaal product views
+Total users created;-;Totaal users aangemaakt
+Total views;-;Totaal views
+Translation;-;Vertaling
+Turn this featur on if you wish to allow guests to add events to your calendar. Events needs to be confirmed by an adminstrator;-;Zet deze instelling aan als je wil dat een gast events kan toevoegen aan je kalender. Events moeten wel goedgekeurd worden door de beheerder.
+UA;-;UA
+Un-combine product list;-;Maak product lijst los
+Untitled product;-;
+Updating;-;Bezig aan het updaten
+Upload image;-;
+Uploading logo;-;Logo aan het uploaden
+Use this application to setup the emails sent from your webshop, like order confirmation etc.;-;
+Use widgets?;-;Gebruik widgets?
+User/Customers overview;-;Bezoekers/ klanten overzicht
+Username;-;Gebruikersnaam
+Users created;-;User aangemaakt
+Users logged on;-;Users ingelogd
+VIP user - $0;-;VIP gebruiker – 0€
+Variations;-;
+View;-;
+Viewed when;-;Wanneer bekeken?
+Warning! this store will automatically be reset to original state each hour;-;
+Warning. you are not connected as a partner yet, please contact getshop support!;-;Opgelet, je bent nog geen aangesloten partner. Neem contact op!
+Web address;-;Webwinkel adres
+What address are you using for the test enviroment to paypal?;-;Welk adres gebruik je als test voor Paypal?
+What areas does this application support?;-;Welke zones ondersteunt deze applicatie?
+What is deepfreeze? Well, if you activate deepfreeze you basically put all options on hold, all changes made after deepfreezeing will be purged each hour.;-;
+What is product variations?;-;
+What kind of application is this?;-;Wat voor applicatie is dit?
+When;-;Wanneer
+When a standalone application is added, a new icon will be added to top taskbar and launched from there.;-;Als een aparte applicatie is toegevoegd, zal een nieuw icon verschijnen in de taskbar en bestuurbaar zijn vanaf daar.
+When creating this application, you will be able to add banners which will slide on a time interval.;-;Bij aanmaak van deze applicatie, zal je banners kunnen toevoegen die roteren op een tijdsinterval.
+When you have added this application, it will automatically start relating products related to the main product added to this page.;-;Als je deze applicatie toevoegd, zal het automatisch producten linken aan de andere producten op deze pagina.
+Widget id;-;Widget ID
+Would you like to use paypal in sandbox mode?;-;Wil je Paypal gebruiken in Sandbox mode?
+Yes;-;Ja
+Yes, delete this application;-;Ja, verwijder deze applicatie
+Yes, synchronize this application;-;Ja, synchroniseer deze applicatie
+You are not logged on, please log on.;-;Je bent niet ingelogd, gelieve in te loggen.
+You can add as many images as you would like to your product, this will make your product look more attractive for your customers.;-;
+You can choose between three types of user levels.;-;Je kan kiezen tussen drie niveau’s van gebruiker levels
+You can filter your customers by entering som text in the textbox;-;Je kan klanten filteren door tekst in te voeren in het tekstveld.
+You currently have the following users added to your system;-;Je hebt volgende gebruikers toegevoegd aan je system
+You do not have any lists combined with this list yet...;-;Je hebt nog geen lijst gecombineerd met deze lijst
+You do not want to display the cart.. sure enable this then.;-;Als je de winkelwagen niet wil laten vertonen, zet deze aan.
+You guessed correctly, in this panel you can setup a variation of your product. If you for instance has a product that has two different colors, you can set it up here and make your customers to specify the color before they can add it to the cart.;-;
+You have not yet added any attributes to this group, they will automatically be added when you starting to add attributes to a product.;-;Je hebt nog geen attributen toegevoegd aan deze groep. Dit zal automatisch gebeuren als je attributen toevoegd aan een product.
+You have not yet created any products, create a product by clicking the create product button.;-;
+You have not yet created any web shops, create one and they will be listed here.;-;Je hebt nog geen webwinkels aangemaakt. Van zodra er eentje is aangemaakt zal die in deze lijst verschijnen.
+You have successfully been added or removed from the email list.;-;Je bent succesvol toegevoegd of verwijderd uit de mailinglijst.
+You need this application if you want this webshop send emails from your email account;-;Je hebt deze applicatie nodig als je via je webwinkel emails wil versturen via je eigen email account.
+You simply modify the text, you would like to edit.;-;Pas de tekst aan die je wil veranderen.
+Your attributes;-;
+Your function name;-;Je functie naam
+Your merchant id, this id is something that sisow is providing you.;-;
+Your merchant key, this id is something that sisow is providing you.;-;
+Your reset code;-;Reset code
+Your synchronization client is connected, and you are ready to start developing your applications.;-;Je gesynchroniseerde klant is aangesloten. Je bent nu klaar om applicaties te developen.
 accept_domain;-;
 add_app_error;-;
 add_app_free;-;
@@ -409,7 +464,7 @@ cart;-;
 change_image;-;
 check_avail;-;
 city;-;
-click to upload a logo;-;
+click to upload a logo;-;Klik om logo te uploaden
 click_delete;-;
 click_order;-;
 click_to_pay;-;
@@ -422,23 +477,16 @@ create_new;-;
 create_new_cat;-;
 create_news_desc;-;
 create_user;-;
-css_injection;-;
-css_injection_desc_1;-;
-css_injection_desc_2;-;
-css_injection_desc_3;-;
 cur_page_security;-;
 currently_configured_banners;-;
 customer;-;
-days;-;
-days until expiration date;-;
+customer postcode;-;
 delete;-;
 delete_app;-;
-delete_image;-;
 delete_user;-;
-desc_to_image;-;
 design;-;
 detailed_desc;-;
-dibs payment services allows you to start charging with visa / mastercard / and other card vendors. its extremly easy to use. prices for using this application is provided by dibs, and you will be contacted by dibs when adding this application.;-;
+dibs payment services allows you to start charging with visa / mastercard / and other card vendors. its extremly easy to use. prices for using this application is provided by dibs, and you will be contacted by dibs when adding this application.;-;Met Dibs payment services kan je betalingen ontvangen via Visa / Mastercard. Zeer eenvoudig in gebruik. Transactiekosten zijn verkrijgbaar bij Dibs.
 dibs_address;-;
 direct_where;-;
 disabled_option;-;
@@ -457,7 +505,6 @@ enable_tls_desc;-;
 enter_address;-;
 enter_domain;-;
 enter_feedback;-;
-event_color;-;
 event_desc;-;
 event_name;-;
 expiredate;-;
@@ -466,12 +513,13 @@ firstname;-;
 fraktguiden is a norwegian application for keeping track of norwegian shipment prices, shipment tracking etc.;-;
 free_positions;-;
 free_shipping;-;
-give your customers ability to book into your events or appointments;-;
+give your customers ability to book into your events or appointments;-;Geef je klanten de mogelijkheid om een boeking van een event te doen.
 google_code;-;
 google_code_desc;-;
 hardlink;-;
 hardlink_desc;-;
 height;-;
+help;-;
 hide_search;-;
 hide_search_desc;-;
 hostname;-;
@@ -479,7 +527,7 @@ hostname_desc_smtp;-;
 invalid_delivery;-;
 invalid_input;-;
 invalid_operation;-;
-is not available, please try another one.;-;
+is not available, please try another one.;-;Is niet verkrijgbaar, gelieve een ander te proberen.
 lastname;-;
 latitude;-;
 like_button;-;
@@ -519,14 +567,12 @@ reorder_app;-;
 return_stock;-;
 return_stock_desc;-;
 save;-;
-save_product;-;
 save_settings;-;
 save_settings_desc;-;
 saved_to_db;-;
 secondary_domain;-;
 security;-;
 select_delivery;-;
-select_language;-;
 select_shipment;-;
 send_email;-;
 send_email_desc;-;
@@ -536,7 +582,6 @@ send_message;-;
 send_reminder;-;
 send_sms;-;
 send_sms_desc;-;
-set_default;-;
 settings;-;
 settings_desc;-;
 settings_saved;-;
@@ -563,19 +608,18 @@ store;-;
 subscribe_news;-;
 taxes;-;
 themes;-;
-this application gives you the ability to setup fixed shipping price;-;
-this applications lists products for you webshop, in the body of every page (except for system pages). from this application you can also add products. combine this application with a leftmenu, and/or a category displayer to create a powerful webshop.;-;
-this is restricted to owner only;-;
+this application gives you the ability to setup fixed shipping price;-;Met deze applicatie kan je een vaste verzendkost instellen
+this applications lists products for you webshop, in the body of every page (except for system pages). from this application you can also add products. combine this application with a leftmenu, and/or a category displayer to create a powerful webshop.;-;Deze applicatie geeft een producten lijst van je webwinkel, op elke pagina. Je kan hier ook producten toevoegen. Combineer met een linker of rechter menu.
+this is restricted to owner only;-;Enkel voor de beheerder toegankelijk
 three_col;-;
 title;-;
-title_of_product;-;
 title_send;-;
 title_send_desc;-;
 track;-;
 transfer_description;-;
 two_col_left;-;
 two_col_right;-;
-unique visitors found in total.;-;
+unique visitors found in total.;-;Unieke bezoekers in total.
 unlink_menu;-;
 updated;-;
 upload_image;-;
@@ -583,11 +627,9 @@ use_paypal;-;
 userlevel;-;
 username;-;
 users;-;
-weight;-;
 when;-;
-width;-;
 withdraw;-;
-withdraw_desc;-;
+withdraw_desc;-;withdraw_error
 withdraw_error;-;
 year;-;
 zoom;-;

@@ -7,6 +7,8 @@ Application;-;
 April;-;
 August;-;
 Birth Date;-;Syntymäaika
+Buy;-;
+By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;
 Cancel order;-;Peruuta tilaus
 Canceled;-;Peruttu
 Cart overview;-;
@@ -25,7 +27,6 @@ Customer information;-;Asiakastiedot
 Date;-;
 December;-;
 Delete image;-;
-Delete product;-;
 Details;-;
 Email;-;Sähköposti
 End date;-;
@@ -95,7 +96,6 @@ Send message;-;Lähetä viesti
 Send us mail;-;
 September;-;
 Set new password;-;Luo uusi salasana
-Setup product variations;-;
 Shipment information;-;Toimitusehdot
 Shipment settings;-;
 Shipping;-;Toimitus
@@ -122,7 +122,6 @@ Top speed ;-;
 Total;-;
 Tuesday;-;
 Update;-;Päivitys
-Upload image;-;
 Username / Email;-;Käyttäjätunnus / Sähköposti
 Waiting for payment;-;Odotettaan maksua
 We host events at the following locations, click on the location to filter the calendar by location(s);-;
@@ -139,8 +138,6 @@ change;-;
 course;-;
 description;-;
 email;-;
-gram;-;
-help;-;
 if we dont answer, please leave your email here and we will return your message asap.;-;
 in stock;-;Varastossa
 location;-;

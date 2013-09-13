@@ -23,7 +23,7 @@ class ImportApplication {
     }
 
     public function getControlPanel() {
-       $apps = $this->factory->getApi()->getPageManager()->getApplicationsByPageAreaAndSettingsId($this->appSettingsId, $this->area);
+       $apps = $this->factory->getApi()->getPageManager()->getApplicationsBasedOnApplicationSettingsId($this->appSettingsId);
        $appsDiv = array();
        $i = 0;
        foreach ($apps as $app) {
@@ -48,8 +48,8 @@ class ImportApplication {
         echo "<div id='ImportMenu' style=\"background-image: url('/skin/default/elements/ImportButtonBackShadow.png'); padding: 6px;  display:none; position: absolute; z-index: 999999999;\">";
         echo "<div class='inline' id='ImportPrevApp' ></div>";
         echo "<div class='inline' id='ImportNextApp' ></div>";
-        echo "<div id='ImportSave'>Save</div>";
-        echo "<div id='ImportCancel'>Cancel</div>";
+        echo "<div id='ImportSave'>".$this->factory->__f("Save")."</div>";
+        echo "<div id='ImportCancel'>".$this->factory->__f("Cancel")."</div>";
         echo "</div>";
     }
 }

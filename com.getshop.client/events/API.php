@@ -276,6 +276,13 @@
 	}
 	
 	/**
+	 * @return \core_getshop_data_PartnerData
+	 */
+	public static function core_getshop_data_PartnerData() {
+		return new \core_getshop_data_PartnerData();
+	}
+	
+	/**
 	 * @return \core_loggermanager_data_LoggerData
 	 */
 	public static function core_loggermanager_data_LoggerData() {

@@ -145,7 +145,7 @@ $('#importApplicationToArea').live('click', function() {
         });
         
     }
-    
+    $('.applicationarea[area="'+area+'"] .empty_app_area').hide();
     thundashop.Ajax.post(event, callBack);
     
 });

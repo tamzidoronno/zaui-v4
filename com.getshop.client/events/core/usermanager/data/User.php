@@ -49,6 +49,9 @@ class core_usermanager_data_User extends core_common_DataCommon  {
 	public $hasChrome;
 
 	/** @var String */
+	public $partnerid;
+
+	/** @var String */
 	public $groups;
 
 }

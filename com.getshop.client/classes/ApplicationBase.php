@@ -193,6 +193,13 @@ class ApplicationBase extends FactoryBase {
         return ($hasImage && $hasName);
     }
 
+    /**
+     * @return core_usermanager_data_User
+     */
+    public function getUser() {
+        return \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+    }
+    
     public function getAvailablePositions() {
         if (isset($this->singleton) && $this->singleton)
             return "";

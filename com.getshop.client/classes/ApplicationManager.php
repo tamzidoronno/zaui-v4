@@ -481,7 +481,7 @@ class ApplicationManager extends FactoryBase {
         $area = $_POST['data']['area'];
         $import = new ImportApplication($appSettingsId, $area);
         echo $import->getControlPanel();
-    }
+   }
 
     /*
      * Dont remove this. it is used for ping!

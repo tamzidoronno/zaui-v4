@@ -81,13 +81,6 @@ $(document).ready(function() {
                 disableOnSystemPages: true
             },
             {
-                icon: "/skin/default/images/information.png",
-                title: "Application information",
-                click: thundashop.MainMenu.displayApplicationInformation,
-                extraArgs: {},
-                disableOnSystemPages: true
-            },
-            {
                 type: 'seperator',
                 title: 'Webshop'
             },

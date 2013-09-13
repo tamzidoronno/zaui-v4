@@ -1,16 +1,1 @@
-<div class="skelholder skeleton5" theme='<? echo $this->getThemeApplicationSettingsId(); ?>'>
-    <?
-    $this->includefile('pageinfo');
-    ?>
-
-    <div class="mainarea-outer">
-        <div class="mainarea"> 
-            <div class="main-area-top"></div>
-            <div class="mainareacontent">
-                <div area='middle' id="apparea-middle" class="applicationarea middle inline">
-                    <?php $this->getPage()->getApplicationArea('main_1')->render(); ?>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<?php $this->getPage()->getApplicationArea('main_1')->render(); ?>

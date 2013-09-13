@@ -55,16 +55,6 @@ if(!function_exists("print_app_for_getshop")) {
                 </table>
             </div>
 
-            <div class="price">
-                <?
-                if ($app->price) {
-                    echo "<b>Price</b> $".$app->price." / year";
-                } else {
-                    echo "<b>Free</b> $0 / year";
-                }    
-                ?>
-            </div>
-
             <? if ($displayActivateButton): ?>
             <div id="activateSingletonApplication" class="button-large" renderStandalone="<? echo $supportStandalone; ?>" appId="<? echo $app->id;?>">
                 <div class="rightglare"></div>

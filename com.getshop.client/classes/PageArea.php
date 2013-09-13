@@ -90,8 +90,10 @@ class PageArea extends FactoryBase {
     }
 
     public function render() {
-        $this->includefile('applicationareamenu');
-        $this->includefile('add_application_menu');
+        if ($this->page->skeletonType != 5) {
+            $this->includefile('applicationareamenu');
+            $this->includefile('add_application_menu');
+        }
 
         if ($this->backendPageArea->type == "main_1")
             $this->showAccessDeniedMessage();

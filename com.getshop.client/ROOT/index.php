@@ -246,21 +246,12 @@ if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() && !$factor
 
 if (isset($_GET['page'])) {
     if (strstr($_GET['page'], "_standalone")) {
-        ?>
-        <script>
-            $(function() {
-                $('html').css('overflow-y', 'auto');
-                $('body').css('height', $(window).height());
-                $('body').css('width', $(window).width());
-                $(window).on('resize', function() {
-                    $('body').css('height', $(window).height());
-                    $('body').css('width', $(window).width());
-                });
-                mainmenu.hide();
-            });
-
-        </script>
-        <?
+        echo '<script> 
+            $(function() { 
+                mainmenu.hide(); 
+                $("#apparea-bottom").hide(); 
+            }); 
+        </script>';
     }
 }
 ?>

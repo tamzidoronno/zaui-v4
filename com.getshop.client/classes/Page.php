@@ -12,6 +12,7 @@ class Page extends FactoryBase {
     public $skeletonType;
     public $areas;
     public $description;
+    public $backendPage;
     public $emptySkeleton = false;
     public static $systemPages = array("orderoverview", "checkout", "myaccount", "users", "settings", "domain", "cart");
 
@@ -61,6 +62,7 @@ class Page extends FactoryBase {
         if (!$page) {
             $this->skeletonType = "NotFound";
         } else {
+            $this->backendPage = $page;
             $this->parentPage = $page->parent;
             $this->id = $page->id;
             $this->areas = array();
@@ -134,15 +136,20 @@ class Page extends FactoryBase {
 
     private function loadSkeletonBody() {
         echo '<div class="skelholder skeleton'.$this->skeletonType.'" theme="' . $this->getThemeApplicationSettingsId() . '">';
-        $this->includefile('pageinfo');
-        $this->includefile('mainmenu');
-        $this->includefile('header');
+        
+        if (!$this->backendPage->hideHeader && $this->skeletonType != 5 ) {
+            $this->includefile('pageinfo');
+            $this->includefile('mainmenu');
+            $this->includefile('header');
+        }
         
         echo "<div class='gs_outer_mainarea'><div class='mainarea'>";
         $this->includefile('skeleton' . $this->skeletonType);
         echo "</div></div>";
 
-        $this->includefile('footer');
+        if (!$this->backendPage->hideFooter && $this->skeletonType != 5) {
+            $this->includefile('footer');
+        }
         echo "</div>";
     }
     

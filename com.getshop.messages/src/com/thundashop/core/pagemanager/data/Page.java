@@ -17,7 +17,9 @@ import java.util.Set;
  * @author ktonder
  */
 public class Page extends DataCommon implements Cloneable {
-
+    public boolean hideHeader = false;
+    public boolean hideFooter = false;
+    
     public Page() {
     }
 

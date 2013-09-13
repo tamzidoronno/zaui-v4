@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.usermanager.data;
 
+import com.google.code.morphia.annotations.Transient;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import java.util.Date;
@@ -47,6 +48,9 @@ public class User extends DataCommon  {
     
     public String userAgent;
     public boolean hasChrome;
+    
+    @Transient
+    public String partnerid;
     
     /**
      * This user can be connected to

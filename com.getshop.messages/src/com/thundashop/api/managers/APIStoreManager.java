@@ -18,6 +18,19 @@ public class APIStoreManager {
       }
 
      /**
+     * When an administrator has logged on, it can call on this call to connect its store to a partner.
+     */
+
+     public void connectStoreToPartner(String partner)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new HashMap();
+          data.args.put("partner",new Gson().toJson(partner));
+          data.method = "connectStoreToPartner";
+          data.interfaceName = "core.storemanager.IStoreManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Create a new store / webshop with a given name.
      * @param hostname The hostname to the webshop.
      * @param email The email to identify the first user with,

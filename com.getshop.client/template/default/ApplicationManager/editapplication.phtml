@@ -149,7 +149,7 @@
                 <th> <? echo $this->__f("Your function name"); ?></th>
                 <?
                 $i=0;
-                if(is_array($settings->connectedWidgets)) {
+                if(@is_array($settings->connectedWidgets)) {
                     foreach($settings->connectedWidgets as $key => $appSetting) {
                         $i++;
                         ?>

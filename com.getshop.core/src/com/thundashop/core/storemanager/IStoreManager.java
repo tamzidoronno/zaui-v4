@@ -23,6 +23,11 @@ public interface IStoreManager {
     public Store initializeStore(String webAddress, String initSessionId) throws ErrorException;
     
     
+    /**
+     * When an administrator has logged on, it can call on this call to connect its store to a partner.
+     */
+    public void connectStoreToPartner(String partner) throws ErrorException;
+
     
     /**
      * Check if a web shop address has already been taken.

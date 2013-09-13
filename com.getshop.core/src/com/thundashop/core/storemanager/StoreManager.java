@@ -50,6 +50,11 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     }
 
     @Override
+    public void connectStoreToPartner(String partner) throws ErrorException {
+        Store store = getStore();
+        connectStoreToPartner(store.id, partner);
+    }
+
     public Store getMyStore() throws ErrorException {
         return storePool.getStoreBySessionId(getSession().id);
     }

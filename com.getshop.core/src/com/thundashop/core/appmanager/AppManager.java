@@ -69,20 +69,10 @@ public class AppManager extends ManagerBase implements IAppManager {
     @Override
     public AvailableApplications getAllApplications() throws ErrorException {
         AvailableApplications retMessage = new AvailableApplications();
-        retMessage.applications = applicationPool.getAll(storeId);
+        retMessage.applications = applicationPool.getAll(getStore());
         return retMessage;
     }
 
-    private ArrayList<ApplicationSettings> getAddedApplications() {
-        ArrayList<ApplicationSettings> appSettings = new ArrayList();
-        PageManager pageManager = getManager(PageManager.class);
-        for (ApplicationSettings app : applicationPool.getAll(this.getSession().storeId)) {
-            if (pageManager.applicationPool.isApplicationAdded(app)) {
-                appSettings.add(app);
-            }
-        }
-        return appSettings;
-    }
 
     @Override
     public ApplicationSettings createApplication(String appName) throws ErrorException {

@@ -12,6 +12,8 @@ import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.getshop.GetShop;
+import com.thundashop.core.storemanager.data.Store;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,6 +30,9 @@ public class ApplicationPool extends ManagerBase {
 
     public HashMap<String, ApplicationSettings> applications = new HashMap();
 
+    @Autowired
+    public GetShop getshop;
+    
     @Autowired
     public ApplicationPool(Logger log, DatabaseSaver databaseSaver, Database database) {
         super(log, databaseSaver);
@@ -73,25 +78,38 @@ public class ApplicationPool extends ManagerBase {
             applications.remove(id);
         }
     }
+    
+    private void addToAppList(ApplicationSettings setting, Store store, List<ApplicationSettings> list) {
+        List<String> partnerapps = getshop.getPartnerApplicationList(store.partnerId);
+        if(store.id.equals("6acac00e-ef8a-4213-a75b-557c5d1cd150")) {
+            //Ignore filtering applications when the partner portal is asking for applications.
+            list.add(setting);
+        } else if(partnerapps.contains(setting.id) || setting.type.equals(ApplicationSettings.Type.System) || setting.appName.equals("SlickTheme")) {
+            list.add(setting);
+        }
+    }
 
-    public List<ApplicationSettings> getAll(String storeid) {
+    public List<ApplicationSettings> getAll(Store store) {
         updateApplicationSet();
         ArrayList<ApplicationSettings> list = new ArrayList(applications.values());
 
         //Getshop owns them all. this is the getshop id.
-        if (storeid.equals("cdae85c1-35b9-45e6-a6b9-fd95c18bb291")) {
+        if (store.id.equals("cdae85c1-35b9-45e6-a6b9-fd95c18bb291")) {
             Collections.sort(list, new ApplicationSettings());
             return list;
         }
 
         ArrayList<ApplicationSettings> returnlist = new ArrayList();
         for (ApplicationSettings settings : list) {
+            
             if (settings.isPublic) {
-                returnlist.add(settings);
-            } else if (storeid.equals(settings.ownerStoreId) || settings.allowedStoreIds.contains(storeid)) {
-                returnlist.add(settings);
+                addToAppList(settings, store, returnlist);
+            } else if (store.id.equals(settings.ownerStoreId) || settings.allowedStoreIds.contains(store.id)) {
+                addToAppList(settings, store, returnlist);
             }
         }
+        
+        
 
         Collections.sort(returnlist, new ApplicationSettings());
         return returnlist;

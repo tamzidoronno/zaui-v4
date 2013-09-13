@@ -90,7 +90,15 @@ public class AddApplicationsToDatabase {
                 "", 
                 ApplicationSettings.Type.Payment, true);
         sisow.isPublic = true;
-        apps.add(sisow);
+        
+        ApplicationSettings partnerselection = createSettings(
+                "PartnerApplicationSelection", 
+                "a109b0f1-97c3_4292-a46f4c6894a9841c", 
+                emtpy, 
+                "", 
+                ApplicationSettings.Type.System, true);
+        partnerselection.isPublic = true;
+        apps.add(partnerselection);
         
         return apps;
     }

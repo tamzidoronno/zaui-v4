@@ -3,6 +3,7 @@ package com.thundashop.core.usermanager;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
+import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
@@ -151,6 +152,7 @@ public class UserManager extends ManagerBase implements IUserManager {
 
         user.lastLoggedIn = new Date();
         user.loggedInCounter++;
+        user.partnerid = getShop.getPartnerId(user.id);
         databaseSaver.saveObject(user, credentials);
 
         return user;
@@ -438,5 +440,10 @@ public class UserManager extends ManagerBase implements IUserManager {
     @Override
     public void removeGroup(String groupId) throws ErrorException {
         getUserStoreCollection(storeId).removeGroup(groupId);
+    }
+
+    @Override
+    public List<GetshopStore> getStoresConnectedToMe() throws ErrorException {
+        return getShop.getStoresConnectedToUser(getSession().currentUser.id);
     }
 }

@@ -3,6 +3,7 @@ package com.thundashop.core.getshop;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.getshop.data.GetshopStore;
+import com.thundashop.core.getshop.data.PartnerData;
 import java.util.List;
 
 /**
@@ -21,6 +22,20 @@ public interface IGetShop {
     
     /**
      * 
+     * @param ids
+     * @throws ErrorException 
+     */
+    public void setApplicationList(List<String> ids, String partnerId, String password) throws ErrorException;
+    
+    /**
+     * Get partner data for this user.
+     * @return
+     * @throws ErrorException 
+     */
+    public PartnerData getPartnerData(String partnerId, String password) throws ErrorException;
+
+    /**
+     * 
      * @param userId
      * @param partner
      * @param password
@@ -28,13 +43,7 @@ public interface IGetShop {
      */
     public void addUserToPartner(String userId, String partner, String password) throws ErrorException;
     
-    public List<GetshopStore> getStoresConnectedToMe() throws ErrorException;
-    
-    /**
-     * When an administrator has logged on, it can call on this call to connect its store to a partner.
-     */
-    public void connectStoreToPartner(String partner) throws ErrorException;
-    
+        
     /**
      * Need to figure out what address is connected to a specific uuid?
      * Remember this is query is quite slow. so cache the result.
@@ -52,10 +61,4 @@ public interface IGetShop {
      */
     public String findAddressForApplication(String uuid) throws ErrorException;
     
-    /**
-     * Get the partner id attached to this user.
-     * @return
-     * @throws ErrorException 
-     */
-    public String getPartnerId() throws ErrorException;
 }

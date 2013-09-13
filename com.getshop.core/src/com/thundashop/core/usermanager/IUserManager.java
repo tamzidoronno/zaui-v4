@@ -3,6 +3,7 @@ package com.thundashop.core.usermanager;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ public interface IUserManager {
      * @throws ErrorException 
      */
     public User createUser(User user) throws ErrorException;
+    
+    public List<GetshopStore> getStoresConnectedToMe() throws ErrorException;
     
     /**
      * Find all users with a given search criteria.

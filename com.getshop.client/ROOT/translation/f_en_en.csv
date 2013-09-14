@@ -1,23 +1,18 @@
 ###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
 cart;-;Cart
 no_image;-;No image added for this product
-price;-;Price
 select_shipment;-;Please select a shipment method.
 
 
 ###### fb076580_c7df_471c_b6b7_9540e4212441 (OpenSRS) ######
 accept_domain;-;Accept your domain name.
-address;-;Address
 all_fields;-;* All fields need to be filled in before you proceed.
 avail;-;is available.
 check_avail;-;Check availability
 city;-;City
 click_to_pay;-;Click to enter payment information
 country;-;Country
-domain_overview;-;Domain overview
 domain_registration;-;Register domain
-domain_transfer;-;Transfer existing domain
-enter_domain;-;Enter Domain Name
 find_domain_name;-;Find your desired domain name.
 firstname;-;First name
 lastname;-;Last name
@@ -77,10 +72,8 @@ delete_app;-;Delete application
 one_col;-;One column
 reorder_app;-;Reorder application
 security;-;Security
-settings;-;Settings
 themes;-;Themes
 three_col;-;Three column 
-title;-;Title
 two_col_left;-;Two column left main
 two_col_right;-;Two column right main
 
@@ -98,7 +91,6 @@ add_eyecandy;-;"Add some eyecandy to your webshop, by activating this. It will s
 design;-;Design
 hide_search;-;Hide search bar
 hide_search_desc;-;Disable or enable the search bar in the top middle area.
-postal;-;Postal code
 specify_postal_code;-;Specify your postal code.
 specify_title;-;Specify a title for your webshop.
 
@@ -115,25 +107,39 @@ add_other_apps;-;Add other applications
 add_product;-;Add single product
 add_products;-;Add products
 add_text;-;Add text content
+address;-;Address
 already_added;-;Already added
 click_delete;-;Click to delete
 click_order;-;Click to reorder
 close;-;Close
+delete;-;Delete
 disabled_option;-;Disabled option
+domain_overview;-;Domain overview
+domain_transfer;-;Transfer existing domain
 empty_left;-;"Empty left column, you can add applications to this area, choose between: ""LeftMenu"", ""Commercial"", ""ContentManager"", etc"
 empty_right;-;"Empty right column. A right column can be used as a AD area, add text using a content manager, a right menu, etc. Add an application using the administration menu."
+enter_address;-;Please enter your paypal address:
+enter_domain;-;Enter Domain Name
 enter_feedback;-;Enter your feedback in the field below
+hardlink;-;Hardlink
 invalid_delivery;-;Invalid delivery method
 invalid_input;-;Invalid input
 invalid_operation;-;Invalid operation
 only_one_per_page;-;Only one pr page
 option_not_available;-;this option is not available for this page
+postal;-;Postal code
+price;-;Price
 remove_app_warning;-;Are you sure you want remove this application? PS: This will remove all its content!
+rename;-;Rename
+save;-;Save
+save_settings;-;Save settings
 saved_to_db;-;The settings has been saved to the database
 select_delivery;-;You have to select a valid delivery method
 send_feedback;-;Send feedback to getshop.
+settings;-;Settings
 settings_saved;-;Settings Saved
 size_only_number;-;Size can only be numbers, no text allowed
+title;-;Title
 updated;-;Updated
 withdraw_error;-;Can not active this option without having withdraw of stock activated first
 
@@ -145,7 +151,6 @@ like_button;-;Like button
 like_button_desc;-;Enables or disables a like button to all your products
 profile_url;-;Profile url
 profile_url_desc;-;Your profile url example: https://www.facebook.com/zuck
-save_settings;-;Save settings
 
 
 ###### a93d64e4_b7fa_4d55_a804_ea664b037e72 (StockControl) ######
@@ -177,13 +182,9 @@ my_name;-;My name is:
 
 ###### 1051b4cf_6e9f_475d_aa12_fc83a89d2fd4 (TopMenu) ######
 addnew;-;[ Add new ]
-delete;-;Delete
 direct_where;-;Where you would you like to direct the user:
-hardlink;-;Hardlink
 hardlink_desc;-;Hardlinks are a way for you to manually specify where to go when the button is clicked.
 remove_hardlink;-;Remove hardlink
-rename;-;Rename
-save;-;Save
 
 
 ###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
@@ -240,10 +241,6 @@ edit_product;-;Edit product
 short_description;-;A short description
 stock_quantity;-;Stock Quantity
 taxes;-;Taxes
-
-
-###### c7736539_4523_4691_8453_a6aa1e784fc1 (PayPal) ######
-enter_address;-;Please enter your paypal address:
 
 
 ###### 8ad8243c_b9c1_48d4_96d5_7382fa2e24cd (Mail) ######

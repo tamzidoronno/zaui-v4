@@ -1,7 +1,3 @@
-###### 04259325_abfa_4311_ab81_b89c60893ce1 (Reporting) ######
-Name;-;
-
-
 ###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 ######
 By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;
 
@@ -11,14 +7,9 @@ Cart overview;-;
 Checkout;-;
 Click next to select shipping options;-;
 Confirm order;-;
-Next;-;
-Place order;-;
 Please select a shipment method.;-;
-Previous;-;
-Remove;-;
 Shipping price;-;
 Total;-;
-You do not have any products in your cart;-;
 
 
 ###### 2afb045b_fa01_4398_8582_33f212bb8db8 (Chat) ######
@@ -26,12 +17,6 @@ Chat with us;-;
 How can I help you today ?;-;
 Our local time is:;-;
 if we dont answer, please leave your email here and we will return your message asap.;-;
-
-
-###### fb076580_c7df_471c_b6b7_9540e4212441 (OpenSRS) ######
-email;-;
-org;-;
-phone;-;
 
 
 ###### 7a4f3750_895a_11e2_9e96_0800200c9a66 (GetShopTheme) ######
@@ -56,13 +41,6 @@ Username / Email;-;
 Search for a product;-;
 
 
-###### framework ######
-Price;-;
-This page is only available for adminsitrators;-;
-This page is only available for editors.;-;
-This page is only available for registered users.;-;
-
-
 ###### 2ebd7c69_eba3_4b7e_85c6_0e0bd274aad0 (SedoxCarList) ######
 0-100 km/h;-;
 Original (hp);-;
@@ -76,9 +54,45 @@ Stage 3 (nm):;-;
 Top speed;-;
 
 
+###### framework ######
+A red theme that can be used when selling exciting things;-;
+Add to cart;-;
+Address;-;
+Change password;-;
+City;-;
+Email;-;
+Featured Product;-;
+Free shipping;-;
+Full name;-;
+Name;-;
+New password;-;
+Next;-;
+Password;-;
+Payment;-;
+Phone;-;
+Place order;-;
+Please select department;-;
+Postal code;-;
+Previous;-;
+Price;-;
+Related products;-;
+Remove;-;
+Repeat password;-;
+Send message;-;
+This page is only available for adminsitrators;-;
+This page is only available for editors.;-;
+This page is only available for registered users.;-;
+Update;-;
+Weight;-;
+You do not have any products in your cart;-;
+email;-;
+location;-;
+org;-;
+phone;-;
+
+
 ###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
 Fixed price;-;
-Free shipping;-;
 Shipment settings;-;
 
 
@@ -87,33 +101,23 @@ Delete image;-;
 Les mer;-;
 
 
-###### d147f6a0_8f31_11e2_9e96_0800200c9a66 (TheRedTheme) ######
-A red theme that can be used when selling exciting things;-;
-
-
 ###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
 Company;-;
 My name is:;-;
-Send message;-;
 Send us mail;-;
 What's on your mind?;-;
 
 
 ###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######
-Address;-;
 All orders;-;
 Cancel order;-;
 Canceled;-;
-City;-;
 Completed;-;
 Customer information;-;
-Full name;-;
 Order;-;
 Order Created;-;
 Order date;-;
 Payment failed;-;
-Phone;-;
-Postal code;-;
 Product count;-;
 Shipment information;-;
 Shipping;-;
@@ -145,12 +149,10 @@ Tuesday;-;
 We host events at the following locations, click on the location to filter the calendar by location(s);-;
 Wednesday;-;
 description;-;
-location;-;
 
 
 ###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
 Date;-;
-Please select department;-;
 Sign up;-;
 change;-;
 course;-;
@@ -161,19 +163,12 @@ orgnummer;-;
 You are here:;-;
 
 
-###### de0b9b83_a41d_4fca_a2d4_3d3945cc8b9e (ColumnProducts) ######
-Related products;-;
-
-
 ###### dcd22afc_79ba_4463_bb5c_38925468ae26 (ProductManager) ######
-Add to cart;-;
 Buy;-;
 Click here to edit the text.;-;
 Details;-;
 Extended Description;-;
-Featured Product;-;
 Other images;-;
-Weight;-;
 in stock;-;
 shipping;-;
 
@@ -187,22 +182,15 @@ You are being transferred to paypal, please wait...;-;
 Application;-;
 Birth Date;-;
 Cell phone;-;
-Change password;-;
-Email;-;
 End date;-;
 Group;-;
-New password;-;
 Number of instances added;-;
 Old password;-;
 Organisation name;-;
-Password;-;
-Payment;-;
 Price and plans;-;
 Register;-;
-Repeat password;-;
 Set new password;-;
 Start date;-;
-Update;-;
 Your personal information;-;
 
 

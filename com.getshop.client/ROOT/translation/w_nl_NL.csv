@@ -1,20 +1,11 @@
-###### 04259325_abfa_4311_ab81_b89c60893ce1 (Reporting) ######
-Name;-;Naam
-
-
 ###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
 Cart overview;-;Overzicht winkelwagen
 Checkout;-;Afrekenen
 Click next to select shipping options;-;Klik volgende om een verzendmethode te kiezen
 Confirm order;-;Bestelling bevestigen
-Next;-;Volgende
-Place order;-;Bestelling plaatsen
 Please select a shipment method.;-;Selecteer aub verzendmethode
-Previous;-;Vorige
-Remove;-;Verwijderen
 Shipping price;-;Verzendkosten
 Total;-;Totaal
-You do not have any products in your cart;-;U heeft nog geen producten in de winkelwagen
 
 
 ###### 2afb045b_fa01_4398_8582_33f212bb8db8 (Chat) ######
@@ -46,10 +37,41 @@ Search for a product;-;Product zoeken
 
 
 ###### framework ######
+A red theme that can be used when selling exciting things;-;Een rode layout voor verkoop van interessante producten
+Add to cart;-;Aan winkelwagen toevoegen
+Address;-;Addres
+Change password;-;Wachtwoord aanpassen
+City;-;Woonplaats
+Email;-;Email
+Featured Product;-;Product in de kijker
+Free shipping;-;Gratis verzending
+Full name;-;Volledige naam
+Name;-;Naam
+New password;-;Nieuw wachtwoord
+Next;-;Volgende
+Password;-;Wachtwoord
+Payment;-;Betaling
+Phone;-;Telefoon
+Place order;-;Bestelling plaatsen
+Please select department;-;Gelieve een afdeling te kiezen
+Postal code;-;Postcode
+Previous;-;Vorige
 Price;-;Prijs
+Related products;-;Gerelateerde producten
+Remove;-;Verwijderen
+Repeat password;-;Wachtwoord nogmaals
+Send message;-;Bericht versturen
 This page is only available for adminsitrators;-;Deze pagina is alleen voor beheerders toegangkelijk
 This page is only available for editors.;-;Deze pagina is alleen voor redacteuren toegangkelijk
 This page is only available for registered users.;-;Deze pagina is alleen voor geregistreerde gebruikers toegangkelijk
+Update;-;Updaten
+Weight;-;Gewicht
+You do not have any products in your cart;-;U heeft nog geen producten in de winkelwagen
+
+
+###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
+Fixed price;-;Vaste prijs
+Shipment settings;-;Verzendingsmogelijkheden
 
 
 ###### 32c15c30_d665_11e2_8b8b_0800200c9a66 (RealEstate) ######
@@ -57,27 +79,15 @@ Delete image;-;Verwijder afbeelding
 Les mer;-;?
 
 
-###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
-Fixed price;-;Vaste prijs
-Free shipping;-;Gratis verzending
-Shipment settings;-;Verzendingsmogelijkheden
-
-
-###### d147f6a0_8f31_11e2_9e96_0800200c9a66 (TheRedTheme) ######
-A red theme that can be used when selling exciting things;-;Een rode layout voor verkoop van interessante producten
-
-
 ###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
 Company;-;Bedrijf
 My name is:;-;Mijn naam is:
-Send message;-;Bericht versturen
 Send us mail;-;Stuur ons een email
 What's on your mind?;-;Waar denk je aan?
 
 
 ###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
 Date;-;Datum
-Please select department;-;Gelieve een afdeling te kiezen
 Sign up;-;Registreer
 
 
@@ -105,20 +115,15 @@ Wednesday;-;Woensdag
 
 
 ###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######
-Address;-;Addres
 All orders;-;Alle bestellingen
 Cancel order;-;Bestelling afbreken
 Canceled;-;Afgebroken
-City;-;Woonplaats
 Completed;-;Afgerond
 Customer information;-;Klanteninformatie
-Full name;-;Volledige naam
 Order;-;Bestelling
 Order Created;-;Bestelling aangemaakt
 Order date;-;Besteldatum
 Payment failed;-;Betaling niet gelukt
-Phone;-;Telefoon
-Postal code;-;Postcode
 Product count;-;Aantal producten
 Shipment information;-;Verzendinformatie
 Shipping;-;Verzending	 
@@ -133,18 +138,11 @@ You are here:;-;U bent hier:
 
 
 ###### dcd22afc_79ba_4463_bb5c_38925468ae26 (ProductManager) ######
-Add to cart;-;Aan winkelwagen toevoegen
 Click here to edit the text.;-;Klik hier om de tekst te bewerken
 Details;-;Details
 Extended Description;-;Uitgebreide beschrijving
-Featured Product;-;Product in de kijker
 Other images;-;Andere afbeeldingen
-Weight;-;Gewicht
 in stock;-;op voorraad
-
-
-###### de0b9b83_a41d_4fca_a2d4_3d3945cc8b9e (ColumnProducts) ######
-Related products;-;Gerelateerde producten
 
 
 ###### c7736539_4523_4691_8453_a6aa1e784fc1 (PayPal) ######
@@ -156,22 +154,15 @@ You are being transferred to paypal, please wait...;-;Je wordt doorgestuurd naar
 Application;-;Applicatie 
 Birth Date;-;Geboortedatum
 Cell phone;-;Mobiel
-Change password;-;Wachtwoord aanpassen
-Email;-;Email
 End date;-;Einddatum
 Group;-;Groep
-New password;-;Nieuw wachtwoord
 Number of instances added;-;Aantal zaken toegevoegd
 Old password;-;oude wachtwoord
 Organisation name;-;Bedrijfsnaam
-Password;-;Wachtwoord
-Payment;-;Betaling
 Price and plans;-;Prijs en pakketten
 Register;-;Aanmelden
-Repeat password;-;Wachtwoord nogmaals
 Set new password;-;Nieuw wachtwoord vastleggen
 Start date;-;Start datum
-Update;-;Updaten
 Your personal information;-;Uw persoonlijke informatie
 
 

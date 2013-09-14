@@ -1,7 +1,3 @@
-###### 04259325_abfa_4311_ab81_b89c60893ce1 (Reporting) ######
-Name;-;
-
-
 ###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 ######
 By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;
 
@@ -17,12 +13,6 @@ Total;-;
 ###### 2afb045b_fa01_4398_8582_33f212bb8db8 (Chat) ######
 Our local time is:;-;
 if we dont answer, please leave your email here and we will return your message asap.;-;
-
-
-###### fb076580_c7df_471c_b6b7_9540e4212441 (OpenSRS) ######
-email;-;
-org;-;
-phone;-;
 
 
 ###### 7a4f3750_895a_11e2_9e96_0800200c9a66 (GetShopTheme) ######
@@ -42,18 +32,27 @@ Stage 3 (nm):;-;
 Top speed;-;
 
 
-###### 32c15c30_d665_11e2_8b8b_0800200c9a66 (RealEstate) ######
-Delete image;-;
-Les mer;-;
+###### framework ######
+A red theme that can be used when selling exciting things;-;
+Featured Product;-;
+Free shipping;-;
+Name;-;
+Payment;-;
+Please select department;-;
+Weight;-;
+email;-;
+location;-;
+org;-;
+phone;-;
 
 
 ###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
-Free shipping;-;
 Shipment settings;-;
 
 
-###### d147f6a0_8f31_11e2_9e96_0800200c9a66 (TheRedTheme) ######
-A red theme that can be used when selling exciting things;-;
+###### 32c15c30_d665_11e2_8b8b_0800200c9a66 (RealEstate) ######
+Delete image;-;
+Les mer;-;
 
 
 ###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
@@ -64,7 +63,6 @@ What's on your mind?;-;
 
 ###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
 Date;-;
-Please select department;-;
 Sign up;-;
 change;-;
 course;-;
@@ -93,7 +91,6 @@ Tuesday;-;
 We host events at the following locations, click on the location to filter the calendar by location(s);-;
 Wednesday;-;
 description;-;
-location;-;
 
 
 ###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######
@@ -105,9 +102,7 @@ Status;-;
 Buy;-;
 Click here to edit the text.;-;
 Details;-;
-Featured Product;-;
 Other images;-;
-Weight;-;
 shipping;-;
 
 
@@ -121,7 +116,6 @@ Application;-;
 End date;-;
 Group;-;
 Number of instances added;-;
-Payment;-;
 Price and plans;-;
 Start date;-;
 

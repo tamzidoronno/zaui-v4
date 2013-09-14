@@ -7,7 +7,6 @@ when;-;
 ###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
 cart;-;
 no_image;-;
-price;-;
 select_shipment;-;
 
 
@@ -23,17 +22,13 @@ Your merchant key, this id is something that sisow is providing you.;-;
 
 ###### fb076580_c7df_471c_b6b7_9540e4212441 (OpenSRS) ######
 accept_domain;-;
-address;-;
 all_fields;-;
 avail;-;
 check_avail;-;
 city;-;
 click_to_pay;-;
 country;-;
-domain_overview;-;
 domain_registration;-;
-domain_transfer;-;
-enter_domain;-;
 find_domain_name;-;
 firstname;-;
 lastname;-;
@@ -99,11 +94,9 @@ help;-;
 one_col;-;
 reorder_app;-;
 security;-;
-settings;-;
 store;-;
 themes;-;
 three_col;-;
-title;-;
 two_col_left;-;
 two_col_right;-;
 
@@ -126,7 +119,6 @@ add_eyecandy;-;
 design;-;
 hide_search;-;
 hide_search_desc;-;
-postal;-;
 specify_postal_code;-;
 specify_title;-;
 
@@ -137,9 +129,12 @@ no_products_found;-;
 
 ###### framework ######
 Cancel;-;
+Edit product;-;
 More color options;-;
+New product / untitled product;-;
 No advanced color options for this design;-;
 No background selection available for this design.;-;
+No products has been added to this list yet, please add one from the list on the right hand side.;-;
 There is one layout defined for each page, a layout can have multiple of rows and multiple of columns.;-;
 To change a layout for the current page, please select one from the list below.;-;
 Warning! this store will automatically be reset to original state each hour;-;
@@ -151,26 +146,40 @@ add_other_apps;-;
 add_product;-;
 add_products;-;
 add_text;-;
+address;-;
 adv;-;
 already_added;-;
 click_delete;-;
 click_order;-;
 close;-;
+delete;-;
 disabled_option;-;
+domain_overview;-;
+domain_transfer;-;
 empty_left;-;
 empty_right;-;
+enter_address;-;
+enter_domain;-;
 enter_feedback;-;
+hardlink;-;
 invalid_delivery;-;
 invalid_input;-;
 invalid_operation;-;
 only_one_per_page;-;
 option_not_available;-;
+postal;-;
+price;-;
 remove_app_warning;-;
+rename;-;
+save;-;
+save_settings;-;
 saved_to_db;-;
 select_delivery;-;
 send_feedback;-;
+settings;-;
 settings_saved;-;
 size_only_number;-;
+title;-;
 updated;-;
 withdraw_error;-;
 
@@ -204,7 +213,6 @@ like_button;-;
 like_button_desc;-;
 profile_url;-;
 profile_url_desc;-;
-save_settings;-;
 
 
 ###### a93d64e4_b7fa_4d55_a804_ea664b037e72 (StockControl) ######
@@ -236,13 +244,9 @@ my_name;-;
 
 ###### 1051b4cf_6e9f_475d_aa12_fc83a89d2fd4 (TopMenu) ######
 addnew;-;
-delete;-;
 direct_where;-;
-hardlink;-;
 hardlink_desc;-;
 remove_hardlink;-;
-rename;-;
-save;-;
 
 
 ###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
@@ -283,10 +287,7 @@ upload_image;-;
 Add to list;-;
 All products available;-;
 Create product;-;
-Edit product;-;
 My product list;-;
-New product / untitled product;-;
-No products has been added to this list yet, please add one from the list on the right hand side.;-;
 Products already added to your list;-;
 Remove from list;-;
 Save product list;-;
@@ -342,7 +343,6 @@ taxes;-;
 
 
 ###### c7736539_4523_4691_8453_a6aa1e784fc1 (PayPal) ######
-enter_address;-;
 paypal;-;
 
 

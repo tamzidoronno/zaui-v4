@@ -1,13 +1,4 @@
-###### 04259325_abfa_4311_ab81_b89c60893ce1 (Reporting) ######
-Reporting;-;Raportointi
-
-
-###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
-price;-;Hinta
-
-
 ###### fb076580_c7df_471c_b6b7_9540e4212441 (OpenSRS) ######
-address;-;Osoite
 city;-;Postitoimipaikka
 firstname;-;Etunimi
 lastname;-;Sukunimi
@@ -27,10 +18,6 @@ all_users;-;Kaikki käyttäjät
 create_user;-;Luo uusi käyttäjä
 edit_user;-;,,
 send_message;-;Lähetä viesti
-
-
-###### 32c15c30_d665_11e2_8b8b_0800200c9a66 (RealEstate) ######
-Change image;-;Muokkaa kuvaa
 
 
 ###### 6c245631_effb_4fe2_abf7_f44c57cb6c5b (Account) ######
@@ -53,11 +40,9 @@ delete_app;-;Poistaa sovellus
 one_col;-;Yksi sarake
 reorder_app;-;,,
 security;-;Turvallisuus
-settings;-;Asetukset
 store;-;Kauppa
 themes;-;Teemat
 three_col;-;Kolme saraketta
-title;-;Otsikko
 two_col_left;-;Kaksi saraketta pääohjain vasemalla
 two_col_right;-;Kaksi saraketta pääohjain oikealla
 
@@ -75,30 +60,37 @@ remove_image;-;Poista kuva
 unlink_menu;-;Poista sis,??n linkki
 
 
-###### d755efca_9e02_4e88_92c2_37a3413f3f41 (Settings) ######
-postal;-;Postinumero
-
-
 ###### 626ff5c4_60d4_4faf_ac2e_d0f21ffa9e87 (Search) ######
 no_products_found;-;Etsim3i tuotetta ei l??ytynyt
 
 
 ###### framework ######
+Change image;-;Muokkaa kuvaa
+Rename;-;Nimet5udelleen
+Reporting;-;Raportointi
 Save;-;Tallenna
 add_app_error;-;,,
 add_app_free;-;Lisää sovellus (maksuton)
 add_products;-;Lisää tuotteita
+address;-;Osoite
 already_added;-;On jo lis4y
 click_delete;-;Poistamiseksi klikkaa
 click_order;-;,,
 close;-;Sulje
+delete;-;Poista
 invalid_delivery;-;,,
 invalid_input;-;,,
 invalid_operation;-;,,
 only_one_per_page;-;,,
+postal;-;Postinumero
+price;-;Hinta
 remove_app_warning;-;,,
+rename;-;Nimet5udelleen
+save;-;Tallenna
 select_delivery;-;,,
+settings;-;Asetukset
 size_only_number;-;,,
+title;-;Otsikko
 updated;-;Osta
 withdraw_error;-;,,
 
@@ -124,12 +116,9 @@ my_name;-;Minun nimi on:
 
 ###### 1051b4cf_6e9f_475d_aa12_fc83a89d2fd4 (TopMenu) ######
 addnew;-;[ Lisää Uusia ]
-delete;-;Poista
 direct_where;-;,,
 hardlink_desc;-;,,
 remove_hardlink;-;,,
-rename;-;Nimet5udelleen
-save;-;Tallenna
 
 
 ###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
@@ -171,7 +160,6 @@ create_news_desc;-;Luo uutiksien kohta kirjoittamalla teksti alla tekstikentt.
 
 
 ###### dcd22afc_79ba_4463_bb5c_38925468ae26 (ProductManager) ######
-Rename;-;Nimet5udelleen
 detailed_desc;-;Yksityiskohtaisempi kuvaus
 edit_product;-;Muoka tuoteta
 short_description;-;Lyhyt kuvaus

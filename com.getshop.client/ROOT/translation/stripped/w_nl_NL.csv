@@ -6,12 +6,6 @@ By using sisow as your payment provider, you will simply offer your customers to
 Our local time is:;-;
 
 
-###### fb076580_c7df_471c_b6b7_9540e4212441 (OpenSRS) ######
-email;-;
-org;-;
-phone;-;
-
-
 ###### 2ebd7c69_eba3_4b7e_85c6_0e0bd274aad0 (SedoxCarList) ######
 0-100 km/h;-;
 Original (hp);-;
@@ -25,6 +19,13 @@ Stage 3 (nm):;-;
 Top speed;-;
 
 
+###### framework ######
+email;-;
+location;-;
+org;-;
+phone;-;
+
+
 ###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
 change;-;
 course;-;
@@ -33,7 +34,6 @@ orgnummer;-;
 
 ###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
 description;-;
-location;-;
 
 
 ###### dcd22afc_79ba_4463_bb5c_38925468ae26 (ProductManager) ######

@@ -8,8 +8,6 @@ All page views listed;-;Lijst van pageviews
 Anonymous user;-;Anonieme gebruiker
 Click on the icon in the top admin menu under category More to gain access to your reporting page.;-;Klik op het icon in het top beheer menu onder ‘Meer’ voor je report pagina te bekijken.
 Connected;-;Aangesloten
-Created when;-;Aangemaakt op
-Email / username;-;Email / gebruikersnaam
 First Page;-;Eerste pagina
 History;-;Geschiedenis
 Keep track of your products, orders, pages, etc with this application. Generate reports on a hourly, daily, weekly and monthly basis.;-;Hou je producten, bestellingen, pagina’s,… bij met deze applicatie. Maak rapporten per uur, dagelijk, wekelijks en maandelijks.
@@ -25,16 +23,11 @@ Number of views;-;Aantal views:
 Orders added;-;Bestellingen toegevoegd
 Orders created summary;-;Aangemaakte bestellingen samenvatting
 Overall;-;Algemeen
-Page id;-;Pagina ID
-Page name;-;Pagina naam
 Page view summary;-;Pagina bezoekers overzicht
 Page views;-;Page views
-Product name;-;Product naam
 Product views;-;Product views
 Push the create application button to get you started.;-;Klik ‘maak applicatie aan’ om te starten.
-Reporting;-;Rapport
 Set date;-;Stel datum in
-Summary;-;Samenvatting
 Total orders registered;-;Totaal van geregistreerde bestellingen
 Total page views;-;Totaal pageviews
 Total product views;-;Totaal product views
@@ -42,7 +35,6 @@ Total users created;-;Totaal users aangemaakt
 Total views;-;Totaal views
 Username;-;Gebruikersnaam
 Users created;-;User aangemaakt
-Users logged on;-;Users ingelogd
 Viewed when;-;Wanneer bekeken?
 When;-;Wanneer
 unique visitors found in total.;-;Unieke bezoekers in total.
@@ -111,7 +103,6 @@ You currently have the following users added to your system;-;Je hebt volgende g
 
 
 ###### 32c15c30_d665_11e2_8b8b_0800200c9a66 (RealEstate) ######
-Change image;-;Verander afbeelding
 Need to display your realestates? well, here is the application that allows you to do that, simply add the application to your page and start editing your realestate;-;Wil je huizen verkopen? Dit is een applicatie om huizen te verkopen. Voeg ze toe aan je pagina en plaats alle info er op.
 Real estate;-;Immo 
 
@@ -133,10 +124,6 @@ click to upload a logo;-;Klik om logo te uploaden
 Updating;-;Bezig aan het updaten
 
 
-###### b9cc5940_edef_11e2_91e2_0800200c9a66 (AutoAkademietTheme) ######
-this is restricted to owner only;-;Enkel voor de beheerder toegankelijk
-
-
 ###### 6c245631_effb_4fe2_abf7_f44c57cb6c5b (Account) ######
 Admin functions;-;Beheer  functies
 VIP user - $0;-;VIP gebruiker – 0€
@@ -147,12 +134,9 @@ dibs payment services allows you to start charging with visa / mastercard / and 
 
 
 ###### bf35979f_6965_4fec_9cc4_c42afd3efdd7 (MainMenu) ######
-Domain name configuration;-;Domeinnaam configuratie
 Layout;-;Layout
 Manage applications;-;Beheer applicaties
-More...;-;Meer...
 Page Settings;-;Pagina settings
-Themes;-;Layouts
 
 
 ###### e9d04f19_6eaa_4a17_9b7b_aa387dbaed92 (CategoryLister) ######
@@ -176,10 +160,6 @@ Store currency;-;Munteenheid webwinkel
 You do not want to display the cart.. sure enable this then.;-;Als je de winkelwagen niet wil laten vertonen, zet deze aan.
 
 
-###### ee96fe89_e09d_4f7b_921a_3272462e9b7e (Airgram) ######
-Specify an airgram account.;-;Stel een airgram account in
-
-
 ###### 626ff5c4_60d4_4faf_ac2e_d0f21ffa9e87 (Search) ######
 Search;-;Zoeken
 
@@ -192,6 +172,7 @@ This footer application contains the footer information for your webshop, all me
 
 
 ###### framework ######
+Add;-;Toevoegen
 Add to your page;-;Voeg toe aan je pagina
 All fields need to be filled before you continue;-;Alle velden moet ingevuld zijn alvorens verder te gaan
 Already created instances of this app;-;Bestaande zaken van deze app
@@ -203,24 +184,44 @@ Button color;-;Knop kleur
 Button text color;-;Knop tekst kleur
 By clicking the button above you will be able to add an application to this area.;-;Door de knop hierboven aan te klikken, kan je een applicatie in deze zone toevoegen.
 By turning on this feature you will set this application to be visible on all pages.;-;Als je deze functie aanzet, zal deze zichtbaar zijn op alle pagina’s.
+Change image;-;Verander afbeelding
 Click to add application;-;Klik om een applicatie toe  te voegen
 Close;-;Sluiter
 Colors;-;Kleuren
+Created when;-;Aangemaakt op
+Delete;-;Verwijderen
 Delete selected application;-;Verwijder geselecteerde applicatie
+Domain name configuration;-;Domeinnaam configuratie
+Email / username;-;Email / gebruikersnaam
+Enter a menu name;-;Typ een menu naam
 Free;-;Gratis
 Get Started;-;Start
 Import an existing application.;-;Importeer een bestaande applicatie
 Import to area;-;Importeer naar veld
 Just click the button below;-;Klik de knop onderaan
 Manually select a color;-;Selecteer een kleur
+More...;-;Meer...
+No;-;Neen
 No colors available for this design.;-;Geen kleuren beschikbaar voor deze layout
 Page description;-;Pagina omschrijving
+Page id;-;Pagina ID
+Page name;-;Pagina naam
 Please specify a name;-;Geef een naam op
+Product name;-;Product naam
+Rename;-;Hernoemen
+Reporting;-;Rapport
 Save;-;Opslaan
+Save changes;-;Aanpassingen opslaan
 Set application sticky;-;Maak applicatie sticky
 Some settings are important for google and other search engines, and this is where you can configure them.;-;Sommige settings zijn belangrijk voor Google en andere zoekmachines. Hier kan je ze instellen.
+Specify an airgram account.;-;Stel een airgram account in
+Summary;-;Samenvatting
+Themes;-;Layouts
 This is where you can configure your current page, special settings like search engine optimization for the current page you are browser;-;Pas je huidige pagina aan met SEO tekst.
+Users logged on;-;Users ingelogd
+Yes;-;Ja
 You are not logged on, please log on.;-;Je bent niet ingelogd, gelieve in te loggen.
+this is restricted to owner only;-;Enkel voor de beheerder toegankelijk
 
 
 ###### ee1f3649_cfd8_41d5_aa5b_682216f376b6 (Translation) ######
@@ -271,7 +272,6 @@ A topmenu enables you to display top menu entries;-;Een hoofdmenu maakt het moge
 Add new;-;Voeg nieuw toe
 Administrators only;-;Beheerder  
 Editors and adminstrators only;-;Enkel voor editors en beheerders
-Enter a menu name;-;Typ een menu naam
 Everyone;-;Iedereen
 Everyone will be able to access and see this menu entry.;-;Iedereen heeft toegang tot dit menu
 Only logged on administrators or editors will be able to see this menu entry.;-;Enkel ingelogde administrators kunnen deze menu input zien
@@ -318,7 +318,6 @@ Show location filter left for calendar;-;Toon locatie filter links van kalender
 A description to the image;-;Een beschrijving voor de afbeelding.
 Delete this image;-;Verwijder deze afbeelding
 Gallery;-;Gallery
-Save changes;-;Aanpassingen opslaan
 Start adding pictures to your webshop, create this application and start uploading images.;-;Voeg afbeeldingen toe aan je webshop. Voeg deze applicatie toe en start het toevoegen van afbeeldingen.
 This gallery gives you the ability to display images into a gallery, and even connect the images to products, categorise them by combining a category displayer, or by using a left menu.;-;Je kan afbeeldingen in een gallerij laten vertonen, en de afbeeldingen linken met producten in de webwinkel. Maak en category lijst aan, laat deze op de pagina zelf vertonen of in een linker menu
 Title for the image;-;Naam van de afbeelding
@@ -342,7 +341,6 @@ Google analytics is by far the best reporting tool for webadministrator, by addi
 A news application makes you push news to your WebShop. And share to subscribers and push to facebook if the Facebook application has been added.;-;Een nieuws applicatie om nieuws op je webwinkel te plaatsen. Share het nieuws met nieuwsbrief leden of deel het via facebook, als je de Facebook app hebt toegevoegd.
 Confirm delete;-;Bevestig verwijderen
 Create news;-;Maak nieuws aan
-Delete;-;Verwijderen
 Enter email;-;Typ je email
 Get started, add this application and start adding news and updates to your page.;-;Voeg deze applicatie toe en voeg nieuws en updates toe aan je pagina.
 News;-;Nieuws
@@ -357,7 +355,6 @@ When you have added this application, it will automatically start relating produ
 
 ###### dcd22afc_79ba_4463_bb5c_38925468ae26 (ProductManager) ######
 About this attribute group:;-;Over deze attributen groep:
-Add;-;Toevoegen
 Add a product to a page, add description, price, title, and other attributes. And you are ready to start selling the product. Combine it with a left menu, a category list to create a flexible and powerful webshop.;-;Voeg een product, een omschrijving, prijs en titel toe aan een pagina, en je bent klaar om een product te verkopen. Combineer het met een menu link, een categorie lijst om een Flexibele en professionele webwinkel te bekomen.
 Advanced Options;-;Geavanceerde opties
 Attribute administration;-;Beheer attributen
@@ -368,16 +365,13 @@ Delete group;-;Verwijder groep
 Edit;-;Bewerk
 Hide shipping price from this product?;-;Toon geen verzendkosten bij dit product?
 Images;-;Afbeeldingen.
-No;-;Neen
 Product Information;-;Product informatie
 Product Manager;-;Product beheerder
-Rename;-;Hernoemen
 Select a group in the left hand area;-;Selecteer een groep in de linker zone
 Select a group:;-;Selecteer een groep:
 Should this product listed as a featured product?;-;Dit product ‘in de kijker’ plaatsen?
 This product has been deleted;-;Dit product is verwijderd
 Title;-;Titel
-Yes;-;Ja
 You have not yet added any attributes to this group, they will automatically be added when you starting to add attributes to a product.;-;Je hebt nog geen attributen toegevoegd aan deze groep. Dit zal automatisch gebeuren als je attributen toevoegd aan een product.
 
 

@@ -1,11 +1,6 @@
 ###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
 Confirm order;-;Vahvista tilaus
-Next;-;Seuraava
-Place order;-;Laita tilaus
 Please select a shipment method.;-;Olkaa hyvä ja valitsekaa toimitustapa
-Previous;-;Edellinen
-Remove;-;Poista
-You do not have any products in your cart;-;Ostoskorisi on tyhjä
 
 
 ###### 2afb045b_fa01_4398_8582_33f212bb8db8 (Chat) ######
@@ -32,10 +27,29 @@ Search for a product;-;Etsi tuote
 
 
 ###### framework ######
+Add to cart;-;Lisää ostoskoriin
+Address;-;Osoite
+Change password;-;Vaihta salasanaa
+City;-;Kaupunki
+Email;-;Sähköposti
+Full name;-;Koko nimi
+New password;-;Uusi salasana
+Next;-;Seuraava
+Password;-;Salasana
+Phone;-;Puhelin
+Place order;-;Laita tilaus
+Postal code;-;Postinumero
+Previous;-;Edellinen
 Price;-;Hinta
+Related products;-;Vastaavat tuotteet
+Remove;-;Poista
+Repeat password;-;Toista salasana
+Send message;-;Lähetä viesti
 This page is only available for adminsitrators;-;Tämä sivu on saattavilla ainoastaan pääkäyttäjälle.
 This page is only available for editors.;-;Tämä sivu on saattavilla ainoastaan toimittajalle
 This page is only available for registered users.;-;Tämä sivu on saattavilla ainoastaan rekisteröityille käyttäjille
+Update;-;Päivitys
+You do not have any products in your cart;-;Ostoskorisi on tyhjä
 
 
 ###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
@@ -44,24 +58,18 @@ Fixed price;-;Kiinteä hinta
 
 ###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
 My name is:;-;Minun nimeni on:
-Send message;-;Lähetä viesti
 
 
 ###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######
-Address;-;Osoite
 All orders;-;Kaikki tilaukset
 Cancel order;-;Peruuta tilaus
 Canceled;-;Peruttu
-City;-;Kaupunki
 Completed;-;Valmis
 Customer information;-;Asiakastiedot
-Full name;-;Koko nimi
 Order;-;Tilaus
 Order Created;-;Tilaus luotu
 Order date;-;Tilauksen päiväys
 Payment failed;-;Maksu epäonnistui
-Phone;-;Puhelin
-Postal code;-;Postinumero
 Shipment information;-;Toimitusehdot
 Shipping;-;Toimitus
 Taxes;-;Verot
@@ -74,28 +82,17 @@ You are here:;-;Olet tässä:
 
 
 ###### dcd22afc_79ba_4463_bb5c_38925468ae26 (ProductManager) ######
-Add to cart;-;Lisää ostoskoriin
 Extended Description;-;Laajennettu kuvaus
 in stock;-;Varastossa
-
-
-###### de0b9b83_a41d_4fca_a2d4_3d3945cc8b9e (ColumnProducts) ######
-Related products;-;Vastaavat tuotteet
 
 
 ###### 6c245631_effb_4fe2_abf7_f44c57cb6c5b (Account) ######
 Birth Date;-;Syntymäaika
 Cell phone;-;Matkapuhelin
-Change password;-;Vaihta salasanaa
-Email;-;Sähköposti
-New password;-;Uusi salasana
 Old password;-;Vanha salasana
 Organisation name;-;Yrityksen nimi
-Password;-;Salasana
 Register;-;Rekisteröidy
-Repeat password;-;Toista salasana
 Set new password;-;Luo uusi salasana
-Update;-;Päivitys
 Your personal information;-;Sinun henkilökohtaiset tiedot
 
 

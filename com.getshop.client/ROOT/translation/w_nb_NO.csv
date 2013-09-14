@@ -1,7 +1,3 @@
-###### 04259325_abfa_4311_ab81_b89c60893ce1 (Reporting) ######
-Name;-;Navn
-
-
 ###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 ######
 By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;Ved å bruke sisow som din betnalings leverandør vil du få muligheten til å selge ved hjelp av iDeal/Visa og mye mer. For mer informasjon: https://www.sisow.nl
 
@@ -11,25 +7,14 @@ Cart overview;-;Handlekurv oversikt
 Checkout;-;Utsjekking
 Click next to select shipping options;-;Trykk neste for å velge en betalings metode
 Confirm order;-;Bekreft ordre
-Next;-; Neste
-Place order;-;Legg inn ordre
 Please select a shipment method.;-;Vennligst velg en forendelsemetode
-Previous;-;Forrige
-Remove;-;Fjern
 Total;-;Total
-You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
 
 
 ###### 2afb045b_fa01_4398_8582_33f212bb8db8 (Chat) ######
 Chat with us;-;Chat med oss
 How can I help you today ?;-;Hva kan jeg hjelpe deg med?
 if we dont answer, please leave your email here and we will return your message asap.;-;Hvis vi ikke svarer, legg igjen en din epost, og vi vil kontakte deg så snart som mulig.
-
-
-###### fb076580_c7df_471c_b6b7_9540e4212441 (OpenSRS) ######
-email;-;E-post
-org;-;Firma
-phone;-;Mob.Tlf.
 
 
 ###### df435931_9364_4b6a_b4b2_951c90cc0d70 (Login) ######
@@ -51,37 +36,60 @@ Search for a product;-;Søk etter et produkt
 
 
 ###### framework ######
+A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
+Add to cart;-;Legg i handlekurv
+Address;-;Adresse
+Change password;-;Endre passord
+City;-;By
+Email;-;Epost
+Featured Product;-;Fremhevet produkt
+Free shipping;-;Gratis frakt
+Full name;-;Hele navnet
+Name;-;Navn
+New password;-;Nytt passord
+Next;-; Neste
+Password;-;Passord
+Payment;-;Betaling
+Phone;-;Telefon
+Place order;-;Legg inn ordre
+Please select department;-;Velg en avdeling
+Postal code;-;Postnummer
+Previous;-;Forrige
 Price;-;Pris
+Related products;-;Relaterte produkter
+Remove;-;Fjern
+Repeat password;-;Gjenta passord
+Send message;-;Send melding
 This page is only available for adminsitrators;-;Denne siden er kun tilgjengelig for adminstratorer.
 This page is only available for editors.;-;Denne siden er kun tilgjengelig for editorer.
 This page is only available for registered users.;-;Denne siden er kun tilgjengelig for registrerte brukere
+Update;-;Oppdater
+Weight;-;Vekt
+You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
+email;-;E-post
+location;-;Sted
+org;-;Firma
+phone;-;Mob.Tlf.
+
+
+###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
+Fixed price;-;Fikset pris
+Shipment settings;-;Betaling instillinger
 
 
 ###### 32c15c30_d665_11e2_8b8b_0800200c9a66 (RealEstate) ######
 Delete image;-;Slett bilde
 
 
-###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
-Fixed price;-;Fikset pris
-Free shipping;-;Gratis frakt
-Shipment settings;-;Betaling instillinger
-
-
-###### d147f6a0_8f31_11e2_9e96_0800200c9a66 (TheRedTheme) ######
-A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
-
-
 ###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
 Company;-;Selskap
 My name is:;-;Mitt navn er
-Send message;-;Send melding
 Send us mail;-;Send oss en epost
 What's on your mind?;-;Hva ønsker du å formidle?
 
 
 ###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
 Date;-;Dato
-Please select department;-;Velg en avdeling
 Sign up;-;Logg in
 orgnummer;-;Org.nr.
 
@@ -108,24 +116,18 @@ Tuesday;-;Tirsdag
 We host events at the following locations, click on the location to filter the calendar by location(s);-;We har events på følgende steder, trykk på stedet for å filtere kalenderen på stedet(ene)
 Wednesday;-;Onsdag
 description;-;Beskrivelse
-location;-;Sted
 
 
 ###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######
-Address;-;Adresse
 All orders;-;Alle bestilinger
 Cancel order;-;Kanselert ordre
 Canceled;-;Kanselert
-City;-;By
 Completed;-;Gjennomført
 Customer information;-;Kunde detaljer
-Full name;-;Hele navnet
 Order;-;Ordre
 Order Created;-; Ordre opprettet
 Order date;-;Bestillings dato
 Payment failed;-;Betaling feilet
-Phone;-;Telefon
-Postal code;-;Postnummer
 Product count;-;Antall produkter
 Shipment information;-;Forsendelse informasjon
 Shipping;-;Utsendelse
@@ -140,20 +142,13 @@ You are here:;-;Du er her:
 
 
 ###### dcd22afc_79ba_4463_bb5c_38925468ae26 (ProductManager) ######
-Add to cart;-;Legg i handlekurv
 Buy;-;Kjøp
 Click here to edit the text.;-;Trykk her for å editere tekst.
 Details;-;Detaljer
 Extended Description;-;Utvidet beskrivelse
-Featured Product;-;Fremhevet produkt
 Other images;-;Andre bilder
-Weight;-;Vekt
 in stock;-;på lager
 shipping;-;frakt
-
-
-###### de0b9b83_a41d_4fca_a2d4_3d3945cc8b9e (ColumnProducts) ######
-Related products;-;Relaterte produkter
 
 
 ###### c7736539_4523_4691_8453_a6aa1e784fc1 (PayPal) ######
@@ -165,22 +160,15 @@ You are being transferred to paypal, please wait...;-;Du  blir nå overført til
 Application;-;Applikasjoner
 Birth Date;-;Bursdag
 Cell phone;-;Mobil tlf
-Change password;-;Endre passord
-Email;-;Epost
 End date;-;Slutt dato
 Group;-;Gruppe
-New password;-;Nytt passord
 Number of instances added;-;Antall av instanser lagt til
 Old password;-;Gammelt passord
 Organisation name;-;Selskapnavn
-Password;-;Passord
-Payment;-;Betaling
 Price and plans;-;Priser og oversikter
 Register;-;Registrer
-Repeat password;-;Gjenta passord
 Set new password;-;Sett nytt passord
 Start date;-;Start dato
-Update;-;Oppdater
 Your personal information;-;Din personlige informasjon
 
 

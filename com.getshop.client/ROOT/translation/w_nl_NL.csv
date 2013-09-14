@@ -1,147 +1,177 @@
-0-100 km/h ;-;
-A red theme that can be used when selling exciting things;-;Een rode layout voor verkoop van interessante producten
-Add to cart;-;Aan winkelwagen toevoegen
-Address;-;Addres
-All orders;-;Alle bestellingen
-Application;-;Applicatie 
-April;-;April
-August;-;Augustus
-Birth Date;-;Geboortedatum
-Buy;-;
-By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;
-Cancel order;-;Bestelling afbreken
-Canceled;-;Afgebroken
+###### 04259325_abfa_4311_ab81_b89c60893ce1 (Reporting) ######
+Name;-;Naam
+
+
+###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
 Cart overview;-;Overzicht winkelwagen
-Cell phone;-;Mobiel
-Change password;-;Wachtwoord aanpassen
-Chat with us;-;Chat met ons
 Checkout;-;Afrekenen
-City;-;Woonplaats
-Click here to edit the text.;-;Klik hier om de tekst te bewerken
 Click next to select shipping options;-;Klik volgende om een verzendmethode te kiezen
-Company;-;Bedrijf
-Completed;-;Afgerond
 Confirm order;-;Bestelling bevestigen
-Count;-;Tel
-Customer information;-;Klanteninformatie
-Date;-;Datum
-December;-;December
-Delete image;-;Verwijder afbeelding
-Details;-;Details
-Email;-;Email
-End date;-;Einddatum
-Enter the code sent to your email.;-;Code invoeren die u per sms is gestuurd
-Expire date;-;Vervaldatum
-Extended Description;-;Uitgebreide beschrijving
-Featured Product;-;Product in de kijker
-February;-;Februari
-Fixed price;-;Vaste prijs
-Free shipping;-;Gratis verzending
-Friday;-;Vrijdag
-Full name;-;Volledige naam
-Group;-;Groep
+Next;-;Volgende
+Place order;-;Bestelling plaatsen
+Please select a shipment method.;-;Selecteer aub verzendmethode
+Previous;-;Vorige
+Remove;-;Verwijderen
+Shipping price;-;Verzendkosten
+Total;-;Totaal
+You do not have any products in your cart;-;U heeft nog geen producten in de winkelwagen
+
+
+###### 2afb045b_fa01_4398_8582_33f212bb8db8 (Chat) ######
+Chat with us;-;Chat met ons
 How can I help you today ?;-;Waarmee kunnen we u van dienst zijn?
-January;-;Januari
-July;-;Juli
-June;-;Juni
-Les mer;-;?
+if we dont answer, please leave your email here and we will return your message asap.;-;Indien we niet antwoorden, gelieve een email te sturen. We reageren zo snel mogelijk.
+
+
+###### 7a4f3750_895a_11e2_9e96_0800200c9a66 (GetShopTheme) ######
+This design is private to getshop only.;-;Dit design is eigendom van Getshop
+
+
+###### df435931_9364_4b6a_b4b2_951c90cc0d70 (Login) ######
+Enter the code sent to your email.;-;Code invoeren die u per sms is gestuurd
 Login;-;Inloggen
 Logout;-;Uitloggen
 Lost your password?;-;Wachtwoord vergeten?
-March;-;Maart
-May;-;Mei
-Monday;-;Maandag
 My Account;-;Mijn account
-My name is:;-;Mijn naam is:
-Name;-;Naam
-Name of the application;-;Naam van de applicatie
-New password;-;Nieuw wachtwoord
-Next;-;Volgende
-November;-;November
-Number of instances added;-;Aantal zaken toegevoegd
-October;-;Oktober
-Old password;-;oude wachtwoord
-Order;-;Bestelling
-Order Created;-;Bestelling aangemaakt
-Order date;-;Besteldatum
 Orders;-;Bestellingen
-Organisation name;-;Bedrijfsnaam
-Original (hp) ;-;Origineel
-Original (nm) ;-;Origineel
-Other images;-;Andere afbeeldingen
-Our local time is: ;-;De lokale tijd is:
-Password;-;Wachtwoord
-Payment;-;Betaling
-Payment failed;-;Betaling niet gelukt
-Phone;-;Telefoon
-Place order;-;Bestelling plaatsen
 Please enter your email address:;-;E-mailadres aub invoeren:
 Please following theese steps to recover your password.;-;Volg instructies om uw wachtwoord te achterhalen
-Please select a shipment method.;-;Selecteer aub verzendmethode
-Please select department;-;Gelieve een afdeling te kiezen
-Postal code;-;Postcode
-Previous;-;Vorige
-Price;-;Prijs
-Price and plans;-;Prijs en pakketten
-Product count;-;Aantal producten
 Recover password;-;Wachtwoord achterhalen
-Register;-;Aanmelden
-Related products;-;Gerelateerde producten
-Remove;-;Verwijderen
-Repeat password;-;Wachtwoord nogmaals
-Saturday;-;Zaterdag
-Search for a product;-;Product zoeken
 Send me a code;-;Stuur mij de code
-Send message;-;Bericht versturen
-Send us mail;-;Stuur ons een email
-September;-;September
-Set new password;-;Nieuw wachtwoord vastleggen
-Shipment information;-;Verzendinformatie
-Shipment settings;-;Verzendingsmogelijkheden
-Shipping;-;Verzending	 
-Shipping cost;-;Verzendkosten
-Shipping price;-;Verzendkosten
-Sign up;-;Registreer
-Stage 1 (hp): ;-;
-Stage 1 (nm): ;-;
-Stage 2 (hp): ;-;
-Stage 2 (nm): ;-;
-Stage 3 (hp): ;-;
-Stage 3 (nm): ;-;
-Start date;-;Start datum
-Status;-;Status
-Sunday;-;Zondag
-Taxes;-;BTW
-This design is private to getshop only.;-;Dit design is eigendom van Getshop
+Username / Email;-;Gebruikersnaam / E-mail
+
+
+###### 626ff5c4_60d4_4faf_ac2e_d0f21ffa9e87 (Search) ######
+Search for a product;-;Product zoeken
+
+
+###### framework ######
+Price;-;Prijs
 This page is only available for adminsitrators;-;Deze pagina is alleen voor beheerders toegangkelijk
 This page is only available for editors.;-;Deze pagina is alleen voor redacteuren toegangkelijk
 This page is only available for registered users.;-;Deze pagina is alleen voor geregistreerde gebruikers toegangkelijk
+
+
+###### 32c15c30_d665_11e2_8b8b_0800200c9a66 (RealEstate) ######
+Delete image;-;Verwijder afbeelding
+Les mer;-;?
+
+
+###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
+Fixed price;-;Vaste prijs
+Free shipping;-;Gratis verzending
+Shipment settings;-;Verzendingsmogelijkheden
+
+
+###### d147f6a0_8f31_11e2_9e96_0800200c9a66 (TheRedTheme) ######
+A red theme that can be used when selling exciting things;-;Een rode layout voor verkoop van interessante producten
+
+
+###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
+Company;-;Bedrijf
+My name is:;-;Mijn naam is:
+Send message;-;Bericht versturen
+Send us mail;-;Stuur ons een email
+What's on your mind?;-;Waar denk je aan?
+
+
+###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
+Date;-;Datum
+Please select department;-;Gelieve een afdeling te kiezen
+Sign up;-;Registreer
+
+
+###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
+April;-;April
+August;-;Augustus
+December;-;December
+February;-;Februari
+Friday;-;Vrijdag
+January;-;Januari
+July;-;Juli
+June;-;Juni
+March;-;Maart
+May;-;Mei
+Monday;-;Maandag
+November;-;November
+October;-;Oktober
+Saturday;-;Zaterdag
+September;-;September
+Sunday;-;Zondag
 Thursday;-;Donderdag
-To continue using this feature, you will need to pay, or remove the application.;-;Om deze applicatie te gebruiken moet je betalen
-Top speed ;-;Top snelheid
-Total;-;Totaal
 Tuesday;-;Dinsdag
-Update;-;Updaten
-Username / Email;-;Gebruikersnaam / E-mail
-Waiting for payment;-;Wachten op betaling
 We host events at the following locations, click on the location to filter the calendar by location(s);-;We organiseren events op de volgende locaties. Klik op de locatie om de kalender op locatie te filteren.
 Wednesday;-;Woensdag
-Weight;-;Gewicht
-What's on your mind?;-;Waar denk je aan?
-You are being transferred to paypal, please wait...;-;Je wordt doorgestuurd naar Paypal, even geduld…
-You are here:;-;U bent hier:
+
+
+###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######
+Address;-;Addres
+All orders;-;Alle bestellingen
+Cancel order;-;Bestelling afbreken
+Canceled;-;Afgebroken
+City;-;Woonplaats
+Completed;-;Afgerond
+Customer information;-;Klanteninformatie
+Full name;-;Volledige naam
+Order;-;Bestelling
+Order Created;-;Bestelling aangemaakt
+Order date;-;Besteldatum
+Payment failed;-;Betaling niet gelukt
+Phone;-;Telefoon
+Postal code;-;Postcode
+Product count;-;Aantal producten
+Shipment information;-;Verzendinformatie
+Shipping;-;Verzending	 
+Status;-;Status
+Taxes;-;BTW
+Waiting for payment;-;Wachten op betaling
 You do not have any orders.;-;U heeft nog geen bestellingen geplaatst
-You do not have any products in your cart;-;U heeft nog geen producten in de winkelwagen
-You have expired applications that requires payment.;-;Je applicaties zijn verlopen en moeten verlengd worden
-Your personal information;-;Uw persoonlijke informatie
-change;-;
-course;-;
-description;-;
-email;-;
-if we dont answer, please leave your email here and we will return your message asap.;-;Indien we niet antwoorden, gelieve een email te sturen. We reageren zo snel mogelijk.
+
+
+###### 7093535d_f842_4746_9256_beff0860dbdf (BreadCrumb) ######
+You are here:;-;U bent hier:
+
+
+###### dcd22afc_79ba_4463_bb5c_38925468ae26 (ProductManager) ######
+Add to cart;-;Aan winkelwagen toevoegen
+Click here to edit the text.;-;Klik hier om de tekst te bewerken
+Details;-;Details
+Extended Description;-;Uitgebreide beschrijving
+Featured Product;-;Product in de kijker
+Other images;-;Andere afbeeldingen
+Weight;-;Gewicht
 in stock;-;op voorraad
-location;-;
-org;-;
-orgnummer;-;
-phone;-;
-shipping;-;
+
+
+###### de0b9b83_a41d_4fca_a2d4_3d3945cc8b9e (ColumnProducts) ######
+Related products;-;Gerelateerde producten
+
+
+###### c7736539_4523_4691_8453_a6aa1e784fc1 (PayPal) ######
+Shipping cost;-;Verzendkosten
+You are being transferred to paypal, please wait...;-;Je wordt doorgestuurd naar Paypal, even geduld…
+
+
+###### 6c245631_effb_4fe2_abf7_f44c57cb6c5b (Account) ######
+Application;-;Applicatie 
+Birth Date;-;Geboortedatum
+Cell phone;-;Mobiel
+Change password;-;Wachtwoord aanpassen
+Email;-;Email
+End date;-;Einddatum
+Group;-;Groep
+New password;-;Nieuw wachtwoord
+Number of instances added;-;Aantal zaken toegevoegd
+Old password;-;oude wachtwoord
+Organisation name;-;Bedrijfsnaam
+Password;-;Wachtwoord
+Payment;-;Betaling
+Price and plans;-;Prijs en pakketten
+Register;-;Aanmelden
+Repeat password;-;Wachtwoord nogmaals
+Set new password;-;Nieuw wachtwoord vastleggen
+Start date;-;Start datum
+Update;-;Updaten
+Your personal information;-;Uw persoonlijke informatie
+
+

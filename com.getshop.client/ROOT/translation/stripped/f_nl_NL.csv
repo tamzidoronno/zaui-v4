@@ -1,266 +1,368 @@
-(cloned);-;
-1. Download the synchronization program;-;
-A quick tip; when the mouse is hovering the image, you will see a settings box where you can configure the image.;-;
-Activate Deepfreeze;-;
-Add an image by clicking the button below to start your image upload progress.;-;
-Add images to the product;-;
-Add to list;-;
-Advanced settings;-;
-Advanced settings allows you to finetune different aspects to your product. For example, if shipping is configured and you would like this product to be shipped for free.;-;
-All products available;-;
-All text that you enter in the box below will be sent out as order confirmation emails. You can write anything you wish here, and enter variables. See bottom of page for variable defenitions.;-;
-Attribute settings;-;
-Attribute settings enables you to attach different kind of attributes to the product. Theese attributes will be used to filter your products in a product list.;-;
-Attributes;-;
-Attributes added to this product;-;
+###### 04259325_abfa_4311_ab81_b89c60893ce1 (Reporting) ######
+Count;-;
+track;-;
+when;-;
+
+
+###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
+cart;-;
+no_image;-;
+price;-;
+select_shipment;-;
+
+
+###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 ######
 By enabling testmode for sisow, you will be able to test the payment solutions in sandbox mode.;-;
+Enable test mode for sisow;-;
+Here you can configure all the settings required to get sisow to work properly with your account. Enter the fields below and press save, as soon as everything here is set correctly you will see that a new payment options is available in the checkout area.;-;
+Merchant id;-;
+Merchant key;-;
+Your merchant id, this id is something that sisow is providing you.;-;
+Your merchant key, this id is something that sisow is providing you.;-;
+
+
+###### fb076580_c7df_471c_b6b7_9540e4212441 (OpenSRS) ######
+accept_domain;-;
+address;-;
+all_fields;-;
+avail;-;
+check_avail;-;
+city;-;
+click_to_pay;-;
+country;-;
+domain_overview;-;
+domain_registration;-;
+domain_transfer;-;
+enter_domain;-;
+find_domain_name;-;
+firstname;-;
+lastname;-;
+not_valid;-;
+payment_received;-;
+payment_received_notfication;-;
+point_domain_name;-;
+primary_domain;-;
+save_settings_desc;-;
+secondary_domain;-;
+state;-;
+transfer_description;-;
+use_paypal;-;
+
+
+###### df435931_9364_4b6a_b4b2_951c90cc0d70 (Login) ######
+login;-;
+users;-;
+
+
+###### ba6f5e74_87c7_4825_9606_f2d3c93d292f (Users) ######
+all_users;-;
+create_user;-;
+edit_user;-;
+send_message;-;
+
+
+###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
+free_shipping;-;
+product_price;-;
+startup_cost;-;
+
+
+###### 2da52bbc_a392_4125_92b6_eec1dc4879e9 (Bring) ######
+fraktguiden is a norwegian application for keeping track of norwegian shipment prices, shipment tracking etc.;-;
+
+
+###### 6c245631_effb_4fe2_abf7_f44c57cb6c5b (Account) ######
+administrator;-;
+customer;-;
+delete_user;-;
+editor;-;
+expiredate;-;
+personal_info_updated;-;
+userlevel;-;
+
+
+###### d02f8b7a_7395_455d_b754_888d7d701db8 (Dibs) ######
+dibs_address;-;
+merch_id_desc;-;
+
+
+###### bf35979f_6965_4fec_9cc4_c42afd3efdd7 (MainMenu) ######
+allow_access_administrators;-;
+allow_access_editors;-;
+allow_access_everyone;-;
+allow_access_registered_users;-;
+apps;-;
+config_domain;-;
+cur_page_security;-;
+delete_app;-;
+help;-;
+one_col;-;
+reorder_app;-;
+security;-;
+settings;-;
+store;-;
+themes;-;
+three_col;-;
+title;-;
+two_col_left;-;
+two_col_right;-;
+
+
+###### e9d04f19_6eaa_4a17_9b7b_aa387dbaed92 (CategoryLister) ######
+change_image;-;
+create_new_cat;-;
+link_menu;-;
+remove_image;-;
+unlink_menu;-;
+
+
+###### d755efca_9e02_4e88_92c2_37a3413f3f41 (Settings) ######
+Activate Deepfreeze;-;
+Deactivate Deepfreeze;-;
+Enter an address to your favicon.;-;
+Favicon;-;
+Please select your language;-;
+add_eyecandy;-;
+design;-;
+hide_search;-;
+hide_search_desc;-;
+postal;-;
+specify_postal_code;-;
+specify_title;-;
+
+
+###### 626ff5c4_60d4_4faf_ac2e_d0f21ffa9e87 (Search) ######
+no_products_found;-;
+
+
+###### framework ######
 Cancel;-;
+More color options;-;
+No advanced color options for this design;-;
+No background selection available for this design.;-;
+There is one layout defined for each page, a layout can have multiple of rows and multiple of columns.;-;
+To change a layout for the current page, please select one from the list below.;-;
+Warning! this store will automatically be reset to original state each hour;-;
+What is deepfreeze? Well, if you activate deepfreeze you basically put all options on hold, all changes made after deepfreezeing will be purged each hour.;-;
+add_app_error;-;
+add_app_free;-;
+add_apps;-;
+add_other_apps;-;
+add_product;-;
+add_products;-;
+add_text;-;
+adv;-;
+already_added;-;
+click_delete;-;
+click_order;-;
+close;-;
+disabled_option;-;
+empty_left;-;
+empty_right;-;
+enter_feedback;-;
+invalid_delivery;-;
+invalid_input;-;
+invalid_operation;-;
+only_one_per_page;-;
+option_not_available;-;
+remove_app_warning;-;
+saved_to_db;-;
+select_delivery;-;
+send_feedback;-;
+settings_saved;-;
+size_only_number;-;
+updated;-;
+withdraw_error;-;
+
+
+###### a109b0f1_97c3_4292_a46f_4c6894a9841c (PartnerApplicationSelection) ######
+Activate / deactivate the applications you would like your customers to have access to.;-;
+
+
+###### eb03c660_186a_11e3_8ffd_0800200c9a66 (MailManager) ######
+All text that you enter in the box below will be sent out as order confirmation emails. You can write anything you wish here, and enter variables. See bottom of page for variable defenitions.;-;
 Click to change subject;-;
-Congratulation, you have added your first image.;-;
-Create;-;
-Create a new product;-;
-Create product;-;
 Customer address;-;
 Customer city;-;
 Customer email;-;
 Customer name;-;
 Customer phone;-;
-Deactivate Deepfreeze;-;
 Different variables that is available;-;
-Edit product;-;
-Edit the data below and write a description, the name of the product and a more detailed description. This data will be displayed on your product when viewing it.;-;
-Edit your product.;-;
-Enable test mode for sisow;-;
-Enter an address to your favicon.;-;
-Favicon;-;
-Here you can configure all the settings required to get sisow to work properly with your account. Enter the fields below and press save, as soon as everything here is set correctly you will see that a new payment options is available in the checkout area.;-;
-Import;-;
-Is this your default picture to the product?;-;
 MailManager;-;
-Merchant id;-;
-Merchant key;-;
-More color options;-;
-My product list;-;
-New product / untitled product;-;
-No advanced color options for this design;-;
-No background selection available for this design.;-;
-No products has been added to this list yet, please add one from the list on the right hand side.;-;
-No short description set yet;-;
 Order email;-;
 Order lines;-;
 OrderId;-;
-Please select your language;-;
+Subject;-;
+Use this application to setup the emails sent from your webshop, like order confirmation etc.;-;
+customer postcode;-;
+
+
+###### ba885f72_f571_4a2e_8770_e91cbb16b4ad (Facebook) ######
+appid;-;
+appid_required;-;
+like_button;-;
+like_button_desc;-;
+profile_url;-;
+profile_url_desc;-;
+save_settings;-;
+
+
+###### a93d64e4_b7fa_4d55_a804_ea664b037e72 (StockControl) ######
+return_stock;-;
+return_stock_desc;-;
+show_stock_status;-;
+show_stock_status_desc;-;
+withdraw;-;
+
+
+###### 320ada5b_a53a_46d2_99b2_9b0b26a7105a (ContentManager) ######
+add_text_desc;-;
+
+
+###### d612904c_8e44_4ec0_abf9_c03b62159ce4 (Banner) ######
+add_banner;-;
+banner_config;-;
+currently_configured_banners;-;
+edit banners;-;
+height;-;
+no_banners;-;
+settings_desc;-;
+
+
+###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
+message_sent;-;
+my_name;-;
+
+
+###### 1051b4cf_6e9f_475d_aa12_fc83a89d2fd4 (TopMenu) ######
+addnew;-;
+delete;-;
+direct_where;-;
+hardlink;-;
+hardlink_desc;-;
+remove_hardlink;-;
+rename;-;
+save;-;
+
+
+###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
+configure_booking;-;
+send_email;-;
+send_email_desc;-;
+send_mail_title;-;
+send_sms;-;
+send_sms_desc;-;
+sms_from;-;
+sms_from_desc;-;
+sms_text;-;
+sms_text_desc;-;
+title_send;-;
+title_send_desc;-;
+
+
+###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
+add_event;-;
+edit;-;
+event_desc;-;
+event_name;-;
+free_positions;-;
+max_atandees;-;
+no_activites;-;
+send_reminder;-;
+start;-;
+start_time;-;
+stop;-;
+
+
+###### e72f97ad_aa1f_4e67_bcfd_e64607f05f93 (Gallery) ######
+Upload image;-;
+upload_image;-;
+
+
+###### 8402f800_1e7e_43b5_b3f7_6c7cabbf8942 (ProductList) ######
+Add to list;-;
+All products available;-;
+Create product;-;
+Edit product;-;
+My product list;-;
+New product / untitled product;-;
+No products has been added to this list yet, please add one from the list on the right hand side.;-;
 Products already added to your list;-;
 Remove from list;-;
-Save product;-;
 Save product list;-;
-Subject;-;
-There is one layout defined for each page, a layout can have multiple of rows and multiple of columns.;-;
-To change a layout for the current page, please select one from the list below.;-;
+create_new;-;
+
+
+###### 0cf21aa0_5a46_41c0_b5a6_fd52fb90216f (GoogleAnalytics) ######
+google_code;-;
+google_code_desc;-;
+
+
+###### dabb8a85_f593_43ec_bf0d_240467118a40 (News) ######
+add_news;-;
+create_news_desc;-;
+subscribe_news;-;
+
+
+###### 831647b5_6a63_4c46_a3a3_1b4a7c36710a (ImageDisplayer) ######
+A quick tip; when the mouse is hovering the image, you will see a settings box where you can configure the image.;-;
+Congratulation, you have added your first image.;-;
+
+
+###### dcd22afc_79ba_4463_bb5c_38925468ae26 (ProductManager) ######
+Add an image by clicking the button below to start your image upload progress.;-;
+Add images to the product;-;
+Advanced settings;-;
+Advanced settings allows you to finetune different aspects to your product. For example, if shipping is configured and you would like this product to be shipped for free.;-;
+Attribute settings;-;
+Attribute settings enables you to attach different kind of attributes to the product. Theese attributes will be used to filter your products in a product list.;-;
+Attributes;-;
+Attributes added to this product;-;
+Create;-;
+Create a new product;-;
+Edit the data below and write a description, the name of the product and a more detailed description. This data will be displayed on your product when viewing it.;-;
+Edit your product.;-;
+Import;-;
+Is this your default picture to the product?;-;
+No short description set yet;-;
+Save product;-;
 Untitled product;-;
-Upload image;-;
-Use this application to setup the emails sent from your webshop, like order confirmation etc.;-;
 Variations;-;
 View;-;
-Warning! this store will automatically be reset to original state each hour;-;
-What is deepfreeze? Well, if you activate deepfreeze you basically put all options on hold, all changes made after deepfreezeing will be purged each hour.;-;
 What is product variations?;-;
 You can add as many images as you would like to your product, this will make your product look more attractive for your customers.;-;
 You guessed correctly, in this panel you can setup a variation of your product. If you for instance has a product that has two different colors, you can set it up here and make your customers to specify the color before they can add it to the cart.;-;
 You have not yet created any products, create a product by clicking the create product button.;-;
 Your attributes;-;
-Your merchant id, this id is something that sisow is providing you.;-;
-Your merchant key, this id is something that sisow is providing you.;-;
-accept_domain;-;
-add_app_error;-;
-add_app_free;-;
-add_apps;-;
-add_banner;-;
-add_event;-;
-add_eyecandy;-;
-add_news;-;
-add_other_apps;-;
-add_product;-;
-add_products;-;
-add_text;-;
-add_text_desc;-;
-addnew;-;
-address;-;
-administrator;-;
-adv;-;
-all_fields;-;
-all_users;-;
-allow_access_administrators;-;
-allow_access_editors;-;
-allow_access_everyone;-;
-allow_access_registered_users;-;
-already_added;-;
-appid;-;
-appid_required;-;
-apps;-;
-avail;-;
-banner_config;-;
-cart;-;
-change_image;-;
-check_avail;-;
-city;-;
-click_delete;-;
-click_order;-;
-click_to_pay;-;
-close;-;
-config_domain;-;
-config_sender;-;
-configure_booking;-;
-country;-;
-create_new;-;
-create_new_cat;-;
-create_news_desc;-;
-create_user;-;
-cur_page_security;-;
-currently_configured_banners;-;
-customer;-;
-customer postcode;-;
-delete;-;
-delete_app;-;
-delete_user;-;
-design;-;
 detailed_desc;-;
-dibs_address;-;
-direct_where;-;
-disabled_option;-;
-domain_overview;-;
-domain_registration;-;
-domain_transfer;-;
-edit;-;
-edit banners;-;
 edit_product;-;
-edit_user;-;
-editor;-;
-empty_left;-;
-empty_right;-;
+short_description;-;
+stock_quantity;-;
+taxes;-;
+
+
+###### c7736539_4523_4691_8453_a6aa1e784fc1 (PayPal) ######
+enter_address;-;
+paypal;-;
+
+
+###### 8ad8243c_b9c1_48d4_96d5_7382fa2e24cd (Mail) ######
+config_sender;-;
 enable_tls;-;
 enable_tls_desc;-;
-enter_address;-;
-enter_domain;-;
-enter_feedback;-;
-event_desc;-;
-event_name;-;
-expiredate;-;
-find_domain_name;-;
-firstname;-;
-fraktguiden is a norwegian application for keeping track of norwegian shipment prices, shipment tracking etc.;-;
-free_positions;-;
-free_shipping;-;
-google_code;-;
-google_code_desc;-;
-hardlink;-;
-hardlink_desc;-;
-height;-;
-help;-;
-hide_search;-;
-hide_search_desc;-;
 hostname;-;
 hostname_desc_smtp;-;
-invalid_delivery;-;
-invalid_input;-;
-invalid_operation;-;
-lastname;-;
-latitude;-;
-like_button;-;
-like_button_desc;-;
-link_menu;-;
-longitide;-;
-max_atandees;-;
-merch_id_desc;-;
-message_sent;-;
-my_name;-;
-no_activites;-;
-no_banners;-;
-no_image;-;
-no_products_found;-;
-not_valid;-;
-one_col;-;
-only_one_per_page;-;
-option_not_available;-;
 password;-;
-payment_received;-;
-payment_received_notfication;-;
-paypal;-;
-personal_info_updated;-;
-point_domain_name;-;
 port;-;
-postal;-;
-price;-;
-primary_domain;-;
-product_price;-;
-profile_url;-;
-profile_url_desc;-;
-remove_app_warning;-;
-remove_hardlink;-;
-remove_image;-;
-rename;-;
-reorder_app;-;
-return_stock;-;
-return_stock_desc;-;
-save;-;
-save_settings;-;
-save_settings_desc;-;
-saved_to_db;-;
-secondary_domain;-;
-security;-;
-select_delivery;-;
-select_shipment;-;
-send_email;-;
-send_email_desc;-;
-send_feedback;-;
-send_mail_title;-;
-send_message;-;
-send_reminder;-;
-send_sms;-;
-send_sms_desc;-;
-settings;-;
-settings_desc;-;
-settings_saved;-;
-short_description;-;
-show_stock_status;-;
-show_stock_status_desc;-;
-size_only_number;-;
-sms_from;-;
-sms_from_desc;-;
-sms_text;-;
-sms_text_desc;-;
 smtp_password_desc;-;
 smtp_port_desc;-;
 smtp_username_desc;-;
-specify_postal_code;-;
-specify_title;-;
-start;-;
-start_time;-;
-startup_cost;-;
-state;-;
-stock_quantity;-;
-stop;-;
-store;-;
-subscribe_news;-;
-taxes;-;
-themes;-;
-three_col;-;
-title;-;
-title_send;-;
-title_send_desc;-;
-track;-;
-transfer_description;-;
-two_col_left;-;
-two_col_right;-;
-unlink_menu;-;
-updated;-;
-upload_image;-;
-use_paypal;-;
-userlevel;-;
 username;-;
-users;-;
-when;-;
-withdraw;-;
-withdraw_error;-;
-year;-;
+
+
+###### 17c48891_6f7a_47a0_849d_b50de9af218f (GoogleMaps) ######
+latitude;-;
+longitide;-;
 zoom;-;
+
+

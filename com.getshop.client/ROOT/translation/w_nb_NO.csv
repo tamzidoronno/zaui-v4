@@ -1,147 +1,186 @@
-0-100 km/h ;-;
-A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
-Add to cart;-;Legg i handlekurv
-Address;-;Adresse
-All orders;-;Alle bestilinger
-Application;-;Applikasjoner
-April;-;April
-August;-;August
-Birth Date;-;Bursdag
-Buy;-;Kjøp
+###### 04259325_abfa_4311_ab81_b89c60893ce1 (Reporting) ######
+Name;-;Navn
+
+
+###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 ######
 By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;Ved å bruke sisow som din betnalings leverandør vil du få muligheten til å selge ved hjelp av iDeal/Visa og mye mer. For mer informasjon: https://www.sisow.nl
-Cancel order;-;Kanselert ordre
-Canceled;-;Kanselert
+
+
+###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
 Cart overview;-;Handlekurv oversikt
-Cell phone;-;Mobil tlf
-Change password;-;Endre passord
-Chat with us;-;Chat med oss
 Checkout;-;Utsjekking
-City;-;By
-Click here to edit the text.;-;Trykk her for å editere tekst.
 Click next to select shipping options;-;Trykk neste for å velge en betalings metode
-Company;-;Selskap
-Completed;-;Gjennomført
 Confirm order;-;Bekreft ordre
-Count;-;Antall
-Customer information;-;Kunde detaljer
-Date;-;Dato
-December;-;Desember
-Delete image;-;Slett bilde
-Details;-;Detaljer
-Email;-;Epost
-End date;-;Slutt dato
-Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.
-Expire date;-;Utløpsdato
-Extended Description;-;Utvidet beskrivelse
-Featured Product;-;Fremhevet produkt
-February;-;Februar
-Fixed price;-;Fikset pris
-Free shipping;-;Gratis frakt
-Friday;-;Fredag
-Full name;-;Hele navnet
-Group;-;Gruppe
+Next;-; Neste
+Place order;-;Legg inn ordre
+Please select a shipment method.;-;Vennligst velg en forendelsemetode
+Previous;-;Forrige
+Remove;-;Fjern
+Total;-;Total
+You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
+
+
+###### 2afb045b_fa01_4398_8582_33f212bb8db8 (Chat) ######
+Chat with us;-;Chat med oss
 How can I help you today ?;-;Hva kan jeg hjelpe deg med?
-January;-;Januar
-July;-;Juli
-June;-;Juni
-Les mer;-;
+if we dont answer, please leave your email here and we will return your message asap.;-;Hvis vi ikke svarer, legg igjen en din epost, og vi vil kontakte deg så snart som mulig.
+
+
+###### fb076580_c7df_471c_b6b7_9540e4212441 (OpenSRS) ######
+email;-;E-post
+org;-;Firma
+phone;-;Mob.Tlf.
+
+
+###### df435931_9364_4b6a_b4b2_951c90cc0d70 (Login) ######
+Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.
 Login;-;Logg inn
 Logout;-;Logg ut
 Lost your password?;-;Glemt ditt passord?
-March;-;Mars
-May;-;Mai
-Monday;-;Mandag
 My Account;-;Min konto
-My name is:;-;Mitt navn er
-Name;-;Navn
-Name of the application;-;Antall applikasjoner
-New password;-;Nytt passord
-Next;-; Neste
-November;-;November
-Number of instances added;-;Antall av instanser lagt til
-October;-;Oktober
-Old password;-;Gammelt passord
-Order;-;Ordre
-Order Created;-; Ordre opprettet
-Order date;-;Bestillings dato
 Orders;-;Alle ordre
-Organisation name;-;Selskapnavn
-Original (hp) ;-;
-Original (nm) ;-;
-Other images;-;Andre bilder
-Our local time is: ;-;Vår lokale tid er
-Password;-;Passord
-Payment;-;Betaling
-Payment failed;-;Betaling feilet
-Phone;-;Telefon
-Place order;-;Legg inn ordre
 Please enter your email address:;-;Vennligst skriv inn din epost
 Please following theese steps to recover your password.;-;Vennligst følgt instruksjonen under.
-Please select a shipment method.;-;Vennligst velg en forendelsemetode
-Please select department;-;Velg en avdeling
-Postal code;-;Postnummer
-Previous;-;Forrige
-Price;-;Pris
-Price and plans;-;Priser og oversikter
-Product count;-;Antall produkter
 Recover password;-;Gjennopprett passord
-Register;-;Registrer
-Related products;-;Relaterte produkter
-Remove;-;Fjern
-Repeat password;-;Gjenta passord
-Saturday;-;Lørdag
-Search for a product;-;Søk etter et produkt
 Send me a code;-;Send meg koden
-Send message;-;Send melding
-Send us mail;-;Send oss en epost
-September;-;September
-Set new password;-;Sett nytt passord
-Shipment information;-;Forsendelse informasjon
-Shipment settings;-;Betaling instillinger
-Shipping;-;Utsendelse
-Shipping cost;-;Fraktkostnader
-Shipping price;-;
-Sign up;-;Logg in
-Stage 1 (hp): ;-;
-Stage 1 (nm): ;-;
-Stage 2 (hp): ;-;
-Stage 2 (nm): ;-;
-Stage 3 (hp): ;-;
-Stage 3 (nm): ;-;
-Start date;-;Start dato
-Status;-;Status
-Sunday;-;Søndag
-Taxes;-;Skatter
-This design is private to getshop only.;-;
+Username / Email;-;Brukernavn / Epost
+
+
+###### 626ff5c4_60d4_4faf_ac2e_d0f21ffa9e87 (Search) ######
+Search for a product;-;Søk etter et produkt
+
+
+###### framework ######
+Price;-;Pris
 This page is only available for adminsitrators;-;Denne siden er kun tilgjengelig for adminstratorer.
 This page is only available for editors.;-;Denne siden er kun tilgjengelig for editorer.
 This page is only available for registered users.;-;Denne siden er kun tilgjengelig for registrerte brukere
+
+
+###### 32c15c30_d665_11e2_8b8b_0800200c9a66 (RealEstate) ######
+Delete image;-;Slett bilde
+
+
+###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
+Fixed price;-;Fikset pris
+Free shipping;-;Gratis frakt
+Shipment settings;-;Betaling instillinger
+
+
+###### d147f6a0_8f31_11e2_9e96_0800200c9a66 (TheRedTheme) ######
+A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
+
+
+###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
+Company;-;Selskap
+My name is:;-;Mitt navn er
+Send message;-;Send melding
+Send us mail;-;Send oss en epost
+What's on your mind?;-;Hva ønsker du å formidle?
+
+
+###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
+Date;-;Dato
+Please select department;-;Velg en avdeling
+Sign up;-;Logg in
+orgnummer;-;Org.nr.
+
+
+###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
+April;-;April
+August;-;August
+December;-;Desember
+February;-;Februar
+Friday;-;Fredag
+January;-;Januar
+July;-;Juli
+June;-;Juni
+March;-;Mars
+May;-;Mai
+Monday;-;Mandag
+November;-;November
+October;-;Oktober
+Saturday;-;Lørdag
+September;-;September
+Sunday;-;Søndag
 Thursday;-;Torsdag
-To continue using this feature, you will need to pay, or remove the application.;-;
-Top speed ;-;
-Total;-;Total
 Tuesday;-;Tirsdag
-Update;-;Oppdater
-Username / Email;-;Brukernavn / Epost
-Waiting for payment;-;Venter på betaling
 We host events at the following locations, click on the location to filter the calendar by location(s);-;We har events på følgende steder, trykk på stedet for å filtere kalenderen på stedet(ene)
 Wednesday;-;Onsdag
-Weight;-;Vekt
-What's on your mind?;-;Hva ønsker du å formidle?
-You are being transferred to paypal, please wait...;-;Du  blir nå overført til paypal, vennligst vent.
-You are here:;-;Du er her:
-You do not have any orders.;-;Du har ingen bestillinger
-You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
-You have expired applications that requires payment.;-;
-Your personal information;-;Din personlige informasjon
-change;-;
-course;-;
 description;-;Beskrivelse
-email;-;E-post
-if we dont answer, please leave your email here and we will return your message asap.;-;Hvis vi ikke svarer, legg igjen en din epost, og vi vil kontakte deg så snart som mulig.
-in stock;-;på lager
 location;-;Sted
-org;-;Firma
-orgnummer;-;Org.nr.
-phone;-;Mob.Tlf.
+
+
+###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######
+Address;-;Adresse
+All orders;-;Alle bestilinger
+Cancel order;-;Kanselert ordre
+Canceled;-;Kanselert
+City;-;By
+Completed;-;Gjennomført
+Customer information;-;Kunde detaljer
+Full name;-;Hele navnet
+Order;-;Ordre
+Order Created;-; Ordre opprettet
+Order date;-;Bestillings dato
+Payment failed;-;Betaling feilet
+Phone;-;Telefon
+Postal code;-;Postnummer
+Product count;-;Antall produkter
+Shipment information;-;Forsendelse informasjon
+Shipping;-;Utsendelse
+Status;-;Status
+Taxes;-;Skatter
+Waiting for payment;-;Venter på betaling
+You do not have any orders.;-;Du har ingen bestillinger
+
+
+###### 7093535d_f842_4746_9256_beff0860dbdf (BreadCrumb) ######
+You are here:;-;Du er her:
+
+
+###### dcd22afc_79ba_4463_bb5c_38925468ae26 (ProductManager) ######
+Add to cart;-;Legg i handlekurv
+Buy;-;Kjøp
+Click here to edit the text.;-;Trykk her for å editere tekst.
+Details;-;Detaljer
+Extended Description;-;Utvidet beskrivelse
+Featured Product;-;Fremhevet produkt
+Other images;-;Andre bilder
+Weight;-;Vekt
+in stock;-;på lager
 shipping;-;frakt
+
+
+###### de0b9b83_a41d_4fca_a2d4_3d3945cc8b9e (ColumnProducts) ######
+Related products;-;Relaterte produkter
+
+
+###### c7736539_4523_4691_8453_a6aa1e784fc1 (PayPal) ######
+Shipping cost;-;Fraktkostnader
+You are being transferred to paypal, please wait...;-;Du  blir nå overført til paypal, vennligst vent.
+
+
+###### 6c245631_effb_4fe2_abf7_f44c57cb6c5b (Account) ######
+Application;-;Applikasjoner
+Birth Date;-;Bursdag
+Cell phone;-;Mobil tlf
+Change password;-;Endre passord
+Email;-;Epost
+End date;-;Slutt dato
+Group;-;Gruppe
+New password;-;Nytt passord
+Number of instances added;-;Antall av instanser lagt til
+Old password;-;Gammelt passord
+Organisation name;-;Selskapnavn
+Password;-;Passord
+Payment;-;Betaling
+Price and plans;-;Priser og oversikter
+Register;-;Registrer
+Repeat password;-;Gjenta passord
+Set new password;-;Sett nytt passord
+Start date;-;Start dato
+Update;-;Oppdater
+Your personal information;-;Din personlige informasjon
+
+

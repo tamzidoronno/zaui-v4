@@ -1,21 +1,16 @@
-Is this a page singleton application?;-;
-Is this a singleton application?;-;
-Is this your default picture to the product?;-;
-Last application was created at :;-;
-Last application was named :;-;
+###### 32c15c30_d665_11e2_8b8b_0800200c9a66 (RealEstate) ######
 Need to display your realestates? well, here is the application that allows you to do that, simply add the application to your page and start editing your realestate;-;
-Number of application created by you:;-;
-Number of public applications :;-;
-The application management tool enables you to develope your own applications directly into getshop, and modify your web shop as you see fit. From this point you basically has access to do everything you want to, and if you can proove us that you can't. Then we will modify it to make sure you can.;-;
-The code for this application will automatically be synced to your code base after you click the start building application button.;-;
-Then click on the save button, or click outside of the text area to save the text.;-;
-This application has been marked for synchronization;-;
-What areas does this application support?;-;
-What kind of application is this?;-;
-When a standalone application is added, a new icon will be added to top taskbar and launched from there.;-;
-Yes, delete this application;-;
-Yes, synchronize this application;-;
-Your synchronization client is connected, and you are ready to start developing your applications.;-;
+
+
+###### framework ######
 adv;-;
-latitude;-;
-longitide;-;
+
+
+###### a109b0f1_97c3_4292_a46f_4c6894a9841c (PartnerApplicationSelection) ######
+Activate / deactivate the applications you would like your customers to have access to.;-;
+
+
+###### dcd22afc_79ba_4463_bb5c_38925468ae26 (ProductManager) ######
+Is this your default picture to the product?;-;
+
+

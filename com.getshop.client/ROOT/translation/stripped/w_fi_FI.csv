@@ -1,82 +1,128 @@
-0-100 km/h ;-;
-A red theme that can be used when selling exciting things;-;
-Application;-;
-April;-;
-August;-;
-Buy;-;
+###### 04259325_abfa_4311_ab81_b89c60893ce1 (Reporting) ######
+Name;-;
+
+
+###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 ######
 By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;
+
+
+###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
 Cart overview;-;
 Checkout;-;
-Click here to edit the text.;-;
 Click next to select shipping options;-;
-Company;-;
-Count;-;
-Date;-;
-December;-;
+Shipping price;-;
+Total;-;
+
+
+###### 2afb045b_fa01_4398_8582_33f212bb8db8 (Chat) ######
+Our local time is:;-;
+if we dont answer, please leave your email here and we will return your message asap.;-;
+
+
+###### fb076580_c7df_471c_b6b7_9540e4212441 (OpenSRS) ######
+email;-;
+org;-;
+phone;-;
+
+
+###### 7a4f3750_895a_11e2_9e96_0800200c9a66 (GetShopTheme) ######
+This design is private to getshop only.;-;
+
+
+###### 2ebd7c69_eba3_4b7e_85c6_0e0bd274aad0 (SedoxCarList) ######
+0-100 km/h;-;
+Original (hp);-;
+Original (nm);-;
+Stage 1 (hp):;-;
+Stage 1 (nm):;-;
+Stage 2 (hp):;-;
+Stage 2 (nm):;-;
+Stage 3 (hp):;-;
+Stage 3 (nm):;-;
+Top speed;-;
+
+
+###### 32c15c30_d665_11e2_8b8b_0800200c9a66 (RealEstate) ######
 Delete image;-;
-Details;-;
-End date;-;
-Expire date;-;
-Featured Product;-;
-February;-;
+Les mer;-;
+
+
+###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
 Free shipping;-;
+Shipment settings;-;
+
+
+###### d147f6a0_8f31_11e2_9e96_0800200c9a66 (TheRedTheme) ######
+A red theme that can be used when selling exciting things;-;
+
+
+###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
+Company;-;
+Send us mail;-;
+What's on your mind?;-;
+
+
+###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
+Date;-;
+Please select department;-;
+Sign up;-;
+change;-;
+course;-;
+orgnummer;-;
+
+
+###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
+April;-;
+August;-;
+December;-;
+February;-;
 Friday;-;
-Group;-;
 January;-;
 July;-;
 June;-;
-Les mer;-;
 March;-;
 May;-;
 Monday;-;
-Name;-;
-Name of the application;-;
 November;-;
-Number of instances added;-;
 October;-;
-Original (hp) ;-;
-Original (nm) ;-;
-Other images;-;
-Our local time is: ;-;
-Payment;-;
-Please select department;-;
-Price and plans;-;
-Product count;-;
 Saturday;-;
-Send us mail;-;
 September;-;
-Shipment settings;-;
-Shipping cost;-;
-Shipping price;-;
-Sign up;-;
-Stage 1 (hp): ;-;
-Stage 1 (nm): ;-;
-Stage 2 (hp): ;-;
-Stage 2 (nm): ;-;
-Stage 3 (hp): ;-;
-Stage 3 (nm): ;-;
-Start date;-;
-Status;-;
 Sunday;-;
-This design is private to getshop only.;-;
 Thursday;-;
-To continue using this feature, you will need to pay, or remove the application.;-;
-Top speed ;-;
-Total;-;
 Tuesday;-;
 We host events at the following locations, click on the location to filter the calendar by location(s);-;
 Wednesday;-;
-Weight;-;
-What's on your mind?;-;
-You are being transferred to paypal, please wait...;-;
-You have expired applications that requires payment.;-;
-change;-;
-course;-;
 description;-;
-email;-;
-if we dont answer, please leave your email here and we will return your message asap.;-;
 location;-;
-org;-;
-orgnummer;-;
-phone;-;
+
+
+###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######
+Product count;-;
+Status;-;
+
+
+###### dcd22afc_79ba_4463_bb5c_38925468ae26 (ProductManager) ######
+Buy;-;
+Click here to edit the text.;-;
+Details;-;
+Featured Product;-;
+Other images;-;
+Weight;-;
 shipping;-;
+
+
+###### c7736539_4523_4691_8453_a6aa1e784fc1 (PayPal) ######
+Shipping cost;-;
+You are being transferred to paypal, please wait...;-;
+
+
+###### 6c245631_effb_4fe2_abf7_f44c57cb6c5b (Account) ######
+Application;-;
+End date;-;
+Group;-;
+Number of instances added;-;
+Payment;-;
+Price and plans;-;
+Start date;-;
+
+

@@ -232,7 +232,7 @@ public class GetShop extends ManagerBase implements IGetShop {
     @Override
     public void setApplicationList(List<String> ids, String partnerId, String password) throws ErrorException {
         if(!password.equals("vcxubidnsituenguidnskgjnsdg")) {
-            return;
+            throw new ErrorException(26);
         }
         
         PartnerData data = getPartnerDataInternal(partnerId);

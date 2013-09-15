@@ -189,7 +189,7 @@ class ApplicationManager extends FactoryBase {
         $appMan = new ApplicationManagement();
         $appMan->setApplicationSettingsId($_POST['data']['id']);
         $appMan->syncApplication();
-        echo $this->__f("This application has been marked for synchronization");
+        echo $this->__o("This application has been marked for synchronization");
         $appMan->display();
     }
 

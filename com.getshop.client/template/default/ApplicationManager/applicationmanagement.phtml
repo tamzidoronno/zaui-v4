@@ -1,7 +1,7 @@
 <div class="applicationamanagement">
     <div class="tabs">
         <div class="tabset inline">
-                <div method="displayApplicationManagement" gsname="id" gsvalue="overview" gstype="clicksubmit" output="informationbox" class="tab <? if($this->getSettingsId() == "overview") { echo "active"; } ?>"><? echo $this->__f("Overview"); ?></div>
+                <div method="displayApplicationManagement" gsname="id" gsvalue="overview" gstype="clicksubmit" output="informationbox" class="tab <? if($this->getSettingsId() == "overview") { echo "active"; } ?>"><? echo $this->__o("Overview"); ?></div>
             <?
                 $myApps = $this->getMyApplications();
                 $notPrint = array();
@@ -25,7 +25,7 @@
                         ?>
                         <div method="displayApplicationManagement" gsname="id" gsvalue="<? echo $myApp->id; ?>" gstype="clicksubmit" output="informationbox" class="tab <? echo $active; ?>"><? echo $myApp->appName; 
                         if(isset($myApp->clonedFrom)) {
-                            echo " ".$this->__f("(cloned)");
+                            echo " ".$this->__o("(cloned)");
                         }
                         
                         ?></div>
@@ -33,7 +33,7 @@
                     }
                 }
             ?>
-            <div method="displayApplicationManagement" gsname="id" gsvalue="newapp" gstype="clicksubmit" output="informationbox" class="tab <? if($this->getSettingsId() == "newapp") { echo "active"; } ?>"><? echo $this->__f("Create application"); ?></div>
+            <div method="displayApplicationManagement" gsname="id" gsvalue="newapp" gstype="clicksubmit" output="informationbox" class="tab <? if($this->getSettingsId() == "newapp") { echo "active"; } ?>"><? echo $this->__o("Create application"); ?></div>
         </div>
         <div class="tab_content inline">
                 <div class="content_holder active" id="createapp">

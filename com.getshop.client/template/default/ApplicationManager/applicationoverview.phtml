@@ -1,32 +1,32 @@
 <div class="description">
       <div class="title">
-            <? echo $this->__f("Application overview"); ?>
+            <? echo $this->__o("Application overview"); ?>
         </div>
-        <? echo $this->__f("An introduction to application management in GetShop."); ?>
+        <? echo $this->__o("An introduction to application management in GetShop."); ?>
 </div>
 <br>
     <div style="padding-left: 10px;">
         
     <div class="overviewbox">
-        <b><? echo $this->__f("Summary!"); ?></b><br>
+        <b><? echo $this->__o("Summary!"); ?></b><br>
         <? $lastApp = $this->getLastCreatedApp(); ?>
         
-    - <? echo $this->__f("Number of application created by you:") . " <b>" . $this->getMyAppCount() . "</b>"; ?><br>
-     - <? echo $this->__f("Last application was created at :") . " <b>" . @$lastApp->rowCreatedDate . "</b>"; ?><br>
-     - <? echo $this->__f("Last application was named :") . " <b>" . @$lastApp->appName . "</b>"; ?><br>
-     - <? echo $this->__f("Number of public applications :") . " <b>" . $this->getPublicApplicationCount() . "</b>"; ?><br>
+    - <? echo $this->__o("Number of application created by you:") . " <b>" . $this->getMyAppCount() . "</b>"; ?><br>
+     - <? echo $this->__o("Last application was created at :") . " <b>" . @$lastApp->rowCreatedDate . "</b>"; ?><br>
+     - <? echo $this->__o("Last application was named :") . " <b>" . @$lastApp->appName . "</b>"; ?><br>
+     - <? echo $this->__o("Number of public applications :") . " <b>" . $this->getPublicApplicationCount() . "</b>"; ?><br>
     </div>
         
     <div class="overviewbox">
         <? if($this->isSynchToolConnected()) {
-            echo "<div><b>" . $this->__f("Status - connnected!") . "</b></div>";
-            echo $this->__f("Your synchronization client is connected, and you are ready to start developing your applications.");
+            echo "<div><b>" . $this->__o("Status - connnected!") . "</b></div>";
+            echo $this->__o("Your synchronization client is connected, and you are ready to start developing your applications.");
          } else {
-            echo "<div><b>" . $this->__f("Status - not connnected!") . "</b></div>";
+            echo "<div><b>" . $this->__o("Status - not connnected!") . "</b></div>";
         ?>
         <div style=" cursor:pointer;">
             <div style="display:inline-block; width: 50px; height: 50px;background-image: url('/skin/default/images/download.png'); background-repeat:no-repeat; float:left;"></div>
-            <div style="display:inline-block; width: 290px; font-size: 15px;line-height:40px; font-weight: bold;"><? echo $this->__f("Install the synchronization client (linux)"); ?></div>
+            <div style="display:inline-block; width: 290px; font-size: 15px;line-height:40px; font-weight: bold;"><? echo $this->__o("Install the synchronization client (linux)"); ?></div>
             <div style="padding-left:50px;">
                 <div>sudo apt-get install pip</div>
                 <div>pip install watchdog</div>
@@ -40,16 +40,16 @@
     </div>
     <div class="overviewbox">
         <b>6 Step manual!</b><br>
-    <? echo $this->__f("1. Download the synchronization program"); ?><br>
-    <? echo $this->__f("2. Create an application"); ?><br>
-    <? echo $this->__f("3. The application will automatically be synched to your own computer."); ?><br>
-    <? echo $this->__f("4. Add the application wherever you want it."); ?><br>
-    <? echo $this->__f("5. Modify the code locally on your computer."); ?><br>
-    <? echo $this->__f("6. Reload the page and see it has been updated."); ?><br>
+    <? echo $this->__o("1. Download the synchronization program"); ?><br>
+    <? echo $this->__o("2. Create an application"); ?><br>
+    <? echo $this->__o("3. The application will automatically be synched to your own computer."); ?><br>
+    <? echo $this->__o("4. Add the application wherever you want it."); ?><br>
+    <? echo $this->__o("5. Modify the code locally on your computer."); ?><br>
+    <? echo $this->__o("6. Reload the page and see it has been updated."); ?><br>
     </div>
 
     <div class="overviewbox">
-        <div><b><? echo $this->__f("About app management!"); ?></b></div>
-        <div><? echo $this->__f("The application management tool enables you to develope your own applications directly into getshop, and modify your web shop as you see fit. From this point you basically has access to do everything you want to, and if you can proove us that you can't. Then we will modify it to make sure you can."); ?></div>
+        <div><b><? echo $this->__o("About app management!"); ?></b></div>
+        <div><? echo $this->__o("The application management tool enables you to develope your own applications directly into getshop, and modify your web shop as you see fit. From this point you basically has access to do everything you want to, and if you can proove us that you can't. Then we will modify it to make sure you can."); ?></div>
     </div>
 </div>

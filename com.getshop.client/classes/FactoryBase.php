@@ -87,6 +87,10 @@ class FactoryBase {
         return $this->__($string);
     }
 
+    public function __o($string) {
+        return $string;
+    }
+
     /**
      * Translate the text into correct language.
      * 

@@ -505,6 +505,9 @@ class Factory extends FactoryBase {
         $this->translationMatrix = array();
         $app = "";
         foreach ($line as $entry) {
+            if(strpos($entry, "###### ") === 0) {
+                continue;
+            }
             $cell = explode(";-;", $entry);
             if(isset($cell[1])) {
                 $this->translationMatrix[$cell[0]] = $cell[1];
@@ -515,9 +518,12 @@ class Factory extends FactoryBase {
         $content = file_get_contents("translation/f_en_en.csv");
         $line = explode("\n", $content);
         foreach ($line as $entry) {
+            if(strpos($entry, "###### ") === 0) {
+                continue;
+            }
             $cell = explode(";-;", $entry);
             if(isset($cell[1])) {
-                if(!$this->translationMatrix[$cell[0]]) {
+                if(!isset($this->translationMatrix[$cell[0]])) {
                     $this->translationMatrix[$cell[0]] = $cell[1];
                 }
             }

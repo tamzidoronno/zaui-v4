@@ -1,88 +1,29 @@
-###### fb076580_c7df_471c_b6b7_9540e4212441 (OpenSRS) ######
-city;-;Postitoimipaikka
-firstname;-;Etunimi
-lastname;-;Sukunimi
-
-
 ###### df435931_9364_4b6a_b4b2_951c90cc0d70 (Login) ######
 users;-;käyttäjille
-
-
-###### 00d8f5ce_ed17_4098_8925_5697f6159f66 (LeftMenu) ######
-Link to menu;-;Yhdist2yhm???nnettuun valikkoon
-Remove image;-;Poista kuva
-
-
-###### ba6f5e74_87c7_4825_9606_f2d3c93d292f (Users) ######
-all_users;-;Kaikki käyttäjät
-create_user;-;Luo uusi käyttäjä
-edit_user;-;,,
-send_message;-;Lähetä viesti
-
-
-###### 6c245631_effb_4fe2_abf7_f44c57cb6c5b (Account) ######
-administrator;-;Administraatori
-customer;-;Asiakas
-delete_user;-;Poista käyttäjä
-editor;-;Muokkaaja
-expiredate;-;,,
-
-
-###### bf35979f_6965_4fec_9cc4_c42afd3efdd7 (MainMenu) ######
-allow_access_administrators;-;Pääsy tälle sivulle sallitu ainoastaan pääkäyttäjille
-allow_access_editors;-;Pääsy tälle sivulle sallitu ainoastaan toimitajille
-allow_access_everyone;-;Salli kaikkien pääsy tälle sivulle
-allow_access_registered_users;-;Pääsy tälle sivulle sallitu ainoastaan rekisteröitynyille käyttäjille
-apps;-;Lisäsovellukset
-config_domain;-;Domainnimen säätö
-cur_page_security;-;Nykyinen sivun turvallisuuden taso
-delete_app;-;Poistaa sovellus
-one_col;-;Yksi sarake
-reorder_app;-;,,
-security;-;Turvallisuus
-store;-;Kauppa
-themes;-;Teemat
-three_col;-;Kolme saraketta
-two_col_left;-;Kaksi saraketta pääohjain vasemalla
-two_col_right;-;Kaksi saraketta pääohjain oikealla
 
 
 ###### e9d04f19_6eaa_4a17_9b7b_aa387dbaed92 (CategoryLister) ######
 Category list;-;Ryhm??ntt??
 Create categories and add a list of products to the category, attach images to the categories, and name them as you want.;-;Luo ryhmi*a lis,uettelo tuotteista, liit+uvia ryhmiin ja nimet.e haluamallasi tavalla.
-Create new category;-;Luo uusi ryhm?
 More Categories?;-;Lis?? ryhmi??
 This category displayer is currently empty. To create a new category please click the create new category button below.;-;T?m? ryhm? on hetkell? tyhj?. Uuden ryhm?n luomiseksi kirjoita ryhm?n nimi laatikkoon ja paina ...
-change_image;-;Muokkaa kuvaa
-create_new_cat;-;Luo uusi ryhm�
-link_menu;-;Linkki valikkoon
-remove_image;-;Poista kuva
-unlink_menu;-;Poista sis,??n linkki
 
 
-###### 626ff5c4_60d4_4faf_ac2e_d0f21ffa9e87 (Search) ######
-no_products_found;-;Etsim3i tuotetta ei l??ytynyt
+###### d755efca_9e02_4e88_92c2_37a3413f3f41 (Settings) ######
+postal;-;Postinumero
 
 
 ###### framework ######
 Change image;-;Muokkaa kuvaa
+Create new category;-;Luo uusi ryhm?
+Link to menu;-;Yhdist2yhm???nnettuun valikkoon
+Remove image;-;Poista kuva
 Rename;-;Nimet5udelleen
 Reporting;-;Raportointi
 Save;-;Tallenna
-add_app_free;-;Lisää sovellus (maksuton)
-add_products;-;Lisää tuotteita
-address;-;Osoite
-already_added;-;On jo lis4y
-click_delete;-;Poistamiseksi klikkaa
-click_order;-;,,
-close;-;Sulje
 delete;-;Poista
-only_one_per_page;-;,,
-postal;-;Postinumero
 price;-;Hinta
-rename;-;Nimet5udelleen
 save;-;Tallenna
-settings;-;Asetukset
 title;-;Otsikko
 
 
@@ -94,35 +35,6 @@ Translation;-;Käännös
 ###### 320ada5b_a53a_46d2_99b2_9b0b26a7105a (ContentManager) ######
 A content manager allows you to add content to whatever page you would like to add content to. It supports text, images, and even basic HTML, its like word for web.;-;Sis,??n hallinoijan avulla voit lis$ sis4??*okaiselle sivulle. Se tukee teksti kuvia ja jopa perinteist
 Content Manager;-;Sis,??n hallinnoija
-
-
-###### d612904c_8e44_4ec0_abf9_c03b62159ce4 (Banner) ######
-height;-;Korkeus
-
-
-###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
-message_sent;-;,,
-my_name;-;Minun nimi on:
-
-
-###### 1051b4cf_6e9f_475d_aa12_fc83a89d2fd4 (TopMenu) ######
-addnew;-;[ Lisää Uusia ]
-direct_where;-;,,
-hardlink_desc;-;,,
-remove_hardlink;-;,,
-
-
-###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
-configure_booking;-;,,
-send_email;-;Lähetä sähköpostia
-send_email_desc;-;,,
-send_mail_title;-;,,
-send_sms;-;,,
-send_sms_desc;-;,,
-sms_from;-;,,
-sms_from_desc;-;,,
-sms_text;-;,,
-sms_text_desc;-;,,
 
 
 ###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
@@ -137,7 +49,6 @@ start_time;-;,,
 
 ###### 8402f800_1e7e_43b5_b3f7_6c7cabbf8942 (ProductList) ######
 Product List;-;Tuoteluettelo
-create_new;-;Luo uusi tuote
 
 
 ###### dabb8a85_f593_43ec_bf0d_240467118a40 (News) ######
@@ -155,10 +66,5 @@ detailed_desc;-;Yksityiskohtaisempi kuvaus
 edit_product;-;Muoka tuoteta
 short_description;-;Lyhyt kuvaus
 taxes;-;Verot
-
-
-###### 8ad8243c_b9c1_48d4_96d5_7382fa2e24cd (Mail) ######
-password;-;Salasana
-username;-;Käyttäjätunnus / Sähköposti
 
 

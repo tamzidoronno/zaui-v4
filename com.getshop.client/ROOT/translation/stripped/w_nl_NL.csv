@@ -1,3 +1,7 @@
+###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 ######
+By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;
+
+
 ###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
 Failed;-;
 Invalid payment method;-;
@@ -34,6 +38,7 @@ Top speed;-;
 
 
 ###### framework ######
+Buy;-;
 New message;-;
 Please check your delivery options.;-;
 Reminder;-;
@@ -41,7 +46,6 @@ Success;-;
 Wrong delivery method;-;
 email;-;
 location;-;
-org;-;
 phone;-;
 
 
@@ -60,6 +64,7 @@ Stop;-;
 Your are now signed up for the event;-;
 change;-;
 course;-;
+org;-;
 orgnummer;-;
 
 
@@ -70,7 +75,6 @@ description;-;
 
 
 ###### dcd22afc_79ba_4463_bb5c_38925468ae26 (ProductManager) ######
-Buy;-;
 shipping;-;
 
 

@@ -5,33 +5,43 @@ when;-;
 
 
 ###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
+No image added for this product;-;
 cart;-;
-no_image;-;
-select_shipment;-;
+
+
+###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 ######
+By enabling testmode for sisow, you will be able to test the payment solutions in sandbox mode.;-;
+Enable test mode for sisow;-;
+Here you can configure all the settings required to get sisow to work properly with your account. Enter the fields below and press save, as soon as everything here is set correctly you will see that a new payment options is available in the checkout area.;-;
+Merchant id;-;
+Merchant key;-;
+Your merchant id, this id is something that sisow is providing you.;-;
+Your merchant key, this id is something that sisow is providing you.;-;
+save_settings;-;
 
 
 ###### fb076580_c7df_471c_b6b7_9540e4212441 (OpenSRS) ######
-accept_domain;-;
-all_fields;-;
-avail;-;
-check_avail;-;
-city;-;
-click_to_pay;-;
-country;-;
-domain_registration;-;
-find_domain_name;-;
-firstname;-;
-lastname;-;
-not_valid;-;
-payment_received;-;
-payment_received_notfication;-;
-point_domain_name;-;
-primary_domain;-;
-save_settings_desc;-;
-secondary_domain;-;
-state;-;
-transfer_description;-;
-use_paypal;-;
+* All fields need to be filled in before you proceed.;-;
+* When payment has been received, it will automatically register your webshop to this domain name.;-;
+* You will receive an email notification when your webshop is registered to this address;-;
+Accept your domain name.;-;
+Check availability;-;
+Country;-;
+Enter Domain Name;-;
+Find your desired domain name.;-;
+First name;-;
+It is extremly easy to transfer your domain name. All you have to to do is enter the domain name in the address under.;-;
+Last name;-;
+Point your domain name to the following ip address:;-;
+Primary domain name;-;
+Register domain;-;
+Save your settings;-;
+Secondary domain name;-;
+State;-;
+Use paypal for as your preferred payment solution;-;
+enter_domain;-;
+is available.;-;
+is not a valid domain name.;-;
 
 
 ###### df435931_9364_4b6a_b4b2_951c90cc0d70 (Login) ######
@@ -40,16 +50,14 @@ users;-;
 
 
 ###### ba6f5e74_87c7_4825_9606_f2d3c93d292f (Users) ######
-all_users;-;
-create_user;-;
-edit_user;-;
-send_message;-;
+Administrators;-;
+All users;-;
 
 
 ###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
-free_shipping;-;
-product_price;-;
-startup_cost;-;
+Free shipping if total price is above, if set empty this feature is disabled;-;
+Price each product (default: 0 );-;
+Startup cost (default: 0 );-;
 
 
 ###### 974beda7_eb6e_4474_b991_5dbc9d24db8e (Logo) ######
@@ -61,18 +69,13 @@ fraktguiden is a norwegian application for keeping track of norwegian shipment p
 
 
 ###### 6c245631_effb_4fe2_abf7_f44c57cb6c5b (Account) ######
-administrator;-;
-customer;-;
-delete_user;-;
-editor;-;
-expiredate;-;
-personal_info_updated;-;
-userlevel;-;
-
-
-###### d02f8b7a_7395_455d_b754_888d7d701db8 (Dibs) ######
-dibs_address;-;
-merch_id_desc;-;
+Administrator;-;
+Customer;-;
+Delete user;-;
+Editor;-;
+Expiration date;-;
+User level;-;
+Your personal information has been updated.;-;
 
 
 ###### bf35979f_6965_4fec_9cc4_c42afd3efdd7 (MainMenu) ######
@@ -82,46 +85,33 @@ Import application;-;
 Select page layout;-;
 Select your theme;-;
 Sorry to hear that, Are you sure that you want to delete your store?;-;
-allow_access_administrators;-;
-allow_access_editors;-;
-allow_access_everyone;-;
-allow_access_registered_users;-;
-apps;-;
-config_domain;-;
-cur_page_security;-;
-delete_app;-;
-one_col;-;
-reorder_app;-;
-security;-;
-store;-;
-themes;-;
-three_col;-;
-two_col_left;-;
-two_col_right;-;
+
+
+###### d02f8b7a_7395_455d_b754_888d7d701db8 (Dibs) ######
+Have a look at http://www.dibspayment.com/ for more information.;-;
+The Merchant-ID is provided by Dibs, please contact us for more information.;-;
 
 
 ###### e9d04f19_6eaa_4a17_9b7b_aa387dbaed92 (CategoryLister) ######
-change_image;-;
-create_new_cat;-;
-link_menu;-;
-remove_image;-;
-unlink_menu;-;
+Settings;-;
+Unlink entry;-;
 
 
 ###### d755efca_9e02_4e88_92c2_37a3413f3f41 (Settings) ######
 Activate Deepfreeze;-;
+Add some eyecandy to your webshop, by activating this. It will show some nice fade in effects.;-;
 Deactivate Deepfreeze;-;
+Design;-;
+Disable or enable the search bar in the top middle area.;-;
 Enter an address to your favicon.;-;
 Favicon;-;
+Hide search bar;-;
 Please select your language;-;
 Settings saved;-;
+Specify a title for your webshop.;-;
+Specify your postal code.;-;
 Your settings have been saved.;-;
-add_eyecandy;-;
-design;-;
-hide_search;-;
-hide_search_desc;-;
-specify_postal_code;-;
-specify_title;-;
+postal;-;
 
 
 ###### ee96fe89_e09d_4f7b_921a_3272462e9b7e (Airgram) ######
@@ -129,22 +119,30 @@ Airgram allows you to push important notifications to your phone, use this appli
 
 
 ###### 626ff5c4_60d4_4faf_ac2e_d0f21ffa9e87 (Search) ######
-no_products_found;-;
+No products where found.;-;
 
 
 ###### framework ######
 Activate;-;
+Add an image;-;
 Add more applications to this page.;-;
+Add text content;-;
 Admins;-;
 All;-;
 Applications;-;
 Are you sure that you want to remove this application?;-;
+Browse applications;-;
 Cancel;-;
 Change/select theme/skin;-;
 Click to change;-;
+Click to delete;-;
+Click to reorder;-;
 Customers;-;
+Domain overview;-;
 Edit product;-;
 Editors;-;
+Import a product;-;
+Import an existing application;-;
 MainMenu;-;
 More;-;
 More color options;-;
@@ -154,51 +152,30 @@ No advanced color options for this design;-;
 No background selection available for this design.;-;
 No products has been added to this list yet, please add one from the list on the right hand side.;-;
 Page settings;-;
+Please enter your paypal address:;-;
 Please select;-;
 Product list;-;
 Remove applications that are added;-;
+Remove hardlink;-;
 Saved;-;
 Security;-;
 Select different page layouts;-;
 Setup your own domain;-;
+Soon to be available;-;
 Store settings / more applications available here;-;
 Text saved;-;
 The text has been saved;-;
 There is one layout defined for each page, a layout can have multiple of rows and multiple of columns.;-;
 To change a layout for the current page, please select one from the list below.;-;
+Transfer existing domain;-;
+Upload image;-;
 Warning! this store will automatically be reset to original state each hour;-;
 Webshop;-;
 What is deepfreeze? Well, if you activate deepfreeze you basically put all options on hold, all changes made after deepfreezeing will be purged each hour.;-;
-add_app_free;-;
-add_apps;-;
-add_other_apps;-;
-add_product;-;
-add_products;-;
-add_text;-;
-address;-;
 adv;-;
-already_added;-;
-click_delete;-;
-click_order;-;
-close;-;
 delete;-;
-domain_overview;-;
-domain_transfer;-;
-empty_left;-;
-empty_right;-;
-enter_address;-;
-enter_domain;-;
-enter_feedback;-;
-hardlink;-;
-help;-;
-only_one_per_page;-;
-postal;-;
 price;-;
-rename;-;
 save;-;
-save_settings;-;
-send_feedback;-;
-settings;-;
 title;-;
 
 
@@ -239,55 +216,38 @@ profile_url_desc;-;
 
 
 ###### a93d64e4_b7fa_4d55_a804_ea664b037e72 (StockControl) ######
+By enabling this function the stock quantities will be modified when a customer has done the checkout routine.;-;
+Display 'X in stock' or 'out of stock' on product?;-;
+If a order is canceled, should the items from the order be put back in stock?;-;
 It is not possible to activate this option with the current settings.;-;
 Not possible;-;
-return_stock;-;
-return_stock_desc;-;
-show_stock_status;-;
-show_stock_status_desc;-;
-withdraw;-;
+Return stock if order is canceled?;-;
+Show stock status on product?;-;
+Withdraw from stock when order is created;-;
 
 
 ###### 320ada5b_a53a_46d2_99b2_9b0b26a7105a (ContentManager) ######
 Edit text content;-;
-add_text_desc;-;
 
 
 ###### d612904c_8e44_4ec0_abf9_c03b62159ce4 (Banner) ######
-add_banner;-;
-banner_config;-;
-currently_configured_banners;-;
+Add new banner;-;
+Banner configuration;-;
+By setting the settings below you will change the banners size, this is convenient if you need to make your banner fit better to your design.;-;
+Height;-;
+No banners added, click on settings in the top right corner to add one.;-;
+You currently have (%d) banners configured;-;
 edit banners;-;
-height;-;
-no_banners;-;
-settings_desc;-;
 
 
 ###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
-message_sent;-;
-my_name;-;
+Your message has been sent!;-;
 
 
 ###### 1051b4cf_6e9f_475d_aa12_fc83a89d2fd4 (TopMenu) ######
-addnew;-;
-direct_where;-;
-hardlink_desc;-;
-remove_hardlink;-;
-
-
-###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
-configure_booking;-;
-send_email;-;
-send_email_desc;-;
-send_mail_title;-;
-send_sms;-;
-send_sms_desc;-;
-sms_from;-;
-sms_from_desc;-;
-sms_text;-;
-sms_text_desc;-;
-title_send;-;
-title_send_desc;-;
+Hardlinks are a way for you to manually specify where to go when the button is clicked.;-;
+Where you would you like to direct the user:;-;
+[ Add new ];-;
 
 
 ###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
@@ -308,25 +268,39 @@ start_time;-;
 stop;-;
 
 
+###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
+Configure your booking application;-;
+Enable this option to send email when a booking has been made.;-;
+If this option has been enabled the attendee will receive an sms.;-;
+SMS From;-;
+SMS Text;-;
+Send email;-;
+Send sms to attendee?;-;
+The default title to use when sending emails.;-;
+This is the mail that will be sent upon booking;-;
+Title when sending emails;-;
+What should be the sender name?;-;
+What should the text message contain?;-;
+
+
 ###### e72f97ad_aa1f_4e67_bcfd_e64607f05f93 (Gallery) ######
-Upload image;-;
-upload_image;-;
+Uplaod image;-;
 
 
 ###### 8402f800_1e7e_43b5_b3f7_6c7cabbf8942 (ProductList) ######
 Add to list;-;
 All products available;-;
+Create new;-;
 Create product;-;
 My product list;-;
 Products already added to your list;-;
 Remove from list;-;
 Save product list;-;
-create_new;-;
 
 
 ###### 0cf21aa0_5a46_41c0_b5a6_fd52fb90216f (GoogleAnalytics) ######
-google_code;-;
-google_code_desc;-;
+Google analytics code;-;
+This is a code that you need to get from your google analytics account. If you need help to get it we would be more then happy to help you out, just contact our customer support by email and you will have an answer within an hour;-;
 
 
 ###### dabb8a85_f593_43ec_bf0d_240467118a40 (News) ######
@@ -360,7 +334,6 @@ Delete product;-;
 Edit product information;-;
 Edit the data below and write a description, the name of the product and a more detailed description. This data will be displayed on your product when viewing it.;-;
 Edit your product.;-;
-How to edit product;-;
 Images attached to this product;-;
 Import;-;
 Insert image;-;
@@ -390,22 +363,16 @@ stock_quantity;-;
 taxes;-;
 
 
-###### c7736539_4523_4691_8453_a6aa1e784fc1 (PayPal) ######
-paypal;-;
-
-
 ###### 8ad8243c_b9c1_48d4_96d5_7382fa2e24cd (Mail) ######
-config_sender;-;
-enable_tls;-;
-enable_tls_desc;-;
-hostname;-;
-hostname_desc_smtp;-;
-password;-;
-port;-;
-smtp_password_desc;-;
-smtp_port_desc;-;
-smtp_username_desc;-;
-username;-;
+Configure your email sender.;-;
+Enable tls?;-;
+Hostname;-;
+Port;-;
+Should TLS be enabled for this smtp server?;-;
+The hostname for your smtp server.;-;
+The password for your smtp server.;-;
+The port for your smtp server.;-;
+The username for your smtp server.;-;
 
 
 ###### 17c48891_6f7a_47a0_849d_b50de9af218f (GoogleMaps) ######

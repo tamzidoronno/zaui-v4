@@ -3,28 +3,40 @@ Cart overview;-;Handlekurv oversikt
 Checkout;-;Utsjekking
 Click next to select shipping options;-;Trykk neste for å velge en betalings metode
 Confirm order;-;Bekreft ordre
-Please select a shipment method.;-;Vennligst velg en forendelsemetode
+Failed;-;Feilet
+Invalid payment method;-;Ugyldig betalings metode
+Please select a valid payment method;-;Vennligst velg en gyldig betalings metode.
+Shipping price;-;Forendelse pris
 Total;-;Total
+Was not able to get payment methods, please check your postcode;-;Klarte ikke å oppdrive betalings metoder, vennligst sjekk ditt postnummer.
 
 
 ###### 2afb045b_fa01_4398_8582_33f212bb8db8 (Chat) ######
 Chat with us;-;Chat med oss
 How can I help you today ?;-;Hva kan jeg hjelpe deg med?
+Our local time is:;-;Vår lokale tid er
+Please select a user in the left menu;-;Vennligst velg en bruker fra venstre meny.
+You need to select at least one to send back message to;-;Du må velge minium en som du kan sende en melding til.
 if we dont answer, please leave your email here and we will return your message asap.;-;Hvis vi ikke svarer, legg igjen en din epost, og vi vil kontakte deg så snart som mulig.
 
 
 ###### df435931_9364_4b6a_b4b2_951c90cc0d70 (Login) ######
+An email has been sent to you with the confirmation code.;-;En godkjennings kode er sendt til din epost.
+Email sent;-;Epost sendt
 Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.
 Login;-;Logg inn
 Logout;-;Logg ut
 Lost your password?;-;Glemt ditt passord?
 My Account;-;Min konto
 Orders;-;Alle ordre
+Password cannot be empty;-;Passordet kan ikke være tomt.
+Password does not match, please re enter password;-;Passordet stemmer ikke oversens, prøv på nytt.
+Password has been successfully updated;-;Passordet har blitt oppdatert.
+Password has been updated;-;Passordet har blitt oppdatert.
 Please enter your email address:;-;Vennligst skriv inn din epost
 Please following theese steps to recover your password.;-;Vennligst følgt instruksjonen under.
 Recover password;-;Gjennopprett passord
 Send me a code;-;Send meg koden
-Username / Email;-;Brukernavn / Epost
 
 
 ###### 626ff5c4_60d4_4faf_ac2e_d0f21ffa9e87 (Search) ######
@@ -35,38 +47,47 @@ Search for a product;-;Søk etter et produkt
 A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
 Add to cart;-;Legg i handlekurv
 Address;-;Adresse
+Buy;-;Kjøp
 Change password;-;Endre passord
 City;-;By
+Company;-;Selskap
 Completed;-;Gjennomført
 Delete image;-;Slett bilde
 Email;-;Epost
 Featured Product;-;Fremhevet produkt
 Free shipping;-;Gratis frakt
 Full name;-;Hele navnet
+My name is:;-;Mitt navn er
 Name;-;Navn
+New message;-;Ny melding
 New password;-;Nytt passord
 Next;-; Neste
 Password;-;Passord
 Payment;-;Betaling
 Phone;-;Telefon
 Place order;-;Legg inn ordre
+Please check your delivery options.;-;Vennligst sjekk dine leveringsmetoder.
+Please select a shipment method.;-;Vennligst velg en forendelsemetode
 Please select department;-;Velg en avdeling
 Postal code;-;Postnummer
 Previous;-;Forrige
 Price;-;Pris
 Related products;-;Relaterte produkter
+Reminder;-;Påminnelse
 Remove;-;Fjern
 Repeat password;-;Gjenta passord
 Send message;-;Send melding
+Success;-;Success
 This page is only available for adminsitrators;-;Denne siden er kun tilgjengelig for adminstratorer.
 This page is only available for editors.;-;Denne siden er kun tilgjengelig for editorer.
 This page is only available for registered users.;-;Denne siden er kun tilgjengelig for registrerte brukere
 Update;-;Oppdater
+Username / Email;-;Brukernavn / Epost
 Weight;-;Vekt
+Wrong delivery method;-;Feil forsendelses metode.
 You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
 email;-;E-post
 location;-;Sted
-org;-;Firma
 phone;-;Mob.Tlf.
 
 
@@ -75,16 +96,30 @@ Fixed price;-;Fikset pris
 Shipment settings;-;Betaling instillinger
 
 
+###### 32c15c30_d665_11e2_8b8b_0800200c9a66 (RealEstate) ######
+Les mer;-;Les mer
+
+
+###### d612904c_8e44_4ec0_abf9_c03b62159ce4 (Banner) ######
+Banner settings;-;Banner innstillinger
+Configure banner slider;-;Konfigurer banner slideren
+
+
 ###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
-Company;-;Selskap
-My name is:;-;Mitt navn er
 Send us mail;-;Send oss en epost
 What's on your mind?;-;Hva ønsker du å formidle?
+Your message has been delivered;-;Din melding har blitt sendt.
 
 
 ###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
+All fields are required;-;Alle felt er påkrevd
 Date;-;Dato
 Sign up;-;Logg in
+Stop;-;Stopp
+Your are now signed up for the event;-;Du er nå registert inn på denne eventen.
+change;-;endre
+course;-;kurs
+org;-;Firma
 orgnummer;-;Org.nr.
 
 
@@ -102,9 +137,11 @@ May;-;Mai
 Monday;-;Mandag
 November;-;November
 October;-;Oktober
+Reminder sent by email;-;En påmindelse har blitt sendt per epost.
 Saturday;-;Lørdag
 September;-;September
 Sunday;-;Søndag
+The event has been confirmed.;-;Eventent har blitt bekreftet.
 Thursday;-;Torsdag
 Tuesday;-;Tirsdag
 We host events at the following locations, click on the location to filter the calendar by location(s);-;We har events på følgende steder, trykk på stedet for å filtere kalenderen på stedet(ene)
@@ -135,7 +172,6 @@ You are here:;-;Du er her:
 
 
 ###### dcd22afc_79ba_4463_bb5c_38925468ae26 (ProductManager) ######
-Buy;-;Kjøp
 Click here to edit the text.;-;Trykk her for å editere tekst.
 Details;-;Detaljer
 Extended Description;-;Utvidet beskrivelse
@@ -153,6 +189,7 @@ You are being transferred to paypal, please wait...;-;Du  blir nå overført til
 Application;-;Applikasjoner
 Birth Date;-;Bursdag
 Cell phone;-;Mobil tlf
+Changes has been saved!;-;Innstillingene har blitt lagret!
 End date;-;Slutt dato
 Group;-;Gruppe
 Number of instances added;-;Antall av instanser lagt til

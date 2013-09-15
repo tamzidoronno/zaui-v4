@@ -1,133 +1,27 @@
 ###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
 cart;-;Cart
-no_image;-;No image added for this product
-select_shipment;-;Please select a shipment method.
+
+
+###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 ######
+save_settings;-;Save settings
 
 
 ###### fb076580_c7df_471c_b6b7_9540e4212441 (OpenSRS) ######
-accept_domain;-;Accept your domain name.
-all_fields;-;* All fields need to be filled in before you proceed.
-avail;-;is available.
-check_avail;-;Check availability
-city;-;City
-click_to_pay;-;Click to enter payment information
-country;-;Country
-domain_registration;-;Register domain
-find_domain_name;-;Find your desired domain name.
-firstname;-;First name
-lastname;-;Last name
-not_valid;-;is not a valid domain name.
-payment_received;-;"* When payment has been received, it will automatically register your webshop to this domain name."
-payment_received_notfication;-;* You will receive an email notification when your webshop is registered to this address
-point_domain_name;-;Point your domain name to the following ip address:
-primary_domain;-;Primary domain name
-save_settings_desc;-;Save your settings
-secondary_domain;-;Secondary domain name
-state;-;State
-transfer_description;-;It is extremly easy to transfer your domain name into getshop. All you have to to do is enter the domain name in the address under.
-use_paypal;-;Use paypal for as your preferred payment solution
+enter_domain;-;Enter Domain Name
 
 
 ###### df435931_9364_4b6a_b4b2_951c90cc0d70 (Login) ######
 users;-;Users
 
 
-###### ba6f5e74_87c7_4825_9606_f2d3c93d292f (Users) ######
-all_users;-;All users
-create_user;-;Create a new user
-edit_user;-;Edit user
-send_message;-;Send message
-
-
-###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
-free_shipping;-;"Free shipping if total price is above, if set empty this feature is disabled"
-product_price;-;Price each product (default: 0 )
-startup_cost;-;Startup cost (default: 0 )
-
-
-###### 6c245631_effb_4fe2_abf7_f44c57cb6c5b (Account) ######
-administrator;-;Administrator
-customer;-;Customer
-delete_user;-;Delete user
-editor;-;Editor
-expiredate;-;Expiration date
-personal_info_updated;-;Your personal information has been updated.
-userlevel;-;User level
-
-
-###### d02f8b7a_7395_455d_b754_888d7d701db8 (Dibs) ######
-dibs_address;-;Have a look at http://www.dibspayment.com/ for more information.
-merch_id_desc;-;"The Merchant-ID is provided by Dibs, please contact us for more information."
-
-
-###### bf35979f_6965_4fec_9cc4_c42afd3efdd7 (MainMenu) ######
-allow_access_administrators;-;Allow access to this page to administrators only
-allow_access_editors;-;Allow access to this page to editors only
-allow_access_everyone;-;Allow access to this page to everyone
-allow_access_registered_users;-;Allow access to this page to registered users only
-apps;-;Apps
-config_domain;-;Domain name configuration
-cur_page_security;-;Current page security level
-delete_app;-;Delete application
-one_col;-;One column
-reorder_app;-;Reorder application
-security;-;Security
-themes;-;Themes
-three_col;-;Three column 
-two_col_left;-;Two column left main
-two_col_right;-;Two column right main
-
-
-###### e9d04f19_6eaa_4a17_9b7b_aa387dbaed92 (CategoryLister) ######
-change_image;-;Change image
-create_new_cat;-;Create new category
-link_menu;-;Link to menu
-remove_image;-;Remove image
-unlink_menu;-;Unlink entry
-
-
 ###### d755efca_9e02_4e88_92c2_37a3413f3f41 (Settings) ######
-add_eyecandy;-;"Add some eyecandy to your webshop, by activating this. It will show some nice fade in effects."
-design;-;Design
-hide_search;-;Hide search bar
-hide_search_desc;-;Disable or enable the search bar in the top middle area.
-specify_postal_code;-;Specify your postal code.
-specify_title;-;Specify a title for your webshop.
-
-
-###### 626ff5c4_60d4_4faf_ac2e_d0f21ffa9e87 (Search) ######
-no_products_found;-;No products found for your search criteria.
+postal;-;Postal code
 
 
 ###### framework ######
-add_app_free;-;add application (free)
-add_apps;-;Add applications
-add_other_apps;-;Add other applications
-add_product;-;Add single product
-add_products;-;Add products
-add_text;-;Add text content
-address;-;Address
-already_added;-;Already added
-click_delete;-;Click to delete
-click_order;-;Click to reorder
-close;-;Close
 delete;-;Delete
-domain_overview;-;Domain overview
-domain_transfer;-;Transfer existing domain
-empty_left;-;"Empty left column, you can add applications to this area, choose between: ""LeftMenu"", ""Commercial"", ""ContentManager"", etc"
-empty_right;-;"Empty right column. A right column can be used as a AD area, add text using a content manager, a right menu, etc. Add an application using the administration menu."
-enter_address;-;Please enter your paypal address:
-enter_domain;-;Enter Domain Name
-enter_feedback;-;Enter your feedback in the field below
-hardlink;-;Hardlink
-only_one_per_page;-;Only one pr page
-postal;-;Postal code
 price;-;Price
-rename;-;Rename
 save;-;Save
-save_settings;-;Save settings
-send_feedback;-;Send feedback to getshop.
-settings;-;Settings
 title;-;Title
 
 
@@ -138,55 +32,6 @@ like_button;-;Like button
 like_button_desc;-;Enables or disables a like button to all your products
 profile_url;-;Profile url
 profile_url_desc;-;Your profile url example: https://www.facebook.com/zuck
-
-
-###### a93d64e4_b7fa_4d55_a804_ea664b037e72 (StockControl) ######
-return_stock;-;Return stock if order is canceled?
-return_stock_desc;-;"If a order is canceled, should the items from the order be put back in stock?"
-show_stock_status;-;Show stock status on product?
-show_stock_status_desc;-;"Display ""X in stock"" or ""out of stock"" on product?"
-withdraw;-;Withdraw from stock when order is created
-withdraw_desc;-;By enabling this function the stock quantities will be modified when a customer has done the checkout routine.
-
-
-###### 320ada5b_a53a_46d2_99b2_9b0b26a7105a (ContentManager) ######
-add_text_desc;-;"No content set for this yet, please modify the content for this application by clicking the 'edit' button at the bottom for this application. This informationbox will be removed as soon as you have added content to this application."
-
-
-###### d612904c_8e44_4ec0_abf9_c03b62159ce4 (Banner) ######
-add_banner;-;Add new banner
-banner_config;-;Banner configuration
-currently_configured_banners;-;You currently have (%d) banners configured
-height;-;Height
-no_banners;-;"No banners added, click on settings in the top right corner to add one."
-settings_desc;-;"By setting the settings below you will change the banners size, this is convenient if you need to make your banner fit better to your design."
-
-
-###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
-message_sent;-;Your message has been sent!
-my_name;-;My name is:
-
-
-###### 1051b4cf_6e9f_475d_aa12_fc83a89d2fd4 (TopMenu) ######
-addnew;-;[ Add new ]
-direct_where;-;Where you would you like to direct the user:
-hardlink_desc;-;Hardlinks are a way for you to manually specify where to go when the button is clicked.
-remove_hardlink;-;Remove hardlink
-
-
-###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
-configure_booking;-;Configure your booking application
-send_email;-;Send email
-send_email_desc;-;Enable this option to send email when a booking has been made.
-send_mail_title;-;This is the mail that will be sent upon booking
-send_sms;-;Send sms to attendee?
-send_sms_desc;-;If this option has been enabled the attendee will receive an sms.
-sms_from;-;SMS From
-sms_from_desc;-;What should be the sender name?
-sms_text;-;SMS Text
-sms_text_desc;-;What should the text message contain?
-title_send;-;Title when sending emails
-title_send_desc;-;The default title to use when sending emails.
 
 
 ###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
@@ -203,19 +48,6 @@ start_time;-;Start time
 stop;-;Stop
 
 
-###### e72f97ad_aa1f_4e67_bcfd_e64607f05f93 (Gallery) ######
-upload_image;-;Upload image
-
-
-###### 8402f800_1e7e_43b5_b3f7_6c7cabbf8942 (ProductList) ######
-create_new;-;Create a new product
-
-
-###### 0cf21aa0_5a46_41c0_b5a6_fd52fb90216f (GoogleAnalytics) ######
-google_code;-;Google analytics code
-google_code_desc;-;"This is a code that you need to get from your google analytics account. If you need help to get it we would be more then happy to help you out, just contact our customer support by email and you will have an answer within an hour"
-
-
 ###### dabb8a85_f593_43ec_bf0d_240467118a40 (News) ######
 add_news;-;Add News
 create_news_desc;-;Create a news entry by entering text in the textfield below.
@@ -228,19 +60,5 @@ edit_product;-;Edit product
 short_description;-;A short description
 stock_quantity;-;Stock Quantity
 taxes;-;Taxes
-
-
-###### 8ad8243c_b9c1_48d4_96d5_7382fa2e24cd (Mail) ######
-config_sender;-;Configure your email sender.
-enable_tls;-;Enable tls?
-enable_tls_desc;-;Should TLS be enabled for this smtp server?
-hostname;-;Hostname
-hostname_desc_smtp;-;The hostname for your smtp server.
-password;-;Password0
-port;-;Port
-smtp_password_desc;-;The password for your smtp server.
-smtp_port_desc;-;The port for your smtp server.
-smtp_username_desc;-;The username for your smtp server.
-username;-;Username / Email
 
 

@@ -1,3 +1,7 @@
+###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 ######
+By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;
+
+
 ###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
 Cart overview;-;
 Checkout;-;
@@ -15,10 +19,6 @@ Our local time is:;-;
 Please select a user in the left menu;-;
 You need to select at least one to send back message to;-;
 if we dont answer, please leave your email here and we will return your message asap.;-;
-
-
-###### 7a4f3750_895a_11e2_9e96_0800200c9a66 (GetShopTheme) ######
-This design is private to getshop only.;-;
 
 
 ###### df435931_9364_4b6a_b4b2_951c90cc0d70 (Login) ######
@@ -45,6 +45,8 @@ Top speed;-;
 
 ###### framework ######
 A red theme that can be used when selling exciting things;-;
+Buy;-;
+Company;-;
 Delete image;-;
 Featured Product;-;
 Free shipping;-;
@@ -59,7 +61,6 @@ Weight;-;
 Wrong delivery method;-;
 email;-;
 location;-;
-org;-;
 phone;-;
 
 
@@ -77,7 +78,6 @@ Configure banner slider;-;
 
 
 ###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
-Company;-;
 Send us mail;-;
 What's on your mind?;-;
 Your message has been delivered;-;
@@ -91,6 +91,7 @@ Stop;-;
 Your are now signed up for the event;-;
 change;-;
 course;-;
+org;-;
 orgnummer;-;
 
 
@@ -126,7 +127,6 @@ Status;-;
 
 
 ###### dcd22afc_79ba_4463_bb5c_38925468ae26 (ProductManager) ######
-Buy;-;
 Click here to edit the text.;-;
 Details;-;
 Other images;-;

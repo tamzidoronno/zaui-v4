@@ -58,12 +58,12 @@ class ApplicationBase extends FactoryBase {
         
         echo "<div appid='$id' app='" . $className . "' class='app $changeable " . $className . "' appsettingsid='$appSettingsId'>";
         if($this->isEditorMode()) {
-            echo "<div class='mask'><div class='inner'>".$this->__("click_delete", "common")."</div></div>";
+            echo "<div class='mask'><div class='inner'>".$this->__f("Click to delete")."</div></div>";
             echo "<div class='order_mask'>";
 
             echo "<div class='inner'>";
             echo "<span class='reorder_up'></span>";
-            echo $this->__("click_order", "common");
+            echo $this->__f("Click to reorder");
             echo "<span class='reorder_down'></span>";
             echo "</div>";
             echo "</div>";

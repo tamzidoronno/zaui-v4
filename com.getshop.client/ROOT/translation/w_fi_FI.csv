@@ -1,6 +1,5 @@
 ###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
 Confirm order;-;Vahvista tilaus
-Please select a shipment method.;-;Olkaa hyvä ja valitsekaa toimitustapa
 
 
 ###### 2afb045b_fa01_4398_8582_33f212bb8db8 (Chat) ######
@@ -19,7 +18,6 @@ Please enter your email address:;-;Olkaa hyvä ja kirjoittakaa sähköpostiosoit
 Please following theese steps to recover your password.;-;Olkaa hyvä ja seurakaa näitä ohjeita salasanan palauttamiseksi
 Recover password;-;Palauta salasana
 Send me a code;-;Lähetä minulle koodi
-Username / Email;-;Käyttäjätunnus / Sähköposti
 
 
 ###### 626ff5c4_60d4_4faf_ac2e_d0f21ffa9e87 (Search) ######
@@ -34,11 +32,13 @@ City;-;Kaupunki
 Completed;-;Valmis
 Email;-;Sähköposti
 Full name;-;Koko nimi
+My name is:;-;Minun nimeni on:
 New password;-;Uusi salasana
 Next;-;Seuraava
 Password;-;Salasana
 Phone;-;Puhelin
 Place order;-;Laita tilaus
+Please select a shipment method.;-;Olkaa hyvä ja valitsekaa toimitustapa
 Postal code;-;Postinumero
 Previous;-;Edellinen
 Price;-;Hinta
@@ -50,15 +50,12 @@ This page is only available for adminsitrators;-;Tämä sivu on saattavilla aino
 This page is only available for editors.;-;Tämä sivu on saattavilla ainoastaan toimittajalle
 This page is only available for registered users.;-;Tämä sivu on saattavilla ainoastaan rekisteröityille käyttäjille
 Update;-;Päivitys
+Username / Email;-;Käyttäjätunnus / Sähköposti
 You do not have any products in your cart;-;Ostoskorisi on tyhjä
 
 
 ###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
 Fixed price;-;Kiinteä hinta
-
-
-###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
-My name is:;-;Minun nimeni on:
 
 
 ###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######

@@ -20,6 +20,8 @@ About app management!;-;
 About this attribute group:;-;
 Accessed when;-;
 Action;-;
+Activate;-;
+Activate / deactivate the applications you would like your customers to have access to.;-;
 Activate Deepfreeze;-;
 Activity;-;
 Add;-;
@@ -29,7 +31,9 @@ Add a new marker;-;
 Add a product to a page, add description, price, title, and other attributes. And you are ready to start selling the product. Combine it with a left menu, a category list to create a flexible and powerful webshop.;-;
 Add additional stores that should have access to this application (comma seperated);-;
 Add an image by clicking the button below to start your image upload progress.;-;
+Add application;-;
 Add images to the product;-;
+Add more applications to this page.;-;
 Add new;-;
 Add sub entry;-;
 Add this application and get started adding content to your page.;-;
@@ -41,9 +45,12 @@ Additional domain names;-;
 Additional info;-;
 Admin functions;-;
 Administrators only;-;
+Admins;-;
 Advanced Options;-;
 Advanced settings;-;
 Advanced settings allows you to finetune different aspects to your product. For example, if shipping is configured and you would like this product to be shipped for free.;-;
+Airgram allows you to push important notifications to your phone, use this application to push notifications to your cell phone when something important is happening, for example if someone is starting to chat with you, you will be instantly notified and can responde accordingly. Just download airgram from google play or app store and start using it.;-;
+All;-;
 All fields need to be filled before you continue;-;
 All page views listed;-;
 All products available;-;
@@ -55,9 +62,15 @@ An introduction to application management in GetShop.;-;
 Anonymous user;-;
 Answering your customers questions, means more sale. By adding this excellent chat application, you can answer on request at any time from you mobile devices or your stationary computer.;-;
 Application id;-;
+Application management;-;
 Application overview;-;
+Applications;-;
 Are you limited to only one instance of this applications for each page?;-;
+Are you sure that you want to remove this application?;-;
 Are you sure you want to delete this application? You will not be able to recover this!;-;
+Are you sure you want to delete this logo?;-;
+Are you sure you want to delete this product?;-;
+Are you sure you want to remove this?;-;
 Are you sure you want to synchronize this application? All files which already exists for application will be overwritten!;-;
 Attendees;-;
 Attribute administration;-;
@@ -80,12 +93,12 @@ Button color;-;
 Button text color;-;
 By adding this application you will see some static over your sms usage.;-;
 By clicking the button above you will be able to add an application to this area.;-;
-By enabling testmode for sisow, you will be able to test the payment solutions in sandbox mode.;-;
 By turning on this feature you will set this application to be visible on all pages.;-;
 Cancel;-;
 Cart (%s);-;
 Category list;-;Ryhm??ntt??
 Change image;-;Muokkaa kuvaa
+Change/select theme/skin;-;
 Chat;-;
 Chrome?;-;
 Click on create application to get started, you will then get an input form to start filling out your product.;-;
@@ -93,6 +106,7 @@ Click on the chat icon in the top menu and start translating.;-;
 Click on the icon in the top admin menu under category More to gain access to your reporting page.;-;
 Click the create application button and you will automatically get a form which sends you email directly to your email address when someone use this form.;-;
 Click to add application;-;
+Click to change;-;
 Click to change subject;-;
 Clone this application;-;
 Close;-;
@@ -114,6 +128,7 @@ Create a new product;-;
 Create a new user;-;
 Create application;-;
 Create categories and add a list of products to the category, attach images to the categories, and name them as you want.;-;Luo ryhmi*a lis,uettelo tuotteista, liit+uvia ryhmiin ja nimet.e haluamallasi tavalla.
+Create event;-;
 Create new category;-;Luo uusi ryhm?
 Create new group;-;
 Create news;-;Luo uusi uutiksien kohta
@@ -125,17 +140,21 @@ Create this application and start showing events on given dates.;-;
 Create user;-;
 Create your own application and start building your own web shop.;-;
 Created when;-;
+Crop;-;
 Customer address;-;
 Customer city;-;
 Customer email;-;
 Customer name;-;
 Customer phone;-;
+Customers;-;
+Data has been saved;-;
 Deactivate Deepfreeze;-;
 Default price;-;
 Delete;-;
 Delete attribute;-;
 Delete group;-;
 Delete my store;-;
+Delete product;-;
 Delete selected application;-;
 Delete this application;-;
 Delete this image;-;
@@ -146,14 +165,18 @@ Do you want to display the shipping price in the detailed product view?;-;
 Domain name;-;
 Domain name configuration;-;
 Edit;-;
+Edit event;-;
 Edit google maps;-;
 Edit product;-;
+Edit product information;-;
+Edit text content;-;
 Edit the data below and write a description, the name of the product and a more detailed description. This data will be displayed on your product when viewing it.;-;
+Edit the image;-;
 Edit your product.;-;
+Editors;-;
 Editors and adminstrators only;-;
 Email / username;-;
 Email address;-;
-Enable test mode for sisow;-;
 End hour;-;
 Enter a menu name;-;
 Enter an address to link this to;-;
@@ -176,11 +199,11 @@ Google analytics is by far the best reporting tool for webadministrator, by addi
 Google maps configuration;-;
 Hardlink;-;
 Hardlink configuration for menu entry;-;
-Here you can configure all the settings required to get sisow to work properly with your account. Enter the fields below and press save, as soon as everything here is set correctly you will see that a new payment options is available in the checkout area.;-;
 Hide cart;-;
 Hide shipping price from this product?;-;
 History;-;
 How many days for a free trial?;-;
+How to edit product;-;
 If converting to a different currency, you can specify a percentage of how much more you would like to append to conversion when the conversion calculation is done. For example 10 will give you a 10% higher conversion rate.;-;
 If the total amount in the basket is outside of the range above, use this price.;-;
 If this email address is specified, it will send notificition to this one if a requested event has been made.;-;
@@ -189,14 +212,18 @@ If this function is enabled, it will show the company field.;-;
 If this is set, getshop will automatically convert from this currency to the currency above for all other customers.;-;
 If you want to charge for this application, specify the price you want for it (one time cost).;-;
 Images;-;
+Images attached to this product;-;
 Import;-;
 Import an existing application.;-;
+Import application;-;
 Import to area;-;
+Insert image;-;
 Install the synchronization client (linux);-;
 Interval;-;
 Is this a page singleton application?;-;
 Is this a singleton application?;-;
 Is this your default picture to the product?;-;
+It is not possible to activate this option with the current settings.;-;
 Item price;-;
 Just add it;-;
 Just click the button below;-;
@@ -211,22 +238,25 @@ Left;-;
 Left Menu;-;
 Lets you easily connect to paypal, and give your customers option to pay using paypal.;-;
 Link to menu;-;Yhdist2yhm???nnettuun valikkoon
+List has been saved;-;
 Mail;-;
 MailManager;-;
+MainMenu;-;
 Manage applications;-;
 Manually select a color;-;
 Markers;-;
 Marketing;-;
 Marketing is applications like news, and other application used for marketing.;-;
 Menu hardlink for;-;
-Merchant id;-;
-Merchant key;-;
 Method;-;
 Middle;-;
 Minimum activity;-;
+Modify your product;-;
+More;-;
 More Categories?;-;Lis?? ryhmi??
 More color options;-;
 More...;-;
+Move applications;-;
 My product list;-;
 Need to display your realestates? well, here is the application that allows you to do that, simply add the application to your page and start editing your realestate;-;
 New product / untitled product;-;
@@ -246,7 +276,9 @@ No users found;-;
 No users where found for this time range.;-;
 North east corner latitude;-;
 North east corner longitude;-;
+Not possible;-;
 Not satisfied with the text "hardcoded" on your page?<br>Add this application and tune the text yourself.;-;
+Not valid selection;-;
 Note: minumum 3 chars before search start;-;
 Number of application created by you:;-;
 Number of columns;-;
@@ -268,23 +300,33 @@ Page Settings;-;
 Page description;-;
 Page id;-;
 Page name;-;
+Page security;-;
+Page settings;-;
 Page view summary;-;
 Page views;-;
 Payment is transactional applications like paypal, dibs, visa, etc.;-;
 Paypal address;-;
+Please click on 'Add new top level variation' above;-;
+Please select;-;
 Please select someone to chat with at the right side;-;
+Please select the options marked in red;-;
 Please select your language;-;
 Please specify a name;-;
+Preview;-;
 Price?;-;
 Product Information;-;
 Product List;-;Tuoteluettelo
 Product Manager;-;
+Product list;-;
 Product name;-;
+Product variations;-;
 Product views;-;
 Products already added to your list;-;
 Push the create application button to get you started.;-;
 Real estate;-;
+Reminder sent by sms;-;
 Remove application;-;
+Remove applications that are added;-;
 Remove from list;-;
 Remove icon;-;
 Remove image;-;Poista kuva
@@ -296,6 +338,7 @@ Reset code is;-;
 Restrict to administrators;-;
 Restrict to administrators and editors;-;
 Right;-;
+Rotate;-;
 Sandbox;-;
 Save;-;Tallenna
 Save changes;-;
@@ -303,19 +346,28 @@ Save product;-;
 Save product list;-;
 Save settings;-;
 Save translation;-;
+Saved;-;
 Search;-;
+Security;-;
 Select a group in the left hand area;-;
 Select a group:;-;
+Select different page layouts;-;
+Select page layout;-;
+Select your theme;-;
+Send reminder;-;
 Set application sticky;-;
 Set as homepage;-;
 Set date;-;
 Set icon;-;
+Settings saved;-;
+Setup your own domain;-;
 Should this application be public available?;-;
 Should this product listed as a featured product?;-;
 Show company field;-;
 Show location filter left for calendar;-;
 Sms Statistic;-;
 Some settings are important for google and other search engines, and this is where you can configure them.;-;
+Sorry to hear that, Are you sure that you want to delete your store?;-;
 South west corner latitude;-;
 South west corner longitude;-;
 Specify an airgram account.;-;
@@ -332,6 +384,7 @@ Status - connnected!;-;
 Status - not connnected!;-;
 Stock Control;-;
 Store currency;-;
+Store settings / more applications available here;-;
 Subentry name;-;
 Subheader;-;
 Subject;-;
@@ -341,12 +394,15 @@ Summary!;-;
 Synchronize this application;-;
 System;-;
 Text description;-;
+Text saved;-;
 Text title;-;
 Thank you for your order.;-;
 The address is already taken or invalid.;-;
 The application management tool enables you to develope your own applications directly into getshop, and modify your web shop as you see fit. From this point you basically has access to do everything you want to, and if you can proove us that you can't. Then we will modify it to make sure you can.;-;
 The code for this application will automatically be synced to your code base after you click the start building application button.;-;
 The paypal account has not been configured correctly. Go to settings and configure it properly;-;
+The text has been saved;-;
+The translation has been saved;-;
 Theme;-;
 Themes;-;
 Then click on the save button, or click outside of the text area to save the text.;-;
@@ -354,6 +410,7 @@ There is one layout defined for each page, a layout can have multiple of rows an
 This application gives you the ability to control your stocks, simply change how many you have in stock on each product.;-;
 This application has been marked for synchronization;-;
 This application is added to the following pages;-;
+This area displays how the variation will look like for this product view;-;
 This category displayer is currently empty. To create a new category please click the create new category button below.;-;T?m? ryhm? on hetkell? tyhj?. Uuden ryhm?n luomiseksi kirjoita ryhm?n nimi laatikkoon ja paina ...
 This content has been updated!;-;
 This entry is currently hardlinked to;-;
@@ -397,6 +454,7 @@ Viewed when;-;
 Warning! this store will automatically be reset to original state each hour;-;
 Warning. you are not connected as a partner yet, please contact getshop support!;-;
 Web address;-;
+Webshop;-;
 What address are you using for the test enviroment to paypal?;-;
 What areas does this application support?;-;
 What is deepfreeze? Well, if you activate deepfreeze you basically put all options on hold, all changes made after deepfreezeing will be purged each hour.;-;
@@ -427,12 +485,10 @@ You need this application if you want this webshop send emails from your email a
 You simply modify the text, you would like to edit.;-;
 Your attributes;-;
 Your function name;-;
-Your merchant id, this id is something that sisow is providing you.;-;
-Your merchant key, this id is something that sisow is providing you.;-;
 Your reset code;-;
+Your settings have been saved.;-;
 Your synchronization client is connected, and you are ready to start developing your applications.;-;
 accept_domain;-;
-add_app_error;-;,,
 add_app_free;-;Lisää sovellus (maksuton)
 add_apps;-;
 add_banner;-;
@@ -489,7 +545,6 @@ detailed_desc;-;Yksityiskohtaisempi kuvaus
 dibs payment services allows you to start charging with visa / mastercard / and other card vendors. its extremly easy to use. prices for using this application is provided by dibs, and you will be contacted by dibs when adding this application.;-;
 dibs_address;-;
 direct_where;-;,,
-disabled_option;-;
 domain_overview;-;
 domain_registration;-;
 domain_transfer;-;
@@ -524,15 +579,13 @@ hide_search;-;
 hide_search_desc;-;
 hostname;-;
 hostname_desc_smtp;-;
-invalid_delivery;-;,,
-invalid_input;-;,,
-invalid_operation;-;,,
 is not available, please try another one.;-;
 lastname;-;Sukunimi
 latitude;-;
 like_button;-;
 like_button_desc;-;
 link_menu;-;Linkki valikkoon
+login;-;
 longitide;-;
 max_atandees;-;,,
 merch_id_desc;-;
@@ -545,7 +598,6 @@ no_products_found;-;Etsim3i tuotetta ei l??ytynyt
 not_valid;-;
 one_col;-;Yksi sarake
 only_one_per_page;-;,,
-option_not_available;-;
 password;-;Salasana
 payment_received;-;
 payment_received_notfication;-;
@@ -559,7 +611,6 @@ primary_domain;-;
 product_price;-;
 profile_url;-;
 profile_url_desc;-;
-remove_app_warning;-;,,
 remove_hardlink;-;,,
 remove_image;-;Poista kuva
 rename;-;Nimet5udelleen
@@ -569,10 +620,8 @@ return_stock_desc;-;
 save;-;Tallenna
 save_settings;-;
 save_settings_desc;-;
-saved_to_db;-;
 secondary_domain;-;
 security;-;Turvallisuus
-select_delivery;-;,,
 select_shipment;-;
 send_email;-;Lähetä sähköpostia
 send_email_desc;-;,,
@@ -584,11 +633,9 @@ send_sms;-;,,
 send_sms_desc;-;,,
 settings;-;Asetukset
 settings_desc;-;
-settings_saved;-;
 short_description;-;Lyhyt kuvaus
 show_stock_status;-;
 show_stock_status_desc;-;
-size_only_number;-;,,
 sms_from;-;,,
 sms_from_desc;-;,,
 sms_text;-;,,
@@ -621,7 +668,6 @@ two_col_left;-;Kaksi saraketta pääohjain vasemalla
 two_col_right;-;Kaksi saraketta pääohjain oikealla
 unique visitors found in total.;-;
 unlink_menu;-;Poista sis,??n linkki
-updated;-;Osta
 upload_image;-;
 use_paypal;-;
 userlevel;-;
@@ -630,6 +676,5 @@ users;-;käyttäjille
 when;-;
 withdraw;-;
 withdraw_desc;-;
-withdraw_error;-;,,
 year;-;
 zoom;-;

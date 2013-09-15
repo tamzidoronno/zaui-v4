@@ -634,3 +634,21 @@ $(function() {
     });
 });
 
+getText = function(text) {
+    if (translationMatrix[text])
+        return translationMatrix[text]
+    
+    return text;
+};
+
+__f = function(text) {
+    return getText(text);
+};
+
+__w = function(text) {
+    return getText(text);
+};
+
+__o = function(text) {
+    return getText(text);
+};

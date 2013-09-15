@@ -82,8 +82,7 @@ public class GenerateTranslation {
             String fileOriginal = f.getCanonicalPath().toString();
             if (f.isDirectory()) {
                 parsePath(f.getAbsolutePath());
-            } else if (filePath.endsWith(".php") || filePath.endsWith(".phtml")) {
-//                System.out.println("File:" + f.getAbsoluteFile());
+            } else if (filePath.endsWith(".php") || filePath.endsWith(".phtml") || filePath.endsWith(".js")) {
                 parseFile(fileOriginal);
                 fileCount++;
             }
@@ -102,10 +101,10 @@ public class GenerateTranslation {
             //Check if there is more translation at the same line
             int offset = 0;
             do {
-                offset = strLine.indexOf("->__", offset);
-                if(offset > 0) {
+                offset = strLine.indexOf("__", offset);
+                if(offset >= 0) {
                     strLine = strLine.substring(offset);
-                    offset = 5;
+                    offset = 3;
                     String key = "";
                     // Print the content on the console
                     if (strLine.contains("__(")) {

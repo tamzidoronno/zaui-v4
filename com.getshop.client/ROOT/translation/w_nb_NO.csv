@@ -2,18 +2,21 @@
 A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
 Add to cart;-;Legg i handlekurv
 Address;-;Adresse
+All fields are required;-;
 All orders;-;Alle bestilinger
+An email has been sent to you with the confirmation code.;-;
 Application;-;Applikasjoner
 April;-;April
 August;-;August
+Banner settings;-;
 Birth Date;-;Bursdag
 Buy;-;Kjøp
-By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;Ved å bruke sisow som din betnalings leverandør vil du få muligheten til å selge ved hjelp av iDeal/Visa og mye mer. For mer informasjon: https://www.sisow.nl
 Cancel order;-;Kanselert ordre
 Canceled;-;Kanselert
 Cart overview;-;Handlekurv oversikt
 Cell phone;-;Mobil tlf
 Change password;-;Endre passord
+Changes has been saved!;-;
 Chat with us;-;Chat med oss
 Checkout;-;Utsjekking
 City;-;By
@@ -21,6 +24,7 @@ Click here to edit the text.;-;Trykk her for å editere tekst.
 Click next to select shipping options;-;Trykk neste for å velge en betalings metode
 Company;-;Selskap
 Completed;-;Gjennomført
+Configure banner slider;-;
 Confirm order;-;Bekreft ordre
 Count;-;Antall
 Customer information;-;Kunde detaljer
@@ -29,10 +33,12 @@ December;-;Desember
 Delete image;-;Slett bilde
 Details;-;Detaljer
 Email;-;Epost
+Email sent;-;
 End date;-;Slutt dato
 Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.
 Expire date;-;Utløpsdato
 Extended Description;-;Utvidet beskrivelse
+Failed;-;
 Featured Product;-;Fremhevet produkt
 February;-;Februar
 Fixed price;-;Fikset pris
@@ -41,6 +47,7 @@ Friday;-;Fredag
 Full name;-;Hele navnet
 Group;-;Gruppe
 How can I help you today ?;-;Hva kan jeg hjelpe deg med?
+Invalid payment method;-;
 January;-;Januar
 July;-;Juli
 June;-;Juni
@@ -55,6 +62,7 @@ My Account;-;Min konto
 My name is:;-;Mitt navn er
 Name;-;Navn
 Name of the application;-;Antall applikasjoner
+New message;-;
 New password;-;Nytt passord
 Next;-; Neste
 November;-;November
@@ -71,13 +79,20 @@ Original (nm) ;-;
 Other images;-;Andre bilder
 Our local time is: ;-;Vår lokale tid er
 Password;-;Passord
+Password cannot be empty;-;
+Password does not match, please re enter password;-;
+Password has been successfully updated;-;
+Password has been updated;-;
 Payment;-;Betaling
 Payment failed;-;Betaling feilet
 Phone;-;Telefon
 Place order;-;Legg inn ordre
+Please check your delivery options.;-;
 Please enter your email address:;-;Vennligst skriv inn din epost
 Please following theese steps to recover your password.;-;Vennligst følgt instruksjonen under.
 Please select a shipment method.;-;Vennligst velg en forendelsemetode
+Please select a user in the left menu;-;
+Please select a valid payment method;-;
 Please select department;-;Velg en avdeling
 Postal code;-;Postnummer
 Previous;-;Forrige
@@ -87,6 +102,8 @@ Product count;-;Antall produkter
 Recover password;-;Gjennopprett passord
 Register;-;Registrer
 Related products;-;Relaterte produkter
+Reminder;-;
+Reminder sent by email;-;
 Remove;-;Fjern
 Repeat password;-;Gjenta passord
 Saturday;-;Lørdag
@@ -110,8 +127,11 @@ Stage 3 (hp): ;-;
 Stage 3 (nm): ;-;
 Start date;-;Start dato
 Status;-;Status
+Stop;-;
+Success;-;
 Sunday;-;Søndag
 Taxes;-;Skatter
+The event has been confirmed.;-;
 This design is private to getshop only.;-;
 This page is only available for adminsitrators;-;Denne siden er kun tilgjengelig for adminstratorer.
 This page is only available for editors.;-;Denne siden er kun tilgjengelig for editorer.
@@ -124,15 +144,20 @@ Tuesday;-;Tirsdag
 Update;-;Oppdater
 Username / Email;-;Brukernavn / Epost
 Waiting for payment;-;Venter på betaling
+Was not able to get payment methods, please check your postcode;-;
 We host events at the following locations, click on the location to filter the calendar by location(s);-;We har events på følgende steder, trykk på stedet for å filtere kalenderen på stedet(ene)
 Wednesday;-;Onsdag
 Weight;-;Vekt
 What's on your mind?;-;Hva ønsker du å formidle?
+Wrong delivery method;-;
 You are being transferred to paypal, please wait...;-;Du  blir nå overført til paypal, vennligst vent.
 You are here:;-;Du er her:
 You do not have any orders.;-;Du har ingen bestillinger
 You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
 You have expired applications that requires payment.;-;
+You need to select at least one to send back message to;-;
+Your are now signed up for the event;-;
+Your message has been delivered;-;
 Your personal information;-;Din personlige informasjon
 change;-;
 course;-;

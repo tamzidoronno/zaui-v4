@@ -20,6 +20,8 @@ About app management!;-;Over app management
 About this attribute group:;-;Over deze attributen groep:
 Accessed when;-;Wanneer geopenend
 Action;-;Actie
+Activate;-;
+Activate / deactivate the applications you would like your customers to have access to.;-;
 Activate Deepfreeze;-;
 Activity;-;Activiteit
 Add;-;Toevoegen
@@ -29,7 +31,9 @@ Add a new marker;-;Voeg nieuwe markering toe
 Add a product to a page, add description, price, title, and other attributes. And you are ready to start selling the product. Combine it with a left menu, a category list to create a flexible and powerful webshop.;-;Voeg een product, een omschrijving, prijs en titel toe aan een pagina, en je bent klaar om een product te verkopen. Combineer het met een menu link, een categorie lijst om een Flexibele en professionele webwinkel te bekomen.
 Add additional stores that should have access to this application (comma seperated);-;Voeg meedere webwinkels toe die toegang hebben tot deze applicatie (komma gescheiden)
 Add an image by clicking the button below to start your image upload progress.;-;
+Add application;-;
 Add images to the product;-;
+Add more applications to this page.;-;
 Add new;-;Voeg nieuw toe
 Add sub entry;-;Voeg sub titel toe
 Add this application and get started adding content to your page.;-;Voeg deze applicatie toe en start met toevoegen van inhoud aan je pagina.
@@ -41,9 +45,12 @@ Additional domain names;-;Bijkomende domeinnamen
 Additional info;-;Meer info
 Admin functions;-;Beheer  functies
 Administrators only;-;Beheerder  
+Admins;-;
 Advanced Options;-;Geavanceerde opties
 Advanced settings;-;
 Advanced settings allows you to finetune different aspects to your product. For example, if shipping is configured and you would like this product to be shipped for free.;-;
+Airgram allows you to push important notifications to your phone, use this application to push notifications to your cell phone when something important is happening, for example if someone is starting to chat with you, you will be instantly notified and can responde accordingly. Just download airgram from google play or app store and start using it.;-;
+All;-;
 All fields need to be filled before you continue;-;Alle velden moet ingevuld zijn alvorens verder te gaan
 All page views listed;-;Lijst van pageviews
 All products available;-;
@@ -55,9 +62,15 @@ An introduction to application management in GetShop.;-;Een introductie van het 
 Anonymous user;-;Anonieme gebruiker
 Answering your customers questions, means more sale. By adding this excellent chat application, you can answer on request at any time from you mobile devices or your stationary computer.;-;Beantwoorden van klanten vragen, betekent stijgende verkoop. Door deze chat applicatie toe te voegen, kan je ten alle tijde vragen van je klanten via pc of smartphone beantwoorden.
 Application id;-;Applicatie ID
+Application management;-;
 Application overview;-;Applicatie overzicht
+Applications;-;
 Are you limited to only one instance of this applications for each page?;-;Ben je gelimiteerd tot maar 1 applicatie per pagina?
+Are you sure that you want to remove this application?;-;
 Are you sure you want to delete this application? You will not be able to recover this!;-;Zeker dat je deze applicatie wil verwijderen? De gegevens hiervan gaan verloren na verwijdering.
+Are you sure you want to delete this logo?;-;
+Are you sure you want to delete this product?;-;
+Are you sure you want to remove this?;-;
 Are you sure you want to synchronize this application? All files which already exists for application will be overwritten!;-;Ben je zker dat je deze applicatie wil synchroniseren? Alle bestaande bestanden  zullen overschreven worden.
 Attendees;-;Deelnemers
 Attribute administration;-;Beheer attributen
@@ -80,12 +93,12 @@ Button color;-;Knop kleur
 Button text color;-;Knop tekst kleur
 By adding this application you will see some static over your sms usage.;-;Als je deze applicatie toevoegt zal je het statische sms gebruik overzicht kunnen zien.
 By clicking the button above you will be able to add an application to this area.;-;Door de knop hierboven aan te klikken, kan je een applicatie in deze zone toevoegen.
-By enabling testmode for sisow, you will be able to test the payment solutions in sandbox mode.;-;
 By turning on this feature you will set this application to be visible on all pages.;-;Als je deze functie aanzet, zal deze zichtbaar zijn op alle pagina’s.
 Cancel;-;
 Cart (%s);-;Winkelwagen
 Category list;-;Category lijst
 Change image;-;Verander afbeelding
+Change/select theme/skin;-;
 Chat;-;Chat
 Chrome?;-;Chrome?
 Click on create application to get started, you will then get an input form to start filling out your product.;-;Klik op ‘Maak applicatie aan’ om te beginnen. Je krijgt dan een input formulier om gegevens toe te voegen.
@@ -93,6 +106,7 @@ Click on the chat icon in the top menu and start translating.;-;Klik op het chat
 Click on the icon in the top admin menu under category More to gain access to your reporting page.;-;Klik op het icon in het top beheer menu onder ‘Meer’ voor je report pagina te bekijken.
 Click the create application button and you will automatically get a form which sends you email directly to your email address when someone use this form.;-;Klik de ‘Maak  applicatie’ knop en je krijgt automatisch email in je inbox als een bezoekers contact met je opneemt via het formulier
 Click to add application;-;Klik om een applicatie toe  te voegen
+Click to change;-;
 Click to change subject;-;
 Clone this application;-;Clone deze applicatie
 Close;-;Sluiter
@@ -114,6 +128,7 @@ Create a new product;-;
 Create a new user;-;Maak nieuwe gebruiker aan
 Create application;-;Maak applicatie aan
 Create categories and add a list of products to the category, attach images to the categories, and name them as you want.;-;Maak categorieën aan en voeg een lijst van producten toe aan de categorie, voeg afbeeldingen toe en geef een titel op.
+Create event;-;
 Create new category;-;Maak nieuwe categorie aan
 Create new group;-;Maak nieuwe groep aan.
 Create news;-;Maak nieuws aan
@@ -125,17 +140,21 @@ Create this application and start showing events on given dates.;-;Maak deze app
 Create user;-;Maak gebruiker aan.
 Create your own application and start building your own web shop.;-;Maak je eigen applicatie aan en start met je webwinkel te bouwen.
 Created when;-;Aangemaakt op
+Crop;-;
 Customer address;-;
 Customer city;-;
 Customer email;-;
 Customer name;-;
 Customer phone;-;
+Customers;-;
+Data has been saved;-;
 Deactivate Deepfreeze;-;
 Default price;-;Standaard prijs
 Delete;-;Verwijderen
 Delete attribute;-;Verwijder attribuut
 Delete group;-;Verwijder groep
 Delete my store;-;Verwijder mijn webwinkel
+Delete product;-;
 Delete selected application;-;Verwijder geselecteerde applicatie
 Delete this application;-;Verwijder deze applicatie
 Delete this image;-;Verwijder deze afbeelding
@@ -146,14 +165,18 @@ Do you want to display the shipping price in the detailed product view?;-;Wil je
 Domain name;-;Domeinnaam
 Domain name configuration;-;Domeinnaam configuratie
 Edit;-;Bewerk
+Edit event;-;
 Edit google maps;-;Bewerk google maps
 Edit product;-;
+Edit product information;-;
+Edit text content;-;
 Edit the data below and write a description, the name of the product and a more detailed description. This data will be displayed on your product when viewing it.;-;
+Edit the image;-;
 Edit your product.;-;
+Editors;-;
 Editors and adminstrators only;-;Enkel voor editors en beheerders
 Email / username;-;Email / gebruikersnaam
 Email address;-;Email adres
-Enable test mode for sisow;-;
 End hour;-;Eind uur
 Enter a menu name;-;Typ een menu naam
 Enter an address to link this to;-;Typ een emailadres om deze te linken
@@ -176,11 +199,11 @@ Google analytics is by far the best reporting tool for webadministrator, by addi
 Google maps configuration;-;Google maps configuratie
 Hardlink;-;Hardlink
 Hardlink configuration for menu entry;-;Hardlink configuratie voor menu tekst
-Here you can configure all the settings required to get sisow to work properly with your account. Enter the fields below and press save, as soon as everything here is set correctly you will see that a new payment options is available in the checkout area.;-;
 Hide cart;-;Toon winkelwagen niet
 Hide shipping price from this product?;-;Toon geen verzendkosten bij dit product?
 History;-;Geschiedenis
 How many days for a free trial?;-;Hoeveel dagen voor een gratis demo?
+How to edit product;-;
 If converting to a different currency, you can specify a percentage of how much more you would like to append to conversion when the conversion calculation is done. For example 10 will give you a 10% higher conversion rate.;-;Indien je omzet naar een andere munteenheid, kan je een omzetpercentage ingeven. Bijvoorbeeld 10 zal je 10% hogere omzetfee geven.
 If the total amount in the basket is outside of the range above, use this price.;-;Als het totaal bedrag in het winkelmandje boven een bepaalde grens is, gebruik dan deze prijs.
 If this email address is specified, it will send notificition to this one if a requested event has been made.;-;Als dit emailadres is ingesteld, zal je een bericht ontvangen als een aangevraagd event is gemaakt.
@@ -189,14 +212,18 @@ If this function is enabled, it will show the company field.;-;Als deze functie 
 If this is set, getshop will automatically convert from this currency to the currency above for all other customers.;-;Als deze aan staat, zal automatisch de munteenheid omgezet worden naar bovenstaande munteenheid voor alle bezoekers / klanten.
 If you want to charge for this application, specify the price you want for it (one time cost).;-;Als je kosten wil aanrekenen voor deze applicatie, vermeld dan een prijs. (eenmalige kost).
 Images;-;Afbeeldingen.
+Images attached to this product;-;
 Import;-;
 Import an existing application.;-;Importeer een bestaande applicatie
+Import application;-;
 Import to area;-;Importeer naar veld
+Insert image;-;
 Install the synchronization client (linux);-;Installeer de sychronisatie client (Linux)
 Interval;-;Interval
 Is this a page singleton application?;-;Is deze pagina singleton applicatie?
 Is this a singleton application?;-;Is dit een singleton applicatie?
 Is this your default picture to the product?;-;
+It is not possible to activate this option with the current settings.;-;
 Item price;-;Product prijs
 Just add it;-;Toevoegen
 Just click the button below;-;Klik de knop onderaan
@@ -211,22 +238,25 @@ Left;-;Links
 Left Menu;-;Linker menu
 Lets you easily connect to paypal, and give your customers option to pay using paypal.;-;Connecteer makkelijk met PayPal, zo kunnen bezoekers betalen via Paypal.
 Link to menu;-;Link naar menu
+List has been saved;-;
 Mail;-;Post
 MailManager;-;
+MainMenu;-;
 Manage applications;-;Beheer applicaties
 Manually select a color;-;Selecteer een kleur
 Markers;-;Markers
 Marketing;-;Marketing
 Marketing is applications like news, and other application used for marketing.;-;Marketing, applicaties zoals nieuws en andere gebruikt voor marketing
 Menu hardlink for;-;Menu hardlink voor
-Merchant id;-;
-Merchant key;-;
 Method;-;Methode
 Middle;-;Midden
 Minimum activity;-;Minimum activiteit
+Modify your product;-;
+More;-;
 More Categories?;-;Meer categoriën?
 More color options;-;
 More...;-;Meer...
+Move applications;-;
 My product list;-;
 Need to display your realestates? well, here is the application that allows you to do that, simply add the application to your page and start editing your realestate;-;Wil je huizen verkopen? Dit is een applicatie om huizen te verkopen. Voeg ze toe aan je pagina en plaats alle info er op.
 New product / untitled product;-;
@@ -246,7 +276,9 @@ No users found;-;Geen gebruikers gevonden
 No users where found for this time range.;-;Geen gebruiksers gevonden voor deze tijdzone
 North east corner latitude;-;Noord-Oosten latitude
 North east corner longitude;-;Noord-Oosten Longitude
+Not possible;-;
 Not satisfied with the text "hardcoded" on your page?<br>Add this application and tune the text yourself.;-;Niet tevreden met de tekst op je webwinkel? Pas deze zelf aan met deze applicatie
+Not valid selection;-;
 Note: minumum 3 chars before search start;-;Opgelet: minimum 3 tekens om het zoeken te starten
 Number of application created by you:;-;Aantal applicaties aangemaak door jou:
 Number of columns;-;Aantal kolommen:
@@ -268,23 +300,33 @@ Page Settings;-;Pagina settings
 Page description;-;Pagina omschrijving
 Page id;-;Pagina ID
 Page name;-;Pagina naam
+Page security;-;
+Page settings;-;
 Page view summary;-;Pagina bezoekers overzicht
 Page views;-;Page views
 Payment is transactional applications like paypal, dibs, visa, etc.;-;Betaling met transactie applicaties als Paypal, visa, etc.
 Paypal address;-;Paypal emailadres
+Please click on 'Add new top level variation' above;-;
+Please select;-;
 Please select someone to chat with at the right side;-;Klik iemand aan om mee te chatten
+Please select the options marked in red;-;
 Please select your language;-;
 Please specify a name;-;Geef een naam op
+Preview;-;
 Price?;-;Prijs?
 Product Information;-;Product informatie
 Product List;-;Product lijst
 Product Manager;-;Product beheerder
+Product list;-;
 Product name;-;Product naam
+Product variations;-;
 Product views;-;Product views
 Products already added to your list;-;
 Push the create application button to get you started.;-;Klik ‘maak applicatie aan’ om te starten.
 Real estate;-;Immo 
+Reminder sent by sms;-;
 Remove application;-;Verwijder applicatie
+Remove applications that are added;-;
 Remove from list;-;
 Remove icon;-;Verwijder icoon
 Remove image;-;Verwijder afbeelding
@@ -296,6 +338,7 @@ Reset code is;-;Reset code is
 Restrict to administrators;-;Enkel adminstrator bevoegd
 Restrict to administrators and editors;-;Enkel administrators en editors bevoegd
 Right;-;Rechts
+Rotate;-;
 Sandbox;-;Sandbox
 Save;-;Opslaan
 Save changes;-;Aanpassingen opslaan
@@ -303,19 +346,28 @@ Save product;-;
 Save product list;-;
 Save settings;-;Settings opslaan
 Save translation;-;Vertaling opslaan
+Saved;-;
 Search;-;Zoeken
+Security;-;
 Select a group in the left hand area;-;Selecteer een groep in de linker zone
 Select a group:;-;Selecteer een groep:
+Select different page layouts;-;
+Select page layout;-;
+Select your theme;-;
+Send reminder;-;
 Set application sticky;-;Maak applicatie sticky
 Set as homepage;-;Stel als homepage in
 Set date;-;Stel datum in
 Set icon;-;Stel icoon in
+Settings saved;-;
+Setup your own domain;-;
 Should this application be public available?;-;Moet deze applicatie publiek zijn?
 Should this product listed as a featured product?;-;Dit product ‘in de kijker’ plaatsen?
 Show company field;-;Toon bedrijfsveld
 Show location filter left for calendar;-;Toon locatie filter links van kalender
 Sms Statistic;-;Sms statistieken
 Some settings are important for google and other search engines, and this is where you can configure them.;-;Sommige settings zijn belangrijk voor Google en andere zoekmachines. Hier kan je ze instellen.
+Sorry to hear that, Are you sure that you want to delete your store?;-;
 South west corner latitude;-;Zuid – west corner latitude
 South west corner longitude;-;Zuid – west corner longitude
 Specify an airgram account.;-;Stel een airgram account in
@@ -332,6 +384,7 @@ Status - connnected!;-;Status: verbonden!
 Status - not connnected!;-;Status: niet verbonden!
 Stock Control;-;Voorraad controle
 Store currency;-;Munteenheid webwinkel
+Store settings / more applications available here;-;
 Subentry name;-;Subtekst naam
 Subheader;-;Subheader
 Subject;-;
@@ -341,12 +394,15 @@ Summary!;-;Samenvatting!
 Synchronize this application;-;Synchroniseer deze applicatie
 System;-;Systeem
 Text description;-;Omschrijving tekst
+Text saved;-;
 Text title;-;Titel
 Thank you for your order.;-;Bedankt voor de bestelling
 The address is already taken or invalid.;-;Dit adres is al gebruikt of niet geldig.
 The application management tool enables you to develope your own applications directly into getshop, and modify your web shop as you see fit. From this point you basically has access to do everything you want to, and if you can proove us that you can't. Then we will modify it to make sure you can.;-;Met de applicatie beheer tool kan je je eigen applicaties in je webwinkel invoegen en aanpassen zoals jij het wil. Vanaf dit punt kan je alles doen wat je wil, lukt er toch iets niet? Dan Passen wij het aan zodat het wel kan ;-)!
 The code for this application will automatically be synced to your code base after you click the start building application button.;-;De code van deze applicatie zal automatisch gesynched worden met de basiscode, nadat je ‘maak applicatie aan’ hebt geklikt.
 The paypal account has not been configured correctly. Go to settings and configure it properly;-;Je paypal account is niet goed ingesteld, ga naar settings en doe de nodige aanpassingen.
+The text has been saved;-;
+The translation has been saved;-;
 Theme;-;Thema
 Themes;-;Layouts
 Then click on the save button, or click outside of the text area to save the text.;-;Klik op opslaan, of buiten het tekstkader om de tekst op te slaan.
@@ -354,6 +410,7 @@ There is one layout defined for each page, a layout can have multiple of rows an
 This application gives you the ability to control your stocks, simply change how many you have in stock on each product.;-;Met deze applicatie kan je de voorraad bijhouden. Pas je voorraad aan per product.
 This application has been marked for synchronization;-;Deze applicatie is klaar voor synchronisatie.
 This application is added to the following pages;-;Deze applicatie is toegevoegd aan de pagina’s
+This area displays how the variation will look like for this product view;-;
 This category displayer is currently empty. To create a new category please click the create new category button below.;-;Deze category is momenteel leeg. Om een nieuwe categorie toe te voegen, klik ‘maak nieuwe categorie aan’
 This content has been updated!;-;Deze inhoud is upgedate!
 This entry is currently hardlinked to;-;Deze tekst is momenteel gelinkt aan
@@ -397,6 +454,7 @@ Viewed when;-;Wanneer bekeken?
 Warning! this store will automatically be reset to original state each hour;-;
 Warning. you are not connected as a partner yet, please contact getshop support!;-;Opgelet, je bent nog geen aangesloten partner. Neem contact op!
 Web address;-;Webwinkel adres
+Webshop;-;
 What address are you using for the test enviroment to paypal?;-;Welk adres gebruik je als test voor Paypal?
 What areas does this application support?;-;Welke zones ondersteunt deze applicatie?
 What is deepfreeze? Well, if you activate deepfreeze you basically put all options on hold, all changes made after deepfreezeing will be purged each hour.;-;
@@ -427,12 +485,10 @@ You need this application if you want this webshop send emails from your email a
 You simply modify the text, you would like to edit.;-;Pas de tekst aan die je wil veranderen.
 Your attributes;-;
 Your function name;-;Je functie naam
-Your merchant id, this id is something that sisow is providing you.;-;
-Your merchant key, this id is something that sisow is providing you.;-;
 Your reset code;-;Reset code
+Your settings have been saved.;-;
 Your synchronization client is connected, and you are ready to start developing your applications.;-;Je gesynchroniseerde klant is aangesloten. Je bent nu klaar om applicaties te developen.
 accept_domain;-;
-add_app_error;-;
 add_app_free;-;
 add_apps;-;
 add_banner;-;
@@ -489,7 +545,6 @@ detailed_desc;-;
 dibs payment services allows you to start charging with visa / mastercard / and other card vendors. its extremly easy to use. prices for using this application is provided by dibs, and you will be contacted by dibs when adding this application.;-;Met Dibs payment services kan je betalingen ontvangen via Visa / Mastercard. Zeer eenvoudig in gebruik. Transactiekosten zijn verkrijgbaar bij Dibs.
 dibs_address;-;
 direct_where;-;
-disabled_option;-;
 domain_overview;-;
 domain_registration;-;
 domain_transfer;-;
@@ -524,15 +579,13 @@ hide_search;-;
 hide_search_desc;-;
 hostname;-;
 hostname_desc_smtp;-;
-invalid_delivery;-;
-invalid_input;-;
-invalid_operation;-;
 is not available, please try another one.;-;Is niet verkrijgbaar, gelieve een ander te proberen.
 lastname;-;
 latitude;-;
 like_button;-;
 like_button_desc;-;
 link_menu;-;
+login;-;
 longitide;-;
 max_atandees;-;
 merch_id_desc;-;
@@ -545,7 +598,6 @@ no_products_found;-;
 not_valid;-;
 one_col;-;
 only_one_per_page;-;
-option_not_available;-;
 password;-;
 payment_received;-;
 payment_received_notfication;-;
@@ -559,7 +611,6 @@ primary_domain;-;
 product_price;-;
 profile_url;-;
 profile_url_desc;-;
-remove_app_warning;-;
 remove_hardlink;-;
 remove_image;-;
 rename;-;
@@ -569,10 +620,8 @@ return_stock_desc;-;
 save;-;
 save_settings;-;
 save_settings_desc;-;
-saved_to_db;-;
 secondary_domain;-;
 security;-;
-select_delivery;-;
 select_shipment;-;
 send_email;-;
 send_email_desc;-;
@@ -584,11 +633,9 @@ send_sms;-;
 send_sms_desc;-;
 settings;-;
 settings_desc;-;
-settings_saved;-;
 short_description;-;
 show_stock_status;-;
 show_stock_status_desc;-;
-size_only_number;-;
 sms_from;-;
 sms_from_desc;-;
 sms_text;-;
@@ -621,7 +668,6 @@ two_col_left;-;
 two_col_right;-;
 unique visitors found in total.;-;Unieke bezoekers in total.
 unlink_menu;-;
-updated;-;
 upload_image;-;
 use_paypal;-;
 userlevel;-;
@@ -630,6 +676,5 @@ users;-;
 when;-;
 withdraw;-;
 withdraw_desc;-;withdraw_error
-withdraw_error;-;
 year;-;
 zoom;-;

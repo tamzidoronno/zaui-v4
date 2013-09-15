@@ -102,9 +102,12 @@ if (isset($_GET['logonwithkey'])) {
 
 <html xmlns:fb="http://ogp.me/ns/fb#">
     <head>
+        <script>
+        translationMatrix = <? echo $factory->getJsonTranslationMatrix(); ?>    
+        </script>
         <!--[if gte IE 8]>
-        <link rel="stylesheet" type="text/css" href="ie8plus.css" />
-<![endif]-->
+            <link rel="stylesheet" type="text/css" href="ie8plus.css" />
+        <![endif]-->
 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <?php
@@ -129,7 +132,6 @@ if (isset($_GET['logonwithkey'])) {
         }
 
         $factory->loadJavascriptFiles();
-        include "js/getshop.translation.php";
         $factory->showCssFiles();
         if ($factory->getPage()->skeletonType == 5)
             echo "<style>body { overflow: auto; } </style>";
@@ -260,7 +262,6 @@ if (isset($_GET['page'])) {
     $(document).ready(function() {
         PubSub.publish('NAVIGATION_COMPLETED', {});
     });
-
 </script>
 
 <? if (isset($_GET['logout'])) { ?>

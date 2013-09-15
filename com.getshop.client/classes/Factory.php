@@ -422,6 +422,10 @@ class Factory extends FactoryBase {
         return $this->store;
     }
 
+    public function getJsonTranslationMatrix() {
+        return json_encode($this->translationMatrix);
+    }
+    
     public function getSettings() {
         $appPool = $this->getApplicationPool();
         $instances = $appPool->getAllAddedInstances();

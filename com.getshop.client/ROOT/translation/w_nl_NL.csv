@@ -2,18 +2,21 @@
 A red theme that can be used when selling exciting things;-;Een rode layout voor verkoop van interessante producten
 Add to cart;-;Aan winkelwagen toevoegen
 Address;-;Addres
+All fields are required;-;
 All orders;-;Alle bestellingen
+An email has been sent to you with the confirmation code.;-;
 Application;-;Applicatie 
 April;-;April
 August;-;Augustus
+Banner settings;-;
 Birth Date;-;Geboortedatum
 Buy;-;
-By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;
 Cancel order;-;Bestelling afbreken
 Canceled;-;Afgebroken
 Cart overview;-;Overzicht winkelwagen
 Cell phone;-;Mobiel
 Change password;-;Wachtwoord aanpassen
+Changes has been saved!;-;
 Chat with us;-;Chat met ons
 Checkout;-;Afrekenen
 City;-;Woonplaats
@@ -21,6 +24,7 @@ Click here to edit the text.;-;Klik hier om de tekst te bewerken
 Click next to select shipping options;-;Klik volgende om een verzendmethode te kiezen
 Company;-;Bedrijf
 Completed;-;Afgerond
+Configure banner slider;-;
 Confirm order;-;Bestelling bevestigen
 Count;-;Tel
 Customer information;-;Klanteninformatie
@@ -29,10 +33,12 @@ December;-;December
 Delete image;-;Verwijder afbeelding
 Details;-;Details
 Email;-;Email
+Email sent;-;
 End date;-;Einddatum
 Enter the code sent to your email.;-;Code invoeren die u per sms is gestuurd
 Expire date;-;Vervaldatum
 Extended Description;-;Uitgebreide beschrijving
+Failed;-;
 Featured Product;-;Product in de kijker
 February;-;Februari
 Fixed price;-;Vaste prijs
@@ -41,6 +47,7 @@ Friday;-;Vrijdag
 Full name;-;Volledige naam
 Group;-;Groep
 How can I help you today ?;-;Waarmee kunnen we u van dienst zijn?
+Invalid payment method;-;
 January;-;Januari
 July;-;Juli
 June;-;Juni
@@ -55,6 +62,7 @@ My Account;-;Mijn account
 My name is:;-;Mijn naam is:
 Name;-;Naam
 Name of the application;-;Naam van de applicatie
+New message;-;
 New password;-;Nieuw wachtwoord
 Next;-;Volgende
 November;-;November
@@ -71,13 +79,20 @@ Original (nm) ;-;Origineel
 Other images;-;Andere afbeeldingen
 Our local time is: ;-;De lokale tijd is:
 Password;-;Wachtwoord
+Password cannot be empty;-;
+Password does not match, please re enter password;-;
+Password has been successfully updated;-;
+Password has been updated;-;
 Payment;-;Betaling
 Payment failed;-;Betaling niet gelukt
 Phone;-;Telefoon
 Place order;-;Bestelling plaatsen
+Please check your delivery options.;-;
 Please enter your email address:;-;E-mailadres aub invoeren:
 Please following theese steps to recover your password.;-;Volg instructies om uw wachtwoord te achterhalen
 Please select a shipment method.;-;Selecteer aub verzendmethode
+Please select a user in the left menu;-;
+Please select a valid payment method;-;
 Please select department;-;Gelieve een afdeling te kiezen
 Postal code;-;Postcode
 Previous;-;Vorige
@@ -87,6 +102,8 @@ Product count;-;Aantal producten
 Recover password;-;Wachtwoord achterhalen
 Register;-;Aanmelden
 Related products;-;Gerelateerde producten
+Reminder;-;
+Reminder sent by email;-;
 Remove;-;Verwijderen
 Repeat password;-;Wachtwoord nogmaals
 Saturday;-;Zaterdag
@@ -110,8 +127,11 @@ Stage 3 (hp): ;-;
 Stage 3 (nm): ;-;
 Start date;-;Start datum
 Status;-;Status
+Stop;-;
+Success;-;
 Sunday;-;Zondag
 Taxes;-;BTW
+The event has been confirmed.;-;
 This design is private to getshop only.;-;Dit design is eigendom van Getshop
 This page is only available for adminsitrators;-;Deze pagina is alleen voor beheerders toegangkelijk
 This page is only available for editors.;-;Deze pagina is alleen voor redacteuren toegangkelijk
@@ -124,15 +144,20 @@ Tuesday;-;Dinsdag
 Update;-;Updaten
 Username / Email;-;Gebruikersnaam / E-mail
 Waiting for payment;-;Wachten op betaling
+Was not able to get payment methods, please check your postcode;-;
 We host events at the following locations, click on the location to filter the calendar by location(s);-;We organiseren events op de volgende locaties. Klik op de locatie om de kalender op locatie te filteren.
 Wednesday;-;Woensdag
 Weight;-;Gewicht
 What's on your mind?;-;Waar denk je aan?
+Wrong delivery method;-;
 You are being transferred to paypal, please wait...;-;Je wordt doorgestuurd naar Paypal, even geduld…
 You are here:;-;U bent hier:
 You do not have any orders.;-;U heeft nog geen bestellingen geplaatst
 You do not have any products in your cart;-;U heeft nog geen producten in de winkelwagen
 You have expired applications that requires payment.;-;Je applicaties zijn verlopen en moeten verlengd worden
+You need to select at least one to send back message to;-;
+Your are now signed up for the event;-;
+Your message has been delivered;-;
 Your personal information;-;Uw persoonlijke informatie
 change;-;
 course;-;

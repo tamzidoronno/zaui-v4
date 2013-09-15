@@ -59,7 +59,7 @@ if(!function_exists("print_app_for_getshop")) {
             <div id="activateSingletonApplication" class="button-large" renderStandalone="<? echo $supportStandalone; ?>" appId="<? echo $app->id;?>">
                 <div class="rightglare"></div>
                 <div class="filler" style="background-color: green !important"></div>
-                <ins>Activate</ins>
+                <ins><? echo IocContainer::getFactorySingelton()->__f("Activate"); ?></ins>
             </div>        
             <? endif; ?>
         </div>

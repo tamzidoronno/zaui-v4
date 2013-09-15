@@ -2,24 +2,24 @@ $(document).ready(function() {
     var config = {
         draggable: true,
         closeOnClick: false,
-        title: "MainMenu",
+        title: __f("MainMenu"),
         items: [
             {
                 icon: "/skin/default/images/add_product.png",
-                title: "Product list",
+                title: __f("Product list"),
                 click: app.ProductManager.loadImportProduct,
                 class: 'layout'
             },
             {
                 icon: "/skin/default/images/icons/layouts.png",
                 click: thundashop.MainMenu.showPageLayoutSelection,
-                title: "Select different page layouts",
+                title: __f("Select different page layouts"),
                 disableOnSystemPages: true,
                 extraArgs: {}
             },
             {
                 type: 'seperator',
-                title: 'Security',
+                title: __f('Security'),
                 disableOnSystemPages: true
             },
             {
@@ -28,25 +28,25 @@ $(document).ready(function() {
                 extraArgs: {},
                 items: [
                     {
-                        text: 'All',
+                        text: __f('All'),
                         class: 'security',
                         click: thundashop.MainMenu.updateUserLevel,
                         extraArgs: 0,
                     },
                     {
-                        text: 'Customers',
+                        text: __f('Customers'),
                         class: 'security',
                         click: thundashop.MainMenu.updateUserLevel,
                         extraArgs: 10,
                     },
                     {
-                        text: 'Editors',
+                        text: __f('Editors'),
                         class: 'security',
                         click: thundashop.MainMenu.updateUserLevel,
                         extraArgs: 50,
                     },
                     {
-                        text: 'Admins',
+                        text: __f('Admins'),
                         class: 'security',
                         click: thundashop.MainMenu.updateUserLevel,
                         extraArgs: 100
@@ -56,43 +56,43 @@ $(document).ready(function() {
             },
             {
                 type: 'seperator',
-                title: 'Applications',
+                title: __f('Applications'),
                 disableOnSystemPages: true
             },
             {
                 icon: "/skin/default/images/add_plus.png",
-                title: "Add more applications to this page.",
+                title: __f("Add more applications to this page."),
                 click: thundashop.MainMenu.showAddApplication,
                 extraArgs: {},
                 disableOnSystemPages: true
             },
             {
                 icon: "/skin/default/images/trash-can.png",
-                title: "Remove applications that are added",
+                title: __f("Remove applications that are added"),
                 click: thundashop.MainMenu.deleteApplicationClicked,
                 extraArgs: {},
                 disableOnSystemPages: true
             },
             {
                 icon: "/skin/default/images/reorder.png",
-                title: "Move applications",
+                title: __f("Move applications"),
                 click: thundashop.MainMenu.reorderApplicationClicked,
                 extraArgs: {},
                 disableOnSystemPages: true
             },
             {
                 type: 'seperator',
-                title: 'Webshop'
+                title: __f('Webshop')
             },
             {
                 icon: "/skin/default/images/color-palette.png",
-                title: "Change/select theme/skin",
+                title: __f("Change/select theme/skin"),
                 click: thundashop.MainMenu.showHideDesignSelection,
                 extraArgs: {}
             },
             {
                 icon: "/skin/default/images/settings.png",
-                title: "Store settings / more applications available here",
+                title: __f("Store settings / more applications available here"),
                 click: function() {
                     window.location.hash = 'page=settings';
                 },
@@ -100,7 +100,7 @@ $(document).ready(function() {
             },
             {
                 icon: "/skin/default/images/domain-names.png",
-                title: "Setup your own domain",
+                title: __f("Setup your own domain"),
                 click: function() {
                     window.location.hash = 'page=domain';
                 },
@@ -108,7 +108,7 @@ $(document).ready(function() {
             },
             {
                 icon: "/skin/default/images/page.png",
-                title: "Page settings",
+                title: __f("Page settings"),
                 click: thundashop.MainMenu.goToStoresettings,
                 extraArgs: {},
                 disableOnSystemPages: true
@@ -139,7 +139,7 @@ PubSub.subscribe('NAVIGATION_COMPLETED', function() {
     if (moreApps.length > 0) {
         var seperator = {
             type: 'seperator',
-            title: 'More',
+            title: __f('More'),
             addon: true
         };
 

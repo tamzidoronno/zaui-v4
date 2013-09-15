@@ -19,7 +19,7 @@ thundashop.Skeleton = {
         var data = {};
         data.appid = id;
         
-        var confirmed =  thundashop.common.confirm(thundashop.translation.confirm_delete_application);
+        var confirmed =  thundashop.common.confirm(__f("Are you sure that you want to remove this application?"));
         if(confirmed) {
             var event = thundashop.Ajax.createEvent('ApplicationManager', 'removeApplicationFromArea', $(document), data);
             thundashop.Ajax.post(event, 'apparea-'+area);

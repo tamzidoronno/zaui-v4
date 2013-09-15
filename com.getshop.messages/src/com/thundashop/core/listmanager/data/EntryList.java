@@ -5,6 +5,7 @@
 package com.thundashop.core.listmanager.data;
 
 import com.thundashop.core.common.DataCommon;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ import java.util.List;
  * @author boggi
  */
 public class EntryList extends DataCommon {
-    public List<Entry> entries;
+    public List<Entry> entries = new ArrayList();
     public String appId;
     public List<String> extendedLists; 
 }

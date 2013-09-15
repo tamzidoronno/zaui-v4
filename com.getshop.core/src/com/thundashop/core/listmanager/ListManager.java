@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -42,7 +43,20 @@ public class ListManager extends ManagerBase implements IListManager {
         for (DataCommon entry : data.data) {
             if (entry instanceof EntryList) {
                 EntryList listObject = (EntryList) entry;
-                allEntries.put(listObject.appId, listObject);
+                
+                if (allEntries.containsKey(listObject.appId)) {
+                    if (allEntries.get(listObject.appId).rowCreatedDate.after(listObject.rowCreatedDate)) {
+                        allEntries.put(listObject.appId, listObject);
+                    } else {
+                        try {
+                            databaseSaver.deleteObject(listObject, credentials);
+                        } catch (ErrorException ex) {
+                            java.util.logging.Logger.getLogger(ListManager.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                } else {
+                    allEntries.put(listObject.appId, listObject);
+                }
             }
         }
     }
@@ -530,7 +544,11 @@ public class ListManager extends ManagerBase implements IListManager {
 
     @Override
     public void setEntries(String listId, ArrayList<Entry> entries) throws ErrorException {
-        allEntries.put(listId, new EntryList());
+        EntryList entryList = allEntries.get(listId);
+        if (entryList != null) {
+            entryList.entries.clear();
+        }
+        
         for(Entry entry : entries) {
            addEntry(listId, entry, "");
         }

@@ -24,10 +24,11 @@ public class ExchangeConvert {
     }
     
     private static double getExchangeRate(String from_currency, String to_currency) throws ErrorException {
-        Double return_rate = 1.0;
+        Double return_rate = null;
         boolean found = false;
+        String key = from_currency + "." + to_currency;
+        
         try {
-            String key = from_currency + "." + to_currency;
             
             if(rates.containsKey(key)) {
                 ExchangeRate rate = rates.get(key);
@@ -54,6 +55,18 @@ public class ExchangeConvert {
                 }
             }
         } catch (Exception e) {
+        }
+        
+        // Fallback to last one
+        if (return_rate == null) {
+            if (rates.get(key) != null) {
+                return_rate = rates.get(key).rate;    
+            }
+        }
+        
+        // Fallback to 1.0
+        if (return_rate == null) {
+            return_rate = 1.0;
         }
         
         return return_rate;

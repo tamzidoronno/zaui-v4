@@ -274,7 +274,7 @@ public class GetShop extends ManagerBase implements IGetShop {
         if(partner != null) {
             return partner.partnerId;
         }
-        return "getshop";
+        return null;
     }
     
 }

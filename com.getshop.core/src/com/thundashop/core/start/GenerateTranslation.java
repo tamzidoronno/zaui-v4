@@ -246,6 +246,11 @@ public class GenerateTranslation {
         if (transkey.type == null || type.equals("webshop")) {
             transkey.type = type;
         }
+        
+        if(keyMap.containsKey(key.trim())) {
+            transkey.app_namespace = "framework";
+        }
+
         keyMap.put(key.trim(), transkey);
     }
 

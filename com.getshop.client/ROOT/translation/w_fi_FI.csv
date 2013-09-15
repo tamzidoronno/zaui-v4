@@ -1,172 +1,98 @@
-0-100 km/h ;-;
-A red theme that can be used when selling exciting things;-;
-Add to cart;-;Lisää ostoskoriin
-Address;-;Osoite
-All fields are required;-;
-All orders;-;Kaikki tilaukset
-An email has been sent to you with the confirmation code.;-;
-Application;-;
-April;-;
-August;-;
-Banner settings;-;
-Birth Date;-;Syntymäaika
-Buy;-;
-Cancel order;-;Peruuta tilaus
-Canceled;-;Peruttu
-Cart overview;-;
-Cell phone;-;Matkapuhelin
-Change password;-;Vaihta salasanaa
-Changes has been saved!;-;
-Chat with us;-;Chattaa meille
-Checkout;-;
-City;-;Kaupunki
-Click here to edit the text.;-;
-Click next to select shipping options;-;
-Company;-;
-Completed;-;Valmis
-Configure banner slider;-;
+###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
 Confirm order;-;Vahvista tilaus
-Count;-;
-Customer information;-;Asiakastiedot
-Date;-;
-December;-;
-Delete image;-;
-Details;-;
-Email;-;Sähköposti
-Email sent;-;
-End date;-;
-Enter the code sent to your email.;-;Syötä koodi, mikä lähetettiin sinulle sähköpostiin
-Expire date;-;
-Extended Description;-;Laajennettu kuvaus
-Failed;-;
-Featured Product;-;
-February;-;
-Fixed price;-;Kiinteä hinta
-Free shipping;-;
-Friday;-;
-Full name;-;Koko nimi
-Group;-;
+Please select a shipment method.;-;Olkaa hyvä ja valitsekaa toimitustapa
+
+
+###### 2afb045b_fa01_4398_8582_33f212bb8db8 (Chat) ######
+Chat with us;-;Chattaa meille
 How can I help you today ?;-;Kuinka voin auttaa tänään?
-Invalid payment method;-;
-January;-;
-July;-;
-June;-;
-Les mer;-;
+
+
+###### df435931_9364_4b6a_b4b2_951c90cc0d70 (Login) ######
+Enter the code sent to your email.;-;Syötä koodi, mikä lähetettiin sinulle sähköpostiin
 Login;-;Sisään kirjautuminen
 Logout;-;Ulos kirjautuminen
 Lost your password?;-;Salasana hukassa?
-March;-;
-May;-;
-Monday;-;
 My Account;-;Minun tili
-My name is:;-;Minun nimeni on:
-Name;-;
-Name of the application;-;
-New message;-;
-New password;-;Uusi salasana
-Next;-;Seuraava
-November;-;
-Number of instances added;-;
-October;-;
-Old password;-;Vanha salasana
-Order;-;Tilaus
-Order Created;-;Tilaus luotu
-Order date;-;Tilauksen päiväys
 Orders;-;Tilaukset
-Organisation name;-;Yrityksen nimi
-Original (hp) ;-;
-Original (nm) ;-;
-Other images;-;
-Our local time is: ;-;
-Password;-;Salasana
-Password cannot be empty;-;
-Password does not match, please re enter password;-;
-Password has been successfully updated;-;
-Password has been updated;-;
-Payment;-;
-Payment failed;-;Maksu epäonnistui
-Phone;-;Puhelin
-Place order;-;Laita tilaus
-Please check your delivery options.;-;
 Please enter your email address:;-;Olkaa hyvä ja kirjoittakaa sähköpostiosoitteenne
 Please following theese steps to recover your password.;-;Olkaa hyvä ja seurakaa näitä ohjeita salasanan palauttamiseksi
-Please select a shipment method.;-;Olkaa hyvä ja valitsekaa toimitustapa
-Please select a user in the left menu;-;
-Please select a valid payment method;-;
-Please select department;-;
+Recover password;-;Palauta salasana
+Send me a code;-;Lähetä minulle koodi
+Username / Email;-;Käyttäjätunnus / Sähköposti
+
+
+###### 626ff5c4_60d4_4faf_ac2e_d0f21ffa9e87 (Search) ######
+Search for a product;-;Etsi tuote
+
+
+###### framework ######
+Add to cart;-;Lisää ostoskoriin
+Address;-;Osoite
+Change password;-;Vaihta salasanaa
+City;-;Kaupunki
+Completed;-;Valmis
+Email;-;Sähköposti
+Full name;-;Koko nimi
+New password;-;Uusi salasana
+Next;-;Seuraava
+Password;-;Salasana
+Phone;-;Puhelin
+Place order;-;Laita tilaus
 Postal code;-;Postinumero
 Previous;-;Edellinen
 Price;-;Hinta
-Price and plans;-;
-Product count;-;
-Recover password;-;Palauta salasana
-Register;-;Rekisteröidy
 Related products;-;Vastaavat tuotteet
-Reminder;-;
-Reminder sent by email;-;
 Remove;-;Poista
 Repeat password;-;Toista salasana
-Saturday;-;
-Search for a product;-;Etsi tuote
-Send me a code;-;Lähetä minulle koodi
 Send message;-;Lähetä viesti
-Send us mail;-;
-September;-;
-Set new password;-;Luo uusi salasana
-Shipment information;-;Toimitusehdot
-Shipment settings;-;
-Shipping;-;Toimitus
-Shipping cost;-;
-Shipping price;-;
-Sign up;-;
-Stage 1 (hp): ;-;
-Stage 1 (nm): ;-;
-Stage 2 (hp): ;-;
-Stage 2 (nm): ;-;
-Stage 3 (hp): ;-;
-Stage 3 (nm): ;-;
-Start date;-;
-Status;-;
-Stop;-;
-Success;-;
-Sunday;-;
-Taxes;-;Verot
-The event has been confirmed.;-;
-This design is private to getshop only.;-;
 This page is only available for adminsitrators;-;Tämä sivu on saattavilla ainoastaan pääkäyttäjälle.
 This page is only available for editors.;-;Tämä sivu on saattavilla ainoastaan toimittajalle
 This page is only available for registered users.;-;Tämä sivu on saattavilla ainoastaan rekisteröityille käyttäjille
-Thursday;-;
-To continue using this feature, you will need to pay, or remove the application.;-;
-Top speed ;-;
-Total;-;
-Tuesday;-;
 Update;-;Päivitys
-Username / Email;-;Käyttäjätunnus / Sähköposti
-Waiting for payment;-;Odotettaan maksua
-Was not able to get payment methods, please check your postcode;-;
-We host events at the following locations, click on the location to filter the calendar by location(s);-;
-Wednesday;-;
-Weight;-;
-What's on your mind?;-;
-Wrong delivery method;-;
-You are being transferred to paypal, please wait...;-;
-You are here:;-;Olet tässä:
-You do not have any orders.;-;Sinulla ei ole tilauksia
 You do not have any products in your cart;-;Ostoskorisi on tyhjä
-You have expired applications that requires payment.;-;
-You need to select at least one to send back message to;-;
-Your are now signed up for the event;-;
-Your message has been delivered;-;
-Your personal information;-;Sinun henkilökohtaiset tiedot
-change;-;
-course;-;
-description;-;
-email;-;
-if we dont answer, please leave your email here and we will return your message asap.;-;
+
+
+###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
+Fixed price;-;Kiinteä hinta
+
+
+###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
+My name is:;-;Minun nimeni on:
+
+
+###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######
+All orders;-;Kaikki tilaukset
+Cancel order;-;Peruuta tilaus
+Canceled;-;Peruttu
+Customer information;-;Asiakastiedot
+Order;-;Tilaus
+Order Created;-;Tilaus luotu
+Order date;-;Tilauksen päiväys
+Payment failed;-;Maksu epäonnistui
+Shipment information;-;Toimitusehdot
+Shipping;-;Toimitus
+Taxes;-;Verot
+Waiting for payment;-;Odotettaan maksua
+You do not have any orders.;-;Sinulla ei ole tilauksia
+
+
+###### 7093535d_f842_4746_9256_beff0860dbdf (BreadCrumb) ######
+You are here:;-;Olet tässä:
+
+
+###### dcd22afc_79ba_4463_bb5c_38925468ae26 (ProductManager) ######
+Extended Description;-;Laajennettu kuvaus
 in stock;-;Varastossa
-location;-;
-org;-;
-orgnummer;-;
-phone;-;
-shipping;-;
+
+
+###### 6c245631_effb_4fe2_abf7_f44c57cb6c5b (Account) ######
+Birth Date;-;Syntymäaika
+Cell phone;-;Matkapuhelin
+Old password;-;Vanha salasana
+Organisation name;-;Yrityksen nimi
+Register;-;Rekisteröidy
+Set new password;-;Luo uusi salasana
+Your personal information;-;Sinun henkilökohtaiset tiedot
+
+

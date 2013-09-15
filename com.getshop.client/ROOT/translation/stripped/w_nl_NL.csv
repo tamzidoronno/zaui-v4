@@ -1,43 +1,80 @@
-0-100 km/h ;-;
-All fields are required;-;
-An email has been sent to you with the confirmation code.;-;
-Banner settings;-;
-Buy;-;
-Changes has been saved!;-;
-Configure banner slider;-;
-Email sent;-;
+###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
 Failed;-;
 Invalid payment method;-;
-New message;-;
+Please select a valid payment method;-;
+Was not able to get payment methods, please check your postcode;-;
+
+
+###### 2afb045b_fa01_4398_8582_33f212bb8db8 (Chat) ######
+Our local time is:;-;
+Please select a user in the left menu;-;
+You need to select at least one to send back message to;-;
+
+
+###### df435931_9364_4b6a_b4b2_951c90cc0d70 (Login) ######
+An email has been sent to you with the confirmation code.;-;
+Email sent;-;
 Password cannot be empty;-;
 Password does not match, please re enter password;-;
 Password has been successfully updated;-;
 Password has been updated;-;
+
+
+###### 2ebd7c69_eba3_4b7e_85c6_0e0bd274aad0 (SedoxCarList) ######
+0-100 km/h;-;
+Original (hp);-;
+Original (nm);-;
+Stage 1 (hp):;-;
+Stage 1 (nm):;-;
+Stage 2 (hp):;-;
+Stage 2 (nm):;-;
+Stage 3 (hp):;-;
+Stage 3 (nm):;-;
+Top speed;-;
+
+
+###### framework ######
+New message;-;
 Please check your delivery options.;-;
-Please select a user in the left menu;-;
-Please select a valid payment method;-;
 Reminder;-;
-Reminder sent by email;-;
-Stage 1 (hp): ;-;
-Stage 1 (nm): ;-;
-Stage 2 (hp): ;-;
-Stage 2 (nm): ;-;
-Stage 3 (hp): ;-;
-Stage 3 (nm): ;-;
-Stop;-;
 Success;-;
-The event has been confirmed.;-;
-Was not able to get payment methods, please check your postcode;-;
 Wrong delivery method;-;
-You need to select at least one to send back message to;-;
-Your are now signed up for the event;-;
-Your message has been delivered;-;
-change;-;
-course;-;
-description;-;
 email;-;
 location;-;
 org;-;
-orgnummer;-;
 phone;-;
+
+
+###### d612904c_8e44_4ec0_abf9_c03b62159ce4 (Banner) ######
+Banner settings;-;
+Configure banner slider;-;
+
+
+###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
+Your message has been delivered;-;
+
+
+###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
+All fields are required;-;
+Stop;-;
+Your are now signed up for the event;-;
+change;-;
+course;-;
+orgnummer;-;
+
+
+###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
+Reminder sent by email;-;
+The event has been confirmed.;-;
+description;-;
+
+
+###### dcd22afc_79ba_4463_bb5c_38925468ae26 (ProductManager) ######
+Buy;-;
 shipping;-;
+
+
+###### 6c245631_effb_4fe2_abf7_f44c57cb6c5b (Account) ######
+Changes has been saved!;-;
+
+

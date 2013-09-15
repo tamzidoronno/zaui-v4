@@ -137,7 +137,7 @@ if (isset($_GET['logonwithkey'])) {
             echo "<style>body { overflow: auto; } </style>";
         $factory->loadJavascriptFilesEditorMode();
         $settings = $factory->getSettings();
-        $title = isset($settings->title) ? $settings->title->value : "GetShop";
+        $title = isset($settings->title) ? $settings->title->value : "";
 
         echo "<script>";
         if (isset($settings->fadein) && $settings->fadein == "true") {

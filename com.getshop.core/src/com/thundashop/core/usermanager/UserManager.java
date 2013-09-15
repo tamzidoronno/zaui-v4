@@ -153,6 +153,9 @@ public class UserManager extends ManagerBase implements IUserManager {
         user.lastLoggedIn = new Date();
         user.loggedInCounter++;
         user.partnerid = getShop.getPartnerId(user.id);
+        if(user.partnerid == null) {
+            user.partnerid = getStore().partnerId;
+        }
         databaseSaver.saveObject(user, credentials);
 
         return user;

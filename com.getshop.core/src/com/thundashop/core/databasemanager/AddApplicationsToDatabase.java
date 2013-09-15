@@ -90,6 +90,7 @@ public class AddApplicationsToDatabase {
                 "", 
                 ApplicationSettings.Type.Payment, true);
         sisow.isPublic = true;
+//        apps.add(sisow);
         
         ApplicationSettings shopshopdesign1 = createSettings(
                 "ShopSoDesign1", 

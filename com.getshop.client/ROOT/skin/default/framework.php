@@ -1136,8 +1136,6 @@ margin: 10px;
 .ui-timepicker-rtl dl dd { margin: 0 65px 10px 10px; }
 .OrderManager .odd, tr.odd td.sorting_1 { background-color:#EFEFEF; cursor:pointer; }
 .OrderManager tr.even td.sorting_1 { background-color:#FFFFFF; cursor:pointer; }
-.OrderManager tr:hover { background-color:#dedede;cursor:pointer; }
-.OrderManager tr:hover td.sorting_1 { background-color:#dedede;cursor:pointer; }
 .designselectionbox {
 -moz-box-shadow: 0px 0px 10px #000000;
 -webkit-box-shadow: 0px 0px 10px #000000;

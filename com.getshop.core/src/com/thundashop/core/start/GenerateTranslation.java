@@ -1,5 +1,12 @@
 package com.thundashop.core.start;
 
+import com.google.code.morphia.Morphia;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.Mongo;
+import com.thundashop.core.appmanager.data.ApplicationSettings;
+import com.thundashop.core.common.DataCommon;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -9,9 +16,11 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -19,58 +28,84 @@ import java.util.List;
  */
 public class GenerateTranslation {
 
+    private static void loadAppsFromDatabase() throws UnknownHostException {
+        Mongo m = new Mongo("localhost", 27017);
+        DB db = m.getDB("ApplicationPool");
+        Morphia morphia = new Morphia();
+        morphia.map(DataCommon.class);
+
+        Set<String> collections = db.getCollectionNames();
+        for (String colection : collections) {
+            DBCollection selectedCollection = db.getCollection(colection);
+            DBCursor allDocs = selectedCollection.find();
+            while (allDocs.hasNext()) {
+                DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, allDocs.next());
+                if(dataCommon instanceof ApplicationSettings) {
+                    System.out.println("found");
+                    ApplicationSettings dbobj = (ApplicationSettings) dataCommon;
+                    applicationNames.put(dbobj.id.replace("-", "_"), dbobj);
+                }
+            }
+        }
+    }
+
     private int fileCount = 0;
-    private HashMap<String, TranslationKey> keyMap = new HashMap();
+    public static HashMap<String, TranslationKey> keyMap = new HashMap();
+    public static HashMap<String, ApplicationSettings> applicationNames = new HashMap();
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
+
+        loadAppsFromDatabase();
         
         GenerateTranslation gt = new GenerateTranslation();
         gt.parsePath("../com.getshop.client/");
-        
+
         ArrayList<String> webShopTranslation = gt.createKeyList("webshop");
         ArrayList<String> frameworkTranslation = gt.createKeyList("framework");
-        
+
         TranslationFile w_base = new TranslationFile("w_base");
         TranslationFile f_base = new TranslationFile("f_base");
-        
+
         w_base.compareWithArray(webShopTranslation);
         f_base.compareWithArray(frameworkTranslation);
-        
-        writeTranslationFile("w_base", webShopTranslation, true);
-        writeTranslationFile("f_base", frameworkTranslation, true);
-        
+
+        gt.writeTranslationFile("w_base", webShopTranslation, true);
+        gt.writeTranslationFile("f_base", frameworkTranslation, true);
+
         TranslationComparor tc = new TranslationComparor();
-        
-//        ArrayList<String> mergedFile = tc.createNewFile(frameworkTranslation, "fi_fi");
-//        writeTranslationFile("f_fi_fi", mergedFile, false);
-        
         tc.finalizeTranslationFiles();
-        
+
         System.out.println(gt.fileCount + " files parsed");
         System.out.println(frameworkTranslation.size() + " framework text lines found");
         System.out.println(webShopTranslation.size() + " webshop text lines found");
         gt.printSummary();
     }
-    
-    private static void writeTranslationFile(String w_base, ArrayList<String> webShopTranslation, boolean includeSuffix) {
+
+    private void writeTranslationFile(String filename, ArrayList<String> webShopTranslation, boolean includeSuffix) {
         try {
             // Create file 
-            FileWriter fstream = new FileWriter("../com.getshop.client/ROOT/translation/" + w_base+".csv");
+            FileWriter fstream = new FileWriter("../com.getshop.client/ROOT/translation/" + filename + ".csv");
             BufferedWriter out = new BufferedWriter(fstream);
-            
-            for(String key : webShopTranslation) {
-                if(includeSuffix) {
-                    out.write(key + ";-;\n");
-                } else {
-                    out.write(key + "\n");
+
+            HashMap<String, List<TranslationKey>> sortedTranslation = buildSortedTranslation(webShopTranslation);
+
+            System.out.println(filename);
+            for (String app : sortedTranslation.keySet()) {
+                out.write("###### " + app + " ######\n");
+                for (TranslationKey key : sortedTranslation.get(app)) {
+                    if (includeSuffix) {
+                        out.write(key.key + ";-;\n");
+                    } else {
+                        out.write(key.key + "\n");
+                    }
                 }
+                out.write("\n\n");
             }
             out.close();
         } catch (Exception e) {//Catch exception if any
             System.err.println("Error: " + e.getMessage());
         }
     }
-
 
     public void parsePath(String path) throws FileNotFoundException, IOException {
 
@@ -96,7 +131,7 @@ public class GenerateTranslation {
 
         String strLine;
         int linenumber = 0;
-        
+
         while ((strLine = br.readLine()) != null) {
             //Check if there is more translation at the same line
             int offset = 0;
@@ -119,7 +154,7 @@ public class GenerateTranslation {
                     }
                     linenumber++;
                 }
-            }while(offset >= 0);
+            } while (offset >= 0);
         }
     }
 
@@ -161,70 +196,101 @@ public class GenerateTranslation {
             int line = strLine.indexOf("\\" + string, offset);
             end = strLine.indexOf(string, offset);
             if (line > 0) {
-                    if ((end - 1) == line) {
-                        offset = line+2;
-                    }
+                if ((end - 1) == line) {
+                    offset = line + 2;
+                }
             } else {
                 break;
             }
-        }while(true);
+        } while (true);
 
-        if(end < 0) {
+        if (end < 0) {
             System.out.println("Fuck.. did not find end for line: " + strLine);
             System.exit(0);
         }
         String result = strLine.substring(0, end);
-        
-        result = result.replace("\\"+string, string+"");
+
+        result = result.replace("\\" + string, string + "");
         return result;
     }
 
     private void addTranslationKey(String key, String filePath, int linenumber, String type) {
-        if(key.trim().length() == 0) {
+        if (key.trim().length() == 0) {
             return;
         }
+        String app_ns = "framework";
+        if (filePath.contains("/app/ns_")) {
+            app_ns = filePath.substring(filePath.indexOf("/app/ns_") + 8);
+            app_ns = app_ns.substring(0, app_ns.indexOf("/"));
+            if(applicationNames.containsKey(app_ns)) {
+                app_ns += " (" + applicationNames.get(app_ns).appName + ")";
+            }
+        }
+
         filePath = filePath.replace("/home/boggi/source/getshop/com.getshop.client/", "");
         TranslationKey transkey = keyMap.get(key);
-        if(transkey == null) {
+        if (transkey == null) {
             transkey = new TranslationKey();
             transkey.key = key.trim();
+            transkey.app_namespace = app_ns;
         }
-        
+
         List<Integer> lines = transkey.files.get(filePath);
-        if(lines == null) {
+        if (lines == null) {
             lines = new ArrayList();
         }
-        
-        lines.add(linenumber); 
+
+        lines.add(linenumber);
         transkey.files.put(filePath, lines);
-        if(transkey.type == null || type.equals("webshop")) {
+        if (transkey.type == null || type.equals("webshop")) {
             transkey.type = type;
         }
-            
-        keyMap.put(key, transkey);
+        
+        if(keyMap.containsKey(key.trim())) {
+            transkey.app_namespace = "framework";
+        }
+
+        keyMap.put(key.trim(), transkey);
     }
 
     private ArrayList<String> createKeyList(String type) {
         ArrayList<String> toAddList = new ArrayList();
-        for(String key : keyMap.keySet()) {
+        for (String key : keyMap.keySet()) {
             TranslationKey transkey = keyMap.get(key);
-            if(!transkey.type.equals(type))
+            if (!transkey.type.equals(type)) {
                 continue;
+            }
             toAddList.add(key);
         }
-        
+
         java.util.Collections.sort(toAddList);
         return toAddList;
     }
 
     private void printSummary() {
         int count = 0;
-        for(TranslationKey key : keyMap.values()) {
-            if(key.files.size() > 2) {
+        for (TranslationKey key : keyMap.values()) {
+            if (key.files.size() > 2) {
                 System.out.println(key.key + ";-;" + key.type + " ( " + key.files.size() + ")");
                 count++;
             }
         }
         System.out.println("Duplicates: " + count);
+    }
+
+    private HashMap<String, List<TranslationKey>> buildSortedTranslation(ArrayList<String> webShopTranslation) {
+        HashMap<String, List<TranslationKey>> result = new HashMap();
+        for (String key : webShopTranslation) {
+            TranslationKey translationkey = keyMap.get(key);
+            String app = translationkey.app_namespace;
+
+            List<TranslationKey> tocheck = result.get(app);
+            if (tocheck == null) {
+                tocheck = new ArrayList();
+            }
+            tocheck.add(translationkey);
+            result.put(app, tocheck);
+        }
+        return result;
     }
 }

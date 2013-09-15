@@ -11,4 +11,5 @@ public class TranslationKey {
     String key;
     HashMap<String, List<Integer>> files = new HashMap();
     String type;
+    String app_namespace;
 }

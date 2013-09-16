@@ -107,7 +107,7 @@ Add sub entry;-;Legg til undermeny
 Enter an address to link this to;-;Skriv inn en adresse å linke denne til
 Get started building yourself a left / right menu, you can do it by adding this application!<br><br>This menu support subentries and hardlinking, and for each entry a page is created where you can add products / other applications.;-;Kom i gang å bygg deg en venstre / høyre meny,
 Hardlink;-;Hardlink
-Hardlink configuration for menu entry;-;Hardlink konfigurasjons meny for valgt innlegg.
+Hardlink configuration for menu entry;-;Hardlink konfigurasjons meny for innlegg
 Left Menu;-;Venstremeny
 Menu hardlink for;-;Meny hardlink for
 Remove icon;-;Fjern icon
@@ -126,6 +126,7 @@ Administrators;-;Administratorer
 All users;-;Alle brukere
 Create new group;-;Opprett en ny gruppe
 Create user;-;Opprett en bruker
+Edit user;-;Editer bruker
 No users found;-;Ingen brukere funnet.
 Note: minumum 3 chars before search start;-;Note: minum 3 tegn før søket starter.
 User/Customers overview;-;Brukere / kunders oversikt
@@ -195,7 +196,6 @@ dibs payment services allows you to start charging with visa / mastercard / and 
 Category list;-;Kategori liste
 Create categories and add a list of products to the category, attach images to the categories, and name them as you want.;-;Opprett kategorier og legg til en liste av produkter for kategorien, legg til bilder til dine kategorier og navgi de med hva du vil.
 More Categories?;-;Mer kategorier?
-Settings;-;Instillinger
 This category displayer is currently empty. To create a new category please click the create new category button below.;-;Denne kategorien er for tiden tom. For å opprette en kategori vennligst trykk på opprett kategori knappen.
 Unlink entry;-;Frakoble element
 
@@ -226,6 +226,7 @@ Store currency;-;Butikk valutta
 You do not want to display the cart.. sure enable this then.;-;Du ønsker ikke å vise handlekurven... Greit nok, aktivert dette.
 Your settings have been saved.;-;Dine instillinger har blitt lagret.
 postal;-;Postnummer
+title;-;Tittel
 
 
 ###### 626ff5c4_60d4_4faf_ac2e_d0f21ffa9e87 (Search) ######
@@ -253,7 +254,6 @@ All fields need to be filled before you continue;-;Alle felter må fylles ut fø
 Already created instances of this app;-;Allerede opprettet instaneser for denne applikasjonen.
 Applications;-;Applikasjoner
 Are you sure that you want to remove this application?;-;Er du sikker på at du ønsker å fjerne denne applikasjonen?
-Attribute administration;-;Atributt administrasjon.
 Background color;-;Bakgrunsfarge
 Backgrounds;-;Bakgrunn
 Base color;-;Base farge
@@ -318,10 +318,10 @@ Reporting;-;Rapportering
 Save;-;Lagre
 Save changes;-;Lagre endringer
 Save settings;-;Lagre instillinger
-Saved;-;Lagre
 Security;-;Sikkerhet
 Select different page layouts;-;Velg sidens layout
 Set application sticky;-;Sett applikasjonen klebelig.
+Settings;-;Instillinger
 Setup your own domain;-;Sett opp ditt egent domene.
 Some settings are important for google and other search engines, and this is where you can configure them.;-;Noen instillinger er viktig for google og andre søkemotorer, og her er hvor du kan finne dem.
 Soon to be available;-;Kommer snart
@@ -334,7 +334,6 @@ There is one layout defined for each page, a layout can have multiple of rows an
 This is where you can configure your current page, special settings like search engine optimization for the current page you are browser;-;Dette er hvor du kan konfigurere siden du er på, spesielle instillinger for søkemotor optimaliser, osv.
 To change a layout for the current page, please select one from the list below.;-;For å endre nåværende layout, vennlig velg en fra listen under.
 Transfer existing domain;-;Overfør eksisterende domene
-Un-combine product list;-;Fjern kombinerte lister
 Upload image;-;Last opp bilde
 Users logged on;-;Brukere logget på
 Warning! this store will automatically be reset to original state each hour;-;Advasel! Systemet vil automatisk bli satt tilbake til sin originale stand hver time.
@@ -347,7 +346,6 @@ delete;-;Slett
 price;-;Pris
 save;-;Lagre
 this is restricted to owner only;-;dette er begrenset til kun eiere.
-title;-;Tittel
 
 
 ###### a109b0f1_97c3_4292_a46f_4c6894a9841c (PartnerApplicationSelection) ######
@@ -377,6 +375,7 @@ customer postcode;-;kundens postnummer
 Click on the chat icon in the top menu and start translating.;-;Trykk på chat iconet i toppen menyen for å starte oversettingen.
 Not satisfied with the text "hardcoded" on your page?<br>Add this application and tune the text yourself.;-;Ikke fornøyd med tekst som er "kodet" inn på din side?<br>Legg til denne applikasjonen og endre teksten selv.
 Save translation;-;Lagre oversetting
+Saved;-;Lagre
 The translation has been saved;-;Oversettingen har blitt oppdatert
 To translate all visible text for your users, translate the entries below, and hit the save translation button.;-;For å lagre all tekst som er viselig for kundene dine, oversett radene under, og trykk på lagre knappen.
 Translation;-;Oversetting
@@ -434,6 +433,7 @@ Add this contact form, configure it, and you are ready to start receiving questi
 Click the create application button and you will automatically get a form which sends you email directly to your email address when someone use this form.;-;Trykk på opprett applikasjons knappen og du vil automatisk få ett skjema hvor epost blir sendt til deg automatisk når noen bruker den.
 Contact form;-;Kontaktskjema
 Contact form configuration;-;Kontakt skjema konfigurasjon
+Edit Contact Form;-;Endre kontakt detaljer
 If this function is enabled, it will show the company field.;-;Hvis denne funksjonen er aktivert, vil du vise selskaps feltet. 
 Show company field;-;Vi selskaps felt.
 Your message has been sent!;-;Din melding har blitt sendt!
@@ -531,6 +531,7 @@ Add to list;-;Legg til en liste
 All products available;-;All produktene som er tilgjengelige.u vi
 Create new;-;Opprett ny
 Create product;-;Opprett produkt
+Edit product list;-;Editer produkt listen
 My product list;-;Min produkt liste
 Product List;-;Produktliste
 Products already added to your list;-;Produkter allerede lagt til i din liste
@@ -538,6 +539,7 @@ Remove application;-;Fjern applikasjon
 Remove from list;-;Fjern fra listen
 Save product list;-;Lagre produkt liste
 This application is added to the following pages;-;Denne applikasjonen er lagt til på følgende sider.
+Un-combine product list;-;Fjern kombinerte lister
 You do not have any lists combined with this list yet...;-;Du har ingen kombinerte lister enda.
 this applications lists products for you webshop, in the body of every page (except for system pages). from this application you can also add products. combine this application with a leftmenu, and/or a category displayer to create a powerful webshop.;-;Denne applikasjonen lister produkter for din webshop i hoved kolonnen for alle dine sider (forutenom system sidene). Du kan også legge til produkter gjennom denne appliakasjonen. Kombiner disse med en venstremeny, og/eller en kategory visning for å bygge en kraftig og god webshop.
 
@@ -579,11 +581,13 @@ About this attribute group:;-;Om disse attribut gruppene:
 Add a product to a page, add description, price, title, and other attributes. And you are ready to start selling the product. Combine it with a left menu, a category list to create a flexible and powerful webshop.;-;Legg til ett produkt, legg til en beskrivelse, pris, og andre atributter. Deretter er du klar til å selge produktet. Kombiner det med en venstre meny, en kategory liste for å lage en fleksibel og kraftful webshop.
 Add an image by clicking the button below to start your image upload progress.;-;Legg til et bilde ved å trykke på knappen under for å starte opplastnings prosessen.
 Add images to the product;-;Legg til bilder på produktet
+Add new top level variation;-;Legg til en ny attribut hovedgruppe
 Advanced Options;-;Avanserte egenskaper
 Advanced settings;-;Avanserte innstillinger
 Advanced settings allows you to finetune different aspects to your product. For example, if shipping is configured and you would like this product to be shipped for free.;-;Avanserte innstillinger gjør det mulig for deg å fintune forskjellige aspekter av ditt produkt. For eksempel, hvis frakt er lagt til, og du ønsker å sende dette produktet gratis.
-Are you sure you want to delete this product?;-;Er du sikker på at du vil slette dette produktet?
-Are you sure you want to remove this?;-;Er du sikker påat du vil slette dette?
+Are you sure you want to remove this?;-;Er du sikker på at du vil slette dette?
+Attribute administration;-;Atributt administrasjon.
+Attribute name;-;Atributt navn
 Attribute settings;-;Atributt instillinger
 Attribute settings enables you to attach different kind of attributes to the product. Theese attributes will be used to filter your products in a product list.;-;Atributt instillinger gjør det mulig å legge til forskjellige attributer til produktet. Disse attributene vil bli brukt for å filtere produktene i en produktliste.
 Attributes;-;Atributter
@@ -593,12 +597,9 @@ Click on create application to get started, you will then get an input form to s
 Create;-;Opprett
 Create a new product;-;Opprett et nytt produkt
 Crop;-;Avskjær
-Data has been saved;-;Data har blitt lagret
 Delete attribute;-;Slett atributt
 Delete group;-;Slett gruppe
-Delete product;-;Slett produktet
 Edit;-;Endre
-Edit product information;-;Editerer produkt informasjonen
 Edit the data below and write a description, the name of the product and a more detailed description. This data will be displayed on your product when viewing it.;-;Endre dataen under og skriv inn en beskrivelse, navnet på produkter og en mer detaljert beskrivelse. Denne dataen vil bli vist når produktet vises.
 Edit your product.;-;Endre ditt produkt
 Hide shipping price from this product?;-;Gjem frakt kostnader for dette produktet
@@ -607,15 +608,12 @@ Images attached to this product;-;Bildene lagt til på dette produktet
 Import;-;Importer
 Insert image;-;Sett inn bilde
 Is this your default picture to the product?;-;Er dette standardbildet for produktet ?
-Modify your product;-;Modifiser produktet ditt
-No short description set yet;-;No kort besrkivelse er satt.
-Not valid selection;-;Ikke et gyldig valg
+No short description set yet;-;Ingen liten beskrivelse er satt enda.
 Please click on 'Add new top level variation' above;-;Vennligst tryll på 'Legg til ny topp nivå variasjon' over.
-Please select the options marked in red;-;Vennligst velg en av valgene som er markert i rødt.
 Preview;-;Forhåndsvis
+Price diff;-;Pris forskjell
 Product Information;-;Produkt informasjon
 Product Manager;-;Produktvisning
-Product variations;-;Produkt variasjon
 Rotate;-;Roter
 Save product;-;Lagre produkt
 Select a group in the left hand area;-;Velg en gruppe i venstre område

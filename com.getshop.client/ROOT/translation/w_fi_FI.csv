@@ -32,7 +32,6 @@ City;-;Kaupunki
 Completed;-;Valmis
 Email;-;Sähköposti
 Full name;-;Koko nimi
-My name is:;-;Minun nimeni on:
 New password;-;Uusi salasana
 Next;-;Seuraava
 Password;-;Salasana
@@ -56,6 +55,10 @@ You do not have any products in your cart;-;Ostoskorisi on tyhjä
 
 ###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
 Fixed price;-;Kiinteä hinta
+
+
+###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
+My name is:;-;Minun nimeni on:
 
 
 ###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######

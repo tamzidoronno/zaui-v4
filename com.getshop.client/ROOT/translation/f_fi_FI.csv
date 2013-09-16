@@ -11,6 +11,7 @@ This category displayer is currently empty. To create a new category please clic
 
 ###### d755efca_9e02_4e88_92c2_37a3413f3f41 (Settings) ######
 postal;-;Postinumero
+title;-;Otsikko
 
 
 ###### framework ######
@@ -24,7 +25,6 @@ Save;-;Tallenna
 delete;-;Poista
 price;-;Hinta
 save;-;Tallenna
-title;-;Otsikko
 
 
 ###### ee1f3649_cfd8_41d5_aa5b_682216f376b6 (Translation) ######

@@ -508,6 +508,20 @@ class Factory extends FactoryBase {
             }
         }
         
+        //Add customer related translation to the matrix.
+        $content = file_get_contents("translation/w_$lang.csv");
+        $line = explode("\n", $content);
+        $app = "";
+        foreach ($line as $entry) {
+            if(strpos($entry, "###### ") === 0) {
+                continue;
+            }
+            $cell = explode(";-;", $entry);
+            if(isset($cell[1])) {
+                $this->translationMatrix[$cell[0]] = $cell[1];
+            }
+        }
+        
         //Append the english lanugage.
         $content = file_get_contents("translation/f_en_en.csv");
         $line = explode("\n", $content);

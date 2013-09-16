@@ -132,6 +132,7 @@ Administrators;-;
 All users;-;
 Create new group;-;
 Create user;-;
+Edit user;-;
 No users found;-;
 Note: minumum 3 chars before search start;-;
 User/Customers overview;-;
@@ -198,7 +199,6 @@ dibs payment services allows you to start charging with visa / mastercard / and 
 
 
 ###### e9d04f19_6eaa_4a17_9b7b_aa387dbaed92 (CategoryLister) ######
-Settings;-;
 Unlink entry;-;
 
 
@@ -258,7 +258,6 @@ All fields need to be filled before you continue;-;
 Already created instances of this app;-;
 Applications;-;
 Are you sure that you want to remove this application?;-;
-Attribute administration;-;
 Background color;-;
 Backgrounds;-;
 Base color;-;
@@ -316,10 +315,10 @@ Remove applications that are added;-;
 Remove hardlink;-;
 Save changes;-;
 Save settings;-;
-Saved;-;
 Security;-;
 Select different page layouts;-;
 Set application sticky;-;
+Settings;-;
 Setup your own domain;-;
 Some settings are important for google and other search engines, and this is where you can configure them.;-;
 Soon to be available;-;
@@ -332,7 +331,6 @@ There is one layout defined for each page, a layout can have multiple of rows an
 This is where you can configure your current page, special settings like search engine optimization for the current page you are browser;-;
 To change a layout for the current page, please select one from the list below.;-;
 Transfer existing domain;-;
-Un-combine product list;-;
 Upload image;-;
 Users logged on;-;
 Warning! this store will automatically be reset to original state each hour;-;
@@ -371,6 +369,7 @@ customer postcode;-;
 Click on the chat icon in the top menu and start translating.;-;
 Not satisfied with the text "hardcoded" on your page?<br>Add this application and tune the text yourself.;-;
 Save translation;-;
+Saved;-;
 The translation has been saved;-;
 
 
@@ -424,6 +423,7 @@ Add this contact form, configure it, and you are ready to start receiving questi
 Click the create application button and you will automatically get a form which sends you email directly to your email address when someone use this form.;-;
 Contact form;-;
 Contact form configuration;-;
+Edit Contact Form;-;
 If this function is enabled, it will show the company field.;-;
 Show company field;-;
 Your message has been sent!;-;
@@ -514,12 +514,14 @@ Add to list;-;
 All products available;-;
 Create new;-;
 Create product;-;
+Edit product list;-;
 My product list;-;
 Products already added to your list;-;
 Remove application;-;
 Remove from list;-;
 Save product list;-;
 This application is added to the following pages;-;
+Un-combine product list;-;
 You do not have any lists combined with this list yet...;-;
 this applications lists products for you webshop, in the body of every page (except for system pages). from this application you can also add products. combine this application with a leftmenu, and/or a category displayer to create a powerful webshop.;-;
 
@@ -554,11 +556,13 @@ About this attribute group:;-;
 Add a product to a page, add description, price, title, and other attributes. And you are ready to start selling the product. Combine it with a left menu, a category list to create a flexible and powerful webshop.;-;
 Add an image by clicking the button below to start your image upload progress.;-;
 Add images to the product;-;
+Add new top level variation;-;
 Advanced Options;-;
 Advanced settings;-;
 Advanced settings allows you to finetune different aspects to your product. For example, if shipping is configured and you would like this product to be shipped for free.;-;
-Are you sure you want to delete this product?;-;
 Are you sure you want to remove this?;-;
+Attribute administration;-;
+Attribute name;-;
 Attribute settings;-;
 Attribute settings enables you to attach different kind of attributes to the product. Theese attributes will be used to filter your products in a product list.;-;
 Attributes;-;
@@ -568,12 +572,9 @@ Click on create application to get started, you will then get an input form to s
 Create;-;
 Create a new product;-;
 Crop;-;
-Data has been saved;-;
 Delete attribute;-;
 Delete group;-;
-Delete product;-;
 Edit;-;
-Edit product information;-;
 Edit the data below and write a description, the name of the product and a more detailed description. This data will be displayed on your product when viewing it.;-;
 Edit your product.;-;
 Hide shipping price from this product?;-;
@@ -582,15 +583,12 @@ Images attached to this product;-;
 Import;-;
 Insert image;-;
 Is this your default picture to the product?;-;
-Modify your product;-;
 No short description set yet;-;
-Not valid selection;-;
 Please click on 'Add new top level variation' above;-;
-Please select the options marked in red;-;
 Preview;-;
+Price diff;-;
 Product Information;-;
 Product Manager;-;
-Product variations;-;
 Rotate;-;
 Save product;-;
 Select a group in the left hand area;-;
@@ -654,6 +652,7 @@ North east corner latitude;-;
 North east corner longitude;-;
 South west corner latitude;-;
 South west corner longitude;-;
+Specify boundaries the map should restrict itself to. Leave it empty to avoid boundaries. Or add multiple rectangular fields as constraints.;-;
 Text description;-;
 Text title;-;
 latitude;-;

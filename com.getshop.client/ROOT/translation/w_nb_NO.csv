@@ -23,8 +23,7 @@ if we dont answer, please leave your email here and we will return your message 
 ###### df435931_9364_4b6a_b4b2_951c90cc0d70 (Login) ######
 An email has been sent to you with the confirmation code.;-;En godkjennings kode er sendt til din epost.
 Email sent;-;Epost sendt
-Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.
-Login;-;Logg inn
+Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.L
 Logout;-;Logg ut
 Lost your password?;-;Glemt ditt passord?
 My Account;-;Min konto
@@ -57,7 +56,6 @@ Email;-;Epost
 Featured Product;-;Fremhevet produkt
 Free shipping;-;Gratis frakt
 Full name;-;Hele navnet
-My name is:;-;Mitt navn er
 Name;-;Navn
 New message;-;Ny melding
 New password;-;Nytt passord
@@ -77,6 +75,7 @@ Reminder;-;Påminnelse
 Remove;-;Fjern
 Repeat password;-;Gjenta passord
 Send message;-;Send melding
+Send us mail;-;Send oss en epost
 Success;-;Success
 This page is only available for adminsitrators;-;Denne siden er kun tilgjengelig for adminstratorer.
 This page is only available for editors.;-;Denne siden er kun tilgjengelig for editorer.
@@ -84,11 +83,11 @@ This page is only available for registered users.;-;Denne siden er kun tilgjenge
 Update;-;Oppdater
 Username / Email;-;Brukernavn / Epost
 Weight;-;Vekt
+What's on your mind?;-;Hva ønsker du å formidle?
 Wrong delivery method;-;Feil forsendelses metode.
 You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
 email;-;E-post
 location;-;Sted
-phone;-;Mob.Tlf.
 
 
 ###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
@@ -106,21 +105,21 @@ Configure banner slider;-;Konfigurer banner slideren
 
 
 ###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
-Send us mail;-;Send oss en epost
-What's on your mind?;-;Hva ønsker du å formidle?
+My name is:;-;Mitt navn er
 Your message has been delivered;-;Din melding har blitt sendt.
 
 
 ###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
 All fields are required;-;Alle felt er påkrevd
 Date;-;Dato
-Sign up;-;Logg in
+Sign up;-;Registrer deg
 Stop;-;Stopp
 Your are now signed up for the event;-;Du er nå registert inn på denne eventen.
 change;-;endre
 course;-;kurs
 org;-;Firma
 orgnummer;-;Org.nr.
+phone;-;Mob.Tlf.
 
 
 ###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######

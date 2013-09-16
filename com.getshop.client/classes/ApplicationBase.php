@@ -228,10 +228,9 @@ class ApplicationBase extends FactoryBase {
     }
     
     public function getStarted() {
-        $success = $this->includefile("getstarted", null, false);
-        if (!$success) {
+//        if (!$success) {
             echo $this->__f("Just click the button below");
-        }
+//        }
     }
     
     /**

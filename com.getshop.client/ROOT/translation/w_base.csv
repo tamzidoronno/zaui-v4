@@ -74,7 +74,6 @@ Email;-;
 Featured Product;-;
 Free shipping;-;
 Full name;-;
-My name is:;-;
 Name;-;
 New message;-;
 New password;-;
@@ -94,6 +93,7 @@ Reminder;-;
 Remove;-;
 Repeat password;-;
 Send message;-;
+Send us mail;-;
 Success;-;
 This page is only available for adminsitrators;-;
 This page is only available for editors.;-;
@@ -101,11 +101,11 @@ This page is only available for registered users.;-;
 Update;-;
 Username / Email;-;
 Weight;-;
+What's on your mind?;-;
 Wrong delivery method;-;
 You do not have any products in your cart;-;
 email;-;
 location;-;
-phone;-;
 
 
 ###### 32c15c30_d665_11e2_8b8b_0800200c9a66 (RealEstate) ######
@@ -123,8 +123,9 @@ Configure banner slider;-;
 
 
 ###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
-Send us mail;-;
-What's on your mind?;-;
+Message;-;
+Message from a customer;-;
+My name is:;-;
 Your message has been delivered;-;
 
 
@@ -138,6 +139,7 @@ change;-;
 course;-;
 org;-;
 orgnummer;-;
+phone;-;
 
 
 ###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######

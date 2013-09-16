@@ -56,12 +56,13 @@ Payment;-;
 Please check your delivery options.;-;
 Please select department;-;
 Reminder;-;
+Send us mail;-;
 Success;-;
 Weight;-;
+What's on your mind?;-;
 Wrong delivery method;-;
 email;-;
 location;-;
-phone;-;
 
 
 ###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
@@ -78,8 +79,8 @@ Configure banner slider;-;
 
 
 ###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
-Send us mail;-;
-What's on your mind?;-;
+Message;-;
+Message from a customer;-;
 Your message has been delivered;-;
 
 
@@ -93,6 +94,7 @@ change;-;
 course;-;
 org;-;
 orgnummer;-;
+phone;-;
 
 
 ###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######

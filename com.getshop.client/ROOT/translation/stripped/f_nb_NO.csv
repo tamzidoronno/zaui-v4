@@ -12,3 +12,7 @@ Your merchant key, this id is something that sisow is providing you.;-;
 Airgram allows you to push important notifications to your phone, use this application to push notifications to your cell phone when something important is happening, for example if someone is starting to chat with you, you will be instantly notified and can responde accordingly. Just download airgram from google play or app store and start using it.;-;
 
 
+###### 17c48891_6f7a_47a0_849d_b50de9af218f (GoogleMaps) ######
+Specify boundaries the map should restrict itself to. Leave it empty to avoid boundaries. Or add multiple rectangular fields as constraints.;-;
+
+

@@ -46,7 +46,6 @@ Success;-;
 Wrong delivery method;-;
 email;-;
 location;-;
-phone;-;
 
 
 ###### d612904c_8e44_4ec0_abf9_c03b62159ce4 (Banner) ######
@@ -55,6 +54,8 @@ Configure banner slider;-;
 
 
 ###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
+Message;-;
+Message from a customer;-;
 Your message has been delivered;-;
 
 
@@ -66,6 +67,7 @@ change;-;
 course;-;
 org;-;
 orgnummer;-;
+phone;-;
 
 
 ###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######

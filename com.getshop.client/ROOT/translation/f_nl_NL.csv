@@ -171,7 +171,6 @@ Add;-;Toevoegen
 Add to your page;-;Voeg toe aan je pagina
 All fields need to be filled before you continue;-;Alle velden moet ingevuld zijn alvorens verder te gaan
 Already created instances of this app;-;Bestaande zaken van deze app
-Attribute administration;-;Beheer attributen
 Background color;-;Achtergrond kleur
 Backgrounds;-;Achtergronden
 Base color;-;Basis kleur
@@ -215,7 +214,6 @@ Some settings are important for google and other search engines, and this is whe
 Specify an airgram account.;-;Stel een airgram account in
 Summary;-;Samenvatting
 This is where you can configure your current page, special settings like search engine optimization for the current page you are browser;-;Pas je huidige pagina aan met SEO tekst.
-Un-combine product list;-;Maak product lijst los
 Users logged on;-;Users ingelogd
 Yes;-;Ja
 You are not logged on, please log on.;-;Je bent niet ingelogd, gelieve in te loggen.
@@ -324,6 +322,7 @@ Title for the image;-;Naam van de afbeelding
 Product List;-;Product lijst
 Remove application;-;Verwijder applicatie
 This application is added to the following pages;-;Deze applicatie is toegevoegd aan de pagina’s
+Un-combine product list;-;Maak product lijst los
 You do not have any lists combined with this list yet...;-;Je hebt nog geen lijst gecombineerd met deze lijst
 this applications lists products for you webshop, in the body of every page (except for system pages). from this application you can also add products. combine this application with a leftmenu, and/or a category displayer to create a powerful webshop.;-;Deze applicatie geeft een producten lijst van je webwinkel, op elke pagina. Je kan hier ook producten toevoegen. Combineer met een linker of rechter menu.
 
@@ -353,6 +352,7 @@ When you have added this application, it will automatically start relating produ
 About this attribute group:;-;Over deze attributen groep:
 Add a product to a page, add description, price, title, and other attributes. And you are ready to start selling the product. Combine it with a left menu, a category list to create a flexible and powerful webshop.;-;Voeg een product, een omschrijving, prijs en titel toe aan een pagina, en je bent klaar om een product te verkopen. Combineer het met een menu link, een categorie lijst om een Flexibele en professionele webwinkel te bekomen.
 Advanced Options;-;Geavanceerde opties
+Attribute administration;-;Beheer attributen
 Attributes attached to this group:;-;Attributen vast in deze groep:
 Click on create application to get started, you will then get an input form to start filling out your product.;-;Klik op ‘Maak applicatie aan’ om te beginnen. Je krijgt dan een input formulier om gegevens toe te voegen.
 Delete attribute;-;Verwijder attribuut

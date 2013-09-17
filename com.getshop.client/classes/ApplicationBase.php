@@ -30,6 +30,14 @@ class ApplicationBase extends FactoryBase {
         return $this->skinVariables[$variableName];
     }
     
+    public function setSkinVariables($skinVaribles) {
+        $this->skinVariables = $skinVaribles;
+    }
+    
+    public function getSkinVariables() {
+        return $this->skinVariables;
+    }
+    
     public function preProcess() {
     }
     

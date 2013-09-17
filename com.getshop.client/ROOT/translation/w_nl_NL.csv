@@ -3,23 +3,36 @@ Cart overview;-;Overzicht winkelwagen
 Checkout;-;Afrekenen
 Click next to select shipping options;-;Klik volgende om een verzendmethode te kiezen
 Confirm order;-;Bestelling bevestigen
+Failed;-;Mislukt
+Invalid payment method;-;Ongeldige betaalmethode
+Please select a valid payment method;-;Gelieve een geldig betaalniddel te kiezen
 Shipping price;-;Verzendkosten
 Total;-;Totaal
+Was not able to get payment methods, please check your postcode;-;Niet mogelijk een betaalmogelijkheid op te halen, gelieve je postcode na te gaan
 
 
 ###### 2afb045b_fa01_4398_8582_33f212bb8db8 (Chat) ######
 Chat with us;-;Chat met ons
 How can I help you today ?;-;Waarmee kunnen we u van dienst zijn?
+Our local time is:;-;Onze locale tijd is:
+Please select a user in the left menu;-;Kies een gebruiker in het linker menu
+You need to select at least one to send back message to;-;Je moet op zijn minst 1 selecteren om een bericht terug te sturen
 if we dont answer, please leave your email here and we will return your message asap.;-;Indien we niet antwoorden, gelieve een email te sturen. We reageren zo snel mogelijk.
 
 
 ###### df435931_9364_4b6a_b4b2_951c90cc0d70 (Login) ######
+An email has been sent to you with the confirmation code.;-;Er is een email verzonden met je bevestigingscode
+Email sent;-;Email verzonden
 Enter the code sent to your email.;-;Code invoeren die u per sms is gestuurd
 Login;-;Inloggen
 Logout;-;Uitloggen
 Lost your password?;-;Wachtwoord vergeten?
 My Account;-;Mijn account
 Orders;-;Bestellingen
+Password cannot be empty;-;Wachtwoord veld mag niet leeg zijn
+Password does not match, please re enter password;-;Wachtwoorden komen niet overeen, gelieve nogmaals in te geven
+Password has been successfully updated;-;Wachtwoord succesvol geupdate
+Password has been updated;-;Wachtwoord geupdate
 Please enter your email address:;-;E-mailadres aub invoeren:
 Please following theese steps to recover your password.;-;Volg instructies om uw wachtwoord te achterhalen
 Recover password;-;Wachtwoord achterhalen
@@ -34,6 +47,7 @@ Search for a product;-;Product zoeken
 A red theme that can be used when selling exciting things;-;Een rode layout voor verkoop van interessante producten
 Add to cart;-;Aan winkelwagen toevoegen
 Address;-;Addres
+Buy;-;Koop
 Change password;-;Wachtwoord aanpassen
 City;-;Woonplaats
 Company;-;Bedrijf
@@ -44,22 +58,26 @@ Featured Product;-;Product in de kijker
 Free shipping;-;Gratis verzending
 Full name;-;Volledige naam
 Name;-;Naam
+New message;-;Nieuw bericht
 New password;-;Nieuw wachtwoord
 Next;-;Volgende
 Password;-;Wachtwoord
 Payment;-;Betaling
 Phone;-;Telefoon
 Place order;-;Bestelling plaatsen
+Please check your delivery options.;-;Kijk de verzendopties na
 Please select a shipment method.;-;Selecteer aub verzendmethode
 Please select department;-;Gelieve een afdeling te kiezen
 Postal code;-;Postcode
 Previous;-;Vorige
 Price;-;Prijs
 Related products;-;Gerelateerde producten
+Reminder;-;Herinnering
 Remove;-;Verwijderen
 Repeat password;-;Wachtwoord nogmaals
 Send message;-;Bericht versturen
 Send us mail;-;Stuur ons een email
+Success;-;Succes
 This page is only available for adminsitrators;-;Deze pagina is alleen voor beheerders toegangkelijk
 This page is only available for editors.;-;Deze pagina is alleen voor redacteuren toegangkelijk
 This page is only available for registered users.;-;Deze pagina is alleen voor geregistreerde gebruikers toegangkelijk
@@ -67,7 +85,10 @@ Update;-;Updaten
 Username / Email;-;Gebruikersnaam / E-mail
 Weight;-;Gewicht
 What's on your mind?;-;Waar denk je aan?
+Wrong delivery method;-;Verkeerde verzendmethode
 You do not have any products in your cart;-;U heeft nog geen producten in de winkelwagen
+email;-;email
+location;-;locatie
 
 
 ###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
@@ -79,13 +100,20 @@ Shipment settings;-;Verzendingsmogelijkheden
 Les mer;-;?
 
 
+###### d612904c_8e44_4ec0_abf9_c03b62159ce4 (Banner) ######
+Banner settings;-;Banner settings
+Configure banner slider;-;Configureer banner slider
+
+
 ###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
 My name is:;-;Mijn naam is:
+Your message has been delivered;-;Je bericht is aangekomen
 
 
 ###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
 Date;-;Datum
 Sign up;-;Registreer
+phone;-;telefoon
 
 
 ###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
@@ -139,6 +167,7 @@ Details;-;Details
 Extended Description;-;Uitgebreide beschrijving
 Other images;-;Andere afbeeldingen
 in stock;-;op voorraad
+shipping;-;Verzending
 
 
 ###### c7736539_4523_4691_8453_a6aa1e784fc1 (PayPal) ######
@@ -150,6 +179,7 @@ You are being transferred to paypal, please wait...;-;Je wordt doorgestuurd naar
 Application;-;Applicatie 
 Birth Date;-;Geboortedatum
 Cell phone;-;Mobiel
+Changes has been saved!;-;Aanpassingen opgeslagen
 End date;-;Einddatum
 Group;-;Groep
 Number of instances added;-;Aantal zaken toegevoegd

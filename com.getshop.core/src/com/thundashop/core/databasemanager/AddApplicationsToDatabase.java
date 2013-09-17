@@ -55,61 +55,16 @@ public class AddApplicationsToDatabase {
     
     private List<ApplicationSettings> addApplications() {
         List<ApplicationSettings> apps = new ArrayList();
+        
+        ApplicationSettings sod2 = createSettings(
+                "ShopSoDesign2", 
+                "f2fc7a50-266f-4638-949b-4ffdb228f6f0", 
+                emtpy, 
+                "", 
+                ApplicationSettings.Type.Theme, true);
+        sod2.isPublic = true;
+        apps.add(sod2);
 
-        ApplicationSettings akad = createSettings(
-                "ImageDisplayer", 
-                "831647b5-6a63-4c46-a3a3-1b4a7c36710a", 
-                emtpy, 
-                "", 
-                ApplicationSettings.Type.Webshop, false);
-        akad.isPublic = true;
-        apps.add(akad);
-        
-        ApplicationSettings mailApplication = createSettings(
-                "MailManager", 
-                "eb03c660-186a-11e3-8ffd-0800200c9a66", 
-                emtpy, 
-                "", 
-                ApplicationSettings.Type.Marketing, true);
-        mailApplication.isPublic = true;
-        apps.add(mailApplication);
-
-        ApplicationSettings blueEnergyTheme = createSettings(
-                "BlueEnergyTheme", 
-                "9ffcc6a0-130e-11e3-8ffd-0800200c9a66", 
-                emtpy, 
-                "", 
-                ApplicationSettings.Type.Theme, false);
-        blueEnergyTheme.isPublic = true;
-        apps.add(blueEnergyTheme);
-        
-        ApplicationSettings sisow = createSettings(
-                "Sisow", 
-                "c4d7bec0-185f-11e3-8ffd-0800200c9a66", 
-                emtpy, 
-                "", 
-                ApplicationSettings.Type.Payment, true);
-        sisow.isPublic = true;
-//        apps.add(sisow);
-        
-        ApplicationSettings shopshopdesign1 = createSettings(
-                "ShopSoDesign1", 
-                "d71779ff-1d32-4c45-86cc-e576ee103f1c", 
-                emtpy, 
-                "", 
-                ApplicationSettings.Type.Theme, false);
-        shopshopdesign1.isPublic = false;
-        apps.add(shopshopdesign1);
-        
-        ApplicationSettings partnerselection = createSettings(
-                "PartnerApplicationSelection", 
-                "a109b0f1-97c3-4292-a46f-4c6894a9841c", 
-                emtpy, 
-                "", 
-                ApplicationSettings.Type.System, false);
-        partnerselection.isPublic = true;
-        apps.add(partnerselection);
-        
         return apps;
     }
     

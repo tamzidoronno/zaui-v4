@@ -1,4 +1,14 @@
-###### 04259325_abfa_4311_ab81_b89c60893ce1 (Reporting) ######
-Count;-;
+###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 ######
+By enabling testmode for sisow, you will be able to test the payment solutions in sandbox mode.;-;
+Enable test mode for sisow;-;
+Here you can configure all the settings required to get sisow to work properly with your account. Enter the fields below and press save, as soon as everything here is set correctly you will see that a new payment options is available in the checkout area.;-;
+Merchant id;-;
+Merchant key;-;
+Your merchant id, this id is something that sisow is providing you.;-;
+Your merchant key, this id is something that sisow is providing you.;-;
+
+
+###### ee96fe89_e09d_4f7b_921a_3272462e9b7e (Airgram) ######
+Airgram allows you to push important notifications to your phone, use this application to push notifications to your cell phone when something important is happening, for example if someone is starting to chat with you, you will be instantly notified and can responde accordingly. Just download airgram from google play or app store and start using it.;-;
 
 

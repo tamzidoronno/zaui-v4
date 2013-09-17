@@ -1,0 +1,19 @@
+/home/boggi/source/core/com.getshop.mobile/test/platforms/android/bin/classes.dex : \
+/home/boggi/source/core/com.getshop.mobile/test/platforms/android/bin/classes/com/sixfire/WebSocket.class \
+/home/boggi/source/core/com.getshop.mobile/test/platforms/android/bin/classes/com/ququplay/websocket/WebSocket$1.class \
+/home/boggi/source/core/com.getshop.mobile/test/platforms/android/bin/classes/com/ququplay/websocket/WebSocket$3.class \
+/home/boggi/source/core/com.getshop.mobile/test/platforms/android/bin/classes/com/ququplay/websocket/WebSocket.class \
+/home/boggi/source/core/com.getshop.mobile/test/platforms/android/bin/classes/com/ququplay/websocket/WebSocket$2.class \
+/home/boggi/source/core/com.getshop.mobile/test/platforms/android/bin/classes/com/ququplay/websocket/CordovaClient.class \
+/home/boggi/source/core/com.getshop.mobile/test/platforms/android/bin/classes/com/ququplay/websocket/Utils.class \
+/home/boggi/source/core/com.getshop.mobile/test/platforms/android/bin/classes/com/phonegap/hello_world/HelloWorld.class \
+/home/boggi/source/core/com.getshop.mobile/test/platforms/android/bin/classes/getshop/com/R$attr.class \
+/home/boggi/source/core/com.getshop.mobile/test/platforms/android/bin/classes/getshop/com/R.class \
+/home/boggi/source/core/com.getshop.mobile/test/platforms/android/bin/classes/getshop/com/HelloWorld.class \
+/home/boggi/source/core/com.getshop.mobile/test/platforms/android/bin/classes/getshop/com/R$layout.class \
+/home/boggi/source/core/com.getshop.mobile/test/platforms/android/bin/classes/getshop/com/R$drawable.class \
+/home/boggi/source/core/com.getshop.mobile/test/platforms/android/bin/classes/getshop/com/R$xml.class \
+/home/boggi/source/core/com.getshop.mobile/test/platforms/android/bin/classes/getshop/com/BuildConfig.class \
+/home/boggi/source/core/com.getshop.mobile/test/platforms/android/bin/classes/getshop/com/R$string.class \
+/home/boggi/source/core/com.getshop.mobile/test/platforms/android/bin/dexedLibs/cordova-3.0.0-b549afa536d1ec8e74a3cd3b07a604cc.jar \
+/home/boggi/source/core/com.getshop.mobile/test/platforms/android/bin/dexedLibs/java_websocket-8cec4f3e4d063bb2d407264ae585f920.jar \

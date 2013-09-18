@@ -26,6 +26,7 @@ public class DataCommon implements Serializable {
     public Date deleted = null;
     public String className = getClass().getName();
     public Date rowCreatedDate;
+    public Date lastModified = null;
 
     private void checkAnnotations(Field field, boolean Administrator) throws IllegalArgumentException, IllegalAccessException {
         Object emptyObject = new Product();

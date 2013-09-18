@@ -21,11 +21,16 @@ foreach ($allProducts as $product) {
 
 foreach ($lists as $list) {
     $entries = $factory->getApi()->getListManager()->getList($list);
-    foreach($entries as $entry) {
-        echo "<url>\n";
-        echo "<loc>" . $address . "/?page=" . $entry->pageId . "</loc>\n";
-        echo "</url>\n";
-        
+    if(isset($entries)) {
+        foreach($entries as $entry) {
+            if($entry->pageId != "home" && strlen($entry->pageId) < 20) {
+                continue;
+            }
+            echo "<url>\n";
+            echo "<loc>" . $address . "/?page=" . $entry->pageId . "</loc>\n";
+            echo "</url>\n";
+
+        }
     }
 }
 echo "</urlset>";

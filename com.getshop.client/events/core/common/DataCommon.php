@@ -15,5 +15,8 @@ class core_common_DataCommon {
 	/** @var String */
 	public $rowCreatedDate;
 
+	/** @var String */
+	public $lastModified;
+
 }
 ?>

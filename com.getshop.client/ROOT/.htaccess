@@ -1,0 +1,8 @@
+Options +FollowSymLinks -MultiViews
+# Turn mod_rewrite on
+RewriteEngine On
+RewriteBase /
+ErrorDocument 404 /
+
+RewriteRule ^sitemap.xml$ sitemap.php [L]
+RewriteRule ^favicon.ico$ favicon.php [L]

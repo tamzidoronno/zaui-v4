@@ -114,8 +114,8 @@ if (isset($_GET['logonwithkey'])) {
         $html = init($factory);
         $pageDescription = $factory->getPage()->description;
         if (isset($factory->getSettings()->{'favicon'})) {
-            echo '<link rel="shortcut icon" href="' . $factory->getSettings()->{'favicon'}->value . '" type="image/png">';
-            echo '<link rel="shortcut icon" type="image/png" href="' . $factory->getSettings()->{'favicon'}->value . '" />';
+            echo '<link rel="shortcut icon" href="favicon.ico" type="image/png">';
+            echo '<link rel="shortcut icon" type="image/png" href="favicon.ico" />';
         }
         echo "<meta name=\"description\" content=\"$pageDescription\">";
 

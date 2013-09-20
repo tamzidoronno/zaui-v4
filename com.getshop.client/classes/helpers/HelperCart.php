@@ -13,7 +13,7 @@ class HelperCart {
             unset($_SESSION['tempaddress']);
         }
         unset($_SESSION['checkoutstep']);
-        unset($_SESSION['paymentMethod']);
+        unset($_SESSION['appId']);
         unset($_SESSION['shippingtype']);
         unset($_SESSION['shippingproduct']);
     }

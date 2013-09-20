@@ -510,8 +510,8 @@ $('#informationbox .settings .entry, #settingsarea .setting').live('click', func
     }
 });
 
-$('#cookiewarning .textbox .continue').on('click', function() {
-    $('#cookiewarning').remove();
+$('#cookiewarning_overlay .textbox .continue').on('click', function() {
+    $('#cookiewarning_overlay').remove();
     var event = thundashop.Ajax.createEvent('','CookieAccepted',$(this),'');
     thundashop.Ajax.postWithCallBack(event, function() {
         

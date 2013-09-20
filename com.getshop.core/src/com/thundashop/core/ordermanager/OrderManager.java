@@ -210,7 +210,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 }
             } else if (user.isAdministrator() || user.isEditor()) {
                 result.add(order);
-            } else if (order.userId.equals(user.id)) {
+            } else if (order.userId != null && order.userId.equals(user.id)) {
                 result.add(order);
             }
         }

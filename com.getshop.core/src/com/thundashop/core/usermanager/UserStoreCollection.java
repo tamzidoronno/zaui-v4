@@ -191,4 +191,14 @@ public class UserStoreCollection {
             databaseSaver.deleteObject(foundGroup, credentials);
         }
     }
+
+    boolean isRegistered(String email) {
+        for(User user : users.values()) {
+            if(user.emailAddress.equalsIgnoreCase(email)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 }

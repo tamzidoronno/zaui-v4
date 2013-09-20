@@ -449,4 +449,10 @@ public class UserManager extends ManagerBase implements IUserManager {
     public List<GetshopStore> getStoresConnectedToMe() throws ErrorException {
         return getShop.getStoresConnectedToUser(getSession().currentUser.id);
     }
+
+    @Override
+    public boolean doEmailExists(String email) throws ErrorException {
+        UserStoreCollection storeCollection = getUserStoreCollection(storeId);
+        return storeCollection.isRegistered(email);
+    }
 }

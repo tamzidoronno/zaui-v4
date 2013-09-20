@@ -209,6 +209,14 @@ public interface IUserManager {
     public List<Group> getAllGroups() throws ErrorException;
     
     /**
+     * Check if a user already exists with the given email.
+     * @param email The email used when registering.
+     * @return
+     * @throws ErrorException 
+     */
+    public boolean doEmailExists(String email) throws ErrorException;
+    
+    /**
      * Delete a specified group.
      * 
      * @param groupId

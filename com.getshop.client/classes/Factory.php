@@ -430,7 +430,7 @@ class Factory extends FactoryBase {
                 return $instance->configuration->settings;
             }
         }
-        return $app->getConfiguration()->settings;
+        return null;
     }
 
     public function getCurrency() {

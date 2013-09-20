@@ -1252,7 +1252,7 @@ line-height: 40px;
 .designselectionbox .colorselection .colorselectbox { border-right:solid 1px #BBB; height: 100%; width: 80px; }
 .designselectionbox .colorselection .colorselectbox .color { height: 15px; }
 .designselectionbox .advanced-color { cursor: pointer; }
-.designselectionbox .advanced_color_selection { float:right; }
+.designselectionbox .advanced_color_selection {cursor:pointer; float:right; background-image: url('skin/default/images/colorselect.jpg'); height: 20px; width: 20px; display:block; }
 .designselectionbox .colorpicker_selection { display:none; width: 100%; position:absolute; top:-28px; padding: 3px; border: solid 1px #BBB; border-top-left-radius: 3px; height: 20px; background-color:#EFEFEF; }
 .designselectionbox .colorpicker_selection .colorpickerinput { position:absolute; right: 12px; }
 .designselectionbox .colorpicker_selection .colorpickerinput input { width: 70px; font-size:10px; border: solid 1px #000; }

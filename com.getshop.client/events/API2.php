@@ -2983,6 +2983,22 @@ class APIUserManager {
      }
 
      /**
+     * Check if a user already exists with the given email.
+     * @param email The email used when registering.
+     * @return boolean
+     * @throws ErrorException 
+     */
+
+     public function doEmailExists($email) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["email"] = json_encode($this->transport->object_unset_nulls($email));
+          $data["method"] = "doEmailExists";
+          $data["interfaceName"] = "core.usermanager.IUserManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Find all users with a given search criteria.
      * @param searchCriteria The criteria to search for
      * @return List

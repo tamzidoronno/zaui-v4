@@ -280,7 +280,7 @@ thundashop.common.Alert = function(title, message, error) {
     $("#messagebox").show();
 
     if (!error)
-        $("#messagebox").delay(800).fadeOut(200);
+        $("#messagebox").delay(2000).fadeOut(200);
 }
 
 thundashop.common.mask = function() {

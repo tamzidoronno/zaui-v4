@@ -1416,7 +1416,7 @@ margin-left:256px;
     font-size: 16px;
 }
 
-#cookiewarning { position:fixed; width: 100%; height: 100%; background-color:rgba(0,0,0,0.6); z-index: 200;  left:0; top: 0; }
-#cookiewarning .textbox {position:relative; margin: auto; background-color:#FFF; width: 500px; height: 200px; display:block; margin-top: 20px; border: solid 7px #BBB; border-radius: 5px; padding: 5px; }
-#cookiewarning .textbox .title { text-align: center; font-size: 16px; margin-bottom: 10px; }
-#cookiewarning .textbox .continue { position:absolute; right: 5px; bottom: 5px; }
+#cookiewarning_overlay { position:fixed; width: 100%; height: 100%; background-color:rgba(0,0,0,0.6); z-index: 200;  left:0; top: 0; }
+#cookiewarning_overlay .textbox {position:relative; margin: auto; background-color:#FFF; width: 500px; height: 200px; display:block; margin-top: 20px; border: solid 7px #BBB; border-radius: 5px; padding: 5px; }
+#cookiewarning_overlay .textbox .title { text-align: center; font-size: 16px; margin-bottom: 10px; }
+#cookiewarning_overlay .textbox .continue { position:absolute; right: 5px; bottom: 5px; }

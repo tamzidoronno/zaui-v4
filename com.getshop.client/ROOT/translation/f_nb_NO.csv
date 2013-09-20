@@ -405,9 +405,9 @@ Withdraw from stock when order is created;-;Trekk fra lagerstatus når ordren bl
 
 
 ###### 320ada5b_a53a_46d2_99b2_9b0b26a7105a (ContentManager) ######
-A content manager allows you to add content to whatever page you would like to add content to. It supports text, images, and even basic HTML, its like word for web.;-;En innhold manager gir deg muligheten til å legge til innhold til hvilken som helst side. Den støtter tekst, bilder, og enkel html.
+A content manager allows you to add content to whatever page you would like to add content to. It supports text, images, and even basic HTML, its like word for web.;-;En tekst editor gir deg muligheten til å legge til innhold til hvilken som helst side. Den støtter tekst, bilder, og enkel html.
 Add this application and get started adding content to your page.;-;Legg til denne applikasjonen og kom i gang med å legge inn innhold.
-Content Manager;-;Innhold manager
+Content Manager;-;Tekst editor
 Create this application and get started, you will automatically be shown the editors view for this application to start adding your text.;-;Opprett denne applikasjonen og kom i gang, du vil automask bli vist editor valgene for å legge til tekst.
 Edit text content;-;Editer teksten
 

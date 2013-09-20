@@ -15,6 +15,11 @@ class PaymentApplication extends ApplicationBase {
     public $order;
     
     /**
+     * @var PaymentMethod[]
+     */
+    private $paymentMethods = array();
+    
+    /**
      * @return core_ordermanager_data_Order
      **/
     function getOrder() {
@@ -48,6 +53,25 @@ class PaymentApplication extends ApplicationBase {
     
     public function doSubProductProccessing() {
         
+    }
+    
+    protected function addPaymentMethod($name, $logo, $id="") {
+        $paymentMethod = new PaymentMethod();
+        $paymentMethod->setName($name);
+        $paymentMethod->setLogo($logo);
+        $paymentMethod->setId($id);
+        $paymentMethod->setPaymentApplication($this);
+        $this->paymentMethods[$name] = $paymentMethod;
+    }
+    
+    public function getPaymentMethods() {
+        if (method_exists($this, "addPaymentMethods"))
+            $this->addPaymentMethods();
+        return $this->paymentMethods; 
+    }
+    
+    public function getExtendedPaymentForm(\PaymentMethod $paymentMethod) {
+        return "";
     }
 }
 

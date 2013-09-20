@@ -36,6 +36,10 @@ class ApplicationManager extends FactoryBase {
         
     }
 
+    public function CookieAccepted() {
+        $_SESSION['getshop_cookie_accepted'] = true;
+    }
+    
     public function listproducts() {
         echo "<div class='ProductManager'>";
         $mgr = new ns_dcd22afc_79ba_4463_bb5c_38925468ae26\ProductManager();

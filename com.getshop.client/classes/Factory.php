@@ -206,6 +206,8 @@ class Factory extends FactoryBase {
         if (!$loadPages) {
             $this->styleSheet = new StyleSheet();
         }
+        
+        $this->displayCookieWarning();
     }
     
     public function loadLanguage($matrix) {
@@ -623,6 +625,23 @@ class Factory extends FactoryBase {
         }
         
         return $agent;
+    }
+
+    public function displayCookieWarning() {
+        $settings = $this->getSettings();
+
+        if(isset($settings->cookiewarning) && $settings->cookiewarning->value === "true") {
+            if(isset($_SESSION['getshop_cookie_accepted'])) {
+                return;
+            }
+            echo "<div id='cookiewarning'>";
+            echo "<span class='textbox'>";
+            echo "<div class='title'>". $this->__w("Cookies are being stored") . "</div>";
+            echo "<div class='text'>". $this->__w("To be able to serve you we need to store a tiny amount of data about your browser. An identification id is being generated and added to your web browser. This allows us to track you for a two hours periode while you are navigating this site. This data is anonymous and are only being used to identify your web browser and not you as a person.") . "</div>";
+            echo "<input type='button' class='continue' value='" . $this->__w("Continue") . "'>";
+            echo "</span>";
+            echo "</div>";
+        }
     }
 }
 

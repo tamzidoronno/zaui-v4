@@ -510,6 +510,14 @@ $('#informationbox .settings .entry, #settingsarea .setting').live('click', func
     }
 });
 
+$('#cookiewarning .textbox .continue').on('click', function() {
+    $('#cookiewarning').remove();
+    var event = thundashop.Ajax.createEvent('','CookieAccepted',$(this),'');
+    thundashop.Ajax.postWithCallBack(event, function() {
+        
+    });
+});
+
 $('#infomrationboxclosebutton').live('click', function(e) {
     thundashop.common.hideInformationBox(null);
 })

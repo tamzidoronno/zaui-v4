@@ -3,6 +3,9 @@ class core_ordermanager_data_Order extends core_common_DataCommon  {
 	/** @var String */
 	public $paymentType;
 
+	/** @var String */
+	public $paymentTransactionId;
+
 	/** @var core_ordermanager_data_Shipping */
 	public $shipping;
 

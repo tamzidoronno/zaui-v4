@@ -44,7 +44,7 @@
             var copyctx = canvasCopy.getContext('2d');
             var htmlCanvas = container.parent().find('#canvas')[0];
             var ctx = htmlCanvas.getContext('2d'),
-                    img = new Image(),
+                    img = document.createElement('img'),
                     f = element[0].files[0],
                     url = window.URL || window.webkitURL,
                     src = url.createObjectURL(f);

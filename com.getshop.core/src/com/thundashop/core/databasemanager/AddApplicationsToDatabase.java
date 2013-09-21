@@ -30,13 +30,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class AddApplicationsToDatabase {
-    
+
     ArrayList<String> emtpy = new ArrayList();
-    
     @Autowired
     public Database database;
-    
-    
+
     @SuppressWarnings("empty-statement")
     private ApplicationSettings createSettings(String appName, String id, List<String> allowedAreas, String description, String type, boolean isSingleton) {
         ApplicationSettings applicationSettings = new ApplicationSettings();
@@ -52,45 +50,45 @@ public class AddApplicationsToDatabase {
         applicationSettings.isSingleton = isSingleton;
         return applicationSettings;
     }
-    
+
     private List<ApplicationSettings> addApplications() {
         List<ApplicationSettings> apps = new ArrayList();
-        
-        ApplicationSettings sod2 = createSettings(
-                "ShopSoDesign2", 
-                "f2fc7a50-266f-4638-949b-4ffdb228f6f0", 
-                emtpy, 
-                "", 
-                ApplicationSettings.Type.Theme, true);
-        sod2.isPublic = true;
-        apps.add(sod2);
+
+        ApplicationSettings sisow = createSettings(
+                "Sisow",
+                "c4d7bec0-185f-11e3-8ffd-0800200c9a66",
+                emtpy,
+                "",
+                ApplicationSettings.Type.Payment, true);
+        sisow.isPublic = true;
+        apps.add(sisow);        
 
         return apps;
     }
-    
+
     public void insert() throws ErrorException {
         Credentials credentials = new Credentials(ApplicationPool.class);
         credentials.manangerName = "ApplicationPool";
         credentials.password = "ADFASDF";
         credentials.storeid = "all";
-        
+
         for (ApplicationSettings app : addApplications()) {
             app.storeId = "all";
             database.save(app, credentials);
         }
     }
-    
+
     public void showLinks() {
         for (ApplicationSettings app : addApplications()) {
-            System.out.println("ln -s ../../../applications/apps/"+app.appName + " " + "ns_"+app.id.replace("-", "_"));
+            System.out.println("ln -s ../../../applications/apps/" + app.appName + " " + "ns_" + app.id.replace("-", "_"));
         }
         System.out.println("Or for kai: ");
         for (ApplicationSettings app : addApplications()) {
-            System.out.println("ln -s ../../../com.getshop.applications/apps/"+app.appName + " " + "ns_"+app.id.replace("-", "_"));
+            System.out.println("ln -s ../../../com.getshop.applications/apps/" + app.appName + " " + "ns_" + app.id.replace("-", "_"));
         }
-        
+
     }
-    
+
     public static void main(String args[]) throws ErrorException, UnknownHostException {
         ApplicationContext context = new ClassPathXmlApplicationContext("All.xml");
         AppContext.appContext = context;
@@ -104,18 +102,17 @@ public class AddApplicationsToDatabase {
         context.getBean(AddApplicationsToDatabase.class).showLinks();
         java.lang.System.exit(1);
     }
-    
-    
+
     private void updateUserPages() throws ErrorException {
         Credentials credentials = new Credentials(StoreManager.class);
         credentials.manangerName = "StoreManager";
         credentials.storeid = "all";
         credentials.password = "ADSFASDF";
-        
-        
+
+
         for (DataCommon data : database.retreiveData(credentials)) {
             if (data instanceof Store) {
-                Store store = (Store)data;
+                Store store = (Store) data;
                 Credentials credentials2 = new Credentials(PageManager.class);
                 credentials2.manangerName = "PageManager";
                 credentials2.storeid = store.id;
@@ -124,22 +121,22 @@ public class AddApplicationsToDatabase {
                 List<DataCommon> pages = database.retreiveData(credentials2);
                 for (DataCommon pageData : pages) {
                     if (pageData instanceof AppConfiguration) {
-                        AppConfiguration appConfig = (AppConfiguration)pageData;
+                        AppConfiguration appConfig = (AppConfiguration) pageData;
                         if (appConfig.appName.equals("Users")) {
                             database.delete(appConfig, credentials2);
-                        } 
-                        
+                        }
+
                         if (appConfig.appName.equals("Crm")) {
                             database.delete(appConfig, credentials2);
                         }
-                        
+
                         if (appConfig.id.equals("users_admin_menu")) {
                             database.delete(appConfig, credentials2);
                         }
-                        
+
                     }
                     if (pageData instanceof Page) {
-                        Page page = (Page)pageData;
+                        Page page = (Page) pageData;
                         if (page.id.equals("users") || page.id.equals("users_all_users")) {
                             database.delete(page, credentials2);
                         }
@@ -147,7 +144,7 @@ public class AddApplicationsToDatabase {
                 }
             }
         }
-                
+
     }
 
     private void updateThemes() throws ErrorException {
@@ -157,39 +154,39 @@ public class AddApplicationsToDatabase {
         credentials.password = "ADSFASDF";
         for (DataCommon data : database.retreiveData(credentials)) {
             if (data instanceof Store) {
-                Store store = (Store)data;
+                Store store = (Store) data;
                 if (store.configuration != null && store.configuration.theeme != null) {
                     store.configuration.hasSelectedDesign = true;
                     database.save(store, credentials);
-                    
+
                     if (store.configuration.theeme.equals("blueandwhite")) {
                         createNewApplication("WhiteAndBlueTheme", "a84cbbb0-8f21-11e2-9e96-0800200c9a66", store.id);
                     }
-                    
+
                     if (store.configuration.theeme.equals("slick")) {
                         createNewApplication("SlickTheme", "efcbb450-8f26-11e2-9e96-0800200c9a66", store.id);
-                    } 
-                    
+                    }
+
                     if (store.configuration.theeme.equals("thered")) {
                         createNewApplication("TheRedTheme", "d147f6a0-8f31-11e2-9e96-0800200c9a66", store.id);
-                    } 
-                    
+                    }
+
                     if (store.configuration.theeme.equals("widescreen")) {
                         createNewApplication("WideScreenTheme", "c2da56a0-8f2f-11e2-9e96-0800200c9a66", store.id);
-                    } 
-                    
+                    }
+
                     if (store.configuration.theeme.equals("getshop")) {
                         createNewApplication("GetShopTheme", "7a4f3750-895a-11e2-9e96-0800200c9a66", store.id);
-                    } 
-                    
+                    }
+
                     if (store.configuration.theeme.equals("kingroids")) {
                         createNewApplication("KingroidsTheme", "161644b0-b095-11e2-9e96-0800200c9a66", store.id);
-                    } 
+                    }
                 }
             }
         }
     }
-    
+
     private void createNewApplication(String appName, String appsettingsid, String storeid) {
         AppConfiguration appConfiguration = new AppConfiguration();
         appConfiguration.sticky = 0;
@@ -208,5 +205,4 @@ public class AddApplicationsToDatabase {
             ex.printStackTrace();
         }
     }
-
 }

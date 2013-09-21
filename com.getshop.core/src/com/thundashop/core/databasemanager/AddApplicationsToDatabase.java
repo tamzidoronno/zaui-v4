@@ -61,7 +61,16 @@ public class AddApplicationsToDatabase {
                 "",
                 ApplicationSettings.Type.Payment, true);
         sisow.isPublic = true;
-        apps.add(sisow);        
+        apps.add(sisow);      
+        
+        ApplicationSettings callback = createSettings(
+                "Callback", 
+                "5474c225-cc7b-4576-83bb-1ad8bf35be8f", 
+                emtpy, 
+                "", 
+                ApplicationSettings.Type.System, true);
+        callback.isPublic = true;
+        apps.add(callback);
 
         return apps;
     }

@@ -15,6 +15,7 @@ import java.util.Date;
  */
 public class Order extends DataCommon implements Comparable<Order> {
     public String paymentType;
+    public String paymentTransactionId = "";
     public Shipping shipping;
     public String session;
     public long incrementOrderId = 0;

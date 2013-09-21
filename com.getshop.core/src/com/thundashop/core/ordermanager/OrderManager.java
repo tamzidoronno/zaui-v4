@@ -232,9 +232,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 handleApplicationPayment(currency, price);
             } else {
                 Order order = orders.get(orderId);
+                
                 if (order.cart.getTotal(false) == price) {
-                    order.status = status;
-                    saveOrderInternal(order);
+                    changeOrderStatus(order.id, status);
                 } else {
                     String content = "Hi.<br>";
                     content += "We received a payment notification from paypal for order: " + orderId + " which is incorrect.<br>";
@@ -247,10 +247,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         } else {
             mailFactory.send("post@getshop.com", "post@getshop.com", "Status update failure", "tried to use password:" + password);
-
         }
     }
-
+    
     private void handleApplicationPayment(String currency, double price) throws ErrorException {
         System.out.println(currency);
         AppManager appManager = getManager(AppManager.class);
@@ -295,5 +294,28 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         throw new ErrorException(61);
+    }
+
+    private Order getByTransactionId(String transactionId) {
+        for (Order order : orders.values()) {
+            if (order.paymentTransactionId.equals(transactionId)) {
+                return order;
+            }
+        }
+        
+        return null;
+    }
+
+    @Override
+    public void changeOrderStatus(String id, int status) throws ErrorException {
+        Order order = orders.get(id);
+        if (order == null) {
+            order = getByTransactionId(id);
+        }
+        
+        if (order != null) {
+            order.status = status;
+            saveOrderInternal(order);
+        }
     }
 }

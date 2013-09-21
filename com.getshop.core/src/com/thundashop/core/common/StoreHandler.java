@@ -4,9 +4,7 @@
  */
 package com.thundashop.core.common;
 
-import com.thundashop.core.appmanager.AppManager;
 import com.thundashop.core.appmanager.ApplicationPool;
-import com.thundashop.core.appmanager.data.ApplicationSubscription;
 import com.thundashop.core.loggermanager.LoggerManager;
 import com.thundashop.core.reportingmanager.ReportingManager;
 import com.thundashop.core.usermanager.IUserManager;
@@ -31,7 +29,6 @@ public class StoreHandler {
     private HashMap<String, Session> sessions = new HashMap();
     // remove this.
     private User testUser;
-    private boolean isPaymentActivated = false;
 
     @Deprecated
     public void setTestUser(User user) {
@@ -63,25 +60,13 @@ public class StoreHandler {
         Class aClass = loadClass(inObject.interfaceName);
         Method executeMethod = getMethodToExecute(aClass, inObject.method, types);
         
-        if (isPaymentActivated) {
-            checkPayMent(executeMethod);
-        }
-        
+        authenticateUserLevel(executeMethod);
+   
         Object result = invokeMethod(executeMethod, aClass, argumentValues);
         clearSessionObject();
         return result;
     }
     
-    private void checkPayMent(Method executeMethod) throws ErrorException {
-        Annotation annotation = authenticateUserLevel(executeMethod);
-        AppManager appManager = getManager(AppManager.class);
-        
-        List<ApplicationSubscription> unpayedApps = appManager.getUnpayedSubscription();
-        if(annotation instanceof Administrator && unpayedApps.size() > 0) {
-            throw new ErrorException(93);
-        }
-    }
-
     private Class loadClass(String objectName) throws ErrorException {
         try {
             ClassLoader classLoader = getClass().getClassLoader();

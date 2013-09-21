@@ -61,6 +61,7 @@ public class PagePoolImpl {
         pageLayout.put(Page.DefaultPages.Users, Page.PageType.HeaderLeftMiddleFooter);
         pageLayout.put(Page.DefaultPages.Settings, Page.PageType.HeaderMiddleFooter);
         pageLayout.put(Page.DefaultPages.Domain, Page.PageType.HeaderMiddleFooter);
+        pageLayout.put(Page.DefaultPages.Callback, Page.PageType.HeaderMiddleFooter);
     }
 
     public void addFromDatabase(Page page) {
@@ -217,6 +218,10 @@ public class PagePoolImpl {
 
         if (Page.DefaultPages.Domain.equals(page.id)) {
             addApplication("fb076580-c7df-471c-b6b7-9540e4212441", page, PageArea.Type.MIDDLE);
+        }
+        
+        if (Page.DefaultPages.Callback.equals(page.id)) {
+            addApplication("5474c225-cc7b-4576-83bb-1ad8bf35be8f", page, PageArea.Type.MIDDLE);
         }
     }
 

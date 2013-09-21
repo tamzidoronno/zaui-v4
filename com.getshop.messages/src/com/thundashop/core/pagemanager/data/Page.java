@@ -74,6 +74,7 @@ public class Page extends DataCommon implements Cloneable {
         public static String Users = "users";
         public static String Settings = "settings";
         public static String Domain = "domain";
+        public static String Callback = "callback";
     }
 
     public static class PageType {

@@ -71,6 +71,16 @@ public class AddApplicationsToDatabase {
                 ApplicationSettings.Type.System, true);
         callback.isPublic = true;
         apps.add(callback);
+        
+        ApplicationSettings payondelviery = createSettings(
+                "PayOnDelivery", 
+                "565ea7bd-c56b-41fe-b421-18f873c63a8f", 
+                emtpy, 
+                "", 
+                ApplicationSettings.Type.Payment, true);
+        payondelviery.isPublic = true;
+        payondelviery.isSingleton = true;
+        apps.add(payondelviery);
 
         ApplicationSettings terms = createSettings(
                 "TermsAndConditions", 

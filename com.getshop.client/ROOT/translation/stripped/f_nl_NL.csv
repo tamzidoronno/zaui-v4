@@ -1,29 +1,19 @@
-###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 ######
-By enabling testmode for sisow, you will be able to test the payment solutions in sandbox mode.;-;
-Enable test mode for sisow;-;
-Here you can configure all the settings required to get sisow to work properly with your account. Enter the fields below and press save, as soon as everything here is set correctly you will see that a new payment options is available in the checkout area.;-;
-Merchant id;-;
-Merchant key;-;
-Your merchant id, this id is something that sisow is providing you.;-;
-Your merchant key, this id is something that sisow is providing you.;-;
-save_settings;-;
+###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
+Please select a shipment method.;-;
 
 
 ###### ba6f5e74_87c7_4825_9606_f2d3c93d292f (Users) ######
 Edit user;-;
 
 
-###### 2da52bbc_a392_4125_92b6_eec1dc4879e9 (Bring) ######
-fraktguiden is a norwegian application for keeping track of norwegian shipment prices, shipment tracking etc.;-;
+###### 6e415852_c023_4ffe_a49f_990a521841cf (TermsAndConditions) ######
+Allows you to create a terms and condition page which has to be accepted by your customers before ordering.;-;
+Enter the terms and condition text in the field below.;-;
 
 
 ###### d02f8b7a_7395_455d_b754_888d7d701db8 (Dibs) ######
 Have a look at http://www.dibspayment.com/ for more information.;-;
 The Merchant-ID is provided by Dibs, please contact us for more information.;-;
-
-
-###### framework ######
-Select application;-;
 
 
 ###### a109b0f1_97c3_4292_a46f_4c6894a9841c (PartnerApplicationSelection) ######
@@ -33,19 +23,6 @@ List has been saved;-;
 
 ###### ee1f3649_cfd8_41d5_aa5b_682216f376b6 (Translation) ######
 The translation has been saved;-;
-
-
-###### ba885f72_f571_4a2e_8770_e91cbb16b4ad (Facebook) ######
-appid;-;
-appid_required;-;
-like_button;-;
-like_button_desc;-;
-profile_url;-;
-profile_url_desc;-;
-
-
-###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
-Edit Contact Form;-;
 
 
 ###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
@@ -66,6 +43,63 @@ start_time;-;
 stop;-;
 
 
+###### 8402f800_1e7e_43b5_b3f7_6c7cabbf8942 (ProductList) ######
+Edit product list;-;
+
+
+###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 (Sisow) ######
+Activate this option if you wish to provide your customer with Fjincadeau payment;-;
+Activate this option if you wish to provide your customer with Mister Cash payment;-;
+Activate this option if you wish to provide your customer with Podium payment;-;
+Activate this option if you wish to provide your customer with Sofort Banking payment;-;
+Activate this option if you wish to provide your customer with eBill payment;-;
+Activate this option if you wish to provide your customer with iDeal payment;-;
+By enabling testmode for sisow, you will be able to test the payment solutions in sandbox mode.;-;
+Enable test mode for sisow;-;
+Here you can configure all the settings required to get sisow to work properly with your account. Enter the fields below and press save, as soon as everything here is set correctly you will see that a new payment options is available in the checkout area.;-;
+Merchant id;-;
+Merchant key;-;
+Should Fjincadeau be activated?;-;
+Should Mister Cash be activated?;-;
+Should Podium be activated?;-;
+Should Sofort Banking be activated?;-;
+Should eBill be activated?;-;
+Should iDeal be activated?;-;
+Your merchant account is deactivated, please check with sisow to get it activated.;-;
+Your merchant id, this id is something that sisow is providing you.;-;
+Your merchant key and id is correct;-;
+Your merchant key or id is incorrect, please recheck it;-;
+Your merchant key, this id is something that sisow is providing you.;-;
+
+
+###### 2da52bbc_a392_4125_92b6_eec1dc4879e9 (Bring) ######
+fraktguiden is a norwegian application for keeping track of norwegian shipment prices, shipment tracking etc.;-;
+
+
+###### d755efca_9e02_4e88_92c2_37a3413f3f41 (Settings) ######
+Are customers required to register to order?;-;
+Cookie warning;-;
+Registration;-;
+Warn users that cookies are being stored from this site?;-;
+
+
+###### framework ######
+Select application;-;
+
+
+###### ba885f72_f571_4a2e_8770_e91cbb16b4ad (Facebook) ######
+appid;-;
+appid_required;-;
+like_button;-;
+like_button_desc;-;
+profile_url;-;
+profile_url_desc;-;
+
+
+###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
+Edit Contact Form;-;
+
+
 ###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
 Configure your booking application;-;
 Enable this option to send email when a booking has been made.;-;
@@ -81,8 +115,10 @@ What should be the sender name?;-;
 What should the text message contain?;-;
 
 
-###### 8402f800_1e7e_43b5_b3f7_6c7cabbf8942 (ProductList) ######
-Edit product list;-;
+###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######
+Current status;-;
+Payment application;-;
+Transaction id;-;
 
 
 ###### dabb8a85_f593_43ec_bf0d_240467118a40 (News) ######
@@ -97,10 +133,9 @@ Attribute name;-;
 Price diff;-;
 
 
-###### 8ad8243c_b9c1_48d4_96d5_7382fa2e24cd (Mail) ######
-The password for your smtp server.;-;
-The port for your smtp server.;-;
-The username for your smtp server.;-;
+###### 831647b5_6a63_4c46_a3a3_1b4a7c36710a (ImageDisplayer) ######
+Insert images into any application area.;-;
+This image has been stretched, click to fix it.;-;
 
 
 ###### 17c48891_6f7a_47a0_849d_b50de9af218f (GoogleMaps) ######
@@ -108,5 +143,11 @@ Specify boundaries the map should restrict itself to. Leave it empty to avoid bo
 latitude;-;
 longitide;-;
 zoom;-;
+
+
+###### 8ad8243c_b9c1_48d4_96d5_7382fa2e24cd (Mail) ######
+The password for your smtp server.;-;
+The port for your smtp server.;-;
+The username for your smtp server.;-;
 
 

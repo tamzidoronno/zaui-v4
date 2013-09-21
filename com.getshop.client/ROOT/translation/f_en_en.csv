@@ -2,36 +2,12 @@
 cart;-;Cart
 
 
-###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 ######
-save_settings;-;Save settings
-
-
 ###### fb076580_c7df_471c_b6b7_9540e4212441 (OpenSRS) ######
 enter_domain;-;Enter Domain Name
 
 
 ###### df435931_9364_4b6a_b4b2_951c90cc0d70 (Login) ######
 users;-;Users
-
-
-###### d755efca_9e02_4e88_92c2_37a3413f3f41 (Settings) ######
-postal;-;Postal code
-title;-;Title
-
-
-###### framework ######
-delete;-;Delete
-price;-;Price
-save;-;Save
-
-
-###### ba885f72_f571_4a2e_8770_e91cbb16b4ad (Facebook) ######
-appid;-;AppId
-appid_required;-;"Your facebook app id, all facebook social plugins requires this."
-like_button;-;Like button
-like_button_desc;-;Enables or disables a like button to all your products
-profile_url;-;Profile url
-profile_url_desc;-;Your profile url example: https://www.facebook.com/zuck
 
 
 ###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
@@ -46,6 +22,26 @@ send_reminder;-;Send reminder
 start;-;Start
 start_time;-;Start time
 stop;-;Stop
+
+
+###### d755efca_9e02_4e88_92c2_37a3413f3f41 (Settings) ######
+postal;-;Postal code
+
+
+###### framework ######
+delete;-;Delete
+price;-;Price
+save;-;Save
+title;-;Title
+
+
+###### ba885f72_f571_4a2e_8770_e91cbb16b4ad (Facebook) ######
+appid;-;AppId
+appid_required;-;"Your facebook app id, all facebook social plugins requires this."
+like_button;-;Like button
+like_button_desc;-;Enables or disables a like button to all your products
+profile_url;-;Profile url
+profile_url_desc;-;Your profile url example: https://www.facebook.com/zuck
 
 
 ###### dabb8a85_f593_43ec_bf0d_240467118a40 (News) ######

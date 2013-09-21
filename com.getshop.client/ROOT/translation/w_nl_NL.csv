@@ -48,6 +48,7 @@ A red theme that can be used when selling exciting things;-;Een rode layout voor
 Add to cart;-;Aan winkelwagen toevoegen
 Address;-;Addres
 Buy;-;Koop
+Canceled;-;Afgebroken
 Change password;-;Wachtwoord aanpassen
 City;-;Woonplaats
 Company;-;Bedrijf
@@ -61,12 +62,13 @@ Name;-;Naam
 New message;-;Nieuw bericht
 New password;-;Nieuw wachtwoord
 Next;-;Volgende
+Order Created;-;Bestelling aangemaakt
 Password;-;Wachtwoord
 Payment;-;Betaling
+Payment failed;-;Betaling niet gelukt
 Phone;-;Telefoon
 Place order;-;Bestelling plaatsen
 Please check your delivery options.;-;Kijk de verzendopties na
-Please select a shipment method.;-;Selecteer aub verzendmethode
 Please select department;-;Gelieve een afdeling te kiezen
 Postal code;-;Postcode
 Previous;-;Vorige
@@ -83,6 +85,7 @@ This page is only available for editors.;-;Deze pagina is alleen voor redacteure
 This page is only available for registered users.;-;Deze pagina is alleen voor geregistreerde gebruikers toegangkelijk
 Update;-;Updaten
 Username / Email;-;Gebruikersnaam / E-mail
+Waiting for payment;-;Wachten op betaling
 Weight;-;Gewicht
 What's on your mind?;-;Waar denk je aan?
 Wrong delivery method;-;Verkeerde verzendmethode
@@ -110,12 +113,6 @@ My name is:;-;Mijn naam is:
 Your message has been delivered;-;Je bericht is aangekomen
 
 
-###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
-Date;-;Datum
-Sign up;-;Registreer
-phone;-;telefoon
-
-
 ###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
 April;-;April
 August;-;Augustus
@@ -139,21 +136,23 @@ We host events at the following locations, click on the location to filter the c
 Wednesday;-;Woensdag
 
 
+###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
+Date;-;Datum
+Sign up;-;Registreer
+phone;-;telefoon
+
+
 ###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######
 All orders;-;Alle bestellingen
 Cancel order;-;Bestelling afbreken
-Canceled;-;Afgebroken
 Customer information;-;Klanteninformatie
 Order;-;Bestelling
-Order Created;-;Bestelling aangemaakt
 Order date;-;Besteldatum
-Payment failed;-;Betaling niet gelukt
 Product count;-;Aantal producten
 Shipment information;-;Verzendinformatie
 Shipping;-;Verzending	 
 Status;-;Status
 Taxes;-;BTW
-Waiting for payment;-;Wachten op betaling
 You do not have any orders.;-;U heeft nog geen bestellingen geplaatst
 
 

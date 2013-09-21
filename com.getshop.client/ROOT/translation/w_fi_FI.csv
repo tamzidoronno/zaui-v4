@@ -27,6 +27,7 @@ Search for a product;-;Etsi tuote
 ###### framework ######
 Add to cart;-;Lisää ostoskoriin
 Address;-;Osoite
+Canceled;-;Peruttu
 Change password;-;Vaihta salasanaa
 City;-;Kaupunki
 Completed;-;Valmis
@@ -34,10 +35,11 @@ Email;-;Sähköposti
 Full name;-;Koko nimi
 New password;-;Uusi salasana
 Next;-;Seuraava
+Order Created;-;Tilaus luotu
 Password;-;Salasana
+Payment failed;-;Maksu epäonnistui
 Phone;-;Puhelin
 Place order;-;Laita tilaus
-Please select a shipment method.;-;Olkaa hyvä ja valitsekaa toimitustapa
 Postal code;-;Postinumero
 Previous;-;Edellinen
 Price;-;Hinta
@@ -50,6 +52,7 @@ This page is only available for editors.;-;Tämä sivu on saattavilla ainoastaan
 This page is only available for registered users.;-;Tämä sivu on saattavilla ainoastaan rekisteröityille käyttäjille
 Update;-;Päivitys
 Username / Email;-;Käyttäjätunnus / Sähköposti
+Waiting for payment;-;Odotettaan maksua
 You do not have any products in your cart;-;Ostoskorisi on tyhjä
 
 
@@ -64,16 +67,12 @@ My name is:;-;Minun nimeni on:
 ###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######
 All orders;-;Kaikki tilaukset
 Cancel order;-;Peruuta tilaus
-Canceled;-;Peruttu
 Customer information;-;Asiakastiedot
 Order;-;Tilaus
-Order Created;-;Tilaus luotu
 Order date;-;Tilauksen päiväys
-Payment failed;-;Maksu epäonnistui
 Shipment information;-;Toimitusehdot
 Shipping;-;Toimitus
 Taxes;-;Verot
-Waiting for payment;-;Odotettaan maksua
 You do not have any orders.;-;Sinulla ei ole tilauksia
 
 

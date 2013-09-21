@@ -47,6 +47,7 @@ A red theme that can be used when selling exciting things;-;Et rødt tema kan bl
 Add to cart;-;Legg i handlekurv
 Address;-;Adresse
 Buy;-;Kjøp
+Canceled;-;Kanselert
 Change password;-;Endre passord
 City;-;By
 Company;-;Selskap
@@ -60,12 +61,13 @@ Name;-;Navn
 New message;-;Ny melding
 New password;-;Nytt passord
 Next;-; Neste
+Order Created;-; Ordre opprettet
 Password;-;Passord
 Payment;-;Betaling
+Payment failed;-;Betaling feilet
 Phone;-;Telefon
 Place order;-;Legg inn ordre
 Please check your delivery options.;-;Vennligst sjekk dine leveringsmetoder.
-Please select a shipment method.;-;Vennligst velg en forendelsemetode
 Please select department;-;Velg en avdeling
 Postal code;-;Postnummer
 Previous;-;Forrige
@@ -82,6 +84,7 @@ This page is only available for editors.;-;Denne siden er kun tilgjengelig for e
 This page is only available for registered users.;-;Denne siden er kun tilgjengelig for registrerte brukere
 Update;-;Oppdater
 Username / Email;-;Brukernavn / Epost
+Waiting for payment;-;Venter på betaling
 Weight;-;Vekt
 What's on your mind?;-;Hva ønsker du å formidle?
 Wrong delivery method;-;Feil forsendelses metode.
@@ -107,19 +110,6 @@ Configure banner slider;-;Konfigurer banner slideren
 ###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
 My name is:;-;Mitt navn er
 Your message has been delivered;-;Din melding har blitt sendt.
-
-
-###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
-All fields are required;-;Alle felt er påkrevd
-Date;-;Dato
-Sign up;-;Registrer deg
-Stop;-;Stopp
-Your are now signed up for the event;-;Du er nå registert inn på denne eventen.
-change;-;endre
-course;-;kurs
-org;-;Firma
-orgnummer;-;Org.nr.
-phone;-;Mob.Tlf.
 
 
 ###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
@@ -148,21 +138,30 @@ Wednesday;-;Onsdag
 description;-;Beskrivelse
 
 
+###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
+All fields are required;-;Alle felt er påkrevd
+Date;-;Dato
+Sign up;-;Registrer deg
+Stop;-;Stopp
+Your are now signed up for the event;-;Du er nå registert inn på denne eventen.
+change;-;endre
+course;-;kurs
+org;-;Firma
+orgnummer;-;Org.nr.
+phone;-;Mob.Tlf.
+
+
 ###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######
 All orders;-;Alle bestilinger
 Cancel order;-;Kanselert ordre
-Canceled;-;Kanselert
 Customer information;-;Kunde detaljer
 Order;-;Ordre
-Order Created;-; Ordre opprettet
 Order date;-;Bestillings dato
-Payment failed;-;Betaling feilet
 Product count;-;Antall produkter
 Shipment information;-;Forsendelse informasjon
 Shipping;-;Utsendelse
 Status;-;Status
 Taxes;-;Skatter
-Waiting for payment;-;Venter på betaling
 You do not have any orders.;-;Du har ingen bestillinger
 
 

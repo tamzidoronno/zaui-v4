@@ -7,10 +7,14 @@ import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.usermanager.data.UserPrivilege;
+import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -26,6 +30,8 @@ public class UserManager extends ManagerBase implements IUserManager {
     public SessionFactory sessionFactory = new SessionFactory();
     public ConcurrentHashMap<String, UserStoreCollection> userStoreCollections = new ConcurrentHashMap<String, UserStoreCollection>();
 
+    private SecureRandom random = new SecureRandom();
+    
     @Autowired
     public UserManager(Logger log, DatabaseSaver databaseSaver) {
         super(log, databaseSaver);
@@ -454,5 +460,28 @@ public class UserManager extends ManagerBase implements IUserManager {
     public boolean doEmailExists(String email) throws ErrorException {
         UserStoreCollection storeCollection = getUserStoreCollection(storeId);
         return storeCollection.isRegistered(email);
+    }
+    
+    @Override
+    public User requestAdminRight(String managerName, String managerFunction, String applicationInstanceId) throws ErrorException {
+        String password =  new BigInteger(130, random).toString(32);
+        User user = new User();
+        user.username = new BigInteger(130, random).toString(32);
+        user.password = password;
+        user.appId = applicationInstanceId;
+        user.type = User.Type.ADMINISTRATOR;
+        
+        UserPrivilege privelege = new UserPrivilege();
+        privelege.managerName = managerName;
+        privelege.managerFunction = managerFunction;
+        user.privileges.add(privelege); 
+       
+        User createdUser = createUser(user);
+        
+        User retUser = new User();
+        retUser.username = createdUser.username;
+        retUser.password = password;
+        retUser.privileges = createdUser.privileges;
+        return retUser;
     }
 }

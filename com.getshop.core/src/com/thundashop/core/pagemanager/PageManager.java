@@ -142,7 +142,7 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
     
     @Override
-    public HashMap<String, Setting> getSecuredSettings(String appName) {
+    public HashMap<String, Setting> getSecuredSettingsInternal(String appName) {
         AppConfiguration config = applicationPool.getSecured(appName);
         if (config != null)
             return config.settings;
@@ -355,6 +355,15 @@ public class PageManager extends ManagerBase implements IPageManager {
         }
 
         pagePool.savePage(page);
+    }
+
+    @Override
+    public HashMap<String, Setting> getSecuredSettings(String applicationInstanceId) {
+        if (applicationPool.getSecured(applicationInstanceId) != null) {
+            return applicationPool.getSecured(applicationInstanceId).settings;
+        }
+        
+        return new HashMap();
     }
 
 }

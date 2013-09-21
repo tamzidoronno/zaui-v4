@@ -7,6 +7,7 @@ package com.thundashop.core.usermanager.data;
 import com.google.code.morphia.annotations.Transient;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +19,8 @@ import java.util.List;
 public class User extends DataCommon  {
     public int resetCode;
 
+    public List<UserPrivilege> privileges = new ArrayList();
+    
     public static class Type {
         public static int ADMINISTRATOR = 100;
         public static int EDITOR = 50;
@@ -52,6 +55,12 @@ public class User extends DataCommon  {
     @Transient
     public String partnerid;
     
+    /**
+     * If the user is connected
+     * to a perticullary application,
+     * this will be set to the application instance id.
+     */
+    public String appId; 
     /**
      * This user can be connected to
      * a group(s).

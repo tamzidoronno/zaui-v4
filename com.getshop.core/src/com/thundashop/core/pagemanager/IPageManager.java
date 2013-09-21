@@ -184,7 +184,7 @@ public interface IPageManager {
     public HashMap<String, Setting> getApplicationSettings(String name) throws ErrorException;
     
     @Internal
-    public HashMap<String, Setting> getSecuredSettings(String appName);
+    public HashMap<String, Setting> getSecuredSettingsInternal(String appName);
     
     /**
      * Get all applications from the applicationPool.
@@ -302,4 +302,11 @@ public interface IPageManager {
      */
     @Administrator
     public void savePage(Page page) throws ErrorException;
+    
+    
+    /**
+     * Get secured settings
+     */
+    @Administrator
+    public HashMap<String, Setting> getSecuredSettings(String applicationInstanceId);
 }

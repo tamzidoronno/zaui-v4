@@ -6,8 +6,10 @@ import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.usermanager.data.UserPrivilege;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @GetShopApi
 
@@ -224,4 +226,19 @@ public interface IUserManager {
      */
     @Administrator
     public void removeGroup(String groupId) throws ErrorException;
+    
+    /**
+     * This function will return a user new admin user that has access to only invoke the function
+     * specified in the paramters.
+     * 
+     * The password field on the user will be in cleartext so it can be saved by the application
+     * that request this feature.
+     * 
+     * @param managerName
+     * @param managerFunction
+     * @return
+     * @throws ErrorException 
+     */
+    @Administrator
+    public User requestAdminRight(String managerName, String managerFunction, String applicationInstanceId) throws ErrorException;
 }

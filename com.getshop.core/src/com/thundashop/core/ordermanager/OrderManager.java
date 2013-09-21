@@ -48,7 +48,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     private void saveOrderInternal(Order order) throws ErrorException {
         User user = getSession().currentUser;
-        if (user != null) {
+        if (user != null && order.userId == null) {
             order.userId = user.id;
         }
         order.session = getSession().id;

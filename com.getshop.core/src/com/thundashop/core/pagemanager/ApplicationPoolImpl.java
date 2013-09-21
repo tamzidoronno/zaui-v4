@@ -158,7 +158,11 @@ public class ApplicationPoolImpl {
         }
 
         for (Setting setting : settings.settings) {
-            saveSettings.put(setting.id, setting);
+            if (setting.secure && setting.value.equals("****************")) {
+                saveSettings.put(setting.id, application.settings.get(setting.id));
+            } else {
+                saveSettings.put(setting.id, setting);
+            }
         }
 
         application.settings = saveSettings;
@@ -184,9 +188,11 @@ public class ApplicationPoolImpl {
         databaseSaver.saveObject(config, credentials);
     }
 
-    public AppConfiguration getSecured(String appName) {
+    public AppConfiguration getSecured(String appNameOrId) {
         for (AppConfiguration app : applicationInstances.values()) {
-            if (app.appName.equals(appName)) {
+            if (app.id.equals(appNameOrId)) {
+                return app;
+            } else  if (app.appName.equals(appNameOrId)) {
                 return app;
             }
         }

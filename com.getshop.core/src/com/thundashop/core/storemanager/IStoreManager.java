@@ -5,6 +5,10 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.usermanager.data.UserPrivilege;
+import java.util.UUID;
 
 /**
  * Aaah, the StoreManager.<br>
@@ -139,5 +143,4 @@ public interface IStoreManager {
      */
     @Administrator
     public void setDeepFreeze(boolean mode, String password) throws ErrorException;
-    
 }

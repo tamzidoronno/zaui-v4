@@ -1,6 +1,5 @@
 package com.thundashop.core.ordermanager;
 
-import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
@@ -65,5 +64,6 @@ public interface IOrderManager {
      * Change order status of a specified order.
      * The id could be the orderId or the transaction id.
      */
+    @Administrator
     public void changeOrderStatus(String id, int status) throws ErrorException;
 }

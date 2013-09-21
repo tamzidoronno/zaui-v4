@@ -10,6 +10,7 @@ import com.thundashop.core.reportingmanager.ReportingManager;
 import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.usermanager.data.UserPrivilege;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -60,7 +61,7 @@ public class StoreHandler {
         Class aClass = loadClass(inObject.interfaceName);
         Method executeMethod = getMethodToExecute(aClass, inObject.method, types);
         
-        authenticateUserLevel(executeMethod);
+        authenticateUserLevel(executeMethod, aClass);
    
         Object result = invokeMethod(executeMethod, aClass, argumentValues);
         clearSessionObject();
@@ -183,7 +184,7 @@ public class StoreHandler {
         throw retex;
     }
 
-    public synchronized Annotation authenticateUserLevel(Method executeMethod) throws ErrorException {
+    public synchronized Annotation authenticateUserLevel(Method executeMethod, Class aClass) throws ErrorException {
         executeMethod = getCorrectMethod(executeMethod);
 
         if (executeMethod.getAnnotation(Internal.class) != null) {
@@ -194,9 +195,14 @@ public class StoreHandler {
         if (userLevel == null) {
             userLevel = executeMethod.getAnnotation(Editor.class);
         }
-
+        
+        
         if (userLevel != null) {
             User user = findUser();
+            
+            if (user != null && (userLevel instanceof Administrator || userLevel instanceof Editor)) {
+                checkUserPrivileges(user, executeMethod, aClass);
+            }
             if (user == null || userLevel instanceof Administrator && !user.isAdministrator()) {
                 throw new ErrorException(26);
             }
@@ -205,6 +211,25 @@ public class StoreHandler {
             }
         }
         return userLevel;
+    }
+    
+    private void checkUserPrivileges(User user, Method executeMethod, Class aClass) throws ErrorException {
+        if (user.privileges.isEmpty()) {
+            return;
+        }
+        
+        
+        ManagerBase manager = getManager(aClass);
+        String managerName = manager.getClass().getSimpleName();
+        
+        for (UserPrivilege priv : user.privileges) {
+            if (executeMethod.getName().equals(priv.managerFunction) && managerName.equals(priv.managerName)) {
+                return;
+            }
+        }
+        
+        System.out.println("WARNING!! Access denied attempted... does not have access, user: " + user.username + " to function : " + managerName+"."+executeMethod.getName() + ", store id: " + storeId);
+        throw new ErrorException(26);
     }
 
     private User findUser() throws ErrorException {

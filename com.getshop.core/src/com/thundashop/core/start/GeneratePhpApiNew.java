@@ -535,9 +535,10 @@ public class GeneratePhpApiNew {
         content += "class GetShopApi {\r\n";
         content += "\r\n";
         content += "      var $transport;\r\n";
-        content += "      function GetShopApi($port, $host=\"localhost\") {\r\n";
+        content += "      function GetShopApi($port, $host=\"localhost\", $sessionId) {\r\n";
         content += "           $this->transport = new CommunicationHelper();\r\n";
         content += "           $this->transport->port = $port;\r\n";
+        content += "           $this->transport->sessionId = $sessionId;\r\n";
         content += "           $this->transport->host = $host;\r\n";
         content += "           $this->transport->connect();\r\n";
         content += "      }\r\n";

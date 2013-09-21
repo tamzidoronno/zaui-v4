@@ -40,7 +40,7 @@ class MailConfiguration {
         Map<String, Setting> confSettings = null;
         if (storeHandler != null) {
             IPageManager pageManager = storeHandler.getManager(IPageManager.class);
-            confSettings = pageManager.getSecuredSettings("Mail");
+            confSettings = pageManager.getSecuredSettingsInternal("Mail");
         }
 
         if (confSettings != null) {

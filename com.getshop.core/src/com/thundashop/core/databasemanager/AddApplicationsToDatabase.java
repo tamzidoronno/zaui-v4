@@ -72,6 +72,15 @@ public class AddApplicationsToDatabase {
         callback.isPublic = true;
         apps.add(callback);
 
+        ApplicationSettings terms = createSettings(
+                "TermsAndConditions", 
+                "6e415852-c023-4ffe-a49f-990a521841cf", 
+                emtpy, 
+                "", 
+                ApplicationSettings.Type.Webshop, true);
+        terms.isPublic = true;
+        apps.add(terms);
+
         return apps;
     }
 

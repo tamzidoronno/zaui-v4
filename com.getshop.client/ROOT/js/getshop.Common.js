@@ -8,6 +8,7 @@ mousePositionX = 0;
 mousePositionY = 0;
 thundashop.common.stopNextNavigation = false;
 thundashop.common.currentScroll = 0;
+getshopmaintoolboxhidden = false;
 
 
 $(document).mousemove(function(e) {

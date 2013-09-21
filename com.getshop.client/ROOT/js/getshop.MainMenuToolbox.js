@@ -1,3 +1,4 @@
+
 $(document).ready(function() {
     var config = {
         draggable: true,
@@ -115,9 +116,9 @@ $(document).ready(function() {
             }
         ]
     };
+    config.ishidden = getshopmaintoolboxhidden;
 
     mainmenu = new GetShopToolbox(config);
-
     $(mainmenu.outerContainer).css('left', '100px');
     $(mainmenu.outerContainer).css('top', '100px');
 });

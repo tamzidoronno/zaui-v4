@@ -5,6 +5,7 @@ GetShopToolbox = function(config, app) {
 };
 
 GetShopToolbox.prototype = {
+    hidden : false, 
     
     init: function() {
         this.createContainer();
@@ -17,6 +18,9 @@ GetShopToolbox.prototype = {
         this.container.html("");
         this.addTitle();
         var entryGroup = this.createEntries(this.config.items);
+        if(this.hidden) {
+            entryGroup.hide();
+        }
         this.container.append(entryGroup);
         this.addCloseButton();
     },
@@ -25,10 +29,14 @@ GetShopToolbox.prototype = {
         var me = this;
         var close = $('<div/>');
         this.closeButton = close;
-        
+        if(me.hidden) {
+            this.closeButton.hide();
+        }
         close.addClass('close');
         close.click(function() {
             if (me.config.closeOnClick === false) {
+                me.hidden = true;
+                
                 me.outerContainer.find('.toolboxgroup:first').slideUp();
                 me.closeButton.hide();
             } else {
@@ -50,6 +58,7 @@ GetShopToolbox.prototype = {
         title.addClass('title');
         title.html(this.config.title);
         title.click(function() {
+            me.hidden = false;
             me.outerContainer.find('.toolboxgroup:first').slideDown();
             me.closeButton.show();
         });

@@ -188,6 +188,7 @@ $('#addApplicationToArea').live('click', function() {
 });
 
 $('#activateSingletonApplication').live('click', function() {
+    $(window).scrollTop(0);
     var id = $(this).attr('appId');
     var standAlone = $(this).attr('renderstandalone') === "true";
     thundashop.Skeleton.addApplicationDirect(id, standAlone);

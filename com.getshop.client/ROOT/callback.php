@@ -1,12 +1,14 @@
 <?php
 include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
-$id = $_GET['app'];
-$application = $factory->getApplicationPool()->getApplicationSetting($id);
- 
-$appcreate = "\\ns_".str_replace("-", "_", $application->id)."\\".$application->appName;
 
-$app = new $appcreate();
-$app->paymentCallback();
- 
+if (!isset($_GET['app'])) {
+    return;
+}
+
+$id = $_GET['app'];
+$application = $factory->getApplicationPool()->getApplicationInstance($id);
+if ($application != null) {
+    $application->paymentCallback();
+}
 ?>

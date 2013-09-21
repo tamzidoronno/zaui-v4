@@ -8,6 +8,7 @@
 class FactoryBase {
     private static $api;
 
+    private $oldApi;
     /**
      * @return Factory
      */
@@ -22,14 +23,35 @@ class FactoryBase {
      */
     public function getApi() {
         if (!isset(FactoryBase::$api)) {
-            $config = new ConfigReader();
-            $port = $config->getConfig("port");
-            $host = $config->getConfig("backenddb");
-            FactoryBase::$api = new GetShopApi($port, $host);
+            FactoryBase::$api = $this->createApi(session_id());
         }
         return FactoryBase::$api;
     }
+    
+    private function createApi($sessionId) {
+        $config = new ConfigReader();
+        $port = $config->getConfig("port");
+        $host = $config->getConfig("backenddb");
+        $api = new GetShopApi($port, $host, $sessionId);
+        return $api;
+    }
+    
+    public function startImpersionation($username,$password) {
+        $this->oldApi = $this->getApi();
+        $newSessionId = "session_".  uniqid(md5(rand()), true);
+        $newSessionId = sha1($newSessionId);
+        
+        FactoryBase::$api = $this->createApi($newSessionId);
+        $this->getApi()->getStoreManager()->initializeStore($_SERVER['HTTP_HOST'], $newSessionId);
+        $this->getApi()->getUserManager()->logOn($username, $password);
+    }
 
+    public function stopImpersionation() {
+        if ($this->oldApi != null) {
+            FactoryBase::$api = $this->oldApi;
+            $this->oldApi = null;
+        }
+    }
     /**
      * 
      * @return GetShopApi

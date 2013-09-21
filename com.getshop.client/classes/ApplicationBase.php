@@ -22,6 +22,93 @@ class ApplicationBase extends FactoryBase {
         
     }
     
+    public function startAdminImpersonation($managerName, $function) {
+        $userToImersonate = $this->getCredentials($managerName, $function);
+        if ($userToImersonate != null) {
+            $this->startImpersionation($userToImersonate[4], $userToImersonate[5]);
+        }
+    }
+    
+    private function getCredentials($managerName, $function) {
+        $namespace = $this->getFactory()->convertUUIDtoString($this->getApplicationSettings()->id);
+        $privateFolder = "../app/$namespace/private";
+        $passwordFile = $privateFolder."/password";
+        if (file_exists($passwordFile)) {
+            $contents = file_get_contents($passwordFile);
+            foreach (explode("\n", $contents) as $content) {
+                
+                $content2 = explode(";", $content);
+                if (count($content2) < 3) {
+                    continue;
+                }
+                
+                if ($content2[0] == $managerName && $content2[1] == $function) {
+                    return $content2;
+                }
+            }
+        }
+        
+        return null;
+    }
+    
+    public function requestAdminRight($managerName, $function, $descriptions) {
+        $user = $this->getApi()->getUserManager()->requestAdminRight($managerName, $function, $this->getConfiguration()->id);
+        $username = $user->username;
+        $password = $user->password;
+        $storeId = $this->getConfiguration()->storeId;
+        $appId = $this->getConfiguration()->id;
+        $saveString = "$managerName;$function;$storeId;$appId;$username;$password";
+        $this->addToPasswordStore($managerName, $function, $saveString);
+    }
+    
+    private function addToPasswordStore($managerName, $function, $saveString) {
+        $namespace = $this->getFactory()->convertUUIDtoString($this->getApplicationSettings()->id);
+        $privateFolder = "../app/$namespace/private";
+        
+        if (!file_exists($privateFolder)) {
+            $success = @mkdir($privateFolder);
+            if (!$success) {
+                echo "UnExpected error 2001230919192039212451597 .. Contact support for more information";
+                die();
+            }
+        }
+        
+        $passwordFile = $privateFolder."/password";
+        if (!file($passwordFile)) {
+            $success = touch($passwordFile);
+            if (!$success) {
+                echo "UnExpected error 2001230919192039212451598 .. Contact support for more information";
+                die();
+            }
+        }
+        
+        $addContent = "";
+        $contents = file_get_contents($passwordFile);
+        foreach (explode("\n", $contents) as $content) {
+            $content2 = explode(";", $content);
+            if (count($content2) < 3) {
+                continue;
+            }
+            if ($content2[0] != $managerName && $content2[1] != $function) {
+                $addContent .= $content."\n";
+            }
+        }
+        
+        $addContent .= $saveString;
+        file_put_contents($passwordFile, $addContent."\n");
+    }
+    
+    /**
+     * This function should be overridden when 
+     * an application need to ask for admin rights.
+     * 
+     * This function is executed after application has been added.
+     */
+    public function requestAdminRights() {
+        
+    }
+    
+    
     public function setSkinVariable($variableName, $defaultValue, $description) {
         $this->skinVariables[$variableName] = $defaultValue;
     }

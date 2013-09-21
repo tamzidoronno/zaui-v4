@@ -13,6 +13,7 @@ class CommunicationHelper {
     var $port = 25554;
     public $errorCodes = array();
     public $host = "";
+    public $sessionId = "";
     
     private function getClass($array) {
         if (!is_array($array) || !isset($array['className'])) {
@@ -104,7 +105,7 @@ class CommunicationHelper {
     }
 
     public function sendMessage($event) {
-        $event["sessionId"] = session_id();
+        $event["sessionId"] = $this->sessionId;
         $data = json_encode($event);
         $res = "";
         $this->connect();

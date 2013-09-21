@@ -543,7 +543,6 @@ $(function() {
     $(document).on('click', '#getshop_logout', function() {
         var event = thundashop.Ajax.createEvent(null, 'logout', $(this), {});
         thundashop.Ajax.postSynchron(event);
-        thundashop.framework.reprintPage();
     });
 });
 

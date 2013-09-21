@@ -2061,17 +2061,30 @@ class APIPageManager {
      }
 
      /**
+     * Get secured settings
+     */
+
+     public function getSecuredSettings($applicationInstanceId) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["applicationInstanceId"] = json_encode($this->transport->object_unset_nulls($applicationInstanceId));
+          $data["method"] = "getSecuredSettings";
+          $data["interfaceName"] = "core.pagemanager.IPageManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Fetch all settings for a given application
      * @param name The php equivelent name of the application.
      * @return HashMap
      * @throws ErrorException 
      */
 
-     public function getSecuredSettings($appName) {
+     public function getSecuredSettingsInternal($appName) {
           $data = array();
           $data['args'] = array();
           $data['args']["appName"] = json_encode($this->transport->object_unset_nulls($appName));
-          $data["method"] = "getSecuredSettings";
+          $data["method"] = "getSecuredSettingsInternal";
           $data["interfaceName"] = "core.pagemanager.IPageManager";
           return $this->transport->sendMessage($data);
      }
@@ -3261,6 +3274,30 @@ class APIUserManager {
      }
 
      /**
+     * This function will return a user new admin user that has access to only invoke the function
+     * specified in the paramters.
+     * 
+     * The password field on the user will be in cleartext so it can be saved by the application
+     * that request this feature.
+     * 
+     * @param managerName
+     * @param managerFunction
+     * @return core_usermanager_data_User
+     * @throws ErrorException 
+     */
+
+     public function requestAdminRight($managerName, $managerFunction, $applicationInstanceId) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["managerName"] = json_encode($this->transport->object_unset_nulls($managerName));
+          $data['args']["managerFunction"] = json_encode($this->transport->object_unset_nulls($managerFunction));
+          $data['args']["applicationInstanceId"] = json_encode($this->transport->object_unset_nulls($applicationInstanceId));
+          $data["method"] = "requestAdminRight";
+          $data["interfaceName"] = "core.usermanager.IUserManager";
+          return $this->transport->cast(API::core_usermanager_data_User(), $this->transport->sendMessage($data));
+     }
+
+     /**
      * When the reset code has been sent, you can reset your password with the given reset code.
      * @param resetCode The code sent by sendResetCode call.
      * @param username The username for the user to update, the email address is the most common username.
@@ -3361,9 +3398,10 @@ class APIUserManager {
 class GetShopApi {
 
       var $transport;
-      function GetShopApi($port, $host="localhost") {
+      function GetShopApi($port, $host="localhost", $sessionId) {
            $this->transport = new CommunicationHelper();
            $this->transport->port = $port;
+           $this->transport->sessionId = $sessionId;
            $this->transport->host = $host;
            $this->transport->connect();
       }

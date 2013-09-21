@@ -227,6 +227,13 @@
 	}
 	
 	/**
+	 * @return \core_usermanager_data_UserPrivilege
+	 */
+	public static function core_usermanager_data_UserPrivilege() {
+		return new \core_usermanager_data_UserPrivilege();
+	}
+	
+	/**
 	 * @return \core_loggermanager_data_LoggerData
 	 */
 	public static function core_loggermanager_data_LoggerData() {

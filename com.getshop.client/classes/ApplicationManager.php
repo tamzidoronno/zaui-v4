@@ -243,11 +243,12 @@ class ApplicationManager extends FactoryBase {
         $applications[] = $application;
         $this->getFactory()->getApplicationPool()->setApplicationInstances($applications);
         $app = $this->getFactory()->getApplicationPool()->getApplicationInstance($application->id);
+        $app->requestAdminRights();
 
         if ($app instanceof \ShipmentApplication || $app instanceof \PaymentApplication) {
             \HelperCart::clearSession(false);
         }
-
+        
         $app->applicationAdded();
     }
 

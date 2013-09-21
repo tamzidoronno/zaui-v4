@@ -60,7 +60,8 @@ public class User extends DataCommon  {
      * to a perticullary application,
      * this will be set to the application instance id.
      */
-    public String appId; 
+    public String appId = ""; 
+    
     /**
      * This user can be connected to
      * a group(s).

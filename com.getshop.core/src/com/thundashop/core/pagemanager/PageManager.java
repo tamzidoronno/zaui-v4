@@ -13,6 +13,7 @@ import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageArea;
 import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.usermanager.UserManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -153,6 +154,8 @@ public class PageManager extends ManagerBase implements IPageManager {
     @Override
     public void deleteApplication(String instanceId) throws ErrorException {
         applicationPool.deleteApplication(instanceId);
+        UserManager userManager = getManager(UserManager.class);
+        userManager.applicationInstanceDeleted(instanceId);
         pagePool.removeApplication(instanceId);
     }
 

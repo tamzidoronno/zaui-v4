@@ -139,6 +139,12 @@ public class UserStoreCollection {
         return user.cellPhone != null && user.cellPhone.replace(" ", "").contains(searchCriteria);
     }
     
+    public List<User> filterUsers(User logedInUser, List<User> users) {
+        List<User> retusers = filterUsersBasedOnGroup(logedInUser, users);
+        retusers = filterBasedOnAppIdCrtieria(users);
+        return retusers;
+    }
+    
     /**
      * Invoke this function to 
      * sort users collection. Based
@@ -149,8 +155,8 @@ public class UserStoreCollection {
      * @param users
      * @return 
      */
-    public List<User> filterUsersBasedOnGroup(User logedInUser, List<User> users) {
-        if (logedInUser == null || logedInUser.groups == null || logedInUser.groups.size() == 0) {
+    private List<User> filterUsersBasedOnGroup(User logedInUser, List<User> users) {
+        if (logedInUser == null || logedInUser.groups == null || logedInUser.groups.isEmpty()) {
             return users;
         }
         
@@ -200,5 +206,15 @@ public class UserStoreCollection {
         }
         
         return false;
+    }
+
+    private List<User> filterBasedOnAppIdCrtieria(List<User> users) {
+        List<User> returnUsers = new ArrayList();
+        for (User user : users) {
+            if (user.appId.equals("")) {
+                returnUsers.add(user);
+            }
+        }
+        return returnUsers;
     }
 }

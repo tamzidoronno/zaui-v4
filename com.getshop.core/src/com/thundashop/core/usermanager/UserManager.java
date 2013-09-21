@@ -135,7 +135,7 @@ public class UserManager extends ManagerBase implements IUserManager {
     public List<User> findUsers(String searchCriteria) throws ErrorException {
         UserStoreCollection users = getUserStoreCollection(storeId);
         List<User> searchResult = users.searchForUser(searchCriteria);
-        return getUserStoreCollection(storeId).filterUsersBasedOnGroup(getSession().currentUser, searchResult);
+        return getUserStoreCollection(storeId).filterUsers(getSession().currentUser, searchResult);
     }
 
     @Override
@@ -193,7 +193,7 @@ public class UserManager extends ManagerBase implements IUserManager {
             retUsers.add(collection.getUser(userId));
         }
         
-        return getUserStoreCollection(storeId).filterUsersBasedOnGroup(getSession().currentUser, retUsers);
+        return getUserStoreCollection(storeId).filterUsers(getSession().currentUser, retUsers);
     }
 
     @Override
@@ -204,7 +204,7 @@ public class UserManager extends ManagerBase implements IUserManager {
             return collection.getAllUsers();
         }
         
-        return collection.filterUsersBasedOnGroup(getSession().currentUser, allUsers);
+        return collection.filterUsers(getSession().currentUser, allUsers);
     }
 
     @Override
@@ -402,7 +402,7 @@ public class UserManager extends ManagerBase implements IUserManager {
 
     private int getUserCount(int type) throws ErrorException {
         int i = 0;
-        for (User user : getUserStoreCollection(storeId).filterUsersBasedOnGroup(getSession().currentUser, getUserStoreCollection(storeId).getAllUsers())) 
+        for (User user : getUserStoreCollection(storeId).filterUsers(getSession().currentUser, getUserStoreCollection(storeId).getAllUsers())) 
             if (user.type == type) 
                 i++;
             
@@ -483,5 +483,19 @@ public class UserManager extends ManagerBase implements IUserManager {
         retUser.password = password;
         retUser.privileges = createdUser.privileges;
         return retUser;
+    }
+
+    public void applicationInstanceDeleted(String instanceId) throws ErrorException {
+        List<User> users = getUserStoreCollection(storeId).getAllUsers();
+        ArrayList<User> deleteUsers = new ArrayList();
+        for (User user : users) {
+            if (user.appId.equals(instanceId)) {
+                deleteUsers.add(user);
+            }
+        }
+        
+        for (User user : deleteUsers) {
+            deleteUser(user.id);
+        }
     }
 }

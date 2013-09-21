@@ -422,6 +422,8 @@ class ApplicationManager extends FactoryBase {
 
         if (method_exists($app, "renderStandalone"))
             $this->getFactory()->getApi()->getPageManager()->deletePage($appId);
+        
+        
     }
 
     public function getAllAddedApplications($appName) {

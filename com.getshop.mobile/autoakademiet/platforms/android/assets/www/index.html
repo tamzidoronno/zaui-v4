@@ -28,6 +28,7 @@ and open the template in the editor.
         <link rel="stylesheet" href="css/theme.css" type="text/css" media="screen" charset="utf-8" />
     </head>
     <body>
+        <div class='disconnected'><div><img src='css/images/ajax-loader.gif'/><br>Venter på at tilkoblingen skal gjennopprettes</div></div>
         <div class='connecting'><div><img src='css/images/ajax-loader.gif'/><br>Kobler til server</div></div>
         <div class='loading'><div><img src='css/images/ajax-loader.gif'/><br>Laster data</div></div>
         <div data-role="page" id="home">
@@ -39,12 +40,9 @@ and open the template in the editor.
                         <li><a href="#signup" data-transition="flip">Påmelding</a></li>
                     </ul>
                 </div>
+                <div class="refresh"></div>
             </div>
             <div data-role="content">
-                <p>
-                    Autoakademiet leverer kurs til ulike grossister. Kurskalenderen viser en oversikt over kurs aktiviteter på ulike steder.
-                    <br>Klikk på aktuellt kurs og få utfyllende informasjon om sted, klokkeslett og restplasser.
-                </p>
                 <h2>Kurs kalender</h2>
                 <div id="calender"></div>
                 <div class="displayActiveFilter">Resultatet er filterert på: <span id="displayActiveFilter"></span></div>
@@ -69,20 +67,33 @@ and open the template in the editor.
         </div>
 
         <div data-role="page" id="courses">
-            <div class="header"></div>
+            <div data-role="header" data-theme="b">
+                <img border="0" src="css/images/logo.png" style="margin-top: 10px; margin-bottom: 10px; float:center; display:inline"/>
+                <div data-role="navbar">
+                    <ul>
+                        <li><a href="#home" data-transition="flip">Kalender</a></li>
+                        <li><a href="#signup" data-transition="flip">Påmelding</a></li>
+                    </ul>
+                </div>
+                <div class="refresh"></div>
+            </div>
             <div data-role="content" id="courselist">
-                <p> Oversikt over kurs levert av Autoakademiet.
-                <br>Klikk på kurset for utfyllende informasjon.</p>
+                <p>Kurs oversikt fra autoakademiet</p>
                 <div class='contentcourselist'></div>
             </div>
         </div>
 
         <div data-role="page" id="signup">
-            <div class="header"></div>
+             <div data-role="header" data-theme="b">
+                <img border="0" src="css/images/logo.png" style="margin-top: 10px; margin-bottom: 10px; float:center; display:inline"/>
+                <div data-role="navbar">
+                    <ul>
+                        <li><a href="#home" data-transition="flip">Kalender</a></li>
+                        <li><a href="#courses" data-transition="flip">Kurser</a></li>
+                    </ul>
+                </div>
+            </div>
             <div data-role="content" style="text-align:left">
-                <p>
-                    Fyll ut skjemaet under for å melde deg på et av våre kurs.
-                </p>
                 <form>
                     <label for="name">Navn:</label>
                     <input type="text" data-clear-btn="true" name="text-6" id="name" value="" >
@@ -117,7 +128,7 @@ and open the template in the editor.
         <div data-role="page" id="filter">
             <div class="header"></div>
             <div data-role="content"> 
-                Velg et av stedencoe under. 
+                Velg sted for filtrering på kalenderen.
                 <div data-role="controlgroup" id="filterholdergroup"></div>
             </div>
         </div>
@@ -126,5 +137,11 @@ and open the template in the editor.
 
 <script type="text/javascript">
     //App.start();
-    papp.initialize();
+    var app = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
+    if ( app ) {
+        papp.initialize();
+    } else {
+        App.start();
+    }
+    
 </script>

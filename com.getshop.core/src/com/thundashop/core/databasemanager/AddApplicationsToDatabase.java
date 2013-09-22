@@ -53,43 +53,43 @@ public class AddApplicationsToDatabase {
 
     private List<ApplicationSettings> addApplications() {
         List<ApplicationSettings> apps = new ArrayList();
-
-        ApplicationSettings sisow = createSettings(
-                "Sisow",
-                "c4d7bec0-185f-11e3-8ffd-0800200c9a66",
-                emtpy,
-                "",
-                ApplicationSettings.Type.Payment, true);
-        sisow.isPublic = true;
-        apps.add(sisow);      
-        
-        ApplicationSettings callback = createSettings(
-                "Callback", 
-                "5474c225-cc7b-4576-83bb-1ad8bf35be8f", 
-                emtpy, 
-                "", 
-                ApplicationSettings.Type.System, true);
-        callback.isPublic = true;
-        apps.add(callback);
-        
-        ApplicationSettings payondelviery = createSettings(
-                "PayOnDelivery", 
-                "565ea7bd-c56b-41fe-b421-18f873c63a8f", 
-                emtpy, 
-                "", 
-                ApplicationSettings.Type.Payment, true);
-        payondelviery.isPublic = true;
-        payondelviery.isSingleton = true;
-        apps.add(payondelviery);
-
-        ApplicationSettings terms = createSettings(
-                "TermsAndConditions", 
-                "6e415852-c023-4ffe-a49f-990a521841cf", 
-                emtpy, 
-                "", 
-                ApplicationSettings.Type.Webshop, true);
-        terms.isPublic = true;
-        apps.add(terms);
+//
+//        ApplicationSettings sisow = createSettings(
+//                "Sisow",
+//                "c4d7bec0-185f-11e3-8ffd-0800200c9a66",
+//                emtpy,
+//                "",
+//                ApplicationSettings.Type.Payment, true);
+//        sisow.isPublic = true;
+//        apps.add(sisow);      
+//        
+//        ApplicationSettings callback = createSettings(
+//                "Callback", 
+//                "5474c225-cc7b-4576-83bb-1ad8bf35be8f", 
+//                emtpy, 
+//                "", 
+//                ApplicationSettings.Type.System, true);
+//        callback.isPublic = true;
+//        apps.add(callback);
+//        
+//        ApplicationSettings payondelviery = createSettings(
+//                "PayOnDelivery", 
+//                "565ea7bd-c56b-41fe-b421-18f873c63a8f", 
+//                emtpy, 
+//                "", 
+//                ApplicationSettings.Type.Payment, true);
+//        payondelviery.isPublic = true;
+//        payondelviery.isSingleton = true;
+//        apps.add(payondelviery);
+//
+//        ApplicationSettings terms = createSettings(
+//                "TermsAndConditions", 
+//                "6e415852-c023-4ffe-a49f-990a521841cf", 
+//                emtpy, 
+//                "", 
+//                ApplicationSettings.Type.Webshop, true);
+//        terms.isPublic = true;
+//        apps.add(terms);
 
         return apps;
     }

@@ -102,6 +102,7 @@ label.error {
     display: none;
 }
 
+.disconnected,
 .connecting,
 .loading {
     display: none;
@@ -115,6 +116,7 @@ label.error {
     z-index: 1200;
 }
 
+.disconnected div,
 .connecting div,
 .loading div {
     position: absolute;
@@ -132,3 +134,21 @@ label.error {
 }
 
 .connecting { display: inherit; }
+
+.refresh {
+    display: none;
+    background-color: rgba(256,256,256,0.5);
+    border-radius: 5px;
+    border: solid 1px #666;
+    position: absolute;
+    z-index: 1100;
+    background-image: url('images/refresh_24.png');
+    top: 20px;
+    left: 5px;
+    width: 30px;
+    height: 30px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    box-shadow: 0px 0px 3px #000;
+}

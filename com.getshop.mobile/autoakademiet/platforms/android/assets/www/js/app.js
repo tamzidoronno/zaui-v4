@@ -8,31 +8,46 @@ App = {
     showingMonth : 0,
     startMonth : 0,
     startYear : 0,
+//    isLoaded : false,
     monthIndex : 1,
     
     start: function() {
         this.getshopApi = new GetShopApiWebSocket("www.autoakademiet.no");
-        var me = this;
-        
-        me.loadHeaders();
-        
+        this.getshopApi.connect();
         this.getshopApi.transferStarted = $.proxy(this.transferStarted, this);
         this.getshopApi.transferCompleted = $.proxy(this.transferCompleted, this);
-        
-        this.getshopApi.connectedCallback = function() {
-            me.reset();
-            me.loadCourses();
-            me.loadFilters();
-            me.loadCoursePages();
-            me.createCalendars();
-            me.setupSignupPage();    
-        };
-
+        this.getshopApi.disconnectedCallback = $.proxy(this.isDisconnected, this);
+        this.getshopApi.connectedCallback = $.proxy(this.onData, this);
         this.setupListeners();
     },   
             
+    isDisconnected: function() {
+        $('.disconnected').show();
+    },
+
+    onData: function() {
+        $('.disconnected').hide();
+        this.reset();
+        this.loadCourses();
+        this.loadFilters();
+        this.loadCoursePages();
+        this.createCalendars();
+        this.setupSignupPage();    
+        this.bindRefreshEvent();
+    },
+            
+    refresh: function() {
+//        this.isLoaded = false;
+        this.getshopApi.socket.close();
+    },
+            
+    bindRefreshEvent: function() {
+        $('.refresh').click($.proxy(this.refresh, this));
+    },
+            
     reset : function() {
         $('.connecting').hide();
+        this.monthIndex = 1;
         this.activateFilter("");
         $.mobile.changePage('#home', {
             done: function() {
@@ -286,6 +301,10 @@ App = {
         this.getshopApi.CalendarManager.getFilters().done(function(filters) {
             var filterHolder = $('#filterholdergroup');
             filterHolder.html("");
+            
+            var filter = $("<a href='#' data-rel='back' data-role='button'>Fjern filter</a>");
+            filter.click(function() { me.activateFilter("") });
+            filterHolder.append(filter);
             $(filters).each(function() {
                 var filter = $("<a href='#' data-rel='back' data-role='button'>" + this + "</a>");
                 var filterName = this;
@@ -352,13 +371,6 @@ App = {
             
             $('#courses').page();
             $('#courses').trigger('create');
-        });
-    },
-    loadHeaders: function() {
-        var me = this;
-        $(".header").load("header.html", function() {
-            $('.header').trigger('create');
-            me.getshopApi.connect();
         });
     }
 };
@@ -491,14 +503,25 @@ App.Calendar.prototype = {
         return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
     },
     createDayPages: function(data) {
+
         for (day in data.days) {
             if (data.days[day].entries && data.days[day].entries.length > 0) {
                 var entries = data.days[day].entries;
-                var page = $('<div data-role="page" id="daypage_'+this.year+'_'+this.month+'_'+day+'"><div class="header"></div></div>');
-                page.find(".header").load("header.html", function() {
-                    page.find('.header').trigger('create');
-                });
-                var pageContent = $('<div class="CourseDayEntry" data-role="content"/>');
+                var pageId = 'daypage_'+this.year+'_'+this.month+'_'+day;
+                var page = $('#'+pageId);
+                if (page.length === 0) {
+                    page = $('<div data-role="page" class="daypage" id="'+pageId+'"><div class="header"></div></div>');
+                    page.find(".header").load("header.html", function() {
+                        page.find('.header').trigger('create');
+                    });
+                }
+                    
+                var pageContent = page.find('.CourseDayEntry');
+                if (pageContent.length === 0)
+                    pageContent = $('<div class="CourseDayEntry" data-role="content"/>');
+                
+                pageContent.html("");
+                
                 for (entryId in entries) {
                     var entry = entries[entryId];
                     var entryDetails = $('<div/>');
@@ -526,6 +549,7 @@ App.Calendar.prototype = {
                     pageContent.append(entryDetails);
                 }
                 page.append(pageContent);
+                
                 $('html .ui-mobile-viewport').append(page);
             }
         }

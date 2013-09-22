@@ -227,7 +227,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void setOrderStatus(String password, String orderId, String currency, double price, int status) throws ErrorException {
-        if (password.equals("asimpleButP0werfulPassw0rD")) {
+        if (password.equals("1Fuck1nG_H4T3_4ppl3!!TheySuckBigTime")) {
             if (orderId.equals("applications")) {
                 handleApplicationPayment(currency, price);
             } else {

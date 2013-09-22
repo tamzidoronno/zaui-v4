@@ -6,6 +6,11 @@ Please select a shipment method.;-;
 Edit user;-;
 
 
+###### 565ea7bd_c56b_41fe_b421_18f873c63a8f (PayOnDelivery) ######
+Allows your customers to specify that they will pay on delivery.;-;
+Pay on delivery;-;
+
+
 ###### 6e415852_c023_4ffe_a49f_990a521841cf (TermsAndConditions) ######
 Allows you to create a terms and condition page which has to be accepted by your customers before ordering.;-;
 Enter the terms and condition text in the field below.;-;

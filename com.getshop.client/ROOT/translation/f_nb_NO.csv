@@ -1,6 +1,6 @@
 ###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
 No image added for this product;-;Ingen blider har blitt lagt til for dette produktet.
-Thank you for your order.;-;Takk for din bestilling.
+Please select a shipment method.;-;Vennligst velg en betalingsmetode.
 cart;-;Handlekurv
 
 
@@ -60,6 +60,16 @@ Price each product (default: 0 );-;Pris for hvert product (standard: 0)
 Start up price;-;Oppstarts pris
 Startup cost (default: 0 );-;Oppstartspris (standard: 0)
 this application gives you the ability to setup fixed shipping price;-;Denne applikasjonen åpner opp for å sette en fast pris på utsendelser.
+
+
+###### 565ea7bd_c56b_41fe_b421_18f873c63a8f (PayOnDelivery) ######
+Allows your customers to specify that they will pay on delivery.;-;Gir deg muligheten til å ta betalt ved levering.
+Pay on delivery;-;Betal ved levering.
+
+
+###### 6e415852_c023_4ffe_a49f_990a521841cf (TermsAndConditions) ######
+Allows you to create a terms and condition page which has to be accepted by your customers before ordering.;-;Gir deg muligheten til å sette opp en Brukervilkår avtale, denne må alltid godkjennes før en eventuell bestilling.
+Enter the terms and condition text in the field below.;-;Skriv inn brukervilkårene i boksen unde.
 
 
 ###### 6c245631_effb_4fe2_abf7_f44c57cb6c5b (Account) ######
@@ -331,8 +341,10 @@ Unlink entry;-;Frakoble element
 ###### d755efca_9e02_4e88_92c2_37a3413f3f41 (Settings) ######
 Activate Deepfreeze;-;Aktiver deepfreeze
 Add some eyecandy to your webshop, by activating this. It will show some nice fade in effects.;-;Sprit opp din webshop ved å aktivere dete. Noen fine fading effekter blir da aktivert.
+Are customers required to register to order?;-;Er det påkrevd at kundene skal registere seg for å handle?
 Base currency;-;Hoved valutta
 Conversion rate addition;-;Tillegg til valutta omregning
+Cookie warning;-;Cookie advarsel
 Deactivate Deepfreeze;-;Deaktivert deepfreeze
 Delete my store;-;Slett min butikk
 Design;-;Design
@@ -346,10 +358,12 @@ Hide search bar;-;Gjem søkefeltet for produkter
 If converting to a different currency, you can specify a percentage of how much more you would like to append to conversion when the conversion calculation is done. For example 10 will give you a 10% higher conversion rate.;-;Hvis du konverterer til en annen valutta, så kan du spesifisere hvor mange prosent du ønsker å legge til i konverteringen. For eksempel 10 vil gi deg en 10% høyere konverterings valutta.
 If this is set, getshop will automatically convert from this currency to the currency above for all other customers.;-;Hvis dette er satt, vil systemet automatisk konvertere fra denne valuttaen til valuttaen over for alle kundene. 
 Please select your language;-;Vennligst velg ditt språk
+Registration;-;Registrering
 Settings saved;-;Instillingene er lagret
 Specify a title for your webshop.;-;Spesifiser en tittel for din webshop
 Specify your postal code.;-;Spesifiser ditt postnummer
 Store currency;-;Butikk valutta
+Warn users that cookies are being stored from this site?;-;Advar brukere at cookies blir brukt på denne siten?
 You do not want to display the cart.. sure enable this then.;-;Du ønsker ikke å vise handlekurven... Greit nok, aktivert dette.
 Your settings have been saved.;-;Dine instillinger har blitt lagret.
 postal;-;Postnummer
@@ -434,6 +448,7 @@ Save;-;Lagre
 Save changes;-;Lagre endringer
 Save settings;-;Lagre instillinger
 Security;-;Sikkerhet
+Select application;-;Velg applikasjon
 Select different page layouts;-;Velg sidens layout
 Set application sticky;-;Sett applikasjonen klebelig.
 Settings;-;Instillinger
@@ -551,6 +566,12 @@ What should the text message contain?;-;Hva skal tekst meldingen inneholde?
 give your customers ability to book into your events or appointments;-;Gi du kunder muligheten til å registrere seg for eventer og avtaler.
 
 
+###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######
+Current status;-;Nåverende status
+Payment application;-;Betalings applikasjon
+Transaction id;-;Transaksjons id
+
+
 ###### e72f97ad_aa1f_4e67_bcfd_e64607f05f93 (Gallery) ######
 A description to the image;-;En beskrivelse av bildet
 Delete this image;-;Slett dette bildet.
@@ -641,6 +662,8 @@ taxes;-;Avgifter
 A quick tip; when the mouse is hovering the image, you will see a settings box where you can configure the image.;-;A lite tips; Når musen er over bildet, vil du se en innstillings boks hvor du kan konfigurere bildet.
 Congratulation, you have added your first image.;-;Gratulerer, du har lagt til ditt første bilde
 Edit the image;-;Editere bildet
+Insert images into any application area.;-;Sett inn et bilde på hvilke som helst applikasjons område.
+This image has been stretched, click to fix it.;-;Dette bildet har blitt strukket, trykk her for å fikse det.
 
 
 ###### de0b9b83_a41d_4fca_a2d4_3d3945cc8b9e (ColumnProducts) ######
@@ -665,6 +688,7 @@ North east corner latitude;-;Nord øst hjørne latitude
 North east corner longitude;-;Nord øskt hjørne longitude
 South west corner latitude;-;Sør vest latitude hjørne
 South west corner longitude;-;Sør vest longitude hjørne
+Specify boundaries the map should restrict itself to. Leave it empty to avoid boundaries. Or add multiple rectangular fields as constraints.;-;Specifiser grenser på karetet. Hvis du ønsker at det ikke skal være begrensninger i karetet så la dette være tomt, eventuelt legg inn flere for å lage en rektaktulær grense.
 Text description;-;Tekst beskrivelse
 Text title;-;Tekst tittel
 latitude;-;latitude

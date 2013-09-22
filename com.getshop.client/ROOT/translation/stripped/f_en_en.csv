@@ -1,7 +1,6 @@
 ###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
 No image added for this product;-;
 Please select a shipment method.;-;
-Thank you for your order.;-;
 
 
 ###### fb076580_c7df_471c_b6b7_9540e4212441 (OpenSRS) ######
@@ -58,6 +57,11 @@ Price each product (default: 0 );-;
 Start up price;-;
 Startup cost (default: 0 );-;
 this application gives you the ability to setup fixed shipping price;-;
+
+
+###### 565ea7bd_c56b_41fe_b421_18f873c63a8f (PayOnDelivery) ######
+Allows your customers to specify that they will pay on delivery.;-;
+Pay on delivery;-;
 
 
 ###### 6e415852_c023_4ffe_a49f_990a521841cf (TermsAndConditions) ######

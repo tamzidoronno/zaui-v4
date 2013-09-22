@@ -4,11 +4,20 @@ Checkout;-;Utsjekking
 Click next to select shipping options;-;Trykk neste for å velge en betalings metode
 Confirm order;-;Bekreft ordre
 Failed;-;Feilet
+I agree to the terms and conditions;-;Jeg godtar bruksvilkårene
+Invalid email address;-;Ugyldig epost adresse
 Invalid payment method;-;Ugyldig betalings metode
+Password missmatch;-;Passordene stemmer ikke oversens
+Please select a payment method.;-;Vennligst veng en betalingsmetode
 Please select a valid payment method;-;Vennligst velg en gyldig betalings metode.
+Registration details;-;Registrerings detaljer.
 Shipping price;-;Forendelse pris
+The email already exists, please log on to continue.;-;Eposten eksisterer allerede, vennligst logg på for å fortsette.
+The passwords does not match.;-;Passordet stemmer ikke overens.
 Total;-;Total
+Use a different email;-;Bruk en annen epost
 Was not able to get payment methods, please check your postcode;-;Klarte ikke å oppdrive betalings metoder, vennligst sjekk ditt postnummer.
+read;-;les
 
 
 ###### 2afb045b_fa01_4398_8582_33f212bb8db8 (Chat) ######
@@ -24,6 +33,7 @@ if we dont answer, please leave your email here and we will return your message 
 An email has been sent to you with the confirmation code.;-;En godkjennings kode er sendt til din epost.
 Email sent;-;Epost sendt
 Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.L
+Login;-;Logg inn
 Logout;-;Logg ut
 Lost your password?;-;Glemt ditt passord?
 My Account;-;Min konto
@@ -52,6 +62,8 @@ Change password;-;Endre passord
 City;-;By
 Company;-;Selskap
 Completed;-;Gjennomført
+Continue;-;Fortsett
+Cookies are being stored;-;Cookier blir lagret
 Delete image;-;Slett bilde
 Email;-;Epost
 Featured Product;-;Fremhevet produkt
@@ -78,10 +90,14 @@ Remove;-;Fjern
 Repeat password;-;Gjenta passord
 Send message;-;Send melding
 Send us mail;-;Send oss en epost
+Sorry;-;Beklager
 Success;-;Success
+Terms and Conditions;-;Bruksvilkår
+Thank you for your order.;-;Takk for din bestilling.
 This page is only available for adminsitrators;-;Denne siden er kun tilgjengelig for adminstratorer.
 This page is only available for editors.;-;Denne siden er kun tilgjengelig for editorer.
 This page is only available for registered users.;-;Denne siden er kun tilgjengelig for registrerte brukere
+To be able to serve you we need to store a tiny amount of data about your browser. An identification id is being generated and added to your web browser. This allows us to track you for a two hours periode while you are navigating this site. This data is anonymous and are only being used to identify your web browser and not you as a person.;-;For at det skal være mulig bruke denne web siden må vi lagre en liten bit av data på din nettleser. Dette er en identifikasjons id som gjør det mulig å identifisere deg som en bruker mens du surfer på denne siden. Denne dataen blir lagret i 20 timer og er 100% anonym.
 Update;-;Oppdater
 Username / Email;-;Brukernavn / Epost
 Waiting for payment;-;Venter på betaling
@@ -91,6 +107,7 @@ Wrong delivery method;-;Feil forsendelses metode.
 You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
 email;-;E-post
 location;-;Sted
+login;-;logg inn
 
 
 ###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
@@ -108,7 +125,12 @@ Configure banner slider;-;Konfigurer banner slideren
 
 
 ###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
+All fields are required.;-;Alle felt er påkrevd
+I am sorry, but all fields are required before sending a message.;-;Beklager, men alle felt må fylles ut før du sender en melding.
+Message;-;Melding
+Message from a customer;-;Melding fra en kunde
 My name is:;-;Mitt navn er
+The email address is invalid.;-;Eposten din er ugyldig.
 Your message has been delivered;-;Din melding har blitt sendt.
 
 
@@ -157,6 +179,7 @@ Cancel order;-;Kanselert ordre
 Customer information;-;Kunde detaljer
 Order;-;Ordre
 Order date;-;Bestillings dato
+Payment information;-;Betalings informasjon
 Product count;-;Antall produkter
 Shipment information;-;Forsendelse informasjon
 Shipping;-;Utsendelse

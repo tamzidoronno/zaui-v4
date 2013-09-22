@@ -1,12 +1,3 @@
-###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
-Please select a shipment method.;-;
-
-
-###### 6e415852_c023_4ffe_a49f_990a521841cf (TermsAndConditions) ######
-Allows you to create a terms and condition page which has to be accepted by your customers before ordering.;-;
-Enter the terms and condition text in the field below.;-;
-
-
 ###### ee96fe89_e09d_4f7b_921a_3272462e9b7e (Airgram) ######
 Airgram allows you to push important notifications to your phone, use this application to push notifications to your cell phone when something important is happening, for example if someone is starting to chat with you, you will be instantly notified and can responde accordingly. Just download airgram from google play or app store and start using it.;-;
 
@@ -34,31 +25,5 @@ Your merchant id, this id is something that sisow is providing you.;-;
 Your merchant key and id is correct;-;
 Your merchant key or id is incorrect, please recheck it;-;
 Your merchant key, this id is something that sisow is providing you.;-;
-
-
-###### d755efca_9e02_4e88_92c2_37a3413f3f41 (Settings) ######
-Are customers required to register to order?;-;
-Cookie warning;-;
-Registration;-;
-Warn users that cookies are being stored from this site?;-;
-
-
-###### framework ######
-Select application;-;
-
-
-###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######
-Current status;-;
-Payment application;-;
-Transaction id;-;
-
-
-###### 831647b5_6a63_4c46_a3a3_1b4a7c36710a (ImageDisplayer) ######
-Insert images into any application area.;-;
-This image has been stretched, click to fix it.;-;
-
-
-###### 17c48891_6f7a_47a0_849d_b50de9af218f (GoogleMaps) ######
-Specify boundaries the map should restrict itself to. Leave it empty to avoid boundaries. Or add multiple rectangular fields as constraints.;-;
 
 

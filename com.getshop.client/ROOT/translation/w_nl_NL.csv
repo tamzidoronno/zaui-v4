@@ -1,14 +1,35 @@
+###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 ######
+By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;Via Payment provider Sisow, laat je je klanten makkelijk betalen met iDeal, Mister Cash en andere betaalmogelijkheden. Meer info via https://www.sisow.nl
+Download ebill;-;Download eBill
+Payment successfully completed;-;Betaling gelukt
+Thank you for ordering with Sisow ebill;-;Bedankt om te bestellen via eBill
+Thank you, you will now be redirected to the payment service;-;Bedankt, je wordt nu doorgestuurd naar de betaal pagina
+What email address do you want the ebill to be sent to?;-;Naar welk emailadres wil je de eBill opgestuurd krijgen?
+Your order has been canceled due to incorrect payment information, please try again.;-;Je bestelling is geannuleerd door onjuiste betaalgegevens. Gelieve nog eens te proberen
+Your order has now been completed and is waiting to be shipped.;-;Je bestelling is compleet en klaar om verzonden te worden
+Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;Je bestelling is succesvol geplaatst en je krijgt zo dadelijk een email met je eBill bijgesloten. Je kan deze ook via volgende link downloaden
+
+
 ###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
 Cart overview;-;Overzicht winkelwagen
 Checkout;-;Afrekenen
 Click next to select shipping options;-;Klik volgende om een verzendmethode te kiezen
 Confirm order;-;Bestelling bevestigen
 Failed;-;Mislukt
+I agree to the terms and conditions;-;Ik ga akkoord met de voorwaarden
+Invalid email address;-;Ongeldig emailadres
 Invalid payment method;-;Ongeldige betaalmethode
+Password missmatch;-;Wachtwoorden komen niet overeen
+Please select a payment method.;-;Selecteer een betaalmethode
 Please select a valid payment method;-;Gelieve een geldig betaalniddel te kiezen
+Registration details;-;Registratie details
 Shipping price;-;Verzendkosten
+The email already exists, please log on to continue.;-;Het emailadres bestaat al, gelieve in te loggen om verder te gaan
+The passwords does not match.;-;Het wachtwoord komt niet overeen
 Total;-;Totaal
+Use a different email;-;Gebruik een ander emailadres
 Was not able to get payment methods, please check your postcode;-;Niet mogelijk een betaalmogelijkheid op te halen, gelieve je postcode na te gaan
+read;-;Lees
 
 
 ###### 2afb045b_fa01_4398_8582_33f212bb8db8 (Chat) ######
@@ -46,13 +67,15 @@ Search for a product;-;Product zoeken
 ###### framework ######
 A red theme that can be used when selling exciting things;-;Een rode layout voor verkoop van interessante producten
 Add to cart;-;Aan winkelwagen toevoegen
-Address;-;Addres
+Address;-;Straatnaam + huisnummer
 Buy;-;Koop
 Canceled;-;Afgebroken
 Change password;-;Wachtwoord aanpassen
 City;-;Woonplaats
 Company;-;Bedrijf
 Completed;-;Afgerond
+Continue;-;Ga verder
+Cookies are being stored;-;Cookies worden bijgehouden
 Delete image;-;Verwijder afbeelding
 Email;-;Email
 Featured Product;-;Product in de kijker
@@ -79,10 +102,14 @@ Remove;-;Verwijderen
 Repeat password;-;Wachtwoord nogmaals
 Send message;-;Bericht versturen
 Send us mail;-;Stuur ons een email
+Sorry;-;Sorry
 Success;-;Succes
+Terms and Conditions;-;Algemene voorwaarden
+Thank you for your order.;-;Bedankt voor je bestelling
 This page is only available for adminsitrators;-;Deze pagina is alleen voor beheerders toegangkelijk
 This page is only available for editors.;-;Deze pagina is alleen voor redacteuren toegangkelijk
 This page is only available for registered users.;-;Deze pagina is alleen voor geregistreerde gebruikers toegangkelijk
+To be able to serve you we need to store a tiny amount of data about your browser. An identification id is being generated and added to your web browser. This allows us to track you for a two hours periode while you are navigating this site. This data is anonymous and are only being used to identify your web browser and not you as a person.;-;Wij gebruiken cookies om [het gebruik van onze webwinkel te faciliteren/ het inloggen op onze website te vergemakkelijken/ uw instellingen en voorkeuren te onthouden]. U kunt deze cookies uitzetten via uw browser maar dit kan het functioneren van onze webwinkel negatief aantasten.
 Update;-;Updaten
 Username / Email;-;Gebruikersnaam / E-mail
 Waiting for payment;-;Wachten op betaling
@@ -92,6 +119,7 @@ Wrong delivery method;-;Verkeerde verzendmethode
 You do not have any products in your cart;-;U heeft nog geen producten in de winkelwagen
 email;-;email
 location;-;locatie
+login;-;Log in
 
 
 ###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
@@ -109,7 +137,12 @@ Configure banner slider;-;Configureer banner slider
 
 
 ###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
+All fields are required.;-;Alle velden moet ingevuld worden
+I am sorry, but all fields are required before sending a message.;-;Sorry, alle velden moeten ingevuld worden om een bericht te kunnen versturen
+Message;-;Bericht
+Message from a customer;-;Bericht van een klant
 My name is:;-;Mijn naam is:
+The email address is invalid.;-;Het emailadres is ongeldig
 Your message has been delivered;-;Je bericht is aangekomen
 
 
@@ -148,6 +181,7 @@ Cancel order;-;Bestelling afbreken
 Customer information;-;Klanteninformatie
 Order;-;Bestelling
 Order date;-;Besteldatum
+Payment information;-;Betaal informatie
 Product count;-;Aantal producten
 Shipment information;-;Verzendinformatie
 Shipping;-;Verzending	 

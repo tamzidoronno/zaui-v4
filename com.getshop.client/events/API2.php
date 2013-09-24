@@ -1672,6 +1672,21 @@ class APIOrderManager {
      }
 
      /**
+     * @param id
+     * @return core_ordermanager_data_Order
+     * @throws ErrorException 
+     */
+
+     public function getOrderByincrementOrderId($id) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+          $data["method"] = "getOrderByincrementOrderId";
+          $data["interfaceName"] = "core.ordermanager.IOrderManager";
+          return $this->transport->cast(API::core_ordermanager_data_Order(), $this->transport->sendMessage($data));
+     }
+
+     /**
      * Get a list of already created orders.
      * @param orderIds A list of all orders you want to fetch, all orders are retrieved if this list is empty.
      * @param page What page are you fetching (default 0)

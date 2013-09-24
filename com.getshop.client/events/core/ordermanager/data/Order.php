@@ -13,6 +13,9 @@ class core_ordermanager_data_Order extends core_common_DataCommon  {
 	public $session;
 
 	/** @var String */
+	public $trackingNumber;
+
+	/** @var String */
 	public $incrementOrderId;
 
 	/** @var String */

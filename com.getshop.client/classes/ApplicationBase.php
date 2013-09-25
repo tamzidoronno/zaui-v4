@@ -84,14 +84,16 @@ class ApplicationBase extends FactoryBase {
         
         $addContent = "";
         $contents = file_get_contents($passwordFile);
+        $result = "";
         foreach (explode("\n", $contents) as $content) {
             $content2 = explode(";", $content);
             if (count($content2) < 3) {
                 continue;
             }
-            if ($content2[0] != $managerName && $content2[1] != $function) {
-                $addContent .= $content."\n";
+            if ($content2[0] == $managerName && $content2[1] == $function) {
+                continue;
             }
+            $addContent .= $content."\n";
         }
         
         $addContent .= $saveString;

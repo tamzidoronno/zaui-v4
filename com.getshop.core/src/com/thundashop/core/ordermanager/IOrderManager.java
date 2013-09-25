@@ -50,6 +50,14 @@ public interface IOrderManager {
     public void saveOrder(Order order) throws ErrorException;
     
     /**
+     * @param id
+     * @return
+     * @throws ErrorException 
+     */
+    @Administrator
+    public Order getOrderByincrementOrderId(Integer id) throws ErrorException;
+    
+    /**
      * If everything is ok, the price is the same as the order and the currency, then update the status.
      * @param password A predefined password needed to update the status.
      * @param orderId The id of the order to update

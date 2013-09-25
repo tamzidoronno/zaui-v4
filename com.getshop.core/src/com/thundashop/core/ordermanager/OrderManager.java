@@ -318,4 +318,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             saveOrderInternal(order);
         }
     }
+
+    @Override
+    public Order getOrderByincrementOrderId(Integer id) throws ErrorException {
+        for(Order order : orders.values()) {
+            if(order.incrementOrderId == id) {
+                return order;
+            }
+        }
+        throw new ErrorException(61);
+    }
 }

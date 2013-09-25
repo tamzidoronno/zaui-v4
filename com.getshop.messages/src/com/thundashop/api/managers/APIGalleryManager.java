@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import com.thundashop.core.common.JsonObject2;
 import com.thundashop.app.gallerymanager.data.ImageEntry;
 import java.util.List;
@@ -28,7 +29,7 @@ public class APIGalleryManager {
 
      public ImageEntry addImageToGallery(String galleryId, String imageId, String description, String title)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("galleryId",new Gson().toJson(galleryId));
           data.args.put("imageId",new Gson().toJson(imageId));
           data.args.put("description",new Gson().toJson(description));
@@ -50,7 +51,7 @@ public class APIGalleryManager {
 
      public String createImageGallery()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "createImageGallery";
           data.interfaceName = "core.gallerymanager.IGalleryManager";
           String result = transport.send(data);
@@ -68,7 +69,7 @@ public class APIGalleryManager {
 
      public void deleteImage(String entryId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("entryId",new Gson().toJson(entryId));
           data.method = "deleteImage";
           data.interfaceName = "core.gallerymanager.IGalleryManager";
@@ -84,7 +85,7 @@ public class APIGalleryManager {
 
      public List<ImageEntry> getAllImages(String id)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("id",new Gson().toJson(id));
           data.method = "getAllImages";
           data.interfaceName = "core.gallerymanager.IGalleryManager";
@@ -104,7 +105,7 @@ public class APIGalleryManager {
 
      public ImageEntry getEntry(String id)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("id",new Gson().toJson(id));
           data.method = "getEntry";
           data.interfaceName = "core.gallerymanager.IGalleryManager";
@@ -123,7 +124,7 @@ public class APIGalleryManager {
 
      public void saveEntry(ImageEntry entry)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("entry",new Gson().toJson(entry));
           data.method = "saveEntry";
           data.interfaceName = "core.gallerymanager.IGalleryManager";

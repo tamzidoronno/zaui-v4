@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import com.thundashop.core.common.JsonObject2;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class APIListManager {
 
      public Entry addEntry(String listId, Entry entry, String parentPageId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("listId",new Gson().toJson(listId));
           data.args.put("entry",new Gson().toJson(entry));
           data.args.put("parentPageId",new Gson().toJson(parentPageId));
@@ -54,7 +55,7 @@ public class APIListManager {
 
      public void clearList(String listId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("listId",new Gson().toJson(listId));
           data.method = "clearList";
           data.interfaceName = "core.listmanager.IListManager";
@@ -71,7 +72,7 @@ public class APIListManager {
 
      public void combineList(String toListId, String newListId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("toListId",new Gson().toJson(toListId));
           data.args.put("newListId",new Gson().toJson(newListId));
           data.method = "combineList";
@@ -86,7 +87,7 @@ public class APIListManager {
 
      public String createListId()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "createListId";
           data.interfaceName = "core.listmanager.IListManager";
           String result = transport.send(data);
@@ -104,7 +105,7 @@ public class APIListManager {
 
      public void deleteEntry(String id, String listId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("id",new Gson().toJson(id));
           data.args.put("listId",new Gson().toJson(listId));
           data.method = "deleteEntry";
@@ -120,7 +121,7 @@ public class APIListManager {
 
      public List<String> getCombinedLists(String listId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("listId",new Gson().toJson(listId));
           data.method = "getCombinedLists";
           data.interfaceName = "core.listmanager.IListManager";
@@ -139,7 +140,7 @@ public class APIListManager {
 
      public List<Entry> getList(String listId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("listId",new Gson().toJson(listId));
           data.method = "getList";
           data.interfaceName = "core.listmanager.IListManager";
@@ -158,7 +159,7 @@ public class APIListManager {
 
      public Entry getListEntry(String id)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("id",new Gson().toJson(id));
           data.method = "getListEntry";
           data.interfaceName = "core.listmanager.IListManager";
@@ -178,7 +179,7 @@ public class APIListManager {
 
      public List<String> getLists()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getLists";
           data.interfaceName = "core.listmanager.IListManager";
           String result = transport.send(data);
@@ -198,7 +199,7 @@ public class APIListManager {
 
      public Entry orderEntry(String id, String after, String parentId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("id",new Gson().toJson(id));
           data.args.put("after",new Gson().toJson(after));
           data.args.put("parentId",new Gson().toJson(parentId));
@@ -220,7 +221,7 @@ public class APIListManager {
 
      public void setEntries(String listId, ArrayList<Entry> entries)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("listId",new Gson().toJson(listId));
           data.args.put("entries",new Gson().toJson(entries));
           data.method = "setEntries";
@@ -237,7 +238,7 @@ public class APIListManager {
 
      public HashMap<String,String> translateEntries(List<String> entryIds)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("entryIds",new Gson().toJson(entryIds));
           data.method = "translateEntries";
           data.interfaceName = "core.listmanager.IListManager";
@@ -257,7 +258,7 @@ public class APIListManager {
 
      public void unCombineList(String fromListId, String toRemoveId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("fromListId",new Gson().toJson(fromListId));
           data.args.put("toRemoveId",new Gson().toJson(toRemoveId));
           data.method = "unCombineList";
@@ -273,7 +274,7 @@ public class APIListManager {
 
      public void updateEntry(Entry entry)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("entry",new Gson().toJson(entry));
           data.method = "updateEntry";
           data.interfaceName = "core.listmanager.IListManager";

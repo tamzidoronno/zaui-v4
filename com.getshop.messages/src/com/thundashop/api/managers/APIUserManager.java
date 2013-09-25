@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import com.thundashop.core.common.JsonObject2;
 import java.util.ArrayList;
 import com.thundashop.core.getshop.data.GetshopStore;
@@ -32,7 +33,7 @@ public class APIUserManager {
 
      public User createUser(User user)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("user",new Gson().toJson(user));
           data.method = "createUser";
           data.interfaceName = "core.usermanager.IUserManager";
@@ -53,7 +54,7 @@ public class APIUserManager {
 
      public void deleteUser(String userId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("userId",new Gson().toJson(userId));
           data.method = "deleteUser";
           data.interfaceName = "core.usermanager.IUserManager";
@@ -69,7 +70,7 @@ public class APIUserManager {
 
      public boolean doEmailExists(String email)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("email",new Gson().toJson(email));
           data.method = "doEmailExists";
           data.interfaceName = "core.usermanager.IUserManager";
@@ -89,7 +90,7 @@ public class APIUserManager {
 
      public List<User> findUsers(String searchCriteria)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("searchCriteria",new Gson().toJson(searchCriteria));
           data.method = "findUsers";
           data.interfaceName = "core.usermanager.IUserManager";
@@ -108,7 +109,7 @@ public class APIUserManager {
 
      public int getAdministratorCount()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getAdministratorCount";
           data.interfaceName = "core.usermanager.IUserManager";
           String result = transport.send(data);
@@ -128,7 +129,7 @@ public class APIUserManager {
 
      public List<Group> getAllGroups()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getAllGroups";
           data.interfaceName = "core.usermanager.IUserManager";
           String result = transport.send(data);
@@ -146,7 +147,7 @@ public class APIUserManager {
 
      public List<User> getAllUsers()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getAllUsers";
           data.interfaceName = "core.usermanager.IUserManager";
           String result = transport.send(data);
@@ -164,7 +165,7 @@ public class APIUserManager {
 
      public int getCustomersCount()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getCustomersCount";
           data.interfaceName = "core.usermanager.IUserManager";
           String result = transport.send(data);
@@ -182,7 +183,7 @@ public class APIUserManager {
 
      public int getEditorCount()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getEditorCount";
           data.interfaceName = "core.usermanager.IUserManager";
           String result = transport.send(data);
@@ -199,7 +200,7 @@ public class APIUserManager {
 
      public User getLoggedOnUser()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getLoggedOnUser";
           data.interfaceName = "core.usermanager.IUserManager";
           String result = transport.send(data);
@@ -221,7 +222,7 @@ public class APIUserManager {
 
      public List<GetshopStore> getStoresConnectedToMe()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getStoresConnectedToMe";
           data.interfaceName = "core.usermanager.IUserManager";
           String result = transport.send(data);
@@ -240,7 +241,7 @@ public class APIUserManager {
 
      public User getUserById(String id)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("id",new Gson().toJson(id));
           data.method = "getUserById";
           data.interfaceName = "core.usermanager.IUserManager";
@@ -260,7 +261,7 @@ public class APIUserManager {
 
      public List<User> getUserList(ArrayList<String> userIds)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("userIds",new Gson().toJson(userIds));
           data.method = "getUserList";
           data.interfaceName = "core.usermanager.IUserManager";
@@ -280,7 +281,7 @@ public class APIUserManager {
 
      public boolean isCaptain(String id)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("id",new Gson().toJson(id));
           data.method = "isCaptain";
           data.interfaceName = "core.usermanager.IUserManager";
@@ -299,7 +300,7 @@ public class APIUserManager {
 
      public boolean isLoggedIn()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "isLoggedIn";
           data.interfaceName = "core.usermanager.IUserManager";
           String result = transport.send(data);
@@ -319,7 +320,7 @@ public class APIUserManager {
 
      public User logOn(String username, String password)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("username",new Gson().toJson(username));
           data.args.put("password",new Gson().toJson(password));
           data.method = "logOn";
@@ -342,7 +343,7 @@ public class APIUserManager {
 
      public User logonUsingKey(String logonKey)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("logonKey",new Gson().toJson(logonKey));
           data.method = "logonUsingKey";
           data.interfaceName = "core.usermanager.IUserManager";
@@ -361,7 +362,7 @@ public class APIUserManager {
 
      public void logout()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "logout";
           data.interfaceName = "core.usermanager.IUserManager";
           String result = transport.send(data);
@@ -376,7 +377,7 @@ public class APIUserManager {
 
      public void removeGroup(String groupId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("groupId",new Gson().toJson(groupId));
           data.method = "removeGroup";
           data.interfaceName = "core.usermanager.IUserManager";
@@ -398,7 +399,7 @@ public class APIUserManager {
 
      public User requestAdminRight(String managerName, String managerFunction, String applicationInstanceId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("managerName",new Gson().toJson(managerName));
           data.args.put("managerFunction",new Gson().toJson(managerFunction));
           data.args.put("applicationInstanceId",new Gson().toJson(applicationInstanceId));
@@ -422,7 +423,7 @@ public class APIUserManager {
 
      public void resetPassword(Integer resetCode, String username, String newPassword)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("resetCode",new Gson().toJson(resetCode));
           data.args.put("username",new Gson().toJson(username));
           data.args.put("newPassword",new Gson().toJson(newPassword));
@@ -445,7 +446,7 @@ public class APIUserManager {
 
      public void saveGroup(Group group)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("group",new Gson().toJson(group));
           data.method = "saveGroup";
           data.interfaceName = "core.usermanager.IUserManager";
@@ -462,7 +463,7 @@ public class APIUserManager {
 
      public void saveUser(User user)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("user",new Gson().toJson(user));
           data.method = "saveUser";
           data.interfaceName = "core.usermanager.IUserManager";
@@ -480,7 +481,7 @@ public class APIUserManager {
 
      public void sendResetCode(String title, String text, String username)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("title",new Gson().toJson(title));
           data.args.put("text",new Gson().toJson(text));
           data.args.put("username",new Gson().toJson(username));
@@ -499,7 +500,7 @@ public class APIUserManager {
 
      public void updatePassword(String userId, String oldPassword, String newPassword)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("userId",new Gson().toJson(userId));
           data.args.put("oldPassword",new Gson().toJson(oldPassword));
           data.args.put("newPassword",new Gson().toJson(newPassword));

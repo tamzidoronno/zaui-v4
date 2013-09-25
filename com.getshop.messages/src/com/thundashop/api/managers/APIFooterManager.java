@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import com.thundashop.core.common.JsonObject2;
 import com.thundashop.app.footermanager.data.Configuration;
 
@@ -24,7 +25,7 @@ public class APIFooterManager {
 
      public Configuration getConfiguration()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getConfiguration";
           data.interfaceName = "app.footer.IFooterManager";
           String result = transport.send(data);
@@ -43,7 +44,7 @@ public class APIFooterManager {
 
      public Configuration setLayout(Integer numberOfColumns)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("numberOfColumns",new Gson().toJson(numberOfColumns));
           data.method = "setLayout";
           data.interfaceName = "app.footer.IFooterManager";
@@ -64,7 +65,7 @@ public class APIFooterManager {
 
      public Configuration setType(Integer column, Integer type)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("column",new Gson().toJson(column));
           data.args.put("type",new Gson().toJson(type));
           data.method = "setType";

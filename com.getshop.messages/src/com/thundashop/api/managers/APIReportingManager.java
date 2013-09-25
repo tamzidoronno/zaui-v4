@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import com.thundashop.core.common.JsonObject2;
 import com.thundashop.core.reportingmanager.data.OrderCreated;
 import com.thundashop.core.reportingmanager.data.LoggedOnUser;
@@ -35,7 +36,7 @@ public class APIReportingManager {
 
      public List<EventLog> getAllEventsFromSession(String startDate, String stopDate, String searchSessionId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("startDate",new Gson().toJson(startDate));
           data.args.put("stopDate",new Gson().toJson(stopDate));
           data.args.put("searchSessionId",new Gson().toJson(searchSessionId));
@@ -60,7 +61,7 @@ public class APIReportingManager {
 
      public List<UserConnected> getConnectedUsers(String startdate, String stopDate, ReportFilter filter)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("startdate",new Gson().toJson(startdate));
           data.args.put("stopDate",new Gson().toJson(stopDate));
           data.args.put("filter",new Gson().toJson(filter));
@@ -83,7 +84,7 @@ public class APIReportingManager {
 
      public List<OrderCreated> getOrdersCreated(String startDate, String stopDate)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("startDate",new Gson().toJson(startDate));
           data.args.put("stopDate",new Gson().toJson(stopDate));
           data.method = "getOrdersCreated";
@@ -105,7 +106,7 @@ public class APIReportingManager {
 
      public List<PageView> getPageViews(String startDate, String stopDate)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("startDate",new Gson().toJson(startDate));
           data.args.put("stopDate",new Gson().toJson(stopDate));
           data.method = "getPageViews";
@@ -127,7 +128,7 @@ public class APIReportingManager {
 
      public List<ProductViewed> getProductViewed(String startDate, String stopDate)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("startDate",new Gson().toJson(startDate));
           data.args.put("stopDate",new Gson().toJson(stopDate));
           data.method = "getProductViewed";
@@ -150,7 +151,7 @@ public class APIReportingManager {
 
      public List<Report> getReport(String startDate, String stopDate, int type)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("startDate",new Gson().toJson(startDate));
           data.args.put("stopDate",new Gson().toJson(stopDate));
           data.args.put("type",new Gson().toJson(type));
@@ -173,7 +174,7 @@ public class APIReportingManager {
 
      public List<LoggedOnUser> getUserLoggedOn(String startDate, String stopDate)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("startDate",new Gson().toJson(startDate));
           data.args.put("stopDate",new Gson().toJson(stopDate));
           data.method = "getUserLoggedOn";

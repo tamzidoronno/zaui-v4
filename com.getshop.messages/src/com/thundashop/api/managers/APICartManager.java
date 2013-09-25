@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import com.thundashop.core.common.JsonObject2;
 import com.thundashop.core.usermanager.data.Address;
 import java.util.List;
@@ -28,7 +29,7 @@ public class APICartManager {
 
      public Cart addProduct(String productId, int count, List<String> variations)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("productId",new Gson().toJson(productId));
           data.args.put("count",new Gson().toJson(count));
           data.args.put("variations",new Gson().toJson(variations));
@@ -47,7 +48,7 @@ public class APICartManager {
 
      public Double calculateTotalCost(Cart cart)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("cart",new Gson().toJson(cart));
           data.method = "calculateTotalCost";
           data.interfaceName = "core.cartmanager.ICartManager";
@@ -64,7 +65,7 @@ public class APICartManager {
 
      public void clear()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "clear";
           data.interfaceName = "core.cartmanager.ICartManager";
           String result = transport.send(data);
@@ -78,7 +79,7 @@ public class APICartManager {
 
      public Cart getCart()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getCart";
           data.interfaceName = "core.cartmanager.ICartManager";
           String result = transport.send(data);
@@ -98,7 +99,7 @@ public class APICartManager {
 
      public Double getCartTotalAmount()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getCartTotalAmount";
           data.interfaceName = "core.cartmanager.ICartManager";
           String result = transport.send(data);
@@ -115,7 +116,7 @@ public class APICartManager {
 
      public Double getShippingCost()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getShippingCost";
           data.interfaceName = "core.cartmanager.ICartManager";
           String result = transport.send(data);
@@ -133,7 +134,7 @@ public class APICartManager {
 
      public Double getShippingPriceBasis()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getShippingPriceBasis";
           data.interfaceName = "core.cartmanager.ICartManager";
           String result = transport.send(data);
@@ -152,7 +153,7 @@ public class APICartManager {
 
      public Cart removeProduct(String cartItemId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("cartItemId",new Gson().toJson(cartItemId));
           data.method = "removeProduct";
           data.interfaceName = "core.cartmanager.ICartManager";
@@ -169,7 +170,7 @@ public class APICartManager {
 
      public void setAddress(Address address)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("address",new Gson().toJson(address));
           data.method = "setAddress";
           data.interfaceName = "core.cartmanager.ICartManager";
@@ -183,7 +184,7 @@ public class APICartManager {
 
      public void setShippingCost(double shippingCost)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("shippingCost",new Gson().toJson(shippingCost));
           data.method = "setShippingCost";
           data.interfaceName = "core.cartmanager.ICartManager";
@@ -200,7 +201,7 @@ public class APICartManager {
 
      public Cart updateProductCount(String cartItemId, int count)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("cartItemId",new Gson().toJson(cartItemId));
           data.args.put("count",new Gson().toJson(count));
           data.method = "updateProductCount";

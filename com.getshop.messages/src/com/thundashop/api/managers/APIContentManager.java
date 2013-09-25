@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import com.thundashop.core.common.JsonObject2;
 import java.util.HashMap;
 
@@ -27,7 +28,7 @@ public class APIContentManager {
 
      public String createContent(String content)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("content",new Gson().toJson(content));
           data.method = "createContent";
           data.interfaceName = "app.content.IContentManager";
@@ -46,7 +47,7 @@ public class APIContentManager {
 
      public void deleteContent(String id)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("id",new Gson().toJson(id));
           data.method = "deleteContent";
           data.interfaceName = "app.content.IContentManager";
@@ -61,7 +62,7 @@ public class APIContentManager {
 
      public HashMap<String,String> getAllContent()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getAllContent";
           data.interfaceName = "app.content.IContentManager";
           String result = transport.send(data);
@@ -80,7 +81,7 @@ public class APIContentManager {
 
      public String getContent(String id)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("id",new Gson().toJson(id));
           data.method = "getContent";
           data.interfaceName = "app.content.IContentManager";
@@ -100,7 +101,7 @@ public class APIContentManager {
 
      public void saveContent(String id, String content)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("id",new Gson().toJson(id));
           data.args.put("content",new Gson().toJson(content));
           data.method = "saveContent";

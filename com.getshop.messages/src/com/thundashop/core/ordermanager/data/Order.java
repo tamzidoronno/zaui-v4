@@ -18,6 +18,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public String paymentTransactionId = "";
     public Shipping shipping;
     public String session;
+    public String trackingNumber = "";
     public long incrementOrderId = 0;
     
     public static class Status  {
@@ -26,6 +27,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         public static int PAYMENT_FAILED = 3;
         public static int COMPLETED = 4;
         public static int CANCELED = 5;
+        public static int SENT = 6;
     }
     
     public Date createdDate;
@@ -67,6 +69,9 @@ public class Order extends DataCommon implements Comparable<Order> {
     
     @Override
     public int compareTo(Order o) {
+        if(o.createdDate == null || createdDate == null) {
+            return 0;
+        }
         return createdDate.compareTo(o.createdDate);
     }
 } 

@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import com.thundashop.core.common.JsonObject2;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
@@ -23,7 +24,7 @@ public class APIStoreManager {
 
      public void connectStoreToPartner(String partner)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("partner",new Gson().toJson(partner));
           data.method = "connectStoreToPartner";
           data.interfaceName = "core.storemanager.IStoreManager";
@@ -42,7 +43,7 @@ public class APIStoreManager {
 
      public Store createStore(String hostname, String email, String password, boolean notify)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("hostname",new Gson().toJson(hostname));
           data.args.put("email",new Gson().toJson(email));
           data.args.put("password",new Gson().toJson(password));
@@ -67,7 +68,7 @@ public class APIStoreManager {
 
      public void delete()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "delete";
           data.interfaceName = "core.storemanager.IStoreManager";
           String result = transport.send(data);
@@ -84,7 +85,7 @@ public class APIStoreManager {
 
      public Store enableExtendedMode(boolean toggle, String password)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("toggle",new Gson().toJson(toggle));
           data.args.put("password",new Gson().toJson(password));
           data.method = "enableExtendedMode";
@@ -107,7 +108,7 @@ public class APIStoreManager {
 
      public Store enableSMSAccess(boolean toggle, String password)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("toggle",new Gson().toJson(toggle));
           data.args.put("password",new Gson().toJson(password));
           data.method = "enableSMSAccess";
@@ -127,7 +128,7 @@ public class APIStoreManager {
 
      public Store getMyStore()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getMyStore";
           data.interfaceName = "core.storemanager.IStoreManager";
           String result = transport.send(data);
@@ -145,7 +146,7 @@ public class APIStoreManager {
 
      public String getStoreId()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getStoreId";
           data.interfaceName = "core.storemanager.IStoreManager";
           String result = transport.send(data);
@@ -164,7 +165,7 @@ public class APIStoreManager {
 
      public Store initializeStore(String webAddress, String initSessionId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("webAddress",new Gson().toJson(webAddress));
           data.args.put("initSessionId",new Gson().toJson(initSessionId));
           data.method = "initializeStore";
@@ -184,7 +185,7 @@ public class APIStoreManager {
 
      public boolean isAddressTaken(String address)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("address",new Gson().toJson(address));
           data.method = "isAddressTaken";
           data.interfaceName = "core.storemanager.IStoreManager";
@@ -204,7 +205,7 @@ public class APIStoreManager {
 
      public Store removeDomainName(String domainName)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("domainName",new Gson().toJson(domainName));
           data.method = "removeDomainName";
           data.interfaceName = "core.storemanager.IStoreManager";
@@ -224,7 +225,7 @@ public class APIStoreManager {
 
      public Store saveStore(StoreConfiguration config)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("config",new Gson().toJson(config));
           data.method = "saveStore";
           data.interfaceName = "core.storemanager.IStoreManager";
@@ -245,7 +246,7 @@ public class APIStoreManager {
 
      public void setDeepFreeze(boolean mode, String password)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("mode",new Gson().toJson(mode));
           data.args.put("password",new Gson().toJson(password));
           data.method = "setDeepFreeze";
@@ -261,7 +262,7 @@ public class APIStoreManager {
 
      public Store setIntroductionRead()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "setIntroductionRead";
           data.interfaceName = "core.storemanager.IStoreManager";
           String result = transport.send(data);
@@ -280,7 +281,7 @@ public class APIStoreManager {
 
      public Store setPrimaryDomainName(String domainName)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("domainName",new Gson().toJson(domainName));
           data.method = "setPrimaryDomainName";
           data.interfaceName = "core.storemanager.IStoreManager";
@@ -301,7 +302,7 @@ public class APIStoreManager {
 
      public void setVIS(boolean toggle, String password)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("toggle",new Gson().toJson(toggle));
           data.args.put("password",new Gson().toJson(password));
           data.method = "setVIS";

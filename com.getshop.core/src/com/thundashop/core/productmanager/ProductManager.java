@@ -228,4 +228,15 @@ public class ProductManager extends AProductManager implements IProductManager {
         }
 
     }
+
+    @Override
+    public String getPageIdByName(String productName) {
+        for (Product product : products.values()) {
+            if (product.name != null && product.name.replaceAll(" ", "_").toLowerCase().equals(productName.toLowerCase())) {
+                return product.pageId;
+            }
+        }
+        
+        return "";
+    }
 }

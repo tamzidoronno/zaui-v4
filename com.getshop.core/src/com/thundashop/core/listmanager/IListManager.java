@@ -135,4 +135,6 @@ public interface IListManager {
      */
     @Administrator
     public void clearList(String listId) throws ErrorException;
+    
+    public String getPageIdByName(String name);
 }

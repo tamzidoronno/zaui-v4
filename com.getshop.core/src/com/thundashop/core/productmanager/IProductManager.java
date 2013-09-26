@@ -163,4 +163,9 @@ public interface IProductManager {
      * Get price for a product with variations
      */
     public Double getPrice(String productId, List<String> variations) throws ErrorException;
+    
+    /**
+     * Get page by name
+     */
+    public String getPageIdByName(String productName);
 }

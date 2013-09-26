@@ -33,6 +33,14 @@ $('.gray').live('focus', function() {
 }(jQuery));
 
 
+window.onpopstate = function(event) {
+    if (event.state) {
+        thundashop.Ajax.doJavascriptNavigation(event.state.url, null, true);
+    } else {
+        thundashop.Ajax.doJavascriptNavigation("?page=home", null, true);
+    }
+}
+
 $(function() {
     $('#skeleton a').live('click', function(event) {
         var comp = new RegExp(location.host);
@@ -375,16 +383,12 @@ $('.display_menu_application_button').live('click', function() {
 
 });
 
-window.onpopstate = function(event) {
-    if (event.state)
-        thundashop.Ajax.doJavascriptNavigation(event.state.url, null, true);
-}
-
 getshop_firstload = true;
 
 getUrl = function(hash) {
     if (!hash)
         return;
+    
     
     if (hash && hash.indexOf("?") === 0) {
         hash = "index.php"+hash;

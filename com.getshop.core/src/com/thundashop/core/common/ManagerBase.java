@@ -130,6 +130,14 @@ public class ManagerBase {
         }
     }
     
+    public String makeSeoUrl(String name) {
+        if (name == null) {
+            return "";
+        }
+        
+        return name.replace(" ", "_").replace("\\", "_").toLowerCase();
+    }
+    
     public void onEvent(String eventName, String eventReferance) throws ErrorException {}
     
     public void dataFromDatabase(DataRetreived data) {}

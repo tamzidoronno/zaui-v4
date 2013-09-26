@@ -555,10 +555,11 @@ public class ListManager extends ManagerBase implements IListManager {
 
     @Override
     public String getPageIdByName(String name) {
+        
         for (EntryList entryList : allEntries.values()) {
             for (Entry entry : entryList.entries) {
-//                System.out.println(name + " " + entry.name);
-                if (entry.name != null && entry.name.replace(" ", "_").toLowerCase().equals(name)) {
+                String entryName = makeSeoUrl(entry.name);
+                if (entryName.equals(name)) {
                     return entry.pageId;
                 }
             }

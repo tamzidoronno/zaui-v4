@@ -15,7 +15,7 @@ $address = "http://" . $_SERVER['SERVER_NAME'];
 
 foreach ($allProducts as $product) {
     echo "<url>\n";
-    echo "<loc>" . $address . "/?page=" . $product->pageId . "</loc>\n";
+    echo "<loc>" . $address .  \GetShopHelper::makeSeoUrl($product->name)."</loc>\n";
     echo "</url>\n";
 }
 
@@ -27,7 +27,7 @@ foreach ($lists as $list) {
                 continue;
             }
             echo "<url>\n";
-            echo "<loc>" . $address . "/?page=" . $entry->pageId . "</loc>\n";
+            echo "<loc>" . $address . GetShopHelper::makeSeoUrl($entry->name) . "</loc>\n";
             echo "</url>\n";
 
         }

@@ -574,9 +574,10 @@ $('.tabset .tab').live('click', function() {
 });
 
 $(function() {
-    $(document).on('click', '#getshop_logout', function() {
+    $(document).on('mousedown', '#getshop_logout', function() {
         var event = thundashop.Ajax.createEvent(null, 'logout', $(this), {});
         thundashop.Ajax.postSynchron(event);
+        window.location = "/";
     });
 });
 

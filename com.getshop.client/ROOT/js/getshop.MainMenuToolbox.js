@@ -95,7 +95,7 @@ $(document).ready(function() {
                 icon: "/skin/default/images/settings.png",
                 title: __f("Store settings / more applications available here"),
                 click: function() {
-                    window.location.hash = 'page=settings';
+                    navigate('?page=settings');
                 },
                 extraArgs: {}
             },
@@ -103,7 +103,7 @@ $(document).ready(function() {
                 icon: "/skin/default/images/domain-names.png",
                 title: __f("Setup your own domain"),
                 click: function() {
-                    window.location.hash = 'page=domain';
+                    navigate('?page=domain');
                 },
                 extraArgs: {}
             },

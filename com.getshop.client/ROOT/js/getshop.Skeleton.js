@@ -43,7 +43,7 @@ thundashop.Skeleton = {
         }
         var event = thundashop.Ajax.createEvent('ApplicationManager', 'addApplicationDirect', $(document), data);
         var id = thundashop.Ajax.postSynchron(event);
-        window.location.hash = '?page=settings&applicationId=' + id;
+        navigate('?page=settings&applicationId=' + id);
     },
     
     stepHelpPrev : function() {
@@ -103,7 +103,7 @@ thundashop.Skeleton = {
     deleteApplication : function(id) {
         var event = thundashop.Ajax.createEvent('ApplicationManager', 'deleteApplication', $(this), { appId : id });
         thundashop.Ajax.post(event, function() {
-            window.location.hash = '?page=settings&applicationId=aisdf29-asdf712-asdf23451-asdf-asdfasfd-asdf23-54-das-12';
+            navigate('?page=settings&applicationId=aisdf29-asdf712-asdf23451-asdf-asdfasfd-asdf23-54-das-12');
         }, null, true);
     }
 }

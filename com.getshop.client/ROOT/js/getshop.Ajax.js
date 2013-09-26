@@ -205,7 +205,7 @@ thundashop.Ajax = {
             success: function(response) {
                 thundashop.Ajax.updateFromResponse(response);
                 PubSub.publish('navigation_complete', variables);
-                if (typeof(callback) !== "undefined" && typeof(callback) !== "boolean") {
+                if (typeof(callback) !== "undefined" && typeof(callback) !== "boolean" && typeof(callback) == "function") {
                     callback();
                 }
             },

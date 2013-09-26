@@ -254,7 +254,7 @@ public class GeneratePhpApiNew {
         returnClass = returnClass.replace("[]", "");
 
         content += "          JsonObject2 data = new JsonObject2();\r\n";
-        content += "          data.args = new HashMap();\r\n";
+        content += "          data.args = new LinkedHashMap();\r\n";
         for (String method : obj) {
             content += "          data.args.put(\"" + method + "\",new Gson().toJson(" + method + "));\n";
         }
@@ -959,6 +959,7 @@ public class GeneratePhpApiNew {
         resultHeader += "import com.google.gson.reflect.TypeToken;\n";
         resultHeader += "import java.lang.reflect.Type;\n";
         resultHeader += "import java.util.HashMap;\n";
+        resultHeader += "import java.util.LinkedHashMap;\n";
 
         resultHeader += "import com.thundashop.core.common.JsonObject2;\n";
         for (String importName : allImportClasses.keySet()) {

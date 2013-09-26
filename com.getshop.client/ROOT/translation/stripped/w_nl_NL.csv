@@ -1,25 +1,3 @@
-###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
-I agree to the terms and conditions;-;
-Invalid email address;-;
-Password missmatch;-;
-Please select a payment method.;-;
-Registration details;-;
-The email already exists, please log on to continue.;-;
-The passwords does not match.;-;
-Use a different email;-;
-read;-;
-
-
-###### framework ######
-Continue;-;
-Cookies are being stored;-;
-Sorry;-;
-Terms and Conditions;-;
-Thank you for your order.;-;
-To be able to serve you we need to store a tiny amount of data about your browser. An identification id is being generated and added to your web browser. This allows us to track you for a two hours periode while you are navigating this site. This data is anonymous and are only being used to identify your web browser and not you as a person.;-;
-login;-;
-
-
 ###### 2ebd7c69_eba3_4b7e_85c6_0e0bd274aad0 (SedoxCarList) ######
 0-100 km/h;-;
 Original (hp);-;
@@ -31,26 +9,6 @@ Stage 2 (nm):;-;
 Stage 3 (hp):;-;
 Stage 3 (nm):;-;
 Top speed;-;
-
-
-###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 (Sisow) ######
-By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;
-Download ebill;-;
-Payment successfully completed;-;
-Thank you for ordering with Sisow ebill;-;
-Thank you, you will now be redirected to the payment service;-;
-What email address do you want the ebill to be sent to?;-;
-Your order has been canceled due to incorrect payment information, please try again.;-;
-Your order has now been completed and is waiting to be shipped.;-;
-Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;
-
-
-###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
-All fields are required.;-;
-I am sorry, but all fields are required before sending a message.;-;
-Message;-;
-Message from a customer;-;
-The email address is invalid.;-;
 
 
 ###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
@@ -67,9 +25,5 @@ change;-;
 course;-;
 org;-;
 orgnummer;-;
-
-
-###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######
-Payment information;-;
 
 

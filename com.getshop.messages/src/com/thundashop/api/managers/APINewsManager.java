@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import com.thundashop.core.common.JsonObject2;
 import java.util.List;
 import com.thundashop.app.newsmanager.data.NewsEntry;
@@ -27,7 +28,7 @@ public class APINewsManager {
 
      public String addNews(String news)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("news",new Gson().toJson(news));
           data.method = "addNews";
           data.interfaceName = "app.news.INewsManager";
@@ -48,7 +49,7 @@ public class APINewsManager {
 
      public MailSubscription addSubscriber(String email)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("email",new Gson().toJson(email));
           data.method = "addSubscriber";
           data.interfaceName = "app.news.INewsManager";
@@ -67,7 +68,7 @@ public class APINewsManager {
 
      public void deleteNews(String id)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("id",new Gson().toJson(id));
           data.method = "deleteNews";
           data.interfaceName = "app.news.INewsManager";
@@ -82,7 +83,7 @@ public class APINewsManager {
 
      public List<NewsEntry> getAllNews()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getAllNews";
           data.interfaceName = "app.news.INewsManager";
           String result = transport.send(data);
@@ -100,7 +101,7 @@ public class APINewsManager {
 
      public List<MailSubscription> getAllSubscribers()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getAllSubscribers";
           data.interfaceName = "app.news.INewsManager";
           String result = transport.send(data);
@@ -119,7 +120,7 @@ public class APINewsManager {
 
      public void removeSubscriber(String subscriberId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("subscriberId",new Gson().toJson(subscriberId));
           data.method = "removeSubscriber";
           data.interfaceName = "app.news.INewsManager";

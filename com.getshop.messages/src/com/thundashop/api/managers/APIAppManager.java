@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import com.thundashop.core.common.JsonObject2;
 import java.util.Map;
 import java.util.List;
@@ -29,7 +30,7 @@ public class APIAppManager {
 
      public ApplicationSettings createApplication(String appName)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("appName",new Gson().toJson(appName));
           data.method = "createApplication";
           data.interfaceName = "core.appmanager.IAppManager";
@@ -48,7 +49,7 @@ public class APIAppManager {
 
      public void deleteApplication(String id)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("id",new Gson().toJson(id));
           data.method = "deleteApplication";
           data.interfaceName = "core.appmanager.IAppManager";
@@ -63,7 +64,7 @@ public class APIAppManager {
 
      public Map<String,ApplicationSubscription> getAllApplicationSubscriptions(boolean includeAppSettings)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("includeAppSettings",new Gson().toJson(includeAppSettings));
           data.method = "getAllApplicationSubscriptions";
           data.interfaceName = "core.appmanager.IAppManager";
@@ -81,7 +82,7 @@ public class APIAppManager {
 
      public AvailableApplications getAllApplications()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getAllApplications";
           data.interfaceName = "core.appmanager.IAppManager";
           String result = transport.send(data);
@@ -100,7 +101,7 @@ public class APIAppManager {
 
      public ApplicationSettings getApplication(String id)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("id",new Gson().toJson(id));
           data.method = "getApplication";
           data.interfaceName = "core.appmanager.IAppManager";
@@ -120,7 +121,7 @@ public class APIAppManager {
 
      public List<ApplicationSynchronization> getSyncApplications()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getSyncApplications";
           data.interfaceName = "core.appmanager.IAppManager";
           String result = transport.send(data);
@@ -138,7 +139,7 @@ public class APIAppManager {
 
      public List<ApplicationSubscription> getUnpayedSubscription()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getUnpayedSubscription";
           data.interfaceName = "core.appmanager.IAppManager";
           String result = transport.send(data);
@@ -156,7 +157,7 @@ public class APIAppManager {
 
      public boolean isSyncToolConnected()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "isSyncToolConnected";
           data.interfaceName = "core.appmanager.IAppManager";
           String result = transport.send(data);
@@ -173,7 +174,7 @@ public class APIAppManager {
 
      public void saveApplication(ApplicationSettings settings)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("settings",new Gson().toJson(settings));
           data.method = "saveApplication";
           data.interfaceName = "core.appmanager.IAppManager";
@@ -188,7 +189,7 @@ public class APIAppManager {
 
      public void setSyncApplication(String id)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("id",new Gson().toJson(id));
           data.method = "setSyncApplication";
           data.interfaceName = "core.appmanager.IAppManager";

@@ -1,3 +1,228 @@
+###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
+No image added for this product;-;
+Please select a shipment method.;-;
+cart;-;
+
+
+###### fb076580_c7df_471c_b6b7_9540e4212441 (OpenSRS) ######
+* All fields need to be filled in before you proceed.;-;
+* When payment has been received, it will automatically register your webshop to this domain name.;-;
+* You will receive an email notification when your webshop is registered to this address;-;
+Accept your domain name.;-;
+Additional domain names;-;
+Check availability;-;
+Contact information;-;
+Country;-;
+Domain name;-;
+Enter Domain Name;-;
+Find your desired domain name.;-;
+First name;-;
+It is extremly easy to transfer your domain name. All you have to to do is enter the domain name in the address under.;-;
+Last name;-;
+Point your domain name to the following ip address:;-;
+Primary domain name;-;
+Register domain;-;
+Save your settings;-;
+Secondary domain name;-;
+State;-;
+Use paypal for as your preferred payment solution;-;
+enter_domain;-;
+is available.;-;
+is not a valid domain name.;-;
+is not available, please try another one.;-;
+
+
+###### df435931_9364_4b6a_b4b2_951c90cc0d70 (Login) ######
+Reset code is;-;
+Your reset code;-;
+users;-;
+
+
+###### ba6f5e74_87c7_4825_9606_f2d3c93d292f (Users) ######
+Administrators;-;
+All users;-;
+Create new group;-;
+Create user;-;
+Edit user;-;
+No users found;-;
+Note: minumum 3 chars before search start;-;
+User/Customers overview;-;
+You can filter your customers by entering som text in the textbox;-;
+You currently have the following users added to your system;-;
+
+
+###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
+Default price;-;
+Free shipping if total price is above, if set empty this feature is disabled;-;
+If the total amount in the basket is outside of the range above, use this price.;-;
+Item price;-;
+Price each product (default: 0 );-;
+Start up price;-;
+Startup cost (default: 0 );-;
+this application gives you the ability to setup fixed shipping price;-;
+
+
+###### 565ea7bd_c56b_41fe_b421_18f873c63a8f ######
+Allows your customers to specify that they will pay on delivery.;-;
+Pay on delivery;-;
+
+
+###### 6c245631_effb_4fe2_abf7_f44c57cb6c5b (Account) ######
+Admin functions;-;
+Administrator;-;
+Customer;-;
+Delete user;-;
+Editor;-;
+Expiration date;-;
+User level;-;
+VIP user - $0;-;
+Your personal information has been updated.;-;
+
+
+###### d02f8b7a_7395_455d_b754_888d7d701db8 (Dibs) ######
+Have a look at http://www.dibspayment.com/ for more information.;-;
+The Merchant-ID is provided by Dibs, please contact us for more information.;-;
+dibs payment services allows you to start charging with visa / mastercard / and other card vendors. its extremly easy to use. prices for using this application is provided by dibs, and you will be contacted by dibs when adding this application.;-;
+
+
+###### ee96fe89_e09d_4f7b_921a_3272462e9b7e (Airgram) ######
+Airgram allows you to push important notifications to your phone, use this application to push notifications to your cell phone when something important is happening, for example if someone is starting to chat with you, you will be instantly notified and can responde accordingly. Just download airgram from google play or app store and start using it.;-;
+
+
+###### d54f339d_e1b7_412f_bc34_b1bd95036d83 (Footer) ######
+Column;-;
+Footer;-;
+Number of columns;-;
+This footer application contains the footer information for your webshop, all menu entries are sorted.;-;
+
+
+###### 626ff5c4_60d4_4faf_ac2e_d0f21ffa9e87 (Search) ######
+No products where found.;-;
+Search;-;
+
+
+###### eb03c660_186a_11e3_8ffd_0800200c9a66 (MailManager) ######
+All text that you enter in the box below will be sent out as order confirmation emails. You can write anything you wish here, and enter variables. See bottom of page for variable defenitions.;-;
+Click to change subject;-;
+Customer address;-;
+Customer city;-;
+Customer email;-;
+Customer name;-;
+Customer phone;-;
+Different variables that is available;-;
+MailManager;-;
+Order email;-;
+Order lines;-;
+OrderId;-;
+Subject;-;
+Use this application to setup the emails sent from your webshop, like order confirmation etc.;-;
+customer postcode;-;
+
+
+###### a109b0f1_97c3_4292_a46f_4c6894a9841c (PartnerApplicationSelection) ######
+Activate / deactivate the applications you would like your customers to have access to.;-;
+List has been saved;-;
+
+
+###### ee1f3649_cfd8_41d5_aa5b_682216f376b6 (Translation) ######
+Click on the chat icon in the top menu and start translating.;-;
+Not satisfied with the text "hardcoded" on your page?<br>Add this application and tune the text yourself.;-;
+Save translation;-;
+Saved;-;
+The translation has been saved;-;
+To translate all visible text for your users, translate the entries below, and hit the save translation button.;-;
+Translation;-;
+
+
+###### 1051b4cf_6e9f_475d_aa12_fc83a89d2fd4 (TopMenu) ######
+A topmenu enables you to display top menu entries;-;
+Add new;-;
+Administrators only;-;
+Editors and adminstrators only;-;
+Everyone;-;
+Everyone will be able to access and see this menu entry.;-;
+Hardlinks are a way for you to manually specify where to go when the button is clicked.;-;
+Only logged on administrators or editors will be able to see this menu entry.;-;
+Only logged on administrators will be able to see this menu entry.;-;
+Open for everyone;-;
+Restrict to administrators;-;
+Restrict to administrators and editors;-;
+This option enables the posibility to restrict access to you menu entries to a given group of users.;-;
+Top menu;-;
+Where you would you like to direct the user:;-;
+You can choose between three types of user levels.;-;
+[ Add new ];-;
+
+
+###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
+Attendees;-;
+Booking configuration;-;
+Confirm entry;-;
+Create event;-;
+Create this application and start showing events on given dates.;-;
+Edit event;-;
+Event calendar;-;
+If this function is enabled, it will show filter left for the calendar.;-;
+Keep your customers up to date of what events you are hosting with this application;-;
+No locations available;-;
+Reminder sent by sms;-;
+Send reminder;-;
+Show location filter left for calendar;-;
+add_event;-;
+edit;-;
+event_desc;-;
+event_name;-;
+free_positions;-;
+max_atandees;-;
+no_activites;-;
+send_reminder;-;
+start;-;
+start_time;-;
+stop;-;
+
+
+###### 8402f800_1e7e_43b5_b3f7_6c7cabbf8942 (ProductList) ######
+Add to list;-;
+All products available;-;
+Create new;-;
+Create product;-;
+Edit product list;-;
+My product list;-;
+Product List;-;
+Products already added to your list;-;
+Remove application;-;
+Remove from list;-;
+Save product list;-;
+This application is added to the following pages;-;
+Un-combine product list;-;
+You do not have any lists combined with this list yet...;-;
+this applications lists products for you webshop, in the body of every page (except for system pages). from this application you can also add products. combine this application with a leftmenu, and/or a category displayer to create a powerful webshop.;-;
+
+
+###### 0cf21aa0_5a46_41c0_b5a6_fd52fb90216f (GoogleAnalytics) ######
+Google Analytics;-;
+Google analytics code;-;
+Google analytics is by far the best reporting tool for webadministrator, by adding this application you will enable your googla analytics account to communicate with your webshop.;-;
+This is a code that you need to get from your google analytics account. If you need help to get it we would be more then happy to help you out, just contact our customer support by email and you will have an answer within an hour;-;
+
+
+###### c7736539_4523_4691_8453_a6aa1e784fc1 (PayPal) ######
+Lets you easily connect to paypal, and give your customers option to pay using paypal.;-;
+Paypal address;-;
+Sandbox;-;
+The paypal account has not been configured correctly. Go to settings and configure it properly;-;
+What address are you using for the test enviroment to paypal?;-;
+Would you like to use paypal in sandbox mode?;-;
+
+
+###### e9864616_96d6_485f_8cb0_e17cdffbcfec (WebShopList) ######
+Chrome?;-;
+Last logged on;-;
+UA;-;
+Web address;-;
+You have not yet created any web shops, create one and they will be listed here.;-;
+
+
 ###### 04259325_abfa_4311_ab81_b89c60893ce1 (Reporting) ######
 A single users browsing activity.;-;
 Accessed when;-;
@@ -43,113 +268,7 @@ unique visitors found in total.;-;
 when;-;
 
 
-###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
-No image added for this product;-;
-Please select a shipment method.;-;
-cart;-;
-
-
-###### 2afb045b_fa01_4398_8582_33f212bb8db8 (Chat) ######
-Answering your customers questions, means more sale. By adding this excellent chat application, you can answer on request at any time from you mobile devices or your stationary computer.;-;
-Chat;-;
-Please select someone to chat with at the right side;-;
-
-
-###### fb076580_c7df_471c_b6b7_9540e4212441 (OpenSRS) ######
-* All fields need to be filled in before you proceed.;-;
-* When payment has been received, it will automatically register your webshop to this domain name.;-;
-* You will receive an email notification when your webshop is registered to this address;-;
-Accept your domain name.;-;
-Additional domain names;-;
-Check availability;-;
-Contact information;-;
-Country;-;
-Domain name;-;
-Enter Domain Name;-;
-Find your desired domain name.;-;
-First name;-;
-It is extremly easy to transfer your domain name. All you have to to do is enter the domain name in the address under.;-;
-Last name;-;
-Point your domain name to the following ip address:;-;
-Primary domain name;-;
-Register domain;-;
-Save your settings;-;
-Secondary domain name;-;
-State;-;
-Use paypal for as your preferred payment solution;-;
-enter_domain;-;
-is available.;-;
-is not a valid domain name.;-;
-is not available, please try another one.;-;
-
-
-###### e2554f70_ecdb_47a6_ba37_79497ea65986 (CreateStore) ######
-Create shop;-;
-The address is already taken or invalid.;-;
-Warning. you are not connected as a partner yet, please contact getshop support!;-;
-
-
-###### df435931_9364_4b6a_b4b2_951c90cc0d70 (Login) ######
-Reset code is;-;
-Your reset code;-;
-users;-;
-
-
-###### 00d8f5ce_ed17_4098_8925_5697f6159f66 (LeftMenu) ######
-Add Menu entry;-;
-Add sub entry;-;
-Enter an address to link this to;-;
-Get started building yourself a left / right menu, you can do it by adding this application!<br><br>This menu support subentries and hardlinking, and for each entry a page is created where you can add products / other applications.;-;
-Hardlink;-;
-Hardlink configuration for menu entry;-;
-Left Menu;-;
-Menu hardlink for;-;
-Remove icon;-;
-Set as homepage;-;
-Set icon;-;
-Subentry name;-;
-This entry is currently hardlinked to;-;
-
-
-###### 2ebd7c69_eba3_4b7e_85c6_0e0bd274aad0 (SedoxCarList) ######
-Just add it;-;
-
-
-###### ba6f5e74_87c7_4825_9606_f2d3c93d292f (Users) ######
-Administrators;-;
-All users;-;
-Create new group;-;
-Create user;-;
-Edit user;-;
-No users found;-;
-Note: minumum 3 chars before search start;-;
-User/Customers overview;-;
-You can filter your customers by entering som text in the textbox;-;
-You currently have the following users added to your system;-;
-
-
-###### 32c15c30_d665_11e2_8b8b_0800200c9a66 (RealEstate) ######
-Need to display your realestates? well, here is the application that allows you to do that, simply add the application to your page and start editing your realestate;-;
-Real estate;-;
-
-
-###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
-Default price;-;
-Free shipping if total price is above, if set empty this feature is disabled;-;
-If the total amount in the basket is outside of the range above, use this price.;-;
-Item price;-;
-Price each product (default: 0 );-;
-Start up price;-;
-Startup cost (default: 0 );-;
-this application gives you the ability to setup fixed shipping price;-;
-
-
-###### 565ea7bd_c56b_41fe_b421_18f873c63a8f (PayOnDelivery) ######
-Allows your customers to specify that they will pay on delivery.;-;
-Pay on delivery;-;
-
-
-###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 (Sisow) ######
+###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 ######
 Activate this option if you wish to provide your customer with Fjincadeau payment;-;
 Activate this option if you wish to provide your customer with Mister Cash payment;-;
 Activate this option if you wish to provide your customer with Podium payment;-;
@@ -174,9 +293,41 @@ Your merchant key or id is incorrect, please recheck it;-;
 Your merchant key, this id is something that sisow is providing you.;-;
 
 
-###### 6e415852_c023_4ffe_a49f_990a521841cf (TermsAndConditions) ######
-Allows you to create a terms and condition page which has to be accepted by your customers before ordering.;-;
-Enter the terms and condition text in the field below.;-;
+###### 2afb045b_fa01_4398_8582_33f212bb8db8 (Chat) ######
+Answering your customers questions, means more sale. By adding this excellent chat application, you can answer on request at any time from you mobile devices or your stationary computer.;-;
+Chat;-;
+Please select someone to chat with at the right side;-;
+
+
+###### e2554f70_ecdb_47a6_ba37_79497ea65986 (CreateStore) ######
+Create shop;-;
+The address is already taken or invalid.;-;
+Warning. you are not connected as a partner yet, please contact getshop support!;-;
+
+
+###### 00d8f5ce_ed17_4098_8925_5697f6159f66 (LeftMenu) ######
+Add Menu entry;-;
+Add sub entry;-;
+Enter an address to link this to;-;
+Get started building yourself a left / right menu, you can do it by adding this application!<br><br>This menu support subentries and hardlinking, and for each entry a page is created where you can add products / other applications.;-;
+Hardlink;-;
+Hardlink configuration for menu entry;-;
+Left Menu;-;
+Menu hardlink for;-;
+Remove icon;-;
+Set as homepage;-;
+Set icon;-;
+Subentry name;-;
+This entry is currently hardlinked to;-;
+
+
+###### 2ebd7c69_eba3_4b7e_85c6_0e0bd274aad0 (SedoxCarList) ######
+Just add it;-;
+
+
+###### 32c15c30_d665_11e2_8b8b_0800200c9a66 (RealEstate) ######
+Need to display your realestates? well, here is the application that allows you to do that, simply add the application to your page and start editing your realestate;-;
+Real estate;-;
 
 
 ###### 974beda7_eb6e_4474_b991_5dbc9d24db8e (Logo) ######
@@ -193,24 +344,6 @@ Updating;-;
 fraktguiden is a norwegian application for keeping track of norwegian shipment prices, shipment tracking etc.;-;
 
 
-###### 6c245631_effb_4fe2_abf7_f44c57cb6c5b (Account) ######
-Admin functions;-;
-Administrator;-;
-Customer;-;
-Delete user;-;
-Editor;-;
-Expiration date;-;
-User level;-;
-VIP user - $0;-;
-Your personal information has been updated.;-;
-
-
-###### d02f8b7a_7395_455d_b754_888d7d701db8 (Dibs) ######
-Have a look at http://www.dibspayment.com/ for more information.;-;
-The Merchant-ID is provided by Dibs, please contact us for more information.;-;
-dibs payment services allows you to start charging with visa / mastercard / and other card vendors. its extremly easy to use. prices for using this application is provided by dibs, and you will be contacted by dibs when adding this application.;-;
-
-
 ###### bf35979f_6965_4fec_9cc4_c42afd3efdd7 (MainMenu) ######
 Add application;-;
 Application management;-;
@@ -219,6 +352,11 @@ Page Settings;-;
 Select page layout;-;
 Select your theme;-;
 Sorry to hear that, Are you sure that you want to delete your store?;-;
+
+
+###### 6e415852_c023_4ffe_a49f_990a521841cf ######
+Allows you to create a terms and condition page which has to be accepted by your customers before ordering.;-;
+Enter the terms and condition text in the field below.;-;
 
 
 ###### e9d04f19_6eaa_4a17_9b7b_aa387dbaed92 (CategoryLister) ######
@@ -258,22 +396,6 @@ Warn users that cookies are being stored from this site?;-;
 You do not want to display the cart.. sure enable this then.;-;
 Your settings have been saved.;-;
 postal;-;
-
-
-###### 626ff5c4_60d4_4faf_ac2e_d0f21ffa9e87 (Search) ######
-No products where found.;-;
-Search;-;
-
-
-###### d54f339d_e1b7_412f_bc34_b1bd95036d83 (Footer) ######
-Column;-;
-Footer;-;
-Number of columns;-;
-This footer application contains the footer information for your webshop, all menu entries are sorted.;-;
-
-
-###### ee96fe89_e09d_4f7b_921a_3272462e9b7e (Airgram) ######
-Airgram allows you to push important notifications to your phone, use this application to push notifications to your cell phone when something important is happening, for example if someone is starting to chat with you, you will be instantly notified and can responde accordingly. Just download airgram from google play or app store and start using it.;-;
 
 
 ###### framework ######
@@ -385,29 +507,6 @@ this is restricted to owner only;-;
 title;-;
 
 
-###### a109b0f1_97c3_4292_a46f_4c6894a9841c (PartnerApplicationSelection) ######
-Activate / deactivate the applications you would like your customers to have access to.;-;
-List has been saved;-;
-
-
-###### eb03c660_186a_11e3_8ffd_0800200c9a66 (MailManager) ######
-All text that you enter in the box below will be sent out as order confirmation emails. You can write anything you wish here, and enter variables. See bottom of page for variable defenitions.;-;
-Click to change subject;-;
-Customer address;-;
-Customer city;-;
-Customer email;-;
-Customer name;-;
-Customer phone;-;
-Different variables that is available;-;
-MailManager;-;
-Order email;-;
-Order lines;-;
-OrderId;-;
-Subject;-;
-Use this application to setup the emails sent from your webshop, like order confirmation etc.;-;
-customer postcode;-;
-
-
 ###### ba885f72_f571_4a2e_8770_e91cbb16b4ad (Facebook) ######
 Tightly integrates facebook into your webshop, give users options to comment product, like products, share discounts, etc;-;
 appid;-;
@@ -416,16 +515,6 @@ like_button;-;
 like_button_desc;-;
 profile_url;-;
 profile_url_desc;-;
-
-
-###### ee1f3649_cfd8_41d5_aa5b_682216f376b6 (Translation) ######
-Click on the chat icon in the top menu and start translating.;-;
-Not satisfied with the text "hardcoded" on your page?<br>Add this application and tune the text yourself.;-;
-Save translation;-;
-Saved;-;
-The translation has been saved;-;
-To translate all visible text for your users, translate the entries below, and hit the save translation button.;-;
-Translation;-;
 
 
 ###### a93d64e4_b7fa_4d55_a804_ea664b037e72 (StockControl) ######
@@ -476,59 +565,6 @@ Show company field;-;
 Your message has been sent!;-;
 
 
-###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######
-Current status;-;
-Payment application;-;
-Transaction id;-;
-
-
-###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
-Attendees;-;
-Booking configuration;-;
-Confirm entry;-;
-Create event;-;
-Create this application and start showing events on given dates.;-;
-Edit event;-;
-Event calendar;-;
-If this function is enabled, it will show filter left for the calendar.;-;
-Keep your customers up to date of what events you are hosting with this application;-;
-No locations available;-;
-Reminder sent by sms;-;
-Send reminder;-;
-Show location filter left for calendar;-;
-add_event;-;
-edit;-;
-event_desc;-;
-event_name;-;
-free_positions;-;
-max_atandees;-;
-no_activites;-;
-send_reminder;-;
-start;-;
-start_time;-;
-stop;-;
-
-
-###### 1051b4cf_6e9f_475d_aa12_fc83a89d2fd4 (TopMenu) ######
-A topmenu enables you to display top menu entries;-;
-Add new;-;
-Administrators only;-;
-Editors and adminstrators only;-;
-Everyone;-;
-Everyone will be able to access and see this menu entry.;-;
-Hardlinks are a way for you to manually specify where to go when the button is clicked.;-;
-Only logged on administrators or editors will be able to see this menu entry.;-;
-Only logged on administrators will be able to see this menu entry.;-;
-Open for everyone;-;
-Restrict to administrators;-;
-Restrict to administrators and editors;-;
-This option enables the posibility to restrict access to you menu entries to a given group of users.;-;
-Top menu;-;
-Where you would you like to direct the user:;-;
-You can choose between three types of user levels.;-;
-[ Add new ];-;
-
-
 ###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
 Allow guests to add events.;-;
 Automatic location;-;
@@ -559,6 +595,12 @@ What should the text message contain?;-;
 give your customers ability to book into your events or appointments;-;
 
 
+###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######
+Current status;-;
+Payment application;-;
+Transaction id;-;
+
+
 ###### e72f97ad_aa1f_4e67_bcfd_e64607f05f93 (Gallery) ######
 A description to the image;-;
 Delete this image;-;
@@ -567,31 +609,6 @@ Start adding pictures to your webshop, create this application and start uploadi
 This gallery gives you the ability to display images into a gallery, and even connect the images to products, categorise them by combining a category displayer, or by using a left menu.;-;
 Title for the image;-;
 Uplaod image;-;
-
-
-###### 8402f800_1e7e_43b5_b3f7_6c7cabbf8942 (ProductList) ######
-Add to list;-;
-All products available;-;
-Create new;-;
-Create product;-;
-Edit product list;-;
-My product list;-;
-Product List;-;
-Products already added to your list;-;
-Remove application;-;
-Remove from list;-;
-Save product list;-;
-This application is added to the following pages;-;
-Un-combine product list;-;
-You do not have any lists combined with this list yet...;-;
-this applications lists products for you webshop, in the body of every page (except for system pages). from this application you can also add products. combine this application with a leftmenu, and/or a category displayer to create a powerful webshop.;-;
-
-
-###### 0cf21aa0_5a46_41c0_b5a6_fd52fb90216f (GoogleAnalytics) ######
-Google Analytics;-;
-Google analytics code;-;
-Google analytics is by far the best reporting tool for webadministrator, by adding this application you will enable your googla analytics account to communicate with your webshop.;-;
-This is a code that you need to get from your google analytics account. If you need help to get it we would be more then happy to help you out, just contact our customer support by email and you will have an answer within an hour;-;
 
 
 ###### dabb8a85_f593_43ec_bf0d_240467118a40 (News) ######
@@ -606,6 +623,19 @@ You have successfully been added or removed from the email list.;-;
 add_news;-;
 create_news_desc;-;
 subscribe_news;-;
+
+
+###### de0b9b83_a41d_4fca_a2d4_3d3945cc8b9e (ColumnProducts) ######
+Add this left or right column at a product, and a new related products will be displayed.;-;
+When you have added this application, it will automatically start relating products related to the main product added to this page.;-;
+
+
+###### 831647b5_6a63_4c46_a3a3_1b4a7c36710a (ImageDisplayer) ######
+A quick tip; when the mouse is hovering the image, you will see a settings box where you can configure the image.;-;
+Congratulation, you have added your first image.;-;
+Edit the image;-;
+Insert images into any application area.;-;
+This image has been stretched, click to fix it.;-;
 
 
 ###### dcd22afc_79ba_4463_bb5c_38925468ae26 (ProductManager) ######
@@ -670,55 +700,6 @@ stock_quantity;-;
 taxes;-;
 
 
-###### 831647b5_6a63_4c46_a3a3_1b4a7c36710a (ImageDisplayer) ######
-A quick tip; when the mouse is hovering the image, you will see a settings box where you can configure the image.;-;
-Congratulation, you have added your first image.;-;
-Edit the image;-;
-Insert images into any application area.;-;
-This image has been stretched, click to fix it.;-;
-
-
-###### de0b9b83_a41d_4fca_a2d4_3d3945cc8b9e (ColumnProducts) ######
-Add this left or right column at a product, and a new related products will be displayed.;-;
-When you have added this application, it will automatically start relating products related to the main product added to this page.;-;
-
-
-###### c7736539_4523_4691_8453_a6aa1e784fc1 (PayPal) ######
-Lets you easily connect to paypal, and give your customers option to pay using paypal.;-;
-Paypal address;-;
-Sandbox;-;
-The paypal account has not been configured correctly. Go to settings and configure it properly;-;
-What address are you using for the test enviroment to paypal?;-;
-Would you like to use paypal in sandbox mode?;-;
-
-
-###### e9864616_96d6_485f_8cb0_e17cdffbcfec (WebShopList) ######
-Chrome?;-;
-Last logged on;-;
-UA;-;
-Web address;-;
-You have not yet created any web shops, create one and they will be listed here.;-;
-
-
-###### 8ad8243c_b9c1_48d4_96d5_7382fa2e24cd (Mail) ######
-Configure your email sender.;-;
-Enable tls?;-;
-Hostname;-;
-Mail;-;
-Port;-;
-Should TLS be enabled for this smtp server?;-;
-The hostname for your smtp server.;-;
-The password for your smtp server.;-;
-The port for your smtp server.;-;
-The username for your smtp server.;-;
-You need this application if you want this webshop send emails from your email account;-;
-
-
-###### 39f1485a_85b8_4f09_ba70_0e33c16f8dc6 (SmsStatistic) ######
-By adding this application you will see some static over your sms usage.;-;
-Sms Statistic;-;
-
-
 ###### 17c48891_6f7a_47a0_849d_b50de9af218f (GoogleMaps) ######
 Add a new boundary;-;
 Add a new marker;-;
@@ -737,5 +718,24 @@ Text title;-;
 latitude;-;
 longitide;-;
 zoom;-;
+
+
+###### 39f1485a_85b8_4f09_ba70_0e33c16f8dc6 (SmsStatistic) ######
+By adding this application you will see some static over your sms usage.;-;
+Sms Statistic;-;
+
+
+###### 8ad8243c_b9c1_48d4_96d5_7382fa2e24cd (Mail) ######
+Configure your email sender.;-;
+Enable tls?;-;
+Hostname;-;
+Mail;-;
+Port;-;
+Should TLS be enabled for this smtp server?;-;
+The hostname for your smtp server.;-;
+The password for your smtp server.;-;
+The port for your smtp server.;-;
+The username for your smtp server.;-;
+You need this application if you want this webshop send emails from your email account;-;
 
 

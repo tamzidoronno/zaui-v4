@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import com.thundashop.core.common.JsonObject2;
 import com.thundashop.core.getshop.data.GetshopStore;
 import java.util.List;
@@ -28,7 +29,7 @@ public class APIGetShop {
 
      public void addUserToPartner(String userId, String partner, String password)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("userId",new Gson().toJson(userId));
           data.args.put("partner",new Gson().toJson(partner));
           data.args.put("password",new Gson().toJson(password));
@@ -46,7 +47,7 @@ public class APIGetShop {
 
      public String findAddressForApplication(String uuid)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("uuid",new Gson().toJson(uuid));
           data.method = "findAddressForApplication";
           data.interfaceName = "core.getshop.IGetShop";
@@ -67,7 +68,7 @@ public class APIGetShop {
 
      public String findAddressForUUID(String uuid)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("uuid",new Gson().toJson(uuid));
           data.method = "findAddressForUUID";
           data.interfaceName = "core.getshop.IGetShop";
@@ -86,7 +87,7 @@ public class APIGetShop {
 
      public PartnerData getPartnerData(String partnerId, String password)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("partnerId",new Gson().toJson(partnerId));
           data.args.put("password",new Gson().toJson(password));
           data.method = "getPartnerData";
@@ -106,7 +107,7 @@ public class APIGetShop {
 
      public List<GetshopStore> getStores(String code)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("code",new Gson().toJson(code));
           data.method = "getStores";
           data.interfaceName = "core.getshop.IGetShop";
@@ -125,7 +126,7 @@ public class APIGetShop {
 
      public void setApplicationList(List<String> ids, String partnerId, String password)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("ids",new Gson().toJson(ids));
           data.args.put("partnerId",new Gson().toJson(partnerId));
           data.args.put("password",new Gson().toJson(password));

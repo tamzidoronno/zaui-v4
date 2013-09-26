@@ -62,14 +62,9 @@ Startup cost (default: 0 );-;Oppstartspris (standard: 0)
 this application gives you the ability to setup fixed shipping price;-;Denne applikasjonen åpner opp for å sette en fast pris på utsendelser.
 
 
-###### 565ea7bd_c56b_41fe_b421_18f873c63a8f (PayOnDelivery) ######
+###### 565ea7bd_c56b_41fe_b421_18f873c63a8f ######
 Allows your customers to specify that they will pay on delivery.;-;Gir deg muligheten til å ta betalt ved levering.
 Pay on delivery;-;Betal ved levering.
-
-
-###### 6e415852_c023_4ffe_a49f_990a521841cf (TermsAndConditions) ######
-Allows you to create a terms and condition page which has to be accepted by your customers before ordering.;-;Gir deg muligheten til å sette opp en Brukervilkår avtale, denne må alltid godkjennes før en eventuell bestilling.
-Enter the terms and condition text in the field below.;-;Skriv inn brukervilkårene i boksen unde.
 
 
 ###### 6c245631_effb_4fe2_abf7_f44c57cb6c5b (Account) ######
@@ -336,6 +331,11 @@ Create categories and add a list of products to the category, attach images to t
 More Categories?;-;Mer kategorier?
 This category displayer is currently empty. To create a new category please click the create new category button below.;-;Denne kategorien er for tiden tom. For å opprette en kategori vennligst trykk på opprett kategori knappen.
 Unlink entry;-;Frakoble element
+
+
+###### 6e415852_c023_4ffe_a49f_990a521841cf ######
+Allows you to create a terms and condition page which has to be accepted by your customers before ordering.;-;Gir deg muligheten til å sette opp en Brukervilkår avtale, denne må alltid godkjennes før en eventuell bestilling.
+Enter the terms and condition text in the field below.;-;Skriv inn brukervilkårene i boksen under.
 
 
 ###### d755efca_9e02_4e88_92c2_37a3413f3f41 (Settings) ######

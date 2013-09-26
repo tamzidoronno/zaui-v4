@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import com.thundashop.core.common.JsonObject2;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.common.Settings;
@@ -30,7 +31,7 @@ public class APIPageManager {
 
      public AppConfiguration addApplication(String applicationSettingId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("applicationSettingId",new Gson().toJson(applicationSettingId));
           data.method = "addApplication";
           data.interfaceName = "core.pagemanager.IPageManager";
@@ -53,7 +54,7 @@ public class APIPageManager {
 
      public AppConfiguration addApplicationToPage(String pageId, String applicationSettingId, String pageArea)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("pageId",new Gson().toJson(pageId));
           data.args.put("applicationSettingId",new Gson().toJson(applicationSettingId));
           data.args.put("pageArea",new Gson().toJson(pageArea));
@@ -77,7 +78,7 @@ public class APIPageManager {
 
      public void addExistingApplicationToPageArea(String pageId, String appId, String area)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("pageId",new Gson().toJson(pageId));
           data.args.put("appId",new Gson().toJson(appId));
           data.args.put("area",new Gson().toJson(area));
@@ -100,7 +101,7 @@ public class APIPageManager {
 
      public void changePageLayout(String pageId, int layout)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("pageId",new Gson().toJson(pageId));
           data.args.put("layout",new Gson().toJson(layout));
           data.method = "changePageLayout";
@@ -119,7 +120,7 @@ public class APIPageManager {
 
      public Page changePageUserLevel(String pageId, int userLevel)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("pageId",new Gson().toJson(pageId));
           data.args.put("userLevel",new Gson().toJson(userLevel));
           data.method = "changePageUserLevel";
@@ -140,7 +141,7 @@ public class APIPageManager {
 
      public void clearPageArea(String pageId, String pageArea)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("pageId",new Gson().toJson(pageId));
           data.args.put("pageArea",new Gson().toJson(pageArea));
           data.method = "clearPageArea";
@@ -166,7 +167,7 @@ public class APIPageManager {
 
      public Page createPage(int layout, String parentId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("layout",new Gson().toJson(layout));
           data.args.put("parentId",new Gson().toJson(parentId));
           data.method = "createPage";
@@ -188,7 +189,7 @@ public class APIPageManager {
 
      public Page createPageWithId(int layout, String parentId, String id)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("layout",new Gson().toJson(layout));
           data.args.put("parentId",new Gson().toJson(parentId));
           data.args.put("id",new Gson().toJson(id));
@@ -213,7 +214,7 @@ public class APIPageManager {
 
      public void deleteApplication(String id)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("id",new Gson().toJson(id));
           data.method = "deleteApplication";
           data.interfaceName = "core.pagemanager.IPageManager";
@@ -228,7 +229,7 @@ public class APIPageManager {
 
      public void deletePage(String id)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("id",new Gson().toJson(id));
           data.method = "deletePage";
           data.interfaceName = "core.pagemanager.IPageManager";
@@ -244,7 +245,7 @@ public class APIPageManager {
 
      public HashMap<String,Setting> getApplicationSettings(String name)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("name",new Gson().toJson(name));
           data.method = "getApplicationSettings";
           data.interfaceName = "core.pagemanager.IPageManager";
@@ -263,7 +264,7 @@ public class APIPageManager {
 
      public List<AppConfiguration> getApplications()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getApplications";
           data.interfaceName = "core.pagemanager.IPageManager";
           String result = transport.send(data);
@@ -282,7 +283,7 @@ public class APIPageManager {
 
      public List<AppConfiguration> getApplicationsBasedOnApplicationSettingsId(String appSettingsId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("appSettingsId",new Gson().toJson(appSettingsId));
           data.method = "getApplicationsBasedOnApplicationSettingsId";
           data.interfaceName = "core.pagemanager.IPageManager";
@@ -302,7 +303,7 @@ public class APIPageManager {
 
      public List<AppConfiguration> getApplicationsByPageAreaAndSettingsId(String appSettingsId, String pageArea)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("appSettingsId",new Gson().toJson(appSettingsId));
           data.args.put("pageArea",new Gson().toJson(pageArea));
           data.method = "getApplicationsByPageAreaAndSettingsId";
@@ -323,7 +324,7 @@ public class APIPageManager {
 
      public List<AppConfiguration> getApplicationsByType(String type)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("type",new Gson().toJson(type));
           data.method = "getApplicationsByType";
           data.interfaceName = "core.pagemanager.IPageManager";
@@ -344,7 +345,7 @@ public class APIPageManager {
 
      public List<AppConfiguration> getApplicationsForPage(String pageId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("pageId",new Gson().toJson(pageId));
           data.method = "getApplicationsForPage";
           data.interfaceName = "core.pagemanager.IPageManager";
@@ -364,7 +365,7 @@ public class APIPageManager {
 
      public Page getPage(String id)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("id",new Gson().toJson(id));
           data.method = "getPage";
           data.interfaceName = "core.pagemanager.IPageManager";
@@ -384,7 +385,7 @@ public class APIPageManager {
 
      public HashMap<String,List<String>> getPagesForApplications(List<String> appIds)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("appIds",new Gson().toJson(appIds));
           data.method = "getPagesForApplications";
           data.interfaceName = "core.pagemanager.IPageManager";
@@ -401,7 +402,7 @@ public class APIPageManager {
 
      public HashMap<String,Setting> getSecuredSettings(String applicationInstanceId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("applicationInstanceId",new Gson().toJson(applicationInstanceId));
           data.method = "getSecuredSettings";
           data.interfaceName = "core.pagemanager.IPageManager";
@@ -421,7 +422,7 @@ public class APIPageManager {
 
      public HashMap<String,Setting> getSecuredSettingsInternal(String appName)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("appName",new Gson().toJson(appName));
           data.method = "getSecuredSettingsInternal";
           data.interfaceName = "core.pagemanager.IPageManager";
@@ -440,7 +441,7 @@ public class APIPageManager {
 
      public void removeAllApplications(String appSettingsId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("appSettingsId",new Gson().toJson(appSettingsId));
           data.method = "removeAllApplications";
           data.interfaceName = "core.pagemanager.IPageManager";
@@ -457,7 +458,7 @@ public class APIPageManager {
 
      public Page removeApplication(String applicationId, String pageid)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("applicationId",new Gson().toJson(applicationId));
           data.args.put("pageid",new Gson().toJson(pageid));
           data.method = "removeApplication";
@@ -480,7 +481,7 @@ public class APIPageManager {
 
      public Page reorderApplication(String pageId, String appId, Boolean moveUp)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("pageId",new Gson().toJson(pageId));
           data.args.put("appId",new Gson().toJson(appId));
           data.args.put("moveUp",new Gson().toJson(moveUp));
@@ -502,7 +503,7 @@ public class APIPageManager {
 
      public void saveApplicationConfiguration(AppConfiguration config)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("config",new Gson().toJson(config));
           data.method = "saveApplicationConfiguration";
           data.interfaceName = "core.pagemanager.IPageManager";
@@ -515,7 +516,7 @@ public class APIPageManager {
 
      public void savePage(Page page)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("page",new Gson().toJson(page));
           data.method = "savePage";
           data.interfaceName = "core.pagemanager.IPageManager";
@@ -530,7 +531,7 @@ public class APIPageManager {
 
      public void setApplicationSettings(Settings settings)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("settings",new Gson().toJson(settings));
           data.method = "setApplicationSettings";
           data.interfaceName = "core.pagemanager.IPageManager";
@@ -551,7 +552,7 @@ public class APIPageManager {
 
      public void setApplicationSticky(String appId, int toggle)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("appId",new Gson().toJson(appId));
           data.args.put("toggle",new Gson().toJson(toggle));
           data.method = "setApplicationSticky";
@@ -568,7 +569,7 @@ public class APIPageManager {
 
      public void setPageDescription(String pageId, String description)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("pageId",new Gson().toJson(pageId));
           data.args.put("description",new Gson().toJson(description));
           data.method = "setPageDescription";
@@ -586,7 +587,7 @@ public class APIPageManager {
 
      public void setParentPage(String pageId, String parentPageId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("pageId",new Gson().toJson(pageId));
           data.args.put("parentPageId",new Gson().toJson(parentPageId));
           data.method = "setParentPage";
@@ -604,7 +605,7 @@ public class APIPageManager {
 
      public void swapApplication(String fromAppId, String toAppId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("fromAppId",new Gson().toJson(fromAppId));
           data.args.put("toAppId",new Gson().toJson(toAppId));
           data.method = "swapApplication";
@@ -621,7 +622,7 @@ public class APIPageManager {
 
      public HashMap<String,String> translatePages(List<String> pages)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("pages",new Gson().toJson(pages));
           data.method = "translatePages";
           data.interfaceName = "core.pagemanager.IPageManager";

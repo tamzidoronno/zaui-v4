@@ -61,14 +61,9 @@ Startup cost (default: 0 );-;
 this application gives you the ability to setup fixed shipping price;-;
 
 
-###### 565ea7bd_c56b_41fe_b421_18f873c63a8f (PayOnDelivery) ######
+###### 565ea7bd_c56b_41fe_b421_18f873c63a8f ######
 Allows your customers to specify that they will pay on delivery.;-;
 Pay on delivery;-;
-
-
-###### 6e415852_c023_4ffe_a49f_990a521841cf (TermsAndConditions) ######
-Allows you to create a terms and condition page which has to be accepted by your customers before ordering.;-;
-Enter the terms and condition text in the field below.;-;
 
 
 ###### 6c245631_effb_4fe2_abf7_f44c57cb6c5b (Account) ######
@@ -262,6 +257,31 @@ unique visitors found in total.;-;
 when;-;
 
 
+###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 ######
+Activate this option if you wish to provide your customer with Fjincadeau payment;-;
+Activate this option if you wish to provide your customer with Mister Cash payment;-;
+Activate this option if you wish to provide your customer with Podium payment;-;
+Activate this option if you wish to provide your customer with Sofort Banking payment;-;
+Activate this option if you wish to provide your customer with eBill payment;-;
+Activate this option if you wish to provide your customer with iDeal payment;-;
+By enabling testmode for sisow, you will be able to test the payment solutions in sandbox mode.;-;
+Enable test mode for sisow;-;
+Here you can configure all the settings required to get sisow to work properly with your account. Enter the fields below and press save, as soon as everything here is set correctly you will see that a new payment options is available in the checkout area.;-;
+Merchant id;-;
+Merchant key;-;
+Should Fjincadeau be activated?;-;
+Should Mister Cash be activated?;-;
+Should Podium be activated?;-;
+Should Sofort Banking be activated?;-;
+Should eBill be activated?;-;
+Should iDeal be activated?;-;
+Your merchant account is deactivated, please check with sisow to get it activated.;-;
+Your merchant id, this id is something that sisow is providing you.;-;
+Your merchant key and id is correct;-;
+Your merchant key or id is incorrect, please recheck it;-;
+Your merchant key, this id is something that sisow is providing you.;-;
+
+
 ###### 2afb045b_fa01_4398_8582_33f212bb8db8 (Chat) ######
 Answering your customers questions, means more sale. By adding this excellent chat application, you can answer on request at any time from you mobile devices or your stationary computer.;-;
 Chat;-;
@@ -292,31 +312,6 @@ This entry is currently hardlinked to;-;
 
 ###### 2ebd7c69_eba3_4b7e_85c6_0e0bd274aad0 (SedoxCarList) ######
 Just add it;-;
-
-
-###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 (Sisow) ######
-Activate this option if you wish to provide your customer with Fjincadeau payment;-;
-Activate this option if you wish to provide your customer with Mister Cash payment;-;
-Activate this option if you wish to provide your customer with Podium payment;-;
-Activate this option if you wish to provide your customer with Sofort Banking payment;-;
-Activate this option if you wish to provide your customer with eBill payment;-;
-Activate this option if you wish to provide your customer with iDeal payment;-;
-By enabling testmode for sisow, you will be able to test the payment solutions in sandbox mode.;-;
-Enable test mode for sisow;-;
-Here you can configure all the settings required to get sisow to work properly with your account. Enter the fields below and press save, as soon as everything here is set correctly you will see that a new payment options is available in the checkout area.;-;
-Merchant id;-;
-Merchant key;-;
-Should Fjincadeau be activated?;-;
-Should Mister Cash be activated?;-;
-Should Podium be activated?;-;
-Should Sofort Banking be activated?;-;
-Should eBill be activated?;-;
-Should iDeal be activated?;-;
-Your merchant account is deactivated, please check with sisow to get it activated.;-;
-Your merchant id, this id is something that sisow is providing you.;-;
-Your merchant key and id is correct;-;
-Your merchant key or id is incorrect, please recheck it;-;
-Your merchant key, this id is something that sisow is providing you.;-;
 
 
 ###### 32c15c30_d665_11e2_8b8b_0800200c9a66 (RealEstate) ######
@@ -350,6 +345,11 @@ Sorry to hear that, Are you sure that you want to delete your store?;-;
 
 ###### e9d04f19_6eaa_4a17_9b7b_aa387dbaed92 (CategoryLister) ######
 Unlink entry;-;
+
+
+###### 6e415852_c023_4ffe_a49f_990a521841cf ######
+Allows you to create a terms and condition page which has to be accepted by your customers before ordering.;-;
+Enter the terms and condition text in the field below.;-;
 
 
 ###### d755efca_9e02_4e88_92c2_37a3413f3f41 (Settings) ######

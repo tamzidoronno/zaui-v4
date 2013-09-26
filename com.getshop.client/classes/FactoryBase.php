@@ -46,6 +46,10 @@ class FactoryBase {
         $this->getApi()->getUserManager()->logOn($username, $password);
     }
 
+    public function updateTransportSession($sessionId) {
+        FactoryBase::$api->transport->sessionId = $sessionId;
+    }
+    
     public function stopImpersionation() {
         if ($this->oldApi != null) {
             FactoryBase::$api = $this->oldApi;

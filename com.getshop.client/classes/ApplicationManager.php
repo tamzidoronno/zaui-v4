@@ -103,6 +103,11 @@ class ApplicationManager extends FactoryBase {
         $color = $_POST['data']['color'];
         $path = $_POST['data']['path'];
         $type = $_POST['data']['type'];
+        
+        if($path == "body" && $type == "background-color") {
+            $this->getFactory()->setConfigurationFlag("bgimage", false);
+        }
+        
 
         $config = json_decode($this->getFactory()->getConfigurationFlag("getshop_colors"), true);
         if (!$config) {

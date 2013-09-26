@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import com.thundashop.core.common.JsonObject2;
 
 public class APIMessageManager {
@@ -25,7 +26,7 @@ public class APIMessageManager {
 
      public int getSmsCount(int year, int month)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("year",new Gson().toJson(year));
           data.args.put("month",new Gson().toJson(month));
           data.method = "getSmsCount";
@@ -49,7 +50,7 @@ public class APIMessageManager {
 
      public void sendMail(String to, String toName, String subject, String content, String from, String fromName)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("to",new Gson().toJson(to));
           data.args.put("toName",new Gson().toJson(toName));
           data.args.put("subject",new Gson().toJson(subject));

@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import com.thundashop.core.common.JsonObject2;
 import com.thundashop.core.calendarmanager.data.Entry;
 import java.util.List;
@@ -30,7 +31,7 @@ public class APICalendarManager {
 
      public void addUserToEvent(String userId, String eventId, String password, String username)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("userId",new Gson().toJson(userId));
           data.args.put("eventId",new Gson().toJson(eventId));
           data.args.put("password",new Gson().toJson(password));
@@ -48,7 +49,7 @@ public class APICalendarManager {
 
      public void applyFilter(List<String> filters)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("filters",new Gson().toJson(filters));
           data.method = "applyFilter";
           data.interfaceName = "core.calendar.ICalendarManager";
@@ -64,7 +65,7 @@ public class APICalendarManager {
 
      public void confirmEntry(String entryId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("entryId",new Gson().toJson(entryId));
           data.method = "confirmEntry";
           data.interfaceName = "core.calendar.ICalendarManager";
@@ -83,7 +84,7 @@ public class APICalendarManager {
 
      public Entry createEntry(int year, int month, int day)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("year",new Gson().toJson(year));
           data.args.put("month",new Gson().toJson(month));
           data.args.put("day",new Gson().toJson(day));
@@ -104,7 +105,7 @@ public class APICalendarManager {
 
      public void deleteEntry(String id)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("id",new Gson().toJson(id));
           data.method = "deleteEntry";
           data.interfaceName = "core.calendar.ICalendarManager";
@@ -121,7 +122,7 @@ public class APICalendarManager {
 
      public List<String> getActiveFilters()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getActiveFilters";
           data.interfaceName = "core.calendar.ICalendarManager";
           String result = transport.send(data);
@@ -142,7 +143,7 @@ public class APICalendarManager {
 
      public List<Entry> getEntries(int year, int month, int day, List<String> filters)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("year",new Gson().toJson(year));
           data.args.put("month",new Gson().toJson(month));
           data.args.put("day",new Gson().toJson(day));
@@ -165,7 +166,7 @@ public class APICalendarManager {
 
      public Entry getEntry(String entryId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("entryId",new Gson().toJson(entryId));
           data.method = "getEntry";
           data.interfaceName = "core.calendar.ICalendarManager";
@@ -183,7 +184,7 @@ public class APICalendarManager {
 
      public List<String> getFilters()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getFilters";
           data.interfaceName = "core.calendar.ICalendarManager";
           String result = transport.send(data);
@@ -204,7 +205,7 @@ public class APICalendarManager {
 
      public Month getMonth(int year, int month, boolean includeExtraEvents)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("year",new Gson().toJson(year));
           data.args.put("month",new Gson().toJson(month));
           data.args.put("includeExtraEvents",new Gson().toJson(includeExtraEvents));
@@ -227,7 +228,7 @@ public class APICalendarManager {
 
      public void removeUserFromEvent(String userId, String eventId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("userId",new Gson().toJson(userId));
           data.args.put("eventId",new Gson().toJson(eventId));
           data.method = "removeUserFromEvent";
@@ -243,7 +244,7 @@ public class APICalendarManager {
 
      public void saveEntry(Entry entry)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("entry",new Gson().toJson(entry));
           data.method = "saveEntry";
           data.interfaceName = "core.calendar.ICalendarManager";
@@ -264,7 +265,7 @@ public class APICalendarManager {
 
      public void sendReminderToUser(boolean byEmail, boolean bySMS, List<String> users, String text, String subject)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("byEmail",new Gson().toJson(byEmail));
           data.args.put("bySMS",new Gson().toJson(bySMS));
           data.args.put("users",new Gson().toJson(users));

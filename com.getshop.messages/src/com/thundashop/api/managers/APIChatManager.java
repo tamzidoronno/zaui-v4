@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import com.thundashop.core.common.JsonObject2;
 import java.util.List;
 import com.thundashop.core.chatmanager.ChatMessage;
@@ -27,7 +28,7 @@ public class APIChatManager {
 
      public void closeChat(String id)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("id",new Gson().toJson(id));
           data.method = "closeChat";
           data.interfaceName = "core.chat.IChatManager";
@@ -41,7 +42,7 @@ public class APIChatManager {
 
      public List<Chatter> getChatters()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getChatters";
           data.interfaceName = "core.chat.IChatManager";
           String result = transport.send(data);
@@ -59,7 +60,7 @@ public class APIChatManager {
 
      public List<ChatMessage> getMessages()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getMessages";
           data.interfaceName = "core.chat.IChatManager";
           String result = transport.send(data);
@@ -78,7 +79,7 @@ public class APIChatManager {
 
      public void pingMobileChat(String chatterid)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("chatterid",new Gson().toJson(chatterid));
           data.method = "pingMobileChat";
           data.interfaceName = "core.chat.IChatManager";
@@ -94,7 +95,7 @@ public class APIChatManager {
 
      public void replyToChat(String id, String message)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("id",new Gson().toJson(id));
           data.args.put("message",new Gson().toJson(message));
           data.method = "replyToChat";
@@ -111,7 +112,7 @@ public class APIChatManager {
 
      public void sendMessage(String message)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("message",new Gson().toJson(message));
           data.method = "sendMessage";
           data.interfaceName = "core.chat.IChatManager";

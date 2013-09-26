@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import com.thundashop.core.common.JsonObject2;
 import com.thundashop.app.bannermanager.data.BannerSet;
 
@@ -28,7 +29,7 @@ public class APIBannerManager {
 
      public BannerSet addImage(String id, String fileId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("id",new Gson().toJson(id));
           data.args.put("fileId",new Gson().toJson(fileId));
           data.method = "addImage";
@@ -51,7 +52,7 @@ public class APIBannerManager {
 
      public BannerSet createSet(int width, int height, String id)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("width",new Gson().toJson(width));
           data.args.put("height",new Gson().toJson(height));
           data.args.put("id",new Gson().toJson(id));
@@ -74,7 +75,7 @@ public class APIBannerManager {
 
      public BannerSet deleteSet(String id)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("id",new Gson().toJson(id));
           data.method = "deleteSet";
           data.interfaceName = "app.banner.IBannerManager";
@@ -94,7 +95,7 @@ public class APIBannerManager {
 
      public BannerSet getSet(String id)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("id",new Gson().toJson(id));
           data.method = "getSet";
           data.interfaceName = "app.banner.IBannerManager";
@@ -116,7 +117,7 @@ public class APIBannerManager {
 
      public BannerSet linkProductToImage(String bannerSetId, String imageId, String productId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("bannerSetId",new Gson().toJson(bannerSetId));
           data.args.put("imageId",new Gson().toJson(imageId));
           data.args.put("productId",new Gson().toJson(productId));
@@ -139,7 +140,7 @@ public class APIBannerManager {
 
      public BannerSet removeImage(String bannerSetId, String fileId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("bannerSetId",new Gson().toJson(bannerSetId));
           data.args.put("fileId",new Gson().toJson(fileId));
           data.method = "removeImage";
@@ -162,7 +163,7 @@ public class APIBannerManager {
 
      public BannerSet saveSet(BannerSet set)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("set",new Gson().toJson(set));
           data.method = "saveSet";
           data.interfaceName = "app.banner.IBannerManager";

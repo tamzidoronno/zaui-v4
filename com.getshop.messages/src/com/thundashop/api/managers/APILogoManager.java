@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import com.thundashop.core.common.JsonObject2;
 import com.thundashop.app.logomanager.data.SavedLogo;
 
@@ -24,7 +25,7 @@ public class APILogoManager {
 
      public void deleteLogo()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "deleteLogo";
           data.interfaceName = "app.logo.ILogoManager";
           String result = transport.send(data);
@@ -38,7 +39,7 @@ public class APILogoManager {
 
      public SavedLogo getLogo()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getLogo";
           data.interfaceName = "app.logo.ILogoManager";
           String result = transport.send(data);
@@ -57,7 +58,7 @@ public class APILogoManager {
 
      public void setLogo(String fileId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("fileId",new Gson().toJson(fileId));
           data.method = "setLogo";
           data.interfaceName = "app.logo.ILogoManager";

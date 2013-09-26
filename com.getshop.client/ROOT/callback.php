@@ -3,7 +3,6 @@ include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
 
 $data = http_build_query($_GET);
-file_put_contents("/tmp/callback", $data);
 
 if (!isset($_GET['app'])) {
     return;
@@ -11,7 +10,12 @@ if (!isset($_GET['app'])) {
 
 $id = $_GET['app'];
 $application = $factory->getApplicationPool()->getApplicationInstance($id);
-if ($application != null) {
-    $application->paymentCallback();
+
+if(isset($_GET['callback_method'])) {
+    call_user_method($_GET['callback_method'], $application);
+} else {
+    if ($application != null) {
+        $application->paymentCallback();
+    }
 }
 ?>

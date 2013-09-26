@@ -1,5 +1,6 @@
 ###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
 No image added for this product;-;Geen afbeeldingen bij dit product toegevoegd
+Please select a shipment method.;-;Kies een verzendmethode
 cart;-;Winkelwagen
 
 
@@ -42,6 +43,7 @@ Administrators;-;Beheerders
 All users;-;Alle gebruikers
 Create new group;-;Maak nieuwe groep aan.
 Create user;-;Maak gebruiker aan.
+Edit user;-;Pas gebruiker aan
 No users found;-;Geen gebruikers gevonden
 Note: minumum 3 chars before search start;-;Opgelet: minimum 3 tekens om het zoeken te starten
 User/Customers overview;-;Bezoekers/ klanten overzicht
@@ -115,6 +117,7 @@ Click on the chat icon in the top menu and start translating.;-;Klik op het chat
 Not satisfied with the text "hardcoded" on your page?<br>Add this application and tune the text yourself.;-;Niet tevreden met de tekst op je webwinkel? Pas deze zelf aan met deze applicatie
 Save translation;-;Vertaling opslaan
 Saved;-;Opgeslagen
+The translation has been saved;-;De vertaling is opgeslagen
 To translate all visible text for your users, translate the entries below, and hit the save translation button.;-;Om alle tekst aan te passen voor je bezoekers, typ hier je tekst en sla alles op.
 Translation;-;Vertaling
 
@@ -156,6 +159,7 @@ Add to list;-;Voeg aan lijst toe
 All products available;-;Alle producten beschikbaar
 Create new;-;Maak nieuw aan
 Create product;-;Maak product aan
+Edit product list;-;Bewerk product lijst
 My product list;-;Mijn product lijst
 Product List;-;Product lijst
 Products already added to your list;-;Producten al toegevoegd aan lijst
@@ -237,6 +241,31 @@ unique visitors found in total.;-;Unieke bezoekers in total.
 when;-;wanneer
 
 
+###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 ######
+Activate this option if you wish to provide your customer with Fjincadeau payment;-;Activeer deze om betalingen via Fjincadeau te aanvaarden
+Activate this option if you wish to provide your customer with Mister Cash payment;-;Activeer deze om betalingen via Mister Cash te aanvaarden
+Activate this option if you wish to provide your customer with Podium payment;-;Activeer deze om betalingen met Podium te aanvaarden
+Activate this option if you wish to provide your customer with Sofort Banking payment;-;Activeer deze om betalingen met Sofort Banking te aanvaarden
+Activate this option if you wish to provide your customer with eBill payment;-;Activeer deze om betalingen met eBill te aanvaarden
+Activate this option if you wish to provide your customer with iDeal payment;-;Activeer deze om betalingen met iDeal te aanvaarden
+By enabling testmode for sisow, you will be able to test the payment solutions in sandbox mode.;-;Als je de testmode aan zet, kan je betalingen testen in sandbox mode.
+Enable test mode for sisow;-;Zet test mode aan voor Sisow
+Here you can configure all the settings required to get sisow to work properly with your account. Enter the fields below and press save, as soon as everything here is set correctly you will see that a new payment options is available in the checkout area.;-;Hier kan je alle instellingen configureren van je Sisow account. Vul de velden in en sla alles op. Als alles goed ingested is zal je de nieuwe betaalmogelijkheden zien in de checkout van je webwinkel.
+Merchant id;-;Merchant Id
+Merchant key;-;Merchant key
+Should Fjincadeau be activated?;-;Activeer Fjincadeau?
+Should Mister Cash be activated?;-;Activeer Mister Cash?
+Should Podium be activated?;-;Activeer Podium?
+Should Sofort Banking be activated?;-;Activeer Sofort Banking?
+Should eBill be activated?;-;Activeer eBill?
+Should iDeal be activated?;-;Activeer iDeal?
+Your merchant account is deactivated, please check with sisow to get it activated.;-;Je Merchant account is gedeactiveerd, kijk je Sisow account na om deze te activeren.
+Your merchant id, this id is something that sisow is providing you.;-;Je Merchant Id kan je in je Sisow account vinden
+Your merchant key and id is correct;-;Merchant Id en Key zijn correct.
+Your merchant key or id is incorrect, please recheck it;-;Je Merchant Id en Key zijn niet correct, kijk deze na.
+Your merchant key, this id is something that sisow is providing you.;-;Je Merchant Key kan je in je Sisow account vinden.
+
+
 ###### 2afb045b_fa01_4398_8582_33f212bb8db8 (Chat) ######
 Answering your customers questions, means more sale. By adding this excellent chat application, you can answer on request at any time from you mobile devices or your stationary computer.;-;Beantwoorden van klanten vragen, betekent stijgende verkoop. Door deze chat applicatie toe te voegen, kan je ten alle tijde vragen van je klanten via pc of smartphone beantwoorden.
 Chat;-;Chat
@@ -302,11 +331,18 @@ This category displayer is currently empty. To create a new category please clic
 Unlink entry;-;Unlink tekst
 
 
+###### 6e415852_c023_4ffe_a49f_990a521841cf ######
+Allows you to create a terms and condition page which has to be accepted by your customers before ordering.;-;Maak een pagina met 'Voorwaarden' aan. Deze moet dan geaccepteerd worden door klanten bij een bestelling.
+Enter the terms and condition text in the field below.;-;Geef de Voorwaarden in dit tekstveld op
+
+
 ###### d755efca_9e02_4e88_92c2_37a3413f3f41 (Settings) ######
 Activate Deepfreeze;-;Activeer Deepfreeze
 Add some eyecandy to your webshop, by activating this. It will show some nice fade in effects.;-;Activeer dit, en je krijgt een schaduwrand rond je webwinkel.
+Are customers required to register to order?;-;Moeten bezoekers zich registreren om te kunnen bestellen?
 Base currency;-;Munteenheid
 Conversion rate addition;-;Conversie percentage
+Cookie warning;-;Cookie waarschuwing
 Deactivate Deepfreeze;-;De-activeer Deepfreeze
 Delete my store;-;Verwijder mijn webwinkel
 Design;-;Design
@@ -320,10 +356,12 @@ Hide search bar;-;Verberg zoekfunctie
 If converting to a different currency, you can specify a percentage of how much more you would like to append to conversion when the conversion calculation is done. For example 10 will give you a 10% higher conversion rate.;-;Indien je omzet naar een andere munteenheid, kan je een omzetpercentage ingeven. Bijvoorbeeld 10 zal je 10% hogere omzetfee geven.
 If this is set, getshop will automatically convert from this currency to the currency above for all other customers.;-;Als deze aan staat, zal automatisch de munteenheid omgezet worden naar bovenstaande munteenheid voor alle bezoekers / klanten.
 Please select your language;-;Kies je taal
+Registration;-;Registratie
 Settings saved;-;Settings opgeslagen
 Specify a title for your webshop.;-;Geef een titel op voor je webwinkel
 Specify your postal code.;-;Postcode
 Store currency;-;Munteenheid webwinkel
+Warn users that cookies are being stored from this site?;-;Waarschuw bezoekers dat cookies worden bijgehouden? (popup verschijnt)
 You do not want to display the cart.. sure enable this then.;-;Als je de winkelwagen niet wil laten vertonen, zet deze aan.
 Your settings have been saved.;-;Je settings zijn opgeslagen
 postal;-;Postcode
@@ -408,6 +446,7 @@ Save;-;Opslaan
 Save changes;-;Aanpassingen opslaan
 Save settings;-;Settings opslaan
 Security;-;Beveiliging
+Select application;-;Selecteer Applicatie
 Select different page layouts;-;Selecteer pagina layout
 Set application sticky;-;Maak applicatie sticky
 Settings;-;Settings
@@ -483,6 +522,7 @@ Add this contact form, configure it, and you are ready to start receiving questi
 Click the create application button and you will automatically get a form which sends you email directly to your email address when someone use this form.;-;Klik de ‘Maak  applicatie’ knop en je krijgt automatisch email in je inbox als een bezoekers contact met je opneemt via het formulier
 Contact form;-;Contact formulier
 Contact form configuration;-;Contact forumlier configuratie
+Edit Contact Form;-;Bewerk Contact formulier
 If this function is enabled, it will show the company field.;-;Als deze functie aan staat, dan zie je het bedrijfs info veld.
 Show company field;-;Toon bedrijfsveld
 Your message has been sent!;-;Je bericht is verzonden!
@@ -504,6 +544,12 @@ This will be displayed as description if someone adds event;-;Dit zal vertoond w
 This will be displayed as the location if someone adds event;-;Dit zal vertoond worden als locatie als iemand een event toevoegt.
 Turn this featur on if you wish to allow guests to add events to your calendar. Events needs to be confirmed by an adminstrator;-;Zet deze instelling aan als je wil dat een gast events kan toevoegen aan je kalender. Events moeten wel goedgekeurd worden door de beheerder.
 give your customers ability to book into your events or appointments;-;Geef je klanten de mogelijkheid om een boeking van een event te doen.
+
+
+###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######
+Current status;-;Huidige status
+Payment application;-;Betaal applicatie
+Transaction id;-;Transactie ID
 
 
 ###### e72f97ad_aa1f_4e67_bcfd_e64607f05f93 (Gallery) ######
@@ -532,11 +578,13 @@ About this attribute group:;-;Over deze attributen groep:
 Add a product to a page, add description, price, title, and other attributes. And you are ready to start selling the product. Combine it with a left menu, a category list to create a flexible and powerful webshop.;-;Voeg een product, een omschrijving, prijs en titel toe aan een pagina, en je bent klaar om een product te verkopen. Combineer het met een menu link, een categorie lijst om een Flexibele en professionele webwinkel te bekomen.
 Add an image by clicking the button below to start your image upload progress.;-;Voeg een afbeelding toe, klik op de button.
 Add images to the product;-;Voeg afbeeldingen toe aan het product
+Add new top level variation;-;Voeg nieuwe variatie toe
 Advanced Options;-;Geavanceerde opties
 Advanced settings;-;Geavanceerde instellingen
 Advanced settings allows you to finetune different aspects to your product. For example, if shipping is configured and you would like this product to be shipped for free.;-;Via Geavanceerde instellingen kan je nog meer info vertonen bij je product. Bvb gratis verzending
 Are you sure you want to remove this?;-;Zeker dat je dit wil verwijderen?
 Attribute administration;-;Beheer attributen
+Attribute name;-;Attribuut naam
 Attribute settings;-;Optionele instellingen
 Attribute settings enables you to attach different kind of attributes to the product. Theese attributes will be used to filter your products in a product list.;-;Via Optionele instellingen kan je verschillende opties toevoegen aan een product. Met deze opties wordt het product gefilterd in de product lijst.
 Attributes;-;Opties
@@ -560,6 +608,7 @@ Is this your default picture to the product?;-;Is dit de standaard afbeelding va
 No short description set yet;-;Geen korte omschrijving geplaatst
 Please click on 'Add new top level variation' above;-;Klik bovenaan op 'Voeg nieuw variatie toe'
 Preview;-;Preview
+Price diff;-;Prijs verschil
 Product Information;-;Product informatie
 Product Manager;-;Product beheerder
 Rotate;-;Roteer
@@ -590,6 +639,8 @@ taxes;-;BTW
 A quick tip; when the mouse is hovering the image, you will see a settings box where you can configure the image.;-;TIP: als je met je muis over een afbeelding gaat, verschijnt er een instellingen box waar je je afbeelding kan aanpassen.
 Congratulation, you have added your first image.;-;Goed zo, je hebt je eerste afbeelding toegevoegd.
 Edit the image;-;Bewerk afbeelding
+Insert images into any application area.;-;Voeg afbeeldingen toe in Applicatie veld
+This image has been stretched, click to fix it.;-;De afbeelding is uitgerekt, gelieve dit aan te passen
 
 
 ###### de0b9b83_a41d_4fca_a2d4_3d3945cc8b9e (ColumnProducts) ######

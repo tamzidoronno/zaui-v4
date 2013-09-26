@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import com.thundashop.core.common.JsonObject2;
 import java.util.ArrayList;
 import com.thundashop.core.productmanager.data.ProductCriteria;
@@ -33,7 +34,7 @@ public class APIProductManager {
 
      public void addImage(String productId, String productImageId, String description)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("productId",new Gson().toJson(productId));
           data.args.put("productImageId",new Gson().toJson(productImageId));
           data.args.put("description",new Gson().toJson(description));
@@ -53,7 +54,7 @@ public class APIProductManager {
 
      public void changeStockQuantity(String productId, int count)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("productId",new Gson().toJson(productId));
           data.args.put("count",new Gson().toJson(count));
           data.method = "changeStockQuantity";
@@ -69,7 +70,7 @@ public class APIProductManager {
 
      public Product createProduct()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "createProduct";
           data.interfaceName = "core.productmanager.IProductManager";
           String result = transport.send(data);
@@ -87,7 +88,7 @@ public class APIProductManager {
 
      public List<AttributeValue> getAllAttributes()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getAllAttributes";
           data.interfaceName = "core.productmanager.IProductManager";
           String result = transport.send(data);
@@ -105,7 +106,7 @@ public class APIProductManager {
 
      public List<Product> getAllProducts()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getAllProducts";
           data.interfaceName = "core.productmanager.IProductManager";
           String result = transport.send(data);
@@ -124,7 +125,7 @@ public class APIProductManager {
 
      public AttributeSummary getAttributeSummary()  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.method = "getAttributeSummary";
           data.interfaceName = "core.productmanager.IProductManager";
           String result = transport.send(data);
@@ -143,7 +144,7 @@ public class APIProductManager {
 
      public List<Product> getLatestProducts(int count)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("count",new Gson().toJson(count));
           data.method = "getLatestProducts";
           data.interfaceName = "core.productmanager.IProductManager";
@@ -160,7 +161,7 @@ public class APIProductManager {
 
      public Double getPrice(String productId, List<String> variations)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("productId",new Gson().toJson(productId));
           data.args.put("variations",new Gson().toJson(variations));
           data.method = "getPrice";
@@ -182,7 +183,7 @@ public class APIProductManager {
 
      public Product getProduct(String id)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("id",new Gson().toJson(id));
           data.method = "getProduct";
           data.interfaceName = "core.productmanager.IProductManager";
@@ -202,7 +203,7 @@ public class APIProductManager {
 
      public Product getProductFromApplicationId(String app_uuid)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("app_uuid",new Gson().toJson(app_uuid));
           data.method = "getProductFromApplicationId";
           data.interfaceName = "core.productmanager.IProductManager";
@@ -223,7 +224,7 @@ public class APIProductManager {
 
      public List<Product> getProducts(ProductCriteria productCriteria)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("productCriteria",new Gson().toJson(productCriteria));
           data.method = "getProducts";
           data.interfaceName = "core.productmanager.IProductManager";
@@ -246,7 +247,7 @@ public class APIProductManager {
 
      public ArrayList<Product> getRandomProducts(Integer fetchSize, String ignoreProductId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("fetchSize",new Gson().toJson(fetchSize));
           data.args.put("ignoreProductId",new Gson().toJson(ignoreProductId));
           data.method = "getRandomProducts";
@@ -268,7 +269,7 @@ public class APIProductManager {
 
      public void removeProduct(String productId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("productId",new Gson().toJson(productId));
           data.method = "removeProduct";
           data.interfaceName = "core.productmanager.IProductManager";
@@ -286,7 +287,7 @@ public class APIProductManager {
 
      public Product saveProduct(Product product)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("product",new Gson().toJson(product));
           data.method = "saveProduct";
           data.interfaceName = "core.productmanager.IProductManager";
@@ -307,7 +308,7 @@ public class APIProductManager {
 
      public void setMainImage(String productId, String imageId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("productId",new Gson().toJson(productId));
           data.args.put("imageId",new Gson().toJson(imageId));
           data.method = "setMainImage";
@@ -324,7 +325,7 @@ public class APIProductManager {
 
      public HashMap<String,String> translateEntries(List<String> entryIds)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("entryIds",new Gson().toJson(entryIds));
           data.method = "translateEntries";
           data.interfaceName = "core.productmanager.IProductManager";
@@ -343,7 +344,7 @@ public class APIProductManager {
 
      public void updateAttributePool(List<AttributeValue> groups)  throws Exception  {
           JsonObject2 data = new JsonObject2();
-          data.args = new HashMap();
+          data.args = new LinkedHashMap();
           data.args.put("groups",new Gson().toJson(groups));
           data.method = "updateAttributePool";
           data.interfaceName = "core.productmanager.IProductManager";

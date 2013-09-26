@@ -96,6 +96,9 @@ public class CartManager extends ManagerBase implements ICartManager {
 
     @Override
     public Double calculateTotalCost(Cart cart) throws ErrorException {
+        if(cart == null) {
+            return 0.0;
+        }
         return cart.getTotal(false);
     }
 

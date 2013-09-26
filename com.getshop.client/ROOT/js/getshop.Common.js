@@ -35,7 +35,9 @@ $('.gray').live('focus', function() {
 
 window.onpopstate = function(event) {
     if (event.state) {
-        thundashop.Ajax.doJavascriptNavigation(event.state.url, null, true);
+        var url = event.state.ajaxLink ? event.state.ajaxLink : event.state.url;
+        console.log(url);
+        thundashop.Ajax.doJavascriptNavigation(url, null, true);
     } else {
         thundashop.Ajax.doJavascriptNavigation("?page=home", null, true);
     }

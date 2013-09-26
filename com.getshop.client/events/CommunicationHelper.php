@@ -116,7 +116,7 @@ class CommunicationHelper {
         }
         
         $start = microtime(true);
-        $res = stream_get_line($this->socket, 1000000, "\n");
+        $res = stream_get_line($this->socket, 10000000000000, "\n");
 //        $res = substr($res, 2);
 //        echo $res;
         file_put_contents("/tmp/test.txt", $res . "\n\n", FILE_APPEND);

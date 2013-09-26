@@ -1481,6 +1481,22 @@ class APIListManager {
      }
 
      /**
+     * Remove all list entries for a specified list
+     * 
+     * @param listId
+     * @throws ErrorException 
+     */
+
+     public function getPageIdByName($name) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["name"] = json_encode($this->transport->object_unset_nulls($name));
+          $data["method"] = "getPageIdByName";
+          $data["interfaceName"] = "core.listmanager.IListManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
     * Order a entry on the list.
     * @param id The id for the entry to move / reorder.
     * @param after Put it after a given entry (this will be the id for the given entry). To move the entry to the top leave this empty.
@@ -2409,6 +2425,19 @@ class APIProductManager {
           $data['args'] = array();
           $data['args']["count"] = json_encode($this->transport->object_unset_nulls($count));
           $data["method"] = "getLatestProducts";
+          $data["interfaceName"] = "core.productmanager.IProductManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
+     * Get page by name
+     */
+
+     public function getPageIdByName($productName) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["productName"] = json_encode($this->transport->object_unset_nulls($productName));
+          $data["method"] = "getPageIdByName";
           $data["interfaceName"] = "core.productmanager.IProductManager";
           return $this->transport->sendMessage($data);
      }

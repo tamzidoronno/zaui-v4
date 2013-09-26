@@ -172,8 +172,8 @@ thundashop.Ajax = {
         if ($(scope).is('form')) {
             var formName = $(scope).attr('name');
             if (!formName) {
-                //                alert('Form name is required');
-                //                return;
+//                alert('Form name is required');
+//                return;
             }
 
             $.each($(scope).serializeArray(), function(i, field) {
@@ -191,6 +191,7 @@ thundashop.Ajax = {
         }
         this.doJavascriptNavigation(variables, data);
     },
+            
     doJavascriptNavigation: function(variables, data, callback) {
         this.doPreProcess();
         $('#loaderbox').show();

@@ -6,3 +6,6 @@ ErrorDocument 404 /
 
 RewriteRule ^sitemap.xml$ sitemap.php [L]
 RewriteRule ^favicon.ico$ favicon.php [L]
+
+RewriteCond %{QUERY_STRING} !index 
+RewriteRule ^(.*).html$ index.php?rewrite=$1 [L]

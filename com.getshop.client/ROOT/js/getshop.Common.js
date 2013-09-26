@@ -36,7 +36,7 @@ $('.gray').live('focus', function() {
 $(function() {
     $('#skeleton a').live('click', function(event) {
         var comp = new RegExp(location.host);
-        if (!comp.test($(this).attr('href')) && !($(this).attr('href').indexOf('?') === 0)) {
+        if (!comp.test($(this).attr('href')) && !($(this).attr('href').indexOf('?') === 0 || $(this).attr('href').indexOf('/') === 0)) {
             return;
         }
 
@@ -57,7 +57,17 @@ $(function() {
         if (target.parents('.cke_top').length > 0) {
             return;
         }
-        window.location.hash = $(this).attr('href');
+        
+        var ajaxLink = getUrl($(this).attr('ajaxlink'));
+        var url = getUrl($(this).attr('href'));
+        var useLink = ajaxLink ? ajaxLink : url;
+        if (history.pushState) {
+            window.history.pushState({ url: url, ajaxLink: ajaxLink}, "Title", url);
+            thundashop.Ajax.doJavascriptNavigation(useLink, null, true);    
+        } else {
+            window.location.hash = useLink;
+        }
+        
         if ($(this).attr('scrolltop')) {
             if ($(this).attr('scrolltop').length > 0) {
                 $(window).scrollTop(0);
@@ -364,23 +374,37 @@ $('.display_menu_application_button').live('click', function() {
 
 });
 
-getshop_firstload = true;
-jQuery(document).ready(function($) {
+window.onpopstate = function(event) {
+    if (event.state)
+        thundashop.Ajax.doJavascriptNavigation(event.state.url, null, true);
+}
 
-    $.history.init(function(hash) {
-        
-        if(hash === "") {
-            if(!getshop_firstload) {
-                thundashop.Ajax.doJavascriptNavigation('?page=clear_page', null, true);
-            }
-            getshop_firstload = false;
-        } else if (hash !== "") {
-            thundashop.Ajax.doJavascriptNavigation(hash, null, true);
+getshop_firstload = true;
+
+getUrl = function(hash) {
+    if (!hash)
+        return;
+    
+    if (hash && hash.indexOf("?") === 0) {
+        hash = "index.php"+hash;
+    }
+    if(hash === "") {
+        if(!getshop_firstload) {
+            return '?page=clear_page';
         }
+        getshop_firstload = false;
+    } 
+    
+    return hash;
+}
+
+jQuery(document).ready(function($) {
+    $.history.init(function(hash) {
+        thundashop.Ajax.doJavascriptNavigation(hash, null, true);
     },
-            {
-                unescape: ",/"
-            });
+    {
+        unescape: ",/"
+    });
 });
 
 $('.configuration').live('click', function() {

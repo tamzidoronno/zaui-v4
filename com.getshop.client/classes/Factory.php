@@ -233,7 +233,25 @@ class Factory extends FactoryBase {
             $_POST['scopeid'] = $_GET['scopeid'];
     }
 
+    private function checkRewrite() {
+        if (isset($_GET['rewrite']) ) {
+            
+            $name = urldecode($_GET['rewrite']);
+            
+            $pageId = $this->getApi()->getListManager()->getPageIdByName($name);
+            if ($pageId != "") {
+                $_GET['page'] = $pageId;
+                return;
+            }
+            
+            $pageId = $this->getApi()->getProductManager()->getPageIdByName($name);
+            if ($pageId != "") {
+                $_GET['page'] = $pageId;
+            }
+        }
+    }
     public function initPage() {
+        $this->checkRewrite();
         if (isset($_GET['page'])) {
             if($_GET['page'] == "clear_page") {
                 $navigation = Navigation::getNavigation();

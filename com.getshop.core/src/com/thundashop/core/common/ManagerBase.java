@@ -135,7 +135,7 @@ public class ManagerBase {
             return "";
         }
         
-        return name.replace(" ", "_").replace("\\", "_").toLowerCase();
+        return name.replace(" ", "_").replace("/", "_").replace("\\", "_").toLowerCase();
     }
     
     public void onEvent(String eventName, String eventReferance) throws ErrorException {}

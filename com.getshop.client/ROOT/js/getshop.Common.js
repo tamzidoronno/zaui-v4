@@ -58,8 +58,9 @@ $(function() {
             return;
         }
         
-        var ajaxLink = getUrl($(this).attr('ajaxlink'));
         var url = getUrl($(this).attr('href'));
+        
+        var ajaxLink = getUrl($(this).attr('ajaxlink'));
         var useLink = ajaxLink ? ajaxLink : url;
         if (history.pushState) {
             window.history.pushState({ url: url, ajaxLink: ajaxLink}, "Title", url);

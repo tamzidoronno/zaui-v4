@@ -12,6 +12,7 @@
  */
 class GetShopHelper {
     public static function makeSeoUrl($name) {
+        $factory = IocContainer::getFactorySingelton();
         $name = str_replace(" ", "_", $name);
         $name = str_replace("/", "_", $name);
         $name = strtolower($name);

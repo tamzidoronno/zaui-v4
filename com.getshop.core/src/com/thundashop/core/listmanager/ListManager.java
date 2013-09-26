@@ -553,17 +553,35 @@ public class ListManager extends ManagerBase implements IListManager {
         }
     }
 
-    @Override
-    public String getPageIdByName(String name) {
-        
-        for (EntryList entryList : allEntries.values()) {
-            for (Entry entry : entryList.entries) {
-                String entryName = makeSeoUrl(entry.name);
-                if (entryName.equals(name)) {
-                    return entry.pageId;
-                }
+    private String getPageIdByName(String name, List<Entry> entries) {
+        for (Entry entry : entries) {
+                
+            String found = "";
+            if (entry.subentries != null && !entry.subentries.isEmpty()) {
+                found = getPageIdByName(name, entry.subentries);
+            }
+            
+            if (!found.equals("")) {
+                return found;
+            }
+            
+            String entryName = makeSeoUrl(entry.name);
+            if (entryName.equals(name)) {
+                return entry.pageId;
             }
         }
+        
         return "";
+    }
+    
+    @Override
+    public String getPageIdByName(String name) {
+        String found = "";
+        for (EntryList entryList : allEntries.values()) {
+            if (found.equals("")) {
+                found = getPageIdByName(name, entryList.entries);
+            }
+        }
+        return found;
     }
 }

@@ -77,9 +77,7 @@ if (history.pushState) {
         if (event.state) {
             var url = event.state.ajaxLink ? event.state.ajaxLink : event.state.url;
             thundashop.Ajax.doJavascriptNavigation(url, null, true);
-        } else {
-            thundashop.Ajax.doJavascriptNavigation("?page=home", null, null);
-        }
+        } 
     }
 };
 

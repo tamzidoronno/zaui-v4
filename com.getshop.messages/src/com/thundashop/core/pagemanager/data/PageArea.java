@@ -37,15 +37,17 @@ public class PageArea implements Serializable {
 
     public void populateApplications(Map<String, AppConfiguration> applicationCollection, boolean onlyExtraApplications) {
         applications.clear();
-        if (!onlyExtraApplications) {
-            for (String applicationId : applicationsList) {
-                AppConfiguration appConfig = applicationCollection.get(applicationId);
-                if (appConfig != null) {
-                    appConfig.originalPageId = pageId;
+        
+        for (String applicationId : applicationsList) {
+            AppConfiguration appConfig = applicationCollection.get(applicationId);
+            if (appConfig != null) {
+                appConfig.originalPageId = pageId;
+                if (!onlyExtraApplications || appConfig.appName.equals("LeftMenu")) {
                     applications.put(appConfig.id, appConfig);
                 }
             }
         }
+        
         
         populateExtraApplications(applicationCollection);
     }

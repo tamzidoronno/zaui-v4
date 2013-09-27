@@ -116,6 +116,10 @@ label.error {
     z-index: 1200;
 }
 
+.disconnected { z-index: 1203; }
+.connecting { z-index: 1202; }
+.loading { z-index: 1201; }
+
 .disconnected div,
 .connecting div,
 .loading div {

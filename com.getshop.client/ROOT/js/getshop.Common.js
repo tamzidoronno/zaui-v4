@@ -695,3 +695,10 @@ __w = function(text) {
 __o = function(text) {
     return getText(text);
 };
+
+$(document).ready(function() {
+    var cookieWarning = $('#cookiewarning_overlay');
+    if (cookieWarning.length > 0) {
+        cookieWarning.fadeIn(200);
+    }
+});

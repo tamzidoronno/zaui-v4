@@ -1404,6 +1404,7 @@ margin-left:256px;
     line-height: 30px;
     color: #FFF;
     border-bottom: solid 1px #000;
+    display:none;
 }
 
 .deepfreezeinformation {

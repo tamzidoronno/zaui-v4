@@ -148,12 +148,8 @@ public class DatabaseSocketHandler implements Runnable {
                 ASyncHandler handler = i.next();
                 handler.handleMessage(this);
             }
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-        } catch (FileNotFoundException ex2) {
-            ex2.printStackTrace();
-        } catch (IOException ex3) {
-            ex3.printStackTrace();
+        } catch (Exception ex4) {
+            System.out.println("Warning, failed ot load database network settings from file, message: " + ex4.getMessage());
         }
     }
     

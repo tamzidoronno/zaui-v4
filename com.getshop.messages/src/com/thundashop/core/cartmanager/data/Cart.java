@@ -7,12 +7,9 @@ package com.thundashop.core.cartmanager.data;
 import com.google.gson.Gson;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.ExchangeConvert;
-import com.thundashop.core.common.Setting;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.data.Address;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -25,6 +22,8 @@ public class Cart extends DataCommon {
     public boolean isShippingFree = false;
     
     public Address address;
+    public Coupon coupon;
+    public Double couponCost;
     
     private CartItem getCartItem(String productId, List<String> variations) {
         for (CartItem cartItem : items) {
@@ -80,10 +79,12 @@ public class Cart extends DataCommon {
    
     public void clear() {
         shippingCost = 0;
+        coupon = null;
+        couponCost = null;
         items.clear();
     }
 
-    public Double getTotal(boolean excludeFreeShipping) {
+    private Double getProductTotal(boolean excludeFreeShipping) {
         Double total = 0D;
         for (CartItem cartItem : items) {
             if(excludeFreeShipping && cartItem.getProduct().freeShipping) {
@@ -92,6 +93,29 @@ public class Cart extends DataCommon {
             total += cartItem.getProduct().price * cartItem.getCount();
         }
         return total;
+    }
+    
+    public Double getTotal(boolean excludeFreeShipping) {
+        Double total = getProductTotal(excludeFreeShipping);
+        total -= getCouponCost(total);
+        return total;
+    }
+    
+    public Double getCouponCost(Double total) {
+        Double retValue = 0D;
+        if (coupon != null) {    
+            if (coupon.type == CouponType.FIXED) {
+                retValue = Double.valueOf(coupon.amount);
+            }
+            if (coupon.type == CouponType.PERCENTAGE) {
+                if (coupon.amount > 0 && coupon.amount < 100) {
+                    Double percentage = Double.valueOf(coupon.amount);
+                    retValue = percentage/100*total;
+                }
+            }
+        }    
+        
+        return retValue;
     }
     
     public List<CartItem> getItems() {
@@ -114,8 +138,15 @@ public class Cart extends DataCommon {
         return shippingCost;
     }
 
+    private void setCouponCost() {
+        Double total = getProductTotal(false);
+        couponCost = getCouponCost(total);
+    }
+    
     public void finalizeCart() {
         List<CartItem> allItems = items;
+        setCouponCost();
+        
         if(allItems == null || allItems.isEmpty()) {
             isShippingFree = false;
             return;
@@ -129,6 +160,5 @@ public class Cart extends DataCommon {
         }
         
         isShippingFree = true;
-    }
-      
+    }     
 }

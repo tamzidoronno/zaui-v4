@@ -1,6 +1,7 @@
 package com.thundashop.core.cartmanager;
 
 import com.thundashop.core.cartmanager.data.Cart;
+import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.ordermanager.OrderManager;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 public class CartManager extends ManagerBase implements ICartManager {
+    public HashMap<String, Coupon> coupons = new HashMap();
     private HashMap<String, Cart> carts = new HashMap();
 
     @Autowired
@@ -30,6 +32,12 @@ public class CartManager extends ManagerBase implements ICartManager {
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
+        for (DataCommon dataObject : data.data) {
+            if (dataObject instanceof Coupon) {
+                Coupon coupon = (Coupon)dataObject;
+                coupons.put(coupon.code, coupon);
+            }
+        }
     }
 
     private Cart getCart(String sessionId) {
@@ -129,5 +137,60 @@ public class CartManager extends ManagerBase implements ICartManager {
         OrderManager orderManager = getManager(OrderManager.class);
         orderManager.finalizeCart(cart);
         return cart.getTotal(true);
+    }
+
+    @Override
+    public void addCoupon(Coupon coupon) throws ErrorException {
+        coupon.storeId = storeId;
+        databaseSaver.saveObject(coupon, credentials);
+        coupons.put(coupon.code, coupon);
+    }
+
+    @Override
+    public void applyCouponToCurrentCart(String code) throws ErrorException {
+        Coupon coupon = coupons.get(code);
+        if (coupon == null) {
+            throw new ErrorException(99);
+        }
+        
+        Cart cart = getCart(getSession().id);
+        cart.coupon = coupon;
+    }
+
+    @Override
+    public List<Coupon> getCoupons() {
+        return new ArrayList(coupons.values());
+    }
+
+    @Override
+    public void removeAllCoupons() throws ErrorException {
+        for (Coupon coupon : coupons.values()) {
+            databaseSaver.deleteObject(coupon, credentials);
+        }
+        coupons.clear();
+    }
+
+    public void updateCoupons(Coupon coupon) throws ErrorException {
+        if (coupon != null) {
+            Coupon inMemoryCoupon = coupons.get(coupon.code);
+            if (inMemoryCoupon == null) {
+                return;
+            }
+            if (inMemoryCoupon.timesLeft > 1) {
+                inMemoryCoupon.timesLeft--;
+                databaseSaver.saveObject(inMemoryCoupon, credentials);
+            } else {
+                coupons.remove(coupon.code);
+                databaseSaver.deleteObject(inMemoryCoupon, credentials);
+            }
+        }
+    }
+
+    @Override
+    public void removeCoupon(String code) throws ErrorException {
+        Coupon coupon = coupons.remove(code);
+        if (coupon != null) {
+            databaseSaver.deleteObject(coupon, credentials);
+        }
     }
 }

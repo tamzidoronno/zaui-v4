@@ -283,7 +283,7 @@ App = {
                                 me.getshopApi.ContentManager.getContent(application.id).done(function(content) {
                                     content = content.replace("/displayImage", "http://www.getshop.com/displayImage")
                                     var contentHtml = $(content);
-                                    contentHtml.find('img').css('height','100%');
+                                    contentHtml.find('img').css('height','auto');
                                     contentHtml.find('img').css('width','100%');
                                     contentHolder.html(contentHtml);
                                 });

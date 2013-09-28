@@ -186,7 +186,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         saveOrder(order);
 
         updateStockQuantity(order, "trackControl");
-
+        updateCouponsCount(order);
+        
         Store store = this.getStore();
         String orderText = getCustomerOrderText(order);
 
@@ -327,5 +328,25 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
         throw new ErrorException(61);
+    }
+
+    @Override
+    public Double getTotalAmount(Order order) {
+        Double toPay = order.cart.getTotal(false);
+        
+        if (order.shipping != null && order.shipping.cost > 0) {
+            toPay += order.shipping.cost;
+        }
+        
+        if (toPay < 0) {
+            toPay = 0D;
+        }
+        
+        return toPay;
+    }
+
+    private void updateCouponsCount(Order order) throws ErrorException {
+        CartManager cartManager = getManager(CartManager.class);
+        cartManager.updateCoupons(order.cart.coupon);
     }
 }

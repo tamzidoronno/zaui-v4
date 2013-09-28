@@ -65,6 +65,7 @@ GetShopApiWebSocket.prototype = {
     },
             
     disconnected: function() {
+        this.sentMessages = [];
         this.fireDisconnectedEvent();
         this.connectionEstablished = false;
         this.reconnect();

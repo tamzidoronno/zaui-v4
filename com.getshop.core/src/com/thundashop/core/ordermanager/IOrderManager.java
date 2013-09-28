@@ -74,4 +74,12 @@ public interface IOrderManager {
      */
     @Administrator
     public void changeOrderStatus(String id, int status) throws ErrorException;
+    
+    /**
+     * Calculate the total amount to pay for the order.
+     * 
+     * @param order
+     * @return 
+     */
+    public Double getTotalAmount(Order order);
 }

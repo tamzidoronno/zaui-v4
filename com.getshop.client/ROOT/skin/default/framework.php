@@ -900,7 +900,7 @@ font-size:12px;
 .tabs .tabset .tab:hover { background-color: #EFEFEF; }
 .tabs .tabset .tab.active { background-color: #DDD; border-top: solid 1px #BBB;  border-bottom: solid 1px #BBB; border-right: solid 1px #BBB; }
 
-.tabs .tab_content .content_holder { display: none; width: 775px;}
+.tabs .tab_content .content_holder { display: none; }
 .tabs .tab_content .active { display: block; }
 
 .tabs .tab_content .application { padding-left: 10px; }

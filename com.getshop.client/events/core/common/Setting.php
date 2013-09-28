@@ -9,5 +9,8 @@ class core_common_Setting extends core_common_DataCommon  {
 	/** @var String */
 	public $secure;
 
+	/** @var String */
+	public $list;
+
 }
 ?>

@@ -113,7 +113,11 @@ public class Cart extends DataCommon {
                     retValue = percentage/100*total;
                 }
             }
-        }    
+        }
+        
+        if (retValue > total) {
+            retValue = total;
+        }
         
         return retValue;
     }

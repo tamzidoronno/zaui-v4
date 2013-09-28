@@ -24,4 +24,5 @@ public class Address extends DataCommon {
     public String address;
     public String city;
     public String type;
+    public String countrycode;
 }

@@ -49,6 +49,17 @@ class Factory extends FactoryBase {
         return $text;
     }
     
+    public function getTerritoriesList() {
+        $lang = "en";
+        if(isset($this->getSettings()->language)) {
+            $lang = $this->getSettings()->language->value;
+        }
+        $lang = substr($lang,0,2);
+        $countries = json_decode(file_get_contents("translation/countries/".$lang."_territories.json"), true);
+        return $countries['main'][$lang]['localeDisplayNames']['territories'];
+    }
+
+    
     public function getWebShopTranslation() {
         if (!isset($this->translation))
             return array();

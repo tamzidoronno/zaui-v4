@@ -28,10 +28,16 @@ class core_listmanager_data_Entry {
 	public $productId;
 
 	/** @var String */
+	public $counter;
+
+	/** @var String */
 	public $subentries;
 
 	/** @var String */
 	public $pageType;
+
+	/** @var String */
+	public $uniqueId;
 
 }
 ?>

@@ -117,6 +117,7 @@ class FactoryBase {
         return $string;
     }
 
+    
     /**
      * Translate the text into correct language.
      * 

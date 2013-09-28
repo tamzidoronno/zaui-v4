@@ -96,6 +96,7 @@
 "96","Can not rename attribute to an attribute which already exists."
 "97","The users you try to modify is not in your group."
 "98","Incorrect deepfreeze password."
+"99","The coupon code is invalid."
 "1000","Left menu entry already exists."
 "1001","Menu entry does not exists."
 "1002","App configuration does not exists."

@@ -332,6 +332,13 @@
 	}
 	
 	/**
+	 * @return \core_cartmanager_data_Coupon
+	 */
+	public static function core_cartmanager_data_Coupon() {
+		return new \core_cartmanager_data_Coupon();
+	}
+	
+	/**
 	 * @return \core_cartmanager_data_CartItem
 	 */
 	public static function core_cartmanager_data_CartItem() {
@@ -343,6 +350,13 @@
 	 */
 	public static function core_cartmanager_data_Cart() {
 		return new \core_cartmanager_data_Cart();
+	}
+	
+	/**
+	 * @return \core_cartmanager_data_CouponType
+	 */
+	public static function core_cartmanager_data_CouponType() {
+		return new \core_cartmanager_data_CouponType();
 	}
 	
 	/**

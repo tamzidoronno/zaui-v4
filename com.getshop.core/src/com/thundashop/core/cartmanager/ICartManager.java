@@ -1,6 +1,8 @@
 package com.thundashop.core.cartmanager;
 
 import com.thundashop.core.cartmanager.data.Cart;
+import com.thundashop.core.cartmanager.data.Coupon;
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.usermanager.data.Address;
@@ -73,6 +75,7 @@ public interface ICartManager {
      */
     public Double calculateTotalCost(Cart cart) throws ErrorException;
     
+    
     /**
      * Set a new address to the current cart.
      */
@@ -89,4 +92,38 @@ public interface ICartManager {
      * Should be in base currency.
      */
     public void setShippingCost(double shippingCost) throws ErrorException;
+    
+    /**
+     * Add coupons to the system.
+     */
+    @Administrator
+    public void addCoupon(Coupon coupon) throws ErrorException;
+    
+    /**
+     * Apply the coupon to the cart.
+     */
+    public void applyCouponToCurrentCart(String code) throws ErrorException;
+    
+    /**
+     * Returns a list of all coupons.
+     * @return 
+     */
+    @Administrator
+    public List<Coupon> getCoupons();
+    
+    /**
+     * Remove all coupons from the system.
+     * @throws ErrorException 
+     */
+    @Administrator
+    public void removeAllCoupons() throws ErrorException;
+    
+    /**
+     * Remove a coupon from the system.
+     * 
+     * @param coupon
+     * @throws ErrorException 
+     */
+    @Administrator
+    public void removeCoupon(String code) throws ErrorException;
 }

@@ -1,25 +1,51 @@
-###### ee96fe89_e09d_4f7b_921a_3272462e9b7e (Airgram) ######
-Airgram allows you to push important notifications to your phone, use this application to push notifications to your cell phone when something important is happening, for example if someone is starting to chat with you, you will be instantly notified and can responde accordingly. Just download airgram from google play or app store and start using it.;-;
-
-
-###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 ######
+###### framework ######
 Activate this option if you wish to provide your customer with Fjincadeau payment;-;
 Activate this option if you wish to provide your customer with Mister Cash payment;-;
 Activate this option if you wish to provide your customer with Podium payment;-;
 Activate this option if you wish to provide your customer with Sofort Banking payment;-;
 Activate this option if you wish to provide your customer with eBill payment;-;
 Activate this option if you wish to provide your customer with iDeal payment;-;
+Add coupons;-;
+Add more coupons;-;
+Airgram allows you to push important notifications to your phone, use this application to push notifications to your cell phone when something important is happening, for example if someone is starting to chat with you, you will be instantly notified and can responde accordingly. Just download airgram from google play or app store and start using it.;-;
+Amount;-;
 By enabling testmode for sisow, you will be able to test the payment solutions in sandbox mode.;-;
+Coupon name;-;
+Current available cupons;-;
+Discount in percentage?;-;
 Enable test mode for sisow;-;
+Error;-;
+Fixed price discount?;-;
 Here you can configure all the settings required to get sisow to work properly with your account. Enter the fields below and press save, as soon as everything here is set correctly you will see that a new payment options is available in the checkout area.;-;
+How many times can this coupon be used?;-;
+Increase your sale potential by giving your valued customers discounts with promotion codes.;-;
 Merchant id;-;
 Merchant key;-;
+Order number;-;
+Others;-;
+Pay on pickup;-;
+Percentage price;-;
+Remaining;-;
+Rows;-;
+Shipping to country;-;
 Should Fjincadeau be activated?;-;
 Should Mister Cash be activated?;-;
 Should Podium be activated?;-;
 Should Sofort Banking be activated?;-;
 Should eBill be activated?;-;
 Should iDeal be activated?;-;
+Sidebar;-;
+Status changed;-;
+The Coupon name can not be blank.;-;
+The discount can not be 0 or the amount of times coupons can be used can not be 0;-;
+The order status has been updated;-;
+The percentage must be between 0 and 100;-;
+There are two different types of coupons, fixed price and percentage price. Fixed price is giving your valued customers a fixed rate off for each time they buy something from the store. The Percentage price gives a percentage discount to your total cost of the cart.;-;
+To edit the text, move the mouse over this text. Then you will see a toolbox that you can click on, click on the pen in this toolbox.;-;
+Tracking number;-;
+Type;-;
+What countries are you selling to?;-;
+You dont have any cupons added.;-;
 Your merchant account is deactivated, please check with sisow to get it activated.;-;
 Your merchant id, this id is something that sisow is providing you.;-;
 Your merchant key and id is correct;-;

@@ -1,28 +1,28 @@
-###### 2ebd7c69_eba3_4b7e_85c6_0e0bd274aad0 (SedoxCarList) ######
+###### framework ######
 0-100 km/h;-;
+All fields are required;-;
+Apply coupon;-;
+Country;-;
+Coupon;-;
+Coupon discount;-;
+Got a coupon from use? Apply it and get discount.;-;
+Order sent;-;
 Original (hp);-;
 Original (nm);-;
+Reminder sent by email;-;
 Stage 1 (hp):;-;
 Stage 1 (nm):;-;
 Stage 2 (hp):;-;
 Stage 2 (nm):;-;
 Stage 3 (hp):;-;
 Stage 3 (nm):;-;
-Top speed;-;
-
-
-###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
-Reminder sent by email;-;
-The event has been confirmed.;-;
-description;-;
-
-
-###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
-All fields are required;-;
 Stop;-;
+The event has been confirmed.;-;
+Top speed;-;
 Your are now signed up for the event;-;
 change;-;
 course;-;
+description;-;
 org;-;
 orgnummer;-;
 

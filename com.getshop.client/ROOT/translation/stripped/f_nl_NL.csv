@@ -1,80 +1,78 @@
-###### 565ea7bd_c56b_41fe_b421_18f873c63a8f ######
+###### framework ######
+Add coupons;-;
+Add more coupons;-;
 Allows your customers to specify that they will pay on delivery.;-;
-Pay on delivery;-;
-
-
-###### d02f8b7a_7395_455d_b754_888d7d701db8 (Dibs) ######
-Have a look at http://www.dibspayment.com/ for more information.;-;
-The Merchant-ID is provided by Dibs, please contact us for more information.;-;
-
-
-###### a109b0f1_97c3_4292_a46f_4c6894a9841c (PartnerApplicationSelection) ######
-Activate / deactivate the applications you would like your customers to have access to.;-;
-List has been saved;-;
-
-
-###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
+Amount;-;
+Configure your booking application;-;
+Coupon name;-;
 Create event;-;
+Current available cupons;-;
+Discount in percentage?;-;
 Edit event;-;
+Enable this option to send email when a booking has been made.;-;
+Error;-;
+Fixed price discount?;-;
+Have a look at http://www.dibspayment.com/ for more information.;-;
+How many times can this coupon be used?;-;
+If this option has been enabled the attendee will receive an sms.;-;
+Increase your sale potential by giving your valued customers discounts with promotion codes.;-;
+Order number;-;
+Others;-;
+Percentage price;-;
+Remaining;-;
 Reminder sent by sms;-;
+Rows;-;
+SMS From;-;
+SMS Text;-;
+Send email;-;
 Send reminder;-;
+Send sms to attendee?;-;
+Shipping to country;-;
+Sidebar;-;
+Specify boundaries the map should restrict itself to. Leave it empty to avoid boundaries. Or add multiple rectangular fields as constraints.;-;
+Status changed;-;
+The Coupon name can not be blank.;-;
+The Merchant-ID is provided by Dibs, please contact us for more information.;-;
+The default title to use when sending emails.;-;
+The discount can not be 0 or the amount of times coupons can be used can not be 0;-;
+The order status has been updated;-;
+The password for your smtp server.;-;
+The percentage must be between 0 and 100;-;
+The port for your smtp server.;-;
+The username for your smtp server.;-;
+There are two different types of coupons, fixed price and percentage price. Fixed price is giving your valued customers a fixed rate off for each time they buy something from the store. The Percentage price gives a percentage discount to your total cost of the cart.;-;
+This is the mail that will be sent upon booking;-;
+Title when sending emails;-;
+To edit the text, move the mouse over this text. Then you will see a toolbox that you can click on, click on the pen in this toolbox.;-;
+Tracking number;-;
+Type;-;
+What countries are you selling to?;-;
+What should be the sender name?;-;
+What should the text message contain?;-;
+You dont have any cupons added.;-;
 add_event;-;
+add_news;-;
+appid;-;
+appid_required;-;
+create_news_desc;-;
 edit;-;
 event_desc;-;
 event_name;-;
+fraktguiden is a norwegian application for keeping track of norwegian shipment prices, shipment tracking etc.;-;
 free_positions;-;
+latitude;-;
+like_button;-;
+like_button_desc;-;
+longitide;-;
 max_atandees;-;
 no_activites;-;
+profile_url;-;
+profile_url_desc;-;
 send_reminder;-;
 start;-;
 start_time;-;
 stop;-;
-
-
-###### 2da52bbc_a392_4125_92b6_eec1dc4879e9 (Bring) ######
-fraktguiden is a norwegian application for keeping track of norwegian shipment prices, shipment tracking etc.;-;
-
-
-###### ba885f72_f571_4a2e_8770_e91cbb16b4ad (Facebook) ######
-appid;-;
-appid_required;-;
-like_button;-;
-like_button_desc;-;
-profile_url;-;
-profile_url_desc;-;
-
-
-###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
-Configure your booking application;-;
-Enable this option to send email when a booking has been made.;-;
-If this option has been enabled the attendee will receive an sms.;-;
-SMS From;-;
-SMS Text;-;
-Send email;-;
-Send sms to attendee?;-;
-The default title to use when sending emails.;-;
-This is the mail that will be sent upon booking;-;
-Title when sending emails;-;
-What should be the sender name?;-;
-What should the text message contain?;-;
-
-
-###### dabb8a85_f593_43ec_bf0d_240467118a40 (News) ######
-add_news;-;
-create_news_desc;-;
 subscribe_news;-;
-
-
-###### 17c48891_6f7a_47a0_849d_b50de9af218f (GoogleMaps) ######
-Specify boundaries the map should restrict itself to. Leave it empty to avoid boundaries. Or add multiple rectangular fields as constraints.;-;
-latitude;-;
-longitide;-;
 zoom;-;
-
-
-###### 8ad8243c_b9c1_48d4_96d5_7382fa2e24cd (Mail) ######
-The password for your smtp server.;-;
-The port for your smtp server.;-;
-The username for your smtp server.;-;
 
 

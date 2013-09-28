@@ -108,9 +108,21 @@ td.gs_col .applicationarea { height: 100%; }
 .skeleton16 .gs_col .applicationarea,.skeleton17 .gs_col .applicationarea { min-height: 200px; }
 
 .skeletondisplayer {
-    text-align: center;
+    text-left: center;
     padding-bottom: 20px;
 }
+
+.skeletondisplayer .group {
+    padding-left: 40px;
+}
+
+.skeletondisplayer h3 {
+    text-align: center;
+    margin: 0px;
+    background-color: #eEE;
+    margin-top: 20px;
+}
+
 .skeletondisplayer .skeletondisplay {
     width: 200px;
     height: 200px;

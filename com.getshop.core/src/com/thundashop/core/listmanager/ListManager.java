@@ -30,6 +30,7 @@ import org.springframework.stereotype.Component;
 @Scope("prototype")
 public class ListManager extends ManagerBase implements IListManager {
     public Map<String, EntryList> allEntries = new HashMap();
+    private Integer currentUniqueCounter = -1;
     
     @Autowired
     public ListManager(Logger log, DatabaseSaver databaseSaver) {
@@ -114,6 +115,7 @@ public class ListManager extends ManagerBase implements IListManager {
     }
 
     private List<Entry> buildEntries(String listId) {
+        genereateUniqueIds();
         if (allEntries == null) {
             allEntries = new HashMap();
         }
@@ -583,5 +585,39 @@ public class ListManager extends ManagerBase implements IListManager {
             }
         }
         return found;
+    }
+
+    private void genereateUniqueIds() {
+        List<Entry> tmpAllEntries = new ArrayList();
+        HashMap<String, Boolean> count = new HashMap();
+        
+        for(EntryList list : allEntries.values()) {
+            addToList(list.entries, tmpAllEntries);
+        }
+        
+        for(Entry entry : tmpAllEntries) {
+            if(count.containsKey(entry.name)) {
+                count.put(entry.name, true);
+            } else {
+                count.put(entry.name, false);
+            }
+        }
+        
+        for(Entry entry : tmpAllEntries) {
+            if(count.get(entry.name)) {
+                entry.uniqueId = entry.name + "_" + entry.pageId;
+            } else {
+                entry.uniqueId = entry.name;
+            }
+        }
+    }
+
+    private void addToList(List<Entry> entries, List<Entry> tmpAllEntries) {
+        for(Entry entry : entries) {
+            tmpAllEntries.add(entry);
+            if(entry.subentries != null && !entry.subentries.isEmpty()) {
+                addToList(entry.subentries, tmpAllEntries);
+            }
+        }
     }
 }

@@ -4,6 +4,9 @@
  */
 package com.thundashop.core.common;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author ktonder

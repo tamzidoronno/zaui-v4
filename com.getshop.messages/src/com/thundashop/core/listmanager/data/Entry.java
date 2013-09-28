@@ -22,6 +22,7 @@ public class Entry implements Serializable {
     public int userLevel;
     public String id;
     public String productId;
+    public int counter = -1;
     
     //Appended when fetching the list.
     public List<Entry> subentries;
@@ -29,4 +30,7 @@ public class Entry implements Serializable {
     @Transient
     //If you don't want it to use the default page type 1, then specify it here on creation.
     public int pageType = 1;
+    
+    @Transient
+    public String uniqueId;
 }

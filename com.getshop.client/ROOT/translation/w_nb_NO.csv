@@ -1,4 +1,5 @@
 ###### framework ######
+0-100 km/h;-;0-100 km/h
 A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
 Add to cart;-;Legg i handlekurv
 Address;-;Adresse
@@ -7,11 +8,13 @@ All fields are required.;-;Alle felt er påkrevd
 All orders;-;Alle bestilinger
 An email has been sent to you with the confirmation code.;-;En godkjennings kode er sendt til din epost.
 Application;-;Applikasjoner
+Apply coupon;-;Bruk kupong
 April;-;April
 August;-;August
 Banner settings;-;Banner innstillinger
 Birth Date;-;Bursdag
 Buy;-;Kjøp
+By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;Sisow er en nederlands betalingsmetode, bruk denne om du ønsker å tilby kundene dine iDeal
 Cancel order;-;Kanselert ordre
 Canceled;-;Kanselert
 Cart overview;-;Handlekurv oversikt
@@ -29,14 +32,20 @@ Configure banner slider;-;Konfigurer banner slideren
 Confirm order;-;Bekreft ordre
 Continue;-;Fortsett
 Cookies are being stored;-;Cookier blir lagret
+Country;-;Land
+Coupon;-;Kupong
+Coupon discount;-;Kupong avslag
 Customer information;-;Kunde detaljer
 Date;-;Dato
 December;-;Desember
 Delete image;-;Slett bilde
 Details;-;Detaljer
+Did not find the specified company, please check your company number;-;Fant ikke det angitte firmaet, vennligst sjekk organisasjonret
+Download ebill;-;Last ned ebill
 Email;-;Epost
 Email sent;-;Epost sendt
 End date;-;Slutt dato
+Enter organisation number and this will be filled out automatically;-;Fyll inn organisasjonsnret og denne boksen vil bli fylt ut automatisk
 Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.L
 Extended Description;-;Utvidet beskrivelse
 Failed;-;Feilet
@@ -46,16 +55,19 @@ Fixed price;-;Fast pris
 Free shipping;-;Gratis frakt
 Friday;-;Fredag
 Full name;-;Hele navnet
+Got a coupon from use? Apply it and get discount.;-;Har du en kupong? bruk den her
 Group;-;Gruppe
 How can I help you today ?;-;Hva kan jeg hjelpe deg med?
 I agree to the terms and conditions;-;Jeg godtar bruksvilkårene
 I am sorry, but all fields are required before sending a message.;-;Beklager, men alle felt må fylles ut før du sender en melding.
 Invalid email address;-;Ugyldig epost adresse
 Invalid payment method;-;Ugyldig betalings metode
+Invoice email;-;Regnings addresse
 January;-;Januar
 July;-;Juli
 June;-;Juni
 Les mer;-;Les mer
+Loading data... please wait;-;Laster, vennligst vent...
 Login;-;Logg inn
 Logout;-;Logg ut
 Lost your password?;-;Glemt ditt passord?
@@ -77,8 +89,12 @@ Old password;-;Gammelt passord
 Order;-;Ordre
 Order Created;-; Ordre opprettet
 Order date;-;Bestillings dato
+Order sent;-;Ordre sent
 Orders;-;Alle ordre
+Organisation;-;Organisasjon
 Organisation name;-;Selskapnavn
+Original (hp);-;Orginal hp
+Original (nm);-;Original nm
 Other images;-;Andre bilder
 Our local time is:;-;Vår lokale tid er
 Password;-;Passord
@@ -90,6 +106,7 @@ Password missmatch;-;Passordene stemmer ikke oversens
 Payment;-;Betaling
 Payment failed;-;Betaling feilet
 Payment information;-;Betalings informasjon
+Payment successfully completed;-;Betalingen gjennomført
 Phone;-;Telefon
 Place order;-;Legg inn ordre
 Please check your delivery options.;-;Vennligst sjekk dine leveringsmetoder.
@@ -99,6 +116,7 @@ Please select a payment method.;-;Vennligst veng en betalingsmetode
 Please select a user in the left menu;-;Vennligst velg en bruker fra venstre meny.
 Please select a valid payment method;-;Vennligst velg en gyldig betalings metode.
 Please select department;-;Velg en avdeling
+Post code;-;Post.nr
 Postal code;-;Postnummer
 Previous;-;Forrige
 Price;-;Pris
@@ -126,6 +144,12 @@ Shipping cost;-;Fraktkostnader
 Shipping price;-;Forendelse pris
 Sign up;-;Registrer deg
 Sorry;-;Beklager
+Stage 1 (hp):;-;Stage 1 hp:
+Stage 1 (nm):;-;Stage 1 nm:
+Stage 2 (hp):;-;Stage 2 hp:
+Stage 2 (nm):;-;Stage 2 nm:
+Stage 3 (hp):;-;Stage 3 hp:
+Stage 3 (nm):;-;Stage 3 nm:
 Start date;-;Start dato
 Status;-;Status
 Stop;-;Stopp
@@ -133,7 +157,9 @@ Success;-;Success
 Sunday;-;Søndag
 Taxes;-;Skatter
 Terms and Conditions;-;Bruksvilkår
+Thank you for ordering with Sisow ebill;-;Takk for at du bestilte med Sisow ebill
 Thank you for your order.;-;Takk for din bestilling.
+Thank you, you will now be redirected to the payment service;-;Takk, du blir nå overført til betalingstjenesten
 The email address is invalid.;-;Eposten din er ugyldig.
 The email already exists, please log on to continue.;-;Eposten eksisterer allerede, vennligst logg på for å fortsette.
 The event has been confirmed.;-;Eventent har blitt bekreftet.
@@ -143,6 +169,7 @@ This page is only available for editors.;-;Denne siden er kun tilgjengelig for e
 This page is only available for registered users.;-;Denne siden er kun tilgjengelig for registrerte brukere
 Thursday;-;Torsdag
 To be able to serve you we need to store a tiny amount of data about your browser. An identification id is being generated and added to your web browser. This allows us to track you for a two hours periode while you are navigating this site. This data is anonymous and are only being used to identify your web browser and not you as a person.;-;For at det skal være mulig bruke denne web siden må vi lagre en liten bit av data på din nettleser. Dette er en identifikasjons id som gjør det mulig å identifisere deg som en bruker mens du surfer på denne siden. Denne dataen blir lagret i 20 timer og er 100% anonym.
+Top speed;-;Topp hastighet
 Total;-;Total
 Tuesday;-;Tirsdag
 Update;-;Oppdater
@@ -153,6 +180,7 @@ Was not able to get payment methods, please check your postcode;-;Klarte ikke å
 We host events at the following locations, click on the location to filter the calendar by location(s);-;We har events på følgende steder, trykk på stedet for å filtere kalenderen på stedet(ene)
 Wednesday;-;Onsdag
 Weight;-;Vekt
+What email address do you want the ebill to be sent to?;-;Hvilken epost ønsker du at ebill skal sendes til?
 What's on your mind?;-;Hva ønsker du å formidle?
 Wrong delivery method;-;Feil forsendelses metode.
 You are being transferred to paypal, please wait...;-;Du  blir nå overført til paypal, vennligst vent.
@@ -162,6 +190,9 @@ You do not have any products in your cart;-;Du har ingen produkter i din handlek
 You need to select at least one to send back message to;-;Du må velge minium en som du kan sende en melding til.
 Your are now signed up for the event;-;Du er nå registert inn på denne eventen.
 Your message has been delivered;-;Din melding har blitt sendt.
+Your order has been canceled due to incorrect payment information, please try again.;-;Orderen din har blitt avbrutt pga manglende betaling.
+Your order has now been completed and is waiting to be shipped.;-;Orderen din har blitt gjennomført og venter på å bli sendt.
+Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;Du vil snart motta en epost med din ebill, eller så kan du last den ned på følgende link
 Your personal information;-;Din personlige informasjon
 change;-;endre
 course;-;kurs

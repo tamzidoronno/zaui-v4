@@ -1,5 +1,5 @@
 <?php
-class core_usermanager_data_Company {
+class core_usermanager_data_Company extends core_common_DataCommon  {
 	/** @var String */
 	public $streetAddress;
 

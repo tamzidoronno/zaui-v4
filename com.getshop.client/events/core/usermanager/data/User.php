@@ -16,6 +16,9 @@ class core_usermanager_data_User extends core_common_DataCommon  {
 	public $emailAddress;
 
 	/** @var String */
+	public $emailAddressToInvoice;
+
+	/** @var String */
 	public $password;
 
 	/** @var String */

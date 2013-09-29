@@ -156,3 +156,21 @@ label.error {
     cursor: pointer;
     box-shadow: 0px 0px 3px #000;
 }
+
+.companyinformation {
+    border: solid 2px #CCC;
+    border-radius: 7px;
+    padding: 5px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    
+}
+
+.companyinformation .value {
+    display: inline-block;    
+}
+
+.companyinformation .description {
+    width: 100px;
+    display: inline-block;
+}

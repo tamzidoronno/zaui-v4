@@ -20,7 +20,6 @@ GetShopApiWebSocket.prototype = {
         if (this.connectionEstablished === null) {
             this.fireDisconnectedEvent();
         }
-        console.log("trying to connect: " + this.address);
         var address = "ws://"+this.address+":31330/";
         this.socket = new WebSocket(address);
         this.socket.onopen = $.proxy(this.connected, this);
@@ -65,7 +64,7 @@ GetShopApiWebSocket.prototype = {
     },
             
     disconnected: function() {
-        this.sentMessages = [];
+        this.sentMessages = []; 
         this.fireDisconnectedEvent();
         this.connectionEstablished = false;
         this.reconnect();
@@ -128,10 +127,9 @@ GetShopApiWebSocket.prototype = {
 
         return text;
     }
-}
+};
 
-
-;GetShopApiWebSocket.BannerManager = function(communication) {
+GetShopApiWebSocket.BannerManager = function(communication) {
     this.communication = communication;
 }
 
@@ -706,6 +704,17 @@ GetShopApiWebSocket.CartManager = function(communication) {
 }
 
 GetShopApiWebSocket.CartManager.prototype = {
+    addCoupon : function(coupon) {
+        data = {
+            args : {
+                coupon : JSON.stringify(coupon),
+            },
+            method: 'addCoupon',
+            interfaceName: 'core.cartmanager.ICartManager',
+        };
+        return this.communication.send(data);
+    },
+
     addProduct : function(productId,count,variations) {
         data = {
             args : {
@@ -714,6 +723,17 @@ GetShopApiWebSocket.CartManager.prototype = {
                 variations : JSON.stringify(variations),
             },
             method: 'addProduct',
+            interfaceName: 'core.cartmanager.ICartManager',
+        };
+        return this.communication.send(data);
+    },
+
+    applyCouponToCurrentCart : function(code) {
+        data = {
+            args : {
+                code : JSON.stringify(code),
+            },
+            method: 'applyCouponToCurrentCart',
             interfaceName: 'core.cartmanager.ICartManager',
         };
         return this.communication.send(data);
@@ -760,6 +780,16 @@ GetShopApiWebSocket.CartManager.prototype = {
         return this.communication.send(data);
     },
 
+    getCoupons : function() {
+        data = {
+            args : {
+            },
+            method: 'getCoupons',
+            interfaceName: 'core.cartmanager.ICartManager',
+        };
+        return this.communication.send(data);
+    },
+
     getShippingCost : function() {
         data = {
             args : {
@@ -775,6 +805,27 @@ GetShopApiWebSocket.CartManager.prototype = {
             args : {
             },
             method: 'getShippingPriceBasis',
+            interfaceName: 'core.cartmanager.ICartManager',
+        };
+        return this.communication.send(data);
+    },
+
+    removeAllCoupons : function() {
+        data = {
+            args : {
+            },
+            method: 'removeAllCoupons',
+            interfaceName: 'core.cartmanager.ICartManager',
+        };
+        return this.communication.send(data);
+    },
+
+    removeCoupon : function(code) {
+        data = {
+            args : {
+                code : JSON.stringify(code),
+            },
+            method: 'removeCoupon',
             interfaceName: 'core.cartmanager.ICartManager',
         };
         return this.communication.send(data);
@@ -989,17 +1040,6 @@ GetShopApiWebSocket.GetShop.prototype = {
         return this.communication.send(data);
     },
 
-    connectStoreToPartner : function(partner) {
-        data = {
-            args : {
-                partner : JSON.stringify(partner),
-            },
-            method: 'connectStoreToPartner',
-            interfaceName: 'core.getshop.IGetShop',
-        };
-        return this.communication.send(data);
-    },
-
     findAddressForApplication : function(uuid) {
         data = {
             args : {
@@ -1022,11 +1062,13 @@ GetShopApiWebSocket.GetShop.prototype = {
         return this.communication.send(data);
     },
 
-    getPartnerId : function() {
+    getPartnerData : function(partnerId,password) {
         data = {
             args : {
+                partnerId : JSON.stringify(partnerId),
+                password : JSON.stringify(password),
             },
-            method: 'getPartnerId',
+            method: 'getPartnerData',
             interfaceName: 'core.getshop.IGetShop',
         };
         return this.communication.send(data);
@@ -1043,11 +1085,14 @@ GetShopApiWebSocket.GetShop.prototype = {
         return this.communication.send(data);
     },
 
-    getStoresConnectedToMe : function() {
+    setApplicationList : function(ids,partnerId,password) {
         data = {
             args : {
+                ids : JSON.stringify(ids),
+                partnerId : JSON.stringify(partnerId),
+                password : JSON.stringify(password),
             },
-            method: 'getStoresConnectedToMe',
+            method: 'setApplicationList',
             interfaceName: 'core.getshop.IGetShop',
         };
         return this.communication.send(data);
@@ -1160,6 +1205,17 @@ GetShopApiWebSocket.ListManager.prototype = {
         return this.communication.send(data);
     },
 
+    getPageIdByName : function(name) {
+        data = {
+            args : {
+                name : JSON.stringify(name),
+            },
+            method: 'getPageIdByName',
+            interfaceName: 'core.listmanager.IListManager',
+        };
+        return this.communication.send(data);
+    },
+
     orderEntry : function(id,after,parentId) {
         data = {
             args : {
@@ -1168,6 +1224,18 @@ GetShopApiWebSocket.ListManager.prototype = {
                 parentId : JSON.stringify(parentId),
             },
             method: 'orderEntry',
+            interfaceName: 'core.listmanager.IListManager',
+        };
+        return this.communication.send(data);
+    },
+
+    setEntries : function(listId,entries) {
+        data = {
+            args : {
+                listId : JSON.stringify(listId),
+                entries : JSON.stringify(entries),
+            },
+            method: 'setEntries',
             interfaceName: 'core.listmanager.IListManager',
         };
         return this.communication.send(data);
@@ -1247,6 +1315,18 @@ GetShopApiWebSocket.OrderManager = function(communication) {
 }
 
 GetShopApiWebSocket.OrderManager.prototype = {
+    changeOrderStatus : function(id,status) {
+        data = {
+            args : {
+                id : JSON.stringify(id),
+                status : JSON.stringify(status),
+            },
+            method: 'changeOrderStatus',
+            interfaceName: 'core.ordermanager.IOrderManager',
+        };
+        return this.communication.send(data);
+    },
+
     createOrder : function(address) {
         data = {
             args : {
@@ -1269,6 +1349,17 @@ GetShopApiWebSocket.OrderManager.prototype = {
         return this.communication.send(data);
     },
 
+    getOrderByincrementOrderId : function(id) {
+        data = {
+            args : {
+                id : JSON.stringify(id),
+            },
+            method: 'getOrderByincrementOrderId',
+            interfaceName: 'core.ordermanager.IOrderManager',
+        };
+        return this.communication.send(data);
+    },
+
     getOrders : function(orderIds,page,pageSize) {
         data = {
             args : {
@@ -1277,6 +1368,17 @@ GetShopApiWebSocket.OrderManager.prototype = {
                 pageSize : JSON.stringify(pageSize),
             },
             method: 'getOrders',
+            interfaceName: 'core.ordermanager.IOrderManager',
+        };
+        return this.communication.send(data);
+    },
+
+    getTotalAmount : function(order) {
+        data = {
+            args : {
+                order : JSON.stringify(order),
+            },
+            method: 'getTotalAmount',
             interfaceName: 'core.ordermanager.IOrderManager',
         };
         return this.communication.send(data);
@@ -1522,12 +1624,23 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data);
     },
 
-    getSecuredSettings : function(appName) {
+    getSecuredSettings : function(applicationInstanceId) {
+        data = {
+            args : {
+                applicationInstanceId : JSON.stringify(applicationInstanceId),
+            },
+            method: 'getSecuredSettings',
+            interfaceName: 'core.pagemanager.IPageManager',
+        };
+        return this.communication.send(data);
+    },
+
+    getSecuredSettingsInternal : function(appName) {
         data = {
             args : {
                 appName : JSON.stringify(appName),
             },
-            method: 'getSecuredSettings',
+            method: 'getSecuredSettingsInternal',
             interfaceName: 'core.pagemanager.IPageManager',
         };
         return this.communication.send(data);
@@ -1575,6 +1688,17 @@ GetShopApiWebSocket.PageManager.prototype = {
                 config : JSON.stringify(config),
             },
             method: 'saveApplicationConfiguration',
+            interfaceName: 'core.pagemanager.IPageManager',
+        };
+        return this.communication.send(data);
+    },
+
+    savePage : function(page) {
+        data = {
+            args : {
+                page : JSON.stringify(page),
+            },
+            method: 'savePage',
             interfaceName: 'core.pagemanager.IPageManager',
         };
         return this.communication.send(data);
@@ -1656,19 +1780,6 @@ GetShopApiWebSocket.ProductManager = function(communication) {
 }
 
 GetShopApiWebSocket.ProductManager.prototype = {
-    addAttributeGroupToProduct : function(productId,attributeGroup,attribute) {
-        data = {
-            args : {
-                productId : JSON.stringify(productId),
-                attributeGroup : JSON.stringify(attributeGroup),
-                attribute : JSON.stringify(attribute),
-            },
-            method: 'addAttributeGroupToProduct',
-            interfaceName: 'core.productmanager.IProductManager',
-        };
-        return this.communication.send(data);
-    },
-
     addImage : function(productId,productImageId,description) {
         data = {
             args : {
@@ -1704,24 +1815,21 @@ GetShopApiWebSocket.ProductManager.prototype = {
         return this.communication.send(data);
     },
 
-    deleteAttribute : function(groupName,attribute) {
+    getAllAttributes : function() {
         data = {
             args : {
-                groupName : JSON.stringify(groupName),
-                attribute : JSON.stringify(attribute),
             },
-            method: 'deleteAttribute',
+            method: 'getAllAttributes',
             interfaceName: 'core.productmanager.IProductManager',
         };
         return this.communication.send(data);
     },
 
-    deleteGroup : function(groupName) {
+    getAllProducts : function() {
         data = {
             args : {
-                groupName : JSON.stringify(groupName),
             },
-            method: 'deleteGroup',
+            method: 'getAllProducts',
             interfaceName: 'core.productmanager.IProductManager',
         };
         return this.communication.send(data);
@@ -1743,6 +1851,17 @@ GetShopApiWebSocket.ProductManager.prototype = {
                 count : JSON.stringify(count),
             },
             method: 'getLatestProducts',
+            interfaceName: 'core.productmanager.IProductManager',
+        };
+        return this.communication.send(data);
+    },
+
+    getPageIdByName : function(productName) {
+        data = {
+            args : {
+                productName : JSON.stringify(productName),
+            },
+            method: 'getPageIdByName',
             interfaceName: 'core.productmanager.IProductManager',
         };
         return this.communication.send(data);
@@ -1805,49 +1924,12 @@ GetShopApiWebSocket.ProductManager.prototype = {
         return this.communication.send(data);
     },
 
-    removeAttributeGroupFromProduct : function(productId,attributeGroupId) {
-        data = {
-            args : {
-                productId : JSON.stringify(productId),
-                attributeGroupId : JSON.stringify(attributeGroupId),
-            },
-            method: 'removeAttributeGroupFromProduct',
-            interfaceName: 'core.productmanager.IProductManager',
-        };
-        return this.communication.send(data);
-    },
-
     removeProduct : function(productId) {
         data = {
             args : {
                 productId : JSON.stringify(productId),
             },
             method: 'removeProduct',
-            interfaceName: 'core.productmanager.IProductManager',
-        };
-        return this.communication.send(data);
-    },
-
-    renameAttribute : function(groupName,oldAttributeName,newAttributeName) {
-        data = {
-            args : {
-                groupName : JSON.stringify(groupName),
-                oldAttributeName : JSON.stringify(oldAttributeName),
-                newAttributeName : JSON.stringify(newAttributeName),
-            },
-            method: 'renameAttribute',
-            interfaceName: 'core.productmanager.IProductManager',
-        };
-        return this.communication.send(data);
-    },
-
-    renameAttributeGroupName : function(oldName,newName) {
-        data = {
-            args : {
-                oldName : JSON.stringify(oldName),
-                newName : JSON.stringify(newName),
-            },
-            method: 'renameAttributeGroupName',
             interfaceName: 'core.productmanager.IProductManager',
         };
         return this.communication.send(data);
@@ -1882,6 +1964,17 @@ GetShopApiWebSocket.ProductManager.prototype = {
                 entryIds : JSON.stringify(entryIds),
             },
             method: 'translateEntries',
+            interfaceName: 'core.productmanager.IProductManager',
+        };
+        return this.communication.send(data);
+    },
+
+    updateAttributePool : function(groups) {
+        data = {
+            args : {
+                groups : JSON.stringify(groups),
+            },
+            method: 'updateAttributePool',
             interfaceName: 'core.productmanager.IProductManager',
         };
         return this.communication.send(data);
@@ -1986,12 +2079,24 @@ GetShopApiWebSocket.StoreManager = function(communication) {
 }
 
 GetShopApiWebSocket.StoreManager.prototype = {
-    createStore : function(hostname,email,password) {
+    connectStoreToPartner : function(partner) {
+        data = {
+            args : {
+                partner : JSON.stringify(partner),
+            },
+            method: 'connectStoreToPartner',
+            interfaceName: 'core.storemanager.IStoreManager',
+        };
+        return this.communication.send(data);
+    },
+
+    createStore : function(hostname,email,password,notify) {
         data = {
             args : {
                 hostname : JSON.stringify(hostname),
                 email : JSON.stringify(email),
                 password : JSON.stringify(password),
+                notify : JSON.stringify(notify),
             },
             method: 'createStore',
             interfaceName: 'core.storemanager.IStoreManager',
@@ -2098,6 +2203,18 @@ GetShopApiWebSocket.StoreManager.prototype = {
         return this.communication.send(data);
     },
 
+    setDeepFreeze : function(mode,password) {
+        data = {
+            args : {
+                mode : JSON.stringify(mode),
+                password : JSON.stringify(password),
+            },
+            method: 'setDeepFreeze',
+            interfaceName: 'core.storemanager.IStoreManager',
+        };
+        return this.communication.send(data);
+    },
+
     setIntroductionRead : function() {
         data = {
             args : {
@@ -2154,6 +2271,17 @@ GetShopApiWebSocket.UserManager.prototype = {
                 userId : JSON.stringify(userId),
             },
             method: 'deleteUser',
+            interfaceName: 'core.usermanager.IUserManager',
+        };
+        return this.communication.send(data);
+    },
+
+    doEmailExists : function(email) {
+        data = {
+            args : {
+                email : JSON.stringify(email),
+            },
+            method: 'doEmailExists',
             interfaceName: 'core.usermanager.IUserManager',
         };
         return this.communication.send(data);
@@ -2225,6 +2353,16 @@ GetShopApiWebSocket.UserManager.prototype = {
             args : {
             },
             method: 'getLoggedOnUser',
+            interfaceName: 'core.usermanager.IUserManager',
+        };
+        return this.communication.send(data);
+    },
+
+    getStoresConnectedToMe : function() {
+        data = {
+            args : {
+            },
+            method: 'getStoresConnectedToMe',
             interfaceName: 'core.usermanager.IUserManager',
         };
         return this.communication.send(data);
@@ -2317,6 +2455,19 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data);
     },
 
+    requestAdminRight : function(managerName,managerFunction,applicationInstanceId) {
+        data = {
+            args : {
+                managerName : JSON.stringify(managerName),
+                managerFunction : JSON.stringify(managerFunction),
+                applicationInstanceId : JSON.stringify(applicationInstanceId),
+            },
+            method: 'requestAdminRight',
+            interfaceName: 'core.usermanager.IUserManager',
+        };
+        return this.communication.send(data);
+    },
+
     resetPassword : function(resetCode,username,newPassword) {
         data = {
             args : {
@@ -2379,6 +2530,23 @@ GetShopApiWebSocket.UserManager.prototype = {
     },
 
 }
+GetShopApiWebSocket.UtilManager = function(communication) {
+    this.communication = communication;
+}
+
+GetShopApiWebSocket.UtilManager.prototype = {
+    getCompanyFromBrReg : function(companyVatNumber) {
+        data = {
+            args : {
+                companyVatNumber : JSON.stringify(companyVatNumber),
+            },
+            method: 'getCompanyFromBrReg',
+            interfaceName: 'core.utils.IUtilManager',
+        };
+        return this.communication.send(data);
+    },
+
+}
 
 GetShopApiWebSocket.prototype.createManagers = function() {
     this.BannerManager = new GetShopApiWebSocket.BannerManager(this);
@@ -2400,4 +2568,5 @@ GetShopApiWebSocket.prototype.createManagers = function() {
     this.ReportingManager = new GetShopApiWebSocket.ReportingManager(this);
     this.StoreManager = new GetShopApiWebSocket.StoreManager(this);
     this.UserManager = new GetShopApiWebSocket.UserManager(this);
+    this.UtilManager = new GetShopApiWebSocket.UtilManager(this);
 }

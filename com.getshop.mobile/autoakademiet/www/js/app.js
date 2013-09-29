@@ -8,7 +8,7 @@ App = {
     showingMonth : 0,
     startMonth : 0,
     startYear : 0,
-//    isLoaded : false,
+    reloadData : null,
     monthIndex : 1,
     
     start: function() {
@@ -49,11 +49,7 @@ App = {
         $('.connecting').hide();
         this.monthIndex = 1;
         this.activateFilter("");
-        $.mobile.changePage('#home', {
-            done: function() {
-                alert('test');
-            }
-        });
+        $.mobile.changePage('#home');
     },
             
     transferCompleted: function() {
@@ -163,6 +159,7 @@ App = {
         var me = this;
         var name = $('#name').val();
         var email = $('#email').val();
+        var invoiceemail = $('#invoiceemail').val();
         var phone = $('#phone').val();
         var vatnr = $('#vatnr').val();
         var company = $('#company').val();
@@ -182,9 +179,6 @@ App = {
         
         if (vatnr === "") 
             $('label[for=vatnr]').addClass('error');
-        
-        if (company === "") 
-            $('label[for=company]').addClass('error');
         
         if (courseId === "") 
             $('label[for=courseId]').addClass('error');
@@ -208,24 +202,33 @@ App = {
         if ($('label.error').length > 0) {
             alert('Vennligst rett feltene i rødt');
         } else {
-            var password = Math.floor(Math.random()*90000) + 10000;
-            var user = {
-                fullName : name,
-                emailAddress : email,
-                type : 10,
-                password : password,
-                birthDay : vatnr,
-                companyName : company,
-                cellPhone : phone, 
-                groups : [groupId]
-            };
-            
-            me.getshopApi.UserManager.createUser(user).done(function(createUser) {
-                me.getshopApi.CalendarManager.addUserToEvent(createUser.id, courseId, password, createUser.username).done(function() {
-                    alert('Du er nå påmeldt kurset');
-                    document.location.href = document.URL.substring(0, document.URL.indexOf("#"));
+            this.getshopApi.UtilManager.getCompanyFromBrReg(vatnr).done(function(company) {
+                if(!company.name) {
+                    alert('klarte ikke å finne firma med oppgitt org.nr, vennligst sjekk');
+                    return;
+                }
+                
+                var password = Math.floor(Math.random()*90000) + 10000;
+                var user = {
+                    fullName : name,
+                    emailAddress : email,
+                    type : 10,
+                    password : password,
+                    birthDay : vatnr,
+                    cellPhone : phone, 
+                    groups : [groupId],
+                    company: company,
+                    emailAddressToInvoice: invoiceemail
+                };
+
+                me.getshopApi.UserManager.createUser(user).done(function(createUser) {
+                    me.getshopApi.CalendarManager.addUserToEvent(createUser.id, courseId, password, createUser.username).done(function() {
+                        alert('Du er nå påmeldt kurset');
+                        document.location.href = document.URL.substring(0, document.URL.indexOf("#"));
+                    });
                 });
             });
+            
         }
     },
             
@@ -233,6 +236,52 @@ App = {
         $('#next').click($.proxy(this.nextClicked,this));
         $('#prev').click($.proxy(this.prevClicked,this));
         $('#signon').click($.proxy(this.signOnClicked,this));
+        $('#vatnr').keyup($.proxy(this.vatnumberupdated,this))
+    },
+            
+    vatnumberupdated: function() {
+        var value = $('#vatnr').val();
+        var informationPage = $('.companyinformation');
+        if (value.length === 9) {
+            var outer = $('<div/>');
+            var loader = $('<img src="css/images/ajaxloader.gif"/><br>');
+            outer.append(loader);
+            outer.append('Laster data, vennligst vent');
+            outer.css('text-align', 'center');
+            informationPage.html(outer);
+            var emptyRow = $('<div><div class="description"/><div class="value"/></div>');
+            this.getshopApi.UtilManager.getCompanyFromBrReg(value).done(function(company) {
+                informationPage.html("");
+                
+                if (!company.name) {
+                    informationPage.html("Fant ingen treff på oppgitt org.nr, vennligst sjekk og prøv på nytt.");
+                    return;
+                }
+                
+                var row = emptyRow.clone();
+                row.find('.description').html("Navn");
+                row.find('.value').html(company.name);
+                informationPage.append(row);
+                
+                var row = emptyRow.clone();
+                row.find('.description').html("Addresse");
+                row.find('.value').html(company.streetAddress);
+                informationPage.append(row);
+                
+                var row = emptyRow.clone();
+                row.find('.description').html("Post.nr");
+                row.find('.value').html(company.postnumber);
+                informationPage.append(row);
+                
+                var row = emptyRow.clone();
+                row.find('.description').html("City");
+                row.find('.value').html(company.city);
+                informationPage.append(row);
+            });
+        } else {
+            var invalidText = "Du har ikke oppgitt et gyldig org nr, det må være 9 tegn, du har oppgitt: " + value.length;
+            informationPage.html(invalidText);
+        }
     },
             
     createCalendars: function() {
@@ -296,6 +345,7 @@ App = {
             });
         });
     },
+    
     loadFilters: function() {
         var me = this;
         this.getshopApi.CalendarManager.getFilters().done(function(filters) {
@@ -316,6 +366,7 @@ App = {
             filterHolder.trigger('create');
         });
     },
+    
     activateFilter: function(filter) {
         filter = filter.replace(/'/g, "\\'");
         $('td.date_has_event').removeClass('disabled');
@@ -559,3 +610,17 @@ App.Calendar.prototype = {
         this.loadData();
     }
 };
+
+TextValidator = {
+    validate: function(evt) {
+        var theEvent = evt || window.event;
+        var key = theEvent.keyCode || theEvent.which;
+        key = String.fromCharCode(key);
+        var regex = /[0-9]|\./;
+        if (!regex.test(key)) {
+            theEvent.returnValue = false;
+            if (theEvent.preventDefault)
+                theEvent.preventDefault();
+        }
+    }
+}

@@ -99,12 +99,16 @@ and open the template in the editor.
                     <input type="text" data-clear-btn="true" name="text-6" id="name" value="" >
                     <label for="email">E-post</label>
                     <input type="text" data-clear-btn="true" name="text-6" id="email" value="" >
+                    <label for="email">E-post Teknisk Leder</label>
+                    <input type="text" data-clear-btn="true" name="text-6" id="invoiceemail" value="" >
                     <label for="phone">Mob.Tlf.</label>
                     <input type="text" data-clear-btn="true" name="text-6" id="phone" value="" >
                     <label for="vatnr">Org.nr.</label>
-                    <input type="text" data-clear-btn="true" name="text-6" id="vatnr" value="" >
+                    <input type="text" data-clear-btn="true" onkeypress='TextValidator.validate(event)' name="text-6" id="vatnr" value="" >
                     <label for="company">Firma.</label>
-                    <input type="text" data-clear-btn="true" name="text-19" id="company">
+                    <div class="companyinformation">
+                        Skriv inn org.nr, så vil informasjonen fylles ut automatisk.
+                    </div>
 
                     <div data-role="fieldcontain">
                         <label for="select-native-1">Velg kurs: </label>

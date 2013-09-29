@@ -54,14 +54,14 @@ public class AddApplicationsToDatabase {
     private List<ApplicationSettings> addApplications() {
         List<ApplicationSettings> apps = new ArrayList();
 //
-        ApplicationSettings promotionCodes = createSettings(
-                "Coupon",
-                "90cd1330-2815-11e3-8224-0800200c9a66",
-                emtpy,
-                "",
-                ApplicationSettings.Type.Marketing, true);
-        promotionCodes.isPublic = true;
-        apps.add(promotionCodes);      
+//        ApplicationSettings promotionCodes = createSettings(
+//                "Coupon",
+//                "90cd1330-2815-11e3-8224-0800200c9a66",
+//                emtpy,
+//                "",
+//                ApplicationSettings.Type.Marketing, true);
+//        promotionCodes.isPublic = true;
+//        apps.add(promotionCodes);      
 //        
 //        ApplicationSettings callback = createSettings(
 //                "Callback", 

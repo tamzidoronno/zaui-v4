@@ -148,6 +148,9 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
         text = mutateText(password, text, entry, user);
         mailFactory.send("noreply@getshop.com", user.emailAddress, subject, text);
+        if (user.emailAddressToInvoice != null && !user.emailAddressToInvoice.equals("")) {
+            mailFactory.send("noreply@getshop.com", user.emailAddressToInvoice, subject, text);
+        }
     }
 
     private void sendSms(String password, Entry entry, User user) throws ErrorException {

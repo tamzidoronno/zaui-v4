@@ -30,6 +30,7 @@ public class User extends DataCommon  {
     public Address address;
     public String fullName = "";
     public String emailAddress = "";
+    public String emailAddressToInvoice = "";
     
     public String password = "";
     public String username = "";

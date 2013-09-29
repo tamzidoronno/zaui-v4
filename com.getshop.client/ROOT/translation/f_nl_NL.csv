@@ -27,6 +27,7 @@ Add an image by clicking the button below to start your image upload progress.;-
 Add application;-;Voeg App toe
 Add images to the product;-;Voeg afbeeldingen toe aan het product
 Add more applications to this page.;-;Voeg meer Apps toe aan deze pagina.
+Add more coupons;-;Voeg korting codes toe
 Add new;-;Voeg nieuw toe
 Add new banner;-;Voeg nieuwe banner toe
 Add new top level variation;-;Voeg nieuwe variatie toe
@@ -58,6 +59,7 @@ All users;-;Alle gebruikers
 Allow guests to add events.;-;Sta gasten toe een event toe te voegen.
 Allows you to create a terms and condition page which has to be accepted by your customers before ordering.;-;Maak een pagina met 'Voorwaarden' aan. Deze moet dan geaccepteerd worden door klanten bij een bestelling.
 Already created instances of this app;-;Bestaande zaken van deze app
+Amount;-;Prijs
 Anonymous user;-;Anonieme gebruiker
 Answering your customers questions, means more sale. By adding this excellent chat application, you can answer on request at any time from you mobile devices or your stationary computer.;-;Beantwoorden van klanten vragen, betekent stijgende verkoop. Door deze chat applicatie toe te voegen, kan je ten alle tijde vragen van je klanten via pc of smartphone beantwoorden.
 Application management;-;Applicatie beheer
@@ -196,6 +198,7 @@ Everyone will be able to access and see this menu entry.;-;Iedereen heeft toegan
 Expiration date;-;Vervaldag
 Favicon;-;Favicon
 First Page;-;Eerste pagina
+Fixed price discount?;-;Korting prijs
 Footer;-;Footer
 Free shipping if total price is above, if set empty this feature is disabled;-;Gratis verzending als het totaal erboven komt. Als je het leeg laat staat deze functie uit.
 Gallery;-;Gallery
@@ -216,6 +219,7 @@ Hide search bar;-;Verberg zoekfunctie
 Hide shipping price from this product?;-;Toon geen verzendkosten bij dit product?
 History;-;Geschiedenis
 Hostname;-;Hostnaam
+How many times can this coupon be used?;-;Hoeveel keer mag deze gebruikt worden?
 If a order is canceled, should the items from the order be put back in stock?;-;Als een bestelling geannuleerd is, moet de stockvoorraad terug aangevuld worden?
 If converting to a different currency, you can specify a percentage of how much more you would like to append to conversion when the conversion calculation is done. For example 10 will give you a 10% higher conversion rate.;-;Indien je omzet naar een andere munteenheid, kan je een omzetpercentage ingeven. Bijvoorbeeld 10 zal je 10% hogere omzetfee geven.
 If the total amount in the basket is outside of the range above, use this price.;-;Als het totaal bedrag in het winkelmandje boven een bepaalde grens is, gebruik dan deze prijs.
@@ -231,6 +235,7 @@ Import an existing application;-;Importeer een Applicatie
 Import an existing application.;-;Importeer een bestaande applicatie
 Import application;-;Importeer App
 Import to area;-;Importeer naar veld
+Increase your sale potential by giving your valued customers discounts with promotion codes.;-;Verhoog je verkoopcijfers met klanten een korting aan te bieden
 Insert image;-;Voeg afbeelding toe
 Insert images into any application area.;-;Voeg afbeeldingen toe in Applicatie veld
 Interval;-;Interval
@@ -247,7 +252,7 @@ Last logged on;-;Laatst ingelogd
 Left Menu;-;Linker menu
 Lets you easily connect to paypal, and give your customers option to pay using paypal.;-;Connecteer makkelijk met PayPal, zo kunnen bezoekers betalen via Paypal.
 Link to menu;-;Link naar menu
-Mail;-;Post
+Mail;-;Verzend email
 MailManager;-;Mail Manager
 MainMenu;-;Hoofd menu
 Manually select a color;-;Selecteer een kleur
@@ -309,6 +314,7 @@ Page views;-;Page views
 Pay on pickup;-;Betaal bij afhaling in winkel
 Payment application;-;Betaal applicatie
 Paypal address;-;Paypal emailadres
+Percentage price;-;Korting Percentage
 Please click on 'Add new top level variation' above;-;Klik bovenaan op 'Voeg nieuw variatie toe'
 Please enter your paypal address:;-;Geef je PayPal adres in.
 Please select;-;Selecteer
@@ -332,6 +338,7 @@ Products already added to your list;-;Producten al toegevoegd aan lijst
 Push the create application button to get you started.;-;Klik ‘maak applicatie aan’ om te starten.
 Real estate;-;Immo 
 Registration;-;Registratie
+Remaining;-;Aantal over
 Remove application;-;Verwijder applicatie
 Remove applications that are added;-;Verwijder toegevoegde Apps
 Remove from list;-;Verwijder van lijst
@@ -370,6 +377,7 @@ Set icon;-;Stel icoon in
 Settings;-;Settings
 Settings saved;-;Settings opgeslagen
 Setup your own domain;-;Stel je eigen domeinnaam in
+Shipping to country;-;Verzend naar
 Should Fjincadeau be activated?;-;Activeer Fjincadeau?
 Should Mister Cash be activated?;-;Activeer Mister Cash?
 Should Podium be activated?;-;Activeer Podium?
@@ -410,6 +418,7 @@ The hostname for your smtp server.;-;Hostnaam van je smtp server.
 The paypal account has not been configured correctly. Go to settings and configure it properly;-;Je paypal account is niet goed ingesteld, ga naar settings en doe de nodige aanpassingen.
 The text has been saved;-;Tekst opgeslagen
 The translation has been saved;-;De vertaling is opgeslagen
+There are two different types of coupons, fixed price and percentage price. Fixed price is giving your valued customers a fixed rate off for each time they buy something from the store. The Percentage price gives a percentage discount to your total cost of the cart.;-;Er zijn twee type kortings codes: Vaste prijs en Percentage prijs. Bij vaste prijs gaat er een vast bedrag van het totaal af. Bij Percentage prijs gaat er een % af van de totaalprijs
 There is one layout defined for each page, a layout can have multiple of rows and multiple of columns.;-;Je kan kiezen uit 15 templates om elke pagina vorm te geven.
 This application gives you the ability to control your stocks, simply change how many you have in stock on each product.;-;Met deze applicatie kan je de voorraad bijhouden. Pas je voorraad aan per product.
 This application is added to the following pages;-;Deze applicatie is toegevoegd aan de pagina’s
@@ -466,6 +475,7 @@ Warning. you are not connected as a partner yet, please contact getshop support!
 Web address;-;Webwinkel adres
 Webshop;-;Webwinkel
 What address are you using for the test enviroment to paypal?;-;Welk adres gebruik je als test voor Paypal?
+What countries are you selling to?;-;Naar welke landen verzend je?
 What is deepfreeze? Well, if you activate deepfreeze you basically put all options on hold, all changes made after deepfreezeing will be purged each hour.;-;What is deepfreeze? Well, if you activate deepfreeze you basically put all options on hold, all changes made after deepfreezeing will be purged each hour.
 What is product variations?;-;Wat zijn product variaties?
 When;-;Wanneer

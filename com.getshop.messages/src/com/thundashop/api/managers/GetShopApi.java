@@ -127,4 +127,10 @@ public class GetShopApi {
       public APIUserManager getUserManager() {
            return new APIUserManager(transport);
       }
+     /**
+      * @return APIUtilManager
+      */
+      public APIUtilManager getUtilManager() {
+           return new APIUtilManager(transport);
+      }
 }

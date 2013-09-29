@@ -3523,6 +3523,29 @@ class APIUserManager {
      }
 
 }
+class APIUtilManager {
+
+      var $transport;
+
+      function APIUtilManager($transport) {
+           $this->transport = $transport;
+      }
+
+     /**
+ *
+ * @author ktonder
+ */
+
+     public function getCompanyFromBrReg($companyVatNumber) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["companyVatNumber"] = json_encode($this->transport->object_unset_nulls($companyVatNumber));
+          $data["method"] = "getCompanyFromBrReg";
+          $data["interfaceName"] = "core.utils.IUtilManager";
+          return $this->transport->cast(API::core_usermanager_data_Company(), $this->transport->sendMessage($data));
+     }
+
+}
 class GetShopApi {
 
       var $transport;
@@ -3646,6 +3669,12 @@ class GetShopApi {
       */
       public function getUserManager() {
            return new APIUserManager($this->transport);
+      }
+     /**
+      * @return UtilManager
+      */
+      public function getUtilManager() {
+           return new APIUtilManager($this->transport);
       }
 }
 ?>

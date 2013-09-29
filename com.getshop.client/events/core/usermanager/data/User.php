@@ -51,6 +51,9 @@ class core_usermanager_data_User extends core_common_DataCommon  {
 	/** @var String */
 	public $hasChrome;
 
+	/** @var core_usermanager_data_Company */
+	public $company;
+
 	/** @var String */
 	public $partnerid;
 

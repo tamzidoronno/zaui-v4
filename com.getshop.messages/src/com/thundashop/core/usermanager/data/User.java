@@ -52,6 +52,8 @@ public class User extends DataCommon  {
     public String userAgent;
     public boolean hasChrome;
     
+    public Company company = null;
+    
     @Transient
     public String partnerid;
     

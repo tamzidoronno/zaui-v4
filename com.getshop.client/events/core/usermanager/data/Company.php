@@ -1,0 +1,25 @@
+<?php
+class core_usermanager_data_Company {
+	/** @var String */
+	public $streetAddress;
+
+	/** @var String */
+	public $postnumber;
+
+	/** @var String */
+	public $vatNumber;
+
+	/** @var String */
+	public $country;
+
+	/** @var String */
+	public $type;
+
+	/** @var String */
+	public $city;
+
+	/** @var String */
+	public $name;
+
+}
+?>

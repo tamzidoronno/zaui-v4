@@ -159,11 +159,15 @@ public class AProductManager extends ManagerBase {
                 boolean found = true;
                 for (String groupId : searchCriteria.attributeFilter.keySet()) {
                     if (prod.attributes.contains(groupId)) {
-                        if (!filteredProducts.contains(prod)) {
-                            filteredProducts.add(prod);
-                        }
-                        cachedResult.addToSummary(prod);
+                        found = true;
+                    } else {
+                        found = false;
+                        break;
                     }
+                }
+                if(found) {
+                    filteredProducts.add(prod);
+                    cachedResult.addToSummary(prod);
                 }
             }
             retProducts = filteredProducts;

@@ -2611,6 +2611,20 @@ class APIProductManager {
      }
 
      /**
+     * Get a list of all the taxes set for this store.
+     * @return List
+     * @throws ErrorException 
+     */
+
+     public function getTaxes() {
+          $data = array();
+          $data['args'] = array();
+          $data["method"] = "getTaxes";
+          $data["interfaceName"] = "core.productmanager.IProductManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Remove an existing product.
      * 
      * @param productId The id of the product to remove.
@@ -2659,6 +2673,21 @@ class APIProductManager {
           $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
           $data['args']["imageId"] = json_encode($this->transport->object_unset_nulls($imageId));
           $data["method"] = "setMainImage";
+          $data["interfaceName"] = "core.productmanager.IProductManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
+     * Set the tax groups for the the products, (0-5).
+     * @param group
+     * @throws ErrorException 
+     */
+
+     public function setTaxes($group) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["group"] = json_encode($this->transport->object_unset_nulls($group));
+          $data["method"] = "setTaxes";
           $data["interfaceName"] = "core.productmanager.IProductManager";
           return $this->transport->sendMessage($data);
      }

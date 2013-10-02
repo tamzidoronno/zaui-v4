@@ -16,20 +16,21 @@ public class AttributeSummary {
         this.pool = pool;
     }
 
-    public void addToSummary(Product value) {
-        if(value.attributes != null) {
-            for(String id : value.attributes) {
+    public void addToSummary(Product product) {
+        if(product.attributes != null) {
+            for(String id : product.attributes) {
                 AttributeValue thevalue = pool.getAttributeByValueId(id);
                 if(thevalue == null) {
                     continue;
                 }
-                AttributeSummaryEntry count = attributeCount.get(thevalue.groupName);
+                AttributeSummaryEntry count = attributeCount.get(id);
                 if(count == null) {
                     count = new AttributeSummaryEntry();
                     count.value = thevalue;
                 }
                 count.increaseCount();
                 attributeCount.put(id, count);
+                pool.values.get(id);
             }
         }
     }

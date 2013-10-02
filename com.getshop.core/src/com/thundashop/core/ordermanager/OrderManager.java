@@ -144,7 +144,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return newOrder;
     }
     
-    public void finalizeCart(Cart cart) throws ErrorException {
+     public void finalizeCart(Cart cart) throws ErrorException {
         ProductManager productManager = getManager(ProductManager.class);
         
         for (CartItem item : cart.getItems()) {

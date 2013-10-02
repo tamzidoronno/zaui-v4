@@ -11,6 +11,7 @@ import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
+import com.thundashop.core.productmanager.data.TaxGroup;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -239,5 +240,29 @@ public class ProductManager extends AProductManager implements IProductManager {
         }
         
         return "";
+    }
+
+    public boolean exists(String id) {
+        return products.containsKey(id);
+    }
+
+    @Override
+    public void setTaxes(List<TaxGroup> groups) throws ErrorException {
+        //Remove the old ones first.
+        for(TaxGroup grp : taxGroups.values()) {
+            databaseSaver.deleteObject(grp, credentials);
+        }
+        
+        taxGroups = new HashMap();
+        for(TaxGroup grp : groups) {
+            taxGroups.put(grp.groupNumber, grp);
+            grp.storeId = storeId;
+            databaseSaver.saveObject(grp, credentials);
+        }
+    }
+
+    @Override
+    public List<TaxGroup> getTaxes() throws ErrorException {
+        return new ArrayList(taxGroups.values());
     }
 }

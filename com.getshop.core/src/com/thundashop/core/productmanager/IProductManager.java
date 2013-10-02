@@ -7,6 +7,7 @@ import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
+import com.thundashop.core.productmanager.data.TaxGroup;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -168,4 +169,18 @@ public interface IProductManager {
      * Get page by name
      */
     public String getPageIdByName(String productName);
+    
+    /**
+     * Set the tax groups for the the products, (0-5).
+     * @param group
+     * @throws ErrorException 
+     */
+    public void setTaxes(List<TaxGroup> group) throws ErrorException;
+    
+    /**
+     * Get a list of all the taxes set for this store.
+     * @return
+     * @throws ErrorException 
+     */
+    public List<TaxGroup> getTaxes() throws ErrorException;
 }

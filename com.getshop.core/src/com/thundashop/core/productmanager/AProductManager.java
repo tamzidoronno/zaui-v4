@@ -14,6 +14,7 @@ import com.thundashop.core.productmanager.data.ProductCriteria;
 import com.thundashop.core.common.ExchangeConvert;
 import com.thundashop.core.productmanager.data.AttributeData;
 import com.thundashop.core.productmanager.data.AttributeValue;
+import com.thundashop.core.productmanager.data.TaxGroup;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,6 +28,7 @@ public class AProductManager extends ManagerBase {
     protected HashMap<String, Product> products = new HashMap();
     AttributeData pool = new AttributeData();
     AttributeSummary cachedResult;
+    public HashMap<Integer, TaxGroup> taxGroups = new HashMap();
 
     public AProductManager(Logger log, DatabaseSaver databaseSaver) {
         super(log, databaseSaver);
@@ -34,7 +36,7 @@ public class AProductManager extends ManagerBase {
 
     private Product finalize(Product product) throws ErrorException {
         PageManager manager = getManager(PageManager.class);
-        
+
         if (product != null && product.pageId != null && product.page == null) {
             product.page = manager.getPage(product.pageId);
         }
@@ -45,15 +47,15 @@ public class AProductManager extends ManagerBase {
                 product.price = ExchangeConvert.calculateExchangeRate(getSettings("Settings"), product.price);
             }
         }
-        
+
         product.attributesAdded = new HashMap();
-        for(String attrid : product.attributes) {
+        for (String attrid : product.attributes) {
             AttributeValue val = pool.getAttributeByValueId(attrid);
-            if(val != null) {
+            if (val != null) {
                 product.attributesAdded.put(val.groupName, val.value);
             }
         }
-        
+
         return product;
     }
 
@@ -65,7 +67,11 @@ public class AProductManager extends ManagerBase {
                 products.put(product.id, product);
             }
             if (object instanceof AttributeValue) {
-                pool.addAttributeValue((AttributeValue)object);
+                pool.addAttributeValue((AttributeValue) object);
+            }
+            if (object instanceof TaxGroup) {
+                TaxGroup group = (TaxGroup) object;
+                taxGroups.put(group.groupNumber, group);
             }
         }
     }
@@ -77,7 +83,7 @@ public class AProductManager extends ManagerBase {
             product.pageId = product.page.id;
             //
             AppConfiguration config = pageManager.addApplicationToPage(product.page.id, "dcd22afc-79ba-4463-bb5c-38925468ae26", "main_1");
-            
+
             Setting setting = new Setting();
             setting.type = "productid";
             setting.secure = false;
@@ -89,10 +95,10 @@ public class AProductManager extends ManagerBase {
 
     protected Product getProduct(String productId) throws ErrorException {
         Product product = products.get(productId);
-        product = finalize(product);
         if (product == null) {
             throw new ErrorException(1011);
         }
+        product = finalize(product);
 
         return product;
     }
@@ -125,7 +131,7 @@ public class AProductManager extends ManagerBase {
                 retProducts.add(product);
             }
         }
-        
+
         cachedResult = new AttributeSummary(pool);
 
         if (searchCriteria.listId != null && searchCriteria.listId.trim().length() > 0) {
@@ -133,16 +139,16 @@ public class AProductManager extends ManagerBase {
             List<Entry> list = manager.getList(searchCriteria.listId);
             for (Entry entry : list) {
                 Product product = products.get(entry.productId);
-                if(product == null) {
+                if (product == null) {
                     continue;
                 }
                 product = finalize(product);
                 retProducts.add(product);
-                
-                if(searchCriteria.attributeFilter.isEmpty()) {
+
+                if (searchCriteria.attributeFilter.isEmpty()) {
                     cachedResult.addToSummary(product);
                 }
-                
+
             }
         }
 
@@ -152,8 +158,8 @@ public class AProductManager extends ManagerBase {
             for (Product prod : retProducts) {
                 boolean found = true;
                 for (String groupId : searchCriteria.attributeFilter.keySet()) {
-                    if(prod.attributes.contains(groupId)) {
-                        if(!filteredProducts.contains(prod)) {
+                    if (prod.attributes.contains(groupId)) {
+                        if (!filteredProducts.contains(prod)) {
                             filteredProducts.add(prod);
                         }
                         cachedResult.addToSummary(prod);

@@ -1,6 +1,7 @@
 package com.thundashop.core.cartmanager;
 
 import com.thundashop.core.cartmanager.data.Cart;
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -45,6 +46,7 @@ public class CartManager extends ManagerBase implements ICartManager {
             carts.put(sessionId, new Cart());
         }
         Cart cart = carts.get(sessionId);
+        removeDeletedProducts(cart);
         cart.finalizeCart();
         return cart;
     }
@@ -78,7 +80,7 @@ public class CartManager extends ManagerBase implements ICartManager {
     @Override
     public Cart removeProduct(String cartItemId) throws ErrorException {
         Cart cart = getCart(getSession().id);
-        cart.removeProduct(cartItemId);
+        cart.removeItem(cartItemId);
         return cart;
     }
 
@@ -191,6 +193,22 @@ public class CartManager extends ManagerBase implements ICartManager {
         Coupon coupon = coupons.remove(code);
         if (coupon != null) {
             databaseSaver.deleteObject(coupon, credentials);
+        }
+    }
+
+    private void removeDeletedProducts(Cart cart) {
+        ProductManager manager = getManager(ProductManager.class);
+        
+        //Look for removed products.
+        List<CartItem> toRemove = new ArrayList();
+        for(CartItem item : cart.getItems()) {
+            if(!manager.exists(item.getProduct().id)) {
+                toRemove.add(item);
+            }
+        }
+        
+        for(CartItem remove : toRemove) {
+            cart.removeItem(remove.getCartItemId());
         }
     }
 }

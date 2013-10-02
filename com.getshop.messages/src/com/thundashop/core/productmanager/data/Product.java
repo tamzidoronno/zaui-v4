@@ -32,6 +32,7 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public boolean freeShipping = false;
     public boolean promoted = false;
     public boolean hideShippingPrice = false;
+    public int taxgroup = -1;
     
     //AttributegroupId, AttributeSelected
     public List<String> attributes = new ArrayList();

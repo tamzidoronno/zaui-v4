@@ -58,7 +58,7 @@ public class Cart extends DataCommon {
         cartItem.increseCounter();
     }
     
-    public void removeProduct(String cartItemId) {
+    public void removeItem(String cartItemId) {
         CartItem cartItem = getCartItem(cartItemId);
         items.remove(cartItem);
     }

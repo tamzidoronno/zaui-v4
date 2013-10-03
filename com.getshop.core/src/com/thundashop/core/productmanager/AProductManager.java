@@ -34,7 +34,7 @@ public class AProductManager extends ManagerBase {
         super(log, databaseSaver);
     }
 
-    private Product finalize(Product product) throws ErrorException {
+    public Product finalize(Product product) throws ErrorException {
         PageManager manager = getManager(PageManager.class);
 
         if (product != null && product.pageId != null && product.page == null) {

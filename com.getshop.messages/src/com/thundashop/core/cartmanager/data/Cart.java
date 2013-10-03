@@ -180,6 +180,10 @@ public class Cart extends DataCommon {
         Map<Integer, CartTax> taxes = new HashMap<Integer, CartTax>();
         
         Double remainingCouponCost = couponCost;
+        if (remainingCouponCost == null) {
+            remainingCouponCost = 0D;
+        } 
+        
         for (CartItem cartItem : getItems()) {
             if (cartItem.getProduct() != null && cartItem.getProduct().taxGroupObject != null) {
                 TaxGroup taxGroup = cartItem.getProduct().taxGroupObject;

@@ -194,13 +194,19 @@ public class ProductManager extends AProductManager implements IProductManager {
     @Override
     public List<Product> getAllProducts() throws ErrorException {
         ArrayList<Product> list = new ArrayList(products.values());
+        ArrayList<Product> finalized = new ArrayList();
+        for (Product prod : list) {
+            finalized.add(finalize(prod));
+        }
+        list = finalized;
+
         Comparator<Product> comparator = new Comparator<Product>() {
             public int compare(Product c1, Product c2) {
                 return c1.rowCreatedDate.compareTo(c2.rowCreatedDate);
             }
         };
-        
-        Collections.sort(list, comparator); 
+
+        Collections.sort(list, comparator);
         return list;
     }
 
@@ -238,7 +244,7 @@ public class ProductManager extends AProductManager implements IProductManager {
                 return product.pageId;
             }
         }
-        
+
         return "";
     }
 
@@ -249,12 +255,12 @@ public class ProductManager extends AProductManager implements IProductManager {
     @Override
     public void setTaxes(List<TaxGroup> groups) throws ErrorException {
         //Remove the old ones first.
-        for(TaxGroup grp : taxGroups.values()) {
+        for (TaxGroup grp : taxGroups.values()) {
             databaseSaver.deleteObject(grp, credentials);
         }
-        
+
         taxGroups = new HashMap();
-        for(TaxGroup grp : groups) {
+        for (TaxGroup grp : groups) {
             taxGroups.put(grp.groupNumber, grp);
             grp.storeId = storeId;
             databaseSaver.saveObject(grp, credentials);

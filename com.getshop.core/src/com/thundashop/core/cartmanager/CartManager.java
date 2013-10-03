@@ -2,12 +2,14 @@ package com.thundashop.core.cartmanager;
 
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.usermanager.data.Address;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,16 +53,18 @@ public class CartManager extends ManagerBase implements ICartManager {
         return cart;
     }
 
-    private Product getProduct(String productId) throws ErrorException {
+    private Product getProduct(String productId, List<String> variations) throws ErrorException {
         ArrayList<String> productIds = new ArrayList<String>();
         productIds.add(productId);
         ProductManager man = getManager(ProductManager.class);
-        return man.getProduct(productId);
+        Product product = man.getProduct(productId).clone();
+        product.price = man.getPrice(product.id, variations);
+        return product;
     }
 
     @Override
     public Cart addProduct(String productId, int count, List<String> variations) throws ErrorException {
-        Product product = getProduct(productId);
+        Product product = getProduct(productId, variations);
         if (product != null) {
             Cart cart = getCart(getSession().id);
             cart.addProduct(product, variations);
@@ -130,7 +134,10 @@ public class CartManager extends ManagerBase implements ICartManager {
             shippingCost = ExchangeConvert.calculateExchangeRate(getSettings("Settings"), shippingCost);
         } 
         Cart cart = this.getCart();
-        cart.setShippingCost(shippingCost);
+        
+        ProductManager productManager = getManager(ProductManager.class);
+        TaxGroup shippingTaxGroup = productManager.getTaxGroup(0);
+        cart.setShippingCost(shippingCost, shippingTaxGroup);
     }
 
     @Override
@@ -211,4 +218,11 @@ public class CartManager extends ManagerBase implements ICartManager {
             cart.removeItem(remove.getCartItemId());
         }
     }
+
+    @Override
+    public List<CartTax> getTaxes() throws ErrorException {
+        Cart cart = getCart();
+        return cart.getCartTaxes();
+    }
+
 }

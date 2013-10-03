@@ -7,10 +7,14 @@ package com.thundashop.core.cartmanager.data;
 import com.google.gson.Gson;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.ordermanager.data.Shipping;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.usermanager.data.Address;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -20,6 +24,7 @@ public class Cart extends DataCommon {
     private List<CartItem> items = new ArrayList();
     private double shippingCost = 0;
     public boolean isShippingFree = false;
+    public TaxGroup shippingTax = null;
     
     public Address address;
     public Coupon coupon;
@@ -90,9 +95,13 @@ public class Cart extends DataCommon {
             if(excludeFreeShipping && cartItem.getProduct().freeShipping) {
                 continue;
             }
-            total += cartItem.getProduct().price * cartItem.getCount();
+            total += getCartItemTotal(cartItem);
         }
         return total;
+    }
+    
+    private Double getCartItemTotal(CartItem cartItem) {
+        return cartItem.getProduct().price * cartItem.getCount();
     }
     
     public Double getTotal(boolean excludeFreeShipping) {
@@ -134,8 +143,9 @@ public class Cart extends DataCommon {
         return copied;
     }
 
-    public void setShippingCost(double shippingCost) throws ErrorException {
+    public void setShippingCost(double shippingCost, TaxGroup shippingTax) throws ErrorException {
         this.shippingCost = shippingCost;
+        this.shippingTax = shippingTax;
     }
 
     public double getShippingCost() {
@@ -165,4 +175,39 @@ public class Cart extends DataCommon {
         
         isShippingFree = true;
     }     
+
+    public List<CartTax> getCartTaxes() {
+        Map<Integer, CartTax> taxes = new HashMap<Integer, CartTax>();
+        
+        for (CartItem cartItem : getItems()) {
+            if (cartItem.getProduct() != null && cartItem.getProduct().taxGroupObject != null) {
+                TaxGroup taxGroup = cartItem.getProduct().taxGroupObject;
+                CartTax cartTax = taxes.get(taxGroup.groupNumber);
+                if (cartTax == null) {
+                    cartTax = new CartTax();
+                    cartTax.taxGroup = taxGroup;
+                    taxes.put(taxGroup.groupNumber, cartTax);
+                }
+                
+                Double productTax = getCartItemTotal(cartItem) * taxGroup.getTaxRate();
+                cartTax.sum += productTax;
+            }
+        }
+        
+        if (shippingTax != null && shippingCost > 0 && shippingTax.taxRate > 0) {
+            CartTax cartTax = new CartTax();
+            cartTax.taxGroup = shippingTax;
+            cartTax.sum = shippingCost * shippingTax.getTaxRate();
+            taxes.put(shippingTax.groupNumber, cartTax);
+        }
+        
+        List retTaxes = new ArrayList();
+        for (CartTax tax : taxes.values()) {
+            if (tax.sum > 0) {
+                retTaxes.add(tax);
+            }
+        }
+        
+        return retTaxes;
+    }
 }

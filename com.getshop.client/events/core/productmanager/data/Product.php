@@ -42,6 +42,9 @@ class core_productmanager_data_Product extends core_common_DataCommon  {
 	/** @var core_pagemanager_data_Page */
 	public $page;
 
+	/** @var core_productmanager_data_TaxGroup */
+	public $taxGroupObject;
+
 	/** @var String */
 	public $attributesAdded;
 

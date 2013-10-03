@@ -271,4 +271,8 @@ public class ProductManager extends AProductManager implements IProductManager {
     public List<TaxGroup> getTaxes() throws ErrorException {
         return new ArrayList(taxGroups.values());
     }
+
+    public TaxGroup getTaxGroup(int i) {
+        return taxGroups.get(i);
+    }
 }

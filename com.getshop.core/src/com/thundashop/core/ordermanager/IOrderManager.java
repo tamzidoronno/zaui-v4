@@ -1,5 +1,6 @@
 package com.thundashop.core.ordermanager;
 
+import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
@@ -82,4 +83,15 @@ public interface IOrderManager {
      * @return 
      */
     public Double getTotalAmount(Order order);
+    
+    
+    /**
+     * Returns a list over taxes
+     * for the specified order.
+     * 
+     * @param order
+     * @return
+     * @throws ErrorException 
+     */
+    public List<CartTax> getTaxes(Order order) throws ErrorException;
 }

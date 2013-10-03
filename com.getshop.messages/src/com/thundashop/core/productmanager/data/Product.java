@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * 
  * @author ktonder
  */
 public class Product extends DataCommon implements Comparable<Product>  {
@@ -39,6 +39,8 @@ public class Product extends DataCommon implements Comparable<Product>  {
     
     @Transient
     public Page page;
+    
+    public TaxGroup taxGroupObject;
     
     @Transient
     public HashMap<String, String> attributesAdded = new HashMap();

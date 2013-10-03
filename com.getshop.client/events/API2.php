@@ -989,6 +989,19 @@ class APICartManager {
      }
 
      /**
+     * Returns the current calculation of taxes.
+     * @return List
+     */
+
+     public function getTaxes() {
+          $data = array();
+          $data['args'] = array();
+          $data["method"] = "getTaxes";
+          $data["interfaceName"] = "core.cartmanager.ICartManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Remove all coupons from the system.
      * @throws ErrorException 
      */
@@ -1786,6 +1799,24 @@ class APIOrderManager {
           $data['args']["page"] = json_encode($this->transport->object_unset_nulls($page));
           $data['args']["pageSize"] = json_encode($this->transport->object_unset_nulls($pageSize));
           $data["method"] = "getOrders";
+          $data["interfaceName"] = "core.ordermanager.IOrderManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
+     * Returns a list over taxes
+     * for the specified order.
+     * 
+     * @param order
+     * @return List
+     * @throws ErrorException 
+     */
+
+     public function getTaxes($core_ordermanager_data_Order) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["core_ordermanager_data_Order"] = json_encode($this->transport->object_unset_nulls($core_ordermanager_data_Order));
+          $data["method"] = "getTaxes";
           $data["interfaceName"] = "core.ordermanager.IOrderManager";
           return $this->transport->sendMessage($data);
      }

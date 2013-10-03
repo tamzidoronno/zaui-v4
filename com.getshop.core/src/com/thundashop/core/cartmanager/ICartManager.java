@@ -1,6 +1,7 @@
 package com.thundashop.core.cartmanager;
 
 import com.thundashop.core.cartmanager.data.Cart;
+import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ErrorException;
@@ -126,4 +127,10 @@ public interface ICartManager {
      */
     @Administrator
     public void removeCoupon(String code) throws ErrorException;
+    
+    /**
+     * Returns the current calculation of taxes.
+     * @return 
+     */
+    public List<CartTax> getTaxes() throws ErrorException;
 }

@@ -5,6 +5,7 @@ import com.thundashop.core.appmanager.data.ApplicationSubscription;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
@@ -348,5 +349,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private void updateCouponsCount(Order order) throws ErrorException {
         CartManager cartManager = getManager(CartManager.class);
         cartManager.updateCoupons(order.cart.coupon);
+    }
+    
+    @Override
+    public List<CartTax> getTaxes(Order order) throws ErrorException {
+        return order.cart.getCartTaxes();
     }
 }

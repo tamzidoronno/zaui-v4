@@ -55,7 +55,9 @@ public class AProductManager extends ManagerBase {
                 product.attributesAdded.put(val.groupName, val.value);
             }
         }
-
+        
+        
+        product.taxGroupObject = taxGroups.get(product.taxgroup);
         return product;
     }
 

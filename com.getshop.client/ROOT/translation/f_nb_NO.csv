@@ -220,6 +220,7 @@ Google Analytics;-;Google Analytics
 Google analytics code;-;Google analyse kode
 Google analytics is by far the best reporting tool for webadministrator, by adding this application you will enable your googla analytics account to communicate with your webshop.;-;Google analytics er helt klart det best rapporteringsverkøyet når det kommer til å holde oversikt over bruken på din webside, ved å legge til denne applikasjonen får du mulighet til å benytte deg av google analytics.
 Google maps configuration;-;Google maps konfigurasjon
+Handles taxes for products and shipment.;-;Oppgi 
 Hardlink;-;Hardlink
 Hardlink configuration for menu entry;-;Hardlink konfigurasjons meny for innlegg
 Hardlinks are a way for you to manually specify where to go when the button is clicked.;-;Hardlinks er en måte å manuelt linke til andre sider på.
@@ -306,6 +307,7 @@ North east corner latitude;-;Nord øst hjørne latitude
 North east corner longitude;-;Nord øskt hjørne longitude
 Not possible;-;Ikke mulig
 Not satisfied with the text "hardcoded" on your page?<br>Add this application and tune the text yourself.;-;Ikke fornøyd med tekst som er "kodet" inn på din side?<br>Legg til denne applikasjonen og endre teksten selv.
+Not set;-;Ikke satt
 Note: minumum 3 chars before search start;-;Note: minum 3 tegn før søket starter.
 Number of columns;-;Antall kolonner
 Number of products;-;Antall produkter
@@ -401,6 +403,7 @@ Set icon;-;Sett ikon
 Settings;-;Instillinger
 Settings saved;-;Instillingene er lagret
 Setup your own domain;-;Sett opp ditt egent domene.
+Shipment taxes;-;Forsendelses mva
 Shipping to country;-;Send til land
 Should Fjincadeau be activated?;-;Skal Fjincadeau være aktivert?
 Should Mister Cash be activated?;-;Skal Mister Cash være aktivert?
@@ -437,6 +440,8 @@ Subentry name;-;Undermeny navn
 Subject;-;Tittel
 Subscribe for news;-;Abonner på nyheter
 Summary;-;Oppsummering
+Tax group;-;Mva gruppe
+Taxgroup;-;Mvagruppe
 Text description;-;Tekst beskrivelse
 Text saved;-;Teksten er lagret
 Text title;-;Tekst tittel
@@ -471,6 +476,8 @@ This is the perfect application if you need to stash your page a bit more, simpl
 This is where you can configure your current page, special settings like search engine optimization for the current page you are browser;-;Dette er hvor du kan konfigurere siden du er på, spesielle instillinger for søkemotor optimaliser, osv.
 This option enables the posibility to restrict access to you menu entries to a given group of users.;-;Dette valget gir deg muligheten til å begrense tilgang til dine menyvalg til gitte grupper av brukere.
 This product has been deleted;-;Dette produktet har blitt slettet.
+This product list is empty, open the management portal to add products to this list.;-;Denne produktlisten er tom, gå til produktadministrasjon for å legge til produkter i denne listen.
+This tax group will be possible to select in your product management.;-;Mva gruppen vil være mulig å velge fra produktadminsitrasjonen.
 This will be displayed as description if someone adds event;-;Dette vil bli vist som en beskrivelse hvis noen legger til en event.
 This will be displayed as the location if someone adds event;-;Dette vil bli vist som en lokasjon når noen legger til en event.
 Tightly integrates facebook into your webshop, give users options to comment product, like products, share discounts, etc;-;Gjør en tett integrasjon mot facebook på din websho, gi brukerne dine muligheter til å kommentere produktene, like produktene dine, dele rabatter, osv.
@@ -520,6 +527,7 @@ What address are you using for the test enviroment to paypal?;-;Hva er adressen 
 What countries are you selling to?;-;Hvilke land selger du til?
 What is deepfreeze? Well, if you activate deepfreeze you basically put all options on hold, all changes made after deepfreezeing will be purged each hour.;-;Hva er deepfreeze? Deepfreeze fryser ned systemet og gjennoppretter systemet hver time.
 What is product variations?;-;Hva er produkt variasjoner?
+What is the shipment taxes?;-;Hva er forsendelses mvaen?
 What should be the sender name?;-;Hva skal senders navn være?
 What should the text message contain?;-;Hva skal tekst meldingen inneholde?
 When;-;Når
@@ -560,6 +568,7 @@ add_news;-;Legg til nyhet
 appid;-;AppId
 appid_required;-;"Din facebook app id, alle facebook sin sosiale pluginner krever dette."
 cart;-;Handlekurv
+click here to open the portal;-;Klikk her for å åpne portalen
 click to upload a logo;-;Trykk for å laste opp logo
 create_news_desc;-;Opprett en nyhet ved å fylle inn tekst i feltet over.
 customer postcode;-;kundens postnummer

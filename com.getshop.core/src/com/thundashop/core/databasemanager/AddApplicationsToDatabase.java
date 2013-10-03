@@ -82,15 +82,15 @@ public class AddApplicationsToDatabase {
 //        payondelviery.isSingleton = true;
 //        apps.add(payondelviery);
 //
-//        ApplicationSettings proteria = createSettings(
-//                "Proteria", 
-//                "e18089e2-56fa-4481-ae13-651a67d0f016", 
-//                emtpy, 
-//                "", 
-//                ApplicationSettings.Type.Reporting, true);
-//        proteria.isPublic = true;
-//        proteria.isSingleton = true;
-//        apps.add(proteria);
+        ApplicationSettings taxes = createSettings(
+                "Taxes", 
+                "deab499e-b133-4cb6-a1b2-532018c31d46", 
+                emtpy, 
+                "", 
+                ApplicationSettings.Type.Webshop, true);
+        taxes.isPublic = true;
+        taxes.isSingleton = true;
+        apps.add(taxes);
 
         return apps;
     }

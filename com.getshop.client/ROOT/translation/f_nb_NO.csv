@@ -198,8 +198,10 @@ Remove application;-;Fjern applikasjon
 Remove from list;-;Fjern fra listen
 Save product list;-;Lagre produkt liste
 This application is added to the following pages;-;Denne applikasjonen er lagt til på følgende sider.
+This product list is empty, open the management portal to add products to this list.;-;Denne produktlisten er tom, gå til produktadministrasjon for å legge til produkter i denne listen.
 Un-combine product list;-;Fjern kombinerte lister
 You do not have any lists combined with this list yet...;-;Du har ingen kombinerte lister enda.
+click here to open the portal;-;Klikk her for å åpne portalen
 this applications lists products for you webshop, in the body of every page (except for system pages). from this application you can also add products. combine this application with a leftmenu, and/or a category displayer to create a powerful webshop.;-;Denne applikasjonen lister produkter for din webshop i hoved kolonnen for alle dine sider (forutenom system sidene). Du kan også legge til produkter gjennom denne appliakasjonen. Kombiner disse med en venstremeny, og/eller en kategory visning for å bygge en kraftig og god webshop.
 
 
@@ -301,6 +303,12 @@ This entry is currently hardlinked to;-;Dette innlegget er for tiden hardlinket 
 
 ###### 2ebd7c69_eba3_4b7e_85c6_0e0bd274aad0 (SedoxCarList) ######
 Just add it;-;Bare legg det til
+
+
+###### deab499e_b133_4cb6_a1b2_532018c31d46 (Taxes) ######
+Handles taxes for products and shipment.;-;Oppgi 
+Shipment taxes;-;Forsendelses mva
+What is the shipment taxes?;-;Hva er forsendelses mvaen?
 
 
 ###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 (Sisow) ######
@@ -494,10 +502,13 @@ Soon to be available;-;Kommer snart
 Specify an airgram account.;-;Spesifiser din airgram konto
 Store settings / more applications available here;-;Nettbutikkens innstillinger, her finner du også flere applikasjoner.
 Summary;-;Oppsummering
+Tax group;-;Mva gruppe
+Taxgroup;-;Mvagruppe
 Text saved;-;Teksten er lagret
 The text has been saved;-;Teksten har blitt lagret
 There is one layout defined for each page, a layout can have multiple of rows and multiple of columns.;-;Det er en layout definert for hver eneste side, og en layout kan flere rader og kolonner.
 This is where you can configure your current page, special settings like search engine optimization for the current page you are browser;-;Dette er hvor du kan konfigurere siden du er på, spesielle instillinger for søkemotor optimaliser, osv.
+This tax group will be possible to select in your product management.;-;Mva gruppen vil være mulig å velge fra produktadminsitrasjonen.
 To change a layout for the current page, please select one from the list below.;-;For å endre nåværende layout, vennlig velg en fra listen under.
 Transfer existing domain;-;Overfør eksisterende domene
 Upload image;-;Last opp bilde
@@ -674,6 +685,7 @@ Import;-;Importer
 Insert image;-;Sett inn bilde
 Is this your default picture to the product?;-;Er dette standardbildet for produktet ?
 No short description set yet;-;Ingen liten beskrivelse er satt enda.
+Not set;-;Ikke satt
 Please click on 'Add new top level variation' above;-;Vennligst tryll på 'Legg til ny topp nivå variasjon' over.
 Preview;-;Forhåndsvis
 Price diff;-;Pris forskjell

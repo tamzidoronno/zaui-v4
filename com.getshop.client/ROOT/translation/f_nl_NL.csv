@@ -38,6 +38,7 @@ You currently have the following users added to your system;-;Je hebt volgende g
 
 
 ###### 565ea7bd_c56b_41fe_b421_18f873c63a8f (PayOnDelivery) ######
+Allows your customers to specify that they will pay on delivery.;-;Sta je klanten toe te betalen bij afhaling
 Pay on pickup;-;Betaal bij afhaling in winkel
 
 
@@ -58,13 +59,21 @@ Enter the terms and condition text in the field below.;-;Geef de Voorwaarden in 
 
 
 ###### 90cd1330_2815_11e3_8224_0800200c9a66 (Coupon) ######
+Add coupons;-;Voeg kortingcodes toe
 Add more coupons;-;Voeg korting codes toe
 Amount;-;Prijs
+Current available cupons;-;Momenteel beschikbare kortingcodes
+Discount in percentage?;-;Korting Percentage?
 Fixed price discount?;-;Korting prijs
 Increase your sale potential by giving your valued customers discounts with promotion codes.;-;Verhoog je verkoopcijfers met klanten een korting aan te bieden
 Percentage price;-;Korting Percentage
 Remaining;-;Aantal over
+The Coupon name can not be blank.;-;De Korting naam moet ingevuld zijn
+The discount can not be 0 or the amount of times coupons can be used can not be 0;-;De korting kan niet 0 zijn, of het aantal gebruikte codes moet meer dan 0 zijn.
+The percentage must be between 0 and 100;-;Percentage moet tussen 0 en 100 zijn.
 There are two different types of coupons, fixed price and percentage price. Fixed price is giving your valued customers a fixed rate off for each time they buy something from the store. The Percentage price gives a percentage discount to your total cost of the cart.;-;Er zijn twee type kortings codes: Vaste prijs en Percentage prijs. Bij vaste prijs gaat er een vast bedrag van het totaal af. Bij Percentage prijs gaat er een % af van de totaalprijs
+Type;-;Typ
+You dont have any cupons added.;-;Je hebt geen Codes toegevoegd.
 
 
 ###### 6c245631_effb_4fe2_abf7_f44c57cb6c5b (Account) ######
@@ -172,8 +181,10 @@ Remove application;-;Verwijder applicatie
 Remove from list;-;Verwijder van lijst
 Save product list;-;Sla product lijst op
 This application is added to the following pages;-;Deze applicatie is toegevoegd aan de pagina’s
+This product list is empty, open the management portal to add products to this list.;-;Deze producten lijst is leeg. Open het Producten scherm om er toe te voegen.
 Un-combine product list;-;Maak product lijst los
 You do not have any lists combined with this list yet...;-;Je hebt nog geen lijst gecombineerd met deze lijst
+click here to open the portal;-;Klik hier om het scherm te openen.
 this applications lists products for you webshop, in the body of every page (except for system pages). from this application you can also add products. combine this application with a leftmenu, and/or a category displayer to create a powerful webshop.;-;Deze applicatie geeft een producten lijst van je webwinkel, op elke pagina. Je kan hier ook producten toevoegen. Combineer met een linker of rechter menu.
 
 
@@ -277,6 +288,12 @@ This entry is currently hardlinked to;-;Deze tekst is momenteel gelinkt aan
 Just add it;-;Toevoegen
 
 
+###### deab499e_b133_4cb6_a1b2_532018c31d46 (Taxes) ######
+Handles taxes for products and shipment.;-;Stel hier je BTW tarief in voor producten en verzending.
+Shipment taxes;-;Verzending belastingen
+What is the shipment taxes?;-;Wat zijn de verzending belastingen?
+
+
 ###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 (Sisow) ######
 Activate this option if you wish to provide your customer with Fjincadeau payment;-;Activeer deze om betalingen via Fjincadeau te aanvaarden
 Activate this option if you wish to provide your customer with Mister Cash payment;-;Activeer deze om betalingen via Mister Cash te aanvaarden
@@ -333,6 +350,10 @@ Create categories and add a list of products to the category, attach images to t
 More Categories?;-;Meer categoriën?
 This category displayer is currently empty. To create a new category please click the create new category button below.;-;Deze category is momenteel leeg. Om een nieuwe categorie toe te voegen, klik ‘maak nieuwe categorie aan’
 Unlink entry;-;Unlink tekst
+
+
+###### 43567fce_00b4_4a71_b054_813066ce81a8 ######
+Handles taxes for products and shipment;-;Stel hier je BTW tarief in voor producten en verzending.
 
 
 ###### d755efca_9e02_4e88_92c2_37a3413f3f41 (Settings) ######
@@ -412,6 +433,7 @@ Edit product;-;Bewerk product
 Editors;-;Editors
 Email / username;-;Email / gebruikersnaam
 Enter a menu name;-;Typ een menu naam
+Error;-;Fout
 Get Started;-;Start
 How many times can this coupon be used?;-;Hoeveel keer mag deze gebruikt worden?
 Import a product;-;Importeer een product
@@ -432,6 +454,7 @@ No advanced color options for this design;-;Geen kleur opties voor dit design
 No background selection available for this design.;-;Geen achtergronden beschikbaar voor dit design
 No colors available for this design.;-;Geen kleuren beschikbaar voor deze layout
 No products has been added to this list yet, please add one from the list on the right hand side.;-;Geen producten aan deze lijst toegevoegd. Voeg er toe van de lijst aan de rechterzijde
+Others;-;Andere
 Page description;-;Pagina omschrijving
 Page id;-;Pagina ID
 Page name;-;Pagina naam
@@ -446,6 +469,7 @@ Remove hardlink;-;Verwijder hardlink
 Remove image;-;Verwijder afbeelding
 Rename;-;Hernoemen
 Reporting;-;Rapport
+Rows;-;Rijen
 Save;-;Opslaan
 Save changes;-;Aanpassingen opslaan
 Save settings;-;Settings opslaan
@@ -455,15 +479,19 @@ Select different page layouts;-;Selecteer pagina layout
 Set application sticky;-;Maak applicatie sticky
 Settings;-;Settings
 Setup your own domain;-;Stel je eigen domeinnaam in
+Sidebar;-;Zijbalk
 Some settings are important for google and other search engines, and this is where you can configure them.;-;Sommige settings zijn belangrijk voor Google en andere zoekmachines. Hier kan je ze instellen.
 Soon to be available;-;Binnenkort beschikbaar
 Specify an airgram account.;-;Stel een airgram account in
 Store settings / more applications available here;-;Winkel instellingen / Meer apps hier beschikbaar
 Summary;-;Samenvatting
+Tax group;-;BTW groep
+Taxgroup;-;BTW groep
 Text saved;-;Tekst opgeslagen
 The text has been saved;-;Tekst opgeslagen
 There is one layout defined for each page, a layout can have multiple of rows and multiple of columns.;-;Je kan kiezen uit 15 templates om elke pagina vorm te geven.
 This is where you can configure your current page, special settings like search engine optimization for the current page you are browser;-;Pas je huidige pagina aan met SEO tekst.
+This tax group will be possible to select in your product management.;-;Deze BTW groep kan je selecteren in je producten Scherm
 To change a layout for the current page, please select one from the list below.;-;Pas deze pagina aan, kies een template uit onderstaande voorbeelden.
 Transfer existing domain;-;Bestaand domein verhuizen.
 Upload image;-;Voeg afbeelding toe
@@ -503,6 +531,7 @@ Add this application and get started adding content to your page.;-;Voeg deze ap
 Content Manager;-;Contact manager
 Create this application and get started, you will automatically be shown the editors view for this application to start adding your text.;-;Maak deze applicatie aan en je krijgt automatisch een editor te zien om je tekst toe te voegen.
 Edit text content;-;Pas tekst inhoud aan
+To edit the text, move the mouse over this text. Then you will see a toolbox that you can click on, click on the pen in this toolbox.;-;Sta met je muis aanwijzer op de tekst. Rechtsboven zie je een icoon verschijnen. Via dat icoon klik je op de Pen afbeelding.
 
 
 ###### d612904c_8e44_4ec0_abf9_c03b62159ce4 (Banner) ######
@@ -552,7 +581,11 @@ give your customers ability to book into your events or appointments;-;Geef je k
 
 ###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######
 Current status;-;Huidige status
+Order number;-;Bestelnummer
 Payment application;-;Betaal applicatie
+Status changed;-;Status aangepast
+The order status has been updated;-;De bestelstatus is aangepast
+Tracking number;-;Volgnummer
 Transaction id;-;Transactie ID
 
 
@@ -610,6 +643,7 @@ Import;-;Importeer
 Insert image;-;Voeg afbeelding toe
 Is this your default picture to the product?;-;Is dit de standaard afbeelding van dit product?
 No short description set yet;-;Geen korte omschrijving geplaatst
+Not set;-;Niet ingesteld.
 Please click on 'Add new top level variation' above;-;Klik bovenaan op 'Voeg nieuw variatie toe'
 Preview;-;Preview
 Price diff;-;Prijs verschil

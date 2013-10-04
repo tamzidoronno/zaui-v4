@@ -62,12 +62,14 @@ Continue;-;Ga verder
 Cookies are being stored;-;Cookies worden bijgehouden
 Country;-;Land
 Coupon;-;Korting
+Coupon discount;-;Kortingcode
 Delete image;-;Verwijder afbeelding
 Email;-;Email
 Featured Product;-;Product in de kijker
 Fixed price;-;Vaste prijs
 Free shipping;-;Gratis verzending
 Full name;-;Volledige naam
+Invoice email;-;Factuur email
 Name;-;Naam
 New message;-;Nieuw bericht
 New password;-;Nieuw wachtwoord
@@ -79,6 +81,7 @@ Phone;-;Telefoon
 Place order;-;Bestelling plaatsen
 Please check your delivery options.;-;Kijk de verzendopties na
 Please select department;-;Gelieve een afdeling te kiezen
+Post code;-;Postcode
 Postal code;-;Postcode
 Previous;-;Vorige
 Price;-;Prijs
@@ -106,8 +109,10 @@ Wrong delivery method;-;Verkeerde verzendmethode
 You do not have any products in your cart;-;U heeft nog geen producten in de winkelwagen
 email;-;email
 in stock;-;op voorraad
+included taxes;-;Inbegrepen belastingen
 location;-;locatie
 login;-;Log in
+org;-;org
 
 
 ###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
@@ -182,6 +187,7 @@ Canceled;-;Afgebroken
 Customer information;-;Klanteninformatie
 Order Created;-;Bestelling aangemaakt
 Order date;-;Besteldatum
+Order sent;-;Bestelling verzonden
 Payment information;-;Betaal informatie
 Product count;-;Aantal producten
 Shipment information;-;Verzendinformatie
@@ -223,6 +229,7 @@ End date;-;Einddatum
 Group;-;Groep
 Number of instances added;-;Aantal zaken toegevoegd
 Old password;-;oude wachtwoord
+Organisation;-;Organisatie
 Organisation name;-;Bedrijfsnaam
 Payment;-;Betaling
 Price and plans;-;Prijs en pakketten

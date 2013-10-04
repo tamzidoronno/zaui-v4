@@ -97,6 +97,7 @@
 "97","The users you try to modify is not in your group."
 "98","Incorrect deepfreeze password."
 "99","The coupon code is invalid."
+"100","Invalid input parameters."
 "1000","Left menu entry already exists."
 "1001","Menu entry does not exists."
 "1002","App configuration does not exists."

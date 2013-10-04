@@ -202,6 +202,10 @@ public class ProductManager extends AProductManager implements IProductManager {
 
         Comparator<Product> comparator = new Comparator<Product>() {
             public int compare(Product c1, Product c2) {
+                if (c1 == null || c2 == null || c1.rowCreatedDate == null || c2.rowCreatedDate == null) {
+                    return 0;
+                }
+                
                 return c1.rowCreatedDate.compareTo(c2.rowCreatedDate);
             }
         };

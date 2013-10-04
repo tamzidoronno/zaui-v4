@@ -271,7 +271,7 @@ public class ApplicationPoolImpl {
         }
     }
 
-    public List<AppConfiguration> getThemeApplications() {
+    public List<AppConfiguration> getThemeApplications() throws ErrorException {
         List<AppConfiguration> apps = new ArrayList();
         for (AppConfiguration config : applicationInstances.values()) {
             try {
@@ -286,7 +286,9 @@ public class ApplicationPoolImpl {
                     apps.add(finalizeApplication(config));
                 }
             } catch (ErrorException ex) {
-                java.util.logging.Logger.getLogger(ApplicationPoolImpl.class.getName()).log(Level.SEVERE, null, ex);
+                if (ex.code != 18) {
+                    throw ex;
+                }
             }
         }
 

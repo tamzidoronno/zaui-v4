@@ -18,6 +18,9 @@
     position:absolute; 
     top:0px; 
     left: 0px; 
+     -moz-box-sizing:    border-box;
+   -webkit-box-sizing: border-box;
+    box-sizing:        border-box;
 }
 .applicationarea { min-height: 150px; }
 

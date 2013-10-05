@@ -94,6 +94,10 @@ public class Database {
     }
     
     public synchronized void save(DataCommon data, Credentials credentials) throws ErrorException {
+        if (data.rowCreatedDate == null) {
+            data.rowCreatedDate = new Date();
+        }
+        
         if (isDeepFreezed(data)) {
             return;
         }
@@ -107,10 +111,6 @@ public class Database {
 
         if (sandbox) {
             return;
-        }
-
-        if (data.rowCreatedDate == null) {
-            data.rowCreatedDate = new Date();
         }
 
         addDataCommonToDatabase(data, credentials);

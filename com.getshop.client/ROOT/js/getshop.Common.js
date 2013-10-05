@@ -283,7 +283,9 @@ thundashop.common.createInformationBox = function(appid, title, open) {
     infoBox.addClass('informationbox');
     infoBox.attr('appid', appid);
     infoBox.addClass('app');
-    $('#informationboxtitle').html(title);
+    if(open) {
+        $('#informationboxtitle').html(title);
+    }
     infoBox.addClass('normalinformationbox');
     infoBox.removeClass('largeinformationbox');
     $('body').css('overflow','hidden');

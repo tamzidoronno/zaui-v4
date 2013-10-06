@@ -9,6 +9,9 @@ class core_cartmanager_data_Cart extends core_common_DataCommon  {
 	/** @var String */
 	public $isShippingFree;
 
+	/** @var core_productmanager_data_TaxGroup */
+	public $shippingTax;
+
 	/** @var core_usermanager_data_Address */
 	public $address;
 

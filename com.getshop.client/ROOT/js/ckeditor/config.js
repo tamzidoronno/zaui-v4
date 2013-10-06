@@ -28,8 +28,8 @@ CKEDITOR.plugins.registered['save'] = {
                 {
                     modes: {wysiwyg: 1, source: 1},
                     exec: function(editor) {
-                       $('#'+editor.name).attr('contenteditable',null);
-                       $('#'+editor.name).blur();
+                       $('#'+editor.name).attr('contenteditable',false);
+                       CKEDITOR.instances[editor.name].fire('save');
                     }
                 }
         );

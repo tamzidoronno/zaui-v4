@@ -82,15 +82,14 @@ public class AddApplicationsToDatabase {
 //        payondelviery.isSingleton = true;
 //        apps.add(payondelviery);
 //
-        ApplicationSettings taxes = createSettings(
-                "Taxes", 
-                "deab499e-b133-4cb6-a1b2-532018c31d46", 
+        ApplicationSettings mecaTheme = createSettings(
+                "MecaTheme", 
+                "b1e89810-2dc3-11e3-aa6e-0800200c9a66", 
                 emtpy, 
                 "", 
-                ApplicationSettings.Type.Webshop, true);
-        taxes.isPublic = true;
-        taxes.isSingleton = true;
-        apps.add(taxes);
+                ApplicationSettings.Type.Theme, true);
+        mecaTheme.isPublic = false;
+        apps.add(mecaTheme);
 
         return apps;
     }

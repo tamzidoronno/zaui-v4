@@ -223,6 +223,16 @@ thundashop.common.activateCKEditor = function(id, autogrow, showMenu, autofocus,
                 if(!notinline) {
                     thundashop.common.addNotificationProgress('contentmanager', "Saving content");
                     thundashop.common.saveCKEditor(data, target);
+                }
+                $(document).tooltip("enable");
+            },
+            save : function(event) {
+                var data = event.editor.getData();
+                if(!notinline) {
+                    thundashop.common.addNotificationProgress('contentmanager', "Saving content");
+                    thundashop.common.saveCKEditor(data, target);
+                    target.attr('contenteditable', false);
+                    target.blur();
                     event.editor.destroy();
                 }
                 $(document).tooltip("enable");

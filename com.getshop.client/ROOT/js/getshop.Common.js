@@ -317,9 +317,8 @@ thundashop.common.showInformationBox = function(event, title) {
     infoBox.attr('apparea', event.core.apparea);
     infoBox.addClass(event.core.appname);
 
-    thundashop.Ajax.postWithCallBack(event, function(result) {
-        infoBox.html(result);
-    });
+    var result = thundashop.Ajax.postSynchron(event);
+    infoBox.html(result);
     setTimeout(thundashop.common.setMaskHeight, "200");
     return infoBox;
 }

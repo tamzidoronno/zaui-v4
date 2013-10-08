@@ -1,0 +1,3 @@
+.app_row_entry .ImageDisplayer .displayed_image { height: auto; max-width:100%; }
+.ImageDisplayer .displayed_image { width: 100%; }
+.ImageDisplayer .applicationinner, .ImageDisplayer .displayimagecontainer, td .ImageDisplayer .displayimagecontainer img { height: auto; max-width:100%; }

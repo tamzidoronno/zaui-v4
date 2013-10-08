@@ -148,7 +148,6 @@ if (isset($_GET['logonwithkey'])) {
         echo "</script>";
         ?>
         <title><?php echo $title; ?></title>
-        <link rel="stylesheet" type="text/css" href="skin/default/mobile.css" media="handheld" />
     </head>
     <body>
         <? if ($factory->getStore()->isDeepFreezed) { ?>
@@ -268,3 +267,4 @@ if (isset($_GET['page'])) {
 <? if (isset($_GET['logout'])) { ?>
     <script>window.location.reload()</script>
 <? } ?>
+<link rel="stylesheet" type="text/css" href="skin/default/mobile.css" media="handheld" />

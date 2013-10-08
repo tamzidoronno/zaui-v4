@@ -267,4 +267,3 @@ if (isset($_GET['page'])) {
 <? if (isset($_GET['logout'])) { ?>
     <script>window.location.reload()</script>
 <? } ?>
-<link rel="stylesheet" type="text/css" href="skin/default/mobile.css" media="handheld" />

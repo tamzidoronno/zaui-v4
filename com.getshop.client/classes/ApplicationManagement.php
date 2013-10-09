@@ -149,14 +149,17 @@ class ApplicationManagement extends ApplicationBase {
         $settings->renderStandalone = $data['standalone'];
         $settings->price = $data['price'];
         $settings->allowedAreas = array();
-        if ($data['apparea_left'] == "true") {
-            $settings->allowedAreas[] = "left";
+        if ($data['apparea_small'] == "true") {
+            $settings->allowedAreas[] = "small";
         }
-        if ($data['apparea_middle'] == "true") {
-            $settings->allowedAreas[] = "main_1";
+        if ($data['apparea_medium'] == "true") {
+            $settings->allowedAreas[] = "medium";
         }
-        if ($data['apparea_right'] == "true") {
-            $settings->allowedAreas[] = "right";
+        if ($data['apparea_large'] == "true") {
+            $settings->allowedAreas[] = "large";
+        }
+        if ($data['apparea_xlarge'] == "true") {
+            $settings->allowedAreas[] = "xlarge";
         }
         if ($data['apparea_subheader'] == "true") {
             $settings->allowedAreas[] = "subheader";

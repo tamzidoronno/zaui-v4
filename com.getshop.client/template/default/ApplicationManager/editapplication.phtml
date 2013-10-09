@@ -69,15 +69,15 @@
             <div class="additonaltext"><? echo $this->__o("Marketing is applications like news, and other application used for marketing."); ?></div>
         </div>
 
-        <div class="title">
-            <div style="float:right;">
-                <input type="checkbox" gsname="apparea_left" <? if ($this->hasArea('left')) { echo "CHECKED"; }  echo $disabled; ?>><? echo $this->__o("Left"); ?>
-                <input type="checkbox" gsname="apparea_middle" <? if ($this->hasArea('middle')) { echo "CHECKED"; } echo $disabled; ?>><? echo $this->__o("Middle"); ?>
-                <input type="checkbox" gsname="apparea_right" <? if ($this->hasArea('right')) { echo "CHECKED"; } echo $disabled; ?>><? echo $this->__o("Right"); ?>
-                <input type="checkbox" gsname="apparea_subheader" <? if ($this->hasArea('subheader')) { echo "CHECKED"; } echo $disabled; ?>><? echo $this->__o("Subheader"); ?>
+        <div class="title" style='height: 100px;'>
+            <div style="float:right; font-size:12px;">
+                <input type="checkbox" gsname="apparea_small" <? if ($this->hasArea('small')) { echo "CHECKED"; }  echo $disabled; ?>><? echo $this->__o("Small (0-200)"); ?><br>
+                <input type="checkbox" gsname="apparea_medium" <? if ($this->hasArea('medium')) { echo "CHECKED"; } echo $disabled; ?>><? echo $this->__o("Medium (200-400)"); ?><br>
+                <input type="checkbox" gsname="apparea_large" <? if ($this->hasArea('large')) { echo "CHECKED"; } echo $disabled; ?>><? echo $this->__o("Large (400-750)"); ?><br>
+                <input type="checkbox" gsname="apparea_xlarge" <? if ($this->hasArea('xlarge')) { echo "CHECKED"; } echo $disabled; ?>><? echo $this->__o("Xtra large (750+)"); ?>
             </div>
 
-            <? echo $this->__o("What areas does this application support?"); ?>
+            <? echo $this->__o("What application sizes does this application support?"); ?>
             <div class="additonaltext"><? echo $this->__o("Specify what areas you want to be able to add this application to."); ?></div>
         </div>
 

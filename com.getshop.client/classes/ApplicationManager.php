@@ -15,10 +15,28 @@ class ApplicationManager extends FactoryBase {
         $this->app = $app;
     }
 
+    function validateArea($areas, $area, $size) {
+        if (!in_array($size, $areas) && $size != "xlarge" || sizeof($areas) == 0) {
+            return false;
+        }
+        if (in_array("right", $areas) || in_array("left", $areas)) {
+            if (in_array("right", $areas)) {
+                if (!stristr("right", $area)) {
+                    return false;
+                }
+            } else {
+                if (!stristr("left", $area)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     function getCurrentApp() {
         return $this->app;
     }
-    
+
     public function getSubscriptions() {
         return $this->subscriptions;
     }
@@ -39,13 +57,14 @@ class ApplicationManager extends FactoryBase {
     public function CookieAccepted() {
         $_SESSION['getshop_cookie_accepted'] = true;
     }
-    
+
     public function listproducts() {
         echo "<div class='ProductManager'>";
         $mgr = new ns_dcd22afc_79ba_4463_bb5c_38925468ae26\ProductManager();
         $mgr->listProducts();
         echo "</div>";
     }
+
     public function editProduct() {
         echo "<div class='ProductManager'>";
         $mgr = new ns_dcd22afc_79ba_4463_bb5c_38925468ae26\ProductManager();
@@ -103,11 +122,11 @@ class ApplicationManager extends FactoryBase {
         $color = $_POST['data']['color'];
         $path = $_POST['data']['path'];
         $type = $_POST['data']['type'];
-        
-        if($path == "body" && $type == "background-color") {
+
+        if ($path == "body" && $type == "background-color") {
             $this->getFactory()->setConfigurationFlag("bgimage", false);
         }
-        
+
 
         $config = json_decode($this->getFactory()->getConfigurationFlag("getshop_colors"), true);
         if (!$config) {
@@ -129,7 +148,7 @@ class ApplicationManager extends FactoryBase {
         $this->getFactory()->setConfigurationFlag("getshop_colors", json_encode($config));
         $this->loadColorAttributes();
     }
-    
+
     public function loadColorAttributes() {
         $config = json_decode($this->getFactory()->getConfigurationFlag("getshop_colors"), true);
         echo "<style id='set_colors'>";
@@ -137,7 +156,6 @@ class ApplicationManager extends FactoryBase {
             echo $entry['path'] . " {" . $entry['type'] . " : #" . $entry['color'] . " }\n";
         }
         echo "</style>";
-        
     }
 
     public function previewApplication() {
@@ -253,7 +271,7 @@ class ApplicationManager extends FactoryBase {
         if ($app instanceof \ShipmentApplication || $app instanceof \PaymentApplication) {
             \HelperCart::clearSession(false);
         }
-        
+
         $app->applicationAdded();
     }
 
@@ -286,7 +304,7 @@ class ApplicationManager extends FactoryBase {
     public function showPageLayoutSelection() {
         $this->includefile("applicationSelectionLayout");
     }
-    
+
     public function showApplications() {
         $this->subscriptions = $this->getFactory()->getApi()->getAppManager()->getAllApplicationSubscriptions(false);
         $this->includefile('applicationSet');
@@ -383,7 +401,7 @@ class ApplicationManager extends FactoryBase {
         $toggle = $_POST['data']['toggle'];
         $this->getApi()->getStoreManager()->setVis($toggle, $password);
     }
-    
+
     public function toggleDeepfreeze() {
         $password = $_POST['data']['password'];
         $store = $this->getFactory()->getStore();
@@ -427,7 +445,7 @@ class ApplicationManager extends FactoryBase {
 
         if (method_exists($app, "renderStandalone"))
             $this->getFactory()->getApi()->getPageManager()->deletePage($appId);
-        
+
         $this->callApplicationDeleted($appId);
     }
 
@@ -497,7 +515,7 @@ class ApplicationManager extends FactoryBase {
         $area = $_POST['data']['area'];
         $import = new ImportApplication($appSettingsId, $area);
         echo $import->getControlPanel();
-   }
+    }
 
     /*
      * Dont remove this. it is used for ping!
@@ -530,15 +548,15 @@ class ApplicationManager extends FactoryBase {
         if (isset($_POST['data']['bg'])) {
             $bg = $_POST['data']['bg'];
             $config = json_decode($this->getFactory()->getConfigurationFlag("getshop_colors"), true);
-            if($config) {
-                foreach($config as $index => $entry) {
-                    if($entry['path'] == 'body') {
+            if ($config) {
+                foreach ($config as $index => $entry) {
+                    if ($entry['path'] == 'body') {
                         unset($config[$index]);
                     }
                 }
                 $this->getFactory()->setConfigurationFlag("getshop_colors", json_encode($config));
             }
-            if($bg == "none") {
+            if ($bg == "none") {
                 $this->getFactory()->setConfigurationFlag("bgimage", false);
             } else {
                 $this->getFactory()->setConfigurationFlag("bgimage", $bg);
@@ -550,9 +568,9 @@ class ApplicationManager extends FactoryBase {
         }
     }
 
-    
     public function showDeepFreeze() {
         $this->includefile("deepfreeze");
     }
+
 }
 ?>

@@ -7,7 +7,7 @@ class AppAreaHelper {
         if ($numberOfEntries == 2) {
             $width = 50;
         } else if ($numberOfEntries == 3) {
-            $width = 33;
+            $width = 33.3;
         } else if ($numberOfEntries == 4) {
             $width = 25;
         } else if ($numberOfEntries == 5) {
@@ -15,8 +15,6 @@ class AppAreaHelper {
         }
         $numberOfEntries = $numberOfEntries + $offset-1;
         ?>
-        <table width="100%" cellspacing='0' cellpadding='0' class='gs_rowtable'>
-            <tr>
                 <?
                 for ($i = $offset; $i <= $numberOfEntries; $i++) {
                     $class = "gs_col c$i ";
@@ -28,13 +26,11 @@ class AppAreaHelper {
                         $class .= "gs_margin_left gs_margin_right";
                     }
 
-                    echo "<td width='$width%' valign='top' class='$class'>";
+                    echo "<div style='width:$width%; box-sizing:border-box;' class='$class gs_row_cell inline'>";
                     AppAreaHelper::printAppArea($page, "col_$i");
-                    echo "</td>";
+                    echo "</div>";
                 }
                 ?>
-            </tr>
-        </table>
         <?
     }
 

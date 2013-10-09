@@ -15,8 +15,11 @@
         var autohideinfobox = true;
         var autosave = false;
         var selectedCropArea = [0, 0, previewWidth, previewHeight];
+        var keepAspect = true;
         var extra = {};
 
+        if (config.keepAspect !== undefined)
+            keepAspect = config.keepAspect;
         if (config.previewHeight !== undefined)
             previewHeight = config.previewHeight;
         if (config.previewWidth !== undefined)
@@ -106,8 +109,14 @@
             }
             
             var imgwidth = imagebox.width();
-            var imgheight = imagebox.height();
+            var imgheight = imagebox.height();            
             var compression = generateCompressionRate(originalCanvas, previewWidth, previewHeight);
+            
+            if(!keepAspect) {
+                imgheight = (y2 - y1) / compression;
+                console.log(imgheight);
+            }
+            
             var canvas = document.createElement("canvas");
             var ctx = canvas.getContext("2d");
 
@@ -166,6 +175,11 @@
             infobox.find('#uploadedimage').attr('src', data);
             infobox.find('.add_image_button').on('click', insertImage);
 
+            var ratio = imagebox.width() / imagebox.height();
+            if(!keepAspect) {
+                ratio = false;
+            }
+
             infobox.find('#uploadedimage').Jcrop({
                 onRelease: function(c) {
                     cords = c;
@@ -179,7 +193,7 @@
                     cords = c;
                 },
                 setSelect: selectedCropArea,
-                aspectRatio: imagebox.width() / imagebox.height()
+                aspectRatio: ratio
             });
 
         }

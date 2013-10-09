@@ -4,7 +4,7 @@ $factory = $this->getFactory();
 $appimagename = ApplicationHelper::getApplicationImage($app);
 
 /* @var $factory Factory */
-$apps = $factory->getApi()->getPageManager()->getApplicationsByPageAreaAndSettingsId($app->getApplicationSettings()->id, $_POST['data']['type']);
+$apps = $factory->getApi()->getPageManager()->getApplicationsByPageAreaAndSettingsId($app->getApplicationSettings()->id, $_POST['data']['area']);
 $count = count($apps);
 ?>
 <div class='application'>
@@ -31,7 +31,7 @@ $count = count($apps);
     </div>
     
     <div style="text-align: right; margin-top: 10px;">
-        <div class="button-large" id="importApplicationToArea" appSettingsId="<?echo $app->getApplicationSettings()->id;?>" area="<? echo isset($_POST['data']) && isset($_POST['data']['type']) ? $_POST['data']['type'] : ""; ?>">
+        <div class="button-large" id="importApplicationToArea" appSettingsId="<?echo $app->getApplicationSettings()->id;?>" area="<? echo isset($_POST['data']) && isset($_POST['data']['area']) ? $_POST['data']['area'] : ""; ?>">
             <div class="rightglare"></div>
             <div class="filler" style="background-color: green"></div>
             <ins><? echo $this->__f("Import to area"); ?></ins>

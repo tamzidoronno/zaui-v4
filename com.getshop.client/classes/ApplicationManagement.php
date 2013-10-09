@@ -152,6 +152,9 @@ class ApplicationManagement extends ApplicationBase {
         if ($data['apparea_left'] == "true") {
             $settings->allowedAreas[] = "left";
         }
+        if ($data['apparea_cell'] == "true") {
+            $settings->allowedAreas[] = "cell";
+        }
         if ($data['apparea_right'] == "true") {
             $settings->allowedAreas[] = "right";
         }

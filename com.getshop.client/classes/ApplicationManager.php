@@ -15,7 +15,7 @@ class ApplicationManager extends FactoryBase {
         $this->app = $app;
     }
 
-    function validateArea($areas, $area, $size) {
+    function validateArea($areas, $area, $size, $type) {
         if (!in_array($size, $areas) && $size != "xlarge" || sizeof($areas) == 0) {
             return false;
         }
@@ -30,6 +30,10 @@ class ApplicationManager extends FactoryBase {
                 }
             }
         }
+        if($type != "standard" && !in_array($type, $areas)) {
+            return false;
+        }
+        
         return true;
     }
 

@@ -22,8 +22,8 @@ $factory = $this->getFactory();
         <? echo $this->__f("Get Started"); ?>
     </div>
     <div class="descriptionholder" gstype="form" method="addApplicationToArea" id="applicationform">
-        <input type="hidden" gsname="applicationName" value="<? echo get_class($app); ?>" type="<? echo $_POST['data']['type']; ?>">
-        <input type="hidden" gsname="applicationArea" value="<? echo $_POST['data']['type']; ?>">
+        <input type="hidden" gsname="applicationName" value="<? echo get_class($app); ?>" type="<? echo $_POST['data']['area']; ?>">
+        <input type="hidden" gsname="applicationArea" value="<? echo $_POST['data']['area']; ?>">
         <input type="hidden" gsname="appSettingsId" value="<? echo $app->getConfiguration()->appSettingsId; ?>">
         <?
         if (method_exists($app, "getStartedExtended")) {

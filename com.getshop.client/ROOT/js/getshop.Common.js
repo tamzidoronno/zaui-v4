@@ -663,16 +663,19 @@ $(function() {
     $(document).on('click', '.empty_app_area_browse_apps', function() {
         var area = $(this).closest('.applicationarea').attr('area');
         var size = $(this).closest('.applicationarea').attr('size');
+        var type = $(this).closest('.applicationarea').attr('type');
         
         var event = thundashop.Ajax.createEvent('', 'showApplications', null, {
-            "type": area,
-            "size" : size
+            "area": area,
+            "size" : size,
+            "type" : type
         });
         thundashop.common.showInformationBox(event);
     });
     $(document).on('click', '.empty_app_area_browse_importapps', function() {
         var area = $(this).closest('.applicationarea').attr('area');
-        thundashop.MainMenu.importApplicationClicked(area);
+        var type = $(this).closest('.applicationarea').attr('type');
+        thundashop.MainMenu.importApplicationClicked(area, type);
     });
     $(document).on('click', '.application_settings', function(event) {
         var app = $(this).closest('.app');

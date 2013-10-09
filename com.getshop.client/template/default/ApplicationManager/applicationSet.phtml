@@ -2,10 +2,11 @@
 /* @var $factory Factory */
 $factory = $this->getFactory();
 
-$area = $_POST['data']['type'];
+$area = $_POST['data']['area'];
 $import = isset($_POST['data']['action']) && $_POST['data']['action'] == "import" ? true : false;
 $allApps = $factory->getApplicationPool()->getAllApplicationSettingsForArea(null);
 $apps = $factory->getApplicationPool()->convertApplicationsSettingsToAppinstances($allApps);
+$type = $_POST['data']['type'];
 
 $size = "xlarge";
 if(isset($_POST['data']['size'])) {
@@ -16,7 +17,7 @@ if(isset($_POST['data']['size'])) {
     <div class="tabset inline">
         <?
         foreach ($apps as $app) {
-            if(!$this->validateArea($app->applicationSettings->allowedAreas, $area, $size)) {
+            if(!$this->validateArea($app->applicationSettings->allowedAreas, $area, $size, $type)) {
                 continue;
             }
             if ($import) {
@@ -52,7 +53,7 @@ if(isset($_POST['data']['size'])) {
     <div class="tab_content inline">
         <?
         foreach ($apps as $app) {
-            if(!$this->validateArea($app->applicationSettings->allowedAreas, $area, $size)) {
+            if(!$this->validateArea($app->applicationSettings->allowedAreas, $area, $size, $type)) {
                 continue;
             }
             if (!$app->getName()) {

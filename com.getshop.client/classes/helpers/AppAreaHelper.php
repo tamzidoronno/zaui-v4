@@ -27,14 +27,14 @@ class AppAreaHelper {
                     }
 
                     echo "<div style='width:$width%; box-sizing:border-box;' class='$class gs_row_cell inline'>";
-                    AppAreaHelper::printAppArea($page, "col_$i");
+                    AppAreaHelper::printAppArea($page, "col_$i", false, false, false, "cell");
                     echo "</div>";
                 }
                 ?>
         <?
     }
 
-    public static function printAppArea($page, $name, $include_bottom_margin = false, $include_right_margin = false, $include_left_margin = false) {
+    public static function printAppArea($page, $name, $include_bottom_margin = false, $include_right_margin = false, $include_left_margin = false, $type = "standard") {
         ?>
         <div area="<? echo $name; ?>" class="applicationarea <?
              if ($include_bottom_margin) {
@@ -46,7 +46,7 @@ class AppAreaHelper {
              if ($include_left_margin) {
                  echo " gs_margin_left";
              }
-             ?>">
+             ?>" type='<? echo $type; ?>'>
         <?php $page->getApplicationArea($name)->render(); ?>
         </div>
         <?

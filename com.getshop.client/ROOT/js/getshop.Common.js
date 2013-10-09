@@ -388,6 +388,7 @@ thundashop.common.setSizeClasses = function() {
             css = "small";
         }
         $(this).addClass(css);
+        $(this).attr('size', css);
     });
 }
 
@@ -661,8 +662,11 @@ $(function() {
     });
     $(document).on('click', '.empty_app_area_browse_apps', function() {
         var area = $(this).closest('.applicationarea').attr('area');
+        var size = $(this).closest('.applicationarea').attr('size');
+        
         var event = thundashop.Ajax.createEvent('', 'showApplications', null, {
-            "type": area
+            "type": area,
+            "size" : size
         });
         thundashop.common.showInformationBox(event);
     });

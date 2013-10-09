@@ -6,11 +6,26 @@ $area = $_POST['data']['type'];
 $import = isset($_POST['data']['action']) && $_POST['data']['action'] == "import" ? true : false;
 $allApps = $factory->getApplicationPool()->getAllApplicationSettingsForArea(null);
 $apps = $factory->getApplicationPool()->convertApplicationsSettingsToAppinstances($allApps);
+
+$size = "xlarge";
+if(isset($_POST['data']['size'])) {
+    $size = $_POST['data']['size'];
+}
 ?>
 <div class="tabs">
     <div class="tabset inline">
         <?
         foreach ($apps as $app) {
+            $areas = $app->applicationSettings->allowedAreas;
+            if(!in_array($size, $areas) && $size != "xlarge" || sizeof($areas) == 0) {
+               continue;
+            }
+            if(stristr($area, "left") && !in_array("left", $areas)) {
+                continue;
+            }
+            if(stristr($area, "right") && !in_array("right", $areas)) {
+                continue;
+            }
             if ($import) {
                 $apps2 = $factory->getApi()->getPageManager()->getApplicationsBasedOnApplicationSettingsId($app->getApplicationSettings()->id);
                 if (count($apps2) == 0) {
@@ -44,6 +59,10 @@ $apps = $factory->getApplicationPool()->convertApplicationsSettingsToAppinstance
     <div class="tab_content inline">
         <?
         foreach ($apps as $app) {
+            $areas = $app->applicationSettings->allowedAreas;
+            if(!in_array($size, $areas) && $size != "xlarge" || sizeof($areas) == 0) {
+               continue;
+            }
             if (!$app->getName()) {
                 continue;
             }

@@ -133,4 +133,10 @@ public class GetShopApi {
       public APIUtilManager getUtilManager() {
            return new APIUtilManager(transport);
       }
+     /**
+      * @return APIYouTubeManager
+      */
+      public APIYouTubeManager getYouTubeManager() {
+           return new APIYouTubeManager(transport);
+      }
 }

@@ -409,6 +409,13 @@
 	}
 	
 	/**
+	 * @return \core_youtubemanager_data_SearchResult
+	 */
+	public static function core_youtubemanager_data_SearchResult() {
+		return new \core_youtubemanager_data_SearchResult();
+	}
+	
+	/**
 	 * @return \core_databasemanager_data_Credentials
 	 */
 	public static function core_databasemanager_data_Credentials() {

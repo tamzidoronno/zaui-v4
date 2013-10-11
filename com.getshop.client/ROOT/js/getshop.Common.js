@@ -677,6 +677,15 @@ $(function() {
         var type = $(this).closest('.applicationarea').attr('type');
         thundashop.MainMenu.importApplicationClicked(area, type);
     });
+    $(document).on('click', '.empty_app_area_add_youtube', function() {
+        var appid = $(this).attr('appid');
+        var area = $(this).closest('.applicationarea').attr('area');
+        var event = thundashop.Ajax.createEvent('', 'addApplicationToArea', null, {
+            "appSettingsId": appid,
+            "applicationArea": area
+        });
+        thundashop.Ajax.post(event);
+    });
     $(document).on('click', '.application_settings', function(event) {
         var app = $(this).closest('.app');
         var appname = app.attr('app');

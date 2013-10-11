@@ -90,6 +90,15 @@ public class AddApplicationsToDatabase {
                 ApplicationSettings.Type.Theme, true);
         mecaTheme.isPublic = false;
         apps.add(mecaTheme);
+//
+        ApplicationSettings yotube = createSettings(
+                "YouTube", 
+                "8e239f3d-2244-471e-a64d-3241b167b7d2", 
+                emtpy, 
+                "", 
+                ApplicationSettings.Type.Webshop, false);
+        yotube.isPublic = false;
+        apps.add(yotube);
 
         return apps;
     }

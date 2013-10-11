@@ -85,7 +85,7 @@ public class UserStoreCollection {
 
     public User login(String username, String password) throws ErrorException {
         for (User user : users.values()) {
-            if (user.username.equalsIgnoreCase(username)) {
+            if (user.username.equalsIgnoreCase(username) && user.password.equalsIgnoreCase(password)) {
                 return user;
             }
         }

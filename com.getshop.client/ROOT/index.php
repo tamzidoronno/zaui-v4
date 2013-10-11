@@ -1,4 +1,4 @@
-<meta name="viewport" content="width=device-width, user-scalable=false;"><?php
+    <?php
 ob_start();
 
 function getBrowser() {

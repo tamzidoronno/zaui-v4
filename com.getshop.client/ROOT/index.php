@@ -1,4 +1,4 @@
-<?php
+<meta name="viewport" content="width=device-width, user-scalable=false;"><?php
 ob_start();
 
 function getBrowser() {
@@ -147,6 +147,7 @@ if (isset($_GET['logonwithkey'])) {
         }
         echo "</script>";
         ?>
+        <meta name="viewport" content="width=device-width, user-scalable=false;"></meta>
         <title><?php echo $title; ?></title>
     </head>
     <body>

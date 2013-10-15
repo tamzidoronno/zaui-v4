@@ -305,7 +305,7 @@ thundashop.common.createInformationBox = function(appid, title, open) {
 
 }
 
-thundashop.common.showInformationBox = function(event, title) {
+thundashop.common.showInformationBox = function(event, title, avoidScroll) {
     if (typeof(title) === "undefined")
         title = "";
     var appid = null;
@@ -320,6 +320,10 @@ thundashop.common.showInformationBox = function(event, title) {
     var result = thundashop.Ajax.postSynchron(event);
     infoBox.html(result);
     setTimeout(thundashop.common.setMaskHeight, "200");
+    if(!avoidScroll) {
+        $('.informationbox-outer').scrollTop(0);
+    }
+    
     return infoBox;
 }
 

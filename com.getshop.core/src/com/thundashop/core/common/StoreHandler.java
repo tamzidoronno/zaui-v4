@@ -49,6 +49,12 @@ public class StoreHandler {
                 base.initialize();
             }
         }
+        
+        for (ManagerBase base : messageHandler) {
+            if (base instanceof StoreInitialized) {
+                ((StoreInitialized)base).storeReady();
+            }
+        }
     }
 
     public void startSession() {
@@ -101,10 +107,6 @@ public class StoreHandler {
     private Object invokeMethod(Method executeMethod, Class aClass, Object[] argObjects) throws ErrorException {
         try {
             ManagerBase manager = getManager(aClass);
-            
-            if(manager == null) {
-                System.out.println("fsdaf");
-            }
             return executeMethod.invoke(manager, argObjects);
         } catch (IllegalAccessException ex) {
             throw new ErrorException(84);

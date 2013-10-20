@@ -82,23 +82,23 @@ public class AddApplicationsToDatabase {
 //        payondelviery.isSingleton = true;
 //        apps.add(payondelviery);
 //
-        ApplicationSettings mecaTheme = createSettings(
-                "MecaTheme", 
-                "b1e89810-2dc3-11e3-aa6e-0800200c9a66", 
-                emtpy, 
-                "", 
-                ApplicationSettings.Type.Theme, true);
-        mecaTheme.isPublic = false;
-        apps.add(mecaTheme);
+//        ApplicationSettings mecaTheme = createSettings(
+//                "MecaTheme", 
+//                "b1e89810-2dc3-11e3-aa6e-0800200c9a66", 
+//                emtpy, 
+//                "", 
+//                ApplicationSettings.Type.Theme, true);
+//        mecaTheme.isPublic = false;
+//        apps.add(mecaTheme);
 //
-        ApplicationSettings yotube = createSettings(
-                "YouTube", 
-                "8e239f3d-2244-471e-a64d-3241b167b7d2", 
+        ApplicationSettings invoicePayment = createSettings(
+                "InvoicePayment", 
+                "70ace3f0-3981-11e3-aa6e-0800200c9a66", 
                 emtpy, 
                 "", 
-                ApplicationSettings.Type.Webshop, false);
-        yotube.isPublic = false;
-        apps.add(yotube);
+                ApplicationSettings.Type.Payment, true);
+        invoicePayment.isPublic = true;
+        apps.add(invoicePayment);
 
         return apps;
     }

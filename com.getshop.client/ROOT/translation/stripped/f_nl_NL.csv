@@ -1,79 +1,73 @@
-###### d02f8b7a_7395_455d_b754_888d7d701db8 (Dibs) ######
-Have a look at http://www.dibspayment.com/ for more information.;-;
-The Merchant-ID is provided by Dibs, please contact us for more information.;-;
-
-
-###### a109b0f1_97c3_4292_a46f_4c6894a9841c (PartnerApplicationSelection) ######
-Activate / deactivate the applications you would like your customers to have access to.;-;
-List has been saved;-;
-
-
-###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
+###### framework ######
+Account number;-;
+Add videos to your page.;-;
+Allows customers to pay by invoice.;-;
+Company Name;-;
+Configure your booking application;-;
+Contact email;-;
 Create event;-;
+Due days;-;
 Edit event;-;
+Enable this option to send email when a booking has been made.;-;
+Extra invoice email field, can be useful if candidate is not the same as the one that pays the bill;-;
+Have a look at http://www.dibspayment.com/ for more information.;-;
+If this option has been enabled the attendee will receive an sms.;-;
+If you turn on this feature, it will try to get the company information from  brreg. Simplify the form significantly.;-;
+Insert an image;-;
+Invoice email field.;-;
+Number of days the customer have to pay the invoice, example 14;-;
 Reminder sent by sms;-;
+SMS From;-;
+SMS Text;-;
+Search youtube;-;
+Select;-;
+Send email;-;
 Send reminder;-;
+Send sms to attendee?;-;
+Specify boundaries the map should restrict itself to. Leave it empty to avoid boundaries. Or add multiple rectangular fields as constraints.;-;
+The Merchant-ID is provided by Dibs, please contact us for more information.;-;
+The default title to use when sending emails.;-;
+The password for your smtp server.;-;
+The port for your smtp server.;-;
+The username for your smtp server.;-;
+This is the accounting number that will be printed on the invoice, example XXXX XX XXXXX;-;
+This is the address that will be printed on the invoice, example GetShop street 13;-;
+This is the city that will be printed on the invoice, example Las Vegas;-;
+This is the company name that will be printed on the invoice, example GetShop;-;
+This is the email address that will be printed on the invoice, example post@getshop.com;-;
+This is the mail that will be sent upon booking;-;
+This is the post code that will be printed on the invoice, example 4380;-;
+This is the vat number that will be printed on the invoice, example 123456789;-;
+This is the web address that will be printed on the invoice, example http://www.getshop.com;-;
+Title when sending emails;-;
+Try to get the company information from Br Reg.;-;
+Vat number;-;
+What should be the sender name?;-;
+What should the text message contain?;-;
+Your site has been deleted;-;
 add_event;-;
+add_news;-;
+appid;-;
+appid_required;-;
+create_news_desc;-;
 edit;-;
 event_desc;-;
 event_name;-;
+fraktguiden is a norwegian application for keeping track of norwegian shipment prices, shipment tracking etc.;-;
 free_positions;-;
+latitude;-;
+like_button;-;
+like_button_desc;-;
+longitide;-;
 max_atandees;-;
 no_activites;-;
+profile_url;-;
+profile_url_desc;-;
 send_reminder;-;
 start;-;
 start_time;-;
 stop;-;
-
-
-###### 2da52bbc_a392_4125_92b6_eec1dc4879e9 (Bring) ######
-fraktguiden is a norwegian application for keeping track of norwegian shipment prices, shipment tracking etc.;-;
-
-
-###### ba885f72_f571_4a2e_8770_e91cbb16b4ad (Facebook) ######
-appid;-;
-appid_required;-;
-like_button;-;
-like_button_desc;-;
-profile_url;-;
-profile_url_desc;-;
-
-
-###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
-Configure your booking application;-;
-Enable this option to send email when a booking has been made.;-;
-Extra invoice email field, can be useful if candidate is not the same as the one that pays the bill;-;
-If this option has been enabled the attendee will receive an sms.;-;
-If you turn on this feature, it will try to get the company information from  brreg. Simplify the form significantly.;-;
-Invoice email field.;-;
-SMS From;-;
-SMS Text;-;
-Send email;-;
-Send sms to attendee?;-;
-The default title to use when sending emails.;-;
-This is the mail that will be sent upon booking;-;
-Title when sending emails;-;
-Try to get the company information from Br Reg.;-;
-What should be the sender name?;-;
-What should the text message contain?;-;
-
-
-###### dabb8a85_f593_43ec_bf0d_240467118a40 (News) ######
-add_news;-;
-create_news_desc;-;
 subscribe_news;-;
-
-
-###### 17c48891_6f7a_47a0_849d_b50de9af218f (GoogleMaps) ######
-Specify boundaries the map should restrict itself to. Leave it empty to avoid boundaries. Or add multiple rectangular fields as constraints.;-;
-latitude;-;
-longitide;-;
 zoom;-;
-
-
-###### 8ad8243c_b9c1_48d4_96d5_7382fa2e24cd (Mail) ######
-The password for your smtp server.;-;
-The port for your smtp server.;-;
-The username for your smtp server.;-;
 
 

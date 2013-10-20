@@ -259,6 +259,10 @@ if (isset($_GET['page'])) {
 }
 ?>
 
+<?
+    $factory->getApi()->getInvoiceManager()->createInvoice("4d98cbe0-f614-4ed3-9b46-846acad65cbb");
+?>
+
 <script>
     $(document).ready(function() {
         PubSub.publish('NAVIGATION_COMPLETED', {});

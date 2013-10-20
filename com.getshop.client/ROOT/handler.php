@@ -40,6 +40,7 @@ class handler {
     }
 
 }
+
 ob_start();
 checkCreateApp();
 

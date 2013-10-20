@@ -104,6 +104,12 @@ public class GetShopApi {
            return new APIPageManager(transport);
       }
      /**
+      * @return APIInvoiceManager
+      */
+      public APIInvoiceManager getInvoiceManager() {
+           return new APIInvoiceManager(transport);
+      }
+     /**
       * @return APIProductManager
       */
       public APIProductManager getProductManager() {

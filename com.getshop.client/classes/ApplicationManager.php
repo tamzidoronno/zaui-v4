@@ -334,7 +334,7 @@ class ApplicationManager extends FactoryBase {
 
         if ($this->getFactory()->getApplicationPool()->getApplicationInstance($_POST['data']['appId']) != null)
             return;
-
+        
         $appConfiguration = $this->getFactory()->getApi()->getPageManager()->addApplication($_POST['data']['appId']);
 
         $namespace = $this->getFactory()->convertUUIDtoString($appConfiguration->appSettingsId);

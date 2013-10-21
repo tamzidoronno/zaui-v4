@@ -2424,6 +2424,29 @@ class APIPageManager {
      }
 
 }
+class APIInvoiceManager {
+
+      var $transport;
+
+      function APIInvoiceManager($transport) {
+           $this->transport = $transport;
+      }
+
+     /**
+ *
+ * @author ktonder
+ */
+
+     public function createInvoice($orderId) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+          $data["method"] = "createInvoice";
+          $data["interfaceName"] = "core.pdf.IInvoiceManager";
+          return $this->transport->sendMessage($data);
+     }
+
+}
 class APIProductManager {
 
       var $transport;
@@ -3727,6 +3750,12 @@ class GetShopApi {
       */
       public function getPageManager() {
            return new APIPageManager($this->transport);
+      }
+     /**
+      * @return InvoiceManager
+      */
+      public function getInvoiceManager() {
+           return new APIInvoiceManager($this->transport);
       }
      /**
       * @return ProductManager

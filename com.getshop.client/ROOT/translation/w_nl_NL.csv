@@ -1,241 +1,190 @@
-###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
-Cart overview;-;Overzicht winkelwagen
-Checkout;-;Afrekenen
-Click next to select shipping options;-;Klik volgende om een verzendmethode te kiezen
-Confirm order;-;Bestelling bevestigen
-Failed;-;Mislukt
-I agree to the terms and conditions;-;Ik ga akkoord met de voorwaarden
-Invalid email address;-;Ongeldig emailadres
-Invalid payment method;-;Ongeldige betaalmethode
-Password missmatch;-;Wachtwoorden komen niet overeen
-Please select a payment method.;-;Selecteer een betaalmethode
-Please select a valid payment method;-;Gelieve een geldig betaalniddel te kiezen
-Registration details;-;Registratie details
-Shipping price;-;Verzendkosten
-The email already exists, please log on to continue.;-;Het emailadres bestaat al, gelieve in te loggen om verder te gaan
-The passwords does not match.;-;Het wachtwoord komt niet overeen
-Use a different email;-;Gebruik een ander emailadres
-Was not able to get payment methods, please check your postcode;-;Niet mogelijk een betaalmogelijkheid op te halen, gelieve je postcode na te gaan
-read;-;Lees
-
-
-###### 2afb045b_fa01_4398_8582_33f212bb8db8 (Chat) ######
-Chat with us;-;Chat met ons
-How can I help you today ?;-;Waarmee kunnen we u van dienst zijn?
-Our local time is:;-;Onze locale tijd is:
-Please select a user in the left menu;-;Kies een gebruiker in het linker menu
-You need to select at least one to send back message to;-;Je moet op zijn minst 1 selecteren om een bericht terug te sturen
-if we dont answer, please leave your email here and we will return your message asap.;-;Indien we niet antwoorden, gelieve een email te sturen. We reageren zo snel mogelijk.
-
-
-###### df435931_9364_4b6a_b4b2_951c90cc0d70 (Login) ######
-An email has been sent to you with the confirmation code.;-;Er is een email verzonden met je bevestigingscode
-Email sent;-;Email verzonden
-Enter the code sent to your email.;-;Code invoeren die u per sms is gestuurd
-Login;-;Inloggen
-Logout;-;Uitloggen
-Lost your password?;-;Wachtwoord vergeten?
-My Account;-;Mijn account
-Orders;-;Bestellingen
-Password cannot be empty;-;Wachtwoord veld mag niet leeg zijn
-Password does not match, please re enter password;-;Wachtwoorden komen niet overeen, gelieve nogmaals in te geven
-Password has been successfully updated;-;Wachtwoord succesvol geupdate
-Password has been updated;-;Wachtwoord geupdate
-Please enter your email address:;-;E-mailadres aub invoeren:
-Please following theese steps to recover your password.;-;Volg instructies om uw wachtwoord te achterhalen
-Recover password;-;Wachtwoord achterhalen
-Send me a code;-;Stuur mij de code
-
-
-###### 626ff5c4_60d4_4faf_ac2e_d0f21ffa9e87 (Search) ######
-Search for a product;-;Product zoeken
-
-
 ###### framework ######
 A red theme that can be used when selling exciting things;-;Een rode layout voor verkoop van interessante producten
 Add to cart;-;Aan winkelwagen toevoegen
 Address;-;Straatnaam + huisnummer
+All fields are required.;-;Alle velden moet ingevuld worden
+All orders;-;Alle bestellingen
+An email has been sent to you with the confirmation code.;-;Er is een email verzonden met je bevestigingscode
+Application;-;Applicatie 
+Apply coupon;-;Korting toevoegen
+April;-;April
+August;-;Augustus
+Banner settings;-;Banner settings
+Birth Date;-;Geboortedatum
+Buy;-;Koop
+By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;Via Payment provider Sisow, laat je je klanten makkelijk betalen met iDeal, Mister Cash en andere betaalmogelijkheden. Meer info via https://www.sisow.nl
+Cancel order;-;Bestelling afbreken
+Canceled;-;Afgebroken
+Cart overview;-;Overzicht winkelwagen
+Cell phone;-;Mobiel
 Change password;-;Wachtwoord aanpassen
+Changes has been saved!;-;Aanpassingen opgeslagen
+Chat with us;-;Chat met ons
+Checkout;-;Afrekenen
 City;-;Woonplaats
+Click here to edit the text.;-;Klik hier om de tekst te bewerken
+Click next to select shipping options;-;Klik volgende om een verzendmethode te kiezen
+Company;-;Bedrijf
 Completed;-;Afgerond
+Configure banner slider;-;Configureer banner slider
+Confirm order;-;Bestelling bevestigen
 Continue;-;Ga verder
 Cookies are being stored;-;Cookies worden bijgehouden
 Country;-;Land
 Coupon;-;Korting
 Coupon discount;-;Kortingcode
+Customer information;-;Klanteninformatie
+Date;-;Datum
+December;-;December
 Delete image;-;Verwijder afbeelding
+Details;-;Details
+Download ebill;-;Download eBill
 Email;-;Email
+Email sent;-;Email verzonden
+End date;-;Einddatum
+Enter the code sent to your email.;-;Code invoeren die u per sms is gestuurd
+Extended Description;-;Uitgebreide beschrijving
+Failed;-;Mislukt
 Featured Product;-;Product in de kijker
+February;-;Februari
 Fixed price;-;Vaste prijs
 Free shipping;-;Gratis verzending
+Friday;-;Vrijdag
 Full name;-;Volledige naam
+Got a coupon from use? Apply it and get discount.;-;Gebruik je korting Code hier
+Group;-;Groep
+How can I help you today ?;-;Waarmee kunnen we u van dienst zijn?
+I agree to the terms and conditions;-;Ik ga akkoord met de voorwaarden
+I am sorry, but all fields are required before sending a message.;-;Sorry, alle velden moeten ingevuld worden om een bericht te kunnen versturen
+Invalid email address;-;Ongeldig emailadres
+Invalid payment method;-;Ongeldige betaalmethode
 Invoice email;-;Factuur email
+January;-;Januari
+July;-;Juli
+June;-;Juni
+Les mer;-;?
+Login;-;Inloggen
+Logout;-;Uitloggen
+Lost your password?;-;Wachtwoord vergeten?
+March;-;Maart
+May;-;Mei
+Message;-;Bericht
+Message from a customer;-;Bericht van een klant
+Monday;-;Maandag
+My Account;-;Mijn account
+My name is:;-;Mijn naam is:
 Name;-;Naam
 New message;-;Nieuw bericht
 New password;-;Nieuw wachtwoord
 Next;-;Volgende
+November;-;November
+Number of instances added;-;Aantal zaken toegevoegd
+October;-;Oktober
+Old password;-;oude wachtwoord
 Order;-;Bestelling
+Order Created;-;Bestelling aangemaakt
+Order date;-;Besteldatum
+Order sent;-;Bestelling verzonden
+Orders;-;Bestellingen
+Organisation;-;Organisatie
+Organisation name;-;Bedrijfsnaam
+Other images;-;Andere afbeeldingen
+Our local time is:;-;Onze locale tijd is:
 Password;-;Wachtwoord
+Password cannot be empty;-;Wachtwoord veld mag niet leeg zijn
+Password does not match, please re enter password;-;Wachtwoorden komen niet overeen, gelieve nogmaals in te geven
+Password has been successfully updated;-;Wachtwoord succesvol geupdate
+Password has been updated;-;Wachtwoord geupdate
+Password missmatch;-;Wachtwoorden komen niet overeen
+Payment;-;Betaling
 Payment failed;-;Betaling niet gelukt
+Payment information;-;Betaal informatie
+Payment successfully completed;-;Betaling gelukt
 Phone;-;Telefoon
 Place order;-;Bestelling plaatsen
 Please check your delivery options.;-;Kijk de verzendopties na
+Please enter your email address:;-;E-mailadres aub invoeren:
+Please following theese steps to recover your password.;-;Volg instructies om uw wachtwoord te achterhalen
+Please select a payment method.;-;Selecteer een betaalmethode
+Please select a user in the left menu;-;Kies een gebruiker in het linker menu
+Please select a valid payment method;-;Gelieve een geldig betaalniddel te kiezen
 Please select department;-;Gelieve een afdeling te kiezen
 Post code;-;Postcode
 Postal code;-;Postcode
 Previous;-;Vorige
 Price;-;Prijs
+Price and plans;-;Prijs en pakketten
+Product count;-;Aantal producten
+Recover password;-;Wachtwoord achterhalen
+Register;-;Aanmelden
+Registration details;-;Registratie details
 Related products;-;Gerelateerde producten
 Reminder;-;Herinnering
 Remove;-;Verwijderen
 Repeat password;-;Wachtwoord nogmaals
+Saturday;-;Zaterdag
+Search for a product;-;Product zoeken
+Send me a code;-;Stuur mij de code
 Send message;-;Bericht versturen
 Send us mail;-;Stuur ons een email
+September;-;September
+Set new password;-;Nieuw wachtwoord vastleggen
+Shipment information;-;Verzendinformatie
+Shipment settings;-;Verzendingsmogelijkheden
+Shipping;-;Verzending	 
+Shipping cost;-;Verzendkosten
+Shipping price;-;Verzendkosten
+Sign up;-;Registreer
 Sorry;-;Sorry
+Start date;-;Start datum
+Status;-;Status
 Success;-;Succes
+Sunday;-;Zondag
 Taxes;-;BTW
 Terms and Conditions;-;Algemene voorwaarden
+Thank you for ordering with Sisow ebill;-;Bedankt om te bestellen via eBill
 Thank you for your order.;-;Bedankt voor je bestelling
+Thank you, you will now be redirected to the payment service;-;Bedankt, je wordt nu doorgestuurd naar de betaal pagina
+The email address is invalid.;-;Het emailadres is ongeldig
+The email already exists, please log on to continue.;-;Het emailadres bestaat al, gelieve in te loggen om verder te gaan
+The passwords does not match.;-;Het wachtwoord komt niet overeen
 This page is only available for adminsitrators;-;Deze pagina is alleen voor beheerders toegangkelijk
 This page is only available for editors.;-;Deze pagina is alleen voor redacteuren toegangkelijk
 This page is only available for registered users.;-;Deze pagina is alleen voor geregistreerde gebruikers toegangkelijk
+Thursday;-;Donderdag
 To be able to serve you we need to store a tiny amount of data about your browser. An identification id is being generated and added to your web browser. This allows us to track you for a two hours periode while you are navigating this site. This data is anonymous and are only being used to identify your web browser and not you as a person.;-;Wij gebruiken cookies om [het gebruik van onze webwinkel te faciliteren/ het inloggen op onze website te vergemakkelijken/ uw instellingen en voorkeuren te onthouden]. U kunt deze cookies uitzetten via uw browser maar dit kan het functioneren van onze webwinkel negatief aantasten.
 Total;-;Totaal
+Tuesday;-;Dinsdag
 Update;-;Updaten
+Use a different email;-;Gebruik een ander emailadres
 Username / Email;-;Gebruikersnaam / E-mail
+Waiting for payment;-;Wachten op betaling
+Was not able to get payment methods, please check your postcode;-;Niet mogelijk een betaalmogelijkheid op te halen, gelieve je postcode na te gaan
+We host events at the following locations, click on the location to filter the calendar by location(s);-;We organiseren events op de volgende locaties. Klik op de locatie om de kalender op locatie te filteren.
+Wednesday;-;Woensdag
 Weight;-;Gewicht
+What email address do you want the ebill to be sent to?;-;Naar welk emailadres wil je de eBill opgestuurd krijgen?
 What's on your mind?;-;Waar denk je aan?
 Wrong delivery method;-;Verkeerde verzendmethode
+You are being transferred to paypal, please wait...;-;Je wordt doorgestuurd naar Paypal, even geduld…
+You are here:;-;U bent hier:
+You do not have any orders.;-;U heeft nog geen bestellingen geplaatst
 You do not have any products in your cart;-;U heeft nog geen producten in de winkelwagen
+You need to select at least one to send back message to;-;Je moet op zijn minst 1 selecteren om een bericht terug te sturen
+Your message has been delivered;-;Je bericht is aangekomen
+Your order has been canceled due to incorrect payment information, please try again.;-;Je bestelling is geannuleerd door onjuiste betaalgegevens. Gelieve nog eens te proberen
+Your order has now been completed and is waiting to be shipped.;-;Je bestelling is compleet en klaar om verzonden te worden
+Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;Je bestelling is succesvol geplaatst en je krijgt zo dadelijk een email met je eBill bijgesloten. Je kan deze ook via volgende link downloaden
+Your personal information;-;Uw persoonlijke informatie
 email;-;email
+if we dont answer, please leave your email here and we will return your message asap.;-;Indien we niet antwoorden, gelieve een email te sturen. We reageren zo snel mogelijk.
 in stock;-;op voorraad
 included taxes;-;Inbegrepen belastingen
 location;-;locatie
 login;-;Log in
 org;-;org
-
-
-###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
-Shipment settings;-;Verzendingsmogelijkheden
-
-
-###### 32c15c30_d665_11e2_8b8b_0800200c9a66 (RealEstate) ######
-Les mer;-;?
-
-
-###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 (Sisow) ######
-By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;Via Payment provider Sisow, laat je je klanten makkelijk betalen met iDeal, Mister Cash en andere betaalmogelijkheden. Meer info via https://www.sisow.nl
-Download ebill;-;Download eBill
-Payment successfully completed;-;Betaling gelukt
-Thank you for ordering with Sisow ebill;-;Bedankt om te bestellen via eBill
-Thank you, you will now be redirected to the payment service;-;Bedankt, je wordt nu doorgestuurd naar de betaal pagina
-What email address do you want the ebill to be sent to?;-;Naar welk emailadres wil je de eBill opgestuurd krijgen?
-Your order has been canceled due to incorrect payment information, please try again.;-;Je bestelling is geannuleerd door onjuiste betaalgegevens. Gelieve nog eens te proberen
-Your order has now been completed and is waiting to be shipped.;-;Je bestelling is compleet en klaar om verzonden te worden
-Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;Je bestelling is succesvol geplaatst en je krijgt zo dadelijk een email met je eBill bijgesloten. Je kan deze ook via volgende link downloaden
-
-
-###### d612904c_8e44_4ec0_abf9_c03b62159ce4 (Banner) ######
-Banner settings;-;Banner settings
-Configure banner slider;-;Configureer banner slider
-
-
-###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
-All fields are required.;-;Alle velden moet ingevuld worden
-Company;-;Bedrijf
-I am sorry, but all fields are required before sending a message.;-;Sorry, alle velden moeten ingevuld worden om een bericht te kunnen versturen
-Message;-;Bericht
-Message from a customer;-;Bericht van een klant
-My name is:;-;Mijn naam is:
-The email address is invalid.;-;Het emailadres is ongeldig
-Your message has been delivered;-;Je bericht is aangekomen
-
-
-###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
-April;-;April
-August;-;Augustus
-December;-;December
-February;-;Februari
-Friday;-;Vrijdag
-January;-;Januari
-July;-;Juli
-June;-;Juni
-March;-;Maart
-May;-;Mei
-Monday;-;Maandag
-November;-;November
-October;-;Oktober
-Saturday;-;Zaterdag
-September;-;September
-Sunday;-;Zondag
-Thursday;-;Donderdag
-Tuesday;-;Dinsdag
-We host events at the following locations, click on the location to filter the calendar by location(s);-;We organiseren events op de volgende locaties. Klik op de locatie om de kalender op locatie te filteren.
-Wednesday;-;Woensdag
-
-
-###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
-Date;-;Datum
-Sign up;-;Registreer
 phone;-;telefoon
-
-
-###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######
-All orders;-;Alle bestellingen
-Cancel order;-;Bestelling afbreken
-Canceled;-;Afgebroken
-Customer information;-;Klanteninformatie
-Order Created;-;Bestelling aangemaakt
-Order date;-;Besteldatum
-Order sent;-;Bestelling verzonden
-Payment information;-;Betaal informatie
-Product count;-;Aantal producten
-Shipment information;-;Verzendinformatie
-Shipping;-;Verzending	 
-Status;-;Status
-Waiting for payment;-;Wachten op betaling
-You do not have any orders.;-;U heeft nog geen bestellingen geplaatst
-
-
-###### 7093535d_f842_4746_9256_beff0860dbdf (BreadCrumb) ######
-You are here:;-;U bent hier:
-
-
-###### dcd22afc_79ba_4463_bb5c_38925468ae26 (ProductManager) ######
-Buy;-;Koop
-Click here to edit the text.;-;Klik hier om de tekst te bewerken
-Details;-;Details
-Extended Description;-;Uitgebreide beschrijving
-Other images;-;Andere afbeeldingen
+read;-;Lees
 shipping;-;Verzending
-
-
-###### 90cd1330_2815_11e3_8224_0800200c9a66 (Coupon) ######
-Apply coupon;-;Korting toevoegen
-Got a coupon from use? Apply it and get discount.;-;Gebruik je korting Code hier
-
-
-###### c7736539_4523_4691_8453_a6aa1e784fc1 (PayPal) ######
-Shipping cost;-;Verzendkosten
-You are being transferred to paypal, please wait...;-;Je wordt doorgestuurd naar Paypal, even geduld…
-
-
-###### 6c245631_effb_4fe2_abf7_f44c57cb6c5b (Account) ######
-Application;-;Applicatie 
-Birth Date;-;Geboortedatum
-Cell phone;-;Mobiel
-Changes has been saved!;-;Aanpassingen opgeslagen
-End date;-;Einddatum
-Group;-;Groep
-Number of instances added;-;Aantal zaken toegevoegd
-Old password;-;oude wachtwoord
-Organisation;-;Organisatie
-Organisation name;-;Bedrijfsnaam
-Payment;-;Betaling
-Price and plans;-;Prijs en pakketten
-Register;-;Aanmelden
-Set new password;-;Nieuw wachtwoord vastleggen
-Start date;-;Start datum
-Your personal information;-;Uw persoonlijke informatie
 
 

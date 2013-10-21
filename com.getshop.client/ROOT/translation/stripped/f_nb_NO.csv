@@ -1,9 +1,23 @@
-###### a109b0f1_97c3_4292_a46f_4c6894a9841c (PartnerApplicationSelection) ######
-Activate / deactivate the applications you would like your customers to have access to.;-;
-List has been saved;-;
-
-
-###### 43567fce_00b4_4a71_b054_813066ce81a8 ######
-Handles taxes for products and shipment;-;
+###### framework ######
+Account number;-;
+Add videos to your page.;-;
+Allows customers to pay by invoice.;-;
+Company Name;-;
+Contact email;-;
+Due days;-;
+Insert an image;-;
+Number of days the customer have to pay the invoice, example 14;-;
+Search youtube;-;
+Select;-;
+This is the accounting number that will be printed on the invoice, example XXXX XX XXXXX;-;
+This is the address that will be printed on the invoice, example GetShop street 13;-;
+This is the city that will be printed on the invoice, example Las Vegas;-;
+This is the company name that will be printed on the invoice, example GetShop;-;
+This is the email address that will be printed on the invoice, example post@getshop.com;-;
+This is the post code that will be printed on the invoice, example 4380;-;
+This is the vat number that will be printed on the invoice, example 123456789;-;
+This is the web address that will be printed on the invoice, example http://www.getshop.com;-;
+Vat number;-;
+Your site has been deleted;-;
 
 

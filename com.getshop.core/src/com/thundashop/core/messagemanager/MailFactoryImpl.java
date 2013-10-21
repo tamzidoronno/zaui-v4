@@ -6,13 +6,23 @@ package com.thundashop.core.messagemanager;
 
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.StoreComponent;
+import java.io.File;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.BodyPart;
+import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMessage.RecipientType;
+import javax.mail.internet.MimeMultipart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -31,6 +41,8 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
     
     @Autowired
     public Logger logger;
+    private Map<String, String> files;
+    private boolean delete;
 
     private Session getSession() {
         Authenticator authenticator = new Authenticator();
@@ -58,6 +70,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
         mfi.configuration = configuration;
         mfi.logger = logger;
         mfi.storeId = storeId;
+        
         if(to == null || to.equals("test@getshop.com")) {
             //Send this to noone, or the test account.. no way!
             return;
@@ -68,6 +81,26 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
     @Override
     public void setStoreId(String storeId) {
         this.storeId = storeId;
+    }
+
+    @Override
+    public void sendWithAttachments(String from, String to, String title, String content, Map<String, String> files, boolean delete) {
+        MailFactoryImpl mfi = new MailFactoryImpl();
+        mfi.from = from;
+        mfi.to = to;
+        mfi.files = files;
+        mfi.delete = delete;
+        mfi.subject = title;
+        mfi.content = content;
+        mfi.configuration = configuration;
+        mfi.logger = logger;
+        mfi.storeId = storeId;
+        
+        if(to == null || to.equals("test@getshop.com")) {
+            //Send this to noone, or the test account.. no way!
+            return;
+        }
+        new Thread(mfi).start();
     }
 
     private class Authenticator extends javax.mail.Authenticator {
@@ -90,17 +123,47 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
         MimeMessage message = new MimeMessage(getSession());
         
         try {
+            message.setSubject(subject, "UTF-8");
+            message.setHeader("Content-Type", "text/plain; charset=UTF-8");
             message.addRecipient(RecipientType.TO, new InternetAddress(to));
             message.addFrom(new InternetAddress[]{new InternetAddress(configuration.getSettings().sendMailFrom)});
             message.setReplyTo(new InternetAddress[]{new InternetAddress(from)});
 
-            message.setSubject(subject, "UTF-8");
-            message.setHeader("Content-Type", "text/plain; charset=UTF-8");
-            message.setContent(content, "text/html; charset=UTF-8");
-
+            if (files != null) {
+                Multipart multipart = new MimeMultipart();
+                
+                BodyPart messageBodyPart = new MimeBodyPart();
+                messageBodyPart.setContent(content, "text/html; charset=UTF-8");
+                
+                for (String file : files.keySet()) {
+                    DataSource source = new FileDataSource(file);
+                    messageBodyPart.setDataHandler(new DataHandler(source));
+                    messageBodyPart.setFileName(files.get(file));
+                }
+                
+                multipart.addBodyPart(messageBodyPart);
+                message.setContent(multipart);
+            } else {
+                message.setContent(content, "text/html; charset=UTF-8");
+            }
+            
             Transport.send(message);
+            
         } catch (Exception ex) {
             logger.error(this, "Was not able to send email... ", ex);
+        }
+        
+        if (delete && !files.isEmpty()) {
+            for (String file : files.keySet()) {
+                try {
+                    File fileToDelete = new File(file);
+                    fileToDelete.delete();
+                    File fileToDelete2 = new File(files.get(file));
+                    fileToDelete2.delete();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
         }
     }
 }

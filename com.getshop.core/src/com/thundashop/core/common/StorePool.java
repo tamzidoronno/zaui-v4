@@ -4,14 +4,21 @@
  */
 package com.thundashop.core.common;
 
+import org.owasp.validator.html.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.thundashop.core.storemanager.data.Store;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -21,11 +28,24 @@ public class StorePool {
 
     private HashMap<String, StoreHandler> storeHandlers = new HashMap();
     private com.thundashop.core.storemanager.StorePool storePool;
+    private final AntiSamy antiySamy;
+    private Policy policy;
 
     public StorePool() {
         if (AppContext.appContext != null) {
             this.storePool = AppContext.appContext.getBean(com.thundashop.core.storemanager.StorePool.class);
         }
+        
+        
+        try {
+             policy = Policy.getInstance(getClass().getResource("/antisamy-myspace-1.4.4.xml"));
+        } catch (Exception ex) {
+            System.out.println("Could not find the antisamy policy file, can not continue unsecurly");
+            ex.printStackTrace();
+            System.exit(1);
+        }
+        
+        antiySamy = new AntiSamy();
     }
 
     private Type[] getArgumentsTypes(JsonObject2 object) throws ErrorException {
@@ -73,12 +93,66 @@ public class StorePool {
             throw new ErrorException(81);
         }
     }
+    
+    private static final Set<Class<?>> WRAPPER_TYPES = getWrapperTypes();
+
+    public static boolean isWrapperType(Class<?> clazz)
+    {
+        return WRAPPER_TYPES.contains(clazz);
+    }
+
+    private static Set<Class<?>> getWrapperTypes()
+    {
+        Set<Class<?>> ret = new HashSet<Class<?>>();
+        ret.add(Boolean.class);
+        ret.add(Character.class);
+        ret.add(Byte.class);
+        ret.add(Short.class);
+        ret.add(Integer.class);
+        ret.add(Long.class);
+        ret.add(Float.class);
+        ret.add(Double.class);
+        ret.add(Void.class);
+        return ret;
+    }
 
     public Object ExecuteMethod(String message, String addr) throws ErrorException {
         return ExecuteMethod(message, addr, null);
     }
 
+    public Object scan(Object objectToScan) throws IllegalArgumentException, IllegalAccessException, ScanException, PolicyException {
+        if (objectToScan == null) {
+            return objectToScan;
+        }
+        
+        if (objectToScan instanceof String) {
+            CleanResults result2 = antiySamy.scan(objectToScan.toString(), policy);
+            return result2.getCleanHTML();
+        } else {
+            for (Field field : objectToScan.getClass().getFields()) {
+                if (field.getType().equals(String.class)) {
+                    String text = (String) field.get(objectToScan);
+                    if (text == null) {
+                        field.set(objectToScan, text);
+                    } else {
+                        CleanResults result2 = antiySamy.scan(text, policy);
+                        field.set(objectToScan, result2.getCleanHTML());
+                    }
+                } else if(isWrapperType(objectToScan.getClass())) {
+                    return objectToScan;
+                } else {
+                    field.set(objectToScan, scan(field.get(objectToScan)));
+                }
+            }
+        }
+        
+        return objectToScan;
+    }
+    
     public Object ExecuteMethod(String message, String addr, String sessionId) throws ErrorException {
+       
+        
+
         Gson gson = new GsonBuilder().serializeNulls().create();
 
         Type type = new TypeToken<JsonObject2>() {
@@ -136,6 +210,15 @@ public class StorePool {
     }
 
     private Object ExecuteMethod(JsonObject2 object, Class[] types, Object[] argumentValues) throws ErrorException {
+        Object[] cleanOject = new Object[argumentValues.length];
+        int i = 0;
+        for (Object arg : argumentValues) {
+            try { 
+                cleanOject[i] = scan(arg); 
+            } catch (Exception ex) { ex.printStackTrace(); }
+            i++;
+        }
+        argumentValues = cleanOject;
         Object res;
         if (object.interfaceName.equals("core.storemanager.StoreManager") && object.method.equals("initializeStore")) {
             res = storePool.initialize((String) argumentValues[0], (String) argumentValues[1]);

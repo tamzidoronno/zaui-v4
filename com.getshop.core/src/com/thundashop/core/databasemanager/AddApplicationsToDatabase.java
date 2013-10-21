@@ -99,6 +99,15 @@ public class AddApplicationsToDatabase {
                 ApplicationSettings.Type.Webshop, false);
         yotube.isPublic = false;
         apps.add(yotube);
+//
+        ApplicationSettings silvy = createSettings(
+                "SilvyTheme", 
+                "dfffd91f-f2f9-4928-ab7d-249b3e1017cf", 
+                emtpy, 
+                "", 
+                ApplicationSettings.Type.Theme, true);
+        silvy.isPublic = true;
+        apps.add(silvy);
 
         return apps;
     }

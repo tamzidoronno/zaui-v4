@@ -50,6 +50,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     @Override
     public Store initializeStore(String webAddress, String sessionId) throws ErrorException {
         webAddress = webAddress.replace(".local.getshop.com", ".getshop.com");
+        webAddress = webAddress.replace(".mpal.getshop.com", ".getshop.com");
         return storePool.initialize(webAddress, sessionId);
     }
 

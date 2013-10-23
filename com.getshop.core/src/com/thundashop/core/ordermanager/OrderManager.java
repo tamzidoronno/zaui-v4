@@ -139,6 +139,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         newOrder += "<br> Address: " + order.cart.address.address;
         newOrder += "<br> Phone: " + order.cart.address.phone;
         newOrder += "<br> PostCode: " + order.cart.address.postCode + " " + order.cart.address.city;
+        if(order.cart.address.countryname != null && !order.cart.address.countryname.isEmpty()) {
+            newOrder += "<br> Country: " + order.cart.address.countryname;
+        }
         newOrder += "<br>";
         newOrder += "<br> <b>Items:</b> ";
         newOrder += getOrderLines(order);

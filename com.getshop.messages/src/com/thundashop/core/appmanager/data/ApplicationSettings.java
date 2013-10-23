@@ -32,6 +32,7 @@ public class ApplicationSettings extends DataCommon implements Comparator<Applic
     public boolean isSingleton;
     public boolean renderStandalone;
     public boolean isPublic;
+    public boolean isResponsive = false;
     public Double price;
     public String userId;
     public String type;

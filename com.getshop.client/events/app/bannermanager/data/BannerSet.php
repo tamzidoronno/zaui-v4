@@ -15,5 +15,8 @@ class app_bannermanager_data_BannerSet extends core_common_DataCommon  {
 	/** @var String */
 	public $listId;
 
+	/** @var String */
+	public $showDots;
+
 }
 ?>

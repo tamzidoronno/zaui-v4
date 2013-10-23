@@ -14,4 +14,5 @@ public class BannerSet extends DataCommon {
     public int height = 100;
     public int interval = 5000;
     public String listId;
+    public boolean showDots = true;
 }

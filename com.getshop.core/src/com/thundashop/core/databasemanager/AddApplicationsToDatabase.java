@@ -107,8 +107,25 @@ public class AddApplicationsToDatabase {
                 "", 
                 ApplicationSettings.Type.Theme, true);
         silvy.isPublic = true;
+        silvy.isResponsive = true;
         apps.add(silvy);
-
+        
+        ApplicationSettings nettmannen = createSettings(
+                "NettMannenBestilling", 
+                "d37cbec7-fbb1-4903-a7af-e372c16ac7dd", 
+                emtpy, 
+                "", 
+                ApplicationSettings.Type.Webshop, false);
+        nettmannen.isPublic = false;
+        nettmannen.allowedAreas = new ArrayList();
+        nettmannen.allowedAreas.add("small");
+        nettmannen.allowedAreas.add("medium");
+        nettmannen.allowedAreas.add("large");
+        nettmannen.allowedAreas.add("xlarge");
+        nettmannen.allowedStoreIds = new ArrayList();
+        nettmannen.allowedStoreIds.add("ca09fed1-f482-4aa6-9a53-a93128b85634");
+        apps.add(nettmannen);
+        
         return apps;
     }
 

@@ -127,6 +127,7 @@ public class StorePool {
     
     public synchronized Store initialize(String webAddress, String sessionId) throws ErrorException {
         webAddress = webAddress.replace(".local.", ".");
+        webAddress = webAddress.replace(".mpal.", ".");
         Store store = getStoreByWebaddress(webAddress);
         if (store == null) {
             return null;

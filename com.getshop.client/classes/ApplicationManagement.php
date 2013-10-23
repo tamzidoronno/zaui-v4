@@ -148,6 +148,7 @@ class ApplicationManagement extends ApplicationBase {
         $settings->isSingleton = $data['singleton'];
         $settings->renderStandalone = $data['standalone'];
         $settings->price = $data['price'];
+        $settings->isResponsive = $data['responsive'];
         $settings->allowedAreas = array();
         if ($data['apparea_left'] == "true") {
             $settings->allowedAreas[] = "left";

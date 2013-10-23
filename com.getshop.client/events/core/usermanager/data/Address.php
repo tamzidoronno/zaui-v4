@@ -24,5 +24,8 @@ class core_usermanager_data_Address extends core_common_DataCommon  {
 	/** @var String */
 	public $countrycode;
 
+	/** @var String */
+	public $countryname;
+
 }
 ?>

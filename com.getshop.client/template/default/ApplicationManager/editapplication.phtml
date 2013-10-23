@@ -98,6 +98,17 @@
 
         <div class="title">
             <div style="float:right;">
+                <select gsname="responsive"<? echo $disabled; ?>>
+                    <option value="false"><? echo $this->__o("No"); ?></option>
+                    <option value="true" <? if ($settings->isResponsive == "true") { echo "SELECTED"; } ?>><? echo $this->__o("Yes"); ?></option>
+                </select>
+            </div>
+    <? echo $this->__o("Responsive design?"); ?>
+            <div class="additonaltext"><? echo $this->__o("If this is a design, is it a responsive design?"); ?></div>
+        </div>
+
+        <div class="title">
+            <div style="float:right;">
                 <select gsname="standalone"<? echo $disabled; ?>>
                     <option value="false"><? echo $this->__o("No"); ?></option>
                     <option value="true" <? if ($settings->renderStandalone == "true") { echo "SELECTED"; } ?>><? echo $this->__o("Yes"); ?></option>

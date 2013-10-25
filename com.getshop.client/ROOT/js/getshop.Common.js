@@ -378,15 +378,26 @@ thundashop.common.lockMask = function() {
     $('#fullscreenmask').attr('locked', 'true');
 }
 
+$(window).resize(function() {
+    thundashop.common.setSizeClasses();
+});
+
 thundashop.common.setSizeClasses = function() {
+    var windowwidth = $(window).width();
     $(document).find('.applicationarea').each(function() {
+        
+        $(this).removeClass('small');
+        $(this).removeClass('large');
+        $(this).removeClass('medium');
+        $(this).removeClass('xlarge');
+        
         var width = $(this).innerWidth();
         var css = "";
-        if (width > 750) {
+        if (width > 750 && windowwidth > 750) {
             css = "xlarge";
-        } else if (width > 400) {
+        } else if (width > 400 && windowwidth > 400) {
             css = "large";
-        } else if (width > 200) {
+        } else if (width > 200 && windowwidth > 200) {
             css = "medium";
         } else {
             css = "small";

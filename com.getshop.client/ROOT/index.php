@@ -85,7 +85,7 @@ $importApplication->showMenu();
 
 $factory = IocContainer::getFactorySingelton();
 if($factory->getApplicationPool()->getSelectedThemeApp()->applicationSettings->isResponsive) {
-    echo '<meta name="viewport" content="width=device-width, user-scalable=false;">';
+    echo '<meta name="viewport" content="width=device-width, user-scalable=no;">';
 }
 
 if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {

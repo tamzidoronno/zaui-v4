@@ -208,8 +208,14 @@ public class StorePool {
 
         return result;
     }
-
-    private Object ExecuteMethod(JsonObject2 object, Class[] types, Object[] argumentValues) throws ErrorException {
+    
+    private Object[] runTroughAntiSamy(JsonObject2 object, Object[] argumentValues) throws ErrorException {
+        StoreHandler storeHandler = getStoreHandler(object.sessionId);
+        
+        if (storeHandler != null && storeHandler.isAdministrator(object.sessionId)) {
+            return argumentValues;
+        }
+        
         Object[] cleanOject = new Object[argumentValues.length];
         int i = 0;
         for (Object arg : argumentValues) {
@@ -218,7 +224,12 @@ public class StorePool {
             } catch (Exception ex) { ex.printStackTrace(); }
             i++;
         }
-        argumentValues = cleanOject;
+        return cleanOject;
+    }
+
+    private Object ExecuteMethod(JsonObject2 object, Class[] types, Object[] argumentValues) throws ErrorException {
+        argumentValues = runTroughAntiSamy(object, argumentValues);
+        
         Object res;
         if (object.interfaceName.equals("core.storemanager.StoreManager") && object.method.equals("initializeStore")) {
             res = storePool.initialize((String) argumentValues[0], (String) argumentValues[1]);

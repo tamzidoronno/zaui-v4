@@ -290,4 +290,14 @@ public class StoreHandler {
     public void removeSession(String id) {
         sessions.remove(id);
     }
+
+    boolean isAdministrator(String sessionId) throws ErrorException {
+        UserManager manager = getManager(UserManager.class);
+        User user = manager.getUserBySessionId(sessionId);
+        if (user != null) {
+            return user.isAdministrator();
+        }
+        
+        return false;
+    }
 }

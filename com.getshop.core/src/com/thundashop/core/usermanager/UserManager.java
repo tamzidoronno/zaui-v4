@@ -497,4 +497,10 @@ public class UserManager extends ManagerBase implements IUserManager {
             deleteUser(user.id);
         }
     }
+
+    public User getUserBySessionId(String sessionId) throws ErrorException {
+        Object id = sessionFactory.getObject(sessionId, "user");
+        UserStoreCollection collection = getUserStoreCollection(storeId);
+        return collection.getUser((String) id);
+    }
 }

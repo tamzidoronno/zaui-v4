@@ -185,7 +185,7 @@ thundashop.common.destroyCKEditors = function() {
 
     return retdata;
 }
-thundashop.common.saveCKEditor = function(data, target) {
+thundashop.common.saveCKEditor = function(data, target, notify) {
     var altid = target.attr('altid');
     var event = thundashop.Ajax.createEvent(null, 'saveContent', target, {
         "content": data,
@@ -193,16 +193,16 @@ thundashop.common.saveCKEditor = function(data, target) {
     });
     var text = $("<p>" + data + "</p>").text();
     text = text.replace(/^\s+|\s+$/g, "");
-    var notify = function() {
-        PubSub.publish("CKEDITOR_SAVED", {});
-    }
+    
+    var notified = false;
     if (text.length === 0) {
         thundashop.Ajax.post(event, notify);
+        notified = true;
     } else {
         thundashop.Ajax.postSynchron(event);
-        notify();
     }
     thundashop.common.removeNotificationProgress('contentmanager');
+    return notified;
 };
 
 thundashop.common.activateCKEditor = function(id, autogrow, showMenu, autofocus, notinline) {
@@ -211,6 +211,10 @@ thundashop.common.activateCKEditor = function(id, autogrow, showMenu, autofocus,
     var toBeRemoved = 'magiclines';
     if(notinline) {
         toBeRemoved += ",save"
+    }
+    
+    var notify = function() {
+        PubSub.publish("CKEDITOR_SAVED", {});
     }
 
     var config = {
@@ -222,7 +226,10 @@ thundashop.common.activateCKEditor = function(id, autogrow, showMenu, autofocus,
                 var data = event.editor.getData();
                 if(!notinline) {
                     thundashop.common.addNotificationProgress('contentmanager', "Saving content");
-                    thundashop.common.saveCKEditor(data, target);
+                    var notified = thundashop.common.saveCKEditor(data, target, notify);
+                    if (!notified) {
+                        notify();
+                    }
                 }
                 $(document).tooltip("enable");
             },
@@ -230,10 +237,13 @@ thundashop.common.activateCKEditor = function(id, autogrow, showMenu, autofocus,
                 var data = event.editor.getData();
                 if(!notinline) {
                     thundashop.common.addNotificationProgress('contentmanager', "Saving content");
-                    thundashop.common.saveCKEditor(data, target);
+                    var notified = thundashop.common.saveCKEditor(data, target, notify);
                     target.attr('contenteditable', false);
                     target.blur();
                     event.editor.destroy();
+                    if (!notified) {
+                        notify();
+                    }
                 }
                 $(document).tooltip("enable");
             },

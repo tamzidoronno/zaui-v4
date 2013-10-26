@@ -99,8 +99,8 @@ class Factory extends FactoryBase {
         $scopid = $_POST['scopeid'];
         echo "<script>GetShop = {}; scopeid='$scopid'</script>";
 //        echo '<script src="http://connect.facebook.net/en_US/all.js"></script>';
-        echo "\n" . '<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.0.js""></script>';
-        echo "\n" . '<script type="text/javascript" src="http://code.jquery.com/jquery-migrate-1.2.1.js""></script>';
+        echo "\n" . '<script type="text/javascript" src="js/jquery-1.9.0.js""></script>';
+        echo "\n" . '<script type="text/javascript" src="js/jquery-migrate-1.2.1.js""></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.Namespace.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.Ajax.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.Common.js"></script>';

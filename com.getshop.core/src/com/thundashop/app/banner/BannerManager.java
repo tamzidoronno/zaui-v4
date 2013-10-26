@@ -55,7 +55,14 @@ public class BannerManager extends ManagerBase implements IBannerManager {
         savedSet.interval = set.interval;
         savedSet.showDots = set.showDots;
         
-        System.out.println("Showing dots: " + savedSet.showDots);
+        for (Banner banner : savedSet.banners) {
+            for (Banner iBanner : set.banners) {
+                if (banner.imageId.equals(iBanner.imageId)) {
+                    banner.link = iBanner.link;
+                }
+            }
+        }
+        
         databaseSaver.saveObject(savedSet, credentials);
         return savedSet;
     }

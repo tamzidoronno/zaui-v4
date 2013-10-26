@@ -87,7 +87,7 @@ $(function() {
         if (!comp.test($(this).attr('href')) && !($(this).attr('href').indexOf('?') === 0 || $(this).attr('href').indexOf('/') === 0)) {
             return;
         }
-
+        
         event.stopPropagation();
         event.preventDefault();
 
@@ -106,8 +106,15 @@ $(function() {
             return;
         }
         
-        var url = getUrl($(this).attr('href'));
-        var ajaxLink = getUrl($(this).attr('ajaxlink'));
+        var link = $(this).attr('href');
+        
+        var url = getUrl(link);
+        
+        if (link.indexOf(".html") > -1 || link.indexOf(".htm") > -1) {
+            link = "?rewrite="+link.substring(link.lastIndexOf("/")+1,link.lastIndexOf("."));
+        }
+        
+        var ajaxLink = getUrl(link);
         navigate(url, ajaxLink);
         
         if ($(this).attr('scrolltop')) {

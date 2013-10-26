@@ -256,7 +256,7 @@ class Factory extends FactoryBase {
                 return;
             }
             
-            $pageId = $this->getApi()->getProductManager()->getPageIdByName($name);
+            $pageId = $this->getApi()->getProductManager()->getPageIdByName($name);            
             if ($pageId != "") {
                 $_GET['page'] = $pageId;
             }

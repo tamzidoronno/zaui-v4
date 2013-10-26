@@ -26,7 +26,7 @@ class AppAreaHelper {
                         $class .= "gs_margin_left gs_margin_right";
                     }
 
-                    echo "<div style='width:$width%; box-sizing:border-box;' class='$class gs_row_cell inline'>";
+                    echo "<div row='$offset' style='width:$width%; box-sizing:border-box;' class='$class gs_row_cell inline'>";
                     AppAreaHelper::printAppArea($page, "col_$i", false, false, false, "cell");
                     echo "</div>";
                 }

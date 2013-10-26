@@ -17,7 +17,7 @@ class AppAreaHelper {
         ?>
                 <?
                 for ($i = $offset; $i <= $numberOfEntries; $i++) {
-                    $class = "gs_col c$i ";
+                    $class = "gs_col c$i gs_row_$offset ";
                     if ($i == $offset) {
                         $class .= "gs_margin_right";
                     } else if ($i == $numberOfEntries) {

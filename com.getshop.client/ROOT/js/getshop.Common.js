@@ -231,6 +231,8 @@ thundashop.common.activateCKEditor = function(id, autogrow, showMenu, autofocus,
                         notify();
                     }
                 }
+                event.editor.destroy();
+                target.attr('contenteditable', false);
                 $(document).tooltip("enable");
             },
             save : function(event) {

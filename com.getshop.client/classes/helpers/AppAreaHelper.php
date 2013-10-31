@@ -7,7 +7,7 @@ class AppAreaHelper {
         if ($numberOfEntries == 2) {
             $width = 50;
         } else if ($numberOfEntries == 3) {
-            $width = 33.3;
+            $width = 32;
         } else if ($numberOfEntries == 4) {
             $width = 25;
         } else if ($numberOfEntries == 5) {

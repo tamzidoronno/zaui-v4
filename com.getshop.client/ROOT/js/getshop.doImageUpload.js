@@ -12,6 +12,7 @@
         var saveCropped = true;
         var callback = false;
         var source = false;
+        var saveOriginalCallback = false;
         var autohideinfobox = true;
         var autosave = false;
         var selectedCropArea = [0, 0, previewWidth, previewHeight];
@@ -26,6 +27,8 @@
             previewWidth = config.previewWidth;
         if (config.saveOriginal !== undefined)
             saveOriginal = config.saveOriginal;
+        if (config.saveOriginalCallback !== undefined)
+            saveOriginalCallback = config.saveOriginalCallback;
         if (config.saveCropped !== undefined)
             saveCropped = config.saveCropped;
         if (config.callback !== undefined)
@@ -114,7 +117,6 @@
             
             if(!keepAspect) {
                 imgheight = (y2 - y1) / compression;
-                console.log(imgheight);
             }
             
             var canvas = document.createElement("canvas");
@@ -160,8 +162,10 @@
             if (saveOriginal) {
                 thundashop.common.addNotificationProgress(id + "_2", "Saving original image");
                 var event = thundashop.Ajax.createEvent('', 'saveOriginalImage', ajaxTarget, {data: origdata, extra: extra});
-                thundashop.Ajax.post(event, function() {
+                event.synchron = true;
+                thundashop.Ajax.post(event, function(data) {
                     thundashop.common.removeNotificationProgress(id + "_2");
+                    saveOriginalCallback(data);
                 });
             }
 

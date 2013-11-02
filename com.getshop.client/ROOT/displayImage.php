@@ -31,6 +31,10 @@ if(isset($_GET['zoom'])) {
     $imageLoader->zoom(true);
 }
 
+if(isset($_GET['crop'])) {
+    $imageLoader->cropImage($_GET['x'], $_GET['y'], $_GET['x2'], $_GET['y2']);
+}
+
 if(isset($_GET['width']) && isset($_GET['height'])) {
     $imageLoader->resize($_GET['width'], $_GET['height']);
 } elseif(isset($_GET['height'])) {

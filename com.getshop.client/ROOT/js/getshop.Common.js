@@ -14,14 +14,14 @@ $(document).mousemove(function(e) {
     mousePositionY = e.pageY;
 });
 
-$('.gray').live('focus', function() {
+$(document).on('focus', '.gray', function() {
     $(this).removeClass("gray");
     $(this).val('');
 });
 
 (function($) {
     $.fn.liveFileupload = function(opts) {
-        this.live("mouseover", function() {
+        this.on("mouseover", function() {
             if (!$(this).data("init")) {
                 $(this).data("init", true).fileupload(opts);
             }
@@ -36,19 +36,19 @@ getshop_firstload = true;
 getUrl = function(hash) {
     if (!hash)
         return;
-    
+
     if (hash && hash.indexOf("?") === 0) {
-        hash = "index.php"+hash;
+        hash = "index.php" + hash;
     }
-    
+
     return hash;
 };
 
 navigate = function(url, ajaxLink) {
     var useLink = ajaxLink ? ajaxLink : url;
     if (history.pushState) {
-        window.history.pushState({ url: url, ajaxLink: ajaxLink}, "Title", url);
-        thundashop.Ajax.doJavascriptNavigation(useLink, null, true);    
+        window.history.pushState({url: url, ajaxLink: ajaxLink}, "Title", url);
+        thundashop.Ajax.doJavascriptNavigation(useLink, null, true);
     } else {
         window.location.hash = useLink;
     }
@@ -57,18 +57,18 @@ navigate = function(url, ajaxLink) {
 if (!history.pushState) {
     jQuery(document).ready(function($) {
         $.history.init(function(hash) {
-            
-            if(hash === "") {
-                if(!getshop_firstload) {
+
+            if (hash === "") {
+                if (!getshop_firstload) {
                     hash = '?page=clear_page';
                 }
                 getshop_firstload = false;
-            } 
+            }
             thundashop.Ajax.doJavascriptNavigation(hash, null, true);
         },
-        {
-            unescape: ",/"
-        });
+                {
+                    unescape: ",/"
+                });
     });
 }
 
@@ -77,17 +77,18 @@ if (history.pushState) {
         if (event.state) {
             var url = event.state.ajaxLink ? event.state.ajaxLink : event.state.url;
             thundashop.Ajax.doJavascriptNavigation(url, null, true);
-        } 
+        }
     }
-};
+}
+;
 
 $(function() {
-    $('#skeleton a').live('click', function(event) {
+    $(document).on('click', '#skeleton a', function(event) {
         var comp = new RegExp(location.host);
         if (!comp.test($(this).attr('href')) && !($(this).attr('href').indexOf('?') === 0 || $(this).attr('href').indexOf('/') === 0)) {
             return;
         }
-        
+
         event.stopPropagation();
         event.preventDefault();
 
@@ -105,18 +106,18 @@ $(function() {
         if (target.parents('.cke_top').length > 0) {
             return;
         }
-        
+
         var link = $(this).attr('href');
-        
+
         var url = getUrl(link);
-        
+
         if (link.indexOf(".html") > -1 || link.indexOf(".htm") > -1) {
-            link = "?rewrite="+link.substring(link.lastIndexOf("/")+1,link.lastIndexOf("."));
+            link = "?rewrite=" + link.substring(link.lastIndexOf("/") + 1, link.lastIndexOf("."));
         }
-        
+
         var ajaxLink = getUrl(link);
         navigate(url, ajaxLink);
-        
+
         if ($(this).attr('scrolltop')) {
             if ($(this).attr('scrolltop').length > 0) {
                 $(window).scrollTop(0);
@@ -126,7 +127,7 @@ $(function() {
 
 });
 
-$('.errorform .close').live('click', function(event) {
+$(document).on('click', '.errorform .close', function(event) {
     $("#errorbox").hide();
 });
 
@@ -200,7 +201,7 @@ thundashop.common.saveCKEditor = function(data, target, notify) {
     });
     var text = $("<p>" + data + "</p>").text();
     text = text.replace(/^\s+|\s+$/g, "");
-    
+
     var notified = false;
     if (text.length === 0) {
         thundashop.Ajax.post(event, notify);
@@ -212,14 +213,17 @@ thundashop.common.saveCKEditor = function(data, target, notify) {
     return notified;
 };
 
-thundashop.common.activateCKEditor = function(id, autogrow, showMenu, autofocus, notinline) {
+thundashop.common.activateCKEditor = function(id, autogrow, showMenu, autofocus, notinline, notdestroyonblur) {
     var target = $('#' + id);
     target.attr('contenteditable', true);
+    if (notdestroyonblur === undefined) {
+        notdestroyonblur = false;
+    }
     var toBeRemoved = 'magiclines';
-    if(notinline) {
+    if (notinline) {
         toBeRemoved += ",save"
     }
-    
+
     var notify = function() {
         PubSub.publish("CKEDITOR_SAVED", {});
     }
@@ -230,8 +234,12 @@ thundashop.common.activateCKEditor = function(id, autogrow, showMenu, autofocus,
         removePlugins: toBeRemoved,
         on: {
             blur: function(event) {
+                if (notdestroyonblur) {
+                    return;
+                }
+
                 var data = event.editor.getData();
-                if(!notinline) {
+                if (!notinline) {
                     thundashop.common.addNotificationProgress('contentmanager', "Saving content");
                     var notified = thundashop.common.saveCKEditor(data, target, notify);
                     if (!notified) {
@@ -242,9 +250,9 @@ thundashop.common.activateCKEditor = function(id, autogrow, showMenu, autofocus,
                 target.attr('contenteditable', false);
                 $(document).tooltip("enable");
             },
-            save : function(event) {
+            save: function(event) {
                 var data = event.editor.getData();
-                if(!notinline) {
+                if (!notinline) {
                     thundashop.common.addNotificationProgress('contentmanager', "Saving content");
                     var notified = thundashop.common.saveCKEditor(data, target, notify);
                     target.attr('contenteditable', false);
@@ -260,7 +268,7 @@ thundashop.common.activateCKEditor = function(id, autogrow, showMenu, autofocus,
                 $(document).tooltip("disable");
             },
             instanceReady: function(ev) {
-                if(autofocus) {
+                if (autofocus) {
                     ev.editor.focus();
                 }
             }
@@ -278,7 +286,7 @@ thundashop.common.activateCKEditor = function(id, autogrow, showMenu, autofocus,
     }
 
     CKEDITOR.disableAutoInline = false;
-    if(notinline) {
+    if (notinline) {
         config.extraPlugins = 'autogrow';
         config.width = '100%';
         CKEDITOR.replace(id, config);
@@ -312,12 +320,12 @@ thundashop.common.createInformationBox = function(appid, title, open) {
     infoBox.addClass('informationbox');
     infoBox.attr('appid', appid);
     infoBox.addClass('app');
-    if(open) {
+    if (open) {
         $('#informationboxtitle').html(title);
     }
     infoBox.addClass('normalinformationbox');
     infoBox.removeClass('largeinformationbox');
-    $('body').css('overflow','hidden');
+    $('body').css('overflow', 'hidden');
     $('.informationbox-outer').show();
 
     return infoBox;
@@ -339,10 +347,10 @@ thundashop.common.showInformationBox = function(event, title, avoidScroll) {
     var result = thundashop.Ajax.postSynchron(event);
     infoBox.html(result);
     setTimeout(thundashop.common.setMaskHeight, "200");
-    if(!avoidScroll) {
+    if (!avoidScroll) {
         $('.informationbox-outer').scrollTop(0);
     }
-    
+
     return infoBox;
 }
 
@@ -351,7 +359,7 @@ thundashop.common.setMaskHeight = function() {
     $('#fullscreenmask').height(height);
 }
 
-$('#messagebox .okbutton').live('click', function() {
+$(document).on('click', '#messagebox .okbutton', function() {
     $('#messagebox').fadeOut(200);
 });
 
@@ -381,7 +389,7 @@ thundashop.common.unmask = function() {
     var result = $.Deferred();
     var attr = $('#fullscreenmask').attr('locked');
     $('.informationbox-outer').hide();
-    $('body').css('overflow','scroll');
+    $('body').css('overflow', 'scroll');
     if (typeof(attr) === "undefined" || attr === "false") {
         $('#informationbox-holder').fadeOut(200);
         $('#fullscreenmask').fadeOut(200, function() {
@@ -404,12 +412,12 @@ $(window).resize(function() {
 thundashop.common.setSizeClasses = function() {
     var windowwidth = $(window).width();
     $(document).find('.applicationarea').each(function() {
-        
+
         $(this).removeClass('small');
         $(this).removeClass('large');
         $(this).removeClass('medium');
         $(this).removeClass('xlarge');
-        
+
         var width = $(this).innerWidth();
         var css = "";
         if (width > 750 && windowwidth > 750) {
@@ -435,16 +443,16 @@ thundashop.common.confirm = function(content) {
     return confirm(content);
 }
 
-$("#fullscreenmask").live('click', function() {
+$(document).on('click', "#fullscreenmask", function() {
     thundashop.common.unmask();
 });
-$(".informationbox-outer").live('click', function(event) {
-    if($(event.target).hasClass('informationbox-outer')) {
+$(document).on('click', ".informationbox-outer", function(event) {
+    if ($(event.target).hasClass('informationbox-outer')) {
         thundashop.common.unmask();
     }
 });
 
-$('.display_menu_application_button').live('click', function() {
+$(document).on('click', '.display_menu_application_button', function() {
     $('.mainmenu').slideDown();
 
     $(document).on('click.hidemenuentry', function(e) {
@@ -464,30 +472,28 @@ $('.display_menu_application_button').live('click', function() {
 });
 
 
-$('.configuration').live('click', function() {
+$(document).on('click', '.configuration', function() {
     $(this).find('.entries').slideDown();
 });
 
-$('.configable').live({
-    mouseenter: function() {
-        $(this).attr('interrupt', "true");
-        $(this).find('.configuration').fadeIn(300);
-    },
-    mouseleave: function() {
-        var mongovar = $(this);
-        var mongo = function(e) {
-            if (mongovar.attr('interrupt') === "true") {
-                return;
-            }
-            mongovar.find('.configuration').hide();
-            mongovar.find('.entries').hide();
+$(document).on('mouseenter', '.configable', function() {
+    $(this).attr('interrupt', "true");
+    $(this).find('.configuration').fadeIn(300);
+});
+$(document).on('mouseleave', '.configable', function() {
+    var mongovar = $(this);
+    var mongo = function(e) {
+        if (mongovar.attr('interrupt') === "true") {
+            return;
         }
-        $(this).attr('interrupt', "false");
-        if ($(document).find('.entries').is(':visible')) {
-            setTimeout(mongo, "200");
-        } else {
-            setTimeout(mongo, "0");
-        }
+        mongovar.find('.configuration').hide();
+        mongovar.find('.entries').hide();
+    }
+    $(this).attr('interrupt', "false");
+    if ($(document).find('.entries').is(':visible')) {
+        setTimeout(mongo, "200");
+    } else {
+        setTimeout(mongo, "0");
     }
 });
 
@@ -497,23 +503,17 @@ getImageElement = function(scope) {
     return $(scope).closest('.' + searchFrom).find('.' + imageClassTag);
 }
 
-$('.imageUploader .upload_image_text').live('click', function() {
-    //    $(this).closest('form').find("#file_selection").click();
+$(document).on('mouseenter', '.editormode .deleteable', function() {
+    if ($(this).find('#file_selection').size() == 0) {
+        $(this).find('.trash').show();
+    }
+});
+$(document).on('mouseleave', '.editormode .deleteable', function() {
+        $(this).find('.trash').hide();
 });
 
-$('.editormode .deleteable').live({
-    mouseenter: function() {
-        if ($(this).find('#file_selection').size() == 0) {
-            $(this).find('.trash').show();
-        }
-    },
-    mouseleave: function() {
-        $(this).find('.trash').hide();
-    }
-})
 
-
-$('.editormode .deleteable .trash').live('click', function(e) {
+$(document).on('click', '.editormode .deleteable .trash', function(e) {
     var imgId = $(this).attr('imageId');
     var res = $(this);
     var event = thundashop.Ajax.createEvent('MainMenu', 'deleteImage', res, {
@@ -564,7 +564,7 @@ $('.imageUploader').liveFileupload({
     }
 });
 
-$('#informationbox .settings .entry, #settingsarea .setting').live('click', function(event) {
+$(document).on('click', '#informationbox .settings .entry, #settingsarea .setting', function(event) {
     if ($(this).find('.onoff')) {
         var data = {
             id: $(this).attr('id')
@@ -594,23 +594,23 @@ $('#informationbox .settings .entry, #settingsarea .setting').live('click', func
 
 $('#cookiewarning_overlay .textbox .continue').on('click', function() {
     $('#cookiewarning_overlay').remove();
-    var event = thundashop.Ajax.createEvent('','CookieAccepted',$(this),'');
+    var event = thundashop.Ajax.createEvent('', 'CookieAccepted', $(this), '');
     thundashop.Ajax.postWithCallBack(event, function() {
-        
+
     });
 });
 
-$('#infomrationboxclosebutton').live('click', function(e) {
+$(document).on('click', '#infomrationboxclosebutton', function(e) {
     thundashop.common.hideInformationBox(null);
 })
 
-$(document).live("keyup", function(e) {
+$(document).on("keyup", function(e) {
     if (e.keyCode == 27) {
         thundashop.common.hideInformationBox();
     }
 });
 
-$('.tabset .tab').live('click', function() {
+$(document).on('click', '.tabset .tab', function() {
     var tabs = $(this).closest('.tabs');
     tabs.find('.active').each(function() {
         $(this).removeClass('active');
@@ -628,17 +628,15 @@ $(function() {
     });
 });
 
-$('.add_application_menu .button-large').live(
-        {
-            mouseover: function() {
-                $(this).find('.filler').css('background-color', '#243da9');
-            },
-            mouseout: function() {
-                $(this).find('.filler').css('background-color', '#009b00');
-            }
-        });
+$(document).on('mouseover', '.add_application_menu .button-large', function() {
+    $(this).find('.filler').css('background-color', '#243da9');
+});
+            
+$(document).on('mouseleave', '.add_application_menu .button-large', function() {
+    $(this).find('.filler').css('background-color', '#009b00');
+});
 
-$('.selectablegroup').live('click', function(event) {
+$(document).on('click', '.selectablegroup', function(event) {
 
     $(this).find('.selectable').each(function() {
         $(this).removeAttr("gsname");
@@ -649,39 +647,34 @@ $('.selectablegroup').live('click', function(event) {
     $(target).addClass("selected");
     $(target).attr("gsname", "selected");
 });
-$('.getshop_ckeditorcontent').live({
-    mouseenter: function() {
-        function s4() {
-            return Math.floor((1 + Math.random()) * 0x10000)
-                    .toString(16)
-                    .substring(1);
-        }
-        ;
+$(document).on('mouseenter', '.getshop_ckeditorcontent', function() {
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+                .toString(16)
+                .substring(1);
+    }
+    ;
 
-        function guid() {
-            return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-                    s4() + '-' + s4() + s4() + s4();
-        }
-        if (!$(this).hasClass('cke_editable')) {
-            var id = guid();
-            $(this).attr('id', id);
-            thundashop.common.activateCKEditor(id, true, true, false);
-            $(this).addClass('cke_focus');
-        }
-    },
-    mouseleave: function() {
-        if (!$(this).hasClass('cke_focus')) {
-            var id = $(this).attr('id');
-            CKEDITOR.instances[id].destroy();
-        }
+    function guid() {
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+                s4() + '-' + s4() + s4() + s4();
+    }
+    if (!$(this).hasClass('cke_editable')) {
+        var id = guid();
+        $(this).attr('id', id);
+        thundashop.common.activateCKEditor(id, true, true, false);
+        $(this).addClass('cke_focus');
     }
 });
-$('.getshop_ckeditorcontent').live('mouseover', function(e) {
-
-
+    
+$(document).on('mouseleave', '.getshop_ckeditorcontent', function() {
+    if (!$(this).hasClass('cke_focus')) {
+        var id = $(this).attr('id');
+        CKEDITOR.instances[id].destroy();
+    }
 });
 $(function() {
-    
+
     PubSub.subscribe('NAVIGATION_COMPLETED', thundashop.common.setSizeClasses);
     thundashop.common.setSizeClasses();
 
@@ -698,11 +691,11 @@ $(function() {
         var area = $(this).closest('.applicationarea').attr('area');
         var size = $(this).closest('.applicationarea').attr('size');
         var type = $(this).closest('.applicationarea').attr('type');
-        
+
         var event = thundashop.Ajax.createEvent('', 'showApplications', null, {
             "area": area,
-            "size" : size,
-            "type" : type
+            "size": size,
+            "type": type
         });
         thundashop.common.showInformationBox(event);
     });
@@ -726,15 +719,15 @@ $(function() {
         $('.GetShopToolbox[attached_to_app="true"]').remove();
         window["app"][appname]["loadSettings"]($(this), app);
     });
-    
-    $(document).on('mouseenter','.app', function() {
+
+    $(document).on('mouseenter', '.app', function() {
         var appname = $(this).attr('app');
-        if(app[appname] !== undefined && app[appname]['loadSettings'] !== undefined) {
+        if (app[appname] !== undefined && app[appname]['loadSettings'] !== undefined) {
             var settingsbox = $(this).find('.application_settings');
             $(this).find('.application_settings').show();
         }
     });
-    $(document).on('mouseleave','.app', function() {
+    $(document).on('mouseleave', '.app', function() {
         $(this).find('.application_settings').hide();
     });
 });
@@ -742,7 +735,7 @@ $(function() {
 getText = function(text) {
     if (translationMatrix[text])
         return translationMatrix[text]
-    
+
     return text;
 };
 
@@ -763,4 +756,15 @@ $(document).ready(function() {
     if (cookieWarning.length > 0) {
         cookieWarning.fadeIn(200);
     }
+});
+
+$(document).on('click', '.gs_tab', function() {
+    var app = $(this).closest('.app');
+    app.find('.gs_tab').removeClass('gs_tab_selected');
+    $(this).addClass('gs_tab_selected');
+    var target = $(this).attr('target');
+    app.find('.gs_tab_area').hide();
+    app.find('.' + target).show();
+    var route = $(this).attr('route');
+    PubSub.publish("GS_TAB_NAVIGATED", {"target": target, "route": route});
 });

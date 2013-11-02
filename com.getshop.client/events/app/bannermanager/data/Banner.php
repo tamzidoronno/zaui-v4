@@ -9,5 +9,8 @@ class app_bannermanager_data_Banner {
 	/** @var String */
 	public $link;
 
+	/** @var String */
+	public $crop_cordinates;
+
 }
 ?>

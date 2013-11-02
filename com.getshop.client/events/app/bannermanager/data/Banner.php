@@ -12,5 +12,8 @@ class app_bannermanager_data_Banner {
 	/** @var String */
 	public $crop_cordinates;
 
+	/** @var String */
+	public $imagetext;
+
 }
 ?>

@@ -213,7 +213,35 @@ thundashop.common.saveCKEditor = function(data, target, notify) {
     return notified;
 };
 
-thundashop.common.activateCKEditor = function(id, autogrow, showMenu, autofocus, notinline, notdestroyonblur) {
+thundashop.common.activateCKEditor = function(id, config) {
+    var autogrow = false;
+    var showMenu = true;
+    var autofocus = false;
+    var notinline = false;
+    var notdestroyonblur = false;
+    var saveCallback = false;
+    var pushToBackend = true;
+    var destroyOnSave = true;
+
+    if (config !== undefined) {
+        if (config.autogrow !== undefined)
+            autogrow = config.autogrow;
+        if (config.showMenu !== undefined)
+            showMenu = config.showMenu;
+        if (config.autofocus !== undefined)
+            autofocus = config.autofocus;
+        if (config.notinline !== undefined)
+            notinline = config.notinline;
+        if (config.notdestroyonblur !== undefined)
+            notdestroyonblur = config.notdestroyonblur;
+        if (config.saveCallback !== undefined)
+            saveCallback = config.saveCallback;
+        if (config.pushToBackend !== undefined)
+            pushToBackend = config.pushToBackend;
+        if (config.destroyOnSave !== undefined)
+            destroyOnSave = config.destroyOnSave;
+    }
+
     var target = $('#' + id);
     target.attr('contenteditable', true);
     if (notdestroyonblur === undefined) {
@@ -234,16 +262,23 @@ thundashop.common.activateCKEditor = function(id, autogrow, showMenu, autofocus,
         removePlugins: toBeRemoved,
         on: {
             blur: function(event) {
+                var data = event.editor.getData();
+                if (saveCallback) {
+                    saveCallback(data);
+                }
+
                 if (notdestroyonblur) {
                     return;
                 }
 
                 var data = event.editor.getData();
                 if (!notinline) {
-                    thundashop.common.addNotificationProgress('contentmanager', "Saving content");
-                    var notified = thundashop.common.saveCKEditor(data, target, notify);
-                    if (!notified) {
-                        notify();
+                    if (pushToBackend) {
+                        thundashop.common.addNotificationProgress('contentmanager', "Saving content");
+                        var notified = thundashop.common.saveCKEditor(data, target, notify);
+                        if (!notified) {
+                            notify();
+                        }
                     }
                 }
                 event.editor.destroy();
@@ -252,14 +287,21 @@ thundashop.common.activateCKEditor = function(id, autogrow, showMenu, autofocus,
             },
             save: function(event) {
                 var data = event.editor.getData();
+                if (saveCallback) {
+                    saveCallback(data);
+                }
                 if (!notinline) {
-                    thundashop.common.addNotificationProgress('contentmanager', "Saving content");
-                    var notified = thundashop.common.saveCKEditor(data, target, notify);
+                    if (pushToBackend) {
+                        thundashop.common.addNotificationProgress('contentmanager', "Saving content");
+                        var notified = thundashop.common.saveCKEditor(data, target, notify);
+                        if (!notified) {
+                            notify();
+                        }
+                    }
                     target.attr('contenteditable', false);
                     target.blur();
-                    event.editor.destroy();
-                    if (!notified) {
-                        notify();
+                    if (destroyOnSave) {
+                        event.editor.destroy();
                     }
                 }
                 $(document).tooltip("enable");
@@ -509,7 +551,7 @@ $(document).on('mouseenter', '.editormode .deleteable', function() {
     }
 });
 $(document).on('mouseleave', '.editormode .deleteable', function() {
-        $(this).find('.trash').hide();
+    $(this).find('.trash').hide();
 });
 
 
@@ -631,7 +673,7 @@ $(function() {
 $(document).on('mouseover', '.add_application_menu .button-large', function() {
     $(this).find('.filler').css('background-color', '#243da9');
 });
-            
+
 $(document).on('mouseleave', '.add_application_menu .button-large', function() {
     $(this).find('.filler').css('background-color', '#009b00');
 });
@@ -666,7 +708,7 @@ $(document).on('mouseenter', '.getshop_ckeditorcontent', function() {
         $(this).addClass('cke_focus');
     }
 });
-    
+
 $(document).on('mouseleave', '.getshop_ckeditorcontent', function() {
     if (!$(this).hasClass('cke_focus')) {
         var id = $(this).attr('id');

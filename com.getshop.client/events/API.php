@@ -549,6 +549,13 @@
 	}
 	
 	/**
+	 * @return \app_bannermanager_data_BannerText
+	 */
+	public static function app_bannermanager_data_BannerText() {
+		return new \app_bannermanager_data_BannerText();
+	}
+	
+	/**
 	 * @return \app_newsmanager_data_MailSubscription
 	 */
 	public static function app_newsmanager_data_MailSubscription() {

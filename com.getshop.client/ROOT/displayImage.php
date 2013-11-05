@@ -42,6 +42,7 @@ if(isset($_GET['width']) && isset($_GET['height'])) {
 } elseif(isset($_GET['width'])) {
     $imageLoader->resizeToWidth($_GET['width']);
 }
+
 $imageLoader->output();
 
  

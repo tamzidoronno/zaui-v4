@@ -36,6 +36,7 @@ class ImageLoader {
     }
 
     function cropImage($x, $y, $x2, $y2) {
+        $this->displayRaw = false;
         $left = $x;
         $top = $y;
         $crop_width = $x2-$x;

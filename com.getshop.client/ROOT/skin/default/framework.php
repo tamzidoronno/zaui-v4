@@ -1455,3 +1455,5 @@ margin-left:256px;
 
 .gs_tab_area { display:none; }
 .gs_tab_area_active { display:block; }
+
+.colorpicker { z-index: 1000; }

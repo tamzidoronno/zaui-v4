@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Hs News</title>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+
+
+
+		<link rel="stylesheet" href="css/jquerymobile.css" />
+		<link rel="stylesheet" href="style.css" />
+
+
+		<script src="js/jquery.js"></script>
+		<script src="js/jquerymobile.js"></script>
+		<script src="iscrollview/iscroll-min.js"></script>
+
+	</head>
+
+	<body>
+		<div data-role="page">
+
+			<div data-role="header" data-position="fixed" data-tap-toggle="false" data-transition="none" data-id="header">
+				<h1>HS News - System Control</h1>
+			</div>
+
+			<div data-role="content">
+
+				<div class="outerdevices">
+					<div id="zones">
+						<div class="boxtitle">
+							<div class="icon"><img width="30" height="30" src="images/workstation.png"/></div>
+							<div class="text">Zones</div>
+						</div>
+
+						<div class="slidewrapper" id="zoneslider">
+							<div class="devices">
+								<div class="device green">101</div>
+								<div class="device">102</div>
+								<div class="device">103</div>
+								<div class="device red">104</div>
+								<div class="device green">105</div>
+								<div class="device">106</div>
+								<div class="device">107</div>
+								<div class="device">108</div>
+								<div class="device">109</div>
+								<div class="device">110</div>
+								<div class="device">111</div>
+								<div class="device">112</div>
+								<div class="device">113</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="outerdevices">
+					<div  id="zones">
+						<div class="boxtitle">
+							<div class="icon"><img width="30" height="30" src="images/devices.png"/></div>
+							<div class="text">Devices</div>
+						</div>
+
+						<div class="slidewrapper" id="deviceslider">
+							<div class="devices">
+								<div class="device green"><div class="printer"></div> Dispencer 1</div>
+								<div class="device red"><div class="checkpoint"></div>Checkpoint</div>
+								<div class="device disabled"><div class="offloader"></div>Offloader</div>
+								<div class="device yellow"><div class="ticketinserter"></div>Ticket inserter</div>
+								<div class="device red"><div class="toteinserter"></div>Tote inserter</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="errors">
+				<ul data-role="listview" data-inset="true" data-divider-theme="d">
+					<li data-role="list-divider">Current errors</li>
+					<li>Not able to connect to Barcode reader 1000</li>
+					<li>This is a very long error message that make no sense and can just be removed. But it was not long enough, so we have to extend it with even further chars. Is this message long enough now?</li>
+				</ul>
+			</div>
+		</div>
+	</body>
+</html>
+
+
+<script>
+	$(document).ready(function() {
+		myScroll1 = new IScroll('#zoneslider', {eventPassthrough: true, scrollX: true, scrollY: false});
+		myScroll1 = new IScroll('#deviceslider', {eventPassthrough: true, scrollX: true, scrollY: false});
+	});
+	
+	$('.outerdevices').each(function() {
+		var boxes = $(this).find('.device')
+		var width = (boxes.length * 112) + 50;
+		$(this).find('.devices').css('width', width+"px");
+	})
+</script>

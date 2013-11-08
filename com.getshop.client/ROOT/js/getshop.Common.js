@@ -111,7 +111,7 @@ $(function() {
         var url = getUrl(link);
         
         if (link.indexOf(".html") > -1 || link.indexOf(".htm") > -1) {
-            link = "?rewrite="+link.substring(link.lastIndexOf("/")+1,link.lastIndexOf("."));
+            link = "?rewrite=" + encodeURIComponent(link.substring(link.lastIndexOf("/") + 1, link.lastIndexOf(".")));
         }
         
         var ajaxLink = getUrl(link);

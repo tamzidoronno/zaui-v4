@@ -1,0 +1,109 @@
+/* 
+    Document   : style
+    Created on : Aug 8, 2013, 7:19:33 PM
+    Author     : ktonder
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+html {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: moz-none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.slidewrapper {
+	border: solid 1px #DDD;
+	overflow: hidden;
+}
+
+.devices {
+	white-space: nowrap; 
+	width: 2000px;
+	background-color: #FFF;
+	background: rgba(255,255,255,0.5);
+	padding: 20px;
+}
+
+.device {
+	font-weight: bold;
+	font-size: 18px;
+	border: Solid 1px;
+	width: 70px !important;
+	height: 90px;
+	display:inline-block;
+	padding: 10px;
+	margin: 10px;
+	text-align: center;
+	line-height: 90px;
+	border-radius: 5px;
+
+	background-image: -ms-linear-gradient(top, #ECECEC 0%, #88888A 100%);
+	background-image: -moz-linear-gradient(top, #ECECEC 0%, #88888A 100%);
+	background-image: -o-linear-gradient(top, #ECECEC 0%, #88888A 100%);
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ECECEC), color-stop(1, #88888A));
+	background-image: -webkit-linear-gradient(top, #ECECEC 0%, #88888A 100%);
+	background-image: linear-gradient(to bottom, #ECECEC 0%, #88888A 100%);
+	
+	box-shadow: 0px 0px 5px #888888;
+}
+
+.device.green {	color: green; }
+.device.red { color: red; }
+.device.yellow { color: rgb(167, 177, 53); }
+.device.disabled { color: grey; }
+
+.boxtitle {
+	border: solid 1px #DDD;
+	border-bottom: 0px;
+	width: 180px;
+	height: 40px;
+	line-height: 30px;
+	position: relative;
+	background: rgba(255,255,255,0.5);
+}
+
+.boxtitle .text {
+	display: inline-block;
+	position: absolute;
+	top: 0px;
+	left: 50px;
+	padding: 5px;
+}
+
+.boxtitle .icon {
+	border-right: solid 1px #DDD;
+	height: 30px;
+	width: 30px;
+	padding: 5px;
+}
+
+.errors {
+	margin-left: 15px;
+	margin-right: 15px;
+	margin-bottom: 15px;
+}
+
+.errors li.ui-li-static {
+	color: red !important;
+}
+
+.device div {
+	background-size: 70px;
+	background-repeat: no-repeat;
+	background-position: center;
+	width: 100%;
+	height: 100%;
+}
+
+#deviceslider .device { line-height: 50px; font-size: 10px; }
+.device .printer { background-image: url('images/printer.png'); }
+.device .checkpoint { background-image: url('images/weight.png'); }
+.device .offloader { background-image: url('images/unload.png'); }
+.device .ticketinserter { background-image: url('images/ticket.png'); }
+.device .toteinserter { background-image: url('images/boxinserter.png'); }
+
+.outerdevices { margin-top: 20px;}

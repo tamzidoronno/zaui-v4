@@ -5,7 +5,7 @@ and open the template in the editor.
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Auto Akademiet AS</title>
+        <title>ProMeister ACADEMY</title>
 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,8 +32,9 @@ and open the template in the editor.
         <div class='connecting'><div><img src='css/images/ajax-loader.gif'/><br>Kobler til server</div></div>
         <div class='loading'><div><img src='css/images/ajax-loader.gif'/><br>Laster data</div></div>
         <div data-role="page" id="home">
-            <div data-role="header" data-theme="b">
+            <div data-role="header" data-theme="a">
                 <img border="0" src="css/images/logo.png" style="margin-top: 10px; margin-bottom: 10px; float:center; display:inline"/>
+                <div class="infobutton"></div>
                 <div data-role="navbar">
                     <ul>
                         <li><a href="#courses" data-transition="flip">Kurser</a></li>
@@ -49,7 +50,7 @@ and open the template in the editor.
             </div>
 
             <!-- INCLUDE FRONT HERE -->
-            <div data-role="footer" data-theme="b" data-tap-toggle="false" data-id="foo1" data-position="fixed">
+            <div data-role="footer" data-theme="a" data-tap-toggle="false" data-id="foo1" data-position="fixed">
                 <div data-role="navbar">
                     <ul>
                         <li><a id="prev" href="#">Forrige</a></li>
@@ -67,8 +68,9 @@ and open the template in the editor.
         </div>
 
         <div data-role="page" id="courses">
-            <div data-role="header" data-theme="b">
+            <div data-role="header" data-theme="a">
                 <img border="0" src="css/images/logo.png" style="margin-top: 10px; margin-bottom: 10px; float:center; display:inline"/>
+                <div class="infobutton"></div>
                 <div data-role="navbar">
                     <ul>
                         <li><a href="#home" data-transition="flip">Kalender</a></li>
@@ -78,14 +80,15 @@ and open the template in the editor.
                 <div class="refresh"></div>
             </div>
             <div data-role="content" id="courselist">
-                <p>Kurs oversikt fra autoakademiet</p>
+                <p>Kurs oversikt</p>
                 <div class='contentcourselist'></div>
             </div>
         </div>
 
         <div data-role="page" id="signup">
-             <div data-role="header" data-theme="b">
+             <div data-role="header" data-theme="a">
                 <img border="0" src="css/images/logo.png" style="margin-top: 10px; margin-bottom: 10px; float:center; display:inline"/>
+                <div class="infobutton"></div>
                 <div data-role="navbar">
                     <ul>
                         <li><a href="#home" data-transition="flip">Kalender</a></li>

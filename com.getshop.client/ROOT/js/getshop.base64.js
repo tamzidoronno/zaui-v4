@@ -72,7 +72,7 @@ thundashop.base64 = {
 
         }
 
-        output = Base64._utf8_decode(output);
+        output = thundashop.base64._utf8_decode(output);
 
         return output;
 

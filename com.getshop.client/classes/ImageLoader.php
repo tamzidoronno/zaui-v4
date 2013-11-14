@@ -35,6 +35,18 @@ class ImageLoader {
         }
     }
 
+    function cropImage($x, $y, $x2, $y2) {
+        $this->displayRaw = false;
+        $left = $x;
+        $top = $y;
+        $crop_width = $x2-$x;
+        $crop_height = $y2-$y;
+        
+        $canvas = imagecreatetruecolor($crop_width, $crop_height);
+        imagecopy($canvas, $this->image, 0, 0, $left, $top, $this->getWidth(), $this->getHeight());
+        $this->image = $canvas;
+    }
+
     function save($filename, $image_type = IMAGETYPE_JPEG, $compression = 75, $permissions = null) {
 
         if ($image_type == IMAGETYPE_JPEG) {
@@ -53,7 +65,7 @@ class ImageLoader {
     }
 
     function output($image_type = IMAGETYPE_PNG) {
-        if($this->displayRaw) {
+        if ($this->displayRaw) {
             echo $this->raw;
         } else if ($image_type == IMAGETYPE_JPEG) {
             imagejpeg($this->image);
@@ -92,47 +104,45 @@ class ImageLoader {
 
     function resize($in_width, $in_height) {
         //Do not zoom.
-        
-        
         //Keep the ratio
-        if($this->getWidth() > $this->getHeight()) {
-            $ratio = $this->getHeight() / $this->getWidth() ;
+        if ($this->getWidth() > $this->getHeight()) {
+            $ratio = $this->getHeight() / $this->getWidth();
             $height = $in_width * $ratio;
             $width = $in_width;
-        } else if($this->getWidth() <= $this->getHeight()) {
+        } else if ($this->getWidth() <= $this->getHeight()) {
             $ratio = $this->getWidth() / $this->getHeight();
             $width = $in_height * $ratio;
             $height = $in_height;
         }
-        
+
         if ($height > $in_height) {
             $height = $in_height;
             $ratio = $this->getWidth() / $this->getHeight();
             $width = $in_height * $ratio;
         }
-        
+
         if ($width > $in_width) {
             $width = $in_width;
-            $ratio = $this->getHeight() / $this->getWidth() ;
+            $ratio = $this->getHeight() / $this->getWidth();
             $height = $in_width * $ratio;
         }
-        
-        
-        if (!isset($width)) 
-            $width = $in_width; 
- 
-        if (!isset($height)) 
-            $height = $in_height; 
+
+
+        if (!isset($width))
+            $width = $in_width;
+
+        if (!isset($height))
+            $height = $in_height;
 
         if (($width > $this->getWidth() || $height > $this->getHeight()) && !$this->zoom) {
             return;
         }
-        
-        if($this->zoom) {
+
+        if ($this->zoom) {
             $width = $in_width;
             $height = $in_height;
         }
-        
+
         $new_image = imagecreatetruecolor($width, $height);
         imagealphablending($new_image, false);
         imagesavealpha($new_image, true);

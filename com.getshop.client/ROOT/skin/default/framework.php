@@ -1422,3 +1422,38 @@ margin-left:256px;
 #cookiewarning_overlay .textbox {position:relative; margin: auto; background-color:#FFF; width: 500px; height: 200px; display:block; margin-top: 20px; border: solid 7px #BBB; border-radius: 5px; padding: 5px; }
 #cookiewarning_overlay .textbox .title { text-align: center; font-size: 16px; margin-bottom: 10px; }
 #cookiewarning_overlay .textbox .continue { position:absolute; right: 5px; bottom: 5px; }
+
+.gs_tabs {
+    height: 34px;
+    border-bottom: solid 1px  #BBBBBB;
+}
+
+.gs_tabs .gs_tab_selected {
+    border-bottom: solid 0px;
+    background-color: #fff;
+    height: 24px;
+    color:#000;
+}
+
+.gs_tab {
+    background-color:#FFF;
+    padding: 5px;
+    border-right: solid 1px #BBBBBB;
+    border-top: solid 1px #BBBBBB;
+    font-size: 16px;
+    display:inline;
+    cursor:pointer;
+    margin: 0px;
+    float:left;
+    height: 24px;
+    text-align:center;
+    background-color:#a4a4a4;
+    color:#FFF;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.gs_tab_area { display:none; }
+.gs_tab_area_active { display:block; }
+
+.colorpicker { z-index: 1000; }

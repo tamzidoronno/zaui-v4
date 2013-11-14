@@ -12,6 +12,8 @@
         var saveCropped = true;
         var callback = false;
         var source = false;
+        var saveOriginalCallback = false;
+        var progressCallback = false;
         var autohideinfobox = true;
         var autosave = false;
         var selectedCropArea = [0, 0, previewWidth, previewHeight];
@@ -20,12 +22,16 @@
 
         if (config.keepAspect !== undefined)
             keepAspect = config.keepAspect;
+        if (config.progressCallback !== undefined)
+            progressCallback = config.progressCallback;
         if (config.previewHeight !== undefined)
             previewHeight = config.previewHeight;
         if (config.previewWidth !== undefined)
             previewWidth = config.previewWidth;
         if (config.saveOriginal !== undefined)
             saveOriginal = config.saveOriginal;
+        if (config.saveOriginalCallback !== undefined)
+            saveOriginalCallback = config.saveOriginalCallback;
         if (config.saveCropped !== undefined)
             saveCropped = config.saveCropped;
         if (config.callback !== undefined)
@@ -114,7 +120,6 @@
             
             if(!keepAspect) {
                 imgheight = (y2 - y1) / compression;
-                console.log(imgheight);
             }
             
             var canvas = document.createElement("canvas");
@@ -155,13 +160,27 @@
                 var event = thundashop.Ajax.createEvent('', 'saveCroppedImage', ajaxTarget, {data: data, extra: extra, cords: cords, imageheight: imagebox.height()});
                 thundashop.Ajax.post(event, function() {
                     thundashop.common.removeNotificationProgress(id + "_1");
-                }, null, autosave);
+                }, null, autosave,true, {
+                    "uploadcallback": function(percentage) {
+                        if(progressCallback) {
+                            progressCallback(percentage);
+                        }
+                    }
+                });
             }
             if (saveOriginal) {
                 thundashop.common.addNotificationProgress(id + "_2", "Saving original image");
                 var event = thundashop.Ajax.createEvent('', 'saveOriginalImage', ajaxTarget, {data: origdata, extra: extra});
-                thundashop.Ajax.post(event, function() {
+                event.synchron = true;
+                thundashop.Ajax.post(event, function(data) {
                     thundashop.common.removeNotificationProgress(id + "_2");
+                    saveOriginalCallback(data);
+                }, null, true, true, {
+                    "uploadcallback": function(percentage) {
+                        if(progressCallback) {
+                            progressCallback(percentage);
+                        }
+                    }
                 });
             }
 

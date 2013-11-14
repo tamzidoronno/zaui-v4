@@ -216,7 +216,7 @@ thundashop.common.saveCKEditor = function(data, target, notify) {
 thundashop.common.activateCKEditor = function(id, config) {
     var autogrow = false;
     var showMenu = true;
-    var autofocus = false;
+    var autofocus = true;
     var notinline = false;
     var notdestroyonblur = false;
     var saveCallback = false;
@@ -263,14 +263,12 @@ thundashop.common.activateCKEditor = function(id, config) {
         on: {
             blur: function(event) {
                 var data = event.editor.getData();
-                if (saveCallback) {
-                    saveCallback(data);
-                }
-
                 if (notdestroyonblur) {
                     return;
                 }
-
+                if (saveCallback) {
+                    saveCallback(data); 
+               }
                 var data = event.editor.getData();
                 if (!notinline) {
                     if (pushToBackend) {

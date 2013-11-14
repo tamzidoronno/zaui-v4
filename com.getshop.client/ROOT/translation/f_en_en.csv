@@ -1,36 +1,58 @@
-###### framework ######
-add_event;-;Add event
-add_news;-;Add News
-appid;-;AppId
-appid_required;-;"Your facebook app id, all facebook social plugins requires this."
+###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
 cart;-;Cart
-create_news_desc;-;Create a news entry by entering text in the textfield below.
-delete;-;Delete
-detailed_desc;-;A more detailed description
-edit;-;Edit
-edit_product;-;Edit product
+
+
+###### fb076580_c7df_471c_b6b7_9540e4212441 (OpenSRS) ######
 enter_domain;-;Enter Domain Name
+
+
+###### df435931_9364_4b6a_b4b2_951c90cc0d70 (Login) ######
+users;-;Users
+
+
+###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
+add_event;-;Add event
+delete;-;Delete
+edit;-;Edit
 event_desc;-;Event Description
 event_name;-;Event name
 free_positions;-;Free positions
-like_button;-;Like button
-like_button_desc;-;Enables or disables a like button to all your products
 max_atandees;-;Max attendees
 no_activites;-;No activities exists for this day
-postal;-;Postal code
-price;-;Price
-profile_url;-;Profile url
-profile_url_desc;-;Your profile url example: https://www.facebook.com/zuck
-save;-;Save
 send_reminder;-;Send reminder
-short_description;-;A short description
 start;-;Start
 start_time;-;Start time
-stock_quantity;-;Stock Quantity
 stop;-;Stop
-subscribe_news;-;Subscribe / unsubscribe to this news feed:
-taxes;-;Taxes
+
+
+###### d755efca_9e02_4e88_92c2_37a3413f3f41 (Settings) ######
+postal;-;Postal code
+
+
+###### framework ######
+price;-;Price
+save;-;Save
 title;-;Title
-users;-;Users
+
+
+###### ba885f72_f571_4a2e_8770_e91cbb16b4ad (Facebook) ######
+appid;-;AppId
+appid_required;-;"Your facebook app id, all facebook social plugins requires this."
+like_button;-;Like button
+like_button_desc;-;Enables or disables a like button to all your products
+profile_url;-;Profile url
+profile_url_desc;-;Your profile url example: https://www.facebook.com/zuck
+
+
+###### dabb8a85_f593_43ec_bf0d_240467118a40 (News) ######
+add_news;-;Add News
+create_news_desc;-;Create a news entry by entering text in the textfield below.
+subscribe_news;-;Subscribe / unsubscribe to this news feed:
+
+
+###### dcd22afc_79ba_4463_bb5c_38925468ae26 (ProductManager) ######
+edit_product;-;Edit product
+stock_quantity;-;Stock Quantity
+taxes;-;Taxes
 
 

@@ -1,213 +1,271 @@
+###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
+Cart overview;-;Handlekurv oversikt
+Checkout;-;Utsjekking
+Click next to select shipping options;-;Trykk neste for å velge en betalings metode
+Confirm order;-;Bekreft ordre
+Failed;-;Feilet
+I agree to the terms and conditions;-;Jeg godtar bruksvilkårene
+Invalid email address;-;Ugyldig epost adresse
+Invalid payment method;-;Ugyldig betalings metode
+Password missmatch;-;Passordene stemmer ikke oversens
+Please select a payment method.;-;Vennligst velg en betalingsmetode
+Please select a valid payment method;-;Vennligst velg en gyldig betalings metode.
+Registration details;-;Registrerings detaljer.
+Shipping price;-;Forendelse pris
+The email already exists, please log on to continue.;-;Eposten eksisterer allerede, vennligst logg på for å fortsette.
+The passwords does not match.;-;Passordet stemmer ikke overens.
+Use a different email;-;Bruk en annen epost
+Was not able to get payment methods, please check your postcode;-;Klarte ikke å oppdrive betalings metoder, vennligst sjekk ditt postnummer.
+read;-;les
+
+
+###### 70ace3f0_3981_11e3_aa6e_0800200c9a66 (InvoicePayment) ######
+InvoicePayment;-;Faktura
+Thank you for your order, an email has been sent to you with the invoice attached. We will ship the items as soon as we have received the payment.;-;Takk for din bestilling, en epost har blitt sendt med fakturaen vedlagt. Vi sender bestillingen når vi har mottat betalingen.
+
+
+###### 2afb045b_fa01_4398_8582_33f212bb8db8 (Chat) ######
+Chat with us;-;Chat med oss
+How can I help you today ?;-;Hva kan jeg hjelpe deg med?
+Our local time is:;-;Vår lokale tid er
+Please select a user in the left menu;-;Vennligst velg en bruker fra venstre meny.
+You need to select at least one to send back message to;-;Du må velge minium en som du kan sende en melding til.
+if we dont answer, please leave your email here and we will return your message asap.;-;Hvis vi ikke svarer, legg igjen en din epost, og vi vil kontakte deg så snart som mulig.
+
+
+###### df435931_9364_4b6a_b4b2_951c90cc0d70 (Login) ######
+An email has been sent to you with the confirmation code.;-;En godkjennings kode er sendt til din epost.
+Email sent;-;Epost sendt
+Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.L
+Login;-;Logg inn
+Logout;-;Logg ut
+Lost your password?;-;Glemt ditt passord?
+My Account;-;Min konto
+Orders;-;Alle ordre
+Password cannot be empty;-;Passordet kan ikke være tomt.
+Password does not match, please re enter password;-;Passordet stemmer ikke oversens, prøv på nytt.
+Password has been successfully updated;-;Passordet har blitt oppdatert.
+Password has been updated;-;Passordet har blitt oppdatert.
+Please enter your email address:;-;Vennligst skriv inn din epost
+Please following theese steps to recover your password.;-;Vennligst følgt instruksjonen under.
+Recover password;-;Gjennopprett passord
+Send me a code;-;Send meg koden
+
+
 ###### framework ######
-0-100 km/h;-;0-100 km/h
 A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
 Add to cart;-;Legg i handlekurv
 Address;-;Adresse
-All fields are required;-;Alle felt er påkrevd
-All fields are required.;-;Alle felt er påkrevd
-All orders;-;Alle bestilinger
-An email has been sent to you with the confirmation code.;-;En godkjennings kode er sendt til din epost.
-Application;-;Applikasjoner
-Apply coupon;-;Bruk kupong
-April;-;April
-August;-;August
-Banner settings;-;Banner innstillinger
-Birth Date;-;Bursdag
-Buy;-;Kjøp
-By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;Sisow er en nederlands betalingsmetode, bruk denne om du ønsker å tilby kundene dine iDeal
-Cancel order;-;Kanselert ordre
-Canceled;-;Kanselert
-Cart overview;-;Handlekurv oversikt
-Cell phone;-;Mobil tlf
 Change password;-;Endre passord
-Changes has been saved!;-;Innstillingene har blitt lagret!
-Chat with us;-;Chat med oss
-Checkout;-;Utsjekking
 City;-;By
-Click here to edit the text.;-;Trykk her for å editere tekst.
-Click next to select shipping options;-;Trykk neste for å velge en betalings metode
-Company;-;Selskap
 Completed;-;Gjennomført
-Configure banner slider;-;Konfigurer banner slideren
-Confirm order;-;Bekreft ordre
 Continue;-;Fortsett
 Cookies are being stored;-;Cookier blir lagret
 Country;-;Land
 Coupon;-;Kupong
 Coupon discount;-;Kupong avslag
-Customer information;-;Kunde detaljer
-Date;-;Dato
-December;-;Desember
 Delete image;-;Slett bilde
-Details;-;Detaljer
-Did not find the specified company, please check your company number;-;Fant ikke det angitte firmaet, vennligst sjekk organisasjonret
-Download ebill;-;Last ned ebill
 Email;-;Epost
-Email sent;-;Epost sendt
-End date;-;Slutt dato
-Enter organisation number and this will be filled out automatically;-;Fyll inn organisasjonsnret og denne boksen vil bli fylt ut automatisk
-Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.L
-Extended Description;-;Utvidet beskrivelse
-Failed;-;Feilet
 Featured Product;-;Fremhevet produkt
-February;-;Februar
 Fixed price;-;Fast pris
 Free shipping;-;Gratis frakt
-Friday;-;Fredag
 Full name;-;Hele navnet
-Got a coupon from use? Apply it and get discount.;-;Har du en kupong? bruk den her
-Group;-;Gruppe
-How can I help you today ?;-;Hva kan jeg hjelpe deg med?
-I agree to the terms and conditions;-;Jeg godtar bruksvilkårene
-I am sorry, but all fields are required before sending a message.;-;Beklager, men alle felt må fylles ut før du sender en melding.
-Invalid email address;-;Ugyldig epost adresse
-Invalid payment method;-;Ugyldig betalings metode
 Invoice email;-;Epost Teknisk Leder
-InvoicePayment;-;Faktura
-January;-;Januar
-July;-;Juli
-June;-;Juni
-Les mer;-;Les mer
-Loading data... please wait;-;Laster, vennligst vent...
-Login;-;Logg inn
-Logout;-;Logg ut
-Lost your password?;-;Glemt ditt passord?
-March;-;Mars
-May;-;Mai
-Message;-;Melding
-Message from a customer;-;Melding fra en kunde
-Monday;-;Mandag
-My Account;-;Min konto
 My name is:;-;Mitt navn er
 Name;-;Navn
 New message;-;Ny melding
 New password;-;Nytt passord
 Next;-; Neste
-November;-;November
-Number of instances added;-;Antall av instanser lagt til
-October;-;Oktober
-Old password;-;Gammelt passord
 Order;-;Ordre
-Order Created;-; Ordre opprettet
-Order date;-;Bestillings dato
-Order sent;-;Ordre sent
-Orders;-;Alle ordre
-Organisation;-;Organisasjon
-Organisation name;-;Selskapnavn
-Original (hp);-;Orginal hp
-Original (nm);-;Original nm
-Other images;-;Andre bilder
-Our local time is:;-;Vår lokale tid er
 Password;-;Passord
-Password cannot be empty;-;Passordet kan ikke være tomt.
-Password does not match, please re enter password;-;Passordet stemmer ikke oversens, prøv på nytt.
-Password has been successfully updated;-;Passordet har blitt oppdatert.
-Password has been updated;-;Passordet har blitt oppdatert.
-Password missmatch;-;Passordene stemmer ikke oversens
-Payment;-;Betaling
 Payment failed;-;Betaling feilet
-Payment information;-;Betalings informasjon
-Payment successfully completed;-;Betalingen gjennomført
 Phone;-;Telefon
 Place order;-;Legg inn ordre
 Please check your delivery options.;-;Vennligst sjekk dine leveringsmetoder.
-Please enter your email address:;-;Vennligst skriv inn din epost
-Please following theese steps to recover your password.;-;Vennligst følgt instruksjonen under.
-Please select a payment method.;-;Vennligst velg en betalingsmetode
-Please select a user in the left menu;-;Vennligst velg en bruker fra venstre meny.
-Please select a valid payment method;-;Vennligst velg en gyldig betalings metode.
 Please select department;-;Velg en avdeling
 Post code;-;Post.nr
 Postal code;-;Postnummer
 Previous;-;Forrige
 Price;-;Pris
-Price and plans;-;Priser og oversikter
-Product count;-;Antall produkter
-Recover password;-;Gjennopprett passord
-Register;-;Registrer
-Registration details;-;Registrerings detaljer.
 Related products;-;Relaterte produkter
 Reminder;-;Påminnelse
-Reminder sent by email;-;En påmindelse har blitt sendt per epost.
 Remove;-;Fjern
 Repeat password;-;Gjenta passord
-Saturday;-;Lørdag
 Search for a product;-;Søk etter et produkt
-Send me a code;-;Send meg koden
 Send message;-;Send melding
 Send us mail;-;Send oss en epost
-September;-;September
-Set new password;-;Sett nytt passord
-Shipment information;-;Forsendelse informasjon
-Shipment settings;-;Forsendelse
-Shipping;-;Utsendelse
-Shipping cost;-;Fraktkostnader
-Shipping price;-;Forendelse pris
-Sign up;-;Registrer deg
 Sorry;-;Beklager
+Success;-;Success
+Taxes;-;Skatter
+Terms and Conditions;-;Bruksvilkår
+Thank you for your order.;-;Takk for din bestilling.
+This page is only available for adminsitrators;-;Denne siden er kun tilgjengelig for adminstratorer.
+This page is only available for editors.;-;Denne siden er kun tilgjengelig for editorer.
+This page is only available for registered users.;-;Denne siden er kun tilgjengelig for registrerte brukere
+To be able to serve you we need to store a tiny amount of data about your browser. An identification id is being generated and added to your web browser. This allows us to track you for a two hours periode while you are navigating this site. This data is anonymous and are only being used to identify your web browser and not you as a person.;-;For at det skal være mulig bruke denne web siden må vi lagre en liten bit av data på din nettleser. Dette er en identifikasjons id som gjør det mulig å identifisere deg som en bruker mens du surfer på denne siden. Denne dataen blir lagret i 20 timer og er 100% anonym.
+Total;-;Total
+Update;-;Oppdater
+Username / Email;-;Brukernavn / Epost
+Weight;-;Vekt
+What's on your mind?;-;Hva ønsker du å formidle?
+Wrong delivery method;-;Feil forsendelses metode.
+You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
+email;-;E-post
+in stock;-;på lager
+included taxes;-;Inkludert mva
+location;-;Sted
+login;-;logg inn
+org;-;Firma
+
+
+###### 2ebd7c69_eba3_4b7e_85c6_0e0bd274aad0 (SedoxCarList) ######
+0-100 km/h;-;0-100 km/h
+Original (hp);-;Orginal hp
+Original (nm);-;Original nm
 Stage 1 (hp):;-;Stage 1 hp:
 Stage 1 (nm):;-;Stage 1 nm:
 Stage 2 (hp):;-;Stage 2 hp:
 Stage 2 (nm):;-;Stage 2 nm:
 Stage 3 (hp):;-;Stage 3 hp:
 Stage 3 (nm):;-;Stage 3 nm:
-Start date;-;Start dato
-Status;-;Status
-Stop;-;Stopp
-Success;-;Success
-Sunday;-;Søndag
-Taxes;-;Skatter
-Terms and Conditions;-;Bruksvilkår
-Thank you for ordering with Sisow ebill;-;Takk for at du bestilte med Sisow ebill
-Thank you for your order.;-;Takk for din bestilling.
-Thank you, you will now be redirected to the payment service;-;Takk, du blir nå overført til betalingstjenesten
-The email address is invalid.;-;Eposten din er ugyldig.
-The email already exists, please log on to continue.;-;Eposten eksisterer allerede, vennligst logg på for å fortsette.
-The event has been confirmed.;-;Eventent har blitt bekreftet.
-The passwords does not match.;-;Passordet stemmer ikke overens.
-This page is only available for adminsitrators;-;Denne siden er kun tilgjengelig for adminstratorer.
-This page is only available for editors.;-;Denne siden er kun tilgjengelig for editorer.
-This page is only available for registered users.;-;Denne siden er kun tilgjengelig for registrerte brukere
-Thursday;-;Torsdag
-To be able to serve you we need to store a tiny amount of data about your browser. An identification id is being generated and added to your web browser. This allows us to track you for a two hours periode while you are navigating this site. This data is anonymous and are only being used to identify your web browser and not you as a person.;-;For at det skal være mulig bruke denne web siden må vi lagre en liten bit av data på din nettleser. Dette er en identifikasjons id som gjør det mulig å identifisere deg som en bruker mens du surfer på denne siden. Denne dataen blir lagret i 20 timer og er 100% anonym.
 Top speed;-;Topp hastighet
-Total;-;Total
-Tuesday;-;Tirsdag
-Update;-;Oppdater
-Use a different email;-;Bruk en annen epost
-Username / Email;-;Brukernavn / Epost
-Waiting for payment;-;Venter på betaling
-Was not able to get payment methods, please check your postcode;-;Klarte ikke å oppdrive betalings metoder, vennligst sjekk ditt postnummer.
-We host events at the following locations, click on the location to filter the calendar by location(s);-;We har events på følgende steder, trykk på stedet for å filtere kalenderen på stedet(ene)
-Wednesday;-;Onsdag
-Weight;-;Vekt
+
+
+###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
+Shipment settings;-;Forsendelse
+
+
+###### 32c15c30_d665_11e2_8b8b_0800200c9a66 (RealEstate) ######
+Les mer;-;Les mer
+
+
+###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 (Sisow) ######
+By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;Sisow er en nederlands betalingsmetode, bruk denne om du ønsker å tilby kundene dine iDeal
+Download ebill;-;Last ned ebill
+Payment successfully completed;-;Betalingen gjennomført
+Thank you for ordering with Sisow ebill;-;Takk for at du bestilte med Sisow ebill
+Thank you, you will now be redirected to the payment service;-;Takk, du blir nå overført til betalingstjenesten
 What email address do you want the ebill to be sent to?;-;Hvilken epost ønsker du at ebill skal sendes til?
-What's on your mind?;-;Hva ønsker du å formidle?
-Wrong delivery method;-;Feil forsendelses metode.
-You are being transferred to paypal, please wait...;-;Du  blir nå overført til paypal, vennligst vent.
-You are here:;-;Du er her:
-You do not have any orders.;-;Du har ingen bestillinger
-You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
-You need to select at least one to send back message to;-;Du må velge minium en som du kan sende en melding til.
-Your are now signed up for the event;-;Du er nå registert inn på denne eventen.
-Your message has been delivered;-;Din melding har blitt sendt.
 Your order has been canceled due to incorrect payment information, please try again.;-;Orderen din har blitt avbrutt pga manglende betaling.
 Your order has now been completed and is waiting to be shipped.;-;Orderen din har blitt gjennomført og venter på å bli sendt.
 Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;Du vil snart motta en epost med din ebill, eller så kan du last den ned på følgende link
-Your personal information;-;Din personlige informasjon
+
+
+###### d612904c_8e44_4ec0_abf9_c03b62159ce4 (Banner) ######
+Banner settings;-;Banner innstillinger
+
+
+###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
+All fields are required.;-;Alle felt er påkrevd
+Company;-;Selskap
+I am sorry, but all fields are required before sending a message.;-;Beklager, men alle felt må fylles ut før du sender en melding.
+Message;-;Melding
+Message from a customer;-;Melding fra en kunde
+The email address is invalid.;-;Eposten din er ugyldig.
+Your message has been delivered;-;Din melding har blitt sendt.
+
+
+###### 1051b4cf_6e9f_475d_aa12_fc83a89d2fd4 (TopMenu) ######
+Menu;-;Meny
+
+
+###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
+April;-;April
+August;-;August
+December;-;Desember
+February;-;Februar
+Friday;-;Fredag
+January;-;Januar
+July;-;Juli
+June;-;Juni
+March;-;Mars
+May;-;Mai
+Monday;-;Mandag
+November;-;November
+October;-;Oktober
+Reminder sent by email;-;En påmindelse har blitt sendt per epost.
+Saturday;-;Lørdag
+September;-;September
+Sunday;-;Søndag
+The event has been confirmed.;-;Eventent har blitt bekreftet.
+Thursday;-;Torsdag
+Tuesday;-;Tirsdag
+We host events at the following locations, click on the location to filter the calendar by location(s);-;We har events på følgende steder, trykk på stedet for å filtere kalenderen på stedet(ene)
+Wednesday;-;Onsdag
+description;-;Beskrivelse
+
+
+###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
+All fields are required;-;Alle felt er påkrevd
+Date;-;Dato
+Did not find the specified company, please check your company number;-;Fant ikke det angitte firmaet, vennligst sjekk organisasjonret
+Enter organisation number and this will be filled out automatically;-;Fyll inn organisasjonsnret og denne boksen vil bli fylt ut automatisk
+Loading data... please wait;-;Laster, vennligst vent...
+Sign up;-;Registrer deg
+Stop;-;Stopp
+Your are now signed up for the event;-;Du er nå registert inn på denne eventen.
 change;-;endre
 course;-;kurs
-description;-;Beskrivelse
-email;-;E-post
-if we dont answer, please leave your email here and we will return your message asap.;-;Hvis vi ikke svarer, legg igjen en din epost, og vi vil kontakte deg så snart som mulig.
-in stock;-;på lager
-included taxes;-;Inkludert mva
-location;-;Sted
-login;-;logg inn
-org;-;Firma
 orgnummer;-;Org.nr.
 phone;-;Mob.Tlf.
-read;-;les
+
+
+###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######
+All orders;-;Alle bestilinger
+Cancel order;-;Kanselert ordre
+Canceled;-;Kanselert
+Customer information;-;Kunde detaljer
+Order Created;-; Ordre opprettet
+Order date;-;Bestillings dato
+Order sent;-;Ordre sent
+Payment information;-;Betalings informasjon
+Product count;-;Antall produkter
+Shipment information;-;Forsendelse informasjon
+Shipping;-;Utsendelse
+Status;-;Status
+Waiting for payment;-;Venter på betaling
+You do not have any orders.;-;Du har ingen bestillinger
+
+
+###### 7093535d_f842_4746_9256_beff0860dbdf (BreadCrumb) ######
+You are here:;-;Du er her:
+
+
+###### dcd22afc_79ba_4463_bb5c_38925468ae26 (ProductManager) ######
+Buy;-;Kjøp
+Click here to edit the text.;-;Trykk her for å editere tekst.
+Details;-;Detaljer
+Extended Description;-;Utvidet beskrivelse
+Other images;-;Andre bilder
 shipping;-;frakt
+
+
+###### 90cd1330_2815_11e3_8224_0800200c9a66 (Coupon) ######
+Apply coupon;-;Bruk kupong
+Got a coupon from use? Apply it and get discount.;-;Har du en kupong? bruk den her
+
+
+###### c7736539_4523_4691_8453_a6aa1e784fc1 (PayPal) ######
+Shipping cost;-;Fraktkostnader
+You are being transferred to paypal, please wait...;-;Du  blir nå overført til paypal, vennligst vent.
+
+
+###### 6c245631_effb_4fe2_abf7_f44c57cb6c5b (Account) ######
+Application;-;Applikasjoner
+Birth Date;-;Bursdag
+Cell phone;-;Mobil tlf
+Changes has been saved!;-;Innstillingene har blitt lagret!
+End date;-;Slutt dato
+Group;-;Gruppe
+Number of instances added;-;Antall av instanser lagt til
+Old password;-;Gammelt passord
+Organisation;-;Organisasjon
+Organisation name;-;Selskapnavn
+Payment;-;Betaling
+Price and plans;-;Priser og oversikter
+Register;-;Registrer
+Set new password;-;Sett nytt passord
+Start date;-;Start dato
+Your personal information;-;Din personlige informasjon
 
 

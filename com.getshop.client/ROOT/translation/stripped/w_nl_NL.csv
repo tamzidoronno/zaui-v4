@@ -1,26 +1,24 @@
-###### framework ######
+###### 2ebd7c69_eba3_4b7e_85c6_0e0bd274aad0 (SedoxCarList) ######
 0-100 km/h;-;
-All fields are required;-;
-Did not find the specified company, please check your company number;-;
-Enter organisation number and this will be filled out automatically;-;
-InvoicePayment;-;
-Loading data... please wait;-;
 Original (hp);-;
 Original (nm);-;
-Reminder sent by email;-;
 Stage 1 (hp):;-;
 Stage 1 (nm):;-;
 Stage 2 (hp):;-;
 Stage 2 (nm):;-;
 Stage 3 (hp):;-;
 Stage 3 (nm):;-;
-Stop;-;
-The event has been confirmed.;-;
 Top speed;-;
-Your are now signed up for the event;-;
-change;-;
+
+
+###### 1051b4cf_6e9f_475d_aa12_fc83a89d2fd4 (TopMenu) ######
+Menu;-;
+
+
+###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
+Enter organisation number and this will be filled out automatically;-;
+Stop;-;
 course;-;
-description;-;
 orgnummer;-;
 
 

@@ -4,6 +4,8 @@ RewriteEngine On
 RewriteBase /
 ErrorDocument 404 /
 
+RewriteRule ^(documentation)($|/) - [L]
+
 RewriteRule ^sitemap.xml$ sitemap.php [L]
 RewriteRule ^favicon.ico$ favicon.php [L]
 

@@ -8,7 +8,7 @@ App = {
     showingMonth : 0,
     startMonth : 0,
     startYear : 0,
-//    isLoaded : false,
+    reloadData : null,
     monthIndex : 1,
     
     start: function() {
@@ -29,11 +29,41 @@ App = {
         $('.disconnected').hide();
         this.reset();
         this.loadCourses();
+        this.loadInformationPage();
         this.loadFilters();
         this.loadCoursePages();
         this.createCalendars();
-        this.setupSignupPage();    
+        this.setupSignupPage();
         this.bindRefreshEvent();
+    },
+            
+    replaceAll: function (o,t,r,c){if(c==1){cs="g"}else{cs="gi"}var mp=new RegExp(t,cs);ns=o.replace(mp,r);return ns},
+            
+    loadInformationPage: function() {
+        var me = this;
+        this.getshopApi.PageManager.getPage("f1d04c8a-222c-4e3d-a5cb-32e7f5f9d6f1").done(function(page) {
+            var contentManagerId = page['pageAreas']['main_1']['applicationsList'][0];
+            me.getshopApi.ContentManager.getContent(contentManagerId).done(function(content) {
+                var page = $('#infopage');
+                if (page.length === 0) {
+                    page = $('<div class="infopage" data-role="page" data-theme="a" id="infopage"/>');
+                    page.html("<div class='header'/>");
+                    page.find(".header").load("header.html", function() {
+                        page.find('.header').trigger('create');
+                    });
+                    page.append('<div data-role="content" data-theme="a" class="ContentManager">');
+                    $('html .ui-mobile-viewport').append(page);    
+                }
+                
+                content = me.replaceAll(content, '/displayImage', "http://www.getshop.com/displayImage");
+                var contentHtml = $(content);
+                contentHtml.find('img').css('height','auto');
+                contentHtml.find('img').css('width','100%');
+                contentHtml.find('td span').css('font-size','8px');
+                page.find('.ContentManager').html(contentHtml);
+                
+            });
+        });
     },
             
     refresh: function() {
@@ -49,11 +79,7 @@ App = {
         $('.connecting').hide();
         this.monthIndex = 1;
         this.activateFilter("");
-        $.mobile.changePage('#home', {
-            done: function() {
-                alert('test');
-            }
-        });
+        $.mobile.changePage('#home');
     },
             
     transferCompleted: function() {
@@ -149,7 +175,7 @@ App = {
 
         $('.calendar[year='+this.showingYear+'][month='+this.showingMonth+']').hide()
         if (this.showingMonth === 1) {
-            this.showingMonth = 12;
+            this.showingMonth = 13;
             this.showingYear--;
         }
 
@@ -163,6 +189,7 @@ App = {
         var me = this;
         var name = $('#name').val();
         var email = $('#email').val();
+        var invoiceemail = $('#invoiceemail').val();
         var phone = $('#phone').val();
         var vatnr = $('#vatnr').val();
         var company = $('#company').val();
@@ -182,9 +209,6 @@ App = {
         
         if (vatnr === "") 
             $('label[for=vatnr]').addClass('error');
-        
-        if (company === "") 
-            $('label[for=company]').addClass('error');
         
         if (courseId === "") 
             $('label[for=courseId]').addClass('error');
@@ -208,31 +232,89 @@ App = {
         if ($('label.error').length > 0) {
             alert('Vennligst rett feltene i rødt');
         } else {
-            var password = Math.floor(Math.random()*90000) + 10000;
-            var user = {
-                fullName : name,
-                emailAddress : email,
-                type : 10,
-                password : password,
-                birthDay : vatnr,
-                companyName : company,
-                cellPhone : phone, 
-                groups : [groupId]
-            };
-            
-            me.getshopApi.UserManager.createUser(user).done(function(createUser) {
-                me.getshopApi.CalendarManager.addUserToEvent(createUser.id, courseId, password, createUser.username).done(function() {
-                    alert('Du er nå påmeldt kurset');
-                    document.location.href = document.URL.substring(0, document.URL.indexOf("#"));
+            this.getshopApi.UtilManager.getCompanyFromBrReg(vatnr).done(function(company) {
+                if(!company.name) {
+                    alert('klarte ikke å finne firma med oppgitt org.nr, vennligst sjekk');
+                    return;
+                }
+                
+                var password = Math.floor(Math.random()*90000) + 10000;
+                var user = {
+                    fullName : name,
+                    emailAddress : email,
+                    type : 10,
+                    password : password,
+                    birthDay : vatnr,
+                    cellPhone : phone, 
+                    groups : [groupId],
+                    company: company,
+                    emailAddressToInvoice: invoiceemail
+                };
+
+                me.getshopApi.UserManager.createUser(user).done(function(createUser) {
+                    me.getshopApi.CalendarManager.addUserToEvent(createUser.id, courseId, password, createUser.username).done(function() {
+                        alert('Du er nå påmeldt kurset');
+                        document.location.href = document.URL.substring(0, document.URL.indexOf("#"));
+                    });
                 });
             });
+            
         }
     },
             
     setupListeners: function() {  
         $('#next').click($.proxy(this.nextClicked,this));
         $('#prev').click($.proxy(this.prevClicked,this));
+        $(document).on('click', '.infobutton', function() {
+            $.mobile.changePage('#infopage');
+        });
         $('#signon').click($.proxy(this.signOnClicked,this));
+        $('#vatnr').keyup($.proxy(this.vatnumberupdated,this))
+    },
+            
+    vatnumberupdated: function() {
+        var value = $('#vatnr').val();
+        var informationPage = $('.companyinformation');
+        if (value.length === 9) {
+            var outer = $('<div/>');
+            var loader = $('<img src="css/images/ajaxloader.gif"/><br>');
+            outer.append(loader);
+            outer.append('Laster data, vennligst vent');
+            outer.css('text-align', 'center');
+            informationPage.html(outer);
+            var emptyRow = $('<div><div class="description"/><div class="value"/></div>');
+            this.getshopApi.UtilManager.getCompanyFromBrReg(value).done(function(company) {
+                informationPage.html("");
+                
+                if (!company.name) {
+                    informationPage.html("Fant ingen treff på oppgitt org.nr, vennligst sjekk og prøv på nytt.");
+                    return;
+                }
+                
+                var row = emptyRow.clone();
+                row.find('.description').html("Navn");
+                row.find('.value').html(company.name);
+                informationPage.append(row);
+                
+                var row = emptyRow.clone();
+                row.find('.description').html("Addresse");
+                row.find('.value').html(company.streetAddress);
+                informationPage.append(row);
+                
+                var row = emptyRow.clone();
+                row.find('.description').html("Post.nr");
+                row.find('.value').html(company.postnumber);
+                informationPage.append(row);
+                
+                var row = emptyRow.clone();
+                row.find('.description').html("City");
+                row.find('.value').html(company.city);
+                informationPage.append(row);
+            });
+        } else {
+            var invalidText = "Du har ikke oppgitt et gyldig org nr, det må være 9 tegn, du har oppgitt: " + value.length;
+            informationPage.html(invalidText);
+        }
     },
             
     createCalendars: function() {
@@ -258,7 +340,7 @@ App = {
                 $(this.subentries).each(function() {
                     var page = $('#'+this.pageId);
                     if (page.length === 0) {
-                        page = $('<div class="coursepages_23459123948" data-role="page" id="' + this.pageId + '"/>');
+                        page = $('<div class="coursepages_23459123948" data-role="page" data-theme="a" id="' + this.pageId + '"/>');
                         page.html("<div class='header'/>");
                         page.find(".header").load("header.html", function() {
                             page.find('.header').trigger('create');
@@ -272,7 +354,7 @@ App = {
 
                         var contentHolder = page.find('.ContentManager');
                         if (contentHolder.length === 0 ) {
-                            contentHolder = $('<div data-role="content" class="ContentManager">');
+                            contentHolder = $('<div data-role="content" data-theme="a" class="ContentManager">');
                         }
 
                         for (id in dataPage.pageAreas.main_1.applications) {
@@ -296,6 +378,7 @@ App = {
             });
         });
     },
+    
     loadFilters: function() {
         var me = this;
         this.getshopApi.CalendarManager.getFilters().done(function(filters) {
@@ -316,8 +399,14 @@ App = {
             filterHolder.trigger('create');
         });
     },
+    
     activateFilter: function(filter) {
         filter = filter.replace(/'/g, "\\'");
+        
+        if (filter === "" && !this.filterIsSet) {
+            return;
+        }
+        
         $('td.date_has_event').removeClass('disabled');
         $('td.date_has_event').each(function() {
             if ($(this).attr('locations').toUpperCase().indexOf(filter.toUpperCase()) < 0) {
@@ -349,9 +438,14 @@ App = {
         
         $('#select-native-1').selectmenu();
         $('#select-native-1').selectmenu('refresh', true);
+        if (filter !== "") {
+            this.filterIsSet = true;
+        } else {
+            this.filterIsSet = false;
+        }
     },
     loadCourses: function() {
-        var topEntry = $('<div data-role="collapsible" data-theme="b" data-content-theme="d"  data-inset="false"/>');
+        var topEntry = $('<div data-role="collapsible" data-theme="a" data-content-theme="a"  data-inset="false"/>');
         var subEntryContainer = $('<ul data-role="listview"/>');
         var courselist = $('#courselist .contentcourselist');
         
@@ -379,6 +473,10 @@ App.Calendar = function(getshopApi, year, month) {
     this.getshopApi = getshopApi;
     this.year = year;
     this.month = month;
+    if (this.month > 12) {
+        this.month = this.month-12;
+        this.year++;
+    }
     this.init();
 };
 
@@ -559,3 +657,17 @@ App.Calendar.prototype = {
         this.loadData();
     }
 };
+
+TextValidator = {
+    validate: function(evt) {
+        var theEvent = evt || window.event;
+        var key = theEvent.keyCode || theEvent.which;
+        key = String.fromCharCode(key);
+        var regex = /[0-9]|\./;
+        if (!regex.test(key)) {
+            theEvent.returnValue = false;
+            if (theEvent.preventDefault)
+                theEvent.preventDefault();
+        }
+    }
+}

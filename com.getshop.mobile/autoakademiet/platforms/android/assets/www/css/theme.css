@@ -46,7 +46,7 @@
     padding: 10px;
     border: dashed 2px #CCC; 
     margin-bottom: 20px;
-    background-color: #DDD;
+    background-color: #333;
 }
 
 .disabled {
@@ -155,4 +155,64 @@ label.error {
     background-repeat: no-repeat;
     cursor: pointer;
     box-shadow: 0px 0px 3px #000;
+}
+
+.companyinformation {
+    border: solid 2px #CCC;
+    border-radius: 7px;
+    padding: 5px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    
+}
+
+.companyinformation .value {
+    display: inline-block;    
+}
+
+.companyinformation .description {
+    width: 100px;
+    display: inline-block;
+}
+
+.ui-page {
+    background-color: #222;
+    background-image: inherit;
+    color: #FFF;
+}
+
+.ui-btn-active {
+    background-color: inherit;
+    background-image: inherit;
+    background-image: inherit;
+    background-image: inherit;
+    background-image: inherit;
+    background-image: inherit;
+    background-image: inherit;
+    border: inherit;
+    background: inherit;
+}
+
+.infopage td {
+    vertical-align: top !important;
+    position: relative;
+}
+
+.infopage td span {
+    position: absolute;
+    bottom: -10px;
+    left: 5px;
+    text-align: center;
+}
+.infobutton {
+    border-radius: 3px;
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    background-image: url('images/infobutton.png');
+    background-repeat: no-repeat;
+    background-position: center center;
 }

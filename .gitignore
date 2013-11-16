@@ -51,3 +51,20 @@ com.getshop.syncserver/nbproject/private/config.properties
 
 com.getshop.mobile/autoakademiet/platforms/android/bin/
 com.getshop.mobile/autoakademiet/platforms/android/gen/
+com.getshop.proteriasync/nbproject/private/
+com.getshop.proteriasync/build/
+com.getshop.proteriasync/dist/
+com.getshop.remote/nbproject/private/
+com.getshop.remote/dist/
+com.getshop.remote/build/
+
+com.getshop.proteriasync/nbproject/build-impl.xml
+com.getshop.proteriasync/nbproject/genfiles.properties
+com.getshop.proteriasync/nbproject/project.properties
+com.getshop.proteriasync/nbproject/project.xml
+com.getshop.remote/completedProducts.txt
+com.getshop.remote/config.txt
+com.getshop.remote/import.txt
+com.getshop.remote/import/import.txt
+com.getshop.remote/nbproject/project.properties
+

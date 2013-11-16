@@ -6,12 +6,8 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
-import com.thundashop.core.usermanager.UserManager;
-import com.thundashop.core.usermanager.data.User;
-import com.thundashop.core.usermanager.data.UserPrivilege;
 import java.security.MessageDigest;
 import java.util.ArrayList;
-import java.util.UUID;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -49,8 +45,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
     @Override
     public Store initializeStore(String webAddress, String sessionId) throws ErrorException {
-        webAddress = webAddress.replace(".local.getshop.com", ".getshop.com");
-        webAddress = webAddress.replace(".mpal.getshop.com", ".getshop.com");
+        // This function is not in use, please modify the code in the function below.
         return storePool.initialize(webAddress, sessionId);
     }
 

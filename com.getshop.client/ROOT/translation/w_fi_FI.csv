@@ -1,88 +1,67 @@
-###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
-Confirm order;-;Vahvista tilaus
-
-
-###### 2afb045b_fa01_4398_8582_33f212bb8db8 (Chat) ######
+###### framework ######
+Add to cart;-;Lisää ostoskoriin
+Address;-;Osoite
+All orders;-;Kaikki tilaukset
+Birth Date;-;Syntymäaika
+Cancel order;-;Peruuta tilaus
+Canceled;-;Peruttu
+Cell phone;-;Matkapuhelin
+Change password;-;Vaihta salasanaa
 Chat with us;-;Chattaa meille
-How can I help you today ?;-;Kuinka voin auttaa tänään?
-
-
-###### df435931_9364_4b6a_b4b2_951c90cc0d70 (Login) ######
+City;-;Kaupunki
+Completed;-;Valmis
+Confirm order;-;Vahvista tilaus
+Customer information;-;Asiakastiedot
+Email;-;Sähköposti
 Enter the code sent to your email.;-;Syötä koodi, mikä lähetettiin sinulle sähköpostiin
+Extended Description;-;Laajennettu kuvaus
+Fixed price;-;Kiinteä hinta
+Full name;-;Koko nimi
+How can I help you today ?;-;Kuinka voin auttaa tänään?
 Login;-;Sisään kirjautuminen
 Logout;-;Ulos kirjautuminen
 Lost your password?;-;Salasana hukassa?
 My Account;-;Minun tili
-Orders;-;Tilaukset
-Please enter your email address:;-;Olkaa hyvä ja kirjoittakaa sähköpostiosoitteenne
-Please following theese steps to recover your password.;-;Olkaa hyvä ja seurakaa näitä ohjeita salasanan palauttamiseksi
-Recover password;-;Palauta salasana
-Send me a code;-;Lähetä minulle koodi
-
-
-###### framework ######
-Add to cart;-;Lisää ostoskoriin
-Address;-;Osoite
-Change password;-;Vaihta salasanaa
-City;-;Kaupunki
-Completed;-;Valmis
-Email;-;Sähköposti
-Fixed price;-;Kiinteä hinta
-Full name;-;Koko nimi
 My name is:;-;Minun nimeni on:
 New password;-;Uusi salasana
 Next;-;Seuraava
+Old password;-;Vanha salasana
 Order;-;Tilaus
+Order Created;-;Tilaus luotu
+Order date;-;Tilauksen päiväys
+Orders;-;Tilaukset
+Organisation name;-;Yrityksen nimi
 Password;-;Salasana
 Payment failed;-;Maksu epäonnistui
 Phone;-;Puhelin
 Place order;-;Laita tilaus
+Please enter your email address:;-;Olkaa hyvä ja kirjoittakaa sähköpostiosoitteenne
+Please following theese steps to recover your password.;-;Olkaa hyvä ja seurakaa näitä ohjeita salasanan palauttamiseksi
 Postal code;-;Postinumero
 Previous;-;Edellinen
 Price;-;Hinta
+Recover password;-;Palauta salasana
+Register;-;Rekisteröidy
 Related products;-;Vastaavat tuotteet
 Remove;-;Poista
 Repeat password;-;Toista salasana
 Search for a product;-;Etsi tuote
+Send me a code;-;Lähetä minulle koodi
 Send message;-;Lähetä viesti
+Set new password;-;Luo uusi salasana
+Shipment information;-;Toimitusehdot
+Shipping;-;Toimitus
 Taxes;-;Verot
 This page is only available for adminsitrators;-;Tämä sivu on saattavilla ainoastaan pääkäyttäjälle.
 This page is only available for editors.;-;Tämä sivu on saattavilla ainoastaan toimittajalle
 This page is only available for registered users.;-;Tämä sivu on saattavilla ainoastaan rekisteröityille käyttäjille
 Update;-;Päivitys
 Username / Email;-;Käyttäjätunnus / Sähköposti
-You do not have any products in your cart;-;Ostoskorisi on tyhjä
-in stock;-;Varastossa
-
-
-###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######
-All orders;-;Kaikki tilaukset
-Cancel order;-;Peruuta tilaus
-Canceled;-;Peruttu
-Customer information;-;Asiakastiedot
-Order Created;-;Tilaus luotu
-Order date;-;Tilauksen päiväys
-Shipment information;-;Toimitusehdot
-Shipping;-;Toimitus
 Waiting for payment;-;Odotettaan maksua
-You do not have any orders.;-;Sinulla ei ole tilauksia
-
-
-###### 7093535d_f842_4746_9256_beff0860dbdf (BreadCrumb) ######
 You are here:;-;Olet tässä:
-
-
-###### dcd22afc_79ba_4463_bb5c_38925468ae26 (ProductManager) ######
-Extended Description;-;Laajennettu kuvaus
-
-
-###### 6c245631_effb_4fe2_abf7_f44c57cb6c5b (Account) ######
-Birth Date;-;Syntymäaika
-Cell phone;-;Matkapuhelin
-Old password;-;Vanha salasana
-Organisation name;-;Yrityksen nimi
-Register;-;Rekisteröidy
-Set new password;-;Luo uusi salasana
+You do not have any orders.;-;Sinulla ei ole tilauksia
+You do not have any products in your cart;-;Ostoskorisi on tyhjä
 Your personal information;-;Sinun henkilökohtaiset tiedot
+in stock;-;Varastossa
 
 

@@ -1,5 +1,8 @@
-###### 2ebd7c69_eba3_4b7e_85c6_0e0bd274aad0 (SedoxCarList) ######
+###### framework ######
 0-100 km/h;-;
+Available positions;-;
+Enter organisation number and this will be filled out automatically;-;
+Menu;-;
 Original (hp);-;
 Original (nm);-;
 Stage 1 (hp):;-;
@@ -8,16 +11,8 @@ Stage 2 (hp):;-;
 Stage 2 (nm):;-;
 Stage 3 (hp):;-;
 Stage 3 (nm):;-;
-Top speed;-;
-
-
-###### 1051b4cf_6e9f_475d_aa12_fc83a89d2fd4 (TopMenu) ######
-Menu;-;
-
-
-###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
-Enter organisation number and this will be filled out automatically;-;
 Stop;-;
+Top speed;-;
 course;-;
 orgnummer;-;
 

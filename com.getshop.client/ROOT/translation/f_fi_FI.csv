@@ -1,68 +1,41 @@
-###### df435931_9364_4b6a_b4b2_951c90cc0d70 (Login) ######
-users;-;käyttäjille
-
-
-###### ee1f3649_cfd8_41d5_aa5b_682216f376b6 (Translation) ######
+###### framework ######
+A content manager allows you to add content to whatever page you would like to add content to. It supports text, images, and even basic HTML, its like word for web.;-;Sis,??n hallinoijan avulla voit lis$ sis4??*okaiselle sivulle. Se tukee teksti kuvia ja jopa perinteist
+A news application makes you push news to your WebShop. And share to subscribers and push to facebook if the Facebook application has been added.;-;Uutiksien sovelluksen avulla laitat uutiset omaan WebShopiin. My??s jakaa ktt??lle ja laita Facebookiin jos Facebookin sovellus on lis4y.
+Category list;-;Ryhm??ntt??
+Change image;-;Muokkaa kuvaa
+Confirm delete;-;Vahvista poistaminen
+Content Manager;-;Sis,??n hallinnoija
+Create categories and add a list of products to the category, attach images to the categories, and name them as you want.;-;Luo ryhmi*a lis,uettelo tuotteista, liit+uvia ryhmiin ja nimet.e haluamallasi tavalla.
+Create new category;-;Luo uusi ryhm?
+Create news;-;Luo uusi uutiksien kohta
+Enter email;-;Anna sähköpostiosoitteesi
+Link to menu;-;Yhdist2yhm???nnettuun valikkoon
+More Categories?;-;Lis?? ryhmi??
+News;-;Uutiset
+Product List;-;Tuoteluettelo
+Remove image;-;Poista kuva
+Rename;-;Nimet5udelleen
+Reporting;-;Raportointi
+Save;-;Tallenna
+This category displayer is currently empty. To create a new category please click the create new category button below.;-;T?m? ryhm? on hetkell? tyhj?. Uuden ryhm?n luomiseksi kirjoita ryhm?n nimi laatikkoon ja paina ...
 To translate all visible text for your users, translate the entries below, and hit the save translation button.;-;Kääntää verkkokaupan teksti omalle kielelleen tai muokkaa  nykyistä kieltä sitä.
 Translation;-;Käännös
-
-
-###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
 add_event;-;,,
+add_news;-;Lis
+create_news_desc;-;Luo uutiksien kohta kirjoittamalla teksti alla tekstikentt.
 delete;-;Poista
+edit_product;-;Muoka tuoteta
 event_desc;-;,,
 event_name;-;,,
 free_positions;-;,,
 max_atandees;-;,,
 no_activites;-;,,
-start_time;-;,,
-
-
-###### 8402f800_1e7e_43b5_b3f7_6c7cabbf8942 (ProductList) ######
-Product List;-;Tuoteluettelo
-
-
-###### e9d04f19_6eaa_4a17_9b7b_aa387dbaed92 (CategoryLister) ######
-Category list;-;Ryhm??ntt??
-Create categories and add a list of products to the category, attach images to the categories, and name them as you want.;-;Luo ryhmi*a lis,uettelo tuotteista, liit+uvia ryhmiin ja nimet.e haluamallasi tavalla.
-More Categories?;-;Lis?? ryhmi??
-This category displayer is currently empty. To create a new category please click the create new category button below.;-;T?m? ryhm? on hetkell? tyhj?. Uuden ryhm?n luomiseksi kirjoita ryhm?n nimi laatikkoon ja paina ...
-
-
-###### d755efca_9e02_4e88_92c2_37a3413f3f41 (Settings) ######
 postal;-;Postinumero
-
-
-###### framework ######
-Change image;-;Muokkaa kuvaa
-Create new category;-;Luo uusi ryhm?
-Link to menu;-;Yhdist2yhm???nnettuun valikkoon
-Remove image;-;Poista kuva
-Rename;-;Nimet5udelleen
-Reporting;-;Raportointi
-Save;-;Tallenna
 price;-;Hinta
 save;-;Tallenna
-title;-;Otsikko
-
-
-###### 320ada5b_a53a_46d2_99b2_9b0b26a7105a (ContentManager) ######
-A content manager allows you to add content to whatever page you would like to add content to. It supports text, images, and even basic HTML, its like word for web.;-;Sis,??n hallinoijan avulla voit lis$ sis4??*okaiselle sivulle. Se tukee teksti kuvia ja jopa perinteist
-Content Manager;-;Sis,??n hallinnoija
-
-
-###### dabb8a85_f593_43ec_bf0d_240467118a40 (News) ######
-A news application makes you push news to your WebShop. And share to subscribers and push to facebook if the Facebook application has been added.;-;Uutiksien sovelluksen avulla laitat uutiset omaan WebShopiin. My??s jakaa ktt??lle ja laita Facebookiin jos Facebookin sovellus on lis4y.
-Confirm delete;-;Vahvista poistaminen
-Create news;-;Luo uusi uutiksien kohta
-Enter email;-;Anna sähköpostiosoitteesi
-News;-;Uutiset
-add_news;-;Lis
-create_news_desc;-;Luo uutiksien kohta kirjoittamalla teksti alla tekstikentt.
-
-
-###### dcd22afc_79ba_4463_bb5c_38925468ae26 (ProductManager) ######
-edit_product;-;Muoka tuoteta
+start_time;-;,,
 taxes;-;Verot
+title;-;Otsikko
+users;-;käyttäjille
 
 

@@ -1,64 +1,32 @@
-###### d02f8b7a_7395_455d_b754_888d7d701db8 (Dibs) ######
+###### framework ######
+If you turn on this feature, it will try to get the company information from  brreg. Simplify the form significantly.;-;
+Navigation has been disabled while image is being uploaded.;-;
+Save image;-;
 The Merchant-ID is provided by Dibs, please contact us for more information.;-;
-
-
-###### a109b0f1_97c3_4292_a46f_4c6894a9841c (PartnerApplicationSelection) ######
-Activate / deactivate the applications you would like your customers to have access to.;-;
-List has been saved;-;
-
-
-###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
 add_event;-;
+add_news;-;
+appid;-;
+appid_required;-;
+create_news_desc;-;
 edit;-;
 event_desc;-;
 event_name;-;
+fraktguiden is a norwegian application for keeping track of norwegian shipment prices, shipment tracking etc.;-;
 free_positions;-;
+latitude;-;
+like_button;-;
+like_button_desc;-;
+longitide;-;
 max_atandees;-;
+more;-;
 no_activites;-;
+profile_url;-;
+profile_url_desc;-;
 send_reminder;-;
 start;-;
 start_time;-;
 stop;-;
-
-
-###### 2da52bbc_a392_4125_92b6_eec1dc4879e9 (Bring) ######
-fraktguiden is a norwegian application for keeping track of norwegian shipment prices, shipment tracking etc.;-;
-
-
-###### 43567fce_00b4_4a71_b054_813066ce81a8 ######
-Handles taxes for products and shipment;-;
-
-
-###### framework ######
-Navigation has been disabled while image is being uploaded.;-;
-
-
-###### ba885f72_f571_4a2e_8770_e91cbb16b4ad (Facebook) ######
-appid;-;
-appid_required;-;
-like_button;-;
-like_button_desc;-;
-profile_url;-;
-profile_url_desc;-;
-
-
-###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
-If you turn on this feature, it will try to get the company information from  brreg. Simplify the form significantly.;-;
-
-
-###### dabb8a85_f593_43ec_bf0d_240467118a40 (News) ######
-add_news;-;
-create_news_desc;-;
 subscribe_news;-;
-
-
-###### dcd22afc_79ba_4463_bb5c_38925468ae26 (ProductManager) ######
-more;-;
-
-
-###### 17c48891_6f7a_47a0_849d_b50de9af218f (GoogleMaps) ######
-latitude;-;
-longitide;-;
 zoom;-;
 
 

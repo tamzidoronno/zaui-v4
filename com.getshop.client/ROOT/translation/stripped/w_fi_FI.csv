@@ -1,149 +1,204 @@
-###### framework ######
-0-100 km/h;-;
-A red theme that can be used when selling exciting things;-;
-All fields are required;-;
-All fields are required.;-;
-An email has been sent to you with the confirmation code.;-;
-Application;-;
-Apply coupon;-;
-April;-;
-August;-;
-Banner settings;-;
-Buy;-;
-By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;
+###### 900e5f6b_4113_46ad_82df_8dafe7872c99 (CartManager) ######
 Cart overview;-;
-Changes has been saved!;-;
 Checkout;-;
-Click here to edit the text.;-;
 Click next to select shipping options;-;
-Company;-;
-Configure banner slider;-;
+Failed;-;
+I agree to the terms and conditions;-;
+Invalid email address;-;
+Invalid payment method;-;
+Password missmatch;-;
+Please select a payment method.;-;
+Please select a valid payment method;-;
+Registration details;-;
+Shipping price;-;
+The email already exists, please log on to continue.;-;
+The passwords does not match.;-;
+Use a different email;-;
+Was not able to get payment methods, please check your postcode;-;
+read;-;
+
+
+###### 70ace3f0_3981_11e3_aa6e_0800200c9a66 (InvoicePayment) ######
+InvoicePayment;-;
+Thank you for your order, an email has been sent to you with the invoice attached. We will ship the items as soon as we have received the payment.;-;
+
+
+###### 2afb045b_fa01_4398_8582_33f212bb8db8 (Chat) ######
+Our local time is:;-;
+Please select a user in the left menu;-;
+You need to select at least one to send back message to;-;
+if we dont answer, please leave your email here and we will return your message asap.;-;
+
+
+###### df435931_9364_4b6a_b4b2_951c90cc0d70 (Login) ######
+An email has been sent to you with the confirmation code.;-;
+Email sent;-;
+Password cannot be empty;-;
+Password does not match, please re enter password;-;
+Password has been successfully updated;-;
+Password has been updated;-;
+
+
+###### framework ######
+A red theme that can be used when selling exciting things;-;
 Continue;-;
 Cookies are being stored;-;
 Country;-;
 Coupon;-;
 Coupon discount;-;
-Date;-;
-December;-;
 Delete image;-;
-Details;-;
-Did not find the specified company, please check your company number;-;
-Download ebill;-;
-Email sent;-;
-End date;-;
-Enter organisation number and this will be filled out automatically;-;
-Failed;-;
 Featured Product;-;
-February;-;
 Free shipping;-;
-Friday;-;
-Got a coupon from use? Apply it and get discount.;-;
-Group;-;
-I agree to the terms and conditions;-;
-I am sorry, but all fields are required before sending a message.;-;
-Invalid email address;-;
-Invalid payment method;-;
 Invoice email;-;
-InvoicePayment;-;
-January;-;
-July;-;
-June;-;
-Les mer;-;
-Loading data... please wait;-;
-March;-;
-May;-;
-Message;-;
-Message from a customer;-;
-Monday;-;
 Name;-;
 New message;-;
-November;-;
-Number of instances added;-;
-October;-;
-Order sent;-;
-Organisation;-;
-Original (hp);-;
-Original (nm);-;
-Other images;-;
-Our local time is:;-;
-Password cannot be empty;-;
-Password does not match, please re enter password;-;
-Password has been successfully updated;-;
-Password has been updated;-;
-Password missmatch;-;
-Payment;-;
-Payment information;-;
-Payment successfully completed;-;
 Please check your delivery options.;-;
-Please select a payment method.;-;
-Please select a user in the left menu;-;
-Please select a valid payment method;-;
 Please select department;-;
 Post code;-;
-Price and plans;-;
-Product count;-;
-Registration details;-;
 Reminder;-;
-Reminder sent by email;-;
-Saturday;-;
 Send us mail;-;
-September;-;
-Shipment settings;-;
-Shipping cost;-;
-Shipping price;-;
-Sign up;-;
 Sorry;-;
+Success;-;
+Terms and Conditions;-;
+Thank you for your order.;-;
+To be able to serve you we need to store a tiny amount of data about your browser. An identification id is being generated and added to your web browser. This allows us to track you for a two hours periode while you are navigating this site. This data is anonymous and are only being used to identify your web browser and not you as a person.;-;
+Total;-;
+Weight;-;
+What's on your mind?;-;
+Wrong delivery method;-;
+email;-;
+included taxes;-;
+location;-;
+login;-;
+org;-;
+
+
+###### 2ebd7c69_eba3_4b7e_85c6_0e0bd274aad0 (SedoxCarList) ######
+0-100 km/h;-;
+Original (hp);-;
+Original (nm);-;
 Stage 1 (hp):;-;
 Stage 1 (nm):;-;
 Stage 2 (hp):;-;
 Stage 2 (nm):;-;
 Stage 3 (hp):;-;
 Stage 3 (nm):;-;
-Start date;-;
-Status;-;
-Stop;-;
-Success;-;
-Sunday;-;
-Terms and Conditions;-;
-Thank you for ordering with Sisow ebill;-;
-Thank you for your order.;-;
-Thank you, you will now be redirected to the payment service;-;
-The email address is invalid.;-;
-The email already exists, please log on to continue.;-;
-The event has been confirmed.;-;
-The passwords does not match.;-;
-Thursday;-;
-To be able to serve you we need to store a tiny amount of data about your browser. An identification id is being generated and added to your web browser. This allows us to track you for a two hours periode while you are navigating this site. This data is anonymous and are only being used to identify your web browser and not you as a person.;-;
 Top speed;-;
-Total;-;
-Tuesday;-;
-Use a different email;-;
-Was not able to get payment methods, please check your postcode;-;
-We host events at the following locations, click on the location to filter the calendar by location(s);-;
-Wednesday;-;
-Weight;-;
+
+
+###### 098bb0fe_eb51_42c6_9fbb_dadb7b52dd56 (Shipper) ######
+Shipment settings;-;
+
+
+###### 32c15c30_d665_11e2_8b8b_0800200c9a66 (RealEstate) ######
+Les mer;-;
+
+
+###### c4d7bec0_185f_11e3_8ffd_0800200c9a66 (Sisow) ######
+By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;
+Download ebill;-;
+Payment successfully completed;-;
+Thank you for ordering with Sisow ebill;-;
+Thank you, you will now be redirected to the payment service;-;
 What email address do you want the ebill to be sent to?;-;
-What's on your mind?;-;
-Wrong delivery method;-;
-You are being transferred to paypal, please wait...;-;
-You need to select at least one to send back message to;-;
-Your are now signed up for the event;-;
-Your message has been delivered;-;
 Your order has been canceled due to incorrect payment information, please try again.;-;
 Your order has now been completed and is waiting to be shipped.;-;
 Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;
+
+
+###### d612904c_8e44_4ec0_abf9_c03b62159ce4 (Banner) ######
+Banner settings;-;
+
+
+###### 96de3d91_41f2_4236_a469_cd1015b233fc (Contact) ######
+All fields are required.;-;
+Company;-;
+I am sorry, but all fields are required before sending a message.;-;
+Message;-;
+Message from a customer;-;
+The email address is invalid.;-;
+Your message has been delivered;-;
+
+
+###### 1051b4cf_6e9f_475d_aa12_fc83a89d2fd4 (TopMenu) ######
+Menu;-;
+
+
+###### 6f3bc804_02a1_44b0_a17d_4277f0c6dee8 (Calendar) ######
+April;-;
+August;-;
+December;-;
+February;-;
+Friday;-;
+January;-;
+July;-;
+June;-;
+March;-;
+May;-;
+Monday;-;
+November;-;
+October;-;
+Reminder sent by email;-;
+Saturday;-;
+September;-;
+Sunday;-;
+The event has been confirmed.;-;
+Thursday;-;
+Tuesday;-;
+We host events at the following locations, click on the location to filter the calendar by location(s);-;
+Wednesday;-;
+description;-;
+
+
+###### 74ea4e90_2d5a_4290_af0c_230a66e09c78 (Booking) ######
+All fields are required;-;
+Date;-;
+Did not find the specified company, please check your company number;-;
+Enter organisation number and this will be filled out automatically;-;
+Loading data... please wait;-;
+Sign up;-;
+Stop;-;
+Your are now signed up for the event;-;
 change;-;
 course;-;
-description;-;
-email;-;
-if we dont answer, please leave your email here and we will return your message asap.;-;
-included taxes;-;
-location;-;
-login;-;
-org;-;
 orgnummer;-;
 phone;-;
-read;-;
+
+
+###### 27716a58_0749_4601_a1bc_051a43a16d14 (OrderManager) ######
+Order sent;-;
+Payment information;-;
+Product count;-;
+Status;-;
+
+
+###### dcd22afc_79ba_4463_bb5c_38925468ae26 (ProductManager) ######
+Buy;-;
+Click here to edit the text.;-;
+Details;-;
+Other images;-;
 shipping;-;
+
+
+###### 90cd1330_2815_11e3_8224_0800200c9a66 (Coupon) ######
+Apply coupon;-;
+Got a coupon from use? Apply it and get discount.;-;
+
+
+###### c7736539_4523_4691_8453_a6aa1e784fc1 (PayPal) ######
+Shipping cost;-;
+You are being transferred to paypal, please wait...;-;
+
+
+###### 6c245631_effb_4fe2_abf7_f44c57cb6c5b (Account) ######
+Application;-;
+Changes has been saved!;-;
+End date;-;
+Group;-;
+Number of instances added;-;
+Organisation;-;
+Payment;-;
+Price and plans;-;
+Start date;-;
 
 

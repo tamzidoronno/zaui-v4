@@ -112,7 +112,7 @@ $(function() {
         var url = getUrl(link);
 
         if (link.indexOf(".html") > -1 || link.indexOf(".htm") > -1) {
-            link = "?rewrite=" + link.substring(link.lastIndexOf("/") + 1, link.lastIndexOf("."));
+            link = "?rewrite=" + encodeURIComponent(link.substring(link.lastIndexOf("/") + 1, link.lastIndexOf(".")));
         }
 
         var ajaxLink = getUrl(link);
@@ -216,7 +216,7 @@ thundashop.common.saveCKEditor = function(data, target, notify) {
 thundashop.common.activateCKEditor = function(id, config) {
     var autogrow = false;
     var showMenu = true;
-    var autofocus = false;
+    var autofocus = true;
     var notinline = false;
     var notdestroyonblur = false;
     var saveCallback = false;
@@ -263,14 +263,12 @@ thundashop.common.activateCKEditor = function(id, config) {
         on: {
             blur: function(event) {
                 var data = event.editor.getData();
-                if (saveCallback) {
-                    saveCallback(data);
-                }
-
                 if (notdestroyonblur) {
                     return;
                 }
-
+                if (saveCallback) {
+                    saveCallback(data); 
+               }
                 var data = event.editor.getData();
                 if (!notinline) {
                     if (pushToBackend) {
@@ -382,6 +380,12 @@ thundashop.common.showInformationBox = function(event, title, avoidScroll) {
         appid = event.core.appid;
     }
     var infoBox = thundashop.common.createInformationBox(appid, title, true);
+    if(event.core.appname === undefined) {
+        event.core.appname = "";
+    }
+    if(event.core.apparea === undefined) {
+        event.core.apparea = "";
+    }
     infoBox.attr('app', event.core.appname);
     infoBox.attr('apparea', event.core.apparea);
     infoBox.addClass(event.core.appname);

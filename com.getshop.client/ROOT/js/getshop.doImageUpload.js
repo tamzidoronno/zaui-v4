@@ -55,11 +55,11 @@
         if (autosave) {
             open = false;
         }
-        
+
         var infobox = thundashop.common.createInformationBox($(this).closest('.app').attr('appid'), 'Crop image', open);
         infobox.html('<center id="uploadedimagerow"></center>');
         infobox.find('#uploadedimagerow').html('<img id="uploadedimage">');
-        infobox.find('#uploadedimagerow').append('<div class="button add_image_button"><div class="rightglare"></div><div class="filler"></div><ins>Save image</ins></div>');
+        infobox.find('#uploadedimagerow').append('<div class="button add_image_button"><div class="rightglare"></div><div class="filler"></div><ins>'+__f("Save image")+'</ins></div>');
 
         function generateCompressionRate(img, width, height) {
             if (img.width >= img.height) {
@@ -101,27 +101,27 @@
         }
 
         function cropImage(x1, x2, y1, y2) {
-            if(x1 < 0) {
+            if (x1 < 0) {
                 x1 = 0;
             }
-            if(x2 < 0) {
+            if (x2 < 0) {
                 x2 = 0;
             }
-            if(y1 < 0) {
+            if (y1 < 0) {
                 y1 = 0;
             }
-            if(y2 < 0) {
+            if (y2 < 0) {
                 y2 = 0;
             }
-            
+
             var imgwidth = imagebox.width();
-            var imgheight = imagebox.height();            
+            var imgheight = imagebox.height();
             var compression = generateCompressionRate(originalCanvas, previewWidth, previewHeight);
-            
-            if(!keepAspect) {
+
+            if (!keepAspect) {
                 imgheight = (y2 - y1) / compression;
             }
-            
+
             var canvas = document.createElement("canvas");
             var ctx = canvas.getContext("2d");
 
@@ -149,7 +149,7 @@
             } else {
                 imagebox.find('.imagecontainer').html('<img src="' + data + '" class="displayed_image">');
             }
-            if(autohideinfobox) {
+            if (autohideinfobox) {
                 thundashop.common.hideInformationBox();
             }
 
@@ -160,24 +160,26 @@
                 var event = thundashop.Ajax.createEvent('', 'saveCroppedImage', ajaxTarget, {data: data, extra: extra, cords: cords, imageheight: imagebox.height()});
                 thundashop.Ajax.post(event, function() {
                     thundashop.common.removeNotificationProgress(id + "_1");
-                }, null, autosave,true, {
+                }, null, autosave, true, {
                     "uploadcallback": function(percentage) {
-                        if(progressCallback) {
+                        if (progressCallback) {
                             progressCallback(percentage);
                         }
                     }
                 });
             }
             if (saveOriginal) {
+                var compression = generateCompressionRate(originalCanvas, previewWidth, previewHeight);
+
                 thundashop.common.addNotificationProgress(id + "_2", "Saving original image");
-                var event = thundashop.Ajax.createEvent('', 'saveOriginalImage', ajaxTarget, {data: origdata, extra: extra});
+                var event = thundashop.Ajax.createEvent('', 'saveOriginalImage', ajaxTarget, {data: origdata, extra: extra, "cords": cords, "compression" : compression});
                 event.synchron = true;
                 thundashop.Ajax.post(event, function(data) {
                     thundashop.common.removeNotificationProgress(id + "_2");
                     saveOriginalCallback(data);
                 }, null, true, true, {
                     "uploadcallback": function(percentage) {
-                        if(progressCallback) {
+                        if (progressCallback) {
                             progressCallback(percentage);
                         }
                     }
@@ -195,7 +197,7 @@
             infobox.find('.add_image_button').on('click', insertImage);
 
             var ratio = imagebox.width() / imagebox.height();
-            if(!keepAspect) {
+            if (!keepAspect) {
                 ratio = false;
             }
 

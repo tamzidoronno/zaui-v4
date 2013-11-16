@@ -380,6 +380,12 @@ thundashop.common.showInformationBox = function(event, title, avoidScroll) {
         appid = event.core.appid;
     }
     var infoBox = thundashop.common.createInformationBox(appid, title, true);
+    if(event.core.appname === undefined) {
+        event.core.appname = "";
+    }
+    if(event.core.apparea === undefined) {
+        event.core.apparea = "";
+    }
     infoBox.attr('app', event.core.appname);
     infoBox.attr('apparea', event.core.apparea);
     infoBox.addClass(event.core.appname);

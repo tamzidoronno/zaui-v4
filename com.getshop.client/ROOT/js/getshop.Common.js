@@ -21,7 +21,8 @@ $(document).on('focus', '.gray', function() {
 
 (function($) {
     $.fn.liveFileupload = function(opts) {
-        this.on("mouseover", function() {
+        $(this).on("mouseenter", function() {
+            alert('enter');
             if (!$(this).data("init")) {
                 $(this).data("init", true).fileupload(opts);
             }
@@ -267,8 +268,8 @@ thundashop.common.activateCKEditor = function(id, config) {
                     return;
                 }
                 if (saveCallback) {
-                    saveCallback(data); 
-               }
+                    saveCallback(data);
+                }
                 var data = event.editor.getData();
                 if (!notinline) {
                     if (pushToBackend) {
@@ -380,10 +381,10 @@ thundashop.common.showInformationBox = function(event, title, avoidScroll) {
         appid = event.core.appid;
     }
     var infoBox = thundashop.common.createInformationBox(appid, title, true);
-    if(event.core.appname === undefined) {
+    if (event.core.appname === undefined) {
         event.core.appname = "";
     }
-    if(event.core.apparea === undefined) {
+    if (event.core.apparea === undefined) {
         event.core.apparea = "";
     }
     infoBox.attr('app', event.core.appname);
@@ -411,7 +412,7 @@ $(document).on('click', '#messagebox .okbutton', function() {
 
 thundashop.common.Alert = function(title, message, error) {
     $("#messagebox").find('.title').html(title);
-    if (typeof(message) == "undefined")
+    if (typeof(message) === "undefined")
         message = "";
 
     $("#messagebox").removeClass('error');
@@ -550,7 +551,7 @@ getImageElement = function(scope) {
 }
 
 $(document).on('mouseenter', '.editormode .deleteable', function() {
-    if ($(this).find('#file_selection').size() == 0) {
+    if ($(this).find('#file_selection').size() === 0) {
         $(this).find('.trash').show();
     }
 });
@@ -568,45 +569,48 @@ $(document).on('click', '.editormode .deleteable .trash', function(e) {
     thundashop.Ajax.post(event);
 });
 
-$('.imageUploader').liveFileupload({
-    url: 'handler.php',
-    sequentialUploads: true,
-    getImageElement: function() {
-    },
-    add: function(e, data) {
-        getImageElement(this).prepend("<div id='progress'></div>");
-        data.submit();
-    },
-    start: function(e, data) {
-        $(this).find('#progress').html('0% Complete');
-    },
-    progress: function(e, data) {
-        var imageContainer = getImageElement(this);
-        var image = imageContainer.find('img');
+$(document).on('mouseenter', '.imageUploader', function() {
+    if (!$(this).data("init")) {
+        $(this).data("init", true);
+        $(this).fileupload({
+            url: 'handler.php',
+            sequentialUploads: true,
+            add: function(e, data) {
+                getImageElement(this).prepend("<div id='progress'></div>");
+                data.submit();
+            },
+            start: function(e, data) {
+                $(this).find('#progress').html('0% Complete');
+            },
+            progress: function(e, data) {
+                var imageContainer = getImageElement(this);
+                var image = imageContainer.find('img');
 
-        if (image)
-            image.remove();
+                if (image)
+                    image.remove();
 
-        var percentage = Math.round((e.loaded / e.total) * 100);
-        imageContainer.find('#progress').html(percentage + '% Complete');
-    },
-    done: function(e, data) {
-        var id = data.result.imageId;
-        var rand = Math.random();
-        var width = $(this).attr('width');
-        var height = $(this).attr('height');
+                var percentage = Math.round((e.loaded / e.total) * 100);
+                imageContainer.find('#progress').html(percentage + '% Complete');
+            },
+            done: function(e, data) {
+                var id = data.result.imageId;
+                var rand = Math.random();
+                var width = $(this).attr('width');
+                var height = $(this).attr('height');
 
-        var imageContainer = getImageElement(this);
-        imageContainer.find('#progress').remove();
-        imageContainer.html('<img gsname="imgId" gsvalue="' + id + '" src="displayImage.php?id=' + id + '&rand=' + rand + '&height=' + height + '&width=' + width + '">');
-        imageContainer.prepend('<span imageId="' + id + '" class="trash"></span>');
+                var imageContainer = getImageElement(this);
+                imageContainer.find('#progress').remove();
+                imageContainer.html('<img gsname="imgId" gsvalue="' + id + '" src="displayImage.php?id=' + id + '&rand=' + rand + '&height=' + height + '&width=' + width + '">');
+                imageContainer.prepend('<span imageId="' + id + '" class="trash"></span>');
 
-        var dataMessage = {
-            result: data.result,
-            appname: $(this).closest('.app').attr('app')
-        };
+                var dataMessage = {
+                    result: data.result,
+                    appname: $(this).closest('.app').attr('app')
+                };
 
-        PubSub.publish('IMAGE_UPLOADED', dataMessage);
+                PubSub.publish('IMAGE_UPLOADED', dataMessage);
+            }
+        });
     }
 });
 
@@ -708,7 +712,9 @@ $(document).on('mouseenter', '.getshop_ckeditorcontent', function() {
     if (!$(this).hasClass('cke_editable')) {
         var id = guid();
         $(this).attr('id', id);
-        thundashop.common.activateCKEditor(id, true, true, false);
+        thundashop.common.activateCKEditor(id, {
+            "autofocus": false
+        });
         $(this).addClass('cke_focus');
     }
 });

@@ -179,6 +179,10 @@
                     saveOriginalCallback(data);
                 }, null, true, true, {
                     "uploadcallback": function(percentage) {
+                        percentage = Math.round(percentage);
+                        $('.'+id + "_2").find('.progresscount').remove();
+                        $('.'+id + "_2").append(' <span class="progresscount">'+percentage+"%</span>");
+                        
                         if (progressCallback) {
                             progressCallback(percentage);
                         }

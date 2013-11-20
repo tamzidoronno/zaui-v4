@@ -117,7 +117,6 @@ class Factory extends FactoryBase {
         echo "\n" . '<script type="text/javascript" src="js/PubSub.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/mutate.events.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/mutate.min.js"></script>';
-//        
         echo "\n" . '<script type="text/javascript" src="js/getshop.ApplicationManager.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.Administration.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.base64.js"></script>';
@@ -369,6 +368,7 @@ class Factory extends FactoryBase {
         echo '<link rel="stylesheet" type="text/css" href="js/datatables/demo_table.css" />';
         echo '<link rel="stylesheet" type="text/css" href="js/datatables/demo_page.css" />';
         echo "\n" . '<link rel="stylesheet" type="text/css" href="/skin/default/applicationPicker.css">';
+        echo "\n" . '<link rel="stylesheet" href="skin/default/fontawesome/css/font-awesome.min.css">';
 
         // LA STÅ!
         echo '<link rel="stylesheet" type="text/css" href="/js/jquery.ui/css/smoothness/jquery-ui-1.9.2.custom.min.css">';

@@ -28,8 +28,8 @@
     background-image: url('images/application_box_background_empty_area.png');
     height: 54px;
     width: 57px;
-    border-right: solid 1px #9b9b9b;
-    border-left: solid 1px #DDD;
+    border-right: solid 1px #6b6a6b;
+    border-left: solid 1px #6b6a6b;
     cursor: pointer;
 }
 

@@ -164,8 +164,15 @@ GetShopToolbox.prototype = {
         });
 
         if (config.icon) {
-            var img = $('<img/>');
-            img.attr('src', config.icon);
+            if(config.icontype !== "undefined" && config.icontype === "awesome") {
+                var img = $('<i></i>');
+                img.addClass("fa");
+                img.addClass(config.icon);
+                img.css('font-size', config.iconsize + "px");
+            } else {
+                var img = $('<img/>');
+                img.attr('src', config.icon);
+            }
             img.attr('alt', config.title);
             item.append(img);
         }

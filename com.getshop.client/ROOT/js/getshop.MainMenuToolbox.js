@@ -6,13 +6,17 @@ $(document).ready(function() {
         title: __f("MainMenu"),
         items: [
             {
-                icon: "/skin/default/images/add_product.png",
+                icontype: "awesome",
+                icon: "fa-inbox",
+                iconsize : "30",
                 title: __f("Product list"),
                 click: app.ProductManager.loadImportProduct,
                 class: 'layout'
             },
             {
-                icon: "/skin/default/images/icons/layouts.png",
+                icontype: "awesome",
+                icon: "fa-th",
+                iconsize : "30",
                 click: thundashop.MainMenu.showPageLayoutSelection,
                 title: __f("Select different page layouts"),
                 disableOnSystemPages: true,
@@ -24,7 +28,9 @@ $(document).ready(function() {
                 disableOnSystemPages: true
             },
             {
-                icon: "/skin/default/images/lock.png",
+                icontype: "awesome",
+                icon: "fa-lock",
+                iconsize : "30",
                 click: thundashop.app.productmanager.uploadImage,
                 extraArgs: {},
                 items: [
@@ -61,21 +67,27 @@ $(document).ready(function() {
                 disableOnSystemPages: true
             },
             {
-                icon: "/skin/default/images/add_plus.png",
+                icontype: "awesome",
+                icon: "fa-plus",
+                iconsize : "30",
                 title: __f("Add more applications to this page."),
                 click: thundashop.MainMenu.showAddApplication,
                 extraArgs: {},
                 disableOnSystemPages: true
             },
             {
-                icon: "/skin/default/images/trash-can.png",
+                icontype: "awesome",
+                icon: "fa-trash-o",
+                iconsize : "30",
                 title: __f("Remove applications that are added"),
                 click: thundashop.MainMenu.deleteApplicationClicked,
                 extraArgs: {},
                 disableOnSystemPages: true
             },
             {
-                icon: "/skin/default/images/reorder.png",
+                icontype: "awesome",
+                icon: "fa-arrows-v",
+                iconsize : "30",
                 title: __f("Move applications"),
                 click: thundashop.MainMenu.reorderApplicationClicked,
                 extraArgs: {},
@@ -86,13 +98,17 @@ $(document).ready(function() {
                 title: __f('Webshop')
             },
             {
-                icon: "/skin/default/images/color-palette.png",
+                icontype: "awesome",
+                icon: "fa-picture-o",
+                iconsize : "30",
                 title: __f("Change/select theme/skin"),
                 click: thundashop.MainMenu.showHideDesignSelection,
                 extraArgs: {}
             },
             {
-                icon: "/skin/default/images/settings.png",
+                icontype: "awesome",
+                icon: "fa-gear",
+                iconsize : "30",
                 title: __f("Store settings / more applications available here"),
                 click: function() {
                     navigate('?page=settings');
@@ -100,7 +116,9 @@ $(document).ready(function() {
                 extraArgs: {}
             },
             {
-                icon: "/skin/default/images/domain-names.png",
+                icontype: "awesome",
+                icon: "fa-globe",
+                iconsize : "30",
                 title: __f("Setup your own domain"),
                 click: function() {
                     navigate('?page=domain');
@@ -108,7 +126,9 @@ $(document).ready(function() {
                 extraArgs: {}
             },
             {
-                icon: "/skin/default/images/page.png",
+                icontype: "awesome",
+                icon: "fa-gears",
+                iconsize : "30",
                 title: __f("Page settings"),
                 click: thundashop.MainMenu.goToStoresettings,
                 extraArgs: {},

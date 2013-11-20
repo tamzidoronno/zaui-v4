@@ -1243,6 +1243,8 @@ font-size: 10px;
 line-height: 40px;
 }
 
+.GetShopToolbox i { padding-top: 5px; color:#FFFFFF;  }
+
 .designselectionbox .design .price { opacity:0.8; position:absolute; border: solid 1px #BBB; bottom: 4px; right:4px; background-color:#FFF; padding:1px;border-radius: 5px; }
 .designselectionbox .close { cursor:pointer; position:absolute; top: 0px; right:0px; background-color:#FFF; padding: 3px; border: solid 1px #DDD;border-bottom-left-radius: 10px; }
 .designselectionbox .colorselection { position:absolute; width: 300; height: 150px; right: 0px; border-left:solid 1px #BBB; bottom: 0px; background-color:#EFEFEF; }
@@ -1457,3 +1459,4 @@ margin-left:256px;
 .gs_tab_area_active { display:block; }
 
 .colorpicker { z-index: 1000; }
+.empty_app_area .fa { color:#ffffff; font-size: 40px; padding-top: 8px; }

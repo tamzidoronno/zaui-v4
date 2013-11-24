@@ -1,4 +1,4 @@
-package com.thundashop.core.databasemanager;
+package com.thundashop.core.databasemanager.updatescripts;
 
 import com.google.code.morphia.Morphia;
 import com.mongodb.DB;

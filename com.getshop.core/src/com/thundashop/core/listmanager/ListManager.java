@@ -10,6 +10,7 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.listmanager.data.Entry;
 import com.thundashop.core.listmanager.data.EntryList;
+import com.thundashop.core.listmanager.data.ListType;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
 import java.util.ArrayList;
@@ -166,7 +167,7 @@ public class ListManager extends ManagerBase implements IListManager {
         saveToDatabase(entry);
     }
 
-    private EntryList getEntryList(String appId) {
+    private EntryList getEntryListInternal(String appId) {
         if (allEntries.get(appId) == null) {
             allEntries.put(appId, new EntryList());
             allEntries.get(appId).appId = appId;
@@ -184,7 +185,7 @@ public class ListManager extends ManagerBase implements IListManager {
         }
 
         //Now sort.
-        EntryList list = getEntryList(getListIdFromEntry(toSortEntry));
+        EntryList list = getEntryListInternal(getListIdFromEntry(toSortEntry));
 
         List<Entry> toSortList;
         if (toSortParent != null) {
@@ -244,7 +245,7 @@ public class ListManager extends ManagerBase implements IListManager {
             //Place it correctly.
             if (parentId.equals("")) {
                 toSortEntry.parentId = "";
-                getEntryList(listId).entries.add(toSortEntry);
+                getEntryListInternal(listId).entries.add(toSortEntry);
             } else {
                 Entry parent = getEntry(parentId);
                 if (parent.subentries == null) {
@@ -267,7 +268,7 @@ public class ListManager extends ManagerBase implements IListManager {
         }
         Entry parent = getEntry(entry.parentId);
         if (parent == null) {
-            toRemove = getEntryList(listId).entries;
+            toRemove = getEntryListInternal(listId).entries;
         } else {
             toRemove = parent.subentries;
         }
@@ -401,6 +402,18 @@ public class ListManager extends ManagerBase implements IListManager {
     public List<String> getLists() {
         return new ArrayList<>(this.allEntries.keySet());
     }
+    
+    @Override
+    public List<EntryList> getAllListsByType(String inType) {
+        ListType type = ListType.valueOf(inType);
+        ArrayList<EntryList> allLists = new ArrayList();
+        for (EntryList list : allEntries.values()) {
+            if (list.type != null && list.type.equals(type)) {
+                allLists.add(list);
+            }
+        }
+        return allLists;
+    }
 
     private void unsetNull(List<Entry> entries) {
         for(Entry entry : entries) {
@@ -430,7 +443,7 @@ public class ListManager extends ManagerBase implements IListManager {
 
     @Override
     public void combineList(String toListId, String newListId) throws ErrorException {
-        EntryList list = getEntryList(toListId);
+        EntryList list = getEntryListInternal(toListId);
         
         if(list.extendedLists == null) {
             list.extendedLists = new ArrayList();
@@ -464,7 +477,7 @@ public class ListManager extends ManagerBase implements IListManager {
 
     @Override
     public void unCombineList(String fromListId, String toRemoveId) throws ErrorException {
-        EntryList list = getEntryList(fromListId);
+        EntryList list = getEntryListInternal(fromListId);
         if(list.extendedLists == null) {
             throw new ErrorException(1000011);
         }
@@ -490,7 +503,7 @@ public class ListManager extends ManagerBase implements IListManager {
 
     @Override
     public List<String> getCombinedLists(String listId) throws ErrorException {
-        EntryList entries = getEntryList(listId);
+        EntryList entries = getEntryListInternal(listId);
         if(entries == null) {
             throw new ErrorException(1000014);
         }
@@ -504,7 +517,7 @@ public class ListManager extends ManagerBase implements IListManager {
 
     @Override
     public void clearList(String listId) throws ErrorException {
-        EntryList entries = getEntryList(listId);
+        EntryList entries = getEntryListInternal(listId);
         if (entries == null || entries.entries == null) {
             return;
         }
@@ -621,4 +634,5 @@ public class ListManager extends ManagerBase implements IListManager {
             }
         }
     }
+    
 }

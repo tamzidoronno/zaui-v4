@@ -241,4 +241,16 @@ public interface IUserManager {
      */
     @Administrator
     public User requestAdminRight(String managerName, String managerFunction, String applicationInstanceId) throws ErrorException;
+    
+    /**
+     * Add priviliges to a another admin user.
+     * 
+     * If a user is given a privilege, all the defaults are removed.
+     * @param userId
+     * @param managerName
+     * @param managerFunction
+     * @throws ErrorException 
+     */
+    @Administrator
+    public void addUserPrivilege(String userId, String managerName, String managerFunction) throws ErrorException;
 }

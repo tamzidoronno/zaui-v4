@@ -580,5 +580,9 @@ class ApplicationManager extends FactoryBase {
         $app = $this->getFactory()->getApplicationPool()->getApplicationsInstancesByNamespace("ns_a11ac190_4f9a_11e3_8f96_0800200c9a66");
         $app[0]->renderSetup();
     }
+    
+    public function searchForPages() {
+        $this->includefile("pageSearchResult");
+    }
 }
 ?>

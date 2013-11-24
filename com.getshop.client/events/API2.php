@@ -1502,6 +1502,24 @@ class APIListManager {
      }
 
      /**
+     * Returns the entrylist of a given id.
+     * 
+     * type = MENU 
+     * type = PRODUCT
+     * 
+     * @return List
+     */
+
+     public function getAllListsByType($type) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["type"] = json_encode($this->transport->object_unset_nulls($type));
+          $data["method"] = "getAllListsByType";
+          $data["interfaceName"] = "core.listmanager.IListManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Fetch a list of all lists combined with a given list.
      * @param listId
      * @throws ErrorException 
@@ -2313,6 +2331,19 @@ class APIPageManager {
           $data['args'] = array();
           $data['args']["core_pagemanager_data_Page"] = json_encode($this->transport->object_unset_nulls($core_pagemanager_data_Page));
           $data["method"] = "savePage";
+          $data["interfaceName"] = "core.pagemanager.IPageManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
+     * Search for pages by name.
+     */
+
+     public function search($search) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["search"] = json_encode($this->transport->object_unset_nulls($search));
+          $data["method"] = "search";
           $data["interfaceName"] = "core.pagemanager.IPageManager";
           return $this->transport->sendMessage($data);
      }
@@ -3184,6 +3215,27 @@ class APIUserManager {
       function APIUserManager($transport) {
            $this->transport = $transport;
       }
+
+     /**
+     * Add priviliges to a another admin user.
+     * 
+     * If a user is given a privilege, all the defaults are removed.
+     * @param userId
+     * @param managerName
+     * @param managerFunction
+     * @throws ErrorException 
+     */
+
+     public function addUserPrivilege($userId, $managerName, $managerFunction) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+          $data['args']["managerName"] = json_encode($this->transport->object_unset_nulls($managerName));
+          $data['args']["managerFunction"] = json_encode($this->transport->object_unset_nulls($managerFunction));
+          $data["method"] = "addUserPrivilege";
+          $data["interfaceName"] = "core.usermanager.IUserManager";
+          return $this->transport->sendMessage($data);
+     }
 
      /**
      * Create a new user to your webshop.<br>

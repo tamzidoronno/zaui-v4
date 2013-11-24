@@ -90,7 +90,6 @@ Banner Slider;-;Banner slider
 Base color;-;Base farge
 Base currency;-;Hoved valutta
 Base text color;-;Base tekst farge
-Booking;-;Booking
 Booking configuration;-;Booking konfigurasjon
 Boundaries;-;Grenser
 Browse applications;-;Bla gjennom applikasjoner
@@ -146,6 +145,7 @@ Create event;-;Opprett en event
 Create new;-;Opprett ny
 Create new category;-;Lag en ny kategori
 Create new group;-;Opprett en ny gruppe
+Create new pages by dragging "New Page" to where you want the new page to be in the menu.;-;Lag en ny side med å dra "Ny side" til der du ønsker den.
 Create news;-;Opprett nyhet
 Create product;-;Opprett produkt
 Create shop;-;Opprett butikk
@@ -165,11 +165,13 @@ Customer name;-;Kundens navn
 Customer phone;-;Kundens telefon
 Customers;-;Kunder
 Deactivate Deepfreeze;-;Deaktivert deepfreeze
+Default on, turn off if you dont want to show the full description.;-;Standard på, skru denne av dersom du ønsker å vise full beskrivelse.
 Default price;-;Ordinær pris
 Delete;-;Slett
 Delete attribute;-;Slett atributt
 Delete group;-;Slett gruppe
 Delete my store;-;Slett min butikk
+Delete pages by dragging the menu entry to the garbage box.;-;Slett sider med å dra et menyvalg hit.
 Delete selected application;-;Slett valgte applikasjon
 Delete this image;-;Slett dette bildet.
 Delete user;-;Slett bruker
@@ -268,6 +270,7 @@ Invoice email field.;-;Regning epost addresse
 Is this your default picture to the product?;-;Er dette standardbildet for produktet ?
 It is extremly easy to transfer your domain name. All you have to to do is enter the domain name in the address under.;-;Det er ekstremt enkelt å overføre domenenavn ditt. Alt du trenger å gjøre er å skrive inn domenenavnet ditt under.
 It is not possible to activate this option with the current settings.;-;det er ikke mulig å aktivere denne instillingene.
+Item details;-;Detaljer
 Item price;-;Item pris
 Just add it;-;Bare legg det til
 Just click the button below;-;Bare trykk på knappen under
@@ -278,12 +281,16 @@ Last logged on;-;Sist logget på
 Left Menu;-;Venstremeny
 Lets you easily connect to paypal, and give your customers option to pay using paypal.;-;Gir deg muligheten for at dine brukere kan benytte seg av paypal.
 Link;-;Link
+Link to booking schema.;-;Hvis link til påmeldings skjema
 Link to menu;-;Link til meny
+Link to page;-;Link til side
 Mail;-;E-post
 MailManager;-;Epost behandler
 MainMenu;-;HovedMeny
 Manually select a color;-;Manuelt velg en farge
 Markers;-;Markører
+Menu Editor;-;Menu Oppsetter
+Menu editor;-;Menu oppsetter
 Menu hardlink for;-;Meny hardlink for
 Merchant id;-;Merchant id
 Merchant key;-;Merchant key
@@ -353,6 +360,7 @@ Please click on 'Add new top level variation' above;-;Vennligst tryll på 'Legg 
 Please enter your paypal address:;-;Vennligst skriv inn din paypal addresse:
 Please select;-;Vennligst velg
 Please select a shipment method.;-;Vennligst velg en betalingsmetode.
+Please select an item, this box will show you all the juice stuff that you can do to the selected item.;-;Vennligst velg et meny valg, denne boksen vil vise deg alle mulighetene du kan gjør med den.
 Please select someone to chat with at the right side;-;Vennligst velg noen å chatte med på høyre side.
 Please select your language;-;Vennligst velg ditt språk
 Please specify a name;-;Spesifiser ditt navn
@@ -429,6 +437,7 @@ Should Mister Cash be activated?;-;Skal Mister Cash være aktivert?
 Should Podium be activated?;-;Skal Podium være aktivert?
 Should Sofort Banking be activated?;-;Skal Sofort være aktivert?
 Should TLS be enabled for this smtp server?;-;Skal TLS være aktivert for smtp server?
+Should be turned on if you want to display a button where links to the booking schema.;-;Skal være aktivert dersom du ønsker å vise en link til påmeldingskjemaet.
 Should eBill be activated?;-;Skal eBill være aktivert?
 Should iDeal be activated?;-;Skal iDeal være aktivert?
 Should this product listed as a featured product?;-;Skal dette produktet være listet som et fremhevet produkt?
@@ -436,6 +445,7 @@ Show company field;-;Vi selskaps felt.
 Show location filter left for calendar;-;Vi lokasjons filter til venstre for kalenderen
 Show prices without taxes;-;Vis pris uten skatter og avgifter
 Show stock status on product?;-;Vis lagerstatus på produktet?
+Show the description for days.;-;Vis beskrivelse for dagen
 Sidebar;-;Sidebar
 Sms Statistic;-;Sms statistikk
 Some of the tabs need to be inspected before you can continue;-;Noen av tabbene må inspiseres før du kan fortsette
@@ -501,6 +511,7 @@ This is the post code that will be printed on the invoice, example 4380;-;Dette 
 This is the vat number that will be printed on the invoice, example 123456789;-;Dette er mva nummeret som blir vist på din faktura, eksempel 123456789
 This is the web address that will be printed on the invoice, example http://www.getshop.com;-; Dette er web adressen som blir vist på fakturaen, eksempel http://www.getshop.com
 This is where you can configure your current page, special settings like search engine optimization for the current page you are browser;-;Dette er hvor du kan konfigurere siden du er på, spesielle instillinger for søkemotor optimaliser, osv.
+This menu editor is powerful. To start editing your menu, please select one from the top left corner.;-;Her kan du gjøre mye med menyene, for å starte med å endre en meny, velg en av menyene på toppen.
 This option enables the posibility to restrict access to you menu entries to a given group of users.;-;Dette valget gir deg muligheten til å begrense tilgang til dine menyvalg til gitte grupper av brukere.
 This product has been deleted;-;Dette produktet har blitt slettet.
 This product list is empty, open the management portal to add products to this list.;-;Denne produktlisten er tom, gå til produktadministrasjon for å legge til produkter i denne listen.
@@ -513,6 +524,7 @@ Title for the image;-;Tittel på bildet
 Title when sending emails;-;Tittel når epost sendes.
 To change a layout for the current page, please select one from the list below.;-;For å endre nåværende layout, vennlig velg en fra listen under.
 To edit the text, move the mouse over this text. Then you will see a toolbox that you can click on, click on the pen in this toolbox.;-;For å endre teksten, flytt musen over denne teksten. Det vil da komme opp en menyboks i høyre hjørenet, trykk på den og vel pennen.
+To move pages, move them from the menu to the loose page area, then drag the loose page into another menu.;-;For å flytte sider, dra dem fra menyen til området "løse sider", deretter dra dem til den menyen du ønsker dem skal ligge på.
 To translate all visible text for your users, translate the entries below, and hit the save translation button.;-;For å lagre all tekst som er viselig for kundene dine, oversett radene under, og trykk på lagre knappen.
 Top menu;-;Top meny
 Total orders registered;-;Totalt ordrer registrert
@@ -566,6 +578,7 @@ Where you would you like to direct the user:;-;Hvis vil du at brukeren skal gå:
 Width;-;Bredde
 Withdraw from stock when order is created;-;Trekk fra lagerstatus når ordren blir laget
 Would you like to use paypal in sandbox mode?;-;Ønsker du å bruke paypal i sandbox modus?
+Wow! A menu editor.;-;Wow! En meny forandrer.
 Yes;-;Ja
 You are not logged on, please log on.;-;Du er ikke logget på, vennligst logg på.
 You can add as many images as you would like to your product, this will make your product look more attractive for your customers.;-;Du kan legge til så mange bilder du ønsker på produktet, dette vil gjør produktet ditt mer attraktiv for dine kunder.
@@ -582,6 +595,7 @@ You have not yet created any web shops, create one and they will be listed here.
 You have successfully been added or removed from the email list.;-;Du har blitt lagt til eller fjernet fra epost listen.
 You need this application if you want this webshop send emails from your email account;-;Du må konfigurere denne applikasjonen hvis du ønsker å sende epost gjennom din epost konto.
 Your attributes;-;Dine atributter
+Your menus;-;Dine menyer.
 Your merchant account is deactivated, please check with sisow to get it activated.;-;Din merchan account er deaktivert, kontakt sisow for å få den aktivert.
 Your merchant id, this id is something that sisow is providing you.;-;Din merchant id, dette før du fra sisow.
 Your merchant key and id is correct;-;Din merchant key og id er korrekt.

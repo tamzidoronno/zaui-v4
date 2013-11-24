@@ -506,4 +506,21 @@ public class UserManager extends ManagerBase implements IUserManager {
         UserStoreCollection collection = getUserStoreCollection(storeId);
         return collection.getUser((String) id);
     }
+
+    @Override
+    public void addUserPrivilege(String userId, String managerName, String managerFunction) throws ErrorException {
+        User user = getUserStoreCollection(storeId).getUser(userId);
+        
+        for (UserPrivilege privilege : user.privileges) {
+            if (privilege.managerFunction.equals(managerFunction) && privilege.managerName.equals(managerName)) {
+                return;
+            }
+        }
+        
+        UserPrivilege privelege = new UserPrivilege();
+        privelege.managerName = managerName;
+        privelege.managerFunction = managerFunction;
+        user.privileges.add(privelege); 
+        saveUser(user);
+    }
 }

@@ -1,0 +1,17 @@
+<?
+$pages = $this->getApi()->getPageManager()->search($_POST['data']['searchText']);
+
+if (!$pages || count($pages) === 0) {
+    echo $this->__f("No page found, please try to change your search criteria.");
+    return;
+}
+foreach ($pages as $page) {
+    if ($page->linkToListEntry != null) {        
+    ?>
+        <div pageId="<? echo $page->id; ?>" class="pageresult">
+            <div><? echo $page->linkToListEntry->name; ?></div>
+        </div>  
+    <?
+    }
+}
+?>

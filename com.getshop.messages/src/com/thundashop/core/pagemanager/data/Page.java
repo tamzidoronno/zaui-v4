@@ -6,8 +6,10 @@
  **/
 package com.thundashop.core.pagemanager.data;
 
+import com.google.code.morphia.annotations.Transient;
 import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.listmanager.data.Entry;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -75,6 +77,7 @@ public class Page extends DataCommon implements Cloneable {
         public static String Settings = "settings";
         public static String Domain = "domain";
         public static String Callback = "callback";
+        public static String MenuEditor = "menueditor";
     }
 
     public static class PageType {
@@ -89,6 +92,12 @@ public class Page extends DataCommon implements Cloneable {
     public int userLevel = 0;
     public String description = "";
     private HashMap<String, PageArea> pageAreas = new HashMap<String, PageArea>();
+    
+    /**
+     * This might not be set, only in just a few cases.
+     */
+    @Transient
+    public Entry linkToListEntry;
     
     public void populateApplications(Map<String, AppConfiguration> applications, boolean onlyExtraApplications) {
         for (PageArea pageArea : pageAreas.values()) {

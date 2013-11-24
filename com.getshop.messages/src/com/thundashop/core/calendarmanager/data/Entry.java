@@ -22,7 +22,8 @@ public class Entry implements Serializable, Comparable<Entry> {
     public boolean isOriginal = true;
     
     public boolean needConfirmation = false;
-    
+
+    public String linkToPage = "";
     public String description;
     public String starttime;
     public String location;
@@ -54,6 +55,7 @@ public class Entry implements Serializable, Comparable<Entry> {
         this.color = entry.color;
         this.year = entry.year;
         this.month = entry.month;
+        this.linkToPage = entry.linkToPage;
         this.day = entry.day;
     }
 

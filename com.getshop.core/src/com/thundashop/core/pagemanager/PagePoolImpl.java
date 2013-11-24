@@ -62,6 +62,7 @@ public class PagePoolImpl {
         pageLayout.put(Page.DefaultPages.Settings, Page.PageType.HeaderMiddleFooter);
         pageLayout.put(Page.DefaultPages.Domain, Page.PageType.HeaderMiddleFooter);
         pageLayout.put(Page.DefaultPages.Callback, Page.PageType.HeaderMiddleFooter);
+        pageLayout.put(Page.DefaultPages.MenuEditor, Page.PageType.HeaderMiddleFooter);
     }
 
     public void addFromDatabase(Page page) {
@@ -222,6 +223,10 @@ public class PagePoolImpl {
         
         if (Page.DefaultPages.Callback.equals(page.id)) {
             addApplication("5474c225-cc7b-4576-83bb-1ad8bf35be8f", page, PageArea.Type.MIDDLE);
+        }
+        
+        if (Page.DefaultPages.MenuEditor.equals(page.id)) {
+            addApplication("a11ac190-4f9a-11e3-8f96-0800200c9a66", page, PageArea.Type.MIDDLE);
         }
     }
 

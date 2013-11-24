@@ -10,6 +10,9 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.listmanager.ListManager;
+import com.thundashop.core.listmanager.data.Entry;
+import com.thundashop.core.listmanager.data.EntryList;
+import com.thundashop.core.listmanager.data.ListType;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageArea;
 import com.thundashop.core.productmanager.ProductManager;
@@ -367,6 +370,43 @@ public class PageManager extends ManagerBase implements IPageManager {
         }
         
         return new HashMap();
+    }
+    
+    private List<Entry> searchEntry(List<Entry> entries, String search) {
+        List<Entry> retEntries = new ArrayList();
+        for (Entry entry : entries) {
+            if (entry.subentries != null && entry.subentries.size() > 0) {
+                List<Entry> subEntries = searchEntry(entry.subentries, search);
+                retEntries.addAll(subEntries);
+            }
+            if (entry.name != null && entry.name.toLowerCase().contains(search.toLowerCase())) {
+                retEntries.add(entry);
+            }
+        }
+        
+        return retEntries;
+    }
+
+    @Override
+    public List<Page> search(String search) throws ErrorException {
+        ListManager listManager = getManager(ListManager.class);
+        List<Page> retPages = new ArrayList();
+        
+        if (search == null || search.length() < 3) {
+            return retPages;
+        }
+        
+        List<EntryList> allListsByType = listManager.getAllListsByType(ListType.MENU.toString());
+        for (EntryList list : allListsByType) {
+            List<Entry> founds = searchEntry(list.entries, search);
+            for (Entry found : founds) {
+                Page foundPage = getPage(found.pageId);
+                foundPage.linkToListEntry = found;
+                retPages.add(foundPage);
+            }
+        }
+        
+        return retPages;
     }
 
 }

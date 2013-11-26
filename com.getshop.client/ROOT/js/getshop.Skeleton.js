@@ -14,7 +14,11 @@ thundashop.Skeleton = {
     hideApplication : function(currentdom) {
         $(currentdom).html(this.lastName);
     },
-    
+    settingsRemoveApplication : function(whoot, app) {
+        var id = app.attr('appid');
+        var area = app.closest('.applicationarea').attr('area');
+        thundashop.Skeleton.removeApplication(id, area);
+    },
     removeApplication : function(id, area) {
         var data = {};
         data.appid = id;

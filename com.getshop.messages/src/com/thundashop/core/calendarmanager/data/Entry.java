@@ -27,6 +27,7 @@ public class Entry implements Serializable, Comparable<Entry> {
     public String description;
     public String starttime;
     public String location;
+    public String locationExtended = "";
     public String stoptime;
     public String entryId;
     public String userId;
@@ -42,6 +43,7 @@ public class Entry implements Serializable, Comparable<Entry> {
     
     public Entry(Entry entry) {
         this.needConfirmation = entry.needConfirmation;
+        this.locationExtended = entry.locationExtended;
         this.maxAttendees = entry.maxAttendees;
         this.description = entry.description;
         this.attendees = entry.attendees;

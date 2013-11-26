@@ -143,6 +143,7 @@ getshop.PagePickerInstance.prototype = {
     resultClicked: function(name, pageId) {
         this.inputfield.attr('pageId', pageId);
         this.inputfield.val(name);
+        this.inputfield.keyup()
         this.destroy();
     },
             

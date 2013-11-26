@@ -31,6 +31,9 @@ class core_calendarmanager_data_Entry {
 	public $location;
 
 	/** @var String */
+	public $locationExtended;
+
+	/** @var String */
 	public $stoptime;
 
 	/** @var String */

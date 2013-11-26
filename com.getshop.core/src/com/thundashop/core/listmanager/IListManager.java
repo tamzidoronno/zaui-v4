@@ -4,6 +4,8 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.listmanager.data.Entry;
+import com.thundashop.core.listmanager.data.EntryList;
+import com.thundashop.core.listmanager.data.ListType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -137,4 +139,14 @@ public interface IListManager {
     public void clearList(String listId) throws ErrorException;
     
     public String getPageIdByName(String name);
+    
+    /**
+     * Returns the entrylist of a given id.
+     * 
+     * type = MENU 
+     * type = PRODUCT
+     * 
+     * @return 
+     */
+    public List<EntryList> getAllListsByType(String type);
 }

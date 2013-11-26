@@ -21,6 +21,11 @@ App = {
         this.setupListeners();
     },   
             
+    validateEmail: function(email) { 
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+    },
+    
     isDisconnected: function() {
         $('.disconnected').show();
     },
@@ -146,6 +151,21 @@ App = {
             $('#select-native-2').selectmenu();
             $('#select-native-2').selectmenu('refresh', true);
         });
+        
+        $('#signup').on('pageshow', function() {
+            if (App.filterToEntryId) {
+                var entryId = App.filterToEntryId;
+                $('#select-native-1').find('option').hide();
+                $('#select-native-1').find('[value="'+entryId+'"]').show();
+                $('#select-native-1').find('[value="'+entryId+'"]').attr('selected','selected');
+                $('#select-native-1').selectmenu('refresh', true);
+            } else {
+                $('#select-native-1').find('option').show();
+                $('#select-native-1').selectmenu('refresh', true);
+            }
+            
+            App.filterToEntryId = null;
+        });
     },
             
     nextClicked: function() {
@@ -201,10 +221,13 @@ App = {
         if (name === "") 
             $('label[for=name]').addClass('error');
         
-        if (email === "") 
+        if (email === "" || !this.validateEmail(email)) 
             $('label[for=email]').addClass('error');
         
-        if (phone === "") 
+        if (email === "" || !this.validateEmail(invoiceemail)) 
+            $('label[for=emailinvoice]').addClass('error');
+        
+        if (phone === "" || phone.length !== 8) 
             $('label[for=phone]').addClass('error');
         
         if (vatnr === "") 
@@ -223,6 +246,21 @@ App = {
             $('label[for=select-native-2]').addClass('error');
         
         var positions = $('#select-native-1').find(':selected').attr('availablepositions');
+        
+        if (!this.validateEmail(email)) {
+            alert('Epost addressen er ikke gyldig.');
+            return;
+        }
+        
+        if (!this.validateEmail(invoiceemail)) {
+            alert('Epost teknisk leder er ikke gyldig.');
+            return;
+        }
+        
+        if (phone.length !== 8) {
+            alert("Du har ikke oppgitt riktig telefonnr, det må være 8 siffer.");
+            return;
+        }
         
         if (positions === "0") {
             alert('Beklager, det er ingen ledige plasser på valgt kurs.');
@@ -250,7 +288,7 @@ App = {
                     company: company,
                     emailAddressToInvoice: invoiceemail
                 };
-
+                
                 me.getshopApi.UserManager.createUser(user).done(function(createUser) {
                     me.getshopApi.CalendarManager.addUserToEvent(createUser.id, courseId, password, createUser.username).done(function() {
                         alert('Du er nå påmeldt kurset');
@@ -576,13 +614,23 @@ App.Calendar.prototype = {
         for (day in data.days) {
             if (data.days[day].entries && data.days[day].entries.length > 0) {
                 var dayCell = $('.calendar[year='+this.year+'][month='+this.month+'] [day='+day+']');
-                dayCell.addClass('date_has_event');
+                
                 var entries = data.days[day].entries;
                 var locations = "";
+                var original = false;
                 for (entryId in entries) {
                     var entry = entries[entryId];
+                    if (entry.isOriginal) {
+                        original = true;
+                    }
                     locations += " "+entry.location;
                 }
+                
+                if (!original) {
+                    continue;
+                }
+                
+                dayCell.addClass('date_has_event');
                 dayCell.attr('locations', locations);
                 var me = this;
                 dayCell.click(function() {  
@@ -619,9 +667,13 @@ App.Calendar.prototype = {
                     pageContent = $('<div class="CourseDayEntry" data-role="content"/>');
                 
                 pageContent.html("");
+                var currentDate = new Date();
                 
                 for (entryId in entries) {
                     var entry = entries[entryId];
+                    if (!entry.isOriginal) {
+                        continue;
+                    }
                     var entryDetails = $('<div/>');
                     entryDetails.addClass('kursentry');
                     entryDetails.append("<h4>Kurs: "+entry.title+"</h4>");
@@ -629,8 +681,28 @@ App.Calendar.prototype = {
                     if (entry.stoptime) {
                         endTime = " - " + entry.stoptime;
                     }
-                    entryDetails.append("<b>Tidspunkt:</b> " + entry.starttime + endTime);
+                    
+                    if (entry.otherDays.length > 0) {
+                        var courseDays = entry.otherDays.length;
+                        courseDays++;
+                        entryDetails.append("<b>NB! Dette er et "+courseDays+" dagers kurs.</b>");
+                        entryDetails.append("<br> Dag 1: " + entry.day +" / " +entry.month +" - " + entry.year + " : "+ entry.starttime + endTime);
+                        for (var i in entry.otherDays) {
+                            var otherDay = entry.otherDays[i];
+                            var j = parseInt(i) + 2;
+                            entryDetails.append("<br> Dag "+j+": " + otherDay.day +" / " +otherDay.month +" - " + otherDay.year + " : "+ otherDay.starttime + " - " + otherDay.stoptime);
+                        }
+                    } else {
+                        entryDetails.append("<b>Tidspunkt:</b> " + entry.starttime + endTime);
+                    }
                     var availablePositions = entry.maxAttendees - entry.attendees.length;
+                    
+                    var javascriptDate = new Date(entry.year, entry.month-1, entry.day, 23, 59, 55)
+                    var inThePast = javascriptDate < currentDate;
+                    if (inThePast) {
+                        availablePositions = 0;
+                    }
+
                     var clazz = "notavailable";
                     
                     if (availablePositions > 0) {
@@ -639,11 +711,33 @@ App.Calendar.prototype = {
                         
                     entryDetails.append("<div class='freespots "+clazz+"'><div class='label'>Ledige plasser</div><div class='number'>" + availablePositions + "</div></div>");
                     entryDetails.append("<br>");
-                    entryDetails.append("<br><b>Sted</b>");
-                    entryDetails.append("<br>"+entry.location);
-                    entryDetails.append("<br>");
-                    entryDetails.append("<br><b> Beskrivelse </b>");
-                    entryDetails.append("<br>"+this.nl2br(entry.description));
+                    entryDetails.append("<br><b>Sted: </b>" + entry.location);
+                    
+                    if (entry.locationExtended) {
+                        entryDetails.append("<br>&nbsp;&nbsp;&nbsp;&nbsp;- " + entry.locationExtended);
+                    }
+                    
+                    var buttons = $('<div/>');
+                    buttons.html("<br/>");
+                        
+                    if (entry.linkToPage && entry.linkToPage != "") {
+                        var linkToPage = $("<a data-theme='a' data-role='button' data-inline='true' href='#"+entry.linkToPage+"'>Mer informasjon</a>");
+                        buttons.append(linkToPage);
+                        linkToPage.button();
+                    }
+                    
+                    if (availablePositions > 0) {
+                        var linkToSignup = $("<a data-theme='a' entry='"+entry.entryId+"' data-role='button' data-inline='true' href='#signup'>Påmelding</a>");
+                        buttons.append(linkToSignup);
+                        linkToSignup.click(function() {
+                            App.filterToEntryId = $(this).attr('entry');
+                        });
+                        linkToSignup.button();
+                    }
+
+                    entryDetails.append(buttons);
+                    
+                    
                     pageContent.append(entryDetails);
                 }
                 page.append(pageContent);

@@ -1,8 +1,23 @@
 ###### framework ######
+Create new pages by dragging "New Page" to where you want the new page to be in the menu.;-;
+Default on, turn off if you dont want to show the full description.;-;
+Delete pages by dragging the menu entry to the garbage box.;-;
 If you turn on this feature, it will try to get the company information from  brreg. Simplify the form significantly.;-;
+Item details;-;
+Link to booking schema.;-;
+Link to page;-;
+Menu Editor;-;
+Menu editor;-;
 Navigation has been disabled while image is being uploaded.;-;
+Please select an item, this box will show you all the juice stuff that you can do to the selected item.;-;
 Save image;-;
+Should be turned on if you want to display a button where links to the booking schema.;-;
+Show the description for days.;-;
 The Merchant-ID is provided by Dibs, please contact us for more information.;-;
+This menu editor is powerful. To start editing your menu, please select one from the top left corner.;-;
+To move pages, move them from the menu to the loose page area, then drag the loose page into another menu.;-;
+Wow! A menu editor.;-;
+Your menus;-;
 add_event;-;
 add_news;-;
 appid;-;

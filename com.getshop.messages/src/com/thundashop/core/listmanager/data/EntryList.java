@@ -15,5 +15,7 @@ import java.util.List;
 public class EntryList extends DataCommon {
     public List<Entry> entries = new ArrayList();
     public String appId;
+    public String name = "";
+    public ListType type = null;
     public List<String> extendedLists; 
 }

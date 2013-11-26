@@ -1,8 +1,10 @@
 ###### framework ######
 0-100 km/h;-;
 Available positions;-;
+Booking;-;
 Enter organisation number and this will be filled out automatically;-;
 Menu;-;
+More information;-;
 Original (hp);-;
 Original (nm);-;
 Stage 1 (hp):;-;
@@ -12,6 +14,7 @@ Stage 2 (nm):;-;
 Stage 3 (hp):;-;
 Stage 3 (nm):;-;
 Stop;-;
+This is a {} days event.;-;
 Top speed;-;
 course;-;
 orgnummer;-;

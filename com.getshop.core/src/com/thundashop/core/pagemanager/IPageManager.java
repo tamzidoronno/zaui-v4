@@ -265,7 +265,6 @@ public interface IPageManager {
      * @param appIds A list of application ids to resolve pages for.
      * @throws ErrorException 
      */
-    @Administrator
     public HashMap<String, List<String>> getPagesForApplications(List<String> appIds) throws ErrorException;
     
     /**
@@ -309,4 +308,9 @@ public interface IPageManager {
      */
     @Administrator
     public HashMap<String, Setting> getSecuredSettings(String applicationInstanceId);
+    
+    /**
+     * Search for pages by name.
+     */
+    public List<Page> search(String search) throws ErrorException;
 }

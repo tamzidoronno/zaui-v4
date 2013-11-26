@@ -22,6 +22,27 @@ public class APIUserManager {
       }
 
      /**
+     * Add priviliges to a another admin user.
+     * 
+     * If a user is given a privilege, all the defaults are removed.
+     * @param userId
+     * @param managerName
+     * @param managerFunction
+     * @throws ErrorException 
+     */
+
+     public void addUserPrivilege(String userId, String managerName, String managerFunction)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("userId",new Gson().toJson(userId));
+          data.args.put("managerName",new Gson().toJson(managerName));
+          data.args.put("managerFunction",new Gson().toJson(managerFunction));
+          data.method = "addUserPrivilege";
+          data.interfaceName = "core.usermanager.IUserManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Create a new user to your webshop.<br>
      * This will fail if you are trying to create a user which is granted more access then you have yourself.<br>
      * If no users has been created, then the user object will automatically be set as an administrator.<br>

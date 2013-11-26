@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.thundashop.core.databasemanager;
+package com.thundashop.core.databasemanager.updatescripts;
 
 import com.mongodb.DB;
 import com.mongodb.DBCollection;

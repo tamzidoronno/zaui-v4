@@ -19,6 +19,9 @@ class core_calendarmanager_data_Entry {
 	public $needConfirmation;
 
 	/** @var String */
+	public $linkToPage;
+
+	/** @var String */
 	public $description;
 
 	/** @var String */
@@ -26,6 +29,9 @@ class core_calendarmanager_data_Entry {
 
 	/** @var String */
 	public $location;
+
+	/** @var String */
+	public $locationExtended;
 
 	/** @var String */
 	public $stoptime;

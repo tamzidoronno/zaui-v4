@@ -53,79 +53,16 @@ public class AddApplicationsToDatabase {
 
     private List<ApplicationSettings> addApplications() {
         List<ApplicationSettings> apps = new ArrayList();
-//
-//        ApplicationSettings promotionCodes = createSettings(
-//                "Coupon",
-//                "90cd1330-2815-11e3-8224-0800200c9a66",
-//                emtpy,
-//                "",
-//                ApplicationSettings.Type.Marketing, true);
-//        promotionCodes.isPublic = true;
-//        apps.add(promotionCodes);      
-//        
-//        ApplicationSettings callback = createSettings(
-//                "Callback", 
-//                "5474c225-cc7b-4576-83bb-1ad8bf35be8f", 
-//                emtpy, 
-//                "", 
-//                ApplicationSettings.Type.System, true);
-//        callback.isPublic = true;
-//        apps.add(callback);
-//        
-//        ApplicationSettings payondelviery = createSettings(
-//                "PayOnDelivery", 
-//                "565ea7bd-c56b-41fe-b421-18f873c63a8f", 
-//                emtpy, 
-//                "", 
-//                ApplicationSettings.Type.Payment, true);
-//        payondelviery.isPublic = true;
-//        payondelviery.isSingleton = true;
-//        apps.add(payondelviery);
-//
-//        ApplicationSettings mecaTheme = createSettings(
-//                "MecaTheme", 
-//                "b1e89810-2dc3-11e3-aa6e-0800200c9a66", 
-//                emtpy, 
-//                "", 
-//                ApplicationSettings.Type.Theme, true);
-//        mecaTheme.isPublic = false;
-//        apps.add(mecaTheme);
-//
-        ApplicationSettings invoicePayment = createSettings(
-                "InvoicePayment", 
-                "70ace3f0-3981-11e3-aa6e-0800200c9a66", 
-                emtpy, 
-                "", 
-                ApplicationSettings.Type.Payment, true);
-        invoicePayment.isPublic = true;
-        apps.add(invoicePayment);
-        //
-        ApplicationSettings silvy = createSettings(
-                "SilvyTheme", 
-                "dfffd91f-f2f9-4928-ab7d-249b3e1017cf", 
-                emtpy, 
-                "", 
-                ApplicationSettings.Type.Theme, true);
-        silvy.isPublic = true;
-        silvy.isResponsive = true;
-        apps.add(silvy);
-        
-        ApplicationSettings nettmannen = createSettings(
-                "NettMannenBestilling", 
-                "d37cbec7-fbb1-4903-a7af-e372c16ac7dd", 
-                emtpy, 
-                "", 
-                ApplicationSettings.Type.Webshop, false);
-        nettmannen.isPublic = false;
-        nettmannen.allowedAreas = new ArrayList();
-        nettmannen.allowedAreas.add("small");
-        nettmannen.allowedAreas.add("medium");
-        nettmannen.allowedAreas.add("large");
-        nettmannen.allowedAreas.add("xlarge");
-        nettmannen.allowedStoreIds = new ArrayList();
-        nettmannen.allowedStoreIds.add("ca09fed1-f482-4aa6-9a53-a93128b85634");
-        apps.add(nettmannen);
-        
+
+        ApplicationSettings menuEditor = createSettings(
+                "MenuEditor",
+                "a11ac190-4f9a-11e3-8f96-0800200c9a66",
+                emtpy,
+                "",
+                ApplicationSettings.Type.System, false);
+        menuEditor.isPublic = true;
+        apps.add(menuEditor);      
+
         return apps;
     }
 

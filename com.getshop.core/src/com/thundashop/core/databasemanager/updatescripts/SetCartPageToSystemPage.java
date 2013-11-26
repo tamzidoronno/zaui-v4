@@ -2,11 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.thundashop.core.databasemanager;
+package com.thundashop.core.databasemanager.updatescripts;
 
 import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;

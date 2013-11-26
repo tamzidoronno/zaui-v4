@@ -168,6 +168,7 @@ GetShopToolbox.prototype = {
                 var img = $('<i></i>');
                 img.addClass("fa");
                 img.addClass(config.icon);
+                img.addClass("gs_icon");
                 img.css('font-size', config.iconsize + "px");
             } else {
                 var img = $('<img/>');

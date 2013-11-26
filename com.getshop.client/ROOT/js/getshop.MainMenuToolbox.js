@@ -7,7 +7,7 @@ $(document).ready(function() {
         items: [
             {
                 icontype: "awesome",
-                icon: "fa-inbox",
+                icon: "fa-folder",
                 iconsize : "30",
                 title: __f("Product list"),
                 click: app.ProductManager.loadImportProduct,
@@ -99,7 +99,7 @@ $(document).ready(function() {
             },
             {
                 icontype: "awesome",
-                icon: "fa-picture-o",
+                icon: "fa-tint",
                 iconsize : "30",
                 title: __f("Change/select theme/skin"),
                 click: thundashop.MainMenu.showHideDesignSelection,

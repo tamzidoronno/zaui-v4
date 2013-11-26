@@ -1243,7 +1243,7 @@ font-size: 10px;
 line-height: 40px;
 }
 
-.GetShopToolbox i { padding-top: 5px; color:#FFFFFF;  }
+.GetShopToolbox i { padding-top: 5px;  }
 
 .designselectionbox .design .price { opacity:0.8; position:absolute; border: solid 1px #BBB; bottom: 4px; right:4px; background-color:#FFF; padding:1px;border-radius: 5px; }
 .designselectionbox .close { cursor:pointer; position:absolute; top: 0px; right:0px; background-color:#FFF; padding: 3px; border: solid 1px #DDD;border-bottom-left-radius: 10px; }
@@ -1285,21 +1285,19 @@ border: dashed 1px #DDD;
 
 .application_settings {
 position: absolute;
-right: 3px;
+ right: 3px;
 top: 3px;
-height: 30px;
-width: 30px;
+background-image: url('skin/default/images/application_box_background_empty_area.png');
+padding: 2px;
 border: solid 1px #DDD;
 cursor: pointer;
-background-image: url('/skin/default/images/settings.png');
-background-repeat: no-repeat;
-background-position: center;
 z-index: 1;
 border-radius: 3px;
-background-color: #FFF;
 display:none;
 }
-
+.application_settings:hover {
+    background-image: url('skin/default/images/application_box_background_empty_area_hover.png');
+}
 
 
 #loadingProgressG{
@@ -1459,4 +1457,5 @@ margin-left:256px;
 .gs_tab_area_active { display:block; }
 
 .colorpicker { z-index: 1000; }
-.empty_app_area .fa { color:#ffffff; font-size: 40px; padding-top: 8px; }
+.empty_app_area .fa { font-size: 32px; padding-top: 8px; }
+.gs_icon { color: #FFFFFF; }

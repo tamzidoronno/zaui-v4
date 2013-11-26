@@ -168,7 +168,7 @@ class ApplicationBase extends FactoryBase {
         
         echo "<div class='applicationinner'>";
         if($this->isEditorMode() && !$changeable && !$this->getPage()->isSystemPage()) {
-            echo "<div class='application_settings inline'></div>";
+            echo "<div class='application_settings inline gs_icon'><i class='fa fa-cog' style='font-size:30px;'></i></div>";
         }
         $this->render();
         echo "</div>";

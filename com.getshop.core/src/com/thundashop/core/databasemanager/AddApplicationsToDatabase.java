@@ -54,6 +54,15 @@ public class AddApplicationsToDatabase {
     private List<ApplicationSettings> addApplications() {
         List<ApplicationSettings> apps = new ArrayList();
 
+        ApplicationSettings jobifyTheme = createSettings(
+                "JobifyTheme",
+                "3b414d4e_25e7_4552_ade1_e37f5b3210ad",
+                emtpy,
+                "",
+                ApplicationSettings.Type.Theme, false);
+        jobifyTheme.isPublic = true;
+        apps.add(jobifyTheme);
+
         ApplicationSettings menuEditor = createSettings(
                 "MenuEditor",
                 "a11ac190-4f9a-11e3-8f96-0800200c9a66",
@@ -61,7 +70,7 @@ public class AddApplicationsToDatabase {
                 "",
                 ApplicationSettings.Type.System, false);
         menuEditor.isPublic = true;
-        apps.add(menuEditor);      
+        apps.add(menuEditor);
 
         return apps;
     }

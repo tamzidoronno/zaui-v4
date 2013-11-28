@@ -664,6 +664,7 @@ position: relative;
 }
 
 .configable .configuration {
+background-repeat: no-repeat;
 background-image: url("/skin/default/images/editsettings.png");
 cursor:pointer;
 position:absolute;

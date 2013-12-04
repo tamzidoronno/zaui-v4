@@ -1124,7 +1124,6 @@ CKEDITOR.dialog.add( 'link', function( editor ) {
 			this.commitContent( data );
                         
                         if(data.url.isInternal) {
-                            alert('is internal');
                             data.type = "url";
                             data.url.protocol = "http://";
                             data.url.url = "/?page="+data.url.internalurl;

@@ -1460,3 +1460,4 @@ margin-left:256px;
 .colorpicker { z-index: 1000; }
 .empty_app_area .fa { font-size: 32px; padding-top: 8px; }
 .gs_icon { color: #FFFFFF; }
+.cke_dialog_contents .pagepickerwindow { z-index:1; }

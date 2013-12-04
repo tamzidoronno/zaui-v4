@@ -282,9 +282,10 @@ thundashop.common.activateCKEditor = function(id, config) {
                 }
                 event.editor.destroy();
                 target.attr('contenteditable', false);
-                $(document).tooltip("enable");
+                $('.ui-tooltip').remove();
             },
             save: function(event) {
+                $('.ui-tooltip').remove();
                 var data = event.editor.getData();
                 if (saveCallback) {
                     saveCallback(data);
@@ -306,7 +307,7 @@ thundashop.common.activateCKEditor = function(id, config) {
                 $(document).tooltip("enable");
             },
             focus: function() {
-                $(document).tooltip("disable");
+                $('.cke_editable_inline').attr('title', '');
             },
             instanceReady: function(ev) {
                 if (autofocus) {

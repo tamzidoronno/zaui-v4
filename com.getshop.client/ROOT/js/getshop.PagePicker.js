@@ -23,10 +23,19 @@ getshop.PagePicker = {
 
     init: function() {
         $(document).on("click", ".pagepicker", function() {
+
+            if(!$(this).is(':input')) {
+                $(this).find('input').addClass('pagepicker');
+                $(this).removeClass('pagepicker');
+                $(this).find('input').click();
+                return;
+            }
+
             
             if (getshop.PagePicker.currentFieldAlreadyCreated(this)) {
                 return;
             }
+            
             
             getshop.PagePicker.currentField = this;
             // TODO, check if the same textfield already has opened one PagePickerInstance.

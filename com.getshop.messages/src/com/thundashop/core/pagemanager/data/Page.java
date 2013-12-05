@@ -11,6 +11,7 @@ import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.listmanager.data.Entry;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
@@ -92,6 +93,7 @@ public class Page extends DataCommon implements Cloneable {
     public int userLevel = 0;
     public String description = "";
     private HashMap<String, PageArea> pageAreas = new HashMap<String, PageArea>();
+    public PageLayout layout;
     
     /**
      * This might not be set, only in just a few cases.

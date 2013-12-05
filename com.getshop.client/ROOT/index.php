@@ -269,6 +269,14 @@ if (isset($_GET['page'])) {
     $(document).ready(function() {
         PubSub.publish('NAVIGATION_COMPLETED', {});
     });
+    
+CKEDITOR.on('instanceCreated', function(event) {
+    var editor = event.editor;
+    editor.on('instanceReady', function(e) {
+        $(e.editor.element.$).removeAttr("title");
+    });
+});
+    
 </script>
 
 <? if (isset($_GET['logout'])) { ?>

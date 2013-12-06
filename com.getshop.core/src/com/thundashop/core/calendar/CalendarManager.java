@@ -124,7 +124,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         return text;
     }
 
-    private void sendMailNotification(String password, Entry entry, User user) throws ErrorException {
+    private void sendMailNotification(String password, Entry entry, User user, boolean waitingList) throws ErrorException {
         String sendmail = null;
         HashMap<String, Setting> settings = getSettings("Booking");
         if(settings != null && settings.get("sendmail") != null) {
@@ -135,9 +135,20 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             return;
         }
 
+        if (waitingList) {
+            if (settings.get("subjectwaiting") == null || settings.get("bookingmailwaiting") == null) {
+                return;
+            }
+        }
+        
         String subject = settings.get("subject").value;
         String text = settings.get("bookingmail").value;
 
+        if (waitingList) {
+            subject = settings.get("subjectwaiting").value;
+            text = settings.get("bookingmailwaiting").value;
+        }
+        
         if (subject == null || subject.isEmpty()) {
             throw new ErrorException(72);
         }
@@ -153,7 +164,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         }
     }
 
-    private void sendSms(String password, Entry entry, User user) throws ErrorException {
+    private void sendSms(String password, Entry entry, User user, boolean waitingList) throws ErrorException {
         String sendsms = null;
         HashMap<String, Setting> settings = getSettings("Booking");
         if(settings != null && settings.get("sendsms") != null) {
@@ -352,30 +363,33 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             for (Day day : month.days.values()) {
                 for (Entry entry : day.entries) {
                     if (entry.entryId.equals(eventId)) {
-                        if (entry.maxAttendees <= entry.attendees.size()) {
-                            throw new ErrorException(71);
-                        }
 
                         if (entry.attendees.contains(userId)) {
                             throw new ErrorException(67);
                         }
 
-                        entry.attendees.add(userId);
+                        boolean waitingList = entry.maxAttendees <= entry.attendees.size();
+                        if (waitingList) {
+                            entry.waitingList.add(userId);
+                        } else {
+                            entry.attendees.add(userId);
+                        }
+                        
                         databaseSaver.saveObject(month, credentials);
 
                         UserManager usrmgr = getManager(UserManager.class);
                         User user = usrmgr.getUserById(userId);
-                        sendMessages(user, entry, password);
+                        sendMessages(user, entry, password, waitingList);
                     }
                 }
             }
         }
     }
-
-    private void sendMessages(User user, Entry entry, String password) throws ErrorException {
+    
+    private void sendMessages(User user, Entry entry, String password, boolean waitingList) throws ErrorException {
         if (!entry.needConfirmation) {
-            sendMailNotification(password, entry, user);
-            sendSms(password, entry, user);
+            sendMailNotification(password, entry, user, waitingList);
+            sendSms(password, entry, user, waitingList);
         }
     }
     
@@ -431,7 +445,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         for (String userId : entry.attendees) {
             UserManager usermanager = getManager(UserManager.class);
             User user = usermanager.getUserById(userId);
-            sendMessages(user, entry, "");
+            sendMessages(user, entry, "", false);
         }
     }
 
@@ -533,5 +547,25 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             filters = new ArrayList<String>();
         }
         return filters;
+    }
+
+    @Override
+    public void transferFromWaitingList(String eventId, String userId) throws ErrorException {
+        Entry entry = getEntry(eventId);
+        for (String user : entry.waitingList) {
+            if (user.equals(userId)) {
+                entry.waitingList.remove(userId);
+                entry.attendees.add(userId);
+                Month month = getMonth(entry.year, entry.month);
+                databaseSaver.saveObject(month, credentials);
+
+                UserManager usrmgr = getManager(UserManager.class);
+                User userObject = usrmgr.getUserById(userId);
+                sendMessages(userObject, entry, "", false);            
+                return;
+            }
+        }
+        
+        throw new ErrorException(101);
     }
 }

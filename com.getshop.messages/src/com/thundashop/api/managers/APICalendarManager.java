@@ -276,4 +276,19 @@ public class APICalendarManager {
           String result = transport.send(data);
      }
 
+     /**
+     * Accept a candidate from waitinglist to 
+     * course.
+     */
+
+     public void transferFromWaitingList(String entryId, String userId)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("entryId",new Gson().toJson(entryId));
+          data.args.put("userId",new Gson().toJson(userId));
+          data.method = "transferFromWaitingList";
+          data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(data);
+     }
+
 }

@@ -839,6 +839,21 @@ class APICalendarManager {
           return $this->transport->sendMessage($data);
      }
 
+     /**
+     * Accept a candidate from waitinglist to 
+     * course.
+     */
+
+     public function transferFromWaitingList($entryId, $userId) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["entryId"] = json_encode($this->transport->object_unset_nulls($entryId));
+          $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+          $data["method"] = "transferFromWaitingList";
+          $data["interfaceName"] = "core.calendar.ICalendarManager";
+          return $this->transport->sendMessage($data);
+     }
+
 }
 class APICartManager {
 

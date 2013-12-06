@@ -98,6 +98,7 @@
 "98","Incorrect deepfreeze password."
 "99","The coupon code is invalid."
 "100","Invalid input parameters."
+"101","Was not able to find the user in the waitinglist."
 "1000","Left menu entry already exists."
 "1001","Menu entry does not exists."
 "1002","App configuration does not exists."

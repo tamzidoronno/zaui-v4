@@ -44,9 +44,9 @@ and open the template in the editor.
                 <div class="refresh"></div>
             </div>
             <div data-role="content">
+                <div class="displayActiveFilter">Kalenderfilter: <span id="displayActiveFilter"></span></div>
                 <h2>Kurs kalender</h2>
                 <div id="calender"></div>
-                <div class="displayActiveFilter">Resultatet er filterert på: <span id="displayActiveFilter"></span></div>
             </div>
 
             <!-- INCLUDE FRONT HERE -->
@@ -102,7 +102,7 @@ and open the template in the editor.
                     <input type="text" data-clear-btn="true" name="text-6" id="name" value="" >
                     <label for="email">E-post</label>
                     <input type="text" data-clear-btn="true" name="text-6" id="email" value="" >
-                    <label for="email">E-post Teknisk Leder</label>
+                    <label for="emailinvoice">E-post Teknisk Leder</label>
                     <input type="text" data-clear-btn="true" name="text-6" id="invoiceemail" value="" >
                     <label for="phone">Mob.Tlf.</label>
                     <input type="text" data-clear-btn="true" name="text-6" id="phone" value="" >
@@ -150,5 +150,4 @@ and open the template in the editor.
     } else {
         App.start();
     }
-    
 </script>

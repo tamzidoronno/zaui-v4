@@ -810,6 +810,16 @@ GetShopApiWebSocket.CartManager.prototype = {
         return this.communication.send(data);
     },
 
+    getTaxes : function() {
+        data = {
+            args : {
+            },
+            method: 'getTaxes',
+            interfaceName: 'core.cartmanager.ICartManager',
+        };
+        return this.communication.send(data);
+    },
+
     removeAllCoupons : function() {
         data = {
             args : {
@@ -1162,6 +1172,17 @@ GetShopApiWebSocket.ListManager.prototype = {
         return this.communication.send(data);
     },
 
+    getAllListsByType : function(type) {
+        data = {
+            args : {
+                type : JSON.stringify(type),
+            },
+            method: 'getAllListsByType',
+            interfaceName: 'core.listmanager.IListManager',
+        };
+        return this.communication.send(data);
+    },
+
     getCombinedLists : function(listId) {
         data = {
             args : {
@@ -1368,6 +1389,17 @@ GetShopApiWebSocket.OrderManager.prototype = {
                 pageSize : JSON.stringify(pageSize),
             },
             method: 'getOrders',
+            interfaceName: 'core.ordermanager.IOrderManager',
+        };
+        return this.communication.send(data);
+    },
+
+    getTaxes : function(order) {
+        data = {
+            args : {
+                order : JSON.stringify(order),
+            },
+            method: 'getTaxes',
             interfaceName: 'core.ordermanager.IOrderManager',
         };
         return this.communication.send(data);
@@ -1704,6 +1736,17 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data);
     },
 
+    search : function(search) {
+        data = {
+            args : {
+                search : JSON.stringify(search),
+            },
+            method: 'search',
+            interfaceName: 'core.pagemanager.IPageManager',
+        };
+        return this.communication.send(data);
+    },
+
     setApplicationSettings : function(settings) {
         data = {
             args : {
@@ -1770,6 +1813,23 @@ GetShopApiWebSocket.PageManager.prototype = {
             },
             method: 'translatePages',
             interfaceName: 'core.pagemanager.IPageManager',
+        };
+        return this.communication.send(data);
+    },
+
+}
+GetShopApiWebSocket.InvoiceManager = function(communication) {
+    this.communication = communication;
+}
+
+GetShopApiWebSocket.InvoiceManager.prototype = {
+    createInvoice : function(orderId) {
+        data = {
+            args : {
+                orderId : JSON.stringify(orderId),
+            },
+            method: 'createInvoice',
+            interfaceName: 'core.pdf.IInvoiceManager',
         };
         return this.communication.send(data);
     },
@@ -1924,6 +1984,16 @@ GetShopApiWebSocket.ProductManager.prototype = {
         return this.communication.send(data);
     },
 
+    getTaxes : function() {
+        data = {
+            args : {
+            },
+            method: 'getTaxes',
+            interfaceName: 'core.productmanager.IProductManager',
+        };
+        return this.communication.send(data);
+    },
+
     removeProduct : function(productId) {
         data = {
             args : {
@@ -1953,6 +2023,17 @@ GetShopApiWebSocket.ProductManager.prototype = {
                 imageId : JSON.stringify(imageId),
             },
             method: 'setMainImage',
+            interfaceName: 'core.productmanager.IProductManager',
+        };
+        return this.communication.send(data);
+    },
+
+    setTaxes : function(group) {
+        data = {
+            args : {
+                group : JSON.stringify(group),
+            },
+            method: 'setTaxes',
             interfaceName: 'core.productmanager.IProductManager',
         };
         return this.communication.send(data);
@@ -2254,6 +2335,19 @@ GetShopApiWebSocket.UserManager = function(communication) {
 }
 
 GetShopApiWebSocket.UserManager.prototype = {
+    addUserPrivilege : function(userId,managerName,managerFunction) {
+        data = {
+            args : {
+                userId : JSON.stringify(userId),
+                managerName : JSON.stringify(managerName),
+                managerFunction : JSON.stringify(managerFunction),
+            },
+            method: 'addUserPrivilege',
+            interfaceName: 'core.usermanager.IUserManager',
+        };
+        return this.communication.send(data);
+    },
+
     createUser : function(user) {
         data = {
             args : {
@@ -2547,6 +2641,23 @@ GetShopApiWebSocket.UtilManager.prototype = {
     },
 
 }
+GetShopApiWebSocket.YouTubeManager = function(communication) {
+    this.communication = communication;
+}
+
+GetShopApiWebSocket.YouTubeManager.prototype = {
+    searchYoutube : function(searchword) {
+        data = {
+            args : {
+                searchword : JSON.stringify(searchword),
+            },
+            method: 'searchYoutube',
+            interfaceName: 'core.youtubemanager.IYouTubeManager',
+        };
+        return this.communication.send(data);
+    },
+
+}
 
 GetShopApiWebSocket.prototype.createManagers = function() {
     this.BannerManager = new GetShopApiWebSocket.BannerManager(this);
@@ -2564,9 +2675,11 @@ GetShopApiWebSocket.prototype.createManagers = function() {
     this.MessageManager = new GetShopApiWebSocket.MessageManager(this);
     this.OrderManager = new GetShopApiWebSocket.OrderManager(this);
     this.PageManager = new GetShopApiWebSocket.PageManager(this);
+    this.InvoiceManager = new GetShopApiWebSocket.InvoiceManager(this);
     this.ProductManager = new GetShopApiWebSocket.ProductManager(this);
     this.ReportingManager = new GetShopApiWebSocket.ReportingManager(this);
     this.StoreManager = new GetShopApiWebSocket.StoreManager(this);
     this.UserManager = new GetShopApiWebSocket.UserManager(this);
     this.UtilManager = new GetShopApiWebSocket.UtilManager(this);
+    this.YouTubeManager = new GetShopApiWebSocket.YouTubeManager(this);
 }

@@ -112,7 +112,7 @@ public class ListManager extends ManagerBase implements IListManager {
             entry.pageId = page.id;
         }
 
-        saveList(listId);
+//        saveList(listId);
     }
 
     private List<Entry> buildEntries(String listId) {
@@ -158,7 +158,9 @@ public class ListManager extends ManagerBase implements IListManager {
         if (parent.subentries == null) {
             parent.subentries = new ArrayList();
         }
-        parent.subentries.add(entry);
+        if(!parent.subentries.contains(entry)) {
+            parent.subentries.add(entry);
+        }
     }
 
     private void saveList(String listId) throws ErrorException {
@@ -294,6 +296,17 @@ public class ListManager extends ManagerBase implements IListManager {
         }
         validateEntry(entry);
         pushToMemory(entry, listId, parentPageId);
+        
+        if(entry.subentries != null) {
+            List<Entry> subentries = new ArrayList();
+            for(Entry tentry : entry.subentries) {
+                subentries.add(tentry);
+            }
+            for(Entry subentry : subentries) {
+                subentry.parentId = entry.id;
+                addEntry(listId, subentry, entry.pageId);
+            }
+        }
         return entry;
     }
 

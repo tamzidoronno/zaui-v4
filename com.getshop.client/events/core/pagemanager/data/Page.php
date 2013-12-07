@@ -21,6 +21,9 @@ class core_pagemanager_data_Page extends core_common_DataCommon  {
 	/** @var String */
 	public $pageAreas;
 
+	/** @var core_pagemanager_data_PageLayout */
+	public $layout;
+
 	/** @var core_listmanager_data_Entry */
 	public $linkToListEntry;
 

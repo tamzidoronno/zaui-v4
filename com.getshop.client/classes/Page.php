@@ -68,6 +68,7 @@ class Page extends FactoryBase {
             $this->areas = array();
             $this->userLevel = $page->userLevel;
             $this->description = $page->description;
+            $this->layout = $page->layout;
             $this->createAllPageAreas($page);
             if (!isset($this->userLevel))
                 $this->userLevel = 0;
@@ -144,7 +145,8 @@ class Page extends FactoryBase {
         }
         
         echo "<div class='gs_outer_mainarea'><div class='mainarea'>";
-        $this->includefile('skeleton' . $this->skeletonType);
+        $pb = new PageBuilder($this->layout, $this->skeletonType, $this);
+        $pb->build();
         echo "</div></div>";
 
         if (!$this->backendPage->hideFooter && $this->skeletonType != 5) {

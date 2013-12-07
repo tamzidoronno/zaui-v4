@@ -92,7 +92,7 @@
 .skeleton11 .midle_row { clear: both; position:relative; }.skeleton11 .main_col .applicationarea, .skeleton11 .apparea-main-1 { min-height: 300px; }
 
 .skeleton14 .mainarea .applicationarea { min-height: 200px; }
-.skeleton14 .gs_col { width: 49%; display:inline-block; }
+.skeleton14 .gs_col { width: 48%; display:inline-block; }
 .skeleton14 .gs_col.c2 { float: right; }
 
 .skeleton16 .gs_col .applicationarea,.skeleton17 .gs_col .applicationarea { min-height: 200px; }

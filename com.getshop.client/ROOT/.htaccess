@@ -8,6 +8,7 @@ RewriteRule ^(documentation)($|/) - [L]
 
 RewriteRule ^sitemap.xml$ sitemap.php [L]
 RewriteRule ^favicon.ico$ favicon.php [L]
+RewriteRule ^favicon.ico$ generateExcelReport.php [L]
 
 RewriteCond %{QUERY_STRING} !index 
 RewriteRule ^(.*).html$ index.php?rewrite=$1 [L]

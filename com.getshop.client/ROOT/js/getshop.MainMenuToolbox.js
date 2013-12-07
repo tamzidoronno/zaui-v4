@@ -23,6 +23,15 @@ $(document).ready(function() {
                 extraArgs: {}
             },
             {
+                icontype: "awesome",
+                icon: "fa-sitemap",
+                iconsize : "30",
+                click: getshop.MenuEditor.open,
+                title: __f("Setup your menus"),
+                disableOnSystemPages: true,
+                extraArgs: {}
+            },
+            {
                 type: 'seperator',
                 title: __f('Security'),
                 disableOnSystemPages: true

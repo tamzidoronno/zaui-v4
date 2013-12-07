@@ -205,14 +205,18 @@ label.error {
     text-align: center;
 }
 .infobutton {
-    border-radius: 3px;
+    border-radius: 5px;
     cursor: pointer;
     width: 35px;
+    border: solid 1px #888;
+    
     height: 35px;
     position: absolute;
     right: 5px;
-    top: 5px;
+    top: 15px;
     background-image: url('images/infobutton.png');
     background-repeat: no-repeat;
     background-position: center center;
+    
+    background-color: rgba(256,256,256,0.1);
 }

@@ -134,4 +134,11 @@ public interface ICalendarManager {
      * @return 
      */
     public List<String> getActiveFilters();
+    
+    /**
+     * Accept a candidate from waitinglist to 
+     * course.
+     */
+    @Administrator
+    public void transferFromWaitingList(String entryId, String userId) throws ErrorException;
 }

@@ -153,16 +153,27 @@ App = {
         });
         
         $('#signup').on('pageshow', function() {
+            if (App.detached) {
+                $('#select-native-1').find('option').detach();
+                $('#select-native-1').append(App.detached);
+                App.detached = null;
+            }
+            
             if (App.filterToEntryId) {
                 var entryId = App.filterToEntryId;
-                $('#select-native-1').find('option').hide();
-                $('#select-native-1').find('[value="'+entryId+'"]').show();
-                $('#select-native-1').find('[value="'+entryId+'"]').attr('selected','selected');
-                $('#select-native-1').selectmenu('refresh', true);
-            } else {
-                $('#select-native-1').find('option').show();
-                $('#select-native-1').selectmenu('refresh', true);
-            }
+                App.detached = $('#select-native-1').find('option').detach();
+                
+                var entryFound = false;
+                $(App.detached).each(function() { 
+                    if ($(this).attr('value') === entryId ) {
+                        entryFound = this;
+                    }
+                });
+                
+                $('#select-native-1').append(entryFound);
+            } 
+            
+            $('#select-native-1').selectmenu('refresh', true);
             
             App.filterToEntryId = null;
         });

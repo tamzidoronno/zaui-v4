@@ -14,6 +14,7 @@ import java.util.List;
  */
 public class Entry implements Serializable, Comparable<Entry> {
     public List<String> attendees = new ArrayList();
+    public List<String> waitingList = new ArrayList();
     public List<ExtraDay> otherDays = new ArrayList();
     
     public int maxAttendees;
@@ -47,6 +48,7 @@ public class Entry implements Serializable, Comparable<Entry> {
         this.maxAttendees = entry.maxAttendees;
         this.description = entry.description;
         this.attendees = entry.attendees;
+        this.waitingList = entry.waitingList;
         this.otherDays = entry.otherDays;
         this.starttime = entry.starttime;
         this.stoptime = entry.stoptime;

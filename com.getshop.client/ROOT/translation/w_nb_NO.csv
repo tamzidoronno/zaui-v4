@@ -120,6 +120,7 @@ Please select a payment method.;-;Vennligst velg en betalingsmetode
 Please select a user in the left menu;-;Vennligst velg en bruker fra venstre meny.
 Please select a valid payment method;-;Vennligst velg en gyldig betalings metode.
 Please select department;-;Velg en avdeling
+Please start typing to search for page, must be more then 2 chars;-;Start å søk etter en side, må ha minst 3 bokstaver
 Post code;-;Post.nr
 Postal code;-;Postnummer
 Previous;-;Forrige
@@ -136,6 +137,7 @@ Remove;-;Fjern
 Repeat password;-;Gjenta passord
 Saturday;-;Lørdag
 Search for a product;-;Søk etter et produkt
+Searching....;-;Søker....
 Send me a code;-;Send meg koden
 Send message;-;Send melding
 Send us mail;-;Send oss en epost
@@ -147,6 +149,7 @@ Shipping;-;Utsendelse
 Shipping cost;-;Fraktkostnader
 Shipping price;-;Forendelse pris
 Sign up;-;Registrer deg
+Sign up for waiting list;-;Påmelding for venteliste
 Sorry;-;Beklager
 Stage 1 (hp):;-;Stage 1 hp:
 Stage 1 (nm):;-;Stage 1 nm:
@@ -182,6 +185,7 @@ Update;-;Oppdater
 Use a different email;-;Bruk en annen epost
 Username / Email;-;Brukernavn / Epost
 Waiting for payment;-;Venter på betaling
+Waiting list;-;Venteliste
 Was not able to get payment methods, please check your postcode;-;Klarte ikke å oppdrive betalings metoder, vennligst sjekk ditt postnummer.
 We host events at the following locations, click on the location to filter the calendar by location(s);-;We har events på følgende steder, trykk på stedet for å filtere kalenderen på stedet(ene)
 Wednesday;-;Onsdag

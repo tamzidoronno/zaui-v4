@@ -96,7 +96,8 @@ public class ListManager extends ManagerBase implements IListManager {
             allEntries.get(listId).entries = new ArrayList();
         }
         
-        if (entry.parentId == null || entry.parentId.trim().length() == 0) {
+        if ((entry.parentId == null || entry.parentId.trim().length() == 0) || getEntry(entry.parentId) == null) {
+            entry.parentId = "";
             allEntries.get(listId).entries.add(entry);
         } else {
             addSubEntry(entry);
@@ -112,7 +113,7 @@ public class ListManager extends ManagerBase implements IListManager {
             entry.pageId = page.id;
         }
 
-//        saveList(listId);
+        saveList(listId);
     }
 
     private List<Entry> buildEntries(String listId) {

@@ -139,6 +139,7 @@ $(document).ready(function() {
     config.ishidden = getshopmaintoolboxhidden;
 
     mainmenu = new GetShopToolbox(config);
+    $(mainmenu.outerContainer).css('position', 'fixed');
     $(mainmenu.outerContainer).css('left', '100px');
     $(mainmenu.outerContainer).css('top', '100px');
 });
@@ -223,9 +224,7 @@ $(window).scroll(function(e) {
     var diff = st - lastScrollTop;
     totalMove += diff;
 
-    $(mainmenu.outerContainer).animate({
-        top: "+=" + diff + "px"
-    }, 70, 'linear');
+  
 
     lastScrollTop = st;
 });

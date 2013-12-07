@@ -67,7 +67,11 @@ public class Page extends DataCommon implements Cloneable {
             pageAreas.put(toarea, area);
         }
     }
-    
+
+    public void removeApplicationOnArea(String area) {
+        pageAreas.remove(area);
+    }
+
     public static class DefaultPages {
         public static String OrderOverviewPageId = "orderoverview";
         public static String CartPage = "cart";
@@ -93,7 +97,7 @@ public class Page extends DataCommon implements Cloneable {
     public int userLevel = 0;
     public String description = "";
     private HashMap<String, PageArea> pageAreas = new HashMap<String, PageArea>();
-    public PageLayout layout;
+    public PageLayout layout = new PageLayout();
     
     /**
      * This might not be set, only in just a few cases.

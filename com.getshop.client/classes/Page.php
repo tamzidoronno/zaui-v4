@@ -145,8 +145,14 @@ class Page extends FactoryBase {
         }
         
         echo "<div class='gs_outer_mainarea'><div class='mainarea'>";
-        $pb = new PageBuilder($this->layout, $this->skeletonType, $this);
-        $pb->build();
+        if ($this->skeletonType == 5 ) {
+            $this->includefile("skeleton5");
+        } else if ($this->skeletonType == 6 ) {
+            $this->includefile("skeleton6");
+        } else {
+            $pb = new PageBuilder($this->layout, $this->skeletonType, $this);
+            $pb->build();
+        }
         echo "</div></div>";
 
         if (!$this->backendPage->hideFooter && $this->skeletonType != 5) {

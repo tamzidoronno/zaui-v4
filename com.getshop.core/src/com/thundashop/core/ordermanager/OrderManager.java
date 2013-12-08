@@ -342,6 +342,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             toPay += order.shipping.cost;
         }
         
+        if (order.payment != null && order.payment.paymentFee > 0) {
+            toPay += order.payment.paymentFee;
+        }
+        
         if (toPay < 0) {
             toPay = 0D;
         }

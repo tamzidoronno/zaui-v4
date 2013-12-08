@@ -1,4 +1,5 @@
 ###### framework ######
+* PayOnDelivery fee;-;Gebyr henting 
 0-100 km/h;-;0-100 km/h
 A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
 Add to cart;-;Legg i handlekurv
@@ -110,6 +111,7 @@ Password missmatch;-;Passordene stemmer ikke oversens
 Pay on pickup;-;Betal ved levering
 Payment;-;Betaling
 Payment failed;-;Betaling feilet
+Payment fee;-;Betalingsgebyr
 Payment information;-;Betalings informasjon
 Payment successfully completed;-;Betalingen gjennomført
 Phone;-;Telefon
@@ -219,5 +221,6 @@ orgnummer;-;Org.nr.
 phone;-;Mob.Tlf.
 read;-;les
 shipping;-;frakt
+will be added to your invoice.;-;vil bli lagt på sluttsummen.
 
 

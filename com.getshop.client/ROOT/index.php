@@ -276,7 +276,7 @@ CKEDITOR.on('instanceCreated', function(event) {
         $(e.editor.element.$).removeAttr("title");
     });
 });
-    
+CKEDITOR.config.allowedContent = true;    
 </script>
 
 <? if (isset($_GET['logout'])) { ?>

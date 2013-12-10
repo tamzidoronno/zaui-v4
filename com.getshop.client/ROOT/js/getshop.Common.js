@@ -821,3 +821,47 @@ $(document).on('click', '.gs_tab', function() {
     var route = $(this).attr('route');
     PubSub.publish("GS_TAB_NAVIGATED", {"target": target, "route": route});
 });
+$(document).on('change', '#informationbox .skeletondisplayer select', function() {
+    var data = {};
+    var id = $(this).attr('id');
+    data[id] = $(this).val();
+    if($(this).closest('.row_option_panel').length > 0) {
+        data["index"] = $(this).closest('.row_option_panel').attr('row');
+    }
+    data["updatelayout"] = true;
+    
+    var event = thundashop.Ajax.createEvent('','showPageLayoutSelection',null, data);
+    thundashop.common.showInformationBox(event, __f("Select page layout"), true);
+});
+
+$(document).on('click', '#informationbox .suggestion_layout', function() {
+    var type = $(this).attr('type');
+    var data = {
+        "layout":type
+    };
+    var id = $(this).attr('id');
+    data["updatelayout"] = true;
+    var event = thundashop.Ajax.createEvent('','showPageLayoutSelection',null, data);
+    thundashop.common.showInformationBox(event, __f("Select page layout"), true);
+});
+$(document).on('click', '#informationbox .row_option', function() {
+    var infobox = $('#informationbox .row_option_panel');
+    infobox.attr('row', $(this).attr('index'));
+    infobox.find('#numberofcells').val($(this).attr('cells'));
+    infobox.css('position','absolute');
+    infobox.css('display','block');
+    infobox.css('top',$(this).position().top);
+    infobox.left('left',$(this).position().left);
+    infobox.show();
+});
+$(document).on('click', '#informationbox .setnewlayout', function() {
+    var type = $(this).attr('type');
+    var data = {
+        "updateToNewLayout":true
+    };
+    var id = $(this).attr('id');
+    data["updatelayout"] = true;
+    var event = thundashop.Ajax.createEvent('','setPageLayout',null, data);
+    thundashop.Ajax.post(event);
+    thundashop.common.hideInformationBox();
+});

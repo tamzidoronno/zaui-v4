@@ -309,6 +309,16 @@ class ApplicationManager extends FactoryBase {
         $this->includefile("applicationSelectionLayout");
     }
 
+    public function setPageLayout() {
+        $page = $this->getPage();
+        $pb = $page->loadPageBuilder();
+        if (isset($_POST['data']['updatelayout'])) {
+            $pb->activateBuildLayoutMode();
+        }
+        $page->setLayout($pb->updateLayoutConfig());
+
+    }
+    
     public function showApplications() {
         $this->subscriptions = $this->getFactory()->getApi()->getAppManager()->getAllApplicationSubscriptions(false);
         $this->includefile('applicationSet');

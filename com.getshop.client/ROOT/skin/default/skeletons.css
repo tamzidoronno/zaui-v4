@@ -151,51 +151,19 @@
 
 .skeleton5 .order_mask { display: none; }
 
-.skeletondisplayer .skeletondisplay .skeleton1 { background-image: url('/skin/default/images/layouts/layout1.png'); }
-.skeletondisplayer .skeletondisplay .skeleton1:hover { background-image: url('/skin/default/images/layouts/layout1_hover.png'); }
-.skeletondisplayer .skeletondisplay .skeleton2 { background-image: url('/skin/default/images/layouts/layout2.png'); }
-.skeletondisplayer .skeletondisplay .skeleton2:hover { background-image: url('/skin/default/images/layouts/layout2_hover.png'); }
-.skeletondisplayer .skeletondisplay .skeleton3 { background-image: url('/skin/default/images/layouts/layout3.png'); }
-.skeletondisplayer .skeletondisplay .skeleton3:hover { background-image: url('/skin/default/images/layouts/layout3_hover.png'); }
-.skeletondisplayer .skeletondisplay .skeleton4 { background-image: url('/skin/default/images/layouts/layout4.png'); }
-.skeletondisplayer .skeletondisplay .skeleton4:hover { background-image: url('/skin/default/images/layouts/layout4_hover.png'); }
-.skeletondisplayer .skeletondisplay .skeleton7 { background-image: url('/skin/default/images/layouts/layout7.png'); }
-.skeletondisplayer .skeletondisplay .skeleton7:hover { background-image: url('/skin/default/images/layouts/layout7_hover.png'); }
-.skeletondisplayer .skeletondisplay .skeleton8 { background-image: url('/skin/default/images/layouts/layout8.png'); }
-.skeletondisplayer .skeletondisplay .skeleton8:hover { background-image: url('/skin/default/images/layouts/layout8_hover.png'); }
-.skeletondisplayer .skeletondisplay .skeleton9 { background-image: url('/skin/default/images/layouts/layout9.png'); }
-.skeletondisplayer .skeletondisplay .skeleton9:hover { background-image: url('/skin/default/images/layouts/layout9_hover.png'); }
-.skeletondisplayer .skeletondisplay .skeleton10 { background-image: url('/skin/default/images/layouts/layout10.png'); }
-.skeletondisplayer .skeletondisplay .skeleton10:hover { background-image: url('/skin/default/images/layouts/layout10_hover.png'); }
-.skeletondisplayer .skeletondisplay .skeleton11 { background-image: url('/skin/default/images/layouts/layout11.png'); }
-.skeletondisplayer .skeletondisplay .skeleton11:hover { background-image: url('/skin/default/images/layouts/layout11_hover.png'); }
-.skeletondisplayer .skeletondisplay .skeleton12 { background-image: url('/skin/default/images/layouts/layout12.png'); }
-.skeletondisplayer .skeletondisplay .skeleton12:hover { background-image: url('/skin/default/images/layouts/layout12_hover.png'); }
-.skeletondisplayer .skeletondisplay .skeleton13 { background-image: url('/skin/default/images/layouts/layout13.png'); }
-.skeletondisplayer .skeletondisplay .skeleton13:hover { background-image: url('/skin/default/images/layouts/layout13_hover.png'); }
-.skeletondisplayer .skeletondisplay .skeleton14 { background-image: url('/skin/default/images/layouts/layout14.png'); }
-.skeletondisplayer .skeletondisplay .skeleton14:hover { background-image: url('/skin/default/images/layouts/layout14_hover.png'); }
-.skeletondisplayer .skeletondisplay .skeleton15 { background-image: url('/skin/default/images/layouts/layout15.png'); }
-.skeletondisplayer .skeletondisplay .skeleton15:hover { background-image: url('/skin/default/images/layouts/layout15_hover.png'); }
-.skeletondisplayer .skeletondisplay .skeleton16 { background-image: url('/skin/default/images/layouts/layout16.png'); }
-.skeletondisplayer .skeletondisplay .skeleton16:hover { background-image: url('/skin/default/images/layouts/layout16_hover.png'); }
-.skeletondisplayer .skeletondisplay .skeleton17 { background-image: url('/skin/default/images/layouts/layout17.png'); }
-.skeletondisplayer .skeletondisplay .skeleton17:hover { background-image: url('/skin/default/images/layouts/layout17_hover.png'); }
-.skeletondisplayer .skeletondisplay .skeleton18 { background-image: url('/skin/default/images/layouts/layout18.png'); }
-.skeletondisplayer .skeletondisplay .skeleton18:hover { background-image: url('/skin/default/images/layouts/layout18_hover.png'); }
-.skeletondisplayer .skeletondisplay .skeleton19 { background-image: url('/skin/default/images/layouts/layout19.png'); }
-.skeletondisplayer .skeletondisplay .skeleton19:hover { background-image: url('/skin/default/images/layouts/layout19_hover.png'); }
-.skeletondisplayer .skeletondisplay .skeleton20 { background-image: url('/skin/default/images/layouts/layout20.png'); }
-.skeletondisplayer .skeletondisplay .skeleton20:hover { background-image: url('/skin/default/images/layouts/layout20_hover.png'); }
-.skeletondisplayer .skeletondisplay .skeleton21 { background-image: url('/skin/default/images/layouts/layout21.png'); }
-.skeletondisplayer .skeletondisplay .skeleton21:hover { background-image: url('/skin/default/images/layouts/layout21_hover.png'); }
-.skeletondisplayer .skeletondisplay .skeleton22 { background-image: url('/skin/default/images/layouts/layout22.png'); }
-.skeletondisplayer .skeletondisplay .skeleton22:hover { background-image: url('/skin/default/images/layouts/layout22_hover.png'); }
-.skeletondisplayer .skeletondisplay .skeleton23 { background-image: url('/skin/default/images/layouts/layout23.png'); }
-.skeletondisplayer .skeletondisplay .skeleton23:hover { background-image: url('/skin/default/images/layouts/layout23_hover.png'); }
-.skeletondisplayer .skeletondisplay .skeleton24 { background-image: url('/skin/default/images/layouts/layout24.png'); }
-.skeletondisplayer .skeletondisplay .skeleton24:hover { background-image: url('/skin/default/images/layouts/layout24_hover.png'); }
-.skeletondisplayer .skeletondisplay .skeleton25 { background-image: url('/skin/default/images/layouts/layout25.png'); }
-.skeletondisplayer .skeletondisplay .skeleton25:hover { background-image: url('/skin/default/images/layouts/layout25_hover.png'); }
-.skeletondisplayer .skeletondisplay .skeleton26 { background-image: url('/skin/default/images/layouts/layout26.png'); }
-.skeletondisplayer .skeletondisplay .skeleton26:hover { background-image: url('/skin/default/images/layouts/layout26_hover.png'); }
+#informationbox .previewrow { font-size:13px; border: solid 1px; height: 50px; margin-bottom: 10px; background-color:#FFF; text-align: center; }
+#informationbox .predefined_layouts { background-color:#5e5e5e; width: 300px; display:inline; height: 95%; padding: 5px; position:absolute; right: 0px; top: 30px; border: solid 1px;  overflow: auto; }
+#informationbox .layoutpreviewselection { border: solid 0px; position: relative; }
+#informationbox .layoutsuggestion { width: 314px; display:inline; position:absolute; right: 0px; top: 0px; }
+#informationbox .headerpreview { display:table-cell; vertical-align:middle; font-size:13px; background-color:#FFF; border-bottom: solid 1px; position: absolute; top: 0px; left: 0px; width: 100%; height: 50px; text-align: center; }
+#informationbox .footerpreview { display:table-cell; vertical-align:middle; font-size:13px; background-color:#FFF; border-top: solid 1px; position: absolute; left: 0px; width: 100%; height: 50px; text-align: center; bottom:0px; }
+
+#informationbox .suggestion_layout { background-color:#EFEFEF; width: 260px; position:relative; border: solid 1px; padding: 10px; padding-top: 33px; margin-bottom: 20px; padding-bottom: 23px; }
+#informationbox .suggestion_layout:hover { cursor: pointer; }
+#informationbox .suggestion_layout:hover .previewrow { background-color:#5c8c57; }
+#informationbox .suggestion_layout:hover .headerpreview { background-color:#5c8c57; }
+#informationbox .suggestion_layout:hover .footerpreview { background-color:#5c8c57; }
+#informationbox .suggestion_layout .footerpreview,#informationbox .suggestion_layout .headerpreview { height: 25px; } 
+#informationbox .row_option { position:absolute;left:-20px;cursor:pointer; }
+#informationbox .row_option_panel { display:none; z-index: 2; }
+#informationbox .layoutpreviewselection select {height: 40px; }

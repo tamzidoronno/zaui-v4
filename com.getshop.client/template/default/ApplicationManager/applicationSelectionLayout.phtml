@@ -89,6 +89,36 @@ $pb->saveBuildLayout($layout);
         var newwidth = (parseInt(boxorigwidth) + parseInt(newsize))+1;
         box.width(newwidth);
     }
+    function alignLayoutBoxes(index, cellnumber, firstcell, changedcell, offset) {
+        var above = index - offset;
+        var changedPercentage = parseFloat(changedcell.attr('percentage'));
+        var firstPercentage = parseFloat(firstcell.attr('percentage'));
+        var abovecell = null;
+        var changedcellposition = firstcell.position();
+        $('.previewrowcontainer[index="'+above+'"]').find('.cell').each(function(theindex) {
+            var diff = changedcellposition.left - $(this).position().left;
+            if((diff < 10 && diff > -10) && abovecell === null) {
+                abovecell = $(this);
+            }
+        });
+        if(abovecell === null) {
+            return false;
+        }
+
+        var abovePercentage = parseFloat(abovecell.attr('percentage'));
+        if(above >= 0) {
+            var diff = abovePercentage - firstPercentage;
+            if(diff < 1 && diff > -1) {
+                var chop = changedPercentage-abovePercentage;
+                firstPercentage += chop;
+                firstcell.attr('percentage', abovePercentage);
+                changedcell.attr('percentage', firstPercentage);
+                return true;
+            }
+        }
+        return false;
+    }
+    
     function calculateResizedPercenage(element, total) {
         return ((element.width() / total)*100);
     }
@@ -122,6 +152,17 @@ $pb->saveBuildLayout($layout);
             var diff = before-after;
             changedcell.attr('percentage', parseFloat(changedcell.attr('percentage'))+(diff/2));
             firstcell.attr('percentage', parseFloat(firstcell.attr('percentage'))+(diff/2));
+            
+            var aligned = alignLayoutBoxes(index, changednumber, firstcell, changedcell,1);
+            if(!aligned) {
+                aligned = alignLayoutBoxes(index, changednumber, changedcell,firstcell,1);
+            }
+            if(!aligned) {
+                aligned = alignLayoutBoxes(index, changednumber, firstcell, changedcell,2);
+            }
+            if(!aligned) {
+                aligned = alignLayoutBoxes(index, changednumber, changedcell,firstcell,2);
+            }
             
             cells.each(function(index) {
                 var percentage = $(this).attr('percentage');

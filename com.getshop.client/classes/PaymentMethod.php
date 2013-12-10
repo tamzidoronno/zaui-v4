@@ -14,12 +14,17 @@ class PaymentMethod {
     private $name = "";
     private $logo = "";
     private $id = "";
+    private $paymentDetails = "";
     private $paymentApp;
 
     public function setName($name) {
         $this->name = $name;
     }
-
+    
+    public function setPaymentDetails($details) {
+        $this->paymentDetails = $details;
+    }
+    
     public function setLogo($logo) {
         $this->logo = $logo;
     }
@@ -47,6 +52,11 @@ class PaymentMethod {
     public function setId($id) {
         $this->id = $id;
     }
+    
+    public function getPaymentDetails() {
+        return $this->paymentDetails;
+    }
+    
 }
 
 ?>

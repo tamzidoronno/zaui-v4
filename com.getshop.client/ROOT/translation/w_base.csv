@@ -1,4 +1,6 @@
 ###### framework ######
+* Can pay with Visa/MasterCard trough PayPal;-;
+* PayOnDelivery fee;-;
 0-100 km/h;-;
 A red theme that can be used when selling exciting things;-;
 Add to cart;-;
@@ -107,8 +109,10 @@ Password does not match, please re enter password;-;
 Password has been successfully updated;-;
 Password has been updated;-;
 Password missmatch;-;
+Pay on pickup;-;
 Payment;-;
 Payment failed;-;
+Payment fee;-;
 Payment information;-;
 Payment successfully completed;-;
 Phone;-;
@@ -218,5 +222,6 @@ orgnummer;-;
 phone;-;
 read;-;
 shipping;-;
+will be added to your invoice.;-;
 
 

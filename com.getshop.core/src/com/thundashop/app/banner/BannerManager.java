@@ -107,6 +107,7 @@ public class BannerManager extends ManagerBase implements IBannerManager {
         BannerSet set = banners.get(id);
         if(set == null) {
             set = new BannerSet();
+            set.storeId = storeId;
             banners.put(id, set);
             set.id = id;
         }

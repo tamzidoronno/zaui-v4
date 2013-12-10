@@ -201,11 +201,33 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
         return retentry;
     }
+    
+    private Entry removeUserWaitingList(String userId, String entryId) throws ErrorException {
+        Entry retentry = null;
+
+        for (Month month : months.values()) {
+            for (Day day : month.days.values()) {
+                for (Entry entry : day.entries) {
+                    if (entryId.equals("")) {
+                        entry.waitingList.remove(userId);
+                    } else if (entry.entryId.equals(entryId)) {
+                        retentry = entry;
+                        entry.waitingList.remove(userId);
+                    }
+                    databaseSaver.saveObject(month, credentials);
+                }
+            }
+        }
+
+        return retentry;
+    }
 
     @Override
     public void onEvent(String eventName, String eventReferance) throws ErrorException {
-        if (Events.USER_DELETED.equals(eventName))
+        if (Events.USER_DELETED.equals(eventName)) {
             removeUserAttendee(eventReferance, "");
+            removeUserWaitingList(eventReferance, "");
+        }
     }
 
     @Override

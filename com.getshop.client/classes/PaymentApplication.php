@@ -28,8 +28,13 @@ class PaymentApplication extends ApplicationBase {
     
     public function initPaymentMethod() {
         $this->order->status = 2;
-        $this->order->paymentType = get_class($this);
+        $this->order->payment->paymentType = get_class($this);
+        $this->order->payment->paymentFee = $this->getPaymentFee();
         $this->getApi()->getOrderManager()->saveOrder($this->order);
+    }
+    
+    public function getPaymentFee() {
+        return 0;
     }
     
     public function isAvailable() {
@@ -55,12 +60,13 @@ class PaymentApplication extends ApplicationBase {
         
     }
     
-    protected function addPaymentMethod($name, $logo, $id="") {
+    protected function addPaymentMethod($name, $logo, $id="", $paymentDetails="") {
         $paymentMethod = new PaymentMethod();
         $paymentMethod->setName($name);
         $paymentMethod->setLogo($logo);
         $paymentMethod->setId($id);
         $paymentMethod->setPaymentApplication($this);
+        $paymentMethod->setPaymentDetails($paymentDetails);
         $this->paymentMethods[$name] = $paymentMethod;
     }
     

@@ -1,4 +1,6 @@
 ###### framework ######
+* Can pay with Visa/MasterCard trough PayPal;-;* Kan også betale med Visa/MasterCard igjennom PayPal.
+* PayOnDelivery fee;-;Gebyr henting 
 0-100 km/h;-;0-100 km/h
 A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
 Add to cart;-;Legg i handlekurv
@@ -107,8 +109,10 @@ Password does not match, please re enter password;-;Passordet stemmer ikke overs
 Password has been successfully updated;-;Passordet har blitt oppdatert.
 Password has been updated;-;Passordet har blitt oppdatert.
 Password missmatch;-;Passordene stemmer ikke oversens
+Pay on pickup;-;Betal ved levering
 Payment;-;Betaling
 Payment failed;-;Betaling feilet
+Payment fee;-;Betalingsgebyr
 Payment information;-;Betalings informasjon
 Payment successfully completed;-;Betalingen gjennomført
 Phone;-;Telefon
@@ -149,7 +153,7 @@ Shipping;-;Utsendelse
 Shipping cost;-;Fraktkostnader
 Shipping price;-;Forendelse pris
 Sign up;-;Registrer deg
-Sign up for waiting list;-;Påmelding for venteliste
+Sign up for waiting list;-;Sett meg på venteliste
 Sorry;-;Beklager
 Stage 1 (hp):;-;Stage 1 hp:
 Stage 1 (nm):;-;Stage 1 nm:
@@ -218,5 +222,6 @@ orgnummer;-;Org.nr.
 phone;-;Mob.Tlf.
 read;-;les
 shipping;-;frakt
+will be added to your invoice.;-;vil bli lagt på sluttsummen.
 
 

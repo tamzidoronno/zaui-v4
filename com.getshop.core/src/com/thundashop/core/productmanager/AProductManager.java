@@ -8,7 +8,6 @@ import com.thundashop.core.listmanager.data.Entry;
 import com.thundashop.core.pagemanager.IPageManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
-import com.thundashop.core.productmanager.data.AttributeSummaryEntry;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
 import com.thundashop.core.common.ExchangeConvert;
@@ -56,8 +55,14 @@ public class AProductManager extends ManagerBase {
             }
         }
         
+        if (taxGroups.get(1) != null && product.taxGroupObject == null && product.taxgroup == -1) {
+            product.taxGroupObject = taxGroups.get(1);
+            product.taxgroup = 1;
+        } else {
+            product.taxGroupObject = taxGroups.get(product.taxgroup);
+        }
         
-        product.taxGroupObject = taxGroups.get(product.taxgroup);
+        
         return product;
     }
 

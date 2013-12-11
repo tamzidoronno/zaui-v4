@@ -153,6 +153,7 @@ class Page extends FactoryBase {
             $pb = new PageBuilder($this->layout, $this->skeletonType, $this);
             $pb->build();
         }
+        
         echo "</div></div>";
 
         if (!$this->backendPage->hideFooter && $this->skeletonType != 5) {
@@ -274,6 +275,18 @@ class Page extends FactoryBase {
             $this->userLevel = 0;
 
         return $this->userLevel;
+    }
+
+    public function loadPageBuilder() {
+        return new PageBuilder($this->layout, $this->skeletonType, $this);
+    }
+    
+    public function setLayout($layout) {
+        $this->layout = $layout;
+        $page = $this->getApi()->getPageManager()->getPage($this->getNavigation()->currentPageId);
+        $page->layout = $layout;
+        $page->type = -1;
+        $this->getApi()->getPageManager()->savePage($page);
     }
 
 }

@@ -9,6 +9,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.SMSFactory;
 import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +92,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         return false;
     }
 
-    private String mutateText(String password, String text, Entry entry, User user) {
+    private String mutateText(String password, String text, Entry entry, User user) throws ErrorException {
         String date = entry.day + "/" + entry.month + "-" + entry.year + " : " + entry.starttime;
        
         if (entry.stoptime != null) {
@@ -121,6 +122,15 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             text = text.replace("{EVENT_LOCATION}", entry.location.replaceAll("\n", "<BR />"));
         if (entry.description != null)
             text = text.replace("{EVENT_DESCRIPTION}", entry.description.replaceAll("\n", "<BR />"));
+        
+        String groupLogo = getGroupLogo(user);
+        if (groupLogo != null) {
+            String address = "http://"+getStore().webAddressPrimary+"//displayImage.php?id="+groupLogo;
+            String imageTag = "<img width='150' src='"+address+"'/>";
+            text = text.replace("{GROUP_LOGO}", imageTag);
+        }
+        
+        
         return text;
     }
 
@@ -201,11 +211,33 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
         return retentry;
     }
+    
+    private Entry removeUserWaitingList(String userId, String entryId) throws ErrorException {
+        Entry retentry = null;
+
+        for (Month month : months.values()) {
+            for (Day day : month.days.values()) {
+                for (Entry entry : day.entries) {
+                    if (entryId.equals("")) {
+                        entry.waitingList.remove(userId);
+                    } else if (entry.entryId.equals(entryId)) {
+                        retentry = entry;
+                        entry.waitingList.remove(userId);
+                    }
+                    databaseSaver.saveObject(month, credentials);
+                }
+            }
+        }
+
+        return retentry;
+    }
 
     @Override
     public void onEvent(String eventName, String eventReferance) throws ErrorException {
-        if (Events.USER_DELETED.equals(eventName))
+        if (Events.USER_DELETED.equals(eventName)) {
             removeUserAttendee(eventReferance, "");
+            removeUserWaitingList(eventReferance, "");
+        }
     }
 
     @Override
@@ -469,6 +501,8 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             }
 
         }
+        
+        java.util.Collections.sort(filters);
         return filters;
     }
     
@@ -567,5 +601,21 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         }
         
         throw new ErrorException(101);
+    }
+
+    private String getGroupLogo(User user) throws ErrorException {
+        if (user.groups == null || user.groups.isEmpty()) {
+            return null;
+        }
+        
+        UserManager userManager = getManager(UserManager.class);
+        String groupId = user.groups.iterator().next();
+        for (Group group : userManager.getAllGroups()) {
+            if (group.id.equals(groupId)) {
+                return group.imageId;
+            }
+        }
+
+        return null;
     }
 }

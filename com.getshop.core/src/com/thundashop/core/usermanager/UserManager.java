@@ -192,7 +192,10 @@ public class UserManager extends ManagerBase implements IUserManager {
         UserStoreCollection collection = getUserStoreCollection(storeId);
         List<User> retUsers = new ArrayList();
         for (String userId : userIds) {
-            retUsers.add(collection.getUser(userId));
+            User user = collection.getUser(userId);
+            if (user != null) {
+                retUsers.add(user);
+            }
         }
         
         return getUserStoreCollection(storeId).filterUsers(getSession().currentUser, retUsers);

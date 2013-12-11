@@ -1,3 +1,15 @@
+<?
+/* @var $factory Factory */
+$factory = $this->getFactory();
+$pb = $factory->getPage()->loadPageBuilder();
+if (isset($_POST['data']['updatelayout'])) {
+    $pb->activateBuildLayoutMode();
+}
+$pb->convertToNewLayout(false);
+$layout = $pb->updateLayoutConfig();
+$pb->saveBuildLayout($layout);
+?>
+
 <div class="skeletondisplayer">
     <div class="information">
         <?
@@ -5,39 +17,168 @@
         echo $this->__f("To change a layout for the current page, please select one from the list below.");
         ?>
     </div>
-    <h3><? echo $this->__f("Sidebar"); ?></h3>
-    <div class="group">
-        <div class="skeletondisplay" ><div class="innerskeletondisplayer skeleton1" skeleton="1"></div></div>
-        <div class="skeletondisplay" ><div class="innerskeletondisplayer skeleton2" skeleton="2"></div></div>
-        <div class="skeletondisplay" ><div class="innerskeletondisplayer skeleton22" skeleton="22"></div></div>
-        <div class="skeletondisplay" ><div class="innerskeletondisplayer skeleton19" skeleton="19"></div></div>
-        <div class="skeletondisplay" ><div class="innerskeletondisplayer skeleton18" skeleton="18"></div></div>
-        <div class="skeletondisplay" ><div class="innerskeletondisplayer skeleton3" skeleton="3"></div></div>
-        <div class="skeletondisplay" ><div class="innerskeletondisplayer skeleton26" skeleton="26"></div></div>
-    </div>
-
-    <h3><? echo $this->__f("Rows"); ?></h3>
-    <div class="group">
-        <div class="skeletondisplay" ><div class="innerskeletondisplayer skeleton4" skeleton="4"></div></div>
-        <div class="skeletondisplay" ><div class="innerskeletondisplayer skeleton20" skeleton="20"></div></div>
-        <div class="skeletondisplay" ><div class="innerskeletondisplayer skeleton21" skeleton="21"></div></div>
-        <div class="skeletondisplay" ><div class="innerskeletondisplayer skeleton10" skeleton="10"></div></div>
-        <div class="skeletondisplay" ><div class="innerskeletondisplayer skeleton11" skeleton="11"></div></div>
-        <div class="skeletondisplay" ><div class="innerskeletondisplayer skeleton12" skeleton="12"></div></div>
-    </div>
-    
-    <h3><? echo $this->__f("Others"); ?></h3>
-    <div class="group">
-        <div class="skeletondisplay" ><div class="innerskeletondisplayer skeleton7" skeleton="7"></div></div>
-        <div class="skeletondisplay" ><div class="innerskeletondisplayer skeleton8" skeleton="8"></div></div>
-        <div class="skeletondisplay" ><div class="innerskeletondisplayer skeleton14" skeleton="14"></div></div>
-        <div class="skeletondisplay" ><div class="innerskeletondisplayer skeleton15" skeleton="15"></div></div>
-        <div class="skeletondisplay" ><div class="innerskeletondisplayer skeleton13" skeleton="13"></div></div>
-        <div class="skeletondisplay" ><div class="innerskeletondisplayer skeleton17" skeleton="17"></div></div>
-        <div class="skeletondisplay" ><div class="innerskeletondisplayer skeleton9" skeleton="9"></div></div>
-        <div class="skeletondisplay" ><div class="innerskeletondisplayer skeleton16" skeleton="16"></div></div>
-        <div class="skeletondisplay" ><div class="innerskeletondisplayer skeleton23" skeleton="23"></div></div>
-        <div class="skeletondisplay" ><div class="innerskeletondisplayer skeleton24" skeleton="24"></div></div>
-        <div class="skeletondisplay" ><div class="innerskeletondisplayer skeleton25" skeleton="25"></div></div>
+    <div class="information layoutpreviewselection">
+        <div><? echo $this->__f("Layout options:"); ?></div>
+        <select id="rowscount">
+            <?
+            for ($i = 1; $i < 20; $i++) {
+                $selected = "";
+                if ($i == sizeof($layout->rows)) {
+                    $selected = "SELECTED";
+                }
+                echo "<option value='" . $i . "' $selected>" . $i . " " . $this->__f("number of rows") . "</option>";
+            }
+            ?>
+        </select>
+        <?
+        echo "<select id='leftsidebarcount'>";
+        for ($i = 0; $i <= 20; $i++) {
+            $lfsel = "";
+            if ($layout->leftSideBar == $i) {
+                $lfsel = "SELECTED";
+            }
+            echo "<option value='$i' $lfsel>$i " . $factory->__f("left sidebar") . "</option>";
+        }
+        echo "</select>";
+        echo "<select id='rightsidebarcount'>";
+        for ($i = 0; $i <= 20; $i++) {
+            $lfsel = "";
+            if ($layout->rightSideBar == $i) {
+                $lfsel = "SELECTED";
+            }
+            echo "<option value='$i' $lfsel>$i " . $factory->__f("right sidebar") . "</option>";
+        }
+        echo "</select>";
+        ?>
+        <div class="button-large setnewlayout">
+            <div class="rightglare"></div>
+            <div class="filler"></div>
+            <ins><? echo $factory->__f("Set page layout"); ?></ins>
+        </div>
+        <br>
+        <br>
+        <? echo $this->__f("Selected layout preview") . ":"; ?>
+        <div class='layoutpreviewbox' style="width:500px; border:solid 1px; padding: 10px; background-color:#EFEFEF; position:relative;padding-top:60px; padding-bottom: 60px;color:#5e5e5e; ">
+            <?
+            echo $pb->printPreview();
+            ?>
+        </div>
+        <div style='width: 500px; font-size:12px;'>
+            * <? echo $this->__f("Content areas can contain content like images, products, text content, menues, movies, etc. After selecting your layout, you can start adding content to them."); ?>
+        </div>
+        <div class='layoutsuggestion'>
+            <? echo $this->__f("Layout suggestions") . ":"; ?>
+        </div>
+        <div class='predefined_layouts'>
+            <? echo $pb->printSuggestions(); ?>
+        </div>
     </div>
 </div>
+
+
+<script>
+
+    function doresizebox(element, ui) {
+        var newsize = ui.originalSize.width - ui.size.width;
+        var cellnumber = parseInt(element.attr('cellnumber')) - 1;
+        var box = element.closest('.previewrowcontainer').find('.previewrow.cell[cellnumber="' + cellnumber + '"]');
+        var boxorigwidth = box.attr('origwidth');
+        if (boxorigwidth === undefined) {
+            box.attr('origwidth', box.width());
+        }
+        var newwidth = (parseInt(boxorigwidth) + parseInt(newsize))+1;
+        box.width(newwidth);
+    }
+    function alignLayoutBoxes(index, cellnumber, firstcell, changedcell, offset) {
+        var above = index - offset;
+        var changedPercentage = parseFloat(changedcell.attr('percentage'));
+        var firstPercentage = parseFloat(firstcell.attr('percentage'));
+        var abovecell = null;
+        var changedcellposition = firstcell.position();
+        $('.previewrowcontainer[index="'+above+'"]').find('.cell').each(function(theindex) {
+            var diff = changedcellposition.left - $(this).position().left;
+            if((diff < 10 && diff > -10) && abovecell === null) {
+                abovecell = $(this);
+            }
+        });
+        if(abovecell === null) {
+            return false;
+        }
+
+        var abovePercentage = parseFloat(abovecell.attr('percentage'));
+        if(above >= 0) {
+            var diff = abovePercentage - firstPercentage;
+            if(diff < 1 && diff > -1) {
+                var chop = changedPercentage-abovePercentage;
+                firstPercentage += chop;
+                firstcell.attr('percentage', abovePercentage);
+                changedcell.attr('percentage', firstPercentage);
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    function calculateResizedPercenage(element, total) {
+        return ((element.width() / total)*100);
+    }
+
+
+    $('.layoutpreviewbox .previewrow.cell').resizable({
+        handles: 'w',
+        "resize": function(event, ui) {
+            doresizebox($(this), ui);
+        },
+        "stop": function(event, ui) {
+            var cellnumber = $(this).attr('cellnumber');
+            var changednumber = cellnumber-1;
+            var rowcontainer = $(this).closest('.previewrowcontainer');
+            var index = rowcontainer.attr('index');
+            var cells = rowcontainer.find('.cell');
+            var rowadjust = [];
+            
+            var totalwidth = 0;
+            cells.each(function() {
+                totalwidth += $(this).width();
+            });
+            
+            var firstcell = rowcontainer.find('.cell[cellnumber="'+cellnumber+'"]');
+            var changedcell = rowcontainer.find('.cell[cellnumber="'+changednumber+'"]');
+            
+            var before = parseFloat(firstcell.attr('percentage')) + parseFloat(changedcell.attr('percentage'));
+            firstcell.attr('percentage', calculateResizedPercenage(firstcell, totalwidth));
+            changedcell.attr('percentage', calculateResizedPercenage(changedcell, totalwidth));
+            var after = parseFloat(firstcell.attr('percentage')) + parseFloat(changedcell.attr('percentage'));
+            var diff = before-after;
+            changedcell.attr('percentage', parseFloat(changedcell.attr('percentage'))+(diff/2));
+            firstcell.attr('percentage', parseFloat(firstcell.attr('percentage'))+(diff/2));
+            
+            var aligned = alignLayoutBoxes(index, changednumber, firstcell, changedcell,1);
+            if(!aligned) {
+                aligned = alignLayoutBoxes(index, changednumber, changedcell,firstcell,1);
+            }
+            if(!aligned) {
+                aligned = alignLayoutBoxes(index, changednumber, firstcell, changedcell,2);
+            }
+            if(!aligned) {
+                aligned = alignLayoutBoxes(index, changednumber, changedcell,firstcell,2);
+            }
+            
+            cells.each(function(index) {
+                var percentage = $(this).attr('percentage');
+                rowadjust.push(percentage);
+            });
+            
+            var data = {
+                "adjustment": rowadjust,
+                "index" : index
+            };
+            data["updatelayout"] = true;
+            var event = thundashop.Ajax.createEvent('', 'showPageLayoutSelection', null, data);
+            thundashop.common.showInformationBox(event, __f("Select page layout"), true);
+
+        }
+    });
+    $('.layoutpreviewbox .previewrow.cell[cellnumber="1"]').resizable("destroy");
+    $('.layoutpreviewbox .previewrow.cell.sidebar').resizable("destroy");
+</script>

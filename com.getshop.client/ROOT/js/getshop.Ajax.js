@@ -101,6 +101,10 @@ thundashop.Ajax = {
             xhr: function()
             {
                 var xhr = new window.XMLHttpRequest();
+                if (!xhr.upload) {
+                    return xhr;
+                }
+                
                 xhr.upload.addEventListener("progress", function(evt) {
                     if (evt.lengthComputable) {
                         var percentComplete = (evt.loaded / evt.total) * 100;
@@ -109,6 +113,7 @@ thundashop.Ajax = {
                         }
                     }
                 }, false);
+                
                 return xhr;
             },
             error: thundashop.handleAjaxError

@@ -11,6 +11,12 @@ if ($_GET['file'] == 2)
 if ($_GET['file'] == 3)
     $file = "Oppgaver ESI Autoakademiet.pptx";
 
+if ($_GET['file'] == 4)
+    $file = "7.1 Innforing Hybrid og EV teknikk 1.0.pdf";
+
+if ($_GET['file'] == 5)
+    $file = "Bransjestandard  2011.odt nr2.pdf 12.12.13.pdf";
+
 if (!isset($file)) {
     return;
 }

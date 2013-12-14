@@ -18,10 +18,13 @@
         var autosave = false;
         var selectedCropArea = [0, 0, previewWidth, previewHeight];
         var keepAspect = true;
+        var disableAspectButton = false;
         var extra = {};
 
         if (config.keepAspect !== undefined)
             keepAspect = config.keepAspect;
+        if (config.disableAspectButton !== undefined)
+            disableAspectButton = config.disableAspectButton;
         if (config.progressCallback !== undefined)
             progressCallback = config.progressCallback;
         if (config.previewHeight !== undefined)
@@ -59,6 +62,23 @@
         var infobox = thundashop.common.createInformationBox($(this).closest('.app').attr('appid'), 'Crop image', open);
         infobox.html('<center id="uploadedimagerow"></center>');
         infobox.find('#uploadedimagerow').html('<img id="uploadedimage">');
+        if(disableAspectButton) {
+            var disablecheckbox = $('<input type="checkbox" id="disableaspectbutton">');
+            disablecheckbox.on('click', function() {
+                if($(this).is(':checked')) {
+                    keepAspect = false;
+                    jcrop_api.setOptions({ aspectRatio: 0 });
+                } else {
+                    keepAspect = true;
+                    var ratio = imagebox.width() / imagebox.height();                
+                    jcrop_api.setOptions({ aspectRatio: ratio });
+                }
+            })
+            infobox.find('#uploadedimagerow').append(disablecheckbox);
+            infobox.find('#uploadedimagerow').append('<label for="disableaspectbutton">'+__f("Disable aspect ratio")+'</label>');
+            infobox.find('#uploadedimagerow').append('<div></div>');
+        }
+        
         infobox.find('#uploadedimagerow').append('<div class="button add_image_button"><div class="rightglare"></div><div class="filler"></div><ins>'+__f("Save image")+'</ins></div>');
 
         function generateCompressionRate(img, width, height) {
@@ -120,6 +140,7 @@
 
             if (!keepAspect) {
                 imgheight = (y2 - y1) / compression;
+                imgwidth = (x2 - x1)/  compression;
             }
 
             var canvas = document.createElement("canvas");
@@ -216,9 +237,12 @@
                 },
                 onChange: function(c) {
                     cords = c;
+                    console.log(cords);
                 },
                 setSelect: selectedCropArea,
                 aspectRatio: ratio
+            }, function() {
+                jcrop_api = this;
             });
 
         }

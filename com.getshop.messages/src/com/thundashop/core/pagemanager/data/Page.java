@@ -72,6 +72,17 @@ public class Page extends DataCommon implements Cloneable {
         pageAreas.remove(area);
     }
 
+    public void switchApplications(String fromArea, String toArea) {
+        PageArea firstArea = pageAreas.get(fromArea);
+        PageArea secondArea = pageAreas.get(toArea);
+        
+        firstArea.type = toArea;
+        secondArea.type = fromArea;
+        
+        pageAreas.put(toArea, firstArea);
+        pageAreas.put(fromArea, secondArea);
+    }
+
     public static class DefaultPages {
         public static String OrderOverviewPageId = "orderoverview";
         public static String CartPage = "cart";

@@ -159,9 +159,7 @@ class ApplicationBase extends FactoryBase {
             echo "<div class='order_mask'>";
 
             echo "<div class='inner'>";
-            echo "<span class='reorder_up'></span>";
-            echo $this->__f("Click to reorder");
-            echo "<span class='reorder_down'></span>";
+            echo $this->__f("Drag to reorder");
             echo "</div>";
             echo "</div>";
         }

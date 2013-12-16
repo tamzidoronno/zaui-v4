@@ -32,11 +32,6 @@ $(document).ready(function() {
                 extraArgs: {}
             },
             {
-                type: 'seperator',
-                title: __f('Security'),
-                disableOnSystemPages: true
-            },
-            {
                 icontype: "awesome",
                 icon: "fa-lock",
                 iconsize : "30",
@@ -71,31 +66,8 @@ $(document).ready(function() {
                 disableOnSystemPages: true
             },
             {
-                type: 'seperator',
-                title: __f('Applications'),
-                disableOnSystemPages: true
-            },
-            {
                 icontype: "awesome",
-                icon: "fa-plus",
-                iconsize : "30",
-                title: __f("Add more applications to this page."),
-                click: thundashop.MainMenu.showAddApplication,
-                extraArgs: {},
-                disableOnSystemPages: true
-            },
-            {
-                icontype: "awesome",
-                icon: "fa-trash-o",
-                iconsize : "30",
-                title: __f("Remove applications that are added"),
-                click: thundashop.MainMenu.deleteApplicationClicked,
-                extraArgs: {},
-                disableOnSystemPages: true
-            },
-            {
-                icontype: "awesome",
-                icon: "fa-arrows-v",
+                icon: "fa-arrows",
                 iconsize : "30",
                 title: __f("Move applications"),
                 click: thundashop.MainMenu.reorderApplicationClicked,

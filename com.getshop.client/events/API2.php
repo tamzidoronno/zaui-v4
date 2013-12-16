@@ -2454,6 +2454,21 @@ class APIPageManager {
      }
 
      /**
+     * Switch application areas between two applications areas on a given page.
+     */
+
+     public function switchApplicationAreas($pageId, $fromArea, $toArea) {
+          $data = array();
+          $data['args'] = array();
+          $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+          $data['args']["fromArea"] = json_encode($this->transport->object_unset_nulls($fromArea));
+          $data['args']["toArea"] = json_encode($this->transport->object_unset_nulls($toArea));
+          $data["method"] = "switchApplicationAreas";
+          $data["interfaceName"] = "core.pagemanager.IPageManager";
+          return $this->transport->sendMessage($data);
+     }
+
+     /**
      * Need to translate a set of page ids?
      * @param pages A list (array) of page ids to translate.
      * @return HashMap

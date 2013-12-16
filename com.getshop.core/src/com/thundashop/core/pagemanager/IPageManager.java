@@ -41,6 +41,13 @@ public interface IPageManager {
     public AppConfiguration addApplication(String applicationSettingId) throws ErrorException;
     
     /**
+     * Switch application areas between two applications areas on a given page.
+     */
+    @Administrator
+    public void switchApplicationAreas(String pageId, String fromArea, String toArea) throws ErrorException;
+    
+    
+    /**
      * Set the page description.
      * @param description The description to add.
      * @param pageId The id of the page.

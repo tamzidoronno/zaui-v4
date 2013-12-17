@@ -644,7 +644,7 @@ height: 20px;
 z-index: 10;
 position: absolute;
 display: none;
-opacity : 0.9;
+opacity : 0.6;
 background-color : #2b42b8;
 color : #FFFFFF;
 border-radius: 5px;
@@ -654,7 +654,7 @@ font-size: 16px;
 vertical-align: middle;
 height: 0px;
 }
-
+.applicationarea .order_mask .inner { opacity: 1.0 } 
 .applicationarea .redmask {
 background-image: url('/skin/default/images/red-transparent.png');
 }

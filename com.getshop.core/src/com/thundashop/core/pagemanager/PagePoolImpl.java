@@ -288,6 +288,10 @@ public class PagePoolImpl {
         boolean onlyExtraApplications = shouldOnlyContainExtraApplications(page);
         page.populateApplications(applicationPool.getApplications(), onlyExtraApplications);
         page.sortApplications();
+        page.finalizePageLayoutRows();
+        if(page.needSaving) {
+            savePage(page);
+        }
         return page;
     }
 

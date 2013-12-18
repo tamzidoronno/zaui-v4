@@ -189,11 +189,6 @@ $pb->saveBuildLayout($layout);
             $('.layoutpreviewbox .sortable_layout_rows li').each(function() {
                 sorted.push($(this).attr('rowid'));
             });
-            var i = 0;
-            $('.layoutpreviewbox .row_option').each(function() {
-                $(this).attr('index',i);
-                i++;
-            });
             
             var data = {
                 "sortorder" : sorted,

@@ -5,6 +5,7 @@ class AppAreaHelper {
     public static $displayContent = true;
     
     public static function printRows($page, $numberOfEntries, $offset = 1, $rowWidth = null) {
+        ob_start();
         $width = 100;
         if ($numberOfEntries == 2) {
             $width = 50;
@@ -33,14 +34,18 @@ class AppAreaHelper {
                     }
                     $index++;
                     echo "<div row='$offset' style='width:$width%; box-sizing:border-box;-moz-box-sizing:border-box;' class='$class gs_row_cell inline'>";
-                    AppAreaHelper::printAppArea($page, "col_$i", false, false, false, "cell");
+                    echo AppAreaHelper::printAppArea($page, "col_$i", false, false, false, "cell");
                     echo "</div>";
                 }
                 ?>
         <?
+        $result = ob_get_contents();
+        ob_end_clean();
+        return $result;
     }
 
     public static function printAppArea($page, $name, $include_bottom_margin = false, $include_right_margin = false, $include_left_margin = false, $type = "standard") {
+        ob_start();
         ?>
         <div area="<? echo $name; ?>" class="applicationarea <?
              if ($include_bottom_margin) {
@@ -60,6 +65,10 @@ class AppAreaHelper {
             ?>
         </div>
         <?
+        $result = ob_get_contents();
+        ob_end_clean();
+        return $result;
+        
     }
 
 }

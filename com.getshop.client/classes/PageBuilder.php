@@ -24,7 +24,6 @@ class PageBuilder {
         $_SESSION['layoutBuilded'] = serialize($layout);
         $_SESSION['layoutBuildedType'] = $this->type;
     }
-    
 
     function updateLayoutConfig() {
         if (isset($_POST['data']['updatelayout'])) {
@@ -52,6 +51,7 @@ class PageBuilder {
                 for ($i = 0; $i < $_POST['data']['rowscount']; $i++) {
                     if (!isset($this->layout->rows[$i])) {
                         $this->layout->rows[$i] = $this->createRow(1);
+                        $this->layout->sortedRows[] = $this->layout->rows[$i]->rowId;
                     }
                 }
                 $i = 0;
@@ -59,6 +59,9 @@ class PageBuilder {
                     foreach ($this->layout->rows as $index => $row) {
                         $i++;
                         if ($i > $_POST['data']['rowscount']) {
+                            if (($key = array_search($this->layout->rows[$index]->rowId, $this->layout->sortedRows)) !== false) {
+                                unset($this->layout->sortedRows[$key]);
+                            }
                             unset($this->layout->rows[$index]);
                         }
                     }
@@ -136,11 +139,7 @@ class PageBuilder {
                 echo "</td>";
             }
             echo "<td valign='top'>";
-            echo "<ul class='sortable_layout_rows'>";
-            foreach ($this->layout->rows as $index => $row) {
-                $this->printPreviewRow($row, $index);
-            }
-            echo "</ul>";
+            $this->printPreviewRows();
             echo "</td>";
             if ($this->layout->rightSideBar > 0) {
                 echo "<td valign='top' width='" . $this->layout->rightSideBarWidth . "%'>";
@@ -152,11 +151,7 @@ class PageBuilder {
             echo "</tr>";
             echo "</table>";
         } else {
-            echo "<ul class='sortable_layout_rows'>";
-            foreach ($this->layout->rows as $index => $row) {
-                $this->printPreviewRow($row, $index);
-            }
-            echo "</ul>";
+            $this->printPreviewRows();
         }
         echo "<div class='footerpreview'>";
         if ($this->includePreviewText) {
@@ -375,78 +370,88 @@ class PageBuilder {
         $rownumber = 1;
         $cellcount = 1;
         $maincount = 1;
+        $rows = array();
         foreach ($this->layout->rows as $row) {
             /* @var $row core_pagemanager_data_RowLayout */
+            ob_start();
             ?>
             <div class="gs_row gs_outer r<? echo $rownumber; ?>" row="<? echo $rownumber; ?>" rowid="<? echo $row->rowId; ?>">
                 <div class='gs_inner'>
-            <?
-            if ($row->numberOfCells == 1) {
-                AppAreaHelper::printAppArea($this->page, "main_" . $maincount);
-                $maincount++;
-            } else {
-                AppAreaHelper::printRows($this->page, $row->numberOfCells, $cellcount, $row->rowWidth);
-                $cellcount += $row->numberOfCells;
-            }
-            ?>
+                    <?
+                    if ($row->numberOfCells == 1) {
+                        echo AppAreaHelper::printAppArea($this->page, "main_" . $maincount);
+                        $maincount++;
+                    } else {
+                        echo AppAreaHelper::printRows($this->page, $row->numberOfCells, $cellcount, $row->rowWidth);
+                        $cellcount += $row->numberOfCells;
+                    }
+                    ?>
                 </div>
             </div>
-                    <?
-                    $rownumber++;
-                }
-            }
+            <?
+            $rows[$row->rowId] = ob_get_contents();
+            ob_end_clean();
+            $rownumber++;
+        }
+        $this->sortAndPrintRows($rows);
+    }
 
-            public function printWithSideBars() {
-                $colcount = 1;
-                $cellcount = 1;
-                $maincount = 1;
-                ?>
+    public function printWithSideBars() {
+        $colcount = 1;
+        $cellcount = 1;
+        $maincount = 1;
+        $rows = array();
+        ?>
         <div class='gs_row r1 gs_outer'>
             <div class='gs_inner'>
                 <table width="100%" cellspacing="0" cellpadding="0">
                     <tr>
         <? if ($this->layout->leftSideBar > 0) { ?>
                             <td width="<? echo $this->layout->leftSideBarWidth; ?>%" valign="top" class='gs_col c<? echo $colcount; ?> gs_margin_right'>
-            <?
-            $colcount++;
-            for ($i = 1; $i <= $this->layout->leftSideBar; $i++) {
-                AppAreaHelper::printAppArea($this->page, "left_" . $i);
-            }
-            ?>
+                            <?
+                            $colcount++;
+                            for ($i = 1; $i <= $this->layout->leftSideBar; $i++) {
+                                echo AppAreaHelper::printAppArea($this->page, "left_" . $i);
+                            }
+                            ?>
                             </td>
                             <? } ?>
                         <td valign="top" class='gs_col c<? echo $colcount; ?> gs_margin_right gs_margin_left'>
-                            <?
-                            $colcount++;
-                            $rowsprinted = 0;
-                            foreach ($this->layout->rows as $row) {
-                                $class = "";
-                                $rowsprinted++;
+                        <?
+                        $rowsprinted = 0;
+                        $colcount++;
+                        foreach ($this->layout->rows as $row) {
+                            ob_start();
+                            $class = "";
+                            $rowsprinted++;
 
-                                if ($rowsprinted != sizeof($this->layout->rows)) {
-                                    $class = "gs_margin_bottom";
-                                }
-                                echo "<div class='$class'>";
-                                /* @var $row core_pagemanager_data_RowLayout */
-                                if ($row->numberOfCells == 1) {
-                                    AppAreaHelper::printAppArea($this->page, "main_" . $maincount);
-                                    $maincount++;
-                                } else {
-                                    AppAreaHelper::printRows($this->page, $row->numberOfCells, $cellcount, $row->rowWidth);
-                                    $cellcount += $row->numberOfCells;
-                                }
-                                echo "</div>";
+                            if ($rowsprinted != sizeof($this->layout->rows)) {
+                                $class = "gs_margin_bottom";
                             }
-                            ?>
+                            echo "<div class='$class'>";
+                            /* @var $row core_pagemanager_data_RowLayout */
+                            if ($row->numberOfCells == 1) {
+                                echo AppAreaHelper::printAppArea($this->page, "main_" . $maincount);
+                                $maincount++;
+                            } else {
+                                echo AppAreaHelper::printRows($this->page, $row->numberOfCells, $cellcount, $row->rowWidth);
+                                $cellcount += $row->numberOfCells;
+                            }
+                            echo "</div>";
+                            $rows[$row->rowId] = ob_get_contents();
+                            ob_end_clean();
+                        }
+                        $this->sortAndPrintRows($rows);
+                        ?>
                         </td>
                             <? if ($this->layout->rightSideBar > 0) { ?>
                             <td width="<? echo $this->layout->rightSideBarWidth; ?>%" valign="top" class='gs_col c<? echo $colcount; ?> gs_margin_left'>
-                                <?
-                                $colcount++;
-                                for ($i = 1; $i <= $this->layout->rightSideBar; $i++) {
-                                    AppAreaHelper::printAppArea($this->page, "right_" . $i, true, false, true);
-                                }
-                                ?>
+                            <?
+                            $colcount++;
+                            for ($i = 1; $i <= $this->layout->rightSideBar; $i++) {
+                                echo AppAreaHelper::printAppArea($this->page, "right_" . $i, true, false, true);
+                            }
+                            ?>
                             </td>
                             <? } ?>
                     </tr>
@@ -461,15 +466,16 @@ class PageBuilder {
      * @param core_pagemanager_data_RowLayout $row
      */
     public function printPreviewRow($row, $index) {
-        echo "<li class='outer-row-container' rowid='" . $row->rowId . "'>";
+        $rowString = "";
+        $rowString .= "<li class='outer-row-container' rowid='" . $row->rowId . "'>";
         if ($this->includePreviewText) {
-            echo '<i class="fa fa-arrows-v"></i>';
-            echo "<span title='" . $this->factory->__f("Row options") . "' class='fa fa-cog row_option' index='$index' cells='" . $row->numberOfCells . "'></span>";
+            $rowString .= '<i class="fa fa-arrows-v"></i>';
+            $rowString .= "<span title='" . $this->factory->__f("Row options") . "' class='fa fa-cog row_option' index='$index' cells='" . $row->numberOfCells . "'></span>";
         }
         if ($row->numberOfCells == 1) {
-            echo "<div class='previewrow row'>" . $this->getPreviewText() . "</div>";
+            $rowString .= "<div class='previewrow row'>" . $this->getPreviewText() . "</div>";
         } else {
-            echo "<div class='previewrowcontainer' index='$index'>";
+            $rowString .= "<div class='previewrowcontainer' index='$index'>";
             for ($i = 1; $i <= $row->numberOfCells; $i++) {
                 $width = (100 / $row->numberOfCells);
                 $margin = 0;
@@ -480,14 +486,15 @@ class PageBuilder {
                     $width = $row->rowWidth[$i - 1];
                 }
 
-                echo "<div style='$i; width: $width%; box-sizing:border-box;-moz-box-sizing:border-box;display:inline-block;padding-right:" . $margin . "px;'>";
-                echo "<div class='previewrow cell' cellnumber='$i' percentage='$width'>" . $this->getPreviewText() . "</div>";
-                echo "</div>";
+                $rowString .= "<div style='$i; width: $width%; box-sizing:border-box;-moz-box-sizing:border-box;display:inline-block;padding-right:" . $margin . "px;'>";
+                $rowString .= "<div class='previewrow cell' cellnumber='$i' percentage='$width'>" . $this->getPreviewText() . "</div>";
+                $rowString .= "</div>";
             }
-            echo "</div>";
+            $rowString .= "</div>";
         }
-        echo "<div class='gs_bottom'></div>";
-        echo "</li>";
+        $rowString .= "<div class='gs_bottom'></div>";
+        $rowString .= "</li>";
+        return $rowString;
     }
 
     public function getPreviewText() {
@@ -503,6 +510,36 @@ class PageBuilder {
 
     public function getLayout() {
         return $this->layout;
+    }
+
+    private function printPreviewRows() {
+        echo "<ul class='sortable_layout_rows'>";
+        $rowarray = [];
+        foreach ($this->layout->rows as $index => $row) {
+            $rowarray[$row->rowId] = $this->printPreviewRow($row, $index);
+        }
+        if (isset($this->layout->sortedRows) && sizeof($this->layout->sortedRows) > 0) {
+            foreach ($this->layout->sortedRows as $rowid) {
+                echo $rowarray[$rowid];
+            }
+        } else {
+            foreach ($rowarray as $row) {
+                echo $row;
+            }
+        }
+        echo "</ul>";
+    }
+
+    public function sortAndPrintRows($rows) {
+        if (isset($this->layout->rows) && sizeof($this->layout->sortedRows)) {
+            foreach ($this->layout->sortedRows as $rowid) {
+                echo $rows[$rowid];
+            }
+        } else {
+            foreach ($rows as $row) {
+                echo $row;
+            }
+        }
     }
 
 }

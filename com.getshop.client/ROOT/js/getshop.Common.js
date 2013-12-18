@@ -850,7 +850,7 @@ $(document).on('click', '#informationbox .row_option', function() {
     infobox.find('#numberofcells').val($(this).attr('cells'));
     infobox.css('position','absolute');
     infobox.css('display','block');
-    infobox.css('top',$(this).position().top);
+    infobox.css('top',$(this).parent().position().top);
     infobox.left('left',$(this).position().left);
     infobox.show();
 });

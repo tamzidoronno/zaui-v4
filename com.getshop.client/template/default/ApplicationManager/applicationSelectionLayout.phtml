@@ -86,7 +86,7 @@ $pb->saveBuildLayout($layout);
         if (boxorigwidth === undefined) {
             box.attr('origwidth', box.width());
         }
-        var newwidth = (parseInt(boxorigwidth) + parseInt(newsize))+1;
+        var newwidth = (parseInt(boxorigwidth) + parseInt(newsize)) + 1;
         box.width(newwidth);
     }
     function alignLayoutBoxes(index, cellnumber, firstcell, changedcell, offset) {
@@ -95,21 +95,21 @@ $pb->saveBuildLayout($layout);
         var firstPercentage = parseFloat(firstcell.attr('percentage'));
         var abovecell = null;
         var changedcellposition = firstcell.position();
-        $('.previewrowcontainer[index="'+above+'"]').find('.cell').each(function(theindex) {
+        $('.previewrowcontainer[index="' + above + '"]').find('.cell').each(function(theindex) {
             var diff = changedcellposition.left - $(this).position().left;
-            if((diff < 10 && diff > -10) && abovecell === null) {
+            if ((diff < 10 && diff > -10) && abovecell === null) {
                 abovecell = $(this);
             }
         });
-        if(abovecell === null) {
+        if (abovecell === null) {
             return false;
         }
 
         var abovePercentage = parseFloat(abovecell.attr('percentage'));
-        if(above >= 0) {
+        if (above >= 0) {
             var diff = abovePercentage - firstPercentage;
-            if(diff < 1 && diff > -1) {
-                var chop = changedPercentage-abovePercentage;
+            if (diff < 1 && diff > -1) {
+                var chop = changedPercentage - abovePercentage;
                 firstPercentage += chop;
                 firstcell.attr('percentage', abovePercentage);
                 changedcell.attr('percentage', firstPercentage);
@@ -118,9 +118,9 @@ $pb->saveBuildLayout($layout);
         }
         return false;
     }
-    
+
     function calculateResizedPercenage(element, total) {
-        return ((element.width() / total)*100);
+        return ((element.width() / total) * 100);
     }
 
 
@@ -131,47 +131,47 @@ $pb->saveBuildLayout($layout);
         },
         "stop": function(event, ui) {
             var cellnumber = $(this).attr('cellnumber');
-            var changednumber = cellnumber-1;
+            var changednumber = cellnumber - 1;
             var rowcontainer = $(this).closest('.previewrowcontainer');
             var index = rowcontainer.attr('index');
             var cells = rowcontainer.find('.cell');
             var rowadjust = [];
-            
+
             var totalwidth = 0;
             cells.each(function() {
                 totalwidth += $(this).width();
             });
-            
-            var firstcell = rowcontainer.find('.cell[cellnumber="'+cellnumber+'"]');
-            var changedcell = rowcontainer.find('.cell[cellnumber="'+changednumber+'"]');
-            
+
+            var firstcell = rowcontainer.find('.cell[cellnumber="' + cellnumber + '"]');
+            var changedcell = rowcontainer.find('.cell[cellnumber="' + changednumber + '"]');
+
             var before = parseFloat(firstcell.attr('percentage')) + parseFloat(changedcell.attr('percentage'));
             firstcell.attr('percentage', calculateResizedPercenage(firstcell, totalwidth));
             changedcell.attr('percentage', calculateResizedPercenage(changedcell, totalwidth));
             var after = parseFloat(firstcell.attr('percentage')) + parseFloat(changedcell.attr('percentage'));
-            var diff = before-after;
-            changedcell.attr('percentage', parseFloat(changedcell.attr('percentage'))+(diff/2));
-            firstcell.attr('percentage', parseFloat(firstcell.attr('percentage'))+(diff/2));
-            
-            var aligned = alignLayoutBoxes(index, changednumber, firstcell, changedcell,1);
-            if(!aligned) {
-                aligned = alignLayoutBoxes(index, changednumber, changedcell,firstcell,1);
+            var diff = before - after;
+            changedcell.attr('percentage', parseFloat(changedcell.attr('percentage')) + (diff / 2));
+            firstcell.attr('percentage', parseFloat(firstcell.attr('percentage')) + (diff / 2));
+
+            var aligned = alignLayoutBoxes(index, changednumber, firstcell, changedcell, 1);
+            if (!aligned) {
+                aligned = alignLayoutBoxes(index, changednumber, changedcell, firstcell, 1);
             }
-            if(!aligned) {
-                aligned = alignLayoutBoxes(index, changednumber, firstcell, changedcell,2);
+            if (!aligned) {
+                aligned = alignLayoutBoxes(index, changednumber, firstcell, changedcell, 2);
             }
-            if(!aligned) {
-                aligned = alignLayoutBoxes(index, changednumber, changedcell,firstcell,2);
+            if (!aligned) {
+                aligned = alignLayoutBoxes(index, changednumber, changedcell, firstcell, 2);
             }
-            
+
             cells.each(function(index) {
                 var percentage = $(this).attr('percentage');
                 rowadjust.push(percentage);
             });
-            
+
             var data = {
                 "adjustment": rowadjust,
-                "index" : index
+                "index": index
             };
             data["updatelayout"] = true;
             var event = thundashop.Ajax.createEvent('', 'showPageLayoutSelection', null, data);
@@ -181,4 +181,28 @@ $pb->saveBuildLayout($layout);
     });
     $('.layoutpreviewbox .previewrow.cell[cellnumber="1"]').resizable("destroy");
     $('.layoutpreviewbox .previewrow.cell.sidebar').resizable("destroy");
+    $('.layoutpreviewbox .previewrow.cell.sidebar').resizable("destroy");
+    $('.layoutpreviewbox .sortable_layout_rows').sortable({
+        containment: "parent",
+        stop: function(event, ui) {
+            var sorted = [];
+            $('.layoutpreviewbox .sortable_layout_rows li').each(function() {
+                sorted.push($(this).attr('rowid'));
+            });
+            var i = 0;
+            $('.layoutpreviewbox .row_option').each(function() {
+                $(this).attr('index',i);
+                i++;
+            });
+            
+            var data = {
+                "sortorder" : sorted,
+                "layoutmode" : true
+            }
+            var event = thundashop.Ajax.createEvent('','setRowLayoutSortOrder',null, data);
+            
+            thundashop.Ajax.postWithCallBack(event, function() {
+            });
+        }
+    });
 </script>

@@ -21,7 +21,7 @@ class ApplicationManager extends FactoryBase {
         $toArea = $_POST['data']['newarea'];
         $this->getApi()->getPageManager()->switchApplicationAreas($pageId, $fromArea, $toArea);
     }
-    
+
     function validateArea($areas, $area, $size, $type) {
         if (!in_array($size, $areas) && $size != "xlarge" || sizeof($areas) == 0) {
             return false;
@@ -37,10 +37,10 @@ class ApplicationManager extends FactoryBase {
                 }
             }
         }
-        if($type != "standard" && !in_array($type, $areas)) {
+        if ($type != "standard" && !in_array($type, $areas)) {
             return false;
         }
-        
+
         return true;
     }
 
@@ -291,6 +291,17 @@ class ApplicationManager extends FactoryBase {
         $app->applicationDeleted();
     }
 
+    public function setRowLayoutSortOrder() {
+        if(isset($_POST['data']['layoutmode'])) {
+            $pb = $this->getPage()->loadPageBuilder();
+            $pb->activateBuildLayoutMode();
+            $pb->reorderRows($_POST['data']['sortorder']);
+            $pb->saveBuildLayout($pb->getLayout());
+            echo "Need to sort for layout mode";
+            
+        }
+    }
+
     public function setHelpRead() {
         $api = IocContainer::getFactorySingelton()->getApi();
         $api->getStoreManager()->setIntroductionRead();
@@ -323,9 +334,8 @@ class ApplicationManager extends FactoryBase {
             $pb->activateBuildLayoutMode();
         }
         $page->setLayout($pb->updateLayoutConfig());
-
     }
-    
+
     public function showApplications() {
         $this->subscriptions = $this->getFactory()->getApi()->getAppManager()->getAllApplicationSubscriptions(false);
         $this->includefile('applicationSet');
@@ -351,7 +361,7 @@ class ApplicationManager extends FactoryBase {
 
         if ($this->getFactory()->getApplicationPool()->getApplicationInstance($_POST['data']['appId']) != null)
             return;
-        
+
         $appConfiguration = $this->getFactory()->getApi()->getPageManager()->addApplication($_POST['data']['appId']);
 
         $namespace = $this->getFactory()->convertUUIDtoString($appConfiguration->appSettingsId);
@@ -597,9 +607,10 @@ class ApplicationManager extends FactoryBase {
         $app = $this->getFactory()->getApplicationPool()->getApplicationsInstancesByNamespace("ns_a11ac190_4f9a_11e3_8f96_0800200c9a66");
         $app[0]->renderSetup();
     }
-    
+
     public function searchForPages() {
         $this->includefile("pageSearchResult");
     }
+
 }
 ?>

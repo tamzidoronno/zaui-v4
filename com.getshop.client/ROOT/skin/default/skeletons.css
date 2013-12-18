@@ -164,6 +164,13 @@
 #informationbox .suggestion_layout:hover .headerpreview { background-color:#5c8c57; }
 #informationbox .suggestion_layout:hover .footerpreview { background-color:#5c8c57; }
 #informationbox .suggestion_layout .footerpreview,#informationbox .suggestion_layout .headerpreview { height: 25px; } 
-#informationbox .row_option { position:absolute;left:-20px;cursor:pointer; }
+#informationbox .row_option { position:absolute;left:5px;top: 20px; cursor:pointer;font-size:14px; }
 #informationbox .row_option_panel { display:none; z-index: 2; }
+#informationbox .layoutpreviewbox .outer-row-container { padding-right: 25px; padding-left: 25px; position:relative; }
+#informationbox .layoutpreviewbox .outer-row-container .fa-arrows-v { position:absolute; right: 5px; top: 15px; padding: 3px; cursor:pointer; font-size:14px; }
 #informationbox .layoutpreviewselection select {height: 40px; }
+#informationbox .sortable_layout_rows {
+list-style-type: none;
+padding:0px;
+margin:0px;
+}

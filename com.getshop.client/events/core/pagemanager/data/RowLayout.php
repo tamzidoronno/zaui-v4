@@ -12,5 +12,8 @@ class core_pagemanager_data_RowLayout {
 	/** @var String */
 	public $rowWidth;
 
+	/** @var String */
+	public $rowId;
+
 }
 ?>

@@ -6,6 +6,9 @@ class core_pagemanager_data_Page extends core_common_DataCommon  {
 	/** @var String */
 	public $hideFooter;
 
+	/** @var String */
+	public $needSaving;
+
 	/** @var core_pagemanager_data_Page */
 	public $parent;
 

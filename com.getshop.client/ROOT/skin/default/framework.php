@@ -1463,3 +1463,5 @@ margin-left:256px;
 .cke_dialog_contents .pagepickerwindow { z-index:1; }
 .applicationarea .ui-droppable { background-color:#037b1a; }
 .applicationarea .app .drop-hover { background-color:#0f4d1b; }
+.gs_reorder_row { position:absolute; right: 10px; border: solid 1px; padding: 2px; font-size: 20px; }
+.gs_reorder_row i { cursor:pointer; }

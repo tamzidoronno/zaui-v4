@@ -19,6 +19,9 @@ class core_pagemanager_data_PageLayout {
 	public $marginRightSideBar;
 
 	/** @var String */
+	public $sortedRows;
+
+	/** @var String */
 	public $rows;
 
 }

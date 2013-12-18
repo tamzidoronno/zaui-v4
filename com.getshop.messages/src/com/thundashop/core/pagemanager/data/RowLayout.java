@@ -9,4 +9,5 @@ public class RowLayout implements Serializable {
     int marginBottom = 0;
     int marginTop = 0;
     List<Double> rowWidth = new ArrayList();
+    String rowId = "";
 }

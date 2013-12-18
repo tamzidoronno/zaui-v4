@@ -12,5 +12,6 @@ public class PageLayout implements Serializable {
     public int rightSideBar = 0;
     public int marginRightSideBar = 10;
     
+    public LinkedList<String> sortedRows = new LinkedList();
     public LinkedList<RowLayout> rows = new LinkedList();
 }

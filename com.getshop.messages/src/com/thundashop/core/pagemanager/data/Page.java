@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  *
@@ -22,6 +23,7 @@ import java.util.Set;
 public class Page extends DataCommon implements Cloneable {
     public boolean hideHeader = false;
     public boolean hideFooter = false;
+    public boolean needSaving = false;
     
     public Page() {
     }
@@ -81,6 +83,15 @@ public class Page extends DataCommon implements Cloneable {
         
         pageAreas.put(toArea, firstArea);
         pageAreas.put(fromArea, secondArea);
+    }
+
+    public void finalizePageLayoutRows() {
+        for(RowLayout row : layout.rows) {
+            if(row.rowId.isEmpty()) {
+                row.rowId = UUID.randomUUID().toString();
+                needSaving = true;
+            }
+        }
     }
 
     public static class DefaultPages {

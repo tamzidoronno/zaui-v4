@@ -409,4 +409,11 @@ public class PageManager extends ManagerBase implements IPageManager {
         return retPages;
     }
 
+    @Override
+    public void switchApplicationAreas(String pageId, String fromArea, String toArea) throws ErrorException {
+        Page page = getPage(pageId);
+        page.switchApplications(fromArea, toArea);
+        savePage(page);
+    }
+
 }

@@ -1461,3 +1461,5 @@ margin-left:256px;
 .empty_app_area .fa { font-size: 32px; padding-top: 8px; }
 .gs_icon { color: #FFFFFF; }
 .cke_dialog_contents .pagepickerwindow { z-index:1; }
+.applicationarea .ui-droppable { background-color:#037b1a; }
+.applicationarea .app .drop-hover { background-color:#0f4d1b; }

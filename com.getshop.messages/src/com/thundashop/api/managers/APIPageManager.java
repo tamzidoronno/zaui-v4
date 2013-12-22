@@ -631,6 +631,21 @@ public class APIPageManager {
      }
 
      /**
+     * Switch application areas between two applications areas on a given page.
+     */
+
+     public void switchApplicationAreas(String pageId, String fromArea, String toArea)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("pageId",new Gson().toJson(pageId));
+          data.args.put("fromArea",new Gson().toJson(fromArea));
+          data.args.put("toArea",new Gson().toJson(toArea));
+          data.method = "switchApplicationAreas";
+          data.interfaceName = "core.pagemanager.IPageManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Need to translate a set of page ids?
      * @param pages A list (array) of page ids to translate.
      * @return HashMap<String,String>

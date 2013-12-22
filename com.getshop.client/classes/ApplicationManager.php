@@ -15,6 +15,13 @@ class ApplicationManager extends FactoryBase {
         $this->app = $app;
     }
 
+    function switchArea() {
+        $pageId = $this->getPage()->id;
+        $fromArea = $_POST['data']['area'];
+        $toArea = $_POST['data']['newarea'];
+        $this->getApi()->getPageManager()->switchApplicationAreas($pageId, $fromArea, $toArea);
+    }
+    
     function validateArea($areas, $area, $size, $type) {
         if (!in_array($size, $areas) && $size != "xlarge" || sizeof($areas) == 0) {
             return false;

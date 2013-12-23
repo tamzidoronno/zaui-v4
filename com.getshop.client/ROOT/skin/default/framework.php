@@ -1461,7 +1461,7 @@ margin-left:256px;
 .empty_app_area .fa { font-size: 32px; padding-top: 8px; }
 .gs_icon { color: #FFFFFF; }
 .cke_dialog_contents .pagepickerwindow { z-index:1; }
-.applicationarea .ui-droppable { background-color:#037b1a; }
-.applicationarea .app .drop-hover { background-color:#0f4d1b; }
+.applicationarea .order_mask.ui-droppable { background-color:#037b1a; }
+.applicationarea .app .order_mask.drop-hover { background-color:#0f4d1b; }
 .gs_reorder_row { position:absolute; right: 10px; border: solid 1px; padding: 2px; font-size: 20px; }
 .gs_reorder_row i { cursor:pointer; }

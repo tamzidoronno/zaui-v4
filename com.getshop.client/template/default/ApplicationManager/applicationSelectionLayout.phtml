@@ -32,7 +32,7 @@ $pb->saveBuildLayout($layout);
         ?>
         <select id="rowscount">
             <?
-            for ($i = 1; $i < 20; $i++) {
+            for ($i = 0; $i <= 20; $i++) {
                 $selected = "";
                 if ($i == sizeof($layout->rows)) {
                     $selected = "SELECTED";

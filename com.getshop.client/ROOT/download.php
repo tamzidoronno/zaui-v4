@@ -17,6 +17,9 @@ if ($_GET['file'] == 4)
 if ($_GET['file'] == 5)
     $file = "Bransjestandard  2011.odt nr2.pdf 12.12.13.pdf";
 
+if ($_GET['file'] == 6)
+    $file = "MBM kundemottaker hefte AK.pdf";
+
 if (!isset($file)) {
     return;
 }

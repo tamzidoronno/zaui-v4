@@ -89,7 +89,14 @@ class PageBuilder {
         if ($this->type >= 0) {
             $this->convertToNewLayout(false);
         }
-        $this->printLayout();
+        if(sizeof($this->layout->rows) == 0) {
+            echo "<div class='no_page_layout'>";
+            echo "<div>".$this->factory->__f("Before you can add content to this page, you will have to set up a layout for this page.")."</div>";
+            echo "<div class='click'>".$this->factory->__f("Open layout configuration")."</div>";
+            echo "</div>";
+        } else {
+            $this->printLayout();
+        }
     }
 
     function printSuggestions() {

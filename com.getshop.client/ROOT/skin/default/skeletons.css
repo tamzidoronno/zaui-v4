@@ -174,3 +174,5 @@ list-style-type: none;
 padding:0px;
 margin:0px;
 }
+.no_page_layout { text-align: center; font-size: 16px;padding-top: 100px; padding-bottom: 100px; }
+.no_page_layout .click { font-weight: bold; color: #1c427b; cursor: pointer; }

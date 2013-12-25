@@ -1,6 +1,8 @@
 package com.thundashop.core.start;
 
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopApi;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -35,6 +37,7 @@ public class GenerateApi {
         public Method method;
         public String[] commentLines;
         public HashMap<String, String> arguments;
+        String userLevel;
     }
 
     public static void main(String[] args) throws ClassNotFoundException, IOException {
@@ -155,6 +158,10 @@ public class GenerateApi {
         //Generate the java api.
         JavaApiBuilder javaapi = new JavaApiBuilder(this, coreClasses, messageClasses);
         javaapi.generate();
+        
+        //Build the documentation.
+        DocumentationBuilder docbuilder = new DocumentationBuilder(this, coreClasses, messageClasses);
+        docbuilder.generate();
     }
 
     public LinkedList<Class> filterClasses(List<Class> apiClasses) {
@@ -183,6 +190,19 @@ public class GenerateApi {
         return filteredApiClasses;
     }
 
+     private String getUserLevel(Method method) {
+        Annotation[] annotations = method.getAnnotations();
+        for (Annotation anno : annotations) {
+            if (anno instanceof Administrator) {
+                return "Administrator";
+            }
+            if (anno instanceof Editor) {
+                return "Editor";
+            }
+        }
+        return "Everyone";
+    }
+    
     private static String[] createCommentLines(String readedContent, int methodStarting) {
         String cuttedText = readedContent.substring(0, methodStarting);
         String comment = cuttedText.substring(cuttedText.lastIndexOf("/**"));
@@ -217,6 +237,7 @@ public class GenerateApi {
             result.arguments = findArguments(javafile, method);
             result.generics = buildGenericsString(method);
             result.commentLines = createCommentLines(javafile, javafile.indexOf(method.getName() + "("));
+            result.userLevel = getUserLevel(method);
             methods.add(result);
         }
         String spaces = "   ";
@@ -240,7 +261,7 @@ public class GenerateApi {
         return methods;
     }
 
-    private String readContent(String path) {
+    public String readContent(String path) {
         String strLine;
         String output = "";
         try {
@@ -254,6 +275,7 @@ public class GenerateApi {
             in.close();
         } catch (Exception e) {//Catch exception if any
             System.err.println("Error: " + e.getMessage());
+            e.printStackTrace();
             System.exit(0);
         }
         return output;

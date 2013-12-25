@@ -208,6 +208,10 @@ public class GeneratePhpApiNew {
      * @throws Exception
      */
     public static void main(String[] args) throws InterruptedException, Exception {
+        System.out.println("This is not in use anymore... please use GenerateApi");
+        System.exit(0);
+        
+        
         GeneratePhpApi.main(args);
         File file = new File("../com.getshop.core/build/classes/");
         List<Class> classes = GeneratePhpApi.findClasses(file, "");

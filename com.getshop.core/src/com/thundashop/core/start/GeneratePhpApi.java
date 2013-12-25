@@ -227,6 +227,8 @@ public class GeneratePhpApi {
      * @throws Exception
      */
     public static void main(String[] args) throws InterruptedException, Exception {
+        System.out.println("This is not in use anymore... please use GenerateApi");
+        System.exit(0);
         File file = new File("../com.getshop.messages/build/classes/");
         File apps = new File("../com.getshop.app/build/classes/");
 

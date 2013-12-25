@@ -48,5 +48,8 @@ class core_appmanager_data_ApplicationSettings extends core_common_DataCommon  {
 	/** @var String */
 	public $allowedStoreIds;
 
+	/** @var String */
+	public $apiCallsInUse;
+
 }
 ?>

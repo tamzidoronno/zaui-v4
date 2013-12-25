@@ -192,6 +192,17 @@
              
              <input type='txt' gsname="storeids" style="width: 700px" value="<? echo $ids; ?>">
         </div>
+        <div style="font-size: 20px;"><? echo $this->__o("Api calls in use by this application"); ?></div>
+        <table width='100%'>
+        <?
+        foreach($settings->apiCallsInUse as $inuse) {
+            echo "<tr>";
+            echo "<td>" . $inuse->manager . "</td><td>" . $inuse->method . "</td>"; 
+            echo "</tr>";
+        }
+        ?>
+        </table>
+        
         <hr>        <div style="height: 60px;">
             <? if(!$disabled) { ?>
                 <div class="button-large deleteapp" style="margin-top:8px;">

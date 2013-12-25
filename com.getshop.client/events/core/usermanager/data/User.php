@@ -58,6 +58,9 @@ class core_usermanager_data_User extends core_common_DataCommon  {
 	public $company;
 
 	/** @var String */
+	public $applicationAccessList;
+
+	/** @var String */
 	public $partnerid;
 
 	/** @var String */

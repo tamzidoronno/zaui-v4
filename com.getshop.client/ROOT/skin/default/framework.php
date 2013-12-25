@@ -1465,3 +1465,7 @@ margin-left:256px;
 .applicationarea .app .order_mask.drop-hover { background-color:#0f4d1b; }
 .gs_reorder_row { position:absolute; right: 10px; border: solid 1px; padding: 2px; font-size: 20px; }
 .gs_reorder_row i { cursor:pointer; }
+.gs_onoff { cursor:pointer; border: solid 1px #BBB; border-radius:2px; width: 30px; height: 15px; display:inline-block; }
+.gs_onoff .toggle { display:block; width: 100%; height: 100%; overflow:hidden;}
+.gs_off .toggle { background-color:#ff1717; width: 14px;border-right: solid 1px #BBB; }
+.gs_on .toggle { border-left: solid 1px #BBB; background-color:#26bc38; margin-left: 14px; width: 15px; }

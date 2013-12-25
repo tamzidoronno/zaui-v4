@@ -22,7 +22,6 @@ $(document).on('focus', '.gray', function() {
 (function($) {
     $.fn.liveFileupload = function(opts) {
         $(this).on("mouseenter", function() {
-            alert('enter');
             if (!$(this).data("init")) {
                 $(this).data("init", true).fileupload(opts);
             }
@@ -864,4 +863,14 @@ $(document).on('click', '#informationbox .setnewlayout', function() {
     var event = thundashop.Ajax.createEvent('','setPageLayout',null, data);
     thundashop.Ajax.post(event);
     thundashop.common.hideInformationBox();
+});
+
+$(document).on('click', '.gs_onoff', function() {
+    if($(this).hasClass('gs_on')) {
+        $(this).removeClass('gs_on');
+        $(this).addClass('gs_off');
+    } else {
+        $(this).removeClass('gs_off');
+        $(this).addClass('gs_on');
+    }
 });

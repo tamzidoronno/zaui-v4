@@ -55,6 +55,8 @@ public class User extends DataCommon  {
     
     public Company company = null;
     
+    public List<String> applicationAccessList = new ArrayList();
+    
     @Transient
     public String partnerid;
     

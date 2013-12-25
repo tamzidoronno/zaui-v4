@@ -1,7 +1,7 @@
 package com.getshop.syncserver;
 
+import com.getshop.javaapi.GetShopApi;
 import com.google.gson.Gson;
-import com.thundashop.api.managers.GetShopApi;
 import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.appmanager.data.ApplicationSynchronization;
 import com.thundashop.core.appmanager.data.AvailableApplications;

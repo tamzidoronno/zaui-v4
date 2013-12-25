@@ -1,6 +1,5 @@
-package com.thundashop.core.start;
+package com.thundashop.core.apigenerator;
 
-import static com.thundashop.core.start.GeneratePhpApiNew.createPhpClassName;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -26,6 +25,21 @@ public class PHPApiBuilder {
     private String getFileName(Class entry) {
         return entry.getName().split("\\.")[entry.getName().split("\\.").length - 1];
     }
+    
+    private String createPhpClassName(Class entry, String filename) {
+        String[] paths = entry.getName().split("\\.");
+        String classname = "WHAT_IS_THIS";
+
+        if (paths.length == 5) {
+            classname = paths[2] + "_" + paths[3] + "_" + filename;
+        } else if (paths.length == 6) {
+            classname = paths[2] + "_" + paths[3] + "_" + paths[4] + "_" + filename;
+        } else {
+            System.out.println(entry.getName());
+        }
+        return classname;
+    }
+
 
     private String createPhpFileContent(Class entry) {
         String filePath = "";

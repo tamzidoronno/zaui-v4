@@ -1,4 +1,4 @@
-package com.thundashop.core.start;
+package com.thundashop.core.apigenerator;
 
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
@@ -16,6 +16,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,11 +27,42 @@ import java.util.List;
 
 public class GenerateApi {
 
-    private LinkedList<Class> filterDataObjects(List<Class> coreClasses) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private final List<Class> coreClasses;
+    private final List<Class> messageClasses;
+    private final LinkedList<Class> allManagers;
+
+    public GenerateApi() throws ClassNotFoundException {
+        File core = new File("../com.getshop.core/");
+        File messages = new File("../com.getshop.messages/");
+        coreClasses = findClasses(core);
+        messageClasses = findClasses(messages);
+        allManagers = filterClasses(coreClasses);
+    }
+
+    public void analyseApplications() throws UnknownHostException, IOException, ClassNotFoundException {
+        AnalyseApplications analyser = new AnalyseApplications(this, allManagers, messageClasses);
+        analyser.generate();
+        ImportApiCallsToApplications importer = new ImportApiCallsToApplications();
+        importer.run();
+    }
+
+    public void buildDocumentation() throws IOException, ClassNotFoundException {
+        DocumentationBuilder docbuilder = new DocumentationBuilder(this, coreClasses, messageClasses);
+        docbuilder.generate();
+    }
+
+    public void generateJavaApi() throws IOException {
+        JavaApiBuilder javaapi = new JavaApiBuilder(this, coreClasses, messageClasses);
+        javaapi.generate();
+    }
+
+    public void generatePHPApi() throws Exception {
+        PHPApiBuilder phpapi = new PHPApiBuilder(this, allManagers, messageClasses);
+        phpapi.generate();
     }
 
     public class ApiMethod {
+
         public String methodName;
         public Class manager;
         public String generics;
@@ -40,12 +72,12 @@ public class GenerateApi {
         String userLevel;
     }
 
-    public static void main(String[] args) throws ClassNotFoundException, IOException {
+    public static void main(String[] args) throws ClassNotFoundException, IOException, Exception {
         GenerateApi ga = new GenerateApi();
         ga.generate();
 
     }
-    
+
     private LinkedHashMap<String, String> findArguments(String javafile, Method method) {
         int methodStart = javafile.indexOf(method.getName() + "(");
         int argStart = javafile.indexOf("(", methodStart) + 1;
@@ -144,25 +176,14 @@ public class GenerateApi {
         return classes;
     }
 
-    private void generate() throws ClassNotFoundException, IOException {
-        File core = new File("../com.getshop.core/");
-        File messages = new File("../com.getshop.messages/");
-        List<Class> coreClasses = findClasses(core);
-        List<Class> messageClasses = findClasses(messages);
-        LinkedList<Class> allManagers = filterClasses(coreClasses);
-        
-        //Generate the php api.
-        PHPApiBuilder phpapi = new PHPApiBuilder(this, allManagers, messageClasses);
-        phpapi.generate();
-        
-        //Generate the java api.
-        JavaApiBuilder javaapi = new JavaApiBuilder(this, coreClasses, messageClasses);
-        javaapi.generate();
-        
-        //Build the documentation.
-        DocumentationBuilder docbuilder = new DocumentationBuilder(this, coreClasses, messageClasses);
-        docbuilder.generate();
+    private void generate() throws ClassNotFoundException, IOException, Exception {
+        generatePHPApi();
+        generateJavaApi();
+        buildDocumentation();
+        analyseApplications();
     }
+    
+    
 
     public LinkedList<Class> filterClasses(List<Class> apiClasses) {
         LinkedList<Class> filteredApiClasses = new LinkedList();
@@ -176,7 +197,7 @@ public class GenerateApi {
                 }
             }
         }
-        
+
         if (filteredApiClasses.size() > 0) {
             Collections.sort(filteredApiClasses, new Comparator<Class>() {
                 @Override
@@ -185,12 +206,12 @@ public class GenerateApi {
                 }
             });
         }
-        
+
         System.out.println("Number of annotated api classes: " + filteredApiClasses.size());
         return filteredApiClasses;
     }
 
-     private String getUserLevel(Method method) {
+    private String getUserLevel(Method method) {
         Annotation[] annotations = method.getAnnotations();
         for (Annotation anno : annotations) {
             if (anno instanceof Administrator) {
@@ -202,9 +223,13 @@ public class GenerateApi {
         }
         return "Everyone";
     }
-    
+
     private static String[] createCommentLines(String readedContent, int methodStarting) {
         String cuttedText = readedContent.substring(0, methodStarting);
+        if(cuttedText.lastIndexOf("/**") < 0) {
+            System.out.println("Failed to find comment in : " + readedContent);
+            System.exit(0);
+        }
         String comment = cuttedText.substring(cuttedText.lastIndexOf("/**"));
         comment = comment.substring(0, comment.indexOf("*/") + 2);
         String[] commentLines = comment.split("\n");
@@ -215,14 +240,14 @@ public class GenerateApi {
     }
 
     public void writeFile(String content, String path) throws IOException {
-         File file = new File(path);
+        File file = new File(path);
         FileWriter fstream = new FileWriter(file);
         BufferedWriter out = new BufferedWriter(fstream);
         out.write(content);
         out.flush();
         out.close();
     }
-    
+
     public LinkedList<ApiMethod> getMethods(Class filteredClass) {
         LinkedList<ApiMethod> methods = new LinkedList();
         Method[] managermethods = filteredClass.getMethods();
@@ -234,6 +259,10 @@ public class GenerateApi {
 
             String path = new File(".").getAbsolutePath() + "/src/" + filteredClass.getName().replace(".", "/") + ".java";
             String javafile = readContent(path);
+            if(javafile.isEmpty()) {
+                System.out.println("Unable to load java file : " + path);
+                System.exit(0);
+            }
             result.arguments = findArguments(javafile, method);
             result.generics = buildGenericsString(method);
             result.commentLines = createCommentLines(javafile, javafile.indexOf(method.getName() + "("));

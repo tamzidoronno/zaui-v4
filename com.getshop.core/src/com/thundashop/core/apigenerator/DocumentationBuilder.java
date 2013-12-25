@@ -1,7 +1,8 @@
-package com.thundashop.core.start;
+package com.thundashop.core.apigenerator;
 
+import com.thundashop.core.apigenerator.GenerateApi;
 import com.thundashop.core.common.GetShopApi;
-import com.thundashop.core.start.GenerateApi.ApiMethod;
+import com.thundashop.core.apigenerator.GenerateApi.ApiMethod;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;

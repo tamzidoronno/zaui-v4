@@ -416,4 +416,8 @@ public class PageManager extends ManagerBase implements IPageManager {
         savePage(page);
     }
 
+    public AppConfiguration getApplicationById(String listId) throws ErrorException {
+        return applicationPool.get(listId);
+    }
+
 }

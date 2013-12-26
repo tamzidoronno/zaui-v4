@@ -118,11 +118,12 @@ $(document).ready(function() {
         ]
     };
     config.ishidden = getshopmaintoolboxhidden;
-
-    mainmenu = new GetShopToolbox(config);
-    $(mainmenu.outerContainer).css('position', 'fixed');
-    $(mainmenu.outerContainer).css('left', '100px');
-    $(mainmenu.outerContainer).css('top', '100px');
+    if(isAdministrator) {
+        mainmenu = new GetShopToolbox(config);
+        $(mainmenu.outerContainer).css('position', 'fixed');
+        $(mainmenu.outerContainer).css('left', '100px');
+        $(mainmenu.outerContainer).css('top', '100px');
+    }
 });
 
 // Updates the menu on navigation.
@@ -182,30 +183,4 @@ PubSub.subscribe('NAVIGATION_COMPLETED', function() {
     }
 
 
-});
-
-var lastScrollTop = 0;
-var totalMove = 0;
-// Make menu follow when scrolling
-
-$(window).scroll(function(e) {
-    var st = $(this).scrollTop();
-    var positiontop = $(mainmenu.outerContainer).position().top;
-
-    var move = 0;
-    var moveText = "";
-    if (st > lastScrollTop) {
-        var diff = st - lastScrollTop;
-        move = positiontop + diff;
-    } else {
-        var diff = lastScrollTop - st;
-        move = positiontop - diff;
-    }
-
-    var diff = st - lastScrollTop;
-    totalMove += diff;
-
-  
-
-    lastScrollTop = st;
 });

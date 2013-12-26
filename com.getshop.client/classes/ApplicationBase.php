@@ -166,13 +166,39 @@ class ApplicationBase extends FactoryBase {
         
         echo "<div class='applicationinner'>";
         if($this->isEditorMode() && !$changeable && !$this->getPage()->isSystemPage()) {
-            echo "<div class='application_settings inline gs_icon'><i class='fa fa-cog' style='font-size:30px;'></i></div>";
+            if($this->hasWriteAccess()) {
+                echo "<div class='application_settings inline gs_icon'><i class='fa fa-cog' style='font-size:30px;'></i></div>";
+            }
         }
         $this->render();
         echo "</div>";
         echo "</div>";
     }
-
+    
+    public function hasWriteAccess() {
+        $accesslist = $this->getUser()->applicationAccessList;
+        $type = -1;
+        if(isset($accesslist->{$this->applicationSettings->id})) {
+            $type = $accesslist->{$this->applicationSettings->id};
+        }
+        if(sizeof($accesslist) == 0 || $type == 0 || $type == 2) {
+            return true;
+        }
+        return true;
+    }
+    
+    public function hasReadAccess() {
+        $accesslist = $this->getUser()->applicationAccessList;
+        $type = -1;
+        if(isset($accesslist->{$this->applicationSettings->id})) {
+            $type = $accesslist->{$this->applicationSettings->id};
+        }
+        if(sizeof($accesslist) == 0 || $type == 0 || $type == 1) {
+            return true;
+        }
+        return false;
+    }
+    
     public function getEvents() {
         return $this->events;
     }

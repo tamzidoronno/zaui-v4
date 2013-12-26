@@ -263,6 +263,9 @@ if (isset($_GET['page'])) {
 
 <?
     $factory->getApi()->getInvoiceManager()->createInvoice("4d98cbe0-f614-4ed3-9b46-846acad65cbb");
+    if(ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+        echo "<script>isAdministrator = true;</script>";
+    }
 ?>
 
 <script>

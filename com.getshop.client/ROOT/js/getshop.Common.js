@@ -7,6 +7,7 @@ mousePositionY = 0;
 thundashop.common.stopNextNavigation = false;
 thundashop.common.currentScroll = 0;
 getshopmaintoolboxhidden = false;
+isAdministrator = false;
 
 
 $(document).mousemove(function(e) {

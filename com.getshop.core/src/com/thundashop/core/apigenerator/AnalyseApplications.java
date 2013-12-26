@@ -82,10 +82,11 @@ public class AnalyseApplications {
             }
             
             for(ApiMethod method : usedMethods.get(setting)) {
-                if(!toWrite.get(setting.id).containsKey(method.manager.getCanonicalName())) {
-                    toWrite.get(setting.id).put(method.manager.getCanonicalName(), new ArrayList());
+                String name = method.manager.getCanonicalName().replace(".I", ".");
+                if(!toWrite.get(setting.id).containsKey(name)) {
+                    toWrite.get(setting.id).put(name, new ArrayList());
                 }
-                toWrite.get(setting.id).get(method.manager.getCanonicalName()).add(method.methodName);
+                toWrite.get(setting.id).get(name).add(method.methodName);
             }
         }
         Gson gson = new Gson();

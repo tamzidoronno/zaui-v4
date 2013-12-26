@@ -5,6 +5,9 @@
 package com.thundashop.core.common;
 
 import com.thundashop.core.appmanager.ApplicationPool;
+import com.thundashop.core.appmanager.data.ApiCallsInUse;
+import com.thundashop.core.appmanager.data.ApplicationSettings;
+import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.loggermanager.LoggerManager;
 import com.thundashop.core.reportingmanager.ReportingManager;
 import com.thundashop.core.usermanager.IUserManager;
@@ -206,13 +209,21 @@ public class StoreHandler {
         if (userLevel != null) {
             User user = findUser();
             
+            if(user != null && user.applicationAccessList.size() > 0) {
+                if(checkApplicationsAccessByApp(user, executeMethod, aClass)) {
+                    return userLevel;
+                } else {
+                    throw new ErrorException(26);
+                }
+            }
+            
             if (user != null && (userLevel instanceof Administrator || userLevel instanceof Editor)) {
                 checkUserPrivileges(user, executeMethod, aClass);
             }
             if (user == null || userLevel instanceof Administrator && !user.isAdministrator()) {
                 throw new ErrorException(26);
             }
-            if (user == null || userLevel instanceof Editor && (!user.isEditor() && !user.isAdministrator())) {
+            if (userLevel instanceof Editor && (!user.isEditor() && !user.isAdministrator())) {
                 throw new ErrorException(26);
             }
         }
@@ -298,6 +309,51 @@ public class StoreHandler {
             return user.isAdministrator();
         }
         
+        return false;
+    }
+
+    private ApplicationPool getApplicationPool() {
+        for(ManagerBase base : messageHandler) {
+            if(base instanceof ApplicationPool) {
+                return (ApplicationPool) base;
+            }
+        }
+        return null;
+    }
+
+    private boolean checkApplicationsAccessByApp(User user, Method executeMethod, Class aClass) {
+        
+        System.out.println("Restricted app access provided ; " + aClass + " : " + executeMethod.getName());
+        ApplicationPool pool = getApplicationPool();
+        for(ApplicationSettings setting : pool.applications.values()) {
+            for(String id : user.applicationAccessList.keySet()) {
+                if(setting.id.equals(id)) {
+                    int writeType = user.applicationAccessList.get(id);
+                    for(ApiCallsInUse inuse : setting.apiCallsInUse) {
+                        System.out.println(inuse.manager + " : " + inuse.method);
+                        boolean isWriting = false;
+                        for(Annotation anno : executeMethod.getAnnotations()) {
+                            if(anno instanceof Writing) {
+                                isWriting = true;
+                            }
+                        }
+                        
+                        //Write access only
+                        if((writeType == 2) && !isWriting) {
+                            continue;
+                        }
+                        //Read access only
+                        if((writeType == 1) && isWriting) {
+                            continue;
+                        }
+                        
+                        if(inuse.manager.equals(aClass.getCanonicalName()) && inuse.method.equals(executeMethod.getName())) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
         return false;
     }
 }

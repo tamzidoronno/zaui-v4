@@ -3,6 +3,7 @@ package com.thundashop.app.content;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.common.Writing;
 import java.util.HashMap;
 
 /**
@@ -18,6 +19,7 @@ public interface IContentManager {
      * @throws ErrorException
      */
     @Administrator
+    @Writing
     public void saveContent(String id, String content) throws ErrorException;
     
     /**
@@ -26,6 +28,7 @@ public interface IContentManager {
      * @throws ErrorException
      */
     @Administrator
+    @Writing
     public void deleteContent(String id) throws ErrorException;
     
     /**
@@ -37,6 +40,7 @@ public interface IContentManager {
      * @throws ErrorException
      */
     @Administrator
+    @Writing
     public String createContent(String content) throws ErrorException;
     
     /**

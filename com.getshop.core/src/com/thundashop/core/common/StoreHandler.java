@@ -323,14 +323,12 @@ public class StoreHandler {
 
     private boolean checkApplicationsAccessByApp(User user, Method executeMethod, Class aClass) {
         
-        System.out.println("Restricted app access provided ; " + aClass + " : " + executeMethod.getName());
         ApplicationPool pool = getApplicationPool();
         for(ApplicationSettings setting : pool.applications.values()) {
             for(String id : user.applicationAccessList.keySet()) {
                 if(setting.id.equals(id)) {
                     int writeType = user.applicationAccessList.get(id);
                     for(ApiCallsInUse inuse : setting.apiCallsInUse) {
-                        System.out.println(inuse.manager + " : " + inuse.method);
                         boolean isWriting = false;
                         for(Annotation anno : executeMethod.getAnnotations()) {
                             if(anno instanceof Writing) {

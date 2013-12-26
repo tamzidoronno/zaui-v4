@@ -9,6 +9,7 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -55,7 +56,8 @@ public class User extends DataCommon  {
     
     public Company company = null;
     
-    public List<String> applicationAccessList = new ArrayList();
+    //ApplicationId, int = 0 rw, 1=r, 2=w
+    public HashMap<String, Integer> applicationAccessList = new HashMap();
     
     @Transient
     public String partnerid;

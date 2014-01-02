@@ -10,4 +10,6 @@ public class RowLayout implements Serializable {
     int marginTop = 0;
     List<Double> rowWidth = new ArrayList();
     String rowId = "";
+    String outercss = "";
+    String innercss = "";
 }

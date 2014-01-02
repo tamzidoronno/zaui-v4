@@ -776,6 +776,9 @@ $(function() {
     $(document).on('mouseenter', '.app', function() {
         var appname = $(this).attr('app');
         if (app[appname] !== undefined && app[appname]['loadSettings'] !== undefined) {
+            if($(this).find('.order_mask').is(':visible')) {
+                return;
+            }
             var settingsbox = $(this).find('.application_settings');
             $(this).find('.application_settings').show();
         }

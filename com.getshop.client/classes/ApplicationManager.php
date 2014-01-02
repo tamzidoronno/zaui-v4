@@ -48,6 +48,24 @@ class ApplicationManager extends FactoryBase {
         return $this->app;
     }
 
+    function saveStyling() {
+        $layout = $this->getPage()->getLayout();
+        /* @var $row core_pagemanager_data_RowLayout */
+        $row = ((int)$_POST['data']['row'])-1;
+        $outer = "";
+        if(isset($_POST['data']['gs_outer'])) {
+            $outer = $_POST['data']['gs_outer'];
+        }
+        $inner = "";
+        if(isset($_POST['data']['gs_inner'])) {
+            $inner = $_POST['data']['gs_inner'];
+        }
+        
+        $layout->rows[$row]->innercss = $inner;
+        $layout->rows[$row]->outercss = $outer;
+        $this->getPage()->setLayout($layout);
+    }
+    
     public function getSubscriptions() {
         return $this->subscriptions;
     }

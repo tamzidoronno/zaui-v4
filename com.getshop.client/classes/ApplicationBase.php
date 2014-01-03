@@ -176,6 +176,9 @@ class ApplicationBase extends FactoryBase {
     }
     
     public function hasWriteAccess() {
+        if(!$this->isEditorMode()) {
+            return false;
+        }
         $accesslist = $this->getUser()->applicationAccessList;
         $type = -1;
         if(isset($accesslist->{$this->applicationSettings->id})) {
@@ -188,12 +191,15 @@ class ApplicationBase extends FactoryBase {
     }
     
     public function hasReadAccess() {
+        if(!$this->isEditorMode()) {
+            return false;
+        }
         $accesslist = $this->getUser()->applicationAccessList;
         $type = -1;
         if(isset($accesslist->{$this->applicationSettings->id})) {
             $type = $accesslist->{$this->applicationSettings->id};
         }
-        if(sizeof($accesslist) == 0 || $type == 0 || $type == 1) {
+        if(sizeof($accesslist) == 0  || $type == 0 || $type == 1) {
             return true;
         }
         return false;

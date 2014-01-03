@@ -1669,6 +1669,62 @@ class APIMessageManager {
 	}
 
 }
+class APIMobileManager {
+
+	var $transport;
+	
+	function APIMobileManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	* Register a token to the system.
+	* This token is later on used for sending messages
+	* back to the unit.
+	* s
+	* @param token
+	*/
+
+	public function registerToken($core_mobilemanager_data_Token) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_mobilemanager_data_Token"] = json_encode($this->transport->object_unset_nulls($core_mobilemanager_data_Token));
+	     $data["method"] = "registerToken";
+	     $data["interfaceName"] = "core.mobilemanager.IMobileManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Sends the message to all registered units.
+	*
+	* @param message
+	*/
+
+	public function sendMessageToAll($message) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["message"] = json_encode($this->transport->object_unset_nulls($message));
+	     $data["method"] = "sendMessageToAll";
+	     $data["interfaceName"] = "core.mobilemanager.IMobileManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Sends the message to all units that are registered as test units.
+	*
+	* @param message
+	*/
+
+	public function sendMessageToAllTestUnits($message) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["message"] = json_encode($this->transport->object_unset_nulls($message));
+	     $data["method"] = "sendMessageToAllTestUnits";
+	     $data["interfaceName"] = "core.mobilemanager.IMobileManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+}
 class APINewsManager {
 
 	var $transport;
@@ -3821,6 +3877,12 @@ class GetShopApi {
       */
       public function getMessageManager() {
            return new APIMessageManager($this->transport);
+      }
+      /**
+      * @return MobileManager
+      */
+      public function getMobileManager() {
+           return new APIMobileManager($this->transport);
       }
       /**
       * @return NewsManager

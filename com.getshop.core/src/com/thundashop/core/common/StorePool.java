@@ -128,6 +128,8 @@ public class StorePool {
         if (objectToScan instanceof String) {
             CleanResults result2 = antiySamy.scan(objectToScan.toString(), policy);
             return result2.getCleanHTML();
+        } else if( objectToScan.getClass().isEnum()) {
+            return objectToScan;
         } else {
             for (Field field : objectToScan.getClass().getFields()) {
                 if (field.getType().equals(String.class)) {

@@ -94,12 +94,12 @@ GetShopApiWebSocket.prototype = {
         this.connectedCallback = callback;
     },
         
-    send: function(message) {
+    send: function(message, silent) {
         var deferred = $.Deferred();
         message.messageId = this.makeid();
         deferred.messageId = message.messageId;
         messageJson = JSON.stringify(message);
-        if (this.sentMessages.length === 0 && this.transferStarted) {
+        if (this.sentMessages.length === 0 && this.transferStarted && silent !== true) {
             this.transferStarted();
         }
         this.sentMessages.push(deferred);
@@ -128,3 +128,4 @@ GetShopApiWebSocket.prototype = {
         return text;
     }
 }
+

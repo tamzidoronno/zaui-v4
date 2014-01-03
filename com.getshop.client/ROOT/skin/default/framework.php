@@ -1469,6 +1469,13 @@ margin-left:256px;
 .gs_onoff .toggle { display:block; width: 100%; height: 100%; overflow:hidden;}
 .gs_off .toggle { background-color:#ff1717; width: 14px;border-right: solid 1px #BBB; }
 .gs_on .toggle { border-left: solid 1px #BBB; background-color:#26bc38; margin-left: 14px; width: 15px; }
+
+.gs_button { font-size: 15px; background-color: #DDD; color: #333; padding: 5px; border-radius: 4px; box-shadow: 0px 0px 5px #333; display: inline-block; background: linear-gradient(to top, #666, #EEE); padding-left: 15px; padding-right: 15px; cursor: pointer; }
+.gs_button:hover { background: linear-gradient(to top, #094930, #52e5ac); }
+.gs_button:active { background: none; background-color: #34c88e; }
+
+.gs_button.small { font-size: 11px; padding: 1px; padding-right: 10px; padding-left: 10px; font-weight: bold;}
+
 .gs_margin_operations { color:#000000; border-radius: 3px; position:absolute; right: 0px; border: solid 1px #BBB; display:inline-block; font-size:30px; cursor:pointer; background-color:#EFEFEF; padding: 2px; z-index: 12; }
 .gs_row_seperator { width:100%;border-top:dashed 1px #FFFFFF;position:absolute; height: 1px; display:inline-block; left:0px;background-color:#4d4d4d; z-index:11; }
 .gs_margin_inner { width: 100px; font-size: 12px; position:relative; padding-bottom: 15px; display:inline-block; }

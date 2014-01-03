@@ -145,8 +145,8 @@ GetShopToolbox.prototype = {
         if (typeof(config.extraArgs) !== "undefined")
             item.attr('extraarg', config.extraArgs);
 
-        if (config.class)
-            item.addClass(config.class);
+        if (config.clazz)
+            item.addClass(config.clazz);
 
         var me = this;
         item.click(function() {

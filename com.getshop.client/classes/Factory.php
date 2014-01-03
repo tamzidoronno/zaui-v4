@@ -132,7 +132,12 @@ class Factory extends FactoryBase {
         echo "\n" . '<script type="text/javascript" src="js/getshop.PagePicker.js"></script>';
         echo "\n" . '<!--[if gte IE 8]><script src="js/jquery.xdr-transport.js"></script><![endif]-->';
         echo "\n" . '<link rel="stylesheet" type="text/css" href="js/jcrop/css/jquery.Jcrop.css">';
-        echo "\n" . '<script type="text/javascript" src="js/getshopwebsocketapi/GetShopApiWebSocket.js"></script>';
+        
+        if(preg_match('/(?i)msie [1-8]/',$_SERVER['HTTP_USER_AGENT']))
+        {
+            echo "\n" . '<script type="text/javascript" src="js/getshopwebsocketapi/GetShopApiWebSocket.js"></script>';
+        }
+        
         if(method_exists($this->getApplicationPool()->getSelectedThemeApp(), "addScripts")) {
             $this->getApplicationPool()->getSelectedThemeApp()->addScripts();
         }
@@ -250,7 +255,12 @@ class Factory extends FactoryBase {
     private function checkRewrite() {
         if (isset($_GET['rewrite']) ) {
             
+//            echo $_GET['rewrite'];
+//            echo "-";
             $name = urldecode($_GET['rewrite']);
+            
+//            echo $name;
+//            die();
             
             $pageId = $this->getApi()->getListManager()->getPageIdByName($name);
             if ($pageId != "") {

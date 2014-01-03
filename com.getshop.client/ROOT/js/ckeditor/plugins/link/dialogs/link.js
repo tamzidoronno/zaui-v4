@@ -678,7 +678,6 @@ CKEDITOR.dialog.add( 'link', function( editor ) {
                                             if ( !data.url )
                                                     data.url = {};
 
-                                            console.log($('.cke_dialog_body .pagepicker').attr('pageid'));
                                             data.url.internalurl = $('.cke_dialog_body .pagepicker').attr('pageid');
                                             if(data.url.internalurl !== undefined) {
                                                 data.url.isInternal = true;

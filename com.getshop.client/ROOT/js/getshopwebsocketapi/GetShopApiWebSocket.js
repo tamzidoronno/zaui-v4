@@ -112,7 +112,9 @@ GetShopApiWebSocket.prototype = {
 
         return text;
     }
-};GetShopApiWebSocket.BannerManager = function(communication) {
+};
+
+GetShopApiWebSocket.BannerManager = function(communication) {
     this.communication = communication;
 }
 

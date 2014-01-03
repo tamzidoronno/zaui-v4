@@ -1475,3 +1475,11 @@ margin-left:256px;
 .gs_button:active { background: none; background-color: #34c88e; }
 
 .gs_button.small { font-size: 11px; padding: 1px; padding-right: 10px; padding-left: 10px; font-weight: bold;}
+
+.gs_margin_operations { color:#000000; border-radius: 3px; position:absolute; right: 0px; border: solid 1px #BBB; display:inline-block; font-size:30px; cursor:pointer; background-color:#EFEFEF; padding: 2px; z-index: 12; }
+.gs_row_seperator { width:100%;border-top:dashed 1px #FFFFFF;position:absolute; height: 1px; display:inline-block; left:0px;background-color:#4d4d4d; z-index:11; }
+.gs_margin_inner { width: 100px; font-size: 12px; position:relative; padding-bottom: 15px; display:inline-block; }
+.gs_margin_inner select { width: 100px; }
+.gs_margin_inner input { width: 95px; }
+.gs_margin_inner .patterns { height: 100px; border: solid 1px #BBB; overflow-x:none; overflow-y: auto; display:inline-block; }
+.gs_margin_inner .patterns .pattern { height: 40px; width: 40px; display:inline-block; overflow: hidden; border-right:solid 1px #BBB; border-bottom:solid 1px #BBB; }

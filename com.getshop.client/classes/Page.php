@@ -13,6 +13,7 @@ class Page extends FactoryBase {
     public $areas;
     public $description;
     public $backendPage;
+    public $layout;
     public $emptySkeleton = false;
     public static $systemPages = array("orderoverview", "checkout", "myaccount", "users", "settings", "domain", "cart", "callback");
 
@@ -55,6 +56,13 @@ class Page extends FactoryBase {
         $this->skeletonType = 1;
     }
 
+    /**
+     * @return core_pagemanager_data_PageLayout 
+     */
+    public function getLayout() {
+        return $this->layout;
+    }
+    
     /**
      * @param core_pagemanager_data_Page $page
      */

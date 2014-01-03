@@ -382,8 +382,8 @@ class PageBuilder {
             /* @var $row core_pagemanager_data_RowLayout */
             ob_start();
             ?>
-            <div class="gs_row gs_outer r<? echo $rownumber; ?>" row="<? echo $rownumber; ?>" rowid="<? echo $row->rowId; ?>">
-                <div class='gs_inner'>
+            <div class="gs_row gs_outer r<? echo $rownumber; ?>" row="<? echo $rownumber; ?>" rowid="<? echo $row->rowId; ?>" style='<? echo $row->outercss; ?>'>
+                <div class='gs_inner' style='<? echo $row->innercss; ?>'>
                     <?
                     if ($row->numberOfCells == 1) {
                         echo AppAreaHelper::printAppArea($this->page, "main_" . $maincount);

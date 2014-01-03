@@ -15,5 +15,11 @@ class core_pagemanager_data_RowLayout {
 	/** @var String */
 	public $rowId;
 
+	/** @var String */
+	public $outercss;
+
+	/** @var String */
+	public $innercss;
+
 }
 ?>

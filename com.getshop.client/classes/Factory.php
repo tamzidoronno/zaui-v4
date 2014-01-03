@@ -254,14 +254,8 @@ class Factory extends FactoryBase {
 
     private function checkRewrite() {
         if (isset($_GET['rewrite']) ) {
-            
-//            echo $_GET['rewrite'];
-//            echo "-";
             $name = urldecode($_GET['rewrite']);
-            
-//            echo $name;
-//            die();
-            
+
             $pageId = $this->getApi()->getListManager()->getPageIdByName($name);
             if ($pageId != "") {
                 $_GET['page'] = $pageId;

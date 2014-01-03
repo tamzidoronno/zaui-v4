@@ -1678,6 +1678,21 @@ class APIMobileManager {
 	}
 
 	/**
+	* Clears the badged number.
+	*
+	* @param tokenId
+	*/
+
+	public function clearBadged($tokenId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["tokenId"] = json_encode($this->transport->object_unset_nulls($tokenId));
+	     $data["method"] = "clearBadged";
+	     $data["interfaceName"] = "core.mobilemanager.IMobileManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Register a token to the system.
 	* This token is later on used for sending messages
 	* back to the unit.
@@ -1740,10 +1755,10 @@ class APINewsManager {
 	* @throws ErrorException
 	*/
 
-	public function addNews($news) {
+	public function addNews($app_newsmanager_data_NewsEntry) {
 	     $data = array();
 	     $data['args'] = array();
-	     $data['args']["news"] = json_encode($this->transport->object_unset_nulls($news));
+	     $data['args']["app_newsmanager_data_NewsEntry"] = json_encode($this->transport->object_unset_nulls($app_newsmanager_data_NewsEntry));
 	     $data["method"] = "addNews";
 	     $data["interfaceName"] = "app.news.INewsManager";
 	     return $this->transport->sendMessage($data);

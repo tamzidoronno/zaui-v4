@@ -5,7 +5,6 @@
 package com.thundashop.app.newsmanager.data;
 
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.MessageBase;
 import java.util.Date;
 
 /**
@@ -13,6 +12,7 @@ import java.util.Date;
  * @author boggi
  */
 public class NewsEntry extends DataCommon {
-    public Date date;
-    public String content;
+    public Date date = new Date();
+    public String content = "";
+    public String subject = "";
 }

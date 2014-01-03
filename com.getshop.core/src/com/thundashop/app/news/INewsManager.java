@@ -28,7 +28,7 @@ public interface INewsManager {
      * @throws ErrorException 
      */
     @Administrator
-    public String addNews(String news) throws ErrorException;
+    public String addNews(NewsEntry newsEntry) throws ErrorException;
     
     /**
      * Delete a given news id.

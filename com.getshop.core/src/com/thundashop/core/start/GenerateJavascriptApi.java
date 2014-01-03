@@ -6,7 +6,6 @@ package com.thundashop.core.start;
 
 import com.thundashop.core.common.GetShopApi;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
@@ -103,6 +102,8 @@ public class GenerateJavascriptApi {
                 if (argstring.length() > 0) {
                     argstring = argstring.substring(0, argstring.length() - 1);
                 }
+                
+                argstring = argstring.equals("") ? "silent" : argstring + ", silent";
                 javascriptFile += "    " + method.getName() + " : function(" + argstring + ") {\n";
                 javascriptFile += "        data = {\n";
                 javascriptFile += "            args : {\n";
@@ -113,7 +114,7 @@ public class GenerateJavascriptApi {
                 javascriptFile += "            method: '" + method.getName() + "',\n";
                 javascriptFile += "            interfaceName: '" + clazz.getCanonicalName().replace("com.thundashop.", "") + "',\n";
                 javascriptFile += "        };\n";
-                javascriptFile += "        return this.communication.send(data);\n";
+                javascriptFile += "        return this.communication.send(data, silent);\n";
                 javascriptFile += "    },\n";
                 javascriptFile += "\n";
             }

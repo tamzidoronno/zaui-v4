@@ -241,6 +241,10 @@ public class GenerateApi {
 
     public void writeFile(String content, String path) throws IOException {
         File file = new File(path);
+        if (!file.exists()) {
+            file.getParentFile().mkdirs();
+            file.createNewFile();
+        }
         FileWriter fstream = new FileWriter(file);
         BufferedWriter out = new BufferedWriter(fstream);
         out.write(content);

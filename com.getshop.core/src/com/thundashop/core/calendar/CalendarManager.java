@@ -8,6 +8,7 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.SMSFactory;
+import com.thundashop.core.mobilemanager.MobileManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
@@ -75,6 +76,9 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         mymonth.storeId = storeId;
         databaseSaver.saveObject(mymonth, credentials);
         months.put(mymonth.id, mymonth);
+        
+        MobileManager mobileManager = getManager(MobileManager.class);
+        mobileManager.sendMessageToAllTestUnits("New course added");
     }
 
     private boolean isNewerOrEquals(Day day, Month month, int compareMonth, int compareDay, int compareYear) {

@@ -8,6 +8,7 @@ import com.thundashop.app.newsmanager.data.MailSubscription;
 import com.thundashop.app.newsmanager.data.NewsEntry;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.mobilemanager.MobileManager;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -79,14 +80,20 @@ public class NewsManager extends ManagerBase implements INewsManager {
     }
 
     @Override
-    public String addNews(String news) throws ErrorException {
-        NewsEntry entry = createNewsEntry(news);
+    public String addNews(NewsEntry entry) throws ErrorException {
+        entry.storeId = storeId;
+        databaseSaver.saveObject(entry, credentials);
+        entries.put(entry.id, entry);
+        
+        MobileManager manager = getManager(MobileManager.class);
+        manager.sendMessageToAll(entry.subject);
         return entry.id;
     }
 
     @Override
     public void deleteNews(String id) throws ErrorException {
-        deleteNewsEntry(getNewsEntry(id));
+        NewsEntry entry = entries.remove(id);
+        databaseSaver.deleteObject(entry, credentials);
     }
 
     @Override
@@ -103,36 +110,6 @@ public class NewsManager extends ManagerBase implements INewsManager {
     @Override
     public List<MailSubscription> getAllSubscribers() throws ErrorException {
         return new ArrayList<MailSubscription>(subscribers.values());
-    }
-
-    private NewsEntry createNewsEntry(String news) throws ErrorException {
-        if (entries == null) {
-            entries = new HashMap();
-        }
-        
-        NewsEntry entry = new NewsEntry();
-        entry.content = news;
-        entry.date = new Date();
-        entry.storeId = storeId;
-        
-        databaseSaver.saveObject(entry, credentials);
-        entries.put(entry.id, entry);
-        
-        return entry;
-    }
-
-    private NewsEntry getNewsEntry(String id) {
-        for(NewsEntry entry : entries.values()) {
-            if(entry.id.equals(id)) {
-                return entry;
-            }
-        }
-        return null;
-    }
-
-    private void deleteNewsEntry(NewsEntry newsEntry) throws ErrorException {
-        entries.remove(newsEntry);
-        databaseSaver.deleteObject(newsEntry, credentials);
     }
 
     private MailSubscription addSubscriberEntry(String email) throws ErrorException {

@@ -1469,3 +1469,9 @@ margin-left:256px;
 .gs_onoff .toggle { display:block; width: 100%; height: 100%; overflow:hidden;}
 .gs_off .toggle { background-color:#ff1717; width: 14px;border-right: solid 1px #BBB; }
 .gs_on .toggle { border-left: solid 1px #BBB; background-color:#26bc38; margin-left: 14px; width: 15px; }
+
+.gs_button { font-size: 15px; background-color: #DDD; color: #333; padding: 5px; border-radius: 4px; box-shadow: 0px 0px 5px #333; display: inline-block; background: linear-gradient(to top, #666, #EEE); padding-left: 15px; padding-right: 15px; cursor: pointer; }
+.gs_button:hover { background: linear-gradient(to top, #094930, #52e5ac); }
+.gs_button:active { background: none; background-color: #34c88e; }
+
+.gs_button.small { font-size: 11px; padding: 1px; padding-right: 10px; padding-left: 10px; font-weight: bold;}

@@ -105,6 +105,14 @@ if (isset($_GET['logonwithkey'])) {
 <html xmlns:fb="http://ogp.me/ns/fb#">
     <head>
         <script>
+            
+            if (typeof(console) == "undefined") {
+                console = {};
+            }
+            
+            if (typeof(console.log) == "undefined") {
+                console.log = function(text) {};
+            }
         translationMatrix = <? echo $factory->getJsonTranslationMatrix(); ?>    
         </script>
         <!--[if gte IE 8]>
@@ -273,13 +281,15 @@ if (isset($_GET['page'])) {
         PubSub.publish('NAVIGATION_COMPLETED', {});
     });
     
-CKEDITOR.on('instanceCreated', function(event) {
-    var editor = event.editor;
-    editor.on('instanceReady', function(e) {
-        $(e.editor.element.$).removeAttr("title");
-    });
-});
-CKEDITOR.config.allowedContent = true;    
+    if (typeof(CKEDITOR) !== "undefined") {
+        CKEDITOR.on('instanceCreated', function(event) {
+            var editor = event.editor;
+            editor.on('instanceReady', function(e) {
+                $(e.editor.element.$).removeAttr("title");
+            });
+        });
+        CKEDITOR.config.allowedContent = true;    
+    }
 </script>
 
 <? if (isset($_GET['logout'])) { ?>

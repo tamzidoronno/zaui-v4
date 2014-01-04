@@ -51,7 +51,13 @@ class PageBuilder {
                 for ($i = 0; $i < $_POST['data']['rowscount']; $i++) {
                     if (!isset($this->layout->rows[$i])) {
                         $this->layout->rows[$i] = $this->createRow(1);
-                        $this->layout->sortedRows[] = $this->layout->rows[$i]->rowId;
+                        if(!isset($this->layout->sortedRows) || sizeof($this->layout->sortedRows) == 0) {
+                            foreach($this->layout->rows as $index => $row) {
+                                $this->layout->sortedRows[] = $row->rowId;
+                            }
+                        } else {
+                            $this->layout->sortedRows[] = $this->layout->rows[$i]->rowId;
+                        }
                     }
                 }
                 $i = 0;
@@ -522,6 +528,9 @@ class PageBuilder {
     private function printPreviewRows() {
         echo "<ul class='sortable_layout_rows'>";
         $rowarray = [];
+//        echo "<pre>";
+//        print_r($this->layout->rows);
+//        echo "</pre>";
         foreach ($this->layout->rows as $index => $row) {
             $rowarray[$row->rowId] = $this->printPreviewRow($row, $index);
         }

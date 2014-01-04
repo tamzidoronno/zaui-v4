@@ -187,7 +187,10 @@ class ApplicationBase extends FactoryBase {
         if(sizeof($accesslist) == 0 || $type == 0 || $type == 2) {
             return true;
         }
-        return true;
+        if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+            return true;
+        }
+        return false;
     }
     
     public function hasReadAccess() {
@@ -200,6 +203,9 @@ class ApplicationBase extends FactoryBase {
             $type = $accesslist->{$this->applicationSettings->id};
         }
         if(sizeof($accesslist) == 0  || $type == 0 || $type == 1) {
+            return true;
+        }
+        if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
             return true;
         }
         return false;

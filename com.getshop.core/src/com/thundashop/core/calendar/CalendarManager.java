@@ -450,7 +450,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             throw new ErrorException(1012);
         }
         
-        if (!entry.needConfirmation && !getSession().currentUser.isAdministrator()) {
+        if (!entry.needConfirmation && !getSession().currentUser.isEditor()) {
             throw new ErrorException(26);
         }
         

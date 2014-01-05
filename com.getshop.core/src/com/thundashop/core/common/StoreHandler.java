@@ -70,11 +70,25 @@ public class StoreHandler {
         Class aClass = loadClass(inObject.interfaceName);
         Method executeMethod = getMethodToExecute(aClass, inObject.method, types);
         
-        authenticateUserLevel(executeMethod, aClass);
-   
-        Object result = invokeMethod(executeMethod, aClass, argumentValues);
-        clearSessionObject();
-        return result;
+        try {
+            authenticateUserLevel(executeMethod, aClass);
+            Object result = invokeMethod(executeMethod, aClass, argumentValues);
+            clearSessionObject();
+            return result;
+        } catch (ErrorException ex) {
+            if (ex.code == 26) {
+                User user = findUser();
+                String userInfo = "";
+                if (user != null) {
+                    userInfo += " id: " +user.id;
+                    userInfo += " name: " +user.fullName;
+                    userInfo += " email: " +user.emailAddress;
+                }
+                
+                System.out.println("Access denied, store: " + storeId + " , user={" + userInfo + "} method={" + aClass.getSimpleName() + "." + inObject.method + "}");
+            }
+            throw ex;
+        }
     }
     
     private Class loadClass(String objectName) throws ErrorException {

@@ -11,9 +11,10 @@ App = {
     reloadData : null,
     monthIndex : 1,
     token: "",
+    appName: "ProMeisterAcademey",
     firstConnected: false,
     numberOfMonthToShowInCalendar: 6,
-    address : "autoakademiet.mpal.getshop.com",
+    address : "www.autoakademiet.no",
     
     start: function() {
         this.getshopApi = new GetShopApiWebSocket(this.address);
@@ -159,6 +160,7 @@ App = {
         var tokenObject = {
             tokenId : App.token,
             type : "IOS",
+            appName : App.appName,
             testMode : true
         };
         

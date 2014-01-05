@@ -19,7 +19,7 @@
 var papp = {
     // Application Constructor
     initialize: function() {
-	console.log("Initializing");
+        console.log("Initializing");
         this.bindEvents();
     },
     // Bind Event Listeners
@@ -28,17 +28,47 @@ var papp = {
     // 'load', 'deviceready', 'offline', and 'online'.
     bindEvents: function() {
         document.addEventListener('deviceready', this.onDeviceReady, false);
+        document.addEventListener("resume", App.programResumed, false);
     },
     // deviceready Event Handler
     //
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicity call 'app.receivedEvent(...);'
     onDeviceReady: function() {
-	console.log("DEVIC EIS READY");
+        console.log("DEVIC EIS READY");
         papp.receivedEvent('deviceready');
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
-	App.start();
+        var pushNotification = window.plugins.pushNotification;
+        var device = window.device;
+        App.start();
+        
+        if (device.platform == 'android' || device.platform == 'Android')
+        {
+            pushNotification.register(
+                App.pushNotificationSuccess,
+                App.pushNotificationError, 
+                {
+                    "senderID": "377883426248",
+                    "ecb": "App.onNotificationGCM"
+                }
+            );
+        }
+        else
+        {
+            pushNotification.register(
+                $.proxy(App.tokenHandler, App),
+                $.proxy(App.pushNotificationError, App), 
+                {
+                    "badge": "true",
+                    "sound": "true",
+                    "alert": "true",
+                    "ecb": "App.onNotificationApple"
+                }
+            );
+        }
+
+        
     }
 };

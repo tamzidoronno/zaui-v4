@@ -13,13 +13,22 @@ and open the template in the editor.
 
         <link rel="stylesheet" href="css/jquerymobile.css" charset="utf-8" />
 
+        <!-- GetShop Library -->
+        <link rel="stylesheet" href="css/GetShop.css" charset="utf-8" />
+        <script src="js/GetShopApiWebSocket.js" charset="utf-8" ></script>
+        <script type="text/javascript" src="js/GetShop.Page.js"></script>
+        <script type="text/javascript" src="js/GetShop.ContentManager.js"></script>
+        <script type="text/javascript" src="js/GetShop.ImageDisplayer.js"></script>
+        <script type="text/javascript" src="js/GetShop.YouTube.js"></script>
+        <!-- End -->
+        
         <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="PushNotification.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
-
+        
         <script src="js/jquery.js" charset="utf-8" ></script>
         <script src="js/date.js" charset="utf-8" ></script>
         <script src="js/jquerymobile.js" charset="utf-8" ></script>
-        <script src="js/GetShopApiWebSocket.js" charset="utf-8" ></script>
         <script src="js/app.js" charset="utf-8" ></script>
 
         <link rel="stylesheet" href="ical/css/master.css" type="text/css" media="screen" charset="utf-8" />
@@ -34,7 +43,8 @@ and open the template in the editor.
         <div data-role="page" id="home">
             <div data-role="header" data-theme="a">
                 <img border="0" src="css/images/logo.png" style="margin-top: 10px; margin-bottom: 10px; float:center; display:inline"/>
-                <div class="infobutton"></div>
+                <div class="headerbutton infobutton"><div class="inner"></div></div>
+                <div class="headerbutton newsbutton"><div class="inner"><div style="position: absolute; left: 50%;"><div class="counter">15</div></div></div></div>
                 <div data-role="navbar">
                     <ul>
                         <li><a href="#courses" data-transition="flip">Kurser</a></li>
@@ -70,7 +80,8 @@ and open the template in the editor.
         <div data-role="page" id="courses">
             <div data-role="header" data-theme="a">
                 <img border="0" src="css/images/logo.png" style="margin-top: 10px; margin-bottom: 10px; float:center; display:inline"/>
-                <div class="infobutton"></div>
+                <div class="headerbutton infobutton"><div class="inner"></div></div>
+                <div class="headerbutton newsbutton"><div class="inner"><div style="position: absolute; left: 50%;"><div class="counter">15</div></div></div></div>
                 <div data-role="navbar">
                     <ul>
                         <li><a href="#home" data-transition="flip">Kalender</a></li>
@@ -84,11 +95,32 @@ and open the template in the editor.
                 <div class='contentcourselist'></div>
             </div>
         </div>
+        
+        <div data-role="page" id="news">
+            <div data-role="header" data-theme="a">
+                <img border="0" src="css/images/logo.png" style="margin-top: 10px; margin-bottom: 10px; float:center; display:inline"/>
+                <div class="headerbutton infobutton"><div class="inner"></div></div>
+                <div class="headerbutton newsbutton"><div class="inner"><div style="position: absolute; left: 50%;"><div class="counter">15</div></div></div></div>
+                <div data-role="navbar">
+                    <ul>
+                        <li><a href="#home" data-transition="flip">Kalender</a></li>
+                        <li><a href="#signup" data-transition="flip">Påmelding</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div data-role="content" style="text-align:left">
+                Nyheter:
+                <br>
+                <br>
+                <div class="newsentries"></div>
+            </div>
+        </div>
 
         <div data-role="page" id="signup">
              <div data-role="header" data-theme="a">
                 <img border="0" src="css/images/logo.png" style="margin-top: 10px; margin-bottom: 10px; float:center; display:inline"/>
-                <div class="infobutton"></div>
+                <div class="headerbutton infobutton"><div class="inner"></div></div>
+                <div class="headerbutton newsbutton"><div class="inner"><div style="position: absolute; left: 50%;"><div class="counter">15</div></div></div></div>
                 <div data-role="navbar">
                     <ul>
                         <li><a href="#home" data-transition="flip">Kalender</a></li>
@@ -126,7 +158,7 @@ and open the template in the editor.
 
                     <div class="availablepositions_course_selected"></div>
                     <br>
-                    <a id="signon" href="#" data-role="button">Meld på</a>
+                    <a id="signon" href="#" data-role="button"><span>Meld på</span></a>
                 </form>
             </div>
 
@@ -150,4 +182,5 @@ and open the template in the editor.
     } else {
         App.start();
     }
+    
 </script>

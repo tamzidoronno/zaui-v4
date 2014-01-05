@@ -84,9 +84,6 @@ public class NewsManager extends ManagerBase implements INewsManager {
         entry.storeId = storeId;
         databaseSaver.saveObject(entry, credentials);
         entries.put(entry.id, entry);
-        
-        MobileManager manager = getManager(MobileManager.class);
-        manager.sendMessageToAll(entry.subject);
         return entry.id;
     }
 
@@ -139,5 +136,14 @@ public class NewsManager extends ManagerBase implements INewsManager {
     private void removeSubscriberEntry(MailSubscription subscriber) throws ErrorException {
         databaseSaver.deleteObject(subscriber, credentials);
         subscribers.remove(subscriber);
+    }
+
+    @Override
+    public void publishNews(String id) throws ErrorException {
+        NewsEntry entry = entries.get(id);
+        MobileManager manager = getManager(MobileManager.class);
+        manager.sendMessageToAll(entry.subject);
+        entry.isPublished = true;
+        databaseSaver.saveObject(entry, credentials);
     }
 }

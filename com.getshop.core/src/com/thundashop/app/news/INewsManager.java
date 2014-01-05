@@ -5,6 +5,7 @@ import com.thundashop.app.newsmanager.data.NewsEntry;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.common.Writing;
 import java.util.List;
 
 /**
@@ -28,6 +29,7 @@ public interface INewsManager {
      * @throws ErrorException 
      */
     @Administrator
+    @Writing
     public String addNews(NewsEntry newsEntry) throws ErrorException;
     
     /**
@@ -61,4 +63,14 @@ public interface INewsManager {
      * @throws ErrorException 
      */
     public List<MailSubscription> getAllSubscribers() throws ErrorException;
+    
+    /**
+     * Publishing news.
+     * 
+     * @param id
+     * @throws ErrorException 
+     */
+    @Administrator
+    @Writing
+    public void publishNews(String id) throws ErrorException;
 }

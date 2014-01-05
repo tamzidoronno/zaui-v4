@@ -1825,6 +1825,22 @@ class APINewsManager {
 	}
 
 	/**
+	* Publishing news.
+	*
+	* @param id
+	* @throws ErrorException
+	*/
+
+	public function publishNews($id) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $data["method"] = "publishNews";
+	     $data["interfaceName"] = "app.news.INewsManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Remove an existing subscriber.
 	* @param subscriberId The subscribers id found in the MailSubscriber object.
 	* @return void

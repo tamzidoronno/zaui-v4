@@ -295,3 +295,11 @@ if (isset($_GET['page'])) {
 <? if (isset($_GET['logout'])) { ?>
     <script>window.location.reload()</script>
 <? } ?>
+
+    
+<?
+echo "<pre style='background-color: #FFF;'>";
+    print_r($factory->getPage()->layout);
+//    print_r($factory->getPage()->areas);
+    echo "</pre>";
+?>

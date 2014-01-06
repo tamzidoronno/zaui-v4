@@ -10,16 +10,37 @@ App = {
     startYear : 0,
     reloadData : null,
     monthIndex : 1,
+    token: "",
+    appName: "ProMeisterAcademey",
+    firstConnected: false,
+    numberOfMonthToShowInCalendar: 6,
+    address : "www.autoakademiet.no",
     
     start: function() {
-        this.getshopApi = new GetShopApiWebSocket("www.autoakademiet.no");
+        this.getshopApi = new GetShopApiWebSocket(this.address);
         this.getshopApi.connect();
         this.getshopApi.transferStarted = $.proxy(this.transferStarted, this);
         this.getshopApi.transferCompleted = $.proxy(this.transferCompleted, this);
         this.getshopApi.disconnectedCallback = $.proxy(this.isDisconnected, this);
         this.getshopApi.connectedCallback = $.proxy(this.onData, this);
         this.setupListeners();
-    },   
+    },  
+            
+    programResumed: function() {
+        App.loadNews(false);
+    },
+            
+    getLocalStorageReadMessages: function() {
+        if (!localStorage["readMessages"]) {
+            return [];
+        }
+        
+        return JSON.parse(localStorage["readMessages"]);
+    },
+            
+    saveLocalStorageReadMessages: function(msg) {
+        localStorage["readMessages"] = JSON.stringify(msg);
+    },
             
     validateEmail: function(email) { 
         var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -40,6 +61,114 @@ App = {
         this.createCalendars();
         this.setupSignupPage();
         this.bindRefreshEvent();
+        this.sendToken();
+        this.loadNews(false);
+        this.firstConnected = true;
+    },
+            
+    isRead: function(entryId) {
+        var readMessages = this.getLocalStorageReadMessages();
+        for (var i in readMessages) {
+            var readMessageEntryId = readMessages[i];
+            if (readMessageEntryId === entryId) {
+                return true;
+            }
+        }
+        
+        return false;
+    },
+    
+    updateCounter: function() {
+        var counter = $('.notRead').length;
+        if (counter === 0) {
+            this.getshopApi.MobileManager.clearBadged(this.token, true);
+            $('.newsbutton .counter').hide();
+        } else {
+            $('.newsbutton .counter').show();
+            $('.newsbutton .counter').html(counter);
+        }
+    },
+            
+    markAllAsRead: function() {
+        var readMessages = this.getLocalStorageReadMessages();
+        $('.notRead').each(function() {
+            var entryId = $(this).attr('entryId');
+            readMessages.push(entryId);
+            $(this).removeClass('notRead');
+        });
+        this.saveLocalStorageReadMessages(readMessages);
+        this.updateCounter();
+    },
+            
+    loadNews: function(silent) {
+        var me = this;
+        this.getshopApi.NewsManager.getAllNews(true, silent).done(function(news) {
+            var holder =  $("#news .newsentries");
+            holder.html("");
+            
+            if (news) {
+                for (var i in news) {
+                    var newsEntry = news[i];
+                    var container = $('<div/>');
+                    var content = me.replaceAll(newsEntry.content, '/displayImage', "http://"+me.address+"/displayImage");
+                    var contentHtml = $("<div>"+content+"</div>");
+                    contentHtml.find('img').css('height','auto');
+                    contentHtml.find('img').css('width','100%');
+                    contentHtml.find('td span').css('font-size','8px');
+                    
+                    container.attr("entryId", newsEntry.id);
+                    if (!me.isRead(newsEntry.id)) {
+                        container.addClass('notRead');
+                    }
+                    
+                    container.addClass("newsentry");
+                    container.append("<div class='header'>"+newsEntry.subject+"</div>");
+                    container.append("<div class='content'>"+contentHtml.html()+"</div>");
+                    container.append("<div class='footer'>"+newsEntry.date+"</div>");
+                    container.append("<div class='right'></div>");
+                    container.click(function() {
+                        var pageId = "#getshoppage_"+$(this).attr('entryId');
+                        if ($('body').find(pageId).length < 1) {
+                            var page = new GetShop.Page(me.getshopApi, $(this).attr('entryId'));
+                            page.ready = function() {
+                                $.mobile.changePage(pageId);
+                            }
+                            page.load();
+                        } else {
+                            $.mobile.changePage(pageId);
+                        }
+                        
+                        
+                    });
+                    holder.append(container);
+                }
+            }
+            
+            if (news.length === 0) {
+                holder.html("Det finnes ingen nyheter akkurat nå, kom tilbake senere.");
+            }
+            
+            me.updateCounter();
+        });
+    },
+            
+    sendToken: function() {
+        if (App.token === "") {
+            return;
+        }
+        
+        var tokenObject = {
+            tokenId : App.token,
+            type : "IOS",
+            appName : App.appName,
+            testMode : true
+        };
+        
+        try {
+            App.getshopApi.MobileManager.registerToken(tokenObject);
+        } catch (Ex) {
+            alert(Ex);
+        }
     },
             
     replaceAll: function (o,t,r,c){if(c==1){cs="g"}else{cs="gi"}var mp=new RegExp(t,cs);ns=o.replace(mp,r);return ns},
@@ -66,13 +195,11 @@ App = {
                 contentHtml.find('img').css('width','100%');
                 contentHtml.find('td span').css('font-size','8px');
                 page.find('.ContentManager').html(contentHtml);
-                
             });
         });
     },
             
     refresh: function() {
-//        this.isLoaded = false;
         this.getshopApi.socket.close();
     },
             
@@ -103,6 +230,20 @@ App = {
         for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
         return o;
     },
+            
+    showFreePositions: function(positions) {
+        $('.availablepositions_course_selected').hide();
+        if (typeof(positions) !== "undefined") {
+            $('.availablepositions_course_selected').show();
+            $('.availablepositions_course_selected').html("Ledige plasser på valgt kurs: <b>" + (positions > 0 ? positions : 0) + "</b>");
+        }
+        if (typeof(positions) !== "undefined" && positions <= 0) {
+            $('#signup a#signon span').html("Sett meg på venteliste");
+        } else {
+            $('#signup a#signon span').html("Meld på");
+        }
+    },
+            
     setupSignupPage: function() {
         var me = this;
         var day = parseInt(Date.today().toString('dd'));
@@ -132,12 +273,10 @@ App = {
             $('#select-native-1').selectmenu('refresh', true);
             $('#select-native-1').on('change', function() {
                 var positions = $(this).find(':selected').attr('availablepositions');
-                $('.availablepositions_course_selected').hide();
-                if (typeof(positions) !== "undefined") {
-                    $('.availablepositions_course_selected').show();
-                    $('.availablepositions_course_selected').html("Ledige plasser på valgt kurs: <b>" + positions + "</b>");
-                }
+                App.showFreePositions(positions);
             });
+            
+           
         });
         this.getshopApi.UserManager.getAllGroups().done(function(groups) {
             $('#select-native-2').html("");
@@ -175,13 +314,18 @@ App = {
             
             $('#select-native-1').selectmenu('refresh', true);
             
-            App.filterToEntryId = null;
+            var signOnButton = $('#signup a#signon span');
+            
+            if ($('#select-native-1').find(':selected') && $('#select-native-1').find(':selected').length > 0) {
+                var positions = $('#select-native-1').find(':selected').attr('availablepositions')
+                App.showFreePositions(positions);
+            }
         });
     },
             
     nextClicked: function() {
         setTimeout(function () { $('#next').removeClass('ui-btn-active'); }, 50);
-        if (this.monthIndex === 3) {
+        if (this.monthIndex === App.numberOfMonthToShowInCalendar) {
             $( "#noCalenderEventForward" ).popup("open");
             return;
         }
@@ -273,11 +417,6 @@ App = {
             return;
         }
         
-        if (positions === "0") {
-            alert('Beklager, det er ingen ledige plasser på valgt kurs.');
-            return;
-        }
-        
         if ($('label.error').length > 0) {
             alert('Vennligst rett feltene i rødt');
         } else {
@@ -302,20 +441,28 @@ App = {
                 
                 me.getshopApi.UserManager.createUser(user).done(function(createUser) {
                     me.getshopApi.CalendarManager.addUserToEvent(createUser.id, courseId, password, createUser.username).done(function() {
-                        alert('Du er nå påmeldt kurset');
+                        if (positions <= 0) {
+                            alert('Du er nå meldt på ventelisten');
+                        } else {
+                            alert('Du er nå påmeldt kurset');
+                        }
                         document.location.href = document.URL.substring(0, document.URL.indexOf("#"));
                     });
                 });
-            });
-            
+            });   
         }
     },
             
     setupListeners: function() {  
+        var me = this;
         $('#next').click($.proxy(this.nextClicked,this));
         $('#prev').click($.proxy(this.prevClicked,this));
         $(document).on('click', '.infobutton', function() {
             $.mobile.changePage('#infopage');
+        });
+        $(document).on('click', '.newsbutton', function() {
+            $.mobile.changePage('#news');
+            me.markAllAsRead();
         });
         $('#signon').click($.proxy(this.signOnClicked,this));
         $('#vatnr').keyup($.proxy(this.vatnumberupdated,this))
@@ -370,7 +517,7 @@ App = {
         $('#calender').html("");
         var year = parseInt(Date.today().toString('yyyy'));
         var currentMonth = Date.today().getMonth()+1;
-        for (var i=currentMonth; i<currentMonth+3; i++) {
+        for (var i=currentMonth; i<currentMonth+App.numberOfMonthToShowInCalendar; i++) {
             this.calendar = new App.Calendar(this.getshopApi, year, i);
         }
 
@@ -397,10 +544,7 @@ App = {
                         $('html .ui-mobile-viewport').append(page);    
                     }
                     
-                    
-
                     me.getshopApi.PageManager.getPage(this.pageId).done(function(dataPage) {
-
                         var contentHolder = page.find('.ContentManager');
                         if (contentHolder.length === 0 ) {
                             contentHolder = $('<div data-role="content" data-theme="a" class="ContentManager">');
@@ -515,6 +659,52 @@ App = {
             $('#courses').page();
             $('#courses').trigger('create');
         });
+    },
+    
+    pushNotificationSuccess: function(result) {
+        alert('Success registered: ' + result);
+    },
+            
+    pushNotificationError: function(error) {
+        alert(error);
+    },
+            
+    tokenHandler: function(token) {
+        App.token = token;
+        if (App.firstConnected) {
+            App.sendToken();
+        }
+    },
+            
+    onNotificationApple: function(e) {
+        if (e.foreground === "1") {
+            App.loadNews(true);
+        }
+    },
+            
+    onNotificationGCM: function(e) {
+        switch( e.event )
+        {
+            case 'registered':
+                if ( e.regid.length > 0 )
+                {
+                    alert('registration id = '+e.regid);
+                }
+            break;
+ 
+            case 'message':
+              // this is the actual push notification. its format depends on the data model from the push server
+              alert('message = '+e.message+' msgcnt = '+e.msgcnt);
+            break;
+ 
+            case 'error':
+              alert('GCM error = '+e.msg);
+            break;
+ 
+            default:
+              alert('An unknown GCM event has occurred');
+              break;
+        }
     }
 };
 
@@ -720,7 +910,7 @@ App.Calendar.prototype = {
                         clazz = "available";
                     } 
                         
-                    entryDetails.append("<div class='freespots "+clazz+"'><div class='label'>Ledige plasser</div><div class='number'>" + availablePositions + "</div></div>");
+                    entryDetails.append("<div class='freespots "+clazz+"'><div class='label'>Ledige plasser</div><div class='number'>" + (availablePositions > 0 ? availablePositions : 0) + "</div></div>");
                     entryDetails.append("<br>");
                     entryDetails.append("<br><b>Sted: </b>" + entry.location);
                     
@@ -742,10 +932,20 @@ App.Calendar.prototype = {
                         buttons.append(linkToSignup);
                         linkToSignup.click(function() {
                             App.filterToEntryId = $(this).attr('entry');
+                            App.filterWaitingList = false;
                         });
                         linkToSignup.button();
                     }
 
+                    if (!inThePast && availablePositions <= 0) {
+                        var linkToSignup = $("<a data-theme='a' entry='"+entry.entryId+"' data-role='button' data-inline='true' href='#signup'>Påmelding venteliste</a>");
+                        buttons.append(linkToSignup);
+                        linkToSignup.click(function() {
+                            App.filterToEntryId = $(this).attr('entry');
+                            App.filterWaitingList = true;
+                        });
+                        linkToSignup.button();
+                    }
                     entryDetails.append(buttons);
                     
                     

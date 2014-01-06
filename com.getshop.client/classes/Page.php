@@ -224,8 +224,6 @@ class Page extends FactoryBase {
     }
 
     public function loadJsonContent() {
-
-
         $contents['skeleton'] = $this->getSkeletonLayout();
         $contents['mainmenu'] = $this->getMainMenuContent();
         $contents['apparea-breadcrumb'] = $this->getBreadCrumbContent();

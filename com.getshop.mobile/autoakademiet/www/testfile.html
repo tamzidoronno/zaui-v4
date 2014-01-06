@@ -1,0 +1,51 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ProMeister ACADEMY</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+        <link rel="stylesheet" href="css/jquerymobile.css" charset="utf-8" />
+        <link rel="stylesheet" href="css/GetShop.css" charset="utf-8" />
+
+        <!-- GetShop Library -->
+        <script src="js/GetShopApiWebSocket.js" charset="utf-8" ></script>
+        <script type="text/javascript" src="js/GetShop.Page.js"></script>
+        <script type="text/javascript" src="js/GetShop.ContentManager.js"></script>
+        <script type="text/javascript" src="js/GetShop.ImageDisplayer.js"></script>
+        <!-- End -->
+        
+        <script type="text/javascript" src="js/index.js"></script>
+        
+        <script src="js/jquery.js" charset="utf-8" ></script>
+        <script src="js/date.js" charset="utf-8" ></script>
+        <script src="js/jquerymobile.js" charset="utf-8" ></script>
+        
+        <script src="js/app.js" charset="utf-8" ></script>
+
+        <link rel="stylesheet" href="ical/css/master.css" type="text/css" media="screen" charset="utf-8" />
+        <script src="ical/js/coda.js" type="text/javascript" charset="utf-8" ></script>
+
+        <link rel="stylesheet" href="css/theme.css" type="text/css" media="screen" charset="utf-8" />
+    </head>
+    <body>
+        
+    </body>
+</html>
+
+<script>
+    var api = new GetShopApiWebSocket("autoakademiet.mpal.getshop.com");
+    var page = new GetShop.Page(api, "64b4f714-cb63-42b0-8fc3-898228888ce1");
+    api.setConnectedEvent(
+        function() {
+            page.load();
+        }
+    );
+    api.connect();
+</script>

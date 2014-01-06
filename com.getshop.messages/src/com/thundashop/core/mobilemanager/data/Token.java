@@ -13,5 +13,6 @@ import com.thundashop.core.common.DataCommon;
 public class Token extends DataCommon {
     public String tokenId = "";
     public TokenType type;
+    public String appName = "";
     public boolean testMode = false;
 }

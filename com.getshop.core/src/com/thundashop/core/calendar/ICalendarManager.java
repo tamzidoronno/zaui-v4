@@ -2,10 +2,10 @@ package com.thundashop.core.calendar;
 
 import com.thundashop.core.calendarmanager.data.Entry;
 import com.thundashop.core.calendarmanager.data.Month;
-import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.common.Writing;
 import java.util.List;
 
 /**
@@ -41,6 +41,7 @@ public interface ICalendarManager {
      * @throws ErrorException 
      */
     @Editor
+    @Writing
     public void deleteEntry(String id) throws ErrorException;
     
     /**
@@ -55,6 +56,7 @@ public interface ICalendarManager {
      * @throws ErrorException 
      */
     @Editor
+    @Writing
     public void sendReminderToUser(boolean byEmail, boolean bySMS, List<String> users, String text, String subject) throws ErrorException;
     
     /**
@@ -86,6 +88,7 @@ public interface ICalendarManager {
      * @throws ErrorException 
      */
     @Editor
+    @Writing
     public void removeUserFromEvent(String userId, String eventId) throws ErrorException;
     
     /**
@@ -110,7 +113,8 @@ public interface ICalendarManager {
      * @param entryId
      * @throws ErrorException 
      */
-    @Administrator
+    @Editor
+    @Writing
     public void confirmEntry(String entryId) throws ErrorException;
     
     /**
@@ -139,6 +143,7 @@ public interface ICalendarManager {
      * Accept a candidate from waitinglist to 
      * course.
      */
-    @Administrator
+    @Editor
+    @Writing
     public void transferFromWaitingList(String entryId, String userId) throws ErrorException;
 }

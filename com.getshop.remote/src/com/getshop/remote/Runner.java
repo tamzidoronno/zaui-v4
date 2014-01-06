@@ -4,7 +4,7 @@
  */
 package com.getshop.remote;
 
-import com.thundashop.api.managers.GetShopApi;
+import com.getshop.javaapi.GetShopApi;
 import com.thundashop.core.usermanager.data.User;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -136,7 +136,7 @@ public class Runner {
 
     private void startWinvaskIntegration() throws Exception {
         System.out.println("Starting winvask integration");
-        WinVask winvask = new WinVask();
+        ComGetShopWinvask winvask = new ComGetShopWinvask(this);
         winvask.startClient();
     }
 }

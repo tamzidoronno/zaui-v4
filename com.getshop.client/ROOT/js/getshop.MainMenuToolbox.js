@@ -159,7 +159,7 @@ PubSub.subscribe('NAVIGATION_COMPLETED', function() {
                 title: appName,
                 click: function() {
                 },
-                class: 'renderstandalone',
+                clazz: 'renderstandalone',
                 appid: appId,
                 addon: true
             };

@@ -100,7 +100,7 @@ class PageArea extends FactoryBase {
 
         
         $isEmpty = $this->checkIfEmptyPage();
-        if ($this->isEditorMode()) {
+        if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
             if ($isEmpty && $this->backendPageArea->type != "bottom") {
                 $this->includefile('emptyapparea');
                 return;

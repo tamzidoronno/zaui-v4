@@ -58,7 +58,7 @@ var navigate = function(url, ajaxLink) {
 if (!history.pushState) {
     jQuery(document).ready(function($) {
         $.history.init(function(hash) {
-
+            hash = window.location.hash;
             if (hash === "") {
                 if (!getshop_firstload) {
                     hash = '?page=clear_page';
@@ -115,7 +115,6 @@ $(function() {
         if (link.indexOf(".html") > -1 || link.indexOf(".htm") > -1) {
             link = "?rewrite=" + encodeURIComponent(link.substring(link.lastIndexOf("/") + 1, link.lastIndexOf(".")));
         }
-
         var ajaxLink = getUrl(link);
         navigate(url, ajaxLink);
 
@@ -158,9 +157,8 @@ thundashop.common.updateColorsFromPicker = function() {
 
     var template = $('.GetShopColorPicker #theeme').val();
     var colors = basecolor + ":" + textcolor + ":" + buttoncolor + ":" + buttontextcolor + ":" + bgcolor;
-
+    
     thundashop.Ajax.changeTheeme(template, colors);
-
 };
 
 thundashop.common.notifyCKEditors = function() {

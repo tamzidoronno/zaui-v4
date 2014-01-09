@@ -2,7 +2,6 @@ package com.getshop.remote;
 
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.usermanager.data.Address;
-import com.thundashop.core.usermanager.data.User;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -12,16 +11,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-public class ComGetshopProteriasync {
-
+public class ComGetShopWinvask {
     private List<String> completedProducts = new ArrayList();
     private Runner runner;
 
-    public ComGetshopProteriasync(Runner runner) {
+    public ComGetShopWinvask(Runner runner) {
         this.runner = runner;
     }
     
@@ -29,7 +27,7 @@ public class ComGetshopProteriasync {
 
     public void startClient() throws Exception {
         loadCompletedProducts();
-
+        
         while (true) {
             checkForOrders();
             Thread.sleep(5000);
@@ -39,29 +37,23 @@ public class ComGetshopProteriasync {
     private void checkForOrders() throws Exception {
         List<Order> orders = this.runner.api.getOrderManager().getOrders(new ArrayList(), 0, 100000);
         for (Order order : orders) {
-            if (order.status == Order.Status.COMPLETED) {
+            if (order.status == Order.Status.WAITING_FOR_PAYMENT) {
                 exportOrder(order);
             }
         }
     }
-
-
-    private void exportOrder(Order order) throws IOException {
+    
+    private void exportOrder(Order order) throws IOException, SQLException, ClassNotFoundException, Exception {
         if (addToUpdated(order)) {
-            Address theAddress = order.cart.address;
-            
-            String line = order.incrementOrderId + ";" + theAddress.emailAddress + ";" + theAddress.fullName + ";" + theAddress.postCode + ";" + theAddress.phone + ";" + order.userId + ";" + theAddress.address + ";" + theAddress.city;
-            line = new String(line.getBytes("ISO-8859-1"), "UTF-8");
-            File folder = new File("import");
-            if(!folder.exists()) {
-                folder.mkdir();
+            System.out.println("This order need to be exported: " + order.id);
+            WinVaskDBIntegration dbint = new WinVaskDBIntegration(runner);
+            Integer kundenr = dbint.findCustomer(order.cart.address.fullName);
+            if(kundenr == -1) {
+                Address address = order.cart.address;
+                kundenr = dbint.createCustomer(address.fullName, address.address, address.postCode, address.city, address.phone, address.emailAddress);
             }
-            File file = new File("import/import.txt");
-            if(!file.exists()) {
-                file.createNewFile();
-            }
-            appendToFile(line, "import/import.txt");
-            System.out.println("Exporting order: " + order.id);
+            System.out.println("Kundenr: " + kundenr);
+            dbint.createInvoice(kundenr, order);
         }
     }
 
@@ -72,8 +64,8 @@ public class ComGetshopProteriasync {
         completedProducts.add(order.id);
         appendToFile(order.id, "completedProducts.txt");
         
-        return true;
-    }
+        return true; 
+   }
 
     private void loadCompletedProducts() {
         try {
@@ -93,5 +85,5 @@ public class ComGetshopProteriasync {
         PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
         out.println(line);
         out.close();
-    }
+    }  
 }

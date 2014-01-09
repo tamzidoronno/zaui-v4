@@ -111,12 +111,12 @@ public class GenerateApi {
         for (Type typeArgument : typeArguments) {
             if (typeArgument instanceof Class) {
                 Class typeArgClass = (Class) typeArgument;
-                generics += typeArgClass.getSimpleName() + ",";
+                generics += typeArgClass.getCanonicalName()+ ",";
             }
             if (typeArgument instanceof ParameterizedType) {
                 ParameterizedType tmpType = (ParameterizedType) typeArgument;
                 Class rawType = (Class) tmpType.getRawType();
-                generics += rawType.getSimpleName() + buildGenerics(typeArgument) + ",";
+                generics += rawType.getCanonicalName() + buildGenerics(typeArgument) + ",";
             }
         }
         generics = "<" + generics.substring(0, generics.length() - 1) + ">";

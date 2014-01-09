@@ -126,11 +126,13 @@ $(document).ready(function() {
     }
 });
 
-// Updates the menu on navigation.
+// Updates the mainmenu on navigation.
 PubSub.subscribe('NAVIGATION_COMPLETED', function() {
 
     var moreApps = $('.moreapps').find('.renderstandalone');
-
+    if(!isAdministrator) {
+        return;
+    }
     var config = mainmenu.getConfig();
     var items = [];
     $(config.items).each(function() {
@@ -157,7 +159,7 @@ PubSub.subscribe('NAVIGATION_COMPLETED', function() {
                 title: appName,
                 click: function() {
                 },
-                class: 'renderstandalone',
+                clazz: 'renderstandalone',
                 appid: appId,
                 addon: true
             };

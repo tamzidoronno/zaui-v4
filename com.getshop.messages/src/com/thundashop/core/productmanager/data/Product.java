@@ -67,6 +67,8 @@ public class Product extends DataCommon implements Comparable<Product>  {
      */
     @Editor
     private double taxes;
+    
+    public String sku;
 
     public void addImage(String fileId, String description) {
         ProductImage productImage = new ProductImage();

@@ -14,6 +14,12 @@ public class GetShopApi {
            getStoreManager().initializeStore(webaddress, sessionId);
       }
      /**
+      * @return APIMobileManager
+      */
+      public APIMobileManager getMobileManager() {
+           return new APIMobileManager(transport);
+      }
+     /**
       * @return APIOrderManager
       */
       public APIOrderManager getOrderManager() {

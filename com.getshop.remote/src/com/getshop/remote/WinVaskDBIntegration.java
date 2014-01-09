@@ -6,6 +6,8 @@ package com.getshop.remote;
 
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.storemanager.data.Store;
+import com.thundashop.core.usermanager.data.User;
 import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,9 +25,18 @@ import java.util.List;
  * @author boggi
  */
 public class WinVaskDBIntegration {
+    private final Runner runner;
 
-    private void error_log(String string) {
-        System.out.println(string);
+    WinVaskDBIntegration(Runner runner) throws SQLException, ClassNotFoundException {
+        this.runner = runner;
+        this.connectToDB();
+        this.connectToYearlyDb();
+    }
+
+
+    private void error_log(String string) throws Exception {
+        User user = runner.api.getUserManager().getLoggedOnUser();
+        runner.api.getMessageManager().sendMail(user.emailAddress, user.fullName, "Error while exporting to winvask", string, "post@getshop.com", "GetShop integration");
     }
 
     class Vare {
@@ -37,14 +48,14 @@ public class WinVaskDBIntegration {
         int momskode;
     }
 
-    private Vare getVareConnectedToItem(CartItem item) throws SQLException {
-        if(item.getProduct().skui == null || item.getProduct().skui.isEmpty()) {
+    private Vare getVareConnectedToItem(CartItem item) throws SQLException, Exception {
+        if(item.getProduct().sku == null || item.getProduct().sku.isEmpty()) {
             //Skui not set...
-            error_log("!!!!!!!!!!!!! SKUI NOT SET FOR PRODUCT:" + item.getProduct().name + " !!!!!!!!!!!!!!!!!!!!!1");
+            error_log("!!!!!!!!!!!!! SKU NOT SET FOR PRODUCT:" + item.getProduct().name + ".");
             return null;
         }
         
-        int id = new Integer(item.getProduct().skui);
+        int id = new Integer(item.getProduct().sku);
         
         PreparedStatement stmt = Cnx.prepareStatement("select * from vare where vare_nr = " + id);
         ResultSet rs = stmt.executeQuery();
@@ -65,10 +76,6 @@ public class WinVaskDBIntegration {
     private Connection Cnx;
     private Connection CnxYearly;
 
-    public WinVaskDBIntegration() throws SQLException, ClassNotFoundException {
-        this.connectToDB();
-        this.connectToYearlyDb();
-    }
 
     /**
      * @param args the command line arguments
@@ -172,7 +179,7 @@ public class WinVaskDBIntegration {
         return kundenr;
     }
 
-    public void createInvoice(int kundenr, Order order) throws SQLException {
+    public void createInvoice(int kundenr, Order order) throws SQLException, Exception {
         //Tables changed: Bilag, UBilag
         //Inifile System Vattr miniopsjoner miniskjerm
         int wierdDate = converToWierdData(order.createdDate);
@@ -187,7 +194,6 @@ public class WinVaskDBIntegration {
         for (CartItem item : items) {
             Vare vare = getVareConnectedToItem(item);
             if(vare == null) {
-                error_log("Failed to create invoice");
                 return;
             }
             vare.count = item.getCount();

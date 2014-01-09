@@ -43,10 +43,10 @@ public class ComGetShopWinvask {
         }
     }
     
-    private void exportOrder(Order order) throws IOException, SQLException, ClassNotFoundException {
+    private void exportOrder(Order order) throws IOException, SQLException, ClassNotFoundException, Exception {
         if (addToUpdated(order)) {
             System.out.println("This order need to be exported: " + order.id);
-            WinVaskDBIntegration dbint = new WinVaskDBIntegration();
+            WinVaskDBIntegration dbint = new WinVaskDBIntegration(runner);
             Integer kundenr = dbint.findCustomer(order.cart.address.fullName);
             if(kundenr == -1) {
                 Address address = order.cart.address;

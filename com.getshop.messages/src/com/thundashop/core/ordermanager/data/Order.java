@@ -30,7 +30,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         public static int SENT = 6;
     }
     
-    public Date createdDate;
+    public Date createdDate = new Date();
     
     /**
      * The users id for whom placed the order

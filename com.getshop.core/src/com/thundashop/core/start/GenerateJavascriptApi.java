@@ -104,7 +104,7 @@ public class GenerateJavascriptApi {
                 }
                 
                 argstring = argstring.equals("") ? "silent" : argstring + ", silent";
-                javascriptFile += "    " + method.getName() + " : function(" + argstring + ") {\n";
+                javascriptFile += "    '" + method.getName() + "' : function(" + argstring + ") {\n";
                 javascriptFile += "        data = {\n";
                 javascriptFile += "            args : {\n";
                 for (String arg : arguments) {

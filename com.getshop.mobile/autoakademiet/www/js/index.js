@@ -44,6 +44,7 @@ var papp = {
         var device = window.device;
         App.start();
         
+        
         if (device.platform == 'android' || device.platform == 'Android')
         {
             pushNotification.register(

@@ -14,7 +14,7 @@ App = {
     appName: "ProMeisterAcademey",
     firstConnected: false,
     numberOfMonthToShowInCalendar: 6,
-    address : "www.autoakademiet.no",
+    address : "mecademo.mpal.getshop.com",
     
     start: function() {
         this.getshopApi = new GetShopApiWebSocket(this.address);
@@ -164,11 +164,7 @@ App = {
             testMode : true
         };
         
-        try {
-            App.getshopApi.MobileManager.registerToken(tokenObject);
-        } catch (Ex) {
-            alert(Ex);
-        }
+        App.getshopApi.MobileManager.registerToken(tokenObject);
     },
             
     replaceAll: function (o,t,r,c){if(c==1){cs="g"}else{cs="gi"}var mp=new RegExp(t,cs);ns=o.replace(mp,r);return ns},
@@ -661,8 +657,19 @@ App = {
         });
     },
     
+    registerAndroidToken: function(tokenId) {
+        var tokenObject = {
+            tokenId : tokenId,
+            type : "ANDROID",
+            appName : App.appName,
+            testMode : true
+        };
+        
+        App.getshopApi.MobileManager.registerToken(tokenObject);
+    },
+    
     pushNotificationSuccess: function(result) {
-        alert('Success registered: ' + result);
+        // OK ?
     },
             
     pushNotificationError: function(error) {
@@ -688,13 +695,16 @@ App = {
             case 'registered':
                 if ( e.regid.length > 0 )
                 {
-                    alert('registration id = '+e.regid);
+                    App.registerAndroidToken(e.regid);
                 }
             break;
  
             case 'message':
-              // this is the actual push notification. its format depends on the data model from the push server
-              alert('message = '+e.message+' msgcnt = '+e.msgcnt);
+                console.log(e);
+                // this is the actual push notification. its format depends on the data model from the push server
+                if (e.foreground) {
+                    App.loadNews(true);
+                }
             break;
  
             case 'error':

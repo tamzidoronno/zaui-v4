@@ -134,7 +134,7 @@ GetShopApiWebSocket.BannerManager = function(communication) {
 }
 
 GetShopApiWebSocket.BannerManager.prototype = {
-    addImage : function(id,fileId, silent) {
+    'addImage' : function(id,fileId, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -146,7 +146,7 @@ GetShopApiWebSocket.BannerManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    createSet : function(width,height,id, silent) {
+    'createSet' : function(width,height,id, silent) {
         data = {
             args : {
                 width : JSON.stringify(width),
@@ -159,7 +159,7 @@ GetShopApiWebSocket.BannerManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    deleteSet : function(id, silent) {
+    'deleteSet' : function(id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -170,7 +170,7 @@ GetShopApiWebSocket.BannerManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getSet : function(id, silent) {
+    'getSet' : function(id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -181,7 +181,7 @@ GetShopApiWebSocket.BannerManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    linkProductToImage : function(bannerSetId,imageId,productId, silent) {
+    'linkProductToImage' : function(bannerSetId,imageId,productId, silent) {
         data = {
             args : {
                 bannerSetId : JSON.stringify(bannerSetId),
@@ -194,7 +194,7 @@ GetShopApiWebSocket.BannerManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    removeImage : function(bannerSetId,fileId, silent) {
+    'removeImage' : function(bannerSetId,fileId, silent) {
         data = {
             args : {
                 bannerSetId : JSON.stringify(bannerSetId),
@@ -206,7 +206,7 @@ GetShopApiWebSocket.BannerManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    saveSet : function(set, silent) {
+    'saveSet' : function(set, silent) {
         data = {
             args : {
                 set : JSON.stringify(set),
@@ -223,7 +223,7 @@ GetShopApiWebSocket.ContentManager = function(communication) {
 }
 
 GetShopApiWebSocket.ContentManager.prototype = {
-    createContent : function(content, silent) {
+    'createContent' : function(content, silent) {
         data = {
             args : {
                 content : JSON.stringify(content),
@@ -234,7 +234,7 @@ GetShopApiWebSocket.ContentManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    deleteContent : function(id, silent) {
+    'deleteContent' : function(id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -245,7 +245,7 @@ GetShopApiWebSocket.ContentManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getAllContent : function(silent) {
+    'getAllContent' : function(silent) {
         data = {
             args : {
             },
@@ -255,7 +255,7 @@ GetShopApiWebSocket.ContentManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getContent : function(id, silent) {
+    'getContent' : function(id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -266,7 +266,7 @@ GetShopApiWebSocket.ContentManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    saveContent : function(id,content, silent) {
+    'saveContent' : function(id,content, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -284,7 +284,7 @@ GetShopApiWebSocket.FooterManager = function(communication) {
 }
 
 GetShopApiWebSocket.FooterManager.prototype = {
-    getConfiguration : function(silent) {
+    'getConfiguration' : function(silent) {
         data = {
             args : {
             },
@@ -294,7 +294,7 @@ GetShopApiWebSocket.FooterManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    setLayout : function(numberOfColumns, silent) {
+    'setLayout' : function(numberOfColumns, silent) {
         data = {
             args : {
                 numberOfColumns : JSON.stringify(numberOfColumns),
@@ -305,7 +305,7 @@ GetShopApiWebSocket.FooterManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    setType : function(column,type, silent) {
+    'setType' : function(column,type, silent) {
         data = {
             args : {
                 column : JSON.stringify(column),
@@ -323,7 +323,7 @@ GetShopApiWebSocket.LogoManager = function(communication) {
 }
 
 GetShopApiWebSocket.LogoManager.prototype = {
-    deleteLogo : function(silent) {
+    'deleteLogo' : function(silent) {
         data = {
             args : {
             },
@@ -333,7 +333,7 @@ GetShopApiWebSocket.LogoManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getLogo : function(silent) {
+    'getLogo' : function(silent) {
         data = {
             args : {
             },
@@ -343,7 +343,7 @@ GetShopApiWebSocket.LogoManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    setLogo : function(fileId, silent) {
+    'setLogo' : function(fileId, silent) {
         data = {
             args : {
                 fileId : JSON.stringify(fileId),
@@ -360,7 +360,7 @@ GetShopApiWebSocket.NewsManager = function(communication) {
 }
 
 GetShopApiWebSocket.NewsManager.prototype = {
-    addNews : function(newsEntry, silent) {
+    'addNews' : function(newsEntry, silent) {
         data = {
             args : {
                 newsEntry : JSON.stringify(newsEntry),
@@ -371,7 +371,7 @@ GetShopApiWebSocket.NewsManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    addSubscriber : function(email, silent) {
+    'addSubscriber' : function(email, silent) {
         data = {
             args : {
                 email : JSON.stringify(email),
@@ -382,7 +382,7 @@ GetShopApiWebSocket.NewsManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    deleteNews : function(id, silent) {
+    'deleteNews' : function(id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -393,7 +393,7 @@ GetShopApiWebSocket.NewsManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getAllNews : function(silent) {
+    'getAllNews' : function(silent) {
         data = {
             args : {
             },
@@ -403,7 +403,7 @@ GetShopApiWebSocket.NewsManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getAllSubscribers : function(silent) {
+    'getAllSubscribers' : function(silent) {
         data = {
             args : {
             },
@@ -413,7 +413,18 @@ GetShopApiWebSocket.NewsManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    removeSubscriber : function(subscriberId, silent) {
+    'publishNews' : function(id, silent) {
+        data = {
+            args : {
+                id : JSON.stringify(id),
+            },
+            method: 'publishNews',
+            interfaceName: 'app.news.INewsManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'removeSubscriber' : function(subscriberId, silent) {
         data = {
             args : {
                 subscriberId : JSON.stringify(subscriberId),
@@ -430,7 +441,7 @@ GetShopApiWebSocket.AppManager = function(communication) {
 }
 
 GetShopApiWebSocket.AppManager.prototype = {
-    createApplication : function(appName, silent) {
+    'createApplication' : function(appName, silent) {
         data = {
             args : {
                 appName : JSON.stringify(appName),
@@ -441,7 +452,7 @@ GetShopApiWebSocket.AppManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    deleteApplication : function(id, silent) {
+    'deleteApplication' : function(id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -452,7 +463,7 @@ GetShopApiWebSocket.AppManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getAllApplicationSubscriptions : function(includeAppSettings, silent) {
+    'getAllApplicationSubscriptions' : function(includeAppSettings, silent) {
         data = {
             args : {
                 includeAppSettings : JSON.stringify(includeAppSettings),
@@ -463,7 +474,7 @@ GetShopApiWebSocket.AppManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getAllApplications : function(silent) {
+    'getAllApplications' : function(silent) {
         data = {
             args : {
             },
@@ -473,7 +484,7 @@ GetShopApiWebSocket.AppManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getApplication : function(id, silent) {
+    'getApplication' : function(id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -484,7 +495,7 @@ GetShopApiWebSocket.AppManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getSyncApplications : function(silent) {
+    'getSyncApplications' : function(silent) {
         data = {
             args : {
             },
@@ -494,7 +505,7 @@ GetShopApiWebSocket.AppManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getUnpayedSubscription : function(silent) {
+    'getUnpayedSubscription' : function(silent) {
         data = {
             args : {
             },
@@ -504,7 +515,7 @@ GetShopApiWebSocket.AppManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    isSyncToolConnected : function(silent) {
+    'isSyncToolConnected' : function(silent) {
         data = {
             args : {
             },
@@ -514,7 +525,7 @@ GetShopApiWebSocket.AppManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    saveApplication : function(settings, silent) {
+    'saveApplication' : function(settings, silent) {
         data = {
             args : {
                 settings : JSON.stringify(settings),
@@ -525,7 +536,7 @@ GetShopApiWebSocket.AppManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    setSyncApplication : function(id, silent) {
+    'setSyncApplication' : function(id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -542,7 +553,7 @@ GetShopApiWebSocket.CalendarManager = function(communication) {
 }
 
 GetShopApiWebSocket.CalendarManager.prototype = {
-    addUserToEvent : function(userId,eventId,password,username, silent) {
+    'addUserToEvent' : function(userId,eventId,password,username, silent) {
         data = {
             args : {
                 userId : JSON.stringify(userId),
@@ -556,7 +567,7 @@ GetShopApiWebSocket.CalendarManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    applyFilter : function(filters, silent) {
+    'applyFilter' : function(filters, silent) {
         data = {
             args : {
                 filters : JSON.stringify(filters),
@@ -567,7 +578,7 @@ GetShopApiWebSocket.CalendarManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    confirmEntry : function(entryId, silent) {
+    'confirmEntry' : function(entryId, silent) {
         data = {
             args : {
                 entryId : JSON.stringify(entryId),
@@ -578,7 +589,7 @@ GetShopApiWebSocket.CalendarManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    createEntry : function(year,month,day, silent) {
+    'createEntry' : function(year,month,day, silent) {
         data = {
             args : {
                 year : JSON.stringify(year),
@@ -591,7 +602,7 @@ GetShopApiWebSocket.CalendarManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    deleteEntry : function(id, silent) {
+    'deleteEntry' : function(id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -602,7 +613,7 @@ GetShopApiWebSocket.CalendarManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getActiveFilters : function(silent) {
+    'getActiveFilters' : function(silent) {
         data = {
             args : {
             },
@@ -612,7 +623,7 @@ GetShopApiWebSocket.CalendarManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getEntries : function(year,month,day,filters, silent) {
+    'getEntries' : function(year,month,day,filters, silent) {
         data = {
             args : {
                 year : JSON.stringify(year),
@@ -626,7 +637,7 @@ GetShopApiWebSocket.CalendarManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getEntry : function(entryId, silent) {
+    'getEntry' : function(entryId, silent) {
         data = {
             args : {
                 entryId : JSON.stringify(entryId),
@@ -637,7 +648,7 @@ GetShopApiWebSocket.CalendarManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getFilters : function(silent) {
+    'getFilters' : function(silent) {
         data = {
             args : {
             },
@@ -647,7 +658,7 @@ GetShopApiWebSocket.CalendarManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getMonth : function(year,month,includeExtraEvents, silent) {
+    'getMonth' : function(year,month,includeExtraEvents, silent) {
         data = {
             args : {
                 year : JSON.stringify(year),
@@ -660,7 +671,7 @@ GetShopApiWebSocket.CalendarManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    removeUserFromEvent : function(userId,eventId, silent) {
+    'removeUserFromEvent' : function(userId,eventId, silent) {
         data = {
             args : {
                 userId : JSON.stringify(userId),
@@ -672,7 +683,7 @@ GetShopApiWebSocket.CalendarManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    saveEntry : function(entry, silent) {
+    'saveEntry' : function(entry, silent) {
         data = {
             args : {
                 entry : JSON.stringify(entry),
@@ -683,7 +694,7 @@ GetShopApiWebSocket.CalendarManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    sendReminderToUser : function(byEmail,bySMS,users,text,subject, silent) {
+    'sendReminderToUser' : function(byEmail,bySMS,users,text,subject, silent) {
         data = {
             args : {
                 byEmail : JSON.stringify(byEmail),
@@ -698,7 +709,7 @@ GetShopApiWebSocket.CalendarManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    transferFromWaitingList : function(entryId,userId, silent) {
+    'transferFromWaitingList' : function(entryId,userId, silent) {
         data = {
             args : {
                 entryId : JSON.stringify(entryId),
@@ -716,7 +727,7 @@ GetShopApiWebSocket.CartManager = function(communication) {
 }
 
 GetShopApiWebSocket.CartManager.prototype = {
-    addCoupon : function(coupon, silent) {
+    'addCoupon' : function(coupon, silent) {
         data = {
             args : {
                 coupon : JSON.stringify(coupon),
@@ -727,7 +738,7 @@ GetShopApiWebSocket.CartManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    addProduct : function(productId,count,variations, silent) {
+    'addProduct' : function(productId,count,variations, silent) {
         data = {
             args : {
                 productId : JSON.stringify(productId),
@@ -740,7 +751,7 @@ GetShopApiWebSocket.CartManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    applyCouponToCurrentCart : function(code, silent) {
+    'applyCouponToCurrentCart' : function(code, silent) {
         data = {
             args : {
                 code : JSON.stringify(code),
@@ -751,7 +762,7 @@ GetShopApiWebSocket.CartManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    calculateTotalCost : function(cart, silent) {
+    'calculateTotalCost' : function(cart, silent) {
         data = {
             args : {
                 cart : JSON.stringify(cart),
@@ -762,7 +773,7 @@ GetShopApiWebSocket.CartManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    clear : function(silent) {
+    'clear' : function(silent) {
         data = {
             args : {
             },
@@ -772,7 +783,7 @@ GetShopApiWebSocket.CartManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getCart : function(silent) {
+    'getCart' : function(silent) {
         data = {
             args : {
             },
@@ -782,7 +793,7 @@ GetShopApiWebSocket.CartManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getCartTotalAmount : function(silent) {
+    'getCartTotalAmount' : function(silent) {
         data = {
             args : {
             },
@@ -792,7 +803,7 @@ GetShopApiWebSocket.CartManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getCoupons : function(silent) {
+    'getCoupons' : function(silent) {
         data = {
             args : {
             },
@@ -802,7 +813,7 @@ GetShopApiWebSocket.CartManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getShippingCost : function(silent) {
+    'getShippingCost' : function(silent) {
         data = {
             args : {
             },
@@ -812,7 +823,7 @@ GetShopApiWebSocket.CartManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getShippingPriceBasis : function(silent) {
+    'getShippingPriceBasis' : function(silent) {
         data = {
             args : {
             },
@@ -822,7 +833,7 @@ GetShopApiWebSocket.CartManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getTaxes : function(silent) {
+    'getTaxes' : function(silent) {
         data = {
             args : {
             },
@@ -832,7 +843,7 @@ GetShopApiWebSocket.CartManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    removeAllCoupons : function(silent) {
+    'removeAllCoupons' : function(silent) {
         data = {
             args : {
             },
@@ -842,7 +853,7 @@ GetShopApiWebSocket.CartManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    removeCoupon : function(code, silent) {
+    'removeCoupon' : function(code, silent) {
         data = {
             args : {
                 code : JSON.stringify(code),
@@ -853,7 +864,7 @@ GetShopApiWebSocket.CartManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    removeProduct : function(cartItemId, silent) {
+    'removeProduct' : function(cartItemId, silent) {
         data = {
             args : {
                 cartItemId : JSON.stringify(cartItemId),
@@ -864,7 +875,7 @@ GetShopApiWebSocket.CartManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    setAddress : function(address, silent) {
+    'setAddress' : function(address, silent) {
         data = {
             args : {
                 address : JSON.stringify(address),
@@ -875,7 +886,7 @@ GetShopApiWebSocket.CartManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    setShippingCost : function(shippingCost, silent) {
+    'setShippingCost' : function(shippingCost, silent) {
         data = {
             args : {
                 shippingCost : JSON.stringify(shippingCost),
@@ -886,7 +897,7 @@ GetShopApiWebSocket.CartManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    updateProductCount : function(cartItemId,count, silent) {
+    'updateProductCount' : function(cartItemId,count, silent) {
         data = {
             args : {
                 cartItemId : JSON.stringify(cartItemId),
@@ -904,7 +915,7 @@ GetShopApiWebSocket.ChatManager = function(communication) {
 }
 
 GetShopApiWebSocket.ChatManager.prototype = {
-    closeChat : function(id, silent) {
+    'closeChat' : function(id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -915,7 +926,7 @@ GetShopApiWebSocket.ChatManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getChatters : function(silent) {
+    'getChatters' : function(silent) {
         data = {
             args : {
             },
@@ -925,7 +936,7 @@ GetShopApiWebSocket.ChatManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getMessages : function(silent) {
+    'getMessages' : function(silent) {
         data = {
             args : {
             },
@@ -935,7 +946,7 @@ GetShopApiWebSocket.ChatManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    pingMobileChat : function(chatterid, silent) {
+    'pingMobileChat' : function(chatterid, silent) {
         data = {
             args : {
                 chatterid : JSON.stringify(chatterid),
@@ -946,7 +957,7 @@ GetShopApiWebSocket.ChatManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    replyToChat : function(id,message, silent) {
+    'replyToChat' : function(id,message, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -958,7 +969,7 @@ GetShopApiWebSocket.ChatManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    sendMessage : function(message, silent) {
+    'sendMessage' : function(message, silent) {
         data = {
             args : {
                 message : JSON.stringify(message),
@@ -975,7 +986,7 @@ GetShopApiWebSocket.GalleryManager = function(communication) {
 }
 
 GetShopApiWebSocket.GalleryManager.prototype = {
-    addImageToGallery : function(galleryId,imageId,description,title, silent) {
+    'addImageToGallery' : function(galleryId,imageId,description,title, silent) {
         data = {
             args : {
                 galleryId : JSON.stringify(galleryId),
@@ -989,7 +1000,7 @@ GetShopApiWebSocket.GalleryManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    createImageGallery : function(silent) {
+    'createImageGallery' : function(silent) {
         data = {
             args : {
             },
@@ -999,7 +1010,7 @@ GetShopApiWebSocket.GalleryManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    deleteImage : function(entryId, silent) {
+    'deleteImage' : function(entryId, silent) {
         data = {
             args : {
                 entryId : JSON.stringify(entryId),
@@ -1010,7 +1021,7 @@ GetShopApiWebSocket.GalleryManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getAllImages : function(id, silent) {
+    'getAllImages' : function(id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -1021,7 +1032,7 @@ GetShopApiWebSocket.GalleryManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getEntry : function(id, silent) {
+    'getEntry' : function(id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -1032,7 +1043,7 @@ GetShopApiWebSocket.GalleryManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    saveEntry : function(entry, silent) {
+    'saveEntry' : function(entry, silent) {
         data = {
             args : {
                 entry : JSON.stringify(entry),
@@ -1049,7 +1060,7 @@ GetShopApiWebSocket.GetShop = function(communication) {
 }
 
 GetShopApiWebSocket.GetShop.prototype = {
-    addUserToPartner : function(userId,partner,password, silent) {
+    'addUserToPartner' : function(userId,partner,password, silent) {
         data = {
             args : {
                 userId : JSON.stringify(userId),
@@ -1062,7 +1073,7 @@ GetShopApiWebSocket.GetShop.prototype = {
         return this.communication.send(data, silent);
     },
 
-    findAddressForApplication : function(uuid, silent) {
+    'findAddressForApplication' : function(uuid, silent) {
         data = {
             args : {
                 uuid : JSON.stringify(uuid),
@@ -1073,7 +1084,7 @@ GetShopApiWebSocket.GetShop.prototype = {
         return this.communication.send(data, silent);
     },
 
-    findAddressForUUID : function(uuid, silent) {
+    'findAddressForUUID' : function(uuid, silent) {
         data = {
             args : {
                 uuid : JSON.stringify(uuid),
@@ -1084,7 +1095,7 @@ GetShopApiWebSocket.GetShop.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getPartnerData : function(partnerId,password, silent) {
+    'getPartnerData' : function(partnerId,password, silent) {
         data = {
             args : {
                 partnerId : JSON.stringify(partnerId),
@@ -1096,7 +1107,7 @@ GetShopApiWebSocket.GetShop.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getStores : function(code, silent) {
+    'getStores' : function(code, silent) {
         data = {
             args : {
                 code : JSON.stringify(code),
@@ -1107,7 +1118,7 @@ GetShopApiWebSocket.GetShop.prototype = {
         return this.communication.send(data, silent);
     },
 
-    setApplicationList : function(ids,partnerId,password, silent) {
+    'setApplicationList' : function(ids,partnerId,password, silent) {
         data = {
             args : {
                 ids : JSON.stringify(ids),
@@ -1126,7 +1137,7 @@ GetShopApiWebSocket.ListManager = function(communication) {
 }
 
 GetShopApiWebSocket.ListManager.prototype = {
-    addEntry : function(listId,entry,parentPageId, silent) {
+    'addEntry' : function(listId,entry,parentPageId, silent) {
         data = {
             args : {
                 listId : JSON.stringify(listId),
@@ -1139,7 +1150,7 @@ GetShopApiWebSocket.ListManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    clearList : function(listId, silent) {
+    'clearList' : function(listId, silent) {
         data = {
             args : {
                 listId : JSON.stringify(listId),
@@ -1150,7 +1161,7 @@ GetShopApiWebSocket.ListManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    combineList : function(toListId,newListId, silent) {
+    'combineList' : function(toListId,newListId, silent) {
         data = {
             args : {
                 toListId : JSON.stringify(toListId),
@@ -1162,7 +1173,7 @@ GetShopApiWebSocket.ListManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    createListId : function(silent) {
+    'createListId' : function(silent) {
         data = {
             args : {
             },
@@ -1172,7 +1183,7 @@ GetShopApiWebSocket.ListManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    deleteEntry : function(id,listId, silent) {
+    'deleteEntry' : function(id,listId, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -1184,7 +1195,7 @@ GetShopApiWebSocket.ListManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getAllListsByType : function(type, silent) {
+    'getAllListsByType' : function(type, silent) {
         data = {
             args : {
                 type : JSON.stringify(type),
@@ -1195,7 +1206,7 @@ GetShopApiWebSocket.ListManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getCombinedLists : function(listId, silent) {
+    'getCombinedLists' : function(listId, silent) {
         data = {
             args : {
                 listId : JSON.stringify(listId),
@@ -1206,7 +1217,7 @@ GetShopApiWebSocket.ListManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getList : function(listId, silent) {
+    'getList' : function(listId, silent) {
         data = {
             args : {
                 listId : JSON.stringify(listId),
@@ -1217,7 +1228,7 @@ GetShopApiWebSocket.ListManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getListEntry : function(id, silent) {
+    'getListEntry' : function(id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -1228,7 +1239,7 @@ GetShopApiWebSocket.ListManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getLists : function(silent) {
+    'getLists' : function(silent) {
         data = {
             args : {
             },
@@ -1238,7 +1249,7 @@ GetShopApiWebSocket.ListManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getPageIdByName : function(name, silent) {
+    'getPageIdByName' : function(name, silent) {
         data = {
             args : {
                 name : JSON.stringify(name),
@@ -1249,7 +1260,7 @@ GetShopApiWebSocket.ListManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    orderEntry : function(id,after,parentId, silent) {
+    'orderEntry' : function(id,after,parentId, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -1262,7 +1273,7 @@ GetShopApiWebSocket.ListManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    setEntries : function(listId,entries, silent) {
+    'setEntries' : function(listId,entries, silent) {
         data = {
             args : {
                 listId : JSON.stringify(listId),
@@ -1274,7 +1285,7 @@ GetShopApiWebSocket.ListManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    translateEntries : function(entryIds, silent) {
+    'translateEntries' : function(entryIds, silent) {
         data = {
             args : {
                 entryIds : JSON.stringify(entryIds),
@@ -1285,7 +1296,7 @@ GetShopApiWebSocket.ListManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    unCombineList : function(fromListId,toRemoveId, silent) {
+    'unCombineList' : function(fromListId,toRemoveId, silent) {
         data = {
             args : {
                 fromListId : JSON.stringify(fromListId),
@@ -1297,7 +1308,7 @@ GetShopApiWebSocket.ListManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    updateEntry : function(entry, silent) {
+    'updateEntry' : function(entry, silent) {
         data = {
             args : {
                 entry : JSON.stringify(entry),
@@ -1314,7 +1325,7 @@ GetShopApiWebSocket.MessageManager = function(communication) {
 }
 
 GetShopApiWebSocket.MessageManager.prototype = {
-    getSmsCount : function(year,month, silent) {
+    'getSmsCount' : function(year,month, silent) {
         data = {
             args : {
                 year : JSON.stringify(year),
@@ -1326,7 +1337,7 @@ GetShopApiWebSocket.MessageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    sendMail : function(to,toName,subject,content,from,fromName, silent) {
+    'sendMail' : function(to,toName,subject,content,from,fromName, silent) {
         data = {
             args : {
                 to : JSON.stringify(to),
@@ -1348,7 +1359,7 @@ GetShopApiWebSocket.MobileManager = function(communication) {
 }
 
 GetShopApiWebSocket.MobileManager.prototype = {
-    clearBadged : function(tokenId, silent) {
+    'clearBadged' : function(tokenId, silent) {
         data = {
             args : {
                 tokenId : JSON.stringify(tokenId),
@@ -1359,7 +1370,7 @@ GetShopApiWebSocket.MobileManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    registerToken : function(token, silent) {
+    'registerToken' : function(token, silent) {
         data = {
             args : {
                 token : JSON.stringify(token),
@@ -1370,7 +1381,7 @@ GetShopApiWebSocket.MobileManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    sendMessageToAll : function(message, silent) {
+    'sendMessageToAll' : function(message, silent) {
         data = {
             args : {
                 message : JSON.stringify(message),
@@ -1381,7 +1392,7 @@ GetShopApiWebSocket.MobileManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    sendMessageToAllTestUnits : function(message, silent) {
+    'sendMessageToAllTestUnits' : function(message, silent) {
         data = {
             args : {
                 message : JSON.stringify(message),
@@ -1398,7 +1409,7 @@ GetShopApiWebSocket.OrderManager = function(communication) {
 }
 
 GetShopApiWebSocket.OrderManager.prototype = {
-    changeOrderStatus : function(id,status, silent) {
+    'changeOrderStatus' : function(id,status, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -1410,7 +1421,7 @@ GetShopApiWebSocket.OrderManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    createOrder : function(address, silent) {
+    'createOrder' : function(address, silent) {
         data = {
             args : {
                 address : JSON.stringify(address),
@@ -1421,7 +1432,7 @@ GetShopApiWebSocket.OrderManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getOrder : function(orderId, silent) {
+    'getOrder' : function(orderId, silent) {
         data = {
             args : {
                 orderId : JSON.stringify(orderId),
@@ -1432,7 +1443,7 @@ GetShopApiWebSocket.OrderManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getOrderByincrementOrderId : function(id, silent) {
+    'getOrderByincrementOrderId' : function(id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -1443,7 +1454,7 @@ GetShopApiWebSocket.OrderManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getOrders : function(orderIds,page,pageSize, silent) {
+    'getOrders' : function(orderIds,page,pageSize, silent) {
         data = {
             args : {
                 orderIds : JSON.stringify(orderIds),
@@ -1456,7 +1467,7 @@ GetShopApiWebSocket.OrderManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getTaxes : function(order, silent) {
+    'getTaxes' : function(order, silent) {
         data = {
             args : {
                 order : JSON.stringify(order),
@@ -1467,7 +1478,7 @@ GetShopApiWebSocket.OrderManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getTotalAmount : function(order, silent) {
+    'getTotalAmount' : function(order, silent) {
         data = {
             args : {
                 order : JSON.stringify(order),
@@ -1478,7 +1489,7 @@ GetShopApiWebSocket.OrderManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    saveOrder : function(order, silent) {
+    'saveOrder' : function(order, silent) {
         data = {
             args : {
                 order : JSON.stringify(order),
@@ -1489,7 +1500,7 @@ GetShopApiWebSocket.OrderManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    setOrderStatus : function(password,orderId,currency,price,status, silent) {
+    'setOrderStatus' : function(password,orderId,currency,price,status, silent) {
         data = {
             args : {
                 password : JSON.stringify(password),
@@ -1510,7 +1521,7 @@ GetShopApiWebSocket.PageManager = function(communication) {
 }
 
 GetShopApiWebSocket.PageManager.prototype = {
-    addApplication : function(applicationSettingId, silent) {
+    'addApplication' : function(applicationSettingId, silent) {
         data = {
             args : {
                 applicationSettingId : JSON.stringify(applicationSettingId),
@@ -1521,7 +1532,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    addApplicationToPage : function(pageId,applicationSettingId,pageArea, silent) {
+    'addApplicationToPage' : function(pageId,applicationSettingId,pageArea, silent) {
         data = {
             args : {
                 pageId : JSON.stringify(pageId),
@@ -1534,7 +1545,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    addExistingApplicationToPageArea : function(pageId,appId,area, silent) {
+    'addExistingApplicationToPageArea' : function(pageId,appId,area, silent) {
         data = {
             args : {
                 pageId : JSON.stringify(pageId),
@@ -1547,7 +1558,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    changePageLayout : function(pageId,layout, silent) {
+    'changePageLayout' : function(pageId,layout, silent) {
         data = {
             args : {
                 pageId : JSON.stringify(pageId),
@@ -1559,7 +1570,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    changePageUserLevel : function(pageId,userLevel, silent) {
+    'changePageUserLevel' : function(pageId,userLevel, silent) {
         data = {
             args : {
                 pageId : JSON.stringify(pageId),
@@ -1571,7 +1582,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    clearPageArea : function(pageId,pageArea, silent) {
+    'clearPageArea' : function(pageId,pageArea, silent) {
         data = {
             args : {
                 pageId : JSON.stringify(pageId),
@@ -1583,7 +1594,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    createPage : function(layout,parentId, silent) {
+    'createPage' : function(layout,parentId, silent) {
         data = {
             args : {
                 layout : JSON.stringify(layout),
@@ -1595,7 +1606,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    createPageWithId : function(layout,parentId,id, silent) {
+    'createPageWithId' : function(layout,parentId,id, silent) {
         data = {
             args : {
                 layout : JSON.stringify(layout),
@@ -1608,7 +1619,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    deleteApplication : function(id, silent) {
+    'deleteApplication' : function(id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -1619,7 +1630,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    deletePage : function(id, silent) {
+    'deletePage' : function(id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -1630,7 +1641,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getApplicationSettings : function(name, silent) {
+    'getApplicationSettings' : function(name, silent) {
         data = {
             args : {
                 name : JSON.stringify(name),
@@ -1641,7 +1652,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getApplications : function(silent) {
+    'getApplications' : function(silent) {
         data = {
             args : {
             },
@@ -1651,7 +1662,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getApplicationsBasedOnApplicationSettingsId : function(appSettingsId, silent) {
+    'getApplicationsBasedOnApplicationSettingsId' : function(appSettingsId, silent) {
         data = {
             args : {
                 appSettingsId : JSON.stringify(appSettingsId),
@@ -1662,7 +1673,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getApplicationsByPageAreaAndSettingsId : function(appSettingsId,pageArea, silent) {
+    'getApplicationsByPageAreaAndSettingsId' : function(appSettingsId,pageArea, silent) {
         data = {
             args : {
                 appSettingsId : JSON.stringify(appSettingsId),
@@ -1674,7 +1685,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getApplicationsByType : function(type, silent) {
+    'getApplicationsByType' : function(type, silent) {
         data = {
             args : {
                 type : JSON.stringify(type),
@@ -1685,7 +1696,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getApplicationsForPage : function(pageId, silent) {
+    'getApplicationsForPage' : function(pageId, silent) {
         data = {
             args : {
                 pageId : JSON.stringify(pageId),
@@ -1696,7 +1707,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getPage : function(id, silent) {
+    'getPage' : function(id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -1707,7 +1718,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getPagesForApplications : function(appIds, silent) {
+    'getPagesForApplications' : function(appIds, silent) {
         data = {
             args : {
                 appIds : JSON.stringify(appIds),
@@ -1718,7 +1729,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getSecuredSettings : function(applicationInstanceId, silent) {
+    'getSecuredSettings' : function(applicationInstanceId, silent) {
         data = {
             args : {
                 applicationInstanceId : JSON.stringify(applicationInstanceId),
@@ -1729,7 +1740,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getSecuredSettingsInternal : function(appName, silent) {
+    'getSecuredSettingsInternal' : function(appName, silent) {
         data = {
             args : {
                 appName : JSON.stringify(appName),
@@ -1740,7 +1751,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    removeAllApplications : function(appSettingsId, silent) {
+    'removeAllApplications' : function(appSettingsId, silent) {
         data = {
             args : {
                 appSettingsId : JSON.stringify(appSettingsId),
@@ -1751,7 +1762,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    removeApplication : function(applicationId,pageid, silent) {
+    'removeApplication' : function(applicationId,pageid, silent) {
         data = {
             args : {
                 applicationId : JSON.stringify(applicationId),
@@ -1763,7 +1774,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    reorderApplication : function(pageId,appId,moveUp, silent) {
+    'reorderApplication' : function(pageId,appId,moveUp, silent) {
         data = {
             args : {
                 pageId : JSON.stringify(pageId),
@@ -1776,7 +1787,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    saveApplicationConfiguration : function(config, silent) {
+    'saveApplicationConfiguration' : function(config, silent) {
         data = {
             args : {
                 config : JSON.stringify(config),
@@ -1787,7 +1798,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    savePage : function(page, silent) {
+    'savePage' : function(page, silent) {
         data = {
             args : {
                 page : JSON.stringify(page),
@@ -1798,7 +1809,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    search : function(search, silent) {
+    'search' : function(search, silent) {
         data = {
             args : {
                 search : JSON.stringify(search),
@@ -1809,7 +1820,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    setApplicationSettings : function(settings, silent) {
+    'setApplicationSettings' : function(settings, silent) {
         data = {
             args : {
                 settings : JSON.stringify(settings),
@@ -1820,7 +1831,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    setApplicationSticky : function(appId,toggle, silent) {
+    'setApplicationSticky' : function(appId,toggle, silent) {
         data = {
             args : {
                 appId : JSON.stringify(appId),
@@ -1832,7 +1843,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    setPageDescription : function(pageId,description, silent) {
+    'setPageDescription' : function(pageId,description, silent) {
         data = {
             args : {
                 pageId : JSON.stringify(pageId),
@@ -1844,7 +1855,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    setParentPage : function(pageId,parentPageId, silent) {
+    'setParentPage' : function(pageId,parentPageId, silent) {
         data = {
             args : {
                 pageId : JSON.stringify(pageId),
@@ -1856,7 +1867,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    swapApplication : function(fromAppId,toAppId, silent) {
+    'swapApplication' : function(fromAppId,toAppId, silent) {
         data = {
             args : {
                 fromAppId : JSON.stringify(fromAppId),
@@ -1868,7 +1879,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    switchApplicationAreas : function(pageId,fromArea,toArea, silent) {
+    'switchApplicationAreas' : function(pageId,fromArea,toArea, silent) {
         data = {
             args : {
                 pageId : JSON.stringify(pageId),
@@ -1881,7 +1892,7 @@ GetShopApiWebSocket.PageManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    translatePages : function(pages, silent) {
+    'translatePages' : function(pages, silent) {
         data = {
             args : {
                 pages : JSON.stringify(pages),
@@ -1898,7 +1909,7 @@ GetShopApiWebSocket.InvoiceManager = function(communication) {
 }
 
 GetShopApiWebSocket.InvoiceManager.prototype = {
-    createInvoice : function(orderId, silent) {
+    'createInvoice' : function(orderId, silent) {
         data = {
             args : {
                 orderId : JSON.stringify(orderId),
@@ -1915,7 +1926,7 @@ GetShopApiWebSocket.ProductManager = function(communication) {
 }
 
 GetShopApiWebSocket.ProductManager.prototype = {
-    addImage : function(productId,productImageId,description, silent) {
+    'addImage' : function(productId,productImageId,description, silent) {
         data = {
             args : {
                 productId : JSON.stringify(productId),
@@ -1928,7 +1939,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    changeStockQuantity : function(productId,count, silent) {
+    'changeStockQuantity' : function(productId,count, silent) {
         data = {
             args : {
                 productId : JSON.stringify(productId),
@@ -1940,7 +1951,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    createProduct : function(silent) {
+    'createProduct' : function(silent) {
         data = {
             args : {
             },
@@ -1950,7 +1961,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getAllAttributes : function(silent) {
+    'getAllAttributes' : function(silent) {
         data = {
             args : {
             },
@@ -1960,7 +1971,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getAllProducts : function(silent) {
+    'getAllProducts' : function(silent) {
         data = {
             args : {
             },
@@ -1970,7 +1981,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getAttributeSummary : function(silent) {
+    'getAttributeSummary' : function(silent) {
         data = {
             args : {
             },
@@ -1980,7 +1991,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getLatestProducts : function(count, silent) {
+    'getLatestProducts' : function(count, silent) {
         data = {
             args : {
                 count : JSON.stringify(count),
@@ -1991,7 +2002,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getPageIdByName : function(productName, silent) {
+    'getPageIdByName' : function(productName, silent) {
         data = {
             args : {
                 productName : JSON.stringify(productName),
@@ -2002,7 +2013,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getPrice : function(productId,variations, silent) {
+    'getPrice' : function(productId,variations, silent) {
         data = {
             args : {
                 productId : JSON.stringify(productId),
@@ -2014,7 +2025,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getProduct : function(id, silent) {
+    'getProduct' : function(id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -2025,7 +2036,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getProductFromApplicationId : function(app_uuid, silent) {
+    'getProductFromApplicationId' : function(app_uuid, silent) {
         data = {
             args : {
                 app_uuid : JSON.stringify(app_uuid),
@@ -2036,7 +2047,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getProducts : function(productCriteria, silent) {
+    'getProducts' : function(productCriteria, silent) {
         data = {
             args : {
                 productCriteria : JSON.stringify(productCriteria),
@@ -2047,7 +2058,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getRandomProducts : function(fetchSize,ignoreProductId, silent) {
+    'getRandomProducts' : function(fetchSize,ignoreProductId, silent) {
         data = {
             args : {
                 fetchSize : JSON.stringify(fetchSize),
@@ -2059,7 +2070,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getTaxes : function(silent) {
+    'getTaxes' : function(silent) {
         data = {
             args : {
             },
@@ -2069,7 +2080,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    removeProduct : function(productId, silent) {
+    'removeProduct' : function(productId, silent) {
         data = {
             args : {
                 productId : JSON.stringify(productId),
@@ -2080,7 +2091,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    saveProduct : function(product, silent) {
+    'saveProduct' : function(product, silent) {
         data = {
             args : {
                 product : JSON.stringify(product),
@@ -2091,7 +2102,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    setMainImage : function(productId,imageId, silent) {
+    'setMainImage' : function(productId,imageId, silent) {
         data = {
             args : {
                 productId : JSON.stringify(productId),
@@ -2103,7 +2114,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    setTaxes : function(group, silent) {
+    'setTaxes' : function(group, silent) {
         data = {
             args : {
                 group : JSON.stringify(group),
@@ -2114,7 +2125,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    translateEntries : function(entryIds, silent) {
+    'translateEntries' : function(entryIds, silent) {
         data = {
             args : {
                 entryIds : JSON.stringify(entryIds),
@@ -2125,7 +2136,7 @@ GetShopApiWebSocket.ProductManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    updateAttributePool : function(groups, silent) {
+    'updateAttributePool' : function(groups, silent) {
         data = {
             args : {
                 groups : JSON.stringify(groups),
@@ -2142,7 +2153,7 @@ GetShopApiWebSocket.ReportingManager = function(communication) {
 }
 
 GetShopApiWebSocket.ReportingManager.prototype = {
-    getAllEventsFromSession : function(startDate,stopDate,searchSessionId, silent) {
+    'getAllEventsFromSession' : function(startDate,stopDate,searchSessionId, silent) {
         data = {
             args : {
                 startDate : JSON.stringify(startDate),
@@ -2155,7 +2166,7 @@ GetShopApiWebSocket.ReportingManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getConnectedUsers : function(startdate,stopDate,filter, silent) {
+    'getConnectedUsers' : function(startdate,stopDate,filter, silent) {
         data = {
             args : {
                 startdate : JSON.stringify(startdate),
@@ -2168,7 +2179,7 @@ GetShopApiWebSocket.ReportingManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getOrdersCreated : function(startDate,stopDate, silent) {
+    'getOrdersCreated' : function(startDate,stopDate, silent) {
         data = {
             args : {
                 startDate : JSON.stringify(startDate),
@@ -2180,7 +2191,7 @@ GetShopApiWebSocket.ReportingManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getPageViews : function(startDate,stopDate, silent) {
+    'getPageViews' : function(startDate,stopDate, silent) {
         data = {
             args : {
                 startDate : JSON.stringify(startDate),
@@ -2192,7 +2203,7 @@ GetShopApiWebSocket.ReportingManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getProductViewed : function(startDate,stopDate, silent) {
+    'getProductViewed' : function(startDate,stopDate, silent) {
         data = {
             args : {
                 startDate : JSON.stringify(startDate),
@@ -2204,7 +2215,7 @@ GetShopApiWebSocket.ReportingManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getReport : function(startDate,stopDate,type, silent) {
+    'getReport' : function(startDate,stopDate,type, silent) {
         data = {
             args : {
                 startDate : JSON.stringify(startDate),
@@ -2217,7 +2228,7 @@ GetShopApiWebSocket.ReportingManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getUserLoggedOn : function(startDate,stopDate, silent) {
+    'getUserLoggedOn' : function(startDate,stopDate, silent) {
         data = {
             args : {
                 startDate : JSON.stringify(startDate),
@@ -2235,7 +2246,7 @@ GetShopApiWebSocket.StoreManager = function(communication) {
 }
 
 GetShopApiWebSocket.StoreManager.prototype = {
-    connectStoreToPartner : function(partner, silent) {
+    'connectStoreToPartner' : function(partner, silent) {
         data = {
             args : {
                 partner : JSON.stringify(partner),
@@ -2246,7 +2257,7 @@ GetShopApiWebSocket.StoreManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    createStore : function(hostname,email,password,notify, silent) {
+    'createStore' : function(hostname,email,password,notify, silent) {
         data = {
             args : {
                 hostname : JSON.stringify(hostname),
@@ -2260,7 +2271,7 @@ GetShopApiWebSocket.StoreManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    delete : function(silent) {
+    'delete' : function(silent) {
         data = {
             args : {
             },
@@ -2270,7 +2281,7 @@ GetShopApiWebSocket.StoreManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    enableExtendedMode : function(toggle,password, silent) {
+    'enableExtendedMode' : function(toggle,password, silent) {
         data = {
             args : {
                 toggle : JSON.stringify(toggle),
@@ -2282,7 +2293,7 @@ GetShopApiWebSocket.StoreManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    enableSMSAccess : function(toggle,password, silent) {
+    'enableSMSAccess' : function(toggle,password, silent) {
         data = {
             args : {
                 toggle : JSON.stringify(toggle),
@@ -2294,7 +2305,7 @@ GetShopApiWebSocket.StoreManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getMyStore : function(silent) {
+    'getMyStore' : function(silent) {
         data = {
             args : {
             },
@@ -2304,7 +2315,7 @@ GetShopApiWebSocket.StoreManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getStoreId : function(silent) {
+    'getStoreId' : function(silent) {
         data = {
             args : {
             },
@@ -2314,7 +2325,7 @@ GetShopApiWebSocket.StoreManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    initializeStore : function(webAddress,initSessionId, silent) {
+    'initializeStore' : function(webAddress,initSessionId, silent) {
         data = {
             args : {
                 webAddress : JSON.stringify(webAddress),
@@ -2326,7 +2337,7 @@ GetShopApiWebSocket.StoreManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    isAddressTaken : function(address, silent) {
+    'isAddressTaken' : function(address, silent) {
         data = {
             args : {
                 address : JSON.stringify(address),
@@ -2337,7 +2348,7 @@ GetShopApiWebSocket.StoreManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    removeDomainName : function(domainName, silent) {
+    'removeDomainName' : function(domainName, silent) {
         data = {
             args : {
                 domainName : JSON.stringify(domainName),
@@ -2348,7 +2359,7 @@ GetShopApiWebSocket.StoreManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    saveStore : function(config, silent) {
+    'saveStore' : function(config, silent) {
         data = {
             args : {
                 config : JSON.stringify(config),
@@ -2359,7 +2370,7 @@ GetShopApiWebSocket.StoreManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    setDeepFreeze : function(mode,password, silent) {
+    'setDeepFreeze' : function(mode,password, silent) {
         data = {
             args : {
                 mode : JSON.stringify(mode),
@@ -2371,7 +2382,7 @@ GetShopApiWebSocket.StoreManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    setIntroductionRead : function(silent) {
+    'setIntroductionRead' : function(silent) {
         data = {
             args : {
             },
@@ -2381,7 +2392,7 @@ GetShopApiWebSocket.StoreManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    setPrimaryDomainName : function(domainName, silent) {
+    'setPrimaryDomainName' : function(domainName, silent) {
         data = {
             args : {
                 domainName : JSON.stringify(domainName),
@@ -2392,7 +2403,7 @@ GetShopApiWebSocket.StoreManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    setVIS : function(toggle,password, silent) {
+    'setVIS' : function(toggle,password, silent) {
         data = {
             args : {
                 toggle : JSON.stringify(toggle),
@@ -2410,7 +2421,7 @@ GetShopApiWebSocket.UserManager = function(communication) {
 }
 
 GetShopApiWebSocket.UserManager.prototype = {
-    addUserPrivilege : function(userId,managerName,managerFunction, silent) {
+    'addUserPrivilege' : function(userId,managerName,managerFunction, silent) {
         data = {
             args : {
                 userId : JSON.stringify(userId),
@@ -2423,7 +2434,7 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    createUser : function(user, silent) {
+    'createUser' : function(user, silent) {
         data = {
             args : {
                 user : JSON.stringify(user),
@@ -2434,7 +2445,7 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    deleteUser : function(userId, silent) {
+    'deleteUser' : function(userId, silent) {
         data = {
             args : {
                 userId : JSON.stringify(userId),
@@ -2445,7 +2456,7 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    doEmailExists : function(email, silent) {
+    'doEmailExists' : function(email, silent) {
         data = {
             args : {
                 email : JSON.stringify(email),
@@ -2456,7 +2467,7 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    findUsers : function(searchCriteria, silent) {
+    'findUsers' : function(searchCriteria, silent) {
         data = {
             args : {
                 searchCriteria : JSON.stringify(searchCriteria),
@@ -2467,7 +2478,7 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getAdministratorCount : function(silent) {
+    'getAdministratorCount' : function(silent) {
         data = {
             args : {
             },
@@ -2477,7 +2488,7 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getAllGroups : function(silent) {
+    'getAllGroups' : function(silent) {
         data = {
             args : {
             },
@@ -2487,7 +2498,7 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getAllUsers : function(silent) {
+    'getAllUsers' : function(silent) {
         data = {
             args : {
             },
@@ -2497,7 +2508,7 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getCustomersCount : function(silent) {
+    'getCustomersCount' : function(silent) {
         data = {
             args : {
             },
@@ -2507,7 +2518,7 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getEditorCount : function(silent) {
+    'getEditorCount' : function(silent) {
         data = {
             args : {
             },
@@ -2517,7 +2528,7 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getLoggedOnUser : function(silent) {
+    'getLoggedOnUser' : function(silent) {
         data = {
             args : {
             },
@@ -2527,7 +2538,7 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getStoresConnectedToMe : function(silent) {
+    'getStoresConnectedToMe' : function(silent) {
         data = {
             args : {
             },
@@ -2537,7 +2548,7 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getUserById : function(id, silent) {
+    'getUserById' : function(id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -2548,7 +2559,7 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    getUserList : function(userIds, silent) {
+    'getUserList' : function(userIds, silent) {
         data = {
             args : {
                 userIds : JSON.stringify(userIds),
@@ -2559,7 +2570,7 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    isCaptain : function(id, silent) {
+    'isCaptain' : function(id, silent) {
         data = {
             args : {
                 id : JSON.stringify(id),
@@ -2570,7 +2581,7 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    isLoggedIn : function(silent) {
+    'isLoggedIn' : function(silent) {
         data = {
             args : {
             },
@@ -2580,7 +2591,7 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    logOn : function(username,password, silent) {
+    'logOn' : function(username,password, silent) {
         data = {
             args : {
                 username : JSON.stringify(username),
@@ -2592,7 +2603,7 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    logonUsingKey : function(logonKey, silent) {
+    'logonUsingKey' : function(logonKey, silent) {
         data = {
             args : {
                 logonKey : JSON.stringify(logonKey),
@@ -2603,7 +2614,7 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    logout : function(silent) {
+    'logout' : function(silent) {
         data = {
             args : {
             },
@@ -2613,7 +2624,7 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    removeGroup : function(groupId, silent) {
+    'removeGroup' : function(groupId, silent) {
         data = {
             args : {
                 groupId : JSON.stringify(groupId),
@@ -2624,7 +2635,7 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    requestAdminRight : function(managerName,managerFunction,applicationInstanceId, silent) {
+    'requestAdminRight' : function(managerName,managerFunction,applicationInstanceId, silent) {
         data = {
             args : {
                 managerName : JSON.stringify(managerName),
@@ -2637,7 +2648,7 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    resetPassword : function(resetCode,username,newPassword, silent) {
+    'resetPassword' : function(resetCode,username,newPassword, silent) {
         data = {
             args : {
                 resetCode : JSON.stringify(resetCode),
@@ -2650,7 +2661,7 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    saveGroup : function(group, silent) {
+    'saveGroup' : function(group, silent) {
         data = {
             args : {
                 group : JSON.stringify(group),
@@ -2661,7 +2672,7 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    saveUser : function(user, silent) {
+    'saveUser' : function(user, silent) {
         data = {
             args : {
                 user : JSON.stringify(user),
@@ -2672,7 +2683,7 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    sendResetCode : function(title,text,username, silent) {
+    'sendResetCode' : function(title,text,username, silent) {
         data = {
             args : {
                 title : JSON.stringify(title),
@@ -2685,7 +2696,7 @@ GetShopApiWebSocket.UserManager.prototype = {
         return this.communication.send(data, silent);
     },
 
-    updatePassword : function(userId,oldPassword,newPassword, silent) {
+    'updatePassword' : function(userId,oldPassword,newPassword, silent) {
         data = {
             args : {
                 userId : JSON.stringify(userId),
@@ -2704,7 +2715,7 @@ GetShopApiWebSocket.UtilManager = function(communication) {
 }
 
 GetShopApiWebSocket.UtilManager.prototype = {
-    getCompanyFromBrReg : function(companyVatNumber, silent) {
+    'getCompanyFromBrReg' : function(companyVatNumber, silent) {
         data = {
             args : {
                 companyVatNumber : JSON.stringify(companyVatNumber),
@@ -2721,7 +2732,7 @@ GetShopApiWebSocket.YouTubeManager = function(communication) {
 }
 
 GetShopApiWebSocket.YouTubeManager.prototype = {
-    searchYoutube : function(searchword, silent) {
+    'searchYoutube' : function(searchword, silent) {
         data = {
             args : {
                 searchword : JSON.stringify(searchword),

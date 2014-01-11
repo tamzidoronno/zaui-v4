@@ -46,6 +46,13 @@ public interface IPageManager {
     @Administrator
     public void switchApplicationAreas(String pageId, String fromArea, String toArea) throws ErrorException;
     
+    /**
+     * Remove all content on all page areas for this page.
+     * @param pageId
+     * @throws ErrorException 
+     */
+    @Administrator
+    public void clearPage(String pageId) throws ErrorException;
     
     /**
      * Set the page description.

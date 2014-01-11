@@ -164,7 +164,7 @@ class Page extends FactoryBase {
         
         echo "</div></div>";
 
-        if (!$this->backendPage->hideFooter && $this->skeletonType != 5) {
+        if (!@$this->backendPage->hideFooter && $this->skeletonType != 5) {
             $this->includefile('footer');
         }
         echo "</div>";

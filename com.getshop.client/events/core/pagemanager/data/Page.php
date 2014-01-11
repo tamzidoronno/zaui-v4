@@ -9,6 +9,9 @@ class core_pagemanager_data_Page extends core_common_DataCommon  {
 	/** @var String */
 	public $needSaving;
 
+	/** @var String */
+	public $beenLoaded;
+
 	/** @var core_pagemanager_data_Page */
 	public $parent;
 

@@ -2127,6 +2127,21 @@ class APIPageManager {
 	}
 
 	/**
+	* Remove all content on all page areas for this page.
+	* @param pageId
+	* @throws ErrorException
+	*/
+
+	public function clearPage($pageId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data["method"] = "clearPage";
+	     $data["interfaceName"] = "core.pagemanager.IPageManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Remove all applications for specified page area at specified page.
 	*
 	* @param pageId

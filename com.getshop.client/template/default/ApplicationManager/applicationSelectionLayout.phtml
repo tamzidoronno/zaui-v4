@@ -11,67 +11,94 @@ $pb->saveBuildLayout($layout);
 ?>
 
 <div class="skeletondisplayer">
-    <div class="information">
-        <?
-        echo $this->__f("There is one layout defined for each page, a layout can have multiple of rows and multiple of columns.") . "<br>";
-        echo $this->__f("To change a layout for the current page, please select one from the list below.");
-        ?>
-    </div>
-    <div class="information layoutpreviewselection">
-        <div><? echo $this->__f("Layout options:"); ?></div>
-        <?
-        echo "<select id='leftsidebarcount'>";
-        for ($i = 0; $i <= 20; $i++) {
-            $lfsel = "";
-            if ($layout->leftSideBar == $i) {
-                $lfsel = "SELECTED";
-            }
-            echo "<option value='$i' $lfsel>$i " . $factory->__f("left sidebar") . "</option>";
-        }
-        echo "</select>";
-        ?>
-        <select id="rowscount">
+
+    <div class="layoutpreviewselection app">
+        <br>
+        <div class="gs_tabs">
+            <span class='gs_tab gs_tab_selected' target="content_pages"><i class="fa fa-book"></i> Content</span>
+            <span class='gs_tab' target="empty_pages"><i class="fa fa-square-o"></i> Empty page</span>
+            <span class='gs_tab' target="layout_builder"><i class="fa fa-wrench"></i> Build your layout</span>
+        </div>
+        <div class="gs_tab_area content_pages">
+            <div class='category_selection'>
+                <div class='options'>
+                    <div class='option_entry option_selected' target='contact'><i class="fa fa-envelope"></i> Contact</div> 
+                    <div class='option_entry' target='map'><i class="fa fa-globe"></i> Map</div>
+                    <div class='option_entry' target='about'> <i class="fa fa-pencil-square-o"></i> About us</div>
+                    <div class='option_entry' target='media'><i class="fa fa-youtube-play"></i> Media</div>
+                    <div class='option_entry' target='productlist'><i class="fa fa-list-alt"></i> Product list</div>
+                </div>
+            </div>
+            <div>
+                <div class="options_content">
+                    <div class='contact content_type_area content_type_selected'>
+                        <span class='layoutpreview' pagetype='contact' type='0'>layout 0</span>
+                        <span class='layoutpreview' pagetype='contact' type='1'>layout 1</span>
+                        <span class='layoutpreview' pagetype='contact' type='2'>layout 2</span>
+                        <span class='layoutpreview' pagetype='contact' type='3'>layout 3</span>
+                        <span class='layoutpreview' pagetype='contact' type='4'>layout 4</span>
+                    </div>
+                    <div class='map content_type_area'>Map</div>
+                    <div class='about content_type_area'>About us</div>
+                    <div class='media content_type_area'>Media</div>
+                    <div class='productlist content_type_area'>Product list</div>
+                </div>
+            </div>
+            <div style='clear:both;'></div>
+        </div>
+        <div class="layoutconfiguration gs_tab_area layout_builder">
+            <div><? echo $this->__f("Layout options:"); ?></div>
             <?
+            echo "<select id='leftsidebarcount'>";
             for ($i = 0; $i <= 20; $i++) {
-                $selected = "";
-                if ($i == sizeof($layout->rows)) {
-                    $selected = "SELECTED";
+                $lfsel = "";
+                if ($layout->leftSideBar == $i) {
+                    $lfsel = "SELECTED";
                 }
-                echo "<option value='" . $i . "' $selected>" . $i . " " . $this->__f("number of rows") . "</option>";
+                echo "<option value='$i' $lfsel>$i " . $factory->__f("left sidebar") . "</option>";
             }
+            echo "</select>";
             ?>
-        </select>
-        <?
-        echo "<select id='rightsidebarcount'>";
-        for ($i = 0; $i <= 20; $i++) {
-            $lfsel = "";
-            if ($layout->rightSideBar == $i) {
-                $lfsel = "SELECTED";
-            }
-            echo "<option value='$i' $lfsel>$i " . $factory->__f("right sidebar") . "</option>";
-        }
-        echo "</select>";
-        ?>
-        <div class="button-large setnewlayout">
-            <div class="rightglare"></div>
-            <div class="filler"></div>
-            <ins><? echo $factory->__f("Set page layout"); ?></ins>
-        </div>
-        <br>
-        <br>
-        <? echo $this->__f("Selected layout preview") . ":"; ?>
-        <div class='layoutpreviewbox' style="width:500px; border:solid 1px; padding: 10px; background-color:#EFEFEF; position:relative;padding-top:60px; padding-bottom: 60px;color:#5e5e5e; ">
+            <select id="rowscount">
+                <?
+                for ($i = 0; $i <= 20; $i++) {
+                    $selected = "";
+                    if ($i == sizeof($layout->rows)) {
+                        $selected = "SELECTED";
+                    }
+                    echo "<option value='" . $i . "' $selected>" . $i . " " . $this->__f("number of rows") . "</option>";
+                }
+                ?>
+            </select>
             <?
-            echo $pb->printPreview();
+            echo "<select id='rightsidebarcount'>";
+            for ($i = 0; $i <= 20; $i++) {
+                $lfsel = "";
+                if ($layout->rightSideBar == $i) {
+                    $lfsel = "SELECTED";
+                }
+                echo "<option value='$i' $lfsel>$i " . $factory->__f("right sidebar") . "</option>";
+            }
+            echo "</select>";
             ?>
+            <div class="button-large setnewlayout">
+                <div class="rightglare"></div>
+                <div class="filler"></div>
+                <ins><? echo $factory->__f("Set page layout"); ?></ins>
+            </div>
+            <br>
+            <br>
+            <? echo $this->__f("Selected layout preview") . ":"; ?>
+            <div class='layoutpreviewbox' style="width:500px; border:solid 1px; padding: 10px; background-color:#EFEFEF; position:relative;padding-top:60px; padding-bottom: 60px;color:#5e5e5e; ">
+                <?
+                echo $pb->printPreview();
+                ?>
+            </div>
+            <div style='width: 500px; font-size:12px;'>
+                * <? echo $this->__f("Content areas can contain content like images, products, text content, menues, movies, etc. After selecting your layout, you can start adding content to them."); ?>
+            </div>
         </div>
-        <div style='width: 500px; font-size:12px;'>
-            * <? echo $this->__f("Content areas can contain content like images, products, text content, menues, movies, etc. After selecting your layout, you can start adding content to them."); ?>
-        </div>
-        <div class='layoutsuggestion'>
-            <? echo $this->__f("Layout suggestions") . ":"; ?>
-        </div>
-        <div class='predefined_layouts'>
+        <div class='predefined_layouts empty_pages gs_tab_area'>
             <? echo $pb->printSuggestions(); ?>
         </div>
     </div>

@@ -7,6 +7,7 @@ package com.thundashop.core.mobilemanager;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -14,6 +15,7 @@ import com.thundashop.core.mobilemanager.data.Token;
 import com.thundashop.core.mobilemanager.data.TokenType;
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -29,10 +31,13 @@ public class MobileManager extends ManagerBase implements IMobileManager {
     public Map<String, Token> tokens = new HashMap();
     
     @Autowired
+    private FrameworkConfig frameworkConfig;
+    
+    @Autowired
     public MobileManager(Logger log, DatabaseSaver databaseSaver) {
         super(log, databaseSaver);
     }
-
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
@@ -86,7 +91,7 @@ public class MobileManager extends ManagerBase implements IMobileManager {
 
     private void sendIosMessage(Token token, String message) {
         increaseBadge(token.tokenId);
-        Thread thread = new Thread(new AppleNotificationThread(message, token.tokenId, getBadgeNumber(token.tokenId)));
+        Thread thread = new Thread(new AppleNotificationThread(message, token.tokenId, getBadgeNumber(token.tokenId), "ProMeister", "auto1000", frameworkConfig));
         thread.start();
     }
 

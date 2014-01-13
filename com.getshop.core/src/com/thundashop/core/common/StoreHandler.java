@@ -259,7 +259,6 @@ public class StoreHandler {
             }
         }
         
-        System.out.println("WARNING!! Access denied attempted... does not have access, user: " + user.username + " to function : " + managerName+"."+executeMethod.getName() + ", store id: " + storeId);
         throw new ErrorException(26);
     }
 

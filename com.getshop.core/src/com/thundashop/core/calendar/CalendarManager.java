@@ -12,6 +12,7 @@ import com.thundashop.core.mobilemanager.MobileManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.usermanager.data.User.Type;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -77,8 +78,8 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         databaseSaver.saveObject(mymonth, credentials);
         months.put(mymonth.id, mymonth);
         
-        MobileManager mobileManager = getManager(MobileManager.class);
-        mobileManager.sendMessageToAllTestUnits("New course added");
+//        MobileManager mobileManager = getManager(MobileManager.class);
+//        mobileManager.sendMessageToAllTestUnits("New course added");
     }
 
     private boolean isNewerOrEquals(Day day, Month month, int compareMonth, int compareDay, int compareYear) {
@@ -450,7 +451,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             throw new ErrorException(1012);
         }
         
-        if (!entry.needConfirmation && !getSession().currentUser.isEditor()) {
+        if (!entry.needConfirmation && (getSession().currentUser.type < Type.EDITOR)) {
             throw new ErrorException(26);
         }
         

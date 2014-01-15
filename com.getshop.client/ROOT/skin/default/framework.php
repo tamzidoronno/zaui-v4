@@ -182,8 +182,14 @@ text-align: center;
 font-size: 16px;
 font-size: 18px;
 font-weight: bold;
-color: #333;
-background-color: #DDD;
+color: #FFF;
+background-color: #3f3f3f;
+position: absolute;
+position: absolute;
+width: 990px;
+z-index: 1;
+top: 17px;
+border-bottom: solid 1px #3a3a3a;
 }
 
 #infomrationboxclosebutton {
@@ -193,6 +199,7 @@ right: 0px;
 top: 0px;
 position: absolute;
 background-repeat: no-repeat;
+z-index: 2;
 cursor: pointer;
 background-image: url('/skin/default/elements/closebutton.png');
 }
@@ -229,6 +236,7 @@ display:hidden;
 .informationboxbackground {
 background-color: #FFFFFF;
 min-height: 500px;
+padding-top: 30px;
 }
 
 .gray {
@@ -1426,36 +1434,42 @@ font-size: 16px;
 
 .gs_tabs {
 height: 34px;
-border-bottom: solid 1px  #BBBBBB;
+border-bottom: solid 1px  #4e4e4e;
+padding-left: 5px;
 }
 
 .gs_tabs .gs_tab_selected {
-border-bottom: solid 0px;
-background-color: #fff;
+background-color: #3f3f3f;
 height: 24px;
-color:#000;
+color:#FFF;
 }
 
 .gs_tab {
+    border-top-left-radius:5px;
+    border-top-right-radius:5px;
+    margin-left: 10px;
     -webkit-transition: background 0.5s linear;
     -moz-transition: background 0.5s linear;
     -ms-transition: background 0.5s linear;
     -o-transition: background 0.5s linear;
     background-color:#FFF;
     padding: 5px;
-    border-right: solid 1px #BBBBBB;
-    border-top: solid 1px #BBBBBB;
+    border-right: solid 1px #4e4e4e;
+    border-top: solid 1px #4e4e4e;
+    border-left: solid 1px #4e4e4e;
     font-size: 16px;
-    display:inline;
+    display:inline-block;
     cursor:pointer;
+    margin-right: 10px; 
     margin: 0px;
-    float:left;
-    height: 24px;
+    display:inline-block;
+    height: 23px;
     text-align:center;
-    background-color:#a4a4a4;
-    color:#FFF;
+    background-color:#ababab;
+    color:#292929;
     padding-left: 15px;
     padding-right: 15px;
+    margin-right: 5px;
 }
 
 .gs_tab_area { display:none; }

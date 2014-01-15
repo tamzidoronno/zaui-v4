@@ -215,8 +215,9 @@ thundashop.common.saveCKEditor = function(data, target, notify) {
 
 thundashop.common.selectPredefinedConent = function() {
     var data = {
-        type : $(this).attr('type'),
-        pagetype : $(this).attr('pagetype')
+        config : $(this).attr('config'),
+        pagetype : $(this).attr('pagetype'),
+        type : $(this).attr('type')
     }
     
     var event = thundashop.Ajax.createEvent('','selectPredefinedData',$(this),data);
@@ -234,7 +235,7 @@ thundashop.common.navigateContentPages = function() {
     
     box.find('.content_type_selected').hide();
     $(this).removeClass('content_type_selected');
-    box.find("."+target).fadeIn(700, function() {
+    box.find("."+target).fadeIn(0, function() {
         $(this).addClass('content_type_selected');
         $(document).on('click', '.gs_showPageLayoutSelection .option_entry', thundashop.common.navigateContentPages);
     });

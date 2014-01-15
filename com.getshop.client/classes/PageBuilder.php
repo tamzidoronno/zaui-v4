@@ -20,6 +20,51 @@ class PageBuilder {
         $this->factory = IocContainer::getFactorySingelton();
     }
 
+    function getPredefinedPage($type) {
+        $res = new PredefinedPagesConfig();
+        switch($type) {
+            case "standard": 
+               return $res->getStandardPages();
+            case "contact":
+                return $res->getContactPages();
+            case "map":
+                return $res->getMapPages();
+                
+        }
+        return array();
+    }
+    
+    function printPredefinedPagePreview($predefined) {
+        echo "<span class='layoutpreview' pagetype='standard' config='".json_encode($predefined)."' row_size='".sizeof($predefined)."'>";
+        foreach ($predefined as $row) {
+            foreach ($row as $cell) {
+                echo "<span class='icon_container' rowsize='".sizeof($row)."'>";
+                switch($cell) {
+                    case "text":
+                        echo '<i class="fa fa-align-justify"></i>';
+                        break;
+                    case "image":
+                        echo '<i class="fa fa-picture-o"></i>';
+                        break;
+                    case "map":
+                        echo '<i class="fa fa-globe"></i>';
+                        break;
+                    case "movie":
+                        echo '<i class="fa fa-youtube-play"></i>';
+                        break;
+                    case "contact":
+                        echo '<i class="fa fa-envelope"></i>';
+                        break;
+                    default;
+                        echo $cell . " ";
+                }
+                echo "</span>";
+            }
+            echo "<br>";
+        }
+        echo "</span>";
+    }
+    
     function saveBuildLayout($layout) {
         $_SESSION['layoutBuilded'] = serialize($layout);
         $_SESSION['layoutBuildedType'] = $this->type;
@@ -362,6 +407,18 @@ class PageBuilder {
                 $layout->rows[] = $this->createRow(1);
                 $layout->rows[] = $this->createRow(2);
                 break;
+            case 28:
+                $layout = $this->createLayout(0, 0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(2);
+                $layout->rows[] = $this->createRow(2);
+                break;
+            case 29:
+                $layout = $this->createLayout(0, 0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(1);
+                $layout->rows[] = $this->createRow(1);
+                break;
             default:
                 if ($type >= 0)
                     $layout = null;
@@ -370,6 +427,51 @@ class PageBuilder {
         return $layout;
     }
 
+    public function addPredefinedContent($type,$config) {
+        $siteBuilder = new SiteBuilder();
+        $siteBuilder->clearPage();
+        
+        $rowcount = 1;
+        $cellcount = 1;
+        $area = "";
+        foreach($config as $row) {
+            foreach($row as $cell) {
+                if(sizeof($row) == 1) {
+                    $area = "main_" . $rowcount;
+                    $rowcount++;
+                } else {
+                    $area = "col_" . $cellcount;
+                    $cellcount++;
+                }
+                switch($cell) {
+                    case "text":
+                        $siteBuilder->addContentManager("test", $area, $type);
+                        break;
+                    case "image":
+                        $siteBuilder->addImageDisplayer("test", $area, $type);
+                        break;
+                    case "movie":
+                        $siteBuilder->addYouTube("", $area, $type);
+                        break;
+                    case "map":
+                        $siteBuilder->addMap($area);
+                        break;
+                }
+            }
+        }
+        
+    }
+    
+    public function buildPredefinedPage($config) {
+        $siteBuilder = new SiteBuilder();
+        $siteBuilder->clearPage();
+        $layout = $this->createLayout(0, 0);
+        foreach($config as $row) {
+            $layout->rows[] = $this->createRow(sizeof($row));
+        }
+        return $layout;
+    }
+    
     public function createRow($numberOfCells) {
         $row = new core_pagemanager_data_RowLayout();
         $row->marginBottom = -1;
@@ -554,9 +656,6 @@ class PageBuilder {
     private function printPreviewRows() {
         echo "<ul class='sortable_layout_rows'>";
         $rowarray = [];
-//        echo "<pre>";
-//        print_r($this->layout->rows);
-//        echo "</pre>";
         foreach ($this->layout->rows as $index => $row) {
             $rowarray[$row->rowId] = $this->printPreviewRow($row, $index);
         }

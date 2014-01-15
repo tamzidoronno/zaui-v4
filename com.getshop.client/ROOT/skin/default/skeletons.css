@@ -171,7 +171,6 @@
 .gs_showPageLayoutSelection .layoutpreviewbox .outer-row-container { padding-right: 25px; padding-left: 25px; position:relative; }
 .gs_showPageLayoutSelection .layoutpreviewbox .outer-row-container .fa-arrows-v { position:absolute; right: 5px; top: 15px; padding: 3px; cursor:pointer; font-size:14px; }
 .gs_showPageLayoutSelection .layoutpreviewselection select {height: 40px; }
-.gs_showPageLayoutSelection .gs_tab_area { margin: 15px; }
 .gs_showPageLayoutSelection .sortable_layout_rows {
 list-style-type: none;
 padding:0px;
@@ -180,18 +179,31 @@ margin:0px;
 .no_page_layout {font-size: 16px; margin-left: 65px;}
 .no_page_layout .click { font-weight: bold; color: #1c427b; cursor: pointer; }
 .layoutpreviewselection .content_pages { display:block; }
-.gs_showPageLayoutSelection .content_pages .options_content { display:inline-block; width: 837px; float:left; border: solid 1px #BBB; padding: 10px;height: 320px; }
-.gs_showPageLayoutSelection .content_pages .category_selection { width: 90px;display:inline-block;float:left;border-right:0px; padding-top: 10px; padding-bottom: 10px;}
+.gs_showPageLayoutSelection .content_pages .options { border-top: solid 1px #313131; }
+.gs_showPageLayoutSelection .content_pages .options i { width: 15px; }
+.gs_showPageLayoutSelection .content_pages .options_content { min-height:500px; display:inline-block; float:left; border-left: solid 1px #4e4e4e; padding: 10px; background-color: #FFF; width: 829px; }
+.gs_showPageLayoutSelection .content_pages .category_selection { width: 140px;display:inline-block;float:left;border-right:0px; padding-top: 10px; padding-bottom: 10px;}
 .gs_showPageLayoutSelection .content_pages .category_selection .option_entry {
-        -webkit-transition: background 0.5s linear;
-        -moz-transition: background 0.5s linear;
-        -ms-transition: background 0.5s linear;
-        -o-transition: background 0.5s linear;
-        transition: background 0.5s linear;
-    border-bottom: solid 1px #FFF; border-top: solid 1px #FFF; padding-left: 5px; padding-right: 10px; line-height: 20px; }
+    -webkit-transition: background 0.5s linear;
+    -moz-transition: background 0.5s linear;
+    -ms-transition: background 0.5s linear;
+    -o-transition: background 0.5s linear;
+    transition: background 0.5s linear;
+    border-bottom: solid 1px #313131; padding-left: 5px; padding-right: 10px; line-height: 20px; padding-top: 5px; padding-bottom: 5px; font-size: 14px;color:#FFF; }
 .gs_showPageLayoutSelection .content_pages .category_selection .option_entry:hover { cursor:pointer; }
 .gs_showPageLayoutSelection .content_pages .content_type_area { display:none; }
 .gs_showPageLayoutSelection .content_pages .content_type_selected { display:block; }
-.gs_showPageLayoutSelection .content_pages .option_selected { background-color:#BBB;}
-
-.no_page_layout { background-color:#FFF; display:inline-block; margin:auto; margin: 10px; padding: 20px; border-radius: 5px; }
+.gs_showPageLayoutSelection .content_pages .option_selected { background-color:#4e4e4e; color:#FFF; }
+.gs_showPageLayoutSelection .layoutpreview { width: 220px; float:left; margin: 17px; padding: 10px; cursor:pointer; border-radius: 5px; text-align:center; background-color: #3f3f3f; color:#FFF; }
+.gs_showPageLayoutSelection .layoutpreview .icon_container { display:inline-block; border: solid 1px #3a3a3a; background-color:#4e4e4e; margin: 3px; padding-top: 3px; }
+.gs_showPageLayoutSelection .layoutpreview[row_size="2"] .icon_container { width: 100px; }
+.gs_showPageLayoutSelection .layoutpreview[row_size="3"] .icon_container { width: 100px; }
+.gs_showPageLayoutSelection .layoutpreview[row_size="1"] { font-size: 125px; }
+.gs_showPageLayoutSelection .layoutpreview[row_size="1"] .icon_container { height: 130px; }
+.gs_showPageLayoutSelection .layoutpreview[row_size="2"] { font-size: 60px; }
+.gs_showPageLayoutSelection .layoutpreview[row_size="3"] { font-size: 60px; }
+.gs_showPageLayoutSelection .layoutpreview .icon_container[rowsize="1"] { width: 208px; }
+.gs_showPageLayoutSelection .layoutpreview .icon_container[rowsize="3"] { width: 64px; font-size: 40px; padding-top: 12px; padding-bottom: 12px; }
+.gs_showPageLayoutSelection .layoutpreview:hover .icon_container { color: #52e5ac; }
+.gs_showPageLayoutSelection .content_pages { background-color: #3f3f3f; }
+.no_page_layout { background-color:#FFF; display:inline-block; margin:auto; margin: 10px; padding: 20px; border-radius: 5px;  }

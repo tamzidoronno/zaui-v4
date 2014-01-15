@@ -8,6 +8,10 @@ if (isset($_POST['data']['updatelayout'])) {
 $pb->convertToNewLayout(false);
 $layout = $pb->updateLayoutConfig();
 $pb->saveBuildLayout($layout);
+
+$content_groups = ["standard", "contact", "map", "productlist", "frontpage"];
+
+
 ?>
 
 <div class="skeletondisplayer">
@@ -15,33 +19,39 @@ $pb->saveBuildLayout($layout);
     <div class="layoutpreviewselection app">
         <br>
         <div class="gs_tabs">
-            <span class='gs_tab gs_tab_selected' target="content_pages"><i class="fa fa-book"></i> Content</span>
-            <span class='gs_tab' target="empty_pages"><i class="fa fa-square-o"></i> Empty page</span>
-            <span class='gs_tab' target="layout_builder"><i class="fa fa-wrench"></i> Build your layout</span>
+            <span class='gs_tab gs_tab_selected' target="content_pages"><i class="fa fa-book"></i> <? echo $this->__f("Content"); ?></span>
+            <span class='gs_tab' target="empty_pages"><i class="fa fa-square-o"></i> <? echo $this->__f("Empty page"); ?></span>
+            <span class='gs_tab' target="layout_builder"><i class="fa fa-wrench"></i> <? echo $this->__f("Build your layout"); ?></span>
         </div>
         <div class="gs_tab_area content_pages">
             <div class='category_selection'>
                 <div class='options'>
-                    <div class='option_entry option_selected' target='contact'><i class="fa fa-envelope"></i> Contact</div> 
-                    <div class='option_entry' target='map'><i class="fa fa-globe"></i> Map</div>
-                    <div class='option_entry' target='about'> <i class="fa fa-pencil-square-o"></i> About us</div>
-                    <div class='option_entry' target='media'><i class="fa fa-youtube-play"></i> Media</div>
-                    <div class='option_entry' target='productlist'><i class="fa fa-list-alt"></i> Product list</div>
+                    <div class='option_entry option_selected' target='standard'><i class="fa fa-pencil-square-o"></i> <? echo $this->__f("Standard page"); ?></div> 
+                    <div class='option_entry' target='contact'><i class="fa fa-envelope"></i> <? echo $this->__f("Contact"); ?></div> 
+                    <div class='option_entry' target='map'><i class="fa fa-globe"></i> <? echo $this->__f("Map"); ?></div>
+                    <div class='option_entry' target='productlist'><i class="fa fa-list-alt"></i> <? echo $this->__f("Product"); ?></div>
+                    <div class='option_entry' target='productlist'><i class="fa fa-list-alt"></i> <? echo $this->__f("Product list"); ?></div>
+                    <div class='option_entry' target='frontpage'><i class="fa fa-heart-o"></i> <? echo $this->__f("Frontpage"); ?></div>
                 </div>
             </div>
             <div>
                 <div class="options_content">
-                    <div class='contact content_type_area content_type_selected'>
-                        <span class='layoutpreview' pagetype='contact' type='0'>layout 0</span>
-                        <span class='layoutpreview' pagetype='contact' type='1'>layout 1</span>
-                        <span class='layoutpreview' pagetype='contact' type='2'>layout 2</span>
-                        <span class='layoutpreview' pagetype='contact' type='3'>layout 3</span>
-                        <span class='layoutpreview' pagetype='contact' type='4'>layout 4</span>
-                    </div>
-                    <div class='map content_type_area'>Map</div>
-                    <div class='about content_type_area'>About us</div>
-                    <div class='media content_type_area'>Media</div>
-                    <div class='productlist content_type_area'>Product list</div>
+                    <?
+                    foreach($content_groups as $group) {
+                        $selected = "";
+                        if($group == "standard") {
+                            $selected = "content_type_selected";
+                        }
+                        ?>
+                        <div class='<? echo $group; ?> content_type_area <? echo $selected; ?>'>
+                            <? 
+                                $pages = $pb->getPredefinedPage($group); 
+                                foreach($pages as $predefined) {
+                                    $pb->printPredefinedPagePreview($predefined);
+                                }
+                            ?>
+                        </div>
+                    <? } ?>
                 </div>
             </div>
             <div style='clear:both;'></div>

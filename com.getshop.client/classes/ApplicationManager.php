@@ -577,13 +577,16 @@ class ApplicationManager extends FactoryBase {
     }
 
     public function selectPredefinedData() {
-        switch($_POST['data']['pagetype']) {
-            case "contact":
-                $builder = new ContactBuilder($this->getFactory(), $this->getPage()->backendPage);
-                $builder->buildPage($_POST['data']['type']);
-                break;
-        }
         $this->getFactory()->reloadStoreObject();
+        
+        $page = $this->getPage()->backendPage;
+        $pb = new PageBuilder(null,null,null);
+        
+        $page->layout = $pb->buildPredefinedPage(json_decode($_POST['data']['config'],true));
+        $this->getApi()->getPageManager()->savePage($page);
+        $pb->addPredefinedContent($_POST['data']['pagetype'], json_decode($_POST['data']['config'],true));
+        $this->getFactory()->reloadStoreObject();
+        $this->getFactory()->initPage();
     }
     
     public function deleteStore() {

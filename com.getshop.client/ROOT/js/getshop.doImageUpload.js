@@ -59,7 +59,7 @@
             open = false;
         }
 
-        var infobox = thundashop.common.createInformationBox($(this).closest('.app').attr('appid'), 'Crop image', open);
+            var infobox = thundashop.common.createInformationBox($(this).closest('.app').attr('appid'), 'Crop image', open);
         infobox.html('<center id="uploadedimagerow"></center>');
         infobox.find('#uploadedimagerow').html('<img id="uploadedimage">');
         if(disableAspectButton) {
@@ -237,7 +237,6 @@
                 },
                 onChange: function(c) {
                     cords = c;
-                    console.log(cords);
                 },
                 setSelect: selectedCropArea,
                 aspectRatio: ratio
@@ -295,6 +294,7 @@
         } else {
             loadFromSource();
         }
-
+        
+        return localImageContainer;
     };
 })(jQuery);

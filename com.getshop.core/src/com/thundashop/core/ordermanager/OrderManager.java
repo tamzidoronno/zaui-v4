@@ -84,12 +84,25 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         text = text.replace("/displayImage", "http://"+getStore().webAddress+"/displayImage");
         text = text.replace("{Order.Id}", order.id);
         text = text.replace("{Order.Lines}", getOrderLines(order));
-        text = text.replace("{Customer.Name}", order.cart.address.fullName);
-        text = text.replace("{Customer.Email}", order.cart.address.emailAddress);
-        text = text.replace("{Customer.Address}", order.cart.address.address);
-        text = text.replace("{Customer.City}", order.cart.address.city);
-        text = text.replace("{Customer.Phone}", order.cart.address.phone);
-        text = text.replace("{Customer.Postcode}", order.cart.address.postCode);
+        
+        if (order.cart.address.fullName != null)
+            text = text.replace("{Customer.Name}", order.cart.address.fullName);
+        
+        if (order.cart.address.emailAddress != null)
+            text = text.replace("{Customer.Email}", order.cart.address.emailAddress);
+        
+        if (order.cart.address.address != null)
+            text = text.replace("{Customer.Address}", order.cart.address.address);
+        
+        if (order.cart.address.city != null)
+            text = text.replace("{Customer.City}", order.cart.address.city);
+        
+        if (order.cart.address.phone != null)
+            text = text.replace("{Customer.Phone}", order.cart.address.phone);
+        
+        if (order.cart.address.postCode != null)
+            text = text.replace("{Customer.Postcode}", order.cart.address.postCode);
+        
         return text;
     }
     

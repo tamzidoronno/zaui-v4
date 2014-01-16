@@ -1,0 +1,362 @@
+.gs_bigstock,
+.gs_image_editor {
+    background-color: #3f3f3f;
+    text-align: left;
+    position: relative;
+    border: solid 1px #AAA;
+}
+
+.gs_image_editor .canvasDiv {
+    position: absolute;
+}
+
+.gs_image_editor .canvasDiv .innerCanvas {
+    position: relative;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    top: 0px;
+}
+
+.gs_image_editor_menu {
+    position: absolute;
+    width: 100px;
+    right: 10px;
+    top: 20px;
+}
+
+.gs_image_editor .imageworkarea {
+    position: relative;
+    margin-left: 20px;
+    margin-top: 20px;
+    background-color: #000;
+    margin-right: 130px;
+}
+
+.gs_image_editor_menu .entry .icon {
+    width: 30px;
+    height: 30px;
+    display: block;
+    font-size: 30px;
+    margin-top: 10px;
+    margin-left: 5px;
+}
+
+.gs_image_editor_menu .entry .icon.active {
+    color: green;
+}
+
+.gs_image_editor_menu .entry .menu_text_image_editor {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+
+.gs_image_editor_menu .entry {
+    position: relative;
+    border: solid 1px #444;
+    background: linear-gradient(to bottom, #3f3f3f, #2f2f2f); /* Standard syntax */
+    font-size: 11px;
+    font-weight: bold;
+    color: #FFF;
+    width: 40px;
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: 10px;
+    display: inline-block;
+    margin-left: 1px; 
+    margin-right: 1px; 
+    padding-left: 3px; 
+    padding-right: 3px;
+    height: 79px;
+    vertical-align: top;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.gs_image_editor_menu .entry:active {
+    background: none;
+}
+
+.gs_image_editor_menu .entry:hover {
+    border: solid 1px #FFF;
+}
+
+.gs_image_editor .uploadmenu {
+    display: none;
+}
+
+.gs_image_editor .uploadmenu .uploadoption {
+    width: 50%;
+    height: 100%;
+    border: solid 5px #000; 
+    border-radius: 15px;
+    display: inline-block;
+    box-sizing: border-box;
+    vertical-align: top;
+    background-color: rgba(255,255,255, 0.3);
+    padding: 20px;
+}
+
+.gs_image_editor .uploadmenu .uploadoption .gs_button i {
+    margin-right: 5px;
+}
+.gs_image_editor .uploadmenu .uploadoption .gs_button {
+    color: #333;
+}
+.gs_image_editor .uploadmenu .uploadoption div {
+    display: inline-block;
+    vertical-align: top;
+    font-size: 16px;
+    color: #FFF;
+}
+.gs_image_editor .uploadmenu .uploadoption .headline {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.gs_image_editor .uploadmenu .uploadoption .description {
+    font-size: 14px;
+}
+.gs_image_editor .uploadmenu .uploadoption .icon {
+    font-size: 50px;
+    color: #FFF;
+    display: inline-block;
+    margin-right: 20px;
+    margin-bottom: 10px;
+}
+
+.gs_image_editor .uploadmenu {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    bottom: 10px;
+    right: 10px;
+}
+
+.gs_image_editor .bigstockicon {
+    display: inline-block;
+    width: 90px;
+    height: 48px;
+    background-image: url('images/bigstock-white-medium.png');
+    background-repeat: no-repeat;
+}
+
+.gs_image_editor .disabled {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    background-color: rgba(111,111,111,0.6);
+}
+
+.gs_bigstock {
+    position: relative;
+}
+
+.gs_bigstock .cancelbutton i {
+    margin-right: 5px;
+}
+
+.gs_bigstock .buybutton {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    color: #333;
+}
+.gs_bigstock .cancelbutton {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    color: #333;
+}
+
+.gs_bigstock .logo {
+    position: absolute;
+    left: 25px;
+    top: 10px;
+    width: 90px;
+    height: 48px;
+    background-image: url('images/bigstock-white-medium.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.gs_bigstock .header {
+    font-size: 30px;
+    color: #FFF;
+    margin-left: 20px;
+    margin-top: 20px;
+}
+
+.gs_bigstock .subtext {
+    color: #FFF;
+    margin-left: 20px;
+    font-size: 18px;
+}
+
+.gs_bigstock .searchContainer {
+    background-color: rgba(0,0,0,0.5);
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    top: 80px;
+    height: 200px;
+    border-radius: 5px;
+}
+
+.gs_bigstock .searchbackground {
+    background-color: #FFF;
+    position: absolute;
+    bottom: 40px;
+    left: 20px;
+    right: 20px;
+    height: 40px;
+    border-radius: 5px;
+    padding: 3px;
+}
+
+.gs_bigstock .searchbackground input {
+    border: solid 1px #DDD;
+    position: absolute;
+    line-height: 30px;
+    left: 4px;
+    right: 55px;
+    border-radius: 3px;
+    padding-left: 10px;
+    font-size: 16px;
+    box-shadow: 0px 0px 5px #333;
+}
+
+.gs_bigstock .searchbackground .gs_button {
+    position: absolute;
+    right: 3px;
+    top: 5px;
+    bottom:7px;
+    font-size: 20px;
+    color: #333;
+}
+
+.gs_bigstock .preview,
+.gs_bigstock .searchresult {
+    position: absolute;
+    bottom: 50px;
+    top: 60px;
+    overflow-y: auto;
+    left: 10px;
+    right: 10px;
+}
+
+.gs_bigstock .searchresult {
+    font-size: 20px;
+    color: #FFF;
+    text-align: center;
+    padding-top: 10px;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    border-radius: 10px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+
+
+.gs_bigstock .searchresult .imageholder {
+    position:relative;
+    border: solid 1px;
+    background-color: #000;
+    display: inline-block;
+    margin: 20px;
+    height: 180px;
+    vertical-align: middle;
+    width: 180px;
+    cursor: pointer;
+}
+
+.gs_bigstock .searchresult .footer {
+    height: 30px;
+    background-color: rgba(0,0,0,0.3);
+    z-index: 1;
+}
+.gs_bigstock .searchresult .imageholder img {
+    position:absolute;
+    top:0;
+    bottom:0;
+    left: 0;
+    right: 0;
+    margin:auto;
+}
+
+.gs_bigstock .preview .bigstock_preview_title {
+    font-size: 15px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    color: #FFF;
+}
+
+.gs_bigstock .preview img {
+    max-width: 100%;
+    max-height: 100%;
+}
+.gs_bigstock .preview .paginginner { 
+    position: relative;
+}
+.gs_bigstock .paging .paginginner {
+    text-align: center;
+    line-height: 26px;
+    color: #FFF;
+}
+.gs_bigstock .paging {
+    position: absolute;
+    bottom: 5px;
+    width: 150px;
+    margin-left: -75px;
+    height: 30px;
+    left: 50%;
+}
+
+.gs_bigstock .nextpaging:hover,
+.gs_bigstock .backpaging:hover {
+    background-color: #666;
+}
+
+.gs_bigstock .nextpaging,
+.gs_bigstock .backpaging {
+    position: absolute;
+    font-size: 13px;
+    color: #FFF;
+    border: solid 1px #666;
+    padding: 5px;
+    width: 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.gs_bigstock .nextpaging {
+    right: 0px;
+}
+
+.gs_bigstock .backpaging {
+    left: 0px;
+}
+
+.gs_bigstock .preview {
+    position: absolute;
+    text-align: center;
+    margin-bottom : 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+}

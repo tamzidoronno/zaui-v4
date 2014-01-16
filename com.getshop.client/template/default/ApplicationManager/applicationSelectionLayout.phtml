@@ -2,16 +2,17 @@
 /* @var $factory Factory */
 $factory = $this->getFactory();
 $pb = $factory->getPage()->loadPageBuilder();
+$layoutupdate = false;
 if (isset($_POST['data']['updatelayout'])) {
     $pb->activateBuildLayoutMode();
+    $layoutupdate = true;
 }
 $pb->convertToNewLayout(false);
 $layout = $pb->updateLayoutConfig();
 $pb->saveBuildLayout($layout);
 
-$content_groups = ["standard", "contact", "map", "productlist", "frontpage"];
 
-
+$content_groups = ["standard", "contact", "map", "product", "productlist", "frontpage"];
 ?>
 
 <div class="skeletondisplayer">
@@ -19,57 +20,57 @@ $content_groups = ["standard", "contact", "map", "productlist", "frontpage"];
     <div class="layoutpreviewselection app">
         <br>
         <div class="gs_tabs">
-            <span class='gs_tab gs_tab_selected' target="content_pages"><i class="fa fa-book"></i> <? echo $this->__f("Content"); ?></span>
+            <span class='gs_tab <? if(!$layoutupdate) { echo "gs_tab_selected"; } ?>' target="content_pages"><i class="fa fa-book"></i> <? echo $this->__f("Content"); ?></span>
             <span class='gs_tab' target="empty_pages"><i class="fa fa-square-o"></i> <? echo $this->__f("Empty page"); ?></span>
-            <span class='gs_tab' target="layout_builder"><i class="fa fa-wrench"></i> <? echo $this->__f("Build your layout"); ?></span>
+            <span class='gs_tab <? if($layoutupdate) { echo "gs_tab_selected"; } ?>' target="layout_builder"><i class="fa fa-wrench"></i> <? echo $this->__f("Build your layout"); ?></span>
         </div>
-        <div class="gs_tab_area content_pages">
+        <div class="gs_tab_area content_pages <? if(!$layoutupdate) { echo "gs_tab_area_active"; } ?>">
             <div class='category_selection'>
                 <div class='options'>
                     <div class='option_entry option_selected' target='standard'><i class="fa fa-pencil-square-o"></i> <? echo $this->__f("Standard page"); ?></div> 
                     <div class='option_entry' target='contact'><i class="fa fa-envelope"></i> <? echo $this->__f("Contact"); ?></div> 
                     <div class='option_entry' target='map'><i class="fa fa-globe"></i> <? echo $this->__f("Map"); ?></div>
-                    <div class='option_entry' target='productlist'><i class="fa fa-list-alt"></i> <? echo $this->__f("Product"); ?></div>
+                    <div class='option_entry' target='product'><i class="fa fa-shopping-cart"></i></i> <? echo $this->__f("Product"); ?></div>
                     <div class='option_entry' target='productlist'><i class="fa fa-list-alt"></i> <? echo $this->__f("Product list"); ?></div>
                     <div class='option_entry' target='frontpage'><i class="fa fa-heart-o"></i> <? echo $this->__f("Frontpage"); ?></div>
                 </div>
             </div>
             <div>
                 <div class="options_content">
-                    <?
-                    foreach($content_groups as $group) {
-                        $selected = "";
-                        if($group == "standard") {
-                            $selected = "content_type_selected";
+<?
+foreach ($content_groups as $group) {
+    $selected = "";
+    if ($group == "standard") {
+        $selected = "content_type_selected";
+    }
+    ?>
+                        <div class='<? echo $group; ?> content_type_area <? echo $selected; ?>'>
+                        <?
+                        $pages = $pb->getPredefinedPage($group);
+                        foreach ($pages as $predefined) {
+                            $pb->printPredefinedPagePreview($predefined);
                         }
                         ?>
-                        <div class='<? echo $group; ?> content_type_area <? echo $selected; ?>'>
-                            <? 
-                                $pages = $pb->getPredefinedPage($group); 
-                                foreach($pages as $predefined) {
-                                    $pb->printPredefinedPagePreview($predefined);
-                                }
-                            ?>
                         </div>
-                    <? } ?>
+                        <? } ?>
                 </div>
             </div>
             <div style='clear:both;'></div>
         </div>
-        <div class="layoutconfiguration gs_tab_area layout_builder">
-            <div><? echo $this->__f("Layout options:"); ?></div>
-            <?
-            echo "<select id='leftsidebarcount'>";
-            for ($i = 0; $i <= 20; $i++) {
-                $lfsel = "";
-                if ($layout->leftSideBar == $i) {
-                    $lfsel = "SELECTED";
+        <div class="layoutconfiguration gs_tab_area layout_builder <? if($layoutupdate) { echo "gs_tab_area_active"; } ?>">
+            <div class="left_panel">
+                <?
+                echo "<select id='leftsidebarcount'>";
+                for ($i = 0; $i <= 20; $i++) {
+                    $lfsel = "";
+                    if ($layout->leftSideBar == $i) {
+                        $lfsel = "SELECTED";
+                    }
+                    echo "<option value='$i' $lfsel>$i " . $factory->__f("left sidebar") . "</option>";
                 }
-                echo "<option value='$i' $lfsel>$i " . $factory->__f("left sidebar") . "</option>";
-            }
-            echo "</select>";
-            ?>
-            <select id="rowscount">
+                echo "</select>";
+                ?>
+                <select id="rowscount">
                 <?
                 for ($i = 0; $i <= 20; $i++) {
                     $selected = "";
@@ -79,38 +80,35 @@ $content_groups = ["standard", "contact", "map", "productlist", "frontpage"];
                     echo "<option value='" . $i . "' $selected>" . $i . " " . $this->__f("number of rows") . "</option>";
                 }
                 ?>
-            </select>
-            <?
-            echo "<select id='rightsidebarcount'>";
-            for ($i = 0; $i <= 20; $i++) {
-                $lfsel = "";
-                if ($layout->rightSideBar == $i) {
-                    $lfsel = "SELECTED";
-                }
-                echo "<option value='$i' $lfsel>$i " . $factory->__f("right sidebar") . "</option>";
-            }
-            echo "</select>";
-            ?>
-            <div class="button-large setnewlayout">
-                <div class="rightglare"></div>
-                <div class="filler"></div>
-                <ins><? echo $factory->__f("Set page layout"); ?></ins>
+                </select>
+                    <?
+                    echo "<select id='rightsidebarcount'>";
+                    for ($i = 0; $i <= 20; $i++) {
+                        $lfsel = "";
+                        if ($layout->rightSideBar == $i) {
+                            $lfsel = "SELECTED";
+                        }
+                        echo "<option value='$i' $lfsel>$i " . $factory->__f("right sidebar") . "</option>";
+                    }
+                    echo "</select>";
+                    ?>
+                <div class="gs_button small setnewlayout">
+                    <? echo $factory->__f("Set page layout"); ?>
+                    <i class="fa fa-arrow-circle-right"></i>
+                </div>
             </div>
-            <br>
-            <br>
-            <? echo $this->__f("Selected layout preview") . ":"; ?>
-            <div class='layoutpreviewbox' style="width:500px; border:solid 1px; padding: 10px; background-color:#EFEFEF; position:relative;padding-top:60px; padding-bottom: 60px;color:#5e5e5e; ">
-                <?
-                echo $pb->printPreview();
-                ?>
-            </div>
-            <div style='width: 500px; font-size:12px;'>
-                * <? echo $this->__f("Content areas can contain content like images, products, text content, menues, movies, etc. After selecting your layout, you can start adding content to them."); ?>
+            <div class="right_panel">
+                <div class='layoutpreviewbox'>
+                    <?
+                    echo $pb->printPreview();
+                    ?>
+                </div>
             </div>
         </div>
         <div class='predefined_layouts empty_pages gs_tab_area'>
-            <? echo $pb->printSuggestions(); ?>
+<? echo $pb->printSuggestions(); ?>
         </div>
+        <div style="clear:both;"></div>
     </div>
 </div>
 
@@ -222,6 +220,7 @@ $content_groups = ["standard", "contact", "map", "productlist", "frontpage"];
     $('.layoutpreviewbox .previewrow.cell.sidebar').resizable("destroy");
     $('.layoutpreviewbox .sortable_layout_rows').sortable({
         containment: "parent",
+        handle: ".fa-arrows-v",
         stop: function(event, ui) {
             var sorted = [];
             $('.layoutpreviewbox .sortable_layout_rows li').each(function() {

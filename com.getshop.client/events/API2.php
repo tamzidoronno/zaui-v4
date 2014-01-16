@@ -2766,7 +2766,7 @@ class APIProductManager {
 	* @throws ErrorException
 	*/
 
-	public function getProduct($id) {
+	public function getProductPages($id) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));

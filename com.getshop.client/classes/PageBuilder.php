@@ -29,6 +29,12 @@ class PageBuilder {
                 return $res->getContactPages();
             case "map":
                 return $res->getMapPages();
+            case "product":
+                return $res->getProductPages();
+            case "product":
+                return $res->getProductPages();
+            case "productlist":
+                return $res->getProductListPages();
                 
         }
         return array();
@@ -41,19 +47,31 @@ class PageBuilder {
                 echo "<span class='icon_container' rowsize='".sizeof($row)."'>";
                 switch($cell) {
                     case "text":
-                        echo '<i class="fa fa-align-justify"></i>';
+                        echo '<i class="fa fa-align-justify" title="'.$this->factory->__f("Text").'"></i>';
                         break;
                     case "image":
-                        echo '<i class="fa fa-picture-o"></i>';
+                        echo '<i class="fa fa-picture-o" title="'.$this->factory->__f("Image").'"></i>';
                         break;
                     case "map":
-                        echo '<i class="fa fa-globe"></i>';
+                        echo '<i class="fa fa-globe" title="'.$this->factory->__f("Map").'"></i>';
                         break;
                     case "movie":
-                        echo '<i class="fa fa-youtube-play"></i>';
+                        echo '<i class="fa fa-youtube-play" title="'.$this->factory->__f("Movie").'"></i>';
                         break;
                     case "contact":
-                        echo '<i class="fa fa-envelope"></i>';
+                        echo '<i class="fa fa-envelope" title="'.$this->factory->__f("Contact form").'"></i>';
+                        break;
+                    case "product":
+                        echo '<i class="fa fa-shopping-cart" title="'.$this->factory->__f("Product data").'"></i>';
+                        break;
+                    case "productwidget":
+                        echo '<i class="fa fa-shopping-cart" title="'.$this->factory->__f("Product").'"></i>';
+                        break;
+                    case "productlist_boxed":
+                        echo '<i class="fa fa-th" title="'.$this->factory->__f("Product grid").'"></i>';
+                        break;
+                    case "productlist_standard":
+                        echo '<i class="fa fa-list" title="'.$this->factory->__f("Product listed").'"></i>';
                         break;
                     default;
                         echo $cell . " ";
@@ -166,9 +184,15 @@ class PageBuilder {
         echo "<table>";
         echo "<tr>";
         $row = 1;
-        for ($i = 1; $i <= 30; $i++) {
+        $rowcount = 0;
+        for ($i = 30; $i <= 70; $i++) {
             $this->layout = $this->convertToNewLayout($i);
             if ($this->layout) {
+                
+                if(sizeof($this->layout->rows) != $rowcount) {
+                    $rowcount = sizeof($this->layout->rows);
+                    echo "</tr></table><div class='spacer'><div>" . $rowcount . " rows" . "</div></div><table><tr>";
+                }
                 echo "<td valign='top'>";
                 echo "<div class='suggestion_layout' type='" . $i . "'>";
                 $this->printPreview();
@@ -419,6 +443,270 @@ class PageBuilder {
                 $layout->rows[] = $this->createRow(1);
                 $layout->rows[] = $this->createRow(1);
                 break;
+            
+            //Suggestions for the customer.
+            case 30:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(1);
+                break;
+            case 31:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(2);
+                break;
+            case 32:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(3);
+                break;
+            
+            //Two rows
+            case 33:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(1);
+                $layout->rows[] = $this->createRow(1);
+                break;
+            case 34:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(1);
+                $layout->rows[] = $this->createRow(2);
+                break;
+            case 35:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(1);
+                $layout->rows[] = $this->createRow(3);
+                break;
+            case 36:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(2);
+                $layout->rows[] = $this->createRow(1);
+                break;
+            case 37:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(2);
+                $layout->rows[] = $this->createRow(2);
+                break;
+            case 38:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(2);
+                $layout->rows[] = $this->createRow(3);
+                break;
+            case 39:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(3);
+                $layout->rows[] = $this->createRow(1);
+                break;
+            case 40:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(3);
+                $layout->rows[] = $this->createRow(2);
+                break;
+            case 41:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(3);
+                $layout->rows[] = $this->createRow(3);
+                break;
+            //three rows
+            case 42:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(1);
+                $layout->rows[] = $this->createRow(1);
+                $layout->rows[] = $this->createRow(1);
+                break;
+            case 43:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(1);
+                $layout->rows[] = $this->createRow(1);
+                $layout->rows[] = $this->createRow(2);
+                break;
+            case 44:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(1);
+                $layout->rows[] = $this->createRow(1);
+                $layout->rows[] = $this->createRow(3);
+                break;
+            case 45:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(1);
+                $layout->rows[] = $this->createRow(2);
+                $layout->rows[] = $this->createRow(1);
+                break;
+            case 46:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(1);
+                $layout->rows[] = $this->createRow(2);
+                $layout->rows[] = $this->createRow(2);
+                break;
+            case 47:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(1);
+                $layout->rows[] = $this->createRow(2);
+                $layout->rows[] = $this->createRow(3);
+                break;
+            case 48:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(1);
+                $layout->rows[] = $this->createRow(3);
+                $layout->rows[] = $this->createRow(1);
+                break;
+            case 49:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(1);
+                $layout->rows[] = $this->createRow(3);
+                $layout->rows[] = $this->createRow(2);
+                break;
+            case 50:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(1);
+                $layout->rows[] = $this->createRow(3);
+                $layout->rows[] = $this->createRow(3);
+                break;
+            case 51:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(2);
+                $layout->rows[] = $this->createRow(1);
+                $layout->rows[] = $this->createRow(1);
+                break;
+            case 52:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(2);
+                $layout->rows[] = $this->createRow(1);
+                $layout->rows[] = $this->createRow(2);
+                break;
+            case 53:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(2);
+                $layout->rows[] = $this->createRow(1);
+                $layout->rows[] = $this->createRow(3);
+                break;
+            case 54:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(2);
+                $layout->rows[] = $this->createRow(2);
+                $layout->rows[] = $this->createRow(1);
+                break;
+            case 55:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(2);
+                $layout->rows[] = $this->createRow(2);
+                $layout->rows[] = $this->createRow(2);
+                break;
+            case 56:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(2);
+                $layout->rows[] = $this->createRow(2);
+                $layout->rows[] = $this->createRow(3);
+                break;
+            case 57:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(2);
+                $layout->rows[] = $this->createRow(3);
+                $layout->rows[] = $this->createRow(1);
+                break;
+            case 58:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(2);
+                $layout->rows[] = $this->createRow(3);
+                $layout->rows[] = $this->createRow(2);
+                break;
+            case 59:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(2);
+                $layout->rows[] = $this->createRow(3);
+                $layout->rows[] = $this->createRow(3);
+                break;
+            case 60:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(3);
+                $layout->rows[] = $this->createRow(1);
+                $layout->rows[] = $this->createRow(1);
+                break;
+            case 61:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(3);
+                $layout->rows[] = $this->createRow(1);
+                $layout->rows[] = $this->createRow(2);
+                break;
+            case 62:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(3);
+                $layout->rows[] = $this->createRow(1);
+                $layout->rows[] = $this->createRow(3);
+                break;
+            case 63:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(3);
+                $layout->rows[] = $this->createRow(2);
+                $layout->rows[] = $this->createRow(1);
+                break;
+            case 64:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(3);
+                $layout->rows[] = $this->createRow(2);
+                $layout->rows[] = $this->createRow(2);
+                break;
+            case 65:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(3);
+                $layout->rows[] = $this->createRow(2);
+                $layout->rows[] = $this->createRow(3);
+                break;
+            case 66:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(3);
+                $layout->rows[] = $this->createRow(3);
+                $layout->rows[] = $this->createRow(1);
+                break;
+            case 67:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(3);
+                $layout->rows[] = $this->createRow(3);
+                $layout->rows[] = $this->createRow(2);
+                break;
+            case 68:
+                $layout = $this->createLayout(0,0);
+                $layout->rows = array();
+                $layout->rows[] = $this->createRow(3);
+                $layout->rows[] = $this->createRow(3);
+                $layout->rows[] = $this->createRow(3);
+                break;
+            
             default:
                 if ($type >= 0)
                     $layout = null;
@@ -640,7 +928,7 @@ class PageBuilder {
 
     public function getPreviewText() {
         if ($this->includePreviewText) {
-            return $this->factory->__f("Content<br>area");
+            return $this->factory->__f("Content area");
         }
         return "";
     }

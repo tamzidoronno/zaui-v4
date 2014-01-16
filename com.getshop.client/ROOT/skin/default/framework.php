@@ -220,7 +220,7 @@ background-image: url('/skin/default/images/informationbox-top.png');
 
 #informationboxbottom {
 width: 1000px;
-height: 7px;
+height: 5px;
 background-image: url('/skin/default/images/informationbox-bottom.png');
 }
 
@@ -1437,7 +1437,6 @@ height: 34px;
 border-bottom: solid 1px  #4e4e4e;
 padding-left: 5px;
 }
-
 .gs_tabs .gs_tab_selected {
 background-color: #3f3f3f;
 height: 24px;

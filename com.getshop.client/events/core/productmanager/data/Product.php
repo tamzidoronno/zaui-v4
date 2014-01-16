@@ -67,7 +67,7 @@ class core_productmanager_data_Product extends core_common_DataCommon  {
 	public $taxes;
 
 	/** @var String */
-	public $skui;
+	public $sku;
 
 }
 ?>

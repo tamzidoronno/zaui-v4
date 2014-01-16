@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.messagemanager;
 
+import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.StoreComponent;
 import java.io.File;
@@ -40,6 +41,9 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
     private MailConfiguration configuration;
     
     @Autowired
+    public FrameworkConfig frameworkConfig;
+    
+    @Autowired
     public Logger logger;
     private Map<String, String> files;
     private boolean delete;
@@ -70,6 +74,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
         mfi.configuration = configuration;
         mfi.logger = logger;
         mfi.storeId = storeId;
+        mfi.frameworkConfig = frameworkConfig;
         
         if(to == null || to.equals("test@getshop.com")) {
             //Send this to noone, or the test account.. no way!
@@ -147,7 +152,11 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
                 message.setContent(content, "text/html; charset=UTF-8");
             }
             
-            Transport.send(message);
+            if (frameworkConfig.productionMode) {
+                Transport.send(message);
+            } else {
+                System.out.println("Mail sent");
+            }
             
         } catch (Exception ex) {
             logger.error(this, "Was not able to send email... ", ex);

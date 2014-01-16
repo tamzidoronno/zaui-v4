@@ -105,6 +105,8 @@ class Factory extends FactoryBase {
         echo "\n" . '<script type="text/javascript" src="js/getshop.Ajax.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.Common.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.Skeleton.js"></script>';
+        echo "\n" . '<script type="text/javascript" src="js/getshop.ImageEditor.js"></script>';
+        echo "\n" . '<script type="text/javascript" src="js/getshop.BigStock.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jquery.history.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jcrop/js/jquery.Jcrop.min.js"></script>';
 
@@ -381,6 +383,7 @@ class Factory extends FactoryBase {
         echo '<link rel="stylesheet" type="text/css" href="/js/jquery.ui/css/smoothness/jquery-ui-1.9.2.custom.min.css">';
         echo '<link rel="stylesheet" type="text/css" href="/skin/default/skeletons.css">';
         echo '<link rel="stylesheet" type="text/css" href="/skin/default/PagePicker.css">';
+        echo '<link rel="stylesheet" type="text/css" href="/skin/default/getshop.ImageEditor.css">';
         echo '<link id=\'mainlessstyle\' rel="stylesheet" type="text/css" media="all" href="StyleSheet.php">';
         
         

@@ -36,7 +36,7 @@ GetShopApiWebSocket.prototype = {
     handleMessage: function(msg) {
         var data = msg.data;
         var jsonObject = JSON.parse(data);
-        var corrolatingMessage = this.getMessage(jsonObject.id);
+        var corrolatingMessage = this.getMessage(jsonObject.messageId);
         corrolatingMessage.resolve(jsonObject.object);
         if (this.sentMessages.length === 0 && this.transferCompleted) {
             this.transferCompleted();
@@ -110,7 +110,7 @@ GetShopApiWebSocket.prototype = {
 
     getMessage: function(id) {
         for (i=0;i<this.sentMessages.length; i++) {
-            if (this.sentMessages[i].id === id) {
+            if (this.sentMessages[i].messageId === id) {
                 var message = this.sentMessages[i];
                 this.sentMessages.splice(i, 1);
                 return message;
@@ -128,4 +128,3 @@ GetShopApiWebSocket.prototype = {
         return text;
     }
 }
-

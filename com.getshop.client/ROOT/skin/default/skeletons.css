@@ -165,7 +165,7 @@
 .gs_showPageLayoutSelection .row_option { position:absolute;left:7px;top: 23px; cursor:pointer;font-size:30px; }
 .gs_showPageLayoutSelection .row_option_panel { display:none; z-index: 2; }
 .gs_showPageLayoutSelection .right_panel  { padding: 10px; display:inline-block; width: 800px; }
-.gs_showPageLayoutSelection .layoutpreviewbox { position:relative;padding-top:60px; padding-bottom: 60px; color:#9f9f9f; background-color:#4e4e4e; }
+.gs_showPageLayoutSelection .layoutpreviewbox { position:relative;padding-top:60px; padding-bottom: 60px; color:#9f9f9f; background-color:#4e4e4e;border: solid 1px #2c2c2c; }
 .gs_showPageLayoutSelection .layoutpreviewbox .outer-row-container { padding-right: 40px; padding-left: 40px; position:relative; }
 .gs_showPageLayoutSelection .layoutpreviewbox .outer-row-container .fa-arrows-v { position:absolute; right: 11px; top: 22px; padding: 3px; cursor:pointer; font-size:30px; }
 .gs_showPageLayoutSelection .sortable_layout_rows {

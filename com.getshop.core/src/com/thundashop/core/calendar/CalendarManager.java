@@ -77,9 +77,6 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         mymonth.storeId = storeId;
         databaseSaver.saveObject(mymonth, credentials);
         months.put(mymonth.id, mymonth);
-        
-//        MobileManager mobileManager = getManager(MobileManager.class);
-//        mobileManager.sendMessageToAllTestUnits("New course added");
     }
 
     private boolean isNewerOrEquals(Day day, Month month, int compareMonth, int compareDay, int compareYear) {

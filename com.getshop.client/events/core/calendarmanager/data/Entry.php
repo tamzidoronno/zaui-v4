@@ -22,6 +22,9 @@ class core_calendarmanager_data_Entry {
 	public $needConfirmation;
 
 	/** @var String */
+	public $lockedForSignup;
+
+	/** @var String */
 	public $linkToPage;
 
 	/** @var String */

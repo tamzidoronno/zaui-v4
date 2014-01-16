@@ -20,6 +20,9 @@ if ($_GET['file'] == 5)
 if ($_GET['file'] == 6)
     $file = "MBM kundemottaker hefte AK.pdf";
 
+if ($_GET['file'] == 7)
+    $file = "2.1 Dieselteknikk versjon 14.01.2014.pdf";
+
 if (!isset($file)) {
     return;
 }

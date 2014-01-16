@@ -23,7 +23,8 @@ public class Entry implements Serializable, Comparable<Entry> {
     public boolean isOriginal = true;
     
     public boolean needConfirmation = false;
-
+    public boolean lockedForSignup = false;
+    
     public String linkToPage = "";
     public String description;
     public String starttime;
@@ -45,6 +46,7 @@ public class Entry implements Serializable, Comparable<Entry> {
     public Entry(Entry entry) {
         this.needConfirmation = entry.needConfirmation;
         this.locationExtended = entry.locationExtended;
+        this.lockedForSignup = entry.lockedForSignup;
         this.maxAttendees = entry.maxAttendees;
         this.description = entry.description;
         this.attendees = entry.attendees;

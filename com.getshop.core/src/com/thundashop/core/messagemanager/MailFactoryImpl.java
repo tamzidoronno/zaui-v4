@@ -155,7 +155,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
             if (frameworkConfig.productionMode) {
                 Transport.send(message);
             } else {
-                System.out.println("Mail sent");
+                System.out.println("Mail sent to: " + to + ", subject: " + subject + ", content: " + content);
             }
             
         } catch (Exception ex) {

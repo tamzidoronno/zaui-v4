@@ -630,5 +630,17 @@ class ApplicationManager extends FactoryBase {
         $this->includefile("pageSearchResult");
     }
 
+    public function buyBigstockImage() {
+        $imageId = $_POST['data']['imageId'];
+        $sizeCode = $_POST['data']['sizeCode'];
+        $downloadUrl = $this->getApi()->getBigStock()->purchaseImage($imageId, $sizeCode);
+        
+        if ($downloadUrl != null) {
+            $imageData = file_get_contents($downloadUrl);
+            $content = base64_decode(str_replace("data:image/png;base64,", "", base64_encode($imageData)));
+            $imgId = \FileUpload::storeFile($content);
+            echo $imgId;
+        }
+    }
 }
 ?>

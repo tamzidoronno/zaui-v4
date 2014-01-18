@@ -92,7 +92,8 @@ label.error {
 }
 
 .notavailable {
-    background: -webkit-linear-gradient(#cf4b41, #ff1200);
+    background: -webkit-linear-gradient(#f2ffaa, #e5d200);
+    color: #000;
 }
 
 .availablepositions_course_selected {
@@ -204,19 +205,98 @@ label.error {
     left: 5px;
     text-align: center;
 }
-.infobutton {
-    border-radius: 5px;
+
+
+.headerbutton {
+    border-radius: 0px;
     cursor: pointer;
-    width: 35px;
-    border: solid 1px #888;
-    
-    height: 35px;
+    width: 50px;
+    height: 40px;
+    border: solid 1px #333;
+    border-top: solid 0px;
+    border-right: solid 0px;
+    background-color: rgba(30,30,30,0.9);
+    background: linear-gradient(to bottom, #666, #333);
+    border-bottom: solid 1px #363636;
     position: absolute;
-    right: 5px;
-    top: 15px;
-    background-image: url('images/infobutton.png');
+    
+}
+
+.headerbutton .inner {
+    width: 50px;
+    position: relative;
+    height: 40px;
     background-repeat: no-repeat;
     background-position: center center;
+}
+
+.infobutton {
+    right: 0px;
+    top: 60px;
+}
+
+.infobutton .inner {
+    background-image: url('images/infobutton.png');
+}
+
+.newsbutton {
+    right: 51px;
+    top: 60px;
+}
+
+.newsbutton .inner {
+    background-image: url('images/news-icon.png');
+}
+
+.newsbutton .counter {
+    position: relative; 
+    left: -50%; 
     
-    background-color: rgba(256,256,256,0.1);
+    top: 10px;
+    background-color: rgba(166, 12,12, 0.9);
+    font-size: 12px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px #FFF;
+    padding: 2px;
+    padding-left: 4px; padding-right: 4px;
+    font-weight: bold;
+    display: none;
+}
+
+#news .newsentry {
+    border: solid 1px #333;
+    background: linear-gradient(to bottom, #333, #252525);
+    margin-bottom: 20px;
+    position: relative;
+    padding: 10px;
+}
+
+#news .newsentry .right {
+    border-left: dashed 1px #444;
+    position: absolute;
+    right: 0px;
+    top: 1px;
+    bottom: 0px;
+    width: 35px;
+    background-color: #333;
+    background-image: url('images/right.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+#news .newsentry .header {
+    border-bottom: solid 1px #353535;
+    padding-bottom: 5px;
+    font-size: 14px;
+}
+
+#news .newsentry .content {
+    padding: 10px;
+    font-size: 13px;
+    font-weight: normal;
+}
+#news .newsentry .footer {
+    font-size: 12px; 
+    text-align: right;
+    padding-right: 35px;
 }

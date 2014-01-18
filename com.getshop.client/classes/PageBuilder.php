@@ -758,6 +758,8 @@ class PageBuilder {
         $siteBuilder = new SiteBuilder();
         $siteBuilder->clearPage();
         $layout = $this->createLayout(0, 0);
+        $layout->rows = array();
+        $layout->sortedRows = array();
         foreach($config as $row) {
             $layout->rows[] = $this->createRow(sizeof($row));
         }

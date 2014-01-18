@@ -581,7 +581,7 @@ class ApplicationManager extends FactoryBase {
         
         $page = $this->getPage()->backendPage;
         $pb = new PageBuilder(null,null,null);
-        
+        $page->type = -1;
         $page->layout = $pb->buildPredefinedPage(json_decode($_POST['data']['config'],true));
         $this->getApi()->getPageManager()->savePage($page);
         $pb->addPredefinedContent($_POST['data']['pagetype'], json_decode($_POST['data']['config'],true));

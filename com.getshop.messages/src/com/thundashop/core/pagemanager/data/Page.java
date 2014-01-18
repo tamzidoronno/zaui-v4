@@ -96,7 +96,11 @@ public class Page extends DataCommon implements Cloneable {
     }
 
     public void deletePageAreas() {
+        PageArea footer = pageAreas.get("footer");
+        PageArea header = pageAreas.get("header");
         pageAreas = new HashMap();
+        pageAreas.put("footer", footer);
+        pageAreas.put("header", header);
     }
 
     public static class DefaultPages {

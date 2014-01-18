@@ -25,7 +25,6 @@ getshop.ImageEditor.prototype = {
         this.createUploadMenu();
         this.addMenu();
         this.refresh();
-        this.showBigStock();
     },
     createBigStock: function() {
         this.bigStockDom = $('<div/>');
@@ -62,9 +61,9 @@ getshop.ImageEditor.prototype = {
     showBigStock: function() {
         this.innerDom.hide();
         this.bigStockDom.fadeIn();
+        this.bigStock.showSearchForm();
     },
     bigstockCanceled: function() {
-        var me = this;
         this.bigStockDom.hide();
         this.innerDom.fadeIn();
     },
@@ -179,6 +178,7 @@ getshop.ImageEditor.prototype = {
         return outer;
     },
     deleteImage: function() {
+        this.config.imageId = null;
         this.config.Image = null;
         this.refresh();
     },
@@ -277,6 +277,11 @@ getshop.ImageEditor.prototype = {
             this.canvasDiv.html(this.canvasDivInner);
             jCropApi.destroy();
         }
+    },
+    setImageId: function(imageId) {
+        this.config.imageId = imageId;
+        this.bigstockCanceled();
+        this.refresh();
     },
     refeshCropArea: function() {
         var selectedCropArea = [0, 0, 200, 200];

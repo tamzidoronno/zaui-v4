@@ -14,7 +14,7 @@ App = {
     appName: "ProMeisterAcademey",
     firstConnected: false,
     numberOfMonthToShowInCalendar: 6,
-    address : "mecademo.mpal.getshop.com",
+    address : "www.autoakademiet.no",
     
     start: function() {
         this.getshopApi = new GetShopApiWebSocket(this.address);

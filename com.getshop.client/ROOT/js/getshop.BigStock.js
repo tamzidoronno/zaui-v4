@@ -20,15 +20,28 @@ getshop.BigStock.prototype = {
         this.createResultContainer();
         this.createPreviewForm();
         this.addBuyButton();
-    },    
+    },
     addBuyButton: function() {
         var button = $('<div/>');
         button.addClass('gs_button');
         button.addClass('buybutton');
         button.hide();
         button.html('<i class="fa fa-money"></i> '+__f('Buy Picture'));
+        button.click($.proxy(this.buyCurrentPicture, this));
         this.buyButton = button;
         this.outerDom.append(button);
+    },
+    buyCurrentPicture: function() {
+        var data = {
+            imageId : this.currentImage.id,
+            sizeCode: 's'
+        }
+        
+        var event = thundashop.Ajax.createEvent("", "buyBigstockImage", null, data);
+        var me = this;
+        thundashop.Ajax.postWithCallBack(event, function(response) {
+            me.imageEditor.setImageId(response);
+        });
     },
     addPagingArea: function() {
         var pageingArea = $('<div/>');
@@ -67,6 +80,26 @@ getshop.BigStock.prototype = {
         this.previewForm = $('<div/>');
         this.previewForm.addClass('preview');
         this.previewForm.hide();
+        
+        var information = $('<div/>');
+        information.addClass("gs_bigstock_information");
+        
+        var header = $('<div/>');
+        header.addClass('bigstock_buypicture_header');
+        header.html(__f("Use your GetShop credit to buy this picture."));
+        
+        var balance = $('<div/>');
+        balance.addClass('bigstock_buypicture_balance');
+        balance.html(__f("Your current account balance")+"<br><b><span id='balance'>0</span></b>");
+        
+        var pictureCost = $('<div/>');
+        pictureCost.addClass('bigstock_buypicture_cost');
+        pictureCost.html(__f("Credits for picture")+"<br><b><span id='credit'>100</span></b>");
+        
+        information.append(header);
+        information.append(balance);
+        information.append(pictureCost);
+        this.previewForm.append(information);
         
         var image = new Image();
         this.previewForm.append(image);
@@ -111,6 +144,10 @@ getshop.BigStock.prototype = {
         emptyField.append(button)
         
         var input = $('<input id="bigstocksearch" type="text" placeholder="'+__f("Find the perfect image...")+'"/>');
+        var me = this;
+        input.change(function(e) {
+            me.search();
+        });
         emptyField.append(input);
         
         this.searchContainer = searchContainer;
@@ -155,6 +192,7 @@ getshop.BigStock.prototype = {
     showSearchForm: function() {
         this.buyButton.hide();
         this.pageingArea.hide();
+        this.previewForm.hide();
         this.searchResult.hide();
         this.pagingTextArea
         $('#bigstocksearch').val("");
@@ -181,12 +219,12 @@ getshop.BigStock.prototype = {
         this.outerDom.hide();
     },
     
-    showPreview: function(data) {
+    showPreview: function() {
         this.searchResult.hide();
         this.pageingArea.hide();
         this.buyButton.show();
-        this.previewForm.find("img").attr('src',data.preview.url);
-        this.previewForm.find(".bigstock_preview_title").html(data.title);
+        this.previewForm.find("img").attr('src', this.currentImage.preview.url);
+        this.previewForm.find(".bigstock_preview_title").html(this.currentImage.title);
         this.previewForm.show();
     },
     
@@ -230,13 +268,13 @@ getshop.BigStock.prototype = {
             div.append(inner);
             
             var image = data.images[i];
-            console.log(image);
             var domImage = new Image();
 
             domImage.src = image.small_thumb.url;
             domImage.data = image;
             $(domImage).click(function() {
-                me.showPreview(this.data);
+                me.currentImage = this.data;
+                me.showPreview();
             })
             inner.append(domImage)
             searchResultArea.append(div);

@@ -299,6 +299,34 @@ class APIBannerManager {
 	}
 
 }
+class APIBigStock {
+
+	var $transport;
+	
+	function APIBigStock($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	* Purchases a picture from the bigstock library.
+	*
+	* @param imageId
+	* @param sizeCode
+	* @return String
+	* @throws ErrorException
+	*/
+
+	public function purchaseImage($imageId, $sizeCode) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["imageId"] = json_encode($this->transport->object_unset_nulls($imageId));
+	     $data['args']["sizeCode"] = json_encode($this->transport->object_unset_nulls($sizeCode));
+	     $data["method"] = "purchaseImage";
+	     $data["interfaceName"] = "core.bigstock.IBigStock";
+	     return $this->transport->sendMessage($data);
+	}
+
+}
 class APICalendarManager {
 
 	var $transport;
@@ -3857,6 +3885,12 @@ class GetShopApi {
       */
       public function getBannerManager() {
            return new APIBannerManager($this->transport);
+      }
+      /**
+      * @return BigStock
+      */
+      public function getBigStock() {
+           return new APIBigStock($this->transport);
       }
       /**
       * @return CalendarManager

@@ -40,8 +40,8 @@ class PageBuilder {
         return array();
     }
     
-    function printPredefinedPagePreview($predefined) {
-        echo "<span class='layoutpreview' pagetype='standard' config='".json_encode($predefined)."' row_size='".sizeof($predefined)."'>";
+    function printPredefinedPagePreview($predefined, $group) {
+        echo "<span class='layoutpreview' pagetype='".$group."' config='".json_encode($predefined)."' row_size='".sizeof($predefined)."'>";
         foreach ($predefined as $row) {
             foreach ($row as $cell) {
                 echo "<span class='icon_container' rowsize='".sizeof($row)."'>";
@@ -724,6 +724,7 @@ class PageBuilder {
         $area = "";
         foreach($config as $row) {
             foreach($row as $cell) {
+                $siteBuilder->setRowSize(sizeof($row));
                 if(sizeof($row) == 1) {
                     $area = "main_" . $rowcount;
                     $rowcount++;
@@ -743,6 +744,9 @@ class PageBuilder {
                         break;
                     case "map":
                         $siteBuilder->addMap($area);
+                        break;
+                    case "contact":
+                        $siteBuilder->addContactForm($area);
                         break;
                 }
             }

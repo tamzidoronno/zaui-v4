@@ -152,13 +152,11 @@ GetShopToolbox.prototype = {
         item.click(function() {
             if (me.config.closeOnClick !== false)
                 me.outerContainer.hide();
-
             if (parent) {
                 parent.find('.toolboxgroup').hide();
             }
-
             if (config.click) {
-                config.click(config.extraArgs, scope.application);
+                config.click.call(scope.application, scope.application, scope.application);
             }
         });
 

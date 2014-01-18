@@ -26,7 +26,7 @@ class PredefinedPagesConfig {
         
         //Two rows
         $res[] = array(array($text), array($map, $image));
-        $res[] = array(array($text, $image), array($movie, $image));
+        $res[] = array(array($text, $image), array($movie, $text));
         $res[] = array(array($image), array($text));
         $res[] = array(array($image), array($movie, $text));
         $res[] = array(array($image), array($map, $image));
@@ -76,7 +76,7 @@ class PredefinedPagesConfig {
         $res[] = array(array($contact), array($image));
         $res[] = array(array($text, $contact), array($image));
         $res[] = array(array($map,$contact), array($image));
-        $res[] = array(array($image), array($contact), array($text));
+        $res[] = array(array($image), array($text), array($contact));
         return $res;
     }
 

@@ -23,8 +23,13 @@ getshop.ImageEditor.prototype = {
         this.setDefaultConfig();
         this.createImageCanvasWorkingArea();
         this.createUploadMenu();
+        this.createPreviewContainer();
         this.addMenu();
         this.refresh();
+    },
+    createPreviewContainer: function() {
+        this.previewContainer = $('<div/>');
+        this.previewContainer.addClass('gs_image_editor_preview');
     },
     createBigStock: function() {
         this.bigStockDom = $('<div/>');
@@ -163,7 +168,91 @@ getshop.ImageEditor.prototype = {
         menuEntry.click($.proxy(this.deleteImage, this));
 
         disableAspectRatio = this.createMenuEntry(__f("Save"), 'fa-save');
+        disableAspectRatio.click($.proxy(this.saveImage, this));
         this.addEntryToMenu(disableAspectRatio);
+    },
+    
+    getFullSizeImage: function() {
+        var canvas = document.createElement("canvas");
+        canvas.width = this.config.Image.width;
+        canvas.height = this.config.Image.height;
+        
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(this.config.Image, 0, 0, this.config.Image.width, this.config.Image.height);
+        return canvas.toDataURL();
+    },
+    
+    getCroppedImage: function() {
+        var crops = this.getCropsForFullSizeImage();
+        var width = crops[2]-crops[0];
+        var height = crops[3]-crops[1];
+        
+        var canvas = document.createElement("canvas");
+        canvas.width = this.config.Image.width;
+        canvas.height = this.config.Image.height;
+        
+        var ctx = canvas.getContext("2d");
+        ctx.height = this.config.Image.height;
+        ctx.width = this.config.Image.width;
+        
+        ctx.height = height;
+        ctx.width = height;
+        canvas.width = width;
+        canvas.height = height;
+        
+        ctx.drawImage(this.config.Image, crops[0], crops[1], width, height, 0, 0, width, height);
+        
+        
+        return canvas.toDataURL();
+    },
+    
+    getCropsForFullSizeImage: function() {
+        var compressionRate = this.generateCompressionRate();
+        var retConfig = [];
+        retConfig[0] = Math.floor(this.config.crops[0]/compressionRate);
+        retConfig[1] = Math.floor(this.config.crops[1]/compressionRate);
+        retConfig[2] = Math.floor(this.config.crops[2]/compressionRate);
+        retConfig[3] = Math.floor(this.config.crops[3]/compressionRate);
+        return retConfig;
+    },
+    
+    onUploadStarted: function(callback) {
+        this.uploadStarted = callback;
+    },
+    
+    saveImage: function() {
+        if (this.uploadStarted && typeof(this.uploadStarted) == "function") {
+            this.uploadStarted();
+        }
+        
+        var data = {
+            data : this.getFullSizeImage(),
+            compression: 1,
+            cords: this.getCropsForFullSizeImage()
+        };
+        
+        var event = thundashop.Ajax.createEvent('', 'saveOriginalImage', this.config.app, data);
+        event.synchron = true;
+        
+        var dontUpdate = true;
+        var dontShowLoaderBox = true;
+        
+        thundashop.Ajax.post(
+            event, 
+            $.proxy(this.uploadCompleted, this), 
+            null, 
+            dontUpdate, 
+            dontShowLoaderBox, 
+            {
+                "uploadcallback": $.proxy(this.uploadProgress, this)
+            }
+        );
+    },
+    uploadCompleted: function(response) {
+        console.log("Completed: " + response);
+    },
+    uploadProgress: function(progress) {
+        console.log(progress);
     },
     addEntryToMenu: function(entry) {
         var outer = $('<div/>');
@@ -228,9 +317,8 @@ getshop.ImageEditor.prototype = {
             return;
         }
 
-        this.config.Image = new Image()
+        this.config.Image = new Image();
         this.config.Image.onload = $.proxy(this.onImageLoaded, this);
-        this.config.Image.style.width = 500;
         this.config.Image.src = "displayImage.php?id=" + this.config.imageId;
     },
     setBoundaries: function() {
@@ -284,27 +372,22 @@ getshop.ImageEditor.prototype = {
         this.refresh();
     },
     refeshCropArea: function() {
-        var selectedCropArea = [0, 0, 200, 200];
         var aspectRatio = this.menu.find('.fa-lock').hasClass('active');
 
         this.removeCropping();
         $(this.canvasDivInner).Jcrop({
-            onRelease: function(c) {
-                cords = c;
-            },
-            onSelect: function() {
-//                if (autosave) {
-//                    insertImage();
-//                }
-            },
-            onChange: function(c) {
-                cords = c;
-            },
-            setSelect: selectedCropArea,
+            onRelease: $.proxy(this.cropChanged, this),
+            onSelect: $.proxy(this.cropChanged, this),
+            onChange: $.proxy(this.cropChanged, this),
+            setSelect: this.config.crops,
             aspectRatio: aspectRatio
         }, function() {
             jcrop_api = this;
         });
+    },
+    cropChanged: function(c) {
+        this.config.crops = [c.x, c.y, c.w+c.x, c.y2];
+        console.log(this.config.crops);
     },
     generateCompressionRate: function() {
         var img = this.config.Image;
@@ -333,8 +416,7 @@ getshop.ImageEditor.prototype = {
         var compression = this.generateCompressionRate();
         var width = this.config.Image.width * compression;
         var height = this.config.Image.height * compression;
-
-
+        
         this.canvas.height = height;
         this.canvas.width = width;
 
@@ -378,5 +460,17 @@ getshop.ImageEditor.prototype = {
         $(this.canvasDiv).css('position', 'absolute');
         $(this.canvasDiv).css('top', top + "px");
         $(this.canvasDiv).css('left', left + "px");
+    },
+    
+    /**
+     * Returns the image with applied current configurations.
+     * 
+     * @returns Image
+     */
+    getImage: function() {
+        var img = new Image();
+        img.src = this.getCroppedImage();
+        this.previewContainer.html(img);
+        return this.previewContainer;
     }
 };

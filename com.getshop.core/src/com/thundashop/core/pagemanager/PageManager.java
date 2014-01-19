@@ -420,4 +420,10 @@ public class PageManager extends ManagerBase implements IPageManager {
         return applicationPool.get(listId);
     }
 
+    @Override
+    public void clearPage(String pageId) throws ErrorException {
+        Page page = getPage(pageId);
+        page.deletePageAreas();
+    }
+
 }

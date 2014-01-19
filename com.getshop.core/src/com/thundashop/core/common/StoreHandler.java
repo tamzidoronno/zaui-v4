@@ -213,7 +213,7 @@ public class StoreHandler {
         if (executeMethod.getAnnotation(Internal.class) != null) {
             throw new ErrorException(90);
         }
-
+        
         Annotation userLevel = executeMethod.getAnnotation(Administrator.class);
         if (userLevel == null) {
             userLevel = executeMethod.getAnnotation(Editor.class);
@@ -222,6 +222,10 @@ public class StoreHandler {
         
         if (userLevel != null) {
             User user = findUser();
+            
+            if(user != null && user.isAdministrator()) {
+                return userLevel;
+            }
             
             if(user != null && user.applicationAccessList.size() > 0) {
                 if(checkApplicationsAccessByApp(user, executeMethod, aClass)) {

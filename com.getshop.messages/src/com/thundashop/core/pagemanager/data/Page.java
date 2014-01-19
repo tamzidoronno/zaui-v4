@@ -24,6 +24,7 @@ public class Page extends DataCommon implements Cloneable {
     public boolean hideHeader = false;
     public boolean hideFooter = false;
     public boolean needSaving = false;
+    public boolean beenLoaded = false;
     
     public Page() {
     }
@@ -92,6 +93,10 @@ public class Page extends DataCommon implements Cloneable {
                 needSaving = true;
             }
         }
+    }
+
+    public void deletePageAreas() {
+        pageAreas = new HashMap();
     }
 
     public static class DefaultPages {

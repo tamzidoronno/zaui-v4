@@ -342,7 +342,9 @@ class ApplicationManager extends FactoryBase {
     }
 
     public function showPageLayoutSelection() {
+        echo "<div class='gs_showPageLayoutSelection'>";
         $this->includefile("applicationSelectionLayout");
+        echo "</div>";
     }
 
     public function setPageLayout() {
@@ -574,6 +576,19 @@ class ApplicationManager extends FactoryBase {
         
     }
 
+    public function selectPredefinedData() {
+        $this->getFactory()->reloadStoreObject();
+        
+        $page = $this->getPage()->backendPage;
+        $pb = new PageBuilder(null,null,null);
+        
+        $page->layout = $pb->buildPredefinedPage(json_decode($_POST['data']['config'],true));
+        $this->getApi()->getPageManager()->savePage($page);
+        $pb->addPredefinedContent($_POST['data']['pagetype'], json_decode($_POST['data']['config'],true));
+        $this->getFactory()->reloadStoreObject();
+        $this->getFactory()->initPage();
+    }
+    
     public function deleteStore() {
         $this->getFactory()->getApi()->getStoreManager()->delete();
     }

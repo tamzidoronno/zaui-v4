@@ -121,6 +121,20 @@ public class APIPageManager {
      }
 
      /**
+     * Remove all content on all page areas for this page.
+     * @param pageId
+     * @throws ErrorException
+     */
+     public void clearPage(java.lang.String pageId)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("pageId",new Gson().toJson(pageId));
+          data.method = "clearPage";
+          data.interfaceName = "core.pagemanager.IPageManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Remove all applications for specified page area at specified page.
      *
      * @param pageId

@@ -34,13 +34,13 @@ cursor: pointer;
 right: 0px;
 }
 .header .Login .form {
-    background-color: #FFF;
-    border: solid 1px #BBB;
+background-color: #FFF;
+border: solid 1px #BBB;
 }
 .header .Login .form .loginbutton {
-    position: absolute;
-    right: 10px; 
-    bottom: 5px;
+position: absolute;
+right: 10px; 
+bottom: 5px;
 }
 .informationbox .unpayedappheader { font-size:16px; padding-left: 10px; border: solid 1px #BBBBBB; padding-top:10px; padding-bottom: 10px; }
 .informationbox .unpayedapptable { margin-left: 10px; margin-right: 10px; }
@@ -182,8 +182,14 @@ text-align: center;
 font-size: 16px;
 font-size: 18px;
 font-weight: bold;
-color: #333;
-background-color: #DDD;
+color: #FFF;
+background-color: #3f3f3f;
+position: absolute;
+position: absolute;
+width: 990px;
+z-index: 1;
+top: 17px;
+border-bottom: solid 1px #3a3a3a;
 }
 
 #infomrationboxclosebutton {
@@ -193,6 +199,7 @@ right: 0px;
 top: 0px;
 position: absolute;
 background-repeat: no-repeat;
+z-index: 2;
 cursor: pointer;
 background-image: url('/skin/default/elements/closebutton.png');
 }
@@ -213,7 +220,7 @@ background-image: url('/skin/default/images/informationbox-top.png');
 
 #informationboxbottom {
 width: 1000px;
-height: 7px;
+height: 5px;
 background-image: url('/skin/default/images/informationbox-bottom.png');
 }
 
@@ -229,6 +236,7 @@ display:hidden;
 .informationboxbackground {
 background-color: #FFFFFF;
 min-height: 500px;
+padding-top: 30px;
 }
 
 .gray {
@@ -1286,7 +1294,7 @@ border: dashed 1px #DDD;
 
 .application_settings {
 position: absolute;
- right: 3px;
+right: 3px;
 top: 3px;
 background-image: url('skin/default/images/application_box_background_empty_area.png');
 padding: 2px;
@@ -1297,7 +1305,7 @@ border-radius: 3px;
 display:none;
 }
 .application_settings:hover {
-    background-image: url('skin/default/images/application_box_background_empty_area_hover.png');
+background-image: url('skin/default/images/application_box_background_empty_area_hover.png');
 }
 
 
@@ -1397,26 +1405,26 @@ margin-left:256px;
 }
 
 .deepfreezedActivated {
-    width: 100%;
-    height: 30px;
-    background-color: red;
-    text-align: center;
-    font-size: 15px;
-    font-weight: bold;
-    line-height: 30px;
-    color: #FFF;
-    border-bottom: solid 1px #000;
-    display:none;
+width: 100%;
+height: 30px;
+background-color: red;
+text-align: center;
+font-size: 15px;
+font-weight: bold;
+line-height: 30px;
+color: #FFF;
+border-bottom: solid 1px #000;
+display:none;
 }
 
 .deepfreezeinformation {
-    background-image: url('skin/default/images/deepfreeze.png');
-    height: 256px;
-    padding-left: 256px;
-    background-repeat: no-repeat;
-    padding-top: 20px;
-    padding-right: 20px;
-    font-size: 16px;
+background-image: url('skin/default/images/deepfreeze.png');
+height: 256px;
+padding-left: 256px;
+background-repeat: no-repeat;
+padding-top: 20px;
+padding-right: 20px;
+font-size: 16px;
 }
 
 #cookiewarning_overlay { position:fixed; width: 100%; height: 100%; background-color:rgba(0,0,0,0.6); z-index: 200;  left:0; top: 0; }
@@ -1425,33 +1433,42 @@ margin-left:256px;
 #cookiewarning_overlay .textbox .continue { position:absolute; right: 5px; bottom: 5px; }
 
 .gs_tabs {
-    height: 34px;
-    border-bottom: solid 1px  #BBBBBB;
+height: 34px;
+border-bottom: solid 1px  #4e4e4e;
+padding-left: 5px;
 }
-
 .gs_tabs .gs_tab_selected {
-    border-bottom: solid 0px;
-    background-color: #fff;
-    height: 24px;
-    color:#000;
+background-color: #3f3f3f;
+height: 24px;
+color:#FFF;
 }
 
 .gs_tab {
+    border-top-left-radius:5px;
+    border-top-right-radius:5px;
+    margin-left: 10px;
+    -webkit-transition: background 0.5s linear;
+    -moz-transition: background 0.5s linear;
+    -ms-transition: background 0.5s linear;
+    -o-transition: background 0.5s linear;
     background-color:#FFF;
     padding: 5px;
-    border-right: solid 1px #BBBBBB;
-    border-top: solid 1px #BBBBBB;
+    border-right: solid 1px #4e4e4e;
+    border-top: solid 1px #4e4e4e;
+    border-left: solid 1px #4e4e4e;
     font-size: 16px;
-    display:inline;
+    display:inline-block;
     cursor:pointer;
+    margin-right: 10px; 
     margin: 0px;
-    float:left;
-    height: 24px;
+    display:inline-block;
+    height: 23px;
     text-align:center;
-    background-color:#a4a4a4;
-    color:#FFF;
+    background-color:#ababab;
+    color:#292929;
     padding-left: 15px;
     padding-right: 15px;
+    margin-right: 5px;
 }
 
 .gs_tab_area { display:none; }

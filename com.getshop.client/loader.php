@@ -100,6 +100,10 @@ function __autoload($class_name) {
         include "../helpers/$class_name.php";
     }
     
+    if (file_exists("../classes/builders/$class_name.php")) {
+        include "../classes/builders/$class_name.php";
+    }
+    
     if (file_exists("../app/$class_name.php")) {
         include "../app/$class_name.php";
     }

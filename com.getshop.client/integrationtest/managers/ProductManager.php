@@ -83,7 +83,7 @@ class ProductManager extends TestBase {
         // Need product to demostrate with.
         $product = $productManager->createProduct();
         
-        $fetchedProduct = $productManager->getProduct($product->id);
+        $fetchedProduct = $productManager->getProductPages($product->id);
     }
     
     /**

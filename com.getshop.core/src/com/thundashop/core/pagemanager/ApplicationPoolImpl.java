@@ -149,7 +149,7 @@ public class ApplicationPoolImpl {
     }
 
     public AppConfiguration saveSettings(Settings settings) throws ErrorException {
-        AppConfiguration application = applicationInstances.get(settings.appId);
+         AppConfiguration application = applicationInstances.get(settings.appId);
 
         HashMap<String, Setting> saveSettings = application.settings;
         if (saveSettings == null) {

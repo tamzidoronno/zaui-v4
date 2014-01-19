@@ -135,7 +135,7 @@ class Factory extends FactoryBase {
         echo "\n" . '<!--[if gte IE 8]><script src="js/jquery.xdr-transport.js"></script><![endif]-->';
         echo "\n" . '<link rel="stylesheet" type="text/css" href="js/jcrop/css/jquery.Jcrop.css">';
         
-        if(preg_match('/(?i)msie [1-8]/',$_SERVER['HTTP_USER_AGENT']))
+        if(preg_match('/(?i)msie[1-8]/',$_SERVER['HTTP_USER_AGENT']))
         {
             echo "\n" . '<script type="text/javascript" src="js/getshopwebsocketapi/GetShopApiWebSocket.js"></script>';
         }

@@ -2,10 +2,29 @@ if (typeof (getshop) === "undefined") {
     getshop = {};
 }
 
-getshop.ImageEditor = function(attachToDom, config) {
+getshop.ImageEditorApi = {
+    editors: [],
+    
+    add: function(id, editor) {
+        getshop.ImageEditorApi.editors[id] = editor;
+    },
+    
+    get: function(id) {
+        return getshop.ImageEditorApi.editors[id];
+    },
+    
+    remove: function(id) {
+        delete getshop.ImageEditorApi.editors[id];
+    }
+};
+
+getshop.ImageEditor = function(attachToDom, config, id) {
     this.attachToDom = attachToDom;
     this.config = config;
     this.init();
+    this.id = id;
+    
+    getshop.ImageEditorApi.add(id, this);
 };
 
 getshop.ImageEditor.prototype = {
@@ -18,6 +37,7 @@ getshop.ImageEditor.prototype = {
     canvas: null,
     rotation: 0,
     init: function() {
+        this.setDefaultCrops();
         this.createContainer();
         this.createBigStock();
         this.setDefaultConfig();
@@ -27,9 +47,35 @@ getshop.ImageEditor.prototype = {
         this.addMenu();
         this.refresh();
     },
+    setDefaultCrops: function() {
+        if (!this.config.crops) {
+            var innerApp = this.config.app.closest('.applicationarea');
+            this.config.crops = [0, 0, innerApp.width(), innerApp.height()];
+        }
+        
+        this.originalAspectRatio = 1;
+        if (this.config.app) {
+            var innerApp = this.config.app.closest('.applicationarea');
+            if (innerApp) {
+                this.originalAspectRatio = innerApp.width() / innerApp.height();
+            }
+        }
+    },
     createPreviewContainer: function() {
         this.previewContainer = $('<div/>');
         this.previewContainer.addClass('gs_image_editor_preview');
+        
+        this.progressDiv = $('<div/>');
+        this.progressDiv.addClass('gs_image_editor_progress_inner');
+        
+        var progressBarHolder = $('<div/>');
+        progressBarHolder.addClass('gs_image_editor_progress_bar_holder')
+        
+        var progressBar = $('<div/>');
+        progressBar.addClass('gs_image_editor_progress_bar')
+        
+        progressBarHolder.append(progressBar);
+        this.progressDiv.append(progressBarHolder);
     },
     createBigStock: function() {
         this.bigStockDom = $('<div/>');
@@ -94,10 +140,12 @@ getshop.ImageEditor.prototype = {
         }
     },
     showFileDialog: function() {
+        console.log("Showing dialog");
         var selectDialogueLink = $('<a href="">Select files</a>');
         var fileSelector = $('<input type="file" id="your-files" multiple/>');
 
         selectDialogueLink.click(function() {
+            console.log("Select dialog clicked");
             fileSelector.click();
         });
         $('body').append(fileSelector);
@@ -107,6 +155,7 @@ getshop.ImageEditor.prototype = {
         var me = this;
         
         control.addEventListener("change", function() {
+            console.log("Image selected");
             me.imageSelected(control);
         });
         
@@ -168,8 +217,8 @@ getshop.ImageEditor.prototype = {
         menuEntry.click($.proxy(this.deleteImage, this));
 
         disableAspectRatio = this.createMenuEntry(__f("Save"), 'fa-save');
-        disableAspectRatio.click($.proxy(this.saveImage, this));
-        this.addEntryToMenu(disableAspectRatio);
+        menuEntry = this.addEntryToMenu(disableAspectRatio);
+        menuEntry.click($.proxy(this.saveImage, this));
     },
     
     getFullSizeImage: function() {
@@ -201,8 +250,7 @@ getshop.ImageEditor.prototype = {
         canvas.height = height;
         
         ctx.drawImage(this.config.Image, crops[0], crops[1], width, height, 0, 0, width, height);
-        
-        
+         
         return canvas.toDataURL();
     },
     
@@ -220,10 +268,15 @@ getshop.ImageEditor.prototype = {
         this.uploadStarted = callback;
     },
     
-    saveImage: function() {
+    _uploadStarted: function() {
+        this.progressDiv.show();
         if (this.uploadStarted && typeof(this.uploadStarted) == "function") {
-            this.uploadStarted();
+            this.uploadStarted(this);
         }
+    },
+    
+    saveImage: function() {
+        this._uploadStarted();
         
         var data = {
             data : this.getFullSizeImage(),
@@ -249,10 +302,11 @@ getshop.ImageEditor.prototype = {
         );
     },
     uploadCompleted: function(response) {
-        console.log("Completed: " + response);
+        getshop.ImageEditorApi.remove(this.id);
+        this.progressDiv.hide();
     },
     uploadProgress: function(progress) {
-        console.log(progress);
+        this.progressDiv.find('.gs_image_editor_progress_bar').css('width', progress+"%");
     },
     addEntryToMenu: function(entry) {
         var outer = $('<div/>');
@@ -272,18 +326,30 @@ getshop.ImageEditor.prototype = {
         this.refresh();
     },
     rotateRight: function() {
-        this.rotation = this.rotation + 90;
-        if (this.rotation > 270) {
-            this.rotation = 0;
-        }
-        this.refresh();
+        var height = this.config.Image.width;
+        var width = this.config.Image.height;
+        
+        var canvasLoc = document.createElement("canvas");
+        canvasLoc.height = height;
+        canvasLoc.width = width;
+        
+        var ctx = canvasLoc.getContext("2d");
+        ctx.rotate(90*Math.PI/180);
+        ctx.drawImage(this.config.Image, 0, -width, height , width);
+        this.config.Image.src = canvasLoc.toDataURL("image/png");
     },
     rotateLeft: function() {
-        this.rotation = this.rotation - 90;
-        if (this.rotation < 0) {
-            this.rotation = 270;
-        }
-        this.refresh();
+        var height = this.config.Image.width;
+        var width = this.config.Image.height;
+        
+        var canvasLoc = document.createElement("canvas");
+        canvasLoc.height = height;
+        canvasLoc.width = width;
+        
+        var ctx = canvasLoc.getContext("2d");
+        ctx.rotate(-90*Math.PI/180);
+        ctx.drawImage(this.config.Image, -height, 0, height , width);
+        this.config.Image.src = canvasLoc.toDataURL("image/png");
     },
     toggleAspectRation: function() {
         var aspectButton = this.menu.find('.fa-lock');
@@ -293,7 +359,7 @@ getshop.ImageEditor.prototype = {
         } else {
             aspectButton.addClass('active');
         }
-        this.refeshCropArea();
+        this.refeshCropArea(false);
     },
     createMenuEntry: function(text, iconClass) {
         var entry = $('<div/>');
@@ -357,7 +423,7 @@ getshop.ImageEditor.prototype = {
         $(this.canvas).fadeIn();
         this.uploadMenu.hide();
         this.appendImageToCanvas();
-        this.refeshCropArea();
+        this.refeshCropArea(true);
     },
     removeCropping: function() {
         var jCropApi = $(this.canvasDivInner).data('Jcrop');
@@ -371,15 +437,29 @@ getshop.ImageEditor.prototype = {
         this.bigstockCanceled();
         this.refresh();
     },
-    refeshCropArea: function() {
-        var aspectRatio = this.menu.find('.fa-lock').hasClass('active');
-
+    refeshCropArea: function(doCompression) {
+        var aspectRatio = false;
+        
         this.removeCropping();
+        var crops = this.config.crops;
+        
+        if (doCompression) {
+            var compression = this.generateCompressionRate();
+            crops[0] = crops[0]*compression;
+            crops[1] = crops[1]*compression;
+            crops[2] = crops[2]*compression;
+            crops[3] = crops[3]*compression;
+        }
+        
+        if (this.menu.find('.fa-lock').hasClass('active')) {
+            aspectRatio = this.originalAspectRatio;
+        }
+        
         $(this.canvasDivInner).Jcrop({
             onRelease: $.proxy(this.cropChanged, this),
             onSelect: $.proxy(this.cropChanged, this),
             onChange: $.proxy(this.cropChanged, this),
-            setSelect: this.config.crops,
+            setSelect: crops,
             aspectRatio: aspectRatio
         }, function() {
             jcrop_api = this;
@@ -387,7 +467,6 @@ getshop.ImageEditor.prototype = {
     },
     cropChanged: function(c) {
         this.config.crops = [c.x, c.y, c.w+c.x, c.y2];
-        console.log(this.config.crops);
     },
     generateCompressionRate: function() {
         var img = this.config.Image;
@@ -420,34 +499,8 @@ getshop.ImageEditor.prototype = {
         this.canvas.height = height;
         this.canvas.width = width;
 
-        if (this.rotation === 90 || this.rotation === 270) {
-            this.canvas.height = width;
-            this.canvas.width = height;
-        }
-
-        ctx.rotate(this.rotation * Math.PI / 180);
-
-        if (this.rotation === 0) {
-            ctx.drawImage(this.config.Image, 0, 0, width, height);
-        }
-
-        if (this.rotation === 90) {
-            ctx.drawImage(this.config.Image, 0, -height, width, height);
-        }
-
-        if (this.rotation === 180) {
-            ctx.drawImage(this.config.Image, -width, -height, width, height);
-        }
-
-        if (this.rotation === 270) {
-            ctx.drawImage(this.config.Image, -width, 0, width, height);
-        }
-
-        if (this.rotation === 90 || this.rotation === 270) {
-            height = this.config.Image.width * compression;
-            width = this.config.Image.height * compression;
-        }
-
+        ctx.drawImage(this.config.Image, 0, 0, width, height);
+        
         var top = (this.imageWorkArea.height() / 2) - (height / 2);
         var left = (this.imageWorkArea.width() / 2) - (width / 2);
 
@@ -470,7 +523,10 @@ getshop.ImageEditor.prototype = {
     getImage: function() {
         var img = new Image();
         img.src = this.getCroppedImage();
-        this.previewContainer.html(img);
+        
+        this.previewContainer.html("");
+        this.previewContainer.append(img);
+        this.previewContainer.append(this.progressDiv);
         return this.previewContainer;
     }
 };

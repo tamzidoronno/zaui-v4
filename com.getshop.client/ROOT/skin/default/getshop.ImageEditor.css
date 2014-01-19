@@ -383,3 +383,35 @@
     padding-right: 200px;
     vertical-align: top;
 }
+
+.gs_image_editor_preview {
+    position: relative;
+}
+
+.gs_image_editor_preview .gs_image_editor_progress_inner .gs_image_editor_progress_bar_holder {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    right: 10px;
+    height: 15px;
+    border-radius: 5px;
+    border: solid 1px #555;
+    background: linear-gradient(to bottom, #333, #666);
+}
+
+.gs_image_editor_preview .gs_image_editor_progress_inner .gs_image_editor_progress_bar_holder .gs_image_editor_progress_bar {
+    width: 50%;
+    background: linear-gradient(to bottom, #00e03a, #00731e);
+    height: 15px;
+    border-radius: 5px;
+}
+
+.gs_image_editor_preview .gs_image_editor_progress_inner {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: rgba(0,0,0,0.6);
+    text-align: center;
+}

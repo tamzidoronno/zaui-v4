@@ -71,12 +71,10 @@ include '../loader.php';
 <div class="informationbox-outer">
     <div id="informationbox-holder">
         <div id="infomrationboxclosebutton"></div>
-        <div id="informationboxtop"></div>
         <div id="informationboxmiddle">
             <div id="informationboxtitle"></div>
             <div id="informationbox" class="informationbox"></div>
         </div>
-        <div id="informationboxbottom"></div>
     </div>
 </div>
 <?

@@ -164,16 +164,17 @@ text-align:center;
 }
 
 #informationbox-holder {
-top: 20px;
-padding-top: 5px;
-padding-left: 7px;
+top: 50px;
 margin: 0 auto;
 display:none;
-width: 1007px;
+width: 996px;
 text-align:left;
 position:relative;
 z-index: 99999999;
 position: relative;
+border: solid 5px #333333;
+border-radius: 15px;
+background-color: #3f3f3f;
 }
 
 #informationboxtitle {
@@ -184,8 +185,6 @@ font-size: 18px;
 font-weight: bold;
 color: #FFF;
 background-color: #3f3f3f;
-position: absolute;
-position: absolute;
 width: 990px;
 z-index: 1;
 top: 17px;
@@ -195,8 +194,8 @@ border-bottom: solid 1px #3a3a3a;
 #infomrationboxclosebutton {
 width: 29px;
 height: 29px; 
-right: 0px;
-top: 0px;
+right: -16px;
+top: -16px;
 position: absolute;
 background-repeat: no-repeat;
 z-index: 2;
@@ -207,8 +206,7 @@ background-image: url('/skin/default/elements/closebutton.png');
 #informationboxmiddle {
 width: 990px;    
 background-color: #FFF;
-border-left: solid 5px #333333;
-border-right: solid 5px #333333;
+margin: 3px;
 }
 
 #informationboxtop {
@@ -234,9 +232,7 @@ display:hidden;
 }
 
 .informationboxbackground {
-background-color: #FFFFFF;
 min-height: 500px;
-padding-top: 30px;
 }
 
 .gray {

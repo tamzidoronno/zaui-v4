@@ -748,6 +748,15 @@ class PageBuilder {
                     case "contact":
                         $siteBuilder->addContactForm($area);
                         break;
+                    case "productlist_standard":
+                        $siteBuilder->addProductList($area, $cell, $type, "listview");
+                        break;
+                    case "productlist_boxed":
+                        $siteBuilder->addProductList($area, $cell, $type, "boxview");
+                        break;
+                    default:
+                        echo "content not found for: " . $cell;
+                        break;
                 }
             }
         }

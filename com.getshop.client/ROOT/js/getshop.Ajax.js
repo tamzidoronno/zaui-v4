@@ -36,7 +36,6 @@ thundashop.Ajax = {
             }
         }
 
-
         if (!(typeof(dontShowLoaderbox) !== "undefined" && dontShowLoaderbox === true))
             $('#loaderbox').show();
 
@@ -49,6 +48,9 @@ thundashop.Ajax = {
             success: function(response) {
                 callback(response);
                 $('#loaderbox').hide();
+                if(file !== "Chat.php") {
+                    PubSub.publish("POSTED_DATA_WITHOUT_PRINT", "");
+                }
             },
             error: thundashop.handleAjaxError
         });
@@ -62,6 +64,8 @@ thundashop.Ajax = {
         return true;
     },
     post: function(data, callback, extraArg, dontUpdate, dontShowLoaderBox, xtra) {
+        PubSub.publish("POSTED_DATA", "");
+
         var file = this.ajaxFile;
         var uploadcallback = false;
         if (xtra !== undefined) {
@@ -97,6 +101,10 @@ thundashop.Ajax = {
                         $('#loaderbox').hide();
                     }
                 }
+                
+                if (callback !== undefined || dontUpdate === true) {
+                    PubSub.publish("POSTED_DATA_WITHOUT_PRINT", "");
+                }
             },
             xhr: function()
             {
@@ -131,6 +139,7 @@ thundashop.Ajax = {
             context: document.body,
             success: function(response) {
                 result = response;
+                PubSub.publish("POSTED_DATA_WITHOUT_PRINT", "");
             },
             error: thundashop.handleAjaxError
         });
@@ -138,6 +147,7 @@ thundashop.Ajax = {
         return result;
     },
     postSynchronWithReprint: function(event) {
+                console.log("postSynchronWithReprint");
         $('#loaderbox').show();
         this.doPreProcess();
         var result = "";

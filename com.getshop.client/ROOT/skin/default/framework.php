@@ -164,7 +164,7 @@ text-align:center;
 }
 
 #informationbox-holder {
-top: 50px;
+top: 20px;
 padding-top: 5px;
 padding-left: 7px;
 margin: 0 auto;

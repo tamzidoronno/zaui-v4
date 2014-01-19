@@ -157,7 +157,7 @@ thundashop.common.updateColorsFromPicker = function() {
 
     var template = $('.GetShopColorPicker #theeme').val();
     var colors = basecolor + ":" + textcolor + ":" + buttoncolor + ":" + buttontextcolor + ":" + bgcolor;
-    
+
     thundashop.Ajax.changeTheeme(template, colors);
 };
 
@@ -215,15 +215,15 @@ thundashop.common.saveCKEditor = function(data, target, notify) {
 
 thundashop.common.selectPredefinedConent = function() {
     var data = {
-        config : $(this).attr('config'),
-        pagetype : $(this).attr('pagetype'),
-        type : $(this).attr('type')
+        config: $(this).attr('config'),
+        pagetype: $(this).attr('pagetype'),
+        type: $(this).attr('type')
     }
-    
-    var event = thundashop.Ajax.createEvent('','selectPredefinedData',$(this),data);
+
+    var event = thundashop.Ajax.createEvent('', 'selectPredefinedData', $(this), data);
     thundashop.Ajax.post(event);
     thundashop.common.hideInformationBox();
-    
+
 }
 thundashop.common.navigateContentPages = function() {
     $(document).off('click', '.gs_showPageLayoutSelection .option_entry');
@@ -232,10 +232,10 @@ thundashop.common.navigateContentPages = function() {
     var box = $(this).closest('.gs_showPageLayoutSelection');
     box.find('.option_selected').removeClass('option_selected');
     button.addClass('option_selected');
-    
+
     box.find('.content_type_selected').hide();
     $(this).removeClass('content_type_selected');
-    box.find("."+target).fadeIn(0, function() {
+    box.find("." + target).fadeIn(0, function() {
         $(this).addClass('content_type_selected');
         $(document).on('click', '.gs_showPageLayoutSelection .option_entry', thundashop.common.navigateContentPages);
     });
@@ -362,6 +362,13 @@ thundashop.common.activateCKEditor = function(id, config) {
     } else {
         CKEDITOR.inline(id, config);
     }
+}
+
+thundashop.common.resizeOrderMask = function() {
+    $('.order_mask').each(function() {
+        $(this).width($(this).closest('.app').width() - 2);
+        $(this).height($(this).closest('.app').height());
+    });
 }
 
 thundashop.common.hideInformationBox = function(event) {
@@ -803,7 +810,7 @@ $(function() {
     $(document).on('mouseenter', '.app', function() {
         var appname = $(this).attr('app');
         if (app[appname] !== undefined && app[appname]['loadSettings'] !== undefined) {
-            if($(this).find('.order_mask').is(':visible')) {
+            if ($(this).find('.order_mask').is(':visible')) {
                 return;
             }
             var settingsbox = $(this).find('.application_settings');
@@ -855,23 +862,23 @@ $(document).on('change', '#informationbox .skeletondisplayer select', function()
     var data = {};
     var id = $(this).attr('id');
     data[id] = $(this).val();
-    if($(this).closest('.row_option_panel').length > 0) {
+    if ($(this).closest('.row_option_panel').length > 0) {
         data["index"] = $(this).closest('.row_option_panel').attr('row');
     }
     data["updatelayout"] = true;
-    
-    var event = thundashop.Ajax.createEvent('','showPageLayoutSelection',null, data);
+
+    var event = thundashop.Ajax.createEvent('', 'showPageLayoutSelection', null, data);
     thundashop.common.showInformationBox(event, __f("Select page layout"), true);
 });
 
 $(document).on('click', '.gs_showPageLayoutSelection .suggestion_layout', function() {
     var type = $(this).attr('type');
     var data = {
-        "layout":type
+        "layout": type
     };
     var id = $(this).attr('id');
     data["updatelayout"] = true;
-    var event = thundashop.Ajax.createEvent('','setPageLayout',null, data);
+    var event = thundashop.Ajax.createEvent('', 'setPageLayout', null, data);
     thundashop.Ajax.post(event);
     thundashop.common.hideInformationBox();
 });
@@ -879,26 +886,26 @@ $(document).on('click', '#informationbox .row_option', function() {
     var infobox = $('#informationbox .row_option_panel');
     infobox.attr('row', $(this).attr('index'));
     infobox.find('#numberofcells').val($(this).attr('cells'));
-    infobox.css('position','absolute');
-    infobox.css('display','block');
-    infobox.css('top',$(this).parent().position().top);
-    infobox.left('left',$(this).position().left);
+    infobox.css('position', 'absolute');
+    infobox.css('display', 'block');
+    infobox.css('top', $(this).parent().position().top);
+    infobox.left('left', $(this).position().left);
     infobox.show();
 });
 $(document).on('click', '#informationbox .setnewlayout', function() {
     var type = $(this).attr('type');
     var data = {
-        "updateToNewLayout":true
+        "updateToNewLayout": true
     };
     var id = $(this).attr('id');
     data["updatelayout"] = true;
-    var event = thundashop.Ajax.createEvent('','setPageLayout',null, data);
+    var event = thundashop.Ajax.createEvent('', 'setPageLayout', null, data);
     thundashop.Ajax.post(event);
     thundashop.common.hideInformationBox();
 });
 
 $(document).on('click', '.gs_onoff', function() {
-    if($(this).hasClass('gs_on')) {
+    if ($(this).hasClass('gs_on')) {
         $(this).removeClass('gs_on');
         $(this).addClass('gs_off');
     } else {

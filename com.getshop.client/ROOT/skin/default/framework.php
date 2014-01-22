@@ -160,6 +160,7 @@ overflow-y: scroll;
 width:100%;
 margin:auto;
 z-index: 100;
+background-color: #000;
 text-align:center;
 }
 
@@ -167,25 +168,26 @@ text-align:center;
 top: 50px;
 margin: 0 auto;
 display:none;
-width: 996px;
+width: 990px;
 text-align:left;
 position:relative;
 z-index: 99999999;
 position: relative;
-border: solid 5px #333333;
-border-radius: 15px;
+-moz-border-radius: 0px;
+-webkit-border-radius: 20px 20px 10px 10px;
+border-radius: 20px 20px 10px 10px; 
 background-color: #3f3f3f;
 }
 
 #informationboxtitle {
-height: 30px;
-text-align: center;
-font-size: 16px;
-font-size: 18px;
-font-weight: bold;
+height: 50px;
+padding-top: 10px;
+text-align: left;
+font-size: 30px;
 color: #FFF;
+font-family: arial;
+padding-left: 20px;
 background-color: #3f3f3f;
-width: 990px;
 z-index: 1;
 top: 17px;
 border-bottom: solid 1px #3a3a3a;
@@ -194,19 +196,21 @@ border-bottom: solid 1px #3a3a3a;
 #infomrationboxclosebutton {
 width: 29px;
 height: 29px; 
-right: -16px;
-top: -16px;
+right: 20px;
+top: 20px;
 position: absolute;
 background-repeat: no-repeat;
 z-index: 2;
 cursor: pointer;
-background-image: url('/skin/default/elements/closebutton.png');
+color: #FFF;
+font-size:29px;
 }
 
 #informationboxmiddle {
-width: 990px;    
-background-color: #FFF;
-margin: 3px;
+width: 990px;
+margin-top: 20px;
+margin-left: 0px;
+margin-right: 0px;
 }
 
 #informationboxtop {
@@ -1075,6 +1079,13 @@ z-index: 10000000000000000000000000000;
 text-align: center;
 font-size: 16px;
 }
+
+#informationbox {
+    background-color: #666666;
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px 0px 10px 10px;
+    border-radius: 0px 0px 10px 10px; 
+}
 #informationbox .GetShopColorPicker {
 text-align:center;
 position:relative;
@@ -1483,7 +1494,7 @@ color:#FFF;
 .gs_off .toggle { background-color:#ff1717; width: 14px;border-right: solid 1px #BBB; }
 .gs_on .toggle { border-left: solid 1px #BBB; background-color:#26bc38; margin-left: 14px; width: 15px; }
 
-.gs_button { font-size: 15px; background-color: #DDD; color: #333; padding: 5px; border-radius: 4px; box-shadow: 0px 0px 5px #333; display: inline-block; background: linear-gradient(to top, #666, #EEE); padding-left: 15px; padding-right: 15px; cursor: pointer; }
+.gs_button { font-size: 15px; background-color: #DDD; color: #333; padding: 5px; border-radius: 4px; box-shadow: 0px 0px 5px #333; display: inline-block; background: linear-gradient(to top, #555, #DDD); padding-left: 15px; padding-right: 15px; cursor: pointer; border: solid 1px #666;}
 .gs_button:hover { background: linear-gradient(to top, #094930, #52e5ac); }
 .gs_button:active { background: none; background-color: #34c88e; }
 
@@ -1496,3 +1507,6 @@ color:#FFF;
 .gs_margin_inner input { width: 95px; }
 .gs_margin_inner .patterns { height: 100px; border: solid 1px #BBB; overflow-x:none; overflow-y: auto; display:inline-block; }
 .gs_margin_inner .patterns .pattern { height: 40px; width: 40px; display:inline-block; overflow: hidden; border-right:solid 1px #BBB; border-bottom:solid 1px #BBB; }
+
+
+.applicationselector { background-color: #FFF; }

@@ -70,7 +70,7 @@ include '../loader.php';
 <div class="upload_information_panel" ></div>
 <div class="informationbox-outer">
     <div id="informationbox-holder">
-        <div id="infomrationboxclosebutton"></div>
+        <div class='fa fa-times-circle' id="infomrationboxclosebutton"></div>
         <div id="informationboxmiddle">
             <div id="informationboxtitle"></div>
             <div id="informationbox" class="informationbox"></div>

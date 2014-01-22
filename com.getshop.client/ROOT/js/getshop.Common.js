@@ -777,7 +777,7 @@ $(function() {
             "size": size,
             "type": type
         });
-        thundashop.common.showInformationBox(event);
+        thundashop.common.showInformationBox(event, __f("Please select an application"));
     });
     $(document).on('click', '.empty_app_area_browse_importapps', function() {
         var area = $(this).closest('.applicationarea').attr('area');

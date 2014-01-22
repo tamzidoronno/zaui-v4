@@ -9,81 +9,83 @@ $apps = $factory->getApplicationPool()->convertApplicationsSettingsToAppinstance
 $type = $_POST['data']['type'];
 
 $size = "xlarge";
-if(isset($_POST['data']['size'])) {
+if (isset($_POST['data']['size'])) {
     $size = $_POST['data']['size'];
 }
 ?>
-<div class="tabs">
-    <div class="tabset inline">
-        <?
-        foreach ($apps as $app) {
-            if(!$this->validateArea($app->applicationSettings->allowedAreas, $area, $size, $type)) {
-                continue;
-            }
-            if ($import) {
-                $apps2 = $factory->getApi()->getPageManager()->getApplicationsBasedOnApplicationSettingsId($app->getApplicationSettings()->id);
-                if (count($apps2) == 0) {
+<div class='applicationselector'>
+    <div class="tabs">
+        <div class="tabset inline">
+            <?
+            foreach ($apps as $app) {
+                if (!$this->validateArea($app->applicationSettings->allowedAreas, $area, $size, $type)) {
                     continue;
                 }
-            }
-
-            if (!$app->getName()) {
-                continue;
-            }
-            if ($app->applicationSettings->type === "ThemeApplication") {
-                continue;
-            }
-            if ($app->applicationSettings->type === "SystemApplication") {
-                continue;
-            }
-            if ($app->applicationSettings->appName === "ProductManager") {
-                continue;
-            }
-
-
-            $active = isset($notFirst) ? "" : "active";
-            $name = str_replace(" ", "", $app->getName());
-            echo "<div activate='$name' class='tab $active'>";
-            echo $app->getName();
-            echo "</div>";
-            $notFirst = false;
-        }
-        ?>
-    </div>
-    <div class="tab_content inline">
-        <?
-        foreach ($apps as $app) {
-            if(!$this->validateArea($app->applicationSettings->allowedAreas, $area, $size, $type)) {
-                continue;
-            }
-            if (!$app->getName()) {
-                continue;
-            }
-            if ($app->applicationSettings->appName === "ProductManager") {
-                continue;
-            }
-            if ($app->applicationSettings->type === "ThemeApplication") {
-                continue;
-            }
-            if ($app->applicationSettings->type === "SystemApplication") {
-                continue;
-            }
-                        
-            $active2 = isset($notFirst2) ? "" : "active";
-            $notFirst2 = false;
-            /* @var $app Application */
-            ?>
-
-            <div class="content_holder <? echo $active2; ?>" id="<? echo str_replace(" ", "", $app->getName()); ?>">
-                <?
-                $this->setCurrentApp($app);
                 if ($import) {
-                    $this->includeFile("applicationPicker");
-                } else {
-                    $this->includeFile("addApplicationContent");
+                    $apps2 = $factory->getApi()->getPageManager()->getApplicationsBasedOnApplicationSettingsId($app->getApplicationSettings()->id);
+                    if (count($apps2) == 0) {
+                        continue;
+                    }
                 }
+
+                if (!$app->getName()) {
+                    continue;
+                }
+                if ($app->applicationSettings->type === "ThemeApplication") {
+                    continue;
+                }
+                if ($app->applicationSettings->type === "SystemApplication") {
+                    continue;
+                }
+                if ($app->applicationSettings->appName === "ProductManager") {
+                    continue;
+                }
+
+
+                $active = isset($notFirst) ? "" : "active";
+                $name = str_replace(" ", "", $app->getName());
+                echo "<div activate='$name' class='tab $active'>";
+                echo $app->getName();
+                echo "</div>";
+                $notFirst = false;
+            }
+            ?>
+        </div>
+        <div class="tab_content inline">
+            <?
+            foreach ($apps as $app) {
+                if (!$this->validateArea($app->applicationSettings->allowedAreas, $area, $size, $type)) {
+                    continue;
+                }
+                if (!$app->getName()) {
+                    continue;
+                }
+                if ($app->applicationSettings->appName === "ProductManager") {
+                    continue;
+                }
+                if ($app->applicationSettings->type === "ThemeApplication") {
+                    continue;
+                }
+                if ($app->applicationSettings->type === "SystemApplication") {
+                    continue;
+                }
+
+                $active2 = isset($notFirst2) ? "" : "active";
+                $notFirst2 = false;
+                /* @var $app Application */
                 ?>
-            </div>
-        <? } ?>
+
+                <div class="content_holder <? echo $active2; ?>" id="<? echo str_replace(" ", "", $app->getName()); ?>">
+                    <?
+                    $this->setCurrentApp($app);
+                    if ($import) {
+                        $this->includeFile("applicationPicker");
+                    } else {
+                        $this->includeFile("addApplicationContent");
+                    }
+                    ?>
+                </div>
+            <? } ?>
+        </div>
     </div>
 </div>

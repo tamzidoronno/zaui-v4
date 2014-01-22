@@ -116,6 +116,23 @@ class SiteBuilder extends ApplicationBase {
         $app->setYoutubeId();
     }
 
+    public function addProductList($area, $cell, $type, $viewtype) {
+        $appconf = $this->api->getPageManager()->addApplicationToPage($this->getPage()->id, "8402f800-1e7e-43b5-b3f7-6c7cabbf8942", $area);
+        $products = $this->getApi()->getProductManager()->getLatestProducts(4);
+        $newlist = array();
+        foreach($products as $product) {
+            $entry = new \core_listmanager_data_Entry();
+            $entry->productId = $product->id;
+            $entry->name = "Product";
+            $newlist[] = $entry;
+        }
+        $this->getApi()->getListManager()->setEntries($appconf->id, $newlist);
+        $app = new \ns_8402f800_1e7e_43b5_b3f7_6c7cabbf8942\ProductList();
+        $app->setConfiguration($appconf);
+        $app->setView($viewtype);
+        
+    }
+
 }
 
 

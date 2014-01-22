@@ -276,6 +276,7 @@ getshop.ImageEditor.prototype = {
     },
     
     saveImage: function() {
+        PubSub.publish("LAYOUT_UPDATED", "image");
         this._uploadStarted();
         
         var data = {

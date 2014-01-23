@@ -232,6 +232,8 @@ thundashop.common.navigateContentPages = function() {
     var box = $(this).closest('.gs_showPageLayoutSelection');
     box.find('.option_selected').removeClass('option_selected');
     button.addClass('option_selected');
+    
+    $('.gs_showPageLayoutSelection .options_content').scrollTop(0);
 
     box.find('.content_type_selected').hide();
     $(this).removeClass('content_type_selected');
@@ -853,6 +855,7 @@ $(document).on('click', '.gs_tab', function() {
     app.find('.gs_tab').removeClass('gs_tab_selected');
     $(this).addClass('gs_tab_selected');
     var target = $(this).attr('target');
+    console.log(target);
     app.find('.gs_tab_area').removeClass('gs_tab_area_active');
     app.find('.' + target).addClass('gs_tab_area_active');
     var route = $(this).attr('route');

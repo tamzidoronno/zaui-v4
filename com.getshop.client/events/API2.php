@@ -2794,11 +2794,24 @@ class APIProductManager {
 	* @throws ErrorException
 	*/
 
-	public function getProductPages($id) {
+	public function getProduct($id) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
 	     $data["method"] = "getProduct";
+	     $data["interfaceName"] = "core.productmanager.IProductManager";
+	     return $this->transport->cast(API::core_productmanager_data_Product(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Returns a product connected to a specific page.
+	*/
+
+	public function getProductByPage($id) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $data["method"] = "getProductByPage";
 	     $data["interfaceName"] = "core.productmanager.IProductManager";
 	     return $this->transport->cast(API::core_productmanager_data_Product(), $this->transport->sendMessage($data));
 	}

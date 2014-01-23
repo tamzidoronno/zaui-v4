@@ -148,16 +148,19 @@
 }
 
 .skeleton5 .order_mask { display: none; }
-.gs_showPageLayoutSelection { background-color:#3f3f3f; }
-.gs_showPageLayoutSelection .predefined_layouts { width: 300px; height: 95%; padding: 5px; padding-left: 40px; padding-top: 15px; }
+.gs_showPageLayoutSelection { min-height: 300px; }
+.gs_showPageLayoutSelection .predefined_layouts { border: solid 1px #3a3a3a; height:430px; overflow-y: auto; padding: 5px; padding-left: 20px; padding-top: 15px; margin: 20px; }
 .gs_showPageLayoutSelection .layoutpreviewselection { border: solid 0px; position: relative; }
 .gs_showPageLayoutSelection .layoutsuggestion { width: 314px; display:inline; position:absolute; right: 0px; top: 0px; }
 
-.gs_showPageLayoutSelection .previewrow { font-size:13px; border: solid 1px #2c2c2c; height: 52px; margin-bottom: 10px; background-color:#3f3f3f; text-align: center; padding-top:28px; }
-.gs_showPageLayoutSelection .headerpreview { display:table-cell; vertical-align:middle; font-size:13px; background-color:#4e4e4e; border-bottom: solid 1px #3f3f3f; position: absolute; top: 0px; left: 0px; width: 100%; height: 37px; text-align: center; padding-top: 13px; }
-.gs_showPageLayoutSelection .footerpreview { display:table-cell; vertical-align:middle; font-size:13px; background-color:#4e4e4e; border-top: solid 1px #3f3f3f; position: absolute; left: 0px; width: 100%; height: 37px; text-align: center; bottom:0px; padding-top: 13px; }
+.gs_showPageLayoutSelection .previewrow { border: solid 1px #4e4e4e; font-size:13px; height: 52px; margin-bottom: 10px; background-color:#8f8f8f; text-align: center; padding-top:28px; }
+.gs_showPageLayoutSelection .headerpreview { border-top: solid 1px #4e4e4e; border-right: solid 1px #4e4e4e; border-left: solid 1px #4e4e4e; display:table-cell; vertical-align:middle; font-size:13px; background-color:#8f8f8f;position: absolute; top: 0px; left: 0px; width: 228px; height: 37px; text-align: center; padding-top: 13px; }
+.gs_showPageLayoutSelection .footerpreview { border-bottom: solid 1px #4e4e4e; border-right: solid 1px #4e4e4e; border-left: solid 1px #4e4e4e; display:table-cell; vertical-align:middle; font-size:13px; background-color:#8f8f8f;position: absolute; left: 0px; width: 228px; height: 37px; text-align: center; bottom:0px; padding-top: 13px;}
+.gs_showPageLayoutSelection .layoutconfiguration .headerpreview { border-top: solid 1px #4e4e4e; border-right: solid 1px #4e4e4e; border-left: solid 1px #4e4e4e; display:table-cell; vertical-align:middle; font-size:13px; background-color:#8f8f8f;position: absolute; top: 0px; left: 0px; width: 228px; height: 37px; text-align: center; padding-top: 13px; }
+.gs_showPageLayoutSelection .layoutconfiguration .footerpreview,
+.gs_showPageLayoutSelection .layoutconfiguration .headerpreview { width: 100%; border: 0px; }
 
-.gs_showPageLayoutSelection .suggestion_layout {  background-color:#4e4e4e; float:left; margin:9px; width: 250px; position:relative; border: solid 1px #2c2c2c; padding: 10px; padding-top: 33px; margin-bottom: 20px; padding-bottom: 23px; display:inline-block; }
+.gs_showPageLayoutSelection .suggestion_layout {  background-color:#4e4e4e; float:left; margin:17px; width: 210px; position:relative; border: solid 12px #cccccc; padding: 10px; border-radius:5px; padding-top: 33px; margin-bottom: 20px; padding-bottom: 23px; display:inline-block; }
 .gs_showPageLayoutSelection .suggestion_layout:hover { cursor: pointer; }
 .gs_showPageLayoutSelection .suggestion_layout:hover .previewrow { background-color:#52e5ac; }
 .gs_showPageLayoutSelection .suggestion_layout .footerpreview,.gs_showPageLayoutSelection .suggestion_layout .headerpreview { height: 25px; } 
@@ -165,7 +168,7 @@
 .gs_showPageLayoutSelection .row_option { position:absolute;left:7px;top: 23px; cursor:pointer;font-size:30px; }
 .gs_showPageLayoutSelection .row_option_panel { display:none; z-index: 2; }
 .gs_showPageLayoutSelection .right_panel  { padding: 10px; display:inline-block; width: 800px; }
-.gs_showPageLayoutSelection .layoutpreviewbox { position:relative;padding-top:60px; padding-bottom: 60px; color:#9f9f9f; background-color:#4e4e4e;border: solid 1px #2c2c2c; }
+.gs_showPageLayoutSelection .layoutpreviewbox { position:relative;padding-top:60px; padding-bottom: 60px; color:#CCC; background-color:#4e4e4e;border: solid 1px #2c2c2c; }
 .gs_showPageLayoutSelection .layoutpreviewbox .outer-row-container { padding-right: 40px; padding-left: 40px; position:relative; }
 .gs_showPageLayoutSelection .layoutpreviewbox .outer-row-container .fa-arrows-v { position:absolute; right: 11px; top: 22px; padding: 3px; cursor:pointer; font-size:30px; }
 .gs_showPageLayoutSelection .sortable_layout_rows {
@@ -175,40 +178,37 @@
 }
 .no_page_layout {font-size: 16px; margin-left: 65px;}
 .no_page_layout .click { font-weight: bold; color: #1c427b; cursor: pointer; }
-.gs_showPageLayoutSelection .content_pages .options { border-top: solid 1px #4e4e4e; }
 .gs_showPageLayoutSelection .content_pages .options i { width: 15px; }
-.gs_showPageLayoutSelection .content_pages .options_content { min-height:500px; display:inline-block; float:left; padding: 10px; width: 829px; }
-.gs_showPageLayoutSelection .content_pages .category_selection { width: 140px;display:inline-block;float:left;border-right:0px; padding-top: 10px; padding-bottom: 10px;}
+.gs_showPageLayoutSelection .content_pages .category_selection { width: 140px;display:inline-block;float:left;border-right:0px; padding-top: 20px; padding-bottom: 10px;}
 .gs_showPageLayoutSelection .content_pages .category_selection .option_entry {
     -webkit-transition: background 0.5s linear;
     -moz-transition: background 0.5s linear;
     -ms-transition: background 0.5s linear;
     -o-transition: background 0.5s linear;
     transition: background 0.5s linear;
-    border-bottom: solid 1px #4e4e4e; border-right: solid 1px #4e4e4e; padding-left: 5px; padding-right: 10px; line-height: 20px; padding-top: 5px; padding-bottom: 5px; font-size: 14px;color:#FFF; }
+    margin-left: 10px;
+    padding-left: 5px; padding-right: 10px; line-height: 20px; padding-top: 5px; padding-bottom: 5px; font-size: 14px;color:#CCC; }
 .gs_showPageLayoutSelection .content_pages .category_selection .option_entry:hover { cursor:pointer; }
 .gs_showPageLayoutSelection .content_pages .content_type_area { display:none; }
 .gs_showPageLayoutSelection .content_pages .content_type_selected { display:block; }
-.gs_showPageLayoutSelection .content_pages .option_selected { background-color:#4e4e4e; color:#FFF; }
-.gs_showPageLayoutSelection .layoutpreview { width: 220px; float:left; margin: 17px; padding: 10px; cursor:pointer; border-radius: 5px; text-align:center; background-color: #4e4e4e; color:#FFF;border: solid 1px #2c2c2c }
-.gs_showPageLayoutSelection .layoutpreview .icon_container { display:inline-block; border: solid 1px #2c2c2c; background-color:#4e4e4e; margin: 3px; padding-top: 3px; }
-.gs_showPageLayoutSelection .layoutpreview[row_size="2"] .icon_container { width: 100px; }
-.gs_showPageLayoutSelection .layoutpreview[row_size="3"] .icon_container { width: 100px; }
-.gs_showPageLayoutSelection .layoutpreview[row_size="4"] .icon_container { width: 100px; }
-.gs_showPageLayoutSelection .layoutpreview[row_size="1"] { font-size: 125px; }
-.gs_showPageLayoutSelection .layoutpreview[row_size="1"] .icon_container { height: 130px; }
-.gs_showPageLayoutSelection .layoutpreview[row_size="2"] { font-size: 60px; }
-.gs_showPageLayoutSelection .layoutpreview[row_size="3"] { font-size: 60px; }
-.gs_showPageLayoutSelection .layoutpreview[row_size="4"] { font-size: 60px; }
-.gs_showPageLayoutSelection .icon_container[rowsize="2"] { font-size: 60px;line-height: 120px;width: 95px;height: 60px; }
-.gs_showPageLayoutSelection .layoutpreview .icon_container[rowsize="1"] { width: 208px; }
-.gs_showPageLayoutSelection .layoutpreview .icon_container[rowsize="3"] { width: 64px; font-size: 39px; padding-top: 12px; padding-bottom: 12px; }
+.gs_showPageLayoutSelection .content_pages .option_selected { background-color:#555555; color:#FFF; }
+.gs_showPageLayoutSelection .layoutpreview { width: 210px; float:left; margin: 17px; padding: 10px; cursor:pointer; border-radius: 5px; text-align:center; background-color: #cccccc; color:#cccccc;}
+.gs_showPageLayoutSelection .layoutpreview .icon_container { font-size:40px; padding-top: 10px; height: 50px; display:inline-block; background-color:#4e4e4e; margin: 3px;  }
+.gs_showPageLayoutSelection .layoutpreview[row_size="2"] .icon_container { width: 98px; }
+.gs_showPageLayoutSelection .layoutpreview[row_size="3"] .icon_container { width: 98px; }
+.gs_showPageLayoutSelection .layoutpreview[row_size="4"] .icon_container { width: 98px; }
+.gs_showPageLayoutSelection .layoutpreview[row_size="5"] .icon_container { width: 98px; }
+.gs_showPageLayoutSelection .layoutpreview[row_size="6"] .icon_container { width: 98px; }
+.gs_showPageLayoutSelection .layoutpreview[row_size="1"] .icon_container { height: 84px; padding-top: 42px; }
+.gs_showPageLayoutSelection .icon_container[rowsize="2"] { line-height: 120px;width: 95px; }
+.gs_showPageLayoutSelection .layoutpreview .icon_container[rowsize="1"] { width: 204px; }
+.gs_showPageLayoutSelection .layoutpreview .icon_container[rowsize="3"] { width: 64px; font-size: 39px; }
 .gs_showPageLayoutSelection .layoutpreview:hover .icon_container { color: #52e5ac; }
 .gs_showPageLayoutSelection .content_pages { background-color: #3f3f3f; }
 .no_page_layout { background-color:#FFF; display:inline-block; margin:auto; margin: 10px; padding: 20px; border-radius: 5px;  }
-.gs_showPageLayoutSelection .predefined_layouts .spacer { padding-bottom: 35px; border-top: 1px #3f3f3f; border-bottom: 1px #3f3f3f; }
-.gs_showPageLayoutSelection .predefined_layouts .spacer div { width: 100%; position:absolute; left: 0px; font-size:14px; background-color:#333333; color:#fff;text-align:center; padding-top: 5pX; padding-bottom: 5px; }
-.gs_showPageLayoutSelection .layout_builder .left_panel {display: inline-block;width: 150px;padding: 10px;background-color: #3f3f3f;float:left;}
+.gs_showPageLayoutSelection .predefined_layouts .spacer { border-top: 1px #3f3f3f; border-bottom: 1px #3f3f3f; }
+.gs_showPageLayoutSelection .predefined_layouts .spacer div { color: #CCC; border-radius: 3px; margin-right: 25px; left: 0px; font-size:14px; background-color:#3a3a3a; text-align:center; padding-top: 5pX; padding-bottom: 5px; }
+.gs_showPageLayoutSelection .layout_builder .left_panel {display: inline-block;width: 150px;padding: 10px;float:left;}
 .gs_showPageLayoutSelection .layout_builder .left_panel select { width: 150px;width: 150px; border: solid 1px #2e2e2e; background-color: #4f4f4f; color: #FFF; padding: 5px; }
 .gs_showPageLayoutSelection .layout_builder .left_panel .gs_button { margin-top: 10px;
 width: 134px;
@@ -216,3 +216,6 @@ border-radius: 0px;
 padding: 5px;
 padding-left: 10px; }
 .gs_showPageLayoutSelection .layout_builder .left_panel .gs_button i { float:right; font-size: 16px; }
+.gs_showPageLayoutSelection .gs_tab_area { background-color:#666666; }
+.gs_showPageLayoutSelection .predefined_layouts { background-color:#555555; }
+.gs_showPageLayoutSelection .gs_tab_area .options_content { display:inline-block; float:left; padding: 10px; width: 829px; margin-top: 20px; background-color:#555555; width: 810px; height: 400px; overflow-y: auto; }

@@ -583,8 +583,18 @@ class ApplicationManager extends FactoryBase {
         $pb = new PageBuilder(null,null,null);
         $page->type = -1;
         $page->layout = $pb->buildPredefinedPage(json_decode($_POST['data']['config'],true));
+        $page->pageType = 1;
+        if($_POST['data']['pagetype'] == "product") {
+            $page->pageType = 2;
+        }
         $this->getApi()->getPageManager()->savePage($page);
         $pb->addPredefinedContent($_POST['data']['pagetype'], json_decode($_POST['data']['config'],true));
+        
+        if($_POST['data']['pagetype'] == "product") {
+            $sitebuilder = new SiteBuilder();
+            $sitebuilder->addProduct();
+        }
+        
         $this->getFactory()->reloadStoreObject();
         $this->getFactory()->initPage();
     }

@@ -31,10 +31,10 @@ class PageBuilder {
                 return $res->getMapPages();
             case "product":
                 return $res->getProductPages();
-            case "product":
-                return $res->getProductPages();
             case "productlist":
                 return $res->getProductListPages();
+            case "frontpage":
+                return $res->getHomePages();
                 
         }
         return array();
@@ -72,6 +72,12 @@ class PageBuilder {
                         break;
                     case "productlist_standard":
                         echo '<i class="fa fa-list" title="'.$this->factory->__f("Product listed").'"></i>';
+                        break;
+                    case "imageslider":
+                        echo '<i class="fa fa-picture-o" title="'.$this->factory->__f("Image").'"></i>';
+                        break;
+                    case "productlist_row":
+                        echo '<i class="fa fa-ellipsis-h" title="'.$this->factory->__f("Products in a row").'"></i>';
                         break;
                     default;
                         echo $cell . " ";
@@ -191,7 +197,13 @@ class PageBuilder {
                 
                 if(sizeof($this->layout->rows) != $rowcount) {
                     $rowcount = sizeof($this->layout->rows);
-                    echo "</tr></table><div class='spacer'><div>" . $rowcount . " rows" . "</div></div><table><tr>";
+                    echo "</tr></table><div class='spacer'><div>";
+                    if($rowcount > 1) {
+                        echo $rowcount ." ". $this->factory->__f("row");
+                    } else {
+                        echo $rowcount ." ". $this->factory->__f("rows");
+                    }
+                    echo "</div></div><table><tr>";
                 }
                 echo "<td valign='top'>";
                 echo "<div class='suggestion_layout' type='" . $i . "'>";
@@ -754,6 +766,12 @@ class PageBuilder {
                     case "productlist_boxed":
                         $siteBuilder->addProductList($area, $cell, $type, "boxview");
                         break;
+                    case "productlist_row":
+                        $siteBuilder->addProductList($area, $cell, $type, "rowview");
+                        break;
+                    case "imageslider":
+                        $siteBuilder->addBannerSlider($area, $cell, $type);
+                        break;
                     default:
                         echo "content not found for: " . $cell;
                         break;
@@ -792,6 +810,16 @@ class PageBuilder {
         if ($this->layout->leftSideBar > 0 || $this->layout->rightSideBar > 0) {
             $hassidebar = true;
         }
+        if($this->page->backendPage->pageType == 2) {
+            echo "<div class='gs_row gs_outer gs_product_row'>";
+            echo "<div class='gs_inner'>";
+            echo AppAreaHelper::printAppArea($this->page, "product");
+            echo "<div></div>";
+            echo "</div>";
+            echo "</div>";
+        }
+
+        
         if (!$hassidebar) {
             $this->printNoSideBarsLayout();
         } else {

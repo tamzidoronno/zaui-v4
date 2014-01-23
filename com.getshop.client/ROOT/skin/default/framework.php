@@ -189,7 +189,6 @@ padding-left: 20px;
 background-color: #3f3f3f;
 z-index: 1;
 top: 17px;
-border-bottom: solid 1px #3a3a3a;
 }
 
 #infomrationboxclosebutton {

@@ -7,7 +7,8 @@ class SiteBuilder extends ApplicationBase {
     var $counterYoutube = 0;
     private $rowSize;
     private $imageCount = 0;
-
+    private $rowImageCount = -1;
+    
     function __construct() {
         $this->api = $this->getApi();
     }
@@ -18,7 +19,7 @@ class SiteBuilder extends ApplicationBase {
 
     public function addImageDisplayer($imageId, $where, $type = false) {
         if (($this->rowSize == 1)) {
-            $imageId = "7cfb35c2-f43e-45fa-9c61-3f6d67b5c8f2";
+                $imageId = $this->getRowImage();
         } else {
             switch($this->imageCount) {
                 case 0:
@@ -35,12 +36,13 @@ class SiteBuilder extends ApplicationBase {
                 case 3:
                     $imageId = "4c085721-bd13-4692-9438-18146b80174d";
                     break;
+                $this->rowImageCount++;
             }
             $this->imageCount++;
         }
         if ($type == "contact") {
             if (($this->rowSize == 1)) {
-                $imageId = "7cfb35c2-f43e-45fa-9c61-3f6d67b5c8f2";
+                $imageId = $this->getRowImage();
             } else {
                 $imageId = "8d566b68-6b2c-4816-82e9-56189b9b1c9a";
             }
@@ -133,6 +135,27 @@ class SiteBuilder extends ApplicationBase {
         
     }
 
+    public function addBannerSlider($area, $cell, $type) {
+        $appconf = $this->api->getPageManager()->addApplicationToPage($this->getPage()->id, "d612904c-8e44-4ec0-abf9-c03b62159ce4", $area);
+        $this->getApi()->getBannerManager()->addImage($appconf->id, "7cfb35c2-f43e-45fa-9c61-3f6d67b5c8f2");
+        $this->getApi()->getBannerManager()->addImage($appconf->id, "7007e885-e19f-4d42-98a5-84f3b1196f87");
+
+    }
+
+    public function getRowImage() {
+        $this->rowImageCount++;
+        switch($this->rowImageCount) {
+            case 0:
+                return "7cfb35c2-f43e-45fa-9c61-3f6d67b5c8f2";
+            case 1:
+            default:
+                return "7007e885-e19f-4d42-98a5-84f3b1196f87";
+        }
+    }
+
+    public function addProduct() {
+        $this->api->getPageManager()->addApplicationToPage($this->getPage()->id, "06f9d235-9dd3-4971-9b91-88231ae0436b", "product");
+    }
 }
 
 

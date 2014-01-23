@@ -2856,6 +2856,19 @@ class APIProductManager {
 	}
 
 	/**
+	* Returns a product connected to a specific page.
+	*/
+
+	public function getProductByPage($id) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $data["method"] = "getProductByPage";
+	     $data["interfaceName"] = "core.productmanager.IProductManager";
+	     return $this->transport->cast(API::core_productmanager_data_Product(), $this->transport->sendMessage($data));
+	}
+
+	/**
 	* Find the product uuid set for an application.
 	* @param uuid
 	* @return core_productmanager_data_Product

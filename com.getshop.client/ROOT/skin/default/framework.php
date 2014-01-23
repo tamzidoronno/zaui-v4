@@ -181,7 +181,6 @@ background-color: #3f3f3f;
 
 #informationboxtitle {
 height: 50px;
-padding-top: 10px;
 text-align: left;
 font-size: 30px;
 color: #FFF;
@@ -190,7 +189,6 @@ padding-left: 20px;
 background-color: #3f3f3f;
 z-index: 1;
 top: 17px;
-border-bottom: solid 1px #3a3a3a;
 }
 
 #infomrationboxclosebutton {
@@ -1443,11 +1441,14 @@ font-size: 16px;
 height: 34px;
 border-bottom: solid 1px  #4e4e4e;
 padding-left: 5px;
+padding-top: 10px;
+background-color:#3f3f3f;
+border-bottom: solid 1px #3a3a3a;
 }
 .gs_tabs .gs_tab_selected {
-background-color: #3f3f3f;
-height: 24px;
-color:#FFF;
+    background-color: #666666;
+    height: 25px;
+    color:#CCC;
 }
 
 .gs_tab {
@@ -1460,26 +1461,23 @@ color:#FFF;
     -o-transition: background 0.5s linear;
     background-color:#FFF;
     padding: 5px;
-    border-right: solid 1px #4e4e4e;
-    border-top: solid 1px #4e4e4e;
-    border-left: solid 1px #4e4e4e;
     font-size: 16px;
     display:inline-block;
     cursor:pointer;
     margin-right: 10px; 
     margin: 0px;
     display:inline-block;
-    height: 23px;
+    height: 25px;
     text-align:center;
-    background-color:#ababab;
-    color:#292929;
+    background-color:#333333;
+    color:#8a8a8a;
     padding-left: 15px;
     padding-right: 15px;
     margin-right: 5px;
 }
 
-.gs_tab_area { display:none; }
-.gs_tab_area_active { display:block; }
+.gs_tab_area { display:none !important; }
+.gs_tab_area_active { display:block !important; }
 
 .colorpicker { z-index: 1000; }
 .empty_app_area .fa { font-size: 32px; padding-top: 8px; }

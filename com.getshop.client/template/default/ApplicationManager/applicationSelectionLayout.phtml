@@ -18,19 +18,24 @@ $content_groups = ["standard", "contact", "map", "product", "productlist", "fron
 <div class="skeletondisplayer">
 
     <div class="layoutpreviewselection app">
-        <br>
         <div class="gs_tabs">
-            <span class='gs_tab <? if (!$layoutupdate) {
-    echo "gs_tab_selected";
-} ?>' target="content_pages"><i class="fa fa-book"></i> <? echo $this->__f("Content"); ?></span>
+            <span class='gs_tab <?
+            if (!$layoutupdate) {
+                echo "gs_tab_selected";
+            }
+            ?>' target="content_pages"><i class="fa fa-book"></i> <? echo $this->__f("Content"); ?></span>
             <span class='gs_tab' target="empty_pages"><i class="fa fa-square-o"></i> <? echo $this->__f("Empty page"); ?></span>
-            <span class='gs_tab <? if ($layoutupdate) {
-    echo "gs_tab_selected";
-} ?>' target="layout_builder"><i class="fa fa-wrench"></i> <? echo $this->__f("Build your layout"); ?></span>
+            <span class='gs_tab <?
+            if ($layoutupdate) {
+                echo "gs_tab_selected";
+            }
+            ?>' target="layout_builder"><i class="fa fa-wrench"></i> <? echo $this->__f("Build your layout"); ?></span>
         </div>
-        <div class="gs_tab_area content_pages <? if (!$layoutupdate) {
-    echo "gs_tab_area_active";
-} ?>">
+        <div class="gs_tab_area content_pages <?
+             if (!$layoutupdate) {
+                 echo "gs_tab_area_active";
+             }
+            ?>">
             <div class='category_selection'>
                 <div class='options'>
                     <div class='option_entry option_selected' target='standard'><i class="fa fa-pencil-square-o"></i> <? echo $this->__f("Standard page"); ?></div> 
@@ -38,6 +43,7 @@ $content_groups = ["standard", "contact", "map", "product", "productlist", "fron
                     <div class='option_entry' target='map'><i class="fa fa-globe"></i> <? echo $this->__f("Map"); ?></div>
                     <div class='option_entry' target='product'><i class="fa fa-shopping-cart"></i></i> <? echo $this->__f("Product"); ?></div>
                     <div class='option_entry' target='productlist'><i class="fa fa-list-alt"></i> <? echo $this->__f("Product list"); ?></div>
+                    <div class='option_entry' target='frontpage'><i class="fa fa-heart"></i> <? echo $this->__f("Homepage"); ?></div>
                 </div>
             </div>
             <div>
@@ -57,14 +63,16 @@ $content_groups = ["standard", "contact", "map", "product", "productlist", "fron
                         }
                         ?>
                         </div>
-                <? } ?>
+        <? } ?>
                 </div>
             </div>
             <div style='clear:both;'></div>
         </div>
-        <div class="layoutconfiguration gs_tab_area layout_builder <? if ($layoutupdate) {
+        <div class="layoutconfiguration gs_tab_area layout_builder <?
+                if ($layoutupdate) {
                     echo "gs_tab_area_active";
-                } ?>">
+                }
+                ?>">
             <div class="left_panel">
                 <?
                 echo "<select id='leftsidebarcount'>";

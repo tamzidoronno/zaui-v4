@@ -163,19 +163,45 @@ public class WinVaskDBIntegration {
         return id;
     }
 
-    public Integer createCustomer(String name, String address, String postcode, String city, String phone, String email) throws SQLException {
+    public Integer createCustomer(String name, String address, String postcode, String city, String phone, String email) throws SQLException, UnsupportedEncodingException {
         Integer kundenr = findNextCustomerId();
-        String query = "insert into kunde (navn, gate_adr, post_nr, sted, telefon_nr, beregn_mva, kundenr, e_mail) values(?,?,?,?,?,?,?,?)";
+        String query = "insert into kunde (navn, gate_adr, post_nr, sted, telefon_nr, beregn_mva, kundenr, e_mail, opprettet_dato, distr, KREDIT_TID, levr, mark, sorterings_bane, sist_i_bruk, beregn_mva, katno, ansatt_nummer, val_nr, fri_lev_mnd) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        System.out.println("---- inserting customer -----");
+        System.out.println("- " + name);
+        System.out.println("- " + address);
+        System.out.println("- " + postcode);
+        System.out.println("- " + city);
+        System.out.println("- " + phone);
+        System.out.println("- " + kundenr);
+        System.out.println("- " + email);
+        System.out.println("----------------------------");
+        
         PreparedStatement stmt = Cnx.prepareStatement(query);
-        stmt.setString(1, name);
-        stmt.setString(2, address);
+        stmt.setString(1, new String(name.getBytes("ISO-8859-1"), "UTF-8"));
+        stmt.setString(2, new String(address.getBytes("ISO-8859-1"), "UTF-8"));
         stmt.setString(3, postcode);
-        stmt.setString(4, city);
+        stmt.setString(4, new String(city.getBytes("ISO-8859-1"), "UTF-8"));
         stmt.setString(5, phone);
         stmt.setInt(6, 1);
         stmt.setInt(7, kundenr);
         stmt.setString(8, email);
+        stmt.setInt(9, converToWierdData(new Date()));
+        stmt.setInt(10, 1);
+        stmt.setInt(11, 10);
+        
+        stmt.setInt(12, 0);
+        stmt.setInt(13, 0);
+        stmt.setInt(14, 0);
+        stmt.setInt(15, 0);
+        stmt.setInt(16, 0);
+        stmt.setInt(17, 0);
+        stmt.setInt(18, 0);
+        stmt.setInt(19, 0);
+        stmt.setInt(20, 0);
+        
         stmt.execute();
+        try { Thread.sleep(1000); }catch(Exception e) {}
+        System.out.println("------------- DONE ---------------");
         return kundenr;
     }
 
@@ -185,7 +211,6 @@ public class WinVaskDBIntegration {
         int wierdDate = converToWierdData(order.createdDate);
         int bilagnr = getNextBilagNumber();
         int ordrenr = getNextOrdreNumber();
-
         List<CartItem> items = order.cart.getItems();
 
         List<Vare> varer = new ArrayList();
@@ -194,6 +219,7 @@ public class WinVaskDBIntegration {
         for (CartItem item : items) {
             Vare vare = getVareConnectedToItem(item);
             if(vare == null) {
+                System.out.println("vare not found returning");
                 return;
             }
             vare.count = item.getCount();
@@ -203,7 +229,16 @@ public class WinVaskDBIntegration {
         }
         double sm3 = price + mva_belop;
 
-
+        System.out.println("-------------------------");
+        System.out.println("- bilagnr: " + bilagnr);
+        System.out.println("- ordrenr: " + ordrenr);
+        System.out.println("- kundenr: " + kundenr);
+        System.out.println("- date: " + wierdDate);
+        System.out.println("- mva: " + mva_belop);
+        System.out.println("- price: " + price);
+        System.out.println("- sm3: " + sm3);
+        System.out.println("-------------------------");
+        
         PreparedStatement stmt = CnxYearly.prepareStatement("insert into Bilag (bilagnr, ordrenr, kundenr,levdato,fakturadato,dato,sm2,mva_belop,sm3)values(?,?,?,?,?,?,?,?,?)");
         stmt.setInt(1, bilagnr);
         stmt.setInt(2, ordrenr);
@@ -215,6 +250,14 @@ public class WinVaskDBIntegration {
         stmt.setDouble(8, price);
         stmt.setDouble(9, sm3);
         stmt.execute();
+        try { Thread.sleep(1000); }catch(Exception e) {}
+        
+        stmt = Cnx.prepareStatement("UPDATE System set ordrenr = ?, bilagnr = ?");
+        stmt.setInt(1, ordrenr);
+        stmt.setInt(2, bilagnr);
+        stmt.execute();
+        
+        try { Thread.sleep(1000); }catch(Exception e) {}
 
         int lnr = 1;
         for(Vare vare : varer) {
@@ -248,6 +291,7 @@ public class WinVaskDBIntegration {
             ubilagstmt.setInt(21, vare.momskode);
             ubilagstmt.setInt(22, vare.count);
             ubilagstmt.execute();
+            try { Thread.sleep(1000); }catch(Exception e) {}
             lnr++;
         }
 

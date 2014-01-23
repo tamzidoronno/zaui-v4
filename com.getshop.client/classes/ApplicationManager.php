@@ -654,8 +654,21 @@ class ApplicationManager extends FactoryBase {
             $imageData = file_get_contents($downloadUrl);
             $content = base64_decode(str_replace("data:image/png;base64,", "", base64_encode($imageData)));
             $imgId = \FileUpload::storeFile($content);
+            
+            $this->getApi()->getBigStock()->addGetShopImageIdToBigStockOrder($downloadUrl, $imgId);
             echo $imgId;
         }
+    }
+    
+    public function setBigStockCreditAccount() {
+        $password = $_POST['data']['password'];
+        $credits = $_POST['data']['credit'];
+        
+        $this->getApi()->getBigStock()->setCreditAccount($credits, $password);
+    }
+    
+    public function printAvailableBigStockCredit() {
+        echo $this->getApi()->getBigStock()->getAvailableCredits();
     }
 }
 ?>

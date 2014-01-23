@@ -94,7 +94,7 @@ getshop.ImageEditor.prototype = {
         var upload = option.clone();
         upload.find('.icon').html('<i class="fa fa-picture-o">');
         upload.find('.headline').html(__f("Upload image from your computer"));
-        upload.find('.description').html(__f("Simply drag the image to this box or browse trough your computer by clicking the button below"));
+        upload.find('.description').html(__f("Select a picture from your local hard-drive, upload it and display it to your page viewers"));
         upload.find('.gs_button').html('<i class="fa fa-upload"></i>' + __f("Upload"));
         upload.find('.gs_button').click($.proxy(this.showFileDialog, this));
         this.uploadMenu.append(upload);
@@ -201,8 +201,12 @@ getshop.ImageEditor.prototype = {
         var menuEntry = this.addEntryToMenu(disableAspectRatio);
         menuEntry.click($.proxy(this.toggleAspectRation, this));
 
-        disableAspectRatio = this.createMenuEntry(__f("Add text"), 'fa-bold');
+        disableAspectRatio = this.createMenuEntry(__f("Delete"), 'fa-trash-o');
         menuEntry = this.addEntryToMenu(disableAspectRatio);
+        menuEntry.click($.proxy(this.deleteImage, this));
+
+//        disableAspectRatio = this.createMenuEntry(__f("Add text"), 'fa-bold');
+//        menuEntry = this.addEntryToMenu(disableAspectRatio);
 
         disableAspectRatio = this.createMenuEntry(__f("Rotate left"), 'fa-rotate-left');
         menuEntry = this.addEntryToMenu(disableAspectRatio);
@@ -211,10 +215,6 @@ getshop.ImageEditor.prototype = {
         disableAspectRatio = this.createMenuEntry(__f("Rotate right"), 'fa-rotate-right');
         menuEntry = this.addEntryToMenu(disableAspectRatio);
         menuEntry.click($.proxy(this.rotateRight, this));
-
-        disableAspectRatio = this.createMenuEntry(__f("Delete"), 'fa-trash-o');
-        menuEntry = this.addEntryToMenu(disableAspectRatio);
-        menuEntry.click($.proxy(this.deleteImage, this));
 
         disableAspectRatio = this.createMenuEntry(__f("Save"), 'fa-save');
         menuEntry = this.addEntryToMenu(disableAspectRatio);

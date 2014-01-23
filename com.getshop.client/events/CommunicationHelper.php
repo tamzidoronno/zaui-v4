@@ -146,11 +146,19 @@ class CommunicationHelper {
             $handler = new LanguageHandler();
             $result = array();
             $result['error'] = $object->errorCode . "," . $handler->getErrorMessage($object->errorCode);
+            $result['error_text'] = $handler->getErrorMessage($object->errorCode);
             $result['error_additional_info'] = $object->additionalInformation;
             $result['error_method'] = $event['method'];
             $result['interfaceName'] = $event['interfaceName'];
             $this->errors[] = $result;
             $this->errorCodes[] = $object->errorCode;
+            
+            if (isset($_POST['synchron'])) {
+                http_response_code(400);
+                echo json_encode($result);
+                die();
+            }
+            
             return null;
         } else {
             return $this->createThundashopObject($object);

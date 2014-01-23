@@ -24,9 +24,25 @@ public interface IBigStock {
      * 
      * @param imageId
      * @param sizeCode
-     * @return
+     * @return downloadUrl
      * @throws ErrorException 
      */
     @Administrator
     public String purchaseImage(String imageId, String sizeCode) throws ErrorException;
+    
+    /**
+     * Update the credit account.
+     * 
+     * @param credits
+     * @param password
+     * @throws ErrorException 
+     */
+    @Administrator
+    public void setCreditAccount(int credits, String password) throws ErrorException;
+    
+    @Administrator
+    public int getAvailableCredits();
+    
+    @Administrator
+    public void addGetShopImageIdToBigStockOrder(String downloadUrl, String imageId) throws ErrorException;
 }

@@ -34,7 +34,7 @@ getshop.BigStock.prototype = {
     buyCurrentPicture: function() {
         var data = {
             imageId : this.currentImage.id,
-            sizeCode: 's'
+            sizeCode: 'm'
         }
         
         var event = thundashop.Ajax.createEvent("", "buyBigstockImage", null, data);
@@ -90,11 +90,11 @@ getshop.BigStock.prototype = {
         
         var balance = $('<div/>');
         balance.addClass('bigstock_buypicture_balance');
-        balance.html(__f("Your current account balance")+"<br><b><span id='balance'>0</span></b>");
+        balance.html(__f("Your current account balance")+"<br><b><span id='balance'>-</span></b>");
         
         var pictureCost = $('<div/>');
         pictureCost.addClass('bigstock_buypicture_cost');
-        pictureCost.html(__f("Credits for picture")+"<br><b><span id='credit'>100</span></b>");
+        pictureCost.html(__f("Credits for picture")+"<br><b><span id='credit'>6</span></b>");
         
         information.append(header);
         information.append(balance);
@@ -223,9 +223,18 @@ getshop.BigStock.prototype = {
         this.searchResult.hide();
         this.pageingArea.hide();
         this.buyButton.show();
+        this.updateAvailableCreditField();
         this.previewForm.find("img").attr('src', this.currentImage.preview.url);
         this.previewForm.find(".bigstock_preview_title").html(this.currentImage.title);
         this.previewForm.show();
+    },
+    
+    updateAvailableCreditField: function() {
+        var event = thundashop.Ajax.createEvent("", "printAvailableBigStockCredit");
+        var me = this;
+        thundashop.Ajax.postWithCallBack(event, function(response) {
+            me.previewForm.find("#balance").html(response);
+        });
     },
     
     receivedResult: function(result) {

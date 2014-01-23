@@ -6,11 +6,13 @@
 
 package com.thundashop.core.bigstock.data;
 
+import java.io.Serializable;
+
 /**
  *
  * @author ktonder
  */
-public class BigStockPurchaseData {
+public class BigStockPurchaseData implements Serializable {
     public Double currency_amount;
     public String currency_code;
     public int download_id;

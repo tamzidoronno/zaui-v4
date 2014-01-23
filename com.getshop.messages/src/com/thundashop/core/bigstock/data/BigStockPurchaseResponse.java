@@ -6,11 +6,13 @@
 
 package com.thundashop.core.bigstock.data;
 
+import java.io.Serializable;
+
 /**
  *
  * @author ktonder
  */
-public class BigStockPurchaseResponse {
+public class BigStockPurchaseResponse implements Serializable {
     public int response_code;
     public String message;
     public BigStockPurchaseData data;

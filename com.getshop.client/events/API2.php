@@ -308,6 +308,40 @@ class APIBigStock {
 	}
 
 	/**
+	* Update the credit account.
+	*
+	* @param credits
+	* @param password
+	* @throws ErrorException
+	*/
+
+	public function addGetShopImageIdToBigStockOrder($downloadUrl, $imageId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["downloadUrl"] = json_encode($this->transport->object_unset_nulls($downloadUrl));
+	     $data['args']["imageId"] = json_encode($this->transport->object_unset_nulls($imageId));
+	     $data["method"] = "addGetShopImageIdToBigStockOrder";
+	     $data["interfaceName"] = "core.bigstock.IBigStock";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Update the credit account.
+	*
+	* @param credits
+	* @param password
+	* @throws ErrorException
+	*/
+
+	public function getAvailableCredits() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getAvailableCredits";
+	     $data["interfaceName"] = "core.bigstock.IBigStock";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Purchases a picture from the bigstock library.
 	*
 	* @param imageId
@@ -322,6 +356,24 @@ class APIBigStock {
 	     $data['args']["imageId"] = json_encode($this->transport->object_unset_nulls($imageId));
 	     $data['args']["sizeCode"] = json_encode($this->transport->object_unset_nulls($sizeCode));
 	     $data["method"] = "purchaseImage";
+	     $data["interfaceName"] = "core.bigstock.IBigStock";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Update the credit account.
+	*
+	* @param credits
+	* @param password
+	* @throws ErrorException
+	*/
+
+	public function setCreditAccount($credits, $password) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["credits"] = json_encode($this->transport->object_unset_nulls($credits));
+	     $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+	     $data["method"] = "setCreditAccount";
 	     $data["interfaceName"] = "core.bigstock.IBigStock";
 	     return $this->transport->sendMessage($data);
 	}
@@ -2794,7 +2846,7 @@ class APIProductManager {
 	* @throws ErrorException
 	*/
 
-	public function getProductPages($id) {
+	public function getProduct($id) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));

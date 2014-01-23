@@ -179,7 +179,7 @@
 .no_page_layout {font-size: 16px; margin-left: 65px;}
 .no_page_layout .click { font-weight: bold; color: #1c427b; cursor: pointer; }
 .gs_showPageLayoutSelection .content_pages .options i { width: 15px; }
-.gs_showPageLayoutSelection .content_pages .category_selection { width: 140px;display:inline-block;float:left;border-right:0px; padding-top: 20px; padding-bottom: 10px;}
+.gs_showPageLayoutSelection .content_pages .category_selection { width: 150px;display:inline-block;float:left;border-right:0px; padding-top: 20px; padding-bottom: 10px;}
 .gs_showPageLayoutSelection .content_pages .category_selection .option_entry {
     -webkit-transition: background 0.5s linear;
     -moz-transition: background 0.5s linear;
@@ -218,4 +218,4 @@ padding-left: 10px; }
 .gs_showPageLayoutSelection .layout_builder .left_panel .gs_button i { float:right; font-size: 16px; }
 .gs_showPageLayoutSelection .gs_tab_area { background-color:#666666; }
 .gs_showPageLayoutSelection .predefined_layouts { background-color:#555555; }
-.gs_showPageLayoutSelection .gs_tab_area .options_content { display:inline-block; float:left; padding: 10px; width: 829px; margin-top: 20px; background-color:#555555; width: 810px; height: 400px; overflow-y: auto; }
+.gs_showPageLayoutSelection .gs_tab_area .options_content { display:inline-block; float:left; padding: 10px; width: 819px; margin-top: 20px; background-color:#555555; width: 810px; height: 400px; overflow-y: auto; }

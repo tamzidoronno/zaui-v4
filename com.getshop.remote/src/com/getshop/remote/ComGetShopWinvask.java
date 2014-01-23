@@ -50,15 +50,30 @@ public class ComGetShopWinvask {
 
     private void exportOrder(Order order) throws IOException, SQLException, ClassNotFoundException, Exception {
         if (addToUpdated(order)) {
+            if(order.cart == null || order.cart.address == null || order.cart.address.fullName == null) {
+                System.out.println("Invalid order: " + order.id);
+                return;
+            }
+            
             System.out.println("This order need to be exported: " + order.id);
+            String tostart = "> started " + new Date() + " : " + order.id;
+            runner.appendToFile(tostart, "startlog.txt");
             WinVaskDBIntegration dbint = new WinVaskDBIntegration(runner);
             Integer kundenr = dbint.findCustomer(order.cart.address.fullName);
             if (kundenr == -1) {
                 Address address = order.cart.address;
-                kundenr = dbint.createCustomer(address.fullName, address.address, address.postCode, address.city, address.phone, address.emailAddress);
+                try {
+                    kundenr = dbint.createCustomer(address.fullName, address.address, address.postCode, address.city, address.phone, address.emailAddress);
+                }catch(Exception e) {
+                    e.printStackTrace();
+                }
             }
             System.out.println("Kundenr: " + kundenr);
             dbint.createInvoice(kundenr, order);
+       
+            tostart = "< ended " + new Date() + " : " + order.id;
+            runner.appendToFile(tostart, "startlog.txt");
+
         }
     }
 

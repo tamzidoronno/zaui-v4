@@ -117,7 +117,7 @@ public class Runner {
         }
     }
 
-    private void appendToFile(String line, String file) throws IOException {
+    public void appendToFile(String line, String file) throws IOException {
         PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
         out.println(line);
         out.close();

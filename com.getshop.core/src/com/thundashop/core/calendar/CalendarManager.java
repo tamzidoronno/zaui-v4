@@ -4,11 +4,11 @@ import com.thundashop.core.calendarmanager.data.Day;
 import com.thundashop.core.calendarmanager.data.Entry;
 import com.thundashop.core.calendarmanager.data.ExtraDay;
 import com.thundashop.core.calendarmanager.data.Month;
+import com.thundashop.core.calendarmanager.data.ReminderHistory;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.SMSFactory;
-import com.thundashop.core.mobilemanager.MobileManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
@@ -32,7 +32,9 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     
     @Autowired
     public SMSFactory smsFactory;
-            
+
+    private List<ReminderHistory> reminderHistory = new ArrayList();
+    
     @Autowired
     public CalendarManager(Logger log, DatabaseSaver databaseSaver) {
         super(log, databaseSaver);
@@ -44,6 +46,10 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             if (dataObject instanceof Month) {
                 Month month = (Month)dataObject;
                 months.put(month.id, month);
+            }
+            if (dataObject instanceof ReminderHistory) {
+                ReminderHistory hist = (ReminderHistory)dataObject;
+                reminderHistory.add(hist);
             }
         }
     }
@@ -268,8 +274,8 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     }
 
     @Override
-    public void sendReminderToUser(boolean byEmail, boolean bySMS, List<String> users, String text, String subject) throws ErrorException {
-        remindUserInternal(byEmail, bySMS, users, text, subject);
+    public void sendReminderToUser(boolean byEmail, boolean bySMS, List<String> users, String text, String subject, String eventId) throws ErrorException {
+        remindUserInternal(byEmail, bySMS, users, text, subject, eventId);
     }
 
     @Override
@@ -372,14 +378,28 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
         return onMonth;
     }
+    
+    private ReminderHistory createReminderHistory(String text, String subject, String eventId, boolean byEmail) {
+        ReminderHistory smsHistory = new ReminderHistory();
+        smsHistory.byEmail = byEmail;
+        smsHistory.text = text;
+        smsHistory.subject = subject;
+        smsHistory.storeId = storeId;
+        smsHistory.eventId = eventId;
+        return smsHistory;
+    }
 
-    private void remindUserInternal(boolean byEmail, boolean bySMS, List<String> users, String text, String subject) throws ErrorException {
+    private void remindUserInternal(boolean byEmail, boolean bySMS, List<String> users, String text, String subject, String eventId) throws ErrorException {
+        ReminderHistory smsHistory = createReminderHistory(text, subject, eventId, byEmail);
+        ReminderHistory emailHistory = createReminderHistory(text, subject, eventId, byEmail);
+        
         for (String userId : users) {
             UserManager usrmgr = getManager(UserManager.class);
             User user = usrmgr.getUserById(userId);
             
             if (byEmail) {
                 mailFactory.send("noreply@getshop.com", user.emailAddress, subject, text);
+                emailHistory.users.add(user);
             }
 
             if (bySMS) {
@@ -388,7 +408,18 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                 String message = text;
                 String phoneNumber = user.cellPhone;
                 smsFactory.send(from, phoneNumber, message);
+                smsHistory.users.add(user);
             }
+        }
+        
+        if (smsHistory.users.size() > 0) {
+            databaseSaver.saveObject(smsHistory, credentials);
+            reminderHistory.add(smsHistory);
+        }
+        
+        if (emailHistory.users.size() > 0) {
+            databaseSaver.saveObject(emailHistory, credentials);
+            reminderHistory.add(emailHistory);
         }
     }
 
@@ -619,5 +650,17 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         }
 
         return null;
+    }
+
+    @Override
+    public List<ReminderHistory> getHistory(String eventId) {
+        List<ReminderHistory> allHistory = new ArrayList();
+        for (ReminderHistory hist : reminderHistory) {
+            if (hist.eventId.equals(eventId)) {
+                allHistory.add(hist);
+            }
+        }
+        
+        return allHistory;
     }
 }

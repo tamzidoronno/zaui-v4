@@ -543,6 +543,23 @@ class APICalendarManager {
 	}
 
 	/**
+	* When an event is sent it automatically creates and log an history entry.
+	* Use this function to get all the history for a given event.
+	*
+	* @param eventId
+	* @return List
+	*/
+
+	public function getHistory($eventId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["eventId"] = json_encode($this->transport->object_unset_nulls($eventId));
+	     $data["method"] = "getHistory";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Get all data attached to a given month.
 	* @param year The year to fetch
 	* @param month The month to fetch
@@ -607,7 +624,7 @@ class APICalendarManager {
 	* @throws ErrorException
 	*/
 
-	public function sendReminderToUser($byEmail, $bySMS, $users, $text, $subject) {
+	public function sendReminderToUser($byEmail, $bySMS, $users, $text, $subject, $eventId) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["byEmail"] = json_encode($this->transport->object_unset_nulls($byEmail));
@@ -615,6 +632,7 @@ class APICalendarManager {
 	     $data['args']["users"] = json_encode($this->transport->object_unset_nulls($users));
 	     $data['args']["text"] = json_encode($this->transport->object_unset_nulls($text));
 	     $data['args']["subject"] = json_encode($this->transport->object_unset_nulls($subject));
+	     $data['args']["eventId"] = json_encode($this->transport->object_unset_nulls($eventId));
 	     $data["method"] = "sendReminderToUser";
 	     $data["interfaceName"] = "core.calendar.ICalendarManager";
 	     return $this->transport->sendMessage($data);
@@ -2851,19 +2869,6 @@ class APIProductManager {
 	     $data['args'] = array();
 	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
 	     $data["method"] = "getProduct";
-	     $data["interfaceName"] = "core.productmanager.IProductManager";
-	     return $this->transport->cast(API::core_productmanager_data_Product(), $this->transport->sendMessage($data));
-	}
-
-	/**
-	* Returns a product connected to a specific page.
-	*/
-
-	public function getProductByPage($id) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
-	     $data["method"] = "getProductByPage";
 	     $data["interfaceName"] = "core.productmanager.IProductManager";
 	     return $this->transport->cast(API::core_productmanager_data_Product(), $this->transport->sendMessage($data));
 	}

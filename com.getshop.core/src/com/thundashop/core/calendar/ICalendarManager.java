@@ -2,6 +2,7 @@ package com.thundashop.core.calendar;
 
 import com.thundashop.core.calendarmanager.data.Entry;
 import com.thundashop.core.calendarmanager.data.Month;
+import com.thundashop.core.calendarmanager.data.ReminderHistory;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
@@ -57,7 +58,7 @@ public interface ICalendarManager {
      */
     @Editor
     @Writing
-    public void sendReminderToUser(boolean byEmail, boolean bySMS, List<String> users, String text, String subject) throws ErrorException;
+    public void sendReminderToUser(boolean byEmail, boolean bySMS, List<String> users, String text, String subject, String eventId) throws ErrorException;
     
     /**
      * Get all entries to a given day
@@ -146,4 +147,14 @@ public interface ICalendarManager {
     @Editor
     @Writing
     public void transferFromWaitingList(String entryId, String userId) throws ErrorException;
+    
+    /**
+     * When an event is sent it automatically creates and log an history entry.
+     * Use this function to get all the history for a given event.
+     * 
+     * @param eventId
+     * @return 
+     */
+    @Editor
+    public List<ReminderHistory> getHistory(String eventId);
 }

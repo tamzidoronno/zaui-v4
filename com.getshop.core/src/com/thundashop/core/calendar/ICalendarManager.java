@@ -3,6 +3,7 @@ package com.thundashop.core.calendar;
 import com.thundashop.core.calendarmanager.data.Entry;
 import com.thundashop.core.calendarmanager.data.Month;
 import com.thundashop.core.calendarmanager.data.ReminderHistory;
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
@@ -157,4 +158,14 @@ public interface ICalendarManager {
      */
     @Editor
     public List<ReminderHistory> getHistory(String eventId);
+    
+    /**
+     * Transfer a user from one event to another.
+     * 
+     * Needs to be administrator becuase it updating the candidates password.
+     * 
+     * @param evenId 
+     */
+    @Administrator
+    public void transferUser(String fromEventId, String toEventId, String userId) throws ErrorException;
 }

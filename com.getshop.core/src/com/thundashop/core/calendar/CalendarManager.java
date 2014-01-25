@@ -675,4 +675,16 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         Collections.reverse(sortedList);
         return sortedList;
     }
+
+    @Override
+    public void transferUser(String fromEventId, String toEventId, String userId) throws ErrorException {
+        UserManager userManager = this.getManager(UserManager.class);
+        User user = userManager.getUserById(userId);
+        removeUserAttendee(userId, fromEventId);
+        removeUserWaitingList(userId, fromEventId);
+        
+        String newPassord = ""+(11005 + (int)(Math.random() * ((98999 - 11005) + 1)));
+        userManager.updatePassword(userId, "", newPassord);
+        addUserToEvent(userId, toEventId, newPassord, user.username);
+    }
 }

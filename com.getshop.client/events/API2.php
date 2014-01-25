@@ -653,6 +653,25 @@ class APICalendarManager {
 	     return $this->transport->sendMessage($data);
 	}
 
+	/**
+	* Transfer a user from one event to another.
+	*
+	* Needs to be administrator becuase it updating the candidates password.
+	*
+	* @param evenId
+	*/
+
+	public function transferUser($fromEventId, $toEventId, $userId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["fromEventId"] = json_encode($this->transport->object_unset_nulls($fromEventId));
+	     $data['args']["toEventId"] = json_encode($this->transport->object_unset_nulls($toEventId));
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data["method"] = "transferUser";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
 }
 class APICartManager {
 
@@ -2869,6 +2888,19 @@ class APIProductManager {
 	     $data['args'] = array();
 	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
 	     $data["method"] = "getProduct";
+	     $data["interfaceName"] = "core.productmanager.IProductManager";
+	     return $this->transport->cast(API::core_productmanager_data_Product(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Returns a product connected to a specific page.
+	*/
+
+	public function getProductByPage($id) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $data["method"] = "getProductByPage";
 	     $data["interfaceName"] = "core.productmanager.IProductManager";
 	     return $this->transport->cast(API::core_productmanager_data_Product(), $this->transport->sendMessage($data));
 	}

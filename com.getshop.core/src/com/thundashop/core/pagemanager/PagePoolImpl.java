@@ -53,16 +53,16 @@ public class PagePoolImpl {
     }
 
     private void setupDefaultLayouts() {
-        pageLayout.put(Page.DefaultPages.CartPage, Page.PageType.HeaderMiddleFooter);
-        pageLayout.put(Page.DefaultPages.CheckOut, Page.PageType.HeaderMiddleFooter);
-        pageLayout.put(Page.DefaultPages.Home, Page.PageType.HeaderFooterLeftMiddleRight);
-        pageLayout.put(Page.DefaultPages.MyAccount, Page.PageType.HeaderMiddleFooter);
-        pageLayout.put(Page.DefaultPages.OrderOverviewPageId, Page.PageType.HeaderMiddleFooter);
-        pageLayout.put(Page.DefaultPages.Users, Page.PageType.HeaderLeftMiddleFooter);
-        pageLayout.put(Page.DefaultPages.Settings, Page.PageType.HeaderMiddleFooter);
-        pageLayout.put(Page.DefaultPages.Domain, Page.PageType.HeaderMiddleFooter);
-        pageLayout.put(Page.DefaultPages.Callback, Page.PageType.HeaderMiddleFooter);
-        pageLayout.put(Page.DefaultPages.MenuEditor, Page.PageType.HeaderMiddleFooter);
+        pageLayout.put(Page.DefaultPages.CartPage, Page.LayoutType.HeaderMiddleFooter);
+        pageLayout.put(Page.DefaultPages.CheckOut, Page.LayoutType.HeaderMiddleFooter);
+        pageLayout.put(Page.DefaultPages.Home, Page.LayoutType.HeaderFooterLeftMiddleRight);
+        pageLayout.put(Page.DefaultPages.MyAccount, Page.LayoutType.HeaderMiddleFooter);
+        pageLayout.put(Page.DefaultPages.OrderOverviewPageId, Page.LayoutType.HeaderMiddleFooter);
+        pageLayout.put(Page.DefaultPages.Users, Page.LayoutType.HeaderLeftMiddleFooter);
+        pageLayout.put(Page.DefaultPages.Settings, Page.LayoutType.HeaderMiddleFooter);
+        pageLayout.put(Page.DefaultPages.Domain, Page.LayoutType.HeaderMiddleFooter);
+        pageLayout.put(Page.DefaultPages.Callback, Page.LayoutType.HeaderMiddleFooter);
+        pageLayout.put(Page.DefaultPages.MenuEditor, Page.LayoutType.HeaderMiddleFooter);
     }
 
     public void addFromDatabase(Page page) {
@@ -189,7 +189,7 @@ public class PagePoolImpl {
             app.settings.put("disableedit", setting);
             applicationPool.saveApplicationConfiguration(app);
             
-            Page allUsers = createNewPage(Page.PageType.HeaderLeftMiddleFooter, page.id, "users_all_users");
+            Page allUsers = createNewPage(Page.LayoutType.HeaderLeftMiddleFooter, page.id, "users_all_users");
             
             ListManager listManager = pageManager.getManager(ListManager.class);
             Entry entry = new Entry();

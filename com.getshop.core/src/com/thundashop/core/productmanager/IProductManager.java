@@ -4,6 +4,7 @@ import com.thundashop.core.productmanager.data.AttributeSummary;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
@@ -183,4 +184,9 @@ public interface IProductManager {
      * @throws ErrorException 
      */
     public List<TaxGroup> getTaxes() throws ErrorException;
+    
+    /**
+     * Returns a product connected to a specific page.
+     */
+    public Product getProductByPage(String id) throws ErrorException;
 }

@@ -86,7 +86,7 @@ public class AProductManager extends ManagerBase {
     protected void createProductPage(Product product) throws ErrorException {
         if (product.page == null) {
             IPageManager pageManager = getManager(PageManager.class);
-            product.page = pageManager.createPage(Page.PageType.HeaderMiddleFooter, "");
+            product.page = pageManager.createPage(Page.LayoutType.HeaderMiddleFooter, "");
             product.pageId = product.page.id;
             //
             AppConfiguration config = pageManager.addApplicationToPage(product.page.id, "dcd22afc-79ba-4463-bb5c-38925468ae26", "main_1");
@@ -199,5 +199,14 @@ public class AProductManager extends ManagerBase {
             limitedResult.add(result.get(i));
         }
         return limitedResult;
+    }
+    
+    public Product findProductByPage(String id) {
+        for(Product product : products.values()) {
+            if(product.pageId.equals(id)) {
+                return product;
+            }
+        }
+        return null;
     }
 }

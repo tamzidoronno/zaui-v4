@@ -17,7 +17,9 @@ import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -71,7 +73,7 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         new Thread(impl).start();
     }
 
-    private String encode(String text) {
+    private String encode(String text) throws UnsupportedEncodingException {
         text = text.replaceAll(" " ,"%20");
         text = text.replaceAll("å", "%E5");
         text = text.replaceAll("ø", "%F8");
@@ -79,6 +81,8 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         text = text.replaceAll("Ø", "%D8");
         text = text.replaceAll("Å", "%C5");
         text = text.replaceAll("Æ", "%C6");
+        text = text.replaceAll("\n", "%0A");
+        
         return text;
     }
     

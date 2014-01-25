@@ -190,11 +190,12 @@
     color: #FFF;
     margin-left: 20px;
     margin-top: 20px;
+    height: 30px;
 }
 
 .gs_bigstock .subtext {
     color: #FFF;
-    margin-left: 20px;
+    margin-left: 30px;
     font-size: 18px;
 }
 

@@ -189,6 +189,7 @@ padding-left: 20px;
 background-color: #3f3f3f;
 z-index: 1;
 top: 17px;
+font-family: "Lucida Console", Monaco, monospace;
 }
 
 #infomrationboxclosebutton {

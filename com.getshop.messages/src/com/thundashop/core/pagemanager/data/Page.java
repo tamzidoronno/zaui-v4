@@ -117,6 +117,12 @@ public class Page extends DataCommon implements Cloneable {
     }
 
     public static class PageType {
+        public static int Standard = 1;
+        public static int Product = 2;
+        
+    }
+    
+    public static class LayoutType {
         public static int HeaderFooterLeftMiddleRight = 1;
         public static int HeaderLeftMiddleFooter = 2;
         public static int HeaderRightMiddleFooter = 3;
@@ -124,11 +130,15 @@ public class Page extends DataCommon implements Cloneable {
     }
     
     public Page parent;
+    public int pageType = 1;
+    //This is actually more a layout type... should be renamed to layouttype
     public int type;
     public int userLevel = 0;
     public String description = "";
     private HashMap<String, PageArea> pageAreas = new HashMap<String, PageArea>();
     public PageLayout layout = new PageLayout();
+    public String title;
+    
     
     /**
      * This might not be set, only in just a few cases.

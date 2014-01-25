@@ -7,6 +7,7 @@ package com.thundashop.core.messagemanager;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.StoreComponent;
 import com.thundashop.core.databasemanager.Database;
@@ -47,6 +48,9 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
     public Database database;
     
     @Autowired
+    public FrameworkConfig frameworkConfig;
+    
+    @Autowired
     public DatabaseSaver databaseSaver;
 
     @Autowired
@@ -68,6 +72,7 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         impl.credentials = credentials;
         impl.database = database;
         impl.logger = logger;
+        impl.frameworkConfig = frameworkConfig;
         impl.storeManager = storeManager;
         impl.setStoreId(storeId);
         new Thread(impl).start();
@@ -126,6 +131,12 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         
         if (!validateNumber())
             return;
+        
+        
+        if (!frameworkConfig.productionMode) {
+            System.out.println("Sent SMS [ to: " + to + ", from: " + from +", Message: " + message + " ]");
+            return;
+        }
         
         URL url;
         InputStream is = null;

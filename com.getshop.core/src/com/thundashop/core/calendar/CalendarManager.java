@@ -654,13 +654,15 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
     @Override
     public List<ReminderHistory> getHistory(String eventId) {
-        List<ReminderHistory> allHistory = new ArrayList();
+        Set<ReminderHistory> allHistory = new TreeSet();
         for (ReminderHistory hist : reminderHistory) {
             if (hist.eventId.equals(eventId)) {
                 allHistory.add(hist);
             }
         }
         
-        return allHistory;
+        List<ReminderHistory> sortedList = new ArrayList(allHistory);
+        Collections.reverse(sortedList);
+        return sortedList;
     }
 }

@@ -300,7 +300,7 @@ class Factory extends FactoryBase {
         }
 
         $pageId = isset($_POST['data']['getShopPageId']) ? $_POST['data']['getShopPageId'] : $navigation->currentPageId;
-        $page = $this->pageManager->getPage($navigation->currentPageId);
+        $page = $this->pageManager->getPage($pageId);
         if ($page == null) {
             $page = $this->pageManager->getPage($homePage);
         }

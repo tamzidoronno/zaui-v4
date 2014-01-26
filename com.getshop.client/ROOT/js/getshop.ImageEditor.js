@@ -45,6 +45,7 @@ getshop.ImageEditor.prototype = {
         this.createUploadMenu();
         this.createPreviewContainer();
         this.addMenu();
+        this.setBoundaries();
         this.refresh();
     },
     setDefaultCrops: function() {
@@ -322,6 +323,9 @@ getshop.ImageEditor.prototype = {
         return outer;
     },
     deleteImage: function() {
+        if (this.imageDeleted && typeof(this.imageDeleted) === "function") {
+            this.imageDeleted(this);
+        }
         this.config.imageId = null;
         this.config.Image = null;
         this.refresh();
@@ -404,7 +408,6 @@ getshop.ImageEditor.prototype = {
      * @returns {undefined}
      */
     refresh: function() {
-        this.setBoundaries();
         if (!this.config.Image && !this.config.imageId) {
             this.showUploadForm();
         } else if (!this.config.Image) {

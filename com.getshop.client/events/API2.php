@@ -543,6 +543,23 @@ class APICalendarManager {
 	}
 
 	/**
+	* When an event is sent it automatically creates and log an history entry.
+	* Use this function to get all the history for a given event.
+	*
+	* @param eventId
+	* @return List
+	*/
+
+	public function getHistory($eventId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["eventId"] = json_encode($this->transport->object_unset_nulls($eventId));
+	     $data["method"] = "getHistory";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Get all data attached to a given month.
 	* @param year The year to fetch
 	* @param month The month to fetch
@@ -607,7 +624,7 @@ class APICalendarManager {
 	* @throws ErrorException
 	*/
 
-	public function sendReminderToUser($byEmail, $bySMS, $users, $text, $subject) {
+	public function sendReminderToUser($byEmail, $bySMS, $users, $text, $subject, $eventId) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["byEmail"] = json_encode($this->transport->object_unset_nulls($byEmail));
@@ -615,6 +632,7 @@ class APICalendarManager {
 	     $data['args']["users"] = json_encode($this->transport->object_unset_nulls($users));
 	     $data['args']["text"] = json_encode($this->transport->object_unset_nulls($text));
 	     $data['args']["subject"] = json_encode($this->transport->object_unset_nulls($subject));
+	     $data['args']["eventId"] = json_encode($this->transport->object_unset_nulls($eventId));
 	     $data["method"] = "sendReminderToUser";
 	     $data["interfaceName"] = "core.calendar.ICalendarManager";
 	     return $this->transport->sendMessage($data);
@@ -631,6 +649,25 @@ class APICalendarManager {
 	     $data['args']["entryId"] = json_encode($this->transport->object_unset_nulls($entryId));
 	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
 	     $data["method"] = "transferFromWaitingList";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Transfer a user from one event to another.
+	*
+	* Needs to be administrator becuase it updating the candidates password.
+	*
+	* @param evenId
+	*/
+
+	public function transferUser($fromEventId, $toEventId, $userId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["fromEventId"] = json_encode($this->transport->object_unset_nulls($fromEventId));
+	     $data['args']["toEventId"] = json_encode($this->transport->object_unset_nulls($toEventId));
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data["method"] = "transferUser";
 	     $data["interfaceName"] = "core.calendar.ICalendarManager";
 	     return $this->transport->sendMessage($data);
 	}

@@ -7,6 +7,7 @@ package com.thundashop.core.messagemanager;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.StoreComponent;
 import com.thundashop.core.databasemanager.Database;
@@ -17,7 +18,9 @@ import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -45,6 +48,9 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
     public Database database;
     
     @Autowired
+    public FrameworkConfig frameworkConfig;
+    
+    @Autowired
     public DatabaseSaver databaseSaver;
 
     @Autowired
@@ -66,12 +72,13 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         impl.credentials = credentials;
         impl.database = database;
         impl.logger = logger;
+        impl.frameworkConfig = frameworkConfig;
         impl.storeManager = storeManager;
         impl.setStoreId(storeId);
         new Thread(impl).start();
     }
 
-    private String encode(String text) {
+    private String encode(String text) throws UnsupportedEncodingException {
         text = text.replaceAll(" " ,"%20");
         text = text.replaceAll("å", "%E5");
         text = text.replaceAll("ø", "%F8");
@@ -79,6 +86,8 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         text = text.replaceAll("Ø", "%D8");
         text = text.replaceAll("Å", "%C5");
         text = text.replaceAll("Æ", "%C6");
+        text = text.replaceAll("\n", "%0A");
+        
         return text;
     }
     
@@ -122,6 +131,12 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         
         if (!validateNumber())
             return;
+        
+        
+        if (!frameworkConfig.productionMode) {
+            System.out.println("Sent SMS [ to: " + to + ", from: " + from +", Message: " + message + " ]");
+            return;
+        }
         
         URL url;
         InputStream is = null;

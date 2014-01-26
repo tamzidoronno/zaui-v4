@@ -8,7 +8,6 @@ import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.StoreComponent;
 import java.io.File;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import javax.activation.DataHandler;
@@ -155,7 +154,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
             if (frameworkConfig.productionMode) {
                 Transport.send(message);
             } else {
-                System.out.println("Mail sent to: " + to + ", subject: " + subject + ", content: " + content);
+                System.out.println("Mail sent to: " + to + ", from: "+from+", subject: " + subject + ", content: " + content);
             }
             
         } catch (Exception ex) {

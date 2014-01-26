@@ -4,11 +4,11 @@ import com.thundashop.core.calendarmanager.data.Day;
 import com.thundashop.core.calendarmanager.data.Entry;
 import com.thundashop.core.calendarmanager.data.ExtraDay;
 import com.thundashop.core.calendarmanager.data.Month;
+import com.thundashop.core.calendarmanager.data.ReminderHistory;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.SMSFactory;
-import com.thundashop.core.mobilemanager.MobileManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
@@ -32,7 +32,9 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     
     @Autowired
     public SMSFactory smsFactory;
-            
+
+    private List<ReminderHistory> reminderHistory = new ArrayList();
+    
     @Autowired
     public CalendarManager(Logger log, DatabaseSaver databaseSaver) {
         super(log, databaseSaver);
@@ -44,6 +46,10 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             if (dataObject instanceof Month) {
                 Month month = (Month)dataObject;
                 months.put(month.id, month);
+            }
+            if (dataObject instanceof ReminderHistory) {
+                ReminderHistory hist = (ReminderHistory)dataObject;
+                reminderHistory.add(hist);
             }
         }
     }
@@ -170,10 +176,20 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         }
 
         text = mutateText(password, text, entry, user);
-        mailFactory.send("noreply@getshop.com", user.emailAddress, subject, text);
+        
+        mailFactory.send(getFromAddress(), user.emailAddress, subject, text);
         if (user.emailAddressToInvoice != null && !user.emailAddressToInvoice.equals("")) {
-            mailFactory.send("noreply@getshop.com", user.emailAddressToInvoice, subject, text);
+            mailFactory.send(getFromAddress(), user.emailAddressToInvoice, subject, text);
         }
+    }
+    
+    private String getFromAddress() throws ErrorException {
+        String storeEmailAddress = getStore().configuration.emailAdress;
+        if (storeEmailAddress != null) {
+            return storeEmailAddress;
+        }
+        
+        return "noreply@getshop.com";
     }
 
     private void sendSms(String password, Entry entry, User user, boolean waitingList) throws ErrorException {
@@ -268,8 +284,8 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     }
 
     @Override
-    public void sendReminderToUser(boolean byEmail, boolean bySMS, List<String> users, String text, String subject) throws ErrorException {
-        remindUserInternal(byEmail, bySMS, users, text, subject);
+    public void sendReminderToUser(boolean byEmail, boolean bySMS, List<String> users, String text, String subject, String eventId) throws ErrorException {
+        remindUserInternal(byEmail, bySMS, users, text, subject, eventId);
     }
 
     @Override
@@ -372,14 +388,28 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
         return onMonth;
     }
+    
+    private ReminderHistory createReminderHistory(String text, String subject, String eventId, boolean byEmail) {
+        ReminderHistory smsHistory = new ReminderHistory();
+        smsHistory.byEmail = byEmail;
+        smsHistory.text = text;
+        smsHistory.subject = subject;
+        smsHistory.storeId = storeId;
+        smsHistory.eventId = eventId;
+        return smsHistory;
+    }
 
-    private void remindUserInternal(boolean byEmail, boolean bySMS, List<String> users, String text, String subject) throws ErrorException {
+    private void remindUserInternal(boolean byEmail, boolean bySMS, List<String> users, String text, String subject, String eventId) throws ErrorException {
+        ReminderHistory smsHistory = createReminderHistory(text, subject, eventId, byEmail);
+        ReminderHistory emailHistory = createReminderHistory(text, subject, eventId, byEmail);
+        
         for (String userId : users) {
             UserManager usrmgr = getManager(UserManager.class);
             User user = usrmgr.getUserById(userId);
             
             if (byEmail) {
-                mailFactory.send("noreply@getshop.com", user.emailAddress, subject, text);
+                mailFactory.send(getFromAddress(), user.emailAddress, subject, text);
+                emailHistory.users.add(user);
             }
 
             if (bySMS) {
@@ -388,7 +418,18 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                 String message = text;
                 String phoneNumber = user.cellPhone;
                 smsFactory.send(from, phoneNumber, message);
+                smsHistory.users.add(user);
             }
+        }
+        
+        if (smsHistory.users.size() > 0) {
+            databaseSaver.saveObject(smsHistory, credentials);
+            reminderHistory.add(smsHistory);
+        }
+        
+        if (emailHistory.users.size() > 0) {
+            databaseSaver.saveObject(emailHistory, credentials);
+            reminderHistory.add(emailHistory);
         }
     }
 
@@ -619,5 +660,31 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         }
 
         return null;
+    }
+
+    @Override
+    public List<ReminderHistory> getHistory(String eventId) {
+        Set<ReminderHistory> allHistory = new TreeSet();
+        for (ReminderHistory hist : reminderHistory) {
+            if (hist.eventId.equals(eventId)) {
+                allHistory.add(hist);
+            }
+        }
+        
+        List<ReminderHistory> sortedList = new ArrayList(allHistory);
+        Collections.reverse(sortedList);
+        return sortedList;
+    }
+
+    @Override
+    public void transferUser(String fromEventId, String toEventId, String userId) throws ErrorException {
+        UserManager userManager = this.getManager(UserManager.class);
+        User user = userManager.getUserById(userId);
+        removeUserAttendee(userId, fromEventId);
+        removeUserWaitingList(userId, fromEventId);
+        
+        String newPassord = ""+(11005 + (int)(Math.random() * ((98999 - 11005) + 1)));
+        userManager.updatePassword(userId, "", newPassord);
+        addUserToEvent(userId, toEventId, newPassord, user.username);
     }
 }

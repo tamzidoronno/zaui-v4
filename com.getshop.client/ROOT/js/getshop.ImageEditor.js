@@ -141,12 +141,10 @@ getshop.ImageEditor.prototype = {
         }
     },
     showFileDialog: function() {
-        console.log("Showing dialog");
         var selectDialogueLink = $('<a href="">Select files</a>');
         var fileSelector = $('<input type="file" id="your-files" multiple/>');
 
         selectDialogueLink.click(function() {
-            console.log("Select dialog clicked");
             fileSelector.click();
         });
         $('body').append(fileSelector);
@@ -156,7 +154,6 @@ getshop.ImageEditor.prototype = {
         var me = this;
         
         control.addEventListener("change", function() {
-            console.log("Image selected");
             me.imageSelected(control);
         });
         
@@ -278,7 +275,14 @@ getshop.ImageEditor.prototype = {
     
     saveImage: function() {
         PubSub.publish("LAYOUT_UPDATED", "image");
+        
         this._uploadStarted();
+        
+        if (this.config.imageId) {
+            var event = thundashop.Ajax.createEvent('', 'updateCordinates', this.config.app, { cords: this.getCropsForFullSizeImage() });
+            thundashop.Ajax.post(event, $.proxy(this.uploadCompleted, this));
+            return;
+        }
         
         var data = {
             data : this.getFullSizeImage(),
@@ -306,6 +310,9 @@ getshop.ImageEditor.prototype = {
     uploadCompleted: function(response) {
         getshop.ImageEditorApi.remove(this.id);
         this.progressDiv.hide();
+        if (this.uploadFinished && typeof(this.uploadFinished) == "function") {
+            this.uploadFinished(this);
+        }
     },
     uploadProgress: function(progress) {
         this.progressDiv.find('.gs_image_editor_progress_bar').css('width', progress+"%");
@@ -470,6 +477,10 @@ getshop.ImageEditor.prototype = {
         });
     },
     cropChanged: function(c) {
+        if (!c) {
+            return;
+        }
+        
         this.config.crops = [c.x, c.y, c.w+c.x, c.y2];
     },
     generateCompressionRate: function() {

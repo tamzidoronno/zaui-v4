@@ -232,7 +232,7 @@ thundashop.common.navigateContentPages = function() {
     var box = $(this).closest('.gs_showPageLayoutSelection');
     box.find('.option_selected').removeClass('option_selected');
     button.addClass('option_selected');
-    
+
     $('.gs_showPageLayoutSelection .options_content').scrollTop(0);
 
     box.find('.content_type_selected').hide();
@@ -401,11 +401,14 @@ thundashop.common.createInformationBox = function(appid, title, open) {
     if (open) {
         $('#informationboxtitle').html(title);
     }
+    infoBox.html('');
     infoBox.addClass('normalinformationbox');
     infoBox.removeClass('largeinformationbox');
-    $('body').css('overflow', 'hidden');
-    $('.informationbox-outer').show();
-
+    $('.informationbox-outer').css('overflow','hidden');
+    $('.informationbox-outer').fadeIn("200", function() {
+        $('.informationbox-outer').css('overflow-y','scroll');
+        $('body').css('overflow', 'hidden');
+    });
     return infoBox;
 
 }
@@ -427,10 +430,13 @@ thundashop.common.showInformationBox = function(event, title, avoidScroll) {
     infoBox.attr('app', event.core.appname);
     infoBox.attr('apparea', event.core.apparea);
     infoBox.addClass(event.core.appname);
-
+    
+    infoBox.html('<div style="font-size:35px; text-align:center; color:#3f3f3f;padding-top: 40px; "><i class="fa fa-spinner fa-spin"></i></div>');
     var result = thundashop.Ajax.postSynchron(event);
-    infoBox.html(result);
-    setTimeout(thundashop.common.setMaskHeight, "200");
+    setTimeout(function() {
+        infoBox.html(result);
+        thundashop.common.setMaskHeight();
+    }, 300);
     if (!avoidScroll) {
         $('.informationbox-outer').scrollTop(0);
     }
@@ -466,21 +472,22 @@ thundashop.common.Alert = function(title, message, error) {
 thundashop.common.mask = function() {
     var height = $(document).height();
     $('#fullscreenmask').height(height);
-    $("#fullscreenmask").show();
+    $("#fullscreenmask").fadeIn();
 }
 
 thundashop.common.unmask = function() {
     var result = $.Deferred();
     var attr = $('#fullscreenmask').attr('locked');
-    $('.informationbox-outer').hide();
-    $('body').css('overflow', 'scroll');
-    if (typeof(attr) === "undefined" || attr === "false") {
-        $('#informationbox-holder').fadeOut(200);
-        $('#fullscreenmask').fadeOut(200, function() {
-            result.resolve();
+    $('.informationbox-outer').css('overflow-y','hidden');
+    $('body').css('overflow', 'auto');
+    $('#informationbox-holder').fadeOut(200, function() {
+        $('.informationbox-outer').fadeOut(200, function() {
+            if (typeof(attr) === "undefined" || attr === "false") {
+                $('#fullscreenmask').hide();
+                result.resolve();
+            }
         });
-        thundashop.MainMenu.unlockScroll();
-    }
+    });
     return result;
 }
 

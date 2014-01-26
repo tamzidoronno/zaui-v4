@@ -10,7 +10,14 @@ getshop.ImageEditorApi = {
     },
     
     get: function(id) {
-        return getshop.ImageEditorApi.editors[id];
+        var editor = getshop.ImageEditorApi.editors[id];
+        
+        if (editor && !editor.isValid()) {
+            getshop.ImageEditorApi.remove(id);
+            return null;
+        }
+        
+        return editor;
     },
     
     remove: function(id) {
@@ -61,6 +68,17 @@ getshop.ImageEditor.prototype = {
                 this.originalAspectRatio = innerApp.width() / innerApp.height();
             }
         }
+    },
+    isValid: function() {
+        if (this.config && this.config.imageId) {
+            return true;
+        }
+        
+        if (this.config && this.config.Image) {
+            return true;
+        }
+        
+        return false;
     },
     createPreviewContainer: function() {
         this.previewContainer = $('<div/>');

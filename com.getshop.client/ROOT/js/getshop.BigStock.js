@@ -293,7 +293,7 @@ getshop.BigStock.prototype = {
 
 
 getshop.BigStockApi = {
-    APIADDRESS : "http://testapi.bigstockphoto.com/2/442193/",
+    APIADDRESS : "https://api.bigstockphoto.com/2/442193/",
     
     search: function(success, keywords, page) {
         $.ajax({

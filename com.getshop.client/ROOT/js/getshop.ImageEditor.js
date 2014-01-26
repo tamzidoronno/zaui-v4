@@ -273,13 +273,19 @@ getshop.ImageEditor.prototype = {
         }
     },
     
+    getCurrentPageId: function() {
+        return $('.skelholder').find('#pageid').attr('value');
+    },
+    
     saveImage: function() {
         PubSub.publish("LAYOUT_UPDATED", "image");
         
         this._uploadStarted();
         
+        var currentPageId = this.getCurrentPageId();
+        
         if (this.config.imageId) {
-            var event = thundashop.Ajax.createEvent('', 'updateCordinates', this.config.app, { cords: this.getCropsForFullSizeImage() });
+            var event = thundashop.Ajax.createEvent('', 'updateCordinates', this.config.app, { cords: this.getCropsForFullSizeImage(), 'getShopPageId' : currentPageId });
             thundashop.Ajax.post(event, $.proxy(this.uploadCompleted, this));
             return;
         }
@@ -287,7 +293,8 @@ getshop.ImageEditor.prototype = {
         var data = {
             data : this.getFullSizeImage(),
             compression: 1,
-            cords: this.getCropsForFullSizeImage()
+            cords: this.getCropsForFullSizeImage(), 
+            'getShopPageId' : currentPageId
         };
         
         var event = thundashop.Ajax.createEvent('', 'saveOriginalImage', this.config.app, data);

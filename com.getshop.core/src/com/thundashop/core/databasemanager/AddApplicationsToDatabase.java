@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.thundashop.core.databasemanager;
 
 import com.thundashop.core.appmanager.ApplicationPool;
@@ -55,22 +52,13 @@ public class AddApplicationsToDatabase {
         List<ApplicationSettings> apps = new ArrayList();
 
         ApplicationSettings jobifyTheme = createSettings(
-                "JobifyTheme",
-                "3b414d4e_25e7_4552_ade1_e37f5b3210ad",
+                "Product",
+                "06f9d235-9dd3-4971-9b91-88231ae0436b",
                 emtpy,
                 "",
-                ApplicationSettings.Type.Theme, false);
+                ApplicationSettings.Type.Webshop, false);
         jobifyTheme.isPublic = true;
         apps.add(jobifyTheme);
-
-        ApplicationSettings menuEditor = createSettings(
-                "MenuEditor",
-                "a11ac190-4f9a-11e3-8f96-0800200c9a66",
-                emtpy,
-                "",
-                ApplicationSettings.Type.System, false);
-        menuEditor.isPublic = true;
-        apps.add(menuEditor);
 
         return apps;
     }

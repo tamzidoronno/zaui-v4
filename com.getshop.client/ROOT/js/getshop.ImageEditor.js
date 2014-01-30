@@ -140,6 +140,8 @@ getshop.ImageEditor.prototype = {
         var i = 0,files = control.files,len = files.length;
         var me = this;
         
+        this.showImageLoader();
+        
         for (; i < len; i++) {
             var file = files[i];
             var reader = new FileReader();
@@ -192,6 +194,11 @@ getshop.ImageEditor.prototype = {
         this.canvas = document.createElement("canvas");
         this.canvasDivInner.append(this.canvas);
         this.imageWorkArea.append(this.canvasDiv);
+        
+        this.loader = $('<center><i style="color:#FFF; font-size: 20px; text-align: center; margin-top: 20px;" class="fa fa-spinner fa-spin"></i><span style="margin-left: 10px; color: #FFF;">'+__f("Loading image, please wait")+'</span></center>');
+        this.loader.hide();
+        this.imageWorkArea.append(this.loader);
+        
         this.innerDom.append(this.imageWorkArea);
     },
     createContainer: function() {
@@ -372,6 +379,7 @@ getshop.ImageEditor.prototype = {
         this.config.Image = null;
         this.config.OriginalImage = null;
         this.config.rotation = 0;
+        this.canvas.getContext("2d").clearRect(0,0,this.canvas.width, this.canvas.height);
         this.refresh();
     },
     rotateRight: function(silent) {
@@ -458,11 +466,17 @@ getshop.ImageEditor.prototype = {
 
         return entry;
     },
+    showImageLoader: function() {
+        $(this.canvas).fadeIn();
+        this.uploadMenu.hide();
+        this.loader.show();  
+    },
     loadImage: function() {
         if (!this.config.imageId) {
             return;
         }
 
+        this.showImageLoader();
         this.config.Image = new Image();
         this.config.Image.onload = $.proxy(this.onImageLoaded, this);
         this.config.Image.src = "displayImage.php?id=" + this.config.imageId;
@@ -483,6 +497,7 @@ getshop.ImageEditor.prototype = {
      * @returns {undefined}
      */
     refresh: function() {
+        this.loader.hide();
         if (!this.config.Image && !this.config.imageId) {
             this.showUploadForm();
         } else if (!this.config.Image) {
@@ -498,6 +513,8 @@ getshop.ImageEditor.prototype = {
         this.uploadMenu.fadeIn();
     },
     onImageLoaded: function() {
+        this.loader.hide();
+        
         var firstTimeLoaded = !this.config.OriginalImage;
         
         if (firstTimeLoaded) {

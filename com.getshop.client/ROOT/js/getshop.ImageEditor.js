@@ -314,16 +314,16 @@ getshop.ImageEditor.prototype = {
         };
 
         if (this.config.imageId) {
+            data.imageId = this.config.imageId;
+        }
+        
+        if (this.config.imageId) {
             var event = thundashop.Ajax.createEvent('', 'updateCordinates', this.config.app, data);
             thundashop.Ajax.post(event, $.proxy(this.uploadCompleted, this));
             return;
         }
         
         data.data = this.getFullSizeOriginalImage();
-        
-        if (this.config.imageId) {
-            data.imageId = this.config.imageId;
-        }
         
         var event = thundashop.Ajax.createEvent('', 'saveOriginalImage', this.config.app, data);
         event.synchron = true;

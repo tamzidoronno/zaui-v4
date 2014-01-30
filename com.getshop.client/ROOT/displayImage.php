@@ -27,6 +27,9 @@ if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])){
 $imageLoader = new ImageLoader();
 $imageLoader->load($_GET['id']);
 
+if (isset($_GET['rotation'])) {
+    $imageLoader->rotate($_GET['rotation']);
+}
 if(isset($_GET['zoom'])) {
     $imageLoader->zoom(true);
 }

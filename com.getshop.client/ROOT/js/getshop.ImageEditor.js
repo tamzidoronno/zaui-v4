@@ -42,7 +42,6 @@ getshop.ImageEditor.prototype = {
      * @type type
      */
     canvas: null,
-    rotation: 0,
     init: function() {
         this.setDefaultCrops();
         this.createContainer();
@@ -206,6 +205,10 @@ getshop.ImageEditor.prototype = {
     setDefaultConfig: function() {
         if (!this.config)
             this.config = {};
+        
+        if (this.config.rotation == null) {
+            this.config.rotation = 0;
+        }
     },
     addMenu: function() {
         this.menu = $('<div/>');
@@ -237,13 +240,14 @@ getshop.ImageEditor.prototype = {
         menuEntry.click($.proxy(this.saveImage, this));
     },
     
-    getFullSizeImage: function() {
+    getFullSizeOriginalImage: function() {
+        var image = this.config.OriginalImage;
         var canvas = document.createElement("canvas");
-        canvas.width = this.config.Image.width;
-        canvas.height = this.config.Image.height;
+        canvas.width = image.width;
+        canvas.height = image.height;
         
         var ctx = canvas.getContext("2d");
-        ctx.drawImage(this.config.Image, 0, 0, this.config.Image.width, this.config.Image.height);
+        ctx.drawImage(image, 0, 0, image.width, image.height);
         return canvas.toDataURL();
     },
     
@@ -302,18 +306,24 @@ getshop.ImageEditor.prototype = {
         
         var currentPageId = this.getCurrentPageId();
         
+        var data = {
+            compression: 1,
+            cords: this.getCropsForFullSizeImage(), 
+            rotation: this.config.rotation,
+            'getShopPageId' : currentPageId,
+        };
+
         if (this.config.imageId) {
-            var event = thundashop.Ajax.createEvent('', 'updateCordinates', this.config.app, { cords: this.getCropsForFullSizeImage(), 'getShopPageId' : currentPageId });
+            var event = thundashop.Ajax.createEvent('', 'updateCordinates', this.config.app, data);
             thundashop.Ajax.post(event, $.proxy(this.uploadCompleted, this));
             return;
         }
         
-        var data = {
-            data : this.getFullSizeImage(),
-            compression: 1,
-            cords: this.getCropsForFullSizeImage(), 
-            'getShopPageId' : currentPageId
-        };
+        data.data = this.getFullSizeOriginalImage();
+        
+        if (this.config.imageId) {
+            data.imageId = this.config.imageId;
+        }
         
         var event = thundashop.Ajax.createEvent('', 'saveOriginalImage', this.config.app, data);
         event.synchron = true;
@@ -360,9 +370,19 @@ getshop.ImageEditor.prototype = {
         }
         this.config.imageId = null;
         this.config.Image = null;
+        this.config.OriginalImage = null;
+        this.config.rotation = 0;
         this.refresh();
     },
-    rotateRight: function() {
+    rotateRight: function(silent) {
+        if (silent !== true) {
+            this.imageJustRotated = true;
+            this.config.rotation = this.config.rotation + 90;
+            if (this.config.rotation >= 360) { 
+               this.config.rotation = 0;
+            }
+        }
+        
         var height = this.config.Image.width;
         var width = this.config.Image.height;
         
@@ -375,7 +395,15 @@ getshop.ImageEditor.prototype = {
         ctx.drawImage(this.config.Image, 0, -width, height , width);
         this.config.Image.src = canvasLoc.toDataURL("image/png");
     },
-    rotateLeft: function() {
+    rotateLeft: function(silent) {
+        if (silent !== true) {
+            this.imageJustRotated = true;
+            this.config.rotation = this.config.rotation - 90;
+            if (this.config.rotation < 0) {
+                this.config.rotation = 270;
+            }
+        }
+        
         var height = this.config.Image.width;
         var width = this.config.Image.height;
         
@@ -386,6 +414,21 @@ getshop.ImageEditor.prototype = {
         var ctx = canvasLoc.getContext("2d");
         ctx.rotate(-90*Math.PI/180);
         ctx.drawImage(this.config.Image, -height, 0, height , width);
+        this.config.Image.src = canvasLoc.toDataURL("image/png");
+    },
+    flipImage: function() {
+        var width = this.config.Image.width;
+        var height = this.config.Image.height;
+
+        var canvasLoc = document.createElement("canvas");
+        canvasLoc.height = this.config.Image.height;
+        canvasLoc.width = this.config.Image.width;
+        
+        var ctx = canvasLoc.getContext("2d");
+        ctx.rotate(180*Math.PI/180);
+        ctx.drawImage(this.config.Image, -width, -height, width, height);
+        ctx.restore();
+        
         this.config.Image.src = canvasLoc.toDataURL("image/png");
     },
     toggleAspectRation: function() {
@@ -455,11 +498,54 @@ getshop.ImageEditor.prototype = {
         this.uploadMenu.fadeIn();
     },
     onImageLoaded: function() {
+        var firstTimeLoaded = !this.config.OriginalImage;
+        
+        if (firstTimeLoaded) {
+            this.setOriginalImage();
+        }
+        
         $(this.menu).find('.disabled').hide();
         $(this.canvas).fadeIn();
         this.uploadMenu.hide();
         this.appendImageToCanvas();
-        this.refeshCropArea(true);
+        
+        if (firstTimeLoaded && this.config.rotation) {
+            this.rotateImageInitially();  
+        } else {
+            var doCompression = this.imageJustRotated === true ? false : true ;
+            this.refeshCropArea(doCompression);
+            this.imageJustRotated = null;
+        }
+    },
+    rotateImageInitially: function() {
+        if (this.config.rotation === 90) {
+            this.rotateRight(true);
+        }
+        
+        if (this.config.rotation === 180) {
+            this.flipImage();
+        }
+        
+        if (this.config.rotation === 270) {
+            this.rotateLeft(true);
+        }
+    },
+    setOriginalImage: function() {
+        var canvas = document.createElement("canvas");
+        canvas.width = this.config.Image.width;
+        canvas.height = this.config.Image.height;
+        
+        var ctx = canvas.getContext("2d");
+        ctx.height = this.config.Image.height;
+        ctx.width = this.config.Image.width;
+        
+        ctx.height = canvas.height;
+        ctx.width = canvas.width;
+        
+        ctx.drawImage(this.config.Image, 0, 0, this.config.Image.width, this.config.Image.height);
+        
+        this.config.OriginalImage = new Image();
+        this.config.OriginalImage.src = canvas.toDataURL();
     },
     removeCropping: function() {
         var jCropApi = $(this.canvasDivInner).data('Jcrop');
@@ -485,6 +571,11 @@ getshop.ImageEditor.prototype = {
             crops[1] = crops[1]*compression;
             crops[2] = crops[2]*compression;
             crops[3] = crops[3]*compression;
+        }
+        
+        if (this.imageJustRotated) {
+            crops[0] = 0;
+            crops[1] = 0;
         }
         
         if (this.menu.find('.fa-lock').hasClass('active')) {
@@ -516,11 +607,6 @@ getshop.ImageEditor.prototype = {
         var ratio = 0;
         var width = img.width;
         var height = img.height;
-
-        if (this.rotation === 90 || this.rotation === 270) {
-            width = img.height;
-            height = img.width;
-        }
 
         ratio = maxWidth / width;
         var newHeight = height * ratio;

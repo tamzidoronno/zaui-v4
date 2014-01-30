@@ -10,7 +10,14 @@ getshop.ImageEditorApi = {
     },
     
     get: function(id) {
-        return getshop.ImageEditorApi.editors[id];
+        var editor = getshop.ImageEditorApi.editors[id];
+        
+        if (editor && !editor.isValid()) {
+            getshop.ImageEditorApi.remove(id);
+            return null;
+        }
+        
+        return editor;
     },
     
     remove: function(id) {
@@ -61,6 +68,17 @@ getshop.ImageEditor.prototype = {
                 this.originalAspectRatio = innerApp.width() / innerApp.height();
             }
         }
+    },
+    isValid: function() {
+        if (this.config && this.config.imageId) {
+            return true;
+        }
+        
+        if (this.config && this.config.Image) {
+            return true;
+        }
+        
+        return false;
     },
     createPreviewContainer: function() {
         this.previewContainer = $('<div/>');
@@ -273,13 +291,19 @@ getshop.ImageEditor.prototype = {
         }
     },
     
+    getCurrentPageId: function() {
+        return $('.skelholder').find('#pageid').attr('value');
+    },
+    
     saveImage: function() {
         PubSub.publish("LAYOUT_UPDATED", "image");
         
         this._uploadStarted();
         
+        var currentPageId = this.getCurrentPageId();
+        
         if (this.config.imageId) {
-            var event = thundashop.Ajax.createEvent('', 'updateCordinates', this.config.app, { cords: this.getCropsForFullSizeImage() });
+            var event = thundashop.Ajax.createEvent('', 'updateCordinates', this.config.app, { cords: this.getCropsForFullSizeImage(), 'getShopPageId' : currentPageId });
             thundashop.Ajax.post(event, $.proxy(this.uploadCompleted, this));
             return;
         }
@@ -287,7 +311,8 @@ getshop.ImageEditor.prototype = {
         var data = {
             data : this.getFullSizeImage(),
             compression: 1,
-            cords: this.getCropsForFullSizeImage()
+            cords: this.getCropsForFullSizeImage(), 
+            'getShopPageId' : currentPageId
         };
         
         var event = thundashop.Ajax.createEvent('', 'saveOriginalImage', this.config.app, data);

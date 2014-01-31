@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thundashop.core.productmanager.data;
 
 import com.google.code.morphia.annotations.Transient;
@@ -9,10 +5,10 @@ import com.google.gson.Gson;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Editor;
-import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.pagemanager.data.Page;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,9 +18,12 @@ import java.util.Map;
  */
 public class Product extends DataCommon implements Comparable<Product>  {
     public Map<String, ProductImage> images = new HashMap<String, ProductImage>();    
+    public List<String> imagesAdded = new LinkedList();
     public List<ProductVariation> variations = new ArrayList();
+    public List<String> descriptions = new ArrayList();
     public String description;
     public String shortDescription;
+    public String mainImage = "";
     public double price;
     public String name;
     public int stockQuantity;
@@ -70,64 +69,17 @@ public class Product extends DataCommon implements Comparable<Product>  {
     
     public String sku;
 
-    public void addImage(String fileId, String description) {
-        ProductImage productImage = new ProductImage();
-        productImage.name = "";
-        productImage.imageDescription = description;
-        productImage.type = (images.isEmpty()) ? ProductImage.Type.MAIN : ProductImage.Type.ADDITIONAL;
-        productImage.fileId = fileId;
-        images.put(fileId, productImage);
-    }
-    
     public void setMainImage(String fileId) {
-        removeAllMainImages();
-        
-        ProductImage productImage = images.get(fileId);
-        if (productImage == null) {
-            addImage(fileId, "");
-            productImage = images.get(fileId);
-        }
-        
-        productImage.type = ProductImage.Type.MAIN;
+        mainImage = fileId;
     }
     
-    private void removeAllMainImages() {
-        for (ProductImage image : images.values()) {
-            if (image.type == ProductImage.Type.MAIN)
-                image.type = ProductImage.Type.ADDITIONAL;
-        }
-    }
-    
-    public ProductImage getMainImage() {
-        for (ProductImage productImage : images.values()) {
-            if (productImage.type == ProductImage.Type.MAIN)
-                return productImage;
-        }
-        
-        return null;
-    }
-    
-    public List<ProductImage> getAdditionalImages() {
-        List<ProductImage> retimages = new ArrayList<ProductImage>();
-        for (ProductImage productImage : images.values()) {
-            if (productImage.type == ProductImage.Type.ADDITIONAL)
-                retimages.add(productImage);
-        }
-        
-        return retimages;
-    }
     
     public void removeImage(String fileId) {
-        if (images == null) {
+        if (imagesAdded == null) {
             return;
         }
         
-        images.remove(fileId);
-        
-        if (images.values().iterator().hasNext()) {
-            if (images.values().iterator().next() != null)
-                images.values().iterator().next().type = ProductImage.Type.MAIN;
-        }
+        imagesAdded.remove(fileId);
     }
     
     @Override
@@ -148,21 +100,6 @@ public class Product extends DataCommon implements Comparable<Product>  {
     @Override
     public String toString() {
         return id;
-    }
-
-    @Override
-    public void onSaveValidate() throws ErrorException {
-        int mainImageCount = 0;
-        for (ProductImage img : images.values()) {
-            if (img.type == ProductImage.Type.MAIN)
-                mainImageCount++;
-        }
-        
-        if (mainImageCount == 0 && images.size() > 0)
-            throw new ErrorException(1014);
-        
-        if (mainImageCount > 1)
-            throw new ErrorException(1013);
     }
 
     public boolean check(ProductCriteria searchCriteria) {

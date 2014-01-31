@@ -1508,3 +1508,11 @@ border-bottom: solid 1px #3a3a3a;
 
 
 .applicationselector { background-color: #FFF; }
+
+@media only all and (max-width: 800px) {
+    .GetShopToolbox { display:none !important; }
+    .application_settings { display:none !important; }
+    .Product .product_variation_selection { width: 100%; }
+    .Product .buy { float:right; margin-top: 4px; }
+    
+}

@@ -4,13 +4,22 @@ class core_productmanager_data_Product extends core_common_DataCommon  {
 	public $images;
 
 	/** @var String */
+	public $imagesAdded;
+
+	/** @var String */
 	public $variations;
+
+	/** @var String */
+	public $descriptions;
 
 	/** @var String */
 	public $description;
 
 	/** @var String */
 	public $shortDescription;
+
+	/** @var String */
+	public $mainImage;
 
 	/** @var String */
 	public $price;

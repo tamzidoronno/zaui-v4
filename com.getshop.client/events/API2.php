@@ -2737,26 +2737,6 @@ class APIProductManager {
 	}
 
 	/**
-	* add image to specified product
-	*
-	* @param productId
-	* @param productImageId
-	* @param description
-	* @throws ErrorException
-	*/
-
-	public function addImage($productId, $productImageId, $description) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
-	     $data['args']["productImageId"] = json_encode($this->transport->object_unset_nulls($productImageId));
-	     $data['args']["description"] = json_encode($this->transport->object_unset_nulls($description));
-	     $data["method"] = "addImage";
-	     $data["interfaceName"] = "core.productmanager.IProductManager";
-	     return $this->transport->sendMessage($data);
-	}
-
-	/**
 	* You can use this function to change the stock quantity for a given product
 	*
 	* @param productId The id for the product to change.

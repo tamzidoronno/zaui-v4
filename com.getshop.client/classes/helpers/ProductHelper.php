@@ -19,16 +19,13 @@ class ProductHelper {
     }
     
     static function findMainImageId($product) {
-        $mainImage = null;
-        if(isset($product->images)) {
-            foreach($product->images as $img) {
-                if($mainImage == null || $img->type == 0) {
-                    $mainImage = $img;
-                }
-            }
+        if(isset($product->mainImage) && strlen($product->mainImage) > 0) {
+            return $product->mainImage;
         }
-        if(isset($mainImage->fileId))
-            return $mainImage->fileId;
+        
+        if(isset($product->imagesAdded) && sizeof($product->imagesAdded) > 0) {
+            return $product->imagesAdded[0];
+        }
     }
 }
 

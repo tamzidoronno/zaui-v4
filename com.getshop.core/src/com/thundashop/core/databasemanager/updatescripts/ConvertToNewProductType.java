@@ -86,11 +86,15 @@ public class ConvertToNewProductType extends UpgradeBase {
         HashMap<String, AppConfiguration> apps = getAppAplications();
         for(AppConfiguration app : apps.values()) {
             if(app.appName.equals("ProductList")) {
-                System.out.println("Found");
                 app.appName = "ProductLister";
                 app.appSettingsId = "962ce2bb-1684-41e4-8896-54b5d24392bf";
+                saveObject(app, "PageManager");
             }
-            saveObject(app, "PageManager");
+            if(app.appName.equals("ProductManager")) {
+                app.appName = "ProductWidget";
+                app.appSettingsId = "b741283d-920d-460b-8c08-fad5ef4294cb";
+                saveObject(app, "PageManager");
+            }
         }
     }
 }

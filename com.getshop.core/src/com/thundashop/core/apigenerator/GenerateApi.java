@@ -61,6 +61,11 @@ public class GenerateApi {
         phpapi.generate();
     }
 
+    private void generatePythonApi() {
+        PythonApiBuilder pythonApiBuilder = new PythonApiBuilder(this, allManagers, messageClasses);
+        pythonApiBuilder.generate();
+    }
+
     public class ApiMethod {
 
         public String methodName;
@@ -179,6 +184,7 @@ public class GenerateApi {
     private void generate() throws ClassNotFoundException, IOException, Exception {
         generatePHPApi();
         generateJavaApi();
+        generatePythonApi();
         buildDocumentation();
         analyseApplications();
     }

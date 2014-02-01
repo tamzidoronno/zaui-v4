@@ -7,6 +7,7 @@ package com.thundashop.core.common;
 import org.owasp.validator.html.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.thundashop.core.storemanager.data.Store;
 import java.lang.reflect.Field;
@@ -152,9 +153,6 @@ public class StorePool {
     }
     
     public Object ExecuteMethod(String message, String addr, String sessionId) throws ErrorException {
-       
-        
-
         Gson gson = new GsonBuilder().serializeNulls().create();
 
         Type type = new TypeToken<JsonObject2>() {
@@ -162,8 +160,17 @@ public class StorePool {
 
         message = message.replace("\"args\":[]", "\"args\":{}");
 
-        JsonObject2 object = gson.fromJson(message, type);
-        object.addr = addr;
+        JsonObject2 object = null;
+        
+        try {
+            object = gson.fromJson(message, type);
+            object.addr = addr;
+        } catch (JsonSyntaxException ex) {
+            System.out.println("Could not decode: " + message);
+            ex.printStackTrace();
+            return null;
+        }
+        
 
         int i = 0;
         Object[] executeArgs = new Object[object.args.size()];
@@ -176,7 +183,9 @@ public class StorePool {
                 executeArgs[i] = argument;
             } catch (Exception e) {
                 e.printStackTrace();
+                System.out.println("Cast type: " + casttypes[i]);
                 System.out.println("From json param: " + object.args.get(parameter));
+                System.out.println("From json paramValue: " + object.args.get(parameter));
                 System.out.println("From json message: " + message);
                 ErrorException ex = new ErrorException(100);
                 ex.additionalInformation = e.getMessage();
@@ -247,7 +256,12 @@ public class StorePool {
 
         StoreHandler handler = getStoreHandler(object.sessionId);
         if (handler != null) {
-            handler.logApiCall(object);
+            try {
+                handler.logApiCall(object);
+            } catch (Exception ex) {
+                System.out.println("Failed to log api call");
+                ex.printStackTrace();
+            }
         }
         return res;
     }

@@ -133,13 +133,6 @@ public class ProductManager extends AProductManager implements IProductManager {
     }
 
     @Override
-    public void addImage(String productId, String productImageId, String description) throws ErrorException {
-        Product product = getProduct(productId);
-        product.addImage(productImageId, description);
-        saveProduct(product);
-    }
-
-    @Override
     public Product getProduct(String productId) throws ErrorException {
         return super.getProduct(productId);
     }
@@ -289,7 +282,7 @@ public class ProductManager extends AProductManager implements IProductManager {
             product.pageId = id;
             saveProduct(product);
         }
-        
+        finalize(product);
         return product;
     }
 }

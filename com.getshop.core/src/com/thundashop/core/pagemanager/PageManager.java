@@ -70,7 +70,8 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     @Override
     public Page getPage(String id) throws ErrorException {
-        return pagePool.get(id);
+        Page res = pagePool.get(id);
+        return res;
     }
 
     @Override

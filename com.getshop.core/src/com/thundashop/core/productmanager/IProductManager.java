@@ -137,16 +137,6 @@ public interface IProductManager {
     public void setMainImage(String productId, String imageId) throws ErrorException;
     
     /**
-     * add image to specified product
-     * 
-     * @param productId
-     * @param productImageId
-     * @param description
-     * @throws ErrorException 
-     */
-    public void addImage(String productId, String productImageId, String description) throws ErrorException;
-    
-    /**
      * Fetch all products the store has available.
      * @return
      * @throws ErrorException 

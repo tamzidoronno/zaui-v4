@@ -122,6 +122,9 @@ public class AppManager extends ManagerBase implements IAppManager {
             }
         }
         System.out.println("id not found :" + id);
+        if(id.equals("newapp")) {
+            return null;
+        }
         throw new ErrorException(18);
     }
 

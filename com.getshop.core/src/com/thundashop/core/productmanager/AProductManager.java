@@ -1,5 +1,6 @@
 package com.thundashop.core.productmanager;
 
+import com.thundashop.app.content.ContentManager;
 import com.thundashop.core.productmanager.data.AttributeSummary;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -35,6 +36,7 @@ public class AProductManager extends ManagerBase {
 
     public Product finalize(Product product) throws ErrorException {
         PageManager manager = getManager(PageManager.class);
+        ContentManager content = getManager(ContentManager.class);
 
         if (product != null && product.pageId != null && product.page == null) {
             product.page = manager.getPage(product.pageId);
@@ -62,6 +64,25 @@ public class AProductManager extends ManagerBase {
             product.taxGroupObject = taxGroups.get(product.taxgroup);
         }
         
+        HashMap<String, AppConfiguration> apps = product.page.getApplications();
+        
+        //Adding text
+        if(product.page.pageType == 2) {
+            for(AppConfiguration config : apps.values()) {
+                if(config.appName.equals("ContentManager")) {
+                    product.descriptions.add(content.getContent(config.id));
+                }
+            }
+
+            //Adding the images.
+            for(AppConfiguration config : apps.values()) {
+                if(config.appName.equals("ImageDisplayer")) {
+                    if(config.settings.get("image") != null) {
+                        product.imagesAdded.add(config.settings.get("image").value);
+                    }
+                }
+            }
+        }
         
         return product;
     }

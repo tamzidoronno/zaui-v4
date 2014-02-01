@@ -59,6 +59,15 @@ public class AddApplicationsToDatabase {
                 ApplicationSettings.Type.Webshop, false);
         jobifyTheme.isPublic = true;
         apps.add(jobifyTheme);
+        
+        ApplicationSettings productLister = createSettings(
+                "ProductLister",
+                "962ce2bb-1684-41e4-8896-54b5d24392bf",
+                emtpy,
+                "",
+                ApplicationSettings.Type.Webshop, false);
+        productLister.isPublic = true;
+        apps.add(productLister);
 
         return apps;
     }

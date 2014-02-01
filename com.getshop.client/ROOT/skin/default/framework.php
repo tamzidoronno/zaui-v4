@@ -1255,6 +1255,8 @@ height: 40px;
 color: #333;
 font-size: 10px;
 line-height: 40px;
+font-size:30px;
+color:#FFF;
 }
 
 .GetShopToolbox i { padding-top: 5px;  }

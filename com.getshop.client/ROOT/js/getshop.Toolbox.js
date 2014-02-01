@@ -156,7 +156,7 @@ GetShopToolbox.prototype = {
                 parent.find('.toolboxgroup').hide();
             }
             if (config.click) {
-                config.click.call(scope.application, scope.application, scope.application);
+                config.click.call(scope.application, config.extraArgs, scope.application);
             }
         });
 

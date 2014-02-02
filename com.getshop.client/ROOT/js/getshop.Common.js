@@ -541,7 +541,19 @@ thundashop.common.unlockMask = function() {
 thundashop.common.confirm = function(content) {
     return confirm(content);
 }
-
+thundashop.common.hideEmptyList = function(event) {
+    $(this).off('click',thundashop.common.hideEmptyList);
+    var target = $(event.target).attr('target');
+    if(target === undefined) {
+        target = $(event.target).parent().attr('target');
+    }
+    
+    $('.addcontent_menu').each(function() {
+        if(target === undefined || !$(this).hasClass(target)) {
+            $(this).hide();
+        }
+    });
+}
 $(document).on('click', "#fullscreenmask", function() {
     thundashop.common.unmask();
 });
@@ -790,6 +802,19 @@ $(function() {
             "applicationArea": area
         });
         thundashop.Ajax.post(event);
+    });
+    $(document).on('click', '.add_content_menu_icon', function() {
+        var position = $(this).position();
+        $('.ui-tooltip').remove();
+        var target = $(this).attr('target');
+        var container = $(this).closest('.empty_app_area');
+        var target_obj = container.find('.'+target);
+        target_obj.css('left',position.left);
+        target_obj.css('top',"42px");
+        $('.addcontent_menu').hide();
+        $(document).on('click', thundashop.common.hideEmptyList);
+        target_obj.slideDown();
+        
     });
     $(document).on('click', '.empty_app_area_browse_apps', function() {
         var area = $(this).closest('.applicationarea').attr('area');

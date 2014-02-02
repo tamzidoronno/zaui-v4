@@ -26,19 +26,23 @@
 
 .empty_app_area .content_box .appiconoption {
     background-image: url('images/application_box_background_empty_area.png');
-    height: 48px;
-    width: 57px;
-    border-right: solid 1px #6b6a6b;
-    border-left: solid 1px #6b6a6b;
+    height: 40px;
+    width: 47px;
+    border: solid 1px #6b6a6b;
     cursor: pointer;
 }
 
-.empty_app_area .content_box .row div:last-child { border-right: solid 0px; }
-.empty_app_area .content_box .row div:first-child { border-left: solid 0px; }
 
 .empty_app_area .content_box .appiconoption:hover {
     background-image: url('images/application_box_background_empty_area_hover.png');
 }
+
+.empty_app_area .addcontent_menu { position:absolute; border: solid 1px #6b6a6b; display: none; padding: 5px; background-color:#666; z-index:1; width: 110px; }
+.empty_app_area .addcontent_menu div { cursor:pointer; padding-bottom: 4px; text-align: left; }
+.empty_app_area .addcontent_menu div:hover .text,.empty_app_area .addcontent_menu div:hover .fa { color:#52e5ac; }
+.empty_app_area .addcontent_menu .text { padding-left: 20px; line-height: 14px; color:#FFF; }
+.empty_app_area .addcontent_menu .fa { font-size: 14px; padding-top:0px; position:absolute; color:#FFF; }
+.empty_app_area .content_box .row { height: 45px; }
 
 .empty_app_area .content_box {
     position:absolute; 
@@ -49,7 +53,6 @@
     left: 50%;
     margin-left: -88px;
     width: 175px; 
-    border: solid 1px #9b9b9b;
     border-bottom: solid 0px;
 }
 .empty_app_area img {

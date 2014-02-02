@@ -7,14 +7,6 @@ $(document).ready(function() {
         items: [
             {
                 icontype: "awesome",
-                icon: "fa-folder",
-                iconsize : "30",
-                title: __f("Product list"),
-                click: app.ProductManager.loadImportProduct,
-                class: 'layout'
-            },
-            {
-                icontype: "awesome",
                 icon: "fa-th",
                 iconsize : "30",
                 click: thundashop.MainMenu.showPageLayoutSelection,
@@ -35,7 +27,6 @@ $(document).ready(function() {
                 icontype: "awesome",
                 icon: "fa-lock",
                 iconsize : "30",
-                click: thundashop.app.productmanager.uploadImage,
                 extraArgs: {},
                 items: [
                     {

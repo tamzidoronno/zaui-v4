@@ -166,17 +166,23 @@ GetShopToolbox.prototype = {
                 img.addClass("fa");
                 img.addClass(config.icon);
                 img.addClass("gs_icon");
-                img.css('font-size', config.iconsize + "px");
             } else {
                 var img = $('<img/>');
                 img.attr('src', config.icon);
             }
+            if(config.iconsize !== undefined) {
+                img.css('font-size', config.iconsize + "px");
+            }
+
             img.attr('alt', config.title);
             item.append(img);
         }
 
         if (config.text) {
             var div = $('<div/>');
+            if(config.iconsize !== undefined) {
+                div.css('font-size', config.iconsize + "px");
+            }
             div.html(config.text);
             item.append(div);
         }

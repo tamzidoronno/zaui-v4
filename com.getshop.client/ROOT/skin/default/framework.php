@@ -1255,7 +1255,7 @@ height: 40px;
 color: #333;
 font-size: 10px;
 line-height: 40px;
-font-size:30px;
+font-size:11px;
 color:#FFF;
 }
 
@@ -1482,7 +1482,7 @@ border-bottom: solid 1px #3a3a3a;
 .gs_tab_area_active { display:block !important; }
 
 .colorpicker { z-index: 1000; }
-.empty_app_area .fa { font-size: 32px; padding-top: 8px; }
+.empty_app_area .fa { font-size: 25px; padding-top: 8px; }
 .gs_icon { color: #FFFFFF; }
 .cke_dialog_contents .pagepickerwindow { z-index:1; }
 .applicationarea .order_mask.ui-droppable { background-color:#037b1a; }

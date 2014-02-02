@@ -291,7 +291,7 @@ getshop.ImageEditor.prototype = {
         canvas.width = width;
         canvas.height = height;
 
-        ctx.drawImage(this.config.Image, crops[0], crops[1], width, height, 0, 0, width, height);
+        ctx.drawImage(this.config.OriginalImage, crops[0], crops[1], width, height, 0, 0, width, height);
 
         return canvas.toDataURL();
     },
@@ -303,6 +303,9 @@ getshop.ImageEditor.prototype = {
         retConfig[2] = Math.floor(this.config.crops[2] / compressionRate);
         retConfig[3] = Math.floor(this.config.crops[3] / compressionRate);
         return retConfig;
+    },
+    onUploadCompleted: function(callback) {
+        this._uploadCompleted = callback;
     },
     onUploadStarted: function(callback) {
         this.uploadStarted = callback;
@@ -367,10 +370,11 @@ getshop.ImageEditor.prototype = {
         );
     },
     uploadCompleted: function(response) {
+        this.config.imageId = response;
         getshop.ImageEditorApi.remove(this.id);
         this.progressDiv.hide();
-        if (this.uploadFinished && typeof (this.uploadFinished) == "function") {
-            this.uploadFinished(this);
+        if (this._uploadCompleted && typeof (this._uploadCompleted) == "function") {
+            this._uploadCompleted(this);
         }
     },
     uploadProgress: function(progress) {
@@ -396,7 +400,17 @@ getshop.ImageEditor.prototype = {
         this.config.Image = null;
         this.config.OriginalImage = null;
         this.config.rotation = 0;
-        this.textFields = [];
+        var toBeDeleted = [];
+        
+        for (var key in this.textFields) {
+            toBeDeleted.push(this.textFields[key]);
+        }
+        
+        for (var key in toBeDeleted) {
+            toBeDeleted[key].destroy();
+        }
+        this.config.textFields = [];
+        
         this.canvas.getContext("2d").clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.refresh();
     },
@@ -695,8 +709,11 @@ getshop.ImageEditor.prototype = {
      * 
      * @returns Image
      */
-    getImage: function() {
+    getImage: function(loadFunction) {
         var img = new Image();
+        if (loadFunction) 
+            img.onload = loadFunction;
+        
         img.src = this.getCroppedImage();
 
         this.previewContainer.html("");
@@ -775,11 +792,11 @@ getshop.ImageEditorTextField.prototype = {
     
     createRemoveOption: function() {
         var input = $('<span class="remove"></span>');
-        input.click($.proxy(this.destory, this));
+        input.click($.proxy(this.destroy, this));
         this.toolbar.append(input);
     },
     
-    destory: function() {
+    destroy: function() {
         this.parent.removeTextField(this);
         this.container.remove();
     },

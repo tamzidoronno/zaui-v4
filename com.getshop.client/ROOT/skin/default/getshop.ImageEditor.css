@@ -153,6 +153,45 @@
     background-color: rgba(111,111,111,0.6);
 }
 
+
+.gs_image_editor .toolbar {
+    width: 120px;
+    position: absolute;
+    padding: 3px;
+    background-color: #FFF;
+    border: solid 1px #666;
+    border-radius: 4px;
+}
+
+.gs_image_editor .drag,
+.gs_image_editor .text_color_selection,
+.gs_image_editor .remove {
+    display:inline-block; 
+    width: 30px; 
+    height: 30px; 
+    background-size: 30px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.gs_image_editor .toolbar select {
+    width: 119px;
+    margin-top: 7px;
+    margin-bottom: 7px;
+}
+.gs_image_editor .drag {
+    background-image: url('images/icons/move.png'); 
+}
+
+.gs_image_editor .text_color_selection {
+    background-image: url('images/colorselect.png'); 
+}
+
+.gs_image_editor .remove {
+    background-image: url('images/trash-can.png'); 
+}
+
+// Big stock
 .gs_bigstock {
     position: relative;
 }
@@ -416,3 +455,5 @@
     background-color: rgba(0,0,0,0.6);
     text-align: center;
 }
+
+

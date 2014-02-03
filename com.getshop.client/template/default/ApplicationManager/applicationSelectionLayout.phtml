@@ -13,11 +13,58 @@ $pb->saveBuildLayout($layout);
 
 
 $content_groups = ["standard", "contact", "map", "product", "productlist", "frontpage"];
+$leftmenu = array();
+$leftmenu["standard"]['icon'] = "fa-pencil-square-o";
+$leftmenu["standard"]['text'] = $this->__f("Standard page");
+$leftmenu["standard"]['target'] = "standard";
+
+$leftmenu["contact"]['icon'] = "fa-envelope";
+$leftmenu["contact"]['text'] = $this->__f("Contact");
+$leftmenu["contact"]['target'] = "contact";
+
+$leftmenu["product"]['icon'] = "fa-shopping-cart";
+$leftmenu["product"]['text'] = $this->__f("Product"); 
+$leftmenu["product"]['target'] = "product";
+
+$leftmenu["map"]['icon'] = "fa-globe";
+$leftmenu["map"]['text'] = $this->__f("Map"); 
+$leftmenu["map"]['target'] = "map";
+
+$leftmenu["productlist"]['icon'] = "fa-list-alt";
+$leftmenu["productlist"]['text'] = $this->__f("Product list");
+$leftmenu["productlist"]['target'] = "productlist";
+
+$leftmenu["frontpage"]['icon'] = "fa-heart";
+$leftmenu["frontpage"]['text'] = $this->__f("Homepage");
+$leftmenu["frontpage"]['target'] = "frontpage";
+
+$type = "default";
+$subtype = "default";
+$target = "default";
+if(isset($_POST['data']['pagetype'])) {
+    $type = $_POST['data']['pagetype'];
+    $content_groups = [$type];
+    foreach($leftmenu as $index => $data) {
+        if($index != $type) {
+            unset($leftmenu[$index]);
+        }
+    }
+}
+if(isset($_POST['data']['pageSubType'])) {
+    $subtype = $_POST['data']['pageSubType'];
+}
+if(isset($_POST['data']['target'])) {
+    $target = $_POST['data']['target'];
+}
+
 ?>
 
 <div class="skeletondisplayer">
 
     <div class="layoutpreviewselection app">
+        <input type="hidden" value="<? echo $type; ?>" id="gs_newpage_type">
+        <input type="hidden" value="<? echo $subtype; ?>" id="gs_newpage_subtype">
+        <input type="hidden" value="<? echo $target; ?>" id="gs_newpage_target">
         <div class="gs_tabs">
             <span class='gs_tab <?
             if (!$layoutupdate) {
@@ -38,12 +85,10 @@ $content_groups = ["standard", "contact", "map", "product", "productlist", "fron
             ?>">
             <div class='category_selection'>
                 <div class='options'>
-                    <div class='option_entry option_selected' target='standard'><i class="fa fa-pencil-square-o"></i> <? echo $this->__f("Standard page"); ?></div> 
-                    <div class='option_entry' target='contact'><i class="fa fa-envelope"></i> <? echo $this->__f("Contact"); ?></div> 
-                    <div class='option_entry' target='map'><i class="fa fa-globe"></i> <? echo $this->__f("Map"); ?></div>
-                    <div class='option_entry' target='product'><i class="fa fa-shopping-cart"></i></i> <? echo $this->__f("Product"); ?></div>
-                    <div class='option_entry' target='productlist'><i class="fa fa-list-alt"></i> <? echo $this->__f("Product list"); ?></div>
-                    <div class='option_entry' target='frontpage'><i class="fa fa-heart"></i> <? echo $this->__f("Homepage"); ?></div>
+                    
+                    <? $selectedEntry = false; foreach($leftmenu as $index => $left_entry) { ?>
+                        <div class='option_entry <? if(!$selectedEntry) { echo "option_selected"; $selectedEntry = $index; } ?>' target='<? echo $left_entry['target'] ?>'><i class="fa <? echo $left_entry['icon'] ?>"></i><? echo $left_entry['text'] ?></div> 
+                    <? } ?>
                 </div>
             </div>
             <div>
@@ -51,7 +96,7 @@ $content_groups = ["standard", "contact", "map", "product", "productlist", "fron
                     <?
                     foreach ($content_groups as $group) {
                         $selected = "";
-                        if ($group == "standard") {
+                        if ($group == $selectedEntry) {
                             $selected = "content_type_selected";
                         }
                         ?>

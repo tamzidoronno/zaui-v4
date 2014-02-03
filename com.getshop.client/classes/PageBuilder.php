@@ -728,7 +728,7 @@ class PageBuilder {
     }
 
     public function addPredefinedContent($type,$config) {
-        $siteBuilder = new SiteBuilder();
+        $siteBuilder = new SiteBuilder($this->page);
         $siteBuilder->clearPage();
         
         $rowcount = 1;
@@ -760,6 +760,9 @@ class PageBuilder {
                     case "contact":
                         $siteBuilder->addContactForm($area);
                         break;
+                    case "productwidget":
+                        $siteBuilder->addProductData($area, "");
+                        break;
                     case "productlist_standard":
                         $siteBuilder->addProductList($area, $cell, $type, "listview");
                         break;
@@ -782,7 +785,7 @@ class PageBuilder {
     }
     
     public function buildPredefinedPage($config) {
-        $siteBuilder = new SiteBuilder();
+        $siteBuilder = new SiteBuilder($this->page);
         $siteBuilder->clearPage();
         $layout = $this->createLayout(0, 0);
         $layout->rows = array();

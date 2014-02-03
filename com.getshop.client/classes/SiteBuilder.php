@@ -8,13 +8,19 @@ class SiteBuilder extends ApplicationBase {
     private $rowSize;
     private $imageCount = 0;
     private $rowImageCount = -1;
+    private $productWidgetCount = 0;
     
-    function __construct() {
+    function __construct($page = null) {
+        if($page) {
+            $this->page = $page;
+        } else {
+            $this->page = $this->getPage()->backendPage;
+        }
         $this->api = $this->getApi();
     }
 
     public function addContactForm($where) {
-        $appConfig = $this->api->getPageManager()->addApplicationToPage($this->getPage()->id, "96de3d91-41f2-4236-a469-cd1015b233fc", $where);
+        $appConfig = $this->api->getPageManager()->addApplicationToPage($this->page->id, "96de3d91-41f2-4236-a469-cd1015b233fc", $where);
     }
 
     public function addImageDisplayer($imageId, $where, $type = false) {
@@ -50,7 +56,7 @@ class SiteBuilder extends ApplicationBase {
         
         
         
-        $appConfig = $this->api->getPageManager()->addApplicationToPage($this->getPage()->id, "831647b5-6a63-4c46-a3a3-1b4a7c36710a", $where);
+        $appConfig = $this->api->getPageManager()->addApplicationToPage($this->page->id, "831647b5-6a63-4c46-a3a3-1b4a7c36710a", $where);
         $app = new ns_831647b5_6a63_4c46_a3a3_1b4a7c36710a\ImageDisplayer();
         $app->setConfiguration($appConfig);
         $app->attachImageIdToApp($imageId);
@@ -61,7 +67,7 @@ class SiteBuilder extends ApplicationBase {
             $content = "<h1>" . $this->__f("Edit this text by clicking the gear while mouse is over this text") . "</h1><br><br>";
             $content .= "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
         }
-        $appConfig = $this->api->getPageManager()->addApplicationToPage($this->getPage()->id, "320ada5b-a53a-46d2-99b2-9b0b26a7105a", $where);
+        $appConfig = $this->api->getPageManager()->addApplicationToPage($this->page->id, "320ada5b-a53a-46d2-99b2-9b0b26a7105a", $where);
         if ($content) {
             $this->api->getContentManager()->saveContent($appConfig->id, $content);
         } else {
@@ -73,7 +79,7 @@ class SiteBuilder extends ApplicationBase {
     }
 
     public function clearPage() {
-        $this->getApi()->getPageManager()->clearPage($this->getPage()->id);
+        $this->getApi()->getPageManager()->clearPage($this->page->id);
     }
 
     public function setRowSize($size) {
@@ -81,9 +87,23 @@ class SiteBuilder extends ApplicationBase {
     }
     
     public function addMap($where) {
-        $this->api->getPageManager()->addApplicationToPage($this->getPage()->id, "17c48891-6f7a-47a0-849d-b50de9af218f", $where);
+        $this->api->getPageManager()->addApplicationToPage($this->page->id, "17c48891-6f7a-47a0-849d-b50de9af218f", $where);
     }
 
+    public function addProductData($where, $productid) {
+        $appconfig = $this->api->getPageManager()->addApplicationToPage($this->page->id, "b741283d-920d-460b-8c08-fad5ef4294cb", $where);
+        
+        $products = $this->getApi()->getProductManager()->getLatestProducts(4);
+        if(!$productid && sizeof($products) > ($this->productWidgetCount+1)) {
+            $productid = $products[$this->productWidgetCount]->id;
+            $this->productWidgetCount++;
+        }
+        
+        $app = new \ns_b741283d_920d_460b_8c08_fad5ef4294cb\ProductWidget();
+        $app->setConfiguration($appconfig);
+        $app->setConfigurationSetting("productid", $productid);
+    }
+    
     public function addYouTube($movieid, $where, $type) {
         if (!$movieid) {
             switch ($this->counterYoutube) {
@@ -111,7 +131,7 @@ class SiteBuilder extends ApplicationBase {
             }
         }
         $this->counterYoutube++;
-        $appconf = $this->api->getPageManager()->addApplicationToPage($this->getPage()->id, "8e239f3d-2244-471e-a64d-3241b167b7d2", $where);
+        $appconf = $this->api->getPageManager()->addApplicationToPage($this->page->id, "8e239f3d-2244-471e-a64d-3241b167b7d2", $where);
         $app = new ns_8e239f3d_2244_471e_a64d_3241b167b7d2\YouTube();
         $app->setConfiguration($appconf);
         $_POST['data']['id'] = $movieid;
@@ -119,8 +139,11 @@ class SiteBuilder extends ApplicationBase {
     }
 
     public function addProductList($area, $cell, $type, $viewtype) {
-        $appconf = $this->api->getPageManager()->addApplicationToPage($this->getPage()->id, "8402f800-1e7e-43b5-b3f7-6c7cabbf8942", $area);
+        $appconf = $this->api->getPageManager()->addApplicationToPage($this->page->id, "962ce2bb-1684-41e4-8896-54b5d24392bf", $area);
         $products = $this->getApi()->getProductManager()->getLatestProducts(4);
+        if(!$products) {
+            $products = array();
+        }
         $newlist = array();
         foreach($products as $product) {
             $entry = new \core_listmanager_data_Entry();
@@ -129,14 +152,20 @@ class SiteBuilder extends ApplicationBase {
             $newlist[] = $entry;
         }
         $this->getApi()->getListManager()->setEntries($appconf->id, $newlist);
-        $app = new \ns_8402f800_1e7e_43b5_b3f7_6c7cabbf8942\ProductList();
+        $app = new \ns_962ce2bb_1684_41e4_8896_54b5d24392bf\ProductLister();
         $app->setConfiguration($appconf);
-        $app->setView($viewtype);
+        $_POST['data']['view'] = $viewtype;
+        $app->setView();
+        $_POST['data']['count'] = 2;
+        if($viewtype == "boxview") {
+            $app->updateColumnCount();
+        }
+        
         
     }
 
     public function addBannerSlider($area, $cell, $type) {
-        $appconf = $this->api->getPageManager()->addApplicationToPage($this->getPage()->id, "d612904c-8e44-4ec0-abf9-c03b62159ce4", $area);
+        $appconf = $this->api->getPageManager()->addApplicationToPage($this->page->id, "d612904c-8e44-4ec0-abf9-c03b62159ce4", $area);
         $this->getApi()->getBannerManager()->addImage($appconf->id, "7cfb35c2-f43e-45fa-9c61-3f6d67b5c8f2");
         $this->getApi()->getBannerManager()->addImage($appconf->id, "7007e885-e19f-4d42-98a5-84f3b1196f87");
 
@@ -154,7 +183,7 @@ class SiteBuilder extends ApplicationBase {
     }
 
     public function addProduct() {
-        $this->api->getPageManager()->addApplicationToPage($this->getPage()->id, "06f9d235-9dd3-4971-9b91-88231ae0436b", "product");
+        $app = $this->api->getPageManager()->addApplicationToPage($this->page->id, "06f9d235-9dd3-4971-9b91-88231ae0436b", "product");
     }
 }
 

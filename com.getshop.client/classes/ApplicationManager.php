@@ -51,21 +51,21 @@ class ApplicationManager extends FactoryBase {
     function saveStyling() {
         $layout = $this->getPage()->getLayout();
         /* @var $row core_pagemanager_data_RowLayout */
-        $row = ((int)$_POST['data']['row'])-1;
+        $row = ((int) $_POST['data']['row']) - 1;
         $outer = "";
-        if(isset($_POST['data']['gs_outer'])) {
+        if (isset($_POST['data']['gs_outer'])) {
             $outer = $_POST['data']['gs_outer'];
         }
         $inner = "";
-        if(isset($_POST['data']['gs_inner'])) {
+        if (isset($_POST['data']['gs_inner'])) {
             $inner = $_POST['data']['gs_inner'];
         }
-        
+
         $layout->rows[$row]->innercss = $inner;
         $layout->rows[$row]->outercss = $outer;
         $this->getPage()->setLayout($layout);
     }
-    
+
     public function getSubscriptions() {
         return $this->subscriptions;
     }
@@ -310,13 +310,12 @@ class ApplicationManager extends FactoryBase {
     }
 
     public function setRowLayoutSortOrder() {
-        if(isset($_POST['data']['layoutmode'])) {
+        if (isset($_POST['data']['layoutmode'])) {
             $pb = $this->getPage()->loadPageBuilder();
             $pb->activateBuildLayoutMode();
             $pb->reorderRows($_POST['data']['sortorder']);
             $pb->saveBuildLayout($pb->getLayout());
             echo "Need to sort for layout mode";
-            
         }
     }
 
@@ -348,12 +347,19 @@ class ApplicationManager extends FactoryBase {
     }
 
     public function setPageLayout() {
-        $page = $this->getPage();
+        if ($_POST['data']['pagetype'] == "product") {
+            $page = $this->getApi()->getPageManager()->createPage(-1, "");
+            $page->pageType = 2;
+            $page = new Page($page);
+        } else {
+            $page = $this->getPage();
+        }
         $pb = $page->loadPageBuilder();
         if (isset($_POST['data']['updatelayout'])) {
             $pb->activateBuildLayoutMode();
         }
         $page->setLayout($pb->updateLayoutConfig());
+        $this->addProductData($page->backendPage);
     }
 
     public function showApplications() {
@@ -578,27 +584,27 @@ class ApplicationManager extends FactoryBase {
 
     public function selectPredefinedData() {
         $this->getFactory()->reloadStoreObject();
-        
-        $page = $this->getPage()->backendPage;
-        $pb = new PageBuilder(null,null,null);
+        if ($_POST['data']['target'] !== "default") {
+            $page = $this->getApi()->getPageManager()->createPage(-1, "");
+        } else {
+            $page = $this->getPage()->backendPage;
+        }
+        $pb = new PageBuilder(null, null, $page);
         $page->type = -1;
-        $page->layout = $pb->buildPredefinedPage(json_decode($_POST['data']['config'],true));
+        $page->layout = $pb->buildPredefinedPage(json_decode($_POST['data']['config'], true));
         $page->pageType = 1;
-        if($_POST['data']['pagetype'] == "product") {
+        if ($_POST['data']['pagetype'] == "product") {
             $page->pageType = 2;
         }
         $this->getApi()->getPageManager()->savePage($page);
-        $pb->addPredefinedContent($_POST['data']['pagetype'], json_decode($_POST['data']['config'],true));
-        
-        if($_POST['data']['pagetype'] == "product") {
-            $sitebuilder = new SiteBuilder();
-            $sitebuilder->addProduct();
-        }
-        
+        $pb->addPredefinedContent($_POST['data']['pagetype'], json_decode($_POST['data']['config']));
+
+        $this->addProductData($page);
+
         $this->getFactory()->reloadStoreObject();
         $this->getFactory()->initPage();
     }
-    
+
     public function deleteStore() {
         $this->getFactory()->getApi()->getStoreManager()->delete();
     }
@@ -659,26 +665,58 @@ class ApplicationManager extends FactoryBase {
         $imageId = $_POST['data']['imageId'];
         $sizeCode = $_POST['data']['sizeCode'];
         $downloadUrl = $this->getApi()->getBigStock()->purchaseImage($imageId, $sizeCode);
-        
+
         if ($downloadUrl != null) {
             $imageData = file_get_contents($downloadUrl);
             $content = base64_decode(str_replace("data:image/png;base64,", "", base64_encode($imageData)));
             $imgId = \FileUpload::storeFile($content);
-            
+
             $this->getApi()->getBigStock()->addGetShopImageIdToBigStockOrder($downloadUrl, $imgId);
             echo $imgId;
         }
     }
-    
+
     public function setBigStockCreditAccount() {
         $password = $_POST['data']['password'];
         $credits = $_POST['data']['credit'];
-        
+
         $this->getApi()->getBigStock()->setCreditAccount($credits, $password);
     }
-    
+
     public function printAvailableBigStockCredit() {
         echo $this->getApi()->getBigStock()->getAvailableCredits();
     }
+
+    public function addProductData($page) {
+        
+        if($_POST['data']['target'] == "productwidget") {
+            $subtype = $_POST['data']['pageSubType'];
+            $product = $this->getApi()->getProductManager()->getProductByPage($page->id);
+            /* @var $app ns_b741283d_920d_460b_8c08_fad5ef4294cb\ProductWidget */
+            $_POST['data']['productid'] = $product->id;
+            
+            $app = $this->getFactory()->getApplicationPool()->getApplicationInstance($subtype);
+            $app->setProductId();
+        }
+        if($_POST['data']['target'] == "productlist") {
+            $subtype = $_POST['data']['pageSubType'];
+            $product = $this->getApi()->getProductManager()->getProductByPage($page->id);
+            $_POST['data']['productid'] = $product->id;
+            $app = $this->getFactory()->getApplicationPool()->getApplicationInstance($subtype);
+            $app->addProduct();
+        }
+        if ($_POST['data']['pageSubType'] == "area") {
+                //We need to add a productwidget to this area.
+                $siteBuilder = new SiteBuilder($this->getPage()->backendPage);
+                $product = $this->getApi()->getProductManager()->getProductByPage($page->id);
+                $siteBuilder->addProductData($_POST['data']['target'], $product->id);
+        }
+        
+        if($page->pageType == 2) {
+            $sitebuilder = new SiteBuilder($page);
+            $sitebuilder->addProduct();
+        }
+    }
+
 }
 ?>

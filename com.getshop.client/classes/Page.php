@@ -289,7 +289,7 @@ class Page extends FactoryBase {
     
     public function setLayout($layout) {
         $this->layout = $layout;
-        $page = $this->getApi()->getPageManager()->getPage($this->getNavigation()->currentPageId);
+        $page = $this->backendPage;
         $page->layout = $layout;
         $page->type = -1;
         $this->getApi()->getPageManager()->savePage($page);

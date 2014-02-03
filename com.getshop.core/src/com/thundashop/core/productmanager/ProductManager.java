@@ -101,7 +101,6 @@ public class ProductManager extends AProductManager implements IProductManager {
         Product product = new Product();
         product.storeId = storeId;
         product.id = UUID.randomUUID().toString();
-        createProductPage(product);
         saveProduct(product);
 
         return product;
@@ -117,7 +116,7 @@ public class ProductManager extends AProductManager implements IProductManager {
         HashMap result = new HashMap();
         for (String id : entryIds) {
             for (Product prod : products.values()) {
-                if (prod.pageId.equals(id)) {
+                if (prod.pageId != null && prod.pageId.equals(id)) {
                     result.put(id, prod.name);
                 }
             }

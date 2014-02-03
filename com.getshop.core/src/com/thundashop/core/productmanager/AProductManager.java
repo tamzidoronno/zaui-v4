@@ -224,7 +224,7 @@ public class AProductManager extends ManagerBase {
     
     public Product findProductByPage(String id) {
         for(Product product : products.values()) {
-            if(product.pageId.equals(id)) {
+            if(product.pageId!= null && product.pageId.equals(id)) {
                 return product;
             }
         }

@@ -68,6 +68,15 @@ public class AddApplicationsToDatabase {
                 ApplicationSettings.Type.Webshop, false);
         productLister.isPublic = true;
         apps.add(productLister);
+        
+        ApplicationSettings widget = createSettings(
+                "ProductWidget",
+                "b741283d-920d-460b-8c08-fad5ef4294cb",
+                emtpy,
+                "",
+                ApplicationSettings.Type.Webshop, false);
+        widget.isPublic = true;
+        apps.add(widget);
 
         return apps;
     }

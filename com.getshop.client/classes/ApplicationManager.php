@@ -22,6 +22,19 @@ class ApplicationManager extends FactoryBase {
         $this->getApi()->getPageManager()->switchApplicationAreas($pageId, $fromArea, $toArea);
     }
 
+    function setProductFromProductPicker() {
+        $productId = $_POST['data']['productids'][0];
+        
+        $settingsid = "b741283d-920d-460b-8c08-fad5ef4294cb";
+        $pageId = $this->getFactory()->getPage()->getId();
+        $area = $_POST['data']['config']['area'];
+        $application = $this->getFactory()->getApi()->getPageManager()->addApplicationToPage($pageId, $settingsid, $area);
+        $app = new ns_b741283d_920d_460b_8c08_fad5ef4294cb\ProductWidget();
+        $app->setConfiguration($application);
+        $app->setConfigurationSetting("productid", $productId);
+        $this->getFactory()->initPage();
+    }
+    
     function validateArea($areas, $area, $size, $type) {
         if (!in_array($size, $areas) && $size != "xlarge" || sizeof($areas) == 0) {
             return false;
@@ -86,42 +99,7 @@ class ApplicationManager extends FactoryBase {
     public function CookieAccepted() {
         $_SESSION['getshop_cookie_accepted'] = true;
     }
-
-    public function listproducts() {
-        echo "<div class='ProductManager'>";
-        $mgr = new ns_dcd22afc_79ba_4463_bb5c_38925468ae26\ProductManager();
-        $mgr->listProducts();
-        echo "</div>";
-    }
-
-    public function editProduct() {
-        echo "<div class='ProductManager'>";
-        $mgr = new ns_dcd22afc_79ba_4463_bb5c_38925468ae26\ProductManager();
-        $mgr->editProduct();
-        echo "</div>";
-    }
-
-    public function deleteProduct() {
-        echo "<div class='ProductManager'>";
-        $mgr = new ns_dcd22afc_79ba_4463_bb5c_38925468ae26\ProductManager();
-        $mgr->deleteProduct();
-        $mgr->listProducts();
-        echo "</div>";
-    }
-
-    public function createProduct() {
-        echo "<div class='ProductManager'>";
-        $mgr = new ns_dcd22afc_79ba_4463_bb5c_38925468ae26\ProductManager();
-        $product = $mgr->createProduct();
-        $mgr->listProducts();
-        echo "</div>";
-    }
-
-    public function saveProduct() {
-        $mgr = new ns_dcd22afc_79ba_4463_bb5c_38925468ae26\ProductManager();
-        $mgr->saveProduct();
-        $_POST['data']['productid'] = null;
-    }
+    
 
     public function moveApplication() {
         $pageId = $this->getPage()->getId();
@@ -274,6 +252,11 @@ class ApplicationManager extends FactoryBase {
         <?
     }
 
+    public function loadProductPicker() {
+        $product = new ns_06f9d235_9dd3_4971_9b91_88231ae0436b\Product();
+        $product->loadPicker();
+    }
+    
     public function addApplicationToArea() {
         $area = $_POST['data']['applicationArea'];
         $settingsId = $_POST['data']['appSettingsId'];

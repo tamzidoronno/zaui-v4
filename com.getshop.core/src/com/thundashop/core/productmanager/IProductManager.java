@@ -4,7 +4,6 @@ import com.thundashop.core.productmanager.data.AttributeSummary;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
-import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
@@ -179,4 +178,11 @@ public interface IProductManager {
      * Returns a product connected to a specific page.
      */
     public Product getProductByPage(String id) throws ErrorException;
+    
+    /**
+     * Returns a list of all products with only name, price and id.
+     * @return
+     * @throws ErrorException 
+     */
+    public List<Product> getAllProductsLight() throws ErrorException;
 }

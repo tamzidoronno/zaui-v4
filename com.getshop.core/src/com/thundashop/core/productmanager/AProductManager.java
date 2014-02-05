@@ -68,6 +68,7 @@ public class AProductManager extends ManagerBase {
         
         //Adding text
         if(product.page.pageType == 2) {
+            product.descriptions = new ArrayList();
             for(AppConfiguration config : apps.values()) {
                 if(config.appName.equals("ContentManager")) {
                     product.descriptions.add(content.getContent(config.id));
@@ -75,6 +76,7 @@ public class AProductManager extends ManagerBase {
             }
 
             //Adding the images.
+            product.imagesAdded = new ArrayList();
             for(AppConfiguration config : apps.values()) {
                 if(config.appName.equals("ImageDisplayer")) {
                     if(config.settings.get("image") != null) {

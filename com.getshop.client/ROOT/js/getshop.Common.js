@@ -425,19 +425,21 @@ thundashop.common.showInformationBox = function(event, title, avoidScroll) {
     if (typeof(title) === "undefined")
         title = "";
     var appid = null;
-    if (event.core.appid !== undefined) {
-        appid = event.core.appid;
-    }
     var infoBox = thundashop.common.createInformationBox(appid, title, true);
-    if (event.core.appname === undefined) {
-        event.core.appname = "";
+    if(event !== undefined) {
+        if (event.core.appid !== undefined) {
+            appid = event.core.appid;
+        }
+        if (event.core.appname === undefined) {
+            event.core.appname = "";
+        }
+        if (event.core.apparea === undefined) {
+            event.core.apparea = "";
+        }
+        infoBox.attr('app', event.core.appname);
+        infoBox.attr('apparea', event.core.apparea);
+        infoBox.addClass(event.core.appname);
     }
-    if (event.core.apparea === undefined) {
-        event.core.apparea = "";
-    }
-    infoBox.attr('app', event.core.appname);
-    infoBox.attr('apparea', event.core.apparea);
-    infoBox.addClass(event.core.appname);
     
     if(!alreadyvisible) {
         infoBox.html('<div style="font-size:35px; text-align:center; color:#3f3f3f;padding-top: 40px; "><i class="fa fa-spinner fa-spin"></i></div>');
@@ -818,9 +820,17 @@ $(function() {
         target_obj.slideDown();
         
     });
-    $(document).on('click','.add_content_menu_icon .product_content', function() {
+    $(document).on('click','.add_new_product', function() {
         var target = $(this).closest('.applicationarea').attr('area');
         app.Product.create(target, "area");
+    });
+    $(document).on('click','.add_existing_product', function() {
+        var test = new ProductPicker($(this), {
+            "type" : "single", 
+            "subtype" : "area",
+            "area" : $(this).closest('.applicationarea').attr('area')
+        });
+        test.load();
     });
     $(document).on('click', '.empty_app_area_browse_apps', function() {
         var area = $(this).closest('.applicationarea').attr('area');

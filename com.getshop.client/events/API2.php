@@ -2798,6 +2798,20 @@ class APIProductManager {
 	}
 
 	/**
+	* Returns a list of all products with only name, price and id.
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function getAllProductsLight() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getAllProductsLight";
+	     $data["interfaceName"] = "core.productmanager.IProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Whenever you use the getproducts function call, you will be able to fetch a summary of the attributes.
 	* Comes in handy to filter result when fetching data from for example a product list.
 	* @return core_productmanager_data_AttributeSummary

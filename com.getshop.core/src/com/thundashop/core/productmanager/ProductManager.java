@@ -8,7 +8,6 @@ import com.thundashop.core.common.ExchangeConvert;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.pagemanager.PageManager;
-import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
@@ -198,7 +197,7 @@ public class ProductManager extends AProductManager implements IProductManager {
                 if (c1 == null || c2 == null || c1.rowCreatedDate == null || c2.rowCreatedDate == null) {
                     return 0;
                 }
-                
+
                 return c1.rowCreatedDate.compareTo(c2.rowCreatedDate);
             }
         };
@@ -276,12 +275,36 @@ public class ProductManager extends AProductManager implements IProductManager {
     @Override
     public Product getProductByPage(String id) throws ErrorException {
         Product product = findProductByPage(id);
-        if(product == null) {
+        if (product == null) {
             product = createProduct();
             product.pageId = id;
             saveProduct(product);
         }
         finalize(product);
         return product;
+    }
+
+    @Override
+    public List<Product> getAllProductsLight() throws ErrorException {
+        List<Product> retval = new ArrayList();
+
+        for (Product prod : products.values()) {
+            Product result = new Product();
+            result.id = prod.id;
+            result.name = prod.name;
+            result.price = prod.price;
+            retval.add(result);
+        }
+
+
+        Collections.sort(retval, new Comparator<Product>() {
+            public int compare(Product o1, Product o2) {
+                if(o1.name != null && o2.name != null) {
+                    return o1.name.compareTo(o2.name);
+                }
+                return 0;
+            }
+        });
+        return retval;
     }
 }

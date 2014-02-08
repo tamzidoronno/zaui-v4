@@ -23,16 +23,22 @@ class ApplicationManager extends FactoryBase {
     }
 
     function setProductFromProductPicker() {
-        $productId = $_POST['data']['productids'][0];
-        
-        $settingsid = "b741283d-920d-460b-8c08-fad5ef4294cb";
-        $pageId = $this->getFactory()->getPage()->getId();
-        $area = $_POST['data']['config']['area'];
-        $application = $this->getFactory()->getApi()->getPageManager()->addApplicationToPage($pageId, $settingsid, $area);
-        $app = new ns_b741283d_920d_460b_8c08_fad5ef4294cb\ProductWidget();
-        $app->setConfiguration($application);
-        $app->setConfigurationSetting("productid", $productId);
-        $this->getFactory()->initPage();
+        $productIds = $_POST['data']['productids'];
+        if(isset($_POST['data']['config']['type']) && $_POST['data']['config']['type'] == "delete") {
+            foreach($productIds as $productId) {
+                $this->getApi()->getProductManager()->removeProduct($productId);
+            }
+        } else {
+            $productId = $productIds[0];
+            $settingsid = "b741283d-920d-460b-8c08-fad5ef4294cb";
+            $pageId = $this->getFactory()->getPage()->getId();
+            $area = $_POST['data']['config']['area'];
+            $application = $this->getFactory()->getApi()->getPageManager()->addApplicationToPage($pageId, $settingsid, $area);
+            $app = new ns_b741283d_920d_460b_8c08_fad5ef4294cb\ProductWidget();
+            $app->setConfiguration($application);
+            $app->setConfigurationSetting("productid", $productId);
+            $this->getFactory()->initPage();
+        }
     }
     
     function validateArea($areas, $area, $size, $type) {

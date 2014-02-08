@@ -25,6 +25,58 @@ $(document).ready(function() {
             },
             {
                 icontype: "awesome",
+                icon: "fa-arrows",
+                iconsize : "30",
+                title: __f("Move applications"),
+                click: thundashop.MainMenu.reorderApplicationClicked,
+                extraArgs: {},
+                disableOnSystemPages: true
+            },
+            {
+                icontype: "awesome",
+                icon: "fa-gear",
+                iconsize : "30",
+                title: __f("Store settings / more applications available here"),
+                click: function() {
+                    navigate('?page=settings');
+                },
+                extraArgs: {}
+            },
+            {
+                icontype: "awesome",
+                icon: "fa-globe",
+                iconsize : "30",
+                title: __f("Setup your own domain"),
+                click: function() {
+                    navigate('?page=domain');
+                },
+                extraArgs: {}
+            },
+            {
+                icontype: "awesome",
+                icon: "fa-gears",
+                iconsize : "30",
+                title: __f("Page settings"),
+                click: thundashop.MainMenu.goToStoresettings,
+                extraArgs: {},
+                disableOnSystemPages: true
+            },
+            {
+                icontype: "awesome",
+                icon: "fa-trash-o",
+                iconsize : "30",
+                title: __f("Delete products"),
+                click: function() {
+                    var test = new ProductPicker($(this), {
+                        "type" : "delete"
+                    });
+                    test.load();
+                },
+                extraArgs: {},
+                disableOnSystemPages: true
+            },
+            {
+                icontype: "awesome",
                 icon: "fa-lock",
                 iconsize : "30",
                 extraArgs: {},
@@ -54,56 +106,6 @@ $(document).ready(function() {
                         extraArgs: 100
                     }
                 ],
-                disableOnSystemPages: true
-            },
-            {
-                icontype: "awesome",
-                icon: "fa-arrows",
-                iconsize : "30",
-                title: __f("Move applications"),
-                click: thundashop.MainMenu.reorderApplicationClicked,
-                extraArgs: {},
-                disableOnSystemPages: true
-            },
-            {
-                type: 'seperator',
-                title: __f('Webshop')
-            },
-            {
-                icontype: "awesome",
-                icon: "fa-tint",
-                iconsize : "30",
-                title: __f("Change/select theme/skin"),
-                click: thundashop.MainMenu.showHideDesignSelection,
-                extraArgs: {}
-            },
-            {
-                icontype: "awesome",
-                icon: "fa-gear",
-                iconsize : "30",
-                title: __f("Store settings / more applications available here"),
-                click: function() {
-                    navigate('?page=settings');
-                },
-                extraArgs: {}
-            },
-            {
-                icontype: "awesome",
-                icon: "fa-globe",
-                iconsize : "30",
-                title: __f("Setup your own domain"),
-                click: function() {
-                    navigate('?page=domain');
-                },
-                extraArgs: {}
-            },
-            {
-                icontype: "awesome",
-                icon: "fa-gears",
-                iconsize : "30",
-                title: __f("Page settings"),
-                click: thundashop.MainMenu.goToStoresettings,
-                extraArgs: {},
                 disableOnSystemPages: true
             }
         ]

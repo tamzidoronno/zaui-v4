@@ -115,13 +115,7 @@ class CommunicationHelper {
             $this->errors[] = "failed on " . $data . " sent: " . $len . " size compared to : " . strlen($data)+1;
         }
         
-        $start = microtime(true);
         $res = stream_get_line($this->socket, 10000000000000, "\n");
-//        $res = substr($res, 2);
-//        echo $res;
-        file_put_contents("/tmp/test.txt", $res . "\n\n", FILE_APPEND);
-        $stop = microtime(true);
-        $diff = $stop - $start;
 
         $object = json_decode($res, false);
         if (json_last_error() != 0) {

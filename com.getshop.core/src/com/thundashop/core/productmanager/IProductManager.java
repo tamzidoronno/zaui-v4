@@ -119,6 +119,7 @@ public interface IProductManager {
 
     /**
      * Fetch one single product by id
+     * If product does not exists, null is returned.
      * 
      * @param id
      * @return

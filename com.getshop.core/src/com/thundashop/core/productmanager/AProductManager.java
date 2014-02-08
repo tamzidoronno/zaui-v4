@@ -64,7 +64,8 @@ public class AProductManager extends ManagerBase {
             product.taxGroupObject = taxGroups.get(product.taxgroup);
         }
         
-        HashMap<String, AppConfiguration> apps = product.page.getApplications();
+        Page page = manager.getPage(product.pageId);
+        HashMap<String, AppConfiguration> apps = page.getApplications();
         
         //Adding text
         if(product.page.pageType == 2) {
@@ -126,7 +127,7 @@ public class AProductManager extends ManagerBase {
     protected Product getProduct(String productId) throws ErrorException {
         Product product = products.get(productId);
         if (product == null) {
-            throw new ErrorException(1011);
+            return null;
         }
         product = finalize(product);
 

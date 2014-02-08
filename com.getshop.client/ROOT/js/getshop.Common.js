@@ -425,11 +425,14 @@ thundashop.common.showInformationBox = function(event, title, avoidScroll) {
     if (typeof(title) === "undefined")
         title = "";
     var appid = null;
-    var infoBox = thundashop.common.createInformationBox(appid, title, true);
     if(event !== undefined) {
         if (event.core.appid !== undefined) {
             appid = event.core.appid;
         }
+    }
+    
+    var infoBox = thundashop.common.createInformationBox(appid, title, true);
+    if(event !== undefined) {
         if (event.core.appname === undefined) {
             event.core.appname = "";
         }

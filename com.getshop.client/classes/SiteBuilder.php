@@ -64,8 +64,7 @@ class SiteBuilder extends ApplicationBase {
 
     public function addContentManager($content, $where, $type = false) {
         if ($type) {
-            $content = "<h1>" . $this->__f("Edit this text by clicking the gear while mouse is over this text") . "</h1><br><br>";
-            $content .= "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+            $content = "";
         }
         $appConfig = $this->api->getPageManager()->addApplicationToPage($this->page->id, "320ada5b-a53a-46d2-99b2-9b0b26a7105a", $where);
         if ($content) {

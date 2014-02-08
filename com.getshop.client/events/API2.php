@@ -2871,6 +2871,7 @@ class APIProductManager {
 
 	/**
 	* Fetch one single product by id
+	* If product does not exists, null is returned.
 	*
 	* @param id
 	* @return core_productmanager_data_Product
@@ -3304,6 +3305,20 @@ class APIStoreManager {
 	     $data["method"] = "enableSMSAccess";
 	     $data["interfaceName"] = "core.storemanager.IStoreManager";
 	     return $this->transport->cast(API::core_storemanager_data_Store(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* On registration, generate a new id this store, which will become a part of the hostname.
+	* @return int
+	* @throws ErrorException
+	*/
+
+	public function generateStoreId() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "generateStoreId";
+	     $data["interfaceName"] = "core.storemanager.IStoreManager";
+	     return $this->transport->sendMessage($data);
 	}
 
 	/**

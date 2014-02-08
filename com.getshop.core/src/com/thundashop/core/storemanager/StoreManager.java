@@ -227,6 +227,11 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         }
     }
 
+    @Override
+    public int generateStoreId() throws ErrorException {
+        return storePool.incrementStoreCounter();
+    }
+
   
 
 }

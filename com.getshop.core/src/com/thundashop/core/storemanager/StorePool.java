@@ -13,6 +13,7 @@ import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
+import com.thundashop.core.storemanager.data.StoreCounter;
 import com.thundashop.core.usermanager.data.User;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,7 @@ public class StorePool {
     private ConcurrentHashMap<String, Store> stores = new ConcurrentHashMap<>();
     private SessionFactory sessionFactory = new SessionFactory();
     private Credentials credentials = new Credentials(StoreManager.class);
+    private StoreCounter counter = null;
     
     @Autowired
     public Database database;
@@ -53,6 +55,9 @@ public class StorePool {
             if (dataCommon instanceof SessionFactory) {
                 sessionFactory = (SessionFactory) dataCommon;
                 sessionFactory.ready = true;
+            }
+            if (dataCommon instanceof StoreCounter) {
+                counter = (StoreCounter) dataCommon;
             }
         }
     }
@@ -244,5 +249,17 @@ public class StorePool {
                 stopStore(store);
             }
         }
+    }
+
+    int incrementStoreCounter() throws ErrorException {
+        if(counter == null) {
+            counter = new StoreCounter();
+            counter.id = UUID.randomUUID().toString();
+            counter.counter = 750;
+        }
+        counter.counter++;
+        counter.storeId = "all";
+        database.save(counter, credentials);
+        return counter.counter;
     }
 }

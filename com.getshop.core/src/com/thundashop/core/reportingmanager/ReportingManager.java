@@ -127,7 +127,7 @@ public class ReportingManager extends ManagerBase implements IReportingManager {
         return report;
     }
 
-    private Report createNewReport() {
+    private Report createNewReport() { 
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);

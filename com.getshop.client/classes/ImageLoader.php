@@ -155,6 +155,10 @@ class ImageLoader {
         $this->zoom = $zoom;
     }
 
+    public function rotate($degrees) {
+        $this->image= imagerotate($this->image, -1*$degrees, 256);
+    }
+
 }
 
 ?>

@@ -7,6 +7,7 @@ class PageBuilder {
     private $type;
     private $page;
     private $factory;
+    private $siteBuilder;
     private $includePreviewText = true;
 
     /**
@@ -18,7 +19,8 @@ class PageBuilder {
         $this->type = $type;
         $this->page = $page;
         $this->factory = IocContainer::getFactorySingelton();
-    }
+        $this->siteBuilder = new SiteBuilder($this->page);
+   }
 
     function getPredefinedPage($type) {
         $res = new PredefinedPagesConfig();
@@ -728,15 +730,14 @@ class PageBuilder {
     }
 
     public function addPredefinedContent($type,$config) {
-        $siteBuilder = new SiteBuilder($this->page);
-        $siteBuilder->clearPage();
+        $this->siteBuilder->clearPage();
         
         $rowcount = 1;
         $cellcount = 1;
         $area = "";
         foreach($config as $row) {
             foreach($row as $cell) {
-                $siteBuilder->setRowSize(sizeof($row));
+                $this->siteBuilder->setRowSize(sizeof($row));
                 if(sizeof($row) == 1) {
                     $area = "main_" . $rowcount;
                     $rowcount++;
@@ -746,34 +747,34 @@ class PageBuilder {
                 }
                 switch($cell) {
                     case "text":
-                        $siteBuilder->addContentManager("test", $area, $type);
+                        $this->siteBuilder->addContentManager("test", $area, $type);
                         break;
                     case "image":
-                        $siteBuilder->addImageDisplayer("test", $area, $type);
+                        $this->siteBuilder->addImageDisplayer("test", $area, $type);
                         break;
                     case "movie":
-                        $siteBuilder->addYouTube("", $area, $type);
+                        $this->siteBuilder->addYouTube("", $area, $type);
                         break;
                     case "map":
-                        $siteBuilder->addMap($area);
+                        $this->siteBuilder->addMap($area);
                         break;
                     case "contact":
-                        $siteBuilder->addContactForm($area);
+                        $this->siteBuilder->addContactForm($area);
                         break;
                     case "productwidget":
-                        $siteBuilder->addProductData($area, "");
+                        $this->siteBuilder->addProductData($area, "");
                         break;
                     case "productlist_standard":
-                        $siteBuilder->addProductList($area, $cell, $type, "listview");
+                        $this->siteBuilder->addProductList($area, $cell, $type, "listview");
                         break;
                     case "productlist_boxed":
-                        $siteBuilder->addProductList($area, $cell, $type, "boxview");
+                        $this->siteBuilder->addProductList($area, $cell, $type, "boxview");
                         break;
                     case "productlist_row":
-                        $siteBuilder->addProductList($area, $cell, $type, "rowview");
+                        $this->siteBuilder->addProductList($area, $cell, $type, "rowview");
                         break;
                     case "imageslider":
-                        $siteBuilder->addBannerSlider($area, $cell, $type);
+                        $this->siteBuilder->addBannerSlider($area, $cell, $type);
                         break;
                     default:
                         echo "content not found for: " . $cell;
@@ -784,9 +785,11 @@ class PageBuilder {
         
     }
     
+    /**
+     * @param type $config
+     * @return \core_pagemanager_data_PageLayout
+     */
     public function buildPredefinedPage($config) {
-        $siteBuilder = new SiteBuilder($this->page);
-        $siteBuilder->clearPage();
         $layout = $this->createLayout(0, 0);
         $layout->rows = array();
         $layout->sortedRows = array();
@@ -849,8 +852,9 @@ class PageBuilder {
         foreach ($this->layout->rows as $row) {
             /* @var $row core_pagemanager_data_RowLayout */
             ob_start();
+            $cellNumberClass = "gs_cell_number_" . $row->numberOfCells;
             ?>
-            <div class="gs_row gs_outer r<? echo $rownumber; ?>" row="<? echo $rownumber; ?>" rowid="<? echo $row->rowId; ?>" style='<? echo $row->outercss; ?>'>
+            <div class="gs_row gs_outer r<? echo $rownumber. " " . $cellNumberClass; ?>" row="<? echo $rownumber; ?>" rowid="<? echo $row->rowId; ?>" style='<? echo $row->outercss; ?>'>
                 <div class='gs_inner' style='<? echo $row->innercss; ?>'>
                     <?
                     if ($row->numberOfCells == 1) {
@@ -1015,6 +1019,17 @@ class PageBuilder {
                 echo $row;
             }
         }
+    }
+
+    /**
+     * @return SiteBuilder
+     */
+    public function getSiteBuilder() {
+        return $this->siteBuilder;
+    }
+
+    public function setSiteBuilder($siteBuilder) {
+        $this->siteBuilder = $siteBuilder;
     }
 
 }

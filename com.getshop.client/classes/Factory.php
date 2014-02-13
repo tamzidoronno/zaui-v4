@@ -11,14 +11,14 @@ class Factory extends FactoryBase {
     private $answers;
     private $errors;
     private $eventHandler;
-    
+
     /** @var core_storemanager_data_Store */
     private $store;
     private $applicationPool;
     private $translationMatrix;
     private $styleSheet;
     public $javaPage;
-    
+
     /** @var $translation GetShopTranslation */
     public $translation;
 
@@ -37,40 +37,53 @@ class Factory extends FactoryBase {
         return $this->eventHandler;
     }
 
-    
+    public function loadInitializationData() {
+        $page = $this->getPage();
+        if ($page->backendPage->pageType == -2) {
+            include("initdata/initializationdata.phtml");
+
+            $sitebuilder = new SiteBuilder();
+            if (!isset($_SESSION['startup_productcreation'])) {
+                $sitebuilder->createProduct(1, $this->__w("Diamonds for the ear"), ["e1be3532-0340-4a4c-8b79-fc21b6a70ec4", "a507da8f-4f17-4ade-bc54-340aff4dc11e"], 289);
+                $sitebuilder->createProduct(1, $this->__w("Finger friend"), ["a507da8f-4f17-4ade-bc54-340aff4dc11e", "7982060d-2504-4efa-834c-30e9fee98d8a"], 99);
+                $sitebuilder->createProduct(1, $this->__w("Lip styling"), ["7982060d-2504-4efa-834c-30e9fee98d8a", "fc4fa4ba-99d4-44c0-a693-4a507604ddec"], 100);
+                $sitebuilder->createProduct(1, $this->__w("Exclusive party"), ["fc4fa4ba-99d4-44c0-a693-4a507604ddec", "fc4fa4ba-99d4-44c0-a693-4a507604ddec"], 150);
+                $_SESSION['startup_productcreation']=true;
+            }
+        }
+    }
+
     public function translateKey($key) {
         if (!isset($this->translation))
             return $key;
-    
+
         $text = $this->translation->getTranslationForKey($key);
-        if(!$text) {
+        if (!$text) {
             $text = $key;
         }
         return $text;
     }
-    
+
     public function getTerritoriesList() {
         $lang = "en";
-        if(isset($this->getSettings()->language)) {
+        if (isset($this->getSettings()->language)) {
             $lang = $this->getSettings()->language->value;
         }
-        $lang = substr($lang,0,2);
-        $countries = json_decode(file_get_contents("translation/countries/".$lang."_territories.json"), true);
+        $lang = substr($lang, 0, 2);
+        $countries = json_decode(file_get_contents("translation/countries/" . $lang . "_territories.json"), true);
         return $countries['main'][$lang]['localeDisplayNames']['territories'];
     }
 
-    
     public function getWebShopTranslation() {
         if (!isset($this->translation))
             return array();
-        
+
         return $this->translation->getTranslationMatrix();
     }
-    
+
     public function reloadStoreObject() {
         $this->store = $this->getApi()->getStoreManager()->getMyStore();
     }
-
 
     public function getTranslationMatrix() {
         return $this->translationMatrix;
@@ -134,25 +147,24 @@ class Factory extends FactoryBase {
         echo "\n" . '<script type="text/javascript" src="js/getshop.PagePicker.js"></script>';
         echo "\n" . '<!--[if gte IE 8]><script src="js/jquery.xdr-transport.js"></script><![endif]-->';
         echo "\n" . '<link rel="stylesheet" type="text/css" href="js/jcrop/css/jquery.Jcrop.css">';
-        
-        if(preg_match('/(?i)msie[1-8]/',$_SERVER['HTTP_USER_AGENT']))
-        {
+
+        if (preg_match('/(?i)msie[1-8]/', $_SERVER['HTTP_USER_AGENT'])) {
             echo "\n" . '<script type="text/javascript" src="js/getshopwebsocketapi/GetShopApiWebSocket.js"></script>';
         }
-        
-        if(method_exists($this->getApplicationPool()->getSelectedThemeApp(), "addScripts")) {
+
+        if (method_exists($this->getApplicationPool()->getSelectedThemeApp(), "addScripts")) {
             $this->getApplicationPool()->getSelectedThemeApp()->addScripts();
         }
         ?>
         <script>
-            $( document ).tooltip({ 
-                show : { delay : 250 }
+            $(document).tooltip({
+                show: {delay: 250 }
             });
         </script>
         <?
-        
+
         include 'javascripts.php';
-    
+
         // TODO - find a better solution for this.
         if ($this->isEditorMode() && $includetoolbox)
             echo "\n" . '<script type="text/javascript" src="js/getshop.MainMenuToolbox.js"></script>';
@@ -182,30 +194,30 @@ class Factory extends FactoryBase {
         $this->applicationPool = new ApplicationPool($this);
         $this->pageManager = $this->getApi()->getPageManager();
     }
-    
+
     public function getConfigurationFlags() {
         return $this->store->configuration->configurationFlags;
     }
-    
+
     public function getConfigurationFlag($flag) {
-        if(isset($this->store->configuration->configurationFlags->{$flag}))
+        if (isset($this->store->configuration->configurationFlags->{$flag}))
             return $this->store->configuration->configurationFlags->{$flag};
         return null;
     }
-    
+
     public function setConfigurationFlag($flag, $setting) {
         $this->store->configuration->configurationFlags->{$flag} = $setting;
         $this->getApi()->getStoreManager()->saveStore($this->store->configuration);
     }
-    
+
     public function showNotExistsMessage() {
         if ($this->store == null) {
             $name = $_SERVER['SERVER_NAME'];
-            
+
             $addr = explode(".", $name);
-            
-            $addr = $addr[sizeof($addr)-2] ."." . $addr[sizeof($addr)-1];
-            header('location:http://'.$addr);
+
+            $addr = $addr[sizeof($addr) - 2] . "." . $addr[sizeof($addr) - 1];
+            header('location:http://' . $addr);
             exit();
         }
     }
@@ -215,7 +227,7 @@ class Factory extends FactoryBase {
         $this->errors = array();
         $this->initialize();
         $this->showNotExistsMessage();
-        
+
         if ($loadPages) {
             $this->initPage();
             $this->read_csv_translation();
@@ -223,39 +235,39 @@ class Factory extends FactoryBase {
                 $this->getStoreConfiguration()->translationMatrix = array();
             $this->loadLanguage($this->getStoreConfiguration()->translationMatrix);
         }
-        
+
         if (!$loadPages) {
             $this->styleSheet = new StyleSheet();
         }
-        
+
         $this->displayCookieWarning();
     }
-    
+
     public function loadLanguage($matrix) {
         $lang = $this->getSettings();
         $this->translation = new GetShopTranslation();
-        if(isset($lang->language->value)) {
+        if (isset($lang->language->value)) {
             $this->translation->loadTranslationFile($lang->language->value);
         } else {
             $this->translation->loadTranslationFile("en_en");
         }
-        if($matrix) {
+        if ($matrix) {
             $this->translation->overrideWithDataMap($matrix);
         }
     }
-    
+
     private function setScopeId() {
         if (!isset($_POST['scopeid']) && !isset($_GET['scopeid'])) {
-            $scopeid = "scope".rand(100000000, 99999999999).rand(100000000, 99999999999).rand(100000000, 99999999999).rand(100000000, 99999999999).rand(100000000, 99999999999);
+            $scopeid = "scope" . rand(100000000, 99999999999) . rand(100000000, 99999999999) . rand(100000000, 99999999999) . rand(100000000, 99999999999) . rand(100000000, 99999999999);
             $_POST['scopeid'] = $scopeid;
         }
-        
+
         if (isset($_GET['scopeid']))
             $_POST['scopeid'] = $_GET['scopeid'];
     }
 
     private function checkRewrite() {
-        if (isset($_GET['rewrite']) ) {
+        if (isset($_GET['rewrite'])) {
             $name = urldecode($_GET['rewrite']);
 
             $pageId = $this->getApi()->getListManager()->getPageIdByName($name);
@@ -263,17 +275,18 @@ class Factory extends FactoryBase {
                 $_GET['page'] = $pageId;
                 return;
             }
-            
-            $pageId = $this->getApi()->getProductManager()->getPageIdByName($name);            
+
+            $pageId = $this->getApi()->getProductManager()->getPageIdByName($name);
             if ($pageId != "") {
                 $_GET['page'] = $pageId;
             }
         }
     }
+
     public function initPage() {
         $this->checkRewrite();
         if (isset($_GET['page'])) {
-            if($_GET['page'] == "clear_page") {
+            if ($_GET['page'] == "clear_page") {
                 $navigation = Navigation::getNavigation();
                 $navigation->currentPageId = null;
             } else {
@@ -307,16 +320,16 @@ class Factory extends FactoryBase {
         $this->page = new Page($page);
         $this->initApplicationsPool();
         $this->javaPage = $page;
-        
+
         $this->styleSheet = new StyleSheet();
     }
-    
+
     public function initApplicationsPool() {
-        
+
         $applications = $this->pageManager->getApplicationsForPage($this->page->id);
         $this->applicationPool->setApplicationInstances($applications);
     }
-    
+
     public function setPage($page) {
         $this->page = $page;
     }
@@ -349,7 +362,6 @@ class Factory extends FactoryBase {
         ob_end_clean();
         return $html;
     }
-
 
     public function run($json = false) {
         $this->initPage();
@@ -386,13 +398,13 @@ class Factory extends FactoryBase {
         echo '<link rel="stylesheet" type="text/css" href="/skin/default/PagePicker.css">';
         echo '<link rel="stylesheet" type="text/css" href="/skin/default/getshop.ImageEditor.css">';
         echo '<link id=\'mainlessstyle\' rel="stylesheet" type="text/css" media="all" href="StyleSheet.php">';
-        
-        
+
+
         $config = json_decode($this->getFactory()->getConfigurationFlag("getshop_colors"), true);
-        if($config) {
+        if ($config) {
             echo "<style id='set_colors'>";
-            foreach($config as $name => $entry) {
-                echo $entry['path'] . " {" .$entry['type'] . " : #" . $entry['color'] ." }\n";
+            foreach ($config as $name => $entry) {
+                echo $entry['path'] . " {" . $entry['type'] . " : #" . $entry['color'] . " }\n";
             }
             echo "</style>";
         }
@@ -427,12 +439,12 @@ class Factory extends FactoryBase {
         ob_end_clean();
         return $errors;
     }
-    
+
     public function getErrorCodes() {
         if (count($this->getApi()->transport->errorCodes) == 0) {
             return "";
         }
-        
+
         return $this->getApi()->transport->errorCodes;
     }
 
@@ -444,6 +456,7 @@ class Factory extends FactoryBase {
     }
 
     public function runStartupGuide() {
+        
     }
 
     /**
@@ -463,12 +476,12 @@ class Factory extends FactoryBase {
     public function getJsonTranslationMatrix() {
         return json_encode($this->translationMatrix);
     }
-    
+
     public function getSettings() {
         $appPool = $this->getApplicationPool();
         $instances = $appPool->getAllAddedInstances();
-        foreach($instances as $instance) {
-            if($instance->applicationSettings->id == "d755efca-9e02-4e88-92c2-37a3413f3f41") {
+        foreach ($instances as $instance) {
+            if ($instance->applicationSettings->id == "d755efca-9e02-4e88-92c2-37a3413f3f41") {
                 return $instance->configuration->settings;
             }
         }
@@ -494,10 +507,10 @@ class Factory extends FactoryBase {
         if (isset($settings->currencycode)) {
             $currency = $settings->currencycode->value;
         }
-        
+
         if ($currency == "USD")
             return "$";
-        
+
         if ($currency == "EUR")
             return "€";
 
@@ -507,7 +520,7 @@ class Factory extends FactoryBase {
         if ($currency == "AUD")
             return "$";
 
-        return $this->__w("Price");
+        return "$";
     }
 
     public function getTranslationForKey($app, $key) {
@@ -543,46 +556,44 @@ class Factory extends FactoryBase {
         $this->translationMatrix = array();
         $app = "";
         foreach ($line as $entry) {
-            if(strpos($entry, "###### ") === 0) {
+            if (strpos($entry, "###### ") === 0) {
                 continue;
             }
             $cell = explode(";-;", $entry);
-            if(isset($cell[1])) {
+            if (isset($cell[1])) {
                 $this->translationMatrix[$cell[0]] = $cell[1];
             }
         }
-        
+
         //Add customer related translation to the matrix.
         $content = file_get_contents("translation/w_$lang.csv");
         $line = explode("\n", $content);
         $app = "";
         foreach ($line as $entry) {
-            if(strpos($entry, "###### ") === 0) {
+            if (strpos($entry, "###### ") === 0) {
                 continue;
             }
             $cell = explode(";-;", $entry);
-            if(isset($cell[1])) {
+            if (isset($cell[1])) {
                 $this->translationMatrix[$cell[0]] = $cell[1];
             }
         }
-        
+
         //Append the english lanugage.
         $content = file_get_contents("translation/f_en_en.csv");
         $line = explode("\n", $content);
         foreach ($line as $entry) {
-            if(strpos($entry, "###### ") === 0) {
+            if (strpos($entry, "###### ") === 0) {
                 continue;
             }
             $cell = explode(";-;", $entry);
-            if(isset($cell[1])) {
-                if(!isset($this->translationMatrix[$cell[0]])) {
+            if (isset($cell[1])) {
+                if (!isset($this->translationMatrix[$cell[0]])) {
                     $this->translationMatrix[$cell[0]] = $cell[1];
                 }
             }
         }
-        
     }
-
 
     public function dumpOtherTranslation() {
         $oldTranslation = $this->tmpTrans;
@@ -629,9 +640,9 @@ class Factory extends FactoryBase {
         }
         echo "</table>";
     }
-    
+
     public function convertUUIDtoString($namespace) {
-        return "ns_".str_replace("-", "_", $namespace);
+        return "ns_" . str_replace("-", "_", $namespace);
     }
 
     public function hasSelectedDesign() {
@@ -642,49 +653,48 @@ class Factory extends FactoryBase {
         $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
         $save = false;
         $agent = false;
-        
+
         $ua = strtolower($_SERVER['HTTP_USER_AGENT']);
-        
-        if(strstr($ua, "chrome")) {
+
+        if (strstr($ua, "chrome")) {
             $agent = "chrome";
         }
-        if(strstr($ua, "firefox")) {
+        if (strstr($ua, "firefox")) {
             $agent = "firefox";
-            
         }
-        if(!$user->userAgent) {
+        if (!$user->userAgent) {
             $user->userAgent = $_SERVER['HTTP_USER_AGENT'];
             $save = true;
         }
-        if(!$user->hasChrome && strstr($ua, "chrome")) {
+        if (!$user->hasChrome && strstr($ua, "chrome")) {
             $user->hasChrome = true;
             $save = true;
         }
-        
-        if($save) {
+
+        if ($save) {
             $this->getApi()->getUserManager()->saveUser($user);
             \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::setLoggedOn($user);
         }
-        
+
         return $agent;
     }
 
     public function displayCookieWarning() {
         $settings = $this->getSettings();
 
-        if(isset($settings->cookiewarning) && $settings->cookiewarning->value === "true") {
-            if(isset($_SESSION['getshop_cookie_accepted'])) {
+        if (isset($settings->cookiewarning) && $settings->cookiewarning->value === "true") {
+            if (isset($_SESSION['getshop_cookie_accepted'])) {
                 return;
             }
             echo "<div style='display:none;' id='cookiewarning_overlay'>";
             echo "<span class='textbox'>";
-            echo "<div class='title'>". $this->__w("Cookies are being stored") . "</div>";
-            echo "<div class='text'>". $this->__w("To be able to serve you we need to store a tiny amount of data about your browser. An identification id is being generated and added to your web browser. This allows us to track you for a two hours periode while you are navigating this site. This data is anonymous and are only being used to identify your web browser and not you as a person.") . "</div>";
+            echo "<div class='title'>" . $this->__w("Cookies are being stored") . "</div>";
+            echo "<div class='text'>" . $this->__w("To be able to serve you we need to store a tiny amount of data about your browser. An identification id is being generated and added to your web browser. This allows us to track you for a two hours periode while you are navigating this site. This data is anonymous and are only being used to identify your web browser and not you as a person.") . "</div>";
             echo "<input type='button' class='continue' value='" . $this->__w("Continue") . "'>";
             echo "</span>";
             echo "</div>";
         }
     }
-}
 
+}
 ?>

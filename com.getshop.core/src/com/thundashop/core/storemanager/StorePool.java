@@ -255,7 +255,7 @@ public class StorePool {
         if(counter == null) {
             counter = new StoreCounter();
             counter.id = UUID.randomUUID().toString();
-            counter.counter = 750;
+            counter.counter = 20000;
         }
         counter.counter++;
         counter.storeId = "all";

@@ -62,5 +62,4 @@ foreach($factory->getApi()->transport->errorCodes as $code) {
     }
 }
 ob_end_flush();
-
 ?>

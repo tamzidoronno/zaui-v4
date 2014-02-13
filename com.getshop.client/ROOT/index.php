@@ -82,7 +82,8 @@ $importApplication = new ImportApplication(null, null);
 $importApplication->showMenu();
 
 $factory = IocContainer::getFactorySingelton();
-if($factory->getApplicationPool()->getSelectedThemeApp()->applicationSettings->isResponsive) {
+
+if ($factory->getApplicationPool()->getSelectedThemeApp()->applicationSettings->isResponsive) {
     echo '<meta name="viewport" content="initial-scale=1.0,width=device-width,user-scalable=no;">';
 }
 
@@ -103,15 +104,16 @@ if (isset($_GET['logonwithkey'])) {
 <html xmlns:fb="http://ogp.me/ns/fb#">
     <head>
         <script>
-            
+
             if (typeof(console) == "undefined") {
                 console = {};
             }
-            
+
             if (typeof(console.log) == "undefined") {
-                console.log = function(text) {};
+                console.log = function(text) {
+                };
             }
-        translationMatrix = <? echo $factory->getJsonTranslationMatrix(); ?>    
+            translationMatrix = <? echo $factory->getJsonTranslationMatrix(); ?>
         </script>
         <!--[if gte IE 8]>
             <link rel="stylesheet" type="text/css" href="ie8plus.css" />
@@ -141,6 +143,8 @@ if (isset($_GET['logonwithkey'])) {
 
         $factory->loadJavascriptFiles();
         $factory->showCssFiles();
+        echo $factory->loadInitializationData();
+
         if ($factory->getPage()->skeletonType == 5)
             echo "<style>body { overflow: auto; } </style>";
         $factory->loadJavascriptFilesEditorMode();
@@ -155,7 +159,7 @@ if (isset($_GET['logonwithkey'])) {
         }
         echo "</script>";
         ?>
-        
+
         <title><?php echo $title; ?></title>
     </head>
     <body>
@@ -222,13 +226,6 @@ if (count($factory->getApi()->transport->errors) > 0) {
     echo "thundashop.Ajax.showErrorMessage('$error')";
     echo "</script>";
 }
-
-if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() && !$factory->hasSelectedDesign()) {
-    echo "<script>thundashop.common.lockMask(); $('#mainmenu #displaytheemesbutton').click();</script>";
-    $store = $factory->getStore();
-    $store->configuration->hasSelectedDesign = true;
-    $factory->getApi()->getStoreManager()->saveStore($store->configuration);
-}
 ?>
 
 <? if (isset($_GET["onlyShowApp"])) { ?>
@@ -268,17 +265,17 @@ if (isset($_GET['page'])) {
 ?>
 
 <?
-    $factory->getApi()->getInvoiceManager()->createInvoice("4d98cbe0-f614-4ed3-9b46-846acad65cbb");
-    if(ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
-        echo "<script>isAdministrator = true;</script>";
-    }
+$factory->getApi()->getInvoiceManager()->createInvoice("4d98cbe0-f614-4ed3-9b46-846acad65cbb");
+if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+    echo "<script>isAdministrator = true;</script>";
+}
 ?>
 
 <script>
     $(document).ready(function() {
         PubSub.publish('NAVIGATION_COMPLETED', {});
     });
-    
+
     if (typeof(CKEDITOR) !== "undefined") {
         CKEDITOR.on('instanceCreated', function(event) {
             var editor = event.editor;
@@ -286,10 +283,10 @@ if (isset($_GET['page'])) {
                 $(e.editor.element.$).removeAttr("title");
             });
         });
-        CKEDITOR.config.allowedContent = true;    
+        CKEDITOR.config.allowedContent = true;
     }
 </script>
 
 <? if (isset($_GET['logout'])) { ?>
     <script>window.location.reload()</script>
-<? } ?>
+<? } ?>    

@@ -9,6 +9,8 @@ class SiteBuilder extends ApplicationBase {
     private $imageCount = 0;
     private $rowImageCount = -1;
     private $productWidgetCount = 0;
+    private $page;
+    private $imageIds;
     
     function __construct($page = null) {
         if($page) {
@@ -24,36 +26,40 @@ class SiteBuilder extends ApplicationBase {
     }
 
     public function addImageDisplayer($imageId, $where, $type = false) {
-        if (($this->rowSize == 1)) {
-                $imageId = $this->getRowImage();
-        } else {
-            switch($this->imageCount) {
-                case 0:
-                case 4:
-                    $imageId = "5f6dbee1-adad-42a1-9333-82fd9ef1a13f";
-                    break;
-                case 1:
-                    $imageId = "57f53e07-80db-4165-96aa-de15ad01a1f4";
-                    break;
-                case 5:
-                case 2:
-                    $imageId = "4eb3a16a-31d7-4284-b0f0-9c33e04a60cf";
-                    break;
-                case 3:
-                    $imageId = "4c085721-bd13-4692-9438-18146b80174d";
-                    break;
-                $this->rowImageCount++;
-            }
+        if(is_array($this->imageIds)) {
+            $imageId = $this->imageIds[$this->imageCount];
             $this->imageCount++;
-        }
-        if ($type == "contact") {
+        } else {
             if (($this->rowSize == 1)) {
-                $imageId = $this->getRowImage();
+                    $imageId = $this->getRowImage();
             } else {
-                $imageId = "8d566b68-6b2c-4816-82e9-56189b9b1c9a";
+                switch($this->imageCount) {
+                    case 0:
+                    case 4:
+                        $imageId = "5f6dbee1-adad-42a1-9333-82fd9ef1a13f";
+                        break;
+                    case 1:
+                        $imageId = "57f53e07-80db-4165-96aa-de15ad01a1f4";
+                        break;
+                    case 5:
+                    case 2:
+                        $imageId = "4eb3a16a-31d7-4284-b0f0-9c33e04a60cf";
+                        break;
+                    case 3:
+                        $imageId = "4c085721-bd13-4692-9438-18146b80174d";
+                        break;
+                    $this->rowImageCount++;
+                }
+                $this->imageCount++;
+            }
+            if ($type == "contact") {
+                if (($this->rowSize == 1)) {
+                    $imageId = $this->getRowImage();
+                } else {
+                    $imageId = "8d566b68-6b2c-4816-82e9-56189b9b1c9a";
+                }
             }
         }
-        
         
         
         $appConfig = $this->api->getPageManager()->addApplicationToPage($this->page->id, "831647b5-6a63-4c46-a3a3-1b4a7c36710a", $where);
@@ -183,6 +189,41 @@ class SiteBuilder extends ApplicationBase {
 
     public function addProduct() {
         $app = $this->api->getPageManager()->addApplicationToPage($this->page->id, "06f9d235-9dd3-4971-9b91-88231ae0436b", "product");
+        return $app;
+    }
+    
+    public function createProduct($layoutIndex, $title, $imageIds, $price) {
+        $this->imageCount = 0;
+        $this->setImageArray($imageIds);
+        
+        //Predefined pages.
+        $predefined = new PredefinedPagesConfig();
+        $layouts = $predefined->getProductPages();
+        $this->page = $this->getApi()->getPageManager()->createPage(-1, "");
+        $this->page->pageType = 2;
+        
+        //Page builder
+        $pageBuilder = new PageBuilder(-1, "product", $this->page);
+        $pageBuilder->setSiteBuilder($this);
+        $this->page->layout = $pageBuilder->buildPredefinedPage($layouts[$layoutIndex]);
+        $this->page->title = $title;
+        $this->getApi()->getPageManager()->savePage($this->page);
+        
+        $pageBuilder->addPredefinedContent("product", $layouts[$layoutIndex]);
+        $this->addProduct();
+        
+        /* @var $product core_productmanager_data_Product */
+        $product = $this->getApi()->getProductManager()->getProductByPage($this->page->id);
+        $product->name = $title;
+        $product->price = $price;
+        
+        $this->getApi()->getProductManager()->saveProduct($product);
+        
+        return $this->page->id;
+    }
+
+    public function setImageArray($imageIds) {
+        $this->imageIds = $imageIds;
     }
 }
 

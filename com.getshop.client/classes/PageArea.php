@@ -26,7 +26,7 @@ class PageArea extends FactoryBase {
 
     /** @var core_pagemanager_data_PageArea */
     private $backendPageArea;
-    private $applications = array();
+    public $applications = array();
     private $systemArea = array('header', 'footer');
 
     public function getApplication($id) {

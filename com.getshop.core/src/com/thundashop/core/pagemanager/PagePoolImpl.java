@@ -13,6 +13,7 @@ import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.Entry;
 import com.thundashop.core.pagemanager.data.Page;
+import com.thundashop.core.pagemanager.data.Page.PageType;
 import com.thundashop.core.pagemanager.data.PageArea;
 import com.thundashop.core.usermanager.data.User;
 import java.lang.reflect.Field;
@@ -150,6 +151,7 @@ public class PagePoolImpl {
         for (String pageId : getDefaultPageList()) {
             if (pages.get(pageId) == null) {
                 Page page = createPage(pageLayout.get(pageId), pageId);
+                page.pageType = PageType.Initialize;
                 databaseSaver.saveObject(page, credentials);
                 pages.put(page.id, page);
                 

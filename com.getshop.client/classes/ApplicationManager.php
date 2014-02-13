@@ -21,6 +21,10 @@ class ApplicationManager extends FactoryBase {
         $toArea = $_POST['data']['newarea'];
         $this->getApi()->getPageManager()->switchApplicationAreas($pageId, $fromArea, $toArea);
     }
+    
+    function showThemeSelection() {
+        include("initdata/themeselection.phtml");
+    }
 
     function setProductFromProductPicker() {
         $productIds = $_POST['data']['productids'];

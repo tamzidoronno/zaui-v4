@@ -112,7 +112,7 @@ class PredefinedPagesConfig {
         $res = array();
         $res[] = array(array($image, $image), array($text));
         
-        $res[] = array(array($image, $image), array($text, $movie));
+        $res[] = array(array($image, $text), array($text, $movie));
         $res[] = array(array($text, $image), array($image, $movie));
         $res[] = array(array($image), array($movie, $text));
         $res[] = array(array($image), array($movie, $text));

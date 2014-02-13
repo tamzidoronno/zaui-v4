@@ -117,6 +117,8 @@ public class Page extends DataCommon implements Cloneable {
     }
 
     public static class PageType {
+        public static int Initialize = -2;
+        public static int Introduction = -1;
         public static int Standard = 1;
         public static int Product = 2;
         
@@ -130,7 +132,7 @@ public class Page extends DataCommon implements Cloneable {
     }
     
     public Page parent;
-    public int pageType = 1;
+    public int pageType =  PageType.Standard;
     //This is actually more a layout type... should be renamed to layouttype
     public int type;
     public int userLevel = 0;

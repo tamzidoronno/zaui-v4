@@ -77,6 +77,15 @@ public class AddApplicationsToDatabase {
                 ApplicationSettings.Type.Webshop, false);
         widget.isPublic = true;
         apps.add(widget);
+        
+        ApplicationSettings gss = createSettings(
+                "GetShopStarter",
+                "1d8e7f34-14ee-4018-a3f4-190500dce026",
+                emtpy,
+                "",
+                ApplicationSettings.Type.Webshop, false);
+        gss.isPublic = true;
+        apps.add(gss);
 
         return apps;
     }

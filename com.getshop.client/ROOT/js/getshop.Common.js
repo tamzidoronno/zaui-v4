@@ -221,10 +221,11 @@ thundashop.common.selectPredefinedConent = function() {
     data = thundashop.common.appendDefaultLayoutData(data);
     data["pagetype"] = $(this).attr('pagetype');
 
-
+    $('#informationbox').html('<center><i class="fa fa-spinner fa-spin" style="font-size:40px;"></i></center>');
     var event = thundashop.Ajax.createEvent('', 'selectPredefinedData', $(this), data);
-    thundashop.Ajax.post(event);
-    thundashop.common.hideInformationBox();
+    thundashop.Ajax.post(event, function() {
+        thundashop.common.hideInformationBox();
+    });
 };
 
 thundashop.common.navigateContentPages = function() {
@@ -490,7 +491,20 @@ thundashop.common.mask = function() {
     $("#fullscreenmask").fadeIn();
 }
 
+
+thundashop.common.disableCloseInformationBox = function() {
+    $('#infomrationboxclosebutton').hide();
+    $(document).off('click', ".informationbox-outer");
+    $('body').attr('infoboxdisabled', true)
+}
+
+
 thundashop.common.unmask = function() {
+    if($('body').attr('infoboxdisabled')) {
+        $('body').attr('infoboxdisabled', null);
+        $('#infomrationboxclosebutton').show();
+        $(document).on('click', ".informationbox-outer", thundashop.common.closeInfoboxEvent);
+    }
     var result = $.Deferred();
     var attr = $('#fullscreenmask').attr('locked');
     $('.informationbox-outer').css('overflow-y','hidden');
@@ -561,14 +575,15 @@ thundashop.common.hideEmptyList = function(event) {
         }
     });
 }
-$(document).on('click', "#fullscreenmask", function() {
-    thundashop.common.unmask();
-});
-$(document).on('click', ".informationbox-outer", function(event) {
+
+thundashop.common.closeInfoboxEvent = function(event) {
     if ($(event.target).hasClass('informationbox-outer')) {
         thundashop.common.unmask();
     }
-});
+}
+
+$(document).on('click', ".informationbox-outer", thundashop.common.closeInfoboxEvent);
+
 
 $(document).on('click', '.display_menu_application_button', function() {
     $('.mainmenu').slideDown();

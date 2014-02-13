@@ -1,0 +1,127 @@
+<?
+/* This file handles all the introduction data needed to get things started.
+ */
+?>
+<div id='startupoverlay' style='background-color:#000; position:absolute; width:100%; height:100%;z-index:50;text-align:center;padding-top: 80px;'>
+    <i class='fa fa-spinner fa-spin' style='font-size:70px; color:#FFF;'></i>
+</div>
+
+<div class="gs_guide">
+    <div class="gs_guide_box">
+        <div class='guide_title'><? echo $this->__f("Congratulation"); ?></div>
+        <img src='skin/default/images/welcome.png' style="float:left; margin-right: 10px;">
+        <? echo $this->__f("You have successfully created your first page. Start modifying it by hovering the mouse over the element you would like to change. A gear (<i class=\"fa fa-gear\"></i>) will then appear."); ?>
+        <span class="gs_button gs_menu_continue"><? echo $this->__f("Ok, got it!"); ?></span>
+    </div>
+</div>
+
+<div class="menu_helper">
+    <span class="help_text_edit">
+        <i class="fa fa-caret-up"></i>
+        <div><b><? echo $this->__f("More pages?"); ?></b></div>
+        <? echo $this->__f("Just click here, type the name of the new menu entry and press enter."); ?>
+        <span class="gs_button small close_helpmenu"><? echo $this->__f("Cool, got it"); ?></span>
+    </span>
+</div>
+
+<div class="mainmenu_helper">
+    <span class="help_text_edit">
+        <i class="fa fa-caret-left"></i>
+        <div><b><? echo $this->__f("More options"); ?></b></div>
+        <? echo $this->__f("The mainmenu is always at your disposal, from this menu you can change you page layout, do advance menu configuration, and fine tune your store."); ?>
+        <span class="gs_button small close_mainhelpmenu"><? echo $this->__f("Sure thing"); ?></span>
+    </span>
+</div>
+
+<script>
+    function loadPageSelection() {
+        var event = thundashop.Ajax.createEvent("MainMenu", 'showPageLayoutSelection', $('body'), {"pagetype": "frontpage"});
+        thundashop.common.showInformationBox(event, __f("2/2 And now, create your first page."));
+    }
+
+    function loadMenuHelp() {
+        var position = $('#add_new_top').offset();
+        var menuhelp = $('.menu_helper');
+        menuhelp.css('top',position.top);
+        menuhelp.css('left',position.left);
+        menuhelp.fadeIn();
+    }
+    
+    function loadMainMenuHelp() {
+        var position = $('.GetShopToolbox').offset();
+        var menuhelp = $('.mainmenu_helper');
+        menuhelp.css('top',position.top);
+        menuhelp.css('left',position.left+100);
+        menuhelp.fadeIn();
+    }
+
+    function loadDesignSelection() {
+        var event = thundashop.Ajax.createEvent("MainMenu", 'showThemeSelection', $('body'), {"pagetype": "frontpage"});
+        thundashop.common.showInformationBox(event, __f("1/2 Start by selecting your theme."));
+        $('#start_layer').remove();
+        thundashop.common.disableCloseInformationBox();
+        $(document).on('click', '.theme_selection_button', function() {
+            $('.theme_selection_selected').removeClass('theme_selection_selected');
+            $(this).addClass('theme_selection_selected');
+            var ns = "ns_" + $(this).attr('theme').replace(/-/g,"_");
+            $(".gs_mac_view").attr('src','/showApplicationImages.php?appNamespace='+ns+'&image=desktop.png');
+            $(".gs_phone_view").attr('src','/showApplicationImages.php?appNamespace='+ns+'&image=mobile.png');
+            $(".gs_pad_view").attr('src','/showApplicationImages.php?appNamespace='+ns+'&image=pad.png');
+        });
+        $(document).on('click','.select_theme_button', function() {
+            var appid = $('.theme_selection_selected').attr('theme');
+            var event = thundashop.Ajax.createEvent('','addApplicationDirect',$(this),{
+                "appId" : appid
+            });
+            thundashop.Ajax.postWithCallBack(event, function() { 
+               var random = Math.random();
+                document.getElementById('mainlessstyle').href = 'StyleSheet.php?rand=' + random;
+                thundashop.framework.reprintPage();
+                loadPageSelection();
+            });
+        });
+    }
+    
+    $('.gs_menu_continue').click(function() {
+        $('.gs_guide').remove();
+        setTimeout(loadMenuHelp, 500);
+    });
+    $('.close_helpmenu').click(function() {
+        $('.menu_helper').remove();
+        setTimeout(loadMainMenuHelp, 500);
+    });
+    $('.close_mainhelpmenu').click(function() {
+        $('.mainmenu_helper').remove();
+    });
+    
+    setTimeout(function() {
+        $('#startupoverlay .fa').remove();
+        loadDesignSelection();
+        setTimeout(function() {
+            $('#startupoverlay').remove();
+        }, "1000");
+    }, 2000);
+</script>
+
+<style>
+    .menu_helper { z-index: 30; display:none; position:absolute; width: 300px; height: 200px; }
+    .mainmenu_helper { z-index: 30; position:absolute; width: 250px; height: 300px; display:none; }
+    .help_text_edit { background-color:#FFF; padding: 10px; padding-bottom: 30px; margin-left: 10px; margin-top: 20px; position:relative; border: solid 1px; display:inline-block; display:inline-block; }
+    .help_text_edit .fa-caret-up { position:absolute; left: 10px; top: -13px; font-size: 18px;}
+    .help_text_edit .fa-caret-left { position:absolute; left: -8px; top: 13px; font-size: 18px;}
+    .help_text_edit .close_helpmenu,.help_text_edit .close_mainhelpmenu { position:absolute; right: 5px; bottom: 5px; }
+    .gs_guide { position:absolute; width: 100%; height: 100%; z-index: 30; background-color:rgba(0,0,0,0.7); }
+    .gs_guide_box { position:relative; padding: 10px; margin:auto; width: 500px; border: solid 5px #666; margin-top: 100px; background-color:#FFF; opacity:19; color:#000; height: 234px; font-size: 14px; }
+    .gs_guide_box .guide_title { font-size: 22px; text-align:center;  margin-bottom: 10px; }
+    .theme_selection_button {cursor: pointer; color:#CCC; background-color: #3f3f3f; border-bottom: solid 1px #383838; border-right: solid 1px #383838;  padding: 5px; display:inline-block; padding-left:10px; padding-right: 10px;  }
+    .theme_selection_button.theme_selection_selected { background-color: #666; border-bottom: 0px; }
+    .theme_selection_menu { border-top: solid 1px #383838; }
+    .select_theme_button { position:absolute; top: -50px; right: 10px; }
+    .example_text { display:inline-block; padding-top: 10px; padding-left: 10px; color:#CCC; }
+    .gs_macpad { position:absolute; top: 50px; left: 5px; z-index: 1; }
+    .gs_iphone { position:absolute; left:847px; top: 206px; z-index: 3; }
+    .gs_mac_view { background-color:#FFF; width: 510px; height: 322px; display:inline-block; position:absolute; left: 96px; top:105px; } /* 510X322 */
+    .gs_pad_view { position:absolute; z-index: 2; display:inline-block; width: 261px; top: 97px; left: 633px; background-color:#FF0000; height: 340px; } /*261x340*/
+    .gs_phone_view { position:absolute; width: 114px; background-color:#efefef; top: 264px; left: 862px; display:inline-block; height: 164px;z-index:4; } /*114x164*/
+    .gs_menu_continue { position:absolute; right: 5px; bottom: 5px; }
+</style>

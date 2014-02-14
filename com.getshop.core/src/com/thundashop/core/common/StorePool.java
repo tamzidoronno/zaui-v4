@@ -206,7 +206,7 @@ public class StorePool {
         long end = System.currentTimeMillis();
         long diff = end - start;
         if (diff > 40) {
-//            System.out.println("" + diff + " : " + object.interfaceName + " method: " + object.method);
+            System.out.println("" + diff + " : " + object.interfaceName + " method: " + object.method);
         }
         result = (result == null) ? new ArrayList() : result;
 

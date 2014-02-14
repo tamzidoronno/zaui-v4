@@ -42,6 +42,7 @@ public class PagePoolImpl {
     private Logger logger;
     private String storeId;
     public PageManager pageManager;
+    public boolean defaultPagesSet = false;
 
     @Autowired
     public PagePoolImpl(Logger logger) {
@@ -87,7 +88,8 @@ public class PagePoolImpl {
             throw new ErrorException(30);
         }
         
-        return finalizePage(page);
+        Page finalized = finalizePage(page);
+        return finalized;
     }
 
     public Page changeLayout(String pageId, int layout) throws ErrorException {
@@ -148,6 +150,10 @@ public class PagePoolImpl {
     }
 
     public void setDefaultPages() throws ErrorException {
+        if(defaultPagesSet) {
+            return;
+        }
+        defaultPagesSet=true;
         for (String pageId : getDefaultPageList()) {
             if (pages.get(pageId) == null) {
                 Page page = createPage(pageLayout.get(pageId), pageId);

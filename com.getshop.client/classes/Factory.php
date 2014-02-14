@@ -15,6 +15,10 @@ class Factory extends FactoryBase {
     /** @var core_storemanager_data_Store */
     private $store;
     private $applicationPool;
+    private $initialized = false;
+    private $checkRewrite = false;
+    private $pageLoaded = array();
+    private $appLoaded = array();
     private $translationMatrix;
     private $styleSheet;
     public $javaPage;
@@ -48,7 +52,7 @@ class Factory extends FactoryBase {
                 $sitebuilder->createProduct(1, $this->__w("Finger friend"), ["a507da8f-4f17-4ade-bc54-340aff4dc11e", "7982060d-2504-4efa-834c-30e9fee98d8a"], 99);
                 $sitebuilder->createProduct(1, $this->__w("Lip styling"), ["7982060d-2504-4efa-834c-30e9fee98d8a", "fc4fa4ba-99d4-44c0-a693-4a507604ddec"], 100);
                 $sitebuilder->createProduct(1, $this->__w("Exclusive party"), ["fc4fa4ba-99d4-44c0-a693-4a507604ddec", "fc4fa4ba-99d4-44c0-a693-4a507604ddec"], 150);
-                $_SESSION['startup_productcreation']=true;
+                $_SESSION['startup_productcreation'] = true;
             }
         }
     }
@@ -184,7 +188,10 @@ class Factory extends FactoryBase {
     }
 
     public function initialize() {
-        $this->store = $this->getApi()->getStoreManager()->initializeStore($_SERVER['HTTP_HOST'], session_id());
+        if (!$this->initialized) {
+            $this->initialized = true;
+            $this->store = $this->getApi()->getStoreManager()->initializeStore($_SERVER['HTTP_HOST'], session_id());
+        }
     }
 
     function __construct() {
@@ -204,9 +211,15 @@ class Factory extends FactoryBase {
             return $this->store->configuration->configurationFlags->{$flag};
         return null;
     }
+    
+    public function clearCachedPageData() {
+        $this->pageLoaded = array();
+        $this->appLoaded = array();
+    }
 
     public function setConfigurationFlag($flag, $setting) {
         $this->store->configuration->configurationFlags->{$flag} = $setting;
+        $this->clearCachedPageData();
         $this->getApi()->getStoreManager()->saveStore($this->store->configuration);
     }
 
@@ -267,9 +280,9 @@ class Factory extends FactoryBase {
     }
 
     private function checkRewrite() {
-        if (isset($_GET['rewrite'])) {
+        if (isset($_GET['rewrite']) && !$this->checkRewrite) {
+            $this->checkRewrite = true;
             $name = urldecode($_GET['rewrite']);
-
             $pageId = $this->getApi()->getListManager()->getPageIdByName($name);
             if ($pageId != "") {
                 $_GET['page'] = $pageId;
@@ -313,7 +326,10 @@ class Factory extends FactoryBase {
         }
 
         $pageId = isset($_POST['data']['getShopPageId']) ? $_POST['data']['getShopPageId'] : $navigation->currentPageId;
-        $page = $this->pageManager->getPage($pageId);
+        if (!isset($this->pageLoaded[$pageId]) || !$this->pageLoaded[$pageId]) {
+            $this->pageLoaded[$pageId] = $this->pageManager->getPage($pageId);
+        }
+        $page = $this->pageLoaded[$pageId];
         if ($page == null) {
             $page = $this->pageManager->getPage($homePage);
         }
@@ -325,9 +341,10 @@ class Factory extends FactoryBase {
     }
 
     public function initApplicationsPool() {
-
-        $applications = $this->pageManager->getApplicationsForPage($this->page->id);
-        $this->applicationPool->setApplicationInstances($applications);
+        if (!isset($this->appLoaded[$this->page->id])) {
+            $this->appLoaded[$this->page->id] = $this->pageManager->getApplicationsForPage($this->page->id);
+        }
+        $this->applicationPool->setApplicationInstances($this->appLoaded[$this->page->id]);
     }
 
     public function setPage($page) {

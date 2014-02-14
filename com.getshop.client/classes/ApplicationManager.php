@@ -41,6 +41,7 @@ class ApplicationManager extends FactoryBase {
             $app = new ns_b741283d_920d_460b_8c08_fad5ef4294cb\ProductWidget();
             $app->setConfiguration($application);
             $app->setConfigurationSetting("productid", $productId);
+            $this->getFactory()->clearCachedPageData();
             $this->getFactory()->initPage();
         }
     }
@@ -594,6 +595,7 @@ class ApplicationManager extends FactoryBase {
 
         $this->addProductData($page);
 
+        $this->getFactory()->clearCachedPageData();
         $this->getFactory()->reloadStoreObject();
         $this->getFactory()->initPage();
     }

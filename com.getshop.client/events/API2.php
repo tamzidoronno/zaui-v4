@@ -2442,7 +2442,6 @@ class APIPageManager {
 	*/
 
 	public function getApplicationsForPage($pageId) {
-	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
 	     $data["method"] = "getApplicationsForPage";

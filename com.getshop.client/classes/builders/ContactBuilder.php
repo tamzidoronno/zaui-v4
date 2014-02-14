@@ -17,6 +17,7 @@ class ContactBuilder {
     function buildPage($type) {
         $this->setLayout($type);
         $this->populateLayout($type);
+        $this->factory->clearCachedPageData();
         $this->factory->initPage();
     }
 

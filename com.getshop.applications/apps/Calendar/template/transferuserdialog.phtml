@@ -1,0 +1,27 @@
+<?
+/* @var $this \ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8\Calendar */
+
+$user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userid']);
+$userId = $user->id;
+$event = $this->currentEntry;
+$events =  $this->getApi()->getCalendarManager()->getEntries((int)date('Y'), (int)date('m'), (int)date('d'), array());
+$currentId = $event->entryId;
+?>
+<div class="transferdialog">
+    <br> Event: <? echo $event->title.", location: ".$event->location.", date: ".$event->day."/".$event->month."-".$event->year;?>
+    <br> Name: <? echo $user->fullName;?>
+    <br> Email: <? echo $user->emailAddress;?>
+    <br>
+    <br>
+    <b>Please select the event you wish to transfer the user to</b>
+    <div class="transfer_event_list">
+        <?
+        foreach ($events as $event) {
+            $entryId = $event->entryId;
+            echo "<div class='add_user_to_this_event' toEntryId='$entryId' userid='$userId' currentEntryId='$currentId'>";
+            echo $event->title." - ".$event->location.", date: ".$event->day."/".$event->month."-".$event->year;
+            echo "</div>";
+        }
+        ?>    
+    </div>
+</div>

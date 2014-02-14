@@ -1,0 +1,27 @@
+<div class="information">
+    <?
+    echo $this->__("Booking configuration");
+    ?>
+</div>
+<div class="setting onoff" id="showfilter">
+    <span class="title"><?php echo $this->__("Show location filter left for calendar"); ?></span>
+    <div class="onoff config" id="showfilter"></div>
+    <div class="description">
+        <?php echo $this->__("If this function is enabled, it will show filter left for the calendar."); ?>
+    </div>
+</div>
+<div class="setting onoff" id="showDescription">
+    <span class="title"><?php echo $this->__("Show the description for days."); ?></span>
+    <div class="onoff config" id="showDescription"></div>
+    <div class="description">
+        <?php echo $this->__("Default on, turn off if you dont want to show the full description."); ?>
+    </div>
+</div>
+<div class="setting onoff" id="showBookingLink">
+    <span class="title"><?php echo $this->__("Link to booking schema."); ?></span>
+    <div class="onoff config" id="showBookingLink"></div>
+    <div class="description">
+        <?php echo $this->__("Should be turned on if you want to display a button where links to the booking schema."); ?>
+    </div>
+</div>
+<div class="button savebutton"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__("Save settings"); ?></ins></div>

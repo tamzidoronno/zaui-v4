@@ -1,0 +1,24 @@
+.Booking table td {
+    font-size: 14px;
+    vertical-align: top;
+}
+
+.Booking table td.col1 {
+    width: 150px;
+}
+.Booking table td select,
+.Booking table td input {
+    height: 25px;
+    width: 200px;
+}
+
+.Booking table td select {
+    width: 206px;
+}
+
+.Booking table td .companyinformation {
+    width: 200px;
+    padding: 2px;
+    color: #AAA;
+    border: solid 1px #DDD;
+}

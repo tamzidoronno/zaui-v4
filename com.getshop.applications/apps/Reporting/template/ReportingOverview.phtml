@@ -1,0 +1,78 @@
+<?
+namespace ns_04259325_abfa_4311_ab81_b89c60893ce1;
+
+/* @var $this Reporting */
+$orders = $this->getApi()->getReportingManager()->getReport($this->getStartDate(), $this->getEndDate(), $this->getType());
+$type = $this->getType();
+
+
+$pageViews = 0;
+$products = 0;
+$usersLoggedOn = 0;
+$orderCount = 0;
+$userCreated = 0;
+
+foreach ($orders as $report) {
+    /* @var $report core_reportingmanager_data_Report */
+    $pageViews += $report->pagesAccessed;
+    $products += $report->productsAccess;
+    $usersLoggedOn += $report->usersLoggedOn;
+    $orderCount += $report->orderCount;
+    $userCreated += $report->userCreated;
+}
+echo '<div class="outer-chart">';
+echo "<div class='title'>" . $this->__f("Summary") . "</div>";
+echo "<table width='100%'>";
+echo "<tr>";
+echo "<th>" . $this->__f("Total page views") . "</th>";
+echo "<th>" . $this->__f("Total product views") . "</th>";
+echo "<th>" . $this->__f("Users logged on") . "</th>";
+echo "<th>" . $this->__f("Total orders registered") . "</th>";
+echo "<th>" . $this->__f("Total users created") . "</th>";
+echo "</tr>";
+
+echo "<tr>";
+echo "<td align='center'>$pageViews</td>";
+echo "<td align='center'>$products</td>";
+echo "<td align='center'>$usersLoggedOn</td>";
+echo "<td align='center'>$orderCount</td>";
+echo "<td align='center'>$userCreated</td>";
+echo "</tr>";
+echo "</table>";
+echo "</div>";
+?>
+
+<div class="outer-chart">
+<? echo "<div class='title'>" . $this->__f("Page views") . "</div>"; ?>
+    <div id="pagesAccessed" class="chart"></div>
+</div>
+
+<div class="outer-chart">
+<? echo "<div class='title'>" . $this->__f("Product views") . "</div>"; ?>
+    <div id="productsAccess" class="chart"></div>
+</div>
+
+<div class="outer-chart">
+<? echo "<div class='title'>" . $this->__f("Users logged on") . "</div>"; ?>
+    <div id="usersLoggedOn" class="chart"></div>
+</div>
+
+<div class="outer-chart">
+<? echo "<div class='title'>" . $this->__f("Orders added") . "</div>"; ?>
+    <div id="orderCount" class="chart"></div>
+</div>
+
+<div class="outer-chart">
+<? echo "<div class='title'>" . $this->__f("Users created") . "</div>"; ?>
+    <div id="userCreated" class="chart"></div>
+</div>
+
+<script>
+    $(function() {
+        GetShop.Reporting.drawChart(<? echo $this->convertToGoogleChartData($orders, "pagesAccessed", $type); ?>, "pagesAccessed", "");
+        GetShop.Reporting.drawChart(<? echo $this->convertToGoogleChartData($orders, "productsAccess", $type); ?>, "productsAccess", "");
+        GetShop.Reporting.drawChart(<? echo $this->convertToGoogleChartData($orders, "usersLoggedOn", $type); ?>, "usersLoggedOn", "");
+        GetShop.Reporting.drawChart(<? echo $this->convertToGoogleChartData($orders, "orderCount", $type); ?>, "orderCount", "");
+        GetShop.Reporting.drawChart(<? echo $this->convertToGoogleChartData($orders, "userCreated", $type); ?>, "userCreated", "");
+    });
+</script>

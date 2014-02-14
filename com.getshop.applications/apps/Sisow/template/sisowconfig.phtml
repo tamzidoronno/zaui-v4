@@ -1,0 +1,103 @@
+<? namespace ns_8ad8243c_b9c1_48d4_96d5_7382fa2e24cd; ?>
+<div class="information">
+    <?
+    echo $this->__f("Here you can configure all the settings required to get sisow to work properly with your account. Enter the fields below and press save, as soon as everything here is set correctly you will see that a new payment options is available in the checkout area.");
+    ?>
+</div>
+
+<div class="setting onoff" id="testmode">
+    <span class="title"><?php echo $this->__f("Enable test mode for sisow"); ?></span>
+    <div class="onoff config" id="testmode"></div>
+    <div class="description">
+        <?php echo $this->__f("By enabling testmode for sisow, you will be able to test the payment solutions in sandbox mode."); ?>
+    </div>
+</div>
+
+<div class="textfield setting"  id="merchantid">
+    <span class="title"><?php echo $this->__f("Merchant id"); ?></span>
+    <input type="textfield" class="config">
+    <div class="description">
+        <?php echo $this->__("Your merchant id, this id is something that sisow is providing you."); ?>
+    </div>
+</div>
+
+<div class="textfield setting"  id="merchantkey" secure="true">
+    <span class="title"><?php echo $this->__f("Merchant key"); ?></span>
+    <input type="textfield" class="config">
+    <div class="description">
+        <?php echo $this->__("Your merchant key, this id is something that sisow is providing you."); ?>
+    </div>
+</div>
+
+<?
+if ($this->getMerchantId() != "" ) {
+    echo "<div class='sisowcheck'>";
+        if($this->isMerchankeyOk()) { 
+            $text = $this->__f("Your merchant key and id is correct");
+            echo "<div class='sisow_ok'>$text</div>";
+            
+            if (!$this->isMerchantActivated()) {
+                $text2 = $this->__f("Your merchant account is deactivated, please check with sisow to get it activated.");
+                echo "<div class='sisow_notok'>$text2</div>";
+            }
+            
+        } else { 
+            $text = $this->__f("Your merchant key or id is incorrect, please recheck it");
+            echo "<div class='sisow_notok'>$text</div>";
+        } 
+    echo '</div>';
+}
+?>
+        
+        
+
+<div class="setting onoff" id="on_ideal">
+    <span class="title"><?php echo $this->__f("Should iDeal be activated?"); ?></span>
+    <div class="onoff config" id="on_ideal"></div>
+    <div class="description">
+        <?php echo $this->__f("Activate this option if you wish to provide your customer with iDeal payment"); ?>
+    </div>
+</div>
+
+<div class="setting onoff" id="on_ebill">
+    <span class="title"><?php echo $this->__f("Should eBill be activated?"); ?></span>
+    <div class="onoff config" id="on_ebill"></div>
+    <div class="description">
+        <?php echo $this->__f("Activate this option if you wish to provide your customer with eBill payment"); ?>
+    </div>
+</div>
+
+<div class="setting onoff" id="on_mistercash">
+    <span class="title"><?php echo $this->__f("Should Mister Cash be activated?"); ?></span>
+    <div class="onoff config" id="on_mistercash"></div>
+    <div class="description">
+        <?php echo $this->__f("Activate this option if you wish to provide your customer with Mister Cash payment"); ?>
+    </div>
+</div>
+
+<div class="setting onoff" id="on_sofort">
+    <span class="title"><?php echo $this->__f("Should Sofort Banking be activated?"); ?></span>
+    <div class="onoff config" id="on_sofort"></div>
+    <div class="description">
+        <?php echo $this->__f("Activate this option if you wish to provide your customer with Sofort Banking payment"); ?>
+    </div>
+</div>
+
+<div class="setting onoff" id="on_fjincadeau">
+    <span class="title"><?php echo $this->__f("Should Fjincadeau be activated?"); ?></span>
+    <div class="onoff config" id="on_fjincadeau"></div>
+    <div class="description">
+        <?php echo $this->__f("Activate this option if you wish to provide your customer with Fjincadeau payment"); ?>
+    </div>
+</div>
+
+<div class="setting onoff" id="on_podium">
+    <span class="title"><?php echo $this->__f("Should Podium be activated?"); ?></span>
+    <div class="onoff config" id="on_podium"></div>
+    <div class="description">
+        <?php echo $this->__f("Activate this option if you wish to provide your customer with Podium payment"); ?>
+    </div>
+</div>
+
+
+<div class="button savebutton needreloadCurrentSettings"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__("Save settings"); ?></ins></div>

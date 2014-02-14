@@ -1,0 +1,26 @@
+/* color:Standard:#2e64a0 */
+
+/* color:Red:#9f2424 */
+.breadcrumb .breadcrumb-inner, .Footer {border-top: solid 1px #9f2424; }
+.TopMenu a.selected { color: #9f2424; }
+.button .filler, .button-large .filler,#apparea-left .LeftMenu .menu_0 { background-color: #9f2424; }
+
+/* color:Green:#2d9b51 */
+.breadcrumb .breadcrumb-inner, .Footer {border-top: solid 1px #2d9b51; }
+.TopMenu a.selected { color: #2d9b51; }
+.button .filler, .button-large .filler,#apparea-left .LeftMenu .menu_0 { background-color: #2d9b51; }
+
+/* color:Blue:#432ba7 */
+.breadcrumb .breadcrumb-inner, .Footer {border-top: solid 1px #432ba7; }
+.TopMenu a.selected { color: #432ba7; }
+.button .filler, .button-large .filler,#apparea-left .LeftMenu .menu_0 { background-color: #432ba7; }
+
+/* color:Brown:#9f7913 */
+.breadcrumb .breadcrumb-inner, .Footer {border-top: solid 1px #9f7913; }
+.TopMenu a.selected { color: #9f7913; }
+.button .filler, .button-large .filler,#apparea-left .LeftMenu .menu_0 { background-color: #9f7913; }
+
+/* color:Pink:#f906df */
+.breadcrumb .breadcrumb-inner, .Footer {border-top: solid 1px #f906df; }
+.TopMenu a.selected { color: #f906df; }
+.button .filler, .button-large .filler,#apparea-left .LeftMenu .menu_0 { background-color: #f906df; }

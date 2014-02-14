@@ -1,0 +1,15 @@
+<?
+namespace ns_2afb045b_fa01_4398_8582_33f212bb8db8;
+
+/* @var $this Chat */
+if (count($this->getMessages()) == 0 && !(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() || \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isEditor())) {
+    echo "<div class='chatevent chatright'>".$this->__w("How can I help you today ?") . "</div>";
+}
+
+if (is_array($this->getMessages())) {
+    foreach ($this->getMessages() as $message) {
+        $leftOrRight = $message->operator ? "chatright" : "chatleft";
+        echo "<div class='chatevent $leftOrRight'> <div class='time'>$message->rowCreatedDate</div>$message->message</div>";
+    }
+}
+?>

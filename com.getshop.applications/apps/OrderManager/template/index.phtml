@@ -1,0 +1,27 @@
+<? namespace ns_27716a58_0749_4601_a1bc_051a43a16d14; ?> 
+<div>
+    <table width="100%">
+        <tr>
+            <td valign="top" style="width:100px;">
+                <div class='inline menu'>
+                    <?php
+                    $this->includefile('menu');
+                    ?>
+                </div>
+            </td>
+            <td valign="top" >
+                <div class="right">
+                    <?php
+                    if ($this->showOrder) {
+                        $this->includefile('order');
+                    } else if ($this->showInvoice) {
+                        $this->includefile('invoice');
+                    } else {
+                        $this->includefile('orderoverview');
+                    }
+                    ?>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

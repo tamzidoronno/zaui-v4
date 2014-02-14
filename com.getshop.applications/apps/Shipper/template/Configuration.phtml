@@ -1,0 +1,70 @@
+<?
+namespace ns_098bb0fe_eb51_42c6_9fbb_dadb7b52dd56;
+?>
+<div class="information">
+    <?
+    echo $this->getDescription(); 
+    ?>
+</div>
+<div class="tabs" id="shippingtype">
+    <div class="tabset">
+        <div activate="simple" class="tab inline active">Fixed price</div>
+        <div activate="advanced" class="tab inline">Price based total cost</div>
+    </div>
+    
+    <div class="tab_content">
+        <div id="simple" class="content_holder active">
+            <div class="textfield setting" id="shippingstart">
+                <span class="title"><? echo $this->__f("Start up price"); ?></span>
+                <input type="textfield" class="config" value=""/>
+                <div class="description"><?php echo $this->__f("Startup cost (default: 0 )"); ?></div>
+            </div>
+
+            <div class="textfield setting" id="priceeachproduct">
+                <span class="title"><? echo $this->__f("Item price"); ?></span>
+                <input type="textfield" class="config" value=""/>
+                <div class="description"><?php echo $this->__f("Price each product (default: 0 )"); ?> </div>
+            </div>
+
+            <div class="textfield setting" id="freeshipment">
+                <span class="title"><? echo $this->__f("Free shipping"); ?></span>
+                <input type="textfield" class="config" value=""/>
+                <div class="description"><?php echo $this->__f("Free shipping if total price is above, if set empty this feature is disabled"); ?> </div>
+            </div>
+        </div>
+
+        <div id="advanced" class="content_holder">
+            <div>
+                Select this option if you want to give your customer the support of different prices based on how much they have bought. Example you can specify that if they buy products for a price 0-100 the shipment will be 10, 100-200 the shipment will be 8 and etc.
+            </div>
+            <br>
+            
+            <center>
+                <table class='settingstable' id='shippingrange'>
+                    <th>From including (price)</th>
+                    <th>To including (price)</th>
+                    <th>Shipment cost</th>
+                    <?
+                    
+                    $count = isset($this->getConfiguration()->settings->shippingrange) ? 
+                        count($this->getConfiguration()->settings->shippingrange->value) :
+                        1;
+                    for ($i=0; $i<$count;$i++) {
+                    ?>
+                        <tr><td><input type="textfield"/></td><td><input type="textfield"/></td><td><input type="textfield"/></td></tr>
+                    <? 
+                    }
+                    ?>
+                </table>
+            </center>
+            <br>
+            <hr>
+            <div class="textfield setting" id="outofrangeprice">
+                <span class="title"><? echo $this->__f("Default price"); ?></span>
+                <input type="textfield" class="config" value=""/>
+                <div class="description"><?php echo $this->__f("If the total amount in the basket is outside of the range above, use this price."); ?> </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="button savebutton"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__("Save settings"); ?></ins></div>

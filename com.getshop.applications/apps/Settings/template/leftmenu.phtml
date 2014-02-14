@@ -1,0 +1,16 @@
+<? namespace ns_d755efca_9e02_4e88_92c2_37a3413f3f41; ?>
+
+<div class="leftmenu inline">
+    <?php foreach ($this->getApplications() as $app) {
+        $active = "";
+        if (!isset($_GET['applicationId'])) {
+            $active = (get_class($app) == "ns_d755efca_9e02_4e88_92c2_37a3413f3f41\Settings") ? " active " : "";
+        } else {
+            $active = ($app && $app->configuration && $_GET['applicationId'] == $app->configuration->id) ? " active " : "";
+        }
+        ?>
+        <a href="?page=settings&applicationId=<?php echo $app->configuration->id; ?>"><div class="entry <?php echo "setting_button_".get_class($app); echo $active;?>"><div class="inner"><?php echo $app->getName(); ?></div></div></a>
+        <?php 
+    }
+    ?>
+</div>

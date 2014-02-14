@@ -1,0 +1,80 @@
+<?php
+
+namespace ns_deab499e_b133_4cb6_a1b2_532018c31d46;
+
+/* @var $this \ns_deab499e_b133_4cb6_a1b2_532018c31d46\Taxes */
+?>
+<div class="information">
+<?
+echo $this->getDescription();
+?>
+</div>
+
+<div appid='<? echo $this->getConfiguration()->id; ?>' class='app'>
+    <div class="textfield setting"  id="shipmentent">
+        <span class="title"><?php echo $this->__("Shipment taxes"); ?></span>
+        <span style="float:right">
+            <span class="value" style="width:27px;display:inline-block;text-align: right;">0</span>%
+        </span>
+        <input type="range" min="0" max="100" step="1" class="config" id="selenium_title" value="0">
+        <div class="description">
+<?php echo $this->__f("What is the shipment taxes?"); ?>
+        </div>
+    </div>
+
+    <div class="textfield setting"  id="tax_group_1">
+        <span class="title"><?php echo $this->__("Taxgroup") . " 1"; ?></span>
+        <span style="float:right">
+            <span class="value" style="width:27px;display:inline-block;text-align: right;">0</span>%
+        </span>
+        <input type="range" min="0" max="100" step="1" class="config" id="selenium_title" value="0">
+        <div class="description">
+<?php echo $this->__f("This tax group will be possible to select in your product management."); ?>
+        </div>
+    </div>
+
+    <div class="textfield setting"  id="tax_group_2">
+        <span class="title"><?php echo $this->__("Taxgroup") . " 2"; ?></span>
+        <span style="float:right">
+            <span class="value" style="width:27px;display:inline-block;text-align: right;">0</span>%
+        </span>
+        <input type="range" min="0" max="100" step="1" class="config" id="selenium_title" value="0">
+        <div class="description">
+<?php echo $this->__f("This tax group will be possible to select in your product management."); ?>
+        </div>
+    </div>
+
+    <div class="textfield setting"  id="tax_group_3">
+        <span class="title"><?php echo $this->__("Taxgroup") . " 3"; ?></span>
+        <span style="float:right">
+            <span class="value" style="width:27px;display:inline-block;text-align: right;">0</span>%
+        </span>
+        <input type="range" min="0" max="100" step="1" class="config" id="selenium_title" value="0">
+        <div class="description">
+<?php echo $this->__f("This tax group will be possible to select in your product management."); ?>
+        </div>
+    </div>
+
+    <div class="textfield setting"  id="tax_group_4">
+        <span class="title"><?php echo $this->__("Taxgroup") . " 4"; ?></span>
+        <span style="float:right">
+            <span class="value" style="width:27px;display:inline-block;text-align: right;">0</span>%
+        </span>
+        <input type="range" min="0" max="100" step="1" class="config" id="selenium_title" value="0">
+        <div class="description">
+<?php echo $this->__f("This tax group will be possible to select in your product management."); ?>
+        </div>
+    </div>
+
+    <div class="textfield setting"  id="tax_group_5">
+        <span class="title"><?php echo $this->__("Taxgroup") . " 5"; ?></span>
+        <span style="float:right">
+            <span class="value" style="width:27px;display:inline-block;text-align: right;">0</span>%
+        </span>
+        <input type="range" min="0" max="100" step="1" class="config" id="selenium_title" value="0">
+        <div class="description">
+<?php echo $this->__f("This tax group will be possible to select in your product management."); ?>
+        </div>
+    </div>
+    <div class="button savebutton"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__("Save settings"); ?></ins></div>
+</div>

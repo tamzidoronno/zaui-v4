@@ -1,0 +1,18 @@
+<?php
+namespace ns_6c245631_effb_4fe2_abf7_f44c57cb6c5b;
+
+/* @var $this Account */
+    $orders = $this->getOrders();
+?>
+<h2>Orders</h2>
+<table width='500'>
+<?php
+    foreach($orders as $order) {
+        echo "<tr>";
+        echo "<td>";
+        print_r($order);
+        echo "</td>";
+        echo "</tr>";
+    }
+?>
+</table>

@@ -1,0 +1,109 @@
+<?
+/* @var $this ns_dcd22afc_79ba_4463_bb5c_38925468ae26\ProductManager */
+$allattributes = $this->getFactory()->getApi()->getProductManager()->getAllAttributes();
+$groups = array();
+if(isset($allattributes)) {
+    foreach($allattributes as $attr) {
+        if(!isset($groups[$attr->groupName])) {
+            $groups[$attr->groupName] = array();
+        }
+        $groups[$attr->groupName][] = $attr;
+    }
+}
+
+
+foreach($groups as $name => $array) {
+    asort($array);
+    $groups[$name] = $array;
+}
+
+?>
+
+<div class='information_box'>
+    <b><? echo $this->__f("Attribute settings"); ?></b>
+    <br><? echo $this->__f("Attribute settings enables you to attach different kind of attributes to the product. Theese attributes will be used to filter your products in a product list."); ?>
+</div>
+
+<span class="attrcontainer added">
+    <div class='template attribute_entry' style='display:none;'>
+        <span class='name'></span>
+        <span class='value'></span>
+        <span class='remove fa fa-trash-o'></span>
+    </div>
+
+    <div class='title'>
+        <? echo $this->__f("Attributes added to this product"); ?>
+    </div>
+
+    <div class='added_container'>
+        <? foreach ($this->getProduct()->attributesAdded as $group => $name) { ?>
+            <div class='attribute_entry'>
+                <span class='name'><? echo $group; ?></span>
+                <span class='value'><? echo $name; ?></span>
+                <span class='remove fa fa-trash-o'></span>
+            </div>
+        <? } ?>
+    </div>
+
+</span>
+<?
+
+function print_attributes_to_select($name, $attributes, $addtext) {
+    $template = "";
+    $display = "";
+    if (!$name) {
+        $name = "";
+        $template = "template";
+        $display = "style='display:none;'";
+        $value = "";
+    }
+    ?>
+    <div class='<? echo $template; ?> attribute_entry' <? echo $display; ?>>
+        <div class='group_name_row'>
+            <span class='name'><? echo $name; ?></span>
+
+            <span class='add_value_container'>
+                <input type='text' placeholder='Add a value'>
+                <span class="gs_button small create_attr_value">
+                    <? echo $addtext; ?>
+                </span>
+                <span class="remove_attribute trash"></span>
+            </span>
+        </div>
+        <div class='attribute_value_row'>
+            <?
+            if ($attributes) {
+                foreach ($attributes as $attr) {
+                    echo "<span class='attribute_value' id='".$attr->id."'><span class='name gs_button small'>" . $attr->value . "</span><span class='editbuttons'><span class='rename fa fa-pencil-square'></span><span class='remove fa fa-trash-o'></span></span></span>";
+                }
+            } else {
+                echo "<span class='attribute_value'" . $display . "><span class='name gs_button small'></span><span class='editbuttons'><span class='rename fa fa-pencil-square'></span><span class='remove fa fa-trash-o'></span></span></span>";
+            }
+            ?>
+        </div>
+    </div>
+    <?
+}
+?>
+
+
+<span class="attrcontainer selection">
+    <? print_attributes_to_select(false, false, $this->__f("Add")); ?>
+    <div class='title'>
+        <? echo $this->__f("Your attributes"); ?>
+        <span class='create_container'>
+            <input type='text' placeholder='<? echo $this->__f("Attribute name"); ?>'>
+            <span class="gs_button small create_attribute">
+                <? echo $this->__f("Create"); ?>
+            </span>
+        </span>
+    </div>
+    <div class='added_container'>
+        <?
+        foreach ($groups as $groupName => $attr) {
+            print_attributes_to_select($groupName, $attr, $this->__f("Add"));
+        }
+        ?>
+    </div>
+</span>
+<div style='clear:both;'></div>

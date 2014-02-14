@@ -1,0 +1,201 @@
+.gs_inner {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+html {
+    background-color: #4d4d4f;
+}
+
+#apparea-header {
+    min-height: 135px;
+    height: 135px;  
+    background: url('{IMAGEFOLDER}/meca_logo.png') no-repeat 100% center; 
+    background-repeat: no-repeat;
+    background-position: right 20px center;
+    background-position-y: 40px;
+}
+
+.gs_outer.header {
+}
+
+.gs_outer.header .gs_inner {
+    height: 135px;
+    width: 1020px;
+    max-width: 1020px;
+    background-image: url('{IMAGEFOLDER}/headerbackground.png');
+}
+
+.gs_outer.breadcrumb {
+    display: none;
+}
+
+.TopMenu {
+    position: absolute; 
+    bottom: 0px;
+    left: 0px;
+    color: #FFF;
+    border-top: solid 1px #3566a3;
+    right: 0px;
+    padding-left: 16px;
+}
+
+.TopMenu li {
+    margin-left: 10px;
+    padding-right: 10px;
+}
+
+.TopMenu li:last-child {
+    border-right: solid 0px #DDD;
+}   
+
+.TopMenu a {
+    color: #FFF;
+    font-size: 12px;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-weight: bold;
+    line-height: 35px;
+}
+
+.gs_outer.footer .gs_inner {
+    background-color: #e0e0e0;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.Logo {
+    top: 10 px;
+    left: 20px;
+}
+
+.mainarea .gs_inner .applicationarea {
+    background-color: #FFF;
+    border-radius: 3px;
+    box-shadow: 0px 0px 7px #BBB;
+    padding: 15px;
+    min-height: 313px;
+}
+.mainarea .gs_inner {    
+    background-color: #e0e0e0;
+    padding: 10px;
+}
+
+.empty_app_area {
+    border: solid 0px;
+}
+
+.gs_margin_left {
+    padding-left: 20px;
+}
+
+.gs_margin_bottom {
+    margin-bottom: 20px;
+}
+
+.Calendar {
+    width: 100%;
+}
+
+.Footer {
+    border: solid 1px #CCC;
+    background-color: #EEE;
+    padding: 10px;
+    max-width: 978px;
+    height: 125px;
+}
+
+.Login {
+    background-color: rgba(255,255,255,0.2);
+}
+
+@media screen and (max-width:500px) {
+    table { width: 100% !important; }
+    table td { float: left; width: 100%; }
+    .gs_col { width: 100% !important; }
+    .gs_margin_left { margin-left: 0px; padding-left: 0px; }
+    .Footer { width: inherit; }
+    .Banner img,
+    .Banner .bannerslider,
+    .Banner { height: auto !important; }
+    .gs_col { margin: 0px; box-sizing: content-box !important; }
+    #webshop_logo { max-width: 350px; }
+    .mainarea .applicationarea { margin: 10px; }
+    .gs_outer.footer .applicationarea { margin-left: 10px; margin-right: 10px;}
+
+    .gs_outer.header { height: 206px; }    
+
+    .gs_outer.header .gs_inner {
+        width: 100%;
+        background-size: 1px 206px;
+    }
+    .skelholder[page="a2bb626b-2248-4066-9d4a-17ee55c9e323"] .gs_col.c1 { display:none; }
+    
+    .GoogleMaps { height: 200px; }
+    .gs_outer.header,
+    .gs_outer.header .gs_inner,
+    #apparea-header {
+        min-height: 125px;
+        height: 125px;
+        padding: 0px;
+    }
+    
+    
+
+    #apparea-header {
+        background-size: 130px;
+        background-position: right 0px bottom 15px;
+        background-position-y: 90px;
+        border-right: 10px solid transparent;
+    }
+
+    #webshop_logo { max-height: 55px; }
+    
+    .TopMenu {
+        border-top: solid 1px #164d8e;
+        margin: 0px;
+        bottom: 0px;
+        right: -10px;
+        left: 0px;
+        background-repeat: no-repeat;
+        background-image: url('{IMAGEFOLDER}/topmenu_mobile.png');
+        height: 50px;
+        background-position: 5px 5px;
+    }
+    .TopMenu li {
+        display: none;
+    }
+    .TopMenu li:not(.mobile) {
+        width: 250px;
+        background-color: #295c9a;
+        color: #FFF;
+        padding: 10px;
+        border-bottom: solid 1px #164d8e;
+    }
+    .Login {
+        display: none;
+    }
+    .mobile {
+        display: block !important;
+        width: 60px;
+        padding-left: 40px !important;
+        line-height: 50px;
+        font-size: 20px !important;
+        font-weight: bold;
+        border-right: solid 1px #164d8e !important;
+    }
+
+    .mainarea .gs_inner {
+        padding-top: inherit;
+        padding-bottom: inherit;
+    }
+    
+    .ContentManager img {
+        width: auto !important; height: auto !important; max-width:100% !important;
+    }
+    
+    .mainarea .gs_inner .applicationarea  {
+        min-height: inherit;
+    }
+    
+    .skeleton3 .c2 {display:none; }
+}

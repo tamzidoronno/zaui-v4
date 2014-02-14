@@ -1,0 +1,29 @@
+<?
+
+ namespace ns_c7736539_4523_4691_8453_a6aa1e784fc1; ?>
+<div class="information">
+    <?php echo $this->getDescription(); ?>
+</div>
+
+<div class="textfield setting" id="paypalemailaddress">
+    <div class="title"><? echo $this->__f("Paypal address"); ?></div>
+    <div class="text inline"> <?php echo $this->__("Please enter your paypal address:"); ?> </div>
+    <input type="textfield" value="" class="config"/>
+</div>
+
+<div class="onoff setting" id="sandbox">
+    <span class="title"><? echo $this->__f("Sandbox"); ?></span>
+    <div class="onoff config"></div>
+    <div class="description">
+        <? echo $this->__f("Would you like to use paypal in sandbox mode?"); ?>   
+    </div>
+</div>
+
+<div class="textfield setting" id="paypaltestaddress">
+    <div class="text inline"> <?php echo $this->__("Please enter your paypal address:"); ?> </div>
+    <input type="textfield" value="" class="config"/>
+    <div class="description">
+        <? echo $this->__f("What address are you using for the test enviroment to paypal?"); ?></div>
+</div>
+
+<div class="button savebutton"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__("Save settings"); ?></ins></div>

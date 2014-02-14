@@ -1,0 +1,16 @@
+<div class="information">
+    <?
+        echo $this->getDescription();
+    ?>
+</div>
+
+<div class="textfield setting"  id="paymentfee">
+    <span class="title"><?php echo $this->__("Payment fee"); ?></span>
+    <input type="textfield" class="config">
+    <div class="description">
+        <?php echo $this->__("Fee for payment."); ?>
+    </div>
+</div>
+
+
+<div class="button savebutton"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__("Save settings"); ?></ins></div>

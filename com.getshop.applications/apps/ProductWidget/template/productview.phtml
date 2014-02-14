@@ -1,0 +1,40 @@
+<?php
+
+namespace ns_b741283d_920d_460b_8c08_fad5ef4294cb;
+
+/* @var $this ProductWidget */
+/* @var $product \core_productmanager_data_Product */
+$product = $this->getProduct();
+$currency = $this->getFactory()->getCurrencyName();
+
+
+if (!$product) {
+    ?>
+    <div class="no_product">
+        <div class="no_product_description"><i class="fa fa-meh-o"></i> <? echo $this->__f("No product selected yet"); ?> <i class="fa fa-meh-o"></i></div>
+        <span class="gs_button create_new"><? echo $this->__f("Create a new product"); ?></span>
+        <span class="gs_button select_existing"><? echo $this->__f("Select an existing product"); ?></span>
+    </div>
+    <?
+} else {
+    ?>
+    <div class='inner product'>
+        <a ajaxlink="<? echo $this->getProductLink($product, false); ?>" href="<? echo $this->getProductLink($product); ?>" id="<?php echo $product->page->id; ?>" scrolltop="true">
+            <input type='hidden' value='<? echo $product->id; ?>' id='ProductId'>
+            <div class="title">
+                <?
+                if (!$product->name) {
+                    echo $this->__w("Untitled product");
+                } else {
+                    echo $product->name;
+                }
+                ?>
+            </div>
+            <img src='displayImage.php?id=<? echo $product->imagesAdded[0] ?>'>
+            <div class='price'><? echo $currency; ?><span class='price_inner'><? echo $product->price; ?></span></div>
+        </a>
+        <div class='buy_product_row'>
+            <span class='gs_button small buy_product' type='productwidget'><? echo $this->__w("Add to cart"); ?></span>
+        </div>
+    </div>
+<? } ?>

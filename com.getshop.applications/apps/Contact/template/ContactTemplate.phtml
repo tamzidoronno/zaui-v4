@@ -1,0 +1,135 @@
+<?php
+
+namespace ns_96de3d91_41f2_4236_a469_cd1015b233fc;
+
+/*  @var $this Contact */
+
+$email = $this->getEmail();
+$address = $this->getAddress();
+$postalCode = $this->getPostalCode();
+$phone = $this->getPhone();
+$header = $this->getHeader();
+
+if (isset($_POST['allfiedsrequired'])) {
+    echo $this->__w("I am sorry, but all fields are required before sending a message.");
+} else {
+    if (isset($_POST['event']) && $_POST['event'] == "sendMessage") {
+        echo "<div class='message_sent'>";
+        echo $this->__f("Your message has been sent!");
+        echo "</div>";
+    }
+}
+?>
+
+<div class='medium_contact_form contact_form'>
+    <input type="txt" class="max_length" id="name" placeholder='<? echo $this->__w("My name is:"); ?>'></input>
+    <input type="txt" class="max_length" id="phone" placeholder='<?php echo $this->__w("Phone"); ?>'></input>
+    <input type="txt" class="max_length" id="email" placeholder='<?php echo $this->__w('Email'); ?>'></input>
+    <textarea class="max_length subject_textarea" id="content" placeholder="<?php echo $this->__w("What's on your mind?"); ?>"></textarea>
+    <div class="button edit_contact_button">
+        <div class="rightglare"></div>
+        <div class="filler"></div>
+        <ins class="send_email" id="send_email"><?php echo $this->__w("Send message"); ?></ins>
+    </div>
+</div>
+
+<div class='normal_contact_form contact_form'>
+    <div class="horizontal">
+        <span class="text"><? echo $this->__w("Send us mail"); ?></span>
+    </div>
+    <table style="width:100%;">
+        <tr>
+            <td>
+    <?php echo $this->__w("My name is:"); ?>
+            </td>
+            <td>
+                <input type="txt" class="max_length" id="name"></input>
+            </td>
+        </tr>
+
+    <?php if ($this->isCompanyFieldActivated()) { ?>
+            <tr>
+                <td>
+        <?php echo $this->__w("Company"); ?>
+                </td>
+                <td>
+                    <input type="txt" class="max_length" id="company"></input>
+                </td>
+            </tr>
+    <?php } ?>
+
+        <tr>
+            <td>
+    <?php echo $this->__w("Phone"); ?>
+            </td>
+            <td>
+                <input type="txt" class="max_length" id="phone"></input>
+            </td>
+        </tr>
+        <tr>
+            <td>
+    <?php echo $this->__w('Email'); ?>
+            </td>
+            <td>
+                <input type="txt" class="max_length" id="email"></input>
+            </td>
+        </tr>
+
+        <?
+        if (isset($_GET['showgroup'])) {
+            ?>
+            <tr>
+                <td>
+        <?php echo $this->__w("Invoice email"); ?>
+                </td>
+                <td>
+                    <input type="txt" class="max_length" id="invoiceemail"></input>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+        <? echo $this->__w("Please select department", 'Booking'); ?>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <?
+                    $groups = $this->getApi()->getUserManager()->getAllGroups();
+                    shuffle($groups);
+                    foreach ($groups as $group) {
+                        $groupName = $group->groupName;
+                        $imageId = $group->imageId;
+                        if ($imageId == "") {
+                            $image = $group->groupName;
+                        } else {
+                            $image = "<img src='displayImage.php?id=$imageId'/>";
+                        }
+                        echo "<div groupname='$groupName' class='group inline'>$image</div>";
+                    }
+                    ?>
+
+                </td>
+            </tr>
+    <? } ?>
+
+        <tr>
+            <td colspan="2">
+    <?php echo $this->__w("What's on your mind?"); ?>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2"><textarea class="max_length subject_textarea" id="content"><?php echo isset($_GET['prefilled']) ? $_GET['prefilled'] : ""; ?></textarea></td>
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <div class="button edit_contact_button">
+                    <div class="rightglare"></div>
+                    <div class="filler"></div>
+                    <ins class="send_email" id="send_email"><?php echo $this->__w("Send message"); ?></ins>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

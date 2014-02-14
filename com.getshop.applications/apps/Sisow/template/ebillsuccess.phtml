@@ -1,0 +1,14 @@
+<?
+$response = $this->getResponse();
+$url = $response->transaction->documenturl;
+$url = urldecode($url);
+?>
+
+<div class="ebillsuccess">
+    <h1><?php echo $this->__w("Thank you for ordering with Sisow ebill"); ?></h1>
+    <?
+    echo $this->__w("Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link");
+    ?>
+    <br><br>
+    <a href="<?echo $url;?>"><? echo $this->__w("Download ebill"); ?></a>
+</div>

@@ -1,0 +1,56 @@
+<h2>
+    <? echo $this->__w("Price and plans"); ?>
+</h2>
+<hr>
+<?
+$subscriptions = $this->getAllSubscriptions();
+echo "<table class='priceandplans' width='100%'>";
+echo "<tr>";
+echo "<th>".$this->__w("Application")."</th>";
+echo "<th>".$this->__w("Start date")."</th>";
+echo "<th>".$this->__w("End date")."</th>";
+echo "<th>".$this->__w("Number of instances added")."</th>";
+echo "<th>".$this->__w("Price")."</th>";
+echo "<th>".$this->__w("Payment")."</th>";
+echo "</tr>";
+$total = 0;
+foreach($subscriptions as $subscription) {
+    if (!isset($subscription->app)) {
+        continue;
+    }
+    
+    if($subscription->numberOfInstancesAdded == 0) {
+        continue;
+    }
+    $total += $subscription->app->price;
+    /* @var $subscription core_appmanager_data_ApplicationSubscription */
+    echo "<tr>";
+    echo "<td>".$subscription->app->appName."</td>";
+    
+    echo "<td align='center'>";if($subscription->app->price != 0) { echo $subscription->from_date; } echo "</td>";
+    echo "<td align='center'>";if($subscription->app->price != 0) { echo $subscription->to_date; } echo "</td>";
+    echo "<td align='center'>".$subscription->numberOfInstancesAdded."</td>";
+    echo "<td align='center'>$ ".$subscription->app->price.",- </td>";
+    echo "<td align='center'>";
+    if($subscription->payedfor) {
+        echo "OK";
+    } else {
+        echo "Not payed for";
+    }
+    echo "</td>";
+    echo "</tr>";
+}
+echo "<tr>";
+echo "<td>Total</td>";
+echo "<td></td>";
+echo "<td></td>";
+echo "<td></td>";
+if(isset($this->getFactory()->getStore()->isVIS) && $this->getFactory()->getStore()->isVIS) {
+    echo "<td align='center'>".$this->__f("VIP user - $0")."</td>";
+} else {
+    echo "<td align='center'>$ $total,- / year</td>";
+}
+echo "<td></td>";
+echo "</tr>";
+echo "</table>";
+?>

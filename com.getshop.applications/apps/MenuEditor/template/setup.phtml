@@ -1,0 +1,135 @@
+<?
+/**
+ * Template file for MenuEditor, this file holds the responsibility to 
+ * show all configurator.
+ * 
+ */
+/** @var core_listmanager_data_EntryList[] */
+$menuLists = $this->getMenuLists();
+?>
+<div class="MenuEditor app" appId="<? echo $this->getConfiguration()->id;?>"> <!-- <- this can be removed -->
+    <div class="menueditorcontainer">
+        <table width="100%">
+            <tr>
+                <td width="200" valign="top">
+                    <div class="menulist">
+                        <div class="title"><? echo $this->__f("Your menus") ?></div>
+                        <div class="menu">
+                            <?
+                            foreach ($menuLists as $list) {
+                                $id = str_replace("-", "_", $list->id);
+                                echo "<div class='menuitem' list='container_$id' appid='".$list->appId."'>$list->name</div>";
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="info">
+                        <div class="title">Information</div>
+                        <ul>
+                            <li><? echo $this->__f("Create new pages by dragging \"New Page\" to where you want the new page to be in the menu."); ?><br><br></li>
+                            <li><? echo $this->__f("Delete pages by dragging the menu entry to the garbage box."); ?><br><br></li>
+                            <li><? echo $this->__f("To move pages, move them from the menu to the loose page area, then drag the loose page into another menu."); ?></li>
+                        </ul>
+                        <?
+                        echo $this->__f("");
+                        ?>
+                    </div>
+                </td>
+                <td valign="top">
+                    <div class="loose_pages">
+                        <div class="title">Loose pages</div>
+                        <div class="page">Om oss</div>
+                        <div class="page">Donald duck</div>
+                        <div class="page">Våre serier</div>
+                        <div class="page">Kurser</div>
+                        <div class="page">Spesielle påstander</div>
+                        <div class="page">Ingenting å bruke</div>
+                        <div class="page">User pages</div>
+                        <div class="page">Hemmelig side</div>
+                        <div class="disabled"></div>
+                    </div>
+                    <div class="menueditorcontent">
+                        <div class="toolbox">
+                            <div style="display:none;" class="menu new_menu">
+                                <span>New menu</span>
+                            </div>
+                            <div class="menu new dropaccept">
+                                <span>New page</span>
+                            </div>
+                            <div class="menu delete">
+                                <span>Delete</span>
+                            </div>
+                            <div class="disabled"></div>
+                        </div>
+                        <div class="menueditor">
+                            <?
+                            foreach ($menuLists as $list) {
+                                $name = "container_" . str_replace("-", "_", $list->id);
+                                echo "<div class='menutree' id='$name'></div>";
+                            }
+                            ?>  
+                            <div class="menutree intro">
+                                <div class="title"><? echo $this->__f("Welcome, enjoy configuring your menu."); ?></div>
+                                <div class="description">
+                                    <?
+                                    echo $this->__f("This menu editor has the flexibility to set up menues the way you would like to. To start editing your menu, please select one from the top left corner.");
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="menuitemedit">
+                            <div class="title"><? echo $this->__f("Item details"); ?></div>
+                            <div class="iteminformation">
+                                <? echo $this->__f("Please select an item, this box will show you all the juice stuff that you can do to the selected item."); ?>
+                            </div>
+                            <div class="titleinformation">
+                                <table>
+                                    <tr><td><? echo $this->__f("Name"); ?></td><td><input type="textfield" id="itemname"/></td></tr>
+                                    <tr><td><? echo $this->__f("Link"); ?></td><td><input type="textfield" class="pagepicker" id="itemlink"/></td></tr>
+                                    <tr><td><? echo $this->__f("Userlevel"); ?></td>
+                                        <td>
+                                            <select id="userlevel">    
+                                                <option value="public"><? echo $this->__("Public"); ?></option>
+                                                <option value="customers"><? echo $this->__("Customers"); ?></option>
+                                                <option value="editor"><? echo $this->__("Editor"); ?></option>
+                                                <option value="admin"><? echo $this->__("Administrator"); ?></option>
+                                            </select>
+                                    
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="disabled"></div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <div class="button-large cancel">
+            <div class="rightglare"></div>
+            <div class="filler"></div>
+            <ins>Cancel</ins>
+        </div>
+        <div class="button-large save">
+            <div class="rightglare"></div>
+            <div class="filler"></div>
+            <ins>Save</ins>
+        </div>
+
+    </div>
+</div>
+
+<script>
+<?
+foreach ($menuLists as $listEntry) {
+    $id = str_replace("-", "_", $listEntry->id);
+    $name = "entryList_$id";
+    $json = $this->getJSonEncodedList($listEntry);
+    echo " var $name = $json ;";
+    echo "var tree_$id = new getshop.Tree('container_$id',$name);";
+    echo "tree_$id.refresh();";
+}
+?>
+    getshop.MenuEditor.editorStarted();
+</script>

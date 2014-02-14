@@ -1,0 +1,33 @@
+/* color:Red:#f14141 */
+.header .TopMenu .applicationinner span a.selected { color: #FFFFFF; }
+.header .TopMenu { background-color: #f14141; }
+.button .filler, .button-large .filler { background-color: #f14141; }
+.button ins, .button-large ins { color:#FFFFFF; }
+#apparea-footer { background-color: #f14141; }
+.LeftMenu .menu_0 { background-color: #f14141; }
+#apparea-footer, .header .TopMenu .applicationinner span a,.LeftMenu .menuName { color: #FFFFFF; }
+ 
+
+/* color:Green:#a0ce4e */
+.header .TopMenu .applicationinner span a.selected { color: #FFFFFF;  }
+.header .TopMenu { background-color: #a0ce4e; }
+.button .filler, .button-large .filler { background-color: #a0ce4e; }
+.button-large ins { color: #000000; }
+.LeftMenu .menu_0 { background-color: #a0ce4e; }
+#apparea-footer { background-color: #a0ce4e; }
+
+/* color:Blue:#1a80b6 */
+.header .TopMenu .applicationinner span a.selected { color: #FFFFFF;  }
+.header .TopMenu { background-color: #1a80b6; }
+.button .filler, .button-large .filler { background-color: #1a80b6; }
+.LeftMenu .menu_0 { background-color: #1a80b6; }
+#apparea-footer { background-color: #1a80b6; }
+
+/* color:White:#FFFFFF */
+
+/* color:Orange:#e9a825 */
+.header .TopMenu .applicationinner span a.selected { color: #FFFFFF; }
+.header .TopMenu { background-color: #e9a825; }
+.LeftMenu .menu_0 { background-color: #e9a825; }
+.button .filler, .button-large .filler { background-color: #e9a825; }
+#apparea-footer { background-color: #e9a825; color:#000000; }

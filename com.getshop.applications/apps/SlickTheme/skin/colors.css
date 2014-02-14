@@ -1,0 +1,96 @@
+/* color:Red:#e10707 */
+.header .TopMenu .applicationinner span a.selected { color: #e10707; }
+.button .filler, .button-large .filler { background-color: #e10707; }
+#apparea-footer,
+.breadcrumb .breadcrumb-inner,
+.header .TopMenu .applicationinner span a.selected,
+.header .Login .applicationinner,
+.header .Login,
+.header .gs_inner .applicationarea ,
+.LeftMenu .menu_0 { background-color: #e10707; }
+.header .Login { border: solid 1px #680101;padding: 2px; }
+body { background-color:#FFF; }
+.header .TopMenu .applicationinner span a.selected,
+    .breadcrumb .accounting a,
+    .breadcrumb-inner .navigation .breadcrumbentry a,
+    .breadcrumb .breadcrumb-inner,
+    .header .applicationinner .logged_on_menu a,
+    .LeftMenu .menuName,
+    .header .TopMenu .applicationinner #add_new_top,
+    .header .TopMenu .applicationinner span a { color:#FFF; }
+
+/* color:Green:#a0ce4e */
+.header .TopMenu .applicationinner span a.selected { color: #a0ce4e; }
+.button .filler, .button-large .filler { background-color: #a0ce4e; }
+#apparea-footer,
+.breadcrumb .breadcrumb-inner,
+.header .TopMenu .applicationinner span a.selected,
+.header .Login .applicationinner,
+.header .Login,
+.header .gs_inner .applicationarea ,
+.LeftMenu .menu_0 { background-color: #a0ce4e; }
+.header .Login { border: solid 1px #a0ce4e;padding: 2px; }
+body { background-color:#fff; }
+.header .TopMenu .applicationinner span a.selected,
+    .breadcrumb .accounting a,
+    .breadcrumb-inner .navigation .breadcrumbentry a,
+    .breadcrumb .breadcrumb-inner,
+    .header .applicationinner .logged_on_menu a,
+    .LeftMenu .menuName,
+    .header .TopMenu .applicationinner #add_new_top,
+    .header .TopMenu .applicationinner span a { color:#000; }
+
+/* color:Blue:#1a80b6 */
+
+
+/* color:Black:#000000 */
+.header .TopMenu .applicationinner span a.selected { color: #000000; }
+.button .filler, .button-large .filler { background-color: #000000; }
+#apparea-footer,
+.breadcrumb .breadcrumb-inner,
+.header .TopMenu .applicationinner span a.selected,
+.header .Login .applicationinner,
+.header .Login,
+.header .gs_inner .applicationarea ,
+.LeftMenu .menu_0 { background-color: #000000; }
+.header .Login { border: solid 1px #000000;padding: 2px; }
+body { background-color:#fff; }
+.header .TopMenu .applicationinner span a.selected,
+    .breadcrumb .accounting a,
+    .breadcrumb-inner .navigation .breadcrumbentry a,
+    .breadcrumb .breadcrumb-inner,
+    .header .applicationinner .logged_on_menu a,
+    .LeftMenu .menuName,
+    .header .TopMenu .applicationinner #add_new_top,
+    .header .TopMenu .applicationinner span a { color:#fff; }
+
+
+/* color:Orange:#e9a825 */
+.header .TopMenu .applicationinner span a.selected { color: #e9a825; }
+.button .filler, .button-large .filler { background-color: #e9a825; }
+#apparea-footer,
+.breadcrumb .breadcrumb-inner,
+.header .TopMenu .applicationinner span a.selected,
+.header .Login .applicationinner,
+.header .Login,
+.header .gs_inner .applicationarea ,
+.LeftMenu .menu_0  { background-color: #e9a825; }
+.header .Login { border: solid 1px #e9a825;padding: 2px; }
+body { background-color:#fff; }
+.header .TopMenu .applicationinner span a.selected,
+    .breadcrumb .accounting a,
+    .breadcrumb-inner .navigation .breadcrumbentry a,
+    .breadcrumb .breadcrumb-inner,
+    .header .applicationinner .logged_on_menu a,
+    .LeftMenu .menuName,
+    .header .TopMenu .applicationinner #add_new_top,
+    .header .TopMenu .applicationinner span a { color:#000; }
+
+    
+/* colorpicker;#apparea-footer,.breadcrumb .breadcrumb-inner,.header .TopMenu .applicationinner span a.selected,.header .Login .applicationinner,.header .Login,.header .gs_inner .applicationarea ,.LeftMenu .menu_0;background-color;Header / Footer*/
+/* colorpicker;.header .TopMenu .applicationinner span a;color;Menu text*/ 
+/* colorpicker;.header .TopMenu .applicationinner span a.selected, .header .TopMenu .applicationinner span a.selected;border-color,color;Menu selected*/ 
+/* colorpicker;#apparea-footer;color;Footer text*/ 
+/* colorpicker;body;background-color;Body background*/
+/* colorpicker;.button .filler, .button-large .filler;background-color;Button background*/
+/* colorpicker;.button ins, .button-large ins;color;Button text*/

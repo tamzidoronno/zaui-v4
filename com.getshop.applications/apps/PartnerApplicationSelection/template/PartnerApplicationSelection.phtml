@@ -1,0 +1,41 @@
+<?php
+
+namespace ns_a109b0f1_97c3_4292_a46f_4c6894a9841c;
+
+/* @var $this PartnerApplicationSelection */
+$partnerdata = $this->getPartnerData();
+?>
+<div id="saveapplicationlist" class="button-large">
+    <div class="rightglare"></div>
+    <div class="filler" style="background-color: green !important"></div>
+    <ins><? echo $this->__f("Save"); ?></ins>
+</div>
+
+<?
+echo "<div class='title'>";
+echo $this->__f("Activate / deactivate the applications you would like your customers to have access to.");
+echo "</div>";
+
+
+foreach ($this->getAllApplications() as $app) {
+    if ($app->type == "SystemApplication") {
+        continue;
+    }
+
+    $img = \ApplicationHelper::getApplicationImage($app);
+
+    echo "<div class='appentry' id='".$app->id."'>";
+    echo "<img src='$img' style='width: 200px; height: 70px;'>";
+    echo "<span class='name'>" . $app->appName . "<br>";
+    echo "<span style='font-size: 12px;'>" . $app->description . "</span>";
+    echo "</span>";
+
+    $onoff = "off";
+    if (in_array($app->id, $partnerdata->applications)) {
+        $onoff = "on";
+    }
+
+    echo "<span class='selection onoff $onoff'></span>";
+    echo "</div>";
+}
+?>

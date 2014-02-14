@@ -1,0 +1,66 @@
+<?
+/* @var $this \ns_ba6f5e74_87c7_4825_9606_f2d3c93d292f\Users */
+$application = $this->getFactory()->getApplicationPool()->getAllApplicationSettings();
+/* @var $user core_usermanager_data_User */
+$user = $this->getUserData();
+$displayList = "block";
+if(sizeof($user->applicationAccessList) == 0) {
+    $displayList = "none";
+}
+if ($user->type >= 50) {
+    ?>
+    <br><br>
+    <div class="form_text registration_heading"><b><? echo $this->__f("Filtered permissions on applications"); ?></b></div>
+    <? if($displayList==="none") { ?>
+        <span class="button"><div class="rightglare"></div><div class="filler"></div><ins id="activate_permissionfilter"><? echo $this->__f("Activate permission filter"); ?></ins></span>
+    <? } ?>
+
+    <div class='application_filter' style='display:<? echo $displayList; ?>;' userid='<? echo $user->id; ?>'>
+        <?
+        echo $this->__f("Select the application you would like this user to able to access.");
+        echo '<br><br>';
+        echo "<table width='100%'>";
+        $i = 0;
+        echo "<tr>";
+        foreach ($application as $app) {
+            $class = "gs_off";
+            $typetext = "";
+            $type = "";
+            if(isset($user->applicationAccessList->{$app->id})) {
+                $class = "gs_on";
+                $type = $user->applicationAccessList->{$app->id};
+                switch($type) {
+                    case 0:
+                        $typetext = " (rw)";
+                        break;
+                    case 1:
+                        $typetext = " (r)";
+                        break;
+                    case 2:
+                        $typetext = " (w)";
+                        break;
+                }
+            }
+            if ($app->type != "SystemApplication" && $app->type != "ThemeApplication") {
+                $i++;
+                echo "<td>";
+                echo "<div style='position:relative;margin-bottom: 5px;'>";
+                echo "<span class='gs_onoff ".$class."' style='margin-right: 10px;' id='".$app->id."'><span class='toggle'></span></span>";
+                echo "<span style='position:absolute; top:2px;'>" . $app->appName;
+                echo "<span class='pm_rights' type='$type'> $typetext</span></span>";
+                echo "</div>";
+                echo "</td>";
+                if ($i % 3 == 0) {
+                    echo "</tr><tr>";
+                }
+            }
+        }
+        echo "</tr>";
+        echo "</table>";
+        ?>
+    <span class="button"><div class="rightglare"></div><div class="filler"></div><ins id="reset_user_filter"><? echo $this->__f("Reset permissions"); ?></ins></span>
+    <span class="button save_user_button"><div class="rightglare"></div><div class="filler"></div><ins id="save_user_filter"><? echo $this->__f("Update permissions"); ?></ins></span>
+    </div>
+    <?
+}
+?>

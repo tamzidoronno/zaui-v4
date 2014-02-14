@@ -1,0 +1,233 @@
+.editormode .applicationinner {
+    border: solid 0px;
+}
+
+html, 
+body,
+#skeleton
+{
+    height: 100%;
+    min-height: 100%;
+}
+
+.right {
+    border-left: solid 1px #bbb; 
+}
+
+.mainareacontent {
+    min-height: 600px;
+}
+
+.Logo  {
+    left: 8px;
+}
+
+.TopMenu {
+    top: 175px;
+    border-top: solid 1px;
+    height: 40px;
+    background-image: url('{IMAGEFOLDER}/TopMenuBg.png');
+    width: 900px;
+}
+
+.TopMenu li {
+    border-left: solid 1px #a6a6a6;
+    border-right: solid 1px #000;
+}
+
+.middle {
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.TopMenu a {
+    line-height: 40px;
+    color: #FFF;
+    font-size: 13px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.breadcrumb-inner {
+    height: 25px !important;
+    border-bottom: dashed 1px #EEE;
+}
+
+.TopMenu a.selected {
+    background-color: #FFF;
+    color: #333;
+    display:block;
+}
+
+#apparea-footer .applicationinner {
+    padding-top: 4px;
+    border-bottom: solid 1px #BBB;
+}
+
+#apparea-footer .applicationinner .outer_footer_configuration{
+    padding-top: 5px;
+}
+
+.left {
+    padding-left: 5px;
+    padding-top: 5px;
+}
+
+.LeftMenu {
+    border: solid 1px;
+    background-color: #ac0008;
+}
+
+.LeftMenu a {
+    color: #FFF;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.LeftMenu .menu_0 .menuEntry {
+    height: 40px;
+}
+.LeftMenu .menu_0 {
+    height: 40px;
+    line-height: 40px;
+    padding-left: 10px;
+    background-image: url('{IMAGEFOLDER}/TopMenuBg.png');
+
+}
+
+
+.LeftMenu .menu_1,
+.LeftMenu .menu_2,
+.LeftMenu .menu_3,
+.LeftMenu .menu_4,
+.LeftMenu .menu_5,
+.LeftMenu .menu_6 {
+    line-height: 20px;
+    height: 20px;   
+}
+
+.LeftMenu .menu_1 { padding-left: 15px; }
+.LeftMenu .menu_2 { padding-left: 25px; }
+.LeftMenu .menu_3 { padding-left: 35px; }
+.LeftMenu .menu_4 { padding-left: 45px; }
+.LeftMenu .menu_5 { padding-left: 55px; }
+.LeftMenu .menu_6 { padding-left: 65px; }
+
+.LeftMenu .menuName {
+    border-top: dashed 1px #ce888c;
+}
+
+.accounting {
+    background-image: url('{IMAGEFOLDER}/shopping-cart-icon.png');
+    padding-left: 30px;
+    background-repeat: no-repeat;
+    top: 2px;
+    padding-right: 10px;
+    line-height: 20px;
+}
+
+.CategoryList .category_list.last_in_row  {
+    margin-right: 0px;
+}
+.CategoryList .category_list {
+    border: solid 1px;
+    background-color: #CA3A43;
+    text-align: center;
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
+
+.CategoryList .text {
+    width: 150px !important;
+    border-top: dashed 1px #FFF;
+    padding-top: 3px;
+}
+
+.CategoryList .product_image_inner {
+    margin: 3px;
+    padding: 3px;
+    background-color: #FFF;
+    height: 147px;
+}
+
+.CategoryList .category_list_inner {
+    width: 150px;
+    height: 180px;
+}
+
+.ProductManager .descheader {
+    border-bottom: solid 1px #000 !important;
+}
+
+.ProductManager .title {
+    height: 25px;
+    font-weight: bold;
+    line-height: 25px;
+    background-color: #CA3A43;
+    border: solid 1px;
+    color: #FFF;
+    padding-left: 5px;
+    margin-bottom: 5px;
+}
+
+.skeleton2 .ProductManager .right-wrapper,
+.ProductManager .right-wrapper {
+    width: 410px;
+}
+
+.skeleton1 .ProductManager .right-wrapper {
+    width: 210px;
+}
+
+.ProductList .product {
+    border-bottom: dashed 1px #BBB;
+    margin-bottom: 20px;
+}
+
+.Login {
+    background-color: #FFF;
+    border: solid 1px;
+    margin-right: 6px;
+}
+
+.Login a {
+    color: #000 !important;
+}
+
+.Account .personal_information {
+    padding-left: inherit;
+    margin-right: inherit;
+    width: 440px;
+}
+
+.Account .change_passord {
+    padding-left: 10px;
+}
+
+.Account .change_passord .registration_heading {
+    margin-bottom: 14px;
+}
+
+.breadcrumbentry a {
+    color: #000000 !important;
+}
+
+
+html {
+    background-image: url('{IMAGEFOLDER}/glare.jpg');
+    background-repeat: repeat-x;
+    background-position: center top;
+    background-attachment:fixed;
+}
+
+.gs_inner {
+    margin:auto;
+    width: 900px;
+    background-image: url('{IMAGEFOLDER}/shadow.png');
+    padding-left: 7px !important;
+    padding-right: 7px !important;
+}
+
+.header .gs_inner { height: 221px; }
+.gs_margin_right { padding-right: 7px; }
+.gs_margin_left { padding-left: 7px; }

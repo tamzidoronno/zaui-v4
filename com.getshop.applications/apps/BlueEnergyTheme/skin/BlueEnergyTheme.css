@@ -1,0 +1,261 @@
+html, body {
+    min-height: 100%;
+}
+
+html {
+    background-color: #1869a0;
+}
+
+.gs_inner { width: 1000px; margin: auto; }
+.gs_margin_bottom { margin-bottom: 20px; }
+.gs_margin_left { padding-left: 10px; }
+.gs_margin_right { padding-right: 20px; }
+.gs_row { margin-bottom: 20px; }
+
+.skeleton3 .mainarea .right,
+.skeleton1 .mainarea .right,
+.skeleton1 .mainarea .left,
+.skeleton2 .mainarea .left { width: 230px; }
+.skeleton3 .mainarea .middle,
+.skeleton2 .mainarea .middle {width: 765px; }
+
+.skeleton1 .mainarea .middle { width: 532px; }
+body {
+    background-image: url('{IMAGEFOLDER}/background.jpg') !important;
+    background-repeat: no-repeat;
+    background-position: center 0;
+    background-color: #1869a0;
+}
+
+.breadcrumb-outer {
+    height: 20px;
+    color: #FFF;
+}
+.TopMenu {
+    bottom: 0px;
+    left: 0px;
+    background-color: #FFF;
+
+    border-radius: 3px;
+    box-shadow: 0px 0px 7px #444;
+}
+
+.TopMenu li {
+    color : #333;
+    font-size: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+    line-height: 30px;
+}
+
+.TopMenu li {
+    border-right: solid 1px #DDD;
+    border-left: solid 1px #AAA;   
+}
+
+.TopMenu li.first {
+    border-left: solid 0px;
+}
+
+.TopMenu li.last {
+    border-right: solid 0px;
+}
+
+.TopMenu a:hover,
+.TopMenu a.selected {
+    color: #333;
+}
+.TopMenu a {
+    color: #666;
+}
+.gs_outer.header .gs_inner,
+.gs_outer.header {
+    height: 183px;
+}
+#apparea-header {
+    height: 100%;
+}
+.gs_outer.header .gs_inner {
+    width: 1022px;
+}
+.header .Login {
+    border: dashed 1px #22a4a9;
+    border-top: solid 0px;
+}
+
+.header .Login .applicationinner,
+.Login a {
+    color: #333 !important;
+    background-color: inherit;
+}
+
+.gs_outer_mainarea .applicationarea {
+    border: solid 1px #DDD;
+    box-shadow: 0px 0px 5px #FFF;
+    background-color: #FFF;
+    border-radius: 5px;    
+    padding: 10px;
+}
+
+.mainarea .gs_inner {
+    width: 1040px;
+}
+.mainarea
+{
+    width: 1040px;
+}
+
+.gs_outer.footer {
+    border-top: solid 1px #22a4a9;
+    height: 200px;
+    background-color: #2281a9;
+    margin-top: 20px;
+    padding-top: 10px;
+}
+
+.navigation {
+    display: none;
+}
+
+.LeftMenu {
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.LeftMenu .menu_0 .menuName {
+    background-image: url('{IMAGEFOLDER}/menu.png');
+    background-position: 5px center;
+    background-repeat: no-repeat;
+    padding-left: 30px;
+    
+}
+
+.LeftMenu .menu_0 {
+    background-color: #cd9529;
+    background-image: url('{IMAGEFOLDER}/leftmenu-transient.png');
+    border: solid 1px #666;
+    margin-bottom: 5px;
+}
+
+.LeftMenu .menu_0:hover {
+    background-color: #1bb82a;
+}
+
+.LeftMenu .menuName {
+    color: #333;
+    font-size: 14px;
+    line-height: 40px;
+    padding-left : 5px;
+}
+
+.Banner { margin-bottom: 15px; }
+
+.skeleton1 .ProductManager .right-wrapper  {
+    width: 301px;
+}
+
+.ProductList .boxview .selection_container {
+    border: dashed 1px #CCC;
+    background-color: #FCFCFC;
+    margin-bottom: 15px;
+}
+.button .filler,
+.button-large .filler { 
+    border: solid 1px #999 !important;
+}
+
+.button,
+.button-large {
+    color: #FFF;
+}
+
+.button-large .filler,
+.button .filler {
+    background-color: green;
+}
+
+.cart .product .cartdesc {
+    height: 88px;
+}
+
+.applicationarea {
+    min-height: 250px;
+}
+
+.footer .applicationarea {
+    min-height: inherit;
+}
+
+.header .applicationarea {
+    min-height: 170px;
+}
+
+.Gallery .applicationinner {
+    text-align: center;
+}
+.applicationarea.medium .ProductManager {
+    border: dashed 1px #DDD;
+}
+
+.ProductManager .shortDescription {
+    font-size: 14px;
+}
+
+.OrderManager .overview { width: 810px; margin-left: 10px;}
+
+
+.ProductManager .bottom_small_product .add_to_cart_small_view {
+    right: 20px !important;
+}
+
+
+.medium .ProductManager .applicationinner {
+    margin-bottom: 0px;
+    height: 100%;
+}
+.medium .ProductManager .small_product_view product {
+    height: 100%;
+}
+.medium .ProductManager  {
+    height: 100%;
+}
+
+.ProductList .rowview .image  {
+    background-color: #000;
+    height: 110px;
+    width: 150px;
+    
+    vertical-align: middle;
+    display: table-cell;
+    text-align: center;
+}
+.ProductList .rowview .small_product_view  {
+    width: 152px;
+    border: solid 1px #EEE;
+    border-bottom: solid 1px #EEE !important;
+    text-align: center;
+}
+
+.medium .ProductManager .bottom_small_product {
+    position: relative;
+}
+.ProductList .rowview .small_product_view .short_description {
+    display:none;
+}
+
+.small .small_product_view.product .bottom_small_product .add_to_cart_small_view {
+    bottom: -30px;
+    position: absolute;
+    top: inherit;
+}
+.small .small_product_view.product .bottom_small_product {
+    position: initial;
+}
+
+.small .small_product_view.product {
+    min-height: 300px;
+    position: relative;
+}
+.ProductWidget .inner { min-height: 280px; }
+.ProductWidget .buy_product_row { text-align: center; }
+.ProductWidget .price { color:#0a6f00; font-size: 15px; }

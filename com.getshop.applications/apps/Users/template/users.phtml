@@ -1,0 +1,19 @@
+<div class="searchheader">
+    <div class="inline">
+        <div class="searchimage"></div>
+    </div>
+
+    <div class="inline serachfield">
+        <? echo $this->__f("You can filter your customers by entering som text in the textbox"); ?>
+        <br><b><? echo $this->__f("Note: minumum 3 chars before search start"); ?></b>
+        <br>
+        &nbsp; <input type="textfield" id="users_search"/>
+    </div>        
+</div>
+
+<div id="result">
+    <?
+    $this->includeFile("searchResult");
+    ?>
+</div>
+

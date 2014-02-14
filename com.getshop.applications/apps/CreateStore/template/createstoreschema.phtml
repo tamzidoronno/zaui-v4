@@ -1,0 +1,50 @@
+<?php
+namespace ns_e2554f70_ecdb_47a6_ba37_79497ea65986;
+
+$class = "gray";
+$name = "John doe";
+$email = "your@email.com";
+
+$loggedOn = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+if($loggedOn) {
+    $class = "";
+    $name = $loggedOn->fullName;
+    $email = $loggedOn->emailAddress;
+}
+
+$value = "";
+if ($this->isPartnerMode()) {
+    $partnerid = $loggedOn->partnerid;
+    echo "<script>com.getshop.app.CreateStore.domainName='$partnerid';</script>";
+} else {
+    $value = "myshop.getshop.com";
+}
+?>
+
+
+<div method="createMyStore" class="new_logon inline" >
+    <div>Your name</div>
+    <input class="<? echo $class; ?>" gsname="username" id="username" value="<? echo $name; ?>">
+    <div>Webshop address</div>
+    <? if ($this->standAlone){ ?>
+        <input readonly="readonly" type="text" id="shopname" value="<? echo $_SERVER["HTTP_HOST"]; ?>"/>
+    <? } else { ?>
+        <input class="gray" gsname="shopname" id="shopname" value="<? echo $value; ?>"/>
+    <? } ?>
+        <div class="error_shopname" style="display:none;">* <? echo $this->__f("The address is already taken or invalid."); ?> </div>
+    
+    <div>The email address for the shop administrator</div>
+    <? if($loggedOn) { ?>
+        * Ps: use a valid email address which can be used when recovering the password.<br>
+        * You can always add more account as normal users later on.
+    <? } ?>
+    <input class="<? echo $class; ?>" gsname="email" id="email" value="<? echo $email; ?>">
+    <div>Password</div>
+    <input class="gray" gsname="password" id="password" value="supersecretpassword">
+    
+    <br><input type="button" class="createstorebutton" gstype="submit" value="<?php echo $this->__("Create shop"); ?>" id="start_store">
+</div>
+
+
+<div id="getshopmovieplaybox" class="inline playbox">
+</div>

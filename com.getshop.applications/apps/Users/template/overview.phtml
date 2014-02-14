@@ -1,0 +1,74 @@
+<center><div class="title"><b><? echo $this->__f("User/Customers overview"); ?></b></div></center>
+
+<div class="sepbox">
+    <?
+    $userManager = $this->getApi()->getUserManager();
+    $customerCount = $userManager->getCustomersCount();
+    $editorCount = $userManager->getEditorCount();
+    $adminCount = $userManager->getAdministratorCount();
+    echo $this->__f("You currently have the following users added to your system");
+    ?>
+    <ul>
+        <li><? echo $this->__f("Administrators"); ?>: <? echo $adminCount; ?></li>
+        <li><? echo $this->__f("Editors"); ?>: <? echo $editorCount; ?></li>
+        <li><? echo $this->__f("Customers"); ?>: <? echo $customerCount; ?></li>
+    </ul>
+</div>
+
+<div class="sepbox">
+    <div class="title"><b><? echo $this->__f("Create a new user"); ?>:</b></div>
+    <input type="text" value="" class="create_user_input" placeholder="Email address">
+    <div class="button create_user">
+        <div class="rightglare"></div>
+        <div class="filler"></div>
+        <ins>
+            <? echo $this->__f("Create user"); ?></ins>
+    </div>
+</div>
+
+<div class="sepbox">
+    <h2> Groups </h2>
+    
+    <?
+    $groups = $this->getApi()->getUserManager()->getAllGroups();
+    if ($groups && is_array($groups)) {
+        echo "<table>";
+        foreach ($groups as $group) {
+            $id = $group->id;
+            $delete = "<a href='?page=users&removegroup=$id'><img src='/skin/default/images/trash.png'/></a>";
+            $title = $group->groupName;
+            $imgid = $group->imageId;
+            if ($imgid == "") {
+                $img = "<div id='imagechange_$id'>". $this->__f("Upload image")."</div>";
+            } else {
+                $img = "<img id='imagechange_$id' src='displayImage.php?id=$imgid'/>";
+            }
+            
+            echo "<tr><td>$delete</td><td>$title</td><td>$img</td>";
+            ?>
+            <td>
+
+                <script>
+                    $('.Users #imagechange_<?echo $id?>').imageupload({
+                        maxWidth: 383,
+                        maxHeight: 283,
+                        extra: { groupId : "<? echo $id ?>"},
+                        uploadText: "<? echo $this->__f("Change image"); ?>"});
+                </script>
+            </td></tr>
+        <? 
+        }
+        echo "</table>";
+    }
+    ?>
+
+    <input id="groupnamecreate" type="text" placeholder="groupname"/>
+    <div class="button create_group">
+        <div class="rightglare"></div>
+        <div class="filler"></div>
+        <ins>
+            <? echo $this->__f("Create new group"); ?></ins>
+    </div>
+</div>
+
+

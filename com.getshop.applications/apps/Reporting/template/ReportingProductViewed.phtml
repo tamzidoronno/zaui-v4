@@ -1,0 +1,60 @@
+<?php
+namespace ns_04259325_abfa_4311_ab81_b89c60893ce1;
+
+$start = $this->getStartDate();
+$end = $this->getEndDate();
+
+/* @var $this Reporting */
+$results = $this->getApi()->getReportingManager()->getProductViewed($start, $end);
+
+if(!$results) {
+    echo $this->__f("No products where found for this time range.");
+    return;
+}
+
+$summary = array();
+foreach ($results as $result) {
+    /* @var $result core_reportingmanager_data_ProductViewed */
+    if (!isset($summary[$result->productId])) {
+        $summary[$result->productId] = 1;
+        $name[$result->productId] = $result->productName;
+    } else {
+        $summary[$result->productId]++;
+    }
+}
+arsort($summary);
+?>
+<div class="outer-chart">
+    <div class="title"><? echo $this->__f("Summary"); ?></div>
+    <table width="100%">
+        <tr>
+            <th><? echo $this->__f("Product name"); ?></th>
+            <th width='100'><? echo $this->__f("Number of views"); ?></th>
+        <?
+        foreach ($summary as $productId => $count) {
+            echo "<tr>";
+            echo "<td>" . strip_tags($name[$productId]) . "</td>";
+            echo "<td align='center'>" . $count . "</td>";
+            echo "</tr>";
+        }
+        ?>
+    </table>
+</div>
+<div class="outer-chart">
+    <div class="title"><? echo $this->__f("History"); ?></div>
+    <table width="100%">
+        <tr>
+            <th><? echo $this->__f("Product name"); ?></th>
+            <th width="150"><? echo $this->__f("Viewed when"); ?></th>
+        </tr>
+        <?
+        foreach($results as $result) {
+            /* @var $result core_reportingmanager_data_ProductViewed */
+            echo "<tr>";
+            echo "<td>" . strip_tags($result->productName)  . "</td>";
+            echo "<td align='center'>" . $result->viewedWhen. "</td>";
+            echo "</tr>";
+        }
+        ?>
+    </table>
+</div>

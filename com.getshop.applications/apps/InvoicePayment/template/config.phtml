@@ -1,0 +1,77 @@
+<div class="information">
+    <?php echo $this->getDescription(); ?>
+</div>
+
+<div class="textfield setting"  id="accountNumber">
+    <span class="title"><? echo $this->__f("Account number"); ?></span>
+    <input type="textfield" class="config" id="accountNumber">
+    <div class="description">
+        <?php  echo $this->__f("This is the accounting number that will be printed on the invoice, example XXXX XX XXXXX"); ?>
+    </div>
+</div>
+
+<div class="textfield setting"  id="vatNumber">
+    <span class="title"><? echo $this->__f("Vat number"); ?></span>
+    <input type="textfield" class="config" id="vatNumber">
+    <div class="description">
+        <?php  echo $this->__f("This is the vat number that will be printed on the invoice, example 123456789"); ?>
+    </div>
+</div>
+
+<div class="textfield setting"  id="address">
+    <span class="title"><? echo $this->__f("Address"); ?></span>
+    <input type="textfield" class="config" id="address">
+    <div class="description">
+        <?php  echo $this->__f("This is the address that will be printed on the invoice, example GetShop street 13"); ?>
+    </div>
+</div>
+
+<div class="textfield setting"  id="companyName">
+    <span class="title"><? echo $this->__f("Company Name"); ?></span>
+    <input type="textfield" class="config" id="companyName">
+    <div class="description">
+        <?php  echo $this->__f("This is the company name that will be printed on the invoice, example GetShop"); ?>
+    </div>
+</div>
+
+<div class="textfield setting"  id="postCode">
+    <span class="title"><? echo $this->__f("Post code"); ?></span>
+    <input type="textfield" class="config" id="postCode">
+    <div class="description">
+        <?php  echo $this->__f("This is the post code that will be printed on the invoice, example 4380"); ?>
+    </div>
+</div>
+
+<div class="textfield setting"  id="city">
+    <span class="title"><? echo $this->__f("City"); ?></span>
+    <input type="textfield" class="config" id="city">
+    <div class="description">
+        <?php  echo $this->__f("This is the city that will be printed on the invoice, example Las Vegas"); ?>
+    </div>
+</div>
+
+<div class="textfield setting"  id="contactEmail">
+    <span class="title"><? echo $this->__f("Contact email"); ?></span>
+    <input type="textfield" class="config" id="contactEmail">
+    <div class="description">
+        <?php  echo $this->__f("This is the email address that will be printed on the invoice, example post@getshop.com"); ?>
+    </div>
+</div>
+
+<div class="textfield setting"  id="webAddress">
+    <span class="title"><? echo $this->__f("Web address"); ?></span>
+    <input type="textfield" class="config" id="webAddress">
+    <div class="description">
+        <?php  echo $this->__f("This is the web address that will be printed on the invoice, example http://www.getshop.com"); ?>
+    </div>
+</div>
+
+<div class="textfield setting"  id="duedays">
+    <span class="title"><? echo $this->__f("Due days"); ?></span>
+    <input type="textfield" class="config" id="duedays">
+    <div class="description">
+        <?php  echo $this->__f("Number of days the customer have to pay the invoice, example 14"); ?>
+    </div>
+</div>
+
+<div class="button savebutton"><div class="rightglare"></div><div class="filler"></div><ins>Save settings</ins></div>

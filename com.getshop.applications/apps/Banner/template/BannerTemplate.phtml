@@ -1,0 +1,62 @@
+<?php 
+namespace ns_d612904c_8e44_4ec0_abf9_c03b62159ce4;
+
+$id = uniqid(); 
+$interval = $this->getInterval();
+
+if (count($this->getBanners()) == 0 && $this->isEditorMode()) {
+    echo "<center><div style='font-size: 14px;'>".$this->__f('No banners added, click on settings in the top right corner to add one.')."<div></center>";
+}
+?>
+<div class="bannerslider" style="height: <?php echo $this->bannerSet->height;?>px;" id="<? echo $id; ?>" interval="<? echo $interval; ?>">
+    <?
+    foreach ($this->getBanners() as $banner) {
+        $imageId = $banner->imageId;
+        echo "<div class='banner' imageId='$imageId'>";
+        foreach($banner->imagetext as $text) {
+            echo "<span class='banner_text' 
+            left='".$text->x."'
+            top='".$text->y."'
+            fontsize='".$text->size."'
+            style='position:absolute; left: ". $text->x . "px; top: " . $text->y ."px; font-size:".$text->size."px; color:#".$text->colour."'>" . $text->text . "</span>";
+        }
+        
+        if(strlen(trim($banner->productId)) > 0) {
+            echo "<a href='".$this->getProductLink($banner->productId)."'>";
+        }
+        if(strlen(trim($banner->link)) > 0) {
+            echo "<a href='".$banner->link."'>";
+        }
+        $crop = json_decode($banner->crop_cordinates);
+        $cropData = "";
+        if($crop) {
+            $cropData = "&crop=true&x=" . $crop->x . "&x2=".$crop->x2."&y=". $crop->y."&y2=". $crop->y2;
+        }
+        echo "<img width='100%' style='height: ".$this->bannerSet->height."px' src='displayImage.php?id=$imageId".$cropData."'/>";
+        if(strlen(trim($banner->productId)) > 0) {
+            echo "</a>";
+        }
+        if(strlen(trim($banner->link)) > 0) {
+            echo "</a>";
+        }
+        echo "</div>";
+    }
+    $i = 0;
+    if ($this->isShowDots()) {
+    ?>
+    <div class="dots">
+        <? foreach ($this->getBanners() as $banner) {
+        $imageId = $banner->imageId;    
+        ?>
+        <div onclick="app.Banner.goToImage('<? echo $id; ?>', <? echo $i; ?> )" imageid="<?echo $imageId;?>" class="dot inline"></div>
+        <? 
+        $i++;
+        } ?>
+    </div>
+    <? } ?>
+</div>
+
+
+<script>
+    app.Banner.start('<?php echo $id; ?>');
+</script>

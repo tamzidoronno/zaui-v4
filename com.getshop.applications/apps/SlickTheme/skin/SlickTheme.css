@@ -1,0 +1,84 @@
+
+
+.Logo {
+    padding-left: 15px;
+    padding-top: 15px;
+    position:absolute;
+    top: 0px;
+    left: 7px;
+}
+
+
+/*.mainarea { padding-left: 0px; }*/
+.header .TopMenu { margin-left: 0px; height: 30px; bottom: 0px; width: 998px;}
+.header .TopMenu span { margin-top: 1px; height: 29px; border-right: solid 1px rgba(0,0,0,0.3); }
+.header .TopMenu .applicationinner span a { display:block; height: 28px; line-height: 28px; padding-left: 10px; padding-right: 10px; }
+.header .TopMenu .applicationinner #add_new_top { border-right: 0px; }
+
+.left .ContentManager { margin-left: 8px; margin-right: 8px;  }
+
+#apparea-footer { background-image: url('{IMAGEFOLDER}/glarebottom.png'); height: 177px; padding-right: 8px; padding-left: 8px; width: 983px; overflow: hidden; }
+
+.middle { border: solid 0px; margin-left: 10px; padding-right: 10; padding-top: 10px; background-color:#FFFFFF; }
+.right { border-left: solid 1px; margin-left: 5px; padding-left: 5px; }
+.ProductList .product { border-bottom: solid 1px #BBBBBB; margin-bottom: 10px; }
+
+
+.left .applicationinner { border-left: 0px !important }
+
+.ProductManager .attributecontainer, .ProductManager .description { padding: 10px; }
+.ProductManager .attributeentry { border-bottom: dashed 1px #CCC; padding-top: 4px; }
+
+.Login .applicationinner {  margin-right:15px; }
+.Login span a { font-size: 14px; }
+
+#apparea-left .LeftMenu .menu_0 .menuEntry { background-image: url('{IMAGEFOLDER}/cat-front-icon.png'); background-repeat: no-repeat; background-position: 7px 16px; padding-left: 25px; width: 184px; height: 42px; line-height:42px;  }
+.header .TopMenu .edit { border-right: 0px; }
+
+.skeleton4 .ContentManager {
+    margin: 5px;
+}
+
+.Contact { padding : 30px; }
+
+
+.header .TopMenu .applicationinner span a.selected { color: #1a80b6; display:block; }
+.button .filler, .button-large .filler { background-color: #1a80b6; }
+
+#apparea-footer,
+.breadcrumb .breadcrumb-inner,
+.header .TopMenu .applicationinner span a.selected,
+.header .Login .applicationinner,
+.header .Login,
+.header .gs_inner .applicationarea ,
+.LeftMenu .menu_0 { background-color: #1a80b6; }
+
+.header .Login { border: solid 1px #1a80b6;padding: 2px; }
+/*body { background-color:#fff; }*/
+.header .TopMenu .applicationinner span a.selected,
+.breadcrumb .accounting a,
+.breadcrumb-inner .navigation .breadcrumbentry a,
+.breadcrumb .breadcrumb-inner,
+.header .applicationinner .logged_on_menu a,
+.LeftMenu .menuName,
+.header .TopMenu .applicationinner #add_new_top,
+.header .TopMenu .applicationinner span a { color:#000; }
+
+.gs_inner { padding-left: 9px; padding-right: 9px; width: 999px; margin:auto; background-image: url('{IMAGEFOLDER}/backgroundshadows.png'); }
+.gs_row .applicationarea { min-height: 200px; margin: 10px; padding: 10px; }
+.header .gs_inner { height: 202px; }
+.header .gs_inner .applicationarea  {background-image: url('{IMAGEFOLDER}/header.png'); height: 202px; }
+.skeleton1 .gs_col.c1 .applicationarea,.skeleton2 .gs_col.c1 .applicationarea { margin-left: 0px; padding-left:1px; }
+
+.LeftMenu .menu_0 .menuEntry { background-image: url('{IMAGEFOLDER}/cat-front-icon.png'); background-repeat: no-repeat; background-position: 7px 16px; padding-left: 25px; width: 184px; height: 42px; line-height:42px;  }
+.LeftMenu .menu_0 { background-image: url("showApplicationImages.php?appNamespace=ns_00d8f5ce_ed17_4098_8925_5697f6159f66&image=skin/images//glaretop.png");}
+.gs_row .gs_inner {  padding-top: 10px; padding-bottom: 20px; }
+.skeleton1 .gs_row .applicationarea { min-height: 400px; }
+.skeleton1 .gs_row .gs_col.c1.gs_margin_right ,.skeleton2 .gs_col.c1.gs_margin_right { padding-left: 0px; }
+
+.Account .personal_information { width: 430px; }
+
+.breadcrumb .navigation { padding: 6px;  }
+.breadcrumb .breadcrumb-inner { height:30px;  }
+.breadcrumb .breadcrumb-inner .accounting { bottom: 3px; }
+.OrderManager .singleorder .products .col3 { width : 643px; }

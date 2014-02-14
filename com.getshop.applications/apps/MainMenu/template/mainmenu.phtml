@@ -1,0 +1,30 @@
+<?php
+namespace ns_bf35979f_6965_4fec_9cc4_c42afd3efdd7;
+
+/* @var $this MainMenu */
+
+?>
+
+
+<div class="content">
+    <?
+    $singletonApps = $this->getFactory()->getApplicationPool()->getStandaloneInstances();
+    if (count($singletonApps) > 0) {
+    ?>
+        <div class="inline group apps moreapps">
+            <div class="<?php echo $this->__("title"); ?>"><?php echo $this->__f("More..."); ?></div>
+            <?
+            foreach ($singletonApps as $app) {
+                $appName = $app->getApplicationSettings()->appName;
+                $appimage = \ApplicationHelper::getApplicationImage($app);
+                $id = $app->configuration->id;
+            ?>
+                <div style="text-indent: 0; " class="inline entry renderstandalone" app="<? echo $appName; ?>" appid="<?echo $id; ?>">
+                    <div style="width: 38px; height: 37px;margin-top: 6px; "><img width="25" height="25" src="<?php echo $appimage; ?>"/></div>
+                </div>
+            <? } ?>
+        </div>
+        <?
+    }
+    ?>
+</div>

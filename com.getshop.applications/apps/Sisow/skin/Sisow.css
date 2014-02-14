@@ -1,0 +1,93 @@
+/* 
+    Document   : Sisow
+    Created on : Sep 9, 2013, 1:32:44 PM
+    Author     : ktonder
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.sisowoptions {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.sisowoptions .selectbank {
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+.sisowoptions .selectbank .entry {
+    border-bottom: solid 1px #DDD;
+    padding: 5px;
+    cursor: pointer;
+    background-image: url('{IMAGEFOLDER}/circular.png');
+    background-repeat: no-repeat;
+    background-position: 5px center;
+    padding-left: 25px;
+}
+
+.sisowoptions .selectbank .entry.selected {
+    background-image: url('{IMAGEFOLDER}/circular_selected.png');
+    border-left: solid 0px;
+    border-right: solid 0px;
+    border-top: solid 0px;
+}
+
+.sisowoptions .selectbank .entry:last-child {
+    border-bottom: solid 0px #DDD;
+}
+
+.sisowoptions .selectbank .entry:hover {
+    background-color: #DDD;
+}
+
+.payment .extendedinfo input {
+    font-size: 16px;
+    line-height: 20px;
+    border: solid 1px #888;
+    width: 300px;
+    padding: 5px;
+}
+
+.ebillsuccess {
+    font-size: 16px;
+    background-image: url('{IMAGEFOLDER}/success.png');
+    background-repeat: no-repeat;
+    background-size: 128px;
+    padding-left: 135px;
+    height: 128px;
+    padding-left: 156px;
+}
+
+.sisowcheck {
+    margin: 20px;
+    font-size: 15px;
+    text-align: center;
+    border: solid 1px;
+    height: 60px;
+    vertical-align: middle;
+    line-height: 30px;
+    font-weight: bold;
+    color: white; 
+}
+
+.sisowcheck .sisow_ok { background: green; }
+.sisowcheck .sisow_notok { background-color: red; }
+
+.redirected,
+.paymentfailed,
+.paymentsuccessfully {
+    background-image: url('{IMAGEFOLDER}/success.png');
+    background-repeat: no-repeat;
+    font-size: 18px;
+    padding-left: 145px;
+    min-height: 128px;
+    margin-bottom: 30px;
+}
+
+.paymentfailed {
+    background-image: url('{IMAGEFOLDER}/error.png');
+}
+
+.redirected {
+    background-image: url('{IMAGEFOLDER}/redirect.png');
+}

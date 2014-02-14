@@ -1,0 +1,89 @@
+<?
+namespace ns_e9d04f19_6eaa_4a17_9b7b_aa387dbaed92;
+?>
+<div class="categories">
+<?php
+/* @var $this CategoryLister */
+
+$catId = $this->getNavigation()->currentCatId;
+$categories = $this->getCategories();
+$images = $this->getCategoryImages();
+$width = $this->getFactory()->getStyleSheet()->CATEGORY_IMAGE_WIDTH;
+$height = $this->getFactory()->getStylesheet()->CATEGORY_IMAGE_HEIGHT;
+
+$colcount = $this->getColCount();
+
+$i = 0;
+foreach ($categories as $cat) {
+    
+    /* @var $cat app_leftMenu_data_ListEntry */
+    $i++;
+    $first = ($i == 1);
+    $id = $cat->id;
+    $class = ($id == $catId) ? "active" : "";
+    $class .= ($first) ? ' first' : '';
+    $imageid = $cat->imageId;
+    
+    $first = false;
+    $link = "?page=".$this->getPage()->getId()."&cat_id=$id";
+    $class .= ($i == $colcount) ? ' last_in_row ' : $class;
+    
+    if ($i == $colcount)
+        $i = 0;
+    
+    $link = "?page=".$cat->pageId;
+    if(strlen(trim($cat->hardLink)) > 0) {
+        $link = "?page=".$cat->hardLink;
+    }
+    ?>
+
+    <div class='inline configable has_category category_list selenium_category_list <?php echo $class; ?> ' id="<?php echo $id; ?>">
+        <a href='<?php echo $link;  ?>' id="<?php echo $id; ?>">
+            <div class="category_list_inner">
+                <div class="product_image_inner">
+                    <?php 
+                    if (strlen(trim($imageid)) > 0) {
+                        echo '<img class="category_image" src="displayImage.php?id='.$imageid.'&width='.$width.'&height='.$height.'">';
+                        echo "<span class='trash'></span>";
+                    }
+                    ?>
+                </div>
+                <div class="text">
+                    <?php echo $cat->name; ?>
+                </div>
+            </div>
+        </a>
+        
+        <?php if ($this->isEditorMode()) { ?>
+            <div class="configuration">
+                <div class="entries">
+                    <div class="entry delete_button"><?php echo $this->__f('Delete') ?></div>
+                    <div class="entry cat_rename_button"><?php echo $this->__f('Rename')?></div>
+                    <div class="entry cat_show_settings"><?php echo $this->__f('Settings')?></div>
+                    <?php if(strlen(trim($cat->hardLink)) > 0) {?>
+                        <div class="entry cat_unlink_to_menu"><?php echo $this->__f('Unlink entry')?></div>
+                    <?php } else { ?>
+                        <div class="entry cat_link_to_menu"><?php echo $this->__f('Link to menu')?></div>
+                    <?php } ?>   
+                    <div class="entry cat_remove_image"><?php echo $this->__f('Remove image')?></div>
+                    <div class="entry updateimage">
+                        <?php
+                            $text = $this->__f('Change image');
+                            $width = $this->getFactory()->getStylesheet()->CATEGORY_IMAGE_WIDTH;
+                            $height = $this->getFactory()->getStylesheet()->CATEGORY_IMAGE_HEIGHT;
+                            $this->createUploadImageForm('uploadCategoryImage', $id, $text, 'category_list', 'product_image_inner', $width, $height);
+                        ?>
+                    </div>
+                </div>
+            </div>
+        <?php } ?>
+    </div>
+    <?php
+}
+
+if (sizeof($categories) > 0 && $this->isEditorMode()) {
+    echo "<div id='add_another_entry' class='inline systembutton'><ins class='add_another_entry' catid='$catId'>".$this->__f('Create new category')."</ins></div>";
+}
+
+?>
+</div>

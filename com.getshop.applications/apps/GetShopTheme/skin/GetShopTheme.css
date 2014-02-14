@@ -1,0 +1,210 @@
+.header {
+    /*box-shadow: 0px 0px 4px #333;*/
+    background-image: url('{IMAGEFOLDER}/header.png');
+    border-bottom: solid 1px #DDD;
+    height: 130px;
+}
+
+
+.skeleton23 .mainarea .r3 .applicationarea,
+.skeleton23 .mainarea .r2 .applicationarea {
+    border: solid 1px #EEE;
+    background: linear-gradient(#FDFDFD, #F3F3F3);
+    padding-top: 30px;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.applicationarea {
+    min-height: 200px;
+
+}
+
+.header .applicationarea {
+    min-height: ihnerit;
+}
+
+.gs_inner {
+    margin: 0 auto;
+    max-width: 1100px;
+}
+
+.breadcrumb {
+    display: none;
+    border-bottom: dashed 1px #CCC;
+    margin-bottom: 10px;
+    height: 25px;
+}
+.header {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.header .TopMenu {
+    right: 0px;  
+    top: 40px;
+}
+
+.header .TopMenu li {
+    line-height: 70px;
+}
+
+.header .Logo {
+
+}
+.header .TopMenu a {
+    font-size: 14px;
+    color: #999;
+    padding: 10px;
+    padding-left: 20px;
+}
+
+.Logo {
+    top: 40px;
+}
+
+.gs_outer.footer {
+    background-image: url('{IMAGEFOLDER}/footer.png');
+    min-height: 346px;
+}
+
+.skeleton23 .mainarea .r3 .gs_col.c2,
+.skeleton23 .mainarea .r2 .gs_col.c2 {
+    border-left: solid 0px;
+}
+.skelholder[page="home"] .gs_row.r2 .applicationarea,
+.skelholder[page="home"] .gs_row.r3 .applicationarea {
+    background-color:#293237;
+    padding: 20px; 
+    margin: 10px;
+    border-radius: 5px;
+}
+
+
+.skelholder[page="home"] .gs_row.r3 {
+    padding-bottom: 100px; 
+}
+
+.skelholder[page="home"] .gs_row.r10 {
+    border-top: solid 1px;
+}
+
+.skelholder[page="home"] .gs_row.r2,
+.skelholder[page="home"] .gs_row.r3
+{ background-color:#2f383d; color: #A9A9A9; }
+.skelholder[page="home"] .gs_row.r4,
+.skelholder[page="home"] .gs_row.r5,
+.skelholder[page="home"] .gs_row.r6,
+.skelholder[page="home"] .gs_row.r7
+{ background-color:#FFF;  
+  background-image: url('{IMAGEFOLDER}/foggy_birds.png');
+}
+
+.skelholder[page="home"] .gs_row.r5,
+.skelholder[page="home"] .gs_row.r6,
+.skelholder[page="home"] .gs_row.r7
+{ padding-top: 80px; }
+
+.skelholder[page="home"] .gs_row.r7
+{ padding-bottom: 80px;  }
+
+.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row .gs_inner {
+    padding: 40px;
+}
+.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row .applicationarea {
+    margin-left: 40px;
+    margin-right: 40px;
+}
+.skelholder[page="e46fedfd-5c47-4fad-88dc-27f241c48209"] .YouTube {
+    margin-left: 40px; 
+}
+.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row .YouTube {
+    border: solid 1px #BBB; 
+    border-right: solid 2px #BBB; 
+}
+.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row {
+    background-image: url('{IMAGEFOLDER}/foggy_birds.png');
+}
+.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row.r2,
+.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row.r3,
+.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row.r4,
+.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row.r5,
+.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row.r6,
+.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row.r7 
+{
+    background-color:#2f383d; color: #A9A9A9;
+    background-image: none;
+}
+.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row.r1 
+{
+    background-image: none;
+}
+.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row.r17,
+.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row.r18,
+.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row.r19
+{
+    background-color:#FFF; color: #000;
+}
+.skelholder[page="home"] .gs_row.r8,
+.skelholder[page="home"] .gs_row.r9 {
+    color: #A9A9A9;
+    background-color:#2f383d;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+/* responsive design stuff */
+.Banner .banner img,.Banner .bannerslider { height: auto !important; }
+@media only all and (max-width: 800px) {
+    .gs_inner { padding: 20px; }
+    .skelholder[page="home"] .gs_row.r1 .gs_inner { padding: 0px; }
+    .ProductList .rowview .slidearrow { display:block !important; }
+    .header .TopMenu { top: 55px; }
+    td.gs_col.c1 { display: none; }
+    td.gs_col.c3 { display: none; }
+    .Login { display: none; }
+    .gs_row_cell { width: 100% !important; }
+    .gs_margin_left,.gs_margin_right { padding-left: 0px; margin-top: 00px; padding-right: 0px; }
+    .Search { display: none; }
+    .CartManager .cartmain td { display: inline-block; width: 100% !important; }
+    .CartManager .cartmain .product_row_table td { display: table-cell; width:auto !important; }
+    .CartManager .cartmain .product_row_table td.image_area { width:180px !important; }
+    .CartManager .leftcart { width: 100% !important; margin-bottom: 10px; }
+    .CartManager .cart .wrapperright { width:auto !important; }
+    .checkout table td input { width: 95%; }
+    .ContentManager img { width: auto !important; height: auto !important; max-width:100% !important; }
+    #apparea-footer { width: 100%; }
+    .Chat { display:none; }
+    .CartManager .rightcart { margin-left: 0px !important; width: 100% !important; }
+    .ProductList .product .short_description { overflow: hidden; height: 103px; }
+    .mainarea .gs_inner .applicationarea { min-height: 50px !important; }
+    .header .TopMenu li { line-height: 30px; }
+}
+
+@media only all and (max-width: 480px) {
+    .YouTube embed { height: 220px; border: solid 1px #BBB; }
+    .Logo { display: none; }
+    .header .TopMenu a { padding: 0px;padding-left:10px;  }
+    .Login { display: none; }
+    .header .TopMenu { margin-left: 0px; top: 0px; }
+    .ProductList .rowview .product {width: 280px; }
+    .breadcrumb .navigation { display: none; }
+    .header .applicationarea { height: 120px; }
+    .header .TopMenu { top: 0px; }
+    .ProductManager .small_product_view { display:none !important; }
+    .ProductManager .dummyproductmanagerclass { display:block; }
+    .ProductList .boxview table { display: inline-block; }
+    .ProductList .boxview table td { float: left; width: 100%; }
+    .ProductList td { padding: 0px; }
+    .Footer { display:none; }
+    .skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row .applicationarea {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+    .skelholder[page="home"] .gs_row.r2 .applicationarea,
+    .skelholder[page="home"] .gs_row.r3 .applicationarea {
+        margin: 0px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+}

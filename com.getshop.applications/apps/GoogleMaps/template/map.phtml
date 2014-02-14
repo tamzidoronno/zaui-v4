@@ -1,0 +1,15 @@
+<?php
+
+namespace ns_17c48891_6f7a_47a0_849d_b50de9af218f;
+
+/* @var $this GoogleMaps */
+$config = $this->getGoogleMapsConfiguration();
+$rand = rand(0,100000000000);
+$config->{'container'} = "map_canvas_".$rand;
+?>    
+<div id="map_canvas_<? echo $rand; ?>" class='googlemapcanvas'></div>
+<script>
+    var map = new thundashop.app.GoogleMaps( <? echo json_encode($config); ?>);
+    map.initialize();
+</script>
+<div class='googlemaptooltip' title='yup'></div>

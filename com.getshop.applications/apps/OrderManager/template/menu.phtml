@@ -1,0 +1,41 @@
+<? namespace ns_27716a58_0749_4601_a1bc_051a43a16d14; ?> 
+<?
+$order = $this->getCurrentOrder();
+?>
+
+<div class="commonleftmenu inline">
+    <?php $active = $this->isOrderOverviewSelected() ? 'active' : ''; ?>
+    <a href="?page=orderoverview" class=""> 
+        <div class='entry first <?php echo $active; ?>'>
+            <?php echo $this->__w('All orders'); ?>
+        </div>
+    </a>
+
+    <?php
+    if ($this->isOrderOverviewSelected()) {
+        echo "</div>";
+        return;
+    }
+    
+    $class = ($_GET['action'] == "showorder") ? "active": '';
+    ?>
+    <a href="?page=orderoverview&showPage=$_&action=showorder&orderid=<?php echo $_GET['orderid']; ?>">
+        <div class="entry <?php echo $class; ?>">
+            <?php echo $this->__w("Order"); ?>
+        </div>
+    </a>
+    <?
+    if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() && $order->status < 5) {
+    ?>
+    
+    <a href="?page=orderoverview&action=showorder&orderid=<?php echo $_GET['orderid']; ?>&cancel=true">
+        <div class="entry cancel">
+            <?php echo $this->__w("Cancel order"); ?>
+        </div>
+    </a>
+    
+    <?
+    }
+    ?>
+    
+</div>

@@ -1,0 +1,30 @@
+<?php
+namespace ns_04259325_abfa_4311_ab81_b89c60893ce1;
+
+/* @var $this Reporting */
+$start = $this->getStartDate();
+$end = $this->getEndDate();
+$sessionId = $this->getSessionId();
+
+//echo $start . " " . $end . " " . $sessionId;
+$results = $this->getApi()->getReportingManager()->getAllEventsFromSession($start, $end, $sessionId);
+
+?>
+<table width="100%">
+    <tr>
+        <th width='150'><? echo $this->__f("When"); ?></th>
+        <th width='150'><? echo $this->__f("Method"); ?></th>
+        <th><? echo $this->__f("Additional info"); ?></th>
+    </tr>
+    
+    <?
+    foreach($results as $result) {
+      /* @var $result core_reportingmanager_data_EventLog */
+        echo "<tr>";
+        echo "<td>" . $result->when . "</td>";
+        echo "<td>" . $result->method . "</td>";
+        echo "<td>" . $result->additionalText . "</td>";
+        echo "</tr>";
+    }
+    ?>
+</table>

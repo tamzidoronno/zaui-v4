@@ -294,6 +294,15 @@ public class ApplicationPoolImpl {
         return apps;
     }
 
+    public Map<String, AppConfiguration> getApplications(List<String> appIds) throws ErrorException {
+        HashMap<String, AppConfiguration> apps = new HashMap();
+        for (String appId : appIds) {
+            AppConfiguration app = applicationInstances.get(appId);
+            apps.put(app.id, finalizeApplication(app));
+        }
+        return apps;
+    }
+    
     public List<AppConfiguration> getApplications(String appSettingsId) throws ErrorException {
         List<AppConfiguration> retApps = new ArrayList();
 

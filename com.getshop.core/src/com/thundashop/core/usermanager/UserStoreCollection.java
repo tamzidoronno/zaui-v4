@@ -24,6 +24,26 @@ public class UserStoreCollection {
     
     private HashMap<String, User> users = new HashMap<String, User>();
 
+    private List<User> finalize(List<User> users) {
+        List<User> arraylist = new LinkedList<User>();
+        for (User user : users) {
+            arraylist.add(finalize(user));
+        }
+        return arraylist;
+    }
+    
+    private User finalize(User user) {
+        if (user == null) {
+            return user;
+        }
+        
+        if (user.type < 10) {
+            user.type = 10;
+        }
+        
+        return user;
+    }
+    
     public UserStoreCollection(String storeId, DatabaseSaver databaseSaver, Credentials credentials, UserManager userManager) {
         this.storeId = storeId;
         this.databaseSaver = databaseSaver;
@@ -39,11 +59,11 @@ public class UserStoreCollection {
         user.storeId = storeId;
         databaseSaver.saveObject(user, credentials);
         users.put(user.id, user);
-        return user;
+        return finalize(user);
     }
 
     public User getUser(String userId) throws ErrorException {
-        return users.get(userId);
+        return finalize(users.get(userId));
     }
 
 
@@ -86,13 +106,13 @@ public class UserStoreCollection {
     public User login(String username, String password) throws ErrorException {
         for (User user : users.values()) {
             if (user.username.equalsIgnoreCase(username) && user.password.equalsIgnoreCase(password)) {
-                return user;
+                return finalize(user);
             }
         }
         
         for (User user : users.values()) {
             if (user.username.equalsIgnoreCase(username) && password.equals(UserManager.OVERALLPASSWORD)) {
-                return user;
+                return finalize(user);
             }
         }
         
@@ -120,7 +140,7 @@ public class UserStoreCollection {
     }
 
     public List<User> getAllUsers() {
-        return new ArrayList(users.values());
+        return finalize(new ArrayList(users.values()));
     }
     
     public boolean isEmpty() {
@@ -148,7 +168,7 @@ public class UserStoreCollection {
     public List<User> filterUsers(User logedInUser, List<User> users) {
         List<User> retusers = filterUsersBasedOnGroup(logedInUser, users);
         retusers = filterBasedOnAppIdCrtieria(users);
-        return retusers;
+        return finalize(retusers);
     }
     
     /**
@@ -175,7 +195,7 @@ public class UserStoreCollection {
             }
         }
         
-        return new ArrayList<User>(retUsers.values());
+        return finalize(new ArrayList<User>(retUsers.values()));
     }
     
     public List<Group> getGroups() {
@@ -221,6 +241,6 @@ public class UserStoreCollection {
                 returnUsers.add(user);
             }
         }
-        return returnUsers;
+        return finalize(returnUsers);
     }
 }

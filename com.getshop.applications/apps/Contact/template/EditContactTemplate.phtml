@@ -1,0 +1,61 @@
+<?php
+namespace ns_96de3d91_41f2_4236_a469_cd1015b233fc;
+
+/* @var $this Contact */
+$email = $this->getEmail();
+$address = $this->getAddress();
+$postalCode = $this->getPostalCode();
+$phone = $this->getPhone();
+$header = $this->getHeader();
+
+$rand = rand(0, 10000);
+?>
+
+<table style="width:100%;">
+    <tr>
+        <td>
+            <?php echo $this->__w("Send us mail"); ?>
+        </td>
+        <td>
+            <input type="txt" class="max_length"></input>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <?php echo $this->__w("Phone"); ?>
+        </td>
+        <td>
+            <input type="txt" class="max_length"></input>
+        </td>
+    </tr>
+    <tr>
+        <td>
+           <?php echo $this->__w('Email'); ?>
+        </td>
+        <td>
+            <input type="txt" class="max_length"></input>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <?php echo $this->__w("What's on your mind?"); ?>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <textarea class="max_length subject_textarea"></textarea>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div class="contact_container">
+                <?php echo $this->__w("Email"); ?>: <input id="email" type="txt" value="<?php echo $email; ?>">
+                - <?php echo $this->__w("Phone"); ?>: <input id="phone" type="txt" value="<?php echo $phone; ?>">
+                - <?php echo $this->__w("Address"); ?>: <input id="address" type="txt" value="<?php echo $address; ?>">
+                - <?php echo $this->__w("Postal code"); ?>: <input id="postalcode" type="txt" value="<?php echo $postalCode; ?>">
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div class="systembutton edit_contact_button"><ins class="save_changes" id="save_changes_button"><?php echo $this->__("Save settings"); ?></ins></div>

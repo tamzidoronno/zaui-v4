@@ -1,0 +1,45 @@
+body { font-family : "arial", "sans-serif"; }
+.header { height: 60px; padding-bottom: 20px; }
+.TopMenu { height: 20px;text-align: right; right: 0px; top: 20px;}
+.TopMenu .entry { font-size: 13px; line-height: 40px; width: 100px; text-align: center; height:40px; display:inline-block; font-weight: normal; }
+.header .Login { border: solid 0px;z-index:1000; }
+.breadcrumb-outer { padding-top: 10px; }
+.header .Logo { position:absolute; top:20px; }
+#add_new_top { padding-left: 20px; }
+.Gallery .imagecontainer { border: 0px; }
+.CategoryLister .categories { text-align:center; }
+.LeftMenu { margin-right: 10px; }
+
+
+
+.LeftMenu { margin-right: 10px; background-color:#EFEFEF; }
+#apparea-left .LeftMenu .menu_0 .menuEntry { background-image: url('{IMAGEFOLDER}/cat-front-icon.png'); background-repeat: no-repeat; background-position: 7px 16px; padding-left: 25px; width: 184px; height: 42px; line-height:42px;  }
+#apparea-left .LeftMenu .menu_0 .menuEntry { background-image: url('{IMAGEFOLDER}/cat-front-icon.png'); background-repeat: no-repeat; background-position: 7px 16px; padding-left: 25px; width: 184px; height: 42px; line-height:42px;  }
+.breadcrumb .accounting { margin-right: 8px; padding-left: 40px; padding-top: 5px; background-image: url('{IMAGEFOLDER}/shopping_cart.png'); background-repeat: no-repeat;}
+
+
+body { background-color: #00aed7; }
+.TopMenu a.selected { color: #00aed7; }
+.button .filler, .button-large .filler { background-color: #00aed7; }
+.header-outer, .ProductManager,
+.ProductList .product,
+.Gallery .inner_image,
+.CategoryList .category_list .category_list_inner,
+.header .Login .applicationinner { background-color:#FFF; }
+ .mainarea .Gallery .inner_image, .mainarea .ProductList .product, .mainarea .CategoryList .category_list .category_list_inner, .mainarea .ProductManager { border-radius: 3px; border: solid 1px #BBB; padding: 3px; }
+.ProductList .rowview .product { border-bottom: solid 1px #BBB; }
+.LeftMenu .menu_0,.breadcrumb-outer { background-color: #EEE; }
+
+.gs_inner { width: 998px; margin:auto;}
+.gs_margin_left { padding-left: 10px; }
+.gs_margin_right { padding-right: 10px; }
+.gs_margin_bottom { margin-bottom: 10px; }
+.applicationarea { min-height: 150px; border-radius: 3px; }
+.gs_row, .breadcrumb { background-color: #EEE; }
+.gs_row { padding-bottom: 10px; }
+.header { background-color:#FFF; }
+.breadcrumb { padding: 10px;}
+.skeleton1 .gs_row.r1,.skeleton2 .gs_row.r1,.skeleton3 .gs_row.r1,.skeleton4 .gs_row.r1 {min-height: 400px; }
+
+.LeftMenu .menu_0 .menuEntry { background-image: url('{IMAGEFOLDER}/cat-front-icon.png'); background-repeat: no-repeat; background-position: 7px 16px; padding-left: 25px; width: 184px; height: 42px; line-height:42px;  }
+.LeftMenu .menu_0 { background-image: url("showApplicationImages.php?appNamespace=ns_00d8f5ce_ed17_4098_8925_5697f6159f66&image=skin/images//glaretop.png");}

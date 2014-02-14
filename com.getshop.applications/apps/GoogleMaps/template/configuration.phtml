@@ -1,0 +1,98 @@
+<?
+/* @var $configuration ns_17c48891_6f7a_47a0_849d_b50de9af218f\Configuration */
+$configuration = $this->getGoogleMapsConfiguration();
+?>
+
+<div class="container">
+    <div class="title">
+        <? echo $this->__f("Configure your starting point"); ?>
+    </div>
+    <div>
+        <? echo $this->__f("zoom"); ?>
+        <select class="positionright mapzoom">
+            <?
+            for ($i = 1; $i <= 21; $i++) {
+                $selected = "";
+                if ($configuration->zoom == $i) {
+                    $selected = "SELECTED";
+                }
+                echo "<option value='$i' $selected>$i</option>";
+            }
+            ?>
+        </select>
+    </div>
+    <div class="row">Latitude<input type='text' class="positionright startlongitude" value='<? echo $configuration->startlongitude; ?>'></div>
+    <div class="row">Longitude<input type='text' class="positionright startaltitude" value='<? echo $configuration->startaltitude; ?>'></div>
+    <div class="row">Max zoom<input type='text' class="positionright maxzoom" value='<? echo $configuration->maxZoom; ?>'></div>
+    <div class="row">Min zoom<input type='text' class="positionright minzoom" value='<? echo $configuration->minZoom; ?>'></div>
+    <br><br>
+    <div class="title">
+        <? echo $this->__f("Markers"); ?>
+    </div>
+    <div class="templaterow row">
+        <span class='remove_marker' style='cursor:pointer;'><img src='skin/default/images/trash.png'></span>
+        <input type="text" class="markertitle" placeholder="<? echo $this->__f("Text title"); ?>">
+        <input type="text" class="description" placeholder="<? echo $this->__f("Text description"); ?>">
+        <input type="text" class="longitude positionright" placeholder="<? echo $this->__f("longitide"); ?>">
+        <input type="text" class="latitude positionright" placeholder="<? echo $this->__f("latitude"); ?>"> 
+    </div>
+
+    <? foreach ($configuration->markers as $marker) { ?>
+        <? if(isset($marker->id)) { continue; } ?>
+    
+        <div class="row entryrow">
+            <span class='remove_marker' style='cursor:pointer;'><img src='skin/default/images/trash.png'></span>
+            <input type="text" class="markertitle" value="<? echo str_replace("\"", "'", @$marker->title); ?>">
+            <input type="text" class="description" value="<? echo str_replace("\"", "'", @$marker->description); ?>">
+            <input type="text" class="longitude positionright" value='<? echo @$marker->longitude; ?>'>
+            <input type="text" class="latitude positionright" value='<? echo @$marker->latitude; ?>'>
+        </div>
+    <? } ?>
+</div>
+<div class="button add_marker">
+    <div class="rightglare"></div>
+    <div class="filler"></div>
+    <ins><? echo $this->__f("Add a new marker"); ?></ins>
+</div>
+
+
+<div class="title">
+    <? echo $this->__f("Boundaries"); ?>
+</div>
+<? echo $this->__f("Specify boundaries the map should restrict itself to. Leave it empty to avoid boundaries. Or add multiple rectangular fields as constraints."); ?>
+<div class="boundary_container">
+    <div class="row templaterow">
+        <span class='remove_marker' style='cursor:pointer;'><img src='skin/default/images/trash.png'></span>
+        <input type="text" class="sw_latitude" placeholder="<? echo $this->__f("South west corner latitude"); ?>">
+        <input type="text" class="sw_longitude" placeholder="<? echo $this->__f("South west corner longitude"); ?>">
+        <input type="text" class="ne_latitude" placeholder="<? echo $this->__f("North east corner latitude"); ?>">
+        <input type="text" class="ne_longitude" placeholder="<? echo $this->__f("North east corner longitude"); ?>">
+    </div>
+
+    <? if(isset($configuration->boundaries) && is_array($configuration->boundaries)) {
+        foreach ($configuration->boundaries as $boundary) {
+            ?>
+            <div class="row entryrow">
+                <span class='remove_marker' style='cursor:pointer;'><img src='skin/default/images/trash.png'></span>
+                <input type="text" class="sw_latitude" value="<? echo $boundary->sw_latitude; ?>">
+                <input type="text" class="sw_longitude" value="<? echo $boundary->sw_longitude; ?>">
+                <input type="text" class="ne_latitude" value="<? echo $boundary->ne_latitude; ?>">
+                <input type="text" class="ne_longitude" value="<? echo $boundary->ne_longitude; ?>">
+            </div>
+        <? }
+    }
+    ?>
+
+</div>
+
+<div class="button add_boundary">
+    <div class="rightglare"></div>
+    <div class="filler"></div>
+    <ins><? echo $this->__f("Add a new boundary"); ?></ins>
+</div>
+
+<div class="button saveconfiguration positionright">
+    <div class="rightglare"></div>
+    <div class="filler"></div>
+    <ins><? echo $this->__f("Save settings"); ?></ins>
+</div>

@@ -1,0 +1,141 @@
+.Banner {
+    position: relative;
+}
+.bannerslider {
+    min-height: 100px;
+}
+
+.bannerslider .banner {
+    display: none;
+}
+
+.bannerssettings {
+    padding: 10px;
+}
+
+.editormode .bannerslider {
+    background-size: 100%;
+}
+
+.editormode .Banner .systembutton {
+    background-color: #FFF;
+}
+
+.Banner {
+    position: relative;
+}
+
+.Banner .systembutton {
+    position: absolute; 
+    right: 0px; 
+    top: 3px;
+}
+
+.Banner .addProduct {
+    width: 530px;
+}
+
+
+.Banner .remove_image_button {
+    position:absolute;
+    right: 10px;
+}
+
+.Banner .update_banner_outer { text-align:right; }
+
+.Banner .thumbnail.empty {
+    height: 100px;
+    width: 200px;
+    background-image: url('{IMAGEFOLDER}/emptybanner.png');
+}
+
+.Banner .bannerssettings input {
+    width: 195px;
+    margin-top: 5px;
+}
+
+.Banner .bannerssettings .button {
+    margin-top: 5px;
+}
+
+.information.banner {
+    margin: 10px;
+    border: solid 0px;
+}
+
+.bannerssettings.main {
+    background-color: #666;
+}
+
+.banner-settings-savebutton {
+    cursor: pointer; 
+    font-size: 20px; 
+    margin: 10px; 
+    color:#ccc;
+    background-color: #3f3f3f; 
+    border: solid 1px #313131; 
+    line-height: 40px;
+    text-align: center;
+}
+
+.banner-settings-savebutton:hover {
+    background-color: #666666;
+}
+
+#informationbox.Banner { background-color:#666; }
+
+.Banner .dots {
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    bottom: 0px;
+}
+.Banner .dots .dot {
+    width: 23px;
+    height: 24px;
+    cursor: pointer;
+    background-image: url('{IMAGEFOLDER}/dot.png');
+}
+
+.Banner .dots .dot.selected {
+    background-image: url('{IMAGEFOLDER}/dot-blue.png');
+}
+.Banner #sortable { 
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+.Banner .dragobject .toolbar { display:none; position:absolute; }
+
+.Banner .progressbar { display:inline-block; width: 200px; height:12px; border: solid 1px #BBB; float:right; }
+.Banner .progressbar .progress_completed { background-color:#539b43; height: 12px; width: 0%; display:inline-block; }
+.Banner .progressbar_container { position:absolute; right: 10px; width: 300px; margin-top:10px; display:none; }
+
+.Banner .add_text { height:14px;padding:2px; cursor:pointer; }
+.Banner .add_text img { float:left;height:12px;padding-left:5px; }
+.Banner .add_text span { float:left; line-height:12px;padding-left:10px; }
+.Banner .delete_banner_image { height:25px;padding:2px;  cursor: pointer; }
+
+.Banner .textfields .image_banner_text { display:none; }
+.Banner .no_cords { background-color: red; }
+.Banner .image_banner_text { display:block; }
+.Banner .link_input { width: 500px; display:none; }
+.Banner .drag {display:inline-block; width: 15px; height: 15px; background-size: 15px; background-image: url('skin/default/images/icons/move.png'); }
+.Banner .remove {display:inline-block; width: 15px; height: 15px; background-size: 15px; background-image: url('skin/default/images/trash-can.png'); }
+.Banner .text_color_selection {display:inline-block; width: 15px; height: 15px; background-size: 15px; background-image: url('skin/default/images/colorselect.png'); }
+.Banner .toolbar { padding-top: 3px; }
+.Banner .toolbar select { position:absolute; left: 55px; bottom: 0px; font-size:12px; }
+.Banner .banner_text { display:none; }
+#sortable li { 
+    margin: 0px 0px 0px 0; float: left; width: 40px; height:35px; font-size: 4em; text-align: center; }
+
+
+#informationbox.Banner .gs_tab,
+#informationbox.Banner ul#sortable .sort_entry {
+    vertical-align: top;
+    display: inline-block;
+}
+#informationbox.Banner ul#sortable {
+    display: inline-block;
+}

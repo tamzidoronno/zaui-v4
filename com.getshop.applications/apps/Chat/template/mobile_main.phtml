@@ -1,0 +1,26 @@
+<?
+if (isset($_GET['amp;id'])) {
+    $_GET['id'] = $_GET['amp;id'];
+}
+?>
+
+<div id="mobilechat_area" chatterid="<? echo $_GET['id']; ?>">
+    <?
+    $this->printMobileChat();
+    ?>
+</div>
+<div style="height: 190px;"></div>
+<textarea id="texttosend" style="width:100%; height: 50px; position:fixed; bottom: 43px;left: 0px;"></textarea>
+<div id="texttosendbutton" style="width:100%; height: 40px; position:fixed; bottom: 0px;left: 0px; text-align:center;background-color:#642ab3;line-height:40px; color:#FFFFFF;"><? echo $this->__f("Send message"); ?></div>
+
+<script>
+    $(function() {
+        com.getshop.app.Chat.startMobileChat(0);
+        $('#texttosendbutton').on('click', function(test) {
+            com.getshop.app.Chat.sendChatMessage($('#texttosend'), "<? echo $_GET['id']; ?>", com.getshop.app.Chat.doMobileUpdate);
+        });
+    });
+</script>
+<style>
+    body { background-color:#EFEFEF; }
+</style>    

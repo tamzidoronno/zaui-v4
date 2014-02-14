@@ -1,0 +1,29 @@
+<div class='ordermailsettingsinformation'>
+    <? 
+    echo $this->__f("All text that you enter in the box below will be sent out as order confirmation emails. You can write anything you wish here, and enter variables. See bottom of page for variable defenitions.");
+    ?>
+</div>
+
+<div class='ordermailsettingsinformation'>
+    <? echo $this->__f("Subject");?><br>
+    <input id='ordermailsubject' type='textfield' placeholder='<? echo $this->__f("Click to change subject"); ?>' value='<? echo $this->getOrderMailSubject(); ?>' />
+</div>
+
+<div class='ordermail getshop_ckeditorcontent'>
+        <? echo $this->getOrderEmailText();  ?>
+    </div>
+    
+<div class='ordermailsettingsinformation'>
+    <b><? echo $this->__f("Different variables that is available"); ?></b>
+    <br><br>
+    <table cell0padding='0' cellspacing='0'>
+        <tr><td><? echo $this->__f("OrderId"); ?></td><td>{Order.Id}</td></tr>
+        <tr><td><? echo $this->__f("Customer name"); ?></td><td>{Customer.Name}</td></tr>
+        <tr><td><? echo $this->__f("Customer email"); ?></td><td>{Customer.Email}</td></tr>
+        <tr><td><? echo $this->__f("Customer address"); ?></td><td>{Customer.Address}</td></tr>
+        <tr><td><? echo $this->__f("Customer phone"); ?></td><td>{Customer.Phone}</td></tr>
+        <tr><td><? echo $this->__f("Customer city"); ?></td><td>{Customer.City}</td></tr>
+        <tr><td><? echo $this->__f("customer postcode"); ?></td><td>{Customer.Postcode}</td></tr>
+        <tr><td><? echo $this->__f("Order lines"); ?></td><td>{Order.Lines}</td></tr>
+    </table>
+</div>

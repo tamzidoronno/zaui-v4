@@ -10,8 +10,10 @@ import com.google.code.morphia.annotations.Transient;
 import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.listmanager.data.Entry;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -101,6 +103,15 @@ public class Page extends DataCommon implements Cloneable {
         pageAreas = new HashMap();
         pageAreas.put("footer", footer);
         pageAreas.put("header", header);
+    }
+
+    public List<String> getApplicationIds() {
+        List<String> ids = new ArrayList<String>();
+        for (PageArea area : pageAreas.values()) {
+            ids.addAll(area.applicationsList);
+            ids.addAll(area.extraApplicationList.keySet());
+        }
+        return ids;
     }
 
     public static class DefaultPages {

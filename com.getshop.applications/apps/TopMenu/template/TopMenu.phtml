@@ -1,0 +1,44 @@
+<?php
+namespace ns_1051b4cf_6e9f_475d_aa12_fc83a89d2fd4;
+
+ /* @var $this TopMenu */
+if($this->getNavigation()->currentPageId == "home") {
+    $selected = "selected";
+} else {
+    $selected = "";
+}
+?>
+    
+<ul class="breadcrumb-menu">
+<?php
+$entries = $this->getTopMenuEntries();
+showEntries($entries);
+function showEntries($entries) {
+    foreach($entries as $entry) {
+        /* @var $entry app_leftMenu_data_ListEntry */
+        $name = $entry->name;
+        $id = $entry->pageId;
+        $selected = "";
+        $menu = "";
+
+        if($this->getNavigation()->currentPageId == $id) {
+            $selected = "selected";
+        }
+        if($entry->hardLink) {
+            echo "<li class='configable'><span><a href='".$entry->hardLink."' class='$selected' hardlink='true'>$name</a></span>$menu</li>";
+        } else {
+            $link = str_replace(" ", "_", $menu);
+            $link = "/".strtolower($menu).".html";
+            $menu = "<span><a ajaxLink='?page=".$id."' href='$link' class='$selected'>$name</a></span>$menu";
+            if ($entry->subentries) {
+                $menu = showEntries($entry->subentries);   
+            }
+            echo "<li class='configable'>$menu</li>";
+        }
+    }    
+}
+if($this->isEditorMode() && \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() && $this->getFactory()->isExtendedMode()) { ?>
+    <li class="addnew"><span id="add_new_top"><?php echo $this->__f('[ Add new ]'); ?></span></li>
+    <input style="display: none" id="add_top_menu_entry" type="txt" class="gray" value="Add topmenu entry"/>
+<?php } ?>    
+</ul>

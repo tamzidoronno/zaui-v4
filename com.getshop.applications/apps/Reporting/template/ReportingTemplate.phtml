@@ -1,0 +1,100 @@
+<?
+namespace ns_04259325_abfa_4311_ab81_b89c60893ce1;
+
+/* @var $this Reporting */
+$start = $this->getStartDate();
+$end = $this->getEndDate();
+$type = $this->getType();
+
+$types[0] = "Hourly view";
+$types[1] = "Daily view";
+$types[2] = "Weekly view";
+$types[3] = "Monthly view";
+
+$pageDisplayed = "overview";
+if (isset($_POST['data']['page'])) {
+    $pageDisplayed = $_POST['data']['page'];
+}
+
+$page["overview"] = "Overview";
+$page["pageviews"] = "Page views";
+$page["usersloggedon"] = "Users logged on";
+$page["productviews"] = "Products viewed";
+$page["orderscreated"] = "Orders created";
+$page["tracker"] = "Traffic tracking";
+
+$min_activity = 0;
+if (isset($_POST['data']['min_activity'])) {
+    $min_activity = $_POST['data']['min_activity'];
+}
+?>
+<div class="date_selection" gstype="form" method="reprintReport" >
+    <select class="type" style="float:left;" gsname="page" gstype="submit" >
+        <?
+        foreach ($page as $id => $pg) {
+            $selected = "";
+            if ($pageDisplayed == $id) {
+                $selected = "selected";
+            }
+
+            echo "<option value='$id' $selected>$pg</option>";
+        }
+        ?>
+    </select>
+    <input type="txt" class="startdate" gsname="startdate" value="<? echo $start; ?>">
+    <input type="txt" class="stopdate"  gsname="stopdate" value="<? echo $end; ?>">
+
+    <select class="type" gsname="type" style="    <?php if ($pageDisplayed != "overview") {
+            echo "display:none;";
+        } ?>">
+        <?
+        for ($i = 0; $i < 4; $i++) {
+            $selected = "";
+            if ($type == $i) {
+                $selected = "SELECTED";
+            }
+
+            echo '<option value="' . $i . '" ' . $selected . '>' . $this->__f($types[$i]) . '</option>';
+        }
+        ?>
+    </select>
+
+    <select class="type" gsname="min_activity" style="    <?php if ($pageDisplayed != "tracker") {
+            echo "display:none;";
+        } ?>">
+        <?
+        echo '<option value="0">' . $this->__f("Minimum activity") . '</option>';
+        for ($i = 1; $i < 10; $i++) {
+            $selected = "";
+            if ($min_activity == $i) {
+                $selected = "SELECTED";
+            }
+
+            echo '<option value="' . $i . '" ' . $selected . '>' . $i . '</option>';
+        }
+        ?>
+    </select>
+    <div class="button" gstype="submit">
+        <div class="rightglare"></div>
+        <div class="filler"></div>
+        <ins><? echo $this->__f("Set date"); ?></ins>
+    </div>
+    
+    <? if($pageDisplayed == "tracker") { ?>
+        <div>
+            <span class="wordlist">
+                <?php
+                foreach ($this->getPageFilter() as $word) {
+                    echo "<span class='word' gsvalue='".$word."'> " . $word . "</span>";
+                }
+                ?>
+            </span>
+            Display only users accessing a page : <input type="txt" gsname="filteronword"  gstype="submitenter">
+        </div>
+    <? } ?>
+</div>
+
+<script>
+    $('.Reporting .startdate').datepicker({dateFormat: 'yy-mm-dd'});
+    $('.Reporting .stopdate').datepicker({dateFormat: 'yy-mm-dd'});
+</script>

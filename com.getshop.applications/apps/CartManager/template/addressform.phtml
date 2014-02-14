@@ -1,0 +1,117 @@
+<?
+/* @var $this CartManager */
+/* @var $user \core_usermanager_data_User */
+$user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+if ($user && !$user->address) {
+    $user->address = $this->getApiObject()->core_usermanager_data_Address();
+}
+
+$name = ($user) ? $user->fullName : '';
+$emailaddress = ($user) ? $user->emailAddress : '';
+$address = ($user) ? $user->address->address : '';
+$postCode = ($user) ? $user->address->postCode : '';
+$city = ($user) ? $user->address->city : '';
+$phone = ($user) ? $user->cellPhone : '';
+
+
+/* @var $factory Factory */
+$factory = $this->getFactory();
+
+$termsAndConditions = false;
+
+$instances = $factory->getApplicationPool()->getApplicationsInstancesByNamespace("ns_6e415852_c023_4ffe_a49f_990a521841cf");
+if (sizeof($instances) > 0) {
+    $termsAndConditions = true;
+}
+
+$settings = $factory->getSettings();
+$countrycodes = $factory->getTerritoriesList();
+
+$requireRegistration = false;
+$required = "0";
+$countrylist = false;
+
+if (isset($settings->registration) && $settings->registration->value == "true") {
+    $requireRegistration = true;
+    $required = "1";
+}
+if (isset($settings->selltocountries)) {
+    $countrylist = json_decode($settings->selltocountries->value);
+}
+
+if (isset($_SESSION['tempaddress'])) {
+    $name = $_SESSION['tempaddress']['fullName'];
+    if ($user != null) {
+        $emailaddress = $user->emailAddress;
+    } else {
+        $emailaddress = $_SESSION['tempaddress']['emailAddress'];
+    }
+
+    $address = $_SESSION['tempaddress']['address'];
+    $postCode = $_SESSION['tempaddress']['postCode'];
+    $city = $_SESSION['tempaddress']['city'];
+    $phone = $_SESSION['tempaddress']['phone'];
+}
+?>
+<div class="address">
+    <div class='shoppingcartheader'><?php echo $this->__w("Checkout"); ?></div>
+    <div class='checkoutinner'>
+        <table>
+            <? if (!$requireRegistration || !$user) { ?>
+                <tr><td class="col1 email"><?php echo $this->__w("Email"); ?></td><td><input type="textfield" name="emailAddress" value="<?php echo $emailaddress; ?>" requirelogon="<? echo $required; ?>"></td></tr>
+            <? } ?>
+            <tr><td class="col1 firstname"><?php echo $this->__w("Full name"); ?></td><td><input type="textfield" name="fullName" value="<?php echo $name; ?>"></td></tr>
+            <tr><td class="col1 address"><?php echo $this->__w("Address"); ?></td><td><input type="textfield" name="address" value="<?php echo $address; ?>"></td></tr>
+            <tr><td class="col1 postcode"><?php echo $this->__w("Postal code"); ?></td><td><input type="textfield" name="postCode" value="<?php echo $postCode; ?>"></td></tr>
+            <tr><td class="col1 city"><?php echo $this->__w("City"); ?></td><td><input type="textfield" name="city" value="<?php echo $city; ?>"></td></tr>
+            <tr><td class="col1 phone"><?php echo $this->__w("Phone"); ?></td><td><input type="textfield" name="phone" value="<?php echo $phone; ?>"></td></tr>
+            <? if($countrylist) { ?>
+                <tr><td class="col1 phone"><?php echo $this->__w("Country"); ?></td>
+                    <td>
+                        <select class='countrycode'>
+                            <? 
+                            foreach($countrylist as $country) { 
+                                echo "<option value='$country'>".$countrycodes[$country]."</option>";
+                             } 
+                             ?>
+                        </select>
+                    </td>
+                </tr>
+            <? } ?>
+
+            <? if ($termsAndConditions) { ?>
+                <tr><td class="col1 phone" colspan="2">
+                        <span class='invalid_terms'>
+                            
+                        </span>
+                        <label class='termslabel'>
+                            <?php echo $this->__w("I agree to the terms and conditions") . " <span class='agreeview'>(" . $this->__w("read") . ")</span>"; ?>
+                            <input type="checkbox" name="checkbox" value="value" class='termsandconditioncheckbox'/> 
+                        </label>
+                    </td></tr>
+            <? } ?>
+            <? if (!$user && $requireRegistration) { ?>
+                <tr><td class="col1" colspan="2"><span class='reg_details_text'><?php echo $this->__w("Registration details"); ?></span></td></td></tr>
+                <tr><td class="col1 password"><?php echo $this->__w("Password"); ?></td><td><input type="password" name="password" value="<?php echo $city; ?>"></td></tr>
+                <tr><td class="col1 repeat_password"><?php echo $this->__w("Repeat password"); ?></td><td><input type="password" name="repeat_password" value="<?php echo $phone; ?>"></td></tr>
+            <? } ?>
+        </table>
+        <?php if ($this->canGoToPayment()) { ?>
+            <div id='confirmorder' class="button-large"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__w("Place order"); ?></ins></div>
+        <?php } else { ?>
+            <div id="next" class="button-large"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__w("Next"); ?></ins></div>
+        <?php } ?>
+    </div>
+</div>
+
+<div class="loginform">
+    <div><? echo $this->__w("The email already exists, please log on to continue."); ?></div>
+    <form action="" method="POST">
+        <input type="hidden" name="loginbutton" value="true">        
+        <table>
+            <tr><td class="col1 email"><?php echo $this->__w("Username / Email"); ?></td><td><input type="textfield" name="username"></td></tr>
+            <tr><td class="col1 password"><?php echo $this->__w("Password"); ?></td><td><input type="password" name="password"></td></tr>
+            <tr><td><input type="button" class="usedifferentemail emailexistsbutton" value="<? echo $this->__w("Use a different email"); ?>"></td><td><input type="submit" class='emailexistsbutton' value="<? echo $this->__w("login"); ?>"></td></tr>
+        </table>
+    </form>
+</div>

@@ -1,0 +1,50 @@
+<?php
+namespace ns_e9d04f19_6eaa_4a17_9b7b_aa387dbaed92;
+
+/* @var $entry core_listmanager_data_Entry */
+$entry = $this->getCurrentEntry();
+$height = $this->getSkinVariable("height");
+$width = $this->getSkinVariable("width");
+?>
+<div class="inline configable has_category category_list entry selenium_category_list <?php if($entry->first) { echo "first"; } if($entry->latest) { echo "last_in_row"; } ?>" id="<?php echo $entry->id; ?>" interrupt="false">
+    <?php
+    if($this->isEditorMode()) { 
+        echo '<span class="edit"></span>';
+        $this->includefile("LeftMenuTemplateMenuConfiguration", "ns_00d8f5ce_ed17_4098_8925_5697f6159f66\LeftMenu");
+    }
+    
+    if($entry->hardLink) {
+        $link = $entry->hardLink;    
+        $hardlink = "hardlink='true'";
+    } else {
+        $link = "?page=".$entry->pageId;        
+        $hardlink = "";
+    }
+    ?>
+    <a href="<? echo $link; ?>" id="<?php echo $entry->id; ?>" <? echo $hardlink; ?>>
+        <div class="category_list_inner">
+            <div class="product_image_inner">
+                <?php
+                if ($entry->imageId) {
+                    echo "<img src='displayImage.php?id=" . $entry->imageId . "&width=$width&height=$height'>";
+                }
+                ?>
+            </div>
+            <div class="text">
+                <?php
+                if (@$_POST['event'] == "renameEntry" && @$_POST['data']['id'] == $entry->id || (@$_POST['event'] == "newEntry" && $entry->latest)) {
+                    ?>
+                    </a>
+                    <span gstype="form" method="renameEntry">
+                        <input type="hidden" gsname="renameId" value="<?php echo $entry->id; ?>">    
+                        <input gstype="submitenter" class='newEntry' gsname="newEntry" placeholder="<?php echo $entry->name; ?>">
+                    </span>
+                    <?php
+                } else {
+                    echo $entry->name;
+                }
+                ?>
+            </div>
+        </div>
+    </a>
+</div>

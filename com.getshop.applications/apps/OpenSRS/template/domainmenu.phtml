@@ -1,0 +1,30 @@
+<? namespace ns_fb076580_c7df_471c_b6b7_9540e4212441; ?>
+<?php
+$overviewselected = "";
+$registerselected = "";
+$transferselected = "";
+
+if (isset($_GET['type']))
+    $type = $_GET['type'];
+else
+    $type = "";
+
+switch ($type) {
+    case "register":
+        $registerselected = "selected";
+        break;
+    case "transfer":
+        $transferselected = "selected";
+        break;
+    default:
+        $overviewselected = "selected";
+}
+?>
+<div class="domain_overview_menu">
+    <div>
+        <a href="?type=overview" class="menuentry <?php echo $overviewselected; ?>"><?php echo $this->__f("Domain overview"); ?></a>
+    </div>
+    <div>
+        <a href="?type=transfer" class="menuentry <?php echo $transferselected; ?>"><?php echo $this->__f("Transfer existing domain"); ?></a>
+    </div>
+</div>

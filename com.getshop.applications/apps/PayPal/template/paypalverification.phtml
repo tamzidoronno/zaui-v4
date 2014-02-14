@@ -1,0 +1,93 @@
+<?php
+namespace ns_c7736539_4523_4691_8453_a6aa1e784fc1;
+
+$raw_post_data = file_get_contents('php://input');
+$raw_post_array = explode('&', $raw_post_data);
+$myPost = array();
+foreach ($raw_post_array as $keyval) {
+    $keyval = explode('=', $keyval);
+    if (count($keyval) == 2)
+        $myPost[$keyval[0]] = urldecode($keyval[1]);
+}
+$req = 'cmd=_notify-validate';
+if (function_exists('get_magic_quotes_gpc')) {
+    $get_magic_quotes_exists = true;
+}
+foreach ($myPost as $key => $value) {
+    if ($get_magic_quotes_exists == true && get_magic_quotes_gpc() == 1) {
+        $value = urlencode(stripslashes($value));
+    } else {
+        $value = urlencode($value);
+    }
+    $req .= "&$key=$value";
+}
+$orderid = $_GET['orderid'];
+
+$factory = $this->getFactory();
+$instances = $factory->getApplicationPool()->getApplicationsInstancesByNamespace("ns_c7736539_4523_4691_8453_a6aa1e784fc1");
+$instance = $instances[0];
+$mode = $instance->configuration->settings;
+
+if($factory->getConfigurationFlag("devMode") == "true") {
+    $url = "https://www.sandbox.paypal.com/cgi-bin/webscr";
+} else if($orderid == "applications") {
+    $url = "https://www.paypal.com/cgi-bin/webscr";
+} else if(isset($mode->{'sandbox'}) && $mode->{'sandbox'}->value=="true") {
+    $url = "https://www.sandbox.paypal.com/cgi-bin/webscr";
+} else {
+    $url = "https://www.paypal.com/cgi-bin/webscr";
+}
+
+file_put_contents("/tmp/paypalurl", $url);
+
+// STEP 2: Post IPN data back to paypal to validate
+
+$ch = curl_init($url);
+curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $req);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+curl_setopt($ch, CURLOPT_FORBID_REUSE, 1);
+curl_setopt($ch, CURLOPT_HTTPHEADER, array('Connection: Close'));
+
+// In wamp like environments that do not come bundled with root authority certificates,
+// please download 'cacert.pem' from "http://curl.haxx.se/docs/caextract.html" and set the directory path 
+// of the certificate as shown below.
+
+curl_setopt($ch, CURLOPT_CAINFO, '../app/ns_c7736539_4523_4691_8453_a6aa1e784fc1/cacert.pem');
+if (!($res = curl_exec($ch))) {
+    // error_log("Got " . curl_error($ch) . " when processing IPN data");
+    file_put_contents("/tmp/order.txt", "Error: " . curl_error($ch));
+    curl_close($ch);
+    exit;
+}
+curl_close($ch);
+
+// STEP 3: Inspect IPN validation result and act accordingly
+if (strcmp($res, "VERIFIED") == 0) {
+    $item_name = $_POST['item_name'];
+    $item_number = $_POST['item_number'];
+    $payment_status = $_POST['payment_status'];
+    $payment_amount = $_POST['mc_gross'];
+    $payment_currency = $_POST['mc_currency'];
+    $txn_id = $_POST['txn_id'];
+    $receiver_email = $_POST['receiver_email'];
+    $payer_email = $_POST['payer_email'];
+    
+    /* @var $api \GetShopApi */
+    file_put_contents("/tmp/paypalurl", "payment status: ".$payment_status);
+//    if($payment_status  == "Completed") {
+        $password = file_get_contents("../app/ns_c7736539_4523_4691_8453_a6aa1e784fc1/private/password");
+        $password = trim($password);
+        $factory->getApi()->getOrderManager()->setOrderStatus($password, $orderid, $payment_currency, $payment_amount, 4);
+//    }
+    
+} else if (strcmp($res, "INVALID") == 0) {
+    // log for manual investigation
+    echo "Failed: ";
+    print_r($res);
+    file_put_contents("/tmp/paypalurl", "OK2");
+}
+?>

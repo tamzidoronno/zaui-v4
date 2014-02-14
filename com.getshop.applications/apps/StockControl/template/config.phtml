@@ -1,0 +1,30 @@
+<? namespace ns_a93d64e4_b7fa_4d55_a804_ea664b037e72; ?>
+<div class="information">
+    <?  echo $this->getDescription(); ?>
+</div>
+
+<div class="setting onoff" id="trackControl">
+    <span class="title"><?php echo $this->__("Withdraw from stock when order is created"); ?></span>
+    <div class="onoff config" id="selenium_trackControl"></div>
+    <div class="description">
+        <?php echo $this->__f("By enabling this function the stock quantities will be modified when a customer has done the checkout routine."); ?>
+    </div>
+</div>
+
+<div class="setting onoff" id="returnStockIfOrderCanceled">
+    <span class="title"><?php echo $this->__f("Return stock if order is canceled?"); ?></span>
+    <div class="onoff config" id="selenium_returnStockIfOrderCanceled"></div>
+    <div class="description">
+        <?php echo $this->__f("If a order is canceled, should the items from the order be put back in stock?"); ?>
+    </div>
+</div>
+
+<div class="setting onoff" id="showStockStatusOnProduct">
+    <span class="title"><?php echo $this->__f("Show stock status on product?"); ?></span>
+    <div class="onoff config" id="selenium_showStockStatusOnProduct"></div>
+    <div class="description">
+        <?php echo $this->__f("Display 'X in stock' or 'out of stock' on product?"); ?>
+    </div>
+</div>
+
+<div class="button savebutton"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__("Save settings"); ?></ins></div>

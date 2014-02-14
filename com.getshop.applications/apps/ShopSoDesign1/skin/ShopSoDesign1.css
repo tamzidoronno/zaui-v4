@@ -1,0 +1,47 @@
+body { font: 14px sans-serif;  }
+.gs_inner { width: 980px; margin: auto; background-color: #FFF; padding: 5px; }
+.TopMenu { position:absolute; left : 0px; top: 85px; width: 100%; background-color:#0a599e; background-image: url('{IMAGEFOLDER}/menubg.png'); }
+.TopMenu a { font-size: 14px; display:block; line-height: 35px; padding-left: 17px; padding-right: 17px; border-right: solid 1px #184870; color:#FFFFFF; }
+.TopMenu a:hover { background-color:#ff6820; }
+.breadcrumb .gs_inner { padding-bottom: 20px; }
+
+.LeftMenu { padding: 10px; border: solid 1px #DBDEE1; }
+.LeftMenu .menu_0 .menuName { font:normal 13px Verdana; border-top: dotted 1px #d6d6d6; line-height: 14px; padding-bottom: 6px; padding-top: 6px; padding-left: 4px; }
+.LeftMenu .menu_0.topleveldepth_0 .menuName { border-top: solid 0px; }
+
+.LeftMenu .active .menuName { font-weight: bold; }
+.LeftMenu .menu_1 { padding-left: 10px; }
+.LeftMenu .menu_1 .menuName { color: #0075e2; font:normal 13px Verdana; }
+
+.ProductList .boxview .product { border-right: solid 1px #DDDDDD; border-bottom: solid 1px #DDDDDD; }
+.ProductList .boxview table { border-top: solid 1px #DDDDDD; border-left: solid 1px #DDDDDD; }
+
+.gs_margin_left { padding-left: 10px; }
+.gs_margin_right { padding-right: 10px; }
+.gs_margin_bottom { margin-bottom: 10px; }
+
+.header .applicationarea { min-height: 130px; }
+
+.ProductList .boxview .product { padding-bottom: 40px; }
+.ProductList .boxview .product .short_description { padding: 10px; height: 95px; }
+.ProductList .boxview .product .image { width: 100%; display:block; text-align:center; padding-bottom: 20px;  }
+.ProductList .boxview .product .pricecontainer { left: 10px; color: #113A78; }
+.ProductList .boxview .product .pricecontainer .price,.ProductManager .applicationinner .priceinner { color: #113A78; font-size: 18px; }
+.ProductList .boxview .product .title { text-align: center; overflow: visible; height: 20px;  }
+.ProductList .rowview .product .title { margin-bottom: 10px;  }
+
+.button .filler, .button-large .filler { background-color: #fc5800; }
+.button ins,.button-large ins { color: #FFF; }
+
+.footer .gs_inner { background-color:#0a599e; background-image: url('{IMAGEFOLDER}/footer.png'); color:#FFF; }
+.footer .gs_inner .applicationarea { padding-top: 20px; }
+.gs_row .gs_inner { padding-bottom: 10px; }
+
+.Search .searchinputfield { left: auto; right: 0px; top: 30px;  }
+.Search .searchinputfield input { width: 200px; border-radius: 3px; padding: 5px; }
+.ProductList .product .rightwrapper .short_description { height: auto; }
+.ProductList .boxview .title { font-size: 17px; padding-top: 10px; }
+.ProductList .rowview .product { border: solid 1px #DDDDDD; width: 288px; }
+.breadcrumb .accounting #mycart { font-size: 16px; top: 0px; margin-right: 8px; padding-left: 30px; padding-top: 0px; background-image: url('{IMAGEFOLDER}/shopping_cart.png'); background-repeat: no-repeat;}
+.breadcrumb .breadcrumb-inner .cart_text { display:none; }
+.breadcrumb .navigation { display: none; }

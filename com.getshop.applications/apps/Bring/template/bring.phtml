@@ -1,0 +1,47 @@
+<?php
+namespace ns_2da52bbc_a392_4125_92b6_eec1dc4879e9;
+
+/* @var $fg FraktGuiden */
+$fg = $this;
+$settings = $this->getStoreSettings();
+
+if(!isset($settings->postal_code) || strlen($settings->postal_code->value) < 4) {
+    ?>
+<div class="information" style="font-size:16px;">
+    <div><b>Advarsel</b></div>
+    Du har ikke lagt inn ditt postnummer under Butikk instillinger, dette må gjøres for få brukt denne applikasjonen.
+</div>
+    <?php
+} else {
+    ?>
+<div class="information" style="font-size:16px;">
+    <div><b>OK</b></div>
+    Du er nå klar for å benytte deg av fraktguiden, priser blir nå automatisk utregnet ettersom hvor den skal sendes.
+</div>
+
+<div class="textfield setting"  id="oversizedpackageprice">
+    <span class="title">For stor pakke.</span>
+    <input type="textfield" class="config">
+    <div class="description">
+        Hvis produktet overstiger en vekt som bring klarer å levere, så kan du så kan du oppgi et beløp her, det beløpet vil være en fallback hvis bring ikke klarer å levere.
+    </div>
+</div>
+
+<div class="setting onoff" id="displayerror">
+    <span class="title"><?php echo $this->__("Show errormessage"); ?></span>
+    <div class="onoff config" id="sendmail"></div>
+    <div class="description">
+        <?php echo $this->__("Display the errormessage below if the error weight is to heavy."); ?>
+    </div>
+</div>
+
+<div class="textarea setting"  id="errormessage">
+    <span class="title"><?php echo $this->__f("This is the errormessage that will be displayed if above is on."); ?></span>
+    <br><br>
+    <textarea style="width:100%; height: 200px;" type="textfield" class="config"></textarea>
+</div>
+    <?php
+}
+?>
+
+<div class="button savebutton"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__("Save settings"); ?></ins></div>

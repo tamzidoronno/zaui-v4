@@ -1,0 +1,237 @@
+<?php
+namespace ns_6c245631_effb_4fe2_abf7_f44c57cb6c5b;
+$fullName = "";
+$email = "";
+$password = "";
+$street = "";
+$pcode = "";
+$city = "";
+$birthday = "";
+$companyName = "";
+
+$user = $this->getUserData();
+$hidden = "";
+$exists = false;
+$userId = "";
+$cellphone = "";
+$textButton = $this->__w("Register");
+$userLevel = 0;
+if ($user) {
+    /* @var $user core_usermanager_data_User */
+    $fullName = $user->fullName;
+    $email = $user->emailAddress;
+    $password = $user->password;
+    if ($user->address) {
+        $street = $user->address->address;
+        $pcode = $user->address->postCode;
+        $city = $user->address->city;
+    }
+    $birthday = $user->birthDay;
+    $companyName = $user->companyName;
+    $cellphone = $user->cellPhone;
+    $hidden = "none";
+    $exists = true;
+    $textButton = $this->__w("Update");
+    $company = $user->company;
+    $userId = $user->id;
+    $userLevel = $user->type;
+    if(isset($user->expireDate) && $user->expireDate) {
+        $expire = date("m/d/y", strtotime($user->expireDate));
+    } else {
+        $expire = "";
+    }
+   
+}
+echo "<input type='hidden' value='$userId' id='user_id'>";
+?>
+<table>
+    
+    <tr>
+        <td class="col1">
+            <?php echo $this->__w("Full name"); ?>
+        </td>
+        <td>
+            <input type="txt" id="full_name" value="<?php echo $fullName; ?>"></input>
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            <?php echo $this->__w("Email"); ?>
+        </td>
+        <td>
+            <input type="txt" id="email" value="<?php echo $email; ?>"></input>
+        </td>
+    </tr>
+    <? if (isset($user) && isset($user->emailAddressToInvoice) && $user->emailAddressToInvoice != "") { ?>
+        <tr>
+            <td class="col1">
+                <?php echo $this->__w("Invoice email"); ?>
+            </td>
+            <td>
+                <? echo $user->emailAddressToInvoice; ?>
+            </td>
+        </tr>
+    <? } ?>
+    <tr style="display:<?php echo $hidden; ?>">
+        <td class="col1">
+            <?php echo $this->__w("Password"); ?>
+        </td>
+        <td>
+            <input type="txt" id="password" value="<?php echo $password; ?>"></input>
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            <?php echo $this->__w("Address"); ?>
+        </td>
+        <td>
+            <input type="txt" id="street" value="<?php echo $street; ?>"></input>
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            <?php echo $this->__w("Postal code"); ?>
+        </td>
+        <td>
+            <input type="txt" id="postal_code" value="<?php echo $pcode; ?>"></input>
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            <?php echo trim($this->__w("City")); ?>
+        </td>
+        <td>
+            <input type="txt" id="city" value="<?php echo $city; ?>"></input>
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            <?php echo $this->__w("Birth Date"); ?>
+        </td>
+        <td>
+            <input type="txt" id="birthDay" value="<?php echo $birthday; ?>"></input>
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            <?php echo $this->__w("Cell phone"); ?>
+        </td>
+        <td>
+            <input type="txt" id="cellPhone" value="<?php echo $cellphone; ?>"></input>
+        </td>
+    </tr>
+    <? if (isset($company) && $company != null) { ?>
+        <tr>
+            <td class="col1">
+                <?php echo $this->__w("Organisation"); ?>
+            </td>
+            <td>
+                <div class="organisation">
+                    <table>
+                        <tr><td style="width: 73px"><? echo $this->__w("Name"); ?></td><td><? echo $company->name;?></td></tr>
+                        <tr><td><? echo $this->__w("Address"); ?></td><td><? echo $company->streetAddress;?></td></tr>
+                        <tr><td><? echo $this->__w("Post code"); ?></td><td><? echo $company->postnumber;?></td></tr>
+                        <tr><td><? echo $this->__w("City"); ?></td><td><? echo $company->city;?></td></tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    <? } else { ?>
+        <tr>
+            <td class="col1">
+                <?php echo $this->__w("Organisation name"); ?>
+            </td>
+            <td>
+                <input type="txt" id="companyName" value="<?php echo $companyName; ?>"></input>
+            </td>
+        </tr>
+    <? } ?>
+    <? 
+        $allGroups = $this->getApi()->getUserManager()->getAllGroups();
+        if (count($allGroups) > 0) {
+    ?>
+        <tr>
+            <td class="col1">
+                <?php echo $this->__w("Group"); ?>
+            </td>
+            <td>
+                <div class="organisation">
+                    <?
+                    if($user != null && $user->groups != null && count($user->groups) > 0) {                
+                        foreach ($user->groups as $groupId) {
+                            foreach($allGroups as $group) {
+                                if ($group->id == $groupId) {
+
+                                    echo '<div id="removegroup" style="cursor:pointer" userid="'.$user->id.'" groupid="'.$group->id.'">'.$group->groupName.' - Remove</div>';
+                                }
+                            }
+                        }    
+                    }
+                    if($user != null && count($allGroups) > 0) {
+                        foreach($allGroups as $group) {
+                            if ($user->groups == null) {
+                                echo '<div id="addgroup" style="cursor:pointer" userid="'.$user->id.'" groupid="'.$group->id.'">'.$group->groupName.' - Add</div>';
+                            } else {
+                                if (!in_array($group->id, $user->groups))
+                                    echo '<div id="addgroup" style="cursor:pointer" userid="'.$user->id.'" groupid="'.$group->id.'">'.$group->groupName.' - Add</div>';
+                                
+                            }
+                        }
+                    }
+                ?>
+                </div>
+            </td>
+        </tr>
+    <? } ?>
+</table>
+<hr>
+<table>
+    <?php
+    if ($this->isEditorMode()) {
+        ?>
+        <tr>
+            <td class="col1">
+               <b><? echo $this->__f("Admin functions"); ?></b>
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                <?php echo $this->__f("User level"); ?>
+            </td>
+            <td>
+                <select type="txt" id="userlevel">
+                    <option value="10" <? if ($userLevel == 10) echo "selected='selected'"; ?>><?php echo $this->__f("Customer"); ?></option>
+                    <option value="50" <? if ($userLevel == 50) echo "selected='selected'"; ?>><?php echo $this->__f("Editor"); ?></option>
+                    <option value="100" <? if ($userLevel == 100) echo "selected='selected'"; ?>><?php echo $this->__f("Administrator"); ?></option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="col1">
+                <?php echo $this->__f("Expiration date"); ?>
+            </td>
+            <td>
+                <input type="txt" id="expireDate" value="<?php echo $expire; ?>"></input>
+            </td>
+        </tr>
+        <?php
+    }
+    
+    ?>
+
+    <tr>
+        <? if($this->isEditorMode()) { ?>
+            <td class="col1"><span userid="<?php echo $userId; ?>" style="margin-right: 100px;" class="button deleteuser"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__f("Delete user"); ?></ins></span></td>
+        <? } else { ?>
+            <td></td>
+        <? } ?>
+        <td>
+            <span class="button"><div class="rightglare"></div><div class="filler"></div><ins class="register_user" id="register_user"><?php echo $textButton; ?></ins></span>
+        </td>
+    </tr>
+</table>
+        <script>
+            $(function() {
+                $('#expireDate').datepicker();
+            })
+        </script>

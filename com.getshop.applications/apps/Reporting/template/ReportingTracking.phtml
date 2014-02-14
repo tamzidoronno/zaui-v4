@@ -1,0 +1,84 @@
+<?
+namespace ns_04259325_abfa_4311_ab81_b89c60893ce1;
+
+$start = $this->getStartDate();
+$end = $this->getEndDate();
+
+$filter = $this->getApiObject()->core_reportingmanager_data_ReportFilter();
+$filter->includeOnlyPages = array();
+$filter->includeOnlyPages = $this->getPageFilter();
+/* @var $this Reporting */
+$results = $this->getApi()->getReportingManager()->getConnectedUsers($start, $end, $filter);
+$min_activity = $_POST['data']['min_activity'];
+
+if(!$results) {
+    echo $this->__f("No traffic where found for this time range.");
+    return;
+}
+
+?>
+<div id="reportingview">
+<div class="outer-chart">
+    <div class="title"><? echo  $this->__f("A single users browsing activity."); ?></div>
+</div>
+    <div class="reporting_inner">
+        
+    </div>
+</div>
+
+<div class="outer-chart">
+    <div class="title"><? echo sizeof($results) . " " . $this->__f("unique visitors found in total."); ?></div>
+</div>
+
+<?
+$curDate = "";
+foreach ($results as $result) {
+    $time = strtotime($result->connectedWhen);
+    $date = date("Y-m-d", $time);
+    if($curDate != $date) { 
+        if($curDate != "") {
+            echo "</table>";
+            echo "</div>";
+        }
+        $curDate = $date;
+    ?>
+        <div class="outer-chart">
+        <div class="title"><? echo $date; ?></div>
+        <table width='100%'>
+            <tr>
+                <th width='150'> <? echo $this->__f("Connected"); ?> </th>
+                <th align='left'> <? echo $this->__f("Username"); ?></th>
+                <th> <? echo $this->__f("First Page"); ?></th>
+                <th> <? echo $this->__f("Activity"); ?></th>
+                <th> <? echo $this->__f("Action"); ?></th>
+            </tr>
+    <?
+    }
+    
+    /* @var $result core_reportingmanager_data_UserConnected */
+    if (!$result->username) {
+        $result->username = $this->__f("Anonymous user");
+    }
+    if($result->activity < $min_activity) {
+        continue;
+    }
+    
+    echo "<tr>";
+    echo "<td width='150'>" . $result->connectedWhen . "</td>";
+    echo "<td>" . $result->username . "</td>";
+    echo "<td width='70' align='center'>".$result->firstPage . "</td>";
+    echo "<td width='70' align='center'>".$result->activity . "</td>";
+    echo "<td width='70' align='center'>";
+    ?>
+        <div gstype="form" method="displaySessionData"  output="informationbox">
+            <input type="hidden" gsname="startdate" value="<? echo $start; ?>">
+            <input type="hidden" gsname="stopdate" value="<? echo $end; ?>">
+            <span class="tracking"  start="<? echo $start; ?>" end="<? echo $end; ?>" gsname="sessionId" id="<? echo $result->sessionId; ?>"><? echo $this->__f("track"); ?></span>
+        </div>
+    <?
+    echo "</td>";
+    echo "</tr>";
+    }
+?>
+
+</div>

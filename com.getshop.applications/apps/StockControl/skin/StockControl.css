@@ -1,0 +1,15 @@
+
+.stockstatus { 
+    margin-top: 8px; 
+    margin-bottom: 8px; 
+}
+
+.stockstatus .entry { 
+    background-repeat: no-repeat; 
+    display: block; 
+    width: 15px;
+    height: 15px;
+}
+
+.stockstatus .entry.ok { background-image: url('{IMAGEFOLDER}/x-green-15px.png');  }
+.stockstatus .entry.out { background-image: url('{IMAGEFOLDER}/x-red-15px.png');  }

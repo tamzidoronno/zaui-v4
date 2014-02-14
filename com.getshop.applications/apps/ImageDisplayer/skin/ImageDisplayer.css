@@ -1,0 +1,18 @@
+.ImageDisplayer #uploadimgbutton { width: 40px; height: 40px; border: solid 1px; }
+.ImageDisplayer .uploadimagebox { background-color:#FFF; min-height: 200px; width: 600px; position:absolute;z-index:2;}
+.app_row_entry .ImageDisplayer .displayed_image { height: auto; }
+.ImageDisplayer .displayed_image { width: 100%; }
+.ImageDisplayer .applicationinner, .ImageDisplayer .displayimagecontainer, td .ImageDisplayer .displayimagecontainer img { height: auto; }
+.ImageDisplayer .editimage.auto { position:absolute; right: 55px; }
+.ImageDisplayer .warning { position:absolute; left: 5px; width: 40px; height: 40px; display:none; background-image:url('skin/default/images/warning.png'); background-size:  40px; }
+.ImageDisplayer .displayimagecontainer.stretched .warning { display: block; }
+.ImageDisplayer .displayimagecontainer.stretched .editimage { display: none; }
+.ImageDisplayer .help { position:absolute; bottom: 0px; background-color:rgba(255,255,255,0.85); left:0px; border-top: solid 1px #666; padding: 3px; }
+.ImageDisplayer .help .heading {font-weight:bold; }
+.ImageDisplayer .help .close {position:absolute; right: 0px; top: 0px; padding: 3px; border-left: solid 1px #666; border-bottom: solid 1px #666; cursor:pointer; }
+.ImageDisplayer .helpactive { display: block; }
+.ImageDisplayer .progressbar_outer {z-index:2; display: none; position:absolute; width: 100%; top: 0px; left: 0px; height: 36px; border: solid 1px #626b68; }
+.ImageDisplayer .progressbar_outer .uploading_text { height: 18px; border-bottom: solid 1px; background-color:rgba(255,255,255,0.8); text-align: center; position:absolute; width:100%; z-index: 1; }
+.ImageDisplayer .progressbar_outer .progressbar { background-color: rgba(32,131,93,1.0); position:absolute; height:100%; }
+.ImageDisplayer .pictureicon { font-size: 100px; }
+.ImageDisplayer .imagecontainer img { width: 100%; height: auto; }

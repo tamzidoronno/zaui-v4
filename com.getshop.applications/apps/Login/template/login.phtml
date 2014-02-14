@@ -1,0 +1,30 @@
+<?
+namespace ns_df435931_9364_4b6a_b4b2_951c90cc0d70;
+?>
+
+<div class="inner">
+    <form method="POST" action="" name="loginform" class="loginform">
+        <?php if ($this->errorMessage != "") { ?>
+            <div><?php echo $this->errorMessage; ?></div>
+        <?php } ?>
+        <?php if (!Login::getUserObject()) { ?>
+            <div class="entry"><?php echo $this->__w('Login'); ?></div>
+            <div class="form">
+                <div class="username"><?php echo $this->__w('Username / Email'); ?><br><input class="tstextfield" name="username" type="textfield"></input></div>
+                <div class="password"><?php echo $this->__w('Password'); ?><br><input class="tstextfield" name="password" type="password"></input></div>
+                <input type="hidden" name="loginbutton" value="true"/>
+                <input class="loginbutton" type="submit" value="<? echo $this->__f("login"); ?>"/>                
+                <span class="recoverpassword"><?php echo $this->__w('Recover password'); ?></span>
+            </div>
+        <?php } else { ?>
+            <span class="logged_on_menu">
+                <?php if (Login::getUserObject()->type == 100) { ?>
+                    <span class="my_account"><a href="?page=users"><?php echo $this->__("users"); ?></a></span>
+                <?php } ?>
+                <span class="my_account"><a href="?page=myaccount"><?php echo $this->__w("My Account"); ?></a></span>
+                <span class="orders"><a href="?page=orderoverview"><?php echo $this->__w("Orders"); ?></a></span>
+                <span id="getshop_logout"><a style="cursor:pointer;" href="/index.php"><?php echo $this->__w("Logout"); ?></a></span>
+            </span>
+        <?php } ?>
+    </form>
+</div>

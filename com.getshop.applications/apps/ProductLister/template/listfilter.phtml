@@ -1,0 +1,62 @@
+<?php
+
+$attributes = $this->getAttributeGroups();
+
+$printableAttributeList = array();
+foreach($attributes as $entry) {
+    $printableAttributeList[$entry->value->groupName][$entry->value->value] = $entry;
+}
+
+$filter = $this->getFilter();
+$i = 0;
+
+$foundAttributes = false;
+foreach ($attributes as $attr) {
+    $foundAttributes = true;
+    break;
+}
+$view = $this->getView();
+
+if ($foundAttributes && $view != "rowview") {
+    echo "<div class='selection_container'>";
+    $size = sizeof((array) $printableAttributeList);
+    if ($size > 5) {
+        $size = 5;
+    }
+
+    foreach ($printableAttributeList as $groupName => $entry) {
+        ?>
+        <div class="attributeselection size<? echo $size; ?>">
+            <div class="attributetitle">
+            <? echo $groupName; ?>
+            </div>
+            <?
+            foreach ($entry as $name => $attribute) {
+                if ($name == "_empty_") {
+                    continue;
+                }
+                $selected = "";
+                if (isset($filter[$attribute->value->id]) && $filter[$attribute->value->id] == $name) {
+                    $selected = "selected";
+                }
+
+                echo "<div id='".$attribute->value->id."' class='attributeselection_row $selected' count='".$attribute->totalCount."'>";
+                if($selected) {
+                    echo "<i class='fa fa-times-circle'></i> ";
+                }
+                echo $name;
+                echo "<span class='count'>$attribute->totalCount</span>";
+                echo "</div>";
+            }
+            ?>
+        </div>
+        <?
+        $i++;
+        if ($i == 5) {
+            break;
+        }
+    }
+    echo '<div class="attribute_selection_end"></div>';
+    echo "</div>";
+}
+?>

@@ -1,0 +1,37 @@
+<?
+
+ namespace ns_e72f97ad_aa1f_4e67_bcfd_e64607f05f93; ?>
+<?php
+/* @var $gallery Gallery */
+$gallery = $this;
+
+if ($this->isEditorMode()) {
+    ?>
+    <span class="add_new_image">
+        <?php echo $this->__f("Upload image"); ?>
+    </span>
+
+    <div style="clear:both;"></div>
+    <div style="text-align: center;" class="listedimages">
+        <?php
+    }
+
+    $count = 0;
+    foreach ($gallery->getAllImages() as $img) {
+        /* @var $data core_filemanager_data_Image */
+        /* @var $img app_gallery_data_ImageEntry */
+
+        $demo = "";
+        if (isset($img->demo)) {
+            $demo = "demo";
+        }
+        $data = "displayImage.php?id=" . $img->imageId . "&height=180&width=200";
+        echo "<div class='imagecontainer $demo' count='$count' id='" . $img->imageId . "' desc='" . urlencode($img->description) . "' title='" . urlencode($img->title) . "'>";
+        echo "<div class='inner_image'>";
+        echo "<img src='$data'>";
+        echo "</div>";
+        echo "</div>";
+        $count++;
+    }
+    ?>    
+</div>

@@ -1,0 +1,197 @@
+<?
+
+ namespace ns_27716a58_0749_4601_a1bc_051a43a16d14; ?> 
+<?php
+/* @var $order \core_ordermanager_data_Order */
+$order = $this->getCurrentOrder();
+$cart = $order->cart;
+$shippingCost = 0;
+
+if (isset($order->shipping) && isset($order->shipping->cost)) {
+    $shippingCost = $order->shipping->cost;
+
+    
+}
+$paymentfee = 0;
+if (isset($order->payment) && isset($order->payment->paymentFee)) {
+    $paymentfee = $order->payment->paymentFee;
+}
+
+/* @var $this OrderManager */
+/* @var $order core_ordermanager_data_Order */
+$address = $order->cart->address;
+$name = $address->fullName;
+
+$countrycodes = $this->getFactory()->getTerritoriesList();
+$country = $address->countrycode;
+if($country) {
+    $country = $countrycodes[$country];
+}
+
+$status = $order->status;
+$tracking = $order->trackingNumber;
+$statustext = $this->translateStatusText($status);
+
+$taxes = $this->getApi()->getOrderManager()->getTaxes($order);
+
+?>
+<input type='hidden' id='current_orderid' value='<? echo $order->id; ?>'>
+<div class="singleorder">
+    <div class="boxed customerinformation inline">
+        <b><?php echo $this->__w('Customer information'); ?></b>
+        <div class='entry name'><?php echo $name ?></div>   
+        <div class='entry address'><?php echo $address->address; ?></div>
+        <div class='entry postcode'><?php echo $address->postCode; ?></div>
+        <div class='entry city'><?php echo $address->city; ?></div>
+    </div>
+
+    <div class="boxed shipmentinfo inline">
+        <b><?php echo $this->__w('Shipment information'); ?></b>
+        <div class='entry name'>
+            <span class="shipmenttext"><? echo $this->__f("Order number"); ?></span><?php echo $order->incrementOrderId; ?>
+        </div>   
+        <div class='entry name'>
+            <span class="shipmenttext"><? echo $this->__f("Name"); ?></span><?php echo $name ?>
+        </div>   
+        <div class='entry address'>
+            <span class="shipmenttext"><? echo $this->__f("Address"); ?></span> <?php echo $address->address; ?>
+        </div>
+        <div class='entry postcode'>
+            <span class="shipmenttext"><? echo $this->__f("Postal code"); ?></span> <?php echo $address->postCode; ?>
+        </div>
+        <div class='entry city'>
+            <span class="shipmenttext"><? echo $this->__f("City"); ?></span> <?php echo $address->city; ?>
+        </div>
+        <div class='entry phone'>
+            <span class="shipmenttext"><? echo $this->__f("Phone"); ?></span> <?php echo $address->phone; ?>
+        </div>
+        
+        <? if($tracking) { ?> 
+            <div class='entry phone'>
+                <span class="shipmenttext"><? echo $this->__f("Tracking number"); ?></span> <?php echo $tracking; ?>
+            </div>
+        <? } ?>
+        <? if($country) { ?> 
+            <div class='entry phone'>
+                <span class="shipmenttext"><? echo $this->__f("Country"); ?></span> <?php echo $country; ?>
+            </div>
+        <? } ?>
+        <div class='entry'>
+            <span class="shipmenttext"><? echo $this->__f("Current status"); ?></span>
+                <? if ($this->isEditorMode()) { ?>
+                <select id='orderstatus_selection'>
+                    <?
+                    for ($i = 1; $i <= 6; $i++) {
+                        $selected = "";
+                        if ($i == $status) {
+                            $selected = "SELECTED";
+                        }
+                        echo "<option value='$i' $selected>" . $this->translateStatusText($i) . "</option>";
+                    }
+                    ?>
+                </select>
+            <? } else { ?>
+    <?php echo $statustext; ?>
+<? } ?>
+        </div>
+    </div> 
+    <br><br>
+    <?
+    if (isset($order->payment->paymentType) && $order->payment->paymentType) {
+        ?>
+        <div class="boxed inline">
+            <b><?php echo $this->__w('Payment information'); ?></b>
+            <div class='entry'>
+                <span class="shipmenttext"><? echo $this->__f("Payment application"); ?></span> <?php echo substr($order->payment->paymentType, 40) ?>
+            </div>
+    <? if (isset($order->paymentTransactionId)) { ?>
+                <div class='entry'>
+                    <span class="shipmenttext"><? echo $this->__f("Transaction id"); ?></span> <?php echo $order->paymentTransactionId; ?>
+                </div>
+        <? } ?>
+        </div>
+        <?
+    }
+    ?>
+
+    <div class="products">
+        <b><?php echo $this->__w('Order'); ?></b>
+        <?php
+        $i = 0;
+        foreach ($cart->items as $item) {
+            $i++;
+            $product = $item->product;
+            $variationstext = \HelperCart::getVartionsText($item);
+            $addClass = ($i % 2 == 0) ? "odd" : "even";
+            ?>
+            <div class="product <? echo $addClass ; ?>">
+                <div class="inline col1"><?php echo $item->count; ?></div>
+                <div class="inline col2">x</div>
+                <div class="inline col3"><?php echo $product->name; ?></div>
+                <div class="inline col4"><?php echo $price = $this->getPriceWithTaxSpecifed($product->price, $product); ?></div>
+                <? if ($variationstext != "") { ?>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;<? echo $variationstext; ?></div>
+                <? } ?>
+            </div>
+<?php } ?>
+        <? if (false) { ?>
+            <div class="product">
+                <div class="inline col1"></div>
+                <div class="inline col2"></div>
+                <div style="text-align: right" class="inline col3"><?php echo $this->__w('Taxes') ?> </div>
+                <div class="inline col4"><?php echo "0"; ?></div>
+            </div>
+        <? } ?>
+        <div class="product">
+            <div class="inline col1"></div>
+            <div class="inline col2"></div>
+            <div class="inline col3 right"><?php echo $this->__w('Shipping') ?> </div>
+            <div class="inline col4"><?php echo $shippingCost; ?></div>
+        </div>
+        <div class="product">
+            <div class="inline col1"></div>
+            <div class="inline col2"></div>
+            <div class="inline col3 right"><?php echo $this->__w('Payment fee') ?> </div>
+            <div class="inline col4"><?php echo $paymentfee; ?></div>
+        </div>
+        <? if (isset($order->cart->couponCost) && $order->cart->couponCost > 0) { ?>
+            <div class="product">
+                <div class="inline col1"></div>
+                <div class="inline col2"></div>
+                <div class="inline col3 right"><?php echo $this->__w('Coupon discount') ?> </div>
+                <div class="inline col4"><?php echo $order->cart->couponCost; ?></div>
+            </div>
+        <? } ?>
+        <? if ($taxes) { ?>
+                <?
+                $first = true;
+                foreach ($taxes as $tax) { ?>
+                    <div class="product">
+                        <div class="inline col1"></div>
+                        <div class="inline col2"></div>
+                        <div class="inline col3 right"><? echo $this->__w("Taxes")." (".$tax->taxGroup->taxRate."%)"; ?></div>
+                        <?
+                        if ($first) {
+                            $first = false;
+                                echo '<div style="border-top: dashed 1px #CCC;" class="inline col4">';
+                            } else {
+                                echo '<div  class="inline col4">';
+                            }
+                            echo $this->getFactory()->getCurrencyName().sprintf('%0.2f',$tax->sum); ?>
+                        </div>
+                    </div>
+                <? } ?>
+        <? } ?>
+        <div class="product">
+            <div class="inline col1"></div>
+            <div class="inline col2"></div>
+            <div class="inline col3 right"><? echo $this->__w("Total"); if ($taxes) { echo " (".$this->__w("included taxes").")"; } ?></div>
+            <div style="border-top: dashed 1px #CCC;" class="inline col4">
+                <?php
+                $price = $this->getApi()->getOrderManager()->getTotalAmount($order);
+                echo $price;
+                ?>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,77 @@
+/* color:Red:#e10707 */
+.header .TopMenu .applicationinner span a.selected { color: #e10707; }
+.button .filler, .button-large .filler { background-color: #e10707; }
+.header,.breadcrumb .breadcrumb-inner,.header .TopMenu .applicationinner span a.selected,.header .Login .applicationinner,.header .Login,.LeftMenu .menu_0 { background-color: #e10707; }
+.header .Login { border: solid 1px #680101;padding: 2px; }
+body { background-color:#e10707; }
+.header .TopMenu .applicationinner span a.selected,
+    .breadcrumb .accounting a,
+    .breadcrumb-inner .navigation .breadcrumbentry a,
+    .breadcrumb .breadcrumb-inner,
+    .header .applicationinner .logged_on_menu a,
+    .LeftMenu .menuName,
+    #apparea-footer,
+    .header .TopMenu .applicationinner #add_new_top,
+    .header .TopMenu .applicationinner span a { color:#FFF; }
+.TopMenu { background-color:#e10707; border: solid 1px #980101;}
+.TopMenu ul li { border-left: solid 1px #980101; border-right: solid 1px #980101; }
+
+/* color:Green:#a0ce4e */
+.header .TopMenu .applicationinner span a.selected { color: #a0ce4e; }
+.button .filler, .button-large .filler { background-color: #a0ce4e; }
+.header,.breadcrumb .breadcrumb-inner,.header .TopMenu .applicationinner span a.selected,.header .Login .applicationinner,.header .Login,.LeftMenu .menu_0 { background-color: #a0ce4e; }
+.header .Login { border: solid 1px #a0ce4e;padding: 2px; }
+body { background-color:#a0ce4e; }
+.header .TopMenu .applicationinner span a.selected,
+    .breadcrumb .accounting a,
+    .breadcrumb-inner .navigation .breadcrumbentry a,
+    .breadcrumb .breadcrumb-inner,
+    #apparea-footer,
+    .header .applicationinner .logged_on_menu a,
+    .LeftMenu .menuName,
+    .header .TopMenu .applicationinner #add_new_top,
+    .header .TopMenu .applicationinner span a { color:#000; }
+.TopMenu { background-color:#a0ce4e; border: solid 1px #536b28;}
+.TopMenu ul li { border-left: solid 1px #536b28; border-right: solid 1px #536b28; }
+
+/* color:Blue:#1a80b6 */
+
+/* color:Gray:#DDDDDD */
+.header .TopMenu .applicationinner span a.selected { color: #DDDDDD; }
+.button .filler, .button-large .filler { background-color: #DDDDDD; }
+.header,.breadcrumb .breadcrumb-inner,.header .TopMenu .applicationinner span a.selected,.header .Login .applicationinner,.header .Login,.LeftMenu .menu_0 { background-color: #DDDDDD; }
+.header .Login { border: solid 1px #FFFFFF;padding: 2px; }
+body { background-color:#DDDDDD; }
+.header .TopMenu .applicationinner span a.selected,
+    .breadcrumb .accounting a,
+    #apparea-footer,
+    .breadcrumb-inner .navigation .breadcrumbentry a,
+    .breadcrumb .breadcrumb-inner,
+    .header .applicationinner .logged_on_menu a,
+    .LeftMenu .menuName,
+    .header .TopMenu .applicationinner #add_new_top,
+    .header .TopMenu .applicationinner span a { color:#000; }
+
+.TopMenu { background-color:#EFEFEF; border: solid 1px #737373;}
+.TopMenu ul li { border-left: solid 1px #737373; border-right: solid 1px #737373; }
+
+
+/* color:Orange:#e9a825 */
+.header .TopMenu .applicationinner span a.selected { color: #e9a825; }
+.button .filler, .button-large .filler { background-color: #e9a825; }
+.header,.breadcrumb .breadcrumb-inner,.header .TopMenu .applicationinner span a.selected,.header .Login .applicationinner,.header .Login,.LeftMenu .menu_0 { background-color: #e9a825; }
+.header .Login { border: solid 1px #e9a825;padding: 2px; }
+body { background-color:#e9a825; }
+.header .TopMenu .applicationinner span a.selected,
+    .breadcrumb .accounting a,
+    .breadcrumb-inner .navigation .breadcrumbentry a,
+    .breadcrumb .breadcrumb-inner,
+    .header .applicationinner .logged_on_menu a,
+    #apparea-footer,
+    .LeftMenu .menuName,
+    .header .TopMenu .applicationinner #add_new_top,
+    .header .TopMenu .applicationinner span a { color:#000; }
+.TopMenu { background-color:#e9a825; border: solid 1px #795713;}
+.TopMenu ul li { border-left: solid 1px #795713; border-right: solid 1px #795713; }
+
+/* nobg */

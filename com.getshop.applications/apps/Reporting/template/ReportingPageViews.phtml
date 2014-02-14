@@ -1,0 +1,72 @@
+<?
+namespace ns_04259325_abfa_4311_ab81_b89c60893ce1;
+
+/* @var $this Reporting */
+$start = $this->getStartDate();
+$end = $this->getEndDate();
+$type = $this->getType();
+
+$results = $this->getApi()->getReportingManager()->getPageViews($start, $end);
+if(!$results) {
+    echo $this->__f("No page views where found for this time range.");
+    return;
+}
+echo "<div class='outer-chart'>";
+echo "<div class='title'>" . $this->__f("Page view summary") . "</div>";
+
+$pageCount = array();
+$names = array();
+$total = sizeof($results);
+
+foreach($results as $result) {
+    /* @var $result core_reportingmanager_data_PageView */
+    if(!isset($pageCount[$result->pageId])) {
+        $pageCount[$result->pageId]=1;
+        $names[$result->pageId] = $result->pageName;
+    } else {
+        $pageCount[$result->pageId]++;
+    }
+}
+
+arsort($pageCount);
+
+echo "<table width='100%'>";
+echo "<tr>";
+echo "<th width='100'>" . $this->__f("Total views") . "</th>";
+echo "<th align='left'>" . $this->__f("Page id") . "</th>";
+echo "<th align='left'>" . $this->__f("Page name") . "</th>";
+echo "<th align='center'>" . $this->__f("Overall") . "</th>";
+echo "</tr>";
+
+foreach($pageCount as $pageId => $result) {
+    echo "<tr>";
+    echo "<td align='center'>" . $result . "</td>";
+    echo "<td width='400'>" . $pageId . "</td>";
+    echo "<td>" . $names[$pageId] . "</td>";
+    
+    $precentage = round(($result / $total)*100);
+    echo "<td align='center'>" . $precentage . " %</td>";
+    
+    echo "</tr>";
+}
+echo "</table>";
+echo "</div>";
+
+echo "<div class='outer-chart'>";
+echo "<div class='title'>" . $this->__f("All page views listed") . "</div>";
+echo "<table width='100%'>";
+echo "<tr>";
+echo "<th align='left'>" .$this->__f("Page id")."</th>";
+echo "<th align='left'>" .$this->__f("Page name") . "</th>";
+echo "<th align='right'>" .$this->__f("Accessed when") . "</th>";
+foreach($results as $result) {
+    /* @var $result core_reportingmanager_data_PageView */
+    echo "<tr>";
+    echo "<td> " . $result->pageId . "</td>";
+    echo "<td> " . $result->pageName . "</td>";
+    echo "<td align='right'> " . $result->viewedWhen . "</td>";
+    echo "</tr>";
+}
+echo "</table>";
+echo "</div>";
+?>

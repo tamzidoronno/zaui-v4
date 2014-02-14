@@ -1,0 +1,29 @@
+<? namespace ns_ee1f3649_cfd8_41d5_aa5b_682216f376b6; ?>
+<div class="translation_header">
+    <? echo $this->__f("To translate all visible text for your users, translate the entries below, and hit the save translation button."); ?>
+    <span class="button save_button">
+        <div class="rightglare"></div>
+        <div class="filler"></div>
+        <ins><? echo $this->__f("Save translation"); ?></ins>
+    </span>
+</div>
+<div style="height: 30px;"></div>
+
+<div class="all_translation_rows">
+    <?php
+    $matrix = $this->getFactory()->getWebShopTranslation();
+    foreach($matrix as $key => $value) {
+        if(stristr($key, "#####")) {
+            continue;
+        }
+        ?>
+        <div class="translation_row">
+            <span class="translation_key">
+                <? echo $key; ?>
+            </span>
+            <input key="<? echo base64_encode($key); ?>" class="translation_field" value="<? echo $value; ?>">
+        </div>
+        <?
+    }
+    ?>
+</div>

@@ -1,0 +1,19 @@
+.ContentManager .content_manager {
+    height: 100px;
+}
+.ContentManager .content_manager_bottom {
+    text-align: right;
+    margin-top: 10px;
+    padding-top: 10px;
+    height: 30px;
+    padding-right: 5px;
+}
+
+.ContentManager .edit_content_button {
+}
+.ContentManager p {
+    margin:0px;
+    padding:0px;
+}
+
+.ContentManager .downloadpdf { z-index: 2; color:#FFF; position:absolute; right: 10px; bottom: 10px; font-size: 20px; border: solid 1px #BBB; background-color:#000; padding: 2px; cursor:pointer; }

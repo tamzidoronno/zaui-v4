@@ -1,0 +1,22 @@
+<? namespace ns_fb076580_c7df_471c_b6b7_9540e4212441; 
+$partnerid = $this->getUser()->partnerid;
+$address = "clients.getshop.com";
+if($partnerid != "GetShop") {
+    $address = "clients.".$partnerid;
+}
+?>
+<div class="headline"><?php echo $this->__f("Transfer existing domain"); ?></div>
+
+<div class="information"><?php echo $this->__f("It is extremly easy to transfer your domain name. All you have to to do is enter the domain name in the address under."); ?></div>
+<div class="content_box">
+    <div>1. <?php echo $this->__("enter_domain"); ?></div>
+        <input type="txt" class='transfer_domain_name'>
+    <div>
+        2. <?php echo $this->__f("Point your domain name to the following ip address:") . " " . $address;?> 
+    </div>
+    <div>
+        3. <?php echo $this->__f("Save your settings"); ?>
+    </div>
+    <br>
+    <span class="button"><div class="rightglare"></div><div class="filler"></div><ins class="save_transfer"><?php echo $this->__f("Save settings"); ?></ins></span>
+</div>

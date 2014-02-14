@@ -1,0 +1,79 @@
+<?
+
+ namespace ns_27716a58_0749_4601_a1bc_051a43a16d14; ?> 
+<div class="overview">
+    <?
+    if (count($this->getOrders()) == 0) {
+        echo "<center><b>" . $this->__w("You do not have any orders.") . "</b></center>";
+        return;
+    }
+    ?>
+    <table id="orderoverviewtable" width='100%'>
+        <thead>
+            <tr>
+                <th><? echo $this->__w('Order date'); ?></th>
+                <th><? echo $this->__w('Full name'); ?></th>
+                <th><? echo $this->__w('Product count'); ?></th>
+                <th><? echo $this->__w('Price'); ?></th>
+                <th><? echo $this->__w('Status'); ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            foreach ($this->getOrders() as $order) {
+                /* @var $order core_ordermanager_data_Order */
+                $name = @$order->cart->address->fullName;
+                $productCount = @count($order->cart->items);
+                $orderdate = $order->createdDate;
+                $totalPrice = $this->getApi()->getCartManager()->calculateTotalCost($order->cart);
+                $totalPrice += $order->shipping != null ? $order->shipping->cost : 0;
+                
+                $status = $order->status;
+                $statustext = $this->translateStatusText($status);
+
+                $id = $order->id;
+                ?>
+                <tr id='<? echo $id; ?>'>
+                    <td><? echo $orderdate; ?></td>
+                    <td><? echo $name; ?></td>
+                    <td align='center'><? echo $productCount; ?></td>
+                    <td align='center'><? echo $totalPrice; ?></td>
+                    <td align='center'><? echo $statustext; ?></td>
+                </tr>
+                <?php
+            }
+            ?>
+        </tbody>
+    </table>
+    <script>
+        $('#orderoverviewtable').dataTable({
+            "bJQueryUI": true
+        });
+
+        $("#orderoverviewtable").delegate("tr", "click", function(event) {
+            var id = $(this).attr('id');
+            if(id) {
+                navigate("?page=orderoverview&action=showorder&orderid=" + id);
+            }
+        });
+    </script>
+</div>
+</div>
+
+<center>
+    <?
+    $pageCount = $this->getPageCount();
+    $currentPage = $this->getCurrentPage();
+    $start = $currentPage - 5;
+
+    if ($start < 1)
+        $start = 1;
+
+    $stop = $pageCount >= 10 ? $start + 10 : $pageCount;
+
+    for ($i = $start; $i < $stop; $i++) {
+        $text = ($i == $currentPage) ? "<b>$i</b>" : $i;
+        echo "<a href='?page=orderoverview&showPage=$i'>$text</a> ";
+    }
+    ?>
+</center>

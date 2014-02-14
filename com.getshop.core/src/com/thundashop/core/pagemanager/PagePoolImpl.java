@@ -20,6 +20,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -81,7 +82,6 @@ public class PagePoolImpl {
     }
 
     public Page get(String id) throws ErrorException {
-        long start = System.currentTimeMillis();
         setDefaultPages();
         Page page = pages.get(id);
         if (page == null) {
@@ -294,7 +294,8 @@ public class PagePoolImpl {
         addInheritatedApplications(page, page.parent);
         addStickedApplications(page);
         boolean onlyExtraApplications = shouldOnlyContainExtraApplications(page);
-        page.populateApplications(applicationPool.getApplications(), onlyExtraApplications);
+        Map<String, AppConfiguration> applications = applicationPool.getApplications(page.getApplicationIds());
+        page.populateApplications(applications, onlyExtraApplications);
         page.sortApplications();
         page.finalizePageLayoutRows();
         if(page.needSaving) {

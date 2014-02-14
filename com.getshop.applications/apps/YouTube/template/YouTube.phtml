@@ -1,0 +1,27 @@
+<?php
+
+namespace ns_8e239f3d_2244_471e_a64d_3241b167b7d2;
+
+/* @var $this \ns_8e239f3d_2244_471e_a64d_3241b167b7d2\YouTube */
+$id = $this->getYoutubeName();
+$height = $this->getHeight();
+if ($id) {
+    
+    ?>
+    <iframe id="youtube_<? echo $id; ?>" width="100%" src="//www.youtube.com/embed/<? echo $id; ?>/?vq=hd720&wmode=opaque" frameborder="0" allowfullscreen></iframe>
+    <script>
+        app.YouTube.setHeight('<? echo $id; ?>');
+        PubSub.subscribe('POSTED_DATA_WITHOUT_PRINT', function() {
+            app.YouTube.setHeight('<? echo $id; ?>');
+        });
+    </script>
+    <?
+} else if ($this->isEditorMode()) {
+    echo "<center>";
+    echo "<br><table><tr><td valign='top'><div class='youtubeicon fa fa-youtube'></div></td><td  valign='top'>";
+    echo "<div class='search_help'>" . $this->__f("Search youtube") . "</div>";
+    echo "<input type='text' value='' class='inputfield' placeholder='Ylvis - The fox' id='searchyoutubeinput'>";
+    echo "<br><input type='button' value='" . $this->__f("Search") . "' id='searchyoutube'></td></tr></table>";
+    echo "</center>";
+}
+?>

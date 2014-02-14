@@ -1,0 +1,41 @@
+<? namespace ns_ba885f72_f571_4a2e_8770_e91cbb16b4ad; ?>
+<div class="information">
+    <?
+    echo $this->getDescription();
+    ?>
+</div>
+
+<div class="textfield setting"  id="facebookappid">
+    <span class="title"><?php echo $this->__("appid"); ?></span>
+    <input type="textfield" class="config" id="selenium_appid">
+    <div class="description">
+        <?php echo $this->__("appid_required"); ?>
+    </div>
+</div>
+
+<div class="textfield setting"  id="facebookprofile">
+    <span class="title"><?php echo $this->__("profile_url"); ?></span>
+    <input type="textfield" class="config" id="selenium_profile_url">
+    <div class="description">
+        <?php echo $this->__("profile_url_desc"); ?>
+    </div>
+</div>
+
+<div class="setting onoff" id="likebutton">
+    <span class="title"><?php echo $this->__("like_button"); ?></span>
+    <div class="onoff config" id="selenium_likebutton"></div>
+    <div class="description">
+        <?php echo $this->__("like_button_desc"); ?>
+    </div>
+</div>
+
+<!--<div class="setting onoff" id="comments">
+    <div class="onoff config"></div>
+    <span class="title">Comments</span>
+    <div class="description">
+        All comments get a comment field to share comments on your products to their friends.
+    </div>
+</div>-->
+
+
+<div class="button savebutton needreload"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__("Save settings"); ?></ins></div>

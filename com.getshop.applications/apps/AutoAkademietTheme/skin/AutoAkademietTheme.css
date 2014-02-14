@@ -1,0 +1,442 @@
+html {
+    background: url('{IMAGEFOLDER}/bkg_1.gif') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    zoom:1;
+    
+    background-color: #0a080a;
+    
+    //filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/showApplicationImages.php?appNamespace=ns_b9cc5940_edef_11e2_91e2_0800200c9a66&image=skin/images/bkg_1.gif', sizingMethod='scale');
+
+}
+
+.skelholder {
+    color: #FFF;
+}
+
+.footer {
+    width:100%;
+    bottom: 0px;
+    
+    height: 160px;
+}
+
+.TopMenu {
+    border-top: 1px solid #3d3c3f;
+    border-left: 2px solid #3d3c3f;
+    border-bottom: 2px solid #000;
+    border-right: 2px solid #000;
+    background-color: #161616;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+    height: 40px;
+}
+
+.TopMenu a {
+    font-family: Bitter, serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: #a7a7a7;
+    line-height: 40px;
+}
+
+.TopMenu li {
+    padding-left: 20px;
+    padding-right: 20px;
+    height: 25px;
+    
+} 
+
+.TopMenu li:last-child {
+    border-right: 0px;
+}
+
+.Login {
+    
+}
+
+.header {
+    margin-bottom: 20px;
+}
+.header .Login {
+    border-color: #CCC;
+    border-top: solid 1px #DDD;
+}
+.header .Login .form {
+    background-color: inherit;
+    border: solid 0px;
+}
+
+.header .Login .applicationinner {
+    background-color: #333;
+}
+
+.breadcrumb {
+    display: none;
+}
+
+.Banner {
+    height: 398px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.LeftMenu .menu_0 .menuName {
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 13px;
+}
+
+.fronttable {
+    border: dashed 1px;
+}
+
+.Booking .groupselection {
+    font-size: 15px;
+    text-align: center;
+}
+
+.Booking .selectbox:hover {
+    background-color: #DDD;
+}
+
+.Booking .selected,
+.Booking .selectbox {
+    cursor: pointer;
+    font-size: 15px;
+    line-height: 60px;
+    height: 60px;
+    padding-left: 70px;
+    text-align: center;
+    margin-bottom: 10px;
+    border: solid 1px #DDD;
+    padding: 5px;
+}
+
+.Booking .selected img,
+.Booking .selectbox img {
+    height: 60px;
+}
+
+.Booking .selected .changeit:hover {
+    background-color: #DDD;
+}
+
+.Booking .selected .changeit {
+    position: absolute;
+    right: 0px;
+    top: 5px;
+    width: 80px;
+}
+
+.Booking .selected {
+    width: 500px;
+    position: relative;
+    border: solid 0px;
+    border-bottom: dashed 1px #DDD;
+}
+
+.Account .change_passord {
+    width: 352px;
+}
+
+.frontleft  {
+    border-right: dashed 1px #CCC;
+    border-bottom: dashed 1px #CCC;
+}
+
+.frontrighttop {
+    border-bottom: dashed 1px #CCC;
+}
+
+.frontrightbottom {
+    border-left: dashed 1px #CCC;
+}
+
+.LeftMenu .menu_1 { border-bottom: solid 0px; background-color: inherit;}
+
+.LeftMenu .menu_2 .menuName {padding-left: inherit; }
+.LeftMenu .menu_3 .menuEntry,
+.LeftMenu .menu_2 .menuEntry,
+.LeftMenu .menu_1 .menuEntry { height: inherit; padding: 5px; background-color: #222; }
+
+
+.LeftMenu .menu_0 { margin-top: 20px; padding-left: 6px; padding-right: 4px; background-color: #333;  }
+.LeftMenu .menu_1 { height: inherit; padding-left: 12px;}
+.LeftMenu .menu_2 { height: inherit; padding-left: 30px;}
+.LeftMenu .menu_3 { height: inherit; padding-left: 45px;}
+
+
+.LeftMenu .active {  font-weight: normal;}
+.LeftMenu a.active .menuName{ color: green !important; }
+
+
+.top_submenu_split { display: none; }
+
+.LeftMenu .menu_1 .menuEntry { border-bottom: solid 1px #333; }
+
+/*.LeftMenu .menu_2 { margin-left: 50px;}*/
+
+.LeftMenu .menuEntry { border-bottom: solid 0px #DDD;}
+
+.LeftMenu .topleveldepth_0.menu_0,
+.LeftMenu .topleveldepth_0 .menuEntry,
+.LeftMenu .topleveldepth_0 .menuName { color: green;  }
+.LeftMenu .menuName { color: #FFF !important;  }
+
+.LeftMenu .topleveldepth_1.menu_0,
+.LeftMenu .topleveldepth_1 .menuEntry,
+.LeftMenu .topleveldepth_1 .menuName { color: red;   }
+
+.LeftMenu .topleveldepth_2.menu_0,
+.LeftMenu .topleveldepth_2 .menuEntry,
+.LeftMenu .topleveldepth_2 .menuName {  color: blue; }
+
+.LeftMenu .topleveldepth_3.menu_0,
+.LeftMenu .topleveldepth_3 .menuEntry,
+.LeftMenu .topleveldepth_3 .menuName { color: #660066;   }
+
+
+.LeftMenu .topleveldepth_4.menu_0,
+.LeftMenu .topleveldepth_4 .menuEntry,
+.LeftMenu .topleveldepth_4 .menuName { color: #CC0033;  }
+
+
+.LeftMenu .topleveldepth_5.menu_0,
+.LeftMenu .topleveldepth_5 .menuEntry,
+.LeftMenu .topleveldepth_5 .menuName { color: indigo; }
+
+.LeftMenu .topleveldepth_6.menu_0,
+.LeftMenu .topleveldepth_6 .menuEntry,
+.LeftMenu .topleveldepth_6 .menuName { color: brown; }
+
+
+.Contact .group img { width : 150px; }
+.Contact .group { border: dashed 2px #DDD; margin: 10px; height: 70px; padding: 10px; vertical-align: middle; cursor: pointer; }
+.Contact .group:hover { background-color: #DDD; }
+.Contact .group.selected { border: solid 2px; background-color: #DDD; }
+
+.gs_inner { width: 1100px; margin: auto; }
+.gs_outer.header {height: 146px;}
+
+.skeleton2 .gs_col.c2.gs_margin_left .applicationarea {
+    margin-left: 20px;
+}
+
+.skeleton18 .gs_margin_right { padding-bottom: 15px; }
+.skeleton18 .gs_margin_left { padding-left: 15px; padding-bottom: 15px; }
+
+.accessdenied {
+    position: absolute; 
+    top: -145px;
+    padding: 5px;
+    font-size: 16px;
+    width: 390px;
+    border: solid 1px;
+    text-align: center;
+    margin-left: 30px;
+    margin-bottom: 20px;
+}
+
+.gs_row.r1 .Login .recoverpassword,
+.gs_row.r1 .Login div.entry {
+    display: none;
+}
+.gs_row.r1 .Login {
+    position: absolute;
+    width: 340px;
+    padding-left: 60px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 15px;
+    margin-left: 30px;
+    top: -109px;
+    border-left: solid 1px;
+    border-right: solid 1px;
+    border-bottom: solid 1px;
+}
+
+.skeleton2 .LeftMenu { width: 220px; }
+
+.gs_row.r1 {
+    margin-bottom: 20px;
+}
+
+.gs_row.r2 {
+    margin-bottom: 14px;
+}
+.gs_margin_left {
+    padding-left: 7px;
+} 
+.gs_margin_right {
+    padding-right: 7px;
+}
+
+.gs_outer.footer {
+    margin-top: 20px;
+    background-color: rgba(16,16,16,0.7);
+    border-top: solid 1px #000;
+    height: 218px;
+}
+
+.gs_col .applicationarea {
+    min-height: 218px;
+    color: #FFF;
+    padding: 10px;
+    background-color: #161616;
+    border-top: 1px solid #3d3c3f;
+    border-left: 2px solid #3d3c3f;
+    border-bottom: 2px solid #000;
+    border-right: 2px solid #000;
+    overflow: hidden;
+}
+
+.Calendar td.calendar-day, 
+.Calendar td.calendar-day-np {
+    background-color: #666;
+    background: linear-gradient(to bottom, #666, #333);
+}
+
+.Calendar td.calendar-day-np {
+    background-color: #333;
+    background: #333;
+}
+
+.Calendar td.calendar-day-head {
+    background-color: #333;
+}
+
+.Calendar .dayevents {
+    padding: 20px;
+    border: solid 1px #333;
+    margin-top: 20px;
+}
+
+.Calendar .dayevents,
+.Calendar .dayevents h2  {
+    background-color: #222;
+}
+
+.Calendar .dayevents h2 {
+    margin-top: 10px;
+}
+
+.Calendar .dayevents .noentry {
+    background-color: #333;
+}
+
+.Calendar .calendercontent .content .outerdiv div {
+    background-color: rgba(255,255,255,0.9);
+    box-shadow: 0px 0px 3px #FFF;
+    text-align: center;
+    margin-top: 3px;
+    color: #000;
+}
+
+.Calendar .filters .filter.selected {
+    background-color: green;
+    background-image: linear-gradient(bottom, rgb(33,33,33) 48%, rgb(44,44,44) 74%);
+    background-image: -o-linear-gradient(bottom, rgb(47,223,87) 48%, rgb(76,255,114) 74%);
+    background-image: -moz-linear-gradient(bottom, rgb(47,223,87) 48%, rgb(76,255,114) 74%);
+    background-image: -webkit-linear-gradient(bottom, rgb(47,223,87) 48%, rgb(76,255,114) 74%);
+    background-image: -ms-linear-gradient(bottom, rgb(47,223,87) 48%, rgb(76,255,114) 74%);
+
+    background-image: -webkit-gradient(
+            linear,
+            left bottom,
+            left top,
+            color-stop(0.10, rgb(150,150,150)),
+            color-stop(0.90, rgb(200,200,200))
+    );   
+    
+    color: #000;
+}
+
+.skeleton23 .gs_row.r2 .applicationarea,
+.skeleton23 .gs_row.r3 .applicationarea {
+    background-repeat: no-repeat;
+    background-position: right top;
+    background-image: url('{IMAGEFOLDER}/puff_about.png');
+}
+
+.dayentry {
+    background-color: inherit;
+}
+
+.dayentry .reports a {
+    color: #FFF;
+}
+
+.loginform a {
+    color: #FFF;
+}
+
+.dayrow td a {
+    color: #FFF !important;
+}
+
+.dayrow:hover td a {
+    color: #000 !important; 
+}
+
+.dayrow {
+    background-color: #222;
+}
+
+.dayevents .description {
+    margin-bottom: 20px;
+}
+
+.Users a .user {
+    color: #FFF;
+}
+
+.Settings #settingsarea {
+    color: #000;
+}
+
+.Settings .leftmenu .entry .inner,
+.button-large ins,
+.button ins {
+    color: #FFF;
+}
+
+.Calendar .dayentry {
+    background-color: #161616;
+    border-top: 1px solid #3d3c3f;
+    border-left: 2px solid #3d3c3f;
+    border-bottom: 2px solid #000;
+    border-right: 2px solid #000;
+    width: 400px;
+    display: inline-block;
+    vertical-align: top;
+    min-height: 140px;
+    position: relative;
+}
+
+.button-large .filler,
+.button .filler {
+    background-color: #000;
+}
+
+.mainarea .gs_row.r1 .Login {
+    position: initial;
+    top: initial;
+    left: initial;
+    right: initial;
+    border: solid 0px;
+        
+}
+
+.News .outeraddnewscontainer .title,
+.News .content_area {
+    border-color: #444;
+}
+
+.News .readmore {
+    color: #FFF;
+}

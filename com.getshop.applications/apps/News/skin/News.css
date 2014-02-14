@@ -1,0 +1,85 @@
+.News .outeraddnewscontainer .title {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: solid 1px;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+.News .outeraddnewscontainer {
+    position: relative;
+    padding-bottom: 55px;
+}
+
+.News .outeraddnewscontainer input {
+    border: solid 1px;
+    border-radius: 4px;
+    padding: 5px;
+    margin-left: 10px;
+}
+
+
+.News {
+    font-size: 14px;
+}
+
+
+.News .content_area {
+    padding: 10px;
+    margin-top: 10px;
+    border: solid 1px #DDD;
+}
+
+.News .news_container .news_entry_footer {
+    text-align: right;
+    font-size: 10px;
+}
+.News .news_container .content {
+    padding-left: 10px;
+}
+.News .news_container {
+    margin-top: 5px;
+    padding: 10px;
+    position: relative;
+}
+
+.News .gs_button {
+    position: absolute;
+    right: 0px;
+    bottom: 10px;
+}
+
+.News .news_entry_header {
+    font-weight: bold;
+}
+.News .news_container {
+    border-bottom: solid 1px;
+    border-color: #222;
+}
+.News .news_container.last {
+    border-bottom: solid 0px;
+}
+
+.News .readmore {
+    position: absolute;
+    right: 0px;
+    height: 30px;
+    line-height: 30px;
+    border-bottom: dashed 1px;
+    top: 0px;
+    border-left: dashed 1px;
+    padding-left: 10px;
+    border-color: #222;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.News .news_container .gs_button {
+    top: 5px;
+    bottom: inherit;
+    right: 120px;
+}
+
+.News .gs_button.publish {
+    right: 180px;
+}

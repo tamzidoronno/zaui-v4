@@ -1,0 +1,42 @@
+<?php
+namespace ns_1051b4cf_6e9f_475d_aa12_fc83a89d2fd4;
+?>
+<input type="hidden" id="userid" value="<?php echo $_POST['data']['id']; ?>">
+<div class="information">
+    <div>
+        <?php echo $this->__("This option enables the posibility to restrict access to you menu entries to a given group of users."); ?>
+    </div>
+    <div>
+        <?php echo $this->__("You can choose between three types of user levels."); ?>
+    </div>
+</div>
+
+<div class="section">
+    <span class="button"><div class="rightglare"></div><div class="filler"></div><ins class='restriction' level="100"><?php echo $this->__("Restrict to administrators"); ?></ins></span>    
+    <div>
+        <b><?php echo $this->__("Administrators only"); ?></b>
+    </div>
+    <div>
+        <?php echo $this->__("Only logged on administrators will be able to see this menu entry."); ?>
+    </div>
+</div>
+
+<div class="section">
+    <span class="button"><div class="rightglare"></div><div class="filler"></div><ins class='restriction' level="50"><?php echo $this->__("Restrict to administrators and editors"); ?></ins></span>    
+    <div>
+        <b><?php echo $this->__("Editors and adminstrators only"); ?></b>
+    </div>
+    <div>
+        <?php echo $this->__("Only logged on administrators or editors will be able to see this menu entry."); ?>
+    </div>
+</div>
+
+<div class="section">
+    <span class="button"><div class="rightglare"></div><div class="filler"></div><ins class='restriction' level="0"><?php echo $this->__("Open for everyone"); ?></ins></span>    
+    <div>
+        <b><?php echo $this->__("Everyone"); ?></b>
+    </div>
+    <div>
+        <?php echo $this->__("Everyone will be able to access and see this menu entry."); ?>
+    </div>
+</div>

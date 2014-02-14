@@ -1,0 +1,148 @@
+
+/* everything is constructed with a single background image */
+
+/* root element for tabs */
+.SedoxCarList #flowtabs {
+
+    /* dimensions */
+    width:392px;
+    height:31px !important;
+    margin:0 !important;
+    padding:0;
+    /* IE6 specific branch (prefixed with "_") */
+    _margin-bottom:-2px;
+    cursor:pointer;
+}
+
+.SedoxCarList .result {
+    display:none;
+}
+
+.SedoxCarList .name_box {
+    position:absolute;
+    right: 30px; 
+    text-align:right; 
+    font-weight: bold; 
+}
+.SedoxCarList .name_box div {
+    color:#FFFFFF;
+    font-size:18px;
+}
+.SedoxCarList .name_box .name_type {
+    display:none;
+}
+
+
+/* single tab */
+.SedoxCarList #flowtabs li {
+    float:left;
+    margin:0;
+    padding:0;
+    text-indent:0;
+    list-style-type:none;
+}
+
+/* a- tag inside single tab */
+.SedoxCarList #flowtabs li span {
+    background: url({IMAGEFOLDER}/tabshome_inactive.png) no-repeat;
+    display:block;
+    height: 32px;
+    width: 98px;
+    padding:0px;
+    margin:0px;
+
+    /* font decoration */
+    color:#000;
+    font-size:12px;
+    line-height:33px;
+    text-align:center;
+    text-decoration:none;
+}
+
+.SedoxCarList #flowtabs { background-color:#{BASECOLOR}; }
+
+/* adjust the background image position on each tab */
+.SedoxCarList #flowtabs #t1 			{ background: url('{IMAGEFOLDER}/tabshome_inactive.png') no-repeat; }
+.SedoxCarList #flowtabs #t2 			{ background: url('{IMAGEFOLDER}/tabshome_inactive.png') -98px 0 no-repeat; }
+.SedoxCarList #flowtabs #t3 			{ background: url('{IMAGEFOLDER}/tabshome_inactive.png') -196px 0 no-repeat; }
+.SedoxCarList #flowtabs #t4 			{ background: url('{IMAGEFOLDER}/tabshome_inactive.png') -294px 0 no-repeat;}
+
+/* mouseover state */
+.SedoxCarList #flowtabs span:hover 		{ color:#fff;	 }
+.SedoxCarList #flowtabs #t1:hover 	{ background: url('{IMAGEFOLDER}/tabshome_hover.png') 0 0 no-repeat; }
+.SedoxCarList #flowtabs #t2:hover 	{ background: url('{IMAGEFOLDER}/tabshome_hover.png') -98px 0 no-repeat; }
+.SedoxCarList #flowtabs #t3:hover 	{ background: url('{IMAGEFOLDER}/tabshome_hover.png') -196px 0 no-repeat; }
+.SedoxCarList #flowtabs #t4:hover 	{ background: url('{IMAGEFOLDER}/tabshome_hover.png') -294px 0 no-repeat; }
+
+/* currently selected tabs */
+.SedoxCarList #flowtabs span.current		{ cursor:default; color:#fff; line-height:34px; text-indent:-3500px }
+.SedoxCarList #flowtabs #t1.current { background: url('{IMAGEFOLDER}/tabshome_active.png') 0 0 no-repeat; }
+.SedoxCarList #flowtabs #t2.current { background: url('{IMAGEFOLDER}/tabshome_active.png') -98px 0 no-repeat; }
+.SedoxCarList #flowtabs #t3.current { background: url('{IMAGEFOLDER}/tabshome_active.png') -196px 0 no-repeat; }
+.SedoxCarList #flowtabs #t4.current { background: url('{IMAGEFOLDER}/tabshome_active.png') -294px 0 no-repeat; }
+
+
+/* panes */
+.SedoxCarList #flowpanes  {
+    background-color: #{BASECOLOR};
+    background-image: url('{IMAGEFOLDER}/background_pane.png');
+    position: relative;
+    height: 145px;
+}
+
+
+/* single pane */
+.SedoxCarList #flowpanes  div.tab {
+    display:none;
+    color:#fff;
+    margin: 0 15px 15px 15px;
+}
+
+.SedoxCarList #flowpanes  div.dropdowns{
+    position:absolute;
+    margin-top:-px;
+}
+
+.SedoxCarList #flowpanes  div.dropdowns select{
+    margin-right:0px;
+    border:none;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    height:22px;
+    line-height:26px;
+    width:230px;
+    text-indent:0px;
+    font-size:12px;
+    color:#333;
+}
+
+.SedoxCarList #flowpanes  div p{
+    font-size:9px;
+    color:#fff;
+    padding-top:6px;
+    text-transform: uppercase;
+}
+
+/* some decorations for elements inside single pane */
+.SedoxCarList #flowpanes  div h4 {
+
+}
+
+
+
+.SedoxCarList #flowpanes  span {
+    color:#cc9;
+    font-size:14px;
+}
+
+.SedoxCarList #flowpanes  p, .SedoxCarList #flowpanes  samp {
+    color:#ccc;
+}
+
+.SedoxCarList #flowpanes  .narrow {
+    padding-right:160px;
+}

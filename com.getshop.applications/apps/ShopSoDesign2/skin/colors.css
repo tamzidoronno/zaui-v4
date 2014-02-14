@@ -1,0 +1,36 @@
+/* nobg */
+
+/* color:Blue:#6558e7 */
+.TopMenu { background-color: #6558e7; }
+.ProductList  .product .price, .ProductList .boxview .product .title,.ProductList .listview .product .title, .ProductManager .applicationinner .priceinner  { color : #6558e7; }
+.ProductList .rowview .product, .ProductList .boxview .product, .LeftMenu,.ProductList .listview .image,.ProductList .listview .product { border-color : #6558e7; }
+
+/* color:Red:#ff6c65 */
+.TopMenu { background-color: #fd5249; }
+.ProductList .product .price, .ProductList .boxview .product .title,.ProductList .listview .product .title, .ProductManager .applicationinner .priceinner  { color : #fd5249; }
+.ProductList .rowview .product, .ProductList .boxview .product, .LeftMenu,.ProductList .listview .image,.ProductList .listview .product { border-color : #fd5249; }
+
+/* color:Green:#659f3b */
+
+/* color:Dark:#525252 */
+.TopMenu { background-color: #525252; }
+.ProductList .product .price, .ProductList .boxview .product .title,.ProductList .listview .product .title, .ProductManager .applicationinner .priceinner  { color : #525252; }
+.ProductList .rowview .product, .ProductList .boxview .product, .LeftMenu,.ProductList .listview .image,.ProductList .listview .product { border-color : #525252; }
+
+/* color:Pink:#fb65e8 */
+.TopMenu { background-color: #fb65e8; }
+.ProductList .product .price, .ProductList .boxview .product .title,.ProductList .listview .product .title, .ProductManager .applicationinner .priceinner  { color : #fb65e8; }
+.ProductList .rowview .product, .ProductList .boxview .product, .LeftMenu,.ProductList .listview .image,.ProductList .listview .product { border-color : #fb65e8; }
+
+/* colorpicker;.header .TopMenu .applicationinner span a;color;Menu text*/ 
+/* colorpicker;.TopMenu;background-color;Menu color*/ 
+/* colorpicker;.TopMenu a:hover;color;Menu hover*/ 
+/* colorpicker;.header .TopMenu .applicationinner span a.selected, .header .TopMenu .applicationinner span a.selected;color;Menu selected*/ 
+/* colorpicker;#apparea-footer;color;Footer text*/ 
+/* colorpicker;.button .filler, .button-large .filler;background-color;Button background*/
+/* colorpicker;.button ins, .button-large ins;color;Button text*/
+/* colorpicker;.ProductList .rowview .product, .ProductList .boxview .product, .LeftMenu,.ProductList .listview .image,.ProductList .listview .product ;border-color;Borders*/
+/* colorpicker;.ProductList .product .price, .ProductList .boxview .product .title, .ProductManager .applicationinner .priceinner,.ProductList .listview .product .title;color;Text color*/
+/* colorpicker;.LeftMenu .menuName;color;Left menu text color*/
+/* colorpicker;.LeftMenu .active .menuName;color;Left menu active*/
+

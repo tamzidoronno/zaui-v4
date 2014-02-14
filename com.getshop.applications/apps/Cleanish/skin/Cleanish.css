@@ -1,0 +1,104 @@
+
+.header .Logo {
+    position:absolute;
+    top: 56px;
+    z-index:11;
+    left: 17px;
+}
+.header .Logo .upload_logo { margin-top: 15px; }
+
+.header .Login { z-index: 402; border: solid 1px #BBBBBB; }
+.header .Login .applicationinner { background-color: #FFFFFF; }
+.TopMenu a.selected { color:#00FF00; }
+
+.skeleton3 .right { border-left: solid 1px; }
+.skeleton3 .middle { margin-left: 12px; }
+
+.skeleton4 .mainarea .middle { width: 998px; padding-top: 0px; }
+.skeleton5 .mainarea { background-image: none }
+
+
+.header_semi { margin: 0 auto;  width: 998px;}
+.breadcrumb_semi { margin: 0 auto; width: 998px;}
+.semi_footer { margin: 0 auto;  width: 998px;}
+
+.breadcrumb { padding-top: 10px; padding-bottom: 5px; }
+
+.header { width: 998px;  }
+.left { margin-left: 10px; background-image: url('{IMAGEFOLDER}/leftcol.png');  padding-top: 10px; }
+.LeftMenu .menu_0 { background-image: url('{IMAGEFOLDER}/leftbg.png'); }
+.left .ContentManager { margin-left: 8px; margin-right: 8px;  }
+
+#apparea-footer { background-image: url('{IMAGEFOLDER}/glarebottom.png');height: 177px; padding-right: 8px; padding-left: 8px; width: 982px; overflow: hidden; }
+.LeftMenu .menuName { padding: 10px; }
+.middle { background-color:#FFFFFF; }
+.right { border-left: solid 1px; margin-left: 5px; padding-left: 5px; }
+.ProductList .product { border-bottom: solid 1px #BBBBBB; margin-bottom: 10px; }
+
+.breadcrumb .breadcrumb-inner { width: 998px; height: 30px;  }
+.breadcrumb .accounting { top: 0px; margin-right: 8px; padding-left: 40px; padding-top: 5px; background-image: url('{IMAGEFOLDER}/shopping_cart.png'); background-repeat: no-repeat;}
+.left .applicationinner { border-left: 0px !important }
+
+
+.Login .applicationinner {  margin-right:15px;}
+.Login span a { font-size: 14px; }
+#apparea-left .LeftMenu .menu_0 .menuEntry { background-image: url('{IMAGEFOLDER}/cat-front-icon.png'); background-repeat: no-repeat; background-position: 7px 16px; padding-left: 25px; width: 184px; height: 42px; line-height:42px;  }
+
+.skeleton4 .ContentManager {
+    margin: 5px;
+}
+
+.colors .color {
+    width: 50px;
+    height: 50px;
+    margin: 10px;
+}
+
+.colors .color.red { background-color: red; }
+.colors .color.yellow { background-color: yellow; }
+.colors .color.green { background-color: green; }
+.colors .color.blue { background-color: blue; }
+.colors .color.orange { background-color: orange; }
+.Logo {
+    position:absolute;
+    top: 0px;
+    left: 7px;
+}
+
+body { font-family: "PT Sans",Arial,Helvetica,sans-serif !important; }
+.header .TopMenu { background-image:url('{IMAGEFOLDER}/menubg.png'); padding-left: 250px; margin-top: 50px; border-radius:4px;   height: 50px; bottom: 0px; width: 748px; position:absolute; top:0px;}
+.header .TopMenu .applicationinner span a { height: 50px; line-height: 50px; padding-left: 10px; padding-right: 10px; font-size:14px; }
+.header .TopMenu .applicationinner span a.selected { font-weight: bold; }
+.header .TopMenu .applicationinner #add_new_top { border-right: 0px; color:#000000;}
+.header .TopMenu ul { font-weight: normal; font-size:14px;  }
+.header .TopMenu .edit { border-right: 0px; }
+.header .Login { position:absolute; z-index: 1000;background-color:#FFFFFF; }
+
+#apparea-footer { background-color: #FFFFFF;  height: 177px; padding-right: 8px; padding-left: 8px; width: 982px; overflow: hidden; }
+.semi_footer { margin: 0 auto;  width: 998px;}
+
+
+.Banner { margin-bottom: 60px; }
+.ProductList .latestproducttext { margin-left: 20px; }
+.ProductList .boxview .product { border: solid 1px #BBBBBB; float:left; border-radius: 5px; }
+.ProductManager .attributecontainer, .ProductManager .description { padding: 10px; }
+.ProductManager .attributeentry { border-bottom: dashed 1px #CCC; padding-top: 4px; }
+
+.CategoryList {text-align: center; }
+.CategoryList .category_list .category_list_inner { background-color:#FFFFFF; border: solid 1px #BBBBBB; }
+.Gallery { text-align: center; }
+.OrderManager .overview { width: 800px; }
+
+.Contact { padding: 30px; }
+.header .TopMenu { background-color: #FFF; }
+
+.ProductList { padding: 10px; }
+
+.gs_inner { width: 998px; margin:auto;}
+.applicationarea { min-height: 150px; border-radius: 3px; }
+.gs_row .gs_inner { box-shadow: 0 1px 3px #000000; background-color:#FFF; padding: 10px; width:978px; margin-bottom: 10px; border-radius:3px;}
+
+.gs_margin_left { padding-left: 10px; }
+.gs_margin_right { padding-right: 10px; }
+.gs_margin_bottom { margin-bottom: 10px; }
+.footer { margin-top: 20px; }

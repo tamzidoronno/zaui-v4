@@ -1,0 +1,29 @@
+<? namespace ns_ba6f5e74_87c7_4825_9606_f2d3c93d292f; ?>
+<div class="overview inline">
+<?php
+/* @var $this Users */
+$users = $this->getAllUsers();
+
+?>
+<?php
+foreach($users as $usr) {
+    /* @var $usr core_usermanager_data_User */
+    echo "<a href='?page=users&user_id=".$usr->id."'>";
+    echo "<div class='row'>";
+    echo "<span class='name'>Name: " . $usr->fullName . "</span>";
+    echo "<span class='email'>Email  : " . $usr->emailAddress ."</span>";
+    if ($usr->lastLoggedIn)
+        echo "<div style='color: red; font: bold' class='lastLoggedIn'>Last logged in: " . $usr->lastLoggedIn ."</div>";
+    if($usr->expireDate)
+        echo "<div style='color: red; font: bold' class='expireDate'>Expires at: " . $usr->expireDate ."</div>";
+    echo "</div>";
+    echo "</a>";
+}
+?>
+</div>
+<a href="?page=users&subpage=newuser">
+    <span class="systembutton">
+        <div class="rightglare"></div><div class="filler"></div>
+        <ins><?php echo $this->__f("Create a new user"); ?></ins>
+    </span>
+</a>

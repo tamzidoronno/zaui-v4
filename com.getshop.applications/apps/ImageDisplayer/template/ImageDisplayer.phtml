@@ -1,0 +1,53 @@
+<?php
+
+namespace ns_831647b5_6a63_4c46_a3a3_1b4a7c36710a;
+
+/*  @var $this \ns_831647b5_6a63_4c46_a3a3_1b4a7c36710a/ImageDisplayer */
+
+$id = $this->getConfigurationSetting("image");
+$cords = $this->getConfigurationSetting("image_cords");
+$original = $this->getConfigurationSetting("original_image");
+$height = $this->getConfigurationSetting("image_height");
+$texts = $this->getTexts();
+$rotation = $this->getConfigurationSetting("rotation") != null ? $this->getConfigurationSetting("rotation") : 0;
+$crop = "";
+$appId = $this->getConfiguration()->id;
+
+if($this->getConfigurationSetting("new_type") == "1") {
+    $id = $original;
+    $compress = $this->getConfigurationSetting("compression");
+    $cordSplitted = explode(":", $cords);
+    $crop = "&crop=true&x=".$cordSplitted[0]/$compress."&x2=".$cordSplitted[1]/$compress."&y=".$cordSplitted[2]/$compress."&y2=".$cordSplitted[3]/$compress."&rotation=".$rotation;
+}
+
+?>
+<div class='displayimagecontainer'>
+    <span class='imagecontainer' >
+        <? if ($id) { ?>
+            <img src="/displayImage.php?id=<? echo $id . $crop; ?>"/>
+        <? } ?>
+    </span>
+</div>
+<? if (!$id) { ?>
+    <script>
+        var appId = '<? echo $this->getConfiguration()->id; ?>';
+        var currentApp = $('.app[appid='+appId+']');
+        var editor = getshop.ImageEditorApi.get(appId);
+       
+        if (editor) {
+            currentApp.find('.imagedisplayer_upload_form_menu').hide();
+            var imageContainer = currentApp.find('.displayimagecontainer');
+            imageContainer.show();
+
+            var holder = imageContainer.find('.imagecontainer')
+            var image = imageDisplayer.getImage();
+            holder.html(image);
+        }
+    </script>
+<? } else { ?>
+    <script>
+        var appId = '<? echo $this->getConfiguration()->id; ?>';
+        app.ImageDisplayer.showText(appId, <? echo $texts; ?>);
+    </script>
+<? } ?>
+

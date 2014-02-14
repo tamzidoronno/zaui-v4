@@ -1,0 +1,13 @@
+<div class="sisowoptions"> 
+    <div class="selectbank">
+        <?
+            $banks = $this->getIdealBanks();
+            foreach ($banks as $bank) {
+                $issueid = $bank->issuerid;
+                $name = $bank->issuername;
+                echo "<div value='$issueid' name='issuer' class='entry'>$name</div>";
+            }
+        ?>        
+    </div>
+</div>
+

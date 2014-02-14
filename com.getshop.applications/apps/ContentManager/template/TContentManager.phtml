@@ -1,0 +1,18 @@
+<?php
+
+namespace ns_320ada5b_a53a_46d2_99b2_9b0b26a7105a;
+
+/* @var $this ContentManager */
+$id = $this->getConfiguration()->id;
+$uid = uniqid();
+
+$class = "";
+if($this->hasPDF() == 1) {
+    echo "<a href='generatePDF.php?type=contentmanager&id=$id'>";
+    echo '<i class="fa fa-download downloadpdf"></i>';
+    echo "</a>";
+}
+echo "<div class='content $class' style='min-height: 40px;' id='appManager_$uid' haspdf='".$this->hasPDF()."'>";
+echo $this->getContent();
+echo "</div>";
+?>

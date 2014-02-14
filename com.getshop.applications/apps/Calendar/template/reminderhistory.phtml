@@ -1,0 +1,26 @@
+<? 
+$histories = $this->getHistory();
+
+if (count($histories)) { ?>
+    <div> History </div>
+    <?
+    foreach ($histories as $hist) {
+        echo "<div class='reminderhistoryrow'>";
+        $emailOrSms = ($hist->byEmail) ? "email" : "sms";
+        $names = [];
+
+        foreach ($hist->users as $user) {
+            $extra = $hist->byEmail ? $user->emailAddress : $user->cellPhone;
+            $names[] = $user->fullName . " - " . $extra;
+        }
+        echo $hist->rowCreatedDate . " - Sent <b>$emailOrSms</b>";
+        foreach ($names as $name) {
+            echo "<br>&nbsp;&nbsp;&nbsp; - " . $name;
+        }
+
+        echo "<br><b>Subject</b>: " . $hist->subject;
+        echo "<br><b>Text</b><br><div style='margin-left: 20px;'> " . $hist->text . "</div>";
+        echo "</div>";
+    }
+    ?>
+<? } ?>

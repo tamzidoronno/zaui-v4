@@ -1,0 +1,74 @@
+<?php
+namespace ns_00d8f5ce_ed17_4098_8925_5697f6159f66;
+
+/**
+ * Remember: this template is used by topmenu, leftmenu and footer.
+ */
+$id = $this->getCurrentMenuEntry()->id;
+$caller = get_class($this);
+$name = $this->getCurrentMenuEntry()->name;
+
+if(stristr($caller, "TopMenu")) {
+    $caller = "TopMenu";
+}
+if(stristr($caller, "CategoryLister")) {
+    $caller = "CategoryLister";
+}
+
+?>
+
+<span class="menu">
+    <div class="editmenuentry" gstype="clicksubmit" method="renameEntry" gsname="id" gsvalue="<?php echo $id; ?>">
+        <?php echo $this->__f("Rename"); ?>
+    </div>
+    <?php if ($caller != "TopMenu" && $caller != "CategoryLister") { ?>
+        <div class="editmenuentry" gstype="clicksubmit" method="addSubEntry" gsname="id" gsvalue="<?php echo $id; ?>">
+            <?php echo $this->__f("Add sub entry"); ?>
+        </div>
+    <?php } ?>
+    <div class="editmenuentry" gstype="clicksubmit" method="deleteEntry" gsname="id" gsvalue="<?php echo $id; ?>">
+        <?php echo $this->__f("Delete"); ?>
+    </div>
+    
+    <?php if ($caller == "TopMenu") { ?>
+    <div class="editmenuentry" gstype="clicksubmit" method="setAsHomePage" gsname="id" gsvalue="<?php echo $this->getCurrentMenuEntry()->pageId; ?>">
+        <?php echo $this->__f("Set as homepage"); ?>
+    </div>
+    <? } ?>
+    <? if($caller != "CategoryLister") { ?>
+    <div class="editmenuentry" onclick="getshop.MenuEditor.open()">
+        <?php echo $this->__f("Open menu editor"); ?>
+    </div>
+    
+    <? } ?>
+    
+    <? if ($caller == "LeftMenu" && $this->getFactory()->getStylesheet()->getLeftMenuSkinSettings()->canUploadIcons) { ?>
+        <div class="editmenuentry" gstype="" method="uploadIcon">
+            <?
+            $text = $this->__f("Set icon");
+            $height = $this->getFactory()->getStylesheet()->getLeftMenuSkinSettings()->ICON_WIDTH;
+            $width  = $this->getFactory()->getStylesheet()->getLeftMenuSkinSettings()->ICON_HEIGHT;
+            $this->createUploadImageForm('uploadIcon', $id, $text, 'category_list', 'menu_icon', $width, $height);
+            ?>
+        </div>
+        <div class="editmenuentry" gstype="clicksubmit" method="removeIcon" gsname="id" gsvalue="<?php echo $id; ?>">
+            <? echo $this->__f("Remove icon"); ?>
+        </div>
+    <? } ?>
+    <?php if ($caller == "CategoryLister") { ?>
+        <div class="editmenuentry" gstype="clicksubmit" method="displayLinkToMenu" gsname="id" gsvalue="<?php echo $id; ?>" output="informationbox">
+            <?php echo $this->__f("Link to menu"); ?>
+        </div>
+        <div class="editmenuentry" gstype="clicksubmit" method="removeImage" gsname="id" gsvalue="<?php echo $id; ?>">
+            <?php echo $this->__f("Remove image"); ?>
+        </div>
+        <div class="editmenuentry" gstype="" method="displayHardLinkConfig" gsname="id" gsvalue="<?php echo $id; ?>" output="informationbox">
+            <?php
+            $text = $this->__f("Change image");
+            $width = $this->getFactory()->getStylesheet()->CATEGORY_IMAGE_WIDTH;
+            $height = $this->getFactory()->getStylesheet()->CATEGORY_IMAGE_HEIGHT;
+            $this->createUploadImageForm('uploadCategoryImage', $id, $text, 'category_list', 'product_image_inner', $width, $height);
+            ?>
+        </div>
+    <?php } ?>
+</span>

@@ -1,0 +1,82 @@
+<?php
+namespace ns_900e5f6b_4113_46ad_82df_8dafe7872c99;
+
+$shipmentApps = $this->getShipmentApplications();
+
+?>
+<div class="delivery">
+    <div class='shoppingcartheader'><?php echo $this->__f("Please select a shipment method."); ?></div>
+    <div class='checkoutinner'>
+        <center>
+            <?php
+            $selected =  (isset($_SESSION['shippingtype'])) ? "" : "selected";
+            
+            foreach ($shipmentApps as $shipmentApp) {
+                if (isset($_SESSION['shippingtype']) && $shipmentApp->getConfiguration()->id == $_SESSION['shippingtype']) {
+                    $selected = "selected";
+                }
+                $shipmentApp->cart = $this->cart;
+                $appName = $shipmentApp->configuration->id;
+                $name = $shipmentApp->getName();
+                $logo = \ApplicationHelper::getApplicationImage($shipmentApp);
+                $price = $this->getFactory()->getCurrencyName() . $shipmentApp->getShippingCost();
+
+                echo "
+                        <div id='$appName' class='inline method $selected' type='" . $shipmentApp->getDefaultShipmentType() . "'>
+                            <div class='logo'><img src='$logo'/></div>
+                            <div class='title'>$name</div>
+                        </div>";
+                $selected = "";
+            }
+            ?>
+        </center>
+        <br>
+        <?php
+        $selectedMethod = (isset($_SESSION['shippingtype'])) ? "" : "selectedMethod";
+        foreach ($shipmentApps as $shipmentApp) {
+            if (isset($_SESSION['shippingtype']) && $shipmentApp->getConfiguration()->id == $_SESSION['shippingtype']) {
+                $selectedMethod = "selectedMethod";
+            }
+            $appName = $shipmentApp->configuration->id;
+            echo "<div class='checked_additional $selectedMethod' method='" . $appName . "'>";
+            if (method_exists($shipmentApp, "additionalInformation")) {
+                $products = $shipmentApp->additionalInformation();
+                if (count($products) > 0) {
+                    echo "<table cellspacing='0' width='100%' style='font-size: 13px'>";
+                    echo "<th></th><th></th><th align='right'><b>".$this->__('price', 'productmanager')."</b></th>";
+                    $selected = isset($_SESSION['shippingproduct']) ? "" : "selected";
+                    foreach ($products as $product) {
+                        /* @var $product ShipmentProduct */
+                        $title = $product->displayTitle;
+                        $price = $product->price;
+                        $productName = $product->productName;
+                        
+                        $selected = $shipmentApp->getDefaultShipmentType() == $productName ? "checked='checked'" : "";
+                        if (isset($_SESSION['shippingproduct']) && $_SESSION['shippingproduct'] == $productName) {
+                            $selected = "checked='checked'";
+                        }
+                        echo "<tr productname='$productName' class='shipmentproductrow'><td width='20'><input name='additionalShipmentProduct' $selected style='width:20px;' type='radio'/></td><td>$title</td><td width='100' align='right'>$price</td></tr>";
+                        $selected = "";
+                    }
+                    echo "</table>";
+                }
+
+            } else {
+                echo "Not found";
+            }
+            echo "</div>";
+            $selectedMethod = "";
+        }
+        ?>
+    </div>
+    
+    <div style='position:relative; height: 45px; '>
+        <div class="prevouter"><div id="previouse" class="button-large previouse"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__w("Previous"); ?></ins></div></div>
+        
+        <?php if ($this->canGoToPayment(true)) { ?>
+            <div id='confirmorder' class="button-large"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__w("Place order"); ?></ins></div>
+        <?php } else { ?>
+            <div id="next" class="button-large"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__w("Next"); ?></ins></div>
+        <?php } ?>
+    </div>
+</div>

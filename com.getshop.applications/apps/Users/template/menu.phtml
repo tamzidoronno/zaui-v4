@@ -1,0 +1,28 @@
+<?php
+namespace baofnepmqpcpmqknroiofkdlcrldkrkf;
+
+/* @var $this Users */
+$activeemail = "";
+$active = "";
+
+if(isset($_GET['subpage']) && $_GET['subpage'] == "email") {
+    $activeemail = "active";
+} else {
+    $active = "active";
+}
+?>
+
+<div class="commonleftmenu inline">
+    <?php $class = (!isset($_GET['user_id'])) ? "active" : ""; ?>
+    <a href="?page=users">
+        <div class="entry <?php echo $class; ?>"><?php echo $this->__f("All users"); ?></div>    
+    </a>
+    
+    <?php if (isset($_GET['user_id'])) { ?>
+        <a href="?page=users&user_id=<?php echo $_GET['user_id'];?>">
+            <div class="entry <?php echo $active; ?>">
+                <?php echo $this->__f("Edit user"); ?>
+            </div>
+        </a>
+        <? } ?>
+</div>

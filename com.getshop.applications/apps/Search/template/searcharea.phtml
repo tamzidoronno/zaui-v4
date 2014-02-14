@@ -1,0 +1,19 @@
+<?php
+
+namespace ns_626ff5c4_60d4_4faf_ac2e_d0f21ffa9e87;
+
+/* @var $this Search */
+$settings = $this->getFactory()->getSettings();
+if (isset($settings->hide_search) && $settings->hide_search->value != "true") {
+    ?>
+    <span class="searchinputfield">
+        <input type="txt" class="gray searchfield" placeholder="<?php echo $this->__w("Search for a product", 'productmanager'); ?>">
+    </span>
+
+    <div class="searchview">
+        This is the search view!
+    </div>
+
+    <?php
+}
+?>

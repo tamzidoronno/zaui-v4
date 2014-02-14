@@ -1,0 +1,59 @@
+<?
+namespace ns_04259325_abfa_4311_ab81_b89c60893ce1;
+
+$start = $this->getStartDate();
+$end = $this->getEndDate();
+
+/* @var $this Reporting */
+$results = $this->getApi()->getReportingManager()->getUserLoggedOn($start, $end);
+
+if(!$results) {
+    echo $this->__f("No users where found for this time range.");
+    return;
+}
+
+$summary = array();
+foreach($results as $result) {
+    if(!isset($summary[$result->email])) {
+        $summary[$result->email] = 1;
+    } else {
+        $summary[$result->email]++;
+    }
+}
+
+arsort($summary);
+echo "<div class='outer-chart'>";
+echo "<div class='title'>Summary</div>";
+echo "<table width='100%'>";
+echo "<tr>";
+echo "<th align='left'>". $this->__f("Email / username") . "</th>";
+echo "<th width='60'>". $this->__f("Count") . "</th>";
+echo "</tr>";
+
+foreach($summary as $key => $result) {
+    echo "<tr>";
+    echo "<td>" . $key . "</td>";
+    echo "<td align='center'>" . $result . "</td>";
+    echo "</tr>";
+}
+echo "</table>";
+echo "</div>";
+
+echo "<div class='outer-chart'>";
+echo "<div class='title'>History</div>";
+echo "<table width='100%'>";
+echo "<tr>";
+echo "<th align='left'>" . $this->__f("Email / username") . "</th>";
+echo "<th>" . $this->__f("when") . "</th>";
+echo "</tr>";
+foreach($results as $result) {
+    /* @var $result core_reportingmanager_data_LoggedOnUser */
+    echo "<tr>";
+    echo "<td>" . $result->email . "</td>";
+    echo "<td width='200' align='center'>" . $result->loggedOnWhen . "</td>";
+    echo "</tr>";
+}
+echo "</table>";
+echo "</div>";
+?>
+

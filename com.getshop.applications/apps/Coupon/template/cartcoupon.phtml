@@ -1,0 +1,13 @@
+<div appid="<? echo $this->getConfiguration()->id; ?>" class="app Coupon">
+    <div class='coupon'>
+        <div class='title'><? echo $this->__w("Coupon"); ?></div>
+        <?
+        echo $this->__w("Got a coupon from use? Apply it and get discount.");
+        ?>
+        <div class='right'>
+            <input type='textfield' placeholder='<? echo $this->__w("Coupon"); ?>'/>
+            <br> 
+            <div id="applycoupon" class="button-large"><div class="rightglare"></div><div class="filler"></div><ins> <? echo $this->__w("Apply coupon"); ?></ins></div>
+        </div>
+    </div>
+</div>

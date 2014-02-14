@@ -1,0 +1,46 @@
+/* color:Red:#e10707 */
+.header .TopMenu .applicationinner span a.selected{ color: #e10707; border-bottom: solid 1px #e10707; }
+.button .filler, .button-large .filler { background-color: #e10707; }
+#apparea-footer,.LeftMenu .menu_0 { background-color: #e10707; }
+.ProductList .price { color: #e10707; }
+
+/* color:Green:#0a6f00 */
+.header .TopMenu .applicationinner span a.selected { color: #0a6f00; border-bottom: solid 1px #0a6f00;  }
+.button .filler, .button-large .filler { background-color: #0a6f00; }
+#apparea-footer,.LeftMenu .menu_0 { background-color: #0a6f00; }
+.ProductList .price { color: #0a6f00; }
+
+/* color:Blue:#1a80b6 */
+.header .TopMenu .applicationinner span a.selected { color: #1a80b6; border-bottom: solid 1px #1a80b6;  }
+.button .filler, .button-large .filler { background-color: #1a80b6; }
+#apparea-footer,.LeftMenu .menu_0 { background-color: #1a80b6; }
+.ProductList .price { color: #1a80b6; }
+
+/* color:Black:#000000 */
+.header .TopMenu .applicationinner span a.selected { color: #000000; border-bottom: solid 1px #000000;  }
+.button .filler, .button-large .filler { background-color: #000000; }
+.button .filler, .button-large ins { color: #FFF; }
+#apparea-footer,.LeftMenu .menu_0 { background-color: #000000; color:#FFFFFF; }
+.ProductList .price { color: #000000; }
+.LeftMenu .menuName {color:#FFFFFF; }
+
+/* color:White:#FFFFFF */
+.button ins, .button-large ins { color: #000000; }
+.header .TopMenu .applicationinner span a.selected { color: #000000; border-bottom: solid 1px #000000;  }
+.ProductList .price { color: #000000; }
+
+/* color:Orange:#e9a825 */
+.header .TopMenu .applicationinner span a.selected { color: #e9a825; border-bottom: solid 1px #e9a825;  }
+.button .filler, .button-large .filler { background-color: #e9a825; }
+.ProductList .price { color: #e9a825; }
+#apparea-footer,.LeftMenu .menu_0 { background-color: #e9a825; color:#000000; }
+
+
+/* colorpicker;.header .gs_inner .applicationarea;background-color;Header background*/
+/* colorpicker;.header .TopMenu .applicationinner span a;color;Menu text*/ 
+/* colorpicker;.header .TopMenu .applicationinner span a.selected, .header .TopMenu .applicationinner span a.selected;border-color,color;Menu selected*/ 
+/* colorpicker;#apparea-footer;background-color;Footer background*/ 
+/* colorpicker;#apparea-footer;color;Footer text*/ 
+/* colorpicker;body;background-color;Body background*/
+/* colorpicker;.button .filler, .button-large .filler;background-color;Button background*/
+/* colorpicker;.button ins, .button-large ins;color;Button text*/

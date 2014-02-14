@@ -1,0 +1,16 @@
+<div class="inline filters">
+    <?
+    echo $this->__w("We host events at the following locations, click on the location to filter the calendar by location(s)");
+    echo "<hr>";
+    $filters = $this->getApi()->getCalendarManager()->getFilters();
+    if (count($filters) == 0) {
+        echo $this->__("No locations available");
+        return;
+    }
+    foreach ($filters as $filter) {
+        $selectedClass = $this->isSelected($filter) ? "selected" : "";
+        echo "<div class='filter $selectedClass'>$filter</div>";
+    }
+    ?>
+</div>
+

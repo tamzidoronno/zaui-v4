@@ -1,0 +1,48 @@
+<?
+$paymentMethods = $this->getPaymentMethods();
+?>
+<div class="payment">
+    <div class='shoppingcartheader'><?php echo $this->__w("Please select a payment method."); ?></div>
+    <div class='checkoutinner'>
+        <center>
+            <?php
+            $selected = "selected";
+            foreach ($paymentMethods as $paymentMethod) {
+                $appName = $paymentMethod->getName();
+                $logo = $paymentMethod->getLogo();
+                $id = $paymentMethod->getId();
+                $appId = $paymentMethod->getPaymentApplication()->getConfiguration()->id;
+                echo "
+                    <div paymentid='$id' appid='$appId' class='inline method $selected'>
+                        <div class='logo'><img src='$logo'/></div>
+                        <div class='title'>$appName</div>
+                    </div>
+                ";
+                $selected="";
+            }
+            ?>
+        </center>
+    </div>
+    <div class='extended_payment_option'>
+        <?
+        $first = true;
+        foreach ($paymentMethods as $paymentMethod) {
+            $html = $paymentMethod->getPaymentApplication()->getExtendedPaymentForm($paymentMethod);
+            $id = $paymentMethod->getId();
+            $add = "";
+            if ($first) {
+                $first = false;
+                $add = "style='display:block;'";
+            }
+            $details = $paymentMethod->getPaymentDetails();
+            echo "<div $add class='extendedinfo' extendedid='$id'>$html</div>";
+            echo "<div $add class='paymentdetails $id'>$details<br><br></div>";
+        }
+        ?>
+    </div>
+
+    <div style='position:relative; height: 45px;'>
+        <div class="prevouter"><div id="previouse" class="button-large previouse"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__w("Previous"); ?></ins></div></div>
+        <div id="confirmorder" class="button-large"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__w("Confirm order"); ?></ins></div>
+    </div>
+</div>

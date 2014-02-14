@@ -1,0 +1,21 @@
+<div class="information">
+    <?
+    echo "Denne applikasjonen tillater deg å sende data fra ditt proteria program til din nettbutikk";
+    ?>
+</div>
+<?
+
+echo "<div>URL for exportering:</div>";
+echo "<div>" . $this->getCallBackUrl() . "</div>";
+echo "<br>";
+echo "Legg inn denne urlen under Database -> Instillinger i ditt proteria program.<br>Der finner du et felt med navn : \"Eksporter til URL:\"";
+?>
+
+1 : Ordrenummer
+2 : Mailadresse
+3 : Mottaker
+4 : Postnummer
+5 : Telefon
+6 : (ikke i bruk)
+7 : Adresse
+8 : Poststed

@@ -1,0 +1,54 @@
+<?php
+namespace ns_e9d04f19_6eaa_4a17_9b7b_aa387dbaed92;
+
+
+/* @var $clist CategoryLister */
+$clist = $this;
+
+$entries = $clist->getEntries();
+
+if (sizeof($entries) == 0 && $clist->isEditorMode()) {
+    ?>
+    <div class="information no_entries_added inline">
+        <b><?php echo $this->__f("More Categories?"); ?></b><br>
+        <?php echo $this->__f("This category displayer is currently empty. To create a new category please click the create new category button below."); ?>
+
+        <input type="hidden" value="" id="currentId">
+        <br><br>
+    </div>
+    <?php
+} else {
+    echo "<div class='CategoryList'>";
+    echo "<div class='categories'>";
+    $i = 0;
+    foreach ($entries as $entry) {
+        $i++;
+        $entry->latest = false;
+        $entry->first = false;
+        if($i == sizeof($entries)) {
+            $entry->latest = true;
+        }
+        if($i == 1) {
+            $entry->first = true;
+        }
+        /* @var $entry core_listmanager_data_Entry */
+        $this->printEntry($entry);
+    }
+    echo "</div>";
+    echo "</div>";
+}
+
+if ($this->isEditorMode()) {
+    ?>
+    <div class="configuration_toolbar">
+        <div class="configuration_menu" style="display: none; ">
+        </div>
+        <span class="systembutton"><ins class="add_new_category_button" gstype="clicksubmit" method="newEntry" gsname="id" gsvalue="somevalue" type="button" >
+                <?php
+                echo $this->__f("Create new category");
+                ?>
+            </ins></span>
+    </div>
+    <?php
+}
+?>

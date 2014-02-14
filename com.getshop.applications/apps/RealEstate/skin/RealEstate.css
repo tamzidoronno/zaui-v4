@@ -1,0 +1,84 @@
+.RealEstate .image {
+    background-image: url('{IMAGEFOLDER}/noimage.png');
+    width: 430px;
+    height: 330px;
+    position: relative;
+}
+
+.RealEstate .image .topimage {
+    background-repeat: no-repeat;
+    width: 380px;
+    height: 280px;
+    position: absolute;
+    margin-left: 15px;
+    top: 15px;
+    text-align: center;
+}
+
+.RealEstate .rightwrapper {
+    width: 305px;
+}
+
+.RealEstate .image .changeimage {
+    border: solid 1px #000;
+    background-color: #000;
+    color: #FFF;
+    font-size: 40px;
+    padding-top: 30px;
+    opacity: 0.7;
+    position: absolute;
+    right: 27px;
+    left: 27px;
+    bottom: 10px;
+    top: 10px;
+    text-align: center;
+    cursor: pointer;
+    color: #FFF;
+}
+
+
+.RealEstate {
+    color: #333;
+}
+
+.RealEstate .title {
+    font-size: 15px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.RealEstate .rightwrapper {
+    font-size: 14px;
+    padding-top: 5px;
+}
+
+.RealEstate .long_description {
+    margin-top: 10px;
+    padding: 5px;
+}
+
+.RealEstate .table {
+    margin-top: 10px;
+    border: solid 1px #DDD;
+}
+.RealEstate .table .row:not(:last-child) {
+    border-bottom: solid 1px #DDD;
+    
+}
+.RealEstate .table .col1 {
+    font-size: 15px;
+    width: 150px;
+    padding: 5px;
+}
+
+.RealEstate .table .col2 {
+    font-size: 15px;
+    width: 550px;
+    padding: 5px;
+}
+
+.RealEstate .long_description .header {
+    font-size: 15px;
+    height: 25px;
+}
+

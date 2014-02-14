@@ -1,0 +1,23 @@
+<?
+if ($this->getCount() == 0) {
+    $this->includeFile('emptycart');
+    return;
+} 
+
+?>
+<div style='padding: 10px;'>
+    <table style='width: 100%' cellpadding='0' cellspacing='0' class='cartmain'>
+        <tr>
+            <td style='width: 500px' valign='top'>
+                <div class='leftcart'>
+                    <? $this->includeFile('cartoverview') ?>
+                </div>
+            </td>
+            <td valign='top'>
+                <div class='rightcart'>
+                    <? $this->includeFile('checkout') ?>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

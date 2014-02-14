@@ -1,0 +1,68 @@
+<? namespace ns_e72f97ad_aa1f_4e67_bcfd_e64607f05f93; ?>
+<?php
+/* @var $entry app_gallery_data_ImageEntry */
+$entry = $this->getCurrentEntry();
+
+$title = "";
+$desc = "";
+$id = "";
+$placeholder_title = $this->__f("Title for the image");
+$placeholder_desc = $this->__f("A description to the image");
+if (isset($entry)) {
+    $desc = $entry->description;
+    $title = $entry->title;
+    $id = $entry->id;
+    $placeholder_title = "";
+    $placeholder_desc = "";
+}
+?>
+<div gstype="form" method="updateImage">
+    <input type="hidden" gsname="id" value="<?php echo $id; ?>">
+
+    <table width="100%">
+        <tr>
+            <td colspan="2">
+                <input type="txt" gsname="title" class="edittitle" value="<?php echo $title; ?>" placeholder="<?php echo $placeholder_title; ?>">
+            </td>
+        </tr>
+        <tr>
+            <td width="10" valign="top">
+                <?php
+                if (isset($entry->imageId) && strlen(trim($entry->imageId)) > 0) {
+                    echo "<img gsname='imgId' gsvalue='" . $entry->imageId . "' src='displayImage.php?id=" . $entry->imageId . "&width=200&height=200'>";
+                } else {
+                    ?>
+                    <div class="image_upload">
+                        <div class="image">
+                            <?php
+                            //
+                            $this->createUploadImageForm('uploadImage', 0, $this->__f("Uplaod image"), 'image_upload', 'image', 180, 180);
+                            ?>
+                        </div>
+                    </div>                
+                    <?php
+                }
+                ?>
+            </td>
+            <td valign="top">
+                <textarea class="edittext" gsname="desc" placeholder="<?php echo $placeholder_desc; ?>"><?php echo $desc; ?></textarea>
+            </td>
+        </tr>
+    </table>
+    <div class="bottom_buttons">
+        <?php if (strlen($id) > 0) { ?>
+            <span class='button'>
+                <div class="rightglare"></div><div class="filler"></div>
+                <ins gstype="clicksubmit" method="deleteEntry" gsname="id" gsvalue="<?php echo $id; ?>">
+                    <?php echo $this->__f("Delete this image"); ?>
+                </ins>
+            </span>
+        <?php } ?>
+        
+        <span class='button save_image_button' gstype="submit">
+            <div class="rightglare"></div><div class="filler"></div>
+            <ins><?php echo $this->__f("Save changes"); ?></ins>
+        </span>
+    </div>
+</div>
+

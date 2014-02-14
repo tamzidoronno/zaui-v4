@@ -1,0 +1,28 @@
+body {background-color: #444342; }
+.TopMenu { width: 100%;bottom: 0px; text-align: right; position:absolute; background-color: #eef5fb; height:100%; border-bottom: solid 1px #0ea8c4;  }
+.TopMenu a { font-size: 1.4em; line-height: 66px; padding-left: 20px; padding-right: 20px; }
+.TopMenu a.selected { background-color:#0ea8c4; color:#FFF; }
+.Logo { position: absolute; left: 10px;z-index: 6; }
+.breadcrumb { display:none; }
+.header, .header .applicationarea { min-height: 66px; height: 66px; }
+.gs_inner { max-width: 900px; margin:auto; background-color:#FFF; }
+.footer .gs_inner { background-color: #0ea8c4; color:#FFF; }
+.gs_margin_left { padding-left: 10px; }
+.gs_margin_right { padding-right: 10px; }
+.gs_margin_bottom { margin-bottom: 10px; }
+.gs_row .applicationarea { padding: 20px; }
+.gs_row .gs_inner { border-bottom: solid 1px #EEE; }
+.Contact .horizontal .text, .Contact td { color:#000; }
+.Contact { padding-bottom: 40px; }
+.skeleton20 .gs_row .applicationarea { padding: 0px; }
+.skeleton20 .gs_row.r3 .applicationarea { padding: 20px; }
+.Banner .banner img,.Banner .bannerslider { height: auto !important; }
+@media only all and (max-width: 480px) {
+    .Logo { display: none; }
+    .TopMenu a { padding-left: 10px; padding-right: 10px; }
+    .Login { display: none; }
+}
+@media only all and (max-width: 880px) {
+    .Login { display: none; }
+    .gs_row_cell { width: 100% !important; }
+}

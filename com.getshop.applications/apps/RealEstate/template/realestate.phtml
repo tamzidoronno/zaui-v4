@@ -1,0 +1,75 @@
+<?
+    $ckeditorclass = $this->isEditorMode() ? "getshop_ckeditorcontent" : "";
+?>
+
+<div class="title <? echo $ckeditorclass; ?>" altid="title">
+    <? echo $this->getTitle(); ?>
+</div>
+    
+<div class="image inline">
+    <div class="topimage">
+        <?
+        if ($this->getConfigurationSetting("image") != "") {
+            $imageid = $this->getConfigurationSetting("image");
+            echo "<img src='/displayImage.php?id=$imageid'>";
+            if ($this->isEditorMode())  {
+                echo "<span class='trash'></span>";
+    }
+        } else {
+            if ($this->isEditorMode()) { ?>
+                <div class="changeimage">
+                    <? echo $this->__f("Change image"); ?>
+                </div>
+
+            <? } ?>
+        <? }?>
+    </div>
+</div>
+
+<div id="shortdesc" altid="shortdesc" class="rightwrapper inline <? echo $ckeditorclass; ?>">
+    <?
+    echo $this->getShortDescription();
+    ?>
+</div>
+
+<div class="long_description">
+    <div class="table">
+        <div class="row"><div class="col1 inline">Adresse</div><div altid="address" class="col2 inline <? echo $ckeditorclass; ?>"><? echo $this->getAddress(); ?></div></div>
+        <div class="row"><div class="col1 inline">Parkeringsplasser</div><div altid="parkingspots" class="col2 inline <? echo $ckeditorclass; ?>"><? echo $this->getParkingspots(); ?></div></div>
+        <div class="row"><div class="col1 inline">Eier</div><div altid="ownership" class="col2 inline <? echo $ckeditorclass; ?>"><? echo $this->getOwnerRelations(); ?></div></div>
+        <div class="row"><div class="col1 inline">Areal</div><div altid="arealsize" class="col2 inline <? echo $ckeditorclass; ?>"><? echo $this->getSize(); ?></div></div>
+        <div class="row"><div class="col1 inline">Leietager</div><div altid="rental" class="col2 inline <? echo $ckeditorclass; ?>"><? echo $this->getRental(); ?></div></div>
+        <? if ($this->isEditorMode()) { ?>
+            <div class="row"><div class="col1 inline">Longitude</div><div altid="longitude" class="col2 inline <? echo $ckeditorclass; ?>"><? echo $this->getLongitude(); ?></div></div>
+            <div class="row"><div class="col1 inline">Latitude</div><div altid="latitude" class="col2 inline <? echo $ckeditorclass; ?>"><? echo $this->getLatitude(); ?></div></div>
+        <? } ?>
+    </div>
+</div>
+
+<? if ($this->isEditorMode()) { ?>
+    <script>
+        
+        var config = {
+            draggable : true,
+            closeOnClick: false,
+            title : "Realestate settings",
+            items : [
+                {
+                    icon : "showApplicationImages.php?appNamespace=ns_32c15c30_d665_11e2_8b8b_0800200c9a66&image=skin/images/trash.png",
+                    title : "<?php echo $this->__w("Delete image"); ?>",
+                    click : RealEstate.deleteImage,
+                    extraArgs: {
+                        imgframe: $('.ProductManager .imageframe .image')
+                    }
+                }
+            ]
+        }
+        
+        var toolbox = new GetShopToolbox(config);
+        toolbox.attachToElement($('.RealEstate'), 3);
+        $('.RealEstate .changeimage').imageupload({
+            maxWidth: 383,
+            maxHeight: 283,
+            uploadText: "<? echo $this->__f("Change image"); ?>"});
+    </script>
+<? } ?>

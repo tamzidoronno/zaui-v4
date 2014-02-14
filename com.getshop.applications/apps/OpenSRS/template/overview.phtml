@@ -1,0 +1,45 @@
+<? namespace ns_fb076580_c7df_471c_b6b7_9540e4212441; ?>
+<?php
+/* @var $this OpenSRS */
+$factory = $this->getFactory();
+$store = $factory->getStore();
+/* @var $store core_storemanager_data_Store */
+$secondaryDomain = $store->webAddress;
+$primary = $store->webAddressPrimary;
+$configureText = "";
+if(!$primary) {
+    $primary = "Not set yet";
+    $configureText = "Please register your own domain name, or transfer an existing one.";
+}
+?>
+    <div class="headline"><?php echo $this->__f("Domain overview"); ?></div>
+<div class="content_box">
+    <div class="information_row">
+        <?php echo $this->__f("Secondary domain name"); ?> <span class='input_data'><b><?php echo $secondaryDomain; ?></b></span>
+    </div>
+    <div class="information_row">
+        <?php echo $this->__f("Primary domain name"); ?> <span class='input_data'><b><?php echo $primary; ?></b><img class="deletedomain" addr="<?php echo $primary; ?>" src='/skin/default/images/closeinfobox.png'></span>
+    </div>
+    <?php
+    if(is_array($store->additionalDomainNames) && sizeof($store->additionalDomainNames) > 0) {
+    ?>
+        <div class="additional_domain_names">
+            <span style='float:left'><?php echo $this->__("Additional domain names"); ?></span>
+                <?php 
+                $toPrint = "";
+                foreach($store->additionalDomainNames as $addName) {
+                    echo "<div style='text-align:right;'>" . $addName . "<img class='deletedomain' addr='$addName' src='/skin/default/images/closeinfobox.png'></div>";
+                }
+                ?>
+        </div>
+    <?php
+    }
+    ?>
+    <?php
+    if($configureText) {
+    ?>
+    <div class="information_row">
+        <?php echo $configureText; ?>
+    </div>
+    <?php } ?>
+</div>

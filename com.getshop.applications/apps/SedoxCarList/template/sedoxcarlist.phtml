@@ -1,0 +1,52 @@
+<? namespace ns_2ebd7c69_eba3_4b7e_85c6_0e0bd274aad0; ?>
+<ul id="flowtabs">
+    <li><span id="t1" class="current"></span></li>
+    <li><span id="t2"></span></li>
+    <li><span id="t3"></span></li>
+    <li><span id="t4"></span></li>
+</ul>
+
+
+<div id="flowpanes" style="padding:10px; color:#FFFFFF;">
+    <span class="name_box">
+        <div class="name">Choose</div>
+        <div class="name_type t1" style="display:block;">Your Car</div>
+        <div class="name_type t2">Your Truck</div>
+        <div class="name_type t3">Your Tractor</div>
+        <div class="name_type t4">Your Boat</div>
+    </span>
+    <div>
+        <div>
+            MANUFACTURER:<br>
+            <select id="manufacturer" style="width:250px;">
+
+            </select>
+        </div>
+
+        <div>
+            MODEL:<br>
+            <select id="model" style="width:250px;">
+
+            </select>
+        </div>
+
+        <div>
+            ENGINE:<br>
+            <select id="engine" style="width:250px;">
+
+            </select>
+        </div>
+    </div>
+    
+    <div class="result">
+        <img src="" width="300" height="300"/>
+        HP: <span id="hp"></span>
+        NM: <span id="nm"></span>
+    </div>
+</div>
+
+<script>
+$(function() {
+    GetShop.SedoxCarList.loadData();
+});
+</script>

@@ -1,0 +1,42 @@
+<?php
+
+namespace ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8;
+
+/* @var $this Calendar */
+$attendees = $this->getAttendees($this->currentEntry);
+?>
+<div class='reminderform'>
+    <b>Subject:</b>
+    <br>
+    <input style='width: 925px; margin-left: 8px; margin-right: 8px' type="textfield" value="Reminder" id="remindersubject"/>
+    <br><br>
+    <b>Message:</b>
+    <div>
+        <textarea style='width: 925px; height: 150px; margin-left: 8px;'><?php echo $this->currentEntry->title; ?></textarea>
+    </div>
+    <br>
+    <b>Send message to the following:</b>
+
+    <table>
+        <?
+        foreach ($attendees as $attendee) {
+            /* @var $attendee core_usermanager_data_User */
+            $id = $attendee->id;
+            $name = $attendee->fullName;
+            echo "<tr><td><input name='attendeestoremind' type='checkbox' value='$id'/ checked='checked'></td><td>$name</td></tr>";
+        }
+        ?>
+    </table>
+
+    <div style='text-align: right'>
+        <div id="sendreminderbysms" entryid="<? echo $this->currentEntry->entryId; ?>" class='gs_button'>Sms</div>
+        <div id="sendreminderbymail" entryid="<? echo $this->currentEntry->entryId; ?>"  class='gs_button'>Mail</div>    
+    </div>
+    
+
+    <div class="all_reminder_history">
+        <? $this->includefile("reminderhistory"); ?>
+    </div>
+    
+
+</div>

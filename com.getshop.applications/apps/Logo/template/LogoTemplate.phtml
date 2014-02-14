@@ -1,0 +1,38 @@
+<?
+
+ namespace ns_974beda7_eb6e_4474_b991_5dbc9d24db8e; ?>
+    <?php /* @var $this Logo */ ?>
+
+<div class="logo_container deleteable" >
+    <?php
+    if ($this->isEditorMode() && isset($this->imageId) && !isset($_GET['editLogo'])) {
+//        echo '<a href="?editLogo=true">[Edit]</a>';
+    }
+
+    if ($this->isEditorMode()) {
+        echo "<span class='trash '></span>";
+    }
+
+    if (isset($this->imageId)) {
+        $logo = $this->getLogo();
+        $height = $this->getSkinVariable("height");
+        $width = $this->getSkinVariable("width");
+        echo "<a href='?page=home' id='pagehome'><img id='webshop_logo' border='0' src='displayImage.php?id=$logo&height=$height&width=$width'></img></a>";
+    } else {
+        if ($this->isEditorMode()) {
+            echo '<div class="upload_logo" namespace="ns_974beda7_eb6e_4474_b991_5dbc9d24db8e">' . $this->__f("click to upload a logo") . '</div>';
+
+            $height = $this->getSkinVariable("height");
+            $width = $this->getSkinVariable("width");
+            ?>
+            <script>
+                $('.Logo .upload_logo').imageupload({
+                    maxWidth: <? echo $width; ?>,
+                    maxHeight: <? echo $height; ?>,
+                    uploadText: "<? echo $this->__f("Uploading logo"); ?>"});
+            </script>
+            <?
+        }
+    }
+    ?>
+</div>

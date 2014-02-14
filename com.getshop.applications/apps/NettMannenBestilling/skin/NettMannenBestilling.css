@@ -1,0 +1,19 @@
+.NettMannenBestilling { text-align:center; padding: 20px; }
+.NettMannenBestilling #whatisitabout { width:405px; }
+.NettMannenBestilling .personal_data,.NettMannenBestilling #whatisitabout {
+    border-radius: 2px;
+    color: #707070;
+    border: solid 1px #e1e1e1;
+    padding: 13px;
+    background-color: #fcfcfc;
+}
+.NettMannenBestilling .personal_data { width: 105px; }
+.NettMannenBestilling .submit_contact { background-color: #0ea8c4; color:#000; padding: 13px; width: 405px; }
+.NettMannenBestilling .thanks { font-size: 18px; display:none; }
+
+@media only all and (max-width: 480px) {
+    .NettMannenBestilling .personal_data { width: 75px; }
+    .NettMannenBestilling #whatisitabout { width:314px; }
+    .NettMannenBestilling .submit_contact { width: 314px; }
+    .gs_row_cell { display: block; width: 100% !important;}
+}

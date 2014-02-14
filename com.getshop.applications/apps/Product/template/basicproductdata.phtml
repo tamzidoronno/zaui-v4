@@ -1,0 +1,29 @@
+<?
+$page = $this->getPage()->backendPage;
+/* @var $product core_productmanager_data_Product */
+$product = $this->getProduct();
+?>
+
+
+<div class='information_box'>
+    <b><? echo $this->__f("Basic configuration"); ?></b>
+    <br><? echo $this->__f("Set your title, weight, price, and stock quantity."); ?>
+</div>
+
+
+<div class='row'>
+    <span class='title'><? echo $this->__f("Product title"); ?></span>
+    <input type='text' data="title" class="gs_product_data" value="<? echo $page->title; ?>">
+</div>
+<div class='row'>
+    <span class='title'><? echo $this->__f("Price"); ?> (<? echo $this->getFactory()->getCurrency(); ?>)</span>
+    <input type='text' class="smallinput gs_product_data" data="price" value="<? echo $product->price; ?>">
+</div>
+<div class='row'>
+    <span class='title'><? echo $this->__f("Weight (gram)"); ?></span>
+    <input type='text' class="smallinput gs_product_data" data="weight" value="<? echo $product->weight; ?>">
+</div>
+<div class='row'>
+    <span class='title'><? echo $this->__f("Stock Quantity"); ?></span>
+    <input type='text' class="smallinput gs_product_data" data="quantity" value="<? echo $product->stockQuantity; ?>">
+</div>

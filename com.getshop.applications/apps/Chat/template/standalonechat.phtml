@@ -1,0 +1,42 @@
+<?
+namespace ns_2afb045b_fa01_4398_8582_33f212bb8db8;
+?>
+<audio id="sound" src="/skin/app/Chat/wav/newmessage.wav"></audio> 
+<?
+/* @var $this Chat */
+
+$chatters = $this->getChatters();
+if (!is_array($chatters))
+    $chatters = array();
+
+?>
+<table>
+    <tr>
+        <td valign="top">
+            <div class="chatters">
+                <?
+                foreach ($chatters as $chatter) {
+                    echo '<div messagecount="'.count($chatter->messages).'" class="chat" chatterid='.$chatter->id.'>'.$chatter->username.'
+                        <div class="close">
+                            <img class="closeimage" width="20" height="20" src="/skin/default/elements/closebutton.png"/>
+                        </div>
+                    </div>';
+                }
+                ?>
+            </div>            
+        </td>
+        <td valign="top"    >
+            <div class="maindialog">
+                <div class="inner">
+                    <? echo $this->__("Please select someone to chat with at the right side"); ?>
+                </div>
+            </div>    
+            <input id="chatinput" class="adminchatinput" type="textfield"/>
+        </td>
+    </tr>
+</table>
+
+<script>
+    com.getshop.app.Chat.scrollBottom();   
+    com.getshop.app.Chat.pollAdmin();
+</script>

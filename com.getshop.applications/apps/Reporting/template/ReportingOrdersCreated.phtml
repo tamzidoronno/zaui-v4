@@ -1,0 +1,34 @@
+<?php
+namespace ns_04259325_abfa_4311_ab81_b89c60893ce1;
+
+/* @var $this Reporting */
+$orders = $this->getApi()->getReportingManager()->getOrdersCreated($this->getStartDate(), $this->getEndDate(), $this->getType());
+
+if(!$orders) {
+    echo $this->__f("No orders where found for this time range.");
+    return;
+}
+
+?>
+<div class="outer-chart">
+
+    <div class="title"><? echo $this->__f("Orders created summary"); ?></diV>
+    <table width='100%'>
+        <tr>
+            <th><? echo $this->__f("Number of products"); ?></th>
+            <th align='left'><? echo $this->__f("Name"); ?></th>
+            <th><? echo $this->__f("Created when"); ?></th>
+        </tr>
+        <?
+        foreach ($orders as $order) {
+            /* @var $order core_reportingmanager_data_OrdersCreated */
+            echo "<tr>";
+            echo "<td width='150'>" . sizeof($order->cart->products) . "</td>";
+            echo "<td>" . $order->cart->address->fullName . "</td>";
+            echo "<td width='150'>" . $order->createdWhen . "</td>";
+            echo "</tr>";
+        }
+        ?>
+    </table>
+</div>
+</div>

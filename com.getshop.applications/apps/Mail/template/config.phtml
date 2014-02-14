@@ -1,0 +1,45 @@
+<? namespace ns_8ad8243c_b9c1_48d4_96d5_7382fa2e24cd; ?>
+<div class="information">
+    <?
+    echo $this->__f("Configure your email sender.");
+    ?>
+</div>
+
+<div class="setting onoff" id="enabletls">
+    <span class="title"><?php echo $this->__f("Enable tls?"); ?></span>
+    <div class="onoff config" id="enabletls"></div>
+    <div class="description">
+        <?php echo $this->__f("Should TLS be enabled for this smtp server?"); ?>
+    </div>
+</div>
+
+<div class="textfield setting"  id="hostname">
+    <span class="title"><?php echo $this->__f("Hostname"); ?></span>
+    <input type="textfield" class="config">
+    <div class="description">
+        <?php echo $this->__f("The hostname for your smtp server."); ?>
+    </div>
+</div>
+<div class="textfield setting"  id="port">
+    <span class="title"><?php echo $this->__f("Port"); ?></span>
+    <input type="textfield" class="config">
+    <div class="description">
+        <?php echo $this->__f("The port for your smtp server."); ?>
+    </div>
+</div>
+<div class="textfield setting"  id="username">
+    <span class="title"><?php echo $this->__f("Username / Email"); ?></span>
+    <input type="textfield" class="config">
+    <div class="description">
+        <?php echo $this->__f("The username for your smtp server."); ?>
+    </div>
+</div>
+<div class="textfield setting"  id="password" secure="true">
+    <span class="title"><?php echo $this->__f("Password"); ?></span>
+    <input type="textfield" class="config">
+    <div class="description">
+        <?php echo $this->__f("The password for your smtp server."); ?>
+    </div>
+</div>
+
+<div class="button savebutton"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__f("Save settings"); ?></ins></div>

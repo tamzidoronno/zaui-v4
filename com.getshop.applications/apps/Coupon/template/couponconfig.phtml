@@ -1,0 +1,66 @@
+<?
+$coupons = $this->getCoupons();
+?>
+<br>
+<div appid="<? echo $this->getConfiguration()->id; ?>" class="app Coupon">
+
+    <div class="information">
+        <div class="title"><? echo $this->getName(); ?></div>
+        <?
+        echo $this->getDescription();
+        ?>
+    </div>
+    <div>
+        <h3><? echo $this->__f("Current available cupons"); ?></h3>
+        <? 
+        if (count($coupons) == 0){
+            echo $this->__f("You dont have any cupons added."); 
+        } else {
+            echo "<table class='coupons'>";
+            echo "<th>".$this->__f("Action")."</th>";
+            echo "<th>".$this->__f("Name")."</th>";
+            echo "<th>".$this->__f("Type")."</th>";
+            echo "<th>".$this->__f("Amount")."</th>";
+            echo "<th>".$this->__f("Remaining")."</th>";
+            foreach ($coupons as $coupon) {
+                echo "<tr><td class='remove'>Remove</td><td class='code'>$coupon->code</td><td>$coupon->type</td><td align='center'>$coupon->amount</td><td align='center'>$coupon->timesLeft</td></td></tr>";
+            }
+            echo "</table>";
+        }
+        ?>
+    </div>
+
+    <div>
+        <h3><? echo $this->__f("Add more coupons"); ?></h3>
+        <?
+        echo $this->__f("There are two different types of coupons, fixed price and percentage price. Fixed price is giving your valued customers a fixed rate off for each time they buy something from the store. The Percentage price gives a percentage discount to your total cost of the cart.");
+        ?>
+        <div class="tabs" id="shippingtype">
+            <div class="tabset">
+                <div activate="fixed" class="tab inline active"><? echo $this->__f("Fixed price"); ?></div>
+                <div activate="percentage" class="tab inline"><? echo $this->__f("Percentage price"); ?></div>
+            </div>
+
+            <div class="tab_content">
+                <div id="fixed" class="content_holder active">
+                    <table>
+                        <tr><td><? echo $this->__f("Coupon name"); ?></td><td><input name="name" type="text" placeholder="myfriends"/></td></tr>
+                        <tr><td><? echo $this->__f("How many times can this coupon be used?"); ?></td><td><input name="times" type="text" placeholder=""/></td></tr>
+                        <tr><td><? echo $this->__f("Fixed price discount?"); ?></td><td><input type="text" name="discount" placeholder=""/></td></tr>
+                    </table>
+                </div>
+                <div id="percentage" class="content_holder ">
+                    <table>
+                        <tr><td><? echo $this->__f("Coupon name"); ?></td><td><input name="name" type="text" placeholder="myfriends"/></td></tr>
+                        <tr><td><? echo $this->__f("How many times can this coupon be used?"); ?></td><td><input name="times" type="text" placeholder=""/></td></tr>
+                        <tr><td><? echo $this->__f("Discount in percentage?"); ?></td><td><input type="text" name="discount" placeholder=""/></td></tr>
+                    </table>
+                </div>
+            </div>
+            <div class="button savecoupons"><div class="rightglare"></div><div class="filler"></div><ins><? echo $this->__f("Add coupons"); ?></ins></div>
+        </div>
+
+
+    </div>
+
+</div>

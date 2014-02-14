@@ -1,0 +1,43 @@
+<? namespace ns_dabb8a85_f593_43ec_bf0d_240467118a40; ?>
+<?php
+/* @var $this News */
+if ($this->hasWriteAccess()) {
+    ?>
+    <div class="outeraddnewscontainer">
+        <? echo $this->__f("Subject"); ?> <input id="subject" type="text"/>
+        <br><br> <? echo $this->__f("Extended description"); ?> 
+        <br>
+        
+        <textarea style="width: 100%; height: 100px; padding: 10px;" placeholder="<? echo $this->__f("Click on me to edit"); ?>"></textarea>
+        <div class="gs_button addevent">
+            <? echo $this->__f("Add"); ?>
+        </div>
+    </div>
+    <?php
+} 
+
+$entries = (array)$this->getAllEntries();
+$i = 0;
+foreach($entries as $entry) {
+    /* @var $entry app_newsmanager_data_NewsEntry */
+    $last = (sizeof($entries)-1) == $i ? "last" : "";
+    $id = $entry->id;
+    echo "<div class='news_container news_container_$i $last' id='".$id."'>";
+    
+    if ($this->hasWriteAccess()) {
+        if (!$entry->isPublished) {
+            echo "<div class='gs_button small publish'>".$this->__f("Publish")."</div>";
+        }
+        echo "<div class='gs_button small delete'>".$this->__f("Delete")."</div>";
+    }
+    echo "<div class='news_entry_header'>" . $entry->subject . "</div>";
+    echo "<div class='content'>";
+    echo $entry->content;
+    echo "</div>";
+    echo "<div class='news_entry_footer'>" . $entry->date ."</div>";
+    echo "<a href='?page=$id'><div class='readmore'>".$this->__w("Read more")."</div></a>";
+    echo "</div>";
+
+    $i++;
+}
+?>

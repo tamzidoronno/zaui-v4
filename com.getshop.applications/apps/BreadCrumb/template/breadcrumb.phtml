@@ -1,0 +1,71 @@
+<?
+
+ namespace ns_7093535d_f842_4746_9256_beff0860dbdf; ?>
+<?php /* @var $this BreadCrumb */ ?>
+
+<div class="breadcrumb-inner">
+
+    <div class="navigation">
+        <?php
+        $factory = $this->getFactory();
+        $parentPage = $factory->javaPage;
+        $addresses = array();
+        while ($parentPage != null) {
+            $addresses[] = $parentPage->id;
+            $parentPage = @$parentPage->parent;
+        }
+
+        $listmanager = $this->getApi()->getListManager()->translateEntries($addresses);
+        $products = $this->getApi()->getProductManager()->translateEntries($addresses);
+        $newAddr = array();
+        foreach ($addresses as $addr) {
+            if (isset($listmanager->{$addr})) {
+                $newAddr[$addr] = $listmanager->{$addr};
+            }
+            if (isset($products->{$addr})) {
+                $newAddr[$addr] = $products->{$addr};
+            }
+        }
+        $addresses = $newAddr;
+        $linkArray = array();
+        $addresses = array_reverse($addresses);
+        echo "<span class='breadcrumbentry'>" . $this->__w("You are here:") . "</span>";
+        $i = 0;
+        foreach ($addresses as $address => $name) {
+            $i++;
+            $link = "";
+            $name = strip_tags($name);
+            if ($i < count($addresses))
+                $link = "link";
+
+            if ($name)
+                $linkArray[] = "<span class='breadcrumbentry $link'><a href='?page=$address'>$name</a></span>";
+        }
+        echo implode('', $linkArray);
+        ?>
+    </div>
+    <?
+    $displayCart = true;
+    $settings = $this->getFactory()->getSettings();
+    if (isset($settings) && isset($settings->hide_cart)) {
+        if ($settings->hide_cart->value == "true") {
+            $displayCart = false;
+        }
+    }
+    if ($displayCart) {
+        ?>
+        <div class="accounting">
+            <i class="fa fa-shopping-cart"></i>
+            <a href="?page=cart">
+                <div class="shoppingcart inline"><div id="mycart-updating" style="display:none;" class="entry"><?php echo $this->__('Updating'); ?></div>
+                    <div id="mycart" class="entry">
+                        <?php
+                        $cartManager = new \ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager();
+                        $cartManager->renderSmallCartView();
+                        ?>
+                    </div>
+                </div>
+            </a>
+        </div>
+<? } ?>
+</div>

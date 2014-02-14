@@ -1,0 +1,16 @@
+<?php
+namespace ns_320ada5b_a53a_46d2_99b2_9b0b26a7105a;
+
+/* @var $this ContentManager */
+$rand = rand(0,1000);
+?>
+<div>
+    <div style="height: 50px !important; border: solid 1px;" class="content_manager" id="content_manager_<?php echo $rand; ?>">
+        <?php
+        echo $this->getContent();
+        ?>
+    </div>
+    <div class="content_manager_bottom">
+    <span type="button" class="button"><div class="rightglare"></div><div class="filler"></div><ins class="content_manager_save_button" id="content_manager_save_button">Save content</ins></span>
+    </div>
+</div>

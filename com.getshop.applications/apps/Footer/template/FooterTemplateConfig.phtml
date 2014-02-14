@@ -1,0 +1,72 @@
+<?php
+namespace ns_d54f339d_e1b7_412f_bc34_b1bd95036d83;
+
+/* @var $config app_footermanager_data_Configuration */
+$config = $this->getFooterConfiguration();
+$count = $config->numberOfColumns;
+    $count = 1;
+?>
+
+<div method="saveConfiguration" output="informationbox">
+    <span style="float:right;">
+        <?php
+        echo $this->__f("Number of columns");
+        ?>
+        <select gsname="column" class="col_number" output="informationbox">
+            <?php
+            for ($i = 1; $i <= 4; $i++) {
+                $selected = "";
+                if ($i == $count) {
+                    $selected = "SELECTED";
+                }
+                echo "<option value='$i' $selected>" . $i . "</option>";
+            }
+            ?>
+        </select>
+    </span>
+
+    <div class='configuration_tabs'>
+        <?php
+        // Print all tabs
+        for ($i = 0; $i < 4; $i++) {
+            $tabselected = "";
+            if ($i == 0) {
+                $tabselected = "tab_selected";
+            }
+            ?>
+            <span method="changeTab" 
+                  output="informationbox" 
+                  gsname="changetab" 
+                  gsvalue="<?php echo $i; ?>" 
+                  class="tab <?php echo $tabselected; ?>" 
+                  tab="<?php echo $i; ?>">
+                      <?php echo $this->__f("Column") . " " . ($i + 1); ?>
+            </span>
+            <?php
+        }
+        ?>
+    </div>
+
+    <? for ($i = 0; $i < 4; $i++) { ?>
+        <div class="configuration_area config_area_<?php echo $i; ?>">
+            <div class="contentText contentText_<? echo $i; ?>"id="contentText_<?php echo $i; ?>">
+                <?php
+                $colId = $config->columnIds->{$i};
+                echo $this->getApi()->getContentManager()->getContent($colId);
+                ?>
+            </div>
+        </div>
+    <? } ?>
+    
+    <span class='button'>
+        <div class="rightglare"></div>
+        <div class="filler"></div>                        
+        <ins id="saveconfiguration">
+            <?php echo $this->__f("Save"); ?></ins>
+    </span>
+</div>
+<script>
+    $(function() {
+        GetShop.Footer.initialize();
+    });
+</script>

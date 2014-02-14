@@ -1,0 +1,34 @@
+/* color:Blue:#0a599e */
+.TopMenu, .footer .gs_inner { background-color: #0a599e; }
+.ProductList .boxview .product .pricecontainer .price,.ProductManager .applicationinner .priceinner { color : #0a599e; }
+.LeftMenu .menu_1 .menuName { color: #0075e2; }
+
+/* color:Red:#e10707 */
+.TopMenu, .footer .gs_inner { background-color: #e10707; }
+.ProductList .boxview .product .pricecontainer .price,.ProductManager .applicationinner .priceinner { color : #e10707; }
+.LeftMenu .menu_1 .menuName { color: #e10707; }
+
+/* color:Green:#659f3b */
+.TopMenu, .footer .gs_inner { background-color: #659f3b; }
+.ProductList .boxview .product .pricecontainer .price,.ProductManager .applicationinner .priceinner { color : #659f3b; }
+.LeftMenu .menu_1 .menuName { color: #659f3b; }
+
+/* color:Dark:#525252 */
+.TopMenu, .footer .gs_inner { background-color: #525252; }
+.ProductList .boxview .product .pricecontainer .price,.ProductManager .applicationinner .priceinner { color : #525252; }
+.LeftMenu .menu_1 .menuName { color: #525252; }
+
+/* color:Pink:#ec1fbe */
+.TopMenu, .footer .gs_inner { background-color: #ec1fbe; }
+.ProductList .boxview .product .pricecontainer .price,.ProductManager .applicationinner .priceinner { color : #ec1fbe; }
+.LeftMenu .menu_1 .menuName { color: #ec1fbe; }
+
+/* colorpicker;.header .TopMenu .applicationinner span a;color;Menu text*/ 
+/* colorpicker;.TopMenu;background-color;Menu color*/ 
+/* colorpicker;.TopMenu a:hover;background-color;Menu hover*/ 
+/* colorpicker;.header .TopMenu .applicationinner span a.selected, .header .TopMenu .applicationinner span a.selected;color;Menu selected*/ 
+/* colorpicker;.footer .gs_inner;background-color;Footer background*/ 
+/* colorpicker;#apparea-footer;color;Footer text*/ 
+/* colorpicker;body;background-color;Body background*/
+/* colorpicker;.button .filler, .button-large .filler;background-color;Button background*/
+/* colorpicker;.button ins, .button-large ins;color;Button text*/

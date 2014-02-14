@@ -1,0 +1,24 @@
+<?php
+/* @var $this \ns_8e239f3d_2244_471e_a64d_3241b167b7d2\YouTube */
+
+$query = @$_POST['data']['query'];
+echo "<div class='searchbar'>";
+echo "<input type='text' value='$query' class='inputfield' placeholder='Ylvis - The fox' id='searchyoutubeinput'>";
+echo "<span class='gs_button' id='searchyoutube'>" . $this->__f("Search") . "</span>";
+echo "</div>";
+
+$result = $this->searchYoutube($query);
+foreach ($result as $res) {
+    echo "<div class='searchresult' id='".$res->id."'>";
+    echo "<img src='" . $res->thumbnail . "'>";
+    echo "<span class='title'>" . $res->name . "</span>";
+    ?>
+    <span class='selection_container'>
+        <span class="gs_button select_youtube_movie">
+            <? echo $this->__f("Select"); ?>
+        </span>
+    </span>
+    <?
+    echo "</div>";
+}
+?>

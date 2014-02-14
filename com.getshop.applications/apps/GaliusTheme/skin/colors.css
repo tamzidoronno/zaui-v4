@@ -1,0 +1,34 @@
+/* nobg */
+
+/* color:Blue:#00aed7 */
+
+/* color:Green:#15a02f */
+body { background-color: #15a02f; }
+.TopMenu a.selected { color: #15a02f; }
+.button .filler, .button-large .filler { background-color: #15a02f; }
+
+/* color:Yellow:#c1bf36 */
+body { background-color: #c1bf36; }
+.TopMenu a.selected { color: #c1bf36; }
+.button .filler, .button-large .filler { background-color: #c1bf36; }
+
+
+/* color:Black:#000000 */
+body { background-color: #000000; }
+.footer-outer { color:#FFFFFF; }
+.TopMenu a.selected { font-weight: bold;  color:#000000; }
+.button .filler, .button-large .filler { background-color: #000000; }
+
+/* color:Red:#ff1717 */
+body { background-color: #ff1717; }
+.footer-outer { color:#FFFFFF; }
+.TopMenu a.selected { color:#ff1717; }
+.button .filler, .button-large .filler { background-color: #ff1717; }
+
+/* color:Pink:#dc08c1 */
+body { background-color: #dc08c1; }
+.footer-outer { color:#FFFFFF; }
+.TopMenu a.selected { color:#dc08c1; }
+.button .filler, .button-large .filler { background-color: #dc08c1; }
+
+

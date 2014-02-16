@@ -22,6 +22,9 @@ if ($count > 1) {
     $view = "listview"; 
 }
 ?>
+<h1 class='productlisttitle'>
+    <? echo $this->getTitle(); ?>
+</h1>
 
 <div class='<? echo $view . " " . $countClass; ?>' column="<? echo $count; ?>">
     <?

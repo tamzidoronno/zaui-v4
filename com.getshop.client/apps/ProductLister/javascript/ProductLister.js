@@ -13,6 +13,24 @@ app.ProductLister = {
         });
         thundashop.Ajax.post(event);
     },
+    changeTitle : function() {
+        var title = $(this).closest('.app').find('.productlisttitle');
+        var done = $("<span class='done_edit_title gs_button small'>" + __f("Save title") + "</span>");
+        done.click(function() {
+            var newTitle = title.html();
+            
+            var event = thundashop.Ajax.createEvent('','updateTitle',$(this), { "title" : newTitle });
+            thundashop.Ajax.postWithCallBack(event, function() {
+                done.remove();
+                title.attr('contenteditable',null);
+            });
+            
+        });
+        
+        title.attr('contenteditable',true);
+        title.after(done);
+        title.focus();
+    },
     slideRight : function() {
         var row = $(this).closest('.rowview').find('.inner_product_container');
         var products = row.find('.product');
@@ -127,6 +145,14 @@ app.ProductLister = {
                         app.Product.create("productlist", application.attr('appid'));
                     },
                     extraArgs: {}
+                },
+                {
+                    icontype: "awesome",
+                    icon: "fa-pencil-square-o",
+                    title: __f("Change title"),
+                    iconsize: "30",
+                    click: app.ProductLister.changeTitle,
+                    extraArgs: { "count" : 1 }
                 },
                 {
                     text: "1",

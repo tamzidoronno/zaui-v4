@@ -711,7 +711,7 @@ class ApplicationManager extends FactoryBase {
             $sitebuilder = new SiteBuilder($page);
             $sitebuilder->addProduct();
         }
+        echo $page->id;
     }
-
 }
 ?>

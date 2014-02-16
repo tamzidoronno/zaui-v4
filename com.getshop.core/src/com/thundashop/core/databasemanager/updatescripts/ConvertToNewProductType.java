@@ -1,6 +1,5 @@
 package com.thundashop.core.databasemanager.updatescripts;
 
-import com.thundashop.app.content.ContentManager;
 import com.thundashop.app.contentmanager.data.ContentData;
 import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.Setting;
@@ -9,7 +8,6 @@ import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductImage;
 import java.net.UnknownHostException;
 import java.util.HashMap;
-import java.util.List;
 
 public class ConvertToNewProductType extends UpgradeBase {
 
@@ -96,5 +94,24 @@ public class ConvertToNewProductType extends UpgradeBase {
                 saveObject(app, "PageManager");
             }
         }
+        
+        for(AppConfiguration app : apps.values()) {
+            if(app.appName.equals("ProductLister")) {
+                Setting view = app.settings.get("view");
+                if(view != null) {
+                    app.settings.remove("view");
+                    if(view.value.equals("boxview")) {
+                        System.out.println("found");
+                        view.value = "listview";
+                    }
+                    Setting colcount = new Setting();
+                    colcount.type = "column";
+                    colcount.value = "2";
+                    app.settings.put("column", colcount);
+                    saveObject(app, "PageManager");
+                }
+            }
+        }
+        
     }
 }

@@ -211,7 +211,14 @@ thundashop.common.saveCKEditor = function(data, target, notify) {
     thundashop.common.removeNotificationProgress('contentmanager');
     return notified;
 };
-
+thundashop.common.lastPushId = null;
+thundashop.common.goToPage = function(id) {
+    var link = "?page="+id;
+    if(thundashop.common.lastPushId === null || thundashop.common.lastPushId !== id) {
+        window.history.pushState({url: link, ajaxLink: link}, "Title", link);
+    }
+    thundashop.Ajax.doJavascriptNavigation(link, null, true);
+}
 
 thundashop.common.selectPredefinedConent = function() {
     var data = {
@@ -223,8 +230,10 @@ thundashop.common.selectPredefinedConent = function() {
 
     $('#informationbox').html('<center><i class="fa fa-spinner fa-spin" style="font-size:40px;"></i></center>');
     var event = thundashop.Ajax.createEvent('', 'selectPredefinedData', $(this), data);
-    thundashop.Ajax.post(event, function() {
+    
+    thundashop.Ajax.postWithCallBack(event, function(data) {
         thundashop.common.hideInformationBox();
+        thundashop.common.goToPage(data);
     });
 };
 
@@ -966,8 +975,10 @@ $(document).on('click', '.gs_showPageLayoutSelection .suggestion_layout', functi
     var id = $(this).attr('id');
     data["updatelayout"] = true;
     var event = thundashop.Ajax.createEvent('', 'setPageLayout', null, data);
-    thundashop.Ajax.post(event);
-    thundashop.common.hideInformationBox();
+    thundashop.Ajax.postWithCallBack(event, function(data) {
+        thundashop.common.hideInformationBox();
+        thundashop.common.goToPage(data);
+    });
 });
 $(document).on('click', '#informationbox .row_option', function() {
     var infobox = $('#informationbox .row_option_panel');
@@ -989,8 +1000,10 @@ $(document).on('click', '#informationbox .setnewlayout', function() {
     var id = $(this).attr('id');
     data["updatelayout"] = true;
     var event = thundashop.Ajax.createEvent('', 'setPageLayout', null, data);
-    thundashop.Ajax.post(event);
-    thundashop.common.hideInformationBox();
+    thundashop.Ajax.postWithCallBack(event, function(data) {
+        thundashop.common.hideInformationBox();
+        thundashop.common.goToPage(data);
+    });
 });
 
 $(document).on('click', '.gs_onoff', function() {

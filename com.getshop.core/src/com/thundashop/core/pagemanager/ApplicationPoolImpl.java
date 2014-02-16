@@ -226,15 +226,6 @@ public class ApplicationPoolImpl {
                 logger.warning(this, "Applicatoin added,  " + app.appName + " but does not have a ApplicationSetting object, appsettingsid: " + app.appSettingsId);
             }
         }
-
-        StoreManager storeManger = pageManager.getManager(StoreManager.class);
-        Store store = storeManger.getMyStore();
-        store.configuration.colors.baseColor = "FF6103";
-        store.configuration.colors.backgroundColor = "FF9955";
-        store.configuration.colors.textColor = "000000";
-
-        AppConfiguration themeApp = createNewApplication("efcbb450-8f26-11e2-9e96-0800200c9a66");
-        retApps.put(themeApp.id, finalizeApplication(themeApp));
     }
 
     public void setPageManager(PageManager pageManager) {
@@ -298,7 +289,9 @@ public class ApplicationPoolImpl {
         HashMap<String, AppConfiguration> apps = new HashMap();
         for (String appId : appIds) {
             AppConfiguration app = applicationInstances.get(appId);
-            apps.put(app.id, finalizeApplication(app));
+            if(app != null) {
+                apps.put(app.id, finalizeApplication(app));
+            }
         }
         return apps;
     }

@@ -112,20 +112,20 @@ app.ProductLister = {
             items: [
                 {
                     icontype: "awesome",
-                    icon: "fa-plus-circle",
-                    iconsize : "30",
-                    title: __f("Add a new product to the list"),
-                    click: function() {
-                        app.Product.create("productlist", application.attr('appid'));
-                    },
+                    icon: "fa-folder-open-o", 
+                   iconsize : "30",
+                    title: __f("Add / remove existing products"),
+                    click: app.ProductLister.editList,
                     extraArgs: {}
                 },
                 {
                     icontype: "awesome",
-                    icon: "fa-chevron-circle-down", 
-                   iconsize : "30",
-                    title: __f("Add / remove existing products"),
-                    click: app.ProductLister.editList,
+                    icon: "fa-plus-circle",
+                    iconsize : "30",
+                    title: __f("Create a new product"),
+                    click: function() {
+                        app.Product.create("productlist", application.attr('appid'));
+                    },
                     extraArgs: {}
                 },
                 {

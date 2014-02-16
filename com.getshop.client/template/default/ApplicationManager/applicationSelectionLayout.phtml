@@ -65,7 +65,7 @@ if(isset($_POST['data']['updatelayout'])) {
 $type = "default";
 $subtype = "default";
 $target = "default";
-if(isset($_POST['data']['pagetype'])) {
+if(isset($_POST['data']['pagetype']) && $_POST['data']['pagetype'] != "default") {
     $type = $_POST['data']['pagetype'];
     $content_groups = [$type];
     foreach($leftmenu as $index => $data) {

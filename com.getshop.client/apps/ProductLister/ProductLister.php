@@ -88,6 +88,12 @@ class ProductLister extends \WebshopApplication implements \Application {
 
         return $this->attributeGroups;
     }
+    
+    public function updateTitle() {
+        $title = $_POST['data']['title'];
+        $title = trim($title);
+        $this->setConfigurationSetting('title', $title);
+    }
 
     public function getTitle() {
         return $this->getConfigurationSetting('title');
@@ -103,7 +109,6 @@ class ProductLister extends \WebshopApplication implements \Application {
     }
 
     public function updateColumnCount() {
-        $this->delConfigurationSetting("type");
         $this->setConfigurationSetting("view", "listview");
         $this->setConfigurationSetting("column", $_POST['data']['count']);
     }

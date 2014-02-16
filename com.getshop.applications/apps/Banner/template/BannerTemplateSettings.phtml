@@ -1,6 +1,11 @@
+<?
+$height = $this->getHeight();
+
+?>
 <div class="informationboxbannersettings">
     <div class="banner_settings">
         <table>
+            <tr><td><? echo $this->__f("Height");?></td><td><input id="height" type="text" value="<? echo $height; ?>"/></td></tr>
             <tr><td><? echo $this->__f("Delay (ms)");?></td><td><input type="text"/></td></tr>
         </table>
         <br>
@@ -43,3 +48,7 @@
         </div>
     </div>
 </div>
+
+<script>
+    app.Banner.start();
+</script>

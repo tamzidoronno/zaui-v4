@@ -765,6 +765,12 @@ getshop.ImageEditor.prototype = {
             }
         }
         this.textFields = newArray;
+    },
+    
+    heightChanged: function(newHeight) {
+        var innerApp = this.config.app.closest('.applicationarea');
+        this.originalAspectRatio = innerApp.width() / newHeight;
+        this.refeshCropArea(false);
     }
 };
 

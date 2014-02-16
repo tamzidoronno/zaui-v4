@@ -47,7 +47,6 @@ class ImageDisplayer extends \ApplicationBase implements \Application {
         } else {
             $this->setConfigurationSetting("texts",null);
         }
-        
     }
     
     public function updateCordinates() {
@@ -62,7 +61,6 @@ class ImageDisplayer extends \ApplicationBase implements \Application {
         $this->setConfigurationSetting("image_cords", $serialized);
         $this->setConfigurationSetting("compression", $_POST['data']['compression']);
         $this->setConfigurationSetting("new_type", "1");
-        
     }
 
     public function saveOriginalImage() {        
@@ -116,7 +114,5 @@ class ImageDisplayer extends \ApplicationBase implements \Application {
         
         return $textFields;
     }
-
 }
-
 ?>

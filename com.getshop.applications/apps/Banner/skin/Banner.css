@@ -55,7 +55,7 @@
     border-radius: 5px;
 }
 .Banner .informationboxbannersettings .banner_settings_preview {
-    margin-top: 35px;
+    margin-top: 70px;
     font-size: 14px;
     color: #FFF;
     min-height: 120px;
@@ -65,7 +65,7 @@
 
 .Banner .informationboxbannersettings .banner_settings_preview .banner_settings_images {
     overflow-y: scroll;
-    height: 353px;
+    height: 320px;
     border-radius: 5px; 
     margin-top: 7px;
     margin-bottom: 7px;

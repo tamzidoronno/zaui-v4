@@ -25,6 +25,11 @@ class Banner extends \WebshopApplication implements \Application {
         return $this->bannerSet->banners;
     }
     
+    public function getHeight() {
+        $this->loadBannerSet();
+        return $this->bannerSet->height;
+    }
+    
     public function render() {
         $this->loadBannerSet();
         $this->includefile("BannerTemplate");
@@ -40,7 +45,7 @@ class Banner extends \WebshopApplication implements \Application {
     }
     
     public function setValidBanners() {
-        $allImages = $_POST['data'];
+        $allImages = $_POST['data']['images'];
         $this->loadBannerSet();
         foreach ($this->bannerSet->banners as $banner) {
             $imageId = $banner->imageId;
@@ -48,6 +53,9 @@ class Banner extends \WebshopApplication implements \Application {
                 $this->getApi()->getBannerManager()->removeImage($this->bannerSet->id, $imageId);
             }
         }
+        
+        $this->bannerSet->height = $_POST['data']['height'];
+        $this->getApi()->getBannerManager()->saveSet($this->bannerSet);
     }
     
     public function updateCordinates() {

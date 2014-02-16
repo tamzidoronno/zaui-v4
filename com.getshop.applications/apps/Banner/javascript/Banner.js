@@ -1,23 +1,70 @@
 app.Banner = {
     editors : [],
     currentApp: null,
+    saveInProgress: false,
     settingValidBanners: false,
     
     init: function() {
         $(document).on('click', '.Banner .addnewbanner', app.Banner.addNewBanner);
         $(document).on('click', '.Banner .saveset', app.Banner.saveSet);
         $(document).on('click', '.Banner .imageholder', app.Banner.imageClicked);
+        $(document).on('change', '.Banner #height', $.proxy(app.Banner.heightChanged, app.Banner));
+    },
+    
+    setHeight: function() {
+        var informationbox = this.getInformationBoxApp(); 
+        var height = parseInt(informationbox.find('#height').val());
+        if (!height) {
+            height = $(this.currentApp).height();
+        }
+        
+        informationbox.find('#height').val(height);
+    },
+    
+    start: function() {
+        app.Banner.setHeight();
+        app.Banner.createEditors();
+    },
+    
+    createEditors: function() {
+        $(this.getInformationBoxApp().find('.imageholder')).each(function () {
+            app.Banner.createEditor(this, true);
+        });
+    },
+    
+    getHeight: function() {
+        var informationbox = this.getInformationBoxApp(); 
+        return parseInt(informationbox.find('#height').val());
+    },
+    
+    heightChanged: function() {
+        var height = app.Banner.getHeight();
+        for (var i in app.Banner.editors) {
+            var editor = app.Banner.editors[i];
+            editor.heightChanged(height);
+        }
+    },
+    
+    getInformationBoxApp: function() {
+        return $($(document).find('[appid='+this.currentApp.attr('appid')+'].informationbox')[0]);
     },
     
     saveSet: function() {
-        var data = [];
+        app.Banner.saveInProgress = true;
+        
+        var data = {
+            images : []
+        };
+        
         app.Banner.getContainer(this).find('.imageholder').each(function() {
             if ($(this).attr('imageId')) {
-                data.push($(this).attr('imageId'));
+                data.images.push($(this).attr('imageId'));
             }
         });
         
         app.Banner.settingValidBanners = true;
+        data.height = app.Banner.getHeight();
+
         var event = thundashop.Ajax.createEvent(null, "setValidBanners", this, data);
         thundashop.Ajax.postWithCallBack(event, function() {
             app.Banner.settingValidBanners = false;
@@ -34,6 +81,10 @@ app.Banner = {
     },
     
     loadEdit : function(element, invokingApp) {
+        if (!app.Banner.saveInProgress) {
+            app.Banner.editors = [];
+        }
+        
         if($(app.Banner.editors).length > 0) {
             thundashop.common.Alert(__f("Please wait"), __f("You need to wait until all uploads has completed before you can do more modifications."), true);
             return;
@@ -122,6 +173,7 @@ app.Banner = {
         }
         
         if ($(app.Banner.editors).length === 0 && !app.Banner.settingValidBanners) {
+            app.Banner.saveInProgress = false;
             app.Banner.reloadBanner();
         }
     },

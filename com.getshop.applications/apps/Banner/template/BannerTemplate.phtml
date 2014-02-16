@@ -2,7 +2,8 @@
     <?php
 $id = uniqid();
     $interval = $this->getInterval();
-
+    $height = $this->getHeight() ? "height:".$this->getHeight()."px" : "";
+    
     if (count($this->getBanners()) == 0 && $this->isEditorMode()) {
         ?>
         <div class='nobannersadded'>
@@ -24,7 +25,7 @@ $id = uniqid();
             
         </div>
     </div>
-    <div class="bannerslider" id="<? echo $id; ?>" interval="<? echo $interval; ?>">
+    <div style='<? echo $height; ?>' class="bannerslider" id="<? echo $id; ?>" interval="<? echo $interval; ?>">
         <?
         foreach ($this->getBanners() as $banner) {
             $imageId = $banner->imageId;
@@ -43,7 +44,7 @@ $id = uniqid();
             if ($crop) {
                 $cropData = "&crop=true&x=" . $crop->x . "&x2=" . $crop->x2 . "&y=" . $crop->y . "&y2=" . $crop->y2 . "&rotation=".$banner->rotation;
             }
-            echo "<img width='100%' src='displayImage.php?id=$imageId" . $cropData . "'/>";
+            echo "<img height='".$height."' width='100%' src='displayImage.php?id=$imageId" . $cropData . "'/>";
             if (isset($banner->productId) && strlen(trim($banner->productId)) > 0) {
                 echo "</a>";
             }

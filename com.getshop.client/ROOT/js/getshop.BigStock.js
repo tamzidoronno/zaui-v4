@@ -211,7 +211,7 @@ getshop.BigStock.prototype = {
     },
     
     search: function() {
-        var text = $('#bigstocksearch').val();
+        var text = this.outerDom.find('#bigstocksearch').val();
         getshop.BigStockApi.search($.proxy(this.receivedResult, this), text, this.currentPage);
     },
     
@@ -227,6 +227,7 @@ getshop.BigStock.prototype = {
         this.previewForm.find("img").attr('src', this.currentImage.preview.url);
         this.previewForm.find(".bigstock_preview_title").html(this.currentImage.title);
         this.previewForm.show();
+        
     },
     
     updateAvailableCreditField: function() {

@@ -70,8 +70,8 @@ class Banner extends \WebshopApplication implements \Application {
             foreach ($textFields as $textFieldPost) {
                 $textField = new \app_bannermanager_data_BannerText();
                 $textField->colour = $textFieldPost['color'];
-                $textField->x = $textFieldPost['x'];
-                $textField->y = $textFieldPost['y'];
+                $textField->x = round($textFieldPost['x']);
+                $textField->y = round($textFieldPost['y']);
                 $textField->size = round($textFieldPost['fontSize']);
                 $textField->text = $textFieldPost['text'];
                 $imagetext[] = $textField;

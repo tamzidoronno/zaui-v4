@@ -2825,35 +2825,6 @@ class PageManager(object):
 class ProductManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
-  def addImage(self, productId, productImageId, description):
-    args = collections.OrderedDict()
-    if isinstance(productId,GetShopBaseClass): 
-      args["productId"]=json.dumps(productId.__dict__)
-    else:
-      try:
-        args["productId"]=json.dumps(productId)
-      except (ValueError, AttributeError):
-        args["productId"]=productId
-    if isinstance(productImageId,GetShopBaseClass): 
-      args["productImageId"]=json.dumps(productImageId.__dict__)
-    else:
-      try:
-        args["productImageId"]=json.dumps(productImageId)
-      except (ValueError, AttributeError):
-        args["productImageId"]=productImageId
-    if isinstance(description,GetShopBaseClass): 
-      args["description"]=json.dumps(description.__dict__)
-    else:
-      try:
-        args["description"]=json.dumps(description)
-      except (ValueError, AttributeError):
-        args["description"]=description
-    data = EmptyClass()
-    data.args = args
-    data.method = "addImage"
-    data.interfaceName = "core.productmanager.IProductManager"
-    return self.communicationHelper.sendMessage(data)
-
   def changeStockQuantity(self, productId, count):
     args = collections.OrderedDict()
     if isinstance(productId,GetShopBaseClass): 
@@ -2897,6 +2868,14 @@ class ProductManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getAllProducts"
+    data.interfaceName = "core.productmanager.IProductManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getAllProductsLight(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getAllProductsLight"
     data.interfaceName = "core.productmanager.IProductManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -3428,6 +3407,14 @@ class StoreManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "enableSMSAccess"
+    data.interfaceName = "core.storemanager.IStoreManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def generateStoreId(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "generateStoreId"
     data.interfaceName = "core.storemanager.IStoreManager"
     return self.communicationHelper.sendMessage(data)
 

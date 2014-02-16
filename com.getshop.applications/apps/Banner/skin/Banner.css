@@ -1,141 +1,138 @@
-.Banner {
+.Banner .nobannersadded {
     position: relative;
-}
-.bannerslider {
-    min-height: 100px;
+    background-image: url('{IMAGEFOLDER}/emptybanner.png');
+    background-size: cover;
 }
 
-.bannerslider .banner {
+.Banner .nobannersadded .banner_info_text {
+    font-size: 16px;
+    color: #FFF;
+    position: absolute;
+    box-shadow: 0px 0px 5px #333;
+    background-color: rgba(0,0,0,0.7);
+    max-width: 300px;
+    padding: 9px;
+    left: 20px;
+    top: 30px;
+}
+
+.Banner .informationboxbannersettings {
+    padding: 20px;
+}
+
+.Banner .informationboxbannersettings .banner_settings {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+}
+.banner_preview_title {
+    text-align: left;
+    padding-left: 4px;
+}
+
+.Banner .informationboxbannersettings .no_image_text_information {
     display: none;
 }
 
-.bannerssettings {
-    padding: 10px;
+.Banner .informationboxbannersettings .banner_settings td {
+    color: #FFF;
+    font-size: 14px;
 }
 
-.editormode .bannerslider {
-    background-size: 100%;
-}
-
-.editormode .Banner .systembutton {
-    background-color: #FFF;
-}
-
-.Banner {
-    position: relative;
-}
-
-.Banner .systembutton {
-    position: absolute; 
-    right: 0px; 
-    top: 3px;
-}
-
-.Banner .addProduct {
-    width: 530px;
-}
-
-
-.Banner .remove_image_button {
-    position:absolute;
-    right: 10px;
-}
-
-.Banner .update_banner_outer { text-align:right; }
-
-.Banner .thumbnail.empty {
-    height: 100px;
-    width: 200px;
-    background-image: url('{IMAGEFOLDER}/emptybanner.png');
-}
-
-.Banner .bannerssettings input {
-    width: 195px;
-    margin-top: 5px;
-}
-
-.Banner .bannerssettings .button {
-    margin-top: 5px;
-}
-
-.information.banner {
-    margin: 10px;
-    border: solid 0px;
-}
-
-.bannerssettings.main {
-    background-color: #666;
-}
-
-.banner-settings-savebutton {
-    cursor: pointer; 
-    font-size: 20px; 
-    margin: 10px; 
-    color:#ccc;
-    background-color: #3f3f3f; 
-    border: solid 1px #313131; 
-    line-height: 40px;
+.Banner .informationboxbannersettings .banner_image_editor .image_editor_got_no_image {
+    font-size: 14px;
+    color: #FFF;
     text-align: center;
+    padding-top: 20px;
 }
-
-.banner-settings-savebutton:hover {
-    background-color: #666666;
-}
-
-#informationbox.Banner { background-color:#666; }
-
-.Banner .dots {
-    width: 100%;
-    text-align: center;
+.Banner .informationboxbannersettings .banner_image_editor {
     position: absolute;
-    bottom: 0px;
+    left: 290px;
+    top: 20px;
+    right: 20px;
+    bottom: 20px;
+    border: dashed 1px #3f3f3f;
+    border-radius: 5px;
 }
-.Banner .dots .dot {
-    width: 23px;
-    height: 24px;
+.Banner .informationboxbannersettings .banner_settings_preview {
+    margin-top: 35px;
+    font-size: 14px;
+    color: #FFF;
+    min-height: 120px;
+    width: 248px;
+    text-align: center;
+}
+
+.Banner .informationboxbannersettings .banner_settings_preview .banner_settings_images {
+    overflow-y: scroll;
+    height: 353px;
+    border-radius: 5px; 
+    margin-top: 7px;
+    margin-bottom: 7px;
+}
+
+.Banner .informationboxbannersettings .banner_settings_preview .imageholder:first-child {
+    margin-top: 0px;
+}
+
+.Banner .informationboxbannersettings .banner_settings_preview .banner_settings_images::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+.Banner .informationboxbannersettings .banner_settings_preview .banner_settings_images::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+    border-radius: 10px;
+}
+ 
+.Banner .informationboxbannersettings .banner_settings_preview .banner_settings_images::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+
+
+.Banner .informationboxbannersettings  .imageholder {
+    position:relative;
+    border: solid 1px #3f3f3f;
+    background-color: #000;
+    display: inline-block;
+    margin: 12px;
+    height: 150px;
+    vertical-align: middle;
+    width: 150px;
     cursor: pointer;
-    background-image: url('{IMAGEFOLDER}/dot.png');
 }
 
-.Banner .dots .dot.selected {
-    background-image: url('{IMAGEFOLDER}/dot-blue.png');
+.Banner .informationboxbannersettings .imageholder img {
+    position:absolute;
+    top: 5px;
+    bottom:5px;
+    left: 5px;
+    right: 5px;
+    margin:auto;
+    max-height: 140px;
+    max-width: 140px;
 }
-.Banner #sortable { 
-    list-style-type: none;
-    padding: 0px;
-    margin: 0px;
+
+.Banner .banner_slider_upload_container img {
+    max-width: 120px;
+    max-height: 120px;
 }
-
-.Banner .dragobject .toolbar { display:none; position:absolute; }
-
-.Banner .progressbar { display:inline-block; width: 200px; height:12px; border: solid 1px #BBB; float:right; }
-.Banner .progressbar .progress_completed { background-color:#539b43; height: 12px; width: 0%; display:inline-block; }
-.Banner .progressbar_container { position:absolute; right: 10px; width: 300px; margin-top:10px; display:none; }
-
-.Banner .add_text { height:14px;padding:2px; cursor:pointer; }
-.Banner .add_text img { float:left;height:12px;padding-left:5px; }
-.Banner .add_text span { float:left; line-height:12px;padding-left:10px; }
-.Banner .delete_banner_image { height:25px;padding:2px;  cursor: pointer; }
-
-.Banner .textfields .image_banner_text { display:none; }
-.Banner .no_cords { background-color: red; }
-.Banner .image_banner_text { display:block; }
-.Banner .link_input { width: 500px; display:none; }
-.Banner .drag {display:inline-block; width: 15px; height: 15px; background-size: 15px; background-image: url('skin/default/images/icons/move.png'); }
-.Banner .remove {display:inline-block; width: 15px; height: 15px; background-size: 15px; background-image: url('skin/default/images/trash-can.png'); }
-.Banner .text_color_selection {display:inline-block; width: 15px; height: 15px; background-size: 15px; background-image: url('skin/default/images/colorselect.png'); }
-.Banner .toolbar { padding-top: 3px; }
-.Banner .toolbar select { position:absolute; left: 55px; bottom: 0px; font-size:12px; }
-.Banner .banner_text { display:none; }
-#sortable li { 
-    margin: 0px 0px 0px 0; float: left; width: 40px; height:35px; font-size: 4em; text-align: center; }
-
-
-#informationbox.Banner .gs_tab,
-#informationbox.Banner ul#sortable .sort_entry {
+.Banner .uploadprogress_bannerslider {
+    font-size: 14px;
+}
+.Banner .banner_slider_upload_container {
+    display: inline-block;
     vertical-align: top;
-    display: inline-block;
+    width: 120px;
+    height: 120px;
+    margin: 10px;
+    border: solid 1px #333;
 }
-#informationbox.Banner ul#sortable {
-    display: inline-block;
+
+.Banner .bannerview .banner {
+    display: none;
+}
+
+.Banner .uploadprogress_bannerslider {
+    display: none;
 }

@@ -10,6 +10,9 @@ class app_bannermanager_data_Banner {
 	public $link;
 
 	/** @var String */
+	public $rotation;
+
+	/** @var String */
 	public $crop_cordinates;
 
 	/** @var String */

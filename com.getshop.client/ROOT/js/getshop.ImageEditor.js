@@ -53,8 +53,26 @@ getshop.ImageEditor.prototype = {
         this.setBoundaries();
         this.refresh();
     },
+    show: function() {
+        this.attachToDom.show();
+    },
+    hide: function() {
+        this.attachToDom.hide();
+    },
+    hideSaveButton: function() {
+        this.menu.find('.fa-save').closest('.entry').hide();
+    },
+    hideChangeButton: function() {
+        this.menu.find('.fa-trash-o').closest('.entry').hide();
+    },
+    hideAspectRatioButton: function() {
+        this.menu.find('.fa-lock').closest('.entry').hide();
+    },
+    enableAspectRatio: function() {
+        this.menu.find('.fa-lock').addClass('active');
+    },
     setDefaultCrops: function() {
-        if (!this.config.crops) {
+        if (!this.config.crops && this.config.app) {
             var innerApp = this.config.app.closest('.applicationarea');
             this.config.crops = [0, 0, innerApp.width(), innerApp.height()];
         }
@@ -229,33 +247,23 @@ getshop.ImageEditor.prototype = {
         this.menu.addClass('gs_image_editor_menu');
 
         this.innerDom.append(this.menu);
-
-        var disableAspectRatio = this.createMenuEntry(__f("Aspect ratio"), 'fa-lock');
-        var menuEntry = this.addEntryToMenu(disableAspectRatio);
-        menuEntry.click($.proxy(this.toggleAspectRation, this));
-
-        disableAspectRatio = this.createMenuEntry(__f("Change"), 'fa-trash-o');
-        menuEntry = this.addEntryToMenu(disableAspectRatio);
-        menuEntry.click($.proxy(this.deleteImage, this));
-
-        disableAspectRatio = this.createMenuEntry(__f("Rotate left"), 'fa-rotate-left');
-        menuEntry = this.addEntryToMenu(disableAspectRatio);
-        menuEntry.click($.proxy(this.rotateLeft, this));
-
-        disableAspectRatio = this.createMenuEntry(__f("Rotate right"), 'fa-rotate-right');
-        menuEntry = this.addEntryToMenu(disableAspectRatio);
-        menuEntry.click($.proxy(this.rotateRight, this));
-
-        disableAspectRatio = this.createMenuEntry(__f("Add text"), 'fa-bold');
-        menuEntry = this.addEntryToMenu(disableAspectRatio);
+        
         var me = this;
-        menuEntry.click(function() {
+        this.addMenuEntry("Rotate left", 'fa-rotate-left', $.proxy(this.rotateLeft, this));
+        this.addMenuEntry("Rotate right", 'fa-rotate-right', $.proxy(this.rotateRight, this));
+        this.addMenuEntry("Aspect ratio", 'fa-lock', $.proxy(this.toggleAspectRation, this));
+        this.addMenuEntry("Change", 'fa-trash-o', $.proxy(this.deleteImage, this));
+        this.addMenuEntry("Add text", 'fa-bold', function() {
             me.addTextField({});
         });
+        this.addMenuEntry("Save", 'fa-save', $.proxy(this.saveImage, this));
+    },
+    
+    addMenuEntry: function(text, classes, func) {
+        var disableAspectRatio = this.createMenuEntry(__f(text), classes);
+        var menuEntry = this.addEntryToMenu(disableAspectRatio);
+        menuEntry.click(func);
 
-        disableAspectRatio = this.createMenuEntry(__f("Save"), 'fa-save');
-        menuEntry = this.addEntryToMenu(disableAspectRatio);
-        menuEntry.click($.proxy(this.saveImage, this));
     },
     addTextField: function(config) {
         var textField = new getshop.ImageEditorTextField(config, this);
@@ -263,7 +271,7 @@ getshop.ImageEditor.prototype = {
         textField.cropChanged(this.config.crops);
         this.textFields.push(textField);
     },
-    getFullSizeOriginalImage: function() {
+    getFullSizeOriginalImageData: function() {
         var image = this.config.OriginalImage;
         var canvas = document.createElement("canvas");
         canvas.width = image.width;
@@ -319,7 +327,7 @@ getshop.ImageEditor.prototype = {
     getCurrentPageId: function() {
         return $('.skelholder').find('#pageid').attr('value');
     },
-    saveImage: function() {
+    saveImage: function(silent) {
         PubSub.publish("LAYOUT_UPDATED", "image");
 
         this._uploadStarted();
@@ -343,27 +351,26 @@ getshop.ImageEditor.prototype = {
         if (this.config.imageId) {
             data.imageId = this.config.imageId;
         }
+        
+        var dontUpdate = (silent === true);
 
         if (this.config.imageId) {
             var event = thundashop.Ajax.createEvent('', 'updateCordinates', this.config.app, data);
-            thundashop.Ajax.post(event, $.proxy(this.uploadCompleted, this));
+            thundashop.Ajax.post(event, $.proxy(this.uploadCompleted, this), null, dontUpdate, dontUpdate);
             return;
         }
 
-        data.data = this.getFullSizeOriginalImage();
+        data.data = this.getFullSizeOriginalImageData();
 
         var event = thundashop.Ajax.createEvent('', 'saveOriginalImage', this.config.app, data);
         event.synchron = true;
-
-        var dontUpdate = true;
-        var dontShowLoaderBox = true;
 
         thundashop.Ajax.post(
                 event,
                 $.proxy(this.uploadCompleted, this),
                 null,
-                dontUpdate,
-                dontShowLoaderBox,
+                true,
+                true,
                 {
                     "uploadcallback": $.proxy(this.uploadProgress, this)
                 }
@@ -570,6 +577,15 @@ getshop.ImageEditor.prototype = {
             this.addTexts();
         }
     },
+    
+    /**
+     * Listen for this event if you want to
+     * be notified if a picture has been changed
+     */
+    onImageChanged:function(func) {
+        this._onImageLoaded = func;
+    },
+    
     addTexts: function() {
         for (var key in this.config.textFields) {
             var config = this.config.textFields[key];
@@ -605,6 +621,13 @@ getshop.ImageEditor.prototype = {
 
         this.config.OriginalImage = new Image();
         this.config.OriginalImage.src = canvas.toDataURL();
+        this.config.OriginalImage.onload = $.proxy(this.originalImageLoaded, this);
+    },
+    
+    originalImageLoaded: function() {
+        if (typeof(this._onImageLoaded) === "function") {
+            this._onImageLoaded(this);
+        }  
     },
     removeCropping: function() {
         var jCropApi = $(this.canvasDivInner).data('Jcrop');
@@ -720,6 +743,17 @@ getshop.ImageEditor.prototype = {
         this.previewContainer.append(img);
         this.previewContainer.append(this.progressDiv);
         return this.previewContainer;
+    },
+    
+    /**
+     * Returns the fullsize image uncropped.
+     * 
+     * @returns {getshop.ImageEditor.prototype.getFullSizeImage.img|Image}
+     */
+    getFullSizeImage: function() {
+        var img = new Image();
+        img.src = this.getFullSizeOriginalImageData();
+        return img;
     },
     
     removeTextField: function(textField) {

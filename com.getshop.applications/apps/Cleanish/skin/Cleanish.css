@@ -78,7 +78,6 @@ body { font-family: "PT Sans",Arial,Helvetica,sans-serif !important; }
 .semi_footer { margin: 0 auto;  width: 998px;}
 
 
-.Banner { margin-bottom: 60px; }
 .ProductList .latestproducttext { margin-left: 20px; }
 .ProductList .boxview .product { border: solid 1px #BBBBBB; float:left; border-radius: 5px; }
 .ProductManager .attributecontainer, .ProductManager .description { padding: 10px; }

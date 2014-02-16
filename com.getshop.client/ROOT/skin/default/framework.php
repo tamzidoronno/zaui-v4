@@ -184,12 +184,11 @@ height: 50px;
 text-align: left;
 font-size: 30px;
 color: #FFF;
-font-family: arial;
 padding-left: 20px;
 background-color: #3f3f3f;
 z-index: 1;
 top: 17px;
-font-family: "Lucida Console", Monaco, monospace;
+font-family: Baskerville, "Baskerville Old Face", "Hoefler Text", Garamond, "Times New Roman", serif;
 }
 
 #infomrationboxclosebutton {

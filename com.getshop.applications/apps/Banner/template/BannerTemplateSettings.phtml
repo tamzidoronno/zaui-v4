@@ -1,114 +1,45 @@
-<?
-namespace ns_d612904c_8e44_4ec0_abf9_c03b62159ce4;
-
-$height = 100;
-$interval = 5000;
-$checked = "";
-
-if ($this->isShowDots()) {
-    $checked = "checked";
-}
-
-if (isset($this->bannerSet->height)) {
-    $height = $this->bannerSet->height;
-}
-if (isset($this->bannerSet->interval)) {
-    $interval = $this->bannerSet->interval;
-}
-?>
-<div gstype="form" class="bannersettingsform"  method="SetSize" output="informationbox">
-    <div class="bannerssettings main">
-        <?
-        echo $this->__f("By setting the settings below you will change the banners size, this is convenient if you need to make your banner fit better to your design.");
-        ?>
+<div class="informationboxbannersettings">
+    <div class="banner_settings">
+        <table>
+            <tr><td><? echo $this->__f("Delay (ms)");?></td><td><input type="text"/></td></tr>
+        </table>
         <br>
-        <div style="width:500px;" class="thumbnail inline">
-            <table>
-                <tr><td><?php echo $this->__f("Height"); ?></td><td><input id="height" gsname="height" type="number" value="<?php echo $height; ?>"/></td></tr>
-                <tr><td><?php echo $this->__f("Interval"); ?></td><td><input id="interval" gsname="interval" type="textfield" value="<?php echo $interval; ?>"/></td><td>Time between each image is displayed</td></tr>
-                <tr><td><?php echo $this->__f("Display dots"); ?></td><td><input id="showdots" gsname="showdots" type="checkbox" <? echo $checked; ?>/></td><td><? echo $this->__f("Check this on to show dots on image."); ?></td></tr>
-            </table>
-        </div>
-        <br>
-        <!-- <div id="banner_save_size" class="rightwrapper inline">
-            <div style="margin-top: 5px; margin-left:4px;" class="button">
-                <div class="rightglare"></div>
-                <div class="filler"></div>
-                <ins style="width: 100px;" gstype="submit">
-        <?php echo $this->__("save", 'common'); ?>
-                </ins>
-            </div>
-        </div> -->
     </div>
-
-    <div class='textfields'>
-        <?
-        foreach ($this->getBanners() as $banner) {
-            foreach($banner->imagetext as $text) {
-                /* @var $text \app_bannermanager_data_BannerText */
-                echo "<div class='image_banner_text' color='".$text->colour."' size='".$text->size."' contenteditable='true' imageid='".$banner->imageId."' x='".$text->x."' y='".$text->y."'>".  base64_encode($text->text)."</div>";
-            }
-        }
-        ?>
-    </div>
-    
-
-    <span class="progressbar_container">
-        <? echo $this->__f("Uploading image"); ?>
-        <span class="progressbar">
-            <span class="progress_completed">
+    <div>
+        <div class='banner_settings_preview'>
+            <div class='banner_preview_title'><? echo $this->__f("Your image list"); ?></div>
+            <div class='banner_settings_images'>
+                <? 
+                $banners = $this->getBanners();
                 
-            </span>
-        </span>
-    </span>
-    <div class="gs_tabs">
-        <?php 
-        $i = 1;
-        echo "<ul id='sortable'>";
-        foreach ($this->getBanners() as $banner) {
-            echo "<li class='sort_entry'>";
-            echo '<div class="gs_tab" target="banner_config_area" route="'.$i.'" imageid="'.$banner->imageId.'" cords=\''.$banner->crop_cordinates.'\' link="'.base64_encode($banner->link).'">'.$i.'</div>';
-            echo "</li>";
-            $i++;
-        }
-        
-        if($i == 1) {
-            echo '<div class="gs_tab" target="banner_config_area" route="'.$i.'" imageid="">'.$i.'</div>';
-            
-        }
-        
-        echo "</ul>";
-        echo '<div class="gs_tab" target="banner_config_area" route="new">+</div>';
-        ?>
-    </div>
-    <div style='position:relative;'>
-            <span id='imageoptions' style="position:absolute; padding: 5px; right:0px; top:0px; display:inline-block; width: 100px; border-left:solid 1px #BBB;border-bottom:solid 1px #BBB;">
-                <div class='add_text'><img src='skin/default/images/text.png'><span><? echo $this->__f("Add text"); ?></span></div>
-                <div class='delete_banner_image'><img style='float:left;' src='skin/default/images/trash.png'><span style='float:left; line-height:22px;padding-left:6px;'><? echo $this->__f("Delete image"); ?></span></div>
-                <div style='padding-left:6px;padding-bottom:3px;'><? echo $this->__f("Width"); ?> : <span id='imagewidth'></span></div>
-                <div style='padding-left:6px;padding-bottom:3px;'><? echo $this->__f("Height"); ?> : <span id='imageheight'></span></div>
-            </span>
-    </div>
-    <div class="gs_tab_area banner_config_area gs_tab_area_active">
-        <div style="display:block; width: 900px; text-align:center; min-height:200px;">
-            <span class="add_image_preview_frame" style="margin: 10px; max-width: 800px; display:inline-block;">
-            </span>
-            <div>
-                    <input type="text" placeholder="<? echo $this->__f("Link"); ?>" class="link_input">
+                if (count($banners) == 0) {
+                    echo "<div style='display:block;' class='no_image_text_information'><br>&nbsp;&nbsp;<b>".$this->__f("Dude! you have not uploaded any images yet. Click the add image button")."</b></div>";
+                } else {
+                    echo "<div class='no_image_text_information'><br>&nbsp;&nbsp;<b>".$this->__f("Dude! you have not uploaded any images yet. Click the add image button")."</b></div>";
+                }
+                foreach ($banners as $banner) { 
+                    $crops = json_decode($banner->crop_cordinates);
+                    $cropsData = "";
+                    $rotation = isset($banner->rotation) ? $banner->rotation : 0;
+                    
+                    if ($crops) {
+                        $cropsData = $crops->x.":".$crops->y.":".$crops->x2.":".$crops->y2;
+                    }
+                    
+                    ?>
+                    <div class='imageholder' rotation="<? echo $rotation; ?>" crops="<? echo $cropsData ?>" imageId="<? echo $banner->imageId; ?>">
+                        <div class='innerholder' >
+                            <img src="/displayImage.php?id=<? echo $banner->imageId; ?>"/>
+                        </div>
+                    </div>
+                <? } ?>
             </div>
+            <span class='gs_button addnewbanner'><? echo $this->__f("Add image"); ?></span>
+            <span class='gs_button saveset'><? echo $this->__f("Save"); ?></span>
+        </div>    
+        
+        <div class='banner_image_editor'>
+            <div class='image_editor_got_no_image'><? echo $this->__f("Please select an image from you image list"); ?></div>
         </div>
     </div>
 </div>
-<div class="banner-settings-savebutton update_banner">
-    <? echo $this->__f("Save Settings"); ?>
-</div>
-<div>&nbsp;</div>
-<script>
-    $('#informationbox.Banner .gs_tab[route="1"]').click();
-    $('#informationbox #sortable').sortable( {
-        delay: 150,
-        stop : function() {
-            app.Banner.sortUpdated();
-        }
-    });
-</script>

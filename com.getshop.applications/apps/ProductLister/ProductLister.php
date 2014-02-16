@@ -2,7 +2,7 @@
 
 namespace ns_962ce2bb_1684_41e4_8896_54b5d24392bf;
 
-class ProductLister extends \ApplicationBase implements \Application {
+class ProductLister extends \WebshopApplication implements \Application {
 
     var $entries;
     var $dept;
@@ -98,10 +98,15 @@ class ProductLister extends \ApplicationBase implements \Application {
         if (!$count) {
             $count = 1;
         }
+        if($this->getConfigurationSetting("type") == "1") {
+            $count = 2;
+        }
+        
         return $count;
     }
 
     public function updateColumnCount() {
+        $this->delConfigurationSetting("type");
         $this->setConfigurationSetting("view", "listview");
         $this->setConfigurationSetting("column", $_POST['data']['count']);
     }

@@ -11,7 +11,7 @@ $view = $this->getView();
 if ($view != "rowview") {
     $view = "listview";
 }
-
+ 
 if (!$products) {
     $products = array();
 }
@@ -19,7 +19,7 @@ $count = $this->getColumnCount();
 $countClass = "c" . $count;
 if ($count > 1) {
     $countClass = "boxed c" . $count;
-    $view = "listview";
+    $view = "listview"; 
 }
 ?>
 
@@ -92,9 +92,6 @@ if ($count > 1) {
                         <div class="price"><? echo $this->getFactory()->getCurrencyName(); ?><? echo $product->price; ?></div>
                         <div class='row_bottom'></div>
                     </a>
-                    <? if ($this->hasWriteAccess()) { ?>
-                        <span  type='productlist' class="gs_button small remove_product"><? echo $this->__f("Remove"); ?></span>
-                    <? } ?>
                     <span  type='productlist' class="gs_button small buy_product"><? echo $this->__f("Buy"); ?></span>
                 </div>
             </div>

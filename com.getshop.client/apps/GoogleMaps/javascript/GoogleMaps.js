@@ -124,6 +124,11 @@ thundashop.app.GoogleMaps.prototype = {
                 }
             }
         });
+        
+        if(container.closest('.gs_inner').find('.app').length === 1) {
+            maxHeight = container.closest('.gs_inner').innerHeight();
+        }
+        
         if (maxHeight > 0) {
             if(this.map !== null) {
                 $(this.mapDiv).width(container.width());

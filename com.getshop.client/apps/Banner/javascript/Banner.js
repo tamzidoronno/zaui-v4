@@ -7,7 +7,7 @@ app.Banner = {
     init: function() {
         $(document).on('click', '.Banner .addnewbanner', app.Banner.addNewBanner);
         $(document).on('click', '.Banner .saveset', app.Banner.saveSet);
-        $(document).on('click', '.Banner .imageholder', app.Banner.imageClicked);
+        $(document).on('click', '.Banner .banner_settings_images .imageholder', app.Banner.imageClicked);
         $(document).on('change', '.Banner #height', $.proxy(app.Banner.heightChanged, app.Banner));
     },
     

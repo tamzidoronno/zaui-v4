@@ -57,11 +57,17 @@ app.Banner.Slider = {
         $('.Banner .banner_text').hide();
 
         $(current).attr('visible', "0");
+        $(current).parent().find('.text_over_image').hide();
         $(current).hide();
         
         $(next).attr('visible', "1");
+        
         $(next).show();
-
+        
+        setTimeout(function() {
+            $(next).parent().find('.text_over_image').fadeIn(500);
+        }, 300);
+        
         $('.dots .dot').each(function() {
             $(this).removeClass('selected');
         });
@@ -73,7 +79,7 @@ app.Banner.Slider = {
 
         if (nextImageCounter >= banners.length) {
             app.Banner.Slider.banners[id].nextImageCounter = 0;
-//        } else {
+        } else {
             app.Banner.Slider.banners[id].nextImageCounter = nextImageCounter;
         }
 
@@ -84,6 +90,7 @@ app.Banner.Slider = {
         var textHolder = $("<span>");
         textHolder.addClass('text_over_image');
         textHolder.css('position', 'absolute');
+        textHolder.css('display', 'none');
         textHolder.css('left', config.x);
         textHolder.css('font-size', config.fontSize);
         textHolder.css('z-index', 1);

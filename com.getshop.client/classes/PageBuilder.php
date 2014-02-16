@@ -883,7 +883,7 @@ class PageBuilder {
         ?>
         <div class='gs_row r1 gs_outer'>
             <div class='gs_inner'>
-                <table width="100%" cellspacing="0" cellpadding="0" style="table-layout:fixed;">
+                <table width="100%" cellspacing="0" cellpadding="0">
                     <tr>
         <? if ($this->layout->leftSideBar > 0) { ?>
                             <td width="<? echo $this->layout->leftSideBarWidth; ?>%" valign="top" class='gs_col c<? echo $colcount; ?> gs_margin_right'>

@@ -98,9 +98,6 @@ class ProductLister extends \WebshopApplication implements \Application {
         if (!$count) {
             $count = 1;
         }
-        if($this->getConfigurationSetting("type") == "1") {
-            $count = 2;
-        }
         
         return $count;
     }

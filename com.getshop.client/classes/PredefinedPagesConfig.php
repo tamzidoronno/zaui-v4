@@ -110,6 +110,8 @@ class PredefinedPagesConfig {
         $product = PredefinedPagesConfig::$PRODUCT;
         
         $res = array();
+        $res[] = array(array($image, $text));
+        
         $res[] = array(array($image, $image), array($text));
         
         $res[] = array(array($image, $text), array($text, $movie));

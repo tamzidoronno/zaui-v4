@@ -98,7 +98,7 @@ class ImageDisplayer extends \ApplicationBase implements \Application {
     }
 
     public function render() {
-        if (!$this->getConfigurationSetting("original_image")) {
+        if (!$this->getConfigurationSetting("original_image") && $this->hasWriteAccess()) {
             $this->includefile("uploadimage");
         }
         

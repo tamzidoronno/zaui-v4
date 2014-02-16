@@ -167,19 +167,21 @@ class PageBuilder {
             $this->convertToNewLayout(false);
         }
         if(!$this->layout || sizeof($this->layout->rows) == 0) {
-            echo "<center>";
-            echo "<div class='no_page_layout'>";
-            echo "<div>".$this->factory->__f("Before you can add content to this page, you will have to set up a layout for this page.")."</div>";
-            echo "<div class='click'>".$this->factory->__f("Open page configuration")."</div>";
-            echo "</div>";
-            echo "</center>";
-            $page = $this->factory->getPage()->backendPage;
-            if(!$page->beenLoaded) {
-                $page->beenLoaded = true;
-                $this->factory->getApi()->getPageManager()->savePage($page);
-                echo "<script>";
-                echo "thundashop.MainMenu.showPageLayoutSelection();";
-                echo "</script>";
+            if($this->factory->isEditorMode()) {
+                echo "<center>";
+                echo "<div class='no_page_layout'>";
+                echo "<div>".$this->factory->__f("Before you can add content to this page, you will have to set up a layout for this page.")."</div>";
+                echo "<div class='click'>".$this->factory->__f("Open page configuration")."</div>";
+                echo "</div>";
+                echo "</center>";
+                $page = $this->factory->getPage()->backendPage;
+                if(!$page->beenLoaded) {
+                    $page->beenLoaded = true;
+                    $this->factory->getApi()->getPageManager()->savePage($page);
+                    echo "<script>";
+                    echo "thundashop.MainMenu.showPageLayoutSelection();";
+                    echo "</script>";
+                }
             }
         } else {
             $this->printLayout();

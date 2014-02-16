@@ -1,8 +1,9 @@
 <div class="bannerview">
     <?php
-$id = uniqid();
+    $id = uniqid();
     $interval = $this->getInterval();
     $height = $this->getHeight() ? "height:".$this->getHeight()."px" : "";
+    $texts = [];
     
     if (count($this->getBanners()) == 0 && $this->isEditorMode()) {
         ?>
@@ -29,6 +30,8 @@ $id = uniqid();
         <?
         foreach ($this->getBanners() as $banner) {
             $imageId = $banner->imageId;
+            $texts[$imageId] = $banner->imagetext;
+            
             echo "<div class='banner' imageId='$imageId'>";
            
             if (isset($banner->productId) && strlen(trim($banner->productId)) > 0) {
@@ -61,7 +64,7 @@ $id = uniqid();
                 foreach ($this->getBanners() as $banner) {
                     $imageId = $banner->imageId;
                     ?>
-                    <div onclick="app.Banner.goToImage('<? echo $id; ?>', <? echo $i; ?>)" imageid="<? echo $imageId; ?>" class="dot inline"></div>
+                    <div onclick="app.Banner.Slider.goToImage('<? echo $id; ?>', <? echo $i; ?>)" imageid="<? echo $imageId; ?>" class="dot inline"></div>
                     <?
                     $i++;
                 }
@@ -70,8 +73,11 @@ $id = uniqid();
 <? } ?>
     </div>
 
-
+<?
+    $jsonTexts = json_encode($texts);
+?>
     <script>
         app.Banner.Slider.start('<?php echo $id; ?>');
+        app.Banner.Slider.showText('<?php echo $id; ?>', <? echo $jsonTexts; ?>)
     </script>
 </div>

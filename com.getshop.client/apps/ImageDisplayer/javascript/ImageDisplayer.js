@@ -37,6 +37,7 @@ app.ImageDisplayer = {
         var textHolder = $("<span>");
         textHolder.addClass('text_over_image');
         textHolder.css('position', 'absolute');
+        textHolder.css('displa', 'none');
         textHolder.css('left', config.x);
         textHolder.css('font-size', config.fontSize);
         textHolder.css('color', "#"+config.color);

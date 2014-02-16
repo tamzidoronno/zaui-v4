@@ -73,10 +73,55 @@ app.Banner.Slider = {
 
         if (nextImageCounter >= banners.length) {
             app.Banner.Slider.banners[id].nextImageCounter = 0;
-        } else {
+//        } else {
             app.Banner.Slider.banners[id].nextImageCounter = nextImageCounter;
         }
 
         this.startTimeout(id);
+    },
+          
+    addTextToImage: function(imageContainer, config) {
+        var textHolder = $("<span>");
+        textHolder.addClass('text_over_image');
+        textHolder.css('position', 'absolute');
+        textHolder.css('left', config.x);
+        textHolder.css('font-size', config.fontSize);
+        textHolder.css('z-index', 1);
+        textHolder.css('color', "#"+config.color);
+        textHolder.css('top', config.y);
+        textHolder.html(config.text);
+        imageContainer.append(textHolder);
+        textHolder.fadeIn(400);
+    },
+            
+    showText: function(appId, texts) {
+        var bannerSlider = $('.bannerslider#'+appId);
+        for (var imageId in texts) {
+            
+            var textEntires = texts[imageId];
+            
+            var newImage = $("<img/>");
+            newImage.attr("src", "/displayImage.php?id="+imageId);
+            newImage.attr('imageId', imageId);
+            newImage.attr('texts', JSON.stringify(textEntires));
+            newImage.load(function() {
+                var originalWidth = this.width;
+                
+                var texts = JSON.parse($(this).attr('texts'));
+                var imageId = $(this).attr('imageId');
+                var imageContainer = $(bannerSlider.find('.banner[imageid='+imageId+"]")[0])
+                var compressionRate = bannerSlider.width() / originalWidth;
+                
+                for (var key in texts) {
+                    var config = texts[key];
+                    config.x = config.x * compressionRate;
+                    config.y = config.y * compressionRate;
+                    config.fontSize = config.size * compressionRate;
+                    config.color = config.colour;
+                    app.Banner.Slider.addTextToImage(imageContainer, config);
+                }
+            });
+        }
+        
     }
 };

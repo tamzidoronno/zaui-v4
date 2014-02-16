@@ -139,9 +139,32 @@ app.Banner = {
             config.rotation = parseInt($(me).attr('rotation')); 
         }
         
+        if ($(me).attr('texts')) {
+            var texts = JSON.parse($(me).attr('texts'));
+            
+            var textNewConfigs = Array();
+            for (var i in texts) {
+                var text = texts[i];
+                
+                var textConfig = {
+                    color : text.colour,
+                    fontSize : text.size,
+                    text : text.text,
+                    x : text.x,
+                    y : text.y
+                }
+            
+
+                textNewConfigs[i] = textConfig;
+            }
+            
+            config.textFields = textNewConfigs;
+        }
+        
         if ($(me).attr('imageId')) {
             config.imageId = $(me).attr('imageId');
         }
+        
         
         var imageEditor = new getshop.ImageEditor(dom, config, 1);
         imageEditor.invokedByButton = me;

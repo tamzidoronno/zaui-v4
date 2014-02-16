@@ -280,10 +280,11 @@ getshop.ImageEditor.prototype = {
         menuEntry.click(func);
 
     },
-    addTextField: function(config) {
+    addTextField: function(config, silent) {
         var textField = new getshop.ImageEditorTextField(config, this);
         this.imageWorkArea.append(textField.getContainer());
-        textField.cropChanged(this.config.crops);
+        if (!silent)
+            textField.cropChanged(this.config.crops);
         this.textFields.push(textField);
     },
     getFullSizeOriginalImageData: function() {
@@ -604,7 +605,7 @@ getshop.ImageEditor.prototype = {
     addTexts: function() {
         for (var key in this.config.textFields) {
             var config = this.config.textFields[key];
-            this.addTextField(config);
+            this.addTextField(config, true);
         }
     },
     rotateImageInitially: function() {
@@ -901,12 +902,12 @@ getshop.ImageEditorTextField.prototype = {
         this.textField.css('font-size', this.config.fontSize + "px");
         this.textField.css('color', "#"+this.config.color);
         if (updatePosition) {
-            var outerPadding = this.getContainMent().parent().parent().parent().parent().position().left;
-            var innerPadding = this.getContainMent().parent().parent().position().left;
+            var outerPadding = parseInt(this.getContainMent().parent().parent().parent().parent().css('left'));
+            var innerPadding = parseInt(this.getContainMent().parent().parent().css('left'));
             var offsetX = this.config.x + outerPadding + innerPadding;
 
-            var outerPaddingTop = this.getContainMent().parent().parent().parent().parent().position().top;
-            var innerPaddingTop = this.getContainMent().parent().parent().position().top;
+            var outerPaddingTop = parseInt(this.getContainMent().parent().parent().parent().parent().css('top'));
+            var innerPaddingTop = parseInt(this.getContainMent().parent().parent().css('top'));
             var offsetY = this.config.y + outerPaddingTop + innerPaddingTop;
             
             this.container.css('left', offsetX+"px");
@@ -951,8 +952,8 @@ getshop.ImageEditorTextField.prototype = {
         var outerPaddingTop = this.getContainMent().parent().parent().parent().parent().position().top;
         var outerPadding = this.getContainMent().parent().parent().parent().parent().position().left;
 
-        var top = this.container.position().top;
-        var left = this.container.position().left;
+        var top = parseInt(this.container.css('top'));
+        var left = parseInt(this.container.css('left'));
         var right = left + this.container.width();
         var bottom = top + this.container.height();
 

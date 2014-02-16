@@ -37,6 +37,11 @@ app.Banner = {
         return parseInt(informationbox.find('#height').val());
     },
     
+    getInterval: function() {
+        var informationbox = this.getInformationBoxApp(); 
+        return parseInt(informationbox.find('#interval').val());
+    },
+    
     heightChanged: function() {
         var height = app.Banner.getHeight();
         for (var i in app.Banner.editors) {
@@ -63,6 +68,7 @@ app.Banner = {
         });
         
         app.Banner.settingValidBanners = true;
+        data.interval = app.Banner.getInterval();
         data.height = app.Banner.getHeight();
 
         var event = thundashop.Ajax.createEvent(null, "setValidBanners", this, data);

@@ -42,6 +42,7 @@ getshop.ImageEditor.prototype = {
     
     init: function() {
         this.textFields = [];
+        this.createUuid();
         this.setDefaultCrops();
         this.createContainer();
         this.createBigStock();
@@ -53,6 +54,19 @@ getshop.ImageEditor.prototype = {
         this.setBoundaries();
         this.refresh();
     },
+    
+    createUuid: function() {
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+        };
+
+        function guid() {
+            return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+        }
+
+        this.uuid = guid();
+    },
+    
     show: function() {
         this.attachToDom.show();
     },
@@ -229,7 +243,8 @@ getshop.ImageEditor.prototype = {
     createContainer: function() {
         this.outerDom = $('<div/>');
         this.outerDom.addClass("gs_image_editor");
-
+        this.outerDom.attr('id', this.uuid);
+        
         this.innerDom = $('<div/>');
         this.outerDom.append(this.innerDom);
         this.attachToDom.html(this.outerDom);
@@ -910,12 +925,13 @@ getshop.ImageEditorTextField.prototype = {
         this.config.text = this.textField.html();
     },
     createContainer: function() {
+        var containment = "#"+this.parent.uuid + " .jcrop-tracker";
         this.container = $('<span/>');
         this.container.css('z-index', 10000);
         this.container.css('position', "absolute");        
         this.container.draggable({
             handle: ".drag",
-            containment: ".jcrop-tracker",
+            containment: containment,
             stop: $.proxy(this.updatePositions, this)
         });
     },

@@ -41,6 +41,7 @@ class Banner extends \WebshopApplication implements \Application {
     }
     
     public function getInterval() {
+        $this->loadBannerSet();
         return $this->bannerSet->interval;
     }
     
@@ -54,8 +55,30 @@ class Banner extends \WebshopApplication implements \Application {
             }
         }
         
+        $this->bannerSet->interval = $_POST['data']['interval'];
         $this->bannerSet->height = $_POST['data']['height'];
         $this->getApi()->getBannerManager()->saveSet($this->bannerSet);
+    }
+    
+    private function getTexts() {
+        $this->loadBannerSet();
+        $imagetext = array();
+        
+        if (isset($_POST['data']['textFields'])) {
+            $textFields = $_POST['data']['textFields'];
+            
+            foreach ($textFields as $textFieldPost) {
+                $textField = new \app_bannermanager_data_BannerText();
+                $textField->colour = $textFieldPost['color'];
+                $textField->x = $textFieldPost['x'];
+                $textField->y = $textFieldPost['y'];
+                $textField->size = round($textFieldPost['fontSize']);
+                $textField->text = $textFieldPost['text'];
+                $imagetext[] = $textField;
+            }
+        }
+        
+        return $imagetext;
     }
     
     public function updateCordinates() {
@@ -100,6 +123,7 @@ class Banner extends \WebshopApplication implements \Application {
         $banner->imageId = $imageId;
         $banner->crop_cordinates = json_encode($cords);
         $banner->rotation = $rotation;
+        $banner->imagetext = $this->getTexts();
         
         $this->getApi()->getBannerManager()->saveSet($this->bannerSet);
     }

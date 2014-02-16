@@ -1,12 +1,13 @@
 <?
 $height = $this->getHeight();
+$interval = $this->getInterval();
 
 ?>
 <div class="informationboxbannersettings">
     <div class="banner_settings">
         <table>
-            <tr><td><? echo $this->__f("Height");?></td><td><input id="height" type="text" value="<? echo $height; ?>"/></td></tr>
-            <tr><td><? echo $this->__f("Delay (ms)");?></td><td><input type="text"/></td></tr>
+            <tr><td><? echo $this->__f("Height (px)");?></td><td><input id="height" type="text" value="<? echo $height; ?>"/></td></tr>
+            <tr><td><? echo $this->__f("Delay (ms)");?></td><td><input id="interval" type="text" value="<? echo $interval; ?>"/></td></tr>
         </table>
         <br>
     </div>

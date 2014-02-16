@@ -103,12 +103,13 @@ public class ConvertToNewProductType extends UpgradeBase {
                     if(view.value.equals("boxview")) {
                         System.out.println("found");
                         view.value = "listview";
+                        
+                        Setting colcount = new Setting();
+                        colcount.type = "column";
+                        colcount.value = "2";
+                        app.settings.put("column", colcount);
+                        saveObject(app, "PageManager");
                     }
-                    Setting colcount = new Setting();
-                    colcount.type = "column";
-                    colcount.value = "2";
-                    app.settings.put("column", colcount);
-                    saveObject(app, "PageManager");
                 }
             }
         }

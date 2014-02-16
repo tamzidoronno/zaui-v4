@@ -29,7 +29,11 @@ thundashop.MainMenu = {
         });
     },
     showPageLayoutSelection: function() {
-        var event = thundashop.Ajax.createEvent("MainMenu", 'showPageLayoutSelection', $('body'), {});
+        var mode = 'edit';
+        if($('.no_page_layout').length > 0) {
+            mode = "new";
+        }
+        var event = thundashop.Ajax.createEvent("MainMenu", 'showPageLayoutSelection', $('body'), {"pagemode" : mode });
         thundashop.common.showInformationBox(event, __f("Select page layout"));
     },
     deleteApplicationClicked: function() {

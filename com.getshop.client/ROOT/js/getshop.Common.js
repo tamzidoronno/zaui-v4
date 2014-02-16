@@ -953,6 +953,7 @@ thundashop.common.appendDefaultLayoutData = function(data) {
     data["pagetype"] = $('#informationbox').find('#gs_newpage_type').val();
     data["pageSubType"] = $('#informationbox').find('#gs_newpage_subtype').val();
     data["target"] = $('#informationbox').find('#gs_newpage_target').val();
+    data["pagemode"] = $('#informationbox').find('#gs_pagelayout_mode').val();
     return data;
 }
 

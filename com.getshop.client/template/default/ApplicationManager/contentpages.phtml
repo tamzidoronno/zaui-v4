@@ -1,0 +1,33 @@
+<div class='category_selection'>
+    <div class='options'>
+
+        <? $selectedEntry = false;
+        foreach ($leftmenu as $index => $left_entry) { ?>
+            <div class='option_entry <? if (!$selectedEntry) {
+                echo "option_selected";
+                $selectedEntry = $index;
+            } ?>' target='<? echo $left_entry['target'] ?>'><i class="fa <? echo $left_entry['icon'] ?>"></i><? echo $left_entry['text'] ?></div> 
+        <? } ?>
+    </div>
+</div>
+<div>
+    <div class="options_content">
+        <?
+        foreach ($content_groups as $group) {
+            $selected = "";
+            if ($group == $selectedEntry) {
+                $selected = "content_type_selected";
+            }
+            ?>
+            <div class='<? echo $group; ?> content_type_area <? echo $selected; ?>'>
+                <?
+                $pages = $pb->getPredefinedPage($group);
+                foreach ($pages as $predefined) {
+                    $pb->printPredefinedPagePreview($predefined, $group);
+                }
+                ?>
+            </div>
+<? } ?>
+    </div>
+</div>
+<div style='clear:both;'></div>

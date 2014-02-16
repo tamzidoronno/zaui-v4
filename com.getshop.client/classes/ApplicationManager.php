@@ -707,7 +707,7 @@ class ApplicationManager extends FactoryBase {
                 $siteBuilder->addProductData($_POST['data']['target'], $product->id);
         }
         
-        if($page->pageType == 2) {
+        if($page->pageType == 2 && $_POST['data']['pagemode'] == "new") {
             $sitebuilder = new SiteBuilder($page);
             $sitebuilder->addProduct();
         }

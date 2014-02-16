@@ -1,0 +1,47 @@
+
+<div class="left_panel">
+    <?
+    echo "<select id='leftsidebarcount'>";
+    for ($i = 0; $i <= 20; $i++) {
+        $lfsel = "";
+        if ($layout->leftSideBar == $i) {
+            $lfsel = "SELECTED";
+        }
+        echo "<option value='$i' $lfsel>$i " . $factory->__f("left sidebar") . "</option>";
+    }
+    echo "</select>";
+    ?>
+    <select id="rowscount">
+        <?
+        for ($i = 0; $i <= 20; $i++) {
+            $selected = "";
+            if ($i == sizeof($layout->rows)) {
+                $selected = "SELECTED";
+            }
+            echo "<option value='" . $i . "' $selected>" . $i . " " . $this->__f("number of rows") . "</option>";
+        }
+        ?>
+    </select>
+    <?
+    echo "<select id='rightsidebarcount'>";
+    for ($i = 0; $i <= 20; $i++) {
+        $lfsel = "";
+        if ($layout->rightSideBar == $i) {
+            $lfsel = "SELECTED";
+        }
+        echo "<option value='$i' $lfsel>$i " . $factory->__f("right sidebar") . "</option>";
+    }
+    echo "</select>";
+    ?>
+    <div class="gs_button small setnewlayout">
+        <? echo $factory->__f("Set page layout"); ?>
+        <i class="fa fa-arrow-circle-right"></i>
+    </div>
+</div>
+<div class="right_panel">
+    <div class='layoutpreviewbox'>
+        <?
+        echo $pb->printPreview();
+        ?>
+    </div>
+</div>

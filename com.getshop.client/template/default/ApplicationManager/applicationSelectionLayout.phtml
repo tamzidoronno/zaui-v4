@@ -38,6 +38,30 @@ $leftmenu["frontpage"]['icon'] = "fa-heart";
 $leftmenu["frontpage"]['text'] = $this->__f("Homepage");
 $leftmenu["frontpage"]['target'] = "frontpage";
 
+$mode = "new";
+if(isset($_POST['data']['pagemode'])) {
+    $mode = $_POST['data']['pagemode'];
+}
+
+$tabs = array();
+$tabs['content_pages']['icon'] = "fa-book";
+$tabs['content_pages']['text'] = $this->__f("Content");
+$tabs['empty_pages']['icon'] = "fa-square-o";
+$tabs['empty_pages']['text'] = $this->__f("Empty page");
+$tabs['layout_builder']['icon'] = "fa-wrench";
+$tabs['layout_builder']['text'] =  $this->__f("Build your layout");
+
+$tabActive = "content_pages";
+if($mode != "new") {
+    unset($tabs['content_pages']);
+    $tabActive = "empty_pages";
+    $tabs['empty_pages']['text'] = $this->__f("Page layout");
+}
+
+if(isset($_POST['data']['updatelayout'])) {
+    $tabActive = "layout_builder";
+}
+
 $type = "default";
 $subtype = "default";
 $target = "default";
@@ -65,108 +89,28 @@ if(isset($_POST['data']['target'])) {
         <input type="hidden" value="<? echo $type; ?>" id="gs_newpage_type">
         <input type="hidden" value="<? echo $subtype; ?>" id="gs_newpage_subtype">
         <input type="hidden" value="<? echo $target; ?>" id="gs_newpage_target">
+        <input type="hidden" value="<? echo $mode; ?>" id="gs_pagelayout_mode">
+        
         <div class="gs_tabs">
-            <span class='gs_tab <?
-            if (!$layoutupdate) {
-                echo "gs_tab_selected";
+            <? 
+            foreach($tabs as $target => $data) {
+                $active = "";
+                if($tabActive == $target) {
+                    $active = "gs_tab_selected";
+                }
+                echo "<span class='gs_tab $active' target='$target'><i class='fa ".$data['icon']."'></i> " . $data['text'] . "</span>";
             }
-            ?>' target="content_pages"><i class="fa fa-book"></i> <? echo $this->__f("Content"); ?></span>
-            <span class='gs_tab' target="empty_pages"><i class="fa fa-square-o"></i> <? echo $this->__f("Empty page"); ?></span>
-            <span class='gs_tab <?
-            if ($layoutupdate) {
-                echo "gs_tab_selected";
-            }
-            ?>' target="layout_builder"><i class="fa fa-wrench"></i> <? echo $this->__f("Build your layout"); ?></span>
+            ?>
         </div>
-        <div class="gs_tab_area content_pages <?
-             if (!$layoutupdate) {
-                 echo "gs_tab_area_active";
-             }
-            ?>">
-            <div class='category_selection'>
-                <div class='options'>
-                    
-                    <? $selectedEntry = false; foreach($leftmenu as $index => $left_entry) { ?>
-                        <div class='option_entry <? if(!$selectedEntry) { echo "option_selected"; $selectedEntry = $index; } ?>' target='<? echo $left_entry['target'] ?>'><i class="fa <? echo $left_entry['icon'] ?>"></i><? echo $left_entry['text'] ?></div> 
-                    <? } ?>
-                </div>
-            </div>
-            <div>
-                <div class="options_content">
-                    <?
-                    foreach ($content_groups as $group) {
-                        $selected = "";
-                        if ($group == $selectedEntry) {
-                            $selected = "content_type_selected";
-                        }
-                        ?>
-                        <div class='<? echo $group; ?> content_type_area <? echo $selected; ?>'>
-                        <?
-                        $pages = $pb->getPredefinedPage($group);
-                        foreach ($pages as $predefined) {
-                            $pb->printPredefinedPagePreview($predefined, $group);
-                        }
-                        ?>
-                        </div>
-        <? } ?>
-                </div>
-            </div>
-            <div style='clear:both;'></div>
+        
+        <div class="gs_tab_area content_pages <? if($tabActive == "content_pages") { echo 'gs_tab_area_active'; } ?>">
+            <? include("contentpages.phtml"); ?>
         </div>
-        <div class="layoutconfiguration gs_tab_area layout_builder <?
-                if ($layoutupdate) {
-                    echo "gs_tab_area_active";
-                }
-                ?>">
-            <div class="left_panel">
-                <?
-                echo "<select id='leftsidebarcount'>";
-                for ($i = 0; $i <= 20; $i++) {
-                    $lfsel = "";
-                    if ($layout->leftSideBar == $i) {
-                        $lfsel = "SELECTED";
-                    }
-                    echo "<option value='$i' $lfsel>$i " . $factory->__f("left sidebar") . "</option>";
-                }
-                echo "</select>";
-                ?>
-                <select id="rowscount">
-                    <?
-                    for ($i = 0; $i <= 20; $i++) {
-                        $selected = "";
-                        if ($i == sizeof($layout->rows)) {
-                            $selected = "SELECTED";
-                        }
-                        echo "<option value='" . $i . "' $selected>" . $i . " " . $this->__f("number of rows") . "</option>";
-                    }
-                    ?>
-                </select>
-                <?
-                echo "<select id='rightsidebarcount'>";
-                for ($i = 0; $i <= 20; $i++) {
-                    $lfsel = "";
-                    if ($layout->rightSideBar == $i) {
-                        $lfsel = "SELECTED";
-                    }
-                    echo "<option value='$i' $lfsel>$i " . $factory->__f("right sidebar") . "</option>";
-                }
-                echo "</select>";
-                ?>
-                <div class="gs_button small setnewlayout">
-                    <? echo $factory->__f("Set page layout"); ?>
-                    <i class="fa fa-arrow-circle-right"></i>
-                </div>
-            </div>
-            <div class="right_panel">
-                <div class='layoutpreviewbox'>
-<?
-echo $pb->printPreview();
-?>
-                </div>
-            </div>
+        <div class="layoutconfiguration gs_tab_area layout_builder <? if($tabActive == "layout_builder") { echo 'gs_tab_area_active'; } ?>">
+           <? include("emptypagelayout.phtml"); ?>
         </div>
-        <div class='predefined_layouts empty_pages gs_tab_area'>
-<? echo $pb->printSuggestions(); ?>
+        <div class='predefined_layouts empty_pages gs_tab_area <? if($tabActive == "empty_pages") { echo 'gs_tab_area_active'; } ?>'>
+            <? echo $pb->printSuggestions(); ?>
         </div>
         <div style="clear:both;"></div>
     </div>
@@ -297,4 +241,5 @@ echo $pb->printPreview();
             });
         }
     });
+    
 </script>

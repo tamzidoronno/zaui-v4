@@ -130,8 +130,11 @@ thundashop.app.GoogleMaps.prototype = {
         }
         
         if (maxHeight > 0) {
+            
             if(this.map !== null) {
-                $(this.mapDiv).width(container.width());
+                if(container.closest('.gs_inner').innerHeight() > maxHeight) {
+                    maxHeight = container.closest('.gs_inner').innerHeight();
+                }
                 $(this.mapDiv).height(maxHeight);
                 google.maps.event.trigger(this.map,'resize');
                 return;

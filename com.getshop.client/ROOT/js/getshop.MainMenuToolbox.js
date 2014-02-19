@@ -1,3 +1,4 @@
+var mainmenu;
 
 $(document).ready(function() {
     var config = {
@@ -83,25 +84,25 @@ $(document).ready(function() {
                 items: [
                     {
                         text: __f('All'),
-                        class: 'security',
+                        "class": "security",
                         click: thundashop.MainMenu.updateUserLevel,
                         extraArgs: 0,
                     },
                     {
                         text: __f('Customers'),
-                        class: 'security',
+                        "class": 'security',
                         click: thundashop.MainMenu.updateUserLevel,
                         extraArgs: 10,
                     },
                     {
                         text: __f('Editors'),
-                        class: 'security',
+                        "class": 'security',
                         click: thundashop.MainMenu.updateUserLevel,
                         extraArgs: 50,
                     },
                     {
                         text: __f('Admins'),
-                        class: 'security',
+                        "class": 'security',
                         click: thundashop.MainMenu.updateUserLevel,
                         extraArgs: 100
                     }

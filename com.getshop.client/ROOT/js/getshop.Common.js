@@ -215,7 +215,9 @@ thundashop.common.lastPushId = null;
 thundashop.common.goToPage = function(id) {
     var link = "?page="+id;
     if(thundashop.common.lastPushId === null || thundashop.common.lastPushId !== id) {
-        window.history.pushState({url: link, ajaxLink: link}, "Title", link);
+        if(window.history.pushState !== undefined) {
+            window.history.pushState({url: link, ajaxLink: link}, "Title", link);
+        }
     }
     thundashop.Ajax.doJavascriptNavigation(link, null, true);
 }

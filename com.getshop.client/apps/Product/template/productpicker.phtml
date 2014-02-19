@@ -41,7 +41,11 @@ foreach($products as $product) {
     if(in_array($product->id, $selectedProducts)) {
         echo '<i class="fa fa-check"></i>';
     }
-    echo $product->name . " ";
+    if($product->name) {
+        echo $product->name . " ";
+    } else {
+        echo "Untitled product";
+    }
     echo "<span class='product_price'>" . $this->getFactory()->getCurrencyName() .$product->price . "</span>";
     echo "</div>";
 }

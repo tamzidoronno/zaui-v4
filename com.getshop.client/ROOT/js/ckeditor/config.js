@@ -9,9 +9,9 @@ CKEDITOR.editorConfig = function(config) {
     config.width = 100;
     config.toolbar = [
         {name: 'document', items: ['Save']},
-        {name: 'clipboard', items: ['MediaEmbed','Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']},
+        {name: 'clipboard', items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']},
         {name: 'editing', items: ['Find', 'Replace', '-', 'SelectAll', '-', 'Scayt', 'JustifyLeft', 'JustifyCenter', 'JustifyRight']},
-        {name: 'insert', items: ['Image', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar']},
+        {name: 'insert', items: ['Table', 'HorizontalRule', 'Smiley', 'SpecialChar']},
         {name: 'links', items: ['Link', 'Unlink', 'Anchor']},
         '/',
         {name: 'styles', items: ['Styles', 'Format', 'FontSize']},

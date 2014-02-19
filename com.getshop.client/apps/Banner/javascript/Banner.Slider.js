@@ -108,7 +108,8 @@ app.Banner.Slider = {
             var textEntires = texts[imageId];
             
             var newImage = $("<img/>");
-            newImage.attr("src", "/displayImage.php?id="+imageId);
+            var imageUrl = bannerSlider.find('.banner[imageid='+imageId+']').find('img').attr('src');
+            newImage.attr("src", imageUrl);
             newImage.attr('imageId', imageId);
             newImage.attr('texts', JSON.stringify(textEntires));
             newImage.load(function() {
@@ -118,6 +119,8 @@ app.Banner.Slider = {
                 var imageId = $(this).attr('imageId');
                 var imageContainer = $(bannerSlider.find('.banner[imageid='+imageId+"]")[0])
                 var compressionRate = bannerSlider.width() / originalWidth;
+                
+                debugger;
                 
                 for (var key in texts) {
                     var config = texts[key];

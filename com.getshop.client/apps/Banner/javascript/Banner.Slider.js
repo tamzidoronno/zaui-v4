@@ -119,9 +119,6 @@ app.Banner.Slider = {
                 var imageId = $(this).attr('imageId');
                 var imageContainer = $(bannerSlider.find('.banner[imageid='+imageId+"]")[0])
                 var compressionRate = bannerSlider.width() / originalWidth;
-                
-                debugger;
-                
                 for (var key in texts) {
                     var config = texts[key];
                     config.x = config.x * compressionRate;

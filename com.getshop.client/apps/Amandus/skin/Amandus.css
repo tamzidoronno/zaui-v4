@@ -79,12 +79,11 @@ body { font-family: 'Open Sans', 'HelveticaNeue', 'Helvetica Neue', 'Helvetica',
 .header .gs_inner { position:relative;height: 70px; }
 .gs_inner { max-width: 998px; margin: auto; background-color:#FFF; }
 
-.gs_row .applicationarea { min-height: 200px; }
+.gs_row .applicationarea { min-height: 60px; }
 .footer .gs_inner { overflow:hidden; border-bottom: solid 1px #BBB; }
 
 .skeleton1 .gs_row .gs_inner,.skeleton2 .gs_row .gs_inner { padding: 10px; max-width: 978px }
 .skeleton1 .gs_row .gs_col.c1.gs_margin_right ,.skeleton2 .gs_col.c1.gs_margin_right { padding-right: 0px; }
-.gs_row .gs_inner { border-bottom: solid 1px #e1e1e1; }
 .gs_row .gs_inner .applicationarea { padding: 15px; }
 .ProductWidget { border: solid 1px #e1e1e1; height: 250px;}
 .apparea_app_Banner { margin:0px !important; padding: 0px !important; }
@@ -155,3 +154,9 @@ body { font-family: 'Open Sans', 'HelveticaNeue', 'Helvetica Neue', 'Helvetica',
 }
 
 .gs_product_row .applicationarea,.gs_product_row .gs_inner {min-height: 30px; }
+
+.frontpage_16 .gs_row.r4 .gs_inner { padding-bottom: 60px; padding-top: 60px;  }
+.frontpage_6 .gs_row.r4 .gs_inner { padding-top: 60px;  }
+.frontpage_7 .gs_row.r4 .gs_inner { padding-top: 60px;  }
+.frontpage_9 .gs_row.r4 .gs_inner { padding-top: 60px;  }
+.frontpage_13 .gs_row.r4 .gs_inner { padding-bottom: 60px; padding-top: 60px;   }

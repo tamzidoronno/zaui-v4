@@ -225,7 +225,8 @@ thundashop.common.goToPage = function(id) {
 thundashop.common.selectPredefinedConent = function() {
     var data = {
         config: $(this).attr('config'),
-        type: $(this).attr('type')
+        type: $(this).attr('type'),
+        index : $(this).attr('index')
     };
     data = thundashop.common.appendDefaultLayoutData(data);
     data["pagetype"] = $(this).attr('pagetype');

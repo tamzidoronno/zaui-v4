@@ -98,7 +98,7 @@ class ProductLister extends \WebshopApplication implements \Application {
     public function getTitle() {
         $title = $this->getConfigurationSetting('title');
         if(!$title) {
-            $title = $this->__f("Untitled product list");
+            $title = $this->__f("My products");
         }
         return $title;
     }

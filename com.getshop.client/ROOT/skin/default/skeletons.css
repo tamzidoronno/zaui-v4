@@ -15,7 +15,7 @@
     width: 100%;
     border: dashed 2px #CCC;
     height: 100%; 
-    position:absolute; 
+    min-height: 200px;
     top:0px; 
     left: 0px; 
     -moz-box-sizing:    border-box;

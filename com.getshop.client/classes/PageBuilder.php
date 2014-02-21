@@ -42,8 +42,8 @@ class PageBuilder {
         return array();
     }
     
-    function printPredefinedPagePreview($predefined, $group) {
-        echo "<span class='layoutpreview' pagetype='".$group."' config='".json_encode($predefined)."' row_size='".sizeof($predefined)."'>";
+    function printPredefinedPagePreview($predefined, $group, $index) {
+        echo "<span class='layoutpreview' pagetype='".$group."' index='$index' config='".json_encode($predefined)."' row_size='".sizeof($predefined)."'>";
         foreach ($predefined as $row) {
             foreach ($row as $cell) {
                 echo "<span class='icon_container' rowsize='".sizeof($row)."'>";

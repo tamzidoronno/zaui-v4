@@ -11,6 +11,7 @@ class SiteBuilder extends ApplicationBase {
     private $productWidgetCount = 0;
     private $page;
     private $imageIds;
+    private $textIndex = -1;
     
     function __construct($page = null) {
         if($page) {
@@ -21,6 +22,22 @@ class SiteBuilder extends ApplicationBase {
         $this->api = $this->getApi();
     }
 
+    public function getText() {
+        $text = array();
+        $welcomeText = $this->__w("Welcome to my page");
+        $text['frontpage_0'][0] = '&nbsp;<div style="text-align: center;"><br><span style="font-size:22px;"><span style="font-size:24px;">'.$welcomeText.'</span></span><br><br>&nbsp;</div>';
+        $text['frontpage_1'][0] = '&nbsp;<div style="text-align: center;"><br><span style="font-size:22px;"><span style="font-size:24px;">My images speaks for itself</span></span><br><br>&nbsp;</div>';
+        $text['frontpage_2'][0] = '&nbsp;<div style="text-align: center;"><br><span style="font-size:22px;"><span style="font-size:24px;">Have a look at my videos</span></span><br><br>&nbsp;</div>';
+        for($i = 3; $i < 25; $i++) {
+            $text['frontpage_'.$i][0] = '&nbsp;<div style="text-align: center;"><br><span style="font-size:22px;"><span style="font-size:24px;">'.$welcomeText.'</span></span><br><br>&nbsp;</div>';
+        }
+        
+        $this->textIndex++;
+        if(isset($text[$this->page->pageTag][$this->textIndex])) {
+            return $text[$this->page->pageTag][$this->textIndex];
+        }
+    }
+    
     public function addContactForm($where) {
         $appConfig = $this->api->getPageManager()->addApplicationToPage($this->page->id, "96de3d91-41f2-4236-a469-cd1015b233fc", $where);
     }
@@ -70,7 +87,7 @@ class SiteBuilder extends ApplicationBase {
 
     public function addContentManager($content, $where, $type = false) {
         if ($type) {
-            $content = "";
+            $content = $this->getText();
         }
         $appConfig = $this->api->getPageManager()->addApplicationToPage($this->page->id, "320ada5b-a53a-46d2-99b2-9b0b26a7105a", $where);
         if ($content) {

@@ -184,22 +184,23 @@ class PredefinedPagesConfig {
         $productlist_row = PredefinedPagesConfig::$PRODUCTLIST_ROW;
         
         $res = array();
-        $res[] = array(array($image_slider),array($text,$text,$text),array($productlist_row));
-        $res[] = array(array($text),array($image,$image,$image),array($productlist_row));
-        $res[] = array(array($image_slider),array($movie,$movie,$movie),array($productlist_row));
-        $res[] = array(array($image_slider),array($text,$text,$movie),array($productlist_row));
-        $res[] = array(array($image_slider),array($image,$text,$movie),array($productlist_row));
-        $res[] = array(array($image_slider),array($image,$movie,$image),array($productlist_row));
         $res[] = array(array($image_slider),array($text),array($text,$text,$text),array($productlist_row));
-        $res[] = array(array($image_slider),array($text),array($movie,$movie,$movie),array($productlist_row));
-        $res[] = array(array($image_slider),array($text),array($image),array($productlist_row));
+        $res[] = array(array($image_slider),array($text),array($image,$image,$image),array($productlist_row));
+        $res[] = array(array($image_slider),array($text), array($movie,$movie,$movie),array($productlist_row));
+        
+        $res[] = array(array($image_slider),array($text),array($text,$movie),array($productlist_row));
+        $res[] = array(array($image_slider),array($text),array($movie,$text),array($productlist_row));
+        $res[] = array(array($image_slider),array($text),array($image,$movie),array($productlist_row));
+        
+        $res[] = array(array($image_slider),array($text),array($text, $image),array($image, $text),array($productlist_row));
+        $res[] = array(array($image_slider),array($text),array($image, $text),array($text, $image),array($productlist_row));
+        $res[] = array(array($image_slider),array($text),array($text, $movie),array($text),array($productlist_row));
+        
         $res[] = array(array($image_slider),array($text),array($text,$text,$text),array($image), array($productlist_row));
         $res[] = array(array($image_slider),array($text),array($image,$image,$image),array($text), array($productlist_row));
         $res[] = array(array($image_slider),array($text),array($image,$movie,$image),array($text), array($productlist_row));
         $res[] = array(array($image_slider),array($text),array($text,$text,$text),array($text), array($productlist_row));
         $res[] = array(array($image_slider),array($text),array($productlist_row),array($text), array($productlist_row));
-        $res[] = array(array($image_slider),array($text),array($productlist_row),array($text), array($productlist_row));
-        $res[] = array(array($image_slider),array($text),array($productlist_row),array($image), array($productlist_row));
         $res[] = array(array($image_slider),array($text),array($map, $movie),array($image), array($productlist_row));
         return $res;
     }

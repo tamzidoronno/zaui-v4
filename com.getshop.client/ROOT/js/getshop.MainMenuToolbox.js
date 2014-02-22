@@ -4,7 +4,7 @@ $(document).ready(function() {
     var config = {
         draggable: true,
         closeOnClick: false,
-        title: __f("MainMenu"),
+        title: __f("Menu"),
         items: [
             {
                 icontype: "awesome",

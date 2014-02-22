@@ -17,20 +17,24 @@ body { background-image: url("{IMAGEFOLDER}/headerbg.png"); background-position:
 .TopMenu { 
     background-image: url("{IMAGEFOLDER}/topmenu_left.png"), url("{IMAGEFOLDER}/topmenu_right.png"); 
     background-position:left, right;
-    background-repeat:no-repeat; min-width: 250px;padding-left: 20px; padding-right:26px; height: 112px; position:absolute; top:20px; }
+    background-repeat:no-repeat; padding-left: 20px; padding-right:26px; height: 112px; position:absolute; top:20px; }
 .TopMenu .breadcrumb-menu { color: #ece8d7; margin: 30px;  background-image: url("{IMAGEFOLDER}/topmenu_menu.png");background-color:#54472a; border: solid 1px #5c5c4c; }
-.TopMenu .breadcrumb-menu a { color: #ece8d7;font-style:italic; padding: 10px; padding-right: 20px; }
+.TopMenu .breadcrumb-menu a { color: #ece8d7;font-style:italic; padding: 10px; padding-right: 20px; padding-left: 20px; }
 .TopMenu .breadcrumb-menu a.selected { color: #c19942; }
-.TopMenu .breadcrumb-menu li { padding-left: 10px; border-right: solid 1px #5c5c4c; }
+.TopMenu .breadcrumb-menu li { border-right: solid 1px #5c5c4c; }
 .breadcrumb .breadcrumb-inner .breadcrumbentry { display:none; }
 .applicationarea { padding: 10px; }
 .footer { background-color: #534629; color:#ece8d7; border-bottom: solid 40px #3a311d; padding-top: 10px; margin-top: 80px; }
 .header .gs_inner .applicationarea { height: 188px; }
 .gs_table_areas { table-layout: fixed; }
 
-.LeftMenu .menuName { 
-background-color: #54472a;
-border: solid 1px #5c5c4c; color:#ece8d7; }
+.LeftMenu .menuName {
+    padding: 10px;
+    background-color: #54472a;
+    border: solid 1px #5c5c4c; color:#ece8d7; 
+}
+
+.TopMenu .subentries { background-color: #54472a;border: solid 1px #5c5c4c; color:#ece8d7; }
 
 
 .frontpage_16 .gs_row.r4 .gs_inner { padding-bottom: 60px; padding-top: 60px;  }
@@ -38,3 +42,11 @@ border: solid 1px #5c5c4c; color:#ece8d7; }
 .frontpage_7 .gs_row.r4 .gs_inner { padding-top: 60px;  }
 .frontpage_9 .gs_row.r4 .gs_inner { padding-top: 60px;  }
 .frontpage_13 .gs_row.r4 .gs_inner { padding-bottom: 60px; padding-top: 60px;   }
+
+@media only all and (max-width: 800px) {
+    body { margin-left: 10px; margin-right: 10px; }
+    .TopMenu { left:0px !important; padding-left: 0px; }
+    .TopMenu .breadcrumb-menu { margin-left: 0px; }
+    .header .gs_inner .applicationarea { height: 70px !important; min-height: 70px !important;}
+    .apparea_app_Banner { padding: 0px !important; margin: 0px !important; }
+}

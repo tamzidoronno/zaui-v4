@@ -41,6 +41,8 @@ GetShopToolbox.prototype = {
             this.closeButton.hide();
         }
         close.addClass('close');
+        close.addClass('fa');
+        close.addClass('fa-times-circle');
         close.click(function() {
             if (me.config.closeOnClick === false) {
                 me.hidden = true;

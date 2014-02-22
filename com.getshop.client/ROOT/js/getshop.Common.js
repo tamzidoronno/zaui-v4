@@ -230,6 +230,14 @@ thundashop.common.selectPredefinedConent = function() {
     };
     data = thundashop.common.appendDefaultLayoutData(data);
     data["pagetype"] = $(this).attr('pagetype');
+    
+    if(data["pagemode"] !== "new") {
+        var confirm = thundashop.common.confirm(__f("This will remove all original content for this page, are you sure about this? Use the page layout tab instead if you need to change the layout and keep its page data"));        
+        if(!confirm) {
+            return;
+        }
+    }
+    
 
     $('#informationbox').html('<center><i class="fa fa-spinner fa-spin" style="font-size:40px;"></i></center>');
     var event = thundashop.Ajax.createEvent('', 'selectPredefinedData', $(this), data);

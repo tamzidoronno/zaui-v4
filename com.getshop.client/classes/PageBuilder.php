@@ -851,12 +851,18 @@ class PageBuilder {
         $cellcount = 1;
         $maincount = 1;
         $rows = array();
+        $i = 0;
         foreach ($this->layout->rows as $row) {
             /* @var $row core_pagemanager_data_RowLayout */
             ob_start();
             $cellNumberClass = "gs_cell_number_" . $row->numberOfCells;
+            $i++;
+            $lastCell ="";
+            if($i == sizeof($this->layout->rows)) {
+                $lastCell = "gs_last_row";
+            }
             ?>
-            <div class="gs_row gs_outer r<? echo $rownumber. " " . $cellNumberClass; ?>" row="<? echo $rownumber; ?>" rowid="<? echo $row->rowId; ?>" style='<? echo $row->outercss; ?>'>
+            <div class="gs_row gs_outer r<? echo $rownumber. " " . $cellNumberClass . " " . $lastCell; ?>" row="<? echo $rownumber; ?>" rowid="<? echo $row->rowId; ?>" style='<? echo $row->outercss; ?>'>
                 <div class='gs_inner' style='<? echo $row->innercss; ?>'>
                     <?
                     if ($row->numberOfCells == 1) {
@@ -885,7 +891,7 @@ class PageBuilder {
         ?>
         <div class='gs_row r1 gs_outer'>
             <div class='gs_inner'>
-                <table width="100%" cellspacing="0" cellpadding="0">
+                <table width="100%" cellspacing="0" cellpadding="0" class="gs_table_areas">
                     <tr>
         <? if ($this->layout->leftSideBar > 0) { ?>
                             <td width="<? echo $this->layout->leftSideBarWidth; ?>%" valign="top" class='gs_col c<? echo $colcount; ?> gs_margin_right'>

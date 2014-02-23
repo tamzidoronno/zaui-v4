@@ -79,12 +79,11 @@ body { font-family: 'Open Sans', 'HelveticaNeue', 'Helvetica Neue', 'Helvetica',
 .header .gs_inner { position:relative;height: 70px; }
 .gs_inner { max-width: 998px; margin: auto; background-color:#FFF; }
 
-.gs_row .applicationarea { min-height: 200px; }
+.gs_row .applicationarea { min-height: 60px; }
 .footer .gs_inner { overflow:hidden; border-bottom: solid 1px #BBB; }
 
 .skeleton1 .gs_row .gs_inner,.skeleton2 .gs_row .gs_inner { padding: 10px; max-width: 978px }
 .skeleton1 .gs_row .gs_col.c1.gs_margin_right ,.skeleton2 .gs_col.c1.gs_margin_right { padding-right: 0px; }
-.gs_row .gs_inner { border-bottom: solid 1px #e1e1e1; }
 .gs_row .gs_inner .applicationarea { padding: 15px; }
 .ProductWidget { border: solid 1px #e1e1e1; height: 250px;}
 .apparea_app_Banner { margin:0px !important; padding: 0px !important; }
@@ -115,43 +114,10 @@ body { font-family: 'Open Sans', 'HelveticaNeue', 'Helvetica Neue', 'Helvetica',
 
 .gs_row_cell .medium .ProductManager img { max-height: 140px; }
 
-/* responsive design stuff */
-.Banner .banner img,.Banner .bannerslider { height: auto !important; }
-@media only all and (max-width: 480px) {
-    .Logo { display: none; }
-    .TopMenu a { padding-left: 10px; padding-right: 10px; }
-    .Login { display: none; }
-    .header .TopMenu { margin-left: 0px;}
-    .breadcrumb .navigation { display: none; }
-    .header .applicationarea { height: 120px; }
-    .header .TopMenu { top: 5px; }
-    .ProductManager .small_product_view { display:none !important; }
-    .ProductManager .dummyproductmanagerclass { display:block; }
-    .ProductList .boxview table { display: inline-block; }
-    .ProductList .boxview table td { float: left; width: 100%; }
-    .ProductList td { padding: 0px; }
-}
-@media only all and (max-width: 800px) {
-    .ProductList .rowview .slidearrow { display:block !important; }
-    .header .TopMenu { top: 5px; }
-    td.gs_col.c1 { display: none; }
-    td.gs_col.c3 { display: none; }
-    .Login { display: none; }
-    .gs_row_cell { width: 100% !important; }
-    .gs_margin_left,.gs_margin_right,.gs_margin_left.gs_margin_right { padding-left: 0px; margin-top: 10px; padding-right: 0px; }
-    .Search { display: none; }
-    .CartManager .cartmain td { display: inline-block; width: 100% !important; }
-    .CartManager .cartmain .product_row_table td { display: table-cell; width:auto !important; }
-    .CartManager .cartmain .product_row_table td.image_area { width:180px !important; }
-    .CartManager .leftcart { width: 100% !important; margin-bottom: 10px; }
-    .CartManager .cart .wrapperright { width:auto !important; }
-    .checkout table td input { width: 95%; }
-    .ContentManager img { width: auto !important; height: auto !important; max-width:100% !important; }
-    #apparea-footer { width: 100%; }
-    .Chat { display:none; }
-    .CartManager .rightcart { margin-left: 0px !important; width: 100% !important; }
-    .ProductList .product .short_description { overflow: hidden; height: 103px; }
-    .mainarea .gs_inner .applicationarea { min-height: 50px !important; }
-}
-
 .gs_product_row .applicationarea,.gs_product_row .gs_inner {min-height: 30px; }
+
+.frontpage_16 .gs_row.r4 .gs_inner { padding-bottom: 60px; padding-top: 60px;  }
+.frontpage_6 .gs_row.r4 .gs_inner { padding-top: 60px;  }
+.frontpage_7 .gs_row.r4 .gs_inner { padding-top: 60px;  }
+.frontpage_9 .gs_row.r4 .gs_inner { padding-top: 60px;  }
+.frontpage_13 .gs_row.r4 .gs_inner { padding-bottom: 60px; padding-top: 60px;   }

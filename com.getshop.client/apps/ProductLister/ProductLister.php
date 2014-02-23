@@ -96,7 +96,11 @@ class ProductLister extends \WebshopApplication implements \Application {
     }
 
     public function getTitle() {
-        return $this->getConfigurationSetting('title');
+        $title = $this->getConfigurationSetting('title');
+        if(!$title) {
+            $title = $this->__f("My products");
+        }
+        return $title;
     }
 
     public function getColumnCount() {

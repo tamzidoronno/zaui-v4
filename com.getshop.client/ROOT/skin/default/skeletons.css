@@ -15,7 +15,7 @@
     width: 100%;
     border: dashed 2px #CCC;
     height: 100%; 
-    position:absolute; 
+    min-height: 200px;
     top:0px; 
     left: 0px; 
     -moz-box-sizing:    border-box;
@@ -222,3 +222,44 @@ padding-left: 10px; }
 .gs_showPageLayoutSelection .gs_tab_area { background-color:#666666; }
 .gs_showPageLayoutSelection .predefined_layouts { background-color:#555555; }
 .gs_showPageLayoutSelection .gs_tab_area .options_content { display:inline-block; float:left; padding: 10px; width: 819px; margin-top: 20px; background-color:#555555; width: 810px; height: 400px; overflow-y: auto; }
+
+
+
+/* responsive design stuff */
+.Banner .banner img,.Banner .bannerslider { height: auto !important; }
+@media only all and (max-width: 480px) {
+    .Logo { display: none; }
+    .TopMenu a { padding-left: 10px; padding-right: 10px; }
+    .Login { display: none; }
+    .header .TopMenu { margin-left: 0px;}
+    .breadcrumb .navigation { display: none; }
+    .header .applicationarea { height: 120px; }
+    .header .TopMenu { top: 5px; }
+    .ProductManager .small_product_view { display:none !important; }
+    .ProductManager .dummyproductmanagerclass { display:block; }
+    .ProductList .boxview table { display: inline-block; }
+    .ProductList .boxview table td { float: left; width: 100%; }
+    .ProductList td { padding: 0px; }
+}
+@media only all and (max-width: 800px) {
+    .ProductList .rowview .slidearrow { display:block !important; }
+    .header .TopMenu { top: 5px; }
+    td.gs_col.c1 { display: none; }
+    td.gs_col.c3 { display: none; }
+    .Login { display: none; }
+    .gs_row_cell { width: 100% !important; }
+    .gs_margin_left,.gs_margin_right,.gs_margin_left.gs_margin_right { padding-left: 0px; margin-top: 10px; padding-right: 0px; }
+    .Search { display: none; }
+    .CartManager .cartmain td { display: inline-block; width: 100% !important; }
+    .CartManager .cartmain .product_row_table td { display: table-cell; width:auto !important; }
+    .CartManager .cartmain .product_row_table td.image_area { width:180px !important; }
+    .CartManager .leftcart { width: 100% !important; margin-bottom: 10px; }
+    .CartManager .cart .wrapperright { width:auto !important; }
+    .checkout table td input { width: 95%; }
+    .ContentManager img { width: auto !important; height: auto !important; max-width:100% !important; }
+    #apparea-footer { width: 100%; }
+    .Chat { display:none; }
+    .CartManager .rightcart { margin-left: 0px !important; width: 100% !important; }
+    .ProductList .product .short_description { overflow: hidden; height: 103px; }
+    .mainarea .gs_inner .applicationarea { min-height: 50px !important; }
+}

@@ -215,7 +215,9 @@ thundashop.common.lastPushId = null;
 thundashop.common.goToPage = function(id) {
     var link = "?page="+id;
     if(thundashop.common.lastPushId === null || thundashop.common.lastPushId !== id) {
-        window.history.pushState({url: link, ajaxLink: link}, "Title", link);
+        if(window.history.pushState !== undefined) {
+            window.history.pushState({url: link, ajaxLink: link}, "Title", link);
+        }
     }
     thundashop.Ajax.doJavascriptNavigation(link, null, true);
 }
@@ -223,10 +225,19 @@ thundashop.common.goToPage = function(id) {
 thundashop.common.selectPredefinedConent = function() {
     var data = {
         config: $(this).attr('config'),
-        type: $(this).attr('type')
+        type: $(this).attr('type'),
+        index : $(this).attr('index')
     };
     data = thundashop.common.appendDefaultLayoutData(data);
     data["pagetype"] = $(this).attr('pagetype');
+    
+    if(data["pagemode"] !== "new") {
+        var confirm = thundashop.common.confirm(__f("This will remove all original content for this page, are you sure about this? Use the page layout tab instead if you need to change the layout and keep its page data"));        
+        if(!confirm) {
+            return;
+        }
+    }
+    
 
     $('#informationbox').html('<center><i class="fa fa-spinner fa-spin" style="font-size:40px;"></i></center>');
     var event = thundashop.Ajax.createEvent('', 'selectPredefinedData', $(this), data);

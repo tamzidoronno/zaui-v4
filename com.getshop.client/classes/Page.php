@@ -141,7 +141,8 @@ class Page extends FactoryBase {
     }
 
     private function loadSkeletonBody() {
-        echo '<div class="skelholder skeleton'.$this->skeletonType.'" theme="' . $this->getThemeApplicationSettingsId() . '" page="'.$this->getPage()->id.'">';
+        $tagClass = $this->getPage()->backendPage->pageTag;
+        echo '<div class="skelholder skeleton'.$this->skeletonType. " " . $tagClass .'" theme="' . $this->getThemeApplicationSettingsId() . '" page="'.$this->getPage()->id.'">';
         
         if (!$this->backendPage->hideHeader && $this->skeletonType != 5 ) {
             $this->includefile('pageinfo');

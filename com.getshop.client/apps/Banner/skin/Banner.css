@@ -153,3 +153,5 @@
 .Banner .dots .dot.selected {
     background-image: url('{IMAGEFOLDER}/dot-blue.png');
 }
+
+.Banner .banner_settings input { width: 165px; }

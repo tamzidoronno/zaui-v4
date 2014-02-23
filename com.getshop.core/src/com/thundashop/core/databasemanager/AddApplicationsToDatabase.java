@@ -87,6 +87,15 @@ public class AddApplicationsToDatabase {
         gss.isPublic = true;
         apps.add(gss);
 
+        ApplicationSettings addapp = createSettings(
+                "FloralTheme",
+                "e30b4f2c-f1f4-4c33-9222-d5d863829ce4",
+                emtpy,
+                "",
+                ApplicationSettings.Type.Theme, false);
+        addapp.isPublic = true;
+        apps.add(addapp);
+
         return apps;
     }
 

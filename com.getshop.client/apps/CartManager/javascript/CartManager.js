@@ -123,18 +123,39 @@ CartManager = {
     },
 
     increaseProductCount: function(button) {
-        var nextCount = parseInt(button.parent().find('.counter').html(),10);
-        nextCount++;
-        this.updateProductCount(nextCount, button);
+        var scope = this;
+        if(this.cartTimeout !== undefined) {
+            clearTimeout(this.cartTimeout);
+        }
+        
+        var count = parseInt(button.parent().find('.counter').html(),10);
+        var nextCount = count+1;
+        this.cartTimeout = setTimeout(function() {
+            scope.updateProductCount(nextCount, button);
+        }, "1000");
+        
+        button.parent().find('.counter').html(nextCount);
     },
     
     decreaseProductCount: function(button) {
+        var scope = this;
+        
+        if(this.cartTimeout !== undefined) {
+            clearTimeout(this.cartTimeout);
+        }
+        
         var nextCount = parseInt(button.parent().find('.counter').html(),10);
         nextCount--;
-        if (nextCount < 1)
-            return;
+        this.cartTimeout = setTimeout(function() {
+            if (nextCount < 1)
+                return;
+
+            scope.updateProductCount(nextCount, button);
+        }, "1000");
         
-        this.updateProductCount(nextCount, button);
+        if(nextCount >= 1) {
+            button.parent().find('.counter').html(nextCount);
+        }
     },
     
     updateProductCount: function(nextCount, button) {

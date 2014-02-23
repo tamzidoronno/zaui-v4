@@ -22,8 +22,8 @@
             <div class='<? echo $group; ?> content_type_area <? echo $selected; ?>'>
                 <?
                 $pages = $pb->getPredefinedPage($group);
-                foreach ($pages as $predefined) {
-                    $pb->printPredefinedPagePreview($predefined, $group);
+                foreach ($pages as $index => $predefined) {
+                    $pb->printPredefinedPagePreview($predefined, $group, $index);
                 }
                 ?>
             </div>

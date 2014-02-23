@@ -48,7 +48,11 @@ for ($i = 0; $i < 4; $i++) {
             $class="getshop_ckeditorcontent";
         }
         echo "<div class='footer_content $class' altid='$i'>";
-        echo $this->getApi()->getContentManager()->getContent($colId);
+        $content = $this->getApi()->getContentManager()->getContent($colId);
+        if(!$content) {
+            $content = file_get_contents(dirname(__FILE__) . "/empty_footer.html");
+        }
+        echo $content;
         echo "</div>";
     }
     echo "</td>";

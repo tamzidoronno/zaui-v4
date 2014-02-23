@@ -3,8 +3,11 @@
     background-image: url('{IMAGEFOLDER}/header.png');
     border-bottom: solid 1px #DDD;
     height: 130px;
+    margin-bottom: 20px;
 }
-
+.breadcrumb .breadcrumb-inner { height: 0px; }
+.breadcrumb-inner .navigation { display:none; }
+.breadcrumb-inner .accounting { position:absolute; top: -20px; z-index: 3;}
 
 .skeleton23 .mainarea .r3 .applicationarea,
 .skeleton23 .mainarea .r2 .applicationarea {
@@ -28,15 +31,7 @@
     margin: 0 auto;
     max-width: 1100px;
 }
-
-.breadcrumb {
-    display: none;
-    border-bottom: dashed 1px #CCC;
-    margin-bottom: 10px;
-    height: 25px;
-}
 .header {
-    margin-bottom: 20px;
     position: relative;
 }
 

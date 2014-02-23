@@ -463,8 +463,6 @@ thundashop.MainMenu = {
         thundashop.common.showInformationBox(event, __f('Add application'));
     },
     importApplicationClicked: function(area, type) {
-        $('.mask').hide();
-
         var data = {
             area: area,
             type: type,

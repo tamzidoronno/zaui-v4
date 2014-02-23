@@ -1191,9 +1191,8 @@ box-shadow: 0px 0px 3px rgba(22, 52, 239, 0.9);
 }
 
 .GetShopToolbox {
+border-bottom: solid 1px #3f3f3f;
 z-index: 20;
-background-color : #FFF;
-border: solid 1px #BBB;
 }   
 
 .GetShopToolbox .toolboxgroup .toolboxgroup {
@@ -1208,27 +1207,40 @@ display: none;
 
 .GetShopToolbox .seperator,
 .GetShopToolbox .title {
-text-align: center;
+height: 18px;
+padding-top: 2px;
+padding-left: 5px;
+text-align:center;
+color:#FFF;
+border-top-left-radius:8px;
+border-top-right-radius:8px;
 font-size: 12px;
-background-color: #DDD;
+background-color: #3f3f3f;
 cursor: move;
 }
 
 .GetShopToolbox .item {
-width: 50px;
+width: 48px;
 height: 45px;
 text-align: center;
 position: relative;
 padding-top: 5px;
 }
 
+.GetShopToolbox .item:hover .fa { color:#52e5ac; }
 .GetShopToolbox .item:hover {
 cursor: pointer;
-background-image: url('/skin/default/images/toolboxrowbackground-hover.png');
 }
 
 .GetShopToolbox .row {
-background-image: url('/skin/default/images/toolboxrowbackground.png');
+    border-left: solid 1px #3f3f3f;
+    border-right: solid 1px #3f3f3f;
+    background-color:#4e4e4e;
+    border-top: solid 1px #cccccc;
+}
+
+.GetShopToolbox .item:first-child { 
+    border-right: solid 1px #cccccc;
 }
 
 .GetShopToolbox .item.active {
@@ -1239,10 +1251,10 @@ background-color: green;
 cursor: pointer;
 width: 20px;
 height: 20px;
-background-image: url('/skin/default/elements/close2.png');
 position: absolute;
-top: -10px;
-right: -10px;
+top: 1px;
+color:#FFF;
+right: -3px;
 }
 
 .GetShopToolbox .item img {

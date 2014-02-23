@@ -586,6 +586,7 @@ class ApplicationManager extends FactoryBase {
         $pb = new PageBuilder(null, null, $page);
         $page->type = -1;
         $page->layout = $pb->buildPredefinedPage(json_decode($_POST['data']['config'], true));
+        $page->pageTag = $_POST['data']['pagetype']."_".$_POST['data']['index'];
         $page->pageType = 1;
         if ($_POST['data']['pagetype'] == "product") {
             $page->pageType = 2;

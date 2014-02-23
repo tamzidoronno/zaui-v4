@@ -137,6 +137,7 @@ $('#importApplicationToArea').live('click', function() {
         appSettingsId : appSettingsId,
         area : area
     };
+    $('.informationbox-outer').hide();
     var event = thundashop.Ajax.createEvent("ApplicationManager", "importExistingApplication", null, data);
     event['synchron'] = true;
     var callBack = function(response) {

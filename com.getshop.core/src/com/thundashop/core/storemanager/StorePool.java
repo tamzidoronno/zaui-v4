@@ -216,21 +216,62 @@ public class StorePool {
     }
     
      public void notifyUsByEmail(Store store) throws ErrorException {
+        String storeAddress = "https://"+store.webAddress;
+        String username = store.configuration.emailAdress;
         String to = store.configuration.emailAdress;
         String from = "post@getshop.com";
         String title = "Your webshop is ready.";
-        String content = "Thank you for trying a webshop solution from GetShop. <br><br> Below you find information necessary to access your webshop. <br>"
-                + "<br><b> Your webshop address is: </b> <a href='http://" + store.webAddress + "'>" + store.webAddress + "</a>"
-                + "<br><b> Username: </b> " + store.configuration.emailAdress
-                + "<br>"
-                + "<br>"
-                + "<br><b> To get started we recommend you to <a href='http://www.youtube.com/watch?v=01EHOSHfTs4'>watch our introduction movie</a></b>"
-                + "<br>"
-                + "<br>"
-                + "We wish you the best of luck towards your webshop! <br><br>If you have any questions on your mind, you can simply hit reply on this email.<br><br>"
-                + "<div style='color: #BBB'>Best Regards"
-                + "<br> Kai Toender"
-                + "<br> COF GetShop</div>";
+        String content = "<div style=\"text-align: center;\">\n" +
+"    <div style=\"border-radius:4px;border:solid 1px #666; background-color:#3f3f3f; color:#fff; border: solid 1px; max-width: 400px;width:100%;display:inline-block;text-align:left;\">\n" +
+"        <div style=\"border-bottom: solid 1px #BBB;padding: 10px;background-color:#d4d4d4;color:#000;position:relative;\">Thank you for trying getshop\n" +
+"            <span style=\"position:absolute; right:10px; font-weight:bold\">\n" +
+"        </div>\n" +
+"        <div style=\"font-size:12px; padding: 10px;\">\n" +
+"            We at GetShop are happy that you are willing to test our unique e-commerce solution. \n" +
+"            <br><br>\n" +
+"            We really hope you enjoy GetShop as much as we put our pride into shaping it to become the best out there. Please don't hesitate to contact us if there is anything we can do for you, our support team will do everything in their power to satisfy your needs.\n" +
+"            <br><br>\n" +
+"            <table width='100%'>\n" +
+"                <tr>\n" +
+"                    <td width='50%' style='font-size:12px;color:#fff;'>Your store address</td>\n" +
+"                    <td style='font-size:12px;color:#fff;'><a style=\"color:#b4ebff; text-decoration:none;\" href=\""+storeAddress+"\">"+storeAddress+"</a></td>\n" +
+"                </tr>\n" +
+"                <tr>\n" +
+"                    <td width='50%' style='font-size:12px;color:#fff;'>Your username</td>\n" +
+"                    <td style='font-size:12px;color:#fff;'><a style=\"color:#b4ebff; text-decoration:none;\" href=\"mailto:"+username+"\">"+username+"</a></td>\n" +
+"                </tr>\n" +
+"            </table>\n" +
+"            <br><br>\n" +
+"            For more information and help visit:<br>\n" +
+"            <a style=\"color:#b4ebff; text-decoration:none;\" href=\"https://www.getshop.com/support.html\">https://www.getshop.com/support.html</a>\n" +
+"        </div>\n" +
+"        <div style=\"border-top: solid 1px #BBB;padding: 10px;background-color:#d4d4d4;color:#000;font-size:12px;position:relative;\">\n" +
+"            <table width=\"100%\">\n" +
+"                <tr>\n" +
+"                    <td style=\"font-size:12px;\">\n" +
+"                        GetShop Support<br>\n" +
+"                        +47 940 10 704<br>\n" +
+"                    </td>\n" +
+"                    <td style=\"font-size:12px;\">\n" +
+"                        <a href=\"mailto:post@getshop.com\" style=\"text-decoration:none;\">post@getshop.com</a><br>\n" +
+"                        <a href=\"https://www.getshop.com\" style=\"text-decoration:none;\">https://www.getshop.com</a><br>\n" +
+"                    </td>\n" +
+"                    <td>\n" +
+"                        <img src=\"\">\n" +
+"                    </td>"
+                + "<td>\n" +
+"                        <img src=\"https://www.getshop.com/displayImage.php?id=52803b18-84a9-4f06-8074-a83e82d47853\" />\n" +
+"                    </td>"
+                + "\n" +
+"                </tr>\n" +
+"            </table>\n" +
+"            <br>\n" +
+"            <div style=\"text-align:right;\">\n" +
+"                Strandgaten 21, 4380 Hauge I Dalane, Norway\n" +
+"            </div>\n" +
+"        </div>\n" +
+"    </div>\n" +
+"</div>";
 
         mailFactory.setStoreId(store.id);
         mailFactory.send(from, to, title, content);

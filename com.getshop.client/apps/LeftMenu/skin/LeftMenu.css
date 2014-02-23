@@ -69,7 +69,6 @@
     margin-top: 10px;
 }
 
-.LeftMenu .menuName { color: #{TEXTCOLOR}; }
 .LeftMenu .menu_1 { padding-left: 30px; background-image: none; height: 22px; background-color : #{BASECOLOR}; border-bottom: solid 1px rgba(255,255,255,0.3);  }
 .LeftMenu .menu_1 .menuEntry { padding-top: 3px; height: 18px; background-color:#{BASECOLOR}; }
 .LeftMenu .menu_2 .menuName { background-color: transparent; padding-left: 35px; height: 22px; padding-top: 3px; background-color : #{BASECOLOR}; border-bottom: solid 1px rgba(255,255,255,0.3);   }

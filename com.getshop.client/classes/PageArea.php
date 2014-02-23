@@ -89,7 +89,7 @@ class PageArea extends FactoryBase {
         }
     }
 
-    public function render() {
+    public function render($debug=false) {
         if ($this->page->skeletonType != 5) {
             $this->includefile('applicationareamenu');
             $this->includefile('add_application_menu');
@@ -98,7 +98,6 @@ class PageArea extends FactoryBase {
         if ($this->backendPageArea->type == "main_1")
             $this->showAccessDeniedMessage();
 
-        
         $isEmpty = $this->checkIfEmptyPage();
         if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
             if ($isEmpty && $this->backendPageArea->type != "bottom") {
@@ -106,8 +105,10 @@ class PageArea extends FactoryBase {
                 return;
             }
         }
-        if (!$isEmpty) {
-            $this->includefile($this->backendPageArea->type);
+        
+        
+        foreach ($this->getApplications() as $application) {
+            $application->renderApplication();
         }
     }
 

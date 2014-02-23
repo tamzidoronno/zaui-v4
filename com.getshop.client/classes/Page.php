@@ -14,7 +14,6 @@ class Page extends FactoryBase {
     public $description;
     public $backendPage;
     public $layout;
-    public $emptySkeleton = false;
     public static $systemPages = array("orderoverview", "checkout", "myaccount", "users", "settings", "domain", "cart", "callback");
 
     /** @var core_pagemanager_data_Page */
@@ -77,13 +76,12 @@ class Page extends FactoryBase {
             $this->userLevel = $page->userLevel;
             $this->description = $page->description;
             $this->layout = $page->layout;
-            $this->createAllPageAreas($page);
             if (!isset($this->userLevel))
                 $this->userLevel = 0;
         }
     }
 
-    private function createAllPageAreas($page) {
+    public function createAllPageAreas($page) {
         foreach ($page->pageAreas as $pagearea) {
             $this->areas[$pagearea->type] = new PageArea($this, $pagearea);
         }
@@ -133,7 +131,6 @@ class Page extends FactoryBase {
     }
 
     public function loadSkeleton() {
-        $this->emptySkeleton = false;
         $editorMode = $this->getFactory()->isEditorMode() ? "editormode" : '';
         echo '<div id="skeleton" class="' . $editorMode . '">';
         $this->loadSkeletonBody();
@@ -174,6 +171,7 @@ class Page extends FactoryBase {
         if ($pageArea == null) {
             return;
         }
+        
         ob_start();
         $pageArea->render();
         $html = ob_get_contents();
@@ -183,7 +181,9 @@ class Page extends FactoryBase {
 
     private function getMainMenuContent() {
         ob_start();
-        $this->getFactory()->getApplicationPool()->getApplicationInstance("bf35979f-6965-4fec-9cc4-c42afd3efdd7")->render();
+        $app = $this->getFactory()->getApplicationPool()->getApplicationInstance("bf35979f-6965-4fec-9cc4-c42afd3efdd7");
+        echo get_class($app);
+        $app->render();
         $html = ob_get_contents();
         ob_end_clean();
         return $html;
@@ -207,8 +207,6 @@ class Page extends FactoryBase {
 
     private function getSkeletonLayout() {
         ob_start();
-        $this->emptySkeleton = true;
-        
         $this->loadSkeletonBody();
         $html = ob_get_contents();
         ob_end_clean();
@@ -226,17 +224,6 @@ class Page extends FactoryBase {
     public function loadJsonContent() {
         $contents['skeleton'] = $this->getSkeletonLayout();
         $contents['mainmenu'] = $this->getMainMenuContent();
-        $contents['apparea-breadcrumb'] = $this->getBreadCrumbContent();
-
-        foreach ($this->areas as $area) {
-            $type = $area->getType();
-            $contents['apparea-' . $type] = $this->getAppAreaHtml($this->getApplicationArea($type));
-        }
-
-        if (isset($_GET['page']) && $_GET['page'] == "settings") {
-            $contents['apparea-bottom'] = $this->getFactory()->getBottomHtml();
-        }
-
         $contents['errors'] = $this->getFactory()->getErrorsHtml();
         $contents['errorCodes'] = $this->getFactory()->getErrorCodes();
         echo json_encode($contents);

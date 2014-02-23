@@ -95,10 +95,6 @@ class FactoryBase {
                     echo "Is the template file: " . $filename . " missing?";
                     return;
                 }
-                
-                foreach ($this->getApplications() as $application) {
-                    $application->renderApplication();
-                }
             }
         }
 

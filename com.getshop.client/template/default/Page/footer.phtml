@@ -9,8 +9,7 @@ if (!$this->getFactory()->isExtendedMode())
     <div class="gs_inner">
         <div area='footer' id="apparea-footer" class="applicationarea">
             <?php 
-            if (!$this->emptySkeleton)    
-                $this->getPage()->getApplicationArea('footer')->render(); 
+            $this->getPage()->getApplicationArea('footer')->render(); 
             ?>
         </div>
     </div>

@@ -225,7 +225,6 @@ class Factory extends FactoryBase {
     public function start($loadPages = true) {
         $this->setScopeId();
         $this->errors = array();
-        $this->initialize();
         $this->showNotExistsMessage();
 
         if ($loadPages) {
@@ -308,6 +307,7 @@ class Factory extends FactoryBase {
         if (!$homePage) {
             $homePage = "home";
         }
+        
         if (!isset($navigation->currentPageId)) {
             $navigation->currentPageId = $homePage;
         }
@@ -317,10 +317,10 @@ class Factory extends FactoryBase {
         if ($page == null) {
             $page = $this->pageManager->getPage($homePage);
         }
-        $this->page = new Page($page);
+        $this->page = new Page($page); 
         $this->initApplicationsPool();
+        $this->page->createAllPageAreas($page);
         $this->javaPage = $page;
-
         $this->styleSheet = new StyleSheet();
     }
 
@@ -364,7 +364,6 @@ class Factory extends FactoryBase {
     }
 
     public function run($json = false) {
-        $this->initPage();
         $this->runPreprocess();
         $this->renderConent($json);
         $this->runPostProcess();

@@ -183,7 +183,6 @@ class Page extends FactoryBase {
     private function getMainMenuContent() {
         ob_start();
         $app = $this->getFactory()->getApplicationPool()->getApplicationInstance("bf35979f-6965-4fec-9cc4-c42afd3efdd7");
-        echo get_class($app);
         $app->render();
         $html = ob_get_contents();
         ob_end_clean();

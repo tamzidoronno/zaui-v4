@@ -3,6 +3,7 @@
     $id = uniqid();
     $interval = $this->getInterval();
     $height = $this->getHeight() ? "height:".$this->getHeight()."px" : "";
+    
     $texts = [];
     
     if (count($this->getBanners()) == 0 && $this->isEditorMode()) {
@@ -32,7 +33,7 @@
             $imageId = $banner->imageId;
             $texts[$imageId] = $banner->imagetext;
             
-            echo "<div class='banner' imageId='$imageId'>";
+            echo "<div class='banner' style='$height' imageId='$imageId'>";
            
             if (isset($banner->productId) && strlen(trim($banner->productId)) > 0) {
                 echo "<a href='" . $this->getProductLink($banner->productId) . "'>";
@@ -42,12 +43,12 @@
                 echo "<a href='" . $banner->link . "'>";
             }
             $crop = json_decode($banner->crop_cordinates);
-            
             $cropData = "";
+            
             if ($crop) {
                 $cropData = "&crop=true&x=" . $crop->x . "&x2=" . $crop->x2 . "&y=" . $crop->y . "&y2=" . $crop->y2 . "&rotation=".$banner->rotation;
             }
-            echo "<img height='".$height."' width='100%' src='displayImage.php?id=$imageId" . $cropData . "'/>";
+            echo "<img style='".$height."' width='100%' src='displayImage.php?id=$imageId" . $cropData . "'/>";
             if (isset($banner->productId) && strlen(trim($banner->productId)) > 0) {
                 echo "</a>";
             }

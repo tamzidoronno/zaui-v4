@@ -571,7 +571,7 @@ getshop.ImageEditor.prototype = {
         this.loader.hide();
 
         var firstTimeLoaded = !this.config.OriginalImage;
-
+       
         if (firstTimeLoaded) {
             this.setOriginalImage();
         }
@@ -581,7 +581,10 @@ getshop.ImageEditor.prototype = {
         this.uploadMenu.hide();
         this.appendImageToCanvas();
 
+        var addText = this.initialRotating && !firstTimeLoaded;
+        
         if (firstTimeLoaded && this.config.rotation) {
+            this.initialRotating = true;
             this.rotateImageInitially();
         } else {
             var doCompression = this.imageJustRotated === true ? false : true;
@@ -589,7 +592,9 @@ getshop.ImageEditor.prototype = {
             this.imageJustRotated = null;
         }
         
-        if (firstTimeLoaded) {
+        
+        if (firstTimeLoaded && !this.initialRotating || addText) {
+            this.initialRotating = null;
             this.addTexts();
         }
     },

@@ -53,6 +53,7 @@ if (isset($_POST['core']['appid']) && $_POST['core']['appid']) {
 }
 
 if (!isset($_POST['synchron'])) {
+    $factory->initPage();
     $factory->run(true);
 }
 

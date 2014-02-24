@@ -171,6 +171,8 @@ The email address is invalid.;-;Eposten din er ugyldig.
 The email already exists, please log on to continue.;-;Eposten eksisterer allerede, vennligst logg på for å fortsette.
 The event has been confirmed.;-;Eventent har blitt bekreftet.
 The passwords does not match.;-;Passordet stemmer ikke overens.
+There is no entries for this event;-;Finnes inne noe for akkurat dette kurset
+This event has the following entries;-;Dette kurset finner du i kalenderen på følgende dager
 This is a {} days event.;-;Dette er et {} dagers event.
 This page is only available for adminsitrators;-;Denne siden er kun tilgjengelig for adminstratorer.
 This page is only available for editors.;-;Denne siden er kun tilgjengelig for editorer.

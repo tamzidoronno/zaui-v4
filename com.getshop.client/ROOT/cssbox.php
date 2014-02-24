@@ -15,33 +15,42 @@ $factory->loadJavascriptFiles();
 </style>
 <script>
     var current_page_set = "<? echo $factory->getPage()->backendPage->id; ?>";
-    
+    var has_css_updated = false;
     function saveCss(callback) {
         var data = {
-                "page_css" : page_css.getSession().getValue(),
-                "global_css" : global_css.getSession().getValue(),
-                "page_text" : $('#page_description').val()
-            }
-            
-            var event = thundashop.Ajax.createEvent('','savePageDetails',null,data);
-            thundashop.Ajax.postWithCallBack(event, callback);
+            "page_css": page_css.getSession().getValue(),
+            "global_css": global_css.getSession().getValue(),
+            "page_text": $('#page_description').val()
+        }
+
+        var event = thundashop.Ajax.createEvent('', 'savePageDetails', null, data);
+        thundashop.Ajax.postWithCallBack(event, callback);
     }
-    
-    $(function() {
-        $(document).mousemove(function() {
-            if(current_page_set !== $('#current_pageid').attr('pageid')) {
-                current_page_set = $('#current_pageid').attr('pageid');
+
+    function updateDocument() {
+        if (current_page_set !== $('#current_pageid').attr('pageid')) {
+            var target = $('.menu_selected').attr('target');
+            current_page_set = $('#current_pageid').attr('pageid');
+            if (has_css_updated) {
                 var saveAndUpdate = confirm("You have navigated to different page, would you like to save and update?");
-                if(saveAndUpdate) {
-                    saveCss(function() {
-                        document.location.href='?page='+current_page_set;
-                    });
-                } else {
-                    document.location.href='?page='+current_page_set;
-                }
+            } else {
+                saveAndUpdate = false;
+            } 
+            if (saveAndUpdate) {
+                saveCss(function() {
+                    document.location.href = '?page=' + current_page_set + "#" + target;
+                });
+            } else {
+                document.location.href = '?page=' + current_page_set + "#" + target;
             }
-            
-        });
+        }
+    }
+
+    $(function() {
+
+        $(document).mousemove(updateDocument);
+        $(window).focus(updateDocument);
+
         $('.menu').on('click', function() {
             $('.menu').removeClass('menu_selected');
             $(this).addClass('menu_selected');
@@ -53,6 +62,11 @@ $factory->loadJavascriptFiles();
                 alert('Data has been saved');
             });
         });
+        var hash = window.location.hash;
+        if (hash) {
+            hash = hash.substr(1, hash.length);
+            $('.menu[target="' + hash + '"]').click();
+        }
     });
 </script>
 <title>Style / page settings</title>
@@ -71,10 +85,10 @@ $factory->loadJavascriptFiles();
     <textarea id="page_description"><? echo $factory->getPage()->description; ?></textarea>    
 </body>
 
-    <textarea contenteditable="true" id="styles" class="textbox" style="width:100%; height:100%;"><? echo $factory->getStore()->configuration->customCss; ?></textarea>
-    <textarea contenteditable="true" id="styles_page" class="textbox" style="width:100%; height:100%;"><? echo $factory->getPage()->backendPage->customCss; ?></textarea>
-    <input type="hidden" pageid="<? echo $factory->getPage()->backendPage->id; ?>" id="current_pageid">
-    
+<textarea contenteditable="true" id="styles" class="textbox" style="width:100%; height:100%;"><? echo $factory->getStore()->configuration->customCss; ?></textarea>
+<textarea contenteditable="true" id="styles_page" class="textbox" style="width:100%; height:100%;"><? echo $factory->getPage()->backendPage->customCss; ?></textarea>
+<input type="hidden" pageid="<? echo $factory->getPage()->backendPage->id; ?>" id="current_pageid">
+
 
 <script src="/js/ace/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
@@ -82,17 +96,19 @@ $factory->loadJavascriptFiles();
     global_css.setTheme("ace/theme/github");
     global_css.getSession().setMode("ace/mode/css");
     global_css.on("change", function(event) {
+        has_css_updated = true;
         $('#styles').val(global_css.getSession().getValue());
     });
     var page_css = ace.edit("page_css");
     page_css.setTheme("ace/theme/github");
     page_css.getSession().setMode("ace/mode/css");
     page_css.on("change", function(event) {
+        has_css_updated = true;
         $('#styles_page').val(page_css.getSession().getValue());
     });
-    
+
     var page_css = ace.edit("page_css");
     page_css.setTheme("ace/theme/github");
     page_css.getSession().setMode("ace/mode/css");
-    
+
 </script>

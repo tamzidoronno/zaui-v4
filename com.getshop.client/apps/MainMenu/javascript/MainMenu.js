@@ -29,7 +29,8 @@ thundashop.MainMenu = {
         });
     },
     openCssBox : function() {
-        var opener = window.open("cssbox.php",'popUpWindow','height=500,width=400,left=100,addressbar=no,top=100,resizable=no,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no, status=yes');
+        var pageid = $('.skelholder').attr('page');
+        var opener = window.open("cssbox.php?page="+pageid,'popUpWindow','height=500,width=400,left=100,addressbar=no,top=100,resizable=no,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no, status=yes');
         $('#gs_customcss').remove();
         var style = $('<div id="gs_customcss"></div>');
         $('#gs_customcss_page').remove();

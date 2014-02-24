@@ -10,10 +10,8 @@ com.getshop.messages/nbproject/private/private.properties
 com.getshop.messages/nbproject/private/private.xml
 com.getshop.messages/nbproject/private/
 com.getshop.messages/build/
-com.getshop.client/app
 com.getshop.client/uploadedfiles
 com.getshop.core/nbproject/private/
-com.getshop.client/app/
 com.getshop.client/uploadedfiles
 com.getshop.client/nbproject/private/
 com.getshop.syncserver/dist/
@@ -37,6 +35,9 @@ com.getshop.syncserver/nbproject/private/private.xml
 com.getshop.syncclient/build.xml
 com.getshop.combined/build.xml
 com.getshop.syncserver/nbproject/private/config.properties
+
+com.getshop.core/PythonGetshopApi.pyc
+com.getshop.core/config.txt
 
 /com.getshop.combined/nbproject/private/
 /com.getshop.syncclient/nbproject/private/
@@ -68,6 +69,8 @@ com.getshop.remote/import.txt
 com.getshop.remote/import/import.txt
 com.getshop.remote/nbproject/project.properties
 
+com.getshop.client/app
+
 com.getshop.remote/completedProducts.txt
 com.getshop.remote/config.txt
 com.getshop.remote/import/import.txt
@@ -77,3 +80,5 @@ com.getshop.client/etc/config.txt
 /com.getshop.client/com.getshop.javaapi/nbproject/private/
 /com.getshop.javaapi/build/
 /com.getshop.javaapi/dist/
+
+

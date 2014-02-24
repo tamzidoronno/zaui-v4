@@ -51,11 +51,14 @@ thundashop.MainMenu = {
         var pageElem = oDom.getElementById("styles_page");
         var pageInput = oDom.getElementById("current_pageid");
         if (elem) {
-            pageInput.setAttribute("pageid", $('.skelholder').attr('page'));
+            var curpage =  $('.skelholder').attr('page');
+            pageInput.setAttribute("pageid",curpage);
             var globalstyles = elem.value;
             var pagestyles = pageElem.value;
             $('#gs_customcss').html("<style>" + globalstyles + "</style>");
-            $('#gs_customcss_page').html("<style>" + pagestyles + "</style>");
+            if(box.current_page_set === curpage) {
+                $('#gs_customcss_page').html("<style>" + pagestyles + "</style>");
+            }
         }
         setTimeout(function() {
             thundashop.MainMenu.checkCss(box);

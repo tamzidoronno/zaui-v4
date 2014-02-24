@@ -228,6 +228,7 @@ padding-left: 10px; }
 /* responsive design stuff */
 .Banner .banner img,.Banner .bannerslider { height: auto !important; }
 @media only all and (max-width: 480px) {
+    .Banner .banner img,.Banner .bannerslider { height: auto !important; }
     .Logo { display: none; }
     .TopMenu a { padding-left: 10px; padding-right: 10px; }
     .Login { display: none; }
@@ -242,6 +243,7 @@ padding-left: 10px; }
     .ProductList td { padding: 0px; }
 }
 @media only all and (max-width: 800px) {
+    .Banner .banner img,.Banner .bannerslider { height: auto !important; }
     .ProductList .rowview .slidearrow { display:block !important; }
     .header .TopMenu { top: 5px; }
     td.gs_col.c1 { display: none; }

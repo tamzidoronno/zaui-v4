@@ -39,6 +39,9 @@ class core_pagemanager_data_Page extends core_common_DataCommon  {
 	/** @var String */
 	public $title;
 
+	/** @var String */
+	public $customCss;
+
 	/** @var core_listmanager_data_Entry */
 	public $linkToListEntry;
 

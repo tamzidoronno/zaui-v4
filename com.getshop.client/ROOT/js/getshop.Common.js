@@ -919,6 +919,9 @@ $(function() {
 });
 
 getText = function(text) {
+    if(typeof(translationMatrix) === "undefined") {
+        return text;
+    }
     if (translationMatrix[text])
         return translationMatrix[text]
 

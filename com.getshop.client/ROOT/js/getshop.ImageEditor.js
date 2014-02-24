@@ -179,7 +179,7 @@ getshop.ImageEditor.prototype = {
             reader.onload = function(event) {
                 var dataUri = event.target.result;
                 me.config.Image = new Image();
-                me.config.Image.onload = $.proxy(me.onImageLoaded, me);
+                me.config.Image.onload = $.proxy(me.compressImage, me);
                 me.config.Image.src = dataUri;
             };
 
@@ -190,6 +190,41 @@ getshop.ImageEditor.prototype = {
             reader.readAsDataURL(file);
         }
     },
+            
+    compressImage: function() {
+        var oldImage = this.config.Image;
+        
+        var canvas = document.createElement("canvas");
+        
+        var ratio = 1;
+        var maxSize = 1500;
+        
+        if (oldImage.width === oldImage.height && oldImage.width > maxSize) {
+            ratio = maxSize / this.config.Image.height;
+        }
+        
+        if (oldImage.width < oldImage.height && oldImage.height > maxSize) {
+            ratio = maxSize / this.config.Image.height;
+        }
+        
+        if (oldImage.width > oldImage.height && oldImage.width > maxSize) {
+            ratio = maxSize / this.config.Image.width;
+        }
+        
+        var ctx = canvas.getContext("2d");
+        ctx.height = oldImage.height*ratio;
+        ctx.width = oldImage.width*ratio;
+        canvas.width = ctx.width;
+        canvas.height = ctx.height;
+
+
+        ctx.drawImage(oldImage, 0, 0, oldImage.width*ratio, oldImage.height*ratio);
+        
+        this.config.Image = new Image();
+        this.config.Image.onload = $.proxy(this.onImageLoaded, this);
+        this.config.Image.src = canvas.toDataURL();
+    },
+            
     showFileDialog: function() {
         var selectDialogueLink = $('<a href="">Select files</a>');
         var fileSelector = $('<input type="file" id="your-files" multiple/>');
@@ -628,18 +663,31 @@ getshop.ImageEditor.prototype = {
     },
     setOriginalImage: function() {
         var canvas = document.createElement("canvas");
-        canvas.width = this.config.Image.width;
-        canvas.height = this.config.Image.height;
-
+        
+        var ratio = 1;
+//        var maxSize = 1500;
+//        
+//        if (this.config.Image.width === this.config.Image.height && this.config.Image.width > maxSize) {
+//            ratio = maxSize / this.config.Image.height;
+//        }
+//        
+//        if (this.config.Image.width < this.config.Image.height && this.config.Image.height > maxSize) {
+//            ratio = maxSize / this.config.Image.height;
+//        }
+//        
+//        if (this.config.Image.width > this.config.Image.height && this.config.Image.width > maxSize) {
+//            ratio = maxSize / this.config.Image.width;
+//        }
+        
         var ctx = canvas.getContext("2d");
-        ctx.height = this.config.Image.height;
-        ctx.width = this.config.Image.width;
+        ctx.height = this.config.Image.height*ratio;
+        ctx.width = this.config.Image.width*ratio;
+        canvas.width = ctx.width;
+        canvas.height = ctx.height;
 
-        ctx.height = canvas.height;
-        ctx.width = canvas.width;
 
-        ctx.drawImage(this.config.Image, 0, 0, this.config.Image.width, this.config.Image.height);
-
+        ctx.drawImage(this.config.Image, 0, 0, this.config.Image.width*ratio, this.config.Image.height*ratio);
+        
         this.config.OriginalImage = new Image();
         this.config.OriginalImage.src = canvas.toDataURL();
         this.config.OriginalImage.onload = $.proxy(this.originalImageLoaded, this);

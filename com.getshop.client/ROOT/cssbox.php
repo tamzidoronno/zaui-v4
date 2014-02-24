@@ -29,7 +29,6 @@ $factory->loadJavascriptFiles();
     
     $(function() {
         $(document).mousemove(function() {
-            console.log();
             if(current_page_set !== $('#current_pageid').attr('pageid')) {
                 current_page_set = $('#current_pageid').attr('pageid');
                 var saveAndUpdate = confirm("You have navigated to different page, would you like to save and update to this page?");

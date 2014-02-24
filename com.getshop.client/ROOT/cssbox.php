@@ -31,11 +31,13 @@ $factory->loadJavascriptFiles();
         $(document).mousemove(function() {
             if(current_page_set !== $('#current_pageid').attr('pageid')) {
                 current_page_set = $('#current_pageid').attr('pageid');
-                var saveAndUpdate = confirm("You have navigated to different page, would you like to save and update to this page?");
+                var saveAndUpdate = confirm("You have navigated to different page, would you like to save and update?");
                 if(saveAndUpdate) {
                     saveCss(function() {
                         document.location.href='?page='+current_page_set;
                     });
+                } else {
+                    document.location.href='?page='+current_page_set;
                 }
             }
             

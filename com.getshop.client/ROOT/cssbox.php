@@ -14,7 +14,32 @@ $factory->loadJavascriptFiles();
     .gs_button { border: solid 1px; font-size: 12px; background-color:#000; padding: 3px; cursor:pointer; padding-left: 5px; padding-right: 5px; position:absolute; right: 10px; top: 7px; }
 </style>
 <script>
+    var current_page_set = "<? echo $factory->getPage()->backendPage->id; ?>";
+    
+    function saveCss(callback) {
+        var data = {
+                "page_css" : page_css.getSession().getValue(),
+                "global_css" : global_css.getSession().getValue(),
+                "page_text" : $('#page_description').val()
+            }
+            
+            var event = thundashop.Ajax.createEvent('','savePageDetails',null,data);
+            thundashop.Ajax.postWithCallBack(event, callback);
+    }
+    
     $(function() {
+        $(document).mousemove(function() {
+            if(current_page_set !== $('#current_pageid').attr('pageid')) {
+                current_page_set = $('#current_pageid').attr('pageid');
+                var saveAndUpdate = confirm("You have navigated to different page, would you like to save and update to this page?");
+                if(saveAndUpdate) {
+                    saveCss(function() {
+                        document.location.href='?page='+current_page_set;
+                    });
+                }
+            }
+            
+        });
         $('.menu').on('click', function() {
             $('.menu').removeClass('menu_selected');
             $(this).addClass('menu_selected');
@@ -22,14 +47,7 @@ $factory->loadJavascriptFiles();
             $("#" + $(this).attr('target')).show();
         });
         $('.save_css_settings').on('click', function() {
-            var data = {
-                "page_css" : page_css.getSession().getValue(),
-                "global_css" : global_css.getSession().getValue(),
-                "page_text" : $('#page_description').val()
-            }
-            
-            var event = thundashop.Ajax.createEvent('','savePageDetails',null,data);
-            thundashop.Ajax.postWithCallBack(event, function() {
+            saveCss(function() {
                 alert('Data has been saved');
             });
         });
@@ -53,8 +71,8 @@ $factory->loadJavascriptFiles();
 
     <textarea contenteditable="true" id="styles" class="textbox" style="width:100%; height:100%;"><? echo $factory->getStore()->configuration->customCss; ?></textarea>
     <textarea contenteditable="true" id="styles_page" class="textbox" style="width:100%; height:100%;"><? echo $factory->getPage()->backendPage->customCss; ?></textarea>
-
-
+    <input type="hidden" pageid="<? echo $factory->getPage()->backendPage->id; ?>" id="current_pageid">
+    
 
 <script src="/js/ace/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>

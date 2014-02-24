@@ -28,6 +28,36 @@ thundashop.MainMenu = {
             }
         });
     },
+    openCssBox : function() {
+        var opener = window.open("cssbox.php",'popUpWindow','height=500,width=400,left=100,addressbar=no,top=100,resizable=no,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no, status=yes');
+        $('#gs_customcss').remove();
+        var style = $('<div id="gs_customcss"></div>');
+        $('#gs_customcss_page').remove();
+        var pagestyle = $('<div id="gs_customcss_page"></div>');
+        $('body').append(style);
+        $('.skelholder').append(pagestyle);
+        thundashop.MainMenu.checkCss(opener);
+    },
+    checkCss : function(box) {
+        if(!box) {
+            return;
+        }
+        if(box.top === null) {
+            return;
+        }
+        var oDom = box.document;
+        var elem = oDom.getElementById("styles");
+        var pageElem = oDom.getElementById("styles_page");
+        if (elem) {
+            var globalstyles = elem.value;
+            var pagestyles = pageElem.value;
+            $('#gs_customcss').html("<style>" + globalstyles + "</style>");
+            $('#gs_customcss_page').html("<style>" + pagestyles + "</style>");
+        }
+        setTimeout(function() {
+            thundashop.MainMenu.checkCss(box);
+        }, "300");
+    },
     showPageLayoutSelection: function() {
         var mode = 'edit';
         if($('.no_page_layout').length > 0) {

@@ -1191,7 +1191,7 @@ box-shadow: 0px 0px 3px rgba(22, 52, 239, 0.9);
 }
 
 .GetShopToolbox {
-border-bottom: solid 1px #3f3f3f;
+border-bottom: solid 1px #CCC;
 z-index: 20;
 }   
 
@@ -1217,6 +1217,9 @@ border-top-right-radius:8px;
 font-size: 12px;
 background-color: #3f3f3f;
 cursor: move;
+border-left: solid 1px #CCC;
+border-right: solid 1px #CCC;
+border-top: solid 1px #CCC;
 }
 
 .GetShopToolbox .item {
@@ -1233,8 +1236,8 @@ cursor: pointer;
 }
 
 .GetShopToolbox .row {
-    border-left: solid 1px #3f3f3f;
-    border-right: solid 1px #3f3f3f;
+    border-left: solid 1px #CCC;
+    border-right: solid 1px #CCC;
     background-color:#4e4e4e;
     border-top: solid 1px #cccccc;
 }

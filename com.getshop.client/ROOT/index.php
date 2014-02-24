@@ -286,7 +286,11 @@ if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
         CKEDITOR.config.allowedContent = true;
     }
 </script>
-
+<div id="gs_customcss">
+    <style>
+        <? echo $factory->getStoreConfiguration()->customCss; ?>
+    </style>
+</div>
 <? if (isset($_GET['logout'])) { ?>
     <script>window.location.reload()</script>
 <? } ?>    

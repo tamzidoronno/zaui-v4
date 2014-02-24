@@ -46,6 +46,21 @@ class ApplicationManager extends FactoryBase {
         }
     }
     
+    function savePageDetails() {
+        $page_css = $_POST['data']['page_css'];
+        $global_css = $_POST['data']['global_css'];
+        $page_text = $_POST['data']['page_text'];
+        
+        $store = $this->getFactory()->getStore();
+        $store->configuration->customCss = $global_css;
+        $this->getApi()->getStoreManager()->saveStore($store->configuration);
+       
+        $page = $this->getFactory()->getPage()->backendPage;
+        $page->customCss = $page_css;
+        $page->description = $page_text;
+        $this->getApi()->getPageManager()->savePage($page);
+    }
+    
     function validateArea($areas, $area, $size, $type) {
         if (!in_array($size, $areas) && $size != "xlarge" || sizeof($areas) == 0) {
             return false;

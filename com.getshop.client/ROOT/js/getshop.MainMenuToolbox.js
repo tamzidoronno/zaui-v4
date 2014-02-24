@@ -55,10 +55,10 @@ $(document).ready(function() {
             },
             {
                 icontype: "awesome",
-                icon: "fa-gears",
+                icon: "fa-html5",
                 iconsize : "30",
-                title: __f("Page settings"),
-                click: thundashop.MainMenu.goToStoresettings,
+                title: __f("Css / page settings"),
+                click: thundashop.MainMenu.openCssBox,
                 extraArgs: {},
                 disableOnSystemPages: true
             },

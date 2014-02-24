@@ -152,7 +152,7 @@ public class Page extends DataCommon implements Cloneable {
     private HashMap<String, PageArea> pageAreas = new HashMap<String, PageArea>();
     public PageLayout layout = new PageLayout();
     public String title;
-    
+    public String customCss = "";
     
     /**
      * This might not be set, only in just a few cases.

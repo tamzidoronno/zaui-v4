@@ -570,7 +570,16 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         List<Entry> removeEntries = new ArrayList();
         for (Entry entry : entries) {
             String camelCasedLocation = toCamelCase(entry.location);
-            if (!filters.contains(camelCasedLocation)) {
+            
+            boolean found = false;
+            for (String s : filters) {
+                if (s.equalsIgnoreCase(camelCasedLocation)) {
+                    found = true;
+                    break;
+                }
+            }
+            
+            if (!found) {
                 removeEntries.add(entry);
             }
         }
@@ -585,7 +594,12 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         if (getSession() != null) {
             if (filters != null) {
                 if (filters.size() > 0) {
-                    getSession().put("filters", filters);
+                    List<String> setThisFilters = new ArrayList();
+                    for (String filter : filters) {
+                        setThisFilters.add(toCamelCase(filter));
+                    }
+                    
+                    getSession().put("filters", setThisFilters);
                 } else {
                     getSession().remove("filters");
                 }
@@ -687,4 +701,25 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         userManager.updatePassword(userId, "", newPassord);
         addUserToEvent(userId, toEventId, newPassord, user.username);
     }
+
+    @Override
+    public List<Entry> getAllEventsConnectedToPage(String pageId) {
+        List<Entry> entries = new ArrayList();
+        
+        for (Month month : months.values()) {
+            for (Day day : month.days.values()) {
+                for (Entry entry : day.entries) {
+                    if (entry.linkToPage != null 
+                            && entry.linkToPage.equals(pageId) 
+                            && !entry.isInPast() 
+                            && entry.availableForBooking 
+                            && !entry.lockedForSignup) {
+                        entries.add(entry);
+                    }
+                }
+            }
+        }
+        
+        return entries; 
+   }
 }

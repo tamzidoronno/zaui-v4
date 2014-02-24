@@ -69,6 +69,15 @@ public class AddApplicationsToDatabase {
         productLister.isPublic = true;
         apps.add(productLister);
         
+        ApplicationSettings calendarEventViewer = createSettings(
+                "CalendarEventViewer",
+                "ab5378d0-9d6c-11e3-a5e2-0800200c9a66",
+                emtpy,
+                "",
+                ApplicationSettings.Type.Webshop, false);
+        calendarEventViewer.isPublic = true;
+        apps.add(calendarEventViewer);
+        
         ApplicationSettings widget = createSettings(
                 "ProductWidget",
                 "b741283d-920d-460b-8c08-fad5ef4294cb",

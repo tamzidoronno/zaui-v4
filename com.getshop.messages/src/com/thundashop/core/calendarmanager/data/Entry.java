@@ -6,6 +6,8 @@ package com.thundashop.core.calendarmanager.data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -80,6 +82,16 @@ public class Entry implements Serializable, Comparable<Entry> {
             return 0;
         
         return 1;
+    }
+
+    public boolean isInPast() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, this.year);
+        cal.set(Calendar.MONTH, this.month);
+        cal.set(Calendar.DAY_OF_MONTH, this.day);
+        Date dateRepresentation = cal.getTime();
+        
+        return dateRepresentation.before(new Date());
     }
   
     

@@ -17,6 +17,10 @@ class Banner extends \WebshopApplication implements \Application {
     }
     
     public function isShowDots() {
+        if ($this->bannerSet->showDots == 1) {
+            return true;
+        }
+        
         return $this->getConfigurationSetting("showDots") == true;
     }
 
@@ -61,7 +65,11 @@ class Banner extends \WebshopApplication implements \Application {
     }
     
     public function toggleDots() {
-        $this->setConfigurationSetting("showDots", !$this->isShowDots());
+        $this->loadBannerSet();
+        $value = !$this->isShowDots();
+        $this->bannerSet->showDots = "false";
+        $this->getApi()->getBannerManager()->saveSet($this->bannerSet);
+        $this->setConfigurationSetting("showDots", $value ? true : false);
     }
     
     private function getTexts() {

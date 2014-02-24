@@ -48,7 +48,8 @@
         var event = thundashop.Ajax.createEvent(null, "render", config.app, {});
         event['synchron'] = true;
         thundashop.Ajax.postWithCallBack(event, function(response) {
-            config.app.html(response);
+            config.app.find('.displayimagecontainer').remove();
+            config.app.append(response);
         }, true);
     }
     

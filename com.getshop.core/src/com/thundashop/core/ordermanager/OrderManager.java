@@ -16,6 +16,7 @@ import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
 import java.util.*;
+import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -39,6 +40,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for (DataCommon dataFromDatabase : data.data) {
             if (dataFromDatabase instanceof Order) {
                 Order order = (Order) dataFromDatabase;
+                if (order.shipping == null || order.cart == null || order.cart.address == null) {
+                    try {
+                        databaseSaver.deleteObject(dataFromDatabase, credentials);
+                    } catch (ErrorException ex) {
+                        ex.printStackTrace();
+                    }
+                    continue;
+                }
                 if (order.incrementOrderId > incrementingOrderId) {
                     incrementingOrderId = order.incrementOrderId;
                 }
@@ -191,11 +200,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Order order = new Order();
         order.createdDate = new Date();
         order.cart = cart.clone();
-        
-        if (order.cart.address == null) {
+
+        if (order.shipping == null || order.cart == null || order.cart.address == null) {
             throw new ErrorException(53);
         }
-
+        
         finalizeCart(order.cart);
         
         incrementingOrderId++;

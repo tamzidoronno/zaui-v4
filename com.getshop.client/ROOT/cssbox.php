@@ -36,6 +36,8 @@ $factory->loadJavascriptFiles();
                     saveCss(function() {
                         document.location.href='?page='+current_page_set;
                     });
+                } else {
+                    document.location.href='?page='+current_page_set;
                 }
             }
             

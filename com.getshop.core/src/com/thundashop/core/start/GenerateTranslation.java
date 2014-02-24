@@ -111,7 +111,6 @@ public class GenerateTranslation {
 
         File root = new File(path);
         File[] list = root.listFiles();
-
         for (File f : list) {
             String filePath = f.getAbsolutePath().toString().toLowerCase();
             String fileOriginal = f.getCanonicalPath().toString();
@@ -128,7 +127,9 @@ public class GenerateTranslation {
         FileInputStream fstream = new FileInputStream(filePath);
         DataInputStream in = new DataInputStream(fstream);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
-
+        if(filePath.contains("com.getshop.client/ROOT/js/ace")) {
+            return;
+        }
         String strLine;
         int linenumber = 0;
 

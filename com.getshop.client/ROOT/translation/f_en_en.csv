@@ -1,13 +1,10 @@
 ###### framework ######
 add_event;-;Add event
-add_news;-;Add News
 appid;-;AppId
 appid_required;-;"Your facebook app id, all facebook social plugins requires this."
 cart;-;Cart
-create_news_desc;-;Create a news entry by entering text in the textfield below.
 delete;-;Delete
 edit;-;Edit
-edit_product;-;Edit product
 enter_domain;-;Enter Domain Name
 event_desc;-;Event Description
 event_name;-;Event name
@@ -24,9 +21,7 @@ save;-;Save
 send_reminder;-;Send reminder
 start;-;Start
 start_time;-;Start time
-stock_quantity;-;Stock Quantity
 stop;-;Stop
-subscribe_news;-;Subscribe / unsubscribe to this news feed:
 taxes;-;Taxes
 title;-;Title
 users;-;Users

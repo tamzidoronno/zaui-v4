@@ -3,16 +3,12 @@ A content manager allows you to add content to whatever page you would like to a
 A news application makes you push news to your WebShop. And share to subscribers and push to facebook if the Facebook application has been added.;-;Uutiksien sovelluksen avulla laitat uutiset omaan WebShopiin. My??s jakaa ktt??lle ja laita Facebookiin jos Facebookin sovellus on lis4y.
 Category list;-;Ryhm??ntt??
 Change image;-;Muokkaa kuvaa
-Confirm delete;-;Vahvista poistaminen
 Content Manager;-;Sis,??n hallinnoija
 Create categories and add a list of products to the category, attach images to the categories, and name them as you want.;-;Luo ryhmi*a lis,uettelo tuotteista, liit+uvia ryhmiin ja nimet.e haluamallasi tavalla.
 Create new category;-;Luo uusi ryhm?
-Create news;-;Luo uusi uutiksien kohta
-Enter email;-;Anna sähköpostiosoitteesi
 Link to menu;-;Yhdist2yhm???nnettuun valikkoon
 More Categories?;-;Lis?? ryhmi??
 News;-;Uutiset
-Product List;-;Tuoteluettelo
 Remove image;-;Poista kuva
 Rename;-;Nimet5udelleen
 Reporting;-;Raportointi
@@ -21,10 +17,7 @@ This category displayer is currently empty. To create a new category please clic
 To translate all visible text for your users, translate the entries below, and hit the save translation button.;-;Kääntää verkkokaupan teksti omalle kielelleen tai muokkaa  nykyistä kieltä sitä.
 Translation;-;Käännös
 add_event;-;,,
-add_news;-;Lis
-create_news_desc;-;Luo uutiksien kohta kirjoittamalla teksti alla tekstikentt.
 delete;-;Poista
-edit_product;-;Muoka tuoteta
 event_desc;-;,,
 event_name;-;,,
 free_positions;-;,,

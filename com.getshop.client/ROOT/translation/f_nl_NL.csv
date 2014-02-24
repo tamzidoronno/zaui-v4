@@ -1,13 +1,14 @@
+###### beb2fdb9_6aec_460f_80ac_bcc9696b3227 ######
+this applications lists products for you webshop, in the body of every page (except for system pages). from this application you can also add products. combine this application with a leftmenu, and/or a category displayer to create a powerful webshop.;-;Deze applicatie geeft een producten lijst van je webwinkel, op elke pagina. Je kan hier ook producten toevoegen. Combineer met een linker of rechter menu.
+
+
 ###### framework ######
 A content manager allows you to add content to whatever page you would like to add content to. It supports text, images, and even basic HTML, its like word for web.;-;Een content manager staat je toe inhoud toe te voegen op eender welke pagina. Het ondersteunt tekst, afbeeldingen, html. Vergelijkbaar met Word.
 A description to the image;-;Een beschrijving voor de afbeelding.
-A more detailed description;-;Gedetailleerde informatie
 A news application makes you push news to your WebShop. And share to subscribers and push to facebook if the Facebook application has been added.;-;Een nieuws applicatie om nieuws op je webwinkel te plaatsen. Share het nieuws met nieuwsbrief leden of deel het via facebook, als je de Facebook app hebt toegevoegd.
 A quick tip; when the mouse is hovering the image, you will see a settings box where you can configure the image.;-;TIP: als je met je muis over een afbeelding gaat, verschijnt er een instellingen box waar je je afbeelding kan aanpassen.
-A short description;-;Korte omschrijving
 A single users browsing activity.;-;Een unieke bezoeker surfactiviteit
 A topmenu enables you to display top menu entries;-;Een hoofdmenu maakt het mogelijk menu items toe te voegen
-About this attribute group:;-;Over deze attributen groep:
 Accessed when;-;Wanneer geopenend
 Account number;-;Account nummer
 Action;-;Actie
@@ -24,24 +25,16 @@ Add;-;Toevoegen
 Add Menu entry;-;Voeg menu link toe
 Add a new boundary;-;Voeg nieuwe grens toe
 Add a new marker;-;Voeg nieuwe markering toe
-Add a product to a page, add description, price, title, and other attributes. And you are ready to start selling the product. Combine it with a left menu, a category list to create a flexible and powerful webshop.;-;Voeg een product, een omschrijving, prijs en titel toe aan een pagina, en je bent klaar om een product te verkopen. Combineer het met een menu link, een categorie lijst om een Flexibele en professionele webwinkel te bekomen.
-Add an image;-;Voeg afbeelding toe
-Add an image by clicking the button below to start your image upload progress.;-;Voeg een afbeelding toe, klik op de button.
 Add application;-;Voeg App toe
 Add coupons;-;Voeg kortingcodes toe
-Add images to the product;-;Voeg afbeeldingen toe aan het product
-Add more applications to this page.;-;Voeg meer Apps toe aan deze pagina.
 Add more coupons;-;Voeg korting codes toe
 Add new;-;Voeg nieuw toe
 Add new top level variation;-;Voeg nieuwe variatie toe
 Add some eyecandy to your webshop, by activating this. It will show some nice fade in effects.;-;Activeer dit, en je krijgt een schaduwrand rond je webwinkel.
 Add sub entry;-;Voeg sub titel toe
-Add text;-;Voeg tekst toe
-Add text content;-;Voeg tekst inhoud toe
 Add this application and get started adding content to your page.;-;Voeg deze applicatie toe en start met toevoegen van inhoud aan je pagina.
 Add this contact form, configure it, and you are ready to start receiving questions and feedback from your users per email.;-;Voeg dit contact formulier toe, pas het aan, en je ben klaar om vragen en feedback te ontvangen van bezoekers/klanten via email.
 Add this left or right column at a product, and a new related products will be displayed.;-;Voeg een kolom links of rechts toe bij een product, en een gerelateerd product zal daarin zichtbaar zijn
-Add to list;-;Voeg aan lijst toe
 Add to your page;-;Voeg toe aan je pagina
 Add videos to your page.;-;Voeg video's aan je pagina toe.
 Additional domain names;-;Bijkomende domeinnamen
@@ -51,14 +44,11 @@ Administrator;-;Beheerder
 Administrators;-;Beheerders
 Administrators only;-;Beheerder  
 Admins;-;Beheerders
-Advanced Options;-;Geavanceerde opties
 Advanced settings;-;Geavanceerde instellingen
-Advanced settings allows you to finetune different aspects to your product. For example, if shipping is configured and you would like this product to be shipped for free.;-;Via Geavanceerde instellingen kan je nog meer info vertonen bij je product. Bvb gratis verzending
 Airgram allows you to push important notifications to your phone, use this application to push notifications to your cell phone when something important is happening, for example if someone is starting to chat with you, you will be instantly notified and can responde accordingly. Just download airgram from google play or app store and start using it.;-;Met Airgram word je op de hoogte gehouden van belangrijke notificaties. Bijvoorbeeld als een bezoeker met je wil chatten krijg je hier een melding van op je smartphone. Download Airgram via Google Play of App Store.
 All;-;Allemaal
 All fields need to be filled before you continue;-;Alle velden moet ingevuld zijn alvorens verder te gaan
 All page views listed;-;Lijst van pageviews
-All products available;-;Alle producten beschikbaar
 All text that you enter in the box below will be sent out as order confirmation emails. You can write anything you wish here, and enter variables. See bottom of page for variable defenitions.;-;Plaats hier tekst die zal worden meegestuurd bij bevestiging email.
 All users;-;Alle gebruikers
 Allow guests to add events.;-;Sta gasten toe een event toe te voegen.
@@ -70,23 +60,19 @@ Amount;-;Prijs
 Anonymous user;-;Anonieme gebruiker
 Answering your customers questions, means more sale. By adding this excellent chat application, you can answer on request at any time from you mobile devices or your stationary computer.;-;Beantwoorden van klanten vragen, betekent stijgende verkoop. Door deze chat applicatie toe te voegen, kan je ten alle tijde vragen van je klanten via pc of smartphone beantwoorden.
 Application management;-;Applicatie beheer
-Applications;-;Applicaties
 Are customers required to register to order?;-;Moeten bezoekers zich registreren om te kunnen bestellen?
 Are you sure that you want to remove this application?;-;Zeker dat je deze App wil verwijderen?
 Are you sure you want to delete this logo?;-;Ben je zeker dat je het logo wil verwijderen?
 Are you sure you want to remove this?;-;Zeker dat je dit wil verwijderen?
 Attendees;-;Deelnemers
-Attribute administration;-;Beheer attributen
 Attribute name;-;Attribuut naam
 Attribute settings;-;Optionele instellingen
 Attribute settings enables you to attach different kind of attributes to the product. Theese attributes will be used to filter your products in a product list.;-;Via Optionele instellingen kan je verschillende opties toevoegen aan een product. Met deze opties wordt het product gefilterd in de product lijst.
 Attributes;-;Opties
 Attributes added to this product;-;Opties toegevoegd aan dit product
-Attributes attached to this group:;-;Attributen vast in deze groep:
 Automatic location;-;Automatische locatie
 Background color;-;Achtergrond kleur
 Backgrounds;-;Achtergronden
-Banner Slider;-;Banner slider
 Base color;-;Basis kleur
 Base currency;-;Munteenheid
 Base text color;-;Basis tekst kleur
@@ -99,16 +85,12 @@ By adding this application you will see some static over your sms usage.;-;Als j
 By clicking the button above you will be able to add an application to this area.;-;Door de knop hierboven aan te klikken, kan je een applicatie in deze zone toevoegen.
 By enabling testmode for sisow, you will be able to test the payment solutions in sandbox mode.;-;Als je de testmode aan zet, kan je betalingen testen in sandbox mode.
 By enabling this function the stock quantities will be modified when a customer has done the checkout routine.;-;Zet deze functie aan om de voorraad bij te houden als een klant een bestelling plaatst.
-By setting the settings below you will change the banners size, this is convenient if you need to make your banner fit better to your design.;-;Via deze instellingen pas je de banner afmeting aan. 
 By turning on this feature you will set this application to be visible on all pages.;-;Als je deze functie aanzet, zal deze zichtbaar zijn op alle pagina’s.
 Cancel;-;Annuleer
 Category list;-;Category lijst
 Change image;-;Verander afbeelding
-Change/select theme/skin;-;Verander/kies thema
 Chat;-;Chat
-Check this on to show dots on image.;-;Zet aan om  dots op afbeelding te vertonen
 Chrome?;-;Chrome?
-Click on create application to get started, you will then get an input form to start filling out your product.;-;Klik op ‘Maak applicatie aan’ om te beginnen. Je krijgt dan een input formulier om gegevens toe te voegen.
 Click on the chat icon in the top menu and start translating.;-;Klik op het chat icoontje in het top menu en start met vertalen.
 Click on the icon in the top admin menu under category More to gain access to your reporting page.;-;Klik op het icon in het top beheer menu onder ‘Meer’ voor je report pagina te bekijken.
 Click the create application button and you will automatically get a form which sends you email directly to your email address when someone use this form.;-;Klik de ‘Maak  applicatie’ knop en je krijgt automatisch email in je inbox als een bezoekers contact met je opneemt via het formulier
@@ -116,7 +98,6 @@ Click to add application;-;Klik om een applicatie toe  te voegen
 Click to change;-;Klik om te veranderen
 Click to change subject;-;Klik om onderwerp te veranderen
 Click to delete;-;Klik om te verwijderen
-Click to reorder;-;Klik om te re-organiseren
 Close;-;Sluiter
 Colors;-;Kleuren
 Column;-;Kolom
@@ -124,7 +105,6 @@ Company Name;-;Bedrijfsnaam.
 Configure your booking application;-;Configureer je Booking applicatie.
 Configure your email sender.;-;Configureer je verzend email
 Configure your starting point;-;Stel je startpunt in
-Confirm delete;-;Bevestig verwijderen
 Confirm entry;-;Bevestig tekst
 Congratulation, you have added your first image.;-;Goed zo, je hebt je eerste afbeelding toegevoegd.
 Connected;-;Aangesloten
@@ -141,18 +121,14 @@ Create a new product;-;Maak een nieuw product aan
 Create a new user;-;Maak nieuwe gebruiker aan
 Create categories and add a list of products to the category, attach images to the categories, and name them as you want.;-;Maak categorieën aan en voeg een lijst van producten toe aan de categorie, voeg afbeeldingen toe en geef een titel op.
 Create event;-;Maak event aan
-Create new;-;Maak nieuw aan
 Create new category;-;Maak nieuwe categorie aan
 Create new group;-;Maak nieuwe groep aan.
-Create news;-;Maak nieuws aan
-Create product;-;Maak product aan
 Create shop;-;Maak een webwinkel aan
 Create this application and get started, you will automatically be shown the editors view for this application to start adding your text.;-;Maak deze applicatie aan en je krijgt automatisch een editor te zien om je tekst toe te voegen.
 Create this application and start book events to given dates.;-;Maak deze applicatie aan en maak events op data aan.
 Create this application and start showing events on given dates.;-;Maak deze applicatie aan en bekijk events op data
 Create user;-;Maak gebruiker aan.
 Created when;-;Aangemaakt op
-Crop;-;Crop
 Current available cupons;-;Momenteel beschikbare kortingcodes
 Current status;-;Huidige status
 Customer;-;Klant
@@ -165,8 +141,6 @@ Customers;-;Klanten
 Deactivate Deepfreeze;-;De-activeer Deepfreeze
 Default price;-;Standaard prijs
 Delete;-;Verwijderen
-Delete attribute;-;Verwijder attribuut
-Delete group;-;Verwijder groep
 Delete my store;-;Verwijder mijn webwinkel
 Delete selected application;-;Verwijder geselecteerde applicatie
 Delete this image;-;Verwijder deze afbeelding
@@ -177,22 +151,16 @@ Different variables that is available;-;Verschillende opties mogelijk
 Disable or enable the search bar in the top middle area.;-;Zet de zoekfunctie aan of uit.
 Discount in percentage?;-;Korting Percentage?
 Display 'X in stock' or 'out of stock' on product?;-;Vertoon 'X' of 'Niet in voorraad' bij product?
-Display dots;-;Vertoon dots
 Display shipping price on products;-;Toon verzendkosten bij producten
 Do you want to display the shipping price in the detailed product view?;-;Wil je dat de verzendkosten vertoond worden op de product pagina?
 Domain name;-;Domeinnaam
 Domain overview;-;Domein overzicht
 Due days;-;Aantal dagen
-Edit;-;Bewerk
 Edit event;-;Wijzig event
-Edit google maps;-;Bewerk google maps
 Edit product;-;Bewerk product
-Edit product list;-;Bewerk product lijst
 Edit text content;-;Pas tekst inhoud aan
-Edit the data below and write a description, the name of the product and a more detailed description. This data will be displayed on your product when viewing it.;-;Bewerk de info, omschrijving, naam van het product en gedetailleerde info. Deze info is zichtbaar op de productpagina.
 Edit the image;-;Bewerk afbeelding
 Edit user;-;Pas gebruiker aan
-Edit your product.;-;Bewerk je product
 Editor;-;Editor
 Editors;-;Editors
 Editors and adminstrators only;-;Enkel voor editors en beheerders
@@ -203,9 +171,7 @@ Enable this option to send email when a booking has been made.;-;Zet deze aan om
 Enable tls?;-;Zet TLS aan?
 End hour;-;Eind uur
 Enter a menu name;-;Typ een menu naam
-Enter an address to link this to;-;Typ een emailadres om deze te linken
 Enter an address to your favicon.;-;Plaats een url met je favicon afbeelding
-Enter email;-;Typ je email
 Enter the terms and condition text in the field below.;-;Geef de Voorwaarden in dit tekstveld op
 Error;-;Fout
 Event calendar;-;Event kalender
@@ -225,13 +191,9 @@ Get started, add this application and start adding news and updates to your page
 Google Analytics;-;Google Analytics
 Google analytics code;-;Google Analytics code
 Google analytics is by far the best reporting tool for webadministrator, by adding this application you will enable your googla analytics account to communicate with your webshop.;-;Google Analytics is de beste rapportage tool voor webmasters/webwinkeliers. Voeg deze applicatie toe en link je google analytics account aan je webwinkel.
-Google maps configuration;-;Google maps configuratie
 Handles taxes for products and shipment.;-;Stel hier je BTW tarief in voor producten en verzending.
-Hardlink;-;Hardlink
-Hardlink configuration for menu entry;-;Hardlink configuratie voor menu tekst
 Hardlinks are a way for you to manually specify where to go when the button is clicked.;-;Met Hardlinks kan je manueel instellen naar welke pagina de bezoeker gaat als een link is aangeklikt
 Have a look at http://www.dibspayment.com/ for more information.;-;Kijk op dibspayment.com voor meer info
-Height;-;Hoogte
 Here you can configure all the settings required to get sisow to work properly with your account. Enter the fields below and press save, as soon as everything here is set correctly you will see that a new payment options is available in the checkout area.;-;Hier kan je alle instellingen configureren van je Sisow account. Vul de velden in en sla alles op. Als alles goed ingested is zal je de nieuwe betaalmogelijkheden zien in de checkout van je webwinkel.
 Hide cart;-;Toon winkelwagen niet
 Hide search bar;-;Verberg zoekfunctie
@@ -248,21 +210,13 @@ If this function is enabled, it will show the company field.;-;Als deze functie 
 If this is set, getshop will automatically convert from this currency to the currency above for all other customers.;-;Als deze aan staat, zal automatisch de munteenheid omgezet worden naar bovenstaande munteenheid voor alle bezoekers / klanten.
 If this option has been enabled the attendee will receive an sms.;-;Als deze aan staat ontvangt de deelnemer een sms.
 If you turn this feature on, all prices displayed on webshop will be shown with taxes removed.;-;Zet deze aan om prijzen van alle artikelen zonder BTW te vertonen
-Images;-;Afbeeldingen.
-Images attached to this product;-;Afbeeldingen toegevoegd aan dit product
-Import;-;Importeer
-Import a product;-;Importeer een product
 Import an existing application;-;Importeer een Applicatie
 Import an existing application.;-;Importeer een bestaande applicatie
 Import application;-;Importeer App
 Import to area;-;Importeer naar veld
 Increase your sale potential by giving your valued customers discounts with promotion codes.;-;Verhoog je verkoopcijfers met klanten een korting aan te bieden
-Insert an image;-;Voeg afbeelding toe
-Insert image;-;Voeg afbeelding toe
 Insert images into any application area.;-;Voeg afbeeldingen toe in Applicatie veld
-Interval;-;Interval
 Invoice email field.;-;Emailadres
-Is this your default picture to the product?;-;Is dit de standaard afbeelding van dit product?
 It is extremly easy to transfer your domain name. All you have to to do is enter the domain name in the address under.;-;Het is makkelijk je doneinnaam over te zetten. Typ je domeinnaam in dit veld.
 It is not possible to activate this option with the current settings.;-;Het is niet mogelijk deze optie te activeren met de huidige instellingen.
 Item price;-;Product prijs
@@ -278,10 +232,8 @@ Link;-;link
 Link to menu;-;Link naar menu
 Mail;-;Verzend email
 MailManager;-;Mail Manager
-MainMenu;-;Hoofd menu
 Manually select a color;-;Selecteer een kleur
 Markers;-;Markers
-Menu hardlink for;-;Menu hardlink voor
 Merchant id;-;Merchant Id
 Merchant key;-;Merchant key
 Method;-;Methode
@@ -291,30 +243,24 @@ More Categories?;-;Meer categoriën?
 More color options;-;Meer kleur opties
 More...;-;Meer...
 Move applications;-;Verplaats applicaties
-My product list;-;Mijn product lijst
 Need to display your realestates? well, here is the application that allows you to do that, simply add the application to your page and start editing your realestate;-;Wil je huizen verkopen? Dit is een applicatie om huizen te verkopen. Voeg ze toe aan je pagina en plaats alle info er op.
-New product / untitled product;-;Nieuw product zonder titel
 New text;-;Nieuwe tekst
 News;-;Nieuws
 No;-;Neen
 No advanced color options for this design;-;Geen kleur opties voor dit design
 No background selection available for this design.;-;Geen achtergronden beschikbaar voor dit design
-No banners added, click on settings in the top right corner to add one.;-;Geen banner toegevoegd, klik op instellingen rechts bovenaan om er toe te voegen.
 No colors available for this design.;-;Geen kleuren beschikbaar voor deze layout
 No image added for this product;-;Geen afbeeldingen bij dit product toegevoegd
 No locations available;-;Geen locatie beschikbaar
 No orders where found for this time range.;-;Geen bestellingen gevonden voor deze tijdzone
 No page views where found for this time range.;-;Geen pageviews gevonden voor deze tijdzone
-No products has been added to this list yet, please add one from the list on the right hand side.;-;Geen producten aan deze lijst toegevoegd. Voeg er toe van de lijst aan de rechterzijde
 No products where found for this time range.;-;Geen producten gevonden voor deze tijdzone
 No products where found.;-;Geen producten gevonden
-No short description set yet;-;Geen korte omschrijving geplaatst
 No traffic where found for this time range.;-;Geen bezoekers gevonden voor deze tijdzone
 No users found;-;Geen gebruikers gevonden
 No users where found for this time range.;-;Geen gebruiksers gevonden voor deze tijdzone
 North east corner latitude;-;Noord-Oosten latitude
 North east corner longitude;-;Noord-Oosten Longitude
-Not complete;-;Niet volledig
 Not possible;-;Niet mogelijk
 Not satisfied with the text "hardcoded" on your page?<br>Add this application and tune the text yourself.;-;Niet tevreden met de tekst op je webwinkel? Pas deze zelf aan met deze applicatie
 Not set;-;Niet ingesteld.
@@ -332,13 +278,11 @@ Order number;-;Bestelnummer
 OrderId;-;Bestellingnummer
 Orders added;-;Bestellingen toegevoegd
 Orders created summary;-;Aangemaakte bestellingen samenvatting
-Others;-;Andere
 Overall;-;Algemeen
 Page Settings;-;Pagina settings
 Page description;-;Pagina omschrijving
 Page id;-;Pagina ID
 Page name;-;Pagina naam
-Page settings;-;Pagina instellingen
 Page view summary;-;Pagina bezoekers overzicht
 Page views;-;Page views
 Payment application;-;Betaal applicatie
@@ -353,25 +297,18 @@ Please select your language;-;Kies je taal
 Please specify a name;-;Geef een naam op
 Point your domain name to the following ip address:;-;Stuur je domeinnaam door naar volgend IP adres:
 Port;-;Poort
-Preview;-;Preview
 Price diff;-;Prijs verschil
 Price each product (default: 0 );-;Prijs elk product (standaard: 0)
 Primary domain name;-;Primaire domeinnaam
-Product Information;-;Product informatie
-Product List;-;Product lijst
-Product Manager;-;Product beheerder
 Product list;-;Producten lijst
 Product name;-;Product naam
 Product views;-;Product views
-Products already added to your list;-;Producten al toegevoegd aan lijst
 Push the create application button to get you started.;-;Klik ‘maak applicatie aan’ om te starten.
 Real estate;-;Immo 
 Registration;-;Registratie
 Remaining;-;Aantal over
 Reminder sent by sms;-;Herinnering gestuurd via sms
 Remove application;-;Verwijder applicatie
-Remove applications that are added;-;Verwijder toegevoegde Apps
-Remove from list;-;Verwijder van lijst
 Remove hardlink;-;Verwijder hardlink
 Remove icon;-;Verwijder icoon
 Remove image;-;Verwijder afbeelding
@@ -381,16 +318,12 @@ Reset code is;-;Reset code is
 Restrict to administrators;-;Enkel adminstrator bevoegd
 Restrict to administrators and editors;-;Enkel administrators en editors bevoegd
 Return stock if order is canceled?;-;Pas voorraad aan als bestelling geannuleerd is?
-Rotate;-;Roteer
-Rows;-;Rijen
 SMS From;-;sms van
 SMS Text;-;sms tekst
 Sandbox;-;Sandbox
 Save;-;Opslaan
-Save Settings;-;Opslaan
 Save changes;-;Aanpassingen opslaan
 Save product;-;Sla product op
-Save product list;-;Sla product lijst op
 Save settings;-;Settings opslaan
 Save translation;-;Vertaling opslaan
 Save your settings;-;Sla je settings op
@@ -398,10 +331,7 @@ Saved;-;Opgeslagen
 Search;-;Zoeken
 Search youtube;-;Doorzoek Youtube
 Secondary domain name;-;Secundaire domeinnaam
-Security;-;Beveiliging
 Select;-;Selecteer
-Select a group in the left hand area;-;Selecteer een groep in de linker zone
-Select a group:;-;Selecteer een groep:
 Select application;-;Selecteer Applicatie
 Select different page layouts;-;Selecteer pagina layout
 Select page layout;-;Selecteer pagina layout
@@ -430,9 +360,7 @@ Show company field;-;Toon bedrijfsveld
 Show location filter left for calendar;-;Toon locatie filter links van kalender
 Show prices without taxes;-;Vertoon prijzen exclusief BTW
 Show stock status on product?;-;Vertoon voorraad status bij product?
-Sidebar;-;Zijbalk
 Sms Statistic;-;Sms statistieken
-Some of the tabs need to be inspected before you can continue;-;Sommige velden moeten nagekeken worden om kunnen verder te gaan
 Some settings are important for google and other search engines, and this is where you can configure them.;-;Sommige settings zijn belangrijk voor Google en andere zoekmachines. Hier kan je ze instellen.
 Sorry to hear that, Are you sure that you want to delete your store?;-;Jammer, zeker dat je je webwinkel wil verwijderen?
 South west corner latitude;-;Zuid – west corner latitude
@@ -452,7 +380,6 @@ Store currency;-;Munteenheid webwinkel
 Store settings / more applications available here;-;Winkel instellingen / Meer apps hier beschikbaar
 Subentry name;-;Subtekst naam
 Subject;-;Onderwerp
-Subscribe for news;-;Inschrijven voor nieuws
 Summary;-;Samenvatting
 Tax group;-;BTW groep
 Taxgroup;-;BTW groep
@@ -473,13 +400,9 @@ The text has been saved;-;Tekst opgeslagen
 The translation has been saved;-;De vertaling is opgeslagen
 The username for your smtp server.;-;De gebruikersnaam van je smtp server
 There are two different types of coupons, fixed price and percentage price. Fixed price is giving your valued customers a fixed rate off for each time they buy something from the store. The Percentage price gives a percentage discount to your total cost of the cart.;-;Er zijn twee type kortings codes: Vaste prijs en Percentage prijs. Bij vaste prijs gaat er een vast bedrag van het totaal af. Bij Percentage prijs gaat er een % af van de totaalprijs
-There is one layout defined for each page, a layout can have multiple of rows and multiple of columns.;-;Je kan kiezen uit 15 templates om elke pagina vorm te geven.
 This application gives you the ability to control your stocks, simply change how many you have in stock on each product.;-;Met deze applicatie kan je de voorraad bijhouden. Pas je voorraad aan per product.
-This application is added to the following pages;-;Deze applicatie is toegevoegd aan de pagina’s
 This area displays how the variation will look like for this product view;-;Dit veld vertoont hoe de variatie eruit zal zien
 This category displayer is currently empty. To create a new category please click the create new category button below.;-;Deze category is momenteel leeg. Om een nieuwe categorie toe te voegen, klik ‘maak nieuwe categorie aan’
-This content has been updated!;-;Deze inhoud is upgedate!
-This entry is currently hardlinked to;-;Deze tekst is momenteel gelinkt aan
 This footer application contains the footer information for your webshop, all menu entries are sorted.;-;Deze footer applicatie omvat alle informatie over je webwinkel. Alle menu tekst is gesorteerd.
 This gallery gives you the ability to display images into a gallery, and even connect the images to products, categorise them by combining a category displayer, or by using a left menu.;-;Je kan afbeeldingen in een gallerij laten vertonen, en de afbeeldingen linken met producten in de webwinkel. Maak en category lijst aan, laat deze op de pagina zelf vertonen of in een linker menu
 This is a code that you need to get from your google analytics account. If you need help to get it we would be more then happy to help you out, just contact our customer support by email and you will have an answer within an hour;-;Deze code moet je in je Google Analytics account ophalen. Neem gerust contact op als je hulp nodig hebt.
@@ -495,17 +418,12 @@ This is the vat number that will be printed on the invoice, example 123456789;-;
 This is the web address that will be printed on the invoice, example http://www.getshop.com;-;Website vermeld op de factuur
 This is where you can configure your current page, special settings like search engine optimization for the current page you are browser;-;Pas je huidige pagina aan met SEO tekst.
 This option enables the posibility to restrict access to you menu entries to a given group of users.;-;Met deze optie geef je een bepaalde groep toegant tot het menu
-This product has been deleted;-;Dit product is verwijderd
-This product list is empty, open the management portal to add products to this list.;-;Deze producten lijst is leeg. Open het Producten scherm om er toe te voegen.
 This tax group will be possible to select in your product management.;-;Deze BTW groep kan je selecteren in je producten Scherm
 This will be displayed as description if someone adds event;-;Dit zal vertoond worden als omschrijving als iemand een event toevoegt.
 This will be displayed as the location if someone adds event;-;Dit zal vertoond worden als locatie als iemand een event toevoegt.
 Tightly integrates facebook into your webshop, give users options to comment product, like products, share discounts, etc;-;Integreer Facebook in je webwinkel. Bezoekers / klanten kunnen comments posten, je producten liken / delen,...
-Title;-;Titel
 Title for the image;-;Naam van de afbeelding
 Title when sending emails;-;Titel bij versturen van emails
-To change a layout for the current page, please select one from the list below.;-;Pas deze pagina aan, kies een template uit onderstaande voorbeelden.
-To edit the text, move the mouse over this text. Then you will see a toolbox that you can click on, click on the pen in this toolbox.;-;Sta met je muis aanwijzer op de tekst. Rechtsboven zie je een icoon verschijnen. Via dat icoon klik je op de Pen afbeelding.
 To translate all visible text for your users, translate the entries below, and hit the save translation button.;-;Om alle tekst aan te passen voor je bezoekers, typ hier je tekst en sla alles op.
 Top menu;-;Hoofdmenu
 Total orders registered;-;Totaal van geregistreerde bestellingen
@@ -521,13 +439,10 @@ Try to get the company information from Br Reg.;-;Achterhaal bedrijfsinformatie
 Turn this featur on if you wish to allow guests to add events to your calendar. Events needs to be confirmed by an adminstrator;-;Zet deze instelling aan als je wil dat een gast events kan toevoegen aan je kalender. Events moeten wel goedgekeurd worden door de beheerder.
 Type;-;Typ
 UA;-;UA
-Un-combine product list;-;Maak product lijst los
 Unlink entry;-;Unlink tekst
-Untitled product;-;Product zonder titel
 Updating;-;Bezig aan het updaten
 Uplaod image;-;Voeg afbeelding toe
 Upload image;-;Voeg afbeelding toe
-Uploading image;-;Afbeelding aan het uploaden
 Uploading logo;-;Logo aan het uploaden
 Use this application to setup the emails sent from your webshop, like order confirmation etc.;-;Met deze applicatie kan je email tekst instellen die naar klanten verzonden worden. Bvb bestelbevestigingen
 User level;-;Gebruikersniveau
@@ -538,13 +453,11 @@ Users logged on;-;Users ingelogd
 VIP user - $0;-;VIP gebruiker – 0€
 Variations;-;Variaties
 Vat number;-;BTW nummer
-View;-;Bekijk
 Viewed when;-;Wanneer bekeken?
 Warn users that cookies are being stored from this site?;-;Waarschuw bezoekers dat cookies worden bijgehouden? (popup verschijnt)
 Warning! this store will automatically be reset to original state each hour;-;Ogelet, de webwinkel zal elk uur naar de originele staat terug gaan
 Warning. you are not connected as a partner yet, please contact getshop support!;-;Opgelet, je bent nog geen aangesloten partner. Neem contact op!
 Web address;-;Webwinkel adres
-Webshop;-;Webwinkel
 What address are you using for the test enviroment to paypal?;-;Welk adres gebruik je als test voor Paypal?
 What countries are you selling to?;-;Naar welke landen verzend je?
 What is deepfreeze? Well, if you activate deepfreeze you basically put all options on hold, all changes made after deepfreezeing will be purged each hour.;-;What is deepfreeze? Well, if you activate deepfreeze you basically put all options on hold, all changes made after deepfreezeing will be purged each hour.
@@ -553,26 +466,19 @@ What is the shipment taxes?;-;Wat zijn de verzending belastingen?
 What should be the sender name?;-;Naam van de afzender?
 What should the text message contain?;-;Inhoud van de tekst
 When;-;Wanneer
-When creating this application, you will be able to add banners which will slide on a time interval.;-;Bij aanmaak van deze applicatie, zal je banners kunnen toevoegen die roteren op een tijdsinterval.
 When you have added this application, it will automatically start relating products related to the main product added to this page.;-;Als je deze applicatie toevoegd, zal het automatisch producten linken aan de andere producten op deze pagina.
 Where you would you like to direct the user:;-;Waar wil je bezoeker naarote sturen:
-Width;-;Breedte
 Withdraw from stock when order is created;-;Haal van de voorraad af bij bestelling
 Would you like to use paypal in sandbox mode?;-;Wil je Paypal gebruiken in Sandbox mode?
 Yes;-;Ja
 You are not logged on, please log on.;-;Je bent niet ingelogd, gelieve in te loggen.
-You can add as many images as you would like to your product, this will make your product look more attractive for your customers.;-;Je kan zoveel afbeeldingen aan een product toevoegen als je wil.
 You can choose between three types of user levels.;-;Je kan kiezen tussen drie niveau’s van gebruiker levels
 You can filter your customers by entering som text in the textbox;-;Je kan klanten filteren door tekst in te voeren in het tekstveld.
 You currently have the following users added to your system;-;Je hebt volgende gebruikers toegevoegd aan je system
-You do not have any lists combined with this list yet...;-;Je hebt nog geen lijst gecombineerd met deze lijst
 You do not want to display the cart.. sure enable this then.;-;Als je de winkelwagen niet wil laten vertonen, zet deze aan.
 You dont have any cupons added.;-;Je hebt geen Codes toegevoegd.
 You guessed correctly, in this panel you can setup a variation of your product. If you for instance has a product that has two different colors, you can set it up here and make your customers to specify the color before they can add it to the cart.;-;Hier kan je variaties instellen op een product. Bvb bij verkoop van kledij heb je groene en blauwe kleur. Stel deze variaties hier in. De bezoeker moet dan een keuze maken als hij een bestelling wil maken.
-You have not yet added any attributes to this group, they will automatically be added when you starting to add attributes to a product.;-;Je hebt nog geen attributen toegevoegd aan deze groep. Dit zal automatisch gebeuren als je attributen toevoegd aan een product.
-You have not yet created any products, create a product by clicking the create product button.;-;Je hebt nog geen produchten aangemaakt. Maak er hier aan
 You have not yet created any web shops, create one and they will be listed here.;-;Je hebt nog geen webwinkels aangemaakt. Van zodra er eentje is aangemaakt zal die in deze lijst verschijnen.
-You have successfully been added or removed from the email list.;-;Je bent succesvol toegevoegd of verwijderd uit de mailinglijst.
 You need this application if you want this webshop send emails from your email account;-;Je hebt deze applicatie nodig als je via je webwinkel emails wil versturen via je eigen email account.
 Your attributes;-;Je opties
 Your merchant account is deactivated, please check with sisow to get it activated.;-;Je Merchant account is gedeactiveerd, kijk je Sisow account na om deze te activeren.
@@ -587,12 +493,10 @@ Your settings have been saved.;-;Je settings zijn opgeslagen
 Your site has been deleted;-;Je website is nu offline.
 [ Add new ];-;[ Voeg nieuw toe ]
 cart;-;Winkelwagen
-click here to open the portal;-;Klik hier om het scherm te openen.
 click to upload a logo;-;Klik om logo te uploaden
 customer postcode;-;Klant postcode
 delete;-;Verwijder
 dibs payment services allows you to start charging with visa / mastercard / and other card vendors. its extremly easy to use. prices for using this application is provided by dibs, and you will be contacted by dibs when adding this application.;-;Met Dibs payment services kan je betalingen ontvangen via Visa / Mastercard. Zeer eenvoudig in gebruik. Transactiekosten zijn verkrijgbaar bij Dibs.
-edit_product;-;bewerk_product
 enter_domain;-;typ_domein
 give your customers ability to book into your events or appointments;-;Geef je klanten de mogelijkheid om een boeking van een event te doen.
 is available.;-; is verkrijgbaar.
@@ -601,10 +505,8 @@ is not available, please try another one.;-;Is niet verkrijgbaar, gelieve een an
 postal;-;Postcode
 price;-;Prijs
 save;-;Opslaan
-stock_quantity;-;Voorraad_hoeveelheid
 taxes;-;BTW
 this application gives you the ability to setup fixed shipping price;-;Met deze applicatie kan je een vaste verzendkost instellen
-this applications lists products for you webshop, in the body of every page (except for system pages). from this application you can also add products. combine this application with a leftmenu, and/or a category displayer to create a powerful webshop.;-;Deze applicatie geeft een producten lijst van je webwinkel, op elke pagina. Je kan hier ook producten toevoegen. Combineer met een linker of rechter menu.
 this is restricted to owner only;-;Enkel voor de beheerder toegankelijk
 title;-;Titel
 track;-;track

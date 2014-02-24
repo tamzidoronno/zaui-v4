@@ -17,7 +17,7 @@ class Banner extends \WebshopApplication implements \Application {
     }
     
     public function isShowDots() {
-        return ($this->bannerSet->showDots == 1);
+        return $this->getConfigurationSetting("showDots") == true;
     }
 
     public function getBanners() {
@@ -58,6 +58,10 @@ class Banner extends \WebshopApplication implements \Application {
         $this->bannerSet->interval = $_POST['data']['interval'];
         $this->bannerSet->height = $_POST['data']['height'];
         $this->getApi()->getBannerManager()->saveSet($this->bannerSet);
+    }
+    
+    public function toggleDots() {
+        $this->setConfigurationSetting("showDots", !$this->isShowDots());
     }
     
     private function getTexts() {

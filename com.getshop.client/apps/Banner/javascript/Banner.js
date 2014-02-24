@@ -282,6 +282,11 @@ app.Banner = {
         previewHolder.prepend(empty);
         empty.click();
     },
+            
+    toggleDots: function(event, invokingApp) {
+        var event = thundashop.Ajax.createEvent('','toggleDots',invokingApp, {});
+        thundashop.Ajax.post(event);
+    },
     
     loadSettings : function(element, application) {
          var config = {
@@ -296,6 +301,13 @@ app.Banner = {
                     iconsize : "30",
                     title: __f("Settings"),
                     click: app.Banner.loadEdit
+                },
+                {
+                    icontype: "awesome",
+                    icon: "fa-dot-circle-o",
+                    iconsize : "30",
+                    title: __f("Show dots"),
+                    click: app.Banner.toggleDots
                 }
             ]
         }

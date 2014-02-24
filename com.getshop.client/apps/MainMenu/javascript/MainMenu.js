@@ -49,7 +49,9 @@ thundashop.MainMenu = {
         var oDom = box.document;
         var elem = oDom.getElementById("styles");
         var pageElem = oDom.getElementById("styles_page");
+        var pageInput = oDom.getElementById("current_pageid");
         if (elem) {
+            pageInput.setAttribute("pageid", $('.skelholder').attr('page'));
             var globalstyles = elem.value;
             var pagestyles = pageElem.value;
             $('#gs_customcss').html("<style>" + globalstyles + "</style>");

@@ -48,7 +48,7 @@ class ApplicationPool {
         foreach ($appConfigurations as $appConfig) {
             /* @var $appConfig core_common_AppConfiguration */
             $appInstance = $this->createAppInstance($appConfig);
-            if($appInstance != null) {
+            if ($appInstance) {
                 $this->addedApplicationInstances[$appConfig->id] = $appInstance; 
             }
         }
@@ -60,6 +60,7 @@ class ApplicationPool {
     public function createAppInstance($appConfig) {
         $settings = $this->getApplicationSetting($appConfig->appSettingsId);
         if ($settings == null) {
+            
             return;
         }
 
@@ -68,7 +69,7 @@ class ApplicationPool {
             $appInstance->setConfiguration($appConfig);
             return $appInstance;
         }
-
+        
         return null;
     }
     
@@ -85,6 +86,9 @@ class ApplicationPool {
             $appInstance->setApplicationSettings($applicationSetting);
             return $appInstance;
         }
+        
+//        TOOD - Log this.
+//        echo "Did not find php code for app: ".$instance."<br>";
         
         return null;
     }

@@ -288,7 +288,9 @@ public class ApplicationPoolImpl {
     public Map<String, AppConfiguration> getApplications(List<String> appIds) throws ErrorException {
         HashMap<String, AppConfiguration> apps = new HashMap();
         for (String appId : appIds) {
+            
             AppConfiguration app = applicationInstances.get(appId);
+            
             if(app != null) {
                 apps.put(app.id, finalizeApplication(app));
             }

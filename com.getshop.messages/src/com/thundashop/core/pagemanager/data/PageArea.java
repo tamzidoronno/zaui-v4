@@ -39,8 +39,10 @@ public class PageArea implements Serializable {
         applications.clear();
         
         for (String applicationId : applicationsList) {
+
             AppConfiguration appConfig = applicationCollection.get(applicationId);
             if (appConfig != null) {
+
                 appConfig.originalPageId = pageId;
                 if (!onlyExtraApplications || appConfig.appName.equals("LeftMenu")) {
                     applications.put(appConfig.id, appConfig);

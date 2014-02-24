@@ -149,6 +149,7 @@ class Calendar extends MarketingApplication implements Application {
     }
     
     public function render() {
+        echo "TEST";
         $this->initMonth();
         echo "<table><tr><td valign='top'>";
         $this->showFilter();

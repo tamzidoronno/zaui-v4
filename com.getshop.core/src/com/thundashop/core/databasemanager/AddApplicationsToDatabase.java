@@ -47,7 +47,7 @@ public class AddApplicationsToDatabase {
         applicationSettings.isSingleton = isSingleton;
         return applicationSettings;
     }
-
+    
     private List<ApplicationSettings> addApplications() {
         List<ApplicationSettings> apps = new ArrayList();
 

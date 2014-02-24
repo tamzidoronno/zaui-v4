@@ -89,7 +89,7 @@ class PageArea extends FactoryBase {
         }
     }
 
-    public function render($debug=false) {
+    public function render() {
         if ($this->page->skeletonType != 5) {
             $this->includefile('applicationareamenu');
             $this->includefile('add_application_menu');
@@ -105,7 +105,6 @@ class PageArea extends FactoryBase {
                 return;
             }
         }
-        
         
         foreach ($this->getApplications() as $application) {
             $application->renderApplication();

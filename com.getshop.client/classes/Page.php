@@ -167,31 +167,11 @@ class Page extends FactoryBase {
         }
         echo "</div>";
     }
-    
-    private function getAppAreaHtml($pageArea) {
-        if ($pageArea == null) {
-            return;
-        }
-        
-        ob_start();
-        $pageArea->render();
-        $html = ob_get_contents();
-        ob_end_clean();
-        return $html;
-    }
-
+  
     private function getMainMenuContent() {
         ob_start();
         $app = $this->getFactory()->getApplicationPool()->getApplicationInstance("bf35979f-6965-4fec-9cc4-c42afd3efdd7");
         $app->render();
-        $html = ob_get_contents();
-        ob_end_clean();
-        return $html;
-    }
-
-    private function getBreadCrumbContent() {
-        ob_start();
-        $this->getFactory()->getApplicationPool()->getApplicationInstance("7093535d-f842-4746-9256-beff0860dbdf")->render();
         $html = ob_get_contents();
         ob_end_clean();
         return $html;

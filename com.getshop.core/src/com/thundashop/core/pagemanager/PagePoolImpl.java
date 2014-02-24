@@ -301,6 +301,7 @@ public class PagePoolImpl {
         if(page.needSaving) {
             savePage(page);
         }
+        
         return page;
     }
 

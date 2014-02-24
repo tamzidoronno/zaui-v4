@@ -509,6 +509,21 @@ class CalendarManager(object):
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getAllEventsConnectedToPage(self, pageId):
+    args = collections.OrderedDict()
+    if isinstance(pageId,GetShopBaseClass): 
+      args["pageId"]=json.dumps(pageId.__dict__)
+    else:
+      try:
+        args["pageId"]=json.dumps(pageId)
+      except (ValueError, AttributeError):
+        args["pageId"]=pageId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getAllEventsConnectedToPage"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getEntries(self, year, month, day, filters):
     args = collections.OrderedDict()
     if isinstance(year,GetShopBaseClass): 

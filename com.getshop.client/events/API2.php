@@ -493,6 +493,19 @@ class APICalendarManager {
 	}
 
 	/**
+	* Returns a list of
+	*/
+
+	public function getAllEventsConnectedToPage($pageId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data["method"] = "getAllEventsConnectedToPage";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Get all entries to a given day
 	* @param year The year to fetch the entries on.
 	* @param month The month to fetch the entries on.

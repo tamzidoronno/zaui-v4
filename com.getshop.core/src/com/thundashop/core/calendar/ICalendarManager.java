@@ -168,4 +168,9 @@ public interface ICalendarManager {
      */
     @Administrator
     public void transferUser(String fromEventId, String toEventId, String userId) throws ErrorException;
+    
+    /**
+     * Returns a list of 
+     */
+    public List<Entry> getAllEventsConnectedToPage(String pageId);
 }

@@ -1,0 +1,17 @@
+<div>
+    <div class="title"><? echo $this->__w("This event has the following entries"); ?></div>
+    <div class="events">
+        <?
+        $events = $this->getEvents();
+        if (!$events) {
+            echo $this->__w("There is no entries for this event");
+            return;
+        }
+        foreach ($events as $event) {
+            $page = "?page=ac52f14b-78df-4eba-92c9-bf635ebb5b6e&year=".$event->year."&month=".$event->month."&day=".$event->day."&scroll_to_dayview=true&filter=".  base64_encode(strtolower($event->location));
+            echo "<a href='$page'>".$event->day."/".$event->month."-".$event->year.": ".ucwords($event->location)."</a><br>";
+        }
+        ?>    
+    </div>
+    
+</div>

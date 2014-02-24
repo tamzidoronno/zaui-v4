@@ -148,8 +148,20 @@ class Calendar extends MarketingApplication implements Application {
         }
     }
     
+    public function setFilter() {
+        if (isset($_GET['filter'])) {
+            $word = strtolower(base64_decode($_GET['filter']));
+            $this->activeFilters = [];
+            $this->activeFilters[] = ucwords($word);
+            $this->getApi()->getCalendarManager()->applyFilter($this->activeFilters);
+            $this->activeFilters = $this->getApi()->getCalendarManager()->getActiveFilters();
+        }
+    }
+    
     public function render() {
+        $this->setFilter();
         $this->initMonth();
+        
         echo "<table><tr><td valign='top'>";
         $this->showFilter();
         echo "</td><td valign='top'>";

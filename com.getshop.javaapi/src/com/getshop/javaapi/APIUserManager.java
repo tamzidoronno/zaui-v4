@@ -16,6 +16,23 @@ public class APIUserManager {
       }
 
      /**
+     * Add a comment to a specific user.
+     *
+     * @param userId
+     * @param comment
+     * @throws ErrorException
+     */
+     public void addComment(java.lang.String userId, com.thundashop.core.usermanager.data.Comment comment)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("userId",new Gson().toJson(userId));
+          data.args.put("comment",new Gson().toJson(comment));
+          data.method = "addComment";
+          data.interfaceName = "core.usermanager.IUserManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Add priviliges to a another admin user.
      *
      * If a user is given a privilege, all the defaults are removed.
@@ -360,6 +377,22 @@ public class APIUserManager {
           JsonObject2 data = new JsonObject2();
           data.args = new LinkedHashMap();
           data.method = "logout";
+          data.interfaceName = "core.usermanager.IUserManager";
+          String result = transport.send(data);
+     }
+
+     /**
+     * Removes the comment from a user
+     * @param userId
+     * @param commentId
+     * @throws ErrorException
+     */
+     public void removeComment(java.lang.String userId, java.lang.String commentId)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("userId",new Gson().toJson(userId));
+          data.args.put("commentId",new Gson().toJson(commentId));
+          data.method = "removeComment";
           data.interfaceName = "core.usermanager.IUserManager";
           String result = transport.send(data);
      }

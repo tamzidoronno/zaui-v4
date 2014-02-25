@@ -37,6 +37,20 @@ td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1p
     width: 264px;
 }
 
+.dayentry .addcomment {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    background-image: url('{IMAGEFOLDER}/bubble-icon.png');
+}
+
+.dayentry .addcomment.activeComment {
+    background-image: url('{IMAGEFOLDER}/bubble-icon-hascomment.png');
+}
+
+.dayentry .addcomment:hover {
+    background-image: url('{IMAGEFOLDER}/bubble-icon-active.png');
+}
 .dayentry {
     padding: 10px; 
     background-color: #eeeeee;
@@ -222,4 +236,38 @@ td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1p
     padding: 20px;
     font-size: 14px;
     color: #FFF;
+}
+
+.Calendar .calendar_comment_area {
+    padding: 20px;
+    color: #FFF;
+    font-size: 16px;
+}
+
+.Calendar .calendar_comment_area .gs_button:not(.small) {
+    position: absolute;
+    right: 24px;
+    top: 378px;
+}
+
+.Calendar .calendar_comment_area textarea {
+    width: 940px;
+    height: 300px;
+    margin-top: 20px;
+    margin-bottom: 80px;
+}
+
+.Calendar .calendar_comment_area .commententry {
+    border-top: dashed 1px #333;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.Calendar .calendar_comment_area .commententry:first-child {
+    border-top: solid 0px;
+}
+
+.Calendar .calendar_comment_area .commententry .datecreated {
+    font-size: 13px;
+    text-align: right;
 }

@@ -49,6 +49,8 @@ public class User extends DataCommon  {
     
     public String cellPhone;
     
+    public HashMap<String, Comment> comments = new HashMap();
+    
     public String key;
     
     public String userAgent;

@@ -3502,6 +3502,24 @@ class APIUserManager {
 	}
 
 	/**
+	* Add a comment to a specific user.
+	*
+	* @param userId
+	* @param comment
+	* @throws ErrorException
+	*/
+
+	public function addComment($userId, $core_usermanager_data_Comment) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data['args']["core_usermanager_data_Comment"] = json_encode($this->transport->object_unset_nulls($core_usermanager_data_Comment));
+	     $data["method"] = "addComment";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Add priviliges to a another admin user.
 	*
 	* If a user is given a privilege, all the defaults are removed.
@@ -3801,6 +3819,23 @@ class APIUserManager {
 	     $data = array();
 	     $data['args'] = array();
 	     $data["method"] = "logout";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Removes the comment from a user
+	* @param userId
+	* @param commentId
+	* @throws ErrorException
+	*/
+
+	public function removeComment($userId, $commentId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data['args']["commentId"] = json_encode($this->transport->object_unset_nulls($commentId));
+	     $data["method"] = "removeComment";
 	     $data["interfaceName"] = "core.usermanager.IUserManager";
 	     return $this->transport->sendMessage($data);
 	}

@@ -5,6 +5,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.messagemanager.MailFactory;
+import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserPrivilege;
@@ -244,6 +245,9 @@ public class UserManager extends ManagerBase implements IUserManager {
         
         //Reset the password.
         user.password = savedUser.password;
+        
+        // Keep comments from prev saved user. (has seperated functions for adding and deleting)
+        user.comments = savedUser.comments;
         
         collection.addUser(user);
     }
@@ -525,5 +529,25 @@ public class UserManager extends ManagerBase implements IUserManager {
         privelege.managerFunction = managerFunction;
         user.privileges.add(privelege); 
         saveUser(user);
+    }
+
+    @Override
+    public void addComment(String userId, Comment comment) throws ErrorException {
+        User user = getUserById(userId);
+        if (user != null) {
+            comment.createdByUserId = getSession().currentUser.id;
+            user.comments.put(comment.getCommentId(), comment);
+            databaseSaver.saveObject(user, credentials);
+        }
+    }
+
+    @Override
+    public void removeComment(String userId, String commentId) throws ErrorException {
+        User user = getUserById(userId);
+        
+        if (user != null) {
+            user.comments.remove(commentId);
+            databaseSaver.saveObject(user, credentials);
+        }
     }
 }

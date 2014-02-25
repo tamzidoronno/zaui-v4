@@ -163,10 +163,13 @@ if (count($day->entries) == 0) {
                     $group = " - ".$group;
                 }
                 $entryid = $entry->entryId;
+                
                 $transfer = $this->hasWriteAccess() ? "<td width='50'><span class='transferUser' userId='$userid' entryId='$entryid' style='inline-block; border: solid 1px; padding: 3px; cursor: pointer; background-color: #000; color: #FFF;'>".$this->__("Transfer")."</span></td>" : "";
                 $remove = $this->hasWriteAccess() ? "<div userid='$userid' entryid='$entryid' class='remove'></div>" : "";
+                $activeComment = $this->isActiveComment($user, $entryid) ? "activeComment" : "";
+                $comment = $this->hasWriteAccess() ? "<div userid='$userid' entryid='$entryid' class='addcomment $activeComment'></div>" : "";
                 $link = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() ? "?page=users_all_users&userid=$userid" : "#";
-                echo "<tr class='dayrow'><td width='22'>$remove</td><td><div class='attendee'><a href='$link'> $i. ".$user->fullName.$group."</a></div></td>$transfer</tr>";
+                echo "<tr class='dayrow'><td width='22'>$remove</td><td><div class='attendee'><a href='$link'> $i. ".$user->fullName.$group."</a></div></td><td width='50'>$transfer</td><td width='22'>$comment</td></tr>";
             }
 
             echo "</table>";
@@ -189,8 +192,10 @@ if (count($day->entries) == 0) {
                     $transfer = $this->hasWriteAccess() ? "<td width='50'><span class='transferUser' userId='$userid' entryId='$entryid' style='inline-block; border: solid 1px; padding: 3px; cursor: pointer; background-color: #000; color: #FFF;'>".$this->__("Transfer")."</span></td>" : "";
                     $accept = $this->hasWriteAccess() ? "<span class='acceptUser' userId='$userid' entryId='$entryid' style='inline-block; border: solid 1px; padding: 3px; cursor: pointer; background-color: #000; color: #FFF;'>".$this->__("Accept")."</span>" : "";
                     $remove = $this->hasWriteAccess() ? "<div userid='$userid' entryid='$entryid' class='remove'></div>" : "";
+                    $activeComment = $this->isActiveComment($user, $entryid) ? "activeComment" : "";
+                    $comment = $this->hasWriteAccess() ? "<div userid='$userid' entryid='$entryid' class='addcomment $activeComment'></div>" : "";
                     $link = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() ? "<a href='?page=users_all_users&userid=$userid'> $i. ".$user->fullName.$group."</a>" : "$i. ".$user->fullName.$group;
-                    echo "<tr class='dayrow'><td width='22'></td><td><div class='attendee'>$link</div></td>$transfer<td width='50'>$accept</td></tr>";
+                    echo "<tr class='dayrow'><td><div class='attendee'>$link</div></td><td width='50'>$transfer</td><td width='50'>$accept</td><td width='22'>$comment</td></tr>";
                 }
 
                 echo "</table>";

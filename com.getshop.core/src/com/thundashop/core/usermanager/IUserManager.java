@@ -1,9 +1,12 @@
 package com.thundashop.core.usermanager;
 
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.common.Writing;
 import com.thundashop.core.getshop.data.GetshopStore;
+import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserPrivilege;
@@ -253,4 +256,25 @@ public interface IUserManager {
      */
     @Administrator
     public void addUserPrivilege(String userId, String managerName, String managerFunction) throws ErrorException;
+    
+    /**
+     * Add a comment to a specific user.
+     * 
+     * @param userId
+     * @param comment
+     * @throws ErrorException 
+     */
+    @Editor
+    @Writing
+    public void addComment(String userId, Comment comment) throws ErrorException;
+    
+    /**
+     * Removes the comment from a user
+     * @param userId
+     * @param commentId
+     * @throws ErrorException 
+     */
+    @Editor
+    @Writing
+    public void removeComment(String userId, String commentId) throws ErrorException;
 }

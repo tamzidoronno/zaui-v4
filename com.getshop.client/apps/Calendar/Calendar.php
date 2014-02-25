@@ -436,5 +436,45 @@ class Calendar extends MarketingApplication implements Application {
         $userId = $_POST['data']['userid'];
         $this->getApi()->getCalendarManager()->transferUser($fromEventId, $toEventId, $userId);
     }
+    
+    public function saveComment() {
+        $comment = new \core_usermanager_data_Comment();
+        $comment->comment = nl2br($_POST['data']['comment']);
+        $comment->extraInformation = $_POST['data']['entryId'];
+        $comment->appId = $this->getConfiguration()->id;
+        
+        $this->getApi()->getUserManager()->addComment($_POST['data']['userId'], $comment);
+    }
+    
+    public function showEvent() {
+        $this->includefile("showComments");
+    }
+    
+    public function filterComments($user, $entryId) {
+        $comments = array();
+        
+        if (!count($user->comments)) {
+            return $comments;
+        }
+        
+        foreach ($user->comments as $comment) {
+            if ($comment->appId === $this->getConfiguration()->id && $comment->extraInformation == $entryId) {
+                $comments[] = $comment;
+            }
+        }
+        
+        return $comments;
+    }
+    
+    public function isActiveComment($user, $entryId) {
+        $comments = $this->filterComments($user, $entryId);
+        return count($comments);
+    }
+    
+    public function deleteComment() {
+        $commentId = $_POST['data']['commentId'];
+        $userId = $_POST['data']['userId'];
+        $this->getApi()->getUserManager()->removeComment($userId, $commentId);
+    }
 }
 ?>

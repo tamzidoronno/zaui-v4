@@ -187,6 +187,40 @@ $('.Calendar .editentry').live('click', function() {
     thundashop.common.showInformationBox(event, __f('Edit event'));
 });
 
+$('.Calendar .save_comment').live('click', function() {
+    var data = {
+        entryId : $(this).attr('entryId'),
+        userId : $(this).attr('userId'),
+        comment : $(this).parent().find('textarea').val()
+    };
+    
+    var event = thundashop.Ajax.createEvent(null, "saveComment", this, data);
+    thundashop.Ajax.post(event);
+    thundashop.common.hideInformationBox();
+});
+
+$('.Calendar .deletecomment').live('click', function() {
+    var data = {
+        commentId: $(this).attr('commentId'),
+        userId: $(this).attr('userId')
+    }
+    var event = thundashop.Ajax.createEvent(null, "deleteComment", this, data);
+    thundashop.Ajax.post(event);
+    $(this).closest('.commententry').fadeOut(function() {
+        $(this).remove();
+    });
+})
+
+$('.Calendar .addcomment').live('click', function() {
+    var data = {
+        userId : $(this).attr('userid'),
+        entryId : $(this).attr('entryId')
+    }
+    
+    var event = thundashop.Ajax.createEvent(null, 'showEvent', this, data);
+    thundashop.common.showInformationBox(event, __f('Add comment'));
+});
+
 $('.Calendar .reminder').live('click', function() {
     var data = {};
     data.entryid = $(this).attr('entryid');

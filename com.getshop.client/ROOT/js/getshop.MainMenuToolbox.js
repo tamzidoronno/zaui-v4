@@ -13,6 +13,7 @@ $(document).ready(function() {
                 click: thundashop.MainMenu.showPageLayoutSelection,
                 title: __f("Select different page layouts"),
                 disableOnSystemPages: true,
+                disabledWarning: __f("It is not possible to change page layout from this page."),
                 extraArgs: {}
             },
             {
@@ -21,7 +22,6 @@ $(document).ready(function() {
                 iconsize : "30",
                 click: getshop.MenuEditor.open,
                 title: __f("Setup your menus"),
-                disableOnSystemPages: true,
                 extraArgs: {}
             },
             {
@@ -31,7 +31,8 @@ $(document).ready(function() {
                 title: __f("Move applications"),
                 click: thundashop.MainMenu.reorderApplicationClicked,
                 extraArgs: {},
-                disableOnSystemPages: true
+                disableOnSystemPages: true,
+                disabledWarning: __f("Applications can not be moved on this page.")
             },
             {
                 icontype: "awesome",
@@ -60,7 +61,6 @@ $(document).ready(function() {
                 title: __f("Css / page settings"),
                 click: thundashop.MainMenu.openCssBox,
                 extraArgs: {},
-                disableOnSystemPages: true
             },
             {
                 icontype: "awesome",
@@ -73,8 +73,7 @@ $(document).ready(function() {
                     });
                     test.load();
                 },
-                extraArgs: {},
-                disableOnSystemPages: true
+                extraArgs: {}
             },
             {
                 icontype: "awesome",
@@ -106,8 +105,7 @@ $(document).ready(function() {
                         click: thundashop.MainMenu.updateUserLevel,
                         extraArgs: 100
                     }
-                ],
-                disableOnSystemPages: true
+                ]
             }
         ]
     };
@@ -173,10 +171,8 @@ PubSub.subscribe('NAVIGATION_COMPLETED', function() {
 
     var systemPage = $('.skelholder').find('#systempage').attr('value');
     if (systemPage) {
-        mainmenu.outerContainer.find('.disableOnSystemPages').hide();
+        mainmenu.outerContainer.find('.disableOnSystemPages').addClass('disabled');
     } else {
-        mainmenu.outerContainer.find('.disableOnSystemPages').show();
+        mainmenu.outerContainer.find('.disableOnSystemPages').removeClass('disabled');
     }
-
-
 });

@@ -1,3 +1,31 @@
+app.Calendar = {
+    loadSettings: function(element, application) {
+        var config = {
+            draggable: true,
+            application: application,
+            title: __f("Settings"),
+            items: [
+                {
+                    icontype: "awesome",
+                    icon: "fa-gears",
+                    iconsize : "30",
+                    title: __f("Settings"),
+                    click: app.Calendar.showSettings
+                }
+            ]
+        }
+
+        var toolbox = new GetShopToolbox(config, application);
+        toolbox.show();
+        toolbox.attachToElement(application, 2);
+    },
+    
+    showSettings: function(event, app) {
+        var event = thundashop.Ajax.createEvent(null, "showSettings", app, {});
+        thundashop.common.showInformationBox(event, __f("Settings"));
+    }
+};
+
 Calendar = {
     animations : [],
             

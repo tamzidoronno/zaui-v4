@@ -2,17 +2,17 @@
 /* @var $factory Factory */
 $factory = $this->getFactory();
 $themes = $factory->getApplicationPool()->getAllApplicationSettingsByType("ThemeApplication");
-echo "<div class='theme_selection_menu'>";
+echo "<div class='theme_selection_menu gs_tabs'>";
 foreach($themes as $index => $theme) {
     $selected = "902cccc1-c315-4a93-8005-d080d414ecee";
     $selectedns = "ns_" . str_replace("-", "_", $selected);
     if($index == 0) {
-        $selected = "theme_selection_selected";
+        $selected = "gs_tab_selected";
     } else {
         $selected = "";
     }
     /* @var $theme core_applicationmanager_ApplicationSettings */
-    echo "<span class='theme_selection_button ".$selected."' theme='".$theme->id."'>" . $theme->appName . "</span>";
+    echo "<span class='gs_tab ".$selected."' theme='".$theme->id."'>" . str_replace("Theme", "", $theme->appName) . "</span>";
 }
 echo "</div>";
 ?>

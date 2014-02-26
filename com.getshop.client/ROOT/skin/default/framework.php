@@ -1454,7 +1454,7 @@ font-size: 16px;
 #cookiewarning_overlay .textbox .continue { position:absolute; right: 5px; bottom: 5px; }
 
 .gs_tabs {
-height: 34px;
+height: 35px;
 border-bottom: solid 1px  #4e4e4e;
 padding-left: 5px;
 padding-top: 10px;
@@ -1463,8 +1463,9 @@ border-bottom: solid 1px #3a3a3a;
 }
 .gs_tabs .gs_tab_selected {
     background-color: #666666;
-    height: 25px;
+    height: 26px;
     color:#CCC;
+    border-bottom: solid 0px;
 }
 
 .gs_tab {

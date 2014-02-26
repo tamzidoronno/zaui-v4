@@ -109,17 +109,19 @@ html {
 }
 
 @media screen and (max-width:500px) {
+    body { background-color: #DDD;}
     table { width: 100% !important; }
     table td { float: left; width: 100%; }
     .gs_col { width: 100% !important; }
     .gs_margin_left { margin-left: 0px; padding-left: 0px; }
     .Footer { width: inherit; }
     .Banner img,
+    .Banner .banner,
     .Banner .bannerslider,
     .Banner { height: auto !important; }
     .gs_col { margin: 0px; box-sizing: content-box !important; }
     #webshop_logo { max-width: 350px; }
-    .mainarea .applicationarea { margin: 10px; }
+    .mainarea .applicationarea { margin-bottom: 20px; }
     .gs_outer.footer .applicationarea { margin-left: 10px; margin-right: 10px;}
 
     .gs_outer.header { height: 206px; }    
@@ -161,7 +163,16 @@ html {
         height: 50px;
         background-position: 5px 5px;
     }
+    
+    .header .TopMenu {
+        position: absolute;
+        top: 74px;
+    }
+    .TopMenu ul {
+        list-style-type:none;
+    }
     .TopMenu li {
+        
         display: none;
     }
     .TopMenu li:not(.mobile) {
@@ -170,6 +181,7 @@ html {
         color: #FFF;
         padding: 10px;
         border-bottom: solid 1px #164d8e;
+        position: relative;
     }
     .Login {
         display: none;
@@ -186,7 +198,6 @@ html {
 
     .mainarea .gs_inner {
         padding-top: inherit;
-        padding-bottom: inherit;
     }
     
     .ContentManager img {
@@ -198,4 +209,16 @@ html {
     }
     
     .skeleton3 .c2 {display:none; }
+    
+    .footer { display: none;}
+    
+    .Logo {
+        display: block;
+        
+    }
+    
+    .Logo img {
+        height: 50px !important;
+    }
 }
+

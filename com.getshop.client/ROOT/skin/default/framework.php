@@ -1532,3 +1532,56 @@ border-bottom: solid 1px #3a3a3a;
     .Product .buy { float:right; margin-top: 4px; }
     
 }
+
+#informationboxmiddle .setting {
+    font-size: 16px;
+    color: #FFF;
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-bottom: dashed 1px #CCC;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+#informationboxmiddle .bottom_menu_settings {
+    height: 56px;
+}
+
+#informationboxmiddle .gs_button.savebutton {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+}
+
+#informationboxmiddle .setting:last-child {
+    border-bottom: solid 0px;
+}
+
+
+#informationboxmiddle .setting {
+    position: relative;
+}
+
+#informationboxmiddle .setting .onoff {
+    right: 0px; 
+    width: 50px;
+    height: 20px;
+    position: absolute; 
+    right: 20px;
+    top: 10px;
+    cursor:pointer;
+}
+
+#informationboxmiddle .setting input.config {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+}
+#informationboxmiddle .setting .onoff.on { 
+    background-image: url('/skin/default/images/onbutton.png');
+}
+
+#informationboxmiddle .setting .onoff.off { 
+    background-image: url('/skin/default/images/offbutton.png');
+}

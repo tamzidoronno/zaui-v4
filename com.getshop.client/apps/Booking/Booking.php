@@ -38,6 +38,10 @@ class Booking extends MarketingApplication implements Application {
     public function renderConfig() {
         $this->includefile('config');
     }
+    
+    public function showSettings() {
+        $this->includefile('config');
+    }
 
     public function getStarted() {
         echo $this->__f("Create this application and start book events to given dates.");
@@ -55,9 +59,7 @@ class Booking extends MarketingApplication implements Application {
         $this->includefile('schema');
     }
     
-    public function registerEvent($data) {
-        $password = rand(11820, 98440);
-        
+    public function createUser($data, $password) {
         $user = $this->getApiObject()->core_usermanager_data_User();
         $user->fullName =  $data['name'];
         $user->emailAddress = $data['email'];
@@ -84,13 +86,18 @@ class Booking extends MarketingApplication implements Application {
             $user->groups[] = $_SESSION['group'];
         }
         
-        $user = $this->getApi()->getUserManager()->createUser($user);
-        
-        $userid = $user->id;
-        $username = $user->username;
-        
-        $this->getApi()->getCalendarManager()->addUserToEvent($userid, $data['eventid'], $password, $username);
-        
+        return $this->getApi()->getUserManager()->createUser($user);
+    }
+    
+    
+    public function registerEvent($data) {
+        $password = rand(11820, 98440);
+        $user = $this->createUser($data, $password);
+        if ($this->isConnectedToCurrentPage()) {
+            $this->getApi()->getCalendarManager()->addUserToPageEvent($user->id, $this->getConfiguration()->id);
+        } else {
+            $this->getApi()->getCalendarManager()->addUserToEvent($user->id, $data['eventid'], $password, $user->username);
+        }
         unset($_SESSION['group']);
     }
     
@@ -164,7 +171,7 @@ class Booking extends MarketingApplication implements Application {
         } else {
             $data['birthday'] = $_POST['data']['birthday'];
             $data['company'] = $_POST['data']['company'];
-            $data['eventid'] = $_POST['data']['eventid'];
+            $data['eventid'] = isset($_POST['data']['eventid']) ? $_POST['data']['eventid'] : ""; 
         }
         
         $this->registerEvent($data);
@@ -193,6 +200,14 @@ class Booking extends MarketingApplication implements Application {
     
     public function isInvoiceEmailActivated() {
         return $this->getConfigurationSetting("addExtraEmailToBeSentTo") == "true";
+    }
+    
+    public function isConnectedToCurrentPage() {
+        return $this->getConfigurationSetting("connectedtopage") == "true";
+    }
+    
+    public function getUsersConnectedToSchema() {
+        return $this->getApi()->getUserManager()->getAllUsersWithCommentToApp($this->getConfiguration()->id);
     }
 }
 ?>

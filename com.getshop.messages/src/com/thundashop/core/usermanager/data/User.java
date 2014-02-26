@@ -17,11 +17,12 @@ import java.util.List;
  * @author hjemme
  */
 
-public class User extends DataCommon  {
+public class User extends DataCommon implements Comparable<User> {
     public int resetCode;
 
     public List<UserPrivilege> privileges = new ArrayList();
-    
+
+ 
     public static class Type {
         public static int ADMINISTRATOR = 100;
         public static int EDITOR = 50;
@@ -110,4 +111,13 @@ public class User extends DataCommon  {
     public void setKey(String key) {
         this.key = key;
     }
+    
+    @Override
+    public int compareTo(User o) {
+        if(o.rowCreatedDate == null || rowCreatedDate == null) {
+            return 0;
+        }
+        return rowCreatedDate.compareTo(o.rowCreatedDate);
+    }
+    
 }

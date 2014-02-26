@@ -135,7 +135,7 @@ if (count($day->entries) == 0) {
             
             <? 
             }
-            
+
             if (!$lockedForSignup && $bookingLink != "" && $availablePositions <= 0  && $this->isCurrentEntryOutOfDate()) { ?>
                 <a href='/<? echo $bookingLink."&waiting=true"; ?>'>;
                     <div class="button-large booking">

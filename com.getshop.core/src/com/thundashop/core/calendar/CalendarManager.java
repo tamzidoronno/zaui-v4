@@ -9,7 +9,10 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.SMSFactory;
+import com.thundashop.core.pagemanager.IPageManager;
+import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.User.Type;
@@ -722,4 +725,26 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         
         return entries; 
    }
+
+    @Override
+    public void addUserToPageEvent(String userId, String bookingAppId) throws ErrorException {
+        UserManager manager = getManager(UserManager.class);
+        User user = manager.getUserById(userId);
+        if (user != null) {
+            IPageManager pageManager = getManager(PageManager.class);
+            HashMap<String, Setting> settings = pageManager.getSecuredSettings(bookingAppId);
+            
+            Comment comment = new Comment();
+            comment.appId = bookingAppId;
+            comment.comment = "BookingEvent";
+            manager.addComment(user.id, comment);
+            
+            String storeOwner = getStore().configuration.emailAdress;
+            String content = settings.get("bookingmail").value;
+            content = mutateText("", content, new Entry(), user);
+            
+            mailFactory.send(getFromAddress(), user.emailAddress, settings.get("subject").value, content);
+            mailFactory.send("post@getshop.com", getFromAddress(), settings.get("subject").value, content);   
+        }
+    }
 }

@@ -277,4 +277,14 @@ public interface IUserManager {
     @Editor
     @Writing
     public void removeComment(String userId, String commentId) throws ErrorException;
+
+    /**
+     * Find all users that has one or more comments
+     * connected to the specified appId.
+     * 
+     * @param appId
+     * @return 
+     */
+    @Editor
+    public List<User> getAllUsersWithCommentToApp(String appId) throws ErrorException;
 }

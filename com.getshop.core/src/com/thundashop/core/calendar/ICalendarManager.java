@@ -83,6 +83,14 @@ public interface ICalendarManager {
     public void addUserToEvent(String userId, String eventId, String password, String username) throws ErrorException;
     
     /**
+     * Adds a user to a page event
+     * 
+     * @param userId
+     * @throws ErrorException 
+     */
+    public void addUserToPageEvent(String userId, String bookingAppId) throws ErrorException;
+    
+    /**
      * Remove a given user from a given event.
      * @param userId The userid for the event to be removed. (see usermanager for more inforamtion about this id)
      * @param eventId The id of the event for the user to be removed from.

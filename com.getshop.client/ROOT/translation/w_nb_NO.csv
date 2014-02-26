@@ -16,6 +16,7 @@ August;-;August
 Available positions;-;Ledige plasser
 Birth Date;-;Bursdag
 Booking;-;Påmelding
+Building your store;-;Lag din webbutikk
 Buy;-;Kjøp
 By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;Sisow er en nederlands betalingsmetode, bruk denne om du ønsker å tilby kundene dine iDeal
 Cancel order;-;Kanselert ordre
@@ -36,6 +37,7 @@ Cookies are being stored;-;Cookier blir lagret
 Country;-;Land
 Coupon;-;Kupong
 Coupon discount;-;Kupong avslag
+Current users added to this booking;-;Brukere som er lagt til
 Customer information;-;Kunde detaljer
 Date;-;Dato
 December;-;Desember
@@ -126,6 +128,7 @@ Previous;-;Forrige
 Price;-;Pris
 Price and plans;-;Priser og oversikter
 Product count;-;Antall produkter
+Read more;-;Les mer
 Recover password;-;Gjennopprett passord
 Register;-;Registrer
 Registration details;-;Registrerings detaljer.
@@ -157,6 +160,7 @@ Stage 2 (nm):;-;Stage 2 nm:
 Stage 3 (hp):;-;Stage 3 hp:
 Stage 3 (nm):;-;Stage 3 nm:
 Start date;-;Start dato
+Start your 30 days free trial now;-;Start din 30 dagers gratis prøveperiode nå
 Status;-;Status
 Stop;-;Stopp
 Success;-;Success
@@ -182,6 +186,7 @@ To be able to serve you we need to store a tiny amount of data about your browse
 Top speed;-;Topp hastighet
 Total;-;Total
 Tuesday;-;Tirsdag
+Untitled product;-;Produkt uten navn
 Update;-;Oppdater
 Use a different email;-;Bruk en annen epost
 Username / Email;-;Brukernavn / Epost
@@ -190,6 +195,7 @@ Waiting list;-;Venteliste
 Was not able to get payment methods, please check your postcode;-;Klarte ikke å oppdrive betalings metoder, vennligst sjekk ditt postnummer.
 We host events at the following locations, click on the location to filter the calendar by location(s);-;We har events på følgende steder, trykk på stedet for å filtere kalenderen på stedet(ene)
 Wednesday;-;Onsdag
+Welcome to my page;-;Velkommen til min side
 What email address do you want the ebill to be sent to?;-;Hvilken epost ønsker du at ebill skal sendes til?
 What's on your mind?;-;Hva ønsker du å formidle?
 Wrong delivery method;-;Feil forsendelses metode.
@@ -199,7 +205,9 @@ You do not have any orders.;-;Du har ingen bestillinger
 You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
 You need to select at least one to send back message to;-;Du må velge minium en som du kan sende en melding til.
 Your are now signed up for the event;-;Du er nå registert inn på denne eventen.
+Your email;-;Din epost
 Your message has been delivered;-;Din melding har blitt sendt.
+Your name;-;Ditt navn
 Your order has been canceled due to incorrect payment information, please try again.;-;Orderen din har blitt avbrutt pga manglende betaling.
 Your order has now been completed and is waiting to be shipped.;-;Orderen din har blitt gjennomført og venter på å bli sendt.
 Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;Du vil snart motta en epost med din ebill, eller så kan du last den ned på følgende link

@@ -379,10 +379,11 @@ class Calendar extends MarketingApplication implements Application {
         
         $bookingApps = $this->getApi()->getPageManager()->getApplicationsBasedOnApplicationSettingsId("74ea4e90-2d5a-4290-af0c-230a66e09c78");
         
-        if (count($bookingApps) === 1) {
+        if (count($bookingApps) > 0) {
             $apps = array();
             foreach ($bookingApps as $bookingApp) {
                 $apps[] = $bookingApp->id;
+                break;
             }
             $pages = $this->getApi()->getPageManager()->getPagesForApplications($apps);
             return "?page=".$pages->{$bookingApp->id}[0]."&entry=".$entry->entryId;

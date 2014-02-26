@@ -88,8 +88,8 @@ thundashop.app.Settings = {
             focusfield.find('input:first').focus();
         }
     },
-    initDropDown: function() {
-        $(".Settings .dropdown").each(function() {
+    initDropDown: function(parent) {
+        parent.find(".dropdown").each(function() {
             var value = "";
             if (currentSettings) {
                 if (currentSettings[$(this).attr('id')] !== undefined) {
@@ -106,8 +106,8 @@ thundashop.app.Settings = {
         var event = thundashop.Ajax.createEvent(null, "SendExtendedModeRequest", target, {});
         thundashop.Ajax.postSynchron(event);
     },
-    initOnOff: function() {
-        $("#settingsarea .setting").each(function() {
+    initOnOff: function(parent) {
+        parent.find(".setting").each(function() {
             if ($(this).hasClass('onoff')) {
                 var options = "";
                 if (currentSettings != null && typeof(currentSettings[$(this).attr('id')]) != "undefined") {
@@ -122,8 +122,8 @@ thundashop.app.Settings = {
         });
 
     },
-    initTextfield: function() {
-        $(".Settings .textfield").each(function() {
+    initTextfield: function(parent) {
+        parent.find(".textfield").each(function() {
             if (currentSettings != null && currentSettings[$(this).attr('id')] !== undefined) {
                 var value = currentSettings[$(this).attr('id')].value;
                 $($(this).find('input')[0]).val(value);
@@ -131,24 +131,24 @@ thundashop.app.Settings = {
             }
         });
     },
-    initTextArea: function() {
-        $(".Settings .textarea").each(function() {
+    initTextArea: function(parent) {
+        parent.find(".textarea").each(function() {
             if (typeof(currentSettings[$(this).attr('id')]) != "undefined") {
                 var value = currentSettings[$(this).attr('id')].value;
                 $($(this).find('textarea[type=textfield]')[0]).val(value);
             }
         });
     },
-    initTabs: function() {
-        $('.Settings .tabs').each(function() {
+    initTabs: function(parent) {
+        parent.find('.tabs').each(function() {
             if (typeof(currentSettings[$(this).attr('id')]) != "undefined") {
                 var activate = currentSettings.shippingtype.value;
                 $(this).find("[activate=" + activate + "]").click();
             }
         });
     },
-    initTables: function() {
-        $('.Settings .settingstable').each(function() {
+    initTables: function(parent) {
+        parent.find('.settingstable').each(function() {
             if (typeof(currentSettings[$(this).attr('id')]) != "undefined") {
                 var value = currentSettings[$(this).attr('id')].value;
                 var trs = $(this).find('tr');
@@ -166,8 +166,8 @@ thundashop.app.Settings = {
             }
         });
     },
-    initLists: function() {
-        $('.Settings .list').each(function() {
+    initLists: function(parent) {
+        parent.find('.list').each(function() {
             var list = [];
             var box = $(this);
             if (currentSettings[$(this).attr('id')] !== undefined) {
@@ -198,14 +198,17 @@ thundashop.app.Settings = {
             });
         });
     },
-    init: function() {
-        this.initDropDown();
-        this.initTextfield();
-        this.initOnOff();
-        this.initTextArea();
-        this.initTabs();
-        this.initTables();
-        this.initLists();
+    init: function(parent) {
+        if (!parent) {
+            parent = $('.Settings');
+        }
+        this.initDropDown(parent);
+        this.initTextfield(parent);
+        this.initOnOff(parent);
+        this.initTextArea(parent);
+        this.initTabs(parent);
+        this.initTables(parent);
+        this.initLists(parent);
         
         $(document).on('click','.Settings .list .selected_entries .selected', function() {
             $(this).remove();
@@ -271,7 +274,18 @@ thundashop.app.Settings = {
         var settings = {};
         var obj = $(this);
         settings['appid'] = fromElement.closest('#settingsarea').attr('appsettingsid');
-        $('.Settings .setting').each(function() {
+        var parent = $('.Settings');
+        var functionName = 'SaveSettings';
+        var close = false;
+        
+        if ($(fromElement).closest('#informationbox').length > 0) {
+            parent = $(fromElement).closest('#informationbox');
+            settings['appid'] = parent.attr('appid');
+            functionName = 'saveGsInstanceSettings';
+            close = true;
+        }
+        
+        parent.find('.setting').each(function() {
             var key = $(this).attr('id');
             var secure = $(this).attr('secure');
             secure = (typeof(secure) === "undefined") ? false : true;
@@ -317,11 +331,23 @@ thundashop.app.Settings = {
         settings = thundashop.app.Settings.getTabs(settings);
         settings = thundashop.app.Settings.getTables(settings);
 
-        var event = thundashop.Ajax.createEvent('', 'SaveSettings', fromElement, settings);
-        thundashop.Ajax.postSynchron(event);
-        thundashop.common.Alert(__f("Settings saved"), __f("Your settings have been saved."));
+        var event = thundashop.Ajax.createEvent('', functionName, fromElement, settings);
+        
+        if (close) {
+            thundashop.Ajax.post(event);
+            thundashop.common.hideInformationBox();
+        } else {
+            thundashop.Ajax.postSynchron(event);
+            thundashop.common.Alert(__f("Settings saved"), __f("Your settings have been saved."));    
+        }
     }
 }
+
+$('.gs_button.savebutton').live('click', function() {
+    var fromElement = $(this);
+    thundashop.app.Settings.save(fromElement);
+    
+});
 
 $('.Settings .savebutton').live('click', function() {
     var fromElement = $(this);

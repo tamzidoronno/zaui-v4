@@ -720,7 +720,7 @@ $(document).on('mouseenter', '.imageUploader', function() {
     }
 });
 
-$(document).on('click', '#informationbox .settings .entry, #settingsarea .setting', function(event) {
+$(document).on('click', '#informationbox .settings .entry, #settingsarea .setting, #informationbox .setting', function(event) {
     if ($(this).find('.onoff')) {
         var data = {
             id: $(this).attr('id')

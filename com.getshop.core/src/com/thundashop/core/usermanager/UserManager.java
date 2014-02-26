@@ -13,6 +13,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -535,7 +536,7 @@ public class UserManager extends ManagerBase implements IUserManager {
     public void addComment(String userId, Comment comment) throws ErrorException {
         User user = getUserById(userId);
         if (user != null) {
-            comment.createdByUserId = getSession().currentUser.id;
+            comment.createdByUserId = getSession() != null && getSession().currentUser != null ? getSession().currentUser.id : "";
             user.comments.put(comment.getCommentId(), comment);
             databaseSaver.saveObject(user, credentials);
         }
@@ -549,5 +550,25 @@ public class UserManager extends ManagerBase implements IUserManager {
             user.comments.remove(commentId);
             databaseSaver.saveObject(user, credentials);
         }
+    }
+
+    @Override
+    public List<User> getAllUsersWithCommentToApp(String appId) throws ErrorException {
+        List<User> retUsers = new ArrayList();
+        
+        for (User user : getAllUsers()) {
+            if (user.comments.size() > 0) {
+                for (Comment comment : user.comments.values()) {
+                    if (comment.appId.equals(appId)) {
+                        retUsers.add(user);
+                        break;
+                    }
+                }
+            }
+        }
+        
+        Collections.sort(retUsers);
+        Collections.reverse(retUsers);
+        return retUsers;
     }
 }

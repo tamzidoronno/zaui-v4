@@ -410,6 +410,23 @@ class APICalendarManager {
 	}
 
 	/**
+	* Adds a user to a page event
+	*
+	* @param userId
+	* @throws ErrorException
+	*/
+
+	public function addUserToPageEvent($userId, $bookingAppId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data['args']["bookingAppId"] = json_encode($this->transport->object_unset_nulls($bookingAppId));
+	     $data["method"] = "addUserToPageEvent";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Apply a set of filters,
 	* if this filters are applied, it will not return entries
 	* that does not match the filter criteria.
@@ -3648,6 +3665,23 @@ class APIUserManager {
 	     $data = array();
 	     $data['args'] = array();
 	     $data["method"] = "getAllUsers";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Find all users that has one or more comments
+	* connected to the specified appId.
+	*
+	* @param appId
+	* @return List
+	*/
+
+	public function getAllUsersWithCommentToApp($appId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["appId"] = json_encode($this->transport->object_unset_nulls($appId));
+	     $data["method"] = "getAllUsersWithCommentToApp";
 	     $data["interfaceName"] = "core.usermanager.IUserManager";
 	     return $this->transport->sendMessage($data);
 	}

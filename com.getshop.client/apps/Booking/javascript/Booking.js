@@ -1,3 +1,31 @@
+app.Booking = {
+    loadSettings: function(element, application) {
+        var config = {
+            draggable: true,
+            application: application,
+            title: __f("Settings"),
+            items: [
+                {
+                    icontype: "awesome",
+                    icon: "fa-gears",
+                    iconsize : "30",
+                    title: __f("Settings"),
+                    click: app.Booking.showSettings
+                }
+            ]
+        }
+
+        var toolbox = new GetShopToolbox(config, application);
+        toolbox.show();
+        toolbox.attachToElement(application, 2);
+    },
+    
+    showSettings: function(event, app) {
+        var event = thundashop.Ajax.createEvent(null, "showSettings", app, {});
+        thundashop.common.showInformationBox(event, __f("Settings"));
+    }
+};
+
 Booking = {
     check: function(test) {
         if (!test || test == "")
@@ -91,7 +119,8 @@ $('.Booking .savebooking').live('click', function() {
         } else {
             Booking.check(data.birthday);
             Booking.check(data.company);
-            Booking.check(data.eventid);
+            if ($('#event').length > 0)
+                Booking.check(data.eventid);
         }
     } catch (error) {
         thundashop.common.Alert(__w('Stop'), __w('All fields are required'), true);
@@ -99,9 +128,14 @@ $('.Booking .savebooking').live('click', function() {
     }
 
     var event = thundashop.Ajax.createEvent('Booking', 'runRegisterEvent', $(this), data);
-    var result = thundashop.Ajax.postSynchronWithReprint(event);
-    if (result !== false)
-        thundashop.common.Alert(__w('Completed'), __w('Your are now signed up for the event'));
+//    if ($('#event').length > 0) {
+        var result = thundashop.Ajax.postSynchronWithReprint(event);
+        if (result !== false)
+            thundashop.common.Alert(__w('Completed'), __w('Your are now signed up for the event'));
+//    } else {
+//        var result = thundashop.Ajax.post(event);
+//        thundashop.common.Alert(__w('Completed'), __w('Your you for your order'));
+//    }
 });
 
 Booking.bindEvents();

@@ -158,6 +158,10 @@ GetShopToolbox.prototype = {
                 parent.find('.toolboxgroup').hide();
             }
             if (config.click) {
+                if(item.hasClass('disabled')) {
+                    thundashop.common.Alert("Disabled", config.disabledWarning, true);
+                    return;
+                }
                 config.click.call(scope.application, config.extraArgs, scope.application);
             }
         });

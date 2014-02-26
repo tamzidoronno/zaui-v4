@@ -60,9 +60,7 @@
         thundashop.common.showInformationBox(event, __f("1/2 Start by selecting your theme."));
         $('#start_layer').remove();
         thundashop.common.disableCloseInformationBox();
-        $(document).on('click', '.theme_selection_button', function() {
-            $('.theme_selection_selected').removeClass('theme_selection_selected');
-            $(this).addClass('theme_selection_selected');
+        $(document).on('click', '.gs_tab', function() {
             var ns = "ns_" + $(this).attr('theme').replace(/-/g,"_");
             $(".gs_mac_view").attr('src','/showApplicationImages.php?appNamespace='+ns+'&image=desktop.png');
             $(".gs_phone_view").attr('src','/showApplicationImages.php?appNamespace='+ns+'&image=mobile.png');
@@ -115,7 +113,7 @@
     .gs_guide_box .guide_title { font-size: 22px; text-align:center;  margin-bottom: 10px; }
     .theme_selection_button {cursor: pointer; color:#CCC; background-color: #3f3f3f; border-bottom: solid 1px #383838; border-right: solid 1px #383838;  padding: 5px; display:inline-block; padding-left:10px; padding-right: 10px;  }
     .theme_selection_button.theme_selection_selected { background-color: #666; border-bottom: 0px; }
-    .theme_selection_menu { border-top: solid 1px #383838; }
+    .theme_selection_menu { background-color: #3f3f3f; }
     .select_theme_button { position:absolute; top: -50px; right: 10px; }
     .example_text { display:inline-block; padding-top: 10px; padding-left: 10px; color:#CCC; }
     .gs_macpad { position:absolute; top: 50px; left: 5px; z-index: 1; }

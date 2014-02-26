@@ -28,8 +28,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class CopyStore {
 
     public static void main(String args[]) throws UnknownHostException, ErrorException {
-        String originalStoreId = "b1671790-ac57-40eb-9523-ce02d87159f4";
-        String newAddress = "utvikautoservice.getshop.com";
+        String originalStoreId = args[0];
+        String newAddress = args[1];
         String newStoreId = UUID.randomUUID().toString();
         
         ApplicationContext context = new ClassPathXmlApplicationContext("All.xml");

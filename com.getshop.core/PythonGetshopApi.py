@@ -427,6 +427,28 @@ class CalendarManager(object):
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
+  def addUserToPageEvent(self, userId, bookingAppId):
+    args = collections.OrderedDict()
+    if isinstance(userId,GetShopBaseClass): 
+      args["userId"]=json.dumps(userId.__dict__)
+    else:
+      try:
+        args["userId"]=json.dumps(userId)
+      except (ValueError, AttributeError):
+        args["userId"]=userId
+    if isinstance(bookingAppId,GetShopBaseClass): 
+      args["bookingAppId"]=json.dumps(bookingAppId.__dict__)
+    else:
+      try:
+        args["bookingAppId"]=json.dumps(bookingAppId)
+      except (ValueError, AttributeError):
+        args["bookingAppId"]=bookingAppId
+    data = EmptyClass()
+    data.args = args
+    data.method = "addUserToPageEvent"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
   def applyFilter(self, filters):
     args = collections.OrderedDict()
     if isinstance(filters,GetShopBaseClass): 
@@ -3586,6 +3608,28 @@ class StoreManager(object):
 class UserManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
+  def addComment(self, userId, comment):
+    args = collections.OrderedDict()
+    if isinstance(userId,GetShopBaseClass): 
+      args["userId"]=json.dumps(userId.__dict__)
+    else:
+      try:
+        args["userId"]=json.dumps(userId)
+      except (ValueError, AttributeError):
+        args["userId"]=userId
+    if isinstance(comment,GetShopBaseClass): 
+      args["comment"]=json.dumps(comment.__dict__)
+    else:
+      try:
+        args["comment"]=json.dumps(comment)
+      except (ValueError, AttributeError):
+        args["comment"]=comment
+    data = EmptyClass()
+    data.args = args
+    data.method = "addComment"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
   def addUserPrivilege(self, userId, managerName, managerFunction):
     args = collections.OrderedDict()
     if isinstance(userId,GetShopBaseClass): 
@@ -3696,6 +3740,21 @@ class UserManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getAllUsers"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getAllUsersWithCommentToApp(self, appId):
+    args = collections.OrderedDict()
+    if isinstance(appId,GetShopBaseClass): 
+      args["appId"]=json.dumps(appId.__dict__)
+    else:
+      try:
+        args["appId"]=json.dumps(appId)
+      except (ValueError, AttributeError):
+        args["appId"]=appId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getAllUsersWithCommentToApp"
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -3826,6 +3885,28 @@ class UserManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "logout"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def removeComment(self, userId, commentId):
+    args = collections.OrderedDict()
+    if isinstance(userId,GetShopBaseClass): 
+      args["userId"]=json.dumps(userId.__dict__)
+    else:
+      try:
+        args["userId"]=json.dumps(userId)
+      except (ValueError, AttributeError):
+        args["userId"]=userId
+    if isinstance(commentId,GetShopBaseClass): 
+      args["commentId"]=json.dumps(commentId.__dict__)
+    else:
+      try:
+        args["commentId"]=json.dumps(commentId)
+      except (ValueError, AttributeError):
+        args["commentId"]=commentId
+    data = EmptyClass()
+    data.args = args
+    data.method = "removeComment"
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 

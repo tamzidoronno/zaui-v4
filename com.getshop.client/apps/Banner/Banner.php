@@ -55,10 +55,14 @@ class Banner extends \WebshopApplication implements \Application {
         foreach ($this->bannerSet->banners as $banner) {
             $imageId = $banner->imageId;
             if (!in_array($imageId, $allImages)) {
+                echo "Removing: ".$imageId;
                 $this->getApi()->getBannerManager()->removeImage($this->bannerSet->id, $imageId);
             }
         }
         
+        if ($this->bannerSet->id) {
+            $this->bannerSet = $this->getApi()->getBannerManager()->getSet($this->bannerSet->id);
+        }
         $this->bannerSet->interval = $_POST['data']['interval'];
         $this->bannerSet->height = $_POST['data']['height'];
         $this->getApi()->getBannerManager()->saveSet($this->bannerSet);

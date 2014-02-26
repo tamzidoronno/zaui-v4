@@ -410,6 +410,23 @@ class APICalendarManager {
 	}
 
 	/**
+	* Adds a user to a page event
+	*
+	* @param userId
+	* @throws ErrorException
+	*/
+
+	public function addUserToPageEvent($userId, $bookingAppId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data['args']["bookingAppId"] = json_encode($this->transport->object_unset_nulls($bookingAppId));
+	     $data["method"] = "addUserToPageEvent";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Apply a set of filters,
 	* if this filters are applied, it will not return entries
 	* that does not match the filter criteria.
@@ -3502,6 +3519,24 @@ class APIUserManager {
 	}
 
 	/**
+	* Add a comment to a specific user.
+	*
+	* @param userId
+	* @param comment
+	* @throws ErrorException
+	*/
+
+	public function addComment($userId, $core_usermanager_data_Comment) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data['args']["core_usermanager_data_Comment"] = json_encode($this->transport->object_unset_nulls($core_usermanager_data_Comment));
+	     $data["method"] = "addComment";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Add priviliges to a another admin user.
 	*
 	* If a user is given a privilege, all the defaults are removed.
@@ -3630,6 +3665,23 @@ class APIUserManager {
 	     $data = array();
 	     $data['args'] = array();
 	     $data["method"] = "getAllUsers";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Find all users that has one or more comments
+	* connected to the specified appId.
+	*
+	* @param appId
+	* @return List
+	*/
+
+	public function getAllUsersWithCommentToApp($appId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["appId"] = json_encode($this->transport->object_unset_nulls($appId));
+	     $data["method"] = "getAllUsersWithCommentToApp";
 	     $data["interfaceName"] = "core.usermanager.IUserManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -3801,6 +3853,23 @@ class APIUserManager {
 	     $data = array();
 	     $data['args'] = array();
 	     $data["method"] = "logout";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Removes the comment from a user
+	* @param userId
+	* @param commentId
+	* @throws ErrorException
+	*/
+
+	public function removeComment($userId, $commentId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data['args']["commentId"] = json_encode($this->transport->object_unset_nulls($commentId));
+	     $data["method"] = "removeComment";
 	     $data["interfaceName"] = "core.usermanager.IUserManager";
 	     return $this->transport->sendMessage($data);
 	}

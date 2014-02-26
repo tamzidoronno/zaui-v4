@@ -26,6 +26,7 @@ class GenerateReport {
         $line["Tlf nr"] = "";
         $line["Firmanavn"] = "";
         $line["Org.nr"] = "";
+        $line["Kommentar"] = "";
 
         $rows[] = $line;
         $rows[] = array("" => "Påmeldte");
@@ -33,7 +34,7 @@ class GenerateReport {
             $user = $this->factory->getApi()->getUserManager()->getUserById($attandee);
             if (is_array($user->groups)) {
                 if (in_array($group, $user->groups)) {
-                    $rows[] = $this->createExcelRow($user);
+                    $rows[] = $this->createExcelRow($user, $entry);
                 }
             }
         }
@@ -45,7 +46,7 @@ class GenerateReport {
             if (is_array($user->groups)) {
                 $line = array();
                 if (in_array($group, $user->groups)) {
-                    $rows[] = $this->createExcelRow($user);
+                    $rows[] = $this->createExcelRow($user, $entry);
                 }
             }
         }
@@ -78,14 +79,38 @@ class GenerateReport {
         header("Cache-Control: private", false);
     }
 
-    public function createExcelRow($user) {
+    public function createExcelRow($user, $entry) {
         $line = array();
         $line[] = $user->fullName;
         $line[] = $user->emailAddress;
         $line[] = $user->cellPhone;
         $line[] = $user->company->name;
         $line[] = $user->company->vatNumber;
+        $line[] = $this->getComments($user, $entry);
         return $line;
+    }
+
+    public function getComments($user, $entry) {
+        $commentText = "";
+        
+        if (count($user->comments)) {
+            $i = 0;
+            $counter = 0;
+            foreach ($user->comments as $comment) {
+                $counter++;
+            }
+            foreach ($user->comments as $comment) {
+                $i++;
+                if ($comment->extraInformation === $entry->entryId) {
+                    $commentText .= preg_replace('#<br\s*/?>#i', "", $comment->comment);
+                    if ($i < $counter) {
+                        $commentText .= "\n----------------------\n";
+                    }
+                }
+            }
+        }
+        
+        return $commentText;
     }
 
 }

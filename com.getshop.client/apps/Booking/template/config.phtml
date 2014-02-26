@@ -1,11 +1,6 @@
 <?
 namespace ns_74ea4e90_2d5a_4290_af0c_230a66e09c78;
 ?>
-<div class="information">
-    <?
-    echo $this->__f("Configure your booking application");
-    ?>
-</div>
 
 <div class="setting onoff" id="sendmail">
     <span class="title"><?php echo $this->__("Send email"); ?></span>
@@ -20,6 +15,14 @@ namespace ns_74ea4e90_2d5a_4290_af0c_230a66e09c78;
     <div class="onoff config" id="sendsms"></div>
     <div class="description">
         <?php echo $this->__("If this option has been enabled the attendee will receive an sms."); ?>
+    </div>
+</div>
+
+<div class="setting onoff" id="connectedtopage">
+    <span class="title"><?php echo $this->__("Is this booking form connected to this page?"); ?></span>
+    <div class="onoff config" id="connectedtopage"></div>
+    <div class="description">
+        <?php echo $this->__("A bookingform can be connected to the page its added to, meaning that the content of this page is the content that are being sold, not an event or course itself."); ?>
     </div>
 </div>
 
@@ -157,5 +160,12 @@ namespace ns_74ea4e90_2d5a_4290_af0c_230a66e09c78;
     </div>
 </div>
 
+<div class="bottom_menu_settings">
+    <div class="gs_button savebutton"><?php echo $this->__("Save settings"); ?></div>
+</div>
 
-<div class="button savebutton"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__("Save settings"); ?></ins></div>
+<script>
+    <? echo "currentSettings = ".json_encode($this->getConfiguration()->settings).";"; ?>
+    var appInstance = $('#informationbox[appid=<? echo $this->getConfiguration()->id?>]');
+    thundashop.app.Settings.init(appInstance);
+</script>

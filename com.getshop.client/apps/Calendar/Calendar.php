@@ -379,10 +379,11 @@ class Calendar extends MarketingApplication implements Application {
         
         $bookingApps = $this->getApi()->getPageManager()->getApplicationsBasedOnApplicationSettingsId("74ea4e90-2d5a-4290-af0c-230a66e09c78");
         
-        if (count($bookingApps) === 1) {
+        if (count($bookingApps) > 0) {
             $apps = array();
             foreach ($bookingApps as $bookingApp) {
                 $apps[] = $bookingApp->id;
+                break;
             }
             $pages = $this->getApi()->getPageManager()->getPagesForApplications($apps);
             return "?page=".$pages->{$bookingApp->id}[0]."&entry=".$entry->entryId;
@@ -435,6 +436,46 @@ class Calendar extends MarketingApplication implements Application {
         $toEventId = $_POST['data']['toEntryId'];
         $userId = $_POST['data']['userid'];
         $this->getApi()->getCalendarManager()->transferUser($fromEventId, $toEventId, $userId);
+    }
+    
+    public function saveComment() {
+        $comment = new \core_usermanager_data_Comment();
+        $comment->comment = nl2br($_POST['data']['comment']);
+        $comment->extraInformation = $_POST['data']['entryId'];
+        $comment->appId = $this->getConfiguration()->id;
+        
+        $this->getApi()->getUserManager()->addComment($_POST['data']['userId'], $comment);
+    }
+    
+    public function showEvent() {
+        $this->includefile("showComments");
+    }
+    
+    public function filterComments($user, $entryId) {
+        $comments = array();
+        
+        if (!count($user->comments)) {
+            return $comments;
+        }
+        
+        foreach ($user->comments as $comment) {
+            if ($comment->appId === $this->getConfiguration()->id && $comment->extraInformation == $entryId) {
+                $comments[] = $comment;
+            }
+        }
+        
+        return $comments;
+    }
+    
+    public function isActiveComment($user, $entryId) {
+        $comments = $this->filterComments($user, $entryId);
+        return count($comments);
+    }
+    
+    public function deleteComment() {
+        $commentId = $_POST['data']['commentId'];
+        $userId = $_POST['data']['userId'];
+        $this->getApi()->getUserManager()->removeComment($userId, $commentId);
     }
 }
 ?>

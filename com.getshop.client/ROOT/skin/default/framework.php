@@ -912,10 +912,10 @@ font-size:12px;
 
 .tabs .tab_content .application { padding-left: 10px; }
 .tabs .tab_content .application .title { margin-top: 10px; line-height: 43px; font-size: 15px; font-weight: bold; padding-left: 10px; }
-.tabs .tab_content .application .descriptionholder { font-size: 14px; background-color:#EFEFEF; padding: 5px; border: solid 1px #DDD; padding:10px; padding-right: 0px; }
+.tabs .tab_content .application .descriptionholder { font-size: 14px; background-color:#EFEFEF; padding: 5px; border: solid 1px #DDD; padding:10px; padding-right: 0px; width: 750px}
 .tabs .tab_content .application .description { width: 218px; padding-right: 10px; }
 #informationbox .application .allFieldsNeedToBeFilled { font-size: 16px; float:left; padding-top: 10px; display:none; font-weight: bold; color:#FF0000; }
-.tabs .tab_content .application .image { width: 520px; height: 320px; text-align:center; }
+.tabs .tab_content .application .image { width: 515px; height: 320px; text-align:center; }
 
 .commonleftmenu { margin-left: 8px; width: 150px; border-left: solid 1px #a4a4a4; border-right: solid 1px #a4a4a4; border-top: solid 1px #a4a4a4; }
 .commonleftmenu .entry { width: 150px; background-image: url('/skin/default/images/standardleftmenuitembackground.png'); height: 34px; line-height: 34px; text-align: center; border-bottom: solid 1px #a4a4a4; border-top: solid 1px #efefef; }
@@ -1532,4 +1532,57 @@ border-bottom: solid 1px #3a3a3a;
     .Product .product_variation_selection { width: 100%; }
     .Product .buy { float:right; margin-top: 4px; }
     
+}
+
+#informationboxmiddle .setting {
+    font-size: 16px;
+    color: #FFF;
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-bottom: dashed 1px #CCC;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+#informationboxmiddle .bottom_menu_settings {
+    height: 56px;
+}
+
+#informationboxmiddle .gs_button.savebutton {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+}
+
+#informationboxmiddle .setting:last-child {
+    border-bottom: solid 0px;
+}
+
+
+#informationboxmiddle .setting {
+    position: relative;
+}
+
+#informationboxmiddle .setting .onoff {
+    right: 0px; 
+    width: 50px;
+    height: 20px;
+    position: absolute; 
+    right: 20px;
+    top: 10px;
+    cursor:pointer;
+}
+
+#informationboxmiddle .setting input.config {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+}
+#informationboxmiddle .setting .onoff.on { 
+    background-image: url('/skin/default/images/onbutton.png');
+}
+
+#informationboxmiddle .setting .onoff.off { 
+    background-image: url('/skin/default/images/offbutton.png');
 }

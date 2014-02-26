@@ -1,0 +1,37 @@
+<?php
+$userId = $_POST['data']['userId'];
+$entryId =  $_POST['data']['entryId'];
+$user = $this->getApi()->getUserManager()->getUserById($userId);
+$comments = $this->filterComments($user, $entryId);
+
+?>
+
+<div class="calendar_comment_area">
+    <div class="commentsworkingarea">
+        <div class="title"><?
+            echo $this->__f("Add a comment to user").": ". $user->fullName;
+            ?></div>
+        <textarea placeholder="<? echo $this->__f("Comment goes here"); ?>"></textarea>
+        <div userId="<?echo $userId;?>" entryId="<? echo $entryId; ?>" class="gs_button save_comment"><? echo $this->__f("Save"); ?></div>
+    </div>
+
+    <div><? echo $this->__f("Existing comments"); ?></div>
+    <div class="comments">
+        <?
+        if (!count($comments)) {
+            echo $this->__f("There is no comments added to this user yet.");
+        } else {
+            foreach ($comments as $comment) { 
+                $createdByUser = $this->getApi()->getUserManager()->getUserById($comment->createdByUserId);
+                
+                ?>
+                <div class="commententry">
+                    <div class="comment"><? echo $comment->comment;?></div>
+                    <div class="datecreated"><div userId="<? echo $userId; ?>" commentId="<? echo $comment->commentId; ?>"  class="gs_button small deletecomment"><? echo $this->__f("Delete comment"); ?></div>&nbsp;&nbsp;&nbsp;<? echo $createdByUser->fullName." - ".$comment->dateCreated; ?></div>
+                </div>
+            
+            <? }
+        }
+        ?>
+    </div>
+</div>

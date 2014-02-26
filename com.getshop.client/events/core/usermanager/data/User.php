@@ -46,6 +46,9 @@ class core_usermanager_data_User extends core_common_DataCommon  {
 	public $cellPhone;
 
 	/** @var String */
+	public $comments;
+
+	/** @var String */
 	public $key;
 
 	/** @var String */

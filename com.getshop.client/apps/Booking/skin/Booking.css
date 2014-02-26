@@ -22,3 +22,21 @@
     color: #AAA;
     border: solid 1px #DDD;
 }
+
+.Booking .userlistoverview .userentry .datecreated {
+    font-size: 12px;
+    position: absolute;
+    right: 10px;
+    top: 6px;
+}
+.Booking .userlistoverview .userentry {
+    font-size: 14px;
+    position: relative;
+    cursor: pointer;
+    padding: 3px;
+    padding-left: 10px;
+}
+
+.Booking .userlistoverview .userentry:hover {
+    background-color: rgba(127,127,127,0.3);
+}

@@ -39,7 +39,7 @@ class Factory extends FactoryBase {
 
     public function loadInitializationData() {
         $page = $this->getPage();
-        if ($page->backendPage->pageType == -2) {
+        if ($page->backendPage->pageType == -2 && $page->backendPage->id == "home") {
             include("initdata/initializationdata.phtml");
 
             $sitebuilder = new SiteBuilder();

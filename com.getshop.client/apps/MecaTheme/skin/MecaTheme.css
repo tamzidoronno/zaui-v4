@@ -20,8 +20,7 @@ html {
 }
 
 .gs_outer.header .gs_inner {
-    height: 135px;
-    width: 1020px;
+    height: 135px; 
     max-width: 1020px;
     background-image: url('{IMAGEFOLDER}/headerbackground.png');
 }
@@ -101,11 +100,33 @@ html {
     background-color: #EEE;
     padding: 10px;
     max-width: 978px;
-    height: 125px;
+    min-height: 125px;
 }
 
 .Login {
     background-color: rgba(255,255,255,0.2);
+}
+
+@media only all and (max-width: 800px) {
+    .TopMenu {
+        top: inherit !important;
+    }
+    
+    .Banner img, .Banner .banner, 
+    .Banner .bannerslider, .Banner {
+        height: inherit !important;
+    }
+    
+    .gs_margin_left { margin-left: 0px; padding-left: 0px; }
+    .mainarea .gs_inner {
+        padding: 0px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    .gs_row.r1 .gs_inner  {
+        padding-bottom: 10px !important;
+    }
 }
 
 @media screen and (max-width:500px) {
@@ -141,8 +162,6 @@ html {
         padding: 0px;
     }
     
-    
-
     #apparea-header {
         background-size: 130px;
         background-position: right 0px bottom 15px;

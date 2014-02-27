@@ -11,6 +11,7 @@ import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.SMSFactory;
 import com.thundashop.core.pagemanager.IPageManager;
 import com.thundashop.core.pagemanager.PageManager;
+import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Group;
@@ -145,9 +146,42 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         return text;
     }
 
+    private HashMap<String, Setting> getBookingSettings() throws ErrorException {
+        HashMap<String, Setting> settings = null;
+        
+        IPageManager pageManager = getManager(PageManager.class);
+        List<AppConfiguration> calendars  = pageManager.getApplicationsBasedOnApplicationSettingsId("6f3bc804-02a1-44b0-a17d-4277f0c6dee8");
+        List<AppConfiguration> bookings = pageManager.getApplicationsBasedOnApplicationSettingsId("74ea4e90-2d5a-4290-af0c-230a66e09c78");
+        
+        // TODO - remove this shit!
+        // There must be a better way, I guess you dont even 
+        // understand whats happening here. (hint, getting the correct booking app
+        for (AppConfiguration calendar : calendars) {
+            if (calendar.settings != null && calendar.settings.get("linkToBookingPage") != null) {
+                for (AppConfiguration config : bookings) {
+                    ArrayList<String> list = new ArrayList();
+                    list.add(config.id);
+                    Map<String, List<String>> pages = pageManager.getPagesForApplications(list);
+                    for (String appId : pages.keySet()) {
+                        List<String> pageIds = pages.get(appId);
+                        for (String pageId : pageIds) {
+                            if (pageId.equals(calendar.settings.get("linkToBookingPage").value)) {
+                                settings = config.settings;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return settings;
+    }
+    
     private void sendMailNotification(String password, Entry entry, User user, boolean waitingList) throws ErrorException {
         String sendmail = null;
-        HashMap<String, Setting> settings = getSettings("Booking");
+        
+        HashMap<String, Setting> settings = getBookingSettings();
+        
         if(settings != null && settings.get("sendmail") != null) {
             sendmail = settings.get("sendmail").value;
         }
@@ -197,7 +231,9 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
     private void sendSms(String password, Entry entry, User user, boolean waitingList) throws ErrorException {
         String sendsms = null;
-        HashMap<String, Setting> settings = getSettings("Booking");
+        
+        HashMap<String, Setting> settings = getBookingSettings();
+        
         if(settings != null && settings.get("sendsms") != null) {
             sendsms = settings.get("sendsms").value;
         }

@@ -66,7 +66,7 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
     }
     ?>
     <table id="bookingtable" allowadd="<? echo ($allowAdd == true) ? "true" : "false"; ?>">
-        <tr><td class="col1"><?php echo $this->__w("Name"); ?></td><td><input id="name" type='textfield'/></td></tr>
+        <tr><td class="col1"><?php echo $this->__w("Candidate name"); ?></td><td><input id="name" type='textfield'/></td></tr>
         <tr><td class="col1"><?php echo $this->__w("email", 'contact'); ?></td><td><input id="email" type='textfield'/></td></tr>
         <? if ($this->isInvoiceEmailActivated()) { ?>
             <tr><td class="col1"><?php echo $this->__w("Invoice email"); ?></td><td><input id="invoiceemail" type='textfield'/></td></tr>

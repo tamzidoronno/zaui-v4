@@ -332,7 +332,7 @@ class Calendar extends MarketingApplication implements Application {
         $this->getApi()->getCalendarManager()->confirmEntry($entryId);
     }
     
-    public function renderConfig() {
+    public function showSettings() {
         $this->includeFile('config');
     }
     
@@ -377,19 +377,9 @@ class Calendar extends MarketingApplication implements Application {
             return "";
         }
         
-        $bookingApps = $this->getApi()->getPageManager()->getApplicationsBasedOnApplicationSettingsId("74ea4e90-2d5a-4290-af0c-230a66e09c78");
+        $pageId = $this->getConfigurationSetting("linkToBookingPage");
         
-        if (count($bookingApps) > 0) {
-            $apps = array();
-            foreach ($bookingApps as $bookingApp) {
-                $apps[] = $bookingApp->id;
-                break;
-            }
-            $pages = $this->getApi()->getPageManager()->getPagesForApplications($apps);
-            return "?page=".$pages->{$bookingApp->id}[0]."&entry=".$entry->entryId;
-        }
-        
-        return "";
+        return "?page=".$pageId."&entry=".$entry->entryId;
     }
     
     public function getPageName($pageId) {

@@ -29,8 +29,18 @@ app.ImageDisplayer = {
         thundashop.common.showInformationBox(event, __f('Image Editor'));
     },
             
+    showImageDisplayer : function() {
+        if($(document).width() < 1000) {
+            return;
+        }
+        thundashop.common.showInformationBox();
+        var src = $(this).attr('src');
+        $('#informationbox').html('<br><center><img src="'+src+'" style="max-width:90%"><br><br>');
+    },
+            
     initEvents: function() {
         $(document).on('click', '.ImageDisplayer .showimageeditor', app.ImageDisplayer.showEditImage);
+        $(document).on('click', '.ImageDisplayer img', app.ImageDisplayer.showImageDisplayer);
     },
     
     addTextToImage: function(imageContainer, config) {

@@ -67,7 +67,7 @@
             $(".gs_pad_view").attr('src','/showApplicationImages.php?appNamespace='+ns+'&image=pad.png');
         });
         $(document).on('click','.select_theme_button', function() {
-            var appid = $('.theme_selection_selected').attr('theme');
+            var appid = $('.gs_tab_selected').attr('theme');
             var event = thundashop.Ajax.createEvent('','addApplicationDirect',$(this),{
                 "appId" : appid
             });

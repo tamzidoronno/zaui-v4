@@ -201,7 +201,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         order.createdDate = new Date();
         order.cart = cart.clone();
 
-        if (order.shipping == null || order.cart == null || order.cart.address == null) {
+        if (order.cart == null || order.cart.address == null) {
             throw new ErrorException(53);
         }
         

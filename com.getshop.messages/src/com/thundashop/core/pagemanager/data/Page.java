@@ -147,6 +147,7 @@ public class Page extends DataCommon implements Cloneable {
     //This is actually more a layout type... should be renamed to layouttype
     public int type;
     public String pageTag = "";
+    public String pageTagGroup = "";
     public int userLevel = 0;
     public String description = "";
     private HashMap<String, PageArea> pageAreas = new HashMap<String, PageArea>();

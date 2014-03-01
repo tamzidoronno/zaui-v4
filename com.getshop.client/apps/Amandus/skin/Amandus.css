@@ -116,8 +116,8 @@ body { font-family: 'Open Sans', 'HelveticaNeue', 'Helvetica Neue', 'Helvetica',
 
 .gs_product_row .applicationarea,.gs_product_row .gs_inner {min-height: 30px; }
 
-.frontpage_16 .gs_row.r4 .gs_inner { padding-bottom: 60px; padding-top: 60px;  }
-.frontpage_6 .gs_row.r4 .gs_inner { padding-top: 60px;  }
-.frontpage_7 .gs_row.r4 .gs_inner { padding-top: 60px;  }
-.frontpage_9 .gs_row.r4 .gs_inner { padding-top: 60px;  }
-.frontpage_13 .gs_row.r4 .gs_inner { padding-bottom: 60px; padding-top: 60px;   }
+.gs_frontpage_16 .gs_row.r4 .gs_inner { padding-bottom: 60px; padding-top: 60px;  }
+.gs_frontpage_6 .gs_row.r4 .gs_inner { padding-top: 60px;  }
+.gs_frontpage_7 .gs_row.r4 .gs_inner { padding-top: 60px;  }
+.gs_frontpage_9 .gs_row.r4 .gs_inner { padding-top: 60px;  }
+.gs_frontpage_13 .gs_row.r4 .gs_inner { padding-bottom: 60px; padding-top: 60px;   }

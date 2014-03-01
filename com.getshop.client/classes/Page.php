@@ -141,7 +141,7 @@ class Page extends FactoryBase {
     }
 
     private function loadSkeletonBody() {
-        $tagClass = $this->getPage()->backendPage->pageTag;
+        $tagClass = "gs_".$this->getPage()->backendPage->pageTag . " gs_" . $this->getPage()->backendPage->pageTagGroup;
         echo '<div class="skelholder skeleton'.$this->skeletonType. " " . $tagClass .'" theme="' . $this->getThemeApplicationSettingsId() . '" page="'.$this->getPage()->id.'">';
         echo '<div id="gs_customcss_page"><style>'.$this->backendPage->customCss.'</style></div>';
         if (!$this->backendPage->hideHeader && $this->skeletonType != 5 ) {

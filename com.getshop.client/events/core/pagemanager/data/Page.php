@@ -25,6 +25,9 @@ class core_pagemanager_data_Page extends core_common_DataCommon  {
 	public $pageTag;
 
 	/** @var String */
+	public $pageTagGroup;
+
+	/** @var String */
 	public $userLevel;
 
 	/** @var String */

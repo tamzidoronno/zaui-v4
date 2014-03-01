@@ -59,6 +59,15 @@ public class AddApplicationsToDatabase {
                 ApplicationSettings.Type.Theme, false);
         snicklesTheme.isPublic = true;
         apps.add(snicklesTheme);
+
+        ApplicationSettings pinboardtheme = createSettings(
+                "PinBoardTheme",
+                "e72c1c7d-4af8-41ca-bb1b-22d8468edf0a",
+                emtpy,
+                "",
+                ApplicationSettings.Type.Theme, false);
+        pinboardtheme.isPublic = true;
+        apps.add(pinboardtheme);
         
         ApplicationSettings pixeLateTheme1 = createSettings(
                 "PixelateTheme1",

@@ -37,6 +37,22 @@ public class APICalendarManager {
      }
 
      /**
+     * Adds a user to a page event
+     *
+     * @param userId
+     * @throws ErrorException
+     */
+     public void addUserToPageEvent(java.lang.String userId, java.lang.String bookingAppId)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("userId",new Gson().toJson(userId));
+          data.args.put("bookingAppId",new Gson().toJson(bookingAppId));
+          data.method = "addUserToPageEvent";
+          data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Apply a set of filters,
      * if this filters are applied, it will not return entries
      * that does not match the filter criteria.

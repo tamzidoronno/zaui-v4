@@ -23,19 +23,10 @@ class SiteBuilder extends ApplicationBase {
     }
 
     public function getText() {
-        $text = array();
-        $welcomeText = $this->__w("Welcome to my page");
-        $text['frontpage_0'][0] = '&nbsp;<div style="text-align: center;"><br><span style="font-size:22px;"><span style="font-size:24px;">'.$welcomeText.'</span></span><br><br>&nbsp;</div>';
-        $text['frontpage_1'][0] = '&nbsp;<div style="text-align: center;"><br><span style="font-size:22px;"><span style="font-size:24px;">My images speaks for itself</span></span><br><br>&nbsp;</div>';
-        $text['frontpage_2'][0] = '&nbsp;<div style="text-align: center;"><br><span style="font-size:22px;"><span style="font-size:24px;">Have a look at my videos</span></span><br><br>&nbsp;</div>';
-        for($i = 3; $i < 25; $i++) {
-            $text['frontpage_'.$i][0] = '&nbsp;<div style="text-align: center;"><br><span style="font-size:22px;"><span style="font-size:24px;">'.$welcomeText.'</span></span><br><br>&nbsp;</div>';
-        }
-        
+        $themeApp = $this->getFactory()->getApplicationPool()->getSelectedThemeApp();
+        $text = $themeApp->getText($this->page->pageTag,$this->textIndex , $this->page->pageTagGroup);
         $this->textIndex++;
-        if(isset($text[$this->page->pageTag][$this->textIndex])) {
-            return $text[$this->page->pageTag][$this->textIndex];
-        }
+        return $text;
     }
     
     public function addContactForm($where) {

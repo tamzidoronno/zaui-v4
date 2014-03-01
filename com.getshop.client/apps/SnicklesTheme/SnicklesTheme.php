@@ -35,8 +35,14 @@ class SnicklesTheme extends \ThemeApplication implements \Application {
         
         $res = array();
         $res[] = array(array($text,$image_slider),array($text,$text,$text),array($productlist_row));
+        $res[] = array(array($text,$image_slider),array($text,$text,$text),array($text,$text,$text));
         return $res;
     }
 
+//    public function getText($pageTag, $index, $pageTagGroup) {
+//        if ($index == 0 && $pageTagGroup == "frontpage") {
+//            return "YO YO YO";
+//        }
+//    }
 }
 ?>

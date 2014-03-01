@@ -120,7 +120,7 @@ app.Banner = {
     createEditor: function(me, silent) {
         var dom = $('<div/>');
         dom.css('width','676px');
-        dom.css('height','472px');
+        dom.css('height','460px');
         if (silent) {
             dom.hide();
         }

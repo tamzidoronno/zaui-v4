@@ -1,0 +1,152 @@
+/* 
+    Document   : SnicklesTheme.css
+    Created on : Feb 28, 2014, 7:11:57 PM
+    Author     : ktonder
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+body { font-family: 'Open Sans', 'HelveticaNeue', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif' !important; background-color: #eaeaea; }
+
+.gs_inner { max-width: 1200px; margin: auto; background-color:#FFF; background-color: inherit;}
+
+[page=home] .gs_row.gs_outer.r1,
+.header {
+    background-color: #082b4c;
+}
+
+[page=home] .gs_row.gs_outer.r1 .apparea_app_Banner .bannerview {
+    background-color: #c9c9c9;
+    padding-top: 20px;
+    border-radius: 10px;
+    background-image: url('{IMAGEFOLDER}/banner-top-frontpage.png');
+    background-repeat: no-repeat;
+    background-position: 25px 5px;
+}
+
+[page=home] .gs_row.gs_outer.r1 .apparea_app_Banner {
+    max-width: 512px;
+    margin-left: 200px;
+    background-image: url('{IMAGEFOLDER}/bannershadow.png');
+    background-position: bottom;
+    background-repeat: no-repeat;
+    padding-bottom: 10px;
+    height: 271px;
+    margin-top: 60px;
+}
+
+[page=home] .gs_row.gs_outer.r1 .Banner .bannerview {
+    margin-left: 10px;
+    margin-right: 10px;
+    border: solid 1px #082b4c;
+}
+
+.gs_margin_left {
+    padding-left: 10px;
+}
+.gs_margin_right {
+    padding-right: 10px;
+}
+
+.gs_row .gs_inner {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+[page=home] .gs_row.gs_outer.r1 .gs_inner {
+    background-image: url('{IMAGEFOLDER}/subheader.png');
+    height: 397px;
+    margin-bottom: 88px;
+    margin-top: 0px !important;
+}
+
+.header .gs_inner {
+    height: 145px;
+    background-image: url('{IMAGEFOLDER}/header.png')
+}
+
+.gs_outer.breadcrumb {
+    height: 68px;
+    background-image: url('{IMAGEFOLDER}/breaker.png')
+}
+
+[page=home] .gs_outer.breadcrumb {
+    position: absolute;
+    top: 540px;
+    z-index: 1;
+    width: 100%;
+}
+
+.gs_outer.breadcrumb .gs_inner a,
+.gs_outer.breadcrumb .gs_inner {
+    
+    font-size: 16px;
+    color: #FFF;
+    padding-top: 20px;
+}
+
+.gs_outer.footer {
+    margin-top: 10px;
+    background-image: url('{IMAGEFOLDER}/footer.png');
+    height: 412px;
+    color: #FFF;
+}
+
+.TopMenu {
+    right: 10px;
+    top: 60px;
+/*    border: solid 1px #05213b;*/
+    box-shadow: 0px 0px 8px #05213b;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 20px;
+    height: 50px;
+    background: linear-gradient(to bottom, #ffc867, #ab6d01);
+}
+
+.TopMenu li {
+    line-height: 28px;
+}
+
+.TopMenu .entry {
+    border-right: solid 1px #ffc867;
+    padding-right: 10px;
+    height: 30px;
+    margin-top: 10px;
+}
+
+.TopMenu .entry:last-child {
+    border-right: solid 0px;
+}
+
+
+.TopMenu a {
+    color: #FFF;
+    font-size: 14px;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-left: 10px;
+}
+
+.TopMenu a.selected {
+    background-color: #ee9e0d;
+    border-radius: 15px;
+    border-top: solid 2px #a66a34;
+    border-left: solid 2px #b07847;
+}
+
+.ProductLister .rowview .product img {
+    max-height: 200px;
+    max-width: 200px;
+}
+
+.ProductLister .rowview .product .price {
+    font-size: 22px;
+    color: #082b4c;
+}
+
+.ProductLister .rowview .product {
+    width: 263px;
+    height: 300px;
+    border: solid 1px #999;    
+}

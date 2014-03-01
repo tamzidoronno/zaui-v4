@@ -122,7 +122,7 @@ getshop.BigStock.prototype = {
         this.outerDom.append(searchContainer);
         
         var header = $('<div/>');
-        header.addClass('header');
+        header.addClass('bigstock_header');
         header.html(__f("Images for everyone."));
         searchContainer.append(header);
         

@@ -36,13 +36,15 @@ if(isset($_POST['event']) && $_POST['event'] == "renameEntry") {
                 }
 
                 $selected = "";
+                $selected_entry = "";
                 if ($pageId == $entry->pageId) {
                     $selected = "selected";
+                    $selected_entry  = "selected_entry";
                 }
 
                 $menu->setCurrentMenuEntry($entry);
                 /* @var $entry core_listmanager_data_Entry */
-                ?><li class="configable entry <? echo $first; echo $last; ?>" interrupt="false" menuid="<? echo  $entry->id; ?>">
+                ?><li class="configable entry <? echo $first; echo $last; echo " ".$selected_entry; ?>" interrupt="false" menuid="<? echo  $entry->id; ?>">
                     <?php
                     if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() && $isTop) {
                         $container->includeFile("LeftMenuTemplateMenuConfiguration", "LeftMenu");

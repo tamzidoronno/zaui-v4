@@ -121,7 +121,7 @@ public class AppManager extends ManagerBase implements IAppManager {
                 return applicationPool.get(appId);
             }
         }
-        System.out.println("id not found :" + id);
+
         if(id.equals("newapp")) {
             return null;
         }

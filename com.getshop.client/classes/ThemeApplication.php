@@ -10,7 +10,7 @@
  *
  * @author ktonder
  */
-class ThemeApplication extends ApplicationBase {
+class ThemeApplication extends PredefinedPagesConfig {
     private $LOGO_WIDTH = 900;
     private $LOGO_HEIGHT = 168;
     private $CATEGORY_IMAGE_WIDTH=140;

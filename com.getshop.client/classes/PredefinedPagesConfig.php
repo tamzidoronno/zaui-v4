@@ -1,6 +1,6 @@
 <?php
 
-class PredefinedPagesConfig {
+class PredefinedPagesConfig extends ApplicationBase {
     public static $IMAGE = "image";
     public static $IMAGESLIDER = "imageslider";
     public static $MAP = "map";

@@ -23,7 +23,12 @@ class PageBuilder {
    }
 
     function getPredefinedPage($type) {
-        $res = new PredefinedPagesConfig();
+        $res = $this->factory->getApplicationPool()->getSelectedThemeApp();
+        
+        if (!$res) {
+            $res = new PredefinedPagesConfig();
+        }
+        
         switch($type) {
             case "standard": 
                return $res->getStandardPages();

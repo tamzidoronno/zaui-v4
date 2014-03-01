@@ -15,6 +15,10 @@ body { font-family: 'Open Sans', 'HelveticaNeue', 'Helvetica Neue', 'Helvetica',
     background-color: #082b4c;
 }
 
+.gs_frontpage .gs_row.r1 .c1 {
+    width: 33% !important; 
+}
+
 [page=home] .gs_row.gs_outer.r1 .apparea_app_Banner .bannerview {
     background-color: #c9c9c9;
     padding-top: 20px;

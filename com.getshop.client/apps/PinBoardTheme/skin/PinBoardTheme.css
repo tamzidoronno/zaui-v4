@@ -1,0 +1,32 @@
+body { background-color: #4b6a6c; background-image: url("{IMAGEFOLDER}/bgtexture.png"); font-family: 'Esteban', serif; }
+.gs_table_areas { table-layout: fixed; }
+.skelholder { background-image: url("{IMAGEFOLDER}/light.png"); background-repeat:no-repeat; background-position: top center; }
+.gs_inner { width: 1000px; margin: auto; }
+.header { margin-bottom: 25px; border-bottom: solid 5px #5c4e4e;background-image: url("{IMAGEFOLDER}/headerbg.png"); }
+.header .applicationarea { min-height: 50px; height: 80px; }
+.mainarea .applicationarea { background-image: url("{IMAGEFOLDER}/areabg.png"); margin: 10px; padding: 5px; background-color:#FFF;box-shadow: 2px 2px 5px #3f3f3f; border-top: solid 1px #464646; border-left: solid 1px #464646; }
+.apparea_app_Banner,
+.apparea_app_ImageDisplayer, 
+.apparea_app_YouTube, 
+.apparea_app_GoogleMaps { padding: 0px !important; }
+.breadcrumb { margin-bottom: 25px; }
+.breadcrumb,.breadcrumb a { color:#f1f1f1;}
+.breadcrumb .navigation { margin: 5px; }
+.breadcrumb .breadcrumb-inner .accounting { right: 5px; }
+.TopMenu { position:absolute; right: 0px; top: 25px; }
+.TopMenu .entry {  padding: 5px; border-radius: 10px; font-size: 14px;padding-left: 10px; padding-right: 10px; margin-right: 10px; }
+.TopMenu .subentries .entry { border-radius: 0px; }
+.TopMenu .selected_entry { background-color: #424242;}
+.TopMenu a { font-style: italic; color:#c9c9c9;  text-shadow: 2px 2px #2e2e2e;}
+.TopMenu .subentries a { text-shadow: 0px 0px #2e2e2e; color: #000; }
+.TopMenu a.selected { color:#FFF; }
+.TopMenu #add_new_top { font-size: 16px; color: #c9c9c9; }
+.Footer { color:#f1f1f1; margin-top: 50px; }
+.Login a { color:#c9c9c9;text-shadow: 2px 2px #2e2e2e; }
+.Login .entry { color:#c9c9c9;text-shadow: 2px 2px #2e2e2e; }
+.Logo { top: 0px; }
+.header .Login .inner .entry { min-width: 0px; }
+.mainarea .applicationarea .gs_apparea_extra { z-index: 2;width: 100%; position:absolute; top: -15px; left: -15px; width: 20px; height: 20px; background-image: url("{IMAGEFOLDER}/pin.png"); background-repeat: no-repeat; background-position:center; }
+.Contact td, .Contact .horizontal .text { color:#000000 !important; }
+.ProductLister .product { background-color:#c6c8a9; }
+.LeftMenu .menuName { border-bottom: solid 1px #bbb;padding: 10px; }

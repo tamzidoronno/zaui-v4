@@ -122,8 +122,8 @@ class CreateStore extends \SystemApplication implements \Application {
     }
 
     private function startNewSession() {
-        $session = preg_replace('/[^A-Za-z0-9\-]/', '', $_POST['data']['shopname']);
-        @session_id(session_id() . $session);
+        $session = preg_replace('/[^A-Za-z0-9\-]/', '', $_POST['data']['name']);
+        @session_id(session_id() . $session . "_" . rand(0,100000000));
         @session_start();
         $this->getFactory()->updateTransportSession(session_id());
     }

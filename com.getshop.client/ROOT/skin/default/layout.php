@@ -8,7 +8,6 @@ body {
 body,table,td,th  {
     margin: 0px;
     font-size: 13px;
-    font:11px/1.55 Tahoma, Arial, Helvetica, sans-serif; 
 }
 
 body {

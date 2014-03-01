@@ -106,6 +106,8 @@ class StyleSheet {
                 }
             }
         }
+        
+        $themeApp;
     }
 
     function includeApplications() {

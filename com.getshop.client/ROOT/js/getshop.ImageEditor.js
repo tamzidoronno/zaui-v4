@@ -571,7 +571,7 @@ getshop.ImageEditor.prototype = {
         this.config.Image.onload = $.proxy(this.onImageLoaded, this);
         this.config.Image.src = "displayImage.php?id=" + this.config.imageId;
     },
-    setBoundaries: function() {
+    setBoundaries: function() {        
         this.outerDom.width(this.attachToDom.width());
         this.outerDom.height(this.attachToDom.height());
 

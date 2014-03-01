@@ -1,6 +1,7 @@
 ln -s ../apps/Account ns_6c245631_effb_4fe2_abf7_f44c57cb6c5b;
 ln -s ../apps/Airgram ns_ee96fe89_e09d_4f7b_921a_3272462e9b7e;
 ln -s ../apps/Amandus ns_902cccc1_c315_4a93_8005_d080d414ecee;
+ln -s ../apps/SnicklesTheme ns_8b060db0_a0a3_11e3_a5e2_0800200c9a66;
 ln -s ../apps/ApplicationDisplayer ns_c841f5a5_ecd5_4007_b9da_2c7538c07212;
 ln -s ../apps/AutoAkademietTheme ns_b9cc5940_edef_11e2_91e2_0800200c9a66;
 ln -s ../apps/Banner ns_d612904c_8e44_4ec0_abf9_c03b62159ce4;
@@ -76,6 +77,7 @@ ln -s ../apps/TheRedTheme ns_d147f6a0_8f31_11e2_9e96_0800200c9a66;
 ln -s ../apps/TopMenu ns_1051b4cf_6e9f_475d_aa12_fc83a89d2fd4;
 ln -s ../apps/Translation ns_ee1f3649_cfd8_41d5_aa5b_682216f376b6;
 ln -s ../apps/Users ns_ba6f5e74_87c7_4825_9606_f2d3c93d292f;
+ln -s ../apps/PixelateTheme1 ns_8f594bb0_a126_11e3_a5e2_0800200c9a66;
 ln -s ../apps/WebShopList ns_e9864616_96d6_485f_8cb0_e17cdffbcfec;
 ln -s ../apps/WhiteAndBlueTheme ns_a84cbbb0_8f21_11e2_9e96_0800200c9a66;
 ln -s ../apps/WideScreenTheme ns_c2da56a0_8f2f_11e2_9e96_0800200c9a66;

@@ -51,60 +51,24 @@ public class AddApplicationsToDatabase {
     private List<ApplicationSettings> addApplications() {
         List<ApplicationSettings> apps = new ArrayList();
 
-        ApplicationSettings jobifyTheme = createSettings(
-                "Product",
-                "06f9d235-9dd3-4971-9b91-88231ae0436b",
-                emtpy,
-                "",
-                ApplicationSettings.Type.Webshop, false);
-        jobifyTheme.isPublic = true;
-        apps.add(jobifyTheme);
-        
-        ApplicationSettings productLister = createSettings(
-                "ProductLister",
-                "962ce2bb-1684-41e4-8896-54b5d24392bf",
-                emtpy,
-                "",
-                ApplicationSettings.Type.Webshop, false);
-        productLister.isPublic = true;
-        apps.add(productLister);
-        
-        ApplicationSettings calendarEventViewer = createSettings(
-                "CalendarEventViewer",
-                "ab5378d0-9d6c-11e3-a5e2-0800200c9a66",
-                emtpy,
-                "",
-                ApplicationSettings.Type.Webshop, false);
-        calendarEventViewer.isPublic = true;
-        apps.add(calendarEventViewer);
-        
-        ApplicationSettings widget = createSettings(
-                "ProductWidget",
-                "b741283d-920d-460b-8c08-fad5ef4294cb",
-                emtpy,
-                "",
-                ApplicationSettings.Type.Webshop, false);
-        widget.isPublic = true;
-        apps.add(widget);
-        
-        ApplicationSettings gss = createSettings(
-                "GetShopStarter",
-                "1d8e7f34-14ee-4018-a3f4-190500dce026",
-                emtpy,
-                "",
-                ApplicationSettings.Type.Webshop, false);
-        gss.isPublic = true;
-        apps.add(gss);
-
-        ApplicationSettings addapp = createSettings(
-                "FloralTheme",
-                "e30b4f2c-f1f4-4c33-9222-d5d863829ce4",
+        ApplicationSettings snicklesTheme = createSettings(
+                "SnicklesTheme",
+                "8b060db0-a0a3-11e3-a5e2-0800200c9a66",
                 emtpy,
                 "",
                 ApplicationSettings.Type.Theme, false);
-        addapp.isPublic = true;
-        apps.add(addapp);
-
+        snicklesTheme.isPublic = true;
+        apps.add(snicklesTheme);
+        
+        ApplicationSettings pixeLateTheme1 = createSettings(
+                "PixelateTheme1",
+                "8f594bb0-a126-11e3-a5e2-0800200c9a66",
+                emtpy,
+                "",
+                ApplicationSettings.Type.Theme, false);
+        pixeLateTheme1.isPublic = false;
+        apps.add(pixeLateTheme1);
+       
         return apps;
     }
 

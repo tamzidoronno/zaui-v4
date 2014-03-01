@@ -39,10 +39,13 @@ class SnicklesTheme extends \ThemeApplication implements \Application {
         return $res;
     }
 
-//    public function getText($pageTag, $index, $pageTagGroup) {
-//        if ($index == 0 && $pageTagGroup == "frontpage") {
-//            return "YO YO YO";
-//        }
-//    }
+    public function getText($pageTag, $index, $pageTagGroup) {
+        if ($index == 0 && $pageTagGroup == "frontpage") {
+            $changeInstruction = $this->__f("To change the text, hover the mouse over the text edior and a gear will appear. Happy hunting!<br><br>");
+            return '<div class="content" style="min-height: 40px; position: relative;" id="85a6f8a2-531f-3519-7236-274ae849fede" haspdf="0" contenteditable="false"><span style="font-size:18px;"><span style="color:#FFFFFF;"><strong>'.$changeInstruction.'</strong></span></span><br>&nbsp;<div style="margin-left: 40px;"><span style="font-size:16px;"><span style="color:#FFFFFF;"><span style="font-family: \'Open Sans\', HelveticaNeue, \'Helvetica Neue\', Helvetica, Arial, sans-serif;">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam<br><br><span style="font-size:14px;">Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</span></span></span></span></div></div>';
+        }
+        
+        return parent::getText($pageTag, $index, $pageTagGroup);
+    }
 }
 ?>

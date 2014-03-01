@@ -183,6 +183,7 @@
 .no_page_layout .click { font-weight: bold; color: #1c427b; cursor: pointer; }
 .gs_showPageLayoutSelection .content_pages .options i { width: 15px; }
 .gs_showPageLayoutSelection .content_pages .category_selection { width: 150px;display:inline-block;float:left;border-right:0px; padding-top: 20px; padding-bottom: 10px;}
+.gs_showPageLayoutSelection .content_pages .category_selection .option_entry i { margin-right: 5px; }
 .gs_showPageLayoutSelection .content_pages .category_selection .option_entry {
     -webkit-transition: background 0.5s linear;
     -moz-transition: background 0.5s linear;

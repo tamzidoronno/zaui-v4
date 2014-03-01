@@ -1,7 +1,9 @@
 <?
 /* @var $factory Factory */
 $factory = $this->getFactory();
-$pb = $factory->getPage()->loadPageBuilder();
+/* @var $page Page */
+$page = $factory->getPage();
+$pb = $page->loadPageBuilder();
 $layoutupdate = false;
 if (isset($_POST['data']['updatelayout'])) {
     $pb->activateBuildLayoutMode();
@@ -52,10 +54,12 @@ $tabs['layout_builder']['icon'] = "fa-wrench";
 $tabs['layout_builder']['text'] =  $this->__f("Build your layout");
 
 $tabActive = "content_pages";
+$group = "";
 if($mode != "new") {
 //    unset($tabs['content_pages']);
-    $tabActive = "empty_pages";
+//    $tabActive = "empty_pages";
     $tabs['empty_pages']['text'] = $this->__f("Page layout");
+    $group = "gs_".$page->backendPage->pageTagGroup;
 }
 
 if(isset($_POST['data']['updatelayout'])) {
@@ -83,7 +87,7 @@ if(isset($_POST['data']['target'])) {
 
 ?>
 
-<div class="skeletondisplayer">
+<div class="skeletondisplayer <? echo $group; ?>">
 
     <div class="layoutpreviewselection app">
         <input type="hidden" value="<? echo $type; ?>" id="gs_newpage_type">

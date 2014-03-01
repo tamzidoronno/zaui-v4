@@ -959,7 +959,7 @@ class PageBuilder {
      */
     public function printPreviewRow($row, $index) {
         $rowString = "";
-        $rowString .= "<li class='outer-row-container' rowid='" . $row->rowId . "'>";
+        $rowString .= "<li class='outer-row-container' rowid='" . $row->rowId . "' index='$index'>";
         if ($this->includePreviewText) {
             $rowString .= '<i class="fa fa-arrows-v"></i>';
             $rowString .= "<span title='" . $this->factory->__f("Row options") . "' class='fa fa-cog row_option' index='$index' cells='" . $row->numberOfCells . "'></span>";

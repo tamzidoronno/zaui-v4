@@ -36,6 +36,8 @@ class SnicklesTheme extends \ThemeApplication implements \Application {
         $res = array();
         $res[] = array(array($text,$image_slider),array($text,$text,$text),array($productlist_row));
         $res[] = array(array($text,$image_slider),array($text,$text,$text),array($text,$text,$text));
+        $res[] = array(array($text,$image_slider),array($text,$image,$text),array($image,$text,$image));
+        $res[] = array(array($text,$image_slider),array($text,$image,$text),array($image,$text,$image),array($productlist_row));
         return $res;
     }
 

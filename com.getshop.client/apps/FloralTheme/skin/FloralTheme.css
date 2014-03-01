@@ -14,7 +14,6 @@ h1 { display:inline-block; }
 .gs_last_row .gs_inner { box-shadow: 3px 7px 10px 0px #ccc;  padding-bottom: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; }
 .footer .gs_inner { margin-top: 50px; }
 body { background-image: url("{IMAGEFOLDER}/headerbg.png"); background-position: top center; background-repeat: no-repeat; }
-
 .ProductLister .product { background-color:#EFEFEF; }
 .ProductLister .rowview .product { width: 208px; }
 
@@ -42,6 +41,7 @@ body { background-image: url("{IMAGEFOLDER}/headerbg.png"); background-position:
 }
 
 .TopMenu .subentries { background-color: #54472a;border: solid 1px #5c5c4c; color:#ece8d7; }
+.TopMenu .fa-plus-square { font-size: 16px; margin-left: 10px; margin-right: 10px; }
 
 
 .frontpage_16 .gs_row.r4 .gs_inner { padding-bottom: 60px; padding-top: 60px;  }

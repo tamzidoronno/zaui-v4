@@ -28,7 +28,8 @@ body { background-color: #4b6a6c; background-image: url("{IMAGEFOLDER}/bgtexture
 .header .Login .inner .entry { min-width: 0px; }
 .mainarea .applicationarea .gs_apparea_extra { z-index: 2;width: 100%; position:absolute; top: -15px; left: -15px; width: 20px; height: 20px; background-image: url("{IMAGEFOLDER}/pin.png"); background-repeat: no-repeat; background-position:center; }
 .Contact td, .Contact .horizontal .text { color:#000000 !important; }
-.ProductLister .product { background-color:#c6c8a9; }
+.ProductLister .rowview .product { background-color:#c6c8a9; }
+.ProductLister .listview.boxed .product .product_inner { background-color:#c6c8a9; padding-top: 10px; }
 .LeftMenu .menuName { border-bottom: solid 1px #bbb;padding: 10px; }
 #add_top_menu_entry { border: solid 1px #bbb; width: 80px; padding: 5px;  }
 .navigation span.breadcrumbentry_prefix { display:none; }

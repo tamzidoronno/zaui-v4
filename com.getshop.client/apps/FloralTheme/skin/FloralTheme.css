@@ -1,4 +1,6 @@
-body { background-color: #ece9df; }
+body { background-color: #ece9df; 
+font-family: 'Allura', cursive;
+}
 h1 { display:inline-block; }
 
 .gs_outer { margin: auto; width: 100%; }
@@ -19,7 +21,7 @@ body { background-image: url("{IMAGEFOLDER}/headerbg.png"); background-position:
     background-position:left, right;
     background-repeat:no-repeat; padding-left: 20px; padding-right:26px; height: 112px; position:absolute; top:20px; }
 .TopMenu .breadcrumb-menu { color: #ece8d7; margin: 30px;  background-image: url("{IMAGEFOLDER}/topmenu_menu.png");background-color:#54472a; border: solid 1px #5c5c4c; }
-.TopMenu .breadcrumb-menu a { color: #ece8d7;font-style:italic; padding: 10px; padding-right: 20px; padding-left: 20px; }
+.TopMenu .breadcrumb-menu a { font-size: 16px; color: #ece8d7;font-style:italic; padding: 10px; padding-right: 20px; padding-left: 20px; }
 .TopMenu .breadcrumb-menu a.selected { color: #c19942; }
 .TopMenu .breadcrumb-menu li { border-right: solid 1px #5c5c4c; }
 .breadcrumb .breadcrumb-inner .breadcrumbentry { display:none; }
@@ -27,6 +29,8 @@ body { background-image: url("{IMAGEFOLDER}/headerbg.png"); background-position:
 .footer { background-color: #534629; color:#ece8d7; border-bottom: solid 40px #3a311d; padding-top: 10px; margin-top: 80px; }
 .header .gs_inner .applicationarea { height: 188px; }
 .gs_table_areas { table-layout: fixed; }
+
+.ContentManager { font-size: 18px; }
 
 .LeftMenu .menuName {
     padding: 10px;

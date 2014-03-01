@@ -69,8 +69,8 @@ class ContentManager extends \WebshopApplication implements \Application {
         //Fix to display images that has no http url attach to it.
         $content = str_replace("src=\"www", "src=\"http://www", $this->content);
         if(!$content) {
-            $content = "<div style='font-size: 14px;'>" . $this->__f("Text area") . "<br>";
-            $content .= "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </div>";
+            $content = $this->__f("Text area") . "<br>";
+            $content .= "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
         }
         return $content;
     }

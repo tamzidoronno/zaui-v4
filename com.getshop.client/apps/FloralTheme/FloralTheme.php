@@ -27,8 +27,10 @@ class FloralTheme extends \ThemeApplication implements \Application {
         return "FloralTheme";
     } 
     
+    
+    
     public function addScripts() {
-        
+        echo "<link href='http://fonts.googleapis.com/css?family=Allura' rel='stylesheet' type='text/css'>";
     }    
 
     public function postProcess() {

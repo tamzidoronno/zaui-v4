@@ -154,3 +154,11 @@ body { font-family: 'Open Sans', 'HelveticaNeue', 'Helvetica Neue', 'Helvetica',
     height: 300px;
     border: solid 1px #999;    
 }
+
+#informationbox .skeletondisplayer.gs_frontpage .sortable_layout_rows .outer-row-container[index="0"] .row_option { 
+        display:none; 
+}
+#informationbox .skeletondisplayer.gs_frontpage .sortable_layout_rows .outer-row-container[index="0"] .fa-arrows-v { 
+        display:none; 
+}
+

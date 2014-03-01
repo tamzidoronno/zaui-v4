@@ -24,8 +24,13 @@ class SiteBuilder extends ApplicationBase {
 
     public function getText() {
         $themeApp = $this->getFactory()->getApplicationPool()->getSelectedThemeApp();
-        $text = $themeApp->getText($this->page->pageTag,$this->textIndex , $this->page->pageTagGroup);
+        
+        if (!$themeApp) {
+            return null;
+        }
+        
         $this->textIndex++;
+        $text = $themeApp->getText($this->page->pageTag,$this->textIndex , $this->page->pageTagGroup);
         return $text;
     }
     

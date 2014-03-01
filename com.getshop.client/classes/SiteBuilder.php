@@ -183,10 +183,13 @@ class SiteBuilder extends ApplicationBase {
     }
 
     public function addBannerSlider($area, $cell, $type) {
-        $appconf = $this->api->getPageManager()->addApplicationToPage($this->page->id, "d612904c-8e44-4ec0-abf9-c03b62159ce4", $area);
-        $this->getApi()->getBannerManager()->addImage($appconf->id, "7cfb35c2-f43e-45fa-9c61-3f6d67b5c8f2");
-        $this->getApi()->getBannerManager()->addImage($appconf->id, "7007e885-e19f-4d42-98a5-84f3b1196f87");
-
+        $themeApp = $this->getFactory()->getApplicationPool()->getSelectedThemeApp();
+        
+        if (!$themeApp) {
+            return null;
+        }
+        
+        return $themeApp->addBannerSlider($this->page->pageTag, $this->textIndex , $this->page->pageTagGroup, $this->page->id, $area);
     }
 
     public function getRowImage() {

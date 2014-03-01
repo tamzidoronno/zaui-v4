@@ -29,7 +29,7 @@
         $addresses = $newAddr;
         $linkArray = array();
         $addresses = array_reverse($addresses);
-        echo "<span class='breadcrumbentry'>" . $this->__w("You are here:") . "</span>";
+        echo "<span class='breadcrumbentry breadcrumbentry_prefix'>" . $this->__w("You are here:") . "</span>";
         $i = 0;
         foreach ($addresses as $address => $name) {
             $i++;

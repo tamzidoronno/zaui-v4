@@ -30,3 +30,5 @@ body { background-color: #4b6a6c; background-image: url("{IMAGEFOLDER}/bgtexture
 .Contact td, .Contact .horizontal .text { color:#000000 !important; }
 .ProductLister .product { background-color:#c6c8a9; }
 .LeftMenu .menuName { border-bottom: solid 1px #bbb;padding: 10px; }
+#add_top_menu_entry { border: solid 1px #bbb; width: 80px; padding: 5px;  }
+.navigation span.breadcrumbentry_prefix { display:none; }

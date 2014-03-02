@@ -797,7 +797,8 @@ class PageBuilder {
      * @return \core_pagemanager_data_PageLayout
      */
     public function buildPredefinedPage($config) {
-        $layout = $this->createLayout(0, 0);
+        
+        $layout = $this->page->layout;
         $layout->rows = array();
         $layout->sortedRows = array();
         foreach($config as $row) {

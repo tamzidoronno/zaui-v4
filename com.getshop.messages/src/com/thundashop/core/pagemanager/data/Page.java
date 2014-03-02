@@ -100,9 +100,21 @@ public class Page extends DataCommon implements Cloneable {
     public void deletePageAreas() {
         PageArea footer = pageAreas.get("footer");
         PageArea header = pageAreas.get("header");
+        
+        HashMap<String, PageArea> keep = new HashMap();
+        for(String key : pageAreas.keySet()) {
+            if(key.contains("left_") || key.contains("right_")) {
+                keep.put(key, pageAreas.get(key));
+            }
+        }
+        
         pageAreas = new HashMap();
         pageAreas.put("footer", footer);
         pageAreas.put("header", header);
+        
+        for(String key : keep.keySet()) {
+            pageAreas.put(key, keep.get(key));
+        }
     }
 
     public List<String> getApplicationIds() {

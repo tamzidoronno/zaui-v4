@@ -40,7 +40,7 @@ app.ImageDisplayer = {
             
     initEvents: function() {
         $(document).on('click', '.ImageDisplayer .showimageeditor', app.ImageDisplayer.showEditImage);
-        $(document).on('click', '.ImageDisplayer img', app.ImageDisplayer.showImageDisplayer);
+        $(document).on('click', '.ImageDisplayer .imagecontainer img', app.ImageDisplayer.showImageDisplayer);
     },
     
     addTextToImage: function(imageContainer, config) {

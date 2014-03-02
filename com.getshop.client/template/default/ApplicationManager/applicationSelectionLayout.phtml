@@ -5,6 +5,7 @@ $factory = $this->getFactory();
 $page = $factory->getPage();
 $pb = $page->loadPageBuilder();
 $layoutupdate = false;
+$pagetype = $page->backendPage->pageType;
 if (isset($_POST['data']['updatelayout'])) {
     $pb->activateBuildLayoutMode();
     $layoutupdate = true;
@@ -60,6 +61,12 @@ if($mode != "new") {
 //    $tabActive = "empty_pages";
     $tabs['empty_pages']['text'] = $this->__f("Page layout");
     $group = "gs_".$page->backendPage->pageTagGroup;
+}
+
+if($pagetype == 2) {
+    $prod = $leftmenu["product"];
+    $leftmenu = array();
+    $leftmenu['product'] = $prod;
 }
 
 if(isset($_POST['data']['updatelayout'])) {

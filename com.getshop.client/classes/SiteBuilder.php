@@ -49,17 +49,17 @@ class SiteBuilder extends ApplicationBase {
                 switch($this->imageCount) {
                     case 0:
                     case 4:
-                        $imageId = "5f6dbee1-adad-42a1-9333-82fd9ef1a13f";
+                        $imageId = "cf3a0036-7dc3-4860-9bff-e240daa80960";
                         break;
                     case 1:
-                        $imageId = "57f53e07-80db-4165-96aa-de15ad01a1f4";
+                        $imageId = "ad582f3f-a82b-46a5-9249-e45a9a1e57fb";
                         break;
                     case 5:
                     case 2:
-                        $imageId = "4eb3a16a-31d7-4284-b0f0-9c33e04a60cf";
+                        $imageId = "c517e0ce-b8ef-4e97-ac62-cee1a2a193e3";
                         break;
                     case 3:
-                        $imageId = "4c085721-bd13-4692-9438-18146b80174d";
+                        $imageId = "aa614a2e-8668-4a06-8cea-8113851e08b6";
                         break;
                     $this->rowImageCount++;
                 }
@@ -201,10 +201,10 @@ class SiteBuilder extends ApplicationBase {
         $this->rowImageCount++;
         switch($this->rowImageCount) {
             case 0:
-                return "7cfb35c2-f43e-45fa-9c61-3f6d67b5c8f2";
+                return "4dfd5fb0-6c0f-4342-bbb2-a1a0ccd03dbd";
             case 1:
             default:
-                return "7007e885-e19f-4d42-98a5-84f3b1196f87";
+                return "87a62af8-372c-4e94-8d94-9a8ab61af278";
         }
     }
 

@@ -85,8 +85,8 @@ class SnicklesTheme extends \ThemeApplication implements \Application {
     public function addBannerSlider($pageTag, $index, $pageTagGroup, $pageId, $area) {
         if ($pageTagGroup == "frontpage") {
             $appconf = $this->getApi()->getPageManager()->addApplicationToPage($pageId, "d612904c-8e44-4ec0-abf9-c03b62159ce4", $area);
-            $this->getApi()->getBannerManager()->addImage($appconf->id, "7cfb35c2-f43e-45fa-9c61-3f6d67b5c8f2");
-            $this->getApi()->getBannerManager()->addImage($appconf->id, "7007e885-e19f-4d42-98a5-84f3b1196f87");
+            $this->getApi()->getBannerManager()->addImage($appconf->id, "4dfd5fb0-6c0f-4342-bbb2-a1a0ccd03dbd");
+            $this->getApi()->getBannerManager()->addImage($appconf->id, "87a62af8-372c-4e94-8d94-9a8ab61af278");
             $set = $this->getApi()->getBannerManager()->getSet($appconf->id);
             $set->height = 250;
             $this->getApi()->getBannerManager()->saveSet($set);

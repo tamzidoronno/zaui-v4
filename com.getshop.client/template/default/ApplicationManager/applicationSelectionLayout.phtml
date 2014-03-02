@@ -67,6 +67,8 @@ if($pagetype == 2) {
     $prod = $leftmenu["product"];
     $leftmenu = array();
     $leftmenu['product'] = $prod;
+} else {
+    unset($leftmenu['product']);
 }
 
 if(isset($_POST['data']['updatelayout'])) {

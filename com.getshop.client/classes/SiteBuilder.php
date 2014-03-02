@@ -109,17 +109,24 @@ class SiteBuilder extends ApplicationBase {
     }
 
     public function addProductData($where, $productid) {
-        $appconfig = $this->api->getPageManager()->addApplicationToPage($this->page->id, "b741283d-920d-460b-8c08-fad5ef4294cb", $where);
-        
-        $products = $this->getApi()->getProductManager()->getLatestProducts(4);
-        if(!$productid && sizeof($products) > ($this->productWidgetCount+1)) {
-            $productid = $products[$this->productWidgetCount]->id;
-            $this->productWidgetCount++;
+        if (!$productid) {
+            $themeApp = $this->getFactory()->getApplicationPool()->getSelectedThemeApp();
+
+            if (!$themeApp) {
+                return null;
+            }
+       
+            $productid = $themeApp->getProductId($this->page->pageTag, $this->page->pageTagGroup, $this->productWidgetCount);
         }
         
-        $app = new \ns_b741283d_920d_460b_8c08_fad5ef4294cb\ProductWidget();
-        $app->setConfiguration($appconfig);
-        $app->setConfigurationSetting("productid", $productid);
+        if ($productid) {
+            $appconfig = $this->getApi()->getPageManager()->addApplicationToPage($this->page->id, "b741283d-920d-460b-8c08-fad5ef4294cb", $where);
+
+            $app = new \ns_b741283d_920d_460b_8c08_fad5ef4294cb\ProductWidget();
+            $app->setConfiguration($appconfig);
+            $app->setConfigurationSetting("productid", $productid);
+            $this->productWidgetCount++;
+        }
     }
     
     public function addYouTube($movieid, $where, $type) {
@@ -178,8 +185,6 @@ class SiteBuilder extends ApplicationBase {
         if($viewtype == "boxview") {
             $app->updateColumnCount();
         }
-        
-        
     }
 
     public function addBannerSlider($area, $cell, $type) {
@@ -189,7 +194,7 @@ class SiteBuilder extends ApplicationBase {
             return null;
         }
         
-        return $themeApp->addBannerSlider($this->page->pageTag, $this->textIndex , $this->page->pageTagGroup, $this->page->id, $area);
+        return $themeApp->addBannerSlider($this->page->pageTag, $this->textIndex , $this->page->pageTagGroup, $this->page->id,$area);
     }
 
     public function getRowImage() {

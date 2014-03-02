@@ -105,7 +105,7 @@ class ThemeApplication extends PredefinedPagesConfig {
     public function getText($pageTag, $index, $pageTagGroup) {
         $welcome = '&nbsp;<div style="text-align: center;"><br><span style="font-size:22px;"><span style="font-size:24px;">'.$this->__w("Welcome to my page").'</span></span><br><br>&nbsp;</div>';
         
-        if ($index == 0) {
+        if ($index == 0 && $pageTagGroup == "frontpage") {
             if ($pageTag == "frontpage_0" || $pageTag == "frontpage_2") {
                 return $welcome;
             }
@@ -125,6 +125,17 @@ class ThemeApplication extends PredefinedPagesConfig {
         $this->getApi()->getBannerManager()->addImage($appconf->id, "7cfb35c2-f43e-45fa-9c61-3f6d67b5c8f2");
         $this->getApi()->getBannerManager()->addImage($appconf->id, "7007e885-e19f-4d42-98a5-84f3b1196f87");
     }
+    
+    public function getProductId($pageTag, $pageTagGroup, $index) {
+        $products = $this->getApi()->getProductManager()->getLatestProducts(4);
+        
+        if(sizeof($products) > ($index+1)) {
+            return $products[$index]->id;
+        }
+        
+        return null;
+    }
+   
 }
 
 ?>

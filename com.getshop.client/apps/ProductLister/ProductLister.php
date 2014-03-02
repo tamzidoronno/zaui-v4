@@ -176,7 +176,7 @@ class ProductLister extends \WebshopApplication implements \Application {
         $this->products = $this->getApi()->getProductManager()->getProducts($criteria);
         $this->attributeGroups = $this->getApi()->getProductManager()->getAttributeSummary()->attributeCount;
     }
-
+//
     public function render() {
         $this->includefile("productlist");
     }

@@ -77,23 +77,25 @@ if ($count > 1) {
                                 echo $product->name;
                             }
                             ?></div>
-                        <img src='displayImage.php?id=<? echo $img; ?>'>
-                        <span class='description'>
-                            <?
-                            $description = "";
-                            foreach($product->descriptions as $desc) {
-                                if($desc) {
-                                    $description = $desc;
+                        <div class="product_inner_content">
+                            <img src='displayImage.php?id=<? echo $img; ?>'>
+                            <span class='description'>
+                                <?
+                                $description = "";
+                                foreach($product->descriptions as $desc) {
+                                    if($desc) {
+                                        $description = $desc;
+                                    }
                                 }
-                            }
-                            if(!$description) {
-                                $description = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
-                           }
-                           echo strip_tags($description, "<br>");
-                            ?>
-                        </span>
-                        <div class="price"><? echo $this->getFactory()->getCurrencyName(); ?><? echo $product->price; ?></div>
-                        <div class='row_bottom'></div>
+                                if(!$description) {
+                                    $description = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+                               }
+                               echo strip_tags($description, "<br>");
+                                ?>
+                            </span>
+                            <div class="price"><? echo $this->getFactory()->getCurrencyName(); ?><? echo $product->price; ?></div>
+                            <div class='row_bottom'></div>
+                        </div>
                     </a>
                     <span  type='productlist' class="gs_button small buy_product"><? echo $this->__f("Buy"); ?></span>
                 </div>

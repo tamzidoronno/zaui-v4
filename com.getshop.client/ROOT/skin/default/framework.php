@@ -1531,7 +1531,7 @@ border-bottom: solid 1px #3a3a3a;
     .application_settings { display:none !important; }
     .Product .product_variation_selection { width: 100%; }
     .Product .buy { float:right; margin-top: 4px; }
-    
+    .Banner .bannerview .banner { height: auto !important; }
 }
 
 #informationboxmiddle .setting {

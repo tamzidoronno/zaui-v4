@@ -94,7 +94,7 @@ app.Product = {
             "pageSubType" : subtype,
             "target" : target
         });
-        thundashop.common.showInformationBox(event, __f('Create a new product'));
+        thundashop.common.showInformationBox(event, __f('How should the new product look like?'));
     },
     addToCart: function() {
         if($(this).attr('type') === "productlist") {

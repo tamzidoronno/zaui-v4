@@ -105,7 +105,7 @@ class ThemeApplication extends PredefinedPagesConfig {
     public function getText($pageTag, $index, $pageTagGroup) {
         $welcome = '&nbsp;<div style="text-align: center;"><br><span style="font-size:22px;"><span style="font-size:24px;">'.$this->__w("Welcome to my page").'</span></span><br><br>&nbsp;</div>';
         
-        if ($index == 0) {
+        if ($index == 0 && $pageTagGroup == "frontpage") {
             if ($pageTag == "frontpage_0" || $pageTag == "frontpage_2") {
                 return $welcome;
             }

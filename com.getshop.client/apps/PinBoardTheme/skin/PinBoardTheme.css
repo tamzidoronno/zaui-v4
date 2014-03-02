@@ -34,3 +34,4 @@ body { background-color: #4b6a6c; background-image: url("{IMAGEFOLDER}/bgtexture
 #add_top_menu_entry { border: solid 1px #bbb; width: 80px; padding: 5px;  }
 .navigation span.breadcrumbentry_prefix { display:none; }
 .Account .personal_information { width: 445px; }
+.header .TopMenu .edit { right: -10px; }

@@ -121,7 +121,7 @@ class ThemeApplication extends PredefinedPagesConfig {
     }
     
     public function addBannerSlider($pageTag, $index, $pageTagGroup, $pageId, $area) {
-        $appconf = $this->api->getPageManager()->addApplicationToPage($pageId, "d612904c-8e44-4ec0-abf9-c03b62159ce4", $area);
+        $appconf = $this->getApi()->getPageManager()->addApplicationToPage($pageId, "d612904c-8e44-4ec0-abf9-c03b62159ce4", $area);
         $this->getApi()->getBannerManager()->addImage($appconf->id, "4dfd5fb0-6c0f-4342-bbb2-a1a0ccd03dbd");
         $this->getApi()->getBannerManager()->addImage($appconf->id, "87a62af8-372c-4e94-8d94-9a8ab61af278");
     }

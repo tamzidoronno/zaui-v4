@@ -169,10 +169,7 @@ class ImageLoader {
 
     public function rotate($degrees) {
         if ($this->image_type === IMAGETYPE_PNG) {
-            imagesavealpha($this->image , true);
-            $pngTransparency = imagecolorallocatealpha($this->image , 0, 0, 0, 127);
-            imagefill($this->image , 0, 0, $pngTransparency);
-            $this->image= imagerotate($this->image, -1*$degrees, $pngTransparency);            
+            $this->image= imagerotate($this->image, -1*$degrees, 0);            
         } else {
             $pngTransparency = imagecolorallocatealpha($this->image , 0, 0, 0, 127);
             $this->image= imagerotate($this->image, -1*$degrees, $pngTransparency);

@@ -10,10 +10,6 @@ body { font-family: 'Open Sans', 'HelveticaNeue', 'Helvetica Neue', 'Helvetica',
 
 .gs_inner { max-width: 1160px; margin: auto; background-color:#FFF; background-color: inherit; }
 
-.gs_row {
-    margin-top: 50px;
-    margin-bottom: 50px;
-}
 
 @media screen and (min-width:800px) {
     .gs_frontpage .gs_row.footer,
@@ -73,19 +69,51 @@ body { font-family: 'Open Sans', 'HelveticaNeue', 'Helvetica Neue', 'Helvetica',
     }
 }
 
+@media screen and (min-width: 800px) and (max-width: 1160px) {
+    .gs_frontpage .gs_row.gs_outer.r1 .apparea_app_Banner {
+        margin-left: 0px;
+    }
+}
+
+.skelholder:not(.gs_product) .gs_row {
+    margin-bottom: 40px;
+}
+.gs_product .mainarea .gs_row.r1 .gs_inner {
+    padding-top: 20px;
+}
+.gs_product .mainarea .gs_row:last-child .gs_inner {
+    border-bottom: solid 1px #DDD;
+    padding-bottom: 20px;
+}
+.gs_product .mainarea .gs_row .gs_inner {
+    background-color: #DEDEDE;
+    border-right: solid 1px #DDD;
+    border-left: solid 1px #DDD;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.ProductWidget .product .price {
+    width: 100%;
+    text-align: center;
+    font-size: 20px;
+    background-color: rgba(255,255,255,0.5);
+    line-height: 30px;
+}
+
+.gs_product_row .gs_inner {
+    border-top: solid 1px #DDD;
+    padding-top: 20px;
+    background-color: #DADADA !important;
+    margin-bottom: 20px;
+}
+
 .gs_margin_left {
     padding-left: 10px;
 }
 .gs_margin_right {
     padding-right: 10px;
 }
-
-.gs_row .gs_inner {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
-
 
 .header .gs_inner {
     height: 145px;
@@ -94,7 +122,8 @@ body { font-family: 'Open Sans', 'HelveticaNeue', 'Helvetica Neue', 'Helvetica',
 
 .gs_outer.breadcrumb {
     height: 68px;
-    background-image: url('{IMAGEFOLDER}/breaker.png')
+    background-image: url('{IMAGEFOLDER}/breaker.png');
+    margin-bottom: 30px;
 }
 
 
@@ -115,26 +144,32 @@ body { font-family: 'Open Sans', 'HelveticaNeue', 'Helvetica Neue', 'Helvetica',
 }
 
 .LeftMenu {
-    background: linear-gradient(to bottom, #ffc867, #ab6d01);
-    border: solid 1px #888;
+    background-color: #DEDEDE;
+    border: solid 1px #DDD;
     padding-left: 10px;
     padding-right: 10px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-
-    border-radius: 20px;
-
 }
 
-.LeftMenu .menu_1,
-.LeftMenu .menu_1 .menuEntry {
-    background-color: inherit;
+.LeftMenu .menu_0 {
+    border-bottom: solid 1px #EEE;
+    height: 40px;
+    background-image: url('{IMAGEFOLDER}/dot-left.png');
+    background-position: 0px center;
+    background-repeat: no-repeat;
+    padding-left: 15px;
+}
+
+.LeftMenu .menu_0:last-child {
+    border-bottom: solid 0px #DDD;
+}
+
+
+.LeftMenu .menu_0 .menuName {
+    line-height: 40px;
 }
 
 .LeftMenu .menuName {
-    font-size: 14px;
-    color: #FFF;
-    line-height: 25px;
+    font-size: 14px;    
 }
 
 .TopMenu {
@@ -251,6 +286,20 @@ body { font-family: 'Open Sans', 'HelveticaNeue', 'Helvetica Neue', 'Helvetica',
     background-color: #333 !important;  
 }
 
+.ProductWidget .product .price {
+    position: absolute;
+    bottom: 50px;
+}
+.ProductWidget .product_widget_image {
+    min-height: 200px;
+    position: relative;
+}
+
+.ProductWidget .gs_button {
+    font-size: 14px;
+    line-height: 30px;
+}
+
 .ProductWidget img {
     max-height: 350px;
 }
@@ -262,6 +311,7 @@ body { font-family: 'Open Sans', 'HelveticaNeue', 'Helvetica Neue', 'Helvetica',
 }
 .ProductWidget {
     border: solid 1px #CCC;
+    min-height: 350px;
 }
 
 .ProductLister .price {
@@ -277,8 +327,6 @@ body { font-family: 'Open Sans', 'HelveticaNeue', 'Helvetica Neue', 'Helvetica',
 }
 .ProductLister .listview img {
     max-width: 240px;
-    margin-right: 20px;
-    margin-left: 20px;
 }
 
 .ProductLister .listview.c1 .product_inner_content {
@@ -288,7 +336,15 @@ body { font-family: 'Open Sans', 'HelveticaNeue', 'Helvetica Neue', 'Helvetica',
     border: solid 1px #CCC;
 }
 
+.gs_margin_bottom {
+    padding-bottom: 20px;
+}
+    
 @media screen and (max-width:800px) {
+    .gs_row.gs_outer.r1 {
+        margin-top: 50px;
+    }
+    
     .gs_frontpage .gs_row.gs_outer.r1 {
         background-color: #082b4c;
     }
@@ -407,4 +463,6 @@ body { font-family: 'Open Sans', 'HelveticaNeue', 'Helvetica Neue', 'Helvetica',
         padding-top: 50px;
         line-height: 50px !important;
     }
+    
+    
 }

@@ -14,10 +14,16 @@ thundashop.Administration = {
     },
     setVIS : function(password, toggle) {
         var event = thundashop.Ajax.createEvent("Administration", "setVIS", false, { "password": password, "toggle" : toggle });
-        thundashop.Ajax.post(event);
-    },
+        thundashop.Ajax.post(event); 
+   },
     setBigStockCreditAccount: function(password, credit) {
         var event = thundashop.Ajax.createEvent("Administration", "setBigStockCreditAccount", false, { "password": password, "credit" : credit });
+        thundashop.Ajax.post(event);
+    },
+    setThemeApplication: function(appId) {
+        var event = thundashop.Ajax.createEvent('','addApplicationDirect',$(this),{
+            "appId" : appId
+        });
         thundashop.Ajax.post(event);
     }
 }

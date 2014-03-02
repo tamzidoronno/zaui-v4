@@ -14,8 +14,10 @@ import com.thundashop.core.listmanager.data.EntryList;
 import com.thundashop.core.listmanager.data.ListType;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
+import com.thundashop.core.pagemanager.data.RowLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -130,6 +132,13 @@ public class ListManager extends ManagerBase implements IListManager {
         PageManager myPageManager = getManager(PageManager.class);
         if (entry.pageId == null && AppContext.storePool != null) {
             Page page = myPageManager.createPage(-1, parentPageId);
+            if(entry.pageType == 2) {
+                page.pageTag = "leftmenu";
+                page.pageTagGroup = "leftmenu";
+                page.layout.leftSideBar = 1;
+                myPageManager.savePage(page);
+            }
+            
             entry.pageId = page.id;
         }
 

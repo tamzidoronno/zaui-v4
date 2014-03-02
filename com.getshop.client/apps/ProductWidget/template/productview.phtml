@@ -30,7 +30,7 @@ if (!$product) {
                 }
                 ?>
             </div>
-            <img src='displayImage.php?id=<? echo $product->imagesAdded[0] ?>'>
+            <div class="product_widget_image"><img src='displayImage.php?id=<? echo $product->imagesAdded[0] ?>'></div>
             <div class='price'><? echo $currency; ?><span class='price_inner'><? echo $product->price; ?></span></div>
         </a>
         <div class='buy_product_row'>

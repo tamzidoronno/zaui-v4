@@ -35,7 +35,7 @@ app.ImageDisplayer = {
         }
         thundashop.common.showInformationBox();
         var src = $(this).attr('src');
-        $('#informationbox').html('<br><center><img src="'+src+'" style="max-width:90%"><br><br>');
+        $('#informationbox').html('<div style="background-color:#FFF;padding-top:10px;"><center><img src="'+src+'" style="max-width:90%"></div>');
     },
             
     initEvents: function() {

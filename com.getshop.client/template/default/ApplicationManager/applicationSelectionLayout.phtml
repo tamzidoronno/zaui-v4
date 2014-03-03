@@ -67,7 +67,7 @@ if($pagetype == 2) {
     $prod = $leftmenu["product"];
     $leftmenu = array();
     $leftmenu['product'] = $prod;
-} else {
+} else if($mode != "new") {
     unset($leftmenu['product']);
 }
 

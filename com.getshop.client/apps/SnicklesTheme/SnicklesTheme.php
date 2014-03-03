@@ -8,6 +8,12 @@ namespace ns_8b060db0_a0a3_11e3_a5e2_0800200c9a66;
 
 class SnicklesTheme extends \ThemeApplication implements \Application {
     
+    function __construct() {
+            // LOGO
+        $this->setVariable('ns_974beda7_eb6e_4474_b991_5dbc9d24db8e', 'height', 100);
+        $this->setVariable('ns_974beda7_eb6e_4474_b991_5dbc9d24db8e', 'width', 900);
+        
+    }
 
     public function getDescription() {
         return $this->__w("Nice modern theme. Could be used for clothing, skateboarding, snowboarding etc.");

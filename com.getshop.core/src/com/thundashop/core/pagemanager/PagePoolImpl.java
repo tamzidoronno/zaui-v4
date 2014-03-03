@@ -181,6 +181,12 @@ public class PagePoolImpl {
             applicationPool.stickApplication(topMenu.id, 1);
             applicationPool.stickApplication(footer.id, 1);
             applicationPool.stickApplication(search.id, 1);
+            
+            Entry homePage = new Entry();
+            homePage.name = "Home";
+            homePage.pageId = page.id;
+            ListManager listManager = pageManager.getManager(ListManager.class);
+            listManager.addEntry(topMenu.id, homePage, page.id);
         }
 
         if (Page.DefaultPages.Users.equals(page.id)) {

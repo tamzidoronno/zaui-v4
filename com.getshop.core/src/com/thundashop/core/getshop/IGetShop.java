@@ -4,6 +4,9 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.getshop.data.PartnerData;
+import com.thundashop.core.getshop.data.StoreCreatedData;
+import com.thundashop.core.getshop.data.WebPageData;
+import com.thundashop.core.usermanager.data.User;
 import java.util.List;
 
 /**
@@ -61,4 +64,10 @@ public interface IGetShop {
      */
     public String findAddressForApplication(String uuid) throws ErrorException;
     
+    
+    /**
+     * Create a new webpage
+     * @return 
+     */
+    public StoreCreatedData createWebPage(WebPageData data) throws ErrorException;
 }

@@ -1,23 +1,31 @@
 package com.thundashop.core.getshop;
 
+import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.Session;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.getshop.data.Partner;
 import com.thundashop.core.getshop.data.PartnerData;
+import com.thundashop.core.getshop.data.StoreCreatedData;
+import com.thundashop.core.getshop.data.WebPageData;
+import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.storemanager.StoreManager;
+import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -42,6 +50,12 @@ public class GetShop extends ManagerBase implements IGetShop {
     @Autowired
     public Database database;
 
+    @Autowired
+    public StorePool storePool;
+    
+    @Autowired
+    public FrameworkConfig frameworkConfig;
+    
     @Override
     public List<GetshopStore> getStores(String code) {
         if (!code.equals("laskdjf034j523lknjksdjnfklqnwgflkjangfasnlkjqnwtwpdsfguoq32905htkasjdfklsdfnaksldth342o5hiy4n4vnyesfjn")) {
@@ -275,6 +289,49 @@ public class GetShop extends ManagerBase implements IGetShop {
             return partner.partnerId;
         }
         return null;
+    }
+
+    private User createUser(WebPageData data) {
+        String loginKey = UUID.randomUUID().toString()+"-"+UUID.randomUUID().toString();
+        User user = new User();
+        user.key = loginKey;
+        user.fullName = data.fullName;
+        user.emailAddress = data.emailAddress;
+        user.username = data.emailAddress;
+        user.password = data.password;
+        return user;
+    }
+    
+    @Override
+    public synchronized StoreCreatedData createWebPage(WebPageData data) throws ErrorException {
+        String local = frameworkConfig.productionMode ? "" : ".local";
+        String address = storePool.incrementStoreCounter()+local+".getshop.com";
+        
+        Store store = storePool.createStoreObject(address, data.emailAddress, data.password, true);
+        
+        String sessionId = UUID.randomUUID().toString();
+        
+        Session locSession = new Session();
+        locSession.id = sessionId;
+        locSession.storeId = store.id;
+        
+        AppContext.storePool.getStorePool(store.id).startSession(sessionId);
+        storePool.initialize(store.webAddress, sessionId);
+        
+        User user = createUser(data);
+        UserManager userManager = getManager(UserManager.class, store.id);
+        userManager.session = locSession;
+        
+        User createUser = userManager.createUser(user);
+        userManager.logOn(createUser.username, data.password);
+        
+        PageManager pageManager = getManager(PageManager.class, store.id);
+        pageManager.getPage("home");
+        
+        StoreCreatedData retData = new StoreCreatedData();
+        retData.user = user;
+        retData.store = store;
+        return retData;
     }
     
 }

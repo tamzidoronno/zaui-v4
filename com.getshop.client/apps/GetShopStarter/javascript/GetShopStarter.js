@@ -26,6 +26,7 @@ app.GetShopStarter = {
         $(this).find('.fa').addClass('fa-spin');
         $(this).find('.text').html(__w("Building your store"));
         thundashop.Ajax.postWithCallBack(event, function(data) {
+            debugger;
             document.location.href=data;
         });
     },

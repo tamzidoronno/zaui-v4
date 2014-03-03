@@ -60,8 +60,8 @@ public class StoreHandler {
         }
     }
 
-    public void startSession() {
-        setSessionObject("asdfasdf");
+    public void startSession(String sessionId) {
+        setSessionObject(sessionId);
     }
     
     public synchronized Object executeMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {

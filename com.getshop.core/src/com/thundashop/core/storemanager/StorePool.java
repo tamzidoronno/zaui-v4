@@ -131,10 +131,16 @@ public class StorePool {
     }
     
     public synchronized Store initialize(String webAddress, String sessionId) throws ErrorException {
-        webAddress = webAddress.replace(".local.", ".");
-        webAddress = webAddress.replace(".mpal.", ".");
-        webAddress = webAddress.replace(".dev.", ".");
         Store store = getStoreByWebaddress(webAddress);
+        
+        if (store == null) {
+            webAddress = webAddress.replace(".local.", ".");
+            webAddress = webAddress.replace(".mpal.", ".");
+            webAddress = webAddress.replace(".dev.", ".");
+            store = getStoreByWebaddress(webAddress);
+        }
+        
+        
         if (store == null && webAddress.contains("www.")) {
             webAddress = webAddress.replace("www.", "");
             store = getStoreByWebaddress(webAddress);
@@ -292,7 +298,7 @@ public class StorePool {
         }
     }
 
-    int incrementStoreCounter() throws ErrorException {
+    public int incrementStoreCounter() throws ErrorException {
         if(counter == null) {
             counter = new StoreCounter();
             counter.id = UUID.randomUUID().toString();

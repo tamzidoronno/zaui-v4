@@ -1361,6 +1361,21 @@ class GetShop(object):
     data.interfaceName = "core.getshop.IGetShop"
     return self.communicationHelper.sendMessage(data)
 
+  def createWebPage(self, data):
+    args = collections.OrderedDict()
+    if isinstance(data,GetShopBaseClass): 
+      args["data"]=json.dumps(data.__dict__)
+    else:
+      try:
+        args["data"]=json.dumps(data)
+      except (ValueError, AttributeError):
+        args["data"]=data
+    data = EmptyClass()
+    data.args = args
+    data.method = "createWebPage"
+    data.interfaceName = "core.getshop.IGetShop"
+    return self.communicationHelper.sendMessage(data)
+
   def findAddressForApplication(self, uuid):
     args = collections.OrderedDict()
     if isinstance(uuid,GetShopBaseClass): 

@@ -1336,6 +1336,20 @@ class APIGetShop {
 	}
 
 	/**
+	* Create a new webpage
+	* @return String
+	*/
+
+	public function createWebPage($core_getshop_data_WebPageData) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_getshop_data_WebPageData"] = json_encode($this->transport->object_unset_nulls($core_getshop_data_WebPageData));
+	     $data["method"] = "createWebPage";
+	     $data["interfaceName"] = "core.getshop.IGetShop";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Find the store address for a given application.
 	* @param uuid The appid.
 	* @return String

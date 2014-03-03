@@ -5,6 +5,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.messagemanager.MailFactory;
+import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
@@ -17,6 +18,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -26,7 +28,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Scope("prototype")
-public class UserManager extends ManagerBase implements IUserManager {
+public class UserManager extends ManagerBase implements IUserManager, StoreInitialized {
     public static String OVERALLPASSWORD = "alksdjfasdoui32q1-2-3-13-1-324asdfasdf_213476askjd....|123§§!4985klq12j3h1kl254h12";
     public SessionFactory sessionFactory = new SessionFactory();
     public ConcurrentHashMap<String, UserStoreCollection> userStoreCollections = new ConcurrentHashMap<String, UserStoreCollection>();
@@ -131,7 +133,7 @@ public class UserManager extends ManagerBase implements IUserManager {
         
         return user;
     }
-
+    
     @Override
     public List<User> findUsers(String searchCriteria) throws ErrorException {
         UserStoreCollection users = getUserStoreCollection(storeId);
@@ -570,5 +572,9 @@ public class UserManager extends ManagerBase implements IUserManager {
         Collections.sort(retUsers);
         Collections.reverse(retUsers);
         return retUsers;
+    }
+
+    @Override
+    public void storeReady() {
     }
 }

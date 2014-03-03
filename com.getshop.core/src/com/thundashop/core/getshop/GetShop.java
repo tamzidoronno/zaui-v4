@@ -309,27 +309,11 @@ public class GetShop extends ManagerBase implements IGetShop {
         
         Store store = storePool.createStoreObject(address, data.emailAddress, data.password, true);
         
-        String sessionId = UUID.randomUUID().toString();
-        
-        Session locSession = new Session();
-        locSession.id = sessionId;
-        locSession.storeId = store.id;
-        
-        AppContext.storePool.getStorePool(store.id).startSession(sessionId);
-        storePool.initialize(store.webAddress, sessionId);
-        
-        User user = createUser(data);
         UserManager userManager = getManager(UserManager.class, store.id);
-        userManager.session = locSession;
-        
-        User createUser = userManager.createUser(user);
-        userManager.logOn(createUser.username, data.password);
-        
-        PageManager pageManager = getManager(PageManager.class, store.id);
-        pageManager.getPage("home");
+        userManager.session = getSession();
         
         StoreCreatedData retData = new StoreCreatedData();
-        retData.user = user;
+        retData.user = userManager.createUser(createUser(data));
         retData.store = store;
         return retData;
     }

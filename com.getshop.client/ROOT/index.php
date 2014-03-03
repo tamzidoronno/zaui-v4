@@ -81,6 +81,16 @@ include '../loader.php';
 $importApplication = new ImportApplication(null, null);
 $importApplication->showMenu();
 
+
+if (isset($_GET['logonwithkey'])) {
+    $key = $_GET['logonwithkey'];
+    $factory = IocContainer::getFactorySingelton(false);
+    $_SESSION['loggedin'] = serialize($factory->getApi()->getUserManager()->logonUsingKey($key));
+    $factory->initPage();
+    header('location:index.php');
+    die();
+}
+
 $factory = IocContainer::getFactorySingelton();
 
 if (@$factory->getApplicationPool()->getSelectedThemeApp()->applicationSettings->isResponsive) {
@@ -94,11 +104,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
     }
     $_SESSION['checkifloggedout'] = true;
 }
-if (isset($_GET['logonwithkey'])) {
-    $key = $_GET['logonwithkey'];
-    $_SESSION['loggedin'] = serialize($factory->getApi()->getUserManager()->logonUsingKey($key));
-    header('location:index.php');
-}
+
 ?>
 
 <html xmlns:fb="http://ogp.me/ns/fb#">

@@ -103,7 +103,7 @@ public class Page extends DataCommon implements Cloneable {
         
         HashMap<String, PageArea> keep = new HashMap();
         for(String key : pageAreas.keySet()) {
-            if(key.contains("left_") || key.contains("right_")) {
+            if(key.contains("left_") || key.contains("right_") || key.contains("product")) {
                 keep.put(key, pageAreas.get(key));
             }
         }

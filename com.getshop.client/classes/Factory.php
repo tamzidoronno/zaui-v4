@@ -46,7 +46,7 @@ class Factory extends FactoryBase {
            $reguser = $store->registrationUser;
            if($reguser != null) {
                $factory->getApi()->getUserManager()->createUser($reguser);
-               $factory->getApi()->getUserManager()->logOn($reguser->emailAddress,$reguser->password);
+               $_SESSION['loggedin'] = serialize($factory->getApi()->getUserManager()->logOn($reguser->emailAddress,$reguser->password));
 
                $sitebuilder = new SiteBuilder();
                $sitebuilder->createProduct(1, $this->__w("Diamonds for the ear"), ["e1be3532-0340-4a4c-8b79-fc21b6a70ec4", "a507da8f-4f17-4ade-bc54-340aff4dc11e"], 289);
@@ -56,6 +56,8 @@ class Factory extends FactoryBase {
 
                $store->registrationUser = null;
                $this->getApi()->getStoreManager()->saveStore($store);
+               echo "<script>isAdministrator = true;</script>";
+               echo "\n" . '<script type="text/javascript" src="js/getshop.MainMenuToolbox.js"></script>';
            }
             include("initdata/initializationdata.phtml");
         }

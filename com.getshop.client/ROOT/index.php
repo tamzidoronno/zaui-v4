@@ -169,7 +169,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         <title><?php echo $title; ?></title>
     </head>
     <body>
-        <? if ($factory->getStore()->isDeepFreezed) { ?>
+        <? if (@$factory->getStore()->isDeepFreezed) { ?>
             <div class='deepfreezedActivated'><? echo $factory->__f("Warning! this store will automatically be reset to original state each hour") ?></div>
         <? } ?>
         <input name="storeid" type="hidden"  value="<?php echo $factory->getStore()->id; ?>"/>

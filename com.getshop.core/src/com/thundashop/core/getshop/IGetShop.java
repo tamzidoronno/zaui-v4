@@ -6,6 +6,7 @@ import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.getshop.data.PartnerData;
 import com.thundashop.core.getshop.data.StoreCreatedData;
 import com.thundashop.core.getshop.data.WebPageData;
+import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.data.User;
 import java.util.List;
 
@@ -69,5 +70,5 @@ public interface IGetShop {
      * Create a new webpage
      * @return 
      */
-    public StoreCreatedData createWebPage(WebPageData data) throws ErrorException;
+    public Store createWebPage(WebPageData data) throws ErrorException;
 }

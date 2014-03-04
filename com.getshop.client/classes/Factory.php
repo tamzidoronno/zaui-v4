@@ -40,16 +40,24 @@ class Factory extends FactoryBase {
     public function loadInitializationData() {
         $page = $this->getPage();
         if ($page->backendPage->pageType == -2 && $page->backendPage->id == "home") {
-            include("initdata/initializationdata.phtml");
 
-            $sitebuilder = new SiteBuilder();
-            if (!isset($_SESSION['startup_productcreation'])) {
-                $sitebuilder->createProduct(1, $this->__w("Diamonds for the ear"), ["e1be3532-0340-4a4c-8b79-fc21b6a70ec4", "a507da8f-4f17-4ade-bc54-340aff4dc11e"], 289);
-                $sitebuilder->createProduct(1, $this->__w("Finger friend"), ["a507da8f-4f17-4ade-bc54-340aff4dc11e", "7982060d-2504-4efa-834c-30e9fee98d8a"], 99);
-                $sitebuilder->createProduct(1, $this->__w("Lip styling"), ["7982060d-2504-4efa-834c-30e9fee98d8a", "fc4fa4ba-99d4-44c0-a693-4a507604ddec"], 100);
-                $sitebuilder->createProduct(1, $this->__w("Exclusive party"), ["fc4fa4ba-99d4-44c0-a693-4a507604ddec", "fc4fa4ba-99d4-44c0-a693-4a507604ddec"], 150);
-                $_SESSION['startup_productcreation']=true;
-            }
+           $factory = IocContainer::getFactorySingelton();
+           $store = $factory->getStore();
+           $reguser = $store->registrationUser;
+           if($reguser != null) {
+               $factory->getApi()->getUserManager()->createUser($reguser);
+               $factory->getApi()->getUserManager()->logOn($reguser->emailAddress,$reguser->password);
+
+               $sitebuilder = new SiteBuilder();
+               $sitebuilder->createProduct(1, $this->__w("Diamonds for the ear"), ["e1be3532-0340-4a4c-8b79-fc21b6a70ec4", "a507da8f-4f17-4ade-bc54-340aff4dc11e"], 289);
+               $sitebuilder->createProduct(1, $this->__w("Finger friend"), ["a507da8f-4f17-4ade-bc54-340aff4dc11e", "7982060d-2504-4efa-834c-30e9fee98d8a"], 99);
+               $sitebuilder->createProduct(1, $this->__w("Lip styling"), ["7982060d-2504-4efa-834c-30e9fee98d8a", "fc4fa4ba-99d4-44c0-a693-4a507604ddec"], 100);
+               $sitebuilder->createProduct(1, $this->__w("Exclusive party"), ["fc4fa4ba-99d4-44c0-a693-4a507604ddec", "fc4fa4ba-99d4-44c0-a693-4a507604ddec"], 150);
+
+               $store->registrationUser = null;
+               $this->getApi()->getStoreManager()->saveStore($store);
+           }
+            include("initdata/initializationdata.phtml");
         }
     }
 

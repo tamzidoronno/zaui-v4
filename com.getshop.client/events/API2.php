@@ -1337,7 +1337,7 @@ class APIGetShop {
 
 	/**
 	* Create a new webpage
-	* @return String
+	* @return core_storemanager_data_Store
 	*/
 
 	public function createWebPage($core_getshop_data_WebPageData) {
@@ -1346,7 +1346,7 @@ class APIGetShop {
 	     $data['args']["core_getshop_data_WebPageData"] = json_encode($this->transport->object_unset_nulls($core_getshop_data_WebPageData));
 	     $data["method"] = "createWebPage";
 	     $data["interfaceName"] = "core.getshop.IGetShop";
-	     return $this->transport->sendMessage($data);
+	     return $this->transport->cast(API::core_storemanager_data_Store(), $this->transport->sendMessage($data));
 	}
 
 	/**

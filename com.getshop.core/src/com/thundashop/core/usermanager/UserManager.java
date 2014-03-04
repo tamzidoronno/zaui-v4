@@ -122,7 +122,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         UserStoreCollection users = getUserStoreCollection(storeId);
         if (users.isEmpty()) {
             user.type = User.Type.ADMINISTRATOR;
-            user.key = "firstlogon";
         }
         users.addUser(user);
         user.password = encryptPassword(user.password);

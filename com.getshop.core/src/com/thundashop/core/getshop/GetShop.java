@@ -1,22 +1,18 @@
 package com.thundashop.core.getshop;
 
-import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
-import com.thundashop.core.common.Session;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.getshop.data.Partner;
 import com.thundashop.core.getshop.data.PartnerData;
-import com.thundashop.core.getshop.data.StoreCreatedData;
 import com.thundashop.core.getshop.data.WebPageData;
-import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
@@ -290,32 +286,23 @@ public class GetShop extends ManagerBase implements IGetShop {
         }
         return null;
     }
-
-    private User createUser(WebPageData data) {
-        String loginKey = UUID.randomUUID().toString()+"-"+UUID.randomUUID().toString();
-        User user = new User();
-        user.key = loginKey;
-        user.fullName = data.fullName;
-        user.emailAddress = data.emailAddress;
-        user.username = data.emailAddress;
-        user.password = data.password;
-        return user;
-    }
     
     @Override
-    public synchronized StoreCreatedData createWebPage(WebPageData data) throws ErrorException {
+    public synchronized Store createWebPage(WebPageData data) throws ErrorException {
         String local = frameworkConfig.productionMode ? "" : ".local";
+        if(storePool == null) {
+            System.out.println("Storepool null?");
+        }
+        
+        User user = new User();
+        user.fullName = data.fullName;
+        user.password = data.password;
+        user.emailAddress = data.emailAddress;
+        user.username = data.emailAddress;
+        
         String address = storePool.incrementStoreCounter()+local+".getshop.com";
-        
         Store store = storePool.createStoreObject(address, data.emailAddress, data.password, true);
-        
-        UserManager userManager = getManager(UserManager.class, store.id);
-        userManager.session = getSession();
-        
-        StoreCreatedData retData = new StoreCreatedData();
-        retData.user = userManager.createUser(createUser(data));
-        retData.store = store;
-        return retData;
+        store.registrationUser = user;
+        return store;
     }
-    
 }

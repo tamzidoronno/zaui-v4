@@ -125,19 +125,22 @@ public class AppManager extends ManagerBase implements IAppManager {
         if(id.equals("newapp")) {
             return null;
         }
-        throw new ErrorException(18);
+        
+        return null;
     }
 
     @Override
     public void setSyncApplication(String id) throws ErrorException {
         ApplicationSettings app = this.getApplication(id);
-        ApplicationSynchronization sync = new ApplicationSynchronization();
-        sync.appId = app.id;
-        sync.userId = getSession().currentUser.id;
-        sync.appName = app.appName;
-        addToSync(sync);
-        sync.storeId = storeId;
-        databaseSaver.saveObject(sync, credentials);
+        if (app != null) {
+            ApplicationSynchronization sync = new ApplicationSynchronization();
+            sync.appId = app.id;
+            sync.userId = getSession().currentUser.id;
+            sync.appName = app.appName;
+            addToSync(sync);
+            sync.storeId = storeId;
+            databaseSaver.saveObject(sync, credentials);
+        }
     }
 
     private void addToSync(ApplicationSynchronization sync) {

@@ -1,0 +1,6 @@
+body { font-family: 'Niconne', cursive; }
+.gs_inner { width: 1000px; margin: auto;}
+.breadcrumb { display:none; }
+.TopMenu { display: none; }
+.GetShopStarter .start_row { background-color:#5cab56; border: solid 1px #4a8545; color:#000;  }
+.GetShopStarter .start_row input { border: solid 1px #000; }

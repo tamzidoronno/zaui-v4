@@ -51,32 +51,15 @@ public class AddApplicationsToDatabase {
     private List<ApplicationSettings> addApplications() {
         List<ApplicationSettings> apps = new ArrayList();
 
-        ApplicationSettings snicklesTheme = createSettings(
-                "SnicklesTheme",
-                "8b060db0-a0a3-11e3-a5e2-0800200c9a66",
+        ApplicationSettings signUpTheme = createSettings(
+                "GetShopSignUpTheme",
+                "3d4a322c-94f5-41a5-bdf5-7e2a1b43c70b",
                 emtpy,
                 "",
                 ApplicationSettings.Type.Theme, false);
-        snicklesTheme.isPublic = true;
-        apps.add(snicklesTheme);
+        signUpTheme.isPublic = false;
+        apps.add(signUpTheme);
 
-        ApplicationSettings pinboardtheme = createSettings(
-                "PinBoardTheme",
-                "e72c1c7d-4af8-41ca-bb1b-22d8468edf0a",
-                emtpy,
-                "",
-                ApplicationSettings.Type.Theme, false);
-        pinboardtheme.isPublic = true;
-        apps.add(pinboardtheme);
-        
-        ApplicationSettings pixeLateTheme1 = createSettings(
-                "PixelateTheme1",
-                "8f594bb0-a126-11e3-a5e2-0800200c9a66",
-                emtpy,
-                "",
-                ApplicationSettings.Type.Theme, false);
-        pixeLateTheme1.isPublic = false;
-        apps.add(pixeLateTheme1);
        
         return apps;
     }

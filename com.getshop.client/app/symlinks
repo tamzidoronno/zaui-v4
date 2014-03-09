@@ -85,3 +85,4 @@ ln -s ../apps/YouTube ns_8e239f3d_2244_471e_a64d_3241b167b7d2;
 ln -s ../apps/CalendarEventViewer ns_ab5378d0_9d6c_11e3_a5e2_0800200c9a66;
 ln -s ../apps/YovyTheme ns_43d02b7f_cde1_4e10_8e8e_8a6ba17dfc9c;
 ln -s ../apps/PinBoardTheme ns_e72c1c7d_4af8_41ca_bb1b_22d8468edf0a;
+ln -s ../apps/GetShopSignUpTheme ns_3d4a322c_94f5_41a5_bdf5_7e2a1b43c70b;

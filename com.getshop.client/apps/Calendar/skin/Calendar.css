@@ -271,3 +271,50 @@ td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1p
     font-size: 13px;
     text-align: right;
 }
+
+.editlocationscalendar td {
+    font-size: 16px;
+}
+.editlocationscalendar {
+    padding: 20px;
+    font-size: 16px;
+    color: #FFF;
+    padding-bottom: 50px;
+}
+
+.editlocationscalendar .selectlcoation {
+    display: inline-block;
+    border: solid 1px #FFF;
+    padding: 5px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.editlocationscalendar .gs_button.calendar_location_save {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.editlocationscalendar .gs_button.calendar_location_back {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+}
+
+.editlocationscalendar .gs_button.calendar_location_delete {
+    position: absolute;
+    bottom: 20px;
+    right: 150px;
+}
+
+.calendar_comment_inner {
+    padding-left: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: solid 1px #4f4f4f;
+}
+
+.calendar_comment_inner:last-child {
+    border-bottom: solid 0px;
+}

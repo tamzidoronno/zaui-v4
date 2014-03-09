@@ -523,6 +523,21 @@ class CalendarManager(object):
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
+  def deleteLocation(self, locationId):
+    args = collections.OrderedDict()
+    if isinstance(locationId,GetShopBaseClass): 
+      args["locationId"]=json.dumps(locationId.__dict__)
+    else:
+      try:
+        args["locationId"]=json.dumps(locationId)
+      except (ValueError, AttributeError):
+        args["locationId"]=locationId
+    data = EmptyClass()
+    data.args = args
+    data.method = "deleteLocation"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getActiveFilters(self):
     args = collections.OrderedDict()
     data = EmptyClass()
@@ -543,6 +558,14 @@ class CalendarManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getAllEventsConnectedToPage"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getAllLocations(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getAllLocations"
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -683,6 +706,21 @@ class CalendarManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "saveEntry"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def saveLocation(self, location):
+    args = collections.OrderedDict()
+    if isinstance(location,GetShopBaseClass): 
+      args["location"]=json.dumps(location.__dict__)
+    else:
+      try:
+        args["location"]=json.dumps(location)
+      except (ValueError, AttributeError):
+        args["location"]=location
+    data = EmptyClass()
+    data.args = args
+    data.method = "saveLocation"
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 

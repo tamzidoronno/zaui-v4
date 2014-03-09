@@ -148,6 +148,55 @@ class Calendar extends MarketingApplication implements Application {
         }
     }
     
+    public function getLocation($locationId) {
+        $locations = $this->getApi()->getCalendarManager()->getAllLocations();
+
+        foreach ($locations as $ilocation) {
+            if ($ilocation->id == $locationId) {
+                return $ilocation;
+            }
+        }
+        
+        return null;
+    }
+    
+    private function saveLocationData() {
+        $location = $this->getLocation($_POST['data']['locationId']);
+        if (!$location) {
+            $location = new \core_calendarmanager_data_Location();
+        }
+        
+        $location->location = $_POST['data']['locationName'];
+        $location->locationExtra = $_POST['data']['locationExtra'];
+        
+        if ($_POST['data']['commentText']) {
+            $comment = new \core_usermanager_data_Comment();
+            $comment->comment = nl2br($_POST['data']['commentText']);
+            $location->comments[] = $comment;
+        }
+        
+        $location = $this->getApi()->getCalendarManager()->saveLocation($location);
+        $_POST['data']['locationId'] = $location->id;
+    }
+    
+    public function saveLocation() {
+        $this->saveLocationData();
+        $this->includefile("editLocation");
+    }
+    
+    public function showEditLocation() {
+        $this->includefile("editLocation");
+    }
+    
+    public function showLocationsEditor() {
+        $this->includefile("locations");
+    }
+    
+    public function deleteLocation() {
+        $this->getApi()->getCalendarManager()->deleteLocation($_POST['data']['locationId']);
+        $this->includefile("locations");
+    }
+    
     public function setFilter() {
         if (isset($_GET['filter'])) {
             $word = strtolower(base64_decode($_GET['filter']));
@@ -204,11 +253,10 @@ class Calendar extends MarketingApplication implements Application {
         $entry->starttime = $_POST['data']['eventstart'];
         $entry->stoptime = $_POST['data']['eventstop'];
         $entry->maxAttendees = $_POST['data']['maxattendees'];
-        $entry->location = $_POST['data']['eventlocation'];
+        $entry->locationId = $_POST['data']['locationId'];
         $entry->title = $_POST['data']['eventname'];
         $entry->color = $_POST['data']['color'];
         $entry->linkToPage = $_POST['data']['linkToPage'];
-        $entry->locationExtended = $_POST['data']['locationExtended'];
         $entry->lockedForSignup = $_POST['data']['lockedForSignup'];
         
         return $entry;

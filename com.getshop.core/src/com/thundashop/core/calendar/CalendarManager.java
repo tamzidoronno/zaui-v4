@@ -3,6 +3,7 @@ package com.thundashop.core.calendar;
 import com.thundashop.core.calendarmanager.data.Day;
 import com.thundashop.core.calendarmanager.data.Entry;
 import com.thundashop.core.calendarmanager.data.ExtraDay;
+import com.thundashop.core.calendarmanager.data.Location;
 import com.thundashop.core.calendarmanager.data.Month;
 import com.thundashop.core.calendarmanager.data.ReminderHistory;
 import com.thundashop.core.common.*;
@@ -11,7 +12,6 @@ import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.SMSFactory;
 import com.thundashop.core.pagemanager.IPageManager;
 import com.thundashop.core.pagemanager.PageManager;
-import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Group;
@@ -30,6 +30,7 @@ import org.springframework.stereotype.Component;
 @Scope("prototype")
 public class CalendarManager extends ManagerBase implements ICalendarManager {
     private HashMap<String, Month> months = new HashMap();
+    private HashMap<String, Location> locations = new HashMap();
     
     @Autowired
     public MailFactory mailFactory;
@@ -47,6 +48,10 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataObject : data.data) {
+            if (dataObject instanceof Location) {
+                Location location = (Location)dataObject;
+                locations.put(location.id, location);
+            }
             if (dataObject instanceof Month) {
                 Month month = (Month)dataObject;
                 months.put(month.id, month);
@@ -340,7 +345,11 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                             entry.month = myMonth.month;
                             entry.day = myDay.day;
                         }
-
+                        
+                        for (Entry entry : myDay.entries) {
+                            finalizeEntry(entry);
+                        }
+                        
                         entries.addAll(myDay.entries);
                     }
                 }
@@ -389,7 +398,6 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             }
         }
 
-        
         return finalizeMonth(mymonth);
     }
 
@@ -512,8 +520,10 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         for (Month month : months.values()) {
             for (Day day : month.days.values()) {
                 for (Entry entry : day.entries) {
-                    if (entry.entryId.equals(entryId))
+                    if (entry.entryId.equals(entryId)) {
+                        finalizeEntry(entry);
                         return entry;
+                    }        
                 }
             }
         }
@@ -565,7 +575,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
     @Override
     public List<String> getFilters() throws ErrorException {
-        List<String> filters = new ArrayList();
+        List<String> filterIds = new ArrayList();
         
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
@@ -574,17 +584,26 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         int day = cal.get(Calendar.DAY_OF_MONTH);
        
         for (Entry entry : getEntries(year, month, day, null)) {
-            if (entry.location == null) {
+            if (entry.locationId == null) {
                 continue;
             }
-            String camelCasedLocation = toCamelCase(entry.location);
-            if (!filters.contains(camelCasedLocation)) {
-                filters.add(camelCasedLocation);
+            
+            if (!filterIds.contains(entry.locationId)) {
+                filterIds.add(entry.locationId);
             }
-
+        }
+        
+        ArrayList<String> filters = new ArrayList();
+        for (String filterId : filterIds) {
+            Location loc = locations.get(filterId);
+            if (loc != null) {
+                filters.add(loc.location);
+            }
         }
         
         java.util.Collections.sort(filters);
+        
+        
         return filters;
     }
     
@@ -608,11 +627,11 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     private void filterResult(List<Entry> entries, List<String> filters) {
         List<Entry> removeEntries = new ArrayList();
         for (Entry entry : entries) {
-            String camelCasedLocation = toCamelCase(entry.location);
             
             boolean found = false;
             for (String s : filters) {
-                if (s.equalsIgnoreCase(camelCasedLocation)) {
+                Location loc = getLocationByName(s);
+                if (loc != null && loc.id.equals(entry.locationId)) {
                     found = true;
                     break;
                 }
@@ -648,6 +667,13 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
     private Month finalizeMonth(Month mymonth) {
         Session lsession = getSession();
+        
+        for (Day day : mymonth.days.values()) {
+            for (Entry entry : day.entries) {
+                finalizeEntry(entry);
+            }
+        }
+        
         if (lsession == null) {
             return mymonth;
         }
@@ -659,6 +685,8 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         }
         
         mymonth = mymonth.clone();
+        
+        
         for (Day day : mymonth.days.values()) {
             filterResult(day.entries, (List)lsession.get("filters"));
         }
@@ -782,5 +810,53 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             mailFactory.send(getFromAddress(), user.emailAddress, settings.get("subject").value, content);
             mailFactory.send("post@getshop.com", getFromAddress(), settings.get("subject").value, content);   
         }
+    }
+
+    @Override
+    public Location saveLocation(Location location) throws ErrorException {
+        location.storeId = storeId;
+        
+        for (Comment comment : location.comments) {
+            if (comment.createdByUserId == null) {
+                comment.createdByUserId = getSession().currentUser.id;
+            }
+        }
+        
+        databaseSaver.saveObject(location, credentials);
+        locations.put(location.id, location);
+        
+        return location;
+    }
+
+    @Override
+    public List<Location> getAllLocations() {
+        return new ArrayList(locations.values());
+    }
+
+    private void finalizeEntry(Entry entry) {
+        entry.locationObject = locations.get(entry.locationId);
+        if (entry.locationObject != null) {
+            entry.location = entry.locationObject.location;
+            entry.locationExtended = entry.locationObject.locationExtra;
+        }
+    }
+
+    @Override
+    public void deleteLocation(String locationId) throws ErrorException {
+        Location loc = locations.remove(locationId);
+        if (loc != null) {
+            databaseSaver.deleteObject(loc, credentials);
+        }
+    }
+
+    private Location getLocationByName(String s) {
+        for (Location loc : locations.values()) {
+            String locationName = toCamelCase(s);
+            if (locationName.equalsIgnoreCase(loc.location)) {
+                return loc;
+            }
+        }
+        
+        return null;
     }
 }

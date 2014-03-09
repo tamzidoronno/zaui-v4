@@ -1,0 +1,18 @@
+<?
+    $locations = $this->getApi()->getCalendarManager()->getAllLocations();
+?>
+<div class="editlocationscalendar">
+    <? echo $this->__f("Select one of your current location") ?>:
+    <div class="edit_locations">
+        <?
+        foreach ($locations as $location) {
+            echo "<div class='selectlcoation' value='".$location->id."'>".$location->location."</div>";
+        }
+        ?>    
+    </div>
+    <br>
+    <? echo $this->__f("Or create a new one by clicking on the button below") ?>:
+    <br/><br/><div class="gs_button calendar_location_createnew" value="createnew">
+        <? echo $this->__f("Create new"); ?>
+    </div>
+</div>

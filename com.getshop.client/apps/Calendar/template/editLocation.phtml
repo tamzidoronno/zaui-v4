@@ -1,0 +1,53 @@
+<?
+    $locationId = $_POST['data']['locationId'];
+    $location = $this->getLocation($locationId);
+    
+    if ($location == null) {
+        $location = new \core_calendarmanager_data_Location();
+        $location->id = "";
+    }
+?>
+
+<div class="editlocationscalendar">
+    <input type="hidden" value="<? echo $location->id; ?>" id='locationId'/>
+    
+    <table>
+        <tr><td><? echo $this->__f("location", "common"); ?></td><td><input id='locationName' style="width: 853px" type="textfield" value="<? echo $location->location; ?>"/></td></tr>
+        <tr><td><? echo $this->__f("Extended location"); ?></td><td><input id='locationExtra' style="width: 853px" type="textfield" value="<? echo $location->locationExtra; ?>"/></td></tr>
+    </table>
+    
+    <hr/>
+    <div class="comments">
+        <? 
+        
+        echo $this->__f("Comments"); 
+        
+        if (!sizeof($location->comments)) {
+            echo "<br/>".$this->__f("No comments added yet");
+        } else {
+            foreach ($location->comments as $comment) {
+                echo "<div class='calendar_comment_inner'>";
+                    echo $comment->comment;
+                    echo "<br>".$comment->dateCreated;
+                echo "</div>";
+            }
+        }
+        ?>
+    </div>
+    <br/>
+    <div>
+        <? echo $this->__f("Add comment"); ?>
+        <br/>
+        <textarea id='commentText' style="width: 945px; height: 150px;"></textarea>
+        <br><div class="gs_button calendar_location_back"><? echo $this->__f("Back"); ?></div>
+        <?
+        if ($location->id != "") { ?>
+            <br><div class="gs_button calendar_location_delete"><? echo $this->__f("Delete"); ?></div>
+        <?
+        }
+        ?>
+        
+        <br><div class="gs_button calendar_location_save"><? echo $this->__f("Save"); ?></div>
+    </div>
+</div>
+

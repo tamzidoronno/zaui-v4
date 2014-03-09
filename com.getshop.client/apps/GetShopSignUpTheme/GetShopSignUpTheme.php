@@ -22,7 +22,7 @@ class GetShopSignUpTheme extends \ThemeApplication implements \Application {
     }
 
     public function addScripts() {
-        echo "<link href='http://fonts.googleapis.com/css?family=Niconne&subset=latin,latin-ext' rel='stylesheet' type='text/css'>";
+        echo "<link href='https://fonts.googleapis.com/css?family=Niconne&subset=latin,latin-ext' rel='stylesheet' type='text/css'>";
     }    
     
     public function postProcess() {

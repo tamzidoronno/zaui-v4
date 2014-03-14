@@ -18,6 +18,8 @@ Birth Date;-;Bursdag
 Booking;-;Påmelding
 Building your store;-;Lag din webbutikk
 Buy;-;Kjøp
+By calendar;-;Som kalendar
+By list;-;Som Liste
 By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;Sisow er en nederlands betalingsmetode, bruk denne om du ønsker å tilby kundene dine iDeal
 Cancel order;-;Kanselert ordre
 Canceled;-;Kanselert
@@ -31,6 +33,7 @@ Checkout;-;Utsjekking
 City;-;By
 Click next to select shipping options;-;Trykk neste for å velge en betalings metode
 Company;-;Selskap
+Company name;-;Firmanavn
 Completed;-;Gjennomført
 Confirm order;-;Bekreft ordre
 Continue;-;Fortsett
@@ -41,6 +44,7 @@ Coupon discount;-;Kupong avslag
 Current users added to this booking;-;Brukere som er lagt til
 Customer information;-;Kunde detaljer
 Date;-;Dato
+Day;-;Dag
 December;-;Desember
 Delete image;-;Slett bilde
 Did not find the specified company, please check your company number;-;Fant ikke det angitte firmaet, vennligst sjekk organisasjonret
@@ -50,6 +54,7 @@ Email sent;-;Epost sendt
 End date;-;Slutt dato
 Enter organisation number and this will be filled out automatically;-;Fyll inn organisasjonsnret og denne boksen vil bli fylt ut automatisk
 Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.L
+Entires marked in green is available for booking and entries marked in red is full;-;Rader merket i grønn er tilgjengelig for påmelding, rader merket i rødt er fulle.
 Failed;-;Feilet
 Featured Product;-;Fremhevet produkt
 February;-;Februar
@@ -161,7 +166,6 @@ Stage 2 (nm):;-;Stage 2 nm:
 Stage 3 (hp):;-;Stage 3 hp:
 Stage 3 (nm):;-;Stage 3 nm:
 Start date;-;Start dato
-Start your 30 days free trial now;-;Start din 30 dagers gratis prøveperiode nå
 Status;-;Status
 Stop;-;Stopp
 Success;-;Success

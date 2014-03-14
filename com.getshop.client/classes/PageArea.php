@@ -25,12 +25,19 @@ class PageArea extends FactoryBase {
     private $page;
 
     /** @var core_pagemanager_data_PageArea */
-    private $backendPageArea;
+    public $backendPageArea;
     public $applications = array();
+    public $bottomApplications = array();
     private $systemArea = array('header', 'footer');
 
     public function getApplication($id) {
-        return $this->applications[$id];
+        if (isset($this->bottomApplications[$id]))
+            return $this->bottomApplications[$id];
+
+        if (isset($this->applications[$id]))
+            return $this->applications[$id];
+        
+        return null;
     }
 
     function __construct(Page $page, $backendPageArea) {
@@ -60,6 +67,16 @@ class PageArea extends FactoryBase {
             $appInstance = IocContainer::getFactorySingelton()->getApplicationPool()->getApplicationInstance($app->id);
             if ($appInstance) {
                 $this->applications[$app->id] = $appInstance;
+            }
+        }
+        
+        if (is_array($this->backendPageArea->bottomApplications)) {
+            foreach ($this->backendPageArea->bottomApplications as $app) {
+                $appInstance = IocContainer::getFactorySingelton()->getApplicationPool()->getApplicationInstance($app->id);
+
+                if ($appInstance) {
+                    $this->bottomApplications[$app->id] = $appInstance;
+                }
             }
         }
     }
@@ -109,6 +126,14 @@ class PageArea extends FactoryBase {
         foreach ($this->getApplications() as $application) {
             $application->renderApplication();
         }
+        
+        if ($this->backendPageArea->bottomAreaActivated) {
+            $this->includefile('emtybottomarea');
+        }
+    }
+    
+    public function getBottomApplications() {
+        return $this->bottomApplications;
     }
 
     public function getApplicationCount() {

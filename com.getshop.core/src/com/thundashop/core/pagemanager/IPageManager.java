@@ -327,4 +327,22 @@ public interface IPageManager {
      * Search for pages by name.
      */
     public List<Page> search(String search) throws ErrorException;
+    
+    @Administrator
+    public void toggleBottomApplicationArea(String pageId, String appAreaId) throws ErrorException;
+    
+    /**
+     * Position could be 
+     * - left
+     * - middle
+     * - right
+     * 
+     * @param pageId
+     * @param appAreaId
+     * @param applicationSettingId
+     * @param position
+     * @throws ErrorException 
+     */
+    @Administrator
+    public void addApplicationToBottomArea(String pageId, String appAreaId, String applicationSettingId, String position) throws ErrorException; 
 }

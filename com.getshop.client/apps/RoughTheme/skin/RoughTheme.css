@@ -1,0 +1,82 @@
+/* 
+    Document   : SnicklesTheme.css
+    Created on : Feb 28, 2014, 7:11:57 PM
+    Author     : ktonder
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+body { font-family: 'Open Sans', 'HelveticaNeue', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif' !important; background-color: #eaeaea; }
+
+body {
+    background-image: url('{IMAGEFOLDER}/background.jpg');
+    
+    background-attachment: fixed;
+    background-position: center;
+}
+.gs_inner {
+    width: 1166px;
+    margin: auto;
+    color: #a0a0a0;
+}
+
+.gs_outer.header {
+    height: 85px;
+    background-color: #000;
+    border-bottom: solid 2px #333333;
+    margin-bottom: 20px;
+}
+
+.Logo {
+    top: 0px;
+}
+
+.gs_outer.footer {
+    background-color: rgba(0,0,0,0.2);
+    padding-top: 20px;
+    padding-bottom: 20px;
+    height: 200px;
+    border-top: solid 1px #000;
+}
+
+.gs_outer.gs_row { margin-bottom: 20px; }
+.gs_margin_left { padding-left: 10px; }
+.gs_margin_right { padding-right: 10px; }
+
+
+.TopMenu {
+    border: solid 1px;
+    right: 10px;
+    height: 85px;
+    color: #222222;
+    box-sizing: border-box;
+}
+
+.TopMenu a {
+    color: #a0a0a0;
+    font-size: 16px;
+    line-height: 85px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.TopMenu li:not(:last-child) {
+    border-right: solid 1px #333;
+}
+
+.Facebook {
+    font-size: 16px;
+}
+
+.Facebook .message {
+    padding-left: 20px;
+}
+
+.Facebook .newsentry {
+    border-bottom: solid 1px #000;
+}
+.Facebook .created_time {
+    font-size: 13px;
+    margin-bottom: 4px;
+    font-weight: bold;
+}

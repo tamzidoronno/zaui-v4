@@ -1,0 +1,42 @@
+ 
+<table width='100%'>
+    <tr>
+        <td width='33%' style='text-align: left;'>
+            <? if ($this->backendPageArea->bottomLeftApplicationId == "" && \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) { ?>
+                <div class='empty_app_area bottom'>   
+                    <div position='left' class='gs_button'>Add</div>
+                </div>
+            <? } else { 
+                
+                $app = $this->getApplication($this->backendPageArea->bottomLeftApplicationId);
+                if ($app) {
+                    $app->renderBottomArea();
+                }
+            } ?>
+        </td>
+        <td width='33%' style='text-align: center;'>
+            <? if ($this->backendPageArea->bottomMiddleApplicationId == "" && \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) { ?>
+                <div class='empty_app_area bottom'>   
+                    <div position='middle' class='gs_button'>Add</div>
+                </div>
+            <? } else { 
+                $app = $this->getApplication($this->backendPageArea->bottomMiddleApplicationId);
+                if ($app) {
+                    $app->renderBottomArea();
+                }
+            } ?>
+        </td>
+        <td width='33%' style='text-align: right;'>
+            <? if (!$this->backendPageArea->bottomRightApplicationId && \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) { ?>
+                <div class='empty_app_area bottom'>   
+                    <div position='right' class='gs_button'>Add</div>
+                </div>
+            <? } else {
+                $app = $this->getApplication($this->backendPageArea->bottomRightApplicationId);
+                if ($app) {
+                    $app->renderBottomArea();
+                }
+            } ?>
+        </td>
+    </tr>
+</table>

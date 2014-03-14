@@ -431,4 +431,29 @@ public class PageManager extends ManagerBase implements IPageManager {
         page.deletePageAreas();
     }
 
+    @Override
+    public void toggleBottomApplicationArea(String pageId, String pageAreaId) throws ErrorException {
+        Page page = pagePool.get(pageId);
+        PageArea pageArea = page.getPageArea(pageAreaId);
+        pageArea.bottomAreaActivated = !pageArea.bottomAreaActivated;
+        pagePool.savePage(page);
+    }
+
+    @Override
+    public void addApplicationToBottomArea(String pageId, String appAreaId, String applicationSettingId, String position) throws ErrorException {
+        Page page = pagePool.get(pageId);
+        PageArea pageArea = page.getPageArea(appAreaId);
+        AppConfiguration config = applicationPool.createNewApplication(applicationSettingId);
+        
+        if (position.equals("left"))
+            pageArea.bottomLeftApplicationId = config.id;
+        
+        if (position.equals("middle"))
+            pageArea.bottomMiddleApplicationId = config.id;
+        
+        if (position.equals("right"))
+            pageArea.bottomRightApplicationId = config.id;
+        
+        pagePool.savePage(page);
+    }
 }

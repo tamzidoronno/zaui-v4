@@ -63,6 +63,7 @@ class AppAreaHelper {
              }
              ?>" type='<? echo $type; ?>'>
             <span class="gs_apparea_extra"></span>
+            
         <?php 
             if(AppAreaHelper::$displayContent) {
                 $page->getApplicationArea($name)->render(); 

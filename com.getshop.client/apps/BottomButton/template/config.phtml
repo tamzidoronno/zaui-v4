@@ -1,0 +1,25 @@
+<div class="setting textfield" id="buttonName">
+    <span class="title"><?php echo $this->__("Name of the button."); ?></span>
+    <input type="textfield" class="config">
+    <div class="description">
+        <?php echo $this->__("This will be the name of the button."); ?>
+    </div>
+</div>
+
+<div class="setting textfield" id="buttonLink">
+    <span class="title"><?php echo $this->__("Link to page."); ?></span>
+    <div class="description">
+        <?php echo $this->__("Start entering the page name you want this button to link to."); ?>
+    </div>
+    <br><input type="textfield" class='pagepicker' class="config">
+</div>
+
+<div class="bottom_menu_settings">
+    <div class="gs_button savebutton"><?php echo $this->__("Save settings"); ?></div>
+</div>
+
+<script>
+    <? echo "currentSettings = ".json_encode($this->getConfiguration()->settings).";"; ?>
+    var appInstance = $('#informationbox[appid=<? echo $this->getConfiguration()->id?>]');
+    thundashop.app.Settings.init(appInstance);
+</script>

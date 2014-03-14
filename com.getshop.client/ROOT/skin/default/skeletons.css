@@ -64,6 +64,16 @@
     font-size:14px;
 }
 
+.empty_app_area.bottom {
+    min-height: 60px;
+    height: 60px;
+}
+
+.empty_app_area.bottom {
+    padding: 10px;
+    text-align: center;
+}
+
 
 .skeleton1 .gs_col { min-height: 300px; }
 
@@ -266,3 +276,9 @@ padding-left: 10px; }
     .ProductList .product .short_description { overflow: hidden; height: 103px; }
     .mainarea .gs_inner .applicationarea { min-height: 50px !important; }
 }
+
+
+.gs_web_button { font-size: 15px; background-color: #DDD; color: #333; padding: 5px; border-radius: 4px; box-shadow: 0px 0px 5px #333; display: inline-block; background: linear-gradient(to top, #555, #DDD); padding-left: 15px; padding-right: 15px; cursor: pointer; border: solid 1px #666;}
+.gs_web_button:hover { background: linear-gradient(to top, #094930, #52e5ac); }
+.gs_web_button:active { background: none; background-color: #34c88e; }
+.gs_web_button.small { font-size: 11px; padding: 1px; padding-right: 10px; padding-left: 10px; font-weight: bold;}

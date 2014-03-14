@@ -114,5 +114,7 @@ class ImageDisplayer extends \ApplicationBase implements \Application {
         
         return $textFields;
     }
+    
+   
 }
 ?>

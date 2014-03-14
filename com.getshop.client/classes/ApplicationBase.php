@@ -204,6 +204,27 @@ class ApplicationBase extends FactoryBase {
         echo "</div>";
     }
     
+    public function renderBottomArea() {
+        $changeable = !isset($this->applicationSettings) || $this->getApplicationSettings()->type == "SystemApplication" ? 'systemapplication' : '';
+        $appSettingsId = $this->getApplicationSettings() ? $this->getApplicationSettings()->id : "";
+        $id = isset($this->configuration) ? $this->configuration->id : "";
+        $className = get_class($this);
+        if(strrpos($className, "\\")) {
+            $className = substr($className, strrpos($className, "\\")+1);
+        }
+        
+        echo "<div appid='$id' app='" . $className . "' class='app $changeable " . $className . "' appsettingsid='$appSettingsId'>";
+        echo "<div class='applicationinner'>";
+        if($this->isEditorMode() && !$changeable && !$this->getPage()->isSystemPage()) {
+            if($this->hasWriteAccess()) {
+                echo "<div class='application_settings inline gs_icon'><i class='fa fa-cog' style='font-size:30px;'></i></div>";
+            }
+        }
+        $this->renderBottomApplicationArea();
+        echo "</div>";
+        echo "</div>";
+    }
+    
     public function hasWriteAccess() {
         if(!$this->isEditorMode()) {
             return false;

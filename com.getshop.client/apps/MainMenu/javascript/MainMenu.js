@@ -486,13 +486,14 @@ thundashop.MainMenu = {
         var event = thundashop.Ajax.createEvent('MainMenu', "showConfigurationMenu", application, null);
         thundashop.common.showInformationBox(event);
     },
-    addApplicationClicked: function(area, size, type) {
+    addApplicationClicked: function(area, size, type, extrainfo){
 
         $('.mask').hide();
         var data = {
             area: area,
             size: size,
-            type: type
+            type: type,
+            extrainfo: extrainfo
         };
 
         var event = thundashop.Ajax.createEvent('MainMenu', "showApplications", null, data);
@@ -790,6 +791,14 @@ $('.add_application_menu .button-large').live('click', function() {
     var size = $(this).closest('.applicationarea').attr('size');
     var type = $(this).closest('.applicationarea').attr('type');
     thundashop.MainMenu.addApplicationClicked(area, size, type);
+});
+
+$('.empty_app_area.bottom .gs_button').live('click', function() {
+    var area = $(this).closest('.applicationarea').attr('area');
+    var size = "bottomarea";
+    var type = "bottomarea";
+    var extraInfo = $(this).attr('position');
+    thundashop.MainMenu.addApplicationClicked(area, size, type, extraInfo);
 });
 
 $('.add_application_menu .importtext').live('click', function(e) {

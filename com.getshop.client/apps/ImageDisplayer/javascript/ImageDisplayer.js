@@ -14,6 +14,13 @@ app.ImageDisplayer = {
                     click: function() {
                         app.ImageDisplayer.showEditImage(application);
                     }
+                },
+                {
+                    icontype: "awesome",
+                    icon: "fa-angle-double-down",
+                    iconsize: "30",
+                    title: __f("Toggle on/off bottom area"),
+                    click: thundashop.Skeleton.activateBottomArea
                 }
             ]
         }

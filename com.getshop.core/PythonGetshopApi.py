@@ -2306,6 +2306,42 @@ class PageManager(object):
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
+  def addApplicationToBottomArea(self, pageId, appAreaId, applicationSettingId, position):
+    args = collections.OrderedDict()
+    if isinstance(pageId,GetShopBaseClass): 
+      args["pageId"]=json.dumps(pageId.__dict__)
+    else:
+      try:
+        args["pageId"]=json.dumps(pageId)
+      except (ValueError, AttributeError):
+        args["pageId"]=pageId
+    if isinstance(appAreaId,GetShopBaseClass): 
+      args["appAreaId"]=json.dumps(appAreaId.__dict__)
+    else:
+      try:
+        args["appAreaId"]=json.dumps(appAreaId)
+      except (ValueError, AttributeError):
+        args["appAreaId"]=appAreaId
+    if isinstance(applicationSettingId,GetShopBaseClass): 
+      args["applicationSettingId"]=json.dumps(applicationSettingId.__dict__)
+    else:
+      try:
+        args["applicationSettingId"]=json.dumps(applicationSettingId)
+      except (ValueError, AttributeError):
+        args["applicationSettingId"]=applicationSettingId
+    if isinstance(position,GetShopBaseClass): 
+      args["position"]=json.dumps(position.__dict__)
+    else:
+      try:
+        args["position"]=json.dumps(position)
+      except (ValueError, AttributeError):
+        args["position"]=position
+    data = EmptyClass()
+    data.args = args
+    data.method = "addApplicationToBottomArea"
+    data.interfaceName = "core.pagemanager.IPageManager"
+    return self.communicationHelper.sendMessage(data)
+
   def addApplicationToPage(self, pageId, applicationSettingId, pageArea):
     args = collections.OrderedDict()
     if isinstance(pageId,GetShopBaseClass): 
@@ -2916,6 +2952,28 @@ class PageManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "switchApplicationAreas"
+    data.interfaceName = "core.pagemanager.IPageManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def toggleBottomApplicationArea(self, pageId, appAreaId):
+    args = collections.OrderedDict()
+    if isinstance(pageId,GetShopBaseClass): 
+      args["pageId"]=json.dumps(pageId.__dict__)
+    else:
+      try:
+        args["pageId"]=json.dumps(pageId)
+      except (ValueError, AttributeError):
+        args["pageId"]=pageId
+    if isinstance(appAreaId,GetShopBaseClass): 
+      args["appAreaId"]=json.dumps(appAreaId.__dict__)
+    else:
+      try:
+        args["appAreaId"]=json.dumps(appAreaId)
+      except (ValueError, AttributeError):
+        args["appAreaId"]=appAreaId
+    data = EmptyClass()
+    data.args = args
+    data.method = "toggleBottomApplicationArea"
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 

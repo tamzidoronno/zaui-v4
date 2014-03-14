@@ -18,9 +18,11 @@ if (isset($_POST['data']['size'])) {
         <div class="tabset inline">
             <?
             foreach ($apps as $app) {
-                if (!$this->validateArea($app->applicationSettings->allowedAreas, $area, $size, $type)) {
+                
+                if (!$this->validateArea($app->applicationSettings->allowedAreas, $area, $size, $type, $app)) {
                     continue;
                 }
+                
                 if ($import) {
                     $apps2 = $factory->getApi()->getPageManager()->getApplicationsBasedOnApplicationSettingsId($app->getApplicationSettings()->id);
                     if (count($apps2) == 0) {
@@ -54,7 +56,7 @@ if (isset($_POST['data']['size'])) {
         <div class="tab_content inline">
             <?
             foreach ($apps as $app) {
-                if (!$this->validateArea($app->applicationSettings->allowedAreas, $area, $size, $type)) {
+                if (!$this->validateArea($app->applicationSettings->allowedAreas, $area, $size, $type, $app)) {
                     continue;
                 }
                 if (!$app->getName()) {

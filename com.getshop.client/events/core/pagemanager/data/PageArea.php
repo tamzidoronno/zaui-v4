@@ -13,10 +13,25 @@ class core_pagemanager_data_PageArea {
 	public $applicationsList;
 
 	/** @var String */
+	public $bottomApplications;
+
+	/** @var String */
+	public $bottomLeftApplicationId;
+
+	/** @var String */
+	public $bottomMiddleApplicationId;
+
+	/** @var String */
+	public $bottomRightApplicationId;
+
+	/** @var String */
 	public $type;
 
 	/** @var String */
 	public $pageId;
+
+	/** @var String */
+	public $bottomAreaActivated;
 
 }
 ?>

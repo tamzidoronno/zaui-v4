@@ -25,8 +25,19 @@ public class PageArea implements Serializable {
     public Map<String, String> extraApplicationList = new HashMap<>();
     
     public List<String> applicationsList = new ArrayList<>();
+    
+    
+    @Transient
+    public TreeMap<String, AppConfiguration> bottomApplications = new TreeMap<>();
+    
+    public String bottomLeftApplicationId = "";
+    public String bottomMiddleApplicationId = "";
+    public String bottomRightApplicationId = "";
+    
     public String type;
     public String pageId;
+    
+    public boolean bottomAreaActivated = false;
             
     public PageArea() {
     }
@@ -50,7 +61,19 @@ public class PageArea implements Serializable {
             }
         }
         
-        
+        AppConfiguration appConfig = applicationCollection.get(bottomLeftApplicationId);
+        if (appConfig != null) {
+            bottomApplications.put(appConfig.id, appConfig);
+        }
+        appConfig = applicationCollection.get(bottomRightApplicationId);
+        if (appConfig != null) {
+            bottomApplications.put(appConfig.id, appConfig);
+        }
+        appConfig = applicationCollection.get(bottomMiddleApplicationId);
+        if (appConfig != null) {
+            bottomApplications.put(appConfig.id, appConfig);
+        }
+
         populateExtraApplications(applicationCollection);
     }
     
@@ -132,6 +155,22 @@ public class PageArea implements Serializable {
 
     public void addApplication(AppConfiguration app) {
         applicationsList.add(app.id);
+    }
+
+    Map<? extends String, ? extends AppConfiguration> bottomApplications() {
+        return (Map<String, AppConfiguration>) bottomApplications.clone();
+    }
+    
+    public void removeFromBottom(String applicationId) {
+        if (bottomLeftApplicationId.equals(applicationId)) {
+            bottomLeftApplicationId = "";
+        }
+        if (bottomMiddleApplicationId.equals(applicationId)) {
+            bottomMiddleApplicationId = "";
+        }
+        if (bottomRightApplicationId.equals(applicationId)) {
+            bottomRightApplicationId = "";
+        }
     }
     
     public static class Type {

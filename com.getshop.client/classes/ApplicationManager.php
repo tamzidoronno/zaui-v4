@@ -61,7 +61,11 @@ class ApplicationManager extends FactoryBase {
         $this->getApi()->getPageManager()->savePage($page);
     }
     
-    function validateArea($areas, $area, $size, $type) {
+    function validateArea($areas, $area, $size, $type, $app=null) {
+        if ($type == "bottomarea" && method_exists($app, "renderBottomApplicationArea")) {
+            return true;
+        }
+        
         if (!in_array($size, $areas) && $size != "xlarge" || sizeof($areas) == 0) {
             return false;
         }
@@ -257,6 +261,7 @@ class ApplicationManager extends FactoryBase {
         $name = $_POST['data']['applicationName'];
         $area = $_POST['data']['applicationArea'];
         $appId = $_POST['data']['appSettingsId'];
+        $extrainfo = $_POST['data']['extrainfo'];
         ?>
         <div class="content_holder">
             <div class="application">
@@ -264,6 +269,7 @@ class ApplicationManager extends FactoryBase {
                     <input type="hidden" gsname="applicationName" value="<? echo $name; ?>">
                     <input type="hidden" gsname="applicationArea" value="<? echo $area; ?>">
                     <input type="hidden" gsname="appSettingsId" value="<? echo $appId; ?>">
+                    <input type="hidden" gsname="extrainfo" value="<? echo $extrainfo; ?>">
                     <?
                     $app = new $name();
                     $app->getStartedExtended();
@@ -286,17 +292,24 @@ class ApplicationManager extends FactoryBase {
     public function addApplicationToArea() {
         $area = $_POST['data']['applicationArea'];
         $settingsId = $_POST['data']['appSettingsId'];
+        $applicationType = isset($_POST['data']['applicationType']) ? $_POST['data']['applicationType'] : "";
         $pageId = $this->getFactory()->getPage()->getId();
 
         $pool = $this->getFactory()->getApplicationPool();
         $app = $pool->getApplicationSetting($settingsId);
 
+        
         if ($app == null || $app->isSingleton) {
             return;
         }
 
-        $application = $this->getFactory()->getApi()->getPageManager()->addApplicationToPage($pageId, $settingsId, $area);
-        $this->invokeApplicationAdded($application);
+        if ($applicationType == "bottomarea") {
+            $position =  $_POST['data']['extrainfo'];
+            $application = $this->getFactory()->getApi()->getPageManager()->addApplicationToBottomArea($pageId, $area, $settingsId, $position);
+        } else {
+            $application = $this->getFactory()->getApi()->getPageManager()->addApplicationToPage($pageId, $settingsId, $area);
+            $this->invokeApplicationAdded($application);
+        }
     }
 
     private function invokeApplicationAdded($application) {
@@ -729,6 +742,10 @@ class ApplicationManager extends FactoryBase {
             $sitebuilder->addProduct();
         }
         echo $page->id;
+    }
+    
+    public function activateAppArea() {
+        $this->getApi()->getPageManager()->toggleBottomApplicationArea($this->getPage()->id, $_POST['data']['appArea']);
     }
 }
 ?>

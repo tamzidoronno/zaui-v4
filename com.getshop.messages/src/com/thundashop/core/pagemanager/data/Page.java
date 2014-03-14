@@ -122,6 +122,9 @@ public class Page extends DataCommon implements Cloneable {
         for (PageArea area : pageAreas.values()) {
             ids.addAll(area.applicationsList);
             ids.addAll(area.extraApplicationList.keySet());
+            ids.add(area.bottomLeftApplicationId);
+            ids.add(area.bottomMiddleApplicationId);
+            ids.add(area.bottomRightApplicationId);
         }
         return ids;
     }
@@ -183,6 +186,7 @@ public class Page extends DataCommon implements Cloneable {
         HashMap<String, AppConfiguration> applications = new HashMap();
         for (PageArea pageArea : pageAreas.values()) {
             applications.putAll(pageArea.applications());
+            applications.putAll(pageArea.bottomApplications());
         }
         return applications;
     }

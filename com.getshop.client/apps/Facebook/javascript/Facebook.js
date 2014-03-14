@@ -69,7 +69,7 @@ gs_app.Facebook.prototype = {
         this.validateAddress();
         var found = false;
         $.ajax({
-            "url": this.getAddress("feed") + "&limit=5",
+            "url": this.getAddress("feed") + "&limit=15",
             "success": function(data) {
                 scope.application.find('.news_area').html('');
                 for (var key in data.data) {

@@ -30,6 +30,14 @@ thundashop.Skeleton = {
         }
         thundashop.common.unmask();
     }, 
+            
+    activateBottomArea: function() {
+        var data = {
+            appArea : this.closest('.applicationarea').attr('area')
+        };
+        var event = thundashop.Ajax.createEvent(null, 'activateAppArea', null, data);
+        thundashop.Ajax.post(event);
+    },
     
     updateSticked : function(element) {
         if (element.hasClass('sticked')) {
@@ -176,6 +184,7 @@ $('#addApplicationToArea').live('click', function() {
     if(valid) {
         var extended = form.find('*[gsname="getshop_extended_application_add"]').val();
         if(extended == "true") {
+            
             var data = {
                 "applicationName" : form.find("input[gsname='applicationName']").val(),
                 "applicationArea" : form.find("input[gsname='applicationArea']").val(),

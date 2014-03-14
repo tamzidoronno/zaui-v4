@@ -120,7 +120,7 @@ public class PagePoolImpl {
     public Page removeApplicationFromPage(Page page, String applicationId) throws ErrorException {
         for (String pageAreaKey : page.getAllPageAreas()) {
             PageArea pageArea = page.getPageArea(pageAreaKey);
-           if (pageArea.applicationsList.contains(applicationId)) {
+            if (pageArea.applicationsList.contains(applicationId)) {
                 pageArea.applicationsList.remove(applicationId);
             }
             if (pageArea.extraApplicationList.containsKey(applicationId)) {
@@ -129,7 +129,10 @@ public class PagePoolImpl {
             if (pageArea.applications.containsKey(applicationId)) {
                 pageArea.applications.remove(applicationId);
             }
+            pageArea.removeFromBottom(applicationId);
         }
+        
+        
         databaseSaver.saveObject(page, credentials);
         return finalizePage(page);
     }
@@ -292,7 +295,6 @@ public class PagePoolImpl {
     }
 
     public Page finalizePage(Page page) throws ErrorException {
-        long start = System.currentTimeMillis();
         if(page.parent != null) {
             page.parent = pages.get(page.parent.id);
         }

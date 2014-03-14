@@ -2266,6 +2266,31 @@ class APIPageManager {
 	}
 
 	/**
+	* Position could be
+	* - left
+	* - middle
+	* - right
+	*
+	* @param pageId
+	* @param appAreaId
+	* @param applicationSettingId
+	* @param position
+	* @throws ErrorException
+	*/
+
+	public function addApplicationToBottomArea($pageId, $appAreaId, $applicationSettingId, $position) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data['args']["appAreaId"] = json_encode($this->transport->object_unset_nulls($appAreaId));
+	     $data['args']["applicationSettingId"] = json_encode($this->transport->object_unset_nulls($applicationSettingId));
+	     $data['args']["position"] = json_encode($this->transport->object_unset_nulls($position));
+	     $data["method"] = "addApplicationToBottomArea";
+	     $data["interfaceName"] = "core.pagemanager.IPageManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* If you know the id of the application you want to add, we strongly recommend to use this call.
 	* This function
 	* @param pageId The id of the page to add the application to
@@ -2811,6 +2836,20 @@ class APIPageManager {
 	     $data['args']["fromArea"] = json_encode($this->transport->object_unset_nulls($fromArea));
 	     $data['args']["toArea"] = json_encode($this->transport->object_unset_nulls($toArea));
 	     $data["method"] = "switchApplicationAreas";
+	     $data["interfaceName"] = "core.pagemanager.IPageManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Search for pages by name.
+	*/
+
+	public function toggleBottomApplicationArea($pageId, $appAreaId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data['args']["appAreaId"] = json_encode($this->transport->object_unset_nulls($appAreaId));
+	     $data["method"] = "toggleBottomApplicationArea";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
 	     return $this->transport->sendMessage($data);
 	}

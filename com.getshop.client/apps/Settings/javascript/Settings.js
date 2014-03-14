@@ -298,7 +298,11 @@ thundashop.app.Settings = {
             }
 
             if ($(this).hasClass('textfield')) {
-                settings[key] = $(this).find('input')[0].value
+                var inputField = $(this).find('input')[0];
+                settings[key] = inputField.value;
+                if ($(inputField).hasClass('pagepicker') && $(inputField).attr('pageid')) {
+                    settings[key] = $(inputField).attr('pageid');
+                }
             }
 
             if ($(this).hasClass('textarea')) {

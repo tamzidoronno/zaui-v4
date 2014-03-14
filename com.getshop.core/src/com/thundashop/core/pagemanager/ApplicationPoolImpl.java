@@ -31,6 +31,7 @@ public class ApplicationPoolImpl {
      * Applications that are added to the corresponding store.
      */
     private HashMap<String, AppConfiguration> applicationInstances = new HashMap<String, AppConfiguration>();
+    
     @Autowired
     public Logger logger;
     private String storeId;

@@ -640,6 +640,20 @@ class APICalendarManager {
 	}
 
 	/**
+	* Get all entries
+	*/
+
+	public function getMonthsAfter($year, $month) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["year"] = json_encode($this->transport->object_unset_nulls($year));
+	     $data['args']["month"] = json_encode($this->transport->object_unset_nulls($month));
+	     $data["method"] = "getMonthsAfter";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Remove a given user from a given event.
 	* @param userId The userid for the event to be removed. (see usermanager for more inforamtion about this id)
 	* @param eventId The id of the event for the user to be removed from.

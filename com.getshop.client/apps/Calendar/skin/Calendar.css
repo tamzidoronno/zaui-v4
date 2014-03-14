@@ -318,3 +318,42 @@ td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1p
 .calendar_comment_inner:last-child {
     border-bottom: solid 0px;
 }
+
+.Calendar .calendar_tabs {
+    margin-bottom: 20px;
+}
+
+.calender_tab_entry {
+    border: solid 1px;
+    margin-right: 10px;
+    display: inline-block;
+    font-size: 16px;
+    line-height: 25px;
+    padding-left: 20px; 
+    padding-right: 20px;
+    cursor: pointer;
+}
+
+.day_entry  {
+    padding-left: 15px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+.listview_month_location {
+    padding-left: 15px;
+}
+.calendar_list_dayinfo {
+    padding-left: 15px;
+}
+
+.calendar_list_entry_not_full .calendar_list_entry_title {
+    color: green;
+}
+
+.calendar_list_entry_full .calendar_list_entry_title {
+    color: red;
+}
+
+.calendar_listview_nameandplace {
+    font-weight: bold;
+}

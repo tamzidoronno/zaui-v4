@@ -85,6 +85,7 @@ public class AddApplicationsToDatabase {
         
         context.getBean(AddApplicationsToDatabase.class).insert();
         context.getBean(AddApplicationsToDatabase.class).showLinks();
+        
         java.lang.System.exit(1);
     }
 

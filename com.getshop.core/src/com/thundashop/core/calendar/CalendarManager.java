@@ -859,4 +859,17 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         
         return null;
     }
+
+    @Override
+    public List<Month> getMonthsAfter(int year, int month) {
+        List<Month> months = new ArrayList();
+        for (Month imonth : this.months.values()) {
+            if (imonth.isNewerOrEqual(year, month)) {
+                months.add(finalizeMonth(imonth));
+            }
+        }
+        
+        return months;
+    }
+    
 }

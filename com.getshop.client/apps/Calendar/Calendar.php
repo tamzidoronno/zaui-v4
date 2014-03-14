@@ -135,6 +135,15 @@ class Calendar extends MarketingApplication implements Application {
         }
     }
     
+    public function isShowTabsForViewMode() {
+        $showTabsForViewMode = $this->getConfigurationSetting("showTabsForViewMode");
+        if ($showTabsForViewMode && $showTabsForViewMode != "false") {
+            return true;
+        }
+        return false;
+    }
+    
+    
     private function removeUnconfirmedEntries() {
         foreach ($this->monthObject->days as $day) {
             /* @var $day core_calendarmanager_data_Day */
@@ -215,9 +224,6 @@ class Calendar extends MarketingApplication implements Application {
         $this->showFilter();
         echo "</td><td valign='top'>";
         $this->includefile('calendar');
-        if (isset($this->day)) {
-            $this->includefile('day');
-        }
         echo "</td></tr></table>";
     }
     
@@ -514,6 +520,36 @@ class Calendar extends MarketingApplication implements Application {
         $commentId = $_POST['data']['commentId'];
         $userId = $_POST['data']['userId'];
         $this->getApi()->getUserManager()->removeComment($userId, $commentId);
+    }
+    
+    public function getListViewData() {
+        $year = (int)date('Y');
+        $month = (int)date('m');
+        $months = $this->getApi()->getCalendarManager()->getMonthsAfter($year, $month);
+        $this->locations = $this->getApi()->getCalendarManager()->getAllLocations();
+        $retdata = [];
+        foreach ($months as $month) {
+            foreach ($this->locations as $location) {
+                if (!isset($retdata[$month->year])) {
+                    $retdata[$month->year] = [];
+                }
+                
+                if (!isset($retdata[$month->year][$month->month])) {
+                    $retdata[$month->year][$month->month] = [];
+                }
+                
+                foreach ($month->days as $day) {
+                    foreach ($day->entries as $entry) {
+                        if ($entry->locationId == $location->id) {
+                            $retdata[$month->year][$month->month][$location->id][] = $entry;
+                        }
+                    }
+                }
+                
+            }
+        }
+        
+        return $retdata;
     }
 }
 ?>

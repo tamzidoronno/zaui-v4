@@ -65,6 +65,13 @@ Calendar = {
         $(document).on('click', '.calendar_location_back', app.Calendar.showLocationsConfiguration);
         $(document).on('click', '.calendar_location_delete', Calendar.deleteLocation);
         $(document).on('click', '.calendar_location_createnew', Calendar.showEditLocation);
+        $(document).on('click', '.calender_tab_entry', Calendar.changeShown);
+    },
+            
+    changeShown: function() {
+        $('.calendar_tab_content_view').hide();
+        var name = $(this).attr('byname');
+        $('[calendar_tab_name='+name).show();
     },
             
     deleteLocation: function() {

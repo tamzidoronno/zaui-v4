@@ -672,6 +672,28 @@ class CalendarManager(object):
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getMonthsAfter(self, year, month):
+    args = collections.OrderedDict()
+    if isinstance(year,GetShopBaseClass): 
+      args["year"]=json.dumps(year.__dict__)
+    else:
+      try:
+        args["year"]=json.dumps(year)
+      except (ValueError, AttributeError):
+        args["year"]=year
+    if isinstance(month,GetShopBaseClass): 
+      args["month"]=json.dumps(month.__dict__)
+    else:
+      try:
+        args["month"]=json.dumps(month)
+      except (ValueError, AttributeError):
+        args["month"]=month
+    data = EmptyClass()
+    data.args = args
+    data.method = "getMonthsAfter"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
   def removeUserFromEvent(self, userId, eventId):
     args = collections.OrderedDict()
     if isinstance(userId,GetShopBaseClass): 

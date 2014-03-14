@@ -209,4 +209,9 @@ public interface ICalendarManager {
      * @return List<Location>
      */
     public List<Location> getAllLocations();
+    
+    /**
+     * Get all entries
+     */
+    public List<Month> getMonthsAfter(int year, int month);
 }

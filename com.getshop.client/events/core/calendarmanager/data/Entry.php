@@ -33,6 +33,12 @@ class core_calendarmanager_data_Entry {
 	/** @var String */
 	public $starttime;
 
+	/** @var core_calendarmanager_data_Location */
+	public $locationObject;
+
+	/** @var String */
+	public $locationId;
+
 	/** @var String */
 	public $location;
 

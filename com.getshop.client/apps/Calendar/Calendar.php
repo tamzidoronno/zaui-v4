@@ -135,6 +135,15 @@ class Calendar extends MarketingApplication implements Application {
         }
     }
     
+    public function isShowTabsForViewMode() {
+        $showTabsForViewMode = $this->getConfigurationSetting("showTabsForViewMode");
+        if ($showTabsForViewMode && $showTabsForViewMode != "false") {
+            return true;
+        }
+        return false;
+    }
+    
+    
     private function removeUnconfirmedEntries() {
         foreach ($this->monthObject->days as $day) {
             /* @var $day core_calendarmanager_data_Day */
@@ -146,6 +155,55 @@ class Calendar extends MarketingApplication implements Application {
                 }
             }
         }
+    }
+    
+    public function getLocation($locationId) {
+        $locations = $this->getApi()->getCalendarManager()->getAllLocations();
+
+        foreach ($locations as $ilocation) {
+            if ($ilocation->id == $locationId) {
+                return $ilocation;
+            }
+        }
+        
+        return null;
+    }
+    
+    private function saveLocationData() {
+        $location = $this->getLocation($_POST['data']['locationId']);
+        if (!$location) {
+            $location = new \core_calendarmanager_data_Location();
+        }
+        
+        $location->location = $_POST['data']['locationName'];
+        $location->locationExtra = $_POST['data']['locationExtra'];
+        
+        if ($_POST['data']['commentText']) {
+            $comment = new \core_usermanager_data_Comment();
+            $comment->comment = nl2br($_POST['data']['commentText']);
+            $location->comments[] = $comment;
+        }
+        
+        $location = $this->getApi()->getCalendarManager()->saveLocation($location);
+        $_POST['data']['locationId'] = $location->id;
+    }
+    
+    public function saveLocation() {
+        $this->saveLocationData();
+        $this->includefile("editLocation");
+    }
+    
+    public function showEditLocation() {
+        $this->includefile("editLocation");
+    }
+    
+    public function showLocationsEditor() {
+        $this->includefile("locations");
+    }
+    
+    public function deleteLocation() {
+        $this->getApi()->getCalendarManager()->deleteLocation($_POST['data']['locationId']);
+        $this->includefile("locations");
     }
     
     public function setFilter() {
@@ -166,9 +224,6 @@ class Calendar extends MarketingApplication implements Application {
         $this->showFilter();
         echo "</td><td valign='top'>";
         $this->includefile('calendar');
-        if (isset($this->day)) {
-            $this->includefile('day');
-        }
         echo "</td></tr></table>";
     }
     
@@ -204,11 +259,10 @@ class Calendar extends MarketingApplication implements Application {
         $entry->starttime = $_POST['data']['eventstart'];
         $entry->stoptime = $_POST['data']['eventstop'];
         $entry->maxAttendees = $_POST['data']['maxattendees'];
-        $entry->location = $_POST['data']['eventlocation'];
+        $entry->locationId = $_POST['data']['locationId'];
         $entry->title = $_POST['data']['eventname'];
         $entry->color = $_POST['data']['color'];
         $entry->linkToPage = $_POST['data']['linkToPage'];
-        $entry->locationExtended = $_POST['data']['locationExtended'];
         $entry->lockedForSignup = $_POST['data']['lockedForSignup'];
         
         return $entry;
@@ -466,6 +520,36 @@ class Calendar extends MarketingApplication implements Application {
         $commentId = $_POST['data']['commentId'];
         $userId = $_POST['data']['userId'];
         $this->getApi()->getUserManager()->removeComment($userId, $commentId);
+    }
+    
+    public function getListViewData() {
+        $year = (int)date('Y');
+        $month = (int)date('m');
+        $months = $this->getApi()->getCalendarManager()->getMonthsAfter($year, $month);
+        $this->locations = $this->getApi()->getCalendarManager()->getAllLocations();
+        $retdata = [];
+        foreach ($months as $month) {
+            foreach ($this->locations as $location) {
+                if (!isset($retdata[$month->year])) {
+                    $retdata[$month->year] = [];
+                }
+                
+                if (!isset($retdata[$month->year][$month->month])) {
+                    $retdata[$month->year][$month->month] = [];
+                }
+                
+                foreach ($month->days as $day) {
+                    foreach ($day->entries as $entry) {
+                        if ($entry->locationId == $location->id) {
+                            $retdata[$month->year][$month->month][$location->id][] = $entry;
+                        }
+                    }
+                }
+                
+            }
+        }
+        
+        return $retdata;
     }
 }
 ?>

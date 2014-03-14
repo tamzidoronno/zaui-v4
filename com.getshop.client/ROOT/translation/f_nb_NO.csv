@@ -25,7 +25,6 @@ Add a new marker;-;Legg til en ny markør
 Add application;-;Legg til en applikasjon
 Add coupons;-;Legg til kuponger
 Add more coupons;-;Legg til flere kuponger
-Add new;-;Legg til ny
 Add new top level variation;-;Legg til en ny attribut hovedgruppe
 Add some eyecandy to your webshop, by activating this. It will show some nice fade in effects.;-;Sprit opp din webshop ved å aktivere dete. Noen fine fading effekter blir da aktivert.
 Add sub entry;-;Legg til undermeny
@@ -74,7 +73,6 @@ Backgrounds;-;Bakgrunn
 Base color;-;Base farge
 Base currency;-;Hoved valutta
 Base text color;-;Base tekst farge
-Booking configuration;-;Booking konfigurasjon
 Boundaries;-;Grenser
 Browse applications;-;Bla gjennom applikasjoner
 Button color;-;Knappfarger
@@ -511,7 +509,6 @@ Your personal information has been updated.;-;Din personlige informasjon har bli
 Your reset code;-;Din kode for tilbakesetting
 Your settings have been saved.;-;Dine instillinger har blitt lagret.
 Your site has been deleted;-;Din side har blitt slettet
-[ Add new ];-;[ Legg til ny ]
 add_event;-;Legg til event
 appid;-;AppId
 appid_required;-;"Din facebook app id, alle facebook sin sosiale pluginner krever dette."

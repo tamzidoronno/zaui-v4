@@ -271,3 +271,89 @@ td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1p
     font-size: 13px;
     text-align: right;
 }
+
+.editlocationscalendar td {
+    font-size: 16px;
+}
+.editlocationscalendar {
+    padding: 20px;
+    font-size: 16px;
+    color: #FFF;
+    padding-bottom: 50px;
+}
+
+.editlocationscalendar .selectlcoation {
+    display: inline-block;
+    border: solid 1px #FFF;
+    padding: 5px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.editlocationscalendar .gs_button.calendar_location_save {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.editlocationscalendar .gs_button.calendar_location_back {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+}
+
+.editlocationscalendar .gs_button.calendar_location_delete {
+    position: absolute;
+    bottom: 20px;
+    right: 150px;
+}
+
+.calendar_comment_inner {
+    padding-left: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: solid 1px #4f4f4f;
+}
+
+.calendar_comment_inner:last-child {
+    border-bottom: solid 0px;
+}
+
+.Calendar .calendar_tabs {
+    margin-bottom: 20px;
+}
+
+.calender_tab_entry {
+    border: solid 1px;
+    margin-right: 10px;
+    display: inline-block;
+    font-size: 16px;
+    line-height: 25px;
+    padding-left: 20px; 
+    padding-right: 20px;
+    cursor: pointer;
+}
+
+.day_entry  {
+    padding-left: 15px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+.listview_month_location {
+    padding-left: 15px;
+}
+.calendar_list_dayinfo {
+    padding-left: 15px;
+}
+
+.calendar_list_entry_not_full .calendar_list_entry_title {
+    color: green;
+}
+
+.calendar_list_entry_full .calendar_list_entry_title {
+    color: red;
+}
+
+.calendar_listview_nameandplace {
+    font-weight: bold;
+}

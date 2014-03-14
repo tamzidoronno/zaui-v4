@@ -14,6 +14,7 @@ import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.storemanager.data.Store;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,7 +52,49 @@ public class UpgradeBase {
         m.close();
         return retval;
     }
+    
+    public List<DataCommon> getDataFromDatabase(Class manager, String storeId) throws UnknownHostException {
+        Morphia morphia = new Morphia();
+        morphia.map(DataCommon.class);
+        
+        Mongo m = new Mongo("localhost", 27017);
+        DB db = m.getDB(manager.getSimpleName());
+        DBCollection collection = db.getCollection("col_"+storeId);
+        List<DataCommon> retstores = new ArrayList();
+        DBCursor documents = collection.find();
+        
+        while (documents.hasNext()) {
+            DBObject dbObject = documents.next();
+            DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, dbObject);
+            retstores.add(dataCommon);
+        }
+        
+        m.close();
+        return retstores;
+    }
 
+    public List<Store> getAllStores() throws UnknownHostException {
+        Morphia morphia = new Morphia();
+        morphia.map(DataCommon.class);
+        
+        Mongo m = new Mongo("localhost", 27017);
+        DB db = m.getDB("StoreManager");
+        DBCollection collection = db.getCollection("col_all");
+        List<Store> retstores = new ArrayList();
+        DBCursor documents = collection.find();
+        
+        while (documents.hasNext()) {
+            DBObject dbObject = documents.next();
+            DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, dbObject);
+            if (dataCommon instanceof Store) {
+                retstores.add((Store)dataCommon);
+            }
+        }
+        
+        m.close();
+        return retstores;
+    }
+     
     public void saveObject(DataCommon object, String manager) throws UnknownHostException {
         Mongo m = new Mongo("localhost", 27017);
         DB db = m.getDB(manager);

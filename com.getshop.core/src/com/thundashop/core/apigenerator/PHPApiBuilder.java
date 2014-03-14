@@ -103,6 +103,8 @@ public class PHPApiBuilder {
         String result = generatePHPApi();
         this.generator.writeFile(result, eventsPath + "API2.php");
         
+        System.out.println("PATH: " + eventsPath);
+        
         for (Class dataobject : dataObjects) {
             String dataPath = eventsPath + dataobject.getCanonicalName().replace("com.thundashop.", "").replace(".", "/");
             dataPath = dataPath+".php";

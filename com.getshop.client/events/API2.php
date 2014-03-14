@@ -494,6 +494,22 @@ class APICalendarManager {
 	}
 
 	/**
+	* Delete a location by id
+	*
+	* @param location
+	* @throws ErrorException
+	*/
+
+	public function deleteLocation($locationId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["locationId"] = json_encode($this->transport->object_unset_nulls($locationId));
+	     $data["method"] = "deleteLocation";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Returns a set of filters that
 	* has been applied to the current session
 	* calendar.
@@ -518,6 +534,20 @@ class APICalendarManager {
 	     $data['args'] = array();
 	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
 	     $data["method"] = "getAllEventsConnectedToPage";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all locations.
+	*
+	* @return List
+	*/
+
+	public function getAllLocations() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getAllLocations";
 	     $data["interfaceName"] = "core.calendar.ICalendarManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -610,6 +640,20 @@ class APICalendarManager {
 	}
 
 	/**
+	* Get all entries
+	*/
+
+	public function getMonthsAfter($year, $month) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["year"] = json_encode($this->transport->object_unset_nulls($year));
+	     $data['args']["month"] = json_encode($this->transport->object_unset_nulls($month));
+	     $data["method"] = "getMonthsAfter";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Remove a given user from a given event.
 	* @param userId The userid for the event to be removed. (see usermanager for more inforamtion about this id)
 	* @param eventId The id of the event for the user to be removed from.
@@ -640,6 +684,22 @@ class APICalendarManager {
 	     $data["method"] = "saveEntry";
 	     $data["interfaceName"] = "core.calendar.ICalendarManager";
 	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Adds a new location to the system.
+	*
+	* @param location
+	* @throws ErrorException
+	*/
+
+	public function saveLocation($core_calendarmanager_data_Location) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_calendarmanager_data_Location"] = json_encode($this->transport->object_unset_nulls($core_calendarmanager_data_Location));
+	     $data["method"] = "saveLocation";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->cast(API::core_calendarmanager_data_Location(), $this->transport->sendMessage($data));
 	}
 
 	/**

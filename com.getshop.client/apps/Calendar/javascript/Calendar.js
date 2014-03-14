@@ -11,6 +11,13 @@ app.Calendar = {
                     iconsize : "30",
                     title: __f("Settings"),
                     click: app.Calendar.showSettings
+                },
+                {
+                    icontype: "awesome",
+                    icon: "fa-location-arrow",
+                    iconsize : "30",
+                    title: __f("Locations"),
+                    click: app.Calendar.showLocationsConfiguration
                 }
             ]
         }
@@ -23,6 +30,27 @@ app.Calendar = {
     showSettings: function(event, app) {
         var event = thundashop.Ajax.createEvent(null, "showSettings", app, {});
         thundashop.common.showInformationBox(event, __f("Settings"));
+    },
+            
+    showLocationsConfiguration: function(event, app) {
+        if (!app) {
+            app = this;
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "showLocationsEditor", app, {});
+        thundashop.common.showInformationBox(event, __f("Locations"));
+    },
+            
+    saveLocationConfiguration: function() {
+        var data = {
+            locationName: $('#locationName').val(),
+            locationExtra: $('#locationExtra').val(),
+            locationId: $('#locationId').val(),
+            commentText: $('#commentText').val()
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "saveLocation", this, data);
+        thundashop.common.showInformationBox(event, __f("Locations"));
     }
 };
 
@@ -32,6 +60,44 @@ Calendar = {
     init: function() {
         PubSub.subscribe('navigation_complete', this.checkScrolling, this);
         PubSub.subscribe("setting_switch_toggled", this.onOffChanged, this);
+        $(document).on('click', '.selectlcoation', Calendar.showEditLocation);
+        $(document).on('click', '.calendar_location_save', app.Calendar.saveLocationConfiguration);
+        $(document).on('click', '.calendar_location_back', app.Calendar.showLocationsConfiguration);
+        $(document).on('click', '.calendar_location_delete', Calendar.deleteLocation);
+        $(document).on('click', '.calendar_location_createnew', Calendar.showEditLocation);
+        $(document).on('click', '.calender_tab_entry', Calendar.changeShown);
+    },
+            
+    changeShown: function() {
+        $('.calendar_tab_content_view').hide();
+        var name = $(this).attr('byname');
+        $('[calendar_tab_name='+name).show();
+    },
+            
+    deleteLocation: function() {
+        var confirm = thundashop.common.confirm(__f("Are you sure you want to delete the location?"));
+        
+        if (!confirm) {
+            return;
+        }
+         
+        var data = {
+            locationId: $('#locationId').val(),
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "deleteLocation", this, data);
+        thundashop.common.showInformationBox(event, __f("Locations"));
+    },
+            
+    showEditLocation: function() {
+        var data = {};
+        
+        if ($(this).attr('value')) {
+            data.locationId = $(this).attr('value')
+        }
+         
+        var event = thundashop.Ajax.createEvent(null, "showEditLocation", this, data);
+        thundashop.common.showInformationBox(event, __f("Locations"));
     },
     
     expandDays: function() {
@@ -188,9 +254,8 @@ $('.Calendar .addevent #save').live('click', function() {
     data.maxattendees = $('#maxattendies').val();
     data.eventstop = $('#eventstop').val();
     data.eventdescription = $('#eventdescription').val();
-    data.eventlocation = $('#eventlocation').val();
     data.linkToPage = $('#linkToPage').attr('pageid');
-    data.locationExtended = $('#locationextended').val();
+    data.locationId = $('#location').val();
     data.extraDays = extraDaysData;
     data.lockedForSignup = $('#lockEvent').is(":checked");
     

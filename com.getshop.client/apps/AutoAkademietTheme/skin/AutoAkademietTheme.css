@@ -459,3 +459,25 @@ html {
 .Booking .userlistoverview a {
     color: #FFF;
 }
+
+.calendar_tab_content_view[calendar_tab_name=list] {
+    width: 926px;
+    background-color: #222222;
+    border: solid 1px #333333;
+    box-sizing: border-box;
+    padding: 20px;
+    font-size: 14px;
+}
+
+.calendar_list_entry_full .calendar_list_entry_title {
+    color: #e73c3c;
+}
+
+.calendar_list_entry_not_full .calendar_list_entry_title {
+    color: #318204;
+}
+
+.Calendar .listview_month:not(:last-child) {
+    border-bottom: solid 1px #333;
+    margin-bottom: 15px;
+}

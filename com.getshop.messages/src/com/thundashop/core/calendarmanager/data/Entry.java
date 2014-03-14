@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.calendarmanager.data;
 
+import com.google.code.morphia.annotations.Transient;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,8 +31,15 @@ public class Entry implements Serializable, Comparable<Entry> {
     public String linkToPage = "";
     public String description;
     public String starttime;
+    
+    @Transient
+    public Location locationObject;
+    
+    public String locationId;
+    
     public String location;
     public String locationExtended = "";
+    
     public String stoptime;
     public String entryId;
     public String userId;
@@ -53,6 +61,7 @@ public class Entry implements Serializable, Comparable<Entry> {
         this.description = entry.description;
         this.attendees = entry.attendees;
         this.waitingList = entry.waitingList;
+        this.locationId = entry.locationId;
         this.otherDays = entry.otherDays;
         this.starttime = entry.starttime;
         this.stoptime = entry.stoptime;

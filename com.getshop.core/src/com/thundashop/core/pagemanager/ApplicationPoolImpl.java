@@ -56,6 +56,11 @@ public class ApplicationPoolImpl {
     public AppConfiguration createNewApplication(String applicationSettingsId, String applicationId) throws ErrorException {
         AppManager appManager = pageManager.getManager(AppManager.class);
         ApplicationSettings setting = appManager.getApplication(applicationSettingsId);
+        
+        if (setting == null) {
+            throw new ErrorException(18);
+        }
+        
         if (setting.type.equals(ApplicationSettings.Type.Theme)) {
             removeAllThemeApplications();
         }
@@ -239,6 +244,11 @@ public class ApplicationPoolImpl {
         for (AppConfiguration appConfig : applicationInstances.values()) {
             try {
                 ApplicationSettings setting = appManager.getApplication(appConfig.appSettingsId);
+                
+                if (setting == null) {
+                    continue;
+                }
+                
                 if (setting.type.equals(ApplicationSettings.Type.Theme)) {
                     remove.add(appConfig.id);
                 }
@@ -253,7 +263,8 @@ public class ApplicationPoolImpl {
     public void setThemeSelectedToStoreConfiguration(AppConfiguration res) throws ErrorException {
         AppManager appManager = pageManager.getManager(AppManager.class);
         ApplicationSettings setting = appManager.getApplication(res.appSettingsId);
-        if (setting.type.equals(ApplicationSettings.Type.Theme)) {
+        
+        if (setting != null && setting.type.equals(ApplicationSettings.Type.Theme)) {
             Store store = pageManager.getStore();
             store.configuration.hasSelectedDesign = true;
             StoreManager storeManager = pageManager.getManager(StoreManager.class);
@@ -270,6 +281,11 @@ public class ApplicationPoolImpl {
                     continue;
                 }
                 ApplicationSettings appSettings = appManager.getApplication(config.appSettingsId);
+                
+                if (appSettings == null) {
+                    continue;
+                }
+                
                 if (appSettings.isSingleton
                         || appSettings.type.equals(ApplicationSettings.Type.Theme)
                         || appSettings.type.equals(ApplicationSettings.Type.System)) {

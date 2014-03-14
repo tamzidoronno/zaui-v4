@@ -1,6 +1,7 @@
 package com.thundashop.core.calendar;
 
 import com.thundashop.core.calendarmanager.data.Entry;
+import com.thundashop.core.calendarmanager.data.Location;
 import com.thundashop.core.calendarmanager.data.Month;
 import com.thundashop.core.calendarmanager.data.ReminderHistory;
 import com.thundashop.core.common.Administrator;
@@ -181,4 +182,36 @@ public interface ICalendarManager {
      * Returns a list of 
      */
     public List<Entry> getAllEventsConnectedToPage(String pageId);
+    
+    /**
+     * Adds a new location to the system. 
+     * 
+     * @param location
+     * @throws ErrorException 
+     */
+    @Administrator
+    @Writing
+    public Location saveLocation(Location location) throws ErrorException;
+    
+    /**
+     * Delete a location by id
+     * 
+     * @param location
+     * @throws ErrorException 
+     */
+    @Administrator
+    @Writing
+    public void deleteLocation(String locationId) throws ErrorException;
+    
+    /**
+     * Get all locations.
+     * 
+     * @return List<Location>
+     */
+    public List<Location> getAllLocations();
+    
+    /**
+     * Get all entries
+     */
+    public List<Month> getMonthsAfter(int year, int month);
 }

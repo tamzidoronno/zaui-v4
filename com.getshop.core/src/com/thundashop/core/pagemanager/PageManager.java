@@ -266,6 +266,10 @@ public class PageManager extends ManagerBase implements IPageManager {
         PageManager manager = getManager(PageManager.class);
         ApplicationSettings toApp = appman.getApplication(toAppId);
         
+        if (toApp == null) {
+            throw new ErrorException(18);
+        }
+        
         ApplicationPoolImpl pool = manager.applicationPool;
         Map<String, AppConfiguration> allAddedApplications = pool.getApplications();
         for(String instanceId : allAddedApplications.keySet()) {
@@ -340,7 +344,7 @@ public class PageManager extends ManagerBase implements IPageManager {
         for(AppConfiguration config : apps) {
             try {
                 ApplicationSettings settings = manager.getApplication(config.appSettingsId);
-                if(settings.type.equals(type)) {
+                if(settings != null && settings.type.equals(type)) {
                     toReturn.add(config);
                 }
             }catch(ErrorException e) {

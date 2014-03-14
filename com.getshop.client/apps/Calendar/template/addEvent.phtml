@@ -13,11 +13,14 @@ namespace ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8;
     $linkToPageText = $this->getPageName($linkToPage);
     $stop = isset($entry) ? $entry->stoptime : '';
     $max =  isset($entry) ? $entry->maxAttendees : '';
-    $location = isset($entry) ? $entry->location : '';
     $description = isset($entry) ? $entry->description : '';
-    $locationExtended = isset($entry) ? $entry->locationExtended : '';
     $locked = isset($entry) && $entry->lockedForSignup ? ' checked ' : "";
     $entryid = isset($entry) ? $entry->entryId : '';
+    $locations = $this->getApi()->getCalendarManager()->getAllLocations();
+    
+    if (!$locations) {
+        $locations = [];
+    }
 ?>
 
 <center>
@@ -53,9 +56,19 @@ namespace ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8;
             </tr>
             <tr><td><?php echo $this->__("max_atandees"); ?></td><td><input id="maxattendies" type='textfield' value='<?php echo $max; ?>'/></td></tr>
             <tr><td><?php echo $this->__("Link to page"); ?></td><td><input class="pagepicker" pageId="<? echo $linkToPage; ?>" id="linkToPage" type='textfield' value='<?php echo $linkToPageText; ?>'/></td></tr>
-            <tr><td colspan="2"><?php echo $this->__("location", "common"); ?></td></tr>
-            <tr><td colspan="2"><textarea id="eventlocation" cols="50" rows="5"><?php echo $location; ?></textarea></td></tr>
-            <tr><td><?php echo $this->__f("Extended location"); ?></td><td><input id="locationextended" type='textfield' value='<?php echo $locationExtended; ?>'/></td></tr>
+            <tr><td><?php echo $this->__("location", "common"); ?></td><td>
+                <select id="location">
+                    <?php 
+                        foreach ($locations as $location) {
+                            $name = $location->location;
+                            $selected = $location->id == $entry->locationObject->id ? "selected" : "";
+                            $id = $location->id;
+                            echo "<option $selected value='$id'>".$name."</option>";
+                        }
+                    ?>
+                </select>
+                </td>
+                </tr>
             <tr><td colspan="2"><?php echo $this->__("event_desc"); ?></td></tr>
             <tr><td colspan="2"><textarea id="eventdescription" cols="50" rows="10"><?php echo $description; ?></textarea></td></tr>
             <tr><td colspan="2"><div><input <? echo $locked; ?> style="width: 20px;" type="checkbox" id="lockEvent"/><?php echo $this->__("Lock event for signups"); ?></div></td></tr>

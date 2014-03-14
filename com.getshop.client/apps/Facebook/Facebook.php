@@ -27,7 +27,7 @@ class Facebook extends \WebshopApplication implements \Application {
     
     public function render() {
         echo "<div class='news_area'>";
-        echo "<i class='fa fa-spinner'></i> ".$this->__w("Loading")."...";
+        echo "<i class='fa fa-spinner fa-spin'></i> ".$this->__w("Loading")."...";
         $address = $this->getConfigurationSetting("address");
         if(!$address && $this->hasWriteAccess()) {
             $this->includefile("activation");

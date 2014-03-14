@@ -1,8 +1,7 @@
 <?php
 namespace ns_ba885f72_f571_4a2e_8770_e91cbb16b4ad;
 
-class Facebook extends \MarketingApplication implements \Application {
-    public $singleton = true;
+class Facebook extends \WebshopApplication implements \Application {
 
     //put your code here
     public function getDescription() {
@@ -13,9 +12,6 @@ class Facebook extends \MarketingApplication implements \Application {
         return "Facebook";
     }
     
-    public function getYoutubeId() {
-        return "K7xJbWta7-k";
-    }
 
     public function postProcess() {
         
@@ -25,63 +21,27 @@ class Facebook extends \MarketingApplication implements \Application {
         
     }
 
-    public function render() {
-        
+    public function saveAddress() {
+        $this->setConfigurationSetting("address", $_POST['data']['address']);
     }
     
-    public function renderBottom() {
-        $appid = "";
-        if (isset($this->getConfiguration()->settings->facebookappid)) {
-            $value = $this->getConfiguration()->settings->facebookappid->value;
-            if ($value != "") {
-                $appid ="&appid=".$value;
-            }
+    public function render() {
+        echo "<div class='news_area'>";
+        $address = $this->getConfigurationSetting("address");
+        if(!$address && $this->hasWriteAccess()) {
+            $this->includefile("activation");
         }
-        
-        echo '<div id="fb-root"></div>
-        <script>(function(d, s, id) {
-              var js, fjs = d.getElementsByTagName(s)[0];
-              if (d.getElementById(id)) return;
-              js = d.createElement(s); js.id = id;
-              js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1'.$appid.'";
-              fjs.parentNode.insertBefore(js, fjs);
-            }(document, \'script\', \'facebook-jssdk\'));
-            
-            $(document).ajaxComplete(function(){
-                try{
-                    FB.XFBML.parse(); 
-                }catch(ex){}
-            });
-        
-        </script>';
+        echo "</div>";
+        echo "<script>";
+        echo "var fb_" . str_replace("-","_", $this->getConfiguration()->id) . " = new gs_app.Facebook('" . $this->getConfiguration()->id . "','$address');";
+        echo "</script>";
     }
-
+    
     /**
      * Should display you configuration page.
      */
     public function renderConfig() {
         $this->includefile("facebookconfig");
-    }
-    
-    function curPageURL() {
-        $pageURL = 'http';
-        if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
-        $pageURL .= "://";
-        if ($_SERVER["SERVER_PORT"] != "80") {
-         $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"];
-        } else {
-            $pageURL .= $_SERVER["SERVER_NAME"];
-        }
-        return $pageURL;
-    }
-
-    public function productAboveShortDesc($product) {
-        if ($this->getConfiguration()->settings->likebutton->value != "true") {
-            return;
-        }
-        
-        $page = $this->curPageURL()."/?page=".$this->getPage()->id;
-        echo '<div class="fb-like" data-href="'.$page.'" data-send="false" data-width="450" data-show-faces="true"></div>';
     }
     
 }

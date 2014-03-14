@@ -43,24 +43,24 @@ public class AddApplicationsToDatabase {
     
     private List<ApplicationSettings> addApplications() {
         List<ApplicationSettings> apps = new ArrayList();
-
-        ApplicationSettings roughTheme = createSettings(
-                "RoughTheme",
-                "bcd06c3e-283b-4862-aafc-4d4b8209c9b8",
-                emtpy,
-                "",
-                ApplicationSettings.Type.Theme, false);
-        roughTheme.isPublic = true;
-        apps.add(roughTheme);
-
-        ApplicationSettings bottomButton = createSettings(
-                "BottomButton",
-                "1081551b-1ecc-46cd-a192-63567ce129ab",
-                emtpy,
-                "",
-                ApplicationSettings.Type.Webshop, false);
-        bottomButton.isPublic = true;
-        apps.add(bottomButton);
+//
+//        ApplicationSettings roughTheme = createSettings(
+//                "RoughTheme",
+//                "bcd06c3e-283b-4862-aafc-4d4b8209c9b8",
+//                emtpy,
+//                "",
+//                ApplicationSettings.Type.Theme, false);
+//        roughTheme.isPublic = true;
+//        apps.add(roughTheme);
+//
+//        ApplicationSettings bottomButton = createSettings(
+//                "BottomButton",
+//                "1081551b-1ecc-46cd-a192-63567ce129ab",
+//                emtpy,
+//                "",
+//                ApplicationSettings.Type.Webshop, false);
+//        bottomButton.isPublic = true;
+//        apps.add(bottomButton);
        
         return apps;
     }

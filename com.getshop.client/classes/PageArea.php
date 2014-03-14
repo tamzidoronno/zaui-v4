@@ -70,10 +70,10 @@ class PageArea extends FactoryBase {
             }
         }
         
-        if (is_array($this->backendPageArea->bottomApplications)) {
+        if ($this->backendPageArea->bottomApplications) {
             foreach ($this->backendPageArea->bottomApplications as $app) {
                 $appInstance = IocContainer::getFactorySingelton()->getApplicationPool()->getApplicationInstance($app->id);
-
+                
                 if ($appInstance) {
                     $this->bottomApplications[$app->id] = $appInstance;
                 }

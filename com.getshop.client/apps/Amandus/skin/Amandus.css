@@ -121,3 +121,8 @@ body { font-family: 'Open Sans', 'HelveticaNeue', 'Helvetica Neue', 'Helvetica',
 .gs_frontpage_7 .gs_row.r4 .gs_inner { padding-top: 60px;  }
 .gs_frontpage_9 .gs_row.r4 .gs_inner { padding-top: 60px;  }
 .gs_frontpage_13 .gs_row.r4 .gs_inner { padding-bottom: 60px; padding-top: 60px;   }
+
+@media only all and (max-width: 800px) {
+    .TopMenu { margin-left: 10px !important; }
+    .Logo { display: none; }
+}

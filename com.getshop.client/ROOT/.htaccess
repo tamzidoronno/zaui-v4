@@ -4,12 +4,12 @@ RewriteEngine On
 RewriteBase /
 ErrorDocument 404 /
 
+RewriteRule ^/?generatePDF.php$ - [L]
 RewriteRule ^(.*).html$ index.php?rewrite=$1 [L,NE]
 
 RewriteRule ^(documentation)($|/) - [L]
 
 RewriteRule ^sitemap.xml$ sitemap.php [L]
 RewriteRule ^favicon.ico$ favicon.php [L]
-RewriteRule ^favicon.ico$ generateExcelReport.php [L]
 
 RewriteCond %{QUERY_STRING} !index 

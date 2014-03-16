@@ -90,6 +90,10 @@ $(function() {
             return;
         }
 
+        if ($(this).attr('href').indexOf('generatePDF.php') > -1) {
+            return;
+        }
+        
         event.stopPropagation();
         event.preventDefault();
 

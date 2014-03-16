@@ -1,0 +1,40 @@
+<?
+echo "<div>" . $this->__w("Entires marked in green is available for booking and entries marked in red is full") . "</div><br>";
+$entries = $this->getListViewData();
+foreach ($entries as $year => $months) {
+    foreach ($months as $month => $locations) {
+
+        if (!count($locations)) {
+            continue;
+        }
+
+        $monthName = date("F", mktime(0, 0, 0, $month, 10));
+        echo "<div class='calendar_listview_nameandplace'>" . $this->__w($monthName) . " " . $year . "</div>";
+
+        echo "<div class='listview_month'>";
+        foreach ($locations as $locationId => $entries) {
+            echo "<div class='listview_month_location'>";
+            $location = $this->getLocation($locationId);
+            echo "<div>" . $location->location . ":</div>";
+
+            foreach ($entries as $entry) {
+                $full = $entry->lockedForSignup || $entry->maxAttendees <= count($entry->attendees);
+                $fullClass = $full ? "calendar_list_entry_full" : "calendar_list_entry_not_full";
+                echo "<div class='day_entry $fullClass'>";
+                $i = 1;
+                $dayName = count($entry->otherDays) ? $this->__w("Day") . ":$i - " : "";
+                echo "<div class='calendar_list_entry_title'>" . $entry->title . "</div>";
+                echo "<div class='calendar_list_dayinfo'>" . $dayName . $this->__w("Date") . ": " . $entry->day . " - " . $entry->starttime . "-" . $entry->stoptime . "</div>";
+                foreach ($entry->otherDays as $otherDay) {
+                    $i++;
+                    $dayName = $this->__w("Day") . ":$i - ";
+                    echo "<div class='calendar_list_dayinfo'>" . $dayName . $this->__w("Date") . ": " . $otherDay->day . " - " . $otherDay->starttime . "-" . $otherDay->stoptime . "</div>";
+                }
+                echo "</div>";
+            }
+            echo "</div>";
+        }
+        echo "</div>";
+    }
+}
+?>

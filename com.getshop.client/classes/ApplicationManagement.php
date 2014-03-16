@@ -174,6 +174,9 @@ class ApplicationManagement extends ApplicationBase {
         if ($data['apparea_subheader'] == "true") {
             $settings->allowedAreas[] = "subheader";
         }
+        if ($data['apparea_bottomarea'] == "true") {
+            $settings->allowedAreas[] = "bottomarea";
+        }
         $settings->pageSingelton = $data['pagesingelton'];
         $settings->trialPeriode = $data['trialPeriode'];
         $settings = $this->setWidgets($settings);

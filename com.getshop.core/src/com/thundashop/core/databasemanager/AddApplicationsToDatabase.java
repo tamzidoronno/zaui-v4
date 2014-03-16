@@ -44,14 +44,14 @@ public class AddApplicationsToDatabase {
     private List<ApplicationSettings> addApplications() {
         List<ApplicationSettings> apps = new ArrayList();
 //
-//        ApplicationSettings roughTheme = createSettings(
-//                "RoughTheme",
-//                "bcd06c3e-283b-4862-aafc-4d4b8209c9b8",
-//                emtpy,
-//                "",
-//                ApplicationSettings.Type.Theme, false);
-//        roughTheme.isPublic = true;
-//        apps.add(roughTheme);
+        ApplicationSettings roughTheme = createSettings(
+                "PdfGenerator",
+                "de134fb1-05ef-4c50-9aad-d6dc36e6aeff",
+                emtpy,
+                "",
+                ApplicationSettings.Type.Theme, false);
+        roughTheme.isPublic = true;
+        apps.add(roughTheme);
 //
 //        ApplicationSettings bottomButton = createSettings(
 //                "BottomButton",

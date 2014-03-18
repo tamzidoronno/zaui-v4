@@ -482,6 +482,7 @@ html {
     margin-bottom: 15px;
 }
 
-.Calendar .calendar_tab_content_view a {
+.Calendar .calendar_tab_content_view[calendar_tab_name="list"] a {
     color: #FFF;
+    /*border: solid 1px #333;*/
 }

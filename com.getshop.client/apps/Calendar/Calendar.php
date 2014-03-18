@@ -230,12 +230,10 @@ class Calendar extends MarketingApplication implements Application {
     public function renderList($includeCss=false) {
         if ($includeCss) {
             echo "<style>";
-            echo '.day_entry  { padding-left: 15px; padding-bottom: 10px; margin-bottom: 10px; }';
-            echo '.listview_month_location { padding-left: 15px; }';
-            echo '.calendar_list_dayinfo { padding-left: 15px; }';
-            echo '.calendar_list_entry_not_full .calendar_list_entry_title { color: green; }';
-            echo '.calendar_list_entry_full .calendar_list_entry_title { color: red; }';
-            echo '.calendar_listview_nameandplace { font-weight: bold; }';
+            echo '.listview_month_location td { vertical-align: top; }';
+            echo '.listview_month_location { margin-bottom: 20px; margin-left: 10px; }';
+            echo '.calendar_list_entry_not_full td { color: green; }';
+            echo '.calendar_list_entry_full td { color: red; }';
             echo "</style>";
         }
         $this->includefile('calendarlist');
@@ -542,7 +540,7 @@ class Calendar extends MarketingApplication implements Application {
         $months = $this->getApi()->getCalendarManager()->getMonthsAfter($year, $month);
         $this->locations = $this->getApi()->getCalendarManager()->getAllLocations();
         $retdata = [];
-        foreach ($months as $month) {
+        foreach (array_reverse($months) as $month) {
             foreach ($this->locations as $location) {
                 if (!isset($retdata[$month->year])) {
                     $retdata[$month->year] = [];

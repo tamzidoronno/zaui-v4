@@ -43,15 +43,18 @@ public class AddApplicationsToDatabase {
     
     private List<ApplicationSettings> addApplications() {
         List<ApplicationSettings> apps = new ArrayList();
-//
-//        ApplicationSettings roughTheme = createSettings(
-//                "RoughTheme",
-//                "bcd06c3e-283b-4862-aafc-4d4b8209c9b8",
-//                emtpy,
-//                "",
-//                ApplicationSettings.Type.Theme, false);
-//        roughTheme.isPublic = true;
-//        apps.add(roughTheme);
+        List<String> allowed = new ArrayList();
+        allowed.add("large");
+        allowed.add("xlarge");
+        
+        ApplicationSettings newsLetterApp = createSettings(
+                "NewsLetter",
+                "adbdc94d-a201-4586-aa07-1e4d46ca0fd6",
+                allowed,
+                "",
+                ApplicationSettings.Type.Marketing, false);
+        newsLetterApp.isPublic = true;
+        apps.add(newsLetterApp);
 //
 //        ApplicationSettings bottomButton = createSettings(
 //                "BottomButton",

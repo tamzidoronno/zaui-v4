@@ -119,6 +119,7 @@
 "1016","Unable to calculate price for product.",
 "1017","Unable to find product attribute value."
 "1018","Failed searching youtube."
+"1019","The email can not be empty, and you need atleast one user"
 
 "1000001","The name attribute is invalid",
 "1000002","The entry you are trying to fecth does not exists.",

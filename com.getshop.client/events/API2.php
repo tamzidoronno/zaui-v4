@@ -1961,6 +1961,43 @@ class APIMobileManager {
 	}
 
 }
+class APINewsLetterManager {
+
+	var $transport;
+	
+	function APINewsLetterManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	* Calling this function will start sending newsletter with a five minute interval for all recipients.
+	* @param group
+	*/
+
+	public function sendNewsLetter($core_messagemanager_NewsLetterGroup) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_messagemanager_NewsLetterGroup"] = json_encode($this->transport->object_unset_nulls($core_messagemanager_NewsLetterGroup));
+	     $data["method"] = "sendNewsLetter";
+	     $data["interfaceName"] = "core.messagemanager.INewsLetterManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Send a preview to the selected contacts.
+	* @param group
+	*/
+
+	public function sendNewsLetterPreview($core_messagemanager_NewsLetterGroup) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_messagemanager_NewsLetterGroup"] = json_encode($this->transport->object_unset_nulls($core_messagemanager_NewsLetterGroup));
+	     $data["method"] = "sendNewsLetterPreview";
+	     $data["interfaceName"] = "core.messagemanager.INewsLetterManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+}
 class APINewsManager {
 
 	var $transport;
@@ -4269,6 +4306,12 @@ class GetShopApi {
       */
       public function getMobileManager() {
            return new APIMobileManager($this->transport);
+      }
+      /**
+      * @return NewsLetterManager
+      */
+      public function getNewsLetterManager() {
+           return new APINewsLetterManager($this->transport);
       }
       /**
       * @return NewsManager

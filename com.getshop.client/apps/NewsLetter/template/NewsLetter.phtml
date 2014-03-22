@@ -1,0 +1,53 @@
+<?php
+namespace ns_adbdc94d_a201_4586_aa07_1e4d46ca0fd6;
+
+/* @var $this \ns_adbdc94d_a201_4586_aa07_1e4d46ca0fd6\HelloWorld */
+?>
+    <div class='newsletter_body'>
+        <div class='heading'>
+            <span style="float:left;" class="gs_button" id="save_template"><? echo $this->__f("Save current template"); ?></span>
+            <span class="gs_button" id="send_preview"><? echo $this->__f("Send preview"); ?></span>
+            <span class="gs_button" id="show_recipients"><? echo $this->__f("Send newsletter"); ?></span>
+        </div>
+        <span id="newsletter_content" style="height: 200px;">
+            <? echo $this->getMail(); ?>
+        </span>
+        <h1><? echo $this->__f("Variables allowed"); ?></h1>
+        <div class="variables_allowed">
+            <table width="50%">
+                <tr>
+                    <td>{Contact.name}</td>
+                    <td><? echo $this->__f("Contact name"); ?></td>
+                </tr>
+                <tr>
+                    <td>{Logo}</td>
+                    <td><? echo $this->__f("Your logo"); ?></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class='conctact_list'>
+        <div class="heading">
+            <span style="float:left;" class="gs_button" id="show_mail"><? echo $this->__f("Back to email"); ?></span>
+            <span class="gs_button" id="send_newsletter_to_recipients"><? echo $this->__f("Send newsletter to recipients"); ?></span>
+        </div>
+        <h1><? echo $this->__f("Select the recipients for this email"); ?></h1>
+        <?
+        /* @var $this NewsLetter */
+         $allUsers = $this->getApi()->getUserManager()->getAllUsers();
+         echo "<table>";
+         foreach($allUsers as $user) {
+             /* @var $user \core_usermanager_data_User */
+             echo "<tr><td><input type='checkbox' class='newsletter_user' id='recipient_".$user->id."' userid='$user->id'></td><td><label for='recipient_".$user->id."'>" . $user->fullName . "</label></td></tr>";
+         }
+         echo "</table>";
+         ?>
+    </div>
+
+    <script>
+        thundashop.common.activateCKEditor('newsletter_content', { 
+            "notinline":true,
+            "notdestroyonblur" : true,
+            "autogrow" : true
+        });
+    </script>

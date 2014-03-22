@@ -43,6 +43,7 @@ public class GetShop extends ManagerBase implements IGetShop {
         storeId = "all";
         partners = new HashMap();
     }
+    
     @Autowired
     public Database database;
 

@@ -99,7 +99,7 @@ public class NewsLetterManager extends ManagerBase implements INewsLetterManager
                 databaseSaver.deleteObject(remove, credentials);
             } catch (ErrorException ex) {
                 log.error(this, "Could not save newsletter", ex);
-            }   
+            }
         }
     }
     
@@ -112,17 +112,14 @@ public class NewsLetterManager extends ManagerBase implements INewsLetterManager
         }
         group.userIds.remove(userId);
         group.SentMailTo.add(userId);
-        sendEmail(userId, group.title, body, group.currentStoreId);
+        sendEmail(user.emailAddress, group.title, body);
         databaseSaver.saveObject(group, credentials);
     }
     
-    
-    private void sendEmail(String email, String title, String body, String storeId) {
-        mailFactory.setStoreId(storeId);
+    private void sendEmail(String email, String title, String body) {
         mailFactory.send("post@getshop.com", email, title, body);
     }
     
-
     private void addGroup(NewsLetterGroup group) throws ErrorException {
         group.storeId = storeId;
         groups.add(group);

@@ -1,24 +1,21 @@
 package com.thundashop.core.messagemanager;
 
-import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
-import com.thundashop.core.databasemanager.data.DataRetreived;
-import java.util.ArrayList;
-import java.util.List;
+import com.thundashop.core.usermanager.UserManager;
+import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NewsLetterManager extends ManagerBase  implements INewsLetterManager {
+@Scope("prototype")
+public class NewsLetterManager extends ManagerBase implements INewsLetterManager {
     
-    public List<NewsLetterGroup> groups = new ArrayList();
-
     @Autowired
-    MailFactory mailFactory;
+    NewsLetterSender sender;    
     
     @Autowired
     public NewsLetterManager(Logger log, DatabaseSaver databaseSaver) {
@@ -26,60 +23,32 @@ public class NewsLetterManager extends ManagerBase  implements INewsLetterManage
     }
     
     @Override
-    public void dataFromDatabase(DataRetreived data) {
-        for(DataCommon tmpData : data.data) {
-            if(tmpData instanceof NewsLetterGroup) {
-                groups.add((NewsLetterGroup) tmpData);
-            }
-        }
-    }
-    
-    
-    @Override
     public void sendNewsLetter(NewsLetterGroup group) throws ErrorException {
         if(group.emailBody == null || group.emailBody.trim().isEmpty()) {
             throw new ErrorException(1019);
         }
-        if(group.emails.isEmpty()) {
+        if(group.userIds.isEmpty()) {
             throw new ErrorException(1019);
         }
-        groups.add(group);
-        group.storeId = "all";
-        databaseSaver.saveObject(group, credentials);
-    }
-    
-    @Scheduled(fixedRate=3000)
-    public void scheduledMailSending() throws ErrorException {
-        List<NewsLetterGroup> toRemove = new ArrayList();
-        for(NewsLetterGroup group : groups) {
-            if(group.emails.isEmpty()) {
-                toRemove.add(group);
-                continue;
-            }
-            sendNewsLetterGroup(group);
+        
+        UserManager manager = getManager(UserManager.class);
+        
+        group.users = new HashMap();
+        for(String userId : group.userIds) {
+            group.users.put(userId, manager.getUserById(userId));
         }
-        for(NewsLetterGroup remove : toRemove) {
-            groups.remove(remove);
-            databaseSaver.deleteObject(remove, credentials);
-        }
+        
+        
+        sender.addGroup(group);
     }
 
     @Override
     public void sendNewsLetterPreview(NewsLetterGroup group) throws ErrorException {
-        sendNewsLetterGroup(group);
+        group.users = new HashMap();
+        String userid = group.userIds.get(0);
+        UserManager manager = getManager(UserManager.class);
+        group.users.put(userid, manager.getUserById(userid));
+        sender.sendNewsLetterGroup(group);
     }
 
-    private void sendEmail(String email, String title, String body) {
-        mailFactory.send("post@getshop.com", email, title, body);
-    }
-
-    private void sendNewsLetterGroup(NewsLetterGroup group) throws ErrorException {
-        String email = group.emails.get(0);
-        String body = group.emailBody;
-        group.emails.remove(email);
-        group.SentMailTo.add(email);
-        sendEmail(email, group.title, body);
-        databaseSaver.saveObject(group, credentials);
-    }
-    
 }

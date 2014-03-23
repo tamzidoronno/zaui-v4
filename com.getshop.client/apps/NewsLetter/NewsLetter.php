@@ -42,21 +42,15 @@ class NewsLetter extends \ApplicationBase implements \Application {
         $mail = $_POST['data']['mail'];
         
         $allUsers = $this->getApi()->getUserManager()->getAllUsers();
-        $usersEmail = array();
-        foreach($allUsers as $user) {
-            /* @var $user \core_usermanager_data_User */
-            if(in_array($user->id, $users)) {
-                $usersEmail[] = $user->emailAddress;
-            }
-        }
+        
         
         $group = new \core_messagemanager_NewsLetterGroup();
         $group->emailBody = $mail;
-        $group->emails = $usersEmail;
+        $group->userIds = $users;
         
         if($_POST['data']['id'] == "send_preview") {
-            $group->emails = array();
-            $group->emails[] = $this->getUser()->emailAddress;
+            $group->userIds = array();
+            $group->userIds[] = $this->getUser()->id;
             $this->getApi()->getNewsLetterManager()->sendNewsLetterPreview($group);
         } else {
             $this->getApi()->getNewsLetterManager()->sendNewsLetter($group);

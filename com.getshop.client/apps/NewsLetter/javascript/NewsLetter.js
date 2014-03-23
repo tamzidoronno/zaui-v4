@@ -15,7 +15,8 @@ app.NewsLetter = {
        var data = {
            "users" : recipients,
            "mail" : content,
-           "id" : $(this).attr('id')
+           "id" : $(this).attr('id'),
+           "subject" : $('#news_letter_subject').val()
        }
        
        var event = thundashop.Ajax.createEvent('','sendNewsLetter',$(this),data);

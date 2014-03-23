@@ -1,7 +1,7 @@
 <?php
 class core_messagemanager_NewsLetterGroup extends core_common_DataCommon  {
 	/** @var String */
-	public $emails;
+	public $userIds;
 
 	/** @var String */
 	public $emailBody;
@@ -10,7 +10,13 @@ class core_messagemanager_NewsLetterGroup extends core_common_DataCommon  {
 	public $title;
 
 	/** @var String */
+	public $subject;
+
+	/** @var String */
 	public $SentMailTo;
+
+	/** @var String */
+	public $users;
 
 }
 ?>

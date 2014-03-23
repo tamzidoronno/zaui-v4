@@ -9,6 +9,13 @@ namespace ns_adbdc94d_a201_4586_aa07_1e4d46ca0fd6;
             <span class="gs_button" id="send_preview"><? echo $this->__f("Send preview"); ?></span>
             <span class="gs_button" id="show_recipients"><? echo $this->__f("Send newsletter"); ?></span>
         </div>
+        <div style="height: 50px;">
+<!--            <table>
+                <tr>-->
+                    <? echo $this->__f("Email subject"); ?>&nbsp;&nbsp;<input type="textfield" id="news_letter_subject" placeholder="<? echo $this->__f("Subject"); ?>"/>
+<!--                </tr>
+            </table>-->
+        </div>
         <span id="newsletter_content" style="height: 200px;">
             <? echo $this->getMail(); ?>
         </span>

@@ -89,6 +89,12 @@ public class UserStoreCollection {
             if (checkPhoneNumer(user, searchCriteria)) {
                 retusers.put(user.id, user);
             }
+            if (user.company != null && user.company.vatNumber.equals(searchCriteria)) {
+                retusers.put(user.id, user);
+            }
+            if (user.birthDay != null && user.birthDay.equals(searchCriteria)) {
+                retusers.put(user.id, user);
+            }
         }
 
         return new ArrayList<User>(retusers.values());

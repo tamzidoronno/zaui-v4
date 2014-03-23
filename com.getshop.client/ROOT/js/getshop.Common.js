@@ -135,6 +135,13 @@ $(document).on('click', '.errorform .close', function(event) {
     $("#errorbox").hide();
 });
 
+thundashop.common.gsToggleButton = function() {
+    if ($(this).hasClass('pressed')) {
+        $(this).removeClass('pressed');
+    } else {
+        $(this).addClass('pressed');
+    }
+};
 
 thundashop.common.addNotificationProgress = function(id, text) {
     var infoPanel = $('.upload_information_panel');
@@ -1037,3 +1044,5 @@ $(document).on('click', '.gs_onoff', function() {
 });
 $(document).on('click', '.gs_showPageLayoutSelection .option_entry', thundashop.common.navigateContentPages);
 $(document).on('click', '.layoutpreviewselection .layoutpreview', thundashop.common.selectPredefinedConent);
+
+$(document).on('click', '.gs_toggle_button', thundashop.common.gsToggleButton);

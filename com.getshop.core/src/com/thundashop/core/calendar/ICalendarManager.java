@@ -1,6 +1,7 @@
 package com.thundashop.core.calendar;
 
 import com.thundashop.core.calendarmanager.data.Entry;
+import com.thundashop.core.calendarmanager.data.FilterResult;
 import com.thundashop.core.calendarmanager.data.Location;
 import com.thundashop.core.calendarmanager.data.Month;
 import com.thundashop.core.calendarmanager.data.ReminderHistory;
@@ -10,6 +11,7 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Writing;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The calendar helps you keep track of happenings and other events.<br>
@@ -214,4 +216,21 @@ public interface ICalendarManager {
      * Get all entries
      */
     public List<Month> getMonthsAfter(int year, int month);
+    
+    /**
+     * This returns a list of all entries
+     * that is connected to a page.
+     * 
+     * @return
+     * @throws ErrorException 
+     */
+    @Editor
+    public List<FilterResult> getEventsGroupedByPageId() throws ErrorException;
+    
+    /**
+     * return a list of entires that a specified user
+     * has been attending to
+     */
+    @Editor
+    public List<Entry> getEntriesByUserId(String userId) throws ErrorException;
 }

@@ -1513,6 +1513,12 @@ border-bottom: solid 1px #3a3a3a;
 .gs_button:hover { background: linear-gradient(to top, #094930, #52e5ac); }
 .gs_button:active { background: none; background-color: #34c88e; }
 
+.gs_toggle_button { font-size: 15px; background-color: #DDD; color: #333; padding: 5px; border-radius: 4px; box-shadow: 0px 0px 5px #333; display: inline-block; background: linear-gradient(to top, #555, #DDD); padding-left: 15px; padding-right: 15px; cursor: pointer; border: solid 1px #666;}
+.gs_toggle_button:hover { background: linear-gradient(to top, #094930, #52e5ac); }
+.gs_toggle_button:active { background: none; background-color: #34c88e; }
+
+.gs_toggle_button.pressed { background: #CCC; } 
+
 .gs_button.small { font-size: 11px; padding: 1px; padding-right: 10px; padding-left: 10px; font-weight: bold;}
 
 .gs_margin_operations { color:#000000; border-radius: 3px; position:absolute; right: 0px; border: solid 1px #BBB; display:inline-block; font-size:30px; cursor:pointer; background-color:#EFEFEF; padding: 2px; z-index: 12; }

@@ -484,5 +484,9 @@ html {
 
 .Calendar .calendar_tab_content_view[calendar_tab_name="list"] a {
     color: #FFF;
-    /*border: solid 1px #333;*/
+}
+
+.CalendarFilter a {
+    font-size: 16px;
+    color: #FFF;
 }

@@ -574,6 +574,20 @@ class APICalendarManager {
 	}
 
 	/**
+	* return a list of entires that a specified user
+	* has been attending to
+	*/
+
+	public function getEntriesByUserId($userId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data["method"] = "getEntriesByUserId";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Gives you the specified entry by id
 	*
 	* @param entryId
@@ -587,6 +601,22 @@ class APICalendarManager {
 	     $data["method"] = "getEntry";
 	     $data["interfaceName"] = "core.calendar.ICalendarManager";
 	     return $this->transport->cast(API::core_calendarmanager_data_Entry(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* This returns a list of all entries
+	* that is connected to a page.
+	*
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function getEventsGroupedByPageId() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getEventsGroupedByPageId";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
 	}
 
 	/**

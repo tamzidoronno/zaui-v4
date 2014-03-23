@@ -3,6 +3,7 @@ package com.thundashop.core.calendar;
 import com.thundashop.core.calendarmanager.data.Day;
 import com.thundashop.core.calendarmanager.data.Entry;
 import com.thundashop.core.calendarmanager.data.ExtraDay;
+import com.thundashop.core.calendarmanager.data.FilterResult;
 import com.thundashop.core.calendarmanager.data.Location;
 import com.thundashop.core.calendarmanager.data.Month;
 import com.thundashop.core.calendarmanager.data.ReminderHistory;
@@ -29,17 +30,15 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 public class CalendarManager extends ManagerBase implements ICalendarManager {
+
     private HashMap<String, Month> months = new HashMap();
     private HashMap<String, Location> locations = new HashMap();
-    
     @Autowired
     public MailFactory mailFactory;
-    
     @Autowired
     public SMSFactory smsFactory;
-
     private List<ReminderHistory> reminderHistory = new ArrayList();
-    
+
     @Autowired
     public CalendarManager(Logger log, DatabaseSaver databaseSaver) {
         super(log, databaseSaver);
@@ -49,15 +48,15 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataObject : data.data) {
             if (dataObject instanceof Location) {
-                Location location = (Location)dataObject;
+                Location location = (Location) dataObject;
                 locations.put(location.id, location);
             }
             if (dataObject instanceof Month) {
-                Month month = (Month)dataObject;
+                Month month = (Month) dataObject;
                 months.put(month.id, month);
             }
             if (dataObject instanceof ReminderHistory) {
-                ReminderHistory hist = (ReminderHistory)dataObject;
+                ReminderHistory hist = (ReminderHistory) dataObject;
                 reminderHistory.add(hist);
             }
         }
@@ -87,7 +86,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         entry.year = year;
         entry.month = month;
         entry.day = day;
-        
+
         mymonth.addEntry(day, entry);
         mymonth.storeId = storeId;
         databaseSaver.saveObject(mymonth, credentials);
@@ -95,9 +94,10 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     }
 
     private boolean isNewerOrEquals(Day day, Month month, int compareMonth, int compareDay, int compareYear) {
-        if (month.year > compareYear)
+        if (month.year > compareYear) {
             return true;
-        
+        }
+
         if (month.month > compareMonth) {
             return true;
         }
@@ -111,53 +111,61 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
     private String mutateText(String password, String text, Entry entry, User user) throws ErrorException {
         String date = entry.day + "/" + entry.month + "-" + entry.year + " : " + entry.starttime;
-       
+
         if (entry.stoptime != null) {
-            date += "->"+entry.stoptime;
+            date += "->" + entry.stoptime;
         }
-        
+
         Collections.sort(entry.otherDays);
         for (ExtraDay extraDay : entry.otherDays) {
-            date += "<br>" + extraDay.day + "/" + extraDay.month + "-" + extraDay.year + " : " +extraDay.starttime + "->" + extraDay.stoptime;
+            date += "<br>" + extraDay.day + "/" + extraDay.month + "-" + extraDay.year + " : " + extraDay.starttime + "->" + extraDay.stoptime;
         }
-        
+
         String time = entry.starttime + "-" + entry.stoptime;
 
-        if (user.username != null)
+        if (user.username != null) {
             text = text.replace("{USERNAME}", user.username);
-        if (password != null)
+        }
+        if (password != null) {
             text = text.replace("{PASSWORD}", password);
-        if (user.fullName != null)
+        }
+        if (user.fullName != null) {
             text = text.replace("{FULLNAME}", user.fullName);
-        if (entry.title != null)
+        }
+        if (entry.title != null) {
             text = text.replace("{EVENT_TITLE}", entry.title);
-        if (date != null)
+        }
+        if (date != null) {
             text = text.replace("{EVENT_DATE}", date);
-        if (time != null)
+        }
+        if (time != null) {
             text = text.replace("{EVENT_TIME}", time);
-        if (entry.location != null)
+        }
+        if (entry.location != null) {
             text = text.replace("{EVENT_LOCATION}", entry.location.replaceAll("\n", "<BR />"));
-        if (entry.description != null)
+        }
+        if (entry.description != null) {
             text = text.replace("{EVENT_DESCRIPTION}", entry.description.replaceAll("\n", "<BR />"));
-        
+        }
+
         String groupLogo = getGroupLogo(user);
         if (groupLogo != null) {
-            String address = "http://"+getStore().webAddressPrimary+"//displayImage.php?id="+groupLogo;
-            String imageTag = "<img width='150' src='"+address+"'/>";
+            String address = "http://" + getStore().webAddressPrimary + "//displayImage.php?id=" + groupLogo;
+            String imageTag = "<img width='150' src='" + address + "'/>";
             text = text.replace("{GROUP_LOGO}", imageTag);
         }
-        
-        
+
+
         return text;
     }
 
     private HashMap<String, Setting> getBookingSettings() throws ErrorException {
         HashMap<String, Setting> settings = null;
-        
+
         IPageManager pageManager = getManager(PageManager.class);
-        List<AppConfiguration> calendars  = pageManager.getApplicationsBasedOnApplicationSettingsId("6f3bc804-02a1-44b0-a17d-4277f0c6dee8");
+        List<AppConfiguration> calendars = pageManager.getApplicationsBasedOnApplicationSettingsId("6f3bc804-02a1-44b0-a17d-4277f0c6dee8");
         List<AppConfiguration> bookings = pageManager.getApplicationsBasedOnApplicationSettingsId("74ea4e90-2d5a-4290-af0c-230a66e09c78");
-        
+
         // TODO - remove this shit!
         // There must be a better way, I guess you dont even 
         // understand whats happening here. (hint, getting the correct booking app
@@ -178,16 +186,16 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                 }
             }
         }
-        
+
         return settings;
     }
-    
+
     private void sendMailNotification(String password, Entry entry, User user, boolean waitingList) throws ErrorException {
         String sendmail = null;
-        
+
         HashMap<String, Setting> settings = getBookingSettings();
-        
-        if(settings != null && settings.get("sendmail") != null) {
+
+        if (settings != null && settings.get("sendmail") != null) {
             sendmail = settings.get("sendmail").value;
         }
 
@@ -200,7 +208,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                 return;
             }
         }
-        
+
         String subject = settings.get("subject").value;
         String text = settings.get("bookingmail").value;
 
@@ -208,7 +216,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             subject = settings.get("subjectwaiting").value;
             text = settings.get("bookingmailwaiting").value;
         }
-        
+
         if (subject == null || subject.isEmpty()) {
             throw new ErrorException(72);
         }
@@ -218,28 +226,28 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         }
 
         text = mutateText(password, text, entry, user);
-        
+
         mailFactory.send(getFromAddress(), user.emailAddress, subject, text);
         if (user.emailAddressToInvoice != null && !user.emailAddressToInvoice.equals("")) {
             mailFactory.send(getFromAddress(), user.emailAddressToInvoice, subject, text);
         }
     }
-    
+
     private String getFromAddress() throws ErrorException {
         String storeEmailAddress = getStore().configuration.emailAdress;
         if (storeEmailAddress != null) {
             return storeEmailAddress;
         }
-        
+
         return "noreply@getshop.com";
     }
 
     private void sendSms(String password, Entry entry, User user, boolean waitingList) throws ErrorException {
         String sendsms = null;
-        
+
         HashMap<String, Setting> settings = getBookingSettings();
-        
-        if(settings != null && settings.get("sendsms") != null) {
+
+        if (settings != null && settings.get("sendsms") != null) {
             sendsms = settings.get("sendsms").value;
         }
         if (sendsms == null || sendsms.equals("") || sendsms.equals("false")) {
@@ -273,7 +281,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
         return retentry;
     }
-    
+
     private Entry removeUserWaitingList(String userId, String entryId) throws ErrorException {
         Entry retentry = null;
 
@@ -305,15 +313,15 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     @Override
     public Entry createEntry(int year, int month, int day) throws ErrorException {
         Entry entry = new Entry();
-        
-        if (getSession() == null || 
-                getSession().currentUser == null || 
-                getSession().currentUser.isCustomer()) {
+
+        if (getSession() == null
+                || getSession().currentUser == null
+                || getSession().currentUser.isCustomer()) {
             entry.needConfirmation = true;
         }
-        
+
         registerEntryInternal(year, month, day, entry);
-        
+
         return entry;
     }
 
@@ -345,11 +353,11 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                             entry.month = myMonth.month;
                             entry.day = myDay.day;
                         }
-                        
+
                         for (Entry entry : myDay.entries) {
                             finalizeEntry(entry);
                         }
-                        
+
                         entries.addAll(myDay.entries);
                     }
                 }
@@ -435,7 +443,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
         return onMonth;
     }
-    
+
     private ReminderHistory createReminderHistory(String text, String subject, String eventId, boolean byEmail) {
         ReminderHistory smsHistory = new ReminderHistory();
         smsHistory.byEmail = byEmail;
@@ -449,11 +457,11 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     private void remindUserInternal(boolean byEmail, boolean bySMS, List<String> users, String text, String subject, String eventId) throws ErrorException {
         ReminderHistory smsHistory = createReminderHistory(text, subject, eventId, byEmail);
         ReminderHistory emailHistory = createReminderHistory(text, subject, eventId, byEmail);
-        
+
         for (String userId : users) {
             UserManager usrmgr = getManager(UserManager.class);
             User user = usrmgr.getUserById(userId);
-            
+
             if (byEmail) {
                 mailFactory.send(getFromAddress(), user.emailAddress, subject, text);
                 emailHistory.users.add(user);
@@ -468,12 +476,12 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                 smsHistory.users.add(user);
             }
         }
-        
+
         if (smsHistory.users.size() > 0) {
             databaseSaver.saveObject(smsHistory, credentials);
             reminderHistory.add(smsHistory);
         }
-        
+
         if (emailHistory.users.size() > 0) {
             databaseSaver.saveObject(emailHistory, credentials);
             reminderHistory.add(emailHistory);
@@ -496,7 +504,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                         } else {
                             entry.attendees.add(userId);
                         }
-                        
+
                         databaseSaver.saveObject(month, credentials);
 
                         UserManager usrmgr = getManager(UserManager.class);
@@ -507,14 +515,14 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             }
         }
     }
-    
+
     private void sendMessages(User user, Entry entry, String password, boolean waitingList) throws ErrorException {
         if (!entry.needConfirmation) {
             sendMailNotification(password, entry, user, waitingList);
             sendSms(password, entry, user, waitingList);
         }
     }
-    
+
     @Override
     public Entry getEntry(String entryId) {
         for (Month month : months.values()) {
@@ -523,39 +531,40 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                     if (entry.entryId.equals(entryId)) {
                         finalizeEntry(entry);
                         return entry;
-                    }        
+                    }
                 }
             }
         }
-        
+
         return null;
     }
 
     @Override
     public void saveEntry(Entry entry) throws ErrorException {
         Entry oldEntry = getEntry(entry.entryId);
-        if(oldEntry == null) {
+        if (oldEntry == null) {
             throw new ErrorException(1012);
         }
-        
+
         if (!entry.needConfirmation && (getSession().currentUser.type < Type.EDITOR)) {
             throw new ErrorException(26);
         }
-        
+
         for (Month month : months.values()) {
             for (Day day : month.days.values()) {
                 Entry toRemove = null;
                 for (Entry tmpEntry : day.entries) {
-                    if (tmpEntry.entryId.equals(entry.entryId))
+                    if (tmpEntry.entryId.equals(entry.entryId)) {
                         toRemove = tmpEntry;
+                    }
                 }
-                
-                if(toRemove != null) {
+
+                if (toRemove != null) {
                     day.entries.remove(toRemove);
                     day.entries.add(entry);
                 }
             }
-            
+
             databaseSaver.saveObject(month, credentials);
         }
     }
@@ -565,7 +574,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         Entry entry = getEntry(entryId);
         entry.needConfirmation = false;
         saveEntry(entry);
-        
+
         for (String userId : entry.attendees) {
             UserManager usermanager = getManager(UserManager.class);
             User user = usermanager.getUserById(userId);
@@ -576,23 +585,23 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     @Override
     public List<String> getFilters() throws ErrorException {
         List<String> filterIds = new ArrayList();
-        
+
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         int year = cal.get(Calendar.YEAR);
         int month = cal.get(Calendar.MONTH) + 1;
         int day = cal.get(Calendar.DAY_OF_MONTH);
-       
+
         for (Entry entry : getEntries(year, month, day, null)) {
             if (entry.locationId == null) {
                 continue;
             }
-            
+
             if (!filterIds.contains(entry.locationId)) {
                 filterIds.add(entry.locationId);
             }
         }
-        
+
         ArrayList<String> filters = new ArrayList();
         for (String filterId : filterIds) {
             Location loc = locations.get(filterId);
@@ -600,34 +609,34 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                 filters.add(loc.location);
             }
         }
-        
+
         java.util.Collections.sort(filters);
-        
-        
+
+
         return filters;
     }
-    
-    private String toCamelCase(String s){
+
+    private String toCamelCase(String s) {
         if (s == null) {
             return "";
         }
         String[] parts = s.split("_");
         String camelCaseString = "";
-        for (String part : parts){
-           camelCaseString = camelCaseString + toProperCase(part);
+        for (String part : parts) {
+            camelCaseString = camelCaseString + toProperCase(part);
         }
         return camelCaseString;
-     }
-    
+    }
+
     private String toProperCase(String s) {
-        return s.substring(0, 1).toUpperCase() +
-                   s.substring(1).toLowerCase();
+        return s.substring(0, 1).toUpperCase()
+                + s.substring(1).toLowerCase();
     }
 
     private void filterResult(List<Entry> entries, List<String> filters) {
         List<Entry> removeEntries = new ArrayList();
         for (Entry entry : entries) {
-            
+
             boolean found = false;
             for (String s : filters) {
                 Location loc = getLocationByName(s);
@@ -636,12 +645,12 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                     break;
                 }
             }
-            
+
             if (!found) {
                 removeEntries.add(entry);
             }
         }
-        
+
         for (Entry entry : removeEntries) {
             entries.remove(entry);
         }
@@ -656,7 +665,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                     for (String filter : filters) {
                         setThisFilters.add(toCamelCase(filter));
                     }
-                    
+
                     getSession().put("filters", setThisFilters);
                 } else {
                     getSession().remove("filters");
@@ -667,30 +676,30 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
     private Month finalizeMonth(Month mymonth) {
         Session lsession = getSession();
-        
+
         for (Day day : mymonth.days.values()) {
             for (Entry entry : day.entries) {
                 finalizeEntry(entry);
             }
         }
-        
+
         if (lsession == null) {
             return mymonth;
         }
-        
+
         List<String> filters = (List<String>) lsession.get("filters");
-        
+
         if (filters == null || filters.isEmpty()) {
             return mymonth;
         }
-        
+
         mymonth = mymonth.clone();
-        
-        
+
+
         for (Day day : mymonth.days.values()) {
-            filterResult(day.entries, (List)lsession.get("filters"));
+            filterResult(day.entries, (List) lsession.get("filters"));
         }
-        
+
         return mymonth;
     }
 
@@ -699,7 +708,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         if (getSession() == null) {
             return new ArrayList<String>();
         }
-        
+
         List<String> filters = (List<String>) getSession().get("filters");
         if (filters == null) {
             filters = new ArrayList<String>();
@@ -719,11 +728,11 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
                 UserManager usrmgr = getManager(UserManager.class);
                 User userObject = usrmgr.getUserById(userId);
-                sendMessages(userObject, entry, "", false);            
+                sendMessages(userObject, entry, "", false);
                 return;
             }
         }
-        
+
         throw new ErrorException(101);
     }
 
@@ -731,7 +740,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         if (user.groups == null || user.groups.isEmpty()) {
             return null;
         }
-        
+
         UserManager userManager = getManager(UserManager.class);
         String groupId = user.groups.iterator().next();
         for (Group group : userManager.getAllGroups()) {
@@ -751,7 +760,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                 allHistory.add(hist);
             }
         }
-        
+
         List<ReminderHistory> sortedList = new ArrayList(allHistory);
         Collections.reverse(sortedList);
         return sortedList;
@@ -763,8 +772,8 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         User user = userManager.getUserById(userId);
         removeUserAttendee(userId, fromEventId);
         removeUserWaitingList(userId, fromEventId);
-        
-        String newPassord = ""+(11005 + (int)(Math.random() * ((98999 - 11005) + 1)));
+
+        String newPassord = "" + (11005 + (int) (Math.random() * ((98999 - 11005) + 1)));
         userManager.updatePassword(userId, "", newPassord);
         addUserToEvent(userId, toEventId, newPassord, user.username);
     }
@@ -772,23 +781,23 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     @Override
     public List<Entry> getAllEventsConnectedToPage(String pageId) {
         List<Entry> entries = new ArrayList();
-        
+
         for (Month month : months.values()) {
             for (Day day : month.days.values()) {
                 for (Entry entry : day.entries) {
-                    if (entry.linkToPage != null 
-                            && entry.linkToPage.equals(pageId) 
-                            && !entry.isInPast() 
-                            && entry.availableForBooking 
+                    if (entry.linkToPage != null
+                            && entry.linkToPage.equals(pageId)
+                            && !entry.isInPast()
+                            && entry.availableForBooking
                             && !entry.lockedForSignup) {
                         entries.add(entry);
                     }
                 }
             }
         }
-        
-        return entries; 
-   }
+
+        return entries;
+    }
 
     @Override
     public void addUserToPageEvent(String userId, String bookingAppId) throws ErrorException {
@@ -797,34 +806,34 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         if (user != null) {
             IPageManager pageManager = getManager(PageManager.class);
             HashMap<String, Setting> settings = pageManager.getSecuredSettings(bookingAppId);
-            
+
             Comment comment = new Comment();
             comment.appId = bookingAppId;
             comment.comment = "BookingEvent";
             manager.addComment(user.id, comment);
-            
+
             String storeOwner = getStore().configuration.emailAdress;
             String content = settings.get("bookingmail").value;
             content = mutateText("", content, new Entry(), user);
-            
+
             mailFactory.send(getFromAddress(), user.emailAddress, settings.get("subject").value, content);
-            mailFactory.send("post@getshop.com", getFromAddress(), settings.get("subject").value, content);   
+            mailFactory.send("post@getshop.com", getFromAddress(), settings.get("subject").value, content);
         }
     }
 
     @Override
     public Location saveLocation(Location location) throws ErrorException {
         location.storeId = storeId;
-        
+
         for (Comment comment : location.comments) {
             if (comment.createdByUserId == null) {
                 comment.createdByUserId = getSession().currentUser.id;
             }
         }
-        
+
         databaseSaver.saveObject(location, credentials);
         locations.put(location.id, location);
-        
+
         return location;
     }
 
@@ -856,7 +865,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                 return loc;
             }
         }
-        
+
         return null;
     }
 
@@ -868,8 +877,60 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                 months.add(finalizeMonth(imonth));
             }
         }
-        
+
         return months;
     }
-    
+
+    @Override
+    public List<FilterResult> getEventsGroupedByPageId() throws ErrorException {
+        List<FilterResult> retEntries = new ArrayList();
+
+        for (Month month : months.values()) {
+            for (Day day : month.days.values()) {
+                for (Entry entry : day.entries) {
+                    String pageId = entry.linkToPage;
+                    if (pageId == null) {
+                        pageId = "null";
+                    }
+
+                    FilterResult retResult = null;
+                    for (FilterResult result : retEntries) {
+                        if (result.pageId.equals(pageId)) {
+                            retResult = result;
+                            break;
+                        }
+                    }
+
+
+                    if (retResult == null) {
+                        retResult = new FilterResult();
+                        retResult.pageId = pageId;
+
+                        retEntries.add(retResult);
+                    }
+
+                    finalizeEntry(entry);
+                    retResult.entries.add(entry);
+                }
+            }
+        }
+
+        return retEntries;
+    }
+
+    @Override
+    public List<Entry> getEntriesByUserId(String userId) throws ErrorException {
+        List<Entry> entries = new ArrayList();
+        for (Month month : months.values()) {
+            for (Day day : month.days.values()) {
+                for (Entry entry : day.entries) {
+                    if (entry.attendees.contains(userId)) {
+                        finalizeEntry(entry);
+                        entries.add(entry);
+                    }
+                }
+            }
+        }
+        return entries;
+    }
 }

@@ -44,16 +44,14 @@ public class AddApplicationsToDatabase {
     private List<ApplicationSettings> addApplications() {
         List<ApplicationSettings> apps = new ArrayList();
 //
-        ApplicationSettings pdfGenerator = createSettings(
-                "PdfGenerator",
-                "de134fb1-05ef-4c50-9aad-d6dc36e6aeff",
+        ApplicationSettings calendarFilter = createSettings(
+                "CalendarFilter",
+                "cc996344-602c-4a44-b542-b2cdb71b73bb",
                 emtpy,
                 "",
                 ApplicationSettings.Type.Webshop, false);
-        pdfGenerator.isPublic = true;
-        pdfGenerator.allowedAreas = new ArrayList();
-        pdfGenerator.allowedAreas.add("bottomarea");
-        apps.add(pdfGenerator);
+        calendarFilter.isPublic = true;
+        apps.add(calendarFilter);
 //
 //        ApplicationSettings bottomButton = createSettings(
 //                "BottomButton",

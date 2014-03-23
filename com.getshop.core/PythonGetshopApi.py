@@ -605,6 +605,21 @@ class CalendarManager(object):
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getEntriesByUserId(self, userId):
+    args = collections.OrderedDict()
+    if isinstance(userId,GetShopBaseClass): 
+      args["userId"]=json.dumps(userId.__dict__)
+    else:
+      try:
+        args["userId"]=json.dumps(userId)
+      except (ValueError, AttributeError):
+        args["userId"]=userId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getEntriesByUserId"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getEntry(self, entryId):
     args = collections.OrderedDict()
     if isinstance(entryId,GetShopBaseClass): 
@@ -617,6 +632,14 @@ class CalendarManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getEntry"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getEventsGroupedByPageId(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getEventsGroupedByPageId"
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 

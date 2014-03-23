@@ -10,6 +10,7 @@ public class NewsLetterGroup extends DataCommon {
     public List<String> userIds = new ArrayList();
     public String emailBody;
     public String title = "";
+    public String currentStoreId = "";
     public List<String> SentMailTo = new ArrayList();
     public HashMap<String, User> users = new HashMap();
 }

@@ -1,0 +1,6 @@
+.NewsLetter .heading {
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+.NewsLetter .conctact_list { display: none; }

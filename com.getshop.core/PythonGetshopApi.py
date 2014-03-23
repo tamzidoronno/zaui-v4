@@ -2030,6 +2030,39 @@ class MobileManager(object):
     data.interfaceName = "core.mobilemanager.IMobileManager"
     return self.communicationHelper.sendMessage(data)
 
+class NewsLetterManager(object):
+  def __init__(self, communicationHelper):
+    self.communicationHelper = communicationHelper
+  def sendNewsLetter(self, group):
+    args = collections.OrderedDict()
+    if isinstance(group,GetShopBaseClass): 
+      args["group"]=json.dumps(group.__dict__)
+    else:
+      try:
+        args["group"]=json.dumps(group)
+      except (ValueError, AttributeError):
+        args["group"]=group
+    data = EmptyClass()
+    data.args = args
+    data.method = "sendNewsLetter"
+    data.interfaceName = "core.messagemanager.INewsLetterManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def sendNewsLetterPreview(self, group):
+    args = collections.OrderedDict()
+    if isinstance(group,GetShopBaseClass): 
+      args["group"]=json.dumps(group.__dict__)
+    else:
+      try:
+        args["group"]=json.dumps(group)
+      except (ValueError, AttributeError):
+        args["group"]=group
+    data = EmptyClass()
+    data.args = args
+    data.method = "sendNewsLetterPreview"
+    data.interfaceName = "core.messagemanager.INewsLetterManager"
+    return self.communicationHelper.sendMessage(data)
+
 class NewsManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
@@ -4281,6 +4314,7 @@ class GetShopApi(object):
     self.LogoManager = LogoManager(self.communicationHelper)
     self.MessageManager = MessageManager(self.communicationHelper)
     self.MobileManager = MobileManager(self.communicationHelper)
+    self.NewsLetterManager = NewsLetterManager(self.communicationHelper)
     self.NewsManager = NewsManager(self.communicationHelper)
     self.OrderManager = OrderManager(self.communicationHelper)
     self.PageManager = PageManager(self.communicationHelper)

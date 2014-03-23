@@ -52,6 +52,19 @@ public class AddApplicationsToDatabase {
                 ApplicationSettings.Type.Webshop, false);
         calendarFilter.isPublic = true;
         apps.add(calendarFilter);
+
+        List<String> allowed = new ArrayList();
+        allowed.add("large");
+        allowed.add("xlarge");
+        
+        ApplicationSettings newsLetterApp = createSettings(
+                "NewsLetter",
+                "adbdc94d-a201-4586-aa07-1e4d46ca0fd6",
+                allowed,
+                "",
+                ApplicationSettings.Type.Marketing, false);
+        newsLetterApp.isPublic = true;
+        apps.add(newsLetterApp);
 //
 //        ApplicationSettings bottomButton = createSettings(
 //                "BottomButton",

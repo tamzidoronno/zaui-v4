@@ -225,7 +225,7 @@ public class ApplicationPoolImpl {
                 }
 
                 setting = appManager.getApplication(app.appSettingsId);
-                if (setting.type.equals(ApplicationSettings.Type.Theme)) {
+                if (setting != null && setting.type.equals(ApplicationSettings.Type.Theme)) {
                     return;
                 }
             } catch (ErrorException ex) {

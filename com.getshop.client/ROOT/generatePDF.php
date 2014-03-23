@@ -1,4 +1,7 @@
 <?php
+header('Content-type: application/pdf');
+header('Content-Disposition: attachment; filename="file.pdf"');
+
 include '../loader.php';
 include('../classes/mpdf/mpdf.php');
 $type = $_GET['type'];
@@ -17,6 +20,16 @@ if($type == "contentmanager") {
     
     $div = "<div style='margin-bottom: 20px; '><img src='http://$address/displayImage.php?id=$imageId'/></div>";
     $content = $div.$factory->getApi()->getContentManager()->getContent($id);
+}
+
+if ($type == "calendar") {
+    ob_start();
+    $app = $factory->getApplicationPool()->getApplicationInstance($_GET['id']);
+    $app->renderList(true);
+    $content = "<b>".$factory->__f("Date").": ".date("d")."/".date("m")."-".date("Y")."</b>";
+    $content .= ob_get_contents();
+    
+    ob_end_clean();
 }
 
 $mpdf=new mPDF();

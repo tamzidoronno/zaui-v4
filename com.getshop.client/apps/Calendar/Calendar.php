@@ -227,6 +227,18 @@ class Calendar extends MarketingApplication implements Application {
         echo "</td></tr></table>";
     }
     
+    public function renderList($includeCss=false) {
+        if ($includeCss) {
+            echo "<style>";
+            echo '.listview_month_location td { vertical-align: top; }';
+            echo '.listview_month_location { margin-bottom: 20px; margin-left: 10px; }';
+            echo '.calendar_list_entry_not_full td { color: green; }';
+            echo '.calendar_list_entry_full td { color: red; }';
+            echo "</style>";
+        }
+        $this->includefile('calendarlist');
+    }
+    
     public function showFilter() {
         $showFilter = $this->getConfigurationSetting("showfilter");
         if ($showFilter && $showFilter != "false") {
@@ -528,7 +540,7 @@ class Calendar extends MarketingApplication implements Application {
         $months = $this->getApi()->getCalendarManager()->getMonthsAfter($year, $month);
         $this->locations = $this->getApi()->getCalendarManager()->getAllLocations();
         $retdata = [];
-        foreach ($months as $month) {
+        foreach (array_reverse($months) as $month) {
             foreach ($this->locations as $location) {
                 if (!isset($retdata[$month->year])) {
                     $retdata[$month->year] = [];

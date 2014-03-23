@@ -62,10 +62,6 @@ class ApplicationManager extends FactoryBase {
     }
     
     function validateArea($areas, $area, $size, $type, $app=null) {
-        if ($type == "bottomarea" && method_exists($app, "renderBottomApplicationArea")) {
-            return true;
-        }
-        
         if (!in_array($size, $areas) && $size != "xlarge" || sizeof($areas) == 0) {
             return false;
         }

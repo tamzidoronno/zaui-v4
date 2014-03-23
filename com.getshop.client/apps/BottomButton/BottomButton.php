@@ -12,10 +12,6 @@ class BottomButton extends \WebshopApplication implements \Application {
     }
 
     public function render() {
-        // Not in use
-    }
-    
-    public function renderBottomApplicationArea() {
         $name = $this->getConfigurationSetting("buttonName") ? $this->getConfigurationSetting("buttonName") : $this->__w("Button");
         $pageId = $this->getConfigurationSetting("buttonLink");
          
@@ -26,6 +22,7 @@ class BottomButton extends \WebshopApplication implements \Application {
             echo $button;
         }
     }
+    
     
     public function edit() {
         $this->includeFile('config');

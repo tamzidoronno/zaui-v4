@@ -57,23 +57,11 @@ public class NewsLetterManager extends ManagerBase implements INewsLetterManager
         }
         
         UserManager manager = getManager(UserManager.class);
-        
-        group.users = new HashMap();
-        for(String userId : group.userIds) {
-            group.users.put(userId, manager.getUserById(userId));
-        }
-        
-        group.currentStoreId = storeId;
-        
         addGroup(group);
     }
 
     @Override
     public void sendNewsLetterPreview(NewsLetterGroup group) throws ErrorException {
-        group.users = new HashMap();
-        String userid = group.userIds.get(0);
-        UserManager manager = getManager(UserManager.class);
-        group.users.put(userid, manager.getUserById(userid));
         sendNewsLetterGroup(group);
     }
 
@@ -105,14 +93,17 @@ public class NewsLetterManager extends ManagerBase implements INewsLetterManager
     
     private void sendNewsLetterGroup(NewsLetterGroup group) throws ErrorException {
         String userId = group.userIds.get(0);
-        User user = group.users.get(userId);
+        UserManager umgr = getManager(UserManager.class);
+        User user = umgr.getUserById(userId);
         String body = group.emailBody;
         if(user != null) {
             body = body.replaceAll("(?i)\\{Contact.name\\}", user.fullName);
         }
         group.userIds.remove(userId);
         group.SentMailTo.add(userId);
-        sendEmail(user.emailAddress, group.title, body);
+        if(user != null) {
+            sendEmail(user.emailAddress, group.title, body);
+        }
         databaseSaver.saveObject(group, credentials);
     }
     

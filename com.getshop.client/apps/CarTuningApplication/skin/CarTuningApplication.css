@@ -1,0 +1,42 @@
+/* 
+    Document   : CarTuningApplication.css
+    Created on : Mar 25, 2014, 8:33:07 PM
+    Author     : ktonder
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.CarTuningApplication .tuning_data_entry {
+    border: solid 1px #CCC;
+    height: 25px;
+    line-height: 25px;
+    margin-right: 10px;
+    padding: 10px;
+    font-size: 18px;
+    background: linear-gradient(to bottom, #eee, #ddd);
+}
+
+.CarTuningApplication .title {
+    font-size: 18px;
+    line-height: 45px;
+}
+
+.CarTuningApplication .tuningdata {
+    height: 155px;
+    overflow-y: scroll;
+}
+
+
+.CarTuningApplication ::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+.CarTuningApplication ::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    border-radius: 10px;
+}
+ 
+.CarTuningApplication ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}

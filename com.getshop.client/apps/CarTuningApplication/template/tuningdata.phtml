@@ -1,0 +1,17 @@
+
+<?
+
+echo "<div class='title'>".$this->__w("Select your car")."</div>";
+/** @var $this \ns_3bfa7e0d_3280_4c85_8f72_7516cd145446\CarTuningApplication */
+$topModels = $this->getTopModels();
+
+echo "<div class='tuningdata'>";
+    echo "<div class='topModels'>";
+    foreach ($topModels as $topModel) {
+        echo "<div class='tuning_data_entry'>".$topModel."</div>";
+    }
+    echo "</div>";
+    
+    
+echo "</div>";
+?>

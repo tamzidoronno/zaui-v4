@@ -102,6 +102,9 @@ if (count($day->entries) == 0) {
         <div class="extendedLocation">&nbsp;&nbsp; - <?php echo $entry->locationExtended; ?></div>
         <? } ?>
         
+        <? if ($entry->extraText) { ?>
+            <div class="extraText"><?php echo $entry->extraText; ?></div>
+        <? } ?>
         <? if ($this->getConfigurationSetting("showDescription") == null || $this->getConfigurationSetting("showDescription") === true) { ?>
             <div class="description"><b><?php echo $this->__w("description"); ?></b><div class='content'> <?php echo nl2br($entry->description); ?></div></div>
         <? } ?>

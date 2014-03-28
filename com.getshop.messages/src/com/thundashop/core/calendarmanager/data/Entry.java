@@ -32,6 +32,8 @@ public class Entry implements Serializable, Comparable<Entry> {
     public String description;
     public String starttime;
     
+    public String extraText = "";
+    
     @Transient
     public Location locationObject;
     
@@ -64,6 +66,7 @@ public class Entry implements Serializable, Comparable<Entry> {
         this.locationId = entry.locationId;
         this.otherDays = entry.otherDays;
         this.starttime = entry.starttime;
+        this.extraText = entry.extraText;
         this.stoptime = entry.stoptime;
         this.location = entry.location;
         this.entryId = entry.entryId;

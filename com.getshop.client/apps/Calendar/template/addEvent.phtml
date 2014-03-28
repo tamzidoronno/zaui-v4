@@ -14,6 +14,7 @@ namespace ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8;
     $stop = isset($entry) ? $entry->stoptime : '';
     $max =  isset($entry) ? $entry->maxAttendees : '';
     $description = isset($entry) ? $entry->description : '';
+    $extraText = isset($entry) ? $entry->extraText : '';
     $locked = isset($entry) && $entry->lockedForSignup ? ' checked ' : "";
     $entryid = isset($entry) ? $entry->entryId : '';
     $locations = $this->getApi()->getCalendarManager()->getAllLocations();
@@ -55,6 +56,7 @@ namespace ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8;
                 </td>
             </tr>
             <tr><td><?php echo $this->__("max_atandees"); ?></td><td><input id="maxattendies" type='textfield' value='<?php echo $max; ?>'/></td></tr>
+            <tr><td><?php echo $this->__f("Extra text"); ?></td><td><input id="extraText" type='textfield' value='<?php echo $extraText; ?>'/></td></tr>
             <tr><td><?php echo $this->__("Link to page"); ?></td><td><input class="pagepicker" pageId="<? echo $linkToPage; ?>" id="linkToPage" type='textfield' value='<?php echo $linkToPageText; ?>'/></td></tr>
             <tr><td><?php echo $this->__("location", "common"); ?></td><td>
                 <select id="location">

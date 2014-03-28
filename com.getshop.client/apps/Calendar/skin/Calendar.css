@@ -336,7 +336,13 @@ td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1p
 
 .day_entry  { padding-left: 15px; padding-bottom: 10px; margin-bottom: 10px; }
 
-
+.Calendar .dayentry .extraText {
+    border: solid 1px red;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    text-align: center;
+    padding: 3px;
+}
 .listview_month_location { margin-bottom: 20px; margin-left: 10px; }
 .listview_month_location td { vertical-align: top; font-size: 15px; }
 .calendar_list_entry_not_full td { color: green; }

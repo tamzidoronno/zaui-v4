@@ -793,6 +793,29 @@ class APICalendarManager {
 	}
 
 }
+class APICarTuningManager {
+
+	var $transport;
+	
+	function APICarTuningManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author boggi
+	*/
+
+	public function getCarTuningData($id) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $data["method"] = "getCarTuningData";
+	     $data["interfaceName"] = "core.cartuning.ICarTuningManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+}
 class APICartManager {
 
 	var $transport;
@@ -4270,6 +4293,12 @@ class GetShopApi {
       */
       public function getCalendarManager() {
            return new APICalendarManager($this->transport);
+      }
+      /**
+      * @return CarTuningManager
+      */
+      public function getCarTuningManager() {
+           return new APICarTuningManager($this->transport);
       }
       /**
       * @return CartManager

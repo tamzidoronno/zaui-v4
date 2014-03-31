@@ -870,6 +870,24 @@ class CalendarManager(object):
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
+class CarTuningManager(object):
+  def __init__(self, communicationHelper):
+    self.communicationHelper = communicationHelper
+  def getCarTuningData(self, id):
+    args = collections.OrderedDict()
+    if isinstance(id,GetShopBaseClass): 
+      args["id"]=json.dumps(id.__dict__)
+    else:
+      try:
+        args["id"]=json.dumps(id)
+      except (ValueError, AttributeError):
+        args["id"]=id
+    data = EmptyClass()
+    data.args = args
+    data.method = "getCarTuningData"
+    data.interfaceName = "core.cartuning.ICarTuningManager"
+    return self.communicationHelper.sendMessage(data)
+
 class CartManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
@@ -4303,6 +4321,7 @@ class GetShopApi(object):
     self.BannerManager = BannerManager(self.communicationHelper)
     self.BigStock = BigStock(self.communicationHelper)
     self.CalendarManager = CalendarManager(self.communicationHelper)
+    self.CarTuningManager = CarTuningManager(self.communicationHelper)
     self.CartManager = CartManager(self.communicationHelper)
     self.ChatManager = ChatManager(self.communicationHelper)
     self.ContentManager = ContentManager(self.communicationHelper)

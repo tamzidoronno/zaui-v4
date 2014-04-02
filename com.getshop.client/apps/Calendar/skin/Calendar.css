@@ -177,7 +177,6 @@ td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1p
     display: inline-block;
 }
 
-
 .Calendar .dayentry .moreinfo {
     position: absolute;
     left: -5px;
@@ -337,7 +336,7 @@ td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1p
 .day_entry  { padding-left: 15px; padding-bottom: 10px; margin-bottom: 10px; }
 
 
-.listview_month_location { margin-bottom: 20px; margin-left: 10px; }
-.listview_month_location td { vertical-align: top; font-size: 15px; }
-.calendar_list_entry_not_full td { color: green; }
-.calendar_list_entry_full td { color: red; }
+.listview_month_location { margin-bottom: 20px; margin-left: 10px; border: solid 1px #333; padding: 3px; margin-top: 5px; }
+.listview_month_location td { vertical-align: top; font-size: 15px; padding: 5px; }
+.listview_month_location th {  background-color: #333; padding: 5px; }
+.listview_month_location tr:nth-child(odd) td { background-color: #333; }

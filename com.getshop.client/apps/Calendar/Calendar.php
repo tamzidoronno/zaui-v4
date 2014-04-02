@@ -289,6 +289,7 @@ class Calendar extends MarketingApplication implements Application {
         $entry->locationId = $_POST['data']['locationId'];
         $entry->title = $_POST['data']['eventname'];
         $entry->color = $_POST['data']['color'];
+        $entry->extraText = $_POST['data']['extraText'];
         $entry->linkToPage = $_POST['data']['linkToPage'];
         $entry->lockedForSignup = $_POST['data']['lockedForSignup'];
         

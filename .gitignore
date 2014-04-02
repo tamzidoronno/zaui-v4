@@ -81,4 +81,7 @@ com.getshop.client/etc/config.txt
 /com.getshop.javaapi/build/
 /com.getshop.javaapi/dist/
 
-
+com.getshop.javaapi/nbproject/private/
+fuck/
+apitodb.json
+com.getshop.remote/startlog.txt

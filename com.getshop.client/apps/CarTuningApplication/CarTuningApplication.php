@@ -22,8 +22,8 @@ class CarTuningApplication extends \WebshopApplication implements \Application {
     }
 
     public function getTopModels() {
-        $data = ['Personbiler', 'Lastebiler', 'Scooter', 'ATV', 'Moped'];
-        return $data;
+        $top = $this->getApi()->getCarTuningManager()->getCarTuningData(null);
+        return $top;
     }
     
     public function render() {

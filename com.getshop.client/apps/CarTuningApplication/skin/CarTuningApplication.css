@@ -16,6 +16,12 @@
     background: linear-gradient(to bottom, #eee, #ddd);
 }
 
+.CarTuningApplication .tuning_data_entry .tuning_data_entry_inner {
+    background-image: url('{IMAGEFOLDER}/arrow-right.png');
+    background-repeat: no-repeat;
+    background-position: right;
+}
+
 .CarTuningApplication .title {
     font-size: 18px;
     line-height: 45px;

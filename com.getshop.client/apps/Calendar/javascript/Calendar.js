@@ -71,7 +71,7 @@ Calendar = {
     changeShown: function() {
         $('.calendar_tab_content_view').hide();
         var name = $(this).attr('byname');
-        $('[calendar_tab_name='+name).show();
+        $('[calendar_tab_name='+name+']').show();
     },
             
     deleteLocation: function() {
@@ -256,6 +256,7 @@ $('.Calendar .addevent #save').live('click', function() {
     data.eventdescription = $('#eventdescription').val();
     data.linkToPage = $('#linkToPage').attr('pageid');
     data.locationId = $('#location').val();
+    data.extraText = $('#extraText').val();
     data.extraDays = extraDaysData;
     data.lockedForSignup = $('#lockEvent').is(":checked");
     

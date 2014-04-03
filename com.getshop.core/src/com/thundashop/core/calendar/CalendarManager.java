@@ -250,11 +250,21 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         if (settings != null && settings.get("sendsms") != null) {
             sendsms = settings.get("sendsms").value;
         }
+        
         if (sendsms == null || sendsms.equals("") || sendsms.equals("false")) {
             return;
         }
-
+        
+        if (waitingList &&  settings.get("smstextwaiting") == null ||  settings.get("smstextwaiting").value.equals("")) {
+            return;
+        }
+        
         String text = settings.get("smstext").value;
+        
+        if (waitingList) {
+            text = settings.get("smstextwaiting").value;
+        }
+        
         text = mutateText(password, text, entry, user);
         String from = settings.get("smsfrom").value;
         String message = text;

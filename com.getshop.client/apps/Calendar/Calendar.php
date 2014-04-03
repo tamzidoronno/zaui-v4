@@ -3,6 +3,7 @@ namespace ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8;
 use \MarketingApplication;
 use \Application;
 
+
 class Calendar extends MarketingApplication implements Application {
     /** @var core_calendarmanager_data_Entry */
     public $currentEntry;
@@ -76,6 +77,10 @@ class Calendar extends MarketingApplication implements Application {
     }    
     
     public function isEntryOutOfData($entry) {
+        if (!is_object($entry)) {
+            return true;
+        }
+        
         if ($entry->year < date('Y'))
             return true; 
         
@@ -550,6 +555,23 @@ class Calendar extends MarketingApplication implements Application {
         $this->getApi()->getUserManager()->removeComment($userId, $commentId);
     }
     
+    /**
+     * Function that is needed to sort the calender listview correctly.
+     * @param type $a
+     * @param type $b
+     * @return type
+     */
+    static function usortCalendarListViewEntry($c, $d) {
+        $a = $c[0]->day;
+        $b = $d[0]->day;
+        
+        if ($a == $b) {
+            return 0;
+        }
+        
+        return ($b < $a) ? -1 : 1;
+    }
+    
     public function getListViewData() {
         $year = (int)date('Y');
         $month = (int)date('m');
@@ -573,8 +595,17 @@ class Calendar extends MarketingApplication implements Application {
                         }
                     }
                 }
-                
             }
+        }
+        
+        foreach ($retdata as $year => $data) {
+            foreach ($data as $month => $monthData) {
+                $res = usort($monthData, array("ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8\Calendar", "usortCalendarListViewEntry"));
+                $data[$year][$month] = $monthData;
+            }
+            
+            ksort($data);
+            $retdata[$year] = $data;
         }
         
         return $retdata;
@@ -585,4 +616,8 @@ class Calendar extends MarketingApplication implements Application {
         return $entry->maxAttendees - count($attendees);
     }
 }
+
+
+
 ?>
+

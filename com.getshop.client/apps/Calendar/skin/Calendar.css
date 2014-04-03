@@ -343,6 +343,17 @@ td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1p
     padding: 3px;
 }
 
+.Calendar .downloadpdf {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    padding-left: 60px;
+    background-image: url('{IMAGEFOLDER}/pdf-icon.png');
+    height: 48px;
+    background-repeat: no-repeat;
+    line-height: 48px;
+}
 .listview_month_location { margin-bottom: 20px; margin-left: 10px; border: solid 1px #333; padding: 3px; margin-top: 5px; }
 .listview_month_location td { vertical-align: top; font-size: 15px; padding: 5px; }
 .listview_month_location th {  background-color: #333; padding: 5px; }

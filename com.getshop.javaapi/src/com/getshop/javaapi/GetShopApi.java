@@ -20,6 +20,12 @@ public class GetShopApi {
            return new APIMobileManager(transport);
       }
      /**
+      * @return APICarTuningManager
+      */
+      public APICarTuningManager getCarTuningManager() {
+           return new APICarTuningManager(transport);
+      }
+     /**
       * @return APIOrderManager
       */
       public APIOrderManager getOrderManager() {
@@ -54,6 +60,12 @@ public class GetShopApi {
       */
       public APIListManager getListManager() {
            return new APIListManager(transport);
+      }
+     /**
+      * @return APINewsLetterManager
+      */
+      public APINewsLetterManager getNewsLetterManager() {
+           return new APINewsLetterManager(transport);
       }
      /**
       * @return APIMessageManager

@@ -16,4 +16,6 @@ import java.util.List;
 @GetShopApi
 public interface ICarTuningManager {
     public List<CarTuningData> getCarTuningData(String id) throws ErrorException; 
+    
+    public void saveCarTuningData(List<CarTuningData> carList) throws ErrorException;
 }

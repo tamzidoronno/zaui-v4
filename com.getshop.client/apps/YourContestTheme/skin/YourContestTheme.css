@@ -1,0 +1,19 @@
+.gs_inner { width: 1000px; margin: auto; background-color:#FFF; }
+.breadcrumb { display:none; }
+body {background: #CCCCCC url(http://www.yourcontests.ca/images/canadabg.jpg) top center no-repeat fixed; margin-top:-10px; }
+.Logo { display:none; }
+.header .applicationarea { min-height: 40px; background-color:#C10000;  }
+.header.gs_outer { width: 100%; height: 40px; background-color:#C10000; position: fixed; z-index: 2; top:0px; }
+.Login { display: none !important; }
+.TopMenu a { font-size: 16px; color:#FFF; padding: 9px;border-left: solid 1px #ae0303;border-right: solid 1px #ae0303;  }
+.TopMenu a:hover { color: yellow; }
+.TopMenu a.selected { background-color:#9b0000; }
+
+.mainarea { margin-top: 40px; }
+#getshoppower { display:none !important; }
+.mainarea .applicationarea { padding: 10px; background-color:#EEE; margin: 10px; border-radius: 5px; }
+.mainarea .gs_inner { padding-top: 10px; padding-bottom: 10px; }
+.apparea_app_Banner { padding:0px !important; margin:0px !important; }
+body { font-family: 'Alegreya', serif; }
+.gs_button { background: linear-gradient(to top, #d50202, #ea4848); color:#FFF; border: solid 1px #9f0101; }
+.gs_button:hover { background: linear-gradient(to top, #9f0101, #ea4848); color:yellow; border: solid 1px #9f0101; }

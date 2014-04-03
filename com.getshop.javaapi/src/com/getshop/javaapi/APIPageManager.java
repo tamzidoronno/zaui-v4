@@ -35,6 +35,30 @@ public class APIPageManager {
      }
 
      /**
+     * Position could be
+     * - left
+     * - middle
+     * - right
+     *
+     * @param pageId
+     * @param appAreaId
+     * @param applicationSettingId
+     * @param position
+     * @throws ErrorException
+     */
+     public void addApplicationToBottomArea(java.lang.String pageId, java.lang.String appAreaId, java.lang.String applicationSettingId, java.lang.String position)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("pageId",new Gson().toJson(pageId));
+          data.args.put("appAreaId",new Gson().toJson(appAreaId));
+          data.args.put("applicationSettingId",new Gson().toJson(applicationSettingId));
+          data.args.put("position",new Gson().toJson(position));
+          data.method = "addApplicationToBottomArea";
+          data.interfaceName = "core.pagemanager.IPageManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * If you know the id of the application you want to add, we strongly recommend to use this call.
      * This function
      * @param pageId The id of the page to add the application to
@@ -616,6 +640,19 @@ public class APIPageManager {
           data.args.put("fromArea",new Gson().toJson(fromArea));
           data.args.put("toArea",new Gson().toJson(toArea));
           data.method = "switchApplicationAreas";
+          data.interfaceName = "core.pagemanager.IPageManager";
+          String result = transport.send(data);
+     }
+
+     /**
+     * Search for pages by name.
+     */
+     public void toggleBottomApplicationArea(java.lang.String pageId, java.lang.String appAreaId)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("pageId",new Gson().toJson(pageId));
+          data.args.put("appAreaId",new Gson().toJson(appAreaId));
+          data.method = "toggleBottomApplicationArea";
           data.interfaceName = "core.pagemanager.IPageManager";
           String result = transport.send(data);
      }

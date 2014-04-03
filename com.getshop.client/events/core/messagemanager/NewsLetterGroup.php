@@ -10,13 +10,7 @@ class core_messagemanager_NewsLetterGroup extends core_common_DataCommon  {
 	public $title;
 
 	/** @var String */
-	public $subject;
-
-	/** @var String */
 	public $SentMailTo;
-
-	/** @var String */
-	public $users;
 
 }
 ?>

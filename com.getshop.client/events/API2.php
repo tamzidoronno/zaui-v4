@@ -815,6 +815,20 @@ class APICarTuningManager {
 	     return $this->transport->sendMessage($data);
 	}
 
+	/**
+	*
+	* @author boggi
+	*/
+
+	public function saveCarTuningData($carList) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["carList"] = json_encode($this->transport->object_unset_nulls($carList));
+	     $data["method"] = "saveCarTuningData";
+	     $data["interfaceName"] = "core.cartuning.ICarTuningManager";
+	     return $this->transport->sendMessage($data);
+	}
+
 }
 class APICartManager {
 

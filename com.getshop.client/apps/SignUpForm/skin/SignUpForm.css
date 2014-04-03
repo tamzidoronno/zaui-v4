@@ -1,0 +1,4 @@
+.SignUpForm .text { font-size: 20px; }
+.SignUpForm .social_signup { margin-top: 10px; }
+.SignUpForm .field { border: solid 1px #BBB; width: 100%; font-size: 16px; padding-top: 4px; padding-bottom: 4px;margin-top: 10px; margin-bottom: 10px; }
+.SignUpForm .social_signup .gs_button { margin-top: 3px; padding: 2px; padding-left: 5px; width: 160px; }

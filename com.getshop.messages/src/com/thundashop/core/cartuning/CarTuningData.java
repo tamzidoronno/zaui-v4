@@ -15,7 +15,6 @@ import java.util.UUID;
  * @author boggi
  */
 public class CarTuningData implements Serializable {
-    public String id = UUID.randomUUID().toString() ;
     public List<CarTuningData> subEntries = new ArrayList();
     public String name = "";
     public int originalHp = 0;

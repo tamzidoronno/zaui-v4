@@ -888,6 +888,21 @@ class CarTuningManager(object):
     data.interfaceName = "core.cartuning.ICarTuningManager"
     return self.communicationHelper.sendMessage(data)
 
+  def saveCarTuningData(self, carList):
+    args = collections.OrderedDict()
+    if isinstance(carList,GetShopBaseClass): 
+      args["carList"]=json.dumps(carList.__dict__)
+    else:
+      try:
+        args["carList"]=json.dumps(carList)
+      except (ValueError, AttributeError):
+        args["carList"]=carList
+    data = EmptyClass()
+    data.args = args
+    data.method = "saveCarTuningData"
+    data.interfaceName = "core.cartuning.ICarTuningManager"
+    return self.communicationHelper.sendMessage(data)
+
 class CartManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
@@ -1462,15 +1477,15 @@ class GetShop(object):
     data.interfaceName = "core.getshop.IGetShop"
     return self.communicationHelper.sendMessage(data)
 
-  def createWebPage(self, data):
+  def createWebPage(self, webpageData):
     args = collections.OrderedDict()
-    if isinstance(data,GetShopBaseClass): 
-      args["data"]=json.dumps(data.__dict__)
+    if isinstance(webpageData,GetShopBaseClass): 
+      args["webpageData"]=json.dumps(webpageData.__dict__)
     else:
       try:
-        args["data"]=json.dumps(data)
+        args["webpageData"]=json.dumps(webpageData)
       except (ValueError, AttributeError):
-        args["data"]=data
+        args["webpageData"]=webpageData
     data = EmptyClass()
     data.args = args
     data.method = "createWebPage"

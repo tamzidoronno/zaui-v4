@@ -21,7 +21,7 @@ if (count($day->entries) == 0) {
         $waitingList = $this->getWaitingList($entry);
         
         $notConfirmed = $entry->needConfirmation ? " - (Not confirmed)" : "";
-        $availablePositions = ($entry->maxAttendees - count($attendees));
+        $availablePositions = $this->getCountOfFreePositions($entry);
         $starttime = $entry->starttime;
         $stoptime = $entry->stoptime;
         $bookingLink = $this->getBookingLink($entry);

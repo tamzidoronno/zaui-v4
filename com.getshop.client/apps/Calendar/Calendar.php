@@ -75,6 +75,19 @@ class Calendar extends MarketingApplication implements Application {
         echo $this->__f("Create this application and start showing events on given dates.");
     }    
     
+    public function isEntryOutOfData($entry) {
+        if ($entry->year < date('Y'))
+            return true; 
+        
+        if ($entry->year == date('Y') && $entry->month < date('m'))
+            return true;
+        
+        if ($entry->year == date('Y') && $entry->month == date('m') && $entry->day <= date('d'))
+            return true;
+        
+        return false;
+    }
+    
     public function isCurrentEntryOutOfDate() {
         if ($this->year > date('Y'))
             return true; 
@@ -230,10 +243,12 @@ class Calendar extends MarketingApplication implements Application {
     public function renderList($includeCss=false) {
         if ($includeCss) {
             echo "<style>";
-            echo '.listview_month_location td { vertical-align: top; }';
-            echo '.listview_month_location { margin-bottom: 20px; margin-left: 10px; }';
-            echo '.calendar_list_entry_not_full td { color: green; }';
-            echo '.calendar_list_entry_full td { color: red; }';
+            echo '
+                .listview_month_location { margin-bottom: 20px; margin-left: 10px; border: solid 1px #333; padding: 3px; margin-top: 5px; }
+                .listview_month_location td { vertical-align: top; font-size: 15px; padding: 5px; }
+                .listview_month_location th {  background-color: #CCC; padding: 5px; }
+                .listview_month_location tr:nth-child(odd) td { background-color: #EEE; }
+                ';
             echo "</style>";
         }
         $this->includefile('calendarlist');
@@ -563,6 +578,11 @@ class Calendar extends MarketingApplication implements Application {
         }
         
         return $retdata;
+    }
+
+    public function getCountOfFreePositions($entry) {
+        $attendees = $this->getAttendees($entry);
+        return $entry->maxAttendees - count($attendees);
     }
 }
 ?>

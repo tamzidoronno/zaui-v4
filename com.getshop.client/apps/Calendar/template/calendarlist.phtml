@@ -1,5 +1,4 @@
 <?
-echo "<div>" . $this->__w("Entires marked in green is available for booking and entries marked in red is full") . "</div><br>";
 $entries = $this->getListViewData();
 foreach ($entries as $year => $months) {
     foreach ($months as $month => $locations) {
@@ -12,12 +11,18 @@ foreach ($entries as $year => $months) {
         echo "<div class='calendar_listview_nameandplace'>" . $this->__w($monthName) . " " . $year . "</div>";
 
         echo "<table class='listview_month_location'>";
+        echo "<tr><th>".$this->__f("Place")."</th>";
+        echo "<th>".$this->__f("Event")."</th>";
+        echo "<th>".$this->__f("Date")."</th>";
+        echo "<th>".$this->__f("Available positions")."</th></tr>";
+
         foreach ($locations as $locationId => $entries) {
             
             $location = $this->getLocation($locationId);
-            
-
             foreach ($entries as $entry) {
+                if ($this->isEntryOutOfData($entry)){
+                    continue;
+                }
                 $full = $entry->lockedForSignup || $entry->maxAttendees <= count($entry->attendees);
                 $fullClass = $full ? "calendar_list_entry_full" : "calendar_list_entry_not_full";
                 
@@ -30,7 +35,9 @@ foreach ($entries as $year => $months) {
                         $dayName = $this->__w("Day") . ":$i - ";
                         echo "<br>" . $dayName . $this->__w("Date") . ": " . $otherDay->day."/". $entry->month  . " - " . $otherDay->starttime . "-" . $otherDay->stoptime;
                     }
-                echo "</td></tr>";
+                    $count = $this->getCountOfFreePositions($entry);
+                    echo "</td><td>$count</td>";
+                echo "</tr>";
             }
             
             

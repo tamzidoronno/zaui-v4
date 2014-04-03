@@ -6,12 +6,6 @@ echo "<div class='title'>".$this->__w("Select your car")."</div>";
 $topModels = $this->getTopModels();
 
 echo "<div class='tuningdata'>";
-    echo "<div class='topModels'>";
-    foreach ($topModels as $topModel) {
-        echo "<div class='tuning_data_entry'><div class='tuning_data_entry_inner'>".$topModel->name."</div></div>";
-    }
-    echo "</div>";
-    
-    
+$this->printCarTuningList($topModels, 0, 0, 0);
 echo "</div>";
 ?>

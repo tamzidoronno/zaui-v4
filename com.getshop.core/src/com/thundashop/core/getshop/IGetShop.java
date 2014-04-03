@@ -70,5 +70,5 @@ public interface IGetShop {
      * Create a new webpage
      * @return 
      */
-    public Store createWebPage(WebPageData data) throws ErrorException;
+    public Store createWebPage(WebPageData webpageData) throws ErrorException;
 }

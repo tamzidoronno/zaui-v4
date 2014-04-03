@@ -47,6 +47,10 @@ public class CarTuningManager extends ManagerBase implements ICarTuningManager {
         
         CarTuningData audi = new CarTuningData();
         audi.name = "Audi";
+        audi.maxHp = 10;
+        audi.maxNw = 11;
+        audi.normalHp = 4;
+        audi.normalNw = 1;
         
         CarTuningData vw = new CarTuningData();
         vw.name = "VW";
@@ -70,5 +74,11 @@ public class CarTuningManager extends ManagerBase implements ICarTuningManager {
     public List<CarTuningData> getCarTuningData(String id) throws ErrorException {
         return carTuningCollection.entries;
     }
-    
+
+    @Override
+    public void saveCarTuningData(List<CarTuningData> data) throws ErrorException {
+        carTuningCollection.entries = data;
+        carTuningCollection.storeId = storeId;
+        databaseSaver.saveObject(carTuningCollection, credentials);
+    }
 }

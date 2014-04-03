@@ -37,10 +37,10 @@ public class APIGetShop {
      * Create a new webpage
      * @return
      */
-     public com.thundashop.core.storemanager.data.Store createWebPage(com.thundashop.core.getshop.data.WebPageData data)  throws Exception  {
+     public com.thundashop.core.storemanager.data.Store createWebPage(com.thundashop.core.getshop.data.WebPageData webpageData)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new LinkedHashMap();
-          data.args.put("data",new Gson().toJson(data));
+          data.args.put("webpageData",new Gson().toJson(webpageData));
           data.method = "createWebPage";
           data.interfaceName = "core.getshop.IGetShop";
           String result = transport.send(data);

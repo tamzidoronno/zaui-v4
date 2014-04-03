@@ -3,7 +3,6 @@ header('Content-type: application/pdf');
 header('Content-Disposition: attachment; filename="file.pdf"');
 
 function getLogo($factory) {
-    $id = $_GET['id'];
     $logo = $factory->getApplicationPool()->getApplicationsInstancesByNamespace("ns_974beda7_eb6e_4474_b991_5dbc9d24db8e");
     $logo = $logo[0];
     $imageId = $factory->getApi()->getLogoManager()->getLogo()->LogoId;
@@ -23,6 +22,7 @@ include('../classes/mpdf/mpdf.php');
 $type = $_GET['type'];
 $factory = IocContainer::getFactorySingelton();
 if($type == "contentmanager") {
+    $id = $_GET['id'];
     $div = getLogo($factory);
     $content = $div.$factory->getApi()->getContentManager()->getContent($id);
 }

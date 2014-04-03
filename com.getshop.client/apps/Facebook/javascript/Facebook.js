@@ -69,7 +69,7 @@ gs_app.Facebook.prototype = {
         this.validateAddress();
         var found = false;
         $.ajax({
-            "url": this.getAddress("feed") + "&limit=15",
+            "url": this.getAddress("posts") + "&limit=15",
             "success": function(data) {
                 scope.application.find('.news_area').html('');
                 for (var key in data.data) {
@@ -97,6 +97,7 @@ gs_app.Facebook.prototype = {
 
     },
     buildNewsEntry: function(newsentry) {
+        console.log(newsentry);
         var date = new Date(newsentry.created_time);
         var month = date.getMonth()+1;
         var minutes = date.getMinutes();

@@ -11,7 +11,7 @@ if ($this->isShowTabsForViewMode()) { ?>
 <? } ?>
 <div class='calendar_tab_content_view' calendar_tab_name="list" style="display: none;">
     <?
-    echo "<a href='/generatePDF.php?type=calendar&id=$id&page=$pageId'>".$this->__w("Download as pdf")."</a>";
+    echo "<a href='/generatePDF.php?type=calendar&id=$id&page=$pageId'><div class='downloadpdf'>".$this->__w("Download as pdf")."</div></a>";
     echo "<hr>";
     $this->renderList();
     ?>

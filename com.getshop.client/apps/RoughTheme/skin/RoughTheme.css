@@ -12,10 +12,10 @@ body {
     background-image: url('{IMAGEFOLDER}/background.jpg');
     
     background-attachment: fixed;
-    background-position: center;
+    /*background-position: center;*/
 }
 .gs_inner {
-    width: 1166px;
+    max-width: 1166px;
     margin: auto;
     color: #333;
 }
@@ -85,4 +85,21 @@ body {
 .Facebook {
     background-color: rgba(255,255,255, 0.9);
     border: solid 1px #CCC;
+}
+
+@media only all and (max-width: 800px) {
+    .Logo img { width: 100px;  }
+    .Logo { top: 10px; left: 10px;  }
+    .mainarea .gs_inner .applicationarea { margin: 15px; }
+    .gs_margin_left { padding-left: 0px !important; }
+    .gs_outer.footer { display:none !important; }
+    .TopMenu a { font-size: 16px; line-height: 14px; padding-left: 20px; padding-right: 20px; line-height: 30px; }
+    .TopMenu { height: 30px; top: 48px !important; }
+}
+@media only all and (max-width: 480px) {
+    .TopMenu { height: 16px; top: 68px !important; }
+    .TopMenu a { font-size: 12px; line-height: 14px; padding-left: 2px; padding-right: 2px; }
+    .Logo { display:block; }
+    .Facebook .newsentry .picture { width: 50px; }
+    .Facebook .message { padding-left: 60px; }
 }

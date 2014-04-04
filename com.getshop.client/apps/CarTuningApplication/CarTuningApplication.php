@@ -24,27 +24,26 @@ class CarTuningApplication extends \WebshopApplication implements \Application {
         $this->includefile("tuningdata");
     } 
     
-    public function printCarTuningList($list, $subindex, $offset) {
+    public function printCarTuningList($list, $parent, $back) {
         $offsetCount = 0;
         $display = "";
-        if($subindex > 0) {
+        $printclass = "entry_".str_replace("-","_", $parent);
+        if($parent != "") {
             $display = "style='display:none;'";
-        }
-        if($subindex > 0) {
-            echo "<div class='back_button tuning_data_entry topLevel subindex_".$subindex . " offset_".$offset."' subindex='".($subindex-2)."' offsetcount='".($subindex-1)."'><div class='back'>Tilbake</div></div>";
+            echo "<div class='back_button tuning_data_entry $printclass' show='".str_replace("-","_", $back)."'><div class='back'>Tilbake</div></div>";
         }
         foreach ($list as $entry) {
             /* @var $entry \core_cartuning_CarTuningData */
-            $printclass = "topLevel subindex_".$subindex . " offset_".$offset;
+            $subclass = str_replace("-","_", $entry->id);
             $attr = "";
             $styler = "";
             if(sizeof($entry->subEntries)) {
-                $this->printCarTuningList($entry->subEntries, $subindex+1, $offsetCount);
+                $this->printCarTuningList($entry->subEntries, $entry->id, $parent);
+                $attr = "show='$subclass'";
             } else {
                 $attr = "data='".json_encode($entry)."'";
-                $styler = "style='background-image:none;'";
             }
-            echo "<div $attr $display class='tuning_data_entry $printclass' subindex='$subindex' offset='$offset' offsetcount='$offsetCount'><div $styler class='tuning_data_entry_inner'>".$entry->name."</div></div>";
+            echo "<div $attr $display class='tuning_data_entry $printclass'><div $styler class='tuning_data_entry_inner'>".$entry->name."</div></div>";
             $offsetCount++;
         }
     }
@@ -118,18 +117,20 @@ class CarTuningApplication extends \WebshopApplication implements \Application {
             },
            "plugins" : [ "dnd", "contextmenu", "sort" ]
          });
-         $('#html1').on('changed.jstree', function (e, data) {
-             var li = $(e.target).find('.jstree-clicked').closest('li');
-             app.CarTuningApplication.loadEntry(JSON.parse(li.attr('entry')));
+         $('#html1').on('select_node.jstree', function (e, data) {
+            var li = $(e.target).find('.jstree-clicked').closest('li');
+            app.CarTuningApplication.loadEntry(JSON.parse(li.attr('entry')));
           });
          $('#html1').on('rename_node.jstree', function (e, data) {
              var entryresult = {};
+             $('#html1').jstree('deselect_all');
              if($("li#"+data.node.id).attr('entry') !== undefined) {
                  entryresult = JSON.parse($("li#"+data.node.id).attr('entry'));
              }
              entryresult.name = data.text;
              app.CarTuningApplication.updateNode(data.node.id, JSON.stringify(entryresult));
              app.CarTuningApplication.loadEntry(entryresult);
+             $('#html1').jstree(false).select_node(data.node.id);
           });
         </script>
         <style>

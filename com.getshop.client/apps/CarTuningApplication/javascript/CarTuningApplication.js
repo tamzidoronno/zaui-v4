@@ -1,4 +1,6 @@
 app.CarTuningApplication = {
+    currentShown : "",
+            
     reserialize : function() {
         var entry = $('a.jstree-clicked').closest('li');
         var data = JSON.parse(entry.attr('entry'));
@@ -10,18 +12,15 @@ app.CarTuningApplication = {
         app.CarTuningApplication.updateNode(node, entryString);
     },
     showSubEntry : function() {
+        var element = $(this);
         $('.CarTuningApplication .result_panel').remove();
-        var element = $(this).closest('.topLevel');
-        var offsetcount = parseInt(element.attr('offsetcount'));
-        var subindex = parseInt(element.attr('subindex'));
-        
-        subindex++;
-        $('.topLevel').hide();
-        $('.topLevel.subindex_'+subindex+'.offset_'+offsetcount).show();
-        
+        $('.tuning_data_entry').hide();
+        var entries = element.attr('show');
+        $('.entry_'+entries).show();
         if(element.attr('data') !== undefined) {
             $('.tuningdata').append(app.CarTuningApplication.buildResultPanel(element));
         }
+        app.CarTuningApplication.currentShown = entries;
     },
     translateKey : function(key) {
         switch(key) {
@@ -43,12 +42,13 @@ app.CarTuningApplication = {
     },
     buildResultPanel : function(element) {
         var panel = $('<div class="result_panel"></div>');
-        var index = parseInt(element.attr('subindex'))-1;
-        var offset = parseInt(element.attr('offset'));
-        panel.append($('<div class="back_button topLevel tuning_data_entry" subindex="'+index+'" offsetcount="'+offset+'" style="display: block;"><div class="back">Tilbake</div></div>'));
+        panel.append($('<div class="back_button topLevel tuning_data_entry" style="display: block;" show="'+app.CarTuningApplication.currentShown+'"><div class="back">Tilbake</div></div>'));
         var result = JSON.parse(element.attr('data'));
         for(var key in result) {
             if(key === "subEntries") {
+                continue;
+            }
+            if(key === "id") {
                 continue;
             }
             panel.append("<div class='result_row'>" + app.CarTuningApplication.translateKey(key) + " <span class='result'>" + result[key] + "</span></div>");
@@ -66,8 +66,7 @@ app.CarTuningApplication = {
         $(document).on('keyup','.CarTuningApplication .configurationbox input', app.CarTuningApplication.reserialize);
         $(document).on('blur','.CarTuningApplication .configurationbox input', app.CarTuningApplication.reserialize);
         $(document).on('click','.CarTuningApplication .save_tuning_data', app.CarTuningApplication.saveTuningData);
-        $(document).on('click','.CarTuningApplication .tuning_data_entry .tuning_data_entry_inner', app.CarTuningApplication.showSubEntry);
-        $(document).on('click','.CarTuningApplication .back', app.CarTuningApplication.showSubEntry);
+        $(document).on('click','.CarTuningApplication .tuning_data_entry', app.CarTuningApplication.showSubEntry);
     },
     saveTuningData : function() {
         var objects = $('#html1').jstree('get_json');

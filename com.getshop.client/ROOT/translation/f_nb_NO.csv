@@ -163,7 +163,6 @@ Editor;-;Editor
 Editors;-;Editorer
 Editors and adminstrators only;-;Editorer og administrator kun
 Email / username;-;Epost / Brukernavn
-Email address;-;Epost adresse
 Enable test mode for sisow;-;Aktiver test modus for Sisow
 Enable this option to send email when a booking has been made.;-;Aktivert dette valget for å sende epost til når en booking har blitt gjort.
 Enable tls?;-;Aktivert tls?
@@ -238,6 +237,7 @@ Link to page;-;Link til side
 Mail;-;E-post
 MailManager;-;Epost behandler
 Manually select a color;-;Manuelt velg en farge
+Mark as done;-;Merk som ferdig
 Markers;-;Markører
 Menu Editor;-;Menu Oppsetter
 Menu editor;-;Menu oppsetter
@@ -416,6 +416,7 @@ The text has been saved;-;Teksten har blitt lagret
 The translation has been saved;-;Oversettingen har blitt oppdatert
 The username for your smtp server.;-;Brukernavn for smtp server.
 There are two different types of coupons, fixed price and percentage price. Fixed price is giving your valued customers a fixed rate off for each time they buy something from the store. The Percentage price gives a percentage discount to your total cost of the cart.;-;Vi støtter 2 forskjellige typer kuponger, fast pris eller prosentvis pris. Dersom du velger fast pris vil du gi kundene dine et fast avslag ved bruk av kupongen. Dersom du setter opp en med prosentvis avslag så vil kundene dine få et prosentvis avslag iforhold til varene som ligger i handlekurven.
+There is no new entries;-;Tomt, ingenting å se her.
 This application gives you the ability to control your stocks, simply change how many you have in stock on each product.;-;Denne applikasjonen gir deg muligheten til å spesifisere antallet som er på lager for hvert av produktene dine.
 This area displays how the variation will look like for this product view;-;Dette området viser hvordan en variasjon vil se ut som på produkt bildet.
 This category displayer is currently empty. To create a new category please click the create new category button below.;-;Denne kategorien er for tiden tom. For å opprette en kategori vennligst trykk på opprett kategori knappen.
@@ -469,6 +470,7 @@ User/Customers overview;-;Brukere / kunders oversikt
 Username;-;Brukernavn
 Users created;-;Brukere opprettet
 Users logged on;-;Brukere logget på
+Users that has been marked as done;-;Brukere som har blitt merket som ferdigbehandlet
 VIP user - $0;-;VIP Kunde - $0
 Variations;-;Variasjoner
 Vat number;-;MVA nummber

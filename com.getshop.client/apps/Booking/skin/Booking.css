@@ -23,10 +23,16 @@
     border: solid 1px #DDD;
 }
 
-.Booking .userlistoverview .userentry .datecreated {
+.Booking .userlistoverview .userentry .donemarker {
     font-size: 12px;
     position: absolute;
     right: 10px;
+    top: 6px;
+}
+.Booking .userlistoverview .userentry .datecreated {
+    font-size: 12px;
+    position: absolute;
+    right: 100px;
     top: 6px;
 }
 .Booking .userlistoverview .userentry {

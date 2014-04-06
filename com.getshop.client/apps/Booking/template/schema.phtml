@@ -148,13 +148,42 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
 if ($this->hasReadAccess()) {
     $users = $this->getUsersConnectedToSchema();
     if (count($users)) {
+        
         echo "<hr>";
         echo "<h1> ".$this->__w("Current users added to this booking")."</h1>";
         echo "<div class='userlistoverview'>";
         
+        $found = false;
         foreach ($users as $user) {
+            $comment = $this->getComment($user);
+            if ($comment->extraInformation) {
+                continue;
+            }
+            $found = true;
             $link = "?page=users_all_users&userid=".$user->id;
-            echo "<a href='$link'><div class='userentry'>".$user->fullName."<div class='datecreated'>".$user->rowCreatedDate."</div>"."</div></a>";
+            $donemarker = "<div class='donemarker' userId='".$user->id."'>".$this->__f("Mark as done")."</div>";
+            echo "<div class='userentry'><a href='$link'>".$user->fullName."<div class='datecreated'>".$user->rowCreatedDate."</a></div>$donemarker</div>";
+        }
+        
+        if (!$found) {
+            echo "<div class='userentry'>".$this->__f("There is no new entries")."</div>";
+        }
+        echo "<br/>";
+        echo "<H1>".$this->__f("Users that has been marked as done")."</h1>";
+        
+        $found = false;
+        foreach ($users as $user) {
+            $comment = $this->getComment($user);
+            if (!$comment->extraInformation) {
+                continue;
+            }
+            $found = true;
+            $link = "?page=users_all_users&userid=".$user->id;
+            echo "<div class='userentry'><a href='$link'>".$user->fullName."<div class='datecreated'>".$user->rowCreatedDate."</a></div></div>";
+        }
+        
+        if (!$found) {
+            echo "<div class='userentry'>".$this->__f("There is no new entries")."</div>";
         }
         echo "</div>";
     }

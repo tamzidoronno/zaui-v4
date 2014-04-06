@@ -209,5 +209,22 @@ class Booking extends MarketingApplication implements Application {
     public function getUsersConnectedToSchema() {
         return $this->getApi()->getUserManager()->getAllUsersWithCommentToApp($this->getConfiguration()->id);
     }
+    
+    public function getComment($user) {
+        foreach ($user->comments as $comment) {
+            if ($comment->appId == $this->getConfiguration()->id) {
+                return $comment;
+            }
+        }
+        return null;
+    }
+    
+    public function markAsDone() {
+        $userId = $_POST['data']['userId'];
+        $user = $this->getApi()->getUserManager()->getUserById($userId);
+        $comment = $this->getComment($user);
+        $comment->extraInformation = "processed";
+        $this->getApi()->getUserManager()->addComment($userId, $comment);
+    }
 }
 ?>

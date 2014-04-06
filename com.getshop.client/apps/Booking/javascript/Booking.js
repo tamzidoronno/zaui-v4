@@ -33,6 +33,15 @@ Booking = {
     },
     bindEvents: function() {
         $(document).on('keyup', '.Booking #birthday.updateOnBlur', this.updateCompanyInformation);
+        $(document).on('click', '.Booking .donemarker', this.markAsDone);
+    },
+    markAsDone: function() {
+        var data = {
+            userId : $(this).attr('userId')
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "markAsDone", this, data);
+        thundashop.Ajax.post(event);
     },
     updateCompanyInformation: function() {
         var value = $(this).val();

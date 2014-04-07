@@ -168,7 +168,6 @@ getshop.ImageEditor.prototype = {
         this.innerDom.fadeIn();
     },
     imageSelected: function(control) {
-        console.log('image selected');
         var i = 0, files = control.files, len = files.length;
         var me = this;
 
@@ -227,7 +226,10 @@ getshop.ImageEditor.prototype = {
     },
             
     showFileDialog: function() {
-        var selectDialogueLink = $('<a href="">Select files</a>');
+        $('#getshop_select_files_link').remove();
+        $('#your-files').remove();
+        
+        var selectDialogueLink = $('<a href="" id="getshop_select_files_link">Select files</a>');
         var fileSelector = $('<input type="file" id="your-files" multiple/>');
 
         selectDialogueLink.click(function() {
@@ -240,12 +242,11 @@ getshop.ImageEditor.prototype = {
         var me = this;
 
         control.addEventListener("change", function() {
-            console.log("image has been changed");
+            fileSelector.remove();
             me.imageSelected(control);
         });
 
         selectDialogueLink.click();
-        fileSelector.remove();
         selectDialogueLink.remove();
     },
     createImageCanvasWorkingArea: function() {

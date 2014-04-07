@@ -168,6 +168,7 @@ getshop.ImageEditor.prototype = {
         this.innerDom.fadeIn();
     },
     imageSelected: function(control) {
+        console.log('image selected');
         var i = 0, files = control.files, len = files.length;
         var me = this;
 
@@ -239,6 +240,7 @@ getshop.ImageEditor.prototype = {
         var me = this;
 
         control.addEventListener("change", function() {
+            console.log("image has been changed");
             me.imageSelected(control);
         });
 

@@ -27,11 +27,18 @@ $attendees = $this->getAttendees($this->currentEntry);
         }
         ?>
     </table>
+    
+    <div>
+        Attach file:
+        <br><input type='file' id='file1'/>
+
+    </div>
 
     <div style='text-align: right'>
         <div id="sendreminderbysms" entryid="<? echo $this->currentEntry->entryId; ?>" class='gs_button'>Sms</div>
         <div id="sendreminderbymail" entryid="<? echo $this->currentEntry->entryId; ?>"  class='gs_button'>Mail</div>    
     </div>
+    
     
 
     <div class="all_reminder_history">

@@ -134,15 +134,18 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
             message.setReplyTo(new InternetAddress[]{new InternetAddress(from)});
 
             if (files != null) {
-                Multipart multipart = new MimeMultipart();
+                Multipart multipart = new MimeMultipart("mixed");
                 
                 BodyPart messageBodyPart = new MimeBodyPart();
                 messageBodyPart.setContent(content, "text/html; charset=UTF-8");
+                multipart.addBodyPart(messageBodyPart);
                 
                 for (String file : files.keySet()) {
                     DataSource source = new FileDataSource(file);
+                    messageBodyPart = new MimeBodyPart();
                     messageBodyPart.setDataHandler(new DataHandler(source));
                     messageBodyPart.setFileName(files.get(file));
+                    multipart.addBodyPart(messageBodyPart);
                 }
                 
                 multipart.addBodyPart(messageBodyPart);

@@ -18,7 +18,11 @@ import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.User.Type;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
+import javax.xml.bind.DatatypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -346,8 +350,8 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     }
 
     @Override
-    public void sendReminderToUser(boolean byEmail, boolean bySMS, List<String> users, String text, String subject, String eventId) throws ErrorException {
-        remindUserInternal(byEmail, bySMS, users, text, subject, eventId);
+    public void sendReminderToUser(boolean byEmail, boolean bySMS, List<String> users, String text, String subject, String eventId, String attachment, String filename) throws ErrorException {
+        remindUserInternal(byEmail, bySMS, users, text, subject, eventId, attachment, filename);
     }
 
     @Override
@@ -463,17 +467,43 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         smsHistory.eventId = eventId;
         return smsHistory;
     }
+    
+    private Map<String, String> getAttachedFiles(String attachment, String filename) {
+        Map<String, String> files = null;
+        if (attachment != null && !attachment.equals("")) {
+            try {
+                byte[] data = DatatypeConverter.parseBase64Binary(attachment);
+                String tmpFileName = "/tmp/"+UUID.randomUUID().toString();
+                FileOutputStream fos = new FileOutputStream(tmpFileName);
+                fos.write(data);
+                fos.close();
+                
+                files = new HashMap();
+                files.put(tmpFileName, filename);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return files;
+    }
 
-    private void remindUserInternal(boolean byEmail, boolean bySMS, List<String> users, String text, String subject, String eventId) throws ErrorException {
+    private void remindUserInternal(boolean byEmail, boolean bySMS, List<String> users, String text, String subject, String eventId, String attachment, String filename) throws ErrorException {
         ReminderHistory smsHistory = createReminderHistory(text, subject, eventId, byEmail);
         ReminderHistory emailHistory = createReminderHistory(text, subject, eventId, byEmail);
 
+        Map<String, String> files = getAttachedFiles(attachment, filename);
+        
         for (String userId : users) {
             UserManager usrmgr = getManager(UserManager.class);
             User user = usrmgr.getUserById(userId);
 
             if (byEmail) {
-                mailFactory.send(getFromAddress(), user.emailAddress, subject, text);
+                if (files != null) {
+                    mailFactory.sendWithAttachments(getFromAddress(), user.emailAddress, subject, text, files, true);
+                } else {
+                    mailFactory.send(getFromAddress(), user.emailAddress, subject, text);
+                }
+                
                 emailHistory.users.add(user);
             }
 
@@ -766,6 +796,10 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     public List<ReminderHistory> getHistory(String eventId) {
         Set<ReminderHistory> allHistory = new TreeSet();
         for (ReminderHistory hist : reminderHistory) {
+            if (hist.eventId == null) {
+                continue;
+            }
+            
             if (hist.eventId.equals(eventId)) {
                 allHistory.add(hist);
             }

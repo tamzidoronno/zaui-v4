@@ -277,8 +277,9 @@ class Factory extends FactoryBase {
 
     private function checkRewrite() {
         if (isset($_GET['rewrite'])) {
-            $name = urldecode($_GET['rewrite']);
-
+            $name = str_replace("+", "%2b", $_GET['rewrite']);
+            $name = urldecode($name);
+            $name = str_replace("_''", "\"", $name);
             $pageId = $this->getApi()->getListManager()->getPageIdByName($name);
             if ($pageId != "") {
                 $_GET['page'] = $pageId;

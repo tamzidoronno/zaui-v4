@@ -16,6 +16,7 @@ class GetShopHelper {
         $name = str_replace(" ", "_", $name);
         $name = str_replace("/", "_", $name);
         $name = str_replace("&", "_", $name);
+        $name = str_replace("\"", "_''", $name);
         $name = strtolower($name);
         return "/$name.html";
     }

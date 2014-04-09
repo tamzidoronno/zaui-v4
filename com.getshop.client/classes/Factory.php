@@ -296,7 +296,7 @@ class Factory extends FactoryBase {
     public function initPage() {
         $this->checkRewrite();
         if (isset($_GET['page'])) {
-            if ($_GET['page'] == "clear_page") {
+            if ($_GET['page'] == "clear_page" || $_GET['page'] == "{HOMEPAGE}") {
                 $navigation = Navigation::getNavigation();
                 $navigation->currentPageId = null;
             } else {

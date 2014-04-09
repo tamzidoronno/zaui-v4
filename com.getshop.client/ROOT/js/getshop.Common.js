@@ -8,6 +8,7 @@ thundashop.common.stopNextNavigation = false;
 thundashop.common.currentScroll = 0;
 getshopmaintoolboxhidden = false;
 isAdministrator = false;
+isFirstLoading = true;
 
 
 $(document).mousemove(function(e) {
@@ -75,9 +76,15 @@ if (!history.pushState) {
 
 if (history.pushState) {
     window.onpopstate = function(event) {
+        if(isFirstLoading) {
+             isFirstLoading=false;
+             return;
+        }
         if (event.state) {
             var url = event.state.ajaxLink ? event.state.ajaxLink : event.state.url;
             thundashop.Ajax.doJavascriptNavigation(url, null, true);
+        } else {
+            thundashop.Ajax.doJavascriptNavigation("?page={HOMEPAGE}", null, true);
         }
     }
 }

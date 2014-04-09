@@ -62,7 +62,7 @@ public interface ICalendarManager {
      */
     @Editor
     @Writing
-    public void sendReminderToUser(boolean byEmail, boolean bySMS, List<String> users, String text, String subject, String eventId) throws ErrorException;
+    public void sendReminderToUser(boolean byEmail, boolean bySMS, List<String> users, String text, String subject, String eventId, String attachment, String sendReminderToUser) throws ErrorException;
     
     /**
      * Get all entries to a given day

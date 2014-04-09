@@ -769,7 +769,7 @@ class CalendarManager(object):
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
-  def sendReminderToUser(self, byEmail, bySMS, users, text, subject, eventId):
+  def sendReminderToUser(self, byEmail, bySMS, users, text, subject, eventId, attachment, sendReminderToUser):
     args = collections.OrderedDict()
     if isinstance(byEmail,GetShopBaseClass): 
       args["byEmail"]=json.dumps(byEmail.__dict__)
@@ -813,6 +813,20 @@ class CalendarManager(object):
         args["eventId"]=json.dumps(eventId)
       except (ValueError, AttributeError):
         args["eventId"]=eventId
+    if isinstance(attachment,GetShopBaseClass): 
+      args["attachment"]=json.dumps(attachment.__dict__)
+    else:
+      try:
+        args["attachment"]=json.dumps(attachment)
+      except (ValueError, AttributeError):
+        args["attachment"]=attachment
+    if isinstance(sendReminderToUser,GetShopBaseClass): 
+      args["sendReminderToUser"]=json.dumps(sendReminderToUser.__dict__)
+    else:
+      try:
+        args["sendReminderToUser"]=json.dumps(sendReminderToUser)
+      except (ValueError, AttributeError):
+        args["sendReminderToUser"]=sendReminderToUser
     data = EmptyClass()
     data.args = args
     data.method = "sendReminderToUser"

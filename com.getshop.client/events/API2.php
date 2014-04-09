@@ -744,7 +744,7 @@ class APICalendarManager {
 	* @throws ErrorException
 	*/
 
-	public function sendReminderToUser($byEmail, $bySMS, $users, $text, $subject, $eventId) {
+	public function sendReminderToUser($byEmail, $bySMS, $users, $text, $subject, $eventId, $attachment, $sendReminderToUser) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["byEmail"] = json_encode($this->transport->object_unset_nulls($byEmail));
@@ -753,6 +753,8 @@ class APICalendarManager {
 	     $data['args']["text"] = json_encode($this->transport->object_unset_nulls($text));
 	     $data['args']["subject"] = json_encode($this->transport->object_unset_nulls($subject));
 	     $data['args']["eventId"] = json_encode($this->transport->object_unset_nulls($eventId));
+	     $data['args']["attachment"] = json_encode($this->transport->object_unset_nulls($attachment));
+	     $data['args']["sendReminderToUser"] = json_encode($this->transport->object_unset_nulls($sendReminderToUser));
 	     $data["method"] = "sendReminderToUser";
 	     $data["interfaceName"] = "core.calendar.ICalendarManager";
 	     return $this->transport->sendMessage($data);

@@ -392,6 +392,15 @@ class Calendar extends MarketingApplication implements Application {
         $this->includefile("sendreminder");
     }
     
+    private function getAttachment() {
+        if ($_POST['data']['attachment1']) {
+            $data = explode(",", $_POST['data']['attachment1']);
+            return $data[1];
+        }
+        
+        return "";
+    }
+    
     private function sendReminderEvent($byEmail, $bySms) {
         $text = $byEmail ? nl2br($_POST['data']['text']) : $_POST['data']['text'];
         $this->getApi()
@@ -402,7 +411,9 @@ class Calendar extends MarketingApplication implements Application {
                         $_POST['data']['users'], 
                         $text, 
                         $_POST['data']['subject'],
-                        $_POST['data']['entryid']
+                        $_POST['data']['entryid'],
+                        $this->getAttachment(),
+                        $_POST['data']['filename']
                     );
     }
     

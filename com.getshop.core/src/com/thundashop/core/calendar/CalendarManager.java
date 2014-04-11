@@ -839,7 +839,11 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                 }
             }
         }
+        
 
+        Collections.sort(entries);
+        Collections.reverse(entries);
+        
         return entries;
     }
 

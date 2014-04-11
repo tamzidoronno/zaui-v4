@@ -1,6 +1,9 @@
 <?php
 class core_cartuning_CarTuningData {
 	/** @var String */
+	public $id;
+
+	/** @var String */
 	public $subEntries;
 
 	/** @var String */

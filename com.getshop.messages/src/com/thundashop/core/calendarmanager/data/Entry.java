@@ -81,30 +81,28 @@ public class Entry implements Serializable, Comparable<Entry> {
 
     @Override
     public int compareTo(Entry o) {
-        if (o.year > year)
-            return -1;
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, o.year);
+        cal.set(Calendar.MONTH, o.month);
+        cal.set(Calendar.DAY_OF_MONTH, o.day);
+        Date dateRepresentation = cal.getTime();
         
-        if (o.year == year && o.month > month)
-            return -1;
+        Calendar cal2 = Calendar.getInstance();
+        cal2.set(Calendar.YEAR, year);
+        cal2.set(Calendar.MONTH, month);
+        cal2.set(Calendar.DAY_OF_MONTH, day);
+        Date dateRepresentation2 = cal2.getTime();
         
-        if (o.year == year && o.month == month && o.day > day)
-            return -1;
-        
-        if (o.year == year && o.month == month && o.day == day)
-            return 0;
-        
-        return 1;
+        return dateRepresentation.compareTo(dateRepresentation2);
     }
 
     public boolean isInPast() {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, this.year);
-        cal.set(Calendar.MONTH, this.month);
+        cal.set(Calendar.MONTH, this.month-1);
         cal.set(Calendar.DAY_OF_MONTH, this.day);
         Date dateRepresentation = cal.getTime();
         
         return dateRepresentation.before(new Date());
     }
-  
-    
 }

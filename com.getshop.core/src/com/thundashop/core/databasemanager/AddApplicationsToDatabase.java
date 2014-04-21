@@ -43,17 +43,15 @@ public class AddApplicationsToDatabase {
     
     private List<ApplicationSettings> addApplications() {
         List<ApplicationSettings> apps = new ArrayList();
-//
-        ApplicationSettings CarTuningApplication = createSettings(
-                "CarTuningApplication",
-                "3bfa7e0d-3280-4c85-8f72-7516cd145446",
+
+        ApplicationSettings hotelbooking = createSettings(
+                "Hotelbooking",
+                "d16b27d9-579f-4d44-b90b-4223de0eb6f2",
                 emtpy,
                 "",
                 ApplicationSettings.Type.Webshop, false);
-        CarTuningApplication.isPublic = false;
-        CarTuningApplication.allowedStoreIds.add("5b297962-d895-4b12-a94d-e5286558fd84");
-        
-        apps.add(CarTuningApplication);
+        hotelbooking.isPublic = false;
+        apps.add(hotelbooking);
 //
 //        List<String> allowed = new ArrayList();
 //        allowed.add("large");

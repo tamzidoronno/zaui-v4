@@ -40,36 +40,6 @@ public class CarTuningManager extends ManagerBase implements ICarTuningManager {
         }
     }
     
-    @PostConstruct
-    public void setupTestData() {
-        CarTuningData personbiler = new CarTuningData();
-        personbiler.name = "Personbiler";
-        
-        CarTuningData audi = new CarTuningData();
-        audi.name = "Audi";
-        audi.maxHp = 10;
-        audi.maxNw = 11;
-        audi.normalHp = 4;
-        audi.normalNw = 1;
-        
-        CarTuningData vw = new CarTuningData();
-        vw.name = "VW";
-        
-        personbiler.subEntries.add(audi);
-        personbiler.subEntries.add(vw);
-        
-        CarTuningData trucks = new CarTuningData();
-        trucks.name = "Lastebiler";
-        
-        CarTuningData boats = new CarTuningData();
-        boats.name = "Boats";
-        
-        carTuningCollection.entries.add(personbiler);
-        carTuningCollection.entries.add(trucks);
-        carTuningCollection.entries.add(boats);
-        carTuningCollection.entries.add(boats);
-    }
-    
     @Override
     public List<CarTuningData> getCarTuningData(String id) throws ErrorException {
         return carTuningCollection.entries;

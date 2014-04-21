@@ -70,8 +70,8 @@ app.CarTuningApplication = {
     },
     saveTuningData : function() {
         var objects = $('#html1').jstree('get_json');
-        console.log(objects);
         var data = app.CarTuningApplication.convertList(objects[0].children);
+        data = JSON.stringify(data);
         var event = thundashop.Ajax.createEvent('','saveTuningData',$(this),{"data" : data});
         thundashop.Ajax.post(event, function() {
             thundashop.common.hideInformationBox();

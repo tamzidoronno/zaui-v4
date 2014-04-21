@@ -143,11 +143,11 @@ class CarTuningApplication extends \WebshopApplication implements \Application {
         foreach($data as $key => $entry) {
             foreach($entry as $key2 => $val) {
                 if($key2 != "subEntries") {
-                    if(!$data[$key][$key2]) {
-                        unset($data[$key][$key2]);
+                    if(!$data[$key]->$key2) {
+                        unset($data[$key]->$key2);
                     }
                 } else {
-                    $data[$key][$key2] = $this->finalizeData($data[$key][$key2]);
+                    $data[$key]->$key2 = $this->finalizeData($data[$key]->$key2);
                 }
             }
         }
@@ -155,7 +155,7 @@ class CarTuningApplication extends \WebshopApplication implements \Application {
     }
     
     function saveTuningData() {
-       $data = $this->finalizeData($_POST['data']['data']);
+       $data = $this->finalizeData(json_decode($_POST['data']['data']));
        $this->getApi()->getCarTuningManager()->saveCarTuningData($data);
     }
 }

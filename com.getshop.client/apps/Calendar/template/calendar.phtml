@@ -9,14 +9,14 @@ if ($this->isShowTabsForViewMode()) { ?>
         <div byname="list" class="calender_tab_entry"><? echo $this->__w("By list"); ?></div>
     </div>
 <? } ?>
-<div class='calendar_tab_content_view' calendar_tab_name="list" style="display: none;">
+<div class='calendar_tab_content_view' calendar_tab_name="list">
     <?
     echo "<a href='/generatePDF.php?type=calendar&id=$id&page=$pageId'><div class='downloadpdf'>".$this->__w("Download as pdf")."</div></a>";
     echo "<hr>";
     $this->renderList();
     ?>
 </div>
-<div class='calendar_tab_content_view' calendar_tab_name="calendar">
+<div class='calendar_tab_content_view' calendar_tab_name="calendar" style="display: none;">
     <?php
     
 

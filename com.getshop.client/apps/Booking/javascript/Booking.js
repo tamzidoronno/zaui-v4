@@ -34,6 +34,29 @@ Booking = {
     bindEvents: function() {
         $(document).on('keyup', '.Booking #birthday.updateOnBlur', this.updateCompanyInformation);
         $(document).on('click', '.Booking .donemarker', this.markAsDone);
+        $(document).on('change', '.Booking .select_course_location', this.updateCourseLocation);
+    },
+    updateCourseLocation : function() {
+        var selection = $(this).closest('.app').find('#event');
+        var location = $(this).val();
+        var foundcourse = false;
+        selection.find('option').each(function() {
+           if($(this).attr('location') === location) {
+               if(!foundcourse) {
+                   foundcourse = $(this).attr('value');
+               }
+               $(this).show();
+           } else {
+               $(this).hide();
+           }
+        });
+        if(foundcourse) {
+            selection.find('[value="'+foundcourse+'"]').attr('selected','selected');
+            selection.show();
+        } else {
+            selection.hide();
+        }
+        
     },
     markAsDone: function() {
         var data = {

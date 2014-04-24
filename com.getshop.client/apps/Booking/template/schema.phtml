@@ -81,10 +81,28 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
                 <tr><td class="col1"><?php echo $this->__w("org", 'contact'); ?></td><td><div class="companyinformation"><? echo $this->__w("Enter organisation number and this will be filled out automatically"); ?></div></td></tr>
             <? } ?>
             
-            <? if (!$this->isConnectedToCurrentPage()) { ?>    
+            <? if (!$this->isConnectedToCurrentPage()) { ?> 
                 <tr><td class="col1"><?php echo $this->__w("course"); ?></td>
                     <td>
-                        <select id="event">
+                        <?
+                        $places = [];
+                        foreach($this->entries as $entry) {
+                            $places[$entry->location] = true;
+                        }
+                        asort($places);
+                        ?>
+                        
+                        <select class='select_course_location'>
+                            <option value=''>Velg et kurssted</option>
+                            <?
+                            foreach($places as $place => $number) {
+                                echo "<option value='".$place."'>" . $place . "</option>";
+                            }
+                            ?>
+                        </select><br>
+                        
+                        
+                        <select id="event" style='display:none;'>
                             <?php 
                             foreach ($this->entries as $entry) {
                                 /* @var $entry core_calendarmanager_data_Entry */
@@ -92,16 +110,13 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
                                 $title = $entry->title;
                                 $location = $entry->location;
                                 $entryid = $entry->entryId;
-
                                 if ($entry->lockedForSignup) {
                                     continue;
                                 }
-
                                 if (isset($_GET["entry"]) && $entryid != $_GET['entry']) {
                                     continue;
                                 }
-
-                                echo "<option value='$entryid'>$date $title - $location</option>";
+                                echo "<option value='$entryid' style='display:none;' location='".$entry->location."'>$date $title</option>";
                             }
                             ?>
                         </select>

@@ -206,7 +206,7 @@ public class PHPApiBuilder {
             phpClass += "\t     $data[\"method\"] = \"" + method.method.getName() + "\";\n";
             phpClass += "\t     $data[\"interfaceName\"] = \"" + method.manager.getCanonicalName().replace("com.thundashop.", "") + "\";\n";
             if (returnvalue.startsWith("core_") || returnvalue.startsWith("app_")) {
-                phpClass += "\t     return $this->transport->cast(API::" + returnvalue + "(), $this->transport->sendMessage($data));\n";
+                phpClass += "\t     return $this->transport->cast(new " + returnvalue + "(), $this->transport->sendMessage($data));\n";
             } else {
                 phpClass += "\t     return $this->transport->sendMessage($data);\n";
             }

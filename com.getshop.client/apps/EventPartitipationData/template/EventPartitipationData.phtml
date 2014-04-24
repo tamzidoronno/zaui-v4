@@ -1,0 +1,42 @@
+<?php
+namespace ns_9d94feed_f4fd_4e6d_8be8_81aa89f58dcf;
+/* @var $this EventPartitipationData */
+$data = $this->getApi()->getCalendarManager()->getEventPartitipatedData($this->getPage()->id);
+$title = "";
+$title2 = "";
+$text = "";
+$heading = "";
+if($data) {
+    $title = $data->title;
+    $title2 = $data->title2;
+    $text = $data->body;
+    $heading = $data->heading;
+}
+?>
+<? echo $this->__f("This is where you configure the text you would like to put on your diploma. The variables helps you personalise the diploma."); ?>
+<br>
+<br>
+Variables:<bR>
+%title% - The given title of the event<bR>
+%date% - The given date for the event<bR>
+%name% - The name of the partipiant.<bR>
+%year% - The year for the event.<bR>
+%month% - The month for the event.<bR>
+%day% - The day for the event.<bR>
+<br>
+<? echo $this->__f("Title"); ?>
+<input type="text" class="eventtitle" value="<? echo $title; ?>">
+<br>
+<br>
+<? echo $this->__f("Secondary title"); ?>
+<input type="text" class="eventtitle2" value="<? echo $title2; ?>">
+<br>
+<br>
+<? echo $this->__f("Text heading"); ?>
+<input type="text" class="heading" value="<? echo $heading; ?>">
+<br>
+<br>
+<? echo $this->__f("Text"); ?>
+<textarea class="eventtext"><? echo $text; ?></textarea>
+<span class="gs_button save_event_partition_data"><? echo $this->__f("Save"); ?></span>
+

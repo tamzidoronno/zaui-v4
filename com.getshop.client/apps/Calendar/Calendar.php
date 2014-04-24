@@ -17,6 +17,16 @@ class Calendar extends MarketingApplication implements Application {
         return $this->__("Keep your customers up to date of what events you are hosting with this application");
     }
     
+    public function updateEventHelder() {
+        $id = $_POST['data']['id'];
+        $helder = $_POST['data']['helder'];
+        
+        $entry = $this->getApi()->getCalendarManager()->getEntry($id);
+        $entry->eventHelder = $helder;
+        $this->getApi()->getCalendarManager()->saveEntry($entry);
+    }
+    
+    
     public function getGroup($user) {
         $retGroups = "";
         if (isset($user->groups) && sizeof($user->groups) > 0) {

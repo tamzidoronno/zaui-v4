@@ -635,6 +635,21 @@ class CalendarManager(object):
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getEventPartitipatedData(self, pageId):
+    args = collections.OrderedDict()
+    if isinstance(pageId,GetShopBaseClass): 
+      args["pageId"]=json.dumps(pageId.__dict__)
+    else:
+      try:
+        args["pageId"]=json.dumps(pageId)
+      except (ValueError, AttributeError):
+        args["pageId"]=pageId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getEventPartitipatedData"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getEventsGroupedByPageId(self):
     args = collections.OrderedDict()
     data = EmptyClass()
@@ -714,6 +729,21 @@ class CalendarManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getMonthsAfter"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getSignature(self, id):
+    args = collections.OrderedDict()
+    if isinstance(id,GetShopBaseClass): 
+      args["id"]=json.dumps(id.__dict__)
+    else:
+      try:
+        args["id"]=json.dumps(id)
+      except (ValueError, AttributeError):
+        args["id"]=id
+    data = EmptyClass()
+    data.args = args
+    data.method = "getSignature"
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -830,6 +860,43 @@ class CalendarManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "sendReminderToUser"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def setEventPartitipatedData(self, data):
+    args = collections.OrderedDict()
+    if isinstance(data,GetShopBaseClass): 
+      args["data"]=json.dumps(data.__dict__)
+    else:
+      try:
+        args["data"]=json.dumps(data)
+      except (ValueError, AttributeError):
+        args["data"]=data
+    data = EmptyClass()
+    data.args = args
+    data.method = "setEventPartitipatedData"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def setSignature(self, userid, signature):
+    args = collections.OrderedDict()
+    if isinstance(userid,GetShopBaseClass): 
+      args["userid"]=json.dumps(userid.__dict__)
+    else:
+      try:
+        args["userid"]=json.dumps(userid)
+      except (ValueError, AttributeError):
+        args["userid"]=userid
+    if isinstance(signature,GetShopBaseClass): 
+      args["signature"]=json.dumps(signature.__dict__)
+    else:
+      try:
+        args["signature"]=json.dumps(signature)
+      except (ValueError, AttributeError):
+        args["signature"]=signature
+    data = EmptyClass()
+    data.args = args
+    data.method = "setSignature"
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 

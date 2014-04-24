@@ -1,6 +1,7 @@
 package com.thundashop.core.calendar;
 
 import com.thundashop.core.calendarmanager.data.Entry;
+import com.thundashop.core.calendarmanager.data.EventPartitipated;
 import com.thundashop.core.calendarmanager.data.FilterResult;
 import com.thundashop.core.calendarmanager.data.Location;
 import com.thundashop.core.calendarmanager.data.Month;
@@ -233,4 +234,18 @@ public interface ICalendarManager {
      */
     @Editor
     public List<Entry> getEntriesByUserId(String userId) throws ErrorException;
+    
+    
+    @Administrator
+    public EventPartitipated getEventPartitipatedData(String pageId) throws ErrorException;
+    
+    @Administrator
+    public void setEventPartitipatedData(EventPartitipated data) throws ErrorException;
+    
+    @Administrator
+    public String getSignature(String id) throws ErrorException;
+    
+    @Administrator
+    public void setSignature(String userid, String signature) throws ErrorException;
+    
 }

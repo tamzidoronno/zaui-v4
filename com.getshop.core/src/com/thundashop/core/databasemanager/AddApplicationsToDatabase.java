@@ -44,14 +44,14 @@ public class AddApplicationsToDatabase {
     private List<ApplicationSettings> addApplications() {
         List<ApplicationSettings> apps = new ArrayList();
 
-        ApplicationSettings hotelbooking = createSettings(
-                "Hotelbooking",
-                "d16b27d9-579f-4d44-b90b-4223de0eb6f2",
+        ApplicationSettings eventpartitpation = createSettings(
+                "EventPartitipationData",
+                "9d94feed-f4fd-4e6d-8be8-81aa89f58dcf",
                 emtpy,
                 "",
                 ApplicationSettings.Type.Webshop, false);
-        hotelbooking.isPublic = false;
-        apps.add(hotelbooking);
+        eventpartitpation.isPublic = false;
+        apps.add(eventpartitpation);
 //
 //        List<String> allowed = new ArrayList();
 //        allowed.add("large");

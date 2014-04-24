@@ -2,11 +2,13 @@ package com.thundashop.core.calendar;
 
 import com.thundashop.core.calendarmanager.data.Day;
 import com.thundashop.core.calendarmanager.data.Entry;
+import com.thundashop.core.calendarmanager.data.EventPartitipated;
 import com.thundashop.core.calendarmanager.data.ExtraDay;
 import com.thundashop.core.calendarmanager.data.FilterResult;
 import com.thundashop.core.calendarmanager.data.Location;
 import com.thundashop.core.calendarmanager.data.Month;
 import com.thundashop.core.calendarmanager.data.ReminderHistory;
+import com.thundashop.core.calendarmanager.data.Signature;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
@@ -42,6 +44,9 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     @Autowired
     public SMSFactory smsFactory;
     private List<ReminderHistory> reminderHistory = new ArrayList();
+    
+    private HashMap<String, EventPartitipated> eventData = new HashMap();
+    private HashMap<String, Signature> signatures = new HashMap();
 
     @Autowired
     public CalendarManager(Logger log, DatabaseSaver databaseSaver) {
@@ -62,6 +67,14 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             if (dataObject instanceof ReminderHistory) {
                 ReminderHistory hist = (ReminderHistory) dataObject;
                 reminderHistory.add(hist);
+            }
+            if (dataObject instanceof EventPartitipated) {
+                EventPartitipated evp = (EventPartitipated) dataObject;
+                eventData.put(evp.pageId, evp);
+            }
+            if (dataObject instanceof Signature) {
+                Signature signature = (Signature) dataObject;
+                signatures.put(signature.userid, signature);
             }
         }
     }
@@ -980,5 +993,48 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             }
         }
         return entries;
+    }
+
+    @Override
+    public EventPartitipated getEventPartitipatedData(String pageId) throws ErrorException {
+        return eventData.get(pageId);
+    }
+
+    @Override
+    public void setEventPartitipatedData(EventPartitipated data) throws ErrorException {
+        EventPartitipated event = getEventPartitipatedData(data.pageId);
+        
+        if(event != null) {
+            //Update the exsiting one.
+            event.body = data.body;
+            event.title = data.title;
+            event.title2 = data.title2;
+            event.heading = data.heading;
+            data = event;
+        }
+        
+        data.storeId = storeId;
+        databaseSaver.saveObject(data, credentials);
+        eventData.put(data.pageId, data);
+    }
+
+    @Override
+    public String getSignature(String id) throws ErrorException {
+        return signatures.get(id).signature;
+    }
+
+    @Override
+    public void setSignature(String userid, String signature) throws ErrorException {
+        Signature cursign = signatures.get(userid);
+        if(cursign != null) {
+            cursign.signature = signature;
+        } else {
+            cursign = new Signature();
+            cursign.storeId = storeId;
+            cursign.userid = userid;
+            cursign.signature = signature;
+            signatures.put(cursign.userid, cursign);
+        }
+        databaseSaver.saveObject(cursign, credentials);
     }
 }

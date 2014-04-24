@@ -5,6 +5,7 @@
         $events = $this->getEvents();
         if (!$events) {
             echo $this->__w("There is no entries for this event");
+            echo "</div>";
             return;
         }
         foreach ($events as $event) {

@@ -47,6 +47,8 @@ public class Entry implements Serializable, Comparable<Entry> {
     public String userId;
     public String title;
     public String color;
+    public String eventHelder;
+    
     
     public int year;
     public int month;
@@ -74,6 +76,7 @@ public class Entry implements Serializable, Comparable<Entry> {
         this.title = entry.title;
         this.color = entry.color;
         this.year = entry.year;
+        this.eventHelder = entry.eventHelder;
         this.month = entry.month;
         this.linkToPage = entry.linkToPage;
         this.day = entry.day;

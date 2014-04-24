@@ -62,6 +62,17 @@ Calendar = {
         $(document).on('click', '.calendar_location_delete', Calendar.deleteLocation);
         $(document).on('click', '.calendar_location_createnew', Calendar.showEditLocation);
         $(document).on('click', '.calender_tab_entry', Calendar.changeShown);
+        $(document).on('change', '.eventhelder_selector', Calendar.changeEventHelder);
+    },
+    changeEventHelder : function() {
+        var data = {
+            "helder" : $(this).val(),
+            "id" : $(this).attr('eventid')
+        }
+        var event = thundashop.Ajax.createEvent('','updateEventHelder',$(this), data);
+        thundashop.Ajax.postWithCallBack(event, function() {
+            thundashop.common.Alert(__f("Saved"), __f("Event helder has been updated"));
+        });
     },
     changeShown: function() {
         $('.calendar_tab_content_view').hide();

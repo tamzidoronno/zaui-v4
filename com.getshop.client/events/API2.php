@@ -26,7 +26,7 @@ class APIAppManager {
 	     $data['args']["appName"] = json_encode($this->transport->object_unset_nulls($appName));
 	     $data["method"] = "createApplication";
 	     $data["interfaceName"] = "core.appmanager.IAppManager";
-	     return $this->transport->cast(API::core_appmanager_data_ApplicationSettings(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_appmanager_data_ApplicationSettings(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -69,7 +69,7 @@ class APIAppManager {
 	     $data['args'] = array();
 	     $data["method"] = "getAllApplications";
 	     $data["interfaceName"] = "core.appmanager.IAppManager";
-	     return $this->transport->cast(API::core_appmanager_data_AvailableApplications(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_appmanager_data_AvailableApplications(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -85,7 +85,7 @@ class APIAppManager {
 	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
 	     $data["method"] = "getApplication";
 	     $data["interfaceName"] = "core.appmanager.IAppManager";
-	     return $this->transport->cast(API::core_appmanager_data_ApplicationSettings(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_appmanager_data_ApplicationSettings(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -186,7 +186,7 @@ class APIBannerManager {
 	     $data['args']["fileId"] = json_encode($this->transport->object_unset_nulls($fileId));
 	     $data["method"] = "addImage";
 	     $data["interfaceName"] = "app.banner.IBannerManager";
-	     return $this->transport->cast(API::app_bannermanager_data_BannerSet(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new app_bannermanager_data_BannerSet(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -206,7 +206,7 @@ class APIBannerManager {
 	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
 	     $data["method"] = "createSet";
 	     $data["interfaceName"] = "app.banner.IBannerManager";
-	     return $this->transport->cast(API::app_bannermanager_data_BannerSet(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new app_bannermanager_data_BannerSet(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -223,7 +223,7 @@ class APIBannerManager {
 	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
 	     $data["method"] = "deleteSet";
 	     $data["interfaceName"] = "app.banner.IBannerManager";
-	     return $this->transport->cast(API::app_bannermanager_data_BannerSet(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new app_bannermanager_data_BannerSet(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -239,7 +239,7 @@ class APIBannerManager {
 	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
 	     $data["method"] = "getSet";
 	     $data["interfaceName"] = "app.banner.IBannerManager";
-	     return $this->transport->cast(API::app_bannermanager_data_BannerSet(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new app_bannermanager_data_BannerSet(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -259,7 +259,7 @@ class APIBannerManager {
 	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
 	     $data["method"] = "linkProductToImage";
 	     $data["interfaceName"] = "app.banner.IBannerManager";
-	     return $this->transport->cast(API::app_bannermanager_data_BannerSet(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new app_bannermanager_data_BannerSet(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -277,7 +277,7 @@ class APIBannerManager {
 	     $data['args']["fileId"] = json_encode($this->transport->object_unset_nulls($fileId));
 	     $data["method"] = "removeImage";
 	     $data["interfaceName"] = "app.banner.IBannerManager";
-	     return $this->transport->cast(API::app_bannermanager_data_BannerSet(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new app_bannermanager_data_BannerSet(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -295,7 +295,7 @@ class APIBannerManager {
 	     $data['args']["app_bannermanager_data_BannerSet"] = json_encode($this->transport->object_unset_nulls($app_bannermanager_data_BannerSet));
 	     $data["method"] = "saveSet";
 	     $data["interfaceName"] = "app.banner.IBannerManager";
-	     return $this->transport->cast(API::app_bannermanager_data_BannerSet(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new app_bannermanager_data_BannerSet(), $this->transport->sendMessage($data));
 	}
 
 }
@@ -475,7 +475,7 @@ class APICalendarManager {
 	     $data['args']["day"] = json_encode($this->transport->object_unset_nulls($day));
 	     $data["method"] = "createEntry";
 	     $data["interfaceName"] = "core.calendar.ICalendarManager";
-	     return $this->transport->cast(API::core_calendarmanager_data_Entry(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_calendarmanager_data_Entry(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -600,7 +600,21 @@ class APICalendarManager {
 	     $data['args']["entryId"] = json_encode($this->transport->object_unset_nulls($entryId));
 	     $data["method"] = "getEntry";
 	     $data["interfaceName"] = "core.calendar.ICalendarManager";
-	     return $this->transport->cast(API::core_calendarmanager_data_Entry(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_calendarmanager_data_Entry(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* return a list of entires that a specified user
+	* has been attending to
+	*/
+
+	public function getEventPartitipatedData($pageId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data["method"] = "getEventPartitipatedData";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->cast(new core_calendarmanager_data_EventPartitipated(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -666,7 +680,7 @@ class APICalendarManager {
 	     $data['args']["includeExtraEvents"] = json_encode($this->transport->object_unset_nulls($includeExtraEvents));
 	     $data["method"] = "getMonth";
 	     $data["interfaceName"] = "core.calendar.ICalendarManager";
-	     return $this->transport->cast(API::core_calendarmanager_data_Month(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_calendarmanager_data_Month(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -679,6 +693,20 @@ class APICalendarManager {
 	     $data['args']["year"] = json_encode($this->transport->object_unset_nulls($year));
 	     $data['args']["month"] = json_encode($this->transport->object_unset_nulls($month));
 	     $data["method"] = "getMonthsAfter";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* return a list of entires that a specified user
+	* has been attending to
+	*/
+
+	public function getSignature($id) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $data["method"] = "getSignature";
 	     $data["interfaceName"] = "core.calendar.ICalendarManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -729,7 +757,7 @@ class APICalendarManager {
 	     $data['args']["core_calendarmanager_data_Location"] = json_encode($this->transport->object_unset_nulls($core_calendarmanager_data_Location));
 	     $data["method"] = "saveLocation";
 	     $data["interfaceName"] = "core.calendar.ICalendarManager";
-	     return $this->transport->cast(API::core_calendarmanager_data_Location(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_calendarmanager_data_Location(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -756,6 +784,35 @@ class APICalendarManager {
 	     $data['args']["attachment"] = json_encode($this->transport->object_unset_nulls($attachment));
 	     $data['args']["sendReminderToUser"] = json_encode($this->transport->object_unset_nulls($sendReminderToUser));
 	     $data["method"] = "sendReminderToUser";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* return a list of entires that a specified user
+	* has been attending to
+	*/
+
+	public function setEventPartitipatedData($core_calendarmanager_data_EventPartitipated) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_calendarmanager_data_EventPartitipated"] = json_encode($this->transport->object_unset_nulls($core_calendarmanager_data_EventPartitipated));
+	     $data["method"] = "setEventPartitipatedData";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* return a list of entires that a specified user
+	* has been attending to
+	*/
+
+	public function setSignature($userid, $signature) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userid"] = json_encode($this->transport->object_unset_nulls($userid));
+	     $data['args']["signature"] = json_encode($this->transport->object_unset_nulls($signature));
+	     $data["method"] = "setSignature";
 	     $data["interfaceName"] = "core.calendar.ICalendarManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -869,7 +926,7 @@ class APICartManager {
 	     $data['args']["variations"] = json_encode($this->transport->object_unset_nulls($variations));
 	     $data["method"] = "addProduct";
 	     $data["interfaceName"] = "core.cartmanager.ICartManager";
-	     return $this->transport->cast(API::core_cartmanager_data_Cart(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_cartmanager_data_Cart(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -921,7 +978,7 @@ class APICartManager {
 	     $data['args'] = array();
 	     $data["method"] = "getCart";
 	     $data["interfaceName"] = "core.cartmanager.ICartManager";
-	     return $this->transport->cast(API::core_cartmanager_data_Cart(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_cartmanager_data_Cart(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -1035,7 +1092,7 @@ class APICartManager {
 	     $data['args']["cartItemId"] = json_encode($this->transport->object_unset_nulls($cartItemId));
 	     $data["method"] = "removeProduct";
 	     $data["interfaceName"] = "core.cartmanager.ICartManager";
-	     return $this->transport->cast(API::core_cartmanager_data_Cart(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_cartmanager_data_Cart(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -1080,7 +1137,7 @@ class APICartManager {
 	     $data['args']["count"] = json_encode($this->transport->object_unset_nulls($count));
 	     $data["method"] = "updateProductCount";
 	     $data["interfaceName"] = "core.cartmanager.ICartManager";
-	     return $this->transport->cast(API::core_cartmanager_data_Cart(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_cartmanager_data_Cart(), $this->transport->sendMessage($data));
 	}
 
 }
@@ -1293,7 +1350,7 @@ class APIFooterManager {
 	     $data['args'] = array();
 	     $data["method"] = "getConfiguration";
 	     $data["interfaceName"] = "app.footer.IFooterManager";
-	     return $this->transport->cast(API::app_footermanager_data_Configuration(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new app_footermanager_data_Configuration(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -1309,7 +1366,7 @@ class APIFooterManager {
 	     $data['args']["numberOfColumns"] = json_encode($this->transport->object_unset_nulls($numberOfColumns));
 	     $data["method"] = "setLayout";
 	     $data["interfaceName"] = "app.footer.IFooterManager";
-	     return $this->transport->cast(API::app_footermanager_data_Configuration(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new app_footermanager_data_Configuration(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -1327,7 +1384,7 @@ class APIFooterManager {
 	     $data['args']["type"] = json_encode($this->transport->object_unset_nulls($type));
 	     $data["method"] = "setType";
 	     $data["interfaceName"] = "app.footer.IFooterManager";
-	     return $this->transport->cast(API::app_footermanager_data_Configuration(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new app_footermanager_data_Configuration(), $this->transport->sendMessage($data));
 	}
 
 }
@@ -1357,7 +1414,7 @@ class APIGalleryManager {
 	     $data['args']["title"] = json_encode($this->transport->object_unset_nulls($title));
 	     $data["method"] = "addImageToGallery";
 	     $data["interfaceName"] = "core.gallerymanager.IGalleryManager";
-	     return $this->transport->cast(API::app_gallerymanager_data_ImageEntry(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new app_gallerymanager_data_ImageEntry(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -1418,7 +1475,7 @@ class APIGalleryManager {
 	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
 	     $data["method"] = "getEntry";
 	     $data["interfaceName"] = "core.gallerymanager.IGalleryManager";
-	     return $this->transport->cast(API::app_gallerymanager_data_ImageEntry(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new app_gallerymanager_data_ImageEntry(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -1475,7 +1532,7 @@ class APIGetShop {
 	     $data['args']["core_getshop_data_WebPageData"] = json_encode($this->transport->object_unset_nulls($core_getshop_data_WebPageData));
 	     $data["method"] = "createWebPage";
 	     $data["interfaceName"] = "core.getshop.IGetShop";
-	     return $this->transport->cast(API::core_storemanager_data_Store(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_storemanager_data_Store(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -1524,7 +1581,7 @@ class APIGetShop {
 	     $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
 	     $data["method"] = "getPartnerData";
 	     $data["interfaceName"] = "core.getshop.IGetShop";
-	     return $this->transport->cast(API::core_getshop_data_PartnerData(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_getshop_data_PartnerData(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -1610,7 +1667,7 @@ class APIListManager {
 	     $data['args']["parentPageId"] = json_encode($this->transport->object_unset_nulls($parentPageId));
 	     $data["method"] = "addEntry";
 	     $data["interfaceName"] = "core.listmanager.IListManager";
-	     return $this->transport->cast(API::core_listmanager_data_Entry(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_listmanager_data_Entry(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -1736,7 +1793,7 @@ class APIListManager {
 	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
 	     $data["method"] = "getListEntry";
 	     $data["interfaceName"] = "core.listmanager.IListManager";
-	     return $this->transport->cast(API::core_listmanager_data_Entry(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_listmanager_data_Entry(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -1786,7 +1843,7 @@ class APIListManager {
 	     $data['args']["parentId"] = json_encode($this->transport->object_unset_nulls($parentId));
 	     $data["method"] = "orderEntry";
 	     $data["interfaceName"] = "core.listmanager.IListManager";
-	     return $this->transport->cast(API::core_listmanager_data_Entry(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_listmanager_data_Entry(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -1888,7 +1945,7 @@ class APILogoManager {
 	     $data['args'] = array();
 	     $data["method"] = "getLogo";
 	     $data["interfaceName"] = "app.logo.ILogoManager";
-	     return $this->transport->cast(API::app_logomanager_data_SavedLogo(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new app_logomanager_data_SavedLogo(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -2105,7 +2162,7 @@ class APINewsManager {
 	     $data['args']["email"] = json_encode($this->transport->object_unset_nulls($email));
 	     $data["method"] = "addSubscriber";
 	     $data["interfaceName"] = "app.news.INewsManager";
-	     return $this->transport->cast(API::app_newsmanager_data_MailSubscription(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new app_newsmanager_data_MailSubscription(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -2220,7 +2277,7 @@ class APIOrderManager {
 	     $data['args']["core_usermanager_data_Address"] = json_encode($this->transport->object_unset_nulls($core_usermanager_data_Address));
 	     $data["method"] = "createOrder";
 	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
-	     return $this->transport->cast(API::core_ordermanager_data_Order(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_ordermanager_data_Order(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -2236,7 +2293,7 @@ class APIOrderManager {
 	     $data['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
 	     $data["method"] = "getOrder";
 	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
-	     return $this->transport->cast(API::core_ordermanager_data_Order(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_ordermanager_data_Order(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -2251,7 +2308,7 @@ class APIOrderManager {
 	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
 	     $data["method"] = "getOrderByincrementOrderId";
 	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
-	     return $this->transport->cast(API::core_ordermanager_data_Order(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_ordermanager_data_Order(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -2368,7 +2425,7 @@ class APIPageManager {
 	     $data['args']["applicationSettingId"] = json_encode($this->transport->object_unset_nulls($applicationSettingId));
 	     $data["method"] = "addApplication";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
-	     return $this->transport->cast(API::core_common_AppConfiguration(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_common_AppConfiguration(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -2414,7 +2471,7 @@ class APIPageManager {
 	     $data['args']["pageArea"] = json_encode($this->transport->object_unset_nulls($pageArea));
 	     $data["method"] = "addApplicationToPage";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
-	     return $this->transport->cast(API::core_common_AppConfiguration(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_common_AppConfiguration(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -2475,7 +2532,7 @@ class APIPageManager {
 	     $data['args']["userLevel"] = json_encode($this->transport->object_unset_nulls($userLevel));
 	     $data["method"] = "changePageUserLevel";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
-	     return $this->transport->cast(API::core_pagemanager_data_Page(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_pagemanager_data_Page(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -2533,7 +2590,7 @@ class APIPageManager {
 	     $data['args']["parentId"] = json_encode($this->transport->object_unset_nulls($parentId));
 	     $data["method"] = "createPage";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
-	     return $this->transport->cast(API::core_pagemanager_data_Page(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_pagemanager_data_Page(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -2552,7 +2609,7 @@ class APIPageManager {
 	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
 	     $data["method"] = "createPageWithId";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
-	     return $this->transport->cast(API::core_pagemanager_data_Page(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_pagemanager_data_Page(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -2698,7 +2755,7 @@ class APIPageManager {
 	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
 	     $data["method"] = "getPage";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
-	     return $this->transport->cast(API::core_pagemanager_data_Page(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_pagemanager_data_Page(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -2776,7 +2833,7 @@ class APIPageManager {
 	     $data['args']["pageid"] = json_encode($this->transport->object_unset_nulls($pageid));
 	     $data["method"] = "removeApplication";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
-	     return $this->transport->cast(API::core_pagemanager_data_Page(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_pagemanager_data_Page(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -2796,7 +2853,7 @@ class APIPageManager {
 	     $data['args']["moveUp"] = json_encode($this->transport->object_unset_nulls($moveUp));
 	     $data["method"] = "reorderApplication";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
-	     return $this->transport->cast(API::core_pagemanager_data_Page(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_pagemanager_data_Page(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -3015,7 +3072,7 @@ class APIProductManager {
 	     $data['args'] = array();
 	     $data["method"] = "createProduct";
 	     $data["interfaceName"] = "core.productmanager.IProductManager";
-	     return $this->transport->cast(API::core_productmanager_data_Product(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_productmanager_data_Product(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -3072,7 +3129,7 @@ class APIProductManager {
 	     $data['args'] = array();
 	     $data["method"] = "getAttributeSummary";
 	     $data["interfaceName"] = "core.productmanager.IProductManager";
-	     return $this->transport->cast(API::core_productmanager_data_AttributeSummary(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_productmanager_data_AttributeSummary(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -3133,7 +3190,7 @@ class APIProductManager {
 	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
 	     $data["method"] = "getProduct";
 	     $data["interfaceName"] = "core.productmanager.IProductManager";
-	     return $this->transport->cast(API::core_productmanager_data_Product(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_productmanager_data_Product(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -3146,7 +3203,7 @@ class APIProductManager {
 	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
 	     $data["method"] = "getProductByPage";
 	     $data["interfaceName"] = "core.productmanager.IProductManager";
-	     return $this->transport->cast(API::core_productmanager_data_Product(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_productmanager_data_Product(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -3162,7 +3219,7 @@ class APIProductManager {
 	     $data['args']["app_uuid"] = json_encode($this->transport->object_unset_nulls($app_uuid));
 	     $data["method"] = "getProductFromApplicationId";
 	     $data["interfaceName"] = "core.productmanager.IProductManager";
-	     return $this->transport->cast(API::core_productmanager_data_Product(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_productmanager_data_Product(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -3248,7 +3305,7 @@ class APIProductManager {
 	     $data['args']["core_productmanager_data_Product"] = json_encode($this->transport->object_unset_nulls($core_productmanager_data_Product));
 	     $data["method"] = "saveProduct";
 	     $data["interfaceName"] = "core.productmanager.IProductManager";
-	     return $this->transport->cast(API::core_productmanager_data_Product(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_productmanager_data_Product(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -3498,7 +3555,7 @@ class APIStoreManager {
 	     $data['args']["notify"] = json_encode($this->transport->object_unset_nulls($notify));
 	     $data["method"] = "createStore";
 	     $data["interfaceName"] = "core.storemanager.IStoreManager";
-	     return $this->transport->cast(API::core_storemanager_data_Store(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_storemanager_data_Store(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -3534,7 +3591,7 @@ class APIStoreManager {
 	     $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
 	     $data["method"] = "enableExtendedMode";
 	     $data["interfaceName"] = "core.storemanager.IStoreManager";
-	     return $this->transport->cast(API::core_storemanager_data_Store(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_storemanager_data_Store(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -3553,7 +3610,7 @@ class APIStoreManager {
 	     $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
 	     $data["method"] = "enableSMSAccess";
 	     $data["interfaceName"] = "core.storemanager.IStoreManager";
-	     return $this->transport->cast(API::core_storemanager_data_Store(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_storemanager_data_Store(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -3581,7 +3638,7 @@ class APIStoreManager {
 	     $data['args'] = array();
 	     $data["method"] = "getMyStore";
 	     $data["interfaceName"] = "core.storemanager.IStoreManager";
-	     return $this->transport->cast(API::core_storemanager_data_Store(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_storemanager_data_Store(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -3612,7 +3669,7 @@ class APIStoreManager {
 	     $data['args']["initSessionId"] = json_encode($this->transport->object_unset_nulls($initSessionId));
 	     $data["method"] = "initializeStore";
 	     $data["interfaceName"] = "core.storemanager.IStoreManager";
-	     return $this->transport->cast(API::core_storemanager_data_Store(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_storemanager_data_Store(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -3643,7 +3700,7 @@ class APIStoreManager {
 	     $data['args']["domainName"] = json_encode($this->transport->object_unset_nulls($domainName));
 	     $data["method"] = "removeDomainName";
 	     $data["interfaceName"] = "core.storemanager.IStoreManager";
-	     return $this->transport->cast(API::core_storemanager_data_Store(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_storemanager_data_Store(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -3659,7 +3716,7 @@ class APIStoreManager {
 	     $data['args']["core_storemanager_data_StoreConfiguration"] = json_encode($this->transport->object_unset_nulls($core_storemanager_data_StoreConfiguration));
 	     $data["method"] = "saveStore";
 	     $data["interfaceName"] = "core.storemanager.IStoreManager";
-	     return $this->transport->cast(API::core_storemanager_data_Store(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_storemanager_data_Store(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -3691,7 +3748,7 @@ class APIStoreManager {
 	     $data['args'] = array();
 	     $data["method"] = "setIntroductionRead";
 	     $data["interfaceName"] = "core.storemanager.IStoreManager";
-	     return $this->transport->cast(API::core_storemanager_data_Store(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_storemanager_data_Store(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -3707,7 +3764,7 @@ class APIStoreManager {
 	     $data['args']["domainName"] = json_encode($this->transport->object_unset_nulls($domainName));
 	     $data["method"] = "setPrimaryDomainName";
 	     $data["interfaceName"] = "core.storemanager.IStoreManager";
-	     return $this->transport->cast(API::core_storemanager_data_Store(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_storemanager_data_Store(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -3792,7 +3849,7 @@ class APIUserManager {
 	     $data['args']["core_usermanager_data_User"] = json_encode($this->transport->object_unset_nulls($core_usermanager_data_User));
 	     $data["method"] = "createUser";
 	     $data["interfaceName"] = "core.usermanager.IUserManager";
-	     return $this->transport->cast(API::core_usermanager_data_User(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_usermanager_data_User(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -3943,7 +4000,7 @@ class APIUserManager {
 	     $data['args'] = array();
 	     $data["method"] = "getLoggedOnUser";
 	     $data["interfaceName"] = "core.usermanager.IUserManager";
-	     return $this->transport->cast(API::core_usermanager_data_User(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_usermanager_data_User(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -3977,7 +4034,7 @@ class APIUserManager {
 	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
 	     $data["method"] = "getUserById";
 	     $data["interfaceName"] = "core.usermanager.IUserManager";
-	     return $this->transport->cast(API::core_usermanager_data_User(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_usermanager_data_User(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -4041,7 +4098,7 @@ class APIUserManager {
 	     $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
 	     $data["method"] = "logOn";
 	     $data["interfaceName"] = "core.usermanager.IUserManager";
-	     return $this->transport->cast(API::core_usermanager_data_User(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_usermanager_data_User(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -4059,7 +4116,7 @@ class APIUserManager {
 	     $data['args']["logonKey"] = json_encode($this->transport->object_unset_nulls($logonKey));
 	     $data["method"] = "logonUsingKey";
 	     $data["interfaceName"] = "core.usermanager.IUserManager";
-	     return $this->transport->cast(API::core_usermanager_data_User(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_usermanager_data_User(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -4130,7 +4187,7 @@ class APIUserManager {
 	     $data['args']["applicationInstanceId"] = json_encode($this->transport->object_unset_nulls($applicationInstanceId));
 	     $data["method"] = "requestAdminRight";
 	     $data["interfaceName"] = "core.usermanager.IUserManager";
-	     return $this->transport->cast(API::core_usermanager_data_User(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_usermanager_data_User(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -4250,7 +4307,7 @@ class APIUtilManager {
 	     $data['args']["companyVatNumber"] = json_encode($this->transport->object_unset_nulls($companyVatNumber));
 	     $data["method"] = "getCompanyFromBrReg";
 	     $data["interfaceName"] = "core.utils.IUtilManager";
-	     return $this->transport->cast(API::core_usermanager_data_Company(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_usermanager_data_Company(), $this->transport->sendMessage($data));
 	}
 
 }

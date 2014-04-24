@@ -64,6 +64,9 @@ class core_calendarmanager_data_Entry {
 	public $color;
 
 	/** @var String */
+	public $eventHelder;
+
+	/** @var String */
 	public $year;
 
 	/** @var String */

@@ -73,6 +73,7 @@ if (count($day->entries) == 0) {
                     <? if ($entry->needConfirmation) { ?>
                         <div class="entry confirmentry" entryid="<?php echo $entry->entryId;?>"><?php echo $this->__f("Confirm entry"); ?></div>
                     <? } ?>
+                    <div class="entry" entryid="<?php echo $entry->entryId;?>"><a href='scripts/generateKursBevis.php?entry=<? echo $entry->entryId; ?>'><?php echo $this->__f("Print diploma"); ?></a></div>
                 </div>
             </div>
         <?php } ?>
@@ -204,7 +205,28 @@ if (count($day->entries) == 0) {
                 echo "</table>";
             }
         }
+        if($this->hasWriteAccess()) {
         ?>
+        <br>
+        <div class="title">
+        <? echo $this->__f("Event held by"); ?>
+        </div>
+        <select style="width:100%;" class="eventhelder_selector" eventid="<? echo $entry->entryId; ?>">
+            <? 
+            $allUsers = $this->getApi()->getUserManager()->getAllUsers();
+            echo "<option value=''>" . $this->__f("Select event helder") . "</option>";
+            foreach($allUsers as $user) {
+                if($user->type > 90) {
+                    $selected = "";
+                    if($entry->eventHelder == $user->id) {
+                        $selected = "SELECTED";
+                    }
+                    echo "<option value='".$user->id."' $selected>" . $user->fullName . "</option>";
+                }
+            }
+            ?>
+        </select>
+        <? } ?>
     </div>
 <?
 }

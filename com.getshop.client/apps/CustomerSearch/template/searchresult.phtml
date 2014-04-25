@@ -1,0 +1,37 @@
+<?
+/* @var $this \ns_0b125d61_9516_4b24_90bc_16a84cd014b4\CustomerSearch */
+$searchword = $_POST['data']['keyword'];
+
+//echo "<pre>";
+$users = $this->getApi()->getUserManager()->findUsers($searchword);
+    echo "<table width='100%'>";
+foreach($users as $user) {
+    /* @var $user core_usermanager_data_User */
+    $link = "<a href='?page=users_all_users&userid=".$user->id."' style='color:#FFFFFF;'>";
+
+    echo "<tr>";
+    echo "<td>$link<div style='margin-top:10px;'></div>" .  $user->fullName . "</a></td>";
+    echo "<td>$link<div style='margin-top:10px;'></div>" . @$user->company->name . "</a></td>";
+    echo "</tr>";
+    $events = $this->getApi()->getCalendarManager()->getEntriesByUserId($user->id);
+    if($events) {
+        foreach($events as $event) {
+            /* @var $event core_calendarmanager_data_Entry */
+            echo "<tr>";
+            echo "<td style='color:#4d4d4d'>&nbsp;&nbsp;&nbsp;" . $event->title . "</td>";
+            echo "<td style='color:#4d4d4d'>" . $event->location . " (" . $event->day . "." . $event->month . "." . $event->year . ")</td>";
+            echo "</tr>";
+        }
+    } else {
+        echo "<tr>";
+        echo "<td colspan='2'style='color:#4d4d4d'>&nbsp;&nbsp;&nbsp;" . $this->__w("This user has not attended any events yet") . "</td>";
+        echo "</tr>";
+    }
+    echo "</a>";
+}
+
+    echo "</table>";
+    echo "<br>";
+//print_r($users);
+echo "</pre>";
+?>

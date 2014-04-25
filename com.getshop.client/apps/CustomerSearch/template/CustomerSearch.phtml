@@ -1,0 +1,18 @@
+<?php
+namespace ns_0b125d61_9516_4b24_90bc_16a84cd014b4;
+
+/* @var $this \ns_0b125d61_9516_4b24_90bc_16a84cd014b4\HelloWorld */
+?>
+<div>
+    <? echo $this->__f("Enter name of the person to search for"); ?>
+</div>
+<div style="clear:both;">
+<input type='text' class="searchfield" value="<? echo @$_SESSION['searchword']; ?>">
+<span class="gs_button search_button"><? echo $this->__f("Search"); ?></span>
+</div>
+<br><bR>
+<div class="search_result"style="clear:both;">
+    <script>
+        $('.CustomerSearch .search_button').click();
+    </script>
+</div>

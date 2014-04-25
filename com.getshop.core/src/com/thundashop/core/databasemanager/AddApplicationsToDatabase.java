@@ -52,6 +52,15 @@ public class AddApplicationsToDatabase {
                 ApplicationSettings.Type.Webshop, false);
         eventpartitpation.isPublic = false;
         apps.add(eventpartitpation);
+
+        ApplicationSettings customersearch = createSettings(
+                "CustomerSearch",
+                "0b125d61-9516-4b24-90bc-16a84cd014b4",
+                emtpy,
+                "",
+                ApplicationSettings.Type.Webshop, false);
+        customersearch.isPublic = false;
+        apps.add(customersearch);
 //
 //        List<String> allowed = new ArrayList();
 //        allowed.add("large");

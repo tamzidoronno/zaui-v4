@@ -34,7 +34,37 @@ Booking = {
     bindEvents: function() {
         $(document).on('keyup', '.Booking #birthday.updateOnBlur', this.updateCompanyInformation);
         $(document).on('click', '.Booking .donemarker', this.markAsDone);
+        $(document).on('click', '.Booking .find_company_for_selection', this.startSearchCompany);
         $(document).on('change', '.Booking .select_course_location', this.updateCourseLocation);
+        $(document).on('click', '.Booking .search_for_company_brreg', this.searchBrreg);
+        $(document).on('click', '.Booking .select_searched_company', this.selectCompanyFromBrreg);
+        $(document).on('keyup', '.Booking .searchbrregvalue', this.searchBrreg);
+    },
+    selectCompanyFromBrreg : function(event) {
+        
+        var row = $(this).closest('tr');
+        var brregnumber = row.find('.orgnr').html();
+        
+        $(this).closest('.app').find('#birthday').val(brregnumber);
+        $(this).closest('.app').find('#birthday').keyup();
+        $(this).closest('.app').find('#birthday').closest('tr').show();
+        $('.Booking .selectcompanyform').fadeOut();
+        
+    },
+    searchBrreg : function(event) {
+console.log(event);
+        if(event.type === "keyup" && event.keyCode !== 13) {
+            return;
+        }
+        
+        var value = $(this).closest('.app').find('.searchbrregvalue').val();
+        var event = thundashop.Ajax.createEvent('','findCompanies',$(this),{'name':value});
+        thundashop.Ajax.postWithCallBack(event, function(data)  {
+            $('.Booking .search_result_area').html(data);
+        });
+    },
+    startSearchCompany : function() {
+        $('.Booking .selectcompanyform').slideDown();
     },
     updateCourseLocation : function() {
         var selection = $(this).closest('.app').find('#event');

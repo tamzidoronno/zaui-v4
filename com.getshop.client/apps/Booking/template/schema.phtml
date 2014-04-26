@@ -1,5 +1,7 @@
 <?
+
 namespace ns_74ea4e90_2d5a_4290_af0c_230a66e09c78;
+
 $allowAdd = $this->getAllowAdd();
 $settings = $this->getConfiguration()->settings;
 $starthour = isset($settings->starthour_for_allowaddon) ? $settings->starthour_for_allowaddon->value : 0;
@@ -9,7 +11,7 @@ $companyRemote = $this->isGetCompanyInformationRemoteEnabled();
 $updateClass = $companyRemote ? "updateOnBlur" : "";
 $groups = $this->getApi()->getUserManager()->getAllGroups();
 
-if($groups != null) {
+if ($groups != null) {
     shuffle($groups);
 }
 
@@ -17,11 +19,11 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
     if (isset($_GET['entry'])) {
         $_SESSION['entry'] = $_GET['entry'];
     }
-    
+
     echo "<div class='groupselection'>";
     echo $this->__w("Please select department");
     echo "<br><br>";
-    
+
     foreach ($groups as $group) {
         $id = $group->id;
         echo "<div groupid='$id' class='selectbox'>";
@@ -35,139 +37,150 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
     }
     echo "</div>";
 } else {
-    
+
     if (isset($_GET['entry']) && isset($_SESSION['entry'])) {
         unset($_SESSION['entry']);
     }
-    
+
     if (isset($_SESSION['entry'])) {
         $_GET['entry'] = $_SESSION['entry'];
         unset($_SESSION['entry']);
     }
-    
-?>
-    <center>
-    <?
-    if (isset($_SESSION['group'])) {
-        foreach($groups as $group) {
-            if ($group->id == $_SESSION['group']) {
-                echo "<div class='selected'>";
-                $imageId = $group->imageId;
-                
-                if ($imageId == "") {
-                    echo $group->groupName;
-                } else {
-                    echo "<img src='displayImage.php?id=$imageId'/>";
-                }
-                echo "<div class='changeit'>".$this->__w("change")."</div>";
-                echo "</div>";
-            } 
-        }
-    }
     ?>
-    <table id="bookingtable" allowadd="<? echo ($allowAdd == true) ? "true" : "false"; ?>">
-        <tr><td class="col1"><?php echo $this->__w("Candidate name"); ?></td><td><input id="name" type='textfield'/></td></tr>
-        <tr><td class="col1"><?php echo $this->__w("email", 'contact'); ?></td><td><input id="email" type='textfield'/></td></tr>
-        <? if ($this->isInvoiceEmailActivated()) { ?>
-            <tr><td class="col1"><?php echo $this->__w("Invoice email"); ?></td><td><input id="invoiceemail" type='textfield'/></td></tr>
-        <? } ?>
-        <tr><td class="col1"><?php echo $this->__w("phone",'contact'); ?></td><td><input id="cellphone" type='textfield'/></td></tr>
+    <center>
+        <?
+        if (isset($_SESSION['group'])) {
+            foreach ($groups as $group) {
+                if ($group->id == $_SESSION['group']) {
+                    echo "<div class='selected'>";
+                    $imageId = $group->imageId;
 
-        <? if (!$allowAdd) { ?>
-            <tr><td class="col1"><?php echo $this->__w("orgnummer"); ?></td><td><input onkeypress='Booking.validate(event)'  class="<? echo $updateClass; ?>" id="birthday" type='textfield'/></td></tr>
-            <? if (!$companyRemote) { ?>
-                <tr><td class="col1"><?php echo $this->__w("org", 'contact'); ?></td><td><input id="company" type='textfield'/></td></tr>
-            <? } else { ?>
-                <tr><td class="col1"><?php echo $this->__w("org", 'contact'); ?></td><td><div class="companyinformation"><? echo $this->__w("Enter organisation number and this will be filled out automatically"); ?></div></td></tr>
-            <? } ?>
-            
-            <? if (!$this->isConnectedToCurrentPage()) { ?> 
-                <tr><td class="col1"><?php echo $this->__w("course"); ?></td>
+                    if ($imageId == "") {
+                        echo $group->groupName;
+                    } else {
+                        echo "<img src='displayImage.php?id=$imageId'/>";
+                    }
+                    echo "<div class='changeit'>" . $this->__w("change") . "</div>";
+                    echo "</div>";
+                }
+            }
+        }
+        ?>
+        <table id="bookingtable" allowadd="<? echo ($allowAdd == true) ? "true" : "false"; ?>">
+            <tr><td class="col1"><?php echo $this->__w("Candidate name"); ?></td><td><input id="name" type='textfield'/></td></tr>
+            <tr><td class="col1"><?php echo $this->__w("email", 'contact'); ?></td><td><input id="email" type='textfield'/></td></tr>
+            <? if ($this->isInvoiceEmailActivated()) { ?>
+                <tr><td class="col1"><?php echo $this->__w("Invoice email"); ?></td><td><input id="invoiceemail" type='textfield'/></td></tr>
+    <? } ?>
+            <tr><td class="col1"><?php echo $this->__w("phone", 'contact'); ?></td><td><input id="cellphone" type='textfield'/></td></tr>
+
+    <? if (!$allowAdd) { ?>
+                <tr><td><? echo $this->__w("Select a company"); ?></td><td><br><br>
+                        <span class='selectcompanyform'>
+                            <? echo $this->__w("Enter the name of the company to search for"); ?> <br>
+                            <input type='txt' class="searchbrregvalue"><span class='gs_button search_for_company_brreg'> <? echo $this->__f("Search"); ?></span>
+                        <div class="search_result_area"></div>
+                        </span>
+                        <span class="gs_button find_company_for_selection"><? echo $this->__w("Search for a company"); ?></span>
+                    </td></tr>
+                <tr style="display:none;"><td class="col1"><?php echo $this->__w("orgnummer"); ?></td>
                     <td>
-                        <?
-                        $places = [];
-                        foreach($this->entries as $entry) {
-                            $places[$entry->location] = true;
-                        }
-                        asort($places);
-                        ?>
-                        
-                        <select class='select_course_location'>
-                            <option value=''>Velg et kurssted</option>
-                            <?
-                            foreach($places as $place => $number) {
-                                echo "<option value='".$place."'>" . $place . "</option>";
-                            }
-                            ?>
-                        </select><br>
-                        
-                        
-                        <select id="event" style='display:none;'>
-                            <?php 
-                            foreach ($this->entries as $entry) {
-                                /* @var $entry core_calendarmanager_data_Entry */
-                                $date = str_pad($entry->day,2,"0",STR_PAD_LEFT)."/".str_pad($entry->month,2,"0",STR_PAD_LEFT)."-".$entry->year." : ";
-                                $title = $entry->title;
-                                $location = $entry->location;
-                                $entryid = $entry->entryId;
-                                if ($entry->lockedForSignup) {
-                                    continue;
-                                }
-                                if (isset($_GET["entry"]) && $entryid != $_GET['entry']) {
-                                    continue;
-                                }
-                                echo "<option value='$entryid' style='display:none;' location='".$entry->location."'>$date $title</option>";
-                            }
-                            ?>
-                        </select>
+                        <input onkeypress='Booking.validate(event)'  class="<? echo $updateClass; ?>" id="birthday" type='textfield' disabled/>
                     </td>
                 </tr>
-        <? } ?>
-                
-        <? } else { ?>
-            <tr><tr><td class="col1"><?php echo $this->__w("Date"); ?></td><td><input id="date"  style="width:140px;" type='textfield'/> <input style="width:50px;" id="time" type='textfield'/></td></tr></tr>
-        <? } ?>
-        <tr>
-            <td colspan="2" align="right">
-                <div class="button savebooking">
-                    <div class="rightglare"></div>
-                    <div class="filler"></div>
-                    <ins class="send_email" id="send_email"><? 
-                        if (isset($_GET['waiting'])) {
-                            echo $this->__w("Sign up for waiting list"); 
-                        } else {
-                            echo $this->isConnectedToCurrentPage() ? $this->__w("Place order") : $this->__w("Sign up"); 
-                        }
-                    ?></ins>
-                </div>
-            </td>
-        </tr>
-    </table>
+                <? if (!$companyRemote) { ?>
+                    <tr><td class="col1"><?php echo $this->__w("org", 'contact'); ?></td><td><input id="company" type='textfield'/></td></tr>
+                <? } else { ?>
+                    <tr><td class="col1"><?php echo $this->__w("org", 'contact'); ?></td><td><div class="companyinformation"><? echo $this->__w("Search for the company you want to enter by clicking the button above, and this box will be filled automatically."); ?></div></td></tr>
+                <? } ?>
+
+        <? if (!$this->isConnectedToCurrentPage()) { ?> 
+                    <tr><td class="col1"><?php echo $this->__w("course"); ?></td>
+                        <td>
+                            <?
+                            $places = [];
+                            foreach ($this->entries as $entry) {
+                                $places[$entry->location] = true;
+                            }
+                            asort($places);
+                            ?>
+
+                            <select class='select_course_location'>
+                                <option value=''>Velg et kurssted</option>
+                                <?
+                                foreach ($places as $place => $number) {
+                                    echo "<option value='" . $place . "'>" . $place . "</option>";
+                                }
+                                ?>
+                            </select><br>
+
+
+                            <select id="event" style='display:none;'>
+                                <?php
+                                foreach ($this->entries as $entry) {
+                                    /* @var $entry core_calendarmanager_data_Entry */
+                                    $date = str_pad($entry->day, 2, "0", STR_PAD_LEFT) . "/" . str_pad($entry->month, 2, "0", STR_PAD_LEFT) . "-" . $entry->year . " : ";
+                                    $title = $entry->title;
+                                    $location = $entry->location;
+                                    $entryid = $entry->entryId;
+                                    if ($entry->lockedForSignup) {
+                                        continue;
+                                    }
+                                    if (isset($_GET["entry"]) && $entryid != $_GET['entry']) {
+                                        continue;
+                                    }
+                                    echo "<option value='$entryid' style='display:none;' location='" . $entry->location . "'>$date $title</option>";
+                                }
+                                ?>
+                            </select>
+                        </td>
+                    </tr>
+                <? } ?>
+
+            <? } else { ?>
+                <tr><tr><td class="col1"><?php echo $this->__w("Date"); ?></td><td><input id="date"  style="width:140px;" type='textfield'/> <input style="width:50px;" id="time" type='textfield'/></td></tr></tr>
+    <? } ?>
+            <tr>
+                <td colspan="2" align="right">
+                    <div class="button savebooking">
+                        <div class="rightglare"></div>
+                        <div class="filler"></div>
+                        <ins class="send_email" id="send_email"><?
+                            if (isset($_GET['waiting'])) {
+                                echo $this->__w("Sign up for waiting list");
+                            } else {
+                                echo $this->isConnectedToCurrentPage() ? $this->__w("Place order") : $this->__w("Sign up");
+                            }
+                            ?></ins>
+                    </div>
+                </td>
+            </tr>
+        </table>
     </center>    
 
     <? if ($allowAdd) { ?>
 
-    <script>
-    //    $('#date').datetimepicker();
-        $("#date").datetimepicker({
-            altField: "#time",
-            stepMinute: 15,
-            hourMin: <? echo $starthour; ?>,
-            hourMax: <? echo $stophour; ?>
-        });
-    </script>
-<?
-    } 
+        <script>
+                            //    $('#date').datetimepicker();
+                            $("#date").datetimepicker({
+                                altField: "#time",
+                                stepMinute: 15,
+                                hourMin: <? echo $starthour; ?>,
+                                hourMax: <? echo $stophour; ?>
+                            });
+        </script>
+        <?
+    }
 }
 
 if ($this->hasReadAccess()) {
     $users = $this->getUsersConnectedToSchema();
     if (count($users)) {
-        
+
         echo "<hr>";
-        echo "<h1> ".$this->__w("Current users added to this booking")."</h1>";
+        echo "<h1> " . $this->__w("Current users added to this booking") . "</h1>";
         echo "<div class='userlistoverview'>";
-        
+
         $found = false;
         foreach ($users as $user) {
             $comment = $this->getComment($user);
@@ -175,17 +188,17 @@ if ($this->hasReadAccess()) {
                 continue;
             }
             $found = true;
-            $link = "?page=users_all_users&userid=".$user->id;
-            $donemarker = "<div class='donemarker' userId='".$user->id."'>".$this->__f("Mark as done")."</div>";
-            echo "<div class='userentry'><a href='$link'>".$user->fullName."<div class='datecreated'>".$user->rowCreatedDate."</a></div>$donemarker</div>";
+            $link = "?page=users_all_users&userid=" . $user->id;
+            $donemarker = "<div class='donemarker' userId='" . $user->id . "'>" . $this->__f("Mark as done") . "</div>";
+            echo "<div class='userentry'><a href='$link'>" . $user->fullName . "<div class='datecreated'>" . $user->rowCreatedDate . "</a></div>$donemarker</div>";
         }
-        
+
         if (!$found) {
-            echo "<div class='userentry'>".$this->__f("There is no new entries")."</div>";
+            echo "<div class='userentry'>" . $this->__f("There is no new entries") . "</div>";
         }
         echo "<br/>";
-        echo "<H1>".$this->__f("Users that has been marked as done")."</h1>";
-        
+        echo "<H1>" . $this->__f("Users that has been marked as done") . "</h1>";
+
         $found = false;
         foreach ($users as $user) {
             $comment = $this->getComment($user);
@@ -193,15 +206,14 @@ if ($this->hasReadAccess()) {
                 continue;
             }
             $found = true;
-            $link = "?page=users_all_users&userid=".$user->id;
-            echo "<div class='userentry'><a href='$link'>".$user->fullName."<div class='datecreated'>".$user->rowCreatedDate."</a></div></div>";
+            $link = "?page=users_all_users&userid=" . $user->id;
+            echo "<div class='userentry'><a href='$link'>" . $user->fullName . "<div class='datecreated'>" . $user->rowCreatedDate . "</a></div></div>";
         }
-        
+
         if (!$found) {
-            echo "<div class='userentry'>".$this->__f("There is no new entries")."</div>";
+            echo "<div class='userentry'>" . $this->__f("There is no new entries") . "</div>";
         }
         echo "</div>";
     }
-    
 }
 ?>

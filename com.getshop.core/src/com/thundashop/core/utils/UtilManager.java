@@ -9,6 +9,7 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.usermanager.data.Company;
+import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -33,5 +34,9 @@ public class UtilManager extends ManagerBase implements IUtilManager {
     public Company getCompanyFromBrReg(String companyVatNumber) throws ErrorException {
         return brRegEngine.getCompany(companyVatNumber);
     }
-    
+
+    @Override
+    public HashMap<String, String> getCompaniesFromBrReg(String search) throws ErrorException {
+        return brRegEngine.search(search);
+    }
 }

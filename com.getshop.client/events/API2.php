@@ -4301,6 +4301,20 @@ class APIUtilManager {
 	* @author ktonder
 	*/
 
+	public function getCompaniesFromBrReg($search) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["search"] = json_encode($this->transport->object_unset_nulls($search));
+	     $data["method"] = "getCompaniesFromBrReg";
+	     $data["interfaceName"] = "core.utils.IUtilManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
 	public function getCompanyFromBrReg($companyVatNumber) {
 	     $data = array();
 	     $data['args'] = array();

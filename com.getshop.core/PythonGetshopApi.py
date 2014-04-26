@@ -4377,6 +4377,21 @@ class UserManager(object):
 class UtilManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
+  def getCompaniesFromBrReg(self, search):
+    args = collections.OrderedDict()
+    if isinstance(search,GetShopBaseClass): 
+      args["search"]=json.dumps(search.__dict__)
+    else:
+      try:
+        args["search"]=json.dumps(search)
+      except (ValueError, AttributeError):
+        args["search"]=search
+    data = EmptyClass()
+    data.args = args
+    data.method = "getCompaniesFromBrReg"
+    data.interfaceName = "core.utils.IUtilManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getCompanyFromBrReg(self, companyVatNumber):
     args = collections.OrderedDict()
     if isinstance(companyVatNumber,GetShopBaseClass): 

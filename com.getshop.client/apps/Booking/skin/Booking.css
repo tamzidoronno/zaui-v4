@@ -46,3 +46,5 @@
 .Booking .userlistoverview .userentry:hover {
     background-color: rgba(127,127,127,0.3);
 }
+
+.Booking .selectcompanyform { position:absolute; padding: 10px; min-height: 200px; background-color:#4d4d4d; z-index: 4; display:none; border: solid 1px; }

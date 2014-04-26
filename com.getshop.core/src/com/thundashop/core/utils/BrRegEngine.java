@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
@@ -90,6 +91,16 @@ public class BrRegEngine {
             }
         }
         return content;
+    }
+
+    HashMap<String, String> search(String search) {
+        String result = read(search);
+        ReturnValue fromJson = gson.fromJson(result, ReturnValue.class);
+        HashMap<String,String> returnvalue = new HashMap();
+        for(BrRegCompany company : fromJson.entries) {
+            returnvalue.put(company.orgnr, company.navn);
+        }
+        return returnvalue;
     }
     
 }

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,6 +70,7 @@ public class BrRegEngine {
     
     private String read(String organisationUrl) {
         try {
+            organisationUrl = URLEncoder.encode(organisationUrl, "UTF-8");
             return getContent("http://hotell.difi.no/api/json/brreg/enhetsregisteret?query="+organisationUrl);
         } catch (MalformedURLException ex) {
             ex.printStackTrace();

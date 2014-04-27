@@ -341,6 +341,7 @@ class Calendar extends MarketingApplication implements Application {
         $entry->extraText = $_POST['data']['extraText'];
         $entry->linkToPage = $_POST['data']['linkToPage'];
         $entry->lockedForSignup = $_POST['data']['lockedForSignup'];
+        $entry->eventHelder = $_POST['data']['eventHelder'];
         
         return $entry;
     }
@@ -357,7 +358,6 @@ class Calendar extends MarketingApplication implements Application {
         }
         
         $entry = $this->populateEvent($entry);
-        
         $entry->otherDays = array();
         if (isset($_POST['data']['extraDays'])) {
             foreach ($_POST['data']['extraDays'] as $postExtraDay) {

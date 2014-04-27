@@ -205,28 +205,7 @@ if (count($day->entries) == 0) {
                 echo "</table>";
             }
         }
-        if($this->hasWriteAccess()) {
         ?>
-        <br>
-        <div class="title">
-        <? echo $this->__f("Event held by"); ?>
-        </div>
-        <select style="width:100%;" class="eventhelder_selector" eventid="<? echo $entry->entryId; ?>">
-            <? 
-            $allUsers = $this->getApi()->getUserManager()->getAllUsers();
-            echo "<option value=''>" . $this->__f("Select event helder") . "</option>";
-            foreach($allUsers as $user) {
-                if($user->type > 90) {
-                    $selected = "";
-                    if($entry->eventHelder == $user->id) {
-                        $selected = "SELECTED";
-                    }
-                    echo "<option value='".$user->id."' $selected>" . $user->fullName . "</option>";
-                }
-            }
-            ?>
-        </select>
-        <? } ?>
     </div>
 <?
 }

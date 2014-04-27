@@ -76,8 +76,8 @@ $content .= "<head>
         .title2 { text-align:center; font-weight:bold; width: 100%; font-size: 25px; margin-bottom: 60px; }
         .heading { margin-top: 30px; }
         .body { margin-top: 20px;  }
-        .name { font-weight: bold; font-size: 20px; }
-        .company { font-weight: bold; font-size: 20px; }
+        .name { font-weight: bold; font-size: 20px; text-transform:uppercase; }
+        .company { font-weight: bold; font-size: 20px; text-transform:uppercase; }
         .footer { width: 100%; color:#FFFFFF; }
         .page_end {  page-break-after:always; }
         .signature_name { font-size: 10px; }
@@ -103,8 +103,8 @@ foreach($attendees as $attendee) {
         <br><br>
         <div class="title"><? echo parsed_text($title); ?></div>
         <div class="title2"><? echo parsed_text($title2); ?></div>
-        <div class="name"><? echo strtoupper($name); ?></div>
-        <div class="company"><? echo strtoupper($user->company->name); ?></div>
+        <div class="name"><? echo $name; ?></div>
+        <div class="company"><? echo $user->company->name; ?></div>
         <div class="heading"><? echo parsed_text($heading);?></div>
         <div class="body"><? echo parsed_text($text);?></div>
         <div class="bottom_text"><? echo $location;?>, den <? echo $entry->day; ?>. <? echo $monthText; ?> <? echo $year; ?>.</div>
@@ -145,6 +145,9 @@ function parsed_text($text) {
     $text = str_replace("%day%", $day, $text);
     $text = str_replace("%date%", $date, $text);
     $text = str_replace("%name%", $name, $text);
+    
+    
+    $text = htmlentities($text);
     return $text;
 }
 

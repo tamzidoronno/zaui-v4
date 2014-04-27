@@ -11,6 +11,9 @@ app.CustomerSearch = {
             }
         }
         var keyword = $('.CustomerSearch .searchfield').val();
+        if(keyword === "") {
+            return;
+        }
         
         var event = thundashop.Ajax.createEvent('','search',$(this),{ "keyword" : keyword});
         thundashop.Ajax.postWithCallBack(event, function(data) {

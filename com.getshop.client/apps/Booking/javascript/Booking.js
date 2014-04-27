@@ -43,7 +43,7 @@ Booking = {
     selectCompanyFromBrreg : function(event) {
         
         var row = $(this).closest('tr');
-        var brregnumber = row.find('.orgnr').html();
+        var brregnumber = $(this).attr('orgnr');
         
         $(this).closest('.app').find('#birthday').val(brregnumber);
         $(this).closest('.app').find('#birthday').keyup();
@@ -52,7 +52,6 @@ Booking = {
         
     },
     searchBrreg : function(event) {
-console.log(event);
         if(event.type === "keyup" && event.keyCode !== 13) {
             return;
         }

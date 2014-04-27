@@ -193,18 +193,12 @@ class Booking extends MarketingApplication implements Application {
         $name = $_POST['data']['name'];
         $result = $this->getApi()->getUtilManager()->getCompaniesFromBrReg($name);
         echo "<bR>";
-        echo "<table width='100%'>";
-        echo "<tr>";
-        echo "<th align='left'>Org.nr</th>";
-        echo "<th align='left'>Name</th>";
-        echo "<th></th>";
-        echo "</tr>";
         foreach($result as $orgnr => $name) {
-            echo "<tr>";
-            echo "<td class='orgnr'>" . $orgnr . "</td><td>" . $name . "</td><td align='right'><span class='gs_button small select_searched_company'>".$this->__w("select") . "</span></td>";
-            echo "</tr>";
+            echo "<b>".$this->__w("orgnummer")."</b>: ".$orgnr;
+            echo "<br>".$name;
+            echo "<span class='gs_button select_searched_company' orgnr='$orgnr'>".$this->__w("select") . "</span><br><br>";
+            echo "<hr>";
         }
-        echo "</table>";
     }
     
     public function getCompanyInformation() {

@@ -75,11 +75,12 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
             <tr><td class="col1"><?php echo $this->__w("phone", 'contact'); ?></td><td><input id="cellphone" type='textfield'/></td></tr>
 
     <? if (!$allowAdd) { ?>
-                <tr><td><? echo $this->__w("Select a company"); ?></td><td><br><br>
+                <tr><td><? echo $this->__w("Select a company"); ?></td><td>
                         <span class='selectcompanyform'>
-                            <? echo $this->__w("Enter the name of the company to search for"); ?> <br>
-                            <input type='txt' class="searchbrregvalue"><span class='gs_button search_for_company_brreg'> <? echo $this->__f("Search"); ?></span>
-                        <div class="search_result_area"></div>
+                            <input type='txt' placeholder="<?echo $this->__w("Name of company"); ?>" class="searchbrregvalue"><div class='gs_button search_for_company_brreg'> <? echo $this->__f("Search"); ?></div>
+                        <div class="search_result_area">
+                            <br><? echo $this->__w("Start typing the name of your company and click ").$this->__w("Search"); ?>
+                        </div>
                         </span>
                         <span class="gs_button find_company_for_selection"><? echo $this->__w("Search for a company"); ?></span>
                     </td></tr>

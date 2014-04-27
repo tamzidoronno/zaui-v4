@@ -17,6 +17,7 @@ Available positions;-;Ledige plasser
 Birth Date;-;Bursdag
 Booking;-;Påmelding
 Building your store;-;Lag din webbutikk
+Button;-;Knapp
 Buy;-;Kjøp
 By calendar;-;Som kalendar
 By list;-;Som Liste
@@ -53,7 +54,6 @@ Download ebill;-;Last ned ebill
 Email;-;Epost
 Email sent;-;Epost sendt
 End date;-;Slutt dato
-Enter organisation number and this will be filled out automatically;-;Fyll inn organisasjonsnret og denne boksen vil bli fylt ut automatisk
 Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.L
 Failed;-;Feilet
 Featured Product;-;Fremhevet produkt
@@ -144,8 +144,13 @@ Reminder sent by email;-;En påmindelse har blitt sendt per epost.
 Remove;-;Fjern
 Repeat password;-;Gjenta passord
 Saturday;-;Lørdag
+Search;-;Søk
+Search for a company;-;Velg firma
 Search for a product;-;Søk etter et produkt
+Search for the company you want to enter by clicking the button above, and this box will be filled automatically.;-;Søk etter firma ved å trykke på knappen over.
 Searching....;-;Søker....
+Select a company;-;Velg et firma
+Select your car;-;Velg din bil
 Send me a code;-;Send meg koden
 Send message;-;Send melding
 Send us mail;-;Send oss en epost
@@ -158,6 +163,8 @@ Shipping cost;-;Fraktkostnader
 Shipping price;-;Forendelse pris
 Sign up;-;Registrer deg
 Sign up for waiting list;-;Sett meg på venteliste
+Sign up with facebook;-;Logg inn me facebook
+Sign up with google;-;Logg inn med google
 Sorry;-;Beklager
 Stage 1 (hp):;-;Stage 1 hp:
 Stage 1 (nm):;-;Stage 1 nm:
@@ -166,6 +173,7 @@ Stage 2 (nm):;-;Stage 2 nm:
 Stage 3 (hp):;-;Stage 3 hp:
 Stage 3 (nm):;-;Stage 3 nm:
 Start date;-;Start dato
+Start your 30 days free trial;-;Start din 30 dagers fri prøveperiode
 Status;-;Status
 Stop;-;Stopp
 Success;-;Success
@@ -186,6 +194,7 @@ This is a {} days event.;-;Dette er et {} dagers event.
 This page is only available for adminsitrators;-;Denne siden er kun tilgjengelig for adminstratorer.
 This page is only available for editors.;-;Denne siden er kun tilgjengelig for editorer.
 This page is only available for registered users.;-;Denne siden er kun tilgjengelig for registrerte brukere
+This user has not attended any events yet;-;Denne brukeren har ikke deltatt på noen eventer enda
 Thursday;-;Torsdag
 To be able to serve you we need to store a tiny amount of data about your browser. An identification id is being generated and added to your web browser. This allows us to track you for a two hours periode while you are navigating this site. This data is anonymous and are only being used to identify your web browser and not you as a person.;-;For at det skal være mulig bruke denne web siden må vi lagre en liten bit av data på din nettleser. Dette er en identifikasjons id som gjør det mulig å identifisere deg som en bruker mens du surfer på denne siden. Denne dataen blir lagret i 20 timer og er 100% anonym.
 Top speed;-;Topp hastighet
@@ -221,6 +230,7 @@ change;-;endre
 course;-;kurs
 description;-;Beskrivelse
 email;-;E-post
+forgot?;-;Glemt?
 if we dont answer, please leave your email here and we will return your message asap.;-;Hvis vi ikke svarer, legg igjen en din epost, og vi vil kontakte deg så snart som mulig.
 included taxes;-;Inkludert mva
 location;-;Sted
@@ -229,6 +239,7 @@ org;-;Firma
 orgnummer;-;Org.nr.
 phone;-;Mob.Tlf.
 read;-;les
+select;-;velg
 will be added to your invoice.;-;vil bli lagt på sluttsummen.
 
 

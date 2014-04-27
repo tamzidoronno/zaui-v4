@@ -62,10 +62,12 @@ public class AddApplicationsToDatabase {
         ApplicationSettings customersearch = createSettings(
                 "CustomerSearch",
                 "0b125d61-9516-4b24-90bc-16a84cd014b4",
-                emtpy,
+                allowed,
                 "",
                 ApplicationSettings.Type.Webshop, false);
         customersearch.isPublic = false;
+        customersearch.allowedStoreIds = new ArrayList();
+        customersearch.allowedStoreIds.add("2fac0e57-de1d-4fdf-b7e4-5f93e3225445");
         apps.add(customersearch);
 //
 //        List<String> allowed = new ArrayList();

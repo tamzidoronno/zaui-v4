@@ -12,5 +12,8 @@ class core_messagemanager_NewsLetterGroup extends core_common_DataCommon  {
 	/** @var String */
 	public $SentMailTo;
 
+	/** @var String */
+	public $attachments;
+
 }
 ?>

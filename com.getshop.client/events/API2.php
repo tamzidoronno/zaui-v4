@@ -4324,6 +4324,34 @@ class APIUtilManager {
 	     return $this->transport->cast(new core_usermanager_data_Company(), $this->transport->sendMessage($data));
 	}
 
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function getFile($id) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $data["method"] = "getFile";
+	     $data["interfaceName"] = "core.utils.IUtilManager";
+	     return $this->transport->cast(new core_utilmanager_data_FileObject(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function saveFile($core_utilmanager_data_FileObject) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_utilmanager_data_FileObject"] = json_encode($this->transport->object_unset_nulls($core_utilmanager_data_FileObject));
+	     $data["method"] = "saveFile";
+	     $data["interfaceName"] = "core.utils.IUtilManager";
+	     return $this->transport->sendMessage($data);
+	}
+
 }
 class APIYouTubeManager {
 

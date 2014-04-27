@@ -456,10 +456,10 @@ public class APICalendarManager {
      * return a list of entires that a specified user
      * has been attending to
      */
-     public void setEventPartitipatedData(com.thundashop.core.calendarmanager.data.EventPartitipated data)  throws Exception  {
+     public void setEventPartitipatedData(com.thundashop.core.calendarmanager.data.EventPartitipated eventData)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new LinkedHashMap();
-          data.args.put("data",new Gson().toJson(data));
+          data.args.put("eventData",new Gson().toJson(eventData));
           data.method = "setEventPartitipatedData";
           data.interfaceName = "core.calendar.ICalendarManager";
           String result = transport.send(data);

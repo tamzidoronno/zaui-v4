@@ -240,7 +240,7 @@ public interface ICalendarManager {
     public EventPartitipated getEventPartitipatedData(String pageId) throws ErrorException;
     
     @Administrator
-    public void setEventPartitipatedData(EventPartitipated data) throws ErrorException;
+    public void setEventPartitipatedData(EventPartitipated eventData) throws ErrorException;
     
     @Administrator
     public String getSignature(String id) throws ErrorException;

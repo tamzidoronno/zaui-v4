@@ -20,7 +20,28 @@ class NewsLetter extends \ApplicationBase implements \Application {
     public function getName() {
         return "NewsLetter";
     }
-
+    
+    public function attachFile() {
+        $id = $_POST['data']['id'];
+        $attachments = $this->getAttachedFiles();
+        $attachments[] = $id;
+        $attachments = json_encode($attachments);
+        $this->setConfigurationSetting("currentMailAttachments", $attachments);
+    }
+    
+    public function removeAttachedFile() {
+        $attachments = $this->getAttachedFiles();
+        $id = $_POST['data']['id'];
+        foreach($attachments as $index => $attachment) {
+            if($attachment['id'] == $id) {
+                unset($attachments[$index]);
+                break;
+            }
+        }
+        $attachments = json_encode($attachments);
+        $this->setConfigurationSetting("currentMailAttachments", $attachments);
+    }
+    
     public function postProcess() {
         
     }
@@ -37,6 +58,12 @@ class NewsLetter extends \ApplicationBase implements \Application {
         $this->setConfigurationSetting("currentMail", $mail);
     }
     
+    
+    public function clearSavedData() {
+        $this->setConfigurationSetting("currentMail", "");
+        $this->setConfigurationSetting("currentMailAttachments", "[]");
+    }
+    
     public function sendNewsLetter() {
         $users = $_POST['data']['users'];
         $mail = $_POST['data']['mail'];
@@ -44,11 +71,16 @@ class NewsLetter extends \ApplicationBase implements \Application {
         
         $allUsers = $this->getApi()->getUserManager()->getAllUsers();
         
-        
         $group = new \core_messagemanager_NewsLetterGroup();
         $group->emailBody = $mail;
         $group->title = $subject;
         $group->userIds = $users;
+      
+        $attachments = $this->getAttachedFiles();
+        $group->attachments = array();
+        foreach($attachments as $attachment) {
+            $group->attachments[] = $attachment['id'];
+        }
         
         if($_POST['data']['id'] == "send_preview") {
             $group->userIds = array();
@@ -56,7 +88,9 @@ class NewsLetter extends \ApplicationBase implements \Application {
             $this->getApi()->getNewsLetterManager()->sendNewsLetterPreview($group);
         } else {
             $this->getApi()->getNewsLetterManager()->sendNewsLetter($group);
+            $this->clearSavedData();
         }
+        
     }
 
     public function getMail() {
@@ -77,6 +111,16 @@ class NewsLetter extends \ApplicationBase implements \Application {
                 $this->includefile("NewsLetter");
             }
         }
+    }
+
+    public function getAttachedFiles() {
+        $attachments = $this->getConfigurationSetting("currentMailAttachments");
+        if(!$attachments) {
+            $attachments = array();
+        } else {
+            $attachments = json_decode($attachments, true);
+        }
+        return $attachments;
     }
 }
 ?>

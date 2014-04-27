@@ -8,6 +8,8 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.utilmanager.data.FileObject;
+import com.thundashop.core.utils.UtilManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -100,6 +102,25 @@ public class NewsLetterManager extends ManagerBase implements INewsLetterManager
         }
         group.userIds.remove(userId);
         group.SentMailTo.add(userId);
+        
+        UtilManager utilmgr = getManager(UtilManager.class);
+        String filepath = "/uploadedFile.php?id=";
+          if(getStore().webAddressPrimary != null) {
+            filepath = "http://" + getStore().webAddressPrimary + filepath;
+        } else {
+            filepath = "http://" + getStore().webAddress + filepath;
+        }
+        
+        if(!group.attachments.isEmpty()) {
+            body += "<hr>";
+            for(String attachmentid : group.attachments) {
+                FileObject file = utilmgr.getFile(attachmentid);
+                String attachmentfilepath = filepath + file.id;
+                String attachmentEntry = "<div><a href='" + attachmentfilepath + "'>" + file.filename + "</a></div>";
+                body += attachmentEntry;
+            }
+        }
+        
         if(user != null) {
             sendEmail(user.emailAddress, group.title, body);
         }

@@ -863,15 +863,15 @@ class CalendarManager(object):
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
-  def setEventPartitipatedData(self, data):
+  def setEventPartitipatedData(self, eventData):
     args = collections.OrderedDict()
-    if isinstance(data,GetShopBaseClass): 
-      args["data"]=json.dumps(data.__dict__)
+    if isinstance(eventData,GetShopBaseClass): 
+      args["eventData"]=json.dumps(eventData.__dict__)
     else:
       try:
-        args["data"]=json.dumps(data)
+        args["eventData"]=json.dumps(eventData)
       except (ValueError, AttributeError):
-        args["data"]=data
+        args["eventData"]=eventData
     data = EmptyClass()
     data.args = args
     data.method = "setEventPartitipatedData"
@@ -4404,6 +4404,36 @@ class UtilManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getCompanyFromBrReg"
+    data.interfaceName = "core.utils.IUtilManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getFile(self, id):
+    args = collections.OrderedDict()
+    if isinstance(id,GetShopBaseClass): 
+      args["id"]=json.dumps(id.__dict__)
+    else:
+      try:
+        args["id"]=json.dumps(id)
+      except (ValueError, AttributeError):
+        args["id"]=id
+    data = EmptyClass()
+    data.args = args
+    data.method = "getFile"
+    data.interfaceName = "core.utils.IUtilManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def saveFile(self, file):
+    args = collections.OrderedDict()
+    if isinstance(file,GetShopBaseClass): 
+      args["file"]=json.dumps(file.__dict__)
+    else:
+      try:
+        args["file"]=json.dumps(file)
+      except (ValueError, AttributeError):
+        args["file"]=file
+    data = EmptyClass()
+    data.args = args
+    data.method = "saveFile"
     data.interfaceName = "core.utils.IUtilManager"
     return self.communicationHelper.sendMessage(data)
 

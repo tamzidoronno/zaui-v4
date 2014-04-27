@@ -42,12 +42,40 @@ app.NewsLetter = {
         })
         
     },
+    uploadFileAttachment : function() {
+        var scope = $(this);
+        var options = { 
+            resetForm: true,
+            success : function(data) {
+                data = JSON.parse(data);
+                var event = thundashop.Ajax.createEvent('',"attachFile", scope, { "id" : data});
+                thundashop.Ajax.postWithCallBack(event, function() {
+                    $('.NewsLetter #attachments').append($('<div>' + data.name +  "<i class='fa fa-trash-o' delid='"+data.id+"'></i></div>"));
+                    console.log(data);
+                });
+            }
+        }; 
+        $(this).ajaxSubmit(options);
+        return false;
+    },
+            
+    removeAttachment : function() {
+        var scope = $(this);
+        var id = $(this).attr('delid');
+        var event = thundashop.Ajax.createEvent('','removeAttachedFile',$(this), { "id" : id });
+        thundashop.Ajax.postWithCallBack(event, function() {
+            scope.closest('div').remove();
+        });
+    },
+            
     init : function() {
         $(document).on('click', '.NewsLetter #send_newsletter_to_recipients', app.NewsLetter.sendEmails);
         $(document).on('click', '.NewsLetter #show_recipients', app.NewsLetter.showRecipients);
         $(document).on('click', '.NewsLetter #send_preview', app.NewsLetter.sendEmails);
         $(document).on('click', '.NewsLetter #show_mail', app.NewsLetter.showMailBody);
         $(document).on('click', '.NewsLetter #save_template', app.NewsLetter.saveMail);
+        $(document).on('click', '.NewsLetter #attachments .fa-trash-o', app.NewsLetter.removeAttachment);
+        $(document).on('submit', '.NewsLetter .getshop_upload_form', app.NewsLetter.uploadFileAttachment);
     }
 }
 

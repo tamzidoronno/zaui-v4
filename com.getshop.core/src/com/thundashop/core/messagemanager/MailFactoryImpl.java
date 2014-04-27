@@ -87,6 +87,15 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
         this.storeId = storeId;
     }
 
+    /**
+     * 
+     * @param from
+     * @param to
+     * @param title
+     * @param content
+     * @param files Filepath, filename.
+     * @param delete 
+     */
     @Override
     public void sendWithAttachments(String from, String to, String title, String content, Map<String, String> files, boolean delete) {
         MailFactoryImpl mfi = new MailFactoryImpl();

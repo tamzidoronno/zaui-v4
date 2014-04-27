@@ -11,6 +11,7 @@ class Calendar extends MarketingApplication implements Application {
     public $year;
     public $month; 
     public $day;
+    public $downloadingListAsPdf = false;
     private $activeFilters;
     
     public function getDescription() {
@@ -244,7 +245,39 @@ class Calendar extends MarketingApplication implements Application {
         }
     }
     
+    public function asList() {
+        if (!$this->isShowTabsForViewMode()) {
+            return false;
+        }
+        
+        if (isset($_SESSION['calendar_as_calendar'])  && $_SESSION['calendar_as_calendar'] == "true") {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public function setAsCalender() {
+        $_SESSION['calendar_as_calendar'] = "true";
+    }
+    
+    public function unsetAsCalender() {
+        unset($_SESSION['calendar_as_calendar']);
+    }
+    
+    public function toggleListView() {
+        if (!isset($_GET['asList'])) {
+            return;
+        }
+        
+        if ($_GET['asList'] == "true") {
+            $this->unsetAsCalender();
+        } else {
+            $this->setAsCalender();
+        }
+    }
     public function render() {
+        $this->toggleListView();
         $this->setFilter();
         $this->initMonth();
         
@@ -266,6 +299,7 @@ class Calendar extends MarketingApplication implements Application {
                 ';
             echo "</style>";
         }
+        $this->downloadingListAsPdf = $includeCss;
         $this->includefile('calendarlist');
     }
     

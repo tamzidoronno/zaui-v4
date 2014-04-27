@@ -61,7 +61,6 @@ Calendar = {
         $(document).on('click', '.calendar_location_back', app.Calendar.showLocationsConfiguration);
         $(document).on('click', '.calendar_location_delete', Calendar.deleteLocation);
         $(document).on('click', '.calendar_location_createnew', Calendar.showEditLocation);
-        $(document).on('click', '.calender_tab_entry', Calendar.changeShown);
         $(document).on('change', '.eventhelder_selector', Calendar.changeEventHelder);
     },
     changeEventHelder : function() {
@@ -73,11 +72,6 @@ Calendar = {
         thundashop.Ajax.postWithCallBack(event, function() {
             thundashop.common.Alert(__f("Saved"), __f("Event helder has been updated"));
         });
-    },
-    changeShown: function() {
-        $('.calendar_tab_content_view').hide();
-        var name = $(this).attr('byname');
-        $('[calendar_tab_name=' + name + ']').show();
     },
     deleteLocation: function() {
         var confirm = thundashop.common.confirm(__f("Are you sure you want to delete the location?"));

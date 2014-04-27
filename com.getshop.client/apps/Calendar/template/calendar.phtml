@@ -5,18 +5,22 @@ $pageId = $this->getPage()->id;
 
 if ($this->isShowTabsForViewMode()) { ?>
     <div class="calendar_tabs">
-        <div byname="calendar" class="calender_tab_entry"><? echo $this->__w("By calendar"); ?></div>
-        <div byname="list" class="calender_tab_entry"><? echo $this->__w("By list"); ?></div>
+        <a href="?page=<?echo $this->getPage()->id?>&asList=true"><div byname="list" class="calender_tab_entry"><? echo $this->__w("By list"); ?></div></a>
+        <a href="?page=<?echo $this->getPage()->id?>&asList=false"><div byname="calendar" class="calender_tab_entry"><? echo $this->__w("By calendar"); ?></div></a>
     </div>
-<? } ?>
-<div class='calendar_tab_content_view' calendar_tab_name="list">
+<? }
+
+if ($this->asList()) {
+?>
+<div class='calendar_tab_content_view' calendar_tab_name="list" >
     <?
     echo "<a href='/generatePDF.php?type=calendar&id=$id&page=$pageId'><div class='downloadpdf'>".$this->__w("Download as pdf")."</div></a>";
     echo "<hr>";
     $this->renderList();
     ?>
 </div>
-<div class='calendar_tab_content_view' calendar_tab_name="calendar" style="display: none;">
+<? } else { ?>
+<div class='calendar_tab_content_view' calendar_tab_name="calendar" >
     <?php
     
 
@@ -150,3 +154,4 @@ if ($this->isShowTabsForViewMode()) { ?>
     }
     ?>
 </div>
+<? } ?>

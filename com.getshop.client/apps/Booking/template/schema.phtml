@@ -103,8 +103,14 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
                                 $places[$entry->location] = true;
                             }
                             asort($places);
+                            
+                            $selectedEntry = false;
+                            if (isset($_GET["entry"])) {
+                                $selectedEntry = $this->getApi()->getCalendarManager()->getEntry($_GET['entry']);
+                            }
+                            
+                            if (!$selectedEntry) {
                             ?>
-
                             <select class='select_course_location'>
                                 <option value=''>Velg et kurssted</option>
                                 <?
@@ -113,9 +119,11 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
                                 }
                                 ?>
                             </select><br>
+                            <?
+                            }
+                            ?>
 
-
-                            <select id="event" style='display:none;'>
+                            <select id="event" style='<? echo !$selectedEntry ? "display:none;" : ""; ?>'>
                                 <?php
                                 foreach ($this->entries as $entry) {
                                     /* @var $entry core_calendarmanager_data_Entry */
@@ -126,9 +134,7 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
                                     if ($entry->lockedForSignup) {
                                         continue;
                                     }
-                                    if (isset($_GET["entry"]) && $entryid != $_GET['entry']) {
-                                        continue;
-                                    }
+                                    
                                     echo "<option value='$entryid' style='display:none;' location='" . $entry->location . "'>$date $title</option>";
                                 }
                                 ?>

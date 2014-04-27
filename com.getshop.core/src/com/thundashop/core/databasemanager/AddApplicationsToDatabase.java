@@ -43,14 +43,20 @@ public class AddApplicationsToDatabase {
     
     private List<ApplicationSettings> addApplications() {
         List<ApplicationSettings> apps = new ArrayList();
-
+        
+        List<String> allowed = new ArrayList();
+        allowed.add("large");
+        allowed.add("xlarge");
+        
         ApplicationSettings eventpartitpation = createSettings(
                 "EventPartitipationData",
                 "9d94feed-f4fd-4e6d-8be8-81aa89f58dcf",
-                emtpy,
+                allowed,
                 "",
                 ApplicationSettings.Type.Webshop, false);
         eventpartitpation.isPublic = false;
+        eventpartitpation.allowedStoreIds = new ArrayList();
+        eventpartitpation.allowedStoreIds.add("2fac0e57-de1d-4fdf-b7e4-5f93e3225445");
         apps.add(eventpartitpation);
 
         ApplicationSettings customersearch = createSettings(

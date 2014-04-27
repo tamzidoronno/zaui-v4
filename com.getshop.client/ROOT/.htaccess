@@ -5,7 +5,6 @@ RewriteBase /
 ErrorDocument 404 /
 
 RewriteRule ^/?generatePDF.php$ - [L]
-RewriteRule ^/?uploadedPDF.php$ - [L]
 RewriteRule ^(.*).html$ index.php?rewrite=$1 [L,NE]
 
 RewriteRule ^(documentation)($|/) - [L]

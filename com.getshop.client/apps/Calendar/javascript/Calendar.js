@@ -61,17 +61,6 @@ Calendar = {
         $(document).on('click', '.calendar_location_back', app.Calendar.showLocationsConfiguration);
         $(document).on('click', '.calendar_location_delete', Calendar.deleteLocation);
         $(document).on('click', '.calendar_location_createnew', Calendar.showEditLocation);
-        $(document).on('change', '.eventhelder_selector', Calendar.changeEventHelder);
-    },
-    changeEventHelder : function() {
-        var data = {
-            "helder" : $(this).val(),
-            "id" : $(this).attr('eventid')
-        }
-        var event = thundashop.Ajax.createEvent('','updateEventHelder',$(this), data);
-        thundashop.Ajax.postWithCallBack(event, function() {
-            thundashop.common.Alert(__f("Saved"), __f("Event helder has been updated"));
-        });
     },
     deleteLocation: function() {
         var confirm = thundashop.common.confirm(__f("Are you sure you want to delete the location?"));
@@ -251,6 +240,7 @@ $('.Calendar .addevent #save').live('click', function() {
     data.extraText = $('#extraText').val();
     data.extraDays = extraDaysData;
     data.lockedForSignup = $('#lockEvent').is(":checked");
+    data.eventHelder = $('.eventhelder_selector').val();
 
     data.color = Calendar.getHexColor();
 

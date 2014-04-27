@@ -1,27 +1,27 @@
 <?php
+
 namespace ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8;
 
+$entry = $this->currentEntry;
+if (!$entry)
+    $entry = $this->getApiObject()->core_calendarmanager_data_Entry();
 
-    $entry = $this->currentEntry;
-    if (!$entry)
-        $entry = $this->getApiObject()->core_calendarmanager_data_Entry();
-    
-    /* @var $entry core_calendarmanager_data_Entry */
-    $eventname = isset($entry) ? $entry->title : '';
-    $start = isset($entry) ? $entry->starttime : '';
-    $linkToPage = isset($entry) ? $entry->linkToPage : '';
-    $linkToPageText = $this->getPageName($linkToPage);
-    $stop = isset($entry) ? $entry->stoptime : '';
-    $max =  isset($entry) ? $entry->maxAttendees : '';
-    $description = isset($entry) ? $entry->description : '';
-    $extraText = isset($entry) ? $entry->extraText : '';
-    $locked = isset($entry) && $entry->lockedForSignup ? ' checked ' : "";
-    $entryid = isset($entry) ? $entry->entryId : '';
-    $locations = $this->getApi()->getCalendarManager()->getAllLocations();
-    
-    if (!$locations) {
-        $locations = [];
-    }
+/* @var $entry core_calendarmanager_data_Entry */
+$eventname = isset($entry) ? $entry->title : '';
+$start = isset($entry) ? $entry->starttime : '';
+$linkToPage = isset($entry) ? $entry->linkToPage : '';
+$linkToPageText = $this->getPageName($linkToPage);
+$stop = isset($entry) ? $entry->stoptime : '';
+$max = isset($entry) ? $entry->maxAttendees : '';
+$description = isset($entry) ? $entry->description : '';
+$extraText = isset($entry) ? $entry->extraText : '';
+$locked = isset($entry) && $entry->lockedForSignup ? ' checked ' : "";
+$entryid = isset($entry) ? $entry->entryId : '';
+$locations = $this->getApi()->getCalendarManager()->getAllLocations();
+
+if (!$locations) {
+    $locations = [];
+}
 ?>
 
 <center>
@@ -38,20 +38,20 @@ namespace ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8;
                         <?
                         if (!is_array($entry->otherDays))
                             $entry->otherDays = array();
-                        foreach($entry->otherDays as $otherDay) {
+                        foreach ($entry->otherDays as $otherDay) {
                             /* @var $otherDay core_calendar_datamanager_ExtraDay */
                             $day = $otherDay->day;
                             $month = $otherDay->month;
-                            $year = $otherDay->year; 
+                            $year = $otherDay->year;
                             $starttime = $otherDay->starttime;
                             $stoptime = $otherDay->stoptime;
                             ?>
                             <div class="daytotal">
                                 <img class="removeday inline" src="/skin/default/images/closeinfobox.png" style="height: 15px; width: 15px; padding-top: 6px; margin-right: 5px; ">
-                                <div class="inline extradayelement" day="<?echo $day;?>" month="<?php echo $month; ?>" year="<?php echo $year ?>" style="line-height: 29px; "><?echo "$day/$month/$year"; ?></div>
-                                <span style="position: absolute; right: 0px; display: inline-block;border-left: solid 1px #DDD; margin-left: 4px; padding-left: 5px;"> Clock: <input style="width: 55px; margin-left: 5px;" type='textfield' id="starttime" value="<?php echo $starttime;?>"> - <input style="width: 55px; margin-left: 5px;" type='textfield' id="stoptime" value="<?php echo $stoptime;?>"></span>
+                                <div class="inline extradayelement" day="<? echo $day; ?>" month="<?php echo $month; ?>" year="<?php echo $year ?>" style="line-height: 29px; "><? echo "$day/$month/$year"; ?></div>
+                                <span style="position: absolute; right: 0px; display: inline-block;border-left: solid 1px #DDD; margin-left: 4px; padding-left: 5px;"> Clock: <input style="width: 55px; margin-left: 5px;" type='textfield' id="starttime" value="<?php echo $starttime; ?>"> - <input style="width: 55px; margin-left: 5px;" type='textfield' id="stoptime" value="<?php echo $stoptime; ?>"></span>
                             </div>
-                    <?php } ?>
+                        <?php } ?>
                     </div>
                 </td>
             </tr>
@@ -59,30 +59,52 @@ namespace ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8;
             <tr><td><?php echo $this->__f("Extra text"); ?></td><td><input id="extraText" type='textfield' value='<?php echo $extraText; ?>'/></td></tr>
             <tr><td><?php echo $this->__("Link to page"); ?></td><td><input class="pagepicker" pageId="<? echo $linkToPage; ?>" id="linkToPage" type='textfield' value='<?php echo $linkToPageText; ?>'/></td></tr>
             <tr><td><?php echo $this->__("location", "common"); ?></td><td>
-                <select id="location">
-                    <?php 
+                    <select id="location">
+                        <?php
                         foreach ($locations as $location) {
                             $name = $location->location;
                             $selected = $location->id == $entry->locationObject->id ? "selected" : "";
                             $id = $location->id;
-                            echo "<option $selected value='$id'>".$name."</option>";
+                            echo "<option $selected value='$id'>" . $name . "</option>";
                         }
-                    ?>
-                </select>
+                        ?>
+                    </select>
                 </td>
-                </tr>
+            </tr>
+            <tr>
+                <td><? echo $this->__f("Event held by"); ?></td>
+                <td>
+                    <select style="width:100%;" class="eventhelder_selector" eventid="<? echo $entry->entryId; ?>">
+                        <?
+                        $allUsers = $this->getApi()->getUserManager()->getAllUsers();
+                        echo "<option value=''>" . $this->__f("Select event helder") . "</option>";
+                        foreach ($allUsers as $user) {
+                            if ($user->type > 90) {
+                                $selected = "";
+                                if ($entry->eventHelder == $user->id) {
+                                    $selected = "SELECTED";
+                                }
+                                echo "<option value='" . $user->id . "' $selected>" . $user->fullName . "</option>";
+                            }
+                        }
+                        ?>
+                    </select>
+                </td>
+
+            </tr>
+
             <tr><td colspan="2"><?php echo $this->__("event_desc"); ?></td></tr>
             <tr><td colspan="2"><textarea id="eventdescription" cols="50" rows="10"><?php echo $description; ?></textarea></td></tr>
             <tr><td colspan="2"><div><input <? echo $locked; ?> style="width: 20px;" type="checkbox" id="lockEvent"/><?php echo $this->__("Lock event for signups"); ?></div></td></tr>
             <tr><td colspan="2" align="right">
-                    <div entryid="<?php echo $entryid; ?>" day="<?php echo $this->day;?>" year="<?php echo $this->year;?>" month="<?php echo $this->month;?>" id="save" class="button">
+                    <div entryid="<?php echo $entryid; ?>" day="<?php echo $this->day; ?>" year="<?php echo $this->year; ?>" month="<?php echo $this->month; ?>" id="save" class="button">
                         <div class="rightglare"></div>
                         <div class="filler"></div>
-                        <ins><?php echo $this->__("save","common"); ?></ins>
+                        <ins><?php echo $this->__("save", "common"); ?></ins>
                     </div>
                 </td>
             </tr>
-            
+
         </table>
     </div>
 </center>
@@ -94,7 +116,7 @@ namespace ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8;
         closeText: "",
         showButtonPanel: true,
         onSelect: function(dateText, inst) {
-            var selectedMonth = inst.selectedMonth+1;
+            var selectedMonth = inst.selectedMonth + 1;
             var day = inst.selectedDay;
             var month = selectedMonth;
             var year = inst.selectedYear;

@@ -617,14 +617,14 @@ class Calendar extends MarketingApplication implements Application {
      * @return type
      */
     static function usortCalendarListViewEntry($c, $d) {
-        $a = $c[0]->day;
-        $b = $d[0]->day;
+        $a = $c->day;
+        $b = $d->day;
         
         if ($a == $b) {
             return 0;
         }
         
-        return ($b < $a) ? -1 : 1;
+        return ($b > $a) ? -1 : 1;
     }
     
     public function getListViewData() {
@@ -646,24 +646,26 @@ class Calendar extends MarketingApplication implements Application {
                 foreach ($month->days as $day) {
                     foreach ($day->entries as $entry) {
                         if ($entry->locationId == $location->id) {
-                            $retdata[$month->year][$month->month][$location->id][] = $entry;
+                            $retdata[$month->year][$month->month][] = $entry;
                         }
                     }
                 }
             }
         }
         
+        $sortedArray = [];
+        
         foreach ($retdata as $year => $data) {
+            $sortedMonths = [];
             foreach ($data as $month => $monthData) {
                 $res = usort($monthData, array("ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8\Calendar", "usortCalendarListViewEntry"));
-                $data[$year][$month] = $monthData;
+                $sortedMonths[$month] = $monthData;
             }
             
-            ksort($data);
-            $retdata[$year] = $data;
+            $sortedArray[$year] = $sortedMonths;
         }
         
-        return $retdata;
+        return $sortedArray;
     }
 
     public function getCountOfFreePositions($entry) {

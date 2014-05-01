@@ -47,11 +47,12 @@ class AppAreaHelper {
     public static function printAppArea($page, $name, $include_bottom_margin = false, $include_right_margin = false, $include_left_margin = false, $type = "standard") {
         ob_start();
         $appClasses = "";
+        $extraclass = count($page->getApplicationArea($name)->applications) == 0 ? "no_apps_on_area" : "";
         foreach($page->getApplicationArea($name)->applications as $app) {
             $appClasses .= "apparea_app_".$app->applicationSettings->appName;
         }
         ?>
-        <div area="<? echo $name; ?>" class="<? echo $appClasses; ?> applicationarea <?
+        <div area="<? echo $name; ?>" class="<? echo $appClasses." ".$extraclass;?> applicationarea <?
              if ($include_bottom_margin) {
                  echo " gs_margin_bottom";
              }

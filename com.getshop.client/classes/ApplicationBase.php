@@ -213,7 +213,7 @@ class ApplicationBase extends FactoryBase {
             $className = substr($className, strrpos($className, "\\")+1);
         }
         
-        echo "<div appid='$id' app='" . $className . "' class='app $changeable " . $className . "' appsettingsid='$appSettingsId'>";
+        echo "<div appid='$id' app='" . $className . "' class='app bottom_app $changeable " . $className . "' appsettingsid='$appSettingsId'>";
         echo "<div class='applicationinner'>";
         if($this->isEditorMode() && !$changeable && !$this->getPage()->isSystemPage()) {
             if($this->hasWriteAccess()) {

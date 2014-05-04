@@ -662,9 +662,11 @@ class Calendar extends MarketingApplication implements Application {
                 $sortedMonths[$month] = $monthData;
             }
             
+            ksort($sortedMonths);
             $sortedArray[$year] = $sortedMonths;
         }
         
+        ksort($sortedArray);
         return $sortedArray;
     }
 

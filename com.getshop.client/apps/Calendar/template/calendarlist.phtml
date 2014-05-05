@@ -25,56 +25,52 @@ foreach ($entries as $year => $months) {
         }
         echo "</tr>";
 
-        foreach ($locations as $locationId => $entries) {
+        foreach ($locations as $entry) { 
+            $location = $this->getLocation($entry->locationId);
+            $link = false;
 
-            $location = $this->getLocation($locationId);
-            foreach ($entries as $entry) {
-                $link = false;
-                
-                
-                if ($this->isEntryOutOfData($entry)) {
-                    continue;
-                }
-                
-                $bookingLink = $this->getBookingLink($entry);
-                $availablePositions = $this->getCountOfFreePositions($entry);
-                $lockedForSignup = $entry->lockedForSignup;
-                
-                if ($entry->linkToPage != "") {
-                    $link = "?page=" . $entry->linkToPage;
-                }
-                
-                $full = $entry->lockedForSignup || $entry->maxAttendees <= count($entry->attendees);
-                $fullClass = $full ? "calendar_list_entry_full" : "calendar_list_entry_not_full";
-
-                echo "<tr class='$fullClass'><td style='width: 100px;'>" . $location->location . "</td><td style='width: 250px;'>" . $entry->title . "</td><td style='width: 300px;'> ";
-                $i = 1;
-                $dayName = count($entry->otherDays) ? $this->__w("Day") . ":$i - " : "";
-                echo $dayName . $this->__w("Date") . ": " . $entry->day . "/" . $entry->month . " - " . $entry->starttime . "-" . $entry->stoptime;
-                foreach ($entry->otherDays as $otherDay) {
-                    $i++;
-                    $dayName = $this->__w("Day") . ":$i - ";
-                    echo "<br>" . $dayName . $this->__w("Date") . ": " . $otherDay->day . "/" . $entry->month . " - " . $otherDay->starttime . "-" . $otherDay->stoptime;
-                }
-                $count = $this->getCountOfFreePositions($entry);
-                echo "</td>";
-                if (!$this->downloadingListAsPdf) {
-                    echo "<td style='text-align: center;'>$count</td>";
-                    $readMore = ""; 
-                    if ($link) {
-                        $readMore = "<a href='$link'>" . $this->__f("Read more") . "</a>";
-                    }
-                    
-                    $booking = "";
-                     if (!$lockedForSignup && $bookingLink != "" && $availablePositions > 0) {
-                        $booking = "<a href='$bookingLink'><div style='text-align: center;' class='gs_button'>".$this->__w("Sign up")."</div></a>";
-                    }
-                    echo "<td style='width: 70px; text-align: center;'>$readMore</td>";
-                    echo "<td style='width: 100px;'>$booking</td>";
-                }
-
-                echo "</tr>";
+            if ($this->isEntryOutOfData($entry)) {
+                continue;
             }
+
+            $bookingLink = $this->getBookingLink($entry);
+            $availablePositions = $this->getCountOfFreePositions($entry);
+            $lockedForSignup = $entry->lockedForSignup;
+
+            if ($entry->linkToPage != "") {
+                $link = "?page=" . $entry->linkToPage;
+            }
+
+            $full = $entry->lockedForSignup || $entry->maxAttendees <= count($entry->attendees);
+            $fullClass = $full ? "calendar_list_entry_full" : "calendar_list_entry_not_full";
+
+            echo "<tr class='$fullClass'><td style='width: 100px;'>" . $location->location . "</td><td style='width: 250px;'>" . $entry->title . "</td><td style='width: 300px;'> ";
+            $i = 1;
+            $dayName = count($entry->otherDays) ? $this->__w("Day") . ":$i - " : "";
+            echo $dayName . $this->__w("Date") . ": " . $entry->day . "/" . $entry->month . " - " . $entry->starttime . "-" . $entry->stoptime;
+            foreach ($entry->otherDays as $otherDay) {
+                $i++;
+                $dayName = $this->__w("Day") . ":$i - ";
+                echo "<br>" . $dayName . $this->__w("Date") . ": " . $otherDay->day . "/" . $entry->month . " - " . $otherDay->starttime . "-" . $otherDay->stoptime;
+            }
+            $count = $this->getCountOfFreePositions($entry);
+            echo "</td>";
+            if (!$this->downloadingListAsPdf) {
+                echo "<td style='text-align: center;'>$count</td>";
+                $readMore = "";
+                if ($link) {
+                    $readMore = "<a href='$link'>" . $this->__f("Read more") . "</a>";
+                }
+
+                $booking = "";
+                if (!$lockedForSignup && $bookingLink != "" && $availablePositions > 0) {
+                    $booking = "<a href='$bookingLink'><div style='text-align: center;' class='gs_button'>" . $this->__w("Sign up") . "</div></a>";
+                }
+                echo "<td style='width: 70px; text-align: center;'>$readMore</td>";
+                echo "<td style='width: 100px;'>$booking</td>";
+            }
+
+            echo "</tr>";
         }
         echo "</table>";
     }

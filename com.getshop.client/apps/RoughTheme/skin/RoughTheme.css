@@ -103,3 +103,12 @@ body {
     .Facebook .newsentry .picture { width: 50px; }
     .Facebook .message { padding-left: 60px; }
 }
+
+.mainarea .applicationarea:not(.no_apps_on_area) {
+    background-image: url('{IMAGEFOLDER}/box-background.png');
+    padding: 10px; 
+    box-shadow: 3px 3px 6px #000;
+    padding-right: 10px;
+    color: #333;
+    border: solid 1px #CCC;
+}

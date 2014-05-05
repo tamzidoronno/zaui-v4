@@ -23,8 +23,6 @@ gs_app.Facebook = function(appid, address) {
     this.address = address;
     this.isSaved = false;
     this.init();
-    console.log(this.address);
-    console.log(address.length);
     if (address.length > 0) {
         this.isSaved = true;
         this.displayNews();
@@ -97,7 +95,6 @@ gs_app.Facebook.prototype = {
 
     },
     buildNewsEntry: function(newsentry) {
-        console.log(newsentry);
         var date = new Date(newsentry.created_time);
         var month = date.getMonth()+1;
         var minutes = date.getMinutes();

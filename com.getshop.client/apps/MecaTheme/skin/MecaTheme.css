@@ -56,6 +56,7 @@ html {
     font-weight: bold;
     line-height: 35px;
 }
+.TopMenu .subentries { background-color: #043e82; }
 
 .gs_outer.footer .gs_inner {
     background-color: #e0e0e0;
@@ -162,6 +163,9 @@ html {
         height: 125px;
         padding: 0px;
     }
+    
+    
+    .TopMenu .subentries { display:block; position: initial; border: solid 0px; }
     
     #apparea-header {
         background-size: 130px;

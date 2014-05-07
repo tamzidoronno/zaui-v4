@@ -1,11 +1,21 @@
 <pre>
 <?
-print_r($_POST);
+/* @var $entryobject core_calendarmanager_data_Entry */
+$entryobject = $this->getApi()->getCalendarManager()->getEntry($_POST['data']['entryId']);
+
+$class = "on";
+if(in_array($_POST['data']['userId'], $entryobject->dropDiploma)) {
+    $class = "off";
+}
+
 ?>
+
+<input type="hidden" id="configuserid" value="<? echo $_POST['data']['userId']; ?>">
+<input type="hidden" id="configentryId" value="<? echo $_POST['data']['entryId']; ?>">
 </pre>
 <div class="setting onoff" id="receiveDiploma">
     <span class="title"><?php echo $this->__("Should user receive an diploma?"); ?></span>
-    <div class="onoff config on" id="receiveDiploma_inner"></div>
+    <div class="onoff config <? echo $class; ?>" id="receiveDiploma_inner"></div>
     <div class="description">
         <?php echo $this->__("Disable this option if the user are not entitled to receive a diploma."); ?>
     </div>

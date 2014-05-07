@@ -251,10 +251,15 @@ $('.Calendar .addevent #save').live('click', function() {
 
 $('.Calendar .save_candidate_setting').live('click', function() {
     var data = {
-        receiveDiploma : $('receiveDiploma_inner').hasClass('on')
+        receiveDiploma : $('#receiveDiploma_inner').hasClass('on'),
+        userId : $('#configuserid').val(),
+        configentryId : $('#configentryId').val()
+        
     };
-    
-    console.log(data);
+    var event = thundashop.Ajax.createEvent('','updateUserSettings',$(this), data);
+    thundashop.Ajax.postWithCallBack(event, function() {
+        thundashop.common.hideInformationBox();
+    });
 });
 
 $('.Calendar .candidate_setting').live('click', function() {

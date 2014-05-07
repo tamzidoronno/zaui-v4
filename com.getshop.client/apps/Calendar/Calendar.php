@@ -27,6 +27,30 @@ class Calendar extends MarketingApplication implements Application {
         $this->getApi()->getCalendarManager()->saveEntry($entry);
     }
     
+    public function updateUserSettings() {
+        $userid = $_POST['data']['userId'];
+        $receiveDiploma = $_POST['data']['receiveDiploma'];
+        $entryId = $_POST['data']['configentryId'];
+        
+        $entryObject = $this->getApi()->getCalendarManager()->getEntry($entryId);
+        
+        $newObject = array();
+        foreach($entryObject->dropDiploma as $key => $tmpuserid) {
+            $newObject[$tmpuserid] = "";
+        }
+        
+        if($receiveDiploma == "true") {
+            unset($newObject[$userid]);
+        } else {
+            $newObject[$userid] = "";
+        }
+        
+        print_r(array_keys($newObject));
+        
+        $entryObject->dropDiploma = array_keys($newObject);
+        
+        $this->getApi()->getCalendarManager()->saveEntry($entryObject);
+    }
     
     public function getGroup($user) {
         $retGroups = "";

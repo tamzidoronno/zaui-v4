@@ -87,6 +87,12 @@ $content .= "<head>
 
 foreach($attendees as $attendee) {
     $user = $factory->getApi()->getUserManager()->getUserById($attendee);
+    
+    
+    if(in_array($user->id, $entry->dropDiploma)) {
+        continue;
+    }
+    
     $name = $user->fullName;
     /* @var $company core_usermanager_data_Group */
     $company = $grouped[$user->groups[0]];

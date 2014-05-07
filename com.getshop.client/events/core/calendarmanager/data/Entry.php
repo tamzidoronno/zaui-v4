@@ -4,6 +4,9 @@ class core_calendarmanager_data_Entry {
 	public $attendees;
 
 	/** @var String */
+	public $dropDiploma;
+
+	/** @var String */
 	public $waitingList;
 
 	/** @var String */

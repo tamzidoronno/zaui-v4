@@ -168,12 +168,12 @@ if (count($day->entries) == 0) {
                 }
                 $entryid = $entry->entryId;
                 
-                $transfer = $this->hasWriteAccess() ? "<td width='50'><span class='transferUser' userId='$userid' entryId='$entryid' style='inline-block; border: solid 1px; padding: 3px; cursor: pointer; background-color: #000; color: #FFF;'>".$this->__("Transfer")."</span></td>" : "";
-                $remove = $this->hasWriteAccess() ? "<div userid='$userid' entryid='$entryid' class='remove'></div>" : "";
+                $transfer = $this->hasWriteAccess() ? "<td width='22'><i class='transferUser fa fa-sign-in' userId='$userid' entryId='$entryid' title='".$this->__("Transfer")."'></i></td>" : "";
+                $remove = $this->hasWriteAccess() ? "<i userid='$userid' entryid='$entryid' class='remove fa fa-trash-o'></i>" : "";
                 $activeComment = $this->isActiveComment($user, $entryid) ? "activeComment" : "";
-                $comment = $this->hasWriteAccess() ? "<div userid='$userid' entryid='$entryid' class='addcomment $activeComment'></div>" : "";
+                $comment = $this->hasWriteAccess() ? "<i userid='$userid' entryid='$entryid' class='addcomment $activeComment fa fa-comments' title='".$this->__f("Comments"). "'></i>" : "";
                 $link = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() ? "?page=users_all_users&userid=$userid" : "#";
-                $settings = $this->hasWriteAccess() ? "<div class='candidate_setting' userid='$userid' entryid='$entryid' ></div>" : "";
+                $settings = $this->hasWriteAccess() ? "<div class='candidate_setting fa fa-cogs' userid='$userid' entryid='$entryid' title='".$this->__f("User settings"). "'></div>" : "";
                 echo "<tr class='dayrow'><td width='22'>$remove</td><td><div class='attendee'><a href='$link'> $i. ".$user->fullName.$group."</a></div></td><td width='50'>$transfer</td><td width='22'>$comment</td><td width='22'>$settings</td></tr>";
             }
 
@@ -194,13 +194,13 @@ if (count($day->entries) == 0) {
                         $group = " - ".$group;
                     }
                     $entryid = $entry->entryId;
-                    $transfer = $this->hasWriteAccess() ? "<td width='50'><span class='transferUser' userId='$userid' entryId='$entryid' style='inline-block; border: solid 1px; padding: 3px; cursor: pointer; background-color: #000; color: #FFF;'>".$this->__("Transfer")."</span></td>" : "";
-                    $accept = $this->hasWriteAccess() ? "<span class='acceptUser' userId='$userid' entryId='$entryid' style='inline-block; border: solid 1px; padding: 3px; cursor: pointer; background-color: #000; color: #FFF;'>".$this->__("Accept")."</span>" : "";
+                    $transfer = $this->hasWriteAccess() ? "<td width='22'><i class='transferUser fa fa-sign-in' userId='$userid' entryId='$entryid' title='".$this->__("Transfer")."'></i></td>" : "";
+                    $accept = $this->hasWriteAccess() ? "<i class='acceptUser fa-check-square fa' userId='$userid' entryId='$entryid' title=".$this->__("Accept")."></i>" : "";
                     $remove = $this->hasWriteAccess() ? "<div userid='$userid' entryid='$entryid' class='remove'></div>" : "";
                     $activeComment = $this->isActiveComment($user, $entryid) ? "activeComment" : "";
-                    $comment = $this->hasWriteAccess() ? "<div userid='$userid' entryid='$entryid' class='addcomment $activeComment'></div>" : "";
+                    $comment = $this->hasWriteAccess() ? "<i userid='$userid' entryid='$entryid' class='addcomment $activeComment  fa fa-comments' title='".$this->__f("Comments"). "'></i>" : "";
                     $link = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() ? "<a href='?page=users_all_users&userid=$userid'> $i. ".$user->fullName.$group."</a>" : "$i. ".$user->fullName.$group;
-                    echo "<tr class='dayrow'><td><div class='attendee'>$link</div></td><td width='50'>$transfer</td><td width='50'>$accept</td><td width='22'>$comment</td></tr>";
+                    echo "<tr class='dayrow'><td><div class='attendee'>$link</div></td><td width='22'>$transfer</td><td width='22'>$accept</td><td width='22'>$comment</td></tr>";
                 }
 
                 echo "</table>";

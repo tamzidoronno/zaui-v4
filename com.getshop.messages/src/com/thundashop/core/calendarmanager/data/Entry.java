@@ -17,6 +17,7 @@ import java.util.List;
  */
 public class Entry implements Serializable, Comparable<Entry> {
     public List<String> attendees = new ArrayList();
+    public List<String> dropDiploma = new ArrayList();
     public List<String> waitingList = new ArrayList();
     public List<ExtraDay> otherDays = new ArrayList();
     
@@ -74,6 +75,7 @@ public class Entry implements Serializable, Comparable<Entry> {
         this.entryId = entry.entryId;
         this.userId = entry.userId;
         this.title = entry.title;
+        this.dropDiploma = entry.dropDiploma;
         this.color = entry.color;
         this.year = entry.year;
         this.eventHelder = entry.eventHelder;

@@ -173,7 +173,8 @@ if (count($day->entries) == 0) {
                 $activeComment = $this->isActiveComment($user, $entryid) ? "activeComment" : "";
                 $comment = $this->hasWriteAccess() ? "<div userid='$userid' entryid='$entryid' class='addcomment $activeComment'></div>" : "";
                 $link = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() ? "?page=users_all_users&userid=$userid" : "#";
-                echo "<tr class='dayrow'><td width='22'>$remove</td><td><div class='attendee'><a href='$link'> $i. ".$user->fullName.$group."</a></div></td><td width='50'>$transfer</td><td width='22'>$comment</td></tr>";
+                $settings = $this->hasWriteAccess() ? "<div class='candidate_setting' userid='$userid' entryid='$entryid' ></div>" : "";
+                echo "<tr class='dayrow'><td width='22'>$remove</td><td><div class='attendee'><a href='$link'> $i. ".$user->fullName.$group."</a></div></td><td width='50'>$transfer</td><td width='22'>$comment</td><td width='22'>$settings</td></tr>";
             }
 
             echo "</table>";

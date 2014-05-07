@@ -249,6 +249,24 @@ $('.Calendar .addevent #save').live('click', function() {
     thundashop.common.hideInformationBox(event);
 });
 
+$('.Calendar .save_candidate_setting').live('click', function() {
+    var data = {
+        receiveDiploma : $('receiveDiploma_inner').hasClass('on')
+    };
+    
+    console.log(data);
+});
+
+$('.Calendar .candidate_setting').live('click', function() {
+    var data = {
+        userId: $(this).attr('userid'),
+        entryId: $(this).attr('entryId')
+    }
+
+    var event = thundashop.Ajax.createEvent(null, 'showCandidateSetting', this, data);
+    thundashop.common.showInformationBox(event, __f('Add comment'));
+});
+
 $('.Calendar .deleteentry').live('click', function() {
     var data = {};
     data.entryId = $(this).attr('entryid');

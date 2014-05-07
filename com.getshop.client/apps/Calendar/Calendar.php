@@ -674,6 +674,10 @@ class Calendar extends MarketingApplication implements Application {
         $attendees = $this->getAttendees($entry);
         return $entry->maxAttendees - count($attendees);
     }
+    
+    public function showCandidateSetting() {
+        $this->includefile("candidate_setting");
+    }
 }
 
 

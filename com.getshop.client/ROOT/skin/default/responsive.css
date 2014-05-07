@@ -17,11 +17,8 @@
 }
 @media only all and (max-width: 800px) {
     .Banner .banner img,.Banner .bannerslider { height: auto !important; }
-
     .ProductList .rowview .slidearrow { display:block !important; }
     .header .TopMenu { top: 5px; }
-    td.gs_col.c1 { display: none; }
-    td.gs_col.c3 { display: none; }
     .Login { display: none; }
     .gs_row_cell { width: 100% !important; }
     .gs_margin_left,.gs_margin_right,.gs_margin_left.gs_margin_right { padding-left: 0px; margin-top: 10px; padding-right: 0px; }

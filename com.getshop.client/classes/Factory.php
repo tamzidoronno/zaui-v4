@@ -223,12 +223,7 @@ class Factory extends FactoryBase {
 
     public function showNotExistsMessage() {
         if ($this->store == null) {
-            $name = $_SERVER['SERVER_NAME'];
-
-            $addr = explode(".", $name);
-
-            $addr = $addr[sizeof($addr) - 2] . "." . $addr[sizeof($addr) - 1];
-            header('location:http://' . $addr);
+            echo "This page does not exists.";
             exit();
         }
     }

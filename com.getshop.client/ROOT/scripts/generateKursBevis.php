@@ -128,7 +128,7 @@ foreach($attendees as $attendee) {
                 </div>
             <? } ?>
         </div>
-            <div style="float:right; width:60mm;text-align:right;"><img src="/displayImage.php?id=<? echo $logo; ?>"></div>
+            <div style="float:right; width:60mm;text-align:right;"><img src="/displayImage.php?id=<? echo $logo; ?>&height=40"></div>
     </div>
     <div class="page_end">
     </div>

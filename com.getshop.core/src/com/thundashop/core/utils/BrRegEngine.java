@@ -46,8 +46,14 @@ public class BrRegEngine {
     
     public Company getCompany(String organisationNumber) {
         
-        String content = read(organisationNumber.trim());
+        String content = read(organisationNumber.trim(), false);
         ReturnValue fromJson = gson.fromJson(content, ReturnValue.class);
+        
+        if(fromJson.entries.size() == 0) {
+            content = read(organisationNumber.trim(), true);
+            fromJson = gson.fromJson(content, ReturnValue.class);
+        }
+        
         if (fromJson.entries.size() == 1) {
             BrRegCompany brRegCompany = fromJson.entries.get(0);
             Company company = new Company();
@@ -64,9 +70,12 @@ public class BrRegEngine {
         return null;
     }
     
-    private String read(String organisationUrl) {
+    private String read(String organisationUrl, boolean subdep) {
         try {
             organisationUrl = URLEncoder.encode(organisationUrl, "UTF-8");
+            if(subdep) {
+                return getContent("http://hotell.difi.no/api/json/brreg/underenheter?query="+organisationUrl);
+            }
             return getContent("http://hotell.difi.no/api/json/brreg/enhetsregisteret?query="+organisationUrl);
         } catch (MalformedURLException ex) {
             ex.printStackTrace();
@@ -92,12 +101,20 @@ public class BrRegEngine {
     }
 
     HashMap<String, String> search(String search) {
-        String result = read(search);
+        String result = read(search, false);
         ReturnValue fromJson = gson.fromJson(result, ReturnValue.class);
         HashMap<String,String> returnvalue = new HashMap();
         for(BrRegCompany company : fromJson.entries) {
             returnvalue.put(company.orgnr, company.navn);
         }
+        
+        result = read(search, true);
+        fromJson = gson.fromJson(result, ReturnValue.class);
+        for(BrRegCompany company : fromJson.entries) {
+            returnvalue.put(company.orgnr, company.navn);
+        }
+        
+        
         return returnvalue;
     }
     

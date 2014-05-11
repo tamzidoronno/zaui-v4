@@ -12,15 +12,15 @@ namespace ns_d16b27d9_579f_4d44_b90b_4223de0eb6f2;
             <tr>
                 <td>
                     <? echo $this->__w("CHECK IN"); ?><br>
-                    <span style='background-color:#b0bda4; display:inline-block;'>
-                        <input type='text' class='date_selection_room' value='06.05.2013'><i class='fa fa-calendar'></i>
+                    <span style='background-color:#b0bda4; display:inline-block;' class='start_cal'>
+                        <input type='text' class='date_selection_room' value='06.05.2013' id='start_date'><i class='fa fa-calendar'></i>
                     </span>
                 </td>
                 <td align='right'>
                     <span style='text-align:left; display:inline-block;'>
                         <? echo $this->__w("CHECK OUT"); ?><br>
-                        <span style='background-color:#b0bda4; display:inline-block;'>
-                            <input type='text' class='date_selection_room' value='06.05.2013'><i class='fa fa-calendar'></i>
+                        <span style='background-color:#b0bda4; display:inline-block;' class='end_cal'>
+                            <input type='text' class='date_selection_room' value='06.05.2013' id='end_date'><i class='fa fa-calendar'></i>
                         </span>
                     </span>
                 </td>
@@ -36,3 +36,9 @@ namespace ns_d16b27d9_579f_4d44_b90b_4223de0eb6f2;
         <div class='check_available_button'><? echo $this->__w("CHECK AVAILABILITY & ORDER"); ?></div>
     </div>
 </div>
+<script>
+    $('#start_date').datepicker({ dateFormat: "dd.mm.yy" });
+    $('#end_date').datepicker({ dateFormat: "dd.mm.yy" });
+    $('.end_cal').on('click', function() { $('#end_date').focus(); });
+    $('.start_cal').on('click', function() { $('#start_date').focus(); });
+</script>

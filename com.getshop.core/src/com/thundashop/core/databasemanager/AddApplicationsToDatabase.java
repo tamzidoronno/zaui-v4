@@ -48,27 +48,27 @@ public class AddApplicationsToDatabase {
         allowed.add("large");
         allowed.add("xlarge");
         
-        ApplicationSettings eventpartitpation = createSettings(
-                "EventPartitipationData",
-                "9d94feed-f4fd-4e6d-8be8-81aa89f58dcf",
-                allowed,
-                "",
-                ApplicationSettings.Type.Webshop, false);
-        eventpartitpation.isPublic = false;
-        eventpartitpation.allowedStoreIds = new ArrayList();
-        eventpartitpation.allowedStoreIds.add("2fac0e57-de1d-4fdf-b7e4-5f93e3225445");
-        apps.add(eventpartitpation);
-
-        ApplicationSettings customersearch = createSettings(
-                "CustomerSearch",
-                "0b125d61-9516-4b24-90bc-16a84cd014b4",
-                allowed,
-                "",
-                ApplicationSettings.Type.Webshop, false);
-        customersearch.isPublic = false;
-        customersearch.allowedStoreIds = new ArrayList();
-        customersearch.allowedStoreIds.add("2fac0e57-de1d-4fdf-b7e4-5f93e3225445");
-        apps.add(customersearch);
+//        ApplicationSettings eventpartitpation = createSettings(
+//                "EventPartitipationData",
+//                "9d94feed-f4fd-4e6d-8be8-81aa89f58dcf",
+//                allowed,
+//                "",
+//                ApplicationSettings.Type.Webshop, false);
+//        eventpartitpation.isPublic = false;
+//        eventpartitpation.allowedStoreIds = new ArrayList();
+//        eventpartitpation.allowedStoreIds.add("2fac0e57-de1d-4fdf-b7e4-5f93e3225445");
+//        apps.add(eventpartitpation);
+//
+//        ApplicationSettings customersearch = createSettings(
+//                "CustomerSearch",
+//                "0b125d61-9516-4b24-90bc-16a84cd014b4",
+//                allowed,
+//                "",
+//                ApplicationSettings.Type.Webshop, false);
+//        customersearch.isPublic = false;
+//        customersearch.allowedStoreIds = new ArrayList();
+//        customersearch.allowedStoreIds.add("2fac0e57-de1d-4fdf-b7e4-5f93e3225445");
+//        apps.add(customersearch);
 //
 //        List<String> allowed = new ArrayList();
 //        allowed.add("large");

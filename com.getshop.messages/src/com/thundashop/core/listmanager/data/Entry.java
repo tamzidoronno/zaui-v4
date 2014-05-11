@@ -22,6 +22,7 @@ public class Entry implements Serializable {
     public int userLevel;
     public String id;
     public String productId;
+    public String fontAwsomeIcon;
     public int counter = -1;
     
     //Appended when fetching the list.

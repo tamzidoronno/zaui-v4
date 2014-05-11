@@ -45,6 +45,9 @@ public class AddApplicationsToDatabase {
         List<ApplicationSettings> apps = new ArrayList();
         
         List<String> allowed = new ArrayList();
+        allowed.add("large");
+        allowed.add("xlarge");
+
         ApplicationSettings wilhemsentheme = createSettings(
                 "WilhelmsenTheme",
                 "26a517ac-c519-412b-9266-59df49355c82",

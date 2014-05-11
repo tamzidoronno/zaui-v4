@@ -45,53 +45,31 @@ public class AddApplicationsToDatabase {
         List<ApplicationSettings> apps = new ArrayList();
         
         List<String> allowed = new ArrayList();
+        ApplicationSettings wilhemsentheme = createSettings(
+                "WilhelmsenTheme",
+                "26a517ac-c519-412b-9266-59df49355c82",
+                allowed,
+                "",
+                ApplicationSettings.Type.Theme, false);
+        wilhemsentheme.isPublic = false;
+        wilhemsentheme.allowedStoreIds = new ArrayList();
+        wilhemsentheme.allowedStoreIds.add("de02a2d5-e4b3-427c-be2c-4e1ee19f05f4");
+        apps.add(wilhemsentheme);
+
+        allowed = new ArrayList();
         allowed.add("large");
         allowed.add("xlarge");
-        
-        ApplicationSettings eventpartitpation = createSettings(
-                "EventPartitipationData",
-                "9d94feed-f4fd-4e6d-8be8-81aa89f58dcf",
+        ApplicationSettings hotel = createSettings(
+                "Hotelbooking",
+                "d16b27d9-579f-4d44-b90b-4223de0eb6f2",
                 allowed,
                 "",
                 ApplicationSettings.Type.Webshop, false);
-        eventpartitpation.isPublic = false;
-        eventpartitpation.allowedStoreIds = new ArrayList();
-        eventpartitpation.allowedStoreIds.add("2fac0e57-de1d-4fdf-b7e4-5f93e3225445");
-        apps.add(eventpartitpation);
+        hotel.isPublic = false;
+        hotel.allowedStoreIds = new ArrayList();
+        hotel.allowedStoreIds.add("de02a2d5-e4b3-427c-be2c-4e1ee19f05f4");
+        apps.add(hotel);
 
-        ApplicationSettings customersearch = createSettings(
-                "CustomerSearch",
-                "0b125d61-9516-4b24-90bc-16a84cd014b4",
-                allowed,
-                "",
-                ApplicationSettings.Type.Webshop, false);
-        customersearch.isPublic = false;
-        customersearch.allowedStoreIds = new ArrayList();
-        customersearch.allowedStoreIds.add("2fac0e57-de1d-4fdf-b7e4-5f93e3225445");
-        apps.add(customersearch);
-//
-//        List<String> allowed = new ArrayList();
-//        allowed.add("large");
-//        allowed.add("xlarge");
-//        
-//        ApplicationSettings newsLetterApp = createSettings(
-//                "NewsLetter",
-//                "adbdc94d-a201-4586-aa07-1e4d46ca0fd6",
-//                allowed,
-//                "",
-//                ApplicationSettings.Type.Marketing, false);
-//        newsLetterApp.isPublic = true;
-//        apps.add(newsLetterApp);
-//
-//        ApplicationSettings bottomButton = createSettings(
-//                "BottomButton",
-//                "1081551b-1ecc-46cd-a192-63567ce129ab",
-//                emtpy,
-//                "",
-//                ApplicationSettings.Type.Webshop, false);
-//        bottomButton.isPublic = true;
-//        apps.add(bottomButton);
-       
         return apps;
     }
 

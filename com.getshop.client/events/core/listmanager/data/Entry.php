@@ -28,6 +28,9 @@ class core_listmanager_data_Entry {
 	public $productId;
 
 	/** @var String */
+	public $fontAwsomeIcon;
+
+	/** @var String */
 	public $counter;
 
 	/** @var String */

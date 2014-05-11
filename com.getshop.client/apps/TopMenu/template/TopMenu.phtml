@@ -15,12 +15,12 @@ $entries = $this->getTopMenuEntries();
 showEntries($entries);
 function showEntries($entries) {
     foreach($entries as $entry) {
-        /* @var $entry app_leftMenu_data_ListEntry */
+        /* @var $entry \core_listmanager_data_Entry */
         $name = $entry->name;
         $id = $entry->pageId;
         $selected = "";
         $menu = "";
-
+        
         if($this->getNavigation()->currentPageId == $id) {
             $selected = "selected";
         }

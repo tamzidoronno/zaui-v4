@@ -6,6 +6,7 @@ getshop.MenuEditor = {
     init: function() {
         $(document).on('click', ".MenuEditor .menulist .menu .menuitem", getshop.MenuEditor.menuClicked);
         $(document).on('keyup', ".MenuEditor .titleinformation #itemname", getshop.MenuEditor.nameKeyUp);
+        $(document).on('keyup', ".MenuEditor .titleinformation #icontext", getshop.MenuEditor.iconKeyUp);
         $(document).on('keyup', ".MenuEditor .titleinformation #itemlink", getshop.MenuEditor.itemLinkChanged);
         $(document).on('click', ".MenuEditor .save", getshop.MenuEditor.saveMenuEditor);
         $(document).on('click', ".MenuEditor .cancel", getshop.MenuEditor.closeMenuEditor);
@@ -80,6 +81,11 @@ getshop.MenuEditor = {
         getshop.MenuEditor.activeItem.name = $(this).val();
         getshop.MenuEditor.list.refresh();
     },
+            
+    iconKeyUp: function() {
+        getshop.MenuEditor.activeItem.icon = $(this).val();
+        getshop.MenuEditor.list.refresh();
+    },
 
     itemLinkChanged: function() {
         getshop.MenuEditor.activeItem.link = $(this).val();
@@ -121,6 +127,7 @@ getshop.MenuEditor = {
             $('.titleinformation #itemname').val(getshop.MenuEditor.activeItem.name);    
             $('.titleinformation #itemlink').attr('pageId', getshop.MenuEditor.activeItem.pageId);    
             $('.titleinformation #itemlink').val(getshop.MenuEditor.activeItem.link);    
+            $('.titleinformation #icontext').val(getshop.MenuEditor.activeItem.icon);    
             var userLevel = this.activeItem.userLevel;
             if (!userLevel) {
                 $('#userlevel').val("public");

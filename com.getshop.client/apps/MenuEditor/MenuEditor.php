@@ -90,6 +90,9 @@ class MenuEditor extends \SystemApplication implements \Application {
         if (isset($item['userLevel'])) {
             $entry->userLevel = $item['userLevel'];
         }
+        if (isset($item['icon'])) {
+            $entry->fontAwsomeIcon = $item['icon'];
+        }
         $entry->subentries = array();
         if(isset($item['items'])) {
             foreach($item['items'] as $subitem) {

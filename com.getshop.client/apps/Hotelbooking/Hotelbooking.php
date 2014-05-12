@@ -8,8 +8,8 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     
     function __construct() {
     }
-
-    public function getDescription() {
+ 
+   public function getDescription() {
         return "Hotelbooking";
     }
 

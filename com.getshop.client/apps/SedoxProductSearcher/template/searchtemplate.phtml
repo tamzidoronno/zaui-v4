@@ -1,0 +1,28 @@
+<div>
+    <input type="textfield" placeholder="Enter something to search for and press enter :D" style='width: 600px;'>
+</div>
+<div class='result'>
+
+    <?
+    if (isset($_SESSION['searchKey'])) {
+        $key = $_SESSION['searchKey'];
+        $result = $this->getSearchResult($key);
+        
+        
+        foreach ($result->products as $prod) {
+            echo "<br>";
+            echo "<table border='1'>";
+            echo "<tr><td>userBrand</td><td>".$prod->userBrand."</td></tr>";
+            echo "<tr><td>userModel</td><td>".$prod->userModel."</td></tr>";
+            echo "<tr><td>userYear</td><td>".$prod->userYear."</td></tr>";
+            echo "<tr><td>userPower</td><td>".$prod->userPower."</td></tr>";
+            echo "<tr><td>Files</td><td>".sizeof($prod->binaryFiles)."</td></tr>";
+            echo "</table>";
+        }
+        echo "<hr>";
+        echo "<center>page 1 of ".$result->totalPages."</center>";
+        echo "<hr>";
+    }
+    ?>
+</div>
+    

@@ -3515,6 +3515,30 @@ class APIReportingManager {
 	}
 
 }
+class APISedoxProductManager {
+
+	var $transport;
+	
+	function APISedoxProductManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function search($searchString) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["searchString"] = json_encode($this->transport->object_unset_nulls($searchString));
+	     $data["method"] = "search";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+         $result = $this->transport->sendMessage($data);
+	     return $result;
+	}
+
+}
 class APIStoreManager {
 
 	var $transport;
@@ -4516,6 +4540,12 @@ class GetShopApi {
       */
       public function getReportingManager() {
            return new APIReportingManager($this->transport);
+      }
+      /**
+      * @return SedoxProductManager
+      */
+      public function getSedoxProductManager() {
+           return new APISedoxProductManager($this->transport);
       }
       /**
       * @return StoreManager

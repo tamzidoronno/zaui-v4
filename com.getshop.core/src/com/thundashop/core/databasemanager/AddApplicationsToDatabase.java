@@ -48,30 +48,17 @@ public class AddApplicationsToDatabase {
         allowed.add("large");
         allowed.add("xlarge");
 
-        ApplicationSettings wilhemsentheme = createSettings(
-                "WilhelmsenTheme",
-                "26a517ac-c519-412b-9266-59df49355c82",
-                allowed,
-                "",
-                ApplicationSettings.Type.Theme, false);
-        wilhemsentheme.isPublic = false;
-        wilhemsentheme.allowedStoreIds = new ArrayList();
-        wilhemsentheme.allowedStoreIds.add("de02a2d5-e4b3-427c-be2c-4e1ee19f05f4");
-        apps.add(wilhemsentheme);
-
-        allowed = new ArrayList();
-        allowed.add("large");
-        allowed.add("xlarge");
-        ApplicationSettings hotel = createSettings(
-                "Hotelbooking",
-                "d16b27d9-579f-4d44-b90b-4223de0eb6f2",
+        ApplicationSettings sedoxProductSearcher = createSettings(
+                "SedoxProductSearcher",
+                "2ef9eeb0-da05-11e3-9c1a-0800200c9a66",
                 allowed,
                 "",
                 ApplicationSettings.Type.Webshop, false);
-        hotel.isPublic = false;
-        hotel.allowedStoreIds = new ArrayList();
-        hotel.allowedStoreIds.add("de02a2d5-e4b3-427c-be2c-4e1ee19f05f4");
-        apps.add(hotel);
+        sedoxProductSearcher.isPublic = false;
+        sedoxProductSearcher.allowedStoreIds = new ArrayList();
+        sedoxProductSearcher.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
+        apps.add(sedoxProductSearcher);
+
 
         return apps;
     }

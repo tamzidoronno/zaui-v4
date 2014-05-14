@@ -1669,6 +1669,165 @@ class GetShop(object):
     data.interfaceName = "core.getshop.IGetShop"
     return self.communicationHelper.sendMessage(data)
 
+class HotelBookingManager(object):
+  def __init__(self, communicationHelper):
+    self.communicationHelper = communicationHelper
+  def checkAvailable(self, startDate, endDate, type):
+    args = collections.OrderedDict()
+    if isinstance(startDate,GetShopBaseClass): 
+      args["startDate"]=json.dumps(startDate.__dict__)
+    else:
+      try:
+        args["startDate"]=json.dumps(startDate)
+      except (ValueError, AttributeError):
+        args["startDate"]=startDate
+    if isinstance(endDate,GetShopBaseClass): 
+      args["endDate"]=json.dumps(endDate.__dict__)
+    else:
+      try:
+        args["endDate"]=json.dumps(endDate)
+      except (ValueError, AttributeError):
+        args["endDate"]=endDate
+    if isinstance(type,GetShopBaseClass): 
+      args["type"]=json.dumps(type.__dict__)
+    else:
+      try:
+        args["type"]=json.dumps(type)
+      except (ValueError, AttributeError):
+        args["type"]=type
+    data = EmptyClass()
+    data.args = args
+    data.method = "checkAvailable"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getAllRooms(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getAllRooms"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getRoomTypes(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getRoomTypes"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def removeRoom(self, id):
+    args = collections.OrderedDict()
+    if isinstance(id,GetShopBaseClass): 
+      args["id"]=json.dumps(id.__dict__)
+    else:
+      try:
+        args["id"]=json.dumps(id)
+      except (ValueError, AttributeError):
+        args["id"]=id
+    data = EmptyClass()
+    data.args = args
+    data.method = "removeRoom"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def removeRoomType(self, id):
+    args = collections.OrderedDict()
+    if isinstance(id,GetShopBaseClass): 
+      args["id"]=json.dumps(id.__dict__)
+    else:
+      try:
+        args["id"]=json.dumps(id)
+      except (ValueError, AttributeError):
+        args["id"]=id
+    data = EmptyClass()
+    data.args = args
+    data.method = "removeRoomType"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def reserveRoom(self, roomType, startDate, endDate):
+    args = collections.OrderedDict()
+    if isinstance(roomType,GetShopBaseClass): 
+      args["roomType"]=json.dumps(roomType.__dict__)
+    else:
+      try:
+        args["roomType"]=json.dumps(roomType)
+      except (ValueError, AttributeError):
+        args["roomType"]=roomType
+    if isinstance(startDate,GetShopBaseClass): 
+      args["startDate"]=json.dumps(startDate.__dict__)
+    else:
+      try:
+        args["startDate"]=json.dumps(startDate)
+      except (ValueError, AttributeError):
+        args["startDate"]=startDate
+    if isinstance(endDate,GetShopBaseClass): 
+      args["endDate"]=json.dumps(endDate.__dict__)
+    else:
+      try:
+        args["endDate"]=json.dumps(endDate)
+      except (ValueError, AttributeError):
+        args["endDate"]=endDate
+    data = EmptyClass()
+    data.args = args
+    data.method = "reserveRoom"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def saveRoom(self, room):
+    args = collections.OrderedDict()
+    if isinstance(room,GetShopBaseClass): 
+      args["room"]=json.dumps(room.__dict__)
+    else:
+      try:
+        args["room"]=json.dumps(room)
+      except (ValueError, AttributeError):
+        args["room"]=room
+    data = EmptyClass()
+    data.args = args
+    data.method = "saveRoom"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def saveRoomType(self, type):
+    args = collections.OrderedDict()
+    if isinstance(type,GetShopBaseClass): 
+      args["type"]=json.dumps(type.__dict__)
+    else:
+      try:
+        args["type"]=json.dumps(type)
+      except (ValueError, AttributeError):
+        args["type"]=type
+    data = EmptyClass()
+    data.args = args
+    data.method = "saveRoomType"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def setCode(self, code, roomId):
+    args = collections.OrderedDict()
+    if isinstance(code,GetShopBaseClass): 
+      args["code"]=json.dumps(code.__dict__)
+    else:
+      try:
+        args["code"]=json.dumps(code)
+      except (ValueError, AttributeError):
+        args["code"]=code
+    if isinstance(roomId,GetShopBaseClass): 
+      args["roomId"]=json.dumps(roomId.__dict__)
+    else:
+      try:
+        args["roomId"]=json.dumps(roomId)
+      except (ValueError, AttributeError):
+        args["roomId"]=roomId
+    data = EmptyClass()
+    data.args = args
+    data.method = "setCode"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
 class InvoiceManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
@@ -4469,6 +4628,7 @@ class GetShopApi(object):
     self.FooterManager = FooterManager(self.communicationHelper)
     self.GalleryManager = GalleryManager(self.communicationHelper)
     self.GetShop = GetShop(self.communicationHelper)
+    self.HotelBookingManager = HotelBookingManager(self.communicationHelper)
     self.InvoiceManager = InvoiceManager(self.communicationHelper)
     self.ListManager = ListManager(self.communicationHelper)
     self.LogoManager = LogoManager(self.communicationHelper)

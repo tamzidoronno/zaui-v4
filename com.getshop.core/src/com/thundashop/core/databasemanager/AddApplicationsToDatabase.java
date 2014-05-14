@@ -48,30 +48,16 @@ public class AddApplicationsToDatabase {
         allowed.add("large");
         allowed.add("xlarge");
 
-        ApplicationSettings wilhemsentheme = createSettings(
-                "WilhelmsenTheme",
-                "26a517ac-c519-412b-9266-59df49355c82",
-                allowed,
-                "",
-                ApplicationSettings.Type.Theme, false);
-        wilhemsentheme.isPublic = false;
-        wilhemsentheme.allowedStoreIds = new ArrayList();
-        wilhemsentheme.allowedStoreIds.add("de02a2d5-e4b3-427c-be2c-4e1ee19f05f4");
-        apps.add(wilhemsentheme);
-
-        allowed = new ArrayList();
-        allowed.add("large");
-        allowed.add("xlarge");
-        ApplicationSettings hotel = createSettings(
-                "Hotelbooking",
-                "d16b27d9-579f-4d44-b90b-4223de0eb6f2",
+        ApplicationSettings hbman = createSettings(
+                "HotelbookingManagement",
+                "15e67fa1-c862-4bc3-9b17-dfd818f30712",
                 allowed,
                 "",
                 ApplicationSettings.Type.Webshop, false);
-        hotel.isPublic = false;
-        hotel.allowedStoreIds = new ArrayList();
-        hotel.allowedStoreIds.add("de02a2d5-e4b3-427c-be2c-4e1ee19f05f4");
-        apps.add(hotel);
+        hbman.isPublic = false;
+        hbman.allowedStoreIds = new ArrayList();
+        hbman.allowedStoreIds.add("de02a2d5-e4b3-427c-be2c-4e1ee19f05f4");
+        apps.add(hbman);
 
         return apps;
     }

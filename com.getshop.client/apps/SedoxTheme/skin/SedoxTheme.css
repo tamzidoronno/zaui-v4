@@ -10,6 +10,13 @@ body {
     
 }
 
+.breadcrum-area-content {
+    display: none;
+}
+
+.TopMenu a.selected {
+    color: yellow;
+}
 .gs_outer_mainarea .gs_inner {
     border: solid 1px #EEE;
     margin-top: 20px;

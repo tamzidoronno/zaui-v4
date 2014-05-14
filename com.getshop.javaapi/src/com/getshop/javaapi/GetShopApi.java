@@ -20,6 +20,12 @@ public class GetShopApi {
            return new APIMobileManager(transport);
       }
      /**
+      * @return APIHotelBookingManager
+      */
+      public APIHotelBookingManager getHotelBookingManager() {
+           return new APIHotelBookingManager(transport);
+      }
+     /**
       * @return APICarTuningManager
       */
       public APICarTuningManager getCarTuningManager() {

@@ -49,11 +49,11 @@ public class AddApplicationsToDatabase {
         allowed.add("xlarge");
 
         ApplicationSettings sedoxProductSearcher = createSettings(
-                "SedoxProductSearcher",
-                "2ef9eeb0-da05-11e3-9c1a-0800200c9a66",
+                "SedoxTheme",
+                "4e2598a8-47d9-4400-ba72-a18b2b45bcb5",
                 allowed,
                 "",
-                ApplicationSettings.Type.Webshop, false);
+                ApplicationSettings.Type.Theme, false);
         sedoxProductSearcher.isPublic = false;
         sedoxProductSearcher.allowedStoreIds = new ArrayList();
         sedoxProductSearcher.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");

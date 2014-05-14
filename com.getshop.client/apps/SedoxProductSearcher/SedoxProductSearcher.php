@@ -25,7 +25,7 @@ class SedoxProductSearcher extends \WebshopApplication implements \Application {
 
     public function render() {
         $this->includefile("searchtemplate");
-        unset($_SESSION['searchKey']);
+//        unset($_SESSION['searchKey']);
     }
     
     public function searchProduct() {

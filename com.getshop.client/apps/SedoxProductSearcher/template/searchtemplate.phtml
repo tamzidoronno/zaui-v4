@@ -1,6 +1,8 @@
-<div>
+<div class='searcharea'>
     <input type="textfield" placeholder="Enter something to search for and press enter :D" style='width: 600px;'>
+    <div class="gs_button"><i class='fa fa-search'></i>&nbsp;Search</div>
 </div>
+
 <div class='result'>
 
     <?
@@ -9,19 +11,34 @@
         $result = $this->getSearchResult($key);
         
         
-        foreach ($result->products as $prod) {
-            echo "<br>";
-            echo "<table border='1'>";
-            echo "<tr><td>userBrand</td><td>".$prod->userBrand."</td></tr>";
-            echo "<tr><td>userModel</td><td>".$prod->userModel."</td></tr>";
-            echo "<tr><td>userYear</td><td>".$prod->userYear."</td></tr>";
-            echo "<tr><td>userPower</td><td>".$prod->userPower."</td></tr>";
-            echo "<tr><td>Files</td><td>".sizeof($prod->binaryFiles)."</td></tr>";
-            echo "</table>";
-        }
-        echo "<hr>";
+        foreach ($result->products as $prod) { 
+            $orgFile = null;
+            
+            foreach ($prod->binaryFiles as $binFile) {
+                /* @var $binFile core_sedox_SedoxBinaryFile */
+                if (trim($binFile->fileType) == "Original") {
+                    $orgFile = $binFile;
+                }
+            }
+            
+            /* @var $orgFile core_sedox_SedoxBinaryFile */
+            /* @var $prod core_sedox_SedoxProduct */
+            ?>
+            <div class='product_row'>
+                <div class='product_header'><? echo $prod->userBrand." ".$prod->userModel." ".$prod->userBuild." ".$prod->userPower." ".$prod->userYear." ".$prod->originalChecksum; ?></div>
+                <div class='extendedinfo'>
+                    <div><div class='col1'>Created</div><div class='col2'>-</div></div>
+                    <div><div class='col1'>PS - Original</div><div class='col2'>-</div></div>
+                    <div><div class='col1'>ECU Brand</div><div class='col2'></div>-</div>
+                    <div><div class='col1'>ECU Type</div><div class='col2'></div>-</div>
+                    <div><div class='col1'>ECU Partnumber</div><div class='col2'></div>-</div>
+                    <div><div class='col1'>ECU SW Number</div><div class='col2'></div>-</div>
+                    <div><div class='col1'>Orginal Checksum</div><div class='col2'></div>-</div>
+                    <div><div class='col1'>Software Size</div><div class='col2'></div>-</div>
+                </div>
+            </div>
+        <? }
         echo "<center>page 1 of ".$result->totalPages."</center>";
-        echo "<hr>";
     }
     ?>
 </div>

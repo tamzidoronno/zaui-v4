@@ -61,9 +61,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 continue;
             }
             
-            if (product.userBrand != null)
-                System.out.println(product.userBrand);
-            
             if (product.filedesc != null && product.filedesc.toLowerCase().contains(searchString)) {
                 retProducts.add(product);
             }

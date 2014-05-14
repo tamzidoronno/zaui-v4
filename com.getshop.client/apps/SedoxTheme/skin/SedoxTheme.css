@@ -1,0 +1,61 @@
+.gs_inner {
+    width: 1160px;
+    margin: auto;
+}
+
+
+body {
+    background-image: url('{IMAGEFOLDER}/background-top.png');
+    background-repeat: repeat-x;
+    
+}
+
+.gs_outer_mainarea .gs_inner {
+    border: solid 1px #EEE;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    padding: 10px;
+    width: 1140px;
+    background-color: #FDFDFD;
+}
+
+.Logo {
+    top: 0px;
+}
+
+.TopMenu {
+    border: solid 1px;
+    top: 80px;
+    left: 0px;
+    right: 0px;
+    height: 60px;
+    background: linear-gradient(to bottom, #b10302, #530201);
+    border-radius: 0px 0px 5px 5px;
+}
+
+.gs_outer.footer {
+    background-color: #eaedf2;
+    border-top: solid 2px #DDD;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.TopMenu ul li {
+    line-height: 60px;
+    font-size: 16px;
+    
+}
+
+.TopMenu ul li i {
+    padding-right: 5px;
+}
+.TopMenu ul li a {
+    color: #FFF;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.gs_margin_right {
+    padding-right: 16px;
+}

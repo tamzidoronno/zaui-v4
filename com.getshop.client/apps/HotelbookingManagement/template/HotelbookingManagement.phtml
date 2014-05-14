@@ -1,0 +1,91 @@
+<?php
+namespace ns_15e67fa1_c862_4bc3_9b17_dfd818f30712;
+
+/* @var $this HotelbookingManagement */
+$hmanager = $this->getApi()->getHotelBookingManager();
+$rooms = $hmanager->getAllRooms();
+
+$types = $hmanager->getRoomTypes();
+$selectedType = new \core_hotelbookingmanager_RoomType();
+if(isset($_POST['data']['typeId'])) {
+    foreach($types as $type) {
+        if($type->id == $_POST['data']['typeId']) {
+            $selectedType = $type;
+        }
+    }
+}
+?>
+
+<? echo $this->__w("Add a room"); ?>
+<div gstype="form" method="addRoom">
+    <input type="text" gsname="roomname" placeholder="Room name">
+    <input type="submit" gstype="submit" gsname="submit">
+</div>
+<br>
+<? 
+if(isset($_POST['data']['roomtype'])) { 
+    echo "<span class='updatedtext' style='float:right;'>Data har blitt oppdatert.</span>";
+    ?>
+    <script>
+        setTimeout(function() {
+            $('.updatedtext').hide();
+        }, "2000");
+    </script>
+    <?
+}
+?>
+Existing rooms:<br>
+<div style="padding:10px; border: solid 1px;background-color:#EFEFEF;">
+    <table width="100%">
+        <tr>
+            <td></td>
+            <td>Room type</td>
+            <td>Room name</td>
+            <td>Lock id</td>
+            <td>Current code</td>
+        </tr>
+        <?
+        foreach($rooms as $room) {
+            $this->printRoomRow($room, $types);
+        }
+        ?>
+    </table>
+</div>
+<br>
+<br>
+<br>
+<br>
+
+<? echo $this->__w("New room type"); ?>
+<div style="padding:10px; border: solid 1px;background-color:#EFEFEF;">
+    <div>
+        <select id="type">
+            <?
+                foreach($types as $type) {
+                    echo "<option value='" . $type->id . "'>" . $type->name . "</option>";
+                }
+            ?>
+        </select>
+        <span class="edit_type">Edit</span>
+        <span class="delete_type">Delete</span>
+    </div>
+    <div gstype="form" method="addType">
+        <input type="hidden" gsname="id" value="<? echo $selectedType->id; ?>">
+        <input gstype="value" type="txt" gsname='name' placeholder="Enter a name for the room type" style="width:50%;" value="<? echo $selectedType->name; ?>"><br>
+        <input gstype="value" type="txt" gsname='en_desc' placeholder="Enter the norwegian description" style="width:50%;"  value="<? echo $selectedType->description_no; ?>"><br>
+        <input gstype="value" type="txt" gsname='no_desc' placeholder="Enter the english description" style="width:50%;"  value="<? echo $selectedType->description_en; ?>"><br>
+        <input gstype="submit" type="button" value="save">
+    </div>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>

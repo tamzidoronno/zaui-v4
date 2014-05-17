@@ -3803,6 +3803,24 @@ class ReportingManager(object):
     data.interfaceName = "core.reportingmanager.IReportingManager"
     return self.communicationHelper.sendMessage(data)
 
+class SedoxProductManager(object):
+  def __init__(self, communicationHelper):
+    self.communicationHelper = communicationHelper
+  def search(self, searchString):
+    args = collections.OrderedDict()
+    if isinstance(searchString,GetShopBaseClass): 
+      args["searchString"]=json.dumps(searchString.__dict__)
+    else:
+      try:
+        args["searchString"]=json.dumps(searchString)
+      except (ValueError, AttributeError):
+        args["searchString"]=searchString
+    data = EmptyClass()
+    data.args = args
+    data.method = "search"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
 class StoreManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
@@ -4640,6 +4658,7 @@ class GetShopApi(object):
     self.PageManager = PageManager(self.communicationHelper)
     self.ProductManager = ProductManager(self.communicationHelper)
     self.ReportingManager = ReportingManager(self.communicationHelper)
+    self.SedoxProductManager = SedoxProductManager(self.communicationHelper)
     self.StoreManager = StoreManager(self.communicationHelper)
     self.UserManager = UserManager(self.communicationHelper)
     self.UtilManager = UtilManager(self.communicationHelper)

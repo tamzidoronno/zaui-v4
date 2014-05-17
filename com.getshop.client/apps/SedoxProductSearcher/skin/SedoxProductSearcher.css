@@ -1,0 +1,37 @@
+.SedoxProductSearcher .searcharea input {
+    height: 20px;
+    border: solid 1px #DDD;
+    font-size: 14px;
+    padding: 4px;
+    border-radius: 3px;
+    margin-right: 4px;
+}
+
+.SedoxProductSearcher .result .product_row  {
+    border: solid 1px #DDD;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+
+.SedoxProductSearcher .result .product_row .product_header {
+    font-size: 14px;    
+    color: blue;
+}
+
+.SedoxProductSearcher .result .product_row .extendedinfo {
+    padding-left: 20px; 
+    padding-top: 10px;
+}
+
+.SedoxProductSearcher .result .product_row .extendedinfo .col1,
+.SedoxProductSearcher .result .product_row .extendedinfo .col2 {
+    display: inline-block;
+}
+
+
+.SedoxProductSearcher .result .product_row .extendedinfo .col1 {
+    width: 130px;
+}

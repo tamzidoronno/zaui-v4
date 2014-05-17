@@ -600,7 +600,6 @@ thundashop.common.unlockMask = function() {
 }
 
 thundashop.common.confirm = function(content) {
-    debugger;
     return confirm(content);
 }
 thundashop.common.hideEmptyList = function(event) {

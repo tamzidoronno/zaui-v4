@@ -48,16 +48,28 @@ public class AddApplicationsToDatabase {
         allowed.add("large");
         allowed.add("xlarge");
 
-        ApplicationSettings hbman = createSettings(
-                "HotelbookingManagement",
-                "15e67fa1-c862-4bc3-9b17-dfd818f30712",
+        ApplicationSettings sedoxFileUploader = createSettings(
+                "SedoxFileUpload",
+                "a2172f9b-c911-4d9a-9361-89b57bc01d40",
                 allowed,
                 "",
                 ApplicationSettings.Type.Webshop, false);
-        hbman.isPublic = false;
-        hbman.allowedStoreIds = new ArrayList();
-        hbman.allowedStoreIds.add("de02a2d5-e4b3-427c-be2c-4e1ee19f05f4");
-        apps.add(hbman);
+        sedoxFileUploader.isPublic = false;
+        sedoxFileUploader.allowedStoreIds = new ArrayList();
+        sedoxFileUploader.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
+        apps.add(sedoxFileUploader);
+        
+        ApplicationSettings sedoxUserPanel = createSettings(
+                "SedoxUserPanel",
+                "32b5f680-dd8d-11e3-8b68-0800200c9a66",
+                allowed,
+                "",
+                ApplicationSettings.Type.Webshop, false);
+        sedoxUserPanel.isPublic = false;
+        sedoxUserPanel.allowedStoreIds = new ArrayList();
+        sedoxUserPanel.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
+        apps.add(sedoxUserPanel);
+
 
         return apps;
     }

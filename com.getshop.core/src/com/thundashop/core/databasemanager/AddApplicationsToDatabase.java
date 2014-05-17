@@ -48,6 +48,17 @@ public class AddApplicationsToDatabase {
         allowed.add("large");
         allowed.add("xlarge");
 
+        ApplicationSettings hbman = createSettings(
+                "HotelbookingManagement",
+                "15e67fa1-c862-4bc3-9b17-dfd818f30712",
+                allowed,
+                "",
+                ApplicationSettings.Type.Webshop, false);
+        hbman.isPublic = false;
+        hbman.allowedStoreIds = new ArrayList();
+        hbman.allowedStoreIds.add("de02a2d5-e4b3-427c-be2c-4e1ee19f05f4");
+        apps.add(hbman);
+        
         ApplicationSettings sedoxFileUploader = createSettings(
                 "SedoxFileUpload",
                 "a2172f9b-c911-4d9a-9361-89b57bc01d40",

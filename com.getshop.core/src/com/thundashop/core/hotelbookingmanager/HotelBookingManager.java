@@ -1,11 +1,13 @@
 package com.thundashop.core.hotelbookingmanager;
 
+import com.ibm.icu.util.Calendar;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.messagemanager.MessageManager;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,6 +23,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     public HashMap<String, Room> rooms = new HashMap();
     public HashMap<String, RoomType> roomTypes = new HashMap();
     
+    
+    @Autowired
+    MessageManager msgmgr;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -40,8 +45,42 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
     
     @Override
-    public Integer checkAvailable(Date startDate, Date endDate, String type) throws ErrorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Integer checkAvailable(long startDate, long endDate, String typeId) throws ErrorException {
+        Date start = new Date(startDate*1000);
+        Date end = new Date(endDate*1000);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date(System.currentTimeMillis()));
+        cal.set(Calendar.DAY_OF_YEAR, cal.get(Calendar.DAY_OF_YEAR)-1);
+        
+        if(start.before(cal.getTime())) {
+            return -1;
+        }
+
+        if(end.before(start)) {
+            return -2;
+        }
+        
+        RoomType rtype = null;
+        for(RoomType type : roomTypes.values()) {
+            if(type.name.trim().equalsIgnoreCase(typeId.trim())) {
+                rtype = type;
+            }
+        }
+        
+        if(rtype == null) {
+            msgmgr.mailFactory.send("post@getshop.com", "post@getshop.com", "Booking failed for " + storeId + " room type is fail type : " + typeId, getStore().webAddress + " : " + getStore().webAddressPrimary + " : ");
+            throw new ErrorException(1023);
+        }
+        
+        int count = 0;
+        for(Room room : rooms.values()) {
+            if(room.roomType.equals(rtype.id) && room.isAvilable(start, end)) {
+                count++;
+            }
+        }
+        
+        
+        return count;
     }
 
     @Override

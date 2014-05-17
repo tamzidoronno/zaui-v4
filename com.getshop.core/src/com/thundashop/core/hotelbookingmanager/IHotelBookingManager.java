@@ -10,13 +10,13 @@ import java.util.List;
 public interface IHotelBookingManager {
     /**
      * Check if a room is available in the given time periode.
-     * @param startDate The first day
-     * @param endDate The last day
+     * @param startDate The first day unix timestamp.
+     * @param endDate The last day unix timestamp.
      * @param type The type of room to search for-
-     * @return Number of avilable rooms.
+     * @return Number of avilable rooms. -1, the date is set before todays date, -2 end date is before the start date.
      * @throws ErrorException 
      */
-    public Integer checkAvailable(Date startDate, Date endDate, String type) throws ErrorException;
+    public Integer checkAvailable(long startDate, long endDate, String type) throws ErrorException;
     
  
     /**

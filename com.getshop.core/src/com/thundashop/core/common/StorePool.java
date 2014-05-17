@@ -78,6 +78,9 @@ public class StorePool {
                 case "boolean":
                     classLoaded = boolean.class;
                     break;
+                case "long":
+                    classLoaded = long.class;
+                    break;
                 case "double":
                     classLoaded = double.class;
                     break;

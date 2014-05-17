@@ -17,13 +17,13 @@ public class APIHotelBookingManager {
 
      /**
      * Check if a room is available in the given time periode.
-     * @param startDate The first day
-     * @param endDate The last day
+     * @param startDate The first day unix timestamp.
+     * @param endDate The last day unix timestamp.
      * @param type The type of room to search for-
      * @return Number of avilable rooms.
      * @throws ErrorException
      */
-     public java.lang.Integer checkAvailable(java.util.Date startDate, java.util.Date endDate, java.lang.String type)  throws Exception  {
+     public java.lang.Integer checkAvailable(long startDate, long endDate, java.lang.String type)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new LinkedHashMap();
           data.args.put("startDate",new Gson().toJson(startDate));

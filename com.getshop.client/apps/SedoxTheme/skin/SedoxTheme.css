@@ -67,7 +67,7 @@ body {
     padding-right: 16px;
 }   
 
-.gs_button {
+.mainarea .gs_button {
     margin-left: 342px;
     margin-top: 10px;
     background: linear-gradient(to bottom, #eaeaea, #dbd5d5);
@@ -76,6 +76,6 @@ body {
     color: #666;
 }
 
-.gs_button:hover {
+.mainarea .gs_button:hover {
     background: linear-gradient(to bottom, #EEE, #ddd);
 }

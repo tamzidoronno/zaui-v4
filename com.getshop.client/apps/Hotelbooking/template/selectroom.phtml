@@ -1,0 +1,40 @@
+<span class='heading'><? echo $this->__w("BOOK A ROOM AT WILHELMSEN HOUSE"); ?></span>
+<br>
+<table width='100%'>
+    <tr>
+        <td>
+            <? echo $this->__w("CHECK IN"); ?><br>
+            <span style='background-color:#b0bda4; display:inline-block;' class='start_cal'>
+                <input type='text' class='date_selection_room' value='<? echo date('d.m.Y'); ?>' id='start_date'><i class='fa fa-calendar'></i>
+            </span>
+        </td>
+        <td align='right'>
+            <span style='text-align:left; display:inline-block;'>
+                <? echo $this->__w("CHECK OUT"); ?><br>
+                <span style='background-color:#b0bda4; display:inline-block;' class='end_cal'>
+                    <input type='text' class='date_selection_room' value='<? echo date('d.m.Y'); ?>' id='end_date'><i class='fa fa-calendar'></i>
+                </span>
+            </span>
+        </td>
+    </tr>
+</table>
+<div class='space_betweenroom'></div>
+<? echo $this->__W("ROOM TYPE"); ?><br>
+<select class='room_selection'>
+    <?
+        $products = $this->getApi()->getProductManager()->getAllProducts();
+        foreach($products as $product) {
+            /* @var $product \core_productmanager_data_Product */
+            echo "<option value='".$product->sku."'>" . $product->price . ",- " . $product->name . "</option>";
+        }
+    ?>
+</select>
+<div class='check_available_button'><? echo $this->__w("ORDER ROOM"); ?></div>
+<div style='padding-top:20px;'>
+    <span class='error_on_check date_before_start'>
+        <? echo $this->__f("Sorry, but the start date is before todays date."); ?>
+    </span>
+    <span class='error_on_check end_before_start'>
+        <? echo $this->__f("Sorry, but the start date is before todays date."); ?>
+    </span>
+</div>

@@ -1,0 +1,78 @@
+<?
+/* @var $this \ns_d16b27d9_579f_4d44_b90b_4223de0eb6f2\Hotelbooking */
+$available = $this->getApi()->getHotelBookingManager()->checkAvailable($this->getStart(), $this->getEnd(), $this->getType());
+
+?>
+
+<div class='room_available single'>
+    <? 
+    if($available > 1) {
+        echo "We got $available rooms available between " . date("d.m.Y", $this->getStart()) . " and " . date("d.m.Y", $this->getEnd()) . ".";
+    } else {
+        echo "We got $available room available between " . date("d.m.Y", $this->getStart()) . " and " . date("d.m.Y", $this->getEnd()) . ".";
+    }
+    ?>
+    <table width="100%">
+        <tr>
+            <td width="50%">Type</td>
+            <td>
+                <select id='ordertype'>
+                    <option value="0">Privat</option>
+                    <option value="1">Bedrift</option>
+                </select>
+            </td>
+        </tr>
+        <? if($available > 1) { ?>
+            <tr>
+                <td width="50%">Antall rom</td>
+                <td><select>
+                        <?
+                        for($i = 1; $i <= $available; $i++) {
+                            echo "<option value='$i'>$i</option>";
+                        }
+                        ?>
+                    </select>
+                </td>
+            </tr>
+        <? } ?>
+        <tr class='orderfields company'>
+            <td width="50%">Kundekode</td>
+            <td><input type="text"></td>
+        </tr>
+        <tr class='orderfields company'>
+            <td width="50%">Org.nr</td>
+            <td><input type="text"></td>
+        </tr>
+        <tr class='orderfields'>
+            <td width="50%">Fornavn</td>
+            <td><input type="text"></td>
+        </tr>
+        <tr class='orderfields'>
+            <td width="50%">Etternavn</td>
+            <td><input type="text"></td>
+        </tr>
+        <tr class='orderfields'>
+            <td width="50%">Mobil tlf</td>
+            <td><input type="text"></td>
+        </tr>
+        <tr class='orderfields'>
+            <td width="50%">Epost</td>
+            <td><input type="text"></td>
+        </tr>
+        <tr class='orderfields'>
+            <td width="50%">Pris totalt</td>
+            <td>$100</td>
+        </tr>
+        <tr>
+            <td width="50%"></td>
+            <td><br><span class="continue_button">Continue</span></td>
+        </tr>
+    </table>
+    
+    </div>
+<script>
+    $(function() {
+        $('.orderfields.company').hide();
+        app.Hotelbooking.setSize();
+    });
+</script>

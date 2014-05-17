@@ -17,6 +17,32 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return "left";
     }
     
+    function checkavailability() {
+        $start = strtotime($_POST['data']['start']);
+        $end =  strtotime($_POST['data']['stop']);
+        $type = $_POST['data']['roomType'];
+        $numbers = $this->getApi()->getHotelBookingManager()->checkAvailable($start,$end,$type);
+        if($numbers) {
+            echo $numbers;
+        }
+        
+        $_SESSION['hotelbooking']['start'] = $start;
+        $_SESSION['hotelbooking']['end'] = $end;
+        $_SESSION['hotelbooking']['type'] = $type;
+    }
+    
+    public function getStart() {
+        return $_SESSION['hotelbooking']['start'];
+    }
+    
+    public function getEnd() {
+        return $_SESSION['hotelbooking']['end'];
+    }
+    
+    public function getType() {
+        return $_SESSION['hotelbooking']['type'];
+    }
+    
     public function getName() {
         return "Hotelbooking";
     }

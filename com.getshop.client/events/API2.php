@@ -1617,6 +1617,159 @@ class APIGetShop {
 	}
 
 }
+class APIHotelBookingManager {
+
+	var $transport;
+	
+	function APIHotelBookingManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	* Check if a room is available in the given time periode.
+	* @param startDate The first day unix timestamp.
+	* @param endDate The last day unix timestamp.
+	* @param type The type of room to search for-
+	* @return Integer
+	* @throws ErrorException
+	*/
+
+	public function checkAvailable($startDate, $endDate, $type) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["startDate"] = json_encode($this->transport->object_unset_nulls($startDate));
+	     $data['args']["endDate"] = json_encode($this->transport->object_unset_nulls($endDate));
+	     $data['args']["type"] = json_encode($this->transport->object_unset_nulls($type));
+	     $data["method"] = "checkAvailable";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	*
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function getAllRooms() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getAllRooms";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	*
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function getRoomTypes() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getRoomTypes";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Add new room to the manager.
+	* @param room
+	* @throws ErrorException
+	*/
+
+	public function removeRoom($id) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $data["method"] = "removeRoom";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function removeRoomType($id) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $data["method"] = "removeRoomType";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	*
+	* @param roomType
+	* @param startDate
+	* @param endDate
+	* @throws ErrorException
+	*/
+
+	public function reserveRoom($roomType, $startDate, $endDate) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["roomType"] = json_encode($this->transport->object_unset_nulls($roomType));
+	     $data['args']["startDate"] = json_encode($this->transport->object_unset_nulls($startDate));
+	     $data['args']["endDate"] = json_encode($this->transport->object_unset_nulls($endDate));
+	     $data["method"] = "reserveRoom";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Add new room to the manager.
+	* @param room
+	* @throws ErrorException
+	*/
+
+	public function saveRoom($core_hotelbookingmanager_Room) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_hotelbookingmanager_Room"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_Room));
+	     $data["method"] = "saveRoom";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function saveRoomType($core_hotelbookingmanager_RoomType) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_hotelbookingmanager_RoomType"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_RoomType));
+	     $data["method"] = "saveRoomType";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Set a new code to a given room.
+	* @param code The code to set
+	* @param roomId The id of the room to update.
+	* @throws ErrorException
+	*/
+
+	public function setCode($code, $roomId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["code"] = json_encode($this->transport->object_unset_nulls($code));
+	     $data['args']["roomId"] = json_encode($this->transport->object_unset_nulls($roomId));
+	     $data["method"] = "setCode";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+}
 class APIInvoiceManager {
 
 	var $transport;
@@ -4450,6 +4603,12 @@ class GetShopApi {
       */
       public function getGetShop() {
            return new APIGetShop($this->transport);
+      }
+      /**
+      * @return HotelBookingManager
+      */
+      public function getHotelBookingManager() {
+           return new APIHotelBookingManager($this->transport);
       }
       /**
       * @return InvoiceManager

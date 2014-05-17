@@ -120,6 +120,10 @@
 "1017","Unable to find product attribute value."
 "1018","Failed searching youtube."
 "1019","The email can not be empty, and you need atleast one user"
+"1020","Can not delete room type since rooms still exists with this type"
+"1021","Start date can not be selected before todays date"
+"1022","End date is starting before start date"
+"1023","An error occured, support has been notified of this problem."
 
 "1000001","The name attribute is invalid",
 "1000002","The entry you are trying to fecth does not exists.",

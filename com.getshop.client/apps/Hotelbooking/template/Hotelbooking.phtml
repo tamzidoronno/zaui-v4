@@ -1,39 +1,22 @@
 <?php
 namespace ns_d16b27d9_579f_4d44_b90b_4223de0eb6f2;
+ /* @var $this Hotelbooking */
+
+$pagenumber = 1;
+if(isset($_GET['pagenumber'])) {
+    $pagenumber = $_GET['pagenumber'];
+}
+
+$pages[1] = "selectroom";
+$pages[2] = "bookroom";
 
 ?>
 <div class='bookingbox'>
     <div class='background-box'></div>
     <div class='boxontop'>
-        <span class='heading'><? echo $this->__w("BOOK A ROOM AT WILHELMSEN HOUSE"); ?></span>
-
-        <br>
-        <table width='100%'>
-            <tr>
-                <td>
-                    <? echo $this->__w("CHECK IN"); ?><br>
-                    <span style='background-color:#b0bda4; display:inline-block;' class='start_cal'>
-                        <input type='text' class='date_selection_room' value='06.05.2013' id='start_date'><i class='fa fa-calendar'></i>
-                    </span>
-                </td>
-                <td align='right'>
-                    <span style='text-align:left; display:inline-block;'>
-                        <? echo $this->__w("CHECK OUT"); ?><br>
-                        <span style='background-color:#b0bda4; display:inline-block;' class='end_cal'>
-                            <input type='text' class='date_selection_room' value='06.05.2013' id='end_date'><i class='fa fa-calendar'></i>
-                        </span>
-                    </span>
-                </td>
-            </tr>
-        </table>
-
-        <br>
-        <? echo $this->__W("ROOM TYPE"); ?><br>
-        <select class='room_selection'>
-            <option value=''>DOBBELTROM M/MINIKJØKKEN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;595,-</option>
-        </select>
-        <br>
-        <div class='check_available_button'><? echo $this->__w("CHECK AVAILABILITY & ORDER"); ?></div>
+        <div class='booking_page page_<? echo $pagenumber; ?>'>
+            <? $this->includefile($pages[$pagenumber]); ?>
+        </div>
     </div>
 </div>
 <script>

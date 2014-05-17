@@ -1,0 +1,63 @@
+.SedoxUserPanel {
+    color: #666;
+}
+.SedoxUserPanel .sedox_box {
+    border-bottom: solid 1px #DDD;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.SedoxUserPanel .sedox_box .icon i {
+    width: 120px;
+    text-align: center;
+}
+.SedoxUserPanel .sedox_box .icon {
+    font-size: 120px;
+    margin-top: 20px;
+    color: #DDD;
+    border-top: solid 1px;
+    border-right: solid 1px;
+    border-left: solid 1px;
+}
+
+.SedoxUserPanel .sedox_box .icon,
+.SedoxUserPanel .sedox_box .details {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.SedoxUserPanel .sedox_box .details td {
+    color: #666;
+    font-size: 15px;
+}
+
+.SedoxUserPanel .bottom_information {
+    text-align: center;
+    padding-bottom: 20px;
+    
+}
+
+.SedoxUserPanel .sedox_box table {
+    margin-top: 5px;
+}
+.SedoxUserPanel .sedox_box th {
+   text-align: left;
+   font-size: 14px;
+   font-weight: normal;
+   color: #333;
+}
+
+.SedoxUserPanel .sedox_box th.col1 { width: 80px; }
+.SedoxUserPanel .sedox_box th.col2 { width: 550px; }
+
+.SedoxUserPanel .sedox_box .details {
+    padding-top: 30px;
+    padding-left: 20px;
+    font-size: 16px;
+}
+
+.SedoxUserPanel .sedox_box .gs_button {
+    position: absolute;
+    right: 0px;
+    bottom: 5px;
+}

@@ -48,16 +48,27 @@ public class AddApplicationsToDatabase {
         allowed.add("large");
         allowed.add("xlarge");
 
-        ApplicationSettings sedoxProductSearcher = createSettings(
-                "SedoxTheme",
-                "4e2598a8-47d9-4400-ba72-a18b2b45bcb5",
+        ApplicationSettings sedoxFileUploader = createSettings(
+                "SedoxFileUpload",
+                "a2172f9b-c911-4d9a-9361-89b57bc01d40",
                 allowed,
                 "",
-                ApplicationSettings.Type.Theme, false);
-        sedoxProductSearcher.isPublic = false;
-        sedoxProductSearcher.allowedStoreIds = new ArrayList();
-        sedoxProductSearcher.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
-        apps.add(sedoxProductSearcher);
+                ApplicationSettings.Type.Webshop, false);
+        sedoxFileUploader.isPublic = false;
+        sedoxFileUploader.allowedStoreIds = new ArrayList();
+        sedoxFileUploader.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
+        apps.add(sedoxFileUploader);
+        
+        ApplicationSettings sedoxUserPanel = createSettings(
+                "SedoxUserPanel",
+                "32b5f680-dd8d-11e3-8b68-0800200c9a66",
+                allowed,
+                "",
+                ApplicationSettings.Type.Webshop, false);
+        sedoxUserPanel.isPublic = false;
+        sedoxUserPanel.allowedStoreIds = new ArrayList();
+        sedoxUserPanel.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
+        apps.add(sedoxUserPanel);
 
 
         return apps;

@@ -20,15 +20,20 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     function checkavailability() {
         $start = strtotime($_POST['data']['start']);
         $end =  strtotime($_POST['data']['stop']);
-        $type = $_POST['data']['roomType'];
-        $numbers = $this->getApi()->getHotelBookingManager()->checkAvailable($start,$end,$type);
+        $product = $this->getApi()->getProductManager()->getProduct($_POST['data']['roomProduct']);
+        
+        $numbers = $this->getApi()->getHotelBookingManager()->checkAvailable($start,$end,$product->sku);
         if($numbers) {
             echo $numbers;
         }
         
         $_SESSION['hotelbooking']['start'] = $start;
         $_SESSION['hotelbooking']['end'] = $end;
-        $_SESSION['hotelbooking']['type'] = $type;
+        $_SESSION['hotelbooking']['product'] = $product->id;
+    }
+    
+    public function getProduct() {
+        return $this->getApi()->getProductManager()->getProduct($_SESSION['hotelbooking']['product']);
     }
     
     public function getStart() {

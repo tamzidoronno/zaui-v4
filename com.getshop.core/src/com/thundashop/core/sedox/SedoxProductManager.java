@@ -4,18 +4,23 @@
  */
 package com.thundashop.core.sedox;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
-import java.io.InputStream;
+import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.usermanager.IUserManager;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.logging.Level;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -28,22 +33,15 @@ import org.springframework.stereotype.Component;
 @Scope("prototype")
 public class SedoxProductManager extends ManagerBase implements ISedoxProductManager {
 
-    private List<SedoxProduct> products = new ArrayList<>();
+    @Autowired
+    private SedoxSearchEngine sedoxSearchEngine;
+    
+    private List<SedoxProduct> products = new ArrayList();
+    private Map<String, SedoxUser> users = new HashMap();
 
     @Autowired
     public SedoxProductManager(Logger log, DatabaseSaver databaseSaver) {
         super(log, databaseSaver);
-//        try {
-                    Gson gson = new Gson();
-                    InputStream in = SedoxProductManager.class.getResourceAsStream("sedoxProducts.json");
-                    String theString = convertStreamToString(in);
-            gson.fromJson(theString,  new TypeToken<List<SedoxProduct>>(){}.getType());
-                    products = gson.fromJson(theString,  new TypeToken<List<SedoxProduct>>(){}.getType());
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(SedoxProductManager.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (SQLException ex) {
-//            java.util.logging.Logger.getLogger(SedoxProductManager.class.getName()).log(Level.SEVERE, null, ex);
-//        }
     }
 
     static String convertStreamToString(java.io.InputStream is) {
@@ -52,45 +50,172 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     @Override
+    public void dataFromDatabase(DataRetreived data) {
+        for (DataCommon dataCommon : data.data) {
+            if (dataCommon instanceof SedoxProduct) {
+                products.add((SedoxProduct)dataCommon);
+            }
+            if (dataCommon instanceof SedoxUser) {
+                SedoxUser user = (SedoxUser)dataCommon;
+                users.put(user.id, user);
+            }
+        }
+    }
+    
+    @Override
     public SedoxProductSearchPage search(String searchString) {
-        searchString = searchString.toLowerCase();
-        Set<SedoxProduct> retProducts = new TreeSet<>();
+        return sedoxSearchEngine.getSearchResult(products, searchString);
+    }
+
+    @Override
+    public void sync() throws ErrorException {
+        if (!getStore().id.equals("608afafe-fd72-4924-aca7-9a8552bc6c81")) {
+            throw new ErrorException(26);
+        }
         
+        deleteAllProducts();
+        deleteAllUsers();
+        
+        try {
+            SedoxMysqlImporter productImporter = new SedoxMysqlImporter();
+            for (SedoxProduct product : productImporter.getProducts()) {
+                product.storeId = this.storeId;
+                databaseSaver.saveObject(product, credentials);
+                products.add(product);
+            }
+            
+            List<SedoxUser> accounts = productImporter.getCreditAccounts();
+            for (SedoxUser user : accounts) {
+                saveUser(user);
+            }
+        } catch (ErrorException | SQLException | ClassNotFoundException ex ) {
+            ex.printStackTrace();
+        }
+        
+        System.out.println("Sync done");
+    }
+    
+    private void deleteAllProducts() throws ErrorException {
         for (SedoxProduct product : products) {
-            if (!product.saleAble ) {
+            database.delete(product, credentials);
+        }
+    }
+
+    private void deleteAllUsers() throws ErrorException {
+        for (SedoxUser user : users.values()) {
+            database.delete(user, credentials);
+        }
+        
+        IUserManager userManager = getManager(UserManager.class);
+        List<User> users = userManager.getAllUsers();
+        for (User user : users) {
+            if (user.type >= 50) {
                 continue;
             }
             
-            if (product.filedesc != null && product.filedesc.toLowerCase().contains(searchString)) {
+            userManager.deleteUser(user.id);
+        }
+    }
+
+    @Override
+    public SedoxUser getSedoxUserAccount() throws ErrorException {
+        String id = getSession().currentUser.id;
+        SedoxUser user = users.get(id);
+        if (user == null) {
+            user = new SedoxUser();
+            user.magentoId = id;
+            saveUser(user);
+        }
+        return user;
+    }
+
+    private void saveUser(SedoxUser user) throws ErrorException {
+        String tmpPassword = "abcd1234-56789ss!";
+        
+        IUserManager userManager = getManager(UserManager.class);
+        User getshopUser = userManager.getUserById(user.magentoId);
+        if (getshopUser == null) {
+            getshopUser = new User();
+            getshopUser.id = user.magentoId;
+            getshopUser.username = user.magentoId;
+            getshopUser.type = 10;
+            getshopUser.password = tmpPassword;
+            getshopUser.storeId = storeId;
+            getshopUser = userManager.createUser(getshopUser);
+        }
+        
+        user.id = getshopUser.id;
+        user.storeId = storeId;
+        databaseSaver.saveObject(user, credentials);
+        users.put(user.id, user);
+    }
+
+    @Override
+    public List<SedoxProduct> getProductsFirstUploadedByCurrentUser() throws ErrorException {
+        List<SedoxProduct> retProducts = new ArrayList();
+        
+        String userId = getSession().currentUser.id;
+        for (SedoxProduct product : products) {
+            if (product.firstUploadedByUserId != null && product.firstUploadedByUserId.equals(userId)) {
                 retProducts.add(product);
-            }
-            
-            if (product.userBrand != null && product.userBrand.toLowerCase().contains(searchString)) {
-                retProducts.add(product);
-            }
-            
-            if (product.userModel != null && product.userModel.toLowerCase().contains(searchString)) {
-                retProducts.add(product);
-            }
-            
-            for (SedoxBinaryFile file : product.binaryFiles) {
-                for (SedoxProductAttribute attr : file.attribues) {
-                    if (attr.value != null && attr.value.toLowerCase().contains(searchString)) {
-                        retProducts.add(product);
-                    }
-                }
             }
         }
         
-        SedoxProductSearchPage page = new SedoxProductSearchPage();
-        page.pageNumber = 1;
-        page.products = new ArrayList<>(retProducts);
-        page.totalPages = (int) Math.ceil((double)page.products.size()/(double)10);
+        return retProducts;
+    }
+
+    @Override
+    public List<SedoxUser> getAllUsersWithNegativeCreditLimit() throws ErrorException {
+        List<SedoxUser> retUsers = new ArrayList();
         
-        if (page.products.size() > 10) {
-            page.products = page.products.subList(0, 10);
-        } 
+        for (SedoxUser user : users.values()) {
+            if (user.creditAccount.balance < 0) {
+                retUsers.add(user);
+            }
+        }
         
-        return page;
+        return retUsers;
+    }
+
+    @Override
+    public List<SedoxUser> getFileDevelopers() throws ErrorException {
+        // TODO Return administrators.
+        
+        List<SedoxUser> developers = new ArrayList();
+        return developers;
+    }
+
+    @Override
+    public List<SedoxProduct> getProductsByDaysBack(int daysBack) throws ErrorException {
+        List<SedoxProduct> retProducts = new ArrayList<>();
+        
+        Calendar nowCalendar = Calendar.getInstance();
+        nowCalendar.setTime(new Date());
+        int nowDayOfYear = nowCalendar.get(Calendar.DAY_OF_YEAR) - daysBack; 
+        int nowYear = nowCalendar.get(Calendar.YEAR); 
+        
+        for (SedoxProduct product : products) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(product.rowCreatedDate);
+            int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR); 
+            if (dayOfYear == nowDayOfYear && nowYear == calendar.get(Calendar.YEAR)) {
+                retProducts.add(product);
+            }   
+        }
+        
+        Collections.sort(retProducts, new SortByDateSedoxProductComperable());
+        
+        return retProducts;
+    }
+
+    @Override
+    public SedoxProduct getProductById(String id) throws ErrorException {
+        for (SedoxProduct product : products) {
+            if (product.id.equals(id)) {
+                return product;
+            }
+        }
+        
+        return null;
     }
 }

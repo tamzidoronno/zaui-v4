@@ -4,7 +4,6 @@ app.SedoxFileUpload = {
     },
             
     saveCarDetails: function() {
-
         data = {
             brand : $(".SedoxFileUpload #brand").val(),
             model : $(".SedoxFileUpload #model").val(),

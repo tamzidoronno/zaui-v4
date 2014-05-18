@@ -1,10 +1,9 @@
 <div class='searcharea'>
     <input type="textfield" placeholder="Enter something to search for and press enter :D" style='width: 600px;'>
-    <div class="gs_button"><i class='fa fa-search'></i>&nbsp;Search</div>
+    <div class="sedox_button"><i class='fa fa-search'></i>&nbsp;Search</div>
 </div>
 
 <div class='result'>
-
     <?
     if (isset($_SESSION['searchKey'])) {
         $key = $_SESSION['searchKey'];
@@ -24,8 +23,8 @@
             /* @var $orgFile core_sedox_SedoxBinaryFile */
             /* @var $prod core_sedox_SedoxProduct */
             ?>
-            <div class='product_row'>
-                <div class='product_header'><? echo $prod->userBrand." ".$prod->userModel." ".$prod->userBuild." ".$prod->userPower." ".$prod->userYear." ".$prod->originalChecksum; ?></div>
+            <a href='?page=productview&productId=<? echo $prod->id; ?>'><div class='product_row'>
+                <div class='product_header'><? echo $prod->brand." ".$prod->model." ".$prod->build." ".$prod->power." ".$prod->year." ".$prod->originalChecksum; ?></div>
                 <div class='extendedinfo'>
                     <div><div class='col1'>Created</div><div class='col2'>-</div></div>
                     <div><div class='col1'>PS - Original</div><div class='col2'>-</div></div>
@@ -36,10 +35,9 @@
                     <div><div class='col1'>Orginal Checksum</div><div class='col2'></div>-</div>
                     <div><div class='col1'>Software Size</div><div class='col2'></div>-</div>
                 </div>
-            </div>
+            </div></a>
         <? }
         echo "<center>page 1 of ".$result->totalPages."</center>";
     }
     ?>
 </div>
-    

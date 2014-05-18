@@ -1,56 +1,78 @@
+<?
+/* @var $this ns_32b5f680_dd8d_11e3_8b68_0800200c9a66\SedoxUserPanel */
+?>
+
 <div class='sedox_box'>
-    <div class='icon'>&nbsp;<i class='fa fa-user'></i>&nbsp;</div>
-    <div class='details'>
-        <b>Kai Tønder</b>
+    <div class='icon'>&nbsp;<i class='fa fa-user'></i>&nbsp;
+    </div><div class='details'>
+        <b>General statistic</b>
         <table>
-            <tr><td>Email</td><td>kai@sedox.com</td></tr>
+            <tr><td style='width: 200px;'>Name</td><td>-</td></tr>
             <tr><td colspan="2"></td></tr>
-            <tr><td style='width: 200px;'>Remaining credit</td><td>2311</td></tr>
-            <tr><td>Files uploaded</td><td>211</td></tr>
+            <tr><td>Remaining credit</td><td><? echo $this->getCreditAccountBalance(); ?></td></tr>
+            <tr><td>Files uploaded</td><td><? echo $this->getFileCount(); ?></td></tr>
             <tr><td>Slaves</td><td>0</td></tr>
         </table>
     </div>
 </div>
 
 <div class='sedox_box filehistory'>
-    <div class='icon'>&nbsp;<i class='fa fa-file'></i>&nbsp;</div>
-    <div class='details'>
+    <div class='icon'>&nbsp;<i class='fa fa-file'></i>&nbsp;
+    </div><div class='details'>
         <b>Your files</b>
+        
         <table>
-            <tr><th class='col1'>Sedox Id</th><th class='col2'>File</th><th class='col3'>Uploaded</th></tr>
-            <tr><td>10001</td><td>Audi A6 2.0 TDI 2005 200hp</td><td>2014-05-16 19:48:18</td></tr>
-            <tr><td>10002</td><td>Audi A6 2.0 TDI 2005 200hp</td><td>2014-05-16 19:48:18</td></tr>
-            <tr><td>10003</td><td>Audi A6 2.0 TDI 2005 200hp</td><td>2014-05-16 19:48:18</td></tr>
-            <tr><td>10004</td><td>Audi A6 2.0 TDI 2005 200hp</td><td>2014-05-16 19:48:18</td></tr>
+            <?
+                $lastestUploadedProducts = $this->getLatestUploadedProducts();
+                if ($lastestUploadedProducts  != null) {
+                    echo "<tr><th class='col1'>Sedox Id</th><th class='col2'>File</th><th class='col3'>Uploaded</th></tr>";
+                    foreach ($lastestUploadedProducts as $product) {
+                        $name = $product->brand." ".$product->model." ".$product->build." ".$product->power." ".$product->year;
+                        $id = $product->id;
+                        $date = $product->rowCreatedDate;
+                        
+                        // TODO - Use divs?
+                        echo "<tr><td>$id</td><td>$name</td><td>$date</td></tr>";
+                    }
+                } else {
+                    echo "<td colspan='3'>You have not uploaded any files yet.</td>";
+                }
+            ?>
         </table>
     </div>
-    <div class='gs_button'>More <i class="fa fa-arrow-right"></i></div>
+    <div class='sedox_button'>More <i class="fa fa-arrow-right"></i></div>
 </div>
 
 <div class='sedox_box credithistory'>
-    <div class='icon'>&nbsp;<i class='fa fa-university'></i>&nbsp;</div>
-    <div class='details'>
+    <div class='icon'>&nbsp;<i class='fa fa-university'></i>&nbsp;
+    </div><div class='details'>
         <b>Credit account</b>
         <table>
-            <tr><th class='col1'>Sedox Id</th><th class='col2'>File</th><th class='col3'>Uploaded</th></tr>
-            <tr><td>10001</td><td>Bought product: VW Golf 5 GTI 2.0T 147kW 2005 CmdEncrypted</td><td>2014-05-16 19:48:18</td></tr>
-            <tr><td>10002</td><td>VW Passat 1.6TDI 2012 Siemens 105.0 A6EC CmdEncrypted/Original/Tune</td><td>2014-05-16 19:48:18</td></tr>
-            <tr><td>10003</td><td>VW Passat 1.6TDI 2012 Siemens 105.0 A6EC</td><td>2014-05-16 19:48:18</td></tr>
-            <tr><td>10004</td><td>Bought product: Buick Regal 1.6T 179.0 2010 CmdEncrypted/Original/Tune</td><td>2014-05-16 19:48:18</td></tr>
+            <?
+            $latestCreditHistory = $this->getLatestCreditHistory();
+            if ($latestCreditHistory != null) {
+                echo "<tr><th class='col1'>Sedox Id</th><th class='col2'>Description</th><th class='col3'>Date</th></tr>";
+                foreach ($latestCreditHistory as $hist) { ?>
+                    <tr><td><? echo $hist->transactionReference; ?></td><td><? echo $hist->description; ?></td><td><? echo $hist->dateCreated; ?></td></tr>
+                <?}
+            } else {
+                echo "<tr><td colspan='4'>You have not made any credit transactions yet.</td></tr>";
+            }
+            ?>
         </table>
     </div>
-    <div class='gs_button'>More <i class="fa fa-arrow-right"></i></div>
+    <div class='sedox_button'>More <i class="fa fa-arrow-right"></i></div>
 </div>
 
 <div class='sedox_box'>
-    <div class='icon'>&nbsp;<i class='fa fa-users'></i>&nbsp;</div>
-    <div class='details'>
+    <div class='icon'>&nbsp;<i class='fa fa-users'></i>&nbsp;
+    </div><div class='details'>
         <b>Your partners</b>
         <table>
             <tr><td>Sorry, but there is no partners setup for you. Do you have partners that needs to be connected? let us know.</td></tr>
         </table>
     </div>
-    <div class='gs_button'>More <i class="fa fa-arrow-right"></i></div>
+    <div class='sedox_button'>More <i class="fa fa-arrow-right"></i></div>
 </div>
 <div class='bottom_information'>
     Dont see all of the information that you wish to see here? Let us know if you find anything missing.

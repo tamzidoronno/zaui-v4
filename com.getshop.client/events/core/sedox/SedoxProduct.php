@@ -1,31 +1,31 @@
 <?php
-class core_sedox_SedoxProduct {
-	/** @var String */
-	public $id;
-
+class core_sedox_SedoxProduct extends core_common_DataCommon  {
 	/** @var String */
 	public $binaryFiles;
+
+	/** @var String */
+	public $histories;
 
 	/** @var String */
 	public $filedesc;
 
 	/** @var String */
-	public $userBrand;
+	public $brand;
 
 	/** @var String */
-	public $userModel;
+	public $model;
 
 	/** @var String */
-	public $userCharacteristic;
+	public $engineSize;
 
 	/** @var String */
-	public $userYear;
+	public $year;
 
 	/** @var String */
-	public $userPower;
+	public $power;
 
 	/** @var String */
-	public $userTool;
+	public $tool;
 
 	/** @var String */
 	public $status;
@@ -34,7 +34,7 @@ class core_sedox_SedoxProduct {
 	public $saleAble;
 
 	/** @var String */
-	public $userId;
+	public $firstUploadedByUserId;
 
 	/** @var String */
 	public $originalChecksum;
@@ -49,10 +49,10 @@ class core_sedox_SedoxProduct {
 	public $comment;
 
 	/** @var String */
-	public $userSeries;
+	public $series;
 
 	/** @var String */
-	public $userBuild;
+	public $build;
 
 	/** @var String */
 	public $started;

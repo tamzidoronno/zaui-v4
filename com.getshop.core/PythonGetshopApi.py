@@ -3806,6 +3806,68 @@ class ReportingManager(object):
 class SedoxProductManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
+  def getAllUsersWithNegativeCreditLimit(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getAllUsersWithNegativeCreditLimit"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getFileDevelopers(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getFileDevelopers"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getProductById(self, id):
+    args = collections.OrderedDict()
+    if isinstance(id,GetShopBaseClass): 
+      args["id"]=json.dumps(id.__dict__)
+    else:
+      try:
+        args["id"]=json.dumps(id)
+      except (ValueError, AttributeError):
+        args["id"]=id
+    data = EmptyClass()
+    data.args = args
+    data.method = "getProductById"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getProductsByDaysBack(self, day):
+    args = collections.OrderedDict()
+    if isinstance(day,GetShopBaseClass): 
+      args["day"]=json.dumps(day.__dict__)
+    else:
+      try:
+        args["day"]=json.dumps(day)
+      except (ValueError, AttributeError):
+        args["day"]=day
+    data = EmptyClass()
+    data.args = args
+    data.method = "getProductsByDaysBack"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getProductsFirstUploadedByCurrentUser(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getProductsFirstUploadedByCurrentUser"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getSedoxUserAccount(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getSedoxUserAccount"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
   def search(self, searchString):
     args = collections.OrderedDict()
     if isinstance(searchString,GetShopBaseClass): 
@@ -3818,6 +3880,14 @@ class SedoxProductManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "search"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def sync(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "sync"
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 

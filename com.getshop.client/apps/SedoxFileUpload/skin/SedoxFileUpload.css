@@ -32,6 +32,10 @@
     text-shadow: 1px 1px #3bac65;
 }
 
+.SedoxFileUpload .sedox_button {
+    margin-left: 350px;
+    margin-top: 10px;
+}
 .SedoxFileUpload .step .line.multi {
     border-bottom: solid 1px #DDD;
     width: 420px;

@@ -136,6 +136,13 @@
 	}
 	
 	/**
+	 * @return \core_common_Customer
+	 */
+	public static function core_common_Customer() {
+		return new \core_common_Customer();
+	}
+	
+	/**
 	 * @return \core_common_Internal
 	 */
 	public static function core_common_Internal() {
@@ -234,6 +241,20 @@
 	}
 	
 	/**
+	 * @return \core_yourcontestmanager_data_Contests
+	 */
+	public static function core_yourcontestmanager_data_Contests() {
+		return new \core_yourcontestmanager_data_Contests();
+	}
+	
+	/**
+	 * @return \core_yourcontestmanager_data_ContestPreferences
+	 */
+	public static function core_yourcontestmanager_data_ContestPreferences() {
+		return new \core_yourcontestmanager_data_ContestPreferences();
+	}
+	
+	/**
 	 * @return \core_calendarmanager_data_Month
 	 */
 	public static function core_calendarmanager_data_Month() {
@@ -262,10 +283,31 @@
 	}
 	
 	/**
+	 * @return \core_calendarmanager_data_EventPartitipated
+	 */
+	public static function core_calendarmanager_data_EventPartitipated() {
+		return new \core_calendarmanager_data_EventPartitipated();
+	}
+	
+	/**
+	 * @return \core_calendarmanager_data_FilterResult
+	 */
+	public static function core_calendarmanager_data_FilterResult() {
+		return new \core_calendarmanager_data_FilterResult();
+	}
+	
+	/**
 	 * @return \core_calendarmanager_data_ReminderHistory
 	 */
 	public static function core_calendarmanager_data_ReminderHistory() {
 		return new \core_calendarmanager_data_ReminderHistory();
+	}
+	
+	/**
+	 * @return \core_calendarmanager_data_Signature
+	 */
+	public static function core_calendarmanager_data_Signature() {
+		return new \core_calendarmanager_data_Signature();
 	}
 	
 	/**
@@ -322,6 +364,13 @@
 	 */
 	public static function core_loggermanager_data_LoggerData() {
 		return new \core_loggermanager_data_LoggerData();
+	}
+	
+	/**
+	 * @return \core_messagemanager_NewsLetterGroup
+	 */
+	public static function core_messagemanager_NewsLetterGroup() {
+		return new \core_messagemanager_NewsLetterGroup();
 	}
 	
 	/**
@@ -423,6 +472,69 @@
 	}
 	
 	/**
+	 * @return \core_sedox_SedoxProductAttribute
+	 */
+	public static function core_sedox_SedoxProductAttribute() {
+		return new \core_sedox_SedoxProductAttribute();
+	}
+	
+	/**
+	 * @return \core_sedox_SedoxCreditAccount
+	 */
+	public static function core_sedox_SedoxCreditAccount() {
+		return new \core_sedox_SedoxCreditAccount();
+	}
+	
+	/**
+	 * @return \core_sedox_SedoxProductSearchPage
+	 */
+	public static function core_sedox_SedoxProductSearchPage() {
+		return new \core_sedox_SedoxProductSearchPage();
+	}
+	
+	/**
+	 * @return \core_sedox_SedoxBinaryFile
+	 */
+	public static function core_sedox_SedoxBinaryFile() {
+		return new \core_sedox_SedoxBinaryFile();
+	}
+	
+	/**
+	 * @return \core_sedox_SedoxCreditHistory
+	 */
+	public static function core_sedox_SedoxCreditHistory() {
+		return new \core_sedox_SedoxCreditHistory();
+	}
+	
+	/**
+	 * @return \core_sedox_SedoxUser
+	 */
+	public static function core_sedox_SedoxUser() {
+		return new \core_sedox_SedoxUser();
+	}
+	
+	/**
+	 * @return \core_sedox_SedoxProductHistory
+	 */
+	public static function core_sedox_SedoxProductHistory() {
+		return new \core_sedox_SedoxProductHistory();
+	}
+	
+	/**
+	 * @return \core_sedox_SedoxProduct
+	 */
+	public static function core_sedox_SedoxProduct() {
+		return new \core_sedox_SedoxProduct();
+	}
+	
+	/**
+	 * @return \core_sedox_SedoxOrder
+	 */
+	public static function core_sedox_SedoxOrder() {
+		return new \core_sedox_SedoxOrder();
+	}
+	
+	/**
 	 * @return \core_chatmanager_ChatMessage
 	 */
 	public static function core_chatmanager_ChatMessage() {
@@ -441,6 +553,20 @@
 	 */
 	public static function core_chatmanager_SubscribedToAirgram() {
 		return new \core_chatmanager_SubscribedToAirgram();
+	}
+	
+	/**
+	 * @return \core_cartuning_CarTuningCollection
+	 */
+	public static function core_cartuning_CarTuningCollection() {
+		return new \core_cartuning_CarTuningCollection();
+	}
+	
+	/**
+	 * @return \core_cartuning_CarTuningData
+	 */
+	public static function core_cartuning_CarTuningData() {
+		return new \core_cartuning_CarTuningData();
 	}
 	
 	/**
@@ -483,6 +609,27 @@
 	 */
 	public static function core_youtubemanager_data_SearchResult() {
 		return new \core_youtubemanager_data_SearchResult();
+	}
+	
+	/**
+	 * @return \core_hotelbookingmanager_RoomType
+	 */
+	public static function core_hotelbookingmanager_RoomType() {
+		return new \core_hotelbookingmanager_RoomType();
+	}
+	
+	/**
+	 * @return \core_hotelbookingmanager_BookedDate
+	 */
+	public static function core_hotelbookingmanager_BookedDate() {
+		return new \core_hotelbookingmanager_BookedDate();
+	}
+	
+	/**
+	 * @return \core_hotelbookingmanager_Room
+	 */
+	public static function core_hotelbookingmanager_Room() {
+		return new \core_hotelbookingmanager_Room();
 	}
 	
 	/**
@@ -553,6 +700,13 @@
 	 */
 	public static function core_productmanager_data_AttributeValue() {
 		return new \core_productmanager_data_AttributeValue();
+	}
+	
+	/**
+	 * @return \core_utilmanager_data_FileObject
+	 */
+	public static function core_utilmanager_data_FileObject() {
+		return new \core_utilmanager_data_FileObject();
 	}
 	
 	/**

@@ -3681,14 +3681,116 @@ class APISedoxProductManager {
 	* @author ktonder
 	*/
 
+	public function getAllUsersWithNegativeCreditLimit() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getAllUsersWithNegativeCreditLimit";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function getFileDevelopers() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getFileDevelopers";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Return the products created by days back.
+	* day = 0 // Means that it will returns the list of todays files
+	* day = 1 // Means that it will returns the list of yesterdays files
+	*
+	* @param day
+	* @return core_sedox_SedoxProduct
+	* @throws ErrorException
+	*/
+
+	public function getProductById($id) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $data["method"] = "getProductById";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->cast(new core_sedox_SedoxProduct(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Return the products created by days back.
+	* day = 0 // Means that it will returns the list of todays files
+	* day = 1 // Means that it will returns the list of yesterdays files
+	*
+	* @param day
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function getProductsByDaysBack($day) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["day"] = json_encode($this->transport->object_unset_nulls($day));
+	     $data["method"] = "getProductsByDaysBack";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function getProductsFirstUploadedByCurrentUser() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getProductsFirstUploadedByCurrentUser";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function getSedoxUserAccount() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getSedoxUserAccount";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->cast(new core_sedox_SedoxUser(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
 	public function search($searchString) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["searchString"] = json_encode($this->transport->object_unset_nulls($searchString));
 	     $data["method"] = "search";
 	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
-         $result = $this->transport->sendMessage($data);
-	     return $result;
+	     return $this->transport->cast(new core_sedox_SedoxProductSearchPage(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function sync() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "sync";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
 	}
 
 }

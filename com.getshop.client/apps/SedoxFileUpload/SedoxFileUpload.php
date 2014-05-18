@@ -21,7 +21,7 @@ class SedoxFileUpload extends \ApplicationBase implements \Application {
     }
 
     public function getName() {
-        return $this->__f("SedoxFileUploader");
+        return $this->__f("Sedox FileUploader");
     }
 
     private function saveFileToSession() {

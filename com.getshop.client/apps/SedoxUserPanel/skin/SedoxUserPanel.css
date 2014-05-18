@@ -2,7 +2,6 @@
     color: #666;
 }
 .SedoxUserPanel .sedox_box {
-    border-bottom: solid 1px #DDD;
     position: relative;
     margin-bottom: 20px;
 }
@@ -14,9 +13,10 @@
 .SedoxUserPanel .sedox_box .icon {
     font-size: 120px;
     margin-top: 20px;
+    text-shadow: 1px 1px #BBB;
     color: #DDD;
     border-top: solid 1px;
-    border-right: solid 1px;
+    border-bottom: solid 1px;
     border-left: solid 1px;
 }
 
@@ -54,9 +54,15 @@
     padding-top: 30px;
     padding-left: 20px;
     font-size: 16px;
+    width: 920px;
+    border-bottom: solid 1px #DDD;
+    border-left: solid 1px #DDD;
+    margin-top: 20px;
+    min-height: 130px;
+    
 }
 
-.SedoxUserPanel .sedox_box .gs_button {
+.SedoxUserPanel .sedox_box .sedox_button {
     position: absolute;
     right: 0px;
     bottom: 5px;

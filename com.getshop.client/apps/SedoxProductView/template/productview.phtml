@@ -1,0 +1,43 @@
+<?
+$sedoxProduct = $this->getCurrentProduct();
+$name = $sedoxProduct->brand . " " . $sedoxProduct->series . " " . $sedoxProduct->model . " " . $sedoxProduct->build . " " . $sedoxProduct->power . " " . $sedoxProduct->year . " " . $sedoxProduct->originalChecksum;
+?>
+
+<div class='title'><i class='fa fa-car'></i>&nbsp; <? echo $name; ?></div>
+<div>
+    <div class='productrow'><div class='col col1'>Created</div><div class='col col2'><? echo $sedoxProduct->rowCreatedDate; ?></div></div>
+    <div class='productrow'><div class='col col1'>PS - Original</div><div class='col col2'><? echo $sedoxProduct->power; ?></div></div>
+    <div class='productrow'><div class='col col1'>ECU Brand</div><div class='col col2'></div></div>
+    <div class='productrow'><div class='col col1'>ECU Type</div><div class='col col2'></div></div>
+    <div class='productrow'><div class='col col1'>Orginal Checksum</div><div class='col col2'><? echo $sedoxProduct->originalChecksum; ?></div></div>
+    <div class='productrow'><div class='col col1'>Software Size</div><div class='col col2'></div></div>
+</div>
+<br>
+<div class='title'><i class='fa fa-download'></i>&nbsp; Purchase and download file.</div>
+<div class='binaryfileholder'>
+    <div class='binaryfilerow header'>
+        <div class='col col1'></div>
+        <div class='col col2'>Type</div>
+        <div class='col col3'>Cost</div>
+        <div class='col col4'>Checksum updated</div>
+        <div class='col col5'>Extra info</div>
+    </div>
+    <?
+    foreach ($sedoxProduct->binaryFiles as $binFile) {
+        ?>
+        <div class='binaryfilerow'>
+            <div class="col col1 squaredThree">
+                <input type="checkbox" value="None" id="squaredThree_<? echo $binFile->id; ?>" name="check" />
+                <label for="squaredThree_<? echo $binFile->id; ?>"></label>
+            </div>
+            <div class='col col2'><? echo $binFile->fileType; ?></div>
+            <div class='col col3'><? echo $this->getPriceForFile($binFile); ?></div>
+            <div class='col col4'><? echo $binFile->checksumCorrected == null ? 'N/A' : "Yes"; ?></div>
+            <div class='col col5'>-</div>
+        </div>
+        <?
+    }
+    ?> 
+    <div class='sedox_warning'>Note! When you click on the button below you will download the file and it will be purchased. </div>
+    <div class='sedox_button'>Purchase and download</div>
+</div>

@@ -1,0 +1,66 @@
+.SedoxAdmin .sedox_admin_topmenu {
+    border-bottom: solid 1px #DDD;
+}
+
+.SedoxAdmin .sedox_admin_topmenu .entry {
+    line-height: 25px;
+    display: inline-block;
+    padding-right: 10px;
+    padding-left: 10px;
+    border-right: solid 1px #DDD;
+    font-size: 16px;
+    color: #666;
+    background: linear-gradient(to bottom, #EEE, #DDD);
+    cursor: pointer;
+}
+
+.SedoxAdmin .sedox_admin_topmenu .entry:hover {
+    background: linear-gradient(to bottom, #DDD, #CCC);
+}
+
+.SedoxAdmin .sedox_admin_subarea {
+    margin-top: 10px;
+    border: solid 1px #DDD;
+    padding: 20px;
+}
+
+.SedoxAdmin .title {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.SedoxAdmin .invoicelist .col {
+    display: inline-block;
+    padding: 5px;
+}
+
+.SedoxAdmin .invoicelist .col1 { width: 100px;}
+.SedoxAdmin .invoicelist .col2 { width: 600px;}
+
+.SedoxAdmin .invoicelist .balancerow.norwegian  {
+    background-color: #00aed7;
+}
+.SedoxAdmin .invoicelist .balancerow  {
+    border-bottom: solid 1px #EEE;
+}
+
+.sedox_admin_topmenu.bottom {
+    margin-top: 20px;
+}
+
+.SedoxAdmin .listview .filelistrow {
+    border-bottom: solid 1px #EEE;
+    line-height: 25px;
+    cursor: pointer;
+}
+
+.SedoxAdmin .listview .filelistrow:hover {
+    background-color: #EEE;
+} 
+.SedoxAdmin .listview .filelistrow .col {
+    display: inline-block;
+}
+
+.SedoxAdmin .listview .filelistrow .col1 { width: 60px; }
+.SedoxAdmin .listview .filelistrow .col2 { width: 500px; }
+.SedoxAdmin .listview .filelistrow .col3 { width: 200px; }

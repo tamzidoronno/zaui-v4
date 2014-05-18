@@ -24,5 +24,5 @@ var SedoxTheme = {
 }
 
 $(document).ready(function() {
-    SedoxTheme.init();
+//    SedoxTheme.init();
 });

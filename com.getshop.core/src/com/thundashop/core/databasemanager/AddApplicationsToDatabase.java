@@ -70,6 +70,29 @@ public class AddApplicationsToDatabase {
         sedoxFileUploader.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
         apps.add(sedoxFileUploader);
         
+        
+        ApplicationSettings sedoxAdmin = createSettings(
+                "SedoxAdmin",
+                "e22e25dd-8000-471c-89a3-6927d932165e",
+                allowed,
+                "",
+                ApplicationSettings.Type.Webshop, false);
+        sedoxAdmin.isPublic = false;
+        sedoxAdmin.allowedStoreIds = new ArrayList();
+        sedoxAdmin.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
+        apps.add(sedoxAdmin);
+        
+        ApplicationSettings sedoxProductView = createSettings(
+                "SedoxProductView",
+                "23fac58b-5066-4222-860c-a9e88196b8a1",
+                allowed,
+                "",
+                ApplicationSettings.Type.Webshop, false);
+        sedoxProductView.isPublic = false;
+        sedoxProductView.allowedStoreIds = new ArrayList();
+        sedoxProductView.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
+        apps.add(sedoxProductView);
+        
         ApplicationSettings sedoxUserPanel = createSettings(
                 "SedoxUserPanel",
                 "32b5f680-dd8d-11e3-8b68-0800200c9a66",

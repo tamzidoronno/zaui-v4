@@ -92,7 +92,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     public void saveRoom(Room room) throws ErrorException {
         if(room.id != null) {
             Room oldRoom = rooms.get(room.id);
-            if(oldRoom != null && !oldRoom.currentCode.equals(room.currentCode)) {
+            if(oldRoom != null && oldRoom.currentCode != null && room.currentCode != null && !oldRoom.currentCode.equals(room.currentCode)) {
                 updateLockOnRoom(room);
             }
         }

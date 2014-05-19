@@ -3806,6 +3806,35 @@ class ReportingManager(object):
 class SedoxProductManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
+  def createSedoxProduct(self, sedoxProduct, base64encodedOriginalFile, originalFileName):
+    args = collections.OrderedDict()
+    if isinstance(sedoxProduct,GetShopBaseClass): 
+      args["sedoxProduct"]=json.dumps(sedoxProduct.__dict__)
+    else:
+      try:
+        args["sedoxProduct"]=json.dumps(sedoxProduct)
+      except (ValueError, AttributeError):
+        args["sedoxProduct"]=sedoxProduct
+    if isinstance(base64encodedOriginalFile,GetShopBaseClass): 
+      args["base64encodedOriginalFile"]=json.dumps(base64encodedOriginalFile.__dict__)
+    else:
+      try:
+        args["base64encodedOriginalFile"]=json.dumps(base64encodedOriginalFile)
+      except (ValueError, AttributeError):
+        args["base64encodedOriginalFile"]=base64encodedOriginalFile
+    if isinstance(originalFileName,GetShopBaseClass): 
+      args["originalFileName"]=json.dumps(originalFileName.__dict__)
+    else:
+      try:
+        args["originalFileName"]=json.dumps(originalFileName)
+      except (ValueError, AttributeError):
+        args["originalFileName"]=originalFileName
+    data = EmptyClass()
+    data.args = args
+    data.method = "createSedoxProduct"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getAllUsersWithNegativeCreditLimit(self):
     args = collections.OrderedDict()
     data = EmptyClass()
@@ -3860,11 +3889,48 @@ class SedoxProductManager(object):
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getSedoxProductByMd5Sum(self, md5sum):
+    args = collections.OrderedDict()
+    if isinstance(md5sum,GetShopBaseClass): 
+      args["md5sum"]=json.dumps(md5sum.__dict__)
+    else:
+      try:
+        args["md5sum"]=json.dumps(md5sum)
+      except (ValueError, AttributeError):
+        args["md5sum"]=md5sum
+    data = EmptyClass()
+    data.args = args
+    data.method = "getSedoxProductByMd5Sum"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getSedoxUserAccount(self):
     args = collections.OrderedDict()
     data = EmptyClass()
     data.args = args
     data.method = "getSedoxUserAccount"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def requestSpecialFile(self, productId, comment):
+    args = collections.OrderedDict()
+    if isinstance(productId,GetShopBaseClass): 
+      args["productId"]=json.dumps(productId.__dict__)
+    else:
+      try:
+        args["productId"]=json.dumps(productId)
+      except (ValueError, AttributeError):
+        args["productId"]=productId
+    if isinstance(comment,GetShopBaseClass): 
+      args["comment"]=json.dumps(comment.__dict__)
+    else:
+      try:
+        args["comment"]=json.dumps(comment)
+      except (ValueError, AttributeError):
+        args["comment"]=comment
+    data = EmptyClass()
+    data.args = args
+    data.method = "requestSpecialFile"
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 

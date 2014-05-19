@@ -13,6 +13,8 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.xml.bind.DatatypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -121,6 +124,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     public SedoxUser getSedoxUserAccount() throws ErrorException {
         String id = getSession().currentUser.id;
         SedoxUser user = users.get(id);
+        
         if (user == null) {
             user = new SedoxUser();
             user.magentoId = id;
@@ -217,5 +221,85 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         }
         
         return null;
+    }
+
+    private String getMd5Sum(byte[] data) throws ErrorException {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("MD5");
+            byte[] array = digest.digest(data);
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < array.length; ++i) {
+                sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new ErrorException(1024);
+        }
+    }
+    
+    @Override
+    public void createSedoxProduct(SedoxProduct sedoxProduct, String base64EncodeString, String originalFileName) throws ErrorException {
+        sedoxProduct.id = getNextProductId();
+        sedoxProduct.firstUploadedByUserId = getSession().currentUser.id;
+        sedoxProduct.storeId = storeId;
+        sedoxProduct.rowCreatedDate = new Date();
+        
+        SedoxBinaryFile originalFile = getOriginalBinaryFile(base64EncodeString, originalFileName);
+        sedoxProduct.binaryFiles.add(originalFile);
+        
+        databaseSaver.saveObject(sedoxProduct, credentials);
+        products.add(sedoxProduct);
+        sendFileCreatedEmail(sedoxProduct);
+    }
+    
+    private SedoxBinaryFile getOriginalBinaryFile(String base64EncodeString, String originalFileName) throws ErrorException {
+        // Check if needs to be decrypted.
+        byte[] fileData = DatatypeConverter.parseBase64Binary(base64EncodeString);
+        
+        SedoxBinaryFile originalFile = new SedoxBinaryFile();
+        originalFile.fileType = "Original";
+        originalFile.md5sum = getMd5Sum(fileData);
+        originalFile.orgFilename = originalFileName;
+        return originalFile;
+    }
+
+    private void sendFileCreatedEmail(SedoxProduct sedoxProduct) {
+        // TODO
+        // NEED DEVELOPERS.
+    }
+
+    private String getNextProductId() {
+        int lowest = 0;
+        for (SedoxProduct sedoxProduct : products) {
+            try {
+                int sedoxId = Integer.parseInt(sedoxProduct.id);
+                if (sedoxId > lowest) {
+                    lowest = sedoxId;
+                }
+            } catch (Exception ex) {
+                // Dont care.
+            }
+        }
+        
+        lowest++;
+        return ""+lowest;
+    }
+
+    @Override
+    public SedoxProduct getSedoxProductByMd5Sum(String md5sum) throws ErrorException {
+        for (SedoxProduct product : products) {
+            for (SedoxBinaryFile binaryFile : product.binaryFiles) {
+                if (binaryFile.md5sum.equals(md5sum)) {
+                    return product;
+                }
+            }
+        }
+        
+        return null;
+    }
+
+    @Override
+    public void requestSpecialFile(String productId, String comment) throws ErrorException {
+        System.out.println("Requesting special file for : " + productId + " Comment: " + comment);
     }
 }

@@ -17,6 +17,16 @@ public class SedoxBinaryFile implements Serializable {
     
     public int id;
     public String md5sum;
+    
+    /**
+     * Original
+     * Tune
+     * CmdEncrypted
+     * ECO
+     * Encrypted
+     * Various
+     * Power
+     */
     public String fileType;
     public boolean checksumCorrected;
     public String orgFilename;

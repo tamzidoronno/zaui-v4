@@ -124,6 +124,7 @@
 "1021","Start date can not be selected before todays date"
 "1022","End date is starting before start date"
 "1023","An error occured, support has been notified of this problem."
+"1024","Failed to generate md5sum for file."
 
 "1000001","The name attribute is invalid",
 "1000002","The entry you are trying to fecth does not exists.",

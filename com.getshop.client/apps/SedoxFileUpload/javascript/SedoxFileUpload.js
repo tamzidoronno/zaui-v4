@@ -1,6 +1,21 @@
 app.SedoxFileUpload = {
     init: function() {
         $(document).on('click', '.SedoxFileUpload .savecardetails', app.SedoxFileUpload.saveCarDetails);
+        $(document).on('click', '.SedoxFileUpload .specialfile', app.SedoxFileUpload.specialfilerequest);
+        $(document).on('click', '.SedoxFileUpload .sendspecialrequest', app.SedoxFileUpload.sendSpecialRequest);
+    },
+            
+    specialfilerequest: function() {
+        $('.SedoxFileUpload .specialform').slideDown();
+    },
+            
+    sendSpecialRequest: function() {
+        var data = {
+            desc : $('.SedoxFileUpload .specialform textarea').val()
+        };
+        
+        var event = thundashop.Ajax.createEvent("", "sendSpecialRequest", this, data);
+        thundashop.Ajax.post(event);
     },
             
     saveCarDetails: function() {

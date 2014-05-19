@@ -1,7 +1,8 @@
 <?
 /* @var $this \ns_d16b27d9_579f_4d44_b90b_4223de0eb6f2\Hotelbooking */
-$available = $this->getApi()->getHotelBookingManager()->checkAvailable($this->getStart(), $this->getEnd(), $this->getType());
-
+$available = $this->getApi()->getHotelBookingManager()->checkAvailable($this->getStart(), $this->getEnd(), $this->getProduct()->sku);
+$diff = $this->getEnd() - $this->getStart();
+$days = $diff / 86400;
 ?>
 
 <div class='room_available single'>
@@ -25,7 +26,7 @@ $available = $this->getApi()->getHotelBookingManager()->checkAvailable($this->ge
         <? if($available > 1) { ?>
             <tr>
                 <td width="50%">Antall rom</td>
-                <td><select>
+                <td><select class='number_of_rooms'>
                         <?
                         for($i = 1; $i <= $available; $i++) {
                             echo "<option value='$i'>$i</option>";
@@ -61,11 +62,12 @@ $available = $this->getApi()->getHotelBookingManager()->checkAvailable($this->ge
         </tr>
         <tr class='orderfields'>
             <td width="50%">Pris totalt</td>
-            <td>$100</td>
+            <? $totprice = $this->getProduct()->price * $days; ?>
+            <td><span class='price' price='<? echo $totprice; ?>'><? echo $totprice; ?></span> kroner</td>
         </tr>
         <tr>
             <td width="50%"></td>
-            <td><br><span class="continue_button">Continue</span></td>
+            <td><br><span class="continue_button">Fortsett</span></td>
         </tr>
     </table>
     

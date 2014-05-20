@@ -3686,6 +3686,28 @@ class APISedoxProductManager {
 	* @throws ErrorException
 	*/
 
+	public function addFileToProduct($base64EncodedFile, $fileName, $fileType, $productId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["base64EncodedFile"] = json_encode($this->transport->object_unset_nulls($base64EncodedFile));
+	     $data['args']["fileName"] = json_encode($this->transport->object_unset_nulls($fileName));
+	     $data['args']["fileType"] = json_encode($this->transport->object_unset_nulls($fileType));
+	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $data["method"] = "addFileToProduct";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Return the products created by days back.
+	* day = 0 // Means that it will returns the list of todays files
+	* day = 1 // Means that it will returns the list of yesterdays files
+	*
+	* @param day
+	* @return void
+	* @throws ErrorException
+	*/
+
 	public function createSedoxProduct($core_sedox_SedoxProduct, $base64encodedOriginalFile, $originalFileName) {
 	     $data = array();
 	     $data['args'] = array();

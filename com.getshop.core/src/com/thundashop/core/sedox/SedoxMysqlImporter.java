@@ -68,8 +68,8 @@ public class SedoxMysqlImporter {
             product.gearType = resultSet.getString("gearType");
             product.useCreditAccount = resultSet.getString("useCreditAccount");
             product.comment = resultSet.getString("comment");
-            product.series = resultSet.getString("userSeries");
-            product.build = resultSet.getString("userBuild");
+            product.ecuType = resultSet.getString("userSeries");
+            product.ecuBrand = resultSet.getString("userBuild");
             product.channel = resultSet.getString("channel");
             product.started = resultSet.getBoolean("started");
 

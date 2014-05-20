@@ -110,3 +110,42 @@
 	filter: alpha(opacity=100);
 	opacity: 1;
 }
+
+
+.SedoxProductView .admintools {
+    margin-top: 20px;
+}
+
+.SedoxProductView .admintools .subcontainer {
+    padding: 20px;
+    font-size: 16px;
+    color: #666;
+}
+    
+.SedoxProductView .admintools .uploadtuningfilebox {
+    border: solid 2px #DDD;
+    display: inline-block;
+    width: 100px;
+    text-align: center;
+    height: 100px;
+    border-radius: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    font-size: 80px; 
+    padding: 10px;
+    position: relative;
+}
+
+.SedoxProductView .uploadtuningfilebox .progressbar {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5);
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    border-radius: 10px;
+    color: #FFF;
+    font-size: 25px;
+    line-height: 120px;
+    display:none;
+}

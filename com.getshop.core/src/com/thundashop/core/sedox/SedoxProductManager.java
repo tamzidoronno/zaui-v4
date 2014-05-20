@@ -247,6 +247,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         SedoxBinaryFile originalFile = getOriginalBinaryFile(base64EncodeString, originalFileName);
         sedoxProduct.binaryFiles.add(originalFile);
         
+        byte[] fileData = DatatypeConverter.parseBase64Binary(base64EncodeString);
+        sedoxProduct.softwareSize = fileData.length/1024;
+                
         databaseSaver.saveObject(sedoxProduct, credentials);
         products.add(sedoxProduct);
         sendFileCreatedEmail(sedoxProduct);
@@ -301,5 +304,16 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     @Override
     public void requestSpecialFile(String productId, String comment) throws ErrorException {
         System.out.println("Requesting special file for : " + productId + " Comment: " + comment);
+    }
+
+    @Override
+    public void addFileToProduct(String base64EncodedFile, String fileName, String fileType, String productId) throws ErrorException {
+        SedoxBinaryFile sedoxBinaryFile = getOriginalBinaryFile(base64EncodedFile, fileName);
+        sedoxBinaryFile.fileType = fileType;
+        sedoxBinaryFile.updateParametersFromFileName(fileName);
+        
+        SedoxProduct sedoxProduct = getProductById(productId);
+        sedoxProduct.binaryFiles.add(sedoxBinaryFile);
+        sedoxProduct.setParametersBasedOnFileString(fileName);
     }
 }

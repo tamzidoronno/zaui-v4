@@ -3806,6 +3806,42 @@ class ReportingManager(object):
 class SedoxProductManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
+  def addFileToProduct(self, base64EncodedFile, fileName, fileType, productId):
+    args = collections.OrderedDict()
+    if isinstance(base64EncodedFile,GetShopBaseClass): 
+      args["base64EncodedFile"]=json.dumps(base64EncodedFile.__dict__)
+    else:
+      try:
+        args["base64EncodedFile"]=json.dumps(base64EncodedFile)
+      except (ValueError, AttributeError):
+        args["base64EncodedFile"]=base64EncodedFile
+    if isinstance(fileName,GetShopBaseClass): 
+      args["fileName"]=json.dumps(fileName.__dict__)
+    else:
+      try:
+        args["fileName"]=json.dumps(fileName)
+      except (ValueError, AttributeError):
+        args["fileName"]=fileName
+    if isinstance(fileType,GetShopBaseClass): 
+      args["fileType"]=json.dumps(fileType.__dict__)
+    else:
+      try:
+        args["fileType"]=json.dumps(fileType)
+      except (ValueError, AttributeError):
+        args["fileType"]=fileType
+    if isinstance(productId,GetShopBaseClass): 
+      args["productId"]=json.dumps(productId.__dict__)
+    else:
+      try:
+        args["productId"]=json.dumps(productId)
+      except (ValueError, AttributeError):
+        args["productId"]=productId
+    data = EmptyClass()
+    data.args = args
+    data.method = "addFileToProduct"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
   def createSedoxProduct(self, sedoxProduct, base64encodedOriginalFile, originalFileName):
     args = collections.OrderedDict()
     if isinstance(sedoxProduct,GetShopBaseClass): 

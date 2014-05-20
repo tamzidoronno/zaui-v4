@@ -54,4 +54,7 @@ public interface ISedoxProductManager  {
     
     @Customer
     public void requestSpecialFile(String productId, String comment) throws ErrorException;
+    
+    @Administrator
+    public void addFileToProduct(String base64EncodedFile, String fileName, String fileType, String productId) throws ErrorException;
 }

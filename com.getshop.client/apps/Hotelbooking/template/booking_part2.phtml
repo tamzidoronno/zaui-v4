@@ -1,0 +1,98 @@
+<br><br>
+<?php
+/* @var $this \ns_d16b27d9_579f_4d44_b90b_4223de0eb6f2\Hotelbooking */
+?>
+<div class='title'><? echo $this->__w("You have selected the following duration for your stay"); ?></div>
+<div class='seperator'></div>
+<div class='top_box' style="height:260px;">
+    <span class='booking_count_box' style='float:right;'>
+        <table>
+            <tr>
+                <td><? echo $this->__w("Number of persons"); ?></td>
+                <td align='right'><input type='number' min="1" max="10" value='1'></td>
+            </tr>
+            <tr>
+                <td><? echo $this->__w("Number of rooms"); ?></td>
+                <td align='right'><input class='number_of_rooms' type='number' min="1" max="10" value='<? echo $this->getRoomCount(); ?>'></td>
+            </tr>
+            <tr>
+                <td colspan='2'>
+                    <br>
+                    <? echo $this->__w("Campaign code"); ?>
+                    <input type='text' style='width:100%; margin:0px;'>
+                </td>
+            </tr>
+        </table>
+    </span>
+
+    <span style='float:left; margin-right: 30px; width:200px;'>
+        <div class='cal_header'><? echo $this->__w("WHEN DO YOU CHECK IN?"); ?></div>
+        <? $this->printCalendar($this->getStart(), false, "startDate"); ?>
+    </span>
+
+    <span style='float:left; width:200px;'>
+        <div class='cal_header second'><? echo $this->__w("WHEN DO YOU LEAVE?"); ?></div>
+        <? echo $this->printCalendar($this->getEnd(), $this->getStart(), "endDate"); ?>
+    </span>
+</div>
+<div class='title'><? echo $this->__w("Select a room"); ?></div>
+ <div class='room_selection_2 heading'>
+     <span class='firstbox selection_box'>
+         <div class='name'>ROM TYPE</div>
+     </span> 
+     <span class='secondbox selection_box'>
+         <div>ANTALL</div>
+     </span>
+     <span class='price_box'>PRIS PR NATT</span>
+     <div style='clear:both;'></div>
+ </div>
+<div style="height:5px;"></div>
+    
+<?
+$products = $this->getApi()->getProductManager()->getAllProducts();
+$foundroom = 0;
+foreach($products as $product) {
+    $selectedclass = "";
+    $avroom = $this->getNumberOfAvailableRooms($product->sku);
+    if($product->id === $this->getProduct()->id) {
+        $selectedclass = "selected";
+    }
+    if($avroom <= 0) {
+        continue;
+    }
+    $foundroom = true;
+    echo "<div class='room_selection_2 product $selectedclass'>";
+    /* @var $product core_productmanager_data_Product */
+    echo "<span class='firstbox selection_box' productid='".$product->id."'>";
+    echo "<div class='name'>" . $product->name . "</div>";
+    echo trim($product->descriptions[0] ? $product->descriptions[0] : 'Description text');
+    echo "</span>";
+    
+    echo "<span class='secondbox selection_box'>";
+    echo "<div><i class='fa fa-user'></i></div>";
+    echo "<div class='personalcount'>2x</div>";
+    echo "</span>";
+    echo "<span class='price_box'><span class='price_text'>".$product->price.",-</span>";
+    echo "<span class='selectbutton' gstype='clicksubmit' method='changeProduct' gsname='productid' gsvalue='".$product->id."'>".$this->__w("SELECT ROOM")."</span>";
+    echo "</span>";
+    echo "<div style='clear:both;'></div>";
+    echo "<span class='available_rooms'>";
+    echo $avroom;
+    if($avroom > 1) {
+        echo " " . $this->__w("available rooms");
+    } else {
+        echo " " . $this->__w("available room");
+    }
+    echo "</span>";
+    echo "</div>";
+}
+if(!$foundroom) {
+    echo "<div class='no_room_available'>" . $this->__w("No rooms are available for this time periode.") . "</div>";
+    echo "<script>$('.room_selection_2').hide();</script>";
+} else {
+?>
+<div class="to_checkout">
+    <div class="continue_to_cart_button">CONTINUE TO CART</div>
+</div>
+<? } ?>
+<br><br><br><br><br><br>

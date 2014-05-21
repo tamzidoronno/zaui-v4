@@ -17,6 +17,10 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return "left";
     }
     
+    function getNumberOfAvailableRooms($type) {
+        return $this->getApi()->getHotelBookingManager()->checkAvailable($this->getStart(),$this->getEnd(),$type);
+    }
+    
     function checkavailability() {
         $start = strtotime($_POST['data']['start']);
         $end =  strtotime($_POST['data']['stop']);
@@ -27,9 +31,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             echo $numbers;
         }
         
-        $_SESSION['hotelbooking']['start'] = $start;
-        $_SESSION['hotelbooking']['end'] = $end;
-        $_SESSION['hotelbooking']['product'] = $product->id;
+        $this->setStartDate($start);
+        $this->setEndDate($end);
+        $this->setProductId($product->id);
     }
     
     public function getProduct() {
@@ -63,8 +67,110 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     public function getStarted() { 
    }
 
+   public function getContinuePage() {
+       return $this->getConfigurationSetting("contine_page");
+   }
+   
     public function render() {
-        $this->includefile("Hotelbooking");
+        if(isset($_GET['set_order_page'])) {
+            $this->setConfigurationSetting("contine_page", $_GET['set_order_page']);
+        }
+        if($this->getPage()->id == "home") {
+            $this->includefile("Hotelbooking");
+        } else {
+            $this->includefile("booking_part2");
+        }
+    }
+
+    public function updateCalendarDate() {
+        $type = $_POST['data']['type'];
+        $day = $_POST['data']['day'];
+        $month = $_POST['data']['month'];
+        $year = $_POST['data']['year'];
+        
+        if($type == "startDate") {
+            $this->setStartDate(strtotime($year."-".$month."-".$day));
+        }
+        if($type == "endDate") {
+            $this->setEndDate(strtotime($year."-".$month."-".$day));
+        }
+    }
+    
+    public function printCalendar($time, $checkbefore, $id) {
+        $month = date("m", $time);
+        $timestamp = mktime(0,0,0,$month,1,date("y", $time));
+        $maxday = date("t",$timestamp);
+        $thismonth = getdate ($timestamp);
+        $startday = $thismonth['wday'];
+        $year = date('y', $time);
+        if($startday == 0) {
+            $startday = 7;
+        }
+        echo "<table width='100%' class='booking_table' type='$id' year='$year' month='$month'>";
+        echo "<tr>";
+        echo "<th>".$this->__w("Mo")."</th>";
+        echo "<th>".$this->__w("Tu")."</th>";
+        echo "<th>".$this->__w("We")."</th>";
+        echo "<th>".$this->__w("Th")."</th>";
+        echo "<th>".$this->__w("Fr")."</th>";
+        echo "<th>".$this->__w("Sa")."</th>";
+        echo "<th>".$this->__w("Su")."</th>";
+        echo "</tr>";
+        echo "<tr>";
+        for ($i=1; $i<($maxday+$startday); $i++) {
+            if($i < $startday) 
+                echo "<td></td>";
+            else {
+                $class = "";
+                $day = $i - $startday + 1;
+                if(date('d', $time) ==(($i - $startday)+1)) {
+                    $class = "selected";
+                }
+                if($checkbefore) {
+                    $aftertime = strtotime($year . "-" . $month . "-" . $day);
+                    if($checkbefore > $aftertime || date("d", $checkbefore) == date("d",$aftertime)) {
+                        $class .= " disabled";
+                    }
+                }
+                
+                echo "<td align='center' valign='middle' height='20px'><span class='cal_field $class' day='$day'>".$day."</span></td>";
+            }
+            if(($i % 7) == 0) echo "</tr><tr>";
+        }
+        echo "</tr>";
+        echo "</table>";
+    }
+    
+
+    public function updateRoomCount() {
+        $this->setRoomCount($_POST['data']['count']);
+    }
+    
+    public function getRoomCount() {
+        if(isset($_SESSION['hotelbooking']['count'])) {
+            return $_SESSION['hotelbooking']['count'];
+        }
+        return 1;
+    }
+    
+    public function changeProduct() {
+        $this->setProductId($_POST['data']['productid']);
+    }
+    
+    private function setRoomCount($count) {
+        $_SESSION['hotelbooking']['count'] = $count;
+    }
+    
+    public function setStartDate($start) {
+        $_SESSION['hotelbooking']['start'] = $start;
+    }
+
+    public function setEndDate($end) {
+        $_SESSION['hotelbooking']['end'] = $end;
+    }
+
+    public function setProductId($id) {
+        $_SESSION['hotelbooking']['product'] = $id;
     }
 }
 ?>

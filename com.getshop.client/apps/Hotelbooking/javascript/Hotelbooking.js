@@ -21,13 +21,21 @@ app.Hotelbooking = {
         }
         app.Hotelbooking.setSize();
     },
+    updateRoomCount : function() {
+        var count = $(this).val();
+        var event = thundashop.Ajax.createEvent("","updateRoomCount", $(this), { "count": count});
+        thundashop.Ajax.postWithCallBack(event, function() {
+            
+        });
+    },
     checkAvailability : function() {
+        var nextpage = $(this).attr('nextpage');
         var apparea =$(this).closest('.app'); 
         var data = {
             start : apparea.find('#start_date').val(),
             stop : apparea.find('#end_date').val(),
             roomProduct : apparea.find('.room_selection').val()
-        }
+        };
         var event = thundashop.Ajax.createEvent('','checkavailability', $(this), data);
         thundashop.Ajax.postWithCallBack(event, function(result) {
             result = parseInt(result);
@@ -42,9 +50,26 @@ app.Hotelbooking = {
                 }
                 app.Hotelbooking.setSize();
             } else {
-                app.Hotelbooking.goToPage(2);
+                document.location.href='?page='+nextpage;
             }
         });
+    },
+    changeBookingDate : function() {
+        if($(this).hasClass('disabled')) {
+            return;
+        }
+        var cal = $(this).closest('.booking_table');
+        cal.find('.selected').removeClass('selected');
+        $(this).addClass('selected');
+        
+        var event = thundashop.Ajax.createEvent("", "updateCalendarDate", $(this), {
+            "type" : cal.attr('type'),
+            "day" : $(this).attr('day'),
+            "year" : cal.attr('year'),
+            "month" : cal.attr('month')
+        });
+        
+        thundashop.Ajax.post(event);
     },
     goToPage : function(pagenumber) {
          window.history.pushState({url: "", ajaxLink: "pagenumber="+pagenumber}, "Title", "pagenumber="+pagenumber);
@@ -54,8 +79,11 @@ app.Hotelbooking = {
         $(document).on('click', '.Hotelbooking .check_available_button', app.Hotelbooking.checkAvailability);
         $(document).on('change', '.Hotelbooking #ordertype', app.Hotelbooking.changeOrderType);
         $(document).on('change', '.Hotelbooking .number_of_rooms', app.Hotelbooking.updateNumberOfRooms);
+        $(document).on('click', '.Hotelbooking .selectbutton', app.Hotelbooking.setSelectedRoom);
+        $(document).on('click', '.Hotelbooking .cal_field', app.Hotelbooking.changeBookingDate);
+        $(document).on('change', '.Hotelbooking .number_of_rooms', app.Hotelbooking.updateRoomCount);
+        $(document).on('blur', '.Hotelbooking .number_of_rooms', app.Hotelbooking.updateRoomCount);
     }
-    
-}
+};
 
 app.Hotelbooking.initEvents();

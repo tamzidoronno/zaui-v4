@@ -29,7 +29,7 @@
         }
     ?>
 </select>
-<div class='check_available_button'><? echo $this->__w("ORDER ROOM"); ?></div>
+<div class='check_available_button' nextpage="<? echo $this->getContinuePage(); ?>"><? echo $this->__w("Check availability and continue"); ?></div>
 <div style='padding-top:20px;'>
     <span class='error_on_check date_before_start'>
         <? echo $this->__f("Sorry, but the start date is before todays date."); ?>

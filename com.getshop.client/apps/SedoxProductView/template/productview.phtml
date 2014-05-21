@@ -1,16 +1,16 @@
 <?
 $sedoxProduct = $this->getCurrentProduct();
-$name = $sedoxProduct->brand . " " . $sedoxProduct->series . " " . $sedoxProduct->model . " " . $sedoxProduct->build . " " . $sedoxProduct->power . " " . $sedoxProduct->year . " " . $sedoxProduct->originalChecksum;
+$name = $sedoxProduct->brand . " " . $sedoxProduct->model . " " . $sedoxProduct->engineSize . " " . $sedoxProduct->power . " " . $sedoxProduct->year . " " . $sedoxProduct->originalChecksum ;
 ?>
 
 <div class='title'><i class='fa fa-car'></i>&nbsp; <? echo $name; ?></div>
 <div>
     <div class='productrow'><div class='col col1'>Created</div><div class='col col2'><? echo $sedoxProduct->rowCreatedDate; ?></div></div>
     <div class='productrow'><div class='col col1'>PS - Original</div><div class='col col2'><? echo $sedoxProduct->power; ?></div></div>
-    <div class='productrow'><div class='col col1'>ECU Brand</div><div class='col col2'></div></div>
-    <div class='productrow'><div class='col col1'>ECU Type</div><div class='col col2'></div></div>
+    <div class='productrow'><div class='col col1'>ECU Brand</div><div class='col col2'><? echo $sedoxProduct->ecuBrand; ?></div></div>
+    <div class='productrow'><div class='col col1'>ECU Type</div><div class='col col2'><? echo $sedoxProduct->ecuType; ?></div></div>
     <div class='productrow'><div class='col col1'>Orginal Checksum</div><div class='col col2'><? echo $sedoxProduct->originalChecksum; ?></div></div>
-    <div class='productrow'><div class='col col1'>Software Size</div><div class='col col2'></div></div>
+    <div class='productrow'><div class='col col1'>Software Size</div><div class='col col2'><? echo $sedoxProduct->softwareSize; ?></div></div>
 </div>
 <br>
 <div class='title'><i class='fa fa-download'></i>&nbsp; Purchase and download file.</div>
@@ -40,4 +40,24 @@ $name = $sedoxProduct->brand . " " . $sedoxProduct->series . " " . $sedoxProduct
     ?> 
     <div class='sedox_warning'>Note! When you click on the button below you will download the file and it will be purchased. </div>
     <div class='sedox_button'>Purchase and download</div>
+</div>
+
+<?
+if (!$this->hasWriteAccess()) {
+    return;
+}
+?>
+<div class='admintools'>
+    <div class='title'><i class='fa fa-download'></i>&nbsp; Add a tuningfile.</div>
+    <div class='subcontainer'>
+        Drag the tuningfile to the different boxes below, it will automatically upload and set the price. :)
+        <div>
+            <div fileType='Tune' class='uploadtuningfilebox fa fa-upload'><div style='font-size: 15px;'>Tune</div><div class='progressbar'></div></div>
+            <div fileType='ECO' class='uploadtuningfilebox fa fa-upload'><div style='font-size: 15px;'>ECO</div><div class='progressbar'></div></div>
+            <div fileType='Power' class='uploadtuningfilebox fa fa-upload'><div style='font-size: 15px;'>Power</div><div class='progressbar'></div></div>
+            <div fileType='Various' class='uploadtuningfilebox fa fa-upload'><div style='font-size: 15px;'>Varios</div><div class='progressbar'></div></div>
+            <div fileType='Original' class='uploadtuningfilebox fa fa-upload'><div style='font-size: 15px;'>Original</div><div class='progressbar'></div></div>
+        </div>
+    </div>
+
 </div>

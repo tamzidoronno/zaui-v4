@@ -46,4 +46,15 @@ public interface ISedoxProductManager  {
     
     public SedoxProduct getProductById(String id) throws ErrorException;
     
+    @Customer
+    public void createSedoxProduct(SedoxProduct sedoxProduct, String base64encodedOriginalFile, String originalFileName) throws ErrorException;
+    
+    @Customer
+    public SedoxProduct getSedoxProductByMd5Sum(String md5sum) throws ErrorException;
+    
+    @Customer
+    public void requestSpecialFile(String productId, String comment) throws ErrorException;
+    
+    @Administrator
+    public void addFileToProduct(String base64EncodedFile, String fileName, String fileType, String productId) throws ErrorException;
 }

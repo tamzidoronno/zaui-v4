@@ -172,3 +172,46 @@
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
     right: 0px; 
 }
+
+.SedoxFileUpload .sedox_match_options {
+    margin: 20px;
+}
+.SedoxFileUpload .sedox_match_options .sedox_match_option {
+    display: inline-block;
+    border: solid 1px #EEE;
+    text-align: center;
+    padding: 5px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.SedoxFileUpload .sedox_match_options .sedox_match_option i {
+    font-size: 80px;
+}
+
+.SedoxFileUpload a {
+    color: #666;
+}
+
+.SedoxFileUpload .sedox_match_options .sedox_match_option:hover {
+    background-color: #DDD;
+}
+
+.SedoxFileUpload .specialform {
+    display: none;
+}
+
+.SedoxFileUpload .specialform .innerform {
+    padding: 40px;
+    position: relative;
+    width: 400px;
+    padding-bottom: 30px;
+}
+
+.SedoxFileUpload .specialform .innerform .sedox_button {
+    position: absolute;
+    right: 20px;
+    bottom: 0px;
+    margin-left: inherit;
+}

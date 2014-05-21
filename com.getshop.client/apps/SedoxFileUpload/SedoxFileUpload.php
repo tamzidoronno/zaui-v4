@@ -26,26 +26,35 @@ class SedoxFileUpload extends \ApplicationBase implements \Application {
 
     private function saveFileToSession() {
         if (isset($_FILES['originalfile'])) {
-            $_SESSION['originalfile'] = "ORIGNAL";
+            $sum  = md5_file($_FILES["originalfile"]["tmp_name"]);
+            $product = $this->getApi()->getSedoxProductManager()->getSedoxProductByMd5Sum($sum);
+            
+            if ($product) {
+                $_SESSION['originalfile_match'] = $product->id;
+            } else {
+                $binaryFileRead = fread(fopen($_FILES["originalfile"]["tmp_name"], "r"), filesize($_FILES["originalfile"]["tmp_name"]));
+                $_SESSION['originalfile_filename'] = $_FILES['originalfile']['name'];
+                $_SESSION['originalfile_base64'] = base64_encode($binaryFileRead);
+            }   
         }
     }
     
     private function isFileUploaded() {
-        return isset($_SESSION['originalfile']);
+        return isset($_SESSION['originalfile_base64']);
     }
     
     public function saveCarDetails() {
         $sedoxProduct = new \core_sedox_SedoxProduct();
-        $sedoxProduct->userBrand = $_POST['data']['brand'];
-        $sedoxProduct->userModel = $_POST['data']['model'];
-        $sedoxProduct->userBuild = $_POST['data']['enginesize'];
-        $sedoxProduct->userPower = $_POST['data']['power'];
-        $sedoxProduct->userTool = $_POST['data']['tool'];
+        $sedoxProduct->brand = $_POST['data']['brand'];
+        $sedoxProduct->model = $_POST['data']['model'];
+        $sedoxProduct->build = $_POST['data']['enginesize'];
+        $sedoxProduct->power = $_POST['data']['power'];
+        $sedoxProduct->tool = $_POST['data']['tool'];
         $sedoxProduct->comment = $_POST['data']['comments'];
         $sedoxProduct->gearType = $_POST['data']['automaticgear'] == "true" ? "auto" : "man";
         $sedoxProduct->useCreditAccount = $_POST['data']['usecredit'];
         
-        
+        $this->getApi()->getSedoxProductManager()->createSedoxProduct($sedoxProduct, $_SESSION['originalfile_base64'], $_SESSION['originalfile_filename']);
         $_SESSION['fileuploaded'] = true;
     }
     
@@ -53,9 +62,22 @@ class SedoxFileUpload extends \ApplicationBase implements \Application {
         return isset($_SESSION['fileuploaded']);
     }
     
+    private function isFileMatch() {
+        return isset($_SESSION['originalfile_match']);
+    }
+    
+    public function sendSpecialRequest() {
+        $desc = $_POST['data']['desc'];
+        $this->getApi()->getSedoxProductManager()->requestSpecialFile($_SESSION['originalfile_match'], $desc);
+        $_SESSION['fileuploaded'] = true;
+        
+    }
+    
     private function resetUpload() {
         unset($_SESSION['fileuploaded']);
-        unset($_SESSION['originalfile']);
+        unset($_SESSION['originalfile_filename']);
+        unset($_SESSION['originalfile_base64']);
+        unset($_SESSION['originalfile_match']);
     }
     
     public function render() {
@@ -63,6 +85,8 @@ class SedoxFileUpload extends \ApplicationBase implements \Application {
         if ($this->isFinished()) {
             $this->includefile("finished");
             $this->resetUpload();
+        } else if ($this->isFileMatch()) {
+            $this->includefile("filematch");
         } else if ($this->isFileUploaded()) {
             $this->includefile("cardetails");
         } else {

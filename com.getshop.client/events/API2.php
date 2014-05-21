@@ -3677,6 +3677,49 @@ class APISedoxProductManager {
 	}
 
 	/**
+	* Return the products created by days back.
+	* day = 0 // Means that it will returns the list of todays files
+	* day = 1 // Means that it will returns the list of yesterdays files
+	*
+	* @param day
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function addFileToProduct($base64EncodedFile, $fileName, $fileType, $productId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["base64EncodedFile"] = json_encode($this->transport->object_unset_nulls($base64EncodedFile));
+	     $data['args']["fileName"] = json_encode($this->transport->object_unset_nulls($fileName));
+	     $data['args']["fileType"] = json_encode($this->transport->object_unset_nulls($fileType));
+	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $data["method"] = "addFileToProduct";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Return the products created by days back.
+	* day = 0 // Means that it will returns the list of todays files
+	* day = 1 // Means that it will returns the list of yesterdays files
+	*
+	* @param day
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function createSedoxProduct($core_sedox_SedoxProduct, $base64encodedOriginalFile, $originalFileName) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_sedox_SedoxProduct"] = json_encode($this->transport->object_unset_nulls($core_sedox_SedoxProduct));
+	     $data['args']["base64encodedOriginalFile"] = json_encode($this->transport->object_unset_nulls($base64encodedOriginalFile));
+	     $data['args']["originalFileName"] = json_encode($this->transport->object_unset_nulls($originalFileName));
+	     $data["method"] = "createSedoxProduct";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	*
 	* @author ktonder
 	*/
@@ -3754,6 +3797,25 @@ class APISedoxProductManager {
 	}
 
 	/**
+	* Return the products created by days back.
+	* day = 0 // Means that it will returns the list of todays files
+	* day = 1 // Means that it will returns the list of yesterdays files
+	*
+	* @param day
+	* @return core_sedox_SedoxProduct
+	* @throws ErrorException
+	*/
+
+	public function getSedoxProductByMd5Sum($md5sum) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["md5sum"] = json_encode($this->transport->object_unset_nulls($md5sum));
+	     $data["method"] = "getSedoxProductByMd5Sum";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->cast(new core_sedox_SedoxProduct(), $this->transport->sendMessage($data));
+	}
+
+	/**
 	*
 	* @author ktonder
 	*/
@@ -3764,6 +3826,26 @@ class APISedoxProductManager {
 	     $data["method"] = "getSedoxUserAccount";
 	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
 	     return $this->transport->cast(new core_sedox_SedoxUser(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Return the products created by days back.
+	* day = 0 // Means that it will returns the list of todays files
+	* day = 1 // Means that it will returns the list of yesterdays files
+	*
+	* @param day
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function requestSpecialFile($productId, $comment) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $data['args']["comment"] = json_encode($this->transport->object_unset_nulls($comment));
+	     $data["method"] = "requestSpecialFile";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
 	}
 
 	/**

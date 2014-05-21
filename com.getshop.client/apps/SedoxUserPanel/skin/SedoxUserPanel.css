@@ -67,3 +67,14 @@
     right: 0px;
     bottom: 5px;
 }
+
+.SedoxUserPanel .filehistory a {
+    font-size: 14px;
+    color: #666;
+}
+.SedoxUserPanel .filehistory .col {
+    display: inline-block;
+}
+
+.SedoxUserPanel .filehistory .col1 { width: 100px; }
+.SedoxUserPanel .filehistory .col2 { width: 500px; }

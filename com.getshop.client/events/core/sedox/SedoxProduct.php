@@ -25,6 +25,18 @@ class core_sedox_SedoxProduct extends core_common_DataCommon  {
 	public $power;
 
 	/** @var String */
+	public $ecuType;
+
+	/** @var String */
+	public $ecuBrand;
+
+	/** @var String */
+	public $softwareNumber;
+
+	/** @var String */
+	public $softwareSize;
+
+	/** @var String */
 	public $tool;
 
 	/** @var String */
@@ -47,12 +59,6 @@ class core_sedox_SedoxProduct extends core_common_DataCommon  {
 
 	/** @var String */
 	public $comment;
-
-	/** @var String */
-	public $series;
-
-	/** @var String */
-	public $build;
 
 	/** @var String */
 	public $started;

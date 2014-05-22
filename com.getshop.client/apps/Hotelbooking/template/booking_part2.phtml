@@ -65,7 +65,7 @@ foreach($products as $product) {
     /* @var $product core_productmanager_data_Product */
     echo "<span class='firstbox selection_box' productid='".$product->id."'>";
     echo "<div class='name'>" . $product->name . "</div>";
-    echo trim($product->descriptions[0] ? $product->descriptions[0] : 'Description text');
+    echo trim($product->descriptions[0] ? strip_tags($product->descriptions[0]) : 'Description text');
     echo "</span>";
     
     echo "<span class='secondbox selection_box'>";

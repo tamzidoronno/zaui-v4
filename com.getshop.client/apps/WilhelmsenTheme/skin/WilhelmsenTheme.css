@@ -11,8 +11,9 @@
 }
 .gs_inner { max-width: 1000px; margin: auto; }
 .header { background-color: #020303; height: 65px; }
-.TopMenu a { color:#BBB; }
+.TopMenu a { color:#BBB; line-height: 35px; }
 .TopMenu a.selected { color:#FFF; }
+.TopMenu .subentries a.selected { color:#000; }
 .TopMenu { right: 0px; top: 30px; color:#FFF; }
 .footer { background-color: #363b3e; }
 .breadcrumb { display: none; }

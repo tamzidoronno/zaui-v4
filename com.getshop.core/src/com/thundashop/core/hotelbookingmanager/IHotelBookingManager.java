@@ -18,7 +18,6 @@ public interface IHotelBookingManager {
      */
     public Integer checkAvailable(long startDate, long endDate, String type) throws ErrorException;
     
- 
     /**
      * 
      * @param roomType
@@ -57,10 +56,24 @@ public interface IHotelBookingManager {
     @Administrator
     public List<Room> getAllRooms() throws ErrorException;
     
+    /**
+     * Get all references
+     * @return
+     * @throws ErrorException 
+     */
+    @Administrator
+    public List<BookingReference> getAllReservations() throws ErrorException;
+    
+    
+    @Administrator
+    public void deleteReference(int reference) throws ErrorException;
+    
     
     public List<RoomType> getRoomTypes() throws ErrorException;
+
     @Administrator
     public void saveRoomType(RoomType type) throws ErrorException;
+    
     @Administrator
     public void removeRoomType(String id) throws ErrorException;
 }

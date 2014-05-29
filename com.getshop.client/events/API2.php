@@ -1646,6 +1646,35 @@ class APIHotelBookingManager {
 	}
 
 	/**
+	* Get all references
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function deleteReference($reference) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["reference"] = json_encode($this->transport->object_unset_nulls($reference));
+	     $data["method"] = "deleteReference";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function getAllReservations() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getAllReservations";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	*
 	* @return List
 	* @throws ErrorException
@@ -1660,7 +1689,7 @@ class APIHotelBookingManager {
 	}
 
 	/**
-	*
+	* Get all references
 	* @return List
 	* @throws ErrorException
 	*/
@@ -1689,7 +1718,7 @@ class APIHotelBookingManager {
 	}
 
 	/**
-	*
+	* Get all references
 	* @return void
 	* @throws ErrorException
 	*/
@@ -1706,8 +1735,9 @@ class APIHotelBookingManager {
 	/**
 	*
 	* @param roomType
-	* @param startDate
-	* @param endDate
+	* @param startDate The first day unix timestamp.
+	* @param endDate The last day unix timestamp.
+	* @param count The number of rooms to book.
 	* @throws ErrorException
 	*/
 
@@ -1739,7 +1769,7 @@ class APIHotelBookingManager {
 	}
 
 	/**
-	*
+	* Get all references
 	* @return void
 	* @throws ErrorException
 	*/

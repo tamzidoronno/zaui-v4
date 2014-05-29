@@ -50,7 +50,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
     
     @Override
-    public Integer checkAvailable(long startDate, long endDate, String typeId) throws ErrorException {
+    public Integer checkAvailable(long startDate, long endDate, String typeName) throws ErrorException {
         Date start = new Date(startDate*1000);
         Date end = new Date(endDate*1000);
         Calendar cal = Calendar.getInstance();
@@ -67,13 +67,13 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         
         RoomType rtype = null;
         for(RoomType type : roomTypes.values()) {
-            if(type.name.trim().equalsIgnoreCase(typeId.trim())) {
+            if(type.name.trim().equalsIgnoreCase(typeName.trim())) {
                 rtype = type;
             }
         }
         
         if(rtype == null) {
-            msgmgr.mailFactory.send("post@getshop.com", "post@getshop.com", "Booking failed for " + storeId + " room type is fail type : " + typeId, getStore().webAddress + " : " + getStore().webAddressPrimary + " : ");
+            msgmgr.mailFactory.send("post@getshop.com", "post@getshop.com", "Booking failed for " + storeId + " room type is fail type : " + typeName, getStore().webAddress + " : " + getStore().webAddressPrimary + " : ");
             throw new ErrorException(1023);
         }
         
@@ -91,22 +91,30 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     @Override
     public String reserveRoom(String roomType, long startDate, long endDate, int count) throws ErrorException {
         //First make sure there is enough rooms available.
-        Integer availableRooms = checkAvailable(startDate, endDate, roomType);
+        RoomType roomtype = getRoomType(roomType);
+        Integer availableRooms = checkAvailable(startDate, startDate, roomtype.name);
         if(availableRooms < count) {
             return "-1";
         }
+
+        
+        Date start = new Date(startDate*1000);
+        Date end = new Date(endDate*1000);
         
         BookingReference reference = new BookingReference();
         reference.bookingReference = genereateReferenceId();
+        Room room = getAvailableRoom(roomtype.id, start, end);
+        reference.code = room.reserveDates(start, end, reference.bookingReference);
+        reference.startDate = start;
+        reference.endDate = end;
+        reference.roomName = room.roomName;
         
-        Room room = getAvailableRoom(roomType, startDate, endDate);
-        room.reserveDates(startDate, endDate, reference.bookingReference);
-        
+        room.storeId = storeId;
         databaseSaver.saveObject(room, credentials);
+        
+        reference.storeId = storeId;
         databaseSaver.saveObject(reference, credentials);
-        
         bookingReferences.put(reference.bookingReference, reference);
-        
         return new Integer(reference.bookingReference).toString();
     }
 
@@ -174,12 +182,12 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     
-    private Room getAvailableRoom(String roomType, long startDate, long endDate) {
+    private Room getAvailableRoom(String roomTypeId, Date startDate, Date endDate) {
         for(Room room : rooms.values()) {
-            if(!room.roomType.equals(roomType)) {
+            if(!room.roomType.equals(roomTypeId)) {
                 continue;
             }
-            if(room.isAvilable(new Date(startDate), new Date(endDate))) {
+            if(room.isAvilable(startDate, endDate)) {
                 return room;
             }
         }
@@ -196,5 +204,42 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         count++;
         return count;
+    }
+
+    private RoomType getRoomType(String roomTypeName) {
+        for(RoomType roomtype : roomTypes.values()) {
+            if(roomtype.name.equals(roomTypeName)) {
+                return roomtype;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<BookingReference> getAllReservations() throws ErrorException {
+        return new ArrayList(bookingReferences.values());
+    }
+
+    @Override
+    public void deleteReference(int reference) throws ErrorException {
+        BookingReference ref = bookingReferences.get(reference);
+        if(ref == null) {
+            throw new ErrorException(1025);
+        }
+        Room room = getRoom(ref.roomName);
+        room.removeBookedRoomWithReferenceNumber(reference);
+        
+        databaseSaver.saveObject(room, credentials);
+        databaseSaver.deleteObject(ref, credentials);
+        bookingReferences.remove(reference);
+    }
+
+    private Room getRoom(String roomName) {
+        for(Room room : rooms.values()) {
+            if(room.roomName.equalsIgnoreCase(roomName)) {
+                return room;
+            }
+        }
+        return null;
     }
 }

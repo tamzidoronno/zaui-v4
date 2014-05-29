@@ -1701,6 +1701,29 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def deleteReference(self, reference):
+    args = collections.OrderedDict()
+    if isinstance(reference,GetShopBaseClass): 
+      args["reference"]=json.dumps(reference.__dict__)
+    else:
+      try:
+        args["reference"]=json.dumps(reference)
+      except (ValueError, AttributeError):
+        args["reference"]=reference
+    data = EmptyClass()
+    data.args = args
+    data.method = "deleteReference"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getAllReservations(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getAllReservations"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getAllRooms(self):
     args = collections.OrderedDict()
     data = EmptyClass()

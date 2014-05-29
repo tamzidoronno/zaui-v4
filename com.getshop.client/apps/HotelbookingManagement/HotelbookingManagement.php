@@ -26,6 +26,12 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         $this->getApi()->getHotelBookingManager()->saveRoomType($type);
     }
     
+    public function removeBookingReference() {
+        $id = $_POST['data']['id'];
+        $this->getApi()->getHotelBookingManager()->deleteReference($id);
+    }
+    
+    
     public function deleteType() {
         $id = $_POST['data']['typeId'];
         $this->getApi()->getHotelBookingManager()->removeRoomType($id);

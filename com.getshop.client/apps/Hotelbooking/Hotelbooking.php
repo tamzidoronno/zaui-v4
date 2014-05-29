@@ -181,12 +181,25 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $_SESSION['hotelbooking']['cleaning'] = $_POST['data']['product'];
     }
     
-    public function reserveRoom() {
+    public function continueToCart() {
         $count = $this->getRoomCount();
         $type = $this->getProduct()->sku;
         $start = $this->getStart();
         $end = $this->getEnd();
-        $referencenumber = $this->getApi()->getHotelBookingManager()->reserveRoom($type, $start, $end, $count);
+        $reference = $this->getApi()->getHotelBookingManager()->reserveRoom($type, $start, $end, $count);
+        if(($reference) > 0) {
+            $cartmgr = $this->getApi()->getCartManager();
+            $cartmgr->clear();
+            $cartmgr->addProduct($this->getProduct()->id, $this->getDayCount(), array());
+            $cleaningid = $this->getCleaningOption();
+            if($cleaningid) {
+                echo $cleaningid;
+                $cleaningproduct = $this->getApi()->getProductManager()->getProduct($cleaningid);
+                $interval = $cleaningproduct->stockQuantity;
+                $cleaningcount = floor($this->getDayCount() / $interval);
+                $cartmgr->addProduct($cleaningid, $cleaningcount, array());
+            }
+        }
     }
     
     public function getCleaningOption() {

@@ -96,7 +96,6 @@ app.Hotelbooking = {
         $(document).on('click', '.Hotelbooking .check_available_button', app.Hotelbooking.checkAvailability);
         $(document).on('change', '.Hotelbooking #ordertype', app.Hotelbooking.changeOrderType);
         $(document).on('change', '.Hotelbooking .number_of_rooms', app.Hotelbooking.updateNumberOfRooms);
-        $(document).on('click', '.Hotelbooking .selectbutton', app.Hotelbooking.setSelectedRoom);
         $(document).on('click', '.Hotelbooking .cal_field', app.Hotelbooking.changeBookingDate);
         $(document).on('change', '.Hotelbooking .number_of_rooms', app.Hotelbooking.updateRoomCount);
         $(document).on('blur', '.Hotelbooking .number_of_rooms', app.Hotelbooking.updateRoomCount);

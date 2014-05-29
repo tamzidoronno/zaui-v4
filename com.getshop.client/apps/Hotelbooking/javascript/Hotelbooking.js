@@ -31,7 +31,12 @@ app.Hotelbooking = {
     continueToCart : function() {
         var event = thundashop.Ajax.createEvent("","continueToCart", $(this), {});
         thundashop.Ajax.postWithCallBack(event, function(result) {
-            alert(result);
+            if(result === "-1") {
+                alert('Sorry, no rooms available');
+                return;
+            }
+            
+            document.location.href= '?page=cart';
         });
         
     },

@@ -183,6 +183,12 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     
     public function continueToCart() {
         $count = $this->getRoomCount();
+        
+        if($count < $this->getRoomCount()) {
+            echo "-1";
+            return;
+        }
+        
         $type = $this->getProduct()->sku;
         $start = $this->getStart();
         $end = $this->getEnd();
@@ -193,7 +199,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             $cartmgr->addProduct($this->getProduct()->id, $this->getDayCount(), array());
             $cleaningid = $this->getCleaningOption();
             if($cleaningid) {
-                echo $cleaningid;
                 $cleaningproduct = $this->getApi()->getProductManager()->getProduct($cleaningid);
                 $interval = $cleaningproduct->stockQuantity;
                 $cleaningcount = floor($this->getDayCount() / $interval);

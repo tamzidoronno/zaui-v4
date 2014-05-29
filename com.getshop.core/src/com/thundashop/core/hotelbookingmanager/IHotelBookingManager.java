@@ -22,11 +22,12 @@ public interface IHotelBookingManager {
     /**
      * 
      * @param roomType
-     * @param startDate
-     * @param endDate
+     * @param startDate The first day unix timestamp.
+     * @param endDate The last day unix timestamp.
+     * @param count The number of rooms to book.
      * @throws ErrorException 
      */
-    public void reserveRoom(String roomType, Date startDate, Date endDate) throws ErrorException;
+    public String reserveRoom(String roomType, long startDate, long endDate, int count) throws ErrorException;
     
     /**
      * Add new room to the manager.

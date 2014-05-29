@@ -22,6 +22,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     public HashMap<String, Room> rooms = new HashMap();
     public HashMap<String, RoomType> roomTypes = new HashMap();
+    public HashMap<Integer, BookingReference> bookingReferences = new HashMap();
     
     
     @Autowired
@@ -35,6 +36,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
             if(dbobj instanceof Room) {
                 rooms.put(dbobj.id, (Room)dbobj);
+            }
+            if(dbobj instanceof BookingReference) {
+                BookingReference reference = (BookingReference)dbobj;
+                bookingReferences.put(reference.bookingReference, reference);
             }
         }
     }
@@ -84,8 +89,25 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     @Override
-    public void reserveRoom(String roomType, Date startDate, Date endDate) throws ErrorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String reserveRoom(String roomType, long startDate, long endDate, int count) throws ErrorException {
+        //First make sure there is enough rooms available.
+        Integer availableRooms = checkAvailable(startDate, endDate, roomType);
+        if(availableRooms < count) {
+            return "-1";
+        }
+        
+        BookingReference reference = new BookingReference();
+        reference.bookingReference = genereateReferenceId();
+        
+        Room room = getAvailableRoom(roomType, startDate, endDate);
+        room.reserveDates(startDate, endDate, reference.bookingReference);
+        
+        databaseSaver.saveObject(room, credentials);
+        databaseSaver.saveObject(reference, credentials);
+        
+        bookingReferences.put(reference.bookingReference, reference);
+        
+        return new Integer(reference.bookingReference).toString();
     }
 
     @Override
@@ -149,5 +171,30 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         databaseSaver.deleteObject(type, credentials);
         roomTypes.remove(id);
+    }
+
+    
+    private Room getAvailableRoom(String roomType, long startDate, long endDate) {
+        for(Room room : rooms.values()) {
+            if(!room.roomType.equals(roomType)) {
+                continue;
+            }
+            if(room.isAvilable(new Date(startDate), new Date(endDate))) {
+                return room;
+            }
+        }
+        
+        return null;
+    }
+
+    private int genereateReferenceId() {
+        int count = 0;
+        for(int curcount : bookingReferences.keySet()) {
+            if(count < curcount) {
+                count = curcount;
+            }
+        }
+        count++;
+        return count;
     }
 }

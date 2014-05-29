@@ -22,7 +22,7 @@
 <? echo $this->__W("ROOM TYPE"); ?><br>
 <select class='room_selection'>
     <?
-        $products = $this->getApi()->getProductManager()->getAllProducts();
+        $products = $this->getHotelRooms();
         foreach($products as $product) {
             /* @var $product \core_productmanager_data_Product */
             echo "<option value='".$product->id."'>" . $product->price . ",- " . $product->name . "</option>";

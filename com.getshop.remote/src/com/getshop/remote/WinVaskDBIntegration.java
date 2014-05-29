@@ -18,6 +18,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -185,7 +186,7 @@ public class WinVaskDBIntegration {
         stmt.setInt(6, 1);
         stmt.setInt(7, kundenr);
         stmt.setString(8, email);
-        stmt.setInt(9, converToWierdData(new Date()));
+        stmt.setLong(9, converToWierdData(new Date()));
         stmt.setInt(10, 1);
         stmt.setInt(11, 10);
         
@@ -208,7 +209,7 @@ public class WinVaskDBIntegration {
     public void createInvoice(int kundenr, Order order) throws SQLException, Exception {
         //Tables changed: Bilag, UBilag
         //Inifile System Vattr miniopsjoner miniskjerm
-        int wierdDate = converToWierdData(order.createdDate);
+        long wierdDate = converToWierdData(order.createdDate);
         int bilagnr = getNextBilagNumber();
         int ordrenr = getNextOrdreNumber();
         List<CartItem> items = order.cart.getItems();
@@ -243,9 +244,9 @@ public class WinVaskDBIntegration {
         stmt.setInt(1, bilagnr);
         stmt.setInt(2, ordrenr);
         stmt.setInt(3, kundenr);
-        stmt.setInt(4, wierdDate);
-        stmt.setInt(5, wierdDate);
-        stmt.setInt(6, wierdDate);
+        stmt.setLong(4, wierdDate);
+        stmt.setLong(5, wierdDate);
+        stmt.setLong(6, wierdDate);
         stmt.setDouble(7, mva_belop);
         stmt.setDouble(8, price);
         stmt.setDouble(9, sm3);
@@ -274,15 +275,15 @@ public class WinVaskDBIntegration {
             ubilagstmt.setString(4, vare.description);
             ubilagstmt.setDouble(5, theprice);
             ubilagstmt.setDouble(6, theprice*vare.count);
-            ubilagstmt.setInt(7, wierdDate);
+            ubilagstmt.setLong(7, wierdDate);
             ubilagstmt.setDouble(8, theprice*vare.count);
             ubilagstmt.setDouble(9, theprice*vare.count);
             ubilagstmt.setDouble(10, mvaPrice);
             ubilagstmt.setDouble(11, mvaFactor);
             ubilagstmt.setDouble(12, (theprice*vare.count)+mvaPrice);
-            ubilagstmt.setInt(13, wierdDate);
-            ubilagstmt.setInt(14, wierdDate);
-            ubilagstmt.setInt(15, wierdDate);
+            ubilagstmt.setLong(13, wierdDate);
+            ubilagstmt.setLong(14, wierdDate);
+            ubilagstmt.setLong(15, wierdDate);
             ubilagstmt.setInt(16, 12);
             ubilagstmt.setInt(17, lnr);
             ubilagstmt.setInt(18, vare.varenr);
@@ -297,21 +298,11 @@ public class WinVaskDBIntegration {
 
     }
 
-    private int converToWierdData(Date createdDate) {
-        int base = 77805; //This is 05.01.2014, don't ask me why
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, 2014);
-        cal.set(Calendar.DAY_OF_MONTH, 5);
-        cal.set(Calendar.MONTH, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.HOUR, 0);
-
-        long end = createdDate.getTime();
-        System.out.println(createdDate.getTime());
-        int days = (int) (createdDate.getTime() - cal.getTimeInMillis()) / (1000 * 60 * 60 * 24);
+    private long converToWierdData(Date createdDate) {
+        Clarion clar = new Clarion();
+        long days = clar.clarion(createdDate);
         System.out.println("Number of days: " + days + "(" + createdDate.toString() + ")");
-        return base + days;
+        return days;
     }
 
     private int getNextBilagNumber() throws SQLException {

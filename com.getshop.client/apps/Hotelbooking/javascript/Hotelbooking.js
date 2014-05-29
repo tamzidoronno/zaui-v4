@@ -28,6 +28,11 @@ app.Hotelbooking = {
             
         });
     },
+    updateCleaningCount : function() {
+        var count = $(this).val();
+        var event = thundashop.Ajax.createEvent("","setCleaningOption", $(this), { "product": count});
+        thundashop.Ajax.postWithCallBack(event, function() {});
+    },
     checkAvailability : function() {
         var nextpage = $(this).attr('nextpage');
         var apparea =$(this).closest('.app'); 
@@ -83,6 +88,7 @@ app.Hotelbooking = {
         $(document).on('click', '.Hotelbooking .cal_field', app.Hotelbooking.changeBookingDate);
         $(document).on('change', '.Hotelbooking .number_of_rooms', app.Hotelbooking.updateRoomCount);
         $(document).on('blur', '.Hotelbooking .number_of_rooms', app.Hotelbooking.updateRoomCount);
+        $(document).on('change', '.Hotelbooking .cleaning_option', app.Hotelbooking.updateCleaningCount);
     }
 };
 

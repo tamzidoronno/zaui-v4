@@ -20,7 +20,7 @@ public class APIHotelBookingManager {
      * @param startDate The first day unix timestamp.
      * @param endDate The last day unix timestamp.
      * @param type The type of room to search for-
-     * @return Number of avilable rooms.
+     * @return Number of avilable rooms. -1, the date is set before todays date, -2 end date is before the start date.
      * @throws ErrorException
      */
      public java.lang.Integer checkAvailable(long startDate, long endDate, java.lang.String type)  throws Exception  {
@@ -107,12 +107,13 @@ public class APIHotelBookingManager {
      * @param endDate
      * @throws ErrorException
      */
-     public void reserveRoom(java.lang.String roomType, java.util.Date startDate, java.util.Date endDate)  throws Exception  {
+     public void reserveRoom(java.lang.String roomType, java.util.Date startDate, java.util.Date endDate, int count)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new LinkedHashMap();
           data.args.put("roomType",new Gson().toJson(roomType));
           data.args.put("startDate",new Gson().toJson(startDate));
           data.args.put("endDate",new Gson().toJson(endDate));
+          data.args.put("count",new Gson().toJson(count));
           data.method = "reserveRoom";
           data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager";
           String result = transport.send(data);

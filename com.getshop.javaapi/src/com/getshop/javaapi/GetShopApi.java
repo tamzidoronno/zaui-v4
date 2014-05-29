@@ -38,6 +38,12 @@ public class GetShopApi {
            return new APIOrderManager(transport);
       }
      /**
+      * @return APISedoxProductManager
+      */
+      public APISedoxProductManager getSedoxProductManager() {
+           return new APISedoxProductManager(transport);
+      }
+     /**
       * @return APIGalleryManager
       */
       public APIGalleryManager getGalleryManager() {

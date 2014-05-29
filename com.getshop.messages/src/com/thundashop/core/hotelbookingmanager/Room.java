@@ -3,6 +3,7 @@ import com.thundashop.core.common.DataCommon;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 public class Room extends DataCommon {
     List<BookedDate> bookedDates;
@@ -39,6 +40,19 @@ public class Room extends DataCommon {
         }
         
         return true;
+    }
+
+    void reserveDates(long startDate, long endDate, int bookingReference) {
+        Random randomGenerator = new Random();
+        int code = randomGenerator.nextInt(10000);
+        
+        for(long day = startDate; day <= endDate; day += 86400) {
+            BookedDate booked = new BookedDate();
+            booked.bookingReference = bookingReference;
+            booked.code = code;
+            booked.date = new Date(day);
+            System.out.println("Booking room: " + roomName + " : " + lockId + " : " + booked);
+        }
     }
 
 }

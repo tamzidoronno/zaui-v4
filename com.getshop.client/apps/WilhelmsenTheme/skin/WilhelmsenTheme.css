@@ -34,3 +34,4 @@
 .leftcart .shipping_price, .leftcart .up, .leftcart .down, .leftcart .removebutton { display:none; }
 .CartManager .leftcart,.CartManager .rightcart { border: solid 0px !important; }
 body { background-color: #363b3e; }
+.gs_button.buy_product { display: none; }

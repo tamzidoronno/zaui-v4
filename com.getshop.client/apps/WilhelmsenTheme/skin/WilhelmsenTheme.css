@@ -35,3 +35,5 @@
 .CartManager .leftcart,.CartManager .rightcart { border: solid 0px !important; }
 body { background-color: #363b3e; }
 .gs_button.buy_product { display: none; }
+.subentries a { color:#000; }
+.subentries a.selected { font-weight: bold; }

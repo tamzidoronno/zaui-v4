@@ -80,6 +80,35 @@ Existing rooms:<br>
 <br>
 <br>
 <br>
+Existing booking references
+<div style="padding:10px; border: solid 1px;background-color:#EFEFEF;">
+    <table width="100%">
+        <tr>
+            <th>Reservation number</th>
+            <th>Room</th>
+            <th>Start date</th>
+            <th>End date</th>
+            <th>Code</th>
+            <th>Remove</th>
+        </tr>
+    <?
+        $reservations = $this->getApi()->getHotelBookingManager()->getAllReservations();
+        foreach($reservations as $reservation) {
+            /* @var $reservation \core_hotelbookingmanager_BookingReference */
+            echo "<tr>";
+            echo "<td style='text-align:center;'>" . $reservation->bookingReference . "</td>";
+            echo "<td style='text-align:center;'>" . $reservation->roomName . "</td>";
+            echo "<td style='text-align:center;'>" . $reservation->startDate . "</td>";
+            echo "<td style='text-align:center;'>" . $reservation->endDate . "</td>";
+            echo "<td style='text-align:center;'>" . $reservation->code . "</td>";
+            echo "<td style='text-align:center;'><i style='cursor:pointer' refid='".$reservation->bookingReference."' class='fa fa-trash-o delete_reference'></td>";
+            echo "</tr>";
+        }
+    ?>
+    </table>
+</div>
+<br>
+<br>
 <br>
 <br>
 <br>

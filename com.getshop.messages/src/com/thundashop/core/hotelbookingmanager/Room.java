@@ -1,11 +1,13 @@
 package com.thundashop.core.hotelbookingmanager;
 import com.thundashop.core.common.DataCommon;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 public class Room extends DataCommon {
-    List<BookedDate> bookedDates;
+    List<BookedDate> bookedDates = new ArrayList();
     public String roomType;
     public String currentCode;
     public String roomName;
@@ -32,13 +34,48 @@ public class Room extends DataCommon {
             for(BookedDate bdate : bookedDates) {
                 Calendar bcal = Calendar.getInstance();
                 bcal.setTime(bdate.date);
-                if(bcal.get(Calendar.DAY_OF_YEAR) == i) {
+                if(bcal.get(Calendar.DAY_OF_YEAR) == i && bcal.get(Calendar.YEAR) == calStart.get(Calendar.YEAR)) {
                     return false;
                 }
             }
         }
         
         return true;
+    }
+
+    int reserveDates(Date start, Date end, int bookingReference) {
+        Random randomGenerator = new Random();
+        int code = randomGenerator.nextInt(10000);
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(start);
+        
+        while(true) {
+            BookedDate booked = new BookedDate();
+            booked.bookingReference = bookingReference;
+            booked.code = code;
+            booked.date = cal.getTime();
+            System.out.println("Booking room: " + roomName + " : " + lockId + " : " + booked);
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+            bookedDates.add(booked);
+            if(cal.getTime().after(end)) {
+                break;
+            }
+        }
+        return code;
+    }
+
+    void removeBookedRoomWithReferenceNumber(int reference) {
+        List<BookedDate> toRemove = new ArrayList();
+        for(BookedDate booked : bookedDates) {
+            if(booked.bookingReference == reference) {
+                toRemove.add(booked);
+            }
+        }
+        
+        for(BookedDate tmpremove : toRemove) {
+            bookedDates.remove(tmpremove);
+        }
     }
 
 }

@@ -218,7 +218,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
         mailFactory.send(store.configuration.emailAdress, order.cart.address.emailAddress, getSubject() , orderText);
 
-        if (!store.configuration.emailAdress.equals(order.cart.address.emailAddress)) {
+        if (store.configuration.emailAdress != null && !store.configuration.emailAdress.equals(order.cart.address.emailAddress)) {
             mailFactory.send(store.configuration.emailAdress, store.configuration.emailAdress, getSubject(), orderText);
         }
 

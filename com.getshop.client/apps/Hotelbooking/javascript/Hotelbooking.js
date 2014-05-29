@@ -28,6 +28,23 @@ app.Hotelbooking = {
             
         });
     },
+    continueToCart : function() {
+        var event = thundashop.Ajax.createEvent("","continueToCart", $(this), {});
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            if(result === "-1") {
+                alert('Sorry, no rooms available');
+                return;
+            }
+            
+            document.location.href= '?page=cart';
+        });
+        
+    },
+    updateCleaningCount : function() {
+        var count = $(this).val();
+        var event = thundashop.Ajax.createEvent("","setCleaningOption", $(this), { "product": count});
+        thundashop.Ajax.postWithCallBack(event, function() {});
+    },
     checkAvailability : function() {
         var nextpage = $(this).attr('nextpage');
         var apparea =$(this).closest('.app'); 
@@ -79,10 +96,11 @@ app.Hotelbooking = {
         $(document).on('click', '.Hotelbooking .check_available_button', app.Hotelbooking.checkAvailability);
         $(document).on('change', '.Hotelbooking #ordertype', app.Hotelbooking.changeOrderType);
         $(document).on('change', '.Hotelbooking .number_of_rooms', app.Hotelbooking.updateNumberOfRooms);
-        $(document).on('click', '.Hotelbooking .selectbutton', app.Hotelbooking.setSelectedRoom);
         $(document).on('click', '.Hotelbooking .cal_field', app.Hotelbooking.changeBookingDate);
         $(document).on('change', '.Hotelbooking .number_of_rooms', app.Hotelbooking.updateRoomCount);
         $(document).on('blur', '.Hotelbooking .number_of_rooms', app.Hotelbooking.updateRoomCount);
+        $(document).on('change', '.Hotelbooking .cleaning_option', app.Hotelbooking.updateCleaningCount);
+        $(document).on('click', '.Hotelbooking .continue_to_cart_button', app.Hotelbooking.continueToCart);
     }
 };
 

@@ -6,5 +6,8 @@ class core_hotelbookingmanager_BookedDate {
 	/** @var String */
 	public $date;
 
+	/** @var String */
+	public $bookingReference;
+
 }
 ?>

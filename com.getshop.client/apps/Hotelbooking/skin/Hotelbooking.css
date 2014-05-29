@@ -20,6 +20,7 @@
 .Hotelbooking .cal_field.selected { background-color: #b4bac4; }
 .Hotelbooking .booking_count_box td { font-size: 18px; font-weight: bold; }
 .Hotelbooking .booking_count_box input { border: solid 1px #e5e5e5; width: 40px; margin-left: 20px; }
+.Hotelbooking .booking_count_box select { width: 100%; background-color:#FFF; border: solid 1px #e5e5e5; }
 .Hotelbooking .room_selection_2 { padding-left: 20px; padding-right: 20px; position:relative; }
 .Hotelbooking .room_selection_2.product { padding: 20px; border: solid 1px #EEEEEE; margin-bottom: 5px; display:block; background-color: #f5f5f5; }
 .Hotelbooking .room_selection_2.product .name { font-weight: bold; font-size: 18px; }

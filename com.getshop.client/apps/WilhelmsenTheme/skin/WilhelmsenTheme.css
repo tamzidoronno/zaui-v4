@@ -9,13 +9,14 @@
 .TopMenu {
     font-family: "Open Sans 2";
 }
+.gs_outer, .mainarea { background-color:#FFF; }
 .gs_inner { max-width: 1000px; margin: auto; }
 .header { background-color: #020303; height: 65px; }
 .TopMenu a { color:#BBB; line-height: 35px; }
 .TopMenu a.selected { color:#FFF; }
 .TopMenu .subentries a.selected { color:#000; }
 .TopMenu { right: 0px; top: 30px; color:#FFF; }
-.footer { background-color: #363b3e; }
+.footer { background-color: #363b3e; margin-top: 30px !important; }
 .breadcrumb { display: none; }
 .Logo { top: 5px; left: 0px; }
 .TopMenu .entry { margin-right: 30px; }
@@ -23,3 +24,13 @@
 .Login .loginform { color:#000; }
 .TopMenu .fa { margin-right: 6px; }
 #ui-datepicker-div { opacity: 0.95; }
+
+.checkout table td input { background-color:#FFF; }
+.CartManager .rightcart { margin-left: 40px; }
+.checkout .button-large .filler { background-color: #d2684f; }
+.checkout .button-large ins { color: #fff; }
+.skeleton4 .gs_row.gs_outer.r1 { padding-top: 40px; }
+.shoppingcartheader { background-color: #000 !important; color:#FFF !important; }
+.leftcart .shipping_price, .leftcart .up, .leftcart .down, .leftcart .removebutton { display:none; }
+.CartManager .leftcart,.CartManager .rightcart { border: solid 0px !important; }
+body { background-color: #363b3e; }

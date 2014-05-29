@@ -22,6 +22,31 @@
                     <input type='text' style='width:100%; margin:0px;'>
                 </td>
             </tr>
+            <?  
+            if($this->getDayCount() > 3) { 
+                ?>
+                <tr>
+                    <td colspan='2'>
+                        <br>
+                        <? echo $this->__w("Cleaning 49,- each clean"); ?>
+                        <div>
+                            <select class="cleaning_option">
+                                <option value="no"><? echo $this->__f("No cleaning"); ?></option>
+                                <?
+                                $vasking = $this->getCleaningProudcts();
+                                foreach($vasking as $vask) {
+                                    $selected = "";
+                                    if($this->getCleaningOption() == $vask->id) {
+                                        $selected = "SELECTED";
+                                    }
+                                    echo "<option value='".$vask->id."' $selected>" . $vask->name . "</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+            <? } ?>
         </table>
     </span>
 
@@ -49,7 +74,7 @@
 <div style="height:5px;"></div>
     
 <?
-$products = $this->getApi()->getProductManager()->getAllProducts();
+$products = $this->getHotelRooms();
 $foundroom = 0;
 foreach($products as $product) {
     $selectedclass = "";

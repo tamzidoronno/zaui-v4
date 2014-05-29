@@ -21,11 +21,19 @@ app.HotelbookingManagement = {
             thundashop.Ajax.post(event);
         }
     },
+    deleteReference : function() {
+        if(confirm('Are you sure, this will delete this reference, the booking will then be removed from the system and available for reordering.')) {
+            var id = $(this).attr('refid');
+            var event = thundashop.Ajax.createEvent('','removeBookingReference', $(this), { "id" : id });
+            thundashop.Ajax.post(event);
+        }
+    },
     
     initEvents : function() {
         $(document).on('click', '.HotelbookingManagement .edit_type', app.HotelbookingManagement.loadEditType);
         $(document).on('click', '.HotelbookingManagement .delete_type', app.HotelbookingManagement.deleteType);
         $(document).on('click', '.HotelbookingManagement .existingroomrow .fa-trash-o', app.HotelbookingManagement.deleteRoom);
+        $(document).on('click', '.HotelbookingManagement .delete_reference', app.HotelbookingManagement.deleteReference);
     }
     
 }

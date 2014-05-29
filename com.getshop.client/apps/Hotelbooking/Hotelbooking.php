@@ -21,6 +21,10 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return $this->getApi()->getHotelBookingManager()->checkAvailable($this->getStart(),$this->getEnd(),$type);
     }
     
+    function getDayCount() {
+        return ($this->getEnd() - $this->getStart())/86400;
+    }
+    
     function checkavailability() {
         $start = strtotime($_POST['data']['start']);
         $end =  strtotime($_POST['data']['stop']);
@@ -128,7 +132,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                 }
                 if($checkbefore) {
                     $aftertime = strtotime($year . "-" . $month . "-" . $day);
-                    if($checkbefore > $aftertime || date("d", $checkbefore) == date("d",$aftertime)) {
+                    if($checkbefore > $aftertime || (date("d", $checkbefore) == date("d",$aftertime) && date("m", $checkbefore) == date("m",$aftertime))) {
                         $class .= " disabled";
                     }
                 }
@@ -171,6 +175,73 @@ class Hotelbooking extends \ApplicationBase implements \Application {
 
     public function setProductId($id) {
         $_SESSION['hotelbooking']['product'] = $id;
+    }
+
+    public function setCleaningOption() {
+        $_SESSION['hotelbooking']['cleaning'] = $_POST['data']['product'];
+    }
+    
+    public function continueToCart() {
+        $count = $this->getRoomCount();
+        
+        if($count < $this->getRoomCount()) {
+            echo "-1";
+            return;
+        }
+        
+        $type = $this->getProduct()->sku;
+        $start = $this->getStart();
+        $end = $this->getEnd();
+        $reference = $this->getApi()->getHotelBookingManager()->reserveRoom($type, $start, $end, $count);
+        if(($reference) > 0) {
+            $cartmgr = $this->getApi()->getCartManager();
+            $cartmgr->clear();
+            $cartmgr->addProduct($this->getProduct()->id, $this->getDayCount(), array());
+            $cleaningid = $this->getCleaningOption();
+            if($cleaningid) {
+                $cleaningproduct = $this->getApi()->getProductManager()->getProduct($cleaningid);
+                $interval = $cleaningproduct->stockQuantity;
+                $cleaningcount = floor($this->getDayCount() / $interval);
+                $cartmgr->addProduct($cleaningid, $cleaningcount, array());
+            }
+        }
+    }
+    
+    public function getCleaningOption() {
+        if(isset($_SESSION['hotelbooking']['cleaning'])) {
+            return $_SESSION['hotelbooking']['cleaning'];
+        }
+        return "";
+    }
+    
+    public function getCleaningProudcts() {
+        $products = $this->getApi()->getProductManager()->getAllProducts();
+        $vasking = array();
+        foreach($products as $product) {
+            if($product->sku == "vask") {
+                $vasking[] = $product;
+            }
+        }
+        
+        return $vasking;
+    }
+    
+    public function getHotelRooms() {
+        $rooms = $this->getApi()->getProductManager()->getAllProducts();
+        $types = $this->getApi()->getHotelBookingManager()->getRoomTypes();
+        $roomtypes = [];
+        $allrooms = array();
+        foreach($types as $type) {
+            /* @var $type \core_hotelbookingmanager_RoomType */
+            $roomtypes[$type->name] = true;
+        }
+        foreach($rooms as $room) {
+            /* @var $room \core_productmanager_data_Product */
+            if(isset($roomtypes[$room->sku])) {
+                $allrooms[] = $room;
+            }
+        }
+        return $allrooms;
     }
 }
 ?>

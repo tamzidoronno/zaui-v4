@@ -67,7 +67,9 @@ public class CartManager extends ManagerBase implements ICartManager {
         Product product = getProduct(productId, variations);
         if (product != null) {
             Cart cart = getCart(getSession().id);
-            cart.addProduct(product, variations);
+            for(int i = 0; i < count; i++) {
+                cart.addProduct(product, variations);
+            }
             return cart;
         } else {
             throw new ErrorException(1011);

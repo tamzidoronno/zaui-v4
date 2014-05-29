@@ -125,6 +125,8 @@
 "1022","End date is starting before start date"
 "1023","An error occured, support has been notified of this problem."
 "1024","Failed to generate md5sum for file."
+"1025","Not enough credit."
+"1026","Failed to create zipfile."
 
 "1000001","The name attribute is invalid",
 "1000002","The entry you are trying to fecth does not exists.",

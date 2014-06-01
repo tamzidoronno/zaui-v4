@@ -130,7 +130,7 @@ public class SedoxMysqlImporter {
         int j = 0;
         while(resultSet.next()) {
             SedoxCreditAccount account = new SedoxCreditAccount();
-            account.balance = (double)resultSet.getInt("accountBalance");
+            account.setBalance((double)resultSet.getInt("accountBalance"));
             
             SedoxUser sedoxUser = new SedoxUser();
             sedoxUser.magentoId = ""+resultSet.getInt("userId");
@@ -155,6 +155,15 @@ public class SedoxMysqlImporter {
                 order.creditAmount = resultSet3.getInt("creditAmount");
                 order.productId = ""+resultSet3.getInt("productId");
                 sedoxUser.orders.add(order);
+            }
+            
+            Statement statement4 = connect.createStatement();
+            ResultSet resultSet4 = statement4.executeQuery("select * from CreditOrder where customerId = " + sedoxUser.magentoId);
+            while(resultSet4.next()) {
+                SedoxCreditOrder order = new SedoxCreditOrder();
+                order.amount = resultSet4.getInt("amount");
+                order.magentoOrderId = resultSet4.getInt("orderId");
+                sedoxUser.creditOrders.add(order);
             }
             
             sedoxUser.creditAccount = account;

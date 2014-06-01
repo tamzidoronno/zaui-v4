@@ -81,6 +81,18 @@ class SedoxUserPanel extends \ApplicationBase implements \Application {
         return count($this->getApi()->getSedoxProductManager()->getProductsFirstUploadedByCurrentUser());
     }
 
+    public function getLatestDownloadedFiles() {
+        $orders = $this->getLatestOrder();
+        $retProductes = [];
+        foreach ($orders as $order) {
+            $retProductes[] = $this->getApi()->getSedoxProductManager()->getProductById($order->productId);
+            
+        }
+//        echo "<pre>";
+//        print_r($orders);
+//        echo "</pre>";
+        return $retProductes;
+    }
 }
 
 ?>

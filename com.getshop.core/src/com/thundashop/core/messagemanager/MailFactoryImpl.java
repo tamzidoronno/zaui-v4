@@ -157,7 +157,6 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
                     multipart.addBodyPart(messageBodyPart);
                 }
                 
-                multipart.addBodyPart(messageBodyPart);
                 message.setContent(multipart);
             } else {
                 message.setContent(content, "text/html; charset=UTF-8");

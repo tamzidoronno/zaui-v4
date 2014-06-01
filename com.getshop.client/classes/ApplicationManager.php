@@ -486,7 +486,13 @@ class ApplicationManager extends FactoryBase {
             $this->getFactory()->getApi()->getStoreManager()->setDeepFreeze(true, $password);
         }
     }
-
+    
+    public function toggleApplicationSticky() {
+        $appInstanceId = $_POST['data']['appInstanceId'];
+        $toggle = $_POST['data']['toggle'];
+        $this->getApi()->getPageManager()->setApplicationSticky($appInstanceId, $toggle);
+    }
+    
     public function importApplication() {
         if (!isset($_POST['data']['list'])) {
             return;

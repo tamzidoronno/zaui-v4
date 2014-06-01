@@ -96,7 +96,7 @@ class Booking extends MarketingApplication implements Application {
         if ($this->isConnectedToCurrentPage()) {
             $this->getApi()->getCalendarManager()->addUserToPageEvent($user->id, $this->getConfiguration()->id);
         } else {
-            $this->getApi()->getCalendarManager()->addUserToEvent($user->id, $data['eventid'], $password, $user->username);
+            $this->getApi()->getCalendarManager()->addUserToEvent($user->id, $data['eventid'], $password, $user->username, "webpage");
         }
         unset($_SESSION['group']);
     }

@@ -14,6 +14,22 @@ thundashop.Skeleton = {
     hideApplication : function(currentdom) {
         $(currentdom).html(this.lastName);
     },
+    addApplicationToHeader: function(appId) {
+        var area = "header"
+        var event = thundashop.Ajax.createEvent('', 'addApplicationToArea', null, {
+            "appSettingsId": appId,
+            "applicationArea": area
+        });
+        thundashop.Ajax.post(event);
+    },
+    toggleSticky: function(appInstanceId, toggle) {
+        
+        var event = thundashop.Ajax.createEvent('', 'toggleApplicationSticky', null, {
+            "appInstanceId": appInstanceId,
+            "toggle": toggle ? 1 : 0
+        });
+        thundashop.Ajax.post(event);
+    },
     settingsRemoveApplication : function(whoot, app) {
         var id = app.attr('appid');
         var area = app.closest('.applicationarea').attr('area');

@@ -1,11 +1,41 @@
-<div class='step step1'>
-    <div class='stepnumber'>1</div>
-    <div class='step_title'>Select your original file</div>
+<form id='uploadfileform' method="post" enctype="multipart/form-data">
+    <div class='step step1'>
+        <div class='step_title'>Select your original file</div>
 
-    <form id='uploadfileform' method="post" enctype="multipart/form-data">
         <div class='subinfo'>
             <input type='file' name="originalfile" id="originalfile"/>
         </div>
-        <div class='sedox_button' onclick="$('#uploadfileform').submit();"><i class='fa fa-arrow-circle-right'></i>&nbsp;Next</div>
-    </form>
-</div>
+    </div>
+
+    <div class='step step2 nomatch'>
+        <div class='step_title'>Enter your car details.</div>
+        <div class='subinfo'>
+            <div class='line'>
+                <div class='col col1'><input name='brand' id="brand" placeholder='Brand (Ex, Audi)' type='textfield'></div>
+                <div class='col col2'><input name='model' id="model" placeholder='Model (ex, A4)' type='textfield'></div>
+                <div class='col col3'><input name='enginesize' id="enginesize" placeholder='EngineSize (Ex, 2.0TDI)' type='textfield'></div>
+            </div>
+
+            <div class='line'>
+                <div class='col col1'><input name='power' id="power" placeholder='Power (Ex, 140hp)' type='textfield'></div>
+                <div class='col col2'><input name='year' id="year" placeholder='Year (Ex, 2014)' type='textfield'></div>
+                <div class='col col3'><input name='tool' id="tool" placeholder='Tool (Ex, CMD / Frieling / Powergate / Kess)' type='textfield'></div>
+            </div>
+
+            <div class='line'>
+                <div class='col col1'>
+                    <div class='checkbox firstbox'><input type="checkbox" name="automaticgear" class='upload_checkbox' id="automaticgear" />IS THIS A AUTOMATIC GEARBOX?</div>
+                    <div class='checkbox'><input type="checkbox" name="usecredit" class='upload_checkbox' id="usecredit" checked/> WITHDRAW MY CREDIT ACCOUNT AND SEND TUNINGFILE BACK BY EMAIL WHEN READY?</div>
+                </div>
+                <div class='col col2'>
+                    <textarea name='comments' id="comments" placeholder='Comment! Do you have anything else to share with us?'></textarea>
+                </div>
+            </div>
+            <div class='line'>
+                <div class='col col1'>
+                    <div onclick="$('#uploadfileform').submit();" class='sedox_button'><i class='fa fa-arrow-circle-right'></i>&nbsp; Next</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

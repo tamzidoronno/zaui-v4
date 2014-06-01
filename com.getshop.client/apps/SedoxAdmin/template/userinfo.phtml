@@ -1,0 +1,24 @@
+<?
+$userid = $_POST['data']['userId'];
+$user = $this->getApi()->getUserManager()->getUserById($userid);
+$sedoxUser = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($userid);
+$checked = $sedoxUser->creditAccount->allowNegativeCredit ? "checked" : "";
+?>
+
+<div class="useroverview">
+    Id: <? echo $userid; ?>
+    <br> Name: <? echo $user->fullName; ?>
+    <br> Email: <? echo $user->emailAddress; ?>
+    <br> Current balance: <? echo $sedoxUser->creditAccount->balance; ?>
+    <br> Allow negative credit: <input id="allownegativecredit" userId="<? echo $user->id; ?>" type="checkbox" <? echo $checked; ?> />
+    <br>
+    <br><div class="gs_button saveusersettings" userId="<? echo $userid; ?>"> Save </div>
+    <br>
+    <hr>
+    <b>Change credit amount:</b>
+    <table>
+        <tr><td>Description</td><td><input id="sedox_credit_description" type="textfield"/></td></tr>
+        <tr><td>Amount</td><td><input type="textfield" id="amount"/></td></tr>
+    </table>
+    <div class="gs_button savecredit" userId="<? echo $userid; ?>"> Update </div>
+</div>

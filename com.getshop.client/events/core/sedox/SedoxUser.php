@@ -18,5 +18,11 @@ class core_sedox_SedoxUser extends core_common_DataCommon  {
 	/** @var String */
 	public $magentoId;
 
+	/** @var String */
+	public $creditOrders;
+
+	/** @var String */
+	public $isActiveDelevoper;
+
 }
 ?>

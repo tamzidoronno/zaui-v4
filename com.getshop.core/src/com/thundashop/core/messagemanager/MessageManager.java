@@ -108,7 +108,8 @@ public class MessageManager extends ManagerBase implements IMessageManager {
             out.write(data);
             out.close();
 
-            new InputStreamReader(conn.getInputStream());
+            InputStreamReader inputStreamReader = new InputStreamReader(conn.getInputStream());
+            inputStreamReader.close();
 
         } catch (Exception e) {
             e.printStackTrace();

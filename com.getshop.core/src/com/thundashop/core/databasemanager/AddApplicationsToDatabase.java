@@ -47,62 +47,91 @@ public class AddApplicationsToDatabase {
         List<String> allowed = new ArrayList();
         allowed.add("large");
         allowed.add("xlarge");
+        
+        List<String> allowed2 = new ArrayList();
+        allowed2.add("cell");
+        allowed2.add("small");
+        allowed2.add("medium");
+        allowed2.add("large");
+        allowed2.add("xlarge");
 
-        ApplicationSettings hbman = createSettings(
-                "HotelbookingManagement",
-                "15e67fa1-c862-4bc3-9b17-dfd818f30712",
-                allowed,
+//        ApplicationSettings hbman = createSettings(
+//                "HotelbookingManagement",
+//                "15e67fa1-c862-4bc3-9b17-dfd818f30712",
+//                allowed,
+//                "",
+//                ApplicationSettings.Type.Webshop, false);
+//        hbman.isPublic = false;
+//        hbman.allowedStoreIds = new ArrayList();
+//        hbman.allowedStoreIds.add("de02a2d5-e4b3-427c-be2c-4e1ee19f05f4");
+//        apps.add(hbman);
+        
+        ApplicationSettings sedoxMenu = createSettings(
+                "SedoxMenu",
+                "b23a3767-1f7b-40e3-93c5-65504ebaa73c",
+                allowed2,
                 "",
                 ApplicationSettings.Type.Webshop, false);
-        hbman.isPublic = false;
-        hbman.allowedStoreIds = new ArrayList();
-        hbman.allowedStoreIds.add("de02a2d5-e4b3-427c-be2c-4e1ee19f05f4");
-        apps.add(hbman);
+        sedoxMenu.isPublic = false;
+        sedoxMenu.allowedStoreIds = new ArrayList();
+        sedoxMenu.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
+        apps.add(sedoxMenu);
         
-        ApplicationSettings sedoxFileUploader = createSettings(
-                "SedoxFileUpload",
-                "a2172f9b-c911-4d9a-9361-89b57bc01d40",
-                allowed,
+        ApplicationSettings sedoxLogin = createSettings(
+                "SedoxLogin",
+                "05b2baef-5fba-4f01-9fcb-04a8c80b2907",
+                allowed2,
                 "",
                 ApplicationSettings.Type.Webshop, false);
-        sedoxFileUploader.isPublic = false;
-        sedoxFileUploader.allowedStoreIds = new ArrayList();
-        sedoxFileUploader.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
-        apps.add(sedoxFileUploader);
+        sedoxLogin.isPublic = false;
+        sedoxLogin.allowedStoreIds = new ArrayList();
+        sedoxLogin.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
+        apps.add(sedoxLogin);
         
-        
-        ApplicationSettings sedoxAdmin = createSettings(
-                "SedoxAdmin",
-                "e22e25dd-8000-471c-89a3-6927d932165e",
-                allowed,
+        ApplicationSettings sedoxHeaderApp = createSettings(
+                "SedoxHeaderApp",
+                "264b0edf-b654-4ce0-9be2-0ebb3d2887af",
+                new ArrayList(),
                 "",
                 ApplicationSettings.Type.Webshop, false);
-        sedoxAdmin.isPublic = false;
-        sedoxAdmin.allowedStoreIds = new ArrayList();
-        sedoxAdmin.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
-        apps.add(sedoxAdmin);
-        
-        ApplicationSettings sedoxProductView = createSettings(
-                "SedoxProductView",
-                "23fac58b-5066-4222-860c-a9e88196b8a1",
-                allowed,
-                "",
-                ApplicationSettings.Type.Webshop, false);
-        sedoxProductView.isPublic = false;
-        sedoxProductView.allowedStoreIds = new ArrayList();
-        sedoxProductView.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
-        apps.add(sedoxProductView);
-        
-        ApplicationSettings sedoxUserPanel = createSettings(
-                "SedoxUserPanel",
-                "32b5f680-dd8d-11e3-8b68-0800200c9a66",
-                allowed,
-                "",
-                ApplicationSettings.Type.Webshop, false);
-        sedoxUserPanel.isPublic = false;
-        sedoxUserPanel.allowedStoreIds = new ArrayList();
-        sedoxUserPanel.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
-        apps.add(sedoxUserPanel);
+        sedoxHeaderApp.isPublic = false;
+        sedoxHeaderApp.allowedStoreIds = new ArrayList();
+        sedoxHeaderApp.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
+        apps.add(sedoxHeaderApp);
+//        
+//        
+//        ApplicationSettings sedoxAdmin = createSettings(
+//                "SedoxAdmin",
+//                "e22e25dd-8000-471c-89a3-6927d932165e",
+//                allowed,
+//                "",
+//                ApplicationSettings.Type.Webshop, false);
+//        sedoxAdmin.isPublic = false;
+//        sedoxAdmin.allowedStoreIds = new ArrayList();
+//        sedoxAdmin.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
+//        apps.add(sedoxAdmin);
+//        
+//        ApplicationSettings sedoxProductView = createSettings(
+//                "SedoxProductView",
+//                "23fac58b-5066-4222-860c-a9e88196b8a1",
+//                allowed,
+//                "",
+//                ApplicationSettings.Type.Webshop, false);
+//        sedoxProductView.isPublic = false;
+//        sedoxProductView.allowedStoreIds = new ArrayList();
+//        sedoxProductView.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
+//        apps.add(sedoxProductView);
+//        
+//        ApplicationSettings sedoxUserPanel = createSettings(
+//                "SedoxUserPanel",
+//                "32b5f680-dd8d-11e3-8b68-0800200c9a66",
+//                allowed,
+//                "",
+//                ApplicationSettings.Type.Webshop, false);
+//        sedoxUserPanel.isPublic = false;
+//        sedoxUserPanel.allowedStoreIds = new ArrayList();
+//        sedoxUserPanel.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
+//        apps.add(sedoxUserPanel);
 
 
         return apps;

@@ -1,43 +1,76 @@
-<div class='searcharea'>
-    <input type="textfield" placeholder="Enter something to search for and press enter :D" style='width: 600px;'>
-    <div class="sedox_button"><i class='fa fa-search'></i>&nbsp;Search</div>
-</div>
-
 <div class='result'>
     <?
     if (isset($_SESSION['searchKey'])) {
         $key = $_SESSION['searchKey'];
         $result = $this->getSearchResult($key);
         
-        
-        foreach ($result->products as $prod) { 
-            $orgFile = null;
-            
-            foreach ($prod->binaryFiles as $binFile) {
-                /* @var $binFile core_sedox_SedoxBinaryFile */
-                if (trim($binFile->fileType) == "Original") {
-                    $orgFile = $binFile;
+        if (!$result) {
+            $this->includefile("information");
+        } else {
+            if (count($result->products) == 0) {
+                echo "<div class='noresult'><i class='fa fa-warning'></i> No result, please try another search criteria</div>";
+            } else {
+                $nextPageId = $result->pageNumber < $result->totalPages ? $result->pageNumber + 1 : $result->totalPages;
+                $prevPageId = $result->pageNumber > 1 ? $result->pageNumber - 1 : 1;
+
+                $next = "<a href='?searchppage=$nextPageId'>next -></a>";
+                $prev = "<a href='?searchppage=$prevPageId'><- prev</a>";
+
+                echo "<center>$prev : ".$result->pageNumber."/".$result->totalPages." : $next</center>";
+                foreach ($result->products as $prod) { 
+                    $orgFile = null;
+
+                    foreach ($prod->binaryFiles as $binFile) {
+                        /* @var $binFile core_sedox_SedoxBinaryFile */
+                        if (trim($binFile->fileType) == "Original") {
+                            $orgFile = $binFile;
+                        }
+                    }
+
+                    /* @var $orgFile core_sedox_SedoxBinaryFile */
+                    /* @var $prod core_sedox_SedoxProduct */
+                    ?>
+                    <a href='?page=productview&productId=<? echo $prod->id; ?>'><div class='product_row'>
+                        <div class='product_header'><? echo $prod->brand." ".$prod->model." ".$prod->engineSize." ".$prod->power." ".$prod->year." ".$prod->originalChecksum; ?></div>
+                        <div class='extendedinfo'>
+                            <? if ($prod->rowCreatedDate) { ?>
+                            <div><div class='col1'>Created</div><div class='col2'><? echo $prod->rowCreatedDate; ?></div></div>
+                            <? } ?>
+
+                            <? if ($prod->power) { ?>
+                            <div><div class='col1'>PS - Original</div><div class='col2'><? echo $prod->power; ?></div></div>
+                            <? } ?>
+
+                            <? if ($prod->ecuBrand) { ?>
+                            <div><div class='col1'>ECU Brand</div><div class='col2'></div><? echo $prod->ecuBrand; ?></div>
+                            <? } ?>
+
+                            <? if ($prod->ecuType) { ?>
+                            <div><div class='col1'>ECU Type</div><div class='col2'></div><? echo $prod->ecuType; ?></div>
+                            <? } ?>
+
+                            <? if ($prod->softwareNumber) { ?>
+                            <div><div class='col1'>ECU SW Number</div><div class='col2'></div><? echo $prod->softwareNumber; ?></div>
+                            <? } ?>
+
+                            <? if ($prod->originalChecksum) { ?>
+                            <div><div class='col1'>Orginal Checksum</div><div class='col2'></div><? echo $prod->originalChecksum; ?></div>
+                            <? } ?>
+
+                            <? if ($prod->softwareSize) { ?>
+                            <div><div class='col1'>Software Size</div><div class='col2'></div><? echo $prod->softwareSize; ?></div>
+                            <? } ?>
+
+                        </div>
+                    </div></a>
+                    
+                <? 
                 }
+                echo "<center>$prev : ".$result->pageNumber."/".$result->totalPages." : $next</center>";
             }
+          
             
-            /* @var $orgFile core_sedox_SedoxBinaryFile */
-            /* @var $prod core_sedox_SedoxProduct */
-            ?>
-            <a href='?page=productview&productId=<? echo $prod->id; ?>'><div class='product_row'>
-                <div class='product_header'><? echo $prod->brand." ".$prod->model." ".$prod->build." ".$prod->power." ".$prod->year." ".$prod->originalChecksum; ?></div>
-                <div class='extendedinfo'>
-                    <div><div class='col1'>Created</div><div class='col2'>-</div></div>
-                    <div><div class='col1'>PS - Original</div><div class='col2'>-</div></div>
-                    <div><div class='col1'>ECU Brand</div><div class='col2'></div>-</div>
-                    <div><div class='col1'>ECU Type</div><div class='col2'></div>-</div>
-                    <div><div class='col1'>ECU Partnumber</div><div class='col2'></div>-</div>
-                    <div><div class='col1'>ECU SW Number</div><div class='col2'></div>-</div>
-                    <div><div class='col1'>Orginal Checksum</div><div class='col2'></div>-</div>
-                    <div><div class='col1'>Software Size</div><div class='col2'></div>-</div>
-                </div>
-            </div></a>
-        <? }
-        echo "<center>page 1 of ".$result->totalPages."</center>";
+        }
     }
     ?>
 </div>

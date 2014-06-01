@@ -20,4 +20,11 @@ public class SedoxUser extends DataCommon {
     public boolean isPassiveSlave = false;
     public boolean canUseExternalProgram = false;
     public String magentoId;
+    public List<SedoxCreditOrder> creditOrders = new ArrayList<>();
+    boolean isActiveDelevoper = false;
+
+    public void addCreditOrderUpdate(SedoxCreditOrder sedoxCreditOrder) {
+        creditAccount.updateCredit(sedoxCreditOrder);
+        creditOrders.add(sedoxCreditOrder);
+    }
 }

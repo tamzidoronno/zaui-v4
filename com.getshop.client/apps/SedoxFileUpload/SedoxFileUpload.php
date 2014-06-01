@@ -24,73 +24,53 @@ class SedoxFileUpload extends \ApplicationBase implements \Application {
         return $this->__f("Sedox FileUploader");
     }
 
-    private function saveFileToSession() {
+    private function getExistingProduct() {
         if (isset($_FILES['originalfile'])) {
             $sum  = md5_file($_FILES["originalfile"]["tmp_name"]);
             $product = $this->getApi()->getSedoxProductManager()->getSedoxProductByMd5Sum($sum);
-            
-            if ($product) {
-                $_SESSION['originalfile_match'] = $product->id;
-            } else {
-                $binaryFileRead = fread(fopen($_FILES["originalfile"]["tmp_name"], "r"), filesize($_FILES["originalfile"]["tmp_name"]));
-                $_SESSION['originalfile_filename'] = $_FILES['originalfile']['name'];
-                $_SESSION['originalfile_base64'] = base64_encode($binaryFileRead);
-            }   
+            return $product;
         }
+        return null;
     }
-    
-    private function isFileUploaded() {
-        return isset($_SESSION['originalfile_base64']);
-    }
-    
+
     public function saveCarDetails() {
-        $sedoxProduct = new \core_sedox_SedoxProduct();
-        $sedoxProduct->brand = $_POST['data']['brand'];
-        $sedoxProduct->model = $_POST['data']['model'];
-        $sedoxProduct->build = $_POST['data']['enginesize'];
-        $sedoxProduct->power = $_POST['data']['power'];
-        $sedoxProduct->tool = $_POST['data']['tool'];
-        $sedoxProduct->comment = $_POST['data']['comments'];
-        $sedoxProduct->gearType = $_POST['data']['automaticgear'] == "true" ? "auto" : "man";
-        $sedoxProduct->useCreditAccount = $_POST['data']['usecredit'];
+        $binaryFileRead = fread(fopen($_FILES["originalfile"]["tmp_name"], "r"), filesize($_FILES["originalfile"]["tmp_name"]));
+        $filename = $_FILES['originalfile']['name'];
+        $filecontent = base64_encode($binaryFileRead);
         
-        $this->getApi()->getSedoxProductManager()->createSedoxProduct($sedoxProduct, $_SESSION['originalfile_base64'], $_SESSION['originalfile_filename']);
+        $sedoxProduct = new \core_sedox_SedoxProduct();
+        $sedoxProduct->brand = $_POST['brand'];
+        $sedoxProduct->model = $_POST['model'];
+        $sedoxProduct->engineSize = $_POST['enginesize'];
+        $sedoxProduct->power = $_POST['power'];
+        $sedoxProduct->year = $_POST['year'];
+        $sedoxProduct->tool = $_POST['tool'];
+        $sedoxProduct->comment = $_POST['comments'];
+        $sedoxProduct->gearType = isset($_POST['automaticgear']) && $_POST['automaticgear'] == "on" ? "auto" : "man";
+        $sedoxProduct->useCreditAccount = isset($_POST['usecredit']) && $_POST['usecredit'] == "on" ? true : false;
+        
+        $this->getApi()->getSedoxProductManager()->createSedoxProduct($sedoxProduct, $filecontent, $filename);
         $_SESSION['fileuploaded'] = true;
-    }
-    
-    private function isFinished() {
-        return isset($_SESSION['fileuploaded']);
-    }
-    
-    private function isFileMatch() {
-        return isset($_SESSION['originalfile_match']);
     }
     
     public function sendSpecialRequest() {
         $desc = $_POST['data']['desc'];
         $this->getApi()->getSedoxProductManager()->requestSpecialFile($_SESSION['originalfile_match'], $desc);
-        $_SESSION['fileuploaded'] = true;
-        
-    }
-    
-    private function resetUpload() {
-        unset($_SESSION['fileuploaded']);
-        unset($_SESSION['originalfile_filename']);
-        unset($_SESSION['originalfile_base64']);
-        unset($_SESSION['originalfile_match']);
+        $_SESSION['fileuploaded'] = true;   
     }
     
     public function render() {
-        $this->saveFileToSession();
-        if ($this->isFinished()) {
-            $this->includefile("finished");
-            $this->resetUpload();
-        } else if ($this->isFileMatch()) {
-            $this->includefile("filematch");
-        } else if ($this->isFileUploaded()) {
-            $this->includefile("cardetails");
-        } else {
+        if (!isset($_FILES['originalfile'])) {
             $this->includefile("uploadform");
+            return;
+        }
+        
+        $product = $this->getExistingProduct();
+        if ($product) {
+            $this->includefile("filematch");
+        } else {
+            $this->saveCarDetails();
+            $this->includefile("finished");
         }
     }
 }

@@ -1,0 +1,14 @@
+<div class='userinfo'>
+    <div class='sedoxtitle'>Info</div>
+    <br><b>Name:</b> <? echo $this->getApi()->getUserManager()->getLoggedOnUser()->fullName; ?>
+    <br><b>Available credits:</b> <? echo $this->getApi()->getSedoxProductManager()->getSedoxUserAccount()->creditAccount->balance; ?>
+    <br><b>Files:</b> <? 
+    $count = count($this->getApi()->getSedoxProductManager()->getProductsFirstUploadedByCurrentUser());
+    echo $count; ?>
+    
+    <div class='buttons'>
+        <a href='?page=5cb79939-9a26-4ed1-9ffb-424b814b3ad5'><div class='sedox_button'>MY FILES</div></a>
+        <div class='sedox_button logout'>LOGOUT</div>
+    </div>
+    
+</div>

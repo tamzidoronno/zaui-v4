@@ -1,4 +1,18 @@
-<div class="title">
-    A few databank settings.
+<? /* @var $this \ns_e22e25dd_8000_471c_89a3_6927d932165e\SedoxAdmin */ ?>
+
+<div class="sedoxsettings">
+    <div class="title">Developers</div>
+    Are you on vacation ? please let me know so I dont bother you ;D
+    <br> checked = You are ready for business.
+    <br>
+    <?
+    $developers = $this->getApi()->getSedoxProductManager()->getDevelopers();
+    foreach ($developers as $developer) {
+        /* @var $developer \core_sedox_SedoxUser */
+        $id = $developer->id;
+        $checked = $developer->isActiveDelevoper ? "checked" : "";
+        echo "<br/><input type='checkbox' id='$id' $checked/> " . $this->getApi()->getUserManager()->getUserById($id)->fullName;
+    }
+    ?>
+    <br><br><div class='gs_button savedevelopers'>Save</div>
 </div>
-<div class='gs_button'>Save</div>

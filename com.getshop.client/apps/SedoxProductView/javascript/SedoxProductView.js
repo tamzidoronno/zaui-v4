@@ -1,5 +1,12 @@
 app.SedoxProductView = {
     init: function() {
+        
+        $(document).on('click', '.SedoxProductView .purchase', app.SedoxProductView.purchaseFile);
+        $(document).on('click', '.SedoxProductView .purchaseorderonly', app.SedoxProductView.purchaseorderonly);
+        $(document).on('click', '.SedoxProductView .notifybyemailandsms', app.SedoxProductView.notifybyemailandsms);
+        $(document).on('click', '.SedoxProductView .sendproductbyemail', app.SedoxProductView.sendproductbyemail);
+        $(document).on('click', '.SedoxProductView .deletebinfile', app.SedoxProductView.deleteBinFile);
+        
         $(document).on('dragenter', '.SedoxProductView .uploadtuningfilebox', function(e)
         {
             e.stopPropagation();
@@ -67,11 +74,94 @@ app.SedoxProductView = {
 //            handleFileUpload(files, $(this));
         });
     },
+    
+    deleteBinFile: function() {
+        var binFileId = $(this).closest('.binaryfilerow').attr('binfileid');
+        var productId = $(this).attr('productid');
+        
+        var data = {
+            binFileId : binFileId,
+            productId : productId
+        };
+        
+        var event = thundashop.Ajax.createEvent("", "deleteBinaryFile", this, data);
+        thundashop.Ajax.post(event);
+    },
+    getData : function(me) {
+        var files = [];
+        
+        $('.SedoxProductView input:checked').each(function() { 
+            files.push($(this).attr('fileid'));
+        });
+        
+        var data = {
+            productId : $(me).attr('productId'),
+            extraInfo : $('.SedoxProductView .infotextareatocustomer').val(),
+            checksum : $('.SedoxProductView .original_check_input_box').val(),
+            files: files
+        };
+        
+        return data;
+    },
+            
+    purchaseorderonly: function() {
+        var data = app.SedoxProductView.getData(this);
+        var event = thundashop.Ajax.createEvent("", "purchaseProductOnly", this, data);
+        thundashop.Ajax.post(event, function() { thundashop.common.Alert("Message sent", "purchase completed")} );
+    },
+    notifybyemailandsms: function() {
+        var data = app.SedoxProductView.getData(this);
+        var event = thundashop.Ajax.createEvent("", "notifyByEmailAndSms", this, data);
+        thundashop.Ajax.post(event, function() { thundashop.common.Alert("Message sent", "a mail is on its way to the customer")} );
+    },
+    sendproductbyemail: function() {
+        var data = app.SedoxProductView.getData(this);
+        var event = thundashop.Ajax.createEvent("", "sendProductByEmail", this, data);
+        thundashop.Ajax.post(event, function() { thundashop.common.Alert("Message sent", "product is now under its way to the customer")} );
+    },
     uploadProgressCompleted: function(button) {
         $(button).find('.progressbar').hide();
     },
     uploadProgress: function(button, progress) {
         $(button).find('.progressbar').html(progress+"%");
+    },
+            
+    purchaseFile: function() {
+        var files = [];
+        $('.SedoxProductView input:checked').each(function() { 
+            files.push($(this).attr('fileid'));
+        });
+        
+        var data = {
+            files : files
+        };
+        
+        var me = this;
+        
+        var event = thundashop.Ajax.createEvent(null, "purchaseProduct", this, data);
+        thundashop.Ajax.postWithCallBack(event, function(response) {
+            
+            var event = thundashop.Ajax.createEvent("", "dummy", me, {});
+            thundashop.Ajax.post(event, function() {
+                window.location = response;
+            });
+            
+            
+        });
+    },
+            
+    loadSettings : function(element, application) {
+         var config = {
+            draggable: true,
+            app : true,
+            application: application,
+            title: "Settings",
+            items: []
+        }
+
+        var toolbox = new GetShopToolbox(config, application);
+        toolbox.show();
+        toolbox.attachToElement(application, 2);
     }
 };
 

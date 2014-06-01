@@ -155,7 +155,6 @@ thundashop.Ajax = {
         return result;
     },
     postSynchronWithReprint: function(event) {
-                console.log("postSynchronWithReprint");
         $('#loaderbox').show();
         this.doPreProcess();
         var result = "";

@@ -43,4 +43,30 @@ public class SedoxBinaryFile implements Serializable {
         
         checksumCorrected = !productAttributes[15].equals("csnone");
     }
+
+    public double getPrice() {
+        
+        if (fileType.toLowerCase().equals("tune")) {
+            return 60;
+        }
+        
+        if (fileType.toLowerCase().equals("original")) {
+            return 0;
+        }
+        
+        if (fileType.toLowerCase().equals("power")) {
+            return 70;
+        }
+        
+        if (fileType.toLowerCase().equals("eco")) {
+            return 50;
+        }
+        
+        if (fileType.toLowerCase().equals("various")) {
+            return 160;
+        }
+        
+        System.out.println("Warning, file price is not registered to this file");
+        return 60;
+    }
 }

@@ -486,6 +486,13 @@
 	}
 	
 	/**
+	 * @return \core_sedox_SedoxCreditOrder
+	 */
+	public static function core_sedox_SedoxCreditOrder() {
+		return new \core_sedox_SedoxCreditOrder();
+	}
+	
+	/**
 	 * @return \core_sedox_SedoxProductSearchPage
 	 */
 	public static function core_sedox_SedoxProductSearchPage() {
@@ -630,6 +637,13 @@
 	 */
 	public static function core_hotelbookingmanager_Room() {
 		return new \core_hotelbookingmanager_Room();
+	}
+	
+	/**
+	 * @return \core_hotelbookingmanager_BookingReference
+	 */
+	public static function core_hotelbookingmanager_BookingReference() {
+		return new \core_hotelbookingmanager_BookingReference();
 	}
 	
 	/**

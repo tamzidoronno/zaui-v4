@@ -3,40 +3,67 @@
 ?>
 
 <div class='sedox_box'>
-    <div class='icon'>&nbsp;<i class='fa fa-user'></i>&nbsp;
-    </div><div class='details'>
-        <b>General statistic</b>
+    <div class='sedox_title'>My Files</div>
+    <div class='details geninfotop'>
         <table>
-            <tr><td style='width: 200px;'>Name</td><td>-</td></tr>
-            <tr><td colspan="2"></td></tr>
-            <tr><td>Remaining credit</td><td><? echo $this->getCreditAccountBalance(); ?></td></tr>
-            <tr><td>Files uploaded</td><td><? echo $this->getFileCount(); ?></td></tr>
-            <tr><td>Slaves</td><td>0</td></tr>
+            <tr><td style='width: 120px;'><b>Name:</b></td><td style='width: 200px;'><? echo $this->getApi()->getUserManager()->getLoggedOnUser()->fullName; ?></td>  <td style='width: 150px;'><b>Remaining credit:</b></td><td><? echo $this->getCreditAccountBalance(); ?></td>  </tr>
+            <tr><td><b>Files uploaded:</b></td><td><? echo $this->getFileCount(); ?></td> <td><b>Slaves:</b></td><td>0</td></tr>
         </table>
     </div>
 </div>
 
 <div class='sedox_box filehistory'>
-    <div class='icon'>&nbsp;<i class='fa fa-file'></i>&nbsp;
-    </div><div class='details'>
-        <b>Your files</b>
-        
+    <div class='details'>
+        <div class='detailstitle'><i class='fa fa-upload'></i> &nbsp;Upload history</div>
+
         <div class='filehistory'>
             <?
-                $lastestUploadedProducts = $this->getLatestUploadedProducts();
-                if ($lastestUploadedProducts  != null) {
-                    echo "<div class='row'><div class='col col1'>Sedox Id</div><div class='col col2'>File</div><div class='col col3'>Uploaded</div></div>";
-                    foreach ($lastestUploadedProducts as $product) {
-                        $name = $product->brand." ".$product->model." ".$product->build." ".$product->power." ".$product->year;
-                        $id = $product->id;
-                        $date = $product->rowCreatedDate;
-                        
-                        // TODO - Use divs?
-                        echo "<a href='?page=productview&productId=$id'><div class='row'><div class='col col1'>$id</div><div class='col col2'>$name</div><div class='col col3'>$date</div></div></a>";
-                    }
-                } else {
-                    echo "<div class='row'>You have not uploaded any files yet.</div>";
+            $lastestUploadedProducts = $this->getLatestUploadedProducts();
+            $i = 0;
+            if ($lastestUploadedProducts != null) {
+
+                echo "<div class='row header'><div class='col col1'>Sedox Id</div><div class='col col2'>File</div><div class='col col3'>Uploaded</div></div>";
+                foreach ($lastestUploadedProducts as $product) {
+                    $i++;
+                    $odd = $i % 2 ? "odd" : "even";
+
+                    $name = $product->brand . " " . $product->model . " " . $product->engineSize . " " . $product->power . " " . $product->year;
+                    $id = $product->id;
+                    $date = $product->rowCreatedDate;
+                    echo "<a href='?page=productview&productId=$id'><div class='row $odd'><div class='col col1'>$id</div><div class='col col2'>$name</div><div class='col col3'>$date</div></div></a>";
                 }
+            } else {
+                echo "<div class='row'>You have not uploaded any files yet.</div>";
+            }
+            ?>
+        </div>
+    </div>
+    <div class='sedox_button'>More <i class="fa fa-arrow-right"></i></div>
+</div>
+
+<div class='sedox_box filehistory'>
+    <div class='details'>
+        <div class='detailstitle'><i class='fa fa-download'></i> &nbsp;Download history</div>
+
+        <div class='filehistory'>
+            <?
+            $lastestUploadedProducts = $this->getLatestDownloadedFiles();
+            $i = 0;
+            if ($lastestUploadedProducts != null) {
+
+                echo "<div class='row header'><div class='col col1'>Sedox Id</div><div class='col col2'>File</div></div>";
+                foreach ($lastestUploadedProducts as $product) {
+                    $i++;
+                    $odd = $i % 2 ? "odd" : "even";
+
+                    $name = $product->brand . " " . $product->model . " " . $product->engineSize . " " . $product->power . " " . $product->year;
+                    $id = $product->id;
+                    $date = $product->rowCreatedDate;
+                    echo "<a href='?page=productview&productId=$id'><div class='row $odd'><div class='col col1'>$id</div><div class='col col2'>$name</div></div></a>";
+                }
+            } else {
+                echo "<div class='row'>You have not uploaded any files yet.</div>";
+            }
             ?>
         </div>
     </div>
@@ -44,30 +71,39 @@
 </div>
 
 <div class='sedox_box credithistory'>
-    <div class='icon'>&nbsp;<i class='fa fa-university'></i>&nbsp;
-    </div><div class='details'>
-        <b>Credit account</b>
-        <table>
+    <div class='details'>
+        <div class='detailstitle'><i class='fa fa-dollar'></i> &nbsp;Transaction history</div>
+        <div class='filehistory'>
             <?
             $latestCreditHistory = $this->getLatestCreditHistory();
             if ($latestCreditHistory != null) {
-                echo "<tr><th class='col1'>Sedox Id</th><th class='col2'>Description</th><th class='col3'>Date</th></tr>";
-                foreach ($latestCreditHistory as $hist) { ?>
-                    <tr><td><? echo $hist->transactionReference; ?></td><td><? echo $hist->description; ?></td><td><? echo $hist->dateCreated; ?></td></tr>
-                <?}
+                echo "<div class='row header'><div class='col col1'>Sedox Id</div><div class='col col2'>Description</div><div class='col col3'>Amount</div> <div class='col col4'>Date</div></div>";
+                $i = 0;
+                foreach ($latestCreditHistory as $hist) {
+                    $i++;
+                    $odd = $i % 2 ? "odd" : "even";
+                    ?>
+                                <!--<tr><td></td><td><? echo $hist->description; ?></td><td><? echo $hist->amount; ?></td><td><? echo $hist->dateCreated; ?></td></tr>-->
+                        <div class='row <? echo $odd; ?>'>
+                            <div class='col col1'><? echo $hist->transactionReference; ?></div>
+                            <div class='col col2'><? echo $hist->description; ?></div>
+                            <div class='col col3'><? echo $hist->amount; ?></div>
+                            <div class='col col4'><? echo $hist->dateCreated; ?></div>
+                        </div>
+                <?
+                }
             } else {
-                echo "<tr><td colspan='4'>You have not made any credit transactions yet.</td></tr>";
+                echo "<div class='row'><div class='col col1'>You have not made any credit transactions yet.</div></div>";
             }
             ?>
-        </table>
+        </div>
     </div>
     <div class='sedox_button'>More <i class="fa fa-arrow-right"></i></div>
 </div>
 
 <div class='sedox_box'>
-    <div class='icon'>&nbsp;<i class='fa fa-users'></i>&nbsp;
-    </div><div class='details'>
-        <b>Your partners</b>
+    <div class='details'>
+        <div class='detailstitle'><i class='fa fa-users'></i> &nbsp;Your partners</div>
         <table>
             <tr><td>Sorry, but there is no partners setup for you. Do you have partners that needs to be connected? let us know.</td></tr>
         </table>

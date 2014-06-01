@@ -6,13 +6,15 @@ package com.thundashop.core.calendarmanager.data;
 
 import com.google.gson.Gson;
 import com.thundashop.core.common.DataCommon;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.TreeMap;
 
 /**
  *
  * @author ktonder
  */
-public class Month extends DataCommon {
+public class Month extends DataCommon implements Comparable<Month> {
     public TreeMap<Integer, Day> days = new TreeMap();
     public int year;
     public int month;
@@ -67,5 +69,25 @@ public class Month extends DataCommon {
         Gson gson = new Gson();
         String json = gson.toJson(this);
         return gson.fromJson(json, Month.class);
+    }
+
+    public boolean isOutOfDate() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        int curyear = cal.get(Calendar.YEAR);
+        int curmonth = cal.get(Calendar.MONTH) + 1;
+        if (this.year >= curyear && this.month >= curmonth) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int compareTo(Month o) {
+        if (this.isNewerOrEqual(o.year, o.month)) {
+            return 1;
+        }
+        
+        return -1;
     }
 }

@@ -20,7 +20,7 @@ public interface ISedoxProductManager  {
     public SedoxProductSearchPage search(SedoxSearch search);
     
     @Administrator
-    public void sync() throws ErrorException;
+    public void sync(String option) throws ErrorException;
     
     @Customer
     public SedoxUser getSedoxUserAccount() throws ErrorException;

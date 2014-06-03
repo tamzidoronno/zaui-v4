@@ -95,9 +95,14 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     @Override
-    public synchronized void sync() throws ErrorException {
+    public synchronized void sync(String option) throws ErrorException {
         if (!getStore().id.equals("608afafe-fd72-4924-aca7-9a8552bc6c81")) {
             throw new ErrorException(26);
+        }
+        
+        if (option != null && option.equals("magento")) {
+            updateAllUsers();
+            return;
         }
 
         deleteAllProducts();

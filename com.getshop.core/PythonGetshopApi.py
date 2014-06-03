@@ -4272,8 +4272,15 @@ class SedoxProductManager(object):
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 
-  def sync(self):
+  def sync(self, option):
     args = collections.OrderedDict()
+    if isinstance(option,GetShopBaseClass): 
+      args["option"]=json.dumps(option.__dict__)
+    else:
+      try:
+        args["option"]=json.dumps(option)
+      except (ValueError, AttributeError):
+        args["option"]=option
     data = EmptyClass()
     data.args = args
     data.method = "sync"

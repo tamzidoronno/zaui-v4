@@ -4128,9 +4128,10 @@ class APISedoxProductManager {
 	* @author ktonder
 	*/
 
-	public function sync() {
+	public function sync($option) {
 	     $data = array();
 	     $data['args'] = array();
+	     $data['args']["option"] = json_encode($this->transport->object_unset_nulls($option));
 	     $data["method"] = "sync";
 	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
 	     return $this->transport->sendMessage($data);

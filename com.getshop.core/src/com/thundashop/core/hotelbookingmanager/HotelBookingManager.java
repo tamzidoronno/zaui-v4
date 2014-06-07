@@ -35,7 +35,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 roomTypes.put(dbobj.id, (RoomType)dbobj);
             }
             if(dbobj instanceof Room) {
-                rooms.put(dbobj.id, (Room)dbobj);
+                Room room = (Room)dbobj;
+                room.bookedDates = new ArrayList();
+                rooms.put(dbobj.id, room);
             }
             if(dbobj instanceof BookingReference) {
                 BookingReference reference = (BookingReference)dbobj;
@@ -89,7 +91,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     @Override
-    public String reserveRoom(String roomType, long startDate, long endDate, int count) throws ErrorException {
+    public String reserveRoom(String roomType, long startDate, long endDate, int count, ContactData contact) throws ErrorException {
         //First make sure there is enough rooms available.
         RoomType roomtype = getRoomType(roomType);
         Integer availableRooms = checkAvailable(startDate, startDate, roomtype.name);
@@ -103,16 +105,19 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         
         BookingReference reference = new BookingReference();
         reference.bookingReference = genereateReferenceId();
-        Room room = getAvailableRoom(roomtype.id, start, end);
-        reference.code = room.reserveDates(start, end, reference.bookingReference);
         reference.startDate = start;
         reference.endDate = end;
-        reference.roomName = room.roomName;
-        
-        room.storeId = storeId;
-        databaseSaver.saveObject(room, credentials);
-        
+            
+        for(int i = 0; i < count; i++) {
+            Room room = getAvailableRoom(roomtype.id, start, end);
+            reference.codes.add(room.reserveDates(start, end, reference.bookingReference));
+            reference.roomIds.add(room.id);            
+            room.storeId = storeId;
+            databaseSaver.saveObject(room, credentials);
+        }
         reference.storeId = storeId;
+        reference.contact = contact;
+        
         databaseSaver.saveObject(reference, credentials);
         bookingReferences.put(reference.bookingReference, reference);
         return new Integer(reference.bookingReference).toString();
@@ -226,20 +231,16 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         if(ref == null) {
             throw new ErrorException(1025);
         }
-        Room room = getRoom(ref.roomName);
-        room.removeBookedRoomWithReferenceNumber(reference);
-        
-        databaseSaver.saveObject(room, credentials);
+        for(String roomId : ref.roomIds) {
+            Room room = getRoom(roomId);
+            room.removeBookedRoomWithReferenceNumber(reference);
+            databaseSaver.saveObject(room, credentials);
+        }
         databaseSaver.deleteObject(ref, credentials);
         bookingReferences.remove(reference);
     }
 
-    private Room getRoom(String roomName) {
-        for(Room room : rooms.values()) {
-            if(room.roomName.equalsIgnoreCase(roomName)) {
-                return room;
-            }
-        }
-        return null;
+    private Room getRoom(String id) {
+        return rooms.get(id);
     }
 }

@@ -10,10 +10,13 @@ class core_hotelbookingmanager_BookingReference extends core_common_DataCommon  
 	public $endDate;
 
 	/** @var String */
-	public $code;
+	public $codes;
 
 	/** @var String */
-	public $roomName;
+	public $roomIds;
+
+	/** @var core_hotelbookingmanager_ContactData */
+	public $contact;
 
 }
 ?>

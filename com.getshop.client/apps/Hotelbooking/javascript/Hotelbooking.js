@@ -28,17 +28,12 @@ app.Hotelbooking = {
             
         });
     },
-    continueToCart : function() {
-        var event = thundashop.Ajax.createEvent("","continueToCart", $(this), {});
-        thundashop.Ajax.postWithCallBack(event, function(result) {
-            if(result === "-1") {
-                alert('Sorry, no rooms available');
-                return;
-            }
+    setNumberOfPersons : function() {
+        var count = $(this).val();
+        var event = thundashop.Ajax.createEvent("","updatePersonCount", $(this), { "count": count});
+        thundashop.Ajax.postWithCallBack(event, function() {
             
-            document.location.href= '?page=cart';
         });
-        
     },
     updateCleaningCount : function() {
         var count = $(this).val();
@@ -92,6 +87,9 @@ app.Hotelbooking = {
          window.history.pushState({url: "", ajaxLink: "pagenumber="+pagenumber}, "Title", "pagenumber="+pagenumber);
          thundashop.Ajax.doJavascriptNavigation("pagenumber="+pagenumber, null, true);
     },
+    saveCurrentData : function() {
+        
+    },
     initEvents : function() {
         $(document).on('click', '.Hotelbooking .check_available_button', app.Hotelbooking.checkAvailability);
         $(document).on('change', '.Hotelbooking #ordertype', app.Hotelbooking.changeOrderType);
@@ -100,7 +98,9 @@ app.Hotelbooking = {
         $(document).on('change', '.Hotelbooking .number_of_rooms', app.Hotelbooking.updateRoomCount);
         $(document).on('blur', '.Hotelbooking .number_of_rooms', app.Hotelbooking.updateRoomCount);
         $(document).on('change', '.Hotelbooking .cleaning_option', app.Hotelbooking.updateCleaningCount);
-        $(document).on('click', '.Hotelbooking .continue_to_cart_button', app.Hotelbooking.continueToCart);
+        $(document).on('change', '.Hotelbooking #numberofpersons', app.Hotelbooking.setNumberOfPersons);
+        $(document).on('blur', '.Hotelbooking #numberofpersons', app.Hotelbooking.setNumberOfPersons);
+        $(document).on('blur', '.Hotelbooking .bookingsummary input', app.Hotelbooking.saveCurrentData);
     }
 };
 

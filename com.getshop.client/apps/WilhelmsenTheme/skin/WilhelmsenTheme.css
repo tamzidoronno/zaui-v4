@@ -37,3 +37,13 @@ body { background-color: #363b3e; }
 .gs_button.buy_product { display: none; }
 .subentries a { color:#000; }
 .subentries a.selected { font-weight: bold; }
+@media only all and (max-width: 480px) {
+    .footer { display:none; }
+    .Hotelbooking .bookingbox { top: 0px; }
+    .TopMenu { display:none !important; }
+    
+}
+
+@media only all and (max-width: 800px) {
+    .mainarea .applicationarea { margin: 15px; }
+}

@@ -5,10 +5,16 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     var $entries;
     var $dept;
     var $currentMenuEntry;
+    var $failedReservation = false;
+    var $invalid = false;
     
     function __construct() {
     }
  
+    public function updatePersonCount() {
+        $this->setPersonCount($_POST['data']['count']);
+    }
+    
    public function getDescription() {
         return "Hotelbooking";
     }
@@ -82,7 +88,12 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         if($this->getPage()->id == "home") {
             $this->includefile("Hotelbooking");
         } else {
-            $this->includefile("booking_part2");
+            
+            if(isset($_GET['subpage']) && $_GET['subpage'] == "summary") {
+                 $this->includefile("booking_part3");
+            } else {
+                 $this->includefile("booking_part2");
+            }
         }
     }
 
@@ -185,14 +196,17 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $count = $this->getRoomCount();
         
         if($count < $this->getRoomCount()) {
-            echo "-1";
+            $this->failedReservation = true;
             return;
         }
         
         $type = $this->getProduct()->sku;
         $start = $this->getStart();
         $end = $this->getEnd();
-        $reference = $this->getApi()->getHotelBookingManager()->reserveRoom($type, $start, $end, $count);
+       
+        $contact = $this->getContactData();
+        
+        $reference = $this->getApi()->getHotelBookingManager()->reserveRoom($type, $start, $end, $count, $contact);
         if(($reference) > 0) {
             $cartmgr = $this->getApi()->getCartManager();
             $cartmgr->clear();
@@ -204,7 +218,18 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                 $cleaningcount = floor($this->getDayCount() / $interval);
                 $cartmgr->addProduct($cleaningid, $cleaningcount, array());
             }
+            $_GET['page'] = "cart";
+        } else {
+            $_GET['failedreservation'] = true;
+            $this->failedReservation = true;
         }
+    }
+    
+    public function checkFailedReservation() {
+        if(isset($_GET['failedreservation'])) {
+            return  true;
+        }
+        return $this->failedReservation;
     }
     
     public function getCleaningOption() {
@@ -243,5 +268,104 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         }
         return $allrooms;
     }
+    
+    public function validateAndContinueToPayment() {
+        $_GET['subpage'] = "summary";
+        $this->setBookingData();
+        foreach($this->getBookingData() as $index => $test) {
+            $valid = true;
+            if($this->validateInput($index)) {
+                $valid = false;
+                break;
+            }
+        }
+        if($valid) {
+            $this->continueToCart();
+        }
+    }
+    
+    public function getPost($name) {
+        if(isset($_POST['data'][$name])) {
+            return $_POST['data'][$name];
+        }
+        return "";
+    }
+    
+    public function validateInput($name) {
+        if(isset($_POST['data'][$name])) {
+            if(strlen(trim($_POST['data'][$name])) == 0) {
+                $this->invalid = true;
+                return "invalid";
+            }
+        }
+        return "";
+    }
+
+    public function setPersonCount($count) {
+        $_SESSION['hotelbooking']['roomCount'] = $count;
+    }
+    
+    public function getPersonCount() {
+        if(isset($_SESSION['hotelbooking']['roomCount'])) {
+            return $_SESSION['hotelbooking']['roomCount'];
+        }
+        return 1;
+    }
+
+    public function getCleaningPrice() {
+        $cleanprodid = $this->getCleaningOption();
+        if(!$cleanprodid) {
+            return 0;
+        }
+        $cleaningproduct = $this->getApi()->getProductManager()->getProduct($cleanprodid);
+        $count = (int)($this->getDayCount() / $cleaningproduct->stockQuantity);
+        
+        $cleaningprice = $count * $cleaningproduct->price;
+        return $cleaningprice;
+    }
+
+    public function getRoomPrice() {
+        return $this->getDayCount() * $this->getProduct()->price * $this->getRoomCount();
+    }
+    
+    public function getTotal() {
+        return $this->getCleaningPrice() + $this->getRoomPrice();
+    }
+
+    public function hasErrors() {
+        return $this->invalid;
+    }
+
+    public function setBookingData() {
+        $_SESSION['booking_data'] = serialize($_POST['data']);
+    }
+    
+    public function getBookingData() {
+        return unserialize($_SESSION['booking_data']);
+    }
+
+    
+    public function loadBookingData() {
+        if(isset($_SESSION['booking_data'])) {
+            $_POST['data'] = unserialize($_SESSION['booking_data']);
+        }
+    }
+
+    public function getContactData() {
+        $booked = $this->getBookingData();
+        $names = array();
+        $phones = array();
+        for($i=0; $i<10; $i++) {
+            if(isset($booked['name_'.$i])) {
+                $names[] = $booked['name_'.$i];
+                $phones[] = $booked['phone_'.$i];
+            }
+        }
+        $contact = new \core_hotelbookingmanager_ContactData();
+        $contact->names = $names;
+        $contact->phones = $phones;
+        return $contact;
+    }
+
 }
 ?>

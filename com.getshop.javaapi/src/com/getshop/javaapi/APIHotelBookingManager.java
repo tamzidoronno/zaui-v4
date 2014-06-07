@@ -139,13 +139,14 @@ public class APIHotelBookingManager {
      * @param count The number of rooms to book.
      * @throws ErrorException
      */
-     public java.lang.String reserveRoom(java.lang.String roomType, long startDate, long endDate, int count)  throws Exception  {
+     public java.lang.String reserveRoom(java.lang.String roomType, long startDate, long endDate, int count, com.thundashop.core.hotelbookingmanager.ContactData contact)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new LinkedHashMap();
           data.args.put("roomType",new Gson().toJson(roomType));
           data.args.put("startDate",new Gson().toJson(startDate));
           data.args.put("endDate",new Gson().toJson(endDate));
           data.args.put("count",new Gson().toJson(count));
+          data.args.put("contact",new Gson().toJson(contact));
           data.method = "reserveRoom";
           data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager";
           String result = transport.send(data);

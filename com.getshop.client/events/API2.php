@@ -1741,13 +1741,14 @@ class APIHotelBookingManager {
 	* @throws ErrorException
 	*/
 
-	public function reserveRoom($roomType, $startDate, $endDate, $count) {
+	public function reserveRoom($roomType, $startDate, $endDate, $count, $core_hotelbookingmanager_ContactData) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["roomType"] = json_encode($this->transport->object_unset_nulls($roomType));
 	     $data['args']["startDate"] = json_encode($this->transport->object_unset_nulls($startDate));
 	     $data['args']["endDate"] = json_encode($this->transport->object_unset_nulls($endDate));
 	     $data['args']["count"] = json_encode($this->transport->object_unset_nulls($count));
+	     $data['args']["core_hotelbookingmanager_ContactData"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_ContactData));
 	     $data["method"] = "reserveRoom";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);

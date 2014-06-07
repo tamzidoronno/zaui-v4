@@ -4,6 +4,11 @@ namespace ns_15e67fa1_c862_4bc3_9b17_dfd818f30712;
 /* @var $this HotelbookingManagement */
 $hmanager = $this->getApi()->getHotelBookingManager();
 $rooms = $hmanager->getAllRooms();
+$newRoom = array();
+foreach($rooms as $room) {
+    $newRoom[$room->id] = $room;
+}
+$rooms = $newRoom;
 
 $types = $hmanager->getRoomTypes();
 $selectedType = new \core_hotelbookingmanager_RoomType();
@@ -85,22 +90,27 @@ Existing booking references
     <table width="100%">
         <tr>
             <th>Reservation number</th>
-            <th>Room</th>
+            <th>Room (code)</th>
             <th>Start date</th>
             <th>End date</th>
-            <th>Code</th>
             <th>Remove</th>
         </tr>
     <?
         $reservations = $this->getApi()->getHotelBookingManager()->getAllReservations();
         foreach($reservations as $reservation) {
+            
+            $roomarray = array();
+            /* $rooms \core_hotelbookingmanager_Room[] */
+            foreach($reservation->roomIds as $index => $id) {
+                $roomarray[] = $rooms[$id]->roomName . " (" . $reservation->codes[$index] . ")";
+            }
+            
             /* @var $reservation \core_hotelbookingmanager_BookingReference */
             echo "<tr>";
             echo "<td style='text-align:center;'>" . $reservation->bookingReference . "</td>";
-            echo "<td style='text-align:center;'>" . $reservation->roomName . "</td>";
+            echo "<td style='text-align:center;'>" . join(", ", $roomarray) . "</td>";
             echo "<td style='text-align:center;'>" . $reservation->startDate . "</td>";
             echo "<td style='text-align:center;'>" . $reservation->endDate . "</td>";
-            echo "<td style='text-align:center;'>" . $reservation->code . "</td>";
             echo "<td style='text-align:center;'><i style='cursor:pointer' refid='".$reservation->bookingReference."' class='fa fa-trash-o delete_reference'></td>";
             echo "</tr>";
         }

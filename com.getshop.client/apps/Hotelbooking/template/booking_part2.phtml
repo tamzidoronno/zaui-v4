@@ -4,12 +4,12 @@
 ?>
 <div class='title'><? echo $this->__w("You have selected the following duration for your stay"); ?></div>
 <div class='seperator'></div>
-<div class='top_box' style="height:260px;">
-    <span class='booking_count_box' style='float:right;'>
+<div class='top_box'>
+    <span class='booking_count_box'>
         <table>
             <tr>
                 <td><? echo $this->__w("Number of persons"); ?></td>
-                <td align='right'><input type='number' min="1" max="10" value='1'></td>
+                <td align='right'><input type='number' min="1" max="10" id="numberofpersons" value="<? echo $this->getPersonCount(); ?>"></td>
             </tr>
             <tr>
                 <td><? echo $this->__w("Number of rooms"); ?></td>
@@ -50,12 +50,12 @@
         </table>
     </span>
 
-    <span style='float:left; margin-right: 30px; width:200px;'>
+    <span class='calendar left'>
         <div class='cal_header'><? echo $this->__w("WHEN DO YOU CHECK IN?"); ?></div>
         <? $this->printCalendar($this->getStart(), false, "startDate"); ?>
     </span>
 
-    <span style='float:left; width:200px;'>
+    <span class='calendar right'>
         <div class='cal_header second'><? echo $this->__w("WHEN DO YOU LEAVE?"); ?></div>
         <? echo $this->printCalendar($this->getEnd(), $this->getStart(), "endDate"); ?>
     </span>
@@ -117,7 +117,7 @@ if(!$foundroom) {
 } else {
 ?>
 <div class="to_checkout">
-    <div class="continue_to_cart_button">CONTINUE TO CART</div>
+    <a href='?page=<? echo $this->getPage()->id; ?>&subpage=summary'><div class="continue_to_cart_button"><? echo $this->__w("CONTINUE"); ?></div></a>
 </div>
 <? } ?>
 <br><br><br><br><br><br>

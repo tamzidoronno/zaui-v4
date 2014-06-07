@@ -9,6 +9,7 @@ public class BookingReference extends DataCommon {
     public int bookingReference;
     public Date startDate;
     public Date endDate;
-    public int code;
-    public String roomName;
+    public List<Integer> codes = new ArrayList();
+    public List<String> roomIds = new ArrayList();
+    public ContactData contact = new ContactData();
 }

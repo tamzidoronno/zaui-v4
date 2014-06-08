@@ -1,10 +1,3 @@
-/* 
-    Document   : main
-    Created on : Feb 26, 2012, 3:17:29 PM
-    Author     : boggi
-    Description:
-        Purpose of the stylesheet follows.
-*/
 .TopMenu a:hover, .TopMenu a { display:block; }
 .TopMenu {
     position:absolute;
@@ -136,4 +129,34 @@
 
 .TopMenu .subentries li:last-child {
     border-bottom: solid 0px;
+}
+
+@media screen and (min-width:800px) {
+    .TopMenu .mobile_button { display:none; }
+}
+
+@media screen and (max-width:800px) {
+    .TopMenu {
+        top: inherit !important;
+    }
+    .TopMenu .mobile_button { display:block !important; position:absolute; }
+    .TopMenu .subentries { display:block; position: initial; border: solid 0px; }
+    
+    .header .TopMenu {
+        position: absolute;
+        top: 74px;
+    }
+    .TopMenu ul {
+        list-style-type:none;
+    }
+    .TopMenu li {
+        
+        display: none;
+    }
+        
+    .TopMenu li:not(.mobile) {
+        width: 100%;
+        padding: 10px;
+        position: relative;
+    }
 }

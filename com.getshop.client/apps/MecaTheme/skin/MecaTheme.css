@@ -108,17 +108,20 @@ html {
 .Login {
     background-color: rgba(255,255,255,0.2);
 }
+.TopMenu .mobile_button { display:none !important; }
 
 @media only all and (max-width: 800px) {
-    .TopMenu {
-        top: inherit !important;
-    }
-    
     .Banner img, .Banner .banner, 
     .Banner .bannerslider, .Banner {
         height: inherit !important;
     }
     
+    .TopMenu li:not(.mobile) {
+        background-color: #295c9a;
+        color: #FFF;
+        border-bottom: solid 1px #164d8e;
+    }        
+
     .gs_margin_left { margin-left: 0px; padding-left: 0px; }
     .mainarea .gs_inner {
         padding: 0px;
@@ -129,6 +132,41 @@ html {
     .gs_row.r1 .gs_inner  {
         padding-bottom: 10px !important;
     }
+    .TopMenu {
+        border-top: solid 1px #164d8e;
+        margin: 0px;
+        bottom: 0px;
+        right: -10px;
+        left: 0px;
+        background-repeat: no-repeat;
+        background-image: url('{IMAGEFOLDER}/topmenu_mobile.png');
+        height: 50px;
+        background-position: 5px 5px;
+    }
+    
+
+    #apparea-header {
+        background-size: 130px;
+        background-position: right 0px bottom 15px;
+        background-position-y: 90px;
+        border-right: 10px solid transparent;
+    }    
+    #webshop_logo { max-height: 55px; }
+    .mobile {
+        display: block !important;
+        width: 60px;
+        padding-left: 40px !important;
+        line-height: 50px;
+        font-size: 20px !important;
+        font-weight: bold;
+        border-right: solid 1px #164d8e !important;
+    }
+    #apparea-header {
+        min-height: 125px;
+        height: 125px;
+        padding: 0px;
+    }
+    #webshop_logo { max-width: 350px; }
 }
 
 @media screen and (max-width:500px) {
@@ -163,62 +201,12 @@ html {
         height: 125px;
         padding: 0px;
     }
-    
-    
-    .TopMenu .subentries { display:block; position: initial; border: solid 0px; }
-    
-    #apparea-header {
-        background-size: 130px;
-        background-position: right 0px bottom 15px;
-        background-position-y: 90px;
-        border-right: 10px solid transparent;
-    }
-
     #webshop_logo { max-height: 55px; }
     
-    .TopMenu {
-        border-top: solid 1px #164d8e;
-        margin: 0px;
-        bottom: 0px;
-        right: -10px;
-        left: 0px;
-        background-repeat: no-repeat;
-        background-image: url('{IMAGEFOLDER}/topmenu_mobile.png');
-        height: 50px;
-        background-position: 5px 5px;
-    }
-    
-    .header .TopMenu {
-        position: absolute;
-        top: 74px;
-    }
-    .TopMenu ul {
-        list-style-type:none;
-    }
-    .TopMenu li {
-        
-        display: none;
-    }
-    .TopMenu li:not(.mobile) {
-        width: 250px;
-        background-color: #295c9a;
-        color: #FFF;
-        padding: 10px;
-        border-bottom: solid 1px #164d8e;
-        position: relative;
-    }
     .Login {
         display: none;
     }
-    .mobile {
-        display: block !important;
-        width: 60px;
-        padding-left: 40px !important;
-        line-height: 50px;
-        font-size: 20px !important;
-        font-weight: bold;
-        border-right: solid 1px #164d8e !important;
-    }
+    
 
     .mainarea .gs_inner {
         padding-top: inherit;

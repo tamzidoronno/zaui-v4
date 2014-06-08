@@ -37,13 +37,22 @@ body { background-color: #363b3e; }
 .gs_button.buy_product { display: none; }
 .subentries a { color:#000; }
 .subentries a.selected { font-weight: bold; }
-@media only all and (max-width: 480px) {
+@media only all and (max-width: 800px) {
     .footer { display:none; }
     .Hotelbooking .bookingbox { top: 0px; }
-    .TopMenu { display:none !important; }
-    
-}
-
-@media only all and (max-width: 800px) {
+    .TopMenu .mobile_button { right: 10px; top: 0px; font-size: 30px; }
+    .header .TopMenu { top: 20px !important; }
+    .header .TopMenu .applicationinner { margin-top: 40px; }
+    .TopMenu li:not(.mobile) {
+        background-color: #000;
+        color: #BBB;
+    }        
+    .TopMenu .subentries li { border-bottom: solid 0px !important; }
+    .TopMenu .subentries a {
+        background-color: #000;
+        color: #BBB !important;
+        border-bottom: solid 0px !important;
+    }        
     .mainarea .applicationarea { margin: 15px; }
+    .mainarea .gs_row.r1 .applicationarea { margin-top: 0px; }
 }

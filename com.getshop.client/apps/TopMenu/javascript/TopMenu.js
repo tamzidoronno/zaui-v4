@@ -39,7 +39,17 @@ thundashop.app.TopMenu.mouseOver = function() {
 };
 
 thundashop.app.TopMenu.mouseOut = function() {
-    $(this).find('.subentries').hide();
+    if($(window).width() > 800) {
+        $(this).find('.subentries').hide();
+    }
+}
+
+thundashop.app.TopMenu.showMobileMenu = function() {
+    if( $('.TopMenu li:not(.mobile)').is(':visible')) {
+        $('.TopMenu li:not(.mobile)').hide();
+    } else {
+        $('.TopMenu li:not(.mobile)').show();
+    }
 }
 
 $('.TopMenu .mobile').live('click', function() {
@@ -58,5 +68,8 @@ $('.TopMenu .addnew').live('click', function() {
 //    $('#add_top_menu_entry').focus();
 });
 
+
+
 $(document).on('mouseover', '.TopMenu li', thundashop.app.TopMenu.mouseOver);
 $(document).on('mouseout', '.TopMenu li', thundashop.app.TopMenu.mouseOut);
+$(document).on('click','.TopMenu .mobile_button', thundashop.app.TopMenu.showMobileMenu);

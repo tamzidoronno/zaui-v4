@@ -112,3 +112,8 @@ body {
     color: #333;
     border: solid 1px #CCC;
 }
+
+@media only all and (max-width: 800px) {
+    .TopMenu .mobile_button { right: 10px; top: 0px; font-size: 30px; color:#FFF; }
+    .header .TopMenu { top: 20px !important; }
+}

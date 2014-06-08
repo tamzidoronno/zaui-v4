@@ -2,7 +2,6 @@
 /* responsive design stuff */
 @media only all and (max-width: 480px) {
     .Banner .banner img,.Banner .bannerslider { height: auto !important; }
-    .Logo { display: none; }
     .TopMenu a { padding-left: 10px; padding-right: 10px; }
     .Login { display: none; }
     .header .TopMenu { margin-left: 0px;}

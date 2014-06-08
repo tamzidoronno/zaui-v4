@@ -52,6 +52,9 @@
     margin-right: 10px;
     height: 22px;
 }
+
+.Booking .company_selection { cursor:pointer; }
+
 .Booking .selectcompanyform { 
     position:absolute; 
     padding: 10px; 
@@ -75,6 +78,10 @@
 }
 .Booking .search_result_area {
     color: #333;
+    background-color:#FFF;
+    position:absolute;
+    width:400px;
+    z-index:3;
 }
 .Booking .search_for_company_brreg {
     width: 27px;

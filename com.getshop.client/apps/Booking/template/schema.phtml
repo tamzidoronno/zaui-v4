@@ -75,16 +75,11 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
             <tr><td class="col1"><?php echo $this->__w("phone", 'contact'); ?></td><td><input id="cellphone" type='textfield'/></td></tr>
 
     <? if (!$allowAdd) { ?>
-                <tr><td><? echo $this->__w("Select a company"); ?></td><td>
-                        <span class='selectcompanyform'>
-                            <input type='txt' placeholder="<?echo $this->__w("Name of company"); ?>" class="searchbrregvalue"><div class='gs_button search_for_company_brreg'> <? echo $this->__f("Search"); ?></div>
-                        <div class="search_result_area">
-                            <br><? echo $this->__w("Start typing the name of your company and click ").$this->__w("Search"); ?>
-                        </div>
-                        </span>
-                        <span class="gs_button find_company_for_selection"><? echo $this->__w("Search for a company"); ?></span>
+                <tr><td><? echo $this->__w("Company"); ?></td><td>
+                        <input type="text" placeholder="" class="search_company">
+                        <span class="search_result_area"></span>
                     </td></tr>
-                <tr style="display:none;"><td class="col1"><?php echo $this->__w("orgnummer"); ?></td>
+                    <tr style="display:none;"><td class="col1"><?php echo $this->__w("orgnummer"); ?></td>
                     <td>
                         <input onkeypress='Booking.validate(event)'  class="<? echo $updateClass; ?>" id="birthday" type='textfield' disabled/>
                     </td>
@@ -135,7 +130,6 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
                                     if ($entry->lockedForSignup) {
                                         continue;
                                     }
-                                    
                                     echo "<option value='$entryid' style='display:none;' location='" . $entry->location . "'>$date $title</option>";
                                 }
                                 ?>

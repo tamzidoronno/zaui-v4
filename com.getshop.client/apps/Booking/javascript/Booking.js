@@ -39,24 +39,27 @@ Booking = {
         $(document).on('click', '.Booking .search_for_company_brreg', this.searchBrreg);
         $(document).on('click', '.Booking .select_searched_company', this.selectCompanyFromBrreg);
         $(document).on('keyup', '.Booking .searchbrregvalue', this.searchBrreg);
+        $(document).on('keyup', '.Booking .search_company', this.searchBrreg);
+        $(document).on('click', '.Booking .company_selection', this.selectCompanyFromBrreg);
     },
     selectCompanyFromBrreg : function(event) {
+        if(event.type === "click") {
+            var row = $(this);
+        } else {
+            var row = $(this).closest('tr');
+        }
+        var brregnumber = row.attr('orgnr');
+        var name = row.find('.selected_name').html();
         
-        var row = $(this).closest('tr');
-        var brregnumber = $(this).attr('orgnr');
-        
+        $(this).closest('.app').find('.search_company').val(name);
         $(this).closest('.app').find('#birthday').val(brregnumber);
         $(this).closest('.app').find('#birthday').keyup();
         $(this).closest('.app').find('#birthday').closest('tr').show();
-        $('.Booking .selectcompanyform').fadeOut();
-        
+        $('.Booking .search_result_area').hide();
     },
     searchBrreg : function(event) {
-        if(event.type === "keyup" && event.keyCode !== 13) {
-            return;
-        }
-        
-        var value = $(this).closest('.app').find('.searchbrregvalue').val();
+        $('.Booking .search_result_area').show();
+        var value = $(this).val();
         var event = thundashop.Ajax.createEvent('','findCompanies',$(this),{'name':value});
         thundashop.Ajax.postWithCallBack(event, function(data)  {
             $('.Booking .search_result_area').html(data);
@@ -177,15 +180,22 @@ $('.Booking .savebooking').live('click', function() {
         if (allowAdd) {
             Booking.check(data.date);
             Booking.check(data.time);
-        } else {
-            Booking.check(data.birthday);
-            Booking.check(data.company);
-            if ($('#event').length > 0)
-                Booking.check(data.eventid);
         }
     } catch (error) {
         thundashop.common.Alert(__w('Stop'), __w('All fields are required'), true);
         return;
+    }
+
+    if (!allowAdd) {
+        try {
+            Booking.check(data.birthday);
+            Booking.check(data.company);
+            if ($('#event').length > 0)
+                Booking.check(data.eventid);
+        }catch(error) {
+            thundashop.common.Alert(__w('Stop'), __w('The company you have selected could not be found in brreg.'), true);
+            return;
+        }
     }
 
     var event = thundashop.Ajax.createEvent('Booking', 'runRegisterEvent', $(this), data);

@@ -3,9 +3,12 @@
 * PayOnDelivery fee;-;Gebyr henting 
 0-100 km/h;-;0-100 km/h
 A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
+Add a room;-;Legg til et rom
 Add to cart;-;Legg i handlekurv
+Additional contact data;-;Ekstra kontakt informasjon
 Address;-;Adresse
 All fields are required;-;Alle felt er påkrevd
+All fields are required, please fill in the fields in red.;-;Alle felt er påkrevd, vennligst fyll ut felter i rødt.
 All fields are required.;-;Alle felt er påkrevd
 All orders;-;Alle bestilinger
 An email has been sent to you with the confirmation code.;-;En godkjennings kode er sendt til din epost.
@@ -14,7 +17,9 @@ Apply coupon;-;Bruk kupong
 April;-;April
 August;-;August
 Available positions;-;Ledige plasser
+BOOK A ROOM AT WILHELMSEN HOUSE;-;BOOK ET ROM PÅ WILHELSEM HOUSE
 Birth Date;-;Bursdag
+Booked time periode;-;Booket tidsperiode
 Booking;-;Påmelding
 Building your store;-;Lag din webbutikk
 Button;-;Knapp
@@ -22,6 +27,10 @@ Buy;-;Kjøp
 By calendar;-;Som kalendar
 By list;-;Som Liste
 By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;Sisow er en nederlands betalingsmetode, bruk denne om du ønsker å tilby kundene dine iDeal
+CHECK IN;-;SJEKK INN
+CHECK OUT;-;SJEKK UT
+CONTINUE;-;FORTSETT
+Campaign code;-;Kampanjekode
 Cancel order;-;Kanselert ordre
 Canceled;-;Kanselert
 Candidate name;-;Navn
@@ -30,14 +39,17 @@ Cell phone;-;Mobil tlf
 Change password;-;Endre passord
 Changes has been saved!;-;Innstillingene har blitt lagret!
 Chat with us;-;Chat med oss
+Check availability and continue;-;Sjekk tilgjengelighet og fortsett
 Checkout;-;Utsjekking
 City;-;By
+Cleaning 49,- each clean;-;Vask 49,- per gang.
 Click next to select shipping options;-;Trykk neste for å velge en betalings metode
 Company;-;Selskap
 Company name;-;Firmanavn
 Completed;-;Gjennomført
 Confirm order;-;Bekreft ordre
 Continue;-;Fortsett
+Continue to payment;-;Fortsett til betaling
 Cookies are being stored;-;Cookier blir lagret
 Country;-;Land
 Coupon;-;Kupong
@@ -56,9 +68,11 @@ Email sent;-;Epost sendt
 End date;-;Slutt dato
 Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.L
 Failed;-;Feilet
+Failed to reserve room... please contact us.;-;Det oppstod en feil ved reservasjon av rommene, vennligst kontakt oss.
 Featured Product;-;Fremhevet produkt
 February;-;Februar
 Fixed price;-;Fast pris
+Fr;-;Fr
 Free shipping;-;Gratis frakt
 Friday;-;Fredag
 Full name;-;Hele navnet
@@ -84,6 +98,7 @@ May;-;Mai
 Menu;-;Meny
 Message;-;Melding
 Message from a customer;-;Melding fra en kunde
+Mo;-;Ma
 Monday;-;Mandag
 More information;-;Mer informasjon
 My Account;-;Min konto
@@ -91,9 +106,13 @@ My name is:;-;Mitt navn er
 Name;-;Navn
 New message;-;Ny melding
 New password;-;Nytt passord
+New room type;-;Ny rom type
 Next;-; Neste
+No rooms are available for this time periode.;-;Ingen rom er tilgjengelig i valgt tidsperiode.
 November;-;November
 Number of instances added;-;Antall av instanser lagt til
+Number of persons;-;Antall personer
+Number of rooms;-;Antall rom
 October;-;Oktober
 Old password;-;Gammelt passord
 Order;-;Ordre
@@ -143,13 +162,13 @@ Reminder;-;Påminnelse
 Reminder sent by email;-;En påmindelse har blitt sendt per epost.
 Remove;-;Fjern
 Repeat password;-;Gjenta passord
+SELECT ROOM;-;VELG ROM
+Sa;-;Lø
 Saturday;-;Lørdag
-Search;-;Søk
-Search for a company;-;Velg firma
 Search for a product;-;Søk etter et produkt
 Search for the company you want to enter by clicking the button above, and this box will be filled automatically.;-;Søk etter firma ved å trykke på knappen over.
 Searching....;-;Søker....
-Select a company;-;Velg et firma
+Select a room;-;Velg et rom
 Select your car;-;Velg din bil
 Send me a code;-;Send meg koden
 Send message;-;Send melding
@@ -176,14 +195,18 @@ Start date;-;Start dato
 Start your 30 days free trial;-;Start din 30 dagers fri prøveperiode
 Status;-;Status
 Stop;-;Stopp
+Su;-;Sø
 Success;-;Success
+Summary;-;Oppsummering
 Sunday;-;Søndag
 Taxes;-;Skatter
 Terms and Conditions;-;Bruksvilkår
+Th;-;To
 Thank you for ordering with Sisow ebill;-;Takk for at du bestilte med Sisow ebill
 Thank you for your order, an email has been sent to you with the invoice attached. We will ship the items as soon as we have received the payment.;-;Takk for din bestilling, en epost har blitt sendt med fakturaen vedlagt. Vi sender bestillingen når vi har mottat betalingen.
 Thank you for your order.;-;Takk for din bestilling.
 Thank you, you will now be redirected to the payment service;-;Takk, du blir nå overført til betalingstjenesten
+The company you have selected could not be found in brreg.;-;Firmaet du har valgt eksisterer ikke i brønnøysundregisteret.
 The email address is invalid.;-;Eposten din er ugyldig.
 The email already exists, please log on to continue.;-;Eposten eksisterer allerede, vennligst logg på for å fortsette.
 The event has been confirmed.;-;Eventent har blitt bekreftet.
@@ -199,14 +222,21 @@ Thursday;-;Torsdag
 To be able to serve you we need to store a tiny amount of data about your browser. An identification id is being generated and added to your web browser. This allows us to track you for a two hours periode while you are navigating this site. This data is anonymous and are only being used to identify your web browser and not you as a person.;-;For at det skal være mulig bruke denne web siden må vi lagre en liten bit av data på din nettleser. Dette er en identifikasjons id som gjør det mulig å identifisere deg som en bruker mens du surfer på denne siden. Denne dataen blir lagret i 20 timer og er 100% anonym.
 Top speed;-;Topp hastighet
 Total;-;Total
+Total price;-;Total pris
+Tu;-;Ti
 Tuesday;-;Tirsdag
 Untitled product;-;Produkt uten navn
 Update;-;Oppdater
 Use a different email;-;Bruk en annen epost
 Username / Email;-;Brukernavn / Epost
+Visitor information;-;Besøksinformasjon
+Visitor no {count};-;Besøkende nummer {count}
+WHEN DO YOU CHECK IN?;-;NÅR KOMMER DU
+WHEN DO YOU LEAVE?;-;NÅR DRAR DU
 Waiting for payment;-;Venter på betaling
 Waiting list;-;Venteliste
 Was not able to get payment methods, please check your postcode;-;Klarte ikke å oppdrive betalings metoder, vennligst sjekk ditt postnummer.
+We;-;On
 We host events at the following locations, click on the location to filter the calendar by location(s);-;We har events på følgende steder, trykk på stedet for å filtere kalenderen på stedet(ene)
 Wednesday;-;Onsdag
 Welcome to my page;-;Velkommen til min side
@@ -217,6 +247,7 @@ You are being transferred to paypal, please wait...;-;Du  blir nå overført til
 You are here:;-;Du er her:
 You do not have any orders.;-;Du har ingen bestillinger
 You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
+You have selected the following duration for your stay;-;Du har valgt følgende tidsperiode før besøket
 You need to select at least one to send back message to;-;Du må velge minium en som du kan sende en melding til.
 Your are now signed up for the event;-;Du er nå registert inn på denne eventen.
 Your email;-;Din epost
@@ -226,20 +257,27 @@ Your order has been canceled due to incorrect payment information, please try ag
 Your order has now been completed and is waiting to be shipped.;-;Orderen din har blitt gjennomført og venter på å bli sendt.
 Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;Du vil snart motta en epost med din ebill, eller så kan du last den ned på følgende link
 Your personal information;-;Din personlige informasjon
+available room;-;tilgjengelige rom
+available rooms;-;tilgjengelige rom
 change;-;endre
 course;-;kurs
 description;-;Beskrivelse
+each cleaning;-;per vask
 email;-;E-post
 forgot?;-;Glemt?
 if we dont answer, please leave your email here and we will return your message asap.;-;Hvis vi ikke svarer, legg igjen en din epost, og vi vil kontakte deg så snart som mulig.
+in;-;i
 included taxes;-;Inkludert mva
 location;-;Sted
 login;-;logg inn
+night;-;natt
+nights;-;netter
 org;-;Firma
 orgnummer;-;Org.nr.
 phone;-;Mob.Tlf.
 read;-;les
 select;-;velg
+to;-;til
 will be added to your invoice.;-;vil bli lagt på sluttsummen.
 
 

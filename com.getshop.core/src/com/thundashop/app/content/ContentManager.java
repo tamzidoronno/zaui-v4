@@ -60,8 +60,8 @@ public class ContentManager extends ManagerBase implements IContentManager {
         databaseSaver.deleteObject(data, credentials);
         memory.remove(id);
     }
-
-    @Override
+ 
+   @Override
     public String createContent(String content) throws ErrorException {
         String id = UUID.randomUUID().toString();
         saveContent(id, content);

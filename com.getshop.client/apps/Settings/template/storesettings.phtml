@@ -2,14 +2,22 @@
 $countrycodes = $this->getFactory()->getTerritoriesList();
 
 
+$languages = array();
+$languages['nb_NO'] = "Norwegian";
+$languages['se'] = "Swedish";
+$languages['dk'] = "Danish";
+$languages['en_en'] = "English";
+$languages['nl_NL'] = "Dutch";
+$languages['fi_FI'] = "Finish";
+
 ?>
 <div class="dropdown setting" id="language">
     <div class="text inline"><?php echo $this->__f("Please select your language"); ?></div>
     <select class="config">
-        <option value="en_GB">English</option>
-        <option value="nb_NO">Norsk</option>
-        <option value="nl_NL">Dutch</option>
-        <option value="fi_FI">Finish</option>
+        <? foreach($languages as $key => $lang) { ?>
+            <option value="<? echo $key; ?>"><? echo $lang; ?></option>
+        
+        <? } ?>
     </select>
 </div>
 
@@ -478,18 +486,33 @@ $countrycodes = $this->getFactory()->getTerritoriesList();
 </div>
 
 <div class="list setting"  id="selltocountries">
-    
     <?
     foreach($countrycodes as $code => $name) {
         echo "<span class='listentry' value='$code' name='".$name."'></span>";
     }
     ?>
-    
     <span class="title"><?php echo $this->__f("Shipping to country"); ?></span>
     <span class="listentry"></span>
     <input type='text' class=" config text">
     <div class="description">
         <?php echo $this->__f("What countries are you selling to?"); ?>
+    </div>
+    <div class='selected_entries'></div>
+</div>
+
+<div class="list setting"  id="languages">
+    
+    <?
+    foreach($languages as $lang_code => $lang_name) {
+        echo "<span class='listentry' value='$lang_code' name='".$lang_name."'></span>";
+    }
+    ?>
+    
+    <span class="title"><?php echo $this->__f("Supported languages"); ?></span>
+    <span class="listentry"></span>
+    <input type='text' class=" config text">
+    <div class="description">
+        <?php echo $this->__f("What languages are you supporting?"); ?>
     </div>
     <div class='selected_entries'></div>
 </div>

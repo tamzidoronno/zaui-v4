@@ -236,9 +236,10 @@ class Factory extends FactoryBase {
         if ($loadPages) {
             $this->initPage();
             $this->read_csv_translation();
-            if (!isset($this->getStoreConfiguration()->translationMatrix))
+            if (!isset($this->getStoreConfiguration()->translationMatrix)) {
                 $this->getStoreConfiguration()->translationMatrix = array();
-            $this->loadLanguage($this->getStoreConfiguration()->translationMatrix);
+            }
+            $this->loadLanguage();
         }
 
         if (!$loadPages) {
@@ -248,14 +249,10 @@ class Factory extends FactoryBase {
         $this->displayCookieWarning();
     }
 
-    public function loadLanguage($matrix) {
-        $lang = $this->getSettings();
-        $this->translation = new GetShopTranslation();
-        if (isset($lang->language->value)) {
-            $this->translation->loadTranslationFile($lang->language->value);
-        } else {
-            $this->translation->loadTranslationFile("en_en");
-        }
+    public function loadLanguage() {
+        $matrix = $this->getStoreConfiguration()->translationMatrix;
+        $translation = $this->getSelectedTranslation();
+        $this->translation->loadTranslationFile($translation);
         if ($matrix) {
             $this->translation->overrideWithDataMap($matrix);
         }
@@ -534,11 +531,8 @@ class Factory extends FactoryBase {
     }
 
     public function getTranslationForKey($app, $key) {
-        $orignalkey = $key;
-//        $key = $app . "." . $key;
-//        $key = strtolower($key);
         if (!isset($this->translationMatrix[$key]) || !$this->translationMatrix[$key]) {
-            return $orignalkey;
+            return $key;
         }
         return $this->translationMatrix[$key];
     }
@@ -552,16 +546,8 @@ class Factory extends FactoryBase {
     }
 
     public function read_csv_translation() {
-        $lang = $this->getSettings();
-        if (isset($lang->language)) {
-            $lang = $lang->language->value;
-            if (!file_exists("translation/f_$lang.csv")) {
-                $lang = "en_en";
-            }
-        } else {
-            $lang = "en_en";
-        }
-        $content = file_get_contents("translation/f_$lang.csv");
+        $translation = $this->getSelectedTranslation();
+        $content = file_get_contents("translation/f_$translation.csv");
         $line = explode("\n", $content);
         $this->translationMatrix = array();
         $app = "";
@@ -576,7 +562,7 @@ class Factory extends FactoryBase {
         }
 
         //Add customer related translation to the matrix.
-        $content = file_get_contents("translation/w_$lang.csv");
+        $content = file_get_contents("translation/w_$translation.csv");
         $line = explode("\n", $content);
         $app = "";
         foreach ($line as $entry) {
@@ -704,6 +690,23 @@ class Factory extends FactoryBase {
             echo "</span>";
             echo "</div>";
         }
+    }
+
+    public function getSelectedTranslation() {
+        $translation = "en_en";
+        $lang = $this->getSettings();
+        $this->translation = new GetShopTranslation();
+        if(isset($lang->language->value)) {
+            $translation = $lang->language->value;
+        }
+        if(isset($_GET['setLanguage'])) {
+            $translation = $_GET['setLanguage'];
+            $_SESSION['language_selected'] = $translation;
+            $this->getSettings()->language->value = $translation;
+        } else if(isset($_SESSION['language_selected'])) {
+            $translation = $_SESSION['language_selected'];
+        }
+        return $translation;
     }
 
 }

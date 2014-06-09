@@ -28,10 +28,7 @@ class Translation extends ReportingApplication implements Application {
     
     public function saveTranslation() {
         $newArray = array();
-        
-        $this->getFactory()->loadLanguage(null);
         $baseTranslation = $this->getFactory()->getWebShopTranslation();
-        
         foreach($_POST['data'] as $key => $value) {
             $value = base64_decode($_POST['data'][$key]);
             $key = base64_decode($key);
@@ -60,11 +57,7 @@ class Translation extends ReportingApplication implements Application {
         $store = $this->getApi()->getStoreManager()->getMyStore();
         $store->configuration->translationMatrix = $newArray;
         $this->getApi()->getStoreManager()->saveStore($store->configuration);
-        if(sizeof($newArray) > 0) {
-            $this->getFactory()->loadLanguage($store->configuration->translationMatrix);
-        } else {
-            $this->getFactory()->loadLanguage(null);
-        }
+        $this->getFactory()->loadLanguage();
     }
     
 

@@ -233,6 +233,11 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         return storePool.incrementStoreCounter();
     }
 
+    @Override
+    public void setSessionLanguage(String id) throws ErrorException {
+        getSession().language = id;
+    }
+
   
 
 }

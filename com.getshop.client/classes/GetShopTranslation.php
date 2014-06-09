@@ -33,7 +33,6 @@ class GetShopTranslation {
         foreach($this->base as $key) {
             $this->translationMatrix[$key] = $key;
         }
-
         if(file_exists("translation/w_".$language.".csv")) {
             $content = file_get_contents("translation/w_".$language.".csv");
             $lines = explode("\n", $content);

@@ -18,6 +18,7 @@ public class Session {
     public String id;
     private HashMap<String, Object> storedSessionObjects = new HashMap();
     public Date lastActive;
+    public String language;
     
     public void put(String key, Object object) {
         storedSessionObjects.put(key, object);

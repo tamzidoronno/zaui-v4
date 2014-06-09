@@ -37,6 +37,9 @@ body { background-color: #363b3e; }
 .gs_button.buy_product { display: none; }
 .subentries a { color:#000; }
 .subentries a.selected { font-weight: bold; }
+.Contact input, .Contact textarea { border: solid 1px #BDC7D8; }
+.Contact .text, .Contact td { color:#000 !important; }
+.Contact { padding-bottom: 150px; }
 @media only all and (max-width: 800px) {
     .footer { display:none; }
     .Hotelbooking .bookingbox { top: 0px; }

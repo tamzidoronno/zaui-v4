@@ -24,6 +24,14 @@ public interface IStoreManager {
     
     
     /**
+     * A user can set a different language for its session.
+     * @param id
+     * @throws ErrorException 
+     */
+    public void setSessionLanguage(String id) throws ErrorException;
+    
+    
+    /**
      * When an administrator has logged on, it can call on this call to connect its store to a partner.
      */
     public void connectStoreToPartner(String partner) throws ErrorException;

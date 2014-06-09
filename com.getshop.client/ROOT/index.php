@@ -65,6 +65,11 @@ function init($factory) {
 }
 
 include '../loader.php';
+
+if(isset($_GET['setLanguage'])) {
+    $_SESSION['language_selected'] = $_GET['setLanguage'];
+}
+
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <div class="mask" id="fullscreenmask"></div>
 <div class="upload_information_panel" ></div>
@@ -104,6 +109,14 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         $factory->getApi()->getUserManager()->logout();
     }
     $_SESSION['checkifloggedout'] = true;
+}
+if(isset($factory->getSettings()->languages)) {
+    $languages = json_decode($factory->getSettings()->languages->value);
+    echo "<span class='language_selection'>";
+    foreach($languages as $val) {
+        echo "<a href='?setLanguage=$val'>" . $val . "</a>";
+    }
+    echo "</span>";
 }
 
 ?>

@@ -175,6 +175,7 @@ public class Database {
             } catch (Exception ex) {
                 System.out.println("Figure out this : " + collection.getName() + " " + collection.getDB().getName());
                 System.out.println(dbObject);
+                ex.printStackTrace();
             }
         }
         cur.close();

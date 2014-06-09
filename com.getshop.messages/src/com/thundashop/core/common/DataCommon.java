@@ -19,7 +19,7 @@ import java.util.Date;
  */
 
 @Entity("Credentials")
-public class DataCommon implements Serializable {
+public class DataCommon extends TranslationHandler implements Serializable {
     @Id 
     public String id = "";
     public String storeId = "";

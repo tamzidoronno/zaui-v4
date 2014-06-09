@@ -13,4 +13,5 @@ import com.thundashop.core.databasemanager.data.Credentials;
 public interface DatabaseSaver {
     public void saveObject(DataCommon data, Credentials credentials) throws ErrorException;
     public void deleteObject(DataCommon data, Credentials credentials) throws ErrorException;
+    public DataCommon getDatabaseObject(DataCommon data, Credentials credentials) throws ErrorException;
 }

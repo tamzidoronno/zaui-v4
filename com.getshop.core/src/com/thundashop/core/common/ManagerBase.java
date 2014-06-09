@@ -11,6 +11,7 @@ import com.thundashop.core.pagemanager.IPageManager;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,5 +142,55 @@ public class ManagerBase {
     public void onEvent(String eventName, String eventReferance) throws ErrorException {}
     
     public void dataFromDatabase(DataRetreived data) {}
+    
+    public void saveObject(DataCommon data) throws ErrorException {
+        if(isDifferentLanguageMode()) {
+            System.out.println("Is editing in a different language");
+            System.out.println(data.getClass().getCanonicalName());
+            if(data.id != null && !data.id.isEmpty()) {
+                DataCommon originalData = databaseSaver.getDatabaseObject(data, credentials);
+                updateTranslation(data, originalData);
+                data = originalData;
+            }
+        }
+        data.storeId = storeId;
+        databaseSaver.saveObject(data, credentials);
+    }
+    
+    public void deleteObject(DataCommon data) throws ErrorException {
+        databaseSaver.deleteObject(data, credentials);
+    }
+
+    private boolean isDifferentLanguageMode() throws ErrorException {
+        String standardlang = "en_en";
+        HashMap<String, Setting> settings = getSettings("Settings");
+        if(settings.containsKey("language")) {
+            standardlang = settings.get("language").value;
+        }
+        System.out.println(getSession().language);
+        if(getSession().language != null && !standardlang.equals(getSession().language)) {
+            return true;
+        }
+        return false;
+    }
+
+    private void updateTranslation(Object data, Object originalData) throws ErrorException {
+        
+        Field[] fields = data.getClass().getFields();
+        for(Field field : fields) {
+            if(field.getAnnotation(Translation.class) != null) {
+                System.out.println("field to translate: " + field);
+                try {
+                    Method addTransmethod = originalData.getClass().getMethod("addTranslation", String.class, String.class, Object.class);
+                    addTransmethod.invoke(originalData, getSession().language, field.getName(), field.get(data));
+                    field.set(data, field.get(originalData));
+                }catch(Exception e) {
+                    System.out.println("WARNING:::::: TRANSLATION FAILED FOR " + field + " ( " + data.getClass().getCanonicalName() + ") addTranslation method does not exists.");
+                }
+            } else {
+                System.out.println(field.getType().toString());
+            }
+        }
+    }
 }
 

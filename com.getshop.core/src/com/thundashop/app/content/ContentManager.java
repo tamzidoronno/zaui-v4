@@ -50,7 +50,7 @@ public class ContentManager extends ManagerBase implements IContentManager {
         data.storeId = storeId;
         
         data.content = content;
-        databaseSaver.saveObject(data, credentials);
+        saveObject(data);
         memory.put(contentId,data);
     }
 

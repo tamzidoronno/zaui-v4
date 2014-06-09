@@ -4272,6 +4272,21 @@ class StoreManager(object):
     data.interfaceName = "core.storemanager.IStoreManager"
     return self.communicationHelper.sendMessage(data)
 
+  def setSessionLanguage(self, id):
+    args = collections.OrderedDict()
+    if isinstance(id,GetShopBaseClass): 
+      args["id"]=json.dumps(id.__dict__)
+    else:
+      try:
+        args["id"]=json.dumps(id)
+      except (ValueError, AttributeError):
+        args["id"]=id
+    data = EmptyClass()
+    data.args = args
+    data.method = "setSessionLanguage"
+    data.interfaceName = "core.storemanager.IStoreManager"
+    return self.communicationHelper.sendMessage(data)
+
   def setVIS(self, toggle, password):
     args = collections.OrderedDict()
     if isinstance(toggle,GetShopBaseClass): 

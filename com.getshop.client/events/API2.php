@@ -4161,6 +4161,21 @@ class APIStoreManager {
 	}
 
 	/**
+	* A user can set a different language for its session.
+	* @param id
+	* @throws ErrorException
+	*/
+
+	public function setSessionLanguage($id) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $data["method"] = "setSessionLanguage";
+	     $data["interfaceName"] = "core.storemanager.IStoreManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Is this a very important shop or not?
 	*
 	* @param toggle True / False

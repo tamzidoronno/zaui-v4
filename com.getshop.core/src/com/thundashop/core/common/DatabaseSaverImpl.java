@@ -61,4 +61,9 @@ public class DatabaseSaverImpl implements DatabaseSaver {
         checkStoreId(data);
         database.delete(data, credentials);
     }
+
+    @Override
+    public DataCommon getDatabaseObject(DataCommon data, Credentials credentials) throws ErrorException {
+        return database.findObject(data.id, credentials.manangerName);
+    }
 }

@@ -58,7 +58,7 @@ if($entry->eventHelder) {
 }
 
 $monthText = strftime('%B', strtotime('2012-'.$month.'-22 11:21:53'));
-
+$monthText = $factory->__w($monthText);
 $content .= "<head>
     <style>
         @page {

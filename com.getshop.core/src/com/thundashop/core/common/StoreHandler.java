@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class StoreHandler {
 
-    public List<ManagerBase> messageHandler;
+    private List<ManagerBase> messageHandler;
     private String storeId;
     private HashMap<String, Session> sessions = new HashMap();
     // remove this.
@@ -38,7 +38,11 @@ public class StoreHandler {
     public void setTestUser(User user) {
         testUser = user;
     }
-
+    
+    public Session getSession(String id) {
+        return sessions.get(id);
+    }
+    
     public StoreHandler(String storeId) {
         this.storeId = storeId;
         messageHandler = new ArrayList<ManagerBase>(AppContext.appContext.getBeansOfType(ManagerBase.class).values());
@@ -58,10 +62,6 @@ public class StoreHandler {
                 ((StoreInitialized)base).storeReady();
             }
         }
-    }
-
-    public void startSession(String sessionId) {
-        setSessionObject(sessionId);
     }
     
     public synchronized Object executeMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
@@ -124,7 +124,9 @@ public class StoreHandler {
     private Object invokeMethod(Method executeMethod, Class aClass, Object[] argObjects) throws ErrorException {
         try {
             ManagerBase manager = getManager(aClass);
-            return executeMethod.invoke(manager, argObjects);
+            Object result = executeMethod.invoke(manager, argObjects);
+            manager.updateTranslation(result, true);
+            return result;
         } catch (IllegalAccessException ex) {
             throw new ErrorException(84);
         } catch (IllegalArgumentException ex) {
@@ -207,7 +209,7 @@ public class StoreHandler {
         throw retex;
     }
 
-    public synchronized Annotation authenticateUserLevel(Method executeMethod, Class aClass) throws ErrorException {
+    private synchronized Annotation authenticateUserLevel(Method executeMethod, Class aClass) throws ErrorException {
         executeMethod = getCorrectMethod(executeMethod);
 
         if (executeMethod.getAnnotation(Internal.class) != null) {

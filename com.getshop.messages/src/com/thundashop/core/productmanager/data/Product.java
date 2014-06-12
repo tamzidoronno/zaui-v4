@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Editor;
+import com.thundashop.core.common.Translation;
 import com.thundashop.core.pagemanager.data.Page;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,10 +22,13 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public List<String> imagesAdded = new LinkedList();
     public List<ProductVariation> variations = new ArrayList();
     public List<String> descriptions = new ArrayList();
+    @Translation
     public String description;
+    @Translation
     public String shortDescription;
     public String mainImage = "";
     public double price;
+    @Translation
     public String name;
     public int stockQuantity;
     public String pageId;

@@ -5,6 +5,8 @@
 package com.thundashop.core.listmanager.data;
 
 import com.google.code.morphia.annotations.Transient;
+import com.thundashop.core.common.Translation;
+import com.thundashop.core.common.TranslationHandler;
 import java.io.Serializable;
 import java.util.List;
 
@@ -12,8 +14,9 @@ import java.util.List;
  * @author boggi
  * @param navigateByPages
  */
-public class Entry implements Serializable {
+public class Entry extends TranslationHandler implements Serializable {
     public boolean navigateByPages = true;
+    @Translation
     public String name;
     public String parentId;
     public String pageId;

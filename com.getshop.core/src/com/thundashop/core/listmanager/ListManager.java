@@ -80,7 +80,7 @@ public class ListManager extends ManagerBase implements IListManager {
 
     private void saveToDatabase(EntryList list) throws ErrorException {
         list.storeId = storeId;
-        databaseSaver.saveObject(list, credentials);
+        saveObject(list);
     }
 
     private void validateEntry(Entry entry) throws ErrorException {
@@ -495,7 +495,7 @@ public class ListManager extends ManagerBase implements IListManager {
         
         list.storeId = storeId;
         list.extendedLists.add(newListId);
-        databaseSaver.saveObject(list, credentials);
+        saveObject(list);
     }
 
     private List<Entry> combineLists(EntryList entries) {
@@ -542,7 +542,7 @@ public class ListManager extends ManagerBase implements IListManager {
         
         list.extendedLists.remove(number);
         
-        databaseSaver.saveObject(list, credentials);
+        saveObject(list);
     }
 
     @Override

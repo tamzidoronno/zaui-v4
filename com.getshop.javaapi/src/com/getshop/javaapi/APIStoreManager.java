@@ -293,6 +293,20 @@ public class APIStoreManager {
      }
 
      /**
+     * A user can set a different language for its session.
+     * @param id
+     * @throws ErrorException
+     */
+     public void setSessionLanguage(java.lang.String id)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("id",new Gson().toJson(id));
+          data.method = "setSessionLanguage";
+          data.interfaceName = "core.storemanager.IStoreManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Is this a very important shop or not?
      *
      * @param toggle True / False

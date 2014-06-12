@@ -59,8 +59,7 @@ public class ProductManager extends AProductManager implements IProductManager {
 
         }
 
-        product.storeId = storeId;
-        databaseSaver.saveObject(product, credentials);
+        saveObject(product);
         products.put(product.id, product);
 
         return product;
@@ -211,7 +210,7 @@ public class ProductManager extends AProductManager implements IProductManager {
         List<String> valuesAdded = new ArrayList();
         for (AttributeValue val : groups) {
             val.storeId = storeId;
-            databaseSaver.saveObject(val, credentials);
+            saveObject(val);
             pool.addAttributeValue(val);
             valuesAdded.add(val.id);
         }
@@ -224,7 +223,7 @@ public class ProductManager extends AProductManager implements IProductManager {
                 for (Product product : products.values()) {
                     if (product.attributes != null && product.attributes.contains(value.id)) {
                         product.attributes.remove(value.id);
-                        databaseSaver.saveObject(product, credentials);
+                        saveObject(product);
                     }
                 }
             }
@@ -259,7 +258,7 @@ public class ProductManager extends AProductManager implements IProductManager {
         for (TaxGroup grp : groups) {
             taxGroups.put(grp.groupNumber, grp);
             grp.storeId = storeId;
-            databaseSaver.saveObject(grp, credentials);
+            saveObject(grp);
         }
     }
 

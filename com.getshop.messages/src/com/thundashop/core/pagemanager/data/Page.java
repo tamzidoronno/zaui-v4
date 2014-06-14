@@ -9,6 +9,7 @@ package com.thundashop.core.pagemanager.data;
 import com.google.code.morphia.annotations.Transient;
 import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.Translation;
 import com.thundashop.core.listmanager.data.Entry;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -167,6 +168,7 @@ public class Page extends DataCommon implements Cloneable {
     public String description = "";
     private HashMap<String, PageArea> pageAreas = new HashMap<String, PageArea>();
     public PageLayout layout = new PageLayout();
+    @Translation
     public String title;
     public String customCss = "";
     

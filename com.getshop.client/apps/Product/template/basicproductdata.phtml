@@ -13,7 +13,7 @@ $product = $this->getProduct();
 
 <div class='row'>
     <span class='title'><? echo $this->__f("Product title"); ?></span>
-    <input type='text' data="title" class="gs_product_data" value="<? echo $page->title; ?>">
+    <input type='text' data="title" class="gs_product_data" value="<? echo $product->name; ?>">
 </div>
 <div class='row'>
     <span class='title'><? echo $this->__f("Price"); ?> (<? echo $this->getFactory()->getCurrency(); ?>)</span>

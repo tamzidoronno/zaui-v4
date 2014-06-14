@@ -15,6 +15,7 @@ if(!$title) {
 
 /* @var $product \core_productmanager_data_Product */
 $product = $factory->getApi()->getProductManager()->getProductByPage($page->id);
+$name = $product->name;
 $price = $product->price;
 $variations = $product->variations;
 ?>
@@ -23,7 +24,7 @@ $variations = $product->variations;
 <? if($this->hasWriteAccess()) { ?>
     <i class="fa fa-pencil-square-o" title="<? echo $this->__f("Edit product details"); ?>"></i>
 <? } ?>
-    <? echo $title; ?>
+    <? echo $name; ?>
 </h1>
 
 <input type='hidden' value='<? echo $product->id; ?>' id='ProductId'>

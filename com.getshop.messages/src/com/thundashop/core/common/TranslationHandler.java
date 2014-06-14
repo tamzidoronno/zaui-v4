@@ -25,8 +25,10 @@ public class TranslationHandler implements Serializable {
                         if(!loading) {
                             translationStrings.put(keyindex, (String) result);
                         } else {
-                            if(translationStrings.containsKey(keyindex))
+                            if(translationStrings.containsKey(keyindex)) {
+//                                System.out.println("Updating translation field (" + this.getClass().getSimpleName() + "): " + keyindex + " to : " + translationStrings.get(keyindex).replaceAll("\\s+",""));
                                 field.set(this, translationStrings.get(keyindex));
+                            }
                         }
                     }
                 }catch(Exception e) {

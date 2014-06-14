@@ -1,5 +1,6 @@
 package com.thundashop.core.common;
 
+import com.thundashop.core.productmanager.data.Product;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -23,7 +24,9 @@ public class TranslationHelper {
         if(checked.contains(data)) {
             return;
         }
-        checked.add(data);
+        if(!(data instanceof List)) {
+            checked.add(data);
+        }
         
         if(data instanceof List) {
             List tmpList = (List)data;
@@ -46,6 +49,9 @@ public class TranslationHelper {
             Method method = data.getClass().getMethod("updateTranslation", String.class, String.class, boolean.class);
             method.invoke(data, curLang, mainLang, loading);
         }catch(Exception e) {
+            if(!(e instanceof NoSuchMethodException)) {
+                e.printStackTrace();
+            }
         }
         
         Field[] fields = data.getClass().getFields();

@@ -130,7 +130,14 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
                                     if ($entry->lockedForSignup) {
                                         continue;
                                     }
-                                    echo "<option value='$entryid' style='display:none;' location='" . $entry->location . "'>$date $title</option>";
+ 				   $display = "none";
+				   $selected = "";
+                                   if($selectedEntry && $selectedEntry->entryId == $entryid) {
+					$display = "";
+					$selected = "SELECTED";
+				    }
+
+                                    echo "<option value='$entryid' style='display:".$display."' location='" . $entry->location . "' ".$selected.">$date $title</option>";
                                 }
                                 ?>
                             </select>

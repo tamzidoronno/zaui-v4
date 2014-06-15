@@ -180,7 +180,11 @@ public class StorePool {
         Class[] types = getArguments(object);
         Type[] casttypes = getArgumentsTypes(object);
         for (String parameter : object.args.keySet()) {
-            Class classLoaded = getClass(types[i].getCanonicalName());
+            try {
+                Class classLoaded = getClass(types[i].getCanonicalName());
+            }catch(Exception e) {
+                System.out.println("test");
+            }
             try {
                 Object argument = gson.fromJson(object.args.get(parameter), casttypes[i]);
                 executeArgs[i] = argument;
@@ -295,7 +299,7 @@ public class StorePool {
         Method[] methods = aClass.getMethods();
         Method method = null;
         for (Method tmpMethod : methods) {
-            if (tmpMethod.getName().equals(object.method)) {
+            if (tmpMethod.getName().equals(object.method) && tmpMethod.getGenericParameterTypes().length == object.args.size()) {
                 method = tmpMethod;
             }
         }

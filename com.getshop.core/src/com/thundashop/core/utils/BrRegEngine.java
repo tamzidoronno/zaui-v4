@@ -107,13 +107,13 @@ public class BrRegEngine {
         for(BrRegCompany company : fromJson.entries) {
             returnvalue.put(company.orgnr, company.navn);
         }
-        
-        result = read(search, true);
-        fromJson = gson.fromJson(result, ReturnValue.class);
-        for(BrRegCompany company : fromJson.entries) {
-            returnvalue.put(company.orgnr, company.navn);
+        if(returnvalue.isEmpty()) {
+            result = read(search, true);
+            fromJson = gson.fromJson(result, ReturnValue.class);
+            for(BrRegCompany company : fromJson.entries) {
+                returnvalue.put(company.orgnr, company.navn);
+            }
         }
-        
         
         return returnvalue;
     }

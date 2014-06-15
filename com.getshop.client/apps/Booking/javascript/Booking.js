@@ -54,7 +54,7 @@ Booking = {
         $(this).closest('.app').find('.search_company').val(name);
         $(this).closest('.app').find('#birthday').val(brregnumber);
         $(this).closest('.app').find('#birthday').keyup();
-        $(this).closest('.app').find('#birthday').closest('tr').show();
+//        $(this).closest('.app').find('#birthday').closest('tr').show();
         $('.Booking .search_result_area').hide();
     },
     searchBrreg : function(event) {

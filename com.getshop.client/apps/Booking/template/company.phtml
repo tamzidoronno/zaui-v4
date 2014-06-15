@@ -5,9 +5,11 @@ if (!$company) {
     echo $this->__w("Did not find the specified company, please check your company number");
     return;
 }
+//print_r($company);
 ?>
 
 <table>
+    <tr><td class="col1"><?php echo $this->__w("orgnummer"); ?></td><td><? echo $company->vatNumber;?></td></tr>
     <tr><td style="width: 73px"><? echo $this->__w("Company name"); ?></td><td><? echo $company->name;?></td></tr>
     <tr><td><? echo $this->__w("Address"); ?></td><td><? echo $company->streetAddress;?></td></tr>
     <tr><td><? echo $this->__w("Post code"); ?></td><td><? echo $company->postnumber;?></td></tr>

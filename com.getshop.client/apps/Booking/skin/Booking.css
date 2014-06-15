@@ -82,6 +82,8 @@
     position:absolute;
     width:400px;
     z-index:3;
+    max-height: 150px;
+    overflow:auto;
 }
 .Booking .search_for_company_brreg {
     width: 27px;

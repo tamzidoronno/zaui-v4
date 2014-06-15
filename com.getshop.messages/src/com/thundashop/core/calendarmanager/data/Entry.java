@@ -49,7 +49,7 @@ public class Entry implements Serializable, Comparable<Entry> {
     public String title;
     public String color;
     public String eventHelder;
-    
+    public List<EntryComment> comments = new ArrayList();
     
     public int year;
     public int month;
@@ -82,6 +82,7 @@ public class Entry implements Serializable, Comparable<Entry> {
         this.month = entry.month;
         this.linkToPage = entry.linkToPage;
         this.day = entry.day;
+        this.comments = entry.comments;
     }
 
     @Override

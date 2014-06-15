@@ -19,7 +19,7 @@ public class PHPApiBuilder {
         this.generator = generator;
         this.allManagers = allManagers;
         this.dataObjects = dataObjects;
-
+        this.generator.setType("php");
     }
 
     private String getFileName(Class entry) {

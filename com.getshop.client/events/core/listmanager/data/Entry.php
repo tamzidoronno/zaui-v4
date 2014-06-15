@@ -1,5 +1,5 @@
 <?php
-class core_listmanager_data_Entry {
+class core_listmanager_data_Entry extends core_common_TranslationHandler  {
 	/** @var String */
 	public $navigateByPages;
 

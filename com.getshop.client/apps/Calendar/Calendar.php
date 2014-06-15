@@ -52,6 +52,20 @@ class Calendar extends MarketingApplication implements Application {
         $this->getApi()->getCalendarManager()->saveEntry($entryObject);
     }
     
+    public function addCommentToEntry() {
+        $id = $_POST['data']['id'];
+        $text = $_POST['data']['text'];
+        $entry = $this->getApi()->getCalendarManager()->getEntry($id);
+        
+        $comment = new \core_calendarmanager_data_EntryComment;
+        $comment->addedWhen = time();
+        $comment->text = $text;
+        $comment->userId = $this->getUser()->id;
+        
+        $entry->comments[] = $comment;
+        $this->getApi()->getCalendarManager()->saveEntry($entry);
+    }
+    
     public function getGroup($user) {
         $retGroups = "";
         if (isset($user->groups) && sizeof($user->groups) > 0) {
@@ -701,6 +715,21 @@ class Calendar extends MarketingApplication implements Application {
     
     public function showCandidateSetting() {
         $this->includefile("candidate_setting");
+    }
+    
+    public function deleteCommentToEntry() {
+        $commentid = $_POST['data']['commentid'];
+        $entryid = $_POST['data']['entryid'];
+        
+        $entry = $this->getApi()->getCalendarManager()->getEntry($entryid);
+        $newlist = array();
+        foreach($entry->comments as $cmnt) {
+            if($cmnt->id != $commentid) {
+                $newlist[] = $cmnt;
+            }
+        }
+        $entry->comments = $newlist;
+        $this->getApi()->getCalendarManager()->saveEntry($entry);
     }
 }
 

@@ -70,6 +70,9 @@ class core_calendarmanager_data_Entry {
 	public $eventHelder;
 
 	/** @var String */
+	public $comments;
+
+	/** @var String */
 	public $year;
 
 	/** @var String */

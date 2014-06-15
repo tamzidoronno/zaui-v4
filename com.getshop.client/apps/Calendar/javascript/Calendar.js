@@ -61,7 +61,29 @@ Calendar = {
         $(document).on('click', '.calendar_location_back', app.Calendar.showLocationsConfiguration);
         $(document).on('click', '.calendar_location_delete', Calendar.deleteLocation);
         $(document).on('click', '.calendar_location_createnew', Calendar.showEditLocation);
+        $(document).on('click', '.Calendar .add_comment_to_event', Calendar.addCommentToEvent);
+        $(document).on('click', '.Calendar .delete_comment', Calendar.deleteComment);
     },
+    addCommentToEvent : function() {
+        var text = $(this).closest('.comment_area').find('.comment_field').val();
+        var data= {
+            "text" : text,
+            "id" : $(this).attr('entryid')
+        }
+        var event = thundashop.Ajax.createEvent(null, 'addCommentToEntry',$(this), data);
+        thundashop.Ajax.post(event);
+    },
+    
+    deleteComment : function() {
+        var text = $(this).closest('.comment_area').find('.comment_field').val();
+        var data= {
+            "entryid" : $(this).attr('entryid'),
+            "commentid" : $(this).attr('commentid')
+        }
+        var event = thundashop.Ajax.createEvent(null, 'deleteCommentToEntry',$(this), data);
+        thundashop.Ajax.post(event);
+    },
+    
     deleteLocation: function() {
         var confirm = thundashop.common.confirm(__f("Are you sure you want to delete the location?"));
 

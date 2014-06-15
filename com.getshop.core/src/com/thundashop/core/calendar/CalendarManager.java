@@ -2,6 +2,7 @@ package com.thundashop.core.calendar;
 
 import com.thundashop.core.calendarmanager.data.Day;
 import com.thundashop.core.calendarmanager.data.Entry;
+import com.thundashop.core.calendarmanager.data.EntryComment;
 import com.thundashop.core.calendarmanager.data.EventPartitipated;
 import com.thundashop.core.calendarmanager.data.ExtraDay;
 import com.thundashop.core.calendarmanager.data.FilterResult;
@@ -395,6 +396,11 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     }
 
     @Override
+    public void addUserToEvent(String userId, String eventId, String password, String username) throws ErrorException {
+        addUserToEvent(userId, eventId, password, username, "fallback");
+    }    
+
+    @Override
     public void addUserToEvent(String userId, String eventId, String password, String username, String source) throws ErrorException {
         addUserToEventInternal(userId, eventId, password, username, source);
     }
@@ -593,6 +599,13 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     @Override
     public void saveEntry(Entry entry) throws ErrorException {
         Entry oldEntry = getEntry(entry.entryId);
+        
+        for(EntryComment comment : entry.comments) {
+            if(comment.id == null || comment.id.isEmpty()) {
+                comment.id = UUID.randomUUID().toString();
+            }
+        }
+        
         if (oldEntry == null) {
             throw new ErrorException(1012);
         }
@@ -1068,8 +1081,4 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         return new ArrayList(calendars);
     }
 
-//    @Override
-    public void addUserToEvent(String userId, String eventId, String password, String username) throws ErrorException {
-        addUserToEvent(userId, eventId, password, username, "fallback");
-    }
 }

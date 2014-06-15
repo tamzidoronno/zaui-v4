@@ -30,6 +30,8 @@ public class GenerateApi {
     private final List<Class> coreClasses;
     private final List<Class> messageClasses;
     private final LinkedList<Class> allManagers;
+    private HashMap<String, Integer> methodProcessed = new HashMap();
+    private String type = "defualt";
 
     public GenerateApi() throws ClassNotFoundException {
         File core = new File("../com.getshop.core/");
@@ -66,6 +68,28 @@ public class GenerateApi {
         pythonApiBuilder.generate();
     }
 
+    private LinkedList<ApiMethod> removeOverLoadedMethods(LinkedList<ApiMethod> methods) {
+        HashMap<String, ApiMethod> toKeep = new HashMap();
+        List<ApiMethod> toRemove = new ArrayList();
+        for(ApiMethod method : methods) {
+            if(toKeep.containsKey(method.methodName)) {
+                if(toKeep.get(method.methodName).arguments.size() < method.arguments.size()) {
+                    toRemove.add(toKeep.get(method.methodName));
+                    toKeep.put(method.methodName, method);
+                }
+            } else {
+                toKeep.put(method.methodName, method);
+            }
+        }
+
+        for(ApiMethod remove : toRemove) {
+            System.out.println("Removing: " + remove.methodName + " with : " + remove.arguments.size() + " arguments");
+            methods.remove(remove);
+        }
+        
+        return methods;
+    }
+
     public class ApiMethod {
 
         public String methodName;
@@ -83,8 +107,18 @@ public class GenerateApi {
 
     }
 
-    private LinkedHashMap<String, String> findArguments(String javafile, Method method) {
-        int methodStart = javafile.indexOf(method.getName() + "(");
+    void setType(String type) {
+        this.type = type;
+    }
+
+    private LinkedHashMap<String, String> findArguments(String javafile, Method method, Class filteredClass) {
+        int offset = 0;
+        String key = filteredClass.getSimpleName()+"_" + method.getName();
+        if(methodProcessed.containsKey(key)) {
+            offset = methodProcessed.get(key) + 1;
+        }
+        int methodStart = javafile.indexOf(method.getName() + "(", offset);
+        methodProcessed.put(key, methodStart);
         int argStart = javafile.indexOf("(", methodStart) + 1;
         int argStop = javafile.indexOf(")", argStart);
 
@@ -105,7 +139,8 @@ public class GenerateApi {
             }
             
             if (i >= method.getParameterTypes().length) {
-                throw new RuntimeException("Problem with; " + method.getName());
+                System.out.println("Problem with ( is it overloading?, remember to order it with first least arguments first in both interface and java class) ; " + method.getName() + " ( " + filteredClass + ")");
+                System.exit(0);
             }
             map.put(argmap[1], method.getParameterTypes()[i].getCanonicalName());
             i++;
@@ -264,12 +299,15 @@ public class GenerateApi {
 
     public LinkedList<ApiMethod> getMethods(Class filteredClass) {
         LinkedList<ApiMethod> methods = new LinkedList();
+        methodProcessed = new HashMap();
         Method[] managermethods = filteredClass.getMethods();
         for (Method method : managermethods) {
             ApiMethod result = new ApiMethod();
             result.manager = filteredClass;
             result.method = method;
             result.methodName = method.getName();
+            
+            System.out.println(result.manager.getSimpleName() + " : "+ result.methodName);
 
             String path = new File(".").getAbsolutePath() + "/src/" + filteredClass.getName().replace(".", "/") + ".java";
             String javafile = readContent(path);
@@ -277,12 +315,18 @@ public class GenerateApi {
                 System.out.println("Unable to load java file : " + path);
                 System.exit(0);
             }
-            result.arguments = findArguments(javafile, method);
+            result.arguments = findArguments(javafile, method, filteredClass);
             result.generics = buildGenericsString(method);
             result.commentLines = createCommentLines(javafile, javafile.indexOf(method.getName() + "("));
             result.userLevel = getUserLevel(method);
             methods.add(result);
         }
+        
+        
+        if(type.equals("php")) {
+            methods = removeOverLoadedMethods(methods);
+        }
+        
         String spaces = "   ";
         if (methods.size() >= 10) {
             spaces = "  ";

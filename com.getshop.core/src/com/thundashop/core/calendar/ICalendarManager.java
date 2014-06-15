@@ -85,17 +85,6 @@ public interface ICalendarManager {
     public List<Entry> getEntries(int year, int month, int day, List<String> filters) throws ErrorException;
     
     /**
-     * Add a given user to a given event.
-     * @param userId The user id to add to a the given event (see usermanager for more inforamtion about this id)
-     * @param eventId The event id to attach to the user.
-     * @param password A password you want to attach to the email that is being sent to the user.
-     * @param username A username you want to attach to the email that is being sent to the user.
-     * @return
-     * @throws ErrorException 
-     */
-    public void addUserToEvent(String userId, String eventId, String password, String username, String source) throws ErrorException;
-    
-    /**
      * Deprecated and a fallback method.
      * 
      * @param userId
@@ -105,6 +94,17 @@ public interface ICalendarManager {
      * @throws ErrorException 
      */
     public void addUserToEvent(String userId, String eventId, String password, String username) throws ErrorException;
+    
+    /**
+     * Add a given user to a given event.
+     * @param userId The user id to add to a the given event (see usermanager for more inforamtion about this id)
+     * @param eventId The event id to attach to the user.
+     * @param password A password you want to attach to the email that is being sent to the user.
+     * @param username A username you want to attach to the email that is being sent to the user.
+     * @return
+     * @throws ErrorException 
+     */
+    public void addUserToEvent(String userId, String eventId, String password, String username, String source) throws ErrorException;
     
     /**
      * Adds a user to a page event

@@ -68,7 +68,7 @@ public class StoreHandler {
         setSessionObject(inObject.sessionId);
         
         Class aClass = loadClass(inObject.interfaceName);
-        Method executeMethod = getMethodToExecute(aClass, inObject.method, types);
+        Method executeMethod = getMethodToExecute(aClass, inObject.method, types, argumentValues);
         
         try {
             authenticateUserLevel(executeMethod, aClass);
@@ -111,8 +111,14 @@ public class StoreHandler {
         return null;
     }
 
-    private Method getMethodToExecute(Class aClass, String method, Class[] types) throws ErrorException {
+    private Method getMethodToExecute(Class aClass, String method, Class[] types, Object[] argumentValues) throws ErrorException {
         try {
+            for (Method emethod : aClass.getMethods()) {
+                if (emethod != null && emethod.getName().equals(method) && emethod.getParameterTypes().length == argumentValues.length) {
+                    return emethod;
+                }
+            }
+            
             return aClass.getMethod(method, types);
         } catch (NoSuchMethodException ex) {
             throw new ErrorException(82);

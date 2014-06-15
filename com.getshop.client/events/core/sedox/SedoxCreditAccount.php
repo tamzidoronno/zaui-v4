@@ -4,6 +4,9 @@ class core_sedox_SedoxCreditAccount {
 	public $history;
 
 	/** @var String */
+	public $allowNegativeCredit;
+
+	/** @var String */
 	public $balance;
 
 }

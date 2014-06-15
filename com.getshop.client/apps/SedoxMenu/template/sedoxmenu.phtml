@@ -1,0 +1,45 @@
+<?
+$notLoggedIn = $this->getUser() ? "" : "notLoggedIn";
+?>
+<div class='<? echo $notLoggedIn ?>'>
+    
+    <? if (!$this->isHomePage()) { ?>
+        <a href='?page=home'><div  class="sedoxmenuentry backbutton"><i  class="fa fa-arrow-left"></i><div>BACK</div></div></a>
+    <? } ?>
+        
+    <? if ($this->getUser()) { ?> <a href='?page=17d1c401-6ff7-40e8-9224-6035758e4e41'><? } ?>
+            <div class="sedoxmenuentry"><i class="fa fa-upload"></i><div>UPLOAD FILE</div></div>
+    <? if ($this->getUser()) { ?> </a><? } ?>
+        
+    <? if ($this->getUser()) { ?> <a href='?page=5cb79939-9a26-4ed1-9ffb-424b814b3ad5'><? } ?>
+        <div class="sedoxmenuentry"><i class="fa fa-files-o"></i><div>MY FILES</div></div>
+    <? if ($this->getUser()) { ?> </a><? } ?>
+    
+    <? if ($this->getUser()) { ?> <a href='?page=ca4ad779-2c0f-4c4c-ae32-cbb2f781c9db'><? } ?>
+        <div class="sedoxmenuentry"><i class="fa fa-credit-card"></i><div>BUY CREDITS</div></div>
+    <? if ($this->getUser()) { ?> </a><? } ?>
+    
+    <? if ($this->getUser()) { ?> <a href='?page=c1f604e7-be38-4f66-9bf2-03a32d923fd1'><? } ?>
+        <div class="sedoxmenuentry"><i class="fa fa-wechat"></i><div>CONTACT SEDOX</div></div>
+    <? if ($this->getUser()) { ?> </a><? } ?>
+    <?
+    
+    if (!$this->hasWriteAccess()) {
+        if ($this->getUser()) { ?> <a href='?page=69548d24-da99-45e8-a62c-b324eb8b07b3'><? } ?>
+            <div class="sedoxmenuentry"><i class="fa fa-user"></i><div>PROFILE</div></div>
+        <? if ($this->getUser()) { ?> </a><? } 
+    } 
+    
+    if ($this->hasWriteAccess()) { ?>
+        <a href='?page=83a088e9-9770-4433-b091-1df3afce8d6d'><div class="sedoxmenuentry"><i class="fa fa-gear"></i><div>ADMIN</div></div></a>
+    <? }
+    ?>
+        
+</div>
+
+<? if ($this->isHomePage()) { ?>
+    <div class='searcharea'>
+        <div class='title'>Search Database</div>
+        <input id="searchinputfield" type='text' placeholder='SEARCH OUR DATABASE FOR MATCHING FILE.' value="<? echo isset($_SESSION['searchKey']) ? $_SESSION['searchKey'] : ""; ?>"><div class='sedox_button' >SEARCH</div>
+    </div>
+<? } ?>

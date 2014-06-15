@@ -3,7 +3,8 @@
 }
 .SedoxUserPanel .sedox_box {
     position: relative;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    background-color: #f1f1f1;
 }
 
 .SedoxUserPanel .sedox_box .icon i {
@@ -22,8 +23,8 @@
 
 .SedoxUserPanel .sedox_box .icon,
 .SedoxUserPanel .sedox_box .details {
-    display: inline-block;
     vertical-align: top;
+    padding-bottom: 70px;
 }
 
 .SedoxUserPanel .sedox_box .details td {
@@ -50,31 +51,74 @@
 .SedoxUserPanel .sedox_box th.col1 { width: 80px; }
 .SedoxUserPanel .sedox_box th.col2 { width: 550px; }
 
+.SedoxUserPanel .sedox_box .details.geninfotop {
+    margin: 20px;
+    padding-bottom: 20px;
+}
 .SedoxUserPanel .sedox_box .details {
-    padding-top: 30px;
-    padding-left: 20px;
     font-size: 16px;
-    width: 920px;
-    border-bottom: solid 1px #DDD;
-    border-left: solid 1px #DDD;
     margin-top: 20px;
-    min-height: 130px;
-    
+    margin-bottom: 20px;    
+}
+
+.SedoxUserPanel .sedox_box .detailstitle {
+    background-color: #a6a6a6;
+    font-size: 27px;
+    padding: 20px;
+    color: #FFF;
+    font-weight: normal;
 }
 
 .SedoxUserPanel .sedox_box .sedox_button {
     position: absolute;
-    right: 0px;
-    bottom: 5px;
+    left: 20px;
+    bottom: 15px;
 }
 
+.SedoxUserPanel .filehistory,
 .SedoxUserPanel .filehistory a {
     font-size: 14px;
     color: #666;
 }
-.SedoxUserPanel .filehistory .col {
+.SedoxUserPanel .col {
     display: inline-block;
+}
+
+.SedoxUserPanel .sedox_title { 
+    font-size: 22px;
+    color: #cc0000;
+    padding-top: 20px;
+    margin-left: 20px;
 }
 
 .SedoxUserPanel .filehistory .col1 { width: 100px; }
 .SedoxUserPanel .filehistory .col2 { width: 500px; }
+
+.SedoxUserPanel .row {
+    padding: 5px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    color: #000;
+    font-weight: normal;
+}
+
+.SedoxUserPanel .row.even {
+    background-color: #d9d9d9;
+}
+
+.SedoxUserPanel .row.header {
+    background-color: #bfbfbf;
+}
+.SedoxUserPanel .row.even {
+    background-color: #e6e6e6;
+}
+.SedoxUserPanel .row .col1 {
+    padding-left: 30px;
+}
+
+.SedoxUserPanel .credithistory .row .col3 {
+    width: 100px;
+}
+.SedoxUserPanel .credithistory {
+    font-size: 14px;
+}

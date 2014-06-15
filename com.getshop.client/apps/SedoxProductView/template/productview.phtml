@@ -1,6 +1,7 @@
 <?
 $sedoxProduct = $this->getCurrentProduct();
 $name = $sedoxProduct->brand . " " . $sedoxProduct->model . " " . $sedoxProduct->engineSize . " " . $sedoxProduct->power . " " . $sedoxProduct->year . " " . $sedoxProduct->originalChecksum ;
+$checksum = $sedoxProduct->originalChecksum ? $sedoxProduct->originalChecksum : "";
 ?>
 
 <div class='title'><i class='fa fa-car'></i>&nbsp; <? echo $name; ?></div>
@@ -25,21 +26,35 @@ $name = $sedoxProduct->brand . " " . $sedoxProduct->model . " " . $sedoxProduct-
     <?
     foreach ($sedoxProduct->binaryFiles as $binFile) {
         ?>
-        <div class='binaryfilerow'>
+        <div class='binaryfilerow' binfileid="<? echo $binFile->id; ?>">
             <div class="col col1 squaredThree">
-                <input type="checkbox" value="None" id="squaredThree_<? echo $binFile->id; ?>" name="check" />
+                <input type="checkbox" value="None" id="squaredThree_<? echo $binFile->id; ?>" name="check" fileId="<? echo $binFile->id; ?>" />
                 <label for="squaredThree_<? echo $binFile->id; ?>"></label>
             </div>
             <div class='col col2'><? echo $binFile->fileType; ?></div>
             <div class='col col3'><? echo $this->getPriceForFile($binFile); ?></div>
-            <div class='col col4'><? echo $binFile->checksumCorrected == null ? 'N/A' : "Yes"; ?></div>
+            <div class='col col4'>
+                <? 
+                    if ($binFile->checksumCorrected == 0) {
+                        echo "No";
+                    } else if ($binFile->checksumCorrected == 1) {
+                        echo "Yes";
+                    } else {
+                        echo "N/A";
+                    }
+                ?>
+            </div>
             <div class='col col5'>-</div>
+            <? if ($this->hasWriteAccess()) { ?>
+                <div class='col col6'><i productid="<? echo $sedoxProduct->id; ?>" class="fa fa-trash-o deletebinfile"></i></div>
+                <div class='col col7'><i productid="<? echo $sedoxProduct->id; ?>" class="fa fa-info-circle changeinfo"></i></div>
+            <? } ?>
         </div>
         <?
     }
     ?> 
     <div class='sedox_warning'>Note! When you click on the button below you will download the file and it will be purchased. </div>
-    <div class='sedox_button'>Purchase and download</div>
+    <div class='sedox_button purchase'>Purchase and download</div>
 </div>
 
 <?
@@ -59,5 +74,15 @@ if (!$this->hasWriteAccess()) {
             <div fileType='Original' class='uploadtuningfilebox fa fa-upload'><div style='font-size: 15px;'>Original</div><div class='progressbar'></div></div>
         </div>
     </div>
-
+    
+    <div class='title'><i class='fa fa-lightbulb-o'></i>&nbsp; Purchase file for customer.</div>
+    <div class='subcontainer'>
+        <textarea class="infotextareatocustomer" placeholder="Information to attach to the mail."></textarea>
+        <br><input type="textfield" class="original_check_input_box" placeholder="Insert original checksum here" value="<? echo $checksum; ?>"/>
+        <br>
+        <br>
+        <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button purchaseorderonly">Purchase order only</div>
+        <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button notifybyemailandsms">Notify by email and sms</div>
+        <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button sendproductbyemail">Send product by email</div>
+    </div>
 </div>

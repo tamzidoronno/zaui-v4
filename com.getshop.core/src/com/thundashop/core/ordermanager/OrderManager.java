@@ -26,6 +26,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private long incrementingOrderId = 100000;
     
     public HashMap<String, Order> orders = new HashMap();
+   
     @Autowired
     public MailFactory mailFactory;
 

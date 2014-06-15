@@ -1,0 +1,48 @@
+.SedoxMenu .sedoxmenuentry {
+    display: inline-block;
+    height: 102px;
+    width: 132px;
+    background: linear-gradient(to bottom, #e20202, #bb0301);
+    padding: 5px;
+    text-align: center;
+    padding-top: 30px;
+    color: #FFF;
+}
+
+.SedoxMenu .sedoxmenuentry i {
+    font-size: 60px;
+    color: #eceaed;
+    padding-bottom: 15px;
+}
+
+.SedoxMenu .searcharea {
+    margin-top: 4px;
+    height: 102px;
+    padding: 20px;
+    background-color: #f1f1f1;
+}
+
+.SedoxMenu .searcharea .title {
+    font-size: 22px;
+    color: #cc0000;
+}
+
+.SedoxMenu .searcharea input {
+    height: 34px;
+    width: 561px;
+    border: solid 1px #8d8d8d;
+    padding: 5px;
+}
+
+
+.SedoxMenu .notLoggedIn .sedoxmenuentry i {
+    color: #f3f3f3;
+}
+.SedoxMenu .notLoggedIn .sedoxmenuentry {
+    background: linear-gradient(to bottom, #adadad, #8e8e8e);
+}
+
+.SedoxMenu .backbutton {
+    width: 289px;
+    background: linear-gradient(to bottom, #767676, #434343);
+}

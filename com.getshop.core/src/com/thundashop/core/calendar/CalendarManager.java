@@ -23,7 +23,6 @@ import com.thundashop.core.usermanager.data.User.Type;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.Level;
 import javax.xml.bind.DatatypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -44,7 +43,6 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     @Autowired
     public SMSFactory smsFactory;
     private List<ReminderHistory> reminderHistory = new ArrayList();
-    
     private HashMap<String, EventPartitipated> eventData = new HashMap();
     private HashMap<String, Signature> signatures = new HashMap();
 
@@ -267,21 +265,21 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         if (settings != null && settings.get("sendsms") != null) {
             sendsms = settings.get("sendsms").value;
         }
-        
+
         if (sendsms == null || sendsms.equals("") || sendsms.equals("false")) {
             return;
         }
-        
-        if (waitingList &&  settings.get("smstextwaiting") == null ||  settings.get("smstextwaiting").value.equals("")) {
+
+        if (waitingList && settings.get("smstextwaiting") == null || settings.get("smstextwaiting").value.equals("")) {
             return;
         }
-        
+
         String text = settings.get("smstext").value;
-        
+
         if (waitingList) {
             text = settings.get("smstextwaiting").value;
         }
-        
+
         text = mutateText(password, text, entry, user);
         String from = settings.get("smsfrom").value;
         String message = text;
@@ -397,8 +395,8 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     }
 
     @Override
-    public void addUserToEvent(String userId, String eventId, String password, String username) throws ErrorException {
-        addUserToEventInternal(userId, eventId, password, username);
+    public void addUserToEvent(String userId, String eventId, String password, String username, String source) throws ErrorException {
+        addUserToEventInternal(userId, eventId, password, username, source);
     }
 
     @Override
@@ -480,17 +478,17 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         smsHistory.eventId = eventId;
         return smsHistory;
     }
-    
+
     private Map<String, String> getAttachedFiles(String attachment, String filename) {
         Map<String, String> files = null;
         if (attachment != null && !attachment.equals("")) {
             try {
                 byte[] data = DatatypeConverter.parseBase64Binary(attachment);
-                String tmpFileName = "/tmp/"+UUID.randomUUID().toString();
+                String tmpFileName = "/tmp/" + UUID.randomUUID().toString();
                 FileOutputStream fos = new FileOutputStream(tmpFileName);
                 fos.write(data);
                 fos.close();
-                
+
                 files = new HashMap();
                 files.put(tmpFileName, filename);
             } catch (IOException ex) {
@@ -505,7 +503,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         ReminderHistory emailHistory = createReminderHistory(text, subject, eventId, byEmail);
 
         Map<String, String> files = getAttachedFiles(attachment, filename);
-        
+
         for (String userId : users) {
             UserManager usrmgr = getManager(UserManager.class);
             User user = usrmgr.getUserById(userId);
@@ -516,7 +514,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                 } else {
                     mailFactory.send(getFromAddress(), user.emailAddress, subject, text);
                 }
-                
+
                 emailHistory.users.add(user);
             }
 
@@ -541,7 +539,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         }
     }
 
-    private void addUserToEventInternal(String userId, String eventId, String password, String username) throws ErrorException {
+    private void addUserToEventInternal(String userId, String eventId, String password, String username, String source) throws ErrorException {
         for (Month month : months.values()) {
             for (Day day : month.days.values()) {
                 for (Entry entry : day.entries) {
@@ -812,7 +810,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             if (hist.eventId == null) {
                 continue;
             }
-            
+
             if (hist.eventId.equals(eventId)) {
                 allHistory.add(hist);
             }
@@ -832,7 +830,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
         String newPassord = "" + (11005 + (int) (Math.random() * ((98999 - 11005) + 1)));
         userManager.updatePassword(userId, "", newPassord);
-        addUserToEvent(userId, toEventId, newPassord, user.username);
+        addUserToEvent(userId, toEventId, newPassord, user.username, "system");
     }
 
     @Override
@@ -852,11 +850,11 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                 }
             }
         }
-        
+
 
         Collections.sort(entries);
         Collections.reverse(entries);
-        
+
         return entries;
     }
 
@@ -1003,8 +1001,8 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     @Override
     public void setEventPartitipatedData(EventPartitipated data) throws ErrorException {
         EventPartitipated event = getEventPartitipatedData(data.pageId);
-        
-        if(event != null) {
+
+        if (event != null) {
             //Update the exsiting one.
             event.body = data.body;
             event.title = data.title;
@@ -1012,7 +1010,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             event.heading = data.heading;
             data = event;
         }
-        
+
         data.storeId = storeId;
         databaseSaver.saveObject(data, credentials);
         eventData.put(data.pageId, data);
@@ -1026,7 +1024,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     @Override
     public void setSignature(String userid, String signature) throws ErrorException {
         Signature cursign = signatures.get(userid);
-        if(cursign != null) {
+        if (cursign != null) {
             cursign.signature = signature;
         } else {
             cursign = new Signature();
@@ -1036,5 +1034,42 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             signatures.put(cursign.userid, cursign);
         }
         databaseSaver.saveObject(cursign, credentials);
+    }
+
+    @Override
+    public List<Month> getMonths() throws ErrorException {
+        Set<Month> calendars = new TreeSet();
+
+        for (Month imonth : months.values()) {
+            if (imonth.isOutOfDate()) {
+                continue;
+            }
+            
+            Month month = imonth.clone();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+
+            int curmonth = calendar.get(Calendar.MONTH) + 1;
+            int curDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+            if (curmonth == month.month) {
+                TreeMap<Integer, Day> days = new TreeMap();
+                for (Day day : month.days.values()) {
+                    if (day.day > curDay) {
+                        days.put(day.day, day);
+                    }
+                }
+                month.days = days;
+            }
+            
+            calendars.add(finalizeMonth(month));
+        }
+
+        return new ArrayList(calendars);
+    }
+
+//    @Override
+    public void addUserToEvent(String userId, String eventId, String password, String username) throws ErrorException {
+        addUserToEvent(userId, eventId, password, username, "fallback");
     }
 }

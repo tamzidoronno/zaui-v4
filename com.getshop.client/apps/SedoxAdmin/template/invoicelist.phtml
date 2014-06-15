@@ -1,14 +1,26 @@
+<?
+function sortByCreditBalance($a, $b) {
+    if ($a->creditAccount->balance  == $b->creditAccount->balance) {
+        return 0;
+    }
+    if ($a->creditAccount->balance < $b->creditAccount->balance) {
+        return -1;
+    } else {
+        return 1;
+    }
+}
+?>
 <div class='invoicelist'>
     <?
     /* @var $this \ns_e22e25dd_8000_471c_89a3_6927d932165e\SedoxAdmin */
     $accounts = $this->getAccountsWithNegativeCreditValue();
-
+    usort($accounts, "sortByCreditBalance");
     echo "<div class='balancerow'><div class='col col1'>Id</div><div class='col col2'>Name</div><div class='col col3'>Balance</div></div>";
     
     foreach ($accounts as $account) {
         $id = $account->id;
         $balance = $account->creditAccount->balance;
-        $name = "-";
+        $name = $this->getApi()->getUserManager()->getUserById($id)->fullName;
         $isNorwegian = $account->isNorwegian == "true" ? "norwegian" : "";
         echo "<div class='balancerow $isNorwegian'><div class='col col1'>$id</div><div class='col col2'>$name</div><div class='col col3'>$balance</div></div>";
     }

@@ -42,6 +42,15 @@ public interface ICalendarManager {
     public Month getMonth(int year, int month, boolean includeExtraEvents) throws ErrorException;
     
     /**
+     * Returns all months with only valid entries
+     * and all entries are sorted by date.
+     * 
+     * @return
+     * @throws ErrorException 
+     */
+    public List<Month> getMonths() throws ErrorException;
+    
+    /**
      * Delete an existing entry by a given id from the calendar.
      * @param id The id of the entry to delete.
      * @throws ErrorException 
@@ -82,6 +91,17 @@ public interface ICalendarManager {
      * @param password A password you want to attach to the email that is being sent to the user.
      * @param username A username you want to attach to the email that is being sent to the user.
      * @return
+     * @throws ErrorException 
+     */
+    public void addUserToEvent(String userId, String eventId, String password, String username, String source) throws ErrorException;
+    
+    /**
+     * Deprecated and a fallback method.
+     * 
+     * @param userId
+     * @param eventId
+     * @param password
+     * @param username
      * @throws ErrorException 
      */
     public void addUserToEvent(String userId, String eventId, String password, String username) throws ErrorException;

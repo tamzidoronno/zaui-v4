@@ -397,13 +397,14 @@ class APICalendarManager {
 	* @throws ErrorException
 	*/
 
-	public function addUserToEvent($userId, $eventId, $password, $username) {
+	public function addUserToEvent($userId, $eventId, $password, $username, $source) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
 	     $data['args']["eventId"] = json_encode($this->transport->object_unset_nulls($eventId));
 	     $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
 	     $data['args']["username"] = json_encode($this->transport->object_unset_nulls($username));
+	     $data['args']["source"] = json_encode($this->transport->object_unset_nulls($source));
 	     $data["method"] = "addUserToEvent";
 	     $data["interfaceName"] = "core.calendar.ICalendarManager";
 	     return $this->transport->sendMessage($data);
@@ -681,6 +682,22 @@ class APICalendarManager {
 	     $data["method"] = "getMonth";
 	     $data["interfaceName"] = "core.calendar.ICalendarManager";
 	     return $this->transport->cast(new core_calendarmanager_data_Month(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Returns all months with only valid entries
+	* and all entries are sorted by date.
+	*
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function getMonths() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getMonths";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
 	}
 
 	/**
@@ -3740,6 +3757,42 @@ class APISedoxProductManager {
 	* @throws ErrorException
 	*/
 
+	public function addUserCredit($id, $description, $amount) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $data['args']["description"] = json_encode($this->transport->object_unset_nulls($description));
+	     $data['args']["amount"] = json_encode($this->transport->object_unset_nulls($amount));
+	     $data["method"] = "addUserCredit";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* This will disable/enable the developer. Useful if a developer goes on vacation
+	* or needs an hour sleep.
+	*/
+
+	public function changeDeveloperStatus($userId, $disabled) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data['args']["disabled"] = json_encode($this->transport->object_unset_nulls($disabled));
+	     $data["method"] = "changeDeveloperStatus";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Return the products created by days back.
+	* day = 0 // Means that it will returns the list of todays files
+	* day = 1 // Means that it will returns the list of yesterdays files
+	*
+	* @param day
+	* @return void
+	* @throws ErrorException
+	*/
+
 	public function createSedoxProduct($core_sedox_SedoxProduct, $base64encodedOriginalFile, $originalFileName) {
 	     $data = array();
 	     $data['args'] = array();
@@ -3765,14 +3818,18 @@ class APISedoxProductManager {
 	}
 
 	/**
+	* Developers is simply an getshop user that is registered as an developer.
+	* Active developers are administrators that has an SedoxUser with the flag
+	* isActiveDeveloper = true
 	*
-	* @author ktonder
+	* @return List
+	* @throws ErrorException
 	*/
 
-	public function getFileDevelopers() {
+	public function getDevelopers() {
 	     $data = array();
 	     $data['args'] = array();
-	     $data["method"] = "getFileDevelopers";
+	     $data["method"] = "getDevelopers";
 	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -3861,6 +3918,119 @@ class APISedoxProductManager {
 	}
 
 	/**
+	*
+	* @author ktonder
+	*/
+
+	public function getSedoxUserAccountById($userid) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userid"] = json_encode($this->transport->object_unset_nulls($userid));
+	     $data["method"] = "getSedoxUserAccountById";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->cast(new core_sedox_SedoxUser(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Return the products created by days back.
+	* day = 0 // Means that it will returns the list of todays files
+	* day = 1 // Means that it will returns the list of yesterdays files
+	*
+	* @param day
+	* @return core_usermanager_data_User
+	* @throws ErrorException
+	*/
+
+	public function login($emailAddress, $password) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["emailAddress"] = json_encode($this->transport->object_unset_nulls($emailAddress));
+	     $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+	     $data["method"] = "login";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->cast(new core_usermanager_data_User(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Return the products created by days back.
+	* day = 0 // Means that it will returns the list of todays files
+	* day = 1 // Means that it will returns the list of yesterdays files
+	*
+	* @param day
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function notifyForCustomer($productId, $extraText) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $data['args']["extraText"] = json_encode($this->transport->object_unset_nulls($extraText));
+	     $data["method"] = "notifyForCustomer";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Return the products created by days back.
+	* day = 0 // Means that it will returns the list of todays files
+	* day = 1 // Means that it will returns the list of yesterdays files
+	*
+	* @param day
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function purchaseOnlyForCustomer($productId, $files) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $data['args']["files"] = json_encode($this->transport->object_unset_nulls($files));
+	     $data["method"] = "purchaseOnlyForCustomer";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Return the products created by days back.
+	* day = 0 // Means that it will returns the list of todays files
+	* day = 1 // Means that it will returns the list of yesterdays files
+	*
+	* @param day
+	* @return String
+	* @throws ErrorException
+	*/
+
+	public function purchaseProduct($productId, $files) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $data['args']["files"] = json_encode($this->transport->object_unset_nulls($files));
+	     $data["method"] = "purchaseProduct";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Developers is simply an getshop user that is registered as an developer.
+	* Active developers are administrators that has an SedoxUser with the flag
+	* isActiveDeveloper = true
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function removeBinaryFileFromProduct($productId, $fileId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $data['args']["fileId"] = json_encode($this->transport->object_unset_nulls($fileId));
+	     $data["method"] = "removeBinaryFileFromProduct";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Return the products created by days back.
 	* day = 0 // Means that it will returns the list of todays files
 	* day = 1 // Means that it will returns the list of yesterdays files
@@ -3885,13 +4055,73 @@ class APISedoxProductManager {
 	* @author ktonder
 	*/
 
-	public function search($searchString) {
+	public function search($core_sedox_SedoxSearch) {
 	     $data = array();
 	     $data['args'] = array();
-	     $data['args']["searchString"] = json_encode($this->transport->object_unset_nulls($searchString));
+	     $data['args']["core_sedox_SedoxSearch"] = json_encode($this->transport->object_unset_nulls($core_sedox_SedoxSearch));
 	     $data["method"] = "search";
 	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
 	     return $this->transport->cast(new core_sedox_SedoxProductSearchPage(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Return the products created by days back.
+	* day = 0 // Means that it will returns the list of todays files
+	* day = 1 // Means that it will returns the list of yesterdays files
+	*
+	* @param day
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function searchForUsers($searchString) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["searchString"] = json_encode($this->transport->object_unset_nulls($searchString));
+	     $data["method"] = "searchForUsers";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Return the products created by days back.
+	* day = 0 // Means that it will returns the list of todays files
+	* day = 1 // Means that it will returns the list of yesterdays files
+	*
+	* @param day
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function sendProductByMail($productId, $extraText, $files) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $data['args']["extraText"] = json_encode($this->transport->object_unset_nulls($extraText));
+	     $data['args']["files"] = json_encode($this->transport->object_unset_nulls($files));
+	     $data["method"] = "sendProductByMail";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Return the products created by days back.
+	* day = 0 // Means that it will returns the list of todays files
+	* day = 1 // Means that it will returns the list of yesterdays files
+	*
+	* @param day
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function setChecksum($productId, $checksum) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $data['args']["checksum"] = json_encode($this->transport->object_unset_nulls($checksum));
+	     $data["method"] = "setChecksum";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
 	}
 
 	/**
@@ -3899,10 +4129,30 @@ class APISedoxProductManager {
 	* @author ktonder
 	*/
 
-	public function sync() {
+	public function sync($option) {
 	     $data = array();
 	     $data['args'] = array();
+	     $data['args']["option"] = json_encode($this->transport->object_unset_nulls($option));
 	     $data["method"] = "sync";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Developers is simply an getshop user that is registered as an developer.
+	* Active developers are administrators that has an SedoxUser with the flag
+	* isActiveDeveloper = true
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function toggleAllowNegativeCredit($userId, $allow) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data['args']["allow"] = json_encode($this->transport->object_unset_nulls($allow));
+	     $data["method"] = "toggleAllowNegativeCredit";
 	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
 	     return $this->transport->sendMessage($data);
 	}

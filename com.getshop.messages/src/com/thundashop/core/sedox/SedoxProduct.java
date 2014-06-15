@@ -7,6 +7,7 @@ package com.thundashop.core.sedox;
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
 import java.util.List;
+import javax.naming.BinaryRefAddr;
 
 /**
  *
@@ -66,5 +67,31 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
         ecuBrand = productAttributes[7];
         ecuType = productAttributes[8];
         softwareNumber = productAttributes[10];
+    }
+
+    public SedoxBinaryFile getFileById(int fileId) {
+        for (SedoxBinaryFile binFile : binaryFiles) {
+            if (binFile.id == fileId) {
+                return binFile;
+            }
+        }
+        
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        String checksumaddon = originalChecksum == null ? "" : " " + originalChecksum;
+        return brand + " " + model + " " + engineSize + " " + power + " " + year + checksumaddon;
+    }
+
+    void removeBinaryFile(int fileId) {
+        List<SedoxBinaryFile> sedoxBinFiles = new ArrayList();
+        for (SedoxBinaryFile binFile : binaryFiles) {
+            if (binFile.id != fileId) {
+                sedoxBinFiles.add(binFile);
+            }
+        }
+        this.binaryFiles = sedoxBinFiles;
     }
 }

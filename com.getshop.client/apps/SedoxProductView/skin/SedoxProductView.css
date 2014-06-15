@@ -149,3 +149,19 @@
     line-height: 120px;
     display:none;
 }
+
+.SedoxProductView .sedox_button {
+    width: 150px;
+}
+
+.SedoxProductView .infotextareatocustomer {
+    width: 517px;
+    height: 100px;
+    border: solid 1px #DDD;
+}
+
+.SedoxProductView .original_check_input_box {
+    border: solid 1px #DDD;
+    width: 520px;
+    height: 30px;
+}

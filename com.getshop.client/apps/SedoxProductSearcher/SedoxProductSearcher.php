@@ -16,11 +16,11 @@ class SedoxProductSearcher extends \WebshopApplication implements \Application {
     private $test = "";
     
     public function getDescription() {
-        return $this->__("Nothign to see");
+        return $this->__("Nothing to see");
     }
 
     public function getName() {
-        return $this->__f("Search Sedox Products");
+        return $this->__f("Sedox Search Products");
     }
 
     public function render() {
@@ -30,10 +30,24 @@ class SedoxProductSearcher extends \WebshopApplication implements \Application {
     
     public function searchProduct() {
         $_SESSION['searchKey'] = $_POST['data']['searchKey'];
+        
     }
     
     public function getSearchResult($key) {
-        $hrm = $this->getApi()->getSedoxProductManager()->search($key);
+        if (!$key) {
+            return array();
+        }
+        
+        $page = 1;
+                
+        if (isset($_GET['searchppage'])) {
+            $page = $_GET['searchppage'];
+        }
+        $search = new \core_sedox_SedoxSearch();
+        $search->searchCriteria = $_SESSION['searchKey'];
+        $search->page = $page;
+        
+        $hrm = $this->getApi()->getSedoxProductManager()->search($search);
         return $hrm;
     }
 }

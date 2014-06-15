@@ -1,71 +1,75 @@
 .gs_inner {
-    width: 1160px;
+    width: 1024px;
     margin: auto;
+}
+
+#apparea-header {
+    height: 205px;
+}
+
+.gs_margin_right {
+    padding-right: 4px;
 }
 
 body {
     background-image: url('{IMAGEFOLDER}/background-top.png');
-    background-repeat: repeat-x;
-    
+    background-repeat: repeat-x;   
+}
+
+.gs_outer.header {
+    height: 205px;
 }
 
 .breadcrum-area-content {
     display: none;
 }
 
-.TopMenu a.selected {
-    color: yellow;
-}
 .gs_outer_mainarea .gs_inner {
-    border: solid 1px #EEE;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    padding: 10px;
-    width: 1140px;
-    background-color: #FDFDFD;
+    padding: 2px;
+    width: 1024px;
 }
 
 .Logo {
-    top: 0px;
+    top: 30px;
 }
 
 .TopMenu {
-    border: solid 1px;
-    top: 80px;
-    left: 0px;
-    right: 0px;
-    height: 60px;
-    background: linear-gradient(to bottom, #b10302, #530201);
-    border-radius: 0px 0px 5px 5px;
+    display: none;   
 }
 
 .gs_outer.footer {
-    background-color: #eaedf2;
+    background-image: url('{IMAGEFOLDER}/background-bottom.png');
     border-top: solid 2px #DDD;
     padding-top: 20px;
     padding-bottom: 20px;
 }
 
-.TopMenu ul li {
-    line-height: 60px;
-    font-size: 16px;
-    
-}
-
-.TopMenu ul li i {
-    padding-right: 5px;
-}
-.TopMenu ul li a {
+.sedox_button { 
+    display: inline-block;
+    height: 20px;
+    border-top: solid 1px #8d8d8d;
+    border-right: solid 1px #8d8d8d;
+    border-bottom: solid 1px #8d8d8d;
+    vertical-align: top;
+    font-weight: bold;
+    padding: 12px;
+    width: 80px;
+    text-align: center;
+    cursor: pointer;
+    background: linear-gradient(to bottom, #e20202, #bc0203);
     color: #FFF;
-    padding-left: 20px;
-    padding-right: 20px;
+    font-size: 13px;
+    line-height: 20px;
 }
 
-.gs_margin_right {
-    padding-right: 16px;
-}   
+.ImageDisplayer {
+    background-color: #f1f1f1
+}
 
-.sedox_button { font-size: 15px; background-color: #DDD; color: #333; padding: 5px; border-radius: 4px; box-shadow: 0px 0px 5px #333; display: inline-block; background: linear-gradient(to top, #CCC, #EEE); padding-left: 15px; padding-right: 15px; cursor: pointer; border: solid 1px #BBB;}
-.sedox_button:hover { background: linear-gradient(to top, #DDD, #FFF); }
-.sedox_button:active { background: none; background-color: #CCC; }
+.SedoxHeaderApp {
+    position: absolute;
+    color: #FFF;
+    line-height: 60px;
+    bottom: 0px;
+    left: 10px;
+}

@@ -3,8 +3,12 @@
 include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
 
+if ($_GET['action'] == "magento") {
+    $factory->getApi()->getSedoxProductManager()->sync("magento");
+}
+
 if ($_GET['action'] == "sync") {
-    $factory->getApi()->getSedoxProductManager()->sync();
+    $factory->getApi()->getSedoxProductManager()->sync("");
 }
 
 if ($_GET['action'] == "prepare") {

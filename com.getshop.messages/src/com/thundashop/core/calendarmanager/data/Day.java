@@ -48,5 +48,6 @@ public class Day implements Serializable {
     public List<Entry> getEntries() {
         return entries;
     }
+
     
 }

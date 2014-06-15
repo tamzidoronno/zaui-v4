@@ -28,6 +28,10 @@ class SedoxAdmin extends \ApplicationBase implements \Application {
         
         if ($this->isSettingsView())
             $this->includefile("settings");
+        
+        if ($this->isUserSettings())
+            $this->includefile("usersettings");
+        
         echo "</div>";
     }
 
@@ -42,6 +46,10 @@ class SedoxAdmin extends \ApplicationBase implements \Application {
         
         if ($_POST['data']['menu'] == "daylist") {
             $_SESSION['sedox_days_back'] = $_POST['data']['changeTo'];
+        }
+        
+        if ($_POST['data']['menu'] == "usersettings") {
+            $_SESSION['sedox_admin_subpage'] = $_POST['data']['changeTo'];
         }
     }
     
@@ -59,6 +67,10 @@ class SedoxAdmin extends \ApplicationBase implements \Application {
         return $_SESSION['sedox_admin_subpage'] == "daily";
     }
     
+    public function isUserSettings() {
+        return isset($_SESSION['sedox_admin_subpage']) && $_SESSION['sedox_admin_subpage'] == "usersettings";
+    }
+    
     public function isSettingsView() {
         if (!isset($_SESSION['sedox_admin_subpage'])) {
             return false;
@@ -67,12 +79,56 @@ class SedoxAdmin extends \ApplicationBase implements \Application {
         return $_SESSION['sedox_admin_subpage'] == "settings";
     }
     
+    public function searchForUsers() {
+        $_SESSION['sedox_admin_searchString'] = $_POST['data']['searchString'];
+    }
+    
+    public function getSearchUsers() {
+        if (!isset($_SESSION['sedox_admin_searchString'])) {
+            return array();
+        }
+        
+        return $this->getApi()->getSedoxProductManager()->searchForUsers($_SESSION['sedox_admin_searchString']);
+    }
+    
     public function isInvoiceListView() {
         if (!isset($_SESSION['sedox_admin_subpage'])) {
             return false;
         }
         
         return $_SESSION['sedox_admin_subpage'] == "invoicelist";
+    }
+    
+    public function showUserInformation() {
+        $this->includefile("userinfo");
+    }
+    
+    public function saveUserInfo() {
+        $this->getApi()->getSedoxProductManager()->toggleAllowNegativeCredit($_POST['data']['userId'], $_POST['data']['allowNegativeCredit']);
+    }
+    
+    public function updateCredit() {
+        $id = $_POST['data']['userId'];
+        $desc = $_POST['data']['desc'];
+        $amount = $_POST['data']['amount'];
+        $this->getApi()->getSedoxProductManager()->addUserCredit($id, $desc, $amount);
+    }
+    
+    public function toggleDevelopers() {
+        $sedoxProductManager = $this->getApi()->getSedoxProductManager();
+        
+        if (isset($_POST['data']['activeDevelopers'])) {
+            $activeDevelopers = $_POST['data']['activeDevelopers'];
+        } else {
+            $activeDevelopers = array();
+        }
+        
+        $developers = $sedoxProductManager->getDevelopers();
+        foreach ($developers as $developer) {
+            $devId = $developer->id;
+            $active = in_array($devId, $activeDevelopers);
+            $sedoxProductManager->changeDeveloperStatus($devId, $active);
+        }
     }
 }
 

@@ -157,7 +157,13 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (user.expireDate != null && new Date().after(user.expireDate)) {
             throw new ErrorException(80);
         }
+        
+        addUserToSession(user);
+        
+        return user;
+    }
 
+    private User addUserToSession(User user) throws ErrorException {
         sessionFactory.addToSession(getSession().id, "user", user.id);
         saveSessionFactory();
 
@@ -168,10 +174,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             user.partnerid = getStore().partnerId;
         }
         databaseSaver.saveObject(user, credentials);
-
         return user;
     }
-
+    
     @Override
     public void logout() throws ErrorException {
         sessionFactory.removeFromSession(getSession().id);
@@ -575,5 +580,14 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public void storeReady() {
+    }
+
+    public User forceLogon(String userId) throws ErrorException {
+        User user = getUserById(userId);
+        if (user != null) {
+            addUserToSession(user);
+        }
+        
+        return user;
     }
 }

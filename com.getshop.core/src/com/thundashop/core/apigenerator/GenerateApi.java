@@ -103,6 +103,10 @@ public class GenerateApi {
                 System.out.println("Number of arguments is incorrect (this is being splitted on spaces, make sure HashMap<String, String> is equal to HashMap<String,String> for example.");
                 System.exit(0);
             }
+            
+            if (i >= method.getParameterTypes().length) {
+                throw new RuntimeException("Problem with; " + method.getName());
+            }
             map.put(argmap[1], method.getParameterTypes()[i].getCanonicalName());
             i++;
         }

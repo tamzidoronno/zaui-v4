@@ -5,6 +5,7 @@
 package com.thundashop.core.sedox;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -18,10 +19,12 @@ import org.springframework.stereotype.Component;
 public class SedoxSearchEngine {
     private List<SedoxProduct> products = new ArrayList();
     
-    public synchronized  SedoxProductSearchPage getSearchResult(List<SedoxProduct> products, String searchString) {
+    private int pageSize = 10;
+    
+    public synchronized  SedoxProductSearchPage getSearchResult(List<SedoxProduct> products, SedoxSearch search) {
         this.products = products;
         
-        searchString = searchString.toLowerCase();
+        String searchString = search.searchCriteria.toLowerCase();
         Set<SedoxProduct> retProducts = new TreeSet<>();
         
         for (SedoxProduct product : products) {
@@ -41,6 +44,10 @@ public class SedoxSearchEngine {
                 retProducts.add(product);
             }
             
+            if (product.originalChecksum != null && product.originalChecksum.toLowerCase().contains(searchString)) {
+                retProducts.add(product);
+            }
+            
             for (SedoxBinaryFile file : product.binaryFiles) {
                 for (SedoxProductAttribute attr : file.attribues) {
                     if (attr.value != null && attr.value.toLowerCase().contains(searchString)) {
@@ -51,14 +58,25 @@ public class SedoxSearchEngine {
         }
         
         SedoxProductSearchPage page = new SedoxProductSearchPage();
-        page.pageNumber = 1;
+        page.pageNumber = search.page;
         page.products = new ArrayList<>(retProducts);
+        Collections.sort(page.products);
         page.totalPages = (int) Math.ceil((double)page.products.size()/(double)10);
         
-        if (page.products.size() > 10) {
-            page.products = page.products.subList(0, 10);
+        int start = (search.page-1)*pageSize;
+        int stop = (search.page)*pageSize;
+            
+        if (page.products.size() >= start && page.products.size() >= stop) {
+            page.products = page.products.subList(start, stop);
+            return page;
         } 
         
+        if (page.products.size() >= start) {
+            page.products = page.products.subList(start, page.products.size());
+            return page;
+        }
+        
+        page.pageNumber = 1;
         return page;
     }
 }

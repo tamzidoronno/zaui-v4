@@ -7,6 +7,7 @@ package com.thundashop.core.storemanager;
 import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.SessionFactory;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;

@@ -196,6 +196,10 @@ class Factory extends FactoryBase {
 
     public function initialize() {
         $this->store = $this->getApi()->getStoreManager()->initializeStore($_SERVER['HTTP_HOST'], session_id());
+        $this->store = $this->getApi()->getStoreManager()->getMyStore();
+//        echo "<pre>";
+//        print_r($this->store);
+//        exit(0);
     }
 
     function __construct() {

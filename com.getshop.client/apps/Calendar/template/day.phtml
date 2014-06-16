@@ -152,7 +152,7 @@ if (count($day->entries) == 0) {
             } 
             echo "</div>";
         }
-        
+
         if ($this->hasReadAccess()) {
             echo "<h2>".$this->__("Attendees")."</h2>";
             echo "<table width='100%' cellspacing='0'>";
@@ -167,14 +167,17 @@ if (count($day->entries) == 0) {
                     $group = " - ".$group;
                 }
                 $entryid = $entry->entryId;
-                
+                $dropdiploma = "";
+                if($this->hasWriteAccess() && in_array($user->id, $entry->dropDiploma)) {
+                    $dropdiploma = '<i class="fa fa-graduation-cap" title="'.$this->__w("Disploma is disabled").'"></i>';
+                }
                 $transfer = $this->hasWriteAccess() ? "<td width='22'><i class='transferUser fa fa-sign-in' userId='$userid' entryId='$entryid' title='".$this->__("Transfer")."'></i></td>" : "";
                 $remove = $this->hasWriteAccess() ? "<i userid='$userid' entryid='$entryid' class='remove fa fa-trash-o'></i>" : "";
                 $activeComment = $this->isActiveComment($user, $entryid) ? "activeComment" : "";
                 $comment = $this->hasWriteAccess() ? "<i userid='$userid' entryid='$entryid' class='addcomment $activeComment fa fa-comments' title='".$this->__f("Comments"). "'></i>" : "";
                 $link = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() ? "?page=users_all_users&userid=$userid" : "#";
                 $settings = $this->hasWriteAccess() ? "<div class='candidate_setting fa fa-cogs' userid='$userid' entryid='$entryid' title='".$this->__f("User settings"). "'></div>" : "";
-                echo "<tr class='dayrow'><td width='22'>$remove</td><td><div class='attendee'><a href='$link'> $i. ".$user->fullName.$group."</a></div></td><td width='50'>$transfer</td><td width='22'>$comment</td><td width='22'>$settings</td></tr>";
+                echo "<tr class='dayrow'><td width='22'>$remove</td><td><div class='attendee'><a href='$link'> $i. ".$user->fullName.$group."</a></div></td><td width='50'>$transfer</td><td width='22'>$comment</td><td>$dropdiploma</td><td width='22'>$settings</td></tr>";
             }
 
             echo "</table>";

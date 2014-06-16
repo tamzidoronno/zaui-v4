@@ -43,6 +43,10 @@ td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1p
 .dayentry .addcomment.activeComment {
     color:#008000;
 }
+.dayentry .fa-graduation-cap {
+    display:block !important;
+    color:#e77373;
+}
 .dayentry .fa:hover {
     color:#043e82;
     cursor:pointer;

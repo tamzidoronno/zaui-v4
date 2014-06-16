@@ -20,6 +20,22 @@ class GenerateReport {
         $entry = $this->factory->getApi()->getCalendarManager()->getEntry($_GET['entryid']);
         $attendees = $entry->attendees;
         $rows = array();
+        
+        $allGroups = $this->factory->getApi()->getUserManager()->getAllGroups();
+        $stackedGroups = array();
+        foreach($allGroups as $groupobj) {
+            $stackedGroups[$groupobj->id] = $groupobj;
+        }
+        
+        $heading = array();
+        $heading["Kurs type"] = $entry->title;
+        $heading["Lokasjon"] = $entry->location;
+        $heading["Dato"] = $entry->day.".".$entry->month.".".$entry->year;
+        $heading["Gruppe"] = $stackedGroups[$group]->groupName;
+        $heading["Antall dager"] = sizeof($entry->otherDays)+1;
+        $rows[] = $heading;
+        
+        
         $line = array();
         $line["Navn"] = "";
         $line["E-post"] = "";

@@ -284,6 +284,9 @@ $('.Calendar .save_candidate_setting').live('click', function() {
     });
 });
 
+$(document).on('click','.Calendar .fa-graduation-cap', function() {
+    $(this).closest('tr').find('.candidate_setting').click();
+})
 $('.Calendar .candidate_setting').live('click', function() {
     var data = {
         userId: $(this).attr('userid'),

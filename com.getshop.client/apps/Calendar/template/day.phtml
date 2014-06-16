@@ -223,7 +223,7 @@ if (count($day->entries) == 0) {
             <? 
             foreach($entry->comments as $comment) {
                 /* @var $comment core_calendarmanager_data_EntryComment */
-                echo "<div><i class='fa fa-trash-o delete_comment' commentid='".$comment->id."'  entryid='". $entry->entryId."' style='float:right;'></i>" . $comment->text . "</div>";
+                echo "<div><i class='fa fa-trash-o delete_comment' commentid='".$comment->id."'  entryid='". $entry->entryId."' style='float:right;'></i>" . nl2br($comment->text) . "</div>";
                 echo "<div style='color:#BBB; font-size: 12px;'>" . "<span style='float:right;'>". date("d.m.Y h:s", $comment->addedWhen). ", " . $this->getApi()->getUserManager()->getUserById($comment->userId)->fullName."</span></div>";
                 echo "<br><br>";
             } 

@@ -280,6 +280,7 @@ $('.Calendar .save_candidate_setting').live('click', function() {
     };
     var event = thundashop.Ajax.createEvent('','updateUserSettings',$(this), data);
     thundashop.Ajax.postWithCallBack(event, function() {
+        thundashop.framework.reprintPage();
         thundashop.common.hideInformationBox();
     });
 });

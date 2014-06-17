@@ -114,7 +114,7 @@ if(isset($factory->getSettings()->languages)) {
     $languages = json_decode($factory->getSettings()->languages->value);
     echo "<span class='language_selection'>";
     foreach($languages as $val) {
-        echo "<a href='/?setLanguage=$val'>" . $val . "</a>";
+        echo "<a href='/?setLanguage=$val'><img src='skin/default/images/languages/$val.png'></a>";
     }
     echo "</span>";
 }

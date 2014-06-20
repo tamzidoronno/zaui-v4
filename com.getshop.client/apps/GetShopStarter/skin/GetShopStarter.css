@@ -2,7 +2,7 @@
 .GetShopStarter .started_div { font-size: 18px; margin-bottom: 30px;  }
 .GetShopStarter .start_row { border: solid 1px #2f2f2f; display:inline-block; padding: 20px; background-color: rgba(0,0,0,0.4); border-radius: 5px;}
 .GetShopStarter .start_row input { width: 200px; font-size: 16px; padding: 5px; border: solid 1px #A9A9A9; line-height: 25px; margin-right: 10px; }
-.GetShopStarter .start_row .start_button { line-height: 25px;font-size: 16px; border: solid 1px #86b704; border: solid 1px #78a208; padding: 5px; display:inline-block; background-color:#8fc400; cursor:pointer; color:#FFFFFF;  padding-left: 25px; padding-right: 25px;}
+.GetShopStarter .start_row .start_button { line-height: 25px;font-size: 16px; border: solid 1px #86b704; border: solid 1px #78a208; padding: 5px; display:inline-block; background-color:#7dab22; cursor:pointer; color:#FFFFFF;  padding-left: 25px; padding-right: 25px;}
 .GetShopStarter { text-align: center;padding-top: 190px; color:#FFF; }
 .GetShopStarter .allfields { display: none; padding-top: 5px; }
 .GetShopStarter .started_text { font-size: 30px; margin-bottom: 30px; }

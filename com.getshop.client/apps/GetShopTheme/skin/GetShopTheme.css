@@ -60,8 +60,8 @@
     padding: 10px;
     padding-left: 20px;
 }
-.TopMenu .subentries li { border-bottom: solid 1px #2e3f76;}
-.header .TopMenu .subentries { background-color:#4096ee; border: solid 1px #2e3f76 !important; }
+.TopMenu .subentries li { border-bottom: solid 1px #3886d7;}
+.header .TopMenu .subentries { background-color:#4096ee; border: solid 1px #3886d7 !important; }
 .header .TopMenu .subentries a { font-size: 14px; }
 
 .Logo {

@@ -65,7 +65,7 @@
 .header .TopMenu .subentries a { font-size: 14px; }
 
 .Logo {
-    top: 40px;
+    top: 20px;
 }
 
 .gs_outer.footer {
@@ -187,7 +187,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8fc400', end
     .gs_inner { padding: 20px; }
     .skelholder[page="home"] .gs_row.r1 .gs_inner { padding: 0px; }
     .ProductList .rowview .slidearrow { display:block !important; }
-    .header .TopMenu { top: 55px; }
     td.gs_col.c1 { display: none; }
     td.gs_col.c3 { display: none; }
     .Login { display: none; }
@@ -206,19 +205,21 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8fc400', end
     .CartManager .rightcart { margin-left: 0px !important; width: 100% !important; }
     .ProductList .product .short_description { overflow: hidden; height: 103px; }
     .mainarea .gs_inner .applicationarea { min-height: 50px !important; }
-    .header .TopMenu li { line-height: 30px; }
+    .TopMenu .subentries { width: 100%; }
+    .TopMenu li:not(.mobile) { padding: 0px; }
+    .TopMenu { width: 100%; background-color:#000; }
+    .TopMenu .mobile_button { font-size: 30px; right: 0px; top: 10px; }
+    .breadcrumb-menu { padding-right: 2px !important; }
+    .header .TopMenu li { line-height: 15px; }
 }
 
 @media only all and (max-width: 480px) {
     .YouTube embed { height: 220px; border: solid 1px #BBB; }
-    .Logo { display: none; }
-    .header .TopMenu a { padding: 0px;padding-left:10px;  }
     .Login { display: none; }
-    .header .TopMenu { margin-left: 0px; top: 0px; }
+    .Logo { top: 0px !important; }
     .ProductList .rowview .product {width: 280px; }
     .breadcrumb .navigation { display: none; }
     .header .applicationarea { height: 120px; }
-    .header .TopMenu { top: 0px; }
     .ProductManager .small_product_view { display:none !important; }
     .ProductManager .dummyproductmanagerclass { display:block; }
     .ProductList .boxview table { display: inline-block; }

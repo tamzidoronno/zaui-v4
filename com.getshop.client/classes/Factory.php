@@ -551,7 +551,10 @@ class Factory extends FactoryBase {
 
     public function read_csv_translation() {
         $translation = $this->getSelectedTranslation();
-        $content = file_get_contents("translation/f_$translation.csv");
+        $content = "";
+        if(file_exists("translation/f_$translation.csv")) {
+            $content = file_get_contents("translation/f_$translation.csv");
+        }
         $line = explode("\n", $content);
         $this->translationMatrix = array();
         $app = "";
@@ -566,7 +569,9 @@ class Factory extends FactoryBase {
         }
 
         //Add customer related translation to the matrix.
-        $content = file_get_contents("translation/w_$translation.csv");
+        if(file_exists("translation/w_$translation.csv")) 
+            $content = file_get_contents("translation/w_$translation.csv");
+        
         $line = explode("\n", $content);
         $app = "";
         foreach ($line as $entry) {

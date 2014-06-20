@@ -1,6 +1,8 @@
-.GetShopStarter .started_div { font-size: 18px; padding-bottom: 20px; }
-.GetShopStarter .start_row { border: solid 1px #2f2f2f; display:inline-block; padding: 20px; background-color:#293237; border-radius: 5px; }
+.GetShopStarter { padding-top: 100px; }
+.GetShopStarter .started_div { font-size: 18px; margin-bottom: 30px;  }
+.GetShopStarter .start_row { border: solid 1px #2f2f2f; display:inline-block; padding: 20px; background-color: rgba(0,0,0,0.4); border-radius: 5px;}
 .GetShopStarter .start_row input { width: 200px; font-size: 16px; padding: 5px; border: solid 1px #A9A9A9; line-height: 25px; margin-right: 10px; }
 .GetShopStarter .start_row .start_button { line-height: 25px;font-size: 16px; border: solid 1px #546161; border-bottom: solid 2px #546161;border-right: solid 2px #546161; padding: 5px; display:inline-block; background-color:#2eaeb0; cursor:pointer; color:#242521;  padding-left: 25px; padding-right: 25px;}
-.GetShopStarter { text-align: center;padding-top: 40px; color:#A9A9A9; }
+.GetShopStarter { text-align: center;padding-top: 190px; color:#FFF; }
 .GetShopStarter .allfields { display: none; padding-top: 5px; }
+.GetShopStarter .started_text { font-size: 30px; margin-bottom: 30px; }

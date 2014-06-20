@@ -29,6 +29,18 @@ app.GetShopStarter = {
             document.location.href=data;
         });
     },
+     loadSettings : function(element, application) {
+         var config = {
+            draggable: true,
+            app : true,
+            application: application,
+            title: "Settings",
+            items: []
+        }
+        var toolbox = new GetShopToolbox(config, application);
+        toolbox.show();
+        toolbox.attachToElement(application, 2);
+    },
     init : function() {
         $(document).on('click','.GetShopStarter .start_button', app.GetShopStarter.register);
     }

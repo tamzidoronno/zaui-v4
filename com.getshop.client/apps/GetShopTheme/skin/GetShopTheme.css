@@ -1,9 +1,15 @@
 .header {
     /*box-shadow: 0px 0px 4px #333;*/
-    background-image: url('{IMAGEFOLDER}/header.png');
-    border-bottom: solid 1px #DDD;
+    background: #7abcff; /* Old browsers */
+    background: -moz-linear-gradient(top, #7abcff 0%, #60abf8 44%, #4096ee 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7abcff), color-stop(44%,#60abf8), color-stop(100%,#4096ee)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #7abcff 0%,#60abf8 44%,#4096ee 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #7abcff 0%,#60abf8 44%,#4096ee 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #7abcff 0%,#60abf8 44%,#4096ee 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #7abcff 0%,#60abf8 44%,#4096ee 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7abcff', endColorstr='#4096ee',GradientType=0 );
     height: 130px;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 .breadcrumb .breadcrumb-inner { height: 0px; }
 .breadcrumb-inner .navigation { display:none; }
@@ -13,8 +19,8 @@
 .skeleton23 .mainarea .r2 .applicationarea {
     border: solid 1px #EEE;
     background: linear-gradient(#FDFDFD, #F3F3F3);
-    padding-top: 30px;
-    padding-left: 30px;
+    padding-top: 30px; 
+   padding-left: 30px;
     padding-right: 30px;
 }
 
@@ -47,12 +53,16 @@
 .header .Logo {
 
 }
+.header .TopMenu i { margin-right: 10px; }
 .header .TopMenu a {
-    font-size: 14px;
-    color: #999;
+    font-size: 18px;
+    color: #FFF;
     padding: 10px;
     padding-left: 20px;
 }
+.TopMenu .subentries li { border-bottom: solid 1px #2e3f76;}
+.header .TopMenu .subentries { background-color:#4096ee; border: solid 1px #2e3f76 !important; }
+.header .TopMenu .subentries a { font-size: 14px; }
 
 .Logo {
     top: 40px;
@@ -67,12 +77,36 @@
 .skeleton23 .mainarea .r2 .gs_col.c2 {
     border-left: solid 0px;
 }
+
+.skelholder[page="home"] .gs_row.r4 {
+    background: #fcfff4; /* Old browsers */
+background: -moz-linear-gradient(top, #fcfff4 0%, #dfe5d7 46%, #dfe5d7 46%, #b3bead 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fcfff4), color-stop(46%,#dfe5d7), color-stop(46%,#dfe5d7), color-stop(100%,#b3bead)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, #fcfff4 0%,#dfe5d7 46%,#dfe5d7 46%,#b3bead 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, #fcfff4 0%,#dfe5d7 46%,#dfe5d7 46%,#b3bead 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top, #fcfff4 0%,#dfe5d7 46%,#dfe5d7 46%,#b3bead 100%); /* IE10+ */
+background: linear-gradient(to bottom, #fcfff4 0%,#dfe5d7 46%,#dfe5d7 46%,#b3bead 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfff4', endColorstr='#b3bead',GradientType=0 ); /* IE6-9 */
+}
+
+.skelholder[page="home"] .gs_row.r2 {
+    margin-top: 100px; 
+}
+
 .skelholder[page="home"] .gs_row.r2 .applicationarea,
 .skelholder[page="home"] .gs_row.r3 .applicationarea {
-    background-color:#293237;
+background: #8fc400; /* Old browsers */
+background: -moz-linear-gradient(top, #8fc400 0%, #8fc400 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#8fc400), color-stop(100%,#8fc400)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, #8fc400 0%,#8fc400 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, #8fc400 0%,#8fc400 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top, #8fc400 0%,#8fc400 100%); /* IE10+ */
+background: linear-gradient(to bottom, #8fc400 0%,#8fc400 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8fc400', endColorstr='#8fc400',GradientType=0 ); /* IE6-9 */
     padding: 20px; 
     margin: 10px;
     border-radius: 5px;
+    color:rgba(0,0,0,0.8);
 }
 
 
@@ -86,13 +120,13 @@
 
 .skelholder[page="home"] .gs_row.r2,
 .skelholder[page="home"] .gs_row.r3
-{ background-color:#2f383d; color: #A9A9A9; }
+{ background-color:#FFF; color: #A9A9A9; }
 .skelholder[page="home"] .gs_row.r4,
 .skelholder[page="home"] .gs_row.r5,
 .skelholder[page="home"] .gs_row.r6,
 .skelholder[page="home"] .gs_row.r7
-{ background-color:#FFF;  
-  background-image: url('{IMAGEFOLDER}/foggy_birds.png');
+{ 
+    background-color:#b3bead;
 }
 
 .skelholder[page="home"] .gs_row.r5,
@@ -118,7 +152,6 @@
     border-right: solid 2px #BBB; 
 }
 .skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row {
-    background-image: url('{IMAGEFOLDER}/foggy_birds.png');
 }
 .skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row.r2,
 .skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row.r3,

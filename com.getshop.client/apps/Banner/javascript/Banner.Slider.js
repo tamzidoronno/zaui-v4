@@ -63,7 +63,6 @@ app.Banner.Slider = {
         $(next).attr('visible', "1");
         
         $(next).show();
-         PubSub.publish('BANNERMANAGER_IMAGECHANGE', { "id" : id });
         
         setTimeout(function() {
             $(next).parent().find('.text_over_image').fadeIn(500);
@@ -83,6 +82,7 @@ app.Banner.Slider = {
         } else {
             app.Banner.Slider.banners[id].nextImageCounter = nextImageCounter;
         }
+
         this.startTimeout(id);
     },
           
@@ -102,9 +102,7 @@ app.Banner.Slider = {
     },
             
     showText: function(appId, texts) {
-
         var bannerSlider = $('.bannerslider#'+appId);
-        bannerSlider.find('.text_over_image').remove();
         for (var imageId in texts) {
             
             var textEntires = texts[imageId];

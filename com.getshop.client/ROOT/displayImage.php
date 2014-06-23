@@ -1,10 +1,15 @@
 <?php
-if(!isset($_GET['forcewidth']) && !isset($_GET['ignoreprecache'])) {
-    $_GET['width'] = 100;
-} else if(!isset($_GET['ignoreprecache'])) {
-    $_GET['width'] = $_GET['forcewidth'];
-}
 
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ * Description of handler
+ *
+ * @author ktonder
+ */
 ob_start();
 include '../loader.php';
 session_cache_limiter('none');

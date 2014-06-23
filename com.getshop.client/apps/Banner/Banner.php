@@ -157,7 +157,6 @@ class Banner extends \WebshopApplication implements \Application {
                 return $banner;
             }
         }
-        
         return null;
     }
 }

@@ -1049,7 +1049,34 @@ $(document).on('click', '.gs_onoff', function() {
         $(this).addClass('gs_on');
     }
 });
+
+
+function checkForceLoadImage() {
+    $('img').each(function() {
+        if(!$(this).attr('forceloaded') && ($(this).is(':visible') || $(this).attr('useappwidth')) && $(this).width() > 0) {
+            var src =  $(this).attr('src');
+            $(this).attr('forceloaded','true');
+            if(src.indexOf('displayImage.php') >= 0) {
+                $(this).attr('src', src + "&forcewidth="+$(this).width());
+            }
+        }
+    });
+}
+
 $(document).on('click', '.gs_showPageLayoutSelection .option_entry', thundashop.common.navigateContentPages);
 $(document).on('click', '.layoutpreviewselection .layoutpreview', thundashop.common.selectPredefinedConent);
-
+$(function() {
+    PubSub.subscribe('BANNERMANAGER_IMAGECHANGE', function(data, test) {
+        checkForceLoadImage();
+        var id = test.id;
+        console.log(id);
+        app.Banner.Slider.showText(id, bannermanager_jsontexts[id]);
+    });
+    PubSub.subscribe('NAVIGATION_COMPLETED', function() {
+        checkForceLoadImage();
+        setTimeout(checkForceLoadImage, "300");
+        setTimeout(checkForceLoadImage, "600");
+        setTimeout(checkForceLoadImage, "1000");
+    });    
+});
 $(document).on('click', '.gs_toggle_button', thundashop.common.gsToggleButton);

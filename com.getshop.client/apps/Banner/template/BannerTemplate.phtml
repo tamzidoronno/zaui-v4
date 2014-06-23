@@ -79,6 +79,12 @@
 ?>
     <script>
         app.Banner.Slider.start('<?php echo $id; ?>');
+        if(typeof(bannermanager_jsontexts) === "undefined") {
+            bannermanager_jsontexts = {};
+        }
+        
+        bannermanager_jsontexts['<? echo $id; ?>'] = <?php echo $jsonTexts; ?>;
+        
         app.Banner.Slider.showText('<?php echo $id; ?>', <? echo $jsonTexts; ?>)
     </script>
 </div>

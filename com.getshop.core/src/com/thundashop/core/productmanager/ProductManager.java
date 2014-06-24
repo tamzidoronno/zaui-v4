@@ -50,7 +50,7 @@ public class ProductManager extends AProductManager implements IProductManager {
         if (product.id == null || product.id.equals("")) {
             throw new ErrorException(87);
         }
-
+        product.original_price = product.price;
 
         product.attributes = new ArrayList();
         for (String group : product.attributesToSave.keySet()) {
@@ -279,7 +279,7 @@ public class ProductManager extends AProductManager implements IProductManager {
             product.pageId = id;
             saveProduct(product);
         }
-        finalize(product);
+        product = finalize(product);
         return product;
     }
 

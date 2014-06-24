@@ -11,7 +11,7 @@ import java.util.Map;
 public class TranslationHandler implements Serializable {
     private HashMap<String, String> translationStrings = new HashMap<>();
     private HashMap<String, Map> translationMaps = new HashMap<>();
-    private boolean debug = true;
+    private boolean debug = false;
     
     public void updateTranslation(String language, String mainlanguage, boolean loading) {
         Field[] fields;
@@ -40,8 +40,9 @@ public class TranslationHandler implements Serializable {
                     } else {
                         if(translationStrings.containsKey(keyindex)) {
                             String toSet = translationStrings.get(keyindex);
-                            if(debug)
+                            if(debug) {
                                 System.out.println("Updating translation field (" + this.getClass().getSimpleName() + "): " + keyindex + " to : " + toSet.replaceAll("\\s+",""));
+                            }
                             Object resultObject = null;
                             if(result instanceof String) {
                                 resultObject = toSet;

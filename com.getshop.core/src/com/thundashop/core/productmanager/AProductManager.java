@@ -1,22 +1,23 @@
 package com.thundashop.core.productmanager;
 
 import com.thundashop.app.content.ContentManager;
-import com.thundashop.core.productmanager.data.AttributeSummary;
 import com.thundashop.core.common.*;
+import com.thundashop.core.common.ExchangeConvert;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.Entry;
 import com.thundashop.core.pagemanager.IPageManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
+import com.thundashop.core.productmanager.data.AttributeData;
+import com.thundashop.core.productmanager.data.AttributeSummary;
+import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
-import com.thundashop.core.common.ExchangeConvert;
-import com.thundashop.core.productmanager.data.AttributeData;
-import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -87,6 +88,21 @@ public class AProductManager extends ManagerBase {
             }
         }
         
+        if(product.original_price == null) {
+            product.original_price = product.price;
+        }
+        if(product.campaing_start_date > 0 && product.campaing_end_date > 0) {
+            Date startDate = new Date(product.campaing_start_date*1000);
+            Date endDate = new Date(product.campaing_end_date*1000);
+            Date now = new Date(System.currentTimeMillis());
+            if(startDate.before(now) && endDate.after(now)) {
+                System.out.println("Setting campaing price on : " + product.name + " to : " + product.campaign_price);
+                product.price = product.campaign_price;
+            } else {
+                product.price = product.original_price;
+            }
+            
+        }
         return product;
     }
 

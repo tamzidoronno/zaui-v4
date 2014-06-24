@@ -10,11 +10,13 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
+import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.storemanager.data.Store;
+import com.thundashop.core.storemanager.data.StoreConfiguration;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,6 +75,29 @@ public class UpgradeBase {
         return retstores;
     }
 
+    public List<ApplicationSettings> getAllAppSettings() throws UnknownHostException {
+        Morphia morphia = new Morphia();
+        morphia.map(DataCommon.class);
+        
+        Mongo m = new Mongo("localhost", 27017);
+        DB db = m.getDB("ApplicationPool");
+        DBCollection collection = db.getCollection("col_all");
+        List<ApplicationSettings> retstores = new ArrayList();
+        DBCursor documents = collection.find();
+        
+        while (documents.hasNext()) {
+            DBObject dbObject = documents.next();
+            DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, dbObject);
+            if (dataCommon instanceof ApplicationSettings) {
+                retstores.add((ApplicationSettings)dataCommon);
+            }
+        }
+        
+        m.close();
+        return retstores;
+        
+    }
+    
     public List<Store> getAllStores() throws UnknownHostException {
         Morphia morphia = new Morphia();
         morphia.map(DataCommon.class);

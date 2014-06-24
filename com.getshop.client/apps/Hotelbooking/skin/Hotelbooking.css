@@ -52,6 +52,7 @@
 .Hotelbooking .calendar { width:200px; }
 .Hotelbooking .top_box { min-height: 260px; }
 .Hotelbooking .calendar { margin-right: 30px; }
+.Hotelbooking .rebated_product { color:#BBB; font-size: 15px; }
 
 @media only all and (min-width: 800px) {
     .Hotelbooking .calendar { float:left; margin-bottom: 20px; }

@@ -63,12 +63,12 @@
 <div class='title'><? echo $this->__w("Select a room"); ?></div>
  <div class='room_selection_2 heading'>
      <span class='firstbox selection_box'>
-         <div class='name'>ROM TYPE</div>
+         <div class='name'><? echo $this->__w("ROOM TYPE"); ?></div>
      </span> 
      <span class='secondbox selection_box'>
-         <div>ANTALL</div>
+         <div><? echo $this->__w("COUNT"); ?></div>
      </span>
-     <span class='price_box'>PRIS PR NATT</span>
+     <span class='price_box'><? echo $this->__w("PRICE PER NIGHT"); ?></span>
      <div style='clear:both;'></div>
  </div>
 <div style="height:5px;"></div>
@@ -97,7 +97,11 @@ foreach($products as $product) {
     echo "<div><i class='fa fa-user'></i></div>";
     echo "<div class='personalcount'>2x</div>";
     echo "</span>";
-    echo "<span class='price_box'><span class='price_text'>".$product->price.",-</span>";
+    echo "<span class='price_box'><span class='price_text'>".$product->price.",-";
+    if($product->price < $product->original_price) {
+             echo "<span class='rebated_product'> (-". (100-(int)(($product->price / $product->original_price)*100)) . "%)</span>";
+    }
+    echo "</span>";
     echo "<span class='selectbutton' gstype='clicksubmit' method='changeProduct' gsname='productid' gsvalue='".$product->id."'>".$this->__w("SELECT ROOM")."</span>";
     echo "</span>";
     echo "<div style='clear:both;'></div>";

@@ -130,6 +130,9 @@ class Product extends \ApplicationBase implements \Application {
         $product->hideShippingPrice = $_POST['data']['hideShippingPrice'];
         $product->weight = floatval(str_replace(",", ".", $_POST['data']['weight']));
         $product->stockQuantity = (int)$_POST['data']['quantity'];
+        $product->campaign_price = $_POST['data']['campaign_price'];
+        $product->campaing_start_date = strtotime($_POST['data']['start_date']);
+        $product->campaing_end_date = strtotime($_POST['data']['end_date']);
         
         $this->getApi()->getProductManager()->saveProduct($product);
         

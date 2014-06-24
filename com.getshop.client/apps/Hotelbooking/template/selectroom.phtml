@@ -25,7 +25,14 @@
         $products = $this->getHotelRooms();
         foreach($products as $product) {
             /* @var $product \core_productmanager_data_Product */
-            echo "<option value='".$product->id."'>" . $product->price . ",- " . $product->name . "</option>";
+            
+            
+            $pricetext = $product->price . "NOK ";
+            if($product->price < $product->original_price) {
+                $pricetext .= " (-". (100-(int)(($product->price / $product->original_price)*100)) . "%)";
+            }
+            
+            echo "<option value='".$product->id."'>" . $pricetext . " " . $product->name . "</option>";
         }
     ?>
 </select>

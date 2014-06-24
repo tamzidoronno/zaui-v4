@@ -31,7 +31,14 @@ if (!$product) {
                 ?>
             </div>
             <div class="product_widget_image"><img src='displayImage.php?id=<? echo $product->imagesAdded[0] ?>'></div>
-            <div class='price'><? echo $currency; ?><span class='price_inner'><? echo $product->price; ?></span></div>
+            <div class='price'><? echo $currency; ?><span class='price_inner'><? echo $product->price; 
+            
+            if($product->price < $product->original_price) {
+                echo "<span class='rebated_product'> (-". (100-(int)(($product->price / $product->original_price)*100)) . "%)</span>";
+            }
+            
+            
+            ?></span></div>
         </a>
         <div class='buy_product_row'>
             <span class='gs_button small buy_product' type='productwidget'><? echo $this->__w("Add to cart"); ?></span>

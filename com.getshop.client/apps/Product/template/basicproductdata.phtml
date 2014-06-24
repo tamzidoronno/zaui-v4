@@ -17,7 +17,13 @@ $product = $this->getProduct();
 </div>
 <div class='row'>
     <span class='title'><? echo $this->__f("Price"); ?> (<? echo $this->getFactory()->getCurrency(); ?>)</span>
-    <input type='text' class="smallinput gs_product_data" data="price" value="<? echo $product->price; ?>">
+    <input type='text' class="smallinput gs_product_data" data="price" value="<? echo $product->original_price; ?>">
+</div>
+<div class='row'>
+    <span class='title'><? echo $this->__f("Campaign price"); ?> (<? echo $this->getFactory()->getCurrency(); ?>)</span>
+    <input type='text' class="date_input start gs_product_data" data="start_date" value="<? if($product->campaing_start_date) { echo date("d.m.Y", $product->campaing_start_date); } ?>">
+    <input type='text' class="date_input stop gs_product_data" data="end_date" value="<? if($product->campaing_end_date) { echo date("d.m.Y", $product->campaing_end_date); } ?>">
+    <input type='text' class="smallinput gs_product_data" data="campaign_price" value="<? echo $product->campaign_price; ?>">
 </div>
 <div class='row'>
     <span class='title'><? echo $this->__f("Weight (gram)"); ?></span>
@@ -27,3 +33,7 @@ $product = $this->getProduct();
     <span class='title'><? echo $this->__f("Stock Quantity"); ?></span>
     <input type='text' class="smallinput gs_product_data" data="quantity" value="<? echo $product->stockQuantity; ?>">
 </div>
+
+<script>
+    $('.date_input').datepicker({ dateFormat: "dd.mm.yy" });
+</script>

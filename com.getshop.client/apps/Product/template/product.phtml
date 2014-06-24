@@ -17,6 +17,7 @@ if(!$title) {
 $product = $factory->getApi()->getProductManager()->getProductByPage($page->id);
 $name = $product->name;
 $price = $product->price;
+$origprice = $product->original_price;
 $variations = $product->variations;
 ?>
 
@@ -42,7 +43,15 @@ foreach($variations as $variation) {
 }
 ?>
 <span class='price'>
-<? echo $this->getFactory()->getCurrencyName()."<span class='price_inner' price='".$price."'>". $price ."</span>"; ?>
+    <?
+ echo $this->getFactory()->getCurrencyName()."<span class='price_inner' price='".$price."'>";
+echo $price ."</span>"; 
+if($origprice != $price && $origprice > $price) {
+    $pricetext = "-" . 100+(int)(($product->price / $product->original_price)*100) . "%";
+    echo " <span class='promoted_price'>(" .$pricetext . ")</span>";
+}
+
+?>
 </span>
 <span class='buy gs_button'><? echo $this->__w("Buy"); ?></span>
 <span class='gs_button save'><? echo $this->__f("Save"); ?></span>

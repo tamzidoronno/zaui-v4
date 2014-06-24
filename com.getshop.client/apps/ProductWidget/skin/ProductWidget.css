@@ -5,3 +5,4 @@
 .ProductWidget .no_product {  min-height: 200px; text-align: center; font-size: 16px; }
 .ProductWidget .no_product .no_product_description { padding-top: 30px; }
 .ProductWidget .no_product .gs_button { margin-top: 10px; width: 200px; }
+.ProductWidget .rebated_product { color:#BBB; }

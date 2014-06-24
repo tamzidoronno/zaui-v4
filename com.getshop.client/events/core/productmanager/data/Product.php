@@ -25,6 +25,9 @@ class core_productmanager_data_Product extends core_common_DataCommon  {
 	public $price;
 
 	/** @var String */
+	public $campaign_price;
+
+	/** @var String */
 	public $name;
 
 	/** @var String */
@@ -44,6 +47,12 @@ class core_productmanager_data_Product extends core_common_DataCommon  {
 
 	/** @var String */
 	public $taxgroup;
+
+	/** @var String */
+	public $campaing_start_date;
+
+	/** @var String */
+	public $campaing_end_date;
 
 	/** @var String */
 	public $attributes;

@@ -101,7 +101,7 @@ class Account extends \SystemApplication implements \Application {
             $expire = date_create_from_format("m/d/Y", $expire);
         }
         $cellPhone = $_POST['data']['cellPhone'];
-        $companyName = $_POST['data']['companyName'];
+        $companyName = isseT($_POST['data']['companyName']) ? $_POST['data']['companyName'] : "";
         $birthDay = $_POST['data']['birthDay'];
         
         

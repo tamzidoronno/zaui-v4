@@ -7,9 +7,11 @@ import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.usermanager.data.Comment;
+import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserPrivilege;
+import com.thundashop.core.utils.BrRegEngine;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
@@ -39,6 +41,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     public UserManager(Logger log, DatabaseSaver databaseSaver) {
         super(log, databaseSaver);
     }
+    
+    @Autowired
+    private BrRegEngine brRegEngine;
+    
     @Autowired
     public MailFactory mailfactory;
     
@@ -256,6 +262,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         // Keep comments from prev saved user. (has seperated functions for adding and deleting)
         user.comments = savedUser.comments;
         
+        user.company = getCompany(user);
         collection.addUser(user);
     }
 
@@ -589,5 +596,26 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         
         return user;
+    }
+
+    /**
+     * This function returns the userid if the given store is for
+     * autoa-akademiet. This should be changed to check if
+     * the company brregengine is activate for the given store.
+     * 
+     * @param user
+     * @return 
+     */
+    private Company getCompany(User user) {
+        if (!this.storeId.equals("2fac0e57-de1d-4fdf-b7e4-5f93e3225445")) {
+            return user.company;
+        }
+        
+        if (user.birthDay == null || user.birthDay.equals("")) {
+            return null;
+        }
+        
+        Company company = brRegEngine.getCompany(user.birthDay);
+        return company;
     }
 }

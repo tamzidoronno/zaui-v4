@@ -96,7 +96,6 @@ public class AProductManager extends ManagerBase {
             Date endDate = new Date(product.campaing_end_date*1000);
             Date now = new Date(System.currentTimeMillis());
             if(startDate.before(now) && endDate.after(now)) {
-                System.out.println("Setting campaing price on : " + product.name + " to : " + product.campaign_price);
                 product.price = product.campaign_price;
             } else {
                 product.price = product.original_price;

@@ -29,20 +29,16 @@ public class TranslationHandler implements Serializable {
                     
                     String keyindex = language+"_"+field.getName();
                     if(!translationStrings.containsKey(mainlanguage+"_"+field.getName())) {
-                        if(debug)
-                            System.out.println("Saving default translation field (" + this.getClass().getSimpleName() + "): " + keyindex + " to : " + toSave.replaceAll("\\s+",""));
+//                            System.out.println("Saving default translation field (" + this.getClass().getSimpleName() + "): " + keyindex + " to : " + toSave.replaceAll("\\s+",""));
                         translationStrings.put(mainlanguage+"_"+field.getName(), toSave);
                     }
                     if(!loading) {
-                        if(debug)
-                            System.out.println("Saving translation field (" + this.getClass().getSimpleName() + "): " + keyindex + " to : " + toSave.replaceAll("\\s+",""));
+//                            System.out.println("Saving translation field (" + this.getClass().getSimpleName() + "): " + keyindex + " to : " + toSave.replaceAll("\\s+",""));
                         translationStrings.put(keyindex, toSave);
                     } else {
                         if(translationStrings.containsKey(keyindex)) {
                             String toSet = translationStrings.get(keyindex);
-                            if(debug) {
-                                System.out.println("Updating translation field (" + this.getClass().getSimpleName() + "): " + keyindex + " to : " + toSet.replaceAll("\\s+",""));
-                            }
+//                            System.out.println("Updating translation field (" + this.getClass().getSimpleName() + "): " + keyindex + " to : " + toSet.replaceAll("\\s+",""));
                             Object resultObject = null;
                             if(result instanceof String) {
                                 resultObject = toSet;

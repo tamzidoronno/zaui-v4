@@ -52,6 +52,11 @@ body { background-color: #363b3e; }
 .Contact { padding-bottom: 150px; }
 .language_selection { position:absolute; right: 20px; }
 .language_selection img { margin-left: 5px; }
+.CartManager .formation_page {
+    color: #FFF;
+    font-size: 30px;
+}
+
 @media only all and (max-width: 800px) {
     .footer { display:none; }
     .Hotelbooking .bookingbox { top: 0px; }

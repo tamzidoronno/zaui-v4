@@ -110,7 +110,7 @@ class CartManager extends \SystemApplication implements \Application {
     
     private function doPayment() {
         if (!$this->paymentApplication) {
-            echo $this->__w("Thank you for your order.");
+            $this->includefile("confirmation");
         } else {
             echo $this->__w("Please wait while you are being transferred to dibs payment service.");
             $this->paymentApplication->order = $this->order;
@@ -127,6 +127,9 @@ class CartManager extends \SystemApplication implements \Application {
             }
             if($_GET['subpage'] == "gotopayment") {
                 $this->SaveOrder();
+            }
+            if($_GET['subpage'] == "confirmation") {
+                $this->includefile("confirmation");
             }
         } else {
             $this->includefile("cartmain");

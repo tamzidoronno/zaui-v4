@@ -1,6 +1,10 @@
 .CartManager {
     position: relative;
 }
+.CartManager .formation_page {
+    font-size: 20px;
+    text-align:center;
+}
 
 .CartManager .checkoutarea .checkoutinner {
     padding-left: 8px;

@@ -228,6 +228,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             
             $_GET['page'] = "cart";
             $_GET['subpage'] = "gotopayment";
+            if($this->partnerShipChecked()) {
+                $_GET['subpage'] = "confirmation";
+            }
         } else {
             $_GET['failedreservation'] = true;
             $this->failedReservation = true;

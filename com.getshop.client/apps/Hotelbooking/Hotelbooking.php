@@ -218,7 +218,16 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                 $cleaningcount = floor($this->getDayCount() / $interval);
                 $cartmgr->addProduct($cleaningid, $cleaningcount, array());
             }
+            
+            $_SESSION['tempaddress']['emailAddress'] = $_POST['data']['email'];
+            $_SESSION['tempaddress']['fullName'] = $_POST['data']['name_1'];
+            $_SESSION['tempaddress']['phone'] = $_POST['data']['phone_1'];
+            $_SESSION['tempaddress']['city'] = $_POST['data']['city'];
+            $_SESSION['tempaddress']['postCode'] = $_POST['data']['postal_code'];
+            $_SESSION['tempaddress']['address'] = $_POST['data']['address'];
+            
             $_GET['page'] = "cart";
+            $_GET['subpage'] = "gotopayment";
         } else {
             $_GET['failedreservation'] = true;
             $this->failedReservation = true;
@@ -292,12 +301,33 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
     
     public function validateInput($name) {
-        if(isset($_POST['data'][$name])) {
+        if(isset($_POST['data'][$name]) && !$this->partnerShipChecked()) {
+            if($name == "referencenumber") {
+                return "";
+            }
             if(strlen(trim($_POST['data'][$name])) == 0) {
                 $this->invalid = true;
                 return "invalid";
             }
         }
+        
+        if($this->partnerShipChecked() && $name == "referencenumber") {
+            $allUsers = $this->getApi()->getUserManager()->getAllUsers();
+            $referenceUser = null;
+            foreach($allUsers as $user) {
+                if($user->referenceKey == $_POST['data']['referencenumber']) {
+                    $referenceUser = $user;
+                    break;
+                }
+            }
+            
+            if(!$referenceUser) {
+                $this->invalid = true;
+                return "invalid";
+            }
+        }
+
+        
         return "";
     }
 
@@ -365,6 +395,13 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $contact->names = $names;
         $contact->phones = $phones;
         return $contact;
+    }
+
+    public function partnerShipChecked() {
+        if(isset($_POST['data']['partnershipdeal']) && $_POST['data']['partnershipdeal'] == "true") {
+            return true;
+        }
+        return false;
     }
 
 }

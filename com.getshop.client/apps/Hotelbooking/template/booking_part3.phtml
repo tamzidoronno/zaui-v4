@@ -65,29 +65,45 @@ $this->loadBookingData();
             <? echo $this->__w("Additional contact data"); ?>
         </div>
         <div class='contact_entry'>
-            <span class='contact_text'><? echo $this->__w("Address"); ?></span>
-            <span class='contact_input'><input type='text' gsname="address" value='<? echo $this->getPost("address"); ?>' class='<? echo $this->validateInput("address"); ?>'></span>
+            <span class='contact_text'><? echo $this->__w("I have a partnership deal"); ?></span>
+            <span class='contact_input'><input type='checkbox' gsname="partnershipdeal" <? if($this->partnerShipChecked()) { echo "checked"; } ?>></span>
         </div>
-        <div class='contact_entry'>
-            <span class='contact_text'><? echo $this->__w("Postal code"); ?></span>
-            <span class='contact_input'><input type='text' gsname='postal_code' value='<? echo $this->getPost("postal_code"); ?>' class='<? echo $this->validateInput("postal_code"); ?>'></span>
+        <div class='contact_entry partnership common_input' <? if(!$this->partnerShipChecked()) { echo "style='display:none;'"; } ?>>
+            <span class='contact_text'><? echo $this->__w("Reference number"); ?></span>
+            <span class='contact_input'><input type='text' gsname="referencenumber" value='<? echo $this->getPost("referencenumber"); ?>' class='<? echo $this->validateInput("referencenumber"); ?>'></span>
+            <div><? echo $this->__w("Please enter the reference number provided by Wilhelmsen House"); ?></div>
+            <div class="continue_to_cart_button" gstype="submit"><? echo $this->__w("Complete the order"); ?></div>
         </div>
-        <div class='contact_entry'>
-            <span class='contact_text'><? echo $this->__w("City"); ?></span>
-            <span class='contact_input'><input type='text' gsname='city' value='<? echo $this->getPost("city"); ?>' class='<? echo $this->validateInput("city"); ?>'></span>
+        <div class="common_input" <? if($this->partnerShipChecked()) { echo "style='display:none;'"; } ?>>
+            <div class='contact_entry'>
+                <span class='contact_text'><? echo $this->__w("Address"); ?></span>
+                <span class='contact_input'><input type='text' gsname="address" value='<? echo $this->getPost("address"); ?>' class='<? echo $this->validateInput("address"); ?>'></span>
+            </div>
+            <div class='contact_entry'>
+                <span class='contact_text'><? echo $this->__w("Postal code"); ?></span>
+                <span class='contact_input'><input type='text' gsname='postal_code' value='<? echo $this->getPost("postal_code"); ?>' class='<? echo $this->validateInput("postal_code"); ?>'></span>
+            </div>
+            <div class='contact_entry'>
+                <span class='contact_text'><? echo $this->__w("City"); ?></span>
+                <span class='contact_input'><input type='text' gsname='city' value='<? echo $this->getPost("city"); ?>' class='<? echo $this->validateInput("city"); ?>'></span>
+            </div>
+            <div class='contact_entry'>
+                <span class='contact_text'><? echo $this->__w("Email"); ?></span>
+                <span class='contact_input'><input type='text' gsname='email' value='<? echo $this->getPost("email"); ?>' class='<? echo $this->validateInput("email"); ?>'></span>
+            </div>
+            <?
+            if($this->hasErrors()) { 
+                echo "<div>";
+                echo $this->__w("All fields are required, please fill in the fields in red.");
+                echo "</div>";
+            }
+
+            if($this->checkFailedReservation()) { 
+                echo $this->__w("Failed to reserve room... please contact us.");
+            } else {        ?>
+                <div class="continue_to_cart_button common_input" gstype="submit"><? echo $this->__w("Continue to payment"); ?></div>
+            <? } ?>
         </div>
-        <?
-        if($this->hasErrors()) { 
-            echo "<div>";
-            echo $this->__w("All fields are required, please fill in the fields in red.");
-            echo "</div>";
-        }
-        
-        if($this->checkFailedReservation()) { 
-            echo $this->__w("Failed to reserve room... please contact us.");
-        } else {        ?>
-            <div class="continue_to_cart_button" gstype="submit" nextpage="258b565b-21e4-4cad-b5b6-6e0b50cf76b3"><? echo $this->__w("Continue to payment"); ?></div>
-        <? } ?>
     </div>
         
     <div style='clear:both;'></div>

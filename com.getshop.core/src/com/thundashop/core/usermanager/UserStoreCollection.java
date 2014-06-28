@@ -41,6 +41,10 @@ public class UserStoreCollection {
             user.type = 10;
         }
         
+        if(user.referenceKey.isEmpty()) {
+            setReferenceNumber(user);
+        }
+        
         return user;
     }
     
@@ -248,5 +252,28 @@ public class UserStoreCollection {
             }
         }
         return finalize(returnUsers);
+    }
+
+    private void setReferenceNumber(User user) {
+        while(true) {
+            String key = UUID.randomUUID().toString();
+            key = key.substring(0, 6);
+            boolean exists = false;
+            for(User tmpuser : users.values()) {
+                if(tmpuser.referenceKey.equals(key)) {
+                    exists = true;
+                    break;
+                }
+            }
+            if(!exists) {
+                user.referenceKey = key;
+                try {
+                    databaseSaver.saveObject(user, credentials);
+                }catch(ErrorException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+        }
     }
 }

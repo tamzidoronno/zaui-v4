@@ -26,7 +26,9 @@ class Dibs extends \PaymentApplication implements \Application {
         $currency = $this->getFactory()->getCurrency();
         $orderId = $this->getOrder()->id;
         $amount = $this->getApi()->getCartManager()->calculateTotalCost($this->order->cart)*100;
-        $amount += ($this->order->shipping && $this->order->shipping->cost) ? $this->order->shipping : 0;
+        if(isset($this->order->shipping)) {
+            $amount += ($this->order->shipping && $this->order->shipping->cost) ? $this->order->shipping : 0;
+        }
         $settings = $this->getFactory()->getSettings();
         $language = $settings->language->value;
         $callBack = "https://callback.getshop.com/?orderid=".$orderId."&storeid=".$this->getFactory()->getStore()->id;

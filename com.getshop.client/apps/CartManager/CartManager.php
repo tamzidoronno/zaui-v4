@@ -112,6 +112,7 @@ class CartManager extends \SystemApplication implements \Application {
         if (!$this->paymentApplication) {
             echo $this->__w("Thank you for your order.");
         } else {
+            echo $this->__w("Please wait while you are being transferred to dibs payment service.");
             $this->paymentApplication->order = $this->order;
             $this->paymentApplication->initPaymentMethod();
             $this->paymentApplication->preProcess();
@@ -120,7 +121,16 @@ class CartManager extends \SystemApplication implements \Application {
     
     public function render() {
         $this->init();
-        $this->includefile("cartmain");
+        if(isset($_GET['subpage'])) {
+            if($_GET['subpage'] == "paymentform") {
+                $this->includefile("paymentform");
+            }
+            if($_GET['subpage'] == "gotopayment") {
+                $this->SaveOrder();
+            }
+        } else {
+            $this->includefile("cartmain");
+        }
     }
         
     public function getTotalAmount() {
@@ -216,7 +226,7 @@ class CartManager extends \SystemApplication implements \Application {
         if (count($this->getPaymentApplications()) > 0 && !isset($this->paymentApplication)) {
             ob_clean();
             ob_start();
-            header('HTTP/1.1 400 Internal Server Error');
+            header('HTTP/1.1 500 Internal Server Error');
             die("PAYMENT_NOT_SELECTED");
         }
         
@@ -237,7 +247,9 @@ class CartManager extends \SystemApplication implements \Application {
         
         if (isset($this->paymentApplication)) {
             $this->order->shipping = $this->shippingApplication;
-            $this->order->shipping->cost = $this->getShippingPrice();
+            if($this->order->shipping) {
+                $this->order->shipping->cost = $this->getShippingPrice();
+            }
             $this->getApi()->getOrderManager()->saveOrder($this->order);
         }
         

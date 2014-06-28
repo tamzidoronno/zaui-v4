@@ -57,6 +57,8 @@ public class User extends DataCommon implements Comparable<User> {
     public String userAgent;
     public boolean hasChrome;
     
+    public String referenceKey = "";
+    
     public Company company = null;
     
     //ApplicationId, int = 0 rw, 1=r, 2=w

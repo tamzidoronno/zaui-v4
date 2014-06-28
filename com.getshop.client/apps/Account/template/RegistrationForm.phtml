@@ -145,6 +145,14 @@ echo "<input type='hidden' value='$userId' id='user_id'>";
                 <input type="txt" id="companyName" value="<?php echo $companyName; ?>"></input>
             </td>
         </tr>
+        <tr>
+            <td class="col1">
+                <?php echo $this->__w("Reference key"); ?>
+            </td>
+            <td>
+                <?php echo $user->referenceKey; ?>
+            </td>
+        </tr>        
     <? } ?>
     <? 
         $allGroups = $this->getApi()->getUserManager()->getAllGroups();

@@ -90,6 +90,16 @@ app.Hotelbooking = {
     saveCurrentData : function() {
         
     },
+    changeToPartnership : function() {
+        if($('.partnership').is(":visible")) {
+            $('input[gsname="referencenumber"]').val('');
+            $('.common_input').show();
+            $('.partnership').hide();
+        } else {
+            $('.common_input').hide();
+            $('.partnership').show();
+        }
+    },
     initEvents : function() {
         $(document).on('click', '.Hotelbooking .check_available_button', app.Hotelbooking.checkAvailability);
         $(document).on('change', '.Hotelbooking #ordertype', app.Hotelbooking.changeOrderType);
@@ -101,6 +111,7 @@ app.Hotelbooking = {
         $(document).on('change', '.Hotelbooking #numberofpersons', app.Hotelbooking.setNumberOfPersons);
         $(document).on('blur', '.Hotelbooking #numberofpersons', app.Hotelbooking.setNumberOfPersons);
         $(document).on('blur', '.Hotelbooking .bookingsummary input', app.Hotelbooking.saveCurrentData);
+        $(document).on('click', '.Hotelbooking input[gsname="partnershipdeal"]', app.Hotelbooking.changeToPartnership);
     }
 };
 

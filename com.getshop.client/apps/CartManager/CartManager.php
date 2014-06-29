@@ -110,7 +110,7 @@ class CartManager extends \SystemApplication implements \Application {
     
     private function doPayment() {
         if (!$this->paymentApplication) {
-            $this->includefile("confirmation");
+            echo $this->__w("Thank you for your order.");
         } else {
             echo $this->__w("Please wait while you are being transferred to dibs payment service.");
             $this->paymentApplication->order = $this->order;
@@ -127,15 +127,6 @@ class CartManager extends \SystemApplication implements \Application {
             }
             if($_GET['subpage'] == "gotopayment") {
                 $this->SaveOrder();
-            }
-            if($_GET['subpage'] == "confirmation") {
-                
-                $instances = $this->getFactory()->getApplicationPool()->getApplicationsInstancesByNamespace("ns_d16b27d9_579f_4d44_b90b_4223de0eb6f2");
-                if(sizeof($instances) > 0) {
-                    $instances[0]->sendConfirmationEmail();
-                }
-                
-                $this->includefile("confirmation");
             }
         } else {
             $this->includefile("cartmain");
@@ -219,7 +210,7 @@ class CartManager extends \SystemApplication implements \Application {
         return $address;
     }
     
-    public function SaveOrder($doPayment = true) {
+    public function SaveOrder() {
         if(isset($_POST['data']['appId'])) {
             $_SESSION['appId'] = $_POST['data']['appId'];
         }
@@ -264,10 +255,7 @@ class CartManager extends \SystemApplication implements \Application {
         
         \HelperCart::clearSession();
         $this->getApi()->getCartManager()->clear();
-        if($doPayment) {
-            $this->doPayment();
-        }
-        return $this->order;
+        $this->doPayment();
     }
     
     public function LoadShipmentMethods() {

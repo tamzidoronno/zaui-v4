@@ -74,7 +74,13 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         
     }
     
-    public function getStarted() { 
+   public function getStarted() { 
+   
+   }
+   
+   public function sendConfirmationEmail() {
+       $orderId = $_GET['orderId'];
+       $this->getApi()->getMessageManager()->sendMail("boggibill@gmail.com", "test", "test2", "Test34" . $orderId, "post@getshop.com", "GetShop Booking");
    }
 
    public function getContinuePage() {
@@ -82,6 +88,23 @@ class Hotelbooking extends \ApplicationBase implements \Application {
    }
    
     public function render() {
+
+        //this variable is set from $this->continueToCart();
+        if(isset($_GET['orderProcessed'])) {
+            
+            $cartInstances = $this->getFactory()->getApplicationPool()->getApplicationsInstancesByNamespace("ns_900e5f6b_4113_46ad_82df_8dafe7872c99");
+            /* @var $cart \ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager */
+            $cart = $cartInstances[0];
+            if($this->partnerShipChecked()) {
+                $order = $cart->SaveOrder(false);
+                $_GET['orderId'] = $order->id;
+                $this->sendConfirmationEmail();
+            } else {
+                $cart->SaveOrder();
+            }
+            return;
+        }
+        
         if(isset($_GET['set_order_page'])) {
             $this->setConfigurationSetting("contine_page", $_GET['set_order_page']);
         }
@@ -210,6 +233,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         if(($reference) > 0) {
             $cartmgr = $this->getApi()->getCartManager();
             $cartmgr->clear();
+            $cartmgr->setReference($reference);
             $cartmgr->addProduct($this->getProduct()->id, $this->getDayCount(), array());
             $cleaningid = $this->getCleaningOption();
             if($cleaningid) {
@@ -225,12 +249,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             $_SESSION['tempaddress']['city'] = $_POST['data']['city'];
             $_SESSION['tempaddress']['postCode'] = $_POST['data']['postal_code'];
             $_SESSION['tempaddress']['address'] = $_POST['data']['address'];
-            
-            $_GET['page'] = "cart";
-            $_GET['subpage'] = "gotopayment";
-            if($this->partnerShipChecked()) {
-                $_GET['subpage'] = "confirmation";
-            }
+            $_GET['orderProcessed'] = true;
         } else {
             $_GET['failedreservation'] = true;
             $this->failedReservation = true;

@@ -18,4 +18,9 @@ if(isset($_GET['callback_method'])) {
         $application->paymentCallback();
     }
 }
+//If hotelbooking app exists, call it for sending confirmation email.
+$instances = $factory->getApplicationPool()->getApplicationsInstancesByNamespace("ns_d16b27d9_579f_4d44_b90b_4223de0eb6f2");
+if(sizeof($instances) > 0) {
+    $instances[0]->sendConfirmationEmail();
+}
 ?>

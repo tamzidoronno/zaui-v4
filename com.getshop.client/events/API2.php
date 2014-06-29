@@ -1126,6 +1126,20 @@ class APICartManager {
 	}
 
 	/**
+	* Need to attach a reference number manually to the cart?
+	* @throws ErrorException
+	*/
+
+	public function setReference($reference) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["reference"] = json_encode($this->transport->object_unset_nulls($reference));
+	     $data["method"] = "setReference";
+	     $data["interfaceName"] = "core.cartmanager.ICartManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Sets the shipping cost.
 	* Should be in base currency.
 	*/

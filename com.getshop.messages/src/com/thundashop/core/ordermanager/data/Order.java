@@ -20,6 +20,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public String session;
     public String trackingNumber = "";
     public long incrementOrderId = 0;
+    public String reference = "";
     
     public static class Status  {
         public static int CREATED = 1;

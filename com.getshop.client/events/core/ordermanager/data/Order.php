@@ -19,6 +19,9 @@ class core_ordermanager_data_Order extends core_common_DataCommon  {
 	public $incrementOrderId;
 
 	/** @var String */
+	public $reference;
+
+	/** @var String */
 	public $createdDate;
 
 	/** @var String */

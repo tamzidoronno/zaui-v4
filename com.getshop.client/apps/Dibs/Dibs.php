@@ -20,6 +20,10 @@ class Dibs extends \PaymentApplication implements \Application {
     public function postProcess() {
         
     }
+    
+    public function paymentCallback() {
+        
+    }
 
     public function preProcess() {
         $merchid = $this->getConfiguration()->settings->{"merchantid"}->value;
@@ -29,10 +33,11 @@ class Dibs extends \PaymentApplication implements \Application {
         if(isset($this->order->shipping)) {
             $amount += ($this->order->shipping && $this->order->shipping->cost) ? $this->order->shipping : 0;
         }
+        
         $settings = $this->getFactory()->getSettings();
         $language = $settings->language->value;
-        $callBack = "https://callback.getshop.com/?orderid=".$orderId."&storeid=".$this->getFactory()->getStore()->id;
-        $exitUrl = "http://".$this->getFactory()->getStore()->webAddress."/index.php?page=home";
+        $callBack = "https://". $_SERVER['SERVER_NAME']."/callback.php?orderid=".$orderId."&app=".$this->getConfiguration()->id;
+        $exitUrl = "http://". $_SERVER['SERVER_NAME']."/index.php?page=home";
         echo '<form method="post" id="dibsform" action="https://sat1.dibspayment.com/dibspaymentwindow/entrypoint">
             <input value="' . $merchid . '" name="merchant" type="hidden" />
             <input value="' . $currency . '" name="currency" type="hidden" />

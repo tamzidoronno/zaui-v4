@@ -248,6 +248,19 @@ public class APICartManager {
      }
 
      /**
+     * Need to attach a reference number manually to the cart?
+     * @throws ErrorException
+     */
+     public void setReference(java.lang.String reference)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("reference",new Gson().toJson(reference));
+          data.method = "setReference";
+          data.interfaceName = "core.cartmanager.ICartManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Sets the shipping cost.
      * Should be in base currency.
      */

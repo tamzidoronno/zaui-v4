@@ -129,6 +129,12 @@ class CartManager extends \SystemApplication implements \Application {
                 $this->SaveOrder();
             }
             if($_GET['subpage'] == "confirmation") {
+                
+                $instances = $this->getFactory()->getApplicationPool()->getApplicationsInstancesByNamespace("ns_d16b27d9_579f_4d44_b90b_4223de0eb6f2");
+                if(sizeof($instances) > 0) {
+                    $instances[0]->sendConfirmationEmail();
+                }
+                
                 $this->includefile("confirmation");
             }
         } else {
@@ -213,7 +219,7 @@ class CartManager extends \SystemApplication implements \Application {
         return $address;
     }
     
-    public function SaveOrder() {
+    public function SaveOrder($doPayment = true) {
         if(isset($_POST['data']['appId'])) {
             $_SESSION['appId'] = $_POST['data']['appId'];
         }
@@ -258,7 +264,10 @@ class CartManager extends \SystemApplication implements \Application {
         
         \HelperCart::clearSession();
         $this->getApi()->getCartManager()->clear();
-        $this->doPayment();
+        if($doPayment) {
+            $this->doPayment();
+        }
+        return $this->order;
     }
     
     public function LoadShipmentMethods() {

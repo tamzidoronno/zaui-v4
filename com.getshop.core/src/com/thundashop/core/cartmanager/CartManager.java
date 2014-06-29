@@ -227,4 +227,10 @@ public class CartManager extends ManagerBase implements ICartManager {
         return cart.getCartTaxes();
     }
 
+    @Override
+    public void setReference(String reference) throws ErrorException {
+        Cart cart = this.getCart();
+        cart.reference = reference;
+    }
+
 }

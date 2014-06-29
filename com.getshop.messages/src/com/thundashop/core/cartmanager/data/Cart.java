@@ -25,6 +25,7 @@ public class Cart extends DataCommon {
     private double shippingCost = 0;
     public boolean isShippingFree = false;
     public TaxGroup shippingTax = null;
+    public String reference = "";
     
     public Address address;
     public Coupon coupon;

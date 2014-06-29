@@ -1185,6 +1185,21 @@ class CartManager(object):
     data.interfaceName = "core.cartmanager.ICartManager"
     return self.communicationHelper.sendMessage(data)
 
+  def setReference(self, reference):
+    args = collections.OrderedDict()
+    if isinstance(reference,GetShopBaseClass): 
+      args["reference"]=json.dumps(reference.__dict__)
+    else:
+      try:
+        args["reference"]=json.dumps(reference)
+      except (ValueError, AttributeError):
+        args["reference"]=reference
+    data = EmptyClass()
+    data.args = args
+    data.method = "setReference"
+    data.interfaceName = "core.cartmanager.ICartManager"
+    return self.communicationHelper.sendMessage(data)
+
   def setShippingCost(self, shippingCost):
     args = collections.OrderedDict()
     if isinstance(shippingCost,GetShopBaseClass): 

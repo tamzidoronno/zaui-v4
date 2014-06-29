@@ -133,4 +133,10 @@ public interface ICartManager {
      * @return 
      */
     public List<CartTax> getTaxes() throws ErrorException;
+    
+    /**
+     * Need to attach a reference number manually to the cart?
+     * @throws ErrorException 
+     */
+    public void setReference(String reference) throws ErrorException;
 }

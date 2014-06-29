@@ -1081,4 +1081,18 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         return new ArrayList(calendars);
     }
 
+    @Override
+    public void addUserSilentlyToEvent(String eventId, String userId) throws ErrorException {
+        Entry entry = getEntry(eventId);
+        UserManager userManager = getManager(UserManager.class);
+        User user = userManager.getUserById(userId);
+        System.out.println("user; " + user);
+        System.out.println("entry: " + entry);
+        if (entry != null && entry.attendees != null && !entry.attendees.contains(userId) && user != null) {
+            entry.attendees.add(userId);
+            saveEntry(entry);
+        }
+   
+    }
+
 }

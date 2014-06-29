@@ -504,3 +504,31 @@ $(document).on('click', '.Calendar .acceptUser', function() {
     var event = thundashop.Ajax.createEvent('Calendar', 'transferUserFromWaitingList', $(this), data);
     thundashop.Ajax.post(event);
 });
+$(document).on('click', '.Calendar .addusertoevent', function() {
+    var data = {
+        entryId: $(this).attr('entryId')
+    };
+
+    var event = thundashop.Ajax.createEvent('Calendar', 'showAddUserInterface', $(this), data);
+    thundashop.common.showInformationBox(event, __f("Add user to event"));
+});
+$(document).on('click', '.Calendar .gs_button.calendaruserentrysearch', function() {
+    var data = {
+        entryId: $(this).closest('.searchforuser').attr('entryId'),
+        search: $(this).closest('.searchforuser').find('input').val()
+    };
+
+    var event = thundashop.Ajax.createEvent('Calendar', 'showAddUserInterface', $(this), data);
+    thundashop.common.showInformationBox(event, __f("Add user to event"));
+});
+$(document).on('click', '.Calendar .gs_button.adduseractionbutton', function() {
+    var data = {
+        entryId: $(this).closest('.searchforuser').attr('entryId'),
+        userId: $(this).attr('userId')
+    };
+
+    var event = thundashop.Ajax.createEvent('Calendar', 'addUserToEventSilent', $(this), data);
+    thundashop.Ajax.post(event, function() {
+        thundashop.common.hideInformationBox();
+    });
+});

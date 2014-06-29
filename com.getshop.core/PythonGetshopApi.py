@@ -391,7 +391,29 @@ class BigStock(object):
 class CalendarManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
-  def addUserToEvent(self, userId, eventId, password, username, source):
+  def addUserSilentlyToEvent(self, eventId, userId):
+    args = collections.OrderedDict()
+    if isinstance(eventId,GetShopBaseClass): 
+      args["eventId"]=json.dumps(eventId.__dict__)
+    else:
+      try:
+        args["eventId"]=json.dumps(eventId)
+      except (ValueError, AttributeError):
+        args["eventId"]=eventId
+    if isinstance(userId,GetShopBaseClass): 
+      args["userId"]=json.dumps(userId.__dict__)
+    else:
+      try:
+        args["userId"]=json.dumps(userId)
+      except (ValueError, AttributeError):
+        args["userId"]=userId
+    data = EmptyClass()
+    data.args = args
+    data.method = "addUserSilentlyToEvent"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def addUserToEvent(self, userId, eventId, password, username):
     args = collections.OrderedDict()
     if isinstance(userId,GetShopBaseClass): 
       args["userId"]=json.dumps(userId.__dict__)
@@ -421,13 +443,6 @@ class CalendarManager(object):
         args["username"]=json.dumps(username)
       except (ValueError, AttributeError):
         args["username"]=username
-    if isinstance(source,GetShopBaseClass): 
-      args["source"]=json.dumps(source.__dict__)
-    else:
-      try:
-        args["source"]=json.dumps(source)
-      except (ValueError, AttributeError):
-        args["source"]=source
     data = EmptyClass()
     data.args = args
     data.method = "addUserToEvent"

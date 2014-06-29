@@ -1,0 +1,21 @@
+<div style='padding: 20px;' class='searchforuser' entryId='<? echo $_POST['data']['entryId']; ?>' >
+    <input type='textfield' placeholder='enter name of user'/> <div class='gs_button calendaruserentrysearch'><? echo $this->__f("search"); ?></div>
+    <div class='searchresult_calendar'>
+        <? 
+        
+        $i=0;
+        $searchResults = $this->getSearchAddToUserResult(); 
+        echo "<table cellpadding='10' cellspacing='0'><th>Name</th><th>Email</th><th>Company</th>";
+        foreach ($searchResults as $user) {
+            $i++;
+            $name = $user->fullName;
+            $email = $user->emailAddress;
+            $company = $user->company != null ? $user->company->name : "";
+            $bgcolor = $i % 2 ? '#DDD' : '#EEE';
+            $id = $user->id;
+            echo "<tr style='padding-bottom: 5px; background-color: $bgcolor;'><td>$name</td><td>$email</td><td>$company</td><td><div class='gs_button adduseractionbutton' userId='$id'>Add</div></td></tr>";
+        }
+        echo "</table>";
+        ?>
+    </div>
+</div>

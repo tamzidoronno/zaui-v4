@@ -33,7 +33,7 @@ thundashop.app.account.registerUser = function(target) {
         cellPhone : cellPhone
         
     });
-    thundashop.Ajax.postSynchron(event);
+    thundashop.Ajax.postSynchronWithReprint(event);
     thundashop.common.Alert(__w("Changes has been saved!"));
 }
 

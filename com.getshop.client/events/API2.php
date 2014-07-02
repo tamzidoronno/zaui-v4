@@ -388,6 +388,21 @@ class APICalendarManager {
 	}
 
 	/**
+	* return a list of entires that a specified user
+	* has been attending to
+	*/
+
+	public function addUserSilentlyToEvent($eventId, $userId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["eventId"] = json_encode($this->transport->object_unset_nulls($eventId));
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data["method"] = "addUserSilentlyToEvent";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Deprecated and a fallback method.
 	*
 	* @param userId
@@ -397,14 +412,13 @@ class APICalendarManager {
 	* @throws ErrorException
 	*/
 
-	public function addUserToEvent($userId, $eventId, $password, $username, $source) {
+	public function addUserToEvent($userId, $eventId, $password, $username) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
 	     $data['args']["eventId"] = json_encode($this->transport->object_unset_nulls($eventId));
 	     $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
 	     $data['args']["username"] = json_encode($this->transport->object_unset_nulls($username));
-	     $data['args']["source"] = json_encode($this->transport->object_unset_nulls($source));
 	     $data["method"] = "addUserToEvent";
 	     $data["interfaceName"] = "core.calendar.ICalendarManager";
 	     return $this->transport->sendMessage($data);

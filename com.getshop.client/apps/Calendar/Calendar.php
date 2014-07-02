@@ -731,6 +731,22 @@ class Calendar extends MarketingApplication implements Application {
         $entry->comments = $newlist;
         $this->getApi()->getCalendarManager()->saveEntry($entry);
     }
+    
+    public function showAddUserInterface() {
+        $this->includefile("addUser");
+    }
+    
+    public function getSearchAddToUserResult() {
+        if (!isset($_POST['data']['search'])) {
+            return array();
+        }
+        
+        return $this->getApi()->getUserManager()->findUsers($_POST['data']['search']);
+    }
+    
+    public function addUserToEventSilent() {
+        $this->getApi()->getCalendarManager()->addUserSilentlyToEvent($_POST['data']['entryId'], $_POST['data']['userId']);
+    }
 }
 
 

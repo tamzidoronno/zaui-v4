@@ -268,4 +268,7 @@ public interface ICalendarManager {
     @Administrator
     public void setSignature(String userid, String signature) throws ErrorException;
     
+    @Administrator
+    public void addUserSilentlyToEvent(String eventId, String userId) throws ErrorException;
+    
 }

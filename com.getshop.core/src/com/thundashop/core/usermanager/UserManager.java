@@ -606,6 +606,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             }
         }
         return null;
+    }
+    
     /**
      * This function returns the userid if the given store is for
      * autoa-akademiet. This should be changed to check if

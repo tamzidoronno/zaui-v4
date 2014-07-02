@@ -164,7 +164,7 @@ public class ManagerBase {
      */
     public void updateTranslation(Object object, boolean loading) throws ErrorException {
         HashMap<String, Setting> settings = getSettings("Settings");
-        if(settings.containsKey("languages")) {
+        if(settings != null && settings.containsKey("languages")) {
             Gson sgon = new Gson();
             Setting langsetting = settings.get("languages");
             List<String> langcodes = sgon.fromJson(langsetting.value, ArrayList.class);

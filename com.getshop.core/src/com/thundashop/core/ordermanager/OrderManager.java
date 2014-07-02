@@ -13,6 +13,7 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.storemanager.data.Store;
+import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
 import java.util.*;
@@ -184,7 +185,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (settings != null && settings.get("ordermail_subject") != null) {
             Setting setting = settings.get("ordermail_subject");
             String value = setting.value;
-            if (value != null && !value.equals(""))
+            if (value != null)
                 return value;
         }
         
@@ -193,37 +194,23 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public Order createOrder(Address address) throws ErrorException {
-        CartManager cartManager = getManager(CartManager.class);
-        Cart cart = cartManager.getCart();
-        cart.address = address;
-
-        Order order = new Order();
-        order.createdDate = new Date();
-        order.cart = cart.clone();
-        order.reference = cart.reference;
-
-        if (order.cart == null || order.cart.address == null) {
-            throw new ErrorException(53);
-        }
-        
-        finalizeCart(order.cart);
-        
-        incrementingOrderId++;
-        order.incrementOrderId = incrementingOrderId;
+        Order order = createOrderInternally(address);
         saveOrder(order);
-
-        updateStockQuantity(order, "trackControl");
-        updateCouponsCount(order);
-        
-        Store store = this.getStore();
-        String orderText = getCustomerOrderText(order);
-
-        mailFactory.send(store.configuration.emailAdress, order.cart.address.emailAddress, getSubject() , orderText);
-
-        if (store.configuration.emailAdress != null && !store.configuration.emailAdress.equals(order.cart.address.emailAddress)) {
-            mailFactory.send(store.configuration.emailAdress, store.configuration.emailAdress, getSubject(), orderText);
-        }
-
+        updateStockAndSendConfirmation(order);
+        return order;
+    }
+    
+    
+    @Override
+    public Order createOrderByCustomerReference(String referenceKey) throws ErrorException {
+        UserManager usermgr = getManager(UserManager.class);
+        User user = usermgr.getUserByReference(referenceKey);
+        user.address.phone = user.cellPhone;
+        user.address.fullName = user.fullName;
+        Order order = createOrderInternally(user.address);
+        order.userId = user.id;
+        saveOrder(order);
+        updateStockAndSendConfirmation(order);
         return order;
     }
 
@@ -385,4 +372,44 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public List<CartTax> getTaxes(Order order) throws ErrorException {
         return order.cart.getCartTaxes();
     }
+
+    private Order createOrderInternally(Address address) throws ErrorException {
+        CartManager cartManager = getManager(CartManager.class);
+        Cart cart = cartManager.getCart();
+        cart.address = address;
+
+        Order order = new Order();
+        order.createdDate = new Date();
+        order.cart = cart.clone();
+        order.reference = cart.reference;
+
+        if (order.cart == null || order.cart.address == null) {
+            throw new ErrorException(53);
+        }
+        
+        finalizeCart(order.cart);
+        
+        incrementingOrderId++;
+        order.incrementOrderId = incrementingOrderId;
+        return order;
+    }
+
+    private void updateStockAndSendConfirmation(Order order) throws ErrorException {
+
+        updateStockQuantity(order, "trackControl");
+        updateCouponsCount(order);
+        
+        Store store = this.getStore();
+        String orderText = getCustomerOrderText(order);
+
+        String subject = getSubject();
+        if(!subject.isEmpty()) {
+            mailFactory.send(store.configuration.emailAdress, order.cart.address.emailAddress, getSubject() , orderText);
+
+            if (store.configuration.emailAdress != null && !store.configuration.emailAdress.equals(order.cart.address.emailAddress)) {
+                mailFactory.send(store.configuration.emailAdress, store.configuration.emailAdress, getSubject(), orderText);
+            }
+        }
+    }
+
 }

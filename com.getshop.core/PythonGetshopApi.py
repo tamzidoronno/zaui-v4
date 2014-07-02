@@ -2537,6 +2537,21 @@ class OrderManager(object):
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 
+  def createOrderByCustomerReference(self, referenceKey):
+    args = collections.OrderedDict()
+    if isinstance(referenceKey,GetShopBaseClass): 
+      args["referenceKey"]=json.dumps(referenceKey.__dict__)
+    else:
+      try:
+        args["referenceKey"]=json.dumps(referenceKey)
+      except (ValueError, AttributeError):
+        args["referenceKey"]=referenceKey
+    data = EmptyClass()
+    data.args = args
+    data.method = "createOrderByCustomerReference"
+    data.interfaceName = "core.ordermanager.IOrderManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getOrder(self, orderId):
     args = collections.OrderedDict()
     if isinstance(orderId,GetShopBaseClass): 

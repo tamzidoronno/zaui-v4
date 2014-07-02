@@ -7,6 +7,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     var $currentMenuEntry;
     var $failedReservation = false;
     var $invalid = false;
+    var $errors = array();
     
     function __construct() {
     }
@@ -36,14 +37,14 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $end =  strtotime($_POST['data']['stop']);
         $product = $this->getApi()->getProductManager()->getProduct($_POST['data']['roomProduct']);
         
-        $numbers = $this->getApi()->getHotelBookingManager()->checkAvailable($start,$end,$product->sku);
-        if($numbers) {
-            echo $numbers;
-        }
-        
         $this->setStartDate($start);
         $this->setEndDate($end);
         $this->setProductId($product->id);
+        
+        $numbers = $this->checkavailabilityFromSelection();
+        if($numbers) {
+            echo $numbers;
+        }
     }
     
     public function getProduct() {
@@ -91,16 +92,17 @@ class Hotelbooking extends \ApplicationBase implements \Application {
 
         //this variable is set from $this->continueToCart();
         if(isset($_GET['orderProcessed'])) {
-            
-            $cartInstances = $this->getFactory()->getApplicationPool()->getApplicationsInstancesByNamespace("ns_900e5f6b_4113_46ad_82df_8dafe7872c99");
-            /* @var $cart \ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager */
-            $cart = $cartInstances[0];
             if($this->partnerShipChecked()) {
-                $order = $cart->SaveOrder(false);
-                $_GET['orderId'] = $order->id;
+                $this->includefile("confirmation");
                 $this->sendConfirmationEmail();
             } else {
-                $cart->SaveOrder();
+                //Send the user to the payment view.
+                $payment = $this->getFactory()->getApplicationPool()->getAllPaymentInstances();
+                if(sizeof($payment) > 0) {
+                    //Orderid is set in $this->continueToPayment()
+                    $payment[0]->order = $this->getApi()->getOrderManager()->getOrder($_GET['orderId']);
+                    $payment[0]->preProcess();
+                }
             }
             return;
         }
@@ -111,11 +113,11 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         if($this->getPage()->id == "home") {
             $this->includefile("Hotelbooking");
         } else {
-            
-            if(isset($_GET['subpage']) && $_GET['subpage'] == "summary") {
+            if(isset($_GET['subpage']) && $_GET['subpage'] == "summary" && $this->hasValidSelection()) {
                  $this->includefile("booking_part3");
             } else {
-                 $this->includefile("booking_part2");
+                $this->hasValidSelection();
+                $this->includefile("booking_part2");
             }
         }
     }
@@ -215,7 +217,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $_SESSION['hotelbooking']['cleaning'] = $_POST['data']['product'];
     }
     
-    public function continueToCart() {
+    public function continueToPayment() {
         $count = $this->getRoomCount();
         
         if($count < $this->getRoomCount()) {
@@ -243,13 +245,29 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                 $cartmgr->addProduct($cleaningid, $cleaningcount, array());
             }
             
-            $_SESSION['tempaddress']['emailAddress'] = $_POST['data']['email'];
-            $_SESSION['tempaddress']['fullName'] = $_POST['data']['name_1'];
-            $_SESSION['tempaddress']['phone'] = $_POST['data']['phone_1'];
-            $_SESSION['tempaddress']['city'] = $_POST['data']['city'];
-            $_SESSION['tempaddress']['postCode'] = $_POST['data']['postal_code'];
-            $_SESSION['tempaddress']['address'] = $_POST['data']['address'];
+            if($this->partnerShipChecked()) {
+                $order = $this->getApi()->getOrderManager()->createOrderByCustomerReference($this->getReferenceKey());
+            } else {
+                $address = $this->getApiObject()->core_usermanager_data_Address();
+                $address->fullName = $_POST['data']['name_1'];
+                $address->city = $_POST['data']['city'];
+                $address->postCode = $_POST['data']['postal_code'];
+                $address->address = $_POST['data']['address'];
+                $address->phone = $_POST['data']['phone_1'];
+
+                $user = new \core_usermanager_data_User();
+                $user->emailAddress = $_POST['data']['email'];
+                $user->username = $_POST['data']['email'];
+                $user->password = "dfsafasd#¤#cvsdfgdfasdfasf";
+                $user->fullName = $_POST['data']['name_1'];
+                $user->cellPhone = $_POST['data']['phone_1'];
+                $user->address = $address;
+                $this->getApi()->getUserManager()->createUser($user);
+
+                $order = $this->getApi()->getOrderManager()->createOrder($address);
+            }
             $_GET['orderProcessed'] = true;
+            $_GET['orderId'] = $order->id;
         } else {
             $_GET['failedreservation'] = true;
             $this->failedReservation = true;
@@ -301,7 +319,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
     
     public function validateAndContinueToPayment() {
-        $_GET['subpage'] = "summary";
         $this->setBookingData();
         foreach($this->getBookingData() as $index => $test) {
             $valid = true;
@@ -311,7 +328,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             }
         }
         if($valid) {
-            $this->continueToCart();
+            $this->continueToPayment();
         }
     }
     
@@ -424,6 +441,29 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             return true;
         }
         return false;
+    }
+
+    public function getReferenceKey() {
+        if(isset($_POST['data']['referencenumber'])) {
+            return $_POST['data']['referencenumber'];
+        }
+        return "";
+    }
+
+    public function hasValidSelection() {
+        $count = $this->checkavailabilityFromSelection();
+        $isvalid = true;
+        $this->errors = array();
+        if(((int)$count < (int)$this->getRoomCount())) {
+            $this->errors[] = $this->__w("We are sorry, but there is not enough available rooms for your selection, please select a different one.");
+            $isvalid = false;
+        }
+        return $isvalid;
+    }
+
+    public function checkavailabilityFromSelection() {
+        $product = $this->getProduct();
+        return $this->getApi()->getHotelBookingManager()->checkAvailable($this->getStart(),$this->getEnd(),$product->sku);
     }
 
 }

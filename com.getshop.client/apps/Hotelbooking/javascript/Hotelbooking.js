@@ -1,4 +1,5 @@
 app.Hotelbooking = {
+    updateRoomCountTimer : null,
     setSize : function() {
         var newHeight = $('.Hotelbooking .booking_page').outerHeight()+30;
         var top = (500 - newHeight)/2;
@@ -23,10 +24,14 @@ app.Hotelbooking = {
     },
     updateRoomCount : function() {
         var count = $(this).val();
-        var event = thundashop.Ajax.createEvent("","updateRoomCount", $(this), { "count": count});
-        thundashop.Ajax.postWithCallBack(event, function() {
-            
-        });
+        clearTimeout(app.Hotelbooking.updateRoomCountTimer);
+        var container = $(this);
+        app.Hotelbooking.updateRoomCountTimer = setTimeout(function() {
+            container.blur();
+            clearTimeout(app.Hotelbooking.updateRoomCountTimer);
+            var event = thundashop.Ajax.createEvent("","updateRoomCount", container, { "count": count});
+                thundashop.Ajax.post(event, function() {});
+        }, "500");
     },
     setNumberOfPersons : function() {
         var count = $(this).val();

@@ -387,6 +387,18 @@ class ApplicationPool {
         
         return $apps;
     }
-    
+
+    public function getAllPaymentInstances() {
+        $instances = $this->getAllAddedInstances();
+        $allinstances = array();
+        foreach($instances as $app) {
+            if($app instanceof PaymentApplication) {
+                $allinstances[] = $app;
+            }
+        }
+        
+        return $allinstances;
+    }
+
 }
 ?>

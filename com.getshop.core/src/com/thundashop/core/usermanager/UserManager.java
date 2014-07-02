@@ -590,4 +590,14 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         return user;
     }
+
+    public User getUserByReference(String referenceKey) throws ErrorException {
+        List<User> allusers = getAllUsers();
+        for(User user : allusers) {
+            if(user.referenceKey.equals(referenceKey)) {
+                return user;
+            }
+        }
+        return null;
+    }
 }

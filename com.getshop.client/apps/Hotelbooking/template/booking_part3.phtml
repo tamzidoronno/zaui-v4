@@ -1,6 +1,21 @@
 <?
 /* @var $this ns_d16b27d9_579f_4d44_b90b_4223de0eb6f2\Hotelbooking */
 $this->loadBookingData();
+$nightText = $this->__w("night");
+$nightsText = $this->__w("nights");
+$inText = $this->__w("in");
+$bookTime = $this->__w("Booked time periode");
+$vistorInfoText = $this->__w("Visitor information");
+$continueCartButtonText = $this->__w("Continue to payment");
+
+if($this->getServiceType() == "storage") {
+    $nightText = $this->__w("month");
+    $nightsText = $this->__w("months");
+    $inText = $this->__w("with");
+    $bookTime = $this->__w("Rental time periode");
+    $vistorInfoText = $this->__w("Contact information");
+}
+
 ?>
 
 <br>
@@ -8,7 +23,7 @@ $this->loadBookingData();
     <div class="summaryview">
             <div class='summary_heading'><? echo $this->__w("Summary"); ?></div>
             <div class='price_row'>
-                <? echo $this->__w("Booked time periode"); ?>
+                <? echo $bookTime; ?>
                 <span class='right_aligned_price'><? echo date("d. M Y", $this->getStart()) . " " . $this->__w("to") . " " . date("d. M Y", $this->getEnd()); ?></span>
             </div>
 
@@ -22,13 +37,17 @@ $this->loadBookingData();
             }
 
             echo "<div class='price_row'>";
-            $night = $this->__w("nights");
+            $night = $nightsText;
             if($this->getDayCount() == 1) {
-                $night = $this->__w("night");
+                $night = $nightText;
             }
-            $in = $this->__w("in");
+            $in = $inText;
             
-            echo "<span class='price_summary'>" . $this->getDayCount() . " $night $in " .$this->getRoomCount() . " " . $this->getProduct()->name  . " (" . $this->getProduct()->price . "/night)" . "</span>";
+            echo "<span class='price_summary'>" . $this->getDayCount() . " $night $in ";
+            if($this->getServiceType() == "hotel") {
+                $this->getRoomCount();
+            }
+            echo " " . $this->getProduct()->name  . " (" . $this->getProduct()->price . "/night)" . "</span>";
             echo "<span class='price_summary_price price_row'><span class='right_aligned_price'>" . $this->getRoomPrice() . " kr</span></span>";
             echo "</div>";
 
@@ -39,7 +58,7 @@ $this->loadBookingData();
             ?>
         </div>
     <div class="booking_contact_data">
-        <div class='summary_heading'><? echo $this->__w("Visitor information"); ?></div>
+        <div class='summary_heading'><? echo $vistorInfoText; ?></div>
         <?
             for($i = 1; $i <= $this->getPersonCount(); $i++) {
                 if($this->getPersonCount() > 1) {
@@ -71,7 +90,7 @@ $this->loadBookingData();
         <div class='contact_entry partnership common_input' <? if(!$this->partnerShipChecked()) { echo "style='display:none;'"; } ?>>
             <span class='contact_text'><? echo $this->__w("Reference number"); ?></span>
             <span class='contact_input'><input type='text' gsname="referencenumber" value='<? echo $this->getPost("referencenumber"); ?>' class='<? echo $this->validateInput("referencenumber"); ?>'></span>
-            <div><? echo $this->__w("Please enter the reference number provided by Wilhelmsen House"); ?></div>
+            <div><? echo $this->__w("Please enter the reference number provided by") ." " . $this->getProjectName(); ?></div>
             <div class="continue_to_cart_button" gstype="submit"><? echo $this->__w("Complete the order"); ?></div>
         </div>
         <div class="common_input" <? if($this->partnerShipChecked()) { echo "style='display:none;'"; } ?>>
@@ -100,8 +119,13 @@ $this->loadBookingData();
 
             if($this->checkFailedReservation()) { 
                 echo $this->__w("Failed to reserve room... please contact us.");
-            } else {        ?>
-                <div class="continue_to_cart_button common_input" gstype="submit"><? echo $this->__w("Continue to payment"); ?></div>
+            } else {
+                ?>
+                <? if($this->hasPaymentAppAdded()) { ?>
+                <div class="continue_to_cart_button common_input" gstype="submit"><? echo $continueCartButtonText; ?></div>
+                <? } else { ?>
+                <div class="continue_to_cart_button" gstype="submit"><? echo $this->__w("Complete the order"); ?></div>
+            <? } ?>
             <? } ?>
         </div>
     </div>

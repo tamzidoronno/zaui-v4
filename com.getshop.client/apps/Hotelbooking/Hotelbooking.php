@@ -53,6 +53,19 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
     
     function getDayCount() {
+        if($this->getServiceType() == "storage") {
+            $d1 = $this->getStart();
+            $d2 = $this->getEnd();
+            $min_date = min($d1, $d2);
+            $max_date = max($d1, $d2);
+            $i = 1;
+
+            while (($min_date = strtotime("+1 MONTH", $min_date)) <= $max_date) {
+                $i++;
+            }
+            return $i;
+        }
+        
         return ($this->getEnd() - $this->getStart())/86400;
     }
     
@@ -116,7 +129,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
 
         //this variable is set from $this->continueToCart();
         if(isset($_GET['orderProcessed'])) {
-            if($this->partnerShipChecked()) {
+            if($this->partnerShipChecked() || !$this->hasPaymentAppAdded()) {
                 $this->includefile("confirmation");
                 $this->sendConfirmationEmail();
             } else {
@@ -496,6 +509,11 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     public function checkavailabilityFromSelection() {
         $product = $this->getProduct();
         return $this->getApi()->getHotelBookingManager()->checkAvailable($this->getStart(),$this->getEnd(),$product->sku);
+    }
+
+    public function hasPaymentAppAdded() {
+        $payment = $this->getFactory()->getApplicationPool()->getAllPaymentInstances();
+        return sizeof($payment) > 0;
     }
 
 }

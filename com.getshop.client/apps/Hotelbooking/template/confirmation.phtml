@@ -1,5 +1,9 @@
 <div class="formation_page">
 <?php
-echo $this->__w("Thank you for checking into our hotel. A confirmation mail has been sent to your email");
+if($this->getServiceType() == "hotel") {
+    echo $this->__w("Thank you for checking into our hotel. A confirmation mail has been sent to your email.");
+} else {
+    echo $this->__w("Thank you for renting a storage room from us. A confirmation mail has been sent to your email.");
+}
 ?>
 </div>

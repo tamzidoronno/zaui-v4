@@ -61,8 +61,8 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
                    } else {
                        $room->isActive = "true";
                    }
+                   $this->getApi()->getHotelBookingManager()->saveRoom($room);
                 }
-                $this->getApi()->getHotelBookingManager()->saveRoom($room);
             }
          }
     }

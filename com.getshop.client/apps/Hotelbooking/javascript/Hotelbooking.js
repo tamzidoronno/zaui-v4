@@ -105,6 +105,30 @@ app.Hotelbooking = {
             $('.partnership').show();
         }
     },
+    loadSettingPanel : function() {
+        var event = thundashop.Ajax.createEvent('','loadSettings', $(this), null);
+        thundashop.common.showInformationBox(event, "Booking settings");
+    },
+    loadSettings: function(element, application) {
+        var config = {
+            application: application,
+            draggable: true,
+            title: "Settings",
+            items: [
+                {
+                    icontype: "awesome",
+                    icon: "fa-cog",
+                    iconsize: "30",
+                    title: __f("Configure your booking application"),
+                    click: app.Hotelbooking.loadSettingPanel
+                }
+            ]
+        }
+
+        var toolbox = new GetShopToolbox(config, application);
+        toolbox.show();
+        toolbox.attachToElement(application, 2);
+    },
     initEvents : function() {
         $(document).on('click', '.Hotelbooking .check_available_button', app.Hotelbooking.checkAvailability);
         $(document).on('change', '.Hotelbooking #ordertype', app.Hotelbooking.changeOrderType);

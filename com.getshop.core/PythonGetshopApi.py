@@ -413,7 +413,7 @@ class CalendarManager(object):
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
-  def addUserToEvent(self, userId, eventId, password, username):
+  def addUserToEvent(self, userId, eventId, password, username, source):
     args = collections.OrderedDict()
     if isinstance(userId,GetShopBaseClass): 
       args["userId"]=json.dumps(userId.__dict__)
@@ -443,6 +443,13 @@ class CalendarManager(object):
         args["username"]=json.dumps(username)
       except (ValueError, AttributeError):
         args["username"]=username
+    if isinstance(source,GetShopBaseClass): 
+      args["source"]=json.dumps(source.__dict__)
+    else:
+      try:
+        args["source"]=json.dumps(source)
+      except (ValueError, AttributeError):
+        args["source"]=source
     data = EmptyClass()
     data.args = args
     data.method = "addUserToEvent"
@@ -1774,6 +1781,21 @@ class HotelBookingManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getAllRooms"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getRoom(self, id):
+    args = collections.OrderedDict()
+    if isinstance(id,GetShopBaseClass): 
+      args["id"]=json.dumps(id.__dict__)
+    else:
+      try:
+        args["id"]=json.dumps(id)
+      except (ValueError, AttributeError):
+        args["id"]=id
+    data = EmptyClass()
+    data.args = args
+    data.method = "getRoom"
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 

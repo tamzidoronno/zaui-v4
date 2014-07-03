@@ -11,11 +11,16 @@ public class Room extends DataCommon {
     public String roomType;
     public String currentCode;
     public String roomName;
+    public Boolean isActive = true;
     
     //Identify what lock is connected to this room.
     public String lockId;
 
     boolean isAvilable(Date start, Date end) {
+        
+        if(!isActive) {
+            return false;
+        }
         
         if(bookedDates == null) {
             return true;

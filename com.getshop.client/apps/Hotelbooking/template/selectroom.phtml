@@ -1,16 +1,30 @@
-<span class='heading'><? echo $this->__w("BOOK A ROOM AT WILHELMSEN HOUSE"); ?></span>
+<?
+$text = $this->__w("BOOK A ROOM AT");
+$checkintext = $this->__w("CHECK IN");
+$checkouttext = $this->__w("CHECK OUT");
+$roomtypetext = $this->__W("ROOM TYPE");
+
+if($this->getServiceType($text) == "storage") {
+    $text = $this->__w("GET A STORAGE ROOM FROM");
+    $checkintext = $this->__w("START");
+    $checkouttext = $this->__w("END");
+    $roomtypetext = $this->__w("STORAGE TYPE");
+}
+?>
+
+<span class='heading'><? echo $text . "<br>" . $this->getProjectName() ; ?></span>
 <br>
 <table width='100%'>
     <tr>
         <td>
-            <? echo $this->__w("CHECK IN"); ?><br>
+            <? echo $checkintext; ?><br>
             <span style='background-color:#b0bda4; display:inline-block;' class='start_cal'>
                 <input type='text' class='date_selection_room' value='<? echo date('d.m.Y'); ?>' id='start_date'><i class='fa fa-calendar'></i>
             </span>
         </td>
         <td align='right'>
             <span style='text-align:left; display:inline-block;'>
-                <? echo $this->__w("CHECK OUT"); ?><br>
+                <? echo $checkouttext; ?><br>
                 <span style='background-color:#b0bda4; display:inline-block;' class='end_cal'>
                     <input type='text' class='date_selection_room' value='<? echo date('d.m.Y', time()+86400); ?>' id='end_date'><i class='fa fa-calendar'></i>
                 </span>
@@ -19,7 +33,7 @@
     </tr>
 </table>
 <div class='space_betweenroom'></div>
-<? echo $this->__W("ROOM TYPE"); ?><br>
+<? echo $roomtypetext; ?><br>
 <select class='room_selection'>
     <?
         $products = $this->getHotelRooms();

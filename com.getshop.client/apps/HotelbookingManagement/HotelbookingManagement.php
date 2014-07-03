@@ -36,22 +36,35 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         $id = $_POST['data']['typeId'];
         $this->getApi()->getHotelBookingManager()->removeRoomType($id);
     }
-    
+    function startsWith($haystack, $needle) {
+        $length = strlen($needle);
+        return (substr($haystack, 0, $length) === $needle);
+    }
     function addRoom() {
          $room = new \core_hotelbookingmanager_Room();
-         
-         if(isset($_POST['data']['id']))
-             $room->id = $_POST['data']['id'];
-         if(isset($_POST['data']['roomtype']))
-             $room->roomType = $_POST['data']['roomtype'];
-         if(isset($_POST['data']['roomname']))
-            $room->roomName = $_POST['data']['roomname'];
-         if(isset($_POST['data']['lockid']))
-            $room->lockId = $_POST['data']['lockid'];
-         if(isset($_POST['data']['lockcode']))
-            $room->currentCode = $_POST['data']['lockcode'];
-         
-         $this->getApi()->getHotelBookingManager()->saveRoom($room);
+         if(isset($_POST['data']['newroom'])) {
+             $room->roomName = $_POST['data']['roomname'];
+             $this->getApi()->getHotelBookingManager()->saveRoom($room);
+         } else {
+            foreach($_POST['data'] as $id => $val) {
+                if($this->startsWith($id, "id_")) {
+                   $id = str_replace("id_", "", $id);
+                   $room = $this->getApi()->getHotelBookingManager()->getRoom($id);
+
+                   $room->roomType = $_POST['data']['roomtype_'.$id];
+                   $room->roomName = $_POST['data']['roomname_'.$id];
+                   $room->lockId = $_POST['data']['lockid_'.$id];
+                   $room->currentCode = $_POST['data']['lockcode_'.$id];
+
+                   if($_POST['data']['available_'.$id] == "false") {
+                       $room->isActive = "false";
+                   } else {
+                       $room->isActive = "true";
+                   }
+                }
+                $this->getApi()->getHotelBookingManager()->saveRoom($room);
+            }
+         }
     }
     
     public function getName() {
@@ -90,12 +103,12 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
      * @param \core_hotelbookingmanager_RoomType[] $types
      */
     public function printRoomRow($room, $types) {
-        echo "<tr class='existingroomrow' gstype='form' method='addRoom'>";
+        echo "<tr class='existingroomrow'>";
         echo "<td width='10'>";
-        echo "<input type='hidden' value='". $room->id."' gsname='id'>";
+        echo "<input type='hidden' value='". $room->id."' gsname='id_".$room->id."'>";
         echo "<i class='fa fa-trash-o' roomid='".$room->id."'></i></td>";
         echo "<td width='10'>";
-        echo "<select gsname='roomtype'>";
+        echo "<select gsname='roomtype_".$room->id."'>";
         echo "<option value=''>Set a room type</option>";
         foreach($types as $type) {
             $selected = "";
@@ -106,10 +119,21 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         }
         echo "</select>";
         echo "</td>";
-        echo "<td><input gsname='roomname' value='" . $room->roomName . "'></td>";
-        echo "<td><input gsname='lockid' value='" . $room->lockId . "'></td>";
-        echo "<td><input gsname='lockcode' value='" . $room->currentCode . "'></td>";
-        echo "<td width='10'><i class='fa fa-floppy-o' style='cursor:pointer; color:green;' gstype='submit'></td>";
+        echo "<td>";
+        
+        $falseselected = "";
+        if(!$room->isActive) {
+            $falseselected = "SELECTED";
+        }
+        
+        echo "<select gsname='available_".$room->id."'>";
+        echo "<option value='true'>". $this->__f("Active") . "</option>";
+        echo "<option value='false' $falseselected>". $this->__f("Inactive") . "</option>";
+        echo "</select>";
+        echo "</td>";
+        echo "<td><input gsname='roomname_".$room->id."' value='" . $room->roomName . "'></td>";
+        echo "<td><input gsname='lockid_".$room->id."' value='" . $room->lockId . "'></td>";
+        echo "<td><input gsname='lockcode_".$room->id."' value='" . $room->currentCode . "'></td>";
         echo "</tr>";
     }
 }

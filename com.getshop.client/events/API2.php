@@ -412,13 +412,14 @@ class APICalendarManager {
 	* @throws ErrorException
 	*/
 
-	public function addUserToEvent($userId, $eventId, $password, $username) {
+	public function addUserToEvent($userId, $eventId, $password, $username, $source) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
 	     $data['args']["eventId"] = json_encode($this->transport->object_unset_nulls($eventId));
 	     $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
 	     $data['args']["username"] = json_encode($this->transport->object_unset_nulls($username));
+	     $data['args']["source"] = json_encode($this->transport->object_unset_nulls($source));
 	     $data["method"] = "addUserToEvent";
 	     $data["interfaceName"] = "core.calendar.ICalendarManager";
 	     return $this->transport->sendMessage($data);
@@ -1731,6 +1732,21 @@ class APIHotelBookingManager {
 	     $data["method"] = "getAllRooms";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Add new room to the manager.
+	* @param room
+	* @throws ErrorException
+	*/
+
+	public function getRoom($id) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $data["method"] = "getRoom";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->cast(new core_hotelbookingmanager_Room(), $this->transport->sendMessage($data));
 	}
 
 	/**

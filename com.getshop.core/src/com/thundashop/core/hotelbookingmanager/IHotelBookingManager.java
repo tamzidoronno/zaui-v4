@@ -39,6 +39,9 @@ public interface IHotelBookingManager {
     @Administrator
     public void removeRoom(String id) throws ErrorException;
     
+    @Administrator
+    public Room getRoom(String id) throws ErrorException;
+    
     /**
      * Set a new code to a given room.
      * @param code The code to set

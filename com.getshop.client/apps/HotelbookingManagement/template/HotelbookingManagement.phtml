@@ -24,11 +24,12 @@ if(isset($_POST['data']['typeId'])) {
 <? echo $this->__w("Add a room"); ?>
 <div gstype="form" method="addRoom">
     <input type="text" gsname="roomname" placeholder="Room name">
+    <input type="hidden" gsname="newroom" value="true">
     <input type="submit" gstype="submit" gsname="submit">
 </div>
 <br>
 <? 
-if(isset($_POST['data']['roomtype'])) { 
+if(isset($_POST['data']['updated'])) { 
     echo "<span class='updatedtext' style='float:right;'>Data har blitt oppdatert.</span>";
     ?>
     <script>
@@ -41,10 +42,16 @@ if(isset($_POST['data']['roomtype'])) {
 ?>
 Existing rooms:<br>
 <div style="padding:10px; border: solid 1px;background-color:#EFEFEF;">
-    <table width="100%">
+    <table width="100%" gstype='form' method='addRoom'>
+        <input type="hidden" value="true" gsname="updated">
+        <tr>
+            <td colspan='6' align='center'><div style='text-align:right'><i class='fa fa-floppy-o' style='cursor:pointer; color:green;' gstype='submit'></div></td>
+        </tr>
+
         <tr>
             <td></td>
             <td>Room type</td>
+            <td>Active</td>
             <td>Room name</td>
             <td>Lock id</td>
             <td>Current code</td>
@@ -54,6 +61,9 @@ Existing rooms:<br>
             $this->printRoomRow($room, $types);
         }
         ?>
+        <tr>
+            <td colspan='6' align='center'><div style='text-align:right'><i class='fa fa-floppy-o' style='cursor:pointer; color:green;' gstype='submit'></div></td>
+        </tr>
     </table>
 </div>
 <br>

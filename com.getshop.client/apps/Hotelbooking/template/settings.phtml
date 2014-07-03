@@ -1,0 +1,51 @@
+<?php
+$types = array();
+$types["hotel"] = "Hotel";
+$types["storage"] = "Storage";
+
+?>
+<div style='padding: 20px;'>
+    <table width='40%' gstype="form" method="setConfig">
+        <tr>
+            <td>
+                Name for the given service
+            </td>
+            <td>
+                <input type='text' gsname='name' value='<? echo $this->getProjectName(); ?>'>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Type
+            </td>
+            <td>
+                <select gsname='type'>
+                    <? 
+                    foreach($types as $index => $type) {
+                        $selected = "";
+                        if($index == $this->getServiceType()) {
+                            $selected = "SELECTED"; 
+                        }
+                        echo "<option value='" . $index . "' $selected>" . $type . "</option>";
+                    }
+                    ?>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+               Continue page id
+            </td>
+            <td>
+                <input type='text' gsname='contine_page' value="<? echo $this->getOrderPageId(); ?>">
+            </td>
+        </tr>
+        <tr>
+            <td>
+            </td>
+            <td>
+                <span class='gs_button' gstype='submit'>Save</span>
+            </td>
+        </tr>
+    </table>
+</div>

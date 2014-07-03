@@ -132,6 +132,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
         }
         room.storeId = storeId;
+        if(!room.isActive) {
+            System.out.println("Room is inactive");
+        } else {
+            System.out.println("Is active");
+        }
         databaseSaver.saveObject(room, credentials);
         rooms.put(room.id, room);
     }
@@ -240,7 +245,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         bookingReferences.remove(reference);
     }
 
-    private Room getRoom(String id) {
+    @Override
+    public Room getRoom(String id) throws ErrorException {
         return rooms.get(id);
     }
 }

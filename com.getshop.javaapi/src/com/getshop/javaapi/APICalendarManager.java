@@ -16,6 +16,20 @@ public class APICalendarManager {
       }
 
      /**
+     * return a list of entires that a specified user
+     * has been attending to
+     */
+     public void addUserSilentlyToEvent(java.lang.String eventId, java.lang.String userId)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("eventId",new Gson().toJson(eventId));
+          data.args.put("userId",new Gson().toJson(userId));
+          data.method = "addUserSilentlyToEvent";
+          data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Deprecated and a fallback method.
      *
      * @param userId

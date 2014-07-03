@@ -16,6 +16,30 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $this->setPersonCount($_POST['data']['count']);
     }
     
+    public function loadSettings() {
+        $this->includefile("settings");
+    }
+    
+    public function setConfig() {
+        $this->setConfigurationSetting("name", $_POST['data']['name']);
+        $this->setConfigurationSetting("type", $_POST['data']['type']);
+        $this->setConfigurationSetting("contine_page", $_POST['data']['contine_page']);
+    }
+    
+    public function getProjectName() {
+        if($this->getConfigurationSetting("name")) {
+            return $this->getConfigurationSetting("name");
+        }
+        return "name not set";
+    }
+    
+    public function getServiceType() {
+        if($this->getConfigurationSetting("type")) {
+            return $this->getConfigurationSetting("type");
+        }
+        return "hotel";
+    }
+    
    public function getDescription() {
         return "Hotelbooking";
     }
@@ -122,6 +146,14 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         }
     }
 
+    public function getOrderPageId() {
+        $contpage = $this->getConfigurationSetting("contine_page");
+        if(!$contpage) {
+            return "none";
+        }
+        return $contpage;
+    }
+    
     public function updateCalendarDate() {
         $type = $_POST['data']['type'];
         $day = $_POST['data']['day'];

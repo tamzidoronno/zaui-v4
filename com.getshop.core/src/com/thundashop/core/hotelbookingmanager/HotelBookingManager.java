@@ -9,6 +9,8 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -162,12 +164,32 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Override
     public List<Room> getAllRooms() throws ErrorException {
-        return new ArrayList(rooms.values());
+        List<Room> room = new ArrayList(rooms.values());
+          Collections.sort(room,
+                 new Comparator<Room>()
+                 {
+                     public int compare(Room f1, Room f2)
+                     {
+                         return f1.roomName.compareTo(f2.roomName);
+                     }        
+                 });
+        return room;
     }
 
     @Override
     public List<RoomType> getRoomTypes() throws ErrorException {
-        return new ArrayList(roomTypes.values());
+        ArrayList retval = new ArrayList(roomTypes.values());
+        
+        Collections.sort(retval,
+                 new Comparator<RoomType>()
+                 {
+                     public int compare(RoomType f1, RoomType f2)
+                     {
+                         return f1.name.compareTo(f2.name);
+                     }        
+                 });
+        
+        return retval;
     }
 
     @Override
@@ -180,7 +202,6 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     @Override
     public void removeRoomType(String id) throws ErrorException {
         RoomType type = roomTypes.get(id);
-        //Check if rooms already exists on this type, if so, not allow it.
         List<Room> allRooms = getAllRooms();
         for(Room room : allRooms) {
             if(room.roomType.equals(type.id)) {

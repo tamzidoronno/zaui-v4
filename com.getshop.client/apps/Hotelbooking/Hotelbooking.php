@@ -118,7 +118,17 @@ class Hotelbooking extends \ApplicationBase implements \Application {
    
    public function sendConfirmationEmail() {
        $orderId = $_GET['orderId'];
-       $this->getApi()->getMessageManager()->sendMail("boggibill@gmail.com", "test", "test2", "Test34" . $orderId, "post@getshop.com", "GetShop Booking");
+       
+       $message = "test";
+       $title = "test title";
+       $mainemail = false;
+       if(isset($this->getFactory()->getSettings()->{"mainemailaddress"})) {
+           $mainemail = $this->getFactory()->getSettings()->{"mainemailaddress"}->value;
+       }
+       
+       $this->getApi()->getMessageManager()->sendMail("boggibill@gmail.com", "", $title, $message . $orderId, "post@getshop.com", "Booking");
+       $this->getApi()->getMessageManager()->sendMail($mainemail, "", $title, $message . $orderId, "post@getshop.com", "Booking");
+       
    }
 
    public function getContinuePage() {
@@ -130,8 +140,8 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         //this variable is set from $this->continueToCart();
         if(isset($_GET['orderProcessed'])) {
             if($this->partnerShipChecked() || !$this->hasPaymentAppAdded()) {
-                $this->includefile("confirmation");
                 $this->sendConfirmationEmail();
+//                $this->includefile("confirmation");
             } else {
                 //Send the user to the payment view.
                 $payment = $this->getFactory()->getApplicationPool()->getAllPaymentInstances();

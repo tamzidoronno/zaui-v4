@@ -127,8 +127,8 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         }
         
         echo "<select gsname='available_".$room->id."'>";
-        echo "<option value='true'>". $this->__f("Active") . "</option>";
-        echo "<option value='false' $falseselected>". $this->__f("Inactive") . "</option>";
+        echo "<option value='true'>". $this->__f("Available") . "</option>";
+        echo "<option value='false' $falseselected>". $this->__f("Not available") . "</option>";
         echo "</select>";
         echo "</td>";
         echo "<td><input gsname='roomname_".$room->id."' value='" . $room->roomName . "'></td>";

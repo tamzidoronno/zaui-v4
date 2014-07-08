@@ -83,7 +83,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         
         int count = 0;
         for(Room room : rooms.values()) {
-            if(room.roomType.equals(rtype.id) && room.isAvilable(start, end)) {
+            if(room.roomType != null && room.roomType.equals(rtype.id) && room.isAvilable(start, end)) {
                 count++;
             }
         }
@@ -215,7 +215,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     
     private Room getAvailableRoom(String roomTypeId, Date startDate, Date endDate) {
         for(Room room : rooms.values()) {
-            if(!room.roomType.equals(roomTypeId)) {
+            if(room.roomType == null || !room.roomType.equals(roomTypeId)) {
                 continue;
             }
             if(room.isAvilable(startDate, endDate)) {

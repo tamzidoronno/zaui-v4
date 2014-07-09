@@ -51,6 +51,22 @@ public interface IOrderManager {
     public Order getOrder(String orderId) throws ErrorException;
     
     /**
+     * Got a reference number for the order, fetch it from here.
+     * @param referenceId
+     * @throws ErrorException 
+     */
+    @Administrator
+    public Order getOrderByReference(String referenceId) throws ErrorException;
+    
+    /**
+     * Fetch all orders for a user.
+     * @param userId
+     * @return
+     * @throws ErrorException 
+     */
+    public List<Order> getAllOrdersForUser(String userId) throws ErrorException;
+    
+    /**
      * Update or modify an existing order. 
      * @param order The order to modify
      * @return

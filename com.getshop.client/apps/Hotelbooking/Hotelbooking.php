@@ -126,8 +126,55 @@ class Hotelbooking extends \ApplicationBase implements \Application {
            $mainemail = $this->getFactory()->getSettings()->{"mainemailaddress"}->value;
        }
        
-       $this->getApi()->getMessageManager()->sendMail("boggibill@gmail.com", "", $title, $message . $orderId, "post@getshop.com", "Booking");
-       $this->getApi()->getMessageManager()->sendMail($mainemail, "", $title, $message . $orderId, "post@getshop.com", "Booking");
+       $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+       $address = $order->cart->address;
+       $name = $address->fullName;
+       $reference = $order->reference;
+       echo "Reference: " . $reference;
+       
+       if($this->getServiceType() == "hotel") {
+           $title = $this->__w("Thank you for your booking a room at")." ".$this->getProjectName();
+       } else {
+           $title = $this->__w("Thank you for your booking a storage room at")." ".$this->getProjectName();
+       }
+       
+       $booking = $this->getApi()->getHotelBookingManager()->getReservationByReferenceId($reference);
+       $room = $this->getApi()->getHotelBookingManager()->getRoom($booking->roomIds[0]);
+       $logo = $this->getApi()->getLogoManager()->getLogo();
+       
+       $logoAddress = "http://" . $_SERVER['SERVER_NAME'] . "/displayImage.php?id=" . $logo->LogoId;
+       $body = "<div><img src='$logoAddress'></div><br><br>";
+       $body .= $this->__w("Dear {name}") . "<br>";
+       $body .= $title;
+       $body .= $this->__w("This email is a confirmation that we have reserved a room for you.") . "<br>";
+       $body .= $this->__w("The room has been reserved between {start} to {end}.") . "<br>";
+       $body .= $this->__w("The code for the room is : {code}.") . "<br>";
+       $body .= $this->__w("The reserved room is : {roomName}.") . "<br>";
+       
+       $body = str_replace("{start}", date("d-m-Y", strtotime($booking->startDate)), $body);
+       $body = str_replace("{end}", date("d-m-Y", strtotime($booking->endDate)), $body);
+       $body = str_replace("{roomName}", $room->roomName, $body);
+       $body = str_replace("{code}", $booking->codes[0], $body);
+       $body = str_replace("{name}", $name, $body);
+       
+       $body .= "<hr>";
+       $body .= "<b>" . $this->__w("Contact information related to the booking event") . "</b><br>";
+       
+       $contactData = $booking->contact;
+       
+       foreach($contactData->names as $index => $name) {
+           $body .= $name . "<br>";
+           $body .= $contactData->phones[$index] . "<br>";
+           $body .= "<br>";
+       }
+       $body .= "<b>" . $this->__w("Additional contact information") . "</b><br>";
+       $body .= $address->address . "<br>";
+       $body .= $address->postCode . "<br>";
+       $body .= $address->city . "<br>";
+       
+       
+       $this->getApi()->getMessageManager()->sendMail("boggibill@gmail.com", "", $title, $body, "post@getshop.com", "Booking");
+       $this->getApi()->getMessageManager()->sendMail($mainemail, "", $title, $body, "post@getshop.com", "Booking");
        
    }
 

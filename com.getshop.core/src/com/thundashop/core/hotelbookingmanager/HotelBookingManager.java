@@ -270,4 +270,16 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     public Room getRoom(String id) throws ErrorException {
         return rooms.get(id);
     }
+
+    @Override
+    public BookingReference getReservationByReferenceId(Integer referenceId) throws ErrorException {
+        List<BookingReference> allReservations = getAllReservations();
+        for(BookingReference reference : allReservations) {
+            if(reference.bookingReference == referenceId) {
+                return reference;
+            }
+        }
+        
+        return null;
+    }
 }

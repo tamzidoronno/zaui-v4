@@ -1735,6 +1735,21 @@ class APIHotelBookingManager {
 	}
 
 	/**
+	* Get all references
+	* @return core_hotelbookingmanager_BookingReference
+	* @throws ErrorException
+	*/
+
+	public function getReservationByReferenceId($referenceId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["referenceId"] = json_encode($this->transport->object_unset_nulls($referenceId));
+	     $data["method"] = "getReservationByReferenceId";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->cast(new core_hotelbookingmanager_BookingReference(), $this->transport->sendMessage($data));
+	}
+
+	/**
 	* Add new room to the manager.
 	* @param room
 	* @throws ErrorException
@@ -2543,6 +2558,22 @@ class APIOrderManager {
 	}
 
 	/**
+	* Fetch all orders for a user.
+	* @param userId
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function getAllOrdersForUser($userId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data["method"] = "getAllOrdersForUser";
+	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Fetch a single order based on its id.
 	* @param orderId
 	* @return core_ordermanager_data_Order
@@ -2554,6 +2585,21 @@ class APIOrderManager {
 	     $data['args'] = array();
 	     $data['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
 	     $data["method"] = "getOrder";
+	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->cast(new core_ordermanager_data_Order(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Got a reference number for the order, fetch it from here.
+	* @param referenceId
+	* @throws ErrorException
+	*/
+
+	public function getOrderByReference($referenceId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["referenceId"] = json_encode($this->transport->object_unset_nulls($referenceId));
+	     $data["method"] = "getOrderByReference";
 	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->cast(new core_ordermanager_data_Order(), $this->transport->sendMessage($data));
 	}

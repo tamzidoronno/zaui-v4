@@ -1784,6 +1784,21 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getReservationByReferenceId(self, referenceId):
+    args = collections.OrderedDict()
+    if isinstance(referenceId,GetShopBaseClass): 
+      args["referenceId"]=json.dumps(referenceId.__dict__)
+    else:
+      try:
+        args["referenceId"]=json.dumps(referenceId)
+      except (ValueError, AttributeError):
+        args["referenceId"]=referenceId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getReservationByReferenceId"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getRoom(self, id):
     args = collections.OrderedDict()
     if isinstance(id,GetShopBaseClass): 
@@ -2589,6 +2604,21 @@ class OrderManager(object):
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getAllOrdersForUser(self, userId):
+    args = collections.OrderedDict()
+    if isinstance(userId,GetShopBaseClass): 
+      args["userId"]=json.dumps(userId.__dict__)
+    else:
+      try:
+        args["userId"]=json.dumps(userId)
+      except (ValueError, AttributeError):
+        args["userId"]=userId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getAllOrdersForUser"
+    data.interfaceName = "core.ordermanager.IOrderManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getOrder(self, orderId):
     args = collections.OrderedDict()
     if isinstance(orderId,GetShopBaseClass): 
@@ -2601,6 +2631,21 @@ class OrderManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getOrder"
+    data.interfaceName = "core.ordermanager.IOrderManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getOrderByReference(self, referenceId):
+    args = collections.OrderedDict()
+    if isinstance(referenceId,GetShopBaseClass): 
+      args["referenceId"]=json.dumps(referenceId.__dict__)
+    else:
+      try:
+        args["referenceId"]=json.dumps(referenceId)
+      except (ValueError, AttributeError):
+        args["referenceId"]=referenceId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getOrderByReference"
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 

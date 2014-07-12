@@ -168,6 +168,11 @@ public class ManagerBase {
             Gson sgon = new Gson();
             Setting langsetting = settings.get("languages");
             List<String> langcodes = sgon.fromJson(langsetting.value, ArrayList.class);
+            
+            if (langcodes == null) {
+                return;
+            }
+            
             if(langcodes.size() > 0) {
                 TranslationHelper helper = new TranslationHelper(getSession().language, getMainLanguage());
                 helper.checkFields(object, loading);

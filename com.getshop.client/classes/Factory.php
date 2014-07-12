@@ -311,30 +311,55 @@ class Factory extends FactoryBase {
         }
 
         $navigation = Navigation::getNavigation();
+       
+        $homePageId = $this->getHomePageName();
+        
+        if (!isset($navigation->currentPageId)) {
+            $navigation->currentPageId = $homePageId;
+        }
+
+        $pageId = isset($_POST['data']['getShopPageId']) ? $_POST['data']['getShopPageId'] : $navigation->currentPageId;
+        
+        $javaPage = $this->pageManager->getPage($pageId);
+        if ($javaPage == null) {
+            $javaPage = $this->pageManager->getPage($homePageId);
+        }
+   
+        $this->page = new Page($javaPage); 
+        $this->initApplicationsPool();
+       
+        $javaPage = $this->setPageToHomePageIfNotLoggedInAndRedirectIsSet($javaPage);
+       
+        $this->page->createAllPageAreas($javaPage);
+        $this->javaPage = $javaPage;
+        $this->styleSheet = new StyleSheet();
+    }
+    
+    private function getHomePageName() {
         $homePage = @$this->getStoreConfiguration()->homePage;
         if (!$homePage) {
             $homePage = "home";
         }
-        
-        if (!isset($navigation->currentPageId)) {
-            $navigation->currentPageId = $homePage;
-        }
-
-        $pageId = isset($_POST['data']['getShopPageId']) ? $_POST['data']['getShopPageId'] : $navigation->currentPageId;
-        $page = $this->pageManager->getPage($pageId);
-        if ($page == null) {
-            $page = $this->pageManager->getPage($homePage);
-        }
-        $this->page = new Page($page); 
-        $this->initApplicationsPool();
-        $this->page->createAllPageAreas($page);
-        $this->javaPage = $page;
-        $this->styleSheet = new StyleSheet();
+        return $homePage;
     }
 
-    public function initApplicationsPool() {
-
-        $applications = $this->pageManager->getApplicationsForPage($this->page->id);
+    private function setPageToHomePageIfNotLoggedInAndRedirectIsSet($originalBackendPage) {
+        if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() == null
+                && isset($this->getSettings()->redirecttohomepage) 
+                && $this->getSettings()->redirecttohomepage->value == "true"
+                ) {
+            $homePageId = $this->getHomePageName();
+            $backendPage = $this->pageManager->getPage($homePageId); 
+            $this->page = new Page($backendPage);
+            $this->initApplicationsPool();
+            return $backendPage;
+        } 
+        
+        return $originalBackendPage;
+    }
+    
+    public function initApplicationsPool() { 
+       $applications = $this->pageManager->getApplicationsForPage($this->page->id);
         $this->applicationPool->setApplicationInstances($applications);
     }
 

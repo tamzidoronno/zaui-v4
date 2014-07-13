@@ -38,21 +38,14 @@ class SedoxUserPanel extends \ApplicationBase implements \Application {
     public function getLatestCreditHistory() {
         $creditAccount = $this->getSedoxUserAccount()->creditAccount;
         $history = $creditAccount->history;
-        if (count($history) > 0) {
-            $reverstedArray = array_reverse($history);
-            $fourLatestCreditHistory = array_slice($reverstedArray, 0, 10);
-            return $fourLatestCreditHistory;
-        } else {
-            return null;
-        }
+        return $history;
     }
     
-    public function getLatestOrder() {
+    public function getOrders() {
         $orders = $this->getSedoxUserAccount()->orders;
         if (count($orders) > 0) {
             $ordersReversed = array_reverse($orders);
-            $fourLatestCreditHistory = array_slice($ordersReversed, 0, 10);
-            return $fourLatestCreditHistory;
+            return $ordersReversed;
         } else {
             return null;
         }
@@ -70,7 +63,7 @@ class SedoxUserPanel extends \ApplicationBase implements \Application {
         if (count($productsConnected) == 0) {
             return null;
         }
-        return array_slice(array_reverse($productsConnected), 0, 10);
+        return $productsConnected;
     }
 
     public function getCreditAccountBalance() {
@@ -81,17 +74,106 @@ class SedoxUserPanel extends \ApplicationBase implements \Application {
         return count($this->getApi()->getSedoxProductManager()->getProductsFirstUploadedByCurrentUser());
     }
 
-    public function getLatestDownloadedFiles() {
-        $orders = $this->getLatestOrder();
-        $retProductes = [];
-        foreach ($orders as $order) {
-            $retProductes[] = $this->getApi()->getSedoxProductManager()->getProductById($order->productId);
-            
+    
+    public function printPaging($list, $currentPage) {
+        echo "<div class='paging'>";
+        
+            if ($list == null) {
+                echo $pages = 1;
+            } else {
+                $pages = count($list)/10;
+                $pages = ceil($pages);
+            }
+
+            $prev = $currentPage > 1 ? "<i class='fa fa-arrow-left prev'></i>&nbsp;&nbsp;" : "";
+            $next = $currentPage < $pages ? "&nbsp;&nbsp;<i class='fa fa-arrow-right next'></i> " : "";
+            echo " $prev $currentPage / $pages $next";
+        
+        echo '</div>';
+    }
+    
+    private function getSessionVariable($name) {
+        if (!isset($_SESSION[$name])) {
+            $_SESSION[$name] = 1;
         }
-//        echo "<pre>";
-//        print_r($orders);
-//        echo "</pre>";
-        return $retProductes;
+        
+        return $_SESSION[$name];
+    }
+    public function getCurrentFileHistoryPage() {
+        return $this->getSessionVariable('sedox_user_panel_current_session');
+    }
+    
+    public function nextFileHistory() {
+        $currentPage = $this->getCurrentFileHistoryPage();
+        $currentPage++;
+        $_SESSION['sedox_user_panel_current_session'] = $currentPage;
+    }
+    
+    public function prevFileHistory() {
+        $currentPage = $this->getCurrentFileHistoryPage();
+        $currentPage--;
+        if ($currentPage < 1) {
+            $currentPage = 1;
+        }
+        $_SESSION['sedox_user_panel_current_session'] = $currentPage;
+    }
+    
+   
+    public function nextTransactionHistory() {
+        $currentPage = $this->getCurrentTransactionHistoryPage();
+        $currentPage++;
+        $_SESSION['sedox_user_panel_filehistory_session'] = $currentPage;
+    }
+    
+    public function prevTransactionHistory() {
+        $currentPage = $this->getCurrentTransactionHistoryPage();
+        $currentPage--;
+        if ($currentPage < 1) {
+            $currentPage = 1;
+        }
+        $_SESSION['sedox_user_panel_filehistory_session'] = $currentPage;
+    }
+
+    public function getCurrentTransactionHistoryPage() {
+        return $this->getSessionVariable("sedox_user_panel_filehistory_session");
+    }
+    
+    public function getCurrentPageForDownloadedFiles() {
+        return $this->getSessionVariable("sedox_user_panel_page_filedownloaded");
+    }
+    
+     public function nextDownloadHistory() {
+        $currentPage = $this->getCurrentPageForDownloadedFiles();
+        $currentPage++;
+        $_SESSION['sedox_user_panel_page_filedownloaded'] = $currentPage;
+    }
+    
+    public function prevDownloadHistory() {
+        $currentPage = $this->getCurrentPageForDownloadedFiles();
+        $currentPage--;
+        if ($currentPage < 1) {
+            $currentPage = 1;
+        }
+        $_SESSION['sedox_user_panel_page_filedownloaded'] = $currentPage;
+    }
+    
+    public function getSlaves() {
+        $masterId = $this->getSedoxUserAccount()->id;
+        return $this->getApi()->getSedoxProductManager()->getSlaves($masterId);
+    }
+    
+    public function getSlave() {
+        $slaveId = $_POST['data']['userId'];
+        $slaves = $this->getSlaves();
+        foreach ($slaves as $slave) {
+            if ($slave->id == $slaveId) {
+                return $slave;
+            }
+        }
+    }
+    
+    public function showSlaveHistory() {
+        $this->includefile("slaveCreditHistory");
     }
 }
 

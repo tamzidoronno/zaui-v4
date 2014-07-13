@@ -24,5 +24,8 @@ class core_sedox_SedoxBinaryFile {
 	/** @var String */
 	public $additionalInformation;
 
+	/** @var String */
+	public $cmdFileType;
+
 }
 ?>

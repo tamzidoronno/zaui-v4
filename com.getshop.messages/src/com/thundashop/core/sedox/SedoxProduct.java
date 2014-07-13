@@ -30,7 +30,7 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
     
     public String tool;
     public String status;
-    public boolean saleAble;
+    public boolean saleAble = true;
     public String firstUploadedByUserId;
     public String originalChecksum;
     public String gearType;
@@ -38,6 +38,7 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
     public String comment;
     
     public boolean started;
+    public boolean isCmdEncryptedProduct=false;
     public String channel;
 
     @Override

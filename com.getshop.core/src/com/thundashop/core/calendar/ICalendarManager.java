@@ -93,7 +93,7 @@ public interface ICalendarManager {
      * @param username
      * @throws ErrorException 
      */
-    public void addUserToEvent(String userId, String eventId, String password, String username) throws ErrorException;
+//    public void addUserToEvent(String userId, String eventId, String password, String username) throws ErrorException;
     
     /**
      * Add a given user to a given event.

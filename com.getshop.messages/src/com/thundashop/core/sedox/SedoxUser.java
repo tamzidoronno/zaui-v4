@@ -22,9 +22,11 @@ public class SedoxUser extends DataCommon {
     public String magentoId;
     public List<SedoxCreditOrder> creditOrders = new ArrayList<>();
     boolean isActiveDelevoper = false;
+    public String masterUserId;
+    public double slaveIncome = 0;
 
-    public void addCreditOrderUpdate(SedoxCreditOrder sedoxCreditOrder) {
-        creditAccount.updateCredit(sedoxCreditOrder);
+    public void addCreditOrderUpdate(SedoxCreditOrder sedoxCreditOrder, String description) {
+        creditAccount.updateCredit(sedoxCreditOrder, description);
         creditOrders.add(sedoxCreditOrder);
     }
 }

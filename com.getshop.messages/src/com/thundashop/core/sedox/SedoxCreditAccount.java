@@ -30,10 +30,16 @@ public class SedoxCreditAccount implements Serializable {
         return balance;
     }
 
-    void updateCredit(SedoxCreditOrder sedoxCreditOrder) {
+    void updateCredit(SedoxCreditOrder sedoxCreditOrder, String description) {
         SedoxCreditHistory historyEntry = new SedoxCreditHistory();
         historyEntry.amount = sedoxCreditOrder.amount;
-        historyEntry.description = "Added credit for order: " + sedoxCreditOrder.magentoOrderId + ", amount " + historyEntry.amount + " credits";
+        
+        if (description != null) {
+            historyEntry.description = description;
+        } else {
+            historyEntry.description = "Added credit for order: " + sedoxCreditOrder.magentoOrderId + ", amount " + historyEntry.amount + " credits";
+        }
+        
         historyEntry.transactionReference = sedoxCreditOrder.magentoOrderId;
         balance = balance + historyEntry.amount;
         history.add(historyEntry);

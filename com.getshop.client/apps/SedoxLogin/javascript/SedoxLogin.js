@@ -2,6 +2,7 @@ app.SedoxLogin = {
     init: function() {
         $(document).on('click', '.SedoxLogin .logout', app.SedoxLogin.logout)
         $(document).on('click', '.SedoxLogin .sedox_login', app.SedoxLogin.login)
+        $(document).on('change', '.SedoxLogin #password', app.SedoxLogin.login)
     },
     login: function() {
         var data = {

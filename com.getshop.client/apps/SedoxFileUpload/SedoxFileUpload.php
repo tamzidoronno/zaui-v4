@@ -49,7 +49,8 @@ class SedoxFileUpload extends \ApplicationBase implements \Application {
         $sedoxProduct->gearType = isset($_POST['automaticgear']) && $_POST['automaticgear'] == "on" ? "auto" : "man";
         $sedoxProduct->useCreditAccount = isset($_POST['usecredit']) && $_POST['usecredit'] == "on" ? true : false;
         
-        $this->getApi()->getSedoxProductManager()->createSedoxProduct($sedoxProduct, $filecontent, $filename);
+        $slave = isset( $_POST['partnerselect']) ? $_POST['partnerselect'] : null;
+        $this->getApi()->getSedoxProductManager()->createSedoxProduct($sedoxProduct, $filecontent, $filename, $slave);
         $_SESSION['fileuploaded'] = true;
     }
     
@@ -72,6 +73,11 @@ class SedoxFileUpload extends \ApplicationBase implements \Application {
             $this->saveCarDetails();
             $this->includefile("finished");
         }
+    }
+    
+    public function getSlaves() {
+        $userId = $this->getUser()->id;
+        return $this->getApi()->getSedoxProductManager()->getSlaves($userId);
     }
 }
 ?>

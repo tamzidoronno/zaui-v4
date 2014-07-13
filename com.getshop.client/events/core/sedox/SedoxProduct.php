@@ -64,6 +64,9 @@ class core_sedox_SedoxProduct extends core_common_DataCommon  {
 	public $started;
 
 	/** @var String */
+	public $isCmdEncryptedProduct;
+
+	/** @var String */
 	public $channel;
 
 }

@@ -105,6 +105,7 @@ class SedoxAdmin extends \ApplicationBase implements \Application {
     
     public function saveUserInfo() {
         $this->getApi()->getSedoxProductManager()->toggleAllowNegativeCredit($_POST['data']['userId'], $_POST['data']['allowNegativeCredit']);
+        $this->getApi()->getSedoxProductManager()->toggleAllowWindowsApp($_POST['data']['userId'], $_POST['data']['allowWindowsApplication']);
     }
     
     public function updateCredit() {
@@ -129,6 +130,39 @@ class SedoxAdmin extends \ApplicationBase implements \Application {
             $active = in_array($devId, $activeDevelopers);
             $sedoxProductManager->changeDeveloperStatus($devId, $active);
         }
+    }
+    
+    public function addCreditToSlave() {
+        $this->getApi()->getSedoxProductManager()->addCreditToSlave($_POST['data']['slave'], $_POST['data']['amount']);
+    }
+    
+    public function searchForSlaves() {
+        $results = $this->getApi()->getSedoxProductManager()->searchForUsers($_POST['data']['text']);
+        if (!count($results)) {
+            echo "No result found";
+            return;
+        }
+        foreach ($results as $user) {
+            $name = $user->fullName;
+            $email = $user->emailAddress;
+            $id = $user->id;
+            $add = "<div userid='$id' class='gs_button addusertomaster'> Add </div>";
+            echo "<div  style='border-bottom: solid 1px #555; padding-bottom: 5px; margin-bottom: 5px;'>$add $name - $email</div>";
+        }
+    }
+    
+    public function addSlaveToMaster() {
+        $this->getApi()->getSedoxProductManager()->addSlaveToUser($_POST['data']['master'], $_POST['data']['slave']);
+    }
+    
+    public function removeSlaveToMaster() {
+        $this->getApi()->getSedoxProductManager()->addSlaveToUser(null, $_POST['data']['slave']);
+    }
+    
+    public function toggleSlave() {
+        $userId = $_POST['data']['userId'];
+        $toggle = $_POST['data']['isPassiveSlave'];
+        $this->getApi()->getSedoxProductManager()->togglePassiveSlaveMode($userId, $toggle);
     }
 }
 

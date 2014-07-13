@@ -32,6 +32,7 @@ public class SedoxBinaryFile implements Serializable {
     public String orgFilename;
     public String extraInformation;
     public String additionalInformation;
+    public String cmdFileType;
 
     void updateParametersFromFileName(String fileName) {
         String[] productAttributes = fileName.split(";");
@@ -64,6 +65,10 @@ public class SedoxBinaryFile implements Serializable {
         
         if (fileType.toLowerCase().equals("various")) {
             return 160;
+        }
+        
+        if (fileType.toLowerCase().equals("cmdencrypted")) {
+            return 0;
         }
         
         System.out.println("Warning, file price is not registered to this file");

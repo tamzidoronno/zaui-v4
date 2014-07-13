@@ -31,6 +31,28 @@
                     <textarea name='comments' id="comments" placeholder='Comment! Do you have anything else to share with us?'></textarea>
                 </div>
             </div>
+            
+            <?
+            $slaves = $this->getSlaves();
+            if (count($slaves)) {
+            ?>
+                <div class='line'>
+                    <div class='col col1'>
+                        Are you uploading the file for a partner?
+                    </div>
+                    <div class='col col2'>
+                        <select id="partnerselect" name="partnerselect">
+                            <option value=''>Myself</option>;
+                        <? 
+                            foreach ($slaves as $slave) {
+                                $user = $this->getApi()->getUserManager()->getUserById($slave->id);
+                                echo "<option value='$user->id'>$user->fullName</option>";
+                             } ?>
+                        </select>
+                    </div>
+                </div>
+            <? } ?>
+            
             <div class='line'>
                 <div class='col col1'>
                     <div onclick="$('#uploadfileform').submit();" class='sedox_button'><i class='fa fa-arrow-circle-right'></i>&nbsp; Next</div>

@@ -49,7 +49,7 @@ public interface ISedoxProductManager  {
     public SedoxProduct getProductById(String id) throws ErrorException;
     
     @Customer
-    public void createSedoxProduct(SedoxProduct sedoxProduct, String base64encodedOriginalFile, String originalFileName) throws ErrorException;
+    public void createSedoxProduct(SedoxProduct sedoxProduct, String base64encodedOriginalFile, String originalFileName, String forSlaveId) throws ErrorException;
     
     @Customer
     public SedoxProduct getSedoxProductByMd5Sum(String md5sum) throws ErrorException;
@@ -106,5 +106,18 @@ public interface ISedoxProductManager  {
     
     @Administrator
     public void toggleAllowNegativeCredit(String userId, boolean allow) throws ErrorException;
+
+    @Administrator
+    public void toggleAllowWindowsApp(String userId, boolean allow) throws ErrorException;
     
+    @Administrator
+    public void addSlaveToUser(String masterUserId, String slaveUserId) throws ErrorException;
+    
+    @Administrator
+    public void addCreditToSlave(String slaveId, double amount) throws ErrorException;
+    
+    public List<SedoxUser> getSlaves(String masterUserId);
+    
+    @Administrator
+    public void togglePassiveSlaveMode(String userId, boolean toggle) throws ErrorException;
 }

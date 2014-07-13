@@ -1,6 +1,10 @@
 .SedoxUserPanel {
     color: #666;
 }
+.informationbox.SedoxUserPanel {
+    color: #FFF;
+}
+
 .SedoxUserPanel .sedox_box {
     position: relative;
     margin-bottom: 10px;
@@ -21,10 +25,20 @@
     border-left: solid 1px;
 }
 
+.SedoxUserPanel .sedox_box .paging {
+    text-align: center;
+    padding: 2px;
+    padding-bottom: 10px;
+}
+
+.SedoxUserPanel .sedox_box .paging .prev,
+.SedoxUserPanel .sedox_box .paging .next {
+    cursor: pointer;
+}
+
 .SedoxUserPanel .sedox_box .icon,
 .SedoxUserPanel .sedox_box .details {
     vertical-align: top;
-    padding-bottom: 70px;
 }
 
 .SedoxUserPanel .sedox_box .details td {
@@ -102,6 +116,8 @@
     font-weight: normal;
 }
 
+
+
 .SedoxUserPanel .row.even {
     background-color: #d9d9d9;
 }
@@ -122,3 +138,30 @@
 .SedoxUserPanel .credithistory {
     font-size: 14px;
 }
+
+.SedoxUserPanel .show_slave_credit_history {
+    cursor: pointer;
+    color: blue;
+}
+
+.SedoxUserPanel .slave_credit_history {
+    padding: 20px;
+    font-size: 15px;
+}
+
+.informationbox.SedoxUserPanel .row {
+    padding-bottom: 3px;
+    padding-top: 8px;
+    border-bottom: solid 1px #555;
+ 
+}
+.informationbox.SedoxUserPanel .row .col {
+    color: #FFF;
+    
+    margin-bottom: 5px;
+}
+
+.informationbox.SedoxUserPanel .row .col1 { width: 186px; }
+.informationbox.SedoxUserPanel .row .col2 { width: 90px; }
+.informationbox.SedoxUserPanel .row .col3 { width: 570px; }
+.informationbox.SedoxUserPanel .row .col4 { width: 50px; }

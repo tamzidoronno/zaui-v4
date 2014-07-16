@@ -1,6 +1,10 @@
 <?php
-function getTuningfile($product) {
+function getTuningfile($product, $orgFileName=false) {
     foreach ($product->binaryFiles as $binFile) {
+        if ($orgFileName && $binFile->fileType == "Original") {
+            return $binFile->orgFilename;
+        }
+        
         if ($binFile->fileType != "Original") {
             return $binFile->id;
         }
@@ -12,8 +16,8 @@ function getTuningfile($product) {
 chdir("../");
 include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
-$orders = $factory->getApi()->getSedoxProductManager()->getProductsFirstUploadedByCurrentUser();
 
+$orders = $factory->getApi()->getSedoxProductManager()->getProductsFirstUploadedByCurrentUser();
 $orders = array_splice($orders , 0, 10);
 
 $files = array();
@@ -22,12 +26,12 @@ foreach ($orders as $product) {
     /* @var $product SedoxProduct */
 	$data = array();
     
-	    
 	$data['Car'] = $product->brand;
 	$data['Model'] = $product->model;
 	$data['EngineSize'] = $product->engineSize;
 	$data['HorsePower'] = $product->power;
 	$data['Year'] = $product->year;
+    $data['originalFileName'] = getTuningfile($product, true);
 	$data['tuningfileid'] = getTuningfile($product);
 	$data['ProductId'] = (int)$product->id;
 	$data['dateCreated'] = $product->rowCreatedDate;

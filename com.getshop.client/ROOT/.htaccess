@@ -9,6 +9,7 @@ RewriteRule ^/?filedownload.php$ - [L]
 RewriteRule ^(.*).html$ index.php?rewrite=$1 [L,NE]
 
 RewriteRule ^(documentation)($|/) - [L]
+RewriteRule ^(external)($|/) - [L]
 RewriteRule ^(scripts)($|/) - [L]
 
 RewriteRule ^sitemap.xml$ sitemap.php [L]

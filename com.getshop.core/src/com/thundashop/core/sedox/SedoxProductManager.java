@@ -781,7 +781,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     
     private String getMailContent(String extraText, String productId) {
         String content = "Your file is ready! :)";
-        if (!extraText.equals("")) {
+        if (extraText != null && !extraText.equals("")) {
             content += "<br>";
             content += "<br> Please note:";
             content += "<br> " + extraText.replace("\n", "<br/>");

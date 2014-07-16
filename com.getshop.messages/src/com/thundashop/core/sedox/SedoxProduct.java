@@ -24,6 +24,7 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
     public String year;
     public String power;
     public String ecuType;
+    public String build;
     public String ecuBrand;
     public String softwareNumber; 
     public int softwareSize;
@@ -56,18 +57,18 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
         String[] productAttributes = fileName.split(";");
         
         if (productAttributes.length != 16) {
-            System.out.println("WARNING! Cant update attributes, the filename is not the correct parameters. Check winols settings");
             return;
         }
         
-        brand = productAttributes[0];
-        model = productAttributes[1];
-        engineSize = productAttributes[3];
-        year = productAttributes[5];
-        power = productAttributes[6];
-        ecuBrand = productAttributes[7];
-        ecuType = productAttributes[8];
-        softwareNumber = productAttributes[10];
+        brand = productAttributes[0]; // %Vehicle.Producer%; (bmw / audi)
+        model = productAttributes[1]; // %Vehicle.Series% (e90 / passat etc)
+        engineSize = productAttributes[3]; // %Vehicle.Model% 
+        build = productAttributes[2]; // %Vehicle.Build%;
+        year = productAttributes[5]; // %Vehicle.Modelyear%
+        power = productAttributes[6]; // %Engine.OutputPS%
+        ecuBrand = productAttributes[7]; // %ECU.Producer%
+        ecuType = productAttributes[8]; // %ECU.Build% 
+        softwareNumber = productAttributes[10]; // %ECU.ECUStg%;
     }
 
     public SedoxBinaryFile getFileById(int fileId) {

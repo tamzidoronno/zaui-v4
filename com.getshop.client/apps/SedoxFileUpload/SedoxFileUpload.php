@@ -38,20 +38,26 @@ class SedoxFileUpload extends \ApplicationBase implements \Application {
         $filename = $_FILES['originalfile']['name'];
         $filecontent = base64_encode($binaryFileRead);
         
-        $sedoxProduct = new \core_sedox_SedoxProduct();
-        $sedoxProduct->brand = $_POST['brand'];
-        $sedoxProduct->model = $_POST['model'];
-        $sedoxProduct->engineSize = $_POST['enginesize'];
-        $sedoxProduct->power = $_POST['power'];
-        $sedoxProduct->year = $_POST['year'];
-        $sedoxProduct->tool = $_POST['tool'];
-        $sedoxProduct->comment = $_POST['comments'];
-        $sedoxProduct->gearType = isset($_POST['automaticgear']) && $_POST['automaticgear'] == "on" ? "auto" : "man";
-        $sedoxProduct->useCreditAccount = isset($_POST['usecredit']) && $_POST['usecredit'] == "on" ? true : false;
-        
         $slave = isset( $_POST['partnerselect']) ? $_POST['partnerselect'] : null;
-        $this->getApi()->getSedoxProductManager()->createSedoxProduct($sedoxProduct, $filecontent, $filename, $slave);
+        $useCredit = isset($_POST['usecredit']) && $_POST['usecredit'] == "on" ? true : false;
+        $geartype = isset($_POST['automaticgear']) && $_POST['automaticgear'] == "on" ? "auto" : "man";
+        $this->saveFileContent($_POST['brand'], $_POST['model'], $_POST['enginesize'], $_POST['power'], $_POST['year'], $_POST['tool'], $_POST['comments'], $geartype, $useCredit, $slave, $filename, $filecontent);
         $_SESSION['fileuploaded'] = true;
+    }
+    
+    public function saveFileContent($brand, $model, $engineSize, $power, $year, $tool, $comment, $geartype, $useCredit, $slave, $filename, $filecontent) {
+        $sedoxProduct = new \core_sedox_SedoxProduct();
+        $sedoxProduct->brand = $brand;
+        $sedoxProduct->model = $model;
+        $sedoxProduct->engineSize = $engineSize;
+        $sedoxProduct->power = $power;
+        $sedoxProduct->year = $year;
+        $sedoxProduct->tool = $tool;
+        $sedoxProduct->comment = $comment;
+        $sedoxProduct->gearType = $geartype;
+        $sedoxProduct->useCreditAccount = $useCredit;
+        
+        $this->getApi()->getSedoxProductManager()->createSedoxProduct($sedoxProduct, $filecontent, $filename, $slave);    
     }
     
     public function sendSpecialRequest() {

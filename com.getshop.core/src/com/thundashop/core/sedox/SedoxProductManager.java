@@ -109,28 +109,41 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             throw new ErrorException(26);
         }
         
-        if (option != null && option.equals("magento")) {
-            updateAllUsers();
-            return;
+        if (option == null) {
+            option = "";
         }
 
-        deleteAllProducts();
-        deleteAllUsers();
+        if (option.equals("products") || option.equals("all")) {
+            deleteAllProducts();
+        }
+        
+        if (option.equals("users") || option.equals("all")) {
+            deleteAllUsers();
+        }
 
         try {
             SedoxMysqlImporter productImporter = new SedoxMysqlImporter();
-            for (SedoxProduct product : productImporter.getProducts()) {
-                product.storeId = this.storeId;
-                databaseSaver.saveObject(product, credentials);
-                products.add(product);
+            if (option.equals("products") || option.equals("all")) {
+                for (SedoxProduct product : productImporter.getProducts()) {
+                    product.storeId = this.storeId;
+                    databaseSaver.saveObject(product, credentials);
+                    products.add(product);
+                }
             }
 
-            List<SedoxUser> accounts = productImporter.getCreditAccounts();
-            for (SedoxUser user : accounts) {
-                saveUser(user);
+            if (option.equals("users") || option.equals("all")) {
+                List<SedoxUser> accounts = productImporter.getCreditAccounts();
+                for (SedoxUser user : accounts) {
+                    saveUser(user);
+                }
             }
         } catch (ErrorException | SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
+        }
+        
+        if (option.equals("magento") || option.equals("all")) {
+            updateAllUsers();
+            return;
         }
 
         System.out.println("Sync done");

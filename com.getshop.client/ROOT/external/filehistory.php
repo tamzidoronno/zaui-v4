@@ -43,7 +43,4 @@ foreach ($orders as $product) {
 }
 
 echo json_encode($files);
-
-
 ?>
-

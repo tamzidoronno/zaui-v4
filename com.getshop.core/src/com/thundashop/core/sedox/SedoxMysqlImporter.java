@@ -177,6 +177,20 @@ public class SedoxMysqlImporter {
             i++;
         }
         
+        Statement statement2 = connect.createStatement();
+        ResultSet slavesSet = statement2.executeQuery("select * from CustomerMaster ");
+        while(slavesSet.next()) {
+            int customerId = slavesSet.getInt("customerId");
+            int masterId = slavesSet.getInt("masterId");
+            int value = slavesSet.getInt("value");
+            for (SedoxUser user : accounts) {
+                if (user.magentoId.equals(""+customerId)) {
+                    user.masterUserId = ""+masterId;
+                    user.slaveIncome = value;
+                }
+            }
+        }
+        
         return accounts;
     }   
 }

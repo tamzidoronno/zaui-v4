@@ -2864,6 +2864,35 @@ class PageManager(object):
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
+  def addApplicationToRow(self, pageId, rowId, applicationSettingId):
+    args = collections.OrderedDict()
+    if isinstance(pageId,GetShopBaseClass): 
+      args["pageId"]=json.dumps(pageId.__dict__)
+    else:
+      try:
+        args["pageId"]=json.dumps(pageId)
+      except (ValueError, AttributeError):
+        args["pageId"]=pageId
+    if isinstance(rowId,GetShopBaseClass): 
+      args["rowId"]=json.dumps(rowId.__dict__)
+    else:
+      try:
+        args["rowId"]=json.dumps(rowId)
+      except (ValueError, AttributeError):
+        args["rowId"]=rowId
+    if isinstance(applicationSettingId,GetShopBaseClass): 
+      args["applicationSettingId"]=json.dumps(applicationSettingId.__dict__)
+    else:
+      try:
+        args["applicationSettingId"]=json.dumps(applicationSettingId)
+      except (ValueError, AttributeError):
+        args["applicationSettingId"]=applicationSettingId
+    data = EmptyClass()
+    data.args = args
+    data.method = "addApplicationToRow"
+    data.interfaceName = "core.pagemanager.IPageManager"
+    return self.communicationHelper.sendMessage(data)
+
   def addExistingApplicationToPageArea(self, pageId, appId, area):
     args = collections.OrderedDict()
     if isinstance(pageId,GetShopBaseClass): 
@@ -2971,6 +3000,21 @@ class PageManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "clearPageArea"
+    data.interfaceName = "core.pagemanager.IPageManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def createNewRow(self, pageId):
+    args = collections.OrderedDict()
+    if isinstance(pageId,GetShopBaseClass): 
+      args["pageId"]=json.dumps(pageId.__dict__)
+    else:
+      try:
+        args["pageId"]=json.dumps(pageId)
+      except (ValueError, AttributeError):
+        args["pageId"]=pageId
+    data = EmptyClass()
+    data.args = args
+    data.method = "createNewRow"
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 

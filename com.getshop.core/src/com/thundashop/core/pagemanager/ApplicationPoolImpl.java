@@ -315,6 +315,10 @@ public class ApplicationPoolImpl {
         return apps;
     }
     
+    public AppConfiguration getApplication(String appInstanceId) throws ErrorException {
+        return applicationInstances.get(appInstanceId);
+    }
+    
     public List<AppConfiguration> getApplications(String appSettingsId) throws ErrorException {
         List<AppConfiguration> retApps = new ArrayList();
 

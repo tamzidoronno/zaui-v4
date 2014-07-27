@@ -15,6 +15,7 @@ import com.thundashop.core.listmanager.data.Entry;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.Page.PageType;
 import com.thundashop.core.pagemanager.data.PageArea;
+import com.thundashop.core.pagemanager.data.RowLayout;
 import com.thundashop.core.usermanager.data.User;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -89,6 +90,7 @@ public class PagePoolImpl {
         }
         
         Page finalized = finalizePage(page);
+        
         return finalized;
     }
 
@@ -107,6 +109,21 @@ public class PagePoolImpl {
         return app;
     }
 
+    AppConfiguration addApplicationToRow(String pageId, String rowId, String applicationSettingId) throws ErrorException {
+        AppConfiguration app = applicationPool.createNewApplication(applicationSettingId);
+        Page page = get(pageId);
+        for(RowLayout row : page.layout.rows) {
+            if(row.rowId.equals(rowId)) {
+                PageArea area = row.createApplicationArea();
+                area.applicationsList.add(app.id);
+                savePage(page);
+            }
+        }    
+        return app;
+    }
+
+    
+    
     public Page removeApplication(String instanceId) throws ErrorException {
         for (Page page : pages.values()) {
             Page pageres = removeApplicationFromPage(page, instanceId);
@@ -299,12 +316,16 @@ public class PagePoolImpl {
             page.parent = pages.get(page.parent.id);
         }
         page.clear();
+        
+        Page homePage = pages.get("home");
+        page.layout.header = homePage.layout.header;
+        page.layout.footer = homePage.layout.footer;
+        
         addInheritatedApplications(page, page.parent);
         addStickedApplications(page);
         boolean onlyExtraApplications = shouldOnlyContainExtraApplications(page);
         Map<String, AppConfiguration> applications = applicationPool.getApplications(page.getApplicationIds());
         page.populateApplications(applications, onlyExtraApplications);
-        page.sortApplications();
         page.finalizePageLayoutRows();
         if(page.needSaving) {
             savePage(page);
@@ -313,7 +334,7 @@ public class PagePoolImpl {
         return page;
     }
 
-    private void addInheritatedApplications(Page currentPage, Page page) {
+    private void addInheritatedApplications(Page currentPage, Page page) throws ErrorException {
         if (page == null) {
             return;
         }
@@ -354,7 +375,7 @@ public class PagePoolImpl {
         }
     }
 
-    private PageArea getPageArea(AppConfiguration application) {
+    private PageArea getPageArea(AppConfiguration application) throws ErrorException {
         for (Page page : pages.values()) {
             for (String pageAreaKey : page.getAllPageAreas()) {
                 PageArea pageArea = page.getPageArea(pageAreaKey);
@@ -416,14 +437,11 @@ public class PagePoolImpl {
         pages.put(page.id, page);
     }
 
-    boolean applicationExistsInArea(AppConfiguration appConfig, String pageAreaCompare) {
+    boolean applicationExistsInArea(AppConfiguration appConfig, String pageAreaCompare) throws ErrorException {
         PageArea pageArea = getPageArea(appConfig);
         if (pageArea != null && pageArea.type.equals(pageAreaCompare)) {
             return true;
         }
         return false;
     }
-
-    
-
 }

@@ -13,6 +13,7 @@ import com.mongodb.Mongo;
 import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.storemanager.data.Store;
@@ -138,8 +139,8 @@ public class UpgradeBase {
         m.close();
     }
 
-    public HashMap<String, Page> getAllPages() throws UnknownHostException {
-        HashMap<String, Page> retval = new HashMap();
+    public HashMap<String, HashMap<String, Page>> getAllPages() throws UnknownHostException {
+        HashMap<String, HashMap<String, Page>> retval = new HashMap();
         Mongo m = new Mongo("localhost", 27017);
         DB db = m.getDB("PageManager");
 
@@ -155,7 +156,10 @@ public class UpgradeBase {
                 DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, document);
                 if (dataCommon instanceof Page) {
                     Page page = (Page) dataCommon;
-                    retval.put(page.id, page);
+                    if(!retval.containsKey(colection)) {
+                        retval.put(colection, new HashMap());
+                    }
+                    retval.get(colection).put(page.id, page);
                 }
             }
         }
@@ -188,7 +192,7 @@ public class UpgradeBase {
         return retval;
     }
 
-    public void addApplicationToPage(Page page, String area, String appId) {
+    public void addApplicationToPage(Page page, String area, String appId) throws ErrorException {
         page.getPageArea(area).applicationsList.add(appId);
     }
 

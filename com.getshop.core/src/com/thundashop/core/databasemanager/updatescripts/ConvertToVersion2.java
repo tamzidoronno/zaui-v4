@@ -8,12 +8,14 @@ import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageArea;
 import com.thundashop.core.productmanager.data.Product;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 public class ConvertToVersion2 {
@@ -21,13 +23,13 @@ public class ConvertToVersion2 {
     public static HashMap<String, Product> allProducts = new HashMap();
     public static HashMap<String, AppConfiguration> appConfig = new HashMap();
 
-    public static void main(String[] args) throws UnknownHostException {
+    public static void main(String[] args) throws UnknownHostException, MongoException, ErrorException {
         LoadProducts();
         LoadAppConfig();
         MoveApplications();
     }
 
-    private static void MoveApplications() throws MongoException, UnknownHostException {
+    private static void MoveApplications() throws MongoException, UnknownHostException, ErrorException {
         Mongo m = new Mongo("localhost", 27017);
         DB db = m.getDB("PageManager");
 
@@ -47,7 +49,7 @@ public class ConvertToVersion2 {
                     page.moveApplicationToArea("left", "left_1");
                     page.moveApplicationToArea("right", "right_1");
                     
-                    Set<String> areas = page.getAllPageAreas();
+                    List<String> areas = page.getAllPageAreas();
                     for (String area : areas) {
                         System.out.println("AREA: " + area);
                         PageArea pagearea = page.getPageArea(area);

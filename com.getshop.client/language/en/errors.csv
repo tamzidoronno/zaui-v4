@@ -128,6 +128,7 @@
 "1025","Booking reference does not exists."
 "1026","Failed to create zipfile."
 "1027","Not enough credit."
+"1028","Page area does not exists"
 
 "1000001","The name attribute is invalid",
 "1000002","The entry you are trying to fecth does not exists.",

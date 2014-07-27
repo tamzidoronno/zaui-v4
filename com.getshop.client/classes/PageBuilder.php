@@ -743,15 +743,10 @@ class PageBuilder {
         $cellcount = 1;
         $area = "";
         foreach($config as $row) {
+            $this->siteBuilder->setRowSize(sizeof($row));
+            $area = $this->factory->getApi()->getPageManager()->createNewRow($this->page->id);
             foreach($row as $cell) {
-                $this->siteBuilder->setRowSize(sizeof($row));
-                if(sizeof($row) == 1) {
-                    $area = "main_" . $rowcount;
-                    $rowcount++;
-                } else {
-                    $area = "col_" . $cellcount;
-                    $cellcount++;
-                }
+                
                 switch($cell) {
                     case "text":
                         $this->siteBuilder->addContentManager("test", $area, $type);
@@ -854,39 +849,19 @@ class PageBuilder {
 
     public function printNoSideBarsLayout() {
         $rownumber = 1;
-        $cellcount = 1;
-        $maincount = 1;
         $rows = array();
         $i = 0;
         foreach ($this->layout->rows as $row) {
-            /* @var $row core_pagemanager_data_RowLayout */
-            ob_start();
-            $cellNumberClass = "gs_cell_number_" . $row->numberOfCells;
             $i++;
             $lastCell ="";
             if($i == sizeof($this->layout->rows)) {
                 $lastCell = "gs_last_row";
             }
-            ?>
-            <div class="gs_row gs_outer r<? echo $rownumber. " " . $cellNumberClass . " " . $lastCell; ?>" row="<? echo $rownumber; ?>" rowid="<? echo $row->rowId; ?>" style='<? echo $row->outercss; ?>'>
-                <div class='gs_inner' style='<? echo $row->innercss; ?>'>
-                    <?
-                    if ($row->numberOfCells == 1) {
-                        echo AppAreaHelper::printAppArea($this->page, "main_" . $maincount);
-                        $maincount++;
-                    } else {
-                        echo AppAreaHelper::printRows($this->page, $row->numberOfCells, $cellcount, $row->rowWidth);
-                        $cellcount += $row->numberOfCells;
-                    }
-                    ?>
-                </div>
-            </div>
-            <?
-            $rows[$row->rowId] = ob_get_contents();
-            ob_end_clean();
+            echo "<div class='gs_row gs_outer r$rownumber' row='$rownumber' rowid='".$row->rowId."' style=''>";
+            echo AppAreaHelper::printAppRow($row, $rownumber);
+            echo "</div>";
             $rownumber++;
         }
-        $this->sortAndPrintRows($rows);
     }
 
     public function printWithSideBars() {

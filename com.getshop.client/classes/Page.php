@@ -39,6 +39,14 @@ class Page extends FactoryBase {
      * @return PageArea
      */
     public function getApplicationArea($area) {
+        echo $area;
+        if($area == "header") {
+            return new PageArea($this, $this->layout->header);
+        }
+        if($area == "footer") {
+            return new PageArea($this, $this->layout->footer);
+        }
+        
         if (!isset($this->areas[$area])) {
             $backendarea = new core_pagemanager_data_PageArea();
             $backendarea->type = $area;

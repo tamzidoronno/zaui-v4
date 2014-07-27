@@ -2783,6 +2783,25 @@ class APIPageManager {
 	}
 
 	/**
+	* Creates a new application area attach the new application to it and appends it to the row.
+	* @param pageId
+	* @param rowId
+	* @param applicationSettingId
+	* @throws com.thundashop.core.common.ErrorException
+	*/
+
+	public function addApplicationToRow($pageId, $rowId, $applicationSettingId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data['args']["rowId"] = json_encode($this->transport->object_unset_nulls($rowId));
+	     $data['args']["applicationSettingId"] = json_encode($this->transport->object_unset_nulls($applicationSettingId));
+	     $data["method"] = "addApplicationToRow";
+	     $data["interfaceName"] = "core.pagemanager.IPageManager";
+	     return $this->transport->cast(new core_common_AppConfiguration(), $this->transport->sendMessage($data));
+	}
+
+	/**
 	* Add an existing application to the application area
 	*
 	* @param pageId
@@ -2876,6 +2895,22 @@ class APIPageManager {
 	}
 
 	/**
+	* Create a new row to add application areas to for a given page.
+	* @param pageId
+	* @return String
+	* @throws ErrorException
+	*/
+
+	public function createNewRow($pageId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data["method"] = "createNewRow";
+	     $data["interfaceName"] = "core.pagemanager.IPageManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Create a new page.
 	* This page can be used to stick applications to it.
 	*
@@ -2884,6 +2919,7 @@ class APIPageManager {
 	* Header left middle footer = 2;<br>
 	* Header right middle footer = 3;<br>
 	* Header middle footer = 4;<br>
+	* Layout is depeacated, the layouts has been eveloved to be more dynamic now.
 	*
 	* @param layout See above, integer 1 to 4
 	* @param parentId The parent page. From what page are this page being created?

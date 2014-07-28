@@ -39,7 +39,6 @@ class Page extends FactoryBase {
      * @return PageArea
      */
     public function getApplicationArea($area) {
-        echo $area;
         if($area == "header") {
             return new PageArea($this, $this->layout->header);
         }

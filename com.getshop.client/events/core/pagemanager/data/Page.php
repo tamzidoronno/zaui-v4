@@ -12,6 +12,9 @@ class core_pagemanager_data_Page extends core_common_DataCommon  {
 	/** @var String */
 	public $beenLoaded;
 
+	/** @var String */
+	public $pageAreas;
+
 	/** @var core_pagemanager_data_Page */
 	public $parent;
 
@@ -32,9 +35,6 @@ class core_pagemanager_data_Page extends core_common_DataCommon  {
 
 	/** @var String */
 	public $description;
-
-	/** @var String */
-	public $pageAreas;
 
 	/** @var core_pagemanager_data_PageLayout */
 	public $layout;

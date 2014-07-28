@@ -18,6 +18,21 @@ class core_pagemanager_data_PageLayout {
 	/** @var String */
 	public $marginRightSideBar;
 
+	/** @var core_pagemanager_data_PageArea */
+	public $header;
+
+	/** @var core_pagemanager_data_PageArea */
+	public $footer;
+
+	/** @var String */
+	public $commonPageAreas;
+
+	/** @var String */
+	public $leftSideBarAreas;
+
+	/** @var String */
+	public $rightSideBarAreas;
+
 	/** @var String */
 	public $sortedRows;
 

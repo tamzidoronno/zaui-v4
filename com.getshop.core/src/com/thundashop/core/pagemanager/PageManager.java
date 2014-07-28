@@ -13,6 +13,7 @@ import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.Entry;
 import com.thundashop.core.listmanager.data.EntryList;
 import com.thundashop.core.listmanager.data.ListType;
+import com.thundashop.core.pagemanager.data.CommonPageData;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageArea;
 import com.thundashop.core.pagemanager.data.RowLayout;
@@ -64,7 +65,9 @@ public class PageManager extends ManagerBase implements IPageManager {
                 Page p = (Page) data;
                 pagePool.addFromDatabase(p);
             }
-            
+            if(data instanceof CommonPageData) {
+                pagePool.commonPageData = (CommonPageData) data;
+            }
             if (data instanceof AppConfiguration)
                 applicationPool.addFromDatabase((AppConfiguration)data);
         }

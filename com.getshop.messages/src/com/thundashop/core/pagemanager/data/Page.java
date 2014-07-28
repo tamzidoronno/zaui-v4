@@ -72,24 +72,11 @@ public class Page extends DataCommon implements Cloneable {
     }
 
     public PageArea getPageArea(String pageArea) throws ErrorException {
-        for(RowLayout row : layout.rows) {
-            for (PageArea area : row.areas) {
-                if(area.type.equals(pageArea)) {
-                    return area;
-                }
-            }
-        }
-        throw new ErrorException(1028);
+        return layout.getPageArea(pageArea);
     }
 
     public List<String> getAllPageAreas() {
-        List<String> areas = new ArrayList();
-        for(RowLayout row : layout.rows) {
-            for (PageArea area : row.areas) {
-                areas.add(area.type);
-            }
-        }
-        return areas;
+        return layout.getAllAreas();
     }
 
     public void moveApplicationToArea(String fromarea, String toarea) {
@@ -120,18 +107,7 @@ public class Page extends DataCommon implements Cloneable {
     public List<String> getApplicationIds() {
         List<String> ids = new ArrayList<String>();
         
-        for(RowLayout row : layout.rows) {
-            for (PageArea area : row.areas) {
-                ids.addAll(area.applicationsList);
-                ids.addAll(area.extraApplicationList.keySet());
-                ids.add(area.bottomLeftApplicationId);
-                ids.add(area.bottomMiddleApplicationId);
-                ids.add(area.bottomRightApplicationId);
-            }
-        }
-        ids.addAll(layout.footer.applicationsList);
-        ids.addAll(layout.header.applicationsList);
-        
+        ids.addAll(layout.getApplicationIds());
         return ids;
     }
 
@@ -177,31 +153,9 @@ public class Page extends DataCommon implements Cloneable {
     @Transient
     public Entry linkToListEntry;
     
-    public void populateApplications(Map<String, AppConfiguration> applications, boolean onlyExtraApplications) {
-        for(RowLayout row : layout.rows) {
-            for (PageArea pageArea : row.areas) {
-                pageArea.populateApplications(applications, onlyExtraApplications);
-            }
-        }
-        
-        layout.header.populateApplications(applications, onlyExtraApplications);
-        layout.footer.populateApplications(applications, onlyExtraApplications);
-
-    }
 
     public HashMap<String, AppConfiguration> getApplications() {
-        HashMap<String, AppConfiguration> applications = new HashMap();
-        
-        for(RowLayout row : layout.rows) {
-            for (PageArea pageArea : row.areas) {
-                applications.putAll(pageArea.applications());
-                applications.putAll(pageArea.bottomApplications());
-            }
-        }
-        applications.putAll(layout.header.applications());
-        applications.putAll(layout.footer.applications());
-        
-        return applications;
+        return layout.buildAppConfigurationList();
     }
     
 }

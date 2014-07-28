@@ -82,8 +82,8 @@ public class PageLayout implements Serializable {
             area.populateApplications(applications, onlyExtraApplications);
         }
         
-        header.populateApplications(applications, onlyExtraApplications);
-        footer.populateApplications(applications, onlyExtraApplications);
+        header.populateApplications(applications, false);
+        footer.populateApplications(applications, false);
     }
 
     public List<String> getApplicationIds() {
@@ -99,17 +99,23 @@ public class PageLayout implements Serializable {
             }
         }
         
-        if(footer != null)
+        if(footer != null) {
             ids.addAll(footer.applicationsList);
+            ids.addAll(footer.extraApplicationList.keySet());
+        }
             
-        if(header != null)
+        if(header != null) {
             ids.addAll(header.applicationsList);
+            ids.addAll(header.extraApplicationList.keySet());
+        }
         
         for(PageArea area : leftSideBarAreas) {
             ids.addAll(area.applicationsList);
+            ids.addAll(area.extraApplicationList.keySet());
         }
         for(PageArea area : rightSideBarAreas) {
             ids.addAll(area.applicationsList);
+            ids.addAll(area.extraApplicationList.keySet());
         }
         return ids;
     }

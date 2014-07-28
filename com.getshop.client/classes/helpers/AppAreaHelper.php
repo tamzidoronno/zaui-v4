@@ -99,19 +99,23 @@ class AppAreaHelper {
                 $app->renderApplication();
             }
         }
+        foreach ($area->extraApplicationList as $appId => $data) {
+            $app = $factory->getFactory()->getApplicationPool()->getApplicationInstance($appId);
+            if ($app) {
+                $app->renderApplication();
+            }
+        }
         echo "</div>";
         echo "</div>";
     }
 
     public static function printAppRow($row, $rownumber) {
         $factory = IocContainer::getFactorySingelton(false);
-        echo "<div class='gs_inner'>";
         $colCount = 1;
         foreach ($row->areas as $area) {
             AppAreaHelper::printAppAreaNew($area, $colCount, sizeof($row->areas), $rownumber, $factory);
             $colCount++;
         }
-        echo "</div>";
     }
 
 }

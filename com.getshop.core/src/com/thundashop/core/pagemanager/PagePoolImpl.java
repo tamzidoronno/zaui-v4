@@ -330,8 +330,10 @@ public class PagePoolImpl {
         addInheritatedApplications(page, page.parent);
         addStickedApplications(page);
         boolean onlyExtraApplications = shouldOnlyContainExtraApplications(page);
-        Map<String, AppConfiguration> applications = applicationPool.getApplications(page.getApplicationIds());
+        List<String> applicationlist = page.getApplicationIds();
+        Map<String, AppConfiguration> applications = applicationPool.getApplications(applicationlist);
         page.layout.populateApplications(applications, onlyExtraApplications);
+        boolean hasit = page.layout.header.applications.size() > 0;
         page.finalizePageLayoutRows();
         if(page.needSaving) {
             savePage(page);
@@ -350,7 +352,6 @@ public class PagePoolImpl {
             if(pageArea == null) {
                 System.out.println("Page area null for : " + pageAreaKey);
             } else {
-                System.out.println("Exdending : " + pageAreaKey);
                 for (String application : pageArea.applicationsList) {
                     try {
                         AppConfiguration appConfig = applicationPool.get(application);

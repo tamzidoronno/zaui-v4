@@ -53,7 +53,6 @@ class PageArea extends FactoryBase {
         
         $apps = $this->backendPageArea->applications;
         $copy = array();
-
         foreach ($apps as $id => $value) {
             $copy[$id] = $value;
         }
@@ -112,8 +111,9 @@ class PageArea extends FactoryBase {
             $this->includefile('add_application_menu');
         }
 
-        if ($this->backendPageArea->type == "main_1")
+        if ($this->backendPageArea->type == "main_1") {
             $this->showAccessDeniedMessage();
+        }
 
         $isEmpty = $this->checkIfEmptyPage();
         if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
@@ -122,7 +122,6 @@ class PageArea extends FactoryBase {
                 return;
             }
         }
-        
         foreach ($this->getApplications() as $application) {
             $application->renderApplication();
         }

@@ -409,7 +409,9 @@ class PageBuilder {
                 $lastCell = "gs_last_row";
             }
             echo "<div class='gs_row gs_outer r$rownumber' row='$rownumber' rowid='".$row->rowId."' style=''>";
+            echo "<div class='gs_inner'>";
             AppAreaHelper::printAppRow($row, $rownumber);
+            echo "</div>";
             echo "</div>";
             $rownumber++;
         }

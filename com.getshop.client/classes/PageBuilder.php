@@ -402,6 +402,7 @@ class PageBuilder {
         $rownumber = 1;
         $rows = array();
         $i = 0;
+        $colcount = 1;
         foreach ($this->layout->rows as $row) {
             $i++;
             $lastCell ="";
@@ -443,6 +444,7 @@ class PageBuilder {
                         
                         $rownumber = 0;
                         $i = 1;
+                        $colcount = 1;
                         foreach ($this->layout->rows as $row) {
                             $i++;
                             $lastCell ="";

@@ -54,12 +54,8 @@ public class ConvertPageLayouts  extends UpgradeBase {
 
                 
                 LinkedList newRows = new LinkedList();
-                if(layout.sortedRows.size() > 0) {
-                    loopStrings = layout.sortedRows;
-                } else {
-                    for(RowLayout row : layout.rows) {
-                        loopStrings.add(row.rowId);
-                    }
+                for(RowLayout row : layout.rows) {
+                    loopStrings.add(row.rowId);
                 }
                 
                 for(String rowId : loopStrings) {
@@ -95,9 +91,7 @@ public class ConvertPageLayouts  extends UpgradeBase {
                         PageArea area = page.pageAreas.get(added);
                         if(area.type != null) {
                             if(area.type.startsWith("main_")) {
-                                int number = Integer.parseInt(area.type.replace("main_", "").replace("col_", ""));
                             } else if(area.type.startsWith("col_")) {
-                                System.out.println("yueah");
                             } else {
                                 layout.otherAreas.put(area.type, area);
                             }

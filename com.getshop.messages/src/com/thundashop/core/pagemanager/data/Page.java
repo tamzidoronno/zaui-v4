@@ -97,7 +97,35 @@ public class Page extends DataCommon implements Cloneable {
                 row.rowId = UUID.randomUUID().toString();
                 needSaving = true;
             }
+            
+            if(row.numberOfCells > row.areas.size()) {
+                for(int i = 0; i < row.numberOfCells; i++) {
+                    if(i >= row.areas.size()) {
+                        PageArea area = new PageArea();
+                        area.type = UUID.randomUUID().toString();
+                        row.areas.add(i, area);
+                    }
+                }
+            }
+            if(row.numberOfCells < row.areas.size()) {
+                for(int i = row.numberOfCells; i < row.areas.size(); i++) {
+                    row.areas.remove(i);
+                }
+            }
         }
+        
+        if(layout.sortedRows.size() > 0) {
+            LinkedList<RowLayout> sortedRows = new LinkedList();
+            for(String sorted : layout.sortedRows) {
+                for(RowLayout row : layout.rows) {
+                    if(row.rowId.equals(sorted)) {
+                        sortedRows.add(row);
+                        break;
+                    }
+                }
+            }
+            layout.rows = sortedRows;
+        }     
     }
 
     public void deletePageAreas() {

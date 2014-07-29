@@ -77,7 +77,16 @@ class AppAreaHelper {
         return $result;
     }
 
-    public static function printAppAreaNew($area, $colCount, $totalColCount, $rowNumber, $page) {
+    /**
+     * 
+     * @param core_pagemanager_data_PageArea $area
+     * @param type $colCount
+     * @param type $totalColCount
+     * @param type $rowNumber
+     * @param type $page
+     */
+    public static function printAppAreaNew($area, $colCount, $row, $rowNumber, $page) {
+        $totalColCount = sizeof($row->areas);
         $name = "";
         $appClasses = "apparea_app_";
         $extraclass = "";
@@ -86,19 +95,49 @@ class AppAreaHelper {
             $includeColumns = true;
         }
         
+        
+        
         $width = round(100 / $totalColCount, 1);
+        if(sizeof($row->rowWidth) > 0) {
+            $width = $row->rowWidth[$colCount-1];
+        }
+        
         if ($colCount == 1 && $totalColCount != 1) {
             $extraclass = "gs_margin_right";
         } else if ($colCount == $totalColCount && $totalColCount != 1) {
             $extraclass = "gs_margin_left";
-        } else if($totalColCount > 1) {
+        } else if($colCount > 1) {
             $extraclass = "gs_margin_left gs_margin_right";
         }
+        
+        //Backward compability for design stuff.
+        if(strpos($area->type, "col_") === 0) {
+            $colCount = str_replace("col_", "",$area->type);
+        }
+        
+        if($totalColCount > 1) {
+            $extraclass .= " gs_row_cell";
+        }
+        $extraclass .= " gs_row_" . $rowNumber;
+        
+        $extraclass .= " ";
 
         if($includeColumns) {
             echo "<div row='$rowNumber' style='width:$width%; box-sizing:border-box;-moz-box-sizing:border-box;' class='gs_col c$colCount " . $extraclass . " gs_row_cell inline'>";
         }
-        echo "<div area='".$area->type."' class='applicationarea'>";
+
+        if($totalColCount <= 1) {
+            $type = "standard";
+        } else {
+            $type = "cell";
+        }
+        
+        $marginbottom = "";
+        if($rowNumber < sizeof($page->layout->rows)-1) {
+            $marginbottom = "gs_margin_bottom";
+        }
+        
+        echo "<div area='".$area->type."' type='".$type."' class='applicationarea $marginbottom'>";
         $pagearea = new PageArea($page,$area);
         $pagearea->render();
         echo "</div>";
@@ -109,9 +148,10 @@ class AppAreaHelper {
 
     public static function printAppRow($row, $rownumber, $page) {
         $factory = IocContainer::getFactorySingelton(false);
+        $colnumber = 0;
         $colCount = 1;
         foreach ($row->areas as $area) {
-            AppAreaHelper::printAppAreaNew($area, $colCount, sizeof($row->areas), $rownumber, $page);
+            AppAreaHelper::printAppAreaNew($area, $colCount, $row, $rownumber, $page);
             $colCount++;
         }
     }

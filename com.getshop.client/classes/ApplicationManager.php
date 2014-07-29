@@ -376,7 +376,8 @@ class ApplicationManager extends FactoryBase {
         if (isset($_POST['data']['updatelayout'])) {
             $pb->activateBuildLayoutMode();
         }
-        $page->setLayout($pb->updateLayoutConfig());
+        $layout = $pb->updateLayoutConfig();
+        $page->setLayout($layout);
         $this->addProductData($page->backendPage);
     }
 

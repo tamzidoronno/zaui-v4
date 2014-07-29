@@ -333,7 +333,6 @@ class Factory extends FactoryBase {
     }
 
     public function initApplicationsPool() {
-
         $applications = $this->pageManager->getApplicationsForPage($this->page->id);
         $this->applicationPool->setApplicationInstances($applications);
     }

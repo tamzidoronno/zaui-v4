@@ -410,7 +410,7 @@ class PageBuilder {
             }
             echo "<div class='gs_row gs_outer r$rownumber' row='$rownumber' rowid='".$row->rowId."' style=''>";
             echo "<div class='gs_inner'>";
-            AppAreaHelper::printAppRow($row, $rownumber);
+            AppAreaHelper::printAppRow($row, $rownumber,$this->page);
             echo "</div>";
             echo "</div>";
             $rownumber++;
@@ -431,35 +431,29 @@ class PageBuilder {
                             <td width="<? echo $this->layout->leftSideBarWidth; ?>%" valign="top" class='gs_col c<? echo $colcount; ?> gs_margin_right'>
                             <?
                             $colcount++;
-                            $rownumber = 1;
-                            foreach ($this->layout->leftSideBarAreas as $area) {
-                                AppAreaHelper::printAppAreaNew($area, $rownumber, sizeof($this->layout->leftSideBarAreas), $rownumber, $this->factory);
-                                $rownumber++;
+                            for ($i = 1; $i <= $this->layout->leftSideBar; $i++) {
+                                echo AppAreaHelper::printAppArea($this->page, "left_" . $i);
                             }
                             ?>
                             </td>
                             <? } ?>
                         <td valign="top" class='gs_col c<? echo $colcount; ?> gs_margin_right gs_margin_left'>
                         <?
-                        $rowsprinted = 0;
                         $colcount++;
-                        $rownumber = 1;
+                        
+                        $rownumber = 0;
+                        $i = 1;
                         foreach ($this->layout->rows as $row) {
-                            ob_start();
-                            $class = "";
-                            $rowsprinted++;
-
-                            if ($rowsprinted != sizeof($this->layout->rows)) {
-                                $class = "gs_margin_bottom";
+                            $i++;
+                            $lastCell ="";
+                            if($i == sizeof($this->layout->rows)) {
+                                $lastCell = "gs_last_row";
                             }
-                            echo "<div class='$class'>";
-                            AppAreaHelper::printAppRow($row, $rownumber);
+                            echo "<div class='gs_row gs_outer r$rownumber' row='$rownumber' rowid='".$row->rowId."' style=''>";
+                            AppAreaHelper::printAppRow($row, $rownumber,$this->page);
                             echo "</div>";
-                            $rows[$row->rowId] = ob_get_contents();
-                            ob_end_clean();
                             $rownumber++;
                         }
-                        $this->sortAndPrintRows($rows);
                         ?>
                         </td>
                             <? if ($this->layout->rightSideBar > 0) { ?>

@@ -25,13 +25,7 @@ class core_pagemanager_data_PageLayout {
 	public $footer;
 
 	/** @var String */
-	public $commonPageAreas;
-
-	/** @var String */
-	public $leftSideBarAreas;
-
-	/** @var String */
-	public $rightSideBarAreas;
+	public $otherAreas;
 
 	/** @var String */
 	public $sortedRows;

@@ -77,43 +77,41 @@ class AppAreaHelper {
         return $result;
     }
 
-    public static function printAppAreaNew($area, $colCount, $totalColCount, $rowNumber, $factory) {
+    public static function printAppAreaNew($area, $colCount, $totalColCount, $rowNumber, $page) {
         $name = "";
         $appClasses = "apparea_app_";
         $extraclass = "";
-
+        $includeColumns = false;
+        if($totalColCount > 1) {
+            $includeColumns = true;
+        }
+        
         $width = round(100 / $totalColCount, 1);
-        if ($colCount == 1) {
+        if ($colCount == 1 && $totalColCount != 1) {
             $extraclass = "gs_margin_right";
-        } else if ($colCount == $totalColCount) {
+        } else if ($colCount == $totalColCount && $totalColCount != 1) {
             $extraclass = "gs_margin_left";
-        } else {
+        } else if($totalColCount > 1) {
             $extraclass = "gs_margin_left gs_margin_right";
         }
 
-        echo "<div row='$rowNumber' style='width:$width%; box-sizing:border-box;-moz-box-sizing:border-box;' class='gs_col c$colCount " . $extraclass . " gs_row_cell inline'>";
+        if($includeColumns) {
+            echo "<div row='$rowNumber' style='width:$width%; box-sizing:border-box;-moz-box-sizing:border-box;' class='gs_col c$colCount " . $extraclass . " gs_row_cell inline'>";
+        }
         echo "<div area='".$area->type."' class='applicationarea'>";
-        foreach ($area->applicationsList as $appId) {
-            $app = $factory->getFactory()->getApplicationPool()->getApplicationInstance($appId);
-            if ($app) {
-                $app->renderApplication();
-            }
-        }
-        foreach ($area->extraApplicationList as $appId => $data) {
-            $app = $factory->getFactory()->getApplicationPool()->getApplicationInstance($appId);
-            if ($app) {
-                $app->renderApplication();
-            }
-        }
+        $pagearea = new PageArea($page,$area);
+        $pagearea->render();
         echo "</div>";
-        echo "</div>";
+        if($includeColumns) {
+            echo "</div>";
+        }
     }
 
-    public static function printAppRow($row, $rownumber) {
+    public static function printAppRow($row, $rownumber, $page) {
         $factory = IocContainer::getFactorySingelton(false);
         $colCount = 1;
         foreach ($row->areas as $area) {
-            AppAreaHelper::printAppAreaNew($area, $colCount, sizeof($row->areas), $rownumber, $factory);
+            AppAreaHelper::printAppAreaNew($area, $colCount, sizeof($row->areas), $rownumber, $page);
             $colCount++;
         }
     }

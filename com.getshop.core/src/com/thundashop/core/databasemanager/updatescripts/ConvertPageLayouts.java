@@ -38,9 +38,6 @@ public class ConvertPageLayouts  extends UpgradeBase {
                 if(page.type > 0) {
                     convertToNewType(page);
                 }
-                if(pageId.equals("home") && page.storeId.equals("2fac0e57-de1d-4fdf-b7e4-5f93e3225445")) {
-                    System.out.println("This is it");
-                }
                 
                 PageArea header = page.pageAreas.get("header");
                 if(header != null && (header.extraApplicationList.size() > 0 || header.applicationsList.size() > 0 || header.applications.size() > 0)) {
@@ -55,12 +52,6 @@ public class ConvertPageLayouts  extends UpgradeBase {
                     saveObject(data, "PageManager");
                 }
 
-                for(String added : page.pageAreas.keySet()) {
-                    if(areasAdded.contains(added)) {
-                        layout.commonPageAreas.add(page.pageAreas.get(added));
-                    }
-                }
-                
                 
                 LinkedList newRows = new LinkedList();
                 if(layout.sortedRows.size() > 0) {
@@ -70,58 +61,58 @@ public class ConvertPageLayouts  extends UpgradeBase {
                         loopStrings.add(row.rowId);
                     }
                 }
+                
                 for(String rowId : loopStrings) {
                     RowLayout row = findRow(layout,rowId);
                     row.areas = new LinkedList();
                     if(row.numberOfCells == 1) {
                         PageArea area = page.pageAreas.get("main_"+maincount);
-                        if(area != null) {
-                            row.areas.add(area);
-                            areasAdded.add(area.type);
-                            maincount++;
+                        if(area == null) {
+                            area = new PageArea();
+                            area.type = "main_"+maincount;
                         }
+                        row.areas.add(area);
+                        areasAdded.add(area.type);
+                        maincount++;
                     } else {
                         for(int i = 1;i <= row.numberOfCells; i++) {
                             PageArea area = page.pageAreas.get("col_"+colcount);
-                            if(area != null) {
-                                row.areas.add(area);
-                                areasAdded.add(area.type);
-                                colcount++;
+                            if(area == null) {
+                                area = new PageArea();
+                                area.type = "col_"+colcount;
                             }
+                            row.areas.add(area);
+                            areasAdded.add(area.type);
+                            colcount++;
                         }
                     }
                     newRows.add(row);
                 }
 
-                layout.rows = newRows;
                 
-                //Now left and right sidebar.
-                for(int i = 0; i < layout.leftSideBar; i++) {
-                    int count = i+1;
-                    PageArea leftArea = page.pageAreas.get("left_"+count);
-                    if(leftArea == null) {
-                        leftArea = new PageArea();
-                        leftArea.type = "left_"+count;
+                for(String added : page.pageAreas.keySet()) {
+                    if(!areasAdded.contains(added)) {
+                        PageArea area = page.pageAreas.get(added);
+                        if(area.type != null) {
+                            if(area.type.startsWith("main_")) {
+                                int number = Integer.parseInt(area.type.replace("main_", "").replace("col_", ""));
+                            } else if(area.type.startsWith("col_")) {
+                                System.out.println("yueah");
+                            } else {
+                                layout.otherAreas.put(area.type, area);
+                            }
+                        }
                     }
-                    layout.leftSideBarAreas.add(leftArea);
                 }
-                for(int i = 0; i < layout.rightSideBar; i++) {
-                    int count = i+1;
-                    PageArea rightArea = page.pageAreas.get("right_"+count);
-                    if(rightArea == null) {
-                        rightArea = new PageArea();
-                        rightArea.type = "right_"+count;
-                    }
-                    layout.rightSideBarAreas.add(rightArea);
-                }
+                
+                layout.rows = newRows;
                 
                 saveObject(page, "PageManager");
             }
-
             if(!foundHeader) {
-                System.out.println("No header found for collection: " + collection );
+//                System.out.println("No header found for collection: " + collection );
             } else {
-                System.out.println("Header actually found for collection: " + collection );
+//                System.out.println("Header actually sfound for collection: " + collection );
             }
         }
     }

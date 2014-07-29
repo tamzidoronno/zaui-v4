@@ -319,12 +319,12 @@ public class PagePoolImpl {
         }
         page.clear();
         
-        page.layout.header = commonPageData.header;
-        page.layout.footer = commonPageData.footer;
+        page.layout.otherAreas.put("footer", commonPageData.footer);
+        page.layout.otherAreas.put("header", commonPageData.header);
         
         if(page.parent != null) {
-            page.parent.layout.header = commonPageData.header;
-            page.parent.layout.footer = commonPageData.footer;
+            page.parent.layout.otherAreas.put("footer", commonPageData.footer);
+            page.parent.layout.otherAreas.put("header", commonPageData.header);
         }
         
         addInheritatedApplications(page, page.parent);
@@ -333,7 +333,6 @@ public class PagePoolImpl {
         List<String> applicationlist = page.getApplicationIds();
         Map<String, AppConfiguration> applications = applicationPool.getApplications(applicationlist);
         page.layout.populateApplications(applications, onlyExtraApplications);
-        boolean hasit = page.layout.header.applications.size() > 0;
         page.finalizePageLayoutRows();
         if(page.needSaving) {
             savePage(page);

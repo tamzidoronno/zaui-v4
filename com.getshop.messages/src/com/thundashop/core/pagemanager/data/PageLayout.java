@@ -18,24 +18,20 @@ public class PageLayout implements Serializable {
     public int rightSideBar = 0;
     public int marginRightSideBar = 10;
     
-    public PageArea header;
-    public PageArea footer;
-    
-    public List<PageArea> commonPageAreas = new ArrayList();
-    
-    public LinkedList<PageArea> leftSideBarAreas = new LinkedList();
-    public LinkedList<PageArea> rightSideBarAreas = new LinkedList();
+    //This areas contains the left sidebar areas, and other areas, like product, and special areas.
+    public HashMap<String, PageArea> otherAreas = new HashMap();
     public LinkedList<String> sortedRows = new LinkedList();
     public LinkedList<RowLayout> rows = new LinkedList();
 
     public List<String> getAllApplications() {
         List<String> allApps = new ArrayList();
-        allApps.addAll(getApps(header));
-        allApps.addAll(getApps(footer));
         for(RowLayout row : rows) {
             for(PageArea area : row.areas) {
                 allApps.addAll(getApps(area));
             }
+        }
+        for(PageArea area : otherAreas.values()) {
+            allApps.addAll(getApps(area));
         }
         return allApps;
     }
@@ -56,15 +52,11 @@ public class PageLayout implements Serializable {
             }
         }
         
-        for(PageArea area : leftSideBarAreas) {
+        for(PageArea area : otherAreas.values()) {
             applications.putAll(area.applications());
-        }
-        for(PageArea area : rightSideBarAreas) {
-            applications.putAll(area.applications());
+            applications.putAll(area.bottomApplications());
         }
         
-        applications.putAll(header.applications());
-        applications.putAll(footer.applications());        
         return applications;
     }
 
@@ -75,15 +67,14 @@ public class PageLayout implements Serializable {
             }
         }
         
-        for(PageArea area : leftSideBarAreas) {
-            area.populateApplications(applications, onlyExtraApplications);
-        }
-        for(PageArea area : rightSideBarAreas) {
-            area.populateApplications(applications, onlyExtraApplications);
+        for(PageArea area : otherAreas.values()) {
+                if(area.type.equals("header") || area.type.equals("footer")) {
+                    area.populateApplications(applications, false);
+                } else {
+                    area.populateApplications(applications, onlyExtraApplications);
+                }
         }
         
-        header.populateApplications(applications, false);
-        footer.populateApplications(applications, false);
     }
 
     public List<String> getApplicationIds() {
@@ -98,22 +89,8 @@ public class PageLayout implements Serializable {
                 ids.add(area.bottomRightApplicationId);
             }
         }
-        
-        if(footer != null) {
-            ids.addAll(footer.applicationsList);
-            ids.addAll(footer.extraApplicationList.keySet());
-        }
             
-        if(header != null) {
-            ids.addAll(header.applicationsList);
-            ids.addAll(header.extraApplicationList.keySet());
-        }
-        
-        for(PageArea area : leftSideBarAreas) {
-            ids.addAll(area.applicationsList);
-            ids.addAll(area.extraApplicationList.keySet());
-        }
-        for(PageArea area : rightSideBarAreas) {
+        for(PageArea area : otherAreas.values()) {
             ids.addAll(area.applicationsList);
             ids.addAll(area.extraApplicationList.keySet());
         }
@@ -121,12 +98,6 @@ public class PageLayout implements Serializable {
     }
 
     PageArea getPageArea(String pageArea) throws ErrorException {
-        if(pageArea.equals("header")) {
-            return header;
-        }
-        if(pageArea.equals("footer")) {
-            return footer;
-        }
         
         for(RowLayout row : rows) {
             for (PageArea area : row.areas) {
@@ -136,16 +107,8 @@ public class PageLayout implements Serializable {
             }
         }
         
-        for(PageArea area : leftSideBarAreas) {
-            if(area.type.equals(pageArea)) {
-                return area;
-            }
-        }
-        
-        for(PageArea area : rightSideBarAreas) {
-            if(area.type.equals(pageArea)) {
-                return area;
-            }
+        if(otherAreas.containsKey(pageArea)) {
+            return otherAreas.get(pageArea);
         }
         
         throw new ErrorException(1028);
@@ -158,15 +121,9 @@ public class PageLayout implements Serializable {
                 areas.add(area.type);
             }
         }
-        for(PageArea area : leftSideBarAreas) {
+        for(PageArea area : otherAreas.values()) {
             areas.add(area.type);
         }
-        for(PageArea area : rightSideBarAreas) {
-            areas.add(area.type);
-        }
-        
-        areas.add("header");
-        areas.add("footer");
         return areas;
     }
 }

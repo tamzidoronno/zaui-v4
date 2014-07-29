@@ -39,14 +39,11 @@ class Page extends FactoryBase {
      * @return PageArea
      */
     public function getApplicationArea($area) {
-        if($area == "header") {
-            return new PageArea($this, $this->layout->header);
-        }
-        if($area == "footer") {
-            return new PageArea($this, $this->layout->footer);
-        }
-        
-        if (!isset($this->areas[$area])) {
+//        echo "<pre>";
+//        print_r($this->layout->otherAreas);
+//        echo "</pre>";
+//        exit(0);
+       if (!isset($this->layout->otherAreas->{$area})) {
             $backendarea = new core_pagemanager_data_PageArea();
             $backendarea->type = $area;
             $backendarea->applications = array();
@@ -55,7 +52,7 @@ class Page extends FactoryBase {
             $backendarea->extraApplicationList = array();
             return new PageArea($this, $backendarea);
         }
-        return $this->areas[$area];
+        return new PageArea($this, $this->layout->otherAreas->{$area});
     }
 
     public function standAloneApp($app) {

@@ -122,6 +122,7 @@ class PageArea extends FactoryBase {
                 return;
             }
         }
+        
         foreach ($this->getApplications() as $application) {
             $application->renderApplication();
         }

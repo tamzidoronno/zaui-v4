@@ -304,8 +304,9 @@ public class StorePool {
             }
         }
         if (method == null) {
-            System.out.println("Failed on obj: " + object.interfaceName);
-            System.out.println("Failed on obj: " + object.method);
+            System.out.println("Failed on interface: " + object.interfaceName);
+            System.out.println("Failed on method: " + object.method);
+            System.out.println("Failed on size: " + object.args.size());
         }
         return method;
     }

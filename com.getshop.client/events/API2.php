@@ -403,22 +403,23 @@ class APICalendarManager {
 	}
 
 	/**
-	* Deprecated and a fallback method.
-	*
-	* @param userId
-	* @param eventId
-	* @param password
-	* @param username
+	* Add a given user to a given event.
+	* @param userId The user id to add to a the given event (see usermanager for more inforamtion about this id)
+	* @param eventId The event id to attach to the user.
+	* @param password A password you want to attach to the email that is being sent to the user.
+	* @param username A username you want to attach to the email that is being sent to the user.
+	* @return void
 	* @throws ErrorException
 	*/
 
-	public function addUserToEvent($userId, $eventId, $password, $username) {
+	public function addUserToEvent($userId, $eventId, $password, $username, $source) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
 	     $data['args']["eventId"] = json_encode($this->transport->object_unset_nulls($eventId));
 	     $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
 	     $data['args']["username"] = json_encode($this->transport->object_unset_nulls($username));
+	     $data['args']["source"] = json_encode($this->transport->object_unset_nulls($source));
 	     $data["method"] = "addUserToEvent";
 	     $data["interfaceName"] = "core.calendar.ICalendarManager";
 	     return $this->transport->sendMessage($data);

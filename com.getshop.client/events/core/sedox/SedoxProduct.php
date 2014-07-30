@@ -28,6 +28,9 @@ class core_sedox_SedoxProduct extends core_common_DataCommon  {
 	public $ecuType;
 
 	/** @var String */
+	public $build;
+
+	/** @var String */
 	public $ecuBrand;
 
 	/** @var String */

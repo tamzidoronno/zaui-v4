@@ -395,11 +395,6 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         return entries;
     }
 
-//    @Override
-    public void addUserToEvent(String userId, String eventId, String password, String username) throws ErrorException {
-        addUserToEvent(userId, eventId, password, username, "fallback");
-    }    
-
     @Override
     public void addUserToEvent(String userId, String eventId, String password, String username, String source) throws ErrorException {
         addUserToEventInternal(userId, eventId, password, username, source);

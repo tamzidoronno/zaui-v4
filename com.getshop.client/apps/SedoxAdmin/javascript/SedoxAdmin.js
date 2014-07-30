@@ -6,13 +6,100 @@ app.SedoxAdmin = {
         $(document).on('click', '.SedoxAdmin .savecredit', app.SedoxAdmin.updateUserCredit);
         $(document).on('click', '.SedoxAdmin .savedevelopers', app.SedoxAdmin.saveDevelopers);
         $(document).on('click', '.SedoxAdmin .saveusersettings', app.SedoxAdmin.saveUserSettings);
+        $(document).on('change', '.SedoxAdmin #slavesearchtextfield', app.SedoxAdmin.searchForSlavesToAdd);
+        $(document).on('change', '.SedoxAdmin .extraincometext', app.SedoxAdmin.addCreditForSlave);
+        $(document).on('click', '.SedoxAdmin .addusertomaster', app.SedoxAdmin.addUserToMaster);
+        $(document).on('click', '.SedoxAdmin i.removeuser', app.SedoxAdmin.removeUserFromMaster);
+        $(document).on('click', '.SedoxAdmin .showuser', app.SedoxAdmin.changeToUser);
+        $(document).on('change', '.SedoxAdmin #togglepassiveslave', app.SedoxAdmin.togglePassiveChanged);
+    },
+            
+    togglePassiveChanged: function() {
+        var masterId = $(this).closest('.useroverview').attr('userid');
+
+        var data = {
+            isPassiveSlave : $(this).is(":checked"),
+            userId : masterId
+        }
+        
+        var event = thundashop.Ajax.createEvent("", "toggleSlave", this, data);
+
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            thundashop.common.Alert("Success", "Saved");
+        });
+    },
+            
+    changeToUser: function() {
+        var userId = $(this).attr('userid');
+        app.SedoxAdmin.updateInfoBox(userId);
+    },
+            
+    addCreditForSlave: function() {
+        var slaveId = $(this).attr('userid');
+      
+        var data = {
+            amount: $(this).val(),
+            slave: slaveId
+        };
+
+        var event = thundashop.Ajax.createEvent("", "addCreditToSlave", this, data);
+
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            thundashop.common.Alert("Success", "Saved");
+            app.SedoxAdmin.updateInfoBox(masterId);
+        }, true);
+    },
+            
+    removeUserFromMaster: function() {
+        var masterId = $(this).closest('.useroverview').attr('userid');
+        var slaveId = $(this).attr('userid');
+      
+        var data = {
+            master: masterId,
+            slave: slaveId
+        };
+
+        var event = thundashop.Ajax.createEvent("", "removeSlaveToMaster", this, data);
+
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            app.SedoxAdmin.updateInfoBox(masterId);
+        });
+    },
+            
+    addUserToMaster: function() { 
+        var masterId = $(this).closest('.useroverview').attr('userid');
+        var slaveId = $(this).attr('userid');
+        
+        var data = {
+            master: masterId,
+            slave: slaveId
+        };
+
+        var event = thundashop.Ajax.createEvent("", "addSlaveToMaster", this, data);
+
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            app.SedoxAdmin.updateInfoBox(masterId);
+        });
+    },
+            
+    searchForSlavesToAdd: function() {
+        var data = {
+            text : $('.SedoxAdmin #slavesearchtextfield').val()
+        }
+        
+        var event = thundashop.Ajax.createEvent("", "searchForSlaves", $('.SedoxAdmin'), data);
+        
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            $('.SedoxAdmin .add_slave_result').html(result);
+        });
     },
     saveUserSettings: function() {
         var userId = $(this).attr('userId');
         
         var data = {
             userId : userId,
-            allowNegativeCredit : $('.SedoxAdmin #allownegativecredit').is(':checked')
+            allowNegativeCredit : $('.SedoxAdmin #allownegativecredit').is(':checked'),
+            allowWindowsApplication : $('.SedoxAdmin #allowwindowsapp').is(':checked')
         };
         
         var event = thundashop.Ajax.createEvent("", "saveUserInfo", this, data);
@@ -52,12 +139,18 @@ app.SedoxAdmin = {
             $('.SedoxAdmin #amount').val("");
         })
     },
-    showUserInformation: function() {
+            
+    updateInfoBox: function(userId) {
         var data = {
-            userId: $(this).attr('userId')
+            userId: userId
         }
-        var event = thundashop.Ajax.createEvent("", "showUserInformation", this, data);
+        
+        var event = thundashop.Ajax.createEvent("", "showUserInformation", $('.SedoxAdmin'), data);
         thundashop.common.showInformationBox(event, "User information");
+    },
+            
+    showUserInformation: function() {
+        app.SedoxAdmin.updateInfoBox($(this).attr('userId'));
     },
     searchUsers: function() {
         var data = {

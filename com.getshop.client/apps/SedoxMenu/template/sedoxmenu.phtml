@@ -12,7 +12,7 @@ $notLoggedIn = $this->getUser() ? "" : "notLoggedIn";
     <? if ($this->getUser()) { ?> </a><? } ?>
         
     <? if ($this->getUser()) { ?> <a href='?page=5cb79939-9a26-4ed1-9ffb-424b814b3ad5'><? } ?>
-        <div class="sedoxmenuentry"><i class="fa fa-files-o"></i><div>MY FILES</div></div>
+        <div class="sedoxmenuentry"><i class="fa fa-files-o"></i><div>PROFILE</div></div>
     <? if ($this->getUser()) { ?> </a><? } ?>
     
     <? if ($this->getUser()) { ?> <a href='?page=ca4ad779-2c0f-4c4c-ae32-cbb2f781c9db'><? } ?>
@@ -26,7 +26,7 @@ $notLoggedIn = $this->getUser() ? "" : "notLoggedIn";
     
     if (!$this->hasWriteAccess()) {
         if ($this->getUser()) { ?> <a href='?page=69548d24-da99-45e8-a62c-b324eb8b07b3'><? } ?>
-            <div class="sedoxmenuentry"><i class="fa fa-user"></i><div>PROFILE</div></div>
+            <div class="sedoxmenuentry"><i class="fa fa-user"></i><div>WINDOWS APP</div></div>
         <? if ($this->getUser()) { ?> </a><? } 
     } 
     

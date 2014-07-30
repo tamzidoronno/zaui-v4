@@ -48,6 +48,10 @@ class SedoxProductView extends \ApplicationBase implements \Application {
         if (strtolower($binFile->fileType) == "various") {
             return 160;
         }
+        
+        if (strtolower($binFile->fileType) == "cmdencrypted") {
+            return 0;
+        }
 
         return 100;
     }
@@ -101,5 +105,4 @@ class SedoxProductView extends \ApplicationBase implements \Application {
         $this->getApi()->getSedoxProductManager()->removeBinaryFileFromProduct($_POST['data']['productId'], $_POST['data']['binFileId']);
     }
 }
-
 ?>

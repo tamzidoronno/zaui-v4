@@ -19,6 +19,13 @@ app.SedoxFileUpload = {
     },
             
     saveCarDetails: function() {
+        var selectbox = $('#partnerselect');
+        var slaveAccount = null;
+        
+        if (selectbox) {
+            slaveAccount = selectbox.val();
+        }
+        
         data = {
             brand : $(".SedoxFileUpload #brand").val(),
             model : $(".SedoxFileUpload #model").val(),
@@ -29,7 +36,9 @@ app.SedoxFileUpload = {
             comments : $(".SedoxFileUpload #comments").val(),
             automaticgear : $(".SedoxFileUpload #automaticgear").is(':checked'),
             usecredit : $(".SedoxFileUpload #usecredit").is(':checked'),
+            slaveAccount : slaveAccount
         };
+        
         var event = thundashop.Ajax.createEvent(null, "saveCarDetails", this, data);
         thundashop.Ajax.post(event);
     },

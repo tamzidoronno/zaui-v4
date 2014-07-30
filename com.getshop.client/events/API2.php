@@ -403,12 +403,12 @@ class APICalendarManager {
 	}
 
 	/**
-	* Deprecated and a fallback method.
-	*
-	* @param userId
-	* @param eventId
-	* @param password
-	* @param username
+	* Add a given user to a given event.
+	* @param userId The user id to add to a the given event (see usermanager for more inforamtion about this id)
+	* @param eventId The event id to attach to the user.
+	* @param password A password you want to attach to the email that is being sent to the user.
+	* @param username A username you want to attach to the email that is being sent to the user.
+	* @return void
 	* @throws ErrorException
 	*/
 
@@ -3868,6 +3868,25 @@ class APISedoxProductManager {
 	}
 
 	/**
+	* Developers is simply an getshop user that is registered as an developer.
+	* Active developers are administrators that has an SedoxUser with the flag
+	* isActiveDeveloper = true
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function addCreditToSlave($slaveId, $amount) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["slaveId"] = json_encode($this->transport->object_unset_nulls($slaveId));
+	     $data['args']["amount"] = json_encode($this->transport->object_unset_nulls($amount));
+	     $data["method"] = "addCreditToSlave";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Return the products created by days back.
 	* day = 0 // Means that it will returns the list of todays files
 	* day = 1 // Means that it will returns the list of yesterdays files
@@ -3885,6 +3904,25 @@ class APISedoxProductManager {
 	     $data['args']["fileType"] = json_encode($this->transport->object_unset_nulls($fileType));
 	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
 	     $data["method"] = "addFileToProduct";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Developers is simply an getshop user that is registered as an developer.
+	* Active developers are administrators that has an SedoxUser with the flag
+	* isActiveDeveloper = true
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function addSlaveToUser($masterUserId, $slaveUserId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["masterUserId"] = json_encode($this->transport->object_unset_nulls($masterUserId));
+	     $data['args']["slaveUserId"] = json_encode($this->transport->object_unset_nulls($slaveUserId));
+	     $data["method"] = "addSlaveToUser";
 	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -3935,12 +3973,13 @@ class APISedoxProductManager {
 	* @throws ErrorException
 	*/
 
-	public function createSedoxProduct($core_sedox_SedoxProduct, $base64encodedOriginalFile, $originalFileName) {
+	public function createSedoxProduct($core_sedox_SedoxProduct, $base64encodedOriginalFile, $originalFileName, $forSlaveId) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["core_sedox_SedoxProduct"] = json_encode($this->transport->object_unset_nulls($core_sedox_SedoxProduct));
 	     $data['args']["base64encodedOriginalFile"] = json_encode($this->transport->object_unset_nulls($base64encodedOriginalFile));
 	     $data['args']["originalFileName"] = json_encode($this->transport->object_unset_nulls($originalFileName));
+	     $data['args']["forSlaveId"] = json_encode($this->transport->object_unset_nulls($forSlaveId));
 	     $data["method"] = "createSedoxProduct";
 	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
 	     return $this->transport->sendMessage($data);
@@ -4071,6 +4110,24 @@ class APISedoxProductManager {
 	     $data["method"] = "getSedoxUserAccountById";
 	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
 	     return $this->transport->cast(new core_sedox_SedoxUser(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Developers is simply an getshop user that is registered as an developer.
+	* Active developers are administrators that has an SedoxUser with the flag
+	* isActiveDeveloper = true
+	*
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function getSlaves($masterUserId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["masterUserId"] = json_encode($this->transport->object_unset_nulls($masterUserId));
+	     $data["method"] = "getSlaves";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
 	}
 
 	/**
@@ -4295,6 +4352,44 @@ class APISedoxProductManager {
 	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
 	     $data['args']["allow"] = json_encode($this->transport->object_unset_nulls($allow));
 	     $data["method"] = "toggleAllowNegativeCredit";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Developers is simply an getshop user that is registered as an developer.
+	* Active developers are administrators that has an SedoxUser with the flag
+	* isActiveDeveloper = true
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function toggleAllowWindowsApp($userId, $allow) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data['args']["allow"] = json_encode($this->transport->object_unset_nulls($allow));
+	     $data["method"] = "toggleAllowWindowsApp";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Developers is simply an getshop user that is registered as an developer.
+	* Active developers are administrators that has an SedoxUser with the flag
+	* isActiveDeveloper = true
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function togglePassiveSlaveMode($userId, $toggle) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data['args']["toggle"] = json_encode($this->transport->object_unset_nulls($toggle));
+	     $data["method"] = "togglePassiveSlaveMode";
 	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
 	     return $this->transport->sendMessage($data);
 	}

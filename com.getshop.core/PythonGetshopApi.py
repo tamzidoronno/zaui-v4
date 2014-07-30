@@ -4014,6 +4014,28 @@ class ReportingManager(object):
 class SedoxProductManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
+  def addCreditToSlave(self, slaveId, amount):
+    args = collections.OrderedDict()
+    if isinstance(slaveId,GetShopBaseClass): 
+      args["slaveId"]=json.dumps(slaveId.__dict__)
+    else:
+      try:
+        args["slaveId"]=json.dumps(slaveId)
+      except (ValueError, AttributeError):
+        args["slaveId"]=slaveId
+    if isinstance(amount,GetShopBaseClass): 
+      args["amount"]=json.dumps(amount.__dict__)
+    else:
+      try:
+        args["amount"]=json.dumps(amount)
+      except (ValueError, AttributeError):
+        args["amount"]=amount
+    data = EmptyClass()
+    data.args = args
+    data.method = "addCreditToSlave"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
   def addFileToProduct(self, base64EncodedFile, fileName, fileType, productId):
     args = collections.OrderedDict()
     if isinstance(base64EncodedFile,GetShopBaseClass): 
@@ -4047,6 +4069,28 @@ class SedoxProductManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "addFileToProduct"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def addSlaveToUser(self, masterUserId, slaveUserId):
+    args = collections.OrderedDict()
+    if isinstance(masterUserId,GetShopBaseClass): 
+      args["masterUserId"]=json.dumps(masterUserId.__dict__)
+    else:
+      try:
+        args["masterUserId"]=json.dumps(masterUserId)
+      except (ValueError, AttributeError):
+        args["masterUserId"]=masterUserId
+    if isinstance(slaveUserId,GetShopBaseClass): 
+      args["slaveUserId"]=json.dumps(slaveUserId.__dict__)
+    else:
+      try:
+        args["slaveUserId"]=json.dumps(slaveUserId)
+      except (ValueError, AttributeError):
+        args["slaveUserId"]=slaveUserId
+    data = EmptyClass()
+    data.args = args
+    data.method = "addSlaveToUser"
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -4101,7 +4145,7 @@ class SedoxProductManager(object):
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 
-  def createSedoxProduct(self, sedoxProduct, base64encodedOriginalFile, originalFileName):
+  def createSedoxProduct(self, sedoxProduct, base64encodedOriginalFile, originalFileName, forSlaveId):
     args = collections.OrderedDict()
     if isinstance(sedoxProduct,GetShopBaseClass): 
       args["sedoxProduct"]=json.dumps(sedoxProduct.__dict__)
@@ -4124,6 +4168,13 @@ class SedoxProductManager(object):
         args["originalFileName"]=json.dumps(originalFileName)
       except (ValueError, AttributeError):
         args["originalFileName"]=originalFileName
+    if isinstance(forSlaveId,GetShopBaseClass): 
+      args["forSlaveId"]=json.dumps(forSlaveId.__dict__)
+    else:
+      try:
+        args["forSlaveId"]=json.dumps(forSlaveId)
+      except (ValueError, AttributeError):
+        args["forSlaveId"]=forSlaveId
     data = EmptyClass()
     data.args = args
     data.method = "createSedoxProduct"
@@ -4219,6 +4270,21 @@ class SedoxProductManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getSedoxUserAccountById"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getSlaves(self, masterUserId):
+    args = collections.OrderedDict()
+    if isinstance(masterUserId,GetShopBaseClass): 
+      args["masterUserId"]=json.dumps(masterUserId.__dict__)
+    else:
+      try:
+        args["masterUserId"]=json.dumps(masterUserId)
+      except (ValueError, AttributeError):
+        args["masterUserId"]=masterUserId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getSlaves"
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -4469,6 +4535,50 @@ class SedoxProductManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "toggleAllowNegativeCredit"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def toggleAllowWindowsApp(self, userId, allow):
+    args = collections.OrderedDict()
+    if isinstance(userId,GetShopBaseClass): 
+      args["userId"]=json.dumps(userId.__dict__)
+    else:
+      try:
+        args["userId"]=json.dumps(userId)
+      except (ValueError, AttributeError):
+        args["userId"]=userId
+    if isinstance(allow,GetShopBaseClass): 
+      args["allow"]=json.dumps(allow.__dict__)
+    else:
+      try:
+        args["allow"]=json.dumps(allow)
+      except (ValueError, AttributeError):
+        args["allow"]=allow
+    data = EmptyClass()
+    data.args = args
+    data.method = "toggleAllowWindowsApp"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def togglePassiveSlaveMode(self, userId, toggle):
+    args = collections.OrderedDict()
+    if isinstance(userId,GetShopBaseClass): 
+      args["userId"]=json.dumps(userId.__dict__)
+    else:
+      try:
+        args["userId"]=json.dumps(userId)
+      except (ValueError, AttributeError):
+        args["userId"]=userId
+    if isinstance(toggle,GetShopBaseClass): 
+      args["toggle"]=json.dumps(toggle.__dict__)
+    else:
+      try:
+        args["toggle"]=json.dumps(toggle)
+      except (ValueError, AttributeError):
+        args["toggle"]=toggle
+    data = EmptyClass()
+    data.args = args
+    data.method = "togglePassiveSlaveMode"
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 

@@ -13,6 +13,7 @@ import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
+import javax.annotation.PostConstruct;
 import javax.mail.BodyPart;
 import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
@@ -41,7 +42,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
     
     @Autowired
     public FrameworkConfig frameworkConfig;
-    
+
     @Autowired
     public Logger logger;
     private Map<String, String> files;
@@ -108,6 +109,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
         mfi.configuration = configuration;
         mfi.logger = logger;
         mfi.storeId = storeId;
+        mfi.frameworkConfig = frameworkConfig;
         
         if(to == null || to.equals("test@getshop.com")) {
             //Send this to noone, or the test account.. no way!

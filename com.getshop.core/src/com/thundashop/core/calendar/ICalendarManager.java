@@ -84,17 +84,7 @@ public interface ICalendarManager {
      */
     public List<Entry> getEntries(int year, int month, int day, List<String> filters) throws ErrorException;
     
-    /**
-     * Deprecated and a fallback method.
-     * 
-     * @param userId
-     * @param eventId
-     * @param password
-     * @param username
-     * @throws ErrorException 
-     */
-    public void addUserToEvent(String userId, String eventId, String password, String username) throws ErrorException;
-    
+
     /**
      * Add a given user to a given event.
      * @param userId The user id to add to a the given event (see usermanager for more inforamtion about this id)

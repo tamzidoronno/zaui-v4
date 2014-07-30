@@ -444,7 +444,6 @@ class PageBuilder {
                         
                         $rownumber = 0;
                         $i = 1;
-                        $colcount = 1;
                         foreach ($this->layout->rows as $row) {
                             $i++;
                             $lastCell ="";

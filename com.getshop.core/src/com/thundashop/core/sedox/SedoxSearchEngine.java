@@ -48,13 +48,6 @@ public class SedoxSearchEngine {
                 retProducts.add(product);
             }
             
-            for (SedoxBinaryFile file : product.binaryFiles) {
-                for (SedoxProductAttribute attr : file.attribues) {
-                    if (attr.value != null && attr.value.toLowerCase().contains(searchString)) {
-                        retProducts.add(product);
-                    }
-                }
-            }
         }
         
         SedoxProductSearchPage page = new SedoxProductSearchPage();

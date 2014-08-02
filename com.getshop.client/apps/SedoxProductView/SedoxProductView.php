@@ -15,6 +15,7 @@ class SedoxProductView extends \ApplicationBase implements \Application {
     public function render() {
         $this->includefile("productview");
     }
+    
 
     public function getCurrentProduct() {
         if (isset($_GET['productId'])) {
@@ -62,7 +63,8 @@ class SedoxProductView extends \ApplicationBase implements \Application {
     }
 
     public function purchaseProduct() {
-        $this->getApi()->getSedoxProductManager()->purchaseProduct($_SESSION['sedox_current_productid'], $_POST['data']['files']);
+        $files = isset($_POST['data']['files']) ? $_POST['data']['files'] : null;
+        $this->getApi()->getSedoxProductManager()->purchaseProduct($_SESSION['sedox_current_productid'], $files);
         $codeSafe = urlencode(base64_encode(implode(":-:", $_POST['data']['files'])));
         echo "filedownload.php?files=" . $codeSafe;
         die();
@@ -83,7 +85,8 @@ class SedoxProductView extends \ApplicationBase implements \Application {
 
     public function purchaseProductOnly() {
         $this->setOrginalCheckSum();
-        $this->getApi()->getSedoxProductManager()->purchaseOnlyForCustomer($_POST['data']['productId'], $_POST['data']['files']);
+        $files = isset($_POST['data']['files']) ? $_POST['data']['files'] : null;
+        $this->getApi()->getSedoxProductManager()->purchaseOnlyForCustomer($_POST['data']['productId'], $files);
     }
 
     public function notifyByEmailAndSms() {
@@ -103,6 +106,16 @@ class SedoxProductView extends \ApplicationBase implements \Application {
 
     public function deleteBinaryFile() {
         $this->getApi()->getSedoxProductManager()->removeBinaryFileFromProduct($_POST['data']['productId'], $_POST['data']['binFileId']);
+    }
+    
+    public function getUploadedSedoxUser($sedoxProduct) {
+        $user = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($sedoxProduct->firstUploadedByUserId);
+        return $user;
+    }
+    
+    public function getUploadedUserName($sedoxProduct) {
+        $user = $this->getApi()->getUserManager()->getUserById($sedoxProduct->firstUploadedByUserId);
+        return $user;
     }
 }
 ?>

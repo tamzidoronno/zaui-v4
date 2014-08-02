@@ -27,7 +27,7 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
     public String build;
     public String ecuBrand;
     public String softwareNumber; 
-    public int softwareSize;
+    public String softwareSize;
     
     public String tool;
     public String status;
@@ -41,6 +41,12 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
     public boolean started;
     public boolean isCmdEncryptedProduct=false;
     public String channel;
+    public String ecuPartNumber;
+    public String ecuHardwareNumber;
+    public String ecuSoftwareNumber;
+    public String ecuSoftwareVersion;
+    
+    public String uploadOrigin;
 
     @Override
     public int compareTo(SedoxProduct o) {
@@ -68,7 +74,8 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
         power = productAttributes[6]; // %Engine.OutputPS%
         ecuBrand = productAttributes[7]; // %ECU.Producer%
         ecuType = productAttributes[8]; // %ECU.Build% 
-        softwareNumber = productAttributes[10]; // %ECU.ECUStg%;
+        ecuSoftwareNumber = productAttributes[10]; // %ECU.ECUStg%;
+        ecuHardwareNumber = productAttributes[11]; // %ECU.ECUStg%;
     }
 
     public SedoxBinaryFile getFileById(int fileId) {

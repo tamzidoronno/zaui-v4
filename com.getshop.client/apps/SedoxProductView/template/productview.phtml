@@ -4,36 +4,61 @@ $name = $sedoxProduct->brand . " " . $sedoxProduct->model . " " . $sedoxProduct-
 $checksum = $sedoxProduct->originalChecksum ? $sedoxProduct->originalChecksum : "";
 ?>
 
-<div class='title'><i class='fa fa-car'></i>&nbsp; <? echo $name; ?></div>
-<div>
-    <div class='productrow'><div class='col col1'>Created</div><div class='col col2'><? echo $sedoxProduct->rowCreatedDate; ?></div></div>
-    <div class='productrow'><div class='col col1'>PS - Original</div><div class='col col2'><? echo $sedoxProduct->power; ?></div></div>
-    <div class='productrow'><div class='col col1'>ECU Brand</div><div class='col col2'><? echo $sedoxProduct->ecuBrand; ?></div></div>
-    <div class='productrow'><div class='col col1'>ECU Type</div><div class='col col2'><? echo $sedoxProduct->ecuType; ?></div></div>
-    <div class='productrow'><div class='col col1'>Orginal Checksum</div><div class='col col2'><? echo $sedoxProduct->originalChecksum; ?></div></div>
-    <div class='productrow'><div class='col col1'>Software Size</div><div class='col col2'><? echo $sedoxProduct->softwareSize; ?></div></div>
+<div class="productviewtoprow">
+    <i class='fa fa-car'></i><div class="carname"><? echo $name; ?></div><div class="statictext">All files at this page are developed by Sedox Performance<br><font style="color: red; font-weight: bold;"> Download is not available unless you have credit at your account.</font></div>
 </div>
-<br>
-<div class='title'><i class='fa fa-download'></i>&nbsp; Purchase and download file.</div>
-<div class='binaryfileholder'>
-    <div class='binaryfilerow header'>
-        <div class='col col1'></div>
-        <div class='col col2'>Type</div>
-        <div class='col col3'>Cost</div>
-        <div class='col col4'>Checksum updated</div>
-        <div class='col col5'>Extra info</div>
+<div class='sedox_product_box productinfo'>
+    <div class='title'>Product Information</div>
+
+    <div class='header'>
+        <div class='col col1'>Created:</div>
+        <div class='col col2'>Original HP:</div>
+        <div class='col col3'>ECU Brand:</div>
+        <div class='col col4'>ECU Type:</div>
+        <div class='col col5'>ECU HW Nr.:</div>
+        <div class='col col6'>ECU SW Nr.:</div>
+        <div class='col col7'>Orig. Checksum:</div>
+        <div class='col col8'>Software Size:</div>
+        <div class='col col9'>Tool</div>
     </div>
-    <?
+    <div class='row'>
+        <div class='col col1'><? echo $sedoxProduct->rowCreatedDate; ?></div>
+        <div class='col col2'><? echo $sedoxProduct->power; ?></div>
+        <div class='col col3'><? echo $sedoxProduct->ecuBrand; ?></div>
+        <div class='col col4'><? echo $sedoxProduct->ecuType; ?></div>
+        <div class='col col5'><? echo $sedoxProduct->ecuHardwareNumber; ?></div>
+        <div class='col col6'><? echo $sedoxProduct->ecuSoftwareNumber; ?></div>
+        <div class='col col7'><? echo $sedoxProduct->originalChecksum; ?></div>
+        <div class='col col8'><? echo $sedoxProduct->softwareSize; ?></div>
+        <div class='col col9'><? echo $sedoxProduct->tool; ?></div>
+    </div>
+</div>
+
+
+<div class='sedox_product_box downloadbox'>
+    <div class='title'>Download</div>
+
+    <div class='header'>
+        <div class='col col1'>Type:</div>
+        <div class='col col2'>Cost:</div>
+        <div class='col col3'>Checksum updated:</div>
+        <div class='col col4'>Extra information:</div>
+        <div class='col col5'>Admin tools:</div>
+    </div>
+    <div class='row'>
+       <?
     foreach ($sedoxProduct->binaryFiles as $binFile) {
         ?>
         <div class='binaryfilerow' binfileid="<? echo $binFile->id; ?>">
             <div class="col col1 squaredThree">
                 <input type="checkbox" value="None" id="squaredThree_<? echo $binFile->id; ?>" name="check" fileId="<? echo $binFile->id; ?>" />
                 <label for="squaredThree_<? echo $binFile->id; ?>"></label>
+                <? echo $binFile->fileType; ?>
             </div>
-            <div class='col col2'><? echo $binFile->fileType; ?></div>
-            <div class='col col3'><? echo $this->getPriceForFile($binFile); ?></div>
-            <div class='col col4'>
+            
+            <div class='col col2'><? echo $this->getPriceForFile($binFile); ?></div>
+            
+            <div class='col col3'>
                 <? 
                     if ($binFile->checksumCorrected == 0) {
                         echo "No";
@@ -44,25 +69,43 @@ $checksum = $sedoxProduct->originalChecksum ? $sedoxProduct->originalChecksum : 
                     }
                 ?>
             </div>
-            <div class='col col5'>-</div>
+            <div class='col col4'></div>
             <? if ($this->hasWriteAccess()) { ?>
-                <div class='col col6'><i productid="<? echo $sedoxProduct->id; ?>" class="fa fa-trash-o deletebinfile"></i></div>
-                <div class='col col7'><i productid="<? echo $sedoxProduct->id; ?>" class="fa fa-info-circle changeinfo"></i></div>
+                <div class='col col5'>
+                    <i productid="<? echo $sedoxProduct->id; ?>" class="fa fa-trash-o deletebinfile"></i>
+                    <i productid="<? echo $sedoxProduct->id; ?>" class="fa fa-info-circle changeinfo"></i>
+                </div>
             <? } ?>
         </div>
         <?
     }
     ?> 
-    <div class='sedox_warning'>Note! When you click on the button below you will download the file and it will be purchased. </div>
-    <div class='sedox_button purchase'>Purchase and download</div>
+    </div>
+    <div class='row'>
+
+        <div class='sedox_button purchase'>Purchase and download</div>
+        <div class='sedox_warning'>Note! When you click on the button below you will download the file and it will be purchased. </div>
+    </div>
 </div>
 
 <?
 if (!$this->hasWriteAccess()) {
     return;
 }
+
+$sedoxUser = $this->getUploadedSedoxUser($sedoxProduct);
+$uploadedByUser = $this->getUploadedUserName($sedoxProduct);
 ?>
 <div class='admintools'>
+    <div class='sedox_product_box'>
+        
+    </div>
+    <div class='title'><i class='fa fa-download'></i>&nbsp; Uploaded by</div>
+    <div class='subcontainer'>
+        Uploaded by: <? echo $uploadedByUser->fullName;?>
+        <br> Email: <? echo $uploadedByUser->emailAddress; ?>
+        <br> Credit balance: <? echo $sedoxUser->creditAccount->balance; ?>
+    </div>
     <div class='title'><i class='fa fa-download'></i>&nbsp; Add a tuningfile.</div>
     <div class='subcontainer'>
         Drag the tuningfile to the different boxes below, it will automatically upload and set the price. :)
@@ -77,12 +120,25 @@ if (!$this->hasWriteAccess()) {
     
     <div class='title'><i class='fa fa-lightbulb-o'></i>&nbsp; Purchase file for customer.</div>
     <div class='subcontainer'>
-        <textarea class="infotextareatocustomer" placeholder="Information to attach to the mail."></textarea>
-        <br><input type="textfield" class="original_check_input_box" placeholder="Insert original checksum here" value="<? echo $checksum; ?>"/>
+        <div class="box122">
+            <textarea class="infotextareatocustomer" placeholder="Information to attach to the mail."></textarea>
+            <br><input type="textfield" class="original_check_input_box" placeholder="Insert original checksum here" value="<? echo $checksum; ?>"/>
+        </div>
+        
+        <div class="box122 additional_info">
+            <b>User comment: </b>
+            <br><? echo $sedoxProduct->comment; ?>
+            <br>
+            <br><b>Uploaded from: </b>
+            <br><? echo $sedoxProduct->uploadOrigin; ?>
+        </div>
         <br>
         <br>
-        <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button purchaseorderonly">Purchase order only</div>
-        <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button notifybyemailandsms">Notify by email and sms</div>
-        <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button sendproductbyemail">Send product by email</div>
+        <div>
+            <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button purchaseorderonly">Purchase order only</div>
+            <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button notifybyemailandsms">Notify by email and sms</div>
+            <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button sendproductbyemail">Send product by email</div>
+        </div>
+        
     </div>
 </div>

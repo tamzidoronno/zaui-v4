@@ -22,6 +22,6 @@ $slave = null;
 $comment = $json['extraComment'];
 $geartype = $json['ManualGear'] == true ? "man" : "auto";
 $useCredit = "yes";
-$sedoxFileUpload->saveFileContent($brand, $model, $engineSize, $power, $year, $tool, $comment, $geartype, $useCredit, $slave, $filename, $filecontent);
+$sedoxFileUpload->saveFileContent($brand, $model, $engineSize, $power, $year, $tool, $comment, $geartype, $useCredit, $slave, $filename, $filecontent, "Windows Application");
 
 ?>

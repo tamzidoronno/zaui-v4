@@ -144,5 +144,6 @@
 "1000013","Page list is invalid.",
 "1000014","This list does not exists"
 
-"2000001","You must selected the original encrypted file + the tuningfile you wish to send.";
-"2000002","Failed to decrypt file, please check the windows computer where the CMD program is running if it has a error or something.";
+"2000001","You must selected the original encrypted file + the tuningfile you wish to send."
+"2000002","Failed to decrypt file, please check the windows computer where the CMD program is running if it has a error or something."
+"2000003","At least one file needs to be selected when purchasing a product."

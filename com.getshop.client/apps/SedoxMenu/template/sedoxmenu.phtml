@@ -40,6 +40,9 @@ $notLoggedIn = $this->getUser() ? "" : "notLoggedIn";
 <? if ($this->isHomePage()) { ?>
     <div class='searcharea'>
         <div class='title'>Search Database</div>
-        <input id="searchinputfield" type='text' placeholder='SEARCH OUR DATABASE FOR MATCHING FILE.' value="<? echo isset($_SESSION['searchKey']) ? $_SESSION['searchKey'] : ""; ?>"><div class='sedox_button' >SEARCH</div>
+        <?
+        $placeholder = isset($_SESSION['searchKey']) ? $_SESSION['searchKey'] : "SEARCH OUR DATABASE FOR MATCHING FILE.";
+        ?>
+        <input id="searchinputfield" type='text' placeholder='<? echo $placeholder; ?>'><div class='sedox_button' >SEARCH</div>
     </div>
 <? } ?>

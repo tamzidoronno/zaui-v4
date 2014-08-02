@@ -45,7 +45,7 @@ class SedoxFileUpload extends \ApplicationBase implements \Application {
         $_SESSION['fileuploaded'] = true;
     }
     
-    public function saveFileContent($brand, $model, $engineSize, $power, $year, $tool, $comment, $geartype, $useCredit, $slave, $filename, $filecontent) {
+    public function saveFileContent($brand, $model, $engineSize, $power, $year, $tool, $comment, $geartype, $useCredit, $slave, $filename, $filecontent, $origin="WebPage") {
         $sedoxProduct = new \core_sedox_SedoxProduct();
         $sedoxProduct->brand = $brand;
         $sedoxProduct->model = $model;
@@ -57,7 +57,7 @@ class SedoxFileUpload extends \ApplicationBase implements \Application {
         $sedoxProduct->gearType = $geartype;
         $sedoxProduct->useCreditAccount = $useCredit;
         
-        $this->getApi()->getSedoxProductManager()->createSedoxProduct($sedoxProduct, $filecontent, $filename, $slave);    
+        $this->getApi()->getSedoxProductManager()->createSedoxProduct($sedoxProduct, $filecontent, $filename, $slave, $origin);    
     }
     
     public function sendSpecialRequest() {

@@ -5,15 +5,12 @@
 package com.thundashop.core.sedox;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
  * @author ktonder
  */
 public class SedoxBinaryFile implements Serializable {
-    public List<SedoxProductAttribute> attribues = new ArrayList();
     
     public int id;
     public String md5sum;

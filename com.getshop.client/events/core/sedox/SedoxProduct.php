@@ -72,5 +72,20 @@ class core_sedox_SedoxProduct extends core_common_DataCommon  {
 	/** @var String */
 	public $channel;
 
+	/** @var String */
+	public $ecuPartNumber;
+
+	/** @var String */
+	public $ecuHardwareNumber;
+
+	/** @var String */
+	public $ecuSoftwareNumber;
+
+	/** @var String */
+	public $ecuSoftwareVersion;
+
+	/** @var String */
+	public $uploadOrigin;
+
 }
 ?>

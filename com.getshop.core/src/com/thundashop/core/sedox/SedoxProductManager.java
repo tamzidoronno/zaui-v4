@@ -219,7 +219,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     @Override
-    public synchronized void createSedoxProduct(SedoxProduct sedoxProduct, String base64EncodeString, String originalFileName, String forSlaveId) throws ErrorException {
+    public synchronized void createSedoxProduct(SedoxProduct sedoxProduct, String base64EncodeString, String originalFileName, String forSlaveId, String origin) throws ErrorException {
         if (forSlaveId != null && !forSlaveId.equals("")) {
             checkIfMasterOfSlave(forSlaveId);
         }
@@ -247,7 +247,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         }
 
         byte[] fileData = DatatypeConverter.parseBase64Binary(base64EncodeString);
-        sedoxProduct.softwareSize = fileData.length / 1024;
+        sedoxProduct.softwareSize = (fileData.length / 1024) + " KB";
+        sedoxProduct.uploadOrigin = origin;
 
         databaseSaver.saveObject(sedoxProduct, credentials);
         sendFileCreatedEmail(sedoxProduct);
@@ -303,10 +304,18 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     
     @Override
     public synchronized String purchaseProduct(String productId, List<Integer> files) throws ErrorException {
+        if (getSession().currentUser == null) {
+            throw new ErrorException(26);
+        }
+        
         SedoxUser user = users.get(getSession().currentUser.id);
 
         if (user == null) {
             throw new ErrorException(26);
+        }
+        
+        if (files == null) {
+            throw new ErrorException(2000003);
         }
 
         purchaseProductInternalForUser(productId, user, files);
@@ -438,12 +447,15 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
         double totalPrice = 40;
         double mostExpensive = 0;
-        for (int fileId : files) {
-            SedoxBinaryFile binFile = sedoxProduct.getFileById(fileId);
-            if (binFile != null && binFile.getPrice() > mostExpensive) {
-                mostExpensive = binFile.getPrice();
+        if (files != null) {
+            for (int fileId : files) {
+                SedoxBinaryFile binFile = sedoxProduct.getFileById(fileId);
+                if (binFile != null && binFile.getPrice() > mostExpensive) {
+                    mostExpensive = binFile.getPrice();
+                }
             }
         }
+        
 
         totalPrice += mostExpensive;
         double alreadySpentOnProduct = getAlreadySpentOnProduct(sedoxProduct, user);
@@ -829,7 +841,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         return retUsers;
     }
 
-    private void sendNotificationEmail(String emailAddress, SedoxProduct sedoxProduct) {
+    private void sendNotificationEmail(String emailAddress, SedoxProduct sedoxProduct) throws ErrorException {
         List<Integer> files = new ArrayList();
         
         for (SedoxBinaryFile binFile : sedoxProduct.binaryFiles) {
@@ -840,9 +852,17 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         
         HashMap<String, String> fileMap = new HashMap();
         fileMap.put(fileName, sedoxProduct.toString()+".zip");
+
+        User user = getGetshopUser(sedoxProduct.firstUploadedByUserId);
+        SedoxUser sedoxUser = getSedoxUserAccountById(sedoxProduct.firstUploadedByUserId);
+        String content = "New file uploaded";
         
-        String content = getMailContent(sedoxProduct.comment, sedoxProduct.id);
-        mailFactory.sendWithAttachments("files@tuningfiles.com", emailAddress, "File needs to be processed", content, fileMap, true);
+        content += "<br><b>Car details: </b>" + sedoxProduct.toString();
+        content += "<br>";
+        content += "<br>Name: " + user.fullName;
+        content += "<br>Credit balance: " + sedoxUser.creditAccount.getBalance();
+        content += "</br><br/>Link to product <a href='http://databank.tuningfiles.com/index.php?page=productview&productId=76972'>http://databank.tuningfiles.com/index.php?page=productview&productId="+sedoxProduct.id+"</a>";
+        mailFactory.sendWithAttachments("files@tuningfiles.com", emailAddress, "File uploaded: " + sedoxProduct.toString(), content, fileMap, true);
     }
 
     private double getAlreadySpentOnProduct(SedoxProduct sedoxProduct, SedoxUser user) {
@@ -1005,6 +1025,15 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 
                 databaseSaver.saveObject(master, credentials);
             }
+        }
+    }
+
+    @Override
+    public void toggleStartStop(String productId, boolean toggle) throws ErrorException {
+        SedoxProduct product = getProductById(productId);
+        if (product != null) {
+            product.started = toggle;
+            saveObject(product);
         }
     }
 }

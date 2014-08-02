@@ -18,6 +18,7 @@ class SedoxAdmin extends \ApplicationBase implements \Application {
     }
 
     public function render() {
+        $this->doHandlingOfStartStopAction();
         $this->includefile("topmenu");        
         echo "<div class='sedox_admin_subarea'>";
         if ($this->isDailyView())
@@ -33,6 +34,14 @@ class SedoxAdmin extends \ApplicationBase implements \Application {
             $this->includefile("usersettings");
         
         echo "</div>";
+    }
+
+    public function doHandlingOfStartStopAction() {
+        if (isset($_GET['action'])) {
+            $action = $_GET['action'];
+            $productId = $_GET['file'];
+            $this->getApi()->getSedoxProductManager()->toggleStartStop($productId, $action == "Start");
+        }
     }
 
     public function getAccountsWithNegativeCreditValue() {
@@ -163,6 +172,14 @@ class SedoxAdmin extends \ApplicationBase implements \Application {
         $userId = $_POST['data']['userId'];
         $toggle = $_POST['data']['isPassiveSlave'];
         $this->getApi()->getSedoxProductManager()->togglePassiveSlaveMode($userId, $toggle);
+    }
+    
+    public function getFullName($sedoxProduct) {
+        $user = $this->getApi()->getUserManager()->getUserById($sedoxProduct->firstUploadedByUserId);
+        if ($user != null) {
+            return $user->fullName;
+        }
+        return "";
     }
 }
 

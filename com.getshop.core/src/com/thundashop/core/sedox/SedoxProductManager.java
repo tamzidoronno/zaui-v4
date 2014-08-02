@@ -387,9 +387,13 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         return null;
     }
     
-    private byte[] getByteContentOfProduct(SedoxProduct product, List<Integer> files) throws IOException  {
+    private byte[] getByteContentOfProduct(SedoxProduct product, List<Integer> files) throws IOException, ErrorException  {
         byte[] zippedContent;
 
+        if (files == null) {
+            throw new ErrorException(2000003);
+        }
+        
         try (ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream(); ZipOutputStream out = new ZipOutputStream(byteOutputStream)) {
             for (Integer fileId : files) {
                 SedoxBinaryFile binFile = product.getFileById(fileId);
@@ -422,7 +426,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         return zippedContent;
     }
 
-    private String getZipfileAsBase64(SedoxProduct product, List<Integer> files) throws IOException {
+    private String getZipfileAsBase64(SedoxProduct product, List<Integer> files) throws IOException, ErrorException {
         byte[] zippedContent = getByteContentOfProduct(product, files);
         return DatatypeConverter.printBase64Binary(zippedContent);
     }
@@ -664,7 +668,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             System.out.println(i +"/"+users.size());
             try {
                 updateUserFromMagento(user.id, true);
-            } catch (ErrorException ex) {
+            } catch (ErrorException | NullPointerException ex) {
                 ex.printStackTrace();
             }
         }
@@ -788,7 +792,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         mailFactory.sendWithAttachments("files@tuningfiles.com", getshopUser.emailAddress, product.toString(), content, fileMap, true);
     }
     
-    private String zipProductToTmpFolder(SedoxProduct sedoxProduct, List<Integer> files) {
+    private String zipProductToTmpFolder(SedoxProduct sedoxProduct, List<Integer> files) throws ErrorException {
         try {
             byte[] zippedContent = getByteContentOfProduct(sedoxProduct, files);
             

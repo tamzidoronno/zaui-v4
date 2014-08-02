@@ -43,9 +43,9 @@ public class SedoxMysqlImporter {
     
     
     public List<SedoxProduct> getProducts() throws ClassNotFoundException, SQLException {
-        Connection connect = DriverManager.getConnection("jdbc:mysql://localhost/databank?user=databank&password=flatark");
+        Connection connect = DriverManager.getConnection("jdbc:mysql://10.0.3.3/databank?user=sync&password=syncmann");
         Statement statement = connect.createStatement();
-        ResultSet resultSet = statement.executeQuery("select * from SedoxProduct order by id desc limit 2000");
+        ResultSet resultSet = statement.executeQuery("select * from SedoxProduct ");
 
         List<SedoxProduct> products = new ArrayList<SedoxProduct>();
         int i = 0;
@@ -155,7 +155,7 @@ public class SedoxMysqlImporter {
     }
     
     public List<SedoxUser> getCreditAccounts() throws SQLException {
-        Connection connect = DriverManager.getConnection("jdbc:mysql://localhost/databank?user=databank&password=flatark");
+        Connection connect = DriverManager.getConnection("jdbc:mysql://10.0.3.3/databank?user=sync&password=syncmann");
         Statement statement = connect.createStatement();
         ResultSet resultSet = statement.executeQuery("select * from CreditAccount ");
         

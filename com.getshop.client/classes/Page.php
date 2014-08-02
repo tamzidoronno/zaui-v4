@@ -21,8 +21,15 @@ class Page extends FactoryBase {
 
     public function getApplications() {
         $apps = array();
-        foreach ($this->areas as $area) {
-            $apps = array_merge($apps, $area->getApplications());
+        foreach ($this->layout->otherAreas as $area) {
+            $pageArea = new PageArea($this,$area);
+            $apps = array_merge($apps, $pageArea->getApplications());
+        }
+        foreach ($this->layout->rows as $row) {
+            foreach($row->areas as $area) {
+                $pageArea = new PageArea($this,$area);
+                $apps = array_merge($apps, $pageArea->getApplications());
+            }
         }
 
         return $apps;
@@ -39,7 +46,11 @@ class Page extends FactoryBase {
      * @return PageArea
      */
     public function getApplicationArea($area) {
-        if (!isset($this->areas[$area])) {
+//        echo "<pre>";
+//        print_r($this->layout->otherAreas);
+//        echo "</pre>";
+//        exit(0);
+       if (!isset($this->layout->otherAreas->{$area})) {
             $backendarea = new core_pagemanager_data_PageArea();
             $backendarea->type = $area;
             $backendarea->applications = array();
@@ -48,7 +59,7 @@ class Page extends FactoryBase {
             $backendarea->extraApplicationList = array();
             return new PageArea($this, $backendarea);
         }
-        return $this->areas[$area];
+        return new PageArea($this, $this->layout->otherAreas->{$area});
     }
 
     public function standAloneApp($app) {

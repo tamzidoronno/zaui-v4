@@ -13,14 +13,17 @@ import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.Entry;
 import com.thundashop.core.listmanager.data.EntryList;
 import com.thundashop.core.listmanager.data.ListType;
+import com.thundashop.core.pagemanager.data.CommonPageData;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageArea;
+import com.thundashop.core.pagemanager.data.RowLayout;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.usermanager.UserManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -62,7 +65,9 @@ public class PageManager extends ManagerBase implements IPageManager {
                 Page p = (Page) data;
                 pagePool.addFromDatabase(p);
             }
-            
+            if(data instanceof CommonPageData) {
+                pagePool.commonPageData = (CommonPageData) data;
+            }
             if (data instanceof AppConfiguration)
                 applicationPool.addFromDatabase((AppConfiguration)data);
         }
@@ -289,15 +294,6 @@ public class PageManager extends ManagerBase implements IPageManager {
         if(pageArea == null) {
             return;
         }
-        
-        List<String> apps = new ArrayList();
-        for (AppConfiguration app : pageArea.applications.values()) {
-            apps.add(app.id);
-        }
-        
-        for (String appid : apps) {
-            removeApplication(appid, pageId);
-        }
     }
 
     @Override
@@ -455,5 +451,18 @@ public class PageManager extends ManagerBase implements IPageManager {
             pageArea.bottomRightApplicationId = config.id;
         
         pagePool.savePage(page);
+    }
+
+    @Override
+    public String createNewRow(String pageId) throws ErrorException {
+        Page page = getPage(pageId);
+        RowLayout row = page.createApplicationRow();
+        saveObject(page);
+        return row.rowId;
+    }
+
+    @Override
+    public AppConfiguration addApplicationToRow(String pageId, String applicationSettingId, String rowId) throws ErrorException {
+        return pagePool.addApplicationToRow(pageId, rowId, applicationSettingId);
     }
 }

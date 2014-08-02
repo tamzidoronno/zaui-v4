@@ -6,14 +6,18 @@
     font-family: "Museo700-Regular";
     src: url(/fonts/Museo700-Regular.ttf) format("truetype");
 }
-.TopMenu {
-    font-family: "Open Sans 2";
+body {
+    font-family: "helvetica" !important;
+    
+}
+.TopMenu .subentries {
+        background-color: rgba(255,255,255,0.8);
 }
 .gs_outer, .mainarea { background-color:#FFF; }
 .gs_inner { max-width: 1000px; margin: auto; }
 .header { background-color: #020303; height: 65px; }
-.TopMenu a { color:#BBB; line-height: 35px; }
-.TopMenu a.selected { color:#FFF; }
+.TopMenu a { color:#BBB; line-height: 35px; font-weight: normal !important; }
+.TopMenu a.selected { color:#FFF; font-weight:800 !important; }
 .TopMenu .subentries a.selected { color:#000; }
 .TopMenu { right: 0px; top: 30px; color:#FFF; }
 .footer { background-color: #363b3e; margin-top: 30px !important; }
@@ -44,6 +48,7 @@ cursor: pointer; }
 .leftcart .shipping_price, .leftcart .up, .leftcart .down, .leftcart .removebutton { display:none; }
 .CartManager .leftcart,.CartManager .rightcart { border: solid 0px !important; }
 body { background-color: #363b3e; }
+h1,h2,h3,h4,h5,h6 { font-family: "Museo700-Regular"; }
 .gs_button.buy_product { display: none; }
 .subentries a { color:#000; }
 .subentries a.selected { font-weight: bold; }
@@ -69,7 +74,7 @@ body { background-color: #363b3e; }
     }        
     .TopMenu .subentries li { border-bottom: solid 0px !important; }
     .TopMenu .subentries a {
-        background-color: #000;
+        background-color: #FFF;
         color: #BBB !important;
         border-bottom: solid 0px !important;
     }        

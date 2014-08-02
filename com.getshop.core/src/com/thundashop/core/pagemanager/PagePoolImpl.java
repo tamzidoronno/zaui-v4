@@ -12,9 +12,11 @@ import com.thundashop.core.common.Setting;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.Entry;
+import com.thundashop.core.pagemanager.data.CommonPageData;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.Page.PageType;
 import com.thundashop.core.pagemanager.data.PageArea;
+import com.thundashop.core.pagemanager.data.RowLayout;
 import com.thundashop.core.usermanager.data.User;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -44,6 +46,7 @@ public class PagePoolImpl {
     private String storeId;
     public PageManager pageManager;
     public boolean defaultPagesSet = false;
+    public CommonPageData commonPageData = new CommonPageData();
 
     @Autowired
     public PagePoolImpl(Logger logger) {
@@ -89,6 +92,7 @@ public class PagePoolImpl {
         }
         
         Page finalized = finalizePage(page);
+        
         return finalized;
     }
 
@@ -107,6 +111,21 @@ public class PagePoolImpl {
         return app;
     }
 
+    AppConfiguration addApplicationToRow(String pageId, String rowId, String applicationSettingId) throws ErrorException {
+        AppConfiguration app = applicationPool.createNewApplication(applicationSettingId);
+        Page page = get(pageId);
+        for(RowLayout row : page.layout.rows) {
+            if(row.rowId.equals(rowId)) {
+                PageArea area = row.createApplicationArea();
+                area.applicationsList.add(app.id);
+                savePage(page);
+            }
+        }    
+        return app;
+    }
+
+    
+    
     public Page removeApplication(String instanceId) throws ErrorException {
         for (Page page : pages.values()) {
             Page pageres = removeApplicationFromPage(page, instanceId);
@@ -299,12 +318,21 @@ public class PagePoolImpl {
             page.parent = pages.get(page.parent.id);
         }
         page.clear();
+        
+        page.layout.otherAreas.put("footer", commonPageData.footer);
+        page.layout.otherAreas.put("header", commonPageData.header);
+        
+        if(page.parent != null) {
+            page.parent.layout.otherAreas.put("footer", commonPageData.footer);
+            page.parent.layout.otherAreas.put("header", commonPageData.header);
+        }
+        
         addInheritatedApplications(page, page.parent);
         addStickedApplications(page);
         boolean onlyExtraApplications = shouldOnlyContainExtraApplications(page);
-        Map<String, AppConfiguration> applications = applicationPool.getApplications(page.getApplicationIds());
-        page.populateApplications(applications, onlyExtraApplications);
-        page.sortApplications();
+        List<String> applicationlist = page.getApplicationIds();
+        Map<String, AppConfiguration> applications = applicationPool.getApplications(applicationlist);
+        page.layout.populateApplications(applications, onlyExtraApplications);
         page.finalizePageLayoutRows();
         if(page.needSaving) {
             savePage(page);
@@ -313,25 +341,29 @@ public class PagePoolImpl {
         return page;
     }
 
-    private void addInheritatedApplications(Page currentPage, Page page) {
+    private void addInheritatedApplications(Page currentPage, Page page) throws ErrorException {
         if (page == null) {
             return;
         }
 
         for (String pageAreaKey : page.getAllPageAreas()) {
             PageArea pageArea = page.getPageArea(pageAreaKey);
-            for (String application : pageArea.applicationsList) {
-                try {
-                    AppConfiguration appConfig = applicationPool.get(application);
-                    if (appConfig != null
-                            && appConfig.inheritate > 0
-                            && currentPage.getPageArea(pageArea.type) != null
-                            && currentPage.getPageArea(pageArea.type).applicationsList != null
-                            && !currentPage.getPageArea(pageArea.type).applicationsList.contains(appConfig.id)) {
-                        currentPage.getPageArea(pageArea.type).extraApplicationList.put(appConfig.id, page.id);
+            if(pageArea == null) {
+                System.out.println("Page area null for : " + pageAreaKey);
+            } else {
+                for (String application : pageArea.applicationsList) {
+                    try {
+                        AppConfiguration appConfig = applicationPool.get(application);
+                        if (appConfig != null
+                                && appConfig.inheritate > 0
+                                && currentPage.getPageArea(pageArea.type) != null
+                                && currentPage.getPageArea(pageArea.type).applicationsList != null
+                                && !currentPage.getPageArea(pageArea.type).applicationsList.contains(appConfig.id)) {
+                            currentPage.getPageArea(pageArea.type).extraApplicationList.put(appConfig.id, page.id);
+                        }
+                    } catch (ErrorException ex) {
+                        ex.printStackTrace();
                     }
-                } catch (ErrorException ex) {
-                    ex.printStackTrace();
                 }
             }
         }
@@ -354,11 +386,16 @@ public class PagePoolImpl {
         }
     }
 
-    private PageArea getPageArea(AppConfiguration application) {
+    private PageArea getPageArea(AppConfiguration application) throws ErrorException {
+        if(application.id == null) {
+            System.out.println("What?");
+        }
         for (Page page : pages.values()) {
             for (String pageAreaKey : page.getAllPageAreas()) {
                 PageArea pageArea = page.getPageArea(pageAreaKey);
-                if (pageArea.applicationsList.contains(application.id)) {
+                
+                
+                if (pageArea != null && pageArea.applicationsList != null && pageArea.applicationsList.contains(application.id)) {
                     return pageArea;
                 }
             }
@@ -416,14 +453,11 @@ public class PagePoolImpl {
         pages.put(page.id, page);
     }
 
-    boolean applicationExistsInArea(AppConfiguration appConfig, String pageAreaCompare) {
+    boolean applicationExistsInArea(AppConfiguration appConfig, String pageAreaCompare) throws ErrorException {
         PageArea pageArea = getPageArea(appConfig);
         if (pageArea != null && pageArea.type.equals(pageAreaCompare)) {
             return true;
         }
         return false;
     }
-
-    
-
 }

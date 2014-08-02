@@ -1735,6 +1735,21 @@ class APIHotelBookingManager {
 	}
 
 	/**
+	* Get all references
+	* @return core_hotelbookingmanager_BookingReference
+	* @throws ErrorException
+	*/
+
+	public function getReservationByReferenceId($referenceId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["referenceId"] = json_encode($this->transport->object_unset_nulls($referenceId));
+	     $data["method"] = "getReservationByReferenceId";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->cast(new core_hotelbookingmanager_BookingReference(), $this->transport->sendMessage($data));
+	}
+
+	/**
 	* Add new room to the manager.
 	* @param room
 	* @throws ErrorException
@@ -2543,6 +2558,22 @@ class APIOrderManager {
 	}
 
 	/**
+	* Fetch all orders for a user.
+	* @param userId
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function getAllOrdersForUser($userId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data["method"] = "getAllOrdersForUser";
+	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Fetch a single order based on its id.
 	* @param orderId
 	* @return core_ordermanager_data_Order
@@ -2554,6 +2585,21 @@ class APIOrderManager {
 	     $data['args'] = array();
 	     $data['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
 	     $data["method"] = "getOrder";
+	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->cast(new core_ordermanager_data_Order(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Got a reference number for the order, fetch it from here.
+	* @param referenceId
+	* @throws ErrorException
+	*/
+
+	public function getOrderByReference($referenceId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["referenceId"] = json_encode($this->transport->object_unset_nulls($referenceId));
+	     $data["method"] = "getOrderByReference";
 	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->cast(new core_ordermanager_data_Order(), $this->transport->sendMessage($data));
 	}
@@ -2737,6 +2783,25 @@ class APIPageManager {
 	}
 
 	/**
+	* Creates a new application area attach the new application to it and appends it to the row.
+	* @param pageId
+	* @param rowId
+	* @param applicationSettingId
+	* @throws com.thundashop.core.common.ErrorException
+	*/
+
+	public function addApplicationToRow($pageId, $rowId, $applicationSettingId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data['args']["rowId"] = json_encode($this->transport->object_unset_nulls($rowId));
+	     $data['args']["applicationSettingId"] = json_encode($this->transport->object_unset_nulls($applicationSettingId));
+	     $data["method"] = "addApplicationToRow";
+	     $data["interfaceName"] = "core.pagemanager.IPageManager";
+	     return $this->transport->cast(new core_common_AppConfiguration(), $this->transport->sendMessage($data));
+	}
+
+	/**
 	* Add an existing application to the application area
 	*
 	* @param pageId
@@ -2830,6 +2895,22 @@ class APIPageManager {
 	}
 
 	/**
+	* Create a new row to add application areas to for a given page.
+	* @param pageId
+	* @return String
+	* @throws ErrorException
+	*/
+
+	public function createNewRow($pageId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data["method"] = "createNewRow";
+	     $data["interfaceName"] = "core.pagemanager.IPageManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Create a new page.
 	* This page can be used to stick applications to it.
 	*
@@ -2838,6 +2919,7 @@ class APIPageManager {
 	* Header left middle footer = 2;<br>
 	* Header right middle footer = 3;<br>
 	* Header middle footer = 4;<br>
+	* Layout is depeacated, the layouts has been eveloved to be more dynamic now.
 	*
 	* @param layout See above, integer 1 to 4
 	* @param parentId The parent page. From what page are this page being created?

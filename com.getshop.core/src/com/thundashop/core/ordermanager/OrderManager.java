@@ -41,8 +41,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for (DataCommon dataFromDatabase : data.data) {
             if (dataFromDatabase instanceof Order) {
                 Order order = (Order) dataFromDatabase;
-                if (order.shipping == null || order.cart == null || order.cart.address == null) {
+                if (order.cart == null || order.cart.address == null) {
                     try {
+                        System.out.println("Removing order: " + order.id + " due to incorrect data on them");
                         databaseSaver.deleteObject(dataFromDatabase, credentials);
                     } catch (ErrorException ex) {
                         ex.printStackTrace();
@@ -410,6 +411,30 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 mailFactory.send(store.configuration.emailAdress, store.configuration.emailAdress, getSubject(), orderText);
             }
         }
+    }
+
+    @Override
+    public Order getOrderByReference(String referenceId) throws ErrorException {
+        for(Order order : orders.values()) {
+            if(order.reference.equals(referenceId)) {
+                return order;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<Order> getAllOrdersForUser(String userId) throws ErrorException {
+        User user = getSession().currentUser;
+        List<Order> returnOrders = new ArrayList();
+        if(user.isAdministrator() || user.id.equals(userId)) {
+            for(Order order : orders.values()) {
+                if(order.userId != null && order.userId.equals(userId)) {
+                    returnOrders.add(order);
+                }
+            }
+        }
+        return returnOrders;
     }
 
 }

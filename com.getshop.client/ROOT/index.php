@@ -233,13 +233,6 @@ if(isset($factory->getSettings()->languages)) {
 
 </html>
 <?
-if ($factory->getApi()->getStoreManager()->getMyStore()->partnerId == "GetShop") {
-    ?>
-    <div id="getshoppower" style='position:fixed; text-align:right;  bottom:0px; right:0px; display:block;background-color:#FFFFFF; padding: 1px; margin-top: 3px;'>
-        &nbsp;&nbsp;&nbsp;<a href='http://www.getshop.com'>Powered by GetShop</a>&nbsp;&nbsp;&nbsp;
-    </div>
-    <?
-}
 if (count($factory->getApi()->transport->errors) > 0) {
     echo "<script>";
     $error = $factory->getErrorsHtml();

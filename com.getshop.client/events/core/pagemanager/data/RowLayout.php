@@ -4,6 +4,9 @@ class core_pagemanager_data_RowLayout {
 	public $numberOfCells;
 
 	/** @var String */
+	public $areas;
+
+	/** @var String */
 	public $marginBottom;
 
 	/** @var String */

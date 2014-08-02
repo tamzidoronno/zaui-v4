@@ -9,6 +9,7 @@ package com.thundashop.core.pagemanager.data;
 import com.google.code.morphia.annotations.Transient;
 import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Translation;
 import com.thundashop.core.listmanager.data.Entry;
 import java.util.ArrayList;
@@ -29,64 +30,65 @@ public class Page extends DataCommon implements Cloneable {
     public boolean needSaving = false;
     public boolean beenLoaded = false;
     
+    public HashMap<String, PageArea> pageAreas = new HashMap<String, PageArea>();
+    public Page parent;
+    public int pageType =  PageType.Standard;
+    //This is actually more a layout type... should be renamed to layouttype
+    public int type;
+    public String pageTag = "";
+    public String pageTagGroup = "";
+    public int userLevel = 0;
+    public String description = "";
+    public PageLayout layout = new PageLayout();
+    @Translation
+    public String title;
+    public String customCss = "";
+    
     public Page() {
     }
 
     public void clear() {
-        for (PageArea pageArea : pageAreas.values()) {
-            pageArea.clear();
+        for(RowLayout row : layout.rows) {
+            for (PageArea pageArea : row.areas) {
+                pageArea.clear();
+            }
         }
     }
 
     public void moveApplicationUp(String appid) {
-        sortApplications();
-        for (PageArea pageArea : pageAreas.values()) {
-            pageArea.moveApplicationUp(appid);
+        for(RowLayout row : layout.rows) {
+            for (PageArea pageArea : row.areas) {
+                pageArea.moveApplicationUp(appid);
+            }
         }
     }
 
     public void moveApplicationDown(String appid) {
-        sortApplications();
-        for (PageArea pageArea : pageAreas.values()) {
-            pageArea.moveApplicationDown(appid);
+        for(RowLayout row : layout.rows) {
+            for (PageArea pageArea : row.areas) {   
+                pageArea.moveApplicationDown(appid);
+            }
         }
     }
 
-    public PageArea getPageArea(String pageArea) {
-        if(!pageAreas.containsKey(pageArea)) {
-            PageArea newPageArea = new PageArea(this);
-            newPageArea.type = pageArea;
-            pageAreas.put(pageArea, newPageArea);
-        }
-        return pageAreas.get(pageArea);
+    public PageArea getPageArea(String pageArea) throws ErrorException {
+        return layout.getPageArea(pageArea);
     }
 
-    public Set<String> getAllPageAreas() {
-        return pageAreas.keySet();
+    public List<String> getAllPageAreas() {
+        return layout.getAllAreas();
     }
 
     public void moveApplicationToArea(String fromarea, String toarea) {
-        if(pageAreas.containsKey(fromarea)) {
-            PageArea area = pageAreas.get(fromarea);
-            area.type = toarea;
-            pageAreas.remove(fromarea);
-            pageAreas.put(toarea, area);
-        }
+        
     }
 
     public void removeApplicationOnArea(String area) {
-        pageAreas.remove(area);
+        
     }
 
     public void switchApplications(String fromArea, String toArea) {
-        PageArea firstArea = pageAreas.get(fromArea);
-        PageArea secondArea = pageAreas.get(toArea);
         
-        firstArea.type = toArea;
-        secondArea.type = fromArea;
-        
-        pageAreas.put(toArea, firstArea);
-        pageAreas.put(fromArea, secondArea);
     }
 
     public void finalizePageLayoutRows() {
@@ -95,40 +97,54 @@ public class Page extends DataCommon implements Cloneable {
                 row.rowId = UUID.randomUUID().toString();
                 needSaving = true;
             }
-        }
-    }
-
-    public void deletePageAreas() {
-        PageArea footer = pageAreas.get("footer");
-        PageArea header = pageAreas.get("header");
-        
-        HashMap<String, PageArea> keep = new HashMap();
-        for(String key : pageAreas.keySet()) {
-            if(key.contains("left_") || key.contains("right_") || key.contains("product")) {
-                keep.put(key, pageAreas.get(key));
+            
+            if(row.numberOfCells > row.areas.size()) {
+                for(int i = 0; i < row.numberOfCells; i++) {
+                    if(i >= row.areas.size()) {
+                        PageArea area = new PageArea();
+                        area.type = UUID.randomUUID().toString();
+                        row.areas.add(i, area);
+                    }
+                }
+            }
+            if(row.numberOfCells < row.areas.size()) {
+                for(int i = row.numberOfCells; i < row.areas.size(); i++) {
+                    row.areas.remove(i);
+                }
             }
         }
         
-        pageAreas = new HashMap();
-        pageAreas.put("footer", footer);
-        pageAreas.put("header", header);
-        
-        for(String key : keep.keySet()) {
-            pageAreas.put(key, keep.get(key));
-        }
+        if(layout.sortedRows.size() > 0) {
+            LinkedList<RowLayout> sortedRows = new LinkedList();
+            for(String sorted : layout.sortedRows) {
+                for(RowLayout row : layout.rows) {
+                    if(row.rowId.equals(sorted)) {
+                        sortedRows.add(row);
+                        break;
+                    }
+                }
+            }
+            layout.rows = sortedRows;
+        }     
+    }
+
+    public void deletePageAreas() {
+        layout.rows = new LinkedList();
     }
 
     public List<String> getApplicationIds() {
         List<String> ids = new ArrayList<String>();
-        for (PageArea area : pageAreas.values()) {
-            ids.addAll(area.applicationsList);
-            ids.addAll(area.extraApplicationList.keySet());
-            ids.add(area.bottomLeftApplicationId);
-            ids.add(area.bottomMiddleApplicationId);
-            ids.add(area.bottomRightApplicationId);
-        }
+        
+        ids.addAll(layout.getApplicationIds());
         return ids;
     }
+
+    public RowLayout createApplicationRow() {
+        RowLayout newRow = new RowLayout();
+        newRow.rowId = UUID.randomUUID().toString();
+        return newRow;
+    }
+
 
     public static class DefaultPages {
         public static String OrderOverviewPageId = "orderoverview";
@@ -158,19 +174,6 @@ public class Page extends DataCommon implements Cloneable {
         public static int HeaderMiddleFooter = 4;
     }
     
-    public Page parent;
-    public int pageType =  PageType.Standard;
-    //This is actually more a layout type... should be renamed to layouttype
-    public int type;
-    public String pageTag = "";
-    public String pageTagGroup = "";
-    public int userLevel = 0;
-    public String description = "";
-    private HashMap<String, PageArea> pageAreas = new HashMap<String, PageArea>();
-    public PageLayout layout = new PageLayout();
-    @Translation
-    public String title;
-    public String customCss = "";
     
     /**
      * This might not be set, only in just a few cases.
@@ -178,23 +181,9 @@ public class Page extends DataCommon implements Cloneable {
     @Transient
     public Entry linkToListEntry;
     
-    public void populateApplications(Map<String, AppConfiguration> applications, boolean onlyExtraApplications) {
-        for (PageArea pageArea : pageAreas.values()) {
-            pageArea.populateApplications(applications, onlyExtraApplications);
-        }
-    }
 
     public HashMap<String, AppConfiguration> getApplications() {
-        HashMap<String, AppConfiguration> applications = new HashMap();
-        for (PageArea pageArea : pageAreas.values()) {
-            applications.putAll(pageArea.applications());
-            applications.putAll(pageArea.bottomApplications());
-        }
-        return applications;
+        return layout.buildAppConfigurationList();
     }
     
-    public void sortApplications() {
-        for (PageArea pageArea : pageAreas.values()) 
-            pageArea.sortApplications();
-    }
 }

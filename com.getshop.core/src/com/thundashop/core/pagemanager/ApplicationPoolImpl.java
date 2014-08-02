@@ -305,14 +305,16 @@ public class ApplicationPoolImpl {
     public Map<String, AppConfiguration> getApplications(List<String> appIds) throws ErrorException {
         HashMap<String, AppConfiguration> apps = new HashMap();
         for (String appId : appIds) {
-            
             AppConfiguration app = applicationInstances.get(appId);
-            
             if(app != null) {
                 apps.put(app.id, finalizeApplication(app));
             }
         }
         return apps;
+    }
+    
+    public AppConfiguration getApplication(String appInstanceId) throws ErrorException {
+        return applicationInstances.get(appInstanceId);
     }
     
     public List<AppConfiguration> getApplications(String appSettingsId) throws ErrorException {

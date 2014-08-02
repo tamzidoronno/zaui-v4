@@ -99,24 +99,34 @@ Existing booking references
 <div style="padding:10px; border: solid 1px;background-color:#EFEFEF;">
     <table width="100%">
         <tr>
+            <th>Registration date</th>
+            <th>Reserved by</th>
             <th>Reservation number</th>
             <th>Room (code)</th>
             <th>Start date</th>
             <th>End date</th>
             <th>Remove</th>
         </tr>
-    <?
+        <?
         $reservations = $this->getApi()->getHotelBookingManager()->getAllReservations();
         foreach($reservations as $reservation) {
-            
             $roomarray = array();
             /* $rooms \core_hotelbookingmanager_Room[] */
             foreach($reservation->roomIds as $index => $id) {
                 $roomarray[] = $rooms[$id]->roomName . " (" . $reservation->codes[$index] . ")";
             }
+
+            $order = $this->getApi()->getOrderManager()->getOrderByReference($reservation->bookingReference);
             
             /* @var $reservation \core_hotelbookingmanager_BookingReference */
             echo "<tr>";
+            echo "<td>" . $reservation->rowCreatedDate . "</td>";
+            echo "<td>";
+            if($order) {
+                $user = $this->getApi()->getUserManager()->getUserById($order->userId);
+                echo "<a href='?page=users_all_users&userid=".$order->userId."'>" . $user->fullName . "</a>";
+            }
+            echo "</td>";
             echo "<td style='text-align:center;'>" . $reservation->bookingReference . "</td>";
             echo "<td style='text-align:center;'>" . join(", ", $roomarray) . "</td>";
             echo "<td style='text-align:center;'>" . $reservation->startDate . "</td>";
@@ -124,7 +134,7 @@ Existing booking references
             echo "<td style='text-align:center;'><i style='cursor:pointer' refid='".$reservation->bookingReference."' class='fa fa-trash-o delete_reference'></td>";
             echo "</tr>";
         }
-    ?>
+        ?>
     </table>
 </div>
 <br>

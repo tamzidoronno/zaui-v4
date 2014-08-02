@@ -22,6 +22,7 @@ public interface IPageManager {
      * Header left middle footer = 2;<br>
      * Header right middle footer = 3;<br>
      * Header middle footer = 4;<br>
+     * Layout is depeacated, the layouts has been eveloved to be more dynamic now.
      * 
      * @param layout See above, integer 1 to 4
      * @param parentId The parent page. From what page are this page being created?
@@ -345,4 +346,24 @@ public interface IPageManager {
      */
     @Administrator
     public void addApplicationToBottomArea(String pageId, String appAreaId, String applicationSettingId, String position) throws ErrorException; 
+    
+    /**
+     * Create a new row to add application areas to for a given page.
+     * @param pageId
+     * @return
+     * @throws ErrorException 
+     */
+    @Administrator
+    public String createNewRow(String pageId) throws ErrorException;
+    
+    
+    /**
+     * Creates a new application area attach the new application to it and appends it to the row.
+     * @param pageId
+     * @param rowId
+     * @param applicationSettingId
+     * @throws com.thundashop.core.common.ErrorException
+     */
+    @Administrator
+    public AppConfiguration addApplicationToRow(String pageId, String rowId, String applicationSettingId) throws ErrorException;
 }

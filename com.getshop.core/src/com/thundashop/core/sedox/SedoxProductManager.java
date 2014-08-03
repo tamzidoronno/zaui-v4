@@ -615,7 +615,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     private void saveUser(SedoxUser user) throws ErrorException {
-        String tmpPassword = "abcd1234-56789ss!";
+        String tmpPassword = "abcd1234-56789ss!"; // 
 
         IUserManager userManager = getManager(UserManager.class);
         User getshopUser = userManager.getUserById(user.magentoId);
@@ -719,10 +719,17 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     @Override
     public User login(String emailAddress, String password) throws ErrorException {
+        UserManager userManager = getManager(IUserManager.class);
+        try {
+            userManager.logOn(emailAddress, password);
+            return userManager.getLoggedOnUser();
+        } catch (ErrorException ex) {
+            // OK
+        }
+        
         String loggedUserId = sedoxMagentoIntegration.login(emailAddress, password);
         
         if (loggedUserId != null) {
-            UserManager userManager = getManager(IUserManager.class);
             return userManager.forceLogon(loggedUserId);
         } else {
             throw new ErrorException(13);
@@ -1039,5 +1046,32 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             product.started = toggle;
             saveObject(product);
         }
+    }
+
+    @Override
+    public String getExtraInformationForFile(String productId, int fileId) throws ErrorException {
+        SedoxProduct product = getProductById(productId);
+        for (SedoxBinaryFile binFile : product.binaryFiles) {
+            if (binFile.id == fileId) {
+                return binFile.extraInformation;
+            }
+        }
+        
+        return "";
+    }
+
+    @Override
+    public void setExtraInformationForFile(String productId, int fileId, String text) throws ErrorException {
+        SedoxProduct product = getProductById(productId);
+        if (product != null) {
+            for (SedoxBinaryFile binFile : product.binaryFiles) {
+                if (binFile.id == fileId) {
+                    binFile.extraInformation = text;
+                }
+            }    
+            
+            saveObject(product);
+        }
+        
     }
 }

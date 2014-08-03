@@ -6,6 +6,8 @@ app.SedoxProductView = {
         $(document).on('click', '.SedoxProductView .notifybyemailandsms', app.SedoxProductView.notifybyemailandsms);
         $(document).on('click', '.SedoxProductView .sendproductbyemail', app.SedoxProductView.sendproductbyemail);
         $(document).on('click', '.SedoxProductView .deletebinfile', app.SedoxProductView.deleteBinFile);
+        $(document).on('click', '.SedoxProductView .changeinfo', app.SedoxProductView.changeInfo);
+        $(document).on('click', '.SedoxProductView .saveextrainfo', app.SedoxProductView.saveExtraInfo);
         
         $(document).on('dragenter', '.SedoxProductView .uploadtuningfilebox', function(e)
         {
@@ -73,6 +75,16 @@ app.SedoxProductView = {
             //We need to send dropped files to Server
 //            handleFileUpload(files, $(this));
         });
+    },
+    
+    changeInfo: function()  {
+        var data = {
+            fileid: $(this).attr('fileid'),
+            productid: $(this).attr('productid'),
+        };
+        
+        var event = thundashop.Ajax.createEvent(null, "showAddInformation", this, data);
+        thundashop.common.showInformationBox(event, "Change file extra information");
     },
     
     deleteBinFile: function() {
@@ -162,6 +174,18 @@ app.SedoxProductView = {
         var toolbox = new GetShopToolbox(config, application);
         toolbox.show();
         toolbox.attachToElement(application, 2);
+    },
+            
+    saveExtraInfo: function() {
+         var data = {
+            fileid: $(this).attr('fileid'),
+            productid: $(this).attr('productid'),
+            text: $('#extrafileinformationbox').val()
+        };
+        
+        var event = thundashop.Ajax.createEvent(null, "setAddInformation", this, data);
+        thundashop.Ajax.post(event);
+        thundashop.common.hideInformationBox();
     }
 };
 

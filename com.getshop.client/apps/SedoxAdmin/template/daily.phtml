@@ -12,7 +12,7 @@
             /* @var $sedoxProduct \core_sedox_SedoxProduct */
             $id = $sedoxProduct->id;
             $name = $sedoxProduct->brand . " " . $sedoxProduct->model . " " . $sedoxProduct->engineSize . " " . $sedoxProduct->power . " " . $sedoxProduct->year;
-            $fullName = $this->getFullName($sedoxProduct);
+            $fullName = "<span class='showUserInformationSedox' userid='$sedoxProduct->firstUploadedByUserId'>".$this->getFullName($sedoxProduct)."</span>";
             $date = $sedoxProduct->rowCreatedDate;
             $start = $sedoxProduct->started ? "Stop" : "Start";
             $start = "<a class='$start' href='?page=$pageId&action=$start&file=$id'>$start</a>";

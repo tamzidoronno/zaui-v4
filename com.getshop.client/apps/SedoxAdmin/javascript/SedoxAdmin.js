@@ -3,6 +3,7 @@ app.SedoxAdmin = {
         $(document).on('click', '.SedoxAdmin .sedox_admin_topmenu .entry', app.SedoxAdmin.topMenuClicked);
         $(document).on('change', '.SedoxAdmin #searchfield', app.SedoxAdmin.searchUsers);
         $(document).on('click', '.SedoxAdmin .userentrysearch', app.SedoxAdmin.showUserInformation);
+        $(document).on('click', '.showUserInformationSedox', app.SedoxAdmin.showUserInformation);
         $(document).on('click', '.SedoxAdmin .savecredit', app.SedoxAdmin.updateUserCredit);
         $(document).on('click', '.SedoxAdmin .savedevelopers', app.SedoxAdmin.saveDevelopers);
         $(document).on('click', '.SedoxAdmin .saveusersettings', app.SedoxAdmin.saveUserSettings);

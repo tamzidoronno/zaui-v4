@@ -117,5 +117,24 @@ class SedoxProductView extends \ApplicationBase implements \Application {
         $user = $this->getApi()->getUserManager()->getUserById($sedoxProduct->firstUploadedByUserId);
         return $user;
     }
+    
+    public function setAddInformation() {
+        $productId = $_POST['data']['productid'];
+        $fileId = $_POST['data']['fileid'];
+        $text = $_POST['data']['text'];
+        $this->getApi()->getSedoxProductManager()->setExtraInformationForFile($productId, $fileId, $text);
+    }
+    
+    public function showAddInformation() {
+        $productId = $_POST['data']['productid'];
+        $fileid = $_POST['data']['fileid'];
+        $text = $this->getApi()->getSedoxProductManager()->getExtraInformationForFile($productId, $fileid);
+        
+        echo "<center>";
+        echo "Extra information:";
+        echo "<br><input id='extrafileinformationbox' type='textfield' placeholder='$text'/>";
+        echo "<br><div fileid='$fileid' productid='$productId' class='gs_button saveextrainfo'>Save</div>";
+        echo "</center>";
+    }
 }
 ?>

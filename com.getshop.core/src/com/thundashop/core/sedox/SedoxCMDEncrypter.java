@@ -60,7 +60,6 @@ public class SedoxCMDEncrypter {
 
             FilesMessage message = service.encryptFile(fileMessage);
             if (message.getFile_encryptedFile() != null) {
-                System.out.println("Decrypted file :D");
                 return DatatypeConverter.parseBase64Binary(message.getFile_encryptedFile());
             }
             

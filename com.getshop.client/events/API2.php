@@ -4017,6 +4017,25 @@ class APISedoxProductManager {
 	}
 
 	/**
+	* Developers is simply an getshop user that is registered as an developer.
+	* Active developers are administrators that has an SedoxUser with the flag
+	* isActiveDeveloper = true
+	*
+	* @return String
+	* @throws ErrorException
+	*/
+
+	public function getExtraInformationForFile($productId, $fileId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $data['args']["fileId"] = json_encode($this->transport->object_unset_nulls($fileId));
+	     $data["method"] = "getExtraInformationForFile";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Return the products created by days back.
 	* day = 0 // Means that it will returns the list of todays files
 	* day = 1 // Means that it will returns the list of yesterdays files
@@ -4320,6 +4339,26 @@ class APISedoxProductManager {
 	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
 	     $data['args']["checksum"] = json_encode($this->transport->object_unset_nulls($checksum));
 	     $data["method"] = "setChecksum";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Developers is simply an getshop user that is registered as an developer.
+	* Active developers are administrators that has an SedoxUser with the flag
+	* isActiveDeveloper = true
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function setExtraInformationForFile($productId, $fileId, $text) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $data['args']["fileId"] = json_encode($this->transport->object_unset_nulls($fileId));
+	     $data['args']["text"] = json_encode($this->transport->object_unset_nulls($text));
+	     $data["method"] = "setExtraInformationForFile";
 	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
 	     return $this->transport->sendMessage($data);
 	}

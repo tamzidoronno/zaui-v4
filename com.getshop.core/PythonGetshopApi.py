@@ -4204,6 +4204,28 @@ class SedoxProductManager(object):
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getExtraInformationForFile(self, productId, fileId):
+    args = collections.OrderedDict()
+    if isinstance(productId,GetShopBaseClass): 
+      args["productId"]=json.dumps(productId.__dict__)
+    else:
+      try:
+        args["productId"]=json.dumps(productId)
+      except (ValueError, AttributeError):
+        args["productId"]=productId
+    if isinstance(fileId,GetShopBaseClass): 
+      args["fileId"]=json.dumps(fileId.__dict__)
+    else:
+      try:
+        args["fileId"]=json.dumps(fileId)
+      except (ValueError, AttributeError):
+        args["fileId"]=fileId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getExtraInformationForFile"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getProductById(self, id):
     args = collections.OrderedDict()
     if isinstance(id,GetShopBaseClass): 
@@ -4505,6 +4527,35 @@ class SedoxProductManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "setChecksum"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def setExtraInformationForFile(self, productId, fileId, text):
+    args = collections.OrderedDict()
+    if isinstance(productId,GetShopBaseClass): 
+      args["productId"]=json.dumps(productId.__dict__)
+    else:
+      try:
+        args["productId"]=json.dumps(productId)
+      except (ValueError, AttributeError):
+        args["productId"]=productId
+    if isinstance(fileId,GetShopBaseClass): 
+      args["fileId"]=json.dumps(fileId.__dict__)
+    else:
+      try:
+        args["fileId"]=json.dumps(fileId)
+      except (ValueError, AttributeError):
+        args["fileId"]=fileId
+    if isinstance(text,GetShopBaseClass): 
+      args["text"]=json.dumps(text.__dict__)
+    else:
+      try:
+        args["text"]=json.dumps(text)
+      except (ValueError, AttributeError):
+        args["text"]=text
+    data = EmptyClass()
+    data.args = args
+    data.method = "setExtraInformationForFile"
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 

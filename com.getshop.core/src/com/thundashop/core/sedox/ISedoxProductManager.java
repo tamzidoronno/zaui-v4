@@ -123,4 +123,11 @@ public interface ISedoxProductManager  {
     
     @Administrator
     public void toggleStartStop(String productId, boolean toggle) throws ErrorException;
+    
+    @Administrator
+    public String getExtraInformationForFile(String productId, int fileId) throws ErrorException;
+    
+    @Administrator
+    public void setExtraInformationForFile(String productId, int fileId, String text) throws ErrorException;
+    
 }

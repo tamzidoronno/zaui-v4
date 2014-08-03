@@ -69,11 +69,13 @@ $checksum = $sedoxProduct->originalChecksum ? $sedoxProduct->originalChecksum : 
                     }
                 ?>
             </div>
-            <div class='col col4'></div>
+            <div class='col col4'>
+                <? echo $binFile->extraInformation; ?>
+            </div>
             <? if ($this->hasWriteAccess()) { ?>
                 <div class='col col5'>
                     <i productid="<? echo $sedoxProduct->id; ?>" class="fa fa-trash-o deletebinfile"></i>
-                    <i productid="<? echo $sedoxProduct->id; ?>" class="fa fa-info-circle changeinfo"></i>
+                    <i productid="<? echo $sedoxProduct->id; ?>" fileid="<? echo $binFile->id; ?>" class="fa fa-info-circle changeinfo"></i>
                 </div>
             <? } ?>
         </div>
@@ -103,6 +105,7 @@ $uploadedByUser = $this->getUploadedUserName($sedoxProduct);
     <div class='title'><i class='fa fa-download'></i>&nbsp; Uploaded by</div>
     <div class='subcontainer'>
         Uploaded by: <? echo $uploadedByUser->fullName;?>
+        <br> User id: <? echo $uploadedByUser->id; ?>
         <br> Email: <? echo $uploadedByUser->emailAddress; ?>
         <br> Credit balance: <? echo $sedoxUser->creditAccount->balance; ?>
     </div>

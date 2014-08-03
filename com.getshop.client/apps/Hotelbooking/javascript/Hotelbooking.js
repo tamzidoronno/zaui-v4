@@ -141,6 +141,11 @@ app.Hotelbooking = {
         });
         
     },
+    updateCompanySelection : function() {
+        var val = $(this).is(':checked');
+        var event = thundashop.Ajax.createEvent('','updateCompanySelection',$(this), { "company" : val });
+        thundashop.Ajax.post(event);
+    },
     loadSettings: function(element, application) {
         var config = {
             application: application,
@@ -174,6 +179,7 @@ app.Hotelbooking = {
         $(document).on('blur', '.Hotelbooking .bookingsummary input', app.Hotelbooking.saveCurrentData);
         $(document).on('click', '.Hotelbooking input[gsname="partnershipdeal"]', app.Hotelbooking.changeToPartnership);
         $(document).on('click', '.Hotelbooking .fa.calnav', app.Hotelbooking.navigateMonth);
+        $(document).on('click', '.Hotelbooking input[gsname="company"]', app.Hotelbooking.updateCompanySelection);
     }
 };
 

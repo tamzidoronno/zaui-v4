@@ -28,6 +28,11 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
     
     public function getRoomTaxes() {
+        
+        if($this->getProduct()->privateExcluded && !$this->isCompany()) {
+            return 0;
+        }
+        
         if(isset($this->getProduct()->taxGroupObject)) {
             return $this->getRoomPrice() * ($this->getProduct()->taxGroupObject->taxRate / 100);
         }
@@ -223,7 +228,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         if($this->getPage()->id == "home") {
             $this->includefile("Hotelbooking");
         } else {
-            if(isset($_GET['subpage']) && $_GET['subpage'] == "summary" && $this->hasValidSelection()) {
+            if(((isset($_GET['subpage']) && $_GET['subpage'] == "summary") || isset($_POST['data']['partnershipdeal'])) && $this->hasValidSelection()) {
                  $this->includefile("booking_part3");
             } else {
                 $this->hasValidSelection();
@@ -466,7 +471,18 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return "";
     }
     
+    public function updateCompanySelection() {
+        $_GET['subpage'] = "summary";
+        $company = $_POST['data']['company'];
+        $this->loadBookingData();
+        $_POST['data']['company'] = $company;
+        $this->setBookingData();
+    }
+    
     public function validateInput($name) {
+        if(isset($_GET['subpage']) && $_GET['subpage'] == "summary") {
+            return "";
+        }
         if(isset($_POST['data'][$name]) && !$this->partnerShipChecked()) {
             if($name == "referencenumber") {
                 return "";
@@ -617,6 +633,10 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             return $this->getRoomPrice() * ($this->getCleaningOption()->taxGroupObject->taxRate / 100);
         }
         return 0;
+    }
+
+    public function isCompany() {
+        return $this->getPost("company") == "true";
     }
 
 }

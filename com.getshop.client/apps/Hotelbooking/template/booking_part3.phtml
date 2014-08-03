@@ -112,7 +112,8 @@ if($this->getServiceType() == "storage") {
         <div class="common_input" <? if($this->partnerShipChecked()) { echo "style='display:none;'"; } ?>>
             <div class='contact_entry'>
                 <span>
-                    <input type='checkbox' gsname="company" value='<? echo $this->getPost("address"); ?>' class='<? echo $this->validateInput("address"); ?>'>
+                    <? $company = ""; if($this->isCompany()) { $company = " CHECKED"; } ?>
+                    <input type='checkbox' gsname="company" class='<? echo $this->validateInput("address"); ?>' <? echo $company; ?>>
                     <span class=''><? echo $this->__w("Im ordering on behalf of a company"); ?></span>
                 </span>
             </div>

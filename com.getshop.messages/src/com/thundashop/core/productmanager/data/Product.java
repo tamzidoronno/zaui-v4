@@ -38,6 +38,7 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public boolean promoted = false;
     public boolean hideShippingPrice = false;
     public int taxgroup = -1;
+    public boolean privateExcluded = false;
     
     public long campaing_start_date = 0;
     public long campaing_end_date = 0;

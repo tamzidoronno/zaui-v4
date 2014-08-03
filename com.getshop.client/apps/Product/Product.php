@@ -133,7 +133,8 @@ class Product extends \ApplicationBase implements \Application {
         $product->campaign_price = $_POST['data']['campaign_price'];
         $product->campaing_start_date = strtotime($_POST['data']['start_date']);
         $product->campaing_end_date = strtotime($_POST['data']['end_date']);
-        
+        $product->privateExcluded = $_POST['data']['privateExcluded'];
+//        print_r($product);
         $this->getApi()->getProductManager()->saveProduct($product);
         
         $page = $this->getPage()->backendPage;

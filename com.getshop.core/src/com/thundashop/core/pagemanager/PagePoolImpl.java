@@ -338,6 +338,10 @@ public class PagePoolImpl {
             savePage(page);
         }
         
+        for(PageArea area : page.pageAreas.values()) {
+            area.populateApplications(applications, onlyExtraApplications);
+        }
+        
         return page;
     }
 

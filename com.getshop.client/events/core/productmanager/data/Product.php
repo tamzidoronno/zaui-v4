@@ -52,6 +52,9 @@ class core_productmanager_data_Product extends core_common_DataCommon  {
 	public $taxgroup;
 
 	/** @var String */
+	public $privateExcluded;
+
+	/** @var String */
 	public $campaing_start_date;
 
 	/** @var String */

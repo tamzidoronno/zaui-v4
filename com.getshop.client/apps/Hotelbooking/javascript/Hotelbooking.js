@@ -80,10 +80,8 @@ app.Hotelbooking = {
         $(this).addClass('selected');
         
         var event = thundashop.Ajax.createEvent("", "updateCalendarDate", $(this), {
-            "type" : cal.attr('type'),
-            "day" : $(this).attr('day'),
-            "year" : cal.attr('year'),
-            "month" : cal.attr('month')
+            "type" : cal.prev().attr('type'),
+            "time" : $(this).attr('time')
         });
         
         thundashop.Ajax.post(event);
@@ -108,6 +106,40 @@ app.Hotelbooking = {
     loadSettingPanel : function() {
         var event = thundashop.Ajax.createEvent('','loadSettings', $(this), null);
         thundashop.common.showInformationBox(event, "Booking settings");
+    },
+    navigateMonth : function() {
+        var type = $(this).attr('navigation');
+
+        var month = parseInt($(this).parent().attr('month'));
+        var year = parseInt($(this).parent().attr('year'));
+        
+        if(type === "prev") {
+            if(month === 1) {
+                month = 12;
+                year--;
+            } else {
+                month--;
+            }
+        } else {
+            if(month === 12) {
+                month = 1;
+                year++;
+            } else {
+                month++;
+            }
+        }
+        
+        var data = {
+            "year" : year,
+            "month" : month,
+            "type" : $(this).parent().attr('type')
+        }
+        var container = $(this).closest('.calendar');
+        var event = thundashop.Ajax.createEvent('','navigateMonthCalendar',$(this), data);
+        thundashop.Ajax.postWithCallBack(event, function(data) {
+            container.html(data);
+        });
+        
     },
     loadSettings: function(element, application) {
         var config = {
@@ -141,6 +173,7 @@ app.Hotelbooking = {
         $(document).on('blur', '.Hotelbooking #numberofpersons', app.Hotelbooking.setNumberOfPersons);
         $(document).on('blur', '.Hotelbooking .bookingsummary input', app.Hotelbooking.saveCurrentData);
         $(document).on('click', '.Hotelbooking input[gsname="partnershipdeal"]', app.Hotelbooking.changeToPartnership);
+        $(document).on('click', '.Hotelbooking .fa.calnav', app.Hotelbooking.navigateMonth);
     }
 };
 

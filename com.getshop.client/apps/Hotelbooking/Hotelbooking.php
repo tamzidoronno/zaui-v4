@@ -24,6 +24,22 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $this->setConfigurationSetting("name", $_POST['data']['name']);
         $this->setConfigurationSetting("type", $_POST['data']['type']);
         $this->setConfigurationSetting("contine_page", $_POST['data']['contine_page']);
+        $this->setConfigurationSetting("minumum_rental_days", $_POST['data']['rental_days']);
+    }
+    
+    public function getRoomTaxes() {
+        if(isset($this->getProduct()->taxGroupObject)) {
+            return $this->getRoomPrice() * ($this->getProduct()->taxGroupObject->taxRate / 100);
+        }
+        return 0;
+    }
+    
+    public function getMinumRental() {
+        $minimum = $this->getConfigurationSetting("minumum_rental_days");
+        if(!$minimum) {
+            return 1;
+        }
+        return $minimum;
     }
     
     public function getProjectName() {
@@ -226,19 +242,23 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     
     public function updateCalendarDate() {
         $type = $_POST['data']['type'];
-        $day = $_POST['data']['day'];
-        $month = $_POST['data']['month'];
-        $year = $_POST['data']['year'];
+        $time = $_POST['data']['time'];
         
         if($type == "startDate") {
-            $this->setStartDate(strtotime($year."-".$month."-".$day));
+            $this->setStartDate($time);
         }
         if($type == "endDate") {
-            $this->setEndDate(strtotime($year."-".$month."-".$day));
+            $this->setEndDate($time);
         }
     }
     
-    public function printCalendar($time, $checkbefore, $id) {
+    public function navigateMonthCalendar() {
+        $time = strtotime("20".$_POST['data']['year']."-".$_POST['data']['month']."-01");
+        $type = $_POST['data']['type'];
+        $this->printCalendar($time, $this->getStart(), $type, false);
+    }
+    
+    public function printCalendar($time, $checkbefore, $id, $setSelected = true) {
         $month = date("m", $time);
         $timestamp = mktime(0,0,0,$month,1,date("y", $time));
         $maxday = date("t",$timestamp);
@@ -248,7 +268,11 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         if($startday == 0) {
             $startday = 7;
         }
-        echo "<table width='100%' class='booking_table' type='$id' year='$year' month='$month'>";
+        $monthText = date("M", $time) . " " . $year;
+        
+        echo "<div class='cal_header' type='$id' year='$year' month='$month'><i class='fa fa-arrow-left calnav' style='float:left;cursor:pointer;' navigation='prev'></i>".$monthText."<i class='fa fa-arrow-right calnav' style='float:right;cursor:pointer;' navigation='next'></i></div>";
+
+        echo "<table width='100%' class='booking_table'>";
         echo "<tr>";
         echo "<th>".$this->__w("Mo")."</th>";
         echo "<th>".$this->__w("Tu")."</th>";
@@ -265,7 +289,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             else {
                 $class = "";
                 $day = $i - $startday + 1;
-                if(date('d', $time) ==(($i - $startday)+1)) {
+                if(date('d', $time) ==(($i - $startday)+1) && $setSelected) {
                     $class = "selected";
                 }
                 if($checkbefore) {
@@ -274,8 +298,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                         $class .= " disabled";
                     }
                 }
+                $fieldtime = strtotime($year ."-" . $month . "-" . $day);
                 
-                echo "<td align='center' valign='middle' height='20px'><span class='cal_field $class' day='$day'>".$day."</span></td>";
+                echo "<td align='center' valign='middle' height='20px'><span class='cal_field $class' time='$fieldtime'>".$day."</span></td>";
             }
             if(($i % 7) == 0) echo "</tr><tr>";
         }
@@ -500,7 +525,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
     
     public function getTotal() {
-        return $this->getCleaningPrice() + $this->getRoomPrice();
+        return $this->getCleaningPrice() + $this->getRoomPrice() + $this->getRoomTaxes() + $this->getCleaningTaxes();
     }
 
     public function hasErrors() {
@@ -556,8 +581,22 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $count = $this->checkavailabilityFromSelection();
         $isvalid = true;
         $this->errors = array();
+        $numberOfDays = $this->getDayCount();
         if(((int)$count < (int)$this->getRoomCount())) {
-            $this->errors[] = $this->__w("We are sorry, but there is not enough available rooms for your selection, please select a different one.");
+            $errorText = $this->__w("We are sorry, but there is not enough available rooms for your selection, please select a different one.");
+            if($this->getServiceType() == "storage") {
+                $errorText = $this->__w("Sorry, we are out of this type of storage, please select a different one.");
+            }
+            $this->errors[] = $errorText;
+            $isvalid = false;
+        }
+        if((int)$this->getMinumRental() > (int)$numberOfDays) {
+            $errorText = $this->__w("Sorry, your rental is too short, it has to be longer then {days} days of rental.");
+            if($this->getServiceType() == "storage") {
+                $errorText = $this->__w("Sorry, your rental is too short, it has to be longer then {days} months.");
+            }
+            $errorText = str_replace("{days}", $this->getMinumRental(), $errorText);
+            $this->errors[] = $errorText;
             $isvalid = false;
         }
         return $isvalid;
@@ -571,6 +610,13 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     public function hasPaymentAppAdded() {
         $payment = $this->getFactory()->getApplicationPool()->getAllPaymentInstances();
         return sizeof($payment) > 0;
+    }
+
+    public function getCleaningTaxes() {
+        if(isset($this->getCleaningOption()->taxGroupObject)) {
+            return $this->getRoomPrice() * ($this->getCleaningOption()->taxGroupObject->taxRate / 100);
+        }
+        return 0;
     }
 
 }

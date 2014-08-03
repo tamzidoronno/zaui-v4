@@ -54,7 +54,7 @@
 .Hotelbooking .calendar { margin-right: 30px; }
 .Hotelbooking .rebated_product { color:#BBB; font-size: 15px; }
 .Hotelbooking .formation_page { font-size: 30px; text-align: center; padding-top: 20px; }
-.Hotelbooking .error_text { color:#ab5f22; font-weight: bold; font-size: 14px; text-align: right; }
+.Hotelbooking .error_text { color:#ab5f22; font-weight: bold; font-size: 14px; }
 @media only all and (min-width: 800px) {
     .Hotelbooking .calendar { float:left; margin-bottom: 20px; }
     .Hotelbooking .booking_count_box { float:right; }

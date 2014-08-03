@@ -4,18 +4,18 @@
 $selectRoomText = $this->__w("Select a room");
 $priceText = $this->__w("PRICE PER NIGHT");
 $selectRoomButton = $this->__w("SELECT ROOM");
-$startText = $this->__w("WHEN DO YOU CHECK IN?");
 $endText = $this->__w("WHEN DO YOU LEAVE?");
+$headingtext = $this->__w("You have selected the following duration for your stay");
 if($this->getServiceType() == "storage") {
     $selectRoomText = $this->__w("Select your storage room");
     $priceText = $this->__w("PRICE PER MONTH");
     $selectRoomButton = $this->__w("SELECT STORAGE ROOM");
-    $startText = $this->__w("START");
     $endText = $this->__w("END");
+    $headingtext = $this->__w("You have selected the following rental periode");
 }
 
 ?>
-<div class='title'><? echo $this->__w("You have selected the following duration for your stay"); ?></div>
+<div class='title'><? echo $headingtext; ?></div>
 <div class='seperator'></div>
 <div class='top_box'>
     <? if($this->getServiceType() == "hotel") { ?>
@@ -66,15 +66,19 @@ if($this->getServiceType() == "storage") {
     <? } ?>
     
     <span class='calendar left'>
-        <div class='cal_header'><? echo $startText; ?></div>
         <? $this->printCalendar($this->getStart(), false, "startDate"); ?>
     </span>
 
     <span class='calendar right'>
-        <div class='cal_header second'><? echo $endText; ?></div>
         <? echo $this->printCalendar($this->getEnd(), $this->getStart(), "endDate"); ?>
     </span>
 </div>
+<?
+        foreach($this->errors as $error) {
+            echo "<div class='error_text'>" . $error . "</div>";
+        }
+?>
+<br><br>
 <div class='title'><? echo $selectRoomText; ?></div>
  <div class='room_selection_2 heading'>
      <span class='firstbox selection_box'>
@@ -138,11 +142,7 @@ if(!$foundroom) {
     echo "<div class='no_room_available'>" . $this->__w("No rooms are available for this time periode.") . "</div>";
     echo "<script>$('.room_selection_2').hide();</script>";
 } else {
-    if($this->errors) {
-        foreach($this->errors as $error) {
-            echo "<div class='error_text'>" . $error . "</div>";
-        }
-    } else {
+    if(!$this->errors) {
         ?>
         <div class="to_checkout">
             <a href='?page=<? echo $this->getPage()->id; ?>&subpage=summary'><div class="continue_to_cart_button"><? echo $this->__w("CONTINUE"); ?></div></a>

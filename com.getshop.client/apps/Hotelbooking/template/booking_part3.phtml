@@ -7,6 +7,8 @@ $inText = $this->__w("in");
 $bookTime = $this->__w("Booked time periode");
 $vistorInfoText = $this->__w("Visitor information");
 $continueCartButtonText = $this->__w("Continue to payment");
+$roomTaxPrice = $this->__w("{percentage}% taxes on room");
+$cleaningTaxPrice = $this->__w("{percentage}% taxes on cleaning");
 
 if($this->getServiceType() == "storage") {
     $nightText = $this->__w("month");
@@ -43,6 +45,7 @@ if($this->getServiceType() == "storage") {
             }
             $in = $inText;
             
+            
             echo "<span class='price_summary'>" . $this->getDayCount() . " $night $in ";
             if($this->getServiceType() == "hotel") {
                 $this->getRoomCount();
@@ -51,6 +54,18 @@ if($this->getServiceType() == "storage") {
             echo "<span class='price_summary_price price_row'><span class='right_aligned_price'>" . $this->getRoomPrice() . " kr</span></span>";
             echo "</div>";
 
+            if($this->getRoomTaxes() > 0) {
+                $roomTaxPrice = str_replace("{percentage}", $this->getProduct()->taxGroupObject->taxRate, $roomTaxPrice);
+                echo "<span class='price_summary'>".$roomTaxPrice."</span>";
+                echo "<span class='price_summary_price price_row'><span class='right_aligned_price'>" . $this->getRoomTaxes() . " kr</span></span>";
+            }
+            
+            if($this->getCleaningTaxes() > 0) {
+                $cleaningTaxPrice = str_replace("{percentage}", $this->getProduct()->taxGroupObject->taxRate, $cleaningTaxPrice);
+                echo "<span class='price_summary'>".$cleaningTaxPrice."</span>";
+                echo "<span class='price_summary_price price_row'><span class='right_aligned_price'>" . $this->getCleaningTaxes() . " kr</span></span>";
+            }
+            
             $totalprice = $this->getDayCount() * $this->getProduct()->price * $this->getRoomCount();
             echo "<div class='summary_total'>";
             echo "<div class='price_summary'>" . $this->__w("Total price")."<span class='right_aligned_price'>". $this->getTotal() . " kr" ."</span></div>";
@@ -84,8 +99,8 @@ if($this->getServiceType() == "storage") {
             <? echo $this->__w("Additional contact data"); ?>
         </div>
         <div class='contact_entry'>
-            <span class='contact_text'><? echo $this->__w("I have a partnership deal"); ?></span>
-            <span class='contact_input'><input type='checkbox' gsname="partnershipdeal" <? if($this->partnerShipChecked()) { echo "checked"; } ?>></span>
+            <input type='checkbox' gsname="partnershipdeal" <? if($this->partnerShipChecked()) { echo "checked"; } ?>>
+            <? echo $this->__w("I have a partnership deal"); ?>
         </div>
         <div class='contact_entry partnership common_input' <? if(!$this->partnerShipChecked()) { echo "style='display:none;'"; } ?>>
             <span class='contact_text'><? echo $this->__w("Reference number"); ?></span>
@@ -93,7 +108,15 @@ if($this->getServiceType() == "storage") {
             <div><? echo $this->__w("Please enter the reference number provided by") ." " . $this->getProjectName(); ?></div>
             <div class="continue_to_cart_button" gstype="submit"><? echo $this->__w("Complete the order"); ?></div>
         </div>
+        
         <div class="common_input" <? if($this->partnerShipChecked()) { echo "style='display:none;'"; } ?>>
+            <div class='contact_entry'>
+                <span>
+                    <input type='checkbox' gsname="company" value='<? echo $this->getPost("address"); ?>' class='<? echo $this->validateInput("address"); ?>'>
+                    <span class=''><? echo $this->__w("Im ordering on behalf of a company"); ?></span>
+                </span>
+            </div>
+        <br>
             <div class='contact_entry'>
                 <span class='contact_text'><? echo $this->__w("Address"); ?></span>
                 <span class='contact_input'><input type='text' gsname="address" value='<? echo $this->getPost("address"); ?>' class='<? echo $this->validateInput("address"); ?>'></span>

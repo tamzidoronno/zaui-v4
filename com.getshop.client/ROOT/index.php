@@ -184,12 +184,12 @@ if(isset($factory->getSettings()->languages)) {
 
         <title><?php echo $title; ?></title>
     </head>
-    <body>
+    <body editormode="<? echo $factory->isEditorMode() ? "true" : "false"?>">
         <? if (@$factory->getStore()->isDeepFreezed) { ?>
             <div class='deepfreezedActivated'><? echo $factory->__f("Warning! this store will automatically be reset to original state each hour") ?></div>
         <? } ?>
         <input name="storeid" type="hidden"  value="<?php echo $factory->getStore()->id; ?>"/>
-        <input name="userid" type="hidden"  value="<?php echo \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id; ?>"/>
+        <input name="userid" type="hidden"  value="<?php echo  \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null ? \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id : ""; ?>"/>
 
         <div id="mainmenutoolbox"></div>
         <div id="messagebox" class="ok">

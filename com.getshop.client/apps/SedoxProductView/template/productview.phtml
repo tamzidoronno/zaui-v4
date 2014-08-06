@@ -35,7 +35,7 @@ $checksum = $sedoxProduct->originalChecksum ? $sedoxProduct->originalChecksum : 
 </div>
 
 
-<div class='sedox_product_box downloadbox'>
+<div class='sedox_product_box downloadbox' style='position: relative;'>
     <div class='title'>Download</div>
 
     <div class='header'>
@@ -45,7 +45,7 @@ $checksum = $sedoxProduct->originalChecksum ? $sedoxProduct->originalChecksum : 
         <div class='col col4'>Extra information:</div>
         <div class='col col5'>Admin tools:</div>
     </div>
-    <div class='row'>
+    <div class='row' >
        <?
     foreach ($sedoxProduct->binaryFiles as $binFile) {
         ?>
@@ -83,8 +83,18 @@ $checksum = $sedoxProduct->originalChecksum ? $sedoxProduct->originalChecksum : 
     }
     ?> 
     </div>
+    <? if ($this->hasWriteAccess()) { ?>
+        <div style='position: absolute; top: 0px; right: 0px;'class="add_tuningfile">
+            <div>
+                <div fileType='Tune' class='uploadtuningfilebox fa fa-upload'><div style='font-size: 11px;'>Tune</div><div class='progressbar'></div></div>
+                <div fileType='ECO' class='uploadtuningfilebox fa fa-upload'><div style='font-size: 11px;'>ECO</div><div class='progressbar'></div></div>
+                <div fileType='Power' class='uploadtuningfilebox fa fa-upload'><div style='font-size: 11px;'>Power</div><div class='progressbar'></div></div>
+                <div fileType='Various' class='uploadtuningfilebox fa fa-upload'><div style='font-size: 11px;'>Varios</div><div class='progressbar'></div></div>
+                <div fileType='Original' class='uploadtuningfilebox fa fa-upload'><div style='font-size: 11px;'>Original</div><div class='progressbar'></div></div>
+            </div>
+        </div>
+    <? } ?>
     <div class='row'>
-
         <div class='sedox_button purchase'>Purchase and download</div>
         <div class='sedox_warning'>Note! When you click on the button below you will download the file and it will be purchased. </div>
     </div>
@@ -99,25 +109,10 @@ $sedoxUser = $this->getUploadedSedoxUser($sedoxProduct);
 $uploadedByUser = $this->getUploadedUserName($sedoxProduct);
 ?>
 <div class='admintools'>
-    <div class='sedox_product_box'>
-        
-    </div>
-    <div class='title'><i class='fa fa-download'></i>&nbsp; Uploaded by</div>
-    <div class='subcontainer'>
-        Uploaded by: <? echo $uploadedByUser->fullName;?>
-        <br> User id: <? echo $uploadedByUser->id; ?>
-        <br> Email: <? echo $uploadedByUser->emailAddress; ?>
-        <br> Credit balance: <? echo $sedoxUser->creditAccount->balance; ?>
-    </div>
-    <div class='title'><i class='fa fa-download'></i>&nbsp; Add a tuningfile.</div>
-    <div class='subcontainer'>
-        Drag the tuningfile to the different boxes below, it will automatically upload and set the price. :)
-        <div>
-            <div fileType='Tune' class='uploadtuningfilebox fa fa-upload'><div style='font-size: 15px;'>Tune</div><div class='progressbar'></div></div>
-            <div fileType='ECO' class='uploadtuningfilebox fa fa-upload'><div style='font-size: 15px;'>ECO</div><div class='progressbar'></div></div>
-            <div fileType='Power' class='uploadtuningfilebox fa fa-upload'><div style='font-size: 15px;'>Power</div><div class='progressbar'></div></div>
-            <div fileType='Various' class='uploadtuningfilebox fa fa-upload'><div style='font-size: 15px;'>Varios</div><div class='progressbar'></div></div>
-            <div fileType='Original' class='uploadtuningfilebox fa fa-upload'><div style='font-size: 15px;'>Original</div><div class='progressbar'></div></div>
+    <div class='userinfo' style="position: absolute; top: 65px; border-left: dashed 1px red; border-bottom: dashed 1px red; right: 1px; ">
+        <div class='subcontainer' style="margin-bottom: 0px; padding: 5px; ">
+            <? echo $uploadedByUser->fullName. " (id: $uploadedByUser->id) (Credit: ".$sedoxUser->creditAccount->balance.")";?>
+            <br> Email: <? echo $uploadedByUser->emailAddress; ?>
         </div>
     </div>
     
@@ -137,10 +132,15 @@ $uploadedByUser = $this->getUploadedUserName($sedoxProduct);
         </div>
         <br>
         <br>
-        <div>
-            <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button purchaseorderonly">Purchase order only</div>
-            <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button notifybyemailandsms">Notify by email and sms</div>
-            <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button sendproductbyemail">Send product by email</div>
+        <?
+        $class1 = array_key_exists("purchaseOnlyForCustomer", $sedoxProduct->states) ? "active" : "";
+        $class2 = array_key_exists("notifyForCustomer", $sedoxProduct->states) ? "active" : "";
+        $class3 = array_key_exists("sendProductByMail", $sedoxProduct->states) ? "active" : "";
+        ?>
+        <div class="adminbottons">
+            <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button purchaseorderonly <? echo $class1; ?>">Purchase order only</div>
+            <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button notifybyemailandsms <? echo $class2; ?>">Notify by email and sms</div>
+            <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button sendproductbyemail <? echo $class3; ?>">Send product by email</div>
         </div>
         
     </div>

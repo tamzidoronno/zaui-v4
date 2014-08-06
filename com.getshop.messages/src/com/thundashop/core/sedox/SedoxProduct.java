@@ -6,7 +6,10 @@ package com.thundashop.core.sedox;
 
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.naming.BinaryRefAddr;
 
 /**
@@ -47,6 +50,8 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
     public String ecuSoftwareVersion;
     
     public String uploadOrigin;
+    
+    public Map<String, Date> states = new HashMap();
 
     @Override
     public int compareTo(SedoxProduct o) {
@@ -63,6 +68,7 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
         String[] productAttributes = fileName.split(";");
         
         if (productAttributes.length != 16) {
+            saleAble = false;
             return;
         }
         

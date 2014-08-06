@@ -3,6 +3,40 @@ app.SedoxFileUpload = {
         $(document).on('click', '.SedoxFileUpload .savecardetails', app.SedoxFileUpload.saveCarDetails);
         $(document).on('click', '.SedoxFileUpload .specialfile', app.SedoxFileUpload.specialfilerequest);
         $(document).on('click', '.SedoxFileUpload .sendspecialrequest', app.SedoxFileUpload.sendSpecialRequest);
+        $(document).on('click', '.SedoxFileUpload .saveupload', app.SedoxFileUpload.saveUploadFile);
+    },
+            
+    saveUploadFile: function() {
+        if ($('#originalfile').val() == "") {
+            thundashop.common.Alert("File not selected", "You have not selected a file, please add a file before you continue click next.", true);
+            return;
+        }
+        if ($('#brand').val() == "") {
+            thundashop.common.Alert("Cant be empty", "Field Brand is mandatatory, it can not be empty.", true);
+            return;
+        }
+        if ($('#model').val() == "") {
+            thundashop.common.Alert("Cant be empty", "Field Model is mandatatory, it can not be empty.", true);
+            return;
+        }
+        if ($('#enginesize').val() == "") {
+            thundashop.common.Alert("Cant be empty", "Field EngineSize is mandatatory, it can not be empty.", true);
+            return;
+        }
+        if ($('#power').val() == "") {
+            thundashop.common.Alert("Cant be empty", "Field Power is mandatatory, it can not be empty.", true);
+            return;
+        }
+        if ($('#year').val() == "") {
+            thundashop.common.Alert("Cant be empty", "Field Year is mandatatory, it can not be empty.", true);
+            return;
+        }
+        if ($('#tool').val() == "") {
+            thundashop.common.Alert("Cant be empty", "Field Tool is mandatatory, it can not be empty.", true);
+            return;
+        }
+        
+        $('#uploadfileform').submit();
     },
             
     specialfilerequest: function() {
@@ -11,7 +45,8 @@ app.SedoxFileUpload = {
             
     sendSpecialRequest: function() {
         var data = {
-            desc : $('.SedoxFileUpload .specialform textarea').val()
+            desc : $('.SedoxFileUpload .specialform textarea').val(),
+            fileId: $(this).attr('fileid')
         };
         
         var event = thundashop.Ajax.createEvent("", "sendSpecialRequest", this, data);

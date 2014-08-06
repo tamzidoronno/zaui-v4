@@ -87,5 +87,8 @@ class core_sedox_SedoxProduct extends core_common_DataCommon  {
 	/** @var String */
 	public $uploadOrigin;
 
+	/** @var String */
+	public $states;
+
 }
 ?>

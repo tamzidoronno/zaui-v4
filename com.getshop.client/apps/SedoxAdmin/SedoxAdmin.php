@@ -181,6 +181,11 @@ class SedoxAdmin extends \ApplicationBase implements \Application {
         }
         return "";
     }
+    
+    public function getCreditBalance($sedoxProduct) {
+        $account = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($sedoxProduct->firstUploadedByUserId);
+        return $account->creditAccount->balance;
+    }
 }
 
 ?>

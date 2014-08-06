@@ -73,3 +73,11 @@ body {
     bottom: 0px;
     left: 10px;
 }
+
+.editormode .gs_outer.header {
+    display: none;
+}
+
+body[editormode=true] {
+    background-image: none;
+}

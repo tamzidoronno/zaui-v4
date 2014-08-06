@@ -127,8 +127,9 @@ app.SedoxAdmin = {
         });
     },
     updateUserCredit: function() {
+        var userId = $(this).attr('userId');
         var data = {
-            userId : $(this).attr('userId'),
+            userId : userId,
             desc : $('.SedoxAdmin #sedox_credit_description').val(),
             amount : $('.SedoxAdmin #amount').val()
         }
@@ -138,6 +139,7 @@ app.SedoxAdmin = {
             thundashop.common.Alert("Succes", "Credit updated");
             $('.SedoxAdmin #sedox_credit_description').val("");
             $('.SedoxAdmin #amount').val("");
+            app.SedoxAdmin.updateInfoBox(userId);
         })
     },
             

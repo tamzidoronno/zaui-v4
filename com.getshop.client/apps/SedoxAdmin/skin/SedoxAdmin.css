@@ -51,7 +51,6 @@
 .SedoxAdmin .listview .filelistrow {
     border-bottom: solid 1px #EEE;
     line-height: 25px;
-    cursor: pointer;
 }
 
 .SedoxAdmin .listview .filelistrow:hover {

@@ -628,4 +628,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         Company company = brRegEngine.getCompany(user.birthDay);
         return company;
     }
+
+    public void directSaveUser(User user) throws ErrorException {
+        UserStoreCollection collection = getUserStoreCollection(storeId);
+        collection.addUser(user);
+    }
 }

@@ -61,7 +61,7 @@ public class SedoxBinaryFile implements Serializable {
         }
         
         if (fileType.toLowerCase().equals("various")) {
-            return 160;
+            return 110;
         }
         
         if (fileType.toLowerCase().equals("cmdencrypted")) {

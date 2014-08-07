@@ -151,6 +151,10 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     @Override
     public synchronized SedoxUser getSedoxUserAccount() throws ErrorException {
+        if (getSession().currentUser == null) {
+            throw new ErrorException(26);
+        }
+        
         String id = getSession().currentUser.id;
         updateUserFromMagento(id, false);
         SedoxUser user = getSedoxUserById(id);
@@ -239,13 +243,15 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         }
         
         SedoxBinaryFile originalFile = getOriginalBinaryFile(base64EncodeString, originalFileName);
-        sedoxProduct.binaryFiles.add(originalFile);
-        
-        if (cmdEncryptedFile != null) {
-            cmdEncryptedFile.cmdFileType = originalFile.cmdFileType;
-            originalFile.cmdFileType = null;
-        }
+        if (originalFile != null) {
+            sedoxProduct.binaryFiles.add(originalFile);
 
+            if (cmdEncryptedFile != null) {
+                cmdEncryptedFile.cmdFileType = originalFile.cmdFileType;
+                originalFile.cmdFileType = null;
+            }
+        }
+        
         byte[] fileData = DatatypeConverter.parseBase64Binary(base64EncodeString);
         sedoxProduct.softwareSize = (fileData.length / 1024) + " KB";
         sedoxProduct.uploadOrigin = origin;
@@ -522,19 +528,24 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             cmdEncryptedFile.md5sum = getMd5Sum(fileData);
             cmdEncryptedFile.orgFilename = originalFileName+"-cmd-encrypted";
             
-            try {
-                FileOutputStream fw = new FileOutputStream("/opt/files/" + cmdEncryptedFile.md5sum);
-                BufferedOutputStream bw = new BufferedOutputStream(fw);
-                bw.write(fileData);
-                bw.close();
-                fw.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            writeFile(fileData);
+
             return cmdEncryptedFile;
         }
         
         return null;
+    }
+    
+    private void writeFile(byte[] data) throws ErrorException {
+        try {
+            String fileName = "/opt/files/"+getMd5Sum(data);
+            
+            FileOutputStream fos = new FileOutputStream(fileName);
+            fos.write(data);
+            fos.close();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     private SedoxBinaryFile getOriginalBinaryFile(String base64EncodeString, String originalFileName) throws ErrorException {
@@ -544,7 +555,14 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         SedoxBinaryFile originalFile = new SedoxBinaryFile();
         
         if (isCmdFile(fileData)) {
-            fileData = doCMDEncryptedFile(fileData, originalFile);
+            try {
+                fileData = doCMDEncryptedFile(fileData, originalFile);  
+                if (fileData == null || fileData.length == 0) {
+                    return null;
+                }
+            } catch (Exception ex) {
+                return null;
+            }
         }
         
         originalFile.fileType = "Original";
@@ -552,16 +570,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         originalFile.md5sum = getMd5Sum(fileData);
         originalFile.orgFilename = originalFileName;
 
-        try {
-            FileOutputStream fw = new FileOutputStream("/opt/files/" + originalFile.md5sum);
-            BufferedOutputStream bw = new BufferedOutputStream(fw);
-            bw.write(fileData);
-            bw.close();
-            fw.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
+        writeFile(fileData);
 
         return originalFile;
     }
@@ -910,7 +919,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         content += "<br> ";
         content += "<br>Credit balance: " + sedoxUser.creditAccount.getBalance();
         content += "</br><br/>Link to product <a href='http://databank.tuningfiles.com/index.php?page=productview&productId="+sedoxProduct.id+"'>http://databank.tuningfiles.com/index.php?page=productview&productId="+sedoxProduct.id+"</a>";
-        mailFactory.sendWithAttachments(user.emailAddress, emailAddress, "Upload id: " +sedoxProduct.id + " - " + sedoxProduct.toString(), content, fileMap, true);
+        mailFactory.sendWithAttachments(user.emailAddress, emailAddress, "Upload id: " +sedoxProduct.id + " - " + sedoxProduct.toString(), content, fileMap, false);
     }
 
     private double getAlreadySpentOnProduct(SedoxProduct sedoxProduct, SedoxUser user) {

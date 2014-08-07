@@ -47,7 +47,7 @@ class SedoxProductView extends \ApplicationBase implements \Application {
         }
 
         if (strtolower($binFile->fileType) == "various") {
-            return 160;
+            return 110;
         }
         
         if (strtolower($binFile->fileType) == "cmdencrypted") {

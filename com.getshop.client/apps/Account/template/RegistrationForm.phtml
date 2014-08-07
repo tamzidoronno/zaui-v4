@@ -33,6 +33,7 @@ if ($user) {
     $exists = true;
     $textButton = $this->__w("Update");
     $company = $user->company;
+    $private = $user->isPrivatePerson;
     $userId = $user->id;
     $userLevel = $user->type;
     if(isset($user->expireDate) && $user->expireDate) {
@@ -118,6 +119,17 @@ echo "<input type='hidden' value='$userId' id='user_id'>";
         </td>
         <td>
             <input type="txt" id="cellPhone" value="<?php echo $cellphone; ?>"></input>
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            <?php echo $this->__w("Is private person"); ?>
+        </td>
+        <td>
+            <select>
+                <option value="false"><? echo $this->__w("No"); ?></option>
+                <option value="true" <? if($private) { echo "SELECTED"; } ?>><? echo $this->__w("Yes"); ?></option>
+            </select>
         </td>
     </tr>
     <? if (isset($company) && $company != null) { ?>

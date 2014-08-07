@@ -11,7 +11,7 @@ if($this->getServiceType() == "storage") {
     $priceText = $this->__w("PRICE PER MONTH");
     $selectRoomButton = $this->__w("SELECT STORAGE ROOM");
     $endText = $this->__w("END");
-    $headingtext = $this->__w("You have selected the following rental periode");
+    $headingtext = $this->__w("You have selected the following start date for your rental periode");
 }
 
 ?>
@@ -69,9 +69,11 @@ if($this->getServiceType() == "storage") {
         <? $this->printCalendar($this->getStart(), false, "startDate"); ?>
     </span>
 
-    <span class='calendar right'>
-        <? echo $this->printCalendar($this->getEnd(), $this->getStart(), "endDate"); ?>
-    </span>
+    <? if($this->getServiceType() == "hotel") { ?>
+        <span class='calendar right'>
+            <? echo $this->printCalendar($this->getEnd(), $this->getStart(), "endDate"); ?>
+        </span>
+    <? } ?>
 </div>
 <?
         foreach($this->errors as $error) {

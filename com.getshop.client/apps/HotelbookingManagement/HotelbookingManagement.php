@@ -17,6 +17,13 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         return "left";
     }
     
+    public function saveContractData() {
+        $this->setConfigurationSetting("utleier_navn", $_POST['data']['utleier_navn']);
+        $this->setConfigurationSetting("utleier_adresse", $_POST['data']['utleier_adresse']);
+        $this->setConfigurationSetting("utleier_postnr", $_POST['data']['utleier_postnr']);
+        $this->setConfigurationSetting("utleier_sted", $_POST['data']['utleier_sted']);
+    }
+    
     public function addType() {
         $type = new \core_hotelbookingmanager_RoomType();
         $type->id = $_POST['data']['id'];

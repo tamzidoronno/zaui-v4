@@ -9,11 +9,12 @@ $vistorInfoText = $this->__w("Visitor information");
 $continueCartButtonText = $this->__w("Continue to payment");
 $roomTaxPrice = $this->__w("{percentage}% taxes on room");
 $cleaningTaxPrice = $this->__w("{percentage}% taxes on cleaning");
-
+$periode = $this->__w("night");
 if($this->getServiceType() == "storage") {
-    $nightText = $this->__w("month");
-    $nightsText = $this->__w("months");
-    $inText = $this->__w("with");
+    $nightText = "";
+    $nightsText = "";
+    $inText = "";
+    $periode = $this->__w("month");
     $bookTime = $this->__w("Rental time periode");
     $vistorInfoText = $this->__w("Contact information");
 }
@@ -46,11 +47,11 @@ if($this->getServiceType() == "storage") {
             $in = $inText;
             
             
-            echo "<span class='price_summary'>" . $this->getDayCount() . " $night $in ";
+            echo "<span class='price_summary'>";
             if($this->getServiceType() == "hotel") {
-                $this->getRoomCount();
+                echo $this->getDayCount() . " $night $in " . $this->getRoomCount();
             }
-            echo " " . $this->getProduct()->name  . " (" . $this->getProduct()->price . "/night)" . "</span>";
+            echo " " . $this->getProduct()->name  . " (" . $this->getProduct()->price . "/$periode)" . "</span>";
             echo "<span class='price_summary_price price_row'><span class='right_aligned_price'>" . $this->getRoomPrice() . " kr</span></span>";
             echo "</div>";
 
@@ -113,11 +114,34 @@ if($this->getServiceType() == "storage") {
             <div class='contact_entry'>
                 <span>
                     <? $company = ""; if($this->isCompany()) { $company = " CHECKED"; } ?>
-                    <input type='checkbox' gsname="company" class='<? echo $this->validateInput("address"); ?>' <? echo $company; ?>>
+                    <input type='checkbox' gsname="company" class='<? echo $this->validateInput("company"); ?>' <? echo $company; ?>>
                     <span class=''><? echo $this->__w("Im ordering on behalf of a company"); ?></span>
                 </span>
             </div>
+            <?
+            $hideCompany = "";
+            $hidePrivate = "";
+            if(!$company) { 
+                $hideCompany = "style='display:none;'"; 
+            } else { 
+                $hidePrivate =  "style='display:none;'"; 
+            }
+            ?>
+            <div class='common_text company contact_entry' <? echo $hideCompany; ?>>
+                <span>
+                    <? $company = ""; if($this->isMvaRegistered()) { $company = " CHECKED"; } ?>
+                    <input type='checkbox' gsname="mvaregistered" class='<? echo $this->validateInput("address"); ?>' <? echo $company; ?>>
+                    <span class=''><? echo $this->__w("The company is mva registered"); ?></span>
+                </span>
+            </div>
         <br>
+            <div class='contact_entry'>
+                <span class='contact_text'><? 
+                    echo "<span $hideCompany class='common_text company'>" . $this->__w("Organisation number") . "</span>";
+                    echo "<span $hidePrivate class='common_text private'>" . $this->__w("Birth date") . "</span>";
+                ?></span>
+                <span class='contact_input'><input type='text' gsname="birthday" value='<? echo $this->getPost("birthday"); ?>' class='<? echo $this->validateInput("birthday"); ?>'></span>
+            </div>
             <div class='contact_entry'>
                 <span class='contact_text'><? echo $this->__w("Address"); ?></span>
                 <span class='contact_input'><input type='text' gsname="address" value='<? echo $this->getPost("address"); ?>' class='<? echo $this->validateInput("address"); ?>'></span>

@@ -3,8 +3,9 @@ $text = $this->__w("BOOK A ROOM AT");
 $checkintext = $this->__w("CHECK IN");
 $checkouttext = $this->__w("CHECK OUT");
 $roomtypetext = $this->__W("ROOM TYPE");
-
+$displayEnd = "display:inline-block;";
 if($this->getServiceType($text) == "storage") {
+    $displayEnd = "display:none;";
     $text = $this->__w("GET A STORAGE ROOM FROM");
     $checkintext = $this->__w("START");
     $checkouttext = $this->__w("END");
@@ -23,7 +24,7 @@ if($this->getServiceType($text) == "storage") {
             </span>
         </td>
         <td align='right'>
-            <span style='text-align:left; display:inline-block;'>
+            <span style='text-align:left;<? echo $displayEnd; ?>'>
                 <? echo $checkouttext; ?><br>
                 <span style='background-color:#b0bda4; display:inline-block;' class='end_cal'>
                     <input type='text' class='date_selection_room' value='<? echo date('d.m.Y', time()+86400); ?>' id='end_date'><i class='fa fa-calendar'></i>

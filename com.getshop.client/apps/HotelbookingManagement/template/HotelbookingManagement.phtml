@@ -19,16 +19,7 @@ if(isset($_POST['data']['typeId'])) {
         }
     }
 }
-?>
 
-<? echo $this->__w("Add a room"); ?>
-<div gstype="form" method="addRoom">
-    <input type="text" gsname="roomname" placeholder="Room name">
-    <input type="hidden" gsname="newroom" value="true">
-    <input type="submit" gstype="submit" gsname="submit">
-</div>
-<br>
-<? 
 if(isset($_POST['data']['updated'])) { 
     echo "<span class='updatedtext' style='float:right;'>Data har blitt oppdatert.</span>";
     ?>
@@ -40,6 +31,92 @@ if(isset($_POST['data']['updated'])) {
     <?
 }
 ?>
+<br>
+<br>
+<br>
+    
+Existing booking references
+<div style="padding:10px; border: solid 1px;background-color:#EFEFEF;">
+    <table width="100%">
+        <tr>
+            <th>Registration date</th>
+            <th>Reserved by</th>
+            <th>Reservation number</th>
+            <th>Room (code)</th>
+            <th>Start date</th>
+            <th>End date</th>
+            <th>Remove</th>
+            <th>Contract</th>
+        </tr>
+        <?
+        $reservations = $this->getApi()->getHotelBookingManager()->getAllReservations();
+        foreach($reservations as $reservation) {
+            $roomarray = array();
+            /* $rooms \core_hotelbookingmanager_Room[] */
+            foreach($reservation->roomIds as $index => $id) {
+                $roomarray[] = $rooms[$id]->roomName . " (" . $reservation->codes[$index] . ")";
+            }
+
+            $order = $this->getApi()->getOrderManager()->getOrderByReference($reservation->bookingReference);
+            /* @var $reservation \core_hotelbookingmanager_BookingReference */
+            echo "<tr>";
+            echo "<td>" . $reservation->rowCreatedDate . "</td>";
+            echo "<td>";
+            if($order && $order->userId) {
+                $user = $this->getApi()->getUserManager()->getUserById($order->userId);
+                echo "<a href='?page=users_all_users&userid=".$order->userId."'>" . $user->fullName . "</a>";
+            }
+            echo "</td>";
+            echo "<td style='text-align:center;'>" . $reservation->bookingReference . "</td>";
+            echo "<td style='text-align:center;'>" . join(", ", $roomarray) . "</td>";
+            echo "<td style='text-align:center;'>" . $reservation->startDate . "</td>";
+            echo "<td style='text-align:center;'>" . $reservation->endDate . "</td>";
+            echo "<td style='text-align:center;'><i style='cursor:pointer' refid='".$reservation->bookingReference."' class='fa fa-trash-o delete_reference'></td>";
+            echo "<td style='text-align:center;'>";
+            echo "<a target='_new' onclick=\"window.open('/scripts/generateContract.php?userid=".$user->id."&refid=".$reservation->bookingReference."&type=standard')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".$user->referenceKey."' class='fa fa-file-pdf-o'></i></a> ";
+            echo "<a target='_new' onclick=\"window.open('http://".$_SERVER['SERVER_NAME']."/scripts/generateContract.php?userid=".$user->id."&refid=".$reservation->bookingReference."&type=bilag')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".$user->referenceKey."' class='fa fa-plus'></i></a> ";
+            echo "<a target='_new' onclick=\"window.open('http://".$_SERVER['SERVER_NAME']."/scripts/generateContract.php?userid=".$user->id."&refid=".$reservation->bookingReference."&type=autogiro')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".$user->referenceKey."' class='fa fa-car'></i></a>";
+            echo "</td>";
+            echo "</tr>";
+        }
+        ?>
+    </table>
+</div>
+<br>
+<br>
+<b>Information related to the contract</b>
+<table gstype="form" method="saveContractData">
+    <tr>
+        <td>landlord's name</td>
+        <td><input type="text" gsname="utleier_navn" value="<? echo $this->getConfigurationSetting("utleier_navn"); ?>"></td>
+    </tr>
+    <tr>
+        <td>landlord's address</td>
+        <td><input type="text" gsname="utleier_adresse" value="<? echo $this->getConfigurationSetting("utleier_adresse"); ?>"></td>
+    </tr>
+    <tr>
+        <td>landlord's place</td>
+        <td><input type="text" gsname="utleier_sted" value="<? echo $this->getConfigurationSetting("utleier_sted"); ?>"></td>
+    </tr>
+    <tr>
+        <td>landlord's postal code</td>
+        <td><input type="text" gsname="utleier_postnr" value="<? echo $this->getConfigurationSetting("utleier_postnr"); ?>"></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td><input gstype="submit" type="button" value="Lagre"></td>
+    </tr>
+</table>
+<br>
+<br>
+
+<? echo $this->__w("Add a room"); ?>
+<div gstype="form" method="addRoom">
+    <input type="text" gsname="roomname" placeholder="Room name">
+    <input type="hidden" gsname="newroom" value="true">
+    <input type="submit" gstype="submit" gsname="submit">
+</div>
+<br>
 Existing rooms:<br>
 <div style="padding:10px; border: solid 1px;background-color:#EFEFEF;">
     <table width="100%" gstype='form' method='addRoom'>
@@ -93,58 +170,27 @@ Existing rooms:<br>
     </div>
 </div>
 <br>
-<br>
-<br>
-Existing booking references
-<div style="padding:10px; border: solid 1px;background-color:#EFEFEF;">
-    <table width="100%">
-        <tr>
-            <th>Registration date</th>
-            <th>Reserved by</th>
-            <th>Reservation number</th>
-            <th>Room (code)</th>
-            <th>Start date</th>
-            <th>End date</th>
-            <th>Remove</th>
-        </tr>
-        <?
-        $reservations = $this->getApi()->getHotelBookingManager()->getAllReservations();
-        foreach($reservations as $reservation) {
-            $roomarray = array();
-            /* $rooms \core_hotelbookingmanager_Room[] */
-            foreach($reservation->roomIds as $index => $id) {
-                $roomarray[] = $rooms[$id]->roomName . " (" . $reservation->codes[$index] . ")";
-            }
 
-            $order = $this->getApi()->getOrderManager()->getOrderByReference($reservation->bookingReference);
-            
-            /* @var $reservation \core_hotelbookingmanager_BookingReference */
-            echo "<tr>";
-            echo "<td>" . $reservation->rowCreatedDate . "</td>";
-            echo "<td>";
-            if($order) {
-                $user = $this->getApi()->getUserManager()->getUserById($order->userId);
-                echo "<a href='?page=users_all_users&userid=".$order->userId."'>" . $user->fullName . "</a>";
-            }
-            echo "</td>";
-            echo "<td style='text-align:center;'>" . $reservation->bookingReference . "</td>";
-            echo "<td style='text-align:center;'>" . join(", ", $roomarray) . "</td>";
-            echo "<td style='text-align:center;'>" . $reservation->startDate . "</td>";
-            echo "<td style='text-align:center;'>" . $reservation->endDate . "</td>";
-            echo "<td style='text-align:center;'><i style='cursor:pointer' refid='".$reservation->bookingReference."' class='fa fa-trash-o delete_reference'></td>";
-            echo "</tr>";
-        }
-        ?>
-    </table>
-</div>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
+<b>Variables in use for contracts</b>
+<pre>
+[navn] = leietakers navn
+[org_fnr] = fødseldato eventuelt orgnr
+[postaddr] = adressen for leier
+[rom] = Rommet som skal leies ut
+[areal] = Størrelsen på boden / rommet
+[startdato] = Startdato   
+[pris] = Prisen ved inngåelse av leie
+[year] = Året
+[adresse] = Kundens adresse
+[postnr] = Kundens postadresse
+
+[belop_forslag] = Forslag på pris
+[utleier_sted] = Sted som kontrakten skrives ut på
+[utleier_navn] = Navnet på utleier
+[utleier_adresse] = Utleiers adresse
+[utleier_postnr] = Utleiers postnummer
+</pre>
+
 <br>
 <br>
 <br>

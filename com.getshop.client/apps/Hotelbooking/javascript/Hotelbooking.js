@@ -91,7 +91,21 @@ app.Hotelbooking = {
          thundashop.Ajax.doJavascriptNavigation("pagenumber="+pagenumber, null, true);
     },
     saveCurrentData : function() {
+        var data = {};
+        $('.booking_contact_data').find('[gsname]').each(function() {
+           var name = $(this).attr('gsname');
+           data[name] = $(this).val();
+        });
         
+        data['mvaregistered'] = $('.booking_contact_data [gsname="mvaregistered"]').is(':checked');
+        data['company'] = $('.booking_contact_data [gsname="company"]').is(':checked');
+        data['partnershipdeal'] = $('.booking_contact_data [gsname="partnershipdeal"]').is(':checked');
+        var event = thundashop.Ajax.createEvent('','setBookingData',$(this),data);
+        if($(this).attr('gsname') === "mvaregistered" || $(this).attr('gsname') === "company") {
+            thundashop.Ajax.post(event);
+        } else {
+            thundashop.Ajax.postWithCallBack(event, function() {});
+        }
     },
     changeToPartnership : function() {
         if($('.partnership').is(":visible")) {
@@ -141,10 +155,13 @@ app.Hotelbooking = {
         });
         
     },
-    updateCompanySelection : function() {
-        var val = $(this).is(':checked');
-        var event = thundashop.Ajax.createEvent('','updateCompanySelection',$(this), { "company" : val });
-        thundashop.Ajax.post(event);
+    displayMvaRow : function() {
+        $('.common_text').hide();
+        if($(this).is(':checked')) {
+            $('.common_text.company').show();
+        } else {
+            $('.common_text.private').show();
+        }
     },
     loadSettings: function(element, application) {
         var config = {
@@ -176,10 +193,11 @@ app.Hotelbooking = {
         $(document).on('change', '.Hotelbooking .cleaning_option', app.Hotelbooking.updateCleaningCount);
         $(document).on('change', '.Hotelbooking #numberofpersons', app.Hotelbooking.setNumberOfPersons);
         $(document).on('blur', '.Hotelbooking #numberofpersons', app.Hotelbooking.setNumberOfPersons);
-        $(document).on('blur', '.Hotelbooking .bookingsummary input', app.Hotelbooking.saveCurrentData);
+        $(document).on('blur', '.Hotelbooking .booking_contact_data input', app.Hotelbooking.saveCurrentData);
         $(document).on('click', '.Hotelbooking input[gsname="partnershipdeal"]', app.Hotelbooking.changeToPartnership);
         $(document).on('click', '.Hotelbooking .fa.calnav', app.Hotelbooking.navigateMonth);
-        $(document).on('click', '.Hotelbooking input[gsname="company"]', app.Hotelbooking.updateCompanySelection);
+        $(document).on('click', '.Hotelbooking input[gsname="mvaregistered"]', app.Hotelbooking.saveCurrentData);
+        $(document).on('click', '.Hotelbooking input[gsname="company"]', app.Hotelbooking.saveCurrentData);
     }
 };
 

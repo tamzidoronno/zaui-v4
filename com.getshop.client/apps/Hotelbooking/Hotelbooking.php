@@ -29,7 +29,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     
     public function getRoomTaxes() {
         
-        if($this->getProduct()->privateExcluded && !$this->isCompany()) {
+        if($this->getProduct()->privateExcluded && !$this->isMvaRegistered()) {
             return 0;
         }
         
@@ -248,8 +248,10 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     public function updateCalendarDate() {
         $type = $_POST['data']['type'];
         $time = $_POST['data']['time'];
-        
         if($type == "startDate") {
+            if($time > $this->getEnd()) {
+                $this->setEndDate($time+86400);
+            }
             $this->setStartDate($time);
         }
         if($type == "endDate") {
@@ -335,6 +337,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     
     public function setStartDate($start) {
         $_SESSION['hotelbooking']['start'] = $start;
+        
     }
 
     public function setEndDate($end) {
@@ -389,14 +392,17 @@ class Hotelbooking extends \ApplicationBase implements \Application {
 
                 $user = new \core_usermanager_data_User();
                 $user->emailAddress = $_POST['data']['email'];
-                $user->username = $_POST['data']['email'];
+                $user->birthDay = $_POST['data']['birthday'];
                 $user->password = "dfsafasd#¤#cvsdfgdfasdfasf";
                 $user->fullName = $_POST['data']['name_1'];
                 $user->cellPhone = $_POST['data']['phone_1'];
                 $user->address = $address;
-                $this->getApi()->getUserManager()->createUser($user);
+                if($this->isCompany()) {
+                    $user->isPrivatePerson = "false";
+                }
+                $user = $this->getApi()->getUserManager()->createUser($user);
 
-                $order = $this->getApi()->getOrderManager()->createOrder($address);
+                $order = $this->getApi()->getOrderManager()->createOrderByCustomerReference($user->referenceKey);
             }
             $_GET['orderProcessed'] = true;
             $_GET['orderId'] = $order->id;
@@ -471,16 +477,8 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return "";
     }
     
-    public function updateCompanySelection() {
-        $_GET['subpage'] = "summary";
-        $company = $_POST['data']['company'];
-        $this->loadBookingData();
-        $_POST['data']['company'] = $company;
-        $this->setBookingData();
-    }
-    
     public function validateInput($name) {
-        if(isset($_GET['subpage']) && $_GET['subpage'] == "summary") {
+        if(isset($_GET['subpage']) && $_GET['subpage'] == "summary" || (isset($_POST['event']) && $_POST['event'] == 'setBookingData')) {
             return "";
         }
         if(isset($_POST['data'][$name]) && !$this->partnerShipChecked()) {
@@ -549,6 +547,10 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function setBookingData() {
+        if($_POST['data']['company'] == "false") {
+            $_POST['data']['mvaregistered'] = "false";
+        }
+        
         $_SESSION['booking_data'] = serialize($_POST['data']);
     }
     
@@ -607,13 +609,12 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             $isvalid = false;
         }
         if((int)$this->getMinumRental() > (int)$numberOfDays) {
-            $errorText = $this->__w("Sorry, your rental is too short, it has to be longer then {days} days of rental.");
-            if($this->getServiceType() == "storage") {
-                $errorText = $this->__w("Sorry, your rental is too short, it has to be longer then {days} months.");
+            if(!$this->getServiceType() == "storage") {
+                $errorText = $this->__w("Sorry, your rental is too short, it has to be longer then {days} days of rental.");
+                $errorText = str_replace("{days}", $this->getMinumRental(), $errorText);
+                $this->errors[] = $errorText;
+                $isvalid = false;
             }
-            $errorText = str_replace("{days}", $this->getMinumRental(), $errorText);
-            $this->errors[] = $errorText;
-            $isvalid = false;
         }
         return $isvalid;
     }
@@ -637,6 +638,10 @@ class Hotelbooking extends \ApplicationBase implements \Application {
 
     public function isCompany() {
         return $this->getPost("company") == "true";
+    }
+
+    public function isMvaRegistered() {
+        return $this->getPost("mvaregistered") == "true";
     }
 
 }

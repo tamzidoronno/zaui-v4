@@ -26,6 +26,7 @@ app.SedoxProductView = {
     },
           
     imageSelected: function(files, originalButton) {
+        debugger;
         var file = files[0];
         var fileName = file.name;
         var fileType = originalButton.attr('fileType');
@@ -34,6 +35,7 @@ app.SedoxProductView = {
         var button = this;
 
         reader.onload = function(event) {
+            debugger;
             var dataUri = event.target.result;
 
             var data = {

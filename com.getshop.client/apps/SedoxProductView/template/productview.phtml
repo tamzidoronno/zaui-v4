@@ -129,6 +129,15 @@ $uploadedByUser = $this->getUploadedUserName($sedoxProduct);
             <br>
             <br><b>Uploaded from: </b>
             <br><? echo $sedoxProduct->uploadOrigin; ?>
+            <br>
+            <br><b>Withdraw credit:</b> <?
+                if ($sedoxProduct->useCreditAccount == "true") {
+                    echo "<span style='color:green'>".ucwords($sedoxProduct->useCreditAccount)."</span>";
+                } else {
+                    echo "<span style='color:red'>".ucwords($sedoxProduct->useCreditAccount)."</span>";
+                }
+                
+            ?>
         </div>
         <br>
         <br>

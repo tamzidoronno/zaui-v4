@@ -17,6 +17,21 @@ class Users extends \SystemApplication implements \Application {
     public function postProcess() {
     }
     
+    public function removeComment() {
+        $commentid = $_POST['data']['commentid'];
+        $userid = $_POST['data']['userid'];
+        $this->getApi()->getUserManager()->removeComment($userid, $commentid);
+    }
+    
+    public function addCommentOnUser() {
+        $comment = $_POST['data']['comment_text'];
+        $userid = $_POST['data']['userid'];
+        $user = $this->getApi()->getUserManager()->getUserById($userid);
+        $commentobject = new \core_usermanager_data_Comment();
+        $commentobject->comment = $comment;
+        $this->getApi()->getUserManager()->addComment($userid, $commentobject);
+    }
+    
     public function updateApplicationPermissions() {
         $_GET['userid'] = $_POST['data']['userid'];
         $this->setSelectedUser();

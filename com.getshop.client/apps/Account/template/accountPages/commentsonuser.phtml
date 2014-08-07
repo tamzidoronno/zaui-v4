@@ -1,0 +1,22 @@
+<?
+$user = $this->getUserData();
+echo "<br><br><br>";
+echo '<div class="form_text registration_heading"><b>'.$this->__f("Comments on user").'</b></div>';
+foreach($user->comments as $comment) {
+    /* @var $comment core_usermanager_data_Comment */
+    echo "<div>" . $comment->dateCreated;
+    echo "<span style='float:right; cursor:pointer;'  gstype='form' method='removeComment'>";
+    echo "<input type='hidden' value='".$user->id."' gsname='userid'>";
+    echo "<input type='hidden' value='".$comment->commentId."' gsname='commentid'>";
+    echo "<i class='fa fa-trash-o' gstype='submit'></i>";
+    echo "</span>";
+    echo "<div>" . $comment->comment . "</div>";
+    echo "<br>";
+}
+echo "<div gstype='form' method='addCommentOnUser'>";
+echo "<br><br>";
+echo "<input type='hidden' value='". $user->id . "' gsname='userid'>";
+echo "<textarea style='width:100%; height: 100px;' gsname='comment_text'></textarea>";
+echo "<input style='float:right;' type='button' value='". $this->__f("Add comment") ."' gstype='submit'>";
+echo "</div>";
+?>

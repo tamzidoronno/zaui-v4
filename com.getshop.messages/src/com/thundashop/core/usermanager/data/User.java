@@ -59,6 +59,8 @@ public class User extends DataCommon implements Comparable<User> {
     
     public String referenceKey = "";
     
+    public boolean isPrivatePerson = true;
+    
     public Company company = null;
     
     //ApplicationId, int = 0 rw, 1=r, 2=w

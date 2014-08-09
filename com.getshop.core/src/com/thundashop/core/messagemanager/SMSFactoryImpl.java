@@ -15,9 +15,11 @@ import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.messagehandler.data.Message;
 import com.thundashop.core.storemanager.StorePool;
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -145,10 +147,22 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
             message = encode(message);
             from = encode(from);
             to = encode(to);
-            String urlString = "http://dio.eurobate.com/push.php?bruker=arctic&passord=4gEo2X&til="+to+"&avsender="+from+"&melding="+message;
+            String urlString = "http://api.clickatell.com/http/sendmsg?user=boggibill&password=RKCDcOSAECbKeY&api_id=3492637&to=47"+to+"&text="+message;
             url = new URL(urlString);
-            is = url.openStream();
             dis = new DataInputStream(new BufferedInputStream(is));
+            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+
+            String content = "";
+            String inputLine;
+            while ((inputLine = in.readLine()) != null)
+                content += inputLine;
+            in.close();
+            
+            if(!content.trim().startsWith("ID:")) {
+                logger.error(this, "Could not send sms to " + to + " from " + from + " message: " + message);
+                System.out.println(content);
+                return;
+            }
         } catch (IOException ex) {
             logger.error(this, "Could not send sms to " + to + " from " + from + " message: " + message, ex);
             return;

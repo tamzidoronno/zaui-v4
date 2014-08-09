@@ -1,4 +1,5 @@
 <?
+/* @var $this \ns_d16b27d9_579f_4d44_b90b_4223de0eb6f2\Hotelbooking */
 $text = $this->__w("BOOK A ROOM AT");
 $checkintext = $this->__w("CHECK IN");
 $checkouttext = $this->__w("CHECK OUT");
@@ -51,6 +52,15 @@ if($this->getServiceType($text) == "storage") {
         }
     ?>
 </select>
+<?
+$days = $this->getMinumRentalTexted();
+if($days) {
+    $minimum = $this->__f("* Minimum rental periode is {days}");
+    $minimum = str_replace("{days}", $days, $minimum);
+    echo $minimum;
+}
+?>
+
 <div class='check_available_button' nextpage="<? echo $this->getContinuePage(); ?>"><? echo $this->__w("Check availability and continue"); ?></div>
 <div style='padding-top:20px;'>
     <span class='error_on_check date_before_start'>

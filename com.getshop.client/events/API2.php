@@ -1779,6 +1779,25 @@ class APIHotelBookingManager {
 	}
 
 	/**
+	* Change a room for a reference.
+	* @param reference
+	* @param oldRoom the old room
+	* @param newRoomId
+	* @throws ErrorException
+	*/
+
+	public function moveRoomOnReference($reference, $oldRoom, $newRoomId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["reference"] = json_encode($this->transport->object_unset_nulls($reference));
+	     $data['args']["oldRoom"] = json_encode($this->transport->object_unset_nulls($oldRoom));
+	     $data['args']["newRoomId"] = json_encode($this->transport->object_unset_nulls($newRoomId));
+	     $data["method"] = "moveRoomOnReference";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Add new room to the manager.
 	* @param room
 	* @throws ErrorException

@@ -44,6 +44,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         if(!$minimum) {
             return 1;
         }
+        
         return $minimum;
     }
     
@@ -151,13 +152,22 @@ class Hotelbooking extends \ApplicationBase implements \Application {
        $address = $order->cart->address;
        $name = $address->fullName;
        $reference = $order->reference;
-       echo "Reference: " . $reference;
        
        if($this->getServiceType() == "hotel") {
-           $title = $this->__w("Thank you for your booking a room at")." ".$this->getProjectName();
+           $title = $this->__w("Thank you for your booking a room at")." ".$this->getProjectName().".";
        } else {
-           $title = $this->__w("Thank you for your booking a storage room at")." ".$this->getProjectName();
+           $title = $this->__w("Thank you for your booking a storage room at")." ".$this->getProjectName().".";
        }
+       echo "<br><br>";
+       echo "<h1>" . $title . "</h1>";
+       if($this->getServiceType() == "hotel") {
+           $stay = $this->__w("A confirmation email has been sent to your email. Enjoy your stay at {hotel}.");
+           $stay = str_replace("{hotel}", $this->getProjectName(), $stay);
+           echo $stay;
+       } else {
+           echo $this->__w("A confirmation email has been sent to your email, and your storage room has been reserved. Please note that the storage room might not be final and could be changed to a different one with the same size if needed.");
+       }
+       echo "<br><br><br><br>";
        
        $booking = $this->getApi()->getHotelBookingManager()->getReservationByReferenceId($reference);
        $room = $this->getApi()->getHotelBookingManager()->getRoom($booking->roomIds[0]);
@@ -642,6 +652,28 @@ class Hotelbooking extends \ApplicationBase implements \Application {
 
     public function isMvaRegistered() {
         return $this->getPost("mvaregistered") == "true";
+    }
+
+    public function getMinumRentalTexted() {
+        $days = $this->getMinumRental();
+        if(!$days || $days == 1) {
+            return "";
+        }
+        if($days > 30) {
+            $days /= 30;
+            if($days > 1) {
+                $days .=  " " . $this->__w("months");
+            } else {
+                $days .=  " " . $this->__w("month");
+            }
+        } else {
+            if($days > 1) {
+                $days .=  " " . $this->__w("day");
+            } else {
+                $days .=  " " . $this->__w("days");
+            }
+        }
+        return $days;
     }
 
 }

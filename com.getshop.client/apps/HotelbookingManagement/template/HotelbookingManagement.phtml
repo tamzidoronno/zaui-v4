@@ -54,7 +54,7 @@ Existing booking references
             $roomarray = array();
             /* $rooms \core_hotelbookingmanager_Room[] */
             foreach($reservation->roomIds as $index => $id) {
-                $roomarray[] = $rooms[$id]->roomName . " (" . $reservation->codes[$index] . ")";
+                $roomarray[] = "<span class='editroom' style='cursor:pointer;' refid='".$reservation->bookingReference."' roomid='$id'>" . $rooms[$id]->roomName . " (" . $reservation->codes[$index] . ")</span>";
             }
 
             $order = $this->getApi()->getOrderManager()->getOrderByReference($reservation->bookingReference);
@@ -84,29 +84,6 @@ Existing booking references
 </div>
 <br>
 <br>
-<b>Information related to the contract</b>
-<table gstype="form" method="saveContractData">
-    <tr>
-        <td>landlord's name</td>
-        <td><input type="text" gsname="utleier_navn" value="<? echo $this->getConfigurationSetting("utleier_navn"); ?>"></td>
-    </tr>
-    <tr>
-        <td>landlord's address</td>
-        <td><input type="text" gsname="utleier_adresse" value="<? echo $this->getConfigurationSetting("utleier_adresse"); ?>"></td>
-    </tr>
-    <tr>
-        <td>landlord's place</td>
-        <td><input type="text" gsname="utleier_sted" value="<? echo $this->getConfigurationSetting("utleier_sted"); ?>"></td>
-    </tr>
-    <tr>
-        <td>landlord's postal code</td>
-        <td><input type="text" gsname="utleier_postnr" value="<? echo $this->getConfigurationSetting("utleier_postnr"); ?>"></td>
-    </tr>
-    <tr>
-        <td></td>
-        <td><input gstype="submit" type="button" value="Lagre"></td>
-    </tr>
-</table>
 <br>
 <br>
 
@@ -169,6 +146,31 @@ Existing rooms:<br>
         <input gstype="submit" type="button" value="save">
     </div>
 </div>
+<br>
+
+<b>Information related to the contract</b>
+<table gstype="form" method="saveContractData">
+    <tr>
+        <td>landlord's name</td>
+        <td><input type="text" gsname="utleier_navn" value="<? echo $this->getConfigurationSetting("utleier_navn"); ?>"></td>
+    </tr>
+    <tr>
+        <td>landlord's address</td>
+        <td><input type="text" gsname="utleier_adresse" value="<? echo $this->getConfigurationSetting("utleier_adresse"); ?>"></td>
+    </tr>
+    <tr>
+        <td>landlord's place</td>
+        <td><input type="text" gsname="utleier_sted" value="<? echo $this->getConfigurationSetting("utleier_sted"); ?>"></td>
+    </tr>
+    <tr>
+        <td>landlord's postal code</td>
+        <td><input type="text" gsname="utleier_postnr" value="<? echo $this->getConfigurationSetting("utleier_postnr"); ?>"></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td><input gstype="submit" type="button" value="Lagre"></td>
+    </tr>
+</table>
 <br>
 
 <b>Variables in use for contracts</b>

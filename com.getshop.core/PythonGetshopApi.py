@@ -1822,6 +1822,35 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def moveRoomOnReference(self, reference, oldRoom, newRoomId):
+    args = collections.OrderedDict()
+    if isinstance(reference,GetShopBaseClass): 
+      args["reference"]=json.dumps(reference.__dict__)
+    else:
+      try:
+        args["reference"]=json.dumps(reference)
+      except (ValueError, AttributeError):
+        args["reference"]=reference
+    if isinstance(oldRoom,GetShopBaseClass): 
+      args["oldRoom"]=json.dumps(oldRoom.__dict__)
+    else:
+      try:
+        args["oldRoom"]=json.dumps(oldRoom)
+      except (ValueError, AttributeError):
+        args["oldRoom"]=oldRoom
+    if isinstance(newRoomId,GetShopBaseClass): 
+      args["newRoomId"]=json.dumps(newRoomId.__dict__)
+    else:
+      try:
+        args["newRoomId"]=json.dumps(newRoomId)
+      except (ValueError, AttributeError):
+        args["newRoomId"]=newRoomId
+    data = EmptyClass()
+    data.args = args
+    data.method = "moveRoomOnReference"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def removeRoom(self, id):
     args = collections.OrderedDict()
     if isinstance(id,GetShopBaseClass): 

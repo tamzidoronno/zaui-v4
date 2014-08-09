@@ -1,0 +1,27 @@
+<?
+$refid = $_POST['data']['refid'];
+$roomid = $_POST['data']['roomid'];
+$reference = $this->getApi()->getHotelBookingManager()->getReservationByReferenceId($refid);
+$currentRoom = $this->getApi()->getHotelBookingManager()->getRoom($roomid);
+?>
+<div style='padding:40px;'>
+    <input type='hidden' value='<? echo $refid; ?>' id='referenceId'>
+    <input type='hidden' value='<? echo $roomid; ?>' id='oldRoom'>
+    <?
+    /* @var $this \ns_15e67fa1_c862_4bc3_9b17_dfd818f30712\HotelbookingManagement */
+    $rooms = $this->getApi()->getHotelBookingManager()->getAllRooms();
+    echo "<div style='height: 50px;'>";
+    echo "<select style='float:right;' id='moveRoomSelection'>";
+    foreach($rooms as $room) {
+        /* @var $room core_hotelbookingmanager_Room */
+        echo "<option value='".$room->id."'>" . $room->roomName . "</option>";
+    }
+    ?>
+    </select>
+    <b><? echo $this->__f("Select a new room for") . " " . $reference->contact->names[0]; ?> </b><br>
+    <? echo $this->__f("Current room is") . " " . $currentRoom->roomName; ?>
+</div>
+    <div style="text-align:right;">
+        <input type="button" id="doChangeRoom" value="<? echo $this->__f("Update room"); ?>">
+    </div>
+</div>

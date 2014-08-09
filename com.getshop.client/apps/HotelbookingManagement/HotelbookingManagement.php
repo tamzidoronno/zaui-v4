@@ -104,6 +104,18 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         $this->getApi()->getHotelBookingManager()->removeRoom($id);
     }
     
+    public function loadMoveRoom() {
+        $this->includefile("moveroom");
+    }
+    
+    public function moveRoom() {
+        $refid = $_POST['data']['refid'];
+        $newroomid = $_POST['data']['newRoom'];
+        $oldRoom = $_POST['data']['oldRoom'];
+        
+        $this->getApi()->getHotelBookingManager()->moveRoomOnReference($refid, $oldRoom, $newroomid);
+    }
+    
     /**
      * 
      * @param \core_hotelbookingmanager_Room $room

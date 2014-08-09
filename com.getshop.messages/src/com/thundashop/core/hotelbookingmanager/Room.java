@@ -83,4 +83,14 @@ public class Room extends DataCommon {
         }
     }
 
+    List<BookedDate> getBookedDatesByReference(Integer reference) {
+        List<BookedDate> result = new ArrayList();
+        for(BookedDate bd : bookedDates) {
+            if(bd.bookingReference == reference) {
+                result.add(bd);
+            }
+        }
+        return result;
+    }
+
 }

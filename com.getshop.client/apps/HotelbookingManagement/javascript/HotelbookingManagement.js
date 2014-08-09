@@ -28,12 +28,31 @@ app.HotelbookingManagement = {
             thundashop.Ajax.post(event);
         }
     },
-    
+    updateRoom : function() {
+        var data = {
+            "newRoom" : $('.HotelbookingManagement #moveRoomSelection').val(),
+            "oldRoom" : $('.HotelbookingManagement #oldRoom').val(),
+            "refid" : $('.HotelbookingManagement #referenceId').val()
+        }
+        var event = thundashop.Ajax.createEvent("", "moveRoom", $(this), data);
+        thundashop.Ajax.post(event);
+        thundashop.common.hideInformationBox();
+    },
+    loadMoveRoom : function() {
+        var data = {
+            "roomid" : $(this).attr('roomid'),
+            "refid" : $(this).attr('refid')
+        }
+        var event = thundashop.Ajax.createEvent('','loadMoveRoom',$(this), data);
+        thundashop.common.showInformationBox(event, "Move room");
+    },
     initEvents : function() {
         $(document).on('click', '.HotelbookingManagement .edit_type', app.HotelbookingManagement.loadEditType);
         $(document).on('click', '.HotelbookingManagement .delete_type', app.HotelbookingManagement.deleteType);
         $(document).on('click', '.HotelbookingManagement .existingroomrow .fa-trash-o', app.HotelbookingManagement.deleteRoom);
         $(document).on('click', '.HotelbookingManagement .delete_reference', app.HotelbookingManagement.deleteReference);
+        $(document).on('click', '.HotelbookingManagement .editroom', app.HotelbookingManagement.loadMoveRoom);
+        $(document).on('click', '.HotelbookingManagement #doChangeRoom', app.HotelbookingManagement.updateRoom);
     }
     
 }

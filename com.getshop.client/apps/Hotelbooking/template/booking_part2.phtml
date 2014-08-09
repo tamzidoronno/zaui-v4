@@ -74,7 +74,16 @@ if($this->getServiceType() == "storage") {
             <? echo $this->printCalendar($this->getEnd(), $this->getStart(), "endDate"); ?>
         </span>
     <? } ?>
+    
 </div>
+<?
+$days = $this->getMinumRentalTexted();
+if($days) {
+    $minimum = $this->__f("* Minimum rental periode is {days}");
+    $minimum = str_replace("{days}", $days, $minimum);
+    echo "<div class='error_text'>" . $minimum . "</div>";
+}
+?>
 <?
         foreach($this->errors as $error) {
             echo "<div class='error_text'>" . $error . "</div>";

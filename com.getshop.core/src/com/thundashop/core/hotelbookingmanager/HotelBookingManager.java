@@ -282,4 +282,22 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         
         return null;
     }
+
+    @Override
+    public void moveRoomOnReference(Integer reference,String oldRoom, String newRoomId) throws ErrorException {
+        BookingReference bookingreference = getReservationByReferenceId(reference);
+        Room existingRoom = getRoom(oldRoom);
+        Room newRoom = getRoom(newRoomId);
+        
+        List<BookedDate> existingBookingDates = existingRoom.getBookedDatesByReference(reference);
+        newRoom.bookedDates.addAll(existingBookingDates);
+        existingRoom.bookedDates.removeAll(existingBookingDates);
+        
+        bookingreference.roomIds.remove(oldRoom);
+        bookingreference.roomIds.add(newRoomId);
+       
+        saveObject(bookingreference);
+        saveRoom(newRoom);
+        saveRoom(existingRoom);
+    }
 }

@@ -51,6 +51,16 @@ public interface IHotelBookingManager {
     public void setCode(String code, String roomId) throws ErrorException;
     
     /**
+     * Change a room for a reference.
+     * @param reference
+     * @param oldRoom the old room
+     * @param newRoomId
+     * @throws ErrorException 
+     */
+    @Administrator
+    public void moveRoomOnReference(Integer reference, String oldRoom, String newRoomId) throws ErrorException;
+    
+    /**
      * 
      * @return
      * @throws ErrorException 

@@ -5,7 +5,7 @@
         You have two choices, use the already existing file or ask for a tuningfile that is to your specifications.
         
         <div class='sedox_match_options'>
-            <a href='?page=productview&productId=<? echo $_SESSION['originalfile_match']; ?>'>
+            <a href='?page=productview&productId=<? echo $this->getExistingProduct()->id; ?>'>
                 <div class='sedox_match_option'>
                     <i class='fa fa-mail-forward'></i>
                     <br> Go to product
@@ -20,7 +20,7 @@
             Please specify the reason why you can not use the tuningfiles we already have
             <div class='innerform'>
                 <textarea id='specialformdesc'></textarea>
-                <div class='sedox_button sendspecialrequest'>Send request</div>    
+                <div fileid='<? echo $this->getExistingProduct()->id; ?>' class='sedox_button sendspecialrequest'>Send request</div>    
             </div>
             
         </div>

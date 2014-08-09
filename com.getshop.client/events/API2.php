@@ -3992,13 +3992,14 @@ class APISedoxProductManager {
 	* @throws ErrorException
 	*/
 
-	public function createSedoxProduct($core_sedox_SedoxProduct, $base64encodedOriginalFile, $originalFileName, $forSlaveId) {
+	public function createSedoxProduct($core_sedox_SedoxProduct, $base64encodedOriginalFile, $originalFileName, $forSlaveId, $origin) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["core_sedox_SedoxProduct"] = json_encode($this->transport->object_unset_nulls($core_sedox_SedoxProduct));
 	     $data['args']["base64encodedOriginalFile"] = json_encode($this->transport->object_unset_nulls($base64encodedOriginalFile));
 	     $data['args']["originalFileName"] = json_encode($this->transport->object_unset_nulls($originalFileName));
 	     $data['args']["forSlaveId"] = json_encode($this->transport->object_unset_nulls($forSlaveId));
+	     $data['args']["origin"] = json_encode($this->transport->object_unset_nulls($origin));
 	     $data["method"] = "createSedoxProduct";
 	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
 	     return $this->transport->sendMessage($data);
@@ -4030,6 +4031,25 @@ class APISedoxProductManager {
 	     $data = array();
 	     $data['args'] = array();
 	     $data["method"] = "getDevelopers";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Developers is simply an getshop user that is registered as an developer.
+	* Active developers are administrators that has an SedoxUser with the flag
+	* isActiveDeveloper = true
+	*
+	* @return String
+	* @throws ErrorException
+	*/
+
+	public function getExtraInformationForFile($productId, $fileId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $data['args']["fileId"] = json_encode($this->transport->object_unset_nulls($fileId));
+	     $data["method"] = "getExtraInformationForFile";
 	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -4343,6 +4363,26 @@ class APISedoxProductManager {
 	}
 
 	/**
+	* Developers is simply an getshop user that is registered as an developer.
+	* Active developers are administrators that has an SedoxUser with the flag
+	* isActiveDeveloper = true
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function setExtraInformationForFile($productId, $fileId, $text) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $data['args']["fileId"] = json_encode($this->transport->object_unset_nulls($fileId));
+	     $data['args']["text"] = json_encode($this->transport->object_unset_nulls($text));
+	     $data["method"] = "setExtraInformationForFile";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	*
 	* @author ktonder
 	*/
@@ -4409,6 +4449,25 @@ class APISedoxProductManager {
 	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
 	     $data['args']["toggle"] = json_encode($this->transport->object_unset_nulls($toggle));
 	     $data["method"] = "togglePassiveSlaveMode";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Developers is simply an getshop user that is registered as an developer.
+	* Active developers are administrators that has an SedoxUser with the flag
+	* isActiveDeveloper = true
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function toggleStartStop($productId, $toggle) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $data['args']["toggle"] = json_encode($this->transport->object_unset_nulls($toggle));
+	     $data["method"] = "toggleStartStop";
 	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
 	     return $this->transport->sendMessage($data);
 	}

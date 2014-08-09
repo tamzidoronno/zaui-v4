@@ -1,17 +1,17 @@
 app.SedoxLogin = {
     init: function() {
         $(document).on('click', '.SedoxLogin .logout', app.SedoxLogin.logout)
-        $(document).on('click', '.SedoxLogin .sedox_login', app.SedoxLogin.login)
-        $(document).on('change', '.SedoxLogin #password', app.SedoxLogin.login)
+//        $(document).on('click', '.SedoxLogin .sedox_login', app.SedoxLogin.login)
+//        $(document).on('change', '.SedoxLogin #password', app.SedoxLogin.login)
     },
     login: function() {
-        var data = {
-            emailAddress : $('.SedoxLogin #emailAddress').val(),
-            password : $('.SedoxLogin #password').val()
-        }
-        
-        var event = thundashop.Ajax.createEvent("", "login", this, data);
-        thundashop.Ajax.post(event);
+//        var data = {
+//            emailAddress : $('.SedoxLogin #emailAddress').val(),
+//            password : $('.SedoxLogin #password').val()
+//        }
+//        
+//        var event = thundashop.Ajax.createEvent("", "login", this, data);
+//        thundashop.Ajax.post(event);
     },
     logout: function() {
         var dom = $('#getshop_logout');
@@ -21,17 +21,17 @@ app.SedoxLogin = {
         });
     },
     loadSettings : function(element, application) {
-         var config = {
-            draggable: true,
-            app : true,
-            application: application,
-            title: "Settings",
-            items: []
-        }
-
-        var toolbox = new GetShopToolbox(config, application);
-        toolbox.show();
-        toolbox.attachToElement(application, 2);
+//         var config = {
+//            draggable: true,
+//            app : true,
+//            application: application,
+//            title: "Settings",
+//            items: []
+//        }
+//
+//        var toolbox = new GetShopToolbox(config, application);
+//        toolbox.show();
+//        toolbox.attachToElement(application, 2);
     }
 };
 

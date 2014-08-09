@@ -17,7 +17,7 @@ class SedoxMenu extends \ApplicationBase implements \Application {
     }
     
     public function isHomePage() {
-        return $this->getPage()->getId() == "home";
+        return $this->getPage()->getId() == "home" || $this->getPage()->getId() == "productview";
     }
     
     public function searchProduct() {
@@ -25,6 +25,7 @@ class SedoxMenu extends \ApplicationBase implements \Application {
         // Well, sort of. this sets the session variable then the render function in
         // SedoxProductSearch picks it up and uses it to search for products.
         $_SESSION['searchKey'] = $_POST['data']['searchKey'];
+        $_GET['page'] = "home";
     }
 }
 ?>

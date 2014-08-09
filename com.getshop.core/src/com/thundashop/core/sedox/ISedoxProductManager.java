@@ -49,7 +49,7 @@ public interface ISedoxProductManager  {
     public SedoxProduct getProductById(String id) throws ErrorException;
     
     @Customer
-    public void createSedoxProduct(SedoxProduct sedoxProduct, String base64encodedOriginalFile, String originalFileName, String forSlaveId) throws ErrorException;
+    public void createSedoxProduct(SedoxProduct sedoxProduct, String base64encodedOriginalFile, String originalFileName, String forSlaveId, String origin) throws ErrorException;
     
     @Customer
     public SedoxProduct getSedoxProductByMd5Sum(String md5sum) throws ErrorException;
@@ -120,4 +120,14 @@ public interface ISedoxProductManager  {
     
     @Administrator
     public void togglePassiveSlaveMode(String userId, boolean toggle) throws ErrorException;
+    
+    @Administrator
+    public void toggleStartStop(String productId, boolean toggle) throws ErrorException;
+    
+    @Administrator
+    public String getExtraInformationForFile(String productId, int fileId) throws ErrorException;
+    
+    @Administrator
+    public void setExtraInformationForFile(String productId, int fileId, String text) throws ErrorException;
+    
 }

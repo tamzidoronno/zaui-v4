@@ -4174,7 +4174,7 @@ class SedoxProductManager(object):
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 
-  def createSedoxProduct(self, sedoxProduct, base64encodedOriginalFile, originalFileName, forSlaveId):
+  def createSedoxProduct(self, sedoxProduct, base64encodedOriginalFile, originalFileName, forSlaveId, origin):
     args = collections.OrderedDict()
     if isinstance(sedoxProduct,GetShopBaseClass): 
       args["sedoxProduct"]=json.dumps(sedoxProduct.__dict__)
@@ -4204,6 +4204,13 @@ class SedoxProductManager(object):
         args["forSlaveId"]=json.dumps(forSlaveId)
       except (ValueError, AttributeError):
         args["forSlaveId"]=forSlaveId
+    if isinstance(origin,GetShopBaseClass): 
+      args["origin"]=json.dumps(origin.__dict__)
+    else:
+      try:
+        args["origin"]=json.dumps(origin)
+      except (ValueError, AttributeError):
+        args["origin"]=origin
     data = EmptyClass()
     data.args = args
     data.method = "createSedoxProduct"
@@ -4223,6 +4230,28 @@ class SedoxProductManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getDevelopers"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getExtraInformationForFile(self, productId, fileId):
+    args = collections.OrderedDict()
+    if isinstance(productId,GetShopBaseClass): 
+      args["productId"]=json.dumps(productId.__dict__)
+    else:
+      try:
+        args["productId"]=json.dumps(productId)
+      except (ValueError, AttributeError):
+        args["productId"]=productId
+    if isinstance(fileId,GetShopBaseClass): 
+      args["fileId"]=json.dumps(fileId.__dict__)
+    else:
+      try:
+        args["fileId"]=json.dumps(fileId)
+      except (ValueError, AttributeError):
+        args["fileId"]=fileId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getExtraInformationForFile"
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -4530,6 +4559,35 @@ class SedoxProductManager(object):
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 
+  def setExtraInformationForFile(self, productId, fileId, text):
+    args = collections.OrderedDict()
+    if isinstance(productId,GetShopBaseClass): 
+      args["productId"]=json.dumps(productId.__dict__)
+    else:
+      try:
+        args["productId"]=json.dumps(productId)
+      except (ValueError, AttributeError):
+        args["productId"]=productId
+    if isinstance(fileId,GetShopBaseClass): 
+      args["fileId"]=json.dumps(fileId.__dict__)
+    else:
+      try:
+        args["fileId"]=json.dumps(fileId)
+      except (ValueError, AttributeError):
+        args["fileId"]=fileId
+    if isinstance(text,GetShopBaseClass): 
+      args["text"]=json.dumps(text.__dict__)
+    else:
+      try:
+        args["text"]=json.dumps(text)
+      except (ValueError, AttributeError):
+        args["text"]=text
+    data = EmptyClass()
+    data.args = args
+    data.method = "setExtraInformationForFile"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
   def sync(self, option):
     args = collections.OrderedDict()
     if isinstance(option,GetShopBaseClass): 
@@ -4608,6 +4666,28 @@ class SedoxProductManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "togglePassiveSlaveMode"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def toggleStartStop(self, productId, toggle):
+    args = collections.OrderedDict()
+    if isinstance(productId,GetShopBaseClass): 
+      args["productId"]=json.dumps(productId.__dict__)
+    else:
+      try:
+        args["productId"]=json.dumps(productId)
+      except (ValueError, AttributeError):
+        args["productId"]=productId
+    if isinstance(toggle,GetShopBaseClass): 
+      args["toggle"]=json.dumps(toggle.__dict__)
+    else:
+      try:
+        args["toggle"]=json.dumps(toggle)
+      except (ValueError, AttributeError):
+        args["toggle"]=toggle
+    data = EmptyClass()
+    data.args = args
+    data.method = "toggleStartStop"
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 

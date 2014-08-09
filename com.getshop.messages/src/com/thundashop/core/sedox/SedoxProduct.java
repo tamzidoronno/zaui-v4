@@ -6,7 +6,10 @@ package com.thundashop.core.sedox;
 
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.naming.BinaryRefAddr;
 
 /**
@@ -27,7 +30,7 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
     public String build;
     public String ecuBrand;
     public String softwareNumber; 
-    public int softwareSize;
+    public String softwareSize;
     
     public String tool;
     public String status;
@@ -41,6 +44,14 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
     public boolean started;
     public boolean isCmdEncryptedProduct=false;
     public String channel;
+    public String ecuPartNumber;
+    public String ecuHardwareNumber;
+    public String ecuSoftwareNumber;
+    public String ecuSoftwareVersion;
+    
+    public String uploadOrigin;
+    
+    public Map<String, Date> states = new HashMap();
 
     @Override
     public int compareTo(SedoxProduct o) {
@@ -57,6 +68,7 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
         String[] productAttributes = fileName.split(";");
         
         if (productAttributes.length != 16) {
+            saleAble = false;
             return;
         }
         
@@ -68,7 +80,8 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
         power = productAttributes[6]; // %Engine.OutputPS%
         ecuBrand = productAttributes[7]; // %ECU.Producer%
         ecuType = productAttributes[8]; // %ECU.Build% 
-        softwareNumber = productAttributes[10]; // %ECU.ECUStg%;
+        ecuSoftwareNumber = productAttributes[10]; // %ECU.ECUStg%;
+        ecuHardwareNumber = productAttributes[11]; // %ECU.ECUStg%;
     }
 
     public SedoxBinaryFile getFileById(int fileId) {

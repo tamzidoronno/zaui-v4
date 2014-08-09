@@ -24,7 +24,7 @@ class SedoxFileUpload extends \ApplicationBase implements \Application {
         return $this->__f("Sedox FileUploader");
     }
 
-    private function getExistingProduct() {
+    public function getExistingProduct() {
         if (isset($_FILES['originalfile'])) {
             $sum  = md5_file($_FILES["originalfile"]["tmp_name"]);
             $product = $this->getApi()->getSedoxProductManager()->getSedoxProductByMd5Sum($sum);
@@ -33,8 +33,42 @@ class SedoxFileUpload extends \ApplicationBase implements \Application {
         return null;
     }
 
-    public function saveCarDetails() {
-        $binaryFileRead = fread(fopen($_FILES["originalfile"]["tmp_name"], "r"), filesize($_FILES["originalfile"]["tmp_name"]));
+    private function codeToMessage($code) {
+        switch ($code) { 
+            case UPLOAD_ERR_INI_SIZE: 
+                $message = "The uploaded file exceeds the upload_max_filesize directive in php.ini"; 
+                break; 
+            case UPLOAD_ERR_FORM_SIZE: 
+                $message = "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form"; 
+                break; 
+            case UPLOAD_ERR_PARTIAL: 
+                $message = "The uploaded file was only partially uploaded"; 
+                break; 
+            case UPLOAD_ERR_NO_FILE: 
+                $message = "No file was uploaded"; 
+                break; 
+            case UPLOAD_ERR_NO_TMP_DIR: 
+                $message = "Missing a temporary folder"; 
+                break; 
+            case UPLOAD_ERR_CANT_WRITE: 
+                $message = "Failed to write file to disk"; 
+                break; 
+            case UPLOAD_ERR_EXTENSION: 
+                $message = "File upload stopped by extension"; 
+                break; 
+
+            default: 
+                $message = "Unknown upload error"; 
+                break; 
+        } 
+        return $message; 
+    } 
+    
+    public function saveCarDetails() {        
+        $fileResource = fopen($_FILES["originalfile"]["tmp_name"], "r");
+        $fileSize = filesize($_FILES["originalfile"]["tmp_name"]);
+        
+        $binaryFileRead = fread($fileResource, $fileSize);
         $filename = $_FILES['originalfile']['name'];
         $filecontent = base64_encode($binaryFileRead);
         
@@ -45,7 +79,7 @@ class SedoxFileUpload extends \ApplicationBase implements \Application {
         $_SESSION['fileuploaded'] = true;
     }
     
-    public function saveFileContent($brand, $model, $engineSize, $power, $year, $tool, $comment, $geartype, $useCredit, $slave, $filename, $filecontent) {
+    public function saveFileContent($brand, $model, $engineSize, $power, $year, $tool, $comment, $geartype, $useCredit, $slave, $filename, $filecontent, $origin="WebPage") {
         $sedoxProduct = new \core_sedox_SedoxProduct();
         $sedoxProduct->brand = $brand;
         $sedoxProduct->model = $model;
@@ -57,12 +91,12 @@ class SedoxFileUpload extends \ApplicationBase implements \Application {
         $sedoxProduct->gearType = $geartype;
         $sedoxProduct->useCreditAccount = $useCredit;
         
-        $this->getApi()->getSedoxProductManager()->createSedoxProduct($sedoxProduct, $filecontent, $filename, $slave);    
+        $this->getApi()->getSedoxProductManager()->createSedoxProduct($sedoxProduct, $filecontent, $filename, $slave, $origin);    
     }
     
     public function sendSpecialRequest() {
         $desc = $_POST['data']['desc'];
-        $this->getApi()->getSedoxProductManager()->requestSpecialFile($_SESSION['originalfile_match'], $desc);
+        $this->getApi()->getSedoxProductManager()->requestSpecialFile($_POST['data']['fileId'], $desc);
         $_SESSION['fileuploaded'] = true;   
     }
     
@@ -70,6 +104,12 @@ class SedoxFileUpload extends \ApplicationBase implements \Application {
         if (!isset($_FILES['originalfile'])) {
             $this->includefile("uploadform");
             return;
+        }
+        
+        $errorCode = $_FILES['originalfile']['error'];
+        if ($errorCode) {
+            $message = $this->codeToMessage($errorCode);
+            throw new \Exception($message);
         }
         
         $product = $this->getExistingProduct();

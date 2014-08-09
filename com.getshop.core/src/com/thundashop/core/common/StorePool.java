@@ -124,7 +124,7 @@ public class StorePool {
         return ExecuteMethod(message, addr, null);
     }
 
-    public Object scan(Object objectToScan) throws IllegalArgumentException, IllegalAccessException, ScanException, PolicyException {
+    private Object scan(Object objectToScan) throws IllegalArgumentException, IllegalAccessException, ScanException, PolicyException {
         if (objectToScan == null) {
             return objectToScan;
         }

@@ -29,6 +29,8 @@ if(!function_exists("print_app_for_getshop")) {
     function print_app_for_getshop($app, $even, $displayActivateButton, ApplicationPool $pool) {
         $name = $app->appName;
         $supportStandalone = method_exists($app, "renderStandalone") ? "true" : "false";
+        $instance = IocContainer::getFactorySingelton()->convertUUIDtoString($app->id) . "\\" . $app->appName;
+        if (class_exists($instance)) {
     ?>
         <div class="appbox inline" style="width: 425px; border: solid 1px #DDD; height: 250px; margin-bottom: 15px; <? echo ($even) ? 'margin-right: 11px;'  : ""; ?>" class="inline" >
             <div class="app_title">
@@ -44,7 +46,7 @@ if(!function_exists("print_app_for_getshop")) {
                     <td valign="top">
                         <div style="font-size:14px; padding-left: 10px;">
                             <?
-                            $instance = IocContainer::getFactorySingelton()->convertUUIDtoString($app->id) . "\\" . $app->appName;
+                            
                             $instance = new $instance();
                             if(method_exists($instance, "getDescription")) {
                                 echo $instance->getDescription(); 
@@ -63,7 +65,10 @@ if(!function_exists("print_app_for_getshop")) {
             </div>        
             <? endif; ?>
         </div>
-    <?php } 
+    <?php 
+    
+        }
+    } 
 }
 
 if($this->isEditorMode()) {

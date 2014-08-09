@@ -22,7 +22,7 @@ public class WebserviceServiceLocator extends org.apache.axis.client.Service imp
     }
 
     // Use to get a proxy class for WebservicePort
-    private java.lang.String WebservicePort_address = "http://boss.tuningfiles.com:20000/Webservice";
+    private java.lang.String WebservicePort_address = "http://192.168.21.30:20000/Webservice";
 
     public java.lang.String getWebservicePortAddress() {
         return WebservicePort_address;

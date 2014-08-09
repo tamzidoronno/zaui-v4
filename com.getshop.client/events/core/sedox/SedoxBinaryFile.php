@@ -1,9 +1,6 @@
 <?php
 class core_sedox_SedoxBinaryFile {
 	/** @var String */
-	public $attribues;
-
-	/** @var String */
 	public $id;
 
 	/** @var String */

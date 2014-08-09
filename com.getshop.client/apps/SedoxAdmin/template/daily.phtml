@@ -4,15 +4,37 @@
 <div class="listview">
     <?
     $sedoxProducts = $this->getDayList();
+    $pageId = $this->getPage()->id;
     if (count($sedoxProducts)) {
         echo "Number of files: ".count($sedoxProducts);
         echo "<hr>";
         foreach ($sedoxProducts as $sedoxProduct) {
-            /* @var $sedoxProduct core_sedox_SedoxProduct */
+            /* @var $sedoxProduct \core_sedox_SedoxProduct */
             $id = $sedoxProduct->id;
             $name = $sedoxProduct->brand . " " . $sedoxProduct->model . " " . $sedoxProduct->engineSize . " " . $sedoxProduct->power . " " . $sedoxProduct->year;
+            $balance = $this->getCreditBalance($sedoxProduct);
+            if ($balance > 0) {
+                $balance = "<span style='color: green;'>$balance</span>";
+            } else {
+                $balance = "<span style='color: red;'>$balance</span>";
+            }
+            $fullName = "<span class='showUserInformationSedox' userid='$sedoxProduct->firstUploadedByUserId'>".$this->getFullName($sedoxProduct)." ($balance)</span>";
             $date = $sedoxProduct->rowCreatedDate;
-            echo "<a href='?page=productview&productId=$id'><div productId='$id' class='filelistrow'><div class='col col1'>$id</div><div class='col col2'>$name</div><div class='col col3'>$date</div></div></a>";
+            $goto = "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?page=productview&productId=$id'><i class='fa fa-arrow-right'></i></a>";
+            $start = $sedoxProduct->started ? "Stop" : "Start";
+            $start = "<a class='$start' href='?page=$pageId&action=$start&file=$id'>$start</a>";
+            echo "
+                    <div productId='$id' class='filelistrow'>
+                        
+                        <div class='col col1'> $id </div>
+                        <div class='col col2'> $name </div>
+                        <div class='col col3'> $date </div>
+
+                        <div class='col col4'> $fullName </div>
+                        <div class='col col5'> $start </div>
+                        <div class='col col5'> $goto </div>
+                    </div>
+                ";
         }
     } else {
         echo "Sorry! You dont have any files the specified day";

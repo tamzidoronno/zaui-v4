@@ -43,7 +43,7 @@ public class SedoxMysqlImporter {
     
     
     public List<SedoxProduct> getProducts() throws ClassNotFoundException, SQLException {
-        Connection connect = DriverManager.getConnection("jdbc:mysql://localhost/databank?user=databank&password=flatark");
+        Connection connect = DriverManager.getConnection("jdbc:mysql://10.0.3.3/databank?user=sync&password=syncmann");
         Statement statement = connect.createStatement();
         ResultSet resultSet = statement.executeQuery("select * from SedoxProduct ");
 
@@ -56,8 +56,17 @@ public class SedoxMysqlImporter {
             product.filedesc = resultSet.getString("filedesc");
             product.rowCreatedDate = resultSet.getTimestamp("dateCreated");
             product.brand = resultSet.getString("userBrand");
-            product.model = resultSet.getString("userModel");
-            product.engineSize = resultSet.getString("userCharacteristic");
+            if (resultSet.getString("userCharacteristic") != null && !resultSet.getString("userCharacteristic").equals("")) {
+                product.engineSize = resultSet.getString("userCharacteristic");
+                product.model = resultSet.getString("userModel"); 
+            } else {
+                product.model =  resultSet.getString("userSeries"); 
+                product.engineSize = resultSet.getString("userModel");
+            }
+            
+            product.build = resultSet.getString("userBuild");
+            
+            
             product.year = resultSet.getString("userYear");
             product.power = resultSet.getString("userPower");
             product.tool = resultSet.getString("userTool");
@@ -68,8 +77,6 @@ public class SedoxMysqlImporter {
             product.gearType = resultSet.getString("gearType");
             product.useCreditAccount = resultSet.getString("useCreditAccount");
             product.comment = resultSet.getString("comment");
-            product.ecuType = resultSet.getString("userSeries");
-            product.ecuBrand = resultSet.getString("userBuild");
             product.channel = resultSet.getString("channel");
             product.started = resultSet.getBoolean("started");
 
@@ -87,17 +94,45 @@ public class SedoxMysqlImporter {
                 file.additionalInformation = resultSetBinFiles.getString("additionalInformation");
                 file.checksumCorrected = resultSetBinFiles.getBoolean("checksumCorrected");
                 product.binaryFiles.add(file);
-
-                Statement statement3 = connect.createStatement();
-                ResultSet attributesResSet = statement3.executeQuery("select * from SedoxAttributeValue where sedoxFileId = " + file.id);
-                while (attributesResSet.next()) {
-                    SedoxProductAttribute attribute = new SedoxProductAttribute();
-                    attribute.id = attributesResSet.getInt("sedoxAttributeId");
-                    attribute.value = attributesResSet.getString("value");
-                    file.attribues.add(attribute);
-                }
             }
             
+            Statement statement3 = connect.createStatement();
+            ResultSet attributesResSet = statement3.executeQuery("select * from SedoxAttributeValue where sedoxFileId = " + product.id);
+            while (attributesResSet.next()) {
+
+                int id = attributesResSet.getInt("sedoxAttributeId");
+                String value = attributesResSet.getString("value");
+
+                if (id == 1) {
+                    product.ecuBrand = value;
+                }
+                if (id == 2) {
+                    product.ecuType = value;
+                }
+                if (id == 3) {
+                    product.ecuPartNumber = value;
+                }
+                if (id == 4) {
+                    product.ecuHardwareNumber = value;
+                }
+                if (id == 5) {
+                    product.ecuSoftwareNumber = value;
+                }
+                if (id == 6) {
+                    product.ecuSoftwareVersion = value;
+                }
+                if (id == 7) {
+                    product.ecuSoftwareVersion = value;
+                }
+                if (id == 15) {
+                    product.softwareSize = value;
+                }
+                if (id == 10 && (product.power == null || product.power.equals(""))) {
+                    product.power = value;
+                }
+                
+            }
+
             Statement historyStatment = connect.createStatement();
             ResultSet historyResultSet = historyStatment.executeQuery("select description, dateCreated, userId from SedoxProductHistory where productId = " + product.id);
             while (historyResultSet.next()) {
@@ -120,7 +155,7 @@ public class SedoxMysqlImporter {
     }
     
     public List<SedoxUser> getCreditAccounts() throws SQLException {
-        Connection connect = DriverManager.getConnection("jdbc:mysql://localhost/databank?user=databank&password=flatark");
+        Connection connect = DriverManager.getConnection("jdbc:mysql://10.0.3.3/databank?user=sync&password=syncmann");
         Statement statement = connect.createStatement();
         ResultSet resultSet = statement.executeQuery("select * from CreditAccount ");
         

@@ -15,6 +15,7 @@ class SedoxProductView extends \ApplicationBase implements \Application {
     public function render() {
         $this->includefile("productview");
     }
+    
 
     public function getCurrentProduct() {
         if (isset($_GET['productId'])) {
@@ -46,7 +47,7 @@ class SedoxProductView extends \ApplicationBase implements \Application {
         }
 
         if (strtolower($binFile->fileType) == "various") {
-            return 160;
+            return 110;
         }
         
         if (strtolower($binFile->fileType) == "cmdencrypted") {
@@ -62,7 +63,8 @@ class SedoxProductView extends \ApplicationBase implements \Application {
     }
 
     public function purchaseProduct() {
-        $this->getApi()->getSedoxProductManager()->purchaseProduct($_SESSION['sedox_current_productid'], $_POST['data']['files']);
+        $files = isset($_POST['data']['files']) ? $_POST['data']['files'] : null;
+        $this->getApi()->getSedoxProductManager()->purchaseProduct($_SESSION['sedox_current_productid'], $files);
         $codeSafe = urlencode(base64_encode(implode(":-:", $_POST['data']['files'])));
         echo "filedownload.php?files=" . $codeSafe;
         die();
@@ -83,7 +85,8 @@ class SedoxProductView extends \ApplicationBase implements \Application {
 
     public function purchaseProductOnly() {
         $this->setOrginalCheckSum();
-        $this->getApi()->getSedoxProductManager()->purchaseOnlyForCustomer($_POST['data']['productId'], $_POST['data']['files']);
+        $files = isset($_POST['data']['files']) ? $_POST['data']['files'] : null;
+        $this->getApi()->getSedoxProductManager()->purchaseOnlyForCustomer($_POST['data']['productId'], $files);
     }
 
     public function notifyByEmailAndSms() {
@@ -103,6 +106,35 @@ class SedoxProductView extends \ApplicationBase implements \Application {
 
     public function deleteBinaryFile() {
         $this->getApi()->getSedoxProductManager()->removeBinaryFileFromProduct($_POST['data']['productId'], $_POST['data']['binFileId']);
+    }
+    
+    public function getUploadedSedoxUser($sedoxProduct) {
+        $user = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($sedoxProduct->firstUploadedByUserId);
+        return $user;
+    }
+    
+    public function getUploadedUserName($sedoxProduct) {
+        $user = $this->getApi()->getUserManager()->getUserById($sedoxProduct->firstUploadedByUserId);
+        return $user;
+    }
+    
+    public function setAddInformation() {
+        $productId = $_POST['data']['productid'];
+        $fileId = $_POST['data']['fileid'];
+        $text = $_POST['data']['text'];
+        $this->getApi()->getSedoxProductManager()->setExtraInformationForFile($productId, $fileId, $text);
+    }
+    
+    public function showAddInformation() {
+        $productId = $_POST['data']['productid'];
+        $fileid = $_POST['data']['fileid'];
+        $text = $this->getApi()->getSedoxProductManager()->getExtraInformationForFile($productId, $fileid);
+        
+        echo "<center>";
+        echo "Extra information:";
+        echo "<br><input id='extrafileinformationbox' type='textfield' placeholder='$text'/>";
+        echo "<br><div fileid='$fileid' productid='$productId' class='gs_button saveextrainfo'>Save</div>";
+        echo "</center>";
     }
 }
 ?>

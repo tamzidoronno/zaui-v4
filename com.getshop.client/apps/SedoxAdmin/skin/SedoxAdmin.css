@@ -51,7 +51,6 @@
 .SedoxAdmin .listview .filelistrow {
     border-bottom: solid 1px #EEE;
     line-height: 25px;
-    cursor: pointer;
 }
 
 .SedoxAdmin .listview .filelistrow:hover {
@@ -64,6 +63,10 @@
 .SedoxAdmin .listview .filelistrow .col1 { width: 60px; }
 .SedoxAdmin .listview .filelistrow .col2 { width: 500px; }
 .SedoxAdmin .listview .filelistrow .col3 { width: 200px; }
+.SedoxAdmin .listview .filelistrow .col4 { width: 150px; }
+
+.SedoxAdmin .listview .filelistrow .col5 .Start { font-weight: bold; color: red; }
+.SedoxAdmin .listview .filelistrow .col5 .Stop { font-weight: bold; color: green; }
 
 .SedoxAdmin .result {
     margin-top: 20px;
@@ -85,3 +88,4 @@
 
 .SedoxAdmin .slaveslist .col1 { width: 800px;}
 .SedoxAdmin .showuser { color: blue; cursor: pointer;}
+

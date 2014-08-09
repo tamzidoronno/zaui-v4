@@ -457,13 +457,23 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             /* @var $type \core_hotelbookingmanager_RoomType */
             $roomtypes[$type->name] = true;
         }
+        $prices = array();
         foreach($rooms as $room) {
             /* @var $room \core_productmanager_data_Product */
             if(isset($roomtypes[$room->sku])) {
+                $prices[] = $room->price;
                 $allrooms[] = $room;
             }
         }
-        return $allrooms;
+        asort($prices);
+        
+        $sortedRooms = array();
+        foreach($prices as $index => $price) {
+            $sortedRooms[] = $allrooms[$index];
+        }
+        
+        
+        return $sortedRooms;
     }
     
     public function validateAndContinueToPayment() {

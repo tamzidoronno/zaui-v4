@@ -1,20 +1,20 @@
 <?
 /* @var $this \ns_d16b27d9_579f_4d44_b90b_4223de0eb6f2\Hotelbooking */
-$text = $this->__w("BOOK A ROOM AT");
+$text = $this->__w("BOOK A ROOM AT") . "<br>" . $this->getProjectName() ;
 $checkintext = $this->__w("CHECK IN");
 $checkouttext = $this->__w("CHECK OUT");
 $roomtypetext = $this->__W("ROOM TYPE");
 $displayEnd = "display:inline-block;";
 if($this->getServiceType($text) == "storage") {
     $displayEnd = "display:none;";
-    $text = $this->__w("GET A STORAGE ROOM FROM");
+    $text = $this->__w("ORDER STORAGE ROOM");
     $checkintext = $this->__w("Select start date");
     $checkouttext = $this->__w("END");
     $roomtypetext = $this->__w("Select size");
 }
 ?>
 
-<span class='heading'><? echo $text . "<br>" . $this->getProjectName() ; ?></span>
+<span class='heading'><? echo $text; ?></span>
 <table width='100%'>
     <tr>
         <td>

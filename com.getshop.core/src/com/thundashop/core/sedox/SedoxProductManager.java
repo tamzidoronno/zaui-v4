@@ -11,11 +11,11 @@ import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
+import com.thundashop.core.messagemanager.MailFactoryImpl;
 import com.thundashop.core.sedox.autocryptoapi.FilesMessage;
 import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,8 +41,12 @@ import java.util.TreeSet;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import javax.annotation.PostConstruct;
 import javax.xml.bind.DatatypeConverter;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -52,7 +56,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Scope("prototype")
-public class SedoxProductManager extends ManagerBase implements ISedoxProductManager {
+public class SedoxProductManager extends ManagerBase implements ISedoxProductManager, ApplicationContextAware {
 
     @Autowired
     private SedoxSearchEngine sedoxSearchEngine;
@@ -64,6 +68,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     
     @Autowired
     public MailFactory mailFactory;
+    private ApplicationContext context;
+    private MailFactoryImpl sedoxDatabankMailAccount;
     
     @Autowired
     public SedoxProductManager(Logger log, DatabaseSaver databaseSaver) {
@@ -75,6 +81,13 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     
     @Autowired
     public SedoxMagentoIntegration sedoxMagentoIntegration;
+    
+    @PostConstruct
+    public void setupDatabankMailAccount() {
+        sedoxDatabankMailAccount = context.getBean(MailFactoryImpl.class);
+        sedoxDatabankMailAccount.setMailConfiguration(new SedoxDatabankMailConfig());
+    }
+    
 
     static String convertStreamToString(java.io.InputStream is) {
         java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
@@ -215,6 +228,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     public synchronized SedoxProduct getProductById(String id) throws ErrorException {
         for (SedoxProduct product : products) {
             if (product.id.equals(id)) {
+                for (SedoxBinaryFile file : product.binaryFiles) {
+                    System.out.println("file: " + file.md5sum);
+                }
                 return product;
             }
         }
@@ -257,7 +273,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         sedoxProduct.uploadOrigin = origin;
 
         databaseSaver.saveObject(sedoxProduct, credentials);
-        sendFileCreatedEmail(sedoxProduct);
+        sendFileCreatedNotification(sedoxProduct);
+        sendNotificationToUploadedUser(sedoxProduct);
     }
 
     @Override
@@ -279,6 +296,10 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             return;
         }
         
+        if (getSession().currentUser == null) {
+            throw new ErrorException(26);
+        }
+        
         String desc = comment;
         SedoxProduct product = getProductById(productId);
         
@@ -287,6 +308,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             sendNotificationEmail("contact@sedox.com", product, desc);
         }
         
+        product.firstUploadedByUserId = getSession().currentUser.id;
+        product.rowCreatedDate = new Date();
+        saveObject(product);
     }
 
     @Override
@@ -317,6 +341,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         user.creditAccount.addOrderToCreditHistory(order, product, nextTransactionalId);
         databaseSaver.saveObject(user, credentials);
         users.put(user.id, user);
+        
+        sendNotificationProductPurchased(product, user, order);
     }
     
     @Override
@@ -424,7 +450,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 }
                 
                 try (FileInputStream in = new FileInputStream(f)) {
-                    out.putNextEntry(new ZipEntry(product.toString()+ " " + binFile.fileType + ".bin"));
+                    out.putNextEntry(new ZipEntry(binFile.id + " - " + product.toString()+ " " + binFile.fileType + ".bin"));
 
                     byte[] b = new byte[1024];
                     int count;
@@ -575,16 +601,18 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         return originalFile;
     }
 
-    private void sendFileCreatedEmail(SedoxProduct sedoxProduct) throws ErrorException {
+    private void sendFileCreatedNotification(SedoxProduct sedoxProduct) throws ErrorException {
+        UserManager userManager = getManager(UserManager.class);
+        
         for (SedoxUser developer : getDevelopers()) {
-            UserManager userManager = getManager(UserManager.class);
             User user = userManager.getUserById(developer.id);
             if (developer.isActiveDelevoper) {
                 sendAirGramMessage(user.emailAddress, sedoxProduct);
-                sendNotificationEmail("files@tuningfiles.com", sedoxProduct);
-                sendNotificationEmail("contact@sedox.com", sedoxProduct);
             }
         }
+        
+        sendNotificationEmail("files@tuningfiles.com", sedoxProduct);
+        sendNotificationEmail("contact@sedox.com", sedoxProduct);
     }
     
     private void sendAirGramMessage(String emailAddress, SedoxProduct sedoxProduct) throws ErrorException {
@@ -919,7 +947,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         content += "<br> ";
         content += "<br>Credit balance: " + sedoxUser.creditAccount.getBalance();
         content += "</br><br/>Link to product <a href='http://databank.tuningfiles.com/index.php?page=productview&productId="+sedoxProduct.id+"'>http://databank.tuningfiles.com/index.php?page=productview&productId="+sedoxProduct.id+"</a>";
-        mailFactory.sendWithAttachments(user.emailAddress, emailAddress, "Upload id: " +sedoxProduct.id + " - " + sedoxProduct.toString(), content, fileMap, false);
+        sedoxDatabankMailAccount.sendWithAttachments(user.emailAddress, emailAddress, "Upload id: " +sedoxProduct.id + " - " + sedoxProduct.toString(), content, fileMap, false);
     }
 
     private double getAlreadySpentOnProduct(SedoxProduct sedoxProduct, SedoxUser user) {
@@ -1119,5 +1147,40 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             saveObject(product);
         }
         
+    }
+
+    private void sendNotificationProductPurchased(SedoxProduct product, SedoxUser user, SedoxOrder order) throws ErrorException {
+        UserManager userManager = getManager(UserManager.class);
+        User getshopUser = userManager.getUserById(user.id);
+        
+        String subject = "Product purchased: " + product.id + " - " + product.toString();
+        String message = "Purchased by user: " + user.id + " - " + getshopUser.fullName;
+        message += "<br/> Credit amount: " + order.creditAmount;
+        message += "<br/> New credit balance: " + user.creditAccount.getBalance();
+        
+        for (SedoxUser developer : getDevelopers()) {
+            if (developer.isActiveDelevoper) {
+                User getshopUserDeveloper = userManager.getUserById(developer.id);
+                mailFactory.send(getshopUser.emailAddress, getshopUserDeveloper.emailAddress, subject, message);
+            }
+        }
+    }
+
+    private void sendNotificationToUploadedUser(SedoxProduct sedoxProduct) throws ErrorException {
+        UserManager userManager = getManager(UserManager.class);
+        User getshopUser = userManager.getUserById(sedoxProduct.firstUploadedByUserId);
+        String subject = "We have received your file request";
+        String message = "You uploaded file: " + sedoxProduct.toString();
+        message += "<br/>";
+        message += "<br/>Thank you. You will receive an email from us when we have processed your file.";
+        message += "<br/>";
+        message += "<br/>Best Regards";
+        message += "<br/>Tuningfiles Support";
+        mailFactory.send("files@tuningfiles.com", getshopUser.emailAddress, subject, message);
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext ac) throws BeansException {
+        this.context = ac;
     }
 }

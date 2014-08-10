@@ -68,11 +68,15 @@ public class PageLayout implements Serializable {
         }
         
         for(PageArea area : otherAreas.values()) {
-                if(area.type.equals("header") || area.type.equals("footer")) {
-                    area.populateApplications(applications, false);
-                } else {
-                    area.populateApplications(applications, onlyExtraApplications);
-                }
+            if (area == null || area.type == null) {
+                continue;
+            }
+            
+            if(area.type.equals("header") || area.type.equals("footer")) {
+                area.populateApplications(applications, false);
+            } else {
+                area.populateApplications(applications, onlyExtraApplications);
+            }
         }
         
     }

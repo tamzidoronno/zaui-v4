@@ -27,7 +27,6 @@ import java.util.List;
  * @author ktonder
  */
 public class StoreHandler {
-
     private List<ManagerBase> messageHandler;
     private String storeId;
     private HashMap<String, Session> sessions = new HashMap();

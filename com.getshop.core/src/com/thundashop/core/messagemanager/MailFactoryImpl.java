@@ -38,7 +38,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
     private String storeId;
     
     @Autowired
-    private MailConfiguration configuration;
+    private MailConfig configuration;
     
     @Autowired
     public FrameworkConfig frameworkConfig;
@@ -47,6 +47,10 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
     public Logger logger;
     private Map<String, String> files;
     private boolean delete;
+    
+    public void setMailConfiguration(MailConfig configuration) {
+        this.configuration = configuration;
+    }
 
     private Session getSession() {
         Authenticator authenticator = new Authenticator();

@@ -56,10 +56,19 @@ body {
     width: 80px;
     text-align: center;
     cursor: pointer;
-    background: linear-gradient(to bottom, #e20202, #bc0203);
     color: #FFF;
     font-size: 13px;
     line-height: 20px;
+    
+    background: #e20202; /* Old browsers */
+    background: -moz-linear-gradient(top, #adadad 0%, #bc0203 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e20202), color-stop(100%,#bc0203)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #e20202 0%,#bc0203 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #e20202 0%,#bc0203 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #e20202 0%,#bc0203 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #e20202 0%,#bc0203 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e20202', endColorstr='#bc0203',GradientType=0 ); /* IE6-9 */
+
 }
 
 .ImageDisplayer {
@@ -81,3 +90,4 @@ body {
 body[editormode=true] {
     background-image: none;
 }
+

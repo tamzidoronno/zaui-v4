@@ -124,6 +124,7 @@ class Factory extends FactoryBase {
 //        echo '<script src="http://connect.facebook.net/en_US/all.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jquery-1.9.0.js""></script>';
         echo "\n" . '<script type="text/javascript" src="js/jquery-migrate-1.2.1.js""></script>';
+        echo "\n" . '<script type="text/javascript" src="js/jquery.placeholder.js""></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.Namespace.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.Ajax.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.Common.js#28374518123481"></script>';

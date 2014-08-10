@@ -80,8 +80,10 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
         power = productAttributes[6]; // %Engine.OutputPS%
         ecuBrand = productAttributes[7]; // %ECU.Producer%
         ecuType = productAttributes[8]; // %ECU.Build% 
-        ecuSoftwareNumber = productAttributes[10]; // %ECU.ECUStg%;
-        ecuHardwareNumber = productAttributes[11]; // %ECU.ECUStg%;
+        ecuPartNumber = productAttributes[9];
+        ecuHardwareNumber = productAttributes[10]; // %ECU.ECUStg%;
+        ecuSoftwareNumber = productAttributes[11]; // %ECU.ECUStg%;
+        ecuSoftwareVersion = productAttributes[12]; // %ECU.ECUStg%;
     }
 
     public SedoxBinaryFile getFileById(int fileId) {

@@ -26,16 +26,14 @@ app.SedoxProductView = {
     },
           
     imageSelected: function(files, originalButton) {
-        debugger;
         var file = files[0];
         var fileName = file.name;
         var fileType = originalButton.attr('fileType');
 
         var reader = new FileReader();
-        var button = this;
+        var button = originalButton;
 
         reader.onload = function(event) {
-            debugger;
             var dataUri = event.target.result;
 
             var data = {
@@ -45,9 +43,9 @@ app.SedoxProductView = {
             };
 
             var event = thundashop.Ajax.createEvent(null, "saveModifiedFile", originalButton, data);
-            var me = this;
             $(button).find('.progressbar').html("0" + "%");
             $(button).find('.progressbar').show();
+            
             thundashop.Ajax.post(
                     event,
                     function() {
@@ -58,7 +56,7 @@ app.SedoxProductView = {
                     true,
                     {
                         "uploadcallback": function(prog) {
-                            app.SedoxProductView.uploadProgress(me, button);
+                            app.SedoxProductView.uploadProgress(button, prog);
                         }
                     });
         };

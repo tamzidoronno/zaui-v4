@@ -96,6 +96,10 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $end =  strtotime($_POST['data']['stop']);
         $product = $this->getApi()->getProductManager()->getProduct($_POST['data']['roomProduct']);
         
+        if($this->getServiceType() == "storage") {
+            $end = $start + 86400;
+        }        
+        
         $this->setStartDate($start);
         $this->setEndDate($end);
         $this->setProductId($product->id);

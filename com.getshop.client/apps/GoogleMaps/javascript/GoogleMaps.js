@@ -39,10 +39,14 @@ thundashop.app.GoogleMaps.prototype = {
     boundaries: null,
     countCheck: 0,
     curSize: 0,
-    waitForGoogleMapsToLoad: function() {
+    waitForGoogleMapsToLoad: function(loaded) {
         var scope = this;
         if (thundashop.app.GoogleMapsCommon === false) {
             setTimeout(scope.waitForGoogleMapsToLoad, 100);
+        } else {
+            setTimeout(function() {
+                loaded.resolve();
+            }, "500");
         }
     },
     checkFitToContainer: function() {
@@ -52,59 +56,63 @@ thundashop.app.GoogleMaps.prototype = {
         this.fitToContainer();
     },
     initialize: function() {
-        this.waitForGoogleMapsToLoad();
-        this.checkFitToContainer();
-        directionsDisplay = new google.maps.DirectionsRenderer();
-        if (this.config === undefined) {
-            this.config = {};
-        }
-        if (this.config.startlongitude !== undefined) {
-            var center = new google.maps.LatLng(parseFloat(this.config.startlongitude), parseFloat(this.config.startaltitude));
-        } else {
-            var center = new google.maps.LatLng(1, 1);
-        }
-        if (this.config.zoom === undefined) {
-            this.config.zoom = 3;
-        }
-        var mapOptions = {
-            zoom: parseInt(this.config.zoom),
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            center: center,
-            minZoom: parseInt(this.config.minZoom),
-            maxZoom: parseInt(this.config.maxZoom)
-        }
-        this.mapOptions = mapOptions;
-        this.mapDiv = document.getElementById(this.config.container);
-        this.map = new google.maps.Map(this.mapDiv, this.mapOptions);
-        $(this.mapDiv).css('height', "200px");
-        directionsDisplay.setMap(this.map);
-        this.initializeMarkers();
+        var loaded = $.Deferred();
+        this.waitForGoogleMapsToLoad(loaded);
         var scope = this;
-        google.maps.event.addListener(this.map, "center_changed", function() {
-            scope.checkBounds.apply(scope, []);
-        });
-        this.boundaries = [];
+        loaded.done(function() {
+            scope.checkFitToContainer();
+            directionsDisplay = new google.maps.DirectionsRenderer();
+            if (scope.config === undefined) {
+                scope.config = {};
+            }
+            if (scope.config.startlongitude !== undefined) {
+                var center = new google.maps.LatLng(parseFloat(scope.config.startlongitude), parseFloat(scope.config.startaltitude));
+            } else {
+                var center = new google.maps.LatLng(1, 1);
+            }
+            if (scope.config.zoom === undefined) {
+                scope.config.zoom = 3;
+            }
+            var mapOptions = {
+                zoom: parseInt(scope.config.zoom),
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                center: center,
+                minZoom: parseInt(scope.config.minZoom),
+                maxZoom: parseInt(scope.config.maxZoom)
+            }
+            scope.mapOptions = mapOptions;
+            scope.mapDiv = document.getElementById(scope.config.container);
+            scope.map = new google.maps.Map(scope.mapDiv, scope.mapOptions);
+            $(scope.mapDiv).css('height', "200px");
+            directionsDisplay.setMap(scope.map);
+            scope.initializeMarkers();
 
-        for (var key in this.config.boundaries) {
-            var entry = this.config.boundaries[key];
-            var allowedBounds = new google.maps.LatLngBounds(
-                    new google.maps.LatLng(parseFloat(entry.sw_latitude), parseFloat(entry.sw_longitude)),
-                    new google.maps.LatLng(parseFloat(entry.ne_latitude), parseFloat(entry.ne_longitude)));
-            this.boundaries.push(allowedBounds);
-        }
+            google.maps.event.addListener(scope.map, "center_changed", function() {
+                scope.checkBounds.apply(scope, []);
+            });
+            scope.boundaries = [];
 
-        var me = this;
-        PubSub.subscribe('POSTED_DATA_WITHOUT_PRINT', function() {
-            var container = $('#' + me.config.container);
-            me.curSize = 0;
-            container.height(1);
-            $(me.mapDiv).height(1);
+            for (var key in scope.config.boundaries) {
+                var entry = scope.config.boundaries[key];
+                var allowedBounds = new google.maps.LatLngBounds(
+                        new google.maps.LatLng(parseFloat(entry.sw_latitude), parseFloat(entry.sw_longitude)),
+                        new google.maps.LatLng(parseFloat(entry.ne_latitude), parseFloat(entry.ne_longitude)));
+                scope.boundaries.push(allowedBounds);
+            }
+
+            var me = this;
+            PubSub.subscribe('POSTED_DATA_WITHOUT_PRINT', function() {
+                var container = $('#' + me.config.container);
+                me.curSize = 0;
+                container.height(1);
+                $(me.mapDiv).height(1);
 
 
-            me.countCheck = 0;
-            setTimeout(function() {
-                me.checkFitToContainer();
-            }, "200");
+                me.countCheck = 0;
+                setTimeout(function() {
+                    me.checkFitToContainer();
+                }, "200");
+            });
         });
     },
     initializeMarkers: function() {

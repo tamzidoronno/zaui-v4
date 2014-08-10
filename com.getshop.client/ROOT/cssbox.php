@@ -90,7 +90,7 @@ $factory->loadJavascriptFiles();
 <input type="hidden" pageid="<? echo $factory->getPage()->backendPage->id; ?>" id="current_pageid">
 
 
-<script src="/js/ace/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
     var global_css = ace.edit("global_css");
     global_css.setTheme("ace/theme/github");

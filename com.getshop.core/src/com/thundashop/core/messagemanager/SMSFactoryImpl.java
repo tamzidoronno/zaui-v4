@@ -147,7 +147,7 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
             message = encode(message);
             from = encode(from);
             to = encode(to);
-            String urlString = "http://api.clickatell.com/http/sendmsg?user=boggibill&password=RKCDcOSAECbKeY&api_id=3492637&to=47"+to+"&text="+message;
+            String urlString = "http://api.clickatell.com/http/sendmsg?user=boggibill&password=RKCDcOSAECbKeY&from=ProMeister&api_id=3492637&to=47"+to+"&text="+message;
             url = new URL(urlString);
             dis = new DataInputStream(new BufferedInputStream(is));
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -176,7 +176,7 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         try {
             saveMessageSent();
         } catch (ErrorException ex) {
-            logger.error(this, "Was not able to save sent sms message");
+            logger.error(this, "Was not able to save sent sms message", ex);
         }
     }
 

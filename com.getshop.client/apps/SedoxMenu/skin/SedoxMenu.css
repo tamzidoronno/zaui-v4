@@ -2,7 +2,19 @@
     display: inline-block;
     height: 102px;
     width: 131px;
-    background: linear-gradient(to bottom, #e20202, #bb0301);
+    
+    
+    /*background: linear-gradient(to bottom, #e20202, #bb0301);*/
+     /*gradient background color */
+    background: #cc0000; /* Old browsers */
+    background: -moz-linear-gradient(top, #cc0000 0%, #cc0000 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#cc0000), color-stop(100%,#cc0000)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #cc0000 0%,#cc0000 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #cc0000 0%,#cc0000 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #cc0000 0%,#cc0000 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #cc0000 0%,#cc0000 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cc0000', endColorstr='#cc0000',GradientType=0 ); /* IE6-9 */
+    
     padding: 5px;
     text-align: center;
     padding-top: 30px;

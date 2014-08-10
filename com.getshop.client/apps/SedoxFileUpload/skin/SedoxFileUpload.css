@@ -127,3 +127,7 @@
     width: 500px;
     height: 200px;
 }
+
+.SedoxFileUpload input {
+    height: 30px;
+}

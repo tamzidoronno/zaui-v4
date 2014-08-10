@@ -17,23 +17,15 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Scope("prototype")
-class MailConfiguration {
-    class Settings {
-        public String sendMailFrom = "post@getshop.com";
-        public String hostname = "smtp.gmail.com";
-        public String username = "post@getshop.com";
-        public String password = "shootthatbitch";
-        public boolean enableTls = true;
-        public int port = 587;
-    }
+public class MailConfiguration implements MailConfig {
     
-    private Settings settings;
+    private MailSettings settings = new MailSettings();
     
     @Autowired
     public Logger log;
     
+    @Override
     public void setup(String storeId) {
-        settings = new Settings();
         StoreHandler storeHandler = AppContext.storePool.getStorePool(storeId);
         
         
@@ -71,7 +63,8 @@ class MailConfiguration {
         
     }
     
-    public MailConfiguration.Settings getSettings() {
+    @Override
+    public MailSettings getSettings() {
         return settings;
     }
 }

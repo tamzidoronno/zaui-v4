@@ -48,7 +48,6 @@ cursor: pointer; }
 .leftcart .shipping_price, .leftcart .up, .leftcart .down, .leftcart .removebutton { display:none; }
 .CartManager .leftcart,.CartManager .rightcart { border: solid 0px !important; }
 body { background-color: #363b3e; }
-h1,h2,h3,h4,h5,h6 { font-family: "Museo700-Regular"; }
 .gs_button.buy_product { display: none; }
 .subentries a { color:#000; }
 .subentries a.selected { font-weight: bold; }

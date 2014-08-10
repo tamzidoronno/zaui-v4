@@ -156,7 +156,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
        $address = $order->cart->address;
        $name = $address->fullName;
        $reference = $order->reference;
-       
+       $user = $this->getApi()->getUserManager()->getUserById($order->userId);
        if($this->getServiceType() == "hotel") {
            $title = $this->__w("Thank you for your booking a room at")." ".$this->getProjectName().".";
        } else {
@@ -182,12 +182,13 @@ class Hotelbooking extends \ApplicationBase implements \Application {
        $body .= $this->__w("Dear {name}") . "<br>";
        $body .= $title;
        $body .= $this->__w("This email is a confirmation that we have reserved a room for you.") . "<br>";
-       $body .= $this->__w("The room has been reserved between {start} to {end}.") . "<br>";
        if($this->getServiceType() == "storage") {
            $body .= $this->__w("The room has been reserved from {start}.") . "<br>";
+       } else {
+           $body .= $this->__w("The room has been reserved between {start} to {end}.") . "<br>";
+           $body .= $this->__w("The code for the room is : {code}.") . "<br>";
+           $body .= $this->__w("The reserved room is : {roomName}.") . "<br>";
        }
-       $body .= $this->__w("The code for the room is : {code}.") . "<br>";
-       $body .= $this->__w("The reserved room is : {roomName}.") . "<br>";
        
        $body = str_replace("{start}", date("d-m-Y", strtotime($booking->startDate)), $body);
        $body = str_replace("{end}", date("d-m-Y", strtotime($booking->endDate)), $body);
@@ -211,7 +212,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
        $body .= $address->city . "<br>";
        
        
-       $this->getApi()->getMessageManager()->sendMail("boggibill@gmail.com", "", $title, $body, "post@getshop.com", "Booking");
+       $this->getApi()->getMessageManager()->sendMail($user->emailAddress, "", $title, $body, "post@getshop.com", "Booking");
        $this->getApi()->getMessageManager()->sendMail($mainemail, "", $title, $body, "post@getshop.com", "Booking");
        
    }

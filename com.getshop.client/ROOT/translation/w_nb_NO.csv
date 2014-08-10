@@ -251,6 +251,7 @@ The event has been confirmed.;-;Eventent har blitt bekreftet.
 The passwords does not match.;-;Passordet stemmer ikke overens.
 The reserved room is : {roomName}.;-;Det reserverte rommet er : {roomName}.
 The room has been reserved between {start} to {end}.;-;Rommet har blitt reservert mellom {start} og {end}.
+The room has been reserved from {start}.;-;Din bod har blitt reservert fra {start}.
 There is no entries for this event;-;Finnes inne noe for akkurat dette kurset
 This email is a confirmation that we have reserved a room for you.;-;Denne eposten er en bekreftelse på din reservasjon på rom.
 This event has the following entries;-;Dette kurset finner du i kalenderen på følgende dager

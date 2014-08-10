@@ -210,6 +210,7 @@ The event has been confirmed.;-;
 The passwords does not match.;-;
 The reserved room is : {roomName}.;-;
 The room has been reserved between {start} to {end}.;-;
+The room has been reserved from {start}.;-;
 There is no entries for this event;-;
 This email is a confirmation that we have reserved a room for you.;-;
 This event has the following entries;-;

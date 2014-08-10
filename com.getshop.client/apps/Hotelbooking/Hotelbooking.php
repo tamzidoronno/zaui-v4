@@ -183,6 +183,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
        $body .= $title;
        $body .= $this->__w("This email is a confirmation that we have reserved a room for you.") . "<br>";
        $body .= $this->__w("The room has been reserved between {start} to {end}.") . "<br>";
+       if($this->getServiceType() == "storage") {
+           $body .= $this->__w("The room has been reserved from {start}.") . "<br>";
+       }
        $body .= $this->__w("The code for the room is : {code}.") . "<br>";
        $body .= $this->__w("The reserved room is : {roomName}.") . "<br>";
        

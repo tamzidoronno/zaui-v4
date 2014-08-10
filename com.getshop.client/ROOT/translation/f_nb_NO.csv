@@ -1,4 +1,5 @@
 ###### framework ######
+* Minimum rental periode is {days};-;* Minimum periode for leie er {days}
 A content manager allows you to add content to whatever page you would like to add content to. It supports text, images, and even basic HTML, its like word for web.;-;En tekst editor gir deg muligheten til å legge til innhold til hvilken som helst side. Den støtter tekst, bilder, og enkel html.
 A description to the image;-;En beskrivelse av bildet
 A news application makes you push news to your WebShop. And share to subscribers and push to facebook if the Facebook application has been added.;-;En nyhetsapplikasjon gjør det enkelt for deg å legge inn nyheter på din webshop. Del så deretter dine nyheter med de som har abbonneere

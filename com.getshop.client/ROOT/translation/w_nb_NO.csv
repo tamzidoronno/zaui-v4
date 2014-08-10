@@ -2,10 +2,14 @@
 * Can pay with Visa/MasterCard trough PayPal;-;* Kan også betale med Visa/MasterCard igjennom PayPal.
 * PayOnDelivery fee;-;Gebyr henting 
 0-100 km/h;-;0-100 km/h
+A confirmation email has been sent to your email, and your storage room has been reserved. Please note that the storage room might not be final and could be changed to a different one with the same size if needed.;-;En bekreftelses epost har blitt sendt til din epost og din bod har blitt reservert. Husk at boden din kan bli endret til en annen en med samme størrelse ved utlevering.
+A confirmation email has been sent to your email.;-;En bekreftelse er sendt til din e-post.
+A confirmation email has been sent to your email. Enjoy your stay at {hotel}.;-;En bekreftelse er sendt til din e-post. Ha et hyggelig opphold hos {hotel}.
 A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
 Add a room;-;Legg til et rom
 Add to cart;-;Legg i handlekurv
 Additional contact data;-;Ekstra kontakt informasjon
+Additional contact information;-;Ekstra kontakt informasjon
 Address;-;Adresse
 All fields are required;-;Alle felt er påkrevd
 All fields are required, please fill in the fields in red.;-;Alle felt er påkrevd, vennligst fyll ut felter i rødt.
@@ -17,7 +21,9 @@ Apply coupon;-;Bruk kupong
 April;-;April
 August;-;August
 Available positions;-;Ledige plasser
+BOOK A ROOM AT;-;BOOK ET ROM HOS
 Birth Date;-;Bursdag
+Birth date;-;Bursdag
 Booked time periode;-;Booket tidsperiode
 Booking;-;Påmelding
 Building your store;-;Lag din webbutikk
@@ -29,6 +35,7 @@ By using sisow as your payment provider, you will simply offer your customers to
 CHECK IN;-;SJEKK INN
 CHECK OUT;-;SJEKK UT
 CONTINUE;-;FORTSETT
+COUNT;-;ANTALL
 Campaign code;-;Kampanjekode
 Cancel order;-;Kanselert ordre
 Canceled;-;Kanselert
@@ -45,8 +52,11 @@ Cleaning 49,- each clean;-;Vask 49,- per gang.
 Click next to select shipping options;-;Trykk neste for å velge en betalings metode
 Company;-;Selskap
 Company name;-;Firmanavn
+Complete the order;-;Gjennomfør orderen
 Completed;-;Gjennomført
 Confirm order;-;Bekreft ordre
+Contact information;-;Kontakt informasjon
+Contact information related to the booking event;-;Kontakt informasjon relatert til din booking
 Continue;-;Fortsett
 Continue to payment;-;Fortsett til betaling
 Cookies are being stored;-;Cookier blir lagret
@@ -57,12 +67,16 @@ Current users added to this booking;-;Brukere som er lagt til
 Customer information;-;Kunde detaljer
 Date;-;Dato
 Day;-;Dag
+Dear {name};-;Kjære {name}
 December;-;Desember
 Delete image;-;Slett bilde
 Did not find the specified company, please check your company number;-;Fant ikke det angitte firmaet, vennligst sjekk organisasjonret
+Disploma is disabled;-;Diploma er deaktivert
 Download as pdf;-;Last ned som PDF
 Download ebill;-;Last ned ebill
+END;-;SLUTT
 Email;-;Epost
+Email address;-;Epost adresse
 Email sent;-;Epost sendt
 End date;-;Slutt dato
 Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.L
@@ -75,15 +89,19 @@ Fr;-;Fr
 Free shipping;-;Gratis frakt
 Friday;-;Fredag
 Full name;-;Hele navnet
+GET A STORAGE ROOM FROM;-;FÅ ET LAGER ROM FRA
 Got a coupon from use? Apply it and get discount.;-;Har du en kupong? bruk den her
 Group;-;Gruppe
 How can I help you today ?;-;Hva kan jeg hjelpe deg med?
 I agree to the terms and conditions;-;Jeg godtar bruksvilkårene
 I am sorry, but all fields are required before sending a message.;-;Beklager, men alle felt må fylles ut før du sender en melding.
+I have a partnership deal;-;Jeg har et referansenummer
+Im ordering on behalf of a company;-;Jeg bestiller på vegne av et firma
 Invalid email address;-;Ugyldig epost adresse
 Invalid payment method;-;Ugyldig betalings metode
 Invoice email;-;Epost Teknisk Leder
 InvoicePayment;-;Faktura
+Is private person;-;Er privat person
 January;-;Januar
 July;-;Juli
 June;-;Juni
@@ -121,9 +139,12 @@ Order sent;-;Ordre sent
 Orders;-;Alle ordre
 Organisation;-;Organisasjon
 Organisation name;-;Selskapnavn
+Organisation number;-;Organisasjonsnummer
 Original (hp);-;Orginal hp
 Original (nm);-;Original nm
 Our local time is:;-;Vår lokale tid er
+PRICE PER MONTH;-;PRIS PER MÅNED
+PRICE PER NIGHT;-;PRIS PER NATT
 Password;-;Passord
 Password cannot be empty;-;Passordet kan ikke være tomt.
 Password does not match, please re enter password;-;Passordet stemmer ikke oversens, prøv på nytt.
@@ -139,6 +160,7 @@ Payment successfully completed;-;Betalingen gjennomført
 Phone;-;Telefon
 Place order;-;Legg inn ordre
 Please check your delivery options.;-;Vennligst sjekk dine leveringsmetoder.
+Please enter the reference number provided by;-;Vennligst skriv inn referansenummeret du har fått utdelt.
 Please enter your email address:;-;Vennligst skriv inn din epost
 Please following theese steps to recover your password.;-;Vennligst følgt instruksjonen under.
 Please select a payment method.;-;Vennligst velg en betalingsmetode
@@ -146,29 +168,38 @@ Please select a user in the left menu;-;Vennligst velg en bruker fra venstre men
 Please select a valid payment method;-;Vennligst velg en gyldig betalings metode.
 Please select department;-;Velg en avdeling
 Please start typing to search for page, must be more then 2 chars;-;Start å søk etter en side, må ha minst 3 bokstaver
+Please wait while you are being transferred to dibs payment service.;-;-Vennligst vent til du blir overført til betaling siden.
 Post code;-;Post.nr
 Postal code;-;Postnummer
 Previous;-;Forrige
 Price;-;Pris
 Price and plans;-;Priser og oversikter
 Product count;-;Antall produkter
+ROOM TYPE;-;ROM TYPE
 Read more;-;Les mer
 Recover password;-;Gjennopprett passord
+Reference key;-;Referanse nummer
+Reference number;-;Referanse nummer
 Register;-;Registrer
 Registration details;-;Registrerings detaljer.
 Related products;-;Relaterte produkter
 Reminder;-;Påminnelse
 Reminder sent by email;-;En påmindelse har blitt sendt per epost.
 Remove;-;Fjern
+Rental time periode;-;Din leieperiode
 Repeat password;-;Gjenta passord
 SELECT ROOM;-;VELG ROM
+SELECT STORAGE ROOM;-;VELG BOD
 Sa;-;Lø
 Saturday;-;Lørdag
 Search for a product;-;Søk etter et produkt
 Search for the company you want to enter by clicking the button above, and this box will be filled automatically.;-;Søk etter firma ved å trykke på knappen over.
 Searching....;-;Søker....
 Select a room;-;Velg et rom
+Select size;-;Velg størrelse
+Select start date;-;Velg start dato
 Select your car;-;Velg din bil
+Select your storage room;-;VELG DIN BOD
 Send me a code;-;Send meg koden
 Send message;-;Send melding
 Send us mail;-;Send oss en epost
@@ -184,6 +215,8 @@ Sign up for waiting list;-;Sett meg på venteliste
 Sign up with facebook;-;Logg inn me facebook
 Sign up with google;-;Logg inn med google
 Sorry;-;Beklager
+Sorry, we are out of this type of storage, please select a different one.;-;Beklager, men vi har ikke flere av denne typen igjen, velg en annen en.
+Sorry, your rental is too short, it has to be longer then {days} days of rental.;-;Beklager, men din leieperiode er for kort, den må være lengere enn {days} dager.
 Stage 1 (hp):;-;Stage 1 hp:
 Stage 1 (nm):;-;Stage 1 nm:
 Stage 2 (hp):;-;Stage 2 hp:
@@ -201,16 +234,25 @@ Sunday;-;Søndag
 Taxes;-;Skatter
 Terms and Conditions;-;Bruksvilkår
 Th;-;To
+Thank you for checking into our hotel. A confirmation mail has been sent to your email.;-;Takk for at du sjekker inn på vårt hotel. En bekreftelse er sendt til din e-post.
 Thank you for ordering with Sisow ebill;-;Takk for at du bestilte med Sisow ebill
+Thank you for renting a storage room from us. A confirmation mail has been sent to your email.;-;Takk for at du benytter deg av en våre boder. En bekreftelse er sendt til din e-post.
+Thank you for your booking a room at;-;Takk for at du booker et room hos
+Thank you for your booking a storage room at;-;Takk for at du booker en bod hos
 Thank you for your order, an email has been sent to you with the invoice attached. We will ship the items as soon as we have received the payment.;-;Takk for din bestilling, en epost har blitt sendt med fakturaen vedlagt. Vi sender bestillingen når vi har mottat betalingen.
 Thank you for your order.;-;Takk for din bestilling.
 Thank you, you will now be redirected to the payment service;-;Takk, du blir nå overført til betalingstjenesten
+The code for the room is : {code}.;-;Koden for rommet er : {code}
+The company is mva registered;-;Firmaet er registrert i mva registeret
 The company you have selected could not be found in brreg.;-;Firmaet du har valgt eksisterer ikke i brønnøysundregisteret.
 The email address is invalid.;-;Eposten din er ugyldig.
 The email already exists, please log on to continue.;-;Eposten eksisterer allerede, vennligst logg på for å fortsette.
 The event has been confirmed.;-;Eventent har blitt bekreftet.
 The passwords does not match.;-;Passordet stemmer ikke overens.
+The reserved room is : {roomName}.;-;Det reserverte rommet er : {roomName}.
+The room has been reserved between {start} to {end}.;-;Rommet har blitt reservert mellom {start} og {end}.
 There is no entries for this event;-;Finnes inne noe for akkurat dette kurset
+This email is a confirmation that we have reserved a room for you.;-;Denne eposten er en bekreftelse på din reservasjon på rom.
 This event has the following entries;-;Dette kurset finner du i kalenderen på følgende dager
 This is a {} days event.;-;Dette er et {} dagers event.
 This page is only available for adminsitrators;-;Denne siden er kun tilgjengelig for adminstratorer.
@@ -235,17 +277,20 @@ Waiting for payment;-;Venter på betaling
 Waiting list;-;Venteliste
 Was not able to get payment methods, please check your postcode;-;Klarte ikke å oppdrive betalings metoder, vennligst sjekk ditt postnummer.
 We;-;On
+We are sorry, but there is not enough available rooms for your selection, please select a different one.;-;Vi beklager, men vi har ikke nok tilgjengelige rom ut fra ditt valg, du må velge et annet type rom.
 We host events at the following locations, click on the location to filter the calendar by location(s);-;We har events på følgende steder, trykk på stedet for å filtere kalenderen på stedet(ene)
 Wednesday;-;Onsdag
 Welcome to my page;-;Velkommen til min side
 What email address do you want the ebill to be sent to?;-;Hvilken epost ønsker du at ebill skal sendes til?
 What's on your mind?;-;Hva ønsker du å formidle?
 Wrong delivery method;-;Feil forsendelses metode.
+Yes;-;Ja
 You are being transferred to paypal, please wait...;-;Du  blir nå overført til paypal, vennligst vent.
 You are here:;-;Du er her:
 You do not have any orders.;-;Du har ingen bestillinger
 You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
 You have selected the following duration for your stay;-;Du har valgt følgende tidsperiode før besøket
+You have selected the following start date for your rental periode;-;Du har valgt følgendestart dato for ditt opphold.
 You need to select at least one to send back message to;-;Du må velge minium en som du kan sende en melding til.
 Your are now signed up for the event;-;Du er nå registert inn på denne eventen.
 Your email;-;Din epost
@@ -259,6 +304,8 @@ available room;-;tilgjengelige rom
 available rooms;-;tilgjengelige rom
 change;-;endre
 course;-;kurs
+day;-;dag
+days;-;dager
 description;-;Beskrivelse
 each cleaning;-;per vask
 email;-;E-post
@@ -268,6 +315,8 @@ in;-;i
 included taxes;-;Inkludert mva
 location;-;Sted
 login;-;logg inn
+month;-;måned
+months;-;måneder
 night;-;natt
 nights;-;netter
 org;-;Firma
@@ -277,5 +326,7 @@ read;-;les
 select;-;velg
 to;-;til
 will be added to your invoice.;-;vil bli lagt på sluttsummen.
+{percentage}% taxes on cleaning;-;{percentage}% moms på vask
+{percentage}% taxes on room;-;{percentage}% moms på rom
 
 

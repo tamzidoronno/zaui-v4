@@ -66,7 +66,7 @@ mkdir("/tmp/$tmpFolder");
 if($user->isPrivatePerson) {
     $extension = "private";
 } else {
-    $extension = "company";
+    $extension = "private";
 }
 if(isset($_GET['type'])) {
     if($_GET['type'] == "standard") {

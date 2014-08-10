@@ -6,10 +6,6 @@
     font-family: "Museo700-Regular";
     src: url(/fonts/Museo700-Regular.ttf) format("truetype");
 }
-body {
-    font-family: "helvetica" !important;
-    
-}
 .TopMenu .subentries {
         background-color: rgba(255,255,255,0.8);
 }

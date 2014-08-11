@@ -24,7 +24,7 @@ function showEntries($entries) {
             $selected = "selected";
         }
         if($entry->hardLink) {
-            echo "<li class='configable'><span><a href='".$entry->hardLink."' class='$selected' hardlink='true'>$name</a></span>$menu</li>";
+            echo "<li class='configable'><span><a target='_new' href='".$entry->hardLink."' class='$selected' hardlink='true'>$name</a></span>$menu</li>";
         } else {
             $link = str_replace(" ", "_", $menu);
             $link = "/".strtolower($menu).".html";

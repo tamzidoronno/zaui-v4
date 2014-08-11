@@ -175,7 +175,7 @@ Previous;-;Forrige
 Price;-;Pris
 Price and plans;-;Priser og oversikter
 Product count;-;Antall produkter
-ROOM TYPE;-;ROM TYPE
+ROOM TYPE;-;Størrelse
 Read more;-;Les mer
 Recover password;-;Gjennopprett passord
 Reference key;-;Referanse nummer
@@ -199,7 +199,7 @@ Select a room;-;Velg et rom
 Select size;-;Velg størrelse
 Select start date;-;Velg start dato
 Select your car;-;Velg din bil
-Select your storage room;-;VELG DIN BOD
+Select your storage room;-;Velg størrelse på lagerbod. A
 Send me a code;-;Send meg koden
 Send message;-;Send melding
 Send us mail;-;Send oss en epost
@@ -291,7 +291,7 @@ You are here:;-;Du er her:
 You do not have any orders.;-;Du har ingen bestillinger
 You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
 You have selected the following duration for your stay;-;Du har valgt følgende tidsperiode før besøket
-You have selected the following start date for your rental periode;-;Du har valgt følgende start dato for ditt opphold.
+You have selected the following start date for your rental periode;-;Ønsket startdato for lagerbod.
 You need to select at least one to send back message to;-;Du må velge minium en som du kan sende en melding til.
 Your are now signed up for the event;-;Du er nå registert inn på denne eventen.
 Your email;-;Din epost

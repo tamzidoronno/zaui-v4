@@ -66,7 +66,7 @@ mkdir("/tmp/$tmpFolder");
 if($user->isPrivatePerson) {
     $extension = "private";
 } else {
-    $extension = "company";
+    $extension = "private";
 }
 if(isset($_GET['type'])) {
     if($_GET['type'] == "standard") {
@@ -94,9 +94,9 @@ $content = file_get_contents("/tmp/$tmpFolder/word/document.xml");
 $content = replacevariables($content);
 file_put_contents("/tmp/$tmpFolder/word/document.xml", $content);
 chdir("/tmp/$tmpFolder/");
-`zip -r document.docx *`;
-$handle = fopen("document.docx", "r");
-$contents = fread($handle, filesize("document.docx"));
+`zip -r /tmp/document.docx *`;
+$handle = fopen("/tmp/document.docx", "r");
+$contents = fread($handle, filesize("/tmp/document.docx"));
 fclose($handle);
 `rm -rf /tmp/$tmpFolder`;
 echo $contents;

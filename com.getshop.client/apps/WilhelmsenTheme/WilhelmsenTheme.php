@@ -20,6 +20,12 @@ class WilhelmsenTheme extends \ThemeApplication implements \Application {
         return "left";
     }
     
+    public function addScripts() {
+        echo "\n" . "<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600' rel='stylesheet' type='text/css'>";
+    }    
+
+    
+    
     public function getName() {
         return "WilhelmsenTheme";
     }

@@ -1,4 +1,5 @@
 ###### framework ######
+* Minimum rental periode is {days};-;* Minimum periode for leie er {days}
 A content manager allows you to add content to whatever page you would like to add content to. It supports text, images, and even basic HTML, its like word for web.;-;En tekst editor gir deg muligheten til å legge til innhold til hvilken som helst side. Den støtter tekst, bilder, og enkel html.
 A description to the image;-;En beskrivelse av bildet
 A news application makes you push news to your WebShop. And share to subscribers and push to facebook if the Facebook application has been added.;-;En nyhetsapplikasjon gjør det enkelt for deg å legge inn nyheter på din webshop. Del så deretter dine nyheter med de som har abbonneere
@@ -254,7 +255,6 @@ Need to display your realestates? well, here is the application that allows you 
 New entry;-;Ny
 New text;-;Ny tekst
 News;-;Nyheter
-No;-;Nei
 No advanced color options for this design;-;Ingen avanserte farger tilgjengelig for dette designet.
 No background selection available for this design.;-;Ingen bakgrunsvalg tilgengelig for dette designet.
 No colors available for this design.;-;Ingen farger tilgjengelig for dette designet.
@@ -489,7 +489,6 @@ When you have added this application, it will automatically start relating produ
 Where you would you like to direct the user:;-;Hvis vil du at brukeren skal gå:
 Withdraw from stock when order is created;-;Trekk fra lagerstatus når ordren blir laget
 Would you like to use paypal in sandbox mode?;-;Ønsker du å bruke paypal i sandbox modus?
-Yes;-;Ja
 You are not logged on, please log on.;-;Du er ikke logget på, vennligst logg på.
 You can choose between three types of user levels.;-;Du kan velge mellom tre typer over brukernivå
 You can filter your customers by entering som text in the textbox;-;Du kan filtere dine kunder ved å legge inn tekst i tekstboksen.

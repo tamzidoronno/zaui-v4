@@ -8,8 +8,8 @@ A confirmation email has been sent to your email. Enjoy your stay at {hotel}.;-;
 A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
 Add a room;-;Legg til et rom
 Add to cart;-;Legg i handlekurv
-Additional contact data;-;Ekstra kontakt informasjon
-Additional contact information;-;Ekstra kontakt informasjon
+Additional contact data;-;Ekstra kontaktinformasjon
+Additional contact information;-;Ekstra kontaktinformasjon
 Address;-;Adresse
 All fields are required;-;Alle felt er påkrevd
 All fields are required, please fill in the fields in red.;-;Alle felt er påkrevd, vennligst fyll ut felter i rødt.
@@ -52,7 +52,7 @@ Cleaning 49,- each clean;-;Vask 49,- per gang.
 Click next to select shipping options;-;Trykk neste for å velge en betalings metode
 Company;-;Selskap
 Company name;-;Firmanavn
-Complete the order;-;Gjennomfør orderen
+Complete the order;-;Fullfør reservasjon
 Completed;-;Gjennomført
 Confirm order;-;Bekreft ordre
 Contact information;-;Kontakt informasjon
@@ -171,6 +171,7 @@ Please start typing to search for page, must be more then 2 chars;-;Start å sø
 Please wait while you are being transferred to dibs payment service.;-;-Vennligst vent til du blir overført til betaling siden.
 Post code;-;Post.nr
 Postal code;-;Postnummer
+Postal place;-;Poststed
 Previous;-;Forrige
 Price;-;Pris
 Price and plans;-;Priser og oversikter
@@ -327,7 +328,7 @@ read;-;les
 select;-;velg
 to;-;til
 will be added to your invoice.;-;vil bli lagt på sluttsummen.
-{percentage}% taxes on cleaning;-;{percentage}% moms på vask
-{percentage}% taxes on room;-;{percentage}% moms på rom
+{percentage}% taxes on cleaning;-;{percentage}% MVA
+{percentage}% taxes on room;-;{percentage}% MVA
 
 

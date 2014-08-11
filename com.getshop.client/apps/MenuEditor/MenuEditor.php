@@ -84,8 +84,14 @@ class MenuEditor extends \SystemApplication implements \Application {
         if (isset($item['linke'])) {
             $entry->hardLink = $item['linke'];
         }
-        if (isset($item['pageId'])) {
+        
+        if (isset($item['link']) && !isset($item['pageId'])) {
+            $entry->hardLink = $item['link'];
+        }
+        
+        if (isset($item['pageId']) && $item['pageId']) {
             $entry->pageId = $item['pageId'];
+            $entry->hardLink = null;
         }
         if (isset($item['userLevel'])) {
             $entry->userLevel = $item['userLevel'];

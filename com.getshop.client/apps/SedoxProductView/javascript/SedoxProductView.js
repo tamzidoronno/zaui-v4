@@ -166,6 +166,7 @@ app.SedoxProductView = {
         $(button).find('.progressbar').hide();
     },
     uploadProgress: function(button, progress) {
+        progress = Math.round(progress * 100) / 100;
         $(button).find('.progressbar').html(progress+"%");
     },
             

@@ -457,6 +457,8 @@ public class PageManager extends ManagerBase implements IPageManager {
     public String createNewRow(String pageId) throws ErrorException {
         Page page = getPage(pageId);
         RowLayout row = page.createApplicationRow();
+        row.numberOfCells = 0;
+        page.layout.rows.add(row);
         saveObject(page);
         return row.rowId;
     }

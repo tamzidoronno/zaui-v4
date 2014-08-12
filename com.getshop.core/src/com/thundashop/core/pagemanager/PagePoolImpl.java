@@ -118,9 +118,13 @@ public class PagePoolImpl {
             if(row.rowId.equals(rowId)) {
                 PageArea area = row.createApplicationArea();
                 area.applicationsList.add(app.id);
+                row.numberOfCells = row.areas.size();
                 savePage(page);
+
             }
+            
         }    
+        
         return app;
     }
 

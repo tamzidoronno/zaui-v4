@@ -25,10 +25,12 @@ class Page extends FactoryBase {
             $pageArea = new PageArea($this,$area);
             $apps = array_merge($apps, $pageArea->getApplications());
         }
-        foreach ($this->layout->rows as $row) {
-            foreach($row->areas as $area) {
-                $pageArea = new PageArea($this,$area);
-                $apps = array_merge($apps, $pageArea->getApplications());
+        if(isset($this->layout->rows)) {
+            foreach ($this->layout->rows as $row) {
+                foreach($row->areas as $area) {
+                    $pageArea = new PageArea($this,$area);
+                    $apps = array_merge($apps, $pageArea->getApplications());
+                }
             }
         }
 

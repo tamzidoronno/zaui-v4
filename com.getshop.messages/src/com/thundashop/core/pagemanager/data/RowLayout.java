@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class RowLayout implements Serializable {
-    public int numberOfCells = 3;
+    public int numberOfCells = 0;
     public LinkedList<PageArea> areas = new LinkedList();
     int marginBottom = 0;
     int marginTop = 0;

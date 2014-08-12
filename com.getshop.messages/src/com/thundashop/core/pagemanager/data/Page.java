@@ -141,6 +141,7 @@ public class Page extends DataCommon implements Cloneable {
 
     public RowLayout createApplicationRow() {
         RowLayout newRow = new RowLayout();
+        newRow.numberOfCells = 1;
         newRow.rowId = UUID.randomUUID().toString();
         return newRow;
     }

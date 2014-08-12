@@ -98,10 +98,10 @@ app.Hotelbooking = {
         });
         
         data['mvaregistered'] = $('.booking_contact_data [gsname="mvaregistered"]').is(':checked');
-        data['company'] = $('.booking_contact_data [gsname="company"]').is(':checked');
         data['partnershipdeal'] = $('.booking_contact_data [gsname="partnershipdeal"]').is(':checked');
+        data['customer_type'] = $('.booking_contact_data [gsname="customer_type"]:checked').val();
         var event = thundashop.Ajax.createEvent('','setBookingData',$(this),data);
-        if($(this).attr('gsname') === "mvaregistered" || $(this).attr('gsname') === "company") {
+        if($(this).attr('gsname') === "mvaregistered" || $(this).attr('gsname') === "customer_type") {
             thundashop.Ajax.post(event);
         } else {
             thundashop.Ajax.postWithCallBack(event, function() {});
@@ -197,7 +197,7 @@ app.Hotelbooking = {
         $(document).on('click', '.Hotelbooking input[gsname="partnershipdeal"]', app.Hotelbooking.changeToPartnership);
         $(document).on('click', '.Hotelbooking .fa.calnav', app.Hotelbooking.navigateMonth);
         $(document).on('click', '.Hotelbooking input[gsname="mvaregistered"]', app.Hotelbooking.saveCurrentData);
-        $(document).on('click', '.Hotelbooking input[gsname="company"]', app.Hotelbooking.saveCurrentData);
+        $(document).on('click', '.Hotelbooking input[gsname="customer_type"]', app.Hotelbooking.saveCurrentData);
     }
 };
 

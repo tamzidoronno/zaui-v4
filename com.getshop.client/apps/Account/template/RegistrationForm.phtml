@@ -16,6 +16,7 @@ $userId = "";
 $cellphone = "";
 $textButton = $this->__w("Register");
 $userLevel = 0;
+$mvaRegistered = false;
 if ($user) {
     /* @var $user core_usermanager_data_User */
     $fullName = $user->fullName;
@@ -36,6 +37,7 @@ if ($user) {
     $private = $user->isPrivatePerson;
     $userId = $user->id;
     $userLevel = $user->type;
+    $mvaRegistered = $user->mvaRegistered;
     if(isset($user->expireDate) && $user->expireDate) {
         $expire = date("m/d/y", strtotime($user->expireDate));
     } else {
@@ -126,9 +128,20 @@ echo "<input type='hidden' value='$userId' id='user_id'>";
             <?php echo $this->__w("Is private person"); ?>
         </td>
         <td>
-            <select>
+            <select id="">
                 <option value="false"><? echo $this->__w("No"); ?></option>
                 <option value="true" <? if($private) { echo "SELECTED"; } ?>><? echo $this->__w("Yes"); ?></option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td class="col1">
+            <?php echo $this->__w("Mva registered"); ?>
+        </td>
+        <td>
+            <select id="mvaRegistered">
+                <option value="false"><? echo $this->__w("No"); ?></option>
+                <option value="true" <? if($mvaRegistered) { echo "SELECTED"; } ?>><? echo $this->__w("Yes"); ?></option>
             </select>
         </td>
     </tr>

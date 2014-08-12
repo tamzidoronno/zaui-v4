@@ -24,6 +24,7 @@ Available positions;-;Ledige plasser
 BOOK A ROOM AT;-;BOOK ET ROM HOS
 Birth Date;-;Fødselsdato
 Birth date;-;Fødselsdato
+Birth date has to be formatted like dd.mm.yy;-;Fødselsdato må være av format: dd.mm.åå.
 Booked time periode;-;Booket tidsperiode
 Booking;-;Påmelding
 Building your store;-;Lag din webbutikk
@@ -95,7 +96,6 @@ How can I help you today ?;-;Hva kan jeg hjelpe deg med?
 I agree to the terms and conditions;-;Jeg godtar bruksvilkårene
 I am sorry, but all fields are required before sending a message.;-;Beklager, men alle felt må fylles ut før du sender en melding.
 I have a partnership deal;-;Jeg har et referansenummer
-Im ordering on behalf of a company;-;Jeg bestiller på vegne av et firma
 Invalid email address;-;Ugyldig epost adresse
 Invalid payment method;-;Ugyldig betalings metode
 Invoice email;-;Epost Teknisk Leder
@@ -117,6 +117,7 @@ Message from a customer;-;Melding fra en kunde
 Mo;-;Ma
 Monday;-;Mandag
 More information;-;Mer informasjon
+Mva registered;-;Registrert i mva registeret
 My Account;-;Min konto
 My name is:;-;Mitt navn er
 Name;-;Navn
@@ -140,6 +141,7 @@ Orders;-;Alle ordre
 Organisation;-;Organisasjon
 Organisation name;-;Selskapnavn
 Organisation number;-;Organisasjonsnummer
+Organisation number has to be 9 digits long.;-;Organisasjonsnummeret må bestå av 9 siffer 
 Original (hp);-;Orginal hp
 Original (nm);-;Original nm
 Our local time is:;-;Vår lokale tid er

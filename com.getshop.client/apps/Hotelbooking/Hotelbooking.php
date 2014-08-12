@@ -415,6 +415,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                 $user->fullName = $_POST['data']['name_1'];
                 $user->cellPhone = $_POST['data']['phone_1'];
                 $user->address = $address;
+                $user->mvaRegistered = $_POST['data']['mvaregistered'];
                 if($this->isCompany()) {
                     $user->isPrivatePerson = "false";
                 }
@@ -509,6 +510,21 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         if(isset($_GET['subpage']) && $_GET['subpage'] == "summary" || (isset($_POST['event']) && $_POST['event'] == 'setBookingData')) {
             return "";
         }
+        
+        if($_POST['data']['customer_type'] == "private") {
+            if($name === "birthday" && strlen($_POST['data']['birthday']) != 10) {
+                $this->invalid = true;
+                $this->errors[] = $this->__w("Birth date has to be formatted like dd.mm.yy");
+                return "invalid";
+            }
+        } else {
+            if($name === "birthday" && strlen($_POST['data']['birthday']) != 9) {
+                $this->invalid = true;
+                $this->errors[] = $this->__w("Organisation number has to be 9 digits long.");
+                return "invalid";
+            }
+        }
+        
         if(isset($_POST['data'][$name]) && !$this->partnerShipChecked()) {
             if($name == "referencenumber") {
                 return "";
@@ -575,7 +591,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function setBookingData() {
-        if($_POST['data']['company'] == "false") {
+        if($this->isPrivate()) {
             $_POST['data']['mvaregistered'] = "false";
         }
         
@@ -665,7 +681,10 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function isCompany() {
-        return $this->getPost("company") == "true";
+        return $this->getPost("customer_type") == "firma";
+    }
+    public function isPrivate() {
+        return $this->getPost("customer_type") == "private";
     }
 
     public function isMvaRegistered() {

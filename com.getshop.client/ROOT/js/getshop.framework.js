@@ -105,11 +105,16 @@ thundashop.framework = {
             if($(this).is(':checkbox')) {
                 value = $(this).is(':checked');
             }
-        
             if($(this).attr('gstype') == "ckeditor") {
                 value = ckeditors[$(this).attr('id')];
             }
-            args[name] = value;
+            if($(this).is(':radio')) {
+                if($(this).is(':checked')) {
+                    args[name] = $(this).val();
+                }
+            } else {
+                args[name] = value;
+            }
         });
         return args;
     },

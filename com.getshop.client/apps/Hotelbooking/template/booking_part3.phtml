@@ -99,83 +99,89 @@ if($this->getServiceType() == "storage") {
         <div class="summary_heading">
             <? echo $this->__w("Additional contact data"); ?>
         </div>
-        <div class='contact_entry'>
-            <input type='checkbox' gsname="partnershipdeal" <? if($this->partnerShipChecked()) { echo "checked"; } ?>>
-            <? echo $this->__w("I have a partnership deal"); ?>
+        <div>
+            <input type="radio" name="customer_type" gsname="customer_type" value="private" <? if($this->isPrivate()) echo "CHECKED"; ?>> Privatperson
+            <input type="radio" name="customer_type" gsname="customer_type" value="firma" <? if($this->isCompany()) echo "CHECKED"; ?>> Firma
         </div>
-        <div class='contact_entry partnership common_input' <? if(!$this->partnerShipChecked()) { echo "style='display:none;'"; } ?>>
-            <span class='contact_text'><? echo $this->__w("Reference number"); ?></span>
-            <span class='contact_input'><input type='text' gsname="referencenumber" value='<? echo $this->getPost("referencenumber"); ?>' class='<? echo $this->validateInput("referencenumber"); ?>'></span>
-            <div><? echo $this->__w("Please enter the reference number provided by") ." " . $this->getProjectName(); ?></div>
-            <div class="continue_to_cart_button" gstype="submit"><? echo $this->__w("Complete the order"); ?></div>
-        </div>
-        
-        <div class="common_input" <? if($this->partnerShipChecked()) { echo "style='display:none;'"; } ?>>
-            <div class='contact_entry'>
-                <span>
-                    <? $company = ""; if($this->isCompany()) { $company = " CHECKED"; } ?>
-                    <input type='checkbox' gsname="company" class='<? echo $this->validateInput("company"); ?>' <? echo $company; ?>>
-                    <span class=''><? echo $this->__w("Im ordering on behalf of a company"); ?></span>
-                </span>
-            </div>
-            <?
-            $hideCompany = "";
-            $hidePrivate = "";
-            if(!$company) { 
-                $hideCompany = "style='display:none;'"; 
-            } else { 
-                $hidePrivate =  "style='display:none;'"; 
-            }
+         <? 
+         if($this->isCompany() || $this->isPrivate()) {
             ?>
-            <div class='common_text company contact_entry' <? echo $hideCompany; ?>>
-                <span>
-                    <? $company = ""; if($this->isMvaRegistered()) { $company = " CHECKED"; } ?>
-                    <input type='checkbox' gsname="mvaregistered" class='<? echo $this->validateInput("address"); ?>' <? echo $company; ?>>
-                    <span class=''><? echo $this->__w("The company is mva registered"); ?></span>
-                </span>
-            </div>
-        <br>
-            <div class='contact_entry'>
-                <span class='contact_text'><? 
-                    echo "<span $hideCompany class='common_text company'>" . $this->__w("Organisation number") . "</span>";
-                    echo "<span $hidePrivate class='common_text private' >" . $this->__w("Birth date") . "</span>";
-                ?></span>
-                <span class='contact_input'><input type='text' placeholder='dd.mm.åå' gsname="birthday" value='<? echo $this->getPost("birthday"); ?>' class='<? echo $this->validateInput("birthday"); ?>'></span>
-            </div>
-            <div class='contact_entry'>
-                <span class='contact_text'><? echo $this->__w("Address"); ?></span>
-                <span class='contact_input'><input type='text' gsname="address" value='<? echo $this->getPost("address"); ?>' class='<? echo $this->validateInput("address"); ?>'></span>
-            </div>
-            <div class='contact_entry'>
-                <span class='contact_text'><? echo $this->__w("Postal code"); ?></span>
-                <span class='contact_input'><input type='text' gsname='postal_code' value='<? echo $this->getPost("postal_code"); ?>' class='<? echo $this->validateInput("postal_code"); ?>'></span>
-            </div>
-            <div class='contact_entry'>
-                <span class='contact_text'><? echo $this->__w("Postal place"); ?></span>
-                <span class='contact_input'><input type='text' gsname='city' value='<? echo $this->getPost("city"); ?>' class='<? echo $this->validateInput("city"); ?>'></span>
-            </div>
-            <div class='contact_entry'>
-                <span class='contact_text'><? echo $this->__w("Email"); ?></span>
-                <span class='contact_input'><input type='text' gsname='email' value='<? echo $this->getPost("email"); ?>' class='<? echo $this->validateInput("email"); ?>'></span>
-            </div>
-            <?
-            if($this->hasErrors()) { 
-                echo "<div>";
-                echo $this->__w("All fields are required, please fill in the fields in red.");
-                echo "</div>";
-            }
+           <div class='contact_entry'>
+               <input type='checkbox' gsname="partnershipdeal" <? if($this->partnerShipChecked()) { echo "checked"; } ?>>
+               <? echo $this->__w("I have a partnership deal"); ?>
+           </div>
 
-            if($this->checkFailedReservation()) { 
-                echo $this->__w("Failed to reserve room... please contact us.");
-            } else {
-                ?>
-                <? if($this->hasPaymentAppAdded()) { ?>
-                <div class="continue_to_cart_button common_input" gstype="submit"><? echo $continueCartButtonText; ?></div>
-                <? } else { ?>
-                <div class="continue_to_cart_button" gstype="submit"><? echo $this->__w("Complete the order"); ?></div>
-            <? } ?>
-            <? } ?>
-        </div>
+
+           <div class='contact_entry partnership common_input' <? if(!$this->partnerShipChecked()) { echo "style='display:none;'"; } ?>>
+               <span class='contact_text'><? echo $this->__w("Reference number"); ?></span>
+               <span class='contact_input'><input type='text' gsname="referencenumber" value='<? echo $this->getPost("referencenumber"); ?>' class='<? echo $this->validateInput("referencenumber"); ?>'></span>
+               <div><? echo $this->__w("Please enter the reference number provided by") ." " . $this->getProjectName(); ?></div>
+               <div class="continue_to_cart_button" gstype="submit"><? echo $this->__w("Complete the order"); ?></div>
+           </div>
+
+           <div class="common_input" <? if($this->partnerShipChecked()) { echo "style='display:none;'"; } ?>>
+               <?
+               $hideCompany = "";
+               $hidePrivate = "";
+               if(!$this->isCompany()) { 
+                   $hideCompany = "style='display:none;'"; 
+               } else { 
+                   $hidePrivate =  "style='display:none;'"; 
+               }
+               ?>
+               <div class='common_text company contact_entry' <? echo $hideCompany; ?>>
+                   <span>
+                       <? $company = ""; if($this->isMvaRegistered()) { $company = " CHECKED"; } ?>
+                       <input type='checkbox' gsname="mvaregistered" class='<? echo $this->validateInput("address"); ?>' <? echo $company; ?>>
+                       <span class=''><? echo $this->__w("The company is mva registered"); ?></span>
+                   </span>
+               </div>
+           <br>
+               <div class='contact_entry'>
+                   <span class='contact_text'><? 
+                       echo "<span $hideCompany class='common_text company'>" . $this->__w("Organisation number") . "</span>";
+                       echo "<span $hidePrivate class='common_text private' >" . $this->__w("Birth date") . "</span>";
+                   ?></span>
+                   <span class='contact_input'><input type='text' placeholder='<? if($this->isPrivate()) { echo "dd.mm.åå"; } ?>' gsname="birthday" value='<? echo $this->getPost("birthday"); ?>' class='<? echo $this->validateInput("birthday"); ?>'></span>
+               </div>
+               <div class='contact_entry'>
+                   <span class='contact_text'><? echo $this->__w("Address"); ?></span>
+                   <span class='contact_input'><input type='text' gsname="address" value='<? echo $this->getPost("address"); ?>' class='<? echo $this->validateInput("address"); ?>'></span>
+               </div>
+               <div class='contact_entry'>
+                   <span class='contact_text'><? echo $this->__w("Postal code"); ?></span>
+                   <span class='contact_input'><input type='text' gsname='postal_code' value='<? echo $this->getPost("postal_code"); ?>' class='<? echo $this->validateInput("postal_code"); ?>'></span>
+               </div>
+               <div class='contact_entry'>
+                   <span class='contact_text'><? echo $this->__w("Postal place"); ?></span>
+                   <span class='contact_input'><input type='text' gsname='city' value='<? echo $this->getPost("city"); ?>' class='<? echo $this->validateInput("city"); ?>'></span>
+               </div>
+               <div class='contact_entry'>
+                   <span class='contact_text'><? echo $this->__w("Email"); ?></span>
+                   <span class='contact_input'><input type='text' gsname='email' value='<? echo $this->getPost("email"); ?>' class='<? echo $this->validateInput("email"); ?>'></span>
+               </div>
+               <?
+               if($this->hasErrors()) { 
+                   echo "<div>";
+                   echo $this->__w("All fields are required, please fill in the fields in red.");
+                   foreach($this->errors as $error) {
+                       echo "<div>" . $error . "</div>";
+                   }
+                   echo "</div>";
+               }
+
+               if($this->checkFailedReservation()) { 
+                   echo $this->__w("Failed to reserve room... please contact us.");
+               } else {
+                   ?>
+                   <? if($this->hasPaymentAppAdded()) { ?>
+                   <div class="continue_to_cart_button common_input" gstype="submit"><? echo $continueCartButtonText; ?></div>
+                   <? } else { ?>
+                   <div class="continue_to_cart_button" gstype="submit"><? echo $this->__w("Complete the order"); ?></div>
+               <? } ?>
+               <? } ?>
+           </div>
+         <? } ?>
     </div>
         
     <div style='clear:both;'></div>

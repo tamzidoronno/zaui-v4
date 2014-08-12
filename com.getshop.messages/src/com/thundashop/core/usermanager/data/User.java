@@ -60,6 +60,7 @@ public class User extends DataCommon implements Comparable<User> {
     public String referenceKey = "";
     
     public boolean isPrivatePerson = true;
+    public boolean mvaRegistered = false;
     
     public Company company = null;
     

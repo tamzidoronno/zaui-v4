@@ -24,7 +24,7 @@ if($this->getConfigurationSetting("new_type") == "1") {
 <div class='displayimagecontainer'>
     <span class='imagecontainer' >
         <? if ($id) { ?>
-            <img src="/displayImage.php?id=<? echo $id . $crop; ?>"/>
+            <img zoomable='<? echo $this->isZoomAble() ? "true" : "false"; ?>' src="/displayImage.php?id=<? echo $id . $crop; ?>"/>
         <? } ?>
     </span>
 </div>

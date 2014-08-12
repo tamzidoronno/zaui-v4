@@ -115,6 +115,19 @@ class ImageDisplayer extends \ApplicationBase implements \Application {
         return $textFields;
     }
     
-   
+    public function isZoomAble() {
+        $zoomable = $this->getConfigurationSetting("zoom_able");
+        
+        if (!$zoomable) {
+            return true;
+        }
+        
+        return $zoomable === "true";
+    }
+    
+    public function toggleZoomImage() {
+        $value = $this->isZoomAble() ? "false" : "true";
+        $this->setConfigurationSetting("zoom_able", $value);
+    }
 }
 ?>

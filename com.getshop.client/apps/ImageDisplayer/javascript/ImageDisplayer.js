@@ -21,6 +21,13 @@ app.ImageDisplayer = {
                     iconsize: "30",
                     title: __f("Toggle on/off bottom area"),
                     click: thundashop.Skeleton.activateBottomArea
+                },
+                {
+                    icontype: "awesome",
+                    icon: "fa-search",
+                    iconsize: "30",
+                    title: __f("Toggle able to zoom"),
+                    click: app.ImageDisplayer.toggleZoom
                 }
             ]
         }
@@ -30,6 +37,11 @@ app.ImageDisplayer = {
         toolbox.attachToElement(application, 2);
     },
     
+    toggleZoom: function(application) {
+        var event = thundashop.Ajax.createEvent("", "toggleZoomImage", this);
+        thundashop.Ajax.post(event);
+    },
+    
     showEditImage: function(application) {
         var app = $(application).hasClass('app') ? application : this;
         var event = thundashop.Ajax.createEvent("", "showImageEditor", app);
@@ -37,6 +49,11 @@ app.ImageDisplayer = {
     },
             
     showImageDisplayer : function() {
+        
+        if ($(this).attr('zoomable') === "false") {
+            return;
+        }
+        
         if($(document).width() < 1000) {
             return;
         }

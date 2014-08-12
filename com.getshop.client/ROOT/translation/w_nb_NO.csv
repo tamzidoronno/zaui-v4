@@ -8,8 +8,8 @@ A confirmation email has been sent to your email. Enjoy your stay at {hotel}.;-;
 A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
 Add a room;-;Legg til et rom
 Add to cart;-;Legg i handlekurv
-Additional contact data;-;Ekstra kontakt informasjon
-Additional contact information;-;Ekstra kontakt informasjon
+Additional contact data;-;Ekstra kontaktinformasjon
+Additional contact information;-;Ekstra kontaktinformasjon
 Address;-;Adresse
 All fields are required;-;Alle felt er påkrevd
 All fields are required, please fill in the fields in red.;-;Alle felt er påkrevd, vennligst fyll ut felter i rødt.
@@ -52,11 +52,11 @@ Cleaning 49,- each clean;-;Vask 49,- per gang.
 Click next to select shipping options;-;Trykk neste for å velge en betalings metode
 Company;-;Selskap
 Company name;-;Firmanavn
-Complete the order;-;Gjennomfør orderen
+Complete the order;-;Fullfør reservasjon
 Completed;-;Gjennomført
 Confirm order;-;Bekreft ordre
-Contact information;-;Kontakt informasjon
-Contact information related to the booking event;-;Kontakt informasjon relatert til din booking
+Contact information;-;Kontaktinformasjon
+Contact information related to the booking event;-;Kontaktinformasjon relatert til din booking
 Continue;-;Fortsett
 Continue to payment;-;Fortsett til betaling
 Cookies are being stored;-;Cookier blir lagret
@@ -171,11 +171,12 @@ Please start typing to search for page, must be more then 2 chars;-;Start å sø
 Please wait while you are being transferred to dibs payment service.;-;-Vennligst vent til du blir overført til betaling siden.
 Post code;-;Post.nr
 Postal code;-;Postnummer
+Postal place;-;Poststed
 Previous;-;Forrige
 Price;-;Pris
 Price and plans;-;Priser og oversikter
 Product count;-;Antall produkter
-ROOM TYPE;-;ROM TYPE
+ROOM TYPE;-;Størrelse
 Read more;-;Les mer
 Recover password;-;Gjennopprett passord
 Reference key;-;Referanse nummer
@@ -199,7 +200,7 @@ Select a room;-;Velg et rom
 Select size;-;Velg størrelse
 Select start date;-;Velg start dato
 Select your car;-;Velg din bil
-Select your storage room;-;VELG DIN BOD
+Select your storage room;-;Velg størrelse på lagerbod.
 Send me a code;-;Send meg koden
 Send message;-;Send melding
 Send us mail;-;Send oss en epost
@@ -291,7 +292,7 @@ You are here:;-;Du er her:
 You do not have any orders.;-;Du har ingen bestillinger
 You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
 You have selected the following duration for your stay;-;Du har valgt følgende tidsperiode før besøket
-You have selected the following start date for your rental periode;-;Du har valgt følgende start dato for ditt opphold.
+You have selected the following start date for your rental periode;-;Ønsket startdato for lagerbod.
 You need to select at least one to send back message to;-;Du må velge minium en som du kan sende en melding til.
 Your are now signed up for the event;-;Du er nå registert inn på denne eventen.
 Your email;-;Din epost
@@ -327,7 +328,7 @@ read;-;les
 select;-;velg
 to;-;til
 will be added to your invoice.;-;vil bli lagt på sluttsummen.
-{percentage}% taxes on cleaning;-;{percentage}% moms på vask
-{percentage}% taxes on room;-;{percentage}% moms på rom
+{percentage}% taxes on cleaning;-;{percentage}% MVA
+{percentage}% taxes on room;-;{percentage}% MVA
 
 

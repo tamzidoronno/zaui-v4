@@ -65,9 +65,11 @@ if(isset($_POST['event']) && $_POST['event'] == "renameEntry") {
                             <?php
                             /* @var $entry \core_listmanager_data_Entry */
                             $hardlink = "false";
+                            $target = "";
                             if($entry->hardLink) {
                                 $hardlink="true";
                                 $url = $entry->hardLink;
+                                $target = "_new";
                             } else {
                                 $link = "?page=".$entry->pageId;
                                 $url = \GetShopHelper::makeSeoUrl($entry->name);
@@ -78,14 +80,14 @@ if(isset($_POST['event']) && $_POST['event'] == "renameEntry") {
                             }
                             if($entry->subentries) {
                                 ?>
-                                <a ajaxlink="<?php echo $link; ?>" href="<? echo $url; ?>" class="<?php echo $selected; ?>" hardlink="<?php echo $hardlink; ?>"><?php echo $icon.$entry->name; ?></a>
+                                <a ajaxlink="<?php echo $link; ?>" href="<? echo $url; ?>" target="<? echo $target; ?>" class="<?php echo $selected; ?>" hardlink="<?php echo $hardlink; ?>"><?php echo $icon.$entry->name; ?></a>
                                 <?
                                 echo '<ul class="subentries" id="topmenuline">';
                                     printEntries($entry->subentries, $pageId, $menu, $container, false, $currentUser);
                                 echo '</ul>';
                             } else {
                             ?>
-                            <a ajaxlink="<?php echo $link; ?>" href="<? echo $url; ?>" class="<?php echo $selected; ?>" hardlink="<?php echo $hardlink; ?>"><?php echo $icon.$entry->name; ?></a>
+                            <a ajaxlink="<?php echo $link; ?>" href="<? echo $url; ?>" target="<? echo $target; ?>" class="<?php echo $selected; ?>" hardlink="<?php echo $hardlink; ?>"><?php echo $icon.$entry->name; ?></a>
                             <? } ?>
                         </span>
                         <?php

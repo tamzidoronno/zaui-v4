@@ -209,7 +209,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
        $body .= "<b>" . $this->__w("Additional contact information") . "</b><br>";
        $body .= $address->address . "<br>";
        $body .= $address->postCode . "<br>";
-       $body .= $address->city . "<br>";
+       $body .= "<br>";
+       $body .= "<br>";
+       $body .= $address->city . "<br><img src='http://www.semlagerhotell.no/showApplicationImages.php?appNamespace=ns_26a517ac_c519_412b_9266_59df49355c82&image=skin/images/logo_for_email.png'/>";
        
        
        $this->getApi()->getMessageManager()->sendMail($user->emailAddress, "", $title, $body, "post@getshop.com", "Booking");

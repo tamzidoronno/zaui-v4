@@ -177,7 +177,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
        $room = $this->getApi()->getHotelBookingManager()->getRoom($booking->roomIds[0]);
        $logo = $this->getApi()->getLogoManager()->getLogo();
        
-       $logoAddress = "http://" . $_SERVER['SERVER_NAME'] . "/displayImage.php?id=" . $logo->LogoId;
+       $logoAddress = 'http://www.semlagerhotell.no/showApplicationImages.php?appNamespace=ns_26a517ac_c519_412b_9266_59df49355c82&image=skin/images/logo_for_email.png';
        $body = "<div><img src='$logoAddress'></div><br><br>";
        $body .= $this->__w("Dear {name}") . "<br>";
        $body .= $title;
@@ -209,9 +209,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
        $body .= "<b>" . $this->__w("Additional contact information") . "</b><br>";
        $body .= $address->address . "<br>";
        $body .= $address->postCode . "<br>";
-       $body .= "<br>";
-       $body .= "<br>";
-       $body .= $address->city . "<br><img src='http://www.semlagerhotell.no/showApplicationImages.php?appNamespace=ns_26a517ac_c519_412b_9266_59df49355c82&image=skin/images/logo_for_email.png'/>";
+       $body .= $address->city . "<br>";
        
        
        $this->getApi()->getMessageManager()->sendMail($user->emailAddress, "", $title, $body, "post@getshop.com", "Booking");

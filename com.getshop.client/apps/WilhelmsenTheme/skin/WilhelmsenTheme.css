@@ -20,6 +20,7 @@
 .breadcrumb { display: none; }
 .Logo { top: 5px; left: 0px; }
 .TopMenu .entry { margin-right: 30px; }
+.Login { display: none; }
 .Login .entry { color:#FFF; }
 .Login .loginform { color:#000; }
 .TopMenu .fa { margin-right: 6px; }
@@ -57,6 +58,16 @@ body { background-color: #363b3e; }
     font-size: 30px;
 }
 
+.TopMenu li[menuid=ee04a31c-aa6e-42bf-a445-4c3b19e96686] { 
+    background-image: url('{IMAGEFOLDER}/facebook_logo.png') !important; 
+    background-size: 35px; 
+    background-repeat: no-repeat;
+    padding-left: 40px;
+}
+
+.TopMenu li[menuid=ee04a31c-aa6e-42bf-a445-4c3b19e96686] i { 
+    display: none;
+}
 @media only all and (max-width: 800px) {
     .footer { display:none; }
     .Hotelbooking .bookingbox { top: 0px; }

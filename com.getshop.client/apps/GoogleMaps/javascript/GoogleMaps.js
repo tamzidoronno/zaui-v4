@@ -75,6 +75,8 @@ thundashop.app.GoogleMaps.prototype = {
             }
             var mapOptions = {
                 draggable: draggable,
+                scaleControl: draggable,
+                scrollwheel: draggable,
                 zoom: parseInt(scope.config.zoom),
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
                 center: center,

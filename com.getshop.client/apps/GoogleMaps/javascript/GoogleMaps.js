@@ -55,7 +55,7 @@ thundashop.app.GoogleMaps.prototype = {
         }
         this.fitToContainer();
     },
-    initialize: function() {
+    initialize: function(draggable) {
         var loaded = $.Deferred();
         this.waitForGoogleMapsToLoad(loaded);
         var scope = this;
@@ -74,6 +74,7 @@ thundashop.app.GoogleMaps.prototype = {
                 scope.config.zoom = 3;
             }
             var mapOptions = {
+                draggable: draggable,
                 zoom: parseInt(scope.config.zoom),
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
                 center: center,
@@ -248,7 +249,8 @@ thundashop.app.GoogleMapsCommon = {
             width: container.find('.mapwidth').val(),
             height: container.find('.mapheight').val(),
             minZoom: container.find('.minzoom').val(),
-            maxZoom: container.find('.maxzoom').val()
+            maxZoom: container.find('.maxzoom').val(),
+            draggable : container.find('.draggable').val()
         };
         var entries = [];
         container.find('.container').find('.entryrow').each(function() {

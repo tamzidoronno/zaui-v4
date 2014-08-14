@@ -9,7 +9,13 @@ $config->{'container'} = "map_canvas_".$rand;
 ?>    
 <div id="map_canvas_<? echo $rand; ?>" class='googlemapcanvas'></div>
 <script>
+    <? 
+    $draggable = "true";
+    if(isset($config->{'draggable'})) {
+        $draggable = $config->{'draggable'};
+    }
+    ?>
     var map = new thundashop.app.GoogleMaps( <? echo json_encode($config); ?>);
-    map.initialize();
+    map.initialize(<? echo $draggable; ?>);
 </script>
 <div class='googlemaptooltip' title='yup'></div>

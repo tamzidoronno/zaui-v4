@@ -36,6 +36,20 @@ class Factory extends FactoryBase {
 
         return $this->eventHandler;
     }
+    
+    public function getMainLanguage() {
+        if(isset($this->getSettings()->language)) {
+            return $this->getSettings()->language->value;
+        }
+        return "en_en";
+    }
+    
+    public function getSelectedLanguage() {
+        if(isset($_SESSION['language_selected'])) {
+            return $_SESSION['language_selected'];
+        }
+        return $this->getMainLanguage();
+    }
 
     public function loadInitializationData() {
         $page = $this->getPage();
@@ -738,7 +752,6 @@ class Factory extends FactoryBase {
             $translation = $_GET['setLanguage'];
             $_SESSION['language_selected'] = $translation;
             $this->getApi()->getStoreManager()->setSessionLanguage($translation);
-            $this->getSettings()->language->value = $translation;
         } else if(isset($_SESSION['language_selected'])) {
             $translation = $_SESSION['language_selected'];
         }

@@ -20,7 +20,7 @@
 .breadcrumb { display: none; }
 .Logo { top: 5px; left: 0px; }
 .TopMenu .entry { margin-right: 30px; }
-.Login { display: none; }
+.Login .notloggedon { display: none; }
 .Login .entry { color:#FFF; }
 .Login .loginform { color:#000; }
 .TopMenu .fa { margin-right: 6px; }

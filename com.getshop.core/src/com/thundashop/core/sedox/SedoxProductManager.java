@@ -316,6 +316,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         product.firstUploadedByUserId = getSession().currentUser.id;
         product.rowCreatedDate = new Date();
         saveObject(product);
+        
+        sendNotificationToUploadedUser(product);
     }
 
     @Override

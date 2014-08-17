@@ -737,6 +737,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 if (user.fullName != null && user.fullName.toLowerCase().contains(searchStringI)) {
                     retUsers.add(user);
                 }
+                if (user.emailAddress != null && user.emailAddress.toLowerCase().contains(searchStringI)) {
+                    retUsers.add(user);
+                }
             }
         }
         

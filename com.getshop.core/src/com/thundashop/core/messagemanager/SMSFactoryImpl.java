@@ -58,6 +58,9 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
     @Autowired
     public StorePool storeManager;
     
+    @Autowired
+    public SmsConfiguration config;
+    
     public SMSFactoryImpl() {
         credentials = new Credentials(MessageManager.class);
         credentials.manangerName = "MessageManager";
@@ -76,21 +79,9 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         impl.logger = logger;
         impl.frameworkConfig = frameworkConfig;
         impl.storeManager = storeManager;
+        impl.config = config;
         impl.setStoreId(storeId);
         new Thread(impl).start();
-    }
-
-    private String encode(String text) throws UnsupportedEncodingException {
-        text = text.replaceAll(" " ,"%20");
-        text = text.replaceAll("å", "%E5");
-        text = text.replaceAll("ø", "%F8");
-        text = text.replaceAll("æ", "%E6");
-        text = text.replaceAll("Ø", "%D8");
-        text = text.replaceAll("Å", "%C5");
-        text = text.replaceAll("Æ", "%C6");
-        text = text.replaceAll("\n", "%0A");
-        
-        return text;
     }
     
     private void saveMessageSent() throws ErrorException {
@@ -103,37 +94,18 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         databaseSaver.saveObject(message, credentials);
     }
     
-    private boolean validateNumber() {
-        if (to.length() != 8)
-            return false;
-        
-        if (!to.subSequence(0, 1).equals("4") && !to.subSequence(0, 1).equals("9"))
-            return false;
+    public void run() {
         
         try {
-            Integer.parseInt(to);
-        } catch (NumberFormatException ex) {
-            return false;
+            config.setup(storeId);
+        } catch (ErrorException ex) {
+            logger.error(this, "Could not fetch the configuration for the store.", ex);
         }
         
-        return true;
-    }
-    
-    public void run() {
         if (storeId == null || storeId.equals("")) {
             logger.error(this, "Could not send sms, the storeId is empty for the component.");
             return;
         }
-        
-        if (!checkSecurity()) {
-            logger.warning(this, "ACCESS DENIED! Tried to send sms : " + message + " from store: " + storeId + " to: " + to);
-            return;
-        }
-            
-        
-        if (!validateNumber())
-            return;
-        
         
         if (!frameworkConfig.productionMode) {
             System.out.println("Sent SMS [ to: " + to + ", from: " + from +", Message: " + message + " ]");
@@ -144,10 +116,9 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         InputStream is = null;
         DataInputStream dis;
         try {
-            message = encode(message);
-            from = encode(from);
-            to = encode(to);
-            String urlString = "http://api.clickatell.com/http/sendmsg?user=boggibill&password=RKCDcOSAECbKeY&from=ProMeister&api_id=3492637&to=47"+to+"&text="+message;
+            message = URLEncoder.encode(message, "ISO-8859-1");
+//            String urlString = "http://api.clickatell.com/http/sendmsg?user=boggibill&password=RKCDcOSAECbKeY&from=ProMeister&api_id=3492637&to=47"+to+"&text="+message;
+            String urlString = "http://api.clickatell.com/http/sendmsg?user="+config.getUsername()+"&password="+config.getPassword()+"&api_id="+config.getApiId()+"&to="+config.getNumberprefix()+to+"&text="+message;
             url = new URL(urlString);
             dis = new DataInputStream(new BufferedInputStream(is));
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -210,9 +181,5 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         }
         
         return count;
-    }
-
-    private boolean checkSecurity() {
-        return storeManager.isSmsActivate(storeId);
     }
 }

@@ -353,10 +353,14 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public boolean isCaptain(String id) throws ErrorException {
+        
         User user = getUserById(id);
         if(user.fullName == null) {
             return false;
         }
+        
+        
+        
         return user.fullName.equalsIgnoreCase("Jean-Luc Picard");
     }
 

@@ -1,3 +1,12 @@
+@font-face {
+    font-family: "Open Sans 2";
+    src: url(/fonts/opensans/OpenSans-Regular.ttf) format("truetype");
+}
+@font-face {
+    font-family: "Museo700-Regular";
+    src: url(/fonts/Museo700-Regular.ttf) format("truetype");
+}
+
 .gs_inner {
     width: 1024px;
     margin: auto;

@@ -12,6 +12,8 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MailFactoryImpl;
+import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.messagemanager.SMSFactory;
 import com.thundashop.core.sedox.autocryptoapi.FilesMessage;
 import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
@@ -81,6 +83,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     
     @Autowired
     public SedoxMagentoIntegration sedoxMagentoIntegration;
+    
+    @Autowired
+    public SMSFactory smsFactory;
     
     @PostConstruct
     public void setupDatabankMailAccount() {
@@ -396,6 +401,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         if (magentoUser != null) {
             user.fullName = magentoUser.name;
             user.emailAddress = magentoUser.emailAddress;
+            user.cellPhone = magentoUser.phone;
+            
             userManager.directSaveUser(user);
         }
     }
@@ -855,6 +862,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         User getshopUser = getGetshopUser(product.firstUploadedByUserId);
         mailFactory.sendWithAttachments("files@tuningfiles.com", getshopUser.emailAddress, product.toString(), content, fileMap, true);
         product.states.put("sendProductByMail", new Date());
+        smsFactory.send("Sedox Performance", getshopUser.cellPhone, "Your file is ready from Sedox Performance");
     }
     
     private String zipProductToTmpFolder(SedoxProduct sedoxProduct, List<Integer> files) throws ErrorException {

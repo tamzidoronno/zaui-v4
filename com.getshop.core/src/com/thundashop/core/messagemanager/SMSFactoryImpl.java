@@ -100,6 +100,7 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
             config.setup(storeId);
         } catch (ErrorException ex) {
             logger.error(this, "Could not fetch the configuration for the store.", ex);
+            return;
         }
         
         if (storeId == null || storeId.equals("")) {
@@ -111,6 +112,12 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
             System.out.println("Sent SMS [ to: " + to + ", from: " + from +", Message: " + message + " ]");
             return;
         }
+        
+        if (to == null) {
+            return;
+        }
+        
+        to = to.replace("+", "");
         
         URL url;
         InputStream is = null;

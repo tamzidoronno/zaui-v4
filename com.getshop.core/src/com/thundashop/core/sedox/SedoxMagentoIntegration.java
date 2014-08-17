@@ -47,9 +47,9 @@ public class SedoxMagentoIntegration {
     }
 
     public static class MagentoUser {
-
         public String name;
         public String emailAddress;
+        public String phone;
     }
     private static String code = "asdfae4r209345ui1ojt1jkl3541iou45h12k34jh12kl5jh36kl1h346kl1j346h134789hasdihASKDFJQWKERv89ah123NEøæå";
     private SedoxProductManager listener;
@@ -66,6 +66,10 @@ public class SedoxMagentoIntegration {
 
             MagentoUser magentoUser = new MagentoUser();
             magentoUser.name = result.get("firstname") + " " + result.get("lastname");
+            Object phoneObject = port.getPhoneNumber(code, userId);
+            if (phoneObject != null) {
+                magentoUser.phone = phoneObject.toString();
+            }
             magentoUser.emailAddress = result.get("email");
             return magentoUser;
         } catch (Exception ex) {

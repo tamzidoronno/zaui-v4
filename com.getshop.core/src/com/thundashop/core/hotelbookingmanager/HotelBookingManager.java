@@ -93,7 +93,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     @Override
-    public String reserveRoom(String roomType, long startDate, long endDate, int count, ContactData contact) throws ErrorException {
+    public String reserveRoom(String roomType, long startDate, long endDate, int count, ContactData contact, boolean markRoomInactive) throws ErrorException {
         //First make sure there is enough rooms available.
         RoomType roomtype = getRoomType(roomType);
         Integer availableRooms = checkAvailable(startDate, startDate, roomtype.name);
@@ -115,6 +115,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             reference.codes.add(room.reserveDates(start, end, reference.bookingReference));
             reference.roomIds.add(room.id);            
             room.storeId = storeId;
+            if(markRoomInactive) {
+                room.isActive = false;
+            }
             databaseSaver.saveObject(room, credentials);
         }
         reference.storeId = storeId;

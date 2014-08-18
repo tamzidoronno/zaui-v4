@@ -184,16 +184,19 @@ class Hotelbooking extends \ApplicationBase implements \Application {
        $body .= $this->__w("This email is a confirmation that we have reserved a room for you.") . "<br>";
        if($this->getServiceType() == "storage") {
            $body .= $this->__w("The room has been reserved from {start}.") . "<br>";
+           $body .= $this->__w("The reserved storage room is : {roomName}.") . "<br>";
        } else {
            $body .= $this->__w("The room has been reserved between {start} to {end}.") . "<br>";
            $body .= $this->__w("The code for the room is : {code}.") . "<br>";
            $body .= $this->__w("The reserved room is : {roomName}.") . "<br>";
        }
+        $body .= $this->__w("Your reference number is : {referenceNumber}.") . "<br>";
        
        $body = str_replace("{start}", date("d-m-Y", strtotime($booking->startDate)), $body);
        $body = str_replace("{end}", date("d-m-Y", strtotime($booking->endDate)), $body);
        $body = str_replace("{roomName}", $room->roomName, $body);
        $body = str_replace("{code}", $booking->codes[0], $body);
+       $body = str_replace("{referenceNumber}", $booking->bookingReference, $body);
        $body = str_replace("{name}", $name, $body);
        
        $body .= "<hr>";
@@ -384,7 +387,12 @@ class Hotelbooking extends \ApplicationBase implements \Application {
        
         $contact = $this->getContactData();
         
-        $reference = $this->getApi()->getHotelBookingManager()->reserveRoom($type, $start, $end, $count, $contact);
+        $inactive = false;
+        if($this->getServiceType() == "storage") {
+             $inactive = true;
+        }
+        
+        $reference = $this->getApi()->getHotelBookingManager()->reserveRoom($type, $start, $end, $count, $contact, $inactive);
         if(($reference) > 0) {
             $cartmgr = $this->getApi()->getCartManager();
             $cartmgr->clear();

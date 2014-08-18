@@ -253,6 +253,7 @@ The email already exists, please log on to continue.;-;Eposten eksisterer allere
 The event has been confirmed.;-;Eventent har blitt bekreftet.
 The passwords does not match.;-;Passordet stemmer ikke overens.
 The reserved room is : {roomName}.;-;Det reserverte rommet er : {roomName}.
+The reserved storage room is : {roomName}.;-;Følgende bod har blitt reservert for deg : {roomName}.
 The room has been reserved between {start} to {end}.;-;Rommet har blitt reservert mellom {start} og {end}.
 The room has been reserved from {start}.;-;Din bod har blitt reservert fra {start}.
 There is no entries for this event;-;Finnes inne noe for akkurat dette kurset
@@ -304,6 +305,7 @@ Your order has been canceled due to incorrect payment information, please try ag
 Your order has now been completed and is waiting to be shipped.;-;Orderen din har blitt gjennomført og venter på å bli sendt.
 Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;Du vil snart motta en epost med din ebill, eller så kan du last den ned på følgende link
 Your personal information;-;Din personlige informasjon
+Your reference number is : {referenceNumber}.;-;Ditt referansenummer er : {referenceNumber}.
 available room;-;tilgjengelige rom
 available rooms;-;tilgjengelige rom
 change;-;endre

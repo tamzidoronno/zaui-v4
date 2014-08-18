@@ -11,21 +11,22 @@ import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
 public class NewsLetterSender extends ManagerBase {
-    public List<NewsLetterManager> managers = new ArrayList();
+    public List<NewsLetterManager> managers = new CopyOnWriteArrayList();
     
     @Autowired
     public NewsLetterSender(Logger log, DatabaseSaver databaseSaver) {
         super(log, databaseSaver);
     }
     
-    @Scheduled(fixedRate=300000)
-    public void scheduledMailSending() throws ErrorException {
+    @Scheduled(fixedRate=3000)
+    public synchronized void scheduledMailSending() throws ErrorException {
         for (NewsLetterManager manager : managers) {
             manager.run();
         }

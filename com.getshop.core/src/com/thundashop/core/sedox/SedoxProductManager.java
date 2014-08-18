@@ -111,7 +111,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             }
         }
 
-        if (this.storeId.equals("608afafe-fd72-4924-aca7-9a8552bc6c81")) {
+        if (this.storeId != null && this.storeId.equals("608afafe-fd72-4924-aca7-9a8552bc6c81")) {
             sedoxMagentoIntegration.addOrderUpdateListener(this);
         }
     }

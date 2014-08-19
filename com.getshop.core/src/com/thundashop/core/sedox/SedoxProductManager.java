@@ -12,6 +12,8 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MailFactoryImpl;
+import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.messagemanager.SMSFactory;
 import com.thundashop.core.sedox.autocryptoapi.FilesMessage;
 import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
@@ -82,6 +84,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     @Autowired
     public SedoxMagentoIntegration sedoxMagentoIntegration;
     
+    @Autowired
+    public SMSFactory smsFactory;
+    
     @PostConstruct
     public void setupDatabankMailAccount() {
         sedoxDatabankMailAccount = context.getBean(MailFactoryImpl.class);
@@ -106,7 +111,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             }
         }
 
-        if (this.storeId.equals("608afafe-fd72-4924-aca7-9a8552bc6c81")) {
+        if (this.storeId != null && this.storeId.equals("608afafe-fd72-4924-aca7-9a8552bc6c81")) {
             sedoxMagentoIntegration.addOrderUpdateListener(this);
         }
     }
@@ -311,6 +316,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         product.firstUploadedByUserId = getSession().currentUser.id;
         product.rowCreatedDate = new Date();
         saveObject(product);
+        
+        sendNotificationToUploadedUser(product);
     }
 
     @Override
@@ -396,6 +403,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         if (magentoUser != null) {
             user.fullName = magentoUser.name;
             user.emailAddress = magentoUser.emailAddress;
+            user.cellPhone = magentoUser.phone;
+            
             userManager.directSaveUser(user);
         }
     }
@@ -737,6 +746,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 if (user.fullName != null && user.fullName.toLowerCase().contains(searchStringI)) {
                     retUsers.add(user);
                 }
+                if (user.emailAddress != null && user.emailAddress.toLowerCase().contains(searchStringI)) {
+                    retUsers.add(user);
+                }
             }
         }
         
@@ -852,6 +864,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         User getshopUser = getGetshopUser(product.firstUploadedByUserId);
         mailFactory.sendWithAttachments("files@tuningfiles.com", getshopUser.emailAddress, product.toString(), content, fileMap, true);
         product.states.put("sendProductByMail", new Date());
+        smsFactory.send("Sedox Performance", getshopUser.cellPhone, "Your file is ready from Sedox Performance");
     }
     
     private String zipProductToTmpFolder(SedoxProduct sedoxProduct, List<Integer> files) throws ErrorException {

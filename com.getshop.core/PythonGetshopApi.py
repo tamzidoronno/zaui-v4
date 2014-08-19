@@ -1881,7 +1881,7 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
-  def reserveRoom(self, roomType, startDate, endDate, count, contact):
+  def reserveRoom(self, roomType, startDate, endDate, count, contact, markAsInctive):
     args = collections.OrderedDict()
     if isinstance(roomType,GetShopBaseClass): 
       args["roomType"]=json.dumps(roomType.__dict__)
@@ -1918,6 +1918,13 @@ class HotelBookingManager(object):
         args["contact"]=json.dumps(contact)
       except (ValueError, AttributeError):
         args["contact"]=contact
+    if isinstance(markAsInctive,GetShopBaseClass): 
+      args["markAsInctive"]=json.dumps(markAsInctive.__dict__)
+    else:
+      try:
+        args["markAsInctive"]=json.dumps(markAsInctive)
+      except (ValueError, AttributeError):
+        args["markAsInctive"]=markAsInctive
     data = EmptyClass()
     data.args = args
     data.method = "reserveRoom"

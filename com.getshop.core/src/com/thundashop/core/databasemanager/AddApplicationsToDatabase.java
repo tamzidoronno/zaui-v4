@@ -55,16 +55,14 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-//        ApplicationSettings hbman = createSettings(
-//                "HotelbookingManagement",
-//                "15e67fa1-c862-4bc3-9b17-dfd818f30712",
-//                allowed,
-//                "",
-//                ApplicationSettings.Type.Webshop, false);
-//        hbman.isPublic = false;
-//        hbman.allowedStoreIds = new ArrayList();
-//        hbman.allowedStoreIds.add("de02a2d5-e4b3-427c-be2c-4e1ee19f05f4");
-//        apps.add(hbman);
+        ApplicationSettings clickatell = createSettings(
+                "Clickatell",
+                "12fecb30-4e5c-49d8-aa3b-73f37f0712ee",
+                allowed,
+                "",
+                ApplicationSettings.Type.Marketing, true);
+        clickatell.isPublic = true;
+        apps.add(clickatell);
         
 //        ApplicationSettings sedoxMenu = createSettings(
 //                "SedoxMenu",

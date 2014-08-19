@@ -493,6 +493,14 @@ $languages['fi_FI'] = "Finish";
     </div>
 </div>
 
+<div class="onoff setting"  id="stoporderemail">
+    <span class="title"><?php echo $this->__f("Avoid sending emails on order"); ?></span>
+    <div class="onoff config"></div>
+    <div class="description">
+        <?php echo $this->__f("A reciept is being sent per email when an order is created, stop it from being sent."); ?>
+    </div>
+</div>
+
 <div class="list setting"  id="selltocountries">
     <?
     foreach($countrycodes as $code => $name) {

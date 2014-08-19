@@ -264,6 +264,7 @@ The email already exists, please log on to continue.;-;
 The event has been confirmed.;-;
 The passwords does not match.;-;
 The reserved room is : {roomName}.;-;
+The reserved storage room is : {roomName}.;-;
 The room has been reserved between {start} to {end}.;-;
 The room has been reserved from {start}.;-;
 There is no entries for this event;-;
@@ -315,6 +316,7 @@ Your order has been canceled due to incorrect payment information, please try ag
 Your order has now been completed and is waiting to be shipped.;-;
 Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;
 Your personal information;-;
+Your reference number is : {referenceNumber}.;-;
 Your you for your order;-;
 available room;-;
 available rooms;-;

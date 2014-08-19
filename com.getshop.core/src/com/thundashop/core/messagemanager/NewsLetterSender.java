@@ -25,7 +25,7 @@ public class NewsLetterSender extends ManagerBase {
         super(log, databaseSaver);
     }
     
-    @Scheduled(fixedRate=3000)
+    @Scheduled(fixedRate=300000)
     public synchronized void scheduledMailSending() throws ErrorException {
         for (NewsLetterManager manager : managers) {
             manager.run();

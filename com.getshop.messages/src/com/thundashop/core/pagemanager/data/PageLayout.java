@@ -114,8 +114,11 @@ public class PageLayout implements Serializable {
         if(otherAreas.containsKey(pageArea)) {
             return otherAreas.get(pageArea);
         }
-        
-        throw new ErrorException(1028);
+	
+	PageArea area = new PageArea();
+	area.type = pageArea;
+	otherAreas.put(pageArea, area);
+        return area;
     }
 
     List<String> getAllAreas() {

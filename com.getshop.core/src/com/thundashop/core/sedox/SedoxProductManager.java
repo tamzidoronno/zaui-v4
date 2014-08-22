@@ -333,13 +333,13 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         databaseSaver.saveObject(sedoxProduct, credentials);
     }
 
-    private void purchaseProductInternalForUser(String productId, SedoxUser user, List<Integer> files) throws ErrorException {
+    private SedoxOrder purchaseProductInternalForUser(String productId, SedoxUser user, List<Integer> files) throws ErrorException {
         SedoxProduct product = getProductById(productId);
         SedoxOrder order = getOrder(product, files, user);
         
         if (order.creditAmount <= 0) {
             // Dont register if product is free.
-            return;
+            return order;
         }
         
         checkCreditLimit(user, order.creditAmount);
@@ -350,6 +350,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         users.put(user.id, user);
         
         sendNotificationProductPurchased(product, user, order);
+        return order;
     }
     
     @Override
@@ -807,12 +808,13 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     @Override
-    public void purchaseOnlyForCustomer(String productId, List<Integer> files) throws ErrorException {
+    public SedoxOrder purchaseOnlyForCustomer(String productId, List<Integer> files) throws ErrorException {
         SedoxProduct product = getProductById(productId);
         SedoxUser user = getSedoxUserById(product.firstUploadedByUserId);
-        purchaseProductInternalForUser(productId, user, files);
+        SedoxOrder order = purchaseProductInternalForUser(productId, user, files);
         product.states.put("purchaseOnlyForCustomer", new Date());
         saveObject(product);
+        return order;
     }
     
     private String getSignature() {
@@ -838,7 +840,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         SedoxProduct product = getProductById(productId);
         SedoxUser user = getSedoxUserById(product.firstUploadedByUserId);
         User getshopUser = getGetshopUser(user.id);
-        String content = getMailContent(extraText, productId);
+        String content = getMailContent(extraText, productId, null, user);
         mailFactory.send("files@tuningfiles.com", getshopUser.emailAddress, product.toString(), content);
         product.states.put("notifyForCustomer", new Date());
         saveObject(product);
@@ -846,7 +848,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     @Override
     public void sendProductByMail(String productId, String extraText, List<Integer> files) throws ErrorException {
-        purchaseOnlyForCustomer(productId, files);
+        SedoxOrder order = purchaseOnlyForCustomer(productId, files);
         
         SedoxProduct product = getProductById(productId);
         
@@ -859,9 +861,11 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             fileMap.put(fileName, product.toString()+".zip");
         }
         
-        String content = getMailContent(extraText, productId);
-        
+        SedoxUser user = getSedoxUserById(product.firstUploadedByUserId);
         User getshopUser = getGetshopUser(product.firstUploadedByUserId);
+        String content = getMailContent(extraText, productId, order, user);
+        
+        
         mailFactory.sendWithAttachments("files@tuningfiles.com", getshopUser.emailAddress, product.toString(), content, fileMap, true);
         product.states.put("sendProductByMail", new Date());
         smsFactory.send("Sedox Performance", getshopUser.cellPhone, "Your file is ready from Sedox Performance");
@@ -883,14 +887,18 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         return null;
     }
     
-    private String getMailContent(String extraText, String productId) {
+    private String getMailContent(String extraText, String productId, SedoxOrder order, SedoxUser user) {
         String content = "Your file is ready! :)";
         if (extraText != null && !extraText.equals("")) {
             content += "<br>";
             content += "<br> Please note:";
             content += "<br> " + extraText.replace("\n", "<br/>");
         }
-        content += "</br><br/>Link to product <a href='http://databank.tuningfiles.com/index.php?page=productview&productId="+productId+"'>http://databank.tuningfiles.com/index.php?page=productview&productId="+productId+"</a>";
+        if (order != null) {
+            content += "<br/><br/> Your account has been changed with: -" + order.creditAmount; 
+            content += "<br/> New account balance is now: " + user.creditAccount.getBalance() + " credit"; 
+        }
+        content += "<br/><br/>Link to product <a href='http://databank.tuningfiles.com/index.php?page=productview&productId="+productId+"'>http://databank.tuningfiles.com/index.php?page=productview&productId="+productId+"</a>";
         content += getSignature();
         return content;
     }

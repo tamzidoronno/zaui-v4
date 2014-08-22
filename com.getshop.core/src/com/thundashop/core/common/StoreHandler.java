@@ -216,6 +216,9 @@ public class StoreHandler {
 
     private synchronized Annotation authenticateUserLevel(Method executeMethod, Class aClass) throws ErrorException {
         executeMethod = getCorrectMethod(executeMethod);
+        if(executeMethod.getName().equals("getAllUsers")) {
+            System.out.println("found");
+        }
 
         if (executeMethod.getAnnotation(Internal.class) != null) {
             throw new ErrorException(90);

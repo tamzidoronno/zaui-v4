@@ -21,8 +21,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -296,5 +298,25 @@ public class AppManager extends ManagerBase implements IAppManager {
         if (Events.ALL_APPS_REMOVED.equals(eventName)) {
             cache = null;
         }
+    }
+
+    @Override
+    public List<ApplicationSettings> getApplicationSettingsUsedByWebPage() throws ErrorException {
+        PageManager pageManager = getManager(PageManager.class);
+        List<AppConfiguration> apps = pageManager.getApplications();
+        
+        if (apps == null) {
+            return new ArrayList<ApplicationSettings>();
+        }
+        
+        Set<ApplicationSettings> settings = new HashSet();
+        for (AppConfiguration app : apps) {
+            ApplicationSettings setting = getApplication(app.appSettingsId);
+            if (setting != null) {
+                settings.add(setting);
+            }
+        }
+        
+        return new ArrayList(settings);
     }
 }

@@ -22,6 +22,8 @@ import org.springframework.stereotype.Component;
 @Scope("prototype")
 public class HotelBookingManager extends ManagerBase implements IHotelBookingManager {
 
+    public BookingSettings booksettings = new BookingSettings();
+    
     public HashMap<String, Room> rooms = new HashMap();
     public HashMap<String, RoomType> roomTypes = new HashMap();
     public HashMap<Integer, BookingReference> bookingReferences = new HashMap();
@@ -36,6 +38,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             if(dbobj instanceof RoomType) {
                 roomTypes.put(dbobj.id, (RoomType)dbobj);
             }
+            if(dbobj instanceof BookingSettings) {
+                booksettings = (BookingSettings) dbobj;
+            }
+            
             if(dbobj instanceof Room) {
                 Room room = (Room)dbobj;
                 room.bookedDates = new ArrayList();
@@ -229,14 +235,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         return null;
     }
 
-    private int genereateReferenceId() {
-        int count = 0;
-        for(int curcount : bookingReferences.keySet()) {
-            if(count < curcount) {
-                count = curcount;
-            }
-        }
-        count++;
+    private int genereateReferenceId() throws ErrorException {
+        booksettings.referenceCount++;
+        int count = booksettings.referenceCount;
+        saveObject(booksettings);
         return count;
     }
 
@@ -251,7 +253,14 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Override
     public List<BookingReference> getAllReservations() throws ErrorException {
-        return new ArrayList(bookingReferences.values());
+        List<BookingReference> result = new ArrayList(bookingReferences.values());
+        Collections.sort(result, new Comparator<BookingReference>() {
+            public int compare(BookingReference reference1, BookingReference reference2) {
+                return reference1.rowCreatedDate.compareTo(reference2.rowCreatedDate);
+            }
+        });
+        
+        return result;
     }
 
     @Override

@@ -107,6 +107,14 @@ class AppManager(object):
     data.interfaceName = "core.appmanager.IAppManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getApplicationSettingsUsedByWebPage(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getApplicationSettingsUsedByWebPage"
+    data.interfaceName = "core.appmanager.IAppManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getSyncApplications(self):
     args = collections.OrderedDict()
     data = EmptyClass()

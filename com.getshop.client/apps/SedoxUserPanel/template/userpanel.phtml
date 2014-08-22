@@ -131,29 +131,28 @@
         
         <div class='filehistory'>
             <div class='row header'><div class='col col1'>Credit each 100</div><div class='col col2'>Name</div><div class="col col3">Credit balance</div></div>
-                <?
-                $slaves = $this->getSlaves();
-                if (!count($slaves)) { 
+            <?
+            $slaves = $this->getSlaves();
+            if (!count($slaves)) { 
+            ?>
+                <div class='row'><div class='col'>Sorry, but there is no partners setup for you. Do you have partners that needs to be connected? let us know.</div></div>
+            <? }  else {  
+                $i = 0;
+
+                foreach ($slaves as $slave) {
+                    $user = $this->getApi()->getUserManager()->getUserById($slave->id);
+                    $i++;
+                    $odd = $i % 2 ? "odd" : "even";
                 ?>
-                    <div class='row'><div class='col'>Sorry, but there is no partners setup for you. Do you have partners that needs to be connected? let us know.</div></div>
-                <? }  else {  
-                    $i = 0;
+                    <div class='row <? echo $odd; ?>'>
+                        <div class='col col1'><? echo $slave->slaveIncome; ?></div>
+                        <div class='col col2'><? echo $user->fullName; ?></div>
+                        <div class='col col3'><div userid="<? echo $slave->id; ?>" class="show_slave_credit_history"><? echo $slave->creditAccount->balance; ?> </div></div>
+                    </div>                
+                <? 
+                }
+            } ?>
 
-                    foreach ($slaves as $slave) {
-                        $user = $this->getApi()->getUserManager()->getUserById($slave->id);
-                        $i++;
-                        $odd = $i % 2 ? "odd" : "even";
-                    ?>
-                        <div class='row <? echo $odd; ?>'>
-                            <div class='col col1'><? echo $slave->slaveIncome; ?></div>
-                            <div class='col col2'><? echo $user->fullName; ?></div>
-                            <div class='col col3'><div userid="<? echo $slave->id; ?>" class="show_slave_credit_history"><? echo $slave->creditAccount->balance; ?> </div></div>
-                        </div>                
-                    <? 
-                    }
-                } ?>
-
-            </div>
         </div>
     </div>
 </div>

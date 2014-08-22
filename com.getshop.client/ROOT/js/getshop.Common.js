@@ -60,10 +60,10 @@ if (!history.pushState) {
     jQuery(document).ready(function($) {
         $.history.init(function(hash) {
             hash = window.location.hash;
-            if (hash) {
+//            if (hash) {
                 thundashop.Ajax.doJavascriptNavigation(hash, null, true);
-                getshop_firstload = false;
-            }
+//                getshop_firstload = false;
+//            }
             
         },
         {

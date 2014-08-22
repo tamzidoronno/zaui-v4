@@ -89,6 +89,21 @@ class APIAppManager {
 	}
 
 	/**
+	* Get a list of all applicationsettings that is in
+	* use for this webopage.
+	*
+	* @return List
+	*/
+
+	public function getApplicationSettingsUsedByWebPage() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getApplicationSettingsUsedByWebPage";
+	     $data["interfaceName"] = "core.appmanager.IAppManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Fetch all application that has been marked for synchronization.
 	* When this method is called all objects related to this will unqueued.
 	* @return List
@@ -4216,7 +4231,7 @@ class APISedoxProductManager {
 	* day = 1 // Means that it will returns the list of yesterdays files
 	*
 	* @param day
-	* @return void
+	* @return core_sedox_SedoxOrder
 	* @throws ErrorException
 	*/
 
@@ -4227,7 +4242,7 @@ class APISedoxProductManager {
 	     $data['args']["files"] = json_encode($this->transport->object_unset_nulls($files));
 	     $data["method"] = "purchaseOnlyForCustomer";
 	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
-	     return $this->transport->sendMessage($data);
+	     return $this->transport->cast(new core_sedox_SedoxOrder(), $this->transport->sendMessage($data));
 	}
 
 	/**

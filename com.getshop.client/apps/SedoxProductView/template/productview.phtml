@@ -132,9 +132,9 @@ $uploadedByUser = $this->getUploadedUserName($sedoxProduct);
             <br>
             <br><b>Withdraw credit:</b> <?
                 if ($sedoxProduct->useCreditAccount == "true") {
-                    echo "<span style='color:green'>".ucwords($sedoxProduct->useCreditAccount)."</span>";
+                    echo "<span style='color:green'>Yes</span>";
                 } else {
-                    echo "<span style='color:red'>".ucwords($sedoxProduct->useCreditAccount)."</span>";
+                    echo "<span style='color:red'>No</span>";
                 }
                 
             ?>

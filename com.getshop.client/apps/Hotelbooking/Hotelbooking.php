@@ -217,7 +217,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
        
        $this->getApi()->getMessageManager()->sendMail($user->emailAddress, "", $title, $body, "post@getshop.com", "Booking");
        $this->getApi()->getMessageManager()->sendMail($mainemail, "", $title, $body, "post@getshop.com", "Booking");
-       
    }
 
    public function getContinuePage() {
@@ -230,7 +229,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         if(isset($_GET['orderProcessed'])) {
             if($this->partnerShipChecked() || !$this->hasPaymentAppAdded()) {
                 $this->sendConfirmationEmail();
-//                $this->includefile("confirmation");
+                $this->clearBookingData();
             } else {
                 //Send the user to the payment view.
                 $payment = $this->getFactory()->getApplicationPool()->getAllPaymentInstances();
@@ -519,8 +518,31 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             return "";
         }
         
+        if($this->partnerShipChecked()) {
+            if($name != "referencenumber") {
+                return;
+            } else {
+                $this->startAdminImpersonation("UserManager", "getAllUsers");
+                $allUsers = $this->getApi()->getUserManager()->getAllUsers();
+                $this->stopImpersionation();
+                $referenceUser = null; 
+                foreach($allUsers as $user) {
+                    if($user->referenceKey == $_POST['data']['referencenumber']) {
+                        $referenceUser = $user;
+                        break;
+                    }
+                }
+
+                if(!$referenceUser) {
+                    $this->invalid = true;
+                    return "invalid";
+                }
+            }
+            
+        }
+        
         if($_POST['data']['customer_type'] == "private") {
-            if($name === "birthday" && strlen($_POST['data']['birthday']) != 10) {
+            if($name === "birthday" && strlen($_POST['data']['birthday']) != 8) {
                 $this->invalid = true;
                 $this->errors[] = $this->__w("Birth date has to be formatted like dd.mm.yy");
                 return "invalid";
@@ -542,24 +564,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                 return "invalid";
             }
         }
-        
-        if($this->partnerShipChecked() && $name == "referencenumber") {
-            $allUsers = $this->getApi()->getUserManager()->getAllUsers();
-            $referenceUser = null;
-            foreach($allUsers as $user) {
-                if($user->referenceKey == $_POST['data']['referencenumber']) {
-                    $referenceUser = $user;
-                    break;
-                }
-            }
-            
-            if(!$referenceUser) {
-                $this->invalid = true;
-                return "invalid";
-            }
-        }
-
-        
         return "";
     }
 
@@ -598,6 +602,10 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return $this->invalid;
     }
 
+    public function clearBookingData() {
+        unset($_SESSION['booking_data']);
+    }
+    
     public function setBookingData() {
         if($this->isPrivate()) {
             $_POST['data']['mvaregistered'] = "false";
@@ -719,6 +727,11 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             }
         }
         return $days;
+    }
+    
+     
+    public function requestAdminRights() {
+        $this->requestAdminRight("UserManager", "getAllUsers", $this->__o("This app need to be able to get the users to check if it has a reference number."));
     }
 
 }

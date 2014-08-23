@@ -20,7 +20,7 @@ class SedoxTheme extends \ThemeApplication implements \Application {
     }
 
     public function render() {
-        
+
     }    
     
     public function getDescription() {

@@ -1218,4 +1218,13 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         return userManager.forceLogon(userId);
     }
 
+    @Override
+    public void toggleSaleableProduct(String productId, boolean saleable) throws ErrorException {
+        SedoxProduct product = getProductById(productId);
+        if (product != null) {
+            product.saleAble = saleable;
+            saveObject(product);
+        }
+    }
+
 }

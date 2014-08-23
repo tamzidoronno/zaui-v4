@@ -68,6 +68,10 @@ public class SedoxBinaryFile implements Serializable {
             return 0;
         }
         
+        if (fileType.toLowerCase().equals("cmd original")) {
+            return 0;
+        }
+        
         System.out.println("Warning, file price is not registered to this file");
         return 60;
     }

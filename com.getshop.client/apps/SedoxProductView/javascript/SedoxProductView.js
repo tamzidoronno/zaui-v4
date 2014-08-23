@@ -80,6 +80,7 @@ app.SedoxProductView = {
         $(document).on('click', '.SedoxProductView .changeinfo', app.SedoxProductView.changeInfo);
         $(document).on('click', '.SedoxProductView .saveextrainfo', app.SedoxProductView.saveExtraInfo);
         $(document).on('click', '.SedoxProductView .uploadtuningfilebox', app.SedoxProductView.uploadBoxClick);
+        $(document).on('click', '.SedoxProductView .togglesalable', app.SedoxProductView.toggleSalable);
         
         $(document).on('dragenter', '.SedoxProductView .uploadtuningfilebox', function(e)
         {
@@ -156,6 +157,13 @@ app.SedoxProductView = {
         var data = app.SedoxProductView.getData(this);
         var event = thundashop.Ajax.createEvent("", "notifyByEmailAndSms", this, data);
         thundashop.Ajax.post(event, function() { thundashop.common.Alert("Message sent", "a mail is on its way to the customer")} );
+    },
+    
+    toggleSalable: function() {
+        var data = app.SedoxProductView.getData(this);
+	data.saleAble = !$(this).hasClass('saleable');
+        var event = thundashop.Ajax.createEvent("", "toggleSaleableProduct", this, data);
+        thundashop.Ajax.post(event);	
     },
     sendproductbyemail: function() {
         var data = app.SedoxProductView.getData(this);

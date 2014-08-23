@@ -91,6 +91,7 @@ $checksum = $sedoxProduct->originalChecksum ? $sedoxProduct->originalChecksum : 
                 <div fileType='Power' class='uploadtuningfilebox fa fa-upload'><div style='font-size: 11px;'>Power</div><div class='progressbar'></div></div>
                 <div fileType='Various' class='uploadtuningfilebox fa fa-upload'><div style='font-size: 11px;'>Varios</div><div class='progressbar'></div></div>
                 <div fileType='Original' class='uploadtuningfilebox fa fa-upload'><div style='font-size: 11px;'>Original</div><div class='progressbar'></div></div>
+                <div fileType='Cmd Original' class='uploadtuningfilebox fa fa-upload'><div style='font-size: 11px;'>CMD Original</div><div class='progressbar'></div></div>
             </div>
         </div>
     <? } ?>
@@ -169,11 +170,15 @@ $uploadedByUser = $this->getUploadedUserName($sedoxProduct);
         $class1 = array_key_exists("purchaseOnlyForCustomer", $sedoxProduct->states) ? "active" : "";
         $class2 = array_key_exists("notifyForCustomer", $sedoxProduct->states) ? "active" : "";
         $class3 = array_key_exists("sendProductByMail", $sedoxProduct->states) ? "active" : "";
+	$class4 = $sedoxProduct->saleAble ? "saleable" : "";
+	$text = $sedoxProduct->saleAble ? "Make product NOT salable" : "Make product saleable";
+	
         ?>
         <div class="adminbottons">
             <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button purchaseorderonly <? echo $class1; ?>">Purchase order only</div>
             <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button notifybyemailandsms <? echo $class2; ?>">Notify by email and sms</div>
             <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button sendproductbyemail <? echo $class3; ?>">Send product by email</div>
+            <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button togglesalable <? echo $class4; ?>"><? echo $text; ?></div>
         </div>
         
     </div>

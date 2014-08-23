@@ -299,7 +299,7 @@ public class StoreHandler {
         return null;
     }
 
-    public void sendEvent(ManagerBase managerBase, String eventName, String eventReferance) {
+    public synchronized void sendEvent(ManagerBase managerBase, String eventName, String eventReferance) {
         for (ManagerBase handler : messageHandler) {
             if (handler.equals(managerBase)) {
                 continue;
@@ -310,23 +310,11 @@ public class StoreHandler {
         }
     }
 
-    public void logApiCall(JsonObject2 object) throws ErrorException {
-        setSessionObject(object.sessionId);
-        
-        //Save the data.
-        LoggerManager manager = getManager(LoggerManager.class);
-        manager.logApiCall(object);
-        
-        //Process it.
-        ReportingManager reporting = getManager(ReportingManager.class);
-        reporting.processApiCall(object);
-    }
-
     public void removeSession(String id) {
         sessions.remove(id);
     }
 
-    boolean isAdministrator(String sessionId) throws ErrorException {
+    public synchronized boolean isAdministrator(String sessionId) throws ErrorException {
         UserManager manager = getManager(UserManager.class);
         User user = manager.getUserBySessionId(sessionId);
         if (user != null) {

@@ -5,11 +5,15 @@
 package com.thundashop.core.sedox;
 
 import com.thundashop.core.common.DataCommon;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.naming.BinaryRefAddr;
 
 /**
@@ -94,6 +98,15 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
         }
         
         return null;
+    }
+    
+    public String fileSafeName() {
+        try {
+            String name = toString();
+            return URLEncoder.encode(name, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException("Failed to make safe filename", ex);
+        }
     }
 
     @Override

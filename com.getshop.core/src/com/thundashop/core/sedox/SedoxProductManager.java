@@ -228,9 +228,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     public synchronized SedoxProduct getProductById(String id) throws ErrorException {
         for (SedoxProduct product : products) {
             if (product.id.equals(id)) {
-                for (SedoxBinaryFile file : product.binaryFiles) {
-                    System.out.println("file: " + file.md5sum);
-                }
                 return product;
             }
         }
@@ -396,7 +393,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         if (magentoUser != null) {
             user.fullName = magentoUser.name;
             user.emailAddress = magentoUser.emailAddress;
-            userManager.directSaveUser(user);
+            userManager.saveUser(user);
         }
     }
     
@@ -508,6 +505,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
         totalPrice += mostExpensive;
         double alreadySpentOnProduct = getAlreadySpentOnProduct(sedoxProduct, user);
+        if (alreadySpentOnProduct < 0) {
+            alreadySpentOnProduct = alreadySpentOnProduct * -1;
+        }
         totalPrice = totalPrice - alreadySpentOnProduct;
         
         SedoxOrder order = new SedoxOrder();
@@ -716,13 +716,14 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         int i = 0;
         for (SedoxUser user : users.values()) {
             i++;
-            System.out.println(i +"/"+users.size());
             try {
                 updateUserFromMagento(user.id, true);
             } catch (ErrorException | NullPointerException ex) {
                 ex.printStackTrace();
             }
         }
+        
+        System.out.println("Users updated");
     }
 
     @Override
@@ -954,7 +955,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         double spent = 0;
         
         for (SedoxOrder order : user.orders) {
-            if (sedoxProduct.id != null && sedoxProduct.id.equals(""+order.productId)) {
+            if (sedoxProduct.id != null && sedoxProduct.id.equals(order.productId)) {
                 spent += order.creditAmount;
             }
         }
@@ -1037,7 +1038,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             }
             
             byte[] data = sedoxCMDEncrypter.decrypt(originalFile, tuningFile);
-            String fileName = "/tmp/"+product.toString()+".mod";
+            String fileName = "/tmp/"+product.fileSafeName()+".mod";
             Path path = Paths.get(fileName);
             Files.write(path, data);
             return fileName;

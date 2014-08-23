@@ -16,7 +16,7 @@ header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 header("Cache-Control: public");
 header("Content-Description: File Transfer");
 header("Content-type: application/octet-stream");
-header("Content-Disposition: attachment; filename=$productName.zip");
+header("Content-Disposition: attachment; filename=\"$productName.zip\"");
 header("Content-Transfer-Encoding: binary");
 
 $fileArray = explode(":-:", base64_decode(urldecode($_GET['files'])));

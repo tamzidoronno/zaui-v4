@@ -1,0 +1,37 @@
+<? namespace ns_8ad8243c_b9c1_48d4_96d5_7382fa2e24cd; ?>
+<div class="information">
+    <?
+    echo $this->__f("Please enter the information below in order to activate SMS for clickatell.");
+    ?>
+</div>
+
+<div class="textfield setting"  id="username">
+    <span class="title"><?php echo $this->__f("Username"); ?></span>
+    <input type="textfield" class="config">
+    <div class="description">
+        <?php echo $this->__f("This is the username you receive from Clickatell when you create an account."); ?>
+    </div>
+</div>
+<div class="textfield setting"  id="apiid">
+    <span class="title"><?php echo $this->__f("Api id"); ?></span>
+    <input type="textfield" class="config">
+    <div class="description">
+        <?php echo $this->__f("The api id from Clickatell"); ?>
+    </div>
+</div>
+<div class="textfield setting"  id="numberprefix">
+    <span class="title"><?php echo $this->__f("Prefix number before sending"); ?></span>
+    <input type="textfield" class="config">
+    <div class="description">
+        <?php echo $this->__f("This is useful if you want to make sure that sms are only sent to a specific country, like for instance: 47"); ?>
+    </div>
+</div>
+<div class="textfield setting"  id="password" secure="true">
+    <span class="title"><?php echo $this->__f("Password"); ?></span>
+    <input type="textfield" class="config">
+    <div class="description">
+        <?php echo $this->__f("The password you get from clickatell, this is something personal."); ?>
+    </div>
+</div>
+
+<div class="button savebutton"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__f("Save settings"); ?></ins></div>

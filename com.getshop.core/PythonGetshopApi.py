@@ -107,6 +107,14 @@ class AppManager(object):
     data.interfaceName = "core.appmanager.IAppManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getApplicationSettingsUsedByWebPage(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getApplicationSettingsUsedByWebPage"
+    data.interfaceName = "core.appmanager.IAppManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getSyncApplications(self):
     args = collections.OrderedDict()
     data = EmptyClass()
@@ -1881,7 +1889,7 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
-  def reserveRoom(self, roomType, startDate, endDate, count, contact):
+  def reserveRoom(self, roomType, startDate, endDate, count, contact, markAsInctive):
     args = collections.OrderedDict()
     if isinstance(roomType,GetShopBaseClass): 
       args["roomType"]=json.dumps(roomType.__dict__)
@@ -1918,6 +1926,13 @@ class HotelBookingManager(object):
         args["contact"]=json.dumps(contact)
       except (ValueError, AttributeError):
         args["contact"]=contact
+    if isinstance(markAsInctive,GetShopBaseClass): 
+      args["markAsInctive"]=json.dumps(markAsInctive.__dict__)
+    else:
+      try:
+        args["markAsInctive"]=json.dumps(markAsInctive)
+      except (ValueError, AttributeError):
+        args["markAsInctive"]=markAsInctive
     data = EmptyClass()
     data.args = args
     data.method = "reserveRoom"
@@ -4666,6 +4681,28 @@ class SedoxProductManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "togglePassiveSlaveMode"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def toggleSaleableProduct(self, productId, saleable):
+    args = collections.OrderedDict()
+    if isinstance(productId,GetShopBaseClass): 
+      args["productId"]=json.dumps(productId.__dict__)
+    else:
+      try:
+        args["productId"]=json.dumps(productId)
+      except (ValueError, AttributeError):
+        args["productId"]=productId
+    if isinstance(saleable,GetShopBaseClass): 
+      args["saleable"]=json.dumps(saleable.__dict__)
+    else:
+      try:
+        args["saleable"]=json.dumps(saleable)
+      except (ValueError, AttributeError):
+        args["saleable"]=saleable
+    data = EmptyClass()
+    data.args = args
+    data.method = "toggleSaleableProduct"
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 

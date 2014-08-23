@@ -1,6 +1,6 @@
 .Hotelbooking .bookingbox .heading { border-bottom: solid 1px; font-size: 16px; display:block; width: 100%; text-align:center;  }
 .Hotelbooking .room_selection { width:100%; background-color:#FFF; padding: 5px; }
-.Hotelbooking .date_selection_room { border: solid 1px #b0bda4; margin:0px;padding: 3px; width: 70px;filter:alpha(opacity=2); opacity:2; }
+.Hotelbooking .date_selection_room { width:100%; border: solid 1px #b0bda4; margin:0px;padding: 3px;filter:alpha(opacity=2); opacity:2; }
 .Hotelbooking .fa-calendar { margin: 3px; cursor:pointer; }
 .Hotelbooking .check_available_button, .Hotelbooking .continue_to_cart_button { color:#FFF; text-align: center; margin-top: 20px; background-color:#d2684f; padding:3px; cursor: pointer; padding-top: 7px;  padding-bottom: 7px; }
 .Hotelbooking .continue_button { display:block;  width: 175px;text-align: center; background-color:#d2684f; padding:3px; cursor: pointer; padding-top: 7px;  padding-bottom: 7px; }

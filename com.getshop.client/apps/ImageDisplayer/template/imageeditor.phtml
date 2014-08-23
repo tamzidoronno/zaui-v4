@@ -2,8 +2,8 @@
 <center><div id="imagedisplayer" style="position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px;"> </div></center>
 
 <?
-    $serCrops = $this->getConfigurationSetting("image_cords");
-    $rotation = $this->getConfigurationSetting("rotation");
+    $serCrops = $this->getTranslatedConfigurationSettings("image_cords");
+    $rotation = $this->getTranslatedConfigurationSettings("rotation");
     $textFields = $this->getTexts();
     
     if ($rotation == null) {
@@ -25,7 +25,7 @@
         app : $('.app[appid='+appId+']:not(".informationbox")'),
         crops: <? echo $crops; ?> 
         <?
-        $id = $this->getConfigurationSetting("image");
+        $id = $this->getTranslatedConfigurationSettings("image");
         if ($id) {
             echo ",imageId : '$id'";
         }

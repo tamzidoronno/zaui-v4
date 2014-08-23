@@ -1,0 +1,23 @@
+<div class='filehistory'>
+   
+<?
+$hists = $this->getLatestUploadedProducts();
+if (count($hists) == 0) {
+    echo "No history";
+    return;
+}
+
+foreach ( $hists as $product) {
+    $name = $product->brand . " " . $product->model . " " . $product->engineSize . " " . $product->power . " " . $product->year;
+    $id = $product->id;
+    $date = $product->rowCreatedDate;
+		  
+    echo "<div class='row'>"
+    . "<div class='col col1'>$id</div>"
+    . "<div class='col col2'>$name</div>"
+    . "<div class='col col3'>$date</div>"
+    . "</div>";
+}
+?>
+    
+</div>

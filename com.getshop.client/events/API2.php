@@ -89,6 +89,21 @@ class APIAppManager {
 	}
 
 	/**
+	* Get a list of all applicationsettings that is in
+	* use for this webopage.
+	*
+	* @return List
+	*/
+
+	public function getApplicationSettingsUsedByWebPage() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getApplicationSettingsUsedByWebPage";
+	     $data["interfaceName"] = "core.appmanager.IAppManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Fetch all application that has been marked for synchronization.
 	* When this method is called all objects related to this will unqueued.
 	* @return List
@@ -1836,7 +1851,7 @@ class APIHotelBookingManager {
 	* @throws ErrorException
 	*/
 
-	public function reserveRoom($roomType, $startDate, $endDate, $count, $core_hotelbookingmanager_ContactData) {
+	public function reserveRoom($roomType, $startDate, $endDate, $count, $core_hotelbookingmanager_ContactData, $markAsInctive) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["roomType"] = json_encode($this->transport->object_unset_nulls($roomType));
@@ -1844,6 +1859,7 @@ class APIHotelBookingManager {
 	     $data['args']["endDate"] = json_encode($this->transport->object_unset_nulls($endDate));
 	     $data['args']["count"] = json_encode($this->transport->object_unset_nulls($count));
 	     $data['args']["core_hotelbookingmanager_ContactData"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_ContactData));
+	     $data['args']["markAsInctive"] = json_encode($this->transport->object_unset_nulls($markAsInctive));
 	     $data["method"] = "reserveRoom";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
@@ -4215,7 +4231,7 @@ class APISedoxProductManager {
 	* day = 1 // Means that it will returns the list of yesterdays files
 	*
 	* @param day
-	* @return void
+	* @return core_sedox_SedoxOrder
 	* @throws ErrorException
 	*/
 
@@ -4226,7 +4242,7 @@ class APISedoxProductManager {
 	     $data['args']["files"] = json_encode($this->transport->object_unset_nulls($files));
 	     $data["method"] = "purchaseOnlyForCustomer";
 	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
-	     return $this->transport->sendMessage($data);
+	     return $this->transport->cast(new core_sedox_SedoxOrder(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -4449,6 +4465,25 @@ class APISedoxProductManager {
 	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
 	     $data['args']["toggle"] = json_encode($this->transport->object_unset_nulls($toggle));
 	     $data["method"] = "togglePassiveSlaveMode";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Developers is simply an getshop user that is registered as an developer.
+	* Active developers are administrators that has an SedoxUser with the flag
+	* isActiveDeveloper = true
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function toggleSaleableProduct($productId, $saleable) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $data['args']["saleable"] = json_encode($this->transport->object_unset_nulls($saleable));
+	     $data["method"] = "toggleSaleableProduct";
 	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
 	     return $this->transport->sendMessage($data);
 	}

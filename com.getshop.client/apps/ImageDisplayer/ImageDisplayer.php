@@ -41,11 +41,12 @@ class ImageDisplayer extends \ApplicationBase implements \Application {
     }
     
     private function saveTexts() {
+        $prefix = $this->getPrefix();
         if (isset($_POST['data']['textFields'])) {
             $jsonString = json_encode($_POST['data']['textFields']);
-            $this->setConfigurationSetting("texts",$jsonString);
+            $this->setConfigurationSetting("texts".$prefix,$jsonString);
         } else {
-            $this->setConfigurationSetting("texts",null);
+            $this->setConfigurationSetting("texts".$prefix,null);
         }
     }
     
@@ -54,43 +55,53 @@ class ImageDisplayer extends \ApplicationBase implements \Application {
         if (isset($_POST['data']['imageId'])) {
             $this->attachImageIdToApp($_POST['data']['imageId']);
         }
-        
+        $prefix = $this->getPrefix();
         $c = $_POST['data']['cords'];
         $serialized = $c[0] . ":" . $c[2] . ":" . $c[1] . ":" . $c[3];
-        $this->setConfigurationSetting("rotation", $_POST['data']['rotation']);
-        $this->setConfigurationSetting("image_cords", $serialized);
-        $this->setConfigurationSetting("compression", $_POST['data']['compression']);
-        $this->setConfigurationSetting("new_type", "1");
+        $this->setConfigurationSetting("rotation".$prefix, $_POST['data']['rotation']);
+        $this->setConfigurationSetting("image_cords".$prefix, $serialized);
+        $this->setConfigurationSetting("compression".$prefix, $_POST['data']['compression']);
+        $this->setConfigurationSetting("new_type".$prefix, "1");
     }
 
     public function saveOriginalImage() {        
         $this->saveTexts();
-        
+        $prefix = $this->getPrefix();
         $content = base64_decode(str_replace("data:image/png;base64,", "", $_POST['data']['data']));
         $imgId = \FileUpload::storeFile($content);
         $this->attachImageIdToApp($imgId);
         $c = $_POST['data']['cords'];
         $serialized = $c[0] . ":" . $c[2] . ":" . $c[1] . ":" . $c[3];
-        $this->setConfigurationSetting("new_type", "1");
-        $this->setConfigurationSetting("image_cords", $serialized);
-        $this->setConfigurationSetting("compression", $_POST['data']['compression']);
-        $this->setConfigurationSetting("rotation", $_POST['data']['rotation']);
+        $this->setConfigurationSetting("new_type".$prefix, "1");
+        $this->setConfigurationSetting("image_cords".$prefix, $serialized);
+        $this->setConfigurationSetting("compression".$prefix, $_POST['data']['compression']);
+        $this->setConfigurationSetting("rotation".$prefix, $_POST['data']['rotation']);
         echo $imgId;
     }
     
     public function attachImageIdToApp($id) {
-        $this->setConfigurationSetting("original_image", $id);
-        $this->setConfigurationSetting("image", $id);
+        $prefix = $this->getPrefix();
+        $this->setConfigurationSetting("original_image".$prefix, $id);
+        $this->setConfigurationSetting("image".$prefix, $id);
     }
     
     private function deleteImage() {
-        $this->setConfigurationSetting("original_image", null);
-        $this->setConfigurationSetting("image", null);
-        $this->setConfigurationSetting("texts", null);
+        $prefix = $this->getPrefix();
+        $this->setConfigurationSetting("original_image".$prefix, null);
+        $this->setConfigurationSetting("image".$prefix, null);
+        $this->setConfigurationSetting("texts".$prefix, null);
     }
     
     public function removeImage() {
         $this->getApi()->getPageManager()->removeApplication($this->getConfiguration()->id, $this->getPage()->id);
+    }
+    
+    public function getPrefix() {
+        $prefix = "";
+        if($this->getFactory()->getMainLanguage() != $this->getFactory()->getSelectedLanguage()) {
+            $prefix = "_" . $this->getFactory()->getSelectedLanguage();
+        }
+        return $prefix;
     }
     
     public function showImageEditor() {
@@ -98,15 +109,31 @@ class ImageDisplayer extends \ApplicationBase implements \Application {
     }
 
     public function render() {
-        if (!$this->getConfigurationSetting("original_image") && $this->hasWriteAccess()) {
+        if (!$this->getOriginalImageId() && $this->hasWriteAccess()) {
             $this->includefile("uploadimage");
         }
-        
+        $this->getImageId();
         $this->includefile("ImageDisplayer");
     }
     
+    public function getImageId() {
+        return $this->getTranslatedConfigurationSettings("image");
+    }
+    
+    public function getOriginalImageId() {
+        return $this->getTranslatedConfigurationSettings("original_image");
+    }
+
+    public function getTranslatedConfigurationSettings($name) {
+        $prefix = $this->getPrefix();
+        if($this->getConfigurationSetting($name.$prefix)) {
+            return $this->getConfigurationSetting($name.$prefix);
+        }
+        return $this->getConfigurationSetting($name);
+    }
+    
     public function getTexts() {
-        $textFields = $this->getConfigurationSetting("texts");
+        $textFields = $this->getTranslatedConfigurationSettings("texts");
  
         if (!$textFields) {
             $textFields = "[]";

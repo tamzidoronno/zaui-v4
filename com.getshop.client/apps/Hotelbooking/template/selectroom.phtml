@@ -20,14 +20,27 @@ if($this->getServiceType($text) == "storage") {
         <td>
             <? echo $checkintext; ?><br>
             <span style='background-color:#b0bda4; display:inline-block;' class='start_cal'>
-                <input type='text' class='date_selection_room' value='<? echo date('d.m.Y'); ?>' id='start_date'><i class='fa fa-calendar'></i>
+                <table width='100%' border='0' cellspacing='0' cellpadding='0'>
+                    <tr>
+                        <td width='100%'>
+                            <input type='text' class='date_selection_room' value='<? echo date('d.m.Y'); ?>' id='start_date'>
+                        </td>
+                        <td><span style='width:25px;display:inline-block;text-align:right;'><i class='fa fa-calendar'></i></span></td>
+                    </tr>
+                </table>
             </span>
         </td>
         <td align='right'>
             <span style='text-align:left;<? echo $displayEnd; ?>'>
                 <? echo $checkouttext; ?><br>
                 <span style='background-color:#b0bda4; display:inline-block;' class='end_cal'>
-                    <input type='text' class='date_selection_room' value='<? echo date('d.m.Y', time()+86400); ?>' id='end_date'><i class='fa fa-calendar'></i>
+                    <table width="100%" width='100%' border='0' cellspacing='0' cellpadding='0'>
+                        <tr>
+                            <td width='100%'>
+                                <input type='text' class='date_selection_room' value='<? echo date('d.m.Y', time()+86400); ?>' id='end_date'>
+                            </td>
+                        <td><span style='width:25px;display:inline-block;text-align:right;'><i class='fa fa-calendar'></i></span></td>
+                    </table>
                 </span>
             </span>
         </td>

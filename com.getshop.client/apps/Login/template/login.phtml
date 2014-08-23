@@ -1,8 +1,12 @@
 <?
 namespace ns_df435931_9364_4b6a_b4b2_951c90cc0d70;
+$notloggedInClass = "notloggedon";
+if($this->getFactory()->isEditorMode()) {
+    $notloggedInClass = "";
+}
 ?>
 
-<div class="inner">
+<div class="inner <? echo $notloggedInClass; ?>">
     <form method="POST" action="" name="loginform" class="loginform">
         <?php if ($this->errorMessage != "") { ?>
             <div><?php echo $this->errorMessage; ?></div>

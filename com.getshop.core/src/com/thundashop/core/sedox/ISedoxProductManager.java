@@ -64,7 +64,7 @@ public interface ISedoxProductManager  {
     public String purchaseProduct(String productId, List<Integer> files) throws ErrorException;
     
     @Administrator
-    public void purchaseOnlyForCustomer(String productId, List<Integer> files) throws ErrorException;
+    public SedoxOrder purchaseOnlyForCustomer(String productId, List<Integer> files) throws ErrorException;
     
     @Administrator
     public void notifyForCustomer(String productId, String extraText) throws ErrorException;
@@ -129,5 +129,7 @@ public interface ISedoxProductManager  {
     
     @Administrator
     public void setExtraInformationForFile(String productId, int fileId, String text) throws ErrorException;
-    
+ 
+    @Administrator
+    public void toggleSaleableProduct(String productId, boolean saleable) throws ErrorException;
 }

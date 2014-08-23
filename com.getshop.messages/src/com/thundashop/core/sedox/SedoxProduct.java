@@ -71,7 +71,7 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
     public void setParametersBasedOnFileString(String fileName) {
         String[] productAttributes = fileName.split(";");
         
-        if (productAttributes.length != 16) {
+        if (productAttributes.length != 16 &&  productAttributes.length != 17) {
             saleAble = false;
             return;
         }
@@ -88,6 +88,9 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
         ecuHardwareNumber = productAttributes[10]; // %ECU.ECUStg%;
         ecuSoftwareNumber = productAttributes[11]; // %ECU.ECUStg%;
         ecuSoftwareVersion = productAttributes[12]; // %ECU.ECUStg%;
+        if (productAttributes.length > 16) {
+            tool = productAttributes[16]; 
+        }
     }
 
     public SedoxBinaryFile getFileById(int fileId) {
@@ -123,5 +126,34 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
             }
         }
         this.binaryFiles = sedoxBinFiles;
+    }
+    
+    private SedoxProductHistory getHistoryEntry(String userId, String comment) {
+        SedoxProductHistory hist = new SedoxProductHistory();
+        hist.dateCreated = new Date();
+        hist.description = comment;
+        hist.userId = userId;
+        return hist;
+    }
+
+    void addCreatedHistoryEntry(String userId) {
+        histories.add(getHistoryEntry(userId, "Product created"));
+    }
+    
+    void addFileAddedHistory(String userId, String fileName) {
+        String fileComment = "Added " + fileName + " file.";
+        histories.add(getHistoryEntry(userId, fileComment));
+    }
+
+    void addDeveloperHasBeenNotifiedHistory(String userId) {
+        histories.add(getHistoryEntry(userId, "Sedox file developers has been notified"));
+    }
+    
+    void addMarkedAsStarted(String userId, boolean started) {
+        if (started) {
+            histories.add(getHistoryEntry(userId, "Product has been marked as started"));        
+        } else {
+            histories.add(getHistoryEntry(userId, "Product has been marked as stopped"));
+        }
     }
 }

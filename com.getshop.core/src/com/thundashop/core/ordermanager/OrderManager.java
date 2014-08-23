@@ -404,6 +404,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         String orderText = getCustomerOrderText(order);
 
         String subject = getSubject();
+        HashMap<String, Setting> settings = getSettings("Settings");
+        
+        if(settings != null && settings.containsKey("stoporderemail") && settings.get("stoporderemail").value.equals("true")) {
+            return;
+        }
+        
         if(!subject.isEmpty()) {
             mailFactory.send(store.configuration.emailAdress, order.cart.address.emailAddress, getSubject() , orderText);
 

@@ -136,7 +136,7 @@ class Calendar extends MarketingApplication implements Application {
         if ($entry->year == date('Y') && $entry->month < date('m'))
             return true;
         
-        if ($entry->year == date('Y') && $entry->month == date('m') && $entry->day <= date('d'))
+        if ($entry->year == date('Y') && $entry->month == date('m') && $entry->day < date('d'))
             return true;
         
         return false;

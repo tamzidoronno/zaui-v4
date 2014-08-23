@@ -60,17 +60,15 @@ if (!history.pushState) {
     jQuery(document).ready(function($) {
         $.history.init(function(hash) {
             hash = window.location.hash;
-            if (hash === "") {
-                if (!getshop_firstload) {
-                    hash = '?page=clear_page';
-                }
-                getshop_firstload = false;
-            }
-            thundashop.Ajax.doJavascriptNavigation(hash, null, true);
+//            if (hash) {
+                thundashop.Ajax.doJavascriptNavigation(hash, null, true);
+//                getshop_firstload = false;
+//            }
+            
         },
-                {
-                    unescape: ",/"
-                });
+        {
+            unescape: ",/"
+        });
     });
 }
 

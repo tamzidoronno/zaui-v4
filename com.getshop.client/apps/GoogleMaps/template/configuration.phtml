@@ -1,6 +1,11 @@
 <?
 /* @var $configuration ns_17c48891_6f7a_47a0_849d_b50de9af218f\Configuration */
 $configuration = $this->getGoogleMapsConfiguration();
+
+$notDraggable = "";
+if(isset($configuration->draggable) && $configuration->draggable == "false") {
+    $notDraggable = "SELECTED";
+}
 ?>
 
 <div class="container">
@@ -25,6 +30,7 @@ $configuration = $this->getGoogleMapsConfiguration();
     <div class="row">Longitude<input type='text' class="positionright startaltitude" value='<? echo $configuration->startaltitude; ?>'></div>
     <div class="row">Max zoom<input type='text' class="positionright maxzoom" value='<? echo $configuration->maxZoom; ?>'></div>
     <div class="row">Min zoom<input type='text' class="positionright minzoom" value='<? echo $configuration->minZoom; ?>'></div>
+    <div class="row">Draggable<select type='text' class="positionright draggable"><option value="true"><? echo $this->__f("Yes"); ?></option><option value="false" <? echo $notDraggable; ?>><? echo $this->__f("No"); ?></option></select></div>
     <br><br>
     <div class="title">
         <? echo $this->__f("Markers"); ?>

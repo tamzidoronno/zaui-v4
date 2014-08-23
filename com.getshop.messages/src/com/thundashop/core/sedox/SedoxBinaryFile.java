@@ -34,7 +34,7 @@ public class SedoxBinaryFile implements Serializable {
     void updateParametersFromFileName(String fileName) {
         String[] productAttributes = fileName.split(";");
         
-        if (productAttributes.length != 16) {
+        if (productAttributes.length != 16 && productAttributes.length != 17) {
             System.out.println("WARNING! Cant update attributes, the filename is not the correct parameters. Check winols settings");
             return;
         }
@@ -65,6 +65,10 @@ public class SedoxBinaryFile implements Serializable {
         }
         
         if (fileType.toLowerCase().equals("cmdencrypted")) {
+            return 0;
+        }
+        
+        if (fileType.toLowerCase().equals("cmd original")) {
             return 0;
         }
         

@@ -53,6 +53,10 @@ class SedoxProductView extends \ApplicationBase implements \Application {
         if (strtolower($binFile->fileType) == "cmdencrypted") {
             return 0;
         }
+	
+        if (strtolower($binFile->fileType) == "cmd original") {
+            return 0;
+        }
 
         return 100;
     }
@@ -135,6 +139,12 @@ class SedoxProductView extends \ApplicationBase implements \Application {
         echo "<br><input id='extrafileinformationbox' type='textfield' placeholder='$text'/>";
         echo "<br><div fileid='$fileid' productid='$productId' class='gs_button saveextrainfo'>Save</div>";
         echo "</center>";
+    }
+    
+    public function toggleSaleableProduct() {
+	$productId = $_POST['data']['productId'];
+	$saleable = $_POST['data']['saleAble'];
+	$this->getApi()->getSedoxProductManager()->toggleSaleableProduct($productId, $saleable);
     }
 }
 ?>

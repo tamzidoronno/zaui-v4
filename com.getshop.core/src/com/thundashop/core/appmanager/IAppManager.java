@@ -100,4 +100,12 @@ public interface IAppManager {
     @Administrator
     public boolean isSyncToolConnected() throws ErrorException;
     
+    /**
+     * Get a list of all applicationsettings that is in 
+     * use for this webopage.
+     * 
+     * @return 
+     */
+    public List<ApplicationSettings> getApplicationSettingsUsedByWebPage() throws ErrorException;
+    
 }

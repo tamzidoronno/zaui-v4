@@ -12,6 +12,8 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MailFactoryImpl;
+import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.messagemanager.SMSFactory;
 import com.thundashop.core.sedox.autocryptoapi.FilesMessage;
 import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
@@ -82,6 +84,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     @Autowired
     public SedoxMagentoIntegration sedoxMagentoIntegration;
     
+    @Autowired
+    public SMSFactory smsFactory;
+    
     @PostConstruct
     public void setupDatabankMailAccount() {
         sedoxDatabankMailAccount = context.getBean(MailFactoryImpl.class);
@@ -106,7 +111,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             }
         }
 
-        if (this.storeId.equals("608afafe-fd72-4924-aca7-9a8552bc6c81")) {
+        if (this.storeId != null && this.storeId.equals("608afafe-fd72-4924-aca7-9a8552bc6c81")) {
             sedoxMagentoIntegration.addOrderUpdateListener(this);
         }
     }
@@ -245,7 +250,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         sedoxProduct.firstUploadedByUserId = forSlaveId != null && !forSlaveId.equals("") ? forSlaveId : getSession().currentUser.id;
         sedoxProduct.storeId = storeId;
         sedoxProduct.rowCreatedDate = new Date();
-
+        sedoxProduct.addCreatedHistoryEntry(getSession().currentUser.id);
+        
         products.add(sedoxProduct);
         
         SedoxBinaryFile cmdEncryptedFile = saveCmdEncryptedFile(base64EncodeString, originalFileName);
@@ -269,6 +275,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         sedoxProduct.softwareSize = (fileData.length / 1024) + " KB";
         sedoxProduct.uploadOrigin = origin;
 
+        sedoxProduct.addDeveloperHasBeenNotifiedHistory(getSession().currentUser.id);
         databaseSaver.saveObject(sedoxProduct, credentials);
         sendFileCreatedNotification(sedoxProduct);
         sendNotificationToUploadedUser(sedoxProduct);
@@ -308,6 +315,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         product.firstUploadedByUserId = getSession().currentUser.id;
         product.rowCreatedDate = new Date();
         saveObject(product);
+        
+        sendNotificationToUploadedUser(product);
     }
 
     @Override
@@ -320,16 +329,17 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         SedoxProduct sedoxProduct = getProductById(productId);
         sedoxProduct.binaryFiles.add(sedoxBinaryFile);
         sedoxProduct.setParametersBasedOnFileString(fileName);
+        sedoxProduct.addFileAddedHistory(getSession().currentUser.id, fileType);
         databaseSaver.saveObject(sedoxProduct, credentials);
     }
 
-    private void purchaseProductInternalForUser(String productId, SedoxUser user, List<Integer> files) throws ErrorException {
+    private SedoxOrder purchaseProductInternalForUser(String productId, SedoxUser user, List<Integer> files) throws ErrorException {
         SedoxProduct product = getProductById(productId);
         SedoxOrder order = getOrder(product, files, user);
         
         if (order.creditAmount <= 0) {
             // Dont register if product is free.
-            return;
+            return order;
         }
         
         checkCreditLimit(user, order.creditAmount);
@@ -340,6 +350,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         users.put(user.id, user);
         
         sendNotificationProductPurchased(product, user, order);
+        return order;
     }
     
     @Override
@@ -393,6 +404,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         if (magentoUser != null) {
             user.fullName = magentoUser.name;
             user.emailAddress = magentoUser.emailAddress;
+            user.cellPhone = magentoUser.phone;
             userManager.saveUser(user);
         }
     }
@@ -738,6 +750,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 if (user.fullName != null && user.fullName.toLowerCase().contains(searchStringI)) {
                     retUsers.add(user);
                 }
+                if (user.emailAddress != null && user.emailAddress.toLowerCase().contains(searchStringI)) {
+                    retUsers.add(user);
+                }
             }
         }
         
@@ -773,17 +788,23 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     public User login(String emailAddress, String password) throws ErrorException {
         UserManager userManager = getManager(IUserManager.class);
         try {
-            userManager.logOn(emailAddress, password);
-            return userManager.getLoggedOnUser();
+            return userManager.logOn(emailAddress, password);
         } catch (ErrorException ex) {
-            // OK
+	    ex.printStackTrace();
         }
         
         String loggedUserId = sedoxMagentoIntegration.login(emailAddress, password);
-        
+	
         if (loggedUserId != null) {
-            return userManager.forceLogon(loggedUserId);
+            User user = userManager.forceLogon(loggedUserId);
+	    
+	    if (user == null) {
+		user = saveNewUserAndUpdateFromMagento(loggedUserId, userManager);
+	    }
+	    
+	    return user;
         } else {
+	    System.out.println("Failure");
             throw new ErrorException(13);
         }
     }
@@ -796,12 +817,13 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     @Override
-    public void purchaseOnlyForCustomer(String productId, List<Integer> files) throws ErrorException {
+    public SedoxOrder purchaseOnlyForCustomer(String productId, List<Integer> files) throws ErrorException {
         SedoxProduct product = getProductById(productId);
         SedoxUser user = getSedoxUserById(product.firstUploadedByUserId);
-        purchaseProductInternalForUser(productId, user, files);
+        SedoxOrder order = purchaseProductInternalForUser(productId, user, files);
         product.states.put("purchaseOnlyForCustomer", new Date());
         saveObject(product);
+        return order;
     }
     
     private String getSignature() {
@@ -827,7 +849,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         SedoxProduct product = getProductById(productId);
         SedoxUser user = getSedoxUserById(product.firstUploadedByUserId);
         User getshopUser = getGetshopUser(user.id);
-        String content = getMailContent(extraText, productId);
+        String content = getMailContent(extraText, productId, null, user);
         mailFactory.send("files@tuningfiles.com", getshopUser.emailAddress, product.toString(), content);
         product.states.put("notifyForCustomer", new Date());
         saveObject(product);
@@ -835,7 +857,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     @Override
     public void sendProductByMail(String productId, String extraText, List<Integer> files) throws ErrorException {
-        purchaseOnlyForCustomer(productId, files);
+        SedoxOrder order = purchaseOnlyForCustomer(productId, files);
         
         SedoxProduct product = getProductById(productId);
         
@@ -848,11 +870,14 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             fileMap.put(fileName, product.toString()+".zip");
         }
         
-        String content = getMailContent(extraText, productId);
-        
+        SedoxUser user = getSedoxUserById(product.firstUploadedByUserId);
         User getshopUser = getGetshopUser(product.firstUploadedByUserId);
+        String content = getMailContent(extraText, productId, order, user);
+        
+        
         mailFactory.sendWithAttachments("files@tuningfiles.com", getshopUser.emailAddress, product.toString(), content, fileMap, true);
         product.states.put("sendProductByMail", new Date());
+        smsFactory.send("Sedox Performance", getshopUser.cellPhone, "Your file is ready from Sedox Performance");
     }
     
     private String zipProductToTmpFolder(SedoxProduct sedoxProduct, List<Integer> files) throws ErrorException {
@@ -871,14 +896,18 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         return null;
     }
     
-    private String getMailContent(String extraText, String productId) {
+    private String getMailContent(String extraText, String productId, SedoxOrder order, SedoxUser user) {
         String content = "Your file is ready! :)";
         if (extraText != null && !extraText.equals("")) {
             content += "<br>";
             content += "<br> Please note:";
             content += "<br> " + extraText.replace("\n", "<br/>");
         }
-        content += "</br><br/>Link to product <a href='http://databank.tuningfiles.com/index.php?page=productview&productId="+productId+"'>http://databank.tuningfiles.com/index.php?page=productview&productId="+productId+"</a>";
+        if (order != null) {
+            content += "<br/><br/> Your account has been changed with: -" + order.creditAmount; 
+            content += "<br/> New account balance is now: " + user.creditAccount.getBalance() + " credit"; 
+        }
+        content += "<br/><br/>Link to product <a href='http://databank.tuningfiles.com/index.php?page=productview&productId="+productId+"'>http://databank.tuningfiles.com/index.php?page=productview&productId="+productId+"</a>";
         content += getSignature();
         return content;
     }
@@ -1119,6 +1148,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         SedoxProduct product = getProductById(productId);
         if (product != null) {
             product.started = toggle;
+            product.addMarkedAsStarted(getSession().currentUser.id, toggle);
             saveObject(product);
         }
     }
@@ -1184,4 +1214,20 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     public void setApplicationContext(ApplicationContext ac) throws BeansException {
         this.context = ac;
     }
+
+    private User saveNewUserAndUpdateFromMagento(String userId, UserManager userManager) throws ErrorException {
+        getSedoxUserById(userId);
+        updateUserFromMagento(userId, true);
+        return userManager.forceLogon(userId);
+    }
+
+    @Override
+    public void toggleSaleableProduct(String productId, boolean saleable) throws ErrorException {
+        SedoxProduct product = getProductById(productId);
+        if (product != null) {
+            product.saleAble = saleable;
+            saveObject(product);
+        }
+    }
+
 }

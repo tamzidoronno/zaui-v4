@@ -11,5 +11,6 @@ class Configuration {
     public $height = 700;
     public $maxZoom = 0;
     public $minZoom = 50;
+    public $draggable = "true";
 }
 ?>

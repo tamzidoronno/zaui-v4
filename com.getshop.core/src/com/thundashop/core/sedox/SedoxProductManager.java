@@ -233,9 +233,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     public synchronized SedoxProduct getProductById(String id) throws ErrorException {
         for (SedoxProduct product : products) {
             if (product.id.equals(id)) {
-                for (SedoxBinaryFile file : product.binaryFiles) {
-                    System.out.println("file: " + file.md5sum);
-                }
                 return product;
             }
         }

@@ -7,6 +7,10 @@ app.SedoxFileUpload = {
     },
             
     saveUploadFile: function() {
+	if ($(this).attr('sending') === "true") {
+	    return;
+	}
+	
         if ($('#originalfile').val() == "") {
             thundashop.common.Alert("File not selected", "You have not selected a file, please add a file before you continue click next.", true);
             return;
@@ -35,7 +39,9 @@ app.SedoxFileUpload = {
             thundashop.common.Alert("Cant be empty", "Field Tool is mandatatory, it can not be empty.", true);
             return;
         }
-        
+	
+        $(this).attr('sending', 'true');
+	$(this).find('span').html('Sending..');
         $('#uploadfileform').submit();
     },
             

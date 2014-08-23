@@ -785,17 +785,26 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     public User login(String emailAddress, String password) throws ErrorException {
         UserManager userManager = getManager(IUserManager.class);
         try {
-            userManager.logOn(emailAddress, password);
+            User user = userManager.logOn(emailAddress, password);
+	    System.out.println("user: " + user);
             return userManager.getLoggedOnUser();
         } catch (ErrorException ex) {
+	    ex.printStackTrace();
             // OK
         }
         
         String loggedUserId = sedoxMagentoIntegration.login(emailAddress, password);
-        
+	
         if (loggedUserId != null) {
-            return userManager.forceLogon(loggedUserId);
+            User user = userManager.forceLogon(loggedUserId);
+	    
+	    if (user == null) {
+		user = saveNewUserAndUpdateFromMagento(loggedUserId, userManager);
+	    }
+	    
+	    return user;
         } else {
+	    System.out.println("Failure");
             throw new ErrorException(13);
         }
     }
@@ -1204,4 +1213,11 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     public void setApplicationContext(ApplicationContext ac) throws BeansException {
         this.context = ac;
     }
+
+    private User saveNewUserAndUpdateFromMagento(String userId, UserManager userManager) throws ErrorException {
+        getSedoxUserById(userId);
+        updateUserFromMagento(userId, true);
+        return userManager.forceLogon(userId);
+    }
+
 }

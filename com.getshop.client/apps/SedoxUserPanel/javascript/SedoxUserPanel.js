@@ -24,8 +24,24 @@ app.SedoxUserPanel = {
         $(document).on('click', '.SedoxUserPanel .downloadhistory .prev', $.proxy(this.prevDownloadHistory, this));
         
         $(document).on('click', '.SedoxUserPanel .show_slave_credit_history', this.showSlaveCreditHistory);
+        $(document).on('click', '.SedoxUserPanel .fa-expand', this.expandBox);
     },
-            
+    expandBox: function() {
+	var box = $(this).closest('.sedox_box');
+	
+	if (box.hasClass('credithistory')) {
+	    var event = thundashop.Ajax.createEvent(null, "showFullCreditHistory", box, null);
+	    thundashop.common.showInformationBox(event, 'Transaction history');
+	}
+	if (box.hasClass('downloadhistory')) {
+	    var event = thundashop.Ajax.createEvent(null, "showFullDownloadHistory", box, null);
+	    thundashop.common.showInformationBox(event, 'Download history');
+	}
+	if (box.hasClass('filehistory')) {
+	    var event = thundashop.Ajax.createEvent(null, "showFullFileHistory", box, null);
+	    thundashop.common.showInformationBox(event, 'Upload history');
+	}
+    },
     showSlaveCreditHistory: function() {
         var data = {
             userId : $(this).attr('userid')

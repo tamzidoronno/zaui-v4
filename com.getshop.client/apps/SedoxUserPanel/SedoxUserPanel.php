@@ -175,6 +175,18 @@ class SedoxUserPanel extends \ApplicationBase implements \Application {
     public function showSlaveHistory() {
         $this->includefile("slaveCreditHistory");
     }
+    
+    public function showFullCreditHistory() {
+	$this->includefile("fullcredithistory");
+    }
+    
+    public function showFullFileHistory() {
+	$this->includefile("fullfilehistory");
+    }
+    
+    public function showFullDownloadHistory() {
+	$this->includefile("fulldownloadhistory");
+    }
 }
 
 ?>

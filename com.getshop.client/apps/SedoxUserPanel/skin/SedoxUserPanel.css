@@ -81,6 +81,19 @@
     padding: 20px;
     color: #FFF;
     font-weight: normal;
+    position: relative;
+}
+
+.SedoxUserPanel .sedox_box .detailstitle .fa-expand {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    border-left: solid 1px #555;
+    border-bottom: solid 1px #555;
+    padding: 5px;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #666;
 }
 
 .SedoxUserPanel .sedox_box .sedox_button {
@@ -168,7 +181,10 @@
     margin-bottom: 5px;
 }
 
-.informationbox.SedoxUserPanel .row .col1 { width: 186px; }
-.informationbox.SedoxUserPanel .row .col2 { width: 90px; }
-.informationbox.SedoxUserPanel .row .col3 { width: 570px; }
-.informationbox.SedoxUserPanel .row .col4 { width: 50px; }
+.informationbox.SedoxUserPanel .col1 { width: 100px; }
+.informationbox.SedoxUserPanel .col2 { width: 500px; }
+.informationbox.SedoxUserPanel .col3 { width: 345px; }
+
+.informationbox.SedoxUserPanel .credithistory .row .col3 {
+    width: 100px;
+}

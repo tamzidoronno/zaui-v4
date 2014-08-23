@@ -283,3 +283,11 @@
 }
 
 .SedoxProductView .adminbottons .active { background: green; }
+
+.SedoxProductView .product_history .col.col1 {
+    width: 200px;
+}
+
+.SedoxProductView .product_history .col.col2 {
+    width: 600px;
+}

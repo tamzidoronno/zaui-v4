@@ -250,7 +250,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         sedoxProduct.firstUploadedByUserId = forSlaveId != null && !forSlaveId.equals("") ? forSlaveId : getSession().currentUser.id;
         sedoxProduct.storeId = storeId;
         sedoxProduct.rowCreatedDate = new Date();
-
+        sedoxProduct.addCreatedHistoryEntry(getSession().currentUser.id);
+        
         products.add(sedoxProduct);
         
         SedoxBinaryFile cmdEncryptedFile = saveCmdEncryptedFile(base64EncodeString, originalFileName);
@@ -274,6 +275,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         sedoxProduct.softwareSize = (fileData.length / 1024) + " KB";
         sedoxProduct.uploadOrigin = origin;
 
+        sedoxProduct.addDeveloperHasBeenNotifiedHistory(getSession().currentUser.id);
         databaseSaver.saveObject(sedoxProduct, credentials);
         sendFileCreatedNotification(sedoxProduct);
         sendNotificationToUploadedUser(sedoxProduct);
@@ -327,6 +329,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         SedoxProduct sedoxProduct = getProductById(productId);
         sedoxProduct.binaryFiles.add(sedoxBinaryFile);
         sedoxProduct.setParametersBasedOnFileString(fileName);
+        sedoxProduct.addFileAddedHistory(getSession().currentUser.id, fileType);
         databaseSaver.saveObject(sedoxProduct, credentials);
     }
 
@@ -1142,6 +1145,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         SedoxProduct product = getProductById(productId);
         if (product != null) {
             product.started = toggle;
+            product.addMarkedAsStarted(getSession().currentUser.id, toggle);
             saveObject(product);
         }
     }

@@ -100,6 +100,30 @@ $checksum = $sedoxProduct->originalChecksum ? $sedoxProduct->originalChecksum : 
     </div>
 </div>
 
+<div class='sedox_product_box product_history' style='position: relative;'>
+    <div class='title'>History</div>
+    
+    <?
+    if (count($sedoxProduct->histories) == 0) {
+	echo "<div class='row'><div class='col'>There is no history for this product</div></div>";
+    } else {
+	?>
+	<div class='header'>
+	    <div class='col col1'>Date:</div>
+	    <div class='col col2'>Comment:</div>
+	    <div class='col col3'>By user:</div>
+	</div>
+    <?
+	foreach ($sedoxProduct->histories as $hist) {
+	    $date = $hist->dateCreated;
+	    $desc = $hist->description;
+	    $user = $this->getApi()->getUserManager()->getUserById($hist->userId)->fullName;
+	    echo "<div class='row'><div class='col col1'>$date</div><div class='col col2'>$desc</div><div class='col col3'>$user</div></div>";
+	}
+    }
+    ?>
+</div>
+
 <?
 if (!$this->hasWriteAccess()) {
     return;

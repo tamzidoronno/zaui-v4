@@ -785,12 +785,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     public User login(String emailAddress, String password) throws ErrorException {
         UserManager userManager = getManager(IUserManager.class);
         try {
-            User user = userManager.logOn(emailAddress, password);
-	    System.out.println("user: " + user);
-            return userManager.getLoggedOnUser();
+            return userManager.logOn(emailAddress, password);
         } catch (ErrorException ex) {
 	    ex.printStackTrace();
-            // OK
         }
         
         String loggedUserId = sedoxMagentoIntegration.login(emailAddress, password);

@@ -105,8 +105,15 @@
     margin-left: 20px;
 }
 
+.SedoxUserPanel .filehistory .row { position: relative; }
 .SedoxUserPanel .filehistory .col1 { width: 100px; }
 .SedoxUserPanel .filehistory .col2 { width: 500px; }
+.SedoxUserPanel .filehistory .col3 { width: 345px; }
+
+.SedoxUserPanel .status { width: 25px; height: 25px; position: absolute; top: 5px; background-size: 25px;}
+.SedoxUserPanel .status.red { background-image: url('{IMAGEFOLDER}/reddot.png'); }
+.SedoxUserPanel .status.yellow { background-image: url('{IMAGEFOLDER}/yellowdot.png'); }
+.SedoxUserPanel .status.green { background-image: url('{IMAGEFOLDER}/greendot.png'); }
 
 .SedoxUserPanel .row {
     padding: 5px;

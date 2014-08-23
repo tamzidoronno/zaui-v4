@@ -34,7 +34,11 @@
                     $name = $product->brand . " " . $product->model . " " . $product->engineSize . " " . $product->power . " " . $product->year;
                     $id = $product->id;
                     $date = $product->rowCreatedDate;
-                    echo "<a href='?page=productview&productId=$id'><div class='row $odd'><div class='col col1'>$id</div><div class='col col2'>$name</div><div class='col col3'>$date</div></div></a>";
+		    $status = "red";
+		    $status = $product->started ? "yellow" : $status;
+		    $status = count($product->binaryFiles) > 1 ? "green" : $status;
+		    
+                    echo "<a href='?page=productview&productId=$id'><div class='row $odd'><div class='col col1'>$id</div><div class='col col2'>$name</div><div class='col col3'>$date</div><div class='col col4'><div class='status $status'></div></div></div></a>";
                 }
             } else {
                 echo "<div class='row'>You have not uploaded any files yet.</div>";

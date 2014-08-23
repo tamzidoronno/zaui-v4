@@ -119,19 +119,29 @@ class SedoxFileUpload extends \ApplicationBase implements \Application {
 	    return;
         }
 	
-	if (!isset($_FILES['originalfile'])) {
-            $this->includefile("uploadform");
-            return;
-        }
+	if (!isset($_SESSION['fileuploaded'])) {
+	    if (!isset($_FILES['originalfile'])) {
+		$this->includefile("uploadform");
+		return;
+	    }
+	    
+	    $errorCode = $_FILES['originalfile']['error'];
+	    if ($errorCode) {
+		$message = $this->codeToMessage($errorCode);
+		throw new \Exception($message);
+	    }
+	    
+	    $this->saveCarDetails();
+	    $this->includefile("finished");
+	    unset($_SESSION['fileuploaded']);    
+	} else {
+	    $this->includefile("finished");
+	    unset($_SESSION['fileuploaded']);    
+	}
         
-        $errorCode = $_FILES['originalfile']['error'];
-        if ($errorCode) {
-            $message = $this->codeToMessage($errorCode);
-            throw new \Exception($message);
-        }
         
-	$this->saveCarDetails();
-	$this->includefile("finished");
+        
+	
     }
     
     public function getSlaves() {

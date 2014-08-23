@@ -23,8 +23,20 @@ class SedoxFileUpload extends \ApplicationBase implements \Application {
     public function getName() {
         return $this->__f("Sedox FileUploader");
     }
+    
+    public function doesProductExists() {
+	$product = $this->getExistingProduct();
+        if ($product != null) {
+	    return;
+	}
+	echo "false";
+    }
 
     public function getExistingProduct() {
+	if (isset($_POST['data']['md5'])) {
+	    $product = $this->getApi()->getSedoxProductManager()->getSedoxProductByMd5Sum($_POST['data']['md5']);
+            return $product;
+	}
         if (isset($_FILES['originalfile'])) {
             $sum  = md5_file($_FILES["originalfile"]["tmp_name"]);
             $product = $this->getApi()->getSedoxProductManager()->getSedoxProductByMd5Sum($sum);
@@ -101,7 +113,13 @@ class SedoxFileUpload extends \ApplicationBase implements \Application {
     }
     
     public function render() {
-        if (!isset($_FILES['originalfile'])) {
+        $product = $this->getExistingProduct();
+        if ($product) {
+            $this->includefile("filematch");
+	    return;
+        }
+	
+	if (!isset($_FILES['originalfile'])) {
             $this->includefile("uploadform");
             return;
         }
@@ -112,13 +130,8 @@ class SedoxFileUpload extends \ApplicationBase implements \Application {
             throw new \Exception($message);
         }
         
-        $product = $this->getExistingProduct();
-        if ($product) {
-            $this->includefile("filematch");
-        } else {
-            $this->saveCarDetails();
-            $this->includefile("finished");
-        }
+	$this->saveCarDetails();
+	$this->includefile("finished");
     }
     
     public function getSlaves() {

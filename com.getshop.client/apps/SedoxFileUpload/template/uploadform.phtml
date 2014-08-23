@@ -5,6 +5,7 @@
         <div class='subinfo'>
             <input type='file' name="originalfile" id="originalfile"/>
         </div>
+	<div class="md5sumsearchresult"></div>
     </div>
 
     <div class='step step2 nomatch'>
@@ -64,4 +65,6 @@
 
 <script>
     $('.SedoxFileUpload input, .SedoxFileUpload textarea').placeholder();
+    app.SedoxFileUpload.addListeningForFileChangeToCalculateMd5();
+
 </script>

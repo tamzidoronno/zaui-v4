@@ -17,11 +17,11 @@ foreach ( $hists as $order) {
     $id = $product->id;
     $date = $product->rowCreatedDate;
 		  
-    echo "<div class='row'>"
+    echo "<a href='/index.php?page=productview&productId=$id'><div class='row'>"
     . "<div class='col col1'>$id</div>"
     . "<div class='col col2'>$name</div>"
     . "<div class='col col3'>$date</div>"
-    . "</div>";
+    . "</div></a>";
 }
 ?>
     

@@ -51,12 +51,9 @@ public class SedoxMagentoIntegration {
         public String emailAddress;
         public String phone;
     }
+    
     private static String code = "asdfae4r209345ui1ojt1jkl3541iou45h12k34jh12kl5jh36kl1h346kl1j346h134789hasdihASKDFJQWKERv89ah123NEøæå";
-    private SedoxProductManager listener;
 
-    void addOrderUpdateListener(SedoxProductManager aThis) {
-        this.listener = aThis;
-    }
 
     public MagentoUser getUserInformation(int userId) {
         try {
@@ -123,17 +120,4 @@ public class SedoxMagentoIntegration {
         return retOrders;
     }
 
-    @Scheduled(fixedDelay = 60000)
-    public void test() throws ErrorException {
-        if (listener != null) {
-            listener.updateOrders(getOrders());
-        }
-    }
-
-    @Scheduled(cron = "0 0 0 * * *")
-    public void updateAll() {
-        if (listener != null) {
-            listener.updateAllUsers();
-        }
-    }
 }

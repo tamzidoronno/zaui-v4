@@ -110,10 +110,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 users.put(user.id, user);
             }
         }
-
-        if (this.storeId != null && this.storeId.equals("608afafe-fd72-4924-aca7-9a8552bc6c81")) {
-            sedoxMagentoIntegration.addOrderUpdateListener(this);
-        }
     }
 
     @Override
@@ -129,6 +125,16 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         
         if (option == null) {
             option = "";
+        }
+        
+        if (option.equals("orders")) {
+            updateOrders();
+            return;
+        }
+        
+        if (option.equals("allmagentousers")) {
+            updateAllUsers();
+            return;
         }
 
         if (option.equals("products") || option.equals("all")) {
@@ -347,7 +353,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         int nextTransactionalId = getNextTransactionId();
         user.creditAccount.addOrderToCreditHistory(order, product, nextTransactionalId);
         databaseSaver.saveObject(user, credentials);
-        users.put(user.id, user);
+        users.put(user.id, user);        
         
         sendNotificationProductPurchased(product, user, order);
         return order;
@@ -790,21 +796,20 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         try {
             return userManager.logOn(emailAddress, password);
         } catch (ErrorException ex) {
-	    ex.printStackTrace();
+            // ITs Ok
         }
         
         String loggedUserId = sedoxMagentoIntegration.login(emailAddress, password);
 	
         if (loggedUserId != null) {
             User user = userManager.forceLogon(loggedUserId);
+
+            if (user == null) {
+                user = saveNewUserAndUpdateFromMagento(loggedUserId, userManager);
+            }
 	    
-	    if (user == null) {
-		user = saveNewUserAndUpdateFromMagento(loggedUserId, userManager);
-	    }
-	    
-	    return user;
+            return user;
         } else {
-	    System.out.println("Failure");
             throw new ErrorException(13);
         }
     }
@@ -1230,4 +1235,10 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         }
     }
 
+    private void updateOrders() throws ErrorException {
+        List<SedoxMagentoIntegration.Order> orders = sedoxMagentoIntegration.getOrders();
+        updateOrders(orders);
+    }
+
+  
 }

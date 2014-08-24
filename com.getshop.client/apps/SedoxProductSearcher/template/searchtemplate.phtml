@@ -40,14 +40,15 @@
                     <div <? echo $onclick; ?> class='sedox_product_box productinfo'>
                         <div class='title'><? echo $name; ?></div>
 
+                        
                         <div class='header'>
                             <div class='col col1'>Created:</div>
                             <div class='col col2'>Orig. Checksum:</div>
                             <div class='col col3'>ECU Brand:</div>
                             <div class='col col4'>ECU Type:</div>
-                            <div class='col col5'>ECU HW Nr.:</div>
-                            <div class='col col6'>ECU SW Nr.:</div>
-                            <div class='col col7'>ECU Part Nr.</div>
+                            <div class='col col5'>ECU Part Nr.:</div>
+                            <div class='col col6'>ECU HW Nr.:</div>
+                            <div class='col col7'>ECU SW Nr.:</div>
                             <div class='col col8'>Software Version:</div>
                             <div class='col col9'>Size:</div>
                             <div class='col col10'>Tool</div>
@@ -57,9 +58,9 @@
                             <div class='col col2'><? echo $prod->originalChecksum; ?></div>
                             <div class='col col3'><? echo $prod->ecuBrand; ?></div>
                             <div class='col col4'><? echo $prod->ecuType; ?></div>
-                            <div class='col col5'><? echo $prod->ecuHardwareNumber; ?></div>
-                            <div class='col col6'><? echo $prod->ecuSoftwareNumber; ?></div>
-                            <div class='col col7'><? echo $prod->ecuPartNumber; ?></div>
+                            <div class='col col5'><? echo $prod->ecuPartNumber; ?></div>
+                            <div class='col col6'><? echo $prod->ecuHardwareNumber; ?></div>
+                            <div class='col col7'><? echo $prod->ecuSoftwareNumber; ?></div>
                             <div class='col col8'><? echo $prod->ecuSoftwareVersion; ?></div>
                             <div class='col col9'><? echo $prod->softwareSize; ?></div>
                             <div class='col col10'><? echo $prod->tool; ?></div>

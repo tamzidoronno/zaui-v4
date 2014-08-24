@@ -37,7 +37,3 @@ var SedoxTheme = {
     }
 }
 
-SedoxTheme.loadJS('//use.typekit.net/spw7lup.js', function() {
-    try { Typekit.load(); } catch(e) {}
-});
-

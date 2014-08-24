@@ -12,25 +12,27 @@ $checksum = $sedoxProduct->originalChecksum ? $sedoxProduct->originalChecksum : 
 
     <div class='header'>
         <div class='col col1'>Created:</div>
-        <div class='col col2'>Original HP:</div>
+        <div class='col col2'>Orig. Checksum:</div>
         <div class='col col3'>ECU Brand:</div>
         <div class='col col4'>ECU Type:</div>
         <div class='col col5'>ECU HW Nr.:</div>
         <div class='col col6'>ECU SW Nr.:</div>
-        <div class='col col7'>Orig. Checksum:</div>
-        <div class='col col8'>Software Size:</div>
-        <div class='col col9'>Tool</div>
+        <div class='col col7'>ECU Part Nr.</div>
+        <div class='col col8'>Software Version:</div>
+        <div class='col col9'>Size:</div>
+        <div class='col col10'>Tool</div>
     </div>
     <div class='row'>
         <div class='col col1'><? echo $sedoxProduct->rowCreatedDate; ?></div>
-        <div class='col col2'><? echo $sedoxProduct->power; ?></div>
+        <div class='col col2'><? echo $sedoxProduct->originalChecksum; ?></div>
         <div class='col col3'><? echo $sedoxProduct->ecuBrand; ?></div>
         <div class='col col4'><? echo $sedoxProduct->ecuType; ?></div>
         <div class='col col5'><? echo $sedoxProduct->ecuHardwareNumber; ?></div>
         <div class='col col6'><? echo $sedoxProduct->ecuSoftwareNumber; ?></div>
-        <div class='col col7'><? echo $sedoxProduct->originalChecksum; ?></div>
-        <div class='col col8'><? echo $sedoxProduct->softwareSize; ?></div>
-        <div class='col col9'><? echo $sedoxProduct->tool; ?></div>
+        <div class='col col7'><? echo $sedoxProduct->ecuPartNumber; ?></div>
+        <div class='col col8'><? echo $sedoxProduct->ecuSoftwareVersion; ?></div>
+        <div class='col col9'><? echo $sedoxProduct->softwareSize; ?></div>
+        <div class='col col10'><? echo $sedoxProduct->tool; ?></div>
     </div>
 </div>
 

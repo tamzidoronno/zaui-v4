@@ -89,6 +89,7 @@
 
 .SedoxProductSearcher .productinfo {
     margin-top: 4px;
+    cursor: pointer;
 }
 
 .SedoxProductSearcher .title {
@@ -118,15 +119,16 @@
     font-size: 14px;
 }
 
-.SedoxProductSearcher .sedox_product_box .col { padding-left: 5px;}
+.SedoxProductSearcher .sedox_product_box .col { padding-left: 5px; overflow: hidden;}
 .SedoxProductSearcher .productinfo .col1 { width: 100px; }
 .SedoxProductSearcher .productinfo .col2 { width: 100px; }
-.SedoxProductSearcher .productinfo .col3 { width: 100px; }
-.SedoxProductSearcher .productinfo .col4 { width: 100px; }
-.SedoxProductSearcher .productinfo .col5 { width: 110px; }
-.SedoxProductSearcher .productinfo .col6 { width: 110px; }
-.SedoxProductSearcher .productinfo .col7 { width: 130px; }
-.SedoxProductSearcher .productinfo .col8 { width: 130px; }
-.SedoxProductSearcher .productinfo .col9 { width: 50px; }
+.SedoxProductSearcher .productinfo .col3 { width: 90px; }
+.SedoxProductSearcher .productinfo .col4 { width: 90px; }
+.SedoxProductSearcher .productinfo .col5 { width: 100px; }
+.SedoxProductSearcher .productinfo .col6 { width: 100px; }
+.SedoxProductSearcher .productinfo .col7 { width: 120px; }
+.SedoxProductSearcher .productinfo .col8 { width: 120px; }
+.SedoxProductSearcher .productinfo .col9 { width: 70px; }
+.SedoxProductSearcher .productinfo .col10 { width: 50px; }
 
 .SedoxProductSearcher .sedox_information .title { background-color: inherit; padding: 0px; line-height: inherit;}

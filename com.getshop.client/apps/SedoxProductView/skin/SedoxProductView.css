@@ -252,17 +252,18 @@
     font-size: 14px;
 }
 
-.SedoxProductView .sedox_product_box .col { padding-left: 5px;}
+
+.SedoxProductView .sedox_product_box .col { padding-left: 5px; overflow: hidden;}
 .SedoxProductView .productinfo .col1 { width: 100px; }
 .SedoxProductView .productinfo .col2 { width: 100px; }
-.SedoxProductView .productinfo .col3 { width: 100px; }
-.SedoxProductView .productinfo .col4 { width: 100px; }
-.SedoxProductView .productinfo .col5 { width: 110px; }
-.SedoxProductView .productinfo .col6 { width: 110px; }
-.SedoxProductView .productinfo .col7 { width: 130px; }
-.SedoxProductView .productinfo .col8 { width: 130px; }
-.SedoxProductView .productinfo .col9 { width: 50px; }
-
+.SedoxProductView .productinfo .col3 { width: 90px; }
+.SedoxProductView .productinfo .col4 { width: 90px; }
+.SedoxProductView .productinfo .col5 { width: 100px; }
+.SedoxProductView .productinfo .col6 { width: 100px; }
+.SedoxProductView .productinfo .col7 { width: 120px; }
+.SedoxProductView .productinfo .col8 { width: 120px; }
+.SedoxProductView .productinfo .col9 { width: 70px; }
+.SedoxProductView .productinfo .col10 { width: 50px; }
 
 .SedoxProductView .downloadbox .col1 { width: 200px; }
 .SedoxProductView .downloadbox .col2 { width: 100px; }

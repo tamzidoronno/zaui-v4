@@ -18,7 +18,7 @@
 
 
 .SedoxProductSearcher .result .product_row .product_header {
-    font-size: 22px;    
+    font-size: 16px;    
     color: #CC0000;
 }
 
@@ -44,7 +44,7 @@
     padding-bottom: 50px;
 }
 .SedoxProductSearcher .sedox_information .title {
-    font-size: 22px;
+    font-size: 16px;
     color: #cc0000;
 }
 
@@ -56,13 +56,13 @@
 
 .SedoxProductSearcher .noresult {
     padding: 20px;
-    font-size: 22px;
+    font-size: 16px;
     color: #CC0000;
     background-color: #f1f1f1;
     text-align: center;
 }
 .SedoxProductSearcher .sedox_information {
-    font-size: 17px;
+    font-size: 16px;
 }
 
 
@@ -83,10 +83,8 @@
 
 .SedoxProductSearcher .header div {
     display: inline-block;
-    font-weight: bold;
     font-size: 13px;
     line-height: 30px;
-    font-size: 15px;
 }
 
 .SedoxProductSearcher .productinfo {
@@ -94,7 +92,7 @@
 }
 
 .SedoxProductSearcher .title {
-    font-size: 25px;
+    font-size: 20px;
     padding-left: 20px;
     line-height: 60px;
     background-color: #a6a6a6;
@@ -117,7 +115,7 @@
 .SedoxProductSearcher .sedox_product_box .row div {
     display: inline-block;
     vertical-align: middle;
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .SedoxProductSearcher .sedox_product_box .col { padding-left: 5px;}

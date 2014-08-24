@@ -43,7 +43,7 @@
 
 .SedoxUserPanel .sedox_box .details td {
     color: #666;
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .SedoxUserPanel .bottom_information {
@@ -58,7 +58,6 @@
 .SedoxUserPanel .sedox_box th {
    text-align: left;
    font-size: 14px;
-   font-weight: normal;
    color: #333;
 }
 
@@ -77,10 +76,9 @@
 
 .SedoxUserPanel .sedox_box .detailstitle {
     background-color: #a6a6a6;
-    font-size: 27px;
+    font-size: 22px;
     padding: 20px;
     color: #FFF;
-    font-weight: normal;
     position: relative;
 }
 
@@ -91,7 +89,7 @@
     border-left: solid 1px #555;
     border-bottom: solid 1px #555;
     padding: 5px;
-    font-size: 20px;
+    font-size: 22px;
     cursor: pointer;
     background-color: #666;
 }
@@ -133,7 +131,6 @@
     padding-bottom: 10px;
     padding-top: 10px;
     color: #000;
-    font-weight: normal;
 }
 
 
@@ -166,7 +163,7 @@
 
 .SedoxUserPanel .slave_credit_history {
     padding: 20px;
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .informationbox.SedoxUserPanel .row {

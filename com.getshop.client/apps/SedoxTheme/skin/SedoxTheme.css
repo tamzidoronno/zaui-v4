@@ -1,9 +1,4 @@
 
-html {
-    font-family: "nimbus-sans";
-}
-
-
 .gs_inner {
     width: 1024px;
     margin: auto;
@@ -20,6 +15,8 @@ html {
 body {
     background-image: url('{IMAGEFOLDER}/background-top.png');
     background-repeat: repeat-x;   
+    font-family: "nimbus-sans";
+    font-weight: 300;
 }
 
 .gs_outer.header {
@@ -57,14 +54,13 @@ body {
     border-right: solid 1px #8d8d8d;
     border-bottom: solid 1px #8d8d8d;
     vertical-align: top;
-    font-weight: bold;
     padding: 12px;
     width: 80px;
     text-align: center;
     cursor: pointer;
     color: #FFF;
-    font-size: 13px;
     line-height: 20px;
+    font-size: 13px;
     
     background: #e20202; /* Old browsers */
     background: -moz-linear-gradient(top, #adadad 0%, #bc0203 100%); /* FF3.6+ */

@@ -5,8 +5,8 @@
 .SedoxAdmin .sedox_admin_topmenu .entry {
     line-height: 25px;
     display: inline-block;
-    padding-right: 10px;
-    padding-left: 10px;
+    padding-right: 9px;
+    padding-left: 9px;
     border-right: solid 1px #DDD;
     font-size: 16px;
     color: #666;
@@ -25,7 +25,7 @@
 }
 
 .SedoxAdmin .title {
-    font-size: 18px;
+    font-size: 16px;
     margin-bottom: 20px;
 }
 
@@ -61,12 +61,12 @@
 }
 
 .SedoxAdmin .listview .filelistrow .col1 { width: 60px; }
-.SedoxAdmin .listview .filelistrow .col2 { width: 500px; }
+.SedoxAdmin .listview .filelistrow .col2 { width: 450px; }
 .SedoxAdmin .listview .filelistrow .col3 { width: 200px; }
 .SedoxAdmin .listview .filelistrow .col4 { width: 150px; }
 
-.SedoxAdmin .listview .filelistrow .col5 .Start { font-weight: bold; color: red; }
-.SedoxAdmin .listview .filelistrow .col5 .Stop { font-weight: bold; color: green; }
+.SedoxAdmin .listview .filelistrow .col5 .Start { color: red; }
+.SedoxAdmin .listview .filelistrow .col5 .Stop { color: green; }
 
 .SedoxAdmin .result {
     margin-top: 20px;

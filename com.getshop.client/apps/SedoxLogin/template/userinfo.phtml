@@ -1,8 +1,8 @@
 <div class='userinfo'>
     <div class='sedoxtitle'>Info</div>
-    <br><b>Name:</b> <? echo $this->getApi()->getUserManager()->getLoggedOnUser()->fullName; ?>
-    <br><b>Available credits:</b> <? echo $this->getApi()->getSedoxProductManager()->getSedoxUserAccount()->creditAccount->balance; ?>
-    <br><b>Files:</b> <? 
+    <br>Name: <? echo $this->getApi()->getUserManager()->getLoggedOnUser()->fullName; ?>
+    <br>Available credits: <? echo $this->getApi()->getSedoxProductManager()->getSedoxUserAccount()->creditAccount->balance; ?>
+    <br>Files: <? 
     $count = count($this->getApi()->getSedoxProductManager()->getProductsFirstUploadedByCurrentUser());
     echo $count; ?>
     

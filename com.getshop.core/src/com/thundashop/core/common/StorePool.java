@@ -260,16 +260,7 @@ public class StorePool {
             }
             res = handler.executeMethod(object, types, argumentValues);
         }
-
-        StoreHandler handler = getStoreHandler(object.sessionId);
-        if (handler != null) {
-            try {
-                handler.logApiCall(object);
-            } catch (Exception ex) {
-                System.out.println("Failed to log api call");
-                ex.printStackTrace();
-            }
-        }
+        
         return res;
     }
 

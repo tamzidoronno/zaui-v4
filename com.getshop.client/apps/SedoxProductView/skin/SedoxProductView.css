@@ -7,7 +7,7 @@
 */
 
 .SedoxProductView .title {
-    font-size: 18px;
+    font-size: 16px;
     color: #FFF;
     background-color: #a6a6a6;
     padding: 5px;
@@ -33,7 +33,7 @@
 
 .SedoxProductView .binaryfilerow .col {
     display: inline-block;
-    font-size: 15px;
+    font-size: 14px;
     color: #666;
     padding: 3px;
     vertical-align: top;
@@ -124,7 +124,7 @@
     text-align: center;
     height: 29px;
     border-left: solid 1px #000;
-    font-size: 25px; 
+    font-size: 22px; 
     padding: 10px;
     position: relative;
     color: #FFF;
@@ -141,7 +141,7 @@
     bottom: 0px;
     border-radius: 10px;
     color: #FFF;
-    font-size: 15px;
+    font-size: 14px;
     line-height: 50px;
     display:none;
 }
@@ -161,7 +161,8 @@
     
 
 .SedoxProductView .sedox_button {
-    width: 250px;
+    width: 216px;
+    font-size: 14px;
 }
 
 .SedoxProductView .infotextareatocustomer {
@@ -187,12 +188,12 @@
 }
 
 .SedoxProductView .productviewtoprow i {
-    font-size: 25px;
+    font-size: 22px;
     padding-left: 20px;
     padding-top: 20px;
 }
 .SedoxProductView .productviewtoprow div.carname {
-    font-size: 20px;
+    font-size: 22px;
     line-height: 60px;
     color: red;
     padding-left: 20px;
@@ -216,10 +217,8 @@
 
 .SedoxProductView .header div {
     display: inline-block;
-    font-weight: bold;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 30px;
-    font-size: 15px;
 }
 
 .SedoxProductView .sedox_product_box  {
@@ -230,7 +229,7 @@
 }
 
 .SedoxProductView .title {
-    font-size: 25px;
+    font-size: 22px;
     padding-left: 20px;
     line-height: 40px;
 }
@@ -243,7 +242,6 @@
 
 .SedoxProductView .sedox_product_box .row {
     background-color: #f1f1f1;
-    font-size: 14px;
     margin-bottom: 3px;
     font-size: 0px;
 }
@@ -251,20 +249,21 @@
 .SedoxProductView .sedox_product_box .row div {
     display: inline-block;
     vertical-align: middle;
-    font-size: 15px;
+    font-size: 14px;
 }
 
-.SedoxProductView .sedox_product_box .col { padding-left: 5px;}
+
+.SedoxProductView .sedox_product_box .col { padding-left: 5px; overflow: hidden;}
 .SedoxProductView .productinfo .col1 { width: 100px; }
 .SedoxProductView .productinfo .col2 { width: 100px; }
-.SedoxProductView .productinfo .col3 { width: 100px; }
-.SedoxProductView .productinfo .col4 { width: 100px; }
-.SedoxProductView .productinfo .col5 { width: 110px; }
-.SedoxProductView .productinfo .col6 { width: 110px; }
-.SedoxProductView .productinfo .col7 { width: 130px; }
-.SedoxProductView .productinfo .col8 { width: 130px; }
-.SedoxProductView .productinfo .col9 { width: 50px; }
-
+.SedoxProductView .productinfo .col3 { width: 90px; }
+.SedoxProductView .productinfo .col4 { width: 90px; }
+.SedoxProductView .productinfo .col5 { width: 100px; }
+.SedoxProductView .productinfo .col6 { width: 100px; }
+.SedoxProductView .productinfo .col7 { width: 120px; }
+.SedoxProductView .productinfo .col8 { width: 120px; }
+.SedoxProductView .productinfo .col9 { width: 70px; }
+.SedoxProductView .productinfo .col10 { width: 50px; }
 
 .SedoxProductView .downloadbox .col1 { width: 200px; }
 .SedoxProductView .downloadbox .col2 { width: 100px; }
@@ -283,3 +282,15 @@
 }
 
 .SedoxProductView .adminbottons .active { background: green; }
+
+.SedoxProductView .product_history .col.col1 {
+    width: 200px;
+}
+
+.SedoxProductView .product_history .col.col2 {
+    width: 600px;
+}
+
+.SedoxProductView .sedox_button.saleable {
+    background: green;
+}

@@ -180,6 +180,7 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     @Override
     public void addExistingApplicationToPageArea(String pageId, String appId, String area) throws ErrorException {
+        System.out.println("Area: " + area);
         pagePool.addExistingApplicationToArea(pageId, appId, area);
     }
 

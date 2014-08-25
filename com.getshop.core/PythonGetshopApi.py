@@ -4684,6 +4684,28 @@ class SedoxProductManager(object):
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 
+  def toggleSaleableProduct(self, productId, saleable):
+    args = collections.OrderedDict()
+    if isinstance(productId,GetShopBaseClass): 
+      args["productId"]=json.dumps(productId.__dict__)
+    else:
+      try:
+        args["productId"]=json.dumps(productId)
+      except (ValueError, AttributeError):
+        args["productId"]=productId
+    if isinstance(saleable,GetShopBaseClass): 
+      args["saleable"]=json.dumps(saleable.__dict__)
+    else:
+      try:
+        args["saleable"]=json.dumps(saleable)
+      except (ValueError, AttributeError):
+        args["saleable"]=saleable
+    data = EmptyClass()
+    data.args = args
+    data.method = "toggleSaleableProduct"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
   def toggleStartStop(self, productId, toggle):
     args = collections.OrderedDict()
     if isinstance(productId,GetShopBaseClass): 

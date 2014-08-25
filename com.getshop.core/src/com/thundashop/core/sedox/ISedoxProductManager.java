@@ -129,5 +129,7 @@ public interface ISedoxProductManager  {
     
     @Administrator
     public void setExtraInformationForFile(String productId, int fileId, String text) throws ErrorException;
-    
+ 
+    @Administrator
+    public void toggleSaleableProduct(String productId, boolean saleable) throws ErrorException;
 }

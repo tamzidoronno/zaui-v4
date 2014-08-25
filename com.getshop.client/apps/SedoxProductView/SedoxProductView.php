@@ -62,8 +62,10 @@ class SedoxProductView extends \ApplicationBase implements \Application {
     }
 
     public function saveModifiedFile() {
-        $toDecode = str_replace("data:;base64,", "", $_POST['data']['fileBase64']);
-        $this->getApi()->getSedoxProductManager()->addFileToProduct($toDecode, $_POST['data']['fileName'], $_POST['data']['fileType'], $_SESSION['sedox_current_productid']);
+        $seperator = ";base64,";
+        $index = strrpos($_POST['data']['fileBase64'], $seperator)+  strlen($seperator);
+        $base64 = substr($_POST['data']['fileBase64'], $index);
+        $this->getApi()->getSedoxProductManager()->addFileToProduct($base64, $_POST['data']['fileName'], $_POST['data']['fileType'], $_SESSION['sedox_current_productid']);
     }
 
     public function purchaseProduct() {

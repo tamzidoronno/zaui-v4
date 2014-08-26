@@ -230,6 +230,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             if($this->partnerShipChecked() || !$this->hasPaymentAppAdded()) {
                 $this->sendConfirmationEmail();
                 $this->clearBookingData();
+                $this->includeEcommerceTransaction();
             } else {
                 //Send the user to the payment view.
                 $payment = $this->getFactory()->getApplicationPool()->getAllPaymentInstances();
@@ -732,6 +733,42 @@ class Hotelbooking extends \ApplicationBase implements \Application {
      
     public function requestAdminRights() {
         $this->requestAdminRight("UserManager", "getAllUsers", $this->__o("This app need to be able to get the users to check if it has a reference number."));
+    }
+
+    public function includeEcommerceTransaction() {
+        $orderId = $_GET['orderId'];
+        $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+        $taxes = $this->getRoomTaxes();
+        $price = $this->getRoomPrice();
+        $total = $price + $taxes;
+        
+        echo "<script>";
+        echo "ga('ecommerce:addTransaction', {
+            'id': '". $order->id."',
+            'affiliation': '".$this->getProjectName()."',
+            'revenue': '".$price."',
+            'shipping': '0',
+            'tax': '".$taxes."'
+          });";
+        
+        foreach($order->cart->items as $item) {
+            /* @var $product \core_productmanager_data_Product */
+            $product = $item->product;
+            
+            echo "ga('ecommerce:addItem', {
+                'id': '".$order->incrementOrderId."',
+                'name': '".$product->name."',
+                'sku': '".$product->sku."',
+                'category': '',
+                'price': '".$product->price."',
+                'quantity': '1'
+              });";
+            
+        }
+        
+        echo "ga('ecommerce:send');";
+        echo "</script>";
+        
     }
 
 }

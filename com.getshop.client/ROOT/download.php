@@ -23,6 +23,12 @@ if ($_GET['file'] == 6)
 if ($_GET['file'] == 7)
     $file = "2.1 Dieselteknikk versjon 14.01.2014.pdf";
 
+if ($_GET['file'] == 8)
+    $file = "6.1 Bedriftsledelse pluss - kursunderlag-1.pdf";
+
+if ($_GET['file'] == 9)
+    $file = "6.1 Verkstedledelse - kursunderlag.pdf";
+
 if (!isset($file)) {
     return;
 }

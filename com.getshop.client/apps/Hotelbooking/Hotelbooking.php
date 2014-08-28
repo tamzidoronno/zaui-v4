@@ -194,7 +194,11 @@ class Hotelbooking extends \ApplicationBase implements \Application {
        
        $body = str_replace("{start}", date("d-m-Y", strtotime($booking->startDate)), $body);
        $body = str_replace("{end}", date("d-m-Y", strtotime($booking->endDate)), $body);
-       $body = str_replace("{roomName}", $room->roomName, $body);
+       if($this->getServiceType() == "storage") {
+           $body = str_replace("{roomName}", $order->cart->items[0]->product->name, $body);
+       } else {
+           $body = str_replace("{roomName}", $room->roomName, $body);
+       }
        $body = str_replace("{code}", $booking->codes[0], $body);
        $body = str_replace("{referenceNumber}", $booking->bookingReference, $body);
        $body = str_replace("{name}", $name, $body);

@@ -245,9 +245,13 @@ class Booking extends MarketingApplication implements Application {
         $invoiced = $this->getConfigurationSetting("invoiced");
         
         if ($invoiced == null) {
-            $invoiced = [];
+            $invoiced = new \stdClass();
         } else {
             $invoiced = json_decode($invoiced);
+        }
+        
+        if (!($invoiced instanceof \stdClass)) {
+            return new \stdClass();
         }
         
         return $invoiced;

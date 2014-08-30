@@ -12,6 +12,7 @@ $room = $factory->getApi()->getHotelBookingManager()->getRoom($order->roomIds[0]
 $types = $factory->getApi()->getHotelBookingManager()->getRoomTypes();
 $products = $factory->getApi()->getProductManager()->getAllProducts();
 
+$taxgroups = $factory->getApi()->getProductManager()->getTaxes();
 $apps = $factory->getApi()->getPageManager()->getApplications();
 $hotelbookingmanagementapp = null;
 foreach($apps as $app) {
@@ -38,16 +39,34 @@ foreach($products as $product) {
     }
 }
 
+foreach($taxgroups as $group) {
+    if($group->groupNumber == $selectedProduct->taxgroup) {
+        $foundgroup = $group;
+        break;
+    }
+}
+$taxes = 0;
+$totalPrice = $selectedProduct->price;
+if($foundgroup) {
+    $taxes = $selectedProduct->price * ($group->taxRate/100);
+    $totalPrice += $taxes;
+}
+
 function replacevariables($content) {
-    global $user, $room, $selectedProduct, $selectedType, $order, $hotelbookingmanagementapp;
+    global $user, $room, $selectedProduct, $selectedType, $order, $hotelbookingmanagementapp, $taxes, $totalPrice;
     $content = str_replace("[navn]", $user->fullName, $content);
     $content = str_replace("[org_fnr]", $user->birthDay, $content);
     $content = str_replace("[postaddr]", $user->address->address . ", " . $user->address->postCode . " " . $user->address->city, $content);
     $content = str_replace("[rom]", $room->roomName, $content);
     $content = str_replace("[areal]", $selectedType->name, $content);
     $content = str_replace("[startdato]", date("d.m.Y", strtotime($order->startDate)), $content);
+    $content = str_replace("[dagensdato]", date("d.m.Y", time()), $content);
+    $content = str_replace("[dag_i_maned]", date("d", strtotime($order->startDate)), $content);
     $content = str_replace("[year]", date("Y", strtotime($order->startDate)), $content);
     $content = str_replace("[pris]", $selectedProduct->price, $content);
+    $content = str_replace("[taxes]", $taxes, $content);
+    $content = str_replace("[total_price]", $totalPrice, $content);
+    $content = str_replace("[admingebyr]", $order->bookingFee, $content);
     
     $content = str_replace("[utleier_navn]", $hotelbookingmanagementapp->settings->{"utleier_navn"}->value, $content);
     $content = str_replace("[utleier_adresse]", $hotelbookingmanagementapp->settings->{"utleier_adresse"}->value, $content);
@@ -57,7 +76,7 @@ function replacevariables($content) {
 }
 
 //echo "<pre>";
-//print_r($hotelbookingmanagementapp);
+//print_r($user);
 //echo "</pre>";
 //exit(0);
 
@@ -66,7 +85,11 @@ mkdir("/tmp/$tmpFolder");
 if($user->isPrivatePerson) {
     $extension = "private";
 } else {
-    $extension = "private";
+    if($user->mvaRegistered) {
+        $extension = "company";
+    } else {
+        $extension = "company_ex_taxes";
+    }
 }
 if(isset($_GET['type'])) {
     if($_GET['type'] == "standard") {

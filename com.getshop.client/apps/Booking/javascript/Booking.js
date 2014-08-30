@@ -41,7 +41,18 @@ Booking = {
         $(document).on('keyup', '.Booking .searchbrregvalue', this.searchBrreg);
         $(document).on('keyup', '.Booking .search_company', this.searchBrreg);
         $(document).on('click', '.Booking .company_selection', this.selectCompanyFromBrreg);
+        $(document).on('click', '.Booking .toggleUserId', this.toggleInvoiced);
     },
+            
+    toggleInvoiced: function() {
+        var data = {
+            userId : $(this).attr('userId')
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "toggleInvoiced", this, data);
+        thundashop.Ajax.post(event);
+    },
+            
     selectCompanyFromBrreg : function(event) {
         if(event.type === "click") {
             var row = $(this);

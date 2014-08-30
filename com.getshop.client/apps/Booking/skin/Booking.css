@@ -41,9 +41,13 @@
     cursor: pointer;
     padding: 3px;
     padding-left: 10px;
+    display: inline-block;
+    vertical-align: top;
+    width: 510px;
+    line-height: 10px;
 }
 
-.Booking .userlistoverview .userentry:hover {
+.Booking .userlistoverview .userentryouter:hover {
     background-color: rgba(127,127,127,0.3);
 }
 
@@ -87,4 +91,12 @@
 }
 .Booking .search_for_company_brreg {
     width: 27px;
+}
+
+.Booking .toggleUserId {
+    cursor: pointer; 
+    padding-top: 3px; 
+    padding-bottom: 3px;
+    width: 30px; 
+    text-align: center;
 }

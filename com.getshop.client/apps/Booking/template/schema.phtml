@@ -214,8 +214,10 @@ if ($this->hasReadAccess()) {
                 continue;
             }
             $found = true;
+            $id = $user->id;
             $link = "?page=users_all_users&userid=" . $user->id;
-            echo "<div class='userentry'><a href='$link'>" . $user->fullName . "<div class='datecreated'>" . $user->rowCreatedDate . "</a></div></div>";
+            $color = $this->isInvoiced($user->id) ? "green" : "red";
+            echo "<div class='userentryouter'><div class='userentry'><a href='$link'>" . $user->fullName . "<div class='datecreated'>" . $user->rowCreatedDate . "</a></div></div><i style='color: $color;' class='fa fa-dollar toggleUserId' userId='$id' ></i></div> ";
         }
 
         if (!$found) {

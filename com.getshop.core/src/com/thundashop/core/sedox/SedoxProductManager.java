@@ -41,6 +41,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import javax.annotation.PostConstruct;
@@ -134,6 +135,11 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         
         if (option.equals("allmagentousers")) {
             updateAllUsers();
+            return;
+        }
+        
+        if (option.equals("updatesoftwareversion")) {
+            updateSoftwareVersion();
             return;
         }
 
@@ -310,12 +316,11 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             throw new ErrorException(26);
         }
         
-        String desc = comment;
         SedoxProduct product = getProductById(productId);
         
         if (product != null) {
-            sendNotificationEmail("files@tuningfiles.com", product, desc);
-            sendNotificationEmail("contact@sedox.com", product, desc);
+            sendNotificationEmail("files@tuningfiles.com", product, comment);
+            sendNotificationEmail("contact@sedox.com", product, comment);
         }
         
         product.firstUploadedByUserId = getSession().currentUser.id;
@@ -970,13 +975,15 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         content += "<br>";
         content += "<br>Name: " + user.fullName;
         content += "<br>Email: " + user.emailAddress;
-        content += "<br>Tool: " + sedoxProduct.tool;
-        content += "<br>Comment: ";
-        content += "<br> " + sedoxProduct.comment;
-        content += "<br>";
         
-        for (SedoxBinaryFile file : sedoxProduct.binaryFiles) {
-            content += "<br>Original filename: " + file.orgFilename;
+        if (special == null) {
+            content += "<br>Tool: " + sedoxProduct.tool;
+            content += "<br>Comment: ";
+            content += "<br> " + sedoxProduct.comment;
+            content += "<br>";
+            for (SedoxBinaryFile file : sedoxProduct.binaryFiles) {
+                content += "<br>Original filename: " + file.orgFilename;
+            }
         }
         
         content += "<br> ";
@@ -1238,6 +1245,24 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     private void updateOrders() throws ErrorException {
         List<SedoxMagentoIntegration.Order> orders = sedoxMagentoIntegration.getOrders();
         updateOrders(orders);
+    }
+
+    private void updateSoftwareVersion() throws ErrorException {
+        try {
+            SedoxMysqlImporter productImporter = new SedoxMysqlImporter();
+            int i = 0;
+            for (SedoxProduct sedoxProduct : products) {
+                i++;
+                productImporter.updateSoftwareVersion(sedoxProduct);
+                saveObject(sedoxProduct);
+                System.out.println("Progress: " + i +"/"+products.size());
+            }
+            productImporter.close();
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(SedoxProductManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            java.util.logging.Logger.getLogger(SedoxProductManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
   

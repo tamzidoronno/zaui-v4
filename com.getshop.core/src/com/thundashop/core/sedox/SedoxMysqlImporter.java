@@ -36,16 +36,33 @@ public class SedoxMysqlImporter {
         bw.write(content);
         bw.close();
     }
+    private final Connection connect;
 
-    public SedoxMysqlImporter() throws ClassNotFoundException {
+    public SedoxMysqlImporter() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.jdbc.Driver");
+        connect = DriverManager.getConnection("jdbc:mysql://10.0.3.3/databank?user=sync&password=syncmann");
+//        connect = DriverManager.getConnection("jdbc:mysql://localhost/databank?user=databank&password=flatark");
     }
     
     
     public List<SedoxProduct> getProducts() throws ClassNotFoundException, SQLException {
-        Connection connect = DriverManager.getConnection("jdbc:mysql://10.0.3.3/databank?user=sync&password=syncmann");
+        return getProducts(null);
+    }
+    
+    public void close() throws SQLException {
+        connect.close();
+    }
+    
+    private List<SedoxProduct> getProducts(String sedoxproductid) throws ClassNotFoundException, SQLException {
         Statement statement = connect.createStatement();
-        ResultSet resultSet = statement.executeQuery("select * from SedoxProduct ");
+        ResultSet resultSet = null;
+        
+        if (sedoxproductid != null) {
+            resultSet = statement.executeQuery("select * from SedoxProduct where id = " + sedoxproductid);
+        } else {
+            resultSet = statement.executeQuery("select * from SedoxProduct ");
+        }
+         
 
         List<SedoxProduct> products = new ArrayList<SedoxProduct>();
         int i = 0;
@@ -121,9 +138,6 @@ public class SedoxMysqlImporter {
                 if (id == 6) {
                     product.ecuSoftwareVersion = value;
                 }
-                if (id == 7) {
-                    product.ecuSoftwareVersion = value;
-                }
                 if (id == 15) {
                     product.softwareSize = value;
                 }
@@ -155,7 +169,8 @@ public class SedoxMysqlImporter {
     }
     
     public List<SedoxUser> getCreditAccounts() throws SQLException {
-        Connection connect = DriverManager.getConnection("jdbc:mysql://10.0.3.3/databank?user=sync&password=syncmann");
+//        Connection connect = DriverManager.getConnection("jdbc:mysql://10.0.3.3/databank?user=sync&password=syncmann");
+        Connection connect = DriverManager.getConnection("jdbc:mysql://localhost/databank?user=databank&password=flatark");
         Statement statement = connect.createStatement();
         ResultSet resultSet = statement.executeQuery("select * from CreditAccount ");
         
@@ -228,4 +243,11 @@ public class SedoxMysqlImporter {
         
         return accounts;
     }   
+
+    void updateSoftwareVersion(SedoxProduct sedoxProduct) throws ClassNotFoundException, SQLException {
+        List<SedoxProduct> productsInDb = getProducts(sedoxProduct.id);
+        if (productsInDb != null && productsInDb.size() == 1) {
+            sedoxProduct.ecuSoftwareVersion = productsInDb.iterator().next().ecuSoftwareVersion;            
+        }
+    }
 }

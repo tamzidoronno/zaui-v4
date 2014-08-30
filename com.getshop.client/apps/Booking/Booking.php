@@ -240,5 +240,43 @@ class Booking extends MarketingApplication implements Application {
         $comment->extraInformation = "processed";
         $this->getApi()->getUserManager()->addComment($userId, $comment);
     }
+    
+    private function getInvoicedArray() {
+        $invoiced = $this->getConfigurationSetting("invoiced");
+        
+        if ($invoiced == null) {
+            $invoiced = new \stdClass();
+        } else {
+            $invoiced = json_decode($invoiced);
+        }
+        
+        if (!($invoiced instanceof \stdClass)) {
+            return new \stdClass();
+        }
+        
+        return $invoiced;
+    }
+    
+    public function isInvoiced($userId) {
+        $invoiced = $this->getInvoicedArray();
+        
+        if (!property_exists($invoiced, $userId)) {
+            return false;
+        }
+        
+        $value = $invoiced->{$userId};
+        return $value;
+    }
+    
+    public function toggleInvoiced() {
+        $userId = $_POST['data']['userId'];
+        $value = $this->isInvoiced($userId);
+        $invoiced = $this->getInvoicedArray();
+        
+        $invoiced->$userId = !$value;
+        $this->setConfigurationSetting("invoiced", json_encode($invoiced));
+    }
+    
+    
 }
 ?>

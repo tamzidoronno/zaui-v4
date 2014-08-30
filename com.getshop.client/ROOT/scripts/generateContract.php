@@ -95,9 +95,9 @@ if(isset($_GET['type'])) {
     if($_GET['type'] == "standard") {
         $filename = "contract_$extension.docx";
     } else if($_GET['type'] == "autogiro") {
-        $filename = "autogiro_$extension.docx";
+        $filename = "autogiro.docx";
     } else {
-        $filename = "bilag_$extension.docx";
+        $filename = "bilag.docx";
     }
 } else {
     $filename = "bilag_$extension.docx";

@@ -39,13 +39,14 @@ Existing booking references
 <div style="padding:10px; border: solid 1px;background-color:#EFEFEF;">
     <table width="100%">
         <tr>
+            <th>Remove</th>
             <th>Registration date</th>
             <th>Reserved by</th>
             <th>Reservation number</th>
             <th>Room (code)</th>
             <th>Start date</th>
             <th>End date</th>
-            <th>Remove</th>
+            <th>Gebyr</th>
             <th>Contract</th>
         </tr>
         <?
@@ -59,7 +60,8 @@ Existing booking references
 
             $order = $this->getApi()->getOrderManager()->getOrderByReference($reservation->bookingReference);
             /* @var $reservation \core_hotelbookingmanager_BookingReference */
-            echo "<tr>";
+            echo "<tr reservation='".$reservation->bookingReference."'>";
+            echo "<td style='text-align:center;'><i style='cursor:pointer' refid='".$reservation->bookingReference."' class='fa fa-trash-o delete_reference'></td>";
             echo "<td>" . $reservation->rowCreatedDate . "</td>";
             echo "<td>";
             if($order && $order->userId) {
@@ -71,7 +73,7 @@ Existing booking references
             echo "<td style='text-align:center;'>" . join(", ", $roomarray) . "</td>";
             echo "<td style='text-align:center;'>" . $reservation->startDate . "</td>";
             echo "<td style='text-align:center;'>" . $reservation->endDate . "</td>";
-            echo "<td style='text-align:center;'><i style='cursor:pointer' refid='".$reservation->bookingReference."' class='fa fa-trash-o delete_reference'></td>";
+            echo "<td style='text-align:center;'><input type='text' style='width: 40px;' class='adminfee' value='".$reservation->bookingFee."'></td>";
             echo "<td style='text-align:center;'>";
             echo "<a target='_new' onclick=\"window.open('/scripts/generateContract.php?userid=".$user->id."&refid=".$reservation->bookingReference."&type=standard')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".$user->referenceKey."' class='fa fa-file-pdf-o'></i></a> ";
             echo "<a target='_new' onclick=\"window.open('http://".$_SERVER['SERVER_NAME']."/scripts/generateContract.php?userid=".$user->id."&refid=".$reservation->bookingReference."&type=bilag')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".$user->referenceKey."' class='fa fa-plus'></i></a> ";
@@ -185,6 +187,11 @@ Existing rooms:<br>
 [year] = Året
 [adresse] = Kundens adresse
 [postnr] = Kundens postadresse
+[dagensdato] = Dagens dato
+[dag_i_maned] = Dag i måned for bestilling
+[admingebyr] = Administrasjons gebyr
+[taxes] = Skatter og avgifter
+[total_price] = Total pris ink. skatter og avgifter.
 
 [belop_forslag] = Forslag på pris
 [utleier_sted] = Sted som kontrakten skrives ut på

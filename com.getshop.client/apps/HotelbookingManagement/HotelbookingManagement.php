@@ -17,6 +17,15 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         return "left";
     }
     
+    public function updateAdminFee() {
+        $fee = $_POST['data']['fee'];
+        $reservation = $_POST['data']['ref'];
+        echo $fee;
+        $reservation = $this->getApi()->getHotelBookingManager()->getReservationByReferenceId($reservation);
+        $reservation->bookingFee = $fee;
+        $this->getApi()->getHotelBookingManager()->updateReservation($reservation);
+    }
+    
     public function saveContractData() {
         $this->setConfigurationSetting("utleier_navn", $_POST['data']['utleier_navn']);
         $this->setConfigurationSetting("utleier_adresse", $_POST['data']['utleier_adresse']);

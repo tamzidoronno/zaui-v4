@@ -1912,6 +1912,21 @@ class APIHotelBookingManager {
 	     return $this->transport->sendMessage($data);
 	}
 
+	/**
+	* Get all references
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function updateReservation($core_hotelbookingmanager_BookingReference) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_hotelbookingmanager_BookingReference"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_BookingReference));
+	     $data["method"] = "updateReservation";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
 }
 class APIInvoiceManager {
 

@@ -214,6 +214,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
            $body .= "<br>";
        }
        $body .= "<b>" . $this->__w("Additional contact information") . "</b><br>";
+       $body .= $user->emailAddress . "<br>";
        $body .= $address->address . "<br>";
        $body .= $address->postCode . "<br>";
        $body .= $address->city . "<br>";

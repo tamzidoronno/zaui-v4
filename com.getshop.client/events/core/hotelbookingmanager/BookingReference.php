@@ -18,5 +18,8 @@ class core_hotelbookingmanager_BookingReference extends core_common_DataCommon  
 	/** @var core_hotelbookingmanager_ContactData */
 	public $contact;
 
+	/** @var String */
+	public $bookingFee;
+
 }
 ?>

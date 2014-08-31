@@ -12,6 +12,7 @@ $room = $factory->getApi()->getHotelBookingManager()->getRoom($order->roomIds[0]
 $types = $factory->getApi()->getHotelBookingManager()->getRoomTypes();
 $products = $factory->getApi()->getProductManager()->getAllProducts();
 
+$taxgroups = $factory->getApi()->getProductManager()->getTaxes();
 $apps = $factory->getApi()->getPageManager()->getApplications();
 $hotelbookingmanagementapp = null;
 foreach($apps as $app) {
@@ -38,26 +39,44 @@ foreach($products as $product) {
     }
 }
 
+foreach($taxgroups as $group) {
+    if($group->groupNumber == $selectedProduct->taxgroup) {
+        $foundgroup = $group;
+        break;
+    }
+}
+$taxes = 0;
+$totalPrice = $selectedProduct->price;
+if($foundgroup) {
+    $taxes = $selectedProduct->price * ($group->taxRate/100);
+    $totalPrice += $taxes;
+}
+
 function replacevariables($content) {
-    global $user, $room, $selectedProduct, $selectedType, $order, $hotelbookingmanagementapp;
-    $content = str_replace("[navn]", $user->fullName, $content);
-    $content = str_replace("[org_fnr]", $user->birthDay, $content);
-    $content = str_replace("[postaddr]", $user->address->address . ", " . $user->address->postCode . " " . $user->address->city, $content);
-    $content = str_replace("[rom]", $room->roomName, $content);
-    $content = str_replace("[areal]", $selectedType->name, $content);
-    $content = str_replace("[startdato]", date("d.m.Y", strtotime($order->startDate)), $content);
-    $content = str_replace("[year]", date("Y", strtotime($order->startDate)), $content);
-    $content = str_replace("[pris]", $selectedProduct->price, $content);
+    global $user, $room, $selectedProduct, $selectedType, $order, $hotelbookingmanagementapp, $taxes, $totalPrice;
+    $content = str_replace("gsnavn", $user->fullName, $content);
+    $content = str_replace("gsorgfnr", $user->birthDay, $content);
+    $content = str_replace("gspostaddr", $user->address->address . ", " . $user->address->postCode . " " . $user->address->city, $content);
+    $content = str_replace("gsrom", $room->roomName, $content);
+    $content = str_replace("gsareal", $selectedType->name, $content);
+    $content = str_replace("gsstartdato", date("d.m.Y", strtotime($order->startDate)), $content);
+    $content = str_replace("gsdagensdato", date("d.m.Y", time()), $content);
+    $content = str_replace("gsdagimaned", date("d", strtotime($order->startDate)), $content);
+    $content = str_replace("gsyear", date("Y", strtotime($order->startDate)), $content);
+    $content = str_replace("gspris", $selectedProduct->price, $content);
+    $content = str_replace("gstaxes", $taxes, $content);
+    $content = str_replace("gstotalprice", $totalPrice, $content);
+    $content = str_replace("gsadmingebyr", $order->bookingFee, $content);
     
-    $content = str_replace("[utleier_navn]", $hotelbookingmanagementapp->settings->{"utleier_navn"}->value, $content);
-    $content = str_replace("[utleier_adresse]", $hotelbookingmanagementapp->settings->{"utleier_adresse"}->value, $content);
-    $content = str_replace("[utleier_postnr]", $hotelbookingmanagementapp->settings->{"utleier_postnr"}->value, $content);
-    $content = str_replace("[utleier_sted]", $hotelbookingmanagementapp->settings->{"utleier_sted"}->value, $content);
+    $content = str_replace("gsutleiernavn_", $hotelbookingmanagementapp->settings->{"utleier_navn"}->value, $content);
+    $content = str_replace("gsutleieradresse", $hotelbookingmanagementapp->settings->{"utleier_adresse"}->value, $content);
+    $content = str_replace("gsutleierpostnr", $hotelbookingmanagementapp->settings->{"utleier_postnr"}->value, $content);
+    $content = str_replace("gsutleiersted", $hotelbookingmanagementapp->settings->{"utleier_sted"}->value, $content);
     return $content;
 }
 
 //echo "<pre>";
-//print_r($hotelbookingmanagementapp);
+//print_r($user);
 //echo "</pre>";
 //exit(0);
 
@@ -66,15 +85,19 @@ mkdir("/tmp/$tmpFolder");
 if($user->isPrivatePerson) {
     $extension = "private";
 } else {
-    $extension = "private";
+    if($user->mvaRegistered) {
+        $extension = "company";
+    } else {
+        $extension = "company_ex_taxes";
+    }
 }
 if(isset($_GET['type'])) {
     if($_GET['type'] == "standard") {
         $filename = "contract_$extension.docx";
     } else if($_GET['type'] == "autogiro") {
-        $filename = "autogiro_$extension.docx";
+        $filename = "autogiro.docx";
     } else {
-        $filename = "bilag_$extension.docx";
+        $filename = "bilag.docx";
     }
 } else {
     $filename = "bilag_$extension.docx";

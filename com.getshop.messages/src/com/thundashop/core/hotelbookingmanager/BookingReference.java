@@ -12,4 +12,5 @@ public class BookingReference extends DataCommon {
     public List<Integer> codes = new ArrayList();
     public List<String> roomIds = new ArrayList();
     public ContactData contact = new ContactData();
+    public Double bookingFee = 0.0;
 }

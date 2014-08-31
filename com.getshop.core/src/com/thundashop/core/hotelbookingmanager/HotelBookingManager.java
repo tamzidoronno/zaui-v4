@@ -312,4 +312,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         saveRoom(newRoom);
         saveRoom(existingRoom);
     }
+
+    @Override
+    public void updateReservation(BookingReference reference) throws ErrorException {
+        bookingReferences.put(reference.bookingReference, reference);
+        saveObject(reference);
+    }
 }

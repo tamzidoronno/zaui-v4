@@ -46,6 +46,14 @@ app.HotelbookingManagement = {
         var event = thundashop.Ajax.createEvent('','loadMoveRoom',$(this), data);
         thundashop.common.showInformationBox(event, "Move room");
     },
+    updateAdminFee : function() {
+        var val = $(this).val();
+        var ref = $(this).closest('tr').attr('reservation');
+        var event = thundashop.Ajax.createEvent("", "updateAdminFee", $(this), {"fee" : val, "ref" : ref});
+        thundashop.Ajax.postWithCallBack(event, function() {
+            
+        });
+    },
     initEvents : function() {
         $(document).on('click', '.HotelbookingManagement .edit_type', app.HotelbookingManagement.loadEditType);
         $(document).on('click', '.HotelbookingManagement .delete_type', app.HotelbookingManagement.deleteType);
@@ -53,6 +61,7 @@ app.HotelbookingManagement = {
         $(document).on('click', '.HotelbookingManagement .delete_reference', app.HotelbookingManagement.deleteReference);
         $(document).on('click', '.HotelbookingManagement .editroom', app.HotelbookingManagement.loadMoveRoom);
         $(document).on('click', '.HotelbookingManagement #doChangeRoom', app.HotelbookingManagement.updateRoom);
+        $(document).on('keyup', '.HotelbookingManagement .adminfee', app.HotelbookingManagement.updateAdminFee);
     }
     
 }

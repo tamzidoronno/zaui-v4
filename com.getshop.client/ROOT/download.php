@@ -29,6 +29,9 @@ if ($_GET['file'] == 8)
 if ($_GET['file'] == 9)
     $file = "6.1 Verkstedledelse - kursunderlag.pdf";
 
+if ($_GET['file'] == 10)
+    $file = "1.1 Kunnskapsfornying i elektronikk.pdf";
+
 if (!isset($file)) {
     return;
 }

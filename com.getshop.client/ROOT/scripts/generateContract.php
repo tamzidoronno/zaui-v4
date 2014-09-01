@@ -67,8 +67,11 @@ function replacevariables($content) {
     $content = str_replace("gstaxes", $taxes, $content);
     $content = str_replace("gstotalprice", $totalPrice, $content);
     $content = str_replace("gsadmingebyr", $order->bookingFee, $content);
+    $content = str_replace("gspostnr", $user->address->postCode, $content);
+    $content = str_replace("gssted", $user->address->city, $content);
+    $content = str_replace("gsadresse", $user->address->address, $content);
     
-    $content = str_replace("gsutleiernavn_", $hotelbookingmanagementapp->settings->{"utleier_navn"}->value, $content);
+    $content = str_replace("gsutleiernavn", $hotelbookingmanagementapp->settings->{"utleier_navn"}->value, $content);
     $content = str_replace("gsutleieradresse", $hotelbookingmanagementapp->settings->{"utleier_adresse"}->value, $content);
     $content = str_replace("gsutleierpostnr", $hotelbookingmanagementapp->settings->{"utleier_postnr"}->value, $content);
     $content = str_replace("gsutleiersted", $hotelbookingmanagementapp->settings->{"utleier_sted"}->value, $content);

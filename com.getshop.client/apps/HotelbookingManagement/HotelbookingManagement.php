@@ -131,7 +131,16 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
      * @param \core_hotelbookingmanager_RoomType[] $types
      */
     public function printRoomRow($room, $types) {
-        echo "<tr class='existingroomrow'>";
+        
+        $falseselected = "";
+        $unavclass = "";
+        if(!$room->isActive) {
+            $falseselected = "SELECTED";
+            $unavclass = "unavailable";
+        }
+        
+        
+        echo "<tr class='existingroomrow ".$unavclass."'>";
         echo "<td width='10'>";
         echo "<input type='hidden' value='". $room->id."' gsname='id_".$room->id."'>";
         echo "<i class='fa fa-trash-o' roomid='".$room->id."'></i></td>";
@@ -148,11 +157,6 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         echo "</select>";
         echo "</td>";
         echo "<td>";
-        
-        $falseselected = "";
-        if(!$room->isActive) {
-            $falseselected = "SELECTED";
-        }
         
         echo "<select gsname='available_".$room->id."'>";
         echo "<option value='true'>". $this->__f("Available") . "</option>";

@@ -1,2 +1,6 @@
 .HotelbookingManagement .existingroomrow:hover { background-color:#EFEFEF; }
+.HotelbookingManagement .existingroomrow .fa-trash-o { cursor:pointer; }
 .HotelbookingManagement .existingroomrow input { width: 100%; border:solid 1px; }
+.HotelbookingManagement .existingroomrow.unavailable { background-color:red; }
+.HotelbookingManagement .existingroomrow.unavailable .fa-trash-o { color:#ffffff; }
+.HotelbookingManagement .fa-floppy-o { font-size: 30px; }

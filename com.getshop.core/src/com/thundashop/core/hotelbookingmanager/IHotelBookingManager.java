@@ -3,7 +3,6 @@ package com.thundashop.core.hotelbookingmanager;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
-import java.util.Date;
 import java.util.List;
 
 @GetShopApi
@@ -40,15 +39,6 @@ public interface IHotelBookingManager {
     public void removeRoom(String id) throws ErrorException;
     
     public Room getRoom(String id) throws ErrorException;
-    
-    /**
-     * Set a new code to a given room.
-     * @param code The code to set
-     * @param roomId The id of the room to update.
-     * @throws ErrorException 
-     */
-    @Administrator
-    public void setCode(String code, String roomId) throws ErrorException;
     
     /**
      * Change a room for a reference.
@@ -92,6 +82,11 @@ public interface IHotelBookingManager {
     @Administrator
     public void updateReservation(BookingReference reference) throws ErrorException;
     
+    @Administrator
+    public void setArxConfiguration(String address, String username, String password) throws ErrorException;
+    
     public BookingReference getReservationByReferenceId(Integer referenceId) throws ErrorException;
+    
+    public List<ArxLogEntry> getArxLog() throws ErrorException;
     
 }

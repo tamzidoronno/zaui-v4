@@ -1,0 +1,30 @@
+<?php
+
+
+$entries = $this->getApi()->getHotelBookingManager()->getArxLog();
+echo "<table border='1' width='100%'>";
+echo "<tr>";
+echo "<th>Code</th>";
+echo "<th>Navn</th>";
+echo "<th>Doors</th>";
+echo "<th>Start date</th>";
+echo "<th>End date</th>";
+echo "</tr>";
+foreach($entries as $entry) {
+    /* @var $user \core_hotelbookingmanager_ArxUser */
+    $user = $entry->user;
+    echo "<tr>";
+    echo "<td>" . $user->code . "</td>";
+    echo "<td>" . $user->firstName . " " . $user->lastName . "</td>";
+    echo "<td>";
+    foreach($user->doorsToAccess as $door) {
+        echo $door . " ";
+    }
+    echo "</td>";
+    echo "<td>" . $user->startDate . "</td>";
+    echo "<td>" . $user->endDate . "</td>";
+    echo "</tr>";
+}
+echo "</table>";
+
+?>

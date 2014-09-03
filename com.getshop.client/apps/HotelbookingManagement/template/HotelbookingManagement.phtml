@@ -200,6 +200,24 @@ Existing rooms:<br>
 [utleier_postnr] = Utleiers postnummer
 </pre>
 
+
+<b>Arx server</b>
+<table gstype="form" method="saveArxData">
+    <tr><td>Server address</td><td><input type="text" gsname="arx_server" value="<? echo $this->getConfigurationSetting("arx_server"); ?>"></td><tr>
+    <tr><td>Server username</td><td><input type="text" gsname="arx_username" value="<? echo $this->getConfigurationSetting("arx_username"); ?>"></td><tr>
+    <tr><td>Server password</td><td><input type="text" gsname="arx_password" value="<? echo $this->getConfigurationSetting("arx_password"); ?>"></td><tr>
+    <tr><td></td><td><input gstype="submit" type="button" value="Save"></td><tr>
+</table>
+
+<b>Arx log</b>
+<div class="arx_log">
+    <?
+    $this->includefile("arxlog");
+    ?>
+</div>
 <br>
 <br>
 <br>
+<script>
+    setInterval(function(){ app.HotelbookingManagement.refreshArxLog(); }, 5000);
+</script>

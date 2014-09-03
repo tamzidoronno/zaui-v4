@@ -1792,6 +1792,14 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getArxLog(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getArxLog"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getReservationByReferenceId(self, referenceId):
     args = collections.OrderedDict()
     if isinstance(referenceId,GetShopBaseClass): 
@@ -1969,25 +1977,32 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
-  def setCode(self, code, roomId):
+  def setArxConfiguration(self, address, username, password):
     args = collections.OrderedDict()
-    if isinstance(code,GetShopBaseClass): 
-      args["code"]=json.dumps(code.__dict__)
+    if isinstance(address,GetShopBaseClass): 
+      args["address"]=json.dumps(address.__dict__)
     else:
       try:
-        args["code"]=json.dumps(code)
+        args["address"]=json.dumps(address)
       except (ValueError, AttributeError):
-        args["code"]=code
-    if isinstance(roomId,GetShopBaseClass): 
-      args["roomId"]=json.dumps(roomId.__dict__)
+        args["address"]=address
+    if isinstance(username,GetShopBaseClass): 
+      args["username"]=json.dumps(username.__dict__)
     else:
       try:
-        args["roomId"]=json.dumps(roomId)
+        args["username"]=json.dumps(username)
       except (ValueError, AttributeError):
-        args["roomId"]=roomId
+        args["username"]=username
+    if isinstance(password,GetShopBaseClass): 
+      args["password"]=json.dumps(password.__dict__)
+    else:
+      try:
+        args["password"]=json.dumps(password)
+      except (ValueError, AttributeError):
+        args["password"]=password
     data = EmptyClass()
     data.args = args
-    data.method = "setCode"
+    data.method = "setArxConfiguration"
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 

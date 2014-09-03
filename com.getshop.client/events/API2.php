@@ -1751,6 +1751,20 @@ class APIHotelBookingManager {
 
 	/**
 	* Get all references
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function getArxLog() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getArxLog";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
 	* @return core_hotelbookingmanager_BookingReference
 	* @throws ErrorException
 	*/
@@ -1896,18 +1910,18 @@ class APIHotelBookingManager {
 	}
 
 	/**
-	* Set a new code to a given room.
-	* @param code The code to set
-	* @param roomId The id of the room to update.
+	* Get all references
+	* @return void
 	* @throws ErrorException
 	*/
 
-	public function setCode($code, $roomId) {
+	public function setArxConfiguration($address, $username, $password) {
 	     $data = array();
 	     $data['args'] = array();
-	     $data['args']["code"] = json_encode($this->transport->object_unset_nulls($code));
-	     $data['args']["roomId"] = json_encode($this->transport->object_unset_nulls($roomId));
-	     $data["method"] = "setCode";
+	     $data['args']["address"] = json_encode($this->transport->object_unset_nulls($address));
+	     $data['args']["username"] = json_encode($this->transport->object_unset_nulls($username));
+	     $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+	     $data["method"] = "setArxConfiguration";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
 	}

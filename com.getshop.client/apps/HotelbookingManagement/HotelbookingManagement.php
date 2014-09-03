@@ -12,9 +12,16 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
     public function getDescription() {
         return "HotelbookingManagement";
     }
-
+    
     public function getAvailablePositions() {
         return "left";
+    }
+    
+    public function saveArxData() {
+        $this->setConfigurationSetting("arx_server", $_POST['data']['arx_server']);
+        $this->setConfigurationSetting("arx_username", $_POST['data']['arx_username']);
+        $this->setConfigurationSetting("arx_password", $_POST['data']['arx_password']);
+        $this->getApi()->getHotelBookingManager()->setArxConfiguration($_POST['data']['arx_server'],  $_POST['data']['arx_username'], $_POST['data']['arx_password']);
     }
     
     public function updateAdminFee() {
@@ -87,6 +94,10 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         return "HotelbookingManagement";
     }
 
+    public function loadArxLog() {
+        $this->includefile("arxlog");
+    }
+    
     public function postProcess() {
         
     }

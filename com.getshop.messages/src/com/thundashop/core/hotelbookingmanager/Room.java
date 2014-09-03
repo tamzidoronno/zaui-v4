@@ -50,8 +50,10 @@ public class Room extends DataCommon {
 
     int reserveDates(Date start, Date end, int bookingReference) {
         Random randomGenerator = new Random();
-        int code = randomGenerator.nextInt(10000);
-        
+        int code = 0;
+        do {
+            code = randomGenerator.nextInt(999999);
+        }while(code < 100000);
         Calendar cal = Calendar.getInstance();
         cal.setTime(start);
         

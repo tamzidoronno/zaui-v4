@@ -574,7 +574,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         for (User user : getAllUsers()) {
             if (user.comments.size() > 0) {
                 for (Comment comment : user.comments.values()) {
-                    if (comment.appId.equals(appId)) {
+                    if (comment != null && comment.appId != null && comment.appId.equals(appId)) {
                         retUsers.add(user);
                         break;
                     }

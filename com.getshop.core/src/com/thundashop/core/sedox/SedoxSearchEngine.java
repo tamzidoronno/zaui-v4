@@ -32,6 +32,10 @@ public class SedoxSearchEngine {
                 continue;
             }
             
+            if (!product.hasMoreThenOriginalFile()) {
+                continue;
+            }
+            
             if (product.filedesc != null && product.filedesc.toLowerCase().contains(searchString)) {
                 retProducts.add(product);
             }

@@ -156,4 +156,12 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
             histories.add(getHistoryEntry(userId, "Product has been marked as stopped"));
         }
     }
+    
+    boolean hasMoreThenOriginalFile() {
+        if (binaryFiles != null && binaryFiles.size() < 2) {
+            return false;
+        }
+        
+        return true;
+    }
 }

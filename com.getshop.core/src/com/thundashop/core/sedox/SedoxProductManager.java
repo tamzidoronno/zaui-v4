@@ -296,8 +296,12 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     @Override
     public synchronized SedoxProduct getSedoxProductByMd5Sum(String md5sum) throws ErrorException {
         for (SedoxProduct product : products) {
+            if (!product.hasMoreThenOriginalFile()) {
+                continue;
+            }
+            
             for (SedoxBinaryFile binaryFile : product.binaryFiles) {
-                if (binaryFile.md5sum.equals(md5sum) && product.saleAble) {
+                if (binaryFile.md5sum.equals(md5sum) && product.saleAble && product.hasMoreThenOriginalFile()) {
                     return product;
                 }
             }

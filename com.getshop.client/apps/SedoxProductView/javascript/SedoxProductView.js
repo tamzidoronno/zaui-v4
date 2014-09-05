@@ -81,6 +81,7 @@ app.SedoxProductView = {
         $(document).on('click', '.SedoxProductView .saveextrainfo', app.SedoxProductView.saveExtraInfo);
         $(document).on('click', '.SedoxProductView .uploadtuningfilebox', app.SedoxProductView.uploadBoxClick);
         $(document).on('click', '.SedoxProductView .togglesalable', app.SedoxProductView.toggleSalable);
+        $(document).on('click', '.checkbuttons input', app.SedoxProductView.checkbuttonsClicked);
         
         $(document).on('dragenter', '.SedoxProductView .uploadtuningfilebox', function(e)
         {
@@ -109,6 +110,11 @@ app.SedoxProductView = {
         });
     },
     
+    checkbuttonsClicked: function() {
+        var text = $(this).val();
+        $('#extrafileinformationbox').val(text);
+    },
+            
     changeInfo: function()  {
         var data = {
             fileid: $(this).attr('fileid'),

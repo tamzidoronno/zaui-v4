@@ -23,6 +23,20 @@
             $goto = "&nbsp;&nbsp;&nbsp;&nbsp;<a href='?page=productview&productId=$id'><i class='fa fa-arrow-right'></i></a>";
             $start = $sedoxProduct->started ? "Stop" : "Start";
             $start = "<a class='$start' href='?page=$pageId&action=$start&file=$id'>$start</a>";
+            $status = "";
+            
+            if (array_key_exists("purchaseOnlyForCustomer", $sedoxProduct->states)) {
+                $status = "<i style='color: red;' class='fa fa-usd'></i>";
+            }
+            
+            if (array_key_exists("notifyForCustomer", $sedoxProduct->states)) {
+                $status = "<i style='color: orange;' class='fa fa-comment'></i>";
+            }
+            
+            if (array_key_exists("sendProductByMail", $sedoxProduct->states)) {
+                $status = "<i style='color: green;' class='fa fa-check-circle'></i>";
+            }
+            
             echo "
                     <div productId='$id' class='filelistrow'>
                         
@@ -33,6 +47,7 @@
                         <div class='col col4'> $fullName </div>
                         <div class='col col5'> $start </div>
                         <div class='col col5'> $goto </div>
+                        <div class='col col6'> &nbsp; $status </div>
                     </div>
                 ";
         }

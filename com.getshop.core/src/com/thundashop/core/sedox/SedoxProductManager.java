@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -870,6 +871,24 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         saveObject(product);
     }
 
+    
+    private void copyFile( File from, File to ) {
+
+        try {
+            if ( !to.exists() ) { to.createNewFile(); }
+
+            try (
+                FileChannel in = new FileInputStream( from ).getChannel();
+                FileChannel out = new FileOutputStream( to ).getChannel() ) {
+
+                out.transferFrom( in, 0, in.size() );
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    
     @Override
     public void sendProductByMail(String productId, String extraText, List<Integer> files) throws ErrorException {
         SedoxOrder order = purchaseOnlyForCustomer(productId, files);
@@ -881,8 +900,22 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             String fileName = encryptProductAndZipToTmpFolder(product, files);
             fileMap.put(fileName, product.toString()+".mod");    
         } else {
-            String fileName = zipProductToTmpFolder(product, files);
-            fileMap.put(fileName, product.toString()+".zip");
+            if (files.size() == 1) {
+                for (Integer fileId : files) {
+                    SedoxBinaryFile binFile = product.getFileById(fileId);
+                    File origFile = new File("/opt/files/" + binFile.md5sum);
+                    String fileName = "/tmp/"+ UUID.randomUUID().toString();
+                    File tmpFile = new File(fileName);
+                    copyFile(origFile, tmpFile);
+                    fileMap.put(fileName, product.toString()+".mod");    
+                    break;
+                }
+
+            } else {
+                String fileName = zipProductToTmpFolder(product, files);
+                fileMap.put(fileName, product.toString()+".zip");    
+            }
+            
         }
         
         SedoxUser user = getSedoxUserById(product.firstUploadedByUserId);

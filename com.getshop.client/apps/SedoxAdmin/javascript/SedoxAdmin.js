@@ -100,7 +100,8 @@ app.SedoxAdmin = {
         var data = {
             userId : userId,
             allowNegativeCredit : $('.SedoxAdmin #allownegativecredit').is(':checked'),
-            allowWindowsApplication : $('.SedoxAdmin #allowwindowsapp').is(':checked')
+            allowWindowsApplication : $('.SedoxAdmin #allowwindowsapp').is(':checked'),
+            isNorwegian : $('.SedoxAdmin #norwegiancustomer').is(':checked')
         };
         
         var event = thundashop.Ajax.createEvent("", "saveUserInfo", this, data);

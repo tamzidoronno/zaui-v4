@@ -1265,5 +1265,13 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         }
     }
 
+    @Override
+    public void toggleIsNorwegian(String userId, boolean isNorwegian) throws ErrorException {
+        SedoxUser user = getSedoxUserById(userId);
+        if (user != null) {
+            user.isNorwegian = isNorwegian;
+        }
+    }
+
   
 }

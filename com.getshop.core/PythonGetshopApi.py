@@ -4677,6 +4677,28 @@ class SedoxProductManager(object):
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 
+  def toggleIsNorwegian(self, userId, isNorwegian):
+    args = collections.OrderedDict()
+    if isinstance(userId,GetShopBaseClass): 
+      args["userId"]=json.dumps(userId.__dict__)
+    else:
+      try:
+        args["userId"]=json.dumps(userId)
+      except (ValueError, AttributeError):
+        args["userId"]=userId
+    if isinstance(isNorwegian,GetShopBaseClass): 
+      args["isNorwegian"]=json.dumps(isNorwegian.__dict__)
+    else:
+      try:
+        args["isNorwegian"]=json.dumps(isNorwegian)
+      except (ValueError, AttributeError):
+        args["isNorwegian"]=isNorwegian
+    data = EmptyClass()
+    data.args = args
+    data.method = "toggleIsNorwegian"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
   def togglePassiveSlaveMode(self, userId, toggle):
     args = collections.OrderedDict()
     if isinstance(userId,GetShopBaseClass): 

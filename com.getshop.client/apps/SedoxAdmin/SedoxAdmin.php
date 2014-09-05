@@ -113,6 +113,7 @@ class SedoxAdmin extends \ApplicationBase implements \Application {
     }
     
     public function saveUserInfo() {
+        $this->getApi()->getSedoxProductManager()->toggleIsNorwegian($_POST['data']['userId'], $_POST['data']['isNorwegian']);
         $this->getApi()->getSedoxProductManager()->toggleAllowNegativeCredit($_POST['data']['userId'], $_POST['data']['allowNegativeCredit']);
         $this->getApi()->getSedoxProductManager()->toggleAllowWindowsApp($_POST['data']['userId'], $_POST['data']['allowWindowsApplication']);
     }

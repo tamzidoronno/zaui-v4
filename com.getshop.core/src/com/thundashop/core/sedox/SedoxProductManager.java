@@ -975,6 +975,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         content += "<br>";
         content += "<br>Name: " + user.fullName;
         content += "<br>Email: " + user.emailAddress;
+        content += "<br>Customer id: " + user.id;
         
         if (special == null) {
             content += "<br>Tool: " + sedoxProduct.tool;

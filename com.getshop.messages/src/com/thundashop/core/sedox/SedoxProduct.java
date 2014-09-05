@@ -5,6 +5,7 @@
 package com.thundashop.core.sedox;
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.usermanager.data.User;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -148,6 +149,19 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
     void addDeveloperHasBeenNotifiedHistory(String userId) {
         histories.add(getHistoryEntry(userId, "Sedox file developers has been notified"));
     }
+    
+    void addSmsSentToCustomer(String userId, User user) {
+        histories.add(getHistoryEntry(user.id, "User " + user.fullName + " has been notified on SMS number: " + user.cellPhone));
+    }
+    
+    void addProductSentToEmail(String userId, User user) {
+        histories.add(getHistoryEntry(user.id, "Product has been sent to " + user.fullName + " on email address: " + user.emailAddress));
+    }
+    
+    void addCustomerNotified(String userId, User user) {
+        histories.add(getHistoryEntry(user.id, "User " + user.fullName + " has been notified on email address: " + user.emailAddress));
+    }
+    
     
     void addMarkedAsStarted(String userId, boolean started) {
         if (started) {

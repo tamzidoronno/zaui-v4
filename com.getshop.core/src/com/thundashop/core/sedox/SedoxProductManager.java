@@ -865,6 +865,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         User getshopUser = getGetshopUser(user.id);
         String content = getMailContent(extraText, productId, null, user);
         mailFactory.send("files@tuningfiles.com", getshopUser.emailAddress, product.toString(), content);
+        product.addCustomerNotified(getSession().id, getshopUser);
         product.states.put("notifyForCustomer", new Date());
         saveObject(product);
     }
@@ -892,6 +893,10 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         mailFactory.sendWithAttachments("files@tuningfiles.com", getshopUser.emailAddress, product.toString(), content, fileMap, true);
         product.states.put("sendProductByMail", new Date());
         smsFactory.send("Sedox Performance", getshopUser.cellPhone, "Your file is ready from Sedox Performance");
+        product.addSmsSentToCustomer(getSession().id, getshopUser);
+        product.addProductSentToEmail(getSession().id, getshopUser);
+        
+        saveObject(product);
     }
     
     private String zipProductToTmpFolder(SedoxProduct sedoxProduct, List<Integer> files) throws ErrorException {

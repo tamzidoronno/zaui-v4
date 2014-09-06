@@ -4876,6 +4876,20 @@ class APIUserManager {
 	}
 
 	/**
+	* Cancel the impersonation of a user.
+	*
+	* @throws ErrorException
+	*/
+
+	public function cancelImpersonating() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "cancelImpersonating";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Create a new user to your webshop.<br>
 	* This will fail if you are trying to create a user which is granted more access then you have yourself.<br>
 	* If no users has been created, then the user object will automatically be set as an administrator.<br>
@@ -5096,6 +5110,21 @@ class APIUserManager {
 	}
 
 	/**
+	* Switch the context of what user you are logged in as.
+	*
+	* @throws ErrorException
+	*/
+
+	public function impersonateUser($userId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data["method"] = "impersonateUser";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Check if the user is a real star trek hero!
 	* @param id The id of the user to check on.
 	* @return boolean
@@ -5107,6 +5136,22 @@ class APIUserManager {
 	     $data['args'] = array();
 	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
 	     $data["method"] = "isCaptain";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return boolean
+	* @throws ErrorException
+	*/
+
+	public function isImpersonating() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "isImpersonating";
 	     $data["interfaceName"] = "core.usermanager.IUserManager";
 	     return $this->transport->sendMessage($data);
 	}

@@ -5098,6 +5098,14 @@ class UserManager(object):
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
+  def cancelImpersonating(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "cancelImpersonating"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
   def createUser(self, user):
     args = collections.OrderedDict()
     if isinstance(user,GetShopBaseClass): 
@@ -5259,6 +5267,21 @@ class UserManager(object):
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
+  def impersonateUser(self, userId):
+    args = collections.OrderedDict()
+    if isinstance(userId,GetShopBaseClass): 
+      args["userId"]=json.dumps(userId.__dict__)
+    else:
+      try:
+        args["userId"]=json.dumps(userId)
+      except (ValueError, AttributeError):
+        args["userId"]=userId
+    data = EmptyClass()
+    data.args = args
+    data.method = "impersonateUser"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
   def isCaptain(self, id):
     args = collections.OrderedDict()
     if isinstance(id,GetShopBaseClass): 
@@ -5271,6 +5294,14 @@ class UserManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "isCaptain"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def isImpersonating(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "isImpersonating"
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 

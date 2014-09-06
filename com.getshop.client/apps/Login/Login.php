@@ -93,6 +93,12 @@ class Login extends \SystemApplication implements \Application {
     public static function setLoggedOn($user) {
         $_SESSION['loggedin'] = serialize($user);
     }
+    
+    public static function refresh() {
+        $factory = \IocContainer::getFactorySingelton();
+        $user = $factory->getApi()->getUserManager()->getLoggedOnUser();
+        Login::setLoggedOn($user);
+    }
 
     public function setUp() {
     }

@@ -98,6 +98,10 @@ $(function() {
             return;
         }
         
+        if ($(this).attr('href').indexOf('impersonate.php') > -1) {
+            return;
+        }
+        
         event.stopPropagation();
         event.preventDefault();
 

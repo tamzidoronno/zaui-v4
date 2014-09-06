@@ -13,13 +13,14 @@
 }
 
 body {
-    background-image: url('{IMAGEFOLDER}/background-top.png');
-    background-repeat: repeat-x;   
     font-family: "nimbus-sans";
     font-weight: 300;
 }
 
+
 .gs_outer.header {
+    background-image: url('{IMAGEFOLDER}/background-top.png');
+    background-repeat: repeat-x;   
     height: 205px;
 }
 

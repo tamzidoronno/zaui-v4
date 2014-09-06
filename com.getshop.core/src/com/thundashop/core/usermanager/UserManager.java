@@ -635,4 +635,19 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         UserStoreCollection collection = getUserStoreCollection(storeId);
         collection.addUser(user);
     }
+
+    @Override
+    public void impersonateUser(String userId) throws ErrorException {
+        sessionFactory.addToSession(getSession().id, "impersonatedUser", userId);
+    }
+
+    @Override
+    public void cancelImpersonating() throws ErrorException {
+        sessionFactory.cancelImpersonating(getSession().id);
+    }
+
+    @Override
+    public boolean isImpersonating() throws ErrorException {
+        return sessionFactory.getObject(getSession().id, "impersonatedUser") != null;
+    }
 }

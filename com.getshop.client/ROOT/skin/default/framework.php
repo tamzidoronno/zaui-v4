@@ -1592,3 +1592,12 @@ border-bottom: solid 1px #3a3a3a;
 #informationboxmiddle .setting .onoff.off { 
     background-image: url('/skin/default/images/offbutton.png');
 }
+
+.impersonatingActivated {
+    height: 30px;
+    background-color: red;
+    color: #FFF;
+    text-align: center;
+    font-size: 15px;
+    line-height: 30px;
+}

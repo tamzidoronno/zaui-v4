@@ -373,3 +373,8 @@ td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1p
     right: 10px;
     position: absolute;
 }
+
+.Calendar .week.calendar-day-np {
+    width: 25px;
+    text-align: center;
+}

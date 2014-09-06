@@ -26,14 +26,17 @@ if ($this->asList()) {
 
     $month = $this->month;
     $year = $this->year;
+    
     $headings = array(
-        $this->__w('Sunday', "common"),
         $this->__w('Monday', "common"),
         $this->__w('Tuesday', "common"),
         $this->__w('Wednesday', "common"),
         $this->__w('Thursday', "common"),
         $this->__w('Friday', "common"),
-        $this->__w('Saturday', "common"));
+        $this->__w('Saturday', "common"),
+        $this->__w('Sunday', "common")
+    );
+    
     $running_day = date('w', mktime(0, 0, 0, $month, 1, $year));
     $days_in_month = date('t', mktime(0, 0, 0, $month, 1, $year));
     $days_in_this_week = 1;
@@ -60,7 +63,7 @@ if ($this->asList()) {
         <table cellpadding="0" cellspacing="0" class="calendar">
 
             <tr class="calendar-row">
-                <td class="calendar-day-head" style="cursor: pointer">
+                <td class="calendar-day-head" colspan="2" style="cursor: pointer">
                     <a href="<?php echo $this->getPrevLink(); ?>">
                         <center>
                             <div class="left-arrow"></div>
@@ -77,10 +80,13 @@ if ($this->asList()) {
                 </td>
             </tr>
             <?
-            echo '<tr class="calendar-row"><td class="calendar-day-head">' . implode('</td><td class="calendar-day-head">', $headings) . '</td></tr>';
-            echo '<tr class="calendar-row">';
+            $dateweekcheck  = mktime(0, 0, 0, $month, 1, $year);
+            $week  = (int)date('W', $dateweekcheck);
+                        
+            echo '<tr class="calendar-row"><td class="calendar-day-np week"></td><td class="calendar-day-head">' . implode('</td><td class="calendar-day-head">', $headings) . '</td></tr>';
+            echo '<tr class="calendar-row"><td class="calendar-day-np week">'.$week.'</td>';
 
-            for ($x = 0; $x < $running_day; $x++) {
+            for ($x = 0; $x < ($running_day-1); $x++) {
                 echo '<td class="calendar-day-np">&nbsp;</td>';
                 $days_in_this_week++;
             }
@@ -121,12 +127,14 @@ if ($this->asList()) {
                 echo "</a>";
                 echo '</td>';
 
-                if ($running_day == 6) {
+                if ($running_day == 7) {
                     echo '</tr>';
                     if (($day_counter + 1) != $days_in_month) {
-                        echo '<tr class="calendar-row">';
+                        $dateweekcheck  = mktime(0, 0, 0, $month, ($day_counter+2), $year);
+                        $week  = (int)date('W', $dateweekcheck);
+                        echo '<tr class="calendar-row"><td class="calendar-day-np week">'.$week.'</td>';
                     }
-                    $running_day = -1;
+                    $running_day = 0;
                     $days_in_this_week = 0;
                 }
 

@@ -9,7 +9,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -20,6 +22,7 @@ public class Entry implements Serializable, Comparable<Entry> {
     public List<String> dropDiploma = new ArrayList();
     public List<String> waitingList = new ArrayList();
     public List<ExtraDay> otherDays = new ArrayList();
+    public Map<String, AttendeeMetaInfo> metaInfo = new HashMap<>();
     
     public int maxAttendees;
     
@@ -71,6 +74,7 @@ public class Entry implements Serializable, Comparable<Entry> {
         this.starttime = entry.starttime;
         this.extraText = entry.extraText;
         this.stoptime = entry.stoptime;
+        this.metaInfo = entry.metaInfo;
         this.location = entry.location;
         this.entryId = entry.entryId;
         this.userId = entry.userId;

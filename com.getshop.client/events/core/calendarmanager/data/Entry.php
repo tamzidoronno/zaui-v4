@@ -13,6 +13,9 @@ class core_calendarmanager_data_Entry {
 	public $otherDays;
 
 	/** @var String */
+	public $metaInfo;
+
+	/** @var String */
 	public $maxAttendees;
 
 	/** @var String */

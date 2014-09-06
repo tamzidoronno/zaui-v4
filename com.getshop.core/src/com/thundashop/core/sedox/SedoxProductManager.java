@@ -389,11 +389,21 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         
         SedoxProduct product = getProductById(productId);
         String base64ZipFile;
-        try {
-            base64ZipFile = getZipfileAsBase64(product, files);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            throw new ErrorException(1026);
+        
+        if (files.size() == 1) {
+            try {
+                base64ZipFile = getBaseEncodedFile(product, files);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                throw new ErrorException(1029);
+            }
+        } else {
+            try {
+                base64ZipFile = getZipfileAsBase64(product, files);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                throw new ErrorException(1026);
+            }
         }
         
         product.states.put("purchaseProduct", new Date());
@@ -1314,6 +1324,18 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         if (user != null) {
             user.isNorwegian = isNorwegian;
         }
+    }
+
+    private String getBaseEncodedFile(SedoxProduct product, List<Integer> files) throws IOException {
+        Integer fileId = files.iterator().next();
+        for (SedoxBinaryFile file : product.binaryFiles) {
+            if (file.id == fileId) {
+                Path path = Paths.get("/opt/files/" + file.md5sum);
+                byte[] data = Files.readAllBytes(path);
+                return DatatypeConverter.printBase64Binary(data);
+            }
+        }
+        return null;
     }
 
   

@@ -762,9 +762,7 @@ class Calendar extends MarketingApplication implements Application {
                 }
             }
         }
-//        echo "<pre>";
-//        print_r($entry);
-//        echo "</pre>";
+        
         return "";
     }
 }

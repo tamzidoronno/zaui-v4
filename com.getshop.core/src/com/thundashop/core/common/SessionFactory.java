@@ -52,10 +52,22 @@ public class SessionFactory extends DataCommon {
             object = session.getObject(name);
         }
         
+        if (name != null && name.equals("user") && session != null && session.getObject("impersonatedUser") != null) {
+            object = session.getObject("impersonatedUser");
+        }
+        
         return (T)object;
     }
     
-
+    public void cancelImpersonating(String sessionId) throws ErrorException {
+        checkSessionIsNotEmpty(sessionId);
+       
+        ThundashopSession session = getSession(sessionId);
+        if (session != null) {
+            session.removeObject("impersonatedUser");
+        }
+    }
+    
     public void removeFromSession(String sessionId) {
         synchronized(sessions) {
             sessions.remove(sessionId);
@@ -87,6 +99,6 @@ public class SessionFactory extends DataCommon {
         for (String key : removeKeys)
             sessions.remove(key);
     }
-    
+
     
 }

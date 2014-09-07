@@ -132,4 +132,7 @@ public interface ISedoxProductManager  {
  
     @Administrator
     public void toggleSaleableProduct(String productId, boolean saleable) throws ErrorException;
+    
+    @Administrator
+    public void toggleIsNorwegian(String userId, boolean isNorwegian) throws ErrorException;
 }

@@ -46,5 +46,9 @@ public class ThundashopSession  implements Serializable {
     public void addObject(String name, String object) {
         objects.put(name, object);
     }
+
+    void removeObject(String name) {
+        objects.remove(name);
+    }
     
 }

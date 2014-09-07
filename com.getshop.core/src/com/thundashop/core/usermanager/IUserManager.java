@@ -287,4 +287,28 @@ public interface IUserManager {
      */
     @Editor
     public List<User> getAllUsersWithCommentToApp(String appId) throws ErrorException;
+    
+    /**
+     * Switch the context of what user you are logged in as.
+     * 
+     * @throws ErrorException 
+     */
+    @Administrator
+    public void impersonateUser(String userId) throws ErrorException;
+    
+    /**
+     * Cancel the impersonation of a user.
+     * 
+     * @throws ErrorException 
+     */
+    public void cancelImpersonating() throws ErrorException;
+    
+    /**
+     * If an administrator is impersonating a lower user, 
+     * this function will return true.
+     * 
+     * @return
+     * @throws ErrorException 
+     */
+    public boolean isImpersonating() throws ErrorException;
 }

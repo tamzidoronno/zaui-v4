@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -296,8 +297,12 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     @Override
     public synchronized SedoxProduct getSedoxProductByMd5Sum(String md5sum) throws ErrorException {
         for (SedoxProduct product : products) {
+            if (!product.hasMoreThenOriginalFile()) {
+                continue;
+            }
+            
             for (SedoxBinaryFile binaryFile : product.binaryFiles) {
-                if (binaryFile.md5sum.equals(md5sum) && product.saleAble) {
+                if (binaryFile.md5sum.equals(md5sum) && product.saleAble && product.hasMoreThenOriginalFile()) {
                     return product;
                 }
             }
@@ -384,11 +389,21 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         
         SedoxProduct product = getProductById(productId);
         String base64ZipFile;
-        try {
-            base64ZipFile = getZipfileAsBase64(product, files);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            throw new ErrorException(1026);
+        
+        if (files.size() == 1) {
+            try {
+                base64ZipFile = getBaseEncodedFile(product, files);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                throw new ErrorException(1029);
+            }
+        } else {
+            try {
+                base64ZipFile = getZipfileAsBase64(product, files);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                throw new ErrorException(1026);
+            }
         }
         
         product.states.put("purchaseProduct", new Date());
@@ -861,10 +876,29 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         User getshopUser = getGetshopUser(user.id);
         String content = getMailContent(extraText, productId, null, user);
         mailFactory.send("files@tuningfiles.com", getshopUser.emailAddress, product.toString(), content);
+        product.addCustomerNotified(getSession().id, getshopUser);
         product.states.put("notifyForCustomer", new Date());
         saveObject(product);
     }
 
+    
+    private void copyFile( File from, File to ) {
+
+        try {
+            if ( !to.exists() ) { to.createNewFile(); }
+
+            try (
+                FileChannel in = new FileInputStream( from ).getChannel();
+                FileChannel out = new FileOutputStream( to ).getChannel() ) {
+
+                out.transferFrom( in, 0, in.size() );
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    
     @Override
     public void sendProductByMail(String productId, String extraText, List<Integer> files) throws ErrorException {
         SedoxOrder order = purchaseOnlyForCustomer(productId, files);
@@ -876,8 +910,22 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             String fileName = encryptProductAndZipToTmpFolder(product, files);
             fileMap.put(fileName, product.toString()+".mod");    
         } else {
-            String fileName = zipProductToTmpFolder(product, files);
-            fileMap.put(fileName, product.toString()+".zip");
+            if (files.size() == 1) {
+                for (Integer fileId : files) {
+                    SedoxBinaryFile binFile = product.getFileById(fileId);
+                    File origFile = new File("/opt/files/" + binFile.md5sum);
+                    String fileName = "/tmp/"+ UUID.randomUUID().toString();
+                    File tmpFile = new File(fileName);
+                    copyFile(origFile, tmpFile);
+                    fileMap.put(fileName, product.toString()+".mod");    
+                    break;
+                }
+
+            } else {
+                String fileName = zipProductToTmpFolder(product, files);
+                fileMap.put(fileName, product.toString()+".zip");    
+            }
+            
         }
         
         SedoxUser user = getSedoxUserById(product.firstUploadedByUserId);
@@ -888,6 +936,10 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         mailFactory.sendWithAttachments("files@tuningfiles.com", getshopUser.emailAddress, product.toString(), content, fileMap, true);
         product.states.put("sendProductByMail", new Date());
         smsFactory.send("Sedox Performance", getshopUser.cellPhone, "Your file is ready from Sedox Performance");
+        product.addSmsSentToCustomer(getSession().id, getshopUser);
+        product.addProductSentToEmail(getSession().id, getshopUser);
+        
+        saveObject(product);
     }
     
     private String zipProductToTmpFolder(SedoxProduct sedoxProduct, List<Integer> files) throws ErrorException {
@@ -975,6 +1027,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         content += "<br>";
         content += "<br>Name: " + user.fullName;
         content += "<br>Email: " + user.emailAddress;
+        content += "<br>Customer id: " + user.id;
         
         if (special == null) {
             content += "<br>Tool: " + sedoxProduct.tool;
@@ -1263,6 +1316,26 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         } catch (SQLException ex) {
             java.util.logging.Logger.getLogger(SedoxProductManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Override
+    public void toggleIsNorwegian(String userId, boolean isNorwegian) throws ErrorException {
+        SedoxUser user = getSedoxUserById(userId);
+        if (user != null) {
+            user.isNorwegian = isNorwegian;
+        }
+    }
+
+    private String getBaseEncodedFile(SedoxProduct product, List<Integer> files) throws IOException {
+        Integer fileId = files.iterator().next();
+        for (SedoxBinaryFile file : product.binaryFiles) {
+            if (file.id == fileId) {
+                Path path = Paths.get("/opt/files/" + file.md5sum);
+                byte[] data = Files.readAllBytes(path);
+                return DatatypeConverter.printBase64Binary(data);
+            }
+        }
+        return null;
     }
 
   

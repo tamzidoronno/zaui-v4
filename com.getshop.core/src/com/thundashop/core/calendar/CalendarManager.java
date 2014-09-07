@@ -1,5 +1,6 @@
 package com.thundashop.core.calendar;
 
+import com.thundashop.core.calendarmanager.data.AttendeeMetaInfo;
 import com.thundashop.core.calendarmanager.data.Day;
 import com.thundashop.core.calendarmanager.data.Entry;
 import com.thundashop.core.calendarmanager.data.EntryComment;
@@ -556,6 +557,11 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                         } else {
                             entry.attendees.add(userId);
                         }
+                        
+                        AttendeeMetaInfo metaInfo = new AttendeeMetaInfo();
+                        metaInfo.source = source;
+                        metaInfo.userId = userId;
+                        entry.metaInfo.put(userId, metaInfo);
 
                         databaseSaver.saveObject(month, credentials);
 

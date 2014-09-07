@@ -140,7 +140,7 @@ app.SedoxProductView = {
     getData : function(me) {
         var files = [];
         
-        $('.SedoxProductView input:checked').each(function() { 
+        $('.SedoxProductView:not(".informationbox") input:checked').each(function() { 
             files.push($(this).attr('fileid'));
         });
         

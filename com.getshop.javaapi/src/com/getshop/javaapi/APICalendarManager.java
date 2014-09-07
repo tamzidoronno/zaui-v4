@@ -30,12 +30,12 @@ public class APICalendarManager {
      }
 
      /**
-     * Deprecated and a fallback method.
-     *
-     * @param userId
-     * @param eventId
-     * @param password
-     * @param username
+     * Add a given user to a given event.
+     * @param userId The user id to add to a the given event (see usermanager for more inforamtion about this id)
+     * @param eventId The event id to attach to the user.
+     * @param password A password you want to attach to the email that is being sent to the user.
+     * @param username A username you want to attach to the email that is being sent to the user.
+     * @return
      * @throws ErrorException
      */
      public void addUserToEvent(java.lang.String userId, java.lang.String eventId, java.lang.String password, java.lang.String username, java.lang.String source)  throws Exception  {

@@ -1,9 +1,0 @@
-100005;post@getshop.com;GetShop Demo;fasd;fasd;02e7faf0-c671-48ac-add4-630bcf7707af;fdsa
-100004;post@getshop.com;GetShop Demo;asdf;asdf;02e7faf0-c671-48ac-add4-630bcf7707af;fdasf
-100003;post@getshop.com;GetShop Demo;test;test;02e7faf0-c671-48ac-add4-630bcf7707af;test
-100002;test@getshop.com;test;test;test;28e1d325-c642-4c11-9506-eb99a380f6b9;test
-100001;gokk@gmail.com;test;test;test;8fab85f6-46b1-480e-b304-d6dff84d676b;test
-100003;ktonder@gmail.com;Kai Tønder;4380;48311484;5cd8f9d3-41ea-41d7-9a81-b12c18b5ef8d;Strandgaten 21
-100002;post@getshop.com;GetShop Demo;asdf;asdf;02e7faf0-c671-48ac-add4-630bcf7707af;asdf
-100004;post@getshop.com;GetShop Demo;fasdf;asdf;02e7faf0-c671-48ac-add4-630bcf7707af;fasdf
-100005;post@getshop.com;GetShop Demo;3080;46774240;02e7faf0-c671-48ac-add4-630bcf7707af;Solbergskogen 2a

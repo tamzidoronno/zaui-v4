@@ -1,6 +1,0 @@
-100005;post@getshop.com;GetShop Demo;asf;asdfasf;02e7faf0-c671-48ac-add4-630bcf7707af;asdf;asdfas
-100003;ktonder@gmail.com;Kai Tï¿½nder;4380;48311484;5cd8f9d3-41ea-41d7-9a81-b12c18b5ef8d;Strandgaten 21;Hauge i dalane
-100002;post@getshop.com;GetShop Demo;asdf;asdf;02e7faf0-c671-48ac-add4-630bcf7707af;asdf;asdf
-100005;post@getshop.com;GetShop Demo;asf;asdfasf;02e7faf0-c671-48ac-add4-630bcf7707af;asdf;asdfas
-100003;ktonder@gmail.com;Kai Tønder;4380;48311484;5cd8f9d3-41ea-41d7-9a81-b12c18b5ef8d;Strandgaten 21;Hauge i dalane
-100002;post@getshop.com;GetShop Demo;asdf;asdf;02e7faf0-c671-48ac-add4-630bcf7707af;asdf;asdf

@@ -79,9 +79,27 @@ class AppRegister {
 include_once("events/API.php");
 include_once("events/API2.php");
 
+function symLinkIfNeeded($class_name) {
+    if (!is_writeable("../app")) { 
+        die("Please make sure that the app folder is writeable for the web server user");
+    }
+    
+    if (strstr($class_name, "ns_")) {
+        $classArray = explode("/", $class_name);
+        $namespace = $classArray[0];
+        $appName = $classArray[1];
+        $namespacedfolder = "../app/$namespace";
+
+        if (!file_exists($namespacedfolder)) {
+            @symlink("../apps/$appName", $namespacedfolder);
+        }
+    }
+}
 
 function __autoload($class_name) {
     $class_name = str_replace("\\", "/", $class_name);
+    
+    symLinkIfNeeded($class_name);
     
     $apipath = str_replace("_", "/", $class_name);
     if (file_exists("../events/".  $apipath.".php")) {
@@ -112,7 +130,10 @@ function __autoload($class_name) {
     }
     
     foreach (AppRegister::$register as $app) {
+        symLinkIfNeeded($class_name);
+        
         $app = strtolower($app);
+        
         if (file_exists("../app/$app/classes/$class_name.php")) {
             include "../app/$app/classes/$class_name.php";
         }

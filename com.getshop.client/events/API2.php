@@ -1808,6 +1808,21 @@ class APIHotelBookingManager {
 	}
 
 	/**
+	* Get all references
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function markRoomAsReady($roomId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["roomId"] = json_encode($this->transport->object_unset_nulls($roomId));
+	     $data["method"] = "markRoomAsReady";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Change a room for a reference.
 	* @param reference
 	* @param oldRoom the old room

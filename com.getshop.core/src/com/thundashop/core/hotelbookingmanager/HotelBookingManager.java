@@ -351,6 +351,16 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         
         if(arxSettings != null) {
             for (BookingReference reference : bookingReferences.values()) {
+                
+                if(reference.isToday()) {
+                    for(String roomid : reference.roomIds) {
+                        if(getRoom(roomid).isClean && !reference.isApprovedForCheckin(roomid)) {
+                            reference.isApprovedForCheckIn.put(roomid, true);
+                            reference.updateArx = true;
+                        }
+                    }
+                }
+                
                 if (reference.updateArx) {
                     System.out.println("Need to update arx with reference: " + reference.bookingReference);
                     int i = 0;
@@ -360,8 +370,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                         Room room = getRoom(roomId);
                         System.out.println(roomId);
                         ArxUser user = new ArxUser();
-                        user.doorsToAccess.add(room.roomName);
                         user.doorsToAccess.add("utedor");
+                        if(reference.isApprovedForCheckin(room.id)) {
+                            user.doorsToAccess.add(room.roomName);
+                        }
                         String[] names = name.split(" ");
                         user.firstName = names[0];
                         user.lastName = name.substring(user.firstName.length()).trim();
@@ -531,5 +543,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 return f2.rowCreatedDate.compareTo(f1.rowCreatedDate);
             }
         });
+    }
+
+    @Override
+    public void markRoomAsReady(String roomId) throws ErrorException {
+        getRoom(roomId).isClean = true;
+        saveObject(getRoom(roomId));
     }
 }

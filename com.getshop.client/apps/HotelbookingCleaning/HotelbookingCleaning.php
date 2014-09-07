@@ -32,11 +32,11 @@ class HotelbookingCleaning extends \ApplicationBase implements \Application {
     public function getStarted() {
     }
 
+    public function markRoom() {
+        $this->getApi()->getHotelBookingManager()->markRoomAsReady($_POST['data']['roomId']);
+    }
+    
     public function render() {
-        echo "<pre>";
-        $reservations = $this->getApi()->getHotelBookingManager()->getAllReservations();
-        print_r($reservations);
-        echo "</pre>";
         $this->includefile("cleaning");
     }
 }

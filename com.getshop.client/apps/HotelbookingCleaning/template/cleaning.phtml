@@ -1,4 +1,67 @@
 <?php
+
 namespace ns_020b57c2_8f80_46e1_a420_cb163f4fb2d2;
+
 /* @var $this ns_020b57c2_8f80_46e1_a420_cb163f4fb2d2\HotelbookingCleaning */
+
+$rooms = $this->getApi()->getHotelBookingManager()->getAllRooms();
+$reservations = $this->getApi()->getHotelBookingManager()->getAllReservations();
+echo "<br><br>";
+echo "<h1>Guests arriving today</h1>";
+printGuestTable($reservations, $rooms, true);
+echo "<br><br>";
+echo "<h1>Guests leaving today</h1>";
+printGuestTable($reservations, $rooms, false);
+
+function printGuestTable($reservations, $rooms, $arriving) {
+
+    $roomlist = array();
+    foreach ($rooms as $room) {
+        $roomlist[$room->id] = $room;
+    }
+    $found = false;
+    echo "<table width='100%'>";
+    echo "<tr>";
+    echo "<th align='left'>Room id</th>";
+    echo "<th align='left'>Name of guest</th>";
+    echo "<th align='left'>Action</th>";
+    foreach ($reservations as $reservation) {
+        if ($arriving) {
+            $startdate = strtotime($reservation->startDate);
+        } else {
+            $startdate = strtotime($reservation->endDate);
+        }
+        if (date("Ymd", time()) == date("Ymd", $startdate)) {
+            $found = true;
+            echo "<tr>";
+            echo "<td valign='top' width='150'>";
+            foreach ($reservation->roomIds as $roomId) {
+                echo $roomlist[$roomId]->roomName . "<br>";
+            }
+            echo "</td>";
+            echo "<td valign='top'>";
+            foreach ($reservation->contact->names as $contact) {
+                echo $contact . "<br>";
+            }
+            echo "</td>";
+            echo "<td>";
+            foreach ($reservation->roomIds as $roomId) {
+                if ($roomlist[$roomId]->isClean || (isset($reservation->isApprovedForCheckIn->{$roomId}) && $reservation->isApprovedForCheckIn->{$roomId} && $arriving)) {
+                    echo "<span style='line-height: 20px;' class='alreadyready'>room is already ready</span>";
+                } else {
+                    echo "<span style='line-height: 20px;' class='markroomasready' roomId='".$roomId."'>Mark room as ready</span>";
+                }
+                echo "<br>";
+            }
+            echo "</td>";
+            echo "</tr>";
+        }
+    }
+    echo "</table>";
+
+    if (!$found) {
+        echo "No guests are arriving today.";
+    }
+}
 ?>
+<br><br><br>

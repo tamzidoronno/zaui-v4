@@ -12,6 +12,7 @@ public class Room extends DataCommon {
     public String currentCode;
     public String roomName;
     public Boolean isActive = true;
+    public Boolean isClean = false;
     
     //Identify what lock is connected to this room.
     public String lockId;

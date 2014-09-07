@@ -2,6 +2,7 @@ package com.thundashop.core.hotelbookingmanager;
 
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,22 @@ public class BookingReference extends DataCommon {
     public boolean isApprovedForCheckin(String roomId) {
         if(isApprovedForCheckIn.containsKey(roomId)) {
             return isApprovedForCheckIn.get(roomId);
+        }
+        return false;
+    }
+
+    boolean isToday() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(startDate);
+        int dayofyear = cal.get(Calendar.DAY_OF_YEAR);
+        int year = cal.get(Calendar.YEAR);
+        
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(new Date());
+        int dayofyear2 = cal2.get(Calendar.DAY_OF_YEAR);
+        int year2 = cal2.get(Calendar.YEAR);
+        if((dayofyear == dayofyear2) && (year == year2)) {
+            return true;
         }
         return false;
     }

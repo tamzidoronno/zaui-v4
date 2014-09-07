@@ -61,20 +61,22 @@ Existing booking references
             $order = $this->getApi()->getOrderManager()->getOrderByReference($reservation->bookingReference);
             /* @var $reservation \core_hotelbookingmanager_BookingReference */
             echo "<tr reservation='".$reservation->bookingReference."'>";
-            echo "<td style='text-align:center;'><i style='cursor:pointer' refid='".$reservation->bookingReference."' class='fa fa-trash-o delete_reference'></td>";
-            echo "<td>" . $reservation->rowCreatedDate . "</td>";
-            echo "<td>";
+            echo "<td style='text-align:center;' valign='top'><i style='cursor:pointer' refid='".$reservation->bookingReference."' class='fa fa-trash-o delete_reference'></td>";
+            echo "<td valign='top'>" . $reservation->rowCreatedDate . "</td>";
+            echo "<td valign='top'>";
             if($order && $order->userId) {
                 $user = $this->getApi()->getUserManager()->getUserById($order->userId);
-                echo "<a href='?page=users_all_users&userid=".$order->userId."'>" . $user->fullName . "</a>";
+                echo "<a href='?page=users_all_users&userid=".$order->userId."'>";
+                echo join("<br>", $reservation->contact->names);
+                echo "</a>";
             }
             echo "</td>";
-            echo "<td style='text-align:center;'>" . $reservation->bookingReference . "</td>";
-            echo "<td style='text-align:center;'>" . join(", ", $roomarray) . "</td>";
-            echo "<td style='text-align:center;'>" . $reservation->startDate . "</td>";
-            echo "<td style='text-align:center;'>" . $reservation->endDate . "</td>";
-            echo "<td style='text-align:center;'><input type='text' style='width: 40px;' class='adminfee' value='".$reservation->bookingFee."'></td>";
-            echo "<td style='text-align:center;'>";
+            echo "<td style='text-align:center;' valign='top'>" . $reservation->bookingReference . "</td>";
+            echo "<td style='text-align:center;' valign='top'>" . join("<br>", $roomarray) . "</td>";
+            echo "<td style='text-align:center;' valign='top'>" . $reservation->startDate . "</td>";
+            echo "<td style='text-align:center;' valign='top'>" . $reservation->endDate . "</td>";
+            echo "<td style='text-align:center;' valign='top'><input type='text' style='width: 40px;' class='adminfee' value='".$reservation->bookingFee."'></td>";
+            echo "<td style='text-align:center;' valign='top'>";
             echo "<a target='_new' onclick=\"window.open('/scripts/generateContract.php?userid=".$user->id."&refid=".$reservation->bookingReference."&type=standard')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".$user->referenceKey."' class='fa fa-file-pdf-o'></i></a> ";
             echo "<a target='_new' onclick=\"window.open('http://".$_SERVER['SERVER_NAME']."/scripts/generateContract.php?userid=".$user->id."&refid=".$reservation->bookingReference."&type=bilag')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".$user->referenceKey."' class='fa fa-plus'></i></a> ";
             echo "<a target='_new' onclick=\"window.open('http://".$_SERVER['SERVER_NAME']."/scripts/generateContract.php?userid=".$user->id."&refid=".$reservation->bookingReference."&type=autogiro')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".$user->referenceKey."' class='fa fa-car'></i></a>";
@@ -110,7 +112,6 @@ Existing rooms:<br>
             <td>Active</td>
             <td>Room name</td>
             <td>Lock id</td>
-            <td>Current code</td>
         </tr>
         <?
         foreach($rooms as $room) {

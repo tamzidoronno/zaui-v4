@@ -36,9 +36,14 @@ app.HotelbookingManagement = {
         }
     },
     updateRoom : function() {
+        var rooms = {};
+        $('.HotelbookingManagement .roomselection').each(function() {
+            rooms[$(this).attr('oldroom')] = $(this).val();
+        });
         var data = {
-            "newRoom" : $('.HotelbookingManagement #moveRoomSelection').val(),
-            "oldRoom" : $('.HotelbookingManagement #oldRoom').val(),
+            "rooms" : rooms,
+            "enddate" : $('.HotelbookingManagement .enddate').val(),
+            "startdate" : $('.HotelbookingManagement .startdate').val(),
             "refid" : $('.HotelbookingManagement #referenceId').val()
         }
         var event = thundashop.Ajax.createEvent("", "moveRoom", $(this), data);

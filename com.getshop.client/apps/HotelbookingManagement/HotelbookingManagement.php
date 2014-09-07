@@ -130,10 +130,16 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
     
     public function moveRoom() {
         $refid = $_POST['data']['refid'];
-        $newroomid = $_POST['data']['newRoom'];
-        $oldRoom = $_POST['data']['oldRoom'];
+        $rooms = $_POST['data']['rooms'];
         
-        $this->getApi()->getHotelBookingManager()->moveRoomOnReference($refid, $oldRoom, $newroomid);
+        $reference = $this->getApi()->getHotelBookingManager()->getReservationByReferenceId($refid);
+        $reference->startDate = date("M d, Y h:m:s A", strtotime($_POST['data']['startdate']));
+        $reference->endDate = date("M d, Y h:m:s A", strtotime($_POST['data']['enddate']));
+        $this->getApi()->getHotelBookingManager()->updateReservation($reference);
+
+        foreach($rooms as $id => $room) {
+            $this->getApi()->getHotelBookingManager()->moveRoomOnReference($refid, $id, $room);
+        }
     }
     
     /**
@@ -176,7 +182,6 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         echo "</td>";
         echo "<td><input gsname='roomname_".$room->id."' value='" . $room->roomName . "'></td>";
         echo "<td><input gsname='lockid_".$room->id."' value='" . $room->lockId . "'></td>";
-        echo "<td><input gsname='lockcode_".$room->id."' value='" . $room->currentCode . "'></td>";
         echo "</tr>";
     }
 }

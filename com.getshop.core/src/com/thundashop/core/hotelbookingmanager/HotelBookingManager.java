@@ -371,6 +371,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                         user.code = reference.codes.get(i);
                         user.reference = reference.bookingReference + "";
                         sendUserToArx(user);
+                        i++;
                     }
                     reference.updateArx = false;
                     databaseSaver.saveObject(reference, credentials);

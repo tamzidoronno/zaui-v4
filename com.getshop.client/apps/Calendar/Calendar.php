@@ -747,9 +747,23 @@ class Calendar extends MarketingApplication implements Application {
     public function addUserToEventSilent() {
         $this->getApi()->getCalendarManager()->addUserSilentlyToEvent($_POST['data']['entryId'], $_POST['data']['userId']);
     }
+
+    public function getSource($user, $entry) {
+        if (!$this->hasWriteAccess()) {
+            return "";
+        }
+        
+        foreach($entry->metaInfo as $metaInfo) {
+            if ($metaInfo->userId == $user->id) {
+                if ($metaInfo->source == "webpage") {
+                    return "<i class='source fa fa-globe'></i>";
+                } else {
+                    return "<i class='source fa fa-mobile'></i>";
+                }
+            }
+        }
+        
+        return "";
+    }
 }
-
-
-
 ?>
-

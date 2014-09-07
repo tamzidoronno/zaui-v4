@@ -38,14 +38,16 @@ if (!isset($file)) {
 
 header("Content-Type: application/octet-stream");
 
-//$file = $_GET["file"] .".pdf";
-header("Content-Disposition: attachment; filename=$file");   
-header("Content-Type: application/octet-stream");
-header("Content-Type: application/download");
-header("Content-Description: File Transfer");            
-$file = "../docs/$file";
+header("Pragma: public");
+header("Expires: 0");
+header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+header("Cache-Control: public");
+header("Content-Description: File Transfer");
+header("Content-type: application/pdf");
+header("Content-Disposition: attachment; filename=\"$file\"");
+header("Content-Transfer-Encoding: binary");
 header("Content-Length: " . filesize($file));
-flush(); // this doesn't really matter.
+
 $fp = fopen($file, "r");
 while (!feof($fp))
 {

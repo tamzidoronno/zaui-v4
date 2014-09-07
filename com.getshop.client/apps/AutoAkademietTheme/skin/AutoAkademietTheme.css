@@ -494,3 +494,17 @@ html {
 .Calendar .calendar_tabs a {
     color: #FFF;
 }
+
+.TopMenu .subentries a {
+    line-height: 32px;
+}
+
+.TopMenu .subentries li {
+    border-bottom: solid 1px #333;
+    padding-left: 0px;
+}
+
+.TopMenu .subentries {
+    background-color: #161616;
+    border: solid 1px #333;
+}

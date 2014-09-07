@@ -22,7 +22,8 @@ function sortByCreditBalance($a, $b) {
         $balance = $account->creditAccount->balance;
         $name = $this->getApi()->getUserManager()->getUserById($id)->fullName;
         $isNorwegian = $account->isNorwegian == "true" ? "norwegian" : "";
-        echo "<div class='balancerow $isNorwegian'><div class='col col1'>$id</div><div class='col col2'>$name</div><div class='col col3'>$balance</div></div>";
+        $switch = "<a href='/impersonate.php?userId=$id'>Switch</a>";
+        echo "<div userid='$id' class='showuser balancerow $isNorwegian'><div class='col col1'>$id</div><div class='col col2'>$name</div><div class='col col3'>$balance</div><div class='col col4'>$switch</div></div>";
     }
     ?>
 </div>

@@ -140,6 +140,15 @@ class SedoxProductView extends \ApplicationBase implements \Application {
         echo "Extra information:";
         echo "<br><input id='extrafileinformationbox' type='textfield' placeholder='$text'/>";
         echo "<br><div fileid='$fileid' productid='$productId' class='gs_button saveextrainfo'>Save</div>";
+        echo "<div class='checkbuttons' style='text-align: left; width: 230px;'><br><input type='radio' name='info' value='Tuning with DPF removal'/>Tuning with DPF removal";
+        echo "<br><input type='radio' name='info' value='Power with DPF removal'/>Power with DPF removal";
+        echo "<br><input type='radio' name='info' value='Tuning with EGR removal'/>Tuning with EGR removal";
+        echo "<br><input type='radio' name='info' value='Power with EGR removal'/>Power with EGR removal";
+        echo "<br><input type='radio' name='info' value='Tuning with DPF and EGR removal'/>Tuning with DPF and EGR removal";
+        echo "<br><input type='radio' name='info' value='Power with DPF and EGR removal'/>Power with DPF and EGR removal";
+        echo "<br><input type='radio' name='info' value='DPF removal only'/>DPF removal only";
+        echo "<br><input type='radio' name='info' value='EGR removal only'/>EGR removal only";
+        echo "<br><input type='radio' name='info' value='DPF and EGR removal only'/>DPF and EGR removal only</div>";
         echo "</center>";
     }
     

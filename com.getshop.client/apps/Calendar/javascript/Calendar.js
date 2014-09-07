@@ -469,6 +469,12 @@ $('.Calendar .transferUser').live('click', function() {
 });
 
 $('.Calendar .remove').live('click', function() {
+    var confirm = thundashop.common.confirm(__f("Are you sure you want to remove the candidate from this event?"));
+
+    if (!confirm) {
+        return;
+    }
+    
     var data = {
         userid: $(this).attr('userid'),
         entryid: $(this).attr('entryid')

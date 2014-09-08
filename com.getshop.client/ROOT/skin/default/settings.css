@@ -1,0 +1,121 @@
+/* 
+    Document   : settings.css
+    Created on : Sep 7, 2014, 8:04:02 PM
+    Author     : ktonder
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+#backsidesettings {
+    display: block;
+    z-index: 111112;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background-color: #CCC;
+    background: linear-gradient(to bottom, #222, #111);
+    color: #CCC;
+    font-size: 14px;
+}
+
+.store_settings_button:hover {
+    background-color: green;
+    background: linear-gradient(to bottom, green, red);
+    color: #FFF;
+}
+
+#backsidesettings .topmenu {
+    height: 50px;
+    background: rgba(0,0,0,0.3);
+    border-bottom: solid 1px #000;
+    color: #FFF;
+}
+
+#backsidesettings .topmenu .topmenu-button i {
+    padding-right: 5px;
+}
+#backsidesettings .topmenu .topmenu-button.active { 
+    color: #31f431;
+}
+#backsidesettings .topmenu .topmenu-button {
+    cursor: pointer;
+    line-height: 30px;
+    padding: 10px;
+    border-right: solid 2px #000;
+    display: inline-block; 
+}
+
+#backsidesettings .settings_main_area {
+    padding: 20px;
+}
+
+#backsidesettings .settings_main_area .appview img { 
+    width: 100px;
+    vertical-align: center;
+    margin-right: 10px;
+}
+
+#backsidesettings .settings_main_area .appview {
+    padding: 10px;
+    display: inline-block;
+    border: solid 1px #000;
+    height: 150px;
+    width: 400px;
+    margin: 10px;
+    background: rgba(0,0,0,0.3);
+    vertical-align: top;
+    position: relative;
+}
+
+#backsidesettings .settings_main_area .imagebox {
+    display: inline-block;
+    width: 100px;
+    height: 150px;
+    vertical-align: top;
+}
+
+#backsidesettings .settings_main_area .description {
+    display: inline-block;
+    width: 280px;
+    padding-left: 10px;
+}
+
+#backsidesettings .settings_main_area .activate_button {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 80px;
+    height: 30px;
+    color: #31bff4;
+    border-left: solid 1px #333;
+    border-top: solid 1px #333;
+    text-align: center;
+    line-height: 30px;
+    cursor: pointer;
+}
+
+#backsidesettings .settings_main_area .activate_button:hover {
+    background: linear-gradient(to bottom, #f4b131, #c12000);
+    color: #FFF;
+}
+
+#backsidesettings .settings_main_area .activate_button:active {
+    background: #c12000;
+}
+
+#backsidesettings .bottominfo {
+    border-top: solid 1px #333;
+    margin-top: 10px;
+    padding: 15px;
+    text-align: center;
+}
+
+#backsidesettings .settings_main_area .description .title {
+    border-bottom: solid 1px #333;
+    font-weight: bold;
+    color: #FFF;
+    padding-bottom: 3px;
+    margin-bottom: 3px;
+}

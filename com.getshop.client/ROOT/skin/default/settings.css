@@ -69,6 +69,18 @@
     position: relative;
 }
 
+#backsidesettings .infobox { 
+    width:100%;
+    padding-left: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: inline-block;
+    border-bottom: solid 1px #000;
+    background: rgba(0,0,0,0.3);
+    vertical-align: top;
+    position: relative;
+}
+
 #backsidesettings .settings_main_area .imagebox {
     display: inline-block;
     width: 100px;

@@ -103,6 +103,10 @@ if (@$factory->getApplicationPool()->getSelectedThemeApp()->applicationSettings-
     echo '<link rel="stylesheet" type="text/css" href="skin/default/responsive.css" />';
 }
 
+if ($factory->isEditorMode()) {
+    echo '<link rel="stylesheet" type="text/css" href="skin/default/settings.css" />';
+}
+
 if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
     $result = $factory->getApi()->getUserManager()->getLoggedOnUser();
     if ($result && !ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {
@@ -185,6 +189,10 @@ if(isset($factory->getSettings()->languages)) {
         <title><?php echo $title; ?></title>
     </head>
     <body editormode="<? echo $factory->isEditorMode() ? "true" : "false"?>">
+        <? if ($factory->isEditorMode()) {
+            echo "<div class='store_settings_button fa fa-gears'></div>";
+        }
+        ?>
         <? if (@$factory->getStore()->isDeepFreezed) { ?>
             <div class='deepfreezedActivated'><? echo $factory->__f("Warning! this store will automatically be reset to original state each hour") ?></div>
         <? } ?>
@@ -222,6 +230,15 @@ if(isset($factory->getSettings()->languages)) {
             });
         </script>
 
+        <?
+        if ($factory->isEditorMode()) { ?>
+            <div id='backsidesettings'>
+                <? include('../template/default/Common/settings.phtml'); ?>
+            </div>
+        <?
+        }
+        ?>
+        
         <div id="errorbox"></div>
         <?php echo $html; ?>
 
@@ -234,7 +251,6 @@ if(isset($factory->getSettings()->languages)) {
 
     </body>
 
-
     <?php
     $analytics = $factory->getApplicationPool()->getApplicationInstance("ba885f72-f571-4a2e-8770-e91cbb16b4ad");
     if ($analytics) {
@@ -243,6 +259,7 @@ if(isset($factory->getSettings()->languages)) {
     ?>
 
 </html>
+
 <?
 if (count($factory->getApi()->transport->errors) > 0) {
     echo "<script>";

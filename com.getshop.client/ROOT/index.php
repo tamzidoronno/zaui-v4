@@ -104,7 +104,7 @@ if (@$factory->getApplicationPool()->getSelectedThemeApp()->applicationSettings-
 }
 
 if ($factory->isEditorMode()) {
-    echo '<link rel="stylesheet" type="text/css" href="skin/default/settings2.css" />';
+    echo '<link rel="stylesheet" type="text/css" href="skin/default/settings.css" />';
 }
 
 if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {

@@ -4,7 +4,7 @@
  */
 package com.thundashop.core.listmanager.data;
 
-import com.google.code.morphia.annotations.Transient;
+import org.mongodb.morphia.annotations.Transient;
 import com.thundashop.core.common.Translation;
 import com.thundashop.core.common.TranslationHandler;
 import java.io.Serializable;

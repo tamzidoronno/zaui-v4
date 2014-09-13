@@ -222,3 +222,8 @@ Existing rooms:<br>
 <script>
     setInterval(function(){ app.HotelbookingManagement.refreshArxLog(); }, 5000);
 </script>
+
+<?php
+
+ $this->getApi()->getHotelBookingManager()->checkForVismaTransfer();
+?>

@@ -1712,6 +1712,20 @@ class APIHotelBookingManager {
 	* @throws ErrorException
 	*/
 
+	public function checkForVismaTransfer() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "checkForVismaTransfer";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
+	* @return void
+	* @throws ErrorException
+	*/
+
 	public function deleteReference($reference) {
 	     $data = array();
 	     $data['args'] = array();

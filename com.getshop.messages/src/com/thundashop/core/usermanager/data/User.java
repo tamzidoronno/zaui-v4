@@ -7,6 +7,9 @@ package com.thundashop.core.usermanager.data;
 import com.google.code.morphia.annotations.Transient;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
+import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -64,6 +67,8 @@ public class User extends DataCommon implements Comparable<User> {
     
     public Company company = null;
     
+    public Integer customerId = -1;
+    
     //ApplicationId, int = 0 rw, 1=r, 2=w
     public HashMap<String, Integer> applicationAccessList = new HashMap();
     
@@ -116,6 +121,37 @@ public class User extends DataCommon implements Comparable<User> {
     public void setKey(String key) {
         this.key = key;
     }
+    
+    /** 
+     * Generates a checksum for the user that can be used to compare users to eachother 
+     */
+    @Override
+    public String toString() {
+       String toCompare = "";
+       if(fullName != null) {
+           toCompare += fullName;
+       }
+       if(emailAddress != null) {
+           toCompare += emailAddress;
+       }
+       if(address != null) {
+           if(address.address != null) {
+               toCompare += address.address;
+           }
+           if(address.city != null) {
+               toCompare += address.city;
+           }
+           if(address.postCode != null) {
+               toCompare += address.postCode;
+           }
+       }
+       if(cellPhone != null) {
+           toCompare += cellPhone;
+       }
+       return toCompare;
+    }
+
+
     
     @Override
     public int compareTo(User o) {

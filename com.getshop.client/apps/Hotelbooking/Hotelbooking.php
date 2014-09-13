@@ -548,9 +548,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         }
         
         if($_POST['data']['customer_type'] == "private") {
-            if($name === "birthday" && strlen($_POST['data']['birthday']) != 8) {
+            if($name === "birthday" && (strlen($_POST['data']['birthday']) != 8 || substr_count($_POST['data']['birthday'], ".") != 2)) {
                 $this->invalid = true;
-                $this->errors[] = $this->__w("Birth date has to be formatted like dd.mm.yy");
+                $this->errors[] = $this->__w("Birth date has to be formatted like dd.mm.yy") . " <b>ex: 13.06.84</b>";
                 return "invalid";
             }
         } else {

@@ -93,4 +93,6 @@ public interface IHotelBookingManager {
     
     public List<ArxLogEntry> getArxLog() throws ErrorException;
     
+    public void checkForVismaTransfer() throws ErrorException;
+    
 }

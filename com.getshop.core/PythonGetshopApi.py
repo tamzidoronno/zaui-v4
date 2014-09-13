@@ -1761,6 +1761,14 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def checkForVismaTransfer(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "checkForVismaTransfer"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def deleteReference(self, reference):
     args = collections.OrderedDict()
     if isinstance(reference,GetShopBaseClass): 

@@ -9,12 +9,17 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.ordermanager.OrderManager;
+import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +27,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import javapns.notification.management.EmailPayload;
 import javax.annotation.PostConstruct;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -53,11 +60,18 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     public HashMap<String, Room> rooms = new HashMap();
     public HashMap<String, RoomType> roomTypes = new HashMap();
     public HashMap<Integer, BookingReference> bookingReferences = new HashMap();
+    private VismaUsers transferredUsers = new VismaUsers();
 
     public List<ArxLogEntry> logEntries = new ArrayList();
     
     @Autowired
     private ArxAccessCommunicator communicator;
+    
+    @Autowired
+    private UserManager userManager;
+    
+    @Autowired
+    private MessageManager messageManager;
 
     @PostConstruct
     public void addManager() {
@@ -549,5 +563,33 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     public void markRoomAsReady(String roomId) throws ErrorException {
         getRoom(roomId).isClean = true;
         saveObject(getRoom(roomId));
+    }
+
+    @Override
+    public void checkForVismaTransfer() throws ErrorException {
+        String result = "";
+        UserManager usrmgr = getManager(UserManager.class);
+        OrderManager ordermgr = getManager(OrderManager.class);
+        List<User> allUsers = usrmgr.getAllUsers();
+
+        for(User user : allUsers) {
+            if(!transferredUsers.checkTransferred(user) && user.isCustomer()) {
+                String generatedResult;
+                generatedResult = VismaUsers.generateVismaUserString(user);
+                if(generatedResult == null) {
+                    messageManager.mailFactory.send("internal@getshop.com", "post@getshop.com", "Failed to expert user to visma", "For storid: " + storeId + " userid: " + user.id + "("  + user.toString()+ ")");
+                } else {
+                    HashMap<Integer, BookingReference> references = new HashMap();
+                    for(Order order : ordermgr.getAllOrdersForUser(user.id)) {
+                        references.put(new Integer(order.reference), getReservationByReferenceId(new Integer(order.reference)));
+                    }
+                    
+                    result += generatedResult + "\r\n";
+                    result += VismaUsers.generateOrderLines(ordermgr.getAllOrdersForUser(user.id), user, references);
+                }
+            }
+        }
+        
+        System.out.println(result);
     }
 }

@@ -24,7 +24,11 @@ public class ArxAccessCommunicator extends ManagerBase {
      @Scheduled(fixedRate=3000)
     public synchronized void scheduledUsersToSend() throws ErrorException, UnsupportedEncodingException {
         for(HotelBookingManager manager : managers) {
-            manager.checkForArxUpdate();
+            try {
+                manager.checkForArxUpdate();
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
         }
     }
     

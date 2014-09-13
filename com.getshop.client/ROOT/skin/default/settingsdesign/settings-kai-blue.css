@@ -1,0 +1,160 @@
+/* 
+    Document   : settings.css
+    Created on : Sep 7, 2014, 8:04:02 PM
+    Author     : ktonder
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+#backsidesettings {
+    display: block;
+    z-index: 111112;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background-color: #CCC;
+    background: linear-gradient(to bottom, #385775, #2c4762);
+    color: #FFF;
+    font-size: 14px;
+}
+
+.store_settings_button:hover {
+    background-color: green;
+    background: linear-gradient(to bottom, green, red);
+}
+
+#backsidesettings .topmenu {
+    height: 50px;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+#backsidesettings .topmenu .topmenu-button i {
+   display: none;
+}
+#backsidesettings .topmenu .topmenu-button.active { 
+
+}
+
+#backsidesettings .topmenu .topmenu-button {
+    background-position: 0px 0px;
+    background-image: linear-gradient(to bottom, 
+        #687f96 1px,     
+        #466585 1px,   
+        #466585 100%     
+    );  
+    border: solid 1px #31485d;
+    height: 37px;
+    display: inline-block;
+    border-radius: 5px;
+    line-height: 37px;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-family: arial;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+#backsidesettings .topmenu .topmenu-button:first-child {
+    background-image: linear-gradient(to bottom, 
+        #738ba3 1px,     
+        #70adca 2px,   
+        #68a6c2 19px,
+        #5e9ebc 20px,
+        #5596b4 100%  
+    );
+    
+    color : #FFF;
+    box-shadow: 2px 2px 2px #314c64;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+
+#backsidesettings .settings_main_area {
+    padding: 20px;
+    background-color: #2c4762;
+}
+
+#backsidesettings .settings_main_area .appview img { 
+    width: 100px;
+    vertical-align: center;
+    margin-right: 10px;
+}
+
+#backsidesettings .settings_main_area .appview {
+    padding: 10px;
+    display: inline-block;
+    height: 150px;
+    width: 400px;
+    margin: 10px;
+    background-color: #FFF;
+    vertical-align: top;
+    border: solid 1px #2c4762;
+    position: relative;
+    border-radius: 5px;
+    color: #333;
+    box-shadow: 0px 0px 5px #333;
+}
+
+#backsidesettings .infobox { 
+    width:100%;
+    padding-left: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: inline-block;
+    background: rgba(0,0,0,0.3);
+    vertical-align: top;
+    position: relative;
+}
+
+#backsidesettings .settings_main_area .imagebox {
+    display: inline-block;
+    width: 100px;
+    height: 150px;
+    vertical-align: top;
+}
+
+#backsidesettings .settings_main_area .description {
+    display: inline-block;
+    width: 280px;
+    padding-left: 10px;
+}
+
+#backsidesettings .settings_main_area .activate_button {
+    position: absolute;
+    bottom: 3px;    
+    right: 3px;
+    width: 80px;
+    height: 30px;
+    background-color: #354f69;
+    border-radius: 5px 0px 5px 0px;
+    text-align: center;
+    line-height: 30px;
+    cursor: pointer;
+    color: #FFF;
+}
+
+#backsidesettings .settings_main_area .activate_button:hover {
+    background: #466585;
+}
+
+#backsidesettings .settings_main_area .activate_button:active {
+    background: #c12000;
+}
+
+#backsidesettings .bottominfo {
+    border-top: solid 1px #354f69;
+    margin-top: 10px;
+    padding: 15px;
+    text-align: center;
+}
+
+#backsidesettings .settings_main_area .description .title {
+    border-bottom: solid 1px #354f69;
+    font-weight: bold;
+    padding-bottom: 3px;
+    margin-bottom: 3px;
+}

@@ -4,7 +4,6 @@
  */
 package com.thundashop.core.databasemanager;
 
-import com.google.code.morphia.Morphia;
 import com.mongodb.*;
 import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
@@ -28,6 +27,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import org.mongodb.morphia.Morphia;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

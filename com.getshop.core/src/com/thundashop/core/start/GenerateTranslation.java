@@ -1,6 +1,6 @@
 package com.thundashop.core.start;
 
-import com.google.code.morphia.Morphia;
+import org.mongodb.morphia.Morphia;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;

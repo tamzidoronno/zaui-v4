@@ -93,7 +93,9 @@ public class ConvertPageLayouts  extends UpgradeBase {
                             if(area.type.startsWith("main_")) {
                             } else if(area.type.startsWith("col_")) {
                             } else {
-                                layout.otherAreas.put(area.type, area);
+                                if (area.type != null) {
+                                    layout.otherAreas.put(area.type, area);
+                                }
                             }
                         }
                     }

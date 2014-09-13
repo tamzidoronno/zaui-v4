@@ -4,14 +4,15 @@
  */
 package com.thundashop.core.common;
 
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.PostLoad;
+
 import com.thundashop.core.productmanager.data.Product;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Date;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.PostLoad;
 
 /**
  *

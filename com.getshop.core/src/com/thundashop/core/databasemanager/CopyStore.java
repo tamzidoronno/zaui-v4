@@ -4,7 +4,7 @@
  */
 package com.thundashop.core.databasemanager;
 
-import com.google.code.morphia.Morphia;
+import org.mongodb.morphia.Morphia;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;

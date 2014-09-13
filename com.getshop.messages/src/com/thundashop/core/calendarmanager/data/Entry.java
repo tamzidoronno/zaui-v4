@@ -4,7 +4,7 @@
  */
 package com.thundashop.core.calendarmanager.data;
 
-import com.google.code.morphia.annotations.Transient;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.mongodb.morphia.annotations.Transient;
 
 /**
  *

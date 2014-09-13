@@ -19,7 +19,7 @@ public class PageLayout implements Serializable {
     public int marginRightSideBar = 10;
     
     //This areas contains the left sidebar areas, and other areas, like product, and special areas.
-    public HashMap<String, PageArea> otherAreas = new HashMap();
+    public HashMap<String, PageArea> otherAreas = new HashMap<String, PageArea>();
     public LinkedList<String> sortedRows = new LinkedList();
     public LinkedList<RowLayout> rows = new LinkedList();
 
@@ -102,7 +102,7 @@ public class PageLayout implements Serializable {
     }
 
     PageArea getPageArea(String pageArea) throws ErrorException {
-        
+  
         for(RowLayout row : rows) {
             for (PageArea area : row.areas) {
                 if(area.type.equals(pageArea)) {
@@ -115,9 +115,11 @@ public class PageLayout implements Serializable {
             return otherAreas.get(pageArea);
         }
 	
-	PageArea area = new PageArea();
-	area.type = pageArea;
-	otherAreas.put(pageArea, area);
+        PageArea area = new PageArea();
+        area.type = pageArea;
+        
+        otherAreas.put(pageArea, area);
+        
         return area;
     }
 

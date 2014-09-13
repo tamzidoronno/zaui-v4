@@ -16,6 +16,9 @@ class core_hotelbookingmanager_Room extends core_common_DataCommon  {
 	public $isActive;
 
 	/** @var String */
+	public $isClean;
+
+	/** @var String */
 	public $lockId;
 
 }

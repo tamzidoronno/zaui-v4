@@ -6,7 +6,7 @@
  **/
 package com.thundashop.core.pagemanager.data;
 
-import com.google.code.morphia.annotations.Transient;
+import org.mongodb.morphia.annotations.Transient;
 import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
@@ -43,7 +43,7 @@ public class Page extends DataCommon implements Cloneable {
     @Translation
     public String title;
     public String customCss = "";
-    
+
     public Page() {
     }
 

@@ -5,4 +5,11 @@ import com.thundashop.core.common.DataCommon;
 public class CommonPageData extends DataCommon {
     public PageArea header = new PageArea();
     public PageArea footer = new PageArea();
+
+    public CommonPageData() {
+        header.type = "header";
+        footer.type = "footer";
+    }
+    
+    
 }

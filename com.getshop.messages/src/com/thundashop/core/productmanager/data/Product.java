@@ -1,6 +1,6 @@
 package com.thundashop.core.productmanager.data;
 
-import com.google.code.morphia.annotations.Transient;
+import org.mongodb.morphia.annotations.Transient;
 import com.google.gson.Gson;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;

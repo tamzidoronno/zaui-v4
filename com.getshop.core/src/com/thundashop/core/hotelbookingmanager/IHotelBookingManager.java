@@ -1,6 +1,7 @@
 package com.thundashop.core.hotelbookingmanager;
 
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import java.util.List;
@@ -84,6 +85,9 @@ public interface IHotelBookingManager {
     
     @Administrator
     public void setArxConfiguration(String address, String username, String password) throws ErrorException;
+    
+    @Editor
+    public void markRoomAsReady(String roomId) throws ErrorException;
     
     public BookingReference getReservationByReferenceId(Integer referenceId) throws ErrorException;
     

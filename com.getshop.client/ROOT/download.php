@@ -32,6 +32,9 @@ if ($_GET['file'] == 9)
 if ($_GET['file'] == 10)
     $file = "1.1 Kunnskapsfornying i elektronikk.pdf";
 
+if ($_GET['file'] == 11)
+    $file = "1.2 Auto Kommunikasjonsteknikk_2014_LK.pdf";
+
 if (!isset($file)) {
     return;
 }
@@ -46,7 +49,10 @@ header("Content-Description: File Transfer");
 header("Content-type: application/pdf");
 header("Content-Disposition: attachment; filename=\"$file\"");
 header("Content-Transfer-Encoding: binary");
-header("Content-Length: " . filesize($file));
+
+$file = "../docs/$file";
+$fileSize = filesize($file);
+header("Content-Length: $fileSize");
 
 $fp = fopen($file, "r");
 while (!feof($fp))

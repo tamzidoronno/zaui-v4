@@ -1,8 +1,8 @@
 package com.thundashop.core.appmanager.data;
 
-import com.google.code.morphia.annotations.Transient;
 import com.thundashop.core.common.DataCommon;
 import java.util.Date;
+import org.mongodb.morphia.annotations.Transient;
 
 public class ApplicationSubscription extends DataCommon {
     public String appSettingsId;

@@ -1,7 +1,7 @@
 <?php
 class core_hotelbookingmanager_ArxUser extends core_common_DataCommon  {
 	/** @var String */
-	public $id;
+	public $userId;
 
 	/** @var String */
 	public $firstName;

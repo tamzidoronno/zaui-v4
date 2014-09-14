@@ -60,7 +60,7 @@ import org.springframework.stereotype.Component;
 public class HotelBookingManager extends ManagerBase implements IHotelBookingManager {
 
     public BookingSettings booksettings = new BookingSettings();
-    public ArxSettings arxSettings;
+    public ArxSettings arxSettings = new ArxSettings();
     public VismaSettings vismaSettings = new VismaSettings();
 
     public HashMap<String, Room> rooms = new HashMap();
@@ -707,6 +707,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Override
     public String getEmailMessage(String language) throws ErrorException {
+        if(arxSettings == null) {
+            return "";
+        }
         if (language != null && language.equals("nb_NO")) {
             return arxSettings.emailWelcomeNO;
         }
@@ -717,6 +720,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     private String getEmailTitle(String language) {
+        if(arxSettings == null) {
+            return "";
+        }
         if (language != null && language.equals("nb_NO")) {
             return arxSettings.emailWelcomeTitleNO;
         }

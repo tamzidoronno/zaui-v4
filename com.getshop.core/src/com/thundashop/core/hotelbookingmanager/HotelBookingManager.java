@@ -71,18 +71,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     public List<ArxLogEntry> logEntries = new ArrayList();
 
     @Autowired
-    private ArxAccessCommunicator communicator;
-
-    @Autowired
     private UserManager userManager;
 
     @Autowired
     private MessageManager messageManager;
-
-    @PostConstruct
-    public void addManager() {
-        communicator.addManager(this);
-    }
 
     @Autowired
     MessageManager msgmgr;
@@ -173,7 +165,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     @Override
-    public String reserveRoom(String roomType, long startDate, long endDate, int count, ContactData contact, boolean markRoomInactive) throws ErrorException {
+    public String reserveRoom(String roomType, long startDate, long endDate, int count, ContactData contact, boolean markRoomInactive, String language) throws ErrorException {
         //First make sure there is enough rooms available.
         RoomType roomtype = getRoomType(roomType);
         Integer availableRooms = checkAvailable(startDate, startDate, roomtype.name);
@@ -182,16 +174,28 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
 
         Date start = new Date(startDate * 1000);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(start);
+        cal.set(Calendar.HOUR_OF_DAY, 15);
+        cal.set(Calendar.MINUTE, 0);
+        start = cal.getTime();
+
         Date end = new Date(endDate * 1000);
+        cal.setTime(end);
+        cal.set(Calendar.HOUR_OF_DAY, 12);
+        cal.set(Calendar.MINUTE, 0);
+        end = cal.getTime();
 
         BookingReference reference = new BookingReference();
         reference.bookingReference = genereateReferenceId();
         reference.startDate = start;
         reference.endDate = end;
-
+        reference.sentWelcomeMessages = false;
+        reference.language = language;
         for (int i = 0; i < count; i++) {
             Room room = getAvailableRoom(roomtype.id, start, end);
-            reference.codes.add(room.reserveDates(start, end, reference.bookingReference));
+            Integer code = room.reserveDates(start, end, reference.bookingReference);
+            reference.codes.add(code);
             reference.roomIds.add(room.id);
             room.storeId = storeId;
             if (markRoomInactive) {
@@ -371,7 +375,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     void checkForArxUpdate() throws ErrorException, UnsupportedEncodingException {
 
-        if (arxSettings != null) {
+        if (arxSettings != null && arxSettings.address != null && !arxSettings.address.isEmpty()) {
             for (BookingReference reference : bookingReferences.values()) {
 
                 if (reference.isToday()) {
@@ -379,6 +383,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                         if (getRoom(roomid).isClean && !reference.isApprovedForCheckin(roomid)) {
                             reference.isApprovedForCheckIn.put(roomid, true);
                             reference.updateArx = true;
+                            notifyCustomersReadyRoom(reference);
                         }
                     }
                 }
@@ -388,9 +393,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                     int i = 0;
 
                     for (String name : reference.contact.names) {
+                        if(reference.roomIds.size() >= i) {
+                            continue;
+                        }
                         String roomId = reference.roomIds.get(i);
                         Room room = getRoom(roomId);
-                        System.out.println(roomId);
                         ArxUser user = new ArxUser();
                         user.doorsToAccess.add("utedor");
                         if (reference.isApprovedForCheckin(room.id)) {
@@ -529,13 +536,12 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     @Override
-    public void setArxConfiguration(String address, String username, String password) throws ErrorException {
+    public void setArxConfiguration(ArxSettings settings) throws ErrorException {
         if (arxSettings == null) {
             arxSettings = new ArxSettings();
         }
-        arxSettings.address = address;
-        arxSettings.username = username;
-        arxSettings.password = password;
+        settings.id = arxSettings.id;
+        arxSettings = settings;
         saveObject(arxSettings);
     }
 
@@ -573,6 +579,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Override
     public void checkForVismaTransfer() throws ErrorException {
+
+        if (vismaSettings == null || vismaSettings.address == null || vismaSettings.address.isEmpty()) {
+            return;
+        }
+
         String result = "";
         UserManager usrmgr = getManager(UserManager.class);
         OrderManager ordermgr = getManager(OrderManager.class);
@@ -596,19 +607,19 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
         }
         FTPClient client = new FTPClient();
-        if(vismaSettings != null && vismaSettings.address != null && !vismaSettings.address.isEmpty()) {
+        if (vismaSettings != null && vismaSettings.address != null && !vismaSettings.address.isEmpty()) {
             try {
                 client.connect(vismaSettings.address, vismaSettings.port);
                 client.login(vismaSettings.username, vismaSettings.password);
                 client.enterLocalPassiveMode();
                 client.setFileType(FTP.BINARY_FILE_TYPE);
                 int reply = client.getReplyCode();
-                if(!FTPReply.isPositiveCompletion(reply)) {
-                    messageManager.sendMail("post@getshop.com", "GetShop", "failed to log on to ftp visma server..", "Failed to connect to server: " + vismaSettings.address + " with username: " + vismaSettings.username + " to upload file. ", "post@getshop.com","Internal process");
+                if (!FTPReply.isPositiveCompletion(reply)) {
+                    messageManager.sendMail("post@getshop.com", "GetShop", "failed to log on to ftp visma server..", "Failed to connect to server: " + vismaSettings.address + " with username: " + vismaSettings.username + " to upload file. ", "post@getshop.com", "Internal process");
                     return;
                 }
-                String filename = "orders_" + new SimpleDateFormat("yyyyMMdd-k_m").format(new Date())+".edi";
-                String path = "/tmp/"+filename;
+                String filename = "orders_" + new SimpleDateFormat("yyyyMMdd-k_m").format(new Date()) + ".edi";
+                String path = "/tmp/" + filename;
                 PrintWriter writer = new PrintWriter(path, "UTF-8");
                 writer.print(result);
                 writer.close();
@@ -616,10 +627,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 boolean done = client.storeFile("./" + filename, inputStream);
                 inputStream.close();
                 if (!done) {
-                    messageManager.sendMail("post@getshop.com", "GetShop", "failed to upload file to visma.", "Failed to connect to server: " + vismaSettings.username + " to upload file. ( " + client.getReplyString() + ")", "post@getshop.com","Internal process");
+                    messageManager.sendMail("post@getshop.com", "GetShop", "failed to upload file to visma.", "Failed to connect to server: " + vismaSettings.username + " to upload file. ( " + client.getReplyString() + ")", "post@getshop.com", "Internal process");
                 }
             } catch (Exception e) {
-                messageManager.sendMail("post@getshop.com", "GetShop", "failed to upload file to visma.", "something failed when uploading visma file. ", "post@getshop.com","Internal process");
+                messageManager.sendMail("post@getshop.com", "GetShop", "failed to upload file to visma.", "something failed when uploading visma file. ", "post@getshop.com", "Internal process");
                 e.printStackTrace();
             }
         }
@@ -632,5 +643,145 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         vismaSettings.username = username;
         vismaSettings.port = port;
         saveObject(vismaSettings);
-    }   
+    }
+
+    private void notifyCustomersReadyRoom(BookingReference reference) throws ErrorException {
+        int i = 0;
+        for (String phonenumber : reference.contact.phones) {
+            Room room = getRoom(reference.roomIds.get(i));
+            int code = reference.codes.get(i);
+            String origMessage = arxSettings.smsReady;
+            if (reference.language.equals("nb_NO")) {
+                origMessage = arxSettings.smsReadyNO;
+            }
+
+            String message = formatMessage(reference, origMessage, room.roomName, code, reference.contact.names.get(i));
+            sendSMS(phonenumber, message);
+            i++;
+        }
+    }
+
+    private String formatMessage(BookingReference reference, String message, String roomName, Integer code, String name) throws ErrorException {
+        if(code != null) {
+            message = message.replaceAll("\\{code\\}", code + "");
+        }
+        if(roomName != null) {
+            message = message.replaceAll("\\{room\\}", roomName);
+        }
+        message = message.replaceAll("\\{checkin_time\\}", new SimpleDateFormat("dd-MM-yyyy H:m").format(reference.startDate) + "0");
+        message = message.replaceAll("\\{checkin_date\\}", new SimpleDateFormat("dd-MM-yyyy").format(reference.startDate));
+        message = message.replaceAll("\\{checkout_time\\}", new SimpleDateFormat("dd-MM-yyyy H:m").format(reference.endDate) + "0");
+        message = message.replaceAll("\\{name\\}", name);
+        message = message.replaceAll("\\{referenceNumber\\}", reference.bookingReference + "");
+        String contacts = "";
+        for (int i = 0; i < reference.contact.names.size(); i++) {
+            contacts += reference.contact.names.get(i) + "<br>";
+            contacts += reference.contact.phones.get(i) + "<br>";
+        }
+        message = message.replaceAll("\\{contacts\\}", contacts);
+
+        OrderManager ordermgr = getManager(OrderManager.class);
+        UserManager usermgr = getManager(UserManager.class);
+        Order order = ordermgr.getOrderByReference(reference.bookingReference + "");
+        if (order != null) {
+            message = message.replaceAll("\\{roomName\\}", order.cart.getItems().get(0).getProduct().name + "");
+            User user = usermgr.getUserById(order.userId);
+            if (user != null) {
+                message = message.replaceAll("\\{email\\}", user.emailAddress);
+                message = message.replaceAll("\\{address\\}", user.address.address);
+                message = message.replaceAll("\\{postCode\\}", user.address.postCode);
+                message = message.replaceAll("\\{city\\}", user.address.city);
+            }
+        }
+        return message;
+    }
+
+    private void sendSMS(String phonenumber, String message) {
+        try {
+            messageManager.smsFactory.send(arxSettings.smsFrom, phonenumber, message);
+        } catch (Exception e) {
+            //What do we do with sms that fails to be delivered?
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public String getEmailMessage(String language) throws ErrorException {
+        if (language != null && language.equals("nb_NO")) {
+            return arxSettings.emailWelcomeNO;
+        }
+        if (arxSettings.emailWelcome == null || arxSettings.emailWelcome.isEmpty()) {
+            return "";
+        }
+        return arxSettings.emailWelcome;
+    }
+
+    private String getEmailTitle(String language) {
+        if (language != null && language.equals("nb_NO")) {
+            return arxSettings.emailWelcomeTitleNO;
+        }
+        if (arxSettings.emailWelcomeTitle == null || arxSettings.emailWelcomeTitle.isEmpty()) {
+            return "";
+        }
+        return arxSettings.emailWelcomeTitle;
+    }
+
+    @Override
+    public void checkForArxTransfer() throws ErrorException {
+        try {
+            checkForArxUpdate();
+        } catch (UnsupportedEncodingException ex) {
+            messageManager.sendMail("post@getshop.com", "POst getshop", "Failed to tranfser to arx", ex.getMessage(), "internal process", "internal@getshop.com");
+            java.util.logging.Logger.getLogger(HotelBookingManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void checkForWelcomeMessagesToSend() throws ErrorException {
+
+        for (BookingReference reference : getAllReservations()) {
+            if (reference.sentWelcomeMessages) {
+                continue;
+            }
+
+            System.out.println("Sending welcome messages");
+
+            //Send sms messages.
+            for (int i = 0; i < reference.contact.names.size(); i++) {
+                if (arxSettings != null && arxSettings.smsWelcome != null && !arxSettings.smsWelcome.isEmpty()) {
+                    String origMessage = arxSettings.smsWelcome;
+                    if (reference.language.equals("nb_NO")) {
+                        origMessage = arxSettings.smsWelcomeNO;
+                    }
+                    if(i >= reference.roomIds.size()) {
+                        continue;
+                    }
+                    Room room = getRoom(reference.roomIds.get(i));
+                    String message = formatMessage(reference, origMessage, room.roomName, reference.codes.get(i), reference.contact.names.get(i));
+                    sendSMS(reference.contact.phones.get(i), message);
+                }
+            }
+
+            //Sending email confirmation to user.
+            String message = formatMessage(reference, getEmailMessage(reference.language), null, 0, reference.contact.names.get(0));
+            String title = formatMessage(reference, getEmailTitle(reference.language), null, 0, reference.contact.names.get(0));
+
+            OrderManager ordermgr = getManager(OrderManager.class);
+            UserManager usermgr = getManager(UserManager.class);
+            Order order = ordermgr.getOrderByReference(reference.bookingReference + "");
+            if (order != null) {
+                User user = usermgr.getUserById(order.userId);
+                if (user != null) {
+                    String copyadress = getSettings("Settings").get("mainemailaddress").value;
+                    if (copyadress != null && !copyadress.isEmpty()) {
+                        messageManager.mailFactory.send(copyadress, user.emailAddress, title, message);
+//                    messageManager.mailFactory.send(copyadress, copyadress, title, message);
+                        reference.sentWelcomeMessages = true;
+                        saveObject(reference);
+                    }
+                }
+            }
+        }
+
+    }
 }

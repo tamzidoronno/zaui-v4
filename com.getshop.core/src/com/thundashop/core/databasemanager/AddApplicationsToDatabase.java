@@ -60,7 +60,7 @@ public class AddApplicationsToDatabase {
                 "020b57c2-8f80-46e1-a420-cb163f4fb2d2",
                 allowed,
                 "",
-                ApplicationSettings.Type.Webshop, true);
+                ApplicationSettings.Type.Webshop, false);
         hotelvask.isPublic = false;
         apps.add(hotelvask);
         

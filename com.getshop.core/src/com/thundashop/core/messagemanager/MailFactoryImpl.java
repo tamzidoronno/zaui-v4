@@ -167,11 +167,11 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
                 message.setContent(content, "text/html; charset=UTF-8");
             }
             
-            if (frameworkConfig.productionMode) {
+//            if (frameworkConfig.productionMode) {
                 Transport.send(message);
-            } else {
-                System.out.println("Mail sent to: " + to + ", from: "+from+", subject: " + subject + ", content: " + content);
-            }
+//            } else {
+//                System.out.println("Mail sent to: " + to + ", from: "+from+", subject: " + subject + ", content: " + content);
+//            }
             
         } catch (Exception ex) {
             logger.error(this, "Was not able to send email... ", ex);

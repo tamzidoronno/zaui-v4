@@ -26,7 +26,7 @@ public interface IHotelBookingManager {
      * @param count The number of rooms to book.
      * @throws ErrorException 
      */
-    public String reserveRoom(String roomType, long startDate, long endDate, int count, ContactData contact, boolean markAsInctive) throws ErrorException;
+    public String reserveRoom(String roomType, long startDate, long endDate, int count, ContactData contact, boolean markAsInctive, String language) throws ErrorException;
     
     /**
      * Add new room to the manager.
@@ -40,6 +40,9 @@ public interface IHotelBookingManager {
     public void removeRoom(String id) throws ErrorException;
     
     public Room getRoom(String id) throws ErrorException;
+    
+    
+    public String getEmailMessage(String language) throws ErrorException;
     
     /**
      * Change a room for a reference.
@@ -84,7 +87,7 @@ public interface IHotelBookingManager {
     public void updateReservation(BookingReference reference) throws ErrorException;
     
     @Administrator
-    public void setArxConfiguration(String address, String username, String password) throws ErrorException;
+    public void setArxConfiguration(ArxSettings settings) throws ErrorException;
     
     @Administrator
     public void setVismaConfiguration(String address, String username, String password, Integer port) throws ErrorException;
@@ -97,5 +100,7 @@ public interface IHotelBookingManager {
     public List<ArxLogEntry> getArxLog() throws ErrorException;
     
     public void checkForVismaTransfer() throws ErrorException;
+    public void checkForArxTransfer() throws ErrorException;
+    public void checkForWelcomeMessagesToSend() throws ErrorException;
     
 }

@@ -208,13 +208,23 @@ Existing rooms:<br>
 
 
 <b>Arx server</b>
+<div>Variabler: {code}, {room}, {checkin_time}, {checkout_time}, {name}, {checkin_date}, {referenceNumber, {contacts}, {roomName}, {email}, {address}, {postCode}, {city}</div>
 <table gstype="form" method="saveArxData">
     <tr><td>Server address</td><td><input type="text" gsname="arx_server" value="<? echo $this->getConfigurationSetting("arx_server"); ?>"></td><tr>
     <tr><td>Server username</td><td><input type="text" gsname="arx_username" value="<? echo $this->getConfigurationSetting("arx_username"); ?>"></td><tr>
     <tr><td>Server password</td><td><input type="text" gsname="arx_password" value="<? echo $this->getConfigurationSetting("arx_password"); ?>"></td><tr>
+    <tr><td>Sms from</td><td><input type="text" gsname="arx_smsfrom" value="<? echo $this->getConfigurationSetting("arx_smsfrom"); ?>"></td><tr>
+    <tr><td>Sms welcome</td><td><input style="width: 800px;" type="text" gsname="arx_smswelcome" value="<? echo $this->getConfigurationSetting("arx_smswelcome"); ?>"></td><tr>
+    <tr><td>Sms ready</td><td><input style="width: 800px;" type="text" gsname="arx_smsready" value="<? echo $this->getConfigurationSetting("arx_smsready"); ?>"></td><tr>
+    <tr><td>Sms welcome (no)</td><td><input style="width: 800px;" type="text" gsname="arx_smswelcomeNO" value="<? echo $this->getConfigurationSetting("arx_smswelcomeNO"); ?>"></td><tr>
+    <tr><td>Sms ready (no)</td><td><input style="width: 800px;" type="text" gsname="arx_smsreadyNO" value="<? echo $this->getConfigurationSetting("arx_smsreadyNO"); ?>"></td><tr>
+    <tr><td>Welcome email title</td><td><input style="width: 800px;" type="text" gsname="arx_welcomeemail_title" value="<? echo $this->getConfigurationSetting("arx_welcomeemail_title"); ?>"></td><tr>
+    <tr><td>Welcome email</td><td><textarea style="width: 800px;height:200px;" type="text" gsname="arx_welcomeEmail"><? echo $this->getConfigurationSetting("arx_welcomeEmail"); ?></textarea></td><tr>
+    <tr><td>Welcome email title (no)</td><td><input style="width: 800px;" type="text" gsname="arx_welcomeemail_title_no" value="<? echo $this->getConfigurationSetting("arx_welcomeemail_title_no"); ?>"></td><tr>
+    <tr><td>Welcome email (no)</td><td><textarea style="width: 800px;height:200px;" type="text" gsname="arx_welcomeEmailNO"><? echo $this->getConfigurationSetting("arx_welcomeEmailNO"); ?></textarea></td><tr>
     <tr><td></td><td><input gstype="submit" type="button" value="Save"></td><tr>
 </table>
-
+<br><br>
 <b>Visma server</b>
 <table gstype="form" method="saveVismaData">
     <tr><td>Server address</td><td><input type="text" gsname="visma_server" value="<? echo $this->getConfigurationSetting("visma_server"); ?>"></td><tr>
@@ -240,4 +250,6 @@ Existing rooms:<br>
 <?php
 
  $this->getApi()->getHotelBookingManager()->checkForVismaTransfer();
+ $this->getApi()->getHotelBookingManager()->checkForArxTransfer();
+ $this->getApi()->getHotelBookingManager()->checkForWelcomeMessagesToSend();
 ?>

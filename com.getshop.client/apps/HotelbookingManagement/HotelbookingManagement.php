@@ -18,10 +18,35 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
     }
     
     public function saveArxData() {
-        $this->setConfigurationSetting("arx_server", $_POST['data']['arx_server']);
-        $this->setConfigurationSetting("arx_username", $_POST['data']['arx_username']);
-        $this->setConfigurationSetting("arx_password", $_POST['data']['arx_password']);
-        $this->getApi()->getHotelBookingManager()->setArxConfiguration($_POST['data']['arx_server'],  $_POST['data']['arx_username'], $_POST['data']['arx_password']);
+        
+        $settings = new \core_hotelbookingmanager_ArxSettings();
+        $settings->address = $_POST['data']['arx_server'];
+        $settings->username = $_POST['data']['arx_username'];
+        $settings->password = $_POST['data']['arx_password'];
+        $settings->smsFrom = $_POST['data']['arx_smsfrom'];
+        $settings->smsWelcome = $_POST['data']['arx_smswelcome'];
+        $settings->smsReady = $_POST['data']['arx_smsready'];
+        $settings->smsReadyNO = $_POST['data']['arx_smsreadyNO'];
+        $settings->smsWelcomeNO = $_POST['data']['arx_smswelcomeNO'];
+        $settings->emailWelcome = $_POST['data']['arx_welcomeEmail'];
+        $settings->emailWelcomeNO = $_POST['data']['arx_welcomeEmailNO'];
+        $settings->emailWelcomeTitle = $_POST['data']['arx_welcomeemail_title'];
+        $settings->emailWelcomeTitleNO = $_POST['data']['arx_welcomeemail_title_no'];
+
+        $this->setConfigurationSetting("arx_server", $settings->address);
+        $this->setConfigurationSetting("arx_username", $settings->username);
+        $this->setConfigurationSetting("arx_password", $settings->password);
+        $this->setConfigurationSetting("arx_smsfrom", $settings->smsFrom);
+        $this->setConfigurationSetting("arx_smswelcome", $settings->smsWelcome);
+        $this->setConfigurationSetting("arx_smsready", $settings->smsReady);
+        $this->setConfigurationSetting("arx_smsreadyNO", $settings->smsReadyNO);
+        $this->setConfigurationSetting("arx_smswelcomeNO", $settings->smsWelcomeNO);
+        $this->setConfigurationSetting("arx_welcomeEmail", $settings->emailWelcome);
+        $this->setConfigurationSetting("arx_welcomeEmailNO", $settings->emailWelcomeNO);
+        $this->setConfigurationSetting("arx_welcomeemail_title", $settings->emailWelcomeTitle);
+        $this->setConfigurationSetting("arx_welcomeemail_title_no", $settings->emailWelcomeTitleNO);
+        
+        $this->getApi()->getHotelBookingManager()->setArxConfiguration($settings);
     }
     
     public function saveVismaData() {

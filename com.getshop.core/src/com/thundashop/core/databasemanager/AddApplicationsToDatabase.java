@@ -55,14 +55,14 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        ApplicationSettings clickatell = createSettings(
-                "Clickatell",
-                "12fecb30-4e5c-49d8-aa3b-73f37f0712ee",
+        ApplicationSettings hotelvask = createSettings(
+                "HotelbookingCleaning",
+                "020b57c2-8f80-46e1-a420-cb163f4fb2d2",
                 allowed,
                 "",
-                ApplicationSettings.Type.Marketing, true);
-        clickatell.isPublic = true;
-        apps.add(clickatell);
+                ApplicationSettings.Type.Webshop, true);
+        hotelvask.isPublic = false;
+        apps.add(hotelvask);
         
 //        ApplicationSettings sedoxMenu = createSettings(
 //                "SedoxMenu",

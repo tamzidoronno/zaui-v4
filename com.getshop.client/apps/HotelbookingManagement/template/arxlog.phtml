@@ -9,6 +9,7 @@ echo "<th>Navn</th>";
 echo "<th>Doors</th>";
 echo "<th>Start date</th>";
 echo "<th>End date</th>";
+echo "<th>msg</th>";
 echo "</tr>";
 foreach($entries as $entry) {
     /* @var $user \core_hotelbookingmanager_ArxUser */
@@ -23,6 +24,7 @@ foreach($entries as $entry) {
     echo "</td>";
     echo "<td>" . $user->startDate . "</td>";
     echo "<td>" . $user->endDate . "</td>";
+    echo "<td>" . $entry->message . "</td>";
     echo "</tr>";
 }
 echo "</table>";

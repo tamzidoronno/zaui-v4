@@ -46,8 +46,10 @@ Existing booking references
             <th>Room (code)</th>
             <th>Start date</th>
             <th>End date</th>
-            <th>Gebyr</th>
-            <th>Contract</th>
+            <? if($this->getFactory()->getStore()->id == "3292fa74-32a2-4d52-b88f-6be6f3dff813") { ?>
+                <th>Gebyr</th>
+                <th>Contract</th>
+            <? } ?>
         </tr>
         <?
         $reservations = $this->getApi()->getHotelBookingManager()->getAllReservations();
@@ -75,12 +77,14 @@ Existing booking references
             echo "<td style='text-align:center;' valign='top'>" . join("<br>", $roomarray) . "</td>";
             echo "<td style='text-align:center;' valign='top'>" . $reservation->startDate . "</td>";
             echo "<td style='text-align:center;' valign='top'>" . $reservation->endDate . "</td>";
-            echo "<td style='text-align:center;' valign='top'><input type='text' style='width: 40px;' class='adminfee' value='".$reservation->bookingFee."'></td>";
-            echo "<td style='text-align:center;' valign='top'>";
-            echo "<a target='_new' onclick=\"window.open('/scripts/generateContract.php?userid=".$user->id."&refid=".$reservation->bookingReference."&type=standard')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".$user->referenceKey."' class='fa fa-file-pdf-o'></i></a> ";
-            echo "<a target='_new' onclick=\"window.open('http://".$_SERVER['SERVER_NAME']."/scripts/generateContract.php?userid=".$user->id."&refid=".$reservation->bookingReference."&type=bilag')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".$user->referenceKey."' class='fa fa-plus'></i></a> ";
-            echo "<a target='_new' onclick=\"window.open('http://".$_SERVER['SERVER_NAME']."/scripts/generateContract.php?userid=".$user->id."&refid=".$reservation->bookingReference."&type=autogiro')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".$user->referenceKey."' class='fa fa-car'></i></a>";
-            echo "</td>";
+            if($this->getFactory()->getStore()->id == "3292fa74-32a2-4d52-b88f-6be6f3dff813") {
+                echo "<td style='text-align:center;' valign='top'><input type='text' style='width: 40px;' class='adminfee' value='".$reservation->bookingFee."'></td>";
+                echo "<td style='text-align:center;' valign='top'>";
+                echo "<a target='_new' onclick=\"window.open('/scripts/generateContract.php?userid=".@$user->id."&refid=".$reservation->bookingReference."&type=standard')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".@$user->referenceKey."' class='fa fa-file-pdf-o'></i></a> ";
+                echo "<a target='_new' onclick=\"window.open('http://".$_SERVER['SERVER_NAME']."/scripts/generateContract.php?userid=".@$user->id."&refid=".$reservation->bookingReference."&type=bilag')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".@$user->referenceKey."' class='fa fa-plus'></i></a> ";
+                echo "<a target='_new' onclick=\"window.open('http://".$_SERVER['SERVER_NAME']."/scripts/generateContract.php?userid=".@$user->id."&refid=".$reservation->bookingReference."&type=autogiro')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".@$user->referenceKey."' class='fa fa-car'></i></a>";
+                echo "</td>";
+            }
             echo "</tr>";
         }
         ?>
@@ -150,56 +154,57 @@ Existing rooms:<br>
     </div>
 </div>
 <br>
+<? if($this->getFactory()->getStore()->id == "3292fa74-32a2-4d52-b88f-6be6f3dff813") { ?>
 
-<b>Information related to the contract</b>
-<table gstype="form" method="saveContractData">
-    <tr>
-        <td>landlord's name</td>
-        <td><input type="text" gsname="utleier_navn" value="<? echo $this->getConfigurationSetting("utleier_navn"); ?>"></td>
-    </tr>
-    <tr>
-        <td>landlord's address</td>
-        <td><input type="text" gsname="utleier_adresse" value="<? echo $this->getConfigurationSetting("utleier_adresse"); ?>"></td>
-    </tr>
-    <tr>
-        <td>landlord's place</td>
-        <td><input type="text" gsname="utleier_sted" value="<? echo $this->getConfigurationSetting("utleier_sted"); ?>"></td>
-    </tr>
-    <tr>
-        <td>landlord's postal code</td>
-        <td><input type="text" gsname="utleier_postnr" value="<? echo $this->getConfigurationSetting("utleier_postnr"); ?>"></td>
-    </tr>
-    <tr>
-        <td></td>
-        <td><input gstype="submit" type="button" value="Lagre"></td>
-    </tr>
-</table>
-<br>
+    <b>Information related to the contract</b>
+    <table gstype="form" method="saveContractData">
+        <tr>
+            <td>landlord's name</td>
+            <td><input type="text" gsname="utleier_navn" value="<? echo $this->getConfigurationSetting("utleier_navn"); ?>"></td>
+        </tr>
+        <tr>
+            <td>landlord's address</td>
+            <td><input type="text" gsname="utleier_adresse" value="<? echo $this->getConfigurationSetting("utleier_adresse"); ?>"></td>
+        </tr>
+        <tr>
+            <td>landlord's place</td>
+            <td><input type="text" gsname="utleier_sted" value="<? echo $this->getConfigurationSetting("utleier_sted"); ?>"></td>
+        </tr>
+        <tr>
+            <td>landlord's postal code</td>
+            <td><input type="text" gsname="utleier_postnr" value="<? echo $this->getConfigurationSetting("utleier_postnr"); ?>"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input gstype="submit" type="button" value="Lagre"></td>
+        </tr>
+    </table>
+    <br>
+    <b>Variables in use for contracts</b>
+    <pre>
+    [navn] = leietakers navn
+    [org_fnr] = fødseldato eventuelt orgnr
+    [postaddr] = adressen for leier
+    [rom] = Rommet som skal leies ut
+    [areal] = Størrelsen på boden / rommet
+    [startdato] = Startdato   
+    [pris] = Prisen ved inngåelse av leie
+    [year] = Året
+    [adresse] = Kundens adresse
+    [postnr] = Kundens postadresse
+    [dagensdato] = Dagens dato
+    [dag_i_maned] = Dag i måned for bestilling
+    [admingebyr] = Administrasjons gebyr
+    [taxes] = Skatter og avgifter
+    [total_price] = Total pris ink. skatter og avgifter.
 
-<b>Variables in use for contracts</b>
-<pre>
-[navn] = leietakers navn
-[org_fnr] = fødseldato eventuelt orgnr
-[postaddr] = adressen for leier
-[rom] = Rommet som skal leies ut
-[areal] = Størrelsen på boden / rommet
-[startdato] = Startdato   
-[pris] = Prisen ved inngåelse av leie
-[year] = Året
-[adresse] = Kundens adresse
-[postnr] = Kundens postadresse
-[dagensdato] = Dagens dato
-[dag_i_maned] = Dag i måned for bestilling
-[admingebyr] = Administrasjons gebyr
-[taxes] = Skatter og avgifter
-[total_price] = Total pris ink. skatter og avgifter.
-
-[belop_forslag] = Forslag på pris
-[utleier_sted] = Sted som kontrakten skrives ut på
-[utleier_navn] = Navnet på utleier
-[utleier_adresse] = Utleiers adresse
-[utleier_postnr] = Utleiers postnummer
-</pre>
+    [belop_forslag] = Forslag på pris
+    [utleier_sted] = Sted som kontrakten skrives ut på
+    [utleier_navn] = Navnet på utleier
+    [utleier_adresse] = Utleiers adresse
+    [utleier_postnr] = Utleiers postnummer
+    </pre>
+<? } ?>
 
 
 <b>Arx server</b>

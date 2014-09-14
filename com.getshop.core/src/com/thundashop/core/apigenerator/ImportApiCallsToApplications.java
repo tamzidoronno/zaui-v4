@@ -1,6 +1,5 @@
 package com.thundashop.core.apigenerator;
 
-import com.google.code.morphia.Morphia;
 import com.google.gson.Gson;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -15,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.mongodb.morphia.Morphia;
 
 public class ImportApiCallsToApplications {
 

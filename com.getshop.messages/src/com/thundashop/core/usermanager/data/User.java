@@ -4,7 +4,7 @@
  */
 package com.thundashop.core.usermanager.data;
 
-import com.google.code.morphia.annotations.Transient;
+import org.mongodb.morphia.annotations.Transient;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import java.nio.charset.Charset;

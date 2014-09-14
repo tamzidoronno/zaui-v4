@@ -175,7 +175,7 @@ public class PagePoolImpl {
         return defaultPages;
     }
 
-    public void setDefaultPages() throws ErrorException {
+    private void setDefaultPages() throws ErrorException {
         if(defaultPagesSet) {
             return;
         }
@@ -217,6 +217,7 @@ public class PagePoolImpl {
 
         if (Page.DefaultPages.Users.equals(page.id)) {
             AppConfiguration app = applicationPool.createNewApplication("00d8f5ce-ed17-4098-8925-5697f6159f66", "users_admin_menu");
+            page.layout.leftSideBar = 1;
             addExistingApplication(app, page, PageArea.Type.LEFT);
             
             app.inheritate = 1;
@@ -230,6 +231,7 @@ public class PagePoolImpl {
             applicationPool.saveApplicationConfiguration(app);
             
             Page allUsers = createNewPage(Page.LayoutType.HeaderLeftMiddleFooter, page.id, "users_all_users");
+            allUsers.layout.leftSideBar = 1;
             
             ListManager listManager = pageManager.getManager(ListManager.class);
             Entry entry = new Entry();
@@ -290,7 +292,20 @@ public class PagePoolImpl {
     }
 
     private AppConfiguration addExistingApplication(AppConfiguration app, Page page, String pageArea) throws ErrorException {
-        PageArea area = page.getPageArea(pageArea);
+        PageArea area = null;
+        
+        if (pageArea != null && pageArea.equals(PageArea.Type.TOP)) {
+            area = commonPageData.header;
+        } else if (pageArea != null && pageArea.equals(PageArea.Type.BOTTOM)) {
+            area = commonPageData.footer;
+        } else if (pageArea != null && pageArea.equals(PageArea.Type.MIDDLE) && page.layout.rows.size() == 0) {
+            RowLayout row = page.createApplicationRow();
+            page.layout.rows.add(row);
+            area = page.layout.rows.iterator().next().createApplicationArea();
+        } else {
+            area = page.getPageArea(pageArea);    
+        }
+        
         if (area.applicationsList == null) {
             area.applicationsList = new ArrayList();
         }

@@ -6,7 +6,7 @@
  **/
 package com.thundashop.core.pagemanager.data;
 
-import com.google.code.morphia.annotations.Transient;
+import org.mongodb.morphia.annotations.Transient;
 import com.thundashop.core.common.AppConfiguration;
 import java.io.Serializable;
 import java.util.*;

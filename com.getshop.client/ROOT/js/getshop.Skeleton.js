@@ -133,6 +133,15 @@ thundashop.Skeleton = {
         thundashop.Ajax.post(event, function() {
             navigate('?page=settings&applicationId=aisdf29-asdf712-asdf23451-asdf-asdfasfd-asdf23-54-das-12');
         }, null, true);
+    },
+            
+    selectTheme: function(themeId) {
+        var event = thundashop.Ajax.createEvent('','addApplicationDirect',$(this),{
+            "appId" : themeId
+        });
+        thundashop.Ajax.postWithCallBack(event, function() {
+            document.location = '/index.php?page=home'
+        });
     }
 }
 

@@ -48,21 +48,15 @@ public class AddApplicationsToDatabase {
         allowed.add("large");
         allowed.add("xlarge");
         
-        List<String> allowed2 = new ArrayList();
-        allowed2.add("cell");
-        allowed2.add("small");
-        allowed2.add("medium");
-        allowed2.add("large");
-        allowed2.add("xlarge");
-
-        ApplicationSettings clickatell = createSettings(
-                "Clickatell",
-                "12fecb30-4e5c-49d8-aa3b-73f37f0712ee",
+        ApplicationSettings blackAndWhiteTheme = createSettings(
+                "BlackAndWhiteTheme",
+                "9aaa0023-c512-4be0-a3a4-e42ba84c7a4e",
                 allowed,
                 "",
-                ApplicationSettings.Type.Marketing, true);
-        clickatell.isPublic = true;
-        apps.add(clickatell);
+                ApplicationSettings.Type.Theme, true);
+        blackAndWhiteTheme.isPublic = true;
+        blackAndWhiteTheme.isResponsive = true;
+        apps.add(blackAndWhiteTheme);
         
 //        ApplicationSettings sedoxMenu = createSettings(
 //                "SedoxMenu",

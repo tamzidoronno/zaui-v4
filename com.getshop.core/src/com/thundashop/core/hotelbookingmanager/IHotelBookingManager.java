@@ -86,6 +86,9 @@ public interface IHotelBookingManager {
     @Administrator
     public void setArxConfiguration(String address, String username, String password) throws ErrorException;
     
+    @Administrator
+    public void setVismaConfiguration(String address, String username, String password, Integer port) throws ErrorException;
+    
     @Editor
     public void markRoomAsReady(String roomId) throws ErrorException;
     

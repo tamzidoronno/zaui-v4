@@ -14,8 +14,10 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -34,6 +36,9 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import org.apache.axis.encoding.Base64;
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPReply;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -56,6 +61,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     public BookingSettings booksettings = new BookingSettings();
     public ArxSettings arxSettings;
+    public VismaSettings vismaSettings = new VismaSettings();
 
     public HashMap<String, Room> rooms = new HashMap();
     public HashMap<String, RoomType> roomTypes = new HashMap();
@@ -63,13 +69,13 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     private VismaUsers transferredUsers = new VismaUsers();
 
     public List<ArxLogEntry> logEntries = new ArrayList();
-    
+
     @Autowired
     private ArxAccessCommunicator communicator;
-    
+
     @Autowired
     private UserManager userManager;
-    
+
     @Autowired
     private MessageManager messageManager;
 
@@ -97,6 +103,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             if (dbobj instanceof BookingSettings) {
                 booksettings = (BookingSettings) dbobj;
             }
+            if (dbobj instanceof VismaSettings) {
+                vismaSettings = (VismaSettings) dbobj;
+            }
 
             if (dbobj instanceof Room) {
                 Room room = (Room) dbobj;
@@ -108,13 +117,13 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 bookingReferences.put(reference.bookingReference, reference);
             }
         }
-        
+
         sortLogEntries(tmpLogEntries);
-        int i =0;
-        for(ArxLogEntry entry : tmpLogEntries) {
+        int i = 0;
+        for (ArxLogEntry entry : tmpLogEntries) {
             logEntries.add(entry);
             i++;
-            if(i > 100) {
+            if (i > 100) {
                 break;
             }
         }
@@ -216,7 +225,6 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         databaseSaver.deleteObject(room, credentials);
         rooms.remove(id);
     }
-
 
     @Override
     public List<Room> getAllRooms() throws ErrorException {
@@ -362,19 +370,19 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     void checkForArxUpdate() throws ErrorException, UnsupportedEncodingException {
-        
-        if(arxSettings != null) {
+
+        if (arxSettings != null) {
             for (BookingReference reference : bookingReferences.values()) {
-                
-                if(reference.isToday()) {
-                    for(String roomid : reference.roomIds) {
-                        if(getRoom(roomid).isClean && !reference.isApprovedForCheckin(roomid)) {
+
+                if (reference.isToday()) {
+                    for (String roomid : reference.roomIds) {
+                        if (getRoom(roomid).isClean && !reference.isApprovedForCheckin(roomid)) {
                             reference.isApprovedForCheckIn.put(roomid, true);
                             reference.updateArx = true;
                         }
                     }
                 }
-                
+
                 if (reference.updateArx) {
                     System.out.println("Need to update arx with reference: " + reference.bookingReference);
                     int i = 0;
@@ -385,7 +393,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                         System.out.println(roomId);
                         ArxUser user = new ArxUser();
                         user.doorsToAccess.add("utedor");
-                        if(reference.isApprovedForCheckin(room.id)) {
+                        if (reference.isApprovedForCheckin(room.id)) {
                             user.doorsToAccess.add(room.roomName);
                         }
                         String[] names = name.split(" ");
@@ -408,21 +416,21 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     private void sendUserToArx(ArxUser user) throws ErrorException, UnsupportedEncodingException {
         String toPost = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
-        toPost += "<arxdata timestamp=\""+new SimpleDateFormat("yyyy-MM-dd+HH:mm:ss").format(new Date())+"\">\n";
+        toPost += "<arxdata timestamp=\"" + new SimpleDateFormat("yyyy-MM-dd+HH:mm:ss").format(new Date()) + "\">\n";
         toPost += "<persons>\n";
         toPost += "<person>\n";
-        toPost += "<id>"+user.id+"</id>\n";
-        toPost += "<first_name>"+user.firstName+"</first_name>\n";
-        toPost += "<last_name>"+user.lastName+"</last_name>\n";
-        toPost += "<description>reference: "+user.reference+"</description>\n";
+        toPost += "<id>" + user.id + "</id>\n";
+        toPost += "<first_name>" + user.firstName + "</first_name>\n";
+        toPost += "<last_name>" + user.lastName + "</last_name>\n";
+        toPost += "<description>reference: " + user.reference + "</description>\n";
         toPost += "<pin_code></pin_code>\n";
         toPost += "<extra_fields/>\n";
         toPost += "<access_categories>\n";
-        for(String room : user.doorsToAccess) {
+        for (String room : user.doorsToAccess) {
             toPost += "<access_category>\n";
-            toPost += "<name>"+room+"</name>\n";
-            toPost += "<start_date>"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(user.startDate)+"</start_date>\n";
-            toPost += "<end_date>"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(user.endDate)+"</end_date>\n";
+            toPost += "<name>" + room + "</name>\n";
+            toPost += "<start_date>" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(user.startDate) + "</start_date>\n";
+            toPost += "<end_date>" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(user.endDate) + "</end_date>\n";
             toPost += "</access_category>\n";
         }
         toPost += "</access_categories>\n";
@@ -430,20 +438,18 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         toPost += "</persons>\n";
         toPost += "<cards>";
         toPost += "<card>";
-        toPost += "<number>00"+user.code+"</number>";
+        toPost += "<number>00" + user.code + "</number>";
         toPost += "<format_name>kode</format_name>";
         toPost += "<description></description>";
-        toPost += "<person_id>"+user.id+"</person_id>";
+        toPost += "<person_id>" + user.id + "</person_id>";
         toPost += "</card>";
         toPost += "</cards>";
         toPost += "</arxdata>";
-                
+
         String result = httpLoginRequest(arxSettings.address, arxSettings.username, arxSettings.password, toPost);
         logArxCommunication(result, user);
     }
-    
-    
-    
+
     public String httpLoginRequest(String address, String username, String password, String content) {
         String loginToken = null;
         String loginUrl = address;
@@ -462,7 +468,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         StringBody comment = new StringBody("A binary file of some kind", ContentType.TEXT_PLAIN);
 
         StringBody body = new StringBody(content, ContentType.TEXT_PLAIN);
-        
+
         HttpEntity reqEntity = MultipartEntityBuilder.create()
                 .addPart("upfile", body)
                 .addPart("comment", comment)
@@ -524,7 +530,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Override
     public void setArxConfiguration(String address, String username, String password) throws ErrorException {
-        if(arxSettings == null) {
+        if (arxSettings == null) {
             arxSettings = new ArxSettings();
         }
         arxSettings.address = address;
@@ -540,7 +546,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         entry.storeId = storeId;
         databaseSaver.saveObject(entry, credentials);
         logEntries.add(entry);
-        if(logEntries.size() > 120) {
+        if (logEntries.size() > 120) {
             logEntries.remove(0);
         }
     }
@@ -552,7 +558,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     private void sortLogEntries(List<ArxLogEntry> logEntries) {
-        Collections.sort(logEntries,new Comparator<ArxLogEntry>() {
+        Collections.sort(logEntries, new Comparator<ArxLogEntry>() {
             public int compare(ArxLogEntry f1, ArxLogEntry f2) {
                 return f2.rowCreatedDate.compareTo(f1.rowCreatedDate);
             }
@@ -572,24 +578,59 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         OrderManager ordermgr = getManager(OrderManager.class);
         List<User> allUsers = usrmgr.getAllUsers();
 
-        for(User user : allUsers) {
-            if(!transferredUsers.checkTransferred(user) && user.isCustomer()) {
+        for (User user : allUsers) {
+            if (!transferredUsers.checkTransferred(user) && user.isCustomer()) {
                 String generatedResult;
                 generatedResult = VismaUsers.generateVismaUserString(user);
-                if(generatedResult == null) {
-                    messageManager.mailFactory.send("internal@getshop.com", "post@getshop.com", "Failed to expert user to visma", "For storid: " + storeId + " userid: " + user.id + "("  + user.toString()+ ")");
+                if (generatedResult == null) {
+                    messageManager.mailFactory.send("internal@getshop.com", "post@getshop.com", "Failed to expert user to visma", "For storid: " + storeId + " userid: " + user.id + "(" + user.toString() + ")");
                 } else {
                     HashMap<Integer, BookingReference> references = new HashMap();
-                    for(Order order : ordermgr.getAllOrdersForUser(user.id)) {
+                    for (Order order : ordermgr.getAllOrdersForUser(user.id)) {
                         references.put(new Integer(order.reference), getReservationByReferenceId(new Integer(order.reference)));
                     }
-                    
+
                     result += generatedResult + "\r\n";
                     result += VismaUsers.generateOrderLines(ordermgr.getAllOrdersForUser(user.id), user, references);
                 }
             }
         }
-        
-        System.out.println(result);
+        FTPClient client = new FTPClient();
+        if(vismaSettings != null && vismaSettings.address != null && !vismaSettings.address.isEmpty()) {
+            try {
+                client.connect(vismaSettings.address, vismaSettings.port);
+                client.login(vismaSettings.username, vismaSettings.password);
+                client.enterLocalPassiveMode();
+                client.setFileType(FTP.BINARY_FILE_TYPE);
+                int reply = client.getReplyCode();
+                if(!FTPReply.isPositiveCompletion(reply)) {
+                    messageManager.sendMail("post@getshop.com", "GetShop", "failed to log on to ftp visma server..", "Failed to connect to server: " + vismaSettings.address + " with username: " + vismaSettings.username + " to upload file. ", "post@getshop.com","Internal process");
+                    return;
+                }
+                String filename = "orders_" + new SimpleDateFormat("yyyyMMdd-k_m").format(new Date())+".edi";
+                String path = "/tmp/"+filename;
+                PrintWriter writer = new PrintWriter(path, "UTF-8");
+                writer.print(result);
+                writer.close();
+                InputStream inputStream = new FileInputStream(new File(path));
+                boolean done = client.storeFile("./" + filename, inputStream);
+                inputStream.close();
+                if (!done) {
+                    messageManager.sendMail("post@getshop.com", "GetShop", "failed to upload file to visma.", "Failed to connect to server: " + vismaSettings.username + " to upload file. ( " + client.getReplyString() + ")", "post@getshop.com","Internal process");
+                }
+            } catch (Exception e) {
+                messageManager.sendMail("post@getshop.com", "GetShop", "failed to upload file to visma.", "something failed when uploading visma file. ", "post@getshop.com","Internal process");
+                e.printStackTrace();
+            }
+        }
     }
+
+    @Override
+    public void setVismaConfiguration(String address, String username, String password, Integer port) throws ErrorException {
+        vismaSettings.address = address;
+        vismaSettings.password = password;
+        vismaSettings.username = username;
+        vismaSettings.port = port;
+        saveObject(vismaSettings);
+    }   
 }

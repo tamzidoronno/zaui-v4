@@ -601,6 +601,24 @@ public class APISedoxProductManager {
      * @return
      * @throws ErrorException
      */
+     public void toggleIsNorwegian(java.lang.String userId, boolean isNorwegian)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("userId",new Gson().toJson(userId));
+          data.args.put("isNorwegian",new Gson().toJson(isNorwegian));
+          data.method = "toggleIsNorwegian";
+          data.interfaceName = "core.sedox.ISedoxProductManager";
+          String result = transport.send(data);
+     }
+
+     /**
+     * Developers is simply an getshop user that is registered as an developer.
+     * Active developers are administrators that has an SedoxUser with the flag
+     * isActiveDeveloper = true
+     *
+     * @return
+     * @throws ErrorException
+     */
      public void togglePassiveSlaveMode(java.lang.String userId, boolean toggle)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new LinkedHashMap();

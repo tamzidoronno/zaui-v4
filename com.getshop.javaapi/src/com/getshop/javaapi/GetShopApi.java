@@ -26,12 +26,6 @@ public class GetShopApi {
            return new APINewsManager(transport);
       }
      /**
-      * @return APILogoManager
-      */
-      public APILogoManager getLogoManager() {
-           return new APILogoManager(transport);
-      }
-     /**
       * @return APIBannerManager
       */
       public APIBannerManager getBannerManager() {
@@ -42,6 +36,30 @@ public class GetShopApi {
       */
       public APIFooterManager getFooterManager() {
            return new APIFooterManager(transport);
+      }
+     /**
+      * @return APILogoManager
+      */
+      public APILogoManager getLogoManager() {
+           return new APILogoManager(transport);
+      }
+     /**
+      * @return APIStoreManager
+      */
+      public APIStoreManager getStoreManager() {
+           return new APIStoreManager(transport);
+      }
+     /**
+      * @return APIHotelBookingManager
+      */
+      public APIHotelBookingManager getHotelBookingManager() {
+           return new APIHotelBookingManager(transport);
+      }
+     /**
+      * @return APIAppManager
+      */
+      public APIAppManager getAppManager() {
+           return new APIAppManager(transport);
       }
      /**
       * @return APICalendarManager
@@ -56,36 +74,6 @@ public class GetShopApi {
            return new APICarTuningManager(transport);
       }
      /**
-      * @return APIChatManager
-      */
-      public APIChatManager getChatManager() {
-           return new APIChatManager(transport);
-      }
-     /**
-      * @return APIUserManager
-      */
-      public APIUserManager getUserManager() {
-           return new APIUserManager(transport);
-      }
-     /**
-      * @return APIListManager
-      */
-      public APIListManager getListManager() {
-           return new APIListManager(transport);
-      }
-     /**
-      * @return APIInvoiceManager
-      */
-      public APIInvoiceManager getInvoiceManager() {
-           return new APIInvoiceManager(transport);
-      }
-     /**
-      * @return APIUtilManager
-      */
-      public APIUtilManager getUtilManager() {
-           return new APIUtilManager(transport);
-      }
-     /**
       * @return APIMessageManager
       */
       public APIMessageManager getMessageManager() {
@@ -98,76 +86,28 @@ public class GetShopApi {
            return new APINewsLetterManager(transport);
       }
      /**
-      * @return APIYouTubeManager
-      */
-      public APIYouTubeManager getYouTubeManager() {
-           return new APIYouTubeManager(transport);
-      }
-     /**
-      * @return APIGetShop
-      */
-      public APIGetShop getGetShop() {
-           return new APIGetShop(transport);
-      }
-     /**
       * @return APIBigStock
       */
       public APIBigStock getBigStock() {
            return new APIBigStock(transport);
       }
      /**
-      * @return APIProductManager
+      * @return APIUserManager
       */
-      public APIProductManager getProductManager() {
-           return new APIProductManager(transport);
+      public APIUserManager getUserManager() {
+           return new APIUserManager(transport);
       }
      /**
-      * @return APIPageManager
+      * @return APIMobileManager
       */
-      public APIPageManager getPageManager() {
-           return new APIPageManager(transport);
+      public APIMobileManager getMobileManager() {
+           return new APIMobileManager(transport);
       }
      /**
-      * @return APIReportingManager
+      * @return APIUtilManager
       */
-      public APIReportingManager getReportingManager() {
-           return new APIReportingManager(transport);
-      }
-     /**
-      * @return APISedoxProductManager
-      */
-      public APISedoxProductManager getSedoxProductManager() {
-           return new APISedoxProductManager(transport);
-      }
-     /**
-      * @return APIStoreManager
-      */
-      public APIStoreManager getStoreManager() {
-           return new APIStoreManager(transport);
-      }
-     /**
-      * @return APICartManager
-      */
-      public APICartManager getCartManager() {
-           return new APICartManager(transport);
-      }
-     /**
-      * @return APIAppManager
-      */
-      public APIAppManager getAppManager() {
-           return new APIAppManager(transport);
-      }
-     /**
-      * @return APIOrderManager
-      */
-      public APIOrderManager getOrderManager() {
-           return new APIOrderManager(transport);
-      }
-     /**
-      * @return APIHotelBookingManager
-      */
-      public APIHotelBookingManager getHotelBookingManager() {
-           return new APIHotelBookingManager(transport);
+      public APIUtilManager getUtilManager() {
+           return new APIUtilManager(transport);
       }
      /**
       * @return APIGalleryManager
@@ -176,9 +116,69 @@ public class GetShopApi {
            return new APIGalleryManager(transport);
       }
      /**
-      * @return APIMobileManager
+      * @return APIOrderManager
       */
-      public APIMobileManager getMobileManager() {
-           return new APIMobileManager(transport);
+      public APIOrderManager getOrderManager() {
+           return new APIOrderManager(transport);
+      }
+     /**
+      * @return APISedoxProductManager
+      */
+      public APISedoxProductManager getSedoxProductManager() {
+           return new APISedoxProductManager(transport);
+      }
+     /**
+      * @return APIListManager
+      */
+      public APIListManager getListManager() {
+           return new APIListManager(transport);
+      }
+     /**
+      * @return APIChatManager
+      */
+      public APIChatManager getChatManager() {
+           return new APIChatManager(transport);
+      }
+     /**
+      * @return APIYouTubeManager
+      */
+      public APIYouTubeManager getYouTubeManager() {
+           return new APIYouTubeManager(transport);
+      }
+     /**
+      * @return APIPageManager
+      */
+      public APIPageManager getPageManager() {
+           return new APIPageManager(transport);
+      }
+     /**
+      * @return APIInvoiceManager
+      */
+      public APIInvoiceManager getInvoiceManager() {
+           return new APIInvoiceManager(transport);
+      }
+     /**
+      * @return APICartManager
+      */
+      public APICartManager getCartManager() {
+           return new APICartManager(transport);
+      }
+     /**
+      * @return APIProductManager
+      */
+      public APIProductManager getProductManager() {
+           return new APIProductManager(transport);
+      }
+     /**
+      * @return APIReportingManager
+      */
+      public APIReportingManager getReportingManager() {
+           return new APIReportingManager(transport);
+      }
+     /**
+      * @return APIGetShop
+      */
+      public APIGetShop getGetShop() {
+           return new APIGetShop(transport);
       }
 }

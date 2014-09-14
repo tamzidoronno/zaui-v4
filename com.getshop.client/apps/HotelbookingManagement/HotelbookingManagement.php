@@ -24,6 +24,14 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         $this->getApi()->getHotelBookingManager()->setArxConfiguration($_POST['data']['arx_server'],  $_POST['data']['arx_username'], $_POST['data']['arx_password']);
     }
     
+    public function saveVismaData() {
+        $this->setConfigurationSetting("visma_server", $_POST['data']['visma_server']);
+        $this->setConfigurationSetting("visma_username", $_POST['data']['visma_username']);
+        $this->setConfigurationSetting("visma_password", $_POST['data']['visma_password']);
+        $this->setConfigurationSetting("visma_port", $_POST['data']['visma_port']);
+        $this->getApi()->getHotelBookingManager()->setVismaConfiguration($_POST['data']['visma_server'],  $_POST['data']['visma_username'], $_POST['data']['visma_password'], $_POST['data']['visma_port']);
+    }
+    
     public function updateAdminFee() {
         $fee = $_POST['data']['fee'];
         $reservation = $_POST['data']['ref'];

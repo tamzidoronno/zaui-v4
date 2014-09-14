@@ -64,6 +64,16 @@ public class AddApplicationsToDatabase {
         hotelvask.isPublic = false;
         apps.add(hotelvask);
         
+        ApplicationSettings blackAndWhiteTheme = createSettings(
+                "BlackAndWhiteTheme",
+                "9aaa0023-c512-4be0-a3a4-e42ba84c7a4e",
+                allowed,
+                "",
+                ApplicationSettings.Type.Theme, true);
+        blackAndWhiteTheme.isPublic = true;
+        blackAndWhiteTheme.isResponsive = true;
+        apps.add(blackAndWhiteTheme);
+        
 //        ApplicationSettings sedoxMenu = createSettings(
 //                "SedoxMenu",
 //                "b23a3767-1f7b-40e3-93c5-65504ebaa73c",

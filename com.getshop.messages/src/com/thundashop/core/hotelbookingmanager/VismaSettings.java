@@ -7,4 +7,8 @@ public class VismaSettings extends DataCommon {
     public String username = "";
     public String password = "";
     public Integer port = 21;
+    
+    public String sqlUsername = "";
+    public String sqlPassword = "";
+    public String database;
 }

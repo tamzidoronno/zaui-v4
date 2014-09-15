@@ -50,11 +50,26 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
     }
     
     public function saveVismaData() {
-        $this->setConfigurationSetting("visma_server", $_POST['data']['visma_server']);
-        $this->setConfigurationSetting("visma_username", $_POST['data']['visma_username']);
-        $this->setConfigurationSetting("visma_password", $_POST['data']['visma_password']);
-        $this->setConfigurationSetting("visma_port", $_POST['data']['visma_port']);
-        $this->getApi()->getHotelBookingManager()->setVismaConfiguration($_POST['data']['visma_server'],  $_POST['data']['visma_username'], $_POST['data']['visma_password'], $_POST['data']['visma_port']);
+        
+        $settings = new \core_hotelbookingmanager_VismaSettings();
+        
+        $settings->address = $_POST['data']['visma_server'];
+        $settings->username = $_POST['data']['visma_username'];
+        $settings->password = $_POST['data']['visma_password'];
+        $settings->port = $_POST['data']['visma_port'];
+        $settings->sqlUsername = $_POST['data']['visma_sqlUsername'];
+        $settings->sqlPassword = $_POST['data']['visma_sqlPassword'];
+        $settings->database = $_POST['data']['visma_db'];
+        
+        $this->setConfigurationSetting("visma_server", $settings->address);
+        $this->setConfigurationSetting("visma_username", $settings->username);
+        $this->setConfigurationSetting("visma_password", $settings->password);
+        $this->setConfigurationSetting("visma_port", $settings->port);
+        $this->setConfigurationSetting("visma_sqlUsername", $settings->sqlUsername);
+        $this->setConfigurationSetting("visma_sqlPassword", $settings->sqlPassword);
+        $this->setConfigurationSetting("visma_db", $settings->database);
+        
+        $this->getApi()->getHotelBookingManager()->setVismaConfiguration($settings);
     }
     
     public function updateAdminFee() {

@@ -2053,36 +2053,15 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
-  def setVismaConfiguration(self, address, username, password, port):
+  def setVismaConfiguration(self, settings):
     args = collections.OrderedDict()
-    if isinstance(address,GetShopBaseClass): 
-      args["address"]=json.dumps(address.__dict__)
+    if isinstance(settings,GetShopBaseClass): 
+      args["settings"]=json.dumps(settings.__dict__)
     else:
       try:
-        args["address"]=json.dumps(address)
+        args["settings"]=json.dumps(settings)
       except (ValueError, AttributeError):
-        args["address"]=address
-    if isinstance(username,GetShopBaseClass): 
-      args["username"]=json.dumps(username.__dict__)
-    else:
-      try:
-        args["username"]=json.dumps(username)
-      except (ValueError, AttributeError):
-        args["username"]=username
-    if isinstance(password,GetShopBaseClass): 
-      args["password"]=json.dumps(password.__dict__)
-    else:
-      try:
-        args["password"]=json.dumps(password)
-      except (ValueError, AttributeError):
-        args["password"]=password
-    if isinstance(port,GetShopBaseClass): 
-      args["port"]=json.dumps(port.__dict__)
-    else:
-      try:
-        args["port"]=json.dumps(port)
-      except (ValueError, AttributeError):
-        args["port"]=port
+        args["settings"]=settings
     data = EmptyClass()
     data.args = args
     data.method = "setVismaConfiguration"

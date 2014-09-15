@@ -19,8 +19,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -393,7 +399,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                     int i = 0;
 
                     for (String name : reference.contact.names) {
-                        if(reference.roomIds.size() >= i) {
+                        if (reference.roomIds.size() >= i) {
                             continue;
                         }
                         String roomId = reference.roomIds.get(i);
@@ -589,25 +595,40 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         OrderManager ordermgr = getManager(OrderManager.class);
         List<User> allUsers = usrmgr.getAllUsers();
 
-        for (User user : allUsers) {
-            if (!transferredUsers.checkTransferred(user) && user.isCustomer()) {
-                String generatedResult;
-                generatedResult = VismaUsers.generateVismaUserString(user);
-                if (generatedResult == null) {
-                    messageManager.mailFactory.send("internal@getshop.com", "post@getshop.com", "Failed to expert user to visma", "For storid: " + storeId + " userid: " + user.id + "(" + user.toString() + ")");
-                } else {
-                    HashMap<Integer, BookingReference> references = new HashMap();
-                    for (Order order : ordermgr.getAllOrdersForUser(user.id)) {
-                        references.put(new Integer(order.reference), getReservationByReferenceId(new Integer(order.reference)));
-                    }
+        List<MSQLActors> actors = getAllSQLActors();
 
-                    result += generatedResult + "\r\n";
-                    result += VismaUsers.generateOrderLines(ordermgr.getAllOrdersForUser(user.id), user, references);
+        for (User user : allUsers) {
+            if(user.isCustomer()) {
+                boolean transferred = false;
+                for(MSQLActors actor : actors) {
+                    if(actor.compareWithUser(user)) {
+                        transferred = true;
+                        break;
+                    }
+                }
+
+                if (!transferred) {
+                    String generatedResult;
+                    generatedResult = VismaUsers.generateVismaUserString(user);
+                    if (generatedResult == null) {
+                        messageManager.mailFactory.send("internal@getshop.com", "post@getshop.com", "Failed to expert user to visma", "For storid: " + storeId + " userid: " + user.id + "(" + user.toString() + ")");
+                    } else {
+                        HashMap<Integer, BookingReference> references = new HashMap();
+                        for (Order order : ordermgr.getAllOrdersForUser(user.id)) {
+                            references.put(new Integer(order.reference), getReservationByReferenceId(new Integer(order.reference)));
+                        }
+
+                        result += generatedResult + "\r\n";
+//                        result += VismaUsers.generateOrderLines(ordermgr.getAllOrdersForUser(user.id), user, references);
+                    }
                 }
             }
         }
         FTPClient client = new FTPClient();
-        if (vismaSettings != null && vismaSettings.address != null && !vismaSettings.address.isEmpty()) {
+        
+        System.out.println(result);
+        
+        if (vismaSettings != null && vismaSettings.address != null && !vismaSettings.address.isEmpty() && !result.isEmpty()) {
             try {
                 client.connect(vismaSettings.address, vismaSettings.port);
                 client.login(vismaSettings.username, vismaSettings.password);
@@ -615,19 +636,19 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 client.setFileType(FTP.BINARY_FILE_TYPE);
                 int reply = client.getReplyCode();
                 if (!FTPReply.isPositiveCompletion(reply)) {
-                    messageManager.sendMail("post@getshop.com", "GetShop", "failed to log on to ftp visma server..", "Failed to connect to server: " + vismaSettings.address + " with username: " + vismaSettings.username + " to upload file. ", "post@getshop.com", "Internal process");
+                    messageManager.sendMail("post@getshop.com", "GetShop", "failed to log on to ftp visma server..", "Failed to connect to ftp server: " + vismaSettings.address + " with username: " + vismaSettings.username + " to upload file. ", "post@getshop.com", "Internal process");
                     return;
                 }
                 String filename = "orders_" + new SimpleDateFormat("yyyyMMdd-k_m").format(new Date()) + ".edi";
                 String path = "/tmp/" + filename;
-                PrintWriter writer = new PrintWriter(path, "UTF-8");
+                PrintWriter writer = new PrintWriter(path, "ISO-8859-1");
                 writer.print(result);
                 writer.close();
                 InputStream inputStream = new FileInputStream(new File(path));
                 boolean done = client.storeFile("./" + filename, inputStream);
                 inputStream.close();
                 if (!done) {
-                    messageManager.sendMail("post@getshop.com", "GetShop", "failed to upload file to visma.", "Failed to connect to server: " + vismaSettings.username + " to upload file. ( " + client.getReplyString() + ")", "post@getshop.com", "Internal process");
+                    messageManager.sendMail("post@getshop.com", "GetShop", "failed to upload file to visma.", "Failed to connect to ftp server: " + vismaSettings.username + " to upload file. ( " + client.getReplyString() + ")", "post@getshop.com", "Internal process");
                 }
             } catch (Exception e) {
                 messageManager.sendMail("post@getshop.com", "GetShop", "failed to upload file to visma.", "something failed when uploading visma file. ", "post@getshop.com", "Internal process");
@@ -637,11 +658,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     @Override
-    public void setVismaConfiguration(String address, String username, String password, Integer port) throws ErrorException {
-        vismaSettings.address = address;
-        vismaSettings.password = password;
-        vismaSettings.username = username;
-        vismaSettings.port = port;
+    public void setVismaConfiguration(VismaSettings settings) throws ErrorException {
+        settings.id = vismaSettings.id;
+        vismaSettings = settings;
         saveObject(vismaSettings);
     }
 
@@ -662,10 +681,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     private String formatMessage(BookingReference reference, String message, String roomName, Integer code, String name) throws ErrorException {
-        if(code != null) {
+        if (code != null) {
             message = message.replaceAll("\\{code\\}", code + "");
         }
-        if(roomName != null) {
+        if (roomName != null) {
             message = message.replaceAll("\\{room\\}", roomName);
         }
         message = message.replaceAll("\\{checkin_time\\}", new SimpleDateFormat("dd-MM-yyyy H:m").format(reference.startDate) + "0");
@@ -707,7 +726,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Override
     public String getEmailMessage(String language) throws ErrorException {
-        if(arxSettings == null) {
+        if (arxSettings == null) {
             return "";
         }
         if (language != null && language.equals("nb_NO")) {
@@ -720,7 +739,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     private String getEmailTitle(String language) {
-        if(arxSettings == null) {
+        if (arxSettings == null) {
             return "";
         }
         if (language != null && language.equals("nb_NO")) {
@@ -759,7 +778,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                     if (reference.language.equals("nb_NO")) {
                         origMessage = arxSettings.smsWelcomeNO;
                     }
-                    if(i >= reference.roomIds.size()) {
+                    if (i >= reference.roomIds.size()) {
                         continue;
                     }
                     Room room = getRoom(reference.roomIds.get(i));
@@ -789,5 +808,42 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
         }
 
+    }
+
+    private List<MSQLActors> getAllSQLActors() {
+        try {
+            String constring = "jdbc:sqlserver://" + vismaSettings.address + ":1433;databaseName="+vismaSettings.database;
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            Connection conn = DriverManager.getConnection(constring, vismaSettings.sqlUsername, vismaSettings.sqlPassword);
+            
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("select * from dbo.Actor");
+            List<MSQLActors> actors = new ArrayList();
+            while(rs.next()) {
+                MSQLActors actor = new MSQLActors();
+                actor.Ad1 = convertToUtf8(rs.getString("Ad1"));
+                actor.MailAd = convertToUtf8(rs.getString("MailAd"));
+                actor.MobPh = convertToUtf8(rs.getString("MobPh"));
+                actor.Nm = convertToUtf8(rs.getString("Nm"));
+                actor.PArea = convertToUtf8(rs.getString("PArea"));
+                actor.PNo = convertToUtf8(rs.getString("PNo"));
+                actors.add(actor);
+            }
+            return actors;
+        } catch (Exception e) {
+            e.printStackTrace();
+            messageManager.sendMail("post@getshop.com",
+                    "Getshop admin",
+                    "Failed to connect to visma server",
+                    "Failed to connect to " + vismaSettings.address + " with u/p:" + vismaSettings.username + "/" + vismaSettings.password,
+                    "internal@getshop.com",
+                    "Getshop process");
+        }
+        
+        return null;
+    }
+
+    private String convertToUtf8(String string) {
+        return string;
     }
 }

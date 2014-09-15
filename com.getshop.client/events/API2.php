@@ -2003,13 +2003,10 @@ class APIHotelBookingManager {
 	* @throws ErrorException
 	*/
 
-	public function setVismaConfiguration($address, $username, $password, $port) {
+	public function setVismaConfiguration($core_hotelbookingmanager_VismaSettings) {
 	     $data = array();
 	     $data['args'] = array();
-	     $data['args']["address"] = json_encode($this->transport->object_unset_nulls($address));
-	     $data['args']["username"] = json_encode($this->transport->object_unset_nulls($username));
-	     $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
-	     $data['args']["port"] = json_encode($this->transport->object_unset_nulls($port));
+	     $data['args']["core_hotelbookingmanager_VismaSettings"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_VismaSettings));
 	     $data["method"] = "setVismaConfiguration";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);

@@ -603,6 +603,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 for(MSQLActors actor : actors) {
                     if(actor.compareWithUser(user)) {
                         transferred = true;
+                        /** Visma does not update user anyway. 
+                         * if(!actor.hasChanged(user)) {
+                         * }
+                         */
                         break;
                     }
                 }
@@ -827,6 +831,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 actor.Nm = convertToUtf8(rs.getString("Nm"));
                 actor.PArea = convertToUtf8(rs.getString("PArea"));
                 actor.PNo = convertToUtf8(rs.getString("PNo"));
+                actor.customerId = rs.getInt("CustNo");
                 actors.add(actor);
             }
             return actors;

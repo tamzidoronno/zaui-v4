@@ -10,16 +10,31 @@ public class MSQLActors {
     public String PArea;
     public String MailAd;
     public String MobPh;
+    public int customerId;
     
     public boolean compareWithUser(User user) {
-        try {
-            if(Nm.equalsIgnoreCase(user.fullName) && MailAd.equalsIgnoreCase(user.emailAddress) && MobPh.equalsIgnoreCase(user.cellPhone)) {
+        if(customerId == user.customerId) {
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean hasChanged(User user) {
+        
+        if(!user.fullName.equalsIgnoreCase(Nm)) {
+            return true;
+        }
+        if(user.address != null) {
+            if(user.address.address != null && !user.address.address.equalsIgnoreCase(Ad1)) {
                 return true;
             }
-        }catch(NullPointerException e) {
-            return false;
+            if(user.address.postCode != null && !user.address.postCode.equalsIgnoreCase(PNo)) {
+                return true;
+            }
+            if(user.address.city != null && !user.address.city.equalsIgnoreCase(PArea)) {
+                return true;
+            }
         }
-        
         return false;
     }
 }

@@ -3,6 +3,7 @@ package com.thundashop.core.hotelbookingmanager;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -78,28 +79,28 @@ public class VismaUsers extends DataCommon {
         */
         
         if(user.fullName == null) {
-            return null;
+            user.fullName = "";
         }
         if(user.address == null) {
-            return null;
+            user.address = new Address();
         }
         if(user.address.address == null) {
-            return null;
+            user.address.address = "";
         }
         if(user.address.postCode == null) {
-            return null;
+            user.address.postCode = "";
         }
         if(user.address.city == null) {
-            return null;
+            user.address.city = "";
         }
         if(user.emailAddress == null) {
-            return null;
+            user.emailAddress = "";
         }
         if(user.cellPhone == null) {
-            return null;
+            user.cellPhone = "";
         }
         if(user.birthDay == null) {
-            return null;
+            user.birthDay = "";
         }
         
         String result = "A;"; //Fast A som forteller at det er Aktør

@@ -85,10 +85,10 @@ class StyleSheet {
             header("Cache-Control: must-revalidate");
         }
 
-        include_once("skin/default/framework.php");
-        include_once("skin/default/elements.php");
-        include_once("skin/default/layout.php");
-        include_once("skin/default/breadcrumb.php");
+        echo '<link class=\'frameworkstylesheet\' rel="stylesheet" type="text/css" media="all" href="skin/default/framework.css">';
+        echo '<link class=\'frameworkstylesheet\' rel="stylesheet" type="text/css" media="all" href="skin/default/elements.css">';
+        echo '<link class=\'frameworkstylesheet\' rel="stylesheet" type="text/css" media="all" href="skin/default/layout.css">';
+        echo '<link class=\'frameworkstylesheet\' rel="stylesheet" type="text/css" media="all" href="skin/default/breadcrumb.css">';
 
         $this->includeApplications();
     }
@@ -130,16 +130,33 @@ class StyleSheet {
 
     private function doApp($app) {
         $appId = $this->factory->convertUUIDtoString($app->id);
-        $folder = "../app/" . $appId . "/skin/" . $app->appName . ".css";
-
+        $cssFileName = $app->appName . ".css";
+        $folder = "../app/" . $appId . "/skin/";
+        
+        if (!file_exists("cssfolder/$appId")) {
+            mkdir("cssfolder/$appId");    
+        }
+        
         if (file_exists($folder)) {
-            $cssFile = file_get_contents($folder);
-            $cssFile = str_replace("{IMAGEFOLDER}", "/showApplicationImages.php?appNamespace=" . urlencode($appId) . "&image=skin/images/", $cssFile);
-            $cssFile = str_replace("{FOOTERHEIGHT}", $this->getFooterHeight(), $cssFile);
-            $cssFile = str_replace("{BASECOLOR}", $this->getColors()->baseColor, $cssFile);
-            $cssFile = str_replace("{TEXTCOLOR}", $this->getColors()->textColor, $cssFile);
-            $cssFile = str_replace("{WIDTHTOTAL}", $this->getWidthTotal(), $cssFile);
-            echo $cssFile;
+            $files = scandir($folder);
+            foreach ($files as $file) {
+                $cssFile = "$folder$file";
+                
+                if (is_file($cssFile)) {
+                    if (!strstr($cssFile, ".css")) {
+                        continue;
+                    }
+//                    echo $cssFile."<br/>";
+                    $cssFile = file_get_contents($cssFile);
+                    $cssFile = str_replace("{IMAGEFOLDER}", "/showApplicationImages.php?appNamespace=" . urlencode($appId) . "&image=skin/images/", $cssFile);
+                    $cssFile = str_replace("{FOOTERHEIGHT}", $this->getFooterHeight(), $cssFile);
+                    $cssFile = str_replace("{BASECOLOR}", $this->getColors()->baseColor, $cssFile);
+                    $cssFile = str_replace("{TEXTCOLOR}", $this->getColors()->textColor, $cssFile);
+                    $cssFile = str_replace("{WIDTHTOTAL}", $this->getWidthTotal(), $cssFile);
+                    file_put_contents("cssfolder/$appId/$file", $cssFile);
+                    echo '<link class=\'appstylesheet\' rel="stylesheet" type="text/css" media="all" href="'."cssfolder/$appId/$file".'">';
+                }
+            }
         }
     }
 

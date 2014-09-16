@@ -1,0 +1,27 @@
+root { 
+    display: block;
+}
+
+body {
+}
+
+body,table,td,th  {
+    margin: 0px;
+    font-size: 13px;
+}
+
+body {
+    overflow-y:scroll;
+}
+
+.header,
+.footer,
+.breadcrumb,
+.subheader,
+.mainarea {
+    margin: 0 auto;
+    border: 0px;
+}
+
+.footer-outer { width: 100% }
+

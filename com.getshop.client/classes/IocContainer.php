@@ -12,6 +12,7 @@
  */
 class IocContainer {
     static $factory;
+    static $settingsFactory;
     
     /**
      * @return Factory
@@ -26,7 +27,15 @@ class IocContainer {
         
         return IocContainer::$factory;
     }
-    
+
+    public static function getSettingsFactorySingleton()  {
+        if (isset(IocContainer::$settingsFactory)) {
+            return IocContainer::$settingsFactory;
+        }
+        
+        IocContainer::$settingsFactory = new SettingsFactory();
+        return IocContainer::$settingsFactory;
+    }
 }
 
 ?>

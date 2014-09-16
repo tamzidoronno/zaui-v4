@@ -55,14 +55,15 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        ApplicationSettings clickatell = createSettings(
-                "Clickatell",
-                "12fecb30-4e5c-49d8-aa3b-73f37f0712ee",
+        ApplicationSettings dashBoard = createSettings(
+                "DashBoard",
+                "b81bfb16-8066-4bea-a3c6-c155fa7119f8",
                 allowed,
                 "",
                 ApplicationSettings.Type.Marketing, true);
-        clickatell.isPublic = true;
-        apps.add(clickatell);
+        dashBoard.isSingleton = true;
+        dashBoard.isPublic = true;
+        apps.add(dashBoard);
         
 //        ApplicationSettings sedoxMenu = createSettings(
 //                "SedoxMenu",

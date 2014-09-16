@@ -445,8 +445,9 @@ class Factory extends FactoryBase {
         echo '<link rel="stylesheet" type="text/css" href="/skin/default/skeletons.css">';
         echo '<link rel="stylesheet" type="text/css" href="/skin/default/PagePicker.css">';
         echo '<link rel="stylesheet" type="text/css" href="/skin/default/getshop.ImageEditor.css">';
-        echo '<link id=\'mainlessstyle\' rel="stylesheet" type="text/css" media="all" href="StyleSheet.php">';
-
+        
+        $styleSheet = new StyleSheet();
+        $styleSheet->render(false);
 
         $config = json_decode($this->getFactory()->getConfigurationFlag("getshop_colors"), true);
         if ($config) {

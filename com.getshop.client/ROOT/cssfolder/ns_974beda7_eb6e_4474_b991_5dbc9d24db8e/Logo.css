@@ -1,0 +1,51 @@
+.Logo {
+    position:absolute;
+    left:0px; 
+    top: 15px;
+/*    z-index: -1;*/
+}
+
+.Logo .upload_logo { 
+    display:inline-block; 
+    width: 150px; 
+    color: #000000; 
+    background-color:#FFFFFF; 
+    text-align:center;
+    box-shadow:0 0 0 6px #fff,0 0 .3em 8px #BBBBBB;
+    cursor:pointer;
+}
+
+.Logo .logo_container {
+    width: 100px;
+    height: 80px;
+}
+.Logo .trash {
+    position:absolute;
+    z-index:1;
+}
+
+.middle .Login .entry {
+    display:none;
+    
+}
+
+.middle .Login {
+    background-color: #FFFFFF;
+    padding: 5px;
+    border: 0px;
+    text-align: center;
+}
+
+.middle .Login .username {
+    display:inline-block;
+}
+.middle .Login .password {
+    display:inline-block;
+}
+.middle .Login .recoverpassword {
+    display:block;
+    cursor:pointer;
+}
+.middle .Login .recoverpassword:hover {
+    font-weight: bold;
+}

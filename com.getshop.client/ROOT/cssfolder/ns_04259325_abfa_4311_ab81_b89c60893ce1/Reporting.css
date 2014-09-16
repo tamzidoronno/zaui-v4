@@ -1,0 +1,13 @@
+.Reporting .date_selection { text-align:right; border-bottom: solid 1px; padding-bottom: 10px;}
+.Reporting .title { border-bottom: solid 1px #7b7b7b; font-size: 16px; font-weight: bold;padding-left: 10px; text-align:center; background-image: url('/showApplicationImages.php?appNamespace=ns_04259325_abfa_4311_ab81_b89c60893ce1&image=skin/images//header_title.png'); height: 25px; line-height: 25px; }
+.Reporting .chart { height: 150px; }
+.Reporting .outer-chart { border: solid 1px #7b7b7b; margin: 10px;   margin-top: 30px;}
+
+.Reporting .startdate, .Reporting .stopdate { width: 70px; border: solid 1px; }
+.Reporting .outer-chart th { font-weight: bold; border-bottom: solid 1px; }
+.Reporting {  width: 1000px; }
+.Reporting #reportingview { margin-left: 200px; position: fixed; width: 450px; border: solid 1px; background-color:#EFEFEF; display:none; }
+.Reporting #reportingview .reporting_inner { padding: 20px; overflow:auto; height: 200px; }
+.Reporting #reportingview .outer-chart { margin-top: 0px; margin:0px; }
+.Reporting .wordlist { float:left; }
+.Reporting .wordlist .word { border: solid 1px; margin-left: 3px; padding: 3px; background-color:#BBBBBB; border-radius:3px; padding-right: 20px; background-position: 99% 50%; background-image:url('/showApplicationImages.php?appNamespace=ns_04259325_abfa_4311_ab81_b89c60893ce1&image=skin/images//x.png'); background-repeat:no-repeat; }

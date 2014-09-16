@@ -1,0 +1,8 @@
+.ProductWidget .title { font-size: 16px; font-weight: bold; }
+.ProductWidget img { max-width: 100%; max-height: 200px; }
+.ProductWidget .inner { padding-bottom: 30px; text-align: center; }
+.ProductWidget .buy_product_row { position:absolute; bottom: 10px; text-align: center; width: 100%; }
+.ProductWidget .no_product {  min-height: 200px; text-align: center; font-size: 16px; }
+.ProductWidget .no_product .no_product_description { padding-top: 30px; }
+.ProductWidget .no_product .gs_button { margin-top: 10px; width: 200px; }
+.ProductWidget .rebated_product { color:#BBB; }

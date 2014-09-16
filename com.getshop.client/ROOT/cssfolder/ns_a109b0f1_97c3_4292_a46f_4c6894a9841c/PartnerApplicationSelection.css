@@ -1,0 +1,9 @@
+.PartnerApplicationSelection .appentry { position:relative; padding: 5px; font-size: 16px; line-height: 16px; height: 80px; border: solid 1px #BBB; }
+.PartnerApplicationSelection .appentry:hover { cursor:pointer; }
+.PartnerApplicationSelection .appentry .selection { float:right; }
+.PartnerApplicationSelection .appentry .onoff { border: solid 1px #BBB; height: 20px; width: 20px; border-radius: 10px; }
+.PartnerApplicationSelection .appentry .on { background-color:#00FF00; }
+.PartnerApplicationSelection .appentry .off { background-color:#FF0000; }
+.PartnerApplicationSelection .title { font-size: 16px; padding-bottom: 20px; height: 45px; line-height:45px;}
+.PartnerApplicationSelection .name { position:absolute; left: 220px; top: 10px; color:#BBB; }
+.PartnerApplicationSelection #saveapplicationlist { float:right; }

@@ -1,0 +1,31 @@
+.CategoryList .category_list_inner .text { position: absolute; bottom: 0px; text-align: center; width: 120px; height: 20px;}
+
+.CategoryList .edit {
+    position:absolute;
+    cursor:pointer;
+    right: 10px;
+    top: 10px;
+    background-image: url("/skin/default/images/editsettings.png");
+    width: 17px;
+    height: 17px;
+    z-index: 1;
+    display:none;
+}
+
+.CategoryList .category_list:hover .edit {
+    display: block;
+}
+.CategoryList { text-align: center; }
+.CategoryList .categories { margin-left: 20px; position: relative; }
+.CategoryList .category_list { margin-left: 15px; margin-right: 15px; margin-bottom: 30px; }
+.CategoryList .category_list .category_list_inner { border-radius: 10px; width: 143px; height: 190px; }
+.CategoryList .category_list .text { position: absolute; bottom: 3px; width: 137px; height: auto; font-size: 11px; padding-left: 3px; }
+
+.CategoryList .category_list_inner {  padding-top: 10px; }
+.CategoryList .category_list_inner img { display: block; margin-left: auto; margin-right: auto; padding-top: 2px; padding-bottom: 2px; }
+.CategoryList .category_list_inner .product_image_inner {  margin: 2px;   }
+
+.CategoryList .newEntry { width: 110px; }
+.CategoryList .editmenuentry { text-align: left; }
+
+#informationbox .tab_content #Categorylist input { font-size: 16px; padding: 5px; border: solid 1px; width: 730px; margin-top: 10px; }

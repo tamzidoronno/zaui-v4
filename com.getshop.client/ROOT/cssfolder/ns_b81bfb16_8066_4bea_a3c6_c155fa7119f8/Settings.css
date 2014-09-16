@@ -1,0 +1,107 @@
+.gss_settings_main_area {
+    font-size: 14px;
+}
+
+.gss_settings_main_area .gss_appview img { 
+    width: 100px;
+    vertical-align: center;
+    margin-right: 10px;
+}
+
+.gss_settings_main_area .gss_appview {
+    padding: 10px;
+    display: inline-block;
+    height: 150px;
+    width: 357px;
+    margin: 10px;
+    background-color: #FFF;
+    vertical-align: top;
+    position: relative;
+    border-radius: 5px;
+    color: #333;
+}
+
+.gss_infobox { 
+    width:100%;
+    padding-left: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+}
+
+.gss_settings_main_area .gss_imagebox {
+    display: inline-block;
+    width: 100px;
+    height: 150px;
+    vertical-align: top;
+}
+
+.gss_settings_main_area .gss_description {
+    display: inline-block;
+    width: 243px;
+    padding-left: 10px;
+    height: 125px;
+    overflow: hidden;
+}
+
+.gss_settings_main_area .gss_activate_button {
+    position: absolute;
+    bottom: 3px;    
+    right: 3px;
+    width: 80px;
+    height: 30px;
+    border-radius: 5px 0px 5px 0px;
+    text-align: center;
+    line-height: 30px;
+    cursor: pointer;
+    color: #FFF;
+    background: #466585;
+}
+
+.gss_settings_main_area .gss_activate_button:hover {
+    background: #466585;
+}
+
+.gss_settings_main_area .gss_activate_button:active {
+    background: #c12000;
+}
+
+.gss_bottominfo {
+    border-top: solid 1px #166497;
+    margin-top: 10px;
+    padding: 15px;
+    text-align: center;
+}
+
+.gss_settings_main_area .gss_description .gss_title {
+    font-weight: bold;
+    padding-bottom: 3px;
+    margin-bottom: 3px;
+}
+
+.gss_settings_getshop_logo {
+    height: 400px;
+    position: relative;
+    background-image: -webkit-radial-gradient(center,contain ellipse,rgba(255,255,255,.6) 20%,rgba(255,255,255,.2) 70%,transparent);
+    background-image: radial-gradient(center,contain ellipse,rgba(255,255,255,.6) 20%,rgba(255,255,255,.2) 70%,transparent);
+}
+
+.gss_settings_getshop_logo .gss_slogan {
+    font-size: 4em;
+    font-weight: 700;
+    text-align: center;
+    position: absolute;
+    bottom: 50px;
+    left: 0px;
+    right: 0px;
+}
+
+.gss_settings_getshop_logo .gss_logo {
+    background-image: url('/showApplicationImages.php?appNamespace=ns_b81bfb16_8066_4bea_a3c6_c155fa7119f8&image=skin/images//logo_getshop.png');
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 353px;
+}
+

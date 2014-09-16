@@ -1,0 +1,79 @@
+/* 
+    Document   : MailManager
+    Created on : Sep 8, 2013, 12:20:58 PM
+    Author     : ktonder
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.mailmanagerinformation {
+    background-image: url('/showApplicationImages.php?appNamespace=ns_eb03c660_186a_11e3_8ffd_0800200c9a66&image=skin/images//MailManager.png');
+    background-size: 150px;
+    background-repeat: no-repeat;
+    height: 150px;
+    padding-left: 170px;
+    font-size: 16px;
+    padding-top: 20px;
+}
+
+.Settings .MailManager .settingbox .text {
+    font-size: 16px;
+    line-height: 20px;
+    width: 100px;
+    margin-top: 5px;
+}
+.Settings .MailManager .settingbox .image {
+    background-size: 100px;
+    width: 100px;
+    height: 100px;
+    margin-top: 10px;
+    background-image: url('/showApplicationImages.php?appNamespace=ns_eb03c660_186a_11e3_8ffd_0800200c9a66&image=skin/images//Actions-mail-mark-task-icon.png');
+}
+
+.Settings .MailManager .settingbox {
+    border: solid 1px #AAA;
+    border-radius: 5px;
+    min-height: 150px;
+    width: 150px;
+    margin: 10px;
+    display: inline-block;
+    background: linear-gradient(0, #BBB, #DDD);
+    cursor: pointer;
+}
+
+.Settings .MailManager .settingbox:hover {
+    background: linear-gradient(0, #CCC, #EEE);
+    box-shadow: 0px 0px 5px #888888;
+}
+
+.Settings .MailManager .settingbox:active {
+    box-shadow: inherit;    
+}
+
+.ordermailsettingsinformation table td {
+    font-size: 16px;
+    border: solid 1px #DDD;
+    padding: 5px;
+}
+.ordermail {
+    margin: 20px;
+    margin-bottom: 0px;
+    padding: 10px;
+    border: solid 1px #DDD;
+}
+
+.ordermailsettingsinformation {
+    font-size: 16px;
+    margin: 20px;
+    margin-bottom: 0px;
+    padding: 10px;   
+    border: solid 1px #DDD;
+}
+
+.ordermailsettingsinformation input {
+    height: 25px;
+    line-height: 25px;
+    font-size: 16px;
+    padding: 3px;
+    width: 919px;
+}

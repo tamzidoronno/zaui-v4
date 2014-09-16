@@ -1,0 +1,30 @@
+.Settings .Shipper .tabs {
+    background-color: #DDD;
+}
+
+.Settings .Shipper .tab {
+    width: 150px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 5px;
+    border: solid 0px;
+    line-height: 24px;
+}
+
+.Settings .Shipper .tab.active {
+    background-color: #DDD;
+    border: solid 0px;
+}
+
+.Settings .Shipper .content_holder {
+    padding: 10px;
+}
+
+.Settings .Shipper .setting {
+    border-bottom: solid 0px !important;
+}
+.Settings .Shipper .tabset {
+    background-color: #FAFAFA;
+    width: inherit;
+}

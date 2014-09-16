@@ -1,0 +1,102 @@
+.Booking table td {
+    font-size: 14px;
+    vertical-align: top;
+}
+
+.Booking table td.col1 {
+    width: 150px;
+}
+.Booking table td select,
+.Booking table td input {
+    height: 25px;
+    width: 200px;
+}
+
+.Booking table td select {
+    width: 206px;
+}
+
+.Booking table td .companyinformation {
+    width: 200px;
+    padding: 2px;
+    color: #AAA;
+    border: solid 1px #DDD;
+}
+
+.Booking .userlistoverview .userentry .donemarker {
+    font-size: 12px;
+    position: absolute;
+    right: 10px;
+    top: 6px;
+}
+.Booking .userlistoverview .userentry .datecreated {
+    font-size: 12px;
+    position: absolute;
+    right: 100px;
+    top: 6px;
+}
+.Booking .userlistoverview .userentry {
+    font-size: 14px;
+    position: relative;
+    cursor: pointer;
+    padding: 3px;
+    padding-left: 10px;
+    display: inline-block;
+    vertical-align: top;
+    width: 510px;
+    line-height: 10px;
+}
+
+.Booking .userlistoverview .userentryouter:hover {
+    background-color: rgba(127,127,127,0.3);
+}
+
+.Booking .selectcompanyform .searchbrregvalue { 
+    width: 95px;
+    margin-right: 10px;
+    height: 22px;
+}
+
+.Booking .company_selection { cursor:pointer; }
+
+.Booking .selectcompanyform { 
+    position:absolute; 
+    padding: 10px; 
+    height: 200px; 
+    background-color: #eee; 
+    z-index: 4; 
+    display:none; 
+    border: solid 1px; 
+    width: 185px;
+    overflow-y: scroll;
+}
+
+.Booking .find_company_for_selection {
+    width: 175px;
+    text-align: center;
+    color: #000;
+}
+
+.Booking .search_result_area .select_searched_company {
+    float: right;
+}
+.Booking .search_result_area {
+    color: #333;
+    background-color:#FFF;
+    position:absolute;
+    width:400px;
+    z-index:3;
+    max-height: 150px;
+    overflow:auto;
+}
+.Booking .search_for_company_brreg {
+    width: 27px;
+}
+
+.Booking .toggleUserId {
+    cursor: pointer; 
+    padding-top: 3px; 
+    padding-bottom: 3px;
+    width: 30px; 
+    text-align: center;
+}

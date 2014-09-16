@@ -1,0 +1,15 @@
+
+.stockstatus { 
+    margin-top: 8px; 
+    margin-bottom: 8px; 
+}
+
+.stockstatus .entry { 
+    background-repeat: no-repeat; 
+    display: block; 
+    width: 15px;
+    height: 15px;
+}
+
+.stockstatus .entry.ok { background-image: url('/showApplicationImages.php?appNamespace=ns_a93d64e4_b7fa_4d55_a804_ea664b037e72&image=skin/images//x-green-15px.png');  }
+.stockstatus .entry.out { background-image: url('/showApplicationImages.php?appNamespace=ns_a93d64e4_b7fa_4d55_a804_ea664b037e72&image=skin/images//x-red-15px.png');  }

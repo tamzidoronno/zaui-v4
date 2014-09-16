@@ -1,0 +1,157 @@
+.Banner .nobannersadded {
+    position: relative;
+    background-image: url('/showApplicationImages.php?appNamespace=ns_d612904c_8e44_4ec0_abf9_c03b62159ce4&image=skin/images//emptybanner.png');
+    background-size: cover;
+}
+
+.Banner .nobannersadded .banner_info_text {
+    font-size: 16px;
+    color: #FFF;
+    position: absolute;
+    box-shadow: 0px 0px 5px #333;
+    background-color: rgba(0,0,0,0.7);
+    max-width: 300px;
+    padding: 9px;
+    left: 20px;
+    top: 30px;
+}
+
+.Banner .informationboxbannersettings {
+    padding: 20px;
+}
+
+.Banner .informationboxbannersettings .banner_settings {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+}
+.banner_preview_title {
+    text-align: left;
+    padding-left: 4px;
+}
+
+.Banner .informationboxbannersettings .no_image_text_information {
+    display: none;
+}
+
+.Banner .informationboxbannersettings .banner_settings td {
+    color: #FFF;
+    font-size: 14px;
+}
+
+.Banner .informationboxbannersettings .banner_image_editor .image_editor_got_no_image {
+    font-size: 14px;
+    color: #FFF;
+    text-align: center;
+    padding-top: 20px;
+}
+.Banner .informationboxbannersettings .banner_image_editor {
+    position: absolute;
+    left: 290px;
+    top: 20px;
+    right: 20px;
+    bottom: 20px;
+    border: dashed 1px #3f3f3f;
+    border-radius: 5px;
+}
+.Banner .informationboxbannersettings .banner_settings_preview {
+    margin-top: 70px;
+    font-size: 14px;
+    color: #FFF;
+    min-height: 120px;
+    width: 248px;
+    text-align: center;
+}
+
+.Banner .informationboxbannersettings .banner_settings_preview .banner_settings_images {
+    overflow-y: scroll;
+    height: 320px;
+    border-radius: 5px; 
+    margin-top: 7px;
+    margin-bottom: 7px;
+}
+
+.Banner .informationboxbannersettings .banner_settings_preview .imageholder:first-child {
+    margin-top: 0px;
+}
+
+.Banner .informationboxbannersettings .banner_settings_preview .banner_settings_images::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+.Banner .informationboxbannersettings .banner_settings_preview .banner_settings_images::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+    border-radius: 10px;
+}
+ 
+.Banner .informationboxbannersettings .banner_settings_preview .banner_settings_images::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+
+
+.Banner .informationboxbannersettings  .imageholder {
+    position:relative;
+    border: solid 1px #3f3f3f;
+    background-color: #000;
+    display: inline-block;
+    margin: 12px;
+    height: 150px;
+    vertical-align: middle;
+    width: 150px;
+    cursor: pointer;
+}
+
+.Banner .informationboxbannersettings .imageholder img {
+    position:absolute;
+    top: 5px;
+    bottom:5px;
+    left: 5px;
+    right: 5px;
+    margin:auto;
+    max-height: 140px;
+    max-width: 140px;
+}
+
+.Banner .banner_slider_upload_container img {
+    max-width: 120px;
+    max-height: 120px;
+}
+.Banner .uploadprogress_bannerslider {
+    font-size: 14px;
+}
+.Banner .banner_slider_upload_container {
+    display: inline-block;
+    vertical-align: top;
+    width: 120px;
+    height: 120px;
+    margin: 10px;
+    border: solid 1px #333;
+}
+
+.Banner .bannerview .banner {
+    display: none;
+}
+
+.Banner .uploadprogress_bannerslider {
+    display: none;
+}
+
+.Banner .dots {
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    bottom: 0px;
+}
+.Banner .dots .dot {
+    width: 23px;
+    height: 24px;
+    cursor: pointer;
+    background-image: url('/showApplicationImages.php?appNamespace=ns_d612904c_8e44_4ec0_abf9_c03b62159ce4&image=skin/images//dot.png');
+}
+
+.Banner .dots .dot.selected {
+    background-image: url('/showApplicationImages.php?appNamespace=ns_d612904c_8e44_4ec0_abf9_c03b62159ce4&image=skin/images//dot-blue.png');
+}
+
+.Banner .banner_settings input { width: 165px; }

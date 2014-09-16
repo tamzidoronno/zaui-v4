@@ -433,11 +433,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public List<Order> getAllOrdersForUser(String userId) throws ErrorException {
         User user = getSession().currentUser;
         List<Order> returnOrders = new ArrayList();
-        if(user != null && user.isAdministrator() || user.id.equals(userId)) {
-            for(Order order : orders.values()) {
-                if(order.userId != null && order.userId.equals(userId)) {
-                    returnOrders.add(order);
-                }
+        for(Order order : orders.values()) {
+            if((order.userId != null && order.userId.equals(userId)) || (user != null && user.isAdministrator())) {
+                returnOrders.add(order);
             }
         }
         return returnOrders;

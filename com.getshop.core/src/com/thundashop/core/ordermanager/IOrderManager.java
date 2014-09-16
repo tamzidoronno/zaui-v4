@@ -64,6 +64,7 @@ public interface IOrderManager {
      * @return
      * @throws ErrorException 
      */
+    @Administrator
     public List<Order> getAllOrdersForUser(String userId) throws ErrorException;
     
     /**

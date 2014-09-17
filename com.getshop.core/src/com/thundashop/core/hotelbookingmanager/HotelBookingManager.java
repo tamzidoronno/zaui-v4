@@ -1,5 +1,6 @@
 package com.thundashop.core.hotelbookingmanager;
 
+import com.getshop.scope.GetShopSession;
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
@@ -9,6 +10,7 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.storemanager.StoreManager;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,7 +46,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
-@Scope("prototype")
+@GetShopSession
 public class HotelBookingManager extends ManagerBase implements IHotelBookingManager {
 
     public BookingSettings booksettings = new BookingSettings();
@@ -58,6 +60,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     
     @Autowired
     private ArxAccessCommunicator communicator;
+    
+    @Autowired
+    private StoreManager storeManager;
 
     @PostConstruct
     public void addManager() {
@@ -106,11 +111,6 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
     }
 
-    @Autowired
-    public HotelBookingManager(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
-    }
-
     @Override
     public Integer checkAvailable(long startDate, long endDate, String typeName) throws ErrorException {
         Date start = new Date(startDate * 1000);
@@ -135,7 +135,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
 
         if (rtype == null) {
-            msgmgr.mailFactory.send("post@getshop.com", "post@getshop.com", "Booking failed for " + storeId + " room type is fail type : " + typeName, getStore().webAddress + " : " + getStore().webAddressPrimary + " : ");
+            msgmgr.mailFactory.send("post@getshop.com", "post@getshop.com", "Booking failed for " + storeId + " room type is fail type : " + typeName, storeManager.getMyStore().webAddress + " : " + storeManager.getMyStore().webAddressPrimary + " : ");
             throw new ErrorException(1023);
         }
 

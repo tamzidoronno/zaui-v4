@@ -5,6 +5,7 @@
 
 package com.thundashop.core.cartuning;
 
+import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
@@ -12,9 +13,7 @@ import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,15 +21,10 @@ import org.springframework.stereotype.Component;
  * @author boggi
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class CarTuningManager extends ManagerBase implements ICarTuningManager {
     private CarTuningCollection carTuningCollection = new CarTuningCollection();
-
-    @Autowired
-    public CarTuningManager(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
-    }
-
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {

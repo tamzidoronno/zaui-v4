@@ -1,13 +1,10 @@
 package com.thundashop.core.productmanager;
 
+import com.getshop.scope.GetShopSession;
 import com.thundashop.core.productmanager.data.AttributeSummary;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.Events;
-import com.thundashop.core.common.ExchangeConvert;
 import com.thundashop.core.common.Logger;
-import com.thundashop.core.listmanager.ListManager;
-import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
@@ -19,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -33,17 +29,8 @@ import org.springframework.stereotype.Component;
  * be pretty straight forward to use.
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class ProductManager extends AProductManager implements IProductManager {
-
-    @Autowired
-    public ProductManager(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
-    }
-
-    @Override
-    public void onReady() {
-    }
 
     @Override
     public Product saveProduct(Product product) throws ErrorException {
@@ -88,10 +75,7 @@ public class ProductManager extends AProductManager implements IProductManager {
         products.remove(product.id);
         databaseSaver.deleteObject(product, credentials);
 
-        throwEvent(Events.PRODUCT_DELETED, productId);
-        ListManager manager = getManager(ListManager.class);
-        manager.removeProductFromListsIfExists(productId);
-
+        listManager.removeProductFromListsIfExists(productId);
     }
 
     @Override
@@ -156,20 +140,14 @@ public class ProductManager extends AProductManager implements IProductManager {
             return product.price;
         }
 
-        double conversionRate = 1.0;
-        if (getSession().currentUser == null || !getSession().currentUser.isAdministrator()) {
-            conversionRate = ExchangeConvert.getExchangeRate(getSettings("Settings"));
-        }
-
-        return product.getPrice(variations, conversionRate);
+        return product.getPrice(variations);
     }
 
     @Override
     public Product getProductFromApplicationId(String app_uuid) throws ErrorException {
-        PageManager pmgr = getManager(PageManager.class);
         List<String> uuidlist = new ArrayList();
         uuidlist.add(app_uuid);
-        HashMap<String, List<String>> result = pmgr.getPagesForApplications(uuidlist);
+        HashMap<String, List<String>> result = pageManager.getPagesForApplications(uuidlist);
         if (result.isEmpty()) {
             throw new ErrorException(1011);
         }

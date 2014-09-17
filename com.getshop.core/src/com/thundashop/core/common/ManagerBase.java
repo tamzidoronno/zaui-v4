@@ -4,40 +4,50 @@
  */
 package com.thundashop.core.common;
 
-import com.google.gson.Gson;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.pagemanager.IPageManager;
-import com.thundashop.core.storemanager.StoreManager;
-import com.thundashop.core.storemanager.data.Store;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author ktonder
  */
+@Component
 public class ManagerBase {
     public String storeId = "";
     public Credentials credentials = null;
+    
+    @Autowired
     public DatabaseSaver databaseSaver;
+    
+    @Autowired
     public Logger log;
+    
     public boolean isSingleton = false;
     public boolean ready = false;
     public Session session;
 
-    @Autowired
-    public Database database;
-    private ArrayList parsedObjects;
+    
+    private Database database;
 
-    public ManagerBase(Logger log, DatabaseSaver databaseSaver) {
-        this.databaseSaver = databaseSaver;
-        this.log = log;
+    @Autowired
+    public void setDatabase(Database database) {
+        this.database = database;
+    }
+
+    public Database getDatabase() {
+        return database;
+    }
+
+    
+    
+    public ManagerBase() {
     }
 
     public void initialize() {
@@ -48,72 +58,25 @@ public class ManagerBase {
 
         this.credentials = credentials;
 
+        if (databaseSaver == null) {
+            throw new NullPointerException("No database saver?");
+        }
+        
+        if (database == null) {
+            throw new NullPointerException("No database saver?");
+        }
+        
         if (databaseSaver != null && database != null && !credentials.manangerName.equals("LoggerManager")) {
             DataRetreived dataRetreived = new DataRetreived();
             dataRetreived.data = database.retreiveData(credentials);
             ((ManagerBase) this).dataFromDatabase(dataRetreived);
         }
 
-        try {
-            setStoreIdToMailFactories();
-        } catch (Exception ex) {
-            log.error(this, "Could not set storeid to mailfactory", ex);
-        }
-
-        onReady();
         this.ready = true;
-    }
-    
-    public void onReady() {
-    }
-
-    public HashMap<String, Setting> getSettings(String phpApplicationName) throws ErrorException {
-        IPageManager pageManager = getManager(IPageManager.class);
-        return pageManager.getApplicationSettings(phpApplicationName);
     }
 
     public Session getSession() {
         return session;
-    }
-
-    public <T> T getManager(Class managerType) {
-        if (getSession() == null) {
-            throw new NullPointerException("This function cat not be used from a component is not store");
-        }
-
-        String storeId = getSession().storeId;
-
-        // TODO : Use storeId from userloggedin object.
-        if (storeId == null || storeId.equals("") || storeId.equals("all")) {
-            throw new NullPointerException("This function cat not be used from a component is not store");
-        }
-
-        StoreHandler storeHandler = AppContext.storePool.getStorePool(storeId);
-        return storeHandler.getManager(managerType);
-    }
-
-    public <T> T getManager(Class managerType, String storeId) {
-        StoreHandler storeHandler = AppContext.storePool.getStorePool(storeId);
-        return storeHandler.getManager(managerType);
-    }
-
-    public Store getStore() throws ErrorException {
-        StoreManager storeMgr = getManager(StoreManager.class);
-        return storeMgr.getMyStore();
-    }
-
-    public void setStoreIdToMailFactories() throws IllegalArgumentException, IllegalAccessException {
-        for (Field field : this.getClass().getFields()) {
-            if (field.get(this) instanceof StoreComponent) {
-                StoreComponent storeComponent = (StoreComponent) field.get(this);
-                storeComponent.setStoreId(storeId);
-            }
-        }
-    }
-
-    public void throwEvent(String eventName, String eventReferance) {
-        StoreHandler storeHandler = AppContext.storePool.getStorePool(storeId);
-        storeHandler.sendEvent(this, eventName, eventReferance);
     }
 
     /**
@@ -150,47 +113,13 @@ public class ManagerBase {
     }
 
     public void saveObject(DataCommon data) throws ErrorException {
-        parsedObjects = new ArrayList();
-        updateTranslation(data, false);
+//        updateTranslation(data, false);
         data.storeId = storeId;
         databaseSaver.saveObject(data, credentials);
     }
-    
-    
-    /**
-     * @param object
-     * @param loading If you are loading the object, or if you are saving it.
-     * @throws ErrorException 
-     */
-    public void updateTranslation(Object object, boolean loading) throws ErrorException {
-        HashMap<String, Setting> settings = getSettings("Settings");
-        if(settings != null && settings.containsKey("languages")) {
-            Gson sgon = new Gson();
-            Setting langsetting = settings.get("languages");
-            List<String> langcodes = sgon.fromJson(langsetting.value, ArrayList.class);
-            
-            if (langcodes == null) {
-                return;
-            }
-            
-            if(langcodes.size() > 0) {
-                TranslationHelper helper = new TranslationHelper(getSession().language, getMainLanguage());
-                helper.checkFields(object, loading);
-            }
-        }
-    }
-
+ 
     public void deleteObject(DataCommon data) throws ErrorException {
         databaseSaver.deleteObject(data, credentials);
     }
 
-    public String getMainLanguage() throws ErrorException {
-        String standardlang = "en_en";
-        HashMap<String, Setting> settings = getSettings("Settings");
-        if (settings.containsKey("language")) {
-            standardlang = settings.get("language").value;
-        }
-
-        return standardlang;
-    }
 }

@@ -1,18 +1,15 @@
 package com.thundashop.app.banner;
 
+import com.getshop.scope.GetShopSession;
 import com.thundashop.app.bannermanager.data.Banner;
 import com.thundashop.app.bannermanager.data.BannerSet;
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,16 +17,11 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class BannerManager extends ManagerBase implements IBannerManager {
     public HashMap<String, BannerSet> banners = new HashMap();
     private String id;
-    
-    @Autowired 
-    public BannerManager(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
-    }
-
+   
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon retData : data.data)

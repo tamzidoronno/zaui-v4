@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.messagemanager;
 
+import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.StoreComponent;
@@ -24,11 +25,10 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMessage.RecipientType;
 import javax.mail.internet.MimeMultipart;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
-@Scope("prototype")
+@GetShopSession
 public class MailFactoryImpl extends StoreComponent implements MailFactory, Runnable {
     private String from;
     private String to;

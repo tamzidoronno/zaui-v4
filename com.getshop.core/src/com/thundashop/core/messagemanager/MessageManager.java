@@ -1,8 +1,6 @@
 package com.thundashop.core.messagemanager;
 
-import com.thundashop.core.appmanager.AppManager;
-import com.thundashop.core.appmanager.data.ApplicationSettings;
-import com.thundashop.core.appmanager.data.AvailableApplications;
+import com.getshop.scope.GetShopSession;
 import com.thundashop.core.chatmanager.SubscribedToAirgram;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
@@ -11,22 +9,19 @@ import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.pagemanager.PageManager;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class MessageManager extends ManagerBase implements IMessageManager {
 
     @Autowired
@@ -35,11 +30,9 @@ public class MessageManager extends ManagerBase implements IMessageManager {
 
     @Autowired
     public SMSFactory smsFactory;
-
+    
     @Autowired
-    public MessageManager(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
-    }
+    private PageManager pageManager;
 
     @Override
     public void sendMail(String to, String toName, String subject, String content, String from, String fromName) {
@@ -70,6 +63,11 @@ public class MessageManager extends ManagerBase implements IMessageManager {
             databaseSaver.saveObject(airgramSubscriptions, credentials);
         }
     }
+    
+    private HashMap<String, Setting> getSettings(String phpApplicationName) throws ErrorException {
+        return pageManager.getApplicationSettings(phpApplicationName);
+    }
+    
     
     public void sendToAirgram(String url, String message) throws ErrorException {
         HashMap<String, Setting> airgramsettings = this.getSettings("Airgram");

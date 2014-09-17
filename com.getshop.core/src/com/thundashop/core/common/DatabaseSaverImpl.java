@@ -23,11 +23,7 @@ public class DatabaseSaverImpl implements DatabaseSaver {
     @Autowired
     public Database database;
     
-    @Autowired
-    public DatabaseSaverImpl(Logger logger) {
-        this.logger = logger;
-        logger.debug(this, "Started database saver instance");
-    }
+
     
     private void registerIdToDataObject(DataCommon data, Credentials credentials) {
         if (data.id == null || data.id.equals(""))

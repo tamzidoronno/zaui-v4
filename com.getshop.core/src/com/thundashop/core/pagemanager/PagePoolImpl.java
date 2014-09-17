@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.pagemanager;
 
+import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
@@ -24,8 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -33,31 +34,41 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class PagePoolImpl {
 
-    public HashMap<String, Integer> pageLayout = new HashMap<>();
-    public HashMap<String, Page> pages = new HashMap<>();
     @Autowired
     public DatabaseSaver databaseSaver;
+    
+    @Autowired
+    public Logger log;
+    
+    public HashMap<String, Integer> pageLayout = new HashMap<>();
+    public HashMap<String, Page> pages = new HashMap<>();
+
+    @Autowired
     private ApplicationPoolImpl applicationPool;
     private Credentials credentials;
+    
+    @Autowired
     private Logger logger;
     private String storeId;
+    
+    @Autowired
     public PageManager pageManager;
+    
     public boolean defaultPagesSet = false;
     public CommonPageData commonPageData = new CommonPageData();
 
     @Autowired
-    public PagePoolImpl(Logger logger) {
-        this.logger = logger;
-        setupDefaultLayouts();
+    private ListManager listManager;
+    
+    public void initialize(Credentials credentials, String storeId) {
+        this.credentials = credentials;
+        this.storeId = storeId;
     }
 
-    public void setApplicationPool(ApplicationPoolImpl applicationPool) {
-        this.applicationPool = applicationPool;
-    }
-
+    @PostConstruct
     private void setupDefaultLayouts() {
         pageLayout.put(Page.DefaultPages.CartPage, Page.LayoutType.HeaderMiddleFooter);
         pageLayout.put(Page.DefaultPages.CheckOut, Page.LayoutType.HeaderMiddleFooter);
@@ -73,11 +84,6 @@ public class PagePoolImpl {
 
     public void addFromDatabase(Page page) {
         pages.put(page.id, page);
-    }
-
-    public void initialize(Credentials credentials, String storeId) {
-        this.credentials = credentials;
-        this.storeId = storeId;
     }
 
     public Page createNewPage(int layout, String parentId) throws ErrorException {
@@ -211,7 +217,6 @@ public class PagePoolImpl {
             Entry homePage = new Entry();
             homePage.name = "Home";
             homePage.pageId = page.id;
-            ListManager listManager = pageManager.getManager(ListManager.class);
             listManager.addEntry(topMenu.id, homePage, page.id);
         }
 
@@ -233,7 +238,6 @@ public class PagePoolImpl {
             Page allUsers = createNewPage(Page.LayoutType.HeaderLeftMiddleFooter, page.id, "users_all_users");
             allUsers.layout.leftSideBar = 1;
             
-            ListManager listManager = pageManager.getManager(ListManager.class);
             Entry entry = new Entry();
             entry.name = "All users";
             entry.pageId = "users_all_users";

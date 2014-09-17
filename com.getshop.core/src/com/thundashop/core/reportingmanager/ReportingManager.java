@@ -1,5 +1,6 @@
 package com.thundashop.core.reportingmanager;
 
+import com.getshop.scope.GetShopSession;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.thundashop.core.cartmanager.data.Cart;
@@ -34,11 +35,10 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
-@Scope("prototype")
+@GetShopSession
 public class ReportingManager extends ManagerBase implements IReportingManager {
 
     private static final int PageViews = 1;
@@ -46,20 +46,19 @@ public class ReportingManager extends ManagerBase implements IReportingManager {
     private static final int ProductViewed = 3;
     private static final int OrdersCreated = 4;
     private static final int UsersCreated = 5;
-    HashMap<Long, Report> data;
-    LinkedHashMap<String, Integer> popularProducts;
+    HashMap<Long, Report> data = new HashMap();
+    LinkedHashMap<String, Integer> popularProducts = new LinkedHashMap();
+   
     @Autowired
     Database db;
-    private ProductManager prodManager;
-    private ListManager listManager;
-    private HashMap<String, String> cachedNames;
-
+    
     @Autowired
-    public ReportingManager(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
-        data = new HashMap();
-        popularProducts = new LinkedHashMap();
-    }
+    private ProductManager prodManager;
+    
+    @Autowired
+    private ListManager listManager;
+    
+    private HashMap<String, String> cachedNames;
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -548,8 +547,6 @@ public class ReportingManager extends ManagerBase implements IReportingManager {
     }
 
     private void resetManagersAndCachedData() {
-        prodManager = getManager(ProductManager.class);
-        listManager = getManager(ListManager.class);
         cachedNames = new HashMap();
     }
 

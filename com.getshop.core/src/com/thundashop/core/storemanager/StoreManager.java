@@ -1,5 +1,6 @@
 package com.thundashop.core.storemanager;
 
+import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -10,7 +11,6 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class StoreManager extends ManagerBase implements IStoreManager {
     @Autowired
     public StorePool storePool;
@@ -28,11 +28,6 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     
     @Autowired
     public MailFactory mailFactory;
-
-    @Autowired
-    public StoreManager(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
-    }
 
     @PostConstruct
     public void init() {
@@ -49,11 +44,6 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         return storePool.initialize(webAddress, sessionId);
     }
 
-    @Override
-    public void connectStoreToPartner(String partner) throws ErrorException {
-        Store store = getStore();
-        connectStoreToPartner(store.id, partner);
-    }
 
     public Store getMyStore() throws ErrorException {
         return storePool.getStoreBySessionId(getSession().id);
@@ -65,17 +55,16 @@ public class StoreManager extends ManagerBase implements IStoreManager {
             throw new ErrorException(95);
         }
         
-        Store store = getStore();
+        Store store = getMyStore();
         store.configuration = config;
         store.registrationUser = null;
-        updateTranslation(store, false);
         storePool.saveStore(store);
         return store;
     }
 
     @Override
     public Store setPrimaryDomainName(String domainName) throws ErrorException {
-        Store store = getStore();
+        Store store = getMyStore();
 
         if (store.webAddressPrimary != null && store.webAddressPrimary.trim().length() > 0) {
             if (store.additionalDomainNames == null) {
@@ -91,7 +80,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
     @Override
     public Store removeDomainName(String domainName) throws ErrorException {
-        Store store = getStore();
+        Store store = getMyStore();
         if (store.additionalDomainNames != null) {
             store.additionalDomainNames.remove(domainName);
         }
@@ -114,7 +103,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
     @Override
     public Store setIntroductionRead() throws ErrorException {
-        Store store = getStore();
+        Store store = getMyStore();
         store.readIntroduction = true;
         storePool.saveStore(store);
         return store;
@@ -122,7 +111,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
     @Override
     public Store enableSMSAccess(boolean toggle, String password) throws ErrorException {
-        Store store = getStore();
+        Store store = getMyStore();
         if (password.equals("3322xcEE-_239%")) {
             store.configuration.hasSMSPriviliges = toggle;
             storePool.saveStore(store);
@@ -134,7 +123,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
     @Override
     public Store enableExtendedMode(boolean toggle, String password) throws ErrorException {
-        Store store = getStore();
+        Store store = getMyStore();
         if (password.equals("32_9066_cdWDxzRF")) {
             store.isExtendedMode = toggle;
             storePool.saveStore(store);
@@ -146,22 +135,8 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
     @Override
     public String getStoreId() throws ErrorException {
-        Store store = getStore();
+        Store store = getMyStore();
         return store.id;
-    }
-
-    public void connectStoreToPartner(String id, String partner) throws ErrorException {
-        if(partner.equals("") || partner.trim().length() == 0) {
-            throw new ErrorException(26);
-        }
-        
-        Store store = storePool.getStore(id);
-        if(store == null) {
-            throw new ErrorException(23);
-        }
-        
-        store.partnerId = partner;
-        storePool.saveStore(store);
     }
     
     @Override
@@ -180,15 +155,6 @@ public class StoreManager extends ManagerBase implements IStoreManager {
          * Its added here to support our api.
          */
         throw new UnsupportedOperationException("Not in use."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void setVIS(boolean toggle, String password) throws ErrorException {
-        if(password.equals("fdasfddefdvcx_33%ccZss")) {
-            Store store = getStore();
-            store.isVIS = toggle;
-            storePool.saveStore(store);
-        }
     }
 
     private String encrypt(String password) throws ErrorException {

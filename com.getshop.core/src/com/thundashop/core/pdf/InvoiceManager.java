@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.pdf;
 
+import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Logger;
@@ -14,11 +15,9 @@ import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pdf.data.AccountingDetails;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,19 +25,19 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class InvoiceManager extends ManagerBase implements IInvoiceManager {
     @Autowired
     public MailFactory mailFactory;
     
     @Autowired
-    public InvoiceManager(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
-    }
+    private OrderManager orderManager;
+    
+    @Autowired
+    private PageManager pageManager;
     
     @Override
     public void createInvoice(String orderId) throws ErrorException { 
-        OrderManager orderManager = getManager(OrderManager.class);
         Order order = orderManager.getOrder(orderId);
         
         AccountingDetails details = getAccountingDetails();
@@ -55,7 +54,6 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
     }
 
     private AccountingDetails getAccountingDetails() throws ErrorException {
-        PageManager pageManager = getManager(PageManager.class);
         Map<String, Setting> settings = pageManager.getApplicationSettings("InvoicePayment");
         
         AccountingDetails details = new AccountingDetails();

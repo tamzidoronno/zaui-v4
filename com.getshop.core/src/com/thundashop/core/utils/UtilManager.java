@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.utils;
 
+import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.utilmanager.data.FileObject;
 import com.thundashop.core.common.DatabaseSaver;
@@ -11,11 +12,9 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.messagemanager.NewsLetterGroup;
 import com.thundashop.core.usermanager.data.Company;
 import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -23,7 +22,7 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class UtilManager extends ManagerBase implements IUtilManager {
 
     public HashMap<String, FileObject> files = new HashMap();
@@ -31,12 +30,7 @@ public class UtilManager extends ManagerBase implements IUtilManager {
     @Autowired
     public BrRegEngine brRegEngine;
     
-    @Autowired
-    public UtilManager(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
-    }
-    
-  @Override
+    @Override
     public void dataFromDatabase(DataRetreived data) {
         for(DataCommon tmpData : data.data) {
             if(tmpData instanceof FileObject) {

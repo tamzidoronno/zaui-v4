@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.pagemanager;
 
+import com.getshop.scope.GetShopSession;
 import com.thundashop.core.appmanager.AppManager;
 import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.common.*;
@@ -16,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class ApplicationPoolImpl {
 
     /**
@@ -36,15 +36,16 @@ public class ApplicationPoolImpl {
     public Logger logger;
     private String storeId;
     private Credentials credentials;
+    
     @Autowired
     public DatabaseSaver databaseSaver;
-    private PageManager pageManager;
-
-    public void initialize(Credentials credentials, String storeId) {
-        this.credentials = credentials;
-        this.storeId = storeId;
-    }
-
+    
+    @Autowired
+    private AppManager appManager;
+    
+    @Autowired
+    private StoreManager storeManager;
+    
     public void addFromDatabase(AppConfiguration appConfiguration) {
         applicationInstances.put(appConfiguration.id, appConfiguration);
     }
@@ -55,7 +56,6 @@ public class ApplicationPoolImpl {
     }
 
     public AppConfiguration createNewApplication(String applicationSettingsId, String applicationId) throws ErrorException {
-        AppManager appManager = pageManager.getManager(AppManager.class);
         ApplicationSettings setting = appManager.getApplication(applicationSettingsId);
         
         if (setting == null) {
@@ -111,7 +111,7 @@ public class ApplicationPoolImpl {
     public AppConfiguration get(String application) throws ErrorException {
         AppConfiguration app = applicationInstances.get(application);
         if (app == null) {
-            throw new ErrorException(58);
+            return null;
         }
         return finalizeApplication(app);
     }
@@ -216,7 +216,6 @@ public class ApplicationPoolImpl {
     }
 
     private void addDefaultThemeIfNotExists(Map<String, AppConfiguration> retApps) throws ErrorException {
-        AppManager appManager = pageManager.getManager(AppManager.class);
         for (AppConfiguration app : retApps.values()) {
             ApplicationSettings setting;
             try {
@@ -234,13 +233,7 @@ public class ApplicationPoolImpl {
         }
     }
 
-    public void setPageManager(PageManager pageManager) {
-        this.pageManager = pageManager;
-    }
-
     private void removeAllThemeApplications() throws ErrorException {
-        AppManager appManager = pageManager.getManager(AppManager.class);
-
         List<String> remove = new ArrayList<String>();
         for (AppConfiguration appConfig : applicationInstances.values()) {
             try {
@@ -262,13 +255,11 @@ public class ApplicationPoolImpl {
     }
 
     public void setThemeSelectedToStoreConfiguration(AppConfiguration res) throws ErrorException {
-        AppManager appManager = pageManager.getManager(AppManager.class);
         ApplicationSettings setting = appManager.getApplication(res.appSettingsId);
         
         if (setting != null && setting.type.equals(ApplicationSettings.Type.Theme)) {
-            Store store = pageManager.getStore();
+            Store store = storeManager.getMyStore();
             store.configuration.hasSelectedDesign = true;
-            StoreManager storeManager = pageManager.getManager(StoreManager.class);
             storeManager.saveStore(store.configuration);
         }
     }
@@ -277,7 +268,6 @@ public class ApplicationPoolImpl {
         List<AppConfiguration> apps = new ArrayList();
         for (AppConfiguration config : applicationInstances.values()) {
             try {
-                AppManager appManager = pageManager.getManager(AppManager.class);
                 if (config.appSettingsId == null) {
                     continue;
                 }

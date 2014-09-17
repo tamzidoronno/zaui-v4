@@ -4,6 +4,7 @@
  */
 package com.thundashop.app.news;
 
+import com.getshop.scope.GetShopSession;
 import com.thundashop.app.newsmanager.data.MailSubscription;
 import com.thundashop.app.newsmanager.data.NewsEntry;
 import com.thundashop.core.common.*;
@@ -11,7 +12,6 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.mobilemanager.MobileManager;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,15 +19,13 @@ import org.springframework.stereotype.Component;
  * @author boggi
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class NewsManager extends ManagerBase implements INewsManager {
     public HashMap<String, NewsEntry> entries = new HashMap();
     public HashMap<String, MailSubscription> subscribers = new HashMap();
     
     @Autowired
-    public NewsManager(DatabaseSaver databaseSaver, Logger logger) throws ErrorException {
-        super(logger, databaseSaver);
-    }
+    private MobileManager mobileManager;
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -141,8 +139,7 @@ public class NewsManager extends ManagerBase implements INewsManager {
     @Override
     public void publishNews(String id) throws ErrorException {
         NewsEntry entry = entries.get(id);
-        MobileManager manager = getManager(MobileManager.class);
-        manager.sendMessageToAll(entry.subject);
+        mobileManager.sendMessageToAll(entry.subject);
         entry.isPublished = true;
         databaseSaver.saveObject(entry, credentials);
     }

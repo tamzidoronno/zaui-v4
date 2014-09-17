@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.gallerymanager;
 
+import com.getshop.scope.GetShopSession;
 import com.thundashop.app.gallerymanager.data.ImageEntry;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -12,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,17 +20,11 @@ import org.springframework.stereotype.Component;
  * @author boggi
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class GalleryManager extends ManagerBase implements IGalleryManager {
 
-    public HashMap<String, List<ImageEntry>> entries;
-    
-    @Autowired 
-    public GalleryManager(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
-        entries = new HashMap();
-    }
-    
+    public HashMap<String, List<ImageEntry>> entries = new HashMap();
+
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for(DataCommon entry : data.data) {

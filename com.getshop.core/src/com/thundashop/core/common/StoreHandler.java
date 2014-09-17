@@ -4,12 +4,10 @@
  */
 package com.thundashop.core.common;
 
+import com.getshop.scope.GetShopSessionScope;
 import com.thundashop.core.appmanager.ApplicationPool;
 import com.thundashop.core.appmanager.data.ApiCallsInUse;
 import com.thundashop.core.appmanager.data.ApplicationSettings;
-import com.thundashop.core.getshop.GetShop;
-import com.thundashop.core.loggermanager.LoggerManager;
-import com.thundashop.core.reportingmanager.ReportingManager;
 import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
@@ -30,40 +28,17 @@ public class StoreHandler {
     private List<ManagerBase> messageHandler;
     private String storeId;
     private HashMap<String, Session> sessions = new HashMap();
-    // remove this.
-    private User testUser;
+    private final GetShopSessionScope scope;
 
-    @Deprecated
-    public void setTestUser(User user) {
-        testUser = user;
-    }
-    
-    public Session getSession(String id) {
-        return sessions.get(id);
-    }
-    
+   
     public StoreHandler(String storeId) {
         this.storeId = storeId;
-        messageHandler = new ArrayList<ManagerBase>(AppContext.appContext.getBeansOfType(ManagerBase.class).values());
-        init();
+        scope = AppContext.appContext.getBean(GetShopSessionScope.class);
     }
 
-    private void init() {
-        for (ManagerBase base : messageHandler) {
-            if (!base.isSingleton) {
-                base.storeId = storeId;
-                base.initialize();
-            }
-        }
-        
-        for (ManagerBase base : messageHandler) {
-            if (base instanceof StoreInitialized) {
-                ((StoreInitialized)base).storeReady();
-            }
-        }
-    }
-    
     public synchronized Object executeMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
+        scope.setStoreId(storeId);
+        
         setSessionObject(inObject.sessionId);
         
         Class aClass = loadClass(inObject.interfaceName);
@@ -89,6 +64,20 @@ public class StoreHandler {
             throw ex;
         }
     }
+    
+    public synchronized boolean isAdministrator(String sessionId) throws ErrorException {
+        
+        scope.setStoreId(storeId);
+        
+        UserManager manager = getManager(UserManager.class);
+        User user = manager.getUserBySessionId(sessionId);
+        if (user != null) {
+            return user.isAdministrator();
+        }
+        
+        return false;
+    }
+
     
     private Class loadClass(String objectName) throws ErrorException {
         try {
@@ -130,7 +119,6 @@ public class StoreHandler {
         try {
             ManagerBase manager = getManager(aClass);
             Object result = executeMethod.invoke(manager, argObjects);
-            manager.updateTranslation(result, true);
             return result;
         } catch (IllegalAccessException ex) {
             throw new ErrorException(84);
@@ -170,6 +158,7 @@ public class StoreHandler {
         
         session.lastActive = new Date();
         
+        messageHandler = new ArrayList<ManagerBase>(AppContext.appContext.getBeansOfType(ManagerBase.class).values());
         for (ManagerBase base : messageHandler) {
             /**
              * We dont want to set the session for storemanager, 
@@ -277,10 +266,6 @@ public class StoreHandler {
     }
 
     private User findUser() throws ErrorException {
-        // REMOVE THIS
-        if (testUser != null) {
-            return testUser;
-        }
 
         try {
             UserManager manager = getManager(UserManager.class);
@@ -292,39 +277,8 @@ public class StoreHandler {
         return new User();
     }
 
-    public <T> T getManager(Class aClass) {
-        for (ManagerBase handler : messageHandler) {
-            if (aClass.isAssignableFrom(handler.getClass())) {
-                return (T) handler;
-            }
-        }
-
-        return null;
-    }
-
-    public synchronized void sendEvent(ManagerBase managerBase, String eventName, String eventReferance) {
-        for (ManagerBase handler : messageHandler) {
-            if (handler.equals(managerBase)) {
-                continue;
-            }
-
-            ManagerBase mngBase = (ManagerBase) handler;
-            mngBase.onEventPrivate(eventName, eventReferance);
-        }
-    }
-
-    public void removeSession(String id) {
-        sessions.remove(id);
-    }
-
-    public synchronized boolean isAdministrator(String sessionId) throws ErrorException {
-        UserManager manager = getManager(UserManager.class);
-        User user = manager.getUserBySessionId(sessionId);
-        if (user != null) {
-            return user.isAdministrator();
-        }
-        
-        return false;
+    private <T> T getManager(Class aClass) {
+        return (T)AppContext.appContext.getBean(aClass);
     }
 
     private ApplicationPool getApplicationPool() {

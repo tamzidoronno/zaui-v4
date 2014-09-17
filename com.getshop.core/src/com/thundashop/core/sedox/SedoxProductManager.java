@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.sedox;
 
+import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
@@ -15,6 +16,7 @@ import com.thundashop.core.messagemanager.MailFactoryImpl;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.SMSFactory;
 import com.thundashop.core.sedox.autocryptoapi.FilesMessage;
+import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
@@ -51,7 +53,6 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -59,7 +60,7 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class SedoxProductManager extends ManagerBase implements ISedoxProductManager, ApplicationContextAware {
 
     @Autowired
@@ -76,9 +77,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     private MailFactoryImpl sedoxDatabankMailAccount;
     
     @Autowired
-    public SedoxProductManager(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
-    }
+    private StoreManager storeManager;
     
     @Autowired
     public SedoxCMDEncrypter sedoxCMDEncrypter;
@@ -88,6 +87,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     
     @Autowired
     public SMSFactory smsFactory;
+    
+    @Autowired
+    public UserManager userManager;
     
     @PostConstruct
     public void setupDatabankMailAccount() {
@@ -121,7 +123,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     @Override
     public synchronized void sync(String option) throws ErrorException {
-        if (!getStore().id.equals("608afafe-fd72-4924-aca7-9a8552bc6c81")) {
+        if (!storeManager.getMyStore().id.equals("608afafe-fd72-4924-aca7-9a8552bc6c81")) {
             throw new ErrorException(26);
         }
         
@@ -412,7 +414,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     private void updateUserFromMagento(String id, boolean force) throws ErrorException {
-        UserManager userManager = getManager(IUserManager.class);
         User user = userManager.getUserById("" + id);
         if (user.fullName != null && user.emailAddress != null && !force) {
             return;
@@ -640,8 +641,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     private void sendFileCreatedNotification(SedoxProduct sedoxProduct) throws ErrorException {
-        UserManager userManager = getManager(UserManager.class);
-        
         for (SedoxUser developer : getDevelopers()) {
             User user = userManager.getUserById(developer.id);
             if (developer.isActiveDelevoper) {
@@ -654,7 +653,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
     
     private void sendAirGramMessage(String emailAddress, SedoxProduct sedoxProduct) throws ErrorException {
-        UserManager userManager = getManager(UserManager.class);
         User user = userManager.getUserById(sedoxProduct.firstUploadedByUserId);
         SedoxUser sedoxUser = getSedoxUserAccountById(user.id);
         
@@ -683,16 +681,15 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     private void deleteAllProducts() throws ErrorException {
         for (SedoxProduct product : products) {
-            database.delete(product, credentials);
+            getDatabase().delete(product, credentials);
         }
     }
 
     private void deleteAllUsers() throws ErrorException {
         for (SedoxUser user : users.values()) {
-            database.delete(user, credentials);
+            getDatabase().delete(user, credentials);
         }
 
-        IUserManager userManager = getManager(UserManager.class);
         List<User> users = userManager.getAllUsers();
         for (User user : users) {
             if (user.type >= 50) {
@@ -706,7 +703,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     private void saveUser(SedoxUser user) throws ErrorException {
         String tmpPassword = "abcd1234-56789ss!"; // 
 
-        IUserManager userManager = getManager(UserManager.class);
         User getshopUser = userManager.getUserById(user.magentoId);
         if (getshopUser == null) {
             getshopUser = new User();
@@ -766,13 +762,11 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     @Override
     public List<User> searchForUsers(String searchString) throws ErrorException {
-        UserManager manager = getManager(IUserManager.class);
-        
         Set<User> retUsers = new HashSet();
         
         for (String searchStringI : searchString.split(":")) {
             searchStringI = searchStringI.toLowerCase();
-            for (User user : manager.getAllUsers()) {
+            for (User user : userManager.getAllUsers()) {
                 if (user.fullName != null && user.fullName.toLowerCase().contains(searchStringI)) {
                     retUsers.add(user);
                 }
@@ -812,7 +806,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     @Override
     public User login(String emailAddress, String password) throws ErrorException {
-        UserManager userManager = getManager(IUserManager.class);
         try {
             return userManager.logOn(emailAddress, password);
         } catch (ErrorException ex) {
@@ -862,8 +855,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     private User getGetshopUser(String id) throws ErrorException {
-        IUserManager manager = getManager(IUserManager.class);
-        User getshopUser = manager.getUserById(id);
+        User getshopUser = userManager.getUserById(id);
         if (getshopUser == null || getshopUser.emailAddress == null) {
             updateUserFromMagento(id, true);
         }
@@ -984,7 +976,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     
     @Override
     public List<SedoxUser> getDevelopers() throws ErrorException {
-        UserManager userManager = getManager(UserManager.class);
         List<SedoxUser> retUsers = new ArrayList();
         
         for (User user : userManager.getAllUsers()) {
@@ -1194,7 +1185,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         if (sedoxUser.masterUserId != null && !sedoxUser.masterUserId.equals("") &&  sedoxCreditOrder.amount > 0) {
             double creditToAdd = sedoxCreditOrder.amount/100 * sedoxUser.slaveIncome;
             if (creditToAdd > 0) {
-                UserManager userManager = getManager(UserManager.class);
                 User masterGetshopUser = userManager.getUserById(sedoxUser.id);
                 SedoxCreditOrder kickbackCreditOrder = new SedoxCreditOrder();
                 kickbackCreditOrder.amount = order.credit;
@@ -1246,7 +1236,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     private void sendNotificationProductPurchased(SedoxProduct product, SedoxUser user, SedoxOrder order) throws ErrorException {
-        UserManager userManager = getManager(UserManager.class);
         User getshopUser = userManager.getUserById(user.id);
         
         String subject = "Product purchased: " + product.id + " - " + product.toString();
@@ -1263,7 +1252,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     private void sendNotificationToUploadedUser(SedoxProduct sedoxProduct) throws ErrorException {
-        UserManager userManager = getManager(UserManager.class);
         User getshopUser = userManager.getUserById(sedoxProduct.firstUploadedByUserId);
         String subject = "We have received your file request";
         String message = "You uploaded file: " + sedoxProduct.toString();

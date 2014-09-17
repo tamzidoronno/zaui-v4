@@ -15,11 +15,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class ArxAccessCommunicator extends ManagerBase {
     public List<HotelBookingManager> managers = new CopyOnWriteArrayList();
-
-    @Autowired
-    public ArxAccessCommunicator(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
-    }
     
      @Scheduled(fixedRate=3000)
     public synchronized void scheduledUsersToSend() throws ErrorException, UnsupportedEncodingException {

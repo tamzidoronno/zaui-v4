@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.bigstock;
 
+import com.getshop.scope.GetShopSession;
 import com.google.gson.Gson;
 import com.thundashop.core.bigstock.data.BigStockCreditAccount;
 import com.thundashop.core.bigstock.data.BigStockOrder;
@@ -28,7 +29,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -36,7 +36,7 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class BigStock extends ManagerBase implements IBigStock {
 
     @Autowired
@@ -53,11 +53,6 @@ public class BigStock extends ManagerBase implements IBigStock {
                 bigStockCreditAccount = (BigStockCreditAccount)dataCommon;
             }
         }
-    }
-    
-    @Autowired
-    public BigStock(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
     }
     
     private String getSha1Coded(String sha1String) {

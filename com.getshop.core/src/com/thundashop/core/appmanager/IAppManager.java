@@ -52,13 +52,6 @@ public interface IAppManager {
     public void deleteApplication(String id) throws ErrorException;
     
     /**
-     * Fetch all application that needs to be payed for.
-     * @return
-     * @throws ErrorException 
-     */
-    public List<ApplicationSubscription> getUnpayedSubscription() throws ErrorException;
-    
-    /**
      * Get all the applications added to this store.
      * @param includeAppSettings Do you need the application settings object or not?
      * @throws ErrorException 

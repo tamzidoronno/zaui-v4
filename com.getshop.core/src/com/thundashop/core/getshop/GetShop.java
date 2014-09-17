@@ -24,6 +24,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  *
@@ -35,13 +36,6 @@ public class GetShop extends ManagerBase implements IGetShop {
     private HashMap<String, List<Partner>> partners;
     private HashMap<String, PartnerData> partnerData = new HashMap();
 
-    @Autowired
-    public GetShop(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
-        isSingleton = true;
-        storeId = "all";
-        partners = new HashMap();
-    }
     
     @Autowired
     public Database database;
@@ -58,12 +52,14 @@ public class GetShop extends ManagerBase implements IGetShop {
             return new ArrayList();
         }
 
-        List<GetshopStore> retstores = fetchStoreFromDB(null);
-        return retstores;
+        throw new RuntimeException("This function is not available yet in 2.0.0");
     }
 
     @PostConstruct
     public void init() {
+        isSingleton = true;
+        storeId = "all";
+        partners = new HashMap();
         initialize();
     }
 
@@ -168,46 +164,6 @@ public class GetShop extends ManagerBase implements IGetShop {
         }
 
         return false;
-    }
-
-    public List<GetshopStore> getStoresConnectedToUser(String userid) throws ErrorException {
-        Partner partner = findPartnerForUser(userid);
-
-        if (partner == null) {
-            return new ArrayList();
-        }
-
-        List<GetshopStore> retval = fetchStoreFromDB(partner.partnerId);
-        return retval;
-    }
-
-    private List<GetshopStore> fetchStoreFromDB(String partnerId) {
-        Credentials credentials = new Credentials(StoreManager.class);
-        credentials.manangerName = StoreManager.class.getSimpleName();
-        credentials.storeid = "all";
-
-        List<GetshopStore> retstores = new ArrayList();
-        List<DataCommon> stores = database.retreiveData(credentials);
-        for (DataCommon storec : stores) {
-            if (storec instanceof Store) {
-                Store store = (Store) storec;
-                if (partnerId != null && (store.partnerId == null || !partnerId.equals(store.partnerId))) {
-                    continue;
-                }
-
-                GetshopStore getshopstore = new GetshopStore();
-                getshopstore.webaddress = store.webAddress;
-                getshopstore.created = store.rowCreatedDate;
-                if (store.configuration != null) {
-                    getshopstore.configEmail = store.configuration.emailAdress;
-                }
-
-                addUserInformation(getshopstore, store);
-                retstores.add(getshopstore);
-            }
-        }
-
-        return retstores;
     }
 
     private Partner findPartnerForUser(String userId) {

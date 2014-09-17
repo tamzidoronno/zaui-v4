@@ -1,11 +1,11 @@
 package com.thundashop.core.listmanager;
 
+import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.Events;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -14,16 +14,13 @@ import com.thundashop.core.listmanager.data.EntryList;
 import com.thundashop.core.listmanager.data.ListType;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
-import com.thundashop.core.pagemanager.data.RowLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -31,17 +28,14 @@ import org.springframework.stereotype.Component;
  * @author boggi
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class ListManager extends ManagerBase implements IListManager {
     public Map<String, EntryList> allEntries = new HashMap();
     private Integer currentUniqueCounter = -1;
     
     @Autowired
-    public ListManager(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
-        allEntries = new HashMap();
-    }
-
+    private PageManager pageManager;
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon entry : data.data) {
@@ -90,7 +84,6 @@ public class ListManager extends ManagerBase implements IListManager {
     }
     
     private void addListType(String listId) {
-        PageManager pageManager = getManager(PageManager.class);
         try {
             AppConfiguration app = pageManager.getApplicationById(listId);
             if (app != null && app.appSettingsId.equals("1051b4cf-6e9f-475d-aa12-fc83a89d2fd4")) {
@@ -129,14 +122,13 @@ public class ListManager extends ManagerBase implements IListManager {
             entry.id = UUID.randomUUID().toString();
         }
 
-        PageManager myPageManager = getManager(PageManager.class);
         if (entry.pageId == null && AppContext.storePool != null) {
-            Page page = myPageManager.createPage(-1, parentPageId);
+            Page page = pageManager.createPage(-1, parentPageId);
             if(entry.pageType == 2) {
                 page.pageTag = "leftmenu";
                 page.pageTagGroup = "leftmenu";
                 page.layout.leftSideBar = 1;
-                myPageManager.savePage(page);
+                pageManager.savePage(page);
             }
             
             entry.pageId = page.id;
@@ -575,15 +567,7 @@ public class ListManager extends ManagerBase implements IListManager {
         }
     }
     
-    
-    @Override
-    public void onEvent(String eventName, String eventReferance) throws ErrorException {
-        if (Events.PRODUCT_DELETED.equals(eventName))
-            removeProductFromListsIfExists(eventReferance);
-    }
-
-    
-     public void removeProductFromListsIfExists(String productId) throws ErrorException {
+    public void removeProductFromListsIfExists(String productId) throws ErrorException {
         List<String> lists = getLists();
         for(String listId : lists) {
             List<String> toDelete = new ArrayList();

@@ -34,8 +34,6 @@ public interface IUserManager {
      */
     public User createUser(User user) throws ErrorException;
     
-    public List<GetshopStore> getStoresConnectedToMe() throws ErrorException;
-    
     /**
      * Find all users with a given search criteria.
      * @param searchCriteria The criteria to search for

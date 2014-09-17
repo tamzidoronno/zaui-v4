@@ -1,5 +1,6 @@
 package com.thundashop.core.ordermanager;
 
+import com.getshop.scope.GetShopSession;
 import com.thundashop.core.appmanager.AppManager;
 import com.thundashop.core.appmanager.data.ApplicationSubscription;
 import com.thundashop.core.cartmanager.CartManager;
@@ -10,19 +11,20 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
-@Scope("prototype")
+@GetShopSession
 public class OrderManager extends ManagerBase implements IOrderManager {
     private long incrementingOrderId = 100000;
     
@@ -32,9 +34,23 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public MailFactory mailFactory;
 
     @Autowired
-    public OrderManager(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
-    }
+    private UserManager userManager;
+    
+    @Autowired
+    private StoreManager storeManager;
+    
+    @Autowired
+    private ProductManager productManager;
+    
+    @Autowired
+    private AppManager appManager;
+    
+    @Autowired
+    private CartManager cartManager;
+    
+    @Autowired
+    private PageManager pageManager;
+    
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -70,6 +86,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         orders.put(order.id, order);
     }
 
+    private HashMap<String, Setting> getSettings(String phpApplicationName) throws ErrorException {
+        return pageManager.getApplicationSettings(phpApplicationName);
+    }
+    
     private void updateStockQuantity(Order order, String key) throws ErrorException {
         HashMap<String, Setting> map = this.getSettings("StockControl");
         String setting = null;
@@ -92,7 +112,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
     
     private String formatText(Order order, String text) throws ErrorException {
-        text = text.replace("/displayImage", "http://"+getStore().webAddress+"/displayImage");
+        text = text.replace("/displayImage", "http://"+storeManager.getMyStore().webAddress+"/displayImage");
         text = text.replace("{Order.Id}", order.id);
         text = text.replace("{Order.Lines}", getOrderLines(order));
         
@@ -173,8 +193,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
     
      public void finalizeCart(Cart cart) throws ErrorException {
-        ProductManager productManager = getManager(ProductManager.class);
-        
         for (CartItem item : cart.getItems()) {
             double price = productManager.getPrice(item.getProduct().id, item.getVariations());
             item.getProduct().price = price;
@@ -204,8 +222,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public Order createOrderByCustomerReference(String referenceKey) throws ErrorException {
-        UserManager usermgr = getManager(UserManager.class);
-        User user = usermgr.getUserByReference(referenceKey);
+        User user = userManager.getUserByReference(referenceKey);
         user.address.phone = user.cellPhone;
         user.address.fullName = user.fullName;
         Order order = createOrderInternally(user.address);
@@ -244,53 +261,24 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public void setOrderStatus(String password, String orderId, String currency, double price, int status) throws ErrorException {
         if (password.equals("1Fuck1nG_H4T3_4ppl3!!TheySuckBigTime")) {
-            if (orderId.equals("applications")) {
-                handleApplicationPayment(currency, price);
-            } else {
-                Order order = orders.get(orderId);
-                
-                if (order.cart.getTotal(false) == price) {
-                    changeOrderStatus(order.id, status);
-                } else {
-                    String content = "Hi.<br>";
-                    content += "We received a payment notification from paypal for order: " + orderId + " which is incorrect.<br>";
-                    content += "The price or the currency differ from what has been registered to the order.<br>";
+            Order order = orders.get(orderId);
 
-                    String to = getStore().configuration.emailAdress;
-                    mailFactory.send("post@getshop.com", to, "Possible fraud attempt", content);
-                    mailFactory.send("post@getshop.com", "post@getshop.com", "Possible fraud attempt", content);
-                }
+            if (order.cart.getTotal(false) == price) {
+                changeOrderStatus(order.id, status);
+            } else {
+                String content = "Hi.<br>";
+                content += "We received a payment notification from paypal for order: " + orderId + " which is incorrect.<br>";
+                content += "The price or the currency differ from what has been registered to the order.<br>";
+
+                String to = storeManager.getMyStore().configuration.emailAdress;
+                mailFactory.send("post@getshop.com", to, "Possible fraud attempt", content);
+                mailFactory.send("post@getshop.com", "post@getshop.com", "Possible fraud attempt", content);
             }
         } else {
             mailFactory.send("post@getshop.com", "post@getshop.com", "Status update failure", "tried to use password:" + password);
         }
     }
     
-    private void handleApplicationPayment(String currency, double price) throws ErrorException {
-        System.out.println(currency);
-        AppManager appManager = getManager(AppManager.class);
-        List<ApplicationSubscription> subscriptions = appManager.getUnpayedSubscription();
-        double total = 0;
-        for (ApplicationSubscription appsub : subscriptions) {
-            if (appsub.app != null && appsub.app.price != null) {
-                total += appsub.app.price;
-            }
-        }
-
-        if (total == price && currency.equals("USD")) {
-            appManager.renewAllApplications("fdder9bbvnfif909ereXXff");
-        } else {
-            String content = "Hi.<br>";
-            content += "We received a payment notification from paypal for order for applications which is incorrect.<br>";
-            content += "The price or the currency differ from what has been registered to the order <br>";
-            content += "Price : " + price + " <br>";
-            content += "Currency : " + currency + " <br>";
-
-            String to = getStore().configuration.emailAdress;
-            mailFactory.send("post@getshop.com", "post@getshop.com", "Application fraud attempt", content);
-        }
-    }
-
     @Override
     public Order getOrder(String orderId) throws ErrorException {
         User user = getSession().currentUser;
@@ -365,7 +353,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private void updateCouponsCount(Order order) throws ErrorException {
-        CartManager cartManager = getManager(CartManager.class);
         cartManager.updateCoupons(order.cart.coupon);
     }
     
@@ -375,7 +362,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private Order createOrderInternally(Address address) throws ErrorException {
-        CartManager cartManager = getManager(CartManager.class);
         Cart cart = cartManager.getCart();
         cart.address = address;
 
@@ -400,7 +386,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         updateStockQuantity(order, "trackControl");
         updateCouponsCount(order);
         
-        Store store = this.getStore();
+        Store store = storeManager.getMyStore();
         String orderText = getCustomerOrderText(order);
 
         String subject = getSubject();

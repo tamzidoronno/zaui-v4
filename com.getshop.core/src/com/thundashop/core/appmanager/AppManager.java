@@ -1,5 +1,6 @@
 package com.thundashop.core.appmanager;
 
+import com.getshop.scope.GetShopSession;
 import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.appmanager.data.ApplicationSubscription;
 import com.thundashop.core.appmanager.data.ApplicationSynchronization;
@@ -8,15 +9,11 @@ import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.Events;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.PageArea;
-import com.thundashop.core.storemanager.data.Store;
-import com.thundashop.core.usermanager.UserManager;
-import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -35,25 +31,19 @@ import org.springframework.stereotype.Component;
  * id is the id of the main application, the instanceid is the id of the instances to the application.
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class AppManager extends ManagerBase implements IAppManager {
 
     public List<ApplicationSynchronization> toSync;
     private Date lastConnected = new Date();
-    Map<String, ApplicationSubscription> addedApps;
-    private UnpayedAppCache cache;
+    Map<String, ApplicationSubscription> addedApps = new HashMap();
 
-//    TODO
-//    US this variable to retreive data.
-//    private AvailableApplications applications = new AvailableApplications();
+    @Autowired
+    private PageManager pageManager;
+
     @Autowired
     private ApplicationPool applicationPool;
 
-    @Autowired
-    public AppManager(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
-        addedApps = new HashMap();
-    }
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -71,11 +61,7 @@ public class AppManager extends ManagerBase implements IAppManager {
     @Override
     public AvailableApplications getAllApplications() throws ErrorException {
         AvailableApplications retMessage = new AvailableApplications();
-        String partnerid = getStore().partnerId;
-        if(getSession() != null && getSession().currentUser != null && getSession().currentUser.partnerid != null) {
-            partnerid = getSession().currentUser.partnerid;
-        }
-        retMessage.applications = applicationPool.getAll(getStore(), partnerid);
+        retMessage.applications = applicationPool.getAll(storeId);
         return retMessage;
     }
 
@@ -104,7 +90,7 @@ public class AppManager extends ManagerBase implements IAppManager {
     }
 
     private void saveSettings(ApplicationSettings settings) throws ErrorException {
-        if (settings.ownerStoreId == null || !settings.ownerStoreId.equals(getStore().id)) {
+        if (settings.ownerStoreId == null || !settings.ownerStoreId.equals(storeId)) {
             throw new ErrorException(26);
         }
         applicationPool.addApplicationSettings(settings);
@@ -195,12 +181,11 @@ public class AppManager extends ManagerBase implements IAppManager {
 
     @Override
     public Map<String, ApplicationSubscription> getAllApplicationSubscriptions(boolean include) throws ErrorException {
-        PageManager pagemanager = this.getManager(PageManager.class);
         for (ApplicationSubscription sub : addedApps.values()) {
             sub.numberOfInstancesAdded = 0;
         }
 
-        for (AppConfiguration config : pagemanager.getApplications()) {
+        for (AppConfiguration config : pageManager.getApplications()) {
             if (config.appSettingsId == null) {
                 continue;
             }
@@ -247,62 +232,7 @@ public class AppManager extends ManagerBase implements IAppManager {
     }
 
     @Override
-    public List<ApplicationSubscription> getUnpayedSubscription() throws ErrorException {
-        Store store = getStore();
-        if(store.isVIS) {
-            return new ArrayList();
-        }
-        List<ApplicationSubscription> result = new ArrayList();
-        if (cache != null) {
-            if (cache.expire.after(new Date())) {
-                return cache.cache;
-            }
-        }
-
-        for (ApplicationSubscription apsub : getAllApplicationSubscriptions(true).values()) {
-            if (!apsub.payedfor && apsub.to_date.before(new Date()) && apsub.numberOfInstancesAdded > 0) {
-                if (apsub.app.price != null && apsub.app.price > 0) {
-                    result.add(apsub);
-                }
-            }
-        }
-
-        cache = new UnpayedAppCache();
-        cache.cache = result;
-
-        Calendar expire = Calendar.getInstance();
-        expire.setTime(new Date());
-        expire.add(Calendar.SECOND, 30);
-        cache.expire = expire.getTime();
-
-        return result;
-    }
-
-    public void renewAllApplications(String password) throws ErrorException {
-        if (password.equals("fdder9bbvnfif909ereXXff")) {
-            for (ApplicationSubscription sub : getUnpayedSubscription()) {
-                sub.from_date = new Date();
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(sub.from_date);
-                cal.add(Calendar.YEAR, 1);
-                sub.to_date = cal.getTime();
-                sub.payedfor = true;
-                saveSubscription(sub);
-            }
-            cache = null;
-        }
-    }
-    
-    @Override
-    public void onEvent(String eventName, String eventReferance) throws ErrorException {
-        if (Events.ALL_APPS_REMOVED.equals(eventName)) {
-            cache = null;
-        }
-    }
-
-    @Override
     public List<ApplicationSettings> getApplicationSettingsUsedByWebPage() throws ErrorException {
-        PageManager pageManager = getManager(PageManager.class);
         List<AppConfiguration> apps = pageManager.getApplications();
         
         if (apps == null) {

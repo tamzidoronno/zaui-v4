@@ -30,15 +30,10 @@ public class YouTubeManager extends ManagerBase implements IYouTubeManager {
     private static final long NUMBER_OF_VIDEOS_RETURNED = 10;
     private static YouTube youtube;
     
-    @Autowired
-    public YouTubeManager(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
-        isSingleton = true;
-        storeId = "all";
-    }
-    
     @PostConstruct
     public void init() {
+        isSingleton = true;
+        storeId = "all";
         initialize();
     }
     

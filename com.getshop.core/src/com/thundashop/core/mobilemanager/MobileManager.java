@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.mobilemanager;
 
+import com.getshop.scope.GetShopSession;
 import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Sender;
 import com.thundashop.core.common.DataCommon;
@@ -20,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -28,18 +28,14 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class MobileManager extends ManagerBase implements IMobileManager {
     private Map<String, Integer> badges = new HashMap();
     public Map<String, Token> tokens = new HashMap();
     
     @Autowired
     private FrameworkConfig frameworkConfig;
-    
-    @Autowired
-    public MobileManager(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
-    }
+
     
     @Override
     public void dataFromDatabase(DataRetreived data) {

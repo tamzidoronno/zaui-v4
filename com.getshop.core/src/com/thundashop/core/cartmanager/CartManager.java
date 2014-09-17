@@ -1,5 +1,6 @@
 package com.thundashop.core.cartmanager;
 
+import com.getshop.scope.GetShopSession;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
@@ -7,6 +8,7 @@ import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.ordermanager.OrderManager;
+import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.TaxGroup;
@@ -23,16 +25,20 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class CartManager extends ManagerBase implements ICartManager {
     public HashMap<String, Coupon> coupons = new HashMap();
     private HashMap<String, Cart> carts = new HashMap();
 
     @Autowired
-    public CartManager(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
-    }
-
+    private ProductManager productManager;
+    
+    @Autowired
+    private OrderManager orderManager;
+    
+    @Autowired
+    private PageManager pageManager;
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataObject : data.data) {
@@ -56,9 +62,8 @@ public class CartManager extends ManagerBase implements ICartManager {
     private Product getProduct(String productId, List<String> variations) throws ErrorException {
         ArrayList<String> productIds = new ArrayList<String>();
         productIds.add(productId);
-        ProductManager man = getManager(ProductManager.class);
-        Product product = man.getProduct(productId).clone();
-        product.price = man.getPrice(product.id, variations);
+        Product product = productManager.getProduct(productId).clone();
+        product.price = productManager.getPrice(product.id, variations);
         return product;
     }
 
@@ -99,7 +104,6 @@ public class CartManager extends ManagerBase implements ICartManager {
     @Override
     public Double getCartTotalAmount() throws ErrorException {
         Cart cart  = getCart(getSession().id).clone();
-        OrderManager orderManager = getManager(OrderManager.class);
         orderManager.finalizeCart(cart);
         return cart.getTotal(false);
     }
@@ -130,14 +134,17 @@ public class CartManager extends ManagerBase implements ICartManager {
         return cart.getShippingCost();
     }
 
+    private HashMap<String, Setting> getSettings(String phpApplicationName) throws ErrorException {
+        return pageManager.getApplicationSettings(phpApplicationName);
+    }
+    
     @Override
-        public void setShippingCost(double shippingCost) throws ErrorException {
+    public void setShippingCost(double shippingCost) throws ErrorException {
         if (getSession().currentUser == null || !getSession().currentUser.isAdministrator()) {
             shippingCost = ExchangeConvert.calculateExchangeRate(getSettings("Settings"), shippingCost);
         } 
         Cart cart = this.getCart();
         
-        ProductManager productManager = getManager(ProductManager.class);
         TaxGroup shippingTaxGroup = productManager.getTaxGroup(0);
         cart.setShippingCost(shippingCost, shippingTaxGroup);
     }
@@ -145,7 +152,6 @@ public class CartManager extends ManagerBase implements ICartManager {
     @Override
     public Double getShippingPriceBasis() throws ErrorException {
         Cart cart  = getCart(getSession().id).clone();
-        OrderManager orderManager = getManager(OrderManager.class);
         orderManager.finalizeCart(cart);
         return cart.getTotal(true);
     }
@@ -206,12 +212,11 @@ public class CartManager extends ManagerBase implements ICartManager {
     }
 
     private void removeDeletedProducts(Cart cart) {
-        ProductManager manager = getManager(ProductManager.class);
         
         //Look for removed products.
         List<CartItem> toRemove = new ArrayList();
         for(CartItem item : cart.getItems()) {
-            if(!manager.exists(item.getProduct().id)) {
+            if(!productManager.exists(item.getProduct().id)) {
                 toRemove.add(item);
             }
         }

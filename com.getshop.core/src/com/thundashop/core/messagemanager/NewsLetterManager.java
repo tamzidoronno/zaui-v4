@@ -1,11 +1,13 @@
 package com.thundashop.core.messagemanager;
 
+import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.utilmanager.data.FileObject;
@@ -15,11 +17,10 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
-@Scope("prototype")
+@GetShopSession
 public class NewsLetterManager extends ManagerBase implements INewsLetterManager {
     private List<NewsLetterGroup> groups = new CopyOnWriteArrayList();
 
@@ -28,7 +29,16 @@ public class NewsLetterManager extends ManagerBase implements INewsLetterManager
     
     @Autowired
     private MailFactory mailFactory;
+    
+    @Autowired
+    private UserManager userManager;
  
+    @Autowired
+    private StoreManager storeManager;
+ 
+    @Autowired
+    private UtilManager utilManager;
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for(DataCommon tmpData : data.data) {
@@ -36,11 +46,6 @@ public class NewsLetterManager extends ManagerBase implements INewsLetterManager
                 groups.add((NewsLetterGroup) tmpData);
             }
         }
-    }
-    
-    @Autowired
-    public NewsLetterManager(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
     }
     
     @PostConstruct
@@ -57,7 +62,6 @@ public class NewsLetterManager extends ManagerBase implements INewsLetterManager
             throw new ErrorException(1019);
         }
         
-        UserManager manager = getManager(UserManager.class);
         addGroup(group);
     }
 
@@ -94,8 +98,7 @@ public class NewsLetterManager extends ManagerBase implements INewsLetterManager
     
     private void sendNewsLetterGroup(NewsLetterGroup group) throws ErrorException {
         String userId = group.userIds.get(0);
-        UserManager umgr = getManager(UserManager.class);
-        User user = umgr.getUserById(userId);
+        User user = userManager.getUserById(userId);
         String body = group.emailBody;
         if(user != null) {
             body = body.replaceAll("(?i)\\{Contact.name\\}", user.fullName);
@@ -103,18 +106,17 @@ public class NewsLetterManager extends ManagerBase implements INewsLetterManager
         group.userIds.remove(userId);
         group.SentMailTo.add(userId);
         
-        UtilManager utilmgr = getManager(UtilManager.class);
         String filepath = "/uploadedFile.php?id=";
-          if(getStore().webAddressPrimary != null) {
-            filepath = "http://" + getStore().webAddressPrimary + filepath;
+          if(storeManager.getMyStore().webAddressPrimary != null) {
+            filepath = "http://" + storeManager.getMyStore().webAddressPrimary + filepath;
         } else {
-            filepath = "http://" + getStore().webAddress + filepath;
+            filepath = "http://" + storeManager.getMyStore().webAddress + filepath;
         }
         
         if(!group.attachments.isEmpty()) {
             body += "<hr>";
             for(String attachmentid : group.attachments) {
-                FileObject file = utilmgr.getFile(attachmentid);
+                FileObject file = utilManager.getFile(attachmentid);
                 String attachmentfilepath = filepath + file.id;
                 String attachmentEntry = "<div><a href='" + attachmentfilepath + "'>" + file.filename + "</a></div>";
                 body += attachmentEntry;

@@ -5,16 +5,11 @@
 package com.thundashop.core.databasemanager;
 
 import com.mongodb.*;
-import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Logger;
-import com.thundashop.core.common.ManagerBase;
-import com.thundashop.core.common.StoreHandler;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.databasemanager.data.Credentials;
-import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
 import java.io.File;
 import java.io.IOException;
@@ -44,8 +39,7 @@ public class Database {
     private String collectionPrefix = "col_";
     @Autowired
     public Logger logger;
-    @Autowired
-    public DatabaseSocketHandler databaseSocketHandler;
+    
     private boolean sandbox = false;
 
     @Autowired
@@ -114,7 +108,6 @@ public class Database {
         }
 
         addDataCommonToDatabase(data, credentials);
-        databaseSocketHandler.objectSaved(data, credentials);
     }
 
     private void createDataFolder() throws IOException {
@@ -227,22 +220,6 @@ public class Database {
 
         return all;
 
-    }
-
-    public void objectFromOtherSource(DataCommon dataCommon, Credentials credentials) {
-        addDataCommonToDatabase(dataCommon, credentials);
-        ManagerBase managerBase;
-        if (credentials.manangerName.equals(StoreManager.class.getSimpleName())) {
-            managerBase = AppContext.appContext.getBean(StoreManager.class);
-        } else {
-            StoreHandler storeHandler = AppContext.storePool.getStorePool(credentials.storeid);
-            managerBase = storeHandler.getManager(credentials.getManager());
-        }
-
-        DataRetreived dataRetreived = new DataRetreived();
-        dataRetreived.data = new ArrayList();
-        dataRetreived.data.add(dataCommon);
-        managerBase.dataFromDatabase(dataRetreived);
     }
 
     public DataCommon getObject(Credentials credentials, String id) {

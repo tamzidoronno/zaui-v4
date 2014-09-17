@@ -13,13 +13,10 @@ import com.thundashop.core.storemanager.data.Store;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -279,10 +276,6 @@ public class StorePool {
             storeHandlers.put(storeId, handler);
         }
         return handler;
-    }
-
-    public StoreHandler getStorePool(String storeId) {
-        return get(storeId);
     }
 
     private Method getMethod(JsonObject2 object) throws ClassNotFoundException, SecurityException {

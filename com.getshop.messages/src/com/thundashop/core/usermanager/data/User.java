@@ -66,10 +66,7 @@ public class User extends DataCommon implements Comparable<User> {
     
     //ApplicationId, int = 0 rw, 1=r, 2=w
     public HashMap<String, Integer> applicationAccessList = new HashMap();
-    
-    @Transient
-    public String partnerid;
-    
+
     /**
      * If the user is connected
      * to a perticullary application,

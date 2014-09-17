@@ -1,5 +1,6 @@
 package com.thundashop.app.content;
 
+import com.getshop.scope.GetShopSession;
 import com.thundashop.app.contentmanager.data.ContentData;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -7,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,17 +15,12 @@ import org.springframework.stereotype.Component;
  * @author privat
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class ContentManager extends ManagerBase implements IContentManager {
     private int id=1002;
     
     HashMap<String, ContentData> memory = new HashMap<String, ContentData>();
     
-    @Autowired
-    public ContentManager(DatabaseSaver databaseSaver, Logger logger) throws ErrorException {
-        super(logger, databaseSaver);
-    }    
-
     @Override
     public void dataFromDatabase(DataRetreived data) {
          List<DataCommon> theData = data.data;
@@ -71,7 +66,6 @@ public class ContentManager extends ManagerBase implements IContentManager {
     @Override
     public String getContent(String id) throws ErrorException {
         ContentData object = getContentData(id);
-        updateTranslation(object, true);
         return object.content;
     }
 

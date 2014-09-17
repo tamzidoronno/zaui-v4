@@ -4,11 +4,11 @@
  */
 package com.thundashop.core.messagemanager;
 
+import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.*;
 import com.thundashop.core.pagemanager.IPageManager;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  * @author boggi
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class MailConfiguration implements MailConfig {
     
     private MailSettings settings = new MailSettings();
@@ -24,16 +24,12 @@ public class MailConfiguration implements MailConfig {
     @Autowired
     public Logger log;
     
+    @Autowired
+    private IPageManager pageManager;
+    
     @Override
     public void setup(String storeId) {
-        StoreHandler storeHandler = AppContext.storePool.getStorePool(storeId);
-        
-        
-        Map<String, Setting> confSettings = null;
-        if (storeHandler != null) {
-            IPageManager pageManager = storeHandler.getManager(IPageManager.class);
-            confSettings = pageManager.getSecuredSettingsInternal("Mail");
-        }
+        Map<String, Setting> confSettings = pageManager.getSecuredSettingsInternal("Mail");
 
         if (confSettings != null) {
             if (confSettings.get("hostname") != null) {

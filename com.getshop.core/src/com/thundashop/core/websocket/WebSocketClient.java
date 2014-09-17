@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.websocket;
 
+import com.getshop.scope.GetShopSession;
 import com.google.gson.Gson;
 import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.ErrorException;
@@ -14,7 +15,6 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 import org.java_websocket.WebSocket;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class WebSocketClient {
     private WebSocket ws;
     private String sessionId;

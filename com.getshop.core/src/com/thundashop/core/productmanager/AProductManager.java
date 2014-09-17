@@ -20,27 +20,34 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author ktonder
  */
-public class AProductManager extends ManagerBase {
+public abstract class AProductManager extends ManagerBase {
 
     protected HashMap<String, Product> products = new HashMap();
     AttributeData pool = new AttributeData();
     AttributeSummary cachedResult;
     public HashMap<Integer, TaxGroup> taxGroups = new HashMap();
 
-    public AProductManager(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
+    @Autowired
+    public PageManager pageManager;
+    
+    @Autowired
+    private ContentManager contentManager;
+    
+    @Autowired
+    public ListManager listManager;
+    
+    private HashMap<String, Setting> getSettings(String phpApplicationName) throws ErrorException {
+        return pageManager.getApplicationSettings(phpApplicationName);
     }
-
+    
     public Product finalize(Product product) throws ErrorException {
-        PageManager manager = getManager(PageManager.class);
-        ContentManager content = getManager(ContentManager.class);
-
         if (product != null && product.pageId != null && product.page == null) {
-            product.page = manager.getPage(product.pageId);
+            product.page = pageManager.getPage(product.pageId);
         }
 
         if (product != null) {
@@ -65,7 +72,7 @@ public class AProductManager extends ManagerBase {
             product.taxGroupObject = taxGroups.get(product.taxgroup);
         }
         
-        Page page = manager.getPage(product.pageId);
+        Page page = pageManager.getPage(product.pageId);
         HashMap<String, AppConfiguration> apps = page.getApplications();
         
         //Adding text
@@ -73,7 +80,7 @@ public class AProductManager extends ManagerBase {
             product.descriptions = new ArrayList();
             for(AppConfiguration config : apps.values()) {
                 if(config.appName.equals("ContentManager")) {
-                    product.descriptions.add(content.getContent(config.id));
+                    product.descriptions.add(contentManager.getContent(config.id));
                 }
             }
 
@@ -124,7 +131,6 @@ public class AProductManager extends ManagerBase {
 
     protected void createProductPage(Product product) throws ErrorException {
         if (product.page == null) {
-            IPageManager pageManager = getManager(PageManager.class);
             product.page = pageManager.createPage(Page.LayoutType.HeaderMiddleFooter, "");
             product.pageId = product.page.id;
             //
@@ -181,8 +187,7 @@ public class AProductManager extends ManagerBase {
         cachedResult = new AttributeSummary(pool);
 
         if (searchCriteria.listId != null && searchCriteria.listId.trim().length() > 0) {
-            ListManager manager = getManager(ListManager.class);
-            List<Entry> list = manager.getList(searchCriteria.listId);
+            List<Entry> list = listManager.getList(searchCriteria.listId);
             for (Entry entry : list) {
                 Product product = products.get(entry.productId);
                 if (product == null) {

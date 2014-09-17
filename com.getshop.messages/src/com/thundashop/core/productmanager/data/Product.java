@@ -146,12 +146,11 @@ public class Product extends DataCommon implements Comparable<Product>  {
         return null;
     }
     
-    public double getPrice(List<String> variations, double conversionRate) {
+    public double getPrice(List<String> variations) {
         double retprice = this.price;
         for (String variation : variations) {
             ProductVariation productVariation = getVariation(variation);
             if (productVariation != null) {
-                retprice += (productVariation.priceDifference * conversionRate);
                 retprice *= 100;
                 retprice = Math.round(retprice);
                 retprice /= 100;

@@ -20,11 +20,6 @@ import org.springframework.stereotype.Component;
 public class NewsLetterSender extends ManagerBase {
     public List<NewsLetterManager> managers = new CopyOnWriteArrayList();
     
-    @Autowired
-    public NewsLetterSender(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
-    }
-    
     @Scheduled(fixedRate=300000)
     public synchronized void scheduledMailSending() throws ErrorException {
         for (NewsLetterManager manager : managers) {

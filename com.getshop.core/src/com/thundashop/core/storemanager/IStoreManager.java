@@ -30,13 +30,6 @@ public interface IStoreManager {
      */
     public void setSessionLanguage(String id) throws ErrorException;
     
-    
-    /**
-     * When an administrator has logged on, it can call on this call to connect its store to a partner.
-     */
-    public void connectStoreToPartner(String partner) throws ErrorException;
-
-    
     /**
      * Check if a web shop address has already been taken.
      * @param address The address to check for.
@@ -128,15 +121,6 @@ public interface IStoreManager {
     
     @Administrator
     public void delete() throws ErrorException;
-    
-    /**
-     * Is this a very important shop or not?
-     * 
-     * @param toggle True / False
-     * @param password And internal password needed to toggle this option.
-     * @throws ErrorException 
-     */
-    public void setVIS(boolean toggle, String password) throws ErrorException;
     
     /**
      * This option will enable / disable the deepfreeze mode.

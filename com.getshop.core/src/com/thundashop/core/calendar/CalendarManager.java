@@ -1,5 +1,6 @@
 package com.thundashop.core.calendar;
 
+import com.getshop.scope.GetShopSession;
 import com.thundashop.core.calendarmanager.data.AttendeeMetaInfo;
 import com.thundashop.core.calendarmanager.data.Day;
 import com.thundashop.core.calendarmanager.data.Entry;
@@ -17,6 +18,8 @@ import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.SMSFactory;
 import com.thundashop.core.pagemanager.IPageManager;
 import com.thundashop.core.pagemanager.PageManager;
+import com.thundashop.core.storemanager.StoreManager;
+import com.thundashop.core.usermanager.UserDeletedEventListener;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Group;
@@ -27,7 +30,6 @@ import java.io.IOException;
 import java.util.*;
 import javax.xml.bind.DatatypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -35,23 +37,30 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-@Scope("prototype")
-public class CalendarManager extends ManagerBase implements ICalendarManager {
+@GetShopSession
+public class CalendarManager extends ManagerBase implements ICalendarManager, UserDeletedEventListener {
 
     private HashMap<String, Month> months = new HashMap();
     private HashMap<String, Location> locations = new HashMap();
+    
     @Autowired
     public MailFactory mailFactory;
+    
     @Autowired
     public SMSFactory smsFactory;
+    
     private List<ReminderHistory> reminderHistory = new ArrayList();
     private HashMap<String, EventPartitipated> eventData = new HashMap();
     private HashMap<String, Signature> signatures = new HashMap();
 
     @Autowired
-    public CalendarManager(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
-    }
+    private IPageManager pageManager;
+    
+    @Autowired
+    private StoreManager storeManager;
+    
+    @Autowired
+    private UserManager userManager;
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -167,7 +176,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
         String groupLogo = getGroupLogo(user);
         if (groupLogo != null) {
-            String address = "http://" + getStore().webAddressPrimary + "//displayImage.php?id=" + groupLogo;
+            String address = "http://" + storeManager.getMyStore().webAddressPrimary + "//displayImage.php?id=" + groupLogo;
             String imageTag = "<img width='150' src='" + address + "'/>";
             text = text.replace("{GROUP_LOGO}", imageTag);
         }
@@ -179,7 +188,6 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     private HashMap<String, Setting> getBookingSettings() throws ErrorException {
         HashMap<String, Setting> settings = null;
 
-        IPageManager pageManager = getManager(PageManager.class);
         List<AppConfiguration> calendars = pageManager.getApplicationsBasedOnApplicationSettingsId("6f3bc804-02a1-44b0-a17d-4277f0c6dee8");
         List<AppConfiguration> bookings = pageManager.getApplicationsBasedOnApplicationSettingsId("74ea4e90-2d5a-4290-af0c-230a66e09c78");
 
@@ -251,7 +259,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     }
 
     private String getFromAddress() throws ErrorException {
-        String storeEmailAddress = getStore().configuration.emailAdress;
+        String storeEmailAddress = storeManager.getMyStore().configuration.emailAdress;
         if (storeEmailAddress != null) {
             return storeEmailAddress;
         }
@@ -327,14 +335,6 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         }
 
         return retentry;
-    }
-
-    @Override
-    public void onEvent(String eventName, String eventReferance) throws ErrorException {
-        if (Events.USER_DELETED.equals(eventName)) {
-            removeUserAttendee(eventReferance, "");
-            removeUserWaitingList(eventReferance, "");
-        }
     }
 
     @Override
@@ -499,6 +499,10 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         }
         return files;
     }
+    
+    private HashMap<String, Setting> getSettings(String phpApplicationName) throws ErrorException {
+        return pageManager.getApplicationSettings(phpApplicationName);
+    }
 
     private void remindUserInternal(boolean byEmail, boolean bySMS, List<String> users, String text, String subject, String eventId, String attachment, String filename) throws ErrorException {
         ReminderHistory smsHistory = createReminderHistory(text, subject, eventId, byEmail);
@@ -507,8 +511,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         Map<String, String> files = getAttachedFiles(attachment, filename);
 
         for (String userId : users) {
-            UserManager usrmgr = getManager(UserManager.class);
-            User user = usrmgr.getUserById(userId);
+            User user = userManager.getUserById(userId);
 
             if (byEmail) {
                 if (files != null) {
@@ -565,8 +568,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
                         databaseSaver.saveObject(month, credentials);
 
-                        UserManager usrmgr = getManager(UserManager.class);
-                        User user = usrmgr.getUserById(userId);
+                        User user = userManager.getUserById(userId);
                         sendMessages(user, entry, password, waitingList);
                     }
                 }
@@ -641,8 +643,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         saveEntry(entry);
 
         for (String userId : entry.attendees) {
-            UserManager usermanager = getManager(UserManager.class);
-            User user = usermanager.getUserById(userId);
+            User user = userManager.getUserById(userId);
             sendMessages(user, entry, "", false);
         }
     }
@@ -791,8 +792,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                 Month month = getMonth(entry.year, entry.month);
                 databaseSaver.saveObject(month, credentials);
 
-                UserManager usrmgr = getManager(UserManager.class);
-                User userObject = usrmgr.getUserById(userId);
+                User userObject = userManager.getUserById(userId);
                 sendMessages(userObject, entry, "", false);
                 return;
             }
@@ -806,7 +806,6 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             return null;
         }
 
-        UserManager userManager = getManager(UserManager.class);
         String groupId = user.groups.iterator().next();
         for (Group group : userManager.getAllGroups()) {
             if (group.id.equals(groupId)) {
@@ -837,7 +836,6 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
     @Override
     public void transferUser(String fromEventId, String toEventId, String userId) throws ErrorException {
-        UserManager userManager = this.getManager(UserManager.class);
         User user = userManager.getUserById(userId);
         removeUserAttendee(userId, fromEventId);
         removeUserWaitingList(userId, fromEventId);
@@ -874,18 +872,16 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
     @Override
     public void addUserToPageEvent(String userId, String bookingAppId) throws ErrorException {
-        UserManager manager = getManager(UserManager.class);
-        User user = manager.getUserById(userId);
+        User user = userManager.getUserById(userId);
         if (user != null) {
-            IPageManager pageManager = getManager(PageManager.class);
             HashMap<String, Setting> settings = pageManager.getSecuredSettings(bookingAppId);
 
             Comment comment = new Comment();
             comment.appId = bookingAppId;
             comment.comment = "BookingEvent";
-            manager.addComment(user.id, comment);
+            userManager.addComment(user.id, comment);
 
-            String storeOwner = getStore().configuration.emailAdress;
+            String storeOwner = storeManager.getMyStore().configuration.emailAdress;
             String content = settings.get("bookingmail").value;
             content = mutateText("", content, new Entry(), user);
 
@@ -1085,7 +1081,6 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     @Override
     public void addUserSilentlyToEvent(String eventId, String userId) throws ErrorException {
         Entry entry = getEntry(eventId);
-        UserManager userManager = getManager(UserManager.class);
         User user = userManager.getUserById(userId);
         System.out.println("user; " + user);
         System.out.println("entry: " + entry);
@@ -1094,6 +1089,12 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             saveEntry(entry);
         }
    
+    }
+
+    @Override
+    public void userDeleted(String userId) throws ErrorException {
+        removeUserAttendee(userId, "");
+        removeUserWaitingList(userId, "");
     }
 
 }

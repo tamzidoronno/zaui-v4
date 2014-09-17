@@ -1,12 +1,12 @@
 package com.thundashop.app.logo;
 
+import com.getshop.scope.GetShopSession;
 import com.thundashop.app.logomanager.data.SavedLogo;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import java.util.HashMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  * @author boggi
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class LogoManager extends ManagerBase implements ILogoManager {
 
     HashMap<String, SavedLogo> logos = new HashMap();
@@ -31,11 +31,6 @@ public class LogoManager extends ManagerBase implements ILogoManager {
                 }
             }
         }
-    }
-
-    @Autowired
-    public LogoManager(DatabaseSaver databaseSaver, Logger logger) throws ErrorException {
-        super(logger, databaseSaver);
     }
 
     @Override

@@ -6,15 +6,12 @@
 
 package com.thundashop.core.messagemanager;
 
-import com.thundashop.core.common.AppContext;
+import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Setting;
-import com.thundashop.core.common.StoreHandler;
-import com.thundashop.core.pagemanager.IPageManager;
+import com.thundashop.core.pagemanager.PageManager;
 import java.util.HashMap;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,20 +19,18 @@ import org.springframework.stereotype.Component;
  * @author boggi
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class SmsConfiguration {
     private String username;
     private String apiId;
     private String password;
     private String numberprefix;
+    
+    @Autowired
+    private PageManager pageManager;
+    
     public void setup(String storeId) throws ErrorException {
-        StoreHandler storeHandler = AppContext.storePool.getStorePool(storeId);
         
-        if (storeHandler == null) {
-            throw new ErrorException(26);
-        }
-        
-        IPageManager pageManager = storeHandler.getManager(IPageManager.class);
         HashMap<String, Setting> confSettings = pageManager.getSecuredSettingsInternal("Clickatell");
         
         if (confSettings == null) {

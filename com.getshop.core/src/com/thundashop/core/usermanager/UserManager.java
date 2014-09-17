@@ -1,11 +1,12 @@
 package com.thundashop.core.usermanager;
 
+import com.getshop.scope.GetShopSession;
 import com.google.gson.Gson;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
-import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.messagemanager.MailFactory;
+import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.Group;
@@ -18,29 +19,27 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
  * @author hjemme
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class UserManager extends ManagerBase implements IUserManager, StoreInitialized {
     public static String OVERALLPASSWORD = "alksdjfasdoui32q1-2-3-13-1-324asdfasdf_213476askjd....|123§§!4985klq12j3h1kl254h12";
     public SessionFactory sessionFactory = new SessionFactory();
     public ConcurrentHashMap<String, UserStoreCollection> userStoreCollections = new ConcurrentHashMap<String, UserStoreCollection>();
-
+    private List<UserDeletedEventListener> userDeletedListeners = new ArrayList();
     private SecureRandom random = new SecureRandom();
     
     @Autowired
-    public UserManager(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
-    }
+    private PageManager pageManager;
     
     @Autowired
     private BrRegEngine brRegEngine;
@@ -72,6 +71,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
     }
 
+    public void addUserDeletedEventListener(UserDeletedEventListener listener) {
+        this.userDeletedListeners.add(listener);
+    }
+    
     private UserStoreCollection getUserStoreCollection(String storeId) throws ErrorException {
         if (storeId == null) {
             throw new ErrorException(64);
@@ -146,8 +149,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         databaseSaver.saveObject(user, credentials);
         
-        throwEvent(Events.USER_CREATED, user.id);
-        
         return user;
     }
     
@@ -187,10 +188,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
         user.lastLoggedIn = new Date();
         user.loggedInCounter++;
-        user.partnerid = getShop.getPartnerId(user.id);
-        if(user.partnerid == null) {
-            user.partnerid = getStore().partnerId;
-        }
         databaseSaver.saveObject(user, credentials);
         return user;
     }
@@ -198,9 +195,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Override
     public void logout() throws ErrorException {
         sessionFactory.removeFromSession(getSession().id);
-        if (AppContext.storePool != null && getSession() != null && AppContext.storePool.getStorePool(getSession().id) != null) {
-            AppContext.storePool.getStorePool(storeId).removeSession(getSession().id);
-        }
         saveSessionFactory();
     }
 
@@ -341,7 +335,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         UserStoreCollection users = getUserStoreCollection(storeId);
         user = users.deleteUser(userId);
         if (user != null) {
-            throwEvent(Events.USER_DELETED, user.id);
+            throwUserDeletedEvent(user.id);
         }
     }
 
@@ -488,11 +482,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Override
     public void removeGroup(String groupId) throws ErrorException {
         getUserStoreCollection(storeId).removeGroup(groupId);
-    }
-
-    @Override
-    public List<GetshopStore> getStoresConnectedToMe() throws ErrorException {
-        return getShop.getStoresConnectedToUser(getSession().currentUser.id);
     }
 
     @Override
@@ -666,7 +655,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
     
     private User getUserByEmail(String emailAddress) throws ErrorException {
-        List<User> users = getUserStoreCollection(getStore().id).getAllUsers();
+        List<User> users = getUserStoreCollection(storeId).getAllUsers();
         for (User user : users) {
             if (user.emailAddress != null && user.emailAddress.equals(emailAddress)) {
                 return user;
@@ -674,6 +663,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         
         return null;
+    }
+    
+    private HashMap<String, Setting> getSettings(String phpApplicationName) throws ErrorException {
+        return pageManager.getApplicationSettings(phpApplicationName);
     }
 
     private boolean forceUniqueEmailAddress(User user) throws ErrorException {
@@ -695,6 +688,12 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         
         return false;
+    }
+
+    private void throwUserDeletedEvent(String id) throws ErrorException {
+        for (UserDeletedEventListener listener : userDeletedListeners) {
+            listener.userDeleted(id);
+        }
     }
     
 }

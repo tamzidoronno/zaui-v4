@@ -1,5 +1,6 @@
 package com.thundashop.core.loggermanager;
 
+import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Logger;
@@ -12,7 +13,6 @@ import java.util.UUID;
 import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,13 +20,8 @@ import org.springframework.stereotype.Component;
  * @author boggi
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class LoggerManager extends ManagerBase {
-    
-    @Autowired
-    public LoggerManager(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
-    }
     
     @Autowired
     private Database database;

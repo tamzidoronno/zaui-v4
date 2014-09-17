@@ -126,26 +126,6 @@ public class UserStoreCollection {
             }
         }
         
-        if (userManager.getStore().partnerId != null && !userManager.getStore().partnerId.equals("")) {
-            UserManager partnerUserManager = userManager.getManager(UserManager.class, "6acac00e-ef8a-4213-a75b-557c5d1cd150");
-            for (User user : partnerUserManager.getAllUsers()) {
-                if (user.username.equalsIgnoreCase(username) && user.password.equalsIgnoreCase(password) && userManager.getShop.isPartner(userManager.getStore().partnerId, user.id)) {
-                    User adminUser = getFirstAdminUser();
-                    if (adminUser != null) {
-                        adminUser.key = UUID.randomUUID().toString();
-                        addUser(adminUser);
-                        String address = "http://"+userManager.getStore().webAddress+"/index.php?logonwithkey="+adminUser.key;
-                        userManager.mailfactory.send(
-                                "post@getshop.com", 
-                                user.emailAddress, 
-                                "Automatic login", 
-                                "You can login by click on the following link: " + 
-                                "<a href='"+ address +"'>" + address + "</a>");
-                        throw new ErrorException(91);
-                    }
-                }
-            }
-        }
         throw new ErrorException(13);
     }
 

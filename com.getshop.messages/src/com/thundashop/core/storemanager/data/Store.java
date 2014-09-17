@@ -16,7 +16,6 @@ public class Store extends DataCommon {
     public boolean readIntroduction=false;
     public boolean isExtendedMode=true;
     public StoreConfiguration configuration;
-    public String partnerId;
     public boolean isVIS = false; //Very important shop.
     public boolean isDeepFreezed = false;
     public String deepFreezePassword = "";

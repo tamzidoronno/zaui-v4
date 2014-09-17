@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.pagemanager;
 
+import com.getshop.scope.GetShopSession;
 import com.thundashop.core.appmanager.AppManager;
 import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.common.*;
@@ -23,9 +24,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class PageManager extends ManagerBase implements IPageManager {
     
     @Autowired
@@ -43,21 +43,31 @@ public class PageManager extends ManagerBase implements IPageManager {
     public PagePoolImpl pagePool;
     
     @Autowired
-    public PageManager(Logger log, DatabaseSaver databaseSaver) {
-        super(log, databaseSaver);
+    private UserManager userManager;
+    
+    @Autowired
+    private ListManager listManager;
+    
+    @Autowired
+    private ProductManager productManager;
+    
+    @Autowired
+    private AppManager appManager;
+        
+    @PostConstruct
+    public void init() {
         credentials = new Credentials(getClass());
         credentials.manangerName = this.getClass().getSimpleName();
     }
-    
-    @Override
-    public void onReady() {
-        pagePool.pageManager = this;
-        pagePool.setApplicationPool(applicationPool);
-        applicationPool.setPageManager(this);
-        applicationPool.initialize(credentials, storeId);
-        pagePool.initialize(credentials, storeId);
-    }
 
+    @Override
+    public void initialize() {
+        pagePool.initialize(credentials, storeId);
+        super.initialize(); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    
+    
     @Override
     public void dataFromDatabase(DataRetreived dataRetreived) {
         for (DataCommon data : dataRetreived.data) {
@@ -163,7 +173,6 @@ public class PageManager extends ManagerBase implements IPageManager {
     @Override
     public void deleteApplication(String instanceId) throws ErrorException {
         applicationPool.deleteApplication(instanceId);
-        UserManager userManager = getManager(UserManager.class);
         userManager.applicationInstanceDeleted(instanceId);
         pagePool.removeApplication(instanceId);
     }
@@ -237,11 +246,8 @@ public class PageManager extends ManagerBase implements IPageManager {
             throw new ErrorException(1000013);
         }
         
-        ListManager listManager = getManager(ListManager.class);
-        ProductManager prodManager = getManager(ProductManager.class);
-        
         HashMap<String, String> translated = listManager.translateEntries(pages);
-        HashMap<String, String> translatedByProduct = prodManager.translateEntries(pages);
+        HashMap<String, String> translatedByProduct = productManager.translateEntries(pages);
         
         HashMap<String, String> result = new HashMap();
         
@@ -268,15 +274,13 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     @Override
     public void swapApplication(String fromAppId, String toAppId) throws ErrorException {
-        AppManager appman = getManager(AppManager.class);
-        PageManager manager = getManager(PageManager.class);
-        ApplicationSettings toApp = appman.getApplication(toAppId);
+        ApplicationSettings toApp = appManager.getApplication(toAppId);
         
         if (toApp == null) {
             throw new ErrorException(18);
         }
         
-        ApplicationPoolImpl pool = manager.applicationPool;
+        ApplicationPoolImpl pool = applicationPool;
         Map<String, AppConfiguration> allAddedApplications = pool.getApplications();
         for(String instanceId : allAddedApplications.keySet()) {
             AppConfiguration config = allAddedApplications.get(instanceId);
@@ -311,7 +315,6 @@ public class PageManager extends ManagerBase implements IPageManager {
                 deleteApplication(config.id);
             }
         }
-        throwEvent(Events.ALL_APPS_REMOVED, appSettingsId);
     }
 
     @Override
@@ -335,12 +338,11 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     @Override
     public List<AppConfiguration> getApplicationsByType(String type) throws ErrorException {
-        AppManager manager = getManager(AppManager.class);
         List<AppConfiguration> apps = getApplications();
         List<AppConfiguration> toReturn = new ArrayList();
         for(AppConfiguration config : apps) {
             try {
-                ApplicationSettings settings = manager.getApplication(config.appSettingsId);
+                ApplicationSettings settings = appManager.getApplication(config.appSettingsId);
                 if(settings != null && settings.type.equals(type)) {
                     toReturn.add(config);
                 }
@@ -391,7 +393,6 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     @Override
     public List<Page> search(String search) throws ErrorException {
-        ListManager listManager = getManager(ListManager.class);
         List<Page> retPages = new ArrayList();
         
         if (search == null || search.length() < 3) {

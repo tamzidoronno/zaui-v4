@@ -1,12 +1,12 @@
 package com.thundashop.app.footer;
 
+import com.getshop.scope.GetShopSession;
 import com.thundashop.app.footermanager.data.Configuration;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import java.util.HashMap;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,15 +14,10 @@ import org.springframework.stereotype.Component;
  * @author boggi
  */
 @Component
-@Scope("prototype")
+@GetShopSession
 public class FooterManager extends ManagerBase implements IFooterManager {
 
     public Configuration configObject;
-
-    @Autowired
-    public FooterManager(DatabaseSaver databaseSaver, Logger logger) {
-        super(logger, databaseSaver);
-    }
 
     @Override
     public void dataFromDatabase(DataRetreived data) {

@@ -1,5 +1,0 @@
-.Translation .translation_header { position:fixed; z-index:2; width: 100%; bordeR-bottom:solid 2px; top:0px; background-color:#EFEFEF;height: 25px; padding-top: 5px; padding-left: 10px; }
-.Translation .save_button { position:absolute; right: 20px; top: 0px; }
-.Translation .translation_row { margin-bottom: 3px; padding-bottom: 3px; border-bottom: solid 1px #BBBBBB; height: 25px; }
-.Translation .translation_key { width:350px; padding-left: 10px; }
-.Translation .translation_field { position:absolute; right: 20px; width:350px; border:solid 1px; }

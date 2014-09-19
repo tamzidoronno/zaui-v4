@@ -75,15 +75,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     private VismaUsers transferredUsers = new VismaUsers();
 
     public List<ArxLogEntry> logEntries = new ArrayList();
-
-    @Autowired
-    private UserManager userManager;
-
-    @Autowired
-    private MessageManager messageManager;
-
-    @Autowired
-    MessageManager msgmgr;
+    
+    private MessageManager getMsgManager() {
+        return getManager(MessageManager.class);
+    }
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -156,7 +151,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
 
         if (rtype == null) {
-            msgmgr.mailFactory.send("post@getshop.com", "post@getshop.com", "Booking failed for " + storeId + " room type is fail type : " + typeName, getStore().webAddress + " : " + getStore().webAddressPrimary + " : ");
+            getMsgManager().mailFactory.send("post@getshop.com", "post@getshop.com", "Booking failed for " + storeId + " room type is fail type : " + typeName, getStore().webAddress + " : " + getStore().webAddressPrimary + " : ");
             throw new ErrorException(1023);
         }
 
@@ -615,7 +610,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                     String generatedResult;
                     generatedResult = VismaUsers.generateVismaUserString(user);
                     if (generatedResult == null) {
-                        messageManager.mailFactory.send("internal@getshop.com", "post@getshop.com", "Failed to expert user to visma", "For storid: " + storeId + " userid: " + user.id + "(" + user.toString() + ")");
+                        getMsgManager().mailFactory.send("internal@getshop.com", "post@getshop.com", "Failed to expert user to visma", "For storid: " + storeId + " userid: " + user.id + "(" + user.toString() + ")");
                     } else {
                         HashMap<Integer, BookingReference> references = new HashMap();
                         for (Order order : ordermgr.getAllOrdersForUser(user.id)) {
@@ -640,7 +635,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 client.setFileType(FTP.BINARY_FILE_TYPE);
                 int reply = client.getReplyCode();
                 if (!FTPReply.isPositiveCompletion(reply)) {
-                    messageManager.sendMail("post@getshop.com", "GetShop", "failed to log on to ftp visma server..", "Failed to connect to ftp server: " + vismaSettings.address + " with username: " + vismaSettings.username + " to upload file. ", "post@getshop.com", "Internal process");
+                    getMsgManager().sendMail("post@getshop.com", "GetShop", "failed to log on to ftp visma server..", "Failed to connect to ftp server: " + vismaSettings.address + " with username: " + vismaSettings.username + " to upload file. ", "post@getshop.com", "Internal process");
                     return;
                 }
                 String filename = "orders_" + new SimpleDateFormat("yyyyMMdd-k_m").format(new Date()) + ".edi";
@@ -652,10 +647,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 boolean done = client.storeFile("./" + filename, inputStream);
                 inputStream.close();
                 if (!done) {
-                    messageManager.sendMail("post@getshop.com", "GetShop", "failed to upload file to visma.", "Failed to connect to ftp server: " + vismaSettings.username + " to upload file. ( " + client.getReplyString() + ")", "post@getshop.com", "Internal process");
+                    getMsgManager().sendMail("post@getshop.com", "GetShop", "failed to upload file to visma.", "Failed to connect to ftp server: " + vismaSettings.username + " to upload file. ( " + client.getReplyString() + ")", "post@getshop.com", "Internal process");
                 }
             } catch (Exception e) {
-                messageManager.sendMail("post@getshop.com", "GetShop", "failed to upload file to visma.", "something failed when uploading visma file. ", "post@getshop.com", "Internal process");
+                getMsgManager().sendMail("post@getshop.com", "GetShop", "failed to upload file to visma.", "something failed when uploading visma file. ", "post@getshop.com", "Internal process");
                 e.printStackTrace();
             }
         }
@@ -721,7 +716,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     private void sendSMS(String phonenumber, String message) {
         try {
-            messageManager.smsFactory.send(arxSettings.smsFrom, phonenumber, message);
+            getMsgManager().smsFactory.send(arxSettings.smsFrom, phonenumber, message);
         } catch (Exception e) {
             //What do we do with sms that fails to be delivered?
             e.printStackTrace();
@@ -760,7 +755,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         try {
             checkForArxUpdate();
         } catch (UnsupportedEncodingException ex) {
-            messageManager.sendMail("post@getshop.com", "POst getshop", "Failed to tranfser to arx", ex.getMessage(), "internal process", "internal@getshop.com");
+            getMsgManager().sendMail("post@getshop.com", "POst getshop", "Failed to tranfser to arx", ex.getMessage(), "internal process", "internal@getshop.com");
             java.util.logging.Logger.getLogger(HotelBookingManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -803,8 +798,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 if (user != null) {
                     String copyadress = getSettings("Settings").get("mainemailaddress").value;
                     if (copyadress != null && !copyadress.isEmpty()) {
-                        messageManager.mailFactory.send(copyadress, user.emailAddress, title, message);
-                        messageManager.mailFactory.send(copyadress, copyadress, title, message);
+                        getMsgManager().mailFactory.send(copyadress, user.emailAddress, title, message);
+                        getMsgManager().mailFactory.send(copyadress, copyadress, title, message);
                         reference.sentWelcomeMessages = true;
                         saveObject(reference);
                     }
@@ -837,7 +832,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             return actors;
         } catch (Exception e) {
             e.printStackTrace();
-            messageManager.sendMail("post@getshop.com",
+            getMsgManager().sendMail("post@getshop.com",
                     "Getshop admin",
                     "Failed to connect to visma server",
                     "Failed to connect to " + vismaSettings.address + " with u/p:" + vismaSettings.username + "/" + vismaSettings.password,

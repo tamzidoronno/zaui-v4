@@ -222,11 +222,15 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         echo "</select>";
         echo "</td>";
         echo "<td>";
-        
         echo "<select gsname='available_".$room->id."'>";
         echo "<option value='true'>". $this->__f("Available") . "</option>";
         echo "<option value='false' $falseselected>". $this->__f("Not available") . "</option>";
         echo "</select>";
+        echo "</td>";
+        echo "<td>";
+        if($room->lastReservation) {
+            echo $room->lastReservation->contact->names[0];
+        }
         echo "</td>";
         echo "<td><input gsname='roomname_".$room->id."' value='" . $room->roomName . "'></td>";
         echo "<td><input gsname='lockid_".$room->id."' value='" . $room->lockId . "'></td>";

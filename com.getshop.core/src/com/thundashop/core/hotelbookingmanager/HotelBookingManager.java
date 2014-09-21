@@ -235,11 +235,17 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     public List<Room> getAllRooms() throws ErrorException {
         List<Room> room = new ArrayList(rooms.values());
         Collections.sort(room,
-                new Comparator<Room>() {
-                    public int compare(Room f1, Room f2) {
-                        return f1.roomName.compareTo(f2.roomName);
-                    }
-                });
+            new Comparator<Room>() {
+                public int compare(Room f1, Room f2) {
+                    return f1.roomName.compareTo(f2.roomName);
+                }
+            }
+        );
+        
+        for(Room tmpRoom : room) {
+            finalizeRoom(tmpRoom);
+        }
+        
         return room;
     }
 
@@ -837,13 +843,30 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                     "Failed to connect to visma server",
                     "Failed to connect to " + vismaSettings.address + " with u/p:" + vismaSettings.username + "/" + vismaSettings.password,
                     "internal@getshop.com",
-                    "Getshop process");
-        }
-        
-        return null;
+                "Getshop process");
     }
 
-    private String convertToUtf8(String string) {
-        return string;
+    return null;
+}
+
+private String convertToUtf8(String string) {
+    return string;
+}
+
+private void finalizeRoom(Room tmpRoom) throws ErrorException {
+    List<BookingReference> allReservations = getAllReservations();
+    for(BookingReference reservation :allReservations) {
+        if(reservation.roomIds.contains(tmpRoom.id)) {
+            if(tmpRoom.lastReservation != null) {
+                BookingReference lastReservation = tmpRoom.lastReservation;
+                    //If this is the latest room reserved, or is todays room.
+                    if(lastReservation.startDate.before(reservation.startDate) && !reservation.startDate.after(new Date())) {
+                        tmpRoom.lastReservation = reservation;
+                    }
+                } else {
+                    tmpRoom.lastReservation = reservation;
+                }
+            }
+        }
     }
 }

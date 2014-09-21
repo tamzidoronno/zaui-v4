@@ -43,4 +43,16 @@ public class BookingReference extends DataCommon {
         return false;
     }
     
+    
+    boolean isNow() {
+        if(isToday()) {
+            return true;
+        }
+        
+        Date now = new Date();
+        if(startDate.before(now) && endDate.before(now)) {
+            return true;
+        }
+        return false;
+    }
 }

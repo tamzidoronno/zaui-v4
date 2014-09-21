@@ -18,5 +18,8 @@ class core_hotelbookingmanager_MSQLActors {
 	/** @var String */
 	public $MobPh;
 
+	/** @var String */
+	public $customerId;
+
 }
 ?>

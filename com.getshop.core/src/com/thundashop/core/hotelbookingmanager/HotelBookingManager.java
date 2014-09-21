@@ -360,7 +360,13 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         BookingReference bookingreference = getReservationByReferenceId(reference);
         Room existingRoom = getRoom(oldRoom);
         Room newRoom = getRoom(newRoomId);
-
+        
+        if(!existingRoom.isActive) {
+            existingRoom.isActive = true;
+            newRoom.isActive = false;
+        }
+        existingRoom.lastReservation = null;
+        
         List<BookedDate> existingBookingDates = existingRoom.getBookedDatesByReference(reference);
         newRoom.bookedDates.addAll(existingBookingDates);
         existingRoom.bookedDates.removeAll(existingBookingDates);

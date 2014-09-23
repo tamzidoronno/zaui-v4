@@ -14,20 +14,29 @@ foreach ($rooms as $room) {
 
 echo "<br><br>";
 echo "<h1>Guests arriving today</h1>";
-printGuestTable($reservations, $roomlist, true);
+printGuestTable($reservations, $roomlist, true, 0);
 echo "<br><br>";
 echo "<h1>Guests leaving today</h1>";
-printGuestTable($reservations, $roomlist, false);
+printGuestTable($reservations, $roomlist, false, 0);
+echo "<br><br>";
+echo "<h1>Guests leaving tomorrow</h1>";
+printGuestTable($reservations, $roomlist, false, 1);
+echo "<br><br>";
+echo "<h1>Guests arriving tomorrow</h1>";
+printGuestTable($reservations, $roomlist, true, 1);
 printIntervalCleaning($reservations, $roomlist, $this);
-
-function printGuestTable($reservations, $roomlist, $arriving) {
+function printGuestTable($reservations, $roomlist, $arriving, $daydiff) {
 
     $found = false;
     echo "<div style='background-color:#efefef; width:100%; padding:5px;'>";
     echo "<table width='100%'>";
     echo "<tr>";
     echo "<th align='left' width='10%'>Room</th>";
-    echo "<th align='left' width='20%'>Action</th>";
+    if($daydiff == 0) {
+        echo "<th align='left' width='20%'>";
+        echo "Action";
+        echo "</th>";
+    }
     echo "<th align='left'>Name of guest</th>";
     foreach ($reservations as $reservation) {
         if ($arriving) {
@@ -35,7 +44,7 @@ function printGuestTable($reservations, $roomlist, $arriving) {
         } else {
             $startdate = strtotime($reservation->endDate);
         }
-        if (date("Ymd", time()) == date("Ymd", $startdate)) {
+        if (date("Ymd", time() + ($daydiff * (86400))) == date("Ymd", $startdate)) {
             $found = true;
             echo "<tr>";
             echo "<td valign='top' width='150'>";
@@ -43,16 +52,18 @@ function printGuestTable($reservations, $roomlist, $arriving) {
                 echo "<div style='line-height: 20px;'>" . $roomlist[$roomId]->roomName . "</div>";
             }
             echo "</td>";
-            echo "<td>";
-            foreach ($reservation->roomIds as $roomId) {
-                if ($roomlist[$roomId]->isClean || (isset($reservation->isApprovedForCheckIn->{$roomId}) && $reservation->isApprovedForCheckIn->{$roomId} && $arriving)) {
-                    echo "<span style='line-height: 20px;' class='alreadyready'>room is marked as ready</span>";
-                } else {
-                    echo "<span style='line-height: 20px;' class='markroomasready' roomId='" . $roomId . "'>Mark room as ready</span>";
+            if($daydiff == 0) {
+                echo "<td>";
+                foreach ($reservation->roomIds as $roomId) {
+                    if ($roomlist[$roomId]->isClean || (isset($reservation->isApprovedForCheckIn->{$roomId}) && $reservation->isApprovedForCheckIn->{$roomId} && $arriving)) {
+                        echo "<span style='line-height: 20px;' class='alreadyready'>room is marked as ready</span>";
+                    } else {
+                        echo "<span style='line-height: 20px;' class='markroomasready' roomId='" . $roomId . "'>Mark room as ready</span>";
+                    }
+                    echo "<br>";
                 }
-                echo "<br>";
+                echo "</td>";
             }
-            echo "</td>";
             echo "<td valign='top'>";
             foreach ($reservation->contact->names as $contact) {
                 echo "<div style='line-height: 20px;'>" . $contact . "</div>";

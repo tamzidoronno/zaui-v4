@@ -128,14 +128,16 @@ if($this->getServiceType() == "storage") {
                } else { 
                    $hidePrivate =  "style='display:none;'"; 
                }
+               if($this->getServiceType() == "storage") {
                ?>
-               <div class='common_text company contact_entry' <? echo $hideCompany; ?>>
-                   <span>
-                       <? $company = ""; if($this->isMvaRegistered()) { $company = " CHECKED"; } ?>
-                       <input type='checkbox' gsname="mvaregistered" class='<? echo $this->validateInput("address"); ?>' <? echo $company; ?>>
-                       <span class=''><? echo $this->__w("The company is mva registered"); ?></span>
-                   </span>
-               </div>
+                   <div class='common_text company contact_entry' <? echo $hideCompany; ?>>
+                        <span>
+                            <? $company = ""; if($this->isMvaRegistered()) { $company = " CHECKED"; } ?>
+                            <input type='checkbox' gsname="mvaregistered" class='<? echo $this->validateInput("address"); ?>' <? echo $company; ?>>
+                            <span class=''><? echo $this->__w("The company is mva registered"); ?></span>
+                        </span>
+                    </div>
+               <? } ?>
            <br>
                <div class='contact_entry'>
                    <span class='contact_text'><? 

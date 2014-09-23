@@ -2,6 +2,9 @@
 
 
 $entries = $this->getApi()->getHotelBookingManager()->getArxLog();
+if(!$entries) {
+    return;
+}
 echo "<table border='1' width='100%'>";
 echo "<tr>";
 echo "<th>Code</th>";

@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 class Clarion {
-      private Test.Clarion clarion;
+      private Clarion clarion;
 
       private long offset;
 
@@ -25,7 +25,7 @@ class Clarion {
 
       public long clarion(Date d) {
             if (clarion == null) {
-                  clarion = new Test.Clarion();
+                  clarion = new Clarion();
             }
             return (d.getTime() + offset) / (1000 * 60 * 60 * 24);
       }

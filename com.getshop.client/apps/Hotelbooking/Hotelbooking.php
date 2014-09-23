@@ -378,7 +378,11 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                 $user->fullName = $_POST['data']['name_1'];
                 $user->cellPhone = $_POST['data']['phone_1'];
                 $user->address = $address;
-                $user->mvaRegistered = $_POST['data']['mvaregistered'];
+                if(isset($_POST['data']['mvaregistered'])) {
+                    $user->mvaRegistered = $_POST['data']['mvaregistered'];
+                } else {
+                    $user->mvaRegistered = "true";
+                }
                 if($this->isCompany()) {
                     $user->isPrivatePerson = "false";
                 }

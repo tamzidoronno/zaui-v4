@@ -40,6 +40,11 @@ public class WinVaskDBIntegration {
         runner.api.getMessageManager().sendMail(user.emailAddress, user.fullName, "Error while exporting to winvask", string, "post@getshop.com", "GetShop integration");
     }
 
+    void close() throws SQLException {
+        Cnx.close();
+        CnxYearly.close();
+    }
+
     class Vare {
         String description;
         double tax;

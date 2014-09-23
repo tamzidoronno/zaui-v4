@@ -102,7 +102,6 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
             if (dbobj instanceof Room) {
                 Room room = (Room) dbobj;
-                room.bookedDates = new ArrayList();
                 rooms.put(dbobj.id, room);
             }
             if (dbobj instanceof BookingReference) {
@@ -131,11 +130,31 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     public Integer checkAvailable(long startDate, long endDate, String typeName) throws ErrorException {
         Date start = new Date(startDate * 1000);
         Date end = new Date(endDate * 1000);
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date(System.currentTimeMillis()));
-        cal.set(Calendar.DAY_OF_YEAR, cal.get(Calendar.DAY_OF_YEAR) - 1);
-
-        if (start.before(cal.getTime())) {
+        
+        Calendar todayCal = Calendar.getInstance();
+        todayCal.setTime(new Date(System.currentTimeMillis()));
+        todayCal.set(Calendar.HOUR_OF_DAY, 11);
+        todayCal.set(Calendar.MINUTE, 0);
+        todayCal.set(Calendar.SECOND, 0);
+        
+        Calendar startCal = Calendar.getInstance();
+        startCal.setTime(start);
+        startCal.set(Calendar.HOUR_OF_DAY, 13);
+        startCal.set(Calendar.MINUTE, 0);
+        startCal.set(Calendar.SECOND, 0);
+        start = startCal.getTime();
+        
+        Calendar endCal = Calendar.getInstance();
+        endCal.setTime(end);
+        endCal.set(Calendar.HOUR_OF_DAY, 11);
+        endCal.set(Calendar.MINUTE, 0);
+        endCal.set(Calendar.SECOND, 0);
+        end = endCal.getTime();
+        
+        
+        System.out.println("Checking for room between : " + start + " and " + end);
+        
+        if (start.before(todayCal.getTime())) {
             return -1;
         }
 
@@ -169,7 +188,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     public String reserveRoom(String roomType, long startDate, long endDate, int count, ContactData contact, boolean markRoomInactive, String language) throws ErrorException {
         //First make sure there is enough rooms available.
         RoomType roomtype = getRoomType(roomType);
-        Integer availableRooms = checkAvailable(startDate, startDate, roomtype.name);
+        Integer availableRooms = checkAvailable(startDate, endDate, roomtype.name);
         if (availableRooms < count) {
             return "-1";
         }
@@ -396,6 +415,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                         if (getRoom(roomid).isClean && !reference.isApprovedForCheckin(roomid)) {
                             reference.isApprovedForCheckIn.put(roomid, true);
                             reference.updateArx = true;
+                            getRoom(roomid).isClean = false;
+                            saveObject(getRoom(roomid));
                             notifyCustomersReadyRoom(reference);
                         }
                     }
@@ -406,7 +427,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                     int i = 0;
 
                     for (String name : reference.contact.names) {
-                        if (reference.roomIds.size() >= i) {
+                        if (i >= reference.roomIds.size()) {
                             continue;
                         }
                         String roomId = reference.roomIds.get(i);

@@ -13,8 +13,11 @@ public class TranslationHelper {
     private List<Object> checked = new ArrayList();
     
     public TranslationHelper(String curLang, String main_lang) {
-        if(curLang == null || main_lang == null) {
+        if(curLang == null && main_lang == null) {
             return;
+        }
+        if(main_lang != null && curLang == null) {
+            curLang = main_lang;
         }
         this.curLang = curLang;
         this.mainLang = main_lang;

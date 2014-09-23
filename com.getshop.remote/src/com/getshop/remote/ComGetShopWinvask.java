@@ -70,10 +70,9 @@ public class ComGetShopWinvask {
             }
             System.out.println("Kundenr: " + kundenr);
             dbint.createInvoice(kundenr, order);
-       
             tostart = "< ended " + new Date() + " : " + order.id;
             runner.appendToFile(tostart, "startlog.txt");
-
+            dbint.close();
         }
     }
 

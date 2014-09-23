@@ -210,9 +210,9 @@ public class AppManager extends ManagerBase implements IAppManager {
                 subscription.appSettingsId = config.appSettingsId;
             }
             subscription.app = getApplication(subscription.appSettingsId);
-            if (subscription.from_date == null || subscription.from_date.after(config.rowCreatedDate)) {
-                updateSubscription(subscription, config);
-            }
+//            if (subscription.from_date == null || subscription.from_date.after(config.rowCreatedDate)) {
+//                updateSubscription(subscription, config);
+//            }
             if (subscription.appSettingsId == null) {
                 continue;
             }

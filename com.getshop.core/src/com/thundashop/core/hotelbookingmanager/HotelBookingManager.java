@@ -470,7 +470,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         for (String room : user.doorsToAccess) {
             toPost += "<access_category>\n";
             toPost += "<name>" + room + "</name>\n";
-            toPost += "<start_date>" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(user.startDate) + "</start_date>\n";
+            if(room.equals("utedor")) {
+                toPost += "<start_date>" + new SimpleDateFormat("yyyy-MM-dd").format(user.startDate) + " 12:00:00</start_date>\n";
+            } else {
+                toPost += "<start_date>" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(user.startDate) + "</start_date>\n";
+            }
             toPost += "<end_date>" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(user.endDate) + "</end_date>\n";
             toPost += "</access_category>\n";
         }

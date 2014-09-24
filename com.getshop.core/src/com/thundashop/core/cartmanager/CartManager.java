@@ -65,6 +65,8 @@ public class CartManager extends ManagerBase implements ICartManager {
     @Override
     public Cart addProduct(String productId, int count, List<String> variations) throws ErrorException {
         Product product = getProduct(productId, variations);
+        updateTranslation(product, true);
+        
         if (product != null) {
             Cart cart = getCart(getSession().id);
             for(int i = 0; i < count; i++) {

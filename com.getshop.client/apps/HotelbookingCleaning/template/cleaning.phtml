@@ -55,7 +55,7 @@ function printGuestTable($reservations, $roomlist, $arriving, $daydiff) {
             if($daydiff == 0) {
                 echo "<td>";
                 foreach ($reservation->roomIds as $roomId) {
-                    if ($roomlist[$roomId]->isClean || (isset($reservation->isApprovedForCheckIn->{$roomId}) && $reservation->isApprovedForCheckIn->{$roomId} && $arriving)) {
+                    if ($roomlist[$roomId]->isClean) {
                         echo "<span style='line-height: 20px;' class='alreadyready'>room is marked as ready</span>";
                     } else {
                         echo "<span style='line-height: 20px;' class='markroomasready' roomId='" . $roomId . "'>Mark room as ready</span>";
@@ -113,6 +113,12 @@ function printIntervalCleaning($reservations, $roomlist, $scope) {
         foreach ($cleaningarray as $reservation) {
             echo "<tr>";
             echo "<td valign='top' width='150'>";
+            $start = strtotime($reservation->startDate);
+            $end = strtotime($reservation->endDate);
+            $now = time();
+            if($start > $now || $end < $now) {
+                continue;
+            }
             foreach ($reservation->roomIds as $roomId) {
                 echo "<div style='line-height: 20px;'>" . $roomlist[$roomId]->roomName . "</div>";
             }

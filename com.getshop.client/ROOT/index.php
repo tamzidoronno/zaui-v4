@@ -83,6 +83,7 @@ if(isset($_GET['setLanguage'])) {
     </div>
 </div>
 <?
+
 $importApplication = new ImportApplication(null, null);
 $importApplication->showMenu();
 
@@ -95,6 +96,7 @@ if (isset($_GET['logonwithkey'])) {
     header('location:index.php');
     die();
 }
+
 
 $factory = IocContainer::getFactorySingelton();
 
@@ -344,4 +346,6 @@ if (isset($_GET['showlogin']) || $factory->isEditorMode()) {
     echo "<script>$('.Login .notloggedon').show();</script>";
 }
 
+
 ?>
+        

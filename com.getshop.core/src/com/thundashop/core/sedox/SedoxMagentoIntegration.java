@@ -4,7 +4,6 @@
  */
 package com.thundashop.core.sedox;
 
-import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.sedox.magentoapi.SedoxApiPort;
 import com.thundashop.core.sedox.magentoapi.SedoxApiServiceLocator;
 import java.rmi.RemoteException;
@@ -13,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import javax.xml.rpc.ServiceException;
 import javax.xml.soap.SOAPException;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**

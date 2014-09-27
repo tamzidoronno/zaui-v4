@@ -1,10 +1,8 @@
 package com.thundashop.core.getshop;
 
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
-import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
@@ -13,7 +11,6 @@ import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.getshop.data.Partner;
 import com.thundashop.core.getshop.data.PartnerData;
 import com.thundashop.core.getshop.data.WebPageData;
-import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
@@ -24,7 +21,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  *

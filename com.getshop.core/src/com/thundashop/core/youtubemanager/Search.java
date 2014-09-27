@@ -13,26 +13,19 @@
  */
 package com.thundashop.core.youtubemanager;
 
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.ResourceId;
-import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.Thumbnail;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
 
 /**
  * Prints a list of videos based on a search term.
@@ -49,10 +42,7 @@ public class Search {
      * Global instance of the HTTP transport.
      */
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
-    /**
-     * Global instance of the JSON factory.
-     */
-    private static final JsonFactory JSON_FACTORY = new JacksonFactory();
+
     /**
      * Global instance of the max number of videos we want returned (50 = upper
      * limit per page).

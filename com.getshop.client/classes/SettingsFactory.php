@@ -8,8 +8,7 @@ class SettingsFactory extends FactoryBase {
     }
     
     public function includefile($filename, $overrideappname = NULL, $printError = true) {
-        $file = '../template/default/Settings/'. $filename . ".phtml";
-        
+       
     }
 }
 

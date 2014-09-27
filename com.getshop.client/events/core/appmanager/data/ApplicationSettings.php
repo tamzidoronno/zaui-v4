@@ -46,6 +46,9 @@ class core_appmanager_data_ApplicationSettings extends core_common_DataCommon  {
 	public $pageSingelton;
 
 	/** @var String */
+	public $hasDashBoard;
+
+	/** @var String */
 	public $allowedStoreIds;
 
 	/** @var String */

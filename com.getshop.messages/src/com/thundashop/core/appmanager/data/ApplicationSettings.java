@@ -41,6 +41,7 @@ public class ApplicationSettings extends DataCommon implements Comparator<Applic
     public String clonedFrom;
     public int trialPeriode = 7;
     public boolean pageSingelton;
+	public boolean hasDashBoard = true;
     public List<String> allowedStoreIds = new ArrayList();
     public List<ApiCallsInUse> apiCallsInUse = new ArrayList();
     

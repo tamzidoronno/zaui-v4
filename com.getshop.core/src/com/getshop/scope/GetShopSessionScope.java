@@ -8,6 +8,8 @@ import com.thundashop.core.common.ManagerBase;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.config.Scope;
@@ -33,13 +35,17 @@ public class GetShopSessionScope implements Scope, ApplicationContextAware {
         String nameWithStoreId = name + "_" + storeId;
         
         if (!objectMap.containsKey(nameWithStoreId)) {
-            Object object = objectFactory.getObject();
-            if (object instanceof ManagerBase) {
-                ManagerBase managerBase = (ManagerBase)object;
-                managerBase.storeId = storeId;
-                managerBase.initialize();
-            }
-            objectMap.put(nameWithStoreId, object);
+			try {
+				Object object = objectFactory.getObject();
+				if (object instanceof ManagerBase) {
+					ManagerBase managerBase = (ManagerBase)object;
+					managerBase.storeId = storeId;
+					managerBase.initialize();
+				}
+				objectMap.put(nameWithStoreId, object);
+			} catch (BeansException exception) {
+				System.out.println("Got an bean exception ? ");
+			}
         }
         
         return objectMap.get(nameWithStoreId);

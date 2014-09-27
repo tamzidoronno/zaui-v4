@@ -29,6 +29,7 @@ import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.rmi.RemoteException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
@@ -93,8 +94,13 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     
     @PostConstruct
     public void setupDatabankMailAccount() {
-        sedoxDatabankMailAccount = context.getBean(MailFactoryImpl.class);
-        sedoxDatabankMailAccount.setMailConfiguration(new SedoxDatabankMailConfig());
+		try {
+			sedoxDatabankMailAccount = context.getBean(MailFactoryImpl.class);
+			sedoxDatabankMailAccount.setMailConfiguration(new SedoxDatabankMailConfig());
+		} catch (BeansException ex) {
+			System.out.println("Got an beansexception?");
+		}
+        
     }
     
 
@@ -1087,7 +1093,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         return false;
     }
 
-    private byte[] doCMDEncryptedFile(byte[] fileData, SedoxBinaryFile originalFile) {
+    private byte[] doCMDEncryptedFile(byte[] fileData, SedoxBinaryFile originalFile) throws RemoteException {
         FilesMessage message = sedoxCMDEncrypter.decrypt(fileData);
         if (message.getFile_29Bl28Fm58W() != null) {
             fileData = DatatypeConverter.parseBase64Binary(message.getFile_29Bl28Fm58W());

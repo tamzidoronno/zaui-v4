@@ -119,20 +119,6 @@ class APIAppManager {
 	}
 
 	/**
-	* Fetch all application that needs to be payed for.
-	* @return List
-	* @throws ErrorException
-	*/
-
-	public function getUnpayedSubscription() {
-	     $data = array();
-	     $data['args'] = array();
-	     $data["method"] = "getUnpayedSubscription";
-	     $data["interfaceName"] = "core.appmanager.IAppManager";
-	     return $this->transport->sendMessage($data);
-	}
-
-	/**
 	* Check if the synchronization client is connected or not.
 	* @return boolean
 	* @throws ErrorException
@@ -1953,29 +1939,6 @@ class APIHotelBookingManager {
 	     $data['args']["core_hotelbookingmanager_BookingReference"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_BookingReference));
 	     $data["method"] = "updateReservation";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
-	     return $this->transport->sendMessage($data);
-	}
-
-}
-class APIInvoiceManager {
-
-	var $transport;
-	
-	function APIInvoiceManager($transport) {
-		$this->transport = $transport;
-	}
-
-	/**
-	*
-	* @author ktonder
-	*/
-
-	public function createInvoice($orderId) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
-	     $data["method"] = "createInvoice";
-	     $data["interfaceName"] = "core.pdf.IInvoiceManager";
 	     return $this->transport->sendMessage($data);
 	}
 
@@ -4571,25 +4534,34 @@ class APISedoxProductManager {
 	}
 
 }
+class APISettingsManager {
+
+	var $transport;
+	
+	function APISettingsManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function getDashBoardApplications() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getDashBoardApplications";
+	     $data["interfaceName"] = "core.settingsmanager.ISettingsManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+}
 class APIStoreManager {
 
 	var $transport;
 	
 	function APIStoreManager($transport) {
 		$this->transport = $transport;
-	}
-
-	/**
-	* When an administrator has logged on, it can call on this call to connect its store to a partner.
-	*/
-
-	public function connectStoreToPartner($partner) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["partner"] = json_encode($this->transport->object_unset_nulls($partner));
-	     $data["method"] = "connectStoreToPartner";
-	     $data["interfaceName"] = "core.storemanager.IStoreManager";
-	     return $this->transport->sendMessage($data);
 	}
 
 	/**
@@ -4838,24 +4810,6 @@ class APIStoreManager {
 	     return $this->transport->sendMessage($data);
 	}
 
-	/**
-	* Is this a very important shop or not?
-	*
-	* @param toggle True / False
-	* @param password And internal password needed to toggle this option.
-	* @throws ErrorException
-	*/
-
-	public function setVIS($toggle, $password) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["toggle"] = json_encode($this->transport->object_unset_nulls($toggle));
-	     $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
-	     $data["method"] = "setVIS";
-	     $data["interfaceName"] = "core.storemanager.IStoreManager";
-	     return $this->transport->sendMessage($data);
-	}
-
 }
 class APIUserManager {
 
@@ -5086,24 +5040,6 @@ class APIUserManager {
 	     $data["method"] = "getLoggedOnUser";
 	     $data["interfaceName"] = "core.usermanager.IUserManager";
 	     return $this->transport->cast(new core_usermanager_data_User(), $this->transport->sendMessage($data));
-	}
-
-	/**
-	* Create a new user to your webshop.<br>
-	* This will fail if you are trying to create a user which is granted more access then you have yourself.<br>
-	* If no users has been created, then the user object will automatically be set as an administrator.<br>
-	* That is how you create your first user, set the User.type field to 0.
-	* @param user The new user to be created. and the password is sent as plain text.
-	* @return List
-	* @throws ErrorException
-	*/
-
-	public function getStoresConnectedToMe() {
-	     $data = array();
-	     $data['args'] = array();
-	     $data["method"] = "getStoresConnectedToMe";
-	     $data["interfaceName"] = "core.usermanager.IUserManager";
-	     return $this->transport->sendMessage($data);
 	}
 
 	/**
@@ -5574,12 +5510,6 @@ class GetShopApi {
            return new APIHotelBookingManager($this->transport);
       }
       /**
-      * @return InvoiceManager
-      */
-      public function getInvoiceManager() {
-           return new APIInvoiceManager($this->transport);
-      }
-      /**
       * @return ListManager
       */
       public function getListManager() {
@@ -5644,6 +5574,12 @@ class GetShopApi {
       */
       public function getSedoxProductManager() {
            return new APISedoxProductManager($this->transport);
+      }
+      /**
+      * @return SettingsManager
+      */
+      public function getSettingsManager() {
+           return new APISettingsManager($this->transport);
       }
       /**
       * @return StoreManager

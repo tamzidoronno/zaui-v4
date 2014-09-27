@@ -1,17 +1,12 @@
 package com.thundashop.core.hotelbookingmanager;
 
 import com.getshop.scope.GetShopSession;
-import com.ibm.icu.util.Calendar;
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
-import com.thundashop.core.common.Setting;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.storemanager.StoreManager;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -19,16 +14,20 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import org.apache.axis.encoding.Base64;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -42,7 +41,6 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -441,7 +439,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         HttpEntity entity;
         HttpPost request = new HttpPost(loginUrl);
         byte[] bytes = (username + ":" + password).getBytes();
-        String encoding = Base64.encode(bytes);
+        String encoding = Base64.getEncoder().encodeToString(bytes);
 
         request.addHeader("Authorization", "Basic " + encoding);
 
@@ -473,10 +471,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         } catch (ClientProtocolException e) {
             client.getConnectionManager().shutdown();
             e.printStackTrace();
-        } catch (IOException e) {
-            client.getConnectionManager().shutdown();
-            e.printStackTrace();
-        }
+        } catch (IOException ex) {
+			Logger.getLogger(HotelBookingManager.class.getName()).log(Level.SEVERE, null, ex);
+		}
         return "failed";
     }
 

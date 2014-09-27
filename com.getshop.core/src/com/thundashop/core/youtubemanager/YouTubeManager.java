@@ -4,8 +4,7 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.ResourceId;
 import com.google.api.services.youtube.model.SearchListResponse;
@@ -26,8 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Component
 public class YouTubeManager extends ManagerBase implements IYouTubeManager {
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
-    private static final JsonFactory JSON_FACTORY = new JacksonFactory();
     private static final long NUMBER_OF_VIDEOS_RETURNED = 10;
+	private GsonFactory factory = new GsonFactory();
     private static YouTube youtube;
     
     @PostConstruct
@@ -41,7 +40,7 @@ public class YouTubeManager extends ManagerBase implements IYouTubeManager {
     public List<SearchResult> searchYoutube(String queryTerm) throws ErrorException {
         try {
             if(youtube == null) {
-                youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, new HttpRequestInitializer() {
+                youtube = new YouTube.Builder(HTTP_TRANSPORT, factory, new HttpRequestInitializer() {
                     public void initialize(HttpRequest request) throws IOException {
                     }
                 }).setApplicationName("youtube-cmdline-search-sample").build();

@@ -123,14 +123,6 @@ class AppManager(object):
     data.interfaceName = "core.appmanager.IAppManager"
     return self.communicationHelper.sendMessage(data)
 
-  def getUnpayedSubscription(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "getUnpayedSubscription"
-    data.interfaceName = "core.appmanager.IAppManager"
-    return self.communicationHelper.sendMessage(data)
-
   def isSyncToolConnected(self):
     args = collections.OrderedDict()
     data = EmptyClass()
@@ -2034,24 +2026,6 @@ class HotelBookingManager(object):
     data.args = args
     data.method = "updateReservation"
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
-    return self.communicationHelper.sendMessage(data)
-
-class InvoiceManager(object):
-  def __init__(self, communicationHelper):
-    self.communicationHelper = communicationHelper
-  def createInvoice(self, orderId):
-    args = collections.OrderedDict()
-    if isinstance(orderId,GetShopBaseClass): 
-      args["orderId"]=json.dumps(orderId.__dict__)
-    else:
-      try:
-        args["orderId"]=json.dumps(orderId)
-      except (ValueError, AttributeError):
-        args["orderId"]=orderId
-    data = EmptyClass()
-    data.args = args
-    data.method = "createInvoice"
-    data.interfaceName = "core.pdf.IInvoiceManager"
     return self.communicationHelper.sendMessage(data)
 
 class ListManager(object):
@@ -4795,24 +4769,20 @@ class SedoxProductManager(object):
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 
+class SettingsManager(object):
+  def __init__(self, communicationHelper):
+    self.communicationHelper = communicationHelper
+  def getDashBoardApplications(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getDashBoardApplications"
+    data.interfaceName = "core.settingsmanager.ISettingsManager"
+    return self.communicationHelper.sendMessage(data)
+
 class StoreManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
-  def connectStoreToPartner(self, partner):
-    args = collections.OrderedDict()
-    if isinstance(partner,GetShopBaseClass): 
-      args["partner"]=json.dumps(partner.__dict__)
-    else:
-      try:
-        args["partner"]=json.dumps(partner)
-      except (ValueError, AttributeError):
-        args["partner"]=partner
-    data = EmptyClass()
-    data.args = args
-    data.method = "connectStoreToPartner"
-    data.interfaceName = "core.storemanager.IStoreManager"
-    return self.communicationHelper.sendMessage(data)
-
   def createStore(self, hostname, email, password, notify):
     args = collections.OrderedDict()
     if isinstance(hostname,GetShopBaseClass): 
@@ -5052,28 +5022,6 @@ class StoreManager(object):
     data.interfaceName = "core.storemanager.IStoreManager"
     return self.communicationHelper.sendMessage(data)
 
-  def setVIS(self, toggle, password):
-    args = collections.OrderedDict()
-    if isinstance(toggle,GetShopBaseClass): 
-      args["toggle"]=json.dumps(toggle.__dict__)
-    else:
-      try:
-        args["toggle"]=json.dumps(toggle)
-      except (ValueError, AttributeError):
-        args["toggle"]=toggle
-    if isinstance(password,GetShopBaseClass): 
-      args["password"]=json.dumps(password.__dict__)
-    else:
-      try:
-        args["password"]=json.dumps(password)
-      except (ValueError, AttributeError):
-        args["password"]=password
-    data = EmptyClass()
-    data.args = args
-    data.method = "setVIS"
-    data.interfaceName = "core.storemanager.IStoreManager"
-    return self.communicationHelper.sendMessage(data)
-
 class UserManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
@@ -5256,14 +5204,6 @@ class UserManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getLoggedOnUser"
-    data.interfaceName = "core.usermanager.IUserManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getStoresConnectedToMe(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "getStoresConnectedToMe"
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -5667,7 +5607,6 @@ class GetShopApi(object):
     self.GalleryManager = GalleryManager(self.communicationHelper)
     self.GetShop = GetShop(self.communicationHelper)
     self.HotelBookingManager = HotelBookingManager(self.communicationHelper)
-    self.InvoiceManager = InvoiceManager(self.communicationHelper)
     self.ListManager = ListManager(self.communicationHelper)
     self.LogoManager = LogoManager(self.communicationHelper)
     self.MessageManager = MessageManager(self.communicationHelper)
@@ -5679,6 +5618,7 @@ class GetShopApi(object):
     self.ProductManager = ProductManager(self.communicationHelper)
     self.ReportingManager = ReportingManager(self.communicationHelper)
     self.SedoxProductManager = SedoxProductManager(self.communicationHelper)
+    self.SettingsManager = SettingsManager(self.communicationHelper)
     self.StoreManager = StoreManager(self.communicationHelper)
     self.UserManager = UserManager(self.communicationHelper)
     self.UtilManager = UtilManager(self.communicationHelper)

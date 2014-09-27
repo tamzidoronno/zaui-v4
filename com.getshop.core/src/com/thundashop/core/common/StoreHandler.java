@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.springframework.beans.BeansException;
 
 /**
  *
@@ -28,12 +31,16 @@ public class StoreHandler {
     private List<ManagerBase> messageHandler;
     private String storeId;
     private HashMap<String, Session> sessions = new HashMap();
-    private final GetShopSessionScope scope;
+    private GetShopSessionScope scope;
 
    
     public StoreHandler(String storeId) {
         this.storeId = storeId;
-        scope = AppContext.appContext.getBean(GetShopSessionScope.class);
+		try {
+			scope = AppContext.appContext.getBean(GetShopSessionScope.class);
+		} catch (BeansException ex) {
+			System.out.println("Throws bean exception?");
+		}
     }
 
     public synchronized Object executeMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
@@ -158,7 +165,11 @@ public class StoreHandler {
         
         session.lastActive = new Date();
         
-        messageHandler = new ArrayList<ManagerBase>(AppContext.appContext.getBeansOfType(ManagerBase.class).values());
+		try {
+			messageHandler = new ArrayList<ManagerBase>(AppContext.appContext.getBeansOfType(ManagerBase.class).values());
+		} catch (BeansException ex) {
+			System.out.println("Throws bean exception?");
+		}
         for (ManagerBase base : messageHandler) {
             /**
              * We dont want to set the session for storemanager, 
@@ -278,7 +289,13 @@ public class StoreHandler {
     }
 
     private <T> T getManager(Class aClass) {
-        return (T)AppContext.appContext.getBean(aClass);
+		try {
+			return (T)AppContext.appContext.getBean(aClass);
+		} catch (BeansException ex) {
+			System.out.println("Throws bean exception?");
+		}
+		
+		return null;
     }
 
     private ApplicationPool getApplicationPool() {

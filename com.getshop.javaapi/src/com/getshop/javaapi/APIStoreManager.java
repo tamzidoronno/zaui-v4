@@ -16,18 +16,6 @@ public class APIStoreManager {
       }
 
      /**
-     * When an administrator has logged on, it can call on this call to connect its store to a partner.
-     */
-     public void connectStoreToPartner(java.lang.String partner)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("partner",new Gson().toJson(partner));
-          data.method = "connectStoreToPartner";
-          data.interfaceName = "core.storemanager.IStoreManager";
-          String result = transport.send(data);
-     }
-
-     /**
      * Create a new store / webshop with a given name.
      * @param hostname The hostname to the webshop.
      * @param email The email to identify the first user with,
@@ -302,23 +290,6 @@ public class APIStoreManager {
           data.args = new LinkedHashMap();
           data.args.put("id",new Gson().toJson(id));
           data.method = "setSessionLanguage";
-          data.interfaceName = "core.storemanager.IStoreManager";
-          String result = transport.send(data);
-     }
-
-     /**
-     * Is this a very important shop or not?
-     *
-     * @param toggle True / False
-     * @param password And internal password needed to toggle this option.
-     * @throws ErrorException
-     */
-     public void setVIS(boolean toggle, java.lang.String password)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("toggle",new Gson().toJson(toggle));
-          data.args.put("password",new Gson().toJson(password));
-          data.method = "setVIS";
           data.interfaceName = "core.storemanager.IStoreManager";
           String result = transport.send(data);
      }

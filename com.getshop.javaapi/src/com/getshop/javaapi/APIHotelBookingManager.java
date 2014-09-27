@@ -157,6 +157,20 @@ public class APIHotelBookingManager {
      }
 
      /**
+     * Get all references
+     * @return
+     * @throws ErrorException
+     */
+     public void markRoomAsReady(java.lang.String roomId)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("roomId",new Gson().toJson(roomId));
+          data.method = "markRoomAsReady";
+          data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Change a room for a reference.
      * @param reference
      * @param oldRoom the old room

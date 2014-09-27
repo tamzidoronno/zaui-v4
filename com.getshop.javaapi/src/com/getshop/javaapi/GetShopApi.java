@@ -14,76 +14,46 @@ public class GetShopApi {
            getStoreManager().initializeStore(webaddress, sessionId);
       }
      /**
-      * @return APIContentManager
+      * @return APIOrderManager
       */
-      public APIContentManager getContentManager() {
-           return new APIContentManager(transport);
+      public APIOrderManager getOrderManager() {
+           return new APIOrderManager(transport);
       }
      /**
-      * @return APINewsManager
+      * @return APIGetShop
       */
-      public APINewsManager getNewsManager() {
-           return new APINewsManager(transport);
+      public APIGetShop getGetShop() {
+           return new APIGetShop(transport);
       }
      /**
-      * @return APILogoManager
+      * @return APIPageManager
       */
-      public APILogoManager getLogoManager() {
-           return new APILogoManager(transport);
+      public APIPageManager getPageManager() {
+           return new APIPageManager(transport);
       }
      /**
-      * @return APIBannerManager
+      * @return APIAppManager
       */
-      public APIBannerManager getBannerManager() {
-           return new APIBannerManager(transport);
-      }
-     /**
-      * @return APIFooterManager
-      */
-      public APIFooterManager getFooterManager() {
-           return new APIFooterManager(transport);
-      }
-     /**
-      * @return APICalendarManager
-      */
-      public APICalendarManager getCalendarManager() {
-           return new APICalendarManager(transport);
-      }
-     /**
-      * @return APICarTuningManager
-      */
-      public APICarTuningManager getCarTuningManager() {
-           return new APICarTuningManager(transport);
-      }
-     /**
-      * @return APIChatManager
-      */
-      public APIChatManager getChatManager() {
-           return new APIChatManager(transport);
-      }
-     /**
-      * @return APIUserManager
-      */
-      public APIUserManager getUserManager() {
-           return new APIUserManager(transport);
-      }
-     /**
-      * @return APIListManager
-      */
-      public APIListManager getListManager() {
-           return new APIListManager(transport);
-      }
-     /**
-      * @return APIInvoiceManager
-      */
-      public APIInvoiceManager getInvoiceManager() {
-           return new APIInvoiceManager(transport);
+      public APIAppManager getAppManager() {
+           return new APIAppManager(transport);
       }
      /**
       * @return APIUtilManager
       */
       public APIUtilManager getUtilManager() {
            return new APIUtilManager(transport);
+      }
+     /**
+      * @return APISettingsManager
+      */
+      public APISettingsManager getSettingsManager() {
+           return new APISettingsManager(transport);
+      }
+     /**
+      * @return APIUserManager
+      */
+      public APIUserManager getUserManager() {
+           return new APIUserManager(transport);
       }
      /**
       * @return APIMessageManager
@@ -98,34 +68,16 @@ public class GetShopApi {
            return new APINewsLetterManager(transport);
       }
      /**
-      * @return APIYouTubeManager
+      * @return APICalendarManager
       */
-      public APIYouTubeManager getYouTubeManager() {
-           return new APIYouTubeManager(transport);
-      }
-     /**
-      * @return APIGetShop
-      */
-      public APIGetShop getGetShop() {
-           return new APIGetShop(transport);
+      public APICalendarManager getCalendarManager() {
+           return new APICalendarManager(transport);
       }
      /**
       * @return APIBigStock
       */
       public APIBigStock getBigStock() {
            return new APIBigStock(transport);
-      }
-     /**
-      * @return APIProductManager
-      */
-      public APIProductManager getProductManager() {
-           return new APIProductManager(transport);
-      }
-     /**
-      * @return APIPageManager
-      */
-      public APIPageManager getPageManager() {
-           return new APIPageManager(transport);
       }
      /**
       * @return APIReportingManager
@@ -140,10 +92,10 @@ public class GetShopApi {
            return new APISedoxProductManager(transport);
       }
      /**
-      * @return APIStoreManager
+      * @return APICarTuningManager
       */
-      public APIStoreManager getStoreManager() {
-           return new APIStoreManager(transport);
+      public APICarTuningManager getCarTuningManager() {
+           return new APICarTuningManager(transport);
       }
      /**
       * @return APICartManager
@@ -152,16 +104,10 @@ public class GetShopApi {
            return new APICartManager(transport);
       }
      /**
-      * @return APIAppManager
+      * @return APIYouTubeManager
       */
-      public APIAppManager getAppManager() {
-           return new APIAppManager(transport);
-      }
-     /**
-      * @return APIOrderManager
-      */
-      public APIOrderManager getOrderManager() {
-           return new APIOrderManager(transport);
+      public APIYouTubeManager getYouTubeManager() {
+           return new APIYouTubeManager(transport);
       }
      /**
       * @return APIHotelBookingManager
@@ -170,15 +116,69 @@ public class GetShopApi {
            return new APIHotelBookingManager(transport);
       }
      /**
-      * @return APIGalleryManager
+      * @return APIProductManager
       */
-      public APIGalleryManager getGalleryManager() {
-           return new APIGalleryManager(transport);
+      public APIProductManager getProductManager() {
+           return new APIProductManager(transport);
       }
      /**
       * @return APIMobileManager
       */
       public APIMobileManager getMobileManager() {
            return new APIMobileManager(transport);
+      }
+     /**
+      * @return APIStoreManager
+      */
+      public APIStoreManager getStoreManager() {
+           return new APIStoreManager(transport);
+      }
+     /**
+      * @return APIGalleryManager
+      */
+      public APIGalleryManager getGalleryManager() {
+           return new APIGalleryManager(transport);
+      }
+     /**
+      * @return APIListManager
+      */
+      public APIListManager getListManager() {
+           return new APIListManager(transport);
+      }
+     /**
+      * @return APIChatManager
+      */
+      public APIChatManager getChatManager() {
+           return new APIChatManager(transport);
+      }
+     /**
+      * @return APIBannerManager
+      */
+      public APIBannerManager getBannerManager() {
+           return new APIBannerManager(transport);
+      }
+     /**
+      * @return APINewsManager
+      */
+      public APINewsManager getNewsManager() {
+           return new APINewsManager(transport);
+      }
+     /**
+      * @return APILogoManager
+      */
+      public APILogoManager getLogoManager() {
+           return new APILogoManager(transport);
+      }
+     /**
+      * @return APIFooterManager
+      */
+      public APIFooterManager getFooterManager() {
+           return new APIFooterManager(transport);
+      }
+     /**
+      * @return APIContentManager
+      */
+      public APIContentManager getContentManager() {
+           return new APIContentManager(transport);
       }
 }

@@ -11,12 +11,14 @@ public class BookingReference extends DataCommon {
     public int bookingReference;
     public Date startDate;
     public Date endDate;
+    public String language = "nb_NO";
     public List<Integer> codes = new ArrayList();
     public List<String> roomIds = new ArrayList();
     public HashMap<String, Boolean> isApprovedForCheckIn = new HashMap();
     public ContactData contact = new ContactData();
     public Double bookingFee = 0.0;
     public boolean updateArx = true;
+    public boolean sentWelcomeMessages = true;
     
     public boolean isApprovedForCheckin(String roomId) {
         if(isApprovedForCheckIn.containsKey(roomId)) {
@@ -41,4 +43,16 @@ public class BookingReference extends DataCommon {
         return false;
     }
     
+    
+    boolean isNow() {
+        if(isToday()) {
+            return true;
+        }
+        
+        Date now = new Date();
+        if(startDate.before(now) && endDate.before(now)) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -10,6 +10,9 @@ class core_hotelbookingmanager_BookingReference extends core_common_DataCommon  
 	public $endDate;
 
 	/** @var String */
+	public $language;
+
+	/** @var String */
 	public $codes;
 
 	/** @var String */
@@ -26,6 +29,9 @@ class core_hotelbookingmanager_BookingReference extends core_common_DataCommon  
 
 	/** @var String */
 	public $updateArx;
+
+	/** @var String */
+	public $sentWelcomeMessages;
 
 }
 ?>

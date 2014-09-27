@@ -172,56 +172,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
            echo $this->__w("A confirmation email has been sent to your email, and your storage room has been reserved. Please note that the storage room might not be final and could be changed to a different one with the same size if needed.");
        }
        echo "<br><br><br><br>";
-       
-       $booking = $this->getApi()->getHotelBookingManager()->getReservationByReferenceId($reference);
-       $room = $this->getApi()->getHotelBookingManager()->getRoom($booking->roomIds[0]);
-       $logo = $this->getApi()->getLogoManager()->getLogo();
-       
-       $logoAddress = 'http://www.semlagerhotell.no/showApplicationImages.php?appNamespace=ns_26a517ac_c519_412b_9266_59df49355c82&image=skin/images/logo_for_email.png';
-       $body = "<div><img src='$logoAddress'></div><br><br>";
-       $body .= $this->__w("Dear {name}") . "<br>";
-       $body .= $title;
-       $body .= $this->__w("This email is a confirmation that we have reserved a room for you.") . "<br>";
-       if($this->getServiceType() == "storage") {
-           $body .= $this->__w("The room has been reserved from {start}.") . "<br>";
-           $body .= $this->__w("The reserved storage room is : {roomName}.") . "<br>";
-       } else {
-           $body .= $this->__w("The room has been reserved between {start} to {end}.") . "<br>";
-           $body .= $this->__w("The code for the room is : {code}.") . "<br>";
-           $body .= $this->__w("The reserved room is : {roomName}.") . "<br>";
-       }
-        $body .= $this->__w("Your reference number is : {referenceNumber}.") . "<br>";
-       
-       $body = str_replace("{start}", date("d-m-Y", strtotime($booking->startDate)), $body);
-       $body = str_replace("{end}", date("d-m-Y", strtotime($booking->endDate)), $body);
-       if($this->getServiceType() == "storage") {
-           $body = str_replace("{roomName}", $order->cart->items[0]->product->name, $body);
-       } else {
-           $body = str_replace("{roomName}", $room->roomName, $body);
-       }
-       $body = str_replace("{code}", $booking->codes[0], $body);
-       $body = str_replace("{referenceNumber}", $booking->bookingReference, $body);
-       $body = str_replace("{name}", $name, $body);
-       
-       $body .= "<hr>";
-       $body .= "<b>" . $this->__w("Contact information related to the booking event") . "</b><br>";
-       
-       $contactData = $booking->contact;
-       
-       foreach($contactData->names as $index => $name) {
-           $body .= $name . "<br>";
-           $body .= $contactData->phones[$index] . "<br>";
-           $body .= "<br>";
-       }
-       $body .= "<b>" . $this->__w("Additional contact information") . "</b><br>";
-       $body .= $user->emailAddress . "<br>";
-       $body .= $address->address . "<br>";
-       $body .= $address->postCode . "<br>";
-       $body .= $address->city . "<br>";
-       
-       
-       $this->getApi()->getMessageManager()->sendMail($user->emailAddress, "", $title, $body, "post@getshop.com", "Booking");
-       $this->getApi()->getMessageManager()->sendMail($mainemail, "", $title, $body, "post@getshop.com", "Booking");
    }
 
    public function getContinuePage() {
@@ -397,7 +347,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
              $inactive = true;
         }
         
-        $reference = $this->getApi()->getHotelBookingManager()->reserveRoom($type, $start, $end, $count, $contact, $inactive);
+        $reference = $this->getApi()->getHotelBookingManager()->reserveRoom($type, $start, $end, $count, $contact, $inactive, $this->getFactory()->getSelectedLanguage());
         if(($reference) > 0) {
             $cartmgr = $this->getApi()->getCartManager();
             $cartmgr->clear();
@@ -548,9 +498,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         }
         
         if($_POST['data']['customer_type'] == "private") {
-            if($name === "birthday" && strlen($_POST['data']['birthday']) != 8) {
+            if($name === "birthday" && (strlen($_POST['data']['birthday']) != 8 || substr_count($_POST['data']['birthday'], ".") != 2)) {
                 $this->invalid = true;
-                $this->errors[] = $this->__w("Birth date has to be formatted like dd.mm.yy");
+                $this->errors[] = $this->__w("Birth date has to be formatted like dd.mm.yy") . " <b>ex: 13.06.84</b>";
                 return "invalid";
             }
         } else {

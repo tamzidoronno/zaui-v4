@@ -6,25 +6,29 @@ namespace ns_020b57c2_8f80_46e1_a420_cb163f4fb2d2;
 
 $rooms = $this->getApi()->getHotelBookingManager()->getAllRooms();
 $reservations = $this->getApi()->getHotelBookingManager()->getAllReservations();
+
+$roomlist = array();
+foreach ($rooms as $room) {
+    $roomlist[$room->id] = $room;
+}
+
 echo "<br><br>";
 echo "<h1>Guests arriving today</h1>";
-printGuestTable($reservations, $rooms, true);
+printGuestTable($reservations, $roomlist, true);
 echo "<br><br>";
 echo "<h1>Guests leaving today</h1>";
-printGuestTable($reservations, $rooms, false);
+printGuestTable($reservations, $roomlist, false);
+printIntervalCleaning($reservations, $roomlist, $this);
 
-function printGuestTable($reservations, $rooms, $arriving) {
+function printGuestTable($reservations, $roomlist, $arriving) {
 
-    $roomlist = array();
-    foreach ($rooms as $room) {
-        $roomlist[$room->id] = $room;
-    }
     $found = false;
+    echo "<div style='background-color:#efefef; width:100%; padding:5px;'>";
     echo "<table width='100%'>";
     echo "<tr>";
-    echo "<th align='left'>Room id</th>";
+    echo "<th align='left' width='10%'>Room</th>";
+    echo "<th align='left' width='20%'>Action</th>";
     echo "<th align='left'>Name of guest</th>";
-    echo "<th align='left'>Action</th>";
     foreach ($reservations as $reservation) {
         if ($arriving) {
             $startdate = strtotime($reservation->startDate);
@@ -36,22 +40,22 @@ function printGuestTable($reservations, $rooms, $arriving) {
             echo "<tr>";
             echo "<td valign='top' width='150'>";
             foreach ($reservation->roomIds as $roomId) {
-                echo $roomlist[$roomId]->roomName . "<br>";
-            }
-            echo "</td>";
-            echo "<td valign='top'>";
-            foreach ($reservation->contact->names as $contact) {
-                echo $contact . "<br>";
+                echo "<div style='line-height: 20px;'>" . $roomlist[$roomId]->roomName . "</div>";
             }
             echo "</td>";
             echo "<td>";
             foreach ($reservation->roomIds as $roomId) {
                 if ($roomlist[$roomId]->isClean || (isset($reservation->isApprovedForCheckIn->{$roomId}) && $reservation->isApprovedForCheckIn->{$roomId} && $arriving)) {
-                    echo "<span style='line-height: 20px;' class='alreadyready'>room is already ready</span>";
+                    echo "<span style='line-height: 20px;' class='alreadyready'>room is marked as ready</span>";
                 } else {
-                    echo "<span style='line-height: 20px;' class='markroomasready' roomId='".$roomId."'>Mark room as ready</span>";
+                    echo "<span style='line-height: 20px;' class='markroomasready' roomId='" . $roomId . "'>Mark room as ready</span>";
                 }
                 echo "<br>";
+            }
+            echo "</td>";
+            echo "<td valign='top'>";
+            foreach ($reservation->contact->names as $contact) {
+                echo "<div style='line-height: 20px;'>" . $contact . "</div>";
             }
             echo "</td>";
             echo "</tr>";
@@ -60,7 +64,69 @@ function printGuestTable($reservations, $rooms, $arriving) {
     echo "</table>";
 
     if (!$found) {
-        echo "No guests are arriving today.";
+        echo "<span style='padding:5px;'>No guests for today.</span>";
+    }
+    echo "</div>";
+}
+
+function printIntervalCleaning($reservations, $roomlist, $scope) {
+    /* @var $api2 GetShopApi */
+
+    $result = array();
+    foreach ($reservations as $reservation) {
+        /* @var $order \core_ordermanager_data_Order */
+        $order = $scope->getApi()->getOrderManager()->getOrderByReference($reservation->bookingReference);
+        if (isset($order->cart->items)) {
+            foreach ($order->cart->items as $item) {
+                /* @var $item \core_cartmanager_data_CartItem */
+                /* @var $product \core_productmanager_data_Product */
+                if ($item->product->sku === "vask") {
+                    $result[$item->product->name][] = $reservation;
+                }
+            }
+        }
+    }
+
+    foreach ($result as $index => $cleaningarray) {
+        echo "<br><br>";
+        echo "<h1>" . $index . "</h1>";
+        echo "<div style='background-color:#efefef; width:100%; padding:5px;'>";
+        echo "<table width='100%'>";
+        echo "<tr>";
+        echo "<th align='left' width='10%'>Room</th>";
+        echo "<th align='left' width='20%'>Action</th>";
+        echo "<th align='left'>Name of guest</th>";
+        echo "<th align='left'>Check in date</th>";
+        echo "<th align='left'>Check out date</th>";
+        
+        foreach ($cleaningarray as $reservation) {
+            echo "<tr>";
+            echo "<td valign='top' width='150'>";
+            foreach ($reservation->roomIds as $roomId) {
+                echo "<div style='line-height: 20px;'>" . $roomlist[$roomId]->roomName . "</div>";
+            }
+            echo "</td>";
+            echo "<td>";
+            foreach ($reservation->roomIds as $roomId) {
+                if ($roomlist[$roomId]->isClean || (isset($reservation->isApprovedForCheckIn->{$roomId}) && $reservation->isApprovedForCheckIn->{$roomId} && $arriving)) {
+                    echo "<span style='line-height: 20px;' class='alreadyready'>room is already ready</span>";
+                } else {
+                    echo "<span style='line-height: 20px;' class='markroomasready' roomId='" . $roomId . "'>Mark room as ready</span>";
+                }
+                echo "<br>";
+            }
+            echo "</td>";
+            echo "<td valign='top'>";
+            foreach ($reservation->contact->names as $contact) {
+                echo "<div style='line-height: 20px;'>" . $contact . "</div>";
+            }
+            echo "</td>";
+            echo "<td>" . $reservation->startDate . "</td>";
+            echo "<td>" . $reservation->endDate . "</td>";
+            echo "</tr>";
+        }
+        echo "</table>";
+        echo "</div>";
     }
 }
 ?>

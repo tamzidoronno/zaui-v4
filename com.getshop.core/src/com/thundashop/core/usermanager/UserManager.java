@@ -11,6 +11,7 @@ import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.usermanager.data.UserCounter;
 import com.thundashop.core.usermanager.data.UserPrivilege;
 import com.thundashop.core.utils.BrRegEngine;
 import java.math.BigInteger;
@@ -35,7 +36,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     public static String OVERALLPASSWORD = "alksdjfasdoui32q1-2-3-13-1-324asdfasdf_213476askjd....|123§§!4985klq12j3h1kl254h12";
     public SessionFactory sessionFactory = new SessionFactory();
     public ConcurrentHashMap<String, UserStoreCollection> userStoreCollections = new ConcurrentHashMap<String, UserStoreCollection>();
-    private List<UserDeletedEventListener> userDeletedListeners = new ArrayList();
+
+	private List<UserDeletedEventListener> userDeletedListeners = new ArrayList();
+    
+    private UserCounter counter = new UserCounter();
+
     private SecureRandom random = new SecureRandom();
     
     @Autowired
@@ -60,6 +65,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 }
                 if (dataCommon instanceof Group) {
                     userStoreCollection.addGroup((Group)dataCommon);
+                }
+                if (dataCommon instanceof UserCounter) {
+                    counter = (UserCounter) dataCommon;
                 }
                 if (dataCommon instanceof SessionFactory) {
                     sessionFactory = (SessionFactory) dataCommon;
@@ -225,10 +233,12 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     public List<User> getAllUsers() throws ErrorException {
         UserStoreCollection collection = getUserStoreCollection(storeId);
         List<User> allUsers = collection.getAllUsers();
+        for(User user : allUsers) {
+            finalizeUser(user);
+        }
         if (getSession() == null) {
             return collection.getAllUsers();
         }
-        
         return collection.filterUsers(getSession().currentUser, allUsers);
     }
 
@@ -696,4 +706,12 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
     }
     
+	private void finalizeUser(User user) throws ErrorException {
+        if(user.customerId == -1) {
+            user.customerId = counter.counter;
+            counter.counter++;
+            saveObject(counter);
+            saveObject(user);
+		}
+	}
 }

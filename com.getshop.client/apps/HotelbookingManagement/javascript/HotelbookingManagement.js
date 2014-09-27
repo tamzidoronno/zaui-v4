@@ -1,10 +1,10 @@
 app.HotelbookingManagement = {
     
     refreshArxLog : function() {
-        var event = thundashop.Ajax.createEvent('','loadArxLog',$('.HotelbookingManagement .arx_log'),{});
-        thundashop.Ajax.postWithCallBack(event, function(result) {
-            $('.HotelbookingManagement .arx_log').html(result);
-        });
+//        var event = thundashop.Ajax.createEvent('','loadArxLog',$('.HotelbookingManagement .arx_log'),{});
+//        thundashop.Ajax.postWithCallBack(event, function(result) {
+//            $('.HotelbookingManagement .arx_log').html(result);
+//        });
     },
     
     loadEditType : function() {

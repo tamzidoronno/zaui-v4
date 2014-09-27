@@ -13,6 +13,7 @@ public class Room extends DataCommon {
     public String roomName;
     public Boolean isActive = true;
     public Boolean isClean = false;
+    public BookingReference lastReservation = null;
     
     //Identify what lock is connected to this room.
     public String lockId;

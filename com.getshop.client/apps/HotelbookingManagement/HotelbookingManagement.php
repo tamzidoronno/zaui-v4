@@ -18,10 +18,58 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
     }
     
     public function saveArxData() {
-        $this->setConfigurationSetting("arx_server", $_POST['data']['arx_server']);
-        $this->setConfigurationSetting("arx_username", $_POST['data']['arx_username']);
-        $this->setConfigurationSetting("arx_password", $_POST['data']['arx_password']);
-        $this->getApi()->getHotelBookingManager()->setArxConfiguration($_POST['data']['arx_server'],  $_POST['data']['arx_username'], $_POST['data']['arx_password']);
+        
+        $settings = new \core_hotelbookingmanager_ArxSettings();
+        $settings->address = $_POST['data']['arx_server'];
+        $settings->username = $_POST['data']['arx_username'];
+        $settings->password = $_POST['data']['arx_password'];
+        $settings->smsFrom = $_POST['data']['arx_smsfrom'];
+        $settings->smsWelcome = $_POST['data']['arx_smswelcome'];
+        $settings->smsReady = $_POST['data']['arx_smsready'];
+        $settings->smsReadyNO = $_POST['data']['arx_smsreadyNO'];
+        $settings->smsWelcomeNO = $_POST['data']['arx_smswelcomeNO'];
+        $settings->emailWelcome = $_POST['data']['arx_welcomeEmail'];
+        $settings->emailWelcomeNO = $_POST['data']['arx_welcomeEmailNO'];
+        $settings->emailWelcomeTitle = $_POST['data']['arx_welcomeemail_title'];
+        $settings->emailWelcomeTitleNO = $_POST['data']['arx_welcomeemail_title_no'];
+
+        $this->setConfigurationSetting("arx_server", $settings->address);
+        $this->setConfigurationSetting("arx_username", $settings->username);
+        $this->setConfigurationSetting("arx_password", $settings->password);
+        $this->setConfigurationSetting("arx_smsfrom", $settings->smsFrom);
+        $this->setConfigurationSetting("arx_smswelcome", $settings->smsWelcome);
+        $this->setConfigurationSetting("arx_smsready", $settings->smsReady);
+        $this->setConfigurationSetting("arx_smsreadyNO", $settings->smsReadyNO);
+        $this->setConfigurationSetting("arx_smswelcomeNO", $settings->smsWelcomeNO);
+        $this->setConfigurationSetting("arx_welcomeEmail", $settings->emailWelcome);
+        $this->setConfigurationSetting("arx_welcomeEmailNO", $settings->emailWelcomeNO);
+        $this->setConfigurationSetting("arx_welcomeemail_title", $settings->emailWelcomeTitle);
+        $this->setConfigurationSetting("arx_welcomeemail_title_no", $settings->emailWelcomeTitleNO);
+        
+        $this->getApi()->getHotelBookingManager()->setArxConfiguration($settings);
+    }
+    
+    public function saveVismaData() {
+        
+        $settings = new \core_hotelbookingmanager_VismaSettings();
+        
+        $settings->address = $_POST['data']['visma_server'];
+        $settings->username = $_POST['data']['visma_username'];
+        $settings->password = $_POST['data']['visma_password'];
+        $settings->port = $_POST['data']['visma_port'];
+        $settings->sqlUsername = $_POST['data']['visma_sqlUsername'];
+        $settings->sqlPassword = $_POST['data']['visma_sqlPassword'];
+        $settings->database = $_POST['data']['visma_db'];
+        
+        $this->setConfigurationSetting("visma_server", $settings->address);
+        $this->setConfigurationSetting("visma_username", $settings->username);
+        $this->setConfigurationSetting("visma_password", $settings->password);
+        $this->setConfigurationSetting("visma_port", $settings->port);
+        $this->setConfigurationSetting("visma_sqlUsername", $settings->sqlUsername);
+        $this->setConfigurationSetting("visma_sqlPassword", $settings->sqlPassword);
+        $this->setConfigurationSetting("visma_db", $settings->database);
+        
+        $this->getApi()->getHotelBookingManager()->setVismaConfiguration($settings);
     }
     
     public function updateAdminFee() {
@@ -174,11 +222,15 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         echo "</select>";
         echo "</td>";
         echo "<td>";
-        
         echo "<select gsname='available_".$room->id."'>";
         echo "<option value='true'>". $this->__f("Available") . "</option>";
         echo "<option value='false' $falseselected>". $this->__f("Not available") . "</option>";
         echo "</select>";
+        echo "</td>";
+        echo "<td>";
+        if($room->lastReservation) {
+            echo $room->lastReservation->contact->names[0];
+        }
         echo "</td>";
         echo "<td><input gsname='roomname_".$room->id."' value='" . $room->roomName . "'></td>";
         echo "<td><input gsname='lockid_".$room->id."' value='" . $room->lockId . "'></td>";

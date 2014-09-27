@@ -1715,6 +1715,48 @@ class APIHotelBookingManager {
 	* @throws ErrorException
 	*/
 
+	public function checkForArxTransfer() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "checkForArxTransfer";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function checkForVismaTransfer() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "checkForVismaTransfer";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function checkForWelcomeMessagesToSend() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "checkForWelcomeMessagesToSend";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
+	* @return void
+	* @throws ErrorException
+	*/
+
 	public function deleteReference($reference) {
 	     $data = array();
 	     $data['args'] = array();
@@ -1762,6 +1804,21 @@ class APIHotelBookingManager {
 	     $data = array();
 	     $data['args'] = array();
 	     $data["method"] = "getArxLog";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Add new room to the manager.
+	* @param room
+	* @throws ErrorException
+	*/
+
+	public function getEmailMessage($language) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["language"] = json_encode($this->transport->object_unset_nulls($language));
+	     $data["method"] = "getEmailMessage";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -1883,7 +1940,7 @@ class APIHotelBookingManager {
 	* @throws ErrorException
 	*/
 
-	public function reserveRoom($roomType, $startDate, $endDate, $count, $core_hotelbookingmanager_ContactData, $markAsInctive) {
+	public function reserveRoom($roomType, $startDate, $endDate, $count, $core_hotelbookingmanager_ContactData, $markAsInctive, $language) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["roomType"] = json_encode($this->transport->object_unset_nulls($roomType));
@@ -1892,6 +1949,7 @@ class APIHotelBookingManager {
 	     $data['args']["count"] = json_encode($this->transport->object_unset_nulls($count));
 	     $data['args']["core_hotelbookingmanager_ContactData"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_ContactData));
 	     $data['args']["markAsInctive"] = json_encode($this->transport->object_unset_nulls($markAsInctive));
+	     $data['args']["language"] = json_encode($this->transport->object_unset_nulls($language));
 	     $data["method"] = "reserveRoom";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
@@ -1933,13 +1991,26 @@ class APIHotelBookingManager {
 	* @throws ErrorException
 	*/
 
-	public function setArxConfiguration($address, $username, $password) {
+	public function setArxConfiguration($core_hotelbookingmanager_ArxSettings) {
 	     $data = array();
 	     $data['args'] = array();
-	     $data['args']["address"] = json_encode($this->transport->object_unset_nulls($address));
-	     $data['args']["username"] = json_encode($this->transport->object_unset_nulls($username));
-	     $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+	     $data['args']["core_hotelbookingmanager_ArxSettings"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_ArxSettings));
 	     $data["method"] = "setArxConfiguration";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function setVismaConfiguration($core_hotelbookingmanager_VismaSettings) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_hotelbookingmanager_VismaSettings"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_VismaSettings));
+	     $data["method"] = "setVismaConfiguration";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
 	}

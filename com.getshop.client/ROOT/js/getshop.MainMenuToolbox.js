@@ -58,8 +58,16 @@ $(document).ready(function() {
                 icontype: "awesome",
                 icon: "fa-html5",
                 iconsize : "30",
-                title: __f("Css / page settings"),
+                title: __f("Css settings"),
                 click: thundashop.MainMenu.openCssBox,
+                extraArgs: {},
+            },
+            {
+                icontype: "awesome",
+                icon: "fa-file-o",
+                iconsize : "30",
+                title: __f("Page settings"),
+                click: thundashop.MainMenu.goToStoresettings,
                 extraArgs: {},
             },
             {

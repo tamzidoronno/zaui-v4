@@ -43,6 +43,19 @@ public class APIHotelBookingManager {
      * @return
      * @throws ErrorException
      */
+     public void checkForVismaTransfer()  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.method = "checkForVismaTransfer";
+          data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager";
+          String result = transport.send(data);
+     }
+
+     /**
+     * Get all references
+     * @return
+     * @throws ErrorException
+     */
      public void deleteReference(int reference)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new LinkedHashMap();
@@ -282,6 +295,23 @@ public class APIHotelBookingManager {
           data.args.put("username",new Gson().toJson(username));
           data.args.put("password",new Gson().toJson(password));
           data.method = "setArxConfiguration";
+          data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager";
+          String result = transport.send(data);
+     }
+
+     /**
+     * Get all references
+     * @return
+     * @throws ErrorException
+     */
+     public void setVismaConfiguration(java.lang.String address, java.lang.String username, java.lang.String password, java.lang.Integer port)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("address",new Gson().toJson(address));
+          data.args.put("username",new Gson().toJson(username));
+          data.args.put("password",new Gson().toJson(password));
+          data.args.put("port",new Gson().toJson(port));
+          data.method = "setVismaConfiguration";
           data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager";
           String result = transport.send(data);
      }

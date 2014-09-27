@@ -10,7 +10,7 @@ class HotelbookingCleaning extends \ApplicationBase implements \Application {
     }
 
     public function getDescription() {
-        return "My application";
+        return "Administration for room cleaning in booking.";
     }
 
     public function getAvailablePositions() {
@@ -18,7 +18,7 @@ class HotelbookingCleaning extends \ApplicationBase implements \Application {
     }
     
     public function getName() {
-        return "My application";
+        return "Hotelbooking Cleaning";
     }
 
     public function postProcess() {

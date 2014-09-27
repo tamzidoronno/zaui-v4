@@ -46,8 +46,10 @@ Existing booking references
             <th>Room (code)</th>
             <th>Start date</th>
             <th>End date</th>
-            <th>Gebyr</th>
-            <th>Contract</th>
+            <? if($this->getFactory()->getStore()->id == "3292fa74-32a2-4d52-b88f-6be6f3dff813") { ?>
+                <th>Gebyr</th>
+                <th>Contract</th>
+            <? } ?>
         </tr>
         <?
         $reservations = $this->getApi()->getHotelBookingManager()->getAllReservations();
@@ -75,12 +77,14 @@ Existing booking references
             echo "<td style='text-align:center;' valign='top'>" . join("<br>", $roomarray) . "</td>";
             echo "<td style='text-align:center;' valign='top'>" . $reservation->startDate . "</td>";
             echo "<td style='text-align:center;' valign='top'>" . $reservation->endDate . "</td>";
-            echo "<td style='text-align:center;' valign='top'><input type='text' style='width: 40px;' class='adminfee' value='".$reservation->bookingFee."'></td>";
-            echo "<td style='text-align:center;' valign='top'>";
-            echo "<a target='_new' onclick=\"window.open('/scripts/generateContract.php?userid=".$user->id."&refid=".$reservation->bookingReference."&type=standard')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".$user->referenceKey."' class='fa fa-file-pdf-o'></i></a> ";
-            echo "<a target='_new' onclick=\"window.open('http://".$_SERVER['SERVER_NAME']."/scripts/generateContract.php?userid=".$user->id."&refid=".$reservation->bookingReference."&type=bilag')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".$user->referenceKey."' class='fa fa-plus'></i></a> ";
-            echo "<a target='_new' onclick=\"window.open('http://".$_SERVER['SERVER_NAME']."/scripts/generateContract.php?userid=".$user->id."&refid=".$reservation->bookingReference."&type=autogiro')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".$user->referenceKey."' class='fa fa-car'></i></a>";
-            echo "</td>";
+            if($this->getFactory()->getStore()->id == "3292fa74-32a2-4d52-b88f-6be6f3dff813") {
+                echo "<td style='text-align:center;' valign='top'><input type='text' style='width: 40px;' class='adminfee' value='".$reservation->bookingFee."'></td>";
+                echo "<td style='text-align:center;' valign='top'>";
+                echo "<a target='_new' onclick=\"window.open('/scripts/generateContract.php?userid=".@$user->id."&refid=".$reservation->bookingReference."&type=standard')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".@$user->referenceKey."' class='fa fa-file-pdf-o'></i></a> ";
+                echo "<a target='_new' onclick=\"window.open('http://".$_SERVER['SERVER_NAME']."/scripts/generateContract.php?userid=".@$user->id."&refid=".$reservation->bookingReference."&type=bilag')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".@$user->referenceKey."' class='fa fa-plus'></i></a> ";
+                echo "<a target='_new' onclick=\"window.open('http://".$_SERVER['SERVER_NAME']."/scripts/generateContract.php?userid=".@$user->id."&refid=".$reservation->bookingReference."&type=autogiro')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".@$user->referenceKey."' class='fa fa-car'></i></a>";
+                echo "</td>";
+            }
             echo "</tr>";
         }
         ?>
@@ -110,6 +114,7 @@ Existing rooms:<br>
             <td></td>
             <td>Room type</td>
             <td>Active</td>
+            <td>Last reservation</td>
             <td>Room name</td>
             <td>Lock id</td>
         </tr>
@@ -150,63 +155,86 @@ Existing rooms:<br>
     </div>
 </div>
 <br>
+<? if($this->getFactory()->getStore()->id == "3292fa74-32a2-4d52-b88f-6be6f3dff813") { ?>
 
-<b>Information related to the contract</b>
-<table gstype="form" method="saveContractData">
-    <tr>
-        <td>landlord's name</td>
-        <td><input type="text" gsname="utleier_navn" value="<? echo $this->getConfigurationSetting("utleier_navn"); ?>"></td>
-    </tr>
-    <tr>
-        <td>landlord's address</td>
-        <td><input type="text" gsname="utleier_adresse" value="<? echo $this->getConfigurationSetting("utleier_adresse"); ?>"></td>
-    </tr>
-    <tr>
-        <td>landlord's place</td>
-        <td><input type="text" gsname="utleier_sted" value="<? echo $this->getConfigurationSetting("utleier_sted"); ?>"></td>
-    </tr>
-    <tr>
-        <td>landlord's postal code</td>
-        <td><input type="text" gsname="utleier_postnr" value="<? echo $this->getConfigurationSetting("utleier_postnr"); ?>"></td>
-    </tr>
-    <tr>
-        <td></td>
-        <td><input gstype="submit" type="button" value="Lagre"></td>
-    </tr>
-</table>
-<br>
+    <b>Information related to the contract</b>
+    <table gstype="form" method="saveContractData">
+        <tr>
+            <td>landlord's name</td>
+            <td><input type="text" gsname="utleier_navn" value="<? echo $this->getConfigurationSetting("utleier_navn"); ?>"></td>
+        </tr>
+        <tr>
+            <td>landlord's address</td>
+            <td><input type="text" gsname="utleier_adresse" value="<? echo $this->getConfigurationSetting("utleier_adresse"); ?>"></td>
+        </tr>
+        <tr>
+            <td>landlord's place</td>
+            <td><input type="text" gsname="utleier_sted" value="<? echo $this->getConfigurationSetting("utleier_sted"); ?>"></td>
+        </tr>
+        <tr>
+            <td>landlord's postal code</td>
+            <td><input type="text" gsname="utleier_postnr" value="<? echo $this->getConfigurationSetting("utleier_postnr"); ?>"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input gstype="submit" type="button" value="Lagre"></td>
+        </tr>
+    </table>
+    <br>
+    <b>Variables in use for contracts</b>
+    <pre>
+    [navn] = leietakers navn
+    [org_fnr] = fødseldato eventuelt orgnr
+    [postaddr] = adressen for leier
+    [rom] = Rommet som skal leies ut
+    [areal] = Størrelsen på boden / rommet
+    [startdato] = Startdato   
+    [pris] = Prisen ved inngåelse av leie
+    [year] = Året
+    [adresse] = Kundens adresse
+    [postnr] = Kundens postadresse
+    [dagensdato] = Dagens dato
+    [dag_i_maned] = Dag i måned for bestilling
+    [admingebyr] = Administrasjons gebyr
+    [taxes] = Skatter og avgifter
+    [total_price] = Total pris ink. skatter og avgifter.
 
-<b>Variables in use for contracts</b>
-<pre>
-[navn] = leietakers navn
-[org_fnr] = fødseldato eventuelt orgnr
-[postaddr] = adressen for leier
-[rom] = Rommet som skal leies ut
-[areal] = Størrelsen på boden / rommet
-[startdato] = Startdato   
-[pris] = Prisen ved inngåelse av leie
-[year] = Året
-[adresse] = Kundens adresse
-[postnr] = Kundens postadresse
-[dagensdato] = Dagens dato
-[dag_i_maned] = Dag i måned for bestilling
-[admingebyr] = Administrasjons gebyr
-[taxes] = Skatter og avgifter
-[total_price] = Total pris ink. skatter og avgifter.
-
-[belop_forslag] = Forslag på pris
-[utleier_sted] = Sted som kontrakten skrives ut på
-[utleier_navn] = Navnet på utleier
-[utleier_adresse] = Utleiers adresse
-[utleier_postnr] = Utleiers postnummer
-</pre>
+    [belop_forslag] = Forslag på pris
+    [utleier_sted] = Sted som kontrakten skrives ut på
+    [utleier_navn] = Navnet på utleier
+    [utleier_adresse] = Utleiers adresse
+    [utleier_postnr] = Utleiers postnummer
+    </pre>
+<? } ?>
 
 
 <b>Arx server</b>
+<div>Variabler: {code}, {room}, {checkin_time}, {checkout_time}, {name}, {checkin_date}, {referenceNumber, {contacts}, {roomName}, {email}, {address}, {postCode}, {city}</div>
 <table gstype="form" method="saveArxData">
     <tr><td>Server address</td><td><input type="text" gsname="arx_server" value="<? echo $this->getConfigurationSetting("arx_server"); ?>"></td><tr>
     <tr><td>Server username</td><td><input type="text" gsname="arx_username" value="<? echo $this->getConfigurationSetting("arx_username"); ?>"></td><tr>
     <tr><td>Server password</td><td><input type="text" gsname="arx_password" value="<? echo $this->getConfigurationSetting("arx_password"); ?>"></td><tr>
+    <tr><td>Sms from</td><td><input type="text" gsname="arx_smsfrom" value="<? echo $this->getConfigurationSetting("arx_smsfrom"); ?>"></td><tr>
+    <tr><td>Sms welcome</td><td><input style="width: 800px;" type="text" gsname="arx_smswelcome" value="<? echo $this->getConfigurationSetting("arx_smswelcome"); ?>"></td><tr>
+    <tr><td>Sms ready</td><td><input style="width: 800px;" type="text" gsname="arx_smsready" value="<? echo $this->getConfigurationSetting("arx_smsready"); ?>"></td><tr>
+    <tr><td>Sms welcome (no)</td><td><input style="width: 800px;" type="text" gsname="arx_smswelcomeNO" value="<? echo $this->getConfigurationSetting("arx_smswelcomeNO"); ?>"></td><tr>
+    <tr><td>Sms ready (no)</td><td><input style="width: 800px;" type="text" gsname="arx_smsreadyNO" value="<? echo $this->getConfigurationSetting("arx_smsreadyNO"); ?>"></td><tr>
+    <tr><td>Welcome email title</td><td><input style="width: 800px;" type="text" gsname="arx_welcomeemail_title" value="<? echo $this->getConfigurationSetting("arx_welcomeemail_title"); ?>"></td><tr>
+    <tr><td>Welcome email</td><td><textarea style="width: 800px;height:200px;" type="text" gsname="arx_welcomeEmail"><? echo $this->getConfigurationSetting("arx_welcomeEmail"); ?></textarea></td><tr>
+    <tr><td>Welcome email title (no)</td><td><input style="width: 800px;" type="text" gsname="arx_welcomeemail_title_no" value="<? echo $this->getConfigurationSetting("arx_welcomeemail_title_no"); ?>"></td><tr>
+    <tr><td>Welcome email (no)</td><td><textarea style="width: 800px;height:200px;" type="text" gsname="arx_welcomeEmailNO"><? echo $this->getConfigurationSetting("arx_welcomeEmailNO"); ?></textarea></td><tr>
+    <tr><td></td><td><input gstype="submit" type="button" value="Save"></td><tr>
+</table>
+<br><br>
+<b>Visma server</b>
+<table gstype="form" method="saveVismaData">
+    <tr><td>Server address</td><td><input type="text" gsname="visma_server" value="<? echo $this->getConfigurationSetting("visma_server"); ?>"></td><tr>
+    <tr><td>Server username</td><td><input type="text" gsname="visma_username" value="<? echo $this->getConfigurationSetting("visma_username"); ?>"></td><tr>
+    <tr><td>Server password</td><td><input type="text" gsname="visma_password" value="<? echo $this->getConfigurationSetting("visma_password"); ?>"></td><tr>
+    <tr><td>Server port</td><td><input type="text" gsname="visma_port" value="<? echo $this->getConfigurationSetting("visma_port"); ?>"></td><tr>
+    <tr><td>Server sql username</td><td><input type="text" gsname="visma_sqlUsername" value="<? echo $this->getConfigurationSetting("visma_sqlUsername"); ?>"></td><tr>
+    <tr><td>Server sql password</td><td><input type="text" gsname="visma_sqlPassword" value="<? echo $this->getConfigurationSetting("visma_sqlPassword"); ?>"></td><tr>
+    <tr><td>Server database</td><td><input type="text" gsname="visma_db" value="<? echo $this->getConfigurationSetting("visma_db"); ?>"></td><tr>
     <tr><td></td><td><input gstype="submit" type="button" value="Save"></td><tr>
 </table>
 

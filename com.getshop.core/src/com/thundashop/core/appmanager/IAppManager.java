@@ -10,6 +10,7 @@ import com.thundashop.core.appmanager.data.ApplicationSubscription;
 import com.thundashop.core.appmanager.data.AvailableApplications;
 import com.thundashop.core.appmanager.data.ApplicationSynchronization;
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import java.util.List;
@@ -100,5 +101,15 @@ public interface IAppManager {
      * @return 
      */
     public List<ApplicationSettings> getApplicationSettingsUsedByWebPage() throws ErrorException;
+	
+	/**
+	 * Returns an application setting for the given id.
+	 * 
+	 * @param appSettingsId
+	 * @return
+	 * @throws ErrorException 
+	 */
+	@Editor
+	public ApplicationSettings getApplicationSettings(String appSettingsId) throws ErrorException;
     
 }

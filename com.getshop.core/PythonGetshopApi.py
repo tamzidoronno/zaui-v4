@@ -107,6 +107,21 @@ class AppManager(object):
     data.interfaceName = "core.appmanager.IAppManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getApplicationSettings(self, appSettingsId):
+    args = collections.OrderedDict()
+    if isinstance(appSettingsId,GetShopBaseClass): 
+      args["appSettingsId"]=json.dumps(appSettingsId.__dict__)
+    else:
+      try:
+        args["appSettingsId"]=json.dumps(appSettingsId)
+      except (ValueError, AttributeError):
+        args["appSettingsId"]=appSettingsId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getApplicationSettings"
+    data.interfaceName = "core.appmanager.IAppManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getApplicationSettingsUsedByWebPage(self):
     args = collections.OrderedDict()
     data = EmptyClass()

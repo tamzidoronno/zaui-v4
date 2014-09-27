@@ -13,7 +13,7 @@ class FactoryBase {
      * @return Factory
      */
     public function getFactory() {
-        return IocContainer::$factory;
+        return IocContainer::getFactorySingelton(false);
     }
 
     /**

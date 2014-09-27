@@ -1,4 +1,7 @@
-<? namespace ns_d755efca_9e02_4e88_92c2_37a3413f3f41;
+<?
+
+namespace ns_d755efca_9e02_4e88_92c2_37a3413f3f41;
+
 $countrycodes = $this->getFactory()->getTerritoriesList();
 
 
@@ -9,534 +12,169 @@ $languages['dk'] = "Danish";
 $languages['en_en'] = "English";
 $languages['nl_NL'] = "Dutch";
 $languages['fi_FI'] = "Finish";
-
 ?>
-<div class="dropdown setting" id="language">
+<div class="gss_setting" id="language">
     <div class="text inline"><?php echo $this->__f("Please select your language"); ?></div>
-    <select class="config">
-        <? foreach($languages as $key => $lang) { ?>
-            <option value="<? echo $key; ?>"><? echo $lang; ?></option>
-        
-        <? } ?>
-    </select>
+
+	<div class="gss_dropdown">
+		<select class="config">
+			<? foreach ($languages as $key => $lang) { ?>
+				<option value="<? echo $key; ?>"><? echo $lang; ?></option>
+
+<? } ?>
+		</select>
+	</div>
 </div>
 
-<div class="textfield setting"  id="mainemailaddress">
+<div class="textfield gss_setting"  id="mainemailaddress">
     <span class="title"><?php echo $this->__f("Main email address"); ?></span>
     <input type="textfield" class="config" placeholder="<? echo $this->getMainEmailAddress(); ?>">
     <div class="description">
-        <?php echo $this->__("This is the main email address, if you change this all orders, contact forms and etc will be sent to this email address."); ?>
+<?php echo $this->__("This is the main email address, if you change this all orders, contact forms and etc will be sent to this email address."); ?>
     </div>
 </div>
 
-<div class="dropdown setting" id="currencycode">
-    <div class="text inline title"><?php echo $this->__f("Store currency"); ?></div>
-    <select class="config">
-        <option value=''>Not specified</option>
-        <option value='AED'>United Arab Emirates dirham</option>
-        <option value='AFN'>Afghan afghani</option>
-        <option value='ALL'>Albanian lek</option>
-        <option value='AMD'>Armenian dram</option>
-        <option value='ANG'>Netherlands Antillean guilder</option>
-        <option value='AOA'>Angolan kwanza</option>
-        <option value='ARS'>Argentine peso</option>
-        <option value='AUD'>Australian dollar</option>
-        <option value='AWG'>Aruban florin</option>
-        <option value='AZN'>Azerbaijani manat</option>
-        <option value='BAM'>Bosnia and Herzegovina convertible mark</option>
-        <option value='BBD'>Barbados dollar</option>
-        <option value='BDT'>Bangladeshi taka</option>
-        <option value='BGN'>Bulgarian lev</option>
-        <option value='BHD'>Bahraini dinar</option>
-        <option value='BIF'>Burundian franc</option>
-        <option value='BMD'>Bermudian dollar</option>
-        <option value='BND'>Brunei dollar</option>
-        <option value='BOB'>Boliviano</option>
-        <option value='BOV'>Bolivian Mvdol</option>
-        <option value='BRL'>Brazilian real</option>
-        <option value='BSD'>Bahamian dollar</option>
-        <option value='BTN'>Bhutanese ngultrum</option>
-        <option value='BWP'>Botswana pula</option>
-        <option value='BYR'>Belarusian ruble</option>
-        <option value='BZD'>Belize dollar</option>
-        <option value='CAD'>Canadian dollar</option>
-        <option value='CDF'>Congolese franc</option>
-        <option value='CHE'>WIR Euro (complementary currency)</option>
-        <option value='CHF'>Swiss franc</option>
-        <option value='CHW'>WIR Franc (complementary currency)</option>
-        <option value='CLF'>Unidad de Fomento (funds code)</option>
-        <option value='CLP'>Chilean peso</option>
-        <option value='CNY'>Chinese yuan</option>
-        <option value='COP'>Colombian peso</option>
-        <option value='COU'>Unidad de Valor Real</option>
-        <option value='CRC'>Costa Rican colon</option>
-        <option value='CUC'>Cuban convertible peso</option>
-        <option value='CUP'>Cuban peso</option>
-        <option value='CVE'>Cape Verde escudo</option>
-        <option value='CZK'>Czech koruna</option>
-        <option value='DJF'>Djiboutian franc</option>
-        <option value='DKK'>Danish krone</option>
-        <option value='DOP'>Dominican peso</option>
-        <option value='DZD'>Algerian dinar</option>
-        <option value='EGP'>Egyptian pound</option>
-        <option value='ERN'>Eritrean nakfa</option>
-        <option value='ETB'>Ethiopian birr</option>
-        <option value='EUR'>Euro</option>
-        <option value='FJD'>Fiji dollar</option>
-        <option value='FKP'>Falkland Islands pound</option>
-        <option value='GBP'>Pound sterling</option>
-        <option value='GEL'>Georgian lari</option>
-        <option value='GHS'>Ghanaian cedi</option>
-        <option value='GIP'>Gibraltar pound</option>
-        <option value='GMD'>Gambian dalasi</option>
-        <option value='GNF'>Guinean franc</option>
-        <option value='GTQ'>Guatemalan quetzal</option>
-        <option value='GYD'>Guyanese dollar</option>
-        <option value='HKD'>Hong Kong dollar</option>
-        <option value='HNL'>Honduran lempira</option>
-        <option value='HRK'>Croatian kuna</option>
-        <option value='HTG'>Haitian gourde</option>
-        <option value='HUF'>Hungarian forint</option>
-        <option value='IDR'>Indonesian rupiah</option>
-        <option value='ILS'>Israeli new sheqel</option>
-        <option value='INR'>Indian rupee</option>
-        <option value='IQD'>Iraqi dinar</option>
-        <option value='IRR'>Iranian rial</option>
-        <option value='ISK'>Icelandic króna</option>
-        <option value='JMD'>Jamaican dollar</option>
-        <option value='JOD'>Jordanian dinar</option>
-        <option value='JPY'>Japanese yen</option>
-        <option value='KES'>Kenyan shilling</option>
-        <option value='KGS'>Kyrgyzstani som</option>
-        <option value='KHR'>Cambodian riel</option>
-        <option value='KMF'>Comoro franc</option>
-        <option value='KPW'>North Korean won</option>
-        <option value='KRW'>South Korean won</option>
-        <option value='KWD'>Kuwaiti dinar</option>
-        <option value='KYD'>Cayman Islands dollar</option>
-        <option value='KZT'>Kazakhstani tenge</option>
-        <option value='LAK'>Lao kip</option>
-        <option value='LBP'>Lebanese pound</option>
-        <option value='LKR'>Sri Lankan rupee</option>
-        <option value='LRD'>Liberian dollar</option>
-        <option value='LSL'>Lesotho loti</option>
-        <option value='LTL'>Lithuanian litas</option>
-        <option value='LVL'>Latvian lats</option>
-        <option value='LYD'>Libyan dinar</option>
-        <option value='MAD'>Moroccan dirham</option>
-        <option value='MDL'>Moldovan leu</option>
-        <option value='MGA'>Malagasy ariary</option>
-        <option value='MKD'>Macedonian denar</option>
-        <option value='MMK'>Myanma kyat</option>
-        <option value='MNT'>Mongolian tugrik</option>
-        <option value='MOP'>Macanese pataca</option>
-        <option value='MRO'>Mauritanian ouguiya</option>
-        <option value='MUR'>Mauritian rupee</option>
-        <option value='MVR'>Maldivian rufiyaa</option>
-        <option value='MWK'>Malawian kwacha</option>
-        <option value='MXN'>Mexican peso</option>
-        <option value='MXV'>Mexican Unidad de Inversion (UDI) (funds code)</option>
-        <option value='MYR'>Malaysian ringgit</option>
-        <option value='MZN'>Mozambican metical</option>
-        <option value='NAD'>Namibian dollar</option>
-        <option value='NGN'>Nigerian naira</option>
-        <option value='NIO'>Nicaraguan córdoba</option>
-        <option value='NOK'>Norwegian krone</option>
-        <option value='NPR'>Nepalese rupee</option>
-        <option value='NZD'>New Zealand dollar</option>
-        <option value='OMR'>Omani rial</option>
-        <option value='PAB'>Panamanian balboa</option>
-        <option value='PEN'>Peruvian nuevo sol</option>
-        <option value='PGK'>Papua New Guinean kina</option>
-        <option value='PHP'>Philippine peso</option>
-        <option value='PKR'>Pakistani rupee</option>
-        <option value='PLN'>Polish złoty</option>
-        <option value='PYG'>Paraguayan guaraní</option>
-        <option value='QAR'>Qatari rial</option>
-        <option value='RON'>Romanian new leu</option>
-        <option value='RSD'>Serbian dinar</option>
-        <option value='RUB'>Russian rouble</option>
-        <option value='RWF'>Rwandan franc</option>
-        <option value='SAR'>Saudi riyal</option>
-        <option value='SBD'>Solomon Islands dollar</option>
-        <option value='SCR'>Seychelles rupee</option>
-        <option value='SDG'>Sudanese pound</option>
-        <option value='SEK'>Swedish krona/kronor</option>
-        <option value='SGD'>Singapore dollar</option>
-        <option value='SHP'>Saint Helena pound</option>
-        <option value='SLL'>Sierra Leonean leone</option>
-        <option value='SOS'>Somali shilling</option>
-        <option value='SRD'>Surinamese dollar</option>
-        <option value='SSP'>South Sudanese pound</option>
-        <option value='STD'>São Tomé and Príncipe dobra</option>
-        <option value='SYP'>Syrian pound</option>
-        <option value='SZL'>Swazi lilangeni</option>
-        <option value='THB'>Thai baht</option>
-        <option value='TJS'>Tajikistani somoni</option>
-        <option value='TMT'>Turkmenistani manat</option>
-        <option value='TND'>Tunisian dinar</option>
-        <option value='TOP'>Tongan paʻanga</option>
-        <option value='TRY'>Turkish lira</option>
-        <option value='TTD'>Trinidad and Tobago dollar</option>
-        <option value='TWD'>New Taiwan dollar</option>
-        <option value='TZS'>Tanzanian shilling</option>
-        <option value='UAH'>Ukrainian hryvnia</option>
-        <option value='UGX'>Ugandan shilling</option>
-        <option value='USD'>United States dollar</option>
-        <option value='UYI'>Uruguay Peso en Unidades Indexadas (URUIURUI) (funds code)</option>
-        <option value='UYU'>Uruguayan peso</option>
-        <option value='UZS'>Uzbekistan som</option>
-        <option value='VEF'>Venezuelan bolívar fuerte</option>
-        <option value='VND'>Vietnamese đồng</option>
-        <option value='VUV'>Vanuatu vatu</option>
-        <option value='WST'>Samoan tala</option>
-        <option value='XAF'>CFA franc BEAC</option>
-        <option value='XAG'>Silver (one troy ounce)</option>
-        <option value='XAU'>Gold (one troy ounce)</option>
-        <option value='XBA'>European Composite Unit (EURCO) (bond market unit)</option>
-        <option value='XBB'>European Monetary Unit (E.M.U.-6) (bond market unit)</option>
-        <option value='XBC'>European Unit of Account 9 (E.U.A.-9) (bond market unit)</option>
-        <option value='XBD'>European Unit of Account 17 (E.U.A.-17) (bond market unit)</option>
-        <option value='XCD'>East Caribbean dollar</option>
-        <option value='XDR'>Special drawing rights</option>
-        <option value='XFU'>UIC franc (special settlement currency)</option>
-        <option value='XOF'>CFA Franc BCEAO</option>
-        <option value='XPD'>Palladium (one troy ounce)</option>
-        <option value='XPF'>CFP franc</option>
-        <option value='XPT'>Platinum (one troy ounce)</option>
-        <option value='YER'>Yemeni rial</option>
-        <option value='ZAR'>South African rand</option>
-        <option value='ZMK'>Zambian kwacha</option>
-        <option value='ZWL'>Zimbabwe dollar</option>
-    </select>
-</div>
- 
-<div class="dropdown setting" id="currencycode_base"> 
-    <div class="text inline title"><?php echo $this->__f("Base currency"); ?></div>
-    <select class="config">
-        <option value=''>Not specified</option>
-        <option value='AED'>United Arab Emirates dirham</option>
-        <option value='AFN'>Afghan afghani</option>
-        <option value='ALL'>Albanian lek</option>
-        <option value='AMD'>Armenian dram</option>
-        <option value='ANG'>Netherlands Antillean guilder</option>
-        <option value='AOA'>Angolan kwanza</option>
-        <option value='ARS'>Argentine peso</option>
-        <option value='AUD'>Australian dollar</option>
-        <option value='AWG'>Aruban florin</option>
-        <option value='AZN'>Azerbaijani manat</option>
-        <option value='BAM'>Bosnia and Herzegovina convertible mark</option>
-        <option value='BBD'>Barbados dollar</option>
-        <option value='BDT'>Bangladeshi taka</option>
-        <option value='BGN'>Bulgarian lev</option>
-        <option value='BHD'>Bahraini dinar</option>
-        <option value='BIF'>Burundian franc</option>
-        <option value='BMD'>Bermudian dollar</option>
-        <option value='BND'>Brunei dollar</option>
-        <option value='BOB'>Boliviano</option>
-        <option value='BOV'>Bolivian Mvdol</option>
-        <option value='BRL'>Brazilian real</option>
-        <option value='BSD'>Bahamian dollar</option>
-        <option value='BTN'>Bhutanese ngultrum</option>
-        <option value='BWP'>Botswana pula</option>
-        <option value='BYR'>Belarusian ruble</option>
-        <option value='BZD'>Belize dollar</option>
-        <option value='CAD'>Canadian dollar</option>
-        <option value='CDF'>Congolese franc</option>
-        <option value='CHE'>WIR Euro (complementary currency)</option>
-        <option value='CHF'>Swiss franc</option>
-        <option value='CHW'>WIR Franc (complementary currency)</option>
-        <option value='CLF'>Unidad de Fomento (funds code)</option>
-        <option value='CLP'>Chilean peso</option>
-        <option value='CNY'>Chinese yuan</option>
-        <option value='COP'>Colombian peso</option>
-        <option value='COU'>Unidad de Valor Real</option>
-        <option value='CRC'>Costa Rican colon</option>
-        <option value='CUC'>Cuban convertible peso</option>
-        <option value='CUP'>Cuban peso</option>
-        <option value='CVE'>Cape Verde escudo</option>
-        <option value='CZK'>Czech koruna</option>
-        <option value='DJF'>Djiboutian franc</option>
-        <option value='DKK'>Danish krone</option>
-        <option value='DOP'>Dominican peso</option>
-        <option value='DZD'>Algerian dinar</option>
-        <option value='EGP'>Egyptian pound</option>
-        <option value='ERN'>Eritrean nakfa</option>
-        <option value='ETB'>Ethiopian birr</option>
-        <option value='EUR'>Euro</option>
-        <option value='FJD'>Fiji dollar</option>
-        <option value='FKP'>Falkland Islands pound</option>
-        <option value='GBP'>Pound sterling</option>
-        <option value='GEL'>Georgian lari</option>
-        <option value='GHS'>Ghanaian cedi</option>
-        <option value='GIP'>Gibraltar pound</option>
-        <option value='GMD'>Gambian dalasi</option>
-        <option value='GNF'>Guinean franc</option>
-        <option value='GTQ'>Guatemalan quetzal</option>
-        <option value='GYD'>Guyanese dollar</option>
-        <option value='HKD'>Hong Kong dollar</option>
-        <option value='HNL'>Honduran lempira</option>
-        <option value='HRK'>Croatian kuna</option>
-        <option value='HTG'>Haitian gourde</option>
-        <option value='HUF'>Hungarian forint</option>
-        <option value='IDR'>Indonesian rupiah</option>
-        <option value='ILS'>Israeli new sheqel</option>
-        <option value='INR'>Indian rupee</option>
-        <option value='IQD'>Iraqi dinar</option>
-        <option value='IRR'>Iranian rial</option>
-        <option value='ISK'>Icelandic króna</option>
-        <option value='JMD'>Jamaican dollar</option>
-        <option value='JOD'>Jordanian dinar</option>
-        <option value='JPY'>Japanese yen</option>
-        <option value='KES'>Kenyan shilling</option>
-        <option value='KGS'>Kyrgyzstani som</option>
-        <option value='KHR'>Cambodian riel</option>
-        <option value='KMF'>Comoro franc</option>
-        <option value='KPW'>North Korean won</option>
-        <option value='KRW'>South Korean won</option>
-        <option value='KWD'>Kuwaiti dinar</option>
-        <option value='KYD'>Cayman Islands dollar</option>
-        <option value='KZT'>Kazakhstani tenge</option>
-        <option value='LAK'>Lao kip</option>
-        <option value='LBP'>Lebanese pound</option>
-        <option value='LKR'>Sri Lankan rupee</option>
-        <option value='LRD'>Liberian dollar</option>
-        <option value='LSL'>Lesotho loti</option>
-        <option value='LTL'>Lithuanian litas</option>
-        <option value='LVL'>Latvian lats</option>
-        <option value='LYD'>Libyan dinar</option>
-        <option value='MAD'>Moroccan dirham</option>
-        <option value='MDL'>Moldovan leu</option>
-        <option value='MGA'>Malagasy ariary</option>
-        <option value='MKD'>Macedonian denar</option>
-        <option value='MMK'>Myanma kyat</option>
-        <option value='MNT'>Mongolian tugrik</option>
-        <option value='MOP'>Macanese pataca</option>
-        <option value='MRO'>Mauritanian ouguiya</option>
-        <option value='MUR'>Mauritian rupee</option>
-        <option value='MVR'>Maldivian rufiyaa</option>
-        <option value='MWK'>Malawian kwacha</option>
-        <option value='MXN'>Mexican peso</option>
-        <option value='MXV'>Mexican Unidad de Inversion (UDI) (funds code)</option>
-        <option value='MYR'>Malaysian ringgit</option>
-        <option value='MZN'>Mozambican metical</option>
-        <option value='NAD'>Namibian dollar</option>
-        <option value='NGN'>Nigerian naira</option>
-        <option value='NIO'>Nicaraguan córdoba</option>
-        <option value='NOK'>Norwegian krone</option>
-        <option value='NPR'>Nepalese rupee</option>
-        <option value='NZD'>New Zealand dollar</option>
-        <option value='OMR'>Omani rial</option>
-        <option value='PAB'>Panamanian balboa</option>
-        <option value='PEN'>Peruvian nuevo sol</option>
-        <option value='PGK'>Papua New Guinean kina</option>
-        <option value='PHP'>Philippine peso</option>
-        <option value='PKR'>Pakistani rupee</option>
-        <option value='PLN'>Polish złoty</option>
-        <option value='PYG'>Paraguayan guaraní</option>
-        <option value='QAR'>Qatari rial</option>
-        <option value='RON'>Romanian new leu</option>
-        <option value='RSD'>Serbian dinar</option>
-        <option value='RUB'>Russian rouble</option>
-        <option value='RWF'>Rwandan franc</option>
-        <option value='SAR'>Saudi riyal</option>
-        <option value='SBD'>Solomon Islands dollar</option>
-        <option value='SCR'>Seychelles rupee</option>
-        <option value='SDG'>Sudanese pound</option>
-        <option value='SEK'>Swedish krona/kronor</option>
-        <option value='SGD'>Singapore dollar</option>
-        <option value='SHP'>Saint Helena pound</option>
-        <option value='SLL'>Sierra Leonean leone</option>
-        <option value='SOS'>Somali shilling</option>
-        <option value='SRD'>Surinamese dollar</option>
-        <option value='SSP'>South Sudanese pound</option>
-        <option value='STD'>São Tomé and Príncipe dobra</option>
-        <option value='SYP'>Syrian pound</option>
-        <option value='SZL'>Swazi lilangeni</option>
-        <option value='THB'>Thai baht</option>
-        <option value='TJS'>Tajikistani somoni</option>
-        <option value='TMT'>Turkmenistani manat</option>
-        <option value='TND'>Tunisian dinar</option>
-        <option value='TOP'>Tongan paʻanga</option>
-        <option value='TRY'>Turkish lira</option>
-        <option value='TTD'>Trinidad and Tobago dollar</option>
-        <option value='TWD'>New Taiwan dollar</option>
-        <option value='TZS'>Tanzanian shilling</option>
-        <option value='UAH'>Ukrainian hryvnia</option>
-        <option value='UGX'>Ugandan shilling</option>
-        <option value='USD'>United States dollar</option>
-        <option value='UYI'>Uruguay Peso en Unidades Indexadas (URUIURUI) (funds code)</option>
-        <option value='UYU'>Uruguayan peso</option>
-        <option value='UZS'>Uzbekistan som</option>
-        <option value='VEF'>Venezuelan bolívar fuerte</option>
-        <option value='VND'>Vietnamese đồng</option>
-        <option value='VUV'>Vanuatu vatu</option>
-        <option value='WST'>Samoan tala</option>
-        <option value='XAF'>CFA franc BEAC</option>
-        <option value='XAG'>Silver (one troy ounce)</option>
-        <option value='XAU'>Gold (one troy ounce)</option>
-        <option value='XBA'>European Composite Unit (EURCO) (bond market unit)</option>
-        <option value='XBB'>European Monetary Unit (E.M.U.-6) (bond market unit)</option>
-        <option value='XBC'>European Unit of Account 9 (E.U.A.-9) (bond market unit)</option>
-        <option value='XBD'>European Unit of Account 17 (E.U.A.-17) (bond market unit)</option>
-        <option value='XCD'>East Caribbean dollar</option>
-        <option value='XDR'>Special drawing rights</option>
-        <option value='XFU'>UIC franc (special settlement currency)</option>
-        <option value='XOF'>CFA Franc BCEAO</option>
-        <option value='XPD'>Palladium (one troy ounce)</option>
-        <option value='XPF'>CFP franc</option>
-        <option value='XPT'>Platinum (one troy ounce)</option>
-        <option value='YER'>Yemeni rial</option>
-        <option value='ZAR'>South African rand</option>
-        <option value='ZMK'>Zambian kwacha</option>
-        <option value='ZWL'>Zimbabwe dollar</option>
-    </select>
-    <div class="description">
-        <?php echo $this->__f("If this is set, getshop will automatically convert from this currency to the currency above for all other customers."); ?>
-    </div>
-</div>
-
-<div class="textfield setting"  id="conversion_addition">
+<div class="textfield gss_setting"  id="conversion_addition">
     <span class="title"><?php echo $this->__f("Conversion rate addition"); ?></span>
     <input type="textfield" class="config" id="selenium_title">
     <div class="description">
-        <?php echo $this->__("If converting to a different currency, you can specify a percentage of how much more you would like to append to conversion when the conversion calculation is done. For example 10 will give you a 10% higher conversion rate."); ?>
+<?php echo $this->__("If converting to a different currency, you can specify a percentage of how much more you would like to append to conversion when the conversion calculation is done. For example 10 will give you a 10% higher conversion rate."); ?>
     </div>
 </div>
 
-<div class="textfield setting"  id="title">
+<div class="textfield gss_setting"  id="title">
     <span class="title"><?php echo $this->__("title"); ?></span>
     <input type="textfield" class="config" id="selenium_title">
     <div class="description">
-        <?php echo $this->__f("Specify a title for your webshop."); ?>
+<?php echo $this->__f("Specify a title for your webshop."); ?>
     </div>
 </div>
 
-<div class="textfield setting"  id="postal_code">
+<div class="textfield gss_setting"  id="postal_code">
     <span class="title"><?php echo $this->__("postal", "contact"); ?></span>
     <input type="textfield" class="config" id="selenium_title">
     <div class="description">
-        <?php echo $this->__f("Specify your postal code."); ?>
+<?php echo $this->__f("Specify your postal code."); ?>
     </div>
 </div>
 
-<div class="onoff setting"  id="fadein">
+<div class="onoff gss_setting"  id="fadein">
     <span class="title"><?php echo $this->__f("Design"); ?></span>
-<div class="onoff config" id="selenium_trackControl"></div>
-<div class="description">
-        <?php echo $this->__("Add some eyecandy to your webshop, by activating this. It will show some nice fade in effects."); ?>
+	<div class="onoff config" id="selenium_trackControl"></div>
+	<div class="description">
+<?php echo $this->__("Add some eyecandy to your webshop, by activating this. It will show some nice fade in effects."); ?>
     </div>
 </div>
 
-<div class="onoff setting"  id="uniqueusersonemail">
+<div class="onoff gss_setting"  id="uniqueusersonemail">
     <span class="title"><?php echo $this->__f("Unique email addresses"); ?></span>
-<div class="onoff config" id="selenium_trackControl"></div>
-<div class="description">
-        <?php echo $this->__("Force users to be unique be email address, dont allow to create users if email does already exists."); ?>
+	<div class="onoff config" id="selenium_trackControl"></div>
+	<div class="description">
+<?php echo $this->__("Force users to be unique be email address, dont allow to create users if email does already exists."); ?>
     </div>
 </div>
 
-<div class="onoff setting"  id="remove_taxes">
+<div class="onoff gss_setting"  id="remove_taxes">
     <span class="title"><?php echo $this->__f("Show prices without taxes"); ?></span>
     <div class="onoff config" id="selenium_trackControl"></div>
     <div class="description">
-        <?php echo $this->__f("If you turn this feature on, all prices displayed on webshop will be shown with taxes removed."); ?>
+<?php echo $this->__f("If you turn this feature on, all prices displayed on webshop will be shown with taxes removed."); ?>
     </div>
 </div>
 
 
-<div class="onoff setting"  id="hide_search">
+<div class="onoff gss_setting"  id="hide_search">
     <span class="title"><?php echo $this->__f("Hide search bar"); ?></span>
-<div class="onoff config" id="selenium_trackControl"></div>
-<div class="description">
-        <?php echo $this->__f("Disable or enable the search bar in the top middle area."); ?>
+	<div class="onoff config" id="selenium_trackControl"></div>
+	<div class="description">
+<?php echo $this->__f("Disable or enable the search bar in the top middle area."); ?>
     </div>
 </div>
 
-<div class="onoff setting"  id="hide_cart">
+<div class="onoff gss_setting"  id="hide_cart">
     <span class="title"><?php echo $this->__("Hide cart"); ?></span>
-<div class="onoff config" id="selenium_trackControl"></div>
-<div class="description">
-        <?php echo $this->__f("You do not want to display the cart.. sure enable this then."); ?>
+	<div class="onoff config" id="selenium_trackControl"></div>
+	<div class="description">
+<?php echo $this->__f("You do not want to display the cart.. sure enable this then."); ?>
     </div>
 </div>
 
-<div class="onoff setting"  id="display_product_shipping_price">
+<div class="onoff gss_setting"  id="display_product_shipping_price">
     <span class="title"><?php echo $this->__("Display shipping price on products"); ?></span>
-<div class="onoff config" id="selenium_trackControl"></div>
-<div class="description">
-        <?php echo $this->__f("Do you want to display the shipping price in the detailed product view?"); ?>
+	<div class="onoff config" id="selenium_trackControl"></div>
+	<div class="description">
+<?php echo $this->__f("Do you want to display the shipping price in the detailed product view?"); ?>
     </div>
 </div>
 
-<div class="textfield setting"  id="favicon">
+<div class="textfield gss_setting"  id="favicon">
     <span class="title"><?php echo $this->__f("Favicon"); ?></span>
     <input type="textfield" class="config" id="selenium_title">
     <div class="description">
-        <?php echo $this->__f("Enter an address to your favicon."); ?>
+<?php echo $this->__f("Enter an address to your favicon."); ?>
     </div>
 </div>
 
-<div class="onoff setting"  id="registration">
+<div class="onoff gss_setting"  id="registration">
     <span class="title"><?php echo $this->__f("Registration"); ?></span>
     <div class="onoff config"></div>
     <div class="description">
-        <?php echo $this->__f("Are customers required to register to order?"); ?>
+<?php echo $this->__f("Are customers required to register to order?"); ?>
     </div>
 </div>
 
-<div class="onoff setting"  id="cookiewarning">
+<div class="onoff gss_setting"  id="cookiewarning">
     <span class="title"><?php echo $this->__f("Cookie warning"); ?></span>
     <div class="onoff config"></div>
     <div class="description">
-        <?php echo $this->__f("Warn users that cookies are being stored from this site?"); ?>
+<?php echo $this->__f("Warn users that cookies are being stored from this site?"); ?>
     </div>
 </div>
 
-<div class="onoff setting"  id="redirecttohomepage">
+<div class="onoff gss_setting"  id="redirecttohomepage">
     <span class="title"><?php echo $this->__f("Redirect to home page when not logged in"); ?></span>
     <div class="onoff config"></div>
     <div class="description">
-        <?php echo $this->__f("Redirect to home page when not logged in"); ?>
+<?php echo $this->__f("Redirect to home page when not logged in"); ?>
     </div>
 </div>
 
-<div class="onoff setting"  id="stoporderemail">
+<div class="onoff gss_setting"  id="stoporderemail">
     <span class="title"><?php echo $this->__f("Avoid sending emails on order"); ?></span>
     <div class="onoff config"></div>
     <div class="description">
-        <?php echo $this->__f("A reciept is being sent per email when an order is created, stop it from being sent."); ?>
+<?php echo $this->__f("A reciept is being sent per email when an order is created, stop it from being sent."); ?>
     </div>
 </div>
 
-<div class="list setting"  id="selltocountries">
-    <?
-    foreach($countrycodes as $code => $name) {
-        echo "<span class='listentry' value='$code' name='".$name."'></span>";
-    }
-    ?>
+<div class="list gss_setting"  id="selltocountries">
+	<?
+	foreach ($countrycodes as $code => $name) {
+		echo "<span class='listentry' value='$code' name='" . $name . "'></span>";
+	}
+	?>
     <span class="title"><?php echo $this->__f("Shipping to country"); ?></span>
     <span class="listentry"></span>
     <input type='text' class=" config text">
     <div class="description">
-        <?php echo $this->__f("What countries are you selling to?"); ?>
+<?php echo $this->__f("What countries are you selling to?"); ?>
     </div>
     <div class='selected_entries'></div>
 </div>
 
-<div class="list setting"  id="languages">
-    
-    <?
-    foreach($languages as $lang_code => $lang_name) {
-        echo "<span class='listentry' value='$lang_code' name='".$lang_name."'></span>";
-    }
-    ?>
-    
+<div class="list gss_setting"  id="languages">
+
+	<?
+	foreach ($languages as $lang_code => $lang_name) {
+		echo "<span class='listentry' value='$lang_code' name='" . $lang_name . "'></span>";
+	}
+	?>
+
     <span class="title"><?php echo $this->__f("Supported languages"); ?></span>
     <span class="listentry"></span>
     <input type='text' class=" config text">
     <div class="description">
-        <?php echo $this->__f("What languages are you supporting?"); ?>
+<?php echo $this->__f("What languages are you supporting?"); ?>
     </div>
     <div class='selected_entries'></div>
 </div>
@@ -545,14 +183,15 @@ $languages['fi_FI'] = "Finish";
 
 <br><br>
 
-<? if($this->getFactory()->getStore()->isDeepFreezed == 1) {?>
-    <div class="button toogleDeepfreeze needreload" style='float:left;'><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__("Deactivate Deepfreeze"); ?></ins></div><br><br>
+<? if ($this->getFactory()->getStore()->isDeepFreezed == 1) { ?>
+	<div class="button toogleDeepfreeze needreload" style='float:left;'><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__("Deactivate Deepfreeze"); ?></ins></div><br><br>
 <? } else { ?>
-    <div class="button toogleDeepfreeze needreload" style='float:left;'><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__("Activate Deepfreeze"); ?></ins></div><br><br>
+	<div class="button toogleDeepfreeze needreload" style='float:left;'><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__("Activate Deepfreeze"); ?></ins></div><br><br>
 <? } ?>
 <div class="button deletestore needreload" style='float:left;'><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__("Delete my store"); ?></ins></div>
 <br><br>
 
 <div class="button savebutton needreload"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__("Save settings"); ?></ins></div>
+
 
 

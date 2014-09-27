@@ -19,4 +19,6 @@ public interface ISettingsManager {
     
     @Administrator
     public List<ApplicationSettings> getDashBoardApplications() throws ErrorException;
+	
+	
 }

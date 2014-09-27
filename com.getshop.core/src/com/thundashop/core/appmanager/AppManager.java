@@ -7,9 +7,7 @@ import com.thundashop.core.appmanager.data.ApplicationSynchronization;
 import com.thundashop.core.appmanager.data.AvailableApplications;
 import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pagemanager.PageManager;
@@ -110,10 +108,6 @@ public class AppManager extends ManagerBase implements IAppManager {
             }
         }
 
-        if(id.equals("newapp")) {
-            return null;
-        }
-        
         return null;
     }
 
@@ -249,4 +243,10 @@ public class AppManager extends ManagerBase implements IAppManager {
         
         return new ArrayList(settings);
     }
+
+	@Override
+	public ApplicationSettings getApplicationSettings(String appSettingsId) throws ErrorException {
+		System.out.println("Setting: "  + appSettingsId);
+		return applicationPool.get(appSettingsId);
+	}
 }

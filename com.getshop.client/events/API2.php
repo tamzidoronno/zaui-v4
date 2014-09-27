@@ -89,6 +89,23 @@ class APIAppManager {
 	}
 
 	/**
+	* Returns an application setting for the given id.
+	*
+	* @param appSettingsId
+	* @return core_appmanager_data_ApplicationSettings
+	* @throws ErrorException
+	*/
+
+	public function getApplicationSettings($appSettingsId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["appSettingsId"] = json_encode($this->transport->object_unset_nulls($appSettingsId));
+	     $data["method"] = "getApplicationSettings";
+	     $data["interfaceName"] = "core.appmanager.IAppManager";
+	     return $this->transport->cast(new core_appmanager_data_ApplicationSettings(), $this->transport->sendMessage($data));
+	}
+
+	/**
 	* Get a list of all applicationsettings that is in
 	* use for this webopage.
 	*

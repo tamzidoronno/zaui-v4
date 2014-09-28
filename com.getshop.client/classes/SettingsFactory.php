@@ -7,11 +7,6 @@ class SettingsFactory extends FactoryBase {
 	public function initApp() {
 		if (isset($_POST['appid'])) {
 			$this->setApp($_POST['appid']);
-			$_SESSION['gss_settings_current_app_name'] = $_POST['appid'];
-		}
-		
-		if ($this->currentApplication == null && isset($_SESSION['gss_settings_current_app_name'])) {
-			$this->setApp($_SESSION['gss_settings_current_app_name']);
 		}
 		
 		if ($this->currentApplication == null) {
@@ -27,8 +22,7 @@ class SettingsFactory extends FactoryBase {
 	}
     
     public function renderContent() {
-		$this->initApp();
-        $this->currentApplication->renderConfig();
+		
     }
     
     public function includefile($filename, $overrideappname = NULL, $printError = true) {
@@ -38,7 +32,11 @@ class SettingsFactory extends FactoryBase {
 	public function json() {
 		$data = [];
 		ob_start();
-        $this->renderContent();
+        $this->initApp();
+		if (isset($_POST['gss_method'])) {
+			$this->currentApplication->{$_POST['gss_method']}();
+		}
+        $this->currentApplication->renderConfig();
         $html = ob_get_contents();
         ob_end_clean();
 		$data['data'] = $html;

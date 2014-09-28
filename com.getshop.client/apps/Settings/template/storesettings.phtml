@@ -29,7 +29,7 @@ $languages['fi_FI'] = "Finish";
     <div class="text inline title"><?php echo $this->__f("Please select your language"); ?></div>
 
 	<div class="gss_dropdown">
-		<select class="config">
+		<select class="config" gs_model='storesettings' gs_model_attr='language'>
 			<? foreach ($languages as $key => $lang) { ?>
 				<option value="<? echo $key; ?>"><? echo $lang; ?></option>
 			<? } ?>
@@ -39,7 +39,7 @@ $languages['fi_FI'] = "Finish";
 
 <div class="textfield gss_setting"  id="mainemailaddress">
     <span class="title"><?php echo $this->__f("Main email address"); ?></span>
-    <input type="textfield" class="config" placeholder="<? echo $this->getMainEmailAddress(); ?>">
+    <input type="textfield" gs_model='storesettings' gs_model_attr='emailaddress' value="<? echo $this->getMainEmailAddress(); ?>">
     <div class="description">
 		<?php echo $this->__("This is the main email address, if you change this all orders, contact forms and etc will be sent to this email address."); ?>
     </div>
@@ -49,7 +49,7 @@ $languages['fi_FI'] = "Finish";
 
 <div class="textfield gss_setting"  id="title">
     <span class="title"><?php echo $this->__("title"); ?></span>
-    <input type="textfield" class="config" id="selenium_title">
+    <input type="textfield" gs_model='storesettings' gs_model_attr='title'>
     <div class="description">
 		<?php echo $this->__f("Specify a title for your webshop."); ?>
     </div>
@@ -66,7 +66,7 @@ $languages['fi_FI'] = "Finish";
 
 <div class="onoff gss_setting"  id="fadein">
     <span class="title"><?php echo $this->__f("Design"); ?></span>
-	<div class="gss_onoff config">
+	<div class="gss_onoff">
 		Off<i class="fa fa-toggle-on"></i>On
 	</div>
 	<div class="description">
@@ -88,7 +88,7 @@ $languages['fi_FI'] = "Finish";
 
 <div class="gss_setting"  id="redirecttohomepage">
     <span class="title"><?php echo $this->__f("Redirect to home page when not logged in"); ?></span>
-    <div class="gss_onoff config">
+    <div class="gss_onoff" gs_model="storesettings" gs_model_attr="redirecttohomepage">
 		Off<i class="fa fa-toggle-on"></i>On
 	</div>
     <div class="description">
@@ -226,9 +226,9 @@ $languages['fi_FI'] = "Finish";
 	<? } else { ?>
 		<div class="gss_button toogleDeepfreeze needreload"><i class='fa fa-unlink'></i><?php echo $this->__("Activate Deepfreeze"); ?></div>
 	<? } ?>
-	<div class="gss_button deletestore needreload"><i class='fa fa-remove'></i><?php echo $this->__("Delete my store"); ?></div>
+	<div class="gss_button" gss_method="deleteStore"><i class='fa fa-remove'></i><?php echo $this->__("Delete my store"); ?></div>
 
-	<div class="gss_button savebutton needreload"><i class='fa fa-save'></i><?php echo $this->__("Save settings"); ?></div>
+	<div class="gss_button" gss_method="saveStoreSettings" gss_model="storesettings"><i class='fa fa-save'></i><?php echo $this->__("Save settings"); ?></div>
 </div>
 
 

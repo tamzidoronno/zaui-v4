@@ -279,14 +279,6 @@ inputs-moz-placeholder {
 	top: 10px;
 }
 
-.gss_onoff .fa-toggle-on {
-	color: #1fdb8e;
-}
-
-.gss_onoff .fa-toggle-off {
-	color: grey;
-}
-
 .gss_settings_header {
 	background-color: #FFF;
 	margin: 10px;
@@ -330,8 +322,6 @@ inputs-moz-placeholder {
 	text-decoration: none;
 	border-radius: 3px;
 	cursor: pointer;
-	
-
 }
 
 .gss_button:hover {

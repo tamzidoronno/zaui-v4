@@ -137,6 +137,7 @@ class Factory extends FactoryBase {
         echo "<script>GetShop = {}; scopeid='$scopid'</script>";
 //        echo '<script src="http://connect.facebook.net/en_US/all.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jquery-1.9.0.js"></script>';
+        echo "\n" . '<script type="text/javascript" src="js/watch.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jquery-migrate-1.2.1.js""></script>';
         echo "\n" . '<script type="text/javascript" src="js/jquery.placeholder.js""></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.Namespace.js"></script>';
@@ -145,6 +146,7 @@ class Factory extends FactoryBase {
         echo "\n" . '<script type="text/javascript" src="js/getshop.Skeleton.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.ImageEditor.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.BigStock.js"></script>';
+        echo "\n" . '<script type="text/javascript" src="js/getshop.Model.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jquery.history.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jquery.form.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jcrop/js/jquery.Jcrop.min.js"></script>';

@@ -66,7 +66,7 @@
 
     color : #FFF;
     margin-right: 20px;
-    margin-left: 30px;
+    margin-left: 10px;
     border: solid 1px #166497;
 }
 
@@ -81,8 +81,8 @@
 	min-height: 30px;
 	position: relative;
 	padding: 10px;
-	color: #FFF;
-	border-bottom: solid 1px #3aa9d7;
+	color: #444;
+	border-bottom: solid 1px #EEE;
 	padding-right: 350px;
 }
 
@@ -270,6 +270,7 @@ inputs-moz-placeholder {
 	font-size: 30px;
 	padding-left: 10px; 
 	padding-right: 10px;
+	color: #3a99d7;
 }
 .gss_onoff {
 	line-height: 30px;
@@ -286,6 +287,7 @@ inputs-moz-placeholder {
 	padding: 20px;
 	border-radius: 5px;
 	vertical-align: top;
+	box-shadow: 0px 0px 3px #333;
 }
 
 .gss_settings_header i {
@@ -313,19 +315,22 @@ inputs-moz-placeholder {
 }
 
 .gss_button {
-	background-image: linear-gradient(to bottom, #048304 1px, #048304 19px, #006b00 20px, #006b00 100% );
+	
+	background-image: linear-gradient(to bottom, #47a9e7 1px, #47a9e7 19px, #3a99d7 20px, #3a99d7 100% );
 	color: #FFF;
-	border: solid 1px #2f82b7;
+	
 	text-align: center;
 	display: inline-block;
 	padding: 10px;
+	color: #FFF;
 	text-decoration: none;
 	border-radius: 3px;
 	cursor: pointer;
+	border: solid 1px #1c6ea2;
 }
 
 .gss_button:hover {
-	background-image: linear-gradient(to bottom, #00b900 1px, #00b900 19px, #00c000 20px, #00c000 100% );
+	background-image: linear-gradient(to bottom, #63819f 1px, #63819f 19px, #466585 20px, #466585 100% );
 }
 
 
@@ -333,4 +338,5 @@ inputs-moz-placeholder {
 	margin-top: 20px;
 	padding-right: 10px;
 	text-align: right;
+	padding-bottom: 10px;
 }

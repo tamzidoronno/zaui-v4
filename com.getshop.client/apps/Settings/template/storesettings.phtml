@@ -25,211 +25,212 @@ $languages['fi_FI'] = "Finish";
 
 	</div>	
 </div>
-<div class="gss_setting" id="language">
-    <div class="text inline title"><?php echo $this->__f("Please select your language"); ?></div>
+<div style="background: #FFF; margin: 10px; border-radius: 5px; color: #000; box-shadow: 0px 0px 3px #333;">
+	<div class="gss_setting" id="language">
+		<div class="text inline title"><?php echo $this->__f("Please select your language"); ?></div>
 
-	<div class="gss_dropdown">
-		<select class="config" gs_model='storesettings' gs_model_attr='language'>
-			<? foreach ($languages as $key => $lang) { ?>
-				<option value="<? echo $key; ?>"><? echo $lang; ?></option>
-			<? } ?>
-		</select>
-	</div>
-</div>
-
-<div class="textfield gss_setting"  id="mainemailaddress">
-    <span class="title"><?php echo $this->__f("Main email address"); ?></span>
-    <input type="textfield" gs_model='storesettings' gs_model_attr='emailaddress' value="<? echo $this->getMainEmailAddress(); ?>">
-    <div class="description">
-		<?php echo $this->__("This is the main email address, if you change this all orders, contact forms and etc will be sent to this email address."); ?>
-    </div>
-</div>
-
-
-
-<div class="textfield gss_setting"  id="title">
-    <span class="title"><?php echo $this->__("title"); ?></span>
-    <input type="textfield" gs_model='storesettings' gs_model_attr='title'>
-    <div class="description">
-		<?php echo $this->__f("Specify a title for your webshop."); ?>
-    </div>
-</div>
-
-
-<div class="textfield gss_setting"  id="favicon">
-    <span class="title"><?php echo $this->__f("Favicon"); ?></span>
-    <input type="textfield" class="config" id="selenium_title">
-    <div class="description">
-		<?php echo $this->__f("Enter an address to your favicon."); ?>
-    </div>
-</div>
-
-<div class="onoff gss_setting"  id="fadein">
-    <span class="title"><?php echo $this->__f("Design"); ?></span>
-	<div class="gss_onoff">
-		Off<i class="fa fa-toggle-on"></i>On
-	</div>
-	<div class="description">
-		<?php echo $this->__("Add some eyecandy to your webshop, by activating this. It will show some nice fade in effects."); ?>
-    </div>
-</div>
-
-<div class="onoff gss_setting"  id="uniqueusersonemail">
-    <span class="title"><?php echo $this->__f("Unique email addresses"); ?></span>
-	<div class="gss_onoff config">
-		Off<i class="fa fa-toggle-on"></i>On
-	</div>
-	<div class="description">
-		<?php echo $this->__("Force users to be unique be email address, dont allow to create users if email does already exists."); ?>
-    </div>
-</div>
-
-
-
-<div class="gss_setting"  id="redirecttohomepage">
-    <span class="title"><?php echo $this->__f("Redirect to home page when not logged in"); ?></span>
-    <div class="gss_onoff" gs_model="storesettings" gs_model_attr="redirecttohomepage">
-		Off<i class="fa fa-toggle-on"></i>On
-	</div>
-    <div class="description">
-		<?php echo $this->__f("Redirect to home page when not logged in"); ?>
-    </div>
-</div>
-
-
-
-
-<div style='display: none'>
-
-
-	<div class="onoff gss_setting"  id="remove_taxes">
-		<span class="title"><?php echo $this->__f("Show prices without taxes"); ?></span>
-		<div class="gss_onoff config">
-			Off<i class="fa fa-toggle-off"></i>On
+		<div class="gss_dropdown">
+			<select class="config" gs_model='storesettings' gs_model_attr='language'>
+				<? foreach ($languages as $key => $lang) { ?>
+					<option value="<? echo $key; ?>"><? echo $lang; ?></option>
+				<? } ?>
+			</select>
 		</div>
+	</div>
+
+	<div class="textfield gss_setting"  id="mainemailaddress">
+		<span class="title"><?php echo $this->__f("Main email address"); ?></span>
+		<input type="textfield" gs_model='storesettings' gs_model_attr='emailaddress' value="<? echo $this->getMainEmailAddress(); ?>">
 		<div class="description">
-			<?php echo $this->__f("If you turn this feature on, all prices displayed on webshop will be shown with taxes removed."); ?>
+			<?php echo $this->__("This is the main email address, if you change this all orders, contact forms and etc will be sent to this email address."); ?>
 		</div>
 	</div>
 
 
-	<div class="onoff gss_setting"  id="display_product_shipping_price">
-		<span class="title"><?php echo $this->__("Display shipping price on products"); ?></span>
-		<div class="gss_onoff config">
-			Off<i class="fa fa-toggle-on"></i>On
-		</div>
+
+	<div class="textfield gss_setting"  id="title">
+		<span class="title"><?php echo $this->__("title"); ?></span>
+		<input type="textfield" gs_model='storesettings' gs_model_attr='title'>
 		<div class="description">
-			<?php echo $this->__f("Do you want to display the shipping price in the detailed product view?"); ?>
+			<?php echo $this->__f("Specify a title for your webshop."); ?>
 		</div>
 	</div>
 
-	<div class="textfield gss_setting"  id="postal_code">
-		<span class="title"><?php echo $this->__("postal", "contact"); ?></span>
+
+	<div class="textfield gss_setting"  id="favicon">
+		<span class="title"><?php echo $this->__f("Favicon"); ?></span>
 		<input type="textfield" class="config" id="selenium_title">
 		<div class="description">
-			<?php echo $this->__f("Specify your postal code."); ?>
-		</div>
-	</div>
-	<div class="textfield gss_setting"  id="conversion_addition">
-		<span class="title"><?php echo $this->__f("Conversion rate addition"); ?></span>
-		<input type="textfield" class="config" id="selenium_title">
-		<div class="description">
-			<?php echo $this->__("If converting to a different currency, you can specify a percentage of how much more you would like to append to conversion when the conversion calculation is done. For example 10 will give you a 10% higher conversion rate."); ?>
+			<?php echo $this->__f("Enter an address to your favicon."); ?>
 		</div>
 	</div>
 
-	<div class="onoff gss_setting"  id="hide_cart">
-		<span class="title"><?php echo $this->__("Hide cart"); ?></span>
-		<div class="gss_onoff config">
-			Off<i class="fa fa-toggle-off"></i>On
+	<div class="onoff gss_setting"  id="fadein">
+		<span class="title"><?php echo $this->__f("Design"); ?></span>
+		<div class="gss_onoff">
+			Off<i class="fa fa-toggle-on"></i>On
 		</div>
 		<div class="description">
-			<?php echo $this->__f("You do not want to display the cart.. sure enable this then."); ?>
+			<?php echo $this->__("Add some eyecandy to your webshop, by activating this. It will show some nice fade in effects."); ?>
 		</div>
 	</div>
 
-	<div class="onoff gss_setting"  id="hide_search">
-		<span class="title"><?php echo $this->__f("Hide search bar"); ?></span>
+	<div class="onoff gss_setting"  id="uniqueusersonemail">
+		<span class="title"><?php echo $this->__f("Unique email addresses"); ?></span>
 		<div class="gss_onoff config">
 			Off<i class="fa fa-toggle-on"></i>On
 		</div>
 		<div class="description">
-			<?php echo $this->__f("Disable or enable the search bar in the top middle area."); ?>
+			<?php echo $this->__("Force users to be unique be email address, dont allow to create users if email does already exists."); ?>
 		</div>
 	</div>
 
-	<div class="onoff gss_setting"  id="registration">
-		<span class="title"><?php echo $this->__f("Registration"); ?></span>
-		<div class="gss_onoff config">
+
+
+	<div class="gss_setting"  id="redirecttohomepage">
+		<span class="title"><?php echo $this->__f("Redirect to home page when not logged in"); ?></span>
+		<div class="gss_onoff" gs_model="storesettings" gs_model_attr="redirecttohomepage">
 			Off<i class="fa fa-toggle-on"></i>On
 		</div>
 		<div class="description">
-			<?php echo $this->__f("Are customers required to register to order?"); ?>
+			<?php echo $this->__f("Redirect to home page when not logged in"); ?>
 		</div>
 	</div>
 
-	<div class="onoff gss_setting"  id="cookiewarning">
-		<span class="title"><?php echo $this->__f("Cookie warning"); ?></span>
-		<div class="gss_onoff config">
-			Off<i class="fa fa-toggle-on"></i>On
+
+	<div style='display: none'>
+
+
+		<div class="onoff gss_setting"  id="remove_taxes">
+			<span class="title"><?php echo $this->__f("Show prices without taxes"); ?></span>
+			<div class="gss_onoff config">
+				Off<i class="fa fa-toggle-off"></i>On
+			</div>
+			<div class="description">
+				<?php echo $this->__f("If you turn this feature on, all prices displayed on webshop will be shown with taxes removed."); ?>
+			</div>
 		</div>
-		<div class="description">
-			<?php echo $this->__f("Warn users that cookies are being stored from this site?"); ?>
+
+
+		<div class="onoff gss_setting"  id="display_product_shipping_price">
+			<span class="title"><?php echo $this->__("Display shipping price on products"); ?></span>
+			<div class="gss_onoff config">
+				Off<i class="fa fa-toggle-on"></i>On
+			</div>
+			<div class="description">
+				<?php echo $this->__f("Do you want to display the shipping price in the detailed product view?"); ?>
+			</div>
+		</div>
+
+		<div class="textfield gss_setting"  id="postal_code">
+			<span class="title"><?php echo $this->__("postal", "contact"); ?></span>
+			<input type="textfield" class="config" id="selenium_title">
+			<div class="description">
+				<?php echo $this->__f("Specify your postal code."); ?>
+			</div>
+		</div>
+		<div class="textfield gss_setting"  id="conversion_addition">
+			<span class="title"><?php echo $this->__f("Conversion rate addition"); ?></span>
+			<input type="textfield" class="config" id="selenium_title">
+			<div class="description">
+				<?php echo $this->__("If converting to a different currency, you can specify a percentage of how much more you would like to append to conversion when the conversion calculation is done. For example 10 will give you a 10% higher conversion rate."); ?>
+			</div>
+		</div>
+
+		<div class="onoff gss_setting"  id="hide_cart">
+			<span class="title"><?php echo $this->__("Hide cart"); ?></span>
+			<div class="gss_onoff config">
+				Off<i class="fa fa-toggle-off"></i>On
+			</div>
+			<div class="description">
+				<?php echo $this->__f("You do not want to display the cart.. sure enable this then."); ?>
+			</div>
+		</div>
+
+		<div class="onoff gss_setting"  id="hide_search">
+			<span class="title"><?php echo $this->__f("Hide search bar"); ?></span>
+			<div class="gss_onoff config">
+				Off<i class="fa fa-toggle-on"></i>On
+			</div>
+			<div class="description">
+				<?php echo $this->__f("Disable or enable the search bar in the top middle area."); ?>
+			</div>
+		</div>
+
+		<div class="onoff gss_setting"  id="registration">
+			<span class="title"><?php echo $this->__f("Registration"); ?></span>
+			<div class="gss_onoff config">
+				Off<i class="fa fa-toggle-on"></i>On
+			</div>
+			<div class="description">
+				<?php echo $this->__f("Are customers required to register to order?"); ?>
+			</div>
+		</div>
+
+		<div class="onoff gss_setting"  id="cookiewarning">
+			<span class="title"><?php echo $this->__f("Cookie warning"); ?></span>
+			<div class="gss_onoff config">
+				Off<i class="fa fa-toggle-on"></i>On
+			</div>
+			<div class="description">
+				<?php echo $this->__f("Warn users that cookies are being stored from this site?"); ?>
+			</div>
+		</div>
+
+		<div class="onoff gss_setting"  id="stoporderemail">
+			<span class="title"><?php echo $this->__f("Avoid sending emails on order"); ?></span>
+			<div class="gss_onoff config">
+				Off<i class="fa fa-toggle-off"></i>On
+			</div>
+			<div class="description">
+				<?php echo $this->__f("A reciept is being sent per email when an order is created, stop it from being sent."); ?>
+			</div>
+		</div>
+
+		<div class="list gss_setting"  id="selltocountries">
+			<?
+			foreach ($countrycodes as $code => $name) {
+				echo "<span class='listentry' value='$code' name='" . $name . "'></span>";
+			}
+			?>
+			<span class="title"><?php echo $this->__f("Shipping to country"); ?></span>
+			<span class="listentry"></span>
+			<input type='text' class=" config text">
+			<div class="description">
+				<?php echo $this->__f("What countries are you selling to?"); ?>
+			</div>
+			<div class='selected_entries'></div>
+		</div>
+
+		<div class="list gss_setting"  id="languages">
+
+			<?
+			foreach ($languages as $lang_code => $lang_name) {
+				echo "<span class='listentry' value='$lang_code' name='" . $lang_name . "'></span>";
+			}
+			?>
+
+			<span class="title"><?php echo $this->__f("Supported languages"); ?></span>
+			<span class="listentry"></span>
+			<input type='text' class=" config text">
+			<div class="description">
+				<?php echo $this->__f("What languages are you supporting?"); ?>
+			</div>
+			<div class='selected_entries'></div>
 		</div>
 	</div>
+	<div class='gss_button_area'>
+		<? if ($this->getFactory()->getStore()->isDeepFreezed == 1) { ?>
+			<div class="gss_button toogleDeepfreeze needreload"><?php echo $this->__("Deactivate Deepfreeze"); ?></div>
+		<? } else { ?>
+			<div class="gss_button toogleDeepfreeze needreload"><i class='fa fa-unlink'></i><?php echo $this->__("Activate Deepfreeze"); ?></div>
+		<? } ?>
+		<div class="gss_button" gss_method="deleteStore"><i class='fa fa-remove'></i><?php echo $this->__("Delete my store"); ?></div>
 
-	<div class="onoff gss_setting"  id="stoporderemail">
-		<span class="title"><?php echo $this->__f("Avoid sending emails on order"); ?></span>
-		<div class="gss_onoff config">
-			Off<i class="fa fa-toggle-off"></i>On
-		</div>
-		<div class="description">
-			<?php echo $this->__f("A reciept is being sent per email when an order is created, stop it from being sent."); ?>
-		</div>
+		<div class="gss_button" gss_method="saveStoreSettings" gss_model="storesettings"><i class='fa fa-save'></i><?php echo $this->__("Save settings"); ?></div>
 	</div>
 
-	<div class="list gss_setting"  id="selltocountries">
-		<?
-		foreach ($countrycodes as $code => $name) {
-			echo "<span class='listentry' value='$code' name='" . $name . "'></span>";
-		}
-		?>
-		<span class="title"><?php echo $this->__f("Shipping to country"); ?></span>
-		<span class="listentry"></span>
-		<input type='text' class=" config text">
-		<div class="description">
-			<?php echo $this->__f("What countries are you selling to?"); ?>
-		</div>
-		<div class='selected_entries'></div>
-	</div>
 
-	<div class="list gss_setting"  id="languages">
 
-		<?
-		foreach ($languages as $lang_code => $lang_name) {
-			echo "<span class='listentry' value='$lang_code' name='" . $lang_name . "'></span>";
-		}
-		?>
-
-		<span class="title"><?php echo $this->__f("Supported languages"); ?></span>
-		<span class="listentry"></span>
-		<input type='text' class=" config text">
-		<div class="description">
-			<?php echo $this->__f("What languages are you supporting?"); ?>
-		</div>
-		<div class='selected_entries'></div>
-	</div>
 </div>
-<div class='gss_button_area'>
-	<? if ($this->getFactory()->getStore()->isDeepFreezed == 1) { ?>
-		<div class="gss_button toogleDeepfreeze needreload"><?php echo $this->__("Deactivate Deepfreeze"); ?></div>
-	<? } else { ?>
-		<div class="gss_button toogleDeepfreeze needreload"><i class='fa fa-unlink'></i><?php echo $this->__("Activate Deepfreeze"); ?></div>
-	<? } ?>
-	<div class="gss_button" gss_method="deleteStore"><i class='fa fa-remove'></i><?php echo $this->__("Delete my store"); ?></div>
-
-	<div class="gss_button" gss_method="saveStoreSettings" gss_model="storesettings"><i class='fa fa-save'></i><?php echo $this->__("Save settings"); ?></div>
-</div>
-
-
 

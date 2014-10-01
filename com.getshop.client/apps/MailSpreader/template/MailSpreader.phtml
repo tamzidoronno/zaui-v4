@@ -1,0 +1,25 @@
+<br>
+<h1><? echo $this->__w("Your name"); ?></h1>
+<input type="text" class="inputname">
+<br>
+<form action="">
+    <table style="width:100%;" class="emailspreader">
+        <thead>
+            <tr>
+                <th align="left"><? echo $this->__w("Name"); ?></th>
+                <th align="left"><? echo $this->__w("Email address"); ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <? for($i = 0; $i < 3; $i++) { ?>
+                <tr>
+                    <td width="50%"><input type="text" placeholder="<? echo $this->__w("Name of person"); ?>" class="name"></td>
+                    <td width="50%" align="right"><input type="text" placeholder="<? echo $this->__w("Email adress to person"); ?>" class="email"></td>
+                </tr>
+            <? } ?>
+        </tbody>
+    </table>
+    <br>
+    <span class="addcontacts"><? echo $this->__w("Add more contacts"); ?></span>
+    <span class="sendcontacts"><? echo $this->__w("Send form"); ?></span>
+</form>

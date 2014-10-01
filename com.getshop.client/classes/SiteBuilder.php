@@ -120,7 +120,7 @@ class SiteBuilder extends ApplicationBase {
         }
         
         if ($productid) {
-            $appconfig = $this->getApi()->getPageManager()->addApplicationToRow($this->page->id, "b741283d-920d-460b-8c08-fad5ef4294cb", $where);
+            $appconfig = $this->getApi()->getPageManager()->addApplicationToPage($this->page->id, "b741283d-920d-460b-8c08-fad5ef4294cb", $where);
 
             $app = new \ns_b741283d_920d_460b_8c08_fad5ef4294cb\ProductWidget();
             $app->setConfiguration($appconfig);
@@ -209,7 +209,7 @@ class SiteBuilder extends ApplicationBase {
     }
 
     public function addProduct() {
-        $app = $this->api->getPageManager()->addApplicationToRow($this->page->id, "06f9d235-9dd3-4971-9b91-88231ae0436b", "product");
+        $app = $this->api->getPageManager()->addApplicationToPage($this->page->id, "06f9d235-9dd3-4971-9b91-88231ae0436b", "product");
         return $app;
     }
     
@@ -231,7 +231,7 @@ class SiteBuilder extends ApplicationBase {
         $this->getApi()->getPageManager()->savePage($this->page);
         
         $pageBuilder->addPredefinedContent("product", $layouts[$layoutIndex]);
-        $this->addProduct();
+        
         
         /* @var $product core_productmanager_data_Product */
         $product = $this->getApi()->getProductManager()->getProductByPage($this->page->id);
@@ -240,6 +240,8 @@ class SiteBuilder extends ApplicationBase {
         
         $this->getApi()->getProductManager()->saveProduct($product);
         
+		$this->addProduct();
+		
         return $this->page->id;
     }
 

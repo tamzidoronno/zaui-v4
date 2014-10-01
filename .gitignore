@@ -78,6 +78,7 @@ com.getshop.remote/import/import.txt
 com.getshop.remote/nbproject/project.properties
 
 com.getshop.client/etc/config.txt
+com.getshop.client/ROOT/cssfolder
 /com.getshop.client/com.getshop.javaapi/nbproject/private/
 /com.getshop.javaapi/build/
 /com.getshop.javaapi/dist/

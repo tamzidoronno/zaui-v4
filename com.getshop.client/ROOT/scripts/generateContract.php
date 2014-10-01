@@ -47,7 +47,7 @@ foreach($products as $product) {
 }
 
 if(!$selectedProduct) {
-    echo "Product not found. :( on " . $product->sku;
+    echo "Product not found. :( on " . $selectedType->name;
     exit(0);
 }
 

@@ -83,6 +83,9 @@ class MailSpreader extends \ApplicationBase implements \Application {
             $content = str_replace("{name}", $toname, $content);
             $subject = str_replace("{name}", $toname, $subject);
             
+            $content = str_replace("{tipser}", $name, $content);
+            $subject = str_replace("{tipser}", $name, $subject);
+            
             if (!isset($savedEntries[$name][$toemail]) && $toname && $toemail) {
                 $this->getApi()->getMessageManager()->sendMail($toemail, $name, $subject, $content, "Notification", $fromEmail);
                 $savedEntries[$name][$toemail] = $toname;

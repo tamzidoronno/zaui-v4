@@ -7,9 +7,9 @@ A confirmation email has been sent to your email.;-;En bekreftelse er sendt til 
 A confirmation email has been sent to your email. Enjoy your stay at {hotel}.;-;En bekreftelse er sendt til din e-post. Ha et hyggelig opphold hos {hotel}.
 A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
 Add a room;-;Legg til et rom
+Add more contacts;-;Legg til flere deltagere
 Add to cart;-;Legg i handlekurv
 Additional contact data;-;Ekstra kontaktinformasjon
-Additional contact information;-;Ekstra kontaktinformasjon
 Address;-;Adresse
 All fields are required;-;Alle felt er påkrevd
 All fields are required, please fill in the fields in red.;-;Alle felt er påkrevd, vennligst fyll ut felter i rødt.
@@ -57,7 +57,6 @@ Complete the order;-;Fullfør reservasjon
 Completed;-;Gjennomført
 Confirm order;-;Bekreft ordre
 Contact information;-;Kontaktinformasjon
-Contact information related to the booking event;-;Kontaktinformasjon relatert til din booking
 Continue;-;Fortsett
 Continue to payment;-;Fortsett til betaling
 Cookies are being stored;-;Cookier blir lagret
@@ -68,7 +67,6 @@ Current users added to this booking;-;Brukere som er lagt til
 Customer information;-;Kunde detaljer
 Date;-;Dato
 Day;-;Dag
-Dear {name};-;Kjære {name}
 December;-;Desember
 Delete image;-;Slett bilde
 Did not find the specified company, please check your company number;-;Fant ikke det angitte firmaet, vennligst sjekk organisasjonret
@@ -78,7 +76,9 @@ Download ebill;-;Last ned ebill
 END;-;SLUTT
 Email;-;Epost
 Email address;-;Epost adresse
+Email adress to person;-;E-post adresse til vedkommende
 Email sent;-;Epost sendt
+Email text;-;Epost tekst
 End date;-;Slutt dato
 Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.L
 Failed;-;Feilet
@@ -121,6 +121,7 @@ Mva registered;-;Registrert i mva registeret
 My Account;-;Min konto
 My name is:;-;Mitt navn er
 Name;-;Navn
+Name of person;-;Navn på vedkommende
 New message;-;Ny melding
 New password;-;Nytt passord
 New room type;-;Ny rom type
@@ -147,6 +148,7 @@ Original (nm);-;Original nm
 Our local time is:;-;Vår lokale tid er
 PRICE PER MONTH;-;PRIS PER MÅNED
 PRICE PER NIGHT;-;PRIS PER NATT
+Participients;-;Deltagere
 Password;-;Passord
 Password cannot be empty;-;Passordet kan ikke være tomt.
 Password does not match, please re enter password;-;Passordet stemmer ikke oversens, prøv på nytt.
@@ -203,6 +205,7 @@ Select size;-;Velg størrelse
 Select start date;-;Velg start dato
 Select your car;-;Velg din bil
 Select your storage room;-;Velg størrelse på lagerbod.
+Send form;-;Send inn skjema
 Send me a code;-;Send meg koden
 Send message;-;Send melding
 Send us mail;-;Send oss en epost
@@ -239,25 +242,20 @@ Terms and Conditions;-;Bruksvilkår
 Th;-;To
 Thank you for checking into our hotel. A confirmation mail has been sent to your email.;-;Takk for at du sjekker inn på vårt hotel. En bekreftelse er sendt til din e-post.
 Thank you for ordering with Sisow ebill;-;Takk for at du bestilte med Sisow ebill
+Thank you for participating in our campaign.;-;Takk for at du ville delta på vår kampanje.
 Thank you for renting a storage room from us. A confirmation mail has been sent to your email.;-;Takk for at du benytter deg av en våre boder. En bekreftelse er sendt til din e-post.
 Thank you for your booking a room at;-;Takk for at du reserverer et room hos
 Thank you for your booking a storage room at;-;Takk for at du reserverer en bod hos
 Thank you for your order, an email has been sent to you with the invoice attached. We will ship the items as soon as we have received the payment.;-;Takk for din bestilling, en epost har blitt sendt med fakturaen vedlagt. Vi sender bestillingen når vi har mottat betalingen.
 Thank you for your order.;-;Takk for din bestilling.
 Thank you, you will now be redirected to the payment service;-;Takk, du blir nå overført til betalingstjenesten
-The code for the room is : {code}.;-;Koden for rommet er : {code}
 The company is mva registered;-;Firmaet er registrert i mva registeret
 The company you have selected could not be found in brreg.;-;Firmaet du har valgt eksisterer ikke i brønnøysundregisteret.
 The email address is invalid.;-;Eposten din er ugyldig.
 The email already exists, please log on to continue.;-;Eposten eksisterer allerede, vennligst logg på for å fortsette.
 The event has been confirmed.;-;Eventent har blitt bekreftet.
 The passwords does not match.;-;Passordet stemmer ikke overens.
-The reserved room is : {roomName}.;-;Det reserverte rommet er : {roomName}.
-The reserved storage room is : {roomName}.;-;Følgende bod har blitt reservert for deg : {roomName}.
-The room has been reserved between {start} to {end}.;-;Rommet har blitt reservert mellom {start} og {end}.
-The room has been reserved from {start}.;-;Din bod har blitt reservert fra {start}.
 There is no entries for this event;-;Finnes inne noe for akkurat dette kurset
-This email is a confirmation that we have reserved a room for you.;-;Denne eposten er en bekreftelse på din reservasjon på rom.
 This event has the following entries;-;Dette kurset finner du i kalenderen på følgende dager
 This is a {} days event.;-;Dette er et {} dagers event.
 This page is only available for adminsitrators;-;Denne siden er kun tilgjengelig for adminstratorer.
@@ -265,7 +263,10 @@ This page is only available for editors.;-;Denne siden er kun tilgjengelig for e
 This page is only available for registered users.;-;Denne siden er kun tilgjengelig for registrerte brukere
 This user has not attended any events yet;-;Denne brukeren har ikke deltatt på noen eventer enda
 Thursday;-;Torsdag
+Tipser;-;Tipser
 To be able to serve you we need to store a tiny amount of data about your browser. An identification id is being generated and added to your web browser. This allows us to track you for a two hours periode while you are navigating this site. This data is anonymous and are only being used to identify your web browser and not you as a person.;-;For at det skal være mulig bruke denne web siden må vi lagre en liten bit av data på din nettleser. Dette er en identifikasjons id som gjør det mulig å identifisere deg som en bruker mens du surfer på denne siden. Denne dataen blir lagret i 20 timer og er 100% anonym.
+To email;-;Til epost
+To name;-;Til navn
 Top speed;-;Topp hastighet
 Total;-;Total
 Total price;-;Total pris
@@ -305,7 +306,6 @@ Your order has been canceled due to incorrect payment information, please try ag
 Your order has now been completed and is waiting to be shipped.;-;Orderen din har blitt gjennomført og venter på å bli sendt.
 Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;Du vil snart motta en epost med din ebill, eller så kan du last den ned på følgende link
 Your personal information;-;Din personlige informasjon
-Your reference number is : {referenceNumber}.;-;Ditt referansenummer er : {referenceNumber}.
 available room;-;tilgjengelige rom
 available rooms;-;tilgjengelige rom
 change;-;endre

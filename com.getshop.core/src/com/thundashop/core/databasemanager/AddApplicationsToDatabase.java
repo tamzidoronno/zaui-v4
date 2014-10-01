@@ -55,15 +55,25 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        ApplicationSettings hotelvask = createSettings(
-                "HotelbookingCleaning",
-                "020b57c2-8f80-46e1-a420-cb163f4fb2d2",
+        ApplicationSettings mailspreader = createSettings(
+                "MailSpreader",
+                "d2e1d2b4-b604-46a4-a298-0b8161e00715",
                 allowed,
                 "",
                 ApplicationSettings.Type.Webshop, false);
-        hotelvask.isPublic = false;
-        apps.add(hotelvask);
-         
+        mailspreader.isPublic = false;
+        apps.add(mailspreader);
+        
+//        
+//        ApplicationSettings hotelvask = createSettings(
+//                "HotelbookingCleaning",
+//                "020b57c2-8f80-46e1-a420-cb163f4fb2d2",
+//                allowed,
+//                "",
+//                ApplicationSettings.Type.Webshop, false);
+//        hotelvask.isPublic = false;
+//        apps.add(hotelvask);
+//         
 //        ApplicationSettings sedoxMenu = createSettings(
 //                "SedoxMenu",
 //                "b23a3767-1f7b-40e3-93c5-65504ebaa73c",

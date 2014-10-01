@@ -211,6 +211,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         reference.startDate = start;
         reference.endDate = end;
         reference.sentWelcomeMessages = false;
+        if(getSession().currentUser != null) {
+            reference.sentWelcomeMessages = true;
+        }
+        
+        
         reference.language = language;
         for (int i = 0; i < count; i++) {
             Room room = getAvailableRoom(roomtype.id, start, end);

@@ -133,6 +133,18 @@ $uploadedByUser = $this->getUploadedUserName($sedoxProduct);
             <br><b>Uploaded from: </b>
             <br><? echo $sedoxProduct->uploadOrigin; ?>
             <br>
+			<br><b>Automatic gear: </b> 
+				
+				<? 
+				if ($sedoxProduct->gearType == "auto") {
+                    echo "<span style='color:green'>Yes</span>";
+                } else {
+                    echo "<span style='color:red'>No</span>";
+                }
+				
+				?>
+			
+			<br>
             <br><b>Withdraw credit:</b> <?
                 if ($sedoxProduct->useCreditAccount == "true") {
                     echo "<span style='color:green'>Yes</span>";

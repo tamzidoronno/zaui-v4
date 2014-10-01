@@ -1,9 +1,28 @@
+<?
+$sedoxProduct = $this->getExistingProduct();
+$name = $sedoxProduct->brand . " " . $sedoxProduct->model . " " . $sedoxProduct->engineSize . " " . $sedoxProduct->power . " " . $sedoxProduct->year . " " . $sedoxProduct->originalChecksum ;
+$checksum = $sedoxProduct->originalChecksum ? $sedoxProduct->originalChecksum : "";
+?>
+
 <div class='step step2 match'>
     <div class='step_title'>File matched.</div>
 
     <div class='subinfo'>   
         You have two choices, use the already existing file or ask for a tuningfile that is to your specifications.
-        
+        <div class="productdetails">
+			<div><b>We have the following information registered on the file you uploaded</b></div>
+			<div><? echo $name; ?></div>
+			<div>
+				<b>Files that already exists:</b>
+				<?
+				foreach ($sedoxProduct->binaryFiles as $binFile) {
+					$type = $binFile->fileType;
+					echo "<div>&nbsp;&nbsp;&nbsp; $type</div>";
+				}
+				?>
+				
+			</div>
+		</div>
         <div class='sedox_match_options'>
             <a href='?page=productview&productId=<? echo $this->getExistingProduct()->id; ?>'>
                 <div class='sedox_match_option'>

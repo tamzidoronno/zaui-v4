@@ -163,6 +163,12 @@ public class ManagerBase {
      * @throws ErrorException 
      */
     public void updateTranslation(Object object, boolean loading) throws ErrorException {
+		
+		// If there is no session there is most likely no translation to update?
+		if (getSession() == null) {
+			return;
+		}
+		
         HashMap<String, Setting> settings = getSettings("Settings");
         if(settings != null && settings.containsKey("languages")) {
             Gson sgon = new Gson();

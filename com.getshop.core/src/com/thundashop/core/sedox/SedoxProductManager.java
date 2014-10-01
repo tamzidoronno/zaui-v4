@@ -1031,6 +1031,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         
         if (special == null) {
             content += "<br>Tool: " + sedoxProduct.tool;
+            content += "<br>Gearbox: " + sedoxProduct.gearType;
             content += "<br>Comment: ";
             content += "<br> " + sedoxProduct.comment;
             content += "<br>";

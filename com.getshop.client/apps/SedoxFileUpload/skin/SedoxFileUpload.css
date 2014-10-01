@@ -137,3 +137,9 @@
 .SedoxFileUpload .placeholder { color: #aaa; }
 
 .SedoxFileUpload .md5sumsearchresult { text-align:  center; color: green; padding-top: 10px;}
+
+.SedoxFileUpload .productdetails {
+	border: solid 1px;
+	margin-top: 10px;
+	padding: 10px;
+}

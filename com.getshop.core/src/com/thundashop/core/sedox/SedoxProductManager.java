@@ -548,6 +548,12 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         }
         totalPrice = totalPrice - alreadySpentOnProduct;
         
+		
+		// Make sure that the user does not pay for its own original file.
+		if (totalPrice == 40 && sedoxProduct.firstUploadedByUserId != null && sedoxProduct.firstUploadedByUserId.equals(user.id) ) {
+			totalPrice = 0;
+		}
+		
         SedoxOrder order = new SedoxOrder();
         order.productId = sedoxProduct.id;
         order.creditAmount = totalPrice;
@@ -1054,7 +1060,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 spent += order.creditAmount;
             }
         }
-        
+		
         return spent;
     }
 

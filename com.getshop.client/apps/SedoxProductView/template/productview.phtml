@@ -165,6 +165,7 @@ $uploadedByUser = $this->getUploadedUserName($sedoxProduct);
 	
         ?>
         <div class="adminbottons">
+            <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button savechecksumonly">Save checksum only</div>
             <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button purchaseorderonly <? echo $class1; ?>">Purchase order only</div>
             <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button notifybyemailandsms <? echo $class2; ?>">Notify by email and sms</div>
             <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button sendproductbyemail <? echo $class3; ?>">Send product by email</div>

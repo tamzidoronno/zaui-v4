@@ -153,9 +153,9 @@ class SedoxProductView extends \ApplicationBase implements \Application {
     }
     
     public function toggleSaleableProduct() {
-	$productId = $_POST['data']['productId'];
-	$saleable = $_POST['data']['saleAble'];
-	$this->getApi()->getSedoxProductManager()->toggleSaleableProduct($productId, $saleable);
+		$productId = $_POST['data']['productId'];
+		$saleable = $_POST['data']['saleAble'];
+		$this->getApi()->getSedoxProductManager()->toggleSaleableProduct($productId, $saleable);
     }
 }
 ?>

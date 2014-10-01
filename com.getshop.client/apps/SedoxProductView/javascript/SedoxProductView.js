@@ -72,6 +72,7 @@ app.SedoxProductView = {
             
     init: function() {
         var me = this;
+        $(document).on('click', '.SedoxProductView .savechecksumonly', app.SedoxProductView.saveCheckSum);
         $(document).on('click', '.SedoxProductView .purchase', app.SedoxProductView.purchaseFile);
         $(document).on('click', '.SedoxProductView .purchaseorderonly', app.SedoxProductView.purchaseorderonly);
         $(document).on('click', '.SedoxProductView .notifybyemailandsms', app.SedoxProductView.notifybyemailandsms);
@@ -115,6 +116,12 @@ app.SedoxProductView = {
         $('#extrafileinformationbox').val(text);
     },
             
+	saveCheckSum: function() {
+		var data = app.SedoxProductView.getData(this);
+        var event = thundashop.Ajax.createEvent("", "setOrginalCheckSum", this, data);
+        thundashop.Ajax.post(event, function() { thundashop.common.Alert("Success", "Updated completed")} );
+	},
+	
     changeInfo: function()  {
         var data = {
             fileid: $(this).attr('fileid'),

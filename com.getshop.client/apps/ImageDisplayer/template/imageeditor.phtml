@@ -4,6 +4,7 @@
 <?
     $serCrops = $this->getTranslatedConfigurationSettings("image_cords");
     $rotation = $this->getTranslatedConfigurationSettings("rotation");
+	$link = $this->getLink();
     $textFields = $this->getTexts();
     
     if ($rotation == null) {
@@ -31,7 +32,8 @@
         }
         ?>,
         'rotation' : <? echo $rotation ?>,
-        'textFields' : <? echo $textFields ?>
+        'textFields' : <? echo $textFields ?>,
+		'link' : '<? echo $link ?>'
     }
 
     var div = $('#imagedisplayer');

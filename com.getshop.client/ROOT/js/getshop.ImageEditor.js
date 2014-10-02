@@ -310,7 +310,12 @@ getshop.ImageEditor.prototype = {
             me.addTextField({});
         });
         this.addMenuEntry("Save", 'fa-save', $.proxy(this.saveImage, this));
+        this.addMenuEntry("Link", 'fa-chain', $.proxy(this.addLink, this));
     },
+	
+	addLink: function() {
+		this.config.link = prompt("Please enter a link", this.config.link);
+	},
     
     addMenuEntry: function(text, classes, func) {
         var disableAspectRatio = this.createMenuEntry(__f(text), classes);
@@ -393,7 +398,8 @@ getshop.ImageEditor.prototype = {
             cords: this.getCropsForFullSizeImage(),
             rotation: this.config.rotation,
             'getShopPageId': currentPageId,
-            textFields : []
+            textFields : [],
+			link : this.config.link
         };
 
         for (var i in this.textFields) {

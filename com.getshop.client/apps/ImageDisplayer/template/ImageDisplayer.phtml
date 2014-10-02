@@ -25,6 +25,9 @@ if($this->getTranslatedConfigurationSettings("new_type") == "1") {
     $crop = "&crop=true&x=".$cordSplitted[0]/$compress."&x2=".$cordSplitted[1]/$compress."&y=".$cordSplitted[2]/$compress."&y2=".$cordSplitted[3]/$compress."&rotation=".$rotation;
 }
 
+if ($this->getLink() != "") {
+	echo "<a href='".$this->getLink()."'>";
+}
 ?>
 <div class='displayimagecontainer'>
     <span class='imagecontainer' >
@@ -33,6 +36,11 @@ if($this->getTranslatedConfigurationSettings("new_type") == "1") {
         <? } ?>
     </span>
 </div>
+<?
+if ($this->getLink() != "") {
+	echo "</a>";
+}
+?>
 <? if (!$id) { ?>
     <script>
         var appId = '<? echo $this->getConfiguration()->id; ?>';

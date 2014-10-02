@@ -62,6 +62,7 @@ class ImageDisplayer extends \ApplicationBase implements \Application {
         $this->setConfigurationSetting("image_cords".$prefix, $serialized);
         $this->setConfigurationSetting("compression".$prefix, $_POST['data']['compression']);
         $this->setConfigurationSetting("new_type".$prefix, "1");
+		$this->setConfigurationSetting("link", $_POST['data']['link']);
     }
 
     public function saveOriginalImage() {        
@@ -76,6 +77,7 @@ class ImageDisplayer extends \ApplicationBase implements \Application {
         $this->setConfigurationSetting("image_cords".$prefix, $serialized);
         $this->setConfigurationSetting("compression".$prefix, $_POST['data']['compression']);
         $this->setConfigurationSetting("rotation".$prefix, $_POST['data']['rotation']);
+        $this->setConfigurationSetting("link", $_POST['data']['link']);
         echo $imgId;
     }
     
@@ -141,8 +143,16 @@ class ImageDisplayer extends \ApplicationBase implements \Application {
         
         return $textFields;
     }
+	
+	public function getLink() {
+		return $this->getConfigurationSetting("link");
+	}
     
     public function isZoomAble() {
+		if ($this->getLink() != "") {
+			return false;
+		}
+		
         $zoomable = $this->getConfigurationSetting("zoom_able");
         
         if (!$zoomable) {

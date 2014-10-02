@@ -21,7 +21,7 @@ if ($_GET['file'] == 6)
     $file = "MBM kundemottaker hefte AK.pdf";
 
 if ($_GET['file'] == 7)
-    $file = "2.1 Dieselteknikk versjon 14.01.2014.pdf";
+    $file = "2.1 Dieselteknikk host.pdf";
 
 if ($_GET['file'] == 8)
     $file = "6.1 Bedriftsledelse pluss - kursunderlag-1.pdf";

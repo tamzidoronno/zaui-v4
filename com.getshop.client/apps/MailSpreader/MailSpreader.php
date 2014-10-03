@@ -92,7 +92,9 @@ class MailSpreader extends \ApplicationBase implements \Application {
             }
         }
 
+		$this->startAdminImpersonation("PageManager", "setApplicationSettings");
         $this->setConfigurationSetting("sentemails", json_encode($savedEntries));
+		$this->stopImpersionation();
     }
 
     public function render() {
@@ -108,6 +110,9 @@ class MailSpreader extends \ApplicationBase implements \Application {
         echo "<br><br><br><br><br><br>";
     }
 
+	public function requestAdminRights() {
+        $this->requestAdminRight("PageManager", "setApplicationSettings", $this->__o("Need admin rights to save sent mails."));
+    }
 }
 
 ?>

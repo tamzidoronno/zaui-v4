@@ -52,6 +52,7 @@ com.getshop.core/config.txt
 
 com.getshop.mobile/autoakademiet/platforms/android/bin/
 com.getshop.mobile/autoakademiet/platforms/android/gen/
+com.getshop.mobile/autoakademiet/platforms/android/assets
 com.getshop.proteriasync/nbproject/private/
 com.getshop.proteriasync/build/
 com.getshop.proteriasync/dist/
@@ -87,3 +88,4 @@ fuck/
 apitodb.json
 com.getshop.remote/startlog.txt
 com.getshop.client/etc/config.txt
+com.getshop.mobile/autoakademiet/www/nbproject/private/private.properties

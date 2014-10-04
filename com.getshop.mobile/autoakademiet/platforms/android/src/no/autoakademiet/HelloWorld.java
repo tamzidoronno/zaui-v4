@@ -22,7 +22,7 @@ package no.autoakademiet;
 import android.os.Bundle;
 import org.apache.cordova.*;
 
-public class HelloWorld extends DroidGap
+public class HelloWorld extends CordovaActivity
 {
     @Override
     public void onCreate(Bundle savedInstanceState)

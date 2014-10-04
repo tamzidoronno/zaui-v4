@@ -6,6 +6,11 @@
         Purpose of the stylesheet follows.
 */
 
+body,
+html {
+    background-color: #000;
+}
+
 .col1,
 .col2 { 
     display: inline-block;
@@ -39,6 +44,7 @@
 .CourseDayEntry,
 .ContentManager {
     text-align: left;
+    margin: 20px;
 }
 
 .kursentry {
@@ -164,11 +170,11 @@ label.error {
     padding: 5px;
     margin-top: 4px;
     margin-bottom: 4px;
-    
+
 }
 
 .companyinformation .value {
-    display: inline-block;    
+    display: inline-block;
 }
 
 .companyinformation .description {
@@ -176,11 +182,7 @@ label.error {
     display: inline-block;
 }
 
-.ui-page {
-    background-color: #222;
-    background-image: inherit;
-    color: #FFF;
-}
+
 
 .ui-btn-active {
     background-color: inherit;
@@ -219,7 +221,7 @@ label.error {
     background: linear-gradient(to bottom, #666, #333);
     border-bottom: solid 1px #363636;
     position: absolute;
-    
+
 }
 
 .headerbutton .inner {
@@ -230,29 +232,11 @@ label.error {
     background-position: center center;
 }
 
-.infobutton {
-    right: 0px;
-    top: 60px;
-}
-
-.infobutton .inner {
-    background-image: url('images/infobutton.png');
-}
-
-.newsbutton {
-    right: 51px;
-    top: 60px;
-}
-
-.newsbutton .inner {
-    background-image: url('images/news-icon.png');
-}
-
 .newsbutton .counter {
-    position: relative; 
-    left: -50%; 
+    position: absolute; 
     
-    top: 10px;
+    top: 5px;
+    right: 45px;
     background-color: rgba(166, 12,12, 0.9);
     font-size: 12px;
     border-radius: 5px;
@@ -265,10 +249,11 @@ label.error {
 
 #news .newsentry {
     border: solid 1px #333;
-    background: linear-gradient(to bottom, #333, #252525);
+    background-color: rgba(0,0,0,0.3);
     margin-bottom: 20px;
     position: relative;
     padding: 10px;
+    padding-right: 30px;
 }
 
 #news .newsentry .right {
@@ -290,6 +275,16 @@ label.error {
     font-size: 14px;
 }
 
+.ui-header {
+    text-align: left;
+    border: solid 0px;
+}
+.ui-header .logo {
+    margin-top: 10px;
+    margin-left: 10px;
+    left: 10px;
+}
+
 #news .newsentry .content {
     padding: 10px;
     font-size: 13px;
@@ -300,3 +295,119 @@ label.error {
     text-align: right;
     padding-right: 35px;
 }
+
+#home {
+    text-align: left;
+}
+
+.mainmenu_outer {
+    text-align: center;
+}
+
+.mainmenu {
+    width: 280px;
+    display: inline-block;
+    text-align: left;
+}
+.mainmenu .menu_entry {
+    position: relative;
+    display: inline-block;
+    font-size: 50px;
+    color: #BBB;
+    margin-top: 30px;
+    margin-right: 5px;
+    margin-left: 5px;
+    text-align: center;
+}
+
+#courselistoverview {
+    text-align: left;
+}
+
+.mainmenu .menu_entry .name {
+    font-size: 12px;
+    width: 80px;   
+}
+
+.ui-mobile-viewport {
+    background: url('images/bkg_1.gif') ;
+    
+    
+}
+
+.ui-page {
+    background-image: inherit;
+    background-color: inherit;
+    color: #FFF;
+}
+
+.backbutton {
+    border: solid 0px !important;
+    border-top: solid 1px #666;
+    color: #FFF !important;
+}
+.backbutton  {
+    background-image: -webkit-gradient(linear, left top, left bottom, from( #333), to( #000000)) !important; /* Saf4+, Chrome */
+    background-image: -webkit-linear-gradient(#333, #000000) !important; /* Chrome 10+, Saf5.1+ */
+    background-image:    -moz-linear-gradient(#333, #000000) !important; /* FF3.6 */
+    background-image:     -ms-linear-gradient(#333, #000000) !important; /* IE10 */
+    background-image:      -o-linear-gradient(#333, #000000) !important; /* Opera 11.10+ */
+    background-image:         linear-gradient(#333, #000000) !important;
+    color: #DDD;
+}
+
+.ui-bar-a,
+.ui-page-theme-a .ui-bar-inherit,
+html .ui-bar-a .ui-bar-inherit,
+html .ui-body-a .ui-bar-inherit,
+html body .ui-group-theme-a .ui-bar-inherit {
+    background-color: #000;
+    border-top: solid 1px #333;
+}
+
+#courselistoverview {
+    
+}
+
+#courselistoverview .monthcontainer {
+    margin-bottom: 20px;
+}
+
+#courselistoverview .month_list_entries {
+    padding-left: 10px;
+    margin-top: 10px;
+    border-top: solid 1px #666;
+    padding-top: 10px;
+}
+
+#courselistoverview .month_list_entries .list_view_entry_entry {
+    padding: 5px;
+    margin-bottom: 2px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0, 0.8));
+    border-top: solid 1px #222;
+    border-left: solid 1px #222;
+    border-bottom: solid 1px #333;
+    border-right: solid 1px #333;
+}
+
+#courselistoverview .month_list_entries .list_view_entry_entry .extrainfo {
+    text-align: right;
+    font-size: 11px;
+    padding: 4px;
+}
+
+.hidden {
+    display: none;
+}
+
+.ui-btn.ui-input-btn.ui-btn-a.ui-corner-all.ui-btn-inline {
+    border: solid 0px !important;;
+    background: inherit !important;
+}
+
+.contentcourselist {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#infopage { text-align: left; }

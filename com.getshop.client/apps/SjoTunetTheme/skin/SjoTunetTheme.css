@@ -1,0 +1,80 @@
+.gs_inner {
+	width: 1024px;
+	margin: 0 auto;
+}
+
+
+.gs_outer.footer {
+	background-color: #f8a223;
+	color: #FFF;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	margin-top: 20px;
+	border-top: solid 2px #e38c10;
+}
+
+#apparea-header {
+	height: 203px;
+}
+
+.gs_outer.header {
+	background-color: #f8a223;
+	margin-bottom: 20px;
+	border-bottom: solid 2px #e38c10;
+}
+
+.Logo img {
+	position: absolute;
+	top: 15px;
+	border: Solid 2px #e38c10;
+	padding: 5px;
+}
+
+.gs_outer.breadcrumb {
+	display: none;
+}
+
+.gs_margin_left {
+	padding-left: 8px;
+}
+
+.gs_margin_right {
+	padding-right: 8px;
+}
+
+.mainarea .gs_row.gs_outer {
+	margin-bottom: 20px;
+}
+
+
+.TopMenu {
+	right: 0px;
+	bottom: 33px;
+}
+
+.TopMenu .entry i {
+	font-size: 70px;
+	padding-top: 20px;
+	height: 85px;
+	color: #e38c10;
+	vertical-align: middle;
+	width: 115px;
+	text-align: center;
+}
+.TopMenu .entry a {
+	color: #FFF;
+}
+.TopMenu .entry {
+	border: solid 2px #e38c10;
+	height: 136px;
+	width: 115px;
+	text-align: center;
+	vertical-align: bottom;
+	font-size: 15px;
+	margin-left: 10px;
+	font-weight: bold;
+}
+
+.Login .notloggedon {
+	display: none;
+}

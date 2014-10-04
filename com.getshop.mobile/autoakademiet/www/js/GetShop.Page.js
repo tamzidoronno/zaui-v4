@@ -19,19 +19,21 @@ GetShop.Page.prototype = {
     load: function() {
         this.api.PageManager.getPage(this.pageId).done($.proxy(this.receivedPageFromApi, this));
     },
-            
+
     receivedPageFromApi: function(page) {
         this.backendPage = page;
         this.createSkeleton();
     },
             
     createSkeleton: function() {
-        this.header = $('<div data-role="header" ><div data-role="navbar"><ul><li><a href="#" class="ui-btn-active" data-rel="back">Tilbake</a></li></ul></div></div>');
+        this.footer = $('<div data-role="footer" ><div data-role="navbar" ><ul><li><a href="#"  data-rel="back">Tilbake</a></li></ul></div></div>');
         this.page = $('<div data-role="page" id="getshoppage_'+this.backendPage.id+'"></div>');
         this.contentArea = $('<div data-role="content"></div>');
         
-        this.page.append(this.header);
+        
         this.page.append(this.contentArea);
+        this.page.append(this.footer);
+        this.page.trigger('create');
         
         this.createCells();
         $('body').append(this.page);
@@ -39,35 +41,29 @@ GetShop.Page.prototype = {
     },
             
     createCells: function() {
-        var cellNumber=0;
-        var rowNumber=0;
         for (var i in this.backendPage.layout.rows) {
             var row = this.backendPage.layout.rows[i];
-            if (row.numberOfCells === 1) {
-                rowNumber++;
-                this.createAppArea("main_"+rowNumber);
-            } else {
-                for (var j=0;j<row.numberOfCells; j++) {
-                    cellNumber++;
-                    this.createAppArea("col_"+cellNumber);
-                }
+            for (var j in row.areas) {
+                var area = row.areas[j];
+                this.createAppArea(area);
             }
+
         }
     },
             
-    createAppArea: function(name) {
-        var pageArea = this.backendPage.pageAreas[name];
-        if (pageArea) {
+    createAppArea: function(area) {
+        if (area) {
             var cell = $('<div class="gs_cell"></div>');
             cell.attr('id', name);
-            this.startLoadingApplications(pageArea, cell);
+            this.startLoadingApplications(area, cell);
             this.contentArea.append(cell);
         }
     },
 
     startLoadingApplications: function(pageArea, dom) {
-        for (var i in pageArea.applicationsSequenceList) {
-            var appId = pageArea.applicationsSequenceList[i];
+        
+        for (var i in pageArea.applicationsList) {
+            var appId = pageArea.applicationsList[i];
             var appInstance = pageArea.applications[appId];
             this.loadContentManager(appInstance, dom);
             this.loadImageDisplayer(appInstance, dom);

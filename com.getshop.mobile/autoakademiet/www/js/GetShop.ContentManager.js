@@ -27,7 +27,7 @@ GetShop.ContentManager.prototype = {
             
     receivedContentFromApi: function(content) {
         content = this.replaceAll(content, '/displayImage', "http://www.getshop.com/displayImage");
-        var contentHtml = $(content);
+        var contentHtml = $("<div>"+content+"</div>");
         contentHtml.find('img').css('height','auto');
         contentHtml.find('img').css('width','100%');
         contentHtml.find('td span').css('font-size','8px');

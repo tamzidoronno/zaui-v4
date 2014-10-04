@@ -63,7 +63,124 @@ App = {
         this.bindRefreshEvent();
         this.sendToken();
         this.loadNews(false);
+        this.loadCourseList();
         this.firstConnected = true;
+    },
+            
+    loadCourseList: function() {
+        var me = this;
+        
+        this.getshopApi.CalendarManager.getMonths().done(function(months) {
+            var container = $('#courselistoverview');
+            container.html("");
+            for (var i in months) {
+                var monthContainer = $('<div/>');
+                monthContainer.addClass('monthcontainer');
+                var month = months[i];
+                var header = $("<div class='header'>"+me.getNameForMonth(month.month) + " - " + month.year + "</div>");
+                var entries = me.getEntriesForListView(month);
+                monthContainer.html(header);
+                monthContainer.append(entries);
+                container.append(monthContainer);
+            }
+        });
+    },
+            
+    getEntriesForListView: function(month) {
+        var entiresContainer = $('<div/>');
+        entiresContainer.addClass('month_list_entries');
+        var outerMe = this;
+        
+        for (var j in month.days) {
+            var day  = month.days[j];
+            for (var i in day.entries) {
+                var entry  = day.entries[i];
+                
+                var entryContainer = $('<div/>');
+                entryContainer.addClass('list_view_entry_entry');
+                entryContainer.html(entry.title);
+                entiresContainer.append(entryContainer);
+                entryContainer.attr('location', entry.location);
+                
+                var extraInfoContainer = $('<div/>');
+                extraInfoContainer.addClass('extrainfo');
+                var date = entry.day + " / " + entry.month;
+                if (entry.otherDays.length > 0) {
+                    date += " ( " + (entry.otherDays.length + 1) + " dager)";
+                }
+                extraInfoContainer.html(entry.location + " - " + date);
+                entryContainer.append(extraInfoContainer);
+                
+                entryContainer.attr('year', entry.year);
+                entryContainer.attr('day', entry.day);
+                entryContainer.attr('month', entry.month);
+                entryContainer.attr('entry', entry.entryId);
+                
+                entryContainer.tap(function() {
+                    var pageId = 'daypage_'+$(this).attr('year')+"_"+$(this).attr('month')+"_"+$(this).attr('day');
+                    var entryId = $(this).attr('entry');
+                    $.mobile.changePage("#"+pageId, { transition: 'slide' });
+                    outerMe.hideOtherEvents(entryId, pageId);
+                });
+            }
+        }
+        
+        return entiresContainer;
+    },
+
+    hideOtherEvents: function(entry, pageId) {
+        var page = $("#"+pageId);
+        this.showOtherEvents();
+        page.find('.kursentry').each(function() {
+            if ($(this).attr('id') !== entry) {
+                $(this).hide();
+            } 
+        })
+    },
+            
+    showOtherEvents: function() {
+        $(document).find('.kursentry').each(function() {
+            $(this).show();
+        });
+    },
+            
+    getNameForMonth: function(month) {
+        if (month === 1) {
+            return "Januar";
+        }
+        if (month === 2) {
+            return "Februar";
+        }
+        if (month === 3) {
+            return "Mars";
+        }
+        if (month === 4) {
+            return "April";
+        }
+        if (month === 5) {
+            return "Mai";
+        }
+        if (month === 6) {
+            return "Juni";
+        }
+        if (month === 7) {
+            return "Juli";
+        }
+        if (month === 8) {
+            return "August";
+        }
+        if (month === 9) {
+            return "September";
+        }
+        if (month === 10) {
+            return "Oktober";
+        }
+        if (month === 11) {
+            return "November";
+        }
+        if (month === 12) {
+            return "Desember";
+        }
     },
             
     isRead: function(entryId) {
@@ -176,13 +293,9 @@ App = {
             me.getshopApi.ContentManager.getContent(contentManagerId).done(function(content) {
                 var page = $('#infopage');
                 if (page.length === 0) {
-                    page = $('<div class="infopage" data-role="page" data-theme="a" id="infopage"/>');
-                    page.html("<div class='header'/>");
-                    page.find(".header").load("header.html", function() {
-                        page.find('.header').trigger('create');
-                    });
-                    page.append('<div data-role="content" data-theme="a" class="ContentManager">');
-                    $('html .ui-mobile-viewport').append(page);    
+                    page = $('#daycoursetemplate').clone();
+                    page.attr('id', 'infopage');
+                    $('html .ui-mobile-viewport').append(page);  
                 }
                 
                 content = me.replaceAll(content, '/displayImage', "http://www.getshop.com/displayImage");
@@ -190,7 +303,7 @@ App = {
                 contentHtml.find('img').css('height','auto');
                 contentHtml.find('img').css('width','100%');
                 contentHtml.find('td span').css('font-size','8px');
-                page.find('.ContentManager').html(contentHtml);
+                page.find('.innercontent').html(contentHtml);
             });
         });
     },
@@ -436,7 +549,7 @@ App = {
                 };
                 
                 me.getshopApi.UserManager.createUser(user).done(function(createUser) {
-                    me.getshopApi.CalendarManager.addUserToEvent(createUser.id, courseId, password, createUser.username).done(function() {
+                    me.getshopApi.CalendarManager.addUserToEvent(createUser.id, courseId, password, createUser.username, 'mobile').done(function() {
                         if (positions <= 0) {
                             alert('Du er nå meldt på ventelisten');
                         } else {
@@ -453,17 +566,55 @@ App = {
         var me = this;
         $('#next').click($.proxy(this.nextClicked,this));
         $('#prev').click($.proxy(this.prevClicked,this));
-        $(document).on('click', '.infobutton', function() {
+        
+        $(document).on('tap', '.infobutton', function(e) {
             $.mobile.changePage('#infopage');
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).off('click');
         });
-        $(document).on('click', '.newsbutton', function() {
+        
+        $(document).on('tap', '.newsbutton', function(e) {
             $.mobile.changePage('#news');
             me.markAllAsRead();
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).off('click');
         });
+        
+        $(document).on('tap', '.gotolistview', function(e) {
+            $.mobile.changePage('#courselist');
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).off('click');
+        });
+        
+        $(document).on('tap', '.gotosignup', function(e) {
+            App.filterToEntryId = false;
+            $.mobile.changePage('#signup');
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).off('click');    
+        });
+        
+        $(document).on('tap', '.gotocourses', function(e) {
+            $.mobile.changePage('#courses');
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).off('click');
+        });
+        
+        $(document).on('tap', '.gotocalendar', function(e) {
+            $.mobile.changePage('#calendar');
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).off('click');
+        });
+        
         $('#signon').click($.proxy(this.signOnClicked,this));
-        $('#vatnr').keyup($.proxy(this.vatnumberupdated,this))
+        $('#vatnr').keyup($.proxy(this.vatnumberupdated,this));
     },
-            
+        
     vatnumberupdated: function() {
         var value = $('#vatnr').val();
         var informationPage = $('.companyinformation');
@@ -531,15 +682,16 @@ App = {
             $(entries).each(function() {
                 $(this.subentries).each(function() {
                     var page = $('#'+this.pageId);
+
                     if (page.length === 0) {
-                        page = $('<div class="coursepages_23459123948" data-role="page" data-theme="a" id="' + this.pageId + '"/>');
-                        page.html("<div class='header'/>");
-                        page.find(".header").load("header.html", function() {
-                            page.find('.header').trigger('create');
-                        });
+                        page = $('#daycoursetemplate').clone();
+                        page.attr('id', this.pageId);
+                        page.attr('data-theme',"a");
+                        page.addClass('coursepages_23459123948');
                         $('html .ui-mobile-viewport').append(page);    
                     }
-                    
+
+                
                     me.getshopApi.PageManager.getPage(this.pageId).done(function(dataPage) {
                         var contentHolder = page.find('.ContentManager');
                         if (contentHolder.length === 0 ) {
@@ -602,6 +754,22 @@ App = {
                 $(this).addClass('disabled');
             }
         });
+        
+        $('.list_view_entry_entry').removeClass('hidden');
+        $('.monthcontainer').show();
+        $('.list_view_entry_entry').each(function() {
+            if ($(this).attr('location').toUpperCase().indexOf(filter.toUpperCase()) < 0) {
+                $(this).addClass('hidden');
+            }
+        });
+        
+        $('.monthcontainer').each(function() {
+            var subs = $(this).find('.list_view_entry_entry:not(.hidden)');
+            if (subs.length === 0) {
+                $(this).hide();
+            }
+        });
+        
         if (filter === "") {
             $('.displayActiveFilter').hide();
         } else {
@@ -844,8 +1012,10 @@ App.Calendar.prototype = {
                 dayCell.addClass('date_has_event');
                 dayCell.attr('locations', locations);
                 var me = this;
-                dayCell.click(function() {  
-                    $.mobile.changePage('#daypage_'+me.year+"_"+me.month+"_"+$(this).attr('day'), { transition: 'slide' });
+                dayCell.tap(function() {  
+                    var pageId = 'daypage_'+me.year+"_"+me.month+"_"+$(this).attr('day');
+                    $.mobile.changePage("#"+pageId, { transition: 'slide' });
+                    App.showOtherEvents();
                 });
             }
         }
@@ -859,24 +1029,22 @@ App.Calendar.prototype = {
         var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';
         return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
     },
+            
     createDayPages: function(data) {
 
         for (day in data.days) {
             if (data.days[day].entries && data.days[day].entries.length > 0) {
                 var entries = data.days[day].entries;
                 var pageId = 'daypage_'+this.year+'_'+this.month+'_'+day;
+                
                 var page = $('#'+pageId);
                 if (page.length === 0) {
-                    page = $('<div data-role="page" class="daypage" id="'+pageId+'"><div class="header"></div></div>');
-                    page.find(".header").load("header.html", function() {
-                        page.find('.header').trigger('create');
-                    });
+                    page = $('#daycoursetemplate').clone();
+                    page.attr('id', pageId);
                 }
                     
-                var pageContent = page.find('.CourseDayEntry');
-                if (pageContent.length === 0)
-                    pageContent = $('<div class="CourseDayEntry" data-role="content"/>');
-                
+                var pageContent = page.find('.innercontent');
+ 
                 pageContent.html("");
                 var currentDate = new Date();
                 
@@ -886,6 +1054,7 @@ App.Calendar.prototype = {
                         continue;
                     }
                     var entryDetails = $('<div/>');
+                    entryDetails.attr('id', entry.entryId);
                     entryDetails.addClass('kursentry');
                     entryDetails.append("<h4>Kurs: "+entry.title+"</h4>");
                     var endTime = "";

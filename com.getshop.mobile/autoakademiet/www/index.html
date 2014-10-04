@@ -12,6 +12,7 @@ and open the template in the editor.
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
         <link rel="stylesheet" href="css/jquerymobile.css" charset="utf-8" />
+        <link rel="stylesheet" href="css/fontawesome/css/font-awesome.min.css">
 
         <!-- GetShop Library -->
         <link rel="stylesheet" href="css/GetShop.css" charset="utf-8" />
@@ -21,11 +22,11 @@ and open the template in the editor.
         <script type="text/javascript" src="js/GetShop.ImageDisplayer.js"></script>
         <script type="text/javascript" src="js/GetShop.YouTube.js"></script>
         <!-- End -->
-        
+
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="PushNotification.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
-        
+
         <script src="js/jquery.js" charset="utf-8" ></script>
         <script src="js/date.js" charset="utf-8" ></script>
         <script src="js/jquerymobile.js" charset="utf-8" ></script>
@@ -41,93 +42,122 @@ and open the template in the editor.
         <div class='connecting'><div><img src='css/images/ajax-loader.gif'/><br>Kobler til server</div></div>
         <div class='loading'><div><img src='css/images/ajax-loader.gif'/><br>Laster data</div></div>
         <div data-role="page" id="home">
-            <div data-role="header" data-theme="a">
-                <img border="0" src="css/images/logo.png" style="margin-top: 10px; margin-bottom: 10px; float:center; display:inline"/>
-                <div class="headerbutton infobutton"><div class="inner"></div></div>
-                <div class="headerbutton newsbutton"><div class="inner"><div style="position: absolute; left: 50%;"><div class="counter">15</div></div></div></div>
-                <div data-role="navbar">
+            <div data-role="header" data-theme="asd">
+                <img border="0" src="css/images/logo.png" class="logo"/>
+            </div>
+            <div data-role="content">
+                <div class="mainmenu_outer">
+                    <div class="mainmenu">
+                        <div class='menu_entry gotolistview'><i class='fa fa-list'></i><div class='name'>Kurs liste</div></div>
+                        <div class='menu_entry gotocalendar'><i class='fa fa-calendar'></i><div class='name'>Kurs kalender</div></div>
+                        <div class='menu_entry newsbutton'><i class='fa fa-twitter'></i><div class='name'>Nyheter</div><div class='counter'>12</div></div>
+                        <div class='menu_entry gotocourses'><i class='fa fa-mortar-board'></i><div class='name'>Kurs oversikt</div></div>
+                        <div class='menu_entry gotosignup'><i class='fa fa-check'></i><div class='name'>Påmelding</div></div>
+                        <div class='menu_entry infobutton'><i class='fa fa-info'></i><div class='name'>Informasjon</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div data-role="page" id="courselist">
+            <div data-role="content">
+                <div id='courselistoverview'></div>
+            </div>
+
+            <div data-role="footer" data-tap-toggle="false"  data-position="fixed" >
+                <div data-role="navbar" data-tap-toggle="false" data-fullscreen="true"  data-position="fixed" >
                     <ul>
-                        <li><a href="#courses" data-transition="flip">Kurser</a></li>
-                        <li><a href="#signup" data-transition="flip">Påmelding</a></li>
+                        <li>
+                            <a class='backbutton' href="#" data-role="button" data-rel="back">Tilbake</a>
+                        </li>
+                        <li><a class='backbutton' href="#filter" data-rel="dialog">Velg sted</a></li>
                     </ul>
                 </div>
-                <div class="refresh"></div>
             </div>
+        </div>
+        
+        <div data-role="page" id="daycoursetemplate">
+            <div data-role="content">
+                <div class="innercontent"></div>
+            </div>
+
+            <div data-role="footer" data-tap-toggle="false"  data-position="fixed" >
+                <div data-role="navbar" data-tap-toggle="false" data-fullscreen="true"  data-position="fixed" >
+                    <ul>
+                        <li>
+                            <a class='backbutton' href="#" data-role="button" data-rel="back">Tilbake</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div data-role="page" id="calendar">
             <div data-role="content">
                 <div class="displayActiveFilter">Kalenderfilter: <span id="displayActiveFilter"></span></div>
                 <h2>Kurs kalender</h2>
                 <div id="calender"></div>
             </div>
 
-            <!-- INCLUDE FRONT HERE -->
-            <div data-role="footer" data-theme="a" data-tap-toggle="false" data-id="foo1" data-position="fixed">
-                <div data-role="navbar">
-                    <ul>
-                        <li><a id="prev" href="#">Forrige</a></li>
-                        <li><a href="#filter" data-rel="dialog">Velg sted</a></li>
-                        <li><a id="next" href="#">Neste</a></li>
-                    </ul>
-                </div>
-            </div>
+
             <div data-role="popup" id="noCalenderEventBack">
                 <p>Det finnes ikke noe kurstilbud lengre tilbake i tid.</p>
             </div>
             <div data-role="popup" id="noCalenderEventForward">
                 <p>For å se kalenderen lengre fram i tid, vennligst benytt websiden.</p>
             </div>
+
+            <div data-role="footer" data-tap-toggle="false"  data-position="fixed" >
+                <div data-role="navbar" data-position="fixed" data-tap-toggle="false" >
+                    <ul>
+                        <li>
+                            <a class='backbutton' href="#" data-role="button" data-rel="back">Tilbake</a>
+                        </li>
+                        <li><a class='backbutton' id="prev" href="#">Forrige</a></li>
+                        <li><a class='backbutton' href="#filter" data-rel="dialog">Velg sted</a></li>
+                        <li><a class='backbutton' id="next" href="#">Neste</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
         <div data-role="page" id="courses">
-            <div data-role="header" data-theme="a">
-                <img border="0" src="css/images/logo.png" style="margin-top: 10px; margin-bottom: 10px; float:center; display:inline"/>
-                <div class="headerbutton infobutton"><div class="inner"></div></div>
-                <div class="headerbutton newsbutton"><div class="inner"><div style="position: absolute; left: 50%;"><div class="counter">15</div></div></div></div>
-                <div data-role="navbar">
-                    <ul>
-                        <li><a href="#home" data-transition="flip">Kalender</a></li>
-                        <li><a href="#signup" data-transition="flip">Påmelding</a></li>
-                    </ul>
-                </div>
-                <div class="refresh"></div>
-            </div>
             <div data-role="content" id="courselist">
                 <p>Kurs oversikt</p>
                 <div class='contentcourselist'></div>
             </div>
-        </div>
-        
-        <div data-role="page" id="news">
-            <div data-role="header" data-theme="a">
-                <img border="0" src="css/images/logo.png" style="margin-top: 10px; margin-bottom: 10px; float:center; display:inline"/>
-                <div class="headerbutton infobutton"><div class="inner"></div></div>
-                <div class="headerbutton newsbutton"><div class="inner"><div style="position: absolute; left: 50%;"><div class="counter">15</div></div></div></div>
-                <div data-role="navbar">
+
+            <div data-role="footer" data-tap-toggle="false"  data-position="fixed" >
+                <div data-role="navbar" data-position="fixed" data-tap-toggle="false" >
                     <ul>
-                        <li><a href="#home" data-transition="flip">Kalender</a></li>
-                        <li><a href="#signup" data-transition="flip">Påmelding</a></li>
+                        <li>
+                            <a class='backbutton' href="#" data-role="button" data-rel="back">Tilbake</a>
+                        </li>
                     </ul>
                 </div>
             </div>
+        </div>
+
+        <div data-role="page" id="news">
             <div data-role="content" style="text-align:left">
                 Nyheter:
                 <br>
                 <br>
                 <div class="newsentries"></div>
             </div>
-        </div>
 
-        <div data-role="page" id="signup">
-             <div data-role="header" data-theme="a">
-                <img border="0" src="css/images/logo.png" style="margin-top: 10px; margin-bottom: 10px; float:center; display:inline"/>
-                <div class="headerbutton infobutton"><div class="inner"></div></div>
-                <div class="headerbutton newsbutton"><div class="inner"><div style="position: absolute; left: 50%;"><div class="counter">15</div></div></div></div>
-                <div data-role="navbar">
+            <div data-role="footer" data-tap-toggle="false"  data-position="fixed" >
+                <div data-role="navbar" data-position="fixed" data-tap-toggle="false" >
                     <ul>
-                        <li><a href="#home" data-transition="flip">Kalender</a></li>
-                        <li><a href="#courses" data-transition="flip">Kurser</a></li>
+                        <li>
+                            <a class='backbutton' href="#" data-role="button" data-rel="back">Tilbake</a>
+                        </li>
                     </ul>
                 </div>
             </div>
+        </div>
+
+        <div data-role="page" id="signup">
             <div data-role="content" style="text-align:left">
                 <form>
                     <label for="name">Navn:</label>
@@ -161,7 +191,15 @@ and open the template in the editor.
                     <a id="signon" href="#" data-role="button"><span>Meld på</span></a>
                 </form>
             </div>
-
+            <div data-role="footer" data-tap-toggle="false"  data-position="fixed" >
+                <div data-role="navbar" data-position="fixed" data-tap-toggle="false" >
+                    <ul>
+                        <li>
+                            <a class='backbutton' href="#" data-role="button" data-rel="back">Tilbake</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
         <div data-role="page" id="filter">
@@ -175,12 +213,15 @@ and open the template in the editor.
 </html>
 
 <script type="text/javascript">
-    //App.start();
-    var app = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
-    if ( app ) {
-        papp.initialize();
-    } else {
-        App.start();
-    }
-    
+                        $.mobile.defaultPageTransition = "none";
+
+                        //App.start();
+                        var app = document.URL.indexOf('http://') === -1 && document.URL.indexOf('https://') === -1;
+                        if (app) {
+                            papp.initialize();
+                        } else {
+                            App.start();
+                        }
+
+
 </script>

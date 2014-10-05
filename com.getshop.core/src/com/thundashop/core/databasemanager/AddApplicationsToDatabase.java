@@ -56,13 +56,13 @@ public class AddApplicationsToDatabase {
         allowed2.add("xlarge");
 
         ApplicationSettings mailspreader = createSettings(
-                "MailSpreader",
-                "d2e1d2b4-b604-46a4-a298-0b8161e00715",
+                "SjoTunetTheme",
+                "06321eda-afaa-4e91-8ca7-67d342dbd1ea",
                 allowed,
                 "",
-                ApplicationSettings.Type.Webshop, false);
+                ApplicationSettings.Type.Theme, true);
         mailspreader.isPublic = false;
-        apps.add(mailspreader);
+		apps.add(mailspreader);
         
 //        
 //        ApplicationSettings hotelvask = createSettings(

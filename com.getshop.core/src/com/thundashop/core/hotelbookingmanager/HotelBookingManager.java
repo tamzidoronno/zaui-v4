@@ -59,6 +59,7 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 @Component
 @GetShopSession
@@ -814,13 +815,15 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             if (order != null) {
                 User user = userManager.getUserById(order.userId);
                 if (user != null) {
-                    String copyadress = pageManager.getApplicationSettings("Settings").get("mainemailaddress").value;
-                    if (copyadress != null && !copyadress.isEmpty()) {
-                        messageManager.mailFactory.send(copyadress, user.emailAddress, title, message);
-                        messageManager.mailFactory.send(copyadress, copyadress, title, message);
-                        reference.sentWelcomeMessages = true;
-                        saveObject(reference);
-                    }
+                    //We need to fetch settings in a different way then from the pagemanager...
+                    throw new NotImplementedException();
+//                    String copyadress = pageManager.getApplicationSettings("Settings").get("mainemailaddress").value;
+//                    if (copyadress != null && !copyadress.isEmpty()) {
+//                        messageManager.mailFactory.send(copyadress, user.emailAddress, title, message);
+//                        messageManager.mailFactory.send(copyadress, copyadress, title, message);
+//                        reference.sentWelcomeMessages = true;
+//                        saveObject(reference);
+//                    }
                 }
             }
         }

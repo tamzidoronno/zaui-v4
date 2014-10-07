@@ -125,7 +125,7 @@ class StyleSheet {
             }
         }
 
-        $this->doApp($themeApp->getApplicationSettings());
+//        $this->doApp($themeApp->getApplicationSettings());
     }
 
     private function doApp($app) {
@@ -133,6 +133,9 @@ class StyleSheet {
         $cssFileName = $app->appName . ".css";
         $folder = "../app/" . $appId . "/skin/";
         
+        if (!file_exists("cssfolder")) {
+            mkdir("cssfolder");
+        }
         if (!file_exists("cssfolder/$appId")) {
             mkdir("cssfolder/$appId");    
         }

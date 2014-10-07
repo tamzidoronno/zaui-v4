@@ -1,34 +1,10 @@
 <?php
 class core_pagemanager_data_Page extends core_common_DataCommon  {
-	/** @var String */
-	public $hideHeader;
-
-	/** @var String */
-	public $hideFooter;
-
-	/** @var String */
-	public $needSaving;
-
-	/** @var String */
-	public $beenLoaded;
-
-	/** @var String */
-	public $pageAreas;
-
 	/** @var core_pagemanager_data_Page */
 	public $parent;
 
 	/** @var String */
-	public $pageType;
-
-	/** @var String */
 	public $type;
-
-	/** @var String */
-	public $pageTag;
-
-	/** @var String */
-	public $pageTagGroup;
 
 	/** @var String */
 	public $userLevel;

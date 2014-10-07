@@ -150,7 +150,7 @@ if(isset($factory->getSettings()->languages)) {
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <?php
         $html = init($factory);
-        $pageDescription = $factory->getPage()->description;
+        $pageDescription = $factory->getPage()->javapage->description;
         if (isset($factory->getSettings()->{'favicon'})) {
             echo '<link rel="shortcut icon" href="favicon.ico" type="image/png">';
             echo '<link rel="shortcut icon" type="image/png" href="favicon.ico" />';
@@ -171,10 +171,7 @@ if(isset($factory->getSettings()->languages)) {
 
         $factory->loadJavascriptFiles();
         $factory->showCssFiles();
-        echo $factory->loadInitializationData();
 
-        if ($factory->getPage()->skeletonType == 5)
-            echo "<style>body { overflow: auto; } </style>";
         $factory->loadJavascriptFilesEditorMode();
         $settings = $factory->getSettings();
         $title = isset($settings->title) ? $settings->title->value : "";
@@ -310,7 +307,6 @@ if (isset($_GET['page'])) {
 ?>
 
 <?
-$factory->getApi()->getInvoiceManager()->createInvoice("4d98cbe0-f614-4ed3-9b46-846acad65cbb");
 if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
     echo "<script>isAdministrator = true;</script>";
 }

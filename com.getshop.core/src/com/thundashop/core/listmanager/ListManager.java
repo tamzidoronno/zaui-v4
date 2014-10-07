@@ -83,29 +83,11 @@ public class ListManager extends ManagerBase implements IListManager {
         }
     }
     
-    private void addListType(String listId) {
-        try {
-            AppConfiguration app = pageManager.getApplicationById(listId);
-            if (app != null && app.appSettingsId.equals("1051b4cf-6e9f-475d-aa12-fc83a89d2fd4")) {
-                allEntries.get(listId).type = ListType.MENU;
-                allEntries.get(listId).name = "TopMenu";
-            }
-            if (app != null && app.appSettingsId.equals("00d8f5ce-ed17-4098-8925-5697f6159f66")) {
-                allEntries.get(listId).type = ListType.MENU;
-                allEntries.get(listId).name = "LeftMenu";
-            }
-        } catch (ErrorException ex) {
-            System.out.println("Was not able to set list type? is there no application attached to the list?");
-            ex.printStackTrace();
-        }
-    }
-
     private void pushToMemory(Entry entry, String listId, String parentPageId) throws ErrorException {
         if (allEntries.get(listId) == null) {
             allEntries.put(listId, new EntryList());
             allEntries.get(listId).appId = listId;
             allEntries.get(listId).entries = new ArrayList();
-            addListType(listId);
         }
         if(allEntries.get(listId).entries == null) {
             allEntries.get(listId).entries = new ArrayList();
@@ -123,13 +105,7 @@ public class ListManager extends ManagerBase implements IListManager {
         }
 
         if (entry.pageId == null && AppContext.storePool != null) {
-            Page page = pageManager.createPage(-1, parentPageId);
-            if(entry.pageType == 2) {
-                page.pageTag = "leftmenu";
-                page.pageTagGroup = "leftmenu";
-                page.layout.leftSideBar = 1;
-                pageManager.savePage(page);
-            }
+            Page page = pageManager.createPage();
             
             entry.pageId = page.id;
         }
@@ -196,7 +172,6 @@ public class ListManager extends ManagerBase implements IListManager {
             allEntries.put(appId, new EntryList());
             allEntries.get(appId).appId = appId;
             allEntries.get(appId).entries = new ArrayList();
-            addListType(appId);
         }
 
         return allEntries.get(appId);

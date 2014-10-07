@@ -19,6 +19,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  *
@@ -135,7 +136,7 @@ public class CartManager extends ManagerBase implements ICartManager {
     }
 
     private HashMap<String, Setting> getSettings(String phpApplicationName) throws ErrorException {
-        return pageManager.getApplicationSettings(phpApplicationName);
+        throw new NotImplementedException();
     }
     
     @Override

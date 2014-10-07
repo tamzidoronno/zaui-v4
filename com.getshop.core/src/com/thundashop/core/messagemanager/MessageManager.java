@@ -17,6 +17,7 @@ import java.net.URL;
 import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  */
@@ -65,7 +66,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     }
     
     private HashMap<String, Setting> getSettings(String phpApplicationName) throws ErrorException {
-        return pageManager.getApplicationSettings(phpApplicationName);
+        throw new NotImplementedException();
     }
     
     

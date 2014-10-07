@@ -25,18 +25,8 @@ import java.util.UUID;
  * @author ktonder
  */
 public class Page extends DataCommon implements Cloneable {
-    public boolean hideHeader = false;
-    public boolean hideFooter = false;
-    public boolean needSaving = false;
-    public boolean beenLoaded = false;
-    
-    public HashMap<String, PageArea> pageAreas = new HashMap<String, PageArea>();
     public Page parent;
-    public int pageType =  PageType.Standard;
-    //This is actually more a layout type... should be renamed to layouttype
-    public int type;
-    public String pageTag = "";
-    public String pageTagGroup = "";
+    public String type;
     public int userLevel = 0;
     public String description = "";
     public PageLayout layout = new PageLayout();
@@ -48,35 +38,7 @@ public class Page extends DataCommon implements Cloneable {
     }
 
     public void clear() {
-        for(RowLayout row : layout.rows) {
-            for (PageArea pageArea : row.areas) {
-                pageArea.clear();
-            }
-        }
-    }
-
-    public void moveApplicationUp(String appid) {
-        for(RowLayout row : layout.rows) {
-            for (PageArea pageArea : row.areas) {
-                pageArea.moveApplicationUp(appid);
-            }
-        }
-    }
-
-    public void moveApplicationDown(String appid) {
-        for(RowLayout row : layout.rows) {
-            for (PageArea pageArea : row.areas) {   
-                pageArea.moveApplicationDown(appid);
-            }
-        }
-    }
-
-    public PageArea getPageArea(String pageArea) throws ErrorException {
-        return layout.getPageArea(pageArea);
-    }
-
-    public List<String> getAllPageAreas() {
-        return layout.getAllAreas();
+        layout.clear();
     }
 
     public void moveApplicationToArea(String fromarea, String toarea) {
@@ -91,60 +53,14 @@ public class Page extends DataCommon implements Cloneable {
         
     }
 
-    public void finalizePageLayoutRows() {
-        for(RowLayout row : layout.rows) {
-            if(row.rowId.isEmpty()) {
-                row.rowId = UUID.randomUUID().toString();
-                needSaving = true;
-            }
-            
-            if(row.numberOfCells > row.areas.size()) {
-                for(int i = 0; i < row.numberOfCells; i++) {
-                    if(i >= row.areas.size()) {
-                        PageArea area = new PageArea();
-                        area.type = UUID.randomUUID().toString();
-                        row.areas.add(i, area);
-                    }
-                }
-            }
-            if(row.numberOfCells < row.areas.size()) {
-                for(int i = row.numberOfCells; i < row.areas.size(); i++) {
-                    row.areas.remove(i);
-                }
-            }
-        }
-        
-        if(layout.sortedRows.size() > 0) {
-            LinkedList<RowLayout> sortedRows = new LinkedList();
-            for(String sorted : layout.sortedRows) {
-                for(RowLayout row : layout.rows) {
-                    if(row.rowId.equals(sorted)) {
-                        sortedRows.add(row);
-                        break;
-                    }
-                }
-            }
-            layout.rows = sortedRows;
-        }     
-    }
-
     public void deletePageAreas() {
         layout.rows = new LinkedList();
     }
 
-    public List<String> getApplicationIds() {
-        List<String> ids = new ArrayList<String>();
-        
-        ids.addAll(layout.getApplicationIds());
-        return ids;
+    public void createCell(String incell, String aftercell) {
+        layout.createCell(incell, aftercell);
     }
 
-    public RowLayout createApplicationRow() {
-        RowLayout newRow = new RowLayout();
-        newRow.numberOfCells = 1;
-        newRow.rowId = UUID.randomUUID().toString();
-        return newRow;
-    }
 
 
     public static class DefaultPages {
@@ -182,9 +98,5 @@ public class Page extends DataCommon implements Cloneable {
     @Transient
     public Entry linkToListEntry;
     
-
-    public HashMap<String, AppConfiguration> getApplications() {
-        return layout.buildAppConfigurationList();
-    }
     
 }

@@ -13,7 +13,7 @@ import com.mongodb.Mongo;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageArea;
-import com.thundashop.core.pagemanager.data.RowLayout;
+
 import java.net.UnknownHostException;
 import java.util.Set;
 
@@ -38,19 +38,7 @@ public class MovePageAreas {
                 if (dataCommon instanceof Page) {
                     Page page = (Page)dataCommon;
                     int j = 1;
-                    for (RowLayout rowLayout : page.layout.rows) {
-//                        for (int i=0; i<rowLayout.numberOfCells; i++) {
-//                            String pageAreaName = "col_"+j;
-//                            PageArea pageArea = page.getPageAreaWithNullResult(pageAreaName);
-//                            if (pageArea != null) {
-//                                System.out.println(pageArea);
-//                                page.removePageArea(pageAreaName);
-//                                rowLayout.cells.add(pageArea);
-//                            }
-//                            j++;
-//                        }
-                    }
-                    
+
                     DBObject dbObject = morphia.toDBObject(page);
                     collection.save(dbObject);
                 }

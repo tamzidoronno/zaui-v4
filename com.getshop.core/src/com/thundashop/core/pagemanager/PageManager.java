@@ -5,27 +5,13 @@
 package com.thundashop.core.pagemanager;
 
 import com.getshop.scope.GetShopSession;
-import com.thundashop.core.appmanager.AppManager;
-import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.common.*;
-import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.listmanager.ListManager;
-import com.thundashop.core.listmanager.data.Entry;
-import com.thundashop.core.listmanager.data.EntryList;
-import com.thundashop.core.listmanager.data.ListType;
-import com.thundashop.core.pagemanager.data.CommonPageData;
 import com.thundashop.core.pagemanager.data.Page;
-import com.thundashop.core.pagemanager.data.PageArea;
-import com.thundashop.core.pagemanager.data.RowLayout;
-import com.thundashop.core.productmanager.ProductManager;
-import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.pagemanager.data.PageLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import javax.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -36,437 +22,160 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class PageManager extends ManagerBase implements IPageManager {
     
-    @Autowired
-    public ApplicationPoolImpl applicationPool;
-
-    @Autowired
-    public PagePoolImpl pagePool;
+    HashMap<String, Page> pages = new HashMap();
     
-    @Autowired
-    private UserManager userManager;
-    
-    @Autowired
-    private ListManager listManager;
-    
-    @Autowired
-    private ProductManager productManager;
-    
-    @Autowired
-    private AppManager appManager;
+    @Override
+    public Page createPage() throws ErrorException {
+        Page page = new Page();
+        if(pages.isEmpty()) {
+            page.id = "home";
+        }
+        page.storeId = storeId;
         
-    @PostConstruct
-    public void init() {
-        credentials = new Credentials(getClass());
-        credentials.manangerName = this.getClass().getSimpleName();
+        databaseSaver.saveObject(page, credentials);
+        pages.put(page.id, page);
+        return page;
     }
 
     @Override
-    public void initialize() {
-        pagePool.initialize(credentials, storeId);
-        super.initialize(); //To change body of generated methods, choose Tools | Templates.
+    public void dataFromDatabase(DataRetreived data) {
+        for(DataCommon obj : data.data) {
+            if(obj instanceof Page) {
+                Page page = (Page) obj;
+                pages.put(page.id, page);
+            }
+        }
     }
-    
+
     
     
     @Override
-    public void dataFromDatabase(DataRetreived dataRetreived) {
-        for (DataCommon data : dataRetreived.data) {
-            if (data instanceof Page) {
-                Page p = (Page) data;
-                pagePool.addFromDatabase(p);
-            }
-            if(data instanceof CommonPageData) {
-                pagePool.commonPageData = (CommonPageData) data;
-            }
-            if (data instanceof AppConfiguration)
-                applicationPool.addFromDatabase((AppConfiguration)data);
-        }
-    }
-
-    @Override
-    public Page getPage(String id) throws ErrorException {
-        Page res = pagePool.get(id);
-        return res;
-    }
-
-    @Override
-    public void changePageLayout(String pageId, int layout) throws ErrorException {
-        pagePool.changeLayout(pageId, layout);
-    }
-
-    @Override
-    public Page createPage(int layout, String parentId) throws ErrorException {
-        return pagePool.createNewPage(layout, parentId);
-    }
-    
-    @Override
-    public Page removeApplication(String applicationId, String pageid) throws ErrorException {
-        Page page = pagePool.get(pageid);
-        return pagePool.removeApplicationFromPage(page, applicationId);
-    }
-
-    @Override
-    public Page reorderApplication(String pageId, String appId, Boolean moveUp) throws ErrorException {
-        return pagePool.reOrderApplication(appId, pageId, moveUp);
-    }
-
-    @Override
-    public void setApplicationSettings(Settings settings) throws ErrorException {
-        applicationPool.saveSettings(settings);
-    }
-
-    @Override
-    public void setApplicationSticky(String appId, int toggle) throws ErrorException {
-        applicationPool.stickApplication(appId, toggle);
-    }
-
-    @Override
-    public Page changePageUserLevel(String pageId, int userLevel) throws ErrorException {
-        return pagePool.changePageUserLevel(pageId, userLevel);
-    }
-
-    @Override
-    public HashMap<String, Setting> getApplicationSettings(String name) throws ErrorException {
-        AppConfiguration app = applicationPool.getByName(name);
-        if (app != null)
-            return app.settings;
-        
-        return null;
-    }
-
-    @Override
-    public List<AppConfiguration> getApplications() throws ErrorException {
-        List<AppConfiguration> result = new ArrayList(applicationPool.getApplications().values());
-        return result;
-    }
-    
-    @Override
-    public List<AppConfiguration> getApplicationsForPage(String pageId) throws ErrorException {
-        Page page = pagePool.get(pageId);
-        List<AppConfiguration> result = new ArrayList(page.getApplications().values());
-        result.addAll(applicationPool.getThemeApplications());
-        return result;
-    }
-
-    @Override
-    public AppConfiguration addApplication(String applicationSettingId) throws ErrorException {
-        AppConfiguration res = applicationPool.createNewApplication(applicationSettingId);
-        applicationPool.setThemeSelectedToStoreConfiguration(res);
-        databaseSaver.saveObject(res, credentials);
-        return res;
-    }
-
-    @Override
-    public void saveApplicationConfiguration(AppConfiguration config) throws ErrorException {
-        applicationPool.saveApplicationConfiguration(config);
-    }
-    
-    @Override
-    public HashMap<String, Setting> getSecuredSettingsInternal(String appName) {
-        AppConfiguration config = applicationPool.getSecured(appName);
-        if (config != null)
-            return config.settings;
-        
-        return new HashMap();
-    }
-
-    @Override
-    public void deleteApplication(String instanceId) throws ErrorException {
-        applicationPool.deleteApplication(instanceId);
-        userManager.applicationInstanceDeleted(instanceId);
-        pagePool.removeApplication(instanceId);
-    }
-
-    @Override
-    public Page createPageWithId(int layout, String parentId, String id) throws ErrorException {
-        return pagePool.createNewPage(layout, parentId, id);
-    }
-
-    @Override
-    public void deletePage(String id) throws ErrorException {
-        pagePool.deletePage(id);
-    }
-
-    @Override
-    public void addExistingApplicationToPageArea(String pageId, String appId, String area) throws ErrorException {
-        System.out.println("Area: " + area);
-        pagePool.addExistingApplicationToArea(pageId, appId, area);
-    }
-
-    @Override
-    public void setParentPage(String pageId, String parentPageId) throws ErrorException {
-        Page page = pagePool.get(pageId);
-        Page toBeParent = pagePool.get(parentPageId);
-        
-        page.parent = toBeParent;
-        page.type = toBeParent.type;
-        pagePool.savePage(page);
-        
-    }
-
-    @Override
-    public HashMap<String, List<String>> getPagesForApplications(List<String> appIds) throws ErrorException {
-        if(appIds == null) {
-            throw new ErrorException(1000012);
-        }
-        
-        
-        if(appIds.size() == 0) {
-            throw new ErrorException(1000012);
-        }
-        
-        HashMap<String, List<String>> retval = new HashMap();
-        for(String appId : appIds) {
-            List<String> pages = findPagesForApplication(appId);
-            retval.put(appId, pages);
-        }
-        
-        return retval;
-    }
-
-    private List<String> findPagesForApplication(String appId) throws ErrorException {
-        List<String> pages = new ArrayList();
-        for(Page page : pagePool.pages.values()) {
-            Page finalizedPage = pagePool.get(page.id);
-            HashMap<String, AppConfiguration> apps = finalizedPage.getApplications();
-            for(String appIdOnPage : apps.keySet()) {
-                if(appIdOnPage.equals(appId)) {
-                    pages.add(page.id);
-                    continue;
-                }
-            }
-        }
-        
-        return pages;
-    }
-
-    @Override
-    public HashMap<String, String> translatePages(List<String> pages) throws ErrorException {
-        if(pages == null) {
-            throw new ErrorException(1000013);
-        }
-        
-        HashMap<String, String> translated = listManager.translateEntries(pages);
-        HashMap<String, String> translatedByProduct = productManager.translateEntries(pages);
-        
-        HashMap<String, String> result = new HashMap();
-        
-        for(String pageId : pages) {
-            String translationProduct = translatedByProduct.get(pageId);
-            String translation = translated.get(pageId);
-            
-            if(translation != null && translation.trim().length() > 0) {
-                result.put(pageId, translation);
-            }
-            
-            if(translationProduct != null && translationProduct.trim().length() > 0) {
-                result.put(pageId, translationProduct);
-            }
-        }
-        
-        return result;
-    }
-
-    @Override
-    public AppConfiguration addApplicationToPage(String pageId, String applicationSettingId, String pageArea) throws ErrorException {
-        return pagePool.addApplicationToPage(pageId, pageArea, applicationSettingId);
-    }
-
-    @Override
-    public void swapApplication(String fromAppId, String toAppId) throws ErrorException {
-        ApplicationSettings toApp = appManager.getApplication(toAppId);
-        
-        if (toApp == null) {
-            throw new ErrorException(18);
-        }
-        
-        ApplicationPoolImpl pool = applicationPool;
-        Map<String, AppConfiguration> allAddedApplications = pool.getApplications();
-        for(String instanceId : allAddedApplications.keySet()) {
-            AppConfiguration config = allAddedApplications.get(instanceId);
-            if(config.appSettingsId != null && config.appSettingsId.equals(fromAppId)) {
-                config.appSettingsId = toApp.id;
-                pool.saveApplicationConfiguration(config);
-            }
-        }
-    }
-
-    @Override
-    public void clearPageArea(String pageId, String pageAreaName) throws ErrorException {
-        Page page = pagePool.get(pageId);
-        PageArea pageArea = page.getPageArea(pageAreaName);
-        
-        if(pageArea == null) {
-            return;
-        }
-    }
-
-    @Override
-    public List<AppConfiguration> getApplicationsBasedOnApplicationSettingsId(String appSettingsId) throws ErrorException {
-        return applicationPool.getApplications(appSettingsId);
-    }
-
-    @Override
-    public void removeAllApplications(String appSettingsId) throws ErrorException {
-        List<AppConfiguration> allApps = this.getApplications();
-        
-        for(AppConfiguration config : allApps) {
-            if(config.appSettingsId != null && config.appSettingsId.equals(appSettingsId)) {
-                deleteApplication(config.id);
-            }
-        }
-    }
-
-    @Override
-    public List<AppConfiguration> getApplicationsByPageAreaAndSettingsId(String appSettingsId, String pageArea) throws ErrorException {
-        List<AppConfiguration> applications = getApplicationsBasedOnApplicationSettingsId(appSettingsId);
-        List<AppConfiguration> returnList = new ArrayList();
-        for (AppConfiguration appConfig : applications) {
-            if (pagePool.applicationExistsInArea(appConfig, pageArea)) {
-                returnList.add(appConfig.secureClone());
-            }
-        }
-        return returnList;
-    }
-
-    @Override
-    public void setPageDescription(String pageId, String description) throws ErrorException {
-        Page page = pagePool.get(pageId);
-        page.description = description;
-        pagePool.savePage(page);
-    }
-
-    @Override
-    public List<AppConfiguration> getApplicationsByType(String type) throws ErrorException {
-        List<AppConfiguration> apps = getApplications();
-        List<AppConfiguration> toReturn = new ArrayList();
-        for(AppConfiguration config : apps) {
-            try {
-                ApplicationSettings settings = appManager.getApplication(config.appSettingsId);
-                if(settings != null && settings.type.equals(type)) {
-                    toReturn.add(config);
-                }
-            }catch(ErrorException e) {
-                //If the application does not exists, the ignore it.
-                if(e.code != 18) {
-                    throw e;
-                }
-            }
-        }
-        
-        return toReturn;
-    }
-
-    @Override
-    public void savePage(Page page) throws ErrorException {
-        Page savedPage = getPage(page.id);
-        if (savedPage == null) {
-            throw new ErrorException(30);
-        }
-
-        pagePool.savePage(page);
-    }
-
-    @Override
-    public HashMap<String, Setting> getSecuredSettings(String applicationInstanceId) {
-        if (applicationPool.getSecured(applicationInstanceId) != null) {
-            return applicationPool.getSecured(applicationInstanceId).settings;
-        }
-        
-        return new HashMap();
-    }
-    
-    private List<Entry> searchEntry(List<Entry> entries, String search) {
-        List<Entry> retEntries = new ArrayList();
-        for (Entry entry : entries) {
-            if (entry.subentries != null && entry.subentries.size() > 0) {
-                List<Entry> subEntries = searchEntry(entry.subentries, search);
-                retEntries.addAll(subEntries);
-            }
-            if (entry.name != null && entry.name.toLowerCase().contains(search.toLowerCase())) {
-                retEntries.add(entry);
-            }
-        }
-        
-        return retEntries;
-    }
-
-    @Override
-    public List<Page> search(String search) throws ErrorException {
-        List<Page> retPages = new ArrayList();
-        
-        if (search == null || search.length() < 3) {
-            return retPages;
-        }
-        
-        List<EntryList> allListsByType = listManager.getAllListsByType(ListType.MENU.toString());
-        for (EntryList list : allListsByType) {
-            List<Entry> founds = searchEntry(list.entries, search);
-            for (Entry found : founds) {
-                Page foundPage = getPage(found.pageId);
-                foundPage.linkToListEntry = found;
-                retPages.add(foundPage);
-            }
-        }
-        
-        return retPages;
-    }
-
-    @Override
-    public void switchApplicationAreas(String pageId, String fromArea, String toArea) throws ErrorException {
-        Page page = getPage(pageId);
-        page.switchApplications(fromArea, toArea);
-        savePage(page);
-    }
-
-    public AppConfiguration getApplicationById(String listId) throws ErrorException {
-        return applicationPool.get(listId);
+    public AppConfiguration addApplication(String applicationSettingId, String appAreaId) throws ErrorException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void clearPage(String pageId) throws ErrorException {
-        Page page = getPage(pageId);
-        page.deletePageAreas();
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void toggleBottomApplicationArea(String pageId, String pageAreaId) throws ErrorException {
-        Page page = pagePool.get(pageId);
-        PageArea pageArea = page.getPageArea(pageAreaId);
-        pageArea.bottomAreaActivated = !pageArea.bottomAreaActivated;
-        pagePool.savePage(page);
+    public void setPageDescription(String pageId, String description) throws ErrorException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void addApplicationToBottomArea(String pageId, String appAreaId, String applicationSettingId, String position) throws ErrorException {
-        Page page = pagePool.get(pageId);
-        PageArea pageArea = page.getPageArea(appAreaId);
-        AppConfiguration config = applicationPool.createNewApplication(applicationSettingId);
-        
-        if (position.equals("left"))
-            pageArea.bottomLeftApplicationId = config.id;
-        
-        if (position.equals("middle"))
-            pageArea.bottomMiddleApplicationId = config.id;
-        
-        if (position.equals("right"))
-            pageArea.bottomRightApplicationId = config.id;
-        
-        pagePool.savePage(page);
+    public Page getPage(String id) throws ErrorException {
+        return pages.get(id);
     }
+
+    @Override
+    public void deleteApplication(String id) throws ErrorException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void saveApplicationConfiguration(AppConfiguration config) throws ErrorException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Page removeApplication(String pageAreaId) throws ErrorException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Page changePageUserLevel(String pageId, int userLevel) throws ErrorException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public HashMap<String, Setting> getSecuredSettingsInternal(String appName) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<AppConfiguration> getApplications() throws ErrorException {
+        return new ArrayList();
+    }
+
+    @Override
+    public List<AppConfiguration> getApplicationsByType(String type) throws ErrorException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<AppConfiguration> getApplicationsBasedOnApplicationSettingsId(String appSettingsId) throws ErrorException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<AppConfiguration> getApplicationsByPageAreaAndSettingsId(String appSettingsId, String pageArea) throws ErrorException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<AppConfiguration> getApplicationsForPage(String pageId) throws ErrorException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void deletePage(String id) throws ErrorException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void addExistingApplicationToPageArea(String pageId, String appId, String area) throws ErrorException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setParentPage(String pageId, String parentPageId) throws ErrorException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public HashMap<String, List<String>> getPagesForApplications(List<String> appIds) throws ErrorException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public HashMap<String, String> translatePages(List<String> pages) throws ErrorException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+
+    @Override
+    public void clearPageArea(String pageId, String pageArea) throws ErrorException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void savePage(Page page) throws ErrorException {
+        pages.put(page.id, page);
+        databaseSaver.saveObject(page, credentials);
+    }
+
+    @Override
+    public HashMap<String, Setting> getSecuredSettings(String applicationInstanceId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 
     @Override
     public String createNewRow(String pageId) throws ErrorException {
-        Page page = getPage(pageId);
-        RowLayout row = page.createApplicationRow();
-        row.numberOfCells = 0;
-        page.layout.rows.add(row);
-        saveObject(page);
-        return row.rowId;
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public AppConfiguration addApplicationToRow(String pageId, String applicationSettingId, String rowId) throws ErrorException {
-        return pagePool.addApplicationToRow(pageId, rowId, applicationSettingId);
+    public void addLayoutCell(String pageId, String incell, String aftercell) throws ErrorException {
+        Page page = pages.get(pageId);
+        if(page == null) {
+            throw new ErrorException(30);
+        }
+        
+        page.createCell(incell, aftercell);
+        savePage(page);
     }
+    
 }

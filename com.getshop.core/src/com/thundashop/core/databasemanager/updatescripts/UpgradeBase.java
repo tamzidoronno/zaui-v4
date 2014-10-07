@@ -192,9 +192,6 @@ public class UpgradeBase {
         return retval;
     }
 
-    public void addApplicationToPage(Page page, String area, String appId) throws ErrorException {
-        page.getPageArea(area).applicationsList.add(appId);
-    }
 
     public AppConfiguration createApp(String appName, String appId) {
         String appid = UUID.randomUUID().toString();

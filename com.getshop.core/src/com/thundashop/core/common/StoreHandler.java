@@ -45,7 +45,7 @@ public class StoreHandler {
 
     public synchronized Object executeMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
         scope.setStoreId(storeId);
-        
+        System.out.println(inObject.sessionId);
         setSessionObject(inObject.sessionId);
         
         Class aClass = loadClass(inObject.interfaceName);
@@ -133,9 +133,9 @@ public class StoreHandler {
             throw new ErrorException(85);
         } catch (InvocationTargetException ex) {
             Throwable cause = ex.getCause();
+            ex.printStackTrace();
             if (cause instanceof ErrorException) { throw (ErrorException) cause; }
 
-            cause.printStackTrace();
             ErrorException aex = new ErrorException(86);
             aex.additionalInformation = cause.getLocalizedMessage() + " <br> " + stackTraceToString(cause);
             throw aex;

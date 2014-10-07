@@ -1,115 +1,120 @@
 GetShop = {};
 
 thundashop.framework = {
-    bindEvents : function() {
-        $('*[gstype="form"] *[gstype="submit"]').live('click', function(e) {
+    bindEvents: function () {
+        $('*[gstype="form"] *[gstype="submit"]').live('click', function (e) {
             thundashop.framework.submitFromEvent(e);
         });
-        $('*[gstype="changesubmit"]').live('change', function(e) {
-            if($(this).attr('method')) {
+        $('*[gstype="changesubmit"]').live('change', function (e) {
+            if ($(this).attr('method')) {
                 thundashop.framework.submitElement(e);
             } else {
                 thundashop.framework.submitFromEvent(e);
             }
         });
-        $('*[gstype="form"] *[gstype="submitenter"], *[gstype="clicksubmit"]').live('keyup', function(e) {
-            if(e.keyCode == 13) {
-                if($(e.target).attr('gsType') == "clicksubmit") {
+        $('*[gstype="form"] *[gstype="submitenter"], *[gstype="clicksubmit"]').live('keyup', function (e) {
+            if (e.keyCode == 13) {
+                if ($(e.target).attr('gsType') == "clicksubmit") {
                     thundashop.framework.submitElement(e);
                 } else {
                     thundashop.framework.submitFromEvent(e);
-                }   
+                }
             }
         });
-        $('*[gstype="clicksubmit"]').live('click', function(e) {
+        $('*[gstype="clicksubmit"]').live('click', function (e) {
             var target = $(e.target);
-            if(target.prop("tagName") == "INPUT") {
+            if (target.prop("tagName") == "INPUT") {
                 return;
             }
             thundashop.framework.submitElement(e);
         });
+        $(document).on('click', '.gs_addcell', this.addCell);
         $('.toogleDeepfreeze').live('click', this.showDeepFreezOption);
         $('.savedeepfreeze').live('click', this.toggleDeepFreeze);
     },
-            
-    showDeepFreezOption: function() {
+    addCell: function () {
+        var data = {};
+        $(this).each(function () {
+            $.each(this.attributes, function () {
+                data[this.name] = this.value;
+            });
+        });
+        var event = thundashop.Ajax.createEvent('','addCell',$(this),data);
+        thundashop.Ajax.post(event);
+    },
+    showDeepFreezOption: function () {
         var event = thundashop.Ajax.createEvent(null, "showDeepFreeze", null);
         thundashop.common.showInformationBox(event, "Lock/Unlock deepfreeze");
     },
-    
-    submitElement : function(event) {
+    submitElement: function (event) {
         var element = $(event.target);
         var name = element.attr('gsname');
         var value = element.attr('gsvalue');
         var method = element.attr('method');
-        if(!value) {
+        if (!value) {
             value = element.val();
         }
-        
+
         var data = {}
         data[name] = value;
-        
+
         var event = thundashop.Ajax.createEvent("", method, element, data);
         thundashop.framework.postToChannel(event, element);
     },
-    
-    getCallBackFunction: function(element) {
+    getCallBackFunction: function (element) {
         var appName = element.closest('.app').attr('app');
         var appContext = GetShop[appName]
-        if (appContext && appContext.formPosted) 
+        if (appContext && appContext.formPosted)
             return appContext.formPosted
-        
-        if (element && typeof(element.callback) !== "undefined" ) {
+
+        if (element && typeof (element.callback) !== "undefined") {
             return element.callback;
         }
-        
+
         return null;
     },
-    
-    postToChannel : function(event, element) {
+    postToChannel: function (event, element) {
         thundashop.common.destroyCKEditors();
         var callback = this.getCallBackFunction(element);
-        if(!element.attr('output')) {
+        if (!element.attr('output')) {
             thundashop.Ajax.post(event, callback, event);
             thundashop.common.hideInformationBox(null);
-        } else if(element.attr('output') == "informationbox") {
+        } else if (element.attr('output') == "informationbox") {
             var informationTitle = element.attr('informationtitle');
             var box = thundashop.common.showInformationBox(event, informationTitle);
-            box.css('min-height','10px');
-            if (typeof(callback) == "function") {
+            box.css('min-height', '10px');
+            if (typeof (callback) == "function") {
                 callback(box.html(), event);
             }
         }
     },
-    
-    submitFromEvent : function(event) {
+    submitFromEvent: function (event) {
         var target = $(event.target);
         thundashop.framework.submitFromElement(target);
     },
-    
-    createGsArgs : function(form) {
+    createGsArgs: function (form) {
         var args = {};
         var ckeditors = thundashop.common.destroyCKEditors();
-        
-        form.find('*[gsname]').each(function(e) {
+
+        form.find('*[gsname]').each(function (e) {
             var name = $(this).attr('gsname');
-            if(!name || name.trim().length == 0) {
+            if (!name || name.trim().length == 0) {
                 alert('Name attribute is missing for gstype value, need to be fixed');
                 return;
             }
             var value = $(this).attr('gsvalue');
-            if(!value || value === undefined) {
+            if (!value || value === undefined) {
                 value = $(this).val();
             }
-        
-            if($(this).is(':checkbox')) {
+
+            if ($(this).is(':checkbox')) {
                 value = $(this).is(':checked');
             }
-            if($(this).attr('gstype') == "ckeditor") {
+            if ($(this).attr('gstype') == "ckeditor") {
                 value = ckeditors[$(this).attr('id')];
             }
-            if($(this).is(':radio')) {
-                if($(this).is(':checked')) {
+            if ($(this).is(':radio')) {
+                if ($(this).is(':checked')) {
                     args[name] = $(this).val();
                 }
             } else {
@@ -118,30 +123,27 @@ thundashop.framework = {
         });
         return args;
     },
-            
-    submitFromElement : function(element) {
+    submitFromElement: function (element) {
         var form = element.closest('*[gstype="form"]');
         var method = form.attr('method');
         var args = thundashop.framework.createGsArgs(form);
         form.callback = element.callback;
         var event = thundashop.Ajax.createEvent("", method, element, args);
-        thundashop.framework.postToChannel(event, form);        
+        thundashop.framework.postToChannel(event, form);
     },
-    
-    reprintPage : function() {
+    reprintPage: function () {
         var event = thundashop.Ajax.createEvent("", "systemReloadPage", null, null);
         thundashop.Ajax.post(event);
     },
-            
-    toggleDeepFreeze: function() {
+    toggleDeepFreeze: function () {
         var data = {
             password: $('#deepfreezepassword').val()
         };
-        
+
         var event = thundashop.Ajax.createEvent(null, "toggleDeepfreeze", null, data);
-        thundashop.Ajax.post(event, function(response) {
+        thundashop.Ajax.post(event, function (response) {
             if (response.errorCodes.length === 0) {
-                location.reload();    
+                location.reload();
             }
         });
     }

@@ -41,20 +41,10 @@ public abstract class AProductManager extends ManagerBase {
     @Autowired
     public ListManager listManager;
     
-    private HashMap<String, Setting> getSettings(String phpApplicationName) throws ErrorException {
-        return pageManager.getApplicationSettings(phpApplicationName);
-    }
     
     public Product finalize(Product product) throws ErrorException {
         if (product != null && product.pageId != null && product.page == null) {
             product.page = pageManager.getPage(product.pageId);
-        }
-
-        if (product != null) {
-            product = product.clone();
-            if (getSession().currentUser == null || !getSession().currentUser.isAdministrator()) {
-                product.price = ExchangeConvert.calculateExchangeRate(getSettings("Settings"), product.price);
-            }
         }
 
         product.attributesAdded = new HashMap();
@@ -73,27 +63,6 @@ public abstract class AProductManager extends ManagerBase {
         }
         
         Page page = pageManager.getPage(product.pageId);
-        HashMap<String, AppConfiguration> apps = page.getApplications();
-        
-        //Adding text
-        if(product.page.pageType == 2) {
-            product.descriptions = new ArrayList();
-            for(AppConfiguration config : apps.values()) {
-                if(config.appName.equals("ContentManager")) {
-                    product.descriptions.add(contentManager.getContent(config.id));
-                }
-            }
-
-            //Adding the images.
-            product.imagesAdded = new ArrayList();
-            for(AppConfiguration config : apps.values()) {
-                if(config.appName.equals("ImageDisplayer")) {
-                    if(config.settings.get("image") != null) {
-                        product.imagesAdded.add(config.settings.get("image").value);
-                    }
-                }
-            }
-        }
         
         if(product.original_price == null) {
             product.original_price = product.price;
@@ -129,21 +98,6 @@ public abstract class AProductManager extends ManagerBase {
         }
     }
 
-    protected void createProductPage(Product product) throws ErrorException {
-        if (product.page == null) {
-            product.page = pageManager.createPage(Page.LayoutType.HeaderMiddleFooter, "");
-            product.pageId = product.page.id;
-            //
-            AppConfiguration config = pageManager.addApplicationToPage(product.page.id, "dcd22afc-79ba-4463-bb5c-38925468ae26", "main_1");
-
-            Setting setting = new Setting();
-            setting.type = "productid";
-            setting.secure = false;
-            setting.value = product.id;
-            config.settings.put(setting.type, setting);
-            pageManager.saveApplicationConfiguration(config);
-        }
-    }
 
     protected Product getProduct(String productId) throws ErrorException {
         Product product = products.get(productId);

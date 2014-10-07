@@ -2909,7 +2909,7 @@ class OrderManager(object):
 class PageManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
-  def addApplication(self, applicationSettingId):
+  def addApplication(self, applicationSettingId, appAreaId):
     args = collections.OrderedDict()
     if isinstance(applicationSettingId,GetShopBaseClass): 
       args["applicationSettingId"]=json.dumps(applicationSettingId.__dict__)
@@ -2918,21 +2918,6 @@ class PageManager(object):
         args["applicationSettingId"]=json.dumps(applicationSettingId)
       except (ValueError, AttributeError):
         args["applicationSettingId"]=applicationSettingId
-    data = EmptyClass()
-    data.args = args
-    data.method = "addApplication"
-    data.interfaceName = "core.pagemanager.IPageManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def addApplicationToBottomArea(self, pageId, appAreaId, applicationSettingId, position):
-    args = collections.OrderedDict()
-    if isinstance(pageId,GetShopBaseClass): 
-      args["pageId"]=json.dumps(pageId.__dict__)
-    else:
-      try:
-        args["pageId"]=json.dumps(pageId)
-      except (ValueError, AttributeError):
-        args["pageId"]=pageId
     if isinstance(appAreaId,GetShopBaseClass): 
       args["appAreaId"]=json.dumps(appAreaId.__dict__)
     else:
@@ -2940,81 +2925,9 @@ class PageManager(object):
         args["appAreaId"]=json.dumps(appAreaId)
       except (ValueError, AttributeError):
         args["appAreaId"]=appAreaId
-    if isinstance(applicationSettingId,GetShopBaseClass): 
-      args["applicationSettingId"]=json.dumps(applicationSettingId.__dict__)
-    else:
-      try:
-        args["applicationSettingId"]=json.dumps(applicationSettingId)
-      except (ValueError, AttributeError):
-        args["applicationSettingId"]=applicationSettingId
-    if isinstance(position,GetShopBaseClass): 
-      args["position"]=json.dumps(position.__dict__)
-    else:
-      try:
-        args["position"]=json.dumps(position)
-      except (ValueError, AttributeError):
-        args["position"]=position
     data = EmptyClass()
     data.args = args
-    data.method = "addApplicationToBottomArea"
-    data.interfaceName = "core.pagemanager.IPageManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def addApplicationToPage(self, pageId, applicationSettingId, pageArea):
-    args = collections.OrderedDict()
-    if isinstance(pageId,GetShopBaseClass): 
-      args["pageId"]=json.dumps(pageId.__dict__)
-    else:
-      try:
-        args["pageId"]=json.dumps(pageId)
-      except (ValueError, AttributeError):
-        args["pageId"]=pageId
-    if isinstance(applicationSettingId,GetShopBaseClass): 
-      args["applicationSettingId"]=json.dumps(applicationSettingId.__dict__)
-    else:
-      try:
-        args["applicationSettingId"]=json.dumps(applicationSettingId)
-      except (ValueError, AttributeError):
-        args["applicationSettingId"]=applicationSettingId
-    if isinstance(pageArea,GetShopBaseClass): 
-      args["pageArea"]=json.dumps(pageArea.__dict__)
-    else:
-      try:
-        args["pageArea"]=json.dumps(pageArea)
-      except (ValueError, AttributeError):
-        args["pageArea"]=pageArea
-    data = EmptyClass()
-    data.args = args
-    data.method = "addApplicationToPage"
-    data.interfaceName = "core.pagemanager.IPageManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def addApplicationToRow(self, pageId, rowId, applicationSettingId):
-    args = collections.OrderedDict()
-    if isinstance(pageId,GetShopBaseClass): 
-      args["pageId"]=json.dumps(pageId.__dict__)
-    else:
-      try:
-        args["pageId"]=json.dumps(pageId)
-      except (ValueError, AttributeError):
-        args["pageId"]=pageId
-    if isinstance(rowId,GetShopBaseClass): 
-      args["rowId"]=json.dumps(rowId.__dict__)
-    else:
-      try:
-        args["rowId"]=json.dumps(rowId)
-      except (ValueError, AttributeError):
-        args["rowId"]=rowId
-    if isinstance(applicationSettingId,GetShopBaseClass): 
-      args["applicationSettingId"]=json.dumps(applicationSettingId.__dict__)
-    else:
-      try:
-        args["applicationSettingId"]=json.dumps(applicationSettingId)
-      except (ValueError, AttributeError):
-        args["applicationSettingId"]=applicationSettingId
-    data = EmptyClass()
-    data.args = args
-    data.method = "addApplicationToRow"
+    data.method = "addApplication"
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -3047,7 +2960,7 @@ class PageManager(object):
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
-  def changePageLayout(self, pageId, layout):
+  def addLayoutCell(self, pageId, incell, aftercell):
     args = collections.OrderedDict()
     if isinstance(pageId,GetShopBaseClass): 
       args["pageId"]=json.dumps(pageId.__dict__)
@@ -3056,16 +2969,23 @@ class PageManager(object):
         args["pageId"]=json.dumps(pageId)
       except (ValueError, AttributeError):
         args["pageId"]=pageId
-    if isinstance(layout,GetShopBaseClass): 
-      args["layout"]=json.dumps(layout.__dict__)
+    if isinstance(incell,GetShopBaseClass): 
+      args["incell"]=json.dumps(incell.__dict__)
     else:
       try:
-        args["layout"]=json.dumps(layout)
+        args["incell"]=json.dumps(incell)
       except (ValueError, AttributeError):
-        args["layout"]=layout
+        args["incell"]=incell
+    if isinstance(aftercell,GetShopBaseClass): 
+      args["aftercell"]=json.dumps(aftercell.__dict__)
+    else:
+      try:
+        args["aftercell"]=json.dumps(aftercell)
+      except (ValueError, AttributeError):
+        args["aftercell"]=aftercell
     data = EmptyClass()
     data.args = args
-    data.method = "changePageLayout"
+    data.method = "addLayoutCell"
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -3143,54 +3063,11 @@ class PageManager(object):
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
-  def createPage(self, layout, parentId):
+  def createPage(self):
     args = collections.OrderedDict()
-    if isinstance(layout,GetShopBaseClass): 
-      args["layout"]=json.dumps(layout.__dict__)
-    else:
-      try:
-        args["layout"]=json.dumps(layout)
-      except (ValueError, AttributeError):
-        args["layout"]=layout
-    if isinstance(parentId,GetShopBaseClass): 
-      args["parentId"]=json.dumps(parentId.__dict__)
-    else:
-      try:
-        args["parentId"]=json.dumps(parentId)
-      except (ValueError, AttributeError):
-        args["parentId"]=parentId
     data = EmptyClass()
     data.args = args
     data.method = "createPage"
-    data.interfaceName = "core.pagemanager.IPageManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def createPageWithId(self, layout, parentId, id):
-    args = collections.OrderedDict()
-    if isinstance(layout,GetShopBaseClass): 
-      args["layout"]=json.dumps(layout.__dict__)
-    else:
-      try:
-        args["layout"]=json.dumps(layout)
-      except (ValueError, AttributeError):
-        args["layout"]=layout
-    if isinstance(parentId,GetShopBaseClass): 
-      args["parentId"]=json.dumps(parentId.__dict__)
-    else:
-      try:
-        args["parentId"]=json.dumps(parentId)
-      except (ValueError, AttributeError):
-        args["parentId"]=parentId
-    if isinstance(id,GetShopBaseClass): 
-      args["id"]=json.dumps(id.__dict__)
-    else:
-      try:
-        args["id"]=json.dumps(id)
-      except (ValueError, AttributeError):
-        args["id"]=id
-    data = EmptyClass()
-    data.args = args
-    data.method = "createPageWithId"
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -3221,21 +3098,6 @@ class PageManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "deletePage"
-    data.interfaceName = "core.pagemanager.IPageManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getApplicationSettings(self, name):
-    args = collections.OrderedDict()
-    if isinstance(name,GetShopBaseClass): 
-      args["name"]=json.dumps(name.__dict__)
-    else:
-      try:
-        args["name"]=json.dumps(name)
-      except (ValueError, AttributeError):
-        args["name"]=name
-    data = EmptyClass()
-    data.args = args
-    data.method = "getApplicationSettings"
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -3374,69 +3236,18 @@ class PageManager(object):
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
-  def removeAllApplications(self, appSettingsId):
+  def removeApplication(self, pageAreaId):
     args = collections.OrderedDict()
-    if isinstance(appSettingsId,GetShopBaseClass): 
-      args["appSettingsId"]=json.dumps(appSettingsId.__dict__)
+    if isinstance(pageAreaId,GetShopBaseClass): 
+      args["pageAreaId"]=json.dumps(pageAreaId.__dict__)
     else:
       try:
-        args["appSettingsId"]=json.dumps(appSettingsId)
+        args["pageAreaId"]=json.dumps(pageAreaId)
       except (ValueError, AttributeError):
-        args["appSettingsId"]=appSettingsId
-    data = EmptyClass()
-    data.args = args
-    data.method = "removeAllApplications"
-    data.interfaceName = "core.pagemanager.IPageManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def removeApplication(self, applicationId, pageid):
-    args = collections.OrderedDict()
-    if isinstance(applicationId,GetShopBaseClass): 
-      args["applicationId"]=json.dumps(applicationId.__dict__)
-    else:
-      try:
-        args["applicationId"]=json.dumps(applicationId)
-      except (ValueError, AttributeError):
-        args["applicationId"]=applicationId
-    if isinstance(pageid,GetShopBaseClass): 
-      args["pageid"]=json.dumps(pageid.__dict__)
-    else:
-      try:
-        args["pageid"]=json.dumps(pageid)
-      except (ValueError, AttributeError):
-        args["pageid"]=pageid
+        args["pageAreaId"]=pageAreaId
     data = EmptyClass()
     data.args = args
     data.method = "removeApplication"
-    data.interfaceName = "core.pagemanager.IPageManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def reorderApplication(self, pageId, appId, moveUp):
-    args = collections.OrderedDict()
-    if isinstance(pageId,GetShopBaseClass): 
-      args["pageId"]=json.dumps(pageId.__dict__)
-    else:
-      try:
-        args["pageId"]=json.dumps(pageId)
-      except (ValueError, AttributeError):
-        args["pageId"]=pageId
-    if isinstance(appId,GetShopBaseClass): 
-      args["appId"]=json.dumps(appId.__dict__)
-    else:
-      try:
-        args["appId"]=json.dumps(appId)
-      except (ValueError, AttributeError):
-        args["appId"]=appId
-    if isinstance(moveUp,GetShopBaseClass): 
-      args["moveUp"]=json.dumps(moveUp.__dict__)
-    else:
-      try:
-        args["moveUp"]=json.dumps(moveUp)
-      except (ValueError, AttributeError):
-        args["moveUp"]=moveUp
-    data = EmptyClass()
-    data.args = args
-    data.method = "reorderApplication"
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -3467,58 +3278,6 @@ class PageManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "savePage"
-    data.interfaceName = "core.pagemanager.IPageManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def search(self, search):
-    args = collections.OrderedDict()
-    if isinstance(search,GetShopBaseClass): 
-      args["search"]=json.dumps(search.__dict__)
-    else:
-      try:
-        args["search"]=json.dumps(search)
-      except (ValueError, AttributeError):
-        args["search"]=search
-    data = EmptyClass()
-    data.args = args
-    data.method = "search"
-    data.interfaceName = "core.pagemanager.IPageManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def setApplicationSettings(self, settings):
-    args = collections.OrderedDict()
-    if isinstance(settings,GetShopBaseClass): 
-      args["settings"]=json.dumps(settings.__dict__)
-    else:
-      try:
-        args["settings"]=json.dumps(settings)
-      except (ValueError, AttributeError):
-        args["settings"]=settings
-    data = EmptyClass()
-    data.args = args
-    data.method = "setApplicationSettings"
-    data.interfaceName = "core.pagemanager.IPageManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def setApplicationSticky(self, appId, toggle):
-    args = collections.OrderedDict()
-    if isinstance(appId,GetShopBaseClass): 
-      args["appId"]=json.dumps(appId.__dict__)
-    else:
-      try:
-        args["appId"]=json.dumps(appId)
-      except (ValueError, AttributeError):
-        args["appId"]=appId
-    if isinstance(toggle,GetShopBaseClass): 
-      args["toggle"]=json.dumps(toggle.__dict__)
-    else:
-      try:
-        args["toggle"]=json.dumps(toggle)
-      except (ValueError, AttributeError):
-        args["toggle"]=toggle
-    data = EmptyClass()
-    data.args = args
-    data.method = "setApplicationSticky"
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -3563,79 +3322,6 @@ class PageManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "setParentPage"
-    data.interfaceName = "core.pagemanager.IPageManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def swapApplication(self, fromAppId, toAppId):
-    args = collections.OrderedDict()
-    if isinstance(fromAppId,GetShopBaseClass): 
-      args["fromAppId"]=json.dumps(fromAppId.__dict__)
-    else:
-      try:
-        args["fromAppId"]=json.dumps(fromAppId)
-      except (ValueError, AttributeError):
-        args["fromAppId"]=fromAppId
-    if isinstance(toAppId,GetShopBaseClass): 
-      args["toAppId"]=json.dumps(toAppId.__dict__)
-    else:
-      try:
-        args["toAppId"]=json.dumps(toAppId)
-      except (ValueError, AttributeError):
-        args["toAppId"]=toAppId
-    data = EmptyClass()
-    data.args = args
-    data.method = "swapApplication"
-    data.interfaceName = "core.pagemanager.IPageManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def switchApplicationAreas(self, pageId, fromArea, toArea):
-    args = collections.OrderedDict()
-    if isinstance(pageId,GetShopBaseClass): 
-      args["pageId"]=json.dumps(pageId.__dict__)
-    else:
-      try:
-        args["pageId"]=json.dumps(pageId)
-      except (ValueError, AttributeError):
-        args["pageId"]=pageId
-    if isinstance(fromArea,GetShopBaseClass): 
-      args["fromArea"]=json.dumps(fromArea.__dict__)
-    else:
-      try:
-        args["fromArea"]=json.dumps(fromArea)
-      except (ValueError, AttributeError):
-        args["fromArea"]=fromArea
-    if isinstance(toArea,GetShopBaseClass): 
-      args["toArea"]=json.dumps(toArea.__dict__)
-    else:
-      try:
-        args["toArea"]=json.dumps(toArea)
-      except (ValueError, AttributeError):
-        args["toArea"]=toArea
-    data = EmptyClass()
-    data.args = args
-    data.method = "switchApplicationAreas"
-    data.interfaceName = "core.pagemanager.IPageManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def toggleBottomApplicationArea(self, pageId, appAreaId):
-    args = collections.OrderedDict()
-    if isinstance(pageId,GetShopBaseClass): 
-      args["pageId"]=json.dumps(pageId.__dict__)
-    else:
-      try:
-        args["pageId"]=json.dumps(pageId)
-      except (ValueError, AttributeError):
-        args["pageId"]=pageId
-    if isinstance(appAreaId,GetShopBaseClass): 
-      args["appAreaId"]=json.dumps(appAreaId.__dict__)
-    else:
-      try:
-        args["appAreaId"]=json.dumps(appAreaId)
-      except (ValueError, AttributeError):
-        args["appAreaId"]=appAreaId
-    data = EmptyClass()
-    data.args = args
-    data.method = "toggleBottomApplicationArea"
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 

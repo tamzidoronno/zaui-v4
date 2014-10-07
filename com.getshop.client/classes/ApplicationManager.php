@@ -364,26 +364,15 @@ class ApplicationManager extends FactoryBase {
         echo "</div>";
     }
 
-    public function setPageLayout() {
-        if ($_POST['data']['pagetype'] == "product") {
-            $page = $this->getApi()->getPageManager()->createPage(-1, "");
-            $page->pageType = 2;
-            $page = new Page($page);
-        } else {
-            $page = $this->getPage();
-        }
-        $pb = $page->loadPageBuilder();
-        if (isset($_POST['data']['updatelayout'])) {
-            $pb->activateBuildLayoutMode();
-        }
-        $layout = $pb->updateLayoutConfig();
-        $page->setLayout($layout);
-        $this->addProductData($page->backendPage);
-    }
-
     public function showApplications() {
         $this->subscriptions = $this->getFactory()->getApi()->getAppManager()->getAllApplicationSubscriptions(false);
         $this->includefile('applicationSet');
+    }
+    
+    public function addCell() {
+        $incell = $_POST['data']['incell'];
+        $aftercell = $_POST['data']['aftercell'];
+        $this->getApi()->getPageManager()->addLayoutCell($this->getFactory()->getPage()->getId(), $incell, $aftercell);
     }
 
     public function displayAllTheemes() {

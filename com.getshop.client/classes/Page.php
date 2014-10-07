@@ -1,279 +1,49 @@
 <?php
 
-/**
- * Description of Page
- *
- * @author ktonder
- */
-class Page extends FactoryBase {
-
-    private $userLevel = 0;
-    public $id;
-    public $skeletonType;
-    public $areas;
-    public $description;
-    public $backendPage;
-    public $layout;
-    public static $systemPages = array("orderoverview", "checkout", "myaccount", "users", "settings", "domain", "cart", "callback");
-
-    /** @var core_pagemanager_data_Page */
-    private $parentPage;
-
-    public function getApplications() {
-        $apps = array();
-        foreach ($this->layout->otherAreas as $area) {
-            $pageArea = new PageArea($this,$area);
-            $apps = array_merge($apps, $pageArea->getApplications());
-        }
-        if(isset($this->layout->rows)) {
-            foreach ($this->layout->rows as $row) {
-                foreach($row->areas as $area) {
-                    $pageArea = new PageArea($this,$area);
-                    $apps = array_merge($apps, $pageArea->getApplications());
-                }
-            }
-        }
-
-        return $apps;
-    }
-
-    public function isSystemPage() {
-        return in_array($this->id, Page::$systemPages);
-    }
-
-    /**
-     * Get the specified area.
-     * 
-     * @param string $area
-     * @return PageArea
-     */
-    public function getApplicationArea($area) {
-//        echo "<pre>";
-//        print_r($this->layout->otherAreas);
-//        echo "</pre>";
-//        exit(0);
-       if (!isset($this->layout->otherAreas->{$area})) {
-            $backendarea = new core_pagemanager_data_PageArea();
-            $backendarea->type = $area;
-            $backendarea->applications = array();
-            $backendarea->applicationsList = array();
-            $backendarea->applicationsSequenceList = array();
-            $backendarea->extraApplicationList = array();
-            return new PageArea($this, $backendarea);
-        }
-        return new PageArea($this, $this->layout->otherAreas->{$area});
-    }
-
-    public function standAloneApp($app) {
-        $this->skeletonType = 1;
-    }
-
-    /**
-     * @return core_pagemanager_data_PageLayout 
-     */
-    public function getLayout() {
-        return $this->layout;
-    }
+class Page {
+    var $javapage;
+    /* @var $factory Factory */
+    var $factory;
     
     /**
-     * @param core_pagemanager_data_Page $page
-     */
-    function __construct($page) {
-        if (!$page) {
-            $this->skeletonType = "NotFound";
-        } else {
-            $this->backendPage = $page;
-            $this->parentPage = $page->parent;
-            $this->id = $page->id;
-            $this->areas = array();
-            $this->userLevel = $page->userLevel;
-            $this->description = $page->description;
-            $this->layout = $page->layout;
-            if (!isset($this->userLevel))
-                $this->userLevel = 0;
-        }
-    }
-
-    public function createAllPageAreas($page) {
-        foreach ($page->pageAreas as $pagearea) {
-            $this->areas[$pagearea->type] = new PageArea($this, $pagearea);
-        }
-
-        $this->skeletonType = $page->type;
-    }
-
-    public function getId() {
-        return $this->id;
-    }
-
-    public function getSkeletonType() {
-        return $this->skeletonType;
-    }
-
-    public function setSkeletonType($skeletonType) {
-        $this->skeletonType = $skeletonType;
-    }
-
-    public function getAreas() {
-        return $this->areas;
-    }
-
-    public function getLeftApplicationArea() {
-        return $this->areas['left'];
-    }
-
-    /**
-     * @return PageArea
-     */
-    public function getMiddleApplicationArea() {
-        return $this->areas['middle'];
-    }
-
-    /**
-     * @return PageArea
-     */
-    public function getSubHeaderArea() {
-        return $this->areas['subheader'];
-    }
-
-    /**
-     * @return PageArea
-     */
-    public function getRightApplicationArea() {
-        return $this->areas['right'];
-    }
-
-    public function loadSkeleton() {
-        $editorMode = $this->getFactory()->isEditorMode() ? "editormode" : '';
-        echo '<div id="skeleton" class="' . $editorMode . '">';
-        $this->loadSkeletonBody();
-        echo '</div>';
-        
-        if ($this->skeletonType != 5)
-            $this->includefile('bottom');
-    }
-
-    private function loadSkeletonBody() {
-        $tagClass = "gs_".$this->getPage()->backendPage->pageTag . " gs_" . $this->getPage()->backendPage->pageTagGroup;
-        echo '<div class="skelholder skeleton'.$this->skeletonType. " " . $tagClass .'" theme="' . $this->getThemeApplicationSettingsId() . '" page="'.$this->getPage()->id.'">';
-        echo '<div id="gs_customcss_page"><style>'.$this->backendPage->customCss.'</style></div>';
-        if (!$this->backendPage->hideHeader && $this->skeletonType != 5 ) {
-            $this->includefile('pageinfo');
-            $this->includefile('mainmenu');
-            $this->includefile('header');
-        }
-        
-        echo "<div class='gs_outer_mainarea'><div class='mainarea'>";
-        if ($this->skeletonType == 5 ) {
-            $this->includefile("skeleton5");
-        } else if ($this->skeletonType == 6 ) {
-            $this->includefile("skeleton6");
-        } else {
-            $pb = new PageBuilder($this->layout, $this->skeletonType, $this);
-            $pb->build();
-        }
-        
-        echo "</div></div>";
-
-        if (!@$this->backendPage->hideFooter && $this->skeletonType != 5) {
-            $this->includefile('footer');
-        }
-        echo "</div>";
-    }
-  
-    private function getMainMenuContent() {
-        ob_start();
-        $app = $this->getFactory()->getApplicationPool()->getApplicationInstance("bf35979f-6965-4fec-9cc4-c42afd3efdd7");
-        $app->render();
-        $html = ob_get_contents();
-        ob_end_clean();
-        return $html;
-    }
-
-    public function getThemeApplicationSettingsId() {
-        $theme = $this->getFactory()->getApplicationPool()->getSelectedThemeApp();
-        if ($theme != null) {
-            return $theme->getApplicationSettings()->id;
-        }
-        return "";
-    }
-
-    private function getSkeletonLayout() {
-        ob_start();
-        $this->loadSkeletonBody();
-        $html = ob_get_contents();
-        ob_end_clean();
-        return $html;
-    }
-
-    private function getBottomHtml() {
-        ob_start();
-        $this->getFactory()->getBottomHtml();
-        $html = ob_get_contents();
-        ob_end_clean();
-        return $html;
-    }
-
-    public function loadJsonContent() {
-        $contents['skeleton'] = $this->getSkeletonLayout();
-        $contents['mainmenu'] = $this->getMainMenuContent();
-        $contents['errors'] = $this->getFactory()->getErrorsHtml();
-        $contents['errorCodes'] = $this->getFactory()->getErrorCodes();
-        echo json_encode($contents);
-    }
-
-    public function getApplicationByAppId($id) {
-        $pageArea = $this->getApplicationAreaByAppId($id);
-
-        if ($pageArea) {
-            return $pageArea->getApplication($id);
-        }
-
-        $factory = IocContainer::getFactorySingelton();
-        return $factory->getApplicationPool()->getApplicationInstance($id);
-    }
-
-    /**
-     * Gets the page area by application id.
      * 
-     * @param int $id
-     * @return PageArea
+     * @param type $javapage
+     * @param Factory $factory
      */
-    public function getApplicationAreaByAppId($id) {
-        foreach ($this->areas as $area) {
-            if ($area->hasApplication($id)) {
-                return $area;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @return core_pagemanager_data_Page 
-     */
-    public function getParent() {
-        return $this->parentPage;
-    }
-
-    public function getUserLevel() {
-        if (!isset($this->userLevel))
-            $this->userLevel = 0;
-
-        return $this->userLevel;
-    }
-
-    public function loadPageBuilder() {
-        return new PageBuilder($this->layout, $this->skeletonType, $this);
+    function __construct($javapage, $factory) {
+        $this->javapage = $javapage;
+        $this->factory = $factory;
     }
     
-    public function setLayout($layout) {
-        $this->layout = $layout;
-        $page = $this->backendPage;
-        $page->layout = $layout;
-        $page->type = -1;
-        $this->getApi()->getPageManager()->savePage($page);
+    function getApplications() {
+        return array();
+    }
+    
+    function getId() {
+        return $this->javapage->id;
     }
 
+    function loadSkeleton() {
+        /* @var $layout core_pagemanager_data_PageLayout */
+        $layout = $this->javapage->layout;
+        
+        if($layout->header) {
+            $this->printRow($layout->header);
+        }
+        
+        foreach($layout->rows as $row) {
+            $this->printRow($row);
+        }
+        echo '<span class="gs_addcell" incell="" aftercell="">Add row</span>';
+        
+        if($layout->footer) {
+            $this->printRow($layout->footer);
+        }
+    }
+    
+    function printRow($row) {
+        print_r($row);
+    }
+    
+    
 }
-?>

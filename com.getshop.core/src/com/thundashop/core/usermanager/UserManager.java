@@ -676,7 +676,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
     
     private HashMap<String, Setting> getSettings(String phpApplicationName) throws ErrorException {
-        return pageManager.getApplicationSettings(phpApplicationName);
+        return new HashMap();
     }
 
     private boolean forceUniqueEmailAddress(User user) throws ErrorException {

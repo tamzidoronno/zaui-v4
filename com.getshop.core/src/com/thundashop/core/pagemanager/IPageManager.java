@@ -2,6 +2,7 @@ package com.thundashop.core.pagemanager;
 
 import com.thundashop.core.common.*;
 import com.thundashop.core.pagemanager.data.Page;
+import com.thundashop.core.pagemanager.data.PageLayout;
 import java.util.HashMap;
 import java.util.List;
 
@@ -17,20 +18,11 @@ public interface IPageManager {
      * Create a new page.
      * This page can be used to stick applications to it.
      * 
-     * Layout parameters<br>
-     * Header footer left middle right = 1;<br>
-     * Header left middle footer = 2;<br>
-     * Header right middle footer = 3;<br>
-     * Header middle footer = 4;<br>
-     * Layout is depeacated, the layouts has been eveloved to be more dynamic now.
-     * 
-     * @param layout See above, integer 1 to 4
-     * @param parentId The parent page. From what page are this page being created?
      * @return
      * @throws ErrorException 
      */
     @Editor
-    public Page createPage(int layout, String parentId) throws ErrorException;
+    public Page createPage() throws ErrorException;
     
     /**
      * Add application
@@ -39,13 +31,7 @@ public interface IPageManager {
      * @throws ErrorException 
      */
     @Administrator
-    public AppConfiguration addApplication(String applicationSettingId) throws ErrorException;
-    
-    /**
-     * Switch application areas between two applications areas on a given page.
-     */
-    @Administrator
-    public void switchApplicationAreas(String pageId, String fromArea, String toArea) throws ErrorException;
+    public AppConfiguration addApplication(String applicationSettingId, String appAreaId) throws ErrorException;
     
     /**
      * Remove all content on all page areas for this page.
@@ -55,6 +41,9 @@ public interface IPageManager {
     @Administrator
     public void clearPage(String pageId) throws ErrorException;
     
+    @Administrator
+    public void addLayoutCell(String pageId, String incell, String aftercell) throws ErrorException;
+    
     /**
      * Set the page description.
      * @param description The description to add.
@@ -62,16 +51,6 @@ public interface IPageManager {
      * @throws ErrorException 
      */
     public void setPageDescription(String pageId, String description) throws ErrorException;
-    
-    /**
-     * Create a new page with the specified id.
-     * For layouts available, see layouts for createPage function
-     * 
-     * @param id
-     * @return 
-     */
-    @Administrator
-    public Page createPageWithId(int layout, String parentId, String id)  throws ErrorException;
     
     /**
      * fetch an existing page.
@@ -103,66 +82,14 @@ public interface IPageManager {
     public void saveApplicationConfiguration(AppConfiguration config) throws ErrorException;
     
     /**
-     * If you know the id of the application you want to add, we strongly recommend to use this call.
-     * This function 
-     * @param pageId The id of the page to add the application to
-     * @param settingsId The settings id which identify what applications is being added.
-     * @param pageArea The area this application should be added to.
-     * @return AppConfiguration
-     * @throws ErrorException 
-     */
-    @Editor
-    public AppConfiguration addApplicationToPage(String pageId, String applicationSettingId, String pageArea) throws ErrorException;
-   
-    /**
      * Remove an application
      * 
-     * @param applicationId The id to the application.
+     * @param pageAreaId The id of the page area to remove.
      * @return
      * @throws ErrorException 
      */
     @Editor
-    public Page removeApplication(String applicationId, String pageid) throws ErrorException;
-    
-    /**
-     * Remove instances of applications added for a specific page id.
-     * @param appSettingsId The id of the application row
-     * @throws ErrorException 
-     */
-    public void removeAllApplications(String appSettingsId) throws ErrorException;
-    
-    /**
-     * Rearrange a given application for a given page.
-     * @param pageId The id of the page where the application is located.
-     * @param appId The id of application id to rearrange.
-     * @param moveUp If set to true the application is moved up, otherwhise it is set to false.
-     * @return
-     * @throws ErrorException 
-     */
-    @Editor
-    public Page reorderApplication(String pageId, String appId, Boolean moveUp) throws ErrorException;
-    
-    /**
-     * Set a given set of settings to a given application.
-     * @param settings The settings for the application.
-     * @throws ErrorException 
-     */
-    @Editor
-    public void setApplicationSettings(Settings settings) throws ErrorException;
-    
-    /**
-     * Stick an application. This means that the application will be visible on all the pages.<br>
-     * This is especially useful for top menu application, footer applications, and other application<br>
-     * that is supposed to be displayed all the time.
-     * <br>
-     * <br> 1 = sticked
-     * <br> 0 = not sticked
-     * @param appId The id of the application to stick.
-     * @param toggle True makes the application sticky, false disabled the stickyness.
-     * @throws ErrorException 
-     */
-    @Editor
-    public void setApplicationSticky(String appId, int toggle) throws ErrorException;
+    public Page removeApplication(String pageAreaId) throws ErrorException;
     
     /**
      * Change the userlevel for a given page. Make it accessible for only administrators / editors / customers.<br>
@@ -174,29 +101,6 @@ public interface IPageManager {
      */
     @Administrator
     public Page changePageUserLevel(String pageId, int userLevel) throws ErrorException;
-    
-    /**
-     * Change the page layout<br>
-     * HeaderFooterLeftMiddleRight = 1<br>
-     * HeaderLeftMiddleFooter = 2<br>
-     * HeaderRightMiddleFooter = 3<br>
-     * HeaderMiddleFooter = 4<br>
-     * 
-     * @param pageId
-     * @param layout
-     * @throws ErrorException 
-     */
-    @Administrator
-    public void changePageLayout(String pageId, int layout) throws ErrorException;
-    
-    /**
-     * Fetch all settings for a given application
-     * @param name The php equivelent name of the application.
-     * @return
-     * @throws ErrorException 
-     */
-    @Administrator
-    public HashMap<String, Setting> getApplicationSettings(String name) throws ErrorException;
     
     @Internal
     public HashMap<String, Setting> getSecuredSettingsInternal(String appName);
@@ -291,17 +195,6 @@ public interface IPageManager {
     public HashMap<String, String> translatePages(List<String> pages) throws ErrorException;
     
     
-    
-    /**
-     * If you clone an application, you would prefer to switch all already added applications
-     * into an existing application.
-     * @param fromAppId
-     * @param toAppId
-     * @throws ErrorException 
-     */
-    @Administrator
-    public void swapApplication(String fromAppId, String toAppId) throws ErrorException;
-    
     /**
      * Remove all applications for specified page area at specified page.
      * 
@@ -325,29 +218,6 @@ public interface IPageManager {
     public HashMap<String, Setting> getSecuredSettings(String applicationInstanceId);
     
     /**
-     * Search for pages by name.
-     */
-    public List<Page> search(String search) throws ErrorException;
-    
-    @Administrator
-    public void toggleBottomApplicationArea(String pageId, String appAreaId) throws ErrorException;
-    
-    /**
-     * Position could be 
-     * - left
-     * - middle
-     * - right
-     * 
-     * @param pageId
-     * @param appAreaId
-     * @param applicationSettingId
-     * @param position
-     * @throws ErrorException 
-     */
-    @Administrator
-    public void addApplicationToBottomArea(String pageId, String appAreaId, String applicationSettingId, String position) throws ErrorException; 
-    
-    /**
      * Create a new row to add application areas to for a given page.
      * @param pageId
      * @return
@@ -355,15 +225,4 @@ public interface IPageManager {
      */
     @Administrator
     public String createNewRow(String pageId) throws ErrorException;
-    
-    
-    /**
-     * Creates a new application area attach the new application to it and appends it to the row.
-     * @param pageId
-     * @param rowId
-     * @param applicationSettingId
-     * @throws com.thundashop.core.common.ErrorException
-     */
-    @Administrator
-    public AppConfiguration addApplicationToRow(String pageId, String rowId, String applicationSettingId) throws ErrorException;
 }

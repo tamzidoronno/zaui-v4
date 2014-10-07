@@ -33,7 +33,7 @@ public class GetShopSessionScope implements Scope, ApplicationContextAware {
             throw new NullPointerException("There is scoped bean created without being in a context of a store, object: " + name);
         }
         String nameWithStoreId = name + "_" + storeId;
-        
+        System.out.println(nameWithStoreId);
         if (!objectMap.containsKey(nameWithStoreId)) {
 			try {
 				Object object = objectFactory.getObject();

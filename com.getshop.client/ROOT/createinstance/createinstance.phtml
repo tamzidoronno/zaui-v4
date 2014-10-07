@@ -1,0 +1,140 @@
+
+
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+</head>
+<style>
+    body { background-color:#3a99d7; }
+    input { padding: 3px; width: 80%; font-size: 16px; }
+</style>
+<style type="text/css">
+    .button {
+        -moz-box-shadow:inset 0px 1px 0px 0px #97c4fe;
+        -webkit-box-shadow:inset 0px 1px 0px 0px #97c4fe;
+        box-shadow:inset 0px 1px 0px 0px #97c4fe;
+        background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #3d94f6), color-stop(1, #1e62d0) );
+        background:-moz-linear-gradient( center top, #3d94f6 5%, #1e62d0 100% );
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#3d94f6', endColorstr='#1e62d0');
+        background-color:#3d94f6;
+        -webkit-border-top-left-radius:2px;
+        -moz-border-radius-topleft:2px;
+        border-top-left-radius:2px;
+        -webkit-border-top-right-radius:2px;
+        -moz-border-radius-topright:2px;
+        border-top-right-radius:2px;
+        -webkit-border-bottom-right-radius:2px;
+        -moz-border-radius-bottomright:2px;
+        border-bottom-right-radius:2px;
+        -webkit-border-bottom-left-radius:2px;
+        -moz-border-radius-bottomleft:2px;
+        border-bottom-left-radius:2px;
+        text-indent:0;
+        display:inline-block;
+        color:#ffffff;
+        font-family:Arial;
+        font-size:16px;
+        font-weight:bold;
+        font-style:normal;
+        height:35px;
+        line-height:35px;
+        width:82%;
+        text-decoration:none;
+        text-align:center;
+        text-shadow:1px 1px 0px #1570cd;
+    }
+    .button:hover {
+        background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #1e62d0), color-stop(1, #3d94f6) );
+        background:-moz-linear-gradient( center top, #1e62d0 5%, #3d94f6 100% );
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#1e62d0', endColorstr='#3d94f6');
+        background-color:#1e62d0;
+    }.button:active {
+        position:relative;
+        top:1px;
+    }</style>
+
+
+
+<div style="text-align: center;padding:10px;">
+    <img src="https://www.getshop.com/displayImage.php?id=78c64104-ffe0-45d0-a554-87573d34ae7f&height=100&width=100"></img>
+    <form action="" method="POST" id="createstore">
+        <bR><bR>
+        <div style="max-width: 400px; width:100%; display:inline-block; background-color:#FFF; box-shadow: 0px 0px 2px #000; border-radius: 5px;">
+            <h1>Sign up now</h1>
+            Stores name<br>
+            <input type="text" name="storename" value="<? echo @$_POST['storename']; ?>"><br><br>
+            Stores email<br>
+            <input type="text" name="email" value="<? echo @$_POST['email']; ?>"><br>
+            <br>
+            Stores phone number<br>
+            <input type="text" name="phonenumber" value="<? echo @$_POST['phonenumber']; ?>"><br>
+            <br>
+            Contact person<br>
+            <input type="text" name="contactperson" value="<? echo @$_POST['contactperson']; ?>"><br>
+            <br>
+            Password<br>
+            <input type="text" name="password" value="<? echo @$_POST['password']; ?>"><br>
+            <br>
+            <span class="button" onclick="document.getElementById('createstore').submit();">Create store</span>
+            <div style="clear:both"></div>
+            <br><br>
+
+            <?
+            if (isset($_POST['storename'])) {
+                $storename = $_POST['storename'];
+                $email = $_POST['email'];
+                $phone = $_POST['phonenumber'];
+                $contact = $_POST['contactperson'];
+                $password = $_POST['password'];
+
+                $failed = false;
+                if (!$storename) {
+                    echo "Store name cannot be empty<br>";
+                }
+                $failed = false;
+                if (!$email || !strstr($email, "@")) {
+                    echo "Email need to be valid<br>";
+                    $failed = true;
+                }
+                if (!$phone) {
+                    echo "Phone number can not be empty<br>";
+                    $failed = true;
+                }
+                if (!$contact) {
+                    echo "Contact person can not be empty<br>";
+                    $failed = true;
+                }
+                if (!$password || strlen(trim($password)) < 8) {
+                    echo "Password needs to be atleast 8 characters long<br>";
+                    $failed = true;
+                }
+
+                if (!$failed) {
+                    /* @var $api GetShopApi */
+                    $api = $this->getApi();
+                    $store = $api->getStoreManager()->createStore($_SERVER['SERVER_NAME'], $email, $password, false);
+                    $api->getStoreManager()->initializeStore($_SERVER['SERVER_NAME'], session_id());
+
+                    //First page created is the homepage.
+
+                    $user = $this->getApiObject()->core_usermanager_data_User();
+                    $user->emailAddress = $email;
+                    $user->username = $email;
+                    $user->password = $password;
+                    $user->fullName = $contact;
+                    $api->getUserManager()->createUser($user);
+                    $api->getUserManager()->logOn($user->username, $user->password);
+                    $page = $api->getPageManager()->createPage();
+                    $api->getPageManager()->addLayoutCell($page->id, "", "");
+                    $api->getPageManager()->addLayoutCell($page->id, "", "");
+                    $api->getPageManager()->addLayoutCell($page->id, "", "");
+                    header("Location:/");
+                    exit(0);
+                }
+                echo "<br><br>";
+            }
+            ?>
+
+        </div>
+
+</div>
+</form>

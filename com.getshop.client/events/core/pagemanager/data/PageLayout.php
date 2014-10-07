@@ -1,28 +1,10 @@
 <?php
 class core_pagemanager_data_PageLayout {
-	/** @var String */
-	public $leftSideBar;
+	/** @var core_pagemanager_data_PageCell */
+	public $header;
 
-	/** @var String */
-	public $marginLeftSideBar;
-
-	/** @var String */
-	public $leftSideBarWidth;
-
-	/** @var String */
-	public $rightSideBarWidth;
-
-	/** @var String */
-	public $rightSideBar;
-
-	/** @var String */
-	public $marginRightSideBar;
-
-	/** @var String */
-	public $otherAreas;
-
-	/** @var String */
-	public $sortedRows;
+	/** @var core_pagemanager_data_PageCell */
+	public $footer;
 
 	/** @var String */
 	public $rows;

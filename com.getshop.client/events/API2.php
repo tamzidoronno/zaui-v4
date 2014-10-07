@@ -2857,76 +2857,12 @@ class APIPageManager {
 	* @throws ErrorException
 	*/
 
-	public function addApplication($applicationSettingId) {
+	public function addApplication($applicationSettingId, $appAreaId) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["applicationSettingId"] = json_encode($this->transport->object_unset_nulls($applicationSettingId));
-	     $data["method"] = "addApplication";
-	     $data["interfaceName"] = "core.pagemanager.IPageManager";
-	     return $this->transport->cast(new core_common_AppConfiguration(), $this->transport->sendMessage($data));
-	}
-
-	/**
-	* Position could be
-	* - left
-	* - middle
-	* - right
-	*
-	* @param pageId
-	* @param appAreaId
-	* @param applicationSettingId
-	* @param position
-	* @throws ErrorException
-	*/
-
-	public function addApplicationToBottomArea($pageId, $appAreaId, $applicationSettingId, $position) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
 	     $data['args']["appAreaId"] = json_encode($this->transport->object_unset_nulls($appAreaId));
-	     $data['args']["applicationSettingId"] = json_encode($this->transport->object_unset_nulls($applicationSettingId));
-	     $data['args']["position"] = json_encode($this->transport->object_unset_nulls($position));
-	     $data["method"] = "addApplicationToBottomArea";
-	     $data["interfaceName"] = "core.pagemanager.IPageManager";
-	     return $this->transport->sendMessage($data);
-	}
-
-	/**
-	* If you know the id of the application you want to add, we strongly recommend to use this call.
-	* This function
-	* @param pageId The id of the page to add the application to
-	* @param settingsId The settings id which identify what applications is being added.
-	* @param pageArea The area this application should be added to.
-	* @return core_common_AppConfiguration
-	* @throws ErrorException
-	*/
-
-	public function addApplicationToPage($pageId, $applicationSettingId, $pageArea) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
-	     $data['args']["applicationSettingId"] = json_encode($this->transport->object_unset_nulls($applicationSettingId));
-	     $data['args']["pageArea"] = json_encode($this->transport->object_unset_nulls($pageArea));
-	     $data["method"] = "addApplicationToPage";
-	     $data["interfaceName"] = "core.pagemanager.IPageManager";
-	     return $this->transport->cast(new core_common_AppConfiguration(), $this->transport->sendMessage($data));
-	}
-
-	/**
-	* Creates a new application area attach the new application to it and appends it to the row.
-	* @param pageId
-	* @param rowId
-	* @param applicationSettingId
-	* @throws com.thundashop.core.common.ErrorException
-	*/
-
-	public function addApplicationToRow($pageId, $rowId, $applicationSettingId) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
-	     $data['args']["rowId"] = json_encode($this->transport->object_unset_nulls($rowId));
-	     $data['args']["applicationSettingId"] = json_encode($this->transport->object_unset_nulls($applicationSettingId));
-	     $data["method"] = "addApplicationToRow";
+	     $data["method"] = "addApplication";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
 	     return $this->transport->cast(new core_common_AppConfiguration(), $this->transport->sendMessage($data));
 	}
@@ -2952,23 +2888,18 @@ class APIPageManager {
 	}
 
 	/**
-	* Change the page layout<br>
-	* HeaderFooterLeftMiddleRight = 1<br>
-	* HeaderLeftMiddleFooter = 2<br>
-	* HeaderRightMiddleFooter = 3<br>
-	* HeaderMiddleFooter = 4<br>
-	*
+	* Remove all content on all page areas for this page.
 	* @param pageId
-	* @param layout
 	* @throws ErrorException
 	*/
 
-	public function changePageLayout($pageId, $layout) {
+	public function addLayoutCell($pageId, $incell, $aftercell) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
-	     $data['args']["layout"] = json_encode($this->transport->object_unset_nulls($layout));
-	     $data["method"] = "changePageLayout";
+	     $data['args']["incell"] = json_encode($this->transport->object_unset_nulls($incell));
+	     $data['args']["aftercell"] = json_encode($this->transport->object_unset_nulls($aftercell));
+	     $data["method"] = "addLayoutCell";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -3044,44 +2975,14 @@ class APIPageManager {
 	* Create a new page.
 	* This page can be used to stick applications to it.
 	*
-	* Layout parameters<br>
-	* Header footer left middle right = 1;<br>
-	* Header left middle footer = 2;<br>
-	* Header right middle footer = 3;<br>
-	* Header middle footer = 4;<br>
-	* Layout is depeacated, the layouts has been eveloved to be more dynamic now.
-	*
-	* @param layout See above, integer 1 to 4
-	* @param parentId The parent page. From what page are this page being created?
 	* @return core_pagemanager_data_Page
 	* @throws ErrorException
 	*/
 
-	public function createPage($layout, $parentId) {
+	public function createPage() {
 	     $data = array();
 	     $data['args'] = array();
-	     $data['args']["layout"] = json_encode($this->transport->object_unset_nulls($layout));
-	     $data['args']["parentId"] = json_encode($this->transport->object_unset_nulls($parentId));
 	     $data["method"] = "createPage";
-	     $data["interfaceName"] = "core.pagemanager.IPageManager";
-	     return $this->transport->cast(new core_pagemanager_data_Page(), $this->transport->sendMessage($data));
-	}
-
-	/**
-	* Create a new page with the specified id.
-	* For layouts available, see layouts for createPage function
-	*
-	* @param id
-	* @return core_pagemanager_data_Page
-	*/
-
-	public function createPageWithId($layout, $parentId, $id) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["layout"] = json_encode($this->transport->object_unset_nulls($layout));
-	     $data['args']["parentId"] = json_encode($this->transport->object_unset_nulls($parentId));
-	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
-	     $data["method"] = "createPageWithId";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
 	     return $this->transport->cast(new core_pagemanager_data_Page(), $this->transport->sendMessage($data));
 	}
@@ -3116,22 +3017,6 @@ class APIPageManager {
 	     $data['args'] = array();
 	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
 	     $data["method"] = "deletePage";
-	     $data["interfaceName"] = "core.pagemanager.IPageManager";
-	     return $this->transport->sendMessage($data);
-	}
-
-	/**
-	* Fetch all settings for a given application
-	* @param name The php equivelent name of the application.
-	* @return HashMap
-	* @throws ErrorException
-	*/
-
-	public function getApplicationSettings($name) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["name"] = json_encode($this->transport->object_unset_nulls($name));
-	     $data["method"] = "getApplicationSettings";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -3262,8 +3147,10 @@ class APIPageManager {
 	}
 
 	/**
-	* Fetch all settings for a given application
-	* @param name The php equivelent name of the application.
+	* Change the userlevel for a given page. Make it accessible for only administrators / editors / customers.<br>
+	* Everyone with a higher userlevel will allways gain access to the userlevels below.
+	* @param pageId The id of the page to change.
+	* @param userLevel The userlevel to set ADMINISTRATOR = 100, EDITOR = 50, CUSTOMER = 10
 	* @return HashMap
 	* @throws ErrorException
 	*/
@@ -3278,54 +3165,18 @@ class APIPageManager {
 	}
 
 	/**
-	* Remove instances of applications added for a specific page id.
-	* @param appSettingsId The id of the application row
-	* @throws ErrorException
-	*/
-
-	public function removeAllApplications($appSettingsId) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["appSettingsId"] = json_encode($this->transport->object_unset_nulls($appSettingsId));
-	     $data["method"] = "removeAllApplications";
-	     $data["interfaceName"] = "core.pagemanager.IPageManager";
-	     return $this->transport->sendMessage($data);
-	}
-
-	/**
 	* Remove an application
 	*
-	* @param applicationId The id to the application.
+	* @param pageAreaId The id of the page area to remove.
 	* @return core_pagemanager_data_Page
 	* @throws ErrorException
 	*/
 
-	public function removeApplication($applicationId, $pageid) {
+	public function removeApplication($pageAreaId) {
 	     $data = array();
 	     $data['args'] = array();
-	     $data['args']["applicationId"] = json_encode($this->transport->object_unset_nulls($applicationId));
-	     $data['args']["pageid"] = json_encode($this->transport->object_unset_nulls($pageid));
+	     $data['args']["pageAreaId"] = json_encode($this->transport->object_unset_nulls($pageAreaId));
 	     $data["method"] = "removeApplication";
-	     $data["interfaceName"] = "core.pagemanager.IPageManager";
-	     return $this->transport->cast(new core_pagemanager_data_Page(), $this->transport->sendMessage($data));
-	}
-
-	/**
-	* Rearrange a given application for a given page.
-	* @param pageId The id of the page where the application is located.
-	* @param appId The id of application id to rearrange.
-	* @param moveUp If set to true the application is moved up, otherwhise it is set to false.
-	* @return core_pagemanager_data_Page
-	* @throws ErrorException
-	*/
-
-	public function reorderApplication($pageId, $appId, $moveUp) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
-	     $data['args']["appId"] = json_encode($this->transport->object_unset_nulls($appId));
-	     $data['args']["moveUp"] = json_encode($this->transport->object_unset_nulls($moveUp));
-	     $data["method"] = "reorderApplication";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
 	     return $this->transport->cast(new core_pagemanager_data_Page(), $this->transport->sendMessage($data));
 	}
@@ -3355,56 +3206,6 @@ class APIPageManager {
 	     $data['args'] = array();
 	     $data['args']["core_pagemanager_data_Page"] = json_encode($this->transport->object_unset_nulls($core_pagemanager_data_Page));
 	     $data["method"] = "savePage";
-	     $data["interfaceName"] = "core.pagemanager.IPageManager";
-	     return $this->transport->sendMessage($data);
-	}
-
-	/**
-	* Search for pages by name.
-	*/
-
-	public function search($search) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["search"] = json_encode($this->transport->object_unset_nulls($search));
-	     $data["method"] = "search";
-	     $data["interfaceName"] = "core.pagemanager.IPageManager";
-	     return $this->transport->sendMessage($data);
-	}
-
-	/**
-	* Set a given set of settings to a given application.
-	* @param settings The settings for the application.
-	* @throws ErrorException
-	*/
-
-	public function setApplicationSettings($core_common_Settings) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["core_common_Settings"] = json_encode($this->transport->object_unset_nulls($core_common_Settings));
-	     $data["method"] = "setApplicationSettings";
-	     $data["interfaceName"] = "core.pagemanager.IPageManager";
-	     return $this->transport->sendMessage($data);
-	}
-
-	/**
-	* Stick an application. This means that the application will be visible on all the pages.<br>
-	* This is especially useful for top menu application, footer applications, and other application<br>
-	* that is supposed to be displayed all the time.
-	* <br>
-	* <br> 1 = sticked
-	* <br> 0 = not sticked
-	* @param appId The id of the application to stick.
-	* @param toggle True makes the application sticky, false disabled the stickyness.
-	* @throws ErrorException
-	*/
-
-	public function setApplicationSticky($appId, $toggle) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["appId"] = json_encode($this->transport->object_unset_nulls($appId));
-	     $data['args']["toggle"] = json_encode($this->transport->object_unset_nulls($toggle));
-	     $data["method"] = "setApplicationSticky";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -3440,53 +3241,6 @@ class APIPageManager {
 	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
 	     $data['args']["parentPageId"] = json_encode($this->transport->object_unset_nulls($parentPageId));
 	     $data["method"] = "setParentPage";
-	     $data["interfaceName"] = "core.pagemanager.IPageManager";
-	     return $this->transport->sendMessage($data);
-	}
-
-	/**
-	* If you clone an application, you would prefer to switch all already added applications
-	* into an existing application.
-	* @param fromAppId
-	* @param toAppId
-	* @throws ErrorException
-	*/
-
-	public function swapApplication($fromAppId, $toAppId) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["fromAppId"] = json_encode($this->transport->object_unset_nulls($fromAppId));
-	     $data['args']["toAppId"] = json_encode($this->transport->object_unset_nulls($toAppId));
-	     $data["method"] = "swapApplication";
-	     $data["interfaceName"] = "core.pagemanager.IPageManager";
-	     return $this->transport->sendMessage($data);
-	}
-
-	/**
-	* Switch application areas between two applications areas on a given page.
-	*/
-
-	public function switchApplicationAreas($pageId, $fromArea, $toArea) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
-	     $data['args']["fromArea"] = json_encode($this->transport->object_unset_nulls($fromArea));
-	     $data['args']["toArea"] = json_encode($this->transport->object_unset_nulls($toArea));
-	     $data["method"] = "switchApplicationAreas";
-	     $data["interfaceName"] = "core.pagemanager.IPageManager";
-	     return $this->transport->sendMessage($data);
-	}
-
-	/**
-	* Search for pages by name.
-	*/
-
-	public function toggleBottomApplicationArea($pageId, $appAreaId) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
-	     $data['args']["appAreaId"] = json_encode($this->transport->object_unset_nulls($appAreaId));
-	     $data["method"] = "toggleBottomApplicationArea";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
 	     return $this->transport->sendMessage($data);
 	}

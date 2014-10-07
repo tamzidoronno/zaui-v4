@@ -51,31 +51,6 @@ class Factory extends FactoryBase {
         return $this->getMainLanguage();
     }
 
-    public function loadInitializationData() {
-        $page = $this->getPage();
-        if ($page->backendPage->pageType == -2 && $page->backendPage->id == "home") {
-
-           $factory = IocContainer::getFactorySingelton();
-           $store = $factory->getStore();
-           $reguser = $store->registrationUser;
-           if($reguser != null) {
-               $factory->getApi()->getUserManager()->createUser($reguser);
-               $_SESSION['loggedin'] = serialize($factory->getApi()->getUserManager()->logOn($reguser->emailAddress,$reguser->password));
-
-               $sitebuilder = new SiteBuilder();
-               $sitebuilder->createProduct(1, $this->__w("Diamonds for the ear"), ["e1be3532-0340-4a4c-8b79-fc21b6a70ec4", "a507da8f-4f17-4ade-bc54-340aff4dc11e"], 289);
-               $sitebuilder->createProduct(1, $this->__w("Finger friend"), ["a507da8f-4f17-4ade-bc54-340aff4dc11e", "7982060d-2504-4efa-834c-30e9fee98d8a"], 99);
-               $sitebuilder->createProduct(1, $this->__w("Lip styling"), ["7982060d-2504-4efa-834c-30e9fee98d8a", "fc4fa4ba-99d4-44c0-a693-4a507604ddec"], 100);
-               $sitebuilder->createProduct(1, $this->__w("Exclusive party"), ["fc4fa4ba-99d4-44c0-a693-4a507604ddec", "fc4fa4ba-99d4-44c0-a693-4a507604ddec"], 150);
-
-               $store->registrationUser = null;
-               $this->getApi()->getStoreManager()->saveStore($store);
-               echo "<script>isAdministrator = true;</script>";
-               echo "\n" . '<script type="text/javascript" src="js/getshop.MainMenuToolbox.js"></script>';
-           }
-            include("initdata/initializationdata.phtml");
-        }
-    }
 
     public function translateKey($key) {
         if (!isset($this->translation))
@@ -217,9 +192,11 @@ class Factory extends FactoryBase {
     public function initialize() {
         $this->store = $this->getApi()->getStoreManager()->initializeStore($_SERVER['HTTP_HOST'], session_id());
         $this->store = $this->getApi()->getStoreManager()->getMyStore();
-//        echo "<pre>";
-//        print_r($this->store);
-//        exit(0);
+        
+        if(!$this->store) {
+            include("createinstance/createinstance.phtml");
+            exit(0);
+        }
     }
 
     function __construct() {
@@ -245,17 +222,10 @@ class Factory extends FactoryBase {
         $this->getApi()->getStoreManager()->saveStore($this->store->configuration);
     }
 
-    public function showNotExistsMessage() {
-        if ($this->store == null) {
-            echo "This page does not exists.";
-            exit();
-        }
-    }
 
     public function start($loadPages = true) {
         $this->setScopeId();
         $this->errors = array();
-        $this->showNotExistsMessage();
 
         if ($loadPages) {
             $this->initPage();
@@ -339,18 +309,21 @@ class Factory extends FactoryBase {
         }
 
         $pageId = isset($_POST['data']['getShopPageId']) ? $_POST['data']['getShopPageId'] : $navigation->currentPageId;
-        
+
         $javaPage = $this->pageManager->getPage($pageId);
         if ($javaPage == null) {
             $javaPage = $this->pageManager->getPage($homePageId);
         }
+        
+        if($javaPage == null) {
+            echo "<center><h1>Page not found</h1></center>";
+            http_response_code(404);
+            exit(0);
+        }
    
-        $this->page = new Page($javaPage); 
+        $this->page = new Page($javaPage, $this); 
         $this->initApplicationsPool();
        
-        $javaPage = $this->setPageToHomePageIfNotLoggedInAndRedirectIsSet($javaPage);
-       
-        $this->page->createAllPageAreas($javaPage);
         $this->javaPage = $javaPage;
         $this->styleSheet = new StyleSheet();
     }
@@ -363,24 +336,9 @@ class Factory extends FactoryBase {
         return $homePage;
     }
 
-    private function setPageToHomePageIfNotLoggedInAndRedirectIsSet($originalBackendPage) {
-        if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() == null
-                && isset($this->getSettings()->redirecttohomepage) 
-                && $this->getSettings()->redirecttohomepage->value == "true"
-                ) {
-            $homePageId = $this->getHomePageName();
-            $backendPage = $this->pageManager->getPage($homePageId); 
-            $this->page = new Page($backendPage);
-            $this->initApplicationsPool();
-            return $backendPage;
-        } 
-        
-        return $originalBackendPage;
-    }
-    
     public function initApplicationsPool() { 
-       $applications = $this->pageManager->getApplicationsForPage($this->page->id);
-        $this->applicationPool->setApplicationInstances($applications);
+//       $applications = $this->pageManager->getApplicationsForPage($this->page->id);
+//        $this->applicationPool->setApplicationInstances($applications);
     }
 
     public function setPage($page) {
@@ -400,12 +358,8 @@ class Factory extends FactoryBase {
         }
     }
 
-    private function renderConent($json) {
-        if ($json) {
-            $this->page->loadJsonContent();
-        } else {
-            $this->page->loadSkeleton();
-        }
+    private function renderContent($json) {
+        $this->page->loadSkeleton();
     }
 
     public function getBottomHtml() {
@@ -418,7 +372,7 @@ class Factory extends FactoryBase {
 
     public function run($json = false) {
         $this->runPreprocess();
-        $this->renderConent($json);
+        $this->renderContent($json);
         $this->runPostProcess();
     }
 

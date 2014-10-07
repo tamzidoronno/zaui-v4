@@ -22,6 +22,7 @@ import com.thundashop.core.usermanager.data.User;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 @Component
 @GetShopSession
@@ -87,7 +88,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private HashMap<String, Setting> getSettings(String phpApplicationName) throws ErrorException {
-        return pageManager.getApplicationSettings(phpApplicationName);
+        throw new NotImplementedException();
     }
     
     private void updateStockQuantity(Order order, String key) throws ErrorException {

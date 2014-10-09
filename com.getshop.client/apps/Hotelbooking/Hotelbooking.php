@@ -16,6 +16,15 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $this->setPersonCount($_POST['data']['count']);
     }
     
+    public function getStartMaxDays() {
+        $maxdays = $this->getConfigurationSetting("start_max_days");
+        if(!$maxdays) {
+            return 1000;
+        }
+        return $maxdays;
+    }
+    
+    
     public function loadSettings() {
         $this->includefile("settings");
     }
@@ -25,6 +34,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $this->setConfigurationSetting("type", $_POST['data']['type']);
         $this->setConfigurationSetting("contine_page", $_POST['data']['contine_page']);
         $this->setConfigurationSetting("minumum_rental_days", $_POST['data']['rental_days']);
+        $this->setConfigurationSetting("start_max_days", $_POST['data']['start_max_days']);
     }
     
     public function getRoomTaxes() {
@@ -275,12 +285,18 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                 if(date('d', $time) ==(($i - $startday)+1) && $setSelected) {
                     $class = "selected";
                 }
+                $aftertime = strtotime($year . "-" . $month . "-" . $day);
                 if($checkbefore) {
-                    $aftertime = strtotime($year . "-" . $month . "-" . $day);
                     if($checkbefore > $aftertime || (date("d", $checkbefore) == date("d",$aftertime) && date("m", $checkbefore) == date("m",$aftertime))) {
                         $class .= " disabled";
                     }
+                } else if($aftertime < (time()-86400)) {
+                    $class .= " disabled";
+                } else if($aftertime > (time() + ($this->getStartMaxDays()*86400))) {
+                    $class .= " disabled";
                 }
+
+                
                 $fieldtime = strtotime($year ."-" . $month . "-" . $day);
                 
                 echo "<td align='center' valign='middle' height='20px'><span class='cal_field $class' time='$fieldtime'>".$day."</span></td>";

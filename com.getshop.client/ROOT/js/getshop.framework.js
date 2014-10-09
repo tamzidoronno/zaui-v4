@@ -31,7 +31,22 @@ thundashop.framework = {
         $(document).on('click', '.gs_addcell', this.addCell);
         $('.toogleDeepfreeze').live('click', this.showDeepFreezOption);
         $('.savedeepfreeze').live('click', this.toggleDeepFreeze);
+        $('.gscellsettings').live('click', this.showCellSettingsPanel);
     },
+    showCellSettingsPanel : function() {
+        $('.gscellsettingspanel').fadeIn();
+        var cell = $(this).closest('.gscell');
+        var overlay = $('<span class="overlay" style="filter: blur(5px);width:100%; height:100%; background-color:#bbb; opacity:0.6; position:absolute; left:0px; top:0px;display:inline-block;">test</span>');
+        cell.append(overlay);
+        
+        $('.gscellsettingspanel').attr('cellid', cell.attr('cellid'));
+        var offset = $(this).offset();
+        $('.gscellsettingspanel').css('display','inline-block');
+        $('.gscellsettingspanel').css('top',offset.top+10);
+        $('.gscellsettingspanel').css('left',(offset.left-170));
+        
+    },
+    
     addCell: function () {
         var data = {};
         $(this).each(function () {

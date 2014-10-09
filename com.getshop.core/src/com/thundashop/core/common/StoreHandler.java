@@ -45,14 +45,13 @@ public class StoreHandler {
 
     public synchronized Object executeMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
         scope.setStoreId(storeId);
-        System.out.println(inObject.sessionId);
         setSessionObject(inObject.sessionId);
         
         Class aClass = loadClass(inObject.interfaceName);
         Method executeMethod = getMethodToExecute(aClass, inObject.method, types, argumentValues);
         
         try {
-            authenticateUserLevel(executeMethod, aClass);
+//            authenticateUserLevel(executeMethod, aClass);
             Object result = invokeMethod(executeMethod, aClass, argumentValues);
             clearSessionObject();
             return result;

@@ -5,7 +5,7 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.Mongo;
-import com.thundashop.core.appmanager.data.ApplicationSettings;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.DataCommon;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -40,9 +40,9 @@ public class GenerateTranslation {
             DBCursor allDocs = selectedCollection.find();
             while (allDocs.hasNext()) {
                 DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, allDocs.next());
-                if(dataCommon instanceof ApplicationSettings) {
+                if(dataCommon instanceof Application) {
                     System.out.println("found");
-                    ApplicationSettings dbobj = (ApplicationSettings) dataCommon;
+                    Application dbobj = (Application) dataCommon;
                     applicationNames.put(dbobj.id.replace("-", "_"), dbobj);
                 }
             }
@@ -51,7 +51,7 @@ public class GenerateTranslation {
 
     private int fileCount = 0;
     public static HashMap<String, TranslationKey> keyMap = new HashMap();
-    public static HashMap<String, ApplicationSettings> applicationNames = new HashMap();
+    public static HashMap<String, Application> applicationNames = new HashMap();
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
 

@@ -1,8 +1,7 @@
 package com.thundashop.core.chat;
 
 import com.getshop.scope.GetShopSession;
-import com.thundashop.core.appmanager.AppManager;
-import com.thundashop.core.appmanager.data.ApplicationSettings;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.appmanager.data.AvailableApplications;
 import com.thundashop.core.chatmanager.ChatMessage;
 import com.thundashop.core.chatmanager.Chatter;
@@ -44,9 +43,6 @@ public class ChatManager extends ManagerBase implements IChatManager, Runnable {
      */
     private Map<String, Chatter> chatters = new ConcurrentHashMap();
 
-    @Autowired
-    private AppManager manager;
-    
     @Autowired
     private StoreManager storeManager;
     
@@ -127,29 +123,6 @@ public class ChatManager extends ManagerBase implements IChatManager, Runnable {
         databaseSaver.saveObject(chatter, credentials);
     }
 
-    public void pushToAirGram(String message, String chatterid) throws ErrorException {
-
-        AvailableApplications apps = manager.getAllApplications();
-        String address = storeManager.getMyStore().webAddressPrimary;
-        if (address == null) {
-            address = storeManager.getMyStore().webAddress;
-        }
-        String app = "";
-        for (ApplicationSettings setting : apps.applications) {
-            if (setting.appName.equals("Chat")) {
-                app = setting.id;
-            }
-        }
-        String gsurl = "http://" + address + "/mobile.php?app=" + app + "&id=" + chatterid;
-        try {
-            gsurl = URLEncoder.encode(gsurl, "UTF-8");
-            message = URLEncoder.encode(message, "UTF-8");
-        } catch (UnsupportedEncodingException ex) {
-        }
-        
-        messageManager.sendToAirgram(gsurl, message);
-    }
-
     @Override
     public List<ChatMessage> getMessages() {
         Chatter chatter = getChatter();
@@ -222,4 +195,8 @@ public class ChatManager extends ManagerBase implements IChatManager, Runnable {
         }
         return true;
    }
+
+	private void pushToAirGram(String message, String id) {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
 }

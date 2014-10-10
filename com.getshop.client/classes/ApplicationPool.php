@@ -18,10 +18,7 @@ class ApplicationPool {
 
     function __construct($factory) {
         $this->factory = $factory;
-        $applications = $factory->getApi()->getAppManager()->getAllApplications();
-        if ($applications != null) {
-            $this->applicationList = $applications->applications;
-        }
+        $this->applicationList = $factory->getApi()->getStoreApplicationPool()->getApplications();
     }
     
     
@@ -326,8 +323,6 @@ class ApplicationPool {
                 return $app;
             }
         }
-        
-//        throw new Exception("No theme app ? that would be a pretty ugly design I guess. :D");
     }
     
     /**

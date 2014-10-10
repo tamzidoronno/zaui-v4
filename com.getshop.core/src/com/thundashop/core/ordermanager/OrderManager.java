@@ -1,8 +1,6 @@
 package com.thundashop.core.ordermanager;
 
 import com.getshop.scope.GetShopSession;
-import com.thundashop.core.appmanager.AppManager;
-import com.thundashop.core.appmanager.data.ApplicationSubscription;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
@@ -22,6 +20,7 @@ import com.thundashop.core.usermanager.data.User;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 @Component
@@ -42,9 +41,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Autowired
     private ProductManager productManager;
-    
-    @Autowired
-    private AppManager appManager;
     
     @Autowired
     private CartManager cartManager;

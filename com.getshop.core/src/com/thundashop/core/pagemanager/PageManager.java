@@ -50,7 +50,7 @@ public class PageManager extends ManagerBase implements IPageManager {
     
     
     @Override
-    public AppConfiguration addApplication(String applicationSettingId, String appAreaId) throws ErrorException {
+    public ApplicationInstance addApplication(String applicationSettingId, String appAreaId) throws ErrorException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -75,7 +75,7 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     @Override
-    public void saveApplicationConfiguration(AppConfiguration config) throws ErrorException {
+    public void saveApplicationConfiguration(ApplicationInstance config) throws ErrorException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -95,27 +95,27 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     @Override
-    public List<AppConfiguration> getApplications() throws ErrorException {
+    public List<ApplicationInstance> getApplications() throws ErrorException {
         return new ArrayList();
     }
 
     @Override
-    public List<AppConfiguration> getApplicationsByType(String type) throws ErrorException {
+    public List<ApplicationInstance> getApplicationsByType(String type) throws ErrorException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<AppConfiguration> getApplicationsBasedOnApplicationSettingsId(String appSettingsId) throws ErrorException {
+    public List<ApplicationInstance> getApplicationsBasedOnApplicationSettingsId(String appSettingsId) throws ErrorException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<AppConfiguration> getApplicationsByPageAreaAndSettingsId(String appSettingsId, String pageArea) throws ErrorException {
+    public List<ApplicationInstance> getApplicationsByPageAreaAndSettingsId(String appSettingsId, String pageArea) throws ErrorException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public List<AppConfiguration> getApplicationsForPage(String pageId) throws ErrorException {
+    public List<ApplicationInstance> getApplicationsForPage(String pageId) throws ErrorException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

@@ -6,7 +6,7 @@
 
 package com.thundashop.core.databasemanager.updatescripts;
 
-import com.thundashop.core.appmanager.data.ApplicationSettings;
+import com.thundashop.core.appmanager.data.Application;
 import java.net.UnknownHostException;
 import java.util.List;
 
@@ -18,8 +18,8 @@ public class GenerateSymlinks extends UpgradeBase {
     }
 
     private void printSymlinks() throws UnknownHostException {
-        List<ApplicationSettings> allApps = getAllAppSettings();
-        for(ApplicationSettings setting : allApps) {
+        List<Application> allApps = getAllAppSettings();
+        for(Application setting : allApps) {
             String ns = "ns_" + setting.id.replace("-", "_");
             System.out.println("ln -s ../apps/"+setting.appName+" "+ ns + ";");
         }

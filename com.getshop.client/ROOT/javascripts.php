@@ -13,7 +13,7 @@ function endsWith($haystack, $needle)
 $factory = IocContainer::getFactorySingelton(false);
 $apps = $factory->getApplicationPool()->getAllApplicationSettings();
 if (!$factory->isEditorMode()) {
-    $apps = $factory->getApi()->getAppManager()->getApplicationSettingsUsedByWebPage();
+    $apps = $factory->getApi()->getStoreApplicationPool()->getApplications();
     $apps[] = $factory->getApplicationPool()->getApplicationByName("ns_bf35979f_6965_4fec_9cc4_c42afd3efdd7\MainMenu");
     $apps[] = $factory->getApplicationPool()->getApplicationByName("ns_7093535d_f842_4746_9256_beff0860dbdf\BreadCrumb");
     

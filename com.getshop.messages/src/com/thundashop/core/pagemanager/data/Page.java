@@ -7,7 +7,7 @@
 package com.thundashop.core.pagemanager.data;
 
 import org.mongodb.morphia.annotations.Transient;
-import com.thundashop.core.common.AppConfiguration;
+import com.thundashop.core.common.ApplicationInstance;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Translation;

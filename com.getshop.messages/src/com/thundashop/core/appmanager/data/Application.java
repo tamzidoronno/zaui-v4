@@ -1,13 +1,12 @@
 package com.thundashop.core.appmanager.data;
 
 import com.thundashop.core.common.DataCommon;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-public class ApplicationSettings extends DataCommon implements Comparator<ApplicationSettings> {
+public class Application extends DataCommon implements Comparator<Application> {
     public static class Type {
         public static String Marketing = "MarketingApplication";
         public static String System = "SystemApplication";
@@ -42,11 +41,12 @@ public class ApplicationSettings extends DataCommon implements Comparator<Applic
     public int trialPeriode = 7;
     public boolean pageSingelton;
 	public boolean hasDashBoard = true;
+	public boolean defaultActivate = false;
     public List<String> allowedStoreIds = new ArrayList();
     public List<ApiCallsInUse> apiCallsInUse = new ArrayList();
     
     @Override
-    public int compare(ApplicationSettings o1, ApplicationSettings o2) {
+    public int compare(Application o1, Application o2) {
         return o1.appName.compareTo(o2.appName);
     }
 

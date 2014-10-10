@@ -6,7 +6,7 @@ class core_common_MessageBase {
 	/** @var String */
 	public $guid;
 
-	/** @var core_common_AppConfiguration */
+	/** @var core_common_ApplicationInstance */
 	public $conf;
 
 	/** @var String */

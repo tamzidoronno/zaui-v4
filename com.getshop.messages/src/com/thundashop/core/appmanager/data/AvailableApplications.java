@@ -13,6 +13,6 @@ import java.util.List;
  * @author ktonder
  */
 public class AvailableApplications extends DataCommon {
-    public List<ApplicationSettings> addedApplications = new ArrayList();
-    public List<ApplicationSettings> applications = new ArrayList();
+    public List<Application> addedApplications = new ArrayList();
+    public List<Application> applications = new ArrayList();
 }

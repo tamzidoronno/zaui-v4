@@ -7,7 +7,7 @@
 package com.thundashop.core.pagemanager.data;
 
 import org.mongodb.morphia.annotations.Transient;
-import com.thundashop.core.common.AppConfiguration;
+import com.thundashop.core.common.ApplicationInstance;
 import java.io.Serializable;
 import java.util.*;
 
@@ -17,7 +17,7 @@ import java.util.*;
  */
 public class PageArea implements Serializable {
     @Transient
-    public TreeMap<String, AppConfiguration> applications = new TreeMap<>();
+    public TreeMap<String, ApplicationInstance> applications = new TreeMap<>();
     
     private TreeMap<Integer, String> applicationsSequenceList = new TreeMap();
     
@@ -28,7 +28,7 @@ public class PageArea implements Serializable {
     
     
     @Transient
-    public TreeMap<String, AppConfiguration> bottomApplications = new TreeMap<>();
+    public TreeMap<String, ApplicationInstance> bottomApplications = new TreeMap<>();
     
     public String bottomLeftApplicationId = "";
     public String bottomMiddleApplicationId = "";
@@ -46,12 +46,12 @@ public class PageArea implements Serializable {
         pageId = page.id;
     }
 
-    public void populateApplications(Map<String, AppConfiguration> applicationCollection, boolean onlyExtraApplications) {
+    public void populateApplications(Map<String, ApplicationInstance> applicationCollection, boolean onlyExtraApplications) {
         applications.clear();
         
         for (String applicationId : applicationsList) {
 
-            AppConfiguration appConfig = applicationCollection.get(applicationId);
+            ApplicationInstance appConfig = applicationCollection.get(applicationId);
             if (appConfig != null) {
 
                 appConfig.originalPageId = pageId;
@@ -61,7 +61,7 @@ public class PageArea implements Serializable {
             }
         }
         
-        AppConfiguration appConfig = applicationCollection.get(bottomLeftApplicationId);
+        ApplicationInstance appConfig = applicationCollection.get(bottomLeftApplicationId);
         if (appConfig != null) {
             bottomApplications.put(appConfig.id, appConfig);
         }
@@ -77,9 +77,9 @@ public class PageArea implements Serializable {
         populateExtraApplications(applicationCollection);
     }
     
-     private void populateExtraApplications(Map<String, AppConfiguration> applicationCollection) {
+     private void populateExtraApplications(Map<String, ApplicationInstance> applicationCollection) {
         for (String applicationId : extraApplicationList.keySet()) {
-            AppConfiguration appConfig = applicationCollection.get(applicationId);
+            ApplicationInstance appConfig = applicationCollection.get(applicationId);
             if (appConfig != null) {
                 appConfig.originalPageId = extraApplicationList.get(applicationId);
                 applications.put(appConfig.id, appConfig);
@@ -153,12 +153,12 @@ public class PageArea implements Serializable {
         applicationsSequenceList = applicationsList2;
     }
 
-    public void addApplication(AppConfiguration app) {
+    public void addApplication(ApplicationInstance app) {
         applicationsList.add(app.id);
     }
 
-    Map<? extends String, ? extends AppConfiguration> bottomApplications() {
-        return (Map<String, AppConfiguration>) bottomApplications.clone();
+    Map<? extends String, ? extends ApplicationInstance> bottomApplications() {
+        return (Map<String, ApplicationInstance>) bottomApplications.clone();
     }
     
     public void removeFromBottom(String applicationId) {
@@ -219,7 +219,7 @@ public class PageArea implements Serializable {
         }
     }
     
-    public Map<String, AppConfiguration> applications() {
-        return (Map<String, AppConfiguration>) applications.clone();
+    public Map<String, ApplicationInstance> applications() {
+        return (Map<String, ApplicationInstance>) applications.clone();
     }
 }

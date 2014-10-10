@@ -10,7 +10,7 @@ public class ApplicationSubscription extends DataCommon {
     public Date to_date;
     public boolean payedfor;
     @Transient
-    public ApplicationSettings app;
+    public Application app;
     @Transient
     public int numberOfInstancesAdded;
 }

@@ -10,8 +10,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
-import com.thundashop.core.appmanager.data.ApplicationSettings;
-import com.thundashop.core.common.AppConfiguration;
+import com.thundashop.core.appmanager.data.Application;
+import com.thundashop.core.common.ApplicationInstance;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.pagemanager.data.Page;
@@ -31,8 +31,8 @@ import java.util.UUID;
  */
 public class UpgradeBase {
 
-    public HashMap<String, AppConfiguration> getAppAplications() throws UnknownHostException {
-        HashMap<String, AppConfiguration> retval = new HashMap();
+    public HashMap<String, ApplicationInstance> getAppAplications() throws UnknownHostException {
+        HashMap<String, ApplicationInstance> retval = new HashMap();
         Mongo m = new Mongo("localhost", 27017);
         DB db = m.getDB("PageManager");
 
@@ -46,8 +46,8 @@ public class UpgradeBase {
             while (documents.hasNext()) {
                 DBObject document = documents.next();
                 DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, document);
-                if (dataCommon instanceof AppConfiguration) {
-                    AppConfiguration app = (AppConfiguration) dataCommon;
+                if (dataCommon instanceof ApplicationInstance) {
+                    ApplicationInstance app = (ApplicationInstance) dataCommon;
                     retval.put(app.id, app);
                 }
             }
@@ -76,21 +76,21 @@ public class UpgradeBase {
         return retstores;
     }
 
-    public List<ApplicationSettings> getAllAppSettings() throws UnknownHostException {
+    public List<Application> getAllAppSettings() throws UnknownHostException {
         Morphia morphia = new Morphia();
         morphia.map(DataCommon.class);
         
         Mongo m = new Mongo("localhost", 27017);
         DB db = m.getDB("ApplicationPool");
         DBCollection collection = db.getCollection("col_all");
-        List<ApplicationSettings> retstores = new ArrayList();
+        List<Application> retstores = new ArrayList();
         DBCursor documents = collection.find();
         
         while (documents.hasNext()) {
             DBObject dbObject = documents.next();
             DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, dbObject);
-            if (dataCommon instanceof ApplicationSettings) {
-                retstores.add((ApplicationSettings)dataCommon);
+            if (dataCommon instanceof Application) {
+                retstores.add((Application)dataCommon);
             }
         }
         
@@ -193,9 +193,9 @@ public class UpgradeBase {
     }
 
 
-    public AppConfiguration createApp(String appName, String appId) {
+    public ApplicationInstance createApp(String appName, String appId) {
         String appid = UUID.randomUUID().toString();
-        AppConfiguration appConfiguration = new AppConfiguration();
+        ApplicationInstance appConfiguration = new ApplicationInstance();
         appConfiguration.id = appid;
         appConfiguration.appName = appName;
         appConfiguration.sticky = 0;

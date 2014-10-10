@@ -31,7 +31,7 @@ public interface IPageManager {
      * @throws ErrorException 
      */
     @Administrator
-    public AppConfiguration addApplication(String applicationSettingId, String appAreaId) throws ErrorException;
+    public ApplicationInstance addApplication(String applicationSettingId, String appAreaId) throws ErrorException;
     
     /**
      * Remove all content on all page areas for this page.
@@ -79,7 +79,7 @@ public interface IPageManager {
      * @throws ErrorException 
      */
     @Administrator
-    public void saveApplicationConfiguration(AppConfiguration config) throws ErrorException;
+    public void saveApplicationConfiguration(ApplicationInstance config) throws ErrorException;
     
     /**
      * Remove an application
@@ -110,7 +110,7 @@ public interface IPageManager {
      * 
      * @return 
      */
-    public List<AppConfiguration> getApplications() throws ErrorException;
+    public List<ApplicationInstance> getApplications() throws ErrorException;
     
     
     /**
@@ -119,7 +119,7 @@ public interface IPageManager {
      * @return
      * @throws ErrorException 
      */
-    public List<AppConfiguration> getApplicationsByType(String type) throws ErrorException;
+    public List<ApplicationInstance> getApplicationsByType(String type) throws ErrorException;
     
     
     /**
@@ -128,7 +128,7 @@ public interface IPageManager {
      * 
      * @return 
      */
-    public List<AppConfiguration> getApplicationsBasedOnApplicationSettingsId(String appSettingsId) throws ErrorException;
+    public List<ApplicationInstance> getApplicationsBasedOnApplicationSettingsId(String appSettingsId) throws ErrorException;
 
     /**
      * Get all applications from the applicationPool. 
@@ -136,7 +136,7 @@ public interface IPageManager {
      * 
      * @return 
      */
-    public List<AppConfiguration> getApplicationsByPageAreaAndSettingsId(String appSettingsId, String pageArea) throws ErrorException;
+    public List<ApplicationInstance> getApplicationsByPageAreaAndSettingsId(String appSettingsId, String pageArea) throws ErrorException;
 
     
     /**
@@ -146,7 +146,7 @@ public interface IPageManager {
      * @return
      * @throws ErrorException 
      */
-    public List<AppConfiguration> getApplicationsForPage(String pageId) throws ErrorException;
+    public List<ApplicationInstance> getApplicationsForPage(String pageId) throws ErrorException;
     
     /**
      * Delete the page with the id.

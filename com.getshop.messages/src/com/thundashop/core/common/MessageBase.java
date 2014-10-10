@@ -13,6 +13,6 @@ import java.io.Serializable;
 public class MessageBase implements Serializable {
     public String sessionId = "";
     public String guid = "";
-    public AppConfiguration conf;
+    public ApplicationInstance conf;
     public Class sentFrom;
 }

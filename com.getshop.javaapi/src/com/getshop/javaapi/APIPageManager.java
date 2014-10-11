@@ -21,11 +21,11 @@ public class APIPageManager {
      * @return
      * @throws ErrorException
      */
-     public com.thundashop.core.common.ApplicationInstance addApplication(java.lang.String applicationSettingId, java.lang.String appAreaId)  throws Exception  {
+     public com.thundashop.core.common.ApplicationInstance addApplication(java.lang.String applicationId, java.lang.String pageCellId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new LinkedHashMap();
-          data.args.put("applicationSettingId",new Gson().toJson(applicationSettingId));
-          data.args.put("appAreaId",new Gson().toJson(appAreaId));
+          data.args.put("applicationId",new Gson().toJson(applicationId));
+          data.args.put("pageCellId",new Gson().toJson(pageCellId));
           data.method = "addApplication";
           data.interfaceName = "core.pagemanager.IPageManager";
           String result = transport.send(data);

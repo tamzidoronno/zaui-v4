@@ -86,6 +86,12 @@ public class GetShopApi {
            return new APIStoreApplicationPool(transport);
       }
      /**
+      * @return APIStoreApplicationInstancePool
+      */
+      public APIStoreApplicationInstancePool getStoreApplicationInstancePool() {
+           return new APIStoreApplicationInstancePool(transport);
+      }
+     /**
       * @return APIGetShopApplicationPool
       */
       public APIGetShopApplicationPool getGetShopApplicationPool() {

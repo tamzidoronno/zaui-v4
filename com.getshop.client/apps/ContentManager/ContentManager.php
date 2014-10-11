@@ -83,22 +83,22 @@ class ContentManager extends \WebshopApplication implements \Application {
     }
 
     public function saveContent() {
-        $data1 =  strip_tags($_POST['data']['content'], "<img>");
-        
-        $content = str_replace("&nbsp;", "",  $data1);
-        $content = str_replace(" ", "",  $content);
-        $content = trim(preg_replace('/\s+/', '',$content));
-        $content = trim($content);
-        if (strlen($content) == 0 || !$content) {
-            $pageId = $this->getPage()->id;
-            $this->getApi()->getPageManager()->removeApplication($this->getConfiguration()->id, $pageId);
-            $this->content = "";
-            $this->getFactory()->clearCachedPageData();
-            $this->getFactory()->initPage();
-        } else {
+//        $data1 =  strip_tags($_POST['data']['content'], "<img>");
+//        
+//        $content = str_replace("&nbsp;", "",  $data1);
+//        $content = str_replace(" ", "",  $content);
+//        $content = trim(preg_replace('/\s+/', '',$content));
+//        $content = trim($content);
+//        if (strlen($content) == 0 || !$content) {
+//            $pageId = $this->getPage()->id;
+//            $this->getApi()->getPageManager()->removeApplication($this->getConfiguration()->id, $pageId);
+//            $this->content = "";
+//            $this->getFactory()->clearCachedPageData();
+//            $this->getFactory()->initPage();
+//        } else {
             $this->getApi()->getContentManager()->saveContent($this->getConfiguration()->id, $_POST['data']['content']);
-            $this->content = $content;
-        }
+//            $this->content = $content;
+//        }
     }
 
     public function getYoutubeId() {

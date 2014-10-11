@@ -429,7 +429,6 @@ thundashop.common.createInformationBox = function(appid, title, open) {
     var infoBoxHolder = $('#informationbox-holder');
     var infoBox = $('#informationbox');
     if (open) {
-        thundashop.MainMenu.lockScroll();
         thundashop.common.mask();
         infoBoxHolder.css('display', 'inline-block');
     } else {
@@ -921,12 +920,40 @@ $(function() {
         var app = $(this).closest('.app');
         var appname = app.attr('app');
         $('.GetShopToolbox[attached_to_app="true"]').remove();
-        window["app"][appname]["loadSettings"]($(this), app);
+        
+		function defultSettings(element, application) {
+			var config = {
+			   draggable: true,
+			   app : true,
+			   application: application,
+			   title: "Settings",
+			   items: []
+		   }
+
+		   var toolbox = new GetShopToolbox(config, application);
+		   toolbox.show();
+		   toolbox.attachToElement(application, 2);
+	   }
+	   
+		var func = false; 
+		if (window["app"] && window["app"][appname] && window["app"][appname]["loadSettings"]) {
+			func = window["app"][appname]["loadSettings"];
+		}
+		
+		if (!func) {
+			defultSettings($(this), app);
+		} else {
+			func($(this), app);
+		}
+		
+		
+	
+		
     });
 
     $(document).on('mouseenter', '.app', function() {
         var appname = $(this).attr('app');
-        if (app[appname] !== undefined && app[appname]['loadSettings'] !== undefined) {
+        if ($(this).find('.application_settings')) {
             if ($(this).find('.order_mask').is(':visible')) {
                 return;
             }

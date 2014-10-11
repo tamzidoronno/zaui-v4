@@ -215,7 +215,7 @@ class ApplicationBase extends FactoryBase {
         
         echo "<div appid='$id' app='" . $className . "' class='app bottom_app $changeable " . $className . "' appsettingsid='$appSettingsId'>";
         echo "<div class='applicationinner'>";
-        if($this->isEditorMode() && !$changeable) {
+        if($this->isEditorMode()) {
             if($this->hasWriteAccess()) {
                 echo "<div class='application_settings inline gs_icon'><i class='fa fa-cog' style='font-size:30px;'></i></div>";
             }
@@ -325,7 +325,7 @@ class ApplicationBase extends FactoryBase {
         $sendCore = $this->getApiObject()->core_common_Settings();
         $sendCore->settings = $newSettings; 
         $sendCore->appId = $this->getConfiguration()->id;
-        $this->getApi()->getPageManager()->setApplicationSettings($sendCore);
+        $this->getApi()->getStoreApplicationInstancePool()->setApplicationSettings($sendCore);
         $this->configuration->settings->{$key} = $setting;
     }
     

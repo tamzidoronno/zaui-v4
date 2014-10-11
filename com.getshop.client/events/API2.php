@@ -4310,6 +4310,20 @@ class APIStoreApplicationInstancePool {
 	     return $this->transport->cast(new core_common_ApplicationInstance(), $this->transport->sendMessage($data));
 	}
 
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function setApplicationSettings($core_common_Settings) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_common_Settings"] = json_encode($this->transport->object_unset_nulls($core_common_Settings));
+	     $data["method"] = "setApplicationSettings";
+	     $data["interfaceName"] = "core.applications.IStoreApplicationInstancePool";
+	     return $this->transport->cast(new core_common_ApplicationInstance(), $this->transport->sendMessage($data));
+	}
+
 }
 class APIStoreApplicationPool {
 

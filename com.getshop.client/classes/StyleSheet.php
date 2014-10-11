@@ -125,9 +125,8 @@ class StyleSheet {
                 $done[] = $appSettingsId;
             }
         }
-	
 
-//        $this->doApp($themeApp->getApplicationSettings());
+        $this->doApp($themeApp);
     }
 
     private function doApp($app) {

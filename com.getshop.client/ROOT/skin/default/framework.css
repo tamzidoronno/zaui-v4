@@ -1625,7 +1625,8 @@ a img {
 
 
 .gscellsettingspanel { width: 160px; position:absolute; padding: 10px; display:inline-block; background-color:#FFF; box-shadow: 0px 0px 2px #bbb; display:none; z-index:10; }
-.gscellsettingspanel div { padding-top: 10px; opacity:0.8; cursor:pointer; }
+.gscellsettingspanel div { padding-top: 10px; opacity:0.8; cursor:pointer; padding: 2px; display:block; }
+.gscellsettingspanel div i { width: 20px; }
 .gscellsettingspanel div:hover { opacity:1; }
 .gsaddcontent { padding: 5px; font-size: 40px;display:block; text-align:center;}
 .gsaddcontent i { 
@@ -1649,7 +1650,7 @@ filter: alpha(opacity=50);
 .gshorisontal[totalcells="4"] { height: 25% !important; }
 .gshorisontal[totalcells="5"] { height: 20% !important; }
 
-.gseditrowouter { box-shadow: 0px 0px 2px #bbb; height:100%; }
+.gseditrowouter { box-shadow: 0px 0px 2px #bbb; height:100%;   box-sizing: border-box;  }
 .gseditrow {  box-sizing: border-box; padding: 5px; }
 .gseditrowheading { text-align:center; font-size: 14px; background-color:#EFEFEF; padding: 10px; }
 .gsdoneeditbutton { color:blue; cursor:pointer; }

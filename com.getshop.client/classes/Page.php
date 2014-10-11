@@ -29,9 +29,11 @@ class Page {
         $layout = $this->javapage->layout;
 
         echo "<span class='gscellsettingspanel'>";
-        echo "<div class='gs_splithorizontally' type='addhorizontal'><i class='fa fa-chevron-circle-right'> " . $this->factory->__w("Add row") . "</i></div>";
-        echo "<div class='gs_splitvertically' type='addvertical'><i class='fa fa-chevron-circle-down'> " . $this->factory->__w("Add column") . "</i></div>";
-        echo "<div class='gs_removerow' type='delete'><i class='fa fa-trash-o'> " . $this->factory->__w("Delete") . "</i></div>";
+        echo "<div class='gs_splithorizontally' type='addhorizontal'><i class='fa fa-chevron-circle-right'></i>" . $this->factory->__w("Add row") . "</div>";
+        echo "<div class='gs_splitvertically' type='addvertical'><i class='fa fa-chevron-circle-down'></i>" . $this->factory->__w("Add column") . "</div>";
+        echo "<div class='gs_removerow' type='delete'><i class='fa fa-arrows'></i>" . $this->factory->__w("Sizing") . "</div>";
+        echo "<div class='gs_removerow' type='delete'><i class='fa fa-image'></i>" . $this->factory->__w("Background image") . "</div>";
+        echo "<div class='gs_removerow' type='delete'><i class='fa fa-trash-o'></i>" . $this->factory->__w("Delete") . "</div>";
         echo "<i class='gs_closecelledit fa fa-times' style='position:absolute;right: 5px; top: 5px;'></i>";
         echo "</span>";
 

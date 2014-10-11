@@ -301,32 +301,15 @@ class ApplicationManager extends FactoryBase {
         $product->loadPicker();
     }
     
-    public function addApplicationToArea() {
-        $area = $_POST['data']['applicationArea'];
-        $settingsId = $_POST['data']['appSettingsId'];
-        $applicationType = isset($_POST['data']['applicationType']) ? $_POST['data']['applicationType'] : "";
-        $pageId = $this->getFactory()->getPage()->getId();
-
-        $pool = $this->getFactory()->getApplicationPool();
-        $app = $pool->getApplicationSetting($settingsId);
-        
-        if ($app == null || $app->isSingleton) {
-            return;
-        }
-
-        if ($applicationType == "bottomarea") {
-            $position =  $_POST['data']['extrainfo'];
-            $application = $this->getFactory()->getApi()->getPageManager()->addApplicationToBottomArea($pageId, $area, $settingsId, $position);
-        } else {
-            $application = $this->getFactory()->getApi()->getPageManager()->addApplicationToPage($pageId, $settingsId, $area);
-            $this->invokeApplicationAdded($application);
-        }
+    public function addApplicationToCell() {
+        $cellId = $_POST['data']['cellId'];
+        $appId = $_POST['data']['appId'];
+       
+		$application = $this->getFactory()->getApi()->getPageManager()->addApplication($appId, $cellId);
+		$this->invokeApplicationAdded($application);
     }
 
     private function invokeApplicationAdded($application) {
-        $applications = array();
-        $applications[] = $application;
-        $this->getFactory()->getApplicationPool()->setApplicationInstances($applications);
         $app = $this->getFactory()->getApplicationPool()->getApplicationInstance($application->id);
         $app->requestAdminRights();
 
@@ -685,7 +668,7 @@ class ApplicationManager extends FactoryBase {
     }
 
     public function showMenuEditor() {
-        $app = $this->getFactory()->getApplicationPool()->getApplicationsInstancesByNamespace("ns_a11ac190_4f9a_11e3_8f96_0800200c9a66");
+        throw new Exception("This part has not yet been implemented in 2.0.0 version");
         $app[0]->renderSetup();
     }
 

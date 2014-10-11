@@ -115,6 +115,7 @@ class StyleSheet {
 
         $done = array();
         foreach ($this->factory->getApplicationPool()->getAllApplicationSettings() as $app) {
+			
             if ($app->type != "ThemeApplication") {
                 $appSettingsId = $app->id;
                 if (in_array($appSettingsId, $done)) {
@@ -124,6 +125,7 @@ class StyleSheet {
                 $done[] = $appSettingsId;
             }
         }
+	
 
 //        $this->doApp($themeApp->getApplicationSettings());
     }

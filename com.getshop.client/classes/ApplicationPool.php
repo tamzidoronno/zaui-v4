@@ -41,17 +41,17 @@ class ApplicationPool {
      * 
      * @param core_common_AppConfiguration[] $appConfigurations
      */
-    public function setApplicationInstances($appConfigurations) {
-        foreach ($appConfigurations as $appConfig) {
-            /* @var $appConfig core_common_AppConfiguration */
-            $appInstance = $this->createAppInstance($appConfig);
-            if ($appInstance) {
-                $this->addedApplicationInstances[$appConfig->id] = $appInstance; 
-            }
-        }
-        
-        $this->addMainMenu();
-        $this->addBreadCrumb();
+    private function loadApplicationInstance($applicationInstanceId) {
+        if (array_key_exists($applicationInstanceId, $this->addedApplicationInstances)) {
+			return;
+		}
+		
+		$appInstanceRaw = $this->factory->getApi()->getStoreApplicationInstancePool()->getApplicationInstance($applicationInstanceId);
+		
+		if ($appInstanceRaw != null) {
+			$appInstance = $this->createAppInstance($appInstanceRaw);
+			$this->addedApplicationInstances[$appInstanceRaw->id] = $appInstance; 	
+		}
     }
     
     public function createAppInstance($appConfig) {
@@ -157,23 +157,6 @@ class ApplicationPool {
 
         return null;
     }
-
-    /**
-     * Returns a list of added application instances for a given namespace.
-     * 
-     * @param type $namespace
-     * @return ApplicationBase[]
-     */
-    public function getApplicationsInstancesByNamespace($namespace) {
-        $retval = array();
-        foreach ($this->addedApplicationInstances as $app) {
-            $ns = $this->factory->convertUUIDtoString($app->getApplicationSettings()->id);
-            if ($ns == $namespace) {
-                $retval[] = $app;
-            }
-        }
-        return $retval;
-    }
     
     /**
      * Returns a specified application instance, if the instance for the specified id
@@ -182,9 +165,11 @@ class ApplicationPool {
      * @param type $id
      * @return ApplicationBase
      */
-    public function getApplicationInstance($id) {
+    public function getApplicationInstance($applicationInstanceId) {
+		$this->loadApplicationInstance($applicationInstanceId);
+		
         foreach ($this->addedApplicationInstances as $app) {
-            if ($app->getConfiguration()->id == $id) {
+            if ($app->getConfiguration()->id == $applicationInstanceId) {
                 return $app;
             }
         }
@@ -307,64 +292,6 @@ class ApplicationPool {
     public function getSelectedThemeApp() {
 		$app = $this->factory->getApi()->getStoreApplicationPool()->getThemeApplication();
 		return $app;
-    }
-    
-    /**
-     * This function is added because MainMenu is not part of the 
-     * webpage application list.
-     */
-    public function addMainMenu() {
-        $mainMenu = new \ns_bf35979f_6965_4fec_9cc4_c42afd3efdd7\MainMenu();
-        $config = new core_common_AppConfiguration();
-        $config->id = "bf35979f-6965-4fec-9cc4-c42afd3efdd7";
-        $mainMenu->setConfiguration($config);
-        $appSettings = new core_applicationmanager_ApplicationSettings();
-        $appSettings->type = "SystemApplication";
-        $mainMenu->setApplicationSettings($appSettings);
-        $this->addedApplicationInstances[] = $mainMenu;
-    }
-
-    /**
-     * This function is added because BreadCrumb is not part of the 
-     * webpage application list.
-     */
-    public function addBreadCrumb() {
-        $breadCrumb = new ns_7093535d_f842_4746_9256_beff0860dbdf\BreadCrumb();
-        $config = new core_common_AppConfiguration();
-        $config->id = "7093535d-f842-4746-9256-beff0860dbdf";
-        $breadCrumb->setConfiguration($config);
-        $appSettings = new core_applicationmanager_ApplicationSettings();
-        $appSettings->type = "SystemApplication";
-        $breadCrumb->setApplicationSettings($appSettings);
-        $this->addedApplicationInstances[] = $breadCrumb;
-    }
-
-    /**
-     * Returns a list of applications that 
-     * wants to print data for the application widget
-     * area
-     * 
-     * PS: This is a static application instance.
-     * It will not have an appConfiguration object.
-     * 
-     * @param ApplicationBase[]
-     */
-    public function getApplicationsByWidgetArea($widgetAreaName) {
-        $apps = array();
-        
-        foreach($this->addedApplicationInstances as $app) {
-            $settings = $app->getApplicationSettings();
-            
-            if (!isset($settings->connectedWidgets) || !$settings->connectedWidgets)
-                continue;
-
-            if(array_key_exists($widgetAreaName, $app->getApplicationSettings()->connectedWidgets)) {
-                $function = $app->getApplicationSettings()->connectedWidgets->{$widgetAreaName};
-                $apps[$function] = $app;
-            }
-        }
-        
-        return $apps;
     }
 
     public function getAllPaymentInstances() {

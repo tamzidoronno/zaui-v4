@@ -194,7 +194,7 @@ class ApplicationBase extends FactoryBase {
         }
         
         echo "<div class='applicationinner'>";
-        if($this->isEditorMode() && !$changeable && !$this->getPage()->isSystemPage()) {
+        if($this->isEditorMode() && !$changeable) {
             if($this->hasWriteAccess()) {
                 echo "<div class='application_settings inline gs_icon'><i class='fa fa-cog' style='font-size:30px;'></i></div>";
             }
@@ -215,7 +215,7 @@ class ApplicationBase extends FactoryBase {
         
         echo "<div appid='$id' app='" . $className . "' class='app bottom_app $changeable " . $className . "' appsettingsid='$appSettingsId'>";
         echo "<div class='applicationinner'>";
-        if($this->isEditorMode() && !$changeable && !$this->getPage()->isSystemPage()) {
+        if($this->isEditorMode() && !$changeable) {
             if($this->hasWriteAccess()) {
                 echo "<div class='application_settings inline gs_icon'><i class='fa fa-cog' style='font-size:30px;'></i></div>";
             }
@@ -427,17 +427,6 @@ class ApplicationBase extends FactoryBase {
     public function setApplicationSettings($applicationSettings) {
         $this->applicationSettings = $applicationSettings;
     }
-    
-    public function renderWidgetArea($widgetAreaName, $dataObject) {
-        $apps = $this->getFactory()->getApplicationPool()->getApplicationsByWidgetArea($widgetAreaName);
-        foreach ($apps as $function => $app) {
-            if (!method_exists($app, $function)) {
-                continue;
-            }
-            echo "<div class='widget'>";
-                $app->$function($dataObject);
-            echo "</div>";
-        }
-    }
+
 }
 ?>

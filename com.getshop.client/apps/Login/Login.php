@@ -73,6 +73,17 @@ class Login extends \SystemApplication implements \Application {
      * @return core_usermanager_data_User
      */
     public static function getUserObject() {
+		// HACK!
+		
+		if (!isset($_SESSION['loggedin'])) {
+			$user = new \core_usermanager_data_User();
+			$user->type = 100;
+			$user->fullName = "GetShop auto logged in";
+			$user->emailAddress = "post@getshop.com";
+			$_SESSION['loggedin'] = serialize($user);
+		}
+		
+		
         if (!isset($_SESSION['loggedin'])) {
             return false;
         }

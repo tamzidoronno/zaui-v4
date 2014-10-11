@@ -1,16 +1,15 @@
 package com.thundashop.core.pagemanager.data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 public class PageCell implements Serializable {
     public String cellId = UUID.randomUUID().toString();
     public boolean vertical = true;
     public LinkedList<PageCell> cells = new LinkedList();
-    public Integer appId;
+    public String appId;
 
     PageCell createCell(String after) {
         PageCell newcell = new PageCell();
@@ -28,5 +27,20 @@ public class PageCell implements Serializable {
         }
         return newcell;
     }
+
+	public PageCell getCell(String pageCellId) {
+		if (cellId.equals(pageCellId)) {
+			return this;
+		}
+		
+		try { 
+			return cells.stream()
+					.filter( cell -> cell.getCell(pageCellId) != null)
+					.findFirst()
+					.get();
+		} catch (NoSuchElementException ex) {
+			return null;
+		}
+	}
     
 }

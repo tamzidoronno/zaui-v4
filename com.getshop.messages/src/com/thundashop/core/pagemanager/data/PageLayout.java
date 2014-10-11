@@ -3,6 +3,7 @@ package com.thundashop.core.pagemanager.data;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 public class PageLayout implements Serializable {
     public PageCell header;
@@ -63,5 +64,25 @@ public class PageLayout implements Serializable {
             cells.remove(toRemove);
         }
     }
+
+	public PageCell getCell(String pageCellId) {
+		if (header != null && header.cellId.equals(pageCellId)) {
+			return header;
+		}
+		
+		if (footer != null && footer.cellId.equals(pageCellId)) {
+			return footer;
+		}
+		
+		
+		for (PageCell cell : rows) {
+			PageCell cell2 = cell.getCell(pageCellId);
+			if (cell2 != null) {
+				return cell2;
+			}
+		}
+		
+		return null;
+	}
     
 }

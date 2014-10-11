@@ -712,6 +712,25 @@ a img {
     margin-top: 10px;
 }
 
+.gs_add_applicationlist {
+	display: none;
+	margin: auto;
+	position: absolute;
+	left: 50%;
+	margin-left: -100px;
+	background-color: #FFF;
+	z-index: 2;
+	top: 5px;
+	width: 200px;
+	box-shadow: 0px 0px 3px rgba(0,0,0,0.5);
+}
+
+.gs_add_applicationlist .gs_add_app_entry {
+	text-align: center;
+	border-bottom: solid 1px #DDD;
+	line-height: 25px;
+	cursor: pointer;
+}
 
 .theeme_selection {
     cursor:pointer;

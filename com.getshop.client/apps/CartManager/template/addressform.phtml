@@ -19,11 +19,6 @@ $factory = $this->getFactory();
 
 $termsAndConditions = false;
 
-$instances = $factory->getApplicationPool()->getApplicationsInstancesByNamespace("ns_6e415852_c023_4ffe_a49f_990a521841cf");
-if (sizeof($instances) > 0) {
-    $termsAndConditions = true;
-}
-
 $settings = $factory->getSettings();
 $countrycodes = $factory->getTerritoriesList();
 

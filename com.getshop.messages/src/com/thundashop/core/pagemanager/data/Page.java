@@ -45,6 +45,9 @@ public class Page extends DataCommon implements Cloneable {
         layout.rows = new LinkedList();
     }
 
+	public PageCell getCell(String pageCellId) {
+		return layout.getCell(pageCellId);
+	}
     
     public static class DefaultPages {
         public static String OrderOverviewPageId = "orderoverview";

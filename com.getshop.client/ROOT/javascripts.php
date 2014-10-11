@@ -35,13 +35,15 @@ foreach ($apps as $app) {
     
     $namespace = $this->convertUUIDtoString($app->id);
     $javascriptFolder = "../app/$namespace/javascript";
+	
 
     if (is_dir($javascriptFolder) && $handle = opendir($javascriptFolder)) {
         echo "<script>";
         
         while (false !== ($entry = readdir($handle))) {
-            if (endsWith(strtolower($entry), ".js"))
-              echo file_get_contents($javascriptFolder."/".$entry);
+            if (endsWith(strtolower($entry), ".js")) {
+				echo file_get_contents($javascriptFolder."/".$entry);	
+			}
         }
         echo "</script>";
     }

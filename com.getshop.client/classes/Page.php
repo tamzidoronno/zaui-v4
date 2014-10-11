@@ -53,6 +53,24 @@ class Page {
             $this->printCell($layout->footer);
         }
     }
+	
+	private function printApplicationAddCellRow($cell) {
+		echo "<div class='gs_add_applicationlist'>";
+		$apps = $this->factory->getApi()->getStoreApplicationPool()->getApplications();
+		foreach ($apps as $app) {
+			$name = $app->appName;
+			$id = $app->id;
+			echo "<div class='gs_add_app_entry' appId='$id'>$name</div>";
+		}
+		echo "</div>";
+	}
+	
+	private function renderApplication($cell) {
+		$instance = $this->factory->getApplicationPool()->getApplicationInstance($cell->appId);
+		if ($instance) {
+			$instance->renderApplication();
+		}
+	}
 
     function printCell($cell, $count, $depth, $totalcells) {
         $direction = "gshorisontal";
@@ -64,7 +82,7 @@ class Page {
         echo "<div class='gsinner gsdepth_$depth gscount_$count' totalcells='$totalcells'>";
         
         echo "<i class='fa fa-tags gscellsettings'></i>";
-        if(sizeof($cell->cells) > 0) {
+		if(sizeof($cell->cells) > 0) {
             $innercount=0;
             $innerdept = $depth+1;
             foreach($cell->cells as $innercell) {
@@ -74,9 +92,12 @@ class Page {
         } else {
             if(!$cell->appId) {
                 echo "<span class='gsaddcontent'>";
-                echo "<i class='fa fa-plus-circle'></i>";
+                echo "<i class='fa fa-plus-circle gs_show_application_add_list'></i>";
                 echo "</span>";
-            }
+				$this->printApplicationAddCellRow($cell);
+            } else {
+				$this->renderApplication($cell);
+			}
         }
         echo "</div>";
         echo "</div>";

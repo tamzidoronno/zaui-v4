@@ -157,18 +157,6 @@ if(isset($factory->getSettings()->languages)) {
         }
         echo "<meta name=\"description\" content=\"$pageDescription\">";
 
-        $google = $factory->getApplicationPool()->getApplicationsInstancesByNamespace("ns_0cf21aa0_5a46_41c0_b5a6_fd52fb90216f");
-        if ($google) {
-            /* @var $google \ns_0cf21aa0_5a46_41c0_b5a6_fd52fb90216f\GoogleAnalytics */
-            $google[0]->render();
-        }
-
-        $google = $factory->getApplicationPool()->getApplicationsInstancesByNamespace("ns_0cf21aa0_5a46_41c0_b5a6_fd52fb90216f");
-        if ($google) {
-            /* @var $google \ns_0cf21aa0_5a46_41c0_b5a6_fd52fb90216f\GoogleAnalytics */
-            $google[0]->render();
-        }
-
         $factory->loadJavascriptFiles();
         $factory->showCssFiles();
 
@@ -229,35 +217,14 @@ if(isset($factory->getSettings()->languages)) {
             });
         </script>
 
-        <?
-        if ($factory->isEditorMode()) { ?>
-            <div id='backsidesettings'>
-                <? include('../template/default/Common/settings.phtml'); ?>
-            </div>
-        <?
-        }
-        ?>
+
         
         <div id="errorbox"></div>
         <div id="gsbody">
             <?php echo $html; ?>
         </div>
 
-        <? if ($factory->isEditorMode()) { ?>
-            <div class="designselectionbox">
-                <? $factory->includefile("themeselection"); ?>
-            </div>
-
-        <? } ?>
-
     </body>
-
-    <?php
-    $analytics = $factory->getApplicationPool()->getApplicationInstance("ba885f72-f571-4a2e-8770-e91cbb16b4ad");
-    if ($analytics) {
-        echo $analytics->render();
-    }
-    ?>
 
 </html>
 

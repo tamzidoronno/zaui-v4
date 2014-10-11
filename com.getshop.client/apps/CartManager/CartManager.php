@@ -22,11 +22,6 @@ class CartManager extends \SystemApplication implements \Application {
             $this->sendRemoveProductFromCartEvent($action);
         }
     }
-
-    public function loadTermsAndConditions() {
-        $instances = $this->getFactory()->getApplicationPool()->getApplicationsInstancesByNamespace("ns_6e415852_c023_4ffe_a49f_990a521841cf");
-        $instances[0]->render();
-    }
         
     public function checkEmail() {
         $email = $_POST['data']['email'];
@@ -411,13 +406,6 @@ class CartManager extends \SystemApplication implements \Application {
         }
         
         return $paymentMethods;
-    }
-
-    public function renderCoupon() {
-        $apps = $this->getFactory()->getApplicationPool()->getApplicationsInstancesByNamespace("ns_90cd1330_2815_11e3_8224_0800200c9a66");
-        if (count($apps) > 0) {
-            $apps[0]->render();
-        }
     }
 }   
 

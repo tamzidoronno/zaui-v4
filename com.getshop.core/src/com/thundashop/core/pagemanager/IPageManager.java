@@ -31,7 +31,7 @@ public interface IPageManager {
      * @throws ErrorException 
      */
     @Administrator
-    public ApplicationInstance addApplication(String applicationSettingId, String appAreaId) throws ErrorException;
+    public ApplicationInstance addApplication(String applicationId, String pageCellId);
     
     /**
      * Remove all content on all page areas for this page.

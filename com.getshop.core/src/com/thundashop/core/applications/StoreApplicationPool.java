@@ -50,6 +50,7 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 		List<Application> availableApplications = getAvailableApplications();
 		return availableApplications.stream()
 				.filter( o -> activatedApplications.contains(o))
+				.filter( o -> !o.type.equals(Application.Type.Theme))
 				.collect(Collectors.toList());
 	}
 

@@ -5,13 +5,16 @@
 package com.thundashop.core.pagemanager;
 
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pagemanager.data.Page;
-import com.thundashop.core.pagemanager.data.PageLayout;
+import com.thundashop.core.pagemanager.data.PageCell;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,6 +27,9 @@ public class PageManager extends ManagerBase implements IPageManager {
     
     HashMap<String, Page> pages = new HashMap();
     
+	@Autowired
+	private StoreApplicationInstancePool instancePool;
+			
     @Override
     public Page createPage() throws ErrorException {
         Page page = new Page();
@@ -50,8 +56,18 @@ public class PageManager extends ManagerBase implements IPageManager {
     
     
     @Override
-    public ApplicationInstance addApplication(String applicationSettingId, String appAreaId) throws ErrorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public ApplicationInstance addApplication(String applicationId, String pageCellId) {
+		ApplicationInstance instance = instancePool.createNewInstance(applicationId);
+		List<Page> pagesWithCells = getPagesThatHasCell(pageCellId);				
+				
+		for (Page page : pagesWithCells) {
+			System.out.println("Found cell: " + page.getCell(pageCellId));
+			System.out.println("Setting id: " + instance.id);
+			page.getCell(pageCellId).appId = instance.id;
+		}
+
+		pagesWithCells.stream().forEach(page -> savePage(page));
+		return instance;
     }
 
     @Override
@@ -155,7 +171,7 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     @Override
-    public void savePage(Page page) throws ErrorException {
+    public void savePage(Page page) {
         pages.put(page.id, page);
         databaseSaver.saveObject(page, credentials);
     }
@@ -189,5 +205,11 @@ public class PageManager extends ManagerBase implements IPageManager {
         savePage(page);
         return page;
     }
+	
+	private List<Page> getPagesThatHasCell(String pageCellId) {
+		return pages.values().stream()
+				.filter(page -> page.getCell(pageCellId) != null)
+				.collect(Collectors.toList());
+	}
     
 }

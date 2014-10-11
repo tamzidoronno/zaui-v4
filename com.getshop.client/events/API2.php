@@ -2737,11 +2737,11 @@ class APIPageManager {
 	* @throws ErrorException
 	*/
 
-	public function addApplication($applicationSettingId, $appAreaId) {
+	public function addApplication($applicationId, $pageCellId) {
 	     $data = array();
 	     $data['args'] = array();
-	     $data['args']["applicationSettingId"] = json_encode($this->transport->object_unset_nulls($applicationSettingId));
-	     $data['args']["appAreaId"] = json_encode($this->transport->object_unset_nulls($appAreaId));
+	     $data['args']["applicationId"] = json_encode($this->transport->object_unset_nulls($applicationId));
+	     $data['args']["pageCellId"] = json_encode($this->transport->object_unset_nulls($pageCellId));
 	     $data["method"] = "addApplication";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
 	     return $this->transport->cast(new core_common_ApplicationInstance(), $this->transport->sendMessage($data));
@@ -4273,6 +4273,43 @@ class APISedoxProductManager {
 	}
 
 }
+class APIStoreApplicationInstancePool {
+
+	var $transport;
+	
+	function APIStoreApplicationInstancePool($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function createNewInstance($applicationId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["applicationId"] = json_encode($this->transport->object_unset_nulls($applicationId));
+	     $data["method"] = "createNewInstance";
+	     $data["interfaceName"] = "core.applications.IStoreApplicationInstancePool";
+	     return $this->transport->cast(new core_common_ApplicationInstance(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function getApplicationInstance($applicationInstanceId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["applicationInstanceId"] = json_encode($this->transport->object_unset_nulls($applicationInstanceId));
+	     $data["method"] = "getApplicationInstance";
+	     $data["interfaceName"] = "core.applications.IStoreApplicationInstancePool";
+	     return $this->transport->cast(new core_common_ApplicationInstance(), $this->transport->sendMessage($data));
+	}
+
+}
 class APIStoreApplicationPool {
 
 	var $transport;
@@ -5405,6 +5442,12 @@ class GetShopApi {
       */
       public function getSedoxProductManager() {
            return new APISedoxProductManager($this->transport);
+      }
+      /**
+      * @return StoreApplicationInstancePool
+      */
+      public function getStoreApplicationInstancePool() {
+           return new APIStoreApplicationInstancePool($this->transport);
       }
       /**
       * @return StoreApplicationPool

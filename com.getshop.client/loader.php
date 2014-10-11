@@ -103,30 +103,30 @@ function __autoload($class_name) {
     
     $apipath = str_replace("_", "/", $class_name);
     if (file_exists("../events/".  $apipath.".php")) {
-        include "../events/".$apipath.".php";
+        include_once "../events/".$apipath.".php";
     }
     
     if (file_exists("../".  str_replace("_", "/", $class_name).".php")) {    
-        include "../".  str_replace("_", "/", $class_name).".php";
+        include_once "../".  str_replace("_", "/", $class_name).".php";
     }
     
     if (file_exists("../classes/$class_name.php")) {
-        include "../classes/$class_name.php";
+        include_once "../classes/$class_name.php";
     }
     
     if (file_exists("../helpers/$class_name.php")) {
-        include "../helpers/$class_name.php";
+        include_once "../helpers/$class_name.php";
     }
     
     if (file_exists("../classes/builders/$class_name.php")) {
-        include "../classes/builders/$class_name.php";
+        include_once "../classes/builders/$class_name.php";
     }
     
     if (file_exists("../app/$class_name.php")) {
-        include "../app/$class_name.php";
+        include_once "../app/$class_name.php";
     }
     if (file_exists("../classes/api/$class_name.php")) {
-        include "../classes/api/$class_name.php";
+        include_once "../classes/api/$class_name.php";
     }
     
     foreach (AppRegister::$register as $app) {
@@ -135,23 +135,23 @@ function __autoload($class_name) {
         $app = strtolower($app);
         
         if (file_exists("../app/$app/classes/$class_name.php")) {
-            include "../app/$app/classes/$class_name.php";
+            include_once "../app/$app/classes/$class_name.php";
         }
         if (file_exists("../app/$app/$class_name.php")) {
-            include "../app/$app/$class_name.php";
+            include_once "../app/$app/$class_name.php";
         }
         
         if (file_exists("../app/$app/classes/data/$class_name.php")) {
-            include "../app/$app/classes/data/$class_name.php";
+            include_once "../app/$app/classes/data/$class_name.php";
         }
         
         if (file_exists("../app/$app/classes/event/$class_name.php")) {
-            include "../app/$app/classes/event/$class_name.php";
+            include_once "../app/$app/classes/event/$class_name.php";
         }
     }
     
     if (file_exists("../classes/helpers/$class_name.php")) {
-        include "../classes/helpers/$class_name.php";
+        include_once "../classes/helpers/$class_name.php";
     }
     
 }

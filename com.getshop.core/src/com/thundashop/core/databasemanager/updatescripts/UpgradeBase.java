@@ -197,8 +197,6 @@ public class UpgradeBase {
         String appid = UUID.randomUUID().toString();
         ApplicationInstance appConfiguration = new ApplicationInstance();
         appConfiguration.id = appid;
-        appConfiguration.appName = appName;
-        appConfiguration.sticky = 0;
         appConfiguration.appSettingsId = appId;
         return appConfiguration;
     }

@@ -42,10 +42,7 @@ class Bring extends \ShipmentApplication implements \Application {
     }
     
     public function getFromPostalCode() {
-        /* @var $settings Settings */
-        $settings = $this->getFactory()->getApplicationPool()->getApplicationsInstancesByNamespace("ns_d755efca_9e02_4e88_92c2_37a3413f3f41");
-        $settings = $settings[0]->getConfiguration()->settings;
-        return $settings->postal_code->value;
+		throw new Exception("This part has not yet been implemented in 2.0.0 version");
     }
 
     public function getShippingCost($shipmentProduct = "") {
@@ -154,10 +151,7 @@ class Bring extends \ShipmentApplication implements \Application {
     }
 
     public function getStoreSettings() {
-        $settings = $this->getFactory()->getApplicationPool()->getApplicationsInstancesByNamespace("ns_d755efca_9e02_4e88_92c2_37a3413f3f41");
-        $settings = $settings[0];
-        $settings = $settings->getConfiguration()->settings;
-        return $settings;
+        throw new Exception("This function is not yet available in 2.0.0 version");
     }
     
     public function hasSubProducts() {

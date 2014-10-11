@@ -2810,22 +2810,22 @@ class OrderManager(object):
 class PageManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
-  def addApplication(self, applicationSettingId, appAreaId):
+  def addApplication(self, applicationId, pageCellId):
     args = collections.OrderedDict()
-    if isinstance(applicationSettingId,GetShopBaseClass): 
-      args["applicationSettingId"]=json.dumps(applicationSettingId.__dict__)
+    if isinstance(applicationId,GetShopBaseClass): 
+      args["applicationId"]=json.dumps(applicationId.__dict__)
     else:
       try:
-        args["applicationSettingId"]=json.dumps(applicationSettingId)
+        args["applicationId"]=json.dumps(applicationId)
       except (ValueError, AttributeError):
-        args["applicationSettingId"]=applicationSettingId
-    if isinstance(appAreaId,GetShopBaseClass): 
-      args["appAreaId"]=json.dumps(appAreaId.__dict__)
+        args["applicationId"]=applicationId
+    if isinstance(pageCellId,GetShopBaseClass): 
+      args["pageCellId"]=json.dumps(pageCellId.__dict__)
     else:
       try:
-        args["appAreaId"]=json.dumps(appAreaId)
+        args["pageCellId"]=json.dumps(pageCellId)
       except (ValueError, AttributeError):
-        args["appAreaId"]=appAreaId
+        args["pageCellId"]=pageCellId
     data = EmptyClass()
     data.args = args
     data.method = "addApplication"
@@ -4447,6 +4447,39 @@ class SedoxProductManager(object):
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 
+class StoreApplicationInstancePool(object):
+  def __init__(self, communicationHelper):
+    self.communicationHelper = communicationHelper
+  def createNewInstance(self, applicationId):
+    args = collections.OrderedDict()
+    if isinstance(applicationId,GetShopBaseClass): 
+      args["applicationId"]=json.dumps(applicationId.__dict__)
+    else:
+      try:
+        args["applicationId"]=json.dumps(applicationId)
+      except (ValueError, AttributeError):
+        args["applicationId"]=applicationId
+    data = EmptyClass()
+    data.args = args
+    data.method = "createNewInstance"
+    data.interfaceName = "core.applications.IStoreApplicationInstancePool"
+    return self.communicationHelper.sendMessage(data)
+
+  def getApplicationInstance(self, applicationInstanceId):
+    args = collections.OrderedDict()
+    if isinstance(applicationInstanceId,GetShopBaseClass): 
+      args["applicationInstanceId"]=json.dumps(applicationInstanceId.__dict__)
+    else:
+      try:
+        args["applicationInstanceId"]=json.dumps(applicationInstanceId)
+      except (ValueError, AttributeError):
+        args["applicationInstanceId"]=applicationInstanceId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getApplicationInstance"
+    data.interfaceName = "core.applications.IStoreApplicationInstancePool"
+    return self.communicationHelper.sendMessage(data)
+
 class StoreApplicationPool(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
@@ -5365,6 +5398,7 @@ class GetShopApi(object):
     self.ProductManager = ProductManager(self.communicationHelper)
     self.ReportingManager = ReportingManager(self.communicationHelper)
     self.SedoxProductManager = SedoxProductManager(self.communicationHelper)
+    self.StoreApplicationInstancePool = StoreApplicationInstancePool(self.communicationHelper)
     self.StoreApplicationPool = StoreApplicationPool(self.communicationHelper)
     self.StoreManager = StoreManager(self.communicationHelper)
     self.UserManager = UserManager(self.communicationHelper)

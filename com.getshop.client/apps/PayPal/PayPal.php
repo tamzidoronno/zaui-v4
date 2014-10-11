@@ -125,6 +125,10 @@ class PayPal extends \PaymentApplication implements \Application {
         $this->includefile("paypalconfig");
     }
 
+	public function getMode() {
+		return null;
+	}
+	
     public function render() {
         
     }

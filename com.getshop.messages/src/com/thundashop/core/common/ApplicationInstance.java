@@ -1,26 +1,14 @@
 package com.thundashop.core.common;
 
-import com.thundashop.core.appmanager.data.Application;
 import java.util.HashMap;
 
 public class ApplicationInstance extends DataCommon {
     public HashMap<String, Setting> settings = new HashMap<>();
-    public int sticky;
-    public int sequence;
-    public String appName;
-    public int inheritate;
-    public String originalPageId;
     public String appSettingsId;
 
     public ApplicationInstance secureClone() {
         ApplicationInstance appConfig = new ApplicationInstance();
-        appConfig.sticky = sticky;
-        appConfig.sequence = sequence;
-        appConfig.appName = appName;
-        appConfig.inheritate = inheritate;
-        appConfig.originalPageId = originalPageId;
         appConfig.appSettingsId = appSettingsId;
-        
         
         appConfig.id = id;
         appConfig.storeId = storeId;

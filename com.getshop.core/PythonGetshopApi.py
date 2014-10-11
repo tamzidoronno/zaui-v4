@@ -3166,18 +3166,25 @@ class PageManager(object):
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
-  def removeApplication(self, pageAreaId):
+  def removeAppFromCell(self, pageId, cellid):
     args = collections.OrderedDict()
-    if isinstance(pageAreaId,GetShopBaseClass): 
-      args["pageAreaId"]=json.dumps(pageAreaId.__dict__)
+    if isinstance(pageId,GetShopBaseClass): 
+      args["pageId"]=json.dumps(pageId.__dict__)
     else:
       try:
-        args["pageAreaId"]=json.dumps(pageAreaId)
+        args["pageId"]=json.dumps(pageId)
       except (ValueError, AttributeError):
-        args["pageAreaId"]=pageAreaId
+        args["pageId"]=pageId
+    if isinstance(cellid,GetShopBaseClass): 
+      args["cellid"]=json.dumps(cellid.__dict__)
+    else:
+      try:
+        args["cellid"]=json.dumps(cellid)
+      except (ValueError, AttributeError):
+        args["cellid"]=cellid
     data = EmptyClass()
     data.args = args
-    data.method = "removeApplication"
+    data.method = "removeAppFromCell"
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 

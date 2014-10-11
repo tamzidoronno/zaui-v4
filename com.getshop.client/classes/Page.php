@@ -45,10 +45,29 @@ class Page {
         echo "<table width='100%' cellspacing='0' cellpadding='0'>";
         foreach ($rowsToPrint as $row) {
             $isedit = false;
+            
+            if($row->cellId == "footer") {
+                echo "<tr><td>";
+                echo "<div class='gscell  gsdepth_0' style='height:60px'>";
+                echo "<div class='gsinner gsdepth_0'>";
+                echo '<div class="gs_addcell" incell="" aftercell="" style="padding: 20px; text-align:center"><span style="border: solid 1px; padding: 10px; background-color:#BBB;">Add row</span></div>';
+                echo "</div></div>";
+                echo "</td></tr>";
+            }
+            
             if (isset($_SESSION['gseditcell']) && $_SESSION['gseditcell'] === $row->cellId) {
                 echo "<tr><td>";
-                echo "<div class='gseditrowheading'>";
+                echo "<div class='gscell gsdepth_0' style='height: 38px;'>";
+                echo "<div class='gsinner gsdepth_0'>";
+                echo "<div class='gseditrowheading' cellid='".$row->cellId."'>";
+                if($row->cellId != "footer" && $row->cellId != "header") {
+                    echo "<i class='fa fa-trash-o' type='delete' title='Delete this row'></i>";
+                    echo "<i class='fa fa-arrow-up' type='moveup' title='Move row up'></i>";
+                    echo "<i class='fa fa-arrow-down' type='movedown' title='Move row down'></i>";
+                }
                 echo "You are now in edit mode for this row." . " - " . "<span class='gsdoneeditbutton' done='true'true'>done editing</span>";
+                echo "</div>";
+                echo "</div>";
                 echo "</div>";
                 echo "</td></tr>";
                 $isedit = true;
@@ -61,15 +80,18 @@ class Page {
             echo "</tr>";
             if (isset($_SESSION['gseditcell']) && $_SESSION['gseditcell'] === $row->cellId) {
                 echo "<tr><td>";
+                echo "<div class='gscell gsdepth_0 gsendedit'>";
+                echo "<div class='gsinner gsdepth_0'>";
                 echo "<div class='gseditrowheading'>";
                 echo "End of row to edit.";
+                echo "</div>";
+                echo "</div>";
                 echo "</div>";
                 echo "</td></tr>";
                 $isedit = true;
             }
         }
         echo "</table>";
-        echo '<div class="gs_addcell" incell="" aftercell="" style="padding: 20px; text-align:center"><span style="border: solid 1px; padding: 10px; background-color:#BBB;">Add row</span></div>';
     }
 
     private function printApplicationAddCellRow($cell) {
@@ -147,7 +169,9 @@ class Page {
                 $this->printApplicationAddCellRow($cell);
                 echo "</td></tr></table>";
             } else {
+            echo "<div class='applicationarea' appid='".$cell->appId."' area='".$cell->cellId."'>";
                 $this->renderApplication($cell);
+                echo "</div>";
             }
         }
         echo "</div>";

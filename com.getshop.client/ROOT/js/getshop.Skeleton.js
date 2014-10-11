@@ -38,6 +38,7 @@ thundashop.Skeleton = {
     removeApplication : function(id, area) {
         var data = {};
         data.appid = id;
+        data.cellid = area;
         
         var confirmed =  thundashop.common.confirm(__f("Are you sure that you want to remove this application?"));
         if(confirmed) {

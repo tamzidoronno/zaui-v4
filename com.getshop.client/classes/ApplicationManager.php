@@ -245,9 +245,8 @@ class ApplicationManager extends FactoryBase {
     }
 
     public function removeApplicationFromArea() {
-        $id = $_POST['data']['appid'];
-        $this->getFactory()->getApi()->getPageManager()->removeApplication($id, $this->getPage()->id);
-        $this->callApplicationDeleted($id);
+        $id = $_POST['data']['cellid'];
+        $this->getFactory()->getApi()->getPageManager()->removeAppFromCell($this->getPage()->javapage->id, $id);
     }
 
     private function handleResponses($response) {

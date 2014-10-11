@@ -104,8 +104,11 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     @Override
-    public Page removeApplication(String pageAreaId) throws ErrorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Page removeAppFromCell(String pageId, String cellid) throws ErrorException {
+        Page page = getPage(pageId);
+        page.layout.removeAppFromCell(cellid);
+        savePage(page);
+        return page;
     }
 
     @Override

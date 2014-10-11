@@ -70,6 +70,7 @@ public class PageLayout implements Serializable {
         }
         if (toRemove != null) {
             cells.remove(toRemove);
+            this.rows.remove(toRemove);
             return true;
         }
         return false;
@@ -102,5 +103,20 @@ public class PageLayout implements Serializable {
 		
 		return null;
 	}
+
+    public void removeAppFromCell(String cellid) {
+        LinkedList<PageCell> cells = getAllCells();
+        removeAppRecursivly(cellid,cells);
+    }
+
+    private void removeAppRecursivly(String cellid, LinkedList<PageCell> cells) {
+        for(PageCell cell : cells) {
+            if(cell.cellId.equals(cellid)) {
+                cell.appId = null;
+            } else if(cell.cells.size() > 0) {
+                removeAppRecursivly(cellid, cell.cells);
+            }
+        }
+    }
     
 }

@@ -389,11 +389,12 @@ public class APIPageManager {
      * @return
      * @throws ErrorException
      */
-     public com.thundashop.core.pagemanager.data.Page removeApplication(java.lang.String pageAreaId)  throws Exception  {
+     public com.thundashop.core.pagemanager.data.Page removeAppFromCell(java.lang.String pageId, java.lang.String cellid)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new LinkedHashMap();
-          data.args.put("pageAreaId",new Gson().toJson(pageAreaId));
-          data.method = "removeApplication";
+          data.args.put("pageId",new Gson().toJson(pageId));
+          data.args.put("cellid",new Gson().toJson(cellid));
+          data.method = "removeAppFromCell";
           data.interfaceName = "core.pagemanager.IPageManager";
           String result = transport.send(data);
           Gson gson = new GsonBuilder().serializeNulls().create();

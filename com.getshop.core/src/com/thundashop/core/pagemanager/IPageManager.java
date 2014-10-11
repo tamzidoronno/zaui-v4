@@ -92,7 +92,7 @@ public interface IPageManager {
      * @throws ErrorException 
      */
     @Editor
-    public Page removeApplication(String pageAreaId) throws ErrorException;
+    public Page removeAppFromCell(String pageId, String cellid) throws ErrorException;
     
     /**
      * Change the userlevel for a given page. Make it accessible for only administrators / editors / customers.<br>

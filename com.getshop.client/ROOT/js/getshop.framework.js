@@ -39,6 +39,7 @@ thundashop.framework = {
         $(document).on('mouseover', '.gseditrowouter', this.showEditIcon);
         $(document).on('click', '.gseditrowbutton', this.startEditRow);
         $(document).on('click', '.gsdoneeditbutton', this.startEditRow);
+        $(document).on('click', '.gseditrowheading .fa', this.operateCell);
     },
     closeCellEdit : function() {
         $('.gscellsettingspanel').hide();
@@ -73,6 +74,11 @@ thundashop.framework = {
     },
     operateCell: function () {
         var cellid = $(this).closest('.gscellsettingspanel').attr('cellid');
+        
+        if($(this).closest('.gseditrowheading').length > 0) {
+            cellid = $(this).closest('.gseditrowheading').attr('cellid');
+        }
+        
         var data = {
             "cellid": cellid,
             "type": $(this).attr('type')
@@ -83,7 +89,7 @@ thundashop.framework = {
     showCellSettingsPanel: function () {
         $('.gscellsettingspanel').fadeIn();
         var cell = $(this).closest('.gscell');
-        var overlay = $('<span class="gsoverlay" style="filter: blur(5px);width:100%; height:100%; background-color:#bbb; opacity:0.6; position:absolute; left:0px; top:0px;display:inline-block;">test</span>');
+        var overlay = $('<span class="gsoverlay" style="filter: blur(5px);width:100%; height:100%; background-color:#bbb; opacity:0.6; position:absolute; left:0px; top:0px;display:inline-block;"></span>');
         cell.append(overlay);
 
         $('.gscellsettingspanel').attr('cellid', cell.attr('cellid'));

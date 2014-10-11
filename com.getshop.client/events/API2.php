@@ -3069,11 +3069,12 @@ class APIPageManager {
 	* @throws ErrorException
 	*/
 
-	public function removeApplication($pageAreaId) {
+	public function removeAppFromCell($pageId, $cellid) {
 	     $data = array();
 	     $data['args'] = array();
-	     $data['args']["pageAreaId"] = json_encode($this->transport->object_unset_nulls($pageAreaId));
-	     $data["method"] = "removeApplication";
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data['args']["cellid"] = json_encode($this->transport->object_unset_nulls($cellid));
+	     $data["method"] = "removeAppFromCell";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
 	     return $this->transport->cast(new core_pagemanager_data_Page(), $this->transport->sendMessage($data));
 	}

@@ -4,7 +4,9 @@ namespace ns_1051b4cf_6e9f_475d_aa12_fc83a89d2fd4;
 /* *  @var $menu TopMenu */
 $menu = $this;
 $entries = $menu->getEntries();
-$pageId = $menu->getPage()->id;
+$pageId = $menu->getPage()->javapage->id;
+
+
 $renaming = false;
 $currentUser = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
 if(isset($_POST['event']) && $_POST['event'] == "renameEntry") {
@@ -19,88 +21,9 @@ if(isset($_POST['event']) && $_POST['event'] == "renameEntry") {
     <span class="droparea droparea_first"></span>
     <?php
     
-    function printEntries($entries, $pageId, $menu, $container, $isTop, $currentUser) {
-        if(isset($entries)) {
-            $counter = 0;
-            foreach ($entries as $entry) {
-                
-                if ($entry->userLevel != null && $entry->userLevel > 0 && ($currentUser == null || $entry->userLevel > $currentUser->type)) {
-                    continue;
-                }
-                
-                $counter++;
-                $first = !isset($first) ? "first" : "";
-                $last = (count($entries) == $counter) ? "last" : "";
-
-                if (!$entry->pageId) {
-                    $entry->pageId = "home";
-                }
-
-                $selected = "";
-                $selected_entry = "";
-                if ($pageId == $entry->pageId) {
-                    $selected = "selected";
-                    $selected_entry  = "selected_entry";
-                }
-
-                $menu->setCurrentMenuEntry($entry);
-                /* @var $entry core_listmanager_data_Entry */
-                ?><li class="configable entry <? echo $first; echo $last; echo " ".$selected_entry; ?>" interrupt="false" menuid="<? echo  $entry->id; ?>">
-                    <?php
-                    if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() && $isTop) {
-                        $container->includeFile("LeftMenuTemplateMenuConfiguration", "LeftMenu");
-                        echo "<span class='edit'></span>";
-                    }
-                    if (@$_POST['event'] == "renameEntry" && @$_POST['data']['id'] == $entry->id) {
-                        ?>
-                        <span gstype="form" method="renameEntry">
-                            <input gstype="submitenter" method="renameEntry" class='renametopmenuinput'  gsname="newentry" type="text" placeholder="<?php echo $entry->name; ?>">
-                            <input type="hidden" gsname="renameId" value="<?php echo $entry->id; ?>">
-                        </span>
-
-                        <?php
-                    } else {
-                        ?>
-                        <span>
-                            <?php
-                            /* @var $entry \core_listmanager_data_Entry */
-                            $hardlink = "false";
-                            $target = "";
-                            if($entry->hardLink) {
-                                $hardlink="true";
-                                $url = $entry->hardLink;
-                                $target = "_new";
-                            } else {
-                                $link = "?page=".$entry->pageId;
-                                $url = \GetShopHelper::makeSeoUrl($entry->name);
-                            }
-                            $icon = "";
-                            if($entry->fontAwsomeIcon) {
-                                $icon = "<i class='fa " . $entry->fontAwsomeIcon."'></i>";
-                            }
-                            if($entry->subentries) {
-                                ?>
-                                <a ajaxlink="<?php echo $link; ?>" href="<? echo $url; ?>" target="<? echo $target; ?>" class="<?php echo $selected; ?>" hardlink="<?php echo $hardlink; ?>"><?php echo $icon.$entry->name; ?></a>
-                                <?
-                                echo '<ul class="subentries" id="topmenuline">';
-                                    printEntries($entry->subentries, $pageId, $menu, $container, false, $currentUser);
-                                echo '</ul>';
-                            } else {
-                            ?>
-                            <a ajaxlink="<?php echo $link; ?>" href="<? echo $url; ?>" target="<? echo $target; ?>" class="<?php echo $selected; ?>" hardlink="<?php echo $hardlink; ?>"><?php echo $icon.$entry->name; ?></a>
-                            <? } ?>
-                        </span>
-                        <?php
-                    }
-                    ?>
-                <span class='droparea'></span>
-                </li>
-                <?
-            }
-        }
-    }
     
-    printEntries($entries, $pageId, $menu, $this, true, $currentUser);
+    
+    $this->printEntries($entries, $pageId, $menu, $this, true, $currentUser);
     if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
         ?>
         <li class="addnew">

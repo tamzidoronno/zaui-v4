@@ -170,10 +170,6 @@ class Factory extends FactoryBase {
         <?
 
         include 'javascripts.php';
-
-        // TODO - find a better solution for this.
-        if ($this->isEditorMode() && $includetoolbox)
-            echo "\n" . '<script type="text/javascript" src="js/getshop.MainMenuToolbox.js"></script>';
     }
 
     public function loadJavascriptFilesEditorMode() {

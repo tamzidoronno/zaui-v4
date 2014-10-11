@@ -64,8 +64,6 @@ public class PageManager extends ManagerBase implements IPageManager {
 		List<Page> pagesWithCells = getPagesThatHasCell(pageCellId);				
 				
 		for (Page page : pagesWithCells) {
-			System.out.println("Found cell: " + page.getCell(pageCellId));
-			System.out.println("Setting id: " + instance.id);
 			page.getCell(pageCellId).appId = instance.id;
 		}
 
@@ -86,10 +84,12 @@ public class PageManager extends ManagerBase implements IPageManager {
     @Override
     public Page getPage(String id) throws ErrorException {
         Page page = pages.get(id);
-        page.finalizePage(commonPageData);
+        
         if(page == null) {
             throw new ErrorException(30);
         }
+		
+		page.finalizePage(commonPageData);
         return page;
     }
 

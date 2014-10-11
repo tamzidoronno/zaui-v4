@@ -33,14 +33,14 @@ public class PageCell implements Serializable {
 			return this;
 		}
 		
-		try { 
-			return cells.stream()
-					.filter( cell -> cell.getCell(pageCellId) != null)
-					.findFirst()
-					.get();
-		} catch (NoSuchElementException ex) {
-			return null;
+		for (PageCell cell : cells) {
+			PageCell cell2 = cell.getCell(pageCellId);
+			if (cell2 != null) {
+				return cell2;
+			}
 		}
+		
+		return null;
 	}
     
 }

@@ -4487,6 +4487,21 @@ class StoreApplicationInstancePool(object):
     data.interfaceName = "core.applications.IStoreApplicationInstancePool"
     return self.communicationHelper.sendMessage(data)
 
+  def setApplicationSettings(self, settings):
+    args = collections.OrderedDict()
+    if isinstance(settings,GetShopBaseClass): 
+      args["settings"]=json.dumps(settings.__dict__)
+    else:
+      try:
+        args["settings"]=json.dumps(settings)
+      except (ValueError, AttributeError):
+        args["settings"]=settings
+    data = EmptyClass()
+    data.args = args
+    data.method = "setApplicationSettings"
+    data.interfaceName = "core.applications.IStoreApplicationInstancePool"
+    return self.communicationHelper.sendMessage(data)
+
 class StoreApplicationPool(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper

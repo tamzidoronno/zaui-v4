@@ -31,7 +31,6 @@ import java.util.*;
 import javax.xml.bind.DatatypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  *
@@ -501,9 +500,6 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
         return files;
     }
     
-    private HashMap<String, Setting> getSettings(String phpApplicationName) throws ErrorException {
-        throw new NotImplementedException();
-    }
 
     private void remindUserInternal(boolean byEmail, boolean bySMS, List<String> users, String text, String subject, String eventId, String attachment, String filename) throws ErrorException {
         ReminderHistory smsHistory = createReminderHistory(text, subject, eventId, byEmail);
@@ -1097,5 +1093,9 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
         removeUserAttendee(userId, "");
         removeUserWaitingList(userId, "");
     }
+
+	private HashMap<String, Setting> getSettings(String booking) {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
 
 }

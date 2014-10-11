@@ -93,11 +93,26 @@ public class PageLayout implements Serializable {
 			return footer;
 		}
 		
-		
-		for (PageCell cell : rows) {
-			PageCell cell2 = cell.getCell(pageCellId);
+		if (header != null) {
+			PageCell cell2 = header.getCell(pageCellId);
 			if (cell2 != null) {
 				return cell2;
+			}	
+		}
+		
+		
+		if (footer != null) {
+			PageCell cell3 = footer.getCell(pageCellId);
+			if (cell3 != null) {
+				return cell3;
+			}	
+		}
+		
+		
+		for (PageCell cell : rows) {
+			PageCell cell4 = cell.getCell(pageCellId);
+			if (cell4 != null) {
+				return cell4;
 			}
 		}
 		

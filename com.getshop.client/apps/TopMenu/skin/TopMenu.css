@@ -35,6 +35,9 @@
     display: inline-block;
     cursor:pointer;
     font-size: 11px;
+	margin-left: 5px;
+	margin-right: 5px;
+	font-size: 15px;
 }
 
 .TopMenu li span {
@@ -60,11 +63,11 @@
     display:none;
 }
 
-.header .TopMenu .menu {
+.TopMenu .menu {
     display:none;
 }
 
-.header .TopMenu .edit {
+.TopMenu .edit {
     position:absolute;
     cursor:pointer;
     right: 3px;
@@ -75,11 +78,11 @@
     display:none;
 }
 
-.header .TopMenu .configable:hover .edit {
+.TopMenu .configable:hover .edit {
     display:block;
 }
 
-.header .TopMenu .droparea {
+.TopMenu .droparea {
     border: 0px;
     width: 40px;
     position: absolute;
@@ -89,13 +92,13 @@
     display:none;
 }
 
-.header .TopMenu .droparea_hover {
+.TopMenu .droparea_hover {
     background-image: url("{IMAGEFOLDER}/arrow_down.png");
     background-repeat: no-repeat;
     background-position: right top;
 }
 
-.header .TopMenu  .droparea_first {
+.TopMenu  .droparea_first {
     position: absolute;
     left:0px;
     background-position: left top;
@@ -142,7 +145,7 @@
     .TopMenu .mobile_button { display:block !important; position:absolute; }
     .TopMenu .subentries { display:block; position: initial; border: solid 0px; }
     
-    .header .TopMenu {
+    .TopMenu {
         position: absolute;
         top: 74px;
     }

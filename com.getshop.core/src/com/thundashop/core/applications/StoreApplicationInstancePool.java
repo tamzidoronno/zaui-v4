@@ -9,7 +9,10 @@ import com.getshop.scope.GetShopSession;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.ApplicationInstance;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.Setting;
+import com.thundashop.core.common.Settings;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +63,28 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
 		}
 		
 		return instance.secureClone();
+	}
+
+	@Override
+	public ApplicationInstance setApplicationSettings(Settings settings) {
+		ApplicationInstance application = applicationInstances.get(settings.appId);
+		
+        HashMap<String, Setting> saveSettings = application.settings;
+        if (saveSettings == null) {
+            saveSettings = new HashMap<>();
+        }
+
+        for (Setting setting : settings.settings) {
+			if (setting.secure && setting.value.equals("****************")) {
+                saveSettings.put(setting.id, application.settings.get(setting.id));
+            } else {
+                saveSettings.put(setting.id, setting);
+            }
+        }
+
+        application.settings = saveSettings;
+        saveObject(application);
+        return application.secureClone();
 	}
 	
 }

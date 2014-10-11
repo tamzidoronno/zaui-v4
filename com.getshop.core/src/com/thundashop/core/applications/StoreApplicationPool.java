@@ -124,7 +124,7 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 			throw new NullPointerException("There are no theme activated for this shop");
 		}
 		
-		return getAvailableApplications().get(0);
+		return getAvailableThemeApplications().get(0);
 	}
 	
 }

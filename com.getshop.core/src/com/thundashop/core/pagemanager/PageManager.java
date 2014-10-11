@@ -8,6 +8,7 @@ import com.getshop.scope.GetShopSession;
 import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.pagemanager.data.CommonPageData;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageCell;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Component;
 public class PageManager extends ManagerBase implements IPageManager {
     
     HashMap<String, Page> pages = new HashMap();
+    CommonPageData commonPageData = new CommonPageData();
     
 	@Autowired
 	private StoreApplicationInstancePool instancePool;
@@ -50,10 +52,11 @@ public class PageManager extends ManagerBase implements IPageManager {
                 Page page = (Page) obj;
                 pages.put(page.id, page);
             }
+            if(obj instanceof CommonPageData) {
+                commonPageData = (CommonPageData) obj;
+            }
         }
     }
-
-    
     
     @Override
     public ApplicationInstance addApplication(String applicationId, String pageCellId) {
@@ -83,6 +86,7 @@ public class PageManager extends ManagerBase implements IPageManager {
     @Override
     public Page getPage(String id) throws ErrorException {
         Page page = pages.get(id);
+        page.finalizePage(commonPageData);
         if(page == null) {
             throw new ErrorException(30);
         }
@@ -174,6 +178,7 @@ public class PageManager extends ManagerBase implements IPageManager {
     public void savePage(Page page) {
         pages.put(page.id, page);
         databaseSaver.saveObject(page, credentials);
+        saveCommonAreas();
     }
 
     @Override
@@ -189,11 +194,7 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     @Override
     public void addLayoutCell(String pageId, String incell, String aftercell, boolean vertical) throws ErrorException {
-        Page page = pages.get(pageId);
-        if(page == null) {
-            throw new ErrorException(30);
-        }
-        
+        Page page = getPage(pageId);
         page.layout.createCell(incell, aftercell, vertical);
         savePage(page);
     }
@@ -204,6 +205,11 @@ public class PageManager extends ManagerBase implements IPageManager {
         page.layout.deleteCell(cellId);
         savePage(page);
         return page;
+    }
+
+    private void saveCommonAreas() {
+        commonPageData.storeId = storeId;
+        databaseSaver.saveObject(commonPageData, credentials);
     }
 	
 	private List<Page> getPagesThatHasCell(String pageCellId) {

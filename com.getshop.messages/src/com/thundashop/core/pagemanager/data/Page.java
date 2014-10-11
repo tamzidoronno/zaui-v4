@@ -7,18 +7,10 @@
 package com.thundashop.core.pagemanager.data;
 
 import org.mongodb.morphia.annotations.Transient;
-import com.thundashop.core.common.ApplicationInstance;
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Translation;
 import com.thundashop.core.listmanager.data.Entry;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
 
 /**
  *
@@ -43,6 +35,11 @@ public class Page extends DataCommon implements Cloneable {
 
     public void deletePageAreas() {
         layout.rows = new LinkedList();
+    }
+
+    public void finalizePage(CommonPageData pagedata) {
+        layout.header = pagedata.header;
+        layout.footer = pagedata.footer;
     }
 
 	public PageCell getCell(String pageCellId) {

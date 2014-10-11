@@ -1,11 +1,11 @@
 package com.thundashop.core.pagemanager.data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
 public class PageLayout implements Serializable {
+
     public PageCell header;
     public PageCell footer;
     public LinkedList<PageCell> rows = new LinkedList();
@@ -15,31 +15,31 @@ public class PageLayout implements Serializable {
     }
 
     public void createCell(String incell, String after, boolean vertical) {
-        if(incell == null || incell.isEmpty()) {
+        if (incell == null || incell.isEmpty()) {
             PageCell newpagecell = new PageCell();
             newpagecell.vertical = vertical;
             rows.add(newpagecell);
         } else {
-           PageCell cell = findCell(rows, incell);
-           if(cell.cells.isEmpty()) {
-               PageCell newcell = cell.createCell(after);
-               newcell.vertical = vertical;
-               newcell.appId = cell.appId;
-               after = newcell.cellId;
-           }
+            PageCell cell = findCell(getAllCells(), incell);
+            if (cell.cells.isEmpty()) {
+                PageCell newcell = cell.createCell(after);
+                newcell.vertical = vertical;
+                newcell.appId = cell.appId;
+                after = newcell.cellId;
+            }
             PageCell newcell = cell.createCell(after);
             newcell.vertical = vertical;
         }
     }
 
-    private PageCell findCell(LinkedList<PageCell> rows, String id) {
-        for(PageCell cell : rows) {
-            if(cell.cellId.equals(id)) {
+    private PageCell findCell(LinkedList<PageCell> cells, String id) {
+        for (PageCell cell : cells) {
+            if (cell.cellId.equals(id)) {
                 return cell;
             }
-            if(!cell.cells.isEmpty()) {
+            if (!cell.cells.isEmpty()) {
                 PageCell foundcell = findCell(cell.cells, id);
-                if(foundcell != null) {
+                if (foundcell != null) {
                     return foundcell;
                 }
             }
@@ -48,21 +48,37 @@ public class PageLayout implements Serializable {
     }
 
     public void deleteCell(String cellId) {
-        deleteCellRecusive(cellId, rows);
+        deleteCellRecusive(cellId, getAllCells());
     }
 
-    private void deleteCellRecusive(String cellId, LinkedList<PageCell> cells) {
+    private boolean deleteCellRecusive(String cellId, LinkedList<PageCell> cells) {
         PageCell toRemove = null;
-        for(PageCell cell : cells) {
-            if(cell.cellId.equals(cellId)) {
+        for (PageCell cell : cells) {
+            if (cell.cellId.equals(cellId)) {
                 toRemove = cell;
-            } else if(cell.cells.size() > 0) {
-                deleteCellRecusive(cellId, cell.cells);
+            } else if (cell.cells.size() > 0) {
+                boolean deleted = deleteCellRecusive(cellId, cell.cells);
+                if(deleted) {
+                    if(cell.cells.size() == 1) {
+                        cell.appId = cell.cells.get(0).appId;
+                        cell.cells.remove(0);
+                    }
+                }
             }
         }
-        if(toRemove != null) {
+        if (toRemove != null) {
             cells.remove(toRemove);
+            return true;
         }
+        return false;
+    }
+
+    private LinkedList<PageCell> getAllCells() {
+        LinkedList<PageCell> cells = new LinkedList();
+        cells.addAll(this.rows);
+        cells.add(header);
+        cells.add(footer);
+        return cells;
     }
 
 	public PageCell getCell(String pageCellId) {

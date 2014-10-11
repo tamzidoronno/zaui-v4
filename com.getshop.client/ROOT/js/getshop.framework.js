@@ -31,34 +31,42 @@ thundashop.framework = {
         $(document).on('click', '.gs_addcell', this.addCell);
         $(document).on('click', '.toogleDeepfreeze', this.showDeepFreezOption);
         $(document).on('click', '.savedeepfreeze', this.toggleDeepFreeze);
-        $(document).on('click','.gscellsettings', this.showCellSettingsPanel);
-        $(document).on('click','.gs_splithorizontally', this.operateCell);
-        $(document).on('click','.gs_splitvertically', this.operateCell);
-        $(document).on('click','.gs_removerow', this.operateCell);
+        $(document).on('click', '.gscellsettings', this.showCellSettingsPanel);
+        $(document).on('click', '.gs_splithorizontally', this.operateCell);
+        $(document).on('click', '.gs_splitvertically', this.operateCell);
+        $(document).on('click', '.gs_removerow', this.operateCell);
+        $(document).on('mouseover', '.gscell.gseditrow', this.showEditIcon);
     },
-    operateCell : function() {
+    showEditIcon: function (event) {
+        console.log($(event.target).attr('class'));
+        if (!$(event.target).hasClass('gscell')) {
+            return;
+        }
+        $('.gscellsettings').hide();
+        $(event.target).find('.gscellsettings').first().show();
+    },
+    operateCell: function () {
         var cellid = $(this).closest('.gscellsettingspanel').attr('cellid');
         var data = {
-            "cellid" : cellid,
-            "type" : $(this).attr('type')
+            "cellid": cellid,
+            "type": $(this).attr('type')
         }
-        var event = thundashop.Ajax.createEvent('','operateCell',$(this), data);
+        var event = thundashop.Ajax.createEvent('', 'operateCell', $(this), data);
         thundashop.Ajax.post(event);
     },
-    showCellSettingsPanel : function() {
+    showCellSettingsPanel: function () {
         $('.gscellsettingspanel').fadeIn();
         var cell = $(this).closest('.gscell');
         var overlay = $('<span class="overlay" style="filter: blur(5px);width:100%; height:100%; background-color:#bbb; opacity:0.6; position:absolute; left:0px; top:0px;display:inline-block;">test</span>');
         cell.append(overlay);
-        
+
         $('.gscellsettingspanel').attr('cellid', cell.attr('cellid'));
         var offset = $(this).offset();
-        $('.gscellsettingspanel').css('display','inline-block');
-        $('.gscellsettingspanel').css('top',offset.top+10);
-        $('.gscellsettingspanel').css('left',(offset.left-170));
-        
+        $('.gscellsettingspanel').css('display', 'inline-block');
+        $('.gscellsettingspanel').css('top', offset.top + 10);
+        $('.gscellsettingspanel').css('left', (offset.left - 170));
+
     },
-    
     addCell: function () {
         var data = {};
         $(this).each(function () {
@@ -66,7 +74,7 @@ thundashop.framework = {
                 data[this.name] = this.value;
             });
         });
-        var event = thundashop.Ajax.createEvent('','addCell',$(this),data);
+        var event = thundashop.Ajax.createEvent('', 'addCell', $(this), data);
         thundashop.Ajax.post(event);
     },
     showDeepFreezOption: function () {

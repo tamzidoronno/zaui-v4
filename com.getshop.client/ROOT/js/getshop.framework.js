@@ -29,9 +29,21 @@ thundashop.framework = {
             thundashop.framework.submitElement(e);
         });
         $(document).on('click', '.gs_addcell', this.addCell);
-        $('.toogleDeepfreeze').live('click', this.showDeepFreezOption);
-        $('.savedeepfreeze').live('click', this.toggleDeepFreeze);
-        $('.gscellsettings').live('click', this.showCellSettingsPanel);
+        $(document).on('click', '.toogleDeepfreeze', this.showDeepFreezOption);
+        $(document).on('click', '.savedeepfreeze', this.toggleDeepFreeze);
+        $(document).on('click','.gscellsettings', this.showCellSettingsPanel);
+        $(document).on('click','.gs_splithorizontally', this.operateCell);
+        $(document).on('click','.gs_splitvertically', this.operateCell);
+        $(document).on('click','.gs_removerow', this.operateCell);
+    },
+    operateCell : function() {
+        var cellid = $(this).closest('.gscellsettingspanel').attr('cellid');
+        var data = {
+            "cellid" : cellid,
+            "type" : $(this).attr('type')
+        }
+        var event = thundashop.Ajax.createEvent('','operateCell',$(this), data);
+        thundashop.Ajax.post(event);
     },
     showCellSettingsPanel : function() {
         $('.gscellsettingspanel').fadeIn();

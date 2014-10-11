@@ -26,6 +26,22 @@ class ApplicationManager extends FactoryBase {
         include("initdata/themeselection.phtml");
     }
 
+    function operateCell() {
+        $type = $_POST['data']['type'];
+        $cellId = $_POST['data']['cellid'];
+        switch($type) {
+            case "delete":
+                $this->getApi()->getPageManager()->dropCell($this->getPage()->javapage->id, $cellId);
+                break;
+            case "split_vertical":
+                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, null,true);
+                break;
+            case "split_horizontal":
+                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, null,false);
+                break;
+        }
+    }
+    
     function setProductFromProductPicker() {
         $productIds = $_POST['data']['productids'];
         if(isset($_POST['data']['config']['type']) && $_POST['data']['config']['type'] == "delete") {
@@ -372,7 +388,7 @@ class ApplicationManager extends FactoryBase {
     public function addCell() {
         $incell = $_POST['data']['incell'];
         $aftercell = $_POST['data']['aftercell'];
-        $this->getApi()->getPageManager()->addLayoutCell($this->getFactory()->getPage()->getId(), $incell, $aftercell);
+        $this->getApi()->getPageManager()->addLayoutCell($this->getFactory()->getPage()->getId(), $incell, $aftercell, true);
     }
 
     public function displayAllTheemes() {

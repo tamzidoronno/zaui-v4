@@ -41,28 +41,11 @@ public class Page extends DataCommon implements Cloneable {
         layout.clear();
     }
 
-    public void moveApplicationToArea(String fromarea, String toarea) {
-        
-    }
-
-    public void removeApplicationOnArea(String area) {
-        
-    }
-
-    public void switchApplications(String fromArea, String toArea) {
-        
-    }
-
     public void deletePageAreas() {
         layout.rows = new LinkedList();
     }
 
-    public void createCell(String incell, String aftercell) {
-        layout.createCell(incell, aftercell);
-    }
-
-
-
+    
     public static class DefaultPages {
         public static String OrderOverviewPageId = "orderoverview";
         public static String CartPage = "cart";

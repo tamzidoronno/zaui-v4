@@ -2893,12 +2893,13 @@ class APIPageManager {
 	* @throws ErrorException
 	*/
 
-	public function addLayoutCell($pageId, $incell, $aftercell) {
+	public function addLayoutCell($pageId, $incell, $aftercell, $vertical) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
 	     $data['args']["incell"] = json_encode($this->transport->object_unset_nulls($incell));
 	     $data['args']["aftercell"] = json_encode($this->transport->object_unset_nulls($aftercell));
+	     $data['args']["vertical"] = json_encode($this->transport->object_unset_nulls($vertical));
 	     $data["method"] = "addLayoutCell";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
 	     return $this->transport->sendMessage($data);
@@ -3019,6 +3020,22 @@ class APIPageManager {
 	     $data["method"] = "deletePage";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
 	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Remove all content on all page areas for this page.
+	* @param pageId
+	* @throws ErrorException
+	*/
+
+	public function dropCell($pageId, $cellId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data['args']["cellId"] = json_encode($this->transport->object_unset_nulls($cellId));
+	     $data["method"] = "dropCell";
+	     $data["interfaceName"] = "core.pagemanager.IPageManager";
+	     return $this->transport->cast(new core_pagemanager_data_Page(), $this->transport->sendMessage($data));
 	}
 
 	/**

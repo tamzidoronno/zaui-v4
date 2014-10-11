@@ -12,19 +12,21 @@ public class PageCell implements Serializable {
     public LinkedList<PageCell> cells = new LinkedList();
     public Integer appId;
 
-    void createCell(String after) {
+    PageCell createCell(String after) {
+        PageCell newcell = new PageCell();
         if(after == null || after.isEmpty()) {
-            cells.add(new PageCell());
+            cells.add(newcell);
         } else {
             LinkedList newList = new LinkedList();
             for(PageCell cell : cells) {
                 newList.add(cell);
                 if(cell.cellId.equals(after)) {
-                    newList.add(new PageCell());
+                    newList.add(newcell);
                 }
             }
             cells = newList;
         }
+        return newcell;
     }
     
 }

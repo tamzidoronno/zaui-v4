@@ -42,7 +42,10 @@ public interface IPageManager {
     public void clearPage(String pageId) throws ErrorException;
     
     @Administrator
-    public void addLayoutCell(String pageId, String incell, String aftercell) throws ErrorException;
+    public void addLayoutCell(String pageId, String incell, String aftercell, boolean vertical) throws ErrorException;
+    
+    @Administrator
+    public Page dropCell(String pageId, String cellId) throws ErrorException;
     
     /**
      * Set the page description.

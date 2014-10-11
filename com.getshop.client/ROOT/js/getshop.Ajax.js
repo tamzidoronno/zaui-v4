@@ -97,6 +97,7 @@ thundashop.Ajax = {
             dataType: dataType,
             context: document.body,
             success: function(response) {
+                console.log(response);
                 if (typeof(dontUpdate) === "undefined" || dontUpdate === false) {
                     thundashop.Ajax.updateFromResponse(response);
                 }

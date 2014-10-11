@@ -66,7 +66,11 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     @Override
     public Page getPage(String id) throws ErrorException {
-        return pages.get(id);
+        Page page = pages.get(id);
+        if(page == null) {
+            throw new ErrorException(30);
+        }
+        return page;
     }
 
     @Override
@@ -168,14 +172,22 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     @Override
-    public void addLayoutCell(String pageId, String incell, String aftercell) throws ErrorException {
+    public void addLayoutCell(String pageId, String incell, String aftercell, boolean vertical) throws ErrorException {
         Page page = pages.get(pageId);
         if(page == null) {
             throw new ErrorException(30);
         }
         
-        page.createCell(incell, aftercell);
+        page.layout.createCell(incell, aftercell, vertical);
         savePage(page);
+    }
+
+    @Override
+    public Page dropCell(String pageId, String cellId) throws ErrorException {
+        Page page = getPage(pageId);
+        page.layout.deleteCell(cellId);
+        savePage(page);
+        return page;
     }
     
 }

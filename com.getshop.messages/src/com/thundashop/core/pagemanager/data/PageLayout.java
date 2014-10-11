@@ -13,12 +13,21 @@ public class PageLayout implements Serializable {
         rows = new LinkedList();
     }
 
-    void createCell(String incell, String after) {
+    public void createCell(String incell, String after, boolean vertical) {
         if(incell == null || incell.isEmpty()) {
-            rows.add(new PageCell());
+            PageCell newpagecell = new PageCell();
+            newpagecell.vertical = vertical;
+            rows.add(newpagecell);
         } else {
            PageCell cell = findCell(rows, incell);
-           cell.createCell(after);
+           if(cell.cells.isEmpty()) {
+               PageCell newcell = cell.createCell(after);
+               newcell.vertical = vertical;
+               newcell.appId = cell.appId;
+               after = newcell.cellId;
+           }
+            PageCell newcell = cell.createCell(after);
+            newcell.vertical = vertical;
         }
     }
 
@@ -35,6 +44,24 @@ public class PageLayout implements Serializable {
             }
         }
         return null;
+    }
+
+    public void deleteCell(String cellId) {
+        deleteCellRecusive(cellId, rows);
+    }
+
+    private void deleteCellRecusive(String cellId, LinkedList<PageCell> cells) {
+        PageCell toRemove = null;
+        for(PageCell cell : cells) {
+            if(cell.cellId.equals(cellId)) {
+                toRemove = cell;
+            } else if(cell.cells.size() > 0) {
+                deleteCellRecusive(cellId, cell.cells);
+            }
+        }
+        if(toRemove != null) {
+            cells.remove(toRemove);
+        }
     }
     
 }

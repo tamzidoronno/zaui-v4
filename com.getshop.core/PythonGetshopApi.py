@@ -2960,7 +2960,7 @@ class PageManager(object):
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
-  def addLayoutCell(self, pageId, incell, aftercell):
+  def addLayoutCell(self, pageId, incell, aftercell, vertical):
     args = collections.OrderedDict()
     if isinstance(pageId,GetShopBaseClass): 
       args["pageId"]=json.dumps(pageId.__dict__)
@@ -2983,6 +2983,13 @@ class PageManager(object):
         args["aftercell"]=json.dumps(aftercell)
       except (ValueError, AttributeError):
         args["aftercell"]=aftercell
+    if isinstance(vertical,GetShopBaseClass): 
+      args["vertical"]=json.dumps(vertical.__dict__)
+    else:
+      try:
+        args["vertical"]=json.dumps(vertical)
+      except (ValueError, AttributeError):
+        args["vertical"]=vertical
     data = EmptyClass()
     data.args = args
     data.method = "addLayoutCell"
@@ -3098,6 +3105,28 @@ class PageManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "deletePage"
+    data.interfaceName = "core.pagemanager.IPageManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def dropCell(self, pageId, cellId):
+    args = collections.OrderedDict()
+    if isinstance(pageId,GetShopBaseClass): 
+      args["pageId"]=json.dumps(pageId.__dict__)
+    else:
+      try:
+        args["pageId"]=json.dumps(pageId)
+      except (ValueError, AttributeError):
+        args["pageId"]=pageId
+    if isinstance(cellId,GetShopBaseClass): 
+      args["cellId"]=json.dumps(cellId.__dict__)
+    else:
+      try:
+        args["cellId"]=json.dumps(cellId)
+      except (ValueError, AttributeError):
+        args["cellId"]=cellId
+    data = EmptyClass()
+    data.args = args
+    data.method = "dropCell"
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 

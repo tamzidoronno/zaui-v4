@@ -293,7 +293,6 @@ class ApplicationManager extends FactoryBase {
 
         $pool = $this->getFactory()->getApplicationPool();
         $app = $pool->getApplicationSetting($settingsId);
-
         
         if ($app == null || $app->isSingleton) {
             return;

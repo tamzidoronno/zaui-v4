@@ -14,9 +14,6 @@ $factory = IocContainer::getFactorySingelton(false);
 $apps = $factory->getApplicationPool()->getAllApplicationSettings();
 if (!$factory->isEditorMode()) {
     $apps = $factory->getApi()->getStoreApplicationPool()->getApplications();
-    $apps[] = $factory->getApplicationPool()->getApplicationByName("ns_bf35979f_6965_4fec_9cc4_c42afd3efdd7\MainMenu");
-    $apps[] = $factory->getApplicationPool()->getApplicationByName("ns_7093535d_f842_4746_9256_beff0860dbdf\BreadCrumb");
-    
     // Login app
     $appSettings = new core_applicationmanager_ApplicationSettings();
     $appSettings->id = "df435931-9364-4b6a-b4b2-951c90cc0d70";

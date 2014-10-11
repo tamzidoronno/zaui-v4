@@ -4436,6 +4436,21 @@ class StoreApplicationPool(object):
     data.interfaceName = "core.applications.IStoreApplicationPool"
     return self.communicationHelper.sendMessage(data)
 
+  def getApplication(self, id):
+    args = collections.OrderedDict()
+    if isinstance(id,GetShopBaseClass): 
+      args["id"]=json.dumps(id.__dict__)
+    else:
+      try:
+        args["id"]=json.dumps(id)
+      except (ValueError, AttributeError):
+        args["id"]=id
+    data = EmptyClass()
+    data.args = args
+    data.method = "getApplication"
+    data.interfaceName = "core.applications.IStoreApplicationPool"
+    return self.communicationHelper.sendMessage(data)
+
   def getApplications(self):
     args = collections.OrderedDict()
     data = EmptyClass()
@@ -4449,6 +4464,37 @@ class StoreApplicationPool(object):
     data = EmptyClass()
     data.args = args
     data.method = "getAvailableApplications"
+    data.interfaceName = "core.applications.IStoreApplicationPool"
+    return self.communicationHelper.sendMessage(data)
+
+  def getAvailableThemeApplications(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getAvailableThemeApplications"
+    data.interfaceName = "core.applications.IStoreApplicationPool"
+    return self.communicationHelper.sendMessage(data)
+
+  def getThemeApplication(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getThemeApplication"
+    data.interfaceName = "core.applications.IStoreApplicationPool"
+    return self.communicationHelper.sendMessage(data)
+
+  def setThemeApplication(self, applicationId):
+    args = collections.OrderedDict()
+    if isinstance(applicationId,GetShopBaseClass): 
+      args["applicationId"]=json.dumps(applicationId.__dict__)
+    else:
+      try:
+        args["applicationId"]=json.dumps(applicationId)
+      except (ValueError, AttributeError):
+        args["applicationId"]=applicationId
+    data = EmptyClass()
+    data.args = args
+    data.method = "setThemeApplication"
     data.interfaceName = "core.applications.IStoreApplicationPool"
     return self.communicationHelper.sendMessage(data)
 

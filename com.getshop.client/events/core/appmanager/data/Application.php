@@ -49,6 +49,9 @@ class core_appmanager_data_Application extends core_common_DataCommon  {
 	public $hasDashBoard;
 
 	/** @var String */
+	public $defaultActivate;
+
+	/** @var String */
 	public $allowedStoreIds;
 
 	/** @var String */

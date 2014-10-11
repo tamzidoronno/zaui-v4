@@ -7,7 +7,6 @@ package com.thundashop.core.applications;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.appmanager.data.Application;
-import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import java.util.HashSet;
@@ -32,6 +31,8 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 	private List<Application> allApplications;
 	
 	private Set<Application> activatedApplications = new HashSet();
+	
+	
 	
 	@PostConstruct
 	public void load() {
@@ -79,6 +80,50 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 		return allApplications.stream()
 				.filter(o -> o.isPublic)
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<Application> getAvailableThemeApplications() {
+		return getAvailableApplications().stream()
+				.filter(app -> app.type.equals(Application.Type.Theme))
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public Application getThemeApplication() {
+		String id = getManagerSetting("selectedThemeApplication");
+		
+		if (id == null) {
+			return getDefaultThemeApplication();
+		}
+		
+		Application app = getApplication(id);
+		if (app == null) {
+			return getDefaultThemeApplication();
+		}
+		
+		return app;
+	}
+
+	@Override
+	public void setThemeApplication(String applicationId) {
+		setManagerSetting("selectedThemeApplication", applicationId);
+	}
+
+	@Override
+	public Application getApplication(String id) {
+		return getApplications().stream()
+				.filter(app -> app.id.equals(id))
+				.findFirst()
+				.get();
+	}
+
+	private Application getDefaultThemeApplication() {
+		if (getAvailableThemeApplications().size() == 0) {
+			throw new NullPointerException("There are no theme activated for this shop");
+		}
+		
+		return getAvailableApplications().get(0);
 	}
 	
 }

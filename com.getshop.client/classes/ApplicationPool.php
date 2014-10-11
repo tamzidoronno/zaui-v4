@@ -77,6 +77,9 @@ class ApplicationPool {
      * @return ApplicationBase 
      */
     public function createInstace($applicationSetting) {
+		if (!$applicationSetting) {
+			throw new Exception("Empty application");
+		}
         $instance = $this->factory->convertUUIDtoString($applicationSetting->id) . "\\" . $applicationSetting->appName;
         if(class_exists($instance)) {
             $appInstance = new $instance();
@@ -294,22 +297,6 @@ class ApplicationPool {
         
         return null;
     }
-    
-    /**
-     * Full name with namespace.
-     * @param type $id
-     */
-    public function getApplicationByName($id) {
-        foreach($this->applicationList as $app) {
-            $namespace = $this->getNameSpace($app->id);
-            $checkAgain = $namespace . "\\" . $app->appName;
-            
-            if($checkAgain == $id) {
-                return $app;
-            }
-        }
-        return null;
-    }
 
     /**
      * Return the current selected theme application, 
@@ -318,11 +305,8 @@ class ApplicationPool {
      * @throws ThemeApplication
      */
     public function getSelectedThemeApp() {
-        foreach($this->addedApplicationInstances as $app) {
-            if ($app->getApplicationSettings()->type == "ThemeApplication") {
-                return $app;
-            }
-        }
+		$app = $this->factory->getApi()->getStoreApplicationPool()->getThemeApplication();
+		return $app;
     }
     
     /**

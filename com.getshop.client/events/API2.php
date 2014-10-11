@@ -4280,6 +4280,22 @@ class APIStoreApplicationPool {
 	}
 
 	/**
+	* Return an activated application by the given Id.
+	*
+	* @param id
+	* @return core_appmanager_data_Application
+	*/
+
+	public function getApplication($id) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $data["method"] = "getApplication";
+	     $data["interfaceName"] = "core.applications.IStoreApplicationPool";
+	     return $this->transport->cast(new core_appmanager_data_Application(), $this->transport->sendMessage($data));
+	}
+
+	/**
 	* Returns a list of all applications this store
 	* has activated.
 	*
@@ -4306,6 +4322,49 @@ class APIStoreApplicationPool {
 	     $data = array();
 	     $data['args'] = array();
 	     $data["method"] = "getAvailableApplications";
+	     $data["interfaceName"] = "core.applications.IStoreApplicationPool";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Returns a list of all available theme applications.
+	*
+	* @return List
+	*/
+
+	public function getAvailableThemeApplications() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getAvailableThemeApplications";
+	     $data["interfaceName"] = "core.applications.IStoreApplicationPool";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Return the themeapplication that is currently set.
+	*
+	* @return core_appmanager_data_Application
+	*/
+
+	public function getThemeApplication() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getThemeApplication";
+	     $data["interfaceName"] = "core.applications.IStoreApplicationPool";
+	     return $this->transport->cast(new core_appmanager_data_Application(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Use this function to change or set the
+	* theme application you wish to use.
+	* @param applicationId
+	*/
+
+	public function setThemeApplication($applicationId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["applicationId"] = json_encode($this->transport->object_unset_nulls($applicationId));
+	     $data["method"] = "setThemeApplication";
 	     $data["interfaceName"] = "core.applications.IStoreApplicationPool";
 	     return $this->transport->sendMessage($data);
 	}

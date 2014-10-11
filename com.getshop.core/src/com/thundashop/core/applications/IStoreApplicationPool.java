@@ -40,4 +40,33 @@ public interface IStoreApplicationPool {
 	 */
 	@Administrator
 	public void activateApplication(String applicationId);
+	
+	/**
+	 * Returns a list of all available theme applications.
+	 * 
+	 * @return 
+	 */
+	public List<Application> getAvailableThemeApplications();
+	
+	/**
+	 * Return the themeapplication that is currently set.
+	 * 
+	 * @return 
+	 */
+	public Application getThemeApplication();
+	
+	/**
+	 * Use this function to change or set the 
+	 * theme application you wish to use.
+	 * @param applicationId 
+	 */
+	public void setThemeApplication(String applicationId);
+	
+	/**
+	 * Return an activated application by the given Id.
+	 * 
+	 * @param id
+	 * @return 
+	 */
+	public Application getApplication(String id);
 }

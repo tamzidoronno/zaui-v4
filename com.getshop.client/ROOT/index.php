@@ -239,7 +239,9 @@ if(isset($factory->getSettings()->languages)) {
         ?>
         
         <div id="errorbox"></div>
-        <?php echo $html; ?>
+        <div id="gsbody">
+            <?php echo $html; ?>
+        </div>
 
         <? if ($factory->isEditorMode()) { ?>
             <div class="designselectionbox">

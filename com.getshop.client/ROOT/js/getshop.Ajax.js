@@ -191,26 +191,7 @@ thundashop.Ajax = {
         if (response.errors) {
             thundashop.Ajax.showErrorMessage(response.errors)
         } else {
-            for (var divid in response) {
-                if (response[divid] !== null) {
-//                    if (hasFadeInEffect) {
-//                        if (divid === "apparea-middle") {
-//                            $('#' + divid).hide();
-//                            $('#' + divid).html(response[divid]);
-//                            $('#' + divid).fadeIn(600);
-//                        } else {
-//                            $('#' + divid).html(response[divid]);
-//                        }
-//                    } else {
-                    $('#' + divid).html(response[divid]);
-//                    }
-
-                    if (thundashop.MainMenu.hidden) {
-                        $('.mainmenu .content').hide();
-                        $('.mainmenu .hide div').html("show mainmenu");
-                    }
-                }
-            }
+            $('#gsbody').html(response.content);
             PubSub.publish('NAVIGATION_COMPLETED', {response: response});
         }
         $(window).scrollTop(scrolltop);

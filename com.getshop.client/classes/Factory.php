@@ -359,7 +359,17 @@ class Factory extends FactoryBase {
     }
 
     private function renderContent($json) {
-        $this->page->loadSkeleton();
+        if ($json) {
+            ob_start();
+            $this->page->loadSkeleton();
+            $content = ob_get_contents();
+            ob_end_clean();
+            $data = array();
+            $data['content'] = $content;
+            echo json_encode($data);
+        } else {
+            $this->page->loadSkeleton();
+        }
     }
 
     public function getBottomHtml() {

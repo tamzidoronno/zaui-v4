@@ -41,28 +41,24 @@ class Page {
         $rowsToPrint[] = $layout->header;
         $rowsToPrint = array_merge($rowsToPrint, $layout->rows);
         $rowsToPrint[] = $layout->footer;
-        
-        
+
+
         $count = 0;
-        echo "<table width='100%' cellspacing='0' cellpadding='0'>";
         foreach ($rowsToPrint as $row) {
             $isedit = false;
-            
-            if($row->cellId == "footer") {
-                echo "<tr><td>";
+
+            if ($row->cellId == "footer") {
                 echo "<div class='gscell  gsdepth_0' style='height:60px'>";
                 echo "<div class='gsinner gsdepth_0'>";
                 echo '<div class="gs_addcell" incell="" aftercell="" style="padding: 20px; text-align:center"><span style="border: solid 1px; padding: 10px; background-color:#BBB;">Add row</span></div>';
                 echo "</div></div>";
-                echo "</td></tr>";
             }
-            
+
             if (isset($_SESSION['gseditcell']) && $_SESSION['gseditcell'] === $row->cellId) {
-                echo "<tr><td>";
                 echo "<div class='gscell gsdepth_0' style='height: 38px;'>";
                 echo "<div class='gsinner gsdepth_0'>";
-                echo "<div class='gseditrowheading' cellid='".$row->cellId."'>";
-                if($row->cellId != "footer" && $row->cellId != "header") {
+                echo "<div class='gseditrowheading' cellid='" . $row->cellId . "'>";
+                if ($row->cellId != "footer" && $row->cellId != "header") {
                     echo "<i class='fa fa-trash-o' type='delete' title='Delete this row'></i>";
                     echo "<i class='fa fa-arrow-up' type='moveup' title='Move row up'></i>";
                     echo "<i class='fa fa-arrow-down' type='movedown' title='Move row down'></i>";
@@ -71,17 +67,17 @@ class Page {
                 echo "</div>";
                 echo "</div>";
                 echo "</div>";
-                echo "</td></tr>";
                 $isedit = true;
             }
+            echo "<table width='100%' cellspacing='0' cellpadding='0' class='gsrowtable'  cellid='" . $row->cellId . "'>";
             echo "<tr>";
             echo "<td>";
             $this->printCell($row, $count, 0, 0, $isedit);
             $count++;
             echo "</td>";
             echo "</tr>";
+            echo "</table>";
             if (isset($_SESSION['gseditcell']) && $_SESSION['gseditcell'] === $row->cellId) {
-                echo "<tr><td>";
                 echo "<div class='gscell gsdepth_0 gsendedit'>";
                 echo "<div class='gsinner gsdepth_0'>";
                 echo "<div class='gseditrowheading'>";
@@ -89,11 +85,9 @@ class Page {
                 echo "</div>";
                 echo "</div>";
                 echo "</div>";
-                echo "</td></tr>";
                 $isedit = true;
             }
         }
-        echo "</table>";
     }
 
     private function printApplicationAddCellRow($cell) {
@@ -171,7 +165,7 @@ class Page {
                 $this->printApplicationAddCellRow($cell);
                 echo "</td></tr></table>";
             } else {
-            echo "<div class='applicationarea' appid='".$cell->appId."' area='".$cell->cellId."'>";
+                echo "<div class='applicationarea' appid='" . $cell->appId . "' area='" . $cell->cellId . "'>";
                 $this->renderApplication($cell);
                 echo "</div>";
             }

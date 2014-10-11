@@ -6,7 +6,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
-import com.thundashop.core.common.AppConfiguration;
+import com.thundashop.core.common.ApplicationInstance;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import java.net.UnknownHostException;
@@ -81,15 +81,15 @@ public class AddPageSettingsIdToAppConfigurationObject {
 
         Set<String> collections = db.getCollectionNames();
         for (String colection : collections) {
-            HashMap<String, AppConfiguration> pool = createApplicationPool(db, colection);
+            HashMap<String, ApplicationInstance> pool = createApplicationPool(db, colection);
 
             //Now find pages which helds the apps.
             DBCollection selectedCollection = db.getCollection(colection);
             DBCursor allDocs = selectedCollection.find();
             while (allDocs.hasNext()) {
                 DataCommon dataCommon = convert(allDocs.next());
-                if (dataCommon instanceof AppConfiguration) {
-                    AppConfiguration config = (AppConfiguration)dataCommon;
+                if (dataCommon instanceof ApplicationInstance) {
+                    ApplicationInstance config = (ApplicationInstance)dataCommon;
                     config.appSettingsId = check.get(config.appName);
                     System.out.println("Setting : " + config.id + " : " + check.get(config.appName));
                     selectedCollection.save(morphia.toDBObject(config));
@@ -100,18 +100,18 @@ public class AddPageSettingsIdToAppConfigurationObject {
 
     }
 
-    private static HashMap<String, AppConfiguration> createApplicationPool(DB db, String colection) {
+    private static HashMap<String, ApplicationInstance> createApplicationPool(DB db, String colection) {
         Morphia morphia = new Morphia();
         morphia.map(DataCommon.class);
 
         //First build the application pool
         DBCollection selectedCollection = db.getCollection(colection);
-        HashMap<String, AppConfiguration> pool = new HashMap();
+        HashMap<String, ApplicationInstance> pool = new HashMap();
         DBCursor allDocs = selectedCollection.find();
         while (allDocs.hasNext()) {
             DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, allDocs.next());
-            if (dataCommon instanceof AppConfiguration) {
-                AppConfiguration config = (AppConfiguration) dataCommon;
+            if (dataCommon instanceof ApplicationInstance) {
+                ApplicationInstance config = (ApplicationInstance) dataCommon;
                 pool.put(config.id, config);
             }
         }

@@ -1,7 +1,7 @@
 package com.thundashop.core.listmanager;
 
 import com.getshop.scope.GetShopSession;
-import com.thundashop.core.common.AppConfiguration;
+import com.thundashop.core.common.ApplicationInstance;
 import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;

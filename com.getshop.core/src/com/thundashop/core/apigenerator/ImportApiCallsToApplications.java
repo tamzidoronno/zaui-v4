@@ -6,7 +6,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.Mongo;
 import com.thundashop.core.appmanager.data.ApiCallsInUse;
-import com.thundashop.core.appmanager.data.ApplicationSettings;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.DataCommon;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -23,11 +23,11 @@ public class ImportApiCallsToApplications {
         importer.run();
     }
     
-    private HashMap<String, ApplicationSettings> fetchApplicationSettings() throws UnknownHostException {
+    private HashMap<String, Application> fetchApplicationSettings() throws UnknownHostException {
         Morphia morphia = new Morphia();
         morphia.map(DataCommon.class);
 
-        HashMap<String, ApplicationSettings> result = new HashMap();
+        HashMap<String, Application> result = new HashMap();
         Mongo m = new Mongo("localhost", 27017);
         DB db = m.getDB("ApplicationPool");
         Set<String> collections = db.getCollectionNames();
@@ -37,8 +37,8 @@ public class ImportApiCallsToApplications {
             DBCursor allDocs = selectedCollection.find();
             while (allDocs.hasNext()) {
                 DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, allDocs.next());
-                if (dataCommon instanceof ApplicationSettings) {
-                    ApplicationSettings dobj = (ApplicationSettings) dataCommon;
+                if (dataCommon instanceof Application) {
+                    Application dobj = (Application) dataCommon;
                     result.put(dobj.id, dobj);
                 }
             }
@@ -55,7 +55,7 @@ public class ImportApiCallsToApplications {
         Morphia morphia = new Morphia();
         morphia.map(DataCommon.class);
         
-        HashMap<String, ApplicationSettings> apps = fetchApplicationSettings();
+        HashMap<String, Application> apps = fetchApplicationSettings();
         GenerateApi tmp = new GenerateApi();
         String jsondata = tmp.readContent("../apitodb.json");
         Gson gson = new Gson();

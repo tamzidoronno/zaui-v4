@@ -5,9 +5,8 @@
 package com.thundashop.core.common;
 
 import com.getshop.scope.GetShopSessionScope;
-import com.thundashop.core.appmanager.ApplicationPool;
 import com.thundashop.core.appmanager.data.ApiCallsInUse;
-import com.thundashop.core.appmanager.data.ApplicationSettings;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
@@ -19,8 +18,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.springframework.beans.BeansException;
 
 /**
@@ -170,14 +167,6 @@ public class StoreHandler {
 			System.out.println("Throws bean exception?");
 		}
         for (ManagerBase base : messageHandler) {
-            /**
-             * We dont want to set the session for storemanager, 
-             * it is not scoped to prototype
-             */
-            if(base instanceof ApplicationPool ) {
-                continue;
-            }
-            
             base.session = session;
         }
 
@@ -297,46 +286,40 @@ public class StoreHandler {
 		return null;
     }
 
-    private ApplicationPool getApplicationPool() {
-        for(ManagerBase base : messageHandler) {
-            if(base instanceof ApplicationPool) {
-                return (ApplicationPool) base;
-            }
-        }
-        return null;
-    }
+   
 
     private boolean checkApplicationsAccessByApp(User user, Method executeMethod, Class aClass) {
         
-        ApplicationPool pool = getApplicationPool();
-        for(ApplicationSettings setting : pool.applications.values()) {
-            for(String id : user.applicationAccessList.keySet()) {
-                if(setting.id.equals(id)) {
-                    int writeType = user.applicationAccessList.get(id);
-                    for(ApiCallsInUse inuse : setting.apiCallsInUse) {
-                        boolean isWriting = false;
-                        for(Annotation anno : executeMethod.getAnnotations()) {
-                            if(anno instanceof Writing) {
-                                isWriting = true;
-                            }
-                        }
-                        
-                        //Write access only
-                        if((writeType == 2) && !isWriting) {
-                            continue;
-                        }
-                        //Read access only
-                        if((writeType == 1) && isWriting) {
-                            continue;
-                        }
-                        
-                        if(inuse.manager.equals(aClass.getCanonicalName()) && inuse.method.equals(executeMethod.getName())) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		
+//        for(ApplicationSettings setting : pool.applications.values()) {
+//            for(String id : user.applicationAccessList.keySet()) {
+//                if(setting.id.equals(id)) {
+//                    int writeType = user.applicationAccessList.get(id);
+//                    for(ApiCallsInUse inuse : setting.apiCallsInUse) {
+//                        boolean isWriting = false;
+//                        for(Annotation anno : executeMethod.getAnnotations()) {
+//                            if(anno instanceof Writing) {
+//                                isWriting = true;
+//                            }
+//                        }
+//                        
+//                        //Write access only
+//                        if((writeType == 2) && !isWriting) {
+//                            continue;
+//                        }
+//                        //Read access only
+//                        if((writeType == 1) && isWriting) {
+//                            continue;
+//                        }
+//                        
+//                        if(inuse.manager.equals(aClass.getCanonicalName()) && inuse.method.equals(executeMethod.getName())) {
+//                            return true;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        return false;
     }
 }

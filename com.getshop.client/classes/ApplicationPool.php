@@ -18,10 +18,7 @@ class ApplicationPool {
 
     function __construct($factory) {
         $this->factory = $factory;
-        $applications = $factory->getApi()->getAppManager()->getAllApplications();
-        if ($applications != null) {
-            $this->applicationList = $applications->applications;
-        }
+        $this->applicationList = $factory->getApi()->getStoreApplicationPool()->getApplications();
     }
     
     
@@ -80,6 +77,9 @@ class ApplicationPool {
      * @return ApplicationBase 
      */
     public function createInstace($applicationSetting) {
+		if (!$applicationSetting) {
+			throw new Exception("Empty application");
+		}
         $instance = $this->factory->convertUUIDtoString($applicationSetting->id) . "\\" . $applicationSetting->appName;
         if(class_exists($instance)) {
             $appInstance = new $instance();
@@ -297,22 +297,6 @@ class ApplicationPool {
         
         return null;
     }
-    
-    /**
-     * Full name with namespace.
-     * @param type $id
-     */
-    public function getApplicationByName($id) {
-        foreach($this->applicationList as $app) {
-            $namespace = $this->getNameSpace($app->id);
-            $checkAgain = $namespace . "\\" . $app->appName;
-            
-            if($checkAgain == $id) {
-                return $app;
-            }
-        }
-        return null;
-    }
 
     /**
      * Return the current selected theme application, 
@@ -321,13 +305,8 @@ class ApplicationPool {
      * @throws ThemeApplication
      */
     public function getSelectedThemeApp() {
-        foreach($this->addedApplicationInstances as $app) {
-            if ($app->getApplicationSettings()->type == "ThemeApplication") {
-                return $app;
-            }
-        }
-        
-//        throw new Exception("No theme app ? that would be a pretty ugly design I guess. :D");
+		$app = $this->factory->getApi()->getStoreApplicationPool()->getThemeApplication();
+		return $app;
     }
     
     /**

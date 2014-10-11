@@ -22,6 +22,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.mongodb.morphia.Morphia;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -293,7 +295,15 @@ public class Database {
             }
         }
     }
+
+	public Stream<DataCommon> getAll(String dbName, String storeId) {
+		DBCollection col = mongo.getDB(dbName).getCollection("col_"+storeId);
+		return col.find().toArray().stream()
+				.map(o -> morphia.fromDBObject(DataCommon.class, o));
+		
+	}
 }
+
 class DataCommonSorter implements Comparator<DataCommon> {
 
     @Override

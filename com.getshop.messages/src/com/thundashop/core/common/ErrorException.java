@@ -8,7 +8,7 @@ package com.thundashop.core.common;
  *
  * @author hjemme
  */
-public class ErrorException extends Throwable {
+public class ErrorException extends RuntimeException {
     public String additionalInformation;
     public int code;
     

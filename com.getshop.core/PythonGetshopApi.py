@@ -36,146 +36,6 @@ class CommunicationHelper:
   def close(self):
     self.socket.close();
 
-class AppManager(object):
-  def __init__(self, communicationHelper):
-    self.communicationHelper = communicationHelper
-  def createApplication(self, appName):
-    args = collections.OrderedDict()
-    if isinstance(appName,GetShopBaseClass): 
-      args["appName"]=json.dumps(appName.__dict__)
-    else:
-      try:
-        args["appName"]=json.dumps(appName)
-      except (ValueError, AttributeError):
-        args["appName"]=appName
-    data = EmptyClass()
-    data.args = args
-    data.method = "createApplication"
-    data.interfaceName = "core.appmanager.IAppManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def deleteApplication(self, id):
-    args = collections.OrderedDict()
-    if isinstance(id,GetShopBaseClass): 
-      args["id"]=json.dumps(id.__dict__)
-    else:
-      try:
-        args["id"]=json.dumps(id)
-      except (ValueError, AttributeError):
-        args["id"]=id
-    data = EmptyClass()
-    data.args = args
-    data.method = "deleteApplication"
-    data.interfaceName = "core.appmanager.IAppManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getAllApplicationSubscriptions(self, includeAppSettings):
-    args = collections.OrderedDict()
-    if isinstance(includeAppSettings,GetShopBaseClass): 
-      args["includeAppSettings"]=json.dumps(includeAppSettings.__dict__)
-    else:
-      try:
-        args["includeAppSettings"]=json.dumps(includeAppSettings)
-      except (ValueError, AttributeError):
-        args["includeAppSettings"]=includeAppSettings
-    data = EmptyClass()
-    data.args = args
-    data.method = "getAllApplicationSubscriptions"
-    data.interfaceName = "core.appmanager.IAppManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getAllApplications(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "getAllApplications"
-    data.interfaceName = "core.appmanager.IAppManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getApplication(self, id):
-    args = collections.OrderedDict()
-    if isinstance(id,GetShopBaseClass): 
-      args["id"]=json.dumps(id.__dict__)
-    else:
-      try:
-        args["id"]=json.dumps(id)
-      except (ValueError, AttributeError):
-        args["id"]=id
-    data = EmptyClass()
-    data.args = args
-    data.method = "getApplication"
-    data.interfaceName = "core.appmanager.IAppManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getApplicationSettings(self, appSettingsId):
-    args = collections.OrderedDict()
-    if isinstance(appSettingsId,GetShopBaseClass): 
-      args["appSettingsId"]=json.dumps(appSettingsId.__dict__)
-    else:
-      try:
-        args["appSettingsId"]=json.dumps(appSettingsId)
-      except (ValueError, AttributeError):
-        args["appSettingsId"]=appSettingsId
-    data = EmptyClass()
-    data.args = args
-    data.method = "getApplicationSettings"
-    data.interfaceName = "core.appmanager.IAppManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getApplicationSettingsUsedByWebPage(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "getApplicationSettingsUsedByWebPage"
-    data.interfaceName = "core.appmanager.IAppManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def getSyncApplications(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "getSyncApplications"
-    data.interfaceName = "core.appmanager.IAppManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def isSyncToolConnected(self):
-    args = collections.OrderedDict()
-    data = EmptyClass()
-    data.args = args
-    data.method = "isSyncToolConnected"
-    data.interfaceName = "core.appmanager.IAppManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def saveApplication(self, settings):
-    args = collections.OrderedDict()
-    if isinstance(settings,GetShopBaseClass): 
-      args["settings"]=json.dumps(settings.__dict__)
-    else:
-      try:
-        args["settings"]=json.dumps(settings)
-      except (ValueError, AttributeError):
-        args["settings"]=settings
-    data = EmptyClass()
-    data.args = args
-    data.method = "saveApplication"
-    data.interfaceName = "core.appmanager.IAppManager"
-    return self.communicationHelper.sendMessage(data)
-
-  def setSyncApplication(self, id):
-    args = collections.OrderedDict()
-    if isinstance(id,GetShopBaseClass): 
-      args["id"]=json.dumps(id.__dict__)
-    else:
-      try:
-        args["id"]=json.dumps(id)
-      except (ValueError, AttributeError):
-        args["id"]=id
-    data = EmptyClass()
-    data.args = args
-    data.method = "setSyncApplication"
-    data.interfaceName = "core.appmanager.IAppManager"
-    return self.communicationHelper.sendMessage(data)
-
 class BannerManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
@@ -1734,6 +1594,47 @@ class GetShop(object):
     data.args = args
     data.method = "setApplicationList"
     data.interfaceName = "core.getshop.IGetShop"
+    return self.communicationHelper.sendMessage(data)
+
+class GetShopApplicationPool(object):
+  def __init__(self, communicationHelper):
+    self.communicationHelper = communicationHelper
+  def get(self, applicationId):
+    args = collections.OrderedDict()
+    if isinstance(applicationId,GetShopBaseClass): 
+      args["applicationId"]=json.dumps(applicationId.__dict__)
+    else:
+      try:
+        args["applicationId"]=json.dumps(applicationId)
+      except (ValueError, AttributeError):
+        args["applicationId"]=applicationId
+    data = EmptyClass()
+    data.args = args
+    data.method = "get"
+    data.interfaceName = "core.applications.IGetShopApplicationPool"
+    return self.communicationHelper.sendMessage(data)
+
+  def getApplications(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getApplications"
+    data.interfaceName = "core.applications.IGetShopApplicationPool"
+    return self.communicationHelper.sendMessage(data)
+
+  def saveApplication(self, application):
+    args = collections.OrderedDict()
+    if isinstance(application,GetShopBaseClass): 
+      args["application"]=json.dumps(application.__dict__)
+    else:
+      try:
+        args["application"]=json.dumps(application)
+      except (ValueError, AttributeError):
+        args["application"]=application
+    data = EmptyClass()
+    data.args = args
+    data.method = "saveApplication"
+    data.interfaceName = "core.applications.IGetShopApplicationPool"
     return self.communicationHelper.sendMessage(data)
 
 class HotelBookingManager(object):
@@ -4546,15 +4447,84 @@ class SedoxProductManager(object):
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 
-class SettingsManager(object):
+class StoreApplicationPool(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
-  def getDashBoardApplications(self):
+  def activateApplication(self, applicationId):
+    args = collections.OrderedDict()
+    if isinstance(applicationId,GetShopBaseClass): 
+      args["applicationId"]=json.dumps(applicationId.__dict__)
+    else:
+      try:
+        args["applicationId"]=json.dumps(applicationId)
+      except (ValueError, AttributeError):
+        args["applicationId"]=applicationId
+    data = EmptyClass()
+    data.args = args
+    data.method = "activateApplication"
+    data.interfaceName = "core.applications.IStoreApplicationPool"
+    return self.communicationHelper.sendMessage(data)
+
+  def getApplication(self, id):
+    args = collections.OrderedDict()
+    if isinstance(id,GetShopBaseClass): 
+      args["id"]=json.dumps(id.__dict__)
+    else:
+      try:
+        args["id"]=json.dumps(id)
+      except (ValueError, AttributeError):
+        args["id"]=id
+    data = EmptyClass()
+    data.args = args
+    data.method = "getApplication"
+    data.interfaceName = "core.applications.IStoreApplicationPool"
+    return self.communicationHelper.sendMessage(data)
+
+  def getApplications(self):
     args = collections.OrderedDict()
     data = EmptyClass()
     data.args = args
-    data.method = "getDashBoardApplications"
-    data.interfaceName = "core.settingsmanager.ISettingsManager"
+    data.method = "getApplications"
+    data.interfaceName = "core.applications.IStoreApplicationPool"
+    return self.communicationHelper.sendMessage(data)
+
+  def getAvailableApplications(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getAvailableApplications"
+    data.interfaceName = "core.applications.IStoreApplicationPool"
+    return self.communicationHelper.sendMessage(data)
+
+  def getAvailableThemeApplications(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getAvailableThemeApplications"
+    data.interfaceName = "core.applications.IStoreApplicationPool"
+    return self.communicationHelper.sendMessage(data)
+
+  def getThemeApplication(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getThemeApplication"
+    data.interfaceName = "core.applications.IStoreApplicationPool"
+    return self.communicationHelper.sendMessage(data)
+
+  def setThemeApplication(self, applicationId):
+    args = collections.OrderedDict()
+    if isinstance(applicationId,GetShopBaseClass): 
+      args["applicationId"]=json.dumps(applicationId.__dict__)
+    else:
+      try:
+        args["applicationId"]=json.dumps(applicationId)
+      except (ValueError, AttributeError):
+        args["applicationId"]=applicationId
+    data = EmptyClass()
+    data.args = args
+    data.method = "setThemeApplication"
+    data.interfaceName = "core.applications.IStoreApplicationPool"
     return self.communicationHelper.sendMessage(data)
 
 class StoreManager(object):
@@ -5372,7 +5342,6 @@ class YouTubeManager(object):
 class GetShopApi(object):
   def __init__(self, address):
     self.communicationHelper = CommunicationHelper(address)
-    self.AppManager = AppManager(self.communicationHelper)
     self.BannerManager = BannerManager(self.communicationHelper)
     self.BigStock = BigStock(self.communicationHelper)
     self.CalendarManager = CalendarManager(self.communicationHelper)
@@ -5383,6 +5352,7 @@ class GetShopApi(object):
     self.FooterManager = FooterManager(self.communicationHelper)
     self.GalleryManager = GalleryManager(self.communicationHelper)
     self.GetShop = GetShop(self.communicationHelper)
+    self.GetShopApplicationPool = GetShopApplicationPool(self.communicationHelper)
     self.HotelBookingManager = HotelBookingManager(self.communicationHelper)
     self.ListManager = ListManager(self.communicationHelper)
     self.LogoManager = LogoManager(self.communicationHelper)
@@ -5395,7 +5365,7 @@ class GetShopApi(object):
     self.ProductManager = ProductManager(self.communicationHelper)
     self.ReportingManager = ReportingManager(self.communicationHelper)
     self.SedoxProductManager = SedoxProductManager(self.communicationHelper)
-    self.SettingsManager = SettingsManager(self.communicationHelper)
+    self.StoreApplicationPool = StoreApplicationPool(self.communicationHelper)
     self.StoreManager = StoreManager(self.communicationHelper)
     self.UserManager = UserManager(self.communicationHelper)
     self.UtilManager = UtilManager(self.communicationHelper)

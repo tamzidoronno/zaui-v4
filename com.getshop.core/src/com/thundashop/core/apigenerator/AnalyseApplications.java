@@ -6,7 +6,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.Mongo;
 import com.thundashop.core.apigenerator.GenerateApi.ApiMethod;
-import com.thundashop.core.appmanager.data.ApplicationSettings;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.DataCommon;
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +24,7 @@ public class AnalyseApplications {
     private final List<Class> allManagers;
     private final List<Class> dataObjects;
     private final List<ApiMethod> allMethods = new ArrayList();
-    private final HashMap<ApplicationSettings, List<ApiMethod>> usedMethods = new HashMap();
+    private final HashMap<Application, List<ApiMethod>> usedMethods = new HashMap();
     String appPath = "../com.getshop.client/app/";
     
     public static void main(String[] args) throws UnknownHostException, ClassNotFoundException, IOException {
@@ -43,15 +43,15 @@ public class AnalyseApplications {
             allMethods.addAll(generator.getMethods(core));
         }
         
-        List<ApplicationSettings> allApps = fetchApplicationSettings();
+        List<Application> allApps = fetchApplicationSettings();
         analyseApplications(allApps);
     }
 
-    private List<ApplicationSettings> fetchApplicationSettings() throws UnknownHostException {
+    private List<Application> fetchApplicationSettings() throws UnknownHostException {
         Morphia morphia = new Morphia();
         morphia.map(DataCommon.class);
         
-        List<ApplicationSettings> result = new ArrayList();
+        List<Application> result = new ArrayList();
         Mongo m = new Mongo("localhost", 27017);
         DB db = m.getDB("ApplicationPool");
         Set<String> collections = db.getCollectionNames();
@@ -61,8 +61,8 @@ public class AnalyseApplications {
             DBCursor allDocs = selectedCollection.find();
             while (allDocs.hasNext()) {
                 DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, allDocs.next());
-                if (dataCommon instanceof ApplicationSettings) {
-                    ApplicationSettings dobj = (ApplicationSettings) dataCommon;
+                if (dataCommon instanceof Application) {
+                    Application dobj = (Application) dataCommon;
                     result.add(dobj);
                 }
             }
@@ -70,12 +70,12 @@ public class AnalyseApplications {
         return result;
     }
 
-    private void analyseApplications(List<ApplicationSettings> allApps) throws IOException {
-        for(ApplicationSettings setting : allApps) {
+    private void analyseApplications(List<Application> allApps) throws IOException {
+        for(Application setting : allApps) {
             String path = this.appPath + "ns_"+setting.id.replace("-", "_");
             analyseDir(new File(path), setting);
         }
-        for(ApplicationSettings setting : usedMethods.keySet()) {
+        for(Application setting : usedMethods.keySet()) {
             
             if(!toWrite.containsKey(setting.id)) {
                 toWrite.put(setting.id, new HashMap());
@@ -94,7 +94,7 @@ public class AnalyseApplications {
         generator.writeFile(result, "../apitodb.json");
     }
 
-    private void analyseDir(File path, ApplicationSettings app) {
+    private void analyseDir(File path, Application app) {
         if(!path.exists() || path.isFile()) {
             System.out.println(appPath + " does not exists or is file");
             return;
@@ -110,7 +110,7 @@ public class AnalyseApplications {
         
     }
 
-    private void analyseFile(File file, ApplicationSettings app) {
+    private void analyseFile(File file, Application app) {
         if(file.getAbsolutePath().endsWith(".php") || file.getAbsolutePath().endsWith(".phtml")) {
             String content = generator.readContent(file.getAbsolutePath());
             for(ApiMethod method : allMethods) {
@@ -124,7 +124,7 @@ public class AnalyseApplications {
         
     }
 
-    private void addUsedMethod(ApplicationSettings app, ApiMethod method) {
+    private void addUsedMethod(Application app, ApiMethod method) {
         if(!usedMethods.containsKey(app)) {
             usedMethods.put(app, new ArrayList());
         }

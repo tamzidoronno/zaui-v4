@@ -20,6 +20,10 @@ public class Credentials implements Serializable {
     public Credentials(Class managerClass) {
         this.managerClass = managerClass;
     }
+	
+    public Credentials() {
+        this.managerClass = managerClass;
+    }
     
     public Class getManager() {
         return managerClass;

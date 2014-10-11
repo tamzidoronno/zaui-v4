@@ -1,8 +1,7 @@
 
 package com.thundashop.core.databasemanager;
 
-import com.thundashop.core.appmanager.ApplicationPool;
-import com.thundashop.core.appmanager.data.ApplicationSettings;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.data.Credentials;
@@ -26,8 +25,8 @@ public class AddApplicationsToDatabase {
     public Database database;
 
     @SuppressWarnings("empty-statement")
-    private ApplicationSettings createSettings(String appName, String id, List<String> allowedAreas, String description, String type, boolean isSingleton) {
-        ApplicationSettings applicationSettings = new ApplicationSettings();
+    private Application createSettings(String appName, String id, List<String> allowedAreas, String description, String type, boolean isSingleton) {
+        Application applicationSettings = new Application();
         applicationSettings.appName = appName;
         applicationSettings.allowedAreas = allowedAreas;
         applicationSettings.id = id;
@@ -41,8 +40,8 @@ public class AddApplicationsToDatabase {
         return applicationSettings;
     }
     
-    private List<ApplicationSettings> addApplications() {
-        List<ApplicationSettings> apps = new ArrayList();
+    private List<Application> addApplications() {
+        List<Application> apps = new ArrayList();
         
         List<String> allowed = new ArrayList();
         allowed.add("large");
@@ -55,12 +54,11 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        ApplicationSettings dashBoard = createSettings(
-                "DashBoard",
+        Application dashBoard = createSettings("DashBoard",
                 "b81bfb16-8066-4bea-a3c6-c155fa7119f8",
                 allowed,
                 "",
-                ApplicationSettings.Type.Marketing, true);
+                Application.Type.Marketing, true);
         dashBoard.isSingleton = true;
         dashBoard.isPublic = true;
         apps.add(dashBoard);
@@ -137,23 +135,23 @@ public class AddApplicationsToDatabase {
     }
 
     public void insert() throws ErrorException {
-        Credentials credentials = new Credentials(ApplicationPool.class);
+        Credentials credentials = new Credentials();
         credentials.manangerName = "ApplicationPool";
         credentials.password = "ADFASDF";
         credentials.storeid = "all";
 
-        for (ApplicationSettings app : addApplications()) {
+        for (Application app : addApplications()) {
             app.storeId = "all";
             database.save(app, credentials);
         }
     }
 
     public void showLinks() {
-        for (ApplicationSettings app : addApplications()) {
+        for (Application app : addApplications()) {
             System.out.println("ln -s ../../../applications/apps/" + app.appName + " " + "ns_" + app.id.replace("-", "_"));
         }
         System.out.println("Or for kai: ");
-        for (ApplicationSettings app : addApplications()) {
+        for (Application app : addApplications()) {
             System.out.println("ln -s ../../../com.getshop.applications/apps/" + app.appName + " " + "ns_" + app.id.replace("-", "_"));
         }
 

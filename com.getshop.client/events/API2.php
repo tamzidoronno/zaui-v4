@@ -6,179 +6,6 @@
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
-class APIAppManager {
-
-	var $transport;
-	
-	function APIAppManager($transport) {
-		$this->transport = $transport;
-	}
-
-	/**
-	* Create a new application.
-	* @param appName The name of the application
-	* @return core_appmanager_data_ApplicationSettings
-	*/
-
-	public function createApplication($appName) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["appName"] = json_encode($this->transport->object_unset_nulls($appName));
-	     $data["method"] = "createApplication";
-	     $data["interfaceName"] = "core.appmanager.IAppManager";
-	     return $this->transport->cast(new core_appmanager_data_ApplicationSettings(), $this->transport->sendMessage($data));
-	}
-
-	/**
-	* Delete an application owned by you.
-	* @param identificationId
-	* @throws ErrorException
-	*/
-
-	public function deleteApplication($id) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
-	     $data["method"] = "deleteApplication";
-	     $data["interfaceName"] = "core.appmanager.IAppManager";
-	     return $this->transport->sendMessage($data);
-	}
-
-	/**
-	* Get all the applications added to this store.
-	* @param includeAppSettings Do you need the application settings object or not?
-	* @throws ErrorException
-	*/
-
-	public function getAllApplicationSubscriptions($includeAppSettings) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["includeAppSettings"] = json_encode($this->transport->object_unset_nulls($includeAppSettings));
-	     $data["method"] = "getAllApplicationSubscriptions";
-	     $data["interfaceName"] = "core.appmanager.IAppManager";
-	     return $this->transport->sendMessage($data);
-	}
-
-	/**
-	* Fetch all the applications connected to you.
-	* @return core_appmanager_data_AvailableApplications
-	*/
-
-	public function getAllApplications() {
-	     $data = array();
-	     $data['args'] = array();
-	     $data["method"] = "getAllApplications";
-	     $data["interfaceName"] = "core.appmanager.IAppManager";
-	     return $this->transport->cast(new core_appmanager_data_AvailableApplications(), $this->transport->sendMessage($data));
-	}
-
-	/**
-	* Fetch the settings for a given id.
-	* @param id
-	* @return core_appmanager_data_ApplicationSettings
-	* @throws ErrorException
-	*/
-
-	public function getApplication($id) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
-	     $data["method"] = "getApplication";
-	     $data["interfaceName"] = "core.appmanager.IAppManager";
-	     return $this->transport->cast(new core_appmanager_data_ApplicationSettings(), $this->transport->sendMessage($data));
-	}
-
-	/**
-	* Returns an application setting for the given id.
-	*
-	* @param appSettingsId
-	* @return core_appmanager_data_ApplicationSettings
-	* @throws ErrorException
-	*/
-
-	public function getApplicationSettings($appSettingsId) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["appSettingsId"] = json_encode($this->transport->object_unset_nulls($appSettingsId));
-	     $data["method"] = "getApplicationSettings";
-	     $data["interfaceName"] = "core.appmanager.IAppManager";
-	     return $this->transport->cast(new core_appmanager_data_ApplicationSettings(), $this->transport->sendMessage($data));
-	}
-
-	/**
-	* Get a list of all applicationsettings that is in
-	* use for this webopage.
-	*
-	* @return List
-	*/
-
-	public function getApplicationSettingsUsedByWebPage() {
-	     $data = array();
-	     $data['args'] = array();
-	     $data["method"] = "getApplicationSettingsUsedByWebPage";
-	     $data["interfaceName"] = "core.appmanager.IAppManager";
-	     return $this->transport->sendMessage($data);
-	}
-
-	/**
-	* Fetch all application that has been marked for synchronization.
-	* When this method is called all objects related to this will unqueued.
-	* @return List
-	* @throws ErrorException
-	*/
-
-	public function getSyncApplications() {
-	     $data = array();
-	     $data['args'] = array();
-	     $data["method"] = "getSyncApplications";
-	     $data["interfaceName"] = "core.appmanager.IAppManager";
-	     return $this->transport->sendMessage($data);
-	}
-
-	/**
-	* Check if the synchronization client is connected or not.
-	* @return boolean
-	* @throws ErrorException
-	*/
-
-	public function isSyncToolConnected() {
-	     $data = array();
-	     $data['args'] = array();
-	     $data["method"] = "isSyncToolConnected";
-	     $data["interfaceName"] = "core.appmanager.IAppManager";
-	     return $this->transport->sendMessage($data);
-	}
-
-	/**
-	* Save applications
-	* @param settings
-	*/
-
-	public function saveApplication($core_appmanager_data_ApplicationSettings) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["core_appmanager_data_ApplicationSettings"] = json_encode($this->transport->object_unset_nulls($core_appmanager_data_ApplicationSettings));
-	     $data["method"] = "saveApplication";
-	     $data["interfaceName"] = "core.appmanager.IAppManager";
-	     return $this->transport->sendMessage($data);
-	}
-
-	/**
-	* Notify the synchronization server to synchronize this application for the logged on user.
-	* @param id
-	* @throws ErrorException
-	*/
-
-	public function setSyncApplication($id) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
-	     $data["method"] = "setSyncApplication";
-	     $data["interfaceName"] = "core.appmanager.IAppManager";
-	     return $this->transport->sendMessage($data);
-	}
-
-}
 class APIBannerManager {
 
 	var $transport;
@@ -1681,6 +1508,59 @@ class APIGetShop {
 	}
 
 }
+class APIGetShopApplicationPool {
+
+	var $transport;
+	
+	function APIGetShopApplicationPool($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	* Get an application by an given id.
+	*
+	* @param applicationId
+	* @return core_appmanager_data_Application
+	*/
+
+	public function get($applicationId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["applicationId"] = json_encode($this->transport->object_unset_nulls($applicationId));
+	     $data["method"] = "get";
+	     $data["interfaceName"] = "core.applications.IGetShopApplicationPool";
+	     return $this->transport->cast(new core_appmanager_data_Application(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Returns a list of all available applications.
+	*
+	* @return List
+	*/
+
+	public function getApplications() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getApplications";
+	     $data["interfaceName"] = "core.applications.IGetShopApplicationPool";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Save an application
+	* @param application
+	*/
+
+	public function saveApplication($core_appmanager_data_Application) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_appmanager_data_Application"] = json_encode($this->transport->object_unset_nulls($core_appmanager_data_Application));
+	     $data["method"] = "saveApplication";
+	     $data["interfaceName"] = "core.applications.IGetShopApplicationPool";
+	     return $this->transport->sendMessage($data);
+	}
+
+}
 class APIHotelBookingManager {
 
 	var $transport;
@@ -2853,7 +2733,7 @@ class APIPageManager {
 	/**
 	* Add application
 	* @param id
-	* @return core_common_AppConfiguration
+	* @return core_common_ApplicationInstance
 	* @throws ErrorException
 	*/
 
@@ -2864,7 +2744,7 @@ class APIPageManager {
 	     $data['args']["appAreaId"] = json_encode($this->transport->object_unset_nulls($appAreaId));
 	     $data["method"] = "addApplication";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
-	     return $this->transport->cast(new core_common_AppConfiguration(), $this->transport->sendMessage($data));
+	     return $this->transport->cast(new core_common_ApplicationInstance(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -3205,10 +3085,10 @@ class APIPageManager {
 	* @throws ErrorException
 	*/
 
-	public function saveApplicationConfiguration($core_common_AppConfiguration) {
+	public function saveApplicationConfiguration($core_common_ApplicationInstance) {
 	     $data = array();
 	     $data['args'] = array();
-	     $data['args']["core_common_AppConfiguration"] = json_encode($this->transport->object_unset_nulls($core_common_AppConfiguration));
+	     $data['args']["core_common_ApplicationInstance"] = json_encode($this->transport->object_unset_nulls($core_common_ApplicationInstance));
 	     $data["method"] = "saveApplicationConfiguration";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
 	     return $this->transport->sendMessage($data);
@@ -4393,24 +4273,116 @@ class APISedoxProductManager {
 	}
 
 }
-class APISettingsManager {
+class APIStoreApplicationPool {
 
 	var $transport;
 	
-	function APISettingsManager($transport) {
+	function APIStoreApplicationPool($transport) {
 		$this->transport = $transport;
 	}
 
 	/**
+	* Activate an application.
 	*
-	* @author ktonder
+	* @param applicationId
 	*/
 
-	public function getDashBoardApplications() {
+	public function activateApplication($applicationId) {
 	     $data = array();
 	     $data['args'] = array();
-	     $data["method"] = "getDashBoardApplications";
-	     $data["interfaceName"] = "core.settingsmanager.ISettingsManager";
+	     $data['args']["applicationId"] = json_encode($this->transport->object_unset_nulls($applicationId));
+	     $data["method"] = "activateApplication";
+	     $data["interfaceName"] = "core.applications.IStoreApplicationPool";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Return an activated application by the given Id.
+	*
+	* @param id
+	* @return core_appmanager_data_Application
+	*/
+
+	public function getApplication($id) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $data["method"] = "getApplication";
+	     $data["interfaceName"] = "core.applications.IStoreApplicationPool";
+	     return $this->transport->cast(new core_appmanager_data_Application(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Returns a list of all applications this store
+	* has activated.
+	*
+	* @return List
+	*/
+
+	public function getApplications() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getApplications";
+	     $data["interfaceName"] = "core.applications.IStoreApplicationPool";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Returns a list of all applications that are available
+	* for this store. This also includes applications that has
+	* not yet been activated by the administrator.
+	*
+	* @return List
+	*/
+
+	public function getAvailableApplications() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getAvailableApplications";
+	     $data["interfaceName"] = "core.applications.IStoreApplicationPool";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Returns a list of all available theme applications.
+	*
+	* @return List
+	*/
+
+	public function getAvailableThemeApplications() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getAvailableThemeApplications";
+	     $data["interfaceName"] = "core.applications.IStoreApplicationPool";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Return the themeapplication that is currently set.
+	*
+	* @return core_appmanager_data_Application
+	*/
+
+	public function getThemeApplication() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getThemeApplication";
+	     $data["interfaceName"] = "core.applications.IStoreApplicationPool";
+	     return $this->transport->cast(new core_appmanager_data_Application(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Use this function to change or set the
+	* theme application you wish to use.
+	* @param applicationId
+	*/
+
+	public function setThemeApplication($applicationId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["applicationId"] = json_encode($this->transport->object_unset_nulls($applicationId));
+	     $data["method"] = "setThemeApplication";
+	     $data["interfaceName"] = "core.applications.IStoreApplicationPool";
 	     return $this->transport->sendMessage($data);
 	}
 
@@ -5297,12 +5269,6 @@ class GetShopApi {
            $this->transport->connect();
       }
       /**
-      * @return AppManager
-      */
-      public function getAppManager() {
-           return new APIAppManager($this->transport);
-      }
-      /**
       * @return BannerManager
       */
       public function getBannerManager() {
@@ -5361,6 +5327,12 @@ class GetShopApi {
       */
       public function getGetShop() {
            return new APIGetShop($this->transport);
+      }
+      /**
+      * @return GetShopApplicationPool
+      */
+      public function getGetShopApplicationPool() {
+           return new APIGetShopApplicationPool($this->transport);
       }
       /**
       * @return HotelBookingManager
@@ -5435,10 +5407,10 @@ class GetShopApi {
            return new APISedoxProductManager($this->transport);
       }
       /**
-      * @return SettingsManager
+      * @return StoreApplicationPool
       */
-      public function getSettingsManager() {
-           return new APISettingsManager($this->transport);
+      public function getStoreApplicationPool() {
+           return new APIStoreApplicationPool($this->transport);
       }
       /**
       * @return StoreManager

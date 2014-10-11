@@ -10,7 +10,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
-import com.thundashop.core.common.AppConfiguration;
+import com.thundashop.core.common.ApplicationInstance;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.listmanager.data.EntryList;
 import com.thundashop.core.listmanager.data.ListType;
@@ -37,8 +37,8 @@ public class UpdateListTypes {
                 DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, data);
                 DBCollection listCollection = listManagerDB.getCollection("col_"+data.get("storeId"));
                 
-                if (dataCommon instanceof AppConfiguration) {
-                    AppConfiguration app = (AppConfiguration)dataCommon;
+                if (dataCommon instanceof ApplicationInstance) {
+                    ApplicationInstance app = (ApplicationInstance)dataCommon;
                     // TOPMENU
                     if (app.appSettingsId != null && app.appSettingsId.equals("1051b4cf-6e9f-475d-aa12-fc83a89d2fd4")) {
                         DBCursor lists = listCollection.find();

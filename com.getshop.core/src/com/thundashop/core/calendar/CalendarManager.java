@@ -189,15 +189,15 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
     private HashMap<String, Setting> getBookingSettings() throws ErrorException {
         HashMap<String, Setting> settings = null;
 
-        List<AppConfiguration> calendars = pageManager.getApplicationsBasedOnApplicationSettingsId("6f3bc804-02a1-44b0-a17d-4277f0c6dee8");
-        List<AppConfiguration> bookings = pageManager.getApplicationsBasedOnApplicationSettingsId("74ea4e90-2d5a-4290-af0c-230a66e09c78");
+        List<ApplicationInstance> calendars = pageManager.getApplicationsBasedOnApplicationSettingsId("6f3bc804-02a1-44b0-a17d-4277f0c6dee8");
+        List<ApplicationInstance> bookings = pageManager.getApplicationsBasedOnApplicationSettingsId("74ea4e90-2d5a-4290-af0c-230a66e09c78");
 
         // TODO - remove this shit!
         // There must be a better way, I guess you dont even 
         // understand whats happening here. (hint, getting the correct booking app
-        for (AppConfiguration calendar : calendars) {
+        for (ApplicationInstance calendar : calendars) {
             if (calendar.settings != null && calendar.settings.get("linkToBookingPage") != null) {
-                for (AppConfiguration config : bookings) {
+                for (ApplicationInstance config : bookings) {
                     ArrayList<String> list = new ArrayList();
                     list.add(config.id);
                     Map<String, List<String>> pages = pageManager.getPagesForApplications(list);

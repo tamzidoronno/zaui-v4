@@ -7,10 +7,7 @@ package com.thundashop.core.common;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.UUID;
-import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +30,7 @@ public class ManagerBase {
     public boolean ready = false;
     public Session session;
 
+	private ManagerSetting managerSettings = new ManagerSetting();
     
     private Database database;
 
@@ -70,8 +68,14 @@ public class ManagerBase {
             DataRetreived dataRetreived = new DataRetreived();
             dataRetreived.data = database.retreiveData(credentials);
             ((ManagerBase) this).dataFromDatabase(dataRetreived);
+			
+			for (DataCommon common : dataRetreived.data) {
+				if (common instanceof ManagerSetting) {
+					this.managerSettings = (ManagerSetting)common;
+				}
+			}
         }
-
+		
         this.ready = true;
     }
 
@@ -122,4 +126,12 @@ public class ManagerBase {
         databaseSaver.deleteObject(data, credentials);
     }
 
+	protected void setManagerSetting(String key, String value) {
+		managerSettings.keys.put(key, value);
+		saveObject(managerSettings);
+	}
+	
+	protected String getManagerSetting(String key) {
+		return managerSettings.keys.get(key);
+	}
 }

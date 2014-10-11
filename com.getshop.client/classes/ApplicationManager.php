@@ -21,7 +21,7 @@ class ApplicationManager extends FactoryBase {
         $toArea = $_POST['data']['newarea'];
         $this->getApi()->getPageManager()->switchApplicationAreas($pageId, $fromArea, $toArea);
     }
-    
+
     function showThemeSelection() {
         include("initdata/themeselection.phtml");
     }
@@ -29,23 +29,23 @@ class ApplicationManager extends FactoryBase {
     function operateCell() {
         $type = $_POST['data']['type'];
         $cellId = $_POST['data']['cellid'];
-        switch($type) {
+        switch ($type) {
             case "delete":
                 $this->getApi()->getPageManager()->dropCell($this->getPage()->javapage->id, $cellId);
                 break;
-            case "split_vertical":
-                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, null,true);
+            case "addvertical":
+                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, null, true);
                 break;
-            case "split_horizontal":
-                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, null,false);
+            case "addhorizontal":
+                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, null, false);
                 break;
         }
     }
-    
+
     function setProductFromProductPicker() {
         $productIds = $_POST['data']['productids'];
-        if(isset($_POST['data']['config']['type']) && $_POST['data']['config']['type'] == "delete") {
-            foreach($productIds as $productId) {
+        if (isset($_POST['data']['config']['type']) && $_POST['data']['config']['type'] == "delete") {
+            foreach ($productIds as $productId) {
                 $this->getApi()->getProductManager()->removeProduct($productId);
             }
         } else {
@@ -61,23 +61,23 @@ class ApplicationManager extends FactoryBase {
             $this->getFactory()->initPage();
         }
     }
-    
+
     function savePageDetails() {
         $page_css = $_POST['data']['page_css'];
         $global_css = $_POST['data']['global_css'];
         $page_text = $_POST['data']['page_text'];
-        
+
         $store = $this->getFactory()->getStore();
         $store->configuration->customCss = $global_css;
         $this->getApi()->getStoreManager()->saveStore($store->configuration);
-       
+
         $page = $this->getFactory()->getPage()->backendPage;
         $page->customCss = $page_css;
         $page->description = $page_text;
         $this->getApi()->getPageManager()->savePage($page);
     }
-    
-    function validateArea($areas, $area, $size, $type, $app=null) {
+
+    function validateArea($areas, $area, $size, $type, $app = null) {
         if (!in_array($size, $areas) && $size != "xlarge" || sizeof($areas) == 0) {
             return false;
         }
@@ -141,7 +141,6 @@ class ApplicationManager extends FactoryBase {
     public function CookieAccepted() {
         $_SESSION['getshop_cookie_accepted'] = true;
     }
-    
 
     public function moveApplication() {
         $pageId = $this->getPage()->getId();
@@ -233,6 +232,11 @@ class ApplicationManager extends FactoryBase {
             }
         }
     }
+    
+    public function startEditRow() {
+        $cellid = $_POST['data']['cellid'];
+        $_SESSION['gseditcell'] = $cellid;
+    }
 
     public function updatePageUserLevel() {
         $pageId = $this->getPage()->getId();
@@ -300,13 +304,13 @@ class ApplicationManager extends FactoryBase {
         $product = new ns_06f9d235_9dd3_4971_9b91_88231ae0436b\Product();
         $product->loadPicker();
     }
-    
+
     public function addApplicationToCell() {
         $cellId = $_POST['data']['cellId'];
         $appId = $_POST['data']['appId'];
-       
-		$application = $this->getFactory()->getApi()->getPageManager()->addApplication($appId, $cellId);
-		$this->invokeApplicationAdded($application);
+
+        $application = $this->getFactory()->getApi()->getPageManager()->addApplication($appId, $cellId);
+        $this->invokeApplicationAdded($application);
     }
 
     private function invokeApplicationAdded($application) {
@@ -366,7 +370,7 @@ class ApplicationManager extends FactoryBase {
         $this->subscriptions = $this->getFactory()->getApi()->getAppManager()->getAllApplicationSubscriptions(false);
         $this->includefile('applicationSet');
     }
-    
+
     public function addCell() {
         $incell = $_POST['data']['incell'];
         $aftercell = $_POST['data']['aftercell'];
@@ -474,13 +478,13 @@ class ApplicationManager extends FactoryBase {
             $this->getFactory()->getApi()->getStoreManager()->setDeepFreeze(true, $password);
         }
     }
-    
+
     public function toggleApplicationSticky() {
         $appInstanceId = $_POST['data']['appInstanceId'];
         $toggle = $_POST['data']['toggle'];
         $this->getApi()->getPageManager()->setApplicationSticky($appInstanceId, $toggle);
     }
-    
+
     public function importApplication() {
         if (!isset($_POST['data']['list'])) {
             return;
@@ -604,7 +608,7 @@ class ApplicationManager extends FactoryBase {
         $pb = new PageBuilder(null, null, $page);
         $page->type = -1;
         $page->layout = $pb->buildPredefinedPage(json_decode($_POST['data']['config'], true));
-        $page->pageTag = $_POST['data']['pagetype']."_".$_POST['data']['index'];
+        $page->pageTag = $_POST['data']['pagetype'] . "_" . $_POST['data']['index'];
         $page->pageTagGroup = $_POST['data']['pagetype'];
         $page->pageType = 1;
         if ($_POST['data']['pagetype'] == "product") {
@@ -703,17 +707,17 @@ class ApplicationManager extends FactoryBase {
     }
 
     public function addProductData($page) {
-        
-        if($_POST['data']['target'] == "productwidget") {
+
+        if ($_POST['data']['target'] == "productwidget") {
             $subtype = $_POST['data']['pageSubType'];
             $product = $this->getApi()->getProductManager()->getProductByPage($page->id);
             /* @var $app ns_b741283d_920d_460b_8c08_fad5ef4294cb\ProductWidget */
             $_POST['data']['productid'] = $product->id;
-            
+
             $app = $this->getFactory()->getApplicationPool()->getApplicationInstance($subtype);
             $app->setProductId();
         }
-        if($_POST['data']['target'] == "productlist") {
+        if ($_POST['data']['target'] == "productlist") {
             $subtype = $_POST['data']['pageSubType'];
             $product = $this->getApi()->getProductManager()->getProductByPage($page->id);
             $_POST['data']['productid'] = $product->id;
@@ -721,21 +725,22 @@ class ApplicationManager extends FactoryBase {
             $app->addProduct();
         }
         if ($_POST['data']['pageSubType'] == "area") {
-                //We need to add a productwidget to this area.
-                $siteBuilder = new SiteBuilder($this->getPage()->backendPage);
-                $product = $this->getApi()->getProductManager()->getProductByPage($page->id);
-                $siteBuilder->addProductData($_POST['data']['target'], $product->id);
+            //We need to add a productwidget to this area.
+            $siteBuilder = new SiteBuilder($this->getPage()->backendPage);
+            $product = $this->getApi()->getProductManager()->getProductByPage($page->id);
+            $siteBuilder->addProductData($_POST['data']['target'], $product->id);
         }
-        
-        if($page->pageType == 2 && $_POST['data']['pagemode'] == "new") {
+
+        if ($page->pageType == 2 && $_POST['data']['pagemode'] == "new") {
             $sitebuilder = new SiteBuilder($page);
             $sitebuilder->addProduct();
         }
         echo $page->id;
     }
-    
+
     public function activateAppArea() {
         $this->getApi()->getPageManager()->toggleBottomApplicationArea($this->getPage()->id, $_POST['data']['appArea']);
     }
+
 }
 ?>

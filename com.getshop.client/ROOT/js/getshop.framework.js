@@ -35,15 +35,41 @@ thundashop.framework = {
         $(document).on('click', '.gs_splithorizontally', this.operateCell);
         $(document).on('click', '.gs_splitvertically', this.operateCell);
         $(document).on('click', '.gs_removerow', this.operateCell);
-        $(document).on('mouseover', '.gscell.gseditrow', this.showEditIcon);
+        $(document).on('click', '.gs_closecelledit', this.closeCellEdit);
+        $(document).on('mouseover', '.gseditrowouter', this.showEditIcon);
+        $(document).on('click', '.gseditrowbutton', this.startEditRow);
+        $(document).on('click', '.gsdoneeditbutton', this.startEditRow);
+    },
+    closeCellEdit : function() {
+        $('.gscellsettingspanel').hide();
+        $('.gscell .gsoverlay').remove();
+    },
+    startEditRow : function() {
+        if($(this).attr('done') === "true") {
+            cellid = "";
+        } else {
+            cellid = $(this).closest('.gscell').attr('cellid');
+        }
+        var event = thundashop.Ajax.createEvent('','startEditRow', $(this), { "cellid" : cellid });
+        thundashop.Ajax.post(event);
     },
     showEditIcon: function (event) {
-        console.log($(event.target).attr('class'));
-        if (!$(event.target).hasClass('gscell')) {
+        var target = $(event.target);
+        console.log(target.attr('class'));
+        if(!target.hasClass('gscell')) {
+            for(var i = 0; i < 20; i++) {
+                target = target.parent();
+                if(target.hasClass('gscell')) {
+                    break;
+                }
+            }
+        }
+        if(!target.hasClass('gscell')) {
             return;
         }
+        
         $('.gscellsettings').hide();
-        $(event.target).find('.gscellsettings').first().show();
+        target.find('.gscellsettings').first().show();
     },
     operateCell: function () {
         var cellid = $(this).closest('.gscellsettingspanel').attr('cellid');
@@ -57,7 +83,7 @@ thundashop.framework = {
     showCellSettingsPanel: function () {
         $('.gscellsettingspanel').fadeIn();
         var cell = $(this).closest('.gscell');
-        var overlay = $('<span class="overlay" style="filter: blur(5px);width:100%; height:100%; background-color:#bbb; opacity:0.6; position:absolute; left:0px; top:0px;display:inline-block;">test</span>');
+        var overlay = $('<span class="gsoverlay" style="filter: blur(5px);width:100%; height:100%; background-color:#bbb; opacity:0.6; position:absolute; left:0px; top:0px;display:inline-block;">test</span>');
         cell.append(overlay);
 
         $('.gscellsettingspanel').attr('cellid', cell.attr('cellid'));

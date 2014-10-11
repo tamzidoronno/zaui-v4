@@ -27,6 +27,8 @@ public class PageLayout implements Serializable {
                 newcell.appId = cell.appId;
                 after = newcell.cellId;
             }
+            cell.vertical = vertical;
+            
             PageCell newcell = cell.createCell(after);
             newcell.vertical = vertical;
         }

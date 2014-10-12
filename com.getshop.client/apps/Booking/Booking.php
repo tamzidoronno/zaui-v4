@@ -205,6 +205,10 @@ class Booking extends MarketingApplication implements Application {
     public function findCompanies() {
         $name = $_POST['data']['name'];
         $result = $this->getApi()->getUtilManager()->getCompaniesFromBrReg($name);
+		if (!is_array($result) || sizeof($result) == 0) {
+			return;
+		}
+		
         echo "<table width='100%'>";
         foreach($result as $company) {
 			$orgnr = $company->vatNumber;

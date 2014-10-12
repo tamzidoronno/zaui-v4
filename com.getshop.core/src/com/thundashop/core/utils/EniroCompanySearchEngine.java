@@ -46,6 +46,11 @@ public class EniroCompanySearchEngine implements CompanySearchEngine {
 			for (EniroSearchResult.Adverts advert : result.adverts) {
 				Company company = new Company();
 				company.vatNumber = advert.companyInfo.orgNumber;
+				
+				if (company.vatNumber == null || company.vatNumber.contains("#")) {
+					continue;
+				}
+				
 				company.name = advert.companyInfo.companyName;
 				company.city = advert.address.postArea;
 				company.country = "SE";

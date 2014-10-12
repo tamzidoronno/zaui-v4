@@ -64,20 +64,7 @@ class Page {
                 $isedit = true;
                 ?>
                 <script src='http://quocity.com/colresizable/js/colResizable-1.3.min.js' />
-                <script>
-                    $(function () {
-                        var origwidth = "";
-                        var nextOrigWidth = "";
-                        var nextcell = "";
-                        var origTable = "";
-                        var origTableWidth = "";
-                        $('.gseditrowouter .gscell.gshorisontal').resizable({handles: 's',
-                            stop: function (event, ui) {
-                            }
-                        });
-                        $('.dragtable').colResizable();
-                    });
-                </script>
+                
                 <style>
                     .dragtable { background-image: url('http://quocity.com/colresizable/img/rangeBar.png'); background-position: 10px 10px; background-repeat-y: no-repeat;}
                 </style>

@@ -10,7 +10,7 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pagemanager.data.CommonPageData;
 import com.thundashop.core.pagemanager.data.Page;
-import com.thundashop.core.pagemanager.data.PageCell;
+import com.thundashop.core.pagemanager.data.PageLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -220,5 +220,11 @@ public class PageManager extends ManagerBase implements IPageManager {
 				.filter(page -> page.getCell(pageCellId) != null)
 				.collect(Collectors.toList());
 	}
+
+    @Override
+    public void setStylesOnCell(String pageId, String cellId, String styles, Double width) {
+        Page page = getPage(pageId);
+        page.layout.updateStyle(cellId, styles, width);
+    }
     
 }

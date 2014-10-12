@@ -3144,6 +3144,25 @@ class APIPageManager {
 	}
 
 	/**
+	* Add application
+	* @param id
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function setStylesOnCell($pageId, $cellId, $styles, $width) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data['args']["cellId"] = json_encode($this->transport->object_unset_nulls($cellId));
+	     $data['args']["styles"] = json_encode($this->transport->object_unset_nulls($styles));
+	     $data['args']["width"] = json_encode($this->transport->object_unset_nulls($width));
+	     $data["method"] = "setStylesOnCell";
+	     $data["interfaceName"] = "core.pagemanager.IPageManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Need to translate a set of page ids?
 	* @param pages A list (array) of page ids to translate.
 	* @return HashMap

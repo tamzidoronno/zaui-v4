@@ -3262,6 +3262,42 @@ class PageManager(object):
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
+  def setStylesOnCell(self, pageId, cellId, styles, width):
+    args = collections.OrderedDict()
+    if isinstance(pageId,GetShopBaseClass): 
+      args["pageId"]=json.dumps(pageId.__dict__)
+    else:
+      try:
+        args["pageId"]=json.dumps(pageId)
+      except (ValueError, AttributeError):
+        args["pageId"]=pageId
+    if isinstance(cellId,GetShopBaseClass): 
+      args["cellId"]=json.dumps(cellId.__dict__)
+    else:
+      try:
+        args["cellId"]=json.dumps(cellId)
+      except (ValueError, AttributeError):
+        args["cellId"]=cellId
+    if isinstance(styles,GetShopBaseClass): 
+      args["styles"]=json.dumps(styles.__dict__)
+    else:
+      try:
+        args["styles"]=json.dumps(styles)
+      except (ValueError, AttributeError):
+        args["styles"]=styles
+    if isinstance(width,GetShopBaseClass): 
+      args["width"]=json.dumps(width.__dict__)
+    else:
+      try:
+        args["width"]=json.dumps(width)
+      except (ValueError, AttributeError):
+        args["width"]=width
+    data = EmptyClass()
+    data.args = args
+    data.method = "setStylesOnCell"
+    data.interfaceName = "core.pagemanager.IPageManager"
+    return self.communicationHelper.sendMessage(data)
+
   def translatePages(self, pages):
     args = collections.OrderedDict()
     if isinstance(pages,GetShopBaseClass): 

@@ -464,6 +464,24 @@ public class APIPageManager {
      }
 
      /**
+     * Add application
+     * @param id
+     * @return
+     * @throws ErrorException
+     */
+     public void setStylesOnCell(java.lang.String pageId, java.lang.String cellId, java.lang.String styles, java.lang.Double width)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("pageId",new Gson().toJson(pageId));
+          data.args.put("cellId",new Gson().toJson(cellId));
+          data.args.put("styles",new Gson().toJson(styles));
+          data.args.put("width",new Gson().toJson(width));
+          data.method = "setStylesOnCell";
+          data.interfaceName = "core.pagemanager.IPageManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Need to translate a set of page ids?
      * @param pages A list (array) of page ids to translate.
      * @return A list of human readable strings, the key is the page id.

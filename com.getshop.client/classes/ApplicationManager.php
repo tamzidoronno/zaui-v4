@@ -26,6 +26,23 @@ class ApplicationManager extends FactoryBase {
         include("initdata/themeselection.phtml");
     }
 
+    function saveColChanges() {
+        $cellid = $_POST['data']['cellid'];
+        $pageid = $this->getPage()->javapage->id;
+        $styles = "reset";
+        if(isset($_POST['data']['styles'])) {
+            $styles = $_POST['data']['styles'];
+        }
+        $this->getApi()->getPageManager()->setStylesOnCell($pageid, $cellid, $styles, -1);
+        
+        if(isset($_POST['data']['colsizes'])) {
+            $colsizes = $_POST['data']['colsizes'];
+            foreach($colsizes as $cellid => $width) {
+                $this->getApi()->getPageManager()->setStylesOnCell($pageid, $cellid, "", $width);
+            }
+        }
+    }
+    
     function operateCell() {
         $type = $_POST['data']['type'];
         $cellId = $_POST['data']['cellid'];

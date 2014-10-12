@@ -64,7 +64,7 @@ class Page {
                 $isedit = true;
                 ?>
                 <script src='http://quocity.com/colresizable/js/colResizable-1.3.min.js' />
-                
+
                 <style>
                     .dragtable { background-image: url('http://quocity.com/colresizable/img/rangeBar.png'); background-position: 10px 10px; background-repeat-y: no-repeat;}
                 </style>
@@ -104,7 +104,9 @@ class Page {
     }
 
     function printCell($cell, $count, $depth, $totalcells, $edit) {
-
+//        echo "<pre>";
+//        print_r($cell);
+//        echo "</pre>";
 
         $direction = "gshorisontal";
         if ($cell->vertical) {
@@ -117,13 +119,18 @@ class Page {
             $roweditouter = "gseditrowouter";
             $rowedit = "gseditrow";
         }
-        $widthcss = "";
+        $styles = "style='$cell->styles';";
         $width = 100;
         if ($cell->vertical && $totalcells > 1) {
             $width = 100 / $totalcells;
-            $widthcss = "style='width:$width%; float:left;'";
+            if ($cell->width > 0) {
+                $width = $cell->width;
+            }
+
+            $styles = "style='width:$width%; float:left;".$cell->styles."'";
         }
-        echo "<div $widthcss width='$width' class='gscell $roweditouter gsdepth_$depth gscount_$count $direction' cellid='" . $cell->cellId . "'>";
+
+        echo "<div $styles width='$width' class='gscell $roweditouter gsdepth_$depth gscount_$count $direction' cellid='" . $cell->cellId . "'>";
         if ($depth === 0 && !$edit) {
             echo "<i class='fa gseditrowbutton fa-pencil-square-o'></i>";
         }
@@ -140,7 +147,7 @@ class Page {
             $innercount = 0;
             $innerdept = $depth + 1;
             $vertical = $cell->vertical;
-            
+
             foreach ($cell->cells as $innercell) {
                 $this->printCell($innercell, $innercount, $innerdept, sizeof($cell->cells), $edit);
                 $innercount++;
@@ -232,17 +239,17 @@ class Page {
                 </table>
             </div>
             <div>
-            <label>
-                <input type="checkbox" class="gsshowvisualization" checked> Show visualization
-            </label>
+                <label>
+                    <input type="checkbox" class="gsshowvisualization" checked> Show visualization
+                </label>
             </div>
             <div>
                 <span class="modifybutton closeresizing">Undo changes</span>
-                <span class="modifybutton" style="float:right;">Save changes</span>
+                <span class="modifybutton gssavechanges" style="float:right;">Save changes</span>
             </div>
         </span>
         <script>
-            $('.gsresizingpanel').draggable({ handle: ".heading"});
+            $('.gsresizingpanel').draggable({handle: ".heading"});
         </script>
         <?
 

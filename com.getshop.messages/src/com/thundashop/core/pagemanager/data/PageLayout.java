@@ -2,6 +2,7 @@ package com.thundashop.core.pagemanager.data;
 
 import java.io.Serializable;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 public class PageLayout implements Serializable {
@@ -132,5 +133,20 @@ public class PageLayout implements Serializable {
             }
         }
     }
-    
+
+    public void updateStyle(String cellId, String styles, Double width) {
+        PageCell cell = findCell(getAllCells(), cellId);
+        if(cell == null) {
+            return;
+        }
+        if(styles.equals("reset")) {
+            cell.styles = "";
+        }
+        
+        if(styles != null && !styles.isEmpty() && !styles.equals("notset")) {
+            cell.styles = styles;
+        }
+        cell.width = width;
+    }
+
 }

@@ -49,7 +49,25 @@ thundashop.framework = {
         $(document).on('input', '.gsresizingpanel input[type="range"]', this.setValue);
         $(document).on('keyup', '.gsresizingpanel input.sizetxt', this.setValue);
         $(document).on('click', '.gsresizingpanel .closeresizing', this.closeResizing);
+        $(document).on('click', '.gsresizingpanel .gssavechanges', this.saveCellChanges);
         $(document).on('click', '.gsshowvisualization', this.toggleVisualization);
+    },
+    saveCellChanges : function() {
+        var cellid = $(this).closest('.gsresizingpanel').attr('cellid');
+        var cell = $('.gscell[cellid="'+cellid+'"]');
+        var styles = cell.attr('style');
+        var colsizes = {};
+        cell.children('.gsinner').children('.gscell').each(function() {
+            colsizes[$(this).attr('cellid')] = $(this).attr('width');
+        });
+        
+        var data = {
+            "cellid" : cellid,
+            "styles" : styles,
+            "colsizes" : colsizes
+        }
+        var event = thundashop.Ajax.createEvent('','saveColChanges',$(this),data);
+        thundashop.Ajax.post(event);
     },
     toggleVisualization : function() {
         if($(this).is(":checked")) {

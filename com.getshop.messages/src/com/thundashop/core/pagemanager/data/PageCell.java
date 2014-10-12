@@ -10,6 +10,9 @@ public class PageCell implements Serializable {
     public boolean vertical = true;
     public LinkedList<PageCell> cells = new LinkedList();
     public String appId;
+    public String styles = "";
+    public Double width = -1.0;
+    
 
     PageCell createCell(String after) {
         PageCell newcell = new PageCell();

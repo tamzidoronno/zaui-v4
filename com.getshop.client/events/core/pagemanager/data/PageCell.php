@@ -12,5 +12,11 @@ class core_pagemanager_data_PageCell {
 	/** @var String */
 	public $appId;
 
+	/** @var String */
+	public $styles;
+
+	/** @var String */
+	public $width;
+
 }
 ?>

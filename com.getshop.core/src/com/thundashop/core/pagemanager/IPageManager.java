@@ -34,6 +34,15 @@ public interface IPageManager {
     public ApplicationInstance addApplication(String applicationId, String pageCellId);
     
     /**
+     * Add application
+     * @param id
+     * @return
+     * @throws ErrorException 
+     */
+    @Administrator
+    public void setStylesOnCell(String pageId, String cellId, String styles, Double width);
+    
+    /**
      * Remove all content on all page areas for this page.
      * @param pageId
      * @throws ErrorException 

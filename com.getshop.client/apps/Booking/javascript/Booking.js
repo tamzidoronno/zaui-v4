@@ -170,7 +170,6 @@ $('.Booking .savebooking').live('click', function() {
         data.invoiceemail = $('#invoiceemail').val();
     }
 	
-	debugger;
 	if ($("#extradep").length > 0) {
 		data.extradep = $("#extradep").val();
 	}

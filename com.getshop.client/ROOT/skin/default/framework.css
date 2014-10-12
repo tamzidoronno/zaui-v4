@@ -1,3 +1,44 @@
+/* Common css */
+.gscellsettingspanel { width: 160px; position:absolute; padding: 10px; display:inline-block; background-color:#FFF; box-shadow: 0px 0px 2px #bbb; display:none; z-index:10; }
+.gscellsettingspanel div { padding-top: 10px; opacity:0.8; cursor:pointer; padding: 2px; display:block; }
+.gscellsettingspanel div i { width: 20px; }
+.gscellsettingspanel div:hover { opacity:1; }
+.store_settings_button {display:none; }
+.gsaddcontent i {
+    -webkit-transition: opacity .15s ease-in-out;
+    -moz-transition: opacity .15s ease-in-out;
+    -ms-transition: opacity .15s ease-in-out;
+    -o-transition: opacity .15s ease-in-out;
+    transition: opacity .15s ease-in-out;
+filter: alpha(opacity=50);
+    opacity:0.5; box-shadow: 0px 0px 2px #bbb; cursor:pointer; background-color:#fff; padding: 2px; padding-left: 5px; padding-right: 5px; border-radius:5px; color:#000; }
+.gseditrow {  box-sizing: border-box; padding: 5px; }
+.gseditrowheading { text-align:center; font-size: 14px; background-color:#EFEFEF; padding: 10px; }
+.gsdoneeditbutton { color:blue; cursor:pointer; }
+.gseditrowbutton { position:absolute; right: 5px; z-index: 15; font-size: 20px; background-color:#FFF; padding: 5px; border-radius: 5px; display:none; }
+.gseditrowheading .fa { float:right; padding-left: 10px; cursor:pointer; }
+.gscell:hover .gseditrowbutton { display:block; }
+.gscell .gscellsettings { position:absolute; right: 0px; top: 0px; display:none;border-left: solid 1px;border-bottom: solid 1px;border-bottom-left-radius: 15px;background-color:#BBB;width:7px; height: 7px;cursor:pointer;}
+.gseditrowouter .gscell { border: solid 1px; }
+.gsaddcontent:hover { border: dotted 1px #BBB; }
+.gseditrowouter:hover .gsaddcontent { border: solid 1px rgba(0,0,0,0);}
+
+.gsresizingpanel { position:absolute; z-index: 15; width: 250px; background-color:#FFF; box-shadow:0px 0px 5px #000; display:none; }
+.gsresizingpanel .tabbtn { border-right: solid 1px #BBB; padding-right: 5px; height: 20px; padding-left: 5px; float:left; border-top: solid 1px  #BBB; }
+.gsresizingpanel .gstabmenu { border-bottom: solid 1px #BBB; height: 20px; }
+.gsresizingpanel .sizetxt { width: 30px; }
+.gsresizingpanel .gspage { display:none; }
+.gsresizingpanel .modifybutton { cursor: pointer; border: solid 1px; margin: 10px; padding: 5px; background-color:#BBB; display:inline-block; }
+
+/* sizing css */
+.gsaddcontent { width: 100%; display: inline-block; height: 100%; text-align: center; border: solid 1px rgba(0,0,0,0); }
+.gsaddcontent i { margin-top: 20px; font-size: 30px; margin-bottom: 20px; }
+.gsaddcontent i:hover { opacity: 1; }
+.gscell { position:relative; }
+
+.gscell.gsvertical {box-sizing: border-box; }
+.gscell.gshorizontal .applicationarea { height: auto; }
+
 .header .applicationinner .logged_on_menu a {
     padding-right:4px;
     font-size:12px;
@@ -1618,44 +1659,3 @@ a img {
     font-size: 15px;
     line-height: 30px;
 }
-
-
-
-
-
-
-.gscellsettingspanel { width: 160px; position:absolute; padding: 10px; display:inline-block; background-color:#FFF; box-shadow: 0px 0px 2px #bbb; display:none; z-index:10; }
-.gscellsettingspanel div { padding-top: 10px; opacity:0.8; cursor:pointer; padding: 2px; display:block; }
-.gscellsettingspanel div i { width: 20px; }
-.gscellsettingspanel div:hover { opacity:1; }
-.gsaddcontent { padding: 5px; font-size: 40px;display:block; text-align:center;}
-.gsaddcontent i { 
-    -webkit-transition: opacity .15s ease-in-out;
-    -moz-transition: opacity .15s ease-in-out;
-    -ms-transition: opacity .15s ease-in-out;
-    -o-transition: opacity .15s ease-in-out;
-    transition: opacity .15s ease-in-out;
-filter: alpha(opacity=50);
-    opacity:0.5; box-shadow: 0px 0px 2px #bbb; cursor:pointer; background-color:#fff; padding: 2px; padding-left: 5px; padding-right: 5px; border-radius:5px; color:#000; }
-.gsaddcontent i:hover { opacity:1; }
-.gscell .gscellsettings { position:absolute; right: 0px; top: 0px; display:none;border-left: solid 1px;border-bottom: solid 1px;border-bottom-left-radius: 15px;background-color:#BBB;width:7px; height: 7px;cursor:pointer;}
-.gscell { display: inline-block; width:100%; height:100%;  box-sizing: border-box; position:relative;  position:relative; }
-.gscell:hover .gseditrowbutton { display:block; cursor:pointer; }
-.gsinner { height: 100%; position:relative; }
-.gscell[cellid="header"],.gscell[cellid="footer"] { background-color:green; }
-
-.gshorisontal[totalcells="1"] { height: 100% !important; }
-.gshorisontal[totalcells="2"] { height: 50% !important; }
-.gshorisontal[totalcells="3"] { height: 33.333% !important; }
-.gshorisontal[totalcells="4"] { height: 25% !important; }
-.gshorisontal[totalcells="5"] { height: 20% !important; }
-
-.gseditrowouter { box-shadow: 0px 0px 2px #bbb; height:100%;   box-sizing: border-box;  }
-.gseditrow {  box-sizing: border-box; padding: 5px; }
-.gseditrowheading { text-align:center; font-size: 14px; background-color:#EFEFEF; padding: 10px; }
-.gsdoneeditbutton { color:blue; cursor:pointer; }
-.gseditrowbutton { position:absolute; right: 5px; z-index: 15; font-size: 20px; background-color:#FFF; padding: 5px; border-radius: 5px; display:none; }
-.gseditrowheading .fa { float:right; padding-left: 10px; cursor:pointer; }
-.gs_addcell { border-top: solid 1px; border-bottom: solid 1px; }
-.gsendedit .gsinner { min-height: 10px !important; }
-.gsendedit { height: 30px; }

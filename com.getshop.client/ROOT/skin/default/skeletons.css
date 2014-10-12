@@ -22,8 +22,6 @@
     -webkit-box-sizing: border-box;
     box-sizing:        border-box;
 }
-.applicationarea { min-height: 150px; }
-
 .empty_app_area .content_box .appiconoption {
     background-image: url('images/application_box_background_empty_area.png');
     height: 40px;
@@ -225,10 +223,10 @@
 .gs_showPageLayoutSelection .layout_builder .left_panel {display: inline-block;width: 150px;padding: 10px;float:left;}
 .gs_showPageLayoutSelection .layout_builder .left_panel select { width: 150px;width: 150px; border: solid 1px #2e2e2e; background-color: #4f4f4f; color: #FFF; padding: 5px; }
 .gs_showPageLayoutSelection .layout_builder .left_panel .gs_button { margin-top: 10px;
-width: 134px;
-border-radius: 0px;
-padding: 5px;
-padding-left: 10px; }
+                                                                     width: 134px;
+                                                                     border-radius: 0px;
+                                                                     padding: 5px;
+                                                                     padding-left: 10px; }
 .gs_showPageLayoutSelection .layout_builder .left_panel .gs_button i { float:right; font-size: 16px; }
 .gs_showPageLayoutSelection .gs_tab_area { background-color:#666666; }
 .gs_showPageLayoutSelection .predefined_layouts { background-color:#555555; }

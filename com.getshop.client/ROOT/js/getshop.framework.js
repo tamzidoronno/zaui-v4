@@ -1,5 +1,7 @@
 GetShop = {};
 
+likebefore = null;
+
 thundashop.framework = {
     bindEvents: function () {
         $('*[gstype="form"] *[gstype="submit"]').live('click', function (e) {
@@ -40,45 +42,165 @@ thundashop.framework = {
         $(document).on('click', '.gseditrowbutton', this.startEditRow);
         $(document).on('click', '.gsdoneeditbutton', this.startEditRow);
         $(document).on('click', '.gseditrowheading .fa', this.operateCell);
+        $(document).on('click', '.gs_resizing', this.showCellResizing);
+        $(document).on('click', '.gsresizingpanel .gstabmenu .tabbtn', this.switchtab);
+        $(document).on('change', '.gsresizingpanel input[type="range"]', this.setValue);
+        $(document).on('keyup', '.gsresizingpanel input[type="range"]', this.setValue);
+        $(document).on('input', '.gsresizingpanel input[type="range"]', this.setValue);
+        $(document).on('keyup', '.gsresizingpanel input.sizetxt', this.setValue);
+        $(document).on('click', '.gsresizingpanel .closeresizing', this.closeResizing);
+        $(document).on('click', '.gsshowvisualization', this.toggleVisualization);
     },
-    closeCellEdit : function() {
+    toggleVisualization : function() {
+        if($(this).is(":checked")) {
+            $('.gseditrow').css('padding','5px');
+            $('.gseditrowouter .gscell').css('border','solid 1px');
+        } else {
+            $('.gseditrow').css('padding','0px');
+            $('.gseditrowouter .gscell').css('border','solid 0px');
+        }
+    },
+    closeResizing : function() {
+        var cellid = $(this).closest('.gsresizingpanel').attr('cellid');
+        $('.gscell[cellid="'+cellid+'"]').html(likebefore);
+        $('.gsoverlay').fadeOut(function() {
+            $(this).remove();
+        });
+        $('.gsresizingpanel').fadeOut();
+    },
+    setValue: function () {
+        $(this).closest('tr').find('.sizetxt').val($(this).val());
+        var cellid = $('.gsresizingpanel').attr('cellid');
+        var cell = $('.gscell[cellid="' + cellid + '"]');
+        var result = {};
+        $('.gsresizingpanel input').each(function () {
+            var type = $(this).attr('data-csstype');
+            if (type && $(this).val()) {
+                result[type] = $(this).val();
+                if (type.toLowerCase().indexOf("width") >= 0) {
+                    cell.css(type, $(this).val() + "%");
+                } else {
+                    cell.css(type, $(this).val() + "px");
+                }
+            }
+        });
+    },
+    switchtab: function () {
+        var target = $(this).attr('target');
+        $('.gsresizingpanel .gspage').hide();
+        $('.gsresizingpanel .gspage[target="' + target + '"]').show();
+
+    },
+    showCellResizing: function () {
+        var resizingpanel = $('.gsresizingpanel');
+        var cellid = $(this).closest('.gscellsettingspanel').attr('cellid');
+        resizingpanel.attr('cellid', cellid);
+        
+        var cell = $('.gscell[cellid="' + cellid + '"]');
+        likebefore = cell.html();
+        
+        $('.gscellsettingspanel').fadeOut();
+        resizingpanel.css('top',$(this).offset().top);
+        resizingpanel.css('left',$(this).offset().left-100);
+        resizingpanel.find('.tabbtn[target="padding"]').click();
+        resizingpanel.fadeIn();
+        cell.find('.gscell.gshorisontal').resizable({ grid: [10000, 1]});
+        $('.gsresizingpanel input').each(function () {
+            var type = $(this).attr('data-csstype');
+            if (type) {
+                var value = cell.css($(this).attr('data-csstype'));
+                value = value.replace("px", "");
+                if (value && value !== "none") {
+                    var maxvalue = value * 3;
+                    if (value === "0" || type.toLowerCase().indexOf("width") >= 0) {
+                        maxvalue = 100;
+                    }
+                    $(this).val(value);
+                    $(this).closest('tr').find('input[type="range"]').attr('max', maxvalue);
+                    $(this).closest('tr').find('input[type="range"]').val(value);
+                }
+            }
+        });
+        var children = cell.children('.gsinner').children('.gsvertical');
+        if (children.length > 1) {
+            var table = $('<table style="width: 100%;" class="range" dragCursor="pointer" cellspacing="0" cellpadding="0" border="0"></table>');
+            var row = $('<tr></tr>');
+            children.each(function() {
+                var width = $(this).attr('width');
+                row.append('<td  width="'+width+'%"></td>');
+            });
+            table.append(row);
+            
+            var tablecontainer = $('<div style="padding:5px;"></div>"');
+            tablecontainer.append(table);
+            cell.children(".gsinner").prepend(table);
+            
+            
+            table.colResizable({
+                liveDrag: true,
+                dragCursor : 'auto',
+                draggingClass: "rangeDrag",
+                gripInnerHtml: "<div class='rangeGrip'></div>",
+                onResize: function (e) {
+                    document.body.style.cursor = "crosshair";
+                    var columns = $(e.currentTarget).find("td");
+                    var ranges = [], total = 0, i, s = "Ranges: ", w;
+                    for (i = 0; i < columns.length; i++) {
+                        w = columns.eq(i).width() - 14 - (i == 0 ? 1 : 0);
+                        ranges.push(w);
+                        total += w;
+                    }
+                    var i = 0;
+                    cell.children('.gsinner').children('.gsvertical').each(function () {
+                        ranges[i] = 100 * ranges[i] / total;
+                        ranges[i] = Math.round(ranges[i]*100)/100;
+                        $(this).css('width', ranges[i] + "%");
+                        $(this).attr('width', ranges[i]);
+                        i++;
+                    });
+                }
+            });
+
+        }
+
+    },
+    closeCellEdit: function () {
         $('.gscellsettingspanel').hide();
         $('.gscell .gsoverlay').remove();
     },
-    startEditRow : function() {
-        if($(this).attr('done') === "true") {
+    startEditRow: function () {
+        if ($(this).attr('done') === "true") {
             cellid = "";
         } else {
             cellid = $(this).closest('.gscell').attr('cellid');
         }
-        var event = thundashop.Ajax.createEvent('','startEditRow', $(this), { "cellid" : cellid });
+        var event = thundashop.Ajax.createEvent('', 'startEditRow', $(this), {"cellid": cellid });
         thundashop.Ajax.post(event);
     },
     showEditIcon: function (event) {
         var target = $(event.target);
-        console.log(target.attr('class'));
-        if(!target.hasClass('gscell')) {
-            for(var i = 0; i < 20; i++) {
+        if (!target.hasClass('gscell')) {
+            for (var i = 0; i < 20; i++) {
                 target = target.parent();
-                if(target.hasClass('gscell')) {
+                if (target.hasClass('gscell')) {
                     break;
                 }
             }
         }
-        if(!target.hasClass('gscell')) {
+        if (!target.hasClass('gscell')) {
             return;
         }
-        
+
         $('.gscellsettings').hide();
         target.find('.gscellsettings').first().show();
     },
     operateCell: function () {
         var cellid = $(this).closest('.gscellsettingspanel').attr('cellid');
-        
-        if($(this).closest('.gseditrowheading').length > 0) {
+
+        if ($(this).closest('.gseditrowheading').length > 0) {
             cellid = $(this).closest('.gseditrowheading').attr('cellid');
         }
-        
+
         var data = {
             "cellid": cellid,
             "type": $(this).attr('type')

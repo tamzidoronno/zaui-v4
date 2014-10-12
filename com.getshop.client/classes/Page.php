@@ -28,14 +28,8 @@ class Page {
         /* @var $layout core_pagemanager_data_PageLayout */
         $layout = $this->javapage->layout;
 
-        echo "<span class='gscellsettingspanel'>";
-        echo "<div class='gs_splithorizontally' type='addhorizontal'><i class='fa fa-chevron-circle-right'></i>" . $this->factory->__w("Add row") . "</div>";
-        echo "<div class='gs_splitvertically' type='addvertical'><i class='fa fa-chevron-circle-down'></i>" . $this->factory->__w("Add column") . "</div>";
-        echo "<div class='gs_removerow' type='delete'><i class='fa fa-arrows'></i>" . $this->factory->__w("Sizing") . "</div>";
-        echo "<div class='gs_removerow' type='delete'><i class='fa fa-image'></i>" . $this->factory->__w("Background image") . "</div>";
-        echo "<div class='gs_removerow' type='delete'><i class='fa fa-trash-o'></i>" . $this->factory->__w("Delete") . "</div>";
-        echo "<i class='gs_closecelledit fa fa-times' style='position:absolute;right: 5px; top: 5px;'></i>";
-        echo "</span>";
+        $this->addCellConfigPanel();
+        $this->addCellResizingPanel();
 
         $rowsToPrint = array();
         $rowsToPrint[] = $layout->header;
@@ -68,16 +62,31 @@ class Page {
                 echo "</div>";
                 echo "</div>";
                 $isedit = true;
+                ?>
+                <script src='http://quocity.com/colresizable/js/colResizable-1.3.min.js' />
+                <script>
+                    $(function () {
+                        var origwidth = "";
+                        var nextOrigWidth = "";
+                        var nextcell = "";
+                        var origTable = "";
+                        var origTableWidth = "";
+                        $('.gseditrowouter .gscell.gshorisontal').resizable({handles: 's',
+                            stop: function (event, ui) {
+                            }
+                        });
+                        $('.dragtable').colResizable();
+                    });
+                </script>
+                <style>
+                    .dragtable { background-image: url('http://quocity.com/colresizable/img/rangeBar.png'); background-position: 10px 10px; background-repeat-y: no-repeat;}
+                </style>
+                <?
+
             }
-            echo "<table width='100%' cellspacing='0' cellpadding='0' class='gsrowtable'  cellid='" . $row->cellId . "'>";
-            echo "<tr>";
-            echo "<td>";
             $this->printCell($row, $count, 0, 0, $isedit);
             $count++;
-            echo "</td>";
-            echo "</tr>";
-            echo "</table>";
-            if (isset($_SESSION['gseditcell']) && $_SESSION['gseditcell'] === $row->cellId) {
+            if ($isedit) {
                 echo "<div class='gscell gsdepth_0 gsendedit'>";
                 echo "<div class='gsinner gsdepth_0'>";
                 echo "<div class='gseditrowheading'>";
@@ -85,7 +94,6 @@ class Page {
                 echo "</div>";
                 echo "</div>";
                 echo "</div>";
-                $isedit = true;
             }
         }
     }
@@ -109,6 +117,8 @@ class Page {
     }
 
     function printCell($cell, $count, $depth, $totalcells, $edit) {
+
+
         $direction = "gshorisontal";
         if ($cell->vertical) {
             $direction = "gsvertical";
@@ -120,14 +130,22 @@ class Page {
             $roweditouter = "gseditrowouter";
             $rowedit = "gseditrow";
         }
-
-        echo "<div class='gscell $roweditouter gsdepth_$depth gscount_$count $direction' cellid='" . $cell->cellId . "' totalcells='$totalcells'>";
-
+        $widthcss = "";
+        $width = 100;
+        if ($cell->vertical && $totalcells > 1) {
+            $width = 100 / $totalcells;
+            $widthcss = "style='width:$width%; float:left;'";
+        }
+        echo "<div $widthcss width='$width' class='gscell $roweditouter gsdepth_$depth gscount_$count $direction' cellid='" . $cell->cellId . "'>";
         if ($depth === 0 && !$edit) {
             echo "<i class='fa gseditrowbutton fa-pencil-square-o'></i>";
         }
-
         echo "<div class='gsinner gsdepth_$depth $rowedit gscount_$count' totalcells='$totalcells'>";
+        if ($edit) {
+            if (sizeof($cell->cells) > 1 && $cell->vertical && $cell->cells[0]->vertical) {
+                $this->displayResizing();
+            }
+        }
         if ($edit) {
             echo "<span class='gscellsettings'></span>";
         }
@@ -135,43 +153,197 @@ class Page {
             $innercount = 0;
             $innerdept = $depth + 1;
             $vertical = $cell->vertical;
-            if ($vertical) {
-                echo "<table width='100%' cellspacing='0' cellpadding='0' height='100%'>";
-                echo "<tr>";
-                foreach ($cell->cells as $innercell) {
-                    $width = 100 / sizeof($cell->cells);
-                    echo "<td width='$width%'>";
-                    $this->printCell($innercell, $innercount, $innerdept, 0, $edit);
-                    $innercount++;
-                    if ($vertical) {
-                        echo "</td>";
-                    }
-                }
-                echo "</tr>";
-                echo "</table>";
-            } else {
-                foreach ($cell->cells as $innercell) {
-                    $this->printCell($innercell, $innercount, $innerdept, sizeof($cell->cells), $edit);
-                    $innercount++;
-                }
+            
+            foreach ($cell->cells as $innercell) {
+                $this->printCell($innercell, $innercount, $innerdept, sizeof($cell->cells), $edit);
+                $innercount++;
+            }
+            if ($cell->vertical) {
+                echo "<div style='clear:both;'></div>";
             }
         } else {
+            echo "<div class='applicationarea' appid='" . $cell->appId . "' area='" . $cell->cellId . "'>";
             if (!$cell->appId) {
-                echo "<table height='100%' width='100%' cellspacing='0' cellpadding='0'>";
-                echo "<td>";
                 echo "<span class='gsaddcontent'>";
                 echo "<i class='fa fa-plus-circle gs_show_application_add_list'></i>";
                 echo "</span>";
                 $this->printApplicationAddCellRow($cell);
-                echo "</td></tr></table>";
             } else {
-                echo "<div class='applicationarea' appid='" . $cell->appId . "' area='" . $cell->cellId . "'>";
                 $this->renderApplication($cell);
-                echo "</div>";
             }
+            echo "</div>";
         }
         echo "</div>";
         echo "</div>";
+    }
+
+    private function addCellConfigPanel() {
+        echo "<span class='gscellsettingspanel'>";
+        echo "<div class='gs_splithorizontally' type='addhorizontal'><i class='fa fa-chevron-circle-right'></i>" . $this->factory->__w("Add row") . "</div>";
+        echo "<div class='gs_splitvertically' type='addvertical'><i class='fa fa-chevron-circle-down'></i>" . $this->factory->__w("Add column") . "</div>";
+        echo "<div class='gs_resizing' type='delete'><i class='fa fa-arrows'></i>" . $this->factory->__w("Margin, padding, sizing") . "</div>";
+        echo "<div class='gs_removerow' type='delete'><i class='fa fa-image'></i>" . $this->factory->__w("Background image") . "</div>";
+        echo "<div class='gs_removerow' type='delete'><i class='fa fa-trash-o'></i>" . $this->factory->__w("Delete") . "</div>";
+        echo "<i class='gs_closecelledit fa fa-times' style='position:absolute;right: 5px; top: 5px;'></i>";
+        echo "</span>";
+    }
+
+    private function addCellResizingPanel() {
+        ?>
+        <span class='gsresizingpanel'>
+            <div class="heading" style="cursor:pointer; text-align:center; border-bottom: solid 1px #BBB; margin-bottom: 10px;">Sizing console</div>
+            <div class='gstabmenu'>
+                <span class='tabbtn' target='padding'>Paddings</span>
+                <span class='tabbtn' target='margins'>Margins</span>
+            </div>
+            <div class='gspage' target='margins'>
+                <table width='100%'>
+                    <tr>
+                        <td>Left margin</td>
+                        <td><input type='range'></td>
+                        <td><input type='txt' data-csstype='margin-left' class='sizetxt'></td>
+                    </tr>
+                    <tr>
+                        <td>Right margin</td>
+                        <td><input type='range'></td>
+                        <td><input type='txt' data-csstype='margin-right' class='sizetxt'></td>
+                    </tr>
+                    <tr>
+                        <td>Top margin</td>
+                        <td><input type='range'></td>
+                        <td><input type='txt' data-csstype='margin-top' class='sizetxt'></td>
+                    </tr>
+                    <tr>
+                        <td>Bottom margin</td>
+                        <td><input type='range'></td>
+                        <td><input type='txt' data-csstype='margin-bottom' class='sizetxt'></td>
+                    </tr>
+                </table>
+            </div>
+            <div class='gspage' target='padding'>
+                <table width='100%'>
+                    <tr>
+                        <td>Left padding</td>
+                        <td><input type='range' ></td>
+                        <td><input type='txt' data-csstype='padding-left' class='sizetxt'></td>
+                    </tr>
+                    <tr>
+                        <td>Right padding</td>
+                        <td><input type='range' ></td>
+                        <td><input type='txt'  data-csstype='padding-right' class='sizetxt'></td>
+                    </tr>
+                    <tr>
+                        <td>Top padding</td>
+                        <td><input type='range' ></td>
+                        <td><input type='txt' data-csstype='padding-top' class='sizetxt'></td>
+                    </tr>
+                    <tr>
+                        <td>Bottom padding</td>
+                        <td><input type='range'></td>
+                        <td><input type='txt' data-csstype='padding-bottom' class='sizetxt'></td>
+                    </tr>
+                </table>
+            </div>
+            <div>
+            <label>
+                <input type="checkbox" class="gsshowvisualization" checked> Show visualization
+            </label>
+            </div>
+            <div>
+                <span class="modifybutton closeresizing">Undo changes</span>
+                <span class="modifybutton" style="float:right;">Save changes</span>
+            </div>
+        </span>
+        <script>
+            $('.gsresizingpanel').draggable({ handle: ".heading"});
+        </script>
+        <?
+
+    }
+
+    public function displayResizing() {
+        ?>
+        <style>
+            .range{
+                border:none;
+                height:15px;
+                background-image: url('http://quocity.com/colresizable/img/range.png');	
+            }
+
+            #selection{
+                background-image: url('http://quocity.com/colresizable/img/range.png');
+                background-position: 0px -15px;
+                padding:0px;
+                margin:0px;
+                vertical-align:text-top;
+            }
+
+
+            #selection span{
+                width:100%;
+                height:15px;
+                position:relative;
+                display:block;
+                content:"";
+            }
+
+            #selection span:after{
+                background-image: url('http://quocity.com/colresizable/img/range.png');
+                background-position: 0px -30px;
+                position:absolute;
+                left:0px;
+                top:0px;
+                display:block;
+                content:"";
+                height:15px;
+                width:22px;
+                display:block;
+                content:"";
+            }
+
+            #selection span:before{
+                background-image: url('http://quocity.com/colresizable/img/range.png');
+                background-position: 0px -45px;
+                position:absolute;
+                right:0px;
+                top:0px;
+                display:block;
+                content:"";
+                height:15px;
+                width:22px;
+                display:block;
+                content:"";
+            }
+
+
+            .range td{
+                border:none;
+            }
+
+            .rangeGrip{
+                width:14px;
+                height:21px;
+                background-image: url('http://quocity.com/colresizable/img/range.png');
+                background-position: 0px -60px;
+                position:absolute;
+                left:-3px;
+                top:-3px;
+                z-index:8;
+            }
+
+
+            .rangeDrag .rangeGrip, .rangeGrip:hover{
+                background-position: -14px -60px;
+            }
+
+            #text{
+                color:#034a92;
+                float:right;
+
+            }                    
+        </style>
+        <?
+
     }
 
 }

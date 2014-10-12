@@ -48,8 +48,21 @@ class Booking extends MarketingApplication implements Application {
     }
     
     public function isGetCompanyInformationRemoteEnabled() {
-        return $this->getConfigurationSetting("useBrRegToGetCompanyInformation") == "true";
+        return $this->getConfigurationSetting("useBrRegToGetCompanyInformation") == "true" 
+				|| $this->getConfigurationSetting("useEniroSearchEngine") == "true";
     }
+	
+	public function getOrgNumberLength() {
+		if ($this->getConfigurationSetting("useBrRegToGetCompanyInformation") == "true") {
+			return 9;
+		}
+		
+		if ($this->getConfigurationSetting("useEniroSearchEngine") == "true") {
+			return 10;
+		}
+
+		return 0;
+	}
     
     public function preProcess() {
         $this->entries = $this->getApi()->getCalendarManager()->getEntries((int)date('Y'), (int)date('m'), (int)date('d'), array());
@@ -193,7 +206,9 @@ class Booking extends MarketingApplication implements Application {
         $name = $_POST['data']['name'];
         $result = $this->getApi()->getUtilManager()->getCompaniesFromBrReg($name);
         echo "<table width='100%'>";
-        foreach($result as $orgnr => $name) {
+        foreach($result as $company) {
+			$orgnr = $company->vatNumber;
+			$name = $company->name;
             echo "<tr orgnr='$orgnr' class='company_selection'>";
             echo "<td>".$orgnr."</td>";
             echo "<td class='selected_name'>".$name."</td>";

@@ -81,7 +81,7 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
                     </td></tr>
                     <tr style="display:none;"><td class="col1"><?php echo $this->__w("orgnummer"); ?></td>
                     <td>
-                        <input onkeypress='Booking.validate(event)'  class="<? echo $updateClass; ?>" id="birthday" type='textfield' disabled/>
+                        <input orgLength="<? echo $this->getOrgNumberLength(); ?>" onkeypress='Booking.validate(event)'  class="<? echo $updateClass; ?>" id="birthday" type='textfield' disabled/>
                     </td>
                 </tr>
                 <? if (!$companyRemote) { ?>

@@ -111,7 +111,8 @@ Booking = {
     },
     updateCompanyInformation: function() {
         var value = $(this).val();
-        if (value.length === 9) {
+		var orgLength = $(this).attr('orglength');
+        if (value.length == orgLength) {
             var outer = $('<div/>');
             var loader = $('<img src="skin/default/images/ajaxloader.gif"/><br>');
             outer.append(loader);

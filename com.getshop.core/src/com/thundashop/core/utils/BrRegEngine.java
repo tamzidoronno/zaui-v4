@@ -9,7 +9,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
@@ -41,9 +40,10 @@ class ReturnValue {
  * @author ktonder
  */
 @Component
-public class BrRegEngine {
+public class BrRegEngine implements CompanySearchEngine {
     private Gson gson = new Gson();
     
+	@Override
     public Company getCompany(String organisationNumber) {
         
         String content = read(organisationNumber.trim(), false);
@@ -100,22 +100,40 @@ public class BrRegEngine {
         return content;
     }
 
-    HashMap<String, String> search(String search) {
-        String result = read(search, false);
-        ReturnValue fromJson = gson.fromJson(result, ReturnValue.class);
-        HashMap<String,String> returnvalue = new HashMap();
-        for(BrRegCompany company : fromJson.entries) {
-            returnvalue.put(company.orgnr, company.navn);
-        }
-        if(returnvalue.isEmpty()) {
-            result = read(search, true);
-            fromJson = gson.fromJson(result, ReturnValue.class);
-            for(BrRegCompany company : fromJson.entries) {
-                returnvalue.put(company.orgnr, company.navn);
-            }
-        }
-        
-        return returnvalue;
+	@Override
+    public List<Company> search(String search) {
+        String normalSearchResult = read(search, false);
+		List<Company> companies = getCompanies(normalSearchResult);
+		
+		if (companies.isEmpty()) {
+			addSubDepartments(search, companies);
+		}
+		
+        return companies;
     }
+	
+	private void addSubDepartments(String search, List<Company> companies) {
+		String resultSubDep = read(search, true);
+		companies.addAll(getCompanies(resultSubDep));
+	}
+	
+	private List<Company> getCompanies(String result) {
+		ReturnValue fromJson = gson.fromJson(result, ReturnValue.class);
+		List<Company> returnvalue = new ArrayList();
+		
+        for(BrRegCompany company : fromJson.entries) {
+			Company retCompany = new Company();
+			retCompany.vatNumber = company.orgnr;
+			retCompany.name = company.navn;
+            returnvalue.add(retCompany);
+        }
+		
+		return returnvalue;
+	}
+
+	@Override
+	public String getName() {
+		return "brreg";
+	}
     
 }

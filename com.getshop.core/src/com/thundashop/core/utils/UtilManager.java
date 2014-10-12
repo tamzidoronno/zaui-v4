@@ -11,9 +11,9 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.messagemanager.NewsLetterGroup;
 import com.thundashop.core.usermanager.data.Company;
 import java.util.HashMap;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -28,15 +28,15 @@ public class UtilManager extends ManagerBase implements IUtilManager {
 
     public HashMap<String, FileObject> files = new HashMap();
     
-    @Autowired
-    public BrRegEngine brRegEngine;
-    
+	@Autowired
+	private CompanySearchEngineHolder searchEngineHolder;
+		
     @Autowired
     public UtilManager(Logger log, DatabaseSaver databaseSaver) {
         super(log, databaseSaver);
     }
     
-  @Override
+    @Override
     public void dataFromDatabase(DataRetreived data) {
         for(DataCommon tmpData : data.data) {
             if(tmpData instanceof FileObject) {
@@ -47,12 +47,12 @@ public class UtilManager extends ManagerBase implements IUtilManager {
     
     @Override
     public Company getCompanyFromBrReg(String companyVatNumber) throws ErrorException {
-        return brRegEngine.getCompany(companyVatNumber);
+        return searchEngineHolder.getSearchEngine(storeId).getCompany(companyVatNumber);
     }
 
     @Override
-    public HashMap<String, String> getCompaniesFromBrReg(String search) throws ErrorException {
-        return brRegEngine.search(search);
+    public List<Company> getCompaniesFromBrReg(String search) throws ErrorException {
+        return searchEngineHolder.getSearchEngine(storeId).search(search);
     }
 
     @Override

@@ -47,6 +47,28 @@ class Booking extends MarketingApplication implements Application {
         echo $this->__f("Create this application and start book events to given dates.");
     }
     
+	public function isExtraDepActivated() {
+		if ($this->getConfigurationSetting("extradep") == "true" && isset($_SESSION['group'])) {
+			if ($_SESSION['group'] == "b66cf951-0ede-4be8-9e13-73f6069a9566" || $_SESSION['group'] == "ddcdcab9-dedf-42e1-a093-667f1f091311") {
+				return true;
+			}	
+		}
+		
+		return false;
+	}
+	
+	public function getTextForExtraDep() {
+		if ($_SESSION['group'] != "b66cf951-0ede-4be8-9e13-73f6069a9566") {
+			return "Kundnummer";
+		}
+		
+		if ($_SESSION['group'] != "ddcdcab9-dedf-42e1-a093-667f1f091311") {
+			return "Meko-Id";
+		}
+		
+		return "";
+	}
+	
     public function isGetCompanyInformationRemoteEnabled() {
         return $this->getConfigurationSetting("useBrRegToGetCompanyInformation") == "true" 
 				|| $this->getConfigurationSetting("useEniroSearchEngine") == "true";
@@ -78,6 +100,12 @@ class Booking extends MarketingApplication implements Application {
         $user->emailAddress = $data['email'];
         $user->type = 10;
         $user->password = $password;
+		
+		if (isset($data['referenceKey'])) {
+			$user->referenceKey = $data['referenceKey'];
+		} else {
+			$user->referenceKey = "-";
+		}
         
         if (isset($_POST['data']['invoiceemail'])) {
             $user->emailAddressToInvoice = $_POST['data']['invoiceemail'];
@@ -176,7 +204,11 @@ class Booking extends MarketingApplication implements Application {
         $data['name'] = $_POST['data']['name'];
         $data['email'] = $_POST['data']['email'];
         $data['cellphone'] = $_POST['data']['cellphone'];
-        
+		
+		if (isset($_POST['data']['extradep'])) {
+			$data['referenceKey'] = $_POST['data']['extradep'];
+		}
+
         if ($this->getAllowAdd()) {
             $event = $this->registerCalenderEvent($data);
             $data['eventid'] = $event->entryId;

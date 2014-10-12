@@ -7,6 +7,9 @@ html {
     zoom:1;
     
     background-color: #0a080a;
+	font-family: futura-pt;
+	font-size: 16px;
+	/*font-weight: 300;*/
     
     //filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/showApplicationImages.php?appNamespace=ns_b9cc5940_edef_11e2_91e2_0800200c9a66&image=skin/images/bkg_1.gif', sizingMethod='scale');
 
@@ -36,7 +39,6 @@ html {
 }
 
 .TopMenu a {
-    font-family: Bitter, serif;
     font-size: 14px;
     font-weight: bold;
     color: #a7a7a7;

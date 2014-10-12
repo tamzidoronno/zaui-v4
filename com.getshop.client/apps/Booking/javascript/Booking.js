@@ -169,6 +169,11 @@ $('.Booking .savebooking').live('click', function() {
     if ($('#invoiceemail').length > 0) {
         data.invoiceemail = $('#invoiceemail').val();
     }
+	
+	debugger;
+	if ($("#extradep").length > 0) {
+		data.extradep = $("#extradep").val();
+	}
     
     if ($('#birthday').hasClass("updateOnBlur")) {
         data.company = $('.companyinformation').html();
@@ -204,8 +209,8 @@ $('.Booking .savebooking').live('click', function() {
             Booking.check(data.company);
             if ($('#event').length > 0)
                 Booking.check(data.eventid);
-        }catch(error) {
-            thundashop.common.Alert(__w('Stop'), __w('The company you have selected could not be found in brreg.'), true);
+        } catch(error) {
+            thundashop.common.Alert(__w('Stop'), __w('The company you have selected could not be found.'), true);
             return;
         }
     }

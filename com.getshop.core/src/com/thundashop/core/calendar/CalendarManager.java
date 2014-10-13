@@ -513,8 +513,10 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             if (byEmail) {
                 if (files != null) {
                     mailFactory.sendWithAttachments(getFromAddress(), user.emailAddress, subject, text, files, true);
+                    mailFactory.sendWithAttachments(getFromAddress(), user.emailAddressToInvoice, subject, text, files, true);
                 } else {
                     mailFactory.send(getFromAddress(), user.emailAddress, subject, text);
+                    mailFactory.send(getFromAddress(), user.emailAddressToInvoice, subject, text);
                 }
 
                 emailHistory.users.add(user);

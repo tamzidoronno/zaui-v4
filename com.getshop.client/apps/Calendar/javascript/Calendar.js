@@ -373,6 +373,12 @@ $('.Calendar #sendreminderbysms').live('click', function() {
     data.entryid = $(this).attr('entryid');
     data.subject = $('#remindersubject').val();
 
+	if (data.text.length > 470) {
+		alert("Your message is to long for SMS, maximum allowed length is 470 chars, you have: " + data.text.length);
+		return;
+	}
+	
+	
     var event = thundashop.Ajax.createEvent('Calendar', 'sendReminderBySms', $(this), data);
     var me = this;
 

@@ -111,7 +111,8 @@ Booking = {
     },
     updateCompanyInformation: function() {
         var value = $(this).val();
-        if (value.length === 9) {
+		var orgLength = $(this).attr('orglength');
+        if (value.length == orgLength) {
             var outer = $('<div/>');
             var loader = $('<img src="skin/default/images/ajaxloader.gif"/><br>');
             outer.append(loader);
@@ -168,6 +169,10 @@ $('.Booking .savebooking').live('click', function() {
     if ($('#invoiceemail').length > 0) {
         data.invoiceemail = $('#invoiceemail').val();
     }
+	
+	if ($("#extradep").length > 0) {
+		data.extradep = $("#extradep").val();
+	}
     
     if ($('#birthday').hasClass("updateOnBlur")) {
         data.company = $('.companyinformation').html();
@@ -203,8 +208,8 @@ $('.Booking .savebooking').live('click', function() {
             Booking.check(data.company);
             if ($('#event').length > 0)
                 Booking.check(data.eventid);
-        }catch(error) {
-            thundashop.common.Alert(__w('Stop'), __w('The company you have selected could not be found in brreg.'), true);
+        } catch(error) {
+            thundashop.common.Alert(__w('Stop'), __w('The company you have selected could not be found.'), true);
             return;
         }
     }

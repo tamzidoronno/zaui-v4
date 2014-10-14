@@ -13,6 +13,8 @@ import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCounter;
 import com.thundashop.core.usermanager.data.UserPrivilege;
 import com.thundashop.core.utils.BrRegEngine;
+import com.thundashop.core.utils.CompanySearchEngine;
+import com.thundashop.core.utils.CompanySearchEngineHolder;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
@@ -45,8 +47,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
     
     @Autowired
-    private BrRegEngine brRegEngine;
-    
+	private CompanySearchEngineHolder searchEngineHolder;
+	
     @Autowired
     public MailFactory mailfactory;
     
@@ -110,7 +112,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     @Override
     public User createUser(User user) throws ErrorException {
-
+		System.out.println("Userkey : " + user.referenceKey);
         if (getSession().currentUser == null && user.type > User.Type.CUSTOMER) {
             throw new ErrorException(26);
         }
@@ -648,7 +650,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             return null;
         }
         
-        Company company = brRegEngine.getCompany(user.birthDay);
+        Company company = searchEngineHolder.getSearchEngine(storeId).getCompany(user.birthDay);
         return company;
     }
 

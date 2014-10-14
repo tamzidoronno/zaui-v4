@@ -1,16 +1,27 @@
+
+body {
+    font-family: "nimbus-sans";
+    font-weight: 300;
+}
+
 .gs_inner {
 	width: 1024px;
 	margin: 0 auto;
 }
 
 
+.applicationarea {
+	min-height: 50px;
+}
+
 .gs_outer.footer {
-	background-color: #f8a223;
 	color: #FFF;
-	padding-top: 20px;
+	padding-top: 30px;
 	padding-bottom: 20px;
 	margin-top: 20px;
-	border-top: solid 2px #e38c10;
+	border-top: solid 1px #e38c10;
+	background-color: #f8a223;
+	height: 35px;
 }
 
 #apparea-header {
@@ -20,14 +31,14 @@
 .gs_outer.header {
 	background-color: #f8a223;
 	margin-bottom: 20px;
-	border-bottom: solid 2px #e38c10;
+	background: linear-gradient(#f8a223 0px, #f8a223 100px, #ac201a 101px, #ac201a 100%);
 }
 
 .Logo img {
 	position: absolute;
 	top: 15px;
-	border: Solid 2px #e38c10;
 	padding: 5px;
+	background-color: #f8a223;
 }
 
 .gs_outer.breadcrumb {
@@ -50,31 +61,43 @@
 .TopMenu {
 	right: 0px;
 	bottom: 33px;
+	font-family: "arial";
+	font-weight: 130;
+	font-size: 15px;
 }
 
 .TopMenu .entry i {
-	font-size: 70px;
-	padding-top: 20px;
-	height: 85px;
-	color: #e38c10;
-	vertical-align: middle;
-	width: 115px;
-	text-align: center;
+	padding-right: 5px;
+	padding-top: 7px;
+	vertical-align: top;
 }
+
+
+
 .TopMenu .entry a {
 	color: #FFF;
 }
+
 .TopMenu .entry {
-	border: solid 2px #e38c10;
-	height: 136px;
+	height: 35px;
+	line-height: 35px;
 	width: 115px;
-	text-align: center;
 	vertical-align: bottom;
 	font-size: 15px;
 	margin-left: 10px;
-	font-weight: bold;
+}
+
+.TopMenu .subentries .entry {
+	background-color: #f8a223;
+	font-size: 13px;
+	margin-left: 0px;
 }
 
 .Login .notloggedon {
 	display: none;
+}
+
+.ImageDisplayer,
+.Banner {
+	box-shadow: 0px 0px 4px rgba(0,0,0,0.3);
 }

@@ -197,14 +197,16 @@ class Factory extends FactoryBase {
     }
 
     public function loadJavascriptFilesEditorMode() {
-        if ($this->isEditorMode()) {
-            echo "\n" . '<script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>';
-            echo "\n" . '<script type="text/javascript" src="js/ckeditor/adapters/jquery.js"></script>';
-
+		echo "\n" . '<script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>';
+		echo "\n" . '<script type="text/javascript" src="js/ckeditor/adapters/jquery.js"></script>';
+		
+		if ($this->isEditorMode()) {
             //Load app files.
             foreach (AppRegister::$register as $app) {
-                if (file_exists("js/app/" . $app . "_editormode.js"))
+                if (file_exists("js/app/" . $app . "_editormode.js")) {
+					echo "adsfasdfasfasdfasdfasdjs - /app/" . $app . "_editormode.js";
                     echo "\n" . '<script type="text/javascript" src="js/app/' . $app . '_editormode.js"></script>';
+				}
             }
         }
     }

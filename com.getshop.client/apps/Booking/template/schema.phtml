@@ -8,6 +8,7 @@ $starthour = isset($settings->starthour_for_allowaddon) ? $settings->starthour_f
 $stophour = isset($settings->stophour_for_allowaddon) ? $settings->stophour_for_allowaddon->value : 24;
 
 $companyRemote = $this->isGetCompanyInformationRemoteEnabled();
+$extradep = $this->isExtraDepActivated();
 $updateClass = $companyRemote ? "updateOnBlur" : "";
 $groups = $this->getApi()->getUserManager()->getAllGroups();
 
@@ -81,7 +82,7 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
                     </td></tr>
                     <tr style="display:none;"><td class="col1"><?php echo $this->__w("orgnummer"); ?></td>
                     <td>
-                        <input onkeypress='Booking.validate(event)'  class="<? echo $updateClass; ?>" id="birthday" type='textfield' disabled/>
+                        <input orgLength="<? echo $this->getOrgNumberLength(); ?>" onkeypress='Booking.validate(event)'  class="<? echo $updateClass; ?>" id="birthday" type='textfield' disabled/>
                     </td>
                 </tr>
                 <? if (!$companyRemote) { ?>
@@ -89,6 +90,10 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
                 <? } else { ?>
                     <tr><td class="col1"><?php echo $this->__w("org", 'contact'); ?></td><td><div class="companyinformation"><? echo $this->__w("Search for the company you want to enter by clicking the button above, and this box will be filled automatically."); ?></div></td></tr>
                 <? } ?>
+					
+				<? if ($extradep) { ?>
+					<tr><td class="col1"><? echo $this->getTextForExtraDep(); ?></td><td><input id="extradep" type='textfield'/></td></tr>
+				<? } ?>
 
         <? if (!$this->isConnectedToCurrentPage()) { ?> 
                     <tr><td class="col1"><?php echo $this->__w("course"); ?></td>

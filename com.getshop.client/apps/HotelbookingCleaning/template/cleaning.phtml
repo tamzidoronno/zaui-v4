@@ -55,7 +55,9 @@ function printGuestTable($reservations, $roomlist, $arriving, $daydiff) {
             if($daydiff == 0) {
                 echo "<td>";
                 foreach ($reservation->roomIds as $roomId) {
-                    if ($roomlist[$roomId]->isClean) {
+                    $lastcleaned = $roomlist[$roomId]->lastCleaning;
+                    $cleanedToday = date("Ymd", time()) === date("Ymd", strtotime($lastcleaned));
+                    if ($roomlist[$roomId]->isClean || $cleanedToday) {
                         echo "<span style='line-height: 20px;' class='alreadyready'>room is marked as ready</span>";
                     } else {
                         echo "<span style='line-height: 20px;' class='markroomasready' roomId='" . $roomId . "'>Mark room as ready</span>";

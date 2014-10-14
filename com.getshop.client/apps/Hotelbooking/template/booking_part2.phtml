@@ -23,10 +23,6 @@ if($this->getServiceType() == "storage") {
             <span class='booking_count_box'>
                 <table>
                     <tr>
-                        <td><? echo $this->__w("Number of persons"); ?></td>
-                        <td align='right'><input type='number' min="1" max="10" id="numberofpersons" value="<? echo $this->getPersonCount(); ?>"></td>
-                    </tr>
-                    <tr>
                         <td><? echo $this->__w("Number of rooms"); ?></td>
                         <td align='right'><input class='number_of_rooms' type='number' min="1" max="10" value='<? echo $this->getRoomCount(); ?>'></td>
                     </tr>

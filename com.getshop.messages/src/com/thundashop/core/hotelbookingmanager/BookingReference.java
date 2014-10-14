@@ -19,6 +19,7 @@ public class BookingReference extends DataCommon {
     public Double bookingFee = 0.0;
     public boolean updateArx = true;
     public boolean sentWelcomeMessages = true;
+    Date failed = null;
     
     public boolean isApprovedForCheckin(String roomId) {
         if(isApprovedForCheckIn.containsKey(roomId)) {

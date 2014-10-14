@@ -76,9 +76,9 @@ if($this->getServiceType() == "storage") {
     <div class="booking_contact_data">
         <div class='summary_heading'><? echo $vistorInfoText; ?></div>
         <?
-            for($i = 1; $i <= $this->getPersonCount(); $i++) {
-                if($this->getPersonCount() > 1) {
-                    $var = $this->__w("Visitor no {count}");
+            for($i = 1; $i <= $this->getRoomCount(); $i++) {
+                if($this->getRoomCount() > 1) {
+                    $var = $this->__w("Contact person for room no. {count}");
                     $var = str_replace("{count}", $i, $var);
                     echo "<br><div class='visitor_heading'>$var</div>";
                 }

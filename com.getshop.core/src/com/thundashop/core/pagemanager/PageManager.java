@@ -10,7 +10,6 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pagemanager.data.CommonPageData;
 import com.thundashop.core.pagemanager.data.Page;
-import com.thundashop.core.pagemanager.data.PageLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

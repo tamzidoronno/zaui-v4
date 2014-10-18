@@ -17,6 +17,8 @@ public class PageLayout implements Serializable {
 
     public void moveCell(String cellid, boolean moveUp) {
         rows = moveCellRecursive(rows, cellid, moveUp);
+        header.cells = moveCellRecursive(header.cells, cellid, moveUp);
+        footer.cells = moveCellRecursive(footer.cells, cellid, moveUp);
     }
 
     public void createCell(String incell, String before, boolean vertical) {

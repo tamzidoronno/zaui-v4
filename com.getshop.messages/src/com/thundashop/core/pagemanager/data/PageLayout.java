@@ -15,21 +15,32 @@ public class PageLayout implements Serializable {
         rows = new LinkedList();
     }
 
-    public void createCell(String incell, String after, boolean vertical) {
+    public void createCell(String incell, String before, boolean vertical) {
         if (incell == null || incell.isEmpty()) {
             PageCell newpagecell = new PageCell();
             newpagecell.vertical = vertical;
-            rows.add(newpagecell);
+            if(before != null && !before.isEmpty()) {
+                LinkedList<PageCell> newList = new LinkedList();
+                for(PageCell cell : rows) {
+                    if(cell.cellId.equals(before)) {
+                        newList.add(newpagecell);
+                    }
+                    newList.add(cell);
+                }
+                rows = newList;
+            } else {
+                rows.add(newpagecell);
+            }
         } else {
             PageCell cell = findCell(getAllCells(), incell);
             if (cell.cells.isEmpty()) {
-                PageCell newcell = cell.createCell(after);
+                PageCell newcell = cell.createCell(before);
                 newcell.vertical = vertical;
                 newcell.appId = cell.appId;
-                after = newcell.cellId;
+                before = newcell.cellId;
             }
             
-            PageCell newcell = cell.createCell(after);
+            PageCell newcell = cell.createCell(before);
             newcell.vertical = vertical;
         }
     }

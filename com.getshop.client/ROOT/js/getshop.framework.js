@@ -239,10 +239,39 @@ thundashop.framework = {
             cellid = $(this).closest('.gseditrowheading').attr('cellid');
         }
 
+        var type = $(this).attr('type');
+
         var data = {
             "cellid": cellid,
-            "type": $(this).attr('type')
+            "type": type
         }
+        console.log(cellid);
+        var cellobj = $('.gscell[cellid="'+cellid+'"]');
+        
+        if(type === "addbefore") {
+            var newcellid = cellobj.parent().closest('.gscell').attr('cellid');
+            if(!newcellid) {
+                newcellid = "";
+            }
+            data['before'] = cellid;
+            data['cellid'] = newcellid;
+        }
+        
+        if(type === "addafter") {
+            var newcellid = cellobj.parent().closest('.gscell').attr('cellid');
+            if(!newcellid) {
+                newcellid = "";
+            }
+            var before = cellobj.next().attr('cellid');
+            if(cellobj.next().hasClass("gseditinfo")) {
+                before = cellobj.next().next().attr('cellid');
+            }
+            
+            data['before'] = before;
+            data['cellid'] = newcellid;
+        }
+        
+        
         var event = thundashop.Ajax.createEvent('', 'operateCell', $(this), data);
         thundashop.Ajax.post(event);
     },

@@ -15,17 +15,17 @@ public class PageCell implements Serializable {
     public Double width = -1.0;
     
 
-    PageCell createCell(String after) {
+    PageCell createCell(String before) {
         PageCell newcell = new PageCell();
-        if(after == null || after.isEmpty()) {
+        if(before == null || before.isEmpty()) {
             cells.add(newcell);
         } else {
             LinkedList newList = new LinkedList();
             for(PageCell cell : cells) {
-                newList.add(cell);
-                if(cell.cellId.equals(after)) {
+                if(cell.cellId.equals(before)) {
                     newList.add(newcell);
                 }
+                newList.add(cell);
             }
             cells = newList;
         }

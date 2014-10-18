@@ -43,7 +43,7 @@ class Page {
             $isedit = false;
 
             if ($row->cellId == "footer") {
-                echo "<div class='gscell  gsdepth_0' style='height:60px'>";
+                echo "<div class='gscell  gsdepth_0 gseditinfo' style='height:60px'>";
                 echo "<div class='gsinner gsdepth_0'>";
                 echo '<div class="gs_addcell" incell="" aftercell="" style="padding: 20px; text-align:center"><span style="border: solid 1px; padding: 10px; background-color:#BBB;">Add row</span></div>';
                 echo "</div></div>";
@@ -74,7 +74,7 @@ class Page {
             $this->printCell($row, $count, 0, 0, $isedit);
             $count++;
             if ($isedit) {
-                echo "<div class='gscell gsdepth_0 gsendedit'>";
+                echo "<div class='gscell gsdepth_0 gsendedit gseditinfo'>";
                 echo "<div class='gsinner gsdepth_0'>";
                 echo "<div class='gseditrowheading'>";
                 echo "End of row to edit.";
@@ -181,8 +181,10 @@ class Page {
 
     private function addCellConfigPanel() {
         echo "<span class='gscellsettingspanel'>";
-        echo "<div class='gs_splithorizontally' type='addhorizontal'><i class='fa fa-chevron-circle-right'></i>" . $this->factory->__w("Add row") . "</div>";
-        echo "<div class='gs_splitvertically' type='addvertical'><i class='fa fa-chevron-circle-down'></i>" . $this->factory->__w("Add column") . "</div>";
+        echo "<div class='gs_splithorizontally' type='addhorizontal'><i class='fa fa-arrows-h'></i>" . $this->factory->__w("Add row") . "</div>";
+        echo "<div class='gs_splitvertically' type='addvertical'><i class='fa fa-arrows-v'></i>" . $this->factory->__w("Add column") . "</div>";
+        echo "<div class='gs_splithorizontally' type='addbefore'><i class='fa fa-long-arrow-up'></i>" . $this->factory->__w("Add cell before") . "</div>";
+        echo "<div class='gs_splithorizontally' type='addafter'><i class='fa fa-long-arrow-down'></i>" . $this->factory->__w("Add cell after") . "</div>";
         echo "<div class='gs_resizing' type='delete'><i class='fa fa-arrows'></i>" . $this->factory->__w("Margin, padding, sizing") . "</div>";
         echo "<div class='gs_removerow' type='delete'><i class='fa fa-image'></i>" . $this->factory->__w("Background image") . "</div>";
         echo "<div class='gs_removerow' type='delete'><i class='fa fa-trash-o'></i>" . $this->factory->__w("Delete") . "</div>";

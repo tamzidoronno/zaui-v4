@@ -49,15 +49,23 @@ class ApplicationManager extends FactoryBase {
     function operateCell() {
         $type = $_POST['data']['type'];
         $cellId = $_POST['data']['cellid'];
+        $before = null;
+        if(isset($_POST['data']['before'])) {
+            $before = $_POST['data']['before'];
+        }
         switch ($type) {
             case "delete":
                 $this->getApi()->getPageManager()->dropCell($this->getPage()->javapage->id, $cellId);
                 break;
+            case "addbefore":
+            case "addafter":
+                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, true);
+                break;
             case "addvertical":
-                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, null, true);
+                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, true);
                 break;
             case "addhorizontal":
-                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, null, false);
+                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, false);
                 break;
         }
     }

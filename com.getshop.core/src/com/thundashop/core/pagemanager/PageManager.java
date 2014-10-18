@@ -196,9 +196,9 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     @Override
-    public void addLayoutCell(String pageId, String incell, String aftercell, boolean vertical) throws ErrorException {
+    public void addLayoutCell(String pageId, String incell, String beforecell, boolean vertical) throws ErrorException {
         Page page = getPage(pageId);
-        page.layout.createCell(incell, aftercell, vertical);
+        page.layout.createCell(incell, beforecell, vertical);
         savePage(page);
     }
 

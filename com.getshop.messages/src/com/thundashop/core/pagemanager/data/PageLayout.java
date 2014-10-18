@@ -15,14 +15,18 @@ public class PageLayout implements Serializable {
         rows = new LinkedList();
     }
 
+    public void moveCell(String cellid, boolean moveUp) {
+        rows = moveCellRecursive(rows, cellid, moveUp);
+    }
+
     public void createCell(String incell, String before, boolean vertical) {
         if (incell == null || incell.isEmpty()) {
             PageCell newpagecell = new PageCell();
             newpagecell.vertical = vertical;
-            if(before != null && !before.isEmpty()) {
+            if (before != null && !before.isEmpty()) {
                 LinkedList<PageCell> newList = new LinkedList();
-                for(PageCell cell : rows) {
-                    if(cell.cellId.equals(before)) {
+                for (PageCell cell : rows) {
+                    if (cell.cellId.equals(before)) {
                         newList.add(newpagecell);
                     }
                     newList.add(cell);
@@ -39,7 +43,7 @@ public class PageLayout implements Serializable {
                 newcell.appId = cell.appId;
                 before = newcell.cellId;
             }
-            
+
             PageCell newcell = cell.createCell(before);
             newcell.vertical = vertical;
         }
@@ -71,8 +75,8 @@ public class PageLayout implements Serializable {
                 toRemove = cell;
             } else if (cell.cells.size() > 0) {
                 boolean deleted = deleteCellRecusive(cellId, cell.cells);
-                if(deleted) {
-                    if(cell.cells.size() == 1) {
+                if (deleted) {
+                    if (cell.cells.size() == 1) {
                         cell.appId = cell.cells.get(0).appId;
                         cell.cells.remove(0);
                     }
@@ -95,51 +99,49 @@ public class PageLayout implements Serializable {
         return cells;
     }
 
-	public PageCell getCell(String pageCellId) {
-		if (header != null && header.cellId.equals(pageCellId)) {
-			return header;
-		}
-		
-		if (footer != null && footer.cellId.equals(pageCellId)) {
-			return footer;
-		}
-		
-		if (header != null) {
-			PageCell cell2 = header.getCell(pageCellId);
-			if (cell2 != null) {
-				return cell2;
-			}	
-		}
-		
-		
-		if (footer != null) {
-			PageCell cell3 = footer.getCell(pageCellId);
-			if (cell3 != null) {
-				return cell3;
-			}	
-		}
-		
-		
-		for (PageCell cell : rows) {
-			PageCell cell4 = cell.getCell(pageCellId);
-			if (cell4 != null) {
-				return cell4;
-			}
-		}
-		
-		return null;
-	}
+    public PageCell getCell(String pageCellId) {
+        if (header != null && header.cellId.equals(pageCellId)) {
+            return header;
+        }
+
+        if (footer != null && footer.cellId.equals(pageCellId)) {
+            return footer;
+        }
+
+        if (header != null) {
+            PageCell cell2 = header.getCell(pageCellId);
+            if (cell2 != null) {
+                return cell2;
+            }
+        }
+
+        if (footer != null) {
+            PageCell cell3 = footer.getCell(pageCellId);
+            if (cell3 != null) {
+                return cell3;
+            }
+        }
+
+        for (PageCell cell : rows) {
+            PageCell cell4 = cell.getCell(pageCellId);
+            if (cell4 != null) {
+                return cell4;
+            }
+        }
+
+        return null;
+    }
 
     public void removeAppFromCell(String cellid) {
         LinkedList<PageCell> cells = getAllCells();
-        removeAppRecursivly(cellid,cells);
+        removeAppRecursivly(cellid, cells);
     }
 
     private void removeAppRecursivly(String cellid, LinkedList<PageCell> cells) {
-        for(PageCell cell : cells) {
-            if(cell.cellId.equals(cellid)) {
+        for (PageCell cell : cells) {
+            if (cell.cellId.equals(cellid)) {
                 cell.appId = null;
-            } else if(cell.cells.size() > 0) {
+            } else if (cell.cells.size() > 0) {
                 removeAppRecursivly(cellid, cell.cells);
             }
         }
@@ -147,20 +149,72 @@ public class PageLayout implements Serializable {
 
     public void updateStyle(String cellId, String styles, Double width, String innerStyles) {
         PageCell cell = findCell(getAllCells(), cellId);
-        if(cell == null) {
+        if (cell == null) {
             return;
         }
-        if(styles.equals("reset")) {
+        if (styles.equals("reset")) {
             cell.styles = "";
         }
-        
-        if(styles != null && !styles.isEmpty() && !styles.equals("notset")) {
+
+        if (styles != null && !styles.isEmpty() && !styles.equals("notset")) {
             cell.styles = styles;
         }
-        if(innerStyles != null && !styles.isEmpty() && !innerStyles.equals("notset")) {
+        if (innerStyles != null && !styles.isEmpty() && !innerStyles.equals("notset")) {
             cell.innerStyles = innerStyles;
         }
-        cell.width = width;
+        if(width > 0) {
+            cell.width = width;
+        }
+    }
+
+    private LinkedList<PageCell> moveCellRecursive(LinkedList<PageCell> cells, String cellid, boolean moveUp) {
+        for (PageCell cell : cells) {
+            if (cell.cellId.equals(cellid)) {
+                return moveCellInList(cells, moveUp, cellid);
+            }
+            if (cell.cells.size() > 0) {
+                cell.cells = moveCellRecursive(cell.cells, cellid, moveUp);
+            }
+        }
+        return cells;
+    }
+
+    private LinkedList<PageCell> moveCellInList(LinkedList<PageCell> cells, boolean moveUp, String cellId) {
+        LinkedList<PageCell> newCellList = new LinkedList();
+        PageCell toAdd = null;
+        if (moveUp) {
+            for (PageCell cell : cells) {
+                if (cell.cellId.equals(cellId)) {
+                    newCellList.add(cell);
+                    continue;
+                }
+                if (toAdd != null) {
+                    newCellList.add(toAdd);
+                }
+                toAdd = cell;
+            }
+            if (toAdd != null) {
+                newCellList.add(toAdd);
+            }
+        } else {
+            for (PageCell cell : cells) {
+                if (cell.cellId.equals(cellId)) {
+                    toAdd = cell;
+                    continue;
+                }
+                newCellList.add(cell);
+                if (toAdd != null) {
+                    newCellList.add(toAdd);
+                    toAdd = null;
+                }
+            }
+            if (toAdd != null) {
+                newCellList.add(toAdd);
+                toAdd = null;
+            }
+        }
+
+        return newCellList;
     }
 
 }

@@ -50,13 +50,14 @@ class Page {
             }
             
             if (isset($_SESSION['gseditcell']) && $_SESSION['gseditcell'] === $row->cellId) {
-                echo "<div class='gscell gsdepth_0' style='height: 38px;'>";
+                echo "<div class='gscell gsdepth_0 gseditinfo' style='height: 38px;'>";
                 echo "<div class='gsinner gsdepth_0'>";
                 echo "<div class='gseditrowheading' cellid='" . $row->cellId . "'>";
                 if ($row->cellId != "footer" && $row->cellId != "header") {
                     echo "<i class='fa fa-trash-o' type='delete' title='Delete this row'></i>";
                     echo "<i class='fa fa-arrow-up' type='moveup' title='Move row up'></i>";
                     echo "<i class='fa fa-arrow-down' type='movedown' title='Move row down'></i>";
+                    echo "<i class='fa fa-cogs' type='settings' title='Rows settings'></i>";
                 }
                 echo "You are now in edit mode for this row." . " - " . "<span class='gsdoneeditbutton' done='true'true'>done editing</span>";
                 echo "</div>";
@@ -64,12 +65,6 @@ class Page {
                 echo "</div>";
                 $isedit = true;
                 $beenEdited = true;
-                ?>
-                <style>
-                    .dragtable { background-image: url('http://quocity.com/colresizable/img/rangeBar.png'); background-position: 10px 10px; background-repeat-y: no-repeat;}
-                </style>
-                <?
-
             }
             $this->printCell($row, $count, 0, 0, $isedit);
             $count++;
@@ -85,6 +80,11 @@ class Page {
         }
         
         if($beenEdited) {
+            ?>
+            <style>
+                .dragtable { background-image: url('http://quocity.com/colresizable/img/rangeBar.png'); background-position: 10px 10px; background-repeat-y: no-repeat;}
+            </style>
+            <?
             echo "<script src='/js/colresize.js'>";
         }
     }
@@ -140,7 +140,7 @@ class Page {
 
         echo "<div $styles width='$width' class='gscell $roweditouter gsdepth_$depth gscount_$count $direction' cellid='" . $cell->cellId . "'>";
         if ($depth === 0 && !$edit) {
-            echo "<i class='fa gseditrowbutton fa-pencil-square-o'></i>";
+            echo "<i title='".$this->factory->__f("Edit row")."' class='fa gseditrowbutton fa-pencil-square-o'></i>";
         }
         echo "<div class='gsinner gsdepth_$depth $rowedit gscount_$count' totalcells='$totalcells' style='$innerstyles'>";
         if ($edit) {
@@ -148,7 +148,7 @@ class Page {
                 $this->displayResizing();
             }
         }
-        if ($edit) {
+        if ($edit && $depth != 0) {
             echo "<span class='gscellsettings'></span>";
         }
         if (sizeof($cell->cells) > 0) {

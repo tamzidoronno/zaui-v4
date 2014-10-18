@@ -2861,7 +2861,7 @@ class PageManager(object):
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
-  def addLayoutCell(self, pageId, incell, aftercell, vertical):
+  def addLayoutCell(self, pageId, incell, beforecell, vertical):
     args = collections.OrderedDict()
     if isinstance(pageId,GetShopBaseClass): 
       args["pageId"]=json.dumps(pageId.__dict__)
@@ -2877,13 +2877,13 @@ class PageManager(object):
         args["incell"]=json.dumps(incell)
       except (ValueError, AttributeError):
         args["incell"]=incell
-    if isinstance(aftercell,GetShopBaseClass): 
-      args["aftercell"]=json.dumps(aftercell.__dict__)
+    if isinstance(beforecell,GetShopBaseClass): 
+      args["beforecell"]=json.dumps(beforecell.__dict__)
     else:
       try:
-        args["aftercell"]=json.dumps(aftercell)
+        args["beforecell"]=json.dumps(beforecell)
       except (ValueError, AttributeError):
-        args["aftercell"]=aftercell
+        args["beforecell"]=beforecell
     if isinstance(vertical,GetShopBaseClass): 
       args["vertical"]=json.dumps(vertical.__dict__)
     else:
@@ -3163,6 +3163,35 @@ class PageManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getSecuredSettingsInternal"
+    data.interfaceName = "core.pagemanager.IPageManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def moveCell(self, pageId, cellId, up):
+    args = collections.OrderedDict()
+    if isinstance(pageId,GetShopBaseClass): 
+      args["pageId"]=json.dumps(pageId.__dict__)
+    else:
+      try:
+        args["pageId"]=json.dumps(pageId)
+      except (ValueError, AttributeError):
+        args["pageId"]=pageId
+    if isinstance(cellId,GetShopBaseClass): 
+      args["cellId"]=json.dumps(cellId.__dict__)
+    else:
+      try:
+        args["cellId"]=json.dumps(cellId)
+      except (ValueError, AttributeError):
+        args["cellId"]=cellId
+    if isinstance(up,GetShopBaseClass): 
+      args["up"]=json.dumps(up.__dict__)
+    else:
+      try:
+        args["up"]=json.dumps(up)
+      except (ValueError, AttributeError):
+        args["up"]=up
+    data = EmptyClass()
+    data.args = args
+    data.method = "moveCell"
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 

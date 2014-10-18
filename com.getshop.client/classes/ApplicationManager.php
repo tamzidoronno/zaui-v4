@@ -30,12 +30,18 @@ class ApplicationManager extends FactoryBase {
         $cellid = $_POST['data']['cellid'];
         $pageid = $this->getPage()->javapage->id;
         $styles = "reset";
+        $stylesInner = "reset";
         if(isset($_POST['data']['styles'])) {
             $styles = $_POST['data']['styles'];
         }
         if(isset($_POST['data']['stylesInner'])) {
             $stylesInner = $_POST['data']['stylesInner'];
         }
+        
+        
+        $stylesInner = $this->removeWidthFromCss($stylesInner);
+        $styles = $this->removeWidthFromCss($styles);
+        
         $this->getApi()->getPageManager()->setStylesOnCell($pageid, $cellid, $styles, $stylesInner, -1);
         
         if(isset($_POST['data']['colsizes'])) {
@@ -54,6 +60,12 @@ class ApplicationManager extends FactoryBase {
             $before = $_POST['data']['before'];
         }
         switch ($type) {
+            case "movedown":
+                $this->getApi()->getPageManager()->moveCell($this->getPage()->javapage->id, $cellId, false);
+                break;
+            case "moveup":
+                $this->getApi()->getPageManager()->moveCell($this->getPage()->javapage->id, $cellId, true);
+                break;
             case "delete":
                 $this->getApi()->getPageManager()->dropCell($this->getPage()->javapage->id, $cellId);
                 break;
@@ -767,6 +779,16 @@ class ApplicationManager extends FactoryBase {
 
     public function activateAppArea() {
         $this->getApi()->getPageManager()->toggleBottomApplicationArea($this->getPage()->id, $_POST['data']['appArea']);
+    }
+
+    public function removeWidthFromCss($styles) {
+        $newstyles = "";
+        foreach(explode(";", $styles) as $style) {
+            if($style && !stristr($style, "width") && !stristr($style, "float")) {
+                $newstyles .= $style . ";";
+            }
+        }
+        return $newstyles;
     }
 
 }

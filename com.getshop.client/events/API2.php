@@ -2773,12 +2773,12 @@ class APIPageManager {
 	* @throws ErrorException
 	*/
 
-	public function addLayoutCell($pageId, $incell, $aftercell, $vertical) {
+	public function addLayoutCell($pageId, $incell, $beforecell, $vertical) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
 	     $data['args']["incell"] = json_encode($this->transport->object_unset_nulls($incell));
-	     $data['args']["aftercell"] = json_encode($this->transport->object_unset_nulls($aftercell));
+	     $data['args']["beforecell"] = json_encode($this->transport->object_unset_nulls($beforecell));
 	     $data['args']["vertical"] = json_encode($this->transport->object_unset_nulls($vertical));
 	     $data["method"] = "addLayoutCell";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
@@ -3057,6 +3057,24 @@ class APIPageManager {
 	     $data['args'] = array();
 	     $data['args']["appName"] = json_encode($this->transport->object_unset_nulls($appName));
 	     $data["method"] = "getSecuredSettingsInternal";
+	     $data["interfaceName"] = "core.pagemanager.IPageManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Move a cell either up or down.
+	* @param pageId
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function moveCell($pageId, $cellId, $up) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data['args']["cellId"] = json_encode($this->transport->object_unset_nulls($cellId));
+	     $data['args']["up"] = json_encode($this->transport->object_unset_nulls($up));
+	     $data["method"] = "moveCell";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
 	     return $this->transport->sendMessage($data);
 	}

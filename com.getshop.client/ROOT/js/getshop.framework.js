@@ -33,7 +33,9 @@ thundashop.framework = {
         $(document).on('click', '.gs_addcell', this.addCell);
         $(document).on('click', '.toogleDeepfreeze', this.showDeepFreezOption);
         $(document).on('click', '.savedeepfreeze', this.toggleDeepFreeze);
-        $(document).on('click', '.gscellsettings', this.showCellSettingsPanel);
+        $(document).on('click', '.gscellsettings', function() {
+            thundashop.framework.showCellSettingsPanel($(this));
+        });
         $(document).on('click', '.gs_splithorizontally', this.operateCell);
         $(document).on('click', '.gs_splitvertically', this.operateCell);
         $(document).on('click', '.gs_removerow', this.operateCell);
@@ -59,7 +61,6 @@ thundashop.framework = {
         tosavecell.css('width',null);
         var styles = tosavecell.attr('style');
 
-        var cell = $('.gscell[cellid="'+cellid+'"] .gsinner').first();
         var tosavecell = cell.clone();
         tosavecell.css('width',null);
         var stylesInner = tosavecell.attr('style');
@@ -240,6 +241,11 @@ thundashop.framework = {
         }
 
         var type = $(this).attr('type');
+        
+        if(type === "settings") {
+            $(this), thundashop.framework.showCellSettingsPanel($(this));
+            return;
+        }
 
         var data = {
             "cellid": cellid,
@@ -275,14 +281,17 @@ thundashop.framework = {
         var event = thundashop.Ajax.createEvent('', 'operateCell', $(this), data);
         thundashop.Ajax.post(event);
     },
-    showCellSettingsPanel: function () {
+    showCellSettingsPanel: function (element) {
         $('.gscellsettingspanel').fadeIn();
-        var cell = $(this).closest('.gscell');
+        var cell = element.closest('.gscell');
+        if(cell.hasClass('gseditinfo')) {
+            cell = cell.next(".gscell");
+        }
         var overlay = $('<span class="gsoverlay" style="filter: blur(5px);width:100%; height:100%; background-color:#bbb; opacity:0.6; position:absolute; left:0px; top:0px;display:inline-block;"></span>');
         cell.append(overlay);
 
         $('.gscellsettingspanel').attr('cellid', cell.attr('cellid'));
-        var offset = $(this).offset();
+        var offset = element.offset();
         $('.gscellsettingspanel').css('display', 'inline-block');
         $('.gscellsettingspanel').css('top', offset.top + 10);
         $('.gscellsettingspanel').css('left', (offset.left - 170));

@@ -237,4 +237,13 @@ public interface IPageManager {
      */
     @Administrator
     public String createNewRow(String pageId) throws ErrorException;
+    
+    /**
+     * Move a cell either up or down.
+     * @param pageId
+     * @return
+     * @throws ErrorException 
+     */
+    @Administrator
+    public void moveCell(String pageId, String cellId, boolean up) throws ErrorException;
 }

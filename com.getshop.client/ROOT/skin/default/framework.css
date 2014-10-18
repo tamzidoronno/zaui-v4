@@ -15,7 +15,7 @@ filter: alpha(opacity=50);
 .gseditrow {  box-sizing: border-box; padding: 5px; }
 .gseditrowheading { text-align:center; font-size: 14px; background-color:#EFEFEF; padding: 10px; }
 .gsdoneeditbutton { color:blue; cursor:pointer; }
-.gseditrowbutton { position:absolute; right: 5px; z-index: 15; font-size: 20px; background-color:#FFF; padding: 5px; border-radius: 5px; display:none; }
+.gseditrowbutton { cursor:pointer; position:absolute; right: 5px; z-index: 15; font-size: 20px; background-color:rgba(255,255,255,0.4); padding: 5px; border-radius: 5px; display:none; }
 .gseditrowheading .fa { float:right; padding-left: 10px; cursor:pointer; }
 .gscell:hover .gseditrowbutton { display:block; }
 .gscell .gscellsettings { position:absolute; right: 0px; top: 0px; display:none;border-left: solid 1px;border-bottom: solid 1px;border-bottom-left-radius: 15px;background-color:#BBB;width:7px; height: 7px;cursor:pointer;}

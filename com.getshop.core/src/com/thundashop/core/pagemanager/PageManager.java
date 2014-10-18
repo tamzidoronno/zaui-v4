@@ -25,21 +25,21 @@ import org.springframework.stereotype.Component;
 @Component
 @GetShopSession
 public class PageManager extends ManagerBase implements IPageManager {
-    
+
     HashMap<String, Page> pages = new HashMap();
     CommonPageData commonPageData = new CommonPageData();
-    
-	@Autowired
-	private StoreApplicationInstancePool instancePool;
-			
+
+    @Autowired
+    private StoreApplicationInstancePool instancePool;
+
     @Override
     public Page createPage() throws ErrorException {
         Page page = new Page();
-        if(pages.isEmpty()) {
+        if (pages.isEmpty()) {
             page.id = "home";
         }
         page.storeId = storeId;
-        
+
         databaseSaver.saveObject(page, credentials);
         pages.put(page.id, page);
         return page;
@@ -47,28 +47,28 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
-        for(DataCommon obj : data.data) {
-            if(obj instanceof Page) {
+        for (DataCommon obj : data.data) {
+            if (obj instanceof Page) {
                 Page page = (Page) obj;
                 pages.put(page.id, page);
             }
-            if(obj instanceof CommonPageData) {
+            if (obj instanceof CommonPageData) {
                 commonPageData = (CommonPageData) obj;
             }
         }
     }
-    
+
     @Override
     public ApplicationInstance addApplication(String applicationId, String pageCellId) {
-		ApplicationInstance instance = instancePool.createNewInstance(applicationId);
-		List<Page> pagesWithCells = getPagesThatHasCell(pageCellId);				
-				
-		for (Page page : pagesWithCells) {
-			page.getCell(pageCellId).appId = instance.id;
-		}
+        ApplicationInstance instance = instancePool.createNewInstance(applicationId);
+        List<Page> pagesWithCells = getPagesThatHasCell(pageCellId);
 
-		pagesWithCells.stream().forEach(page -> savePage(page));
-		return instance;
+        for (Page page : pagesWithCells) {
+            page.getCell(pageCellId).appId = instance.id;
+        }
+
+        pagesWithCells.stream().forEach(page -> savePage(page));
+        return instance;
     }
 
     @Override
@@ -84,12 +84,12 @@ public class PageManager extends ManagerBase implements IPageManager {
     @Override
     public Page getPage(String id) throws ErrorException {
         Page page = pages.get(id);
-        
-        if(page == null) {
+
+        if (page == null) {
             throw new ErrorException(30);
         }
-		
-		page.finalizePage(commonPageData);
+
+        page.finalizePage(commonPageData);
         return page;
     }
 
@@ -171,7 +171,6 @@ public class PageManager extends ManagerBase implements IPageManager {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-
     @Override
     public void clearPageArea(String pageId, String pageArea) throws ErrorException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -188,7 +187,6 @@ public class PageManager extends ManagerBase implements IPageManager {
     public HashMap<String, Setting> getSecuredSettings(String applicationInstanceId) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
 
     @Override
     public String createNewRow(String pageId) throws ErrorException {
@@ -214,17 +212,24 @@ public class PageManager extends ManagerBase implements IPageManager {
         commonPageData.storeId = storeId;
         databaseSaver.saveObject(commonPageData, credentials);
     }
-	
-	private List<Page> getPagesThatHasCell(String pageCellId) {
-		return pages.values().stream()
-				.filter(page -> page.getCell(pageCellId) != null)
-				.collect(Collectors.toList());
-	}
+
+    private List<Page> getPagesThatHasCell(String pageCellId) {
+        return pages.values().stream()
+                .filter(page -> page.getCell(pageCellId) != null)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public void setStylesOnCell(String pageId, String cellId, String styles, String innerStyles, Double width) {
         Page page = getPage(pageId);
         page.layout.updateStyle(cellId, styles, width, innerStyles);
     }
-    
+
+    @Override
+    public void moveCell(String pageId, String cellId, boolean up) throws ErrorException {
+        Page page = getPage(pageId);
+        page.layout.moveCell(cellId, up);
+        savePage(page);
+    }
+
 }

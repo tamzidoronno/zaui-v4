@@ -233,6 +233,10 @@ thundashop.framework = {
         $('.gscellsettings').hide();
         target.find('.gscellsettings').first().show();
     },
+    activateMoveApplication : function() {
+        
+    },
+    
     operateCell: function () {
         var cellid = $(this).closest('.gscellsettingspanel').attr('cellid');
 
@@ -246,12 +250,12 @@ thundashop.framework = {
             $(this), thundashop.framework.showCellSettingsPanel($(this));
             return;
         }
-
+       
         var data = {
             "cellid": cellid,
             "type": type
         }
-        console.log(cellid);
+
         var cellobj = $('.gscell[cellid="'+cellid+'"]');
         
         if(type === "addbefore") {
@@ -282,11 +286,21 @@ thundashop.framework = {
         thundashop.Ajax.post(event);
     },
     showCellSettingsPanel: function (element) {
+        $('.gscellsettingspanel').find('.gsrowmenu').hide();
+        $('.gscellsettingspanel').find('.gscolumnmenu').hide();
+        
         $('.gscellsettingspanel').fadeIn();
         var cell = element.closest('.gscell');
         if(cell.hasClass('gseditinfo')) {
             cell = cell.next(".gscell");
         }
+        
+        if(cell.hasClass('gscolumn')) {
+            $('.gscellsettingspanel').find('.gscolumnmenu').show();
+        } else {
+            $('.gscellsettingspanel').find('.gsrowmenu').show();
+        }
+        
         var overlay = $('<span class="gsoverlay" style="filter: blur(5px);width:100%; height:100%; background-color:#bbb; opacity:0.6; position:absolute; left:0px; top:0px;display:inline-block;"></span>');
         cell.append(overlay);
 

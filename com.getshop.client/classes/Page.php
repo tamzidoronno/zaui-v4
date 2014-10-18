@@ -55,8 +55,6 @@ class Page {
                 echo "<div class='gseditrowheading' cellid='" . $row->cellId . "'>";
                 if ($row->cellId != "footer" && $row->cellId != "header") {
                     echo "<i class='fa fa-trash-o' type='delete' title='Delete this row'></i>";
-                    echo "<i class='fa fa-arrow-up' type='moveup' title='Move row up'></i>";
-                    echo "<i class='fa fa-arrow-down' type='movedown' title='Move row down'></i>";
                     echo "<i class='fa fa-cogs' type='settings' title='Rows settings'></i>";
                 }
                 echo "You are now in edit mode for this row." . " - " . "<span class='gsdoneeditbutton' done='true'true'>done editing</span>";
@@ -132,6 +130,7 @@ class Page {
             }
 
             $styles = "style='width:$width%; float:left;".$cell->styles."'";
+            $direction .= " gscolumn";
         }
         
                     
@@ -181,10 +180,29 @@ class Page {
 
     private function addCellConfigPanel() {
         echo "<span class='gscellsettingspanel'>";
-        echo "<div class='gs_splithorizontally' type='addhorizontal'><i class='fa fa-arrows-h'></i>" . $this->factory->__w("Add row") . "</div>";
-        echo "<div class='gs_splitvertically' type='addvertical'><i class='fa fa-arrows-v'></i>" . $this->factory->__w("Add column") . "</div>";
-        echo "<div class='gs_splithorizontally' type='addbefore'><i class='fa fa-long-arrow-up'></i>" . $this->factory->__w("Add cell before") . "</div>";
-        echo "<div class='gs_splithorizontally' type='addafter'><i class='fa fa-long-arrow-down'></i>" . $this->factory->__w("Add cell after") . "</div>";
+        echo "<b>New areas</b>";
+        echo "<span class='gscolumnmenu'>";
+        echo "<div class='gs_splithorizontally' type='addhorizontal'><i class='fa fa-arrows-h'></i>" . $this->factory->__w("Insert row") . "</div>";
+        echo "</span>";
+        echo "<div class='gs_splitvertically' type='addvertical'><i class='fa fa-arrows-v'></i>" . $this->factory->__w("Insert column") . "</div>";
+        echo "<span class='gsrowmenu'>";
+        echo "<div class='gs_splithorizontally' type='addbefore'><i class='fa fa-long-arrow-up'></i>" . $this->factory->__w("Create row above") . "</div>";
+        echo "<div class='gs_splithorizontally' type='addafter'><i class='fa fa-long-arrow-down'></i>" . $this->factory->__w("Create row below") . "</div>";
+        echo "</span>";
+        echo "<span class='gscolumnmenu'>";
+        echo "<div class='gs_splithorizontally' type='addbefore'><i class='fa fa-long-arrow-left'></i>" . $this->factory->__w("Create left column") . "</div>";
+        echo "<div class='gs_splithorizontally' type='addafter'><i class='fa fa-long-arrow-right'></i>" . $this->factory->__w("Create right column") . "</div>";
+        echo "</span>";
+        echo "<b>Move area</b>";
+        echo "<span class='gsrowmenu'>";
+        echo "<div class='gs_splithorizontally' type='moveup'><i class='fa fa-long-arrow-up'></i>" . $this->factory->__w("Move row up") . "</div>";
+        echo "<div class='gs_splithorizontally' type='movedown'><i class='fa fa-long-arrow-down'></i>" . $this->factory->__w("Move row down") . "</div>";
+        echo "</span>";
+        echo "<span class='gscolumnmenu'>";
+        echo "<div class='gs_splithorizontally' type='moveup'><i class='fa fa-long-arrow-left'></i>" . $this->factory->__w("Move cell to the left") . "</div>";
+        echo "<div class='gs_splithorizontally' type='movedown'><i class='fa fa-long-arrow-right'></i>" . $this->factory->__w("Move cell to the right") . "</div>";
+        echo "</span>";
+        echo "<b>Other</b>";
         echo "<div class='gs_resizing' type='delete'><i class='fa fa-arrows'></i>" . $this->factory->__w("Margin, padding, sizing") . "</div>";
         echo "<div class='gs_removerow' type='delete'><i class='fa fa-image'></i>" . $this->factory->__w("Background image") . "</div>";
         echo "<div class='gs_removerow' type='delete'><i class='fa fa-trash-o'></i>" . $this->factory->__w("Delete") . "</div>";

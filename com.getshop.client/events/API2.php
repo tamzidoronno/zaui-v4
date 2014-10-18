@@ -3150,12 +3150,13 @@ class APIPageManager {
 	* @throws ErrorException
 	*/
 
-	public function setStylesOnCell($pageId, $cellId, $styles, $width) {
+	public function setStylesOnCell($pageId, $cellId, $styles, $innerStyles, $width) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
 	     $data['args']["cellId"] = json_encode($this->transport->object_unset_nulls($cellId));
 	     $data['args']["styles"] = json_encode($this->transport->object_unset_nulls($styles));
+	     $data['args']["innerStyles"] = json_encode($this->transport->object_unset_nulls($innerStyles));
 	     $data['args']["width"] = json_encode($this->transport->object_unset_nulls($width));
 	     $data["method"] = "setStylesOnCell";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";

@@ -33,12 +33,15 @@ class ApplicationManager extends FactoryBase {
         if(isset($_POST['data']['styles'])) {
             $styles = $_POST['data']['styles'];
         }
-        $this->getApi()->getPageManager()->setStylesOnCell($pageid, $cellid, $styles, -1);
+        if(isset($_POST['data']['stylesInner'])) {
+            $stylesInner = $_POST['data']['stylesInner'];
+        }
+        $this->getApi()->getPageManager()->setStylesOnCell($pageid, $cellid, $styles, $stylesInner, -1);
         
         if(isset($_POST['data']['colsizes'])) {
             $colsizes = $_POST['data']['colsizes'];
             foreach($colsizes as $cellid => $width) {
-                $this->getApi()->getPageManager()->setStylesOnCell($pageid, $cellid, "", $width);
+                $this->getApi()->getPageManager()->setStylesOnCell($pageid, $cellid, "", "", $width);
             }
         }
     }

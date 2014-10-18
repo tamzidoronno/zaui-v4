@@ -38,6 +38,7 @@ class Page {
 
 
         $count = 0;
+        $beenEdited = false;
         foreach ($rowsToPrint as $row) {
             $isedit = false;
 
@@ -47,7 +48,7 @@ class Page {
                 echo '<div class="gs_addcell" incell="" aftercell="" style="padding: 20px; text-align:center"><span style="border: solid 1px; padding: 10px; background-color:#BBB;">Add row</span></div>';
                 echo "</div></div>";
             }
-
+            
             if (isset($_SESSION['gseditcell']) && $_SESSION['gseditcell'] === $row->cellId) {
                 echo "<div class='gscell gsdepth_0' style='height: 38px;'>";
                 echo "<div class='gsinner gsdepth_0'>";
@@ -62,9 +63,8 @@ class Page {
                 echo "</div>";
                 echo "</div>";
                 $isedit = true;
+                $beenEdited = true;
                 ?>
-                <script src='http://quocity.com/colresizable/js/colResizable-1.3.min.js' />
-
                 <style>
                     .dragtable { background-image: url('http://quocity.com/colresizable/img/rangeBar.png'); background-position: 10px 10px; background-repeat-y: no-repeat;}
                 </style>
@@ -82,6 +82,10 @@ class Page {
                 echo "</div>";
                 echo "</div>";
             }
+        }
+        
+        if($beenEdited) {
+            echo "<script src='/js/colresize.js'>";
         }
     }
 
@@ -129,12 +133,16 @@ class Page {
 
             $styles = "style='width:$width%; float:left;".$cell->styles."'";
         }
+        
+                    
+        $innerstyles = $cell->innerStyles;
+
 
         echo "<div $styles width='$width' class='gscell $roweditouter gsdepth_$depth gscount_$count $direction' cellid='" . $cell->cellId . "'>";
         if ($depth === 0 && !$edit) {
             echo "<i class='fa gseditrowbutton fa-pencil-square-o'></i>";
         }
-        echo "<div class='gsinner gsdepth_$depth $rowedit gscount_$count' totalcells='$totalcells'>";
+        echo "<div class='gsinner gsdepth_$depth $rowedit gscount_$count' totalcells='$totalcells' style='$innerstyles'>";
         if ($edit) {
             if (sizeof($cell->cells) > 1 && $cell->vertical && $cell->cells[0]->vertical) {
                 $this->displayResizing();
@@ -185,10 +193,12 @@ class Page {
     private function addCellResizingPanel() {
         ?>
         <span class='gsresizingpanel'>
-            <div class="heading" style="cursor:pointer; text-align:center; border-bottom: solid 1px #BBB; margin-bottom: 10px;">Sizing console</div>
+            <div class="heading" style="cursor:pointer; text-align:center; font-size: 16px; padding: 10px;">Sizing console</div>
             <div class='gstabmenu'>
-                <span class='tabbtn' target='padding'>Paddings</span>
-                <span class='tabbtn' target='margins'>Margins</span>
+                <span class='tabbtn' target='padding' type="outer">Padding</span>
+                <span class='tabbtn' target='paddinginner' type="inner">Inner padding</span>
+                <span class='tabbtn' target='margins' type="outer">Margin</span>
+                <span class='tabbtn' target='marginsinner' type="inner">Inner Margin</span>
             </div>
             <div class='gspage' target='margins'>
                 <table width='100%'>
@@ -214,6 +224,30 @@ class Page {
                     </tr>
                 </table>
             </div>
+            <div class='gspage' target='marginsinner'>
+                <table width='100%'>
+                    <tr>
+                        <td>Top margin</td>
+                        <td><input type='range'></td>
+                        <td><input type='txt' data-csstype='margin-top' class='sizetxt' level=".gsinner"></td>
+                    </tr>
+                    <tr>
+                        <td>Bottom margin</td>
+                        <td><input type='range'></td>
+                        <td><input type='txt' data-csstype='margin-bottom' class='sizetxt' level=".gsinner"></td>
+                    </tr>
+                    <tr>
+                        <td>Left margin</td>
+                        <td><input type='range'></td>
+                        <td><input type='txt' data-csstype='margin-left' class='sizetxt' level=".gsinner"></td>
+                    </tr>
+                    <tr>
+                        <td>Right margin</td>
+                        <td><input type='range'></td>
+                        <td><input type='txt' data-csstype='margin-right' class='sizetxt' level=".gsinner"></td>
+                    </tr>
+                </table>
+            </div>
             <div class='gspage' target='padding'>
                 <table width='100%'>
                     <tr>
@@ -235,6 +269,30 @@ class Page {
                         <td>Bottom padding</td>
                         <td><input type='range'></td>
                         <td><input type='txt' data-csstype='padding-bottom' class='sizetxt'></td>
+                    </tr>
+                </table>
+            </div>
+            <div class='gspage' target='paddinginner'>
+                <table width='100%'>
+                    <tr>
+                        <td>Left padding</td>
+                        <td><input type='range' ></td>
+                        <td><input type='txt' data-csstype='padding-left' class='sizetxt' level=".gsinner"></td>
+                    </tr>
+                    <tr>
+                        <td>Right padding</td>
+                        <td><input type='range' ></td>
+                        <td><input type='txt'  data-csstype='padding-right' class='sizetxt' level=".gsinner"></td>
+                    </tr>
+                    <tr>
+                        <td>Top padding</td>
+                        <td><input type='range' ></td>
+                        <td><input type='txt' data-csstype='padding-top' class='sizetxt' level=".gsinner"></td>
+                    </tr>
+                    <tr>
+                        <td>Bottom padding</td>
+                        <td><input type='range'></td>
+                        <td><input type='txt' data-csstype='padding-bottom' class='sizetxt' level=".gsinner"></td>
                     </tr>
                 </table>
             </div>

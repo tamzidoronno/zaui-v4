@@ -11,6 +11,7 @@ public class PageCell implements Serializable {
     public LinkedList<PageCell> cells = new LinkedList();
     public String appId;
     public String styles = "";
+    public String innerStyles = "";
     public Double width = -1.0;
     
 

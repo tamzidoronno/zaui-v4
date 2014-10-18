@@ -55,7 +55,15 @@ thundashop.framework = {
     saveCellChanges : function() {
         var cellid = $(this).closest('.gsresizingpanel').attr('cellid');
         var cell = $('.gscell[cellid="'+cellid+'"]');
-        var styles = cell.attr('style');
+        var tosavecell = cell.clone();
+        tosavecell.css('width',null);
+        var styles = tosavecell.attr('style');
+
+        var cell = $('.gscell[cellid="'+cellid+'"] .gsinner').first();
+        var tosavecell = cell.clone();
+        tosavecell.css('width',null);
+        var stylesInner = tosavecell.attr('style');
+        
         var colsizes = {};
         cell.children('.gsinner').children('.gscell').each(function() {
             colsizes[$(this).attr('cellid')] = $(this).attr('width');
@@ -64,6 +72,7 @@ thundashop.framework = {
         var data = {
             "cellid" : cellid,
             "styles" : styles,
+            "stylesInner" : stylesInner,
             "colsizes" : colsizes
         }
         var event = thundashop.Ajax.createEvent('','saveColChanges',$(this),data);
@@ -90,24 +99,30 @@ thundashop.framework = {
         $(this).closest('tr').find('.sizetxt').val($(this).val());
         var cellid = $('.gsresizingpanel').attr('cellid');
         var cell = $('.gscell[cellid="' + cellid + '"]');
-        var result = {};
         $('.gsresizingpanel input').each(function () {
             var type = $(this).attr('data-csstype');
             if (type && $(this).val()) {
-                result[type] = $(this).val();
-                if (type.toLowerCase().indexOf("width") >= 0) {
-                    cell.css(type, $(this).val() + "%");
+                var level = $(this).attr('level');
+                var value = $(this).val();
+                var toset = cell;
+                if(level) {
+                    toset = cell.find(level).first();
+                }
+                if(value === "-1") {
+                    toset.css(type, "");
                 } else {
-                    cell.css(type, $(this).val() + "px");
+                    toset.css(type, value + "px");
                 }
             }
         });
     },
     switchtab: function () {
         var target = $(this).attr('target');
+        var type = $(this).attr('type');
         $('.gsresizingpanel .gspage').hide();
         $('.gsresizingpanel .gspage[target="' + target + '"]').show();
-
+        $('.gsresizingpanel .heading').html($(this).html());
+        $('.gsresizingpanel').attr('type', type);
     },
     showCellResizing: function () {
         var resizingpanel = $('.gsresizingpanel');
@@ -120,23 +135,28 @@ thundashop.framework = {
         $('.gscellsettingspanel').fadeOut();
         resizingpanel.css('top',$(this).offset().top);
         resizingpanel.css('left',$(this).offset().left-100);
-        resizingpanel.find('.tabbtn[target="padding"]').click();
+        resizingpanel.find('.tabbtn[target="padding"]').first().click();
         resizingpanel.fadeIn();
         cell.find('.gscell.gshorisontal').resizable({ grid: [10000, 1]});
         $('.gsresizingpanel input').each(function () {
             var type = $(this).attr('data-csstype');
+            var level = $(this).attr('level');
             if (type) {
-                var value = cell.css($(this).attr('data-csstype'));
-                value = value.replace("px", "");
-                if (value && value !== "none") {
-                    var maxvalue = value * 3;
-                    if (value === "0" || type.toLowerCase().indexOf("width") >= 0) {
-                        maxvalue = 100;
-                    }
-                    $(this).val(value);
-                    $(this).closest('tr').find('input[type="range"]').attr('max', maxvalue);
-                    $(this).closest('tr').find('input[type="range"]').val(value);
+                if(level) {
+                    var value = cell.find(level).css($(this).attr('data-csstype'));
+                } else {
+                    var value = cell.css($(this).attr('data-csstype'));
                 }
+                value = value.replace("px", "");
+                $(this).closest('tr').find('input[type="range"]').attr('min', -1);
+                $(this).closest('tr').find('input[type="range"]').attr('max', 100);
+                
+                if(!value) {
+                    value = -1;
+                }
+                
+                $(this).val(value);
+                $(this).closest('tr').find('input[type="range"]').val(value);
             }
         });
         var children = cell.children('.gsinner').children('.gsvertical');

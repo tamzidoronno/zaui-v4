@@ -3262,7 +3262,7 @@ class PageManager(object):
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
-  def setStylesOnCell(self, pageId, cellId, styles, width):
+  def setStylesOnCell(self, pageId, cellId, styles, innerStyles, width):
     args = collections.OrderedDict()
     if isinstance(pageId,GetShopBaseClass): 
       args["pageId"]=json.dumps(pageId.__dict__)
@@ -3285,6 +3285,13 @@ class PageManager(object):
         args["styles"]=json.dumps(styles)
       except (ValueError, AttributeError):
         args["styles"]=styles
+    if isinstance(innerStyles,GetShopBaseClass): 
+      args["innerStyles"]=json.dumps(innerStyles.__dict__)
+    else:
+      try:
+        args["innerStyles"]=json.dumps(innerStyles)
+      except (ValueError, AttributeError):
+        args["innerStyles"]=innerStyles
     if isinstance(width,GetShopBaseClass): 
       args["width"]=json.dumps(width.__dict__)
     else:

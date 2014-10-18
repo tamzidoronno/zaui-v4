@@ -16,6 +16,9 @@ class core_pagemanager_data_PageCell {
 	public $styles;
 
 	/** @var String */
+	public $innerStyles;
+
+	/** @var String */
 	public $width;
 
 }

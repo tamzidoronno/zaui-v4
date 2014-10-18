@@ -40,7 +40,7 @@ public interface IPageManager {
      * @throws ErrorException 
      */
     @Administrator
-    public void setStylesOnCell(String pageId, String cellId, String styles, Double width);
+    public void setStylesOnCell(String pageId, String cellId, String styles, String innerStyles, Double width);
     
     /**
      * Remove all content on all page areas for this page.

@@ -222,9 +222,9 @@ public class PageManager extends ManagerBase implements IPageManager {
 	}
 
     @Override
-    public void setStylesOnCell(String pageId, String cellId, String styles, Double width) {
+    public void setStylesOnCell(String pageId, String cellId, String styles, String innerStyles, Double width) {
         Page page = getPage(pageId);
-        page.layout.updateStyle(cellId, styles, width);
+        page.layout.updateStyle(cellId, styles, width, innerStyles);
     }
     
 }

@@ -134,7 +134,7 @@ public class PageLayout implements Serializable {
         }
     }
 
-    public void updateStyle(String cellId, String styles, Double width) {
+    public void updateStyle(String cellId, String styles, Double width, String innerStyles) {
         PageCell cell = findCell(getAllCells(), cellId);
         if(cell == null) {
             return;
@@ -145,6 +145,9 @@ public class PageLayout implements Serializable {
         
         if(styles != null && !styles.isEmpty() && !styles.equals("notset")) {
             cell.styles = styles;
+        }
+        if(innerStyles != null && !styles.isEmpty() && !innerStyles.equals("notset")) {
+            cell.innerStyles = innerStyles;
         }
         cell.width = width;
     }

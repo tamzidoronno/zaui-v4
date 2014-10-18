@@ -196,7 +196,7 @@ class ApplicationBase extends FactoryBase {
         echo "<div class='applicationinner'>";
         if($this->isEditorMode() && !$changeable) {
             if($this->hasWriteAccess()) {
-                echo "<div class='application_settings inline gs_icon'><i class='fa fa-cog' style='font-size:30px;'></i></div>";
+                echo "<div class='application_settings inline gs_icon'><i class='fa fa-cog' style='font-size:20px;'></i></div>";
             }
         }
         $this->render();
@@ -217,7 +217,7 @@ class ApplicationBase extends FactoryBase {
         echo "<div class='applicationinner'>";
         if($this->isEditorMode()) {
             if($this->hasWriteAccess()) {
-                echo "<div class='application_settings inline gs_icon'><i class='fa fa-cog' style='font-size:30px;'></i></div>";
+                echo "<div class='application_settings inline gs_icon'><i class='fa fa-cog' style='font-size:20px;'></i></div>";
             }
         }
         $this->render();

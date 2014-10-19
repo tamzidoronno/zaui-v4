@@ -1,6 +1,7 @@
 GetShop = {};
 
 likebefore = null;
+likebeforeStyles = null;
 
 thundashop.framework = {
     bindEvents: function () {
@@ -198,7 +199,11 @@ thundashop.framework = {
     },
     closeResizing: function () {
         var cellid = $(this).closest('.gsresizingpanel').attr('cellid');
+        if(!likebeforeStyles) {
+            likebeforeStyles = "";
+        }
         $('.gscell[cellid="' + cellid + '"]').html(likebefore);
+        $('.gscell[cellid="' + cellid + '"]').attr('style',likebeforeStyles);
         $('.gsoverlay').fadeOut(function () {
             $(this).remove();
         });
@@ -247,6 +252,7 @@ thundashop.framework = {
         $('.gsoverlay').remove();
         var cell = $('.gscell[cellid="' + cellid + '"]');
         likebefore = cell.html();
+        likebeforeStyles = cell.attr('style');
 
         $('.gscellsettingspanel').fadeOut();
         resizingpanel.css('top', $(this).offset().top);
@@ -255,28 +261,26 @@ thundashop.framework = {
         resizingpanel.fadeIn();
         cell.find('.gscell.gshorisontal').resizable({grid: [10000, 1]});
 
-        console.log(cell.css('background-color'));
-
         $('.gsbgcolorinput.gsbgcouter').val(thundashop.framework.rgb2hex(cell.css('background-color')));
         $('.gsbgcolorinput.gsbginner').val(thundashop.framework.rgb2hex(cell.find('.gsinner').first().css('background-color')));
 
         $('.gsresizingpanel input').each(function () {
             var type = $(this).attr('data-csstype');
             var level = $(this).attr('level');
+            var value = "";
             if (type) {
                 if (level) {
-                    var value = cell.find(level).css($(this).attr('data-csstype'));
+                    if(cell.find(level).attr('style').indexOf($(this).attr('data-csstype')) >= 0) {
+                        value = cell.find(level).css($(this).attr('data-csstype'));
+                    }
                 } else {
-                    var value = cell.css($(this).attr('data-csstype'));
+                    if(cell.attr('style').indexOf($(this).attr('data-csstype')) >= 0) {
+                        value = cell.css($(this).attr('data-csstype'));
+                    }
                 }
                 value = value.replace("px", "");
                 $(this).closest('tr').find('input[type="range"]').attr('min', -1);
                 $(this).closest('tr').find('input[type="range"]').attr('max', 100);
-
-                if (!value) {
-                    value = -1;
-                }
-
                 $(this).val(value);
                 $(this).closest('tr').find('input[type="range"]').val(value);
             }

@@ -18,7 +18,7 @@ filter: alpha(opacity=50);
 .gseditrowbutton { cursor:pointer; position:absolute; right: 5px; z-index: 15; font-size: 20px; background-color:rgba(255,255,255,0.4); padding: 5px; border-radius: 5px; display:none; }
 .gseditrowheading .fa { float:right; padding-left: 10px; cursor:pointer; }
 .gscell:hover .gseditrowbutton { display:block; }
-.gscell .gscellsettings { z-index:99; position:absolute; right: 0px; top: 0px; display:none;background-color:#FFF;cursor:pointer; font-size:9px; padding-left: 2px; padding-bottom: 2px; border: solid 1px rgba(0,0,0,0.1); }
+.gscell .gscellsettings { z-index:99; position:absolute; color:#000; right: 0px; top: 0px; display:none;background-color:#FFF;cursor:pointer; font-size:9px; padding-left: 2px; padding-bottom: 2px; border: solid 1px rgba(0,0,0,0.1); }
 .gscellsettingsheading { border-bottom: solid 1px rgba(0,0,0,0.2); margin-bottom: 5px; padding-bottom: 5px; font-weight: bold; }
 .gseditrowouter .gscell { border: solid 1px rgba(0,0,0,0.2); }
 .gsaddcontent:hover { border: solid 1px rgba(0,0,0,0.1); }

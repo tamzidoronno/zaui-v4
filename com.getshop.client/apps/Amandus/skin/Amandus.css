@@ -1,15 +1,19 @@
 .TopMenu li {
     background-color: #3a99d7;
-    border: solid 1px #3a99d7; 
-    padding: 5px;
+    border: solid 1px #1e4594; 
+    border-radius:3px;
 }
 
 .TopMenu li a {
-	color: #FFF;
+    padding: 5px;
+    padding-right:15px;
+    padding-left: 15px;
+    color: #FFF;
 }
 
 .TopMenu {
-    bottom: 10px;
+    position:absolute;
+    top: 60px;
     left: 0px;
 }
 

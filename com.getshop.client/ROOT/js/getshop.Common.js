@@ -88,7 +88,7 @@ if (history.pushState) {
 ;
 
 $(function() {
-    $(document).on('click', '#skeleton a', function(event) {
+    $(document).on('click', '#gsbody a', function(event) {
         var comp = new RegExp(location.host);
         if (!comp.test($(this).attr('href')) && !($(this).attr('href').indexOf('?') === 0 || $(this).attr('href').indexOf('/') === 0)) {
             return;

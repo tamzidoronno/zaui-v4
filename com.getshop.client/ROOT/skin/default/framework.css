@@ -13,23 +13,53 @@
 filter: alpha(opacity=50);
     opacity:0.5; box-shadow: 0px 0px 2px #bbb; cursor:pointer; background-color:#fff; padding: 2px; padding-left: 5px; padding-right: 5px; border-radius:5px; color:#000; }
 .gseditrow {  box-sizing: border-box; padding: 5px; }
-.gseditrowheading { text-align:center; font-size: 14px; background-color:#EFEFEF; padding: 10px; }
+.gseditrowheading { text-align:center; font-size: 14px; background-color:#FFF; padding: 10px; border-top: solid 1px; border-bottom: solid 1px; }
 .gsdoneeditbutton { color:blue; cursor:pointer; }
 .gseditrowbutton { cursor:pointer; position:absolute; right: 5px; z-index: 15; font-size: 20px; background-color:rgba(255,255,255,0.4); padding: 5px; border-radius: 5px; display:none; }
 .gseditrowheading .fa { float:right; padding-left: 10px; cursor:pointer; }
 .gscell:hover .gseditrowbutton { display:block; }
-.gscell .gscellsettings { position:absolute; right: 0px; top: 0px; display:none;border-left: solid 1px rgba(0,0,0,0.1);border-bottom: solid 1px rgba(0,0,0,0.1);border-bottom-left-radius: 15px;background-color:rgba(0,0,0,0.1);width:7px; height: 7px;cursor:pointer;}
-.gscellsettingsheading { border-bottom: solid 1px rgba(0,0,0,0.1); margin-bottom: 5px; padding-bottom: 5px; font-weight: bold; }
-.gseditrowouter .gscell { border: solid 1px rgba(0,0,0,0.1); }
+.gscell .gscellsettings { z-index:99; position:absolute; right: 0px; top: 0px; display:none;background-color:#FFF;cursor:pointer; font-size:9px; padding-left: 2px; padding-bottom: 2px; border: solid 1px rgba(0,0,0,0.1); }
+.gscellsettingsheading { border-bottom: solid 1px rgba(0,0,0,0.2); margin-bottom: 5px; padding-bottom: 5px; font-weight: bold; }
+.gseditrowouter .gscell { border: solid 1px rgba(0,0,0,0.2); }
 .gsaddcontent:hover { border: solid 1px rgba(0,0,0,0.1); }
 .gseditrowouter:hover .gsaddcontent { border: solid 1px rgba(0,0,0,0);}
 
 .gsresizingpanel { position:absolute; z-index: 15; background-color:#FFF; box-shadow:0px 0px 5px #000; display:none; }
-.gsresizingpanel .tabbtn { border-right: solid 1px #BBB; padding-right: 5px; height: 20px; padding-left: 5px; float:left; border-top: solid 1px  #BBB; }
+.gsresizingpanel .tabbtn {cursor:pointer; border-right: solid 1px #BBB; padding-right: 5px; height: 20px; padding-left: 5px; float:left; border-top: solid 1px  #BBB; }
+.gsresizingpanel .tabbtn:hover { color:blue; }
 .gsresizingpanel .gstabmenu { border-bottom: solid 1px #BBB; height: 20px; }
+.gsresizingpanel .gspage { margin: 10px; }
 .gsresizingpanel .sizetxt { width: 30px; }
 .gsresizingpanel .gspage { display:none; }
 .gsresizingpanel .modifybutton { cursor: pointer; border: solid 1px; margin: 10px; padding: 5px; background-color:#BBB; display:inline-block; }
+.gsresizingpanel .gsbgcolorselection { float:left; padding-left: 4px; padding-right: 4px; border: solid 1px;  }
+.gsresizingpanel .gscolorselectionpanel .fa { cursor: pointer; }
+.gsresizingpanel .gsheading { border-bottom: solid 1px rgba(0,0,0,0.1); font-weight: bold; text-align: center; margin-bottom: 10px;  }
+
+
+.inputWrapper {
+    height: 32px;
+    width: 64px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    /*Using a background color, but you can use a background image to represent a button*/
+}
+.fileInput {
+    cursor: pointer;
+    height: 100%;
+    position:absolute;
+    top: 0;
+    right: 0;
+    z-index: 99;
+    /*This makes the button huge. If you want a bigger button, increase the font size*/
+    font-size:50px;
+    /*Opacity settings for all browsers*/
+    opacity: 0;
+    -moz-opacity: 0;
+    filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0)
+}
+
 
 /* sizing css */
 .gsaddcontent { width: 100%; display: inline-block; height: 100%; text-align: center; border: solid 1px rgba(0,0,0,0); }

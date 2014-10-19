@@ -47,10 +47,19 @@ class ApplicationManager extends FactoryBase {
         if(isset($_POST['data']['colsizes'])) {
             $colsizes = $_POST['data']['colsizes'];
             foreach($colsizes as $cellid => $width) {
-                $this->getApi()->getPageManager()->setStylesOnCell($pageid, $cellid, "", "", $width);
+                $this->getApi()->getPageManager()->setStylesOnCell($pageid, $cellid, "notset", "notset", $width);
             }
         }
     }
+    
+    function saveBackgroundImage() {
+        $data = $_POST['data']['data'];
+        $data = substr($data, strrpos($data, ";base64,")+8);
+        $content = base64_decode($data);
+        $imgId = \FileUpload::storeFile($content);
+        echo $imgId;
+    }
+    
     
     function operateCell() {
         $type = $_POST['data']['type'];
@@ -782,9 +791,14 @@ class ApplicationManager extends FactoryBase {
     }
 
     public function removeWidthFromCss($styles) {
+        
+        if($styles === "reset") {
+            return $styles;
+        }
+        
         $newstyles = "";
         foreach(explode(";", $styles) as $style) {
-            if($style && !stristr($style, "width") && !stristr($style, "float")) {
+            if($style && !stristr($style, "width") && !stristr($style, "float") && !stristr($style, "border")) {
                 $newstyles .= $style . ";";
             }
         }

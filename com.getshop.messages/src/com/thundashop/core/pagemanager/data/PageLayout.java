@@ -154,14 +154,11 @@ public class PageLayout implements Serializable {
         if (cell == null) {
             return;
         }
-        if (styles.equals("reset")) {
-            cell.styles = "";
-        }
-
-        if (styles != null && !styles.isEmpty() && !styles.equals("notset")) {
+        
+        if (styles != null && !styles.equals("notset")) {
             cell.styles = styles;
         }
-        if (innerStyles != null && !styles.isEmpty() && !innerStyles.equals("notset")) {
+        if (innerStyles != null && !innerStyles.equals("notset")) {
             cell.innerStyles = innerStyles;
         }
         if(width > 0) {

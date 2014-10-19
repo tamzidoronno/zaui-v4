@@ -43,12 +43,12 @@ class Page {
             $isedit = false;
 
             if ($row->cellId == "footer") {
-                echo "<div class='gscell  gsdepth_0 gseditinfo' style='height:60px'>";
+                echo "<div class='gscell  gsdepth_0 gseditinfo' style='height:55px'>";
                 echo "<div class='gsinner gsdepth_0'>";
                 echo '<div class="gs_addcell" incell="" aftercell="" style="padding: 20px; text-align:center"><span style="border: solid 1px; padding: 10px; background-color:#BBB;">Add row</span></div>';
                 echo "</div></div>";
             }
-            
+
             if (isset($_SESSION['gseditcell']) && $_SESSION['gseditcell'] === $row->cellId) {
                 echo "<div class='gscell gsdepth_0 gseditinfo' style='height: 38px;'>";
                 echo "<div class='gsinner gsdepth_0'>";
@@ -76,13 +76,14 @@ class Page {
                 echo "</div>";
             }
         }
-        
-        if($beenEdited) {
+
+        if ($beenEdited) {
             ?>
             <style>
                 .dragtable { background-image: url('http://quocity.com/colresizable/img/rangeBar.png'); background-position: 10px 10px; background-repeat-y: no-repeat;}
             </style>
             <?
+
             echo "<script src='/js/colresize.js'>";
         }
     }
@@ -125,17 +126,17 @@ class Page {
                 $width = $cell->width;
             }
 
-            $styles = "style='width:$width%; float:left;".$cell->styles."'";
+            $styles = "style='width:$width%; float:left;" . $cell->styles . "'";
             $direction .= " gscolumn";
         }
-        
-                    
+
+
         $innerstyles = $cell->innerStyles;
 
 
         echo "<div $styles width='$width' class='gscell $roweditouter gsdepth_$depth gscount_$count $direction' cellid='" . $cell->cellId . "'>";
         if ($depth === 0 && !$edit) {
-            echo "<i title='".$this->factory->__f("Edit row")."' class='fa gseditrowbutton fa-pencil-square-o'></i>";
+            echo "<i title='" . $this->factory->__f("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o'></i>";
         }
         echo "<div class='gsinner gsdepth_$depth $rowedit gscount_$count' totalcells='$totalcells' style='$innerstyles'>";
         if ($edit) {
@@ -144,7 +145,7 @@ class Page {
             }
         }
         if ($edit && $depth != 0) {
-            echo "<span class='gscellsettings'></span>";
+            echo "<span class='gscellsettings'><i class='fa fa-cogs'></i></span>";
         }
         if (sizeof($cell->cells) > 0) {
             $innercount = 0;
@@ -199,8 +200,7 @@ class Page {
         echo "<div class='gs_splithorizontally' type='movedown'><i class='fa fa-long-arrow-right'></i>" . $this->factory->__w("Move cell to the right") . "</div>";
         echo "</span>";
         echo "<div class='gscellsettingsheading'>Other</div>";
-        echo "<div class='gs_resizing' type='delete'><i class='fa fa-arrows'></i>" . $this->factory->__w("Margin, padding, sizing") . "</div>";
-        echo "<div class='gs_removerow' type='delete'><i class='fa fa-image'></i>" . $this->factory->__w("Background image") . "</div>";
+        echo "<div class='gs_resizing'><i class='fa fa-image'></i>" . $this->factory->__w("Styling") . "</div>";
         echo "<div class='gs_removerow' type='delete'><i class='fa fa-trash-o'></i>" . $this->factory->__w("Delete") . "</div>";
         echo "<i class='gs_closecelledit fa fa-times' style='position:absolute;right: 5px; top: 5px; cursor:pointer;'></i>";
         echo "</span>";
@@ -211,10 +211,63 @@ class Page {
         <span class='gsresizingpanel'>
             <div class="heading" style="cursor:pointer; text-align:center; font-size: 16px; padding: 10px;">Sizing console</div>
             <div class='gstabmenu'>
-                <span class='tabbtn' target='padding' type="outer">Padding</span>
-                <span class='tabbtn' target='paddinginner' type="inner">Inner padding</span>
-                <span class='tabbtn' target='margins' type="outer">Margin</span>
-                <span class='tabbtn' target='marginsinner' type="inner">Inner Margin</span>
+                <span class='tabbtn' target='padding'>Padding</span>
+                <span class='tabbtn' target='paddinginner'>Inner padding</span>
+                <span class='tabbtn' target='margins'>Margin</span>
+                <span class='tabbtn' target='marginsinner'>Inner Margin</span>
+                <span class='tabbtn' target='background'>Background</span>
+            </div>
+            <div class='gspage' target='background'>
+                <div class='gsoutercolorselectionpanel'>
+                    <div class='gsheading'>Outer background</div>
+                    <div class='gscolorselectionpanel' level=''>
+                        <table width='100%'>
+                            <tr>
+                                <td><i class='fa fa-trash-o gsremovebgcolor'></i> Color</td>
+                                <td align='right'><input type='color' value='Select color' class='gsbgcolorinput'></td>
+                            </tr>
+                            <tr>
+                                <td><i class='fa fa-trash-o gsremoveopacity'></i> Opacity</td>
+                                <td align='right'><input type='range' min='0' max='10' class='gsbgopacityinput'></td>
+                            </tr>
+                            <tr>
+                                <td><i class='fa fa-trash-o gsremovebgimage'></i> Background image</td>
+                                <td align='right'>
+                                    <div class="inputWrapper">
+                                        <span class='gsuploadimage' style='display:none;'><i class='fa fa-spin fa-spinner'></i></span>
+                                        <input type='button' value='Choose' class='gschoosebgimagebutton'>
+                                        <input class="fileInput gsbgimageselection" type="file" />
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class='gsoutercolorselectionpanel'>
+                    <div class='gsheading'>Inner background</div>
+                    <div class='gscolorselectionpanel' level='.gsinner'>
+                        <table width='100%'>
+                            <tr>
+                                <td><i class='fa fa-trash-o gsremovebgcolor'></i> Color</td>
+                                <td align='right'><input type='color' value='Select color' class='gsbgcolorinput'></td>
+                            </tr>
+                            <tr>
+                                <td><i class='fa fa-trash-o gsremoveopacity'></i> Opacity</td>
+                                <td align='right'><input type='range' min='0' max='10' class='gsbgopacityinput'></td>
+                            </tr>
+                            <tr>
+                                <td><i class='fa fa-trash-o gsremovebgimage'></i> Background image</td>
+                                <td align='right'>
+                                    <div class="inputWrapper">
+                                        <span class='gsuploadimage' style='display:none;'><i class='fa fa-spin fa-spinner'></i></span>
+                                        <input type='button' value='Choose' class='gschoosebgimagebutton'>
+                                        <input class="fileInput gsbgimageselection" type="file" />
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
             <div class='gspage' target='margins'>
                 <table width='100%'>

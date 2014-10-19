@@ -37,11 +37,11 @@
 .medium .Contact .medium_contact_form, .small .Contact .medium_contact_form { display: block; }
 
 
-.Contact td { font-size:14px; color: #707070; }
-.Contact input { border-radius: 2px; color: #707070; border: solid 1px #e1e1e1; padding: 13px; background-color: #fcfcfc; }
-.Contact textarea { border-radius: 2px; color: #707070; border: solid 1px #e1e1e1; padding: 13px; background-color: #fcfcfc; }
+.Contact td { font-size:14px;  }
+.Contact input { border-radius: 2px;  border: solid 1px #e1e1e1; padding: 13px; background-color: #fcfcfc; }
+.Contact textarea { border-radius: 2px;  border: solid 1px #e1e1e1; padding: 13px; background-color: #fcfcfc; }
 .Contact .horizontal {  padding-bottom: 20px; position:relative; }
-.Contact .horizontal .text { font-size: 19px;color: #707070; padding-right: 20px; } 
+.Contact .horizontal .text { font-size: 19px; padding-right: 20px; } 
 
 .medium .Contact .medium_contact_form { padding-bottom: 20px; }
 .medium .Contact .medium_contact_form input, .small .Contact .medium_contact_form input { padding: 13px; }

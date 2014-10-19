@@ -83,9 +83,9 @@ thundashop.framework = {
         }
 
         if (window.File && window.FileReader && window.FileList && window.Blob) {
+            cell.css('background-color', "");
 
-        
-//            var target = $(this);
+            var target = $(this);
             target.closest('.gscolorselectionpanel').find('.gschoosebgimagebutton').hide();
             target.closest('.gscolorselectionpanel').find('.gsuploadimage').show();
             var files = evt.target.files; // FileList object
@@ -233,6 +233,13 @@ thundashop.framework = {
         $('.gsresizingpanel .heading').html($(this).html());
         $('.gsresizingpanel').attr('type', type);
     },
+    rgb2hex: function (rgb) {
+        rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+        return (rgb && rgb.length === 4) ? "#" +
+                ("0" + parseInt(rgb[1], 10).toString(16)).slice(-2) +
+                ("0" + parseInt(rgb[2], 10).toString(16)).slice(-2) +
+                ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2) : '';
+    },
     showCellResizing: function () {
         var resizingpanel = $('.gsresizingpanel');
         var cellid = $(this).closest('.gscellsettingspanel').attr('cellid');
@@ -247,6 +254,12 @@ thundashop.framework = {
         resizingpanel.find('.tabbtn[target="padding"]').first().click();
         resizingpanel.fadeIn();
         cell.find('.gscell.gshorisontal').resizable({grid: [10000, 1]});
+
+        console.log(cell.css('background-color'));
+
+        $('.gsbgcolorinput.gsbgcouter').val(thundashop.framework.rgb2hex(cell.css('background-color')));
+        $('.gsbgcolorinput.gsbginner').val(thundashop.framework.rgb2hex(cell.find('.gsinner').first().css('background-color')));
+
         $('.gsresizingpanel input').each(function () {
             var type = $(this).attr('data-csstype');
             var level = $(this).attr('level');
@@ -307,6 +320,7 @@ thundashop.framework = {
                     });
                 }
             });
+
 
         }
 

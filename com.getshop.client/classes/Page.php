@@ -224,7 +224,7 @@ class Page {
                         <table width='100%'>
                             <tr>
                                 <td><i class='fa fa-trash-o gsremovebgcolor'></i> Color</td>
-                                <td align='right'><input type='color' value='Select color' class='gsbgcolorinput'></td>
+                                <td align='right'><input type='color' value='Select color' class='gsbgcolorinput gsbgcouter'></td>
                             </tr>
                             <tr>
                                 <td><i class='fa fa-trash-o gsremoveopacity'></i> Opacity</td>
@@ -249,7 +249,7 @@ class Page {
                         <table width='100%'>
                             <tr>
                                 <td><i class='fa fa-trash-o gsremovebgcolor'></i> Color</td>
-                                <td align='right'><input type='color' value='Select color' class='gsbgcolorinput'></td>
+                                <td align='right'><input type='color' value='Select color' class='gsbgcolorinput gsbginner'></td>
                             </tr>
                             <tr>
                                 <td><i class='fa fa-trash-o gsremoveopacity'></i> Opacity</td>

@@ -40,16 +40,20 @@ public class PageLayout implements Serializable {
             }
             cellId = newpagecell.cellId;
         } else {
+            boolean verticaltoset = vertical;
             PageCell cell = findCell(getAllCells(), incell);
             if (cell.cells.isEmpty()) {
                 PageCell newcell = cell.createCell(before);
-                newcell.vertical = vertical;
+                newcell.vertical = verticaltoset;
                 newcell.appId = cell.appId;
+                cell.vertical = !vertical;
                 before = newcell.cellId;
+            } else {
+                verticaltoset = cell.cells.get(0).vertical;
             }
 
             PageCell newcell = cell.createCell(before);
-            newcell.vertical = vertical;
+            newcell.vertical = verticaltoset;
             cellId = newcell.cellId;
         }
         return cellId;

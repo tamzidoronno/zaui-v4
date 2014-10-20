@@ -65,7 +65,7 @@ class Page {
                 echo "<i class='fa fa-cogs' type='settings' title='Rows settings'></i>";
                 echo "<i class='fa fa-plus' type='addvertical' title='Add column'></i>";
                 echo "<label style='float:left;'>";
-                echo "<input type='checkbox' style='background-color:#FFF;' class='gsdisplaygridcheckbox'> Display grid";
+                echo "<input type='checkbox' style='background-color:#FFF;' class='gsdisplaygridcheckbox'> Add spacing to grid";
                 echo "</label>";
                 echo "You are now in edit mode for this row." . " - " . "<span class='gsdoneeditbutton' done='true'true'>done editing</span>";
                 echo "</div>";
@@ -140,6 +140,8 @@ class Page {
             $styles = "style='width:$width%; float:left;" . $cell->styles . "'";
             $direction .= " gscolumn";
             $isColumn = true;
+        } else {
+            $direction .= " gsrow";
         }
 
 
@@ -158,15 +160,7 @@ class Page {
         }
         if ($edit && $depth != 0) {
             echo "<span class='gscellsettings'>";
-            if($isColumn) {
-                echo "<i class='fa fa-plus gsoperate' type='addhorizontal' title='Add row'></i>";
-                echo "<i class='fa fa-trash-o gsoperate' type='delete' title='Delete cell'></i>";
-                echo "<i class='fa fa-cogs'  title='Cell settings'></i>";
-            } else {
-                echo "<i class='fa fa-plus gsoperate' type='addvertical' title='Add column'></i>";
-                echo "<i class='fa fa-trash-o gsoperate' type='delete' title='Delete row'></i>";
-                echo "<i class='fa fa-cogs'  title='Row settings'></i>";
-            }
+            echo "<i class='fa fa-cogs'  title='Cell settings'></i>";
             echo "</span>";
         }
         if (sizeof($cell->cells) > 0) {
@@ -178,9 +172,9 @@ class Page {
                 $this->printCell($innercell, $innercount, $innerdept, sizeof($cell->cells), $edit);
                 $innercount++;
             }
-            if ($cell->vertical) {
+//            if ($cell->vertical) {
                 echo "<div style='clear:both;'></div>";
-            }
+//            }
         } else {
             echo "<div class='applicationarea' appid='" . $cell->appId . "' area='" . $cell->cellId . "'>";
             if (!$cell->appId) {

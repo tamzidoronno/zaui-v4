@@ -192,10 +192,10 @@ thundashop.framework = {
     toggleVisualization: function () {
         if ($(this).is(":checked")) {
             $('.gseditrow').css('padding', '5px');
-            $('.gseditrowouter .gscell').css('border', 'solid 1px rgba(0,0,0,0.2)');
+            $('.gseditrowouter .gscell').addClass("gsborders");
         } else {
             $('.gseditrow').css('padding', '0px');
-            $('.gseditrowouter .gscell').css('border', 'solid 1px rgba(0,0,0,0.0)');
+            $('.gseditrowouter .gscell').removeClass("gsborders");
         }
     },
     closeResizing: function () {
@@ -371,7 +371,7 @@ thundashop.framework = {
         if ($(this).closest('.gseditrowheading').length > 0) {
             cellid = $(this).closest('.gseditrowheading').attr('cellid');
         }
-
+        
         if(!cellid) {
             cellid = $('.gsvisualizeedit').attr('cellid');
         }
@@ -438,6 +438,11 @@ thundashop.framework = {
         } else {
             $('.gscellsettingspanel').find('.gsrowmenu').show();
         }
+        
+        if(cell.attr('cellid') === "footer" || cell.attr('cellid') === "header") {
+            $('.gscellsettingspanel').find('.gscolumnmenu').show();
+        }
+        
 
         var overlay = $('<span class="gsoverlay" style="filter: blur(5px);width:100%; height:100%; background-color:#bbb; opacity:0.6; position:absolute; left:0px; top:0px;display:inline-block;"></span>');
         cell.append(overlay);

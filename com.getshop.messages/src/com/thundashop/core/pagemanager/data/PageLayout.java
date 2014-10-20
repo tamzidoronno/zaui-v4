@@ -49,7 +49,15 @@ public class PageLayout implements Serializable {
                 cell.vertical = !vertical;
                 before = newcell.cellId;
             } else {
-                verticaltoset = cell.cells.get(0).vertical;
+                if(verticaltoset != cell.cells.get(0).vertical && before.isEmpty()) {
+                    PageCell newpagecell = new PageCell();
+                    newpagecell.vertical = verticaltoset;
+                    newpagecell.cells.addAll(cell.cells);
+                    cell.cells.clear();
+                    cell.cells.add(newpagecell);
+                } else {
+                    verticaltoset = cell.cells.get(0).vertical;
+                }
             }
 
             PageCell newcell = cell.createCell(before);

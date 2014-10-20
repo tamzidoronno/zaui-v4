@@ -35,6 +35,12 @@ if ($_GET['file'] == 10)
 if ($_GET['file'] == 11)
     $file = "1.2 Auto Kommunikasjonsteknikk_2014_LK.pdf";
 
+if ($_GET['file'] == 12)
+    $file = "Nissan Leaf - Forst pa stedet guide ver3.0.pdf";
+
+if ($_GET['file'] == 13)
+    $file = "7.2 - Hybrid og EV Teknikk.pdf";
+
 if (!isset($file)) {
     return;
 }

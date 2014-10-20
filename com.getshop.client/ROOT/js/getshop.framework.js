@@ -34,7 +34,8 @@ thundashop.framework = {
         $(document).on('click', '.gs_addcell', this.addCell);
         $(document).on('click', '.toogleDeepfreeze', this.showDeepFreezOption);
         $(document).on('click', '.savedeepfreeze', this.toggleDeepFreeze);
-        $(document).on('click', '.gscellsettings', function () {
+        $(document).on('click', '.gscellsettings .gsoperate', this.operateCell);
+        $(document).on('click', '.gscellsettings .fa-cogs', function () {
             thundashop.framework.showCellSettingsPanel($(this));
         });
         $(document).on('click', '.gs_splithorizontally', this.operateCell);
@@ -64,7 +65,7 @@ thundashop.framework = {
         $(document).on('input', '.gsresizingpanel .gsbgopacityinput', this.setOpacity);
         $(document).on('change', '.gsresizingpanel .gsbgopacityinput', this.setOpacity);
         $(document).on('click', '.gsresizingpanel .gsremovebgcolor', this.setBgColor);
-        $(document).on('click', '.gsshowvisualization', this.toggleVisualization);
+        $(document).on('change', '.gsdisplaygridcheckbox', this.toggleVisualization);
     },
     loadImage: function (evt) {
         var cellid = $(this).closest('.gsresizingpanel').attr('cellid');
@@ -191,10 +192,10 @@ thundashop.framework = {
     toggleVisualization: function () {
         if ($(this).is(":checked")) {
             $('.gseditrow').css('padding', '5px');
-            $('.gseditrowouter .gscell').css('border', 'solid 1px');
+            $('.gseditrowouter .gscell').css('border', 'solid 1px rgba(0,0,0,0.2)');
         } else {
             $('.gseditrow').css('padding', '0px');
-            $('.gseditrowouter .gscell').css('border', 'solid 0px');
+            $('.gseditrowouter .gscell').css('border', 'solid 1px rgba(0,0,0,0.0)');
         }
     },
     closeResizing: function () {
@@ -357,7 +358,9 @@ thundashop.framework = {
         }
 
         $('.gscellsettings').hide();
+        $('.gsvisualizeedit').removeClass('gsvisualizeedit');
         target.find('.gscellsettings').first().show();
+        target.find('.gscellsettings').first().closest('.gscell').addClass('gsvisualizeedit');
     },
     activateMoveApplication: function () {
 
@@ -369,11 +372,22 @@ thundashop.framework = {
             cellid = $(this).closest('.gseditrowheading').attr('cellid');
         }
 
+        if(!cellid) {
+            cellid = $('.gsvisualizeedit').attr('cellid');
+        }
+
         var type = $(this).attr('type');
 
         if (type === "settings") {
             $(this), thundashop.framework.showCellSettingsPanel($(this));
             return;
+        }
+
+
+        if(type === "delete") {
+            if(!confirm("Are you sure you want to delete this cell and all its content?")) {
+                return;
+            }
         }
 
         var data = {
@@ -405,7 +419,6 @@ thundashop.framework = {
             data['before'] = before;
             data['cellid'] = newcellid;
         }
-
 
         var event = thundashop.Ajax.createEvent('', 'operateCell', $(this), data);
         thundashop.Ajax.post(event);

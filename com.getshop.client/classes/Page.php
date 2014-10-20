@@ -40,6 +40,12 @@ class Page {
         $count = 0;
         $beenEdited = false;
         foreach ($rowsToPrint as $row) {
+            if(isset($_GET['gseditcell']) && $_GET['gseditcell']== $row->cellId) {
+                $_SESSION['gseditcell'] = $_GET['gseditcell'];
+            }
+        }
+        
+        foreach ($rowsToPrint as $row) {
             $isedit = false;
 
             if ($row->cellId == "footer") {

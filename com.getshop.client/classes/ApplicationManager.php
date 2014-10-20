@@ -80,7 +80,8 @@ class ApplicationManager extends FactoryBase {
                 break;
             case "addbefore":
             case "addafter":
-                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, true);
+                $cellId = $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, true);
+                $_GET['gseditcell'] = $cellId;
                 break;
             case "addvertical":
                 $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, true);
@@ -422,7 +423,8 @@ class ApplicationManager extends FactoryBase {
     public function addCell() {
         $incell = $_POST['data']['incell'];
         $aftercell = $_POST['data']['aftercell'];
-        $this->getApi()->getPageManager()->addLayoutCell($this->getFactory()->getPage()->getId(), $incell, $aftercell, true);
+        $cellId = $this->getApi()->getPageManager()->addLayoutCell($this->getFactory()->getPage()->getId(), $incell, $aftercell, true);
+        $_SESSION['gseditcell'] = $cellId;
     }
 
     public function displayAllTheemes() {

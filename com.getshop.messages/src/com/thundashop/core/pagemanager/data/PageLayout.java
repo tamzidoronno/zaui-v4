@@ -21,7 +21,8 @@ public class PageLayout implements Serializable {
         footer.cells = moveCellRecursive(footer.cells, cellid, moveUp);
     }
 
-    public void createCell(String incell, String before, boolean vertical) {
+    public String createCell(String incell, String before, boolean vertical) {
+        String cellId = "";
         if (incell == null || incell.isEmpty()) {
             PageCell newpagecell = new PageCell();
             newpagecell.vertical = vertical;
@@ -37,6 +38,7 @@ public class PageLayout implements Serializable {
             } else {
                 rows.add(newpagecell);
             }
+            cellId = newpagecell.cellId;
         } else {
             PageCell cell = findCell(getAllCells(), incell);
             if (cell.cells.isEmpty()) {
@@ -48,7 +50,9 @@ public class PageLayout implements Serializable {
 
             PageCell newcell = cell.createCell(before);
             newcell.vertical = vertical;
+            cellId = newcell.cellId;
         }
+        return cellId;
     }
 
     private PageCell findCell(LinkedList<PageCell> cells, String id) {

@@ -67,6 +67,71 @@ thundashop.framework = {
         $(document).on('click', '.gsresizingpanel .gsremovebgcolor', this.setBgColor);
         $(document).on('change', '.gsdisplaygridcheckbox', this.toggleVisualization);
     },
+    calculateColumnSizes: function (table) {
+        var ranges = [], total = 0, i, s = "Ranges: ", w;
+        var columns = table.find("td");
+        for (i = 0; i < columns.length; i++) {
+            w = columns.eq(i).width() - (i == 0 ? 1 : 0);
+            w = w / (table.width()-1);
+            w = Math.round(w * 10000)/100;
+            total += w;
+            if(total > 100) {
+                w = w - (total-100);
+            }
+            ranges.push(w);
+        }
+        return ranges;
+    },
+    loadResizing: function (cell, saveonmove) {
+        if (cell.find('.range').length > 0) {
+            return;
+        }
+        var children = cell.children('.gsinner').children('.gsvertical');
+        if (children.length > 1) {
+            var table = $('<table style="width: 100%;" class="range" dragCursor="pointer" cellspacing="0" cellpadding="0" border="0"></table>');
+            var row = $('<tr></tr>');
+            children.each(function () {
+                var width = $(this).attr('width');
+                row.append('<td  width="' + width + '%"></td>');
+            });
+            table.append(row);
+
+            var tablecontainer = $('<div style="padding:5px;"></div>"');
+            tablecontainer.append(table);
+            cell.children(".gsinner").prepend(table);
+
+
+            table.colResizable({
+                liveDrag: true,
+                dragCursor: 'auto',
+                draggingClass: "rangeDrag",
+                gripInnerHtml: "<div class='rangeGrip'></div>",
+                onResize: function (e) {
+                    document.body.style.cursor = "crosshair";
+
+                    var ranges = thundashop.framework.calculateColumnSizes($(e.currentTarget));
+                    var i = 0;
+                    var columns = {};
+                    cell.children('.gsinner').children('.gsvertical').each(function () {
+                        $(this).css('width', ranges[i] + "%");
+                        $(this).attr('width', ranges[i]);
+                        columns[$(this).attr('cellid')] = $(this).attr('width');
+                        i++;
+                    });
+                    if (saveonmove) {
+                        var data = {
+                            "colsizes": columns,
+                            "cellid": cell.attr('cellid')
+                        }
+                        var event = thundashop.Ajax.createEvent('', 'saveColChanges', $(this), data);
+                        thundashop.Ajax.postWithCallBack(event, function () {
+
+                        });
+                    }
+                }
+            });
+        }
+    },
     loadImage: function (evt) {
         var cellid = $(this).closest('.gsresizingpanel').attr('cellid');
         var cell = $('.gscell[cellid="' + cellid + '"]');
@@ -200,11 +265,11 @@ thundashop.framework = {
     },
     closeResizing: function () {
         var cellid = $(this).closest('.gsresizingpanel').attr('cellid');
-        if(!likebeforeStyles) {
+        if (!likebeforeStyles) {
             likebeforeStyles = "";
         }
         $('.gscell[cellid="' + cellid + '"]').html(likebefore);
-        $('.gscell[cellid="' + cellid + '"]').attr('style',likebeforeStyles);
+        $('.gscell[cellid="' + cellid + '"]').attr('style', likebeforeStyles);
         $('.gsoverlay').fadeOut(function () {
             $(this).remove();
         });
@@ -271,11 +336,11 @@ thundashop.framework = {
             var value = "";
             if (type) {
                 if (level) {
-                    if(cell.find(level).attr('style').indexOf($(this).attr('data-csstype')) >= 0) {
+                    if (cell.find(level).attr('style').indexOf($(this).attr('data-csstype')) >= 0) {
                         value = cell.find(level).css($(this).attr('data-csstype'));
                     }
                 } else {
-                    if(cell.attr('style').indexOf($(this).attr('data-csstype')) >= 0) {
+                    if (cell.attr('style').indexOf($(this).attr('data-csstype')) >= 0) {
                         value = cell.css($(this).attr('data-csstype'));
                     }
                 }
@@ -286,49 +351,7 @@ thundashop.framework = {
                 $(this).closest('tr').find('input[type="range"]').val(value);
             }
         });
-        var children = cell.children('.gsinner').children('.gsvertical');
-        if (children.length > 1) {
-            var table = $('<table style="width: 100%;" class="range" dragCursor="pointer" cellspacing="0" cellpadding="0" border="0"></table>');
-            var row = $('<tr></tr>');
-            children.each(function () {
-                var width = $(this).attr('width');
-                row.append('<td  width="' + width + '%"></td>');
-            });
-            table.append(row);
-
-            var tablecontainer = $('<div style="padding:5px;"></div>"');
-            tablecontainer.append(table);
-            cell.children(".gsinner").prepend(table);
-
-
-            table.colResizable({
-                liveDrag: true,
-                dragCursor: 'auto',
-                draggingClass: "rangeDrag",
-                gripInnerHtml: "<div class='rangeGrip'></div>",
-                onResize: function (e) {
-                    document.body.style.cursor = "crosshair";
-                    var columns = $(e.currentTarget).find("td");
-                    var ranges = [], total = 0, i, s = "Ranges: ", w;
-                    for (i = 0; i < columns.length; i++) {
-                        w = columns.eq(i).width() - 14 - (i == 0 ? 1 : 0);
-                        ranges.push(w);
-                        total += w;
-                    }
-                    var i = 0;
-                    cell.children('.gsinner').children('.gsvertical').each(function () {
-                        ranges[i] = 100 * ranges[i] / total;
-                        ranges[i] = Math.round(ranges[i] * 100) / 100;
-                        $(this).css('width', ranges[i] + "%");
-                        $(this).attr('width', ranges[i]);
-                        i++;
-                    });
-                }
-            });
-
-
-        }
-
+        thundashop.framework.loadResizing(cell);
     },
     closeCellEdit: function () {
         $('.gscellsettingspanel').hide();
@@ -340,7 +363,7 @@ thundashop.framework = {
         } else {
             cellid = $(this).closest('.gscell').attr('cellid');
         }
-        var event = thundashop.Ajax.createEvent('', 'startEditRow', $(this), {"cellid": cellid });
+        var event = thundashop.Ajax.createEvent('', 'startEditRow', $(this), {"cellid": cellid});
         thundashop.Ajax.post(event);
     },
     showEditIcon: function (event) {
@@ -371,8 +394,8 @@ thundashop.framework = {
         if ($(this).closest('.gseditrowheading').length > 0) {
             cellid = $(this).closest('.gseditrowheading').attr('cellid');
         }
-        
-        if(!cellid) {
+
+        if (!cellid) {
             cellid = $('.gsvisualizeedit').attr('cellid');
         }
 
@@ -384,8 +407,8 @@ thundashop.framework = {
         }
 
 
-        if(type === "delete") {
-            if(!confirm("Are you sure you want to delete this cell and all its content?")) {
+        if (type === "delete") {
+            if (!confirm("Are you sure you want to delete this cell and all its content?")) {
                 return;
             }
         }
@@ -438,11 +461,11 @@ thundashop.framework = {
         } else {
             $('.gscellsettingspanel').find('.gsrowmenu').show();
         }
-        
-        if(cell.attr('cellid') === "footer" || cell.attr('cellid') === "header") {
+
+        if (cell.attr('cellid') === "footer" || cell.attr('cellid') === "header") {
             $('.gscellsettingspanel').find('.gscolumnmenu').show();
         }
-        
+
 
         var overlay = $('<span class="gsoverlay" style="filter: blur(5px);width:100%; height:100%; background-color:#bbb; opacity:0.6; position:absolute; left:0px; top:0px;display:inline-block;"></span>');
         cell.append(overlay);

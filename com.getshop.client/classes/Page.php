@@ -40,11 +40,11 @@ class Page {
         $count = 0;
         $beenEdited = false;
         foreach ($rowsToPrint as $row) {
-            if(isset($_GET['gseditcell']) && $_GET['gseditcell']== $row->cellId) {
+            if (isset($_GET['gseditcell']) && $_GET['gseditcell'] == $row->cellId) {
                 $_SESSION['gseditcell'] = $_GET['gseditcell'];
             }
         }
-        
+
         foreach ($rowsToPrint as $row) {
             $isedit = false;
 
@@ -92,9 +92,15 @@ class Page {
             <style>
                 .dragtable { background-image: url('http://quocity.com/colresizable/img/rangeBar.png'); background-position: 10px 10px; background-repeat-y: no-repeat;}
             </style>
+            <script src="/js/colresize.js"/>
+            <script>
+                $(function () {
+                    thundashop.framework.loadResizing($('.gseditrowouter').first(), true);
+                });
+            </script>
             <?
 
-            echo "<script src='/js/colresize.js'>";
+            $this->displayResizing();
         }
     }
 
@@ -173,7 +179,7 @@ class Page {
                 $innercount++;
             }
 //            if ($cell->vertical) {
-                echo "<div style='clear:both;'></div>";
+            echo "<div style='clear:both;'></div>";
 //            }
         } else {
             echo "<div class='applicationarea' appid='" . $cell->appId . "' area='" . $cell->cellId . "'>";
@@ -197,8 +203,8 @@ class Page {
         echo "<span class='gscolumnmenu'>";
         echo "<div class='gs_splithorizontally' type='addhorizontal'><i class='fa fa-arrows-v'></i>" . $this->factory->__w("Insert row") . "</div>";
         echo "</span>";
-        echo "<div class='gs_splitvertically' type='addvertical'><i class='fa fa-arrows-h'></i>" . $this->factory->__w("Insert column") . "</div>";
         echo "<span class='gsrowmenu'>";
+        echo "<div class='gs_splitvertically' type='addvertical'><i class='fa fa-arrows-h'></i>" . $this->factory->__w("Insert column") . "</div>";
         echo "<div class='gs_splithorizontally' type='addbefore'><i class='fa fa-long-arrow-up'></i>" . $this->factory->__w("Create row above") . "</div>";
         echo "<div class='gs_splithorizontally' type='addafter'><i class='fa fa-long-arrow-down'></i>" . $this->factory->__w("Create row below") . "</div>";
         echo "</span>";
@@ -387,7 +393,7 @@ class Page {
             </div>
         </span>
         <script>
-            $('.gsresizingpanel').draggable({handle: ".heading"});
+                $('.gsresizingpanel').draggable({handle: ".heading"});
         </script>
         <?
 

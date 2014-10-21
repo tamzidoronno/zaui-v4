@@ -54,7 +54,7 @@ public class PageLayout implements Serializable {
                     cell2.width = -1.0;
                 });
                 
-                if(verticaltoset != cell.cells.get(0).vertical && before == null || before.isEmpty()) {
+                if(verticaltoset != cell.cells.get(0).vertical && (before == null || before.isEmpty())) {
                     PageCell newpagecell = new PageCell();
                     newpagecell.vertical = verticaltoset;
                     newpagecell.cells.addAll(cell.cells);

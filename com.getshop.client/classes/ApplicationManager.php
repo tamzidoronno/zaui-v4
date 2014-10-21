@@ -364,7 +364,9 @@ class ApplicationManager extends FactoryBase {
 
     private function invokeApplicationAdded($application) {
         $app = $this->getFactory()->getApplicationPool()->getApplicationInstance($application->id);
-        $app->requestAdminRights();
+        if(method_exists($app, "requestAdminRights")) {
+            $app->requestAdminRights();
+        }
 
         if ($app instanceof \ShipmentApplication || $app instanceof \PaymentApplication) {
             \HelperCart::clearSession(false);

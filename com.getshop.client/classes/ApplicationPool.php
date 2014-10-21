@@ -169,8 +169,10 @@ class ApplicationPool {
 		$this->loadApplicationInstance($applicationInstanceId);
 		
         foreach ($this->addedApplicationInstances as $app) {
-            if ($app->getConfiguration()->id == $applicationInstanceId) {
-                return $app;
+            if(method_exists($app, "getConfiguration")) {
+                if ($app->getConfiguration()->id == $applicationInstanceId) {
+                    return $app;
+                }
             }
         }
         

@@ -97,12 +97,14 @@ class StyleSheet {
         $themeApp = $this->factory->getApplicationPool()->getSelectedThemeApp();
 
         foreach ($this->factory->getApplicationPool()->getAllAddedInstances() as $app) {
-            $appId = $this->factory->convertUUIDtoString($app->getApplicationSettings()->id);
-            if (method_exists($themeApp, "getVariableArray")) {
-                $array = $themeApp->getVariableArray($appId);
-                foreach (array_keys($array) as $variableName) {
-                    $value = $array[$variableName];
-                    $app->setSkinVariable($variableName, $value, "");
+            if(method_exists($app, "getApplicationSettings")) {
+                $appId = $this->factory->convertUUIDtoString($app->getApplicationSettings()->id);
+                if (method_exists($themeApp, "getVariableArray")) {
+                    $array = $themeApp->getVariableArray($appId);
+                    foreach (array_keys($array) as $variableName) {
+                        $value = $array[$variableName];
+                        $app->setSkinVariable($variableName, $value, "");
+                    }
                 }
             }
         }

@@ -494,7 +494,7 @@ class Factory extends FactoryBase {
         $appPool = $this->getApplicationPool();
         $instances = $appPool->getAllAddedInstances();
         foreach ($instances as $instance) {
-            if ($instance->applicationSettings->id == "d755efca-9e02-4e88-92c2-37a3413f3f41") {
+            if (@$instance->applicationSettings->id == "d755efca-9e02-4e88-92c2-37a3413f3f41") {
                 return $instance->configuration->settings;
             }
         }

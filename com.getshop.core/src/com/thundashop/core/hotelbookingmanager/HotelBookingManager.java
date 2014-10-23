@@ -229,6 +229,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
         databaseSaver.saveObject(reference, credentials);
         bookingReferences.put(reference.bookingReference, reference);
+        checkForArxUpdate();
         return new Integer(reference.bookingReference).toString();
     }
 
@@ -397,6 +398,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         saveObject(bookingreference);
         saveRoom(newRoom);
         saveRoom(existingRoom);
+        checkForArxUpdate();
     }
 
     @Override
@@ -404,19 +406,22 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         reference.updateArx = true;
         bookingReferences.put(reference.bookingReference, reference);
         saveObject(reference);
+        checkForArxUpdate();
     }
 
-    void checkForArxUpdate() throws ErrorException, UnsupportedEncodingException {
+    synchronized void checkForArxUpdate() throws ErrorException {
 
         if (arxSettings != null && arxSettings.address != null && !arxSettings.address.isEmpty()) {
             for (BookingReference reference : bookingReferences.values()) {
 
                 if (reference.isToday()) {
                     for (String roomid : reference.roomIds) {
-                        if (getRoom(roomid).isClean && !reference.isApprovedForCheckin(roomid)) {
+                        Room room = getRoom(roomid);
+                        if ((room.isCleanedToday() || room.isClean) && !reference.isApprovedForCheckin(roomid)) {
                             reference.isApprovedForCheckIn.put(roomid, true);
                             reference.updateArx = true;
-                            getRoom(roomid).isClean = false;
+                            room.isClean = false;
+                            reference.startDate = new Date();
                             saveObject(getRoom(roomid));
                             notifyCustomersReadyRoom(reference);
                         }
@@ -441,7 +446,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                         String roomId = reference.roomIds.get(i);
                         Room room = getRoom(roomId);
                         ArxUser user = new ArxUser();
-                        user.doorsToAccess.add("utedor");
+                        user.doorsToAccess.add("Ytterdører");
                         if (reference.isApprovedForCheckin(room.id)) {
                             user.doorsToAccess.add(room.roomName);
                         }
@@ -469,7 +474,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
     }
 
-    private boolean sendUserToArx(ArxUser user) throws ErrorException, UnsupportedEncodingException {
+    private boolean sendUserToArx(ArxUser user) throws ErrorException {
         String toPost = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
         toPost += "<arxdata timestamp=\"" + new SimpleDateFormat("yyyy-MM-dd+HH:mm:ss").format(new Date()) + "\">\n";
         toPost += "<persons>\n";
@@ -806,7 +811,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     public void checkForArxTransfer() throws ErrorException {
         try {
             checkForArxUpdate();
-        } catch (UnsupportedEncodingException ex) {
+        } catch (Exception ex) {
             getMsgManager().sendMail("post@getshop.com", "POst getshop", "Failed to tranfser to arx", ex.getMessage(), "internal process", "internal@getshop.com");
             java.util.logging.Logger.getLogger(HotelBookingManager.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class BookingReference extends DataCommon {
+
     public int bookingReference;
     public Date startDate;
     public Date endDate;
@@ -20,9 +21,9 @@ public class BookingReference extends DataCommon {
     public boolean updateArx = true;
     public boolean sentWelcomeMessages = true;
     Date failed = null;
-    
+
     public boolean isApprovedForCheckin(String roomId) {
-        if(isApprovedForCheckIn.containsKey(roomId)) {
+        if (isApprovedForCheckIn.containsKey(roomId)) {
             return isApprovedForCheckIn.get(roomId);
         }
         return false;
@@ -33,27 +34,38 @@ public class BookingReference extends DataCommon {
         cal.setTime(startDate);
         int dayofyear = cal.get(Calendar.DAY_OF_YEAR);
         int year = cal.get(Calendar.YEAR);
-        
+
         Calendar cal2 = Calendar.getInstance();
         cal2.setTime(new Date());
         int dayofyear2 = cal2.get(Calendar.DAY_OF_YEAR);
         int year2 = cal2.get(Calendar.YEAR);
-        if((dayofyear == dayofyear2) && (year == year2)) {
+        if ((dayofyear == dayofyear2) && (year == year2)) {
             return true;
         }
         return false;
     }
-    
-    
+
     boolean isNow() {
-        if(isToday()) {
+        if (isToday()) {
             return true;
         }
-        
+
         Date now = new Date();
-        if(startDate.before(now) && endDate.before(now)) {
+        if (startDate.before(now) && endDate.before(now)) {
             return true;
         }
         return false;
+    }
+
+    boolean allRoomsClean(HashMap<String, Room> rooms) {
+        boolean clean = true;
+        for (String roomId : roomIds) {
+            Room room = rooms.get(roomId);
+            if (!room.isClean && !room.isCleanedToday()) {
+                clean = false;
+                break;
+            }
+        }
+        return clean;
     }
 }

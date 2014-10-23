@@ -414,28 +414,20 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         if (arxSettings != null && arxSettings.address != null && !arxSettings.address.isEmpty()) {
             for (BookingReference reference : bookingReferences.values()) {
 
-                if (reference.isToday()) {
-                    for (String roomid : reference.roomIds) {
-                        Room room = getRoom(roomid);
-                        if ((room.isCleanedToday() || room.isClean) && !reference.isApprovedForCheckin(roomid)) {
-                            reference.isApprovedForCheckIn.put(roomid, true);
-                            reference.updateArx = true;
-                            room.isClean = false;
-                            reference.startDate = new Date();
-                            saveObject(getRoom(roomid));
-                            notifyCustomersReadyRoom(reference);
-                        }
-                    }
+                if (!reference.updateArx) {
+                    continue;
                 }
 
-                if (reference.updateArx) {
-                    if (reference.failed != null) {
-                        long diff = new Date().getTime() - reference.failed.getTime();
-                        if (diff < 10 * 60 * 1000) {
-                            continue;
-                        }
+                if (reference.failed != null) {
+                    long diff = new Date().getTime() - reference.failed.getTime();
+                    if (diff < 10 * 60 * 1000) {
+                        continue;
                     }
-
+                }
+                
+                if (reference.isToday() && reference.allRoomsClean(rooms)) {
+                    reference.startDate = new Date();
+                    notifyCustomersReadyRoom(reference);
                     System.out.println("Need to update arx with reference: " + reference.bookingReference);
                     int i = 0;
                     boolean success = false;
@@ -447,9 +439,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                         Room room = getRoom(roomId);
                         ArxUser user = new ArxUser();
                         user.doorsToAccess.add("Ytterdører");
-                        if (reference.isApprovedForCheckin(room.id)) {
-                            user.doorsToAccess.add(room.roomName);
-                        }
+                        user.doorsToAccess.add(room.roomName);
                         String[] names = name.split(" ");
                         user.firstName = names[0];
                         user.lastName = name.substring(user.firstName.length()).trim();
@@ -459,6 +449,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                         user.code = reference.codes.get(i);
                         user.reference = reference.bookingReference + "";
                         success = sendUserToArx(user);
+                        if(!success) {
+                            break;
+                        }
                         i++;
                     }
                     if (success) {
@@ -467,7 +460,6 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                     } else {
                         reference.failed = new Date();
                     }
-                    
                     databaseSaver.saveObject(reference, credentials);
                 }
             }
@@ -818,7 +810,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     @Override
-    public void checkForWelcomeMessagesToSend() throws ErrorException {
+    public synchronized void checkForWelcomeMessagesToSend() throws ErrorException {
 
         for (BookingReference reference : getAllReservations()) {
             if (reference.sentWelcomeMessages) {
@@ -907,13 +899,12 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     private void finalizeRoom(Room tmpRoom) throws ErrorException {
-        for(Date cleaned : tmpRoom.cleaningDates) {
-            if(tmpRoom.lastCleaning == null || tmpRoom.lastCleaning.before(cleaned)) {
+        for (Date cleaned : tmpRoom.cleaningDates) {
+            if (tmpRoom.lastCleaning == null || tmpRoom.lastCleaning.before(cleaned)) {
                 tmpRoom.lastCleaning = cleaned;
             }
         }
-        
-        
+
         List<BookingReference> allReservations = getAllReservations();
         for (BookingReference reservation : allReservations) {
             if (reservation.roomIds.contains(tmpRoom.id)) {
@@ -948,13 +939,13 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     private void logMailSent(String email, String name, boolean sendt, int referenceid) throws ErrorException {
         ArxLogEntry arxlog = new ArxLogEntry();
         arxlog.type = "email";
-        if(sendt) {
+        if (sendt) {
             arxlog.message = "Welcome message ";
         } else {
             arxlog.message = "Welcome message not ";
         }
         arxlog.message += " sent to " + email + " ( " + name + ") reference: " + referenceid;
-       
+
         arxlog.storeId = storeId;
         logEntries.add(arxlog);
         databaseSaver.saveObject(arxlog, credentials);

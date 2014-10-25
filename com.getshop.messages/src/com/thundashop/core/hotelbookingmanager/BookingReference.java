@@ -20,6 +20,7 @@ public class BookingReference extends DataCommon {
     public Double bookingFee = 0.0;
     public boolean updateArx = true;
     public boolean sentWelcomeMessages = true;
+    public Integer parkingSpots = 0;
     Date failed = null;
 
     public boolean isApprovedForCheckin(String roomId) {
@@ -29,6 +30,7 @@ public class BookingReference extends DataCommon {
         return false;
     }
 
+    
     boolean isToday() {
         Calendar cal = Calendar.getInstance();
         cal.setTime(startDate);
@@ -67,5 +69,12 @@ public class BookingReference extends DataCommon {
             }
         }
         return clean;
+    }
+
+    boolean isBetween(Date start, Date end) {
+        if(start.before(startDate) && end.after(endDate)) {
+            return true;
+        }
+        return false;
     }
 }

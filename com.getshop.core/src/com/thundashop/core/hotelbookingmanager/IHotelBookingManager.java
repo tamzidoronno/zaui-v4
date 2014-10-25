@@ -20,6 +20,13 @@ public interface IHotelBookingManager {
     
     /**
      * 
+     * @return
+     * @throws ErrorException 
+     */
+    public Integer checkAvailableParkingSpots(long startDate, long endDate) throws ErrorException;
+    
+    /**
+     * 
      * @param roomType
      * @param startDate The first day unix timestamp.
      * @param endDate The last day unix timestamp.

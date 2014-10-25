@@ -1707,6 +1707,22 @@ class APIHotelBookingManager {
 	}
 
 	/**
+	*
+	* @return Integer
+	* @throws ErrorException
+	*/
+
+	public function checkAvailableParkingSpots($startDate, $endDate) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["startDate"] = json_encode($this->transport->object_unset_nulls($startDate));
+	     $data['args']["endDate"] = json_encode($this->transport->object_unset_nulls($endDate));
+	     $data["method"] = "checkAvailableParkingSpots";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Get all references
 	* @return void
 	* @throws ErrorException

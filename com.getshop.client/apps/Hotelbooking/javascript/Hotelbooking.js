@@ -45,6 +45,11 @@ app.Hotelbooking = {
         var event = thundashop.Ajax.createEvent("","setCleaningOption", $(this), { "product": count});
         thundashop.Ajax.postWithCallBack(event, function() {});
     },
+    updateParking : function() {
+        var count = $(this).val();
+        var event = thundashop.Ajax.createEvent("","setParkingOption", $(this), { "parking": $(this).is(':checked')});
+        thundashop.Ajax.postWithCallBack(event, function() {});
+    },
     checkAvailability : function() {
         var nextpage = $(this).attr('nextpage');
         var apparea =$(this).closest('.app'); 
@@ -191,6 +196,7 @@ app.Hotelbooking = {
         $(document).on('change', '.Hotelbooking .number_of_rooms', app.Hotelbooking.updateRoomCount);
         $(document).on('blur', '.Hotelbooking .number_of_rooms', app.Hotelbooking.updateRoomCount);
         $(document).on('change', '.Hotelbooking .cleaning_option', app.Hotelbooking.updateCleaningCount);
+        $(document).on('click', '.Hotelbooking .parking_option', app.Hotelbooking.updateParking);
         $(document).on('change', '.Hotelbooking #numberofpersons', app.Hotelbooking.setNumberOfPersons);
         $(document).on('blur', '.Hotelbooking #numberofpersons', app.Hotelbooking.setNumberOfPersons);
         $(document).on('blur', '.Hotelbooking .booking_contact_data input', app.Hotelbooking.saveCurrentData);

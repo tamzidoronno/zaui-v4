@@ -132,28 +132,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Override
     public Integer checkAvailable(long startDate, long endDate, String typeName) throws ErrorException {
-        Date start = new Date(startDate * 1000);
-        Date end = new Date(endDate * 1000);
-
-        Calendar todayCal = Calendar.getInstance();
-        todayCal.setTime(new Date(System.currentTimeMillis()));
-        todayCal.set(Calendar.HOUR_OF_DAY, 11);
-        todayCal.set(Calendar.MINUTE, 0);
-        todayCal.set(Calendar.SECOND, 0);
-
-        Calendar startCal = Calendar.getInstance();
-        startCal.setTime(start);
-        startCal.set(Calendar.HOUR_OF_DAY, 13);
-        startCal.set(Calendar.MINUTE, 0);
-        startCal.set(Calendar.SECOND, 0);
-        start = startCal.getTime();
-
-        Calendar endCal = Calendar.getInstance();
-        endCal.setTime(end);
-        endCal.set(Calendar.HOUR_OF_DAY, 11);
-        endCal.set(Calendar.MINUTE, 0);
-        endCal.set(Calendar.SECOND, 0);
-        end = endCal.getTime();
+        Calendar todayCal = getTodayCalendar();
+        Date start = getStartDate(startDate);
+        Date end = getEndDate(endDate);
+        
+        
         if (start.before(todayCal.getTime())) {
             return -1;
         }
@@ -974,5 +957,67 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     @Override
     public GlobalBookingSettings getBookingConfiguration() throws ErrorException {
         return settings;
+    }
+
+    @Override
+    public Integer checkAvailableParkingSpots(long startDate, long endDate) throws ErrorException {
+        
+        Calendar todayCal = getTodayCalendar();
+        Date start = getStartDate(startDate);
+        Date end = getEndDate(endDate);
+        
+        
+        if (start.before(todayCal.getTime())) {
+            return -1;
+        }
+
+        if (end.before(start)) {
+            return -2;
+        }
+        
+        
+        int totalCount = settings.parkingSpots;
+        for(BookingReference reference : getAllReservations()) {
+            if(reference.isBetween(start, end)) {
+                totalCount -= reference.parkingSpots;
+            }
+        }
+        if(totalCount < 0) {
+            return 0;
+        }
+        
+        return totalCount;
+        
+    }
+
+    private Calendar getTodayCalendar() {
+        Calendar todayCal = Calendar.getInstance();
+        todayCal.setTime(new Date(System.currentTimeMillis()));
+        todayCal.set(Calendar.HOUR_OF_DAY, 11);
+        todayCal.set(Calendar.MINUTE, 0);
+        todayCal.set(Calendar.SECOND, 0);
+        return todayCal;
+    }
+
+    private Date getStartDate(long startDate) {
+        Date start = new Date(startDate * 1000);
+        Calendar startCal = Calendar.getInstance();
+        startCal.setTime(start);
+        startCal.set(Calendar.HOUR_OF_DAY, 13);
+        startCal.set(Calendar.MINUTE, 0);
+        startCal.set(Calendar.SECOND, 0);
+        start = startCal.getTime();
+        return start;
+    }
+
+    private Date getEndDate(long endDate) {
+        Date end = new Date(endDate * 1000);
+        Calendar endCal = Calendar.getInstance();
+        endCal.setTime(end);
+        endCal.set(Calendar.HOUR_OF_DAY, 11);
+        endCal.set(Calendar.MINUTE, 0);
+        endCal.set(Calendar.SECOND, 0);
+        end = endCal.getTime();
+        return end;
     }
 }

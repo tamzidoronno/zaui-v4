@@ -1761,6 +1761,28 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def checkAvailableParkingSpots(self, startDate, endDate):
+    args = collections.OrderedDict()
+    if isinstance(startDate,GetShopBaseClass): 
+      args["startDate"]=json.dumps(startDate.__dict__)
+    else:
+      try:
+        args["startDate"]=json.dumps(startDate)
+      except (ValueError, AttributeError):
+        args["startDate"]=startDate
+    if isinstance(endDate,GetShopBaseClass): 
+      args["endDate"]=json.dumps(endDate.__dict__)
+    else:
+      try:
+        args["endDate"]=json.dumps(endDate)
+      except (ValueError, AttributeError):
+        args["endDate"]=endDate
+    data = EmptyClass()
+    data.args = args
+    data.method = "checkAvailableParkingSpots"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def checkForArxTransfer(self):
     args = collections.OrderedDict()
     data = EmptyClass()

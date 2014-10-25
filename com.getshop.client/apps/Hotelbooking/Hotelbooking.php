@@ -11,6 +11,8 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     var $invalid = false;
     var $errors = array();
     var $config;
+    var $parkingProduct = null;
+
 
     function __construct() {
         
@@ -105,7 +107,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             return $i;
         }
 
-        return ($this->getEnd() - $this->getStart()) / 86400;
+        return round(($this->getEnd() - $this->getStart()) / 86400);
     }
 
     function checkavailability() {
@@ -356,6 +358,36 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $_SESSION['hotelbooking']['cleaning'] = $_POST['data']['product'];
     }
 
+    public function setParkingOption() {
+        $_SESSION['hotelbooking']['parking'] = $_POST['data']['parking'];
+    }
+
+    public function getParking() {
+        if(isset($_SESSION['hotelbooking']['parking'])) {
+            return $_SESSION['hotelbooking']['parking'];
+        }
+        return false;
+    }
+    
+    public function getParkingProduct() {
+        if($this->parkingProduct != null) {
+            return $this->parkingProduct;
+        }
+        $products = $this->getApi()->getProductManager()->getAllProducts();
+        foreach($products as $product) {
+            if($product->sku == "parking") {
+                $this->parkingProduct = $product;
+                break;
+            }
+        }
+        return $this->parkingProduct;
+    }
+    
+    public function hasAvailableParkingSpots() {
+        $spots = $this->getApi()->getHotelBookingManager()->checkAvailableParkingSpots($this->getStart(), $this->getEnd());
+        return $spots;
+    }
+    
     public function continueToPayment() {
         $count = $this->getRoomCount();
 
@@ -582,7 +614,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function getTotal() {
-        return $this->getCleaningPrice() + $this->getRoomPrice() + $this->getRoomTaxes() + $this->getCleaningTaxes();
+        return $this->getCleaningPrice() + $this->getRoomPrice() + $this->getRoomTaxes() + $this->getCleaningTaxes() + $this->getParkingPrice();
     }
 
     public function hasErrors() {
@@ -752,6 +784,13 @@ class Hotelbooking extends \ApplicationBase implements \Application {
 
         echo "ga('ecommerce:send');";
         echo "</script>";
+    }
+
+    public function getParkingPrice() {
+        if(!$this->getParking()) {
+            return 0;
+        }
+        return $this->getParkingProduct()->price * $this->getDayCount();
     }
 
 }

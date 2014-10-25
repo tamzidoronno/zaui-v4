@@ -52,12 +52,27 @@ public class Room extends DataCommon {
         return true;
     }
 
+    public boolean isCleanedToday() {
+        Calendar instance = Calendar.getInstance();
+        instance.setTime(new Date());
+        int dayofyear = instance.get(Calendar.DAY_OF_YEAR);
+        int year = instance.get(Calendar.YEAR);
+        
+        for(Date cleanedDate : cleaningDates) {
+            instance.setTime(cleanedDate);
+            if(instance.get(Calendar.DAY_OF_YEAR) == dayofyear && instance.get(Calendar.YEAR) == year) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     int reserveDates(Date start, Date end, int bookingReference) {
         Random randomGenerator = new Random();
         int code = 0;
         do {
-            code = randomGenerator.nextInt(999999);
-        }while(code < 100000);
+            code = randomGenerator.nextInt(9999);
+        }while(code < 1000);
         Calendar cal = Calendar.getInstance();
         cal.setTime(start);
         

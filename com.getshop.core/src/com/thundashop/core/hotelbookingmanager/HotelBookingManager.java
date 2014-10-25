@@ -66,6 +66,7 @@ import org.springframework.stereotype.Component;
 public class HotelBookingManager extends ManagerBase implements IHotelBookingManager {
 
     public BookingSettings booksettings = new BookingSettings();
+    public GlobalBookingSettings settings = new GlobalBookingSettings();
     public ArxSettings arxSettings = new ArxSettings();
     public VismaSettings vismaSettings = new VismaSettings();
 
@@ -99,6 +100,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             if (dbobj instanceof VismaSettings) {
                 vismaSettings = (VismaSettings) dbobj;
             }
+            if (dbobj instanceof GlobalBookingSettings) {
+                settings = (GlobalBookingSettings) dbobj;
+            }
 
             if (dbobj instanceof Room) {
                 Room room = (Room) dbobj;
@@ -128,28 +132,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Override
     public Integer checkAvailable(long startDate, long endDate, String typeName) throws ErrorException {
-        Date start = new Date(startDate * 1000);
-        Date end = new Date(endDate * 1000);
-
-        Calendar todayCal = Calendar.getInstance();
-        todayCal.setTime(new Date(System.currentTimeMillis()));
-        todayCal.set(Calendar.HOUR_OF_DAY, 11);
-        todayCal.set(Calendar.MINUTE, 0);
-        todayCal.set(Calendar.SECOND, 0);
-
-        Calendar startCal = Calendar.getInstance();
-        startCal.setTime(start);
-        startCal.set(Calendar.HOUR_OF_DAY, 13);
-        startCal.set(Calendar.MINUTE, 0);
-        startCal.set(Calendar.SECOND, 0);
-        start = startCal.getTime();
-
-        Calendar endCal = Calendar.getInstance();
-        endCal.setTime(end);
-        endCal.set(Calendar.HOUR_OF_DAY, 11);
-        endCal.set(Calendar.MINUTE, 0);
-        endCal.set(Calendar.SECOND, 0);
-        end = endCal.getTime();
+        Calendar todayCal = getTodayCalendar();
+        Date start = getStartDate(startDate);
+        Date end = getEndDate(endDate);
+        
+        
         if (start.before(todayCal.getTime())) {
             return -1;
         }
@@ -229,6 +216,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
         databaseSaver.saveObject(reference, credentials);
         bookingReferences.put(reference.bookingReference, reference);
+        checkForArxUpdate();
         return new Integer(reference.bookingReference).toString();
     }
 
@@ -397,6 +385,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         saveObject(bookingreference);
         saveRoom(newRoom);
         saveRoom(existingRoom);
+        checkForArxUpdate();
     }
 
     @Override
@@ -404,33 +393,28 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         reference.updateArx = true;
         bookingReferences.put(reference.bookingReference, reference);
         saveObject(reference);
+        checkForArxUpdate();
     }
 
-    void checkForArxUpdate() throws ErrorException, UnsupportedEncodingException {
+    synchronized void checkForArxUpdate() throws ErrorException {
 
         if (arxSettings != null && arxSettings.address != null && !arxSettings.address.isEmpty()) {
             for (BookingReference reference : bookingReferences.values()) {
 
-                if (reference.isToday()) {
-                    for (String roomid : reference.roomIds) {
-                        if (getRoom(roomid).isClean && !reference.isApprovedForCheckin(roomid)) {
-                            reference.isApprovedForCheckIn.put(roomid, true);
-                            reference.updateArx = true;
-                            getRoom(roomid).isClean = false;
-                            saveObject(getRoom(roomid));
-                            notifyCustomersReadyRoom(reference);
-                        }
-                    }
+                if (!reference.updateArx) {
+                    continue;
                 }
 
-                if (reference.updateArx) {
-                    if (reference.failed != null) {
-                        long diff = new Date().getTime() - reference.failed.getTime();
-                        if (diff < 10 * 60 * 1000) {
-                            continue;
-                        }
+                if (reference.failed != null) {
+                    long diff = new Date().getTime() - reference.failed.getTime();
+                    if (diff < 10 * 60 * 1000) {
+                        continue;
                     }
-
+                }
+                
+                if (reference.isToday() && reference.allRoomsClean(rooms)) {
+                    reference.startDate = new Date();
+                    notifyCustomersReadyRoom(reference);
                     System.out.println("Need to update arx with reference: " + reference.bookingReference);
                     int i = 0;
                     boolean success = false;
@@ -441,10 +425,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                         String roomId = reference.roomIds.get(i);
                         Room room = getRoom(roomId);
                         ArxUser user = new ArxUser();
-                        user.doorsToAccess.add("utedor");
-                        if (reference.isApprovedForCheckin(room.id)) {
-                            user.doorsToAccess.add(room.roomName);
-                        }
+                        user.doorsToAccess.add("Ytterdører");
+                        user.doorsToAccess.add(room.roomName);
                         String[] names = name.split(" ");
                         user.firstName = names[0];
                         user.lastName = name.substring(user.firstName.length()).trim();
@@ -454,6 +436,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                         user.code = reference.codes.get(i);
                         user.reference = reference.bookingReference + "";
                         success = sendUserToArx(user);
+                        if(!success) {
+                            break;
+                        }
                         i++;
                     }
                     if (success) {
@@ -462,14 +447,13 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                     } else {
                         reference.failed = new Date();
                     }
-                    
                     databaseSaver.saveObject(reference, credentials);
                 }
             }
         }
     }
 
-    private boolean sendUserToArx(ArxUser user) throws ErrorException, UnsupportedEncodingException {
+    private boolean sendUserToArx(ArxUser user) throws ErrorException {
         String toPost = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
         toPost += "<arxdata timestamp=\"" + new SimpleDateFormat("yyyy-MM-dd+HH:mm:ss").format(new Date()) + "\">\n";
         toPost += "<persons>\n";
@@ -806,14 +790,14 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     public void checkForArxTransfer() throws ErrorException {
         try {
             checkForArxUpdate();
-        } catch (UnsupportedEncodingException ex) {
+        } catch (Exception ex) {
             getMsgManager().sendMail("post@getshop.com", "POst getshop", "Failed to tranfser to arx", ex.getMessage(), "internal process", "internal@getshop.com");
             java.util.logging.Logger.getLogger(HotelBookingManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Override
-    public void checkForWelcomeMessagesToSend() throws ErrorException {
+    public synchronized void checkForWelcomeMessagesToSend() throws ErrorException {
 
         for (BookingReference reference : getAllReservations()) {
             if (reference.sentWelcomeMessages) {
@@ -902,13 +886,12 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     private void finalizeRoom(Room tmpRoom) throws ErrorException {
-        for(Date cleaned : tmpRoom.cleaningDates) {
-            if(tmpRoom.lastCleaning == null || tmpRoom.lastCleaning.before(cleaned)) {
+        for (Date cleaned : tmpRoom.cleaningDates) {
+            if (tmpRoom.lastCleaning == null || tmpRoom.lastCleaning.before(cleaned)) {
                 tmpRoom.lastCleaning = cleaned;
             }
         }
-        
-        
+
         List<BookingReference> allReservations = getAllReservations();
         for (BookingReference reservation : allReservations) {
             if (reservation.roomIds.contains(tmpRoom.id)) {
@@ -943,13 +926,13 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     private void logMailSent(String email, String name, boolean sendt, int referenceid) throws ErrorException {
         ArxLogEntry arxlog = new ArxLogEntry();
         arxlog.type = "email";
-        if(sendt) {
+        if (sendt) {
             arxlog.message = "Welcome message ";
         } else {
             arxlog.message = "Welcome message not ";
         }
         arxlog.message += " sent to " + email + " ( " + name + ") reference: " + referenceid;
-       
+
         arxlog.storeId = storeId;
         logEntries.add(arxlog);
         databaseSaver.saveObject(arxlog, credentials);
@@ -962,5 +945,79 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         arxlog.storeId = storeId;
         logEntries.add(arxlog);
         databaseSaver.saveObject(arxlog, credentials);
+    }
+
+    @Override
+    public void setBookingConfiguration(GlobalBookingSettings settings) throws ErrorException {
+        settings.storeId = storeId;
+        this.settings = settings;
+        saveObject(settings);
+    }
+
+    @Override
+    public GlobalBookingSettings getBookingConfiguration() throws ErrorException {
+        return settings;
+    }
+
+    @Override
+    public Integer checkAvailableParkingSpots(long startDate, long endDate) throws ErrorException {
+        
+        Calendar todayCal = getTodayCalendar();
+        Date start = getStartDate(startDate);
+        Date end = getEndDate(endDate);
+        
+        
+        if (start.before(todayCal.getTime())) {
+            return -1;
+        }
+
+        if (end.before(start)) {
+            return -2;
+        }
+        
+        
+        int totalCount = settings.parkingSpots;
+        for(BookingReference reference : getAllReservations()) {
+            if(reference.isBetween(start, end)) {
+                totalCount -= reference.parkingSpots;
+            }
+        }
+        if(totalCount < 0) {
+            return 0;
+        }
+        
+        return totalCount;
+        
+    }
+
+    private Calendar getTodayCalendar() {
+        Calendar todayCal = Calendar.getInstance();
+        todayCal.setTime(new Date(System.currentTimeMillis()));
+        todayCal.set(Calendar.HOUR_OF_DAY, 11);
+        todayCal.set(Calendar.MINUTE, 0);
+        todayCal.set(Calendar.SECOND, 0);
+        return todayCal;
+    }
+
+    private Date getStartDate(long startDate) {
+        Date start = new Date(startDate * 1000);
+        Calendar startCal = Calendar.getInstance();
+        startCal.setTime(start);
+        startCal.set(Calendar.HOUR_OF_DAY, 13);
+        startCal.set(Calendar.MINUTE, 0);
+        startCal.set(Calendar.SECOND, 0);
+        start = startCal.getTime();
+        return start;
+    }
+
+    private Date getEndDate(long endDate) {
+        Date end = new Date(endDate * 1000);
+        Calendar endCal = Calendar.getInstance();
+        endCal.setTime(end);
+        endCal.set(Calendar.HOUR_OF_DAY, 11);
+        endCal.set(Calendar.MINUTE, 0);
+        endCal.set(Calendar.SECOND, 0);
+        end = endCal.getTime();
+        return end;
     }
 }

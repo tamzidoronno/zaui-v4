@@ -1761,6 +1761,28 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def checkAvailableParkingSpots(self, startDate, endDate):
+    args = collections.OrderedDict()
+    if isinstance(startDate,GetShopBaseClass): 
+      args["startDate"]=json.dumps(startDate.__dict__)
+    else:
+      try:
+        args["startDate"]=json.dumps(startDate)
+      except (ValueError, AttributeError):
+        args["startDate"]=startDate
+    if isinstance(endDate,GetShopBaseClass): 
+      args["endDate"]=json.dumps(endDate.__dict__)
+    else:
+      try:
+        args["endDate"]=json.dumps(endDate)
+      except (ValueError, AttributeError):
+        args["endDate"]=endDate
+    data = EmptyClass()
+    data.args = args
+    data.method = "checkAvailableParkingSpots"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def checkForArxTransfer(self):
     args = collections.OrderedDict()
     data = EmptyClass()
@@ -1821,6 +1843,14 @@ class HotelBookingManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getArxLog"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getBookingConfiguration(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getBookingConfiguration"
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -2050,6 +2080,21 @@ class HotelBookingManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "setArxConfiguration"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def setBookingConfiguration(self, settings):
+    args = collections.OrderedDict()
+    if isinstance(settings,GetShopBaseClass): 
+      args["settings"]=json.dumps(settings.__dict__)
+    else:
+      try:
+        args["settings"]=json.dumps(settings)
+      except (ValueError, AttributeError):
+        args["settings"]=settings
+    data = EmptyClass()
+    data.args = args
+    data.method = "setBookingConfiguration"
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 

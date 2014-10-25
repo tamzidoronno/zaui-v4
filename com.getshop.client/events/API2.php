@@ -1707,6 +1707,22 @@ class APIHotelBookingManager {
 	}
 
 	/**
+	*
+	* @return Integer
+	* @throws ErrorException
+	*/
+
+	public function checkAvailableParkingSpots($startDate, $endDate) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["startDate"] = json_encode($this->transport->object_unset_nulls($startDate));
+	     $data['args']["endDate"] = json_encode($this->transport->object_unset_nulls($endDate));
+	     $data["method"] = "checkAvailableParkingSpots";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Get all references
 	* @return void
 	* @throws ErrorException
@@ -1803,6 +1819,20 @@ class APIHotelBookingManager {
 	     $data["method"] = "getArxLog";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
+	* @return core_hotelbookingmanager_GlobalBookingSettings
+	* @throws ErrorException
+	*/
+
+	public function getBookingConfiguration() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getBookingConfiguration";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->cast(new core_hotelbookingmanager_GlobalBookingSettings(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -1993,6 +2023,21 @@ class APIHotelBookingManager {
 	     $data['args'] = array();
 	     $data['args']["core_hotelbookingmanager_ArxSettings"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_ArxSettings));
 	     $data["method"] = "setArxConfiguration";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function setBookingConfiguration($core_hotelbookingmanager_GlobalBookingSettings) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_hotelbookingmanager_GlobalBookingSettings"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_GlobalBookingSettings));
+	     $data["method"] = "setBookingConfiguration";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
 	}

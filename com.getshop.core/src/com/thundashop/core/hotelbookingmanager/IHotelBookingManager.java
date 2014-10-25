@@ -20,6 +20,13 @@ public interface IHotelBookingManager {
     
     /**
      * 
+     * @return
+     * @throws ErrorException 
+     */
+    public Integer checkAvailableParkingSpots(long startDate, long endDate) throws ErrorException;
+    
+    /**
+     * 
      * @param roomType
      * @param startDate The first day unix timestamp.
      * @param endDate The last day unix timestamp.
@@ -91,6 +98,11 @@ public interface IHotelBookingManager {
     
     @Administrator
     public void setVismaConfiguration(VismaSettings settings) throws ErrorException;
+    
+    @Administrator
+    public void setBookingConfiguration(GlobalBookingSettings settings) throws ErrorException;
+
+    public GlobalBookingSettings getBookingConfiguration() throws ErrorException;
     
     @Editor
     public void markRoomAsReady(String roomId) throws ErrorException;

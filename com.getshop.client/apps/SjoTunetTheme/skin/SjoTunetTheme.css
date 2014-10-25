@@ -21,7 +21,6 @@ body {
 	margin-top: 20px;
 	border-top: solid 1px #e38c10;
 	background-color: #f8a223;
-	height: 35px;
 }
 
 #apparea-header {
@@ -60,7 +59,7 @@ body {
 
 .TopMenu {
 	right: 0px;
-	bottom: 33px;
+	bottom: 15px;
 	font-family: "arial";
 	font-weight: 130;
 	font-size: 15px;
@@ -81,10 +80,10 @@ body {
 .TopMenu .entry {
 	height: 35px;
 	line-height: 35px;
-	width: 115px;
 	vertical-align: bottom;
 	font-size: 15px;
-	margin-left: 10px;
+	margin-left: 40px;
+	
 }
 
 .TopMenu .subentries .entry {

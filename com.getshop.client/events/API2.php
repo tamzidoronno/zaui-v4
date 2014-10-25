@@ -4112,6 +4112,25 @@ class APISedoxProductManager {
 	* @throws ErrorException
 	*/
 
+	public function addReference($productId, $reference) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $data['args']["reference"] = json_encode($this->transport->object_unset_nulls($reference));
+	     $data["method"] = "addReference";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Developers is simply an getshop user that is registered as an developer.
+	* Active developers are administrators that has an SedoxUser with the flag
+	* isActiveDeveloper = true
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
 	public function addSlaveToUser($masterUserId, $slaveUserId) {
 	     $data = array();
 	     $data['args'] = array();
@@ -4164,7 +4183,7 @@ class APISedoxProductManager {
 	* day = 1 // Means that it will returns the list of yesterdays files
 	*
 	* @param day
-	* @return void
+	* @return core_sedox_SedoxProduct
 	* @throws ErrorException
 	*/
 
@@ -4178,7 +4197,7 @@ class APISedoxProductManager {
 	     $data['args']["origin"] = json_encode($this->transport->object_unset_nulls($origin));
 	     $data["method"] = "createSedoxProduct";
 	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
-	     return $this->transport->sendMessage($data);
+	     return $this->transport->cast(new core_sedox_SedoxProduct(), $this->transport->sendMessage($data));
 	}
 
 	/**

@@ -83,7 +83,6 @@ public class SedoxSearchEngine {
             if (product.originalChecksum != null && product.originalChecksum.toLowerCase().contains(searchString)) {
                 retProducts.add(product);
             }
-            
         }
         
         SedoxProductSearchPage page = new SedoxProductSearchPage();

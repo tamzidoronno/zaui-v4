@@ -118,8 +118,9 @@
 
 .SedoxUserPanel .filehistory .row { position: relative; }
 .SedoxUserPanel .filehistory .col1 { width: 100px; }
-.SedoxUserPanel .filehistory .col2 { width: 500px; }
-.SedoxUserPanel .filehistory .col3 { width: 345px; }
+.SedoxUserPanel .filehistory .col2 { width: 400px; }
+.SedoxUserPanel .filehistory .col3 { width: 200px; }
+.SedoxUserPanel .filehistory .col4 { width: 250px; }
 
 .SedoxUserPanel .status { width: 25px; height: 25px; position: absolute; top: 5px; background-size: 25px;}
 .SedoxUserPanel .status.red { background-image: url('{IMAGEFOLDER}/reddot.png'); }
@@ -179,8 +180,9 @@
 }
 
 .informationbox.SedoxUserPanel .col1 { width: 100px; }
-.informationbox.SedoxUserPanel .col2 { width: 500px; }
-.informationbox.SedoxUserPanel .col3 { width: 345px; }
+.informationbox.SedoxUserPanel .col2 { width: 400px; }
+.informationbox.SedoxUserPanel .col3 { width: 200px; }
+.informationbox.SedoxUserPanel .col4 { width: 245px; }
 
 .informationbox.SedoxUserPanel .credithistory .row .col3 {
     width: 100px;

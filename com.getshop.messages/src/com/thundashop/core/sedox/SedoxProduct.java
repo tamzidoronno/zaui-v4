@@ -55,6 +55,7 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
     public String ecuSoftwareVersion;
     
     public String uploadOrigin;
+    public Map<String,String> reference = new HashMap();
     
     public Map<String, Date> states = new HashMap();
 

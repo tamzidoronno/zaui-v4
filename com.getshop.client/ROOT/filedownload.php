@@ -12,7 +12,17 @@ $fileArray = explode(":-:", base64_decode(urldecode($_GET['files'])));
 $filename = "$productName.zip";
 
 if(count($fileArray) == 1) {
-    $filename = "$productName.tune";
+    $ext = ".tune";
+    
+    foreach ($product->binaryFiles as $file) {
+        if ($file->id == $fileArray[0]) {
+            if ($file->fileType == "Original") {
+                $filename = $file->id." - ".$productName." ".$file->fileType.".bin";
+            }
+        }
+    }
+    
+//    $filename = $file->id." - ".$productName." ".$file->fileType.".bin";
 }
 
 header("Content-Type: application/octet-stream");

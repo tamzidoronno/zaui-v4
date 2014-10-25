@@ -6,6 +6,8 @@
         Purpose of the stylesheet follows.
 */
 
+
+
 .SedoxProductView .title {
     font-size: 16px;
     color: #FFF;
@@ -148,12 +150,13 @@
 
 .SedoxProductView .admintools {
     margin-top: 20px;
+	position: relative;
 }
 
 
 .SedoxProductView .admintools .subcontainer {
     padding: 20px;
-    font-size: 16px;
+    font-size: 15px;
     color: #666;
     background-color: #f1f1f1;
     margin-bottom: 10px;
@@ -293,4 +296,21 @@
 
 .SedoxProductView .sedox_button.saleable {
     background: green;
+}
+
+.SedoxProductView .userinfo {
+	position: absolute; 
+	top: 1px; 
+	right: 1px; 
+}
+
+.SedoxProductView .userinfo .subcontainer {
+	height: 38px !important;
+}
+
+.SedoxProductView .referenceinfo {
+	height: 10px;
+	padding-left: 20px;
+	padding-bottom: 20px;
+	background-color: #f1f1f1;
 }

@@ -49,7 +49,7 @@ public interface ISedoxProductManager  {
     public SedoxProduct getProductById(String id) throws ErrorException;
     
     @Customer
-    public void createSedoxProduct(SedoxProduct sedoxProduct, String base64encodedOriginalFile, String originalFileName, String forSlaveId, String origin) throws ErrorException;
+    public SedoxProduct createSedoxProduct(SedoxProduct sedoxProduct, String base64encodedOriginalFile, String originalFileName, String forSlaveId, String origin) throws ErrorException;
     
     @Customer
     public SedoxProduct getSedoxProductByMd5Sum(String md5sum) throws ErrorException;
@@ -140,4 +140,7 @@ public interface ISedoxProductManager  {
     public void toggleBadCustomer(String userId, boolean badCustomer) throws ErrorException;
 	
 	public List<SedoxProduct> getLatestProductsList(int count) throws ErrorException;
+	
+	@Customer
+	public void addReference(String productId, String reference) throws ErrorException;
 }

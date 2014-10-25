@@ -105,7 +105,10 @@ class SedoxFileUpload extends \ApplicationBase implements \Application {
         $sedoxProduct->gearType = $geartype;
         $sedoxProduct->useCreditAccount = $useCredit;
 
-        $this->getApi()->getSedoxProductManager()->createSedoxProduct($sedoxProduct, $filecontent, $filename, $slave, $origin);
+        $savedProduct = $this->getApi()->getSedoxProductManager()->createSedoxProduct($sedoxProduct, $filecontent, $filename, $slave, $origin);
+		if (isset($_POST['reference']) && $_POST['reference'] != "") {
+			$this->getApi()->getSedoxProductManager()->addReference($savedProduct->id, $_POST['reference']);
+		}
     }
 
     public function sendSpecialRequest() {

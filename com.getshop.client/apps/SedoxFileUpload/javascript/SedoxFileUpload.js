@@ -65,9 +65,9 @@ app.SedoxFileUpload = {
     },
             
     saveUploadFile: function() {
-	if ($(this).attr('sending') === "true") {
-	    return;
-	}
+		if ($(this).attr('sending') === "true") {
+			return;
+		}
 	
         if ($('#originalfile').val() == "") {
             thundashop.common.Alert("File not selected", "You have not selected a file, please add a file before you continue click next.", true);
@@ -99,7 +99,7 @@ app.SedoxFileUpload = {
         }
 	
         $(this).attr('sending', 'true');
-	$(this).find('span').html('Sending..');
+		$(this).find('span').html('Sending..');
         $('#uploadfileform').submit();
     },
             

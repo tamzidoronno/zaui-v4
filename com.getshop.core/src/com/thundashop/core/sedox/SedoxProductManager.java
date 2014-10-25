@@ -254,7 +254,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     @Override
-    public synchronized void createSedoxProduct(SedoxProduct sedoxProduct, String base64EncodeString, String originalFileName, String forSlaveId, String origin) throws ErrorException {
+    public synchronized SedoxProduct createSedoxProduct(SedoxProduct sedoxProduct, String base64EncodeString, String originalFileName, String forSlaveId, String origin) throws ErrorException {
         if (forSlaveId != null && !forSlaveId.equals("")) {
             checkIfMasterOfSlave(forSlaveId);
         }
@@ -292,6 +292,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         databaseSaver.saveObject(sedoxProduct, credentials);
         sendFileCreatedNotification(sedoxProduct);
         sendNotificationToUploadedUser(sedoxProduct);
+		
+		return sedoxProduct;
     }
 
     @Override
@@ -1371,6 +1373,14 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 			user.badCustomer = badCustomer;
 			saveUser(user);
 		}
+	}
+
+	@Override
+	public void addReference(String productId, String reference) throws ErrorException {
+		SedoxProduct product = getProductById(productId);
+		User user = getSession().currentUser;
+		product.reference.put(user.id, reference);
+		saveObject(product);
 	}
 
   

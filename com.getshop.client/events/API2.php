@@ -1806,6 +1806,20 @@ class APIHotelBookingManager {
 	}
 
 	/**
+	* Get all references
+	* @return core_hotelbookingmanager_GlobalBookingSettings
+	* @throws ErrorException
+	*/
+
+	public function getBookingConfiguration() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getBookingConfiguration";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->cast(new core_hotelbookingmanager_GlobalBookingSettings(), $this->transport->sendMessage($data));
+	}
+
+	/**
 	* Add new room to the manager.
 	* @param room
 	* @throws ErrorException
@@ -1993,6 +2007,21 @@ class APIHotelBookingManager {
 	     $data['args'] = array();
 	     $data['args']["core_hotelbookingmanager_ArxSettings"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_ArxSettings));
 	     $data["method"] = "setArxConfiguration";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function setBookingConfiguration($core_hotelbookingmanager_GlobalBookingSettings) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_hotelbookingmanager_GlobalBookingSettings"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_GlobalBookingSettings));
+	     $data["method"] = "setBookingConfiguration";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
 	}

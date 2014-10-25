@@ -66,6 +66,7 @@ import org.springframework.stereotype.Component;
 public class HotelBookingManager extends ManagerBase implements IHotelBookingManager {
 
     public BookingSettings booksettings = new BookingSettings();
+    public GlobalBookingSettings settings = new GlobalBookingSettings();
     public ArxSettings arxSettings = new ArxSettings();
     public VismaSettings vismaSettings = new VismaSettings();
 
@@ -98,6 +99,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
             if (dbobj instanceof VismaSettings) {
                 vismaSettings = (VismaSettings) dbobj;
+            }
+            if (dbobj instanceof GlobalBookingSettings) {
+                settings = (GlobalBookingSettings) dbobj;
             }
 
             if (dbobj instanceof Room) {
@@ -958,5 +962,17 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         arxlog.storeId = storeId;
         logEntries.add(arxlog);
         databaseSaver.saveObject(arxlog, credentials);
+    }
+
+    @Override
+    public void setBookingConfiguration(GlobalBookingSettings settings) throws ErrorException {
+        settings.storeId = storeId;
+        this.settings = settings;
+        saveObject(settings);
+    }
+
+    @Override
+    public GlobalBookingSettings getBookingConfiguration() throws ErrorException {
+        return settings;
     }
 }

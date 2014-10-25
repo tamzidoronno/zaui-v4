@@ -92,6 +92,11 @@ public interface IHotelBookingManager {
     @Administrator
     public void setVismaConfiguration(VismaSettings settings) throws ErrorException;
     
+    @Administrator
+    public void setBookingConfiguration(GlobalBookingSettings settings) throws ErrorException;
+
+    public GlobalBookingSettings getBookingConfiguration() throws ErrorException;
+    
     @Editor
     public void markRoomAsReady(String roomId) throws ErrorException;
     

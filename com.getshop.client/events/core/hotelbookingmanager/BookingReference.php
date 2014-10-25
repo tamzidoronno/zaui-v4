@@ -33,5 +33,8 @@ class core_hotelbookingmanager_BookingReference extends core_common_DataCommon  
 	/** @var String */
 	public $sentWelcomeMessages;
 
+	/** @var String */
+	public $failed;
+
 }
 ?>

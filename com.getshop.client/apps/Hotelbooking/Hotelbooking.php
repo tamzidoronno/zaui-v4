@@ -10,6 +10,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     var $failedReservation = false;
     var $invalid = false;
     var $errors = array();
+    var $config;
 
     function __construct() {
         
@@ -20,11 +21,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function getStartMaxDays() {
-        $maxdays = $this->getConfigurationSetting("start_max_days");
-        if (!$maxdays) {
-            return 1000;
-        }
-        return $maxdays;
+        return $this->getConfig()->maxRentalDaysAhead;
     }
 
     public function loadSettings() {
@@ -32,12 +29,15 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function setConfig() {
-        $this->setConfigurationSetting("name", $_POST['data']['name']);
-        $this->setConfigurationSetting("type", $_POST['data']['type']);
+        $settings = new \core_hotelbookingmanager_GlobalBookingSettings();
+        $settings->name = $_POST['data']['name'];
+        $settings->type = $_POST['data']['type'];
+        $settings->minRentalDays = $_POST['data']['rental_days'];
+        $settings->maxRentalDaysAhead = $_POST['data']['start_max_days'];
+        $settings->roomThumbNails = $_POST['data']['display_room_thumbnail'];
+        $settings->parkingSpots = $_POST['data']['parking_spots'];
+        $this->getFactory()->getApi()->getHotelBookingManager()->setBookingConfiguration($settings);
         $this->setConfigurationSetting("contine_page", $_POST['data']['contine_page']);
-        $this->setConfigurationSetting("minumum_rental_days", $_POST['data']['rental_days']);
-        $this->setConfigurationSetting("start_max_days", $_POST['data']['start_max_days']);
-        $this->setConfigurationSetting("display_room_thumbnail", $_POST['data']['display_room_thumbnail']);
     }
 
     public function getRoomTaxes() {
@@ -52,36 +52,31 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return 0;
     }
 
-    public function getMinumRental() {
-        $minimum = $this->getConfigurationSetting("minumum_rental_days");
-        if (!$minimum) {
-            return 1;
+    public function getConfig() {
+        if(!$this->config) {
+            $this->config = $this->getApi()->getHotelBookingManager()->getBookingConfiguration();
         }
-
-        return $minimum;
+        return $this->config;
+    }
+    
+    public function getMinumRental() {
+        return $this->getConfig()->minRentalDays;
     }
 
     public function getDisplayRoomThumbnail() {
-        $minimum = $this->getConfigurationSetting("display_room_thumbnail");
-        if (!$minimum) {
-            return false;
-        }
-
-        return $minimum == "true";
+        return $this->getConfig()->roomThumbNails;
     }
 
+    public function getParkingSpots() {
+        return $this->getConfig()->parkingSpots;
+    }
+    
     public function getProjectName() {
-        if ($this->getConfigurationSetting("name")) {
-            return $this->getConfigurationSetting("name");
-        }
-        return "name not set";
+        return $this->getConfig()->name;
     }
 
     public function getServiceType() {
-        if ($this->getConfigurationSetting("type")) {
-            return $this->getConfigurationSetting("type");
-        }
-        return "hotel";
+        return $this->getConfig()->type;
     }
 
     public function getDescription() {
@@ -157,7 +152,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function preProcess() {
-        
+        $this->config = $this->getApi()->getHotelBookingManager()->getBookingConfiguration();
     }
 
     public function getStarted() {

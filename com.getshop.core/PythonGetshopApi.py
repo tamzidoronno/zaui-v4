@@ -1824,6 +1824,14 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getBookingConfiguration(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getBookingConfiguration"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getEmailMessage(self, language):
     args = collections.OrderedDict()
     if isinstance(language,GetShopBaseClass): 
@@ -2050,6 +2058,21 @@ class HotelBookingManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "setArxConfiguration"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def setBookingConfiguration(self, settings):
+    args = collections.OrderedDict()
+    if isinstance(settings,GetShopBaseClass): 
+      args["settings"]=json.dumps(settings.__dict__)
+    else:
+      try:
+        args["settings"]=json.dumps(settings)
+      except (ValueError, AttributeError):
+        args["settings"]=settings
+    data = EmptyClass()
+    data.args = args
+    data.method = "setBookingConfiguration"
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 

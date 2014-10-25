@@ -4362,6 +4362,21 @@ class SedoxProductManager(object):
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getLatestProductsList(self, count):
+    args = collections.OrderedDict()
+    if isinstance(count,GetShopBaseClass): 
+      args["count"]=json.dumps(count.__dict__)
+    else:
+      try:
+        args["count"]=json.dumps(count)
+      except (ValueError, AttributeError):
+        args["count"]=count
+    data = EmptyClass()
+    data.args = args
+    data.method = "getLatestProductsList"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getProductById(self, id):
     args = collections.OrderedDict()
     if isinstance(id,GetShopBaseClass): 

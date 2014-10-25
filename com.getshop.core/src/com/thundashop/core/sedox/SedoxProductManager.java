@@ -1345,5 +1345,24 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         return null;
     }
 
+	@Override
+	public List<SedoxProduct> getLatestProductsList(int count) throws ErrorException {
+		Set<SedoxProduct> reversedList = new TreeSet(products);
+	
+		List<SedoxProduct> retProducts = new ArrayList();
+		int i = 0;
+		
+		for (SedoxProduct prod : reversedList) {
+			retProducts.add(prod);
+			i++;
+			if (i >= count) {
+				break;
+			}
+			
+		}
+		
+		return retProducts;
+	}
+
   
 }

@@ -1,0 +1,60 @@
+.SedoxLatestProducts {
+	margin-bottom: 100px;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.SedoxLatestProducts .latestlist .subentry  {
+	display: inline-block;
+	height: 120px;
+	vertical-align: top;
+}
+
+
+.SedoxLatestProducts .latestlist .entry .moreinfo {
+	padding-top: 10px;
+	color: grey;
+	position: absolute;
+	bottom: 10px;
+}
+
+.SedoxLatestProducts .latestlist .entry .carinfo {
+	font-weight: 400;
+}
+
+.SedoxLatestProducts .latestlist .entry .carinfo, 
+.SedoxLatestProducts .latestlist .entry .entry_title {
+	color: #cc0000;
+	font-size: 18px;
+}
+.SedoxLatestProducts .latestlist .entry {
+	background-color: #f1f1f1;
+	width: 322px;
+	box-sizing: border-box;
+	padding: 15px;
+	margin-right: 4px;
+	padding-top: 10px;
+	position: relative;
+}
+
+.SedoxLatestProducts .sedox_latest_products_title {
+	padding: 20px;
+	font-size: 22px;
+	color: #cc0000;	
+}
+
+
+.SedoxLatestProducts .latestlist .navigator {
+	background-color: #cf001a;
+	cursor: pointer;
+	color: #FFF;
+	font-weight: bold;
+	font-size: 18px;
+	line-height: 120px;
+	padding-left: 3px;
+	padding-right: 3px;
+}

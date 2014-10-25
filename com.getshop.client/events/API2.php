@@ -4186,6 +4186,24 @@ class APISedoxProductManager {
 	}
 
 	/**
+	* Developers is simply an getshop user that is registered as an developer.
+	* Active developers are administrators that has an SedoxUser with the flag
+	* isActiveDeveloper = true
+	*
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function getLatestProductsList($count) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["count"] = json_encode($this->transport->object_unset_nulls($count));
+	     $data["method"] = "getLatestProductsList";
+	     $data["interfaceName"] = "core.sedox.ISedoxProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Return the products created by days back.
 	* day = 0 // Means that it will returns the list of todays files
 	* day = 1 // Means that it will returns the list of yesterdays files

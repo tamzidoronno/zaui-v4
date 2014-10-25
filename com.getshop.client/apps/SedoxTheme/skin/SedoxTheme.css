@@ -42,8 +42,9 @@ body {
     bottom: 3px; 	
 }
 
-.editormode .TopMenu {
+.user_is_logged_in .TopMenu {
 	display: block;
+	bottom: 5px;
 }
 
 .TopMenu li:not(:last-child) {
@@ -108,7 +109,7 @@ body {
 }
 
 .editormode .Logo,
-.editormode .SedoxHeaderApp {
+.user_is_logged_in .SedoxHeaderApp {
 	display: none;
 }
 

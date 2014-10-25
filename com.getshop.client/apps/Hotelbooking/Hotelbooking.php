@@ -37,6 +37,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $this->setConfigurationSetting("contine_page", $_POST['data']['contine_page']);
         $this->setConfigurationSetting("minumum_rental_days", $_POST['data']['rental_days']);
         $this->setConfigurationSetting("start_max_days", $_POST['data']['start_max_days']);
+        $this->setConfigurationSetting("display_room_thumbnail", $_POST['data']['display_room_thumbnail']);
     }
 
     public function getRoomTaxes() {
@@ -58,6 +59,15 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         }
 
         return $minimum;
+    }
+
+    public function getDisplayRoomThumbnail() {
+        $minimum = $this->getConfigurationSetting("display_room_thumbnail");
+        if (!$minimum) {
+            return false;
+        }
+
+        return $minimum == "true";
     }
 
     public function getProjectName() {

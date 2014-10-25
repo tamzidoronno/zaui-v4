@@ -115,11 +115,22 @@ if($this->getServiceType() == "storage") {
         if($avroom <= 0) {
             continue;
         }
+        $images = $product->imagesAdded;
+        
         $foundroom = true;
         echo "<div class='room_selection_2 product $selectedclass'>";
         /* @var $product core_productmanager_data_Product */
         echo "<span class='firstbox selection_box' productid='".$product->id."'>";
-        echo "<div class='name'>" . $product->name . "</div>";
+        if(sizeof($images) > 0 && $this->getDisplayRoomThumbnail()) {
+            echo '<a href="displayImage.php?id=' . $images[0] .'" data-lightbox="'.$product->id.'" data-title=""><img class="imagepreview" src="displayImage.php?id=' . $images[0] .'"></a>';
+            foreach($images as $index => $image) {
+                if($index == 0) {
+                    continue;
+                }
+                echo '<a href="displayImage.php?id=' . $image .'" data-lightbox="'.$product->id.'" data-title=""></a>';
+            }
+        }
+        echo "<div class='name' >" . $product->name . "</div>";
         if(isset($product->descriptions[0])) {
             echo trim($product->descriptions[0] ? strip_tags($product->descriptions[0]) : '');
         }

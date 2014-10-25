@@ -160,9 +160,10 @@ $uploadedByUser = $this->getUploadedUserName($sedoxProduct);
         $class1 = array_key_exists("purchaseOnlyForCustomer", $sedoxProduct->states) ? "active" : "";
         $class2 = array_key_exists("notifyForCustomer", $sedoxProduct->states) ? "active" : "";
         $class3 = array_key_exists("sendProductByMail", $sedoxProduct->states) ? "active" : "";
-	$class4 = $sedoxProduct->saleAble ? "saleable" : "";
-	$text = $sedoxProduct->saleAble ? "Make product NOT salable" : "Make product saleable";
-	
+		$class4 = $sedoxProduct->saleAble ? "saleable" : "";
+		$text = $sedoxProduct->saleAble ? "Make product NOT salable" : "Make product saleable";
+		$badCustomer = $sedoxUser->badCustomer == "true" ? "<div><i class='fa fa-warning' style='color: #CC0000;'></i> <b>THIS IS A BAD CUSTOMER!</b></div> <br/>" : "";
+		echo $badCustomer;
         ?>
         <div class="adminbottons">
             <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button savechecksumonly">Save checksum only</div>

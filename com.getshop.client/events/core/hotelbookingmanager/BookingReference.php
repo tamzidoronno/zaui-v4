@@ -34,12 +34,9 @@ class core_hotelbookingmanager_BookingReference extends core_common_DataCommon  
 	public $sentWelcomeMessages;
 
 	/** @var String */
-<<<<<<< HEAD
-=======
 	public $parkingSpots;
 
 	/** @var String */
->>>>>>> 4d3662885e160c35b43392ab4a08061768dc4dab
 	public $failed;
 
 }

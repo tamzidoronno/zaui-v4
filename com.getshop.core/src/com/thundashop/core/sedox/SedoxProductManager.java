@@ -1364,5 +1364,14 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 		return retProducts;
 	}
 
+	@Override
+	public void toggleBadCustomer(String userId, boolean badCustomer) throws ErrorException {
+		SedoxUser user = getSedoxUserById(userId);
+		if (user != null) {
+			user.badCustomer = badCustomer;
+			saveUser(user);
+		}
+	}
+
   
 }

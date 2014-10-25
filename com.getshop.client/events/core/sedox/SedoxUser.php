@@ -13,6 +13,9 @@ class core_sedox_SedoxUser extends core_common_DataCommon  {
 	public $isPassiveSlave;
 
 	/** @var String */
+	public $badCustomer;
+
+	/** @var String */
 	public $canUseExternalProgram;
 
 	/** @var String */

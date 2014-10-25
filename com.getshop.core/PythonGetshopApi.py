@@ -4814,6 +4814,28 @@ class SedoxProductManager(object):
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 
+  def toggleBadCustomer(self, userId, badCustomer):
+    args = collections.OrderedDict()
+    if isinstance(userId,GetShopBaseClass): 
+      args["userId"]=json.dumps(userId.__dict__)
+    else:
+      try:
+        args["userId"]=json.dumps(userId)
+      except (ValueError, AttributeError):
+        args["userId"]=userId
+    if isinstance(badCustomer,GetShopBaseClass): 
+      args["badCustomer"]=json.dumps(badCustomer.__dict__)
+    else:
+      try:
+        args["badCustomer"]=json.dumps(badCustomer)
+      except (ValueError, AttributeError):
+        args["badCustomer"]=badCustomer
+    data = EmptyClass()
+    data.args = args
+    data.method = "toggleBadCustomer"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
   def toggleIsNorwegian(self, userId, isNorwegian):
     args = collections.OrderedDict()
     if isinstance(userId,GetShopBaseClass): 

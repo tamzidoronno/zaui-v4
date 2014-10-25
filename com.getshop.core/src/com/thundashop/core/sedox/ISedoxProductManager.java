@@ -136,5 +136,8 @@ public interface ISedoxProductManager  {
     @Administrator
     public void toggleIsNorwegian(String userId, boolean isNorwegian) throws ErrorException;
 	
+    @Administrator
+    public void toggleBadCustomer(String userId, boolean badCustomer) throws ErrorException;
+	
 	public List<SedoxProduct> getLatestProductsList(int count) throws ErrorException;
 }

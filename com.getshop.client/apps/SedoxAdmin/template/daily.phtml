@@ -38,6 +38,8 @@
             if (array_key_exists("sendProductByMail", $sedoxProduct->states)) {
                 $status = "<i style='color: green;' class='fa fa-check-circle'></i>";
             }
+			
+			$badCustomer = $this->isBadCustomer($sedoxProduct) ? "<i class='fa fa-warning' style='color: #CC0000;'></i> " : "";
             
             echo "
                     <div productId='$id' class='filelistrow'>
@@ -46,7 +48,7 @@
                         <div class='col col2'> $name </div>
                         <div class='col col3'> $date </div>
 
-                        <div class='col col4'> $fullName </div>
+                        <div class='col col4'> $badCustomer $fullName </div>
                         <div class='col col5'> $start </div>
                         <div class='col col5'> $goto </div>
                         <div class='col col6'> &nbsp; $status </div>

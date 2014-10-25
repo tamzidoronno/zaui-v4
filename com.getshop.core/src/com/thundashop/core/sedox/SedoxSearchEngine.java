@@ -47,6 +47,38 @@ public class SedoxSearchEngine {
             if (product.model != null && product.model.toLowerCase().contains(searchString)) {
                 retProducts.add(product);
             }
+			
+            if (product.ecuBrand != null && product.ecuBrand.toLowerCase().contains(searchString)) {
+                retProducts.add(product);
+            }
+			
+            if (product.ecuHardwareNumber != null && product.ecuHardwareNumber.toLowerCase().contains(searchString)) {
+                retProducts.add(product);
+            }
+            
+            if (product.ecuPartNumber != null && product.ecuPartNumber.toLowerCase().contains(searchString)) {
+                retProducts.add(product);
+            }
+			
+            if (product.ecuSoftwareNumber != null && product.ecuSoftwareNumber.toLowerCase().contains(searchString)) {
+                retProducts.add(product);
+            }
+            
+            if (product.ecuSoftwareVersion != null && product.ecuSoftwareVersion.toLowerCase().contains(searchString)) {
+                retProducts.add(product);
+            }
+            
+            if (product.ecuType != null && product.ecuType.toLowerCase().contains(searchString)) {
+                retProducts.add(product);
+            }
+            
+            if (product.engineSize != null && product.engineSize.toLowerCase().contains(searchString)) {
+                retProducts.add(product);
+            }
+            
+            if (product.softwareNumber != null && product.softwareNumber.toLowerCase().contains(searchString)) {
+                retProducts.add(product);
+            }
             
             if (product.originalChecksum != null && product.originalChecksum.toLowerCase().contains(searchString)) {
                 retProducts.add(product);

@@ -612,6 +612,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         room.isClean = true;
         room.cleaningDates.add(new Date());
         saveObject(getRoom(roomId));
+        checkForArxUpdate();
     }
 
     @Override
@@ -722,9 +723,17 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         if (roomName != null) {
             message = message.replaceAll("\\{room\\}", roomName);
         }
-        message = message.replaceAll("\\{checkin_time\\}", new SimpleDateFormat("dd-MM-yyyy H:m").format(reference.startDate) + "0");
+        String startMinute = new SimpleDateFormat("m").format(reference.startDate).toString();
+        if(startMinute.length() < 2) {
+            startMinute = "0" + startMinute;
+        }
+        String endMinute = new SimpleDateFormat("m").format(reference.endDate).toString();
+        if(endMinute.length() < 2) {
+            endMinute = "0" + endMinute;
+        }
+        message = message.replaceAll("\\{checkin_time\\}", new SimpleDateFormat("dd-MM-yyyy H:").format(reference.startDate)) + startMinute;
         message = message.replaceAll("\\{checkin_date\\}", new SimpleDateFormat("dd-MM-yyyy").format(reference.startDate));
-        message = message.replaceAll("\\{checkout_time\\}", new SimpleDateFormat("dd-MM-yyyy H:m").format(reference.endDate) + "0");
+        message = message.replaceAll("\\{checkout_time\\}", new SimpleDateFormat("dd-MM-yyyy H:").format(reference.endDate)) + endMinute;
         message = message.replaceAll("\\{name\\}", name);
         message = message.replaceAll("\\{referenceNumber\\}", reference.bookingReference + "");
         String contacts = "";

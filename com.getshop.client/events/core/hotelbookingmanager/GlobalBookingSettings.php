@@ -16,6 +16,12 @@ class core_hotelbookingmanager_GlobalBookingSettings extends core_common_DataCom
 	public $roomThumbNails;
 
 	/** @var String */
+	public $showReferenceNumber;
+
+	/** @var String */
+	public $displayHeardAboutUs;
+
+	/** @var String */
 	public $parkingSpots;
 
 }

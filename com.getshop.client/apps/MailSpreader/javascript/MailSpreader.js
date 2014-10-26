@@ -16,6 +16,7 @@ app.MailSpreader = {
 	sendContacts: function () {
 		var data = {
 			"name": $('.MailSpreader .inputname').val(),
+			"email": $('.MailSpreader .inputemail').val(),
 		}
 
 		var entries = [];

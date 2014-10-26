@@ -120,8 +120,9 @@ if ($this->getServiceType() == "storage") {
         if ($product->id === $this->getProduct()->id) {
             $selectedclass = "selected";
         }
+        $disabled = "";
         if ($avroom <= 0) {
-            continue;
+            $selectedclass .= " disabled";
         }
         $images = $product->imagesAdded;
 
@@ -155,7 +156,11 @@ if ($this->getServiceType() == "storage") {
             echo "<span class='rebated_product'> (-" . (100 - (int) (($product->price / $product->original_price) * 100)) . "%)</span>";
         }
         echo "</span>";
-        echo "<span class='selectbutton' gstype='clicksubmit' method='changeProduct' gsname='productid' gsvalue='" . $product->id . "'>" . $selectRoomButton . "</span>";
+        if ($avroom <= 0) {
+            echo "<span class='sold_out'>" . $this->__w("Sold out") . "</span>";
+        } else {
+            echo "<span class='selectbutton' gstype='clicksubmit' method='changeProduct' gsname='productid' gsvalue='" . $product->id . "'>" . $selectRoomButton . "</span>";
+        }
         echo "</span>";
         echo "<div style='clear:both;'></div>";
         echo "<span class='available_rooms'>";

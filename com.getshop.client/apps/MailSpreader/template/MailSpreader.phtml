@@ -11,20 +11,22 @@
 <br>
 <h1><? echo $this->__w("Your name"); ?></h1>
 <input type="text" class="inputname">
+<h1><? echo $this->__w("Your email"); ?></h1>
+<input type="text" class="inputemail">
 <br>
 <form action="">
     <table style="width:100%;" class="emailspreader">
         <thead>
             <tr>
-                <th align="left"><? echo $this->__w("Name"); ?></th>
-                <th align="left"><? echo $this->__w("Email"); ?></th>
+                <th align="left"><? echo $this->__w("Name of the person you want to tip"); ?></th>
+                <th align="left"><? echo $this->__w("Email for this person"); ?></th>
             </tr>
         </thead>
         <tbody>
             <? for($i = 0; $i < 3; $i++) { ?>
                 <tr>
-                    <td width="50%"><input type="text" placeholder="<? echo $this->__w("Name of person"); ?>" class="name"></td>
-                    <td width="50%" align="right"><input type="text" placeholder="<? echo $this->__w("Email adress to person"); ?>" class="email"></td>
+                    <td width="50%"><input type="text" placeholder="Ola Norman" class="name"></td>
+                    <td width="50%" align="right"><input type="text" placeholder="ola@normann.no" class="email"></td>
                 </tr>
             <? } ?>
         </tbody>

@@ -69,6 +69,28 @@ $types["storage"] = "Storage";
         </tr>
         <tr>
             <td>
+                Show reference number
+            </td>
+            <td>
+                <select gsname="show_referencenumber">
+                    <option value="false">No</option>
+                    <option value="true" <? if($this->showReferenceNumber()) { echo " SELECTED"; } ?>>Yes</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Display heard about us
+            </td>
+            <td>
+                <select gsname="show_heardaboutus">
+                    <option value="false">No</option>
+                    <option value="true" <? if($this->getConfig()->displayHeardAboutUs) { echo " SELECTED"; } ?>>Yes</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
                 Parking spots
             </td>
             <td>

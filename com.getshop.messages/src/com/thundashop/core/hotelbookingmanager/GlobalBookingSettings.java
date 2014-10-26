@@ -8,5 +8,7 @@ public class GlobalBookingSettings extends DataCommon {
     public Integer minRentalDays = 1;
     public Integer maxRentalDaysAhead = 1000;
     public boolean roomThumbNails = false;
+    public boolean showReferenceNumber = false;
+    public boolean displayHeardAboutUs = false;
     public Integer parkingSpots = 0;
 }

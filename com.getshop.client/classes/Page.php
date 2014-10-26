@@ -145,6 +145,9 @@ class Page extends FactoryBase {
 
     public function loadSkeleton() {
         $editorMode = $this->getFactory()->isEditorMode() ? "editormode" : '';
+		if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {
+			$editorMode .= " user_is_logged_in";
+		}
         echo '<div id="skeleton" class="' . $editorMode . '">';
         $this->loadSkeletonBody();
         echo '</div>';

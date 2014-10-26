@@ -1,0 +1,27 @@
+<div class="sedox_latest_products_title">
+	Latest files processed
+</div>
+<div class="latestlist">
+	<div class="subentry navigator latest_prev"><</div>
+	
+	<?
+	$products = $this->getLatestProducts();
+	$i = 0;
+	
+	foreach ($products as $sedoxProduct) {
+		$name = $sedoxProduct->brand . " " . $sedoxProduct->model . " " . $sedoxProduct->engineSize . " " . $sedoxProduct->power . " " . $sedoxProduct->year . " " . $sedoxProduct->originalChecksum ;
+
+		$hide = $i >= 3 ? "display: none;" : "";
+		echo '<div style="'.$hide.'" class="subentry entry">';
+		echo '<div class="entry_title">Car Tuning:</div>';
+		echo '<div class="carinfo">'.$name.'</div>';
+		echo '<div class="moreinfo"><span style="font-weight: 500;">File processed on:</span><br/>'.$sedoxProduct->rowCreatedDate.'</div>';
+		echo '</div>';
+		$i++;
+		
+	}
+	?>
+	
+	
+	<div class="subentry navigator latest_next">></div>
+</div>

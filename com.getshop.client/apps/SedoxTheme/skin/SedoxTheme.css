@@ -38,7 +38,28 @@ body {
 }
 
 .TopMenu {
-    display: none;   
+	display: none;
+    bottom: 3px; 	
+}
+
+.user_is_logged_in .TopMenu {
+	display: block;
+	bottom: 5px;
+}
+
+.TopMenu li:not(:last-child) {
+	border-right: solid 1px #525252;
+}
+
+.TopMenu li:not(:first-child) {
+	padding-left: 20px;
+}
+
+.TopMenu li a {
+	line-height: 46px;
+	padding-right: 20px;
+	color: #FFF;
+	font-size: 16px;
 }
 
 .gs_outer.footer {
@@ -81,13 +102,22 @@ body {
 .SedoxHeaderApp {
     position: absolute;
     color: #FFF;
+	
     line-height: 60px;
     bottom: 0px;
     left: 10px;
 }
 
+.editormode .Logo,
+.user_is_logged_in .SedoxHeaderApp {
+	display: none;
+}
+
+.editormode .gs_outer.header .applicationarea,
 .editormode .gs_outer.header {
-    display: none;
+    min-height: 50px !important;
+    height: 50px !important;
+	background-position: 0px -150px;
 }
 
 body[editormode=true] {

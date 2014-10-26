@@ -37,14 +37,20 @@
     width: 130px;
 }
 
+.SedoxProductSearcher .sedox_information li {
+	list-style-type:none;
+	background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAIAAACQKrqGAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAB3RJTUUH3goZCzEz9pleDgAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAEaSURBVCjPlZA9jsJADIVtjxWgYIRSQ0GHlDocgXvmCEjcAzrOEERFQzRjj7ewNGR/mnX1ZH96zzY+n8/z+Xy/39/v92KxQERVLaUQERGp6nq97rrudDrhMAy32y3G2LYtM6sqM4cQVBUAAKCUknM+HA58vV5jjNvtdrVaEREz55zNLITgHDOnlMZxZBHZbDZN05iZmaWUENHXAABEzDkjYgiBPcXMSikunHBRy8y4Ek6bmbv+jfrJPvuNeueDisg8dy5KKd/Q+prKVfsPamb/QGv9uAMAiMhRAKDlcikiKSUAEBFPyDkDwFw0TUN93wPANE3+/GovIm6ZUlLV/X6Pj8fjcrm8Xq9pmjw3hEBEIuK5Mcbdbnc8Hr8AOP8bjhkvS2kAAAAASUVORK5CYII=");
+	padding-bottom: 15px;
+	background-repeat: no-repeat;
+	background-position: 0 3px;
+	padding-left: 25px;
+}
 .SedoxProductSearcher .sedox_information {
-    padding-left: 30px;
-    padding-right: 30px;
-    padding-top: 50px;
-    padding-bottom: 50px;
+    padding: 20px;
+	background-color: #f1f1f1;
 }
 .SedoxProductSearcher .sedox_information .title {
-    font-size: 16px;
+    font-size: 22px;
     color: #cc0000;
 }
 

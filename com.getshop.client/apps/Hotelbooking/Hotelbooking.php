@@ -456,9 +456,11 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                 $order = $this->getApi()->getOrderManager()->createOrderByCustomerReference($user->referenceKey);
             }
             
-            $reservation = $this->getApi()->getHotelBookingManager()->getReservationByReferenceId($reference);
-            $reservation->heardAboutUs = $_POST['data']['heardaboutus'];
-            $this->getApi()->getHotelBookingManager()->updateReservation($reservation);
+            if(isset($_POST['data']['heardaboutus'])) {
+                $reservation = $this->getApi()->getHotelBookingManager()->getReservationByReferenceId($reference);
+                $reservation->heardAboutUs = $_POST['data']['heardaboutus'];
+                $this->getApi()->getHotelBookingManager()->updateReservation($reservation);
+            }
             
             $_GET['orderProcessed'] = true;
             $_GET['orderId'] = $order->id;

@@ -37,11 +37,6 @@ class Translation extends ReportingApplication implements Application {
                 continue;
             }
             
-            if($baseTranslation[$key] == $value) {
-                //No need to save user translated data which is the same.
-                continue;
-            }
-            
             if($key == $value) {
                 //No need to save keys as values, since they are defaults.
                 continue;
@@ -57,6 +52,7 @@ class Translation extends ReportingApplication implements Application {
         $store = $this->getApi()->getStoreManager()->getMyStore();
         $store->configuration->translationMatrix = $newArray;
         $this->getApi()->getStoreManager()->saveStore($store->configuration);
+        $this->getFactory()->reloadStoreObject();
         $this->getFactory()->loadLanguage();
     }
     

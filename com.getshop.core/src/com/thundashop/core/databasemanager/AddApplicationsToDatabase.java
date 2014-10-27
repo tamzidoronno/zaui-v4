@@ -55,16 +55,14 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        ApplicationSettings sedoxLatestProducts = createSettings(
-                "SedoxLatestProducts",
-                "8c666b2a-3dd2-4526-9f3d-1edae1e5a7af",
+        ApplicationSettings mailspreader = createSettings(
+                "SjoTunetTheme",
+                "06321eda-afaa-4e91-8ca7-67d342dbd1ea",
                 allowed,
                 "",
-                ApplicationSettings.Type.Marketing, false);
-        sedoxLatestProducts.isPublic = false;
-		sedoxLatestProducts.allowedStoreIds = new ArrayList();
-		sedoxLatestProducts.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
-		apps.add(sedoxLatestProducts);
+                ApplicationSettings.Type.Theme, true);
+        mailspreader.isPublic = false;
+		apps.add(mailspreader);
 		
         
 //        

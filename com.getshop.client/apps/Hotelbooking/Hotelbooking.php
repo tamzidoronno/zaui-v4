@@ -37,6 +37,8 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $settings->minRentalDays = $_POST['data']['rental_days'];
         $settings->maxRentalDaysAhead = $_POST['data']['start_max_days'];
         $settings->roomThumbNails = $_POST['data']['display_room_thumbnail'];
+        $settings->showReferenceNumber = $_POST['data']['show_referencenumber'];
+        $settings->displayHeardAboutUs = $_POST['data']['show_heardaboutus'];
         $settings->parkingSpots = $_POST['data']['parking_spots'];
         $this->getFactory()->getApi()->getHotelBookingManager()->setBookingConfiguration($settings);
         $this->setConfigurationSetting("contine_page", $_POST['data']['contine_page']);
@@ -67,6 +69,10 @@ class Hotelbooking extends \ApplicationBase implements \Application {
 
     public function getDisplayRoomThumbnail() {
         return $this->getConfig()->roomThumbNails;
+    }
+
+    public function showReferenceNumber() {
+        return $this->getConfig()->showReferenceNumber;
     }
 
     public function getParkingSpots() {
@@ -198,7 +204,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function render() {
-
         //this variable is set from $this->continueToCart();
         if (isset($_GET['orderProcessed'])) {
             if ($this->partnerShipChecked() || !$this->hasPaymentAppAdded()) {
@@ -450,6 +455,13 @@ class Hotelbooking extends \ApplicationBase implements \Application {
 
                 $order = $this->getApi()->getOrderManager()->createOrderByCustomerReference($user->referenceKey);
             }
+            
+            if(isset($_POST['data']['heardaboutus'])) {
+                $reservation = $this->getApi()->getHotelBookingManager()->getReservationByReferenceId($reference);
+                $reservation->heardAboutUs = $_POST['data']['heardaboutus'];
+                $this->getApi()->getHotelBookingManager()->updateReservation($reservation);
+            }
+            
             $_GET['orderProcessed'] = true;
             $_GET['orderId'] = $order->id;
         } else {
@@ -719,7 +731,10 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function isPrivate() {
-        return $this->getPost("customer_type") == "private";
+        if(!$this->isCompany()) {
+            return true;
+        }
+//        return $this->getPost("customer_type") == "private";
     }
 
     public function isMvaRegistered() {

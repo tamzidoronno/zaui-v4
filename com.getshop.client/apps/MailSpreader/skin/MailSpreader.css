@@ -37,19 +37,19 @@
 	text-align:center;
 	text-shadow:1px 1px 0px #ffffff;
 }
-.MailSpreader .emailspreader input,.MailSpreader .inputname  {
+.MailSpreader .emailspreader input,.MailSpreader .inputname,.MailSpreader .inputemail {
     font-size: 13px;
     margin-bottom: 5px;
     display: block;
     line-height:30px;
     padding: 4px;
-    width: 95%;
+    width: 98%;
     border: solid 1px #85b1de;
     background-image: url( 'blue_bg.png' );
     background-repeat: repeat-x;
     background-position: top;
 }
-.MailSpreader .inputname {
+.MailSpreader .inputname, .MailSpreader .inputemail {
     width:99%;
 }
 

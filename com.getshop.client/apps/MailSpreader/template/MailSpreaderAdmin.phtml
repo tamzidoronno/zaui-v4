@@ -16,10 +16,17 @@ echo "<th align='left'>" . $this->__w("To email") . "</th>";
 echo "<th align='left'>" . $this->__w("To name") . "</th>";
 echo "</tr>";
 $count = 1;
-foreach($savedentries as $name => $entries) {
+foreach($savedentries as $tipser => $entries) {
     foreach($entries as $email => $name) {
+        if($email === "email") {
+            continue;
+        }
         echo "<tr>";
-        echo "<td>$count. " . $name . "</td>";
+        echo "<td>" . $tipser;
+        if(isset($entries["email"])) {
+            echo " (" . $entries["email"] . ")";
+        }
+        echo "</td>";
         echo "<td>" . $email . "</td>";
         echo "<td>" . $name . "</td>";
         echo "</tr>";

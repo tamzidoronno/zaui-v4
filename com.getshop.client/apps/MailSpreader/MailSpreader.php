@@ -69,6 +69,7 @@ class MailSpreader extends \ApplicationBase implements \Application {
     
     public function sendEmails() {
         $name = $_POST['data']['name'];
+        $email = $_POST['data']['email'];
         $entries = $_POST['data']['entries'];
 
         $savedEntries = $this->getSavedEntries();
@@ -92,6 +93,7 @@ class MailSpreader extends \ApplicationBase implements \Application {
                 $savedEntries[$name][$toemail] = $toname;
             }
         }
+        $savedEntries[$name]["email"] = $email;
 
 		$this->startAdminImpersonation("PageManager", "setApplicationSettings");
         $this->setConfigurationSetting("sentemails", json_encode($savedEntries));

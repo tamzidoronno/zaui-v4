@@ -71,6 +71,9 @@ Existing booking references
                 echo "<a href='?page=users_all_users&userid=".$order->userId."'>";
                 echo join("<br>", $reservation->contact->names);
                 echo "</a>";
+                if($reservation->heardAboutUs) {
+                    echo "<br><span style='color:#BBB;'>Heard about: "  . $reservation->heardAboutUs . "</span>";
+                }
             }
             echo "</td>";
             echo "<td style='text-align:center;' valign='top'>" . $reservation->bookingReference . "</td>";

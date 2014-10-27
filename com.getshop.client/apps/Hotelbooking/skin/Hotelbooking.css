@@ -29,7 +29,8 @@
 .Hotelbooking .room_selection_2.product .secondbox { font-size: 30px; color:#BBBBBB;  }
 .Hotelbooking .room_selection_2 .selection_box { float:left; }
 .Hotelbooking .room_selection_2 .personalcount { font-size: 14px; font-weight: bold; }
-.Hotelbooking .room_selection_2 .price_text { font-size: 22px; font-weight: bold; margin-left: 20px; }
+.Hotelbooking .room_selection_2 .price_text { font-size: 22px; font-weight: bold; }
+.Hotelbooking .sold_out { margin: 20px; color:#BBB; }
 
 .Hotelbooking .no_room_available { font-size: 22px; text-align: center; }
 .Hotelbooking .room_selection_2 .price_box { float:right;display:inline-block; width: 30%; padding-top:10px; }
@@ -47,7 +48,8 @@
 .Hotelbooking .summary_heading { border-bottom: solid 1px #BBB; padding-bottom: 5px; margin-bottom: 5px; font-size: 16px; }
 .Hotelbooking .summary_total { border-top: solid 1px #BBB; border-bottom: solid 1px #BBB; margin-top: 10px; padding-top: 5px; padding-bottom: 5px; font-weight:bold; }
 .Hotelbooking .price_row { padding: 3px; }
-.Hotelbooking .bookingsummary input { border: solid 1px #BDC7D8; border-radius: 2px; padding: 3px; }
+.Hotelbooking .bookingsummary input, .Hotelbooking .bookingsummary select { border: solid 1px #BDC7D8; border-radius: 2px; padding: 3px; }
+.Hotelbooking .bookingsummary select { min-width: 175px; background-color:#FFF; }
 .Hotelbooking .invalid { background-color:#ffd9d9; }
 .Hotelbooking .calendar { width:200px; }
 .Hotelbooking .top_box { min-height: 260px; }
@@ -67,6 +69,6 @@
     .Hotelbooking .booking_contact_data { padding-bottom: 40px;width: 100%;  }
     .Hotelbooking .summaryview { padding-bottom: 40px; }
     .Hotelbooking .contact_text { width: 100px; }
-    .Hotelbooking .contact_input input { width: 100%; }
+    .Hotelbooking .contact_input input, .Hotelbooking .contact_entry select { width: 100%; }
     .Hotelbooking .top_box table { width: 100%; margin-bottom: 120px; }
 }

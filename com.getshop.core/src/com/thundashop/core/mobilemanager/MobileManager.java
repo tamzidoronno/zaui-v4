@@ -45,14 +45,17 @@ public class MobileManager extends ManagerBase implements IMobileManager {
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof Token) {
-                Token token = (Token)dataCommon;
-                tokens.put(token.tokenId, token);
+				System.out.println("Skipping token: " + ((Token)dataCommon).id);
+				continue;
+//                Token token = (Token)dataCommon;
+//                tokens.put(token.tokenId, token);
             }
         }
     }
 
     @Override
     public void registerToken(Token token) throws ErrorException {
+		System.out.println("Registering token: " + token.id);
         token.storeId = storeId;
         databaseSaver.saveObject(token, credentials);
         tokens.put(token.tokenId, token);
@@ -125,6 +128,7 @@ public class MobileManager extends ManagerBase implements IMobileManager {
 
     @Override
     public void clearBadged(String tokenId) {
+		System.out.println("Clearing badget :  " + tokenId);
         badges.put(tokenId, 0);
     }
 }

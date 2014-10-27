@@ -21,6 +21,7 @@ public class BookingReference extends DataCommon {
     public boolean updateArx = true;
     public boolean sentWelcomeMessages = true;
     public Integer parkingSpots = 0;
+    public String heardAboutUs = "";
     Date failed = null;
 
     public boolean isApprovedForCheckin(String roomId) {

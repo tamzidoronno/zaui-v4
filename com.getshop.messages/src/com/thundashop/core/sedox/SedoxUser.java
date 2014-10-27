@@ -18,6 +18,7 @@ public class SedoxUser extends DataCommon {
     public SedoxCreditAccount creditAccount = new SedoxCreditAccount();
     public boolean isNorwegian = false;
     public boolean isPassiveSlave = false;
+    public boolean badCustomer = false;
     public boolean canUseExternalProgram = false;
     public String magentoId;
     public List<SedoxCreditOrder> creditOrders = new ArrayList<>();

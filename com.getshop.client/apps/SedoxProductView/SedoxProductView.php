@@ -157,5 +157,17 @@ class SedoxProductView extends \ApplicationBase implements \Application {
 		$saleable = $_POST['data']['saleAble'];
 		$this->getApi()->getSedoxProductManager()->toggleSaleableProduct($productId, $saleable);
     }
+	
+	public static function getReference($sedoxProduct) {
+		if (!\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {
+			return null;
+		}
+		
+		if (!isset($sedoxProduct->reference->{\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id})) {
+			return null;
+		}
+		
+		return $sedoxProduct->reference->{\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id};
+	}
 }
 ?>

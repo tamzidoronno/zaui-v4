@@ -1,13 +1,25 @@
 <?
 $sedoxProduct = $this->getCurrentProduct();
-$name = $sedoxProduct->brand . " " . $sedoxProduct->model . " " . $sedoxProduct->engineSize . " " . $sedoxProduct->power . " " . $sedoxProduct->year . " " . $sedoxProduct->originalChecksum ;
+$name = $sedoxProduct->brand . " " . $sedoxProduct->model . " " . $sedoxProduct->engineSize . " " . $sedoxProduct->power . " " . $sedoxProduct->year . " " . $sedoxProduct->originalChecksum;
 $checksum = $sedoxProduct->originalChecksum ? $sedoxProduct->originalChecksum : "";
+$reference = $this->getReference($sedoxProduct);
 ?>
+
+
 
 <div class="productviewtoprow">
     <i class='fa fa-car'></i><div class="carname"><? echo $name; ?></div><div class="statictext">All files at this page are developed by Sedox Performance<br><font style="color: red; font-weight: bold;"> Download is not available unless you have credit at your account.</font></div>
 </div>
-<div class='sedox_product_box productinfo'>
+<? if ($reference) { ?>
+    <div class="referenceinfo">
+        Reference: 
+        <?
+        echo $reference;
+        ?>
+    </div>
+<? } ?>
+
+<div class='sedox_product_box productinfo' style='position: relative;'>
     <div class='title'>Product Information</div>
 
     <div class='header'>
@@ -48,20 +60,20 @@ $checksum = $sedoxProduct->originalChecksum ? $sedoxProduct->originalChecksum : 
         <div class='col col5'>Admin tools:</div>
     </div>
     <div class='row' >
-       <?
-    foreach ($sedoxProduct->binaryFiles as $binFile) {
-        ?>
-        <div class='binaryfilerow' binfileid="<? echo $binFile->id; ?>">
-            <div class="col col1 squaredThree">
-                <input type="checkbox" value="None" id="squaredThree_<? echo $binFile->id; ?>" name="check" fileId="<? echo $binFile->id; ?>" />
-                <label for="squaredThree_<? echo $binFile->id; ?>"></label>
-                <? echo $binFile->fileType; ?>
-            </div>
-            
-            <div class='col col2'><? echo $this->getPriceForFile($binFile); ?></div>
-            
-            <div class='col col3'>
-                <? 
+        <?
+        foreach ($sedoxProduct->binaryFiles as $binFile) {
+            ?>
+            <div class='binaryfilerow' binfileid="<? echo $binFile->id; ?>">
+                <div class="col col1 squaredThree">
+                    <input type="checkbox" value="None" id="squaredThree_<? echo $binFile->id; ?>" name="check" fileId="<? echo $binFile->id; ?>" />
+                    <label for="squaredThree_<? echo $binFile->id; ?>"></label>
+                    <? echo $binFile->fileType; ?>
+                </div>
+
+                <div class='col col2'><? echo $this->getPriceForFile($binFile); ?></div>
+
+                <div class='col col3'>
+                    <?
                     if ($binFile->checksumCorrected == 0) {
                         echo "No";
                     } else if ($binFile->checksumCorrected == 1) {
@@ -69,21 +81,21 @@ $checksum = $sedoxProduct->originalChecksum ? $sedoxProduct->originalChecksum : 
                     } else {
                         echo "N/A";
                     }
-                ?>
-            </div>
-            <div class='col col4'>
-                <? echo $binFile->extraInformation; ?>
-            </div>
-            <? if ($this->hasWriteAccess()) { ?>
-                <div class='col col5'>
-                    <i productid="<? echo $sedoxProduct->id; ?>" class="fa fa-trash-o deletebinfile"></i>
-                    <i productid="<? echo $sedoxProduct->id; ?>" fileid="<? echo $binFile->id; ?>" class="fa fa-info-circle changeinfo"></i>
+                    ?>
                 </div>
-            <? } ?>
-        </div>
-        <?
-    }
-    ?> 
+                <div class='col col4'>
+                    <? echo $binFile->extraInformation; ?>
+                </div>
+                <? if ($this->hasWriteAccess()) { ?>
+                    <div class='col col5'>
+                        <i productid="<? echo $sedoxProduct->id; ?>" class="fa fa-trash-o deletebinfile"></i>
+                        <i productid="<? echo $sedoxProduct->id; ?>" fileid="<? echo $binFile->id; ?>" class="fa fa-info-circle changeinfo"></i>
+                    </div>
+                <? } ?>
+            </div>
+            <?
+        }
+        ?> 
     </div>
     <? if ($this->hasWriteAccess()) { ?>
         <div style='position: absolute; top: 0px; right: 0px;'class="add_tuningfile">
@@ -112,20 +124,20 @@ $sedoxUser = $this->getUploadedSedoxUser($sedoxProduct);
 $uploadedByUser = $this->getUploadedUserName($sedoxProduct);
 ?>
 <div class='admintools'>
-    <div class='userinfo' style="position: absolute; top: 65px; border-left: dashed 1px red; border-bottom: dashed 1px red; right: 1px; ">
+    <div class='userinfo'>
         <div class='subcontainer' style="margin-bottom: 0px; padding: 5px; ">
-            <? echo $uploadedByUser->fullName. " (id: $uploadedByUser->id) (Credit: ".$sedoxUser->creditAccount->balance.")";?>
+            <? echo $uploadedByUser->fullName . " (id: $uploadedByUser->id) (Credit: " . $sedoxUser->creditAccount->balance . ")"; ?>
             <br> Email: <? echo $uploadedByUser->emailAddress; ?>
         </div>
     </div>
-    
+
     <div class='title'><i class='fa fa-lightbulb-o'></i>&nbsp; Purchase file for customer.</div>
     <div class='subcontainer'>
         <div class="box122">
             <textarea class="infotextareatocustomer" placeholder="Information to attach to the mail."></textarea>
             <br><input type="textfield" class="original_check_input_box" placeholder="Insert original checksum here" value="<? echo $checksum; ?>"/>
         </div>
-        
+
         <div class="box122 additional_info">
             <b>User comment: </b>
             <br><? echo $sedoxProduct->comment; ?>
@@ -133,37 +145,36 @@ $uploadedByUser = $this->getUploadedUserName($sedoxProduct);
             <br><b>Uploaded from: </b>
             <br><? echo $sedoxProduct->uploadOrigin; ?>
             <br>
-			<br><b>Automatic gear: </b> 
-				
-				<? 
-				if ($sedoxProduct->gearType == "auto") {
-                    echo "<span style='color:green'>Yes</span>";
-                } else {
-                    echo "<span style='color:red'>No</span>";
-                }
-				
-				?>
-			
-			<br>
+            <br><b>Automatic gear: </b> 
+
+            <?
+            if ($sedoxProduct->gearType == "auto") {
+                echo "<span style='color:green'>Yes</span>";
+            } else {
+                echo "<span style='color:red'>No</span>";
+            }
+            ?>
+
+            <br>
             <br><b>Withdraw credit:</b> <?
-                if ($sedoxProduct->useCreditAccount == "true") {
-                    echo "<span style='color:green'>Yes</span>";
-                } else {
-                    echo "<span style='color:red'>No</span>";
-                }
-                
+            if ($sedoxProduct->useCreditAccount == "true") {
+                echo "<span style='color:green'>Yes</span>";
+            } else {
+                echo "<span style='color:red'>No</span>";
+            }
             ?>
         </div>
         <br>
         <br>
-        <?
-        $class1 = array_key_exists("purchaseOnlyForCustomer", $sedoxProduct->states) ? "active" : "";
-        $class2 = array_key_exists("notifyForCustomer", $sedoxProduct->states) ? "active" : "";
-        $class3 = array_key_exists("sendProductByMail", $sedoxProduct->states) ? "active" : "";
-	$class4 = $sedoxProduct->saleAble ? "saleable" : "";
-	$text = $sedoxProduct->saleAble ? "Make product NOT salable" : "Make product saleable";
-	
-        ?>
+<?
+$class1 = array_key_exists("purchaseOnlyForCustomer", $sedoxProduct->states) ? "active" : "";
+$class2 = array_key_exists("notifyForCustomer", $sedoxProduct->states) ? "active" : "";
+$class3 = array_key_exists("sendProductByMail", $sedoxProduct->states) ? "active" : "";
+$class4 = $sedoxProduct->saleAble ? "saleable" : "";
+$text = $sedoxProduct->saleAble ? "Make product NOT salable" : "Make product saleable";
+$badCustomer = $sedoxUser->badCustomer == "true" ? "<div><i class='fa fa-warning' style='color: #CC0000;'></i> <b>THIS IS A BAD CUSTOMER!</b></div> <br/>" : "";
+echo $badCustomer;
+?>
         <div class="adminbottons">
             <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button savechecksumonly">Save checksum only</div>
             <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button purchaseorderonly <? echo $class1; ?>">Purchase order only</div>
@@ -171,30 +182,30 @@ $uploadedByUser = $this->getUploadedUserName($sedoxProduct);
             <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button sendproductbyemail <? echo $class3; ?>">Send product by email</div>
             <div productid="<? echo $sedoxProduct->id; ?>" class="sedox_button togglesalable <? echo $class4; ?>"><? echo $text; ?></div>
         </div>
-        
+
     </div>
-    
+
     <div class='sedox_product_box product_history' style='position: relative;'>
         <div class='title'>History</div>
 
-        <?
-        if (count($sedoxProduct->histories) == 0) {
-        echo "<div class='row'><div class='col'>There is no history for this product</div></div>";
-        } else {
-        ?>
-        <div class='header'>
-            <div class='col col1'>Date:</div>
-            <div class='col col2'>Comment:</div>
-            <div class='col col3'>By user:</div>
-        </div>
-        <?
-        foreach ($sedoxProduct->histories as $hist) {
-            $date = $hist->dateCreated;
-            $desc = $hist->description;
-            $user = $this->getApi()->getUserManager()->getUserById($hist->userId)->fullName;
-            echo "<div class='row'><div class='col col1'>$date</div><div class='col col2'>$desc</div><div class='col col3'>$user</div></div>";
-        }
-        }
-        ?>
+<?
+if (count($sedoxProduct->histories) == 0) {
+    echo "<div class='row'><div class='col'>There is no history for this product</div></div>";
+} else {
+    ?>
+            <div class='header'>
+                <div class='col col1'>Date:</div>
+                <div class='col col2'>Comment:</div>
+                <div class='col col3'>By user:</div>
+            </div>
+    <?
+    foreach ($sedoxProduct->histories as $hist) {
+        $date = $hist->dateCreated;
+        $desc = $hist->description;
+        $user = $this->getApi()->getUserManager()->getUserById($hist->userId)->fullName;
+        echo "<div class='row'><div class='col col1'>$date</div><div class='col col2'>$desc</div><div class='col col3'>$user</div></div>";
+    }
+}
+?>
     </div>
 </div>

@@ -22,6 +22,8 @@ import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.User.Type;
+import com.thundashop.core.utils.CompanySearchEngine;
+import com.thundashop.core.utils.CompanySearchEngineHolder;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
@@ -48,6 +50,9 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     private HashMap<String, EventPartitipated> eventData = new HashMap();
     private HashMap<String, Signature> signatures = new HashMap();
 
+	@Autowired
+	private CompanySearchEngineHolder holder; 
+	
     @Autowired
     public CalendarManager(Logger log, DatabaseSaver databaseSaver) {
         super(log, databaseSaver);
@@ -80,6 +85,9 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     }
 
     private Month getMonth(int year, int month) {
+		
+//		TheReport report = new TheReport(months, (UserManager) getManager(UserManager.class), holder.getSearchEngine(storeId));
+		
         for (Month mountObject : months.values()) {
             if (mountObject.is(year, month)) {
                 return mountObject;

@@ -4253,6 +4253,28 @@ class SedoxProductManager(object):
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 
+  def addReference(self, productId, reference):
+    args = collections.OrderedDict()
+    if isinstance(productId,GetShopBaseClass): 
+      args["productId"]=json.dumps(productId.__dict__)
+    else:
+      try:
+        args["productId"]=json.dumps(productId)
+      except (ValueError, AttributeError):
+        args["productId"]=productId
+    if isinstance(reference,GetShopBaseClass): 
+      args["reference"]=json.dumps(reference.__dict__)
+    else:
+      try:
+        args["reference"]=json.dumps(reference)
+      except (ValueError, AttributeError):
+        args["reference"]=reference
+    data = EmptyClass()
+    data.args = args
+    data.method = "addReference"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
   def addSlaveToUser(self, masterUserId, slaveUserId):
     args = collections.OrderedDict()
     if isinstance(masterUserId,GetShopBaseClass): 
@@ -4811,6 +4833,28 @@ class SedoxProductManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "toggleAllowWindowsApp"
+    data.interfaceName = "core.sedox.ISedoxProductManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def toggleBadCustomer(self, userId, badCustomer):
+    args = collections.OrderedDict()
+    if isinstance(userId,GetShopBaseClass): 
+      args["userId"]=json.dumps(userId.__dict__)
+    else:
+      try:
+        args["userId"]=json.dumps(userId)
+      except (ValueError, AttributeError):
+        args["userId"]=userId
+    if isinstance(badCustomer,GetShopBaseClass): 
+      args["badCustomer"]=json.dumps(badCustomer.__dict__)
+    else:
+      try:
+        args["badCustomer"]=json.dumps(badCustomer)
+      except (ValueError, AttributeError):
+        args["badCustomer"]=badCustomer
+    data = EmptyClass()
+    data.args = args
+    data.method = "toggleBadCustomer"
     data.interfaceName = "core.sedox.ISedoxProductManager"
     return self.communicationHelper.sendMessage(data)
 

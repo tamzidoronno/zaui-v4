@@ -7,6 +7,7 @@ $checkedwindowsapp = $sedoxUser->canUseExternalProgram ? "checked" : "";
 $isASlave = $sedoxUser->masterUserId != null && $sedoxUser->masterUserId != "";
 $isNorwegian = $sedoxUser->isNorwegian ? "checked='checked'" : "";
 $passiveslavechecked = $sedoxUser->isPassiveSlave ? "checked='checked'" : "";
+$badCustomer = $sedoxUser->badCustomer ? "checked='checked'" : "";
 ?>
 
 <div class="useroverview" userid="<? echo $userid; ?>">
@@ -17,6 +18,7 @@ $passiveslavechecked = $sedoxUser->isPassiveSlave ? "checked='checked'" : "";
     <br> Allow negative credit: <input id="allownegativecredit" userId="<? echo $user->id; ?>" type="checkbox" <? echo $checked; ?> />
     <br> Norwegian customer: <input id="norwegiancustomer" userId="<? echo $user->id; ?>" type="checkbox" <? echo $isNorwegian; ?> />
     <br> Allow use of windows program: <input id="allowwindowsapp" userId="<? echo $user->id; ?>" type="checkbox" <? echo $checkedwindowsapp; ?> />
+    <br> Bad customer: <input id="badCustomer" userId="<? echo $user->id; ?>" type="checkbox" <? echo $badCustomer; ?> />
     <br>
     <br><div class="gs_button saveusersettings" userId="<? echo $userid; ?>"> Save </div>
     <br>

@@ -15,33 +15,35 @@
 <div class='sedox_box filehistory'>
     <div class='details'>
         <div class='detailstitle'>
-	    <i class='fa fa-upload'></i> &nbsp;Upload history
-	    <div class="fa fa-expand"></div>
-	</div>
+            <i class='fa fa-upload'></i> &nbsp;Upload history
+            <div class="fa fa-expand"></div>
+        </div>
 
         <div class='filehistory'>
             <?
             $currentPage = $this->getCurrentFileHistoryPage();
             $lastestUploadedProductsAll = $this->getLatestUploadedProducts();
             
+
             $i = 0;
             if ($lastestUploadedProductsAll != null) {
-                
-                $lastestUploadedProducts = array_slice($lastestUploadedProductsAll, (($currentPage-1)*10), 10);
-                
-                echo "<div class='row header'><div class='col col1'>Sedox Id</div><div class='col col2'>File</div><div class='col col3'>Uploaded</div></div>";
+
+                $lastestUploadedProducts = array_slice($lastestUploadedProductsAll, (($currentPage - 1) * 10), 10);
+
+                echo "<div class='row header'><div class='col col1'>Sedox Id</div><div class='col col2'>File</div><div class='col col3'>Uploaded</div><div class='col col4'>Ref</div></div>";
                 foreach ($lastestUploadedProducts as $product) {
+                    $reference = ns_23fac58b_5066_4222_860c_a9e88196b8a1\SedoxProductView::getReference($product);
                     $i++;
                     $odd = $i % 2 ? "odd" : "even";
 
                     $name = $product->brand . " " . $product->model . " " . $product->engineSize . " " . $product->power . " " . $product->year;
                     $id = $product->id;
                     $date = $product->rowCreatedDate;
-		    $status = "red";
-		    $status = $product->started ? "yellow" : $status;
-		    $status = count($product->binaryFiles) > 1 ? "green" : $status;
-		    
-                    echo "<a href='?page=productview&productId=$id'><div class='row $odd'><div class='col col1'>$id</div><div class='col col2'>$name</div><div class='col col3'>$date</div><div class='col col4'><div class='status $status'></div></div></div></a>";
+                    $status = "red";
+                    $status = $product->started ? "yellow" : $status;
+                    $status = count($product->binaryFiles) > 1 ? "green" : $status;
+
+                    echo "<a href='?page=productview&productId=$id'><div class='row $odd'><div class='col col1'>$id</div><div class='col col2'>$name</div><div class='col col3'>$date</div><div class='col col4'>$reference</div><div class='col col5'><div class='status $status'></div></div></div></a>";
                 }
             } else {
                 echo "<div class='row'>You have not uploaded any files yet.</div>";
@@ -57,25 +59,25 @@
 <div class='sedox_box downloadhistory'>
     <div class='details'>
         <div class='detailstitle'>
-	    <i class='fa fa-download'></i> &nbsp;Download history
-	    <div class="fa fa-expand"></div>
-	</div>
+            <i class='fa fa-download'></i> &nbsp;Download history
+            <div class="fa fa-expand"></div>
+        </div>
 
         <div class='filehistory'>
             <?
             $allOrders = $this->getOrders();
             $currentPage = $this->getCurrentPageForDownloadedFiles();
-            $allOrdersSub = array_slice($allOrders, ($currentPage-1)*10, 10);
+            $allOrdersSub = array_slice($allOrders, ($currentPage - 1) * 10, 10);
             $i = 0;
             if ($allOrdersSub != null) {
-                
+
                 echo "<div class='row header'><div class='col col1'>Sedox Id</div><div class='col col2'>File</div></div>";
                 foreach ($allOrdersSub as $order) {
                     $product = $this->getApi()->getSedoxProductManager()->getProductById($order->productId);
                     if ($product == null) {
                         continue;
                     }
-                    
+
                     $i++;
                     $odd = $i % 2 ? "odd" : "even";
 
@@ -98,16 +100,16 @@
 <div class='sedox_box credithistory'>
     <div class='details'>
         <div class='detailstitle'>
-	    <i class='fa fa-dollar'></i> &nbsp;Transaction history
-	    <div class="fa fa-expand"></div>
-	</div>
+            <i class='fa fa-dollar'></i> &nbsp;Transaction history
+            <div class="fa fa-expand"></div>
+        </div>
         <div class='filehistory'>
             <?
             $currentPage = $this->getCurrentTransactionHistoryPage();
             $allCreditHistory = $this->getLatestCreditHistory();
             if (count($allCreditHistory) > 0) {
                 $reverstedArray = array_reverse($allCreditHistory);
-                $latestCreditHistory = array_slice($reverstedArray, ($currentPage-1)*10, 10);
+                $latestCreditHistory = array_slice($reverstedArray, ($currentPage - 1) * 10, 10);
             } else {
                 return null;
             }
@@ -118,14 +120,14 @@
                     $i++;
                     $odd = $i % 2 ? "odd" : "even";
                     ?>
-                                <!--<tr><td></td><td><? echo $hist->description; ?></td><td><? echo $hist->amount; ?></td><td><? echo $hist->dateCreated; ?></td></tr>-->
-                        <div class='row <? echo $odd; ?>'>
-                            <div class='col col1'><? echo $hist->transactionReference; ?></div>
-                            <div class='col col2'><? echo $hist->description; ?></div>
-                            <div class='col col3'><? echo $hist->amount; ?></div>
-                            <div class='col col4'><? echo $hist->dateCreated; ?></div>
-                        </div>
-                <?
+                                        <!--<tr><td></td><td><? echo $hist->description; ?></td><td><? echo $hist->amount; ?></td><td><? echo $hist->dateCreated; ?></td></tr>-->
+                    <div class='row <? echo $odd; ?>'>
+                        <div class='col col1'><? echo $hist->transactionReference; ?></div>
+                        <div class='col col2'><? echo $hist->description; ?></div>
+                        <div class='col col3'><? echo $hist->amount; ?></div>
+                        <div class='col col4'><? echo $hist->dateCreated; ?></div>
+                    </div>
+                    <?
                 }
             } else {
                 echo "<div class='row'><div class='col col1'>You have not made any credit transactions yet.</div></div>";
@@ -141,30 +143,32 @@
 <div class='sedox_box slaveslist'>
     <div class='details'>
         <div class='detailstitle'><i class='fa fa-users'></i> &nbsp;Your partners</div>
-        
+
         <div class='filehistory'>
             <div class='row header'><div class='col col1'>Credit each 100</div><div class='col col2'>Name</div><div class="col col3">Credit balance</div></div>
             <?
             $slaves = $this->getSlaves();
-            if (!count($slaves)) { 
-            ?>
+            if (!count($slaves)) {
+                ?>
                 <div class='row'><div class='col'>Sorry, but there is no partners setup for you. Do you have partners that needs to be connected? let us know.</div></div>
-            <? }  else {  
+            <?
+            } else {
                 $i = 0;
 
                 foreach ($slaves as $slave) {
                     $user = $this->getApi()->getUserManager()->getUserById($slave->id);
                     $i++;
                     $odd = $i % 2 ? "odd" : "even";
-                ?>
+                    ?>
                     <div class='row <? echo $odd; ?>'>
                         <div class='col col1'><? echo $slave->slaveIncome; ?></div>
                         <div class='col col2'><? echo $user->fullName; ?></div>
                         <div class='col col3'><div userid="<? echo $slave->id; ?>" class="show_slave_credit_history"><? echo $slave->creditAccount->balance; ?> </div></div>
                     </div>                
-                <? 
+                    <?
                 }
-            } ?>
+            }
+            ?>
 
         </div>
     </div>

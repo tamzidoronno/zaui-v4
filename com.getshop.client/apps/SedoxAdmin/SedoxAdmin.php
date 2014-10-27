@@ -116,6 +116,7 @@ class SedoxAdmin extends \ApplicationBase implements \Application {
         $this->getApi()->getSedoxProductManager()->toggleIsNorwegian($_POST['data']['userId'], $_POST['data']['isNorwegian']);
         $this->getApi()->getSedoxProductManager()->toggleAllowNegativeCredit($_POST['data']['userId'], $_POST['data']['allowNegativeCredit']);
         $this->getApi()->getSedoxProductManager()->toggleAllowWindowsApp($_POST['data']['userId'], $_POST['data']['allowWindowsApplication']);
+        $this->getApi()->getSedoxProductManager()->toggleBadCustomer($_POST['data']['userId'], $_POST['data']['badCustomer']);
     }
     
     public function updateCredit() {
@@ -181,6 +182,14 @@ class SedoxAdmin extends \ApplicationBase implements \Application {
             return $user->fullName;
         }
         return "";
+    }
+	
+    public function isBadCustomer($sedoxProduct) {
+        $user = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($sedoxProduct->firstUploadedByUserId);
+        if ($user != null) {
+            return $user->badCustomer;
+        }
+        return false;
     }
     
     public function getCreditBalance($sedoxProduct) {

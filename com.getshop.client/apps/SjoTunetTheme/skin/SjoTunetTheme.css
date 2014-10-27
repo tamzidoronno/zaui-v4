@@ -100,3 +100,21 @@ body {
 .Banner {
 	box-shadow: 0px 0px 4px rgba(0,0,0,0.3);
 }
+
+.lang_inner {
+    width: 1024px;
+    margin: 0 auto;
+    height: 0px;
+    position: relative;
+}
+
+.lang_inner .language_selection {
+    position: absolute; 
+    right: 10px;
+    top: 40px;
+    z-index: 2;
+}
+
+.lang_inner .language_selection a {
+    margin-right: 5px;
+}

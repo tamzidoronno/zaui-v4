@@ -113,7 +113,7 @@ if ($groups != null && is_array($groups) && count($groups) > 0 && !isset($_SESSI
                             if (!$selectedEntry) {
                             ?>
                             <select class='select_course_location'>
-                                <option value=''>Velg et kurssted</option>
+                                <option value=''><? echo $this->__w("Select event location"); ?></option>
                                 <?
                                 foreach ($places as $place => $number) {
                                     echo "<option value='" . $place . "'>" . $place . "</option>";

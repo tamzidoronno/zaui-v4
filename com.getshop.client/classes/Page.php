@@ -167,9 +167,7 @@ class Page extends FactoryBase {
         }
         
         echo "<div class='gs_outer_mainarea'><div class='mainarea'>";
-        if ($this->skeletonType == 5 ) {
-            $this->includefile("skeleton5");
-        } else if ($this->skeletonType == 6 ) {
+        if ($this->skeletonType == 6 ) {
             $this->includefile("skeleton6");
         } else {
             $pb = new PageBuilder($this->layout, $this->skeletonType, $this);

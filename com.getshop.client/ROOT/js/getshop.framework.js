@@ -35,10 +35,13 @@ thundashop.framework = {
         $(document).on('click', '.toogleDeepfreeze', this.showDeepFreezOption);
         $(document).on('click', '.savedeepfreeze', this.toggleDeepFreeze);
         $(document).on('click', '.gscellsettings .gsoperate', this.operateCell);
+        $(document).on('click', '.gsrotateleft', this.rotateCell);
+        $(document).on('click', '.gsrotateright', this.rotateCell);
         $(document).on('click', '.gscellsettings .fa-cogs', function () {
             thundashop.framework.showCellSettingsPanel($(this));
         });
         $(document).on('click', '.gs_splithorizontally', this.operateCell);
+        $(document).on('click', '.gs_addrotating', this.operateCell);
         $(document).on('click', '.gs_splitvertically', this.operateCell);
         $(document).on('click', '.gs_removerow', this.operateCell);
         $(document).on('click', '.gs_closecelledit', this.closeCellEdit);
@@ -81,6 +84,41 @@ thundashop.framework = {
             ranges.push(w);
         }
         return ranges;
+    },
+    rotateCell : function() {
+        var cell = $(this).closest('.rotatingcontainer');
+        if($(this).hasClass('gsrotateright')) {
+            thundashop.framework.rotateCellDirection(cell, "right");
+        } else {
+            thundashop.framework.rotateCellDirection(cell, "left");
+        }
+    },
+    rotateCellDirection : function(cell, direction) {
+        var found = 0;
+        var before = null;
+        var newcellid = "";
+        cell.find('.gsrotating').each(function() {
+            if(direction === "right") {
+                if(found === 1) {
+                    $(this).show();
+                    newcellid = $(this).attr('cellid');
+                    found = 2;
+                }
+                if($(this).is(':visible') && found === 0) {
+                    $(this).hide();
+                    found = 1;
+                }
+            } else {
+                if($(this).is(':visible') && found === 0) {
+                    $(this).hide();
+                    before.show();
+                    newcellid = before.attr('cellid');
+                    found = 1;
+                }
+            }
+            before=$(this);
+        });
+        $('.gseditrowheading').attr('cellid', newcellid);
     },
     loadResizing: function (cell, saveonmove) {
         if (cell.find('.range').length > 0) {
@@ -221,7 +259,6 @@ thundashop.framework = {
         if ($(this).hasClass('gsremoveopacity')) {
             val = 1;
         }
-
         if (bgcolor.indexOf("rgba") !== 0) {
             var newcolor = bgcolor.replace(')', ', ' + val + ')').replace('rgb', 'rgba');
         } else {
@@ -363,6 +400,13 @@ thundashop.framework = {
         } else {
             cellid = $(this).closest('.gscell').attr('cellid');
         }
+        
+        var cell = $('.gscell[cellid="'+cellid+'"]');
+        if(cell.hasClass('gsrotating')) {
+            cellid = cell.closest('.rotatingcontainer').attr('cellid');
+        }
+
+        
         var event = thundashop.Ajax.createEvent('', 'startEditRow', $(this), {"cellid": cellid});
         thundashop.Ajax.post(event);
     },
@@ -398,10 +442,11 @@ thundashop.framework = {
         if (!cellid) {
             cellid = $('.gsvisualizeedit').attr('cellid');
         }
-
+        
         var type = $(this).attr('type');
 
         if (type === "settings") {
+            var cell = $('.gscell[cellid="' + cellid + "']");
             $(this), thundashop.framework.showCellSettingsPanel($(this));
             return;
         }
@@ -453,10 +498,10 @@ thundashop.framework = {
         $('.gscellsettingspanel').fadeIn();
         var cell = element.closest('.gscell');
         if (cell.hasClass('gseditinfo')) {
-            cell = cell.next(".gscell");
+            cell = $(".gscell[cellid='"+$('.gseditrowheading').attr('cellid')+"']");
         }
 
-        if (cell.hasClass('gscolumn')) {
+        if (cell.hasClass('gsvertical')) {
             $('.gscellsettingspanel').find('.gscolumnmenu').show();
         } else {
             $('.gscellsettingspanel').find('.gsrowmenu').show();

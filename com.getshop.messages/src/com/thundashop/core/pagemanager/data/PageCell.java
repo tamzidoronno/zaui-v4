@@ -2,12 +2,17 @@ package com.thundashop.core.pagemanager.data;
 
 import java.io.Serializable;
 import java.util.LinkedList;
-import java.util.NoSuchElementException;
 import java.util.UUID;
 
 public class PageCell implements Serializable {
+    static class PageDirection {
+        public static String vertical = "VERTICAL";
+        public static String horizontal = "HORIZONTAL";
+        public static String rotating = "ROTATING";
+    }
+    
     public String cellId = UUID.randomUUID().toString();
-    public boolean vertical = true;
+    public String direction = PageDirection.vertical;
     public LinkedList<PageCell> cells = new LinkedList();
     public String appId;
     public String styles = "";

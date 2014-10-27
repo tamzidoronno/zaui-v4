@@ -21,11 +21,14 @@ public class PageLayout implements Serializable {
         footer.cells = moveCellRecursive(footer.cells, cellid, moveUp);
     }
 
-    public String createCell(String incell, String before, boolean vertical) {
+    public String createCell(String incell, String before, String direction) {
+        if(direction == null || direction.isEmpty()) {
+            direction = PageCell.PageDirection.vertical;
+        }
         String cellId = "";
         if (incell == null || incell.isEmpty()) {
             PageCell newpagecell = new PageCell();
-            newpagecell.vertical = vertical;
+            newpagecell.direction = direction;
             if (before != null && !before.isEmpty()) {
                 LinkedList<PageCell> newList = new LinkedList();
                 for (PageCell cell : rows) {
@@ -40,13 +43,12 @@ public class PageLayout implements Serializable {
             }
             cellId = newpagecell.cellId;
         } else {
-            boolean verticaltoset = vertical;
+            String directionToSet = direction;
             PageCell cell = findCell(getAllCells(), incell);
             if (cell.cells.isEmpty()) {
                 PageCell newcell = cell.createCell(before);
-                newcell.vertical = verticaltoset;
+                newcell.direction = directionToSet;
                 newcell.appId = cell.appId;
-                cell.vertical = !vertical;
                 before = newcell.cellId;
             } else {
                 
@@ -54,19 +56,19 @@ public class PageLayout implements Serializable {
                     cell2.width = -1.0;
                 });
                 
-                if(verticaltoset != cell.cells.get(0).vertical && (before == null || before.isEmpty())) {
+                if(!directionToSet.equals(cell.cells.get(0).direction) && (before == null || before.isEmpty())) {
                     PageCell newpagecell = new PageCell();
-                    newpagecell.vertical = verticaltoset;
+                    newpagecell.direction = directionToSet;
                     newpagecell.cells.addAll(cell.cells);
                     cell.cells.clear();
                     cell.cells.add(newpagecell);
                 } else {
-                    verticaltoset = cell.cells.get(0).vertical;
+                    directionToSet = cell.cells.get(0).direction;
                 }
             }
 
             PageCell newcell = cell.createCell(before);
-            newcell.vertical = verticaltoset;
+            newcell.direction = directionToSet;
             cellId = newcell.cellId;
         }
         return cellId;

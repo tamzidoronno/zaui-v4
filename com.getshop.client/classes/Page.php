@@ -55,10 +55,15 @@ class Page {
                 echo "</div></div>";
             }
 
+            $cellid = $row->cellId;
+            if (sizeof($row->cells) > 0 && $row->cells[0]->direction === "ROTATING") {
+                $cellid = $row->cells[0]->cellId;
+            }
+            
             if (isset($_SESSION['gseditcell']) && $_SESSION['gseditcell'] === $row->cellId) {
                 echo "<div class='gscell gsdepth_0 gseditinfo' style='height: 38px;'>";
                 echo "<div class='gsinner gsdepth_0'>";
-                echo "<div class='gseditrowheading' cellid='" . $row->cellId . "'>";
+                echo "<div class='gseditrowheading' cellid='" . $cellid . "'>";
                 if ($row->cellId != "footer" && $row->cellId != "header") {
                     echo "<i class='fa fa-trash-o' type='delete' title='Delete this row'></i>";
                 }
@@ -74,7 +79,18 @@ class Page {
                 $isedit = true;
                 $beenEdited = true;
             }
-            $this->printCell($row, $count, 0, 0, $isedit);
+
+            if (sizeof($row->cells) > 0 && $row->cells[0]->direction === "ROTATING") {
+                $counter = 0;
+                echo "<div class='rotatingcontainer' cellid='".$row->cellId."'>";
+                foreach ($row->cells as $cell) {
+                    $this->printCell($cell, $counter, 0, 0, $isedit);
+                    $counter++;
+                }
+                echo "</div>";
+            } else {
+                $this->printCell($row, $count, 0, 0, $isedit);
+            }
             $count++;
             if ($isedit) {
                 echo "<div class='gscell gsdepth_0 gsendedit gseditinfo'>";
@@ -124,7 +140,7 @@ class Page {
 
     function printCell($cell, $count, $depth, $totalcells, $edit) {
         $direction = "gshorisontal";
-        if ($cell->vertical) {
+        if ($cell->direction == "VERTICAL") {
             $direction = "gsvertical";
         }
 
@@ -137,30 +153,31 @@ class Page {
         $styles = "style='$cell->styles';";
         $width = 100;
         $isColumn = false;
-        if ($cell->vertical && $totalcells > 1) {
+        if ($cell->direction == "VERTICAL" && $totalcells > 1) {
             $width = 100 / $totalcells;
             if ($cell->width > 0) {
                 $width = $cell->width;
             }
 
             $styles = "style='width:$width%; float:left;" . $cell->styles . "'";
-            $direction .= " gscolumn";
             $isColumn = true;
-        } else {
-            $direction .= " gsrow";
         }
-
+        $direction = "gs" . strtolower($cell->direction);
 
         $innerstyles = $cell->innerStyles;
 
-
         echo "<div $styles width='$width' class='gscell $roweditouter gsdepth_$depth gscount_$count $direction' cellid='" . $cell->cellId . "'>";
+        if ($cell->direction === "ROTATING") {
+            echo "<i class='fa fa-arrow-circle-left gsrotateleft gsrotatearrow'></i>";
+            echo "<i class='fa fa-arrow-circle-right gsrotateright gsrotatearrow'></i>";
+        }
+
         if ($depth === 0 && !$edit) {
             echo "<i title='" . $this->factory->__f("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o'></i>";
         }
         echo "<div class='gsinner gsdepth_$depth $rowedit gscount_$count' totalcells='$totalcells' style='$innerstyles'>";
         if ($edit) {
-            if (sizeof($cell->cells) > 1 && $cell->vertical && $cell->cells[0]->vertical) {
+            if (sizeof($cell->cells) > 1 && $cell->direction == "VERTICAL" && $cell->cells[0]->direction == "VERTICAL") {
                 $this->displayResizing();
             }
         }
@@ -172,15 +189,21 @@ class Page {
         if (sizeof($cell->cells) > 0) {
             $innercount = 0;
             $innerdept = $depth + 1;
-            $vertical = $cell->vertical;
 
+            if($cell->cells[0]->direction == "ROTATING") {
+                echo "<div class='rotatingcontainer' cellid='".$cell->cellId."'>";
+            }
+            
             foreach ($cell->cells as $innercell) {
                 $this->printCell($innercell, $innercount, $innerdept, sizeof($cell->cells), $edit);
                 $innercount++;
             }
-//            if ($cell->vertical) {
+            
+            if($cell->cells[0]->direction == "ROTATING") {
+                echo "</div>";
+            }
+           
             echo "<div style='clear:both;'></div>";
-//            }
         } else {
             echo "<div class='applicationarea' appid='" . $cell->appId . "' area='" . $cell->cellId . "'>";
             if (!$cell->appId) {
@@ -207,10 +230,12 @@ class Page {
         echo "<div class='gs_splitvertically' type='addvertical'><i class='fa fa-arrows-h'></i>" . $this->factory->__w("Insert column") . "</div>";
         echo "<div class='gs_splithorizontally' type='addbefore'><i class='fa fa-long-arrow-up'></i>" . $this->factory->__w("Create row above") . "</div>";
         echo "<div class='gs_splithorizontally' type='addafter'><i class='fa fa-long-arrow-down'></i>" . $this->factory->__w("Create row below") . "</div>";
+        echo "<div class='gs_addrotating' type='addrotate'><i class='fa fa-sitemap'></i>" . $this->factory->__w("Insert carousel row") . "</div>";
         echo "</span>";
         echo "<span class='gscolumnmenu'>";
         echo "<div class='gs_splithorizontally' type='addbefore'><i class='fa fa-long-arrow-left'></i>" . $this->factory->__w("Create left column") . "</div>";
         echo "<div class='gs_splithorizontally' type='addafter'><i class='fa fa-long-arrow-right'></i>" . $this->factory->__w("Create right column") . "</div>";
+        echo "<div class='gs_addrotating' type='addrotate'><i class='fa fa-sitemap'></i>" . $this->factory->__w("Insert carousel cell") . "</div>";
         echo "</span>";
         echo "<div class='gscellsettingsheading'>Move area</div>";
         echo "<span class='gsrowmenu'>";
@@ -393,7 +418,7 @@ class Page {
             </div>
         </span>
         <script>
-                $('.gsresizingpanel').draggable({handle: ".heading"});
+            $('.gsresizingpanel').draggable({handle: ".heading"});
         </script>
         <?
 

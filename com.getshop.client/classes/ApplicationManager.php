@@ -70,24 +70,27 @@ class ApplicationManager extends FactoryBase {
         }
         switch ($type) {
             case "movedown":
-                $this->getApi()->getPageManager()->moveCell($this->getPage()->javapage->id, $cellId, false);
+                $this->getApi()->getPageManager()->moveCell($this->getPage()->javapage->id, $cellId, "HORIZONTAL");
                 break;
             case "moveup":
-                $this->getApi()->getPageManager()->moveCell($this->getPage()->javapage->id, $cellId, true);
+                $this->getApi()->getPageManager()->moveCell($this->getPage()->javapage->id, $cellId, "VERTICAL");
                 break;
             case "delete":
                 $this->getApi()->getPageManager()->dropCell($this->getPage()->javapage->id, $cellId);
                 break;
+            case "addrotate":
+                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "ROTATING");
+                break;
             case "addbefore":
             case "addafter":
-                $cellId = $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, true);
+                $cellId = $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "VERTICAL");
                 $_GET['gseditcell'] = $cellId;
                 break;
             case "addvertical":
-                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, true);
+                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "VERTICAL");
                 break;
             case "addhorizontal":
-                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, false);
+                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "HORIZONTAL");
                 break;
         }
     }
@@ -802,7 +805,7 @@ class ApplicationManager extends FactoryBase {
         
         $newstyles = "";
         foreach(explode(";", $styles) as $style) {
-            if($style && !stristr($style, "width") && !stristr($style, "float") && !stristr($style, "border")) {
+            if($style && !stristr($style, "width") && !stristr($style, "float") && !stristr($style, "border") && !stristr($style, "display:")) {
                 $newstyles .= $style . ";";
             }
         }

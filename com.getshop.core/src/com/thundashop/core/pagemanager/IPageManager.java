@@ -51,7 +51,7 @@ public interface IPageManager {
     public void clearPage(String pageId) throws ErrorException;
     
     @Administrator
-    public String addLayoutCell(String pageId, String incell, String beforecell, boolean vertical) throws ErrorException;
+    public String addLayoutCell(String pageId, String incell, String beforecell, String direction) throws ErrorException;
     
     @Administrator
     public Page dropCell(String pageId, String cellId) throws ErrorException;

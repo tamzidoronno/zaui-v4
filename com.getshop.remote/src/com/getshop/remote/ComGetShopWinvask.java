@@ -42,9 +42,7 @@ public class ComGetShopWinvask {
     private void checkForOrders() throws Exception {
         List<Order> orders = this.runner.api.getOrderManager().getOrders(new ArrayList(), 0, 100000);
         for (Order order : orders) {
-            if (order.status == Order.Status.WAITING_FOR_PAYMENT) {
-                exportOrder(order);
-            }
+            exportOrder(order);
         }
     }
 

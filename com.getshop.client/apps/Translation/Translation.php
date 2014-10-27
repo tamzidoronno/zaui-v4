@@ -37,6 +37,11 @@ class Translation extends ReportingApplication implements Application {
                 continue;
             }
             
+            if($baseTranslation[$key] == $value) {
+                //No need to save user translated data which is the same.
+                continue;
+            }
+            
             if($key == $value) {
                 //No need to save keys as values, since they are defaults.
                 continue;

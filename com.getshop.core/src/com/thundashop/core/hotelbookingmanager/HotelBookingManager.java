@@ -845,6 +845,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                     String copyadress = getSettings("Settings").get("mainemailaddress").value;
                     if (copyadress != null && !copyadress.isEmpty()) {
                         getMsgManager().mailFactory.send(copyadress, user.emailAddress, title, message);
+                        logMailSent(copyadress, "System owner", true, reference.bookingReference);
                         getMsgManager().mailFactory.send(copyadress, copyadress, title, message);
                         reference.sentWelcomeMessages = true;
                         logMailSent(user.emailAddress, user.fullName, true, reference.bookingReference);

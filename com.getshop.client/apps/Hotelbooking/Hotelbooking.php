@@ -228,7 +228,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         if ($this->getPage()->id == "home") {
             $this->includefile("Hotelbooking");
         } else {
-            if (((isset($_GET['subpage']) && $_GET['subpage'] == "summary") || isset($_POST['data']['partnershipdeal'])) && $this->hasValidSelection()) {
+            if (((isset($_GET['subpage']) && $_GET['subpage'] == "summary") || isset($_POST['data']['customer_type'])) && $this->hasValidSelection()) {
                 $this->includefile("booking_part3");
             } else {
                 $this->hasValidSelection();
@@ -549,6 +549,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
 
     public function validateInput($name) {
         if (isset($_GET['subpage']) && $_GET['subpage'] == "summary" || (isset($_POST['event']) && $_POST['event'] == 'setBookingData')) {
+            return "";
+        }
+        if($this->getUser() == null && $name == "heardaboutus") {
             return "";
         }
 

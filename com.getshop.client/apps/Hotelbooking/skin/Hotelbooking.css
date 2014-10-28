@@ -50,7 +50,7 @@
 .Hotelbooking .price_row { padding: 3px; }
 .Hotelbooking .bookingsummary input, .Hotelbooking .bookingsummary select { border: solid 1px #BDC7D8; border-radius: 2px; padding: 3px; }
 .Hotelbooking .bookingsummary select { min-width: 175px; background-color:#FFF; }
-.Hotelbooking .invalid { background-color:#ffd9d9; }
+.Hotelbooking .invalid { background-color:#ffd9d9 !important; }
 .Hotelbooking .calendar { width:200px; }
 .Hotelbooking .top_box { min-height: 260px; }
 .Hotelbooking .calendar { margin-right: 30px; }

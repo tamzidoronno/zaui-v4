@@ -173,11 +173,13 @@ if($this->getServiceType() == "storage") {
                <div class='contact_entry'>
                    <br>
                    <span class='contact_text'><? echo $this->__w("Where have did you hear about us?"); ?></span>
-                <select gsname='heardaboutus'>
+                <select gsname='heardaboutus' class='<? echo $this->validateInput("heardaboutus"); ?>'>
                 <option value=''></option>
                 <option value='<? echo $this->__w("Internet"); ?>'><? echo $this->__w("Internet"); ?></option>
                 <option value='<? echo $this->__w("In the news paper"); ?>'><? echo $this->__w("News paper"); ?></option>
                 <option value='<? echo $this->__w("Got tipped by a friend"); ?>'><? echo  $this->__w("Got tipped by a friend"); ?></option>
+                <option value='<? echo $this->__w("Banner på vegg"); ?>'><? echo  $this->__w("Banner på vegg"); ?></option>
+                <option value='<? echo $this->__w("Annet"); ?>'><? echo  $this->__w("Annet"); ?></option>
                 </select>
                <? } ?>
                </div>

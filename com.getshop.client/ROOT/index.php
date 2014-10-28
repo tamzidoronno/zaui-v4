@@ -66,9 +66,6 @@ function init($factory) {
 
 include '../loader.php';
 
-if(isset($_GET['setLanguage'])) {
-    $_SESSION['language_selected'] = $_GET['setLanguage'];
-}
 
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <div class="mask" id="fullscreenmask"></div>
@@ -98,6 +95,12 @@ if (isset($_GET['logonwithkey'])) {
 
 $factory = IocContainer::getFactorySingelton();
 
+if(isset($_GET['setLanguage'])) {
+    $_SESSION['language_selected'] = $_GET['setLanguage'];
+     $factory->getApi()->getStoreManager()->setSessionLanguage($_GET['setLanguage']);
+     $factory->reloadStoreObject();
+    $factory->loadLanguage();
+}
 if (@$factory->getApplicationPool()->getSelectedThemeApp()->applicationSettings->isResponsive) {
     echo '<meta name="viewport" content="initial-scale=1.0,width=device-width,user-scalable=no;">';
     echo '<link rel="stylesheet" type="text/css" href="skin/default/responsive.css" />';

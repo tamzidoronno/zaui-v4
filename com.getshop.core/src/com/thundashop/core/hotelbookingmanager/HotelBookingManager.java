@@ -732,9 +732,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         if(endMinute.length() < 2) {
             endMinute = "0" + endMinute;
         }
-        message = message.replaceAll("\\{checkin_time\\}", new SimpleDateFormat("dd-MM-yyyy H:").format(reference.startDate)) + startMinute;
+        message = message.replaceAll("\\{checkin_time\\}", new SimpleDateFormat("dd-MM-yyyy H:").format(reference.startDate) + startMinute);
         message = message.replaceAll("\\{checkin_date\\}", new SimpleDateFormat("dd-MM-yyyy").format(reference.startDate));
-        message = message.replaceAll("\\{checkout_time\\}", new SimpleDateFormat("dd-MM-yyyy H:").format(reference.endDate)) + endMinute;
+        message = message.replaceAll("\\{checkout_time\\}", new SimpleDateFormat("dd-MM-yyyy H:").format(reference.endDate) + endMinute);
         message = message.replaceAll("\\{name\\}", name);
         message = message.replaceAll("\\{referenceNumber\\}", reference.bookingReference + "");
         String contacts = "";

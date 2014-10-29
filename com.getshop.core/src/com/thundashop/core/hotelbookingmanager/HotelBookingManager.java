@@ -216,6 +216,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
         databaseSaver.saveObject(reference, credentials);
         bookingReferences.put(reference.bookingReference, reference);
+        checkForWelcomeMessagesToSend();
         checkForArxUpdate();
         return new Integer(reference.bookingReference).toString();
     }

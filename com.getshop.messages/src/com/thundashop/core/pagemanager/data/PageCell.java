@@ -11,11 +11,13 @@ public class PageCell implements Serializable {
         public static String rotating = "ROTATING";
     }
     
+    
     public String cellId = UUID.randomUUID().toString();
     public String direction = PageDirection.vertical;
     public LinkedList<PageCell> cells = new LinkedList();
     public String appId;
     public String styles = "";
+    public CarouselConfig carouselConfig = new CarouselConfig();
     public String innerStyles = "";
     public Double width = -1.0;
     

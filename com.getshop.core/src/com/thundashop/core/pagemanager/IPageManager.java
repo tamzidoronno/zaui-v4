@@ -1,6 +1,7 @@
 package com.thundashop.core.pagemanager;
 
 import com.thundashop.core.common.*;
+import com.thundashop.core.pagemanager.data.CarouselConfig;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageLayout;
 import java.util.HashMap;
@@ -246,4 +247,13 @@ public interface IPageManager {
      */
     @Administrator
     public void moveCell(String pageId, String cellId, boolean up) throws ErrorException;
+    
+    /**
+     * Set the carousel configuration.
+     * @param pageId
+     * @return
+     * @throws ErrorException 
+     */
+    @Administrator
+    public void setCarouselConfig(String pageId, String cellId, CarouselConfig config) throws ErrorException;
 }

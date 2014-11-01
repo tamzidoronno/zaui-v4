@@ -2861,7 +2861,7 @@ class PageManager(object):
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
-  def addLayoutCell(self, pageId, incell, beforecell, vertical):
+  def addLayoutCell(self, pageId, incell, beforecell, direction):
     args = collections.OrderedDict()
     if isinstance(pageId,GetShopBaseClass): 
       args["pageId"]=json.dumps(pageId.__dict__)
@@ -2884,13 +2884,13 @@ class PageManager(object):
         args["beforecell"]=json.dumps(beforecell)
       except (ValueError, AttributeError):
         args["beforecell"]=beforecell
-    if isinstance(vertical,GetShopBaseClass): 
-      args["vertical"]=json.dumps(vertical.__dict__)
+    if isinstance(direction,GetShopBaseClass): 
+      args["direction"]=json.dumps(direction.__dict__)
     else:
       try:
-        args["vertical"]=json.dumps(vertical)
+        args["direction"]=json.dumps(direction)
       except (ValueError, AttributeError):
-        args["vertical"]=vertical
+        args["direction"]=direction
     data = EmptyClass()
     data.args = args
     data.method = "addLayoutCell"
@@ -3244,6 +3244,35 @@ class PageManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "savePage"
+    data.interfaceName = "core.pagemanager.IPageManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def setCarouselConfig(self, pageId, cellId, config):
+    args = collections.OrderedDict()
+    if isinstance(pageId,GetShopBaseClass): 
+      args["pageId"]=json.dumps(pageId.__dict__)
+    else:
+      try:
+        args["pageId"]=json.dumps(pageId)
+      except (ValueError, AttributeError):
+        args["pageId"]=pageId
+    if isinstance(cellId,GetShopBaseClass): 
+      args["cellId"]=json.dumps(cellId.__dict__)
+    else:
+      try:
+        args["cellId"]=json.dumps(cellId)
+      except (ValueError, AttributeError):
+        args["cellId"]=cellId
+    if isinstance(config,GetShopBaseClass): 
+      args["config"]=json.dumps(config.__dict__)
+    else:
+      try:
+        args["config"]=json.dumps(config)
+      except (ValueError, AttributeError):
+        args["config"]=config
+    data = EmptyClass()
+    data.args = args
+    data.method = "setCarouselConfig"
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 

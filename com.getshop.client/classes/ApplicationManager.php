@@ -26,6 +26,17 @@ class ApplicationManager extends FactoryBase {
         include("initdata/themeselection.phtml");
     }
 
+    function updateCarouselConfig() {
+        $cellId = $_POST['data']['cellid'];
+        $pageId = $this->getPage()->javapage->id;
+        
+        $config = new core_pagemanager_data_CarouselConfig();
+        $config->height = $_POST['data']['height'];
+        $config->time = $_POST['data']['timer'];
+        $config->type = $_POST['data']['type'];
+        $this->getApi()->getPageManager()->setCarouselConfig($pageId, $cellId, $config);
+    }
+    
     function saveColChanges() {
         $cellid = $_POST['data']['cellid'];
         $pageid = $this->getPage()->javapage->id;

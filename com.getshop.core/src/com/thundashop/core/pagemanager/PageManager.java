@@ -8,6 +8,7 @@ import com.getshop.scope.GetShopSession;
 import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.pagemanager.data.CarouselConfig;
 import com.thundashop.core.pagemanager.data.CommonPageData;
 import com.thundashop.core.pagemanager.data.Page;
 import java.util.ArrayList;
@@ -229,6 +230,13 @@ public class PageManager extends ManagerBase implements IPageManager {
     public void moveCell(String pageId, String cellId, boolean up) throws ErrorException {
         Page page = getPage(pageId);
         page.layout.moveCell(cellId, up);
+        savePage(page);
+    }
+
+    @Override
+    public void setCarouselConfig(String pageId, String cellId, CarouselConfig config) throws ErrorException {
+        Page page = getPage(pageId);
+        page.layout.setCarouselConfig(cellId, config);
         savePage(page);
     }
 

@@ -43,6 +43,9 @@ public class PageLayout implements Serializable {
             }
             cellId = newpagecell.cellId;
         } else {
+            if(direction.equals(PageCell.PageDirection.rotating)) {
+                incell = denyRotatingInsideRotating(incell);
+            }
             String directionToSet = direction;
             PageCell cell = findCell(getAllCells(), incell);
             if (cell.cells.isEmpty()) {
@@ -51,11 +54,9 @@ public class PageLayout implements Serializable {
                 newcell.appId = cell.appId;
                 before = newcell.cellId;
             } else {
-                
                 cell.cells.stream().forEach((cell2) -> {
                     cell2.width = -1.0;
                 });
-                
                 if(!directionToSet.equals(cell.cells.get(0).direction) && (before == null || before.isEmpty())) {
                     PageCell newpagecell = new PageCell();
                     newpagecell.direction = directionToSet;
@@ -238,5 +239,43 @@ public class PageLayout implements Serializable {
 
         return newCellList;
     }
+
+    private String denyRotatingInsideRotating(String incell) {
+        PageCell cell = findCell(getAllCells(), incell);
+        if(cell.direction.equals(PageCell.PageDirection.rotating)) {
+            PageCell parent = findParent(cell);
+            if(parent == null) {
+                return incell;
+            }
+            do {
+                if(!parent.equals(PageCell.PageDirection.rotating)) {
+                    return parent.cellId;
+                }
+                parent = findParent(parent);
+            }while(parent != null);
+        }
+        return incell;
+    }
+
+    private PageCell findParent(PageCell cell) {
+        return findParentRecursive(getAllCells(), cell);
+    }
+
+    private PageCell findParentRecursive(LinkedList<PageCell> allCells, PageCell cell) {
+        for(PageCell tmpcell : allCells) {
+            if(tmpcell.cells.contains(cell)) {
+                return tmpcell;
+            } else {
+                findParentRecursive(tmpcell.cells, cell);
+            }
+        }
+        return null;
+    }
+
+    public void setCarouselConfig(String cellId, CarouselConfig config) {
+        PageCell cell = findCell(getAllCells(), cellId);
+        cell.carouselConfig = config;
+    }
+
 
 }

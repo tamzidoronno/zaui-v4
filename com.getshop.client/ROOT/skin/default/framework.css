@@ -1704,3 +1704,6 @@ a img {
     font-size: 15px;
     line-height: 30px;
 }
+
+.carouselsettingspanel { position:absolute; border: solid 1px; padding: 10px; background-color:#FFF; z-index: 20; display:none; }
+.carouselsettingspanel input { width: 40px; }

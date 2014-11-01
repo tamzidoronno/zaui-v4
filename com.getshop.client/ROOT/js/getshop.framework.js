@@ -37,6 +37,8 @@ thundashop.framework = {
         $(document).on('click', '.gscellsettings .gsoperate', this.operateCell);
         $(document).on('click', '.gsrotateleft', this.rotateCell);
         $(document).on('click', '.gsrotateright', this.rotateCell);
+        $(document).on('click', '.carouselsettings', this.showCarouselSettings);
+        $(document).on('click', '.savecarouselconfig', this.saveCarouselSettings);
         $(document).on('click', '.gscellsettings .fa-cogs', function () {
             thundashop.framework.showCellSettingsPanel($(this));
         });
@@ -92,12 +94,42 @@ thundashop.framework = {
         } else {
             thundashop.framework.rotateCellDirection(cell, "left");
         }
+        var rotatecell = $('.gscell[cellid="'+$('.gseditrowheading').attr('cellid')+'"]');
+        if(rotatecell.hasClass('gseditrowouter')) {
+            thundashop.framework.loadResizing(rotatecell, true);
+            thundashop.framework.lastRotatedCell = $('.gseditrowheading').attr('cellid');
+        }
+    },
+    saveCarouselSettings : function() {
+        var data = {
+            height : $('.carouselsettingspanel').find('.gscarouselheight').val(),
+            timer : $('.carouselsettingspanel').find('.gscarouseltimer').val(),
+            type : $('.carouselsettingspanel').find('.gscarouseltype').val(),
+            cellid : $(this).closest('.carouselsettingspanel').attr('cellid')
+        }
+        var event = thundashop.Ajax.createEvent('','updateCarouselConfig',$(this),data);
+        thundashop.Ajax.post(event);
+    },
+    showCarouselSettings : function() {
+        $('.carouselsettingspanel').css('left', $(this).offset().left);
+        $('.carouselsettingspanel').css('top', $(this).offset().top+15);
+        $('.carouselsettingspanel').css('top', $(this).offset().top+15);
+        $('.carouselsettingspanel').attr('cellid', $(this).closest('.rotatingcontainer').attr('cellid'));
+        
+        //populate values
+       $('.carouselsettingspanel').find('.gscarouselheight').val($(this).closest('.rotatingcontainer').attr('height'))
+       $('.carouselsettingspanel').find('.gscarouseltimer').val($(this).closest('.rotatingcontainer').attr('timer'))
+       $('.carouselsettingspanel').find('.gscarouseltype').val($(this).closest('.rotatingcontainer').attr('type'))
+        $(this).closest('.rotatingcontainer').attr('timer')
+        $(this).closest('.rotatingcontainer').attr('timertype')
+        
+        $('.carouselsettingspanel').fadeIn();
     },
     rotateCellDirection : function(cell, direction) {
         var found = 0;
         var before = null;
         var newcellid = "";
-        cell.find('.gsrotating').each(function() {
+        cell.children('.gsrotating').each(function() {
             if(direction === "right") {
                 if(found === 1) {
                     $(this).show();
@@ -124,9 +156,15 @@ thundashop.framework = {
         if (cell.find('.range').length > 0) {
             return;
         }
+        if(cell.hasClass('gsrotating') && !cell.hasClass('gsdepth_0')) {
+            return;
+        }
+        
+        $('.gsresizetable').remove();
+        $('.CRC').remove();
         var children = cell.children('.gsinner').children('.gsvertical');
         if (children.length > 1) {
-            var table = $('<table style="width: 100%;" class="range" dragCursor="pointer" cellspacing="0" cellpadding="0" border="0"></table>');
+            var table = $('<table style="width: 100%;" class="range gsresizetable" dragCursor="pointer" cellspacing="0" cellpadding="0" border="0"></table>');
             var row = $('<tr></tr>');
             children.each(function () {
                 var width = $(this).attr('width');
@@ -388,7 +426,7 @@ thundashop.framework = {
                 $(this).closest('tr').find('input[type="range"]').val(value);
             }
         });
-        thundashop.framework.loadResizing(cell);
+        thundashop.framework.loadResizing(cell, false);
     },
     closeCellEdit: function () {
         $('.gscellsettingspanel').hide();
@@ -428,9 +466,6 @@ thundashop.framework = {
         $('.gsvisualizeedit').removeClass('gsvisualizeedit');
         target.find('.gscellsettings').first().show();
         target.find('.gscellsettings').first().closest('.gscell').addClass('gsvisualizeedit');
-    },
-    activateMoveApplication: function () {
-
     },
     operateCell: function () {
         var cellid = $(this).closest('.gscellsettingspanel').attr('cellid');

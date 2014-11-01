@@ -2773,13 +2773,13 @@ class APIPageManager {
 	* @throws ErrorException
 	*/
 
-	public function addLayoutCell($pageId, $incell, $beforecell, $vertical) {
+	public function addLayoutCell($pageId, $incell, $beforecell, $direction) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
 	     $data['args']["incell"] = json_encode($this->transport->object_unset_nulls($incell));
 	     $data['args']["beforecell"] = json_encode($this->transport->object_unset_nulls($beforecell));
-	     $data['args']["vertical"] = json_encode($this->transport->object_unset_nulls($vertical));
+	     $data['args']["direction"] = json_encode($this->transport->object_unset_nulls($direction));
 	     $data["method"] = "addLayoutCell";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
 	     return $this->transport->sendMessage($data);
@@ -3122,6 +3122,24 @@ class APIPageManager {
 	     $data['args'] = array();
 	     $data['args']["core_pagemanager_data_Page"] = json_encode($this->transport->object_unset_nulls($core_pagemanager_data_Page));
 	     $data["method"] = "savePage";
+	     $data["interfaceName"] = "core.pagemanager.IPageManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Set the carousel configuration.
+	* @param pageId
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function setCarouselConfig($pageId, $cellId, $core_pagemanager_data_CarouselConfig) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data['args']["cellId"] = json_encode($this->transport->object_unset_nulls($cellId));
+	     $data['args']["core_pagemanager_data_CarouselConfig"] = json_encode($this->transport->object_unset_nulls($core_pagemanager_data_CarouselConfig));
+	     $data["method"] = "setCarouselConfig";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
 	     return $this->transport->sendMessage($data);
 	}

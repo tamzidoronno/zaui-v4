@@ -34,3 +34,7 @@ body {
 .gscell[cellid="footer"] .gsinner { background-color:#236188 !important; min-height: 100px; color:#FFF;  }
 .gscell[cellid="footer"] {  bottom: 0px; min-height: 200px; }
 .gscell[cellid="footer"].gsdepth_0 .gsdepth_0.gsinner  { box-shadow: none !important; }
+.gscarouseldots { cursor:pointer; position:absolute; text-align: center; z-index: 2; bottom: 10px; left: 49%; }
+.gscarouseldots .fa { margin: 3px; font-size: 10px; }
+.gscarouseldots .activecarousel { color:green;  }
+.gsrotating .applicationarea { min-height: 200px; }

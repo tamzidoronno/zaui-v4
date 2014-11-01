@@ -28,9 +28,6 @@ class Page {
         /* @var $layout core_pagemanager_data_PageLayout */
         $layout = $this->javapage->layout;
 
-        $this->addCellConfigPanel();
-        $this->addCellResizingPanel();
-
         $rowsToPrint = array();
         $rowsToPrint[] = $layout->header;
         $rowsToPrint = array_merge($rowsToPrint, $layout->rows);
@@ -59,8 +56,9 @@ class Page {
             if (sizeof($row->cells) > 0 && $row->cells[0]->direction === "ROTATING") {
                 $cellid = $row->cells[0]->cellId;
             }
-            
+
             if (isset($_SESSION['gseditcell']) && $_SESSION['gseditcell'] === $row->cellId) {
+                $editedCellid = $cellid;
                 echo "<div class='gscell gsdepth_0 gseditinfo' style='height: 38px;'>";
                 echo "<div class='gsinner gsdepth_0'>";
                 echo "<div class='gseditrowheading' cellid='" . $cellid . "'>";
@@ -81,13 +79,7 @@ class Page {
             }
 
             if (sizeof($row->cells) > 0 && $row->cells[0]->direction === "ROTATING") {
-                $counter = 0;
-                echo "<div class='rotatingcontainer' cellid='".$row->cellId."'>";
-                foreach ($row->cells as $cell) {
-                    $this->printCell($cell, $counter, 0, 0, $isedit);
-                    $counter++;
-                }
-                echo "</div>";
+                $this->printSubCells($row, $isedit, -1);
             } else {
                 $this->printCell($row, $count, 0, 0, $isedit);
             }
@@ -104,20 +96,66 @@ class Page {
         }
 
         if ($beenEdited) {
+            $this->addCellConfigPanel();
+            $this->addCellResizingPanel();
+            $this->addCarouselSettingsPanel();
+            $this->displayResizing();
             ?>
             <style>
                 .dragtable { background-image: url('http://quocity.com/colresizable/img/rangeBar.png'); background-position: 10px 10px; background-repeat-y: no-repeat;}
             </style>
-            <script src="/js/colresize.js"/>
             <script>
-                $(function () {
-                    thundashop.framework.loadResizing($('.gseditrowouter').first(), true);
-                });
+                setTimeout(function () {
+                    thundashop.framework.loadResizing($('.gscell[cellid="<? echo $editedCellid; ?>"]'), true);
+                }, "200");
+                PubSub.subscribe('NAVIGATION_COMPLETED', function (a, b) {
+                    if (thundashop.framework.lastRotatedCell) {
+                        var cell = $('.gscell[cellid="' + thundashop.framework.lastRotatedCell + '"]');
+                        cell.closest('.rotatingcontainer').find('.gsrotating').hide();
+                        cell.show();
+                        $('.gseditrowheading').attr('cellid', thundashop.framework.lastRotatedCell);
+                        setTimeout(function () {
+                            thundashop.framework.loadResizing(cell, true);
+                        }, "200");
+                        console.log('need to reset to cell: ');
+                    }
+                })
             </script>
+            <script src="/js/colresize.js"/>
             <?
-
-            $this->displayResizing();
         }
+    }
+
+    private function addCarouselSettingsPanel() {
+        ?>  
+        <div class="carouselsettingspanel">
+            <table>
+                <tr>
+                    <td>Height</td>
+                    <td><input type="text" class="gscarouselheight">px</td>
+                </tr>
+                <tr>
+                    <td>Timer</td>
+                    <td><input type="text" class="gscarouseltimer"> milliseconds</td>
+                </tr>
+                <tr>
+                    <td>Carousel type</td>
+                    <td>
+                        <select style="width: 100px;" class="gscarouseltype">
+                            <option>Slide left</option>
+                            <option>Slide right</option>
+                            <option>Fade</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input style="width: 100px;" class="savecarouselconfig" type="button" value="Save settings">
+                    </td>
+                </tr>
+        </div>
+        <?
     }
 
     private function printApplicationAddCellRow($cell) {
@@ -139,11 +177,6 @@ class Page {
     }
 
     function printCell($cell, $count, $depth, $totalcells, $edit) {
-        $direction = "gshorisontal";
-        if ($cell->direction == "VERTICAL") {
-            $direction = "gsvertical";
-        }
-
         $rowedit = "";
         $roweditouter = "";
         if ($edit) {
@@ -164,58 +197,48 @@ class Page {
         }
         $direction = "gs" . strtolower($cell->direction);
 
-        $innerstyles = $cell->innerStyles;
-
         echo "<div $styles width='$width' class='gscell $roweditouter gsdepth_$depth gscount_$count $direction' cellid='" . $cell->cellId . "'>";
         if ($cell->direction === "ROTATING") {
-            echo "<i class='fa fa-arrow-circle-left gsrotateleft gsrotatearrow'></i>";
-            echo "<i class='fa fa-arrow-circle-right gsrotateright gsrotatearrow'></i>";
+            if ($count > 0) {
+                echo "<i class='fa fa-arrow-circle-left gsrotateleft gsrotatearrow'></i>";
+            }
+            if ($count + 1 < $totalcells) {
+                echo "<i class='fa fa-arrow-circle-right gsrotateright gsrotatearrow'></i>";
+            }
         }
 
         if ($depth === 0 && !$edit) {
             echo "<i title='" . $this->factory->__f("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o'></i>";
         }
-        echo "<div class='gsinner gsdepth_$depth $rowedit gscount_$count' totalcells='$totalcells' style='$innerstyles'>";
-        if ($edit) {
-            if (sizeof($cell->cells) > 1 && $cell->direction == "VERTICAL" && $cell->cells[0]->direction == "VERTICAL") {
-                $this->displayResizing();
-            }
-        }
+        echo "<div class='gsinner gsdepth_$depth $rowedit gscount_$count' totalcells='$totalcells' style='" . $cell->innerStyles . "'>";
+
         if ($edit && $depth != 0) {
             echo "<span class='gscellsettings'>";
             echo "<i class='fa fa-cogs'  title='Cell settings'></i>";
             echo "</span>";
         }
-        if (sizeof($cell->cells) > 0) {
-            $innercount = 0;
-            $innerdept = $depth + 1;
 
-            if($cell->cells[0]->direction == "ROTATING") {
-                echo "<div class='rotatingcontainer' cellid='".$cell->cellId."'>";
-            }
-            
-            foreach ($cell->cells as $innercell) {
-                $this->printCell($innercell, $innercount, $innerdept, sizeof($cell->cells), $edit);
-                $innercount++;
-            }
-            
-            if($cell->cells[0]->direction == "ROTATING") {
-                echo "</div>";
-            }
-           
+        if (sizeof($cell->cells) > 0) {
+            $this->printSubCells($cell, $edit, $depth);
             echo "<div style='clear:both;'></div>";
         } else {
-            echo "<div class='applicationarea' appid='" . $cell->appId . "' area='" . $cell->cellId . "'>";
-            if (!$cell->appId) {
-                echo "<span class='gsaddcontent'>";
-                echo "<i class='fa fa-plus-circle gs_show_application_add_list'></i>";
-                echo "</span>";
-                $this->printApplicationAddCellRow($cell);
-            } else {
-                $this->renderApplication($cell);
+            $this->printApplicationArea($cell);
+        }
+        if ($cell->direction === "ROTATING") {
+            echo "<div class='gscarouseldots'>";
+            for ($i = 0; $i < $totalcells; $i++) {
+                $activeCirle = "";
+                if ($count == $i) {
+                    $activeCirle = "activecarousel";
+                }
+                echo "<i class='fa fa-circle $activeCirle'></i>";
+            }
+            if ($this->factory->isEditorMode() && $edit) {
+                echo "<i class='fa fa-cogs carouselsettings' title='Carousel settings'></i>";
             }
             echo "</div>";
         }
+
         echo "</div>";
         echo "</div>";
     }
@@ -421,7 +444,6 @@ class Page {
             $('.gsresizingpanel').draggable({handle: ".heading"});
         </script>
         <?
-
     }
 
     public function displayResizing() {
@@ -506,7 +528,44 @@ class Page {
             }                    
         </style>
         <?
+    }
 
+    public function printApplicationArea($cell) {
+        echo "<div class='applicationarea' appid='" . $cell->appId . "' area='" . $cell->cellId . "'>";
+        if (!$cell->appId) {
+            echo "<span class='gsaddcontent'>";
+            echo "<i class='fa fa-plus-circle gs_show_application_add_list'></i>";
+            echo "</span>";
+            $this->printApplicationAddCellRow($cell);
+        } else {
+            $this->renderApplication($cell);
+        }
+        echo "</div>";
+    }
+
+    public function printSubCells($cell, $isedit, $depth) {
+        $innercount = 0;
+        $innerdept = $depth + 1;
+
+        if ($cell->cells[0]->direction == "ROTATING") {
+            /* @var $config core_pagemanager_data_CarouselConfig */
+            $config = $cell->carouselConfig;
+
+            echo "<div class='rotatingcontainer' height='" . $config->height . "' timer='" . $config->time . "' type='" . $config->type . "' cellid='" . $cell->cellId . "'>";
+        }
+
+        foreach ($cell->cells as $innercell) {
+            $this->printCell($innercell, $innercount, $innerdept, sizeof($cell->cells), $isedit);
+            $innercount++;
+        }
+
+        if ($cell->cells[0]->direction == "ROTATING") {
+            echo "</div>";
+            echo "<style>";
+            echo ".rotatingcontainer[cellid='" . $cell->cellId . "'] .gscell.gsdepth_$innerdept { min-height: " . $config->height . "px !important; height: " . $config->height . "px !important; }";
+            echo ".rotatingcontainer[cellid='" . $cell->cellId . "'] .gsinner.gsdepth_$innerdept { height: 100%; }";
+            echo "</style>";
+        }
     }
 
 }

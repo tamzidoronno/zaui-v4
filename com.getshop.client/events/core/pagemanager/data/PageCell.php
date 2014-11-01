@@ -4,7 +4,7 @@ class core_pagemanager_data_PageCell {
 	public $cellId;
 
 	/** @var String */
-	public $vertical;
+	public $direction;
 
 	/** @var String */
 	public $cells;
@@ -14,6 +14,9 @@ class core_pagemanager_data_PageCell {
 
 	/** @var String */
 	public $styles;
+
+	/** @var core_pagemanager_data_CarouselConfig */
+	public $carouselConfig;
 
 	/** @var String */
 	public $innerStyles;

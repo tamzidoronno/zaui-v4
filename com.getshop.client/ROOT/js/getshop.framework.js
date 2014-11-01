@@ -132,25 +132,39 @@ thundashop.framework = {
         cell.children('.gsrotating').each(function() {
             if(direction === "right") {
                 if(found === 1) {
-                    $(this).show();
+                    $(this).css('opacity','1');
+                    $(this).css('z-index','2');
                     newcellid = $(this).attr('cellid');
                     found = 2;
                 }
-                if($(this).is(':visible') && found === 0) {
-                    $(this).hide();
+                if($(this).css('z-index') === "2" && found === 0) {
+                    $(this).css('opacity','0');
+                    $(this).css('z-index','0');
                     found = 1;
                 }
             } else {
-                if($(this).is(':visible') && found === 0) {
-                    $(this).hide();
-                    before.show();
+                if($(this).css('z-index') === "2" && found === 0) {
+                    $(this).css('opacity','0');
+                    $(this).css('z-index','0');
+                    before.css('opacity','1');
+                    before.css('z-index','2');
                     newcellid = before.attr('cellid');
                     found = 1;
                 }
             }
             before=$(this);
         });
-        $('.gseditrowheading').attr('cellid', newcellid);
+        
+        if(direction === "right" && found !== 2) {
+            cell.children('.gsrotating').css('opacity','0');
+            cell.children('.gsrotating').css('z-index','0');
+            cell.children('.gsrotating').first().css('z-index','2');
+            cell.children('.gsrotating').first().css('opacity','1');
+        }
+         
+        if($('.gscell[cellid="'+newcellid+'"]').hasClass('gseditrowouter')) {
+            $('.gseditrowheading').attr('cellid', newcellid);
+        }
     },
     loadResizing: function (cell, saveonmove) {
         if (cell.find('.range').length > 0) {
@@ -282,6 +296,11 @@ thundashop.framework = {
         } else {
             cell.css('background-color', $(this).val());
         }
+    },
+    activateCarousel : function(container, timer) {
+        setInterval(function() {
+            thundashop.framework.rotateCellDirection(container, "right");
+        }, timer);
     },
     setOpacity: function () {
         var cellid = $(this).closest('.gsresizingpanel').attr('cellid');

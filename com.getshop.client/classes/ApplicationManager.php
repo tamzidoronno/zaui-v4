@@ -816,7 +816,12 @@ class ApplicationManager extends FactoryBase {
         
         $newstyles = "";
         foreach(explode(";", $styles) as $style) {
-            if($style && !stristr($style, "width") && !stristr($style, "float") && !stristr($style, "border") && !stristr($style, "display:")) {
+            if($style && !stristr($style, "width") && 
+                    !stristr($style, "float") && 
+                    !stristr($style, "border") && 
+                    !stristr($style, "display:") && 
+                    !stristr($style, "z-index:") && 
+                    !stristr($style, "opacity:")) {
                 $newstyles .= $style . ";";
             }
         }

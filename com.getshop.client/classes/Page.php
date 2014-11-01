@@ -111,8 +111,13 @@ class Page {
                 PubSub.subscribe('NAVIGATION_COMPLETED', function (a, b) {
                     if (thundashop.framework.lastRotatedCell) {
                         var cell = $('.gscell[cellid="' + thundashop.framework.lastRotatedCell + '"]');
-                        cell.closest('.rotatingcontainer').find('.gsrotating').hide();
-                        cell.show();
+                        if(!cell.hasClass('gseditrowouter')) {
+                            return;
+                        }
+                        cell.closest('.rotatingcontainer').find('.gsrotating').css('opacity','0');
+                        cell.css('opacity','1');
+                        cell.css('z-index','2');
+
                         $('.gseditrowheading').attr('cellid', thundashop.framework.lastRotatedCell);
                         setTimeout(function () {
                             thundashop.framework.loadResizing(cell, true);
@@ -142,9 +147,9 @@ class Page {
                     <td>Carousel type</td>
                     <td>
                         <select style="width: 100px;" class="gscarouseltype">
-                            <option>Slide left</option>
-                            <option>Slide right</option>
-                            <option>Fade</option>
+                            <option value='slideleft'>Slide left</option>
+                            <option value='slideright'>Slide right</option>
+                            <option value='fade'>Fade</option>
                         </select>
                     </td>
                 </tr>
@@ -183,7 +188,7 @@ class Page {
             $roweditouter = "gseditrowouter";
             $rowedit = "gseditrow";
         }
-        $styles = "style='$cell->styles';";
+        $styles = "style='$cell->styles";
         $width = 100;
         $isColumn = false;
         if ($cell->direction == "VERTICAL" && $totalcells > 1) {
@@ -195,6 +200,14 @@ class Page {
             $styles = "style='width:$width%; float:left;" . $cell->styles . "'";
             $isColumn = true;
         }
+        if ($cell->direction == "ROTATING") {
+            if ($count === 0) {
+                $styles .= " opacity:1;z-index:2;";
+            }
+        }
+
+        $styles .= "'";
+
         $direction = "gs" . strtolower($cell->direction);
 
         echo "<div $styles width='$width' class='gscell $roweditouter gsdepth_$depth gscount_$count $direction' cellid='" . $cell->cellId . "'>";
@@ -558,14 +571,30 @@ class Page {
             $this->printCell($innercell, $innercount, $innerdept, sizeof($cell->cells), $isedit);
             $innercount++;
         }
-
+        $doCarousel = !$isedit;
         if ($cell->cells[0]->direction == "ROTATING") {
-            echo "</div>";
-            echo "<style>";
-            echo ".rotatingcontainer[cellid='" . $cell->cellId . "'] .gscell.gsdepth_$innerdept { min-height: " . $config->height . "px !important; height: " . $config->height . "px !important; }";
-            echo ".rotatingcontainer[cellid='" . $cell->cellId . "'] .gsinner.gsdepth_$innerdept { height: 100%; }";
-            echo "</style>";
+            ?>
+            </div>
+            <style>
+                .rotatingcontainer[cellid='<? echo $cell->cellId; ?>'] {  width: 100%; height: <? echo $config->height; ?>px !important; }
+                .rotatingcontainer[cellid='<? echo $cell->cellId; ?>'] .gscell.gsdepth_<? echo $innerdept; ?> { width:100%; min-height: <? echo $config->height; ?>px !important; height: <? echo $config->height; ?>px !important; }
+                .rotatingcontainer[cellid='<? echo $cell->cellId; ?>'] .gsinner.gsdepth_<? echo $innerdept; ?> { height: 100%; }
+                <? if (($config->type === "fade" || !$config->type) && $doCarousel) { ?>
+                .rotatingcontainer[cellid='<? echo $cell->cellId; ?>'] .gsrotating {
+                    -webkit-transition: opacity .5s ease-in-out;
+                    -moz-transition: opacity .5s ease-in-out;
+                    -ms-transition: opacity .5s ease-in-out;
+                    -o-transition: opacity .5s ease-in-out;
+                    transition: opacity .5s ease-in-out;
+                }
+                <? } ?>
+                </style>
+                <? if ($doCarousel) { ?>
+                    <script>thundashop.framework.activateCarousel($(".rotatingcontainer[cellid='<? echo $cell->cellId; ?>']"), <? echo $config->time; ?>);</script>
+                <? } ?>
+                <?
+            }
         }
-    }
 
-}
+    }
+    

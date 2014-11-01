@@ -27,7 +27,7 @@ class Translation extends ReportingApplication implements Application {
     }
     
     public function saveTranslation() {
-        $newArray = array();
+        $newArray = $this->getFactory()->getStoreConfiguration()->translationMatrix;
         $baseTranslation = $this->getFactory()->getWebShopTranslation();
         foreach($_POST['data'] as $key => $value) {
             $value = base64_decode($_POST['data'][$key]);

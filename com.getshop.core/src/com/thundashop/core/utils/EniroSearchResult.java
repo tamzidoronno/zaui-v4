@@ -27,7 +27,7 @@ public class EniroSearchResult {
 	}
 
 	class Adverts {
-		public Integer eniroId;
+		public String eniroId;
 		public ComapanyInfo companyInfo;
 		public Address address;
 	}

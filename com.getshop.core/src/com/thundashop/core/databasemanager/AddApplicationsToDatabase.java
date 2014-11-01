@@ -4,6 +4,7 @@ package com.thundashop.core.databasemanager;
 import com.thundashop.core.appmanager.ApplicationPool;
 import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.common.AppContext;
+import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.data.Credentials;
 import java.net.UnknownHostException;
@@ -55,14 +56,16 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        ApplicationSettings mailspreader = createSettings(
-                "SjoTunetTheme",
-                "06321eda-afaa-4e91-8ca7-67d342dbd1ea",
-                allowed,
-                "",
-                ApplicationSettings.Type.Theme, true);
-        mailspreader.isPublic = false;
-		apps.add(mailspreader);
+//        ApplicationSettings ProMeisterTheme = createSettings(
+//                "ProMeisterTheme",
+//                "0747d81a-9688-4b71-8d12-04a099654e3d",
+//                allowed,
+//                "",
+//                ApplicationSettings.Type.Theme, true);
+//        ProMeisterTheme.isPublic = false;
+//        ProMeisterTheme.allowedStoreIds = new ArrayList();
+//		ProMeisterTheme.allowedStoreIds.add("2c22090e-6b4a-49fb-a228-f3e019a77982");
+//		apps.add(ProMeisterTheme);
 		
         
 //        
@@ -154,7 +157,14 @@ public class AddApplicationsToDatabase {
 
         for (ApplicationSettings app : addApplications()) {
             app.storeId = "all";
-            database.save(app, credentials);
+			
+			DataCommon data = database.getObject(credentials, app.id);
+			if (data == null) {
+				database.save(app, credentials);
+			} else {
+				System.out.println("Skipping");
+			}
+            
         }
     }
 

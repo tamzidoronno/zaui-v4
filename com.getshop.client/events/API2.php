@@ -1989,6 +1989,22 @@ class APIListManager {
 	}
 
 	/**
+	* Create new list for a given id
+	*
+	* @param listName
+	* @throws ErrorException
+	*/
+
+	public function createMenuList($menuApplicationId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["menuApplicationId"] = json_encode($this->transport->object_unset_nulls($menuApplicationId));
+	     $data["method"] = "createMenuList";
+	     $data["interfaceName"] = "core.listmanager.IListManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Delete an already existing entry from a list.
 	* @param id The of the entry to delete.
 	* @param id The id of the list to remove from.

@@ -2068,6 +2068,21 @@ class ListManager(object):
     data.interfaceName = "core.listmanager.IListManager"
     return self.communicationHelper.sendMessage(data)
 
+  def createMenuList(self, menuApplicationId):
+    args = collections.OrderedDict()
+    if isinstance(menuApplicationId,GetShopBaseClass): 
+      args["menuApplicationId"]=json.dumps(menuApplicationId.__dict__)
+    else:
+      try:
+        args["menuApplicationId"]=json.dumps(menuApplicationId)
+      except (ValueError, AttributeError):
+        args["menuApplicationId"]=menuApplicationId
+    data = EmptyClass()
+    data.args = args
+    data.method = "createMenuList"
+    data.interfaceName = "core.listmanager.IListManager"
+    return self.communicationHelper.sendMessage(data)
+
   def deleteEntry(self, id, listId):
     args = collections.OrderedDict()
     if isinstance(id,GetShopBaseClass): 

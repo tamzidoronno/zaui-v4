@@ -12,7 +12,7 @@
  */
 namespace ns_a11ac190_4f9a_11e3_8f96_0800200c9a66;
 
-class MenuEditor extends \SystemApplication implements \Application {
+class Menu extends \SystemApplication implements \Application {
    
     public function getDescription() {
         return "";
@@ -21,6 +21,9 @@ class MenuEditor extends \SystemApplication implements \Application {
     public function updateLists() {
         $result = $_POST['data'];
         foreach($result as $id => $list) {
+            if (!isset($list['items'])) {
+                continue;
+            }
             $items = $list['items'];
             $name = $list['name'];
             $allentries = array();
@@ -37,7 +40,7 @@ class MenuEditor extends \SystemApplication implements \Application {
     }
     
     public function render() {
-        echo "menu";
+        $this->includefile("menu");
     }
 
     public function renderSetup() {
@@ -106,6 +109,25 @@ class MenuEditor extends \SystemApplication implements \Application {
             }
         }
         return $entry;
+    }
+    
+    public function applicationAdded() {
+        $this->getApi()->getListManager()->createMenuList($this->getConfiguration()->id);
+    }
+    
+    public function addEntry() {
+        $core_listmanager_data_Entry = new \core_listmanager_data_Entry();
+        $core_listmanager_data_Entry->name = $_POST['data']['text'];
+        $this->getApi()->getListManager()->addEntry($this->getConfiguration()->id, $core_listmanager_data_Entry, null);
+    }
+    
+    public function getMenuEntries() {
+        $entries = $this->getApi()->getListManager()->getList($this->getConfiguration()->id);
+        if (!is_array($entries)) {
+            return array();
+        }
+        
+        return $entries;
     }
 }
 

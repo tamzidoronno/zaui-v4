@@ -149,4 +149,13 @@ public interface IListManager {
      * @return 
      */
     public List<EntryList> getAllListsByType(String type);
+	
+	/**
+	 * Create new list for a given id
+	 * 
+	 * @param listName
+	 * @throws ErrorException 
+	 */
+	@Administrator
+	public void createMenuList(String menuApplicationId) throws ErrorException;
 }

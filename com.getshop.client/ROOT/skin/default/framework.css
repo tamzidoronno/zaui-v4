@@ -815,7 +815,8 @@ a img {
 	border-bottom: solid 1px #DDD;
 	line-height: 25px;
 	cursor: pointer;
-        padding-left: 10px;
+    padding-left: 10px;
+    color: #333;
 }
 
 .theeme_selection {

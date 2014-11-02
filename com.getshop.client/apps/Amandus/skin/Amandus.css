@@ -1,20 +1,36 @@
-.TopMenu li {
+[cellid="header"] .Menu .entry {
     background-color: #3a99d7;
     border: solid 1px #1e4594; 
     border-radius:3px;
+    margin-left: 10px;
 }
 
-.TopMenu li a {
+[cellid="header"] .Menu .entry a div {
     padding: 5px;
     padding-right:15px;
     padding-left: 15px;
+    
     color: #FFF;
 }
 
-.TopMenu {
+[cellid="header"] .Menu {
     position:absolute;
     top: 60px;
     left: 0px;
+    padding-right: 30px;
+}
+
+[cellid="footer"] .Menu .entry {
+    border-bottom: solid 1px #444;
+}
+
+[cellid="footer"] .Menu .entry:last-child {
+    border-bottom: none;
+}
+
+[cellid="footer"] .Menu .entry a div {
+    padding: 5px;
+    color: #FFF;
 }
 
 body {

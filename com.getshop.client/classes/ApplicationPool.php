@@ -19,6 +19,7 @@ class ApplicationPool {
     function __construct($factory) {
         $this->factory = $factory;
         $this->applicationList = $factory->getApi()->getStoreApplicationPool()->getApplications();
+
     }
     
     

@@ -132,5 +132,5 @@ foreach ($menuLists as $listEntry) {
     echo "tree_$id.refresh();";
 }
 ?>
-    getshop.MenuEditor.editorStarted();
+    getshop.MenuEditor.editorStarted('<?echo $this->getConfiguration()->id; ?>');
 </script>

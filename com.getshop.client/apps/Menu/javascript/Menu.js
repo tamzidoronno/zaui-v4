@@ -4,13 +4,13 @@ if (typeof(getshop) === "undefined") {
 
 getshop.MenuEditor = {
     init: function() {
-        $(document).on('click', ".MenuEditor .menulist .menu .menuitem", getshop.MenuEditor.menuClicked);
-        $(document).on('keyup', ".MenuEditor .titleinformation #itemname", getshop.MenuEditor.nameKeyUp);
-        $(document).on('keyup', ".MenuEditor .titleinformation #icontext", getshop.MenuEditor.iconKeyUp);
-        $(document).on('keyup', ".MenuEditor .titleinformation #itemlink", getshop.MenuEditor.itemLinkChanged);
-        $(document).on('click', ".MenuEditor .save", getshop.MenuEditor.saveMenuEditor);
-        $(document).on('click', ".MenuEditor .cancel", getshop.MenuEditor.closeMenuEditor);
-        $(document).on('change', ".MenuEditor #userlevel", getshop.MenuEditor.userLevelChanged);
+        $(document).on('click', ".Menu .menulist .menu .menuitem", getshop.MenuEditor.menuClicked);
+        $(document).on('keyup', ".Menu .titleinformation #itemname", getshop.MenuEditor.nameKeyUp);
+        $(document).on('keyup', ".Menu .titleinformation #icontext", getshop.MenuEditor.iconKeyUp);
+        $(document).on('keyup', ".Menu .titleinformation #itemlink", getshop.MenuEditor.itemLinkChanged);
+        $(document).on('click', ".Menu .save", getshop.MenuEditor.saveMenuEditor);
+        $(document).on('click', ".Menu .cancel", getshop.MenuEditor.closeMenuEditor);
+        $(document).on('change', ".Menu #userlevel", getshop.MenuEditor.userLevelChanged);
     },
     closeMenuEditor : function() {
         thundashop.common.hideInformationBox();
@@ -48,7 +48,7 @@ getshop.MenuEditor = {
         thundashop.common.hideInformationBox();
     },
 
-    editorStarted: function() {
+    editorStarted: function(appId) {
         $('.menueditorcontainer .menu.delete').droppable({
             accept: '.dropaccept',
             drop: function(event, ui) {
@@ -68,6 +68,7 @@ getshop.MenuEditor = {
         $('.menueditorcontainer .menu.new').draggable({
             revert: true
         });
+        $('[appid="'+appId+'"]').find('.menulist').find('.menuitem[appid="'+appId+'"]').click();
     },
     
     deleteEntry: function(entryId) {
@@ -104,8 +105,8 @@ getshop.MenuEditor = {
         $(this).addClass('active');
     },
 
-    open: function() {
-        var event = thundashop.Ajax.createEvent('', 'showMenuEditor', $(this), {});
+    open: function(app) {
+        var event = thundashop.Ajax.createEvent('', 'renderSetup', app, {});
         thundashop.common.showInformationBox(event, __f('Menu Editor'));
     },
             
@@ -144,3 +145,64 @@ getshop.MenuEditor = {
 };
 
 getshop.MenuEditor.init();
+
+app.Menu = {
+    ignoreRemovalOfSimpleMenu: false,
+    
+    init: function() {
+        $(document).on('click', '.Menu .showedit', this.showMenuEditor);
+        $(document).on('click', '.Menu .simpleadd', this.simpleAdd);
+        $(document).on('click', '.Menu .saveit', this.saveEntry);
+        $(document).on('change', '.Menu .addtext', this.saveEntry);
+        $(document).on('mouseenter', '.app.Menu', this.showSimpleAdd);
+        $(document).on('mouseleave', '.app.Menu', this.removeSimpleAdd);
+    },
+    
+    showSimpleAdd: function() {
+        var menu = $(this).find('.menu_simple_menu');
+        if (!menu.hasClass('hidden_simple_menu')) {
+            app.Menu.ignoreRemovalOfSimpleMenu = true;
+            return;
+        } else {
+            app.Menu.ignoreRemovalOfSimpleMenu = false;
+            menu.removeClass('hidden_simple_menu');
+        }
+        
+    },
+    
+    removeSimpleAdd: function() {
+        
+        if (app.Menu.ignoreRemovalOfSimpleMenu) {
+            return;
+        }
+        
+        var app2 = $(this).closest('.app');
+        if (app2.find('.simepladd_dialog').is(":visible")) {
+            return;
+        }
+        
+        var menu = $(this).find('.menu_simple_menu');
+        menu.addClass('hidden_simple_menu');
+    },
+    
+    showMenuEditor: function() {
+        getshop.MenuEditor.open(this);
+    },
+    
+    simpleAdd: function() {
+        var app = $(this).closest('.app');
+        app.find('.simepladd_dialog').slideDown(300);
+    },
+    
+    saveEntry: function() {
+        var app = $(this).closest('.app')
+        var data = {
+            text : app.find('.addtext').val()
+        }
+       
+        var event = thundashop.Ajax.createEvent(null, "addEntry", this, data);
+        thundashop.Ajax.post(event);
+    }
+}
+
+app.Menu.init();

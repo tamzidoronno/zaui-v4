@@ -59,13 +59,13 @@ public class APIPageManager {
      * @param pageId
      * @throws ErrorException
      */
-     public java.lang.String addLayoutCell(java.lang.String pageId, java.lang.String incell, java.lang.String beforecell, boolean vertical)  throws Exception  {
+     public java.lang.String addLayoutCell(java.lang.String pageId, java.lang.String incell, java.lang.String beforecell, java.lang.String direction)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new LinkedHashMap();
           data.args.put("pageId",new Gson().toJson(pageId));
           data.args.put("incell",new Gson().toJson(incell));
           data.args.put("beforecell",new Gson().toJson(beforecell));
-          data.args.put("vertical",new Gson().toJson(vertical));
+          data.args.put("direction",new Gson().toJson(direction));
           data.method = "addLayoutCell";
           data.interfaceName = "core.pagemanager.IPageManager";
           String result = transport.send(data);
@@ -447,6 +447,23 @@ public class APIPageManager {
           data.args = new LinkedHashMap();
           data.args.put("page",new Gson().toJson(page));
           data.method = "savePage";
+          data.interfaceName = "core.pagemanager.IPageManager";
+          String result = transport.send(data);
+     }
+
+     /**
+     * Set the carousel configuration.
+     * @param pageId
+     * @return
+     * @throws ErrorException
+     */
+     public void setCarouselConfig(java.lang.String pageId, java.lang.String cellId, com.thundashop.core.pagemanager.data.CarouselConfig config)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("pageId",new Gson().toJson(pageId));
+          data.args.put("cellId",new Gson().toJson(cellId));
+          data.args.put("config",new Gson().toJson(config));
+          data.method = "setCarouselConfig";
           data.interfaceName = "core.pagemanager.IPageManager";
           String result = transport.send(data);
      }

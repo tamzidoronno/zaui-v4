@@ -62,6 +62,16 @@ public class AddApplicationsToDatabase {
         dashBoard.isSingleton = true;
         dashBoard.isPublic = true;
         apps.add(dashBoard);
+		
+        Application menu = createSettings("Menu",
+                "a11ac190-4f9a-11e3-8f96-0800200c9a66",
+                allowed2,
+                "",
+                Application.Type.Webshop, true);
+        menu.isSingleton = true;
+        menu.isPublic = true;
+		menu.defaultActivate = true;
+        apps.add(menu);
         
 //        ApplicationSettings sedoxMenu = createSettings(
 //                "SedoxMenu",

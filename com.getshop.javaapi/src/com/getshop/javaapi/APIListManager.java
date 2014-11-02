@@ -89,6 +89,21 @@ public class APIListManager {
      }
 
      /**
+     * Create new list for a given id
+     *
+     * @param listName
+     * @throws ErrorException
+     */
+     public void createMenuList(java.lang.String menuApplicationId)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("menuApplicationId",new Gson().toJson(menuApplicationId));
+          data.method = "createMenuList";
+          data.interfaceName = "core.listmanager.IListManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Delete an already existing entry from a list.
      * @param id The of the entry to delete.
      * @param id The id of the list to remove from.

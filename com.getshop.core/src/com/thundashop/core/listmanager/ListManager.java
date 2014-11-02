@@ -83,8 +83,8 @@ public class ListManager extends ManagerBase implements IListManager {
         }
     }
     
-    private void pushToMemory(Entry entry, String listId, String parentPageId) throws ErrorException {
-        if (allEntries.get(listId) == null) {
+	private void makeSureListExists(String listId) {
+		if (allEntries.get(listId) == null) {
             allEntries.put(listId, new EntryList());
             allEntries.get(listId).appId = listId;
             allEntries.get(listId).entries = new ArrayList();
@@ -92,7 +92,17 @@ public class ListManager extends ManagerBase implements IListManager {
         if(allEntries.get(listId).entries == null) {
             allEntries.get(listId).entries = new ArrayList();
         }
+		
+		saveList(listId);
+	}
+	
+    private void pushToMemory(Entry entry, String listId) throws ErrorException {
+		makeSureListExists(listId);
         
+		if (entry == null) {
+			return;
+		}
+		
         if ((entry.parentId == null || entry.parentId.trim().length() == 0) || getEntry(entry.parentId) == null) {
             entry.parentId = "";
             allEntries.get(listId).entries.add(entry);
@@ -293,7 +303,7 @@ public class ListManager extends ManagerBase implements IListManager {
             throw new ErrorException(1002);
         }
         validateEntry(entry);
-        pushToMemory(entry, listId, parentPageId);
+        pushToMemory(entry, listId);
         
         if(entry.subentries != null) {
             List<Entry> subentries = new ArrayList();
@@ -601,6 +611,7 @@ public class ListManager extends ManagerBase implements IListManager {
                 found = getPageIdByName(name, entryList.entries);
             }
         }
+		
         return found;
     }
 
@@ -637,5 +648,13 @@ public class ListManager extends ManagerBase implements IListManager {
             }
         }
     }
-    
+
+	@Override
+	public void createMenuList(String menuApplicationId) throws ErrorException {
+		pushToMemory(null, menuApplicationId);
+		EntryList list = allEntries.get(menuApplicationId);
+		list.type = ListType.MENU;
+		list.name = "Menu "+(getAllListsByType(ListType.MENU.toString()).size() + 1);
+		saveList(menuApplicationId);
+	}   
 }

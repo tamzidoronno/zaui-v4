@@ -737,11 +737,6 @@ class ApplicationManager extends FactoryBase {
         $this->includefile("deepfreeze");
     }
 
-    public function showMenuEditor() {
-        throw new Exception("This part has not yet been implemented in 2.0.0 version");
-        $app[0]->renderSetup();
-    }
-
     public function searchForPages() {
         $this->includefile("pageSearchResult");
     }

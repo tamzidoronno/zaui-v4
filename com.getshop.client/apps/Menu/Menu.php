@@ -15,7 +15,7 @@ namespace ns_a11ac190_4f9a_11e3_8f96_0800200c9a66;
 class Menu extends \SystemApplication implements \Application {
    
     public function getDescription() {
-        return "";
+        return "Add a new menu to your page. Menues are the root of all pages, adding a new menuentry is the same as adding a new page.";
     }
 
     public function updateLists() {

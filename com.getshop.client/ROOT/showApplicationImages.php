@@ -24,5 +24,8 @@ if (file_exists($path)) {
 
     header("Content-type: ".$mimeType);
     echo file_get_contents($path);
+} else {
+    echo "does not exists: " .$path;
+    
 }
 ?>

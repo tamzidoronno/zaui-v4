@@ -26,7 +26,7 @@ thundashop.ApplicationManager = {
 		if (menu.is(':visible')) {
 			menu.fadeOut(300);
 		} else {
-			menu.fadeIn(300);
+			menu.slideDown(300);
 		}
 	},
 	

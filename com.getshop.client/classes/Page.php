@@ -164,14 +164,8 @@ class Page {
     }
 
     private function printApplicationAddCellRow($cell) {
-        echo "<div class='gs_add_applicationlist'>";
-        $apps = $this->factory->getApi()->getStoreApplicationPool()->getApplications();
-        foreach ($apps as $app) {
-            $name = $app->appName;
-            $id = $app->id;
-            echo "<div class='gs_add_app_entry' appId='$id'>$name</div>";
-        }
-        echo "</div>";
+        $this->factory->includefile("applicationlist", 'Common');
+
     }
 
     private function renderApplication($cell) {

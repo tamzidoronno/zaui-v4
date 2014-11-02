@@ -801,22 +801,88 @@ a img {
 .gs_add_applicationlist {
 	display: none;
 	margin: auto;
-	position: absolute;
+	position: fixed;
 	left: 50%;
-	margin-left: -100px;
+	margin-left: -500px;
 	background-color: #FFF;
 	z-index: 50;
-	top: 5px;
-	width: 200px;
+	width: 1000px;
+    top: 20px;
+    bottom: 20px;
 	box-shadow: 0px 0px 3px rgba(0,0,0,0.5);
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border-radius: 5px;
 }
 
+.gs_add_applicationlist::-webkit-scrollbar {  
+    width: 10px;  
+}  
+.gs_add_applicationlist::-webkit-scrollbar-track {  
+    background-color: #eaeaea;  
+    border-left: 1px solid #ccc;  
+    border-radius: 5px;
+}  
+.gs_add_applicationlist::-webkit-scrollbar-thumb {  
+    background-color: #ccc;  
+    border-radius: 5px;
+}  
+.gs_add_applicationlist::-webkit-scrollbar-thumb:hover {  
+    background-color: #aaa;  
+}  
+
 .gs_add_applicationlist .gs_add_app_entry {
+    padding-top: 5px;
+    paddinb-bottom: 5px;
 	border-bottom: solid 1px #DDD;
 	line-height: 25px;
 	cursor: pointer;
     padding-left: 10px;
     color: #333;
+    width: 318px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.gs_add_applicationlist .gs_add_app_entry:hover {
+    background-color: #eaeaea;
+}
+
+.gs_add_applicationlist .gs_add_app_entry:nth-child(1),
+.gs_add_applicationlist .gs_add_app_entry:nth-child(2) {
+    border-right: solid 1px #DDD;
+}
+
+
+.gs_add_applicationlist .gs_add_app_entry .gs_app_image,
+.gs_add_applicationlist .gs_add_app_entry .gs_app_image img {
+    margin-top: 5px;
+    width: 100px;
+    display: inline-block;
+}
+
+.gs_add_applicationlist .gs_add_app_entry .infobox,
+.gs_add_applicationlist .gs_add_app_entry .gs_app_desc,
+.gs_add_applicationlist .gs_add_app_entry .gs_app_title {
+    display: inline-block; 
+    width: 218px;
+    vertical-align: top;
+    box-sizing: border-box;
+    padding-left: 5px;
+    padding-bottom: 5px;
+    
+}
+
+.gs_add_applicationlist .gs_add_app_entry .gs_app_title {
+    padding: 5px;
+    font-weight: bold;
+}
+
+.gs_add_applicationlist .gs_add_app_entry .gs_app_desc {
+    height: 150px;
+    overflow: hidden;
+    padding: 5px;
+    padding-right: 15px;
 }
 
 .theeme_selection {

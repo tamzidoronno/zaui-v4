@@ -111,10 +111,11 @@ thundashop.framework = {
         thundashop.Ajax.post(event);
     },
     showCarouselSettings : function() {
+        var cellid = $(this).closest('.rotatingcontainer').attr('cellid');
         $('.carouselsettingspanel').css('left', $(this).offset().left);
         $('.carouselsettingspanel').css('top', $(this).offset().top+15);
         $('.carouselsettingspanel').css('top', $(this).offset().top+15);
-        $('.carouselsettingspanel').attr('cellid', $(this).closest('.rotatingcontainer').attr('cellid'));
+        $('.carouselsettingspanel').attr('cellid', cellid);
         
         //populate values
        $('.carouselsettingspanel').find('.gscarouselheight').val($(this).closest('.rotatingcontainer').attr('height'))
@@ -487,7 +488,8 @@ thundashop.framework = {
         target.find('.gscellsettings').first().closest('.gscell').addClass('gsvisualizeedit');
     },
     operateCell: function () {
-        var cellid = $(this).closest('.gscellsettingspanel').attr('cellid');
+        var panel = $(this).closest('.gscellsettingspanel');
+        var cellid = panel.attr('cellid');
 
         if ($(this).closest('.gseditrowheading').length > 0) {
             cellid = $(this).closest('.gseditrowheading').attr('cellid');
@@ -498,11 +500,19 @@ thundashop.framework = {
         }
         
         var type = $(this).attr('type');
-
+        var cell = $('.gscell[cellid="' + cellid + '"]');
+        
         if (type === "settings") {
-            var cell = $('.gscell[cellid="' + cellid + "']");
             $(this), thundashop.framework.showCellSettingsPanel($(this));
             return;
+        }
+        
+        if(panel.attr('topmenu') === "true") {
+            if(!$(this).attr('subtype') || $(this).attr('subtype') !== "carousel") {
+                if(type === "addbefore" || type === "addafter" || type === "moveup" || type === "movedown" || type === "delete") {
+                    cellid = cell.closest('.rotatingcontainer').attr('cellid');
+                }
+            }
         }
 
 
@@ -546,34 +556,41 @@ thundashop.framework = {
         thundashop.Ajax.post(event);
     },
     showCellSettingsPanel: function (element) {
-        $('.gscellsettingspanel').find('.gsrowmenu').hide();
-        $('.gscellsettingspanel').find('.gscolumnmenu').hide();
-
-        $('.gscellsettingspanel').fadeIn();
+        var panel = $('.gscellsettingspanel');
+        panel.find('.gsrowmenu').hide();
+        panel.find('.gscolumnmenu').hide();
+        panel.fadeIn();
         var cell = element.closest('.gscell');
+        $('.gscellsettingspanel').attr('topmenu','false');
         if (cell.hasClass('gseditinfo')) {
+            $('.gscellsettingspanel').attr('topmenu','true');
             cell = $(".gscell[cellid='"+$('.gseditrowheading').attr('cellid')+"']");
         }
 
         if (cell.hasClass('gsvertical')) {
-            $('.gscellsettingspanel').find('.gscolumnmenu').show();
+            panel.find('.gscolumnmenu').show();
         } else {
-            $('.gscellsettingspanel').find('.gsrowmenu').show();
+            panel.find('.gsrowmenu').show();
+        }
+
+        panel.find('.carouselsettings').hide();
+        if(cell.hasClass('gsrotating')) {
+            panel.find('.carouselsettings').show();
         }
 
         if (cell.attr('cellid') === "footer" || cell.attr('cellid') === "header") {
-            $('.gscellsettingspanel').find('.gscolumnmenu').show();
+            panel.find('.gscolumnmenu').show();
         }
 
-
+        $('.gsoverlay').remove();
         var overlay = $('<span class="gsoverlay" style="filter: blur(5px);width:100%; height:100%; background-color:#bbb; opacity:0.6; position:absolute; left:0px; top:0px;display:inline-block;"></span>');
         cell.append(overlay);
 
-        $('.gscellsettingspanel').attr('cellid', cell.attr('cellid'));
+        panel.attr('cellid', cell.attr('cellid'));
         var offset = element.offset();
-        $('.gscellsettingspanel').css('display', 'inline-block');
-        $('.gscellsettingspanel').css('top', offset.top + 10);
-        $('.gscellsettingspanel').css('left', (offset.left - 170));
+        panel.css('display', 'inline-block');
+        panel.css('top', offset.top + 10);
+        panel.css('left', (offset.left - 230));
 
     },
     addCell: function () {

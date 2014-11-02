@@ -260,12 +260,10 @@ class Page {
         echo "<div class='gs_splitvertically' type='addvertical'><i class='fa fa-arrows-h'></i>" . $this->factory->__w("Insert column") . "</div>";
         echo "<div class='gs_splithorizontally' type='addbefore'><i class='fa fa-long-arrow-up'></i>" . $this->factory->__w("Create row above") . "</div>";
         echo "<div class='gs_splithorizontally' type='addafter'><i class='fa fa-long-arrow-down'></i>" . $this->factory->__w("Create row below") . "</div>";
-        echo "<div class='gs_addrotating' type='addrotate'><i class='fa fa-sitemap'></i>" . $this->factory->__w("Insert carousel row") . "</div>";
         echo "</span>";
         echo "<span class='gscolumnmenu'>";
         echo "<div class='gs_splithorizontally' type='addbefore'><i class='fa fa-long-arrow-left'></i>" . $this->factory->__w("Create left column") . "</div>";
         echo "<div class='gs_splithorizontally' type='addafter'><i class='fa fa-long-arrow-right'></i>" . $this->factory->__w("Create right column") . "</div>";
-        echo "<div class='gs_addrotating' type='addrotate'><i class='fa fa-sitemap'></i>" . $this->factory->__w("Insert carousel cell") . "</div>";
         echo "</span>";
         echo "<div class='gscellsettingsheading'>Move area</div>";
         echo "<span class='gsrowmenu'>";
@@ -280,6 +278,15 @@ class Page {
         echo "<div class='gs_resizing'><i class='fa fa-image'></i>" . $this->factory->__w("Styling") . "</div>";
         echo "<div class='gs_removerow' type='delete'><i class='fa fa-trash-o'></i>" . $this->factory->__w("Delete") . "</div>";
         echo "<i class='gs_closecelledit fa fa-times' style='position:absolute;right: 5px; top: 5px; cursor:pointer;'></i>";
+        
+        echo "<div class='gscellsettingsheading'>Carousel settings</div>";
+        echo "<div class='gs_addrotating' subtype='carousel' type='addrotate'><i class='fa fa-sitemap'></i>" . $this->factory->__w("Insert carousel cell") . "</div>";
+        echo "<div class='carouselsettings' subtype='carousel' style='display:none;'>";
+        echo "<div class='gs_splithorizontally' subtype='carousel' type='moveup'><i class='fa fa-long-arrow-left'></i>" . $this->factory->__w("Move current cell to the left") . "</div>";
+        echo "<div class='gs_splithorizontally' subtype='carousel' type='movedown'><i class='fa fa-long-arrow-right'></i>" . $this->factory->__w("Move current cell to the right") . "</div>";
+        echo "<div class='gs_removerow' subtype='carousel'  type='delete'><i class='fa fa-trash-o'></i>" . $this->factory->__w("Delete current cell") . "</div>";
+        echo "<i class='gs_closecelledit fa fa-times' style='position:absolute;right: 5px; top: 5px; cursor:pointer;'></i>";
+        echo "</div>";
         echo "</span>";
     }
 

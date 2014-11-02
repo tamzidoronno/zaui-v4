@@ -52,7 +52,8 @@ public class PageLayout implements Serializable {
                 PageCell newcell = cell.createCell(before);
                 newcell.direction = directionToSet;
                 newcell.appId = cell.appId;
-                before = newcell.cellId;
+//                before = newcell.cellId;
+//                cell.cells.add(newcell);
             } else {
                 cell.cells.stream().forEach((cell2) -> {
                     cell2.width = -1.0;

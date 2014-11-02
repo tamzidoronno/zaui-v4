@@ -81,10 +81,10 @@ class ApplicationManager extends FactoryBase {
         }
         switch ($type) {
             case "movedown":
-                $this->getApi()->getPageManager()->moveCell($this->getPage()->javapage->id, $cellId, "HORIZONTAL");
+                $this->getApi()->getPageManager()->moveCell($this->getPage()->javapage->id, $cellId, false);
                 break;
             case "moveup":
-                $this->getApi()->getPageManager()->moveCell($this->getPage()->javapage->id, $cellId, "VERTICAL");
+                $this->getApi()->getPageManager()->moveCell($this->getPage()->javapage->id, $cellId, true);
                 break;
             case "delete":
                 $this->getApi()->getPageManager()->dropCell($this->getPage()->javapage->id, $cellId);

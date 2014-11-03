@@ -51,8 +51,10 @@ if($this->getServiceType() == "storage") {
             if($this->getServiceType() == "hotel") {
                 echo $this->getDayCount() . " $night $in " . $this->getRoomCount();
             }
-            echo " " . $this->getProduct()->name  . " (" . $this->getProduct()->price . "/$periode)" . "</span>";
-            echo "<span class='price_summary_price price_row'><span class='right_aligned_price'>" . $this->getRoomPrice() . " kr</span></span>";
+            if($this->getRoomPrice() > 0) {
+                echo " " . $this->getProduct()->name  . " (" . $this->getProduct()->price . "/$periode)" . "</span>";
+                echo "<span class='price_summary_price price_row'><span class='right_aligned_price'>" . $this->getRoomPrice() . " kr</span></span>";
+            }
             echo "</div>";
 
             if($this->getRoomTaxes() > 0) {
@@ -72,10 +74,11 @@ if($this->getServiceType() == "storage") {
                 echo "<span class='price_summary_price price_row'><span class='right_aligned_price'>" . $this->getParkingPrice() . " kr</span></span>";
                 
             }
-            
-            echo "<div class='summary_total'>";
-            echo "<div class='price_summary'>" . $this->__w("Total price")."<span class='right_aligned_price'>". $this->getTotal() . " kr" ."</span></div>";
-            echo "</div>";
+            if( $this->getTotal() > 0) {
+                echo "<div class='summary_total'>";
+                echo "<div class='price_summary'>" . $this->__w("Total price")."<span class='right_aligned_price'>". $this->getTotal() . " kr" ."</span></div>";
+                echo "</div>";
+            }
             ?>
         </div>
     <div class="booking_contact_data">

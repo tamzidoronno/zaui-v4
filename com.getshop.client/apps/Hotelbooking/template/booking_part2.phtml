@@ -151,7 +151,9 @@ if ($this->getServiceType() == "storage") {
             echo "<div class='personalcount'>2x</div>";
         }
         echo "</span>";
-        echo "<span class='price_box'><span class='price_text'>" . $product->price . ",-";
+        if($product->price != 0) {
+            echo "<span class='price_box'><span class='price_text'>" . $product->price . ",-";
+        }
         if ($product->price < $product->original_price) {
             echo "<span class='rebated_product'> (-" . (100 - (int) (($product->price / $product->original_price) * 100)) . "%)</span>";
         }

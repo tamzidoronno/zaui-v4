@@ -166,13 +166,46 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         if (time != null) {
             text = text.replace("{EVENT_TIME}", time);
         }
+        if (user.cellPhone != null) {
+            text = text.replace("{USER_CELLPHONE}", user.cellPhone);
+        }
         if (entry.location != null) {
             text = text.replace("{EVENT_LOCATION}", entry.location.replaceAll("\n", "<BR />"));
         }
         if (entry.description != null) {
             text = text.replace("{EVENT_DESCRIPTION}", entry.description.replaceAll("\n", "<BR />"));
         }
-
+		
+		if (user.emailAddress != null) {
+			text = text.replace("{USER_EMAILADDRESS}", user.emailAddress.replaceAll("\n", "<BR />"));
+		}
+		
+		if (user.company != null) {
+			if (user.company.name != null) {
+				text = text.replace("{COMPANY_NAME}", user.company.name.replaceAll("\n", "<BR />"));
+			}
+			
+			if (user.company.vatNumber != null) {
+				text = text.replace("{COMPANY_VAT}", user.company.vatNumber.replaceAll("\n", "<BR />"));
+			}
+			
+			if (user.company.streetAddress != null) {
+				text = text.replace("{COMPANY_STREETADDRESS}", user.company.streetAddress.replaceAll("\n", "<BR />"));
+			}
+			
+			if (user.company.postnumber != null) {
+				text = text.replace("{COMPANY_POSTNUMBER}", user.company.postnumber.replaceAll("\n", "<BR />"));
+			}
+			
+			if (user.company.country != null) {
+				text = text.replace("{COMPANY_COUNTRY}", user.company.country.replaceAll("\n", "<BR />"));			
+			}
+			
+			if (user.company.city != null) {
+				text = text.replace("{COMPANY_CITY}", user.company.city.replaceAll("\n", "<BR />"));			
+			}
+		}
+		
         String groupLogo = getGroupLogo(user);
         if (groupLogo != null) {
             String address = "http://" + getStore().webAddressPrimary + "//displayImage.php?id=" + groupLogo;

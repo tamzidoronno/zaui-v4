@@ -94,13 +94,30 @@ class GenerateReport {
         header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
         header("Cache-Control: private", false);
     }
-
+    
     public function createExcelRow($user, $entry) {
         $line = array();
         $line[] = $user->fullName;
         $line[] = $user->emailAddress;
         $line[] = $user->cellPhone;
-        $line[] = $user->company->name;
+        $companyInformation = "";
+        if (isset($user->company->name)) {
+            $companyInformation .= $user->company->name;
+        }
+        
+        if (isset($user->company->streetAddress)) {
+            $companyInformation .= "\n".$user->company->streetAddress;
+        }
+        
+        if (isset($user->company->streetAddress)) {
+            $companyInformation .= "\n" .$user->company->postnumber;
+        }
+        
+        if (isset($user->company->city)) {
+            $companyInformation .= " - ".$user->company->city;
+        }
+        
+        $line[] = $companyInformation;
         $line[] = $user->company->vatNumber;
         $line[] = $this->getComments($user, $entry);
         return $line;

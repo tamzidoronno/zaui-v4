@@ -13,7 +13,7 @@ app.CalendarFilter =  {
         
         var vatNumber = $('#vatnumber').val();
         
-        if (vatNumber.length != 9 && vatNumber.length != 0 ) {
+        if (vatNumber.length != 9 && vatNumber.length != 10 && vatNumber.length != 0 ) {
             return;
         }
         var data = {

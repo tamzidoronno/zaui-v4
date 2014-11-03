@@ -193,10 +193,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         reference.bookingReference = genereateReferenceId();
         reference.startDate = start;
         reference.endDate = end;
-        reference.sentWelcomeMessages = false;
+        reference.sentWelcomeMessages = "false";
         if (getSession().currentUser != null) {
             logSkippedSendingEmail(reference);
-            reference.sentWelcomeMessages = true;
+            reference.sentWelcomeMessages = "true";
         }
 
         reference.language = language;
@@ -810,7 +810,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     public synchronized void checkForWelcomeMessagesToSend() throws ErrorException {
 
         for (BookingReference reference : getAllReservations()) {
-            if (reference.sentWelcomeMessages) {
+            if (reference.sentWelcomeMessages.equals("true")) {
                 continue;
             }
 
@@ -848,7 +848,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                         getMsgManager().mailFactory.send(copyadress, user.emailAddress, title, message);
                         logMailSent(copyadress, "System owner", true, reference.bookingReference);
                         getMsgManager().mailFactory.send(copyadress, copyadress, title, message);
-                        reference.sentWelcomeMessages = true;
+                        reference.sentWelcomeMessages = "true";
                         logMailSent(user.emailAddress, user.fullName, true, reference.bookingReference);
                         saveObject(reference);
                     }

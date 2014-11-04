@@ -216,8 +216,6 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
         databaseSaver.saveObject(reference, credentials);
         bookingReferences.put(reference.bookingReference, reference);
-        checkForWelcomeMessagesToSend();
-        checkForArxUpdate();
         return new Integer(reference.bookingReference).toString();
     }
 
@@ -414,6 +412,12 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 }
                 
                 if (reference.isToday() && reference.allRoomsClean(rooms)) {
+                    //Marking rooms as dirty.
+                    for(Room room : rooms.values()) {
+                        room.isClean = false;
+                        saveObject(room);
+                    }
+                    
                     reference.startDate = new Date();
                     notifyCustomersReadyRoom(reference);
                     System.out.println("Need to update arx with reference: " + reference.bookingReference);

@@ -1,12 +1,6 @@
 html {
-    background: url('{IMAGEFOLDER}/bkg_1.gif') no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    zoom:1;
-    
-    background-color: #0a080a;
+    background: url('{IMAGEFOLDER}/bkg_1.png') no-repeat center -50px fixed;
+    background-color: #cdcdcd;
 	font-family: futura-pt;
 	font-size: 16px;
 	/*font-weight: 300;*/
@@ -15,8 +9,8 @@ html {
 
 }
 
-.skelholder {
-    color: #FFF;
+.Logo {
+    left: 32px;
 }
 
 .footer {
@@ -27,21 +21,15 @@ html {
 }
 
 .TopMenu {
-    border-top: 1px solid #3d3c3f;
-    border-left: 2px solid #3d3c3f;
-    border-bottom: 2px solid #000;
-    border-right: 2px solid #000;
-    background-color: #161616;
-    bottom: 0px;
-    right: 0px;
-    left: 0px;
+    background-color: #006e63;
+    bottom: 16px;
+    right: 16px;
+    left: 16px;
     height: 40px;
 }
 
 .TopMenu a {
-    font-size: 14px;
-    font-weight: bold;
-    color: #a7a7a7;
+    font-size: 18px;
     line-height: 40px;
 }
 
@@ -60,12 +48,27 @@ html {
     
 }
 
-.header {
-    margin-bottom: 20px;
+.mainarea .gs_row .gs_inner{
+    padding-left: 16px;
+    padding-right: 16px;
 }
+
+
+.mainarea .gs_row:last-child .gs_inner {
+    padding-bottom: 16px;
+}
+
+.mainarea .gs_inner,
+.header .gs_inner {
+    background-color: #FFF;
+}
+
 .header .Login {
+    color: #FFF;
     border-color: #CCC;
     border-top: solid 1px #DDD;
+    right: 16px;
+    background-color: #006e63;
 }
 .header .Login .form {
     background-color: inherit;
@@ -73,7 +76,8 @@ html {
 }
 
 .header .Login .applicationinner {
-    background-color: #333;
+    background-color: #006e63;
+    min-height: 20px;
 }
 
 .breadcrumb {
@@ -82,10 +86,13 @@ html {
 
 .Banner {
     height: 398px;
-    margin-top: 50px;
-    margin-bottom: 50px;
 }
 
+.LeftMenu {
+    background-color: #006e63;
+    padding: 16px;
+    
+}
 .LeftMenu .menu_0 .menuName {
     padding-left: 10px;
     padding-top: 10px;
@@ -164,7 +171,7 @@ html {
 .LeftMenu .menu_2 .menuName {padding-left: inherit; }
 .LeftMenu .menu_3 .menuEntry,
 .LeftMenu .menu_2 .menuEntry,
-.LeftMenu .menu_1 .menuEntry { height: inherit; padding: 5px; background-color: #222; }
+.LeftMenu .menu_1 .menuEntry { height: inherit; padding: 5px; background-color: #333; }
 
 
 .LeftMenu .menu_0 { margin-top: 20px; padding-left: 6px; padding-right: 4px; background-color: #333;  }
@@ -185,36 +192,8 @@ html {
 
 .LeftMenu .menuEntry { border-bottom: solid 0px #DDD;}
 
-.LeftMenu .topleveldepth_0.menu_0,
-.LeftMenu .topleveldepth_0 .menuEntry,
-.LeftMenu .topleveldepth_0 .menuName { color: green;  }
-.LeftMenu .menuName { color: #FFF !important;  }
+.LeftMenu .menuName { color: #FFF;  }
 
-.LeftMenu .topleveldepth_1.menu_0,
-.LeftMenu .topleveldepth_1 .menuEntry,
-.LeftMenu .topleveldepth_1 .menuName { color: red;   }
-
-.LeftMenu .topleveldepth_2.menu_0,
-.LeftMenu .topleveldepth_2 .menuEntry,
-.LeftMenu .topleveldepth_2 .menuName {  color: blue; }
-
-.LeftMenu .topleveldepth_3.menu_0,
-.LeftMenu .topleveldepth_3 .menuEntry,
-.LeftMenu .topleveldepth_3 .menuName { color: #660066;   }
-
-
-.LeftMenu .topleveldepth_4.menu_0,
-.LeftMenu .topleveldepth_4 .menuEntry,
-.LeftMenu .topleveldepth_4 .menuName { color: #CC0033;  }
-
-
-.LeftMenu .topleveldepth_5.menu_0,
-.LeftMenu .topleveldepth_5 .menuEntry,
-.LeftMenu .topleveldepth_5 .menuName { color: indigo; }
-
-.LeftMenu .topleveldepth_6.menu_0,
-.LeftMenu .topleveldepth_6 .menuEntry,
-.LeftMenu .topleveldepth_6 .menuName { color: brown; }
 
 
 .Contact .group img { width : 150px; }
@@ -223,7 +202,9 @@ html {
 .Contact .group.selected { border: solid 2px; background-color: #DDD; }
 
 .gs_inner { width: 1100px; margin: auto; }
-.gs_outer.header {height: 146px;}
+.mainarea .gs_inner { width: 1068px; margin: auto; }
+.gs_outer.header .applicationarea,
+.gs_outer.header {height: 160px;}
 
 .skeleton2 .gs_col.c2.gs_margin_left .applicationarea {
     margin-left: 20px;
@@ -264,13 +245,14 @@ html {
 
 .skeleton2 .LeftMenu { width: 220px; }
 
-.gs_row.r1 {
-    margin-bottom: 20px;
+[page="home"] .r2 img,
+[page="home"] .r3 img {
+    padding: 5px;
+    margin-top: 10px;
+    /*background-color: rgba(159, 159, 159, 0.1);*/
+    box-shadow: 0px 0px 3px rgba(0,0,0, 0.2);
 }
 
-.gs_row.r2 {
-    margin-bottom: 14px;
-}
 .gs_margin_left {
     padding-left: 7px;
 } 
@@ -279,57 +261,38 @@ html {
 }
 
 .gs_outer.footer {
-    margin-top: 20px;
-    background-color: rgba(16,16,16,0.7);
-    border-top: solid 1px #000;
-    height: 218px;
+    background-color: #006e63;
+    height: 237px;
 }
 
 .gs_col .applicationarea {
     min-height: 218px;
-    color: #FFF;
+    color: #000;
     padding: 10px;
-    background-color: #161616;
-    border-top: 1px solid #3d3c3f;
-    border-left: 2px solid #3d3c3f;
-    border-bottom: 2px solid #000;
-    border-right: 2px solid #000;
     overflow: hidden;
 }
 
 .Calendar td.calendar-day, 
 .Calendar td.calendar-day-np {
     background-color: #666;
-    background: linear-gradient(to bottom, #666, #333);
+    background: linear-gradient(to bottom, #EEE, #DDD);
 }
 
-.Calendar td.calendar-day-np {
-    background-color: #333;
-    background: #333;
-}
 
-.Calendar td.calendar-day-head {
-    background-color: #333;
+.Calendar .dayevents textarea {
+    width: 388px !important;
+    border: solid 1px #999;
 }
-
 .Calendar .dayevents {
     padding: 20px;
-    border: solid 1px #333;
+    border: solid 1px #999;
     margin-top: 20px;
-}
-
-.Calendar .dayevents,
-.Calendar .dayevents h2  {
-    background-color: #222;
 }
 
 .Calendar .dayevents h2 {
     margin-top: 10px;
 }
 
-.Calendar .dayevents .noentry {
-    background-color: #333;
-}
 
 .Calendar .calendercontent .content .outerdiv div {
     background-color: rgba(255,255,255,0.9);
@@ -337,6 +300,8 @@ html {
     text-align: center;
     margin-top: 3px;
     color: #000;
+    
+    font-size: 12px;
 }
 
 .Calendar .filters .filter.selected {
@@ -358,13 +323,6 @@ html {
     color: #000;
 }
 
-.skeleton23 .gs_row.r2 .applicationarea,
-.skeleton23 .gs_row.r3 .applicationarea {
-    background-repeat: no-repeat;
-    background-position: right top;
-    background-image: url('{IMAGEFOLDER}/puff_about.png');
-}
-
 .dayentry {
     background-color: inherit;
 }
@@ -375,26 +333,19 @@ html {
 
 .loginform a {
     color: #FFF;
+    
 }
 
 .dayrow td a {
-    color: #FFF !important;
+    
 }
 
 .dayrow:hover td a {
     color: #000 !important; 
 }
 
-.dayrow {
-    background-color: #222;
-}
-
 .dayevents .description {
     margin-bottom: 20px;
-}
-
-.Users a .user {
-    color: #FFF;
 }
 
 .Settings #settingsarea {
@@ -408,16 +359,12 @@ html {
 }
 
 .Calendar .dayentry {
-    background-color: #161616;
-    border-top: 1px solid #3d3c3f;
-    border-left: 2px solid #3d3c3f;
-    border-bottom: 2px solid #000;
-    border-right: 2px solid #000;
-    width: 400px;
+    width: 394px;
     display: inline-block;
     vertical-align: top;
     min-height: 140px;
     position: relative;
+    border: solid 1px #999;
 }
 
 .button-large .filler,
@@ -437,10 +384,6 @@ html {
 .News .outeraddnewscontainer .title,
 .News .content_area {
     border-color: #444;
-}
-
-.News .readmore {
-    color: #FFF;
 }
 
 .CalendarEventViewer .title {
@@ -463,9 +406,8 @@ html {
 }
 
 .calendar_tab_content_view[calendar_tab_name=list] {
-    width: 926px;
-    background-color: #222222;
-    border: solid 1px #333333;
+    width: 904px;
+    color: #000;
     box-sizing: border-box;
     padding: 20px;
     font-size: 14px;
@@ -484,16 +426,12 @@ html {
     margin-bottom: 15px;
 }
 
-.Calendar .calendar_tab_content_view[calendar_tab_name="list"] a {
-    color: #FFF;
-}
 
 .CalendarFilter a {
     font-size: 16px;
-    color: #FFF;
 }
 
-.Calendar .calendar_tabs a {
+.TopMenu a {
     color: #FFF;
 }
 
@@ -509,4 +447,23 @@ html {
 .TopMenu .subentries {
     background-color: #161616;
     border: solid 1px #333;
+}
+
+.Banner {
+    padding-bottom: 32px;
+}
+
+.calendercontent {
+    width: 113px;
+}
+
+
+.Calendar .containsdata.hovering .content .outerdiv div  {
+    background-color: #006e63;
+    color: #FFF;
+}
+
+.ContentManager h1 {
+    margin-top: 0px;
+    padding-top: 10px;
 }

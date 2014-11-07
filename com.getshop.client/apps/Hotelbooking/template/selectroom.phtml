@@ -59,6 +59,9 @@ if($this->getServiceType($text) == "storage") {
             if($product->price < $product->original_price) {
                 $pricetext .= " (-". (100-(int)(($product->price / $product->original_price)*100)) . "%)";
             }
+            if($product->price == 0) {
+                $pricetext = "";
+            }
             
             echo "<option value='".$product->id."'>" . $pricetext . " " . $product->name . "</option>";
         }

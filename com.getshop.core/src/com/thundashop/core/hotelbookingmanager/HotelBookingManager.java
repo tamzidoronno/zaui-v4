@@ -193,10 +193,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         reference.bookingReference = genereateReferenceId();
         reference.startDate = start;
         reference.endDate = end;
-        reference.sentWelcomeMessages = false;
+        reference.sentWelcomeMessages = "false";
         if (getSession().currentUser != null) {
             logSkippedSendingEmail(reference);
-            reference.sentWelcomeMessages = true;
+            reference.sentWelcomeMessages = "true";
         }
 
         reference.language = language;
@@ -216,8 +216,6 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
         databaseSaver.saveObject(reference, credentials);
         bookingReferences.put(reference.bookingReference, reference);
-        checkForWelcomeMessagesToSend();
-        checkForArxUpdate();
         return new Integer(reference.bookingReference).toString();
     }
 
@@ -414,6 +412,12 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 }
                 
                 if (reference.isToday() && reference.allRoomsClean(rooms)) {
+                    //Marking rooms as dirty.
+                    for(Room room : rooms.values()) {
+                        room.isClean = false;
+                        saveObject(room);
+                    }
+                    
                     reference.startDate = new Date();
                     notifyCustomersReadyRoom(reference);
                     System.out.println("Need to update arx with reference: " + reference.bookingReference);
@@ -810,7 +814,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     public synchronized void checkForWelcomeMessagesToSend() throws ErrorException {
 
         for (BookingReference reference : getAllReservations()) {
-            if (reference.sentWelcomeMessages) {
+            if (reference.sentWelcomeMessages.equals("true")) {
                 continue;
             }
 
@@ -848,7 +852,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                         getMsgManager().mailFactory.send(copyadress, user.emailAddress, title, message);
                         logMailSent(copyadress, "System owner", true, reference.bookingReference);
                         getMsgManager().mailFactory.send(copyadress, copyadress, title, message);
-                        reference.sentWelcomeMessages = true;
+                        reference.sentWelcomeMessages = "true";
                         logMailSent(user.emailAddress, user.fullName, true, reference.bookingReference);
                         saveObject(reference);
                     }

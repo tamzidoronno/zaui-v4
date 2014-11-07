@@ -19,7 +19,7 @@ public class BookingReference extends DataCommon {
     public ContactData contact = new ContactData();
     public Double bookingFee = 0.0;
     public boolean updateArx = true;
-    public boolean sentWelcomeMessages = true;
+    public String sentWelcomeMessages = "true";
     public Integer parkingSpots = 0;
     public String heardAboutUs = "";
     Date failed = null;

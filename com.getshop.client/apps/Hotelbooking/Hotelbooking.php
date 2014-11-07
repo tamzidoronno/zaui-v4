@@ -364,7 +364,11 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function setParkingOption() {
-        $_SESSION['hotelbooking']['parking'] = $_POST['data']['parking'];
+        if($_POST['data']['parking'] == "false") {
+            unset($_SESSION['hotelbooking']['parking']);
+        } else {
+            $_SESSION['hotelbooking']['parking'] = $_POST['data']['parking'];
+        }
     }
 
     public function getParking() {
@@ -807,7 +811,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function getParkingPrice() {
-        if(!$this->getParking()) {
+        if(!$this->getParkingProduct()) {
             return 0;
         }
         return $this->getParkingProduct()->price * $this->getDayCount();

@@ -1606,3 +1606,7 @@ border-bottom: solid 1px #3a3a3a;
     background-color: #FFF !important;
     background-image: url('skin/default/jcropback.png');
 }
+
+.application_settings {
+z-index: 2;
+}

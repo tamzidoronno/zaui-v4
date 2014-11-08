@@ -474,3 +474,7 @@ html {
 .Booking .userlistoverview .userentry a{
     color: #000;
 }
+
+.gs_outer.footer {
+    min-width: 1100px;
+}

@@ -9,10 +9,11 @@ import java.net.UnknownHostException;
  */
 public class All {
 	public static void main(String[] args) throws UnknownHostException {
+		SetDefaultActivatedFlag.main(args);
 		RenameAppConfigrationToApplicationInstance.main(args);
 		RenameAppSettingsToApplication.main(args);
 		AddApplicationsToDatabase.main(args);
 		
-		SetDefaultActivatedFlag.main(args);
+		
 	}
 }

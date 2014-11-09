@@ -10,7 +10,7 @@ import org.mongodb.morphia.annotations.Transient;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Translation;
 import com.thundashop.core.listmanager.data.Entry;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,7 +35,7 @@ public class Page extends DataCommon implements Cloneable {
     }
 
     public void deletePageAreas() {
-        layout.setNewList(new LinkedList(), "body", false);
+        layout.setNewList(new ArrayList(), "body", false);
     }
 
     public void finalizePage(CommonPageData pagedata) {

@@ -19,7 +19,7 @@ public class PageCell implements Serializable {
     
     public String cellId = UUID.randomUUID().toString();
     public String direction = PageDirection.vertical;
-    public LinkedList<PageCell> cells = new LinkedList();
+    public ArrayList<PageCell> cells = new ArrayList();
     public String appId;
     public String styles = "";
     public CarouselConfig carouselConfig = new CarouselConfig();
@@ -32,7 +32,7 @@ public class PageCell implements Serializable {
         if(before == null || before.isEmpty()) {
             cells.add(newcell);
         } else {
-            LinkedList newList = new LinkedList();
+            ArrayList newList = new ArrayList();
             for(PageCell cell : cells) {
                 if(cell.cellId.equals(before)) {
                     newList.add(newcell);

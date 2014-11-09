@@ -48,10 +48,12 @@ class Page {
         }
         echo "</div>";
         
-        echo "<div class='gscell  gsdepth_0 gseditinfo' style='height:55px'>";
-        echo "<div class='gsinner gsdepth_0'>";
-        echo '<div class="gs_addcell" incell="" aftercell="" style="padding: 20px; text-align:center"><span style="border: solid 1px; padding: 10px; background-color:#BBB;">Add row</span></div>';
-        echo "</div></div>";
+        if($this->factory->isEditorMode()) {
+            echo "<div class='gscell  gsdepth_0 gseditinfo' style='height:55px'>";
+            echo "<div class='gsinner gsdepth_0'>";
+            echo '<div class="gs_addcell" incell="" aftercell="" style="padding: 20px; text-align:center"><span style="border: solid 1px; padding: 10px; background-color:#BBB;">Add row</span></div>';
+            echo "</div></div>";
+        }
 
         echo "<div class='gsarea' area='footer'>";
         $edited = $this->printArea($layout->areas->{'footer'});
@@ -179,7 +181,7 @@ class Page {
             }
         }
 
-        if ($depth === 0 && !$edit) {
+        if ($depth === 0 && !$edit && $this->factory->isEditorMode()) {
             echo "<i title='" . $this->factory->__f("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o'></i>";
         }
         echo "<div class='gsinner gsdepth_$depth $rowedit gscount_$count' totalcells='$totalcells' style='" . $cell->innerStyles . "'>";
@@ -511,7 +513,7 @@ class Page {
 
     public function printApplicationArea($cell) {
         echo "<div class='applicationarea' appid='" . $cell->appId . "' area='" . $cell->cellId . "'>";
-        if (!$cell->appId) {
+        if (!$cell->appId && $this->factory->isEditorMode()) {
             echo "<span class='gsaddcontent'>";
             echo "<i class='fa fa-plus-circle gs_show_application_add_list'></i>";
             echo "</span>";

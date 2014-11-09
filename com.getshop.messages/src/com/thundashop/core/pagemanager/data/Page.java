@@ -11,6 +11,7 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Translation;
 import com.thundashop.core.listmanager.data.Entry;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -44,6 +45,10 @@ public class Page extends DataCommon implements Cloneable {
 
 	public PageCell getCell(String pageCellId) {
 		return layout.getCell(pageCellId);
+	}
+
+	public List<PageCell> getCellsFlatList() {
+		return layout.getCellsFlatList();
 	}
     
     public static class DefaultPages {

@@ -1,6 +1,7 @@
 package com.thundashop.core.pagemanager.data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -277,6 +278,18 @@ public class PageLayout implements Serializable {
         PageCell cell = findCell(getAllCells(), cellId);
         cell.carouselConfig = config;
     }
+
+	public List<PageCell> getCellsFlatList() {
+		List<PageCell> arrayList = new ArrayList();
+		arrayList.add(header);
+		arrayList.add(footer);
+		for (PageCell row : rows) {
+			arrayList.addAll(row.getCellsFlatList());
+		}
+		
+		return arrayList;
+	}
+	
 
 
 }

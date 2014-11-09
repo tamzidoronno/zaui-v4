@@ -1,10 +1,15 @@
 package com.thundashop.core.pagemanager.data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 
 public class PageCell implements Serializable {
+
+	
     static class PageDirection {
         public static String vertical = "VERTICAL";
         public static String horizontal = "HORIZONTAL";
@@ -54,4 +59,14 @@ public class PageCell implements Serializable {
 		return null;
 	}
     
+	public List<PageCell> getCellsFlatList() {
+		List<PageCell> retCells = new ArrayList();
+		retCells.add(this);
+		
+		for (PageCell cell : cells) {
+			retCells.addAll(cell.getCellsFlatList());
+		}
+		
+		return retCells;
+	}
 }

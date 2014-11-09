@@ -48,7 +48,7 @@ public class StoreHandler {
         Method executeMethod = getMethodToExecute(aClass, inObject.method, types, argumentValues);
         
         try {
-//            authenticateUserLevel(executeMethod, aClass);
+            authenticateUserLevel(executeMethod, aClass);
             Object result = invokeMethod(executeMethod, aClass, argumentValues);
             clearSessionObject();
             return result;

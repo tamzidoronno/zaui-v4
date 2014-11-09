@@ -76,6 +76,10 @@ class ApplicationManager extends FactoryBase {
         $type = $_POST['data']['type'];
         $cellId = $_POST['data']['cellid'];
         $before = null;
+        $area = "";
+        if(isset($_POST['data']['area'])) {
+            $area = $_POST['data']['area'];
+        }
         if(isset($_POST['data']['before'])) {
             $before = $_POST['data']['before'];
         }
@@ -90,18 +94,18 @@ class ApplicationManager extends FactoryBase {
                 $this->getApi()->getPageManager()->dropCell($this->getPage()->javapage->id, $cellId);
                 break;
             case "addrotate":
-                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "ROTATING");
+                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "ROTATING", $area);
                 break;
             case "addbefore":
             case "addafter":
-                $cellId = $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "VERTICAL");
+                $cellId = $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "HORIZONTAL", $area);
                 $_GET['gseditcell'] = $cellId;
                 break;
             case "addvertical":
-                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "VERTICAL");
+                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "VERTICAL", $area);
                 break;
             case "addhorizontal":
-                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "HORIZONTAL");
+                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "HORIZONTAL", $area);
                 break;
         }
     }
@@ -439,7 +443,7 @@ class ApplicationManager extends FactoryBase {
     public function addCell() {
         $incell = $_POST['data']['incell'];
         $aftercell = $_POST['data']['aftercell'];
-        $cellId = $this->getApi()->getPageManager()->addLayoutCell($this->getFactory()->getPage()->getId(), $incell, $aftercell, true);
+        $cellId = $this->getApi()->getPageManager()->addLayoutCell($this->getFactory()->getPage()->getId(), $incell, $aftercell, true, "");
         $_SESSION['gseditcell'] = $cellId;
     }
 

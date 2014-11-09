@@ -55,17 +55,23 @@ public class APIPageManager {
      }
 
      /**
-     * Remove all content on all page areas for this page.
+     * Add an cell to an specific earea.
      * @param pageId
+     * @param incell
+     * @param beforecell
+     * @param direction
+     * @param area header/footer/body
+     * @return
      * @throws ErrorException
      */
-     public java.lang.String addLayoutCell(java.lang.String pageId, java.lang.String incell, java.lang.String beforecell, java.lang.String direction)  throws Exception  {
+     public java.lang.String addLayoutCell(java.lang.String pageId, java.lang.String incell, java.lang.String beforecell, java.lang.String direction, java.lang.String area)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new LinkedHashMap();
           data.args.put("pageId",new Gson().toJson(pageId));
           data.args.put("incell",new Gson().toJson(incell));
           data.args.put("beforecell",new Gson().toJson(beforecell));
           data.args.put("direction",new Gson().toJson(direction));
+          data.args.put("area",new Gson().toJson(area));
           data.method = "addLayoutCell";
           data.interfaceName = "core.pagemanager.IPageManager";
           String result = transport.send(data);
@@ -198,8 +204,13 @@ public class APIPageManager {
      }
 
      /**
-     * Remove all content on all page areas for this page.
+     * Add an cell to an specific earea.
      * @param pageId
+     * @param incell
+     * @param beforecell
+     * @param direction
+     * @param area header/footer/body
+     * @return
      * @throws ErrorException
      */
      public com.thundashop.core.pagemanager.data.Page dropCell(java.lang.String pageId, java.lang.String cellId)  throws Exception  {

@@ -1,9 +1,9 @@
 <?php
 class core_pagemanager_data_CommonPageData extends core_common_DataCommon  {
-	/** @var core_pagemanager_data_PageCell */
+	/** @var String */
 	public $header;
 
-	/** @var core_pagemanager_data_PageCell */
+	/** @var String */
 	public $footer;
 
 }

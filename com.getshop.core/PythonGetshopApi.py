@@ -2876,7 +2876,7 @@ class PageManager(object):
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
-  def addLayoutCell(self, pageId, incell, beforecell, direction):
+  def addLayoutCell(self, pageId, incell, beforecell, direction, area):
     args = collections.OrderedDict()
     if isinstance(pageId,GetShopBaseClass): 
       args["pageId"]=json.dumps(pageId.__dict__)
@@ -2906,6 +2906,13 @@ class PageManager(object):
         args["direction"]=json.dumps(direction)
       except (ValueError, AttributeError):
         args["direction"]=direction
+    if isinstance(area,GetShopBaseClass): 
+      args["area"]=json.dumps(area.__dict__)
+    else:
+      try:
+        args["area"]=json.dumps(area)
+      except (ValueError, AttributeError):
+        args["area"]=area
     data = EmptyClass()
     data.args = args
     data.method = "addLayoutCell"

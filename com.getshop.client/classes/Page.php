@@ -28,71 +28,44 @@ class Page {
         /* @var $layout core_pagemanager_data_PageLayout */
         $layout = $this->javapage->layout;
 
-        $rowsToPrint = array();
-        $rowsToPrint[] = $layout->header;
-        $rowsToPrint = array_merge($rowsToPrint, $layout->rows);
-        $rowsToPrint[] = $layout->footer;
-
-
-        $count = 0;
         $beenEdited = false;
-        foreach ($rowsToPrint as $row) {
-            if (isset($_GET['gseditcell']) && $_GET['gseditcell'] == $row->cellId) {
-                $_SESSION['gseditcell'] = $_GET['gseditcell'];
+        foreach($layout->areas as $area => $rowsToPrint) {
+            foreach ($rowsToPrint as $row) {
+                if (isset($_GET['gseditcell']) && $_GET['gseditcell'] == $row->cellId) {
+                    $_SESSION['gseditcell'] = $_GET['gseditcell'];
+                }
             }
         }
 
-        foreach ($rowsToPrint as $row) {
-            $isedit = false;
-
-            if ($row->cellId == "footer") {
-                echo "<div class='gscell  gsdepth_0 gseditinfo' style='height:55px'>";
-                echo "<div class='gsinner gsdepth_0'>";
-                echo '<div class="gs_addcell" incell="" aftercell="" style="padding: 20px; text-align:center"><span style="border: solid 1px; padding: 10px; background-color:#BBB;">Add row</span></div>';
-                echo "</div></div>";
-            }
-
-            $cellid = $row->cellId;
-            if (sizeof($row->cells) > 0 && $row->cells[0]->direction === "ROTATING") {
-                $cellid = $row->cells[0]->cellId;
-            }
-
-            if (isset($_SESSION['gseditcell']) && $_SESSION['gseditcell'] === $row->cellId) {
-                $editedCellid = $cellid;
-                echo "<div class='gscell gsdepth_0 gseditinfo' style='height: 38px;'>";
-                echo "<div class='gsinner gsdepth_0'>";
-                echo "<div class='gseditrowheading' cellid='" . $cellid . "'>";
-                echo "<i class='fa fa-cogs' type='settings' title='Rows settings'></i>";
-                echo "<i class='fa fa-plus' type='addvertical' title='Add column'></i>";
-                echo "<label style='float:left;'>";
-                echo "<input type='checkbox' style='background-color:#FFF;' class='gsdisplaygridcheckbox'> Add spacing to grid";
-                echo "</label>";
-                echo "You are now in edit mode for this row." . " - " . "<span class='gsdoneeditbutton' done='true'true'>done editing</span>";
-                echo "</div>";
-                echo "</div>";
-                echo "</div>";
-                $isedit = true;
-                $beenEdited = true;
-            }
-
-            if (sizeof($row->cells) > 0 && $row->cells[0]->direction === "ROTATING") {
-                $this->printSubCells($row, $isedit, -1);
-            } else {
-                $this->printCell($row, $count, 0, 0, $isedit);
-            }
-            $count++;
-            if ($isedit) {
-                echo "<div class='gscell gsdepth_0 gsendedit gseditinfo'>";
-                echo "<div class='gsinner gsdepth_0'>";
-                echo "<div class='gseditrowheading'>";
-                echo "End of row to edit.";
-                echo "</div>";
-                echo "</div>";
-                echo "</div>";
-            }
+        $editedCellid = null;
+        echo "<div class='gsarea' area='header'>";
+        $edited = $this->printArea($layout->areas->{'header'});
+        if($edited) {
+            $editedCellid = $edited;
         }
+        echo "</div>";
+        
+        echo "<div class='gsarea' area='body'>";
+        $edited = $this->printArea($layout->areas->{'body'});
+        if($edited) {
+            $editedCellid = $edited;
+        }
+        echo "</div>";
+        
+        echo "<div class='gscell  gsdepth_0 gseditinfo' style='height:55px'>";
+        echo "<div class='gsinner gsdepth_0'>";
+        echo '<div class="gs_addcell" incell="" aftercell="" style="padding: 20px; text-align:center"><span style="border: solid 1px; padding: 10px; background-color:#BBB;">Add row</span></div>';
+        echo "</div></div>";
 
-        if ($beenEdited) {
+        echo "<div class='gsarea' area='footer'>";
+        $edited = $this->printArea($layout->areas->{'footer'});
+        if($edited) {
+            $editedCellid = $edited;
+        }
+        echo "</div>";
+
+
+        if ($editedCellid != null) {
             $this->addCellConfigPanel();
             $this->addCellResizingPanel();
             $this->addCarouselSettingsPanel();
@@ -108,12 +81,12 @@ class Page {
                 PubSub.subscribe('NAVIGATION_COMPLETED', function (a, b) {
                     if (thundashop.framework.lastRotatedCell) {
                         var cell = $('.gscell[cellid="' + thundashop.framework.lastRotatedCell + '"]');
-                        if(!cell.hasClass('gseditrowouter')) {
+                        if (!cell.hasClass('gseditrowouter')) {
                             return;
                         }
-                        cell.closest('.rotatingcontainer').find('.gsrotating').css('opacity','0');
-                        cell.css('opacity','1');
-                        cell.css('z-index','2');
+                        cell.closest('.rotatingcontainer').find('.gsrotating').css('opacity', '0');
+                        cell.css('opacity', '1');
+                        cell.css('z-index', '2');
 
                         $('.gseditrowheading').attr('cellid', thundashop.framework.lastRotatedCell);
                         setTimeout(function () {
@@ -162,7 +135,6 @@ class Page {
 
     private function printApplicationAddCellRow($cell) {
         $this->factory->includefile("applicationlist", 'Common');
-
     }
 
     private function renderApplication($cell) {
@@ -275,7 +247,7 @@ class Page {
         echo "<div class='gs_resizing'><i class='fa fa-image'></i>" . $this->factory->__w("Styling") . "</div>";
         echo "<div class='gs_removerow' type='delete'><i class='fa fa-trash-o'></i>" . $this->factory->__w("Delete") . "</div>";
         echo "<i class='gs_closecelledit fa fa-times' style='position:absolute;right: 5px; top: 5px; cursor:pointer;'></i>";
-        
+
         echo "<div class='gscellsettingsheading'>Carousel settings</div>";
         echo "<div class='gs_addrotating' subtype='carousel' type='addrotate'><i class='fa fa-sitemap'></i>" . $this->factory->__w("Insert carousel cell") . "</div>";
         echo "<div class='carouselsettings' subtype='carousel' style='display:none;'>";
@@ -578,21 +550,67 @@ class Page {
                 .rotatingcontainer[cellid='<? echo $cell->cellId; ?>'] .gscell.gsdepth_<? echo $innerdept; ?> { width:100%; min-height: <? echo $config->height; ?>px !important; height: <? echo $config->height; ?>px !important; }
                 .rotatingcontainer[cellid='<? echo $cell->cellId; ?>'] .gsinner.gsdepth_<? echo $innerdept; ?> { height: 100%; }
                 <? if (($config->type === "fade" || !$config->type) && $doCarousel) { ?>
-                .rotatingcontainer[cellid='<? echo $cell->cellId; ?>'] .gsrotating {
-                    -webkit-transition: opacity .5s ease-in-out;
-                    -moz-transition: opacity .5s ease-in-out;
-                    -ms-transition: opacity .5s ease-in-out;
-                    -o-transition: opacity .5s ease-in-out;
-                    transition: opacity .5s ease-in-out;
-                }
+                    .rotatingcontainer[cellid='<? echo $cell->cellId; ?>'] .gsrotating {
+                        -webkit-transition: opacity .5s ease-in-out;
+                        -moz-transition: opacity .5s ease-in-out;
+                        -ms-transition: opacity .5s ease-in-out;
+                        -o-transition: opacity .5s ease-in-out;
+                        transition: opacity .5s ease-in-out;
+                    }
                 <? } ?>
-                </style>
-                <? if ($doCarousel) { ?>
-                    <script>thundashop.framework.activateCarousel($(".rotatingcontainer[cellid='<? echo $cell->cellId; ?>']"), <? echo $config->time; ?>);</script>
-                <? } ?>
-                <?
+            </style>
+            <? if ($doCarousel) { ?>
+                <script>thundashop.framework.activateCarousel($(".rotatingcontainer[cellid='<? echo $cell->cellId; ?>']"), <? echo $config->time; ?>);</script>
+            <? } ?>
+            <?
+        }
+    }
+
+    public function printArea($rowsToPrint) {
+        $count = 0;
+        $editedCellid=null;
+        foreach ($rowsToPrint as $row) {
+            $isedit = false;
+
+            $cellid = $row->cellId;
+            if (sizeof($row->cells) > 0 && $row->cells[0]->direction === "ROTATING") {
+                $cellid = $row->cells[0]->cellId;
+            }
+
+            if (isset($_SESSION['gseditcell']) && $_SESSION['gseditcell'] === $row->cellId) {
+                $editedCellid = $cellid;
+                echo "<div class='gscell gsdepth_0 gseditinfo' style='height: 38px;'>";
+                echo "<div class='gsinner gsdepth_0'>";
+                echo "<div class='gseditrowheading' cellid='" . $cellid . "'>";
+                echo "<i class='fa fa-cogs' type='settings' title='Rows settings'></i>";
+                echo "<i class='fa fa-plus' type='addvertical' title='Add column'></i>";
+                echo "<label style='float:left;'>";
+                echo "<input type='checkbox' style='background-color:#FFF;' class='gsdisplaygridcheckbox'> Add spacing to grid";
+                echo "</label>";
+                echo "You are now in edit mode for this row." . " - " . "<span class='gsdoneeditbutton' done='true'true'>done editing</span>";
+                echo "</div>";
+                echo "</div>";
+                echo "</div>";
+                $isedit = true;
+            }
+
+            if (sizeof($row->cells) > 0 && $row->cells[0]->direction === "ROTATING") {
+                $this->printSubCells($row, $isedit, -1);
+            } else {
+                $this->printCell($row, $count, 0, 0, $isedit);
+            }
+            $count++;
+            if ($isedit) {
+                echo "<div class='gscell gsdepth_0 gsendedit gseditinfo'>";
+                echo "<div class='gsinner gsdepth_0'>";
+                echo "<div class='gseditrowheading'>";
+                echo "End of row to edit.";
+                echo "</div>";
+                echo "</div>";
+                echo "</div>";
             }
         }
-
+        return $editedCellid;
     }
-    
+
+}

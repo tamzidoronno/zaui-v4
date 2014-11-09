@@ -1,27 +1,71 @@
 package com.thundashop.core.pagemanager.data;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.NoSuchElementException;
 
 public class PageLayout implements Serializable {
 
-    public PageCell header;
-    public PageCell footer;
-    public LinkedList<PageCell> rows = new LinkedList();
-
+    HashMap<String, LinkedList<PageCell>> areas = new HashMap();
+    
     void clear() {
-        rows = new LinkedList();
+        areas.put("body", new LinkedList());
     }
 
     public void moveCell(String cellid, boolean moveUp) {
-        rows = moveCellRecursive(rows, cellid, moveUp);
-        header.cells = moveCellRecursive(header.cells, cellid, moveUp);
-        footer.cells = moveCellRecursive(footer.cells, cellid, moveUp);
+        String area = findAreaForCell(cellid);
+        setNewList(moveCellRecursive(areas.get(area), cellid, moveUp), area, false);
+    }
+    
+    public void addToList(PageCell cell, String area) {
+        if(area == null || area.isEmpty()) {
+            area = "body";
+        }
+        if(areas.get(area) == null) {
+            areas.put(area, new LinkedList());
+        }
+        
+        areas.get(area).add(cell);
+    }
+    
+    public void removeCellFromList(PageCell cell) {
+        for(String area : areas.keySet()) {
+            areas.get(area).remove(cell);
+        }
+    }
+    
+    public void setNewList(LinkedList<PageCell> newList, String area, boolean force) {
+        if(area == null || area.isEmpty()) {
+            area = "body";
+        }
+        
+        if(areas.get(area) != null && !force) {
+            areas.get(area).clear();
+            areas.get(area).addAll(newList);
+        } else {
+            areas.put(area, newList);
+        }
     }
 
-    public String createCell(String incell, String before, String direction) {
+    private Iterable<PageCell> getAreaList(String area) {
+        LinkedList<PageCell> list = areas.get(area);
+        if(list == null) {
+            return new LinkedList();
+        }
+        return list;
+    }
+    
+    private LinkedList<PageCell> getAllCells() {
+        LinkedList<PageCell> cells = new LinkedList();
+        for(String area : areas.keySet()) {
+            cells.addAll(areas.get(area));
+        }
+        return cells;
+    }
+    
+    
+    public String createCell(String incell, String before, String direction, String area) {
+        
         if(direction == null || direction.isEmpty()) {
             direction = PageCell.PageDirection.vertical;
         }
@@ -31,15 +75,16 @@ public class PageLayout implements Serializable {
             newpagecell.direction = direction;
             if (before != null && !before.isEmpty()) {
                 LinkedList<PageCell> newList = new LinkedList();
-                for (PageCell cell : rows) {
+                area = findAreaForCell(before);
+                for (PageCell cell : getAreaList(area)) {
                     if (cell.cellId.equals(before)) {
                         newList.add(newpagecell);
                     }
                     newList.add(cell);
                 }
-                rows = newList;
+                setNewList(newList, area, false);
             } else {
-                rows.add(newpagecell);
+                addToList(newpagecell, area);
             }
             cellId = newpagecell.cellId;
         } else {
@@ -52,8 +97,6 @@ public class PageLayout implements Serializable {
                 PageCell newcell = cell.createCell(before);
                 newcell.direction = directionToSet;
                 newcell.appId = cell.appId;
-//                before = newcell.cellId;
-//                cell.cells.add(newcell);
             } else {
                 cell.cells.stream().forEach((cell2) -> {
                     cell2.width = -1.0;
@@ -112,44 +155,14 @@ public class PageLayout implements Serializable {
         }
         if (toRemove != null) {
             cells.remove(toRemove);
-            this.rows.remove(toRemove);
+            removeCellFromList(toRemove);
             return true;
         }
         return false;
     }
 
-    private LinkedList<PageCell> getAllCells() {
-        LinkedList<PageCell> cells = new LinkedList();
-        cells.addAll(this.rows);
-        cells.add(header);
-        cells.add(footer);
-        return cells;
-    }
-
     public PageCell getCell(String pageCellId) {
-        if (header != null && header.cellId.equals(pageCellId)) {
-            return header;
-        }
-
-        if (footer != null && footer.cellId.equals(pageCellId)) {
-            return footer;
-        }
-
-        if (header != null) {
-            PageCell cell2 = header.getCell(pageCellId);
-            if (cell2 != null) {
-                return cell2;
-            }
-        }
-
-        if (footer != null) {
-            PageCell cell3 = footer.getCell(pageCellId);
-            if (cell3 != null) {
-                return cell3;
-            }
-        }
-
-        for (PageCell cell : rows) {
+        for (PageCell cell : getAllCells()) {
             PageCell cell4 = cell.getCell(pageCellId);
             if (cell4 != null) {
                 return cell4;
@@ -277,6 +290,17 @@ public class PageLayout implements Serializable {
         PageCell cell = findCell(getAllCells(), cellId);
         cell.carouselConfig = config;
     }
+
+    private String findAreaForCell(String cellId) {
+        for(String area : areas.keySet()) {
+            PageCell cell = findCell(areas.get(area), cellId);
+            if(cell != null) {
+                return area;
+            }
+        }
+        return null;
+    }
+
 
 
 }

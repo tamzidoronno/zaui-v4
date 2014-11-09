@@ -115,13 +115,13 @@ thundashop.framework = {
 
         thundashop.framework.resetCarouselTimer(cell);
         thundashop.framework.rotateCellDirection(cell, offsetcount);
-        
+
         var rotatecell = $('.gscell[cellid="' + $('.gseditrowheading').attr('cellid') + '"]');
         if (rotatecell.hasClass('gseditrowouter')) {
             thundashop.framework.loadResizing(rotatecell, true);
             thundashop.framework.lastRotatedCell = $('.gseditrowheading').attr('cellid');
         }
-        
+
     },
     rotateCell: function () {
         var cell = $(this).closest('.rotatingcontainer');
@@ -358,7 +358,7 @@ thundashop.framework = {
 
         var bgcolor = $(this).closest('table').find('.gsbgcolorinput').val();
         bgcolor = thundashop.framework.hexToRgb(bgcolor);
-        
+
         var level = $(this).closest('.gscolorselectionpanel').attr('level');
         if (level) {
             cell = cell.find(level);
@@ -499,19 +499,19 @@ thundashop.framework = {
 
         var opacityinner = 10;
         var opacityouter = 10;
-        
-        if(bginner.indexOf("rgba") >= 0) {
-            var opacity = bginner.substring(bginner.lastIndexOf(",")+1, bginner.length -1);
-            opacityinner = parseInt(parseFloat(opacity)*10);
+
+        if (bginner.indexOf("rgba") >= 0) {
+            var opacity = bginner.substring(bginner.lastIndexOf(",") + 1, bginner.length - 1);
+            opacityinner = parseInt(parseFloat(opacity) * 10);
         }
-        if(bgouter.indexOf("rgba") >= 0) {
-            var opacity = bgouter.substring(bgouter.lastIndexOf(",")+1, bgouter.length -1);
-            opacityouter = parseInt(parseFloat(opacity)*10);
+        if (bgouter.indexOf("rgba") >= 0) {
+            var opacity = bgouter.substring(bgouter.lastIndexOf(",") + 1, bgouter.length - 1);
+            opacityouter = parseInt(parseFloat(opacity) * 10);
         }
-        
+
         $('.gscolorselectionpanel[level=".gsinner"] .gsbgopacityinput').val(opacityinner);
         $('.gscolorselectionpanel[level=""] .gsbgopacityinput').val(opacityouter);
-        
+
 
         $('.gsresizingpanel input').each(function () {
             var type = $(this).attr('data-csstype');
@@ -581,10 +581,10 @@ thundashop.framework = {
             $(this), thundashop.framework.showCellSettingsPanel($(this));
             return;
         }
-        
+
         var panel = $(this).closest('.gscellsettingspanel');
         var cellid = panel.attr('cellid');
-        
+
         if ($(this).closest('.gseditrowheading').length > 0) {
             cellid = $(this).closest('.gseditrowheading').attr('cellid');
         }
@@ -604,20 +604,22 @@ thundashop.framework = {
                 }
             }
         }
-        
-        
+
+
         if (type === "delete") {
             if (!confirm("Are you sure you want to delete this cell and all its content?")) {
                 return;
+            }
         }
-                    }
         
+        var cellobj = $('.gscell[cellid="' + cellid + '"]');
+
         var data = {
             "cellid": cellid,
-            "type": type
+            "type": type,
+            "area": cellobj.closest('.gsarea').attr('area')
         }
 
-        var cellobj = $('.gscell[cellid="' + cellid + '"]');
 
         if (type === "addbefore") {
             var newcellid = cellobj.parent().closest('.gscell').attr('cellid');
@@ -655,7 +657,7 @@ thundashop.framework = {
         if (cell.hasClass('gseditinfo')) {
             cell = $(".gscell[cellid='" + $('.gseditrowheading').attr('cellid') + "']");
         }
-        
+
         if (cell.hasClass('gsvertical')) {
             panel.find('.gscolumnmenu').show();
         } else {
@@ -667,9 +669,6 @@ thundashop.framework = {
             panel.find('.carouselsettings').show();
         }
 
-        if (cell.attr('cellid') === "footer" || cell.attr('cellid') === "header") {
-            panel.find('.gscolumnmenu').show();
-        }
 
         $('.gsoverlay').remove();
         var overlay = $('<span class="gsoverlay" style="filter: blur(5px);width:100%; height:100%; background-color:#bbb; opacity:0.6; position:absolute; left:0px; top:0px;display:inline-block;"></span>');

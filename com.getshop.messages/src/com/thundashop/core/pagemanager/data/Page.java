@@ -34,12 +34,12 @@ public class Page extends DataCommon implements Cloneable {
     }
 
     public void deletePageAreas() {
-        layout.rows = new LinkedList();
+        layout.setNewList(new LinkedList(), "body", false);
     }
 
     public void finalizePage(CommonPageData pagedata) {
-        layout.header = pagedata.header;
-        layout.footer = pagedata.footer;
+        layout.setNewList(pagedata.header, "header", true);
+        layout.setNewList(pagedata.footer, "footer", true);
     }
 
 	public PageCell getCell(String pageCellId) {

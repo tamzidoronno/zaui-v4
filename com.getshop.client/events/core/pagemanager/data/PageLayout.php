@@ -1,9 +1,9 @@
 <?php
 class core_pagemanager_data_PageLayout {
-	/** @var core_pagemanager_data_PageCell */
+	/** @var String */
 	public $header;
 
-	/** @var core_pagemanager_data_PageCell */
+	/** @var String */
 	public $footer;
 
 	/** @var String */

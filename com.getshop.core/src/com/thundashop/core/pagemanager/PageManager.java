@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thundashop.core.pagemanager;
 
 import com.getshop.scope.GetShopSession;
@@ -194,9 +190,9 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     @Override
-    public String addLayoutCell(String pageId, String incell, String beforecell, String direction) throws ErrorException {
+    public String addLayoutCell(String pageId, String incell, String beforecell, String direction, String area) throws ErrorException {
         Page page = getPage(pageId);
-        String cell = page.layout.createCell(incell, beforecell, direction);
+        String cell = page.layout.createCell(incell, beforecell, direction, area);
         savePage(page);
         return cell;
     }

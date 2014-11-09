@@ -2784,18 +2784,24 @@ class APIPageManager {
 	}
 
 	/**
-	* Remove all content on all page areas for this page.
+	* Add an cell to an specific earea.
 	* @param pageId
+	* @param incell
+	* @param beforecell
+	* @param direction
+	* @param area header/footer/body
+	* @return String
 	* @throws ErrorException
 	*/
 
-	public function addLayoutCell($pageId, $incell, $beforecell, $direction) {
+	public function addLayoutCell($pageId, $incell, $beforecell, $direction, $area) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
 	     $data['args']["incell"] = json_encode($this->transport->object_unset_nulls($incell));
 	     $data['args']["beforecell"] = json_encode($this->transport->object_unset_nulls($beforecell));
 	     $data['args']["direction"] = json_encode($this->transport->object_unset_nulls($direction));
+	     $data['args']["area"] = json_encode($this->transport->object_unset_nulls($area));
 	     $data["method"] = "addLayoutCell";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
 	     return $this->transport->sendMessage($data);
@@ -2919,8 +2925,13 @@ class APIPageManager {
 	}
 
 	/**
-	* Remove all content on all page areas for this page.
+	* Add an cell to an specific earea.
 	* @param pageId
+	* @param incell
+	* @param beforecell
+	* @param direction
+	* @param area header/footer/body
+	* @return core_pagemanager_data_Page
 	* @throws ErrorException
 	*/
 

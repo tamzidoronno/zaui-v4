@@ -51,8 +51,18 @@ public interface IPageManager {
     @Administrator
     public void clearPage(String pageId) throws ErrorException;
     
+    /**
+     * Add an cell to an specific earea.
+     * @param pageId
+     * @param incell
+     * @param beforecell
+     * @param direction
+     * @param area header/footer/body if nothing set it will default to body.
+     * @return
+     * @throws ErrorException 
+     */
     @Administrator
-    public String addLayoutCell(String pageId, String incell, String beforecell, String direction) throws ErrorException;
+    public String addLayoutCell(String pageId, String incell, String beforecell, String direction, String area) throws ErrorException;
     
     @Administrator
     public Page dropCell(String pageId, String cellId) throws ErrorException;

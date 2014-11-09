@@ -22,8 +22,10 @@ class ApplicationPool {
     }
  
     public function setApplicationInstances($javaAppinstances) {
-        foreach ($javaAppinstances as $instance) {
-            $this->loadApplicationInstance($instance->id);
+        if(isset($javaAppinstances)) {
+            foreach ($javaAppinstances as $instance) {
+                $this->loadApplicationInstance($instance->id);
+            }
         }
     }
     

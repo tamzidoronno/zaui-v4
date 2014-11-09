@@ -252,7 +252,6 @@ class Page {
         echo "<div class='gs_splithorizontally' subtype='carousel' type='moveup'><i class='fa fa-long-arrow-left'></i>" . $this->factory->__w("Move current cell to the left") . "</div>";
         echo "<div class='gs_splithorizontally' subtype='carousel' type='movedown'><i class='fa fa-long-arrow-right'></i>" . $this->factory->__w("Move current cell to the right") . "</div>";
         echo "<div class='gs_removerow' subtype='carousel'  type='delete'><i class='fa fa-trash-o'></i>" . $this->factory->__w("Delete current cell") . "</div>";
-        echo "<i class='gs_closecelledit fa fa-times' style='position:absolute;right: 5px; top: 5px; cursor:pointer;'></i>";
         echo "</div>";
         echo "</span>";
     }
@@ -416,6 +415,7 @@ class Page {
                     </tr>
                 </table>
             </div>
+            <div>&nbsp;&nbsp;&nbsp;&nbsp;-1 means no value has been set.</div>
             <div>
                 <span class="modifybutton closeresizing">Undo changes</span>
                 <span class="modifybutton gssavechanges" style="float:right;">Save changes</span>

@@ -488,7 +488,12 @@ thundashop.framework = {
         resizingpanel.css('left', $(this).offset().left - 100);
         resizingpanel.find('.tabbtn[target="padding"]').first().click();
         resizingpanel.fadeIn();
-//        cell.find('.gscell.gshorisontal').resizable({grid: [10000, 1]});
+        
+        cell.find('.gscell.gshorisontal').resizable({grid: [10000, 1]});
+        var cellcount = cell.children('.gsinner').first().children('.gscell.gsvertical').length;
+        if(cellcount > 1) {
+            thundashop.framework.loadResizing(cell, false);
+       }
 
         cell.find('.overlay').hide();
         var bgouter = thundashop.framework.get_inherited_bg(cell);
@@ -519,23 +524,49 @@ thundashop.framework = {
             var value = "";
             if (type) {
                 if (level) {
-                    if (cell.find(level).attr('style').indexOf($(this).attr('data-csstype')) >= 0) {
+                    if (thundashop.framework.hasAttribute(cell.find(level), $(this).attr('data-csstype'))) {
                         value = cell.find(level).css($(this).attr('data-csstype'));
                     }
                 } else {
-                    if (cell.attr('style').indexOf($(this).attr('data-csstype')) >= 0) {
+                    if (thundashop.framework.hasAttribute(cell, $(this).attr('data-csstype'))) {
                         value = cell.css($(this).attr('data-csstype'));
                     }
                 }
                 value = value.replace("px", "");
+                console.log(type + " : " + level + " : " + value);
                 $(this).closest('tr').find('input[type="range"]').attr('min', -1);
                 $(this).closest('tr').find('input[type="range"]').attr('max', 100);
-                $(this).val(value);
-                $(this).closest('tr').find('input[type="range"]').val(value);
+                if(value) {
+                    $(this).val(value);
+                    $(this).closest('tr').find('input[type="range"]').val(value);
+                } else {
+                    $(this).val(-1);
+                    $(this).closest('tr').find('input[type="range"]').val(-1);
+                }
             }
         });
-        thundashop.framework.loadResizing(cell, false);
     },
+    
+    hasAttribute : function(cell, attribute) {
+        var style = cell.attr('style');
+        if(style.indexOf(attribute) >= 0) {
+            return true;
+        }
+        
+        if(attribute === "padding-left" || attribute === "padding-right" || attribute === "padding-top" || attribute === "padding-bottom") {
+            if(style.indexOf("padding:")) {
+                return true;
+            }
+        }
+        if(attribute === "margin-left" || attribute === "margin-right" || attribute === "margin-top" || attribute === "margin-bottom") {
+            if(style.indexOf("margin:") >= 0) {
+                return true;
+            }
+        }
+        
+        return false;
+    },
+    
     closeCellEdit: function () {
         $('.gscellsettingspanel').hide();
         $('.gscell .gsoverlay').remove();

@@ -62,9 +62,6 @@ class Page {
                 echo "<div class='gscell gsdepth_0 gseditinfo' style='height: 38px;'>";
                 echo "<div class='gsinner gsdepth_0'>";
                 echo "<div class='gseditrowheading' cellid='" . $cellid . "'>";
-                if ($row->cellId != "footer" && $row->cellId != "header") {
-                    echo "<i class='fa fa-trash-o' type='delete' title='Delete this row'></i>";
-                }
                 echo "<i class='fa fa-cogs' type='settings' title='Rows settings'></i>";
                 echo "<i class='fa fa-plus' type='addvertical' title='Add column'></i>";
                 echo "<label style='float:left;'>";
@@ -238,7 +235,7 @@ class Page {
                 if ($count == $i) {
                     $activeCirle = "activecarousel";
                 }
-                echo "<i class='fa fa-circle $activeCirle'></i>";
+                echo "<i class='fa fa-circle gscarouseldot $activeCirle'></i>";
             }
             if ($this->factory->isEditorMode() && $edit) {
                 echo "<i class='fa fa-cogs carouselsettings' title='Carousel settings'></i>";

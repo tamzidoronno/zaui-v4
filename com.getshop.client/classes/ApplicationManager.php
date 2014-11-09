@@ -40,8 +40,8 @@ class ApplicationManager extends FactoryBase {
     function saveColChanges() {
         $cellid = $_POST['data']['cellid'];
         $pageid = $this->getPage()->javapage->id;
-        $styles = "reset";
-        $stylesInner = "reset";
+        $styles = "notset";
+        $stylesInner = "notset";
         if(isset($_POST['data']['styles'])) {
             $styles = $_POST['data']['styles'];
         }
@@ -805,7 +805,7 @@ class ApplicationManager extends FactoryBase {
 
     public function removeWidthFromCss($styles) {
         
-        if($styles === "reset") {
+        if($styles == "reset" || $styles == "notset") {
             return $styles;
         }
         

@@ -4,7 +4,8 @@
 .gscellsettingspanel div i { width: 20px; text-align: center; margin-right: 10px; }
 .gscellsettingspanel div:hover { opacity:1; }
 .store_settings_button {display:none; }
-.gsvisualizeedit { background-color:rgba(0,0,0,0.1); }
+.gsvisualizeedit { border-color:red; }
+.rotatingcontainer { position:relative; }
 .gsaddcontent i {
     -webkit-transition: opacity .15s ease-in-out;
     -moz-transition: opacity .15s ease-in-out;

@@ -37,6 +37,7 @@ thundashop.framework = {
         $(document).on('click', '.gscellsettings .gsoperate', this.operateCell);
         $(document).on('click', '.gsrotateleft', this.rotateCell);
         $(document).on('click', '.gsrotateright', this.rotateCell);
+        $(document).on('click', '.gscarouseldot', this.showCarouselEntry);
         $(document).on('click', '.carouselsettings', this.showCarouselSettings);
         $(document).on('click', '.savecarouselconfig', this.saveCarouselSettings);
         $(document).on('click', '.gscellsettings .fa-cogs', function () {
@@ -77,93 +78,139 @@ thundashop.framework = {
         var columns = table.find("td");
         for (i = 0; i < columns.length; i++) {
             w = columns.eq(i).width() - (i == 0 ? 1 : 0);
-            w = w / (table.width()-1);
-            w = Math.round(w * 10000)/100;
+            w = w / (table.width() - 1);
+            w = Math.round(w * 10000) / 100;
             total += w;
-            if(total > 100) {
-                w = w - (total-100);
+            if (total > 100) {
+                w = w - (total - 100);
             }
             ranges.push(w);
         }
         return ranges;
     },
-    rotateCell : function() {
+    resetCarouselTimer: function (container) {
+        var event = container.attr('timerevent');
+        if (event) {
+            clearTimeout(parseInt(event));
+        } else {
+            return;
+        }
+        setTimeout(function () {
+            thundashop.framework.activateCarousel(container, parseInt(container.attr('timer')));
+        }, "10000");
+    },
+    showCarouselEntry: function () {
+        $(this).attr('pushed', 'true');
+        var offset = $(this).closest('.gscarouseldots');
+        count = 0;
+        var offsetcount = 0;
+        offset.find('.gscarouseldot').each(function () {
+            if ($(this).attr('pushed') === "true") {
+                offsetcount = count;
+            }
+            count++;
+        });
+        $(this).attr('pushed', null);
         var cell = $(this).closest('.rotatingcontainer');
-        if($(this).hasClass('gsrotateright')) {
+
+        thundashop.framework.resetCarouselTimer(cell);
+        thundashop.framework.rotateCellDirection(cell, offsetcount);
+        
+        var rotatecell = $('.gscell[cellid="' + $('.gseditrowheading').attr('cellid') + '"]');
+        if (rotatecell.hasClass('gseditrowouter')) {
+            thundashop.framework.loadResizing(rotatecell, true);
+            thundashop.framework.lastRotatedCell = $('.gseditrowheading').attr('cellid');
+        }
+        
+    },
+    rotateCell: function () {
+        var cell = $(this).closest('.rotatingcontainer');
+
+        thundashop.framework.resetCarouselTimer(cell);
+        if ($(this).hasClass('gsrotateright')) {
             thundashop.framework.rotateCellDirection(cell, "right");
         } else {
             thundashop.framework.rotateCellDirection(cell, "left");
         }
-        var rotatecell = $('.gscell[cellid="'+$('.gseditrowheading').attr('cellid')+'"]');
-        if(rotatecell.hasClass('gseditrowouter')) {
+        var rotatecell = $('.gscell[cellid="' + $('.gseditrowheading').attr('cellid') + '"]');
+        if (rotatecell.hasClass('gseditrowouter')) {
             thundashop.framework.loadResizing(rotatecell, true);
             thundashop.framework.lastRotatedCell = $('.gseditrowheading').attr('cellid');
         }
     },
-    saveCarouselSettings : function() {
+    saveCarouselSettings: function () {
         var data = {
-            height : $('.carouselsettingspanel').find('.gscarouselheight').val(),
-            timer : $('.carouselsettingspanel').find('.gscarouseltimer').val(),
-            type : $('.carouselsettingspanel').find('.gscarouseltype').val(),
-            cellid : $(this).closest('.carouselsettingspanel').attr('cellid')
+            height: $('.carouselsettingspanel').find('.gscarouselheight').val(),
+            timer: $('.carouselsettingspanel').find('.gscarouseltimer').val(),
+            type: $('.carouselsettingspanel').find('.gscarouseltype').val(),
+            cellid: $(this).closest('.carouselsettingspanel').attr('cellid')
         }
-        var event = thundashop.Ajax.createEvent('','updateCarouselConfig',$(this),data);
+        var event = thundashop.Ajax.createEvent('', 'updateCarouselConfig', $(this), data);
         thundashop.Ajax.post(event);
     },
-    showCarouselSettings : function() {
+    showCarouselSettings: function () {
         var cellid = $(this).closest('.rotatingcontainer').attr('cellid');
         $('.carouselsettingspanel').css('left', $(this).offset().left);
-        $('.carouselsettingspanel').css('top', $(this).offset().top+15);
-        $('.carouselsettingspanel').css('top', $(this).offset().top+15);
+        $('.carouselsettingspanel').css('top', $(this).offset().top + 15);
+        $('.carouselsettingspanel').css('top', $(this).offset().top + 15);
         $('.carouselsettingspanel').attr('cellid', cellid);
-        
+
         //populate values
-       $('.carouselsettingspanel').find('.gscarouselheight').val($(this).closest('.rotatingcontainer').attr('height'))
-       $('.carouselsettingspanel').find('.gscarouseltimer').val($(this).closest('.rotatingcontainer').attr('timer'))
-       $('.carouselsettingspanel').find('.gscarouseltype').val($(this).closest('.rotatingcontainer').attr('type'))
+        $('.carouselsettingspanel').find('.gscarouselheight').val($(this).closest('.rotatingcontainer').attr('height'))
+        $('.carouselsettingspanel').find('.gscarouseltimer').val($(this).closest('.rotatingcontainer').attr('timer'))
+        $('.carouselsettingspanel').find('.gscarouseltype').val($(this).closest('.rotatingcontainer').attr('type'))
         $(this).closest('.rotatingcontainer').attr('timer')
         $(this).closest('.rotatingcontainer').attr('timertype')
-        
+
         $('.carouselsettingspanel').fadeIn();
     },
-    rotateCellDirection : function(cell, direction) {
+    rotateCellDirection: function (cell, direction) {
         var found = 0;
         var before = null;
         var newcellid = "";
-        cell.children('.gsrotating').each(function() {
-            if(direction === "right") {
-                if(found === 1) {
-                    $(this).css('opacity','1');
-                    $(this).css('z-index','2');
+        var count = 0;
+        cell.children('.gsrotating').each(function () {
+            if (direction === "right") {
+                if (found === 1) {
+                    $(this).css('opacity', '1');
+                    $(this).css('z-index', '2');
                     newcellid = $(this).attr('cellid');
                     found = 2;
                 }
-                if($(this).css('z-index') === "2" && found === 0) {
-                    $(this).css('opacity','0');
-                    $(this).css('z-index','0');
+                if ($(this).css('z-index') === "2" && found === 0) {
+                    $(this).css('opacity', '0');
+                    $(this).css('z-index', '0');
                     found = 1;
                 }
-            } else {
-                if($(this).css('z-index') === "2" && found === 0) {
-                    $(this).css('opacity','0');
-                    $(this).css('z-index','0');
-                    before.css('opacity','1');
-                    before.css('z-index','2');
+            } else if (direction === "left") {
+                if ($(this).css('z-index') === "2" && found === 0) {
+                    $(this).css('opacity', '0');
+                    $(this).css('z-index', '0');
+                    before.css('opacity', '1');
+                    before.css('z-index', '2');
                     newcellid = before.attr('cellid');
                     found = 1;
                 }
+            } else if (direction === count) {
+                newcellid = $(this).attr('cellid');
+                cell.children('.gsrotating').css('opacity', '0');
+                cell.children('.gsrotating').css('z-index', '0');
+                $(this).css('opacity', '1');
+                $(this).css('z-index', '2');
             }
-            before=$(this);
+            count++;
+            before = $(this);
         });
-        
-        if(direction === "right" && found !== 2) {
-            cell.children('.gsrotating').css('opacity','0');
-            cell.children('.gsrotating').css('z-index','0');
-            cell.children('.gsrotating').first().css('z-index','2');
-            cell.children('.gsrotating').first().css('opacity','1');
+
+        if (direction === "right" && found !== 2) {
+            cell.children('.gsrotating').css('opacity', '0');
+            cell.children('.gsrotating').css('z-index', '0');
+            cell.children('.gsrotating').first().css('z-index', '2');
+            cell.children('.gsrotating').first().css('opacity', '1');
         }
-         
-        if($('.gscell[cellid="'+newcellid+'"]').hasClass('gseditrowouter')) {
+
+        if ($('.gscell[cellid="' + newcellid + '"]').hasClass('gseditrowouter')) {
+            console.log('changing 1');
             $('.gseditrowheading').attr('cellid', newcellid);
         }
     },
@@ -171,10 +218,10 @@ thundashop.framework = {
         if (cell.find('.range').length > 0) {
             return;
         }
-        if(cell.hasClass('gsrotating') && !cell.hasClass('gsdepth_0')) {
+        if (cell.hasClass('gsrotating') && !cell.hasClass('gsdepth_0')) {
             return;
         }
-        
+
         $('.gsresizetable').remove();
         $('.CRC').remove();
         var children = cell.children('.gsinner').children('.gsvertical');
@@ -229,7 +276,7 @@ thundashop.framework = {
 
         var level = $(this).closest('.gscolorselectionpanel').attr('level');
         if (level) {
-            cell = cell.find(level);
+            cell = cell.find(level).first();
         }
 
         if ($(this).hasClass('gsremovebgimage')) {
@@ -298,30 +345,31 @@ thundashop.framework = {
             cell.css('background-color', $(this).val());
         }
     },
-    activateCarousel : function(container, timer) {
-        setInterval(function() {
+    activateCarousel: function (container, timer) {
+        var timerevent = setInterval(function () {
             thundashop.framework.rotateCellDirection(container, "right");
         }, timer);
+        container.attr('timerevent', timerevent);
+        container.attr('timer', timer);
     },
     setOpacity: function () {
         var cellid = $(this).closest('.gsresizingpanel').attr('cellid');
         var cell = $('.gscell[cellid="' + cellid + '"]');
 
+        var bgcolor = $(this).closest('table').find('.gsbgcolorinput').val();
+        bgcolor = thundashop.framework.hexToRgb(bgcolor);
+        
         var level = $(this).closest('.gscolorselectionpanel').attr('level');
         if (level) {
             cell = cell.find(level);
         }
 
-        var bgcolor = cell.css('background-color');
         var val = $(this).val() / 10;
         if ($(this).hasClass('gsremoveopacity')) {
             val = 1;
         }
-        if (bgcolor.indexOf("rgba") !== 0) {
-            var newcolor = bgcolor.replace(')', ', ' + val + ')').replace('rgb', 'rgba');
-        } else {
-            var newcolor = bgcolor.substring(0, bgcolor.lastIndexOf(',')) + ', ' + val + ')';
-        }
+        var newcolor = "rgba(" + bgcolor.r + "," + bgcolor.g + "," + bgcolor.b + ', ' + val + ')';
+        console.log(newcolor);
         cell.css('background-color', newcolor);
     },
     saveCellChanges: function () {
@@ -399,12 +447,32 @@ thundashop.framework = {
         $('.gsresizingpanel .heading').html($(this).html());
         $('.gsresizingpanel').attr('type', type);
     },
+    hexToRgb: function (hex) {
+        // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+        var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+        hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+            return r + r + g + g + b + b;
+        });
+
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16)
+        } : null;
+    },
     rgb2hex: function (rgb) {
         rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
         return (rgb && rgb.length === 4) ? "#" +
                 ("0" + parseInt(rgb[1], 10).toString(16)).slice(-2) +
                 ("0" + parseInt(rgb[2], 10).toString(16)).slice(-2) +
                 ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2) : '';
+    },
+    get_inherited_bg: function (jquery_object) {
+        if (jquery_object.css("background-color") !== "rgba(0, 0, 0, 0)") {
+            return jquery_object.css("background-color");
+        }
+        return thundashop.framework.get_inherited_bg(jquery_object.parent());
     },
     showCellResizing: function () {
         var resizingpanel = $('.gsresizingpanel');
@@ -420,10 +488,30 @@ thundashop.framework = {
         resizingpanel.css('left', $(this).offset().left - 100);
         resizingpanel.find('.tabbtn[target="padding"]').first().click();
         resizingpanel.fadeIn();
-        cell.find('.gscell.gshorisontal').resizable({grid: [10000, 1]});
+//        cell.find('.gscell.gshorisontal').resizable({grid: [10000, 1]});
 
-        $('.gsbgcolorinput.gsbgcouter').val(thundashop.framework.rgb2hex(cell.css('background-color')));
-        $('.gsbgcolorinput.gsbginner').val(thundashop.framework.rgb2hex(cell.find('.gsinner').first().css('background-color')));
+        cell.find('.overlay').hide();
+        var bgouter = thundashop.framework.get_inherited_bg(cell);
+        var bginner = thundashop.framework.get_inherited_bg(cell.find('.gsinner').first());
+        $('.gsbgcolorinput.gsbgcouter').val(thundashop.framework.rgb2hex(bgouter));
+        $('.gsbgcolorinput.gsbginner').val(thundashop.framework.rgb2hex(bginner));
+        cell.find('.overlay').show();
+
+        var opacityinner = 10;
+        var opacityouter = 10;
+        
+        if(bginner.indexOf("rgba") >= 0) {
+            var opacity = bginner.substring(bginner.lastIndexOf(",")+1, bginner.length -1);
+            opacityinner = parseInt(parseFloat(opacity)*10);
+        }
+        if(bgouter.indexOf("rgba") >= 0) {
+            var opacity = bgouter.substring(bgouter.lastIndexOf(",")+1, bgouter.length -1);
+            opacityouter = parseInt(parseFloat(opacity)*10);
+        }
+        
+        $('.gscolorselectionpanel[level=".gsinner"] .gsbgopacityinput').val(opacityinner);
+        $('.gscolorselectionpanel[level=""] .gsbgopacityinput').val(opacityouter);
+        
 
         $('.gsresizingpanel input').each(function () {
             var type = $(this).attr('data-csstype');
@@ -458,13 +546,13 @@ thundashop.framework = {
         } else {
             cellid = $(this).closest('.gscell').attr('cellid');
         }
-        
-        var cell = $('.gscell[cellid="'+cellid+'"]');
-        if(cell.hasClass('gsrotating')) {
+
+        var cell = $('.gscell[cellid="' + cellid + '"]');
+        if (cell.hasClass('gsrotating')) {
             cellid = cell.closest('.rotatingcontainer').attr('cellid');
         }
 
-        
+
         var event = thundashop.Ajax.createEvent('', 'startEditRow', $(this), {"cellid": cellid});
         thundashop.Ajax.post(event);
     },
@@ -488,9 +576,15 @@ thundashop.framework = {
         target.find('.gscellsettings').first().closest('.gscell').addClass('gsvisualizeedit');
     },
     operateCell: function () {
+        var type = $(this).attr('type');
+        if (type === "settings") {
+            $(this), thundashop.framework.showCellSettingsPanel($(this));
+            return;
+        }
+        
         var panel = $(this).closest('.gscellsettingspanel');
         var cellid = panel.attr('cellid');
-
+        
         if ($(this).closest('.gseditrowheading').length > 0) {
             cellid = $(this).closest('.gseditrowheading').attr('cellid');
         }
@@ -498,30 +592,26 @@ thundashop.framework = {
         if (!cellid) {
             cellid = $('.gsvisualizeedit').attr('cellid');
         }
-        
-        var type = $(this).attr('type');
+
         var cell = $('.gscell[cellid="' + cellid + '"]');
-        
-        if (type === "settings") {
-            $(this), thundashop.framework.showCellSettingsPanel($(this));
-            return;
-        }
-        
-        if(panel.attr('topmenu') === "true") {
-            if(!$(this).attr('subtype') || $(this).attr('subtype') !== "carousel") {
-                if(type === "addbefore" || type === "addafter" || type === "moveup" || type === "movedown" || type === "delete") {
+
+
+        if (panel.attr('topmenu') === "true") {
+            alert('3');
+            if (!$(this).attr('subtype') || $(this).attr('subtype') !== "carousel") {
+                if (type === "addbefore" || type === "addafter" || type === "moveup" || type === "movedown" || type === "delete") {
                     cellid = cell.closest('.rotatingcontainer').attr('cellid');
                 }
             }
         }
-
-
+        
+        
         if (type === "delete") {
             if (!confirm("Are you sure you want to delete this cell and all its content?")) {
                 return;
-            }
         }
-
+                    }
+        
         var data = {
             "cellid": cellid,
             "type": type
@@ -561,12 +651,11 @@ thundashop.framework = {
         panel.find('.gscolumnmenu').hide();
         panel.fadeIn();
         var cell = element.closest('.gscell');
-        $('.gscellsettingspanel').attr('topmenu','false');
+        $('.gscellsettingspanel').attr('topmenu', 'false');
         if (cell.hasClass('gseditinfo')) {
-            $('.gscellsettingspanel').attr('topmenu','true');
-            cell = $(".gscell[cellid='"+$('.gseditrowheading').attr('cellid')+"']");
+            cell = $(".gscell[cellid='" + $('.gseditrowheading').attr('cellid') + "']");
         }
-
+        
         if (cell.hasClass('gsvertical')) {
             panel.find('.gscolumnmenu').show();
         } else {
@@ -574,7 +663,7 @@ thundashop.framework = {
         }
 
         panel.find('.carouselsettings').hide();
-        if(cell.hasClass('gsrotating')) {
+        if (cell.hasClass('gsrotating')) {
             panel.find('.carouselsettings').show();
         }
 

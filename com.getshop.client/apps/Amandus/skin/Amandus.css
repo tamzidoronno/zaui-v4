@@ -40,7 +40,7 @@ body {
 .gscell.gsdepth_0 { margin:auto; }
 .gsinner.gsdepth_0 {  width: 1024px; margin: auto; background-color:#FFF; }
 .gsinner.gsdepth_1 { min-height: 200px; }
-.gsarea[area='header'] .gsinner { background-color:#236188 !important; min-height: 100px; color:#FFF;  }
+.gsarea[area='header'] .gsinner { background-color:#236188; min-height: 100px; color:#FFF;  }
 .gsarea[area='header'].gsdepth_0 .gsdepth_0.gsinner { box-shadow: none !important; }
 .gsarea[area='header'] .applicationarea,.gscell[cellid="footer"] .applicationarea { border: solid 0px !important; }
 .gscell td { padding: 2px; }

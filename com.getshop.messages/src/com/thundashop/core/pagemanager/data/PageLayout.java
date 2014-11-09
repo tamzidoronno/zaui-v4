@@ -14,7 +14,7 @@ public class PageLayout implements Serializable {
 
     public void moveCell(String cellid, boolean moveUp) {
         String area = findAreaForCell(cellid);
-        setNewList(moveCellRecursive(areas.get(area), cellid, moveUp), area, false);
+        moveCellRecursive(areas.get(area), cellid, moveUp);
     }
 
     public void addToList(PageCell cell, String area) {
@@ -95,6 +95,10 @@ public class PageLayout implements Serializable {
             if (cell.cells.isEmpty()) {
                 PageCell newcell = cell.createCell(before);
                 newcell.direction = directionToSet;
+                newcell.innerStyles = cell.innerStyles;
+                newcell.styles = cell.styles;
+                cell.styles = "";
+                cell.innerStyles = "";
                 newcell.appId = cell.appId;
             } else {
                 cell.cells.stream().forEach((cell2) -> {
@@ -104,6 +108,11 @@ public class PageLayout implements Serializable {
                     PageCell newpagecell = new PageCell();
                     newpagecell.direction = directionToSet;
                     newpagecell.cells.addAll(cell.cells);
+                    newpagecell.styles = cell.styles;
+                    newpagecell.innerStyles = cell.innerStyles;
+                    cell.styles = "";
+                    cell.innerStyles = "";
+                    
                     cell.cells.clear();
                     cell.cells.add(newpagecell);
                 } else {

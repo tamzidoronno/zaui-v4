@@ -649,7 +649,7 @@ thundashop.framework = {
         var cellobj = $('.gscell[cellid="' + cellid + '"]');
 
         if(type === "delete" && cellobj.closest('.rotatingcontainer').length > 0) {
-            if($(this).attr('subtype') !== "carousel") {
+            if($(this).attr('subtype') !== "carousel" && cellobj.hasClass('gsdepth_0')) {
                 cellid = cellobj.closest('.rotatingcontainer').attr('cellid');
             }
         }

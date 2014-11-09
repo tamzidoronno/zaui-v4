@@ -294,7 +294,12 @@ public class PageLayout implements Serializable {
             if (tmpcell.cells.contains(cell)) {
                 return tmpcell;
             } else {
-                findParentRecursive(tmpcell.cells, cell);
+                if(!tmpcell.cells.isEmpty()) {
+                    PageCell found = findParentRecursive(tmpcell.cells, cell);
+                    if(found != null) {
+                        return found;
+                    }
+                }
             }
         }
         return null;

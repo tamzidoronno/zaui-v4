@@ -251,11 +251,11 @@ class Page {
 
         echo "<div class='gscellsettingsheading'>Carousel settings</div>";
         echo "<div class='gs_addrotating' subtype='carousel' type='addrotate'><i class='fa fa-sitemap'></i>" . $this->factory->__w("Insert carousel cell") . "</div>";
-        echo "<div class='carouselsettings' subtype='carousel' style='display:none;'>";
+        echo "<span class='carouselsettings' subtype='carousel' style='display:none;'>";
         echo "<div class='gs_splithorizontally' subtype='carousel' type='moveup'><i class='fa fa-long-arrow-left'></i>" . $this->factory->__w("Move current cell to the left") . "</div>";
         echo "<div class='gs_splithorizontally' subtype='carousel' type='movedown'><i class='fa fa-long-arrow-right'></i>" . $this->factory->__w("Move current cell to the right") . "</div>";
         echo "<div class='gs_removerow' subtype='carousel'  type='delete'><i class='fa fa-trash-o'></i>" . $this->factory->__w("Delete current cell") . "</div>";
-        echo "</div>";
+        echo "</span>";
         echo "</span>";
     }
 

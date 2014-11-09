@@ -7,6 +7,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pagemanager.data.CarouselConfig;
 import com.thundashop.core.pagemanager.data.CommonPageData;
 import com.thundashop.core.pagemanager.data.Page;
+import com.thundashop.core.pagemanager.data.PageCell;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -82,7 +83,7 @@ public class PageManager extends ManagerBase implements IPageManager {
         Page page = pages.get(id);
 
         if (page == null) {
-            throw new ErrorException(30);
+            return null;
         }
 
         page.finalizePage(commonPageData);
@@ -139,8 +140,15 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     @Override
     public List<ApplicationInstance> getApplicationsForPage(String pageId) throws ErrorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        Page page = getPage(pageId);
+		List<PageCell> cells = page.getCellsFlatList();
+		
+		return cells.stream()
+				.filter(cell -> cell.appId != null)
+				.map(cell -> instancePool.getApplicationInstance(cell.appId))
+				.filter(appInstance -> appInstance != null)
+				.collect(Collectors.toList());
+	}
 
     @Override
     public void deletePage(String id) throws ErrorException {

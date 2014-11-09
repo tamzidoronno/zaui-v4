@@ -19,9 +19,13 @@ class ApplicationPool {
     function __construct($factory) {
         $this->factory = $factory;
         $this->applicationList = $factory->getApi()->getStoreApplicationPool()->getApplications();
-
     }
-    
+ 
+    public function setApplicationInstances($javaAppinstances) {
+        foreach ($javaAppinstances as $instance) {
+            $this->loadApplicationInstance($instance->id);
+        }
+    }
     
     public function getShipmentApplicationInstances() {
         $instances = $this->getSingletonInstances();
@@ -57,8 +61,8 @@ class ApplicationPool {
     
     public function createAppInstance($appConfig) {
         $settings = $this->getApplicationSetting($appConfig->appSettingsId);
+        
         if ($settings == null) {
-            
             return;
         }
 
@@ -309,5 +313,9 @@ class ApplicationPool {
         return $allinstances;
     }
 
+    public function initForPage($pagemanager, $page) {
+        $applications = $pagemanager->getApplicationsForPage($page->getId());
+        $this->setApplicationInstances($applications);
+    }
 }
 ?>

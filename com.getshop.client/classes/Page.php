@@ -16,10 +16,6 @@ class Page {
         $this->factory = $factory;
     }
 
-    function getApplications() {
-        return array();
-    }
-
     function getId() {
         return $this->javapage->id;
     }

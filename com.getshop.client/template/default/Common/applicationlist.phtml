@@ -38,5 +38,44 @@ if ($i%3 != 0) {
     echo "</div>";
 }
 
+echo "<div style='background-color: #DEDEDE; margin-top: 20px; margin-bottom: 20px; text-align: center; padding: 3px;'> System apps </div>";
+$apps = $this->getApi()->getStoreApplicationPool()->getApplications();
+$i = 0;
+foreach ($apps as $app) {
+    $id = $app->id;
+    $namespace = $this->convertUUIDtoString($id);
+    $appInstance = $this->getApplicationPool()->createInstace($app);
+    if (!$appInstance) {
+        continue;
+    }
+    
+    if ($app->type != "SystemApplication") {
+        continue;
+    }
+    
+    $i++;
+    if ($i == 1) {
+        echo "<div style=''>";
+    }
+    
+    echo "<div class='gs_add_app_entry' appId='$id'>";
+    echo "<div class='gs_app_image'><img src='/showApplicationImages.php?appNamespace=$namespace&image=".$app->appName.".png'/></div>";
+    echo "<div class='infobox'>";
+        echo "<div class='gs_app_title'>$app->appName</div>";
+        echo "<div class='gs_app_desc'>".$appInstance->getDescription()."</div>";
+    echo "</div>";
+    
+    echo "</div>";
+    
+    if ($i%3 == 0) {
+        echo "</div>";
+        $i = 0 ;
+    }
+}
+
+if ($i%3 != 0) {
+    echo "</div>";
+}
+
 echo "</div>";
 ?>

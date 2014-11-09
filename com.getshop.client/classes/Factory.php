@@ -289,23 +289,18 @@ class Factory extends FactoryBase {
             }
             $navigation->saveToSession();
         }
-
-        if (isset($_GET['cat_id'])) {
-            $navigation = Navigation::getNavigation();
-            $navigation->currentCatId = $_GET['cat_id'];
-            $navigation->saveToSession();
-        }
-
-        $navigation = Navigation::getNavigation();
-       
-        $homePageId = $this->getHomePageName();
         
+        $navigation = Navigation::getNavigation();
+
+        $homePageId = $this->getHomePageName();
+ 
         if (!isset($navigation->currentPageId)) {
             $navigation->currentPageId = $homePageId;
         }
 
         $pageId = isset($_POST['data']['getShopPageId']) ? $_POST['data']['getShopPageId'] : $navigation->currentPageId;
 
+        
         $javaPage = $this->pageManager->getPage($pageId);
         if ($javaPage == null) {
             $javaPage = $this->pageManager->getPage($homePageId);
@@ -318,7 +313,7 @@ class Factory extends FactoryBase {
         }
    
         $this->page = new Page($javaPage, $this); 
-        $this->initApplicationsPool();
+        $this->getApplicationPool()->initForPage($this->pageManager, $this->page);
        
         $this->javaPage = $javaPage;
         $this->styleSheet = new StyleSheet();
@@ -332,24 +327,19 @@ class Factory extends FactoryBase {
         return $homePage;
     }
 
-    public function initApplicationsPool() { 
-//       $applications = $this->pageManager->getApplicationsForPage($this->page->id);
-//        $this->applicationPool->setApplicationInstances($applications);
-    }
-
     public function setPage($page) {
         $this->page = $page;
     }
 
     private function runPreprocess() {
-        $apps = $this->page->getApplications();
+        $apps = $this->getApplicationPool()->getAllAddedInstances();
         foreach ($apps as $app) {
             $app->preProcess();
         }
     }
 
     private function runPostProcess() {
-        foreach ($this->page->getApplications() as $app) {
+        foreach ($this->getApplicationPool()->getAllAddedInstances() as $app) {
             $app->postProcess();
         }
     }

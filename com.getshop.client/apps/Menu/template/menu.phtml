@@ -19,6 +19,9 @@ if (!count($entries)) {
     ?>
 </div>
 
+<?
+if ($this->isEditorMode()) {
+?>
 <div class="menu_simple_menu <? echo $hiddenMenu; ?>">
     <div class="simpleadd">
         <div class="simepladd_dialog">
@@ -34,3 +37,5 @@ if (!count($entries)) {
         </div>
     <? } ?>
 </div>
+
+<? } ?>

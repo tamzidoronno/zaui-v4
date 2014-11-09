@@ -129,6 +129,10 @@ class ApplicationBase extends FactoryBase {
         file_put_contents($passwordFile, $addContent."\n");
     }
     
+    public function renderDashBoardWidget() {
+        return false;
+    }
+    
     /**
      * This function should be overridden when 
      * an application need to ask for admin rights.

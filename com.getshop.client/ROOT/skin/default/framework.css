@@ -3,7 +3,7 @@
 .gscellsettingspanel div { padding-top: 10px; opacity:0.8; cursor:pointer; padding: 2px; display:block; }
 .gscellsettingspanel div i { width: 20px; text-align: center; margin-right: 10px; }
 .gscellsettingspanel div:hover { opacity:1; }
-.store_settings_button {display:none; }
+.store_settings_button { position: absolute; z-index: 1;}
 .gsvisualizeedit { border-color:red; }
 .rotatingcontainer { position:relative; }
 .gsaddcontent i {

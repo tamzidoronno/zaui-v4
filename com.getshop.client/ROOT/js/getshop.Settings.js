@@ -61,14 +61,14 @@ getshop.Settings = {
 	},
 
     showSettings: function() {
-        $('#skeleton').fadeOut(300, function() {
+        $('#gsbody').fadeOut(300, function() {
             $('#backsidesettings').fadeIn(300);
         });
     },
             
     showPage: function() {
         $('#backsidesettings').fadeOut(300, function() {
-            $('#skeleton').fadeIn(300);
+            $('#gsbody').fadeIn(300);
         });
     },
             

@@ -341,7 +341,7 @@
     padding: 5px;
     font-size: 15px;
     display: none;
-    z-index: 2;
+    z-index: 3;
     background-color: #FFF;
     box-shadow: 0 0 3px #DDD;
     color: #333;

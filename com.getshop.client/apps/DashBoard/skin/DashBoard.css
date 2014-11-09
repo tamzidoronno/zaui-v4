@@ -1,0 +1,13 @@
+.gs_fa-icon {
+    font-size: 80px;
+    margin-top: 10px;
+    margin-left: 10px;
+    color: #008ad2;
+    text-shadow: 2px 2px #3a99d7;
+}
+
+.gss_description .title {
+    border-bottom: solid 1px #ededed;
+    margin-bottom: 3px;
+    padding-bottom: 3px;
+}

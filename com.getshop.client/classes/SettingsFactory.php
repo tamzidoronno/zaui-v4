@@ -15,7 +15,7 @@ class SettingsFactory extends FactoryBase {
 	}
 	
 	private function setApp($id) {
-		$settings = $this->getApi()->getAppManager()->getApplication($id);
+		$settings = $this->getApi()->getStoreApplicationPool()->getApplication($id);
 		$appName = "ns_".str_replace("-", "_", $settings->id)."\\".$settings->appName;
 		$this->currentApplication = new $appName();
 		$this->currentApplication->setApplicationSettings($settings);

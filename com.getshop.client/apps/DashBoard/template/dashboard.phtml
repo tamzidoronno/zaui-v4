@@ -1,3 +1,6 @@
+<?
+/* @var $this \ns_b81bfb16_8066_4bea_a3c6_c155fa7119f8\DashBoard */
+?>
 <div class='gss_settings_main_area'>
     <div class='gss_settings_getshop_logo'>
         <div class='gss_logo'></div>
@@ -5,42 +8,26 @@
     </div>
 
     <div class='gss_appviews'>
-        <div class='gss_appview'> 
-            <div class='gss_imagebox'>
-                <img src='http://www.autoakademiet.no/showApplicationImages.php?appNamespace=ns_ee96fe89_e09d_4f7b_921a_3272462e9b7e&image=Airgram.png'> 
-            </div>
-            <div class='gss_description'>
-                <div class='title'>Airgram</div>
-                Airgram gir deg mulighet til å motta diverse notifications på telefonen din, denne kan du legge til for å motta sms når noen prøver å skrive til deg    
-            </div>
-            <div class='gss_activate_button'> Aktiver </div>
-        </div>
-
-        <div class='gss_appview'> 
-            <div class='gss_imagebox'>
-                <img src='http://www.autoakademiet.no/showApplicationImages.php?appNamespace=ns_2da52bbc_a392_4125_92b6_eec1dc4879e9&image=Bring.png'> 
-            </div>
-            <div class='gss_description'>
-                <div class='title'>Bring / Posten norge</div>
-                Fraktguiden hjelper deg med å få kalkulert ut riktig pris ved sending av pakker I Norge. Den henter ut Bring sine priser automatisk og legger det inn I bestillingen.   
-            </div>
-            <div class='gss_activate_button'> Aktiver </div>
-        </div>
-
-        <div class='gss_appview'> 
-            <div class='gss_imagebox'>
-                <img src='http://www.autoakademiet.no/showApplicationImages.php?appNamespace=ns_2afb045b_fa01_4398_8582_33f212bb8db8&image=Chat.png'> 
-            </div>
-            <div class='gss_description'>
-                <div class='title'>Chat applikasjon</div>
-                Å svare dine kunder betyr mer salg. Ved å legge til denne chat applikasjonen kan du gjøre nettopp det     
-            </div>
-            <div class='gss_activate_button'> Aktiver </div>
-        </div>
-
-        <div class='gss_bottominfo'>
-            Hvis du ikke finner den applikasjonen du leter etter, så ta kontakt så kan vi se om ikke vi finner den for deg. Det er ikke alle som har tilgang til alle applikasjonene våre.
-        </div>
-
+        
+        <?
+        $apps = $this->getApi()->getStoreApplicationPool()->getApplications();
+        foreach ($apps as $app) {
+            
+            $instance = $this->getFactory()->getApplicationPool()->createInstace($app);
+            
+            if ($instance) {
+                ob_start();
+                $instance->renderDashBoardWidget();
+                $content = ob_get_contents();
+                ob_end_clean();
+                
+                if ($content) {
+                    echo "<div class='gss_appview'> ";
+                    echo $content;
+                    echo "</div>";
+                }
+            }
+        }
+        ?>
     </div>
 </div>

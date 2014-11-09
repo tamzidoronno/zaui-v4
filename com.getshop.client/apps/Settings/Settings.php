@@ -15,6 +15,10 @@ class Settings extends \SystemApplication implements \Application {
 	public function render() {
     }
     
+    public function renderDashBoardWidget() {
+        $this->includefile("dashboardwidget");
+    }
+    
     public function renderConfig() {
         $this->includefile("storesettings");
     }

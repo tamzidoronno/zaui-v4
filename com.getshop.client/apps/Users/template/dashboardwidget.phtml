@@ -1,0 +1,14 @@
+<div class='gss_imagebox'>
+    <i class="fa fa-users gs_fa-icon"></i>
+</div>
+<div class='gss_description'>
+    <div class='title'><? echo $this->__f("Users"); ?></div>
+    <div>
+        <?
+        echo $this->__f("Administrators") . ": " . $this->getApi()->getUserManager()->getAdministratorCount();
+        echo "<br/>" . $this->__f("Editors") . ": " . $this->getApi()->getUserManager()->getEditorCount();
+        echo "<br/>" . $this->__f("Customers") . ": " . $this->getApi()->getUserManager()->getCustomersCount();
+        ?>
+    </div>
+</div>
+<div class='gss_activate_button'> <? echo $this->__f("more"); ?></div>

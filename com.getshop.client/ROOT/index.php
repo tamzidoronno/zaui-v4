@@ -179,6 +179,7 @@ if(isset($factory->getSettings()->languages)) {
         <? if ($factory->isEditorMode()) {
             echo "<div class='store_settings_button fa fa-gears'></div>";
         }
+        
         ?>
         <? if (@$factory->getStore()->isDeepFreezed) { ?>
             <div class='deepfreezedActivated'><? echo $factory->__f("Warning! this store will automatically be reset to original state each hour") ?></div>
@@ -196,6 +197,14 @@ if(isset($factory->getSettings()->languages)) {
         <? } ?>
         <input name="storeid" type="hidden"  value="<?php echo $factory->getStore()->id; ?>"/>
         <input name="userid" type="hidden"  value="<?php echo  \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null ? \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id : ""; ?>"/>
+
+        <?
+        if ($factory->isEditorMode()) { ?>
+            <div id='backsidesettings'>
+                <? include('../template/default/Common/settings.phtml'); ?>
+            </div>
+        <? } ?>
+        
 
         <div id="mainmenutoolbox"></div>
         <div id="messagebox" class="ok">
@@ -216,8 +225,6 @@ if(isset($factory->getSettings()->languages)) {
                 });
             });
         </script>
-
-
         
         <div id="errorbox"></div>
         <div id="gsbody">

@@ -13,6 +13,11 @@ class Users extends \SystemApplication implements \Application {
     public function getName() {
         
     }
+    
+    public function renderDashBoardWidget() {
+        $this->includefile("dashboardwidget");
+    }
+    
 
     public function postProcess() {
     }

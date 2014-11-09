@@ -48,6 +48,7 @@ thundashop.framework = {
         $(document).on('click', '.gs_splitvertically', this.operateCell);
         $(document).on('click', '.gs_removerow', this.operateCell);
         $(document).on('click', '.gs_closecelledit', this.closeCellEdit);
+        $(document).on('click', '.gs_closecarouselsettings', this.closeCarouselSettings);
         $(document).on('mouseover', '.gseditrowouter', this.showEditIcon);
         $(document).on('click', '.gseditrowbutton', this.startEditRow);
         $(document).on('click', '.gsdoneeditbutton', this.startEditRow);
@@ -73,6 +74,10 @@ thundashop.framework = {
         $(document).on('click', '.gsresizingpanel .gsremovebgcolor', this.setBgColor);
         $(document).on('change', '.gsdisplaygridcheckbox', this.toggleVisualization);
     },
+    closeCarouselSettings : function() {
+        $('.carouselsettingspanel').fadeOut();
+    },
+    
     calculateColumnSizes: function (table) {
         var ranges = [], total = 0, i, s = "Ranges: ", w;
         var columns = table.find("td");
@@ -642,6 +647,12 @@ thundashop.framework = {
         }
         
         var cellobj = $('.gscell[cellid="' + cellid + '"]');
+
+        if(type === "delete" && cellobj.closest('.rotatingcontainer').length > 0) {
+            if($(this).attr('subtype') !== "carousel") {
+                cellid = cellobj.closest('.rotatingcontainer').attr('cellid');
+            }
+        }
 
         var data = {
             "cellid": cellid,

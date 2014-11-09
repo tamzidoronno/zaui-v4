@@ -104,6 +104,7 @@ class Page {
     private function addCarouselSettingsPanel() {
         ?>  
         <div class="carouselsettingspanel">
+            <i class='gs_closecarouselsettings fa fa-times' style='position:absolute;right: 5px; top: 5px; cursor:pointer;'></i>
             <table>
                 <tr>
                     <td>Height</td>

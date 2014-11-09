@@ -358,9 +358,9 @@
     font-size: 15px;
 }
 /****************************** Menu in header ****************************/
-[cellid="header"] .Menu .menuentries, 
-[cellid="header"] .Menu .menu_simple_menu, 
-[cellid="header"] .Menu .menuentries .entry {
+.gsarea[area="header"] .Menu .menuentries, 
+.gsarea[area="header"] .Menu .menu_simple_menu, 
+.gsarea[area="header"] .Menu .menuentries .entry {
     display: inline-block;
     cursor: pointer;
 }

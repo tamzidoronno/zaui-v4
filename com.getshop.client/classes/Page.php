@@ -531,8 +531,13 @@ class Page {
         if ($cell->cells[0]->direction == "ROTATING") {
             /* @var $config core_pagemanager_data_CarouselConfig */
             $config = $cell->carouselConfig;
+            
+            $editClass = "";
+            if($isedit) {
+                $editClass = "editcontainer";
+            }
 
-            echo "<div class='rotatingcontainer' height='" . $config->height . "' timer='" . $config->time . "' type='" . $config->type . "' cellid='" . $cell->cellId . "'>";
+            echo "<div class='rotatingcontainer $editClass' height='" . $config->height . "' timer='" . $config->time . "' type='" . $config->type . "' cellid='" . $cell->cellId . "'>";
         }
 
         foreach ($cell->cells as $innercell) {
@@ -559,8 +564,14 @@ class Page {
             </style>
             <? if ($doCarousel) { ?>
                 <script>thundashop.framework.activateCarousel($(".rotatingcontainer[cellid='<? echo $cell->cellId; ?>']"), <? echo $config->time; ?>);</script>
-            <? } ?>
+            <? } else { ?>
+                <script>
+                    if(!thundashop.framework.lastRotatedCell) {
+                        thundashop.framework.lastRotatedCell = '<? echo $cell->cells[0]->cellId; ?>';
+                    }
+                </script>
             <?
+             }
         }
     }
 

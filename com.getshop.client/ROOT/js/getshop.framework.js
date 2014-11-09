@@ -115,7 +115,6 @@ thundashop.framework = {
 
         thundashop.framework.resetCarouselTimer(cell);
         thundashop.framework.rotateCellDirection(cell, offsetcount);
-
         var rotatecell = $('.gscell[cellid="' + $('.gseditrowheading').attr('cellid') + '"]');
         if (rotatecell.hasClass('gseditrowouter')) {
             thundashop.framework.loadResizing(rotatecell, true);
@@ -125,7 +124,6 @@ thundashop.framework = {
     },
     rotateCell: function () {
         var cell = $(this).closest('.rotatingcontainer');
-
         thundashop.framework.resetCarouselTimer(cell);
         if ($(this).hasClass('gsrotateright')) {
             thundashop.framework.rotateCellDirection(cell, "right");
@@ -210,7 +208,6 @@ thundashop.framework = {
         }
 
         if ($('.gscell[cellid="' + newcellid + '"]').hasClass('gseditrowouter')) {
-            console.log('changing 1');
             $('.gseditrowheading').attr('cellid', newcellid);
         }
     },
@@ -346,6 +343,9 @@ thundashop.framework = {
         }
     },
     activateCarousel: function (container, timer) {
+        if(container.hasClass('editcontainer')) {
+            return;
+        }
         var timerevent = setInterval(function () {
             thundashop.framework.rotateCellDirection(container, "right");
         }, timer);
@@ -369,7 +369,6 @@ thundashop.framework = {
             val = 1;
         }
         var newcolor = "rgba(" + bgcolor.r + "," + bgcolor.g + "," + bgcolor.b + ', ' + val + ')';
-        console.log(newcolor);
         cell.css('background-color', newcolor);
     },
     saveCellChanges: function () {
@@ -533,7 +532,6 @@ thundashop.framework = {
                     }
                 }
                 value = value.replace("px", "");
-                console.log(type + " : " + level + " : " + value);
                 $(this).closest('tr').find('input[type="range"]').attr('min', -1);
                 $(this).closest('tr').find('input[type="range"]').attr('max', 100);
                 if(value) {

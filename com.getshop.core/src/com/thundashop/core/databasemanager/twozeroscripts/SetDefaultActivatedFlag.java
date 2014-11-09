@@ -27,7 +27,7 @@ public class SetDefaultActivatedFlag {
 			DBCursor cur = col.find();
 			while(cur.hasNext()) {
 					DBObject ob = cur.next();
-				if (ob != null && ob.get("className") != null && ob.get("className").equals("com.thundashop.core.appmanager.data.Application") || ob.get("className").equals("com.thundashop.core.appmanager.data.ApplicationSettings")) {
+				if ((ob != null && ob.get("className") != null && ob.get("className").equals("com.thundashop.core.appmanager.data.Application")) || (ob != null && ob.get("className") != null && ob.get("className").equals("com.thundashop.core.appmanager.data.ApplicationSettings"))) {
 					
 					List<String> defaultActivatedApps = Arrays.asList("Cleanish", "Product", "GoogleMaps", "OrderManager", "ContentManager", "YouTube", "Contact", "Users", "GoogleAnalytics", "ImageDisplayer", "Footer", "Banner", "Search", "MenuEditor", "Login");
 					

@@ -92,6 +92,7 @@ public class PageLayout implements Serializable {
             }
             String directionToSet = direction;
             PageCell cell = findCell(getAllCells(), incell);
+            double newwidth = -1;
             if (cell.cells.isEmpty()) {
                 PageCell newcell = cell.createCell(before);
                 newcell.direction = directionToSet;
@@ -101,15 +102,17 @@ public class PageLayout implements Serializable {
                 cell.innerStyles = "";
                 newcell.appId = cell.appId;
             } else {
-                cell.cells.stream().forEach((cell2) -> {
-                    cell2.width = -1.0;
-                });
+                int count = cell.cells.size();
+                double percentage = (double)((100 / count) + 100) / 100;
+                newwidth = resizeCells(cell.cells, true, percentage);
+                
                 if (!directionToSet.equals(cell.cells.get(0).direction) && (before == null || before.isEmpty())) {
                     PageCell newpagecell = new PageCell();
                     newpagecell.direction = directionToSet;
                     newpagecell.cells.addAll(cell.cells);
                     newpagecell.styles = cell.styles;
                     newpagecell.innerStyles = cell.innerStyles;
+                    newpagecell.width = newwidth;
                     cell.styles = "";
                     cell.innerStyles = "";
                     
@@ -122,6 +125,7 @@ public class PageLayout implements Serializable {
 
             PageCell newcell = cell.createCell(before);
             newcell.direction = directionToSet;
+            newcell.width = newwidth;
             cellId = newcell.cellId;
         }
         return cellId;
@@ -163,6 +167,8 @@ public class PageLayout implements Serializable {
         }
         if (toRemove != null) {
             cells.remove(toRemove);
+            double percentage = (double)(toRemove.width / (double)(100-toRemove.width))+1;
+            resizeCells(cells, false, percentage);
             removeCellFromList(toRemove);
             return true;
         }
@@ -317,6 +323,35 @@ public class PageLayout implements Serializable {
             }
         }
         return arrayList;
+    }
+
+    private double resizeCells(ArrayList<PageCell> cells, boolean add, double percentage) {
+        double total = 0;
+        for(PageCell tmpcell : cells) {
+            if(tmpcell.width > -1) {
+                if(percentage == 0) {
+                    tmpcell.width = -1.0;
+                } else {
+                    if(add) {
+                        tmpcell.width = tmpcell.width / percentage;
+                    } else {
+                        tmpcell.width = tmpcell.width * percentage;
+                    }
+                    tmpcell.width = (double)Math.round(tmpcell.width);
+                    total += tmpcell.width;
+                }
+            }
+        }
+        double returning = 100 - total;
+        System.out.println("Returning: " + returning);
+        System.out.println("Total: " + total);
+        if(returning == 100) {
+            return -1;
+        }
+        if(!add && returning > 0) {
+            cells.get(cells.size()-1).width += returning;
+        }
+        return returning;
     }
 
 }

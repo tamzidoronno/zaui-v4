@@ -42,9 +42,11 @@ class Page {
         echo "</div>";
         
         echo "<div class='gsarea' area='body'>";
-        $edited = $this->printArea($layout->areas->{'body'});
-        if($edited) {
-            $editedCellid = $edited;
+        if(isset($layout->areas->{'body'})) {
+            $edited = $this->printArea($layout->areas->{'body'});
+            if($edited) {
+                $editedCellid = $edited;
+            }
         }
         echo "</div>";
         

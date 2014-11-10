@@ -47,6 +47,11 @@
     padding-top: 10px;
 }
 
+.gss_topmenu .gss_topmenu-button:hover {
+    background-color: #3a99d7;
+    opacity: 1;
+}
+
 .gss_topmenu .gss_topmenu-button {
     background-position: 0px 0px;
     height: 37px;
@@ -58,6 +63,12 @@
     font-family: arial;
     font-size: 15px;
     cursor: pointer;
+    
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -ms-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
 }
 
 .gss_topmenu .gss_topmenu-button:first-child {

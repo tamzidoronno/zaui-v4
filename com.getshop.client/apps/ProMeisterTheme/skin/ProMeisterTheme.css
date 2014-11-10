@@ -328,7 +328,7 @@ html {
 }
 
 .dayentry .reports a {
-    color: #FFF;
+    color: #333;
 }
 
 .loginform a {
@@ -477,4 +477,27 @@ html {
 
 .gs_outer.footer {
     min-width: 1100px;
+}
+
+.mainarea .app.systemapplication.Login {
+    top: 0px;
+}
+
+.LeftMenu .menu_1 .menuEntry,  
+.LeftMenu .menu_0 {
+    background-color: inherit;
+    border-bottom: solid 0px;
+}
+
+.LeftMenu .menu_0 {
+    font-weight: bold;
+}
+
+.LeftMenu .menu_0 .menuName {
+    color: #333;
+    font-size: 15px !important;
+}
+
+.LeftMenu a.active .menuName {
+    color: #CCC !important;
 }

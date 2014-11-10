@@ -61,6 +61,7 @@ public class AddApplicationsToDatabase {
                 Application.Type.Marketing, true);
         dashBoard.isSingleton = true;
         dashBoard.isPublic = true;
+		dashBoard.defaultActivate = true;
         apps.add(dashBoard);
 		
         Application menu = createSettings("Menu",

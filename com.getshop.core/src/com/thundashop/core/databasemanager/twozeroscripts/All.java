@@ -13,7 +13,7 @@ public class All {
 		RenameAppConfigrationToApplicationInstance.main(args);
 		RenameAppSettingsToApplication.main(args);
 		AddApplicationsToDatabase.main(args);
-		
+//		SetDefaultActivatedFlag.main(args);
 		
 	}
 }

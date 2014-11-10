@@ -389,6 +389,7 @@ class Factory extends FactoryBase {
             echo '<link rel="stylesheet" type="text/css" href="js/colorpicker/css/colorpicker.css" />';
         }
 
+        echo "<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>";
         echo '<link rel="stylesheet" type="text/css" href="js/datatables/demo_table.css" />';
         echo '<link rel="stylesheet" type="text/css" href="js/datatables/demo_page.css" />';
         echo "\n" . '<link rel="stylesheet" type="text/css" href="/skin/default/applicationPicker.css">';

@@ -73,6 +73,11 @@ class FactoryBase {
     }
 
     public function includefile($filename, $overrideappname = null, $printError = true) {
+        
+        if (strstr($filename, ".") > -1) {
+            throw new Exception("Not allowed to have . in fragments");
+        }
+        
         $appname = get_class($this);
         if ($overrideappname != null) {
             $appname = $this->getFactory()->getApplicationPool()->getNamespaceByApplicationName($overrideappname);

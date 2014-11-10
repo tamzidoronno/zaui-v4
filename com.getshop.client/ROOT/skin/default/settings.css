@@ -7,7 +7,7 @@
 */
 
 #backsidesettings {
-    font-family: Raleway, sans-serif;
+    font-family: 'PT Sans', sans-serif;
     display: none;
     z-index: 111112;
     position: absolute;
@@ -17,6 +17,10 @@
     min-height: 100%;
     background-color: #3a99d7;
     color: #FFF;
+}
+
+#backsidesettings .gss_slogan {
+    font-family: Raleway, sans-serif;
 }
 
 .store_settings_button {
@@ -74,14 +78,15 @@
 	padding: 10px;
 }
 .gss_setting .title {
-	font-weight: bold;
+	font-size: 16px;
 }
 
 .gss_setting {
 	min-height: 30px;
 	position: relative;
-	padding: 10px;
-	color: #444;
+	padding-bottom: 10px;
+	padding-top: 10px;
+	color: #333;
 	border-bottom: solid 1px #EEE;
 	padding-right: 350px;
 }
@@ -93,7 +98,9 @@
 
 .gss_settings_inner.apparea {
 	margin-top: 20px;
-	font-size: 15px;
+	font-size: 14px;
+    font-weight: 300;
+    /*color: #333*/
 }
 
 
@@ -230,8 +237,9 @@ inputs-moz-placeholder {
     color: #b5b5b5;
 }
 
-.gss_setting input[type=text],
-.gss_setting input[type=textfield] {
+input[type=text],
+input[type=password],
+input[type=textfield] {
     width: 270px;
     padding: 8px 8px;
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
@@ -246,7 +254,7 @@ inputs-moz-placeholder {
     -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.50);
     -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.50);
 	position: absolute;
-	right: 10px;
+	right: 12px;
 	top: 10px;
 }
 
@@ -283,6 +291,7 @@ inputs-moz-placeholder {
 .gss_settings_header {
 	background-color: #FFF;
 	margin: 10px;
+    margin-top: 0px;
 	color: #333;
 	padding: 20px;
 	border-radius: 5px;
@@ -298,7 +307,7 @@ inputs-moz-placeholder {
 }
 
 .gss_settings_header .gss_settings_header_title {
-	font-weight: bold;
+	font-size: 16px;
 }
 
 .gss_settings_header .gss_settings_header_description .gss_settings_header_description_inner {
@@ -339,4 +348,43 @@ inputs-moz-placeholder {
 	padding-right: 10px;
 	text-align: right;
 	padding-bottom: 10px;
+}
+
+.gss_settings_content {
+    background: #FFF; 
+    margin: 10px; 
+    padding: 10px;
+    border-radius: 5px; 
+    color: #333; 
+    box-shadow: 0px 0px 3px #333;
+}
+
+.gss_settings_content .gss_settings_title {
+    /*border: #1c6ea2;*/
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 5px;
+    color: #333;
+    border-radius: 5px;
+}
+
+div[gss_fragment],
+div[gss_method] {
+    cursor: pointer;
+}
+
+#backsidesettings .successdialoagbacksettings {
+    font-size: 20px;
+    padding: 20px;
+    width: 400px;
+    position: fixed;
+    top: 50px;
+    left: 50%;
+    margin-left: -200px;
+    background-color: #25c425;
+    color: #FFF;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px #DDD;
+    display: none;
 }

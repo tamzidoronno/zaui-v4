@@ -55,6 +55,7 @@ getshop.Models = {
 	},
 	
 	textfieldChanged: function (field) {
+        
 		var model = $(field).attr('gs_model');
 		var attr = $(field).attr('gs_model_attr');
 		var val = $(field).val();
@@ -67,7 +68,7 @@ getshop.Models = {
 	},
 	
 	isTextfield: function(field) {
-		return ($(field).is("[type=text]") || $(field).is("[type=textfield]"));
+        return ($(field).is("[type=text]") || $(field).is("[type=textfield]") || $(field).is("[type=hidden]") || $(field).is("[type=password]"));
 	},
 	
 	modelChanged: function(prop, action, difference, oldvalue, model) {

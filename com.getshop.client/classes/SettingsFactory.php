@@ -36,7 +36,11 @@ class SettingsFactory extends FactoryBase {
 		if (isset($_POST['gss_method'])) {
 			$this->currentApplication->{$_POST['gss_method']}();
 		}
-        $this->currentApplication->renderConfig();
+        
+        if (!isset($_POST['gss_method']) || $_POST['gss_method'] != "gs_show_fragment") {
+            $this->currentApplication->renderConfig();
+        }
+        
         $html = ob_get_contents();
         ob_end_clean();
 		$data['data'] = $html;

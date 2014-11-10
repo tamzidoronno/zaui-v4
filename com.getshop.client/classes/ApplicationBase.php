@@ -432,5 +432,9 @@ class ApplicationBase extends FactoryBase {
         $this->applicationSettings = $applicationSettings;
     }
 
+
+    public function gs_show_fragment() {
+        $this->includefile($_POST['fragment']);
+    }
 }
 ?>

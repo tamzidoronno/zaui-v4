@@ -1,201 +1,78 @@
-.Users .name {
-    position: absolute;
-    left: 90px;
+#backsidesettings .gs_user_menu .gss_button {
+    width: 110px;
+    margin-right: 15px;
+    margin-bottom: 5px;
 }
-
-.Users .email {
-    position: absolute;
-    left: 90px;
-    top: 18px;
-}
-
-.Users .lastLoggedIn {
-    position: absolute;
-    left: 90px;
-    top: 36px;
-}
-
-.Users .expireDate {
-    position: absolute;
-    left: 90px;
-    top: 56px;
-}
-
-.Users .row:hover {
-    background-color: #DDD;  
-}
-
-.Users .row {
-    padding: 5px;
-    cursor:pointer;
-    background-image: url('{IMAGEFOLDER}/user80.png');
-    background-repeat: no-repeat;
-    height: 80px;
-    position: relative;
-    font-size: 14px;
-    background-position: 0px 5px ;
-    border-bottom: solid 1px #DDD;
-}
-
-.Users .edit_password_table {
-    width: 100%;
-}
-
-.Users .email_log tr:hover {
-    background-color:#EFEFEF;
-    cursor:pointer;
-}
-
-.Users .email_subject {
-    padding-left: 10px;
-    display:inline-block;
-    width: 100px;
-    padding-right: 10px;
-    overflow: hidden;
-    height: 14px;
-}
-
-.Users .email_short_text {
-    overflow:hidden; 
-    display:inline-block;
-    height: 14px;
-    width: 80%;
-    
-/*    color:#6e62c9; */
-}
-.Users .email_subject_large {
-    font-size:16px;
-    font-weight: bold;
-    border-bottom: solid 1px;
-}
-
-.Users .outgoing {
-    color: #575180;
-}
-
-.Users .incoming {
-    padding: 5px;
-}
-
-.Users .email_header {
-    padding: 5px;
-    text-align: center;
-    background-color:#969696;
-}
-
-
-.Users .email_row {
-    cursor:pointer;
-    padding: 3px;
-    border-bottom: solid 1px #BBBBBB;
-    border-right: solid 1px #BBBBBB;
-    border-left: solid 1px #BBBBBB;
-    background-color: #EFEFEF;
-}
-
-.Users .date {
-    position:absolute;
-    z-index:1;
-    right:5px;
-    width: 180px;
-    text-align: right;
-    background-color:#EFEFEF;
-    color:#BBBBBB;
-    padding-right: 4px;
-}
-
-.Users .invite_content {
-    width: 800px;
-}
-
-.Users .email_invite { width: 500px; }
-.Users .title_invite { width: 500px; }
-.Users .msg_invite { width: 500px; height: 100px; }
-.Users .invite_content .button { position: relative; margin-left: 10px; margin-top: 5px; }
-.Users .emails_sent { font-weight: bold; font-size:16px; margin-top: 10px; }
-.Users .personal_information table,.Users .change_password table { width: 600px; }
-
-.Users .title { font-size: 14px; }
-.Users .statistic { font-size: 14px; }
-.Users ul li { font-size: 14px; }
-
-
-.Users .user {
-    cursor:pointer;
-    border-bottom: dashed 1px #ddd;
-    position: relative;
-    font-size: 14px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-}
-
-.Users .user .address {
-    position: absolute;
-    right: 0px;
-    width: 300px;
-}
-.Users .user .info {
-    padding: 5px;
-}
-
-.Users .user .image {
-    padding: 5px;
-    background-image: url('{IMAGEFOLDER}/user80.png');
-    height: 80px;
-    width: 80px;
-    background-repeat: no-repeat;
-    font-size: 14px;
-    background-position: 0px 5px ;
-}
-
-.Users .user.admin .image {
-    background-image: url('{IMAGEFOLDER}/useradmin80.png');
-}
-
-.Users #result {
-    border-top: dashed 1px;
-    padding-top: 5px;
-}
-
-.Users .searchimage {
-    background-repeat: no-repeat;
-    padding: 5px;
-    background-image: url('{IMAGEFOLDER}/search.png');
-    height: 80px;
-    width: 80px;
-    background-position: 0px 5px ;
-}
-
-.Users .searchheader {
-    width: 100%;
-    position: relative;
-    font-size: 14px;
-}
-
-.Users .searchheader .serachfield {
-    position: absolute;
-    bottom: 8px;
-    text-align: right;
-    right: 0px;
-    
-}
-
-.Users .col1 {
-    width: 200px;
-}
-
-.Users table td {
+#backsidesettings .gs_user_menu {
+    margin-left: 10px;
+    display: inline-block;
     vertical-align: top;
 }
-.Users .organisation table {
-    width: 100%;
+
+#backsidesettings .users_userlist {
 }
-.Users .organisation {
-    width: 200px;
-    padding: 3px;
-    border: solid 1px #DDD;
-    border-radius: 5px;
+
+#backsidesettings .gs_user_workarea {
+    display: inline-block; 
+    width: 1000px;
+
 }
-.Users .save_user_button { float:right; }
-.Users .pm_rights { cursor:pointer; }
-.Users .sepbox img {  max-width: 200px; max-height:100px; }
+
+#backsidesettings .user_entry_row {
+    border-bottom: solid 1px #EDEDED;
+}
+
+#backsidesettings .user_entry_row .content {
+    display: inline-block;
+    width: 855px;
+    vertical-align: top;
+    height: 100px;
+    position: relative;
+    padding-top: 10px;
+}
+
+#backsidesettings .user_entry_row .image {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    vertical-align: top;
+    position: relative;
+    padding-bottom: 10px;
+    
+}
+
+#backsidesettings .user_entry_row .image i {
+    text-align: center;
+    width: 100px;
+    height: 100px;
+    font-size: 90px;
+    line-height: 100px;
+    color: #008ad2;
+}
+
+#backsidesettings .user_level {
+    position: absolute;
+    bottom: 5px;
+    left: 0px;
+    right: 0px;
+    text-align: center;
+    font-size: 12px;
+}
+
+#backsidesettings .user_list_header {
+    border-bottom: solid 1px #EDEDED;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    line-height: 25px;
+}
+
+#backsidesettings .user_entry_row .created {
+    font-size: 13px;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    color: grey;
+}
+#backsidesettings .user_entry_row:hover {
+    background-color: #EDEDED;
+}

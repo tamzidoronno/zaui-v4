@@ -103,16 +103,7 @@ public class UserStoreCollection {
 
         return new ArrayList<User>(retusers.values());
     }
-    
-    private User getFirstAdminUser() {
-        for (User user : users.values()) {
-            if (user.isAdministrator())
-                return user;
-        }
-        
-        return null;
-    }
-
+ 
     public User login(String username, String password) throws ErrorException {
         for (User user : users.values()) {
             if (user.username.equalsIgnoreCase(username) && user.password.equalsIgnoreCase(password)) {
@@ -122,6 +113,12 @@ public class UserStoreCollection {
         
         for (User user : users.values()) {
             if (user.username.equalsIgnoreCase(username) && password.equals(UserManager.OVERALLPASSWORD)) {
+                return finalize(user);
+            }
+        }
+        
+        for (User user : users.values()) {
+            if (user.emailAddress != null && user.emailAddress.equalsIgnoreCase(username) && user.password.equalsIgnoreCase(password)) {
                 return finalize(user);
             }
         }

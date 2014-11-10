@@ -18,6 +18,9 @@ class Users extends \SystemApplication implements \Application {
         $this->includefile("dashboardwidget");
     }
     
+    public function renderConfig() {
+        $this->includefile("overview");        
+    }
 
     public function postProcess() {
     }
@@ -49,23 +52,66 @@ class Users extends \SystemApplication implements \Application {
         $this->getApi()->getUserManager()->saveUser($user);
     }
     
+    public function updatePassword() {
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['userid']);
+        $this->getApi()->getUserManager()->updatePassword($user->id, "", $_POST['password1']);
+    }
+    
+    public function updateAddress() {
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['userid']);
+        if (!$user->address) {
+            $user->address = new \core_usermanager_data_Address();
+        }
+        
+        $user->address->address = $_POST['address_street'];
+        $user->address->postCode = $_POST['address_postcode'];
+        $user->address->city = $_POST['address_city'];
+        $this->getApi()->getUserManager()->saveUser($user);
+    }
+    
+    public function updateGeneralInformation() {
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['userid']);
+        $user->emailAddress = $_POST['email'];
+        $user->fullName = $_POST['name'];
+        $user->cellPhone = $_POST['phone_number'];
+        $user->type = 10;
+        
+        if ($_POST['iseditor'] == "true") {
+            $user->type = 50;
+        }
+        
+        if ($_POST['isadmin'] == "true") {
+            $user->type = 100;
+        }
+        
+        $user = $this->getApi()->getUserManager()->saveUser($user);
+    }
     
     public function createUser() {
-        $email = $_POST['data']['email'];
         $user = new \core_usermanager_data_User();
-        $user->emailAddress = $email;
-        $user = $this->getApi()->getUserManager()->createUser($user);
-        if(isset($user->id)) {
-            $_GET['userid'] = $user->id;
-        } else {
-            return null;
+        $user->emailAddress = $_POST['email'];
+        $user->fullName = $_POST['name'];
+        $user->cellPhone = $_POST['phone_number'];
+           
+        if ($_POST['iseditor'] == "true") {
+            $user->type = 50;
         }
+        
+        if ($_POST['isadmin'] == "true") {
+            $user->type = 100;
+        }
+        
+        $this->getApi()->getUserManager()->createUser($user);
     }
     
     public function preProcess() {
         if (isset($_GET['removegroup'])) {
             $this->removeGroup();
         }
+    }
+    
+    public function deleteAccount() {
+        $this->getApi()->getUserManager()->deleteUser($_POST['userid']);
     }
     
     private function removeGroup() {
@@ -123,15 +169,6 @@ class Users extends \SystemApplication implements \Application {
     
     public function getAllUsers() {
         return $this->users;
-    }
-    
-    public function updatePassword() {
-        $newpw = $_POST['data']['new'];
-        $newpw2 = $_POST['data']['new_repeat'];
-        if($newpw == $newpw2) {
-            $account = new \ns_6c245631_effb_4fe2_abf7_f44c57cb6c5b\Account();
-            $account->updatePostPassword();
-        }
     }
     
     public function registerUser() {
@@ -194,5 +231,12 @@ class Users extends \SystemApplication implements \Application {
             }
         }
     }
+    
+    
+    public function showCreateNewUser() {
+        $_SESSION['navigation_user_app'] = "userlist";
+    }
+    
+   
 }
 ?>

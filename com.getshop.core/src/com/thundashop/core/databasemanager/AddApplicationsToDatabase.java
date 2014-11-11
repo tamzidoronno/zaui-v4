@@ -1,4 +1,3 @@
-
 package com.thundashop.core.databasemanager;
 
 import com.thundashop.core.appmanager.ApplicationPool;
@@ -41,14 +40,14 @@ public class AddApplicationsToDatabase {
         applicationSettings.isSingleton = isSingleton;
         return applicationSettings;
     }
-    
+
     private List<ApplicationSettings> addApplications() {
         List<ApplicationSettings> apps = new ArrayList();
-        
+
         List<String> allowed = new ArrayList();
         allowed.add("large");
         allowed.add("xlarge");
-        
+
         List<String> allowed2 = new ArrayList();
         allowed2.add("cell");
         allowed2.add("small");
@@ -56,18 +55,15 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-//        ApplicationSettings ProMeisterTheme = createSettings(
-//                "ProMeisterTheme",
-//                "0747d81a-9688-4b71-8d12-04a099654e3d",
-//                allowed,
-//                "",
-//                ApplicationSettings.Type.Theme, true);
-//        ProMeisterTheme.isPublic = false;
-//        ProMeisterTheme.allowedStoreIds = new ArrayList();
-//		ProMeisterTheme.allowedStoreIds.add("2c22090e-6b4a-49fb-a228-f3e019a77982");
-//		apps.add(ProMeisterTheme);
-		
-        
+        ApplicationSettings netaxcept = createSettings(
+                "Netaxept",
+                "def1e922-972f-4557-a315-a751a9b9eff1",
+                allowed,
+                "",
+                ApplicationSettings.Type.Payment, true);
+        netaxcept.isPublic = true;
+        apps.add(netaxcept);
+
 //        
 //        ApplicationSettings hotelvask = createSettings(
 //                "HotelbookingCleaning",
@@ -144,8 +140,6 @@ public class AddApplicationsToDatabase {
 //        sedoxUserPanel.allowedStoreIds = new ArrayList();
 //        sedoxUserPanel.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
 //        apps.add(sedoxUserPanel);
-
-
         return apps;
     }
 
@@ -157,14 +151,14 @@ public class AddApplicationsToDatabase {
 
         for (ApplicationSettings app : addApplications()) {
             app.storeId = "all";
-			
-			DataCommon data = database.getObject(credentials, app.id);
-			if (data == null) {
-				database.save(app, credentials);
-			} else {
-				System.out.println("Skipping");
-			}
-            
+
+            DataCommon data = database.getObject(credentials, app.id);
+            if (data == null) {
+                database.save(app, credentials);
+            } else {
+                System.out.println("Skipping");
+            }
+
         }
     }
 
@@ -182,10 +176,10 @@ public class AddApplicationsToDatabase {
     public static void main(String args[]) throws ErrorException, UnknownHostException {
         ApplicationContext context = new ClassPathXmlApplicationContext("All.xml");
         AppContext.appContext = context;
-        
+
         context.getBean(AddApplicationsToDatabase.class).insert();
         context.getBean(AddApplicationsToDatabase.class).showLinks();
-        
+
         java.lang.System.exit(1);
     }
 

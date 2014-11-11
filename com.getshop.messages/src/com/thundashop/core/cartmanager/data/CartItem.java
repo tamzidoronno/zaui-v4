@@ -29,14 +29,15 @@ public class CartItem implements Serializable {
         if (!this.product.id.equals(productId)) {
             return false;
         }
-        
-        if (variations.size() != this.variations.size()) {
-            return false;
-        }
-        
-        for (String varId : this.variations) {
-            if (!variations.contains(varId)) {
+        if(variations != null) {
+            if (variations.size() != this.variations.size()) {
                 return false;
+            }
+
+            for (String varId : this.variations) {
+                if (!variations.contains(varId)) {
+                    return false;
+                }
             }
         }
         

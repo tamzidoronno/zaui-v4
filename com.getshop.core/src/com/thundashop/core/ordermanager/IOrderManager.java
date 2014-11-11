@@ -95,6 +95,16 @@ public interface IOrderManager {
     
     
     /**
+     * This can be used in the cases where it does not mather if someone is trying to set the status of the order.
+     * It will be verified in a different way. 4 (completed) will not be possible to set in this case.
+     * 
+     * @param orderId
+     * @param status
+     * @throws ErrorException 
+     */
+    public void updateOrderStatusInsecure(String orderId, int status) throws ErrorException;
+    
+    /**
      * Change order status of a specified order.
      * The id could be the orderId or the transaction id.
      */

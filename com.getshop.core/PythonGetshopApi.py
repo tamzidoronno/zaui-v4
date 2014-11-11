@@ -2962,6 +2962,28 @@ class OrderManager(object):
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 
+  def updateOrderStatusInsecure(self, orderId, status):
+    args = collections.OrderedDict()
+    if isinstance(orderId,GetShopBaseClass): 
+      args["orderId"]=json.dumps(orderId.__dict__)
+    else:
+      try:
+        args["orderId"]=json.dumps(orderId)
+      except (ValueError, AttributeError):
+        args["orderId"]=orderId
+    if isinstance(status,GetShopBaseClass): 
+      args["status"]=json.dumps(status.__dict__)
+    else:
+      try:
+        args["status"]=json.dumps(status)
+      except (ValueError, AttributeError):
+        args["status"]=status
+    data = EmptyClass()
+    data.args = args
+    data.method = "updateOrderStatusInsecure"
+    data.interfaceName = "core.ordermanager.IOrderManager"
+    return self.communicationHelper.sendMessage(data)
+
 class PageManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper

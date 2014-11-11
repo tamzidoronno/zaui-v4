@@ -395,14 +395,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         checkForArxUpdate();
     }
 
-    synchronized void checkForArxUpdate() throws ErrorException {
+    void checkForArxUpdate() throws ErrorException {
 
         if (arxSettings != null && arxSettings.address != null && !arxSettings.address.isEmpty()) {
             for (BookingReference reference : bookingReferences.values()) {
-
-                if (!reference.updateArx) {
-                    continue;
-                }
 
                 if (reference.failed != null) {
                     long diff = new Date().getTime() - reference.failed.getTime();
@@ -411,49 +407,61 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                     }
                 }
                 
-                if (reference.isToday() && reference.allRoomsClean(rooms)) {
-                    //Marking rooms as dirty.
-                    for(Room room : rooms.values()) {
-                        room.isClean = false;
-                        saveObject(room);
+                if(!reference.isToday()) {
+                    continue;
+                }
+                
+                checkForCleanRoomsToChange(reference);
+
+                System.out.println("Need to update arx with reference: " + reference.bookingReference);
+                int i = 0;
+                boolean success = false;
+                for (String name : reference.contact.names) {
+                    String roomId = reference.roomIds.get(i);
+                    Room room = getRoom(roomId);
+                    ArxUser user = new ArxUser();
+                    
+                    if(reference.statusOnRoom(room) == BookingReference.uploadArxStatus.ALLROOMSUPDATED) {
+                        continue;
                     }
                     
-                    reference.startDate = new Date();
-                    notifyCustomersReadyRoom(reference);
-                    System.out.println("Need to update arx with reference: " + reference.bookingReference);
-                    int i = 0;
-                    boolean success = false;
-                    for (String name : reference.contact.names) {
-                        if (i >= reference.roomIds.size()) {
-                            continue;
-                        }
-                        String roomId = reference.roomIds.get(i);
-                        Room room = getRoom(roomId);
-                        ArxUser user = new ArxUser();
-                        user.doorsToAccess.add("Ytterdører");
+                    Integer statusToSet = 0;
+                    if(room.isClean || room.isCleanedToday()) {
+                        reference.startDate = new Date();
                         user.doorsToAccess.add(room.roomName);
-                        String[] names = name.split(" ");
-                        user.firstName = names[0];
-                        user.lastName = name.substring(user.firstName.length()).trim();
-                        user.id = reference.id + "-" + i;
-                        user.startDate = reference.startDate;
-                        user.endDate = reference.endDate;
-                        user.code = reference.codes.get(i);
-                        user.reference = reference.bookingReference + "";
-                        success = sendUserToArx(user);
-                        if(!success) {
-                            break;
-                        }
-                        i++;
-                    }
-                    if (success) {
-                        reference.failed = null;
-                        reference.updateArx = false;
+                        statusToSet = BookingReference.uploadArxStatus.ALLROOMSUPDATED;
+                    } else if(reference.statusOnRoom(room) == BookingReference.uploadArxStatus.OUTDOORSUPLOADED) {
+                        continue;
                     } else {
-                        reference.failed = new Date();
+                        statusToSet = BookingReference.uploadArxStatus.OUTDOORSUPLOADED;
+                        user.doorsToAccess.add("Ytterdører");
                     }
-                    databaseSaver.saveObject(reference, credentials);
+                    
+                    String[] names = name.split(" ");
+                    user.firstName = names[0];
+                    user.lastName = name.substring(user.firstName.length()).trim();
+                    user.id = reference.id + "-" + i;
+                    user.startDate = reference.startDate;
+                    user.endDate = reference.endDate;
+                    user.code = reference.codes.get(i);
+                    user.reference = reference.bookingReference + "";
+                    success = sendUserToArx(user);
+                    if(!success) {
+                        break;
+                    }
+                    reference.uploadedRoomToArx.put(room.id, statusToSet);
+                    if(statusToSet == (int)BookingReference.uploadArxStatus.ALLROOMSUPDATED) {
+                        notifyCustomerReadyRoom(reference, i);
+                    }
+                    i++;
                 }
+                if (success) {
+                    reference.failed = null;
+                    reference.updateArx = false;
+                } else {
+                    reference.failed = new Date();
+                }
+                databaseSaver.saveObject(reference, credentials);
             }
         }
     }
@@ -705,20 +713,17 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         saveObject(vismaSettings);
     }
 
-    private void notifyCustomersReadyRoom(BookingReference reference) throws ErrorException {
-        int i = 0;
-        for (String phonenumber : reference.contact.phones) {
-            Room room = getRoom(reference.roomIds.get(i));
-            int code = reference.codes.get(i);
-            String origMessage = arxSettings.smsReady;
-            if (reference.language.equals("nb_NO")) {
-                origMessage = arxSettings.smsReadyNO;
-            }
-
-            String message = formatMessage(reference, origMessage, room.roomName, code, reference.contact.names.get(i));
-            sendSMS(phonenumber, message);
-            i++;
+    private void notifyCustomerReadyRoom(BookingReference reference, Integer offset) throws ErrorException {
+        String phonenumber = reference.contact.phones.get(offset);
+        Room room = getRoom(reference.roomIds.get(offset));
+        int code = reference.codes.get(offset);
+        String origMessage = arxSettings.smsReady;
+        if (reference.language.equals("nb_NO")) {
+            origMessage = arxSettings.smsReadyNO;
         }
+
+        String message = formatMessage(reference, origMessage, room.roomName, code, reference.contact.names.get(offset));
+        sendSMS(phonenumber, message);
     }
 
     private String formatMessage(BookingReference reference, String message, String roomName, Integer code, String name) throws ErrorException {
@@ -1034,5 +1039,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         endCal.set(Calendar.SECOND, 0);
         end = endCal.getTime();
         return end;
+    }
+
+    private void checkForCleanRoomsToChange(BookingReference reference) {
+        //If there is another room which is available which is of the same type and is clean, then switch to this one.
     }
 }

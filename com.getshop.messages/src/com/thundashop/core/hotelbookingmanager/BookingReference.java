@@ -9,13 +9,22 @@ import java.util.List;
 
 public class BookingReference extends DataCommon {
 
+
+    static class uploadArxStatus {
+        public static Integer NOTHING_UPLOADED = 0;
+        public static Integer OUTDOORSUPLOADED = 1;
+        public static Integer ALLROOMSUPDATED = 2;
+    }
+    
     public int bookingReference;
     public Date startDate;
     public Date endDate;
     public String language = "nb_NO";
     public List<Integer> codes = new ArrayList();
     public List<String> roomIds = new ArrayList();
-    public HashMap<String, Boolean> isApprovedForCheckIn = new HashMap();
+    
+    //0 = No rooms has been up
+    public HashMap<String, Integer> uploadedRoomToArx = new HashMap();
     public ContactData contact = new ContactData();
     public Double bookingFee = 0.0;
     public boolean updateArx = true;
@@ -24,14 +33,6 @@ public class BookingReference extends DataCommon {
     public String heardAboutUs = "";
     Date failed = null;
 
-    public boolean isApprovedForCheckin(String roomId) {
-        if (isApprovedForCheckIn.containsKey(roomId)) {
-            return isApprovedForCheckIn.get(roomId);
-        }
-        return false;
-    }
-
-    
     boolean isToday() {
         Calendar cal = Calendar.getInstance();
         cal.setTime(startDate);
@@ -72,6 +73,13 @@ public class BookingReference extends DataCommon {
         return clean;
     }
 
+    int statusOnRoom(Room room) {
+        if(uploadedRoomToArx.get(room.id) == null) {
+            return BookingReference.uploadArxStatus.NOTHING_UPLOADED;
+        }
+        return uploadedRoomToArx.get(room.id);
+    }
+    
     boolean isBetween(Date start, Date end) {
         if(start.before(startDate) && end.after(endDate)) {
             return true;

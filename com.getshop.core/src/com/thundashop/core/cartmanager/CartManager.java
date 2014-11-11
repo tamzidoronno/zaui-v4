@@ -54,6 +54,9 @@ public class CartManager extends ManagerBase implements ICartManager {
     }
 
     private Product getProduct(String productId, List<String> variations) throws ErrorException {
+        if(variations == null) { 
+            variations = new ArrayList();
+        }
         ArrayList<String> productIds = new ArrayList<String>();
         productIds.add(productId);
         ProductManager man = getManager(ProductManager.class);

@@ -242,6 +242,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
+    public void updateOrderStatusInsecure(String orderId, int status) throws ErrorException {
+        if(status == Order.Status.COMPLETED) {
+            return;
+        }
+        changeOrderStatus(orderId, status);
+    }
+
+    @Override
     public void setOrderStatus(String password, String orderId, String currency, double price, int status) throws ErrorException {
         if (password.equals("1Fuck1nG_H4T3_4ppl3!!TheySuckBigTime")) {
             if (orderId.equals("applications")) {

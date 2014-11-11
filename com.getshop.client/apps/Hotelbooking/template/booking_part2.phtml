@@ -31,15 +31,19 @@ if ($this->getServiceType() == "storage") {
                         <tr>
                             <td colspan='2'>
                                 <br>
-                                <? echo $this->__w("Cleaning 49,- each clean"); ?>
+                                <? echo $this->__w("Cleaning 49,- each clean");
+                                $vasking = $this->getCleaningProudcts();
+                                $selectedOption = $this->getCleaningOption();
+
+                                
+                                ?>
                                 <div>
                                     <select class="cleaning_option">
                                         <option value="no"><? echo $this->__f("No cleaning"); ?></option>
                                         <?
-                                        $vasking = $this->getCleaningProudcts();
                                         foreach ($vasking as $vask) {
                                             $selected = "";
-                                            if ($this->getCleaningOption() == $vask->id) {
+                                            if ($selectedOption == $vask->id) {
                                                 $selected = "SELECTED";
                                             }
                                             echo "<option value='" . $vask->id . "' $selected>" . $vask->name . "</option>";
@@ -51,7 +55,7 @@ if ($this->getServiceType() == "storage") {
                         </tr>
                     <? } ?>
                     <?
-                    if ($this->getDayCount() > 1 && $this->hasAvailableParkingSpots()) {
+                    if ($this->hasAvailableParkingSpots()) {
                         $price = $this->getParkingProduct()->price;
                         ?>
                         <tr>

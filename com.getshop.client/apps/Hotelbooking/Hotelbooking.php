@@ -134,9 +134,13 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             echo $numbers;
         }
     }
+    
+    public function getProductId() {
+        return $_SESSION['hotelbooking']['product'];
+    }
 
     public function getProduct() {
-        return $this->getApi()->getProductManager()->getProduct($_SESSION['hotelbooking']['product']);
+        return $this->getApi()->getProductManager()->getProduct($this->getProductId());
     }
 
     public function getStart() {
@@ -216,6 +220,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                 if (sizeof($payment) > 0) {
                     //Orderid is set in $this->continueToPayment()
                     $payment[0]->order = $this->getApi()->getOrderManager()->getOrder($_GET['orderId']);
+                    $payment[0]->initPaymentMethod();
                     $payment[0]->preProcess();
                 }
             }
@@ -229,6 +234,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             $this->includefile("Hotelbooking");
         } else {
             if (((isset($_GET['subpage']) && $_GET['subpage'] == "summary") || isset($_POST['data']['customer_type'])) && $this->hasValidSelection()) {
+                $this->updateCartObject();
                 $this->includefile("booking_part3");
             } else {
                 $this->hasValidSelection();
@@ -360,6 +366,10 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function setCleaningOption() {
+        if($_POST['data']['product'] == "no") {
+            unset($_SESSION['hotelbooking']['cleaning']);
+            return;
+        }
         $_SESSION['hotelbooking']['cleaning'] = $_POST['data']['product'];
     }
 
@@ -419,17 +429,8 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $reference = $this->getApi()->getHotelBookingManager()->reserveRoom($type, $start, $end, $count, $contact, $inactive, $this->getFactory()->getSelectedLanguage());
         if (($reference) > 0) {
             $cartmgr = $this->getApi()->getCartManager();
-            $cartmgr->clear();
             $cartmgr->setReference($reference);
-            $cartmgr->addProduct($this->getProduct()->id, $this->getDayCount(), array());
-            $cleaningid = $this->getCleaningOption();
-            if ($cleaningid) {
-                $cleaningproduct = $this->getApi()->getProductManager()->getProduct($cleaningid);
-                $interval = $cleaningproduct->stockQuantity;
-                $cleaningcount = floor($this->getDayCount() / $interval);
-                $cartmgr->addProduct($cleaningid, $cleaningcount, array());
-            }
-
+            
             if ($this->partnerShipChecked()) {
                 $order = $this->getApi()->getOrderManager()->createOrderByCustomerReference($this->getReferenceKey());
             } else {
@@ -815,6 +816,27 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             return 0;
         }
         return $this->getParkingProduct()->price * $this->getDayCount();
+    }
+
+    public function updateCartObject() {
+        $mgr = $this->getApi()->getCartManager();
+        $mgr->clear();
+
+        $mgr->addProduct($this->getProductId(), $this->getDayCount(), null);
+        
+        $cleaningid = $this->getCleaningOption();
+        if ($cleaningid && $this->getDayCount() > 3) {
+            $cleaningproduct = $this->getApi()->getProductManager()->getProduct($cleaningid);
+            $interval = $cleaningproduct->stockQuantity;
+            $cleaningcount = floor($this->getDayCount() / $interval);
+            $mgr->addProduct($cleaningid, $cleaningcount, array());
+        }
+
+        $parking = $this->getParking();
+        if($parking) {
+            
+            $mgr->addProduct($this->getParkingProduct()->id, $this->getDayCount(), null);
+        }
     }
 
 }

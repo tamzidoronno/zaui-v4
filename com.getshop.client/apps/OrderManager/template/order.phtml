@@ -81,7 +81,7 @@ $taxes = $this->getApi()->getOrderManager()->getTaxes($order);
                 <? if ($this->isEditorMode()) { ?>
                 <select id='orderstatus_selection'>
                     <?
-                    for ($i = 1; $i <= 6; $i++) {
+                    for ($i = 1; $i <= 7; $i++) {
                         $selected = "";
                         if ($i == $status) {
                             $selected = "SELECTED";

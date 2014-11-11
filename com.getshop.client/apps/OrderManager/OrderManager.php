@@ -47,6 +47,7 @@ class OrderManager extends \SystemApplication implements \Application {
         $statustext = ($status == 4) ? $this->__w("Completed") : $statustext;
         $statustext = ($status == 5) ? $this->__w("Canceled") : $statustext;
         $statustext = ($status == 6) ? $this->__w("Order sent") : $statustext;
+        $statustext = ($status == 7) ? $this->__w("Need collecting") : $statustext;
         return $statustext;
     }
 

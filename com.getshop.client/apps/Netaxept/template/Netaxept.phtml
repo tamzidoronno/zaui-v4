@@ -1,0 +1,49 @@
+<? namespace ns_d02f8b7a_7395_455d_b754_888d7d701db8; ?>
+<div class="information">
+    <?php echo $this->getDescription(); ?>
+    <br><br>
+    <div>
+        <?php  echo $this->__f("Have a look at http://www.betalingsterminal.no/Netthandel-forside/ for more information."); ?>
+    </div>
+</div>
+
+<div class="textfield setting"  id="merchantid">
+    <span class="title">Merchant-ID</span>
+    <input type="textfield" class="config" id="selenium_smtp_host">
+    <div class="description">
+        <?php  echo $this->__f("The Merchant-ID is provided by NetAxept, please contact us for more information."); ?>
+    </div>
+</div>
+<div class="textfield setting"  id="token">
+    <span class="title">Token</span>
+    <input type="textfield" class="config" id="selenium_smtp_host">
+    <div class="description">
+        <?php  echo $this->__f("The Merchant-ID is provided by NetAxept, please contact us for more information."); ?>
+    </div>
+</div>
+<div class="textfield setting"  id="okpage">
+    <span class="title">Success page</span>
+    <input type="textfield" class="config">
+    <div class="description">
+        <?php  echo $this->__f("Link to your thank you page."); ?>
+    </div>
+</div>
+<div class="textfield setting"  id="canceledpage">
+    <span class="title">Cancelled page</span>
+    <input type="textfield" class="config">
+    <div class="description">
+        <?php  echo $this->__f("Link to your cancelled you page."); ?>
+    </div>
+</div>
+
+<div class="setting onoff" id="debugmode">
+    <span class="title"><?php echo $this->__("Test mode"); ?></span>
+    <div class="onoff config" id="showcompany"></div>
+    <div class="description">
+        <?php echo $this->__("Are you running this store in test mode?"); ?>
+    </div>
+</div>
+
+
+
+<div class="button savebutton"><div class="rightglare"></div><div class="filler"></div><ins>Save settings</ins></div>

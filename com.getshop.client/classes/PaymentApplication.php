@@ -45,7 +45,6 @@ class PaymentApplication extends ApplicationBase {
      * Callback system for payments.
      */
     public function paymentCallback() {
-        
     }
     
     public function hasSubProducts() {
@@ -78,6 +77,11 @@ class PaymentApplication extends ApplicationBase {
     
     public function getExtendedPaymentForm(\PaymentMethod $paymentMethod) {
         return "";
+    }
+    
+    
+    public function setOrderId($orderId) {
+        
     }
 }
 

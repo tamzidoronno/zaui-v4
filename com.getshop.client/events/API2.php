@@ -2906,6 +2906,25 @@ class APIOrderManager {
 	     return $this->transport->sendMessage($data);
 	}
 
+	/**
+	* This can be used in the cases where it does not mather if someone is trying to set the status of the order.
+	* It will be verified in a different way. 4 (completed) will not be possible to set in this case.
+	*
+	* @param orderId
+	* @param status
+	* @throws ErrorException
+	*/
+
+	public function updateOrderStatusInsecure($orderId, $status) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $data['args']["status"] = json_encode($this->transport->object_unset_nulls($status));
+	     $data["method"] = "updateOrderStatusInsecure";
+	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($data);
+	}
+
 }
 class APIPageManager {
 

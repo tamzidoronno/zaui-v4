@@ -60,7 +60,7 @@ public class APIPageManager {
      * @param incell
      * @param beforecell
      * @param direction
-     * @param area header/footer/body
+     * @param area header/footer/body if nothing set it will default to body.
      * @return
      * @throws ErrorException
      */
@@ -209,7 +209,7 @@ public class APIPageManager {
      * @param incell
      * @param beforecell
      * @param direction
-     * @param area header/footer/body
+     * @param area header/footer/body if nothing set it will default to body.
      * @return
      * @throws ErrorException
      */

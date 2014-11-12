@@ -8,6 +8,13 @@
     margin-right: 10px;
 }
 
+.gss_settings_main_area .gss_appview .gss_app_desc {
+    display: inline-block;
+    width: 241px;
+    vertical-align: top;
+    height: 119px;
+    overflow: hidden;
+}
 .gss_settings_main_area .gss_appview {
     padding: 10px;
     display: inline-block;

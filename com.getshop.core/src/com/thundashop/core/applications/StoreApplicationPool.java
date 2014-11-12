@@ -32,17 +32,25 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 	
 	private Set<Application> activatedApplications = new HashSet();
 	
-	
-	
-	@PostConstruct
-	public void load() {
-		allApplications = getShopApplicationPool.getApplications();
-		activatedApplications = allApplications.stream().filter( app -> app.defaultActivate).collect(Collectors.toSet());
-	}
 
 	@Override
 	public void dataFromDatabase(DataRetreived data) {
+		allApplications = getShopApplicationPool.getApplications()
+				.stream()
+				.filter(app -> app.allowedStoreIds.contains(storeId) || app.isPublic)
+				.collect(Collectors.toList());
 		
+		activatedApplications = allApplications.stream()
+				.filter( app -> app.defaultActivate)
+				.collect(Collectors.toSet());
+		
+		for (Application app : allApplications) {
+			String activated = getManagerSetting(app.id);
+			System.out.println(activated + " appid: " + app.id);
+			if (activated != null && activated.equals("activated")) {
+				activatedApplications.add(app);
+			}
+		}
 	}
 	
 	@Override
@@ -67,6 +75,8 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 		Application application = getAvailableApplications().stream().filter(app -> app.id.equals(applicationId)).findFirst().get();
 		if (application != null) {
 			activatedApplications.add(application);
+			setManagerSetting(application.id, "activated");
+			System.out.println("app id: " + application.id);
 		}
 	}
 
@@ -125,6 +135,14 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 		}
 		
 		return getAvailableThemeApplications().get(0);
+	}
+
+	@Override
+	public List<Application> getAvailableApplicationsThatIsNotActivated() {
+		return getAvailableApplications()
+				.stream()
+				.filter( a -> !activatedApplications.contains(a))
+				.collect(Collectors.toList());
 	}
 	
 }

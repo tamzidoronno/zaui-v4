@@ -4674,6 +4674,14 @@ class StoreApplicationPool(object):
     data.interfaceName = "core.applications.IStoreApplicationPool"
     return self.communicationHelper.sendMessage(data)
 
+  def getAvailableApplicationsThatIsNotActivated(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getAvailableApplicationsThatIsNotActivated"
+    data.interfaceName = "core.applications.IStoreApplicationPool"
+    return self.communicationHelper.sendMessage(data)
+
   def getAvailableThemeApplications(self):
     args = collections.OrderedDict()
     data = EmptyClass()

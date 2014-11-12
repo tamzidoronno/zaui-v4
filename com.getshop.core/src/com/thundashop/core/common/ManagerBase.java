@@ -67,13 +67,14 @@ public class ManagerBase {
         if (databaseSaver != null && database != null && !credentials.manangerName.equals("LoggerManager")) {
             DataRetreived dataRetreived = new DataRetreived();
             dataRetreived.data = database.retreiveData(credentials);
-            ((ManagerBase) this).dataFromDatabase(dataRetreived);
-			
+            
 			for (DataCommon common : dataRetreived.data) {
 				if (common instanceof ManagerSetting) {
 					this.managerSettings = (ManagerSetting)common;
 				}
 			}
+			
+			((ManagerBase) this).dataFromDatabase(dataRetreived);
         }
 		
         this.ready = true;

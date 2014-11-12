@@ -2789,7 +2789,7 @@ class APIPageManager {
 	* @param incell
 	* @param beforecell
 	* @param direction
-	* @param area header/footer/body
+	* @param area header/footer/body if nothing set it will default to body.
 	* @return String
 	* @throws ErrorException
 	*/
@@ -2930,7 +2930,7 @@ class APIPageManager {
 	* @param incell
 	* @param beforecell
 	* @param direction
-	* @param area header/footer/body
+	* @param area header/footer/body if nothing set it will default to body.
 	* @return core_pagemanager_data_Page
 	* @throws ErrorException
 	*/
@@ -4474,6 +4474,20 @@ class APIStoreApplicationPool {
 	     $data = array();
 	     $data['args'] = array();
 	     $data["method"] = "getAvailableApplications";
+	     $data["interfaceName"] = "core.applications.IStoreApplicationPool";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* This is a filtered list of the getAvailableApplications function.
+	*
+	* @return List
+	*/
+
+	public function getAvailableApplicationsThatIsNotActivated() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getAvailableApplicationsThatIsNotActivated";
 	     $data["interfaceName"] = "core.applications.IStoreApplicationPool";
 	     return $this->transport->sendMessage($data);
 	}

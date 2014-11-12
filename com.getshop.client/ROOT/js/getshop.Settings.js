@@ -21,10 +21,6 @@ getshop.Settings = {
             view : $(field).attr('gss_view')
         };
         
-        if ($(field).attr("gss_value")) {
-            data.value = $(field).attr("gss_value");
-        }
-        
         if ($(field).attr('gss_model')) {
 			model = getshop.Model[$(field).attr('gss_model')];
 		}
@@ -43,7 +39,11 @@ getshop.Settings = {
 	},
 	
 	setApplicationId: function(button) {
-		localStorage.setItem("currentApp", $(button).attr('gss_goto_app'));
+        var appId = $(button).attr('gss_goto_app');
+		localStorage.setItem("currentApp", appId);
+        
+        $('.gss_topmenu').find('.gss_active').removeClass('gss_active');
+        $('.gss_topmenu').find('[gss_goto_app="'+appId+'"]').addClass('gss_active');
 		this.post();
 	},
 	
@@ -69,6 +69,10 @@ getshop.Settings = {
 		data['appid'] = this.getCurrentAppId();
 		data['gss_method'] = method;
 		
+        if (field && $(field).attr("gss_value")) {
+            data.value = $(field).attr("gss_value");
+        }
+        
 		$.ajax({
             type: "POST",
             url: "/settingsnav.php",

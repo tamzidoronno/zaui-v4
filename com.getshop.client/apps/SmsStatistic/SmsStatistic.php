@@ -15,7 +15,11 @@ class SmsStatistic extends \MarketingApplication implements \Application {
     public function render() {
     }
     
-    public function renderConfig() {
+    public function renderDashBoardWidget() {
+        $this->includefile("dashboardwidget");
+    }
+    
+    public function renderConfig($numbers=12) {
         $messageManager = $this->getApi()->getMessageManager();
         
         echo "<table>";
@@ -24,7 +28,7 @@ class SmsStatistic extends \MarketingApplication implements \Application {
         $month = (int)date('m');
         $month++;
         
-        for ($i=0; $i<12; $i++) {
+        for ($i=0; $i<$numbers; $i++) {
             $month--;
             if ($month == 0) {
                 $month = 12;

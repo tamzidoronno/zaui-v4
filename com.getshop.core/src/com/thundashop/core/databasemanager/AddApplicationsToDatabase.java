@@ -73,7 +73,18 @@ public class AddApplicationsToDatabase {
         menu.isPublic = true;
 		menu.defaultActivate = true;
         apps.add(menu);
-        
+		
+        Application applicationSelector = createSettings("ApplicationSelector",
+                "f1fc4af3-656e-4294-a268-40d2a82d0aa1",
+                allowed2,
+                "",
+                Application.Type.System, true);
+        applicationSelector.isSingleton = true;
+        applicationSelector.isPublic = true;
+		applicationSelector.defaultActivate = true;
+        apps.add(applicationSelector);
+		
+		
 //        ApplicationSettings sedoxMenu = createSettings(
 //                "SedoxMenu",
 //                "b23a3767-1f7b-40e3-93c5-65504ebaa73c",

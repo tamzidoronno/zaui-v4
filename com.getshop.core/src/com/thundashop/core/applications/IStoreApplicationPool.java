@@ -34,6 +34,14 @@ public interface IStoreApplicationPool {
 	public List<Application> getAvailableApplications();
 	
 	/**
+	 * This is a filtered list of the getAvailableApplications function. 
+	 * 
+	 * @return 
+	 */
+	public List<Application> getAvailableApplicationsThatIsNotActivated();
+	
+	
+	/**
 	 * Activate an application.
 	 * 
 	 * @param applicationId 

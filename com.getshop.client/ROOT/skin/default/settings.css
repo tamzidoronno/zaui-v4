@@ -17,6 +17,7 @@
     min-height: 100%;
     background-color: #3a99d7;
     color: #FFF;
+    display: block;
 }
 
 #backsidesettings .gss_slogan {
@@ -398,4 +399,8 @@ div[gss_method] {
     border-radius: 10px;
     box-shadow: 0px 0px 10px #DDD;
     display: none;
+}
+
+.gss_active {
+    color: #f0e68c;
 }

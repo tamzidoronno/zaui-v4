@@ -41,5 +41,6 @@ class Settings extends \SystemApplication implements \Application {
 	public function deleteStore() {
 		echo "Deleting store";
 	}
+    
 }
 ?>

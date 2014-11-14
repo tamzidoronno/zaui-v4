@@ -4432,6 +4432,64 @@ class APIStoreApplicationPool {
 	}
 
 	/**
+	* Actiave a module by a given module id.
+	*
+	* @param module
+	*/
+
+	public function activateModule($module) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["module"] = json_encode($this->transport->object_unset_nulls($module));
+	     $data["method"] = "activateModule";
+	     $data["interfaceName"] = "core.applications.IStoreApplicationPool";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Actiave a module by a given module id.
+	*
+	* @param module
+	*/
+
+	public function deactivateApplication($applicationId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["applicationId"] = json_encode($this->transport->object_unset_nulls($applicationId));
+	     $data["method"] = "deactivateApplication";
+	     $data["interfaceName"] = "core.applications.IStoreApplicationPool";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Returns a list of all available applications.
+	*
+	* @return List
+	*/
+
+	public function getActivatedModules() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getActivatedModules";
+	     $data["interfaceName"] = "core.applications.IStoreApplicationPool";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Return a list of all applucation modules available
+	*
+	* @return List
+	*/
+
+	public function getAllAvailableModules() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getAllAvailableModules";
+	     $data["interfaceName"] = "core.applications.IStoreApplicationPool";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Return an activated application by the given Id.
 	*
 	* @param id
@@ -4448,8 +4506,7 @@ class APIStoreApplicationPool {
 	}
 
 	/**
-	* Returns a list of all applications this store
-	* has activated.
+	* Returns a list of all applications this store has activated.
 	*
 	* @return List
 	*/
@@ -4463,9 +4520,9 @@ class APIStoreApplicationPool {
 	}
 
 	/**
-	* Returns a list of all applications that are available
-	* for this store. This also includes applications that has
-	* not yet been activated by the administrator.
+	* Returns a list of all applications that are available for this store.
+	* This also includes applications that has not yet been activated by the
+	* administrator.
 	*
 	* @return List
 	*/
@@ -4521,8 +4578,8 @@ class APIStoreApplicationPool {
 	}
 
 	/**
-	* Use this function to change or set the
-	* theme application you wish to use.
+	* Use this function to change or set the theme application you wish to use.
+	*
 	* @param applicationId
 	*/
 

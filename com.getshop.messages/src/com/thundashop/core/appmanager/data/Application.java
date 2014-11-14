@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import org.mongodb.morphia.annotations.Transient;
 
 public class Application extends DataCommon implements Comparator<Application> {
+
     public static class Type {
+
         public static String Marketing = "MarketingApplication";
         public static String System = "SystemApplication";
         public static String Webshop = "WebshopApplication";
@@ -16,16 +19,15 @@ public class Application extends DataCommon implements Comparator<Application> {
         public static String Shipment = "ShipmentApplication";
         public static String Theme = "ThemeApplication";
     }
-    
+
     /**
-     * Widgets is allocated spaces in an app.
-     * A app is defining the widgets it has, and thereby allows other 
-     * applications to give data to the widgets.
-     * This maps has the widgetid as key and the value as the function on 
-     * this application it should try to run.
+     * Widgets is allocated spaces in an app. A app is defining the widgets it
+     * has, and thereby allows other applications to give data to the widgets.
+     * This maps has the widgetid as key and the value as the function on this
+     * application it should try to run.
      */
-    public HashMap<String,String> connectedWidgets = new HashMap();
-    
+    public HashMap<String, String> connectedWidgets = new HashMap();
+
     public String appName;
     public String description;
     public List<String> allowedAreas;
@@ -40,10 +42,17 @@ public class Application extends DataCommon implements Comparator<Application> {
     public String clonedFrom;
     public int trialPeriode = 7;
     public boolean pageSingelton;
-	public boolean hasDashBoard = true;
-	public boolean defaultActivate = false;
+    public boolean hasDashBoard = true;
+    public boolean defaultActivate = false;
     public List<String> allowedStoreIds = new ArrayList();
     public List<ApiCallsInUse> apiCallsInUse = new ArrayList();
+
+    @Transient
+    public ApplicationModule applicationModule;
+
+    public boolean activeAppOnModuleActivation = false;
+    public String moduleId = "other";
+    
     
     @Override
     public int compare(Application o1, Application o2) {
@@ -51,7 +60,7 @@ public class Application extends DataCommon implements Comparator<Application> {
     }
 
     public void complete() {
-        if (type!= null && type.equals(Type.Theme)) {
+        if (type != null && type.equals(Type.Theme)) {
             allowedAreas = new ArrayList();
             allowedAreas.add("themes");
         }

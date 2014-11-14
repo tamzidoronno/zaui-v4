@@ -7,13 +7,14 @@ package com.thundashop.core.applications;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.appmanager.data.Application;
+import com.thundashop.core.appmanager.data.ApplicationModule;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,124 +26,165 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class StoreApplicationPool extends ManagerBase implements IStoreApplicationPool {
 
-	@Autowired
-	private GetShopApplicationPool getShopApplicationPool;
-	
-	private List<Application> allApplications;
-	
-	private Set<Application> activatedApplications = new HashSet();
-	
+    @Autowired
+    private GetShopApplicationPool getShopApplicationPool;
 
-	@Override
-	public void dataFromDatabase(DataRetreived data) {
-		allApplications = getShopApplicationPool.getApplications()
-				.stream()
-				.filter(app -> app.allowedStoreIds.contains(storeId) || app.isPublic)
-				.collect(Collectors.toList());
-		
-		activatedApplications = allApplications.stream()
-				.filter( app -> app.defaultActivate)
-				.collect(Collectors.toSet());
-		
-		for (Application app : allApplications) {
-			String activated = getManagerSetting(app.id);
-			System.out.println(activated + " appid: " + app.id);
-			if (activated != null && activated.equals("activated")) {
-				activatedApplications.add(app);
-			}
-		}
-	}
-	
-	@Override
-	public List<Application> getApplications() {
-		List<Application> availableApplications = getAvailableApplications();
-		return availableApplications.stream()
-				.filter( o -> activatedApplications.contains(o))
-				.filter( o -> !o.type.equals(Application.Type.Theme))
-				.collect(Collectors.toList());
-	}
+    private List<Application> allApplications;
 
-	@Override
-	public List<Application> getAvailableApplications() {
-		List<Application> publicApplications = getAllPublicApplications();
-		List<Application> nonePublicButIsAllowed = getApplicationsThatAreExplicitAllowed();
-		publicApplications.addAll(nonePublicButIsAllowed);
-		return publicApplications;
-	}
+    private Set<Application> activatedApplications = new HashSet();
 
-	@Override
-	public void activateApplication(String applicationId) {
-		Application application = getAvailableApplications().stream().filter(app -> app.id.equals(applicationId)).findFirst().get();
-		if (application != null) {
-			activatedApplications.add(application);
-			setManagerSetting(application.id, "activated");
-			System.out.println("app id: " + application.id);
-		}
-	}
+    private Set<ApplicationModule> activatedModules = new HashSet();
 
-	private List<Application> getApplicationsThatAreExplicitAllowed() {
-		return allApplications.stream()
-				.filter( o -> !o.isPublic)
-				.filter( o -> o.allowedStoreIds.contains(storeId))
-				.collect(Collectors.toList());
-	}
+    @Override
+    public void dataFromDatabase(DataRetreived data) {
+        allApplications = getShopApplicationPool.getApplications()
+                .stream()
+                .filter(app -> app.allowedStoreIds.contains(storeId) || app.isPublic)
+                .collect(Collectors.toList());
 
-	private List<Application> getAllPublicApplications() {
-		return allApplications.stream()
-				.filter(o -> o.isPublic)
-				.collect(Collectors.toList());
-	}
+        activatedApplications = allApplications.stream()
+                .filter(app -> app.defaultActivate)
+                .collect(Collectors.toSet());
 
-	@Override
-	public List<Application> getAvailableThemeApplications() {
-		return getAvailableApplications().stream()
-				.filter(app -> app.type.equals(Application.Type.Theme))
-				.collect(Collectors.toList());
-	}
+        addActivatedApplications();
+        addActivatedModules();
+    }
 
-	@Override
-	public Application getThemeApplication() {
-		String id = getManagerSetting("selectedThemeApplication");
-		
-		if (id == null) {
-			return getDefaultThemeApplication();
-		}
-		
-		Application app = getApplication(id);
-		if (app == null) {
-			return getDefaultThemeApplication();
-		}
-		
-		return app;
-	}
+    @Override
+    public List<Application> getApplications() {
+        List<Application> availableApplications = getAvailableApplications();
+        return availableApplications.stream()
+                .filter(o -> activatedApplications.contains(o))
+                .filter(o -> !o.type.equals(Application.Type.Theme))
+                .collect(Collectors.toList());
+    }
 
-	@Override
-	public void setThemeApplication(String applicationId) {
-		setManagerSetting("selectedThemeApplication", applicationId);
-	}
+    @Override
+    public List<Application> getAvailableApplications() {
+        List<Application> publicApplications = getAllPublicApplications();
+        List<Application> nonePublicButIsAllowed = getApplicationsThatAreExplicitAllowed();
+        publicApplications.addAll(nonePublicButIsAllowed);
+        return publicApplications;
+    }
 
-	@Override
-	public Application getApplication(String id) {
-		return getApplications().stream()
-				.filter(app -> app.id.equals(id))
-				.findFirst()
-				.get();
-	}
+    @Override
+    public void activateApplication(String applicationId) {
+        Application application = getAvailableApplications().stream().filter(app -> app.id.equals(applicationId)).findFirst().get();
+        if (application != null) {
+            activatedApplications.add(application);
+            setManagerSetting(application.id, "activated");
+        }
+    }
 
-	private Application getDefaultThemeApplication() {
-		if (getAvailableThemeApplications().size() == 0) {
-			throw new NullPointerException("There are no theme activated for this shop");
-		}
-		
-		return getAvailableThemeApplications().get(0);
-	}
+    private List<Application> getApplicationsThatAreExplicitAllowed() {
+        return allApplications.stream()
+                .filter(o -> !o.isPublic)
+                .filter(o -> o.allowedStoreIds.contains(storeId))
+                .collect(Collectors.toList());
+    }
 
-	@Override
-	public List<Application> getAvailableApplicationsThatIsNotActivated() {
-		return getAvailableApplications()
-				.stream()
-				.filter( a -> !activatedApplications.contains(a))
-				.collect(Collectors.toList());
-	}
-	
+    private List<Application> getAllPublicApplications() {
+        return allApplications.stream()
+                .filter(o -> o.isPublic)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Application> getAvailableThemeApplications() {
+        return getAvailableApplications().stream()
+                .filter(app -> app.type.equals(Application.Type.Theme))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Application getThemeApplication() {
+        String id = getManagerSetting("selectedThemeApplication");
+
+        if (id == null) {
+            return getDefaultThemeApplication();
+        }
+
+        Application app = getApplication(id);
+        if (app == null) {
+            return getDefaultThemeApplication();
+        }
+
+        return app;
+    }
+
+    @Override
+    public void setThemeApplication(String applicationId) {
+        setManagerSetting("selectedThemeApplication", applicationId);
+    }
+
+    @Override
+    public Application getApplication(String id) {
+        return getApplications().stream()
+                .filter(app -> app.id.equals(id))
+                .findFirst()
+                .get();
+    }
+
+    private Application getDefaultThemeApplication() {
+        if (getAvailableThemeApplications().size() == 0) {
+            throw new NullPointerException("There are no theme activated for this shop");
+        }
+
+        return getAvailableThemeApplications().get(0);
+    }
+
+    @Override
+    public List<Application> getAvailableApplicationsThatIsNotActivated() {
+        return getAvailableApplications()
+                .stream()
+                .filter(a -> !activatedApplications.contains(a))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ApplicationModule> getAllAvailableModules() {
+        return getShopApplicationPool.getModules();
+    }
+
+    @Override
+    public List<ApplicationModule> getActivatedModules() {
+        return new ArrayList(activatedModules);
+    }
+
+    private void addActivatedModules() {
+//        getShopApplicationPool.getModules().stream()
+//                .filter(module -> getManagerSetting("module_actived_" + module.id) != null)
+//                .filter(module -> getManagerSetting("module_actived_" + module.id).equals("activated"))
+//                .forEach(module -> activatedModules.add(module));
+    }
+
+    private void addActivatedApplications() {
+        allApplications.stream()
+                .filter(app -> getManagerSetting(app.id) != null)
+                .filter(app -> getManagerSetting(app.id).equals("activated"))
+                .forEach(app -> activatedApplications.add(app));
+    }
+
+    @Override
+    public void activateModule(String moduleId) {
+        ApplicationModule foundModule = getAllAvailableModules().stream()
+                .filter(m -> m.id.equals(moduleId))
+                .findFirst()
+                .orElse(null);
+        
+        if (foundModule != null) {
+            setManagerSetting("module_actived_" + foundModule.id, "activated");
+            activatedModules.add(foundModule);
+        }
+    }
+
+    @Override
+    public void deactivateApplication(String applicationId) {
+        Application application = getAvailableApplications().stream().filter(app -> app.id.equals(applicationId)).findFirst().get();
+        if (application != null) {
+            activatedApplications.add(application);
+            setManagerSetting(application.id, "deactivated");
+        }
+    }
+
 }

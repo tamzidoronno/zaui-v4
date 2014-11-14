@@ -29,6 +29,39 @@ class ApplicationSelector extends \SystemApplication implements \Application {
     public function activate_application() {
         $this->getApi()->getStoreApplicationPool()->activateApplication($_POST['value']);
     }
+    
+    public function deactivate_application() {
+        $this->getApi()->getStoreApplicationPool()->deactivateApplication($_POST['value']);
+    }
+
+    public function isModuleInArray($key, $modules) {
+        if (!is_array($modules)) {
+            return false;
+        }
+        
+        foreach ($modules as $module) {
+            if ($module->id == $key) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    public function activateModule() {
+        $this->getApi()->getStoreApplicationPool()->activateModule($_POST['value']);
+    }
+
+    public function isActivated($app, $notActivated) {
+        foreach ($notActivated as $notactive) {
+            if ($notactive->id == $app->id) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
 }
 
 ?>

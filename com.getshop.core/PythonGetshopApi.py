@@ -4643,6 +4643,52 @@ class StoreApplicationPool(object):
     data.interfaceName = "core.applications.IStoreApplicationPool"
     return self.communicationHelper.sendMessage(data)
 
+  def activateModule(self, module):
+    args = collections.OrderedDict()
+    if isinstance(module,GetShopBaseClass): 
+      args["module"]=json.dumps(module.__dict__)
+    else:
+      try:
+        args["module"]=json.dumps(module)
+      except (ValueError, AttributeError):
+        args["module"]=module
+    data = EmptyClass()
+    data.args = args
+    data.method = "activateModule"
+    data.interfaceName = "core.applications.IStoreApplicationPool"
+    return self.communicationHelper.sendMessage(data)
+
+  def deactivateApplication(self, applicationId):
+    args = collections.OrderedDict()
+    if isinstance(applicationId,GetShopBaseClass): 
+      args["applicationId"]=json.dumps(applicationId.__dict__)
+    else:
+      try:
+        args["applicationId"]=json.dumps(applicationId)
+      except (ValueError, AttributeError):
+        args["applicationId"]=applicationId
+    data = EmptyClass()
+    data.args = args
+    data.method = "deactivateApplication"
+    data.interfaceName = "core.applications.IStoreApplicationPool"
+    return self.communicationHelper.sendMessage(data)
+
+  def getActivatedModules(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getActivatedModules"
+    data.interfaceName = "core.applications.IStoreApplicationPool"
+    return self.communicationHelper.sendMessage(data)
+
+  def getAllAvailableModules(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getAllAvailableModules"
+    data.interfaceName = "core.applications.IStoreApplicationPool"
+    return self.communicationHelper.sendMessage(data)
+
   def getApplication(self, id):
     args = collections.OrderedDict()
     if isinstance(id,GetShopBaseClass): 

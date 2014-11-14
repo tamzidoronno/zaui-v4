@@ -19,30 +19,30 @@ import java.util.List;
  * @author ktonder
  */
 public class SetDefaultActivatedFlag {
-	public static void main(String[] args) throws UnknownHostException {
-		Mongo m = new Mongo("localhost", 27017);
-        DB db = m.getDB("ApplicationPool");
-		for (String name : db.getCollectionNames()) {
-			DBCollection col = db.getCollection(name);
-			DBCursor cur = col.find();
-			while(cur.hasNext()) {
-					DBObject ob = cur.next();
-				if ((ob != null && ob.get("className") != null && ob.get("className").equals("com.thundashop.core.appmanager.data.Application")) || (ob != null && ob.get("className") != null && ob.get("className").equals("com.thundashop.core.appmanager.data.ApplicationSettings"))) {
-					
-					List<String> defaultActivatedApps = Arrays.asList("Cleanish", "Product", "GoogleMaps", "DashBoard", "Settings", "ContentManager", "YouTube", "Contact", "Users", "GoogleAnalytics", "ImageDisplayer", "Footer", "Banner", "MenuEditor", "Login");
-					
-					if (ob.get("type").equals("ThemeApplication") && ob.get("isPublic").equals(true)) {
-//						System.out.println("Theme: " + ob.get("appName") + " isPublic" + ob.get("isPublic"));
-					}
-					if (defaultActivatedApps.contains(ob.get("appName"))) {
-						System.out.println("Default activated by startup: " + ob.get("appName"));
-						ob.put("defaultActivate", true);
-						col.save(ob);						
-					}
-					
 
-				}
-			}
-		}
-	}
+    public static void main(String[] args) throws UnknownHostException {
+        Mongo m = new Mongo("localhost", 27017);
+        DB db = m.getDB("ApplicationPool");
+        for (String name : db.getCollectionNames()) {
+            DBCollection col = db.getCollection(name);
+            DBCursor cur = col.find();
+            while (cur.hasNext()) {
+                DBObject ob = cur.next();
+                if ((ob != null && ob.get("className") != null && ob.get("className").equals("com.thundashop.core.appmanager.data.Application")) || (ob != null && ob.get("className") != null && ob.get("className").equals("com.thundashop.core.appmanager.data.ApplicationSettings"))) {
+
+                    List<String> defaultActivatedApps = Arrays.asList("Cleanish", "Product", "GoogleMaps", "DashBoard", "Settings", "ContentManager", "YouTube", "Contact", "Users", "GoogleAnalytics", "ImageDisplayer", "Footer", "Banner", "MenuEditor", "Login");
+
+                    if (ob.get("type").equals("ThemeApplication") && ob.get("isPublic").equals(true)) {
+//						System.out.println("Theme: " + ob.get("appName") + " isPublic" + ob.get("isPublic"));
+                    }
+                    if (defaultActivatedApps.contains(ob.get("appName"))) {
+                        System.out.println("Default activated by startup: " + ob.get("appName"));
+                        ob.put("defaultActivate", true);
+                        col.save(ob);
+                    }
+
+                }
+            }
+        }
+    }
 }

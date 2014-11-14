@@ -81,7 +81,7 @@ public class AddApplicationsToDatabase {
                 Application.Type.System, true);
         applicationSelector.isSingleton = true;
         applicationSelector.isPublic = true;
-		applicationSelector.defaultActivate = true;
+        applicationSelector.defaultActivate = true;
         apps.add(applicationSelector);
 		
 		

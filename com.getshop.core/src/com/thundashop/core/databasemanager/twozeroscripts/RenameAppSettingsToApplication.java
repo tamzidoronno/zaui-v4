@@ -17,19 +17,20 @@ import java.net.UnknownHostException;
  * @author ktonder
  */
 public class RenameAppSettingsToApplication {
-	public static void main(String[] args) throws UnknownHostException {
-		Mongo m = new Mongo("localhost", 27017);
+
+    public static void main(String[] args) throws UnknownHostException {
+        Mongo m = new Mongo("localhost", 27017);
         DB db = m.getDB("ApplicationPool");
-		for (String name : db.getCollectionNames()) {
-			DBCollection col = db.getCollection(name);
-			DBCursor cur = col.find();
-			while(cur.hasNext()) {
-				DBObject ob = cur.next();
-				if (ob != null && ob.get("className") != null && ob.get("className").equals("com.thundashop.core.appmanager.data.ApplicationSettings")) {
-					ob.put("className", "com.thundashop.core.appmanager.data.Application");
-					col.save(ob);
-				}
-			}
-		}
-	}
+        for (String name : db.getCollectionNames()) {
+            DBCollection col = db.getCollection(name);
+            DBCursor cur = col.find();
+            while (cur.hasNext()) {
+                DBObject ob = cur.next();
+                if (ob != null && ob.get("className") != null && ob.get("className").equals("com.thundashop.core.appmanager.data.ApplicationSettings")) {
+                    ob.put("className", "com.thundashop.core.appmanager.data.Application");
+                    col.save(ob);
+                }
+            }
+        }
+    }
 }

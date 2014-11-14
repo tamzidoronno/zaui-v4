@@ -57,5 +57,14 @@ class core_appmanager_data_Application extends core_common_DataCommon  {
 	/** @var String */
 	public $apiCallsInUse;
 
+	/** @var core_appmanager_data_ApplicationModule */
+	public $applicationModule;
+
+	/** @var String */
+	public $activeAppOnModuleActivation;
+
+	/** @var String */
+	public $moduleId;
+
 }
 ?>

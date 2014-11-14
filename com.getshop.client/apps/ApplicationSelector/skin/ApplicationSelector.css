@@ -1,0 +1,97 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Nov 14, 2014, 11:12:18 AM
+    Author     : boggi
+*/
+
+.gss_appview {
+    overflow: hidden;
+}
+.gss_appview .free {
+    background-image: url('{IMAGEFOLDER}/green-cornerflag.png');
+    background-repeat: no-repeat;
+    width: 100px;
+    height: 50px;
+    position: absolute;
+    left: -25px;
+    top: 0px;
+    font-weight: bold;
+    
+    color: #FFF;
+    
+    -ms-transform:rotate(-45deg); /* IE 9 */
+    -moz-transform:rotate(-45deg); /* Firefox */
+    -webkit-transform:rotate(-45deg); /* Safari and Chrome */
+    -o-transform:rotate(-45deg);
+    text-align: center;
+    line-height: 40px;
+}
+
+.innerappview {
+    border-radius: 5px;
+    background-color: #FFF;
+    margin: 10px;
+    position: relative;
+}
+
+.innerappview .gss_settings_header {
+    box-shadow: 0px 0px 0px #EFEFEF;
+    border-bottom: solid 1px #DDD;
+    margin: 0px;
+    margin-bottom: 10px;
+    color: #FFF;
+    background-color: #1c6ea2;
+    border-radius: 5px 5px 0px 0px;
+}
+
+.innerappview .gss_appview {
+    width: 378px;
+    color: #333;
+    border: solid 1px #EEE;
+    display: inline-block;
+    position: relative;
+    margin-left: 8px;
+}
+
+.innerappview .gss_appview .gss_app_desc {
+    display: inline-block;
+    width: 250px;
+    vertical-align: top;
+    height: 150px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+.innerappview .gss_appview img {
+    width: 100px;
+    display: inline-block;
+    vertical-align: top;
+    margin: 10px;
+}
+
+.innerappview .gss_activate_button {
+    position: absolute;
+    bottom: 3px;    
+    right: 3px;
+    width: 80px;
+    height: 30px;
+    border-radius: 5px 0px 5px 0px;
+    text-align: center;
+    line-height: 30px;
+    cursor: pointer;
+    color: #FFF;
+    background: #466585;
+}
+
+
+.innerappview .gss_activate_button.activated {
+    background-color: #1bcf28;
+}
+
+.innerappview .gss_appview .mandatory {
+    background-color: #DDD;
+    cursor: not-allowed;
+}

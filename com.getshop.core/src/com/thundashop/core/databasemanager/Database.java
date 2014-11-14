@@ -28,7 +28,6 @@ import org.mongodb.morphia.Morphia;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-
 /**
  *
  * @author ktonder
@@ -41,12 +40,12 @@ public class Database {
     private String collectionPrefix = "col_";
     @Autowired
     public Logger logger;
-    
+
     private boolean sandbox = false;
 
     @Autowired
     private StorePool storePool;
-    
+
     public void activateSandBox() {
         sandbox = true;
     }
@@ -78,29 +77,29 @@ public class Database {
 
     private synchronized boolean isDeepFreezed(DataCommon data) {
         String storeId = data.storeId;
-        if(data instanceof Store) {
+        if (data instanceof Store) {
             storeId = data.id;
         }
         Store store = storePool.getStore(storeId);
         if (store != null && store.isDeepFreezed) {
             return true;
         }
-        
+
         return false;
     }
-    
+
     public synchronized void save(DataCommon data, Credentials credentials) throws ErrorException {
         if (data.rowCreatedDate == null) {
             data.rowCreatedDate = new Date();
         }
-        
+
         if (isDeepFreezed(data)) {
             return;
         }
-        
+
         saveWithOverrideDeepfreeze(data, credentials);
     }
-    
+
     public synchronized void saveWithOverrideDeepfreeze(DataCommon data, Credentials credentials) throws ErrorException {
         checkId(data);
         data.onSaveValidate();
@@ -118,7 +117,6 @@ public class Database {
         if (file.exists() && file.canWrite() && file.isDirectory()) {
             return;
         }
-
 
         if (file.exists() && !file.isDirectory()) {
             System.out.println("The file " + file.getPath() + " is not a folder");
@@ -181,7 +179,7 @@ public class Database {
         if (sandbox) {
             return;
         }
-        
+
         if (isDeepFreezed(data)) {
             return;
         }
@@ -261,14 +259,14 @@ public class Database {
     public DataCommon findObject(String uuid, String manager) {
         List<String> dbs = mongo.getDatabaseNames();
         for (String db : dbs) {
-            if(db.equals("LoggerManager")) {
+            if (db.equals("LoggerManager")) {
                 continue;
             }
-            
-            if(manager != null && !db.equals(manager)) {
+
+            if (manager != null && !db.equals(manager)) {
                 continue;
             }
-            
+
             DB tmpdb = mongo.getDB(db);
             Set<String> collections = tmpdb.getCollectionNames();
             for (String collection : collections) {
@@ -296,12 +294,11 @@ public class Database {
         }
     }
 
-	public Stream<DataCommon> getAll(String dbName, String storeId) {
-		DBCollection col = mongo.getDB(dbName).getCollection("col_"+storeId);
-		return col.find().toArray().stream()
-				.map(o -> morphia.fromDBObject(DataCommon.class, o));
-		
-	}
+    public Stream<DataCommon> getAll(String dbName, String storeId) {
+        DBCollection col = mongo.getDB(dbName).getCollection("col_" + storeId);
+        return col.find().toArray().stream()
+                .map(o -> morphia.fromDBObject(DataCommon.class, o));
+    }
 }
 
 class DataCommonSorter implements Comparator<DataCommon> {

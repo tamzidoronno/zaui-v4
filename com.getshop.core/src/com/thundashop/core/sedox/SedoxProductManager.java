@@ -886,6 +886,12 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         mailFactory.send("files@tuningfiles.com", getshopUser.emailAddress, product.toString(), content);
         product.addCustomerNotified(getSession().id, getshopUser);
         product.states.put("notifyForCustomer", new Date());
+		
+		if (getshopUser.cellPhone != null && !getshopUser.cellPhone.equals("")) {
+			smsFactory.send("Sedox Performance", getshopUser.cellPhone, "Your file is ready from Sedox Performance");
+			product.addSmsSentToCustomer(getSession().id, getshopUser);	
+		}
+		
         saveObject(product);
     }
 
@@ -943,8 +949,12 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         
         mailFactory.sendWithAttachments("files@tuningfiles.com", getshopUser.emailAddress, product.toString(), content, fileMap, true);
         product.states.put("sendProductByMail", new Date());
-        smsFactory.send("Sedox Performance", getshopUser.cellPhone, "Your file is ready from Sedox Performance");
-        product.addSmsSentToCustomer(getSession().id, getshopUser);
+		
+        if (getshopUser.cellPhone != null && !getshopUser.cellPhone.equals("")) {
+			smsFactory.send("Sedox Performance", getshopUser.cellPhone, "Your file is ready from Sedox Performance");
+			product.addSmsSentToCustomer(getSession().id, getshopUser);	
+		}
+		
         product.addProductSentToEmail(getSession().id, getshopUser);
         
         saveObject(product);

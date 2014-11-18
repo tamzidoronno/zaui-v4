@@ -1601,3 +1601,12 @@ border-bottom: solid 1px #3a3a3a;
     font-size: 15px;
     line-height: 30px;
 }
+
+.jcrop-holder {
+    background-color: #FFF !important;
+    background-image: url('skin/default/jcropback.png');
+}
+
+.application_settings {
+z-index: 2;
+}

@@ -21,6 +21,18 @@ class OrderManager extends \SystemApplication implements \Application {
     public function postProcess() {
         
     }
+    
+    public function collect() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+
+        /* @var $paymentApp \PaymentApplication */
+        $namespace = substr($order->payment->paymentType, 0, strpos($order->payment->paymentType, "\\"));
+        echo $namespace;
+        $apps = $this->getFactory()->getApplicationPool()->getApplicationsInstancesByNamespace($namespace);
+        $app = $apps[0];
+        $app->order = $order;
+        $app->collectOrder();
+    }
 
     public function isOrderOverviewSelected() {
         return !($this->showOrder || $this->showInvoice);

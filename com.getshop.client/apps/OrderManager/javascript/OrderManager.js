@@ -1,8 +1,15 @@
 app.OrderManager = {
     init : function() {
         $(document).on('change', '.OrderManager #orderstatus_selection', app.OrderManager.changeOrderStatus);
-        
+        $(document).on('click', '.OrderManager .collectionOrder', app.OrderManager.collectOrder);
     },
+    collectOrder : function() {
+        var event = thundashop.Ajax.createEvent('','collect',$(this), {
+            "orderid" : $(this).attr('orderid')
+        });
+        thundashop.Ajax.post(event);
+    },
+    
     changeOrderStatus : function() {
         var status = $(this).val();
         var oid = $(this).closest('.OrderManager').find('#current_orderid').val();

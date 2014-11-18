@@ -10,6 +10,7 @@ $taxes = !isset($product) ? "" : $product->taxes;
 /* @var $this ProductManager */
 $taxgroups = $this->getApi()->getProductManager()->getTaxes();
 $skui = $product->sku;
+$vismaId = $product->vismaId;
 $privatExcluded = "";
 if($product->privateExcluded) { $privatExcluded = " SELECTED"; } 
 ?>
@@ -58,6 +59,10 @@ if($product->privateExcluded) { $privatExcluded = " SELECTED"; }
     <div class="row">
         <span class='title'><? echo $this->__f("SKU code"); ?></span>
         <input type="txt" class="config smallinput gs_product_data" data="skui" id="skui" value="<?php echo $skui; ?>">    
+    </div>
+    <div class="row">
+        <span class='title'><? echo $this->__f("Visma product id"); ?></span>
+        <input type="txt" class="config smallinput gs_product_data" data="vismaId" id="vismaId" value="<?php echo $vismaId; ?>">    
     </div>
     <div class="row">
         <span class='title'><? echo $this->__f("Private persons excluded from taxes for this product"); ?></span>

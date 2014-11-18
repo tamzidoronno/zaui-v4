@@ -63,6 +63,9 @@ class core_productmanager_data_Product extends core_common_DataCommon  {
 	/** @var String */
 	public $attributes;
 
+	/** @var String */
+	public $vismaId;
+
 	/** @var core_pagemanager_data_Page */
 	public $page;
 

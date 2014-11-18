@@ -41,6 +41,10 @@ class PaymentApplication extends ApplicationBase {
         return true;
     }
     
+    public function collectOrder() {
+        
+    }
+    
     /**
      * Callback system for payments.
      */

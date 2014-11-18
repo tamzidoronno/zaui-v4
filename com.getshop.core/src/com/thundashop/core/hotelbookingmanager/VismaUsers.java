@@ -2,7 +2,11 @@ package com.thundashop.core.hotelbookingmanager;
 
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.hotelbookingmanager.BookingReference;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
 import java.text.ParseException;
@@ -13,6 +17,24 @@ import java.util.List;
 
 public class VismaUsers extends DataCommon {
 
+    static String payMentCondition = "15"; // gets it from PmtTrm
+    static String payMentType = "10"; // gets it from PmtMt
+
+    private static int getVismaId(ProductManager prodManager, CartItem item) throws ErrorException {
+        
+//        if (item.getProduct().vismaId > 0) {
+//            return item.getProduct().vismaId;
+//        }
+//        
+        Product currentProduct = prodManager.getProduct(item.getProduct().id);
+        
+        if (currentProduct == null) {
+            return item.getProduct().vismaId;
+        }
+        
+        return currentProduct.vismaId;
+    }
+    
     public HashMap<String, String> transfereddUserIds = new HashMap();
     
     
@@ -24,38 +46,43 @@ public class VismaUsers extends DataCommon {
     }
     
     
-    static String generateOrderLines(List<Order> orders, User user, HashMap<Integer, BookingReference> references) {
+    static String generateOrderLines(List<Order> orders, User user, HashMap<Integer, BookingReference> references, ProductManager prodManager, HotelBookingManager bookingManager) throws ErrorException {
         String result = "";
         for(Order order : orders) {
+            if (bookingManager.orderExistsInVisma(order.incrementOrderId)) {
+                continue;
+            }
+            
             if(order.reference == null) {
                 continue;
             }
+            
             BookingReference reference = references.get(new Integer(order.reference));
             if(reference == null) {
                 continue;
             }
-            String ordrehode = "H;";
-            ordrehode += "1;";
-            ordrehode += "1;";
-            ordrehode += order.incrementOrderId+";";
-            ordrehode += user.customerId+";";
-            ordrehode += new SimpleDateFormat("yyyyMMdd").format(order.createdDate)+";";
-            ordrehode += new SimpleDateFormat("yyyyMMdd").format(reference.startDate) + ";";
-            ordrehode += "30;";
-            ordrehode += "10;";
-            ordrehode += ";";
-            ordrehode += ";";
+            String ordrehode = "H;"; // Fast H
+            ordrehode += "1;"; // Fast 1 for salg
+            ordrehode += "1;"; // Fast 1 for normalordre
+            ordrehode += order.incrementOrderId+";"; // GetShop ordre id
+            ordrehode += user.customerId+";"; // Kundenr 
+            ordrehode += new SimpleDateFormat("yyyyMMdd").format(order.createdDate)+";"; // Ordredato
+            ordrehode += new SimpleDateFormat("yyyyMMdd").format(reference.startDate) + ";"; // Leveringsdato
+            ordrehode += payMentCondition+";"; //Betalingsbetingelse
+            ordrehode += payMentType+";"; //Betalingsmåte ( 10 = avtalegiro )
+            ordrehode += ";"; // avgiftskode ( tom = bruk fra kunde )
             result += ordrehode+ "\r\n";
             
             for(CartItem item : order.cart.getItems()) {
-                String orderline = "L;";
-                orderline += item.getProduct().id + ";";
-                orderline += ";";
-                orderline += item.getProduct().name + ";";
-                orderline += item.getProduct().price + "1;";
-                orderline += item.getProduct().sku + ";";
-                orderline += ";";
-                orderline += ";";
+                String orderline = "L;"; // Fast L for orderline
+                orderline += getVismaId(prodManager, item) + ";"; // ProdNO
+                orderline += ";"; // Avgiftskode ( hentes fra kunden )
+                orderline += item.getProduct().name + ";"; // Produkt beskrivelse
+                orderline += item.getCount() + ";"; // Antall mnder
+                orderline += item.getProduct().price + ";"; // Pris pr antall, hvis blank hentes pris fra Visma
+                orderline += ";"; // ikke i bruk
+                orderline += ";"; // Bod id ( denne får vi ikke satt pr nå)
+                orderline += ";"; // 
                 result += orderline+ "\r\n";
             }
         }
@@ -128,7 +155,7 @@ public class VismaUsers extends DataCommon {
                     }
                 }
             }catch(Exception e) {
-                return null;
+                throw new RuntimeException(e);
             }
             result += new SimpleDateFormat("ddMMyyyy").format(date) + ";"; //Kunde Org nr el fødselsnr.
         } else {

@@ -9,8 +9,9 @@ class Netaxept extends \PaymentApplication implements \Application {
     var $currentMenuEntry;
     var $transactionId;
     var $order;
-    
+
     function __construct() {
+        
     }
 
     public function getDescription() {
@@ -119,39 +120,62 @@ class Netaxept extends \PaymentApplication implements \Application {
             print_r($fault);
         }
     }
-    
+
+    public function collectOrder() {
+        $order = $this->order;
+        $orderId = $this->order->id;
+        $amount = 10000000;
+        /* var $order \core_ordermanager_data_Order */
+        $this->processPayment($amount, $order->paymentTransactionId, $orderId, "CAPTURE");
+    }
+
     public function paymentCallback() {
         $orderId = $_GET['orderId'];
         $code = $_GET['responseCode'];
-        
+
         $okpage = false;
         $canceledpage = false;
-        if(isset($this->getSettings()->{"okpage"})) {
+        $paymentfailed = false;
+        if (isset($this->getSettings()->{"okpage"})) {
             $okpage = $this->getSettings()->{"okpage"}->value;
         }
-        if(isset($this->getSettings()->{"canceledpage"})) {
+        if (isset($this->getSettings()->{"paymentfailed"})) {
+            $paymentfailed = $this->getSettings()->{"paymentfailed"}->value;
+        }
+        if (isset($this->getSettings()->{"canceledpage"})) {
             $canceledpage = $this->getSettings()->{"canceledpage"}->value;
         }
         $found = false;
-        if($code == "OK") {
-            $this->getApi()->getOrderManager()->updateOrderStatusInsecure($orderId, 7);
-            if($okpage) {
-                header('Location: '.$okpage);
-                $found = true;
+        if ($code == "OK") {
+            $authing = $this->processPayment(123, $_GET['transactionId'], $orderId, "AUTH");
+            if(!$authing) {
+                $this->getApi()->getOrderManager()->updateOrderStatusInsecure($orderId, 3);
+                if ($paymentfailed) {
+                    header('Location: ' . $paymentfailed);
+                    $found = true;
+                }
+            }
+            if(isset($authing) && $authing->ResponseCode == "OK") {
+                $this->getApi()->getOrderManager()->updateOrderStatusInsecure($orderId, 7);
+                if ($okpage) {
+                    header('Location: ' . $okpage);
+                    $found = true;
+                }
+            } else {
+                echo "Sorry, but your payment did not validate.";
             }
         } else {
             $this->getApi()->getOrderManager()->updateOrderStatusInsecure($orderId, 5);
-            if($canceledpage) {
-                header('Location: '.$canceledpage);
+            if ($canceledpage) {
+//                header('Location: ' . $canceledpage);
                 $found = true;
             }
         }
-        if(!$found) {
+        if (!$found) {
             echo "Thank you page and canceled page not found yet";
         }
     }
-    
-    
+
     public function getTerminal() {
         $terminal = "https://epayment.nets.eu/terminal/default.aspx";
         if ($this->getSettings()->{"debugmode"}->value == "true") {
@@ -163,7 +187,7 @@ class Netaxept extends \PaymentApplication implements \Application {
     public function getTransactionId() {
         return $this->transactionId;
     }
-    
+
     public function preProcess() {
         $this->registerCall();
         $this->includefile("paymentform");
@@ -178,6 +202,7 @@ class Netaxept extends \PaymentApplication implements \Application {
     }
 
     public function render() {
+        
     }
 
     public function createOrder() {
@@ -185,17 +210,17 @@ class Netaxept extends \PaymentApplication implements \Application {
         $currency = $this->getFactory()->getCurrency();
         $orderId = $this->getOrder()->incrementOrderId;
         $amount = 0;
-        
+
         $items = array();
-        foreach($this->getOrder()->cart->items as $cartItem) {
+        foreach ($this->getOrder()->cart->items as $cartItem) {
             /* @var $cartItem core_cartmanager_data_CartItem */
             /** @var product \core_productmanager_data_Product */
             $product = $cartItem->product;
             $item = new Item();
-            $item->VAT = ($product->taxGroupObject->taxRate+100)/100;
-            $item->Amount = (int)(($product->price * $cartItem->count * $item->VAT) * 100);
+            $item->VAT = ($product->taxGroupObject->taxRate + 100) / 100;
+            $item->Amount = (int) (($product->price * $cartItem->count * $item->VAT) * 100);
             $item->Handling = true;
-            $item->IsVatIncluded  = true;
+            $item->IsVatIncluded = true;
             $item->Quantity = $cartItem->count;
             $item->Shipping = true;
             $item->Title = $product->name;
@@ -210,13 +235,13 @@ class Netaxept extends \PaymentApplication implements \Application {
         $Order->Goods = $items;
         $Order->OrderNumber = $orderId;
         $Order->UpdateStoredPaymentInfo = null;
-        
-        
+
+
         return $Order;
     }
 
     public function createTerminal() {
-        $redirect_url = "http://" . $_SERVER["HTTP_HOST"] . "/callback.php?app=" .$this->getConfiguration()->id . "&orderId=" . $this->order->id;
+        $redirect_url = "http://" . $_SERVER["HTTP_HOST"] . "/callback.php?app=" . $this->getConfiguration()->id . "&orderId=" . $this->order->id;
 
         $Terminal = new Terminal();
         $Terminal->AutoAuth = null; // Optional parameter
@@ -235,9 +260,48 @@ class Netaxept extends \PaymentApplication implements \Application {
         $environment->WebServicePlatform = "PHP5";
         return $environment;
     }
-    
+
     public function setOrderId($orderId) {
         $this->orderId = $orderId;
+    }
+
+    public function processPayment($transactionAmount, $transactionId, $orderId, $operation) {
+
+        ####  PROCESS OBJECT  ####
+        $ProcessRequest = new ProcessRequest();
+        $ProcessRequest->Description          = "order id : " . $orderId;
+        $ProcessRequest->Operation            = $operation;
+        $ProcessRequest->TransactionAmount    = $transactionAmount;
+        $ProcessRequest->TransactionId        = $transactionId;
+        $ProcessRequest->TransactionReconRef  = "";
+
+        $InputParametersOfProcess = array
+            (
+            "token" => $this->getToken(),
+            "merchantId" => $this->getMerchantId(),
+            "request" => $ProcessRequest
+        );
+        
+        try {
+            $client = new \SoapClient($this->getWsdl(), array('trace' => true, 'exceptions' => true));
+            $OutputParametersOfProcess = $client->__call('Process', array("parameters" => $InputParametersOfProcess));
+            $result = $OutputParametersOfProcess->ProcessResult;
+            $this->logTransaction($result, $orderId);
+            return $result;
+        }catch(\SoapFault $fault) {
+            $this->logTransaction($fault, $orderId);
+        }
+    }
+
+    public function logTransaction($fault, $orderId) {
+        echo "<pre>";
+        if($fault instanceof \SoapFault) {
+            $error = $fault->detail->BBSException->Result->ResponseCode . " " . $fault->detail->BBSException->Result->ResponseText;
+            echo $error;
+        } else {
+            $error = $fault->{'AuthorizationId'} . " responsecode: " . $fault->{'ResponseCode'};
+        }
+        $this->getApi()->getOrderManager()->logTransactionEntry($orderId, $error);
     }
 
 }

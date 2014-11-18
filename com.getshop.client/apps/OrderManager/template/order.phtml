@@ -108,7 +108,17 @@ $taxes = $this->getApi()->getOrderManager()->getTaxes($order);
                 <div class='entry'>
                     <span class="shipmenttext"><? echo $this->__f("Transaction id"); ?></span> <?php echo $order->paymentTransactionId; ?>
                 </div>
-        <? } ?>
+        <? } 
+        if($status  == 7) {
+            echo "<a class='collectionOrder' orderId='".$order->id."'>Collect this transaction</a><br>";
+        }
+        echo "<br>";
+        foreach($order->payment->transactionLog as $date => $text) {
+            $date = date("Y-m-d H:i", $date/1000);
+            echo $date . " - " . $text . "<br>";
+        }
+        
+        ?>
         </div>
         <?
     }

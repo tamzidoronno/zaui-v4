@@ -125,6 +125,7 @@ class Product extends \ApplicationBase implements \Application {
         
         //saving advanced data.
         $product->sku = $_POST['data']['skui'];
+        $product->vismaId = $_POST['data']['vismaId'];
         $product->freeShipping = $_POST['data']['shipping'];
         $product->promoted = $_POST['data']['promoted'];
         $product->hideShippingPrice = $_POST['data']['hideShippingPrice'];

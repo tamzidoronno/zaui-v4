@@ -442,11 +442,20 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         User user = getSession().currentUser;
         List<Order> returnOrders = new ArrayList();
         for(Order order : orders.values()) {
-            if((order.userId != null && order.userId.equals(userId)) || (user != null && user.isAdministrator())) {
-                returnOrders.add(order);
+            if(order.userId != null && order.userId.equals(userId)) {
+                if((user != null && order.userId.equals(user.id)) || user.isAdministrator()) {
+                    returnOrders.add(order);
+                }
             }
         }
         return returnOrders;
+    }
+
+    @Override
+    public void logTransactionEntry(String orderId, String entry) throws ErrorException {
+        Order order = getOrder(orderId);
+        order.payment.transactionLog.put(new Date().getTime(), entry);
+        saveOrder(order);
     }
 
 }

@@ -46,6 +46,8 @@ public class Product extends DataCommon implements Comparable<Product>  {
     //AttributegroupId, AttributeSelected
     public List<String> attributes = new ArrayList();
     
+    public int vismaId;
+    
     @Transient
     public Page page;
     

@@ -205,6 +205,24 @@ public class APIOrderManager {
      }
 
      /**
+     * Returns a list over taxes
+     * for the specified order.
+     *
+     * @param order
+     * @return
+     * @throws ErrorException
+     */
+     public void logTransactionEntry(java.lang.String orderId, java.lang.String entry)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("orderId",new Gson().toJson(orderId));
+          data.args.put("entry",new Gson().toJson(entry));
+          data.method = "logTransactionEntry";
+          data.interfaceName = "core.ordermanager.IOrderManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Update or modify an existing order.
      * @param order The order to modify
      * @return
@@ -236,6 +254,24 @@ public class APIOrderManager {
           data.args.put("price",new Gson().toJson(price));
           data.args.put("status",new Gson().toJson(status));
           data.method = "setOrderStatus";
+          data.interfaceName = "core.ordermanager.IOrderManager";
+          String result = transport.send(data);
+     }
+
+     /**
+     * This can be used in the cases where it does not mather if someone is trying to set the status of the order.
+     * It will be verified in a different way. 4 (completed) will not be possible to set in this case.
+     *
+     * @param orderId
+     * @param status
+     * @throws ErrorException
+     */
+     public void updateOrderStatusInsecure(java.lang.String orderId, int status)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("orderId",new Gson().toJson(orderId));
+          data.args.put("status",new Gson().toJson(status));
+          data.method = "updateOrderStatusInsecure";
           data.interfaceName = "core.ordermanager.IOrderManager";
           String result = transport.send(data);
      }

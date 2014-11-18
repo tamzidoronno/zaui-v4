@@ -41,7 +41,10 @@ if ($this->asList()) {
     $days_in_month = date('t', mktime(0, 0, 0, $month, 1, $year));
     $days_in_this_week = 1;
     $day_counter = 0;
-
+    
+    if ($running_day == 0) {
+        $running_day = 7;
+    }
 
 //////////////////// This are added for the generate translation script to pick it up ///////////////
     $this->__w("January");

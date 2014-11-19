@@ -131,5 +131,7 @@ public interface IOrderManager {
     public List<CartTax> getTaxes(Order order) throws ErrorException;
     
     public void logTransactionEntry(String orderId, String entry) throws ErrorException;
-    
+
+	@Administrator
+	public void setAllOrdersAsTransferedToAccountSystem() throws ErrorException;
 }

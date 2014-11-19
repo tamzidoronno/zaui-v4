@@ -458,4 +458,27 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         saveOrder(order);
     }
 
+	public void setTriedToSendOrderToAccountingSystem(Order order) throws ErrorException {
+		Order inMemOrder = orders.get(order.id);
+		if (inMemOrder != null) {
+			inMemOrder.triedTransferredToAccountingSystem = true;
+			saveObject(inMemOrder);
+		}
+	}
+
+	public void setDontSendToAccountSystem(Order order) throws ErrorException {
+		Order inMemOrder = orders.get(order.id);
+		if (inMemOrder != null) {
+			inMemOrder.transferedToAccountingSystem = true;
+			saveObject(inMemOrder);
+		}
+	}
+
+	@Override
+	public void setAllOrdersAsTransferedToAccountSystem() throws ErrorException {
+		for (Order order : orders.values()) {
+			order.transferedToAccountingSystem = true;
+			saveObject(order);
+		}
+	}
 }

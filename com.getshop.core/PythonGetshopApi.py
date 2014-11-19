@@ -2941,6 +2941,14 @@ class OrderManager(object):
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 
+  def setAllOrdersAsTransferedToAccountSystem(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "setAllOrdersAsTransferedToAccountSystem"
+    data.interfaceName = "core.ordermanager.IOrderManager"
+    return self.communicationHelper.sendMessage(data)
+
   def setOrderStatus(self, password, orderId, currency, price, status):
     args = collections.OrderedDict()
     if isinstance(password,GetShopBaseClass): 

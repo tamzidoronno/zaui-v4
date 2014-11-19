@@ -95,6 +95,7 @@ public class StoreHandler {
             ClassLoader classLoader = getClass().getClassLoader();
             return classLoader.loadClass("com.thundashop." + objectName);
         } catch (ClassNotFoundException ex) {
+			ex.printStackTrace();
             ErrorException gex = new ErrorException(81);
             gex.additionalInformation = ex.getMessage();
             throw gex;

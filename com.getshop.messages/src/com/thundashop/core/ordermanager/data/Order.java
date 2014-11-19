@@ -14,7 +14,8 @@ import java.util.Date;
  * @author ktonder
  */
 public class Order extends DataCommon implements Comparable<Order> {
-    public boolean transferredToAccountingSystem = false;
+    public boolean triedTransferredToAccountingSystem = false;
+	public boolean transferedToAccountingSystem = false;
     public String paymentTransactionId = "";
     public Shipping shipping;
     public Payment payment = new Payment();

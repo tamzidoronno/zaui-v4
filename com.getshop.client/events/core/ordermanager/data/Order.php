@@ -1,6 +1,12 @@
 <?php
 class core_ordermanager_data_Order extends core_common_DataCommon  {
 	/** @var String */
+	public $triedTransferredToAccountingSystem;
+
+	/** @var String */
+	public $transferedToAccountingSystem;
+
+	/** @var String */
 	public $paymentTransactionId;
 
 	/** @var core_ordermanager_data_Shipping */

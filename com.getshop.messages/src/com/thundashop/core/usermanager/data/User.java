@@ -7,9 +7,6 @@ package com.thundashop.core.usermanager.data;
 import org.mongodb.morphia.annotations.Transient;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
-import java.nio.charset.Charset;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -59,6 +56,8 @@ public class User extends DataCommon implements Comparable<User> {
     
     public String userAgent;
     public boolean hasChrome;
+	
+	public boolean isTransferredToAccountSystem = false;
     
     public String referenceKey = "";
     

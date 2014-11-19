@@ -12,8 +12,6 @@ import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCounter;
 import com.thundashop.core.usermanager.data.UserPrivilege;
-import com.thundashop.core.utils.BrRegEngine;
-import com.thundashop.core.utils.CompanySearchEngine;
 import com.thundashop.core.utils.CompanySearchEngineHolder;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -714,5 +712,15 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             saveObject(user);
         }
     }
+
+	public void markUserAsTransferredToVisma(User user) {
+		try {
+			User inMemUser = getUserById(user.id);
+			inMemUser.isTransferredToAccountSystem = true;
+			saveUser(inMemUser);
+		} catch (ErrorException ex) {
+			// Optimistic saving of transferred.
+		}
+	}
     
 }

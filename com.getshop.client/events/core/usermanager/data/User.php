@@ -58,6 +58,9 @@ class core_usermanager_data_User extends core_common_DataCommon  {
 	public $hasChrome;
 
 	/** @var String */
+	public $isTransferredToAccountSystem;
+
+	/** @var String */
 	public $referenceKey;
 
 	/** @var String */

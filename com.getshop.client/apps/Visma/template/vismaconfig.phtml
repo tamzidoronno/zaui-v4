@@ -1,0 +1,42 @@
+   <div class="information">
+        <div class="title"><? echo $this->getName(); ?></div>
+        <?
+        echo $this->getDescription();
+        ?>
+    </div>
+    <div class="onoff setting"  id="vismaactivate">
+        <span class="title"><?php echo $this->__f("Visma on / off?"); ?></span>
+        <div class="onoff config" id="selenium_trackControl"></div>
+        <div class="description">
+            <?php echo $this->__("Is visma transferred actiavted?"); ?>
+        </div>
+    </div>
+    <div class="textfield setting"  id="paymenttype">
+        <span class="title"><?php echo $this->__("What payment type should the order be registered with?") ?></span>
+        <input type="textfield" class="config">
+        <div class="description">
+            <?php
+            echo $this->__("This is normally the payment type, 10 = autopay for?");
+            ?>
+        </div>
+    </div>
+    <div class="textfield setting"  id="paymentterm">
+        <span class="title"><?php echo $this->__("Visma payment terms") ?></span>
+        <input type="textfield" class="config">
+        <div class="description">
+            <?php
+            echo $this->__("How many days should be the payment thing, this must correspond to payment terms in Visma.");
+            ?>
+        </div>
+    </div>
+    <div class="textfield setting"  id="ordertype">
+        <span class="title"><?php echo $this->__("Order type") ?></span>
+        <input type="textfield" class="config">
+        <div class="description">
+            <?php
+            echo $this->__("What order type should be used?<br/> 1 = normal order<br/> 2 = direct order");
+            ?>
+        </div>
+    </div>
+
+    <div class="button savebutton"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__("Save settings"); ?></ins></div>

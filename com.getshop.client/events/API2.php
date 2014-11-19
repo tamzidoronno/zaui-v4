@@ -2904,6 +2904,23 @@ class APIOrderManager {
 	}
 
 	/**
+	* Returns a list over taxes
+	* for the specified order.
+	*
+	* @param order
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function setAllOrdersAsTransferedToAccountSystem() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "setAllOrdersAsTransferedToAccountSystem";
+	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* If everything is ok, the price is the same as the order and the currency, then update the status.
 	* @param password A predefined password needed to update the status.
 	* @param orderId The id of the order to update

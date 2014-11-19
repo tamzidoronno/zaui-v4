@@ -54,6 +54,7 @@ public class StorePool {
             Method method = getMethod(object);
             return method.getGenericParameterTypes();
         } catch (ClassNotFoundException ex) {
+			ex.printStackTrace();
             throw new ErrorException(81);
         }
 
@@ -64,6 +65,7 @@ public class StorePool {
             Method method = getMethod(object);
             return (Class<?>[]) method.getParameterTypes();
         } catch (ClassNotFoundException ex) {
+			ex.printStackTrace();
             throw new ErrorException(81);
         }
     }
@@ -94,6 +96,7 @@ public class StorePool {
 
             return classLoaded;
         } catch (ClassNotFoundException ex) {
+			ex.printStackTrace();
             throw new ErrorException(81);
         }
     }

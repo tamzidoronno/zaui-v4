@@ -247,13 +247,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public void saveUser(User user) throws ErrorException {
-        
-        UserStoreCollection collection = getUserStoreCollection(storeId);
-        User savedUser = collection.getUser(user.id);
-        
         if (getSession().currentUser == null && user.type > User.Type.CUSTOMER) {
             throw new ErrorException(26);
         }
+		
         if (getSession().currentUser.type < user.type) {
             throw new ErrorException(26);
         }
@@ -275,6 +272,13 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             }
         }
         
+		saveUserDirect(user);
+    }
+	
+	public void saveUserDirect(User user) throws ErrorException {
+		UserStoreCollection collection = getUserStoreCollection(storeId);
+		User savedUser = collection.getUser(user.id);
+		
         //Reset the password.
         user.password = savedUser.password;
         
@@ -283,7 +287,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         user.company = getCompany(user);
         collection.addUser(user);
-    }
+	}
 
     @Override
     public void sendResetCode(String title, String text, String email) throws ErrorException {

@@ -116,7 +116,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     @Override
     public synchronized SedoxProductSearchPage search(SedoxSearch search) {
-        return sedoxSearchEngine.getSearchResult(products, search);
+		User user = getSession() != null ? getSession().currentUser : null;
+        return sedoxSearchEngine.getSearchResult(products, search, user);
     }
 
     @Override
@@ -433,7 +434,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             user.fullName = magentoUser.name;
             user.emailAddress = magentoUser.emailAddress;
             user.cellPhone = magentoUser.phone;
-            userManager.saveUser(user);
+            userManager.saveUserDirect(user);
         }
     }
     
@@ -549,7 +550,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             alreadySpentOnProduct = alreadySpentOnProduct * -1;
         }
         totalPrice = totalPrice - alreadySpentOnProduct;
-        
 		
 		// Make sure that the user does not pay for its own original file.
 		if (totalPrice == 40 && sedoxProduct.firstUploadedByUserId != null && sedoxProduct.firstUploadedByUserId.equals(user.id) ) {
@@ -1350,7 +1350,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         for (SedoxBinaryFile file : product.binaryFiles) {
             if (file.id == fileId) {
                 Path path = Paths.get("/opt/files/" + file.md5sum);
-                byte[] data = Files.readAllBytes(path);
+				byte[] data = Files.readAllBytes(path);
                 return DatatypeConverter.printBase64Binary(data);
             }
         }

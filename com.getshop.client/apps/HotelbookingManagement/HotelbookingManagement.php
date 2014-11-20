@@ -160,6 +160,15 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         
     }
     
+    public function showStopReference() {
+        $this->includefile("stopreference");
+    }
+    
+    public function stopReference() {
+        $stoppedDate = date("M d, Y h:m:s A", strtotime($_POST['data']['stopDate']));
+        $this->getApi()->getHotelBookingManager()->markReferenceAsStopped($_POST['data']['refid'], $stoppedDate);
+    }
+    
     public function getStarted() {
     }
 
@@ -188,6 +197,16 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         foreach($rooms as $id => $room) {
             $this->getApi()->getHotelBookingManager()->moveRoomOnReference($refid, $id, $room);
         }
+    }
+    
+    public function getStoppedReferenceDate($referenceId) {
+        $res = $this->getApi()->getHotelBookingManager()->getReservationByReferenceId($referenceId);
+        if ($res) {
+            $time = strtotime($res->endDate);
+            return date("d.m.Y", $time);
+        }
+        
+        return "";
     }
     
     /**

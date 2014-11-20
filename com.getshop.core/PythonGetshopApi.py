@@ -1907,6 +1907,28 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def markReferenceAsStopped(self, referenceId, stoppedDate):
+    args = collections.OrderedDict()
+    if isinstance(referenceId,GetShopBaseClass): 
+      args["referenceId"]=json.dumps(referenceId.__dict__)
+    else:
+      try:
+        args["referenceId"]=json.dumps(referenceId)
+      except (ValueError, AttributeError):
+        args["referenceId"]=referenceId
+    if isinstance(stoppedDate,GetShopBaseClass): 
+      args["stoppedDate"]=json.dumps(stoppedDate.__dict__)
+    else:
+      try:
+        args["stoppedDate"]=json.dumps(stoppedDate)
+      except (ValueError, AttributeError):
+        args["stoppedDate"]=stoppedDate
+    data = EmptyClass()
+    data.args = args
+    data.method = "markReferenceAsStopped"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def markRoomAsReady(self, roomId):
     args = collections.OrderedDict()
     if isinstance(roomId,GetShopBaseClass): 

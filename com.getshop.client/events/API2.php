@@ -1900,6 +1900,22 @@ class APIHotelBookingManager {
 	* @throws ErrorException
 	*/
 
+	public function markReferenceAsStopped($referenceId, $stoppedDate) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["referenceId"] = json_encode($this->transport->object_unset_nulls($referenceId));
+	     $data['args']["stoppedDate"] = json_encode($this->transport->object_unset_nulls($stoppedDate));
+	     $data["method"] = "markReferenceAsStopped";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
+	* @return void
+	* @throws ErrorException
+	*/
+
 	public function markRoomAsReady($roomId) {
 	     $data = array();
 	     $data['args'] = array();

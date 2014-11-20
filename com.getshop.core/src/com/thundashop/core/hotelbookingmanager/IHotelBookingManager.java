@@ -4,6 +4,7 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
+import java.util.Date;
 import java.util.List;
 
 @GetShopApi
@@ -114,5 +115,7 @@ public interface IHotelBookingManager {
     public void checkForVismaTransfer() throws ErrorException;
     public void checkForArxTransfer() throws ErrorException;
     public void checkForWelcomeMessagesToSend() throws ErrorException;
-    
+
+	@Administrator
+	public void markReferenceAsStopped(int referenceId, Date stoppedDate) throws ErrorException;
 }

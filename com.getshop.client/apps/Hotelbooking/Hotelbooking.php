@@ -432,12 +432,17 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             $cartmgr = $this->getApi()->getCartManager();
             $cartmgr->setReference($reference);
             
+            $user = null;
+            if (!$this->partnerShipChecked()) {
+                $user = $this->createUser();
+            }
+            
             if ($this->getServiceType() == "storage") {
                 for ($i = 0; $i < $this->getDayCount(true); $i++) {
-                    $order = $this->createOrder();
+                    $order = $this->createOrder($user);
                 }
             } else {
-                $order = $this->createOrder();
+                $order = $this->createOrder($user);
             }
             
             
@@ -846,24 +851,22 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $user->fullName = $_POST['data']['name_1'];
         $user->cellPhone = $_POST['data']['phone_1'];
         $user->address = $address;
-        return $user;
+        
+        if (isset($_POST['data']['mvaregistered'])) {
+            $user->mvaRegistered = $_POST['data']['mvaregistered'];
+        } else {
+            $user->mvaRegistered = "true";
+        }
+        if ($this->isCompany()) {
+            $user->isPrivatePerson = "false";
+        }
+        return $this->getApi()->getUserManager()->createUser($user);
     }
 
-    public function createOrder() {
+    public function createOrder($user) {
         if ($this->partnerShipChecked()) {
             $order = $this->getApi()->getOrderManager()->createOrderByCustomerReference($this->getReferenceKey());
         } else {
-            $user = $this->createUser();
-            if (isset($_POST['data']['mvaregistered'])) {
-                $user->mvaRegistered = $_POST['data']['mvaregistered'];
-            } else {
-                $user->mvaRegistered = "true";
-            }
-            if ($this->isCompany()) {
-                $user->isPrivatePerson = "false";
-            }
-            $user = $this->getApi()->getUserManager()->createUser($user);
-
             $order = $this->getApi()->getOrderManager()->createOrderByCustomerReference($user->referenceKey);
         }
         return $order;

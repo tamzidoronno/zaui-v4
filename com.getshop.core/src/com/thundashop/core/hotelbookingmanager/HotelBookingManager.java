@@ -345,6 +345,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 		}
 		databaseSaver.deleteObject(ref, credentials);
 		bookingReferences.remove(reference);
+		
+		OrderManager manager = getManager(OrderManager.class);
+		manager.unsetExpiryDateByReference(""+reference);
 	}
 
 	@Override
@@ -1087,5 +1090,17 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 		lastNotifiedError = new Date();
 		
 		ex.printStackTrace();
+	}
+
+	@Override
+	public void markReferenceAsStopped(int referenceId, Date stoppedDate) throws ErrorException {
+		BookingReference ref = getReservationByReferenceId(referenceId); 
+		if (ref != null) {
+			ref.endDate = stoppedDate;
+			ref.active = false;
+			OrderManager manager = getManager(OrderManager.class);
+			manager.unsetExpiryDateByReference(""+referenceId);
+			saveObject(ref);
+		}
 	}
 }

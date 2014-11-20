@@ -61,9 +61,13 @@ Existing booking references
             }
 
             $order = $this->getApi()->getOrderManager()->getOrderByReference($reservation->bookingReference);
+            $active = $reservation->active ? "" : "color: red";
             /* @var $reservation \core_hotelbookingmanager_BookingReference */
             echo "<tr reservation='".$reservation->bookingReference."'>";
-            echo "<td style='text-align:center;' valign='top'><i style='cursor:pointer' refid='".$reservation->bookingReference."' class='fa fa-trash-o delete_reference'></td>";
+            echo "<td style='text-align:center;' valign='top'>"
+            . "<i style='cursor:pointer' refid='".$reservation->bookingReference."' class='fa fa-trash-o delete_reference'></i>"
+            . "&nbsp;&nbsp;<i style='cursor:pointer; $active' refid='".$reservation->bookingReference."' class='fa fa-stop stop_reference'></i>"
+            . "</td>";
             echo "<td valign='top'>" . $reservation->rowCreatedDate . "</td>";
             echo "<td valign='top'>";
             if($order && $order->userId) {

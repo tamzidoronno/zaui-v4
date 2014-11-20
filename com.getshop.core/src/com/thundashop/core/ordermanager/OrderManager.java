@@ -511,6 +511,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 			saveObject(order);
 		}
 	}
+	
+	public void unsetExpiryDateByReference(String referenceId) throws ErrorException {
+		for (Order order : orders.values()) {
+			if (order.reference != null && order.reference.equals(referenceId)) {
+				order.expiryDate = null;
+				saveObject(order);
+			}
+		}
+	}
 
 	private void renewOrder(Order order) throws ErrorException {
 		Order copiedOrder = order.jsonClone();

@@ -254,6 +254,21 @@ public class APIHotelBookingManager {
      * @return
      * @throws ErrorException
      */
+     public void markReferenceAsStopped(int referenceId, java.util.Date stoppedDate)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("referenceId",new Gson().toJson(referenceId));
+          data.args.put("stoppedDate",new Gson().toJson(stoppedDate));
+          data.method = "markReferenceAsStopped";
+          data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager";
+          String result = transport.send(data);
+     }
+
+     /**
+     * Get all references
+     * @return
+     * @throws ErrorException
+     */
      public void markRoomAsReady(java.lang.String roomId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new LinkedHashMap();

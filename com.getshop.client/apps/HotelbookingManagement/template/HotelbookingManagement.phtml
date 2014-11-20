@@ -36,21 +36,24 @@ if(isset($_POST['data']['updated'])) {
 <br>
     
 Existing booking references
-<div style="padding:10px; border: solid 1px;background-color:#EFEFEF;">
-    <table width="100%">
-        <tr>
-            <th>Remove</th>
-            <th>Registration date</th>
-            <th>Reserved by</th>
-            <th>Reservation number</th>
-            <th>Room (code)</th>
-            <th>Start date</th>
-            <th>End date</th>
-            <? if($this->getFactory()->getStore()->id == "3292fa74-32a2-4d52-b88f-6be6f3dff813") { ?>
-                <th>Gebyr</th>
-                <th>Contract</th>
-            <? } ?>
-        </tr>
+<div style="">
+    <table width="100%" id="datatableadmin">
+        <thead>
+            <tr>
+                <th>Remove</th>
+                <th>Registration date</th>
+                <th>Reserved by</th>
+                <th>Reservation number</th>
+                <th>Room (code)</th>
+                <th>Start date</th>
+                <th>End date</th>
+                <? if($this->getFactory()->getStore()->id == "3292fa74-32a2-4d52-b88f-6be6f3dff813") { ?>
+                    <th>Gebyr</th>
+                    <th>Contract</th>
+                <? } ?>
+            </tr>
+        </thead>
+        <tbody>
         <?
         $reservations = $this->getApi()->getHotelBookingManager()->getAllReservations();
         foreach($reservations as $reservation) {
@@ -64,6 +67,7 @@ Existing booking references
             $active = $reservation->active ? "" : "color: red";
             /* @var $reservation \core_hotelbookingmanager_BookingReference */
             echo "<tr reservation='".$reservation->bookingReference."'>";
+            echo "<td style='text-align:center;' valign='top'>" . $reservation->bookingReference . "</td>";
             echo "<td style='text-align:center;' valign='top'>"
             . "<i style='cursor:pointer' refid='".$reservation->bookingReference."' class='fa fa-trash-o delete_reference'></i>"
             . "&nbsp;&nbsp;<i style='cursor:pointer; $active' refid='".$reservation->bookingReference."' class='fa fa-stop stop_reference'></i>"
@@ -80,7 +84,6 @@ Existing booking references
                 }
             }
             echo "</td>";
-            echo "<td style='text-align:center;' valign='top'>" . $reservation->bookingReference . "</td>";
             echo "<td style='text-align:center;' valign='top'>" . join("<br>", $roomarray) . "</td>";
             echo "<td style='text-align:center;' valign='top'>" . $reservation->startDate . "</td>";
             echo "<td style='text-align:center;' valign='top'>" . $reservation->endDate . "</td>";
@@ -95,11 +98,19 @@ Existing booking references
             echo "</tr>";
         }
         ?>
+        </tbody>
     </table>
 </div>
 <br>
 <br>
 <br>
+<script>
+    $('#datatableadmin').DataTable({
+            "bJQueryUI": true,
+            "aLengthMenu": [[10, 25, 50, 100, 200, -1], [10, 25, 50, 100, 200, "All"]],
+            "iDisplayLength": 1000
+        });
+</script>
 <br>
 
 <? echo $this->__w("Add a room"); ?>

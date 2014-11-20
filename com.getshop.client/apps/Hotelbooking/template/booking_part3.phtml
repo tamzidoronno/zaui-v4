@@ -71,12 +71,14 @@ if ($this->getServiceType() == "storage") {
             echo $text;
             echo "</div>";
         }
-        foreach($taxes as $taxgroup => $value) {
-            echo "<div class='price_row'>";
-            echo "<span class='right_aligned_price'><span class='right_aligned_price'>" . $value . " kr</span></span>";
-            echo $taxgroup."% MVA";
-            echo "</div>";
-            $total += $value;
+        if(($this->isMvaRegistered() && $product->privateExcluded) || !$product->privateExcluded) {
+            foreach($taxes as $taxgroup => $value) {
+                echo "<div class='price_row'>";
+                echo "<span class='right_aligned_price'><span class='right_aligned_price'>" . $value . " kr</span></span>";
+                echo $taxgroup."% MVA";
+                echo "</div>";
+                $total += $value;
+            }
         }
         
         echo "<div class='summary_total'>";

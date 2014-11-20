@@ -250,6 +250,10 @@ public class Database {
         DBObject searchById = new BasicDBObject("_id", id);
         DBObject found = collection.findOne(searchById);
 
+		if (found == null) {
+			return null;
+		}
+		
         try {
             return morphia.fromDBObject(DataCommon.class, found);
         } catch (Exception ex) {

@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.sedox;
 
+import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,14 +22,14 @@ public class SedoxSearchEngine {
     
     private int pageSize = 10;
     
-    public synchronized  SedoxProductSearchPage getSearchResult(List<SedoxProduct> products, SedoxSearch search) {
+    public synchronized  SedoxProductSearchPage getSearchResult(List<SedoxProduct> products, SedoxSearch search, User currentUser) {
         this.products = products;
         
         String searchString = search.searchCriteria.toLowerCase();
         Set<SedoxProduct> retProducts = new TreeSet<>();
         
         for (SedoxProduct product : products) {
-            if (!product.saleAble ) {
+            if (!product.saleAble  && (currentUser == null || currentUser.type < 100)) {
                 continue;
             }
             

@@ -82,6 +82,8 @@ if(isset($_GET['setLanguage'])) {
         </div>
     </div>
 </div>
+
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin"></link>
 <?
 
 $importApplication = new ImportApplication(null, null);

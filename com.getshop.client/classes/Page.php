@@ -25,7 +25,7 @@ class Page {
         $layout = $this->javapage->layout;
 
         $beenEdited = false;
-        foreach($layout->areas as $area => $rowsToPrint) {
+        foreach ($layout->areas as $area => $rowsToPrint) {
             foreach ($rowsToPrint as $row) {
                 if (isset($_GET['gseditcell']) && $_GET['gseditcell'] == $row->cellId) {
                     $_SESSION['gseditcell'] = $_GET['gseditcell'];
@@ -36,21 +36,21 @@ class Page {
         $editedCellid = null;
         echo "<div class='gsarea' area='header'>";
         $edited = $this->printArea($layout->areas->{'header'});
-        if($edited) {
+        if ($edited) {
             $editedCellid = $edited;
         }
         echo "</div>";
-        
+
         echo "<div class='gsarea' area='body'>";
-        if(isset($layout->areas->{'body'})) {
+        if (isset($layout->areas->{'body'})) {
             $edited = $this->printArea($layout->areas->{'body'});
-            if($edited) {
+            if ($edited) {
                 $editedCellid = $edited;
             }
         }
         echo "</div>";
-        
-        if($this->factory->isEditorMode()) {
+
+        if ($this->factory->isEditorMode()) {
             echo "<div class='gscell  gsdepth_0 gseditinfo' style='height:55px'>";
             echo "<div class='gsinner gsdepth_0'>";
             echo '<div class="gs_addcell" incell="" aftercell="" style="padding: 20px; text-align:center"><span style="border: solid 1px; padding: 10px; background-color:#BBB;">Add row</span></div>';
@@ -59,11 +59,16 @@ class Page {
 
         echo "<div class='gsarea' area='footer'>";
         $edited = $this->printArea($layout->areas->{'footer'});
-        if($edited) {
+        if ($edited) {
             $editedCellid = $edited;
         }
         echo "</div>";
 
+        echo "<style id='csseditedbyuser'>";
+        foreach ($layout->areas as $section) {
+            $this->printCss($section);
+        }
+        echo "</style>";
 
         if ($editedCellid != null) {
             $this->addCellConfigPanel();
@@ -98,6 +103,22 @@ class Page {
             </script>
             <script src="/js/colresize.js"/>
             <?
+        }
+    }
+
+    private function printCss($areas) {
+        foreach ($areas as $area) {
+
+            
+            if (isset($area->styles) && $area->styles) {
+                echo "/*start " . $area->cellId . "*/\n";
+                echo $area->styles;
+                echo "/*end " . $area->cellId . "*/\n";
+            }
+            
+            if (sizeof($area->cells) > 0) {
+                $this->printCss($area->cells);
+            }
         }
     }
 
@@ -152,7 +173,7 @@ class Page {
             $roweditouter = "gseditrowouter";
             $rowedit = "gseditrow";
         }
-        $styles = "style='$cell->styles";
+        $styles = "style='";
         $width = 100;
         $isColumn = false;
         if ($cell->direction == "VERTICAL" && $totalcells > 1) {
@@ -174,7 +195,7 @@ class Page {
 
         $direction = "gs" . strtolower($cell->direction);
 
-        echo "<div $styles width='$width' class='gscell $roweditouter gsdepth_$depth gscount_$count $direction' cellid='" . $cell->cellId . "'>";
+        echo "<div $styles width='$width' class='gscell $roweditouter gsdepth_$depth gscount_$count $direction gscell_".$cell->incrementalCellId."' incrementcellid='".$cell->incrementalCellId."' cellid='" . $cell->cellId . "'>";
         if ($cell->direction === "ROTATING") {
             if ($count > 0) {
                 echo "<i class='fa fa-arrow-circle-left gsrotateleft gsrotatearrow'></i>";
@@ -187,7 +208,7 @@ class Page {
         if ($depth === 0 && !$edit && $this->factory->isEditorMode()) {
             echo "<i title='" . $this->factory->__f("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o'></i>";
         }
-        echo "<div class='gsinner gsdepth_$depth $rowedit gscount_$count' totalcells='$totalcells' style='" . $cell->innerStyles . "'>";
+        echo "<div class='gsinner gsdepth_$depth $rowedit gscount_$count gscell_".$cell->incrementalCellId."' totalcells='$totalcells'>";
 
         if ($edit && $depth != 0) {
             echo "<span class='gscellsettings'>";
@@ -264,27 +285,27 @@ class Page {
         <span class='gsresizingpanel'>
             <div class="heading" style="cursor:pointer; text-align:center; font-size: 16px; padding: 10px;">Sizing console</div>
             <div class='gstabmenu'>
-                <span class='tabbtn' target='padding'>Padding</span>
-                <span class='tabbtn' target='paddinginner'>Inner padding</span>
-                <span class='tabbtn' target='margins'>Margin</span>
-                <span class='tabbtn' target='marginsinner'>Inner Margin</span>
-                <span class='tabbtn' target='background'>Background</span>
+                <span class='tabbtn' target='css'>Css</span>
+                <span class='tabbtn' target='background'>Background image</span>
             </div>
-            <div class='gspage' target='background'>
+            <div class='gspage' target='css'>
+                <div id="cellcsseditor" style="width:500px; height: 400px;">test</div>
+
+            </div>
+            <div class='gspage' target='background' style="padding: 10px;">
                 <div class='gsoutercolorselectionpanel'>
                     <div class='gsheading'>Outer background</div>
                     <div class='gscolorselectionpanel' level=''>
                         <table width='100%'>
                             <tr>
-                                <td><i class='fa fa-trash-o gsremovebgcolor'></i> Color</td>
-                                <td align='right'><input type='color' value='Select color' class='gsbgcolorinput gsbgcouter'></td>
-                            </tr>
-                            <tr>
-                                <td><i class='fa fa-trash-o gsremoveopacity'></i> Opacity</td>
-                                <td align='right'><input type='range' min='0' max='10' class='gsbgopacityinput'></td>
-                            </tr>
-                            <tr>
-                                <td><i class='fa fa-trash-o gsremovebgimage'></i> Background image</td>
+                                <td valign="top">
+                                    <select>
+                                        <option>Cover</option>
+                                        <option>Center</option>
+                                        <option>100% width</option>
+                                        <option>Normal</option>
+                                    </select>
+                                </td>
                                 <td align='right'>
                                     <div class="inputWrapper">
                                         <span class='gsuploadimage' style='display:none;'><i class='fa fa-spin fa-spinner'></i></span>
@@ -301,15 +322,14 @@ class Page {
                     <div class='gscolorselectionpanel' level='.gsinner'>
                         <table width='100%'>
                             <tr>
-                                <td><i class='fa fa-trash-o gsremovebgcolor'></i> Color</td>
-                                <td align='right'><input type='color' value='Select color' class='gsbgcolorinput gsbginner'></td>
-                            </tr>
-                            <tr>
-                                <td><i class='fa fa-trash-o gsremoveopacity'></i> Opacity</td>
-                                <td align='right'><input type='range' min='0' max='10' class='gsbgopacityinput'></td>
-                            </tr>
-                            <tr>
-                                <td><i class='fa fa-trash-o gsremovebgimage'></i> Background image</td>
+                                <td valign="top">
+                                    <select>
+                                        <option>Cover</option>
+                                        <option>Center</option>
+                                        <option>100% width</option>
+                                        <option>Normal</option>
+                                    </select>
+                                </td>                                
                                 <td align='right'>
                                     <div class="inputWrapper">
                                         <span class='gsuploadimage' style='display:none;'><i class='fa fa-spin fa-spinner'></i></span>
@@ -319,113 +339,16 @@ class Page {
                                 </td>
                             </tr>
                         </table>
-                    </div>
+                    </div> 
                 </div>
             </div>
-            <div class='gspage' target='margins'>
-                <table width='100%'>
-                    <tr>
-                        <td>Left margin</td>
-                        <td><input type='range'></td>
-                        <td><input type='txt' data-csstype='margin-left' class='sizetxt'></td>
-                    </tr>
-                    <tr>
-                        <td>Right margin</td>
-                        <td><input type='range'></td>
-                        <td><input type='txt' data-csstype='margin-right' class='sizetxt'></td>
-                    </tr>
-                    <tr>
-                        <td>Top margin</td>
-                        <td><input type='range'></td>
-                        <td><input type='txt' data-csstype='margin-top' class='sizetxt'></td>
-                    </tr>
-                    <tr>
-                        <td>Bottom margin</td>
-                        <td><input type='range'></td>
-                        <td><input type='txt' data-csstype='margin-bottom' class='sizetxt'></td>
-                    </tr>
-                </table>
-            </div>
-            <div class='gspage' target='marginsinner'>
-                <table width='100%'>
-                    <tr>
-                        <td>Top margin</td>
-                        <td><input type='range'></td>
-                        <td><input type='txt' data-csstype='margin-top' class='sizetxt' level=".gsinner"></td>
-                    </tr>
-                    <tr>
-                        <td>Bottom margin</td>
-                        <td><input type='range'></td>
-                        <td><input type='txt' data-csstype='margin-bottom' class='sizetxt' level=".gsinner"></td>
-                    </tr>
-                    <tr>
-                        <td>Left margin</td>
-                        <td><input type='range'></td>
-                        <td><input type='txt' data-csstype='margin-left' class='sizetxt' level=".gsinner"></td>
-                    </tr>
-                    <tr>
-                        <td>Right margin</td>
-                        <td><input type='range'></td>
-                        <td><input type='txt' data-csstype='margin-right' class='sizetxt' level=".gsinner"></td>
-                    </tr>
-                </table>
-            </div>
-            <div class='gspage' target='padding'>
-                <table width='100%'>
-                    <tr>
-                        <td>Left padding</td>
-                        <td><input type='range' ></td>
-                        <td><input type='txt' data-csstype='padding-left' class='sizetxt'></td>
-                    </tr>
-                    <tr>
-                        <td>Right padding</td>
-                        <td><input type='range' ></td>
-                        <td><input type='txt'  data-csstype='padding-right' class='sizetxt'></td>
-                    </tr>
-                    <tr>
-                        <td>Top padding</td>
-                        <td><input type='range' ></td>
-                        <td><input type='txt' data-csstype='padding-top' class='sizetxt'></td>
-                    </tr>
-                    <tr>
-                        <td>Bottom padding</td>
-                        <td><input type='range'></td>
-                        <td><input type='txt' data-csstype='padding-bottom' class='sizetxt'></td>
-                    </tr>
-                </table>
-            </div>
-            <div class='gspage' target='paddinginner'>
-                <table width='100%'>
-                    <tr>
-                        <td>Left padding</td>
-                        <td><input type='range' ></td>
-                        <td><input type='txt' data-csstype='padding-left' class='sizetxt' level=".gsinner"></td>
-                    </tr>
-                    <tr>
-                        <td>Right padding</td>
-                        <td><input type='range' ></td>
-                        <td><input type='txt'  data-csstype='padding-right' class='sizetxt' level=".gsinner"></td>
-                    </tr>
-                    <tr>
-                        <td>Top padding</td>
-                        <td><input type='range' ></td>
-                        <td><input type='txt' data-csstype='padding-top' class='sizetxt' level=".gsinner"></td>
-                    </tr>
-                    <tr>
-                        <td>Bottom padding</td>
-                        <td><input type='range'></td>
-                        <td><input type='txt' data-csstype='padding-bottom' class='sizetxt' level=".gsinner"></td>
-                    </tr>
-                </table>
-            </div>
-            <div>&nbsp;&nbsp;&nbsp;&nbsp;-1 means no value has been set.</div>
-            <div>
-                <span class="modifybutton closeresizing">Undo changes</span>
+
+            <div style="border-top: solid 1px #bbb;">
                 <span class="modifybutton gssavechanges" style="float:right;">Save changes</span>
             </div>
         </span>
         <script>
-            $('.gsresizingpanel').draggable({handle: ".heading"});
+                $('.gsresizingpanel').draggable({handle: ".heading"});
         </script>
         <?
     }
@@ -534,7 +457,7 @@ class Page {
         if ($cell->cells[0]->direction == "ROTATING") {
             /* @var $config core_pagemanager_data_CarouselConfig */
             $config = $cell->carouselConfig;
-            
+
             $editClass = "";
             if($isedit) {
                 $editClass = "editcontainer";
@@ -573,14 +496,14 @@ class Page {
                         thundashop.framework.lastRotatedCell = '<? echo $cell->cells[0]->cellId; ?>';
                     }
                 </script>
-            <?
-             }
+                <?
+            }
         }
     }
 
     public function printArea($rowsToPrint) {
         $count = 0;
-        $editedCellid=null;
+        $editedCellid = null;
         foreach ($rowsToPrint as $row) {
             $isedit = false;
 

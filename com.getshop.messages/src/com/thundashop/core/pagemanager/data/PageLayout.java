@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 public class PageLayout implements Serializable {
 
+    Integer cellCount = 0;
+    
     HashMap<String, ArrayList<PageCell>> areas = new HashMap();
 
     void clear() {
@@ -70,7 +72,7 @@ public class PageLayout implements Serializable {
         }
         String cellId = "";
         if (incell == null || incell.isEmpty()) {
-            PageCell newpagecell = new PageCell();
+            PageCell newpagecell = initNewCell();
             newpagecell.direction = direction;
             if (before != null && !before.isEmpty()) {
                 ArrayList<PageCell> newList = new ArrayList();
@@ -94,12 +96,11 @@ public class PageLayout implements Serializable {
             PageCell cell = findCell(getAllCells(), incell);
             double newwidth = -1;
             if (cell.cells.isEmpty()) {
-                PageCell newcell = cell.createCell(before);
+                PageCell newcell = cell.createCell(before, cellCount);
+                cellCount++;
                 newcell.direction = directionToSet;
-                newcell.innerStyles = cell.innerStyles;
                 newcell.styles = cell.styles;
                 cell.styles = "";
-                cell.innerStyles = "";
                 newcell.appId = cell.appId;
             } else {
                 int count = cell.cells.size();
@@ -107,14 +108,12 @@ public class PageLayout implements Serializable {
                 newwidth = resizeCells(cell.cells, true, percentage);
                 
                 if (!directionToSet.equals(cell.cells.get(0).direction) && (before == null || before.isEmpty())) {
-                    PageCell newpagecell = new PageCell();
+                    PageCell newpagecell = initNewCell();
                     newpagecell.direction = directionToSet;
                     newpagecell.cells.addAll(cell.cells);
                     newpagecell.styles = cell.styles;
-                    newpagecell.innerStyles = cell.innerStyles;
                     newpagecell.width = newwidth;
                     cell.styles = "";
-                    cell.innerStyles = "";
                     
                     cell.cells.clear();
                     cell.cells.add(newpagecell);
@@ -123,7 +122,8 @@ public class PageLayout implements Serializable {
                 }
             }
 
-            PageCell newcell = cell.createCell(before);
+            PageCell newcell = cell.createCell(before, cellCount);
+            cellCount++;
             newcell.direction = directionToSet;
             newcell.width = newwidth;
             cellId = newcell.cellId;
@@ -209,9 +209,6 @@ public class PageLayout implements Serializable {
 
         if (styles != null && !styles.equals("notset")) {
             cell.styles = styles;
-        }
-        if (innerStyles != null && !innerStyles.equals("notset")) {
-            cell.innerStyles = innerStyles;
         }
         if (width > 0) {
             cell.width = width;
@@ -357,6 +354,13 @@ public class PageLayout implements Serializable {
             cells.get(cells.size()-1).width += returning;
         }
         return returning;
+    }
+
+    private PageCell initNewCell() {
+        PageCell cell = new PageCell();
+        cell.incrementalCellId = cellCount;
+        cellCount++;
+        return cell;
     }
 
 }

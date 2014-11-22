@@ -45,15 +45,8 @@ class ApplicationManager extends FactoryBase {
         if(isset($_POST['data']['styles'])) {
             $styles = $_POST['data']['styles'];
         }
-        if(isset($_POST['data']['stylesInner'])) {
-            $stylesInner = $_POST['data']['stylesInner'];
-        }
         
-        
-        $stylesInner = $this->removeWidthFromCss($stylesInner);
-        $styles = $this->removeWidthFromCss($styles);
-        
-        $this->getApi()->getPageManager()->setStylesOnCell($pageid, $cellid, $styles, $stylesInner, -1);
+        $this->getApi()->getPageManager()->setStylesOnCell($pageid, $cellid, $styles, "", -1);
         
         if(isset($_POST['data']['colsizes'])) {
             $colsizes = $_POST['data']['colsizes'];

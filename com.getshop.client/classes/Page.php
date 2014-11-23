@@ -58,11 +58,9 @@ class Page {
         }
         echo "</div>";
 
-        echo "<style id='csseditedbyuser'>";
         foreach ($layout->areas as $section) {
             $this->printCss($section);
         }
-        echo "</style>";
 
         if ($editedCellid != null) {
             $this->addCellConfigPanel();
@@ -97,7 +95,7 @@ class Page {
                             container.find('.gstabbtn[cellid="'+thundashop.framework.lastRotatedCell+'"]').addClass('gsactivetab');
                         }
 
-                        $('.gseditrowheading').attr('cellid', thundashop.framework.lastRotatedCell);
+                        thundashop.framework.setActiveContainerCellId(thundashop.framework.lastRotatedCell);
                         setTimeout(function () {
                             thundashop.framework.loadResizing(cell, true);
                         }, "200");
@@ -113,11 +111,8 @@ class Page {
     private function printCss($areas) {
         foreach ($areas as $area) {
 
-
             if (isset($area->styles) && $area->styles) {
-                echo "/*start " . $area->cellId . "*/\n";
-                echo $area->styles;
-                echo "/*end " . $area->cellId . "*/\n";
+                echo "<style cellid='".$area->cellId."'>" . $area->styles . "</style>";
             }
 
             if (sizeof($area->cells) > 0) {
@@ -131,8 +126,9 @@ class Page {
         <div class="tabsettingspanel">
             <div style="width:100%; position:absolute; top:0px; left: 0px; height: 20px; background-color:#bbb; text-align: center; padding-top: 10px;">
                 <i class="fa fa-arrow-left gsoperatecell" type="moveup" target="selectedcell" style="position:absolute; top: 10px; left: 10px;" title="Move tab to the left"></i>
+                <i class="fa fa-image gs_resizing" target="selectedcell" title="Show styling on open tab"></i>
                 <i class="fa fa-arrow-right gsoperatecell" type="movedown" target="selectedcell" style="position:absolute; top: 10px; right: 10px;" title="Move tab to the right"></i>
-                <i class="fa fa-trash-o gsoperatecell" type="delete" target="selectedcell" title="Delete current cell"></i>
+                <i class="fa fa-trash-o gsoperatecell" type="delete" target="selectedcell" title="Delete open tab"></i>
             </div>
             <table>
                 <tr>
@@ -151,7 +147,9 @@ class Page {
             <div style="width:100%; position:absolute; top:0px; left: 0px; height: 20px; background-color:#bbb; text-align: center; padding-top: 10px;">
                 <i class="fa fa-arrow-left gsoperatecell" type="moveup" target="selectedcell" style="position:absolute; top: 10px; left: 10px;" title="Move cell to the left"></i>
                 <i class="fa fa-arrow-right gsoperatecell" type="movedown" target="selectedcell" style="position:absolute; top: 10px; right: 10px;" title="Move cell to the right"></i>
-                <i class="fa fa-trash-o gsoperatecell" type="delete" target="selectedcell" title="Delete current cell"></i>
+                <i class="fa fa-plus gsoperatecell" type="addvertical" target="selectedcell" title="Add cell to open page"></i>
+                <i class="fa fa-image gs_resizing" target="selectedcell" title="Show styling on open page"></i>
+                <i class="fa fa-trash-o gsoperatecell" type="delete" target="selectedcell" title="Delete open slider page"></i>
             </div>
             <table>
                 <tr>
@@ -293,7 +291,7 @@ class Page {
 
         echo "<span class='modesettings'>";
         echo "<div class='gs_addrotating' subtype='carousel' type='addrotate'><i class='fa fa-sitemap'></i>" . $this->factory->__w("Insert carousel cell") . "</div>";
-        echo "<div class='gs_addtab' subtype='tab' type='addtab'><i class='fa fa-sitemap'></i>" . $this->factory->__w("Insert tab") . "</div>";
+        echo "<div class='gs_addtab' subtype='tab' type='addtab'><i class='fa fa-ellipsis-h'></i>" . $this->factory->__w("Insert tab") . "</div>";
         echo "</span>";
         echo "</span>";
     }
@@ -480,7 +478,7 @@ class Page {
             if ($isedit) {
                 $editClass = "editcontainer";
             }
-            echo "<div class='gscontainer $containertype $editClass' height='" . $config->height . "' timer='" . $config->time . "' type='" . $config->type . "' cellid='" . $cell->cellId . "'>";
+            echo "<div class='gscell gscontainer $containertype $editClass gscell_".$cell->incrementalCellId."' height='" . $config->height . "' timer='" . $config->time . "' type='" . $config->type . "' cellid='" . $cell->cellId . "' incrementcellid='" . $cell->incrementalCellId . "'>";
             if ($cell->cells[0]->mode == "TAB") {
                 $this->displayTabRow($cell, $innerdept, $isedit);
             }
@@ -531,12 +529,6 @@ class Page {
             $isedit = false;
 
             $cellid = $row->cellId;
-            if (sizeof($row->cells) > 0 && $row->cells[0]->mode === "ROTATING") {
-                $cellid = $row->cells[0]->cellId;
-            }
-            if (sizeof($row->cells) > 0 && $row->cells[0]->mode === "TAB") {
-                $cellid = $row->cells[0]->cellId;
-            }
 
             if (isset($_SESSION['gseditcell']) && $_SESSION['gseditcell'] === $row->cellId) {
                 $editedCellid = $cellid;

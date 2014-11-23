@@ -43,8 +43,8 @@ position: absolute; font-size: 30px; top: 50%; color: rgba(0,0,0,0.4); cursor:po
 .gsrotatearrow:hover { color: rgba(0,0,0,0.8); }
 .gsrotateleft { left: 0px; }
 .gsrotateright { right: 0px; }
-
-.gsresizingpanel { position:absolute; z-index: 15; background-color:#FFF; box-shadow:0px 0px 5px #000; display:none; }
+.gsinner { position: relative; }
+.gsresizingpanel { position:fixed; z-index: 15; background-color:#FFF; box-shadow:0px 0px 5px #000; display:none; }
 .gsresizingpanel .tabbtn {cursor:pointer; border-right: solid 1px #BBB; padding-right: 5px; height: 20px; padding-left: 5px; float:left; border-top: solid 1px  #BBB; }
 .gsresizingpanel .tabbtn:hover { color:blue; }
 .gsresizingpanel .gstabmenu { border-bottom: solid 1px #BBB; height: 20px; }

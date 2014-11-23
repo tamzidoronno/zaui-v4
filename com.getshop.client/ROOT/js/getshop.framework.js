@@ -45,13 +45,12 @@ thundashop.framework = {
         $(document).on('mousedown', '.gscellsettings .fa-cogs', function () {
             thundashop.framework.showCellSettingsPanel($(this));
         });
-        $(document).on('mouseup', '.gscellsettings .fa-cogs', this.releaseMouse);
+        $(document).on('mouseup', this.releaseMouse);
         $(document).on('click', '.gs_closecelledit', this.closeCellEdit);
         $(document).on('click', '.gs_closecarouselsettings', this.closeCarouselSettings);
         $(document).on('mouseover', '.gseditrowouter', this.showEditIcon);
         $(document).on('click', '.gseditrowbutton', this.startEditRow);
         $(document).on('click', '.gsdoneeditbutton', this.startEditRow);
-        $(document).on('mouseup', '.gseditrowheading .fa', this.releaseMouse);
         $(document).on('click', '.gs_resizing', this.showCellResizing);
         $(document).on('click', '.gscellsettings .fa-image', this.switchCellResizing);
         $(document).on('click', '.gsresizingpanel .gstabmenu .tabbtn', this.switchtab);
@@ -97,23 +96,26 @@ thundashop.framework = {
         $('.carouselsettingspanel').fadeOut();
     },
     findCss: function (id) {
-        var css = $('#csseditedbyuser').html();
+        console.log("Finding css for : " + id);
         var result = "";
-        var incrementid = $('.gscell[cellid="'+id+'"]').attr('incrementcellid');
-        
-        var start = "/*start " + id + "*/";
-        var end = "/*end " + id + "*/";
+        var cellobject = $('.gscell[cellid="'+id+'"]');
+        var incrementid = cellobject.attr('incrementcellid');
         var includeOuter = false;
+        
         if( $('.gscell[cellid="'+id+'"]').hasClass('gsdepth_0')) {
             includeOuter = true;
         }
         
-        if(css.indexOf(start) >= 0) {
-            result += css.substring(css.indexOf(start)+start.length+1, css.indexOf(end));
+        if($('style[cellid="'+id+'"]').length > 0) {
+            return $('style[cellid="'+id+'"]').html();
         } else {
-            result = ".gscell_"+incrementid+".gsinner {\n\n}\n";
-            if(includeOuter) {
-                result += ".gscell_"+incrementid+".gscell {\n\n}\n";
+            if(cellobject.hasClass('gscontainer')) {
+                result = ".gscell_"+incrementid+".gscell {\n\n}\n";
+            } else {
+                result = ".gscell_"+incrementid+".gsinner {\n\n}\n";
+                if(includeOuter) {
+                    result += ".gscell_"+incrementid+".gscell {\n\n}\n";
+                }
             }
         }
         
@@ -128,21 +130,20 @@ thundashop.framework = {
     },
     
     setCss: function (id, value) {
-        var start = "/*start " + id + "*/\n";
-        var end = "/*end " + id + "*/\n";
-        var css = $('#csseditedbyuser').html();
-        
-        if(css.indexOf(start) >= 0) {
-            //Need to replace existing css.
-            css = css.substring(0, css.indexOf(start) + start.length) + value + css.substring(css.indexOf(end), css.length);
+        if($('style[cellid="'+id+'"]').length > 0) {
+            console.log('exists');
+            console.log(value);
+            $('style[cellid="'+id+'"]').html(value);
         } else {
-            css += start + "\n" + value + end; 
+            var style = $("<style></style>");
+            style.html(value);
+            style.attr('cellid',id);
+            $('body').append(style);
         }
         
-        $('#csseditedbyuser').html(css);
     },
     loadCssEditor: function () {
-        var id = $(this).closest('.gsresizingpanel').attr('cellid');
+        var id = thundashop.framework.operatingCellId;
         thundashop.framework.csseditorid = id;
         var css = thundashop.framework.findCss(id);
         if (!$('#cellcsseditor').hasClass('ace_editor')) {
@@ -232,6 +233,7 @@ thundashop.framework = {
         thundashop.Ajax.post(event);
     },
     showCarouselSettings: function () {
+        thundashop.framework.updateOperateOnCellId(thundashop.framework.getActiveContainerCellId());
         var cellid = $(this).closest('.gscontainer').attr('cellid');
         $('.carouselsettingspanel').css('left', $(this).offset().left);
         $('.carouselsettingspanel').css('top', $(this).offset().top + 15);
@@ -256,6 +258,7 @@ thundashop.framework = {
         var tabtext = $('.gstabbtn[cellid="'+cellid+'"]').text();
         
         thundashop.framework.setActiveContainerCellId(cellid);
+        thundashop.framework.updateOperateOnCellId(cellid);
         $('.tabsettingspanel').css('left', $(this).offset().left);
         $('.tabsettingspanel').css('top', $(this).offset().top + 15);
         $('.tabsettingspanel').css('top', $(this).offset().top + 15);
@@ -309,6 +312,7 @@ thundashop.framework = {
         }
 
         if ($('.gscell[cellid="' + newcellid + '"]').hasClass('gseditrowouter')) {
+            console.log("Active cell: " + newcellid);
             thundashop.framework.setActiveContainerCellId(newcellid);
         }
     },
@@ -379,12 +383,13 @@ thundashop.framework = {
         }
         var css = thundashop.framework.findCss(id);
         var incrementid = $('.gscell[cellid="'+id+'"]').attr('incrementcellid');
-        console.log(".gscell_" + incrementid + level+ " ");
         var startPos = css.indexOf(".gscell_" + incrementid + level+ " ");
-        console.log(startPos);
         var endPos = css.indexOf("}", startPos);
         css = css.substring(0, endPos) + "\t" + attribute + " : " + value + ";\n " + css.substring(endPos);
+        console.log(css);
         thundashop.framework.setCss(id, css);
+        cssEditorForCell.setValue(css);
+
     },
     loadImage: function (evt) {
         var cellid = $(this).closest('.gsresizingpanel').attr('cellid');
@@ -459,8 +464,9 @@ thundashop.framework = {
             colsizes[$(this).attr('cellid')] = $(this).attr('width');
         });
         
+        
+        
         var styles = cssEditorForCell.getSession().getValue();
-
         var data = {
             "cellid": cellid,
             "styles": styles,
@@ -532,6 +538,7 @@ thundashop.framework = {
         return thundashop.framework.get_inherited_bg(jquery_object.parent());
     },
     showCellResizing: function () {
+        $('.tabsettingspanel').hide();
         var resizingpanel = $('.gsresizingpanel');
         var cellid = thundashop.framework.operatingCellId;
         resizingpanel.attr('cellid', cellid);
@@ -542,8 +549,8 @@ thundashop.framework = {
 
         $('.gscellsettingspanel').fadeOut();
         if($(this).offset() !== undefined) {
-            resizingpanel.css('top', $(this).offset().top);
-            resizingpanel.css('left', $(this).offset().left - 100);
+            resizingpanel.css('top', 20);
+            resizingpanel.css('left', 20);
         }
         resizingpanel.fadeIn();
 
@@ -597,11 +604,11 @@ thundashop.framework = {
     },
     
     getActiveContainerCellId : function() {
-        return $('.gseditrowheading').attr('cellid');
+        return thundashop.framework.activeContainerCellId;
     },
     setActiveContainerCellId : function(id) {
         thundashop.framework.lastRotatedCell = id;
-        return $('.gseditrowheading').attr('cellid', id);
+        thundashop.framework.activeContainerCellId = id;
     },
     
     operateCell: function () {
@@ -612,12 +619,6 @@ thundashop.framework = {
         }
 
         var cellid = thundashop.framework.operatingCellId;
-        
-        if(type === "addvertical" || type === "addhorizontal") {
-            if($('.gscontainer[cellid="'+cellid+'"]').length > 0) {
-                cellid = thundashop.framework.getActiveContainerCellId();
-            } 
-        }
         
         if($(this).attr('target') && $(this).attr('target') === "selectedcell") {
             cellid = thundashop.framework.getActiveContainerCellId();
@@ -667,16 +668,14 @@ thundashop.framework = {
         thundashop.Ajax.post(event);
     },
     
+    updateOperateOnCellId : function(id) {
+        thundashop.framework.operatingCellId = id;
+    },
     setOperateOnCellId : function(element) {
         thundashop.framework.operatingCellId = element.closest('.gscell').attr('cellid');
         if(element.closest('.gseditrowheading').length > 0) {
-            thundashop.framework.operatingCellId = thundashop.framework.getActiveContainerCellId();
-            var cellobj = $('.gscell[cellid="'+thundashop.framework.operatingCellId+'"]');
-            if(cellobj.closest('.gscontainer') .length > 0) {
-                thundashop.framework.operatingCellId = cellobj.closest('.gscontainer').attr('cellid');
-            }
+            thundashop.framework.operatingCellId = element.closest('.gseditrowheading').attr('cellid');
         }
-        
     },
     
     showCellSettingsPanel: function (element) {
@@ -696,10 +695,7 @@ thundashop.framework = {
         panel.fadeIn();
         var cell = element.closest('.gscell');
         $('.gscellsettingspanel').attr('topmenu', 'false');
-        if (cell.hasClass('gseditinfo')) {
-            cell = $(".gscell[cellid='" + thundashop.framework.getActiveContainerCellId() + "']");
-        }
-
+       
         if (cell.hasClass('gsvertical')) {
             panel.find('.gscolumnmenu').show();
         } else {

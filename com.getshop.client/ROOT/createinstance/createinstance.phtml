@@ -125,9 +125,6 @@
                     $api->getUserManager()->logOn($user->username, $user->password);
                     $page = $api->getPageManager()->createPage();
                     $api->getPageManager()->addLayoutCell($page->id, "", "", "horizontal", "header");
-                    $api->getPageManager()->addLayoutCell($page->id, "", "", "horizontal");
-                    $api->getPageManager()->addLayoutCell($page->id, "", "", "horizontal");
-                    $api->getPageManager()->addLayoutCell($page->id, "", "", "horizontal");
                     $api->getPageManager()->addLayoutCell($page->id, "", "", "horizontal", "footer");
                     header("Location:/");
                     exit(0);

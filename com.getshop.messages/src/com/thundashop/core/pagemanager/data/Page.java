@@ -41,6 +41,9 @@ public class Page extends DataCommon implements Cloneable {
     public void finalizePage(CommonPageData pagedata) {
         layout.setNewList(pagedata.header, "header", true);
         layout.setNewList(pagedata.footer, "footer", true);
+        if(layout.areas.get("body") == null || layout.areas.get("body").isEmpty()) {
+            layout.clear();
+        }
     }
 
 	public PageCell getCell(String pageCellId) {

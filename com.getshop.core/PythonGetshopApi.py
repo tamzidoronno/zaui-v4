@@ -3298,6 +3298,35 @@ class PageManager(object):
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
+  def setCellName(self, pageId, cellId, cellName):
+    args = collections.OrderedDict()
+    if isinstance(pageId,GetShopBaseClass): 
+      args["pageId"]=json.dumps(pageId.__dict__)
+    else:
+      try:
+        args["pageId"]=json.dumps(pageId)
+      except (ValueError, AttributeError):
+        args["pageId"]=pageId
+    if isinstance(cellId,GetShopBaseClass): 
+      args["cellId"]=json.dumps(cellId.__dict__)
+    else:
+      try:
+        args["cellId"]=json.dumps(cellId)
+      except (ValueError, AttributeError):
+        args["cellId"]=cellId
+    if isinstance(cellName,GetShopBaseClass): 
+      args["cellName"]=json.dumps(cellName.__dict__)
+    else:
+      try:
+        args["cellName"]=json.dumps(cellName)
+      except (ValueError, AttributeError):
+        args["cellName"]=cellName
+    data = EmptyClass()
+    data.args = args
+    data.method = "setCellName"
+    data.interfaceName = "core.pagemanager.IPageManager"
+    return self.communicationHelper.sendMessage(data)
+
   def setPageDescription(self, pageId, description):
     args = collections.OrderedDict()
     if isinstance(pageId,GetShopBaseClass): 

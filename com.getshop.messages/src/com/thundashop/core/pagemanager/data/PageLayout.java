@@ -12,11 +12,12 @@ public class PageLayout implements Serializable {
 
     void clear() {
         areas.put("body", new ArrayList());
+        areas.get("body").add(initNewCell(PageCell.PageMode.horizontal));
     }
 
     public void moveCell(String cellid, boolean moveUp) {
         String area = findAreaForCell(cellid);
-        moveCellRecursive(areas.get(area), cellid, moveUp);
+        areas.put(area, moveCellRecursive(areas.get(area), cellid, moveUp));
     }
 
     public void addToList(PageCell cell, String area) {
@@ -65,15 +66,15 @@ public class PageLayout implements Serializable {
         return cells;
     }
 
-    public String createCell(String incell, String before, String direction, String area) {
+    public String createCell(String incell, String before, String mode, String area) {
 
-        if (direction == null || direction.isEmpty()) {
-            direction = PageCell.PageDirection.vertical;
+        if (mode == null || mode.isEmpty()) {
+            mode = PageCell.PageMode.vertical;
         }
         String cellId = "";
         if (incell == null || incell.isEmpty()) {
-            PageCell newpagecell = initNewCell();
-            newpagecell.direction = direction;
+            PageCell newpagecell = initNewCell(mode);
+            newpagecell.mode = mode;
             if (before != null && !before.isEmpty()) {
                 ArrayList<PageCell> newList = new ArrayList();
                 area = findAreaForCell(before);
@@ -89,45 +90,43 @@ public class PageLayout implements Serializable {
             }
             cellId = newpagecell.cellId;
         } else {
-            if (direction.equals(PageCell.PageDirection.rotating)) {
-                incell = denyRotatingInsideRotating(incell);
+            if (mode.equals(PageCell.PageMode.rotating) || mode.equals(PageCell.PageMode.tab)) {
+                incell = denyRotatingInsideRotating(incell, mode);
             }
-            String directionToSet = direction;
+            String modeToSet = mode;
             PageCell cell = findCell(getAllCells(), incell);
             double newwidth = -1;
             if (cell.cells.isEmpty()) {
                 PageCell newcell = cell.createCell(before, cellCount);
                 cellCount++;
-                newcell.direction = directionToSet;
-                newcell.styles = cell.styles;
-                cell.styles = "";
-                newcell.appId = cell.appId;
+                newcell.extractDataFrom(cell, false);
+                newcell.mode = mode;
             } else {
                 int count = cell.cells.size();
                 double percentage = (double)((100 / count) + 100) / 100;
-                newwidth = resizeCells(cell.cells, true, percentage);
+                if(cell.cells.get(0).mode.equals(mode)) {
+                    newwidth = resizeCells(cell.cells, true, percentage);
+                }
                 
-                if (!directionToSet.equals(cell.cells.get(0).direction) && (before == null || before.isEmpty())) {
-                    PageCell newpagecell = initNewCell();
-                    newpagecell.direction = directionToSet;
+                if (!modeToSet.equals(cell.cells.get(0).mode) && (before == null || before.isEmpty())) {
+                    PageCell newpagecell = initNewCell(modeToSet);
                     newpagecell.cells.addAll(cell.cells);
-                    newpagecell.styles = cell.styles;
                     newpagecell.width = newwidth;
-                    cell.styles = "";
                     
                     cell.cells.clear();
                     cell.cells.add(newpagecell);
                 } else {
-                    directionToSet = cell.cells.get(0).direction;
+                    modeToSet = cell.cells.get(0).mode;
                 }
             }
 
             PageCell newcell = cell.createCell(before, cellCount);
             cellCount++;
-            newcell.direction = directionToSet;
+            newcell.mode = modeToSet;
             newcell.width = newwidth;
             cellId = newcell.cellId;
         }
+        
         return cellId;
     }
 
@@ -159,8 +158,7 @@ public class PageLayout implements Serializable {
                 boolean deleted = deleteCellRecusive(cellId, cell.cells);
                 if (deleted) {
                     if (cell.cells.size() == 1) {
-                        cell.appId = cell.cells.get(0).appId;
-                        cell.cells.remove(0);
+                        cell.extractDataFrom(cell.cells.get(0), true);
                     }
                 }
             }
@@ -265,15 +263,15 @@ public class PageLayout implements Serializable {
         return newCellList;
     }
 
-    private String denyRotatingInsideRotating(String incell) {
+    private String denyRotatingInsideRotating(String incell, String denymode) {
         PageCell cell = findCell(getAllCells(), incell);
-        if (cell.direction.equals(PageCell.PageDirection.rotating)) {
+        if (cell.mode.equals(denymode)) {
             PageCell parent = findParent(cell);
             if (parent == null) {
                 return incell;
             }
             do {
-                if (!parent.equals(PageCell.PageDirection.rotating)) {
+                if (!parent.equals(denymode)) {
                     return parent.cellId;
                 }
                 parent = findParent(parent);
@@ -356,11 +354,22 @@ public class PageLayout implements Serializable {
         return returning;
     }
 
-    private PageCell initNewCell() {
+    private PageCell initNewCell(String mode) {
         PageCell cell = new PageCell();
         cell.incrementalCellId = cellCount;
+        cell.mode = mode;
         cellCount++;
         return cell;
+    }
+
+    public void setMode(String cellId, String mode) {
+        PageCell cell = getCell(cellId);
+        cell.mode = mode;
+    }
+
+    public void cellName(String cellId, String cellName) {
+        PageCell cell = getCell(cellId);
+        cell.cellName = cellName;
     }
 
 }

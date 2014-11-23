@@ -64,6 +64,12 @@ class ApplicationManager extends FactoryBase {
         echo $imgId;
     }
     
+    function updateCellName() {
+        $id = $_POST['data']['cellid'];
+        $name = $_POST['data']['name'];
+        $page = $this->getPage()->javapage->id;
+        $this->getApi()->getPageManager()->setCellName($page, $id, $name);
+    }
     
     function operateCell() {
         $type = $_POST['data']['type'];
@@ -88,6 +94,9 @@ class ApplicationManager extends FactoryBase {
                 break;
             case "addrotate":
                 $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "ROTATING", $area);
+                break;
+            case "addtab":
+                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "TAB", $area);
                 break;
             case "addbefore":
             case "addafter":

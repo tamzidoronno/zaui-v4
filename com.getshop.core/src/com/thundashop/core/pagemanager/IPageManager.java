@@ -266,4 +266,13 @@ public interface IPageManager {
      */
     @Administrator
     public void setCarouselConfig(String pageId, String cellId, CarouselConfig config) throws ErrorException;
+    
+    /**
+     * Set the carousel configuration.
+     * @param pageId
+     * @return
+     * @throws ErrorException 
+     */
+    @Administrator
+    public void setCellName(String pageId, String cellId, String cellName) throws ErrorException;
 }

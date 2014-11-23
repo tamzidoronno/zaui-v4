@@ -244,4 +244,11 @@ public class PageManager extends ManagerBase implements IPageManager {
         savePage(page);
     }
 
+    @Override
+    public void setCellName(String pageId, String cellId, String cellName) throws ErrorException {
+        Page page = getPage(pageId);
+        page.layout.cellName(cellId, cellName);
+        savePage(page);        
+    }
+
 }

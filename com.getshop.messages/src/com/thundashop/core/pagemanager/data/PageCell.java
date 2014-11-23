@@ -6,15 +6,17 @@ import java.util.List;
 import java.util.UUID;
 
 public class PageCell implements Serializable {
-    static class PageDirection {
+    static class PageMode {
         public static String vertical = "VERTICAL";
         public static String horizontal = "HORIZONTAL";
         public static String rotating = "ROTATING";
+        public static String tab = "TAB";
     }
     
+    String cellName = "";
     public int incrementalCellId;
     public String cellId = UUID.randomUUID().toString();
-    public String direction = PageDirection.vertical;
+    public String mode = PageMode.vertical;
     public ArrayList<PageCell> cells = new ArrayList();
     public String appId;
     public String styles = "";

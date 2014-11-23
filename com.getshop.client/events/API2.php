@@ -3172,6 +3172,24 @@ class APIPageManager {
 	}
 
 	/**
+	* Set the carousel configuration.
+	* @param pageId
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function setCellName($pageId, $cellId, $cellName) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data['args']["cellId"] = json_encode($this->transport->object_unset_nulls($cellId));
+	     $data['args']["cellName"] = json_encode($this->transport->object_unset_nulls($cellName));
+	     $data["method"] = "setCellName";
+	     $data["interfaceName"] = "core.pagemanager.IPageManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Set the page description.
 	* @param description The description to add.
 	* @param pageId The id of the page.

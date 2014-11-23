@@ -27,6 +27,12 @@ filter: alpha(opacity=50);
 .gseditrowouter:hover .gsaddcontent { border: solid 1px rgba(0,0,0,0);}
 .gsrotating { opacity:0; position:absolute !important;  }
 .gsrotating.gscount_0 { display:inherit; }
+.gstab { display:none;   }
+.gstabrow { padding-top: 10px; border-bottom: solid 1px #BBB; position:relative; }
+.gstabbtn { border: solid 1px #BBB; margin-right: 10px;  padding: 3px; cursor:pointer;  bottom: 0px; cursor:pointer; }
+.gstabname { width: 60px; }
+.gs_closecarouselsettings { width: 50px !important; }
+.gstab.gscount_0 { display:block; }
 .gsrotatearrow {
     z-index: 5;
     -webkit-transition: all 0.5s ease-in-out;
@@ -37,7 +43,6 @@ position: absolute; font-size: 30px; top: 50%; color: rgba(0,0,0,0.4); cursor:po
 .gsrotatearrow:hover { color: rgba(0,0,0,0.8); }
 .gsrotateleft { left: 0px; }
 .gsrotateright { right: 0px; }
-
 
 .gsresizingpanel { position:absolute; z-index: 15; background-color:#FFF; box-shadow:0px 0px 5px #000; display:none; }
 .gsresizingpanel .tabbtn {cursor:pointer; border-right: solid 1px #BBB; padding-right: 5px; height: 20px; padding-left: 5px; float:left; border-top: solid 1px  #BBB; }
@@ -1772,5 +1777,6 @@ a img {
     line-height: 30px;
 }
 
-.carouselsettingspanel { position:absolute; border: solid 1px; padding: 10px; background-color:#FFF; z-index: 20; display:none; }
+.carouselsettingspanel,.tabsettingspanel { position:absolute; border: solid 1px; padding: 10px; background-color:#FFF; z-index: 20; display:none; padding-top: 30px; }
 .carouselsettingspanel input { width: 40px; }
+.carouselsettingspanel .fa,.tabsettingspanel .fa { cursor: pointer; }

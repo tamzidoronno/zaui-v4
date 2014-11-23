@@ -50,12 +50,6 @@ class Page {
         }
         echo "</div>";
 
-        if ($this->factory->isEditorMode()) {
-            echo "<div class='gscell  gsdepth_0 gseditinfo' style='height:55px'>";
-            echo "<div class='gsinner gsdepth_0'>";
-            echo '<div class="gs_addcell" incell="" aftercell="" style="padding: 20px; text-align:center"><span style="border: solid 1px; padding: 10px; background-color:#BBB;">Add row</span></div>';
-            echo "</div></div>";
-        }
 
         echo "<div class='gsarea' area='footer'>";
         $edited = $this->printArea($layout->areas->{'footer'});
@@ -74,6 +68,7 @@ class Page {
             $this->addCellConfigPanel();
             $this->addCellResizingPanel();
             $this->addCarouselSettingsPanel();
+            $this->addTabPanel();
             $this->displayResizing();
             ?>
             <style>
@@ -89,9 +84,18 @@ class Page {
                         if (!cell.hasClass('gseditrowouter')) {
                             return;
                         }
-                        cell.closest('.rotatingcontainer').find('.gsrotating').css('opacity', '0');
-                        cell.css('opacity', '1');
-                        cell.css('z-index', '2');
+                        var container = cell.closest('.gscontainer');
+                        if (container.hasClass('rotatingcontainer')) {
+                            container.find('.gsrotating').css('opacity', '0');
+                            cell.css('opacity', '1');
+                            cell.css('z-index', '2');
+                        }
+                        if (container.hasClass('tabcontainer')) {
+                            container.find('.gstab').hide();
+                            cell.show();
+                            container.find('.gsactivetab').removeClass('gsactivetab');
+                            container.find('.gstabbtn[cellid="'+thundashop.framework.lastRotatedCell+'"]').addClass('gsactivetab');
+                        }
 
                         $('.gseditrowheading').attr('cellid', thundashop.framework.lastRotatedCell);
                         setTimeout(function () {
@@ -109,23 +113,46 @@ class Page {
     private function printCss($areas) {
         foreach ($areas as $area) {
 
-            
+
             if (isset($area->styles) && $area->styles) {
                 echo "/*start " . $area->cellId . "*/\n";
                 echo $area->styles;
                 echo "/*end " . $area->cellId . "*/\n";
             }
-            
+
             if (sizeof($area->cells) > 0) {
                 $this->printCss($area->cells);
             }
         }
     }
 
+    private function addTabPanel() {
+        ?>  
+        <div class="tabsettingspanel">
+            <div style="width:100%; position:absolute; top:0px; left: 0px; height: 20px; background-color:#bbb; text-align: center; padding-top: 10px;">
+                <i class="fa fa-arrow-left gsoperatecell" type="moveup" target="selectedcell" style="position:absolute; top: 10px; left: 10px;" title="Move tab to the left"></i>
+                <i class="fa fa-arrow-right gsoperatecell" type="movedown" target="selectedcell" style="position:absolute; top: 10px; right: 10px;" title="Move tab to the right"></i>
+                <i class="fa fa-trash-o gsoperatecell" type="delete" target="selectedcell" title="Delete current cell"></i>
+            </div>
+            <table>
+                <tr>
+                    <td>Name</td>
+                    <td><input type="text" class="gstabname"></td>
+                </tr>
+            </table>
+            <input type="button" value="Done modifying" class="gsdonemodifytab"></input>
+        </div>
+        <?
+    }
+    
     private function addCarouselSettingsPanel() {
         ?>  
         <div class="carouselsettingspanel">
-            <i class='gs_closecarouselsettings fa fa-times' style='position:absolute;right: 5px; top: 5px; cursor:pointer;'></i>
+            <div style="width:100%; position:absolute; top:0px; left: 0px; height: 20px; background-color:#bbb; text-align: center; padding-top: 10px;">
+                <i class="fa fa-arrow-left gsoperatecell" type="moveup" target="selectedcell" style="position:absolute; top: 10px; left: 10px;" title="Move cell to the left"></i>
+                <i class="fa fa-arrow-right gsoperatecell" type="movedown" target="selectedcell" style="position:absolute; top: 10px; right: 10px;" title="Move cell to the right"></i>
+                <i class="fa fa-trash-o gsoperatecell" type="delete" target="selectedcell" title="Delete current cell"></i>
+            </div>
             <table>
                 <tr>
                     <td>Height</td>
@@ -146,11 +173,15 @@ class Page {
                     </td>
                 </tr>
                 <tr>
-                    <td></td>
+                    <td>
+                        <input type="button" value="Close" class="gs_closecarouselsettings">
+                        
+                    </td>
                     <td>
                         <input style="width: 100px;" class="savecarouselconfig" type="button" value="Save settings">
                     </td>
                 </tr>
+            </table>
         </div>
         <?
     }
@@ -176,7 +207,7 @@ class Page {
         $styles = "style='";
         $width = 100;
         $isColumn = false;
-        if ($cell->direction == "VERTICAL" && $totalcells > 1) {
+        if ($cell->mode == "VERTICAL" && $totalcells > 1) {
             $width = 100 / $totalcells;
             if ($cell->width > 0) {
                 $width = $cell->width;
@@ -185,7 +216,7 @@ class Page {
             $styles = "style='width:$width%; float:left;" . $cell->styles . "'";
             $isColumn = true;
         }
-        if ($cell->direction == "ROTATING") {
+        if ($cell->mode == "ROTATING") {
             if ($count === 0) {
                 $styles .= " opacity:1;z-index:2;";
             }
@@ -193,10 +224,10 @@ class Page {
 
         $styles .= "'";
 
-        $direction = "gs" . strtolower($cell->direction);
+        $direction = "gs" . strtolower($cell->mode);
 
-        echo "<div $styles width='$width' class='gscell $roweditouter gsdepth_$depth gscount_$count $direction gscell_".$cell->incrementalCellId."' incrementcellid='".$cell->incrementalCellId."' cellid='" . $cell->cellId . "'>";
-        if ($cell->direction === "ROTATING") {
+        echo "<div $styles width='$width' class='gscell $roweditouter gsdepth_$depth gscount_$count $direction gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "'>";
+        if ($cell->mode === "ROTATING") {
             if ($count > 0) {
                 echo "<i class='fa fa-arrow-circle-left gsrotateleft gsrotatearrow'></i>";
             }
@@ -208,10 +239,11 @@ class Page {
         if ($depth === 0 && !$edit && $this->factory->isEditorMode()) {
             echo "<i title='" . $this->factory->__f("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o'></i>";
         }
-        echo "<div class='gsinner gsdepth_$depth $rowedit gscount_$count gscell_".$cell->incrementalCellId."' totalcells='$totalcells'>";
+        echo "<div class='gsinner gsdepth_$depth $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
 
         if ($edit && $depth != 0) {
             echo "<span class='gscellsettings'>";
+            echo "<i class='fa fa-image'  title='Styling' style='display:none;'></i> ";
             echo "<i class='fa fa-cogs'  title='Cell settings'></i>";
             echo "</span>";
         }
@@ -222,19 +254,8 @@ class Page {
         } else {
             $this->printApplicationArea($cell);
         }
-        if ($cell->direction === "ROTATING") {
-            echo "<div class='gscarouseldots'>";
-            for ($i = 0; $i < $totalcells; $i++) {
-                $activeCirle = "";
-                if ($count == $i) {
-                    $activeCirle = "activecarousel";
-                }
-                echo "<i class='fa fa-circle gscarouseldot $activeCirle'></i>";
-            }
-            if ($this->factory->isEditorMode() && $edit) {
-                echo "<i class='fa fa-cogs carouselsettings' title='Carousel settings'></i>";
-            }
-            echo "</div>";
+        if ($cell->mode === "ROTATING") {
+            $this->printCarouselDots($totalcells, $edit, $count);
         }
 
         echo "</div>";
@@ -270,12 +291,9 @@ class Page {
         echo "<div class='gs_removerow' type='delete'><i class='fa fa-trash-o'></i>" . $this->factory->__w("Delete") . "</div>";
         echo "<i class='gs_closecelledit fa fa-times' style='position:absolute;right: 5px; top: 5px; cursor:pointer;'></i>";
 
-        echo "<div class='gscellsettingsheading'>Carousel settings</div>";
+        echo "<span class='modesettings'>";
         echo "<div class='gs_addrotating' subtype='carousel' type='addrotate'><i class='fa fa-sitemap'></i>" . $this->factory->__w("Insert carousel cell") . "</div>";
-        echo "<span class='carouselsettings' subtype='carousel' style='display:none;'>";
-        echo "<div class='gs_splithorizontally' subtype='carousel' type='moveup'><i class='fa fa-long-arrow-left'></i>" . $this->factory->__w("Move current cell to the left") . "</div>";
-        echo "<div class='gs_splithorizontally' subtype='carousel' type='movedown'><i class='fa fa-long-arrow-right'></i>" . $this->factory->__w("Move current cell to the right") . "</div>";
-        echo "<div class='gs_removerow' subtype='carousel'  type='delete'><i class='fa fa-trash-o'></i>" . $this->factory->__w("Delete current cell") . "</div>";
+        echo "<div class='gs_addtab' subtype='tab' type='addtab'><i class='fa fa-sitemap'></i>" . $this->factory->__w("Insert tab") . "</div>";
         echo "</span>";
         echo "</span>";
     }
@@ -348,7 +366,7 @@ class Page {
             </div>
         </span>
         <script>
-                $('.gsresizingpanel').draggable({handle: ".heading"});
+            $('.gsresizingpanel').draggable({handle: ".heading"});
         </script>
         <?
     }
@@ -454,16 +472,18 @@ class Page {
         $innercount = 0;
         $innerdept = $depth + 1;
 
-        if ($cell->cells[0]->direction == "ROTATING") {
-            /* @var $config core_pagemanager_data_CarouselConfig */
+        $mode = $cell->cells[0]->mode;
+        if ($mode == "TAB" || $mode == "ROTATING") {
             $config = $cell->carouselConfig;
-
+            $containertype = strtolower($mode) . "container";
             $editClass = "";
-            if($isedit) {
+            if ($isedit) {
                 $editClass = "editcontainer";
             }
-
-            echo "<div class='rotatingcontainer $editClass' height='" . $config->height . "' timer='" . $config->time . "' type='" . $config->type . "' cellid='" . $cell->cellId . "'>";
+            echo "<div class='gscontainer $containertype $editClass' height='" . $config->height . "' timer='" . $config->time . "' type='" . $config->type . "' cellid='" . $cell->cellId . "'>";
+            if ($cell->cells[0]->mode == "TAB") {
+                $this->displayTabRow($cell, $innerdept, $isedit);
+            }
         }
 
         foreach ($cell->cells as $innercell) {
@@ -471,9 +491,12 @@ class Page {
             $innercount++;
         }
         $doCarousel = !$isedit;
-        if ($cell->cells[0]->direction == "ROTATING") {
+        if ($cell->cells[0]->mode == "TAB" || $cell->cells[0]->mode == "ROTATING") {
+            echo "</div>";
+        }
+
+        if ($cell->cells[0]->mode == "ROTATING") {
             ?>
-            </div>
             <style>
                 .rotatingcontainer[cellid='<? echo $cell->cellId; ?>'] {  width: 100%; height: <? echo $config->height; ?>px !important; }
                 .rotatingcontainer[cellid='<? echo $cell->cellId; ?>'] .gscell.gsdepth_<? echo $innerdept; ?> { width:100%; min-height: <? echo $config->height; ?>px !important; height: <? echo $config->height; ?>px !important; }
@@ -492,7 +515,7 @@ class Page {
                 <script>thundashop.framework.activateCarousel($(".rotatingcontainer[cellid='<? echo $cell->cellId; ?>']"), <? echo $config->time; ?>);</script>
             <? } else { ?>
                 <script>
-                    if(!thundashop.framework.lastRotatedCell) {
+                    if (!thundashop.framework.lastRotatedCell) {
                         thundashop.framework.lastRotatedCell = '<? echo $cell->cells[0]->cellId; ?>';
                     }
                 </script>
@@ -508,7 +531,10 @@ class Page {
             $isedit = false;
 
             $cellid = $row->cellId;
-            if (sizeof($row->cells) > 0 && $row->cells[0]->direction === "ROTATING") {
+            if (sizeof($row->cells) > 0 && $row->cells[0]->mode === "ROTATING") {
+                $cellid = $row->cells[0]->cellId;
+            }
+            if (sizeof($row->cells) > 0 && $row->cells[0]->mode === "TAB") {
                 $cellid = $row->cells[0]->cellId;
             }
 
@@ -518,7 +544,6 @@ class Page {
                 echo "<div class='gsinner gsdepth_0'>";
                 echo "<div class='gseditrowheading' cellid='" . $cellid . "'>";
                 echo "<i class='fa fa-cogs' type='settings' title='Rows settings'></i>";
-                echo "<i class='fa fa-plus' type='addvertical' title='Add column'></i>";
                 echo "<label style='float:left;'>";
                 echo "<input type='checkbox' style='background-color:#FFF;' class='gsdisplaygridcheckbox'> Add spacing to grid";
                 echo "</label>";
@@ -529,7 +554,9 @@ class Page {
                 $isedit = true;
             }
 
-            if (sizeof($row->cells) > 0 && $row->cells[0]->direction === "ROTATING") {
+            if (sizeof($row->cells) > 0 && $row->cells[0]->mode === "ROTATING") {
+                $this->printSubCells($row, $isedit, -1);
+            } else if (sizeof($row->cells) > 0 && $row->cells[0]->mode === "TAB") {
                 $this->printSubCells($row, $isedit, -1);
             } else {
                 $this->printCell($row, $count, 0, 0, $isedit);
@@ -546,6 +573,48 @@ class Page {
             }
         }
         return $editedCellid;
+    }
+
+    public function displayTabRow($cell, $depth, $edit) {
+        echo "<div class='gscell'>";
+        echo "<div class='gsinner gsdepth_$depth'>";
+        echo "<div class='gstabrow'>";
+        $first = true;
+        foreach ($cell->cells as $innercell) {
+            $active = "";
+            if($first) {
+                $first = false;
+                $active = "gsactivetab";
+            }
+            $tabName="tab";
+            if($innercell->cellName) {
+                $tabName = $innercell->cellName;
+            }
+            echo "<span class='gstabbtn $active' incrementid='" . $innercell->incrementalCellId . "' cellid='".$innercell->cellId."'>$tabName</span>";
+        }
+        if ($this->factory->isEditorMode() && $edit) {
+            echo "<i class='fa fa-plus gsoperatecell' type='addtab' target='container' title='Add another tab'></i> ";
+            echo "<i class='fa fa-cogs tabsettings' title='Tab settings'></i>";
+        }
+        echo "</div>";
+        echo "</div>";
+        echo "</div>";
+    }
+
+    public function printCarouselDots($totalcells, $edit, $count) {
+        echo "<div class='gscarouseldots'>";
+        for ($i = 0; $i < $totalcells; $i++) {
+            $activeCirle = "";
+            if ($count == $i) {
+                $activeCirle = "activecarousel";
+            }
+            echo "<i class='fa fa-circle gscarouseldot $activeCirle'></i>";
+        }
+        if ($this->factory->isEditorMode() && $edit) {
+            echo "<i class='fa fa-plus addcarouselrow gsoperatecell' type='addrotate' target='container' title='Add another slider'></i>";
+            echo "<i class='fa fa-cogs carouselsettings' title='Carousel settings'></i>";
+        }
+        echo "</div>";
     }
 
 }

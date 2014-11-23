@@ -4,6 +4,8 @@ likebefore = null;
 likebeforeStyles = null;
 
 thundashop.framework = {
+    operatingCellId : null,
+    
     bindEvents: function () {
         $('*[gstype="form"] *[gstype="submit"]').live('click', function (e) {
             thundashop.framework.submitFromEvent(e);
@@ -34,26 +36,24 @@ thundashop.framework = {
         $(document).on('click', '.gs_addcell', this.addCell);
         $(document).on('click', '.toogleDeepfreeze', this.showDeepFreezOption);
         $(document).on('click', '.savedeepfreeze', this.toggleDeepFreeze);
-        $(document).on('click', '.gscellsettings .gsoperate', this.operateCell);
         $(document).on('click', '.gsrotateleft', this.rotateCell);
         $(document).on('click', '.gsrotateright', this.rotateCell);
         $(document).on('click', '.gscarouseldot', this.showCarouselEntry);
         $(document).on('click', '.carouselsettings', this.showCarouselSettings);
+        $(document).on('click', '.tabsettings', this.showTabSettings);
         $(document).on('click', '.savecarouselconfig', this.saveCarouselSettings);
-        $(document).on('click', '.gscellsettings .fa-cogs', function () {
+        $(document).on('mousedown', '.gscellsettings .fa-cogs', function () {
             thundashop.framework.showCellSettingsPanel($(this));
         });
-        $(document).on('click', '.gs_splithorizontally', this.operateCell);
-        $(document).on('click', '.gs_addrotating', this.operateCell);
-        $(document).on('click', '.gs_splitvertically', this.operateCell);
-        $(document).on('click', '.gs_removerow', this.operateCell);
+        $(document).on('mouseup', '.gscellsettings .fa-cogs', this.releaseMouse);
         $(document).on('click', '.gs_closecelledit', this.closeCellEdit);
         $(document).on('click', '.gs_closecarouselsettings', this.closeCarouselSettings);
         $(document).on('mouseover', '.gseditrowouter', this.showEditIcon);
         $(document).on('click', '.gseditrowbutton', this.startEditRow);
         $(document).on('click', '.gsdoneeditbutton', this.startEditRow);
-        $(document).on('click', '.gseditrowheading .fa', this.operateCell);
+        $(document).on('mouseup', '.gseditrowheading .fa', this.releaseMouse);
         $(document).on('click', '.gs_resizing', this.showCellResizing);
+        $(document).on('click', '.gscellsettings .fa-image', this.switchCellResizing);
         $(document).on('click', '.gsresizingpanel .gstabmenu .tabbtn', this.switchtab);
         $(document).on('click', '.gsresizingpanel .closeresizing', this.closeResizing);
         $(document).on('click', '.gsresizingpanel .gssavechanges', this.saveCellChanges);
@@ -61,6 +61,37 @@ thundashop.framework = {
         $(document).on('click', '.gsresizingpanel .gsremovebgimage', this.loadImage);
         $(document).on('change', '.gsdisplaygridcheckbox', this.toggleVisualization);
         $(document).on('click', '.gsresizingpanel .tabbtn[target="css"]', this.loadCssEditor);
+        $(document).on('keyup', '.gstabname', this.updateTabName);
+        $(document).on('click', '.gsdonemodifytab', this.hideTabSettings);
+        $(document).on('click', '.gstabbtn', this.changeTab);
+        
+        /* Cell operations */
+        $(document).on('click', '.gsoperatecell', this.operateCell);
+        $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
+        $(document).on('mousedown', '.gs_splithorizontally', this.operateCell);
+        $(document).on('mousedown', '.gs_addrotating', this.operateCell);
+        $(document).on('mousedown', '.gs_addtab', this.operateCell);
+        $(document).on('mousedown', '.gs_splitvertically', this.operateCell);
+        $(document).on('mousedown', '.gs_removerow', this.operateCell);
+        $(document).on('mousedown', '.gseditrowheading .fa', this.operateCell);
+    },
+    releaseMouse : function() {
+        thundashop.framework.mousedown = false;
+    },
+    changeTab : function() {
+        var newId = $(this).attr('incrementid');
+        var container = $(this).closest('.gscontainer');
+        container.find('.gstab').hide();
+        container.find('.gsactivetab').removeClass('gsactivetab');
+        $(this).addClass('gsactivetab');
+        $('.gscell.gscell_'+newId).show();
+        var cellid = $('.gscell.gscell_'+newId).attr('cellid');
+        thundashop.framework.setActiveContainerCellId(cellid);
+    },
+    switchCellResizing : function() {
+        thundashop.framework.saveCellChanges(true);
+        thundashop.framework.operatingCellId = $(this).closest('.gscell').attr('cellid');
+        thundashop.framework.showCellResizing();
     },
     closeCarouselSettings: function () {
         $('.carouselsettingspanel').fadeOut();
@@ -72,16 +103,30 @@ thundashop.framework = {
         
         var start = "/*start " + id + "*/";
         var end = "/*end " + id + "*/";
+        var includeOuter = false;
+        if( $('.gscell[cellid="'+id+'"]').hasClass('gsdepth_0')) {
+            includeOuter = true;
+        }
         
         if(css.indexOf(start) >= 0) {
             result += css.substring(css.indexOf(start)+start.length+1, css.indexOf(end));
         } else {
             result = ".gscell_"+incrementid+".gsinner {\n\n}\n";
-            result += ".gscell_"+incrementid+".gscell {\n\n}\n";
+            if(includeOuter) {
+                result += ".gscell_"+incrementid+".gscell {\n\n}\n";
+            }
         }
         
         return result;
     },
+    updateTabName : function() {
+        var cellid = thundashop.framework.getActiveContainerCellId();
+        var name = $(this).val();
+        $('.gstabbtn[cellid="'+cellid+'"]').text(name);
+        var event = thundashop.Ajax.createEvent('','updateCellName',$(this),{"cellid" : cellid, "name" : name});
+        thundashop.Ajax.postWithCallBack(event, function() {});
+    },
+    
     setCss: function (id, value) {
         var start = "/*start " + id + "*/\n";
         var end = "/*end " + id + "*/\n";
@@ -98,6 +143,7 @@ thundashop.framework = {
     },
     loadCssEditor: function () {
         var id = $(this).closest('.gsresizingpanel').attr('cellid');
+        thundashop.framework.csseditorid = id;
         var css = thundashop.framework.findCss(id);
         if (!$('#cellcsseditor').hasClass('ace_editor')) {
             $('#cellcsseditor').html(css);
@@ -106,7 +152,7 @@ thundashop.framework = {
             cssEditorForCell.getSession().setMode("ace/mode/css");
             cssEditorForCell.on("change", function (event) {
                 var value = cssEditorForCell.getSession().getValue();
-                thundashop.framework.setCss(id, value);
+                thundashop.framework.setCss(thundashop.framework.csseditorid, value);
             });
         } else {
             cssEditorForCell.setValue(css);
@@ -154,10 +200,10 @@ thundashop.framework = {
 
         thundashop.framework.resetCarouselTimer(cell);
         thundashop.framework.rotateCellDirection(cell, offsetcount);
-        var rotatecell = $('.gscell[cellid="' + $('.gseditrowheading').attr('cellid') + '"]');
+        var rotatecell = $('.gscell[cellid="' + thundashop.framework.getActiveContainerCellId() + '"]');
         if (rotatecell.hasClass('gseditrowouter')) {
             thundashop.framework.loadResizing(rotatecell, true);
-            thundashop.framework.lastRotatedCell = $('.gseditrowheading').attr('cellid');
+            thundashop.framework.lastRotatedCell = thundashop.framework.getActiveContainerCellId();
         }
 
     },
@@ -169,10 +215,10 @@ thundashop.framework = {
         } else {
             thundashop.framework.rotateCellDirection(cell, "left");
         }
-        var rotatecell = $('.gscell[cellid="' + $('.gseditrowheading').attr('cellid') + '"]');
+        var rotatecell = $('.gscell[cellid="' + thundashop.framework.getActiveContainerCellId() + '"]');
         if (rotatecell.hasClass('gseditrowouter')) {
             thundashop.framework.loadResizing(rotatecell, true);
-            thundashop.framework.lastRotatedCell = $('.gseditrowheading').attr('cellid');
+            thundashop.framework.lastRotatedCell = thundashop.framework.getActiveContainerCellId();
         }
     },
     saveCarouselSettings: function () {
@@ -186,7 +232,7 @@ thundashop.framework = {
         thundashop.Ajax.post(event);
     },
     showCarouselSettings: function () {
-        var cellid = $(this).closest('.rotatingcontainer').attr('cellid');
+        var cellid = $(this).closest('.gscontainer').attr('cellid');
         $('.carouselsettingspanel').css('left', $(this).offset().left);
         $('.carouselsettingspanel').css('top', $(this).offset().top + 15);
         $('.carouselsettingspanel').css('top', $(this).offset().top + 15);
@@ -201,6 +247,22 @@ thundashop.framework = {
 
         $('.carouselsettingspanel').fadeIn();
     },
+    hideTabSettings : function() {
+        $('.tabsettingspanel').fadeOut();
+    },
+    
+    showTabSettings : function() {
+        var cellid = $(this).closest('.gscontainer').find('.gsactivetab').attr('cellid');
+        var tabtext = $('.gstabbtn[cellid="'+cellid+'"]').text();
+        
+        thundashop.framework.setActiveContainerCellId(cellid);
+        $('.tabsettingspanel').css('left', $(this).offset().left);
+        $('.tabsettingspanel').css('top', $(this).offset().top + 15);
+        $('.tabsettingspanel').css('top', $(this).offset().top + 15);
+        $('.tabsettingspanel').fadeIn();
+        $('.gstabname').val(tabtext);
+    },
+    
     rotateCellDirection: function (cell, direction) {
         var found = 0;
         var before = null;
@@ -247,7 +309,7 @@ thundashop.framework = {
         }
 
         if ($('.gscell[cellid="' + newcellid + '"]').hasClass('gseditrowouter')) {
-            $('.gseditrowheading').attr('cellid', newcellid);
+            thundashop.framework.setActiveContainerCellId(newcellid);
         }
     },
     loadResizing: function (cell, saveonmove) {
@@ -388,8 +450,8 @@ thundashop.framework = {
         container.attr('timerevent', timerevent);
         container.attr('timer', timer);
     },
-    saveCellChanges: function () {
-        var cellid = $(this).closest('.gsresizingpanel').attr('cellid');
+    saveCellChanges: function (avoidreprint) {
+        var cellid = thundashop.framework.operatingCellId;
         var cell = $('.gscell[cellid="' + cellid + '"]');
 
         var colsizes = {};
@@ -403,9 +465,15 @@ thundashop.framework = {
             "cellid": cellid,
             "styles": styles,
             "colsizes": colsizes
-        }
+        };
         var event = thundashop.Ajax.createEvent('', 'saveColChanges', $(this), data);
-        thundashop.Ajax.post(event);
+        if(avoidreprint === true) {
+            thundashop.Ajax.postWithCallBack(event, function() {
+                
+            });
+        } else {
+            thundashop.Ajax.post(event);
+        }
     },
     toggleVisualization: function () {
         if ($(this).is(":checked")) {
@@ -465,7 +533,7 @@ thundashop.framework = {
     },
     showCellResizing: function () {
         var resizingpanel = $('.gsresizingpanel');
-        var cellid = $(this).closest('.gscellsettingspanel').attr('cellid');
+        var cellid = thundashop.framework.operatingCellId;
         resizingpanel.attr('cellid', cellid);
         $('.gsoverlay').remove();
         var cell = $('.gscell[cellid="' + cellid + '"]');
@@ -473,9 +541,10 @@ thundashop.framework = {
         likebeforeStyles = cell.attr('style');
 
         $('.gscellsettingspanel').fadeOut();
-        resizingpanel.css('top', $(this).offset().top);
-        resizingpanel.css('left', $(this).offset().left - 100);
-        resizingpanel.find('.tabbtn[target="padding"]').first().click();
+        if($(this).offset() !== undefined) {
+            resizingpanel.css('top', $(this).offset().top);
+            resizingpanel.css('left', $(this).offset().left - 100);
+        }
         resizingpanel.fadeIn();
 
         cell.find('.gscell.gshorisontal').resizable({grid: [10000, 1]});
@@ -497,10 +566,9 @@ thundashop.framework = {
         }
 
         var cell = $('.gscell[cellid="' + cellid + '"]');
-        if (cell.hasClass('gsrotating')) {
-            cellid = cell.closest('.rotatingcontainer').attr('cellid');
+        if (cell.closest('.gscontainer').length > 0) {
+            cellid = cell.closest('.gscontainer').attr('cellid');
         }
-
 
         var event = thundashop.Ajax.createEvent('', 'startEditRow', $(this), {"cellid": cellid});
         thundashop.Ajax.post(event);
@@ -522,52 +590,48 @@ thundashop.framework = {
         $('.gscellsettings').hide();
         $('.gsvisualizeedit').removeClass('gsvisualizeedit');
         target.find('.gscellsettings').first().show();
+        if($('.gsresizingpanel').is(':visible')) {
+            target.find('.gscellsettings').first().find('.fa-image').show();
+        }
         target.find('.gscellsettings').first().closest('.gscell').addClass('gsvisualizeedit');
     },
+    
+    getActiveContainerCellId : function() {
+        return $('.gseditrowheading').attr('cellid');
+    },
+    setActiveContainerCellId : function(id) {
+        thundashop.framework.lastRotatedCell = id;
+        return $('.gseditrowheading').attr('cellid', id);
+    },
+    
     operateCell: function () {
         var type = $(this).attr('type');
         if (type === "settings") {
-            $(this), thundashop.framework.showCellSettingsPanel($(this));
+            thundashop.framework.showCellSettingsPanel($(this));
             return;
         }
 
-        var panel = $(this).closest('.gscellsettingspanel');
-        var cellid = panel.attr('cellid');
-
-        if ($(this).closest('.gseditrowheading').length > 0) {
-            cellid = $(this).closest('.gseditrowheading').attr('cellid');
+        var cellid = thundashop.framework.operatingCellId;
+        
+        if(type === "addvertical" || type === "addhorizontal") {
+            if($('.gscontainer[cellid="'+cellid+'"]').length > 0) {
+                cellid = thundashop.framework.getActiveContainerCellId();
+            } 
+        }
+        
+        if($(this).attr('target') && $(this).attr('target') === "selectedcell") {
+            cellid = thundashop.framework.getActiveContainerCellId();
+        }
+        
+        if($(this).attr('target') && $(this).attr('target') === "container") {
+            cellid = $('.gscell[cellid="'+thundashop.framework.getActiveContainerCellId()+'"]').closest('.gscontainer').attr('cellid');
         }
 
-        if (!cellid) {
-            cellid = $('.gsvisualizeedit').attr('cellid');
+        if (type === "delete" && !confirm("Are you sure you want to delete this cell and all its content?")) {
+            return;
         }
-
-        var cell = $('.gscell[cellid="' + cellid + '"]');
-
-
-        if (panel.attr('topmenu') === "true") {
-            alert('3');
-            if (!$(this).attr('subtype') || $(this).attr('subtype') !== "carousel") {
-                if (type === "addbefore" || type === "addafter" || type === "moveup" || type === "movedown" || type === "delete") {
-                    cellid = cell.closest('.rotatingcontainer').attr('cellid');
-                }
-            }
-        }
-
-
-        if (type === "delete") {
-            if (!confirm("Are you sure you want to delete this cell and all its content?")) {
-                return;
-            }
-        }
-
+        
         var cellobj = $('.gscell[cellid="' + cellid + '"]');
-
-        if (type === "delete" && cellobj.closest('.rotatingcontainer').length > 0) {
-            if ($(this).attr('subtype') !== "carousel" && cellobj.hasClass('gsdepth_0')) {
-                cellid = cellobj.closest('.rotatingcontainer').attr('cellid');
-            }
-        }
 
         var data = {
             "cellid": cellid,
@@ -602,7 +666,30 @@ thundashop.framework = {
         var event = thundashop.Ajax.createEvent('', 'operateCell', $(this), data);
         thundashop.Ajax.post(event);
     },
+    
+    setOperateOnCellId : function(element) {
+        thundashop.framework.operatingCellId = element.closest('.gscell').attr('cellid');
+        if(element.closest('.gseditrowheading').length > 0) {
+            thundashop.framework.operatingCellId = thundashop.framework.getActiveContainerCellId();
+            var cellobj = $('.gscell[cellid="'+thundashop.framework.operatingCellId+'"]');
+            if(cellobj.closest('.gscontainer') .length > 0) {
+                thundashop.framework.operatingCellId = cellobj.closest('.gscontainer').attr('cellid');
+            }
+        }
+        
+    },
+    
     showCellSettingsPanel: function (element) {
+        thundashop.framework.setOperateOnCellId(element);
+        
+        thundashop.framework.mousedown = true;
+        setTimeout(function() {
+            if(thundashop.framework.mousedown === true) {
+                $('.gsrowmenu').show();
+                $('.gscolumnmenu').show();
+            }
+        }, "2000");
+        
         var panel = $('.gscellsettingspanel');
         panel.find('.gsrowmenu').hide();
         panel.find('.gscolumnmenu').hide();
@@ -610,7 +697,7 @@ thundashop.framework = {
         var cell = element.closest('.gscell');
         $('.gscellsettingspanel').attr('topmenu', 'false');
         if (cell.hasClass('gseditinfo')) {
-            cell = $(".gscell[cellid='" + $('.gseditrowheading').attr('cellid') + "']");
+            cell = $(".gscell[cellid='" + thundashop.framework.getActiveContainerCellId() + "']");
         }
 
         if (cell.hasClass('gsvertical')) {
@@ -620,7 +707,8 @@ thundashop.framework = {
         }
 
         panel.find('.carouselsettings').hide();
-        if (cell.hasClass('gsrotating')) {
+        if (cell.hasClass('gsrotating') || cell.hasClass('gstab')) {
+            panel.find('.modesettings').hide();
             panel.find('.carouselsettings').show();
         }
 
@@ -628,7 +716,6 @@ thundashop.framework = {
         var overlay = $('<span class="gsoverlay" style="filter: blur(5px);width:100%; height:100%; background-color:#bbb; opacity:0.6; position:absolute; left:0px; top:0px;display:inline-block;"></span>');
         cell.append(overlay);
 
-        panel.attr('cellid', cell.attr('cellid'));
         var offset = element.offset();
         panel.css('display', 'inline-block');
         panel.css('top', offset.top + 10);

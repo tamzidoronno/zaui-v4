@@ -68,12 +68,12 @@ public class PageLayout implements Serializable {
     public String createCell(String incell, String before, String direction, String area) {
 
         if (direction == null || direction.isEmpty()) {
-            direction = PageCell.PageDirection.vertical;
+            direction = PageCell.PageMode.vertical;
         }
         String cellId = "";
         if (incell == null || incell.isEmpty()) {
             PageCell newpagecell = initNewCell();
-            newpagecell.direction = direction;
+            newpagecell.mode = direction;
             if (before != null && !before.isEmpty()) {
                 ArrayList<PageCell> newList = new ArrayList();
                 area = findAreaForCell(before);
@@ -89,8 +89,8 @@ public class PageLayout implements Serializable {
             }
             cellId = newpagecell.cellId;
         } else {
-            if (direction.equals(PageCell.PageDirection.rotating)) {
-                incell = denyRotatingInsideRotating(incell);
+            if (direction.equals(PageCell.PageMode.rotating) || direction.equals(PageCell.PageMode.tab)) {
+                incell = denyRotatingInsideRotating(incell, direction);
             }
             String directionToSet = direction;
             PageCell cell = findCell(getAllCells(), incell);
@@ -98,7 +98,7 @@ public class PageLayout implements Serializable {
             if (cell.cells.isEmpty()) {
                 PageCell newcell = cell.createCell(before, cellCount);
                 cellCount++;
-                newcell.direction = directionToSet;
+                newcell.mode = directionToSet;
                 newcell.styles = cell.styles;
                 cell.styles = "";
                 newcell.appId = cell.appId;
@@ -107,9 +107,9 @@ public class PageLayout implements Serializable {
                 double percentage = (double)((100 / count) + 100) / 100;
                 newwidth = resizeCells(cell.cells, true, percentage);
                 
-                if (!directionToSet.equals(cell.cells.get(0).direction) && (before == null || before.isEmpty())) {
+                if (!directionToSet.equals(cell.cells.get(0).mode) && (before == null || before.isEmpty())) {
                     PageCell newpagecell = initNewCell();
-                    newpagecell.direction = directionToSet;
+                    newpagecell.mode = directionToSet;
                     newpagecell.cells.addAll(cell.cells);
                     newpagecell.styles = cell.styles;
                     newpagecell.width = newwidth;
@@ -118,13 +118,13 @@ public class PageLayout implements Serializable {
                     cell.cells.clear();
                     cell.cells.add(newpagecell);
                 } else {
-                    directionToSet = cell.cells.get(0).direction;
+                    directionToSet = cell.cells.get(0).mode;
                 }
             }
 
             PageCell newcell = cell.createCell(before, cellCount);
             cellCount++;
-            newcell.direction = directionToSet;
+            newcell.mode = directionToSet;
             newcell.width = newwidth;
             cellId = newcell.cellId;
         }
@@ -265,15 +265,15 @@ public class PageLayout implements Serializable {
         return newCellList;
     }
 
-    private String denyRotatingInsideRotating(String incell) {
+    private String denyRotatingInsideRotating(String incell, String denymode) {
         PageCell cell = findCell(getAllCells(), incell);
-        if (cell.direction.equals(PageCell.PageDirection.rotating)) {
+        if (cell.mode.equals(denymode)) {
             PageCell parent = findParent(cell);
             if (parent == null) {
                 return incell;
             }
             do {
-                if (!parent.equals(PageCell.PageDirection.rotating)) {
+                if (!parent.equals(denymode)) {
                     return parent.cellId;
                 }
                 parent = findParent(parent);
@@ -361,6 +361,16 @@ public class PageLayout implements Serializable {
         cell.incrementalCellId = cellCount;
         cellCount++;
         return cell;
+    }
+
+    public void setMode(String cellId, String mode) {
+        PageCell cell = getCell(cellId);
+        cell.mode = mode;
+    }
+
+    public void cellName(String cellId, String cellName) {
+        PageCell cell = getCell(cellId);
+        cell.cellName = cellName;
     }
 
 }

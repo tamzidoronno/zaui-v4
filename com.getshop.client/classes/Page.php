@@ -129,6 +129,7 @@ class Page {
                 <i class="fa fa-image gs_resizing" target="selectedcell" title="Show styling on open tab"></i>
                 <i class="fa fa-arrow-right gsoperatecell" type="movedown" target="selectedcell" style="position:absolute; top: 10px; right: 10px;" title="Move tab to the right"></i>
                 <i class="fa fa-trash-o gsoperatecell" type="delete" target="selectedcell" title="Delete open tab"></i>
+                <i class="fa fa-minus gsoperatecell" target="selectedcell" type="addhorizontal"  title="Show styling on open page"></i>
             </div>
             <table>
                 <tr>
@@ -149,6 +150,7 @@ class Page {
                 <i class="fa fa-arrow-right gsoperatecell" type="movedown" target="selectedcell" style="position:absolute; top: 10px; right: 10px;" title="Move cell to the right"></i>
                 <i class="fa fa-plus gsoperatecell" type="addvertical" target="selectedcell" title="Add cell to open page"></i>
                 <i class="fa fa-image gs_resizing" target="selectedcell" title="Show styling on open page"></i>
+                <i class="fa fa-minus gsoperatecell" target="selectedcell" type="addhorizontal"  title="Show styling on open page"></i>
                 <i class="fa fa-trash-o gsoperatecell" type="delete" target="selectedcell" title="Delete open slider page"></i>
             </div>
             <table>

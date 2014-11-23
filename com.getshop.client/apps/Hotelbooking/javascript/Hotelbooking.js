@@ -1,19 +1,19 @@
 app.Hotelbooking = {
-    updateRoomCountTimer : null,
-    setSize : function() {
-        var newHeight = $('.Hotelbooking .booking_page').outerHeight()+30;
-        var top = (500 - newHeight)/2;
-        $('.Hotelbooking .bookingbox').css('top',top+'px');
-        $('.Hotelbooking .bookingbox').css('height',newHeight);
+    updateRoomCountTimer: null,
+    setSize: function () {
+        var newHeight = $('.Hotelbooking .booking_page').outerHeight() + 30;
+        var top = (500 - newHeight) / 2;
+        $('.Hotelbooking .bookingbox').css('top', top + 'px');
+        $('.Hotelbooking .bookingbox').css('height', newHeight);
     },
-    updateNumberOfRooms : function() {
+    updateNumberOfRooms: function () {
         var price = parseInt($('.Hotelbooking .price').attr('price'));
         var price = price * parseInt($(this).val());
         $('.Hotelbooking .price').html(price);
     },
-    changeOrderType : function() {
+    changeOrderType: function () {
         var type = parseInt($(this).val());
-        if(type === 1) {
+        if (type === 1) {
             $('.Hotelbooking .orderfields.private').hide();
             $('.Hotelbooking .orderfields.company').show();
         } else {
@@ -22,98 +22,102 @@ app.Hotelbooking = {
         }
         app.Hotelbooking.setSize();
     },
-    updateRoomCount : function() {
+    updateRoomCount: function () {
         var count = $(this).val();
         clearTimeout(app.Hotelbooking.updateRoomCountTimer);
         var container = $(this);
-        app.Hotelbooking.updateRoomCountTimer = setTimeout(function() {
+        app.Hotelbooking.updateRoomCountTimer = setTimeout(function () {
             container.blur();
             clearTimeout(app.Hotelbooking.updateRoomCountTimer);
-            var event = thundashop.Ajax.createEvent("","updateRoomCount", container, { "count": count});
-                thundashop.Ajax.post(event, function() {});
+            var event = thundashop.Ajax.createEvent("", "updateRoomCount", container, {"count": count});
+            thundashop.Ajax.post(event, function () {
+            });
         }, "500");
     },
-    setNumberOfPersons : function() {
+    setNumberOfPersons: function () {
         var count = $(this).val();
-        var event = thundashop.Ajax.createEvent("","updatePersonCount", $(this), { "count": count});
-        thundashop.Ajax.postWithCallBack(event, function() {
-            
+        var event = thundashop.Ajax.createEvent("", "updatePersonCount", $(this), {"count": count});
+        thundashop.Ajax.postWithCallBack(event, function () {
+
         });
     },
-    updateCleaningCount : function() {
+    updateCleaningCount: function () {
         var count = $(this).val();
-        var event = thundashop.Ajax.createEvent("","setCleaningOption", $(this), { "product": count});
-        thundashop.Ajax.postWithCallBack(event, function() {});
+        var event = thundashop.Ajax.createEvent("", "setCleaningOption", $(this), {"product": count});
+        thundashop.Ajax.postWithCallBack(event, function () {
+        });
     },
-    updateParking : function() {
+    updateParking: function () {
         var count = $(this).val();
-        var event = thundashop.Ajax.createEvent("","setParkingOption", $(this), { "parking": $(this).is(':checked')});
-        thundashop.Ajax.postWithCallBack(event, function() {});
+        var event = thundashop.Ajax.createEvent("", "setParkingOption", $(this), {"parking": $(this).is(':checked')});
+        thundashop.Ajax.postWithCallBack(event, function () {
+        });
     },
-    checkAvailability : function() {
+    checkAvailability: function () {
         var nextpage = $(this).attr('nextpage');
-        var apparea =$(this).closest('.app'); 
+        var apparea = $(this).closest('.app');
         var data = {
-            start : apparea.find('#start_date').val(),
-            stop : apparea.find('#end_date').val(),
-            roomProduct : apparea.find('.room_selection').val()
+            start: apparea.find('#start_date').val(),
+            stop: apparea.find('#end_date').val(),
+            roomProduct: apparea.find('.room_selection').val()
         };
-        var event = thundashop.Ajax.createEvent('','checkavailability', $(this), data);
-        thundashop.Ajax.postWithCallBack(event, function(result) {
+        var event = thundashop.Ajax.createEvent('', 'checkavailability', $(this), data);
+        thundashop.Ajax.postWithCallBack(event, function (result) {
             result = parseInt(result);
-            if(result <= 0) {
-                $('.Hotelbooking .room_available').css('padding-top','20px');
+            if (result <= 0) {
+                $('.Hotelbooking .room_available').css('padding-top', '20px');
                 $('.Hotelbooking .error_on_check').hide();
-                if(result === -1) {
+                if (result === -1) {
                     $('.Hotelbooking .date_before_start').show();
                 }
-                if(result === -2) {
+                if (result === -2) {
                     $('.Hotelbooking .end_before_start').show();
                 }
                 app.Hotelbooking.setSize();
             } else {
-                document.location.href='/?page='+nextpage;
+                document.location.href = '/?page=' + nextpage;
             }
         });
     },
-    changeBookingDate : function() {
-        if($(this).hasClass('disabled')) {
+    changeBookingDate: function () {
+        if ($(this).hasClass('disabled')) {
             return;
         }
         var cal = $(this).closest('.booking_table');
         cal.find('.selected').removeClass('selected');
         $(this).addClass('selected');
-        
+
         var event = thundashop.Ajax.createEvent("", "updateCalendarDate", $(this), {
-            "type" : cal.prev().attr('type'),
-            "time" : $(this).attr('time')
+            "type": cal.prev().attr('type'),
+            "time": $(this).attr('time')
         });
-        
+
         thundashop.Ajax.post(event);
     },
-    goToPage : function(pagenumber) {
-         window.history.pushState({url: "", ajaxLink: "pagenumber="+pagenumber}, "Title", "pagenumber="+pagenumber);
-         thundashop.Ajax.doJavascriptNavigation("pagenumber="+pagenumber, null, true);
+    goToPage: function (pagenumber) {
+        window.history.pushState({url: "", ajaxLink: "pagenumber=" + pagenumber}, "Title", "pagenumber=" + pagenumber);
+        thundashop.Ajax.doJavascriptNavigation("pagenumber=" + pagenumber, null, true);
     },
-    saveCurrentData : function() {
+    saveCurrentData: function () {
         var data = {};
-        $('.booking_contact_data').find('[gsname]').each(function() {
-           var name = $(this).attr('gsname');
-           data[name] = $(this).val();
+        $('.booking_contact_data').find('[gsname]').each(function () {
+            var name = $(this).attr('gsname');
+            data[name] = $(this).val();
         });
-        
+
         data['mvaregistered'] = $('.booking_contact_data [gsname="mvaregistered"]').is(':checked');
         data['partnershipdeal'] = $('.booking_contact_data [gsname="partnershipdeal"]').is(':checked');
         data['customer_type'] = $('.booking_contact_data [gsname="customer_type"]:checked').val();
-        var event = thundashop.Ajax.createEvent('','setBookingData',$(this),data);
-        if($(this).attr('gsname') === "mvaregistered" || $(this).attr('gsname') === "customer_type") {
+        var event = thundashop.Ajax.createEvent('', 'setBookingData', $(this), data);
+        if ($(this).attr('gsname') === "mvaregistered" || $(this).attr('gsname') === "customer_type") {
             thundashop.Ajax.post(event);
         } else {
-            thundashop.Ajax.postWithCallBack(event, function() {});
+            thundashop.Ajax.postWithCallBack(event, function () {
+            });
         }
     },
-    changeToPartnership : function() {
-        if($('.partnership').is(":visible")) {
+    changeToPartnership: function () {
+        if ($('.partnership').is(":visible")) {
             $('input[gsname="referencenumber"]').val('');
             $('.common_input').show();
             $('.partnership').hide();
@@ -122,53 +126,53 @@ app.Hotelbooking = {
             $('.partnership').show();
         }
     },
-    loadSettingPanel : function() {
-        var event = thundashop.Ajax.createEvent('','loadSettings', $(this), null);
+    loadSettingPanel: function () {
+        var event = thundashop.Ajax.createEvent('', 'loadSettings', $(this), null);
         thundashop.common.showInformationBox(event, "Booking settings");
     },
-    navigateMonth : function() {
+    navigateMonth: function () {
         var type = $(this).attr('navigation');
 
         var month = parseInt($(this).parent().attr('month'));
         var year = parseInt($(this).parent().attr('year'));
-        
-        if(type === "prev") {
-            if(month === 1) {
+
+        if (type === "prev") {
+            if (month === 1) {
                 month = 12;
                 year--;
             } else {
                 month--;
             }
         } else {
-            if(month === 12) {
+            if (month === 12) {
                 month = 1;
                 year++;
             } else {
                 month++;
             }
         }
-        
+
         var data = {
-            "year" : year,
-            "month" : month,
-            "type" : $(this).parent().attr('type')
+            "year": year,
+            "month": month,
+            "type": $(this).parent().attr('type')
         }
         var container = $(this).closest('.calendar');
-        var event = thundashop.Ajax.createEvent('','navigateMonthCalendar',$(this), data);
-        thundashop.Ajax.postWithCallBack(event, function(data) {
+        var event = thundashop.Ajax.createEvent('', 'navigateMonthCalendar', $(this), data);
+        thundashop.Ajax.postWithCallBack(event, function (data) {
             container.html(data);
         });
-        
+
     },
-    displayMvaRow : function() {
+    displayMvaRow: function () {
         $('.common_text').hide();
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('.common_text.company').show();
         } else {
             $('.common_text.private').show();
         }
     },
-    loadSettings: function(element, application) {
+    loadSettings: function (element, application) {
         var config = {
             application: application,
             draggable: true,
@@ -188,7 +192,36 @@ app.Hotelbooking = {
         toolbox.show();
         toolbox.attachToElement(application, 2);
     },
-    initEvents : function() {
+    updatePostalPlace: function () {
+        var val = $(this).val();
+        $.ajax({
+            "dataType" : "jsonp",
+            "url": "https://api.bring.com/shippingguide/api/postalCode.json?clientUrl=insertYourClientUrlHere&country=no&pnr=" + val,
+            "success": function (data) {
+                if(data.valid) {
+                    $('.Hotelbooking input[gsname="city"]').val(data.result);
+                }
+            }
+        }
+        );
+    },
+    updateBrreg : function() {
+        var val = $(this).val();
+        if(val.length === 9) {
+            $.ajax({
+                "url" : "http://hotell.difi.no/api/json/brreg/enhetsregisteret?query=" + val,
+                "success" : function(data) {
+                    var data = data.entries[0];
+                    $('.Hotelbooking input[gsname="birthday"]').val(data.orgnr);
+                    $('.Hotelbooking input[gsname="address"]').val(data.forretningsadr);
+                    $('.Hotelbooking input[gsname="postal_code"]').val(data.forradrpostnr);
+                    $('.Hotelbooking input[gsname="city"]').val(data.forradrpoststed);
+                }
+            });
+        }
+    },
+    
+    initEvents: function () {
         $(document).on('click', '.Hotelbooking .check_available_button', app.Hotelbooking.checkAvailability);
         $(document).on('change', '.Hotelbooking #ordertype', app.Hotelbooking.changeOrderType);
         $(document).on('change', '.Hotelbooking .number_of_rooms', app.Hotelbooking.updateNumberOfRooms);
@@ -204,6 +237,8 @@ app.Hotelbooking = {
         $(document).on('click', '.Hotelbooking .fa.calnav', app.Hotelbooking.navigateMonth);
         $(document).on('click', '.Hotelbooking input[gsname="mvaregistered"]', app.Hotelbooking.saveCurrentData);
         $(document).on('click', '.Hotelbooking input[gsname="customer_type"]', app.Hotelbooking.saveCurrentData);
+        $(document).on('keyup', '.Hotelbooking input[gsname="postal_code"]', app.Hotelbooking.updatePostalPlace);
+        $(document).on('keyup', '.Hotelbooking input[gsname="birthday"]', app.Hotelbooking.updateBrreg);
     }
 };
 

@@ -1,0 +1,63 @@
+<?
+/* @var $this \ns_e073a75a_87c9_4d92_a73a_bc54feb7317f\Products */
+$product = $this->getApi()->getProductManager()->getProduct($_POST['value']);
+?>
+
+<div class='gss_product_title_header'>
+    <? echo $product->name; ?>
+</div>
+
+<div class='gss_tabbar'> 
+    <div class='gss_tab gss_tab_active' gss_tab='1'><? echo $this->__f("Product info"); ?></div>
+    <div class='gss_tab' gss_tab='3'>Images</div>
+    <div class='gss_tab' gss_tab='2'>Lists</div>
+    <div class='gss_tab_content'>
+        <div class='gss_tab_view gss_tab_active' gss_tab='1'>
+            <div class="textfield gss_setting"  id="title">
+                <span class="title"><?php echo $this->__f("Product title"); ?></span>
+                <input type="textfield" gs_model='productmodel' gs_model_attr='title' value="<? echo $product->name; ?>" placeholder="">
+                <div class="description">
+                    <?php echo $this->__("This is the title of the product, example \"White cute teddy bear\" "); ?>
+                </div>
+            </div>
+
+            <div class="textfield gss_setting"  id="price">
+                <span class="title"><?php echo $this->__f("Price (inc taxes)"); ?></span>
+                <input type="textfield" gs_model='productmodel' gs_model_attr='price' value="<? echo $product->price; ?>"  placeholder="">
+                <div class="description">
+                    <?php echo $this->__("The total cost of the product, included taxes."); ?>
+                </div>
+            </div>
+
+            <div class="textfield gss_setting"  id="sku">
+                <span class="title"><?php echo $this->__f("SKU"); ?></span>
+                <input type="textfield" gs_model='productmodel' gs_model_attr='sku' value="<? echo $product->sku; ?>" placeholder=''>
+                <div class="description">
+                    <?php echo $this->__("A unique identifier for the product."); ?>
+                </div>
+            </div>
+
+            <div class="textarea gss_setting"  id="listviewdescription">
+                <span class="title"><?php echo $this->__f("Listview description"); ?></span>
+                <textarea class='gss_mediumsize' gs_model='productmodel' gs_model_attr='lisviewdescription' value="<? echo $product->shortDescription; ?>" ></textarea>
+                <div class="description">
+                    <?php echo $this->__("This description will show up in list views, if blank it will take the first part of the larger description."); ?>
+                </div>
+            </div>
+            
+            <div class='gss_product_more_options_info'>
+                <i class='fa fa-info-circle'></i> Looking for more options? You can add much more information to your product by going to the frontend of the product and use GetShop's entire application sortiment like, Images Carousel, YouTube, Facebook etc. The possibilites are endless.
+            </div>
+        </div>
+        
+        <div class='gss_tab_view' gss_tab='2'>2</div>
+        
+        <div class='gss_tab_view' gss_tab='3'>Images</div>
+    </div>
+</div>
+
+<div class='gss_button_area'>
+    <div class='gss_button' gss_method="deleteProduct" gss_value="<? echo $product->id; ?>"><i class='fa fa-remove'></i><? echo $this->__f("Delete"); ?></div>
+    <div class='gss_button'><i class='fa fa-delicious'></i><? echo $this->__f("View product on frontend"); ?></div>
+    <div class='gss_button'><i class='fa fa-save'></i><? echo $this->__f("Save product"); ?></div>
+</div>

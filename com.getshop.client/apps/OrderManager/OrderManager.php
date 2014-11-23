@@ -2,7 +2,7 @@
 
 namespace ns_27716a58_0749_4601_a1bc_051a43a16d14;
 
-class OrderManager extends \SystemApplication implements \Application {
+class OrderManager extends \WebshopApplication implements \Application {
 
     public $orders;
     public $showOrder = false;
@@ -68,6 +68,10 @@ class OrderManager extends \SystemApplication implements \Application {
         $this->orders = $this->getApi()->getOrderManager()->getOrders($orderIds, $this->currentPage - 1, 10);
     }
 
+    public function renderConfig() {
+        echo "ORDERS";
+    }
+    
     public function render() {
         $this->populateAnswers();
         $this->cancelOrder();

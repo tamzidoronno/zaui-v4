@@ -6,6 +6,25 @@ getshop.Settings = {
         $(document).on('click', '[gss_goto_app]', function() { me.setApplicationId(this); });
         $(document).on('click', '[gss_method]', function() { me.gssMethodInvoke(this); });
         $(document).on('click', '[gss_fragment]', function() { me.gssShowFragment(this); });
+        $(document).on('click', '.gss_tab', function() { me.gssSelectTab(this); });
+        $(document).on('mouseenter', '.gss_topmenu-button', function() { me.showSubMenu(this); });
+        $(document).on('mouseleave', '.gss_topmenu-button',  function() { me.hideSubMenu(this) });
+    },
+    
+    showSubMenu: function(element) {
+        $(element).find('.gss_menu_submenu').show();
+    },
+    
+    gssSelectTab: function(element) {
+        var tabid = $(element).attr('gss_tab');
+        $(element).parent().find('.gss_tab').removeClass('gss_tab_active');
+        $(element).parent().find('.gss_tab_view').removeClass('gss_tab_active');
+        $(element).parent().find('.gss_tab[gss_tab="'+tabid+'"]').addClass('gss_tab_active');
+        $(element).parent().find('.gss_tab_view[gss_tab="'+tabid+'"]').addClass('gss_tab_active');
+    },
+    
+    hideSubMenu: function(element) {
+        $(element).find('.gss_menu_submenu').hide();
     },
     
     showSuccessMessage: function(message) {

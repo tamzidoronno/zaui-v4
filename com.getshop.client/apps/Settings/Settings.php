@@ -13,6 +13,7 @@ class Settings extends \SystemApplication implements \Application {
     public function preProcess() {}
     
 	public function render() {
+        
     }
     
     public function renderDashBoardWidget() {

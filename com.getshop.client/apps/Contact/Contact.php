@@ -54,10 +54,6 @@ class Contact extends \WebshopApplication implements \Application {
         }
     }
     
-    public function renderConfig() {
-        $this->includeFile("config");
-    }
-    
     public function isEditable() {
         if(isset($_SESSION['contact']['edit']) && $_SESSION['contact']['edit'] == $this->getConfiguration()->id) {
             return true;

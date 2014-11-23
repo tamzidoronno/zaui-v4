@@ -41,14 +41,13 @@ public class SetApplicationModules {
         webshopApps.add("InvoicePayment");
         webshopApps.add("StockControl");
         webshopApps.add("Proteria");
-        webshopApps.add("ColumnProducts");
+        
         
         List<String> webshopAppsMandatory = new ArrayList();
         webshopAppsMandatory.add("Taxes");
-        webshopAppsMandatory.add("Product");
+        webshopAppsMandatory.add("Products");
         webshopAppsMandatory.add("Shipper");
-        webshopAppsMandatory.add("ProductLister");
-        webshopAppsMandatory.add("ProductWidget");
+		webshopAppsMandatory.add("OrderManager");
 
         apps.stream().filter(app -> webshopApps.contains(app.appName)).forEach(app -> app.moduleId = "WebShop");
         apps.stream().filter(app -> webshopAppsMandatory.contains(app.appName)).forEach(app -> app.moduleId = "WebShop");

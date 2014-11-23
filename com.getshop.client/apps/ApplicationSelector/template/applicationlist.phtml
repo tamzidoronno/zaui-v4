@@ -1,6 +1,7 @@
 <?
 /* @var $this ns_f1fc4af3_656e_4294_a268_40d2a82d0aa1\ApplicationSelector */
 $activatedModules = $this->getApi()->getStoreApplicationPool()->getActivatedModules();
+$themes = $this->getApi()->getStoreApplicationPool()->getAvailableThemeApplications();
 
 $allModules = $this->getApi()->getStoreApplicationPool()->getAllAvailableModules();
 $notActivatedModuels = [];
@@ -12,13 +13,13 @@ foreach ($allModules as $module) {
     if ($this->isModuleInArray($module->id, $activatedModules)) {
         continue;
     }
-    
+
     $notActivatedModuels[] = $module;
 }
 
 
 if (count($notActivatedModuels)) {
-?>
+    ?>
     <div class='gss_settings_header'>
         <i class='fa fa-dropbox'></i>
 
@@ -39,109 +40,144 @@ if (count($notActivatedModuels)) {
     <div class='gss_settings_main_area'>
         <div class='gss_appviews'>
             <?
-            foreach ($notActivatedModuels as $module) { 
-            ?>
-            <div class='gss_appview'>
-                <div class="gss_imagebox">
-                    <i class="fa <? echo $module->faIcon; ?> gs_fa-icon"></i>
-                </div>
-                <div class="gss_app_desc">
-                    <div style="font-size: 16px; font-weight: 700; margin-bottom: 3px;"><? echo $module->moduleName; ?> </div>
-                    <? echo $module->description; ?>
-                </div>
-                
-                <div gss_method="activateModule" gss_value="<? echo $module->id; ?>" class="gss_activate_button"> <? echo $this->__f("Activate"); ?></div>
-                <div class="free">
-                    <? echo $this->__f("Free"); ?>
-                </div>
-            </div> 
-            <?
+            foreach ($notActivatedModuels as $module) {
+                ?>
+                <div class='gss_appview'>
+                    <div class="gss_imagebox">
+                        <i class="fa <? echo $module->faIcon; ?> gs_fa-icon"></i>
+                    </div>
+                    <div class="gss_app_desc">
+                        <div style="font-size: 16px; font-weight: 700; margin-bottom: 3px;"><? echo $module->moduleName; ?> </div>
+                        <? echo $module->description; ?>
+                    </div>
+
+                    <div gss_method="activateModule" gss_value="<? echo $module->id; ?>" class="gss_activate_button"> <? echo $this->__f("Activate"); ?></div>
+                    <div class="free">
+                        <? echo $this->__f("Free"); ?>
+                    </div>
+                </div> 
+                <?
             }
             ?>
         </div>
     </div>
-<?
+    <?
 }
-?>
-
-<? 
 
 $apps = $this->getApi()->getStoreApplicationPool()->getAvailableApplications();
 $notActivated = $this->getApi()->getStoreApplicationPool()->getAvailableApplicationsThatIsNotActivated();
-            
-foreach ($activatedModules as $module) { 
-?>
 
-<div class='innerappview'>
-    <div class='gss_settings_header'>
-        <i class='fa <? echo $module->faIcon; ?>'></i>
+foreach ($activatedModules as $module) {
+    ?>
 
-        <div class='gss_settings_header_description'>
-            <div class='gss_settings_header_title'>
-                <? echo $this->__f($module->moduleName); ?>
-            </div>
-            <div class='gss_settings_header_description_inner'>
-                <?
-                echo $module->description;
-                ?>	
-            </div>
+    <div class='innerappview'>
+        <div class='gss_settings_header'>
+            <i class='fa <? echo $module->faIcon; ?>'></i>
 
+            <div class='gss_settings_header_description'>
+                <div class='gss_settings_header_title'>
+                    <? echo $this->__f($module->moduleName); ?>
+                </div>
+                <div class='gss_settings_header_description_inner'>
+                    <?
+                    echo $module->description;
+                    ?>	
+                </div>
+
+            </div>	
         </div>	
-    </div>	
 
-        
-            <?
+
+        <?
+        foreach ($apps as $app) {
+            $isActivated = $this->isActivated($app, $notActivated);
+            $namespace = $this->getFactory()->convertUUIDtoString($app->id);
+            $name = $app->appName;
+            $emptyInstance = $this->getFactory()->getApplicationPool()->createInstace($app);
+            $imgsrc = "/showApplicationImages.php?appNamespace=$namespace&image=$name.png";
+
+            if ($app->type == "SystemApplication" || $app->type == "ThemeApplication") {
+                continue;
+            }
+
+            if ($app->moduleId != $module->id) {
+                continue;
+            }
+
+            if (!$emptyInstance) {
+                continue;
+            }
+            ?>
+            <div class='gss_appview'>
+            <? echo "<img src='$imgsrc'/>"; ?>
+
+                <div class="gss_app_desc">
+                    <div style="font-size: 16px; font-weight: 700; margin-bottom: 3px;"><? echo $app->appName; ?></div>
+        <? echo $emptyInstance->getDescription(); ?>
+
+                </div>
+        <?
+        $hasConfig = method_exists($emptyInstance, "renderConfig");
+        if ($app->activeAppOnModuleActivation) {
             
-            foreach ($apps as $app) {
-                $isActivated = $this->isActivated($app, $notActivated);
-                $namespace = $this->getFactory()->convertUUIDtoString($app->id);
-                $name = $app->appName;
-                $emptyInstance = $this->getFactory()->getApplicationPool()->createInstace($app);
-                $imgsrc = "/showApplicationImages.php?appNamespace=$namespace&image=$name.png";
-
-                if ($app->type == "SystemApplication" || $app->type == "ThemeApplication") {
-                    continue;
-                }
-
-                if ($app->moduleId != $module->id) {
-                    continue;
-                }
-
-                if (!$emptyInstance) {
-                    continue;
-                }
-
-                ?>
-                <div class='gss_appview'>
-                    <? echo "<img src='$imgsrc'/>"; ?>
-
-                    <div class="gss_app_desc">
-                        <div style="font-size: 16px; font-weight: 700; margin-bottom: 3px;"><? echo $app->appName; ?></div>
-                        <? echo $app->applicationModule->faIcon; ?><br/>
-                        <? echo $emptyInstance->getDescription(); ?>
-
-                    </div>
+            $appId = $app->id;
+            ?>
+                    <div class="gss_activate_button mandatory"><span> <? echo $this->__f("Mandatory"); ?></span></div>
                     <?
-                    if ($app->activeAppOnModuleActivation) {
-                    ?>
-                        <div class="gss_activate_button mandatory"> <? echo $this->__f("Mandatory"); ?></div>
-                    <?
-                    } else {
-                        if ($isActivated) {
-                        ?>
-                            <div gss_method="deactivate_application" gss_value="<? echo $app->id; ?>" class="gss_activate_button activated"> <? echo $this->__f("Remove"); ?></div>
-                        <?
-                        } else {
-                    ?>
-                        <div gss_method="activate_application" gss_value="<? echo $app->id; ?>" class="gss_activate_button"> <? echo $this->__f("Activate"); ?></div>
-                    <? }
+                    if ($hasConfig) {
+                        echo "<div class='configapp' gss_goto_app='$appId'><span class='config-text'>" . $this->__f("Configure") . "</span><i class='fa fa-gear'></i></div>";
                     }
-                    ?>
-                </div>  
+                } else {
+                    if ($isActivated) {
+                        if ($hasConfig) {
+                            echo "<div class='configapp' gss_goto_app='$appId'><span class='config-text'>" . $this->__f("Configure") . "</span><i class='fa fa-gear'></i></div>";
+                        }
+                        ?>
+                        <div gss_method="deactivate_application" gss_value="<? echo $app->id; ?>" class="gss_activate_button activated"> <span>  <? echo $this->__f("Click to remove application"); ?> </span></div>
+                        <?
+                    } else {
+                        ?>
+                        <div gss_method="activate_application" gss_value="<? echo $app->id; ?>" class="gss_activate_button"><span> <? echo $this->__f("Click to activate application"); ?></span></div>
+                    <?
+                    }
+                }
+                ?>
+            </div>  
                 <?
             }
             ?>
 
-        </div>
+    </div>
+
+<? }
+?>
+
+<div class='innerappview'>
+    <div class='gss_settings_header'>
+        <i class='fa fa-paint-brush'></i>
+
+        <div class='gss_settings_header_description'>
+            <div class='gss_settings_header_title'>
+                Themes
+            </div>
+            <div class='gss_settings_header_description_inner'>
+                Change a theme? This should only be visible by GetShop Admins.
+            </div>
+        </div>	
+    </div>	
+
+    <? 
+    $activatedTheme = $this->getApi()->getStoreApplicationPool()->getThemeApplication();
     
-<? } ?>
+    foreach ($themes as $theme) { 
+        $activated = $activatedTheme->id == $theme->id ? "activated" : "";
+        ?>
+        <div class='gss_appview'>
+            <img src='/showApplicationImages.php?appNamespace=ns_f1fc4af3_656e_4294_a268_40d2a82d0aa1&image=skin/images/color%20gear.png'/>
+            <div class="gss_app_desc">
+                <div style="font-size: 16px; font-weight: 300; margin-bottom: 3px;"><? echo $theme->appName; ?></div>
+            </div>
+            <div gss_method="activateTheme" gss_value="<? echo $theme->id; ?>" class="gss_activate_button <? echo $activated; ?>"><span> <? echo $this->__f("Click to activate theme"); ?></span></div>
+        </div>
+    <? } ?>
+</div>

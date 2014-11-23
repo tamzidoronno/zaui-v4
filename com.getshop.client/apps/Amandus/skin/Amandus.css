@@ -7,7 +7,7 @@
 
 .gsarea[area="header"] .Menu .entry a div {
     padding: 5px;
-    padding-right:15px;
+    /*padding-right:15px;*/
     padding-left: 15px;
     
     color: #FFF;
@@ -15,7 +15,7 @@
 
 .gsarea[area="header"] .Menu {
     position:absolute;
-    top: 60px;
+    top: 5px;
     left: 0px;
     padding-right: 30px;
 }
@@ -34,17 +34,16 @@
 }
 
 body {
-	background-color: #efefef;
 }
 
 .gscell.gsdepth_0 { margin:auto; }
 .gsinner.gsdepth_0 {  width: 1024px; margin: auto; background-color:#FFF; }
 .gsinner.gsdepth_1 { min-height: 200px; }
-.gsarea[area='header'] .gsinner { background-color:#236188; min-height: 100px; color:#FFF;  }
+.gsarea[area='header'] .gsinner { background-color:#236188; min-height: 50px; color:#FFF;  }
 .gsarea[area='header'].gsdepth_0 .gsdepth_0.gsinner { box-shadow: none !important; }
 .gsarea[area='header'] .applicationarea,.gscell[cellid="footer"] .applicationarea { border: solid 0px !important; }
 .gscell td { padding: 2px; }
-.applicationarea { padding: 10px; height:100%;  box-sizing: border-box;  }
+.applicationarea { height:100%;  box-sizing: border-box;  }
 .gseditrowouter .applicationarea { border: solid 0px #BBB;  }
 
 .gsarea[area='footer'] .gsinner { background-color:#236188 !important; min-height: 100px; color:#FFF;  }

@@ -83,7 +83,7 @@ if(isset($_GET['setLanguage'])) {
     </div>
 </div>
 
-<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin"></link>
+
 <?
 
 $importApplication = new ImportApplication(null, null);
@@ -109,7 +109,7 @@ if (@$factory->getApplicationPool()->getSelectedThemeApp()->applicationSettings-
 
 if ($factory->isEditorMode()) {
     echo '<script src="/js/ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>';
-//    echo '<link rel="stylesheet" type="text/css" href="skin/default/settings.css" />';
+    echo '<link rel="stylesheet" type="text/css" href="skin/default/settings.css" />';
 }
 
 if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
@@ -202,7 +202,7 @@ if(isset($factory->getSettings()->languages)) {
         <input name="userid" type="hidden"  value="<?php echo  \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null ? \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id : ""; ?>"/>
 
         <?
-        if ($factory->isEditorMode() && 1 == 2) { ?>
+        if ($factory->isEditorMode()) { ?>
             <div id='backsidesettings'>
                 <? include('../template/default/Common/settings.phtml'); ?>
             </div>

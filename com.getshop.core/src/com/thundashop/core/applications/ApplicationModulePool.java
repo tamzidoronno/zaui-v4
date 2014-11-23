@@ -35,6 +35,7 @@ class ApplicationModulePool {
         
         ApplicationModule module = new ApplicationModule();
         module.moduleName = "E-Commerce";
+		module.needToShowInMenu = true;
         module.id = "WebShop";
         module.faIcon = "fa-shopping-cart";
         module.description = "Upgrade your website to become a fully customizable e-commerce solution. We offer a variouse of payment methods!";

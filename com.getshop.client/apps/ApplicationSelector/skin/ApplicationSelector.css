@@ -36,32 +36,43 @@ and open the template in the editor.
     background-color: #FFF;
     margin: 10px;
     position: relative;
+    margin-bottom: 20px;
 }
 
 .innerappview .gss_settings_header {
     box-shadow: 0px 0px 0px #EFEFEF;
     border-bottom: solid 1px #DDD;
     margin: 0px;
-    margin-bottom: 10px;
     color: #FFF;
     background-color: #1c6ea2;
     border-radius: 5px 5px 0px 0px;
 }
 
+
 .innerappview .gss_appview {
-    width: 378px;
     color: #333;
-    border: solid 1px #EEE;
-    display: inline-block;
+    border-bottom: solid 1px rgba(230, 230, 231, 1);
     position: relative;
-    margin-left: 8px;
+}
+
+.innerappview .gss_appview:hover {
+    background-color: #FCFCFC;
+}
+
+.innerappview .gss_appview:last-child {
+    border-radius: 0px 0px 5px 5px ;
+    border-bottom: solid 0px;
+}
+
+.innerappview .gss_appview:first-child {
+    border-top: solid 10px !important;
 }
 
 .innerappview .gss_appview .gss_app_desc {
     display: inline-block;
-    width: 250px;
+    width: 950px;
     vertical-align: top;
-    height: 150px;
+    height: 100px;
     overflow: hidden;
     margin-top: 10px;
 }
@@ -70,28 +81,62 @@ and open the template in the editor.
     display: inline-block;
     vertical-align: top;
     margin: 10px;
+    max-height: 80px;
 }
 
 .innerappview .gss_activate_button {
     position: absolute;
-    bottom: 3px;    
-    right: 3px;
+    top: 0px;    
+    bottom: 0px;    
+    right: 0px;
     width: 80px;
-    height: 30px;
-    border-radius: 5px 0px 5px 0px;
-    text-align: center;
-    line-height: 30px;
+    
     cursor: pointer;
     color: #FFF;
     background: #466585;
+    text-align: center;
 }
 
+.innerappview .gss_activate_button span {
+ display: table-cell;
+  vertical-align: middle;
+  height: 100px;
+  text-align: center;
+  width: 80px;
+}
 
 .innerappview .gss_activate_button.activated {
     background-color: #1bcf28;
 }
 
 .innerappview .gss_appview .mandatory {
-    background-color: #DDD;
+    background-color: #1bcf28;
     cursor: not-allowed;
+    color: #FFF;
+}
+
+.innerappview .gss_appview .configapp {
+    cursor: pointer;
+    width: 80px;
+    position: absolute;
+    right: 80px;
+    top: 0px;
+    bottom: 0px;
+}
+
+.innerappview .gss_appview .configapp .config-text {
+    position: absolute;
+    bottom: 4px;
+    font-size: 12px;
+    left: 0px;
+    right: 0px;
+    text-align: center;
+}
+.innerappview .gss_appview .configapp i {
+    line-height: 110px;
+    font-size: 50px;
+    text-align: center;
+    width: 80px;
+    color: #466585;
+    background-color: #FCFCFC;
 }

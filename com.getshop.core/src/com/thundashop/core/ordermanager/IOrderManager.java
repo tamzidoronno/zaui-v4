@@ -2,6 +2,7 @@ package com.thundashop.core.ordermanager;
 
 import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.ordermanager.data.Order;
@@ -56,7 +57,7 @@ public interface IOrderManager {
      * @param referenceId
      * @throws ErrorException 
      */
-    @Administrator
+    @Editor
     public Order getOrderByReference(String referenceId) throws ErrorException;
     
     /**
@@ -151,6 +152,6 @@ public interface IOrderManager {
 	 * @param date
 	 * @throws ErrorException 
 	 */
-	@Administrator
+	@Editor
 	public void setExpiryDate(String orderId, Date date) throws ErrorException;
 }

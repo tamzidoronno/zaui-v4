@@ -67,7 +67,7 @@ public interface IHotelBookingManager {
      * @return
      * @throws ErrorException 
      */
-    @Administrator
+    @Editor
     public List<Room> getAllRooms() throws ErrorException;
     
     /**
@@ -75,7 +75,7 @@ public interface IHotelBookingManager {
      * @return
      * @throws ErrorException 
      */
-    @Administrator
+    @Editor
     public List<BookingReference> getAllReservations() throws ErrorException;
     
     
@@ -116,6 +116,6 @@ public interface IHotelBookingManager {
     public void checkForArxTransfer() throws ErrorException;
     public void checkForWelcomeMessagesToSend() throws ErrorException;
 
-	@Administrator
-	public void markReferenceAsStopped(int referenceId, Date stoppedDate) throws ErrorException;
+    @Administrator
+    public void markReferenceAsStopped(int referenceId, Date stoppedDate) throws ErrorException;
 }

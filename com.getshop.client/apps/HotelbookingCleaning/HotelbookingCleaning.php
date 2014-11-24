@@ -37,7 +37,18 @@ class HotelbookingCleaning extends \ApplicationBase implements \Application {
     }
     
     public function render() {
-        $this->includefile("cleaning");
+        if(!$this->isEditorMode()) {
+            echo "<center>";
+        echo "<br>";
+        echo "<br>";
+            $login = new \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login();
+            $login->render();
+        echo "<br>";
+        echo "<br>";
+            echo "</center>";
+        } else {
+            $this->includefile("cleaning");
+        }
     }
 }
 ?>

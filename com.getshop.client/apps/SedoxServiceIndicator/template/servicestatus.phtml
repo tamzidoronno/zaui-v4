@@ -4,7 +4,7 @@ $isOpen = $this->isOpen();
 $outOfService = $isOpen ? "" : "outofservice";
 ?>
 <div class="sedoxfileservicestatus">
-    Local time: <b><? echo date("H:m", time()); ?></b> | FILESERVICE STATUS: 
+    Local time: <b><? echo date("H:i", time()); ?></b> | FILESERVICE STATUS: 
     <?
     if ($this->getConfigurationSetting("onclick_goto_page")) {
         echo "<a href='/?page=".$this->getConfigurationSetting("onclick_goto_page")."'>";

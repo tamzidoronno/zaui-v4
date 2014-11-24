@@ -743,6 +743,11 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         if (!$days || $days == 1) {
             return "";
         }
+        
+        if ($this->getServiceType() == "storage") {
+            return $days .= " " .$this->__w("months");
+        }
+        
         if ($days > 30) {
             $days /= 30;
             if ($days > 1) {

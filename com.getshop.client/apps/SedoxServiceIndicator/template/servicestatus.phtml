@@ -1,0 +1,8 @@
+<?
+$isOpen = $this->isOpen();
+$outOfService = $isOpen ? "" : "outofservice";
+?>
+<div class="sedoxfileservicestatus">
+    FILESERVICE STATUS: 
+    <div class="sedoxfileservicestatus_inner  <? echo $outOfService; ?>"></div>
+</div>

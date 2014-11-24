@@ -1,0 +1,22 @@
+.header .SedoxServiceIndicator {
+    position: absolute;
+    right: 10px;
+    bottom: 6px;
+    line-height: 40px;
+    color: #FFF;
+    font-size: 12px;
+}
+
+.header .SedoxServiceIndicator .sedoxfileservicestatus .sedoxfileservicestatus_inner {
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+    border-radius: 5px 5px 0px 0px;
+    vertical-align: bottom;
+    background-color: green;
+    margin-left: 20px;
+}
+
+.header .SedoxServiceIndicator .sedoxfileservicestatus .sedoxfileservicestatus_inner.outofservice {
+    background-color: #ff9710;
+}

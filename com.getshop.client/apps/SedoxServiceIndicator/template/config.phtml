@@ -1,0 +1,30 @@
+<div class="information">
+    <?
+    echo $this->__f("What is your opening hours?");
+    ?>
+</div>
+
+<div class="setting onoff" id="isclosed">
+    <span class="title"><?php echo $this->__f("Is closed?"); ?></span>
+    <div class="onoff config" id="enabletls"></div>
+    <div class="description">
+        <?php echo $this->__f("If this is enabled it will override time settings and always show closed, can be used for vacations? haha, like there is such things."); ?>
+    </div>
+</div>
+
+<div class="textfield setting"  id="open">
+    <span class="title"><?php echo $this->__f("Opens?"); ?></span>
+    <input type="textfield" class="config">
+    <div class="description">
+        <?php echo $this->__f("Example 08:00"); ?>
+    </div>
+</div>
+<div class="textfield setting"  id="close">
+    <span class="title"><?php echo $this->__f("Closes?"); ?></span>
+    <input type="textfield" class="config">
+    <div class="description">
+        <?php echo $this->__f("Example 22:00"); ?>
+    </div>
+</div>
+
+<div class="button savebutton"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__f("Save settings"); ?></ins></div>

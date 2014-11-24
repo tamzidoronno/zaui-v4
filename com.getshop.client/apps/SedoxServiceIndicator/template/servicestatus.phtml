@@ -1,8 +1,20 @@
 <?
+/* @var $this ns_4cc9499c_6928_4811_9c9b_dba648258c52\SedoxServiceIndicator */
 $isOpen = $this->isOpen();
 $outOfService = $isOpen ? "" : "outofservice";
 ?>
 <div class="sedoxfileservicestatus">
-    FILESERVICE STATUS: 
+    Local time: <b><? echo date("H:m", time()); ?></b> | FILESERVICE STATUS: 
+    <?
+    if ($this->getConfigurationSetting("onclick_goto_page")) {
+        echo "<a href='/?page=".$this->getConfigurationSetting("onclick_goto_page")."'>";
+    }
+    ?>
     <div class="sedoxfileservicestatus_inner  <? echo $outOfService; ?>"></div>
+    <? 
+    if ($this->getConfigurationSetting("onclick_goto_page")) {
+        echo "</a>";
+    }
+    ?>
+    
 </div>

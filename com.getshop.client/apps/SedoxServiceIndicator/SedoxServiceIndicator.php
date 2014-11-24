@@ -38,8 +38,9 @@ class SedoxServiceIndicator extends \ApplicationBase implements \Application {
             return false;
         }
         
-        $open = $this->getConfigurationSetting("open");
-        $close = $this->getConfigurationSetting("close");
+        $dayOfWeek = date( "N", time());
+        $open = $this->getConfigurationSetting($dayOfWeek."open");
+        $close = $this->getConfigurationSetting($dayOfWeek."close");
         
         $show_start = strtotime($open);
         $show_end = strtotime($close);

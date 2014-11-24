@@ -507,7 +507,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                 $allrooms[] = $room;
             }
         }
-        asort($prices);
 
         $sortedRooms = array();
         foreach ($prices as $index => $price) {

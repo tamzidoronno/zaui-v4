@@ -527,7 +527,7 @@ class Calendar extends MarketingApplication implements Application {
         
         $this->activeFilters = $this->getApi()->getCalendarManager()->getActiveFilters();
         foreach($this->activeFilters as $filter) {
-            if ($filter == $_POST['data']['filter']) {
+            if (strtolower($filter) == strtolower($_POST['data']['filter'])) {
                 continue;
             }
             
@@ -538,9 +538,13 @@ class Calendar extends MarketingApplication implements Application {
         $this->getApi()->getCalendarManager()->applyFilter($filters);
     }
     
+    private function in_arrayi($needle, $haystack) {
+        return in_array(strtolower($needle), array_map('strtolower', $haystack));
+    }
+    
     public function isSelected($filter) {
         if ($this->activeFilters)
-            return in_array($filter, $this->activeFilters);
+            return $this->in_arrayi($filter, $this->activeFilters);
         else
             return false;
     }

@@ -1,6 +1,7 @@
 package com.thundashop.core.cartmanager;
 
 import com.thundashop.core.cartmanager.data.Cart;
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.common.Administrator;
@@ -32,6 +33,9 @@ public interface ICartManager {
      * @throws ErrorException 
      */
     public Double getShippingPriceBasis() throws ErrorException;
+    
+    
+    public CartItem addProductItem(String productId, int count) throws ErrorException;
     
     /**
      * Change the number of instances added to the product.

@@ -82,6 +82,19 @@ public class CartManager extends ManagerBase implements ICartManager {
     }
 
     @Override
+    public CartItem addProductItem(String productId, int count) throws ErrorException {
+        Product product = getProduct(productId, null);
+        updateTranslation(product, true);
+        if (product != null) {
+            Cart cart = getCart(getSession().id);
+            return cart.createCartItem(product, count);
+        } else {
+            throw new ErrorException(1011);
+        }
+    }
+    
+    
+    @Override
     public Cart updateProductCount(String cartItemId, int count) throws ErrorException {
         Cart cart = getCart(getSession().id);
         cart.setProductCount(cartItemId, count);

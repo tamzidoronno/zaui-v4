@@ -14,6 +14,7 @@ import com.thundashop.core.appmanager.data.ApplicationSettings;
 import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.hotelbookingmanager.BookingReference;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.storemanager.data.Store;
@@ -98,7 +99,7 @@ public class UpgradeBase {
         return retstores;
         
     }
-    
+   
     public List<Store> getAllStores() throws UnknownHostException {
         Morphia morphia = new Morphia();
         morphia.map(DataCommon.class);
@@ -160,6 +161,31 @@ public class UpgradeBase {
                         retval.put(colection, new HashMap());
                     }
                     retval.get(colection).put(page.id, page);
+                }
+            }
+        }
+        m.close();
+        return retval;
+    }
+
+    public List<BookingReference> getAllBookingReferences() throws UnknownHostException {
+        List<BookingReference> retval = new ArrayList();
+        Mongo m = new Mongo("localhost", 27017);
+        DB db = m.getDB("HotelBookingManager");
+
+        Morphia morphia = new Morphia();
+        morphia.map(DataCommon.class);
+
+        Set<String> collections = db.getCollectionNames();
+        for (String colection : collections) {
+            DBCollection colectioninstance = db.getCollection(colection);
+            DBCursor documents = colectioninstance.find();
+            while (documents.hasNext()) {
+                DBObject document = documents.next();
+                DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, document);
+                if (dataCommon instanceof BookingReference) {
+                    BookingReference page = (BookingReference) dataCommon;
+                    retval.add(page);
                 }
             }
         }

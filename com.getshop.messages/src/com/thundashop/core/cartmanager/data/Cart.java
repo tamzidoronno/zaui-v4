@@ -223,4 +223,12 @@ public class Cart extends DataCommon {
         
         return retTaxes;
     }
+
+    public CartItem createCartItem(Product product, int count) {
+        CartItem cartItem = new CartItem();
+        cartItem.setProduct(product);
+        cartItem.setCount(count);
+        items.add(cartItem);
+        return cartItem;
+    }
 }

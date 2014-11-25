@@ -429,8 +429,18 @@ class Hotelbooking extends \ApplicationBase implements \Application {
 
         $reference = $this->getApi()->getHotelBookingManager()->reserveRoom($type, $start, $end, $count, $contact, $inactive, $this->getFactory()->getSelectedLanguage());
         if (($reference) > 0) {
+            $reservation = $this->getApi()->getHotelBookingManager()->getReservationByReferenceId($reference);
             $cartmgr = $this->getApi()->getCartManager();
             $cartmgr->setReference($reference);
+            
+            $cart = $cartmgr->getCart();
+            foreach($cart->items as $item) {
+                if($item->product->id == $this->getProductId()) {
+                    $ids[] = $item->cartItemId;
+                }
+            }
+            $this->getApi()->getHotelBookingManager()->setCartItemIds($reference, $ids);
+            
             
             $user = null;
             if (!$this->partnerShipChecked()) {
@@ -447,7 +457,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             
             
             if(isset($_POST['data']['heardaboutus'])) {
-                $reservation = $this->getApi()->getHotelBookingManager()->getReservationByReferenceId($reference);
                 $reservation->heardAboutUs = $_POST['data']['heardaboutus'];
                 $this->startAdminImpersonation("HotelBookingManager", "updateReservation");
                 $this->getApi()->getHotelBookingManager()->updateReservation($reservation);
@@ -811,7 +820,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $mgr = $this->getApi()->getCartManager();
         $mgr->clear();
 
-        $mgr->addProduct($this->getProductId(), $this->getDayCount(), null);
+        for($i = 0; $i < $this->getRoomCount(); $i++) {
+            $mgr->addProductItem($this->getProductId(), $this->getDayCount(), null);
+        }
         
         $cleaningid = $this->getCleaningOption();
         if ($cleaningid && $this->getDayCount() > 3) {
@@ -823,7 +834,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
 
         $parking = $this->getParking();
         if($parking) {
-            
             $mgr->addProduct($this->getParkingProduct()->id, $this->getDayCount(), null);
         }
     }

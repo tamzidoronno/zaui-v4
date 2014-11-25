@@ -55,25 +55,25 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        ApplicationSettings netaxcept = createSettings(
-                "Netaxept",
-                "def1e922-972f-4557-a315-a751a9b9eff1",
-                allowed,
-                "",
-                ApplicationSettings.Type.Payment, true);
-        netaxcept.isPublic = true;
-        apps.add(netaxcept);
-
-        ApplicationSettings visma = createSettings(
-                "Visma",
-                "4cc9499c-6928-4811-9c9b-dba648258c52",
-                allowed,
-                "",
-                ApplicationSettings.Type.Reporting, true);
-        visma.isPublic = false;
-		visma.allowedStoreIds = new ArrayList();
-		visma.allowedStoreIds.add("3292fa74-32a2-4d52-b88f-6be6f3dff813");
-        apps.add(visma);
+//        ApplicationSettings netaxcept = createSettings(
+//                "Netaxept",
+//                "def1e922-972f-4557-a315-a751a9b9eff1",
+//                allowed,
+//                "",
+//                ApplicationSettings.Type.Payment, true);
+//        netaxcept.isPublic = true;
+//        apps.add(netaxcept);
+//
+//        ApplicationSettings visma = createSettings(
+//                "Visma",
+//                "4cc9499c-6928-4811-9c9b-dba648258c52",
+//                allowed,
+//                "",
+//                ApplicationSettings.Type.Reporting, true);
+//        visma.isPublic = false;
+//		visma.allowedStoreIds = new ArrayList();
+//		visma.allowedStoreIds.add("3292fa74-32a2-4d52-b88f-6be6f3dff813");
+//        apps.add(visma);
 
 //        
 //        ApplicationSettings hotelvask = createSettings(

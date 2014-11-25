@@ -1076,6 +1076,28 @@ class CartManager(object):
     data.interfaceName = "core.cartmanager.ICartManager"
     return self.communicationHelper.sendMessage(data)
 
+  def addProductItem(self, productId, count):
+    args = collections.OrderedDict()
+    if isinstance(productId,GetShopBaseClass): 
+      args["productId"]=json.dumps(productId.__dict__)
+    else:
+      try:
+        args["productId"]=json.dumps(productId)
+      except (ValueError, AttributeError):
+        args["productId"]=productId
+    if isinstance(count,GetShopBaseClass): 
+      args["count"]=json.dumps(count.__dict__)
+    else:
+      try:
+        args["count"]=json.dumps(count)
+      except (ValueError, AttributeError):
+        args["count"]=count
+    data = EmptyClass()
+    data.args = args
+    data.method = "addProductItem"
+    data.interfaceName = "core.cartmanager.ICartManager"
+    return self.communicationHelper.sendMessage(data)
+
   def applyCouponToCurrentCart(self, code):
     args = collections.OrderedDict()
     if isinstance(code,GetShopBaseClass): 
@@ -2117,6 +2139,28 @@ class HotelBookingManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "setBookingConfiguration"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def setCartItemIds(self, referenceId, ids):
+    args = collections.OrderedDict()
+    if isinstance(referenceId,GetShopBaseClass): 
+      args["referenceId"]=json.dumps(referenceId.__dict__)
+    else:
+      try:
+        args["referenceId"]=json.dumps(referenceId)
+      except (ValueError, AttributeError):
+        args["referenceId"]=referenceId
+    if isinstance(ids,GetShopBaseClass): 
+      args["ids"]=json.dumps(ids.__dict__)
+    else:
+      try:
+        args["ids"]=json.dumps(ids)
+      except (ValueError, AttributeError):
+        args["ids"]=ids
+    data = EmptyClass()
+    data.args = args
+    data.method = "setCartItemIds"
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 

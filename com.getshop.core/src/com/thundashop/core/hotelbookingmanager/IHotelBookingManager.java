@@ -118,4 +118,6 @@ public interface IHotelBookingManager {
 
     @Administrator
     public void markReferenceAsStopped(int referenceId, Date stoppedDate) throws ErrorException;
+    
+    public void setCartItemIds(int referenceId, List<String> ids) throws ErrorException;
 }

@@ -412,6 +412,21 @@ public class APIHotelBookingManager {
      * @return
      * @throws ErrorException
      */
+     public void setCartItemIds(int referenceId, java.util.List ids)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("referenceId",new Gson().toJson(referenceId));
+          data.args.put("ids",new Gson().toJson(ids));
+          data.method = "setCartItemIds";
+          data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager";
+          String result = transport.send(data);
+     }
+
+     /**
+     * Get all references
+     * @return
+     * @throws ErrorException
+     */
      public void setVismaConfiguration(com.thundashop.core.hotelbookingmanager.VismaSettings settings)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new LinkedHashMap();

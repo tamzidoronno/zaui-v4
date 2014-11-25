@@ -977,6 +977,22 @@ class APICartManager {
 	}
 
 	/**
+	* Fetch the total amount of price to use when calculating shipping price.
+	* @return core_cartmanager_data_CartItem
+	* @throws ErrorException
+	*/
+
+	public function addProductItem($productId, $count) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $data['args']["count"] = json_encode($this->transport->object_unset_nulls($count));
+	     $data["method"] = "addProductItem";
+	     $data["interfaceName"] = "core.cartmanager.ICartManager";
+	     return $this->transport->cast(new core_cartmanager_data_CartItem(), $this->transport->sendMessage($data));
+	}
+
+	/**
 	* Apply the coupon to the cart.
 	*/
 
@@ -2054,6 +2070,22 @@ class APIHotelBookingManager {
 	     $data['args'] = array();
 	     $data['args']["core_hotelbookingmanager_GlobalBookingSettings"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_GlobalBookingSettings));
 	     $data["method"] = "setBookingConfiguration";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function setCartItemIds($referenceId, $ids) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["referenceId"] = json_encode($this->transport->object_unset_nulls($referenceId));
+	     $data['args']["ids"] = json_encode($this->transport->object_unset_nulls($ids));
+	     $data["method"] = "setCartItemIds";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
 	}

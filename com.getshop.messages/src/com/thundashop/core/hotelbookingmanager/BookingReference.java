@@ -9,7 +9,6 @@ import java.util.List;
 
 public class BookingReference extends DataCommon {
 
-
     static class uploadArxStatus {
         public static Integer NOTHING_UPLOADED = 0;
         public static Integer OUTDOORSUPLOADED = 1;
@@ -21,7 +20,8 @@ public class BookingReference extends DataCommon {
     public Date endDate;
     public String language = "nb_NO";
     public List<Integer> codes = new ArrayList();
-    public List<String> roomIds = new ArrayList();
+    private List<String> roomIds = new ArrayList();
+    private List<ReservedRoom> rooms = new ArrayList();
     
     //0 = No rooms has been up
     public HashMap<String, Integer> uploadedRoomToArx = new HashMap();
@@ -62,9 +62,20 @@ public class BookingReference extends DataCommon {
         return false;
     }
 
+    void setCartItemIds(List<String> ids) {
+        for(int i = 0; i < ids.size(); i++) {
+            rooms.get(i).cartItemId = ids.get(i);
+        }
+    }
+    
+    @Deprecated
+    public List<String> getRoomIdsForConversion() {
+        return roomIds;
+    }
+    
     boolean allRoomsClean(HashMap<String, Room> rooms) {
         boolean clean = true;
-        for (String roomId : roomIds) {
+        for (String roomId : getRoomIds()) {
             Room room = rooms.get(roomId);
             if (!room.isClean && !room.isCleanedToday()) {
                 clean = false;
@@ -72,6 +83,51 @@ public class BookingReference extends DataCommon {
             }
         }
         return clean;
+    }
+
+    public void addRoom(String id) {
+        ReservedRoom room = new ReservedRoom();
+        room.roomId = id;
+        rooms.add(room);
+    }
+
+    List<String> getRoomIds() {
+        List<String> ids = new ArrayList();
+        for(ReservedRoom room : rooms) {
+            ids.add(room.roomId);
+        }
+        return ids;
+    }
+    
+    void moveRoom(String oldRoom, String newRoomId) {
+        for(ReservedRoom room : rooms) {
+            if(room.roomId.equals(oldRoom)) {
+                room.roomId = oldRoom;
+            }
+        }
+    }
+
+    
+    public String getRoomIdOnCartItem(String cartItemId) {
+        for(ReservedRoom room : rooms) {
+            if(room.cartItemId != null && room.cartItemId.equals(cartItemId)) {
+                return room.roomId;
+            }
+        }
+        
+        if(rooms.size() == 1) {
+            return rooms.get(0).roomId;
+        }
+        
+        return null;
+    }
+
+    void setCartItemToRoom(String roomId, String cartItemId) {
+        for(ReservedRoom room : rooms) {
+            if(room.roomId != null && room.roomId.equals(roomId)) {
+                room.cartItemId = cartItemId;
+            }
+        }
     }
 
     int statusOnRoom(Room room) {

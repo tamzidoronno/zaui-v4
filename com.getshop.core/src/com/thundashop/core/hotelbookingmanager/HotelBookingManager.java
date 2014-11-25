@@ -393,7 +393,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     public Room getRoomForCartItem(Integer reference, String cartItemId) throws ErrorException {
         BookingReference reservation = getReservationByReferenceId(reference);
         String roomId = reservation.getRoomIdOnCartItem(cartItemId);
-
+        
+        saveObject(reservation);
+        
         if (roomId != null) {
             return getRoom(roomId);
         }

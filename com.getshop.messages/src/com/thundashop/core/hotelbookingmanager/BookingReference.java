@@ -116,7 +116,8 @@ public class BookingReference extends DataCommon {
             }
         }
         
-        if(rooms.size() == 1) {
+        if(rooms.size() == 1 && rooms.get(0).cartItemId == null) {
+            rooms.get(0).cartItemId = cartItemId;
             return rooms.get(0).roomId;
         }
         

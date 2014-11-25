@@ -275,6 +275,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
     }
     
+	public void setOrdersActivatedByReferenceId(String referenceId) throws ErrorException {
+		 for(Order order : orders.values()) {
+            if(order.reference.equals(referenceId)) {
+                order.activated = true;
+				saveOrder(order);
+            }
+        }
+	}
+	
     private void handleApplicationPayment(String currency, double price) throws ErrorException {
         System.out.println(currency);
         AppManager appManager = getManager(AppManager.class);

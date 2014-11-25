@@ -101,7 +101,10 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         $id = $_POST['data']['id'];
         $this->getApi()->getHotelBookingManager()->deleteReference($id);
     }
-    
+       
+    public function activateBooking() {
+        $this->getApi()->getHotelBookingManager()->confirmReservation($_POST['data']['referenceid']);
+    }
     
     public function deleteType() {
         $id = $_POST['data']['typeId'];

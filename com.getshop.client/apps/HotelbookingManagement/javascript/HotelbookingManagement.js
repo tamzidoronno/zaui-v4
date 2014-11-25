@@ -97,8 +97,17 @@ app.HotelbookingManagement = {
         $(document).on('click', '.HotelbookingManagement .stop_reference', app.HotelbookingManagement.showStopReference);
         $(document).on('keyup', '.HotelbookingManagement .adminfee', app.HotelbookingManagement.updateAdminFee);
         $(document).on('click', '.HotelbookingManagement .stop_reference_action', app.HotelbookingManagement.doStopReference);
-    }
+        $(document).on('click', '.HotelbookingManagement .go_live', app.HotelbookingManagement.confirmReservation);
+    },
     
+    confirmReservation: function() {
+        var data = {
+            referenceid : $(this).attr('refid')
+        };
+        
+        var event = thundashop.Ajax.createEvent(null, "activateBooking", this, data);
+        thundashop.Ajax.post(event);
+    }
 }
 
 app.HotelbookingManagement.initEvents();

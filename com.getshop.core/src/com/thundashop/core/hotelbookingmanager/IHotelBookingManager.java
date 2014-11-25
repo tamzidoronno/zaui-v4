@@ -91,6 +91,9 @@ public interface IHotelBookingManager {
     @Administrator
     public void removeRoomType(String id) throws ErrorException;
     
+	@Administrator
+	public void confirmReservation(int bookingReferenceId) throws ErrorException;
+	
     @Administrator
     public void updateReservation(BookingReference reference) throws ErrorException;
     

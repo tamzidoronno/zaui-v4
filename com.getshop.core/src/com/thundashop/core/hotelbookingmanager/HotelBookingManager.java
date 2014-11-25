@@ -822,6 +822,15 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 	}
 
 	@Override
+	public void confirmReservation(int bookingReferenceId) throws ErrorException {
+		BookingReference bookingReference = getReservationByReferenceId(bookingReferenceId);
+		bookingReference.confirmed = true;
+		OrderManager orderManager = getManager(OrderManager.class);
+		orderManager.setOrdersActivatedByReferenceId(""+bookingReferenceId);
+		saveObject(bookingReference);
+	}
+	
+	@Override
 	public String getEmailMessage(String language) throws ErrorException {
 		if (arxSettings == null) {
 			return "";

@@ -101,6 +101,20 @@ public class APIHotelBookingManager {
      * @return
      * @throws ErrorException
      */
+     public void confirmReservation(int bookingReferenceId)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("bookingReferenceId",new Gson().toJson(bookingReferenceId));
+          data.method = "confirmReservation";
+          data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager";
+          String result = transport.send(data);
+     }
+
+     /**
+     * Get all references
+     * @return
+     * @throws ErrorException
+     */
      public void deleteReference(int reference)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new LinkedHashMap();

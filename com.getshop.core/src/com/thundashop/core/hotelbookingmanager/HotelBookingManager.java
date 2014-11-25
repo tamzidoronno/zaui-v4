@@ -62,27 +62,27 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 public class HotelBookingManager extends ManagerBase implements IHotelBookingManager {
-    
+
     public BookingSettings booksettings = new BookingSettings();
     public GlobalBookingSettings settings = new GlobalBookingSettings();
     public ArxSettings arxSettings = new ArxSettings();
     public VismaSettings vismaSettings = new VismaSettings();
-    
+
     public HashMap<String, Room> rooms = new HashMap();
     public HashMap<String, RoomType> roomTypes = new HashMap();
     public HashMap<Integer, BookingReference> bookingReferences = new HashMap();
     private VismaUsers transferredUsers = new VismaUsers();
-    
+
     public List<ArxLogEntry> logEntries = new ArrayList();
     public Date lastNotifiedError = null;
-    
+
     @Autowired
     private FrameworkConfig frameworkConfig;
-    
+
     private MessageManager getMsgManager() {
         return getManager(MessageManager.class);
     }
-    
+
     @Override
     public void dataFromDatabase(DataRetreived data) {
         List<ArxLogEntry> tmpLogEntries = new ArrayList();
@@ -105,7 +105,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             if (dbobj instanceof GlobalBookingSettings) {
                 settings = (GlobalBookingSettings) dbobj;
             }
-            
+
             if (dbobj instanceof Room) {
                 Room room = (Room) dbobj;
                 rooms.put(dbobj.id, room);
@@ -115,7 +115,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 bookingReferences.put(reference.bookingReference, reference);
             }
         }
-        
+
         sortLogEntries(tmpLogEntries);
         int i = 0;
         for (ArxLogEntry entry : tmpLogEntries) {
@@ -126,48 +126,48 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
         }
     }
-    
+
     @Autowired
     public HotelBookingManager(Logger log, DatabaseSaver databaseSaver) {
         super(log, databaseSaver);
     }
-    
+
     @Override
     public Integer checkAvailable(long startDate, long endDate, String typeName) throws ErrorException {
         Calendar todayCal = getTodayCalendar();
         Date start = getStartDate(startDate);
         Date end = getEndDate(endDate);
-        
+
         if (start.before(todayCal.getTime())) {
             return -1;
         }
-        
+
         if (end.before(start)) {
             return -2;
         }
-        
+
         RoomType rtype = null;
         for (RoomType type : roomTypes.values()) {
             if (type.name.trim().equalsIgnoreCase(typeName.trim())) {
                 rtype = type;
             }
         }
-        
+
         if (rtype == null) {
             getMsgManager().mailFactory.send("post@getshop.com", "post@getshop.com", "Booking failed for " + storeId + " room type is fail type : " + typeName, getStore().webAddress + " : " + getStore().webAddressPrimary + " : ");
             throw new ErrorException(1023);
         }
-        
+
         int count = 0;
         for (Room room : rooms.values()) {
             if (room.roomType != null && room.roomType.equals(rtype.id) && room.isAvilable(start, end)) {
                 count++;
             }
         }
-        
+
         return count;
     }
-    
+
     @Override
     public String reserveRoom(String roomType, long startDate, long endDate, int count, ContactData contact, boolean markRoomInactive, String language) throws ErrorException {
         //First make sure there is enough rooms available.
@@ -176,20 +176,20 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         if (availableRooms < count) {
             return "-1";
         }
-        
+
         Date start = new Date(startDate * 1000);
         Calendar cal = Calendar.getInstance();
         cal.setTime(start);
         cal.set(Calendar.HOUR_OF_DAY, 15);
         cal.set(Calendar.MINUTE, 0);
         start = cal.getTime();
-        
+
         Date end = new Date(endDate * 1000);
         cal.setTime(end);
         cal.set(Calendar.HOUR_OF_DAY, 12);
         cal.set(Calendar.MINUTE, 0);
         end = cal.getTime();
-        
+
         BookingReference reference = new BookingReference();
         reference.bookingReference = genereateReferenceId();
         reference.startDate = start;
@@ -199,7 +199,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             logSkippedSendingEmail(reference);
             reference.sentWelcomeMessages = "true";
         }
-        
+
         reference.language = language;
         for (int i = 0; i < count; i++) {
             Room room = getAvailableRoom(roomtype.id, start, end);
@@ -214,12 +214,12 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         reference.storeId = storeId;
         reference.contact = contact;
-        
+
         databaseSaver.saveObject(reference, credentials);
         bookingReferences.put(reference.bookingReference, reference);
         return new Integer(reference.bookingReference).toString();
     }
-    
+
     @Override
     public void saveRoom(Room room) throws ErrorException {
         room.storeId = storeId;
@@ -231,14 +231,14 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         databaseSaver.saveObject(room, credentials);
         rooms.put(room.id, room);
     }
-    
+
     @Override
     public void removeRoom(String id) throws ErrorException {
         Room room = rooms.get(id);
         databaseSaver.deleteObject(room, credentials);
         rooms.remove(id);
     }
-    
+
     @Override
     public List<Room> getAllRooms() throws ErrorException {
         List<Room> room = new ArrayList(rooms.values());
@@ -249,35 +249,35 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                     }
                 }
         );
-        
+
         for (Room tmpRoom : room) {
             finalizeRoom(tmpRoom);
         }
-        
+
         return room;
     }
-    
+
     @Override
     public List<RoomType> getRoomTypes() throws ErrorException {
         ArrayList retval = new ArrayList(roomTypes.values());
-        
+
         Collections.sort(retval,
                 new Comparator<RoomType>() {
                     public int compare(RoomType f1, RoomType f2) {
                         return f1.name.compareTo(f2.name);
                     }
                 });
-        
+
         return retval;
     }
-    
+
     @Override
     public void saveRoomType(RoomType type) throws ErrorException {
         type.storeId = storeId;
         databaseSaver.saveObject(type, credentials);
         roomTypes.put(type.id, type);
     }
-    
+
     @Override
     public void removeRoomType(String id) throws ErrorException {
         RoomType type = roomTypes.get(id);
@@ -290,7 +290,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         databaseSaver.deleteObject(type, credentials);
         roomTypes.remove(id);
     }
-    
+
     private Room getAvailableRoom(String roomTypeId, Date startDate, Date endDate) {
         for (Room room : rooms.values()) {
             if (room.roomType == null || !room.roomType.equals(roomTypeId)) {
@@ -300,17 +300,17 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 return room;
             }
         }
-        
+
         return null;
     }
-    
+
     private int genereateReferenceId() throws ErrorException {
         booksettings.referenceCount++;
         int count = booksettings.referenceCount;
         saveObject(booksettings);
         return count;
     }
-    
+
     private RoomType getRoomType(String roomTypeName) {
         for (RoomType roomtype : roomTypes.values()) {
             if (roomtype.name.equals(roomTypeName)) {
@@ -319,7 +319,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         return null;
     }
-    
+
     @Override
     public List<BookingReference> getAllReservations() throws ErrorException {
         List<BookingReference> result = new ArrayList(bookingReferences.values());
@@ -328,10 +328,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 return reference1.rowCreatedDate.compareTo(reference2.rowCreatedDate);
             }
         });
-        
+
         return result;
     }
-    
+
     @Override
     public void deleteReference(int reference) throws ErrorException {
         BookingReference ref = bookingReferences.get(reference);
@@ -345,16 +345,16 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         databaseSaver.deleteObject(ref, credentials);
         bookingReferences.remove(reference);
-        
+
         OrderManager manager = getManager(OrderManager.class);
         manager.unsetExpiryDateByReference("" + reference);
     }
-    
+
     @Override
     public Room getRoom(String id) throws ErrorException {
         return rooms.get(id);
     }
-    
+
     @Override
     public BookingReference getReservationByReferenceId(Integer referenceId) throws ErrorException {
         List<BookingReference> allReservations = getAllReservations();
@@ -365,41 +365,41 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         return null;
     }
-    
+
     @Override
     public void moveRoomOnReference(Integer reference, String oldRoom, String newRoomId) throws ErrorException {
         BookingReference bookingreference = getReservationByReferenceId(reference);
         Room existingRoom = getRoom(oldRoom);
         Room newRoom = getRoom(newRoomId);
-        
+
         if (!existingRoom.isActive) {
             existingRoom.isActive = true;
             newRoom.isActive = false;
         }
         existingRoom.lastReservation = null;
-        
+
         List<BookedDate> existingBookingDates = existingRoom.getBookedDatesByReference(reference);
         newRoom.bookedDates.addAll(existingBookingDates);
         existingRoom.bookedDates.removeAll(existingBookingDates);
         bookingreference.updateArx = true;
         bookingreference.moveRoom(oldRoom, newRoomId);
-        
+
         saveObject(bookingreference);
         saveRoom(newRoom);
         saveRoom(existingRoom);
         checkForArxUpdate();
     }
-    
+
     public Room getRoomForCartItem(Integer reference, String cartItemId) throws ErrorException {
         BookingReference reservation = getReservationByReferenceId(reference);
         String roomId = reservation.getRoomIdOnCartItem(cartItemId);
-        
+
         if (roomId != null) {
             return getRoom(roomId);
         }
         throw new ErrorException(1030);
     }
-    
+
     @Override
     public void updateReservation(BookingReference reference) throws ErrorException {
         reference.updateArx = true;
@@ -407,25 +407,25 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         saveObject(reference);
         checkForArxUpdate();
     }
-    
+
     void checkForArxUpdate() throws ErrorException {
-        
+
         if (arxSettings != null && arxSettings.address != null && !arxSettings.address.isEmpty()) {
             for (BookingReference reference : bookingReferences.values()) {
-                
+
                 if (reference.failed != null) {
                     long diff = new Date().getTime() - reference.failed.getTime();
                     if (diff < 10 * 60 * 1000) {
                         continue;
                     }
                 }
-                
+
                 if (!reference.isToday()) {
                     continue;
                 }
-                
+
                 checkForCleanRoomsToChange(reference);
-                
+
                 System.out.println("Need to update arx with reference: " + reference.bookingReference);
                 int i = 0;
                 boolean success = false;
@@ -433,11 +433,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                     String roomId = reference.getRoomIds().get(i);
                     Room room = getRoom(roomId);
                     ArxUser user = new ArxUser();
-                    
+
                     if (reference.statusOnRoom(room) == BookingReference.uploadArxStatus.ALLROOMSUPDATED) {
                         continue;
                     }
-                    
+
                     Integer statusToSet = 0;
                     if (room.isClean || room.isCleanedToday()) {
                         reference.startDate = new Date();
@@ -449,7 +449,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                         statusToSet = BookingReference.uploadArxStatus.OUTDOORSUPLOADED;
                         user.doorsToAccess.add("Ytterdører");
                     }
-                    
+
                     String[] names = name.split(" ");
                     user.firstName = names[0];
                     user.lastName = name.substring(user.firstName.length()).trim();
@@ -478,7 +478,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
         }
     }
-    
+
     private boolean sendUserToArx(ArxUser user) throws ErrorException {
         String toPost = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
         toPost += "<arxdata timestamp=\"" + new SimpleDateFormat("yyyy-MM-dd+HH:mm:ss").format(new Date()) + "\">\n";
@@ -514,12 +514,12 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         toPost += "</card>";
         toPost += "</cards>";
         toPost += "</arxdata>";
-        
+
         String result = httpLoginRequest(arxSettings.address, arxSettings.username, arxSettings.password, toPost);
         logArxCommunication(result, user);
         return !result.equals("failed");
     }
-    
+
     public String httpLoginRequest(String address, String username, String password, String content) {
         String loginToken = null;
         String loginUrl = address;
@@ -527,29 +527,29 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         DefaultHttpClient client = new DefaultHttpClient();
         client = wrapClient(client);
         HttpResponse httpResponse;
-        
+
         HttpEntity entity;
         HttpPost request = new HttpPost(loginUrl);
         byte[] bytes = (username + ":" + password).getBytes();
         String encoding = Base64.encode(bytes);
-        
+
         request.addHeader("Authorization", "Basic " + encoding);
-        
+
         StringBody comment = new StringBody("A binary file of some kind", ContentType.TEXT_PLAIN);
-        
+
         StringBody body = new StringBody(content, ContentType.TEXT_PLAIN);
-        
+
         HttpEntity reqEntity = MultipartEntityBuilder.create()
                 .addPart("upfile", body)
                 .addPart("comment", comment)
                 .build();
-        
+
         request.setEntity(reqEntity);
-        
+
         try {
             httpResponse = client.execute(request);
             entity = httpResponse.getEntity();
-            
+
             if (entity != null) {
                 InputStream instream = entity.getContent();
                 int ch;
@@ -569,18 +569,18 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         return "failed";
     }
-    
+
     public static DefaultHttpClient wrapClient(DefaultHttpClient base) {
         try {
             SSLContext ctx = SSLContext.getInstance("TLS");
             X509TrustManager tm = new X509TrustManager() {
-                
+
                 public void checkClientTrusted(X509Certificate[] xcs, String string) throws CertificateException {
                 }
-                
+
                 public void checkServerTrusted(X509Certificate[] xcs, String string) throws CertificateException {
                 }
-                
+
                 public X509Certificate[] getAcceptedIssuers() {
                     return null;
                 }
@@ -597,7 +597,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             return null;
         }
     }
-    
+
     @Override
     public void setArxConfiguration(ArxSettings settings) throws ErrorException {
         if (arxSettings == null) {
@@ -607,7 +607,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         arxSettings = settings;
         saveObject(arxSettings);
     }
-    
+
     private void logArxCommunication(String result, ArxUser user) throws ErrorException {
         ArxLogEntry entry = new ArxLogEntry();
         entry.message = result;
@@ -617,13 +617,13 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         databaseSaver.saveObject(entry, credentials);
         logEntries.add(entry);
     }
-    
+
     @Override
     public List<ArxLogEntry> getArxLog() throws ErrorException {
         sortLogEntries(logEntries);
         return logEntries;
     }
-    
+
     private void sortLogEntries(List<ArxLogEntry> logEntries) {
         Collections.sort(logEntries, new Comparator<ArxLogEntry>() {
             public int compare(ArxLogEntry f1, ArxLogEntry f2) {
@@ -631,7 +631,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
         });
     }
-    
+
     @Override
     public void markRoomAsReady(String roomId) throws ErrorException {
         Room room = getRoom(roomId);
@@ -640,18 +640,18 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         saveObject(getRoom(roomId));
         checkForArxUpdate();
     }
-    
+
     private boolean isTransferred(User user) throws ClassNotFoundException, SQLException {
         if (user.isTransferredToAccountSystem) {
             return true;
         }
-        
+
         if (checkInVismaIfUserExists(user)) {
             UserManager userManager = getManager(UserManager.class);
             userManager.markUserAsTransferredToVisma(user);
             return true;
         }
-        
+
         return false;
     }
 
@@ -670,7 +670,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         return VismaUsers.generateOrderLines(ordermgr.getAllOrdersForUser(user.id), user, references, manager, this, settingsFromVismaApp, msgManager, ordermgr);
     }
-    
+
     @Override
     public void checkForVismaTransfer() throws ErrorException {
         try {
@@ -684,52 +684,52 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             sendSqlErrorMessage(ex);
         }
     }
-    
+
     public void checkForVismaTransferInternal() throws ErrorException, ClassNotFoundException, SQLException, IOException {
-        
+
         if (vismaSettings == null || vismaSettings.address == null || vismaSettings.address.isEmpty()) {
             return;
         }
-        
+
         Map<String, Setting> settingsFromVismaApp = getSettings("Visma");
-        
+
         if (settingsFromVismaApp == null) {
             System.out.println("Did not find settings");
             return;
         }
-        
+
         Setting activated = settingsFromVismaApp.get("vismaactivate");
         if (activated == null || activated.value.equals("false")) {
             System.out.println("Visma not activated, check visma app");
             return;
         }
-        
+
         String result = "";
         UserManager usrmgr = getManager(UserManager.class);
-        
+
         List<User> allUsers = usrmgr.getAllUsers();
-        
+
         for (User user : allUsers) {
             if (!user.isCustomer()) {
                 continue;
             }
-            
+
             try {
                 if (!isTransferred(user)) {
                     result += VismaUsers.generateVismaUserString(user) + "\r\n";
                 }
-                
+
                 result += generateOrderLines(user, settingsFromVismaApp);
             } catch (RuntimeException ex) {
                 ex.printStackTrace();
                 getMsgManager().mailFactory.send("internal@getshop.com", "post@getshop.com", "Failed to export user + orders to visma", "For storid: " + storeId + " userid: " + user.id + "(" + user.toString() + ")");
             }
         }
-        
+
         if (result.isEmpty()) {
             return;
         }
-        
+
         if (frameworkConfig.productionMode) {
             FTPClient client = new FTPClient();
             client.connect(vismaSettings.address, vismaSettings.port);
@@ -740,7 +740,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             if (!FTPReply.isPositiveCompletion(reply)) {
                 throw new IOException("Failed to connect to FTP Server, " + vismaSettings.address);
             }
-            
+
             String filename = "orders_" + new SimpleDateFormat("yyyyMMdd-k_m").format(new Date()) + ".edi";
             String path = "/tmp/" + filename;
             PrintWriter writer = new PrintWriter(path, "ISO-8859-1");
@@ -757,14 +757,14 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             System.out.println(result);
         }
     }
-    
+
     @Override
     public void setVismaConfiguration(VismaSettings settings) throws ErrorException {
         settings.id = vismaSettings.id;
         vismaSettings = settings;
         saveObject(vismaSettings);
     }
-    
+
     private void notifyCustomerReadyRoom(BookingReference reference, Integer offset) throws ErrorException {
         String phonenumber = reference.contact.phones.get(offset);
         Room room = getRoom(reference.getRoomIds().get(offset));
@@ -773,11 +773,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         if (reference.language.equals("nb_NO")) {
             origMessage = arxSettings.smsReadyNO;
         }
-        
+
         String message = formatMessage(reference, origMessage, room.roomName, code, reference.contact.names.get(offset));
         sendSMS(phonenumber, message);
     }
-    
+
     private String formatMessage(BookingReference reference, String message, String roomName, Integer code, String name) throws ErrorException {
         if (code != null) {
             message = message.replaceAll("\\{code\\}", code + "");
@@ -804,7 +804,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             contacts += reference.contact.phones.get(i) + "<br>";
         }
         message = message.replaceAll("\\{contacts\\}", contacts);
-        
+
         OrderManager ordermgr = getManager(OrderManager.class);
         UserManager usermgr = getManager(UserManager.class);
         Order order = ordermgr.getOrderByReference(reference.bookingReference + "");
@@ -820,7 +820,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         return message;
     }
-    
+
     private void sendSMS(String phonenumber, String message) throws ErrorException {
         try {
             getMsgManager().smsFactory.send(arxSettings.smsFrom, phonenumber, message);
@@ -829,7 +829,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             logsms(phonenumber, message, false);
         }
     }
-    
+
     @Override
     public String getEmailMessage(String language) throws ErrorException {
         if (arxSettings == null) {
@@ -843,7 +843,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         return arxSettings.emailWelcome;
     }
-    
+
     private String getEmailTitle(String language) {
         if (arxSettings == null) {
             return "";
@@ -856,7 +856,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         return arxSettings.emailWelcomeTitle;
     }
-    
+
     @Override
     public void checkForArxTransfer() throws ErrorException {
         try {
@@ -866,15 +866,15 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             java.util.logging.Logger.getLogger(HotelBookingManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @Override
     public synchronized void checkForWelcomeMessagesToSend() throws ErrorException {
-        
+
         for (BookingReference reference : getAllReservations()) {
             if (reference.sentWelcomeMessages.equals("true")) {
                 continue;
             }
-            
+
             System.out.println("Sending welcome messages");
 
             //Send sms messages.
@@ -897,7 +897,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             //Sending email confirmation to user.
             String message = formatMessage(reference, getEmailMessage(reference.language), null, 0, reference.contact.names.get(0));
             String title = formatMessage(reference, getEmailTitle(reference.language), null, 0, reference.contact.names.get(0));
-            
+
             OrderManager ordermgr = getManager(OrderManager.class);
             UserManager usermgr = getManager(UserManager.class);
             Order order = ordermgr.getOrderByReference(reference.bookingReference + "");
@@ -916,16 +916,16 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 }
             }
         }
-        
+
     }
-    
+
     private void finalizeRoom(Room tmpRoom) throws ErrorException {
         for (Date cleaned : tmpRoom.cleaningDates) {
             if (tmpRoom.lastCleaning == null || tmpRoom.lastCleaning.before(cleaned)) {
                 tmpRoom.lastCleaning = cleaned;
             }
         }
-        
+
         List<BookingReference> allReservations = getAllReservations();
         for (BookingReference reservation : allReservations) {
             if (reservation.getRoomIds().contains(tmpRoom.id)) {
@@ -941,7 +941,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             }
         }
     }
-    
+
     private void logsms(String phonenumber, String message, boolean delivered) throws ErrorException {
         ArxLogEntry arxlog = new ArxLogEntry();
         arxlog.type = "sms";
@@ -954,9 +954,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         arxlog.storeId = storeId;
         logEntries.add(arxlog);
         databaseSaver.saveObject(arxlog, credentials);
-        
+
     }
-    
+
     private void logMailSent(String email, String name, boolean sendt, int referenceid) throws ErrorException {
         ArxLogEntry arxlog = new ArxLogEntry();
         arxlog.type = "email";
@@ -966,12 +966,12 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             arxlog.message = "Welcome message not ";
         }
         arxlog.message += " sent to " + email + " ( " + name + ") reference: " + referenceid;
-        
+
         arxlog.storeId = storeId;
         logEntries.add(arxlog);
         databaseSaver.saveObject(arxlog, credentials);
     }
-    
+
     private void logSkippedSendingEmail(BookingReference reference) throws ErrorException {
         ArxLogEntry arxlog = new ArxLogEntry();
         arxlog.type = "email";
@@ -980,34 +980,34 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         logEntries.add(arxlog);
         databaseSaver.saveObject(arxlog, credentials);
     }
-    
+
     @Override
     public void setBookingConfiguration(GlobalBookingSettings settings) throws ErrorException {
         settings.storeId = storeId;
         this.settings = settings;
         saveObject(settings);
     }
-    
+
     @Override
     public GlobalBookingSettings getBookingConfiguration() throws ErrorException {
         return settings;
     }
-    
+
     @Override
     public Integer checkAvailableParkingSpots(long startDate, long endDate) throws ErrorException {
-        
+
         Calendar todayCal = getTodayCalendar();
         Date start = getStartDate(startDate);
         Date end = getEndDate(endDate);
-        
+
         if (start.before(todayCal.getTime())) {
             return -1;
         }
-        
+
         if (end.before(start)) {
             return -2;
         }
-        
+
         int totalCount = settings.parkingSpots;
         for (BookingReference reference : getAllReservations()) {
             if (reference.isBetween(start, end)) {
@@ -1017,11 +1017,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         if (totalCount < 0) {
             return 0;
         }
-        
+
         return totalCount;
-        
+
     }
-    
+
     private Calendar getTodayCalendar() {
         Calendar todayCal = Calendar.getInstance();
         todayCal.setTime(new Date(System.currentTimeMillis()));
@@ -1030,7 +1030,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         todayCal.set(Calendar.SECOND, 0);
         return todayCal;
     }
-    
+
     private Date getStartDate(long startDate) {
         Date start = new Date(startDate * 1000);
         Calendar startCal = Calendar.getInstance();
@@ -1041,7 +1041,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         start = startCal.getTime();
         return start;
     }
-    
+
     private Date getEndDate(long endDate) {
         Date end = new Date(endDate * 1000);
         Calendar endCal = Calendar.getInstance();
@@ -1052,21 +1052,21 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         end = endCal.getTime();
         return end;
     }
-    
+
     private void checkForCleanRoomsToChange(BookingReference reference) {
         //If there is another room which is available which is of the same type and is clean, then switch to this one.
     }
-    
+
     private boolean checkSql(String sql) throws ClassNotFoundException, SQLException {
         String constring = "jdbc:sqlserver://" + vismaSettings.address + ":1433;databaseName=" + vismaSettings.database;
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        
+
         Connection conn = DriverManager.getConnection(constring, vismaSettings.sqlUsername, vismaSettings.sqlPassword);
-        
+
         try {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-            
+
             boolean exists = rs.next();
             rs.close();
             return exists;
@@ -1076,15 +1076,15 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             conn.close();
         }
     }
-    
+
     private boolean checkInVismaIfUserExists(User user) throws ClassNotFoundException, SQLException {
         return checkSql("select * from dbo.Actor where CustNo = " + user.customerId);
     }
-    
+
     boolean orderExistsInVisma(long incrementOrderId) throws ClassNotFoundException, SQLException {
         return checkSql("select ordno from dbo.Ord where csOrdNo = " + incrementOrderId);
     }
-    
+
     private void sendSqlErrorMessage(Exception ex) {
         if (lastNotifiedError != null) {
             long msSinceLastNotified = new Date().getTime() - lastNotifiedError.getTime();
@@ -1093,17 +1093,17 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 return;
             }
         }
-        
+
         MessageManager manager = getManager(MessageManager.class);
         manager.sendMail("post@getshop.com", "GetShop", "Visma failure", "Failed to query visma SQL database.<br/><br/>" + ex.getMessage(), "post@getshop.com", "GetShop System");
         lastNotifiedError = new Date();
-        
+
         ex.printStackTrace();
     }
-    
+
     @Override
     public void markReferenceAsStopped(int referenceId, Date stoppedDate) throws ErrorException {
-        BookingReference ref = getReservationByReferenceId(referenceId);        
+        BookingReference ref = getReservationByReferenceId(referenceId);
         if (ref != null) {
             ref.endDate = stoppedDate;
             ref.active = false;
@@ -1114,10 +1114,19 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     @Override
+    public void confirmReservation(int bookingReferenceId) throws ErrorException {
+        BookingReference bookingReference = getReservationByReferenceId(bookingReferenceId);
+        bookingReference.confirmed = true;
+        OrderManager orderManager = getManager(OrderManager.class);
+        orderManager.setOrdersActivatedByReferenceId("" + bookingReferenceId);
+        saveObject(bookingReference);
+    }
+
+    @Override
     public void setCartItemIds(int referenceId, List<String> ids) throws ErrorException {
         BookingReference reservation = getReservationByReferenceId(referenceId);
         reservation.setCartItemIds(ids);
         saveObject(reservation);
     }
-    
+
 }

@@ -117,7 +117,7 @@ body {
 .editormode .gs_outer.header {
     min-height: 50px !important;
     height: 50px !important;
-	background-position: 0px -150px;
+	background-position: 0px -155px;
 }
 
 body[editormode=true] {

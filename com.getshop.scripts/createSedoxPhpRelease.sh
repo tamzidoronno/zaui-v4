@@ -54,6 +54,7 @@ cp -rf ../../com.getshop.client/apps/Translation apps;
 cp -rf ../../com.getshop.client/apps/Users apps;
 cp -rf ../../com.getshop.client/apps/YouTube apps;
 cp -rf ../../com.getshop.client/apps/SedoxLatestProducts apps;
+cp -rf ../../com.getshop.client/apps/SedoxServiceIndicator apps;
 
 cd app;
 ln -s ../apps/LeftMenu              ns_00d8f5ce_ed17_4098_8925_5697f6159f66;
@@ -99,6 +100,7 @@ ln -s ../apps/Translation           ns_ee1f3649_cfd8_41d5_aa5b_682216f376b6;
 ln -s ../apps/Airgram               ns_ee96fe89_e09d_4f7b_921a_3272462e9b7e;
 ln -s ../apps/OpenSRS               ns_fb076580_c7df_471c_b6b7_9540e4212441;
 ln -s ../apps/SedoxLatestProducts   ns_8c666b2a_3dd2_4526_9f3d_1edae1e5a7af;
+ln -s ../apps/SedoxServiceIndicator ns_4cc9499c_6928_4811_9c9b_dba648258c52;
 
 cd ../../;
 tar czf web.tar.gz web;

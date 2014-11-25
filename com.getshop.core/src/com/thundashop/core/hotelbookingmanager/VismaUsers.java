@@ -78,6 +78,10 @@ public class VismaUsers extends DataCommon {
         
 		String result = "";
         for(Order order : orders) {
+            if (!order.activated) {
+				continue;
+			}
+			
             if (order.transferedToAccountingSystem) {
 				continue;
 			}

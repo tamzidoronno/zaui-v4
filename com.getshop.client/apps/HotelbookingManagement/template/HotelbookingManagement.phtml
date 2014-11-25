@@ -40,10 +40,10 @@ Existing booking references
     <table width="100%" id="datatableadmin">
         <thead>
             <tr>
-                <th>Remove</th>
+                <th>Ref id</th>
+                <th>Different actions</th>
                 <th>Registration date</th>
                 <th>Reserved by</th>
-                <th>Reservation number</th>
                 <th>Room (code)</th>
                 <th>Start date</th>
                 <th>End date</th>
@@ -65,13 +65,20 @@ Existing booking references
 
             $order = $this->getApi()->getOrderManager()->getOrderByReference($reservation->bookingReference);
             $active = $reservation->active ? "" : "color: red";
+            $alreadyConfirmed = $reservation->confirmed;
+            
             /* @var $reservation \core_hotelbookingmanager_BookingReference */
             echo "<tr reservation='".$reservation->bookingReference."'>";
             echo "<td style='text-align:center;' valign='top'>" . $reservation->bookingReference . "</td>";
             echo "<td style='text-align:center;' valign='top'>"
             . "<i style='cursor:pointer' refid='".$reservation->bookingReference."' class='fa fa-trash-o delete_reference'></i>"
             . "&nbsp;&nbsp;<i style='cursor:pointer; $active' refid='".$reservation->bookingReference."' class='fa fa-stop stop_reference'></i>"
-            . "</td>";
+            ;
+            
+            if (!$alreadyConfirmed) {
+                echo "&nbsp;&nbsp;<i style='cursor:pointer;' refid='".$reservation->bookingReference."' class='fa fa-play go_live'></i>";
+            }
+            echo "</td>";
             echo "<td valign='top'>" . $reservation->rowCreatedDate . "</td>";
             echo "<td valign='top'>";
             if($order && $order->userId) {

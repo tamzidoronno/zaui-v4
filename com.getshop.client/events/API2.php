@@ -1786,6 +1786,21 @@ class APIHotelBookingManager {
 	* @throws ErrorException
 	*/
 
+	public function confirmReservation($bookingReferenceId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["bookingReferenceId"] = json_encode($this->transport->object_unset_nulls($bookingReferenceId));
+	     $data["method"] = "confirmReservation";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
+	* @return void
+	* @throws ErrorException
+	*/
+
 	public function deleteReference($reference) {
 	     $data = array();
 	     $data['args'] = array();

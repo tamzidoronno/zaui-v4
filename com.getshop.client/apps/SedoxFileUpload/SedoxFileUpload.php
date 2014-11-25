@@ -149,6 +149,10 @@ class SedoxFileUpload extends \ApplicationBase implements \Application {
         $userId = $this->getUser()->id;
         return $this->getApi()->getSedoxProductManager()->getSlaves($userId);
     }
+    
+    public function renderConfig() {
+        $this->includeFile("config");
+    }
 
 }
 

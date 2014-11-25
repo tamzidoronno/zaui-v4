@@ -1,0 +1,41 @@
+<?
+/* @var $this \ns_97cb6953_6b7f_4e99_99d8_5764ffed18b5\QuestBack */
+
+$questions = $this->getQuestions();
+if (!count($questions)) {
+    echo "<i class='fa fa-warning'></i> ".$this->__f("No questions has been added yet, please add some");
+    return;
+}
+$question = $this->getCurrentQuestion();
+if (!$question) {
+    $this->reset();
+    echo $this->__w("Thank you");
+    return;
+}
+?>
+
+<div class='question'>
+
+    <div class='title'><? echo $question->question; ?></div>
+    <?
+    if ($question->option1)
+        echo "<input type='radio' name='selected_question' value='1'/>".$question->option1;
+    if ($question->option2)
+        echo "<br/><input type='radio' name='selected_question' value='2'/>".$question->option2;
+    if ($question->option3)
+        echo "<br/><input type='radio' name='selected_question' value='3'/>".$question->option3;
+    if ($question->option4)
+        echo "<br/><input type='radio' name='selected_question' value='4'/>".$question->option4;
+    if ($question->option5)
+        echo "<br/><input type='radio' name='selected_question' value='5'/>".$question->option5;
+    if ($question->option6)
+        echo "<br/><input type='radio' name='selected_question' value='6'/>".$question->option6;
+    ?>
+</div>
+
+<div class='next_question_button' qustionid='<?echo $question->id; ?>'>
+    <? 
+    echo $this->__w("Next"); 
+    echo " ( ".($this->getQuestionIndex()+1)."/".$this->getTotalQuestionCount()." )";
+?><i class='fa fa-arrow-right'></i></div>
+

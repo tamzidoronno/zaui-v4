@@ -1,0 +1,45 @@
+<?
+/* @var $this \ns_97cb6953_6b7f_4e99_99d8_5764ffed18b5\QuestBack */
+?>
+<div class='questback_admin_area'>
+    <div>
+        <div style='font-size: 20px; margin-top: 10px; margin-bottom: 10px;'> 
+            Questions that is in this questback
+             ( <? echo $this->__f("This questback has been taken ".count($this->results)." times"); ?> )
+        </div>
+        <?
+        foreach ($this->getQuestions() as $question) {
+            echo "<div>";
+            echo "<i class='fa fa-trash deletequestions' questionid=".$question->id." ></i>".$question->question;
+            echo "<div class='question_result'>";
+                $this->printResult($question->option1, 1, $question);
+                $this->printResult($question->option2, 2, $question);
+                $this->printResult($question->option3, 3, $question);
+                $this->printResult($question->option4, 4, $question);
+                $this->printResult($question->option5, 5, $question);
+                $this->printResult($question->option6, 6, $question);
+            echo "</div>";
+            echo "</div>";
+        }
+        ?>
+    </div>
+    <div>
+        <div>
+            <div style='font-size: 20px; margin-top: 10px; margin-bottom: 10px;'> Add questions </div>
+            <? echo $this->__f("Title of your question"); ?>
+            <br/><input id='question' type='textfield'/>
+            <br/>
+            <br/>
+            Please enter the answers that can be selected. Leave blank if you need less then 6 options.
+            <div id='select_1'><input type='textfield'/></div>
+            <div id='select_2'><input type='textfield'/></div>
+            <div id='select_3'><input type='textfield'/></div>
+            <div id='select_4'><input type='textfield'/></div>
+            <div id='select_5'><input type='textfield'/></div>
+            <div id='select_6'><input type='textfield'/></div>
+        </div>
+        <br/>
+        <div class='gs_button save_questions'> Add question </div>
+    </div>
+
+</div>

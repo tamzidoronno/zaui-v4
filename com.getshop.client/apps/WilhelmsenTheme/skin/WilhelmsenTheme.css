@@ -86,3 +86,8 @@ body { background-color: #363b3e; }
     .mainarea .applicationarea { margin: 15px; }
     .mainarea .gs_row.r1 .applicationarea { margin-top: 0px; }
 }
+
+.QuestBack {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}

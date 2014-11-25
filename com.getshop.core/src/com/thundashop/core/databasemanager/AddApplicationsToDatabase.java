@@ -64,16 +64,14 @@ public class AddApplicationsToDatabase {
         netaxcept.isPublic = true;
         apps.add(netaxcept);
 
-        ApplicationSettings SedoxServiceIndicator = createSettings(
-                "SedoxServiceIndicator",
-                "4cc9499c-6928-4811-9c9b-dba648258c52",
-                allowed,
+        ApplicationSettings questBack = createSettings(
+                "QuestBack",
+                "97cb6953_6b7f_4e99_99d8_5764ffed18b5",
+                allowed2,
                 "",
-                ApplicationSettings.Type.Webshop, false);
-        SedoxServiceIndicator.isPublic = false;
-		SedoxServiceIndicator.allowedStoreIds = new ArrayList();
-		SedoxServiceIndicator.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
-        apps.add(SedoxServiceIndicator);
+                ApplicationSettings.Type.Marketing, false);
+        questBack.isPublic = true;
+        apps.add(questBack);
 
 //        
 //        ApplicationSettings hotelvask = createSettings(

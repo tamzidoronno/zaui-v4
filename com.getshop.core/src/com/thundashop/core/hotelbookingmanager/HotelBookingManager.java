@@ -1118,10 +1118,12 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     @Override
     public void confirmReservation(int bookingReferenceId) throws ErrorException {
         BookingReference bookingReference = getReservationByReferenceId(bookingReferenceId);
-        bookingReference.confirmed = true;
-        OrderManager orderManager = getManager(OrderManager.class);
-        orderManager.setOrdersActivatedByReferenceId("" + bookingReferenceId);
-        saveObject(bookingReference);
+        if (bookingReference != null && !bookingReference.confirmed) {
+            bookingReference.confirmed = true;
+            OrderManager orderManager = getManager(OrderManager.class);
+            orderManager.setOrdersActivatedByReferenceId(bookingReference);
+            saveObject(bookingReference);
+        }
     }
 
     @Override
@@ -1130,5 +1132,4 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         reservation.setCartItemIds(ids);
         saveObject(reservation);
     }
-
 }

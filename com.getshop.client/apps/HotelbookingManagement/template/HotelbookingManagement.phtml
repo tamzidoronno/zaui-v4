@@ -71,9 +71,11 @@ Existing booking references
             echo "<tr reservation='".$reservation->bookingReference."'>";
             echo "<td style='text-align:center;' valign='top'>" . $reservation->bookingReference . "</td>";
             echo "<td style='text-align:center;' valign='top'>"
-            . "<i style='cursor:pointer' refid='".$reservation->bookingReference."' class='fa fa-trash-o delete_reference'></i>"
-            . "&nbsp;&nbsp;<i style='cursor:pointer; $active' refid='".$reservation->bookingReference."' class='fa fa-stop stop_reference'></i>"
-            ;
+            . "<i style='cursor:pointer' refid='".$reservation->bookingReference."' class='fa fa-trash-o delete_reference'></i>";
+
+            if ($alreadyConfirmed) {
+                echo "&nbsp;&nbsp;<i style='cursor:pointer; $active' refid='".$reservation->bookingReference."' class='fa fa-stop stop_reference'></i>";
+            }
             
             if (!$alreadyConfirmed) {
                 echo "&nbsp;&nbsp;<i style='cursor:pointer;' refid='".$reservation->bookingReference."' class='fa fa-play go_live'></i>";

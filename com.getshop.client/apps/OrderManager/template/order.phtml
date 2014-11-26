@@ -95,12 +95,18 @@ $taxes = $this->getApi()->getOrderManager()->getTaxes($order);
 <? } ?>
         </div>
     </div> 
-    
     <?
-    if (isset($order->expiryDate)) {
-        echo "<div class='products' style='margin-top: 20px; margin-bottom: 10px; padding: 20px;'>Expiry date: $order->expiryDate</div>";
+    if (isset($order->expiryDate) || isset($order->startDate) || isset($order->endDate)) {
+    ?>
+    <div class='products' style='margin-top: 20px; margin-bottom: 10px; padding: 20px;'>
+        Expiry date: <? echo isset($order->expiryDate) ? $order->expiryDate : "-"; ?>
+        <br/>Start date: <? echo isset($order->startDate) ? $order->startDate : "-"; ?>
+        <br/>End date: <? echo isset($order->endDate) ? $order->endDate : "-"; ?>
+    </div>
+    <?
     }
     ?>
+    
     <?
     if (isset($order->payment->paymentType) && $order->payment->paymentType) {
         ?>

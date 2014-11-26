@@ -27,6 +27,9 @@ public class Order extends DataCommon implements Comparable<Order> {
     public long incrementOrderId = 0;
     public String reference = "";
     public boolean activated = false;
+    
+    public Date startDate;
+    public Date endDate;
 
     public Order jsonClone() {
         Gson gson = new Gson();

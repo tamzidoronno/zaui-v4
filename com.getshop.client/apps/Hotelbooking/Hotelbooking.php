@@ -449,7 +449,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             
             if ($this->getServiceType() == "storage") {
                 for ($i = 0; $i < $this->getDayCount(true); $i++) {
-                    $order = $this->createOrder($user);
+                    $order = $this->createOrder($user, $i);
                 }
             } else {
                 $order = $this->createOrder($user);
@@ -462,8 +462,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                 $this->getApi()->getHotelBookingManager()->updateReservation($reservation);
                 $this->stopImpersionation();
             }
-            
-            $this->setExpirationDate($order);
             
             $_GET['orderProcessed'] = true;
             $_GET['orderId'] = $order->id;
@@ -775,8 +773,8 @@ class Hotelbooking extends \ApplicationBase implements \Application {
 
     public function requestAdminRights() {
         $this->requestAdminRight("UserManager", "getAllUsers", $this->__o("This app need to be able to get the users to check if it has a reference number."));
-        $this->requestAdminRight("OrderManager", "setExpiryDate", $this->__o("It needs to be able to set a Order expiry date so it can uses the recurring functionality"));
         $this->requestAdminRight("HotelBookingManager", "updateReservation", $this->__o("Need to update reservation after order has been placed."));
+        $this->requestAdminRight("OrderManager", "saveOrder", $this->__o("Must be able to save order to set start and end date"));
     }
 
     public function includeEcommerceTransaction() {
@@ -842,14 +840,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         }
     }
 
-    public function setExpirationDate($order) {
-        // Sets expiry date of order that has been created.
-        $this->startAdminImpersonation("OrderManager", "setExpiryDate");
-        $expiryDate = date('M d, Y h:m:s A', strtotime("-15 days", strtotime("+".$this->getDayCount(true)." months", $this->getStart())));
-        $this->getApi()->getOrderManager()->setExpiryDate($order->id,  $expiryDate);
-        $this->stopImpersionation();
-    }
-
     public function createUser() {
         $address = $this->getApiObject()->core_usermanager_data_Address();
         $address->fullName = $_POST['data']['name_1'];
@@ -877,12 +867,21 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return $this->getApi()->getUserManager()->createUser($user);
     }
 
-    public function createOrder($user) {
+    public function createOrder($user, $i) {
         if ($this->partnerShipChecked()) {
             $order = $this->getApi()->getOrderManager()->createOrderByCustomerReference($this->getReferenceKey());
         } else {
             $order = $this->getApi()->getOrderManager()->createOrderByCustomerReference($user->referenceKey);
         }
+        
+        $startDate = date('M d, Y h:m:s A', strtotime("+".$i." months", $this->getStart()));
+        $endDate = date('M d, Y h:m:s A', strtotime("-1 day",strtotime("+".($i+1)." months", $this->getStart())));
+        $order->startDate = $startDate;
+        $order->endDate = $endDate;
+        
+        $this->startAdminImpersonation("OrderManager", "saveOrder");
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        $this->stopImpersionation();
         return $order;
     }
 

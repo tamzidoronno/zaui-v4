@@ -15,6 +15,7 @@ import com.thundashop.core.usermanager.data.User;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +34,23 @@ public class VismaUsers extends DataCommon {
         }
 
         return currentProduct.vismaId;
+    }
+
+    private static String getDateFormatted(Date date) {
+        if (date == null) {
+            return "";
+        }
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d/M-y");
+        return simpleDateFormat.format(date);
+    }
+
+    private static String getBodId(int bookingReference, String cartItemId, HotelBookingManager bookingManager) throws ErrorException {
+        Room room = bookingManager.getRoomForCartItem(bookingReference, cartItemId);
+        if (room != null) {
+            return room.roomName;
+        }
+        
+        return "";
     }
 
     public HashMap<String, String> transfereddUserIds = new HashMap();
@@ -120,11 +138,17 @@ public class VismaUsers extends DataCommon {
                 String orderline = "L;"; // Fast L for orderline
                 orderline += vismaId + ";"; // ProdNO
                 orderline += ";"; // Avgiftskode ( hentes fra kunden )
-                orderline += item.getProduct().name + ";"; // Produkt beskrivelse
+                String startDate = getDateFormatted(order.startDate);
+                String stopDate = getDateFormatted(order.endDate);
+                String productName = item.getProduct().name;
+                if (!startDate.isEmpty() && !stopDate.isEmpty()) {
+                    productName += " - fom: " + startDate + ", tom: " + stopDate;
+                }
+                orderline += productName + ";"; // Produkt beskrivelse
                 orderline += item.getCount() + ";"; // Antall mnder
                 orderline += item.getProduct().price + ";"; // Pris pr antall, hvis blank hentes pris fra Visma
                 orderline += ";"; // ikke i bruk
-                orderline += ";"; // Bod id ( denne får vi ikke satt pr nå)
+                orderline += getBodId(reference.bookingReference, item.getCartItemId(), bookingManager)+";";
                 orderline += ";"; // 
                 result += orderline + "\r\n";
             }

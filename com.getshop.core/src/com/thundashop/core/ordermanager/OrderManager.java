@@ -9,6 +9,8 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.hotelbookingmanager.BookingReference;
+import com.thundashop.core.hotelbookingmanager.HotelBookingManager;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.ProductManager;
@@ -17,7 +19,10 @@ import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -282,10 +287,19 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
     }
 
-    public void setOrdersActivatedByReferenceId(String referenceId) throws ErrorException {
+    public void setOrdersActivatedByReferenceId(BookingReference reference) throws ErrorException {
+        boolean expirationDateSet = false;
         for (Order order : orders.values()) {
-            if (order.reference.equals(referenceId)) {
+            
+            if (order.reference.equals(""+reference.bookingReference)) {
                 order.activated = true;
+                order.expiryDate = null;
+                
+                if (!expirationDateSet) {
+                    expirationDateSet = true;
+                    order.expiryDate = getExpirationDate(order, reference);
+                }
+                
                 saveOrder(order);
             }
         }
@@ -492,10 +506,66 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void setAllOrdersAsTransferedToAccountSystem() throws ErrorException {
+        HotelBookingManager manager = getManager(HotelBookingManager.class);
+        
+        String string = "November 25, 2014";
+        Date date = null;
+        try {
+             date = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH).parse(string);
+        } catch (ParseException ex) {
+            java.util.logging.Logger.getLogger(OrderManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        if (date == null) {
+            return;
+        }
+        
+        Set<String> referencesToFix = new HashSet<String>();
+        
         for (Order order : orders.values()) {
+            if (order.rowCreatedDate.after(date)) {
+                referencesToFix.add(order.reference);
+                System.out.println("Skipping: " + order.id);
+                continue; 
+            }
             order.transferedToAccountingSystem = true;
             saveObject(order);
         }
+        
+        
+        for (String reference : referencesToFix) {
+            BookingReference ref = manager.getReservationByReferenceId(Integer.valueOf(reference));
+            int i = 0;
+            for (Order order : orders.values()) {
+                if (order.reference.equals(reference)) {
+                    i++;
+                    setDate(order, ref.startDate, i);
+                }
+            }
+        }
+        
+        for (BookingReference ref: manager.getAllReservations()) {
+            if (referencesToFix.contains(""+ref.bookingReference)) {
+                continue;
+            }
+            manager.confirmReservation(ref.bookingReference);
+        }
+        
+        checkForRecurringPayments();
+    }
+    
+    private void setDate(Order order, Date startDate, int i) throws ErrorException {
+        i--;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startDate);
+        calendar.add(Calendar.MONTH, i);
+        order.startDate = calendar.getTime();
+        calendar.add(Calendar.MONTH, 1);
+        order.endDate = calendar.getTime();
+        order.expiryDate = null;
+        
+        System.out.println("i: " + i + " " + order.startDate);
+        saveObject(order);
     }
 
     @Override
@@ -506,7 +576,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<String> ordersToRenew = new ArrayList();
         for (Order order : orders.values()) {
             if (order.expiryDate != null) {
-                System.out.println("Found one order that is not expired: " + order.expiryDate);
                 if (today.after(order.expiryDate)) {
                     ordersToRenew.add(order.id);
                 }
@@ -556,6 +625,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             copiedOrder.cart.rowCreatedDate = order.expiryDate;
         }
 
+        cal.add(Calendar.MONTH, -1);
+        cal.add(Calendar.DATE, 15);
+        copiedOrder.startDate = cal.getTime();
+        cal.add(Calendar.MONTH, 1);
+        cal.add(Calendar.DATE, -1);
+        copiedOrder.endDate = cal.getTime();
+        
         setIncrementalOrderId(copiedOrder);
         saveOrder(copiedOrder);
 
@@ -566,5 +642,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private void setIncrementalOrderId(Order order) {
         incrementingOrderId++;
         order.incrementOrderId = incrementingOrderId;
+    }
+
+    private Date getExpirationDate(Order order, BookingReference reference) {
+         Calendar calendar = Calendar.getInstance();
+         calendar.setTime(reference.startDate);
+         calendar.add(Calendar.MONTH, 3);
+         calendar.add(Calendar.DAY_OF_MONTH, -15);
+         
+         return calendar.getTime();
     }
 }

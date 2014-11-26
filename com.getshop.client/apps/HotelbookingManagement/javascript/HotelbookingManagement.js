@@ -78,7 +78,10 @@ app.HotelbookingManagement = {
         }
         
         var event = thundashop.Ajax.createEvent("", "stopReference", $(this), data);
-        thundashop.Ajax.post(event);
+        thundashop.Ajax.post(event, function() {
+            thundashop.common.hideInformationBox();
+        });
+        
     },
     showStopReference: function() {
         var data = {

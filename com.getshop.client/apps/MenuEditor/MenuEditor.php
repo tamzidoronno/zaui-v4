@@ -61,6 +61,7 @@ class MenuEditor extends \SystemApplication implements \Application {
             $entryItem->name = $item->name;
             $entryItem->pageId = $item->pageId;
             $entryItem->linke = $item->hardLink;
+            $entryItem->fontAwsomeIcon = $item->fontAwsomeIcon;
             $entryItem->userLevel = $item->userLevel;
             $entryItem->items = $this->createItems($item->subentries);
             $retItems[] = $entryItem;
@@ -99,6 +100,11 @@ class MenuEditor extends \SystemApplication implements \Application {
         if (isset($item['icon'])) {
             $entry->fontAwsomeIcon = $item['icon'];
         }
+        
+        if (isset($item['linke']) && (!isset($item['link']) || $item['link'] == "")) {
+            $entry->hardLink = $item['linke'];
+        }
+        
         $entry->subentries = array();
         if(isset($item['items'])) {
             foreach($item['items'] as $subitem) {
@@ -112,8 +118,10 @@ class MenuEditor extends \SystemApplication implements \Application {
 class EntryItem {
     public $id = "";
     public $name = "";
+    public $link = "";
     public $linke = "";
     public $pageId = "";
+    public $fontAwsomeIcon = "";
     public $userLevel;
     public $items;
 }

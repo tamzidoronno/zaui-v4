@@ -56,13 +56,23 @@ if($event == "renameEntry" && $postedId == $entry->id) {
                 $link = $entry->hardLink;
                 $hardlink = "hardlink='true'";
                 $url = $link;
+                if ($url == "#") {
+                    $url = false;
+                }
             } else {
                 $hardlink = "";
                 $link = "?page=".$entry->pageId;
                 
                 $url = \GetShopHelper::makeSeoUrl($entry->name);
+                
             }
-            echo "<a ajaxlink='".$link."' href='$url' class='".$active."' $hardlink><div class='menuName'>" . $entry->name . "</div></a>";
+            
+            if (!$url) {
+                echo "<div class='menuName'>" . $entry->name . "</div>";
+            } else {
+                echo "<a ajaxlink='".$link."' href='$url' class='".$active."' $hardlink><div class='menuName'>" . $entry->name . "</div></a>";
+            }
+            
         }
         ?>
     </div>

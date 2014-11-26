@@ -48,13 +48,15 @@ function printGuestTable($reservations, $roomlist, $arriving, $daydiff) {
             $found = true;
             echo "<tr>";
             echo "<td valign='top' width='150'>";
-            foreach ($reservation->roomIds as $roomId) {
+            foreach ($reservation->rooms as $room) {
+                $roomId = $room->roomId;
                 echo "<div style='line-height: 20px;'>" . $roomlist[$roomId]->roomName . "</div>";
             }
             echo "</td>";
             if($daydiff == 0) {
                 echo "<td>";
-                foreach ($reservation->roomIds as $roomId) {
+                foreach ($reservation->rooms as $room) {
+                    $roomId = $room->roomId;
                     $lastcleaned = $roomlist[$roomId]->lastCleaning;
                     $cleanedToday = date("Ymd", time()) === date("Ymd", strtotime($lastcleaned));
                     if ($roomlist[$roomId]->isClean || $cleanedToday) {
@@ -121,12 +123,14 @@ function printIntervalCleaning($reservations, $roomlist, $scope) {
             if($start > $now || $end < $now) {
                 continue;
             }
-            foreach ($reservation->roomIds as $roomId) {
+            foreach ($reservation->rooms as $room) {
+                $roomId = $room->roomId;
                 echo "<div style='line-height: 20px;'>" . $roomlist[$roomId]->roomName . "</div>";
             }
             echo "</td>";
             echo "<td>";
-            foreach ($reservation->roomIds as $roomId) {
+            foreach ($reservation->rooms as $room) {
+                $roomId = $room->roomId;
                 if ($roomlist[$roomId]->isClean || (isset($reservation->isApprovedForCheckIn->{$roomId}) && $reservation->isApprovedForCheckIn->{$roomId} && $arriving)) {
                     echo "<span style='line-height: 20px;' class='alreadyready'>room is already ready</span>";
                 } else {

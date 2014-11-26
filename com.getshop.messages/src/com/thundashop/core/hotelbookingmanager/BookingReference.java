@@ -103,7 +103,7 @@ public class BookingReference extends DataCommon {
     void moveRoom(String oldRoom, String newRoomId) {
         for(ReservedRoom room : rooms) {
             if(room.roomId.equals(oldRoom)) {
-                room.roomId = oldRoom;
+                room.roomId = newRoomId;
             }
         }
     }

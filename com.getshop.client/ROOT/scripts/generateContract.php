@@ -8,7 +8,7 @@ $userId = $_GET['userid'];
 
 $user = $factory->getApi()->getUserManager()->getUserById($userId);
 $order = $factory->getApi()->getHotelBookingManager()->getReservationByReferenceId($_GET['refid']);
-$room = $factory->getApi()->getHotelBookingManager()->getRoom($order->roomIds[0]);
+$room = $factory->getApi()->getHotelBookingManager()->getRoom($order->rooms[0]->roomId);
 $types = $factory->getApi()->getHotelBookingManager()->getRoomTypes();
 $products = $factory->getApi()->getProductManager()->getAllProducts();
 

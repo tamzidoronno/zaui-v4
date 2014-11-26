@@ -59,8 +59,9 @@ Existing booking references
         foreach($reservations as $reservation) {
             $roomarray = array();
             /* $rooms \core_hotelbookingmanager_Room[] */
-            foreach($reservation->roomIds as $index => $id) {
-                $roomarray[] = "<span class='editroom' style='cursor:pointer;' refid='".$reservation->bookingReference."' roomid='$id'>" . $rooms[$id]->roomName . " (" . $reservation->codes[$index] . ")</span>";
+            foreach($reservation->rooms as $index => $room) {
+                $roomid = $room->roomId;
+                $roomarray[] = "<span class='editroom' style='cursor:pointer;' refid='".$reservation->bookingReference."' roomid='$roomid'>" . $rooms[$roomid]->roomName . " (" . $reservation->codes[$index] . ")</span>";
             }
 
             $order = $this->getApi()->getOrderManager()->getOrderByReference($reservation->bookingReference);

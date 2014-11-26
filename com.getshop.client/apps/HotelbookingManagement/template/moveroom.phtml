@@ -9,11 +9,11 @@ for($i = 0; $i < sizeof($reference->contact->names);$i++) {
         /* @var $this \ns_15e67fa1_c862_4bc3_9b17_dfd818f30712\HotelbookingManagement */
         $rooms = $this->getApi()->getHotelBookingManager()->getAllRooms();
         echo "<div style='height: 50px;'>";
-        echo "<select style='float:right;' name='moveRoomSelection[".$i."]' class='roomselection' oldroom='".$reference->roomIds[$i]."'>";
+        echo "<select style='float:right;' name='moveRoomSelection[".$i."]' class='roomselection' oldroom='".$reference->rooms[$i]->roomId."'>";
         foreach($rooms as $room) {
             /* @var $room core_hotelbookingmanager_Room */
             $selected = "";
-            if($room->id == $reference->roomIds[$i]) {
+            if($room->id == $reference->rooms[$i]->roomId) {
                 $selected = "SELECTED";
             }
             

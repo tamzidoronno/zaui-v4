@@ -1,10 +1,10 @@
 html {
     background: url('{IMAGEFOLDER}/bkg_1.png') no-repeat center -50px fixed;
     background-color: #cdcdcd;
-	font-family: futura-pt;
-	font-size: 16px;
-	/*font-weight: 300;*/
-    
+    font-family: futura-pt;
+    font-size: 16px;
+    /*font-weight: 300;*/
+
     //filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/showApplicationImages.php?appNamespace=ns_b9cc5940_edef_11e2_91e2_0800200c9a66&image=skin/images/bkg_1.gif', sizingMethod='scale');
 
 }
@@ -16,7 +16,7 @@ html {
 .footer {
     width:100%;
     bottom: 0px;
-    
+
     height: 160px;
 }
 
@@ -37,7 +37,7 @@ html {
     padding-left: 20px;
     padding-right: 20px;
     height: 25px;
-    
+
 } 
 
 .TopMenu li:last-child {
@@ -45,7 +45,7 @@ html {
 }
 
 .Login {
-    
+
 }
 
 .mainarea .gs_row .gs_inner{
@@ -91,7 +91,7 @@ html {
 .LeftMenu {
     background-color: #006e63;
     padding: 16px;
-    
+
 }
 .LeftMenu .menu_0 .menuName {
     padding-left: 10px;
@@ -300,7 +300,7 @@ html {
     text-align: center;
     margin-top: 3px;
     color: #000;
-    
+
     font-size: 12px;
 }
 
@@ -313,13 +313,13 @@ html {
     background-image: -ms-linear-gradient(bottom, rgb(47,223,87) 48%, rgb(76,255,114) 74%);
 
     background-image: -webkit-gradient(
-            linear,
-            left bottom,
-            left top,
-            color-stop(0.10, rgb(150,150,150)),
-            color-stop(0.90, rgb(200,200,200))
-    );   
-    
+        linear,
+        left bottom,
+        left top,
+        color-stop(0.10, rgb(150,150,150)),
+        color-stop(0.90, rgb(200,200,200))
+        );   
+
     color: #000;
 }
 
@@ -333,11 +333,11 @@ html {
 
 .loginform a {
     color: #FFF;
-    
+
 }
 
 .dayrow td a {
-    
+
 }
 
 .dayrow:hover td a {
@@ -352,7 +352,6 @@ html {
     color: #000;
 }
 
-.Settings .leftmenu .entry .inner,
 .button-large ins,
 .button ins {
     color: #FFF;
@@ -378,7 +377,7 @@ html {
     left: initial;
     right: initial;
     border: solid 0px;
-        
+
 }
 
 .News .outeraddnewscontainer .title,

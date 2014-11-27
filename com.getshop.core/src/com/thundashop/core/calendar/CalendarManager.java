@@ -2,6 +2,7 @@ package com.thundashop.core.calendar;
 
 import com.thundashop.core.calendarmanager.data.AttendeeMetaInfo;
 import com.thundashop.core.calendarmanager.data.Day;
+import com.thundashop.core.calendarmanager.data.DiplomaPeriod;
 import com.thundashop.core.calendarmanager.data.Entry;
 import com.thundashop.core.calendarmanager.data.EntryComment;
 import com.thundashop.core.calendarmanager.data.EventPartitipated;
@@ -50,8 +51,10 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     private HashMap<String, EventPartitipated> eventData = new HashMap();
     private HashMap<String, Signature> signatures = new HashMap();
 
-	@Autowired
-	private CompanySearchEngineHolder holder; 
+    @Autowired
+    private CompanySearchEngineHolder holder; 
+    
+    private List<DiplomaPeriod> diplomaPeriods = new ArrayList<DiplomaPeriod>();
 	
     @Autowired
     public CalendarManager(Logger log, DatabaseSaver databaseSaver) {
@@ -80,6 +83,10 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             if (dataObject instanceof Signature) {
                 Signature signature = (Signature) dataObject;
                 signatures.put(signature.userid, signature);
+            }
+            if (dataObject instanceof DiplomaPeriod) {
+                DiplomaPeriod diploma = (DiplomaPeriod) dataObject;
+                diplomaPeriods.add(diploma);
             }
         }
     }
@@ -1091,18 +1098,13 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     }
 
     @Override
-    public void setSignature(String userid, String signature) throws ErrorException {
-        Signature cursign = signatures.get(userid);
-        if (cursign != null) {
-            cursign.signature = signature;
-        } else {
-            cursign = new Signature();
-            cursign.storeId = storeId;
-            cursign.userid = userid;
-            cursign.signature = signature;
-            signatures.put(cursign.userid, cursign);
+    public void setSignature(String userid, String signature, String dimplomaId) throws ErrorException {
+        DiplomaPeriod diplomaPeriod = getDiplomaPeriod(dimplomaId);
+        if (diplomaPeriod != null) {
+            diplomaPeriod.addSignature(userid, signature);
         }
-        databaseSaver.saveObject(cursign, credentials);
+        
+        databaseSaver.saveObject(diplomaPeriod, credentials);
     }
 
     @Override
@@ -1151,4 +1153,94 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
    
     }
 
+    @Override
+    public void createANewDiplomaPeriod(Date startDate, Date stopDate) throws ErrorException {
+        DiplomaPeriod diplomaPeriod = new DiplomaPeriod();
+        diplomaPeriod.startDate = startDate;
+        diplomaPeriod.stopDate = stopDate;
+        diplomaPeriods.add(diplomaPeriod);
+        saveObject(diplomaPeriod);
+    }
+
+    @Override
+    public List<DiplomaPeriod> getDiplomaPeriods() throws ErrorException {
+        List<DiplomaPeriod> periods = new ArrayList();
+        for (DiplomaPeriod period : diplomaPeriods) {
+            periods.add(finalizePeriod(period));
+        }
+        return periods;
+    }
+
+    @Override
+    public void deleteDiplomaPeriode(String id) throws ErrorException {
+        DiplomaPeriod toDelete = getDiplomaPeriod(id);
+        
+        if (toDelete!= null) {
+            diplomaPeriods.remove(toDelete);
+            database.delete(toDelete, credentials);
+        }
+    }
+
+    private DiplomaPeriod finalizePeriod(DiplomaPeriod period) throws ErrorException {
+        UserManager manager = getManager(UserManager.class);
+        for (User user : manager.getAllUsers()) {
+            if (user.isAdministrator()) {
+                period.addUser(user);
+            }
+        }
+        
+        for (DiplomaPeriod per : diplomaPeriods) {
+            per.finalizeObject();
+        }
+
+        return period;
+    }
+
+    private DiplomaPeriod getDiplomaPeriod(String dimplomaId) {
+        for (DiplomaPeriod period : diplomaPeriods) {
+            if (period.id.equals(dimplomaId)) {
+                return period;
+            }
+        }
+        
+        return null;
+    }
+
+    @Override
+    public void removeSignature(String userId, String diplomId) throws ErrorException {
+        DiplomaPeriod diplomPeriod = getDiplomaPeriod(diplomId);
+        if (diplomPeriod != null) {
+            diplomPeriod.unsetSignature(userId);
+            saveObject(diplomPeriod);
+        }
+    }
+
+    @Override
+    public void setDiplomaPeriodeBackground(String diplomaId, String background) throws ErrorException {
+        DiplomaPeriod diplomPeriod = getDiplomaPeriod(diplomaId);
+        if (diplomPeriod != null) {
+            diplomPeriod.backgroundImage = background;
+            saveObject(diplomPeriod);
+        }
+    }
+
+    @Override
+    public DiplomaPeriod getDiplomaPeriod(Date date) throws ErrorException {
+        for (DiplomaPeriod period : diplomaPeriods) {
+            if (period.startDate.before(date) && period.stopDate.after(date)) {
+                return period;
+            }
+        }
+        
+        return null;
+    }
+
+    @Override
+    public void setDiplomaTextColor(String diplomaId, String textColor) throws ErrorException {
+        DiplomaPeriod diplomPeriod = getDiplomaPeriod(diplomaId);
+        if (diplomPeriod != null) {
+            diplomPeriod.textColor = textColor;
+            saveObject(diplomPeriod);
+        }
+    }
 }

@@ -516,6 +516,28 @@ class CalendarManager(object):
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
+  def createANewDiplomaPeriod(self, startDate, stopDate):
+    args = collections.OrderedDict()
+    if isinstance(startDate,GetShopBaseClass): 
+      args["startDate"]=json.dumps(startDate.__dict__)
+    else:
+      try:
+        args["startDate"]=json.dumps(startDate)
+      except (ValueError, AttributeError):
+        args["startDate"]=startDate
+    if isinstance(stopDate,GetShopBaseClass): 
+      args["stopDate"]=json.dumps(stopDate.__dict__)
+    else:
+      try:
+        args["stopDate"]=json.dumps(stopDate)
+      except (ValueError, AttributeError):
+        args["stopDate"]=stopDate
+    data = EmptyClass()
+    data.args = args
+    data.method = "createANewDiplomaPeriod"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
   def createEntry(self, year, month, day):
     args = collections.OrderedDict()
     if isinstance(year,GetShopBaseClass): 
@@ -542,6 +564,21 @@ class CalendarManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "createEntry"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def deleteDiplomaPeriode(self, id):
+    args = collections.OrderedDict()
+    if isinstance(id,GetShopBaseClass): 
+      args["id"]=json.dumps(id.__dict__)
+    else:
+      try:
+        args["id"]=json.dumps(id)
+      except (ValueError, AttributeError):
+        args["id"]=id
+    data = EmptyClass()
+    data.args = args
+    data.method = "deleteDiplomaPeriode"
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -603,6 +640,29 @@ class CalendarManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getAllLocations"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getDiplomaPeriod(self, date):
+    args = collections.OrderedDict()
+    if isinstance(date,GetShopBaseClass): 
+      args["date"]=json.dumps(date.__dict__)
+    else:
+      try:
+        args["date"]=json.dumps(date)
+      except (ValueError, AttributeError):
+        args["date"]=date
+    data = EmptyClass()
+    data.args = args
+    data.method = "getDiplomaPeriod"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getDiplomaPeriods(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getDiplomaPeriods"
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -792,6 +852,28 @@ class CalendarManager(object):
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
+  def removeSignature(self, userId, diplomId):
+    args = collections.OrderedDict()
+    if isinstance(userId,GetShopBaseClass): 
+      args["userId"]=json.dumps(userId.__dict__)
+    else:
+      try:
+        args["userId"]=json.dumps(userId)
+      except (ValueError, AttributeError):
+        args["userId"]=userId
+    if isinstance(diplomId,GetShopBaseClass): 
+      args["diplomId"]=json.dumps(diplomId.__dict__)
+    else:
+      try:
+        args["diplomId"]=json.dumps(diplomId)
+      except (ValueError, AttributeError):
+        args["diplomId"]=diplomId
+    data = EmptyClass()
+    data.args = args
+    data.method = "removeSignature"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
   def removeUserFromEvent(self, userId, eventId):
     args = collections.OrderedDict()
     if isinstance(userId,GetShopBaseClass): 
@@ -908,6 +990,50 @@ class CalendarManager(object):
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
+  def setDiplomaPeriodeBackground(self, diplomaId, background):
+    args = collections.OrderedDict()
+    if isinstance(diplomaId,GetShopBaseClass): 
+      args["diplomaId"]=json.dumps(diplomaId.__dict__)
+    else:
+      try:
+        args["diplomaId"]=json.dumps(diplomaId)
+      except (ValueError, AttributeError):
+        args["diplomaId"]=diplomaId
+    if isinstance(background,GetShopBaseClass): 
+      args["background"]=json.dumps(background.__dict__)
+    else:
+      try:
+        args["background"]=json.dumps(background)
+      except (ValueError, AttributeError):
+        args["background"]=background
+    data = EmptyClass()
+    data.args = args
+    data.method = "setDiplomaPeriodeBackground"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def setDiplomaTextColor(self, diplomaId, textColor):
+    args = collections.OrderedDict()
+    if isinstance(diplomaId,GetShopBaseClass): 
+      args["diplomaId"]=json.dumps(diplomaId.__dict__)
+    else:
+      try:
+        args["diplomaId"]=json.dumps(diplomaId)
+      except (ValueError, AttributeError):
+        args["diplomaId"]=diplomaId
+    if isinstance(textColor,GetShopBaseClass): 
+      args["textColor"]=json.dumps(textColor.__dict__)
+    else:
+      try:
+        args["textColor"]=json.dumps(textColor)
+      except (ValueError, AttributeError):
+        args["textColor"]=textColor
+    data = EmptyClass()
+    data.args = args
+    data.method = "setDiplomaTextColor"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
   def setEventPartitipatedData(self, eventData):
     args = collections.OrderedDict()
     if isinstance(eventData,GetShopBaseClass): 
@@ -923,7 +1049,7 @@ class CalendarManager(object):
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
-  def setSignature(self, userid, signature):
+  def setSignature(self, userid, signature, dimplomaId):
     args = collections.OrderedDict()
     if isinstance(userid,GetShopBaseClass): 
       args["userid"]=json.dumps(userid.__dict__)
@@ -939,6 +1065,13 @@ class CalendarManager(object):
         args["signature"]=json.dumps(signature)
       except (ValueError, AttributeError):
         args["signature"]=signature
+    if isinstance(dimplomaId,GetShopBaseClass): 
+      args["dimplomaId"]=json.dumps(dimplomaId.__dict__)
+    else:
+      try:
+        args["dimplomaId"]=json.dumps(dimplomaId)
+      except (ValueError, AttributeError):
+        args["dimplomaId"]=dimplomaId
     data = EmptyClass()
     data.args = args
     data.method = "setSignature"

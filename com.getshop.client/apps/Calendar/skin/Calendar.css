@@ -378,3 +378,20 @@ td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1p
     width: 25px;
     text-align: center;
 }
+
+.Calendar .diplomasettings .createforperiod {
+    padding-top: 20px;
+    border-top: solid 1px #DDD;
+    margin-top: 20px;
+}
+
+.Calendar .diplomasettings {
+    padding: 20px;
+    font-size: 16px;
+    color: #FFF;
+}
+
+.Calendar .diplomasettings span { display: inline-block; }
+.Calendar .diplomasettings .col1 { width: 50px; vertical-align: top; }
+.Calendar .diplomasettings .col2 { width: 230px; vertical-align: top; }
+.Calendar .diplomasettings .col3 { width: 230px; vertical-align: top;}

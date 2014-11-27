@@ -220,9 +220,11 @@ class Factory extends FactoryBase {
 //        exit(0);
     }
 
-    function __construct() {
+    function __construct($loadHeader=true) {
         @session_start();
-        header('Content-Type: text/html; charset=UTF-8');
+        if ($loadHeader) {
+            header('Content-Type: text/html; charset=UTF-8');
+        }
         $this->initialize();
         $this->applicationPool = new ApplicationPool($this);
         $this->pageManager = $this->getApi()->getPageManager();

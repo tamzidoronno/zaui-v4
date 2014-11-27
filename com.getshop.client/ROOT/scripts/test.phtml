@@ -1,5 +1,8 @@
 <?php
 
+$_GET['entry'] = "73fd1fcd-d288-4d47-9eca-b5708ea35a8b";
+$_GET['showpicture'] = "true";
+
 chdir("../");
 
 if (!isset($_GET['showpicture'])) {
@@ -13,15 +16,6 @@ if (isset($_GET['showpicture'])) {
     header("Content-type: image/png");
     header("Cache-Control: private, max-age=10800, pre-check=10800");
     header("Pragma: private");
-    
-    header("Accept-Ranges: bytes");
-    header("Connection:Keep-Alive");
-    header("Content-Length:90070");
-    header("Content-Type:image/jpeg");
-    header("Date:Thu, 27 Nov 2014 13:20:10 GMT");
-    header("Keep-Alive:timeout=5, max=98");
-    header("Last-Modified:Sun, 07 Sep 2014 14:40:46 GMT");
-    header("Server:Apache/2.4.7 (Ubuntu)");
 }
 
 
@@ -46,15 +40,13 @@ $groups = $factory->getApi()->getUserManager()->getAllGroups();
 
 $location = $entry->location;
 
-
-$eventDate = date('M d, Y h:m:s A', strtotime("$day-$month-$year"));
-
-
-$diplomaPeriod = $factory->getApi()->getCalendarManager()->getDiplomaPeriod($eventDate);
-$index = strpos($diplomaPeriod->backgroundImage, "base64,");
-
-file_put_contents("diplomapictures/".$diplomaPeriod->id.".jpg", base64_decode(substr($diplomaPeriod->backgroundImage, ($index+7))));
-
+if (isset($_GET['showpicture'])) {
+    $eventDate = date('M d, Y h:m:s A', strtotime("$month/$day-$year"));
+    $diplomaPeriod = $factory->getApi()->getCalendarManager()->getDiplomaPeriod($eventDate);
+    $index = strpos($diplomaPeriod->backgroundImage, "base64,");
+    echo base64_decode(substr($diplomaPeriod->backgroundImage, ($index+7)));
+    die();
+}
 $grouped = array();
 foreach($groups as $group) {
     $grouped[$group->id] = $group;
@@ -80,27 +72,23 @@ ob_start();
 
 $signature = false;
 if($entry->eventHelder) {
-    foreach ($diplomaPeriod->signatures as $usersignature) {
-        if ($usersignature->userid == $entry->eventHelder) {
-            $signature = $usersignature->signature;
-        }
-    }
-    
+    $signature = $factory->getApi()->getCalendarManager()->getSignature($entry->eventHelder);
     $eventHelder = $factory->getApi()->getUserManager()->getUserById($entry->eventHelder);
 }
 
 $monthText = strftime('%B', strtotime('2012-'.$month.'-22 11:21:53'));
 $monthText = $factory->__w($monthText);
+$base64EncodedBackground = $diplomaPeriod->backgroundImage;
 $content .= "<head>
     <style>
         @page {
-            color:$diplomaPeriod->textColor;
-            background: url('/diplomapictures/".$diplomaPeriod->id.".jpg') 50% 0 no-repeat;
+            color:#FFFFFF;
+            background: url('/scripts/generateKursBevis.jpg.php?entry=$id&showpicture=true.jpg') 50% 0 no-repeat; 
         }
         .page {
             text-align:center;
             text-alignment:center;
-            color:$diplomaPeriod->textColor;
+            color:#FFFFFF;
             height:220mm;
             width:210mm;
         }
@@ -110,7 +98,7 @@ $content .= "<head>
         .body { margin-top: 20px;  }
         .name { font-weight: bold; font-size: 20px; text-transform:uppercase; }
         .company { font-weight: bold; font-size: 20px; text-transform:uppercase; }
-        .footer { width: 100%; color:$diplomaPeriod->textColor; }
+        .footer { width: 100%; color:#FFFFFF; }
         .page_end {  page-break-after:always; }
         .signature_name { font-size: 10px; }
         .bottom_text { margin-top: 50px; }

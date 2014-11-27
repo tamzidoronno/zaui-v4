@@ -31,6 +31,12 @@ class core_ordermanager_data_Order extends core_common_DataCommon  {
 	public $activated;
 
 	/** @var String */
+	public $startDate;
+
+	/** @var String */
+	public $endDate;
+
+	/** @var String */
 	public $createdDate;
 
 	/** @var String */

@@ -769,5 +769,37 @@ class Calendar extends MarketingApplication implements Application {
         
         return "";
     }
+    
+    public function createPeriod() {
+        $startDate = date('M d, Y h:m:s A', strtotime($_POST['data']['startDate']));
+        $stopDate = date('M d, Y h:m:s A', strtotime($_POST['data']['endDate']));
+        $this->getApi()->getCalendarManager()->createANewDiplomaPeriod($startDate, $stopDate);
+    }
+    
+    public function showDiplomaSettings() {
+        $this->includefile("diplomasettings");
+    }
+    
+    public function deletePeriode() {
+        $this->getApi()->getCalendarManager()->deleteDiplomaPeriode($_POST['data']['id']);
+    }
+  
+    public function removeSignature() {
+        $this->getApi()->getCalendarManager()->removeSignature($_POST['data']['userid'], $_POST['data']['diplomid']);
+    }
+    
+    public function saveSignature() {
+        $base64 = $_POST['data']['base64encode'];
+        $this->getApi()->getCalendarManager()->setSignature($_POST['data']['userid'], $base64, $_POST['data']['diplomId']);
+    }
+    
+    public function addBackground() {
+        $base64 = $_POST['data']['base64encode'];
+        $this->getApi()->getCalendarManager()->setDiplomaPeriodeBackground($_POST['data']['diplomId'], $base64);
+    }
+    
+    public function setDiplomaTextColor() {
+        $this->getApi()->getCalendarManager()->setDiplomaTextColor($_POST['data']['diplomid'], $_POST['data']['textColor']);
+    }
 }
 ?>

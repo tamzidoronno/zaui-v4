@@ -489,6 +489,21 @@ class APICalendarManager {
 	}
 
 	/**
+	* return a list of entires that a specified user
+	* has been attending to
+	*/
+
+	public function createANewDiplomaPeriod($startDate, $stopDate) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["startDate"] = json_encode($this->transport->object_unset_nulls($startDate));
+	     $data['args']["stopDate"] = json_encode($this->transport->object_unset_nulls($stopDate));
+	     $data["method"] = "createANewDiplomaPeriod";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Create a new entry to the calendar on a given date.
 	* @param year The year to attach the entry to
 	* @param month The month to attach the entry to
@@ -507,6 +522,20 @@ class APICalendarManager {
 	     $data["method"] = "createEntry";
 	     $data["interfaceName"] = "core.calendar.ICalendarManager";
 	     return $this->transport->cast(new core_calendarmanager_data_Entry(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* return a list of entires that a specified user
+	* has been attending to
+	*/
+
+	public function deleteDiplomaPeriode($id) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $data["method"] = "deleteDiplomaPeriode";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
 	}
 
 	/**
@@ -579,6 +608,33 @@ class APICalendarManager {
 	     $data = array();
 	     $data['args'] = array();
 	     $data["method"] = "getAllLocations";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* return a list of entires that a specified user
+	* has been attending to
+	*/
+
+	public function getDiplomaPeriod($date) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["date"] = json_encode($this->transport->object_unset_nulls($date));
+	     $data["method"] = "getDiplomaPeriod";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->cast(new core_calendarmanager_data_DiplomaPeriod(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* return a list of entires that a specified user
+	* has been attending to
+	*/
+
+	public function getDiplomaPeriods() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getDiplomaPeriods";
 	     $data["interfaceName"] = "core.calendar.ICalendarManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -759,6 +815,21 @@ class APICalendarManager {
 	}
 
 	/**
+	* return a list of entires that a specified user
+	* has been attending to
+	*/
+
+	public function removeSignature($userId, $diplomId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data['args']["diplomId"] = json_encode($this->transport->object_unset_nulls($diplomId));
+	     $data["method"] = "removeSignature";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Remove a given user from a given event.
 	* @param userId The userid for the event to be removed. (see usermanager for more inforamtion about this id)
 	* @param eventId The id of the event for the user to be removed from.
@@ -840,6 +911,36 @@ class APICalendarManager {
 	* has been attending to
 	*/
 
+	public function setDiplomaPeriodeBackground($diplomaId, $background) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["diplomaId"] = json_encode($this->transport->object_unset_nulls($diplomaId));
+	     $data['args']["background"] = json_encode($this->transport->object_unset_nulls($background));
+	     $data["method"] = "setDiplomaPeriodeBackground";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* return a list of entires that a specified user
+	* has been attending to
+	*/
+
+	public function setDiplomaTextColor($diplomaId, $textColor) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["diplomaId"] = json_encode($this->transport->object_unset_nulls($diplomaId));
+	     $data['args']["textColor"] = json_encode($this->transport->object_unset_nulls($textColor));
+	     $data["method"] = "setDiplomaTextColor";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* return a list of entires that a specified user
+	* has been attending to
+	*/
+
 	public function setEventPartitipatedData($core_calendarmanager_data_EventPartitipated) {
 	     $data = array();
 	     $data['args'] = array();
@@ -854,11 +955,12 @@ class APICalendarManager {
 	* has been attending to
 	*/
 
-	public function setSignature($userid, $signature) {
+	public function setSignature($userid, $signature, $dimplomaId) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["userid"] = json_encode($this->transport->object_unset_nulls($userid));
 	     $data['args']["signature"] = json_encode($this->transport->object_unset_nulls($signature));
+	     $data['args']["dimplomaId"] = json_encode($this->transport->object_unset_nulls($dimplomaId));
 	     $data["method"] = "setSignature";
 	     $data["interfaceName"] = "core.calendar.ICalendarManager";
 	     return $this->transport->sendMessage($data);

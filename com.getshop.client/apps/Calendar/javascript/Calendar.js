@@ -18,6 +18,13 @@ app.Calendar = {
                     iconsize: "30",
                     title: __f("Locations"),
                     click: app.Calendar.showLocationsConfiguration
+                },
+                {
+                    icontype: "awesome",
+                    icon: "fa-trophy",
+                    iconsize: "30",
+                    title: __f("Change diploma settings"),
+                    click: app.Calendar.changeDiplomaSettings
                 }
             ]
         }
@@ -25,6 +32,14 @@ app.Calendar = {
         var toolbox = new GetShopToolbox(config, application);
         toolbox.show();
         toolbox.attachToElement(application, 2);
+    },
+    changeDiplomaSettings: function(event, app) {
+        if (!app) {
+            app = this;
+        }
+
+        var event = thundashop.Ajax.createEvent(null, "showDiplomaSettings", app, {});
+        thundashop.common.showInformationBox(event, __f("Diploma settings"));
     },
     showSettings: function(event, app) {
         var event = thundashop.Ajax.createEvent(null, "showSettings", app, {});
@@ -63,6 +78,82 @@ Calendar = {
         $(document).on('click', '.calendar_location_createnew', Calendar.showEditLocation);
         $(document).on('click', '.Calendar .add_comment_to_event', Calendar.addCommentToEvent);
         $(document).on('click', '.Calendar .delete_comment', Calendar.deleteComment);
+        $(document).on('click', '.Calendar .createforperiod .gs_button', Calendar.createPeriode);
+        $(document).on('click', '.Calendar .diplomasettings .deletediploma', Calendar.deletePeriod);
+        $(document).on('click', '.Calendar .diplomasettings .removesignature', Calendar.removesignature);
+        $(document).on('change', '.Calendar .diplomasettings input.usersignature', Calendar.addSignature);
+        $(document).on('change', '.Calendar .diplomasettings input#diploma_background', Calendar.addBackground);
+        $(document).on('change', '.Calendar .diplomasettings input#textColor', Calendar.setTextColorDiploma);
+    },
+    setTextColorDiploma: function() {
+        var data = {
+            textColor: $(this).val(),
+            diplomid : $(this).attr('diplomid')
+        };
+        
+        var event = thundashop.Ajax.createEvent(null, "setDiplomaTextColor", this, data);
+        thundashop.Ajax.post(event,  Calendar.reprintDiplomaSettings);
+    },
+    
+    removesignature: function() {
+        var data = {
+            userid : $(this).attr('userid'),
+            diplomid : $(this).attr('diplomid')
+        };
+        
+        var event = thundashop.Ajax.createEvent(null, "removeSignature", this, data);
+        thundashop.Ajax.post(event,  Calendar.reprintDiplomaSettings);
+    },
+    addSignature: function() {
+        var input = this;
+        if ( input.files && input.files[0] ) {
+            var FR= new FileReader();
+            FR.onload = function(e) {
+                var data = {
+                    base64encode : e.target.result,
+                    userid : $(input).attr('userid'),
+                    diplomId : $(input).attr('diplomId')
+                }
+                var event = thundashop.Ajax.createEvent(null, "saveSignature", input, data);
+                thundashop.Ajax.post(event, Calendar.reprintDiplomaSettings);
+            };       
+            FR.readAsDataURL( input.files[0] );
+        }
+    },
+    addBackground: function() {
+        var input = this;
+        if ( input.files && input.files[0] ) {
+            var FR= new FileReader();
+            FR.onload = function(e) {
+                var data = {
+                    base64encode : e.target.result,
+                    diplomId : $(input).attr('diplomId')
+                }
+                var event = thundashop.Ajax.createEvent(null, "addBackground", input, data);
+                thundashop.Ajax.post(event, Calendar.reprintDiplomaSettings);
+            };       
+            FR.readAsDataURL( input.files[0] );
+        }
+    },
+    deletePeriod: function() {
+        var data = {
+            id : $(this).attr('diplomaid')
+        };
+        
+        var event = thundashop.Ajax.createEvent(null, "deletePeriode", this, data);
+        thundashop.Ajax.post(event,  Calendar.reprintDiplomaSettings);
+    },
+    reprintDiplomaSettings: function() {
+        app.Calendar.changeDiplomaSettings(null, $('.Calendar .diplomasettings'));
+    },
+    createPeriode: function() {
+        var data = {
+            startDate : $('.Calendar .createforperiod #startdate').val(),
+            endDate : $('.Calendar .createforperiod #stopdate').val()
+        };
+        
+        var event = thundashop.Ajax.createEvent(null, "createPeriod", this, data);
+        thundashop.Ajax.post(event,  Calendar.reprintDiplomaSettings);
     },
     addCommentToEvent : function() {
         var text = $(this).closest('.comment_area').find('.comment_field').val();

@@ -1,0 +1,56 @@
+<?
+/* @var $this ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8\Calendar */
+?>
+<div class="diplomasettings">
+    <div>
+        <? 
+        $diplomas = $this->getApi()->getCalendarManager()->getDiplomaPeriods();
+        if (!$diplomas) {
+            echo "No periods added, please add one";
+        } else {
+            foreach ($diplomas as $diploma) {
+                echo "<div style=' margin-bottom: 20px; padding-bottom: 20px;'class='diplomaperiodrow'>";
+                    echo "<br/>";
+                    echo "<div style='background-color: #888;padding: 20px; margin-bottom: 20px; '>";
+                        echo "<span class='col1'><i class='fa fa-trash deletediploma' diplomaid='".$diploma->id."'></i></span>";
+                        echo "<span class='col2'>".$diploma->startDate."</span>";
+                        echo "<span class='col3'>".$diploma->stopDate."</span>";
+                    echo "</div>";
+
+                    echo "<div>";
+                    echo "Text color: <input type='textfield' id='textColor' diplomId='$diploma->id' value='$diploma->textColor'/>";
+                    echo "<br/><br/>Background image: <input type='file' id='diploma_background' diplomId='$diploma->id'/>";
+                    if ($diploma->backgroundImage) {
+                        echo "<br><img style='height: 200px;' src='$diploma->backgroundImage'/><br><br>";
+                    }
+                    echo "</div>";
+                    foreach ($diploma->signatures as $signature) {
+                        echo "<div style='border-bottom: solid 1px #888; padding-top: 3px;'>";
+                            $user = $this->getApi()->getUserManager()->getUserById($signature->userid);
+                            echo "<span class='col2'>".$user->fullName."</span>";
+                            if (!$signature->signature) {
+                                echo "<span class='col2'><input type='file' class='usersignature' userid='$user->id' diplomId='$diploma->id'/></span>";
+                            } else {
+                                echo "<img style='height: 50px;' src='$signature->signature'/> <i class='fa fa-trash removesignature' userid='".$user->id."' diplomid='".$diploma->id."'></i>";
+                            }
+                        echo "</div>";
+                    }
+                echo "</div>";
+            }
+        }
+        ?>
+    </div>
+    
+    <div class="createforperiod">
+        <table>
+            <tr><td>Start</td><td><input id="startdate" type="textfield"/></td></tr>
+            <tr><td>End</td><td><input id="stopdate" type="textfield"/></td></tr>
+            <tr><td colspan="2"><div class="gs_button">Create new period</div></td></tr>
+        </table>
+    </div>
+</div>
+
+<script>
+    $('#startdate').datepicker({ dateFormat: "dd.mm.yy", minDate: "0d" });
+    $('#stopdate').datepicker({ dateFormat: "dd.mm.yy", minDate: "0d" });
+</script>

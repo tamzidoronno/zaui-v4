@@ -1,5 +1,6 @@
 package com.thundashop.core.calendar;
 
+import com.thundashop.core.calendarmanager.data.DiplomaPeriod;
 import com.thundashop.core.calendarmanager.data.Entry;
 import com.thundashop.core.calendarmanager.data.EventPartitipated;
 import com.thundashop.core.calendarmanager.data.FilterResult;
@@ -11,6 +12,7 @@ import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Writing;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -256,9 +258,29 @@ public interface ICalendarManager {
     public String getSignature(String id) throws ErrorException;
     
     @Administrator
-    public void setSignature(String userid, String signature) throws ErrorException;
+    public void setSignature(String userid, String signature, String dimplomaId) throws ErrorException;
     
     @Administrator
     public void addUserSilentlyToEvent(String eventId, String userId) throws ErrorException;
     
+    @Administrator
+    public void createANewDiplomaPeriod(Date startDate, Date stopDate) throws ErrorException;
+    
+    @Administrator
+    public List<DiplomaPeriod> getDiplomaPeriods() throws ErrorException;
+    
+    @Administrator
+    public void deleteDiplomaPeriode(String id) throws ErrorException;
+    
+    @Administrator
+    public void setDiplomaPeriodeBackground(String diplomaId, String background) throws ErrorException;
+    
+    @Administrator
+    public DiplomaPeriod getDiplomaPeriod(Date date) throws ErrorException;
+    
+    @Administrator
+    public void removeSignature(String userId, String diplomId) throws ErrorException;
+    
+    @Administrator
+    public void setDiplomaTextColor(String diplomaId, String textColor) throws ErrorException;
 }

@@ -16,12 +16,12 @@ class IocContainer {
     /**
      * @return Factory
      */
-    public static function getFactorySingelton($loadPages = true) {
+    public static function getFactorySingelton($loadPages = true, $loadHeader = true) {
         if (isset(IocContainer::$factory)) {
             return IocContainer::$factory;
         }
         
-        IocContainer::$factory = new Factory();
+        IocContainer::$factory = new Factory($loadHeader);
         IocContainer::$factory->start($loadPages);
         
         return IocContainer::$factory;

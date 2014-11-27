@@ -89,3 +89,6 @@ apitodb.json
 com.getshop.remote/startlog.txt
 com.getshop.client/etc/config.txt
 com.getshop.mobile/autoakademiet/www/nbproject/private/private.properties
+
+com.getshop.client/ROOT/diplomapictures
+*private/*

@@ -94,13 +94,13 @@ $monthText = $factory->__w($monthText);
 $content .= "<head>
     <style>
         @page {
-            color:$diplomaPeriod->textColor;
+            color:#FFFFFF;
             background: url('/diplomapictures/".$diplomaPeriod->id.".jpg') 50% 0 no-repeat;
         }
         .page {
             text-align:center;
             text-alignment:center;
-            color:$diplomaPeriod->textColor;
+            color:#FFFFFF;
             height:220mm;
             width:210mm;
         }
@@ -110,7 +110,7 @@ $content .= "<head>
         .body { margin-top: 20px;  }
         .name { font-weight: bold; font-size: 20px; text-transform:uppercase; }
         .company { font-weight: bold; font-size: 20px; text-transform:uppercase; }
-        .footer { width: 100%; color:$diplomaPeriod->textColor; }
+        .footer { width: 100%; color:#FFFFFF; }
         .page_end {  page-break-after:always; }
         .signature_name { font-size: 10px; }
         .bottom_text { margin-top: 50px; }

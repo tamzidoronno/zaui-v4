@@ -16,28 +16,34 @@ body {
 
 .gs_outer.footer {
 	color: #FFF;
-	padding-top: 30px;
+	padding-top: 15px;
 	padding-bottom: 20px;
 	margin-top: 20px;
 	border-top: solid 1px #e38c10;
 	background-color: #f8a223;
+        height: 75px;
 }
 
+.header,
 #apparea-header {
-	height: 203px;
+	height: 100px;
 }
 
 .gs_outer.header {
 	background-color: #f8a223;
 	margin-bottom: 20px;
-	background: linear-gradient(#f8a223 0px, #f8a223 100px, #ac201a 101px, #ac201a 100%);
+	background: linear-gradient(#f8a223 0px, #f8a223 50px, #ac201a 51px, #ac201a 100%);
 }
 
+.Logo {
+    top: 0px;
+}
 .Logo img {
 	position: absolute;
-	top: 15px;
+	top: 0px;
 	padding: 5px;
 	background-color: #f8a223;
+        height: 80px;
 }
 
 .gs_outer.breadcrumb {
@@ -59,7 +65,7 @@ body {
 
 .TopMenu {
 	right: 0px;
-	bottom: 15px;
+	bottom: 8px;
 	font-family: "arial";
 	font-weight: 130;
 	font-size: 15px;
@@ -110,8 +116,8 @@ body {
 
 .lang_inner .language_selection {
     position: absolute; 
-    right: 10px;
-    top: 40px;
+    right: 0px;
+    top: 15px;
     z-index: 2;
 }
 

@@ -16,7 +16,10 @@ class MecaTheme extends \ThemeApplication {
         return $this->__f("this is restricted to owner only");
     }
     
-    function __construct() {
+    public function preProcess() {
+    }
+    
+    function __construct($render=false) {
         $this->setTotalWidth(1100);
         $this->setWidthLeft(210);
         $this->setWidthMidle(660);
@@ -32,6 +35,10 @@ class MecaTheme extends \ThemeApplication {
         $this->setCategoryImageHeight(140);
         $this->setCategoryColumnCount2Layout(4);
         $this->setCategoryColumnCount3Layout(3);
+    }
+    
+    public function renderFonts() {
+        echo "<link href='http://fonts.googleapis.com/css?family=PT+Sans|Roboto' rel='stylesheet' type='text/css'>";
     }
 }
 

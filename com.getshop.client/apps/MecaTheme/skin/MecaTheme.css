@@ -4,8 +4,8 @@
 }
 
 html {
-    font-family: arial;
     background-color: #4d4d4f;
+    font-family: 'Roboto', sans-serif;
 }
 
 #apparea-header {
@@ -52,7 +52,7 @@ html {
 .TopMenu a {
     color: #FFF;
     font-size: 12px;
-    font-family: Tahoma, Geneva, sans-serif;
+
     font-weight: bold;
     line-height: 35px;
 }

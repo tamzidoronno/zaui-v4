@@ -461,6 +461,12 @@ class Factory extends FactoryBase {
             }
             echo "</style>";
         }
+        
+        $themeApp = $this->getApplicationPool()->getSelectedThemeApp();
+        if (method_exists($themeApp,"renderFonts")) {
+            $themeApp->renderFonts();
+        }
+        
     }
 
     /*

@@ -42,7 +42,7 @@ public class EniroCompanySearchEngine implements CompanySearchEngine {
         List<Company> companies = new ArrayList();
 
         try {
-            String content = getContent("http://api.eniro.com/cs/search/basic?country=se&search_word=" + URLEncoder.encode(search, "UTF-8") + "%&key=1085211466286583430&profile=GetShop&version=1.1.3");
+            String content = getContent("http://api.eniro.com/cs/search/basic?country=se&search_word=" + URLEncoder.encode(search, "UTF-8") + "&key=1085211466286583430&profile=GetShop&version=1.1.3");
             EniroSearchResult result = gson.fromJson(content, EniroSearchResult.class);
             for (EniroSearchResult.Adverts advert : result.adverts) {
                 Company company = new Company();
@@ -67,6 +67,7 @@ public class EniroCompanySearchEngine implements CompanySearchEngine {
     }
 
     private String getContent(String url) throws MalformedURLException, IOException {
+        System.out.println(url);
         URL oracle = new URL(url);
         String content;
         try (BufferedReader in = new BufferedReader(new InputStreamReader(oracle.openStream()))) {

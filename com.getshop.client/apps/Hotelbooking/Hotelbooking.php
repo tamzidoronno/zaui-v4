@@ -40,6 +40,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $settings->showReferenceNumber = $_POST['data']['show_referencenumber'];
         $settings->displayHeardAboutUs = $_POST['data']['show_heardaboutus'];
         $settings->parkingSpots = $_POST['data']['parking_spots'];
+        $settings->extraBookingInformation = $_POST['data']['extra_booking_information'];
         $this->getFactory()->getApi()->getHotelBookingManager()->setBookingConfiguration($settings);
         $this->setConfigurationSetting("contine_page", $_POST['data']['contine_page']);
     }
@@ -885,6 +886,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return $order;
     }
 
+    public function getShowExtraInformation() {
+        return $this->getConfig()->extraBookingInformation;
+    }
 }
 
 ?>

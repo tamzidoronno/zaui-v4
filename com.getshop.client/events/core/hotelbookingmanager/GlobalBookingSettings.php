@@ -24,5 +24,8 @@ class core_hotelbookingmanager_GlobalBookingSettings extends core_common_DataCom
 	/** @var String */
 	public $parkingSpots;
 
+	/** @var String */
+	public $extraBookingInformation;
+
 }
 ?>

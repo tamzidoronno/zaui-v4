@@ -87,7 +87,9 @@ if ($this->getServiceType() == "storage") {
     </div>
     <?
     $days = $this->getMinumRentalTexted();
-    if ($days) {
+    if ($this->getShowExtraInformation()) {
+        echo $this->getShowExtraInformation();
+    } else if ($days) {
         $minimum = $this->__f("* Minimum rental periode is {days}");
         $minimum = str_replace("{days}", $days, $minimum);
         echo "<div class='error_text'>" . $minimum . "</div>";

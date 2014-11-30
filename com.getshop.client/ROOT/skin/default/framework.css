@@ -5,7 +5,6 @@
 .gscellsettingspanel div:hover { opacity:1; }
 .store_settings_button { position: absolute; z-index: 1;}
 .gsvisualizeedit { border-color:red; }
-.rotatingcontainer { position:relative; }
 .gsaddcontent i {
     -webkit-transition: opacity .15s ease-in-out;
     -moz-transition: opacity .15s ease-in-out;
@@ -19,17 +18,21 @@ filter: alpha(opacity=50);
 .gsdoneeditbutton { color:blue; cursor:pointer; }
 .gseditrowbutton { cursor:pointer; position:absolute; right: 5px; z-index: 15; font-size: 20px; background-color:rgba(255,255,255,0.4); padding: 5px; border-radius: 5px; display:none; }
 .gseditrowheading .fa { float:right; padding-left: 10px; cursor:pointer; }
-.gscell:hover .gseditrowbutton { display:block; }
-.gscell .gscellsettings { z-index:99; position:absolute; color:#000; right: 0px; top: 0px; display:none;background-color:#FFF;cursor:pointer; font-size:9px; padding-left: 2px; padding-bottom: 2px; border: solid 1px rgba(0,0,0,0.1); }
+.gscell:hover .gseditrowbutton, .gscontainercell:hover .gseditrowbutton { display:block; }
+.gscell .gscellsettings,.gscontainercell .gscellsettings { z-index:99; position:absolute; color:#000; right: 0px; top: 0px; display:none;background-color:#FFF;cursor:pointer; font-size:9px; padding-left: 2px; padding-bottom: 2px; border: solid 1px rgba(0,0,0,0.1); }
 .gscellsettingsheading { border-bottom: solid 1px rgba(0,0,0,0.2); margin-bottom: 5px; padding-bottom: 5px; font-weight: bold; }
 .gseditrowouter .gscell { border: solid 1px rgba(0,0,0,0.1);  padding: 1px;}
 .gsaddcontent:hover { border: solid 1px rgba(0,0,0,0.1); }
 .gseditrowouter:hover .gsaddcontent { border: solid 1px rgba(0,0,0,0);}
-.gsrotating { opacity:0; position:absolute !important;  }
-.gsrotating.gscount_0 { display:inherit; }
-.gstab { display:none;   }
-.gstabrow { padding-top: 10px; border-bottom: solid 1px #BBB; position:relative; }
-.gstabbtn { border: solid 1px #BBB; margin-right: 10px;  padding: 3px; cursor:pointer;  bottom: 0px; cursor:pointer; }
+.gsrotating .gsrotatingrow { opacity:0; position:absolute !important; width:100%; }
+.gsrotating .gsrotatingrow.gscount_0 { display:inherit; opacity: 1; }
+.gscontainer.gscell { width: 100%; }
+.gscontainer.gsinner { margin: 0px !important; width:100% !important; }
+.gstabrow { display:none;   }
+.gstabrow.gscount_0 { display:block;   }
+.gstabrow { border-bottom: solid 1px #BBB; position:relative; }
+.gstabbtn { border: solid 1px #BBB; margin-right: 10px;  padding: 3px; cursor:pointer;  bottom: 0px; cursor:pointer; display:inline-block;  }
+
 .gstabname { width: 60px; }
 .gs_closecarouselsettings { width: 50px !important; }
 .gstab.gscount_0 { display:block; }
@@ -84,10 +87,10 @@ position: absolute; font-size: 30px; top: 50%; color: rgba(0,0,0,0.4); cursor:po
 .gsaddcontent { width: 100%; display: inline-block; height: 100%; text-align: center; border: solid 1px rgba(0,0,0,0); }
 .gsaddcontent i { margin-top: 20px; font-size: 30px; margin-bottom: 20px; }
 .gsaddcontent i:hover { opacity: 1; }
-.gscell { position:relative; }
+.gscell,.gscontainercell { position:relative; }
 
-.gscell.gsvertical {box-sizing: border-box; }
-.gscell.gshorizontal .applicationarea { height: auto; }
+.gscell.gscolumn {box-sizing: border-box; }
+.gscell.gsrow .applicationarea { height: auto; }
 
 .header .applicationinner .logged_on_menu a {
     padding-right:4px;

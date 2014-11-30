@@ -1,5 +1,6 @@
 package com.thundashop.core.pagemanager.data;
 
+import com.thundashop.core.common.ErrorException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -7,12 +8,12 @@ import java.util.ArrayList;
 public class PageLayout implements Serializable {
 
     Integer cellCount = 0;
-    
+
     HashMap<String, ArrayList<PageCell>> areas = new HashMap();
 
     void clear() {
         areas.put("body", new ArrayList());
-        areas.get("body").add(initNewCell(PageCell.PageMode.horizontal));
+        areas.get("body").add(initNewCell(PageCell.PageMode.row));
     }
 
     public void moveCell(String cellid, boolean moveUp) {
@@ -66,10 +67,10 @@ public class PageLayout implements Serializable {
         return cells;
     }
 
-    public String createCell(String incell, String before, String mode, String area) {
+    public String createCell(String incell, String before, String mode, String area) throws ErrorException {
 
         if (mode == null || mode.isEmpty()) {
-            mode = PageCell.PageMode.vertical;
+            throw new ErrorException(1030);
         }
         String cellId = "";
         if (incell == null || incell.isEmpty()) {
@@ -90,10 +91,6 @@ public class PageLayout implements Serializable {
             }
             cellId = newpagecell.cellId;
         } else {
-            if (mode.equals(PageCell.PageMode.rotating) || mode.equals(PageCell.PageMode.tab)) {
-                incell = denyRotatingInsideRotating(incell, mode);
-            }
-            String modeToSet = mode;
             PageCell cell = findCell(getAllCells(), incell);
             double newwidth = -1;
             if (cell.cells.isEmpty()) {
@@ -102,31 +99,22 @@ public class PageLayout implements Serializable {
                 newcell.extractDataFrom(cell, false);
                 newcell.mode = mode;
             } else {
-                int count = cell.cells.size();
-                double percentage = (double)((100 / count) + 100) / 100;
-                if(cell.cells.get(0).mode.equals(mode)) {
-                    newwidth = resizeCells(cell.cells, true, percentage);
-                }
-                
-                if (!modeToSet.equals(cell.cells.get(0).mode) && (before == null || before.isEmpty())) {
-                    PageCell newpagecell = initNewCell(modeToSet);
-                    newpagecell.cells.addAll(cell.cells);
-                    newpagecell.width = newwidth;
-                    
-                    cell.cells.clear();
-                    cell.cells.add(newpagecell);
-                } else {
-                    modeToSet = cell.cells.get(0).mode;
+                //Each cell as a subcell need to be the same.
+                if(!cell.cells.get(0).mode.equals(mode)) {
+                    PageCell newcell = initNewCell(mode);
+                    newcell.extractDataFrom(cell, true);
+                    cell.clear();
+                    cell.cells.add(newcell);
                 }
             }
 
             PageCell newcell = cell.createCell(before, cellCount);
             cellCount++;
-            newcell.mode = modeToSet;
+            newcell.mode = mode;
             newcell.width = newwidth;
             cellId = newcell.cellId;
         }
-        
+
         return cellId;
     }
 
@@ -158,14 +146,19 @@ public class PageLayout implements Serializable {
                 boolean deleted = deleteCellRecusive(cellId, cell.cells);
                 if (deleted) {
                     if (cell.cells.size() == 1) {
+                        String currentMode = cell.mode;
                         cell.extractDataFrom(cell.cells.get(0), true);
+                        cell.mode = currentMode;
+                    }
+                    if(cell.cells.isEmpty() && (cell.isRotating() || cell.isTab())) {
+                        cell.mode = PageCell.PageMode.row;
                     }
                 }
             }
         }
         if (toRemove != null) {
             cells.remove(toRemove);
-            double percentage = (double)(toRemove.width / (double)(100-toRemove.width))+1;
+            double percentage = (double) (toRemove.width / (double) (100 - toRemove.width)) + 1;
             resizeCells(cells, false, percentage);
             removeCellFromList(toRemove);
             return true;
@@ -289,9 +282,9 @@ public class PageLayout implements Serializable {
             if (tmpcell.cells.contains(cell)) {
                 return tmpcell;
             } else {
-                if(!tmpcell.cells.isEmpty()) {
+                if (!tmpcell.cells.isEmpty()) {
                     PageCell found = findParentRecursive(tmpcell.cells, cell);
-                    if(found != null) {
+                    if (found != null) {
                         return found;
                     }
                 }
@@ -317,7 +310,7 @@ public class PageLayout implements Serializable {
 
     public ArrayList<PageCell> getCellsFlatList() {
         ArrayList<PageCell> arrayList = new ArrayList();
-        for(String area : areas.keySet()) {
+        for (String area : areas.keySet()) {
             for (PageCell row : areas.get(area)) {
                 arrayList.addAll(row.getCellsFlatList());
             }
@@ -327,17 +320,17 @@ public class PageLayout implements Serializable {
 
     private double resizeCells(ArrayList<PageCell> cells, boolean add, double percentage) {
         double total = 0;
-        for(PageCell tmpcell : cells) {
-            if(tmpcell.width > -1) {
-                if(percentage == 0) {
+        for (PageCell tmpcell : cells) {
+            if (tmpcell.width > -1) {
+                if (percentage == 0) {
                     tmpcell.width = -1.0;
                 } else {
-                    if(add) {
+                    if (add) {
                         tmpcell.width = tmpcell.width / percentage;
                     } else {
                         tmpcell.width = tmpcell.width * percentage;
                     }
-                    tmpcell.width = (double)Math.round(tmpcell.width);
+                    tmpcell.width = (double) Math.round(tmpcell.width);
                     total += tmpcell.width;
                 }
             }
@@ -345,11 +338,11 @@ public class PageLayout implements Serializable {
         double returning = 100 - total;
         System.out.println("Returning: " + returning);
         System.out.println("Total: " + total);
-        if(returning == 100) {
+        if (returning == 100) {
             return -1;
         }
-        if(!add && returning > 0) {
-            cells.get(cells.size()-1).width += returning;
+        if (!add && returning > 0) {
+            cells.get(cells.size() - 1).width += returning;
         }
         return returning;
     }
@@ -372,4 +365,33 @@ public class PageLayout implements Serializable {
         cell.cellName = cellName;
     }
 
+    public void switchMode(String cellId, String mode) {
+        PageCell cell = getCell(cellId);
+        if (cell.mode.equals(mode)) {
+            return;
+        }
+
+        if (PageCell.PageMode.rotating.equals(mode) || PageCell.PageMode.tab.equalsIgnoreCase(mode)) {
+            boolean convertToSub = true;
+            if (cell.isRotating() || cell.isTab()) {
+                if (!cell.cells.isEmpty()) {
+                    PageCell innercell = cell.cells.get(0);
+                    if (!innercell.isTab() && !innercell.isRotating()) {
+                        convertToSub = false;
+                    }
+                }
+
+            }
+            if (convertToSub) {
+                PageCell subcell = initNewCell(PageCell.PageMode.row);
+                subcell.extractDataFrom(cell, true);
+                cell.clear();
+                cell.cells.add(subcell);
+            }
+
+        }
+
+        cell.mode = mode;
+
+    }
 }

@@ -485,6 +485,26 @@ public class APIPageManager {
      * @return
      * @throws ErrorException
      */
+<<<<<<< HEAD
+=======
+     public void setCellMode(java.lang.String pageId, java.lang.String cellId, java.lang.String mode)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("pageId",new Gson().toJson(pageId));
+          data.args.put("cellId",new Gson().toJson(cellId));
+          data.args.put("mode",new Gson().toJson(mode));
+          data.method = "setCellMode";
+          data.interfaceName = "core.pagemanager.IPageManager";
+          String result = transport.send(data);
+     }
+
+     /**
+     * Set the carousel configuration.
+     * @param pageId
+     * @return
+     * @throws ErrorException
+     */
+>>>>>>> ffb271abea94719c7aa1b424de77856b58789f58
      public void setCellName(java.lang.String pageId, java.lang.String cellId, java.lang.String cellName)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new LinkedHashMap();

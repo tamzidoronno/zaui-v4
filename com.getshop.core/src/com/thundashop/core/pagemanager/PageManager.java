@@ -87,6 +87,7 @@ public class PageManager extends ManagerBase implements IPageManager {
         }
 
         page.finalizePage(commonPageData);
+        page.dumpLayout();
         return page;
     }
 
@@ -198,9 +199,9 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     @Override
-    public String addLayoutCell(String pageId, String incell, String beforecell, String direction, String area) throws ErrorException {
+    public String addLayoutCell(String pageId, String incell, String beforecell, String mode, String area) throws ErrorException {
         Page page = getPage(pageId);
-        String cell = page.layout.createCell(incell, beforecell, direction, area);
+        String cell = page.layout.createCell(incell, beforecell, mode, area);
         savePage(page);
         return cell;
     }
@@ -248,7 +249,13 @@ public class PageManager extends ManagerBase implements IPageManager {
     public void setCellName(String pageId, String cellId, String cellName) throws ErrorException {
         Page page = getPage(pageId);
         page.layout.cellName(cellId, cellName);
-        savePage(page);        
+        savePage(page);
     }
 
+    @Override
+    public void setCellMode(String pageId, String cellId, String mode) throws ErrorException {
+        Page page = getPage(pageId);
+        page.layout.switchMode(cellId, mode);
+        savePage(page);
+    }
 }

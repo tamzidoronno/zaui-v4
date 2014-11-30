@@ -7,10 +7,15 @@ import java.util.UUID;
 
 public class PageCell implements Serializable {
 
+    void clear() {
+        appId = "";
+        cells = new ArrayList();
+    }
+
     static class PageMode {
 
-        public static String vertical = "VERTICAL";
-        public static String horizontal = "HORIZONTAL";
+        public static String column = "COLUMN";
+        public static String row = "ROW";
         public static String rotating = "ROTATING";
         public static String tab = "TAB";
     }
@@ -18,7 +23,7 @@ public class PageCell implements Serializable {
     String cellName = "";
     public int incrementalCellId;
     public String cellId = UUID.randomUUID().toString();
-    public String mode = PageMode.vertical;
+    public String mode = PageMode.column;
     public ArrayList<PageCell> cells = new ArrayList();
     public String appId;
     public String styles = "";
@@ -44,7 +49,7 @@ public class PageCell implements Serializable {
     }
 
     void extractDataFrom(PageCell cell, boolean includeCells) {
-//        styles = cell.styles;
+        styles = cell.styles;
         mode = cell.mode;
         appId = cell.appId;
         if(includeCells) {
@@ -52,6 +57,15 @@ public class PageCell implements Serializable {
         }
     }
 
+    public boolean isRotating() {
+        return PageCell.PageMode.rotating.equalsIgnoreCase(mode);
+    }
+
+    public boolean isTab() {   
+        return PageCell.PageMode.tab.equalsIgnoreCase(mode); 
+    }
+    
+    
     public PageCell getCell(String pageCellId) {
         if (cellId.equals(pageCellId)) {
             return this;

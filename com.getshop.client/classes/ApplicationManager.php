@@ -92,22 +92,25 @@ class ApplicationManager extends FactoryBase {
             case "delete":
                 $this->getApi()->getPageManager()->dropCell($this->getPage()->javapage->id, $cellId);
                 break;
-            case "addrotate":
-                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "ROTATING", $area);
-                break;
-            case "addtab":
-                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "TAB", $area);
-                break;
             case "addbefore":
             case "addafter":
-                $cellId = $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "HORIZONTAL", $area);
+                $cellId = $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "ROW", $area);
                 $_GET['gseditcell'] = $cellId;
                 break;
-            case "addvertical":
-                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "VERTICAL", $area);
+            case "addcolumn":
+                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "COLUMN", $area);
                 break;
-            case "addhorizontal":
-                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "HORIZONTAL", $area);
+            case "addrow":
+                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "ROW", $area);
+                break;
+            case "setcarouselmode":
+                $this->getApi()->getPageManager()->setCellMode($this->getPage()->javapage->id, $cellId, "ROTATING");
+                break;
+            case "settabmode":
+                $this->getApi()->getPageManager()->setCellMode($this->getPage()->javapage->id, $cellId, "TAB");
+                break;
+            case "setnormalmode":
+                $this->getApi()->getPageManager()->setCellMode($this->getPage()->javapage->id, $cellId, "ROW");
                 break;
         }
     }
@@ -304,7 +307,7 @@ class ApplicationManager extends FactoryBase {
     }
     
     public function startEditRow() {
-        $cellid = $_POST['data']['cellid'];
+        $cellid = @$_POST['data']['cellid'];
         $_SESSION['gseditcell'] = $cellid;
     }
 

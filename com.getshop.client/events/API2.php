@@ -3178,6 +3178,24 @@ class APIPageManager {
 	* @throws ErrorException
 	*/
 
+	public function setCellMode($pageId, $cellId, $mode) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data['args']["cellId"] = json_encode($this->transport->object_unset_nulls($cellId));
+	     $data['args']["mode"] = json_encode($this->transport->object_unset_nulls($mode));
+	     $data["method"] = "setCellMode";
+	     $data["interfaceName"] = "core.pagemanager.IPageManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Set the carousel configuration.
+	* @param pageId
+	* @return void
+	* @throws ErrorException
+	*/
+
 	public function setCellName($pageId, $cellId, $cellName) {
 	     $data = array();
 	     $data['args'] = array();

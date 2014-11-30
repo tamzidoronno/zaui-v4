@@ -5,6 +5,8 @@ likebeforeStyles = null;
 
 thundashop.framework = {
     operatingCellId : null,
+    activeContainerCellId : {},
+    lastRotatedCell : {},
     
     bindEvents: function () {
         $('*[gstype="form"] *[gstype="submit"]').live('click', function (e) {
@@ -67,25 +69,17 @@ thundashop.framework = {
         /* Cell operations */
         $(document).on('click', '.gsoperatecell', this.operateCell);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
-        $(document).on('mousedown', '.gs_splithorizontally', this.operateCell);
-        $(document).on('mousedown', '.gs_addrotating', this.operateCell);
-        $(document).on('mousedown', '.gs_addtab', this.operateCell);
-        $(document).on('mousedown', '.gs_splitvertically', this.operateCell);
-        $(document).on('mousedown', '.gs_removerow', this.operateCell);
-        $(document).on('mousedown', '.gseditrowheading .fa', this.operateCell);
     },
     releaseMouse : function() {
         thundashop.framework.mousedown = false;
     },
     changeTab : function() {
         var newId = $(this).attr('incrementid');
-        var container = $(this).closest('.gscontainer');
-        container.find('.gstab').hide();
-        container.find('.gsactivetab').removeClass('gsactivetab');
-        $(this).addClass('gsactivetab');
-        $('.gscell.gscell_'+newId).show();
+        var container = $(this).closest('.gscontainercell');
+        container.find('.gstabrow').hide();
+        $('.gstabrow.gscell_'+newId).show();
         var cellid = $('.gscell.gscell_'+newId).attr('cellid');
-        thundashop.framework.setActiveContainerCellId(cellid);
+        thundashop.framework.setActiveContainerCellId(cellid, container.attr('cellid'));
     },
     switchCellResizing : function() {
         thundashop.framework.saveCellChanges(true);
@@ -96,7 +90,6 @@ thundashop.framework = {
         $('.carouselsettingspanel').fadeOut();
     },
     findCss: function (id) {
-        console.log("Finding css for : " + id);
         var result = "";
         var cellobject = $('.gscell[cellid="'+id+'"]');
         var incrementid = cellobject.attr('incrementcellid');
@@ -109,7 +102,7 @@ thundashop.framework = {
         if($('style[cellid="'+id+'"]').length > 0) {
             return $('style[cellid="'+id+'"]').html();
         } else {
-            if(cellobject.hasClass('gscontainer')) {
+            if(cellobject.hasClass('gscontainercell')) {
                 result = ".gscell_"+incrementid+".gscell {\n\n}\n";
             } else {
                 result = ".gscell_"+incrementid+".gsinner {\n\n}\n";
@@ -197,19 +190,19 @@ thundashop.framework = {
             count++;
         });
         $(this).attr('pushed', null);
-        var cell = $(this).closest('.rotatingcontainer');
+        var cell = $(this).closest('.gscontainercell');
 
         thundashop.framework.resetCarouselTimer(cell);
         thundashop.framework.rotateCellDirection(cell, offsetcount);
         var rotatecell = $('.gscell[cellid="' + thundashop.framework.getActiveContainerCellId() + '"]');
         if (rotatecell.hasClass('gseditrowouter')) {
             thundashop.framework.loadResizing(rotatecell, true);
-            thundashop.framework.lastRotatedCell = thundashop.framework.getActiveContainerCellId();
+            thundashop.framework.lastRotatedCell[cell.attr('cellid')] = thundashop.framework.getActiveContainerCellId();
         }
 
     },
     rotateCell: function () {
-        var cell = $(this).closest('.rotatingcontainer');
+        var cell = $(this).closest('.gscontainercell');
         thundashop.framework.resetCarouselTimer(cell);
         if ($(this).hasClass('gsrotateright')) {
             thundashop.framework.rotateCellDirection(cell, "right");
@@ -219,7 +212,7 @@ thundashop.framework = {
         var rotatecell = $('.gscell[cellid="' + thundashop.framework.getActiveContainerCellId() + '"]');
         if (rotatecell.hasClass('gseditrowouter')) {
             thundashop.framework.loadResizing(rotatecell, true);
-            thundashop.framework.lastRotatedCell = thundashop.framework.getActiveContainerCellId();
+            thundashop.framework.lastRotatedCell[cell.attr('cellid')] = thundashop.framework.getActiveContainerCellId();
         }
     },
     saveCarouselSettings: function () {
@@ -241,11 +234,11 @@ thundashop.framework = {
         $('.carouselsettingspanel').attr('cellid', cellid);
 
         //populate values
-        $('.carouselsettingspanel').find('.gscarouselheight').val($(this).closest('.rotatingcontainer').attr('height'))
-        $('.carouselsettingspanel').find('.gscarouseltimer').val($(this).closest('.rotatingcontainer').attr('timer'))
-        $('.carouselsettingspanel').find('.gscarouseltype').val($(this).closest('.rotatingcontainer').attr('type'))
-        $(this).closest('.rotatingcontainer').attr('timer')
-        $(this).closest('.rotatingcontainer').attr('timertype')
+        $('.carouselsettingspanel').find('.gscarouselheight').val($(this).closest('.gscontainercell').attr('height'))
+        $('.carouselsettingspanel').find('.gscarouseltimer').val($(this).closest('.gscontainercell').attr('timer'))
+        $('.carouselsettingspanel').find('.gscarouseltype').val($(this).closest('.gscontainercell').attr('type'))
+        $(this).closest('.gscontainercell').attr('timer')
+        $(this).closest('.gscontainercell').attr('timertype')
 
         $('.carouselsettingspanel').fadeIn();
     },
@@ -254,10 +247,11 @@ thundashop.framework = {
     },
     
     showTabSettings : function() {
-        var cellid = $(this).closest('.gscontainer').find('.gsactivetab').attr('cellid');
+        var container = $(this).closest('.gscontainercell');
+        var cellid = container.find('.gsactivetab').attr('cellid');
         var tabtext = $('.gstabbtn[cellid="'+cellid+'"]').text();
         
-        thundashop.framework.setActiveContainerCellId(cellid);
+        thundashop.framework.setActiveContainerCellId(cellid, container.attr('cellid'));
         thundashop.framework.updateOperateOnCellId(cellid);
         $('.tabsettingspanel').css('left', $(this).offset().left);
         $('.tabsettingspanel').css('top', $(this).offset().top + 15);
@@ -271,62 +265,64 @@ thundashop.framework = {
         var before = null;
         var newcellid = "";
         var count = 0;
-        cell.children('.gsrotating').each(function () {
+        var curoffset = 0;
+        var counter = 0;
+        cell.find('.gscontainerinner').children('.gsrotatingrow').each(function () {
+            if($(this).css('z-index') === "2") {
+                curoffset = counter;
+            }
+            counter++;
+        });
+        
+        if(direction === "right") {
+            if(curoffset === cell.find('.gscontainerinner').children('.gsrotatingrow').length-1) {
+                curoffset = -1;
+            }
+        }
+        
+        cell.find('.gscontainerinner').children('.gsrotatingrow').each(function () {
+            $(this).css('opacity', '0');
+            $(this).css('z-index', '0');
+        });
+        
+        cell.find('.gscontainerinner').children('.gsrotatingrow').each(function () {
             if (direction === "right") {
-                if (found === 1) {
+                if(count === (curoffset+1)) {
                     $(this).css('opacity', '1');
                     $(this).css('z-index', '2');
                     newcellid = $(this).attr('cellid');
-                    found = 2;
-                }
-                if ($(this).css('z-index') === "2" && found === 0) {
-                    $(this).css('opacity', '0');
-                    $(this).css('z-index', '0');
-                    found = 1;
                 }
             } else if (direction === "left") {
-                if ($(this).css('z-index') === "2" && found === 0) {
-                    $(this).css('opacity', '0');
-                    $(this).css('z-index', '0');
-                    before.css('opacity', '1');
-                    before.css('z-index', '2');
-                    newcellid = before.attr('cellid');
-                    found = 1;
+                if(count === (curoffset-1)) {
+                    $(this).css('opacity', '1');
+                    $(this).css('z-index', '2');
+                    newcellid = $(this).attr('cellid');
                 }
-            } else if (direction === count) {
-                newcellid = $(this).attr('cellid');
-                cell.children('.gsrotating').css('opacity', '0');
-                cell.children('.gsrotating').css('z-index', '0');
+           } else if (direction === count) {
                 $(this).css('opacity', '1');
                 $(this).css('z-index', '2');
+                newcellid = $(this).attr('cellid');
             }
             count++;
             before = $(this);
         });
 
-        if (direction === "right" && found !== 2) {
-            cell.children('.gsrotating').css('opacity', '0');
-            cell.children('.gsrotating').css('z-index', '0');
-            cell.children('.gsrotating').first().css('z-index', '2');
-            cell.children('.gsrotating').first().css('opacity', '1');
-        }
-
         if ($('.gscell[cellid="' + newcellid + '"]').hasClass('gseditrowouter')) {
             console.log("Active cell: " + newcellid);
-            thundashop.framework.setActiveContainerCellId(newcellid);
+            thundashop.framework.setActiveContainerCellId(newcellid, cell.attr('cellid'));
         }
     },
     loadResizing: function (cell, saveonmove) {
         if (cell.find('.range').length > 0) {
             return;
         }
-        if (cell.hasClass('gsrotating') && !cell.hasClass('gsdepth_0')) {
+        if (cell.hasClass('gsrotatingrow') && !cell.hasClass('gsdepth_0')) {
             return;
         }
 
         $('.gsresizetable').remove();
         $('.CRC').remove();
-        var children = cell.children('.gsinner').children('.gsvertical');
+        var children = cell.children('.gsinner').children('.gscolumn');
         if (children.length > 1) {
             var table = $('<table style="width: 100%;" class="range gsresizetable" dragCursor="pointer" cellspacing="0" cellpadding="0" border="0"></table>');
             var row = $('<tr></tr>');
@@ -352,7 +348,7 @@ thundashop.framework = {
                     var ranges = thundashop.framework.calculateColumnSizes($(e.currentTarget));
                     var i = 0;
                     var columns = {};
-                    cell.children('.gsinner').children('.gsvertical').each(function () {
+                    cell.children('.gsinner').children('.gscolumn').each(function () {
                         $(this).css('width', ranges[i] + "%");
                         $(this).attr('width', ranges[i]);
                         columns[$(this).attr('cellid')] = $(this).attr('width');
@@ -555,7 +551,7 @@ thundashop.framework = {
         resizingpanel.fadeIn();
 
         cell.find('.gscell.gshorisontal').resizable({grid: [10000, 1]});
-        var cellcount = cell.children('.gsinner').first().children('.gscell.gsvertical').length;
+        var cellcount = cell.children('.gsinner').first().children('.gscell.gscolumn').length;
         if (cellcount > 1) {
             thundashop.framework.loadResizing(cell, false);
         }
@@ -571,10 +567,8 @@ thundashop.framework = {
         } else {
             cellid = $(this).closest('.gscell').attr('cellid');
         }
-
-        var cell = $('.gscell[cellid="' + cellid + '"]');
-        if (cell.closest('.gscontainer').length > 0) {
-            cellid = cell.closest('.gscontainer').attr('cellid');
+        if(!cellid) {
+            cellid = $(this).closest('.gscontainercell').attr('cellid');
         }
 
         var event = thundashop.Ajax.createEvent('', 'startEditRow', $(this), {"cellid": cellid});
@@ -603,12 +597,14 @@ thundashop.framework = {
         target.find('.gscellsettings').first().closest('.gscell').addClass('gsvisualizeedit');
     },
     
-    getActiveContainerCellId : function() {
-        return thundashop.framework.activeContainerCellId;
+    getActiveContainerCellId : function(containerid) {
+        return thundashop.framework.activeContainerCellId[containerid];
     },
-    setActiveContainerCellId : function(id) {
-        thundashop.framework.lastRotatedCell = id;
-        thundashop.framework.activeContainerCellId = id;
+    setActiveContainerCellId : function(id, containerid) {
+        console.log("Setting id : " + id + " container: " + containerid);
+        thundashop.framework.lastRotatedCell[containerid] = id;
+        thundashop.framework.activeContainerCellId[containerid] = id;
+        console.log('Set active container: ' + containerid + " cellid: " + id);
     },
     
     operateCell: function () {
@@ -625,7 +621,7 @@ thundashop.framework = {
         }
         
         if($(this).attr('target') && $(this).attr('target') === "container") {
-            cellid = $('.gscell[cellid="'+thundashop.framework.getActiveContainerCellId()+'"]').closest('.gscontainer').attr('cellid');
+            cellid = $(this).closest('.gscontainercell').attr('cellid');
         }
 
         if (type === "delete" && !confirm("Are you sure you want to delete this cell and all its content?")) {
@@ -673,8 +669,8 @@ thundashop.framework = {
     },
     setOperateOnCellId : function(element) {
         thundashop.framework.operatingCellId = element.closest('.gscell').attr('cellid');
-        if(element.closest('.gseditrowheading').length > 0) {
-            thundashop.framework.operatingCellId = element.closest('.gseditrowheading').attr('cellid');
+        if(!thundashop.framework.operatingCellId) {
+            thundashop.framework.operatingCellId = element.closest('.gscontainercell').attr('cellid');
         }
     },
     
@@ -696,14 +692,14 @@ thundashop.framework = {
         var cell = element.closest('.gscell');
         $('.gscellsettingspanel').attr('topmenu', 'false');
        
-        if (cell.hasClass('gsvertical')) {
+        if (cell.hasClass('gscolumn')) {
             panel.find('.gscolumnmenu').show();
         } else {
             panel.find('.gsrowmenu').show();
         }
 
         panel.find('.carouselsettings').hide();
-        if (cell.hasClass('gsrotating') || cell.hasClass('gstab')) {
+        if (cell.hasClass('gsrotatingrow') || cell.hasClass('gstab')) {
             panel.find('.modesettings').hide();
             panel.find('.carouselsettings').show();
         }

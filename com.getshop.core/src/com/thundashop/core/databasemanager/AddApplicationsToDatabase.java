@@ -104,6 +104,15 @@ public class AddApplicationsToDatabase {
         yellowCandyTheme.defaultActivate = true;
         apps.add(yellowCandyTheme);
 		
+        Application productLists = createSettings("ProductLists",
+                "f245b8ae-f3ba-454e-beb4-ecff5ec328d6",
+                allowed2,
+                "",
+                Application.Type.Webshop, true);
+        productLists.isPublic = true;
+        productLists.defaultActivate = true;
+        apps.add(productLists);
+		
 		
 //        ApplicationSettings sedoxMenu = createSettings(
 //                "SedoxMenu",

@@ -394,6 +394,7 @@ div[gss_method] {
 
 #backsidesettings .successdialoagbacksettings {
     font-size: 20px;
+    z-index: 1;
     padding: 20px;
     width: 400px;
     position: fixed;

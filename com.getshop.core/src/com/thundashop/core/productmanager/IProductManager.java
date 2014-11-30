@@ -1,5 +1,6 @@
 package com.thundashop.core.productmanager;
 
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.productmanager.data.AttributeSummary;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
@@ -7,6 +8,7 @@ import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
+import com.thundashop.core.productmanager.data.ProductList;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -186,4 +188,43 @@ public interface IProductManager {
      * @throws ErrorException 
      */
     public List<Product> getAllProductsLight() throws ErrorException;
+    
+    /**
+     * Create a new product list.
+     * 
+     * @param listName 
+     */
+    @Administrator
+    public ProductList createProductList(String listName);
+    
+    /**
+     * Create a new product list.
+     * 
+     * @param listName
+     */
+    @Administrator
+    public void deleteProductList(String listId);
+    
+    /**
+     * Create a new product list.
+     * 
+     * @param listName
+     */
+    @Administrator
+    public List<ProductList> getProductLists();
+    
+    /**
+     * Create a new product list.
+     * 
+     * @param listName
+     */
+    public ProductList getProductList(String listId);
+    
+    /**
+     * Create a new product list.
+     * 
+     * @param listName
+     */
+    @Administrator
+    public void saveProductList(ProductList productList);
 }

@@ -1,0 +1,35 @@
+<?
+/* @var $this \ns_e073a75a_87c9_4d92_a73a_bc54feb7317f\Products */
+
+$allLists = $this->getApi()->getProductManager()->getProductLists();
+
+if(!count($allLists)) {
+    $this->includefile("newlist");
+    return;
+}
+
+
+?>
+
+<div class="textfield gss_setting" style='padding-left: 20px;'>
+    <span class="title"><? echo $this->__f("Your product lists"); ?></span>
+    <input type='textfield' placeholder='<? echo $this->__f("Filter lists"); ?>'/>
+    <div class="description">
+        <? echo $this->__f("Work with your lists below or create one. Lists are used for categorizing, filtering and etc in products overview."); ?>
+    </div>
+</div>
+<?
+
+foreach ($allLists as $list) {
+    ?>
+    <div gss_fragment='editlist' gss_view='gss_productwork_area' gss_value='<? echo $list->id ?>' class='gss_product'>
+        <div class='gss_product_inner_desc'>
+            <div class='gss_product_title'><? echo $list->listName; ?></div>
+            <div class='gss_product_price'></div>
+            <div class='gss_product_created'></div>    
+        </div>
+        
+    </div>
+    <?
+}
+?>

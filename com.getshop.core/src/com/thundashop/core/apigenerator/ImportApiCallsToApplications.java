@@ -8,6 +8,7 @@ import com.mongodb.Mongo;
 import com.thundashop.core.appmanager.data.ApiCallsInUse;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.databasemanager.Database;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import org.mongodb.morphia.Morphia;
 
 public class ImportApiCallsToApplications {
 
+    
     public static void main(String[] args) throws UnknownHostException, ClassNotFoundException {
         ImportApiCallsToApplications importer = new ImportApiCallsToApplications();
         importer.run();
@@ -28,7 +30,7 @@ public class ImportApiCallsToApplications {
         morphia.map(DataCommon.class);
 
         HashMap<String, Application> result = new HashMap();
-        Mongo m = new Mongo("localhost", 27017);
+        Mongo m = new Mongo("localhost", Database.mongoPort);
         DB db = m.getDB("ApplicationPool");
         Set<String> collections = db.getCollectionNames();
         for (String colection : collections) {
@@ -48,7 +50,7 @@ public class ImportApiCallsToApplications {
     }
 
     public void run() throws UnknownHostException, ClassNotFoundException {
-        Mongo m = new Mongo("localhost", 27017);
+        Mongo m = new Mongo("localhost", Database.mongoPort);
         DB db = m.getDB("ApplicationPool");
         DBCollection collection = db.getCollection("col_all");
         

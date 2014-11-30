@@ -1,6 +1,9 @@
 <?php
 class core_appmanager_data_ApplicationModule {
 	/** @var String */
+	public $needToShowInMenu;
+
+	/** @var String */
 	public $moduleName;
 
 	/** @var String */

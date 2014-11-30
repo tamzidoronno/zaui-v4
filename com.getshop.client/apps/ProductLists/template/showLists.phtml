@@ -1,0 +1,26 @@
+<div class="productlists_add_title">
+<?
+$productLists = $this->getApi()->getProductManager()->getProductLists();
+if (count($productLists)) {
+    echo $this->__f("Please select what list you want to display here");
+} else {
+    echo '<i class="fa fa-warning"></i> '.$this->__f("You have not created any lists yet, please go to settings and create one.");
+    return;
+}
+?>
+</div>
+
+<div class="available_lists" gstype="form" method="setList">
+    <?
+    foreach ($productLists as $list) {
+        $id = $list->id;
+        echo "<div listid='$id' class='gs_productlist setproductlist'>";
+            echo $list->listName;
+            $count = count($list->productIds);
+            
+            echo "<div class='product_count '>$count</div>";
+        echo "</div>";
+    }
+    ?>
+
+</div>

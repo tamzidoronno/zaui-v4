@@ -434,7 +434,7 @@ class ApplicationBase extends FactoryBase {
 
 
     public function gs_show_fragment() {
-        $this->includefile($_POST['fragment']);
+        $this->includefile($_POST['gss_fragment']);
     }
 }
 ?>

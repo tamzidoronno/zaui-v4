@@ -3462,6 +3462,36 @@ class ProductManager(object):
     data.interfaceName = "core.productmanager.IProductManager"
     return self.communicationHelper.sendMessage(data)
 
+  def createProductList(self, listName):
+    args = collections.OrderedDict()
+    if isinstance(listName,GetShopBaseClass): 
+      args["listName"]=json.dumps(listName.__dict__)
+    else:
+      try:
+        args["listName"]=json.dumps(listName)
+      except (ValueError, AttributeError):
+        args["listName"]=listName
+    data = EmptyClass()
+    data.args = args
+    data.method = "createProductList"
+    data.interfaceName = "core.productmanager.IProductManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def deleteProductList(self, listId):
+    args = collections.OrderedDict()
+    if isinstance(listId,GetShopBaseClass): 
+      args["listId"]=json.dumps(listId.__dict__)
+    else:
+      try:
+        args["listId"]=json.dumps(listId)
+      except (ValueError, AttributeError):
+        args["listId"]=listId
+    data = EmptyClass()
+    data.args = args
+    data.method = "deleteProductList"
+    data.interfaceName = "core.productmanager.IProductManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getAllAttributes(self):
     args = collections.OrderedDict()
     data = EmptyClass()
@@ -3591,6 +3621,29 @@ class ProductManager(object):
     data.interfaceName = "core.productmanager.IProductManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getProductList(self, listId):
+    args = collections.OrderedDict()
+    if isinstance(listId,GetShopBaseClass): 
+      args["listId"]=json.dumps(listId.__dict__)
+    else:
+      try:
+        args["listId"]=json.dumps(listId)
+      except (ValueError, AttributeError):
+        args["listId"]=listId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getProductList"
+    data.interfaceName = "core.productmanager.IProductManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getProductLists(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getProductLists"
+    data.interfaceName = "core.productmanager.IProductManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getProducts(self, productCriteria):
     args = collections.OrderedDict()
     if isinstance(productCriteria,GetShopBaseClass): 
@@ -3663,6 +3716,21 @@ class ProductManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "saveProduct"
+    data.interfaceName = "core.productmanager.IProductManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def saveProductList(self, productList):
+    args = collections.OrderedDict()
+    if isinstance(productList,GetShopBaseClass): 
+      args["productList"]=json.dumps(productList.__dict__)
+    else:
+      try:
+        args["productList"]=json.dumps(productList)
+      except (ValueError, AttributeError):
+        args["productList"]=productList
+    data = EmptyClass()
+    data.args = args
+    data.method = "saveProductList"
     data.interfaceName = "core.productmanager.IProductManager"
     return self.communicationHelper.sendMessage(data)
 

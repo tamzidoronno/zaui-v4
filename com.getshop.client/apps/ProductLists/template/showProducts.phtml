@@ -1,0 +1,21 @@
+<div class="products row_view">
+    <?
+    $products = $this->getAllProducts();
+    if (!count($products)) {
+        echo "<div class='no_products_added_to_list'><i class='fa fa-warning'></i> ".$this->__f("There is no products added to this list, manage your productlists from the settings.")."</div>";
+        return;
+    }
+    foreach ($products as $product) {
+        ?>
+        <div class="product_row">
+            <div class="image"><img src="/displayImage.php?id=<? echo $product->imagesAdded[0]; ?>&width=400"/></div>
+            <div class="content">
+                <div class="product_title"><? echo $product->name; ?></div>
+                <div class="short_description"><? echo nl2br($product->shortDescription); ?></div>
+            </div>
+            <div class="webshop_button"><? echo $this->__f("Add to cart"); ?></div>
+        </div>
+        <?
+    }
+    ?>
+</div>

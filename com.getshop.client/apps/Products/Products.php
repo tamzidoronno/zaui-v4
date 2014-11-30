@@ -29,7 +29,33 @@ class Products extends \WebshopApplication implements \Application {
     public function render() {
         
     }
-   
+
+    public function updateProduct() {
+        $product = $this->getApi()->getProductManager()->getProduct($_POST['productid']);
+        $product->name = $_POST['title'];
+        $product->shortDescription = $_POST['lisviewdescription'];
+        $product->price = $_POST['price'];
+        $product->sku = $_POST['sku'];
+        
+        
+        foreach ($this->getApi()->getProductManager()->getProductLists() as $list) {
+            if ($_POST['productlist_'.$list->id] == "true") {
+                if (!in_array($product->id, $list->productIds)) {
+                    $list->productIds[] = $product->id;
+                    $this->getApi()->getProductManager()->saveProductList($list);
+                } 
+            }
+            
+            if ($_POST['productlist_'.$list->id] == "false") {
+                if (in_array($product->id, $list->productIds)) {
+                    $this->removeProductFromList($list, $product->id);
+                }
+            }
+        }
+        echo $product->shortDescription;
+        $this->getApi()->getProductManager()->saveProduct($product);
+    }
+    
     public function createProduct() {
         $product = $this->getApi()->getProductManager()->createProduct();
         $product->name = $_POST['title'];
@@ -41,4 +67,45 @@ class Products extends \WebshopApplication implements \Application {
     public function deleteProduct() {
         $this->getApi()->getProductManager()->removeProduct($_POST['value']);
     }
+    
+    public function saveImage() {
+        $content = strstr($_POST['fileBase64'], "base64,");
+        $content = str_replace("base64,", "", $content);
+        $content = base64_decode($content);
+        $imgId = \FileUpload::storeFile($content);
+
+        $product = $this->getApi()->getProductManager()->getProduct($_POST['productId']);
+        $product->imagesAdded[] = $imgId;
+        $this->getApi()->getProductManager()->saveProduct($product);
+    }
+    
+    public function removeImage() {
+        $product = $this->getApi()->getProductManager()->getProduct($_POST['value']);
+        $keepImages = array();
+        foreach ($product->imagesAdded as $image) {
+            if ($image != $_POST['value2']) {
+                $keepImages[] = $image;
+            }
+        }
+        
+        $product->imagesAdded = $keepImages;
+        $this->getApi()->getProductManager()->saveProduct($product);
+    }
+    
+    public function renderDashBoardWidget() {
+        $this->includefile("dashboardwidget");
+    }
+
+    public function removeProductFromList($list, $productId) {
+        $keep = array();
+        foreach ($list->productIds as $id) {
+            if ($id != $productId) {
+                $keep[] = $id;
+            }
+        }
+        
+        $list->productIds = $keep;
+        $this->getApi()->getProductManager()->saveProductList($list);
+    }
+
 }

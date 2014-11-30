@@ -8,6 +8,7 @@ import com.thundashop.core.common.Logger;
 import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
+import com.thundashop.core.productmanager.data.ProductList;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -283,5 +284,46 @@ public class ProductManager extends AProductManager implements IProductManager {
             }
         });
         return retval;
+    }
+
+    @Override
+    public ProductList createProductList(String listName) {
+        ProductList list = new ProductList();
+        list.listName = listName;
+        saveObject(list);
+        productList.put(list.id, list);
+        return list;
+    }
+
+    @Override
+    public void deleteProductList(String listId) {
+        ProductList list = productList.remove(listId);
+        if (list != null) {
+            deleteObject(list);
+        }
+    }
+
+    @Override
+    public List<ProductList> getProductLists() {
+        return new ArrayList(productList.values());
+    }
+
+    @Override
+    public ProductList getProductList(String listId) {
+        return productList.get(listId);
+    }
+
+    @Override
+    public void saveProductList(ProductList productList) {
+        if (productList == null) {
+            return;
+        }
+        
+        if (productList.id == null || productList.id.equals("")) {
+            saveObject(productList);
+        }
+        
+        this.productList.put(productList.id, productList);
+        saveObject(productList);
     }
 }

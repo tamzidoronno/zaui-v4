@@ -5,6 +5,7 @@ getshop.Models = {
     watching: {},
     init: function () {
         $(document).on('change', 'input[gs_model]', this.inputChanged);
+        $(document).on('change', 'textarea[gs_model]', this.inputChanged);
         $(document).on('change', 'select[gs_model]', this.selectChanged);
         $(document).on('click', '[gs_model].gss_onoff', this.toggleOnOff);
     },
@@ -59,7 +60,7 @@ getshop.Models = {
         getshop.Model[model][attr] = val;
     },
     isTextfield: function (field) {
-        return ($(field).is("[type=text]") || $(field).is("[type=textfield]") || $(field).is("[type=hidden]") || $(field).is("[type=password]"));
+        return ($(field).is("[type=text]") || $(field).is("[type=textfield]") || $(field).is("[type=hidden]") || $(field).is("[type=password]") || $(field).is('textarea'));
     },
     modelChanged: function (prop, action, difference, oldvalue, model) {
         var fields = $('[gs_model=' + model + "][gs_model_attr=" + prop + "]");

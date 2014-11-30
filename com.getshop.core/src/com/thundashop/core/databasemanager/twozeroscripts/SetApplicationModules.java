@@ -24,12 +24,12 @@ public class SetApplicationModules {
         cred.manangerName = "ApplicationPool";
         cred.storeid = "all";
         cred.password = "asdf";
-        
+
         Database database = new Database();
         List<Application> apps = database.getAll("ApplicationPool", "all")
-                .map(o -> (Application)o)
+                .map(o -> (Application) o)
                 .collect(Collectors.toList());
-        
+
         List<String> webshopApps = new ArrayList();
         webshopApps.add("PayPal");
         webshopApps.add("TermsAndConditions");
@@ -41,22 +41,21 @@ public class SetApplicationModules {
         webshopApps.add("InvoicePayment");
         webshopApps.add("StockControl");
         webshopApps.add("Proteria");
-        
-        
+
         List<String> webshopAppsMandatory = new ArrayList();
         webshopAppsMandatory.add("Taxes");
         webshopAppsMandatory.add("Products");
         webshopAppsMandatory.add("Shipper");
-		webshopAppsMandatory.add("OrderManager");
+        webshopAppsMandatory.add("OrderManager");
+        webshopAppsMandatory.add("ProductLists");
 
         apps.stream().filter(app -> webshopApps.contains(app.appName)).forEach(app -> app.moduleId = "WebShop");
         apps.stream().filter(app -> webshopAppsMandatory.contains(app.appName)).forEach(app -> app.moduleId = "WebShop");
-        apps.stream().filter(app -> webshopAppsMandatory.contains(app.appName)).forEach(app -> app.activeAppOnModuleActivation = true );
-        
+        apps.stream().filter(app -> webshopAppsMandatory.contains(app.appName)).forEach(app -> app.activeAppOnModuleActivation = true);
+
         List<String> cmsApps = new ArrayList();
         List<String> cmsAppsDefault = new ArrayList();
-        
-        
+
         cmsApps.add("MailManager");
         cmsApps.add("YouTube");
         cmsApps.add("GoogleMaps");
@@ -67,11 +66,10 @@ public class SetApplicationModules {
         cmsAppsDefault.add("ContentManager");
         apps.stream().filter(app -> cmsApps.contains(app.appName)).forEach(app -> app.moduleId = "cms");
         apps.stream().filter(app -> cmsAppsDefault.contains(app.appName)).forEach(app -> app.moduleId = "cms");
-        apps.stream().filter(app -> cmsAppsDefault.contains(app.appName)).forEach(app -> app.activeAppOnModuleActivation = true );
-        
+        apps.stream().filter(app -> cmsAppsDefault.contains(app.appName)).forEach(app -> app.activeAppOnModuleActivation = true);
+
         List<String> marketingApps = new ArrayList();
-        
-        
+
         marketingApps.add("Clickatell");
         marketingApps.add("News");
         marketingApps.add("Facebook");
@@ -80,20 +78,17 @@ public class SetApplicationModules {
         marketingApps.add("Calendar");
         marketingApps.add("NewsLetter");
         marketingApps.add("Booking");
-        
+
         apps.stream().filter(app -> marketingApps.contains(app.appName)).forEach(app -> app.moduleId = "Marketing");
-        
-        
+
         List<String> reportingApps = new ArrayList();
-       
-        
+
         reportingApps.add("SmsStatistic");
         reportingApps.add("GoogleAnalytics");
         reportingApps.add("Reporting");
         apps.stream().filter(app -> reportingApps.contains(app.appName)).forEach(app -> app.moduleId = "reporting");
-        
+
         apps.stream().forEach(app -> database.saveWithOverrideDeepfreeze(app, cred));
-        
-        
+
     }
 }

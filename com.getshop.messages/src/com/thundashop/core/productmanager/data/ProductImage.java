@@ -16,6 +16,7 @@ public class ProductImage implements Serializable {
         static int MAIN = 0;
         static int ADDITIONAL = 1;
     }
+    
     public int type;
     public String name;
     public String fileId;

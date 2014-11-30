@@ -1,0 +1,15 @@
+<?
+/* @var $this ns_e073a75a_87c9_4d92_a73a_bc54feb7317f\Products */
+?>
+<div class='gss_imagebox'>
+    <i class="fa fa-shopping-cart gs_fa-icon"></i>
+</div>
+<div class='gss_description'>
+    <div class='title'><? echo $this->__f("Products"); ?></div>
+    <div>
+        <?
+        echo $this->__f("Total products") . ": " . count($this->getApi()->getProductManager()->getAllProducts());
+        ?>
+    </div>
+</div>
+<div class='gss_activate_button' gss_goto_app="e073a75a-87c9-4d92-a73a-cb54feb7317f"> <? echo $this->__f("more"); ?></div>

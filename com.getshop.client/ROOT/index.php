@@ -322,5 +322,8 @@ if (isset($_GET['showlogin']) || $factory->isEditorMode()) {
 }
 
 
+if (isset($_SESSION['showadmin']) && $_SESSION['showadmin']) {
+    echo "<script>getshop.Settings.showSettings(false);</script>";
+}
 ?>
         

@@ -16,6 +16,7 @@ $activatedApps = $factory->getApi()->getStoreApplicationPool()->getApplications(
         <div class='gss_topmenu-button' gss_goto_app="d755efca-9e02-4e88-92c2-37a3413f3f41"><i class='fa fa-gears'></i> Instillinger</div>
         <div class='gss_topmenu-button' gss_goto_app="ba6f5e74-87c7-4825-9606-f2d3c93d292f"><i class='fa fa-users'></i> Users </div>
         <div class='gss_topmenu-button active' gss_goto_app='f1fc4af3-656e-4294-a268-40d2a82d0aa1'><i class='fa fa-cube'></i> Applikasjoner</div>
+        
         <?
         $activatedModules = $factory->getApi()->getStoreApplicationPool()->getActivatedModules();
         foreach ($activatedModules as $module) {
@@ -45,6 +46,7 @@ $activatedApps = $factory->getApi()->getStoreApplicationPool()->getApplications(
         <?
         }
         ?>
+        <div class='gss_topmenu-button active' gss_goto_app='f1fc4af3-656e-4294-a268-40d2a82d0aa1'><i class='fa fa-star'></i> Badges</div>
         <div class='gss_topmenu-button'><i class='fa fa-lightbulb-o'></i> GetShop admin</div>    
     </div>
 </div>

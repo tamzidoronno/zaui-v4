@@ -119,16 +119,24 @@ getshop.Settings = {
         });
 	},
 
-    showSettings: function() {
-        $('#gsbody').fadeOut(300, function() {
-            $('#backsidesettings').fadeIn(300);
+    showSettings: function(fadeIn) {
+        var speed = 300;
+        if (!fadeIn) {
+            speed = 0;
+        }
+        $('#gsbody').fadeOut(speed, function() {
+            $('#backsidesettings').fadeIn(speed);
         });
+        var event = thundashop.Ajax.createEvent(null, "setShowingSettings", null, {});
+        thundashop.Ajax.post(event);
     },
             
     showPage: function() {
         $('#backsidesettings').fadeOut(300, function() {
             $('#gsbody').fadeIn(300);
         });
+        var event = thundashop.Ajax.createEvent(null, "unsetShowingSettings", null, {});
+        thundashop.Ajax.post(event);
     },
             
 }

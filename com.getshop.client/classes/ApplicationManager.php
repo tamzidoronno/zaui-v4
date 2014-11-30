@@ -92,12 +92,6 @@ class ApplicationManager extends FactoryBase {
             case "delete":
                 $this->getApi()->getPageManager()->dropCell($this->getPage()->javapage->id, $cellId);
                 break;
-            case "addrotate":
-                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "ROTATING", $area);
-                break;
-            case "addtab":
-                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "TAB", $area);
-                break;
             case "addbefore":
             case "addafter":
                 $cellId = $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "ROW", $area);

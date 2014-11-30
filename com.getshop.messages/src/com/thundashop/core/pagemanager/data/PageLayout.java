@@ -146,7 +146,12 @@ public class PageLayout implements Serializable {
                 boolean deleted = deleteCellRecusive(cellId, cell.cells);
                 if (deleted) {
                     if (cell.cells.size() == 1) {
+                        String currentMode = cell.mode;
                         cell.extractDataFrom(cell.cells.get(0), true);
+                        cell.mode = currentMode;
+                    }
+                    if(cell.cells.isEmpty() && (cell.isRotating() || cell.isTab())) {
+                        cell.mode = PageCell.PageMode.row;
                     }
                 }
             }

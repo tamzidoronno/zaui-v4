@@ -68,6 +68,7 @@ class Page {
             $this->addCarouselSettingsPanel();
             $this->addTabPanel();
             $this->displayResizing();
+            $this->printLoaderForContainers();
             ?>
             <style>
                 .dragtable { background-image: url('http://quocity.com/colresizable/img/rangeBar.png'); background-position: 10px 10px; background-repeat-y: no-repeat;}
@@ -76,32 +77,6 @@ class Page {
                 setTimeout(function () {
                     thundashop.framework.loadResizing($('.gscell[cellid="<? echo $editedCellid; ?>"]'), true);
                 }, "200");
-                PubSub.subscribe('NAVIGATION_COMPLETED', function (a, b) {
-                    if (thundashop.framework.lastRotatedCell) {
-                        var cell = $('.gscell[cellid="' + thundashop.framework.lastRotatedCell + '"]');
-                        if (!cell.hasClass('gseditrowouter')) {
-                            return;
-                        }
-                        var container = cell.closest('.gscontainercell');
-                        if (container.hasClass('gsrotating')) {
-                            container.find('.gsrotatingrow').css('opacity', '0');
-                            cell.css('opacity', '1');
-                            cell.css('z-index', '2');
-                        }
-                        if (container.hasClass('tabcontainer')) {
-                            container.find('.gstab').hide();
-                            cell.show();
-                            container.find('.gsactivetab').removeClass('gsactivetab');
-                            container.find('.gstabbtn[cellid="' + thundashop.framework.lastRotatedCell + '"]').addClass('gsactivetab');
-                        }
-
-                        thundashop.framework.setActiveContainerCellId(thundashop.framework.lastRotatedCell);
-                        setTimeout(function () {
-                            thundashop.framework.loadResizing(cell, true);
-                        }, "200");
-                        console.log('need to reset to cell: ');
-                    }
-                })
             </script>
             <script src="/js/colresize.js"/>
             <?
@@ -210,9 +185,9 @@ class Page {
         $styles = "style='";
         $width = 100;
         $isColumn = false;
-        $additionalinfo =  "";
-        if($cell->mode == "ROTATING") {
-            $additionalinfo =  "height='".$cell->carouselConfig->height."' timer='" . $cell->carouselConfig->time . "' type='" . $cell->carouselConfig->type . "'";
+        $additionalinfo = "";
+        if ($cell->mode == "ROTATING") {
+            $additionalinfo = "height='" . $cell->carouselConfig->height . "' timer='" . $cell->carouselConfig->time . "' type='" . $cell->carouselConfig->type . "'";
             $styles .= "height: " . $cell->carouselConfig->height . "px;";
         }
         if ($cell->mode == "COLUMN" && $totalcells > 1) {
@@ -237,11 +212,14 @@ class Page {
             $roweditouter = "";
             $rowedit = "";
         }
-        
+
         $gsrotatingrow = "";
-        
-        if($parent != null && $parent->mode == "ROTATING") {
+
+        if ($parent != null && $parent->mode == "ROTATING") {
             $gsrotatingrow = "gsrotatingrow";
+        }
+        if ($parent != null && $parent->mode == "TAB") {
+            $gsrotatingrow = "gstabrow";
         }
 
         $mode = "gs" . strtolower($cell->mode);
@@ -257,9 +235,16 @@ class Page {
         }
 
         if ($depth === 0 && !$edit && $this->factory->isEditorMode()) {
-            echo "<i title='" . $this->factory->__f("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o'></i>";
+            if ($parent == null || ($parent->mode != "TAB" && $parent->mode != "ROTATING")) {
+                echo "<i title='" . $this->factory->__f("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o'></i>";
+            }
         }
         echo "<div class='$gscellinner gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
+
+        if ($parent != null && $parent->mode == "TAB") {
+            $this->displayTabRow($parent, $edit, $cell);
+        }
+
 
         if ($edit) {
             echo "<span class='gscellsettings'>";
@@ -271,23 +256,20 @@ class Page {
         if (sizeof($cell->cells) > 0) {
             $counter = 0;
             $depthprint = $depth + 1;
-            if($cell->mode == "TAB" || $cell->mode == "ROTATING") {
+            if ($cell->mode == "TAB" || $cell->mode == "ROTATING") {
                 $depthprint--;
             }
-            if($cell->mode == "TAB") {
-                $this->displayTabRow($cell, $edit);
-            }
-            
+
             foreach ($cell->cells as $innercell) {
                 $this->printCell($innercell, $counter, $depthprint, sizeof($cell->cells), $edit, $cell);
                 $counter++;
             }
-            
-            if($cell->mode == "ROTATING") {
-                $this->printCarouselSettings(!$edit, $cell, $depth);
+
+            if ($cell->mode == "ROTATING" || $cell->mode == "TAB") {
+                $this->printContainerSettings((!$edit && $cell->mode == "ROTATING"), $cell, $depth);
             }
-            
-            
+
+
             echo "<div style='clear:both;'></div>";
         } else {
             $this->printApplicationArea($cell);
@@ -502,9 +484,21 @@ class Page {
         echo "</div>";
     }
 
-    public function printCarouselSettings($doCarousel, $cell, $depth) {
+    public function printContainerSettings($doCarousel, $cell, $depth) {
         $config = $cell->carouselConfig;
         ?>
+        <script>
+            var cellid = "<? echo $cell->cellId; ?>";
+        <? if ($doCarousel) { ?>
+                thundashop.framework.activateCarousel($(".gsrotating[cellid='<? echo $cell->cellId; ?>']"), <? echo $config->time; ?>);
+        <? } else { ?>
+                if (!thundashop.framework.lastRotatedCell[cellid]) {
+                    thundashop.framework.lastRotatedCell[cellid] = '<? echo $cell->cells[0]->cellId; ?>';
+                }
+        <? } ?>
+
+        </script>
+
         <style>
             .gsrotating[cellid='<? echo $cell->cellId; ?>'] {  width: 100%; height: <? echo $config->height; ?>px !important; }
             .gsrotating[cellid='<? echo $cell->cellId; ?>'] .gscell.gsdepth_<? echo $depth; ?> { width:100%; min-height: <? echo $config->height; ?>px !important; height: <? echo $config->height; ?>px !important; }
@@ -519,16 +513,7 @@ class Page {
                 }
             <? } ?>
         </style>
-        <? if ($doCarousel) { ?>
-            <script>thundashop.framework.activateCarousel($(".gsrotating[cellid='<? echo $cell->cellId; ?>']"), <? echo $config->time; ?>);</script>
-        <? } else { ?>
-            <script>
-                if (!thundashop.framework.lastRotatedCell) {
-                    thundashop.framework.lastRotatedCell = '<? echo $cell->cells[0]->cellId; ?>';
-                }
-            </script>
-            <?
-        }
+        <?
     }
 
     public function printArea($rowsToPrint) {
@@ -570,12 +555,12 @@ class Page {
         return $editedCellid;
     }
 
-    public function displayTabRow($cell, $edit) {
-        echo "<div class='gstabrow'>";
+    public function displayTabRow($parent, $edit, $cell) {
+        echo "<div class='gstabheader'>";
         $first = true;
-        foreach ($cell->cells as $innercell) {
+        foreach ($parent->cells as $innercell) {
             $active = "";
-            if ($first) {
+            if ($cell->cellId == $innercell->cellId) {
                 $first = false;
                 $active = "gsactivetab";
             }
@@ -586,7 +571,7 @@ class Page {
             echo "<span class='gstabbtn $active' incrementid='" . $innercell->incrementalCellId . "' cellid='" . $innercell->cellId . "'>$tabName</span>";
         }
         if ($this->factory->isEditorMode() && $edit) {
-            echo "<i class='fa fa-plus gsoperatecell' type='addtab' target='container' title='Add another tab'></i> ";
+            echo "<i class='fa fa-plus gsoperatecell' type='addrow' target='container' title='Add another tab'></i> ";
             echo "<i class='fa fa-cogs tabsettings' title='Tab settings'></i>";
         }
         echo "</div>";
@@ -606,6 +591,34 @@ class Page {
             echo "<i class='fa fa-cogs carouselsettings' title='Carousel settings'></i>";
         }
         echo "</div>";
+    }
+
+    public function printLoaderForContainers() {
+        ?>
+        <script>
+            PubSub.subscribe('NAVIGATION_COMPLETED', function (a, b) {
+                for (var containerid in thundashop.framework.lastRotatedCell) {
+                    var lastRotatedCell = thundashop.framework.lastRotatedCell[containerid];
+                    console.log("Navigating: " + containerid + " with cell: " + lastRotatedCell);
+                    var cell = $('.gscell[cellid="' + lastRotatedCell + '"]');
+                    var container = cell.closest('.gscontainercell');
+                    if (container.hasClass('gsrotating')) {
+                        container.find('.gsrotatingrow').css('opacity', '0');
+                        cell.css('opacity', '1');
+                        cell.css('z-index', '2');
+                    }
+                    if (container.hasClass('gstab')) {
+                        container.find('.gstabrow').hide();
+                        cell.show();
+                    }
+
+                    setTimeout(function () {
+                        thundashop.framework.loadResizing(cell, true);
+                    }, "200");
+                }
+            });
+        </script>
+        <?
     }
 
 }

@@ -5,6 +5,8 @@ likebeforeStyles = null;
 
 thundashop.framework = {
     operatingCellId : null,
+    activeContainerCellId : {},
+    lastRotatedCell : {},
     
     bindEvents: function () {
         $('*[gstype="form"] *[gstype="submit"]').live('click', function (e) {
@@ -73,13 +75,11 @@ thundashop.framework = {
     },
     changeTab : function() {
         var newId = $(this).attr('incrementid');
-        var container = $(this).closest('.gscontainer');
-        container.find('.gstab').hide();
-        container.find('.gsactivetab').removeClass('gsactivetab');
-        $(this).addClass('gsactivetab');
-        $('.gscell.gscell_'+newId).show();
+        var container = $(this).closest('.gscontainercell');
+        container.find('.gstabrow').hide();
+        $('.gstabrow.gscell_'+newId).show();
         var cellid = $('.gscell.gscell_'+newId).attr('cellid');
-        thundashop.framework.setActiveContainerCellId(cellid);
+        thundashop.framework.setActiveContainerCellId(cellid, container.attr('cellid'));
     },
     switchCellResizing : function() {
         thundashop.framework.saveCellChanges(true);
@@ -90,7 +90,6 @@ thundashop.framework = {
         $('.carouselsettingspanel').fadeOut();
     },
     findCss: function (id) {
-        console.log("Finding css for : " + id);
         var result = "";
         var cellobject = $('.gscell[cellid="'+id+'"]');
         var incrementid = cellobject.attr('incrementcellid');
@@ -103,7 +102,7 @@ thundashop.framework = {
         if($('style[cellid="'+id+'"]').length > 0) {
             return $('style[cellid="'+id+'"]').html();
         } else {
-            if(cellobject.hasClass('gscontainer')) {
+            if(cellobject.hasClass('gscontainercell')) {
                 result = ".gscell_"+incrementid+".gscell {\n\n}\n";
             } else {
                 result = ".gscell_"+incrementid+".gsinner {\n\n}\n";
@@ -198,7 +197,7 @@ thundashop.framework = {
         var rotatecell = $('.gscell[cellid="' + thundashop.framework.getActiveContainerCellId() + '"]');
         if (rotatecell.hasClass('gseditrowouter')) {
             thundashop.framework.loadResizing(rotatecell, true);
-            thundashop.framework.lastRotatedCell = thundashop.framework.getActiveContainerCellId();
+            thundashop.framework.lastRotatedCell[cell.attr('cellid')] = thundashop.framework.getActiveContainerCellId();
         }
 
     },
@@ -213,7 +212,7 @@ thundashop.framework = {
         var rotatecell = $('.gscell[cellid="' + thundashop.framework.getActiveContainerCellId() + '"]');
         if (rotatecell.hasClass('gseditrowouter')) {
             thundashop.framework.loadResizing(rotatecell, true);
-            thundashop.framework.lastRotatedCell = thundashop.framework.getActiveContainerCellId();
+            thundashop.framework.lastRotatedCell[cell.attr('cellid')] = thundashop.framework.getActiveContainerCellId();
         }
     },
     saveCarouselSettings: function () {
@@ -248,10 +247,11 @@ thundashop.framework = {
     },
     
     showTabSettings : function() {
-        var cellid = $(this).closest('.gscontainer').find('.gsactivetab').attr('cellid');
+        var container = $(this).closest('.gscontainercell');
+        var cellid = container.find('.gsactivetab').attr('cellid');
         var tabtext = $('.gstabbtn[cellid="'+cellid+'"]').text();
         
-        thundashop.framework.setActiveContainerCellId(cellid);
+        thundashop.framework.setActiveContainerCellId(cellid, container.attr('cellid'));
         thundashop.framework.updateOperateOnCellId(cellid);
         $('.tabsettingspanel').css('left', $(this).offset().left);
         $('.tabsettingspanel').css('top', $(this).offset().top + 15);
@@ -309,7 +309,7 @@ thundashop.framework = {
 
         if ($('.gscell[cellid="' + newcellid + '"]').hasClass('gseditrowouter')) {
             console.log("Active cell: " + newcellid);
-            thundashop.framework.setActiveContainerCellId(newcellid);
+            thundashop.framework.setActiveContainerCellId(newcellid, cell.attr('cellid'));
         }
     },
     loadResizing: function (cell, saveonmove) {
@@ -597,12 +597,14 @@ thundashop.framework = {
         target.find('.gscellsettings').first().closest('.gscell').addClass('gsvisualizeedit');
     },
     
-    getActiveContainerCellId : function() {
-        return thundashop.framework.activeContainerCellId;
+    getActiveContainerCellId : function(containerid) {
+        return thundashop.framework.activeContainerCellId[containerid];
     },
-    setActiveContainerCellId : function(id) {
-        thundashop.framework.lastRotatedCell = id;
-        thundashop.framework.activeContainerCellId = id;
+    setActiveContainerCellId : function(id, containerid) {
+        console.log("Setting id : " + id + " container: " + containerid);
+        thundashop.framework.lastRotatedCell[containerid] = id;
+        thundashop.framework.activeContainerCellId[containerid] = id;
+        console.log('Set active container: ' + containerid + " cellid: " + id);
     },
     
     operateCell: function () {
@@ -619,7 +621,7 @@ thundashop.framework = {
         }
         
         if($(this).attr('target') && $(this).attr('target') === "container") {
-            cellid = $('.gscell[cellid="'+thundashop.framework.getActiveContainerCellId()+'"]').closest('.gscontainercell').attr('cellid');
+            cellid = $(this).closest('.gscontainercell').attr('cellid');
         }
 
         if (type === "delete" && !confirm("Are you sure you want to delete this cell and all its content?")) {

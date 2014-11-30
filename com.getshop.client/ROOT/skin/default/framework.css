@@ -28,9 +28,10 @@ filter: alpha(opacity=50);
 .gsrotating .gsrotatingrow.gscount_0 { display:inherit; opacity: 1; }
 .gscontainer.gscell { width: 100%; }
 .gscontainer.gsinner { margin: 0px !important; width:100% !important; }
-.gstab { display:none;   }
-.gstabrow { padding-top: 10px; border-bottom: solid 1px #BBB; position:relative; }
-.gstabbtn { border: solid 1px #BBB; margin-right: 10px;  padding: 3px; cursor:pointer;  bottom: 0px; cursor:pointer; }
+.gstabrow { display:none;   }
+.gstabrow.gscount_0 { display:block;   }
+.gstabrow { border-bottom: solid 1px #BBB; position:relative; }
+.gstabbtn { border: solid 1px #BBB; margin-right: 10px;  padding: 3px; cursor:pointer;  bottom: 0px; cursor:pointer; display:inline-block;  }
 
 .gstabname { width: 60px; }
 .gs_closecarouselsettings { width: 50px !important; }

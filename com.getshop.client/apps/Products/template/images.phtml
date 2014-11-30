@@ -1,0 +1,30 @@
+<?
+/* @var $this ns_e073a75a_87c9_4d92_a73a_bc54feb7317f\Products */
+
+$product = $this->getApi()->getProductManager()->getProduct($_POST['value']);
+
+$i = 0;
+if (count($product->imagesAdded)) {
+
+    foreach ($product->imagesAdded as $imageId) {
+        if ($i == 0) {
+            echo "<div class='gss_product_thumbnails_outer_container'>";
+        }
+
+        echo "<div class='outerimagestuff'><div class='gss_product_thumbnail_container'>";
+        echo "<img class='gss_product_thumbnail' src='/displayImage.php?id=$imageId'/>";
+        echo "<i gss_method='removeImage' gss_success_method='productImageRemoved' gss_value_2='$imageId' gss_value='$product->id' class='fa fa-trash remove_image'></i>";
+        echo "</div></div>";
+
+        $i++;
+        if ($i == 5) {
+            $i = 0;
+            echo "</div>";
+        }
+    }
+
+    if ($i != 5) {
+        echo "</div>";
+    }
+}
+?>

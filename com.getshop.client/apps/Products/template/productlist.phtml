@@ -1,0 +1,18 @@
+<?
+/* @var $this \ns_e073a75a_87c9_4d92_a73a_bc54feb7317f\Products */
+$product = $this->getApi()->getProductManager()->getProduct($_POST['value']);
+$productLists = $this->getApi()->getProductManager()->getProductLists();
+
+foreach ($productLists as $productlist) {
+    $status = in_array($product->id, $productlist->productIds) ? "on" : "off";
+    ?>
+    <div class="onoff gss_setting" id="fadein">
+        <span class="title"><? echo $productlist->listName; ?></span>
+        <div class="gss_onoff" gs_model="productmodel" gs_model_attr="productlist_<? echo $productlist->id; ?>">
+            Off<i class="fa fa-toggle-<? echo $status; ?>"></i>On
+        </div>
+        <div class="description"></div>
+    </div>
+    <?
+}
+?>

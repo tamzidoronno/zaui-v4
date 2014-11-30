@@ -14,6 +14,7 @@ import com.thundashop.core.productmanager.data.AttributeSummary;
 import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
+import com.thundashop.core.productmanager.data.ProductList;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author ktonder
  */
 public abstract class AProductManager extends ManagerBase {
+    HashMap<String, ProductList> productList = new HashMap();
 
     protected HashMap<String, Product> products = new HashMap();
     AttributeData pool = new AttributeData();
@@ -90,6 +92,10 @@ public abstract class AProductManager extends ManagerBase {
             }
             if (object instanceof AttributeValue) {
                 pool.addAttributeValue((AttributeValue) object);
+            }
+            if (object instanceof ProductList) {
+                ProductList list = (ProductList)object;
+                productList.put(list.id, list);
             }
             if (object instanceof TaxGroup) {
                 TaxGroup group = (TaxGroup) object;

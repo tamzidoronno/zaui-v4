@@ -34,7 +34,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class Database {
-
+    public static int mongoPort = 27018;
+    
     private Mongo mongo;
     private Morphia morphia;
     private String collectionPrefix = "col_";
@@ -56,7 +57,7 @@ public class Database {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        mongo = new Mongo("localhost", 27018);
+        mongo = new Mongo("localhost", mongoPort);
         morphia = new Morphia();
         morphia.map(DataCommon.class);
     }

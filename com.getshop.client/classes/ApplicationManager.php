@@ -832,5 +832,12 @@ class ApplicationManager extends FactoryBase {
         return $newstyles;
     }
 
+    public function setShowingSettings() {
+        $_SESSION['showadmin'] = true;
+    }
+    
+    public function unsetShowingSettings() {
+        $_SESSION['showadmin'] = false;
+    }
 }
 ?>

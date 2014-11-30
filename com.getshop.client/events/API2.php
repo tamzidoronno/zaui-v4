@@ -3321,6 +3321,36 @@ class APIProductManager {
 	}
 
 	/**
+	* Create a new product list.
+	*
+	* @param listName
+	*/
+
+	public function createProductList($listName) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["listName"] = json_encode($this->transport->object_unset_nulls($listName));
+	     $data["method"] = "createProductList";
+	     $data["interfaceName"] = "core.productmanager.IProductManager";
+	     return $this->transport->cast(new core_productmanager_data_ProductList(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Create a new product list.
+	*
+	* @param listName
+	*/
+
+	public function deleteProductList($listId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["listId"] = json_encode($this->transport->object_unset_nulls($listId));
+	     $data["method"] = "deleteProductList";
+	     $data["interfaceName"] = "core.productmanager.IProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Fetch all attributes connected to all products.
 	* @return List
 	* @throws ErrorException
@@ -3468,6 +3498,35 @@ class APIProductManager {
 	}
 
 	/**
+	* Create a new product list.
+	*
+	* @param listName
+	*/
+
+	public function getProductList($listId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["listId"] = json_encode($this->transport->object_unset_nulls($listId));
+	     $data["method"] = "getProductList";
+	     $data["interfaceName"] = "core.productmanager.IProductManager";
+	     return $this->transport->cast(new core_productmanager_data_ProductList(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Create a new product list.
+	*
+	* @param listName
+	*/
+
+	public function getProductLists() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getProductLists";
+	     $data["interfaceName"] = "core.productmanager.IProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Fetch products
 	*
 	* @param productCriteria
@@ -3551,6 +3610,21 @@ class APIProductManager {
 	     $data["method"] = "saveProduct";
 	     $data["interfaceName"] = "core.productmanager.IProductManager";
 	     return $this->transport->cast(new core_productmanager_data_Product(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Create a new product list.
+	*
+	* @param listName
+	*/
+
+	public function saveProductList($core_productmanager_data_ProductList) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_productmanager_data_ProductList"] = json_encode($this->transport->object_unset_nulls($core_productmanager_data_ProductList));
+	     $data["method"] = "saveProductList";
+	     $data["interfaceName"] = "core.productmanager.IProductManager";
+	     return $this->transport->sendMessage($data);
 	}
 
 	/**

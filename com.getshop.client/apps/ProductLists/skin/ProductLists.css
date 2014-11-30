@@ -1,0 +1,92 @@
+.gss_product_listoverview {
+    padding: 15px;
+}
+
+.gss_new_productlist {
+    padding: 15px;
+}
+
+.ProductLists .productlists_add_title {
+    font-size: 16px;
+}
+.ProductLists .available_lists {
+    margin-top: 15px;
+    font-size: 16px;
+}
+.ProductLists .available_lists .gs_productlist .product_count {
+    position: absolute; 
+    right: 7px;
+    top: 7px;
+    padding: 5px;
+    background-color: #3da73b;
+    background: linear-gradient(to top, #05c100 , #06ec00); /* Standard syntax */
+    color: #333;
+    border-radius: 5px;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+.ProductLists .available_lists .gs_productlist {
+    font-size: 16px;
+    position: relative;
+    height: 36px;
+    border-bottom: solid 1px #DDD;
+    padding: 3px;
+    cursor: pointer;
+}
+
+.ProductLists .available_lists .gs_productlist:hover {
+    background-color: #F1F1F1;
+}
+.ProductLists .available_lists .gs_productlist:last-child {
+    border-bottom: solid 0px #DDD;
+}
+
+.ProductLists .webshop_button {
+    font-size: 16px;
+    border: solid 1px;
+    display: inline-block;
+    padding: 10px;
+    border-radius: 4px;
+    cursor:pointer;
+}
+
+
+/* Start of listview */
+.ProductLists .products.row_view .product_row {
+    position: relative;
+}
+
+.ProductLists .products.row_view .image {
+    display: inline-block;
+    width: 400px;
+}
+
+
+.ProductLists .products.row_view .webshop_button {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+}
+
+.ProductLists .products.row_view .content .product_title {
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+.ProductLists .no_products_added_to_list {
+    font-size: 24px;
+    padding: 20px;
+    text-align: center;
+    color: red;
+}
+.ProductLists .products.row_view .content {
+    display: inline-block;
+    vertical-align: top;
+    padding-left: 10px;
+    position: absolute; 
+    left: 400px;
+    right: 0px;
+    bottom: 45px;
+    top: 0px;
+    overflow: hidden;
+}

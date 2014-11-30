@@ -8,6 +8,7 @@ import com.mongodb.Mongo;
 import com.thundashop.core.apigenerator.GenerateApi.ApiMethod;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.databasemanager.Database;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -52,7 +53,7 @@ public class AnalyseApplications {
         morphia.map(DataCommon.class);
         
         List<Application> result = new ArrayList();
-        Mongo m = new Mongo("localhost", 27017);
+        Mongo m = new Mongo("localhost", Database.mongoPort);
         DB db = m.getDB("ApplicationPool");
         Set<String> collections = db.getCollectionNames();
         for (String colection : collections) {

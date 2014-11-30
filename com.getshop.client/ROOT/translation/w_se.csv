@@ -6,13 +6,14 @@ Booking;-;Anmäl
 By calendar;-;Kalender
 By list;-;Lista
 Candidate name;-;Deltagarens namn
-Company;-;Företag
+Company;-;Orgnr/Företag
 Company name;-;Företag namn
 Date;-;Datum
 December;-;December
 Download as pdf;-;Skriv ut som PDF
 February;-;Februari
 Friday;-;Fredag
+Invoice email;-;Verkstadens e-post
 January;-;Januari
 July;-;Juli
 June;-;Juni
@@ -26,7 +27,7 @@ October;-;Oktober
 Phone;-;Tel.nr
 Read more;-;Läs mer
 Saturday;-;Lördag
-Search for the company you want to enter by clicking the button above, and this box will be filled automatically.;-;Sök efter ditt företag genom att klicka i fältet ovan och fyll i org.nr eller företagsnamn.
+Search for the company you want to enter by clicking the button above, and this box will be filled automatically.;-;Hitta dit företag genom att fylla i hela org.nr i fältet ovan. I vissa fall går det även bra att söka på företagsnamn
 Select event location;-;Välj kursort
 Send message;-;Skicka
 Send us mail;-;Skicka ett meddelande till oss

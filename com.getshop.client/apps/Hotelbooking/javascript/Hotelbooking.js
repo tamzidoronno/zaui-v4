@@ -220,6 +220,32 @@ app.Hotelbooking = {
             });
         }
     },
+    searchExistingButton : function() {
+        var event = thundashop.Ajax.createEvent('','searchCustomerBox',$(this),'');
+        thundashop.common.showInformationBox(event);
+    },
+    searchCustomer : function(event) {
+        if(event.type === "keyup" && event.keyCode !== 13) {
+            return;
+        }
+        var value = $('.Hotelbooking .searchcustomerinput').val();
+        var event = thundashop.Ajax.createEvent('','searchingCustomer',$(this), {
+            "value" : value
+        });
+        thundashop.Ajax.postWithCallBack(event, function(data) {
+            $('.Hotelbooking .searchresultarea').html(data);
+        });
+    },
+    
+    selectCustomer : function() {
+        var phone = $(this).attr('phone');
+        var name = $(this).attr('name');
+        var referenceid = $(this).attr('referenceid');
+        $('.Hotelbooking input[gsname="name_1"]').val(name);
+        $('.Hotelbooking input[gsname="phone_1"]').val(phone);
+        $('.Hotelbooking input[gsname="referencenumber"]').val(referenceid);
+        thundashop.common.hideInformationBox();
+    },
     
     initEvents: function () {
         $(document).on('click', '.Hotelbooking .check_available_button', app.Hotelbooking.checkAvailability);
@@ -235,10 +261,15 @@ app.Hotelbooking = {
         $(document).on('blur', '.Hotelbooking .booking_contact_data input', app.Hotelbooking.saveCurrentData);
         $(document).on('click', '.Hotelbooking input[gsname="partnershipdeal"]', app.Hotelbooking.changeToPartnership);
         $(document).on('click', '.Hotelbooking .fa.calnav', app.Hotelbooking.navigateMonth);
+        $(document).on('click', '.Hotelbooking .searchexisting', app.Hotelbooking.searchExistingButton);
         $(document).on('click', '.Hotelbooking input[gsname="mvaregistered"]', app.Hotelbooking.saveCurrentData);
         $(document).on('click', '.Hotelbooking input[gsname="customer_type"]', app.Hotelbooking.saveCurrentData);
         $(document).on('keyup', '.Hotelbooking input[gsname="postal_code"]', app.Hotelbooking.updatePostalPlace);
         $(document).on('keyup', '.Hotelbooking input[gsname="birthday"]', app.Hotelbooking.updateBrreg);
+        $(document).on('keyup', '.Hotelbooking .searchcustomerinput', app.Hotelbooking.searchCustomer);
+        $(document).on('click', '.Hotelbooking .searchcustomerbutton', app.Hotelbooking.searchCustomer);
+        $(document).on('click', '.Hotelbooking .selectcustomer', app.Hotelbooking.selectCustomer);
+        
     }
 };
 

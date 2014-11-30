@@ -480,6 +480,23 @@ public class APIPageManager {
      }
 
      /**
+     * Set the carousel configuration.
+     * @param pageId
+     * @return
+     * @throws ErrorException
+     */
+     public void setCellName(java.lang.String pageId, java.lang.String cellId, java.lang.String cellName)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("pageId",new Gson().toJson(pageId));
+          data.args.put("cellId",new Gson().toJson(cellId));
+          data.args.put("cellName",new Gson().toJson(cellName));
+          data.method = "setCellName";
+          data.interfaceName = "core.pagemanager.IPageManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Set the page description.
      * @param description The description to add.
      * @param pageId The id of the page.

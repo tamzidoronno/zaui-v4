@@ -56,7 +56,7 @@ public class Database {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        mongo = new Mongo("localhost", 27017);
+        mongo = new Mongo("localhost", 27018);
         morphia = new Morphia();
         morphia.map(DataCommon.class);
     }

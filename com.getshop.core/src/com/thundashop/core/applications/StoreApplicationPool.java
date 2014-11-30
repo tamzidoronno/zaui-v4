@@ -11,6 +11,7 @@ import com.thundashop.core.appmanager.data.ApplicationModule;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -53,10 +54,13 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
     @Override
     public List<Application> getApplications() {
         List<Application> availableApplications = getAvailableApplications();
-        return availableApplications.stream()
+        Set<Application>  activatedApps = availableApplications.stream()
                 .filter(o -> activatedApplications.contains(o))
                 .filter(o -> !o.type.equals(Application.Type.Theme))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
+		
+		activatedApps.addAll(getAllDefaultActivatedApps());
+		return new ArrayList(activatedApps);
     }
 
     @Override
@@ -104,7 +108,12 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
             return getDefaultThemeApplication();
         }
 
-        Application app = getApplication(id);
+        Application app = getAvailableThemeApplications()
+				.stream()
+				.filter(a -> a.id.equals(id))
+				.findFirst()
+				.orElse(null);
+		
         if (app == null) {
             return getDefaultThemeApplication();
         }
@@ -122,7 +131,7 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
         return getApplications().stream()
                 .filter(app -> app.id.equals(id))
                 .findFirst()
-                .get();
+                .orElse(null);
     }
 
     private Application getDefaultThemeApplication() {
@@ -152,10 +161,10 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
     }
 
     private void addActivatedModules() {
-//        getShopApplicationPool.getModules().stream()
-//                .filter(module -> getManagerSetting("module_actived_" + module.id) != null)
-//                .filter(module -> getManagerSetting("module_actived_" + module.id).equals("activated"))
-//                .forEach(module -> activatedModules.add(module));
+        getShopApplicationPool.getModules().stream()
+                .filter(module -> getManagerSetting("module_actived_" + module.id) != null)
+                .filter(module -> getManagerSetting("module_actived_" + module.id).equals("activated"))
+                .forEach(module -> activatedModules.add(module));
     }
 
     private void addActivatedApplications() {
@@ -186,5 +195,18 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
             setManagerSetting(application.id, "deactivated");
         }
     }
+
+	private Collection<? extends Application> getAllDefaultActivatedApps() {
+		Set<Application> applications  = new HashSet();
+		for (ApplicationModule module : getActivatedModules()) {
+			allApplications.stream()
+					.filter(app -> app.moduleId != null)
+					.filter(app -> app.moduleId.equals(module.id))
+					.filter(app -> app.activeAppOnModuleActivation)
+					.forEach(app -> applications.add(app));
+		}
+		
+		return applications;
+	}
 
 }

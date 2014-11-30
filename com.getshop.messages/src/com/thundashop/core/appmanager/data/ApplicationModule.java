@@ -10,6 +10,7 @@ package com.thundashop.core.appmanager.data;
  * @author boggi
  */
 public class ApplicationModule {
+    public boolean needToShowInMenu = false;
     public String moduleName;
     public String id;
     public String description;

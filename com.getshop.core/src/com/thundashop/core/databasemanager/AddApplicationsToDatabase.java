@@ -74,6 +74,17 @@ public class AddApplicationsToDatabase {
 		menu.defaultActivate = true;
         apps.add(menu);
 		
+        Application products = createSettings("Products",
+                "e073a75a-87c9-4d92-a73a-bc54feb7317f",
+                allowed2,
+                "",
+                Application.Type.Webshop, true);
+        products.isSingleton = true;
+        products.isPublic = true;
+		products.moduleId = "WebShop";
+		products.activeAppOnModuleActivation = true;
+        apps.add(products);
+		
         Application applicationSelector = createSettings("ApplicationSelector",
                 "f1fc4af3-656e-4294-a268-40d2a82d0aa1",
                 allowed2,
@@ -83,6 +94,15 @@ public class AddApplicationsToDatabase {
         applicationSelector.isPublic = true;
         applicationSelector.defaultActivate = true;
         apps.add(applicationSelector);
+		
+        Application yellowCandyTheme = createSettings("YellowCandyTheme",
+                "efe5640f-64fe-4053-a0de-508349465cdc",
+                allowed2,
+                "",
+                Application.Type.Theme, true);
+        yellowCandyTheme.isPublic = true;
+        yellowCandyTheme.defaultActivate = true;
+        apps.add(yellowCandyTheme);
 		
 		
 //        ApplicationSettings sedoxMenu = createSettings(

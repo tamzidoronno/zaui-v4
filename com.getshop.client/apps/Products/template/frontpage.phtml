@@ -1,0 +1,27 @@
+<div class='gss_settings_header'>
+	<i class='fa fa-shopping-cart'></i>
+
+	<div class='gss_settings_header_description'>
+		<div class='gss_settings_header_title'>
+			<? echo $this->__f("Products"); ?>
+		</div>
+        
+		<div class='gss_settings_header_description_inner'>
+			<?
+			echo $this->__f("You are probably eager to get started with setting up your products. GetShop is a two-phase product process. First you create a product and put all of your products into the pool. Then you can go to the frontend and place your products where you want.");
+			?>	
+		</div>
+	</div>	
+</div>
+
+
+<div class="gs_user_menu">
+    <div class="gss_button" gss_fragment='productsoverview' gss_view='gss_productwork_area'><i class="fa fa-list"></i><? echo $this->__f("All products"); ?></div>
+    <br/><div class="gss_button" gss_fragment='newproduct' gss_view='gss_productwork_area'><i class="fa fa-plus"></i><? echo $this->__f("New product"); ?></div>
+</div>
+
+<div class="gss_productwork_area">
+    <?
+    $this->includefile('productsoverview');
+    ?>
+</div>

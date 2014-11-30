@@ -17,7 +17,7 @@
     min-height: 100%;
     background-color: #3a99d7;
     color: #FFF;
-    display: block;
+    /*display: block;*/
 }
 
 #backsidesettings .gss_slogan {
@@ -54,6 +54,7 @@
 }
 
 .gss_topmenu .gss_topmenu-button {
+    vertical-align: top;
     background-position: 0px 0px;
     height: 37px;
     display: inline-block;
@@ -249,15 +250,16 @@ inputs-moz-placeholder {
     color: #b5b5b5;
 }
 
-input[type=text],
-input[type=password],
-input[type=textfield] {
+#backsidesettings textarea,
+#backsidesettings input[type=text],
+#backsidesettings input[type=password],
+#backsidesettings input[type=textfield] {
     width: 270px;
     padding: 8px 8px;
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
     font-weight: 400;
     font-size: 14px;
-    color: #9D9E9E;
+    color: #444;
     text-shadow: 1px 1px 0 rgba(256, 256, 256, 1.0);
     background: #FFF;
     border: 1px solid #FFF;
@@ -268,6 +270,10 @@ input[type=textfield] {
     position: absolute;
     right: 12px;
     top: 10px;
+}
+
+#backsidesettings textarea.gss_mediumsize {
+    height: 150px;
 }
 
 .gss_setting input[type=text]:focus,
@@ -328,7 +334,7 @@ input[type=textfield] {
 .gss_settings_header .gss_settings_header_description {
     display: inline-block;
     vertical-align: top;
-    max-width: 1080px;
+    max-width: 1030px;
 }
 
 .gss_button i {
@@ -404,3 +410,42 @@ div[gss_method] {
 .gss_active {
     color: #f0e68c;
 }
+
+.gss_menu_submenu {
+    background-color: #1c6ea2;
+    width: 180px;
+    display: none;
+    position: absolute;
+    z-index: 1;
+}
+
+.gss_submenu_entry {
+    padding-left: 18px;
+}
+
+.gss_tab_content {
+    background-color: #FFF7F7;
+    padding: 20px;
+}
+
+.gss_tab_view {
+    display: none;
+}
+
+.gss_tabbar .gss_tab {
+    width: 100px;
+    cursor: pointer;
+    display: inline-block;
+    line-height: 30px;
+    text-align: center;
+}
+
+.gss_tab_active {
+    display: block;
+    background-color: #FFF7F7;
+}
+
+.gss_newproduct {
+    padding: 20px;
+}
+

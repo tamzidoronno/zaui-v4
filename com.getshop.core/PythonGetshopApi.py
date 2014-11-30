@@ -3298,6 +3298,35 @@ class PageManager(object):
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
+  def setCellMode(self, pageId, cellId, mode):
+    args = collections.OrderedDict()
+    if isinstance(pageId,GetShopBaseClass): 
+      args["pageId"]=json.dumps(pageId.__dict__)
+    else:
+      try:
+        args["pageId"]=json.dumps(pageId)
+      except (ValueError, AttributeError):
+        args["pageId"]=pageId
+    if isinstance(cellId,GetShopBaseClass): 
+      args["cellId"]=json.dumps(cellId.__dict__)
+    else:
+      try:
+        args["cellId"]=json.dumps(cellId)
+      except (ValueError, AttributeError):
+        args["cellId"]=cellId
+    if isinstance(mode,GetShopBaseClass): 
+      args["mode"]=json.dumps(mode.__dict__)
+    else:
+      try:
+        args["mode"]=json.dumps(mode)
+      except (ValueError, AttributeError):
+        args["mode"]=mode
+    data = EmptyClass()
+    data.args = args
+    data.method = "setCellMode"
+    data.interfaceName = "core.pagemanager.IPageManager"
+    return self.communicationHelper.sendMessage(data)
+
   def setCellName(self, pageId, cellId, cellName):
     args = collections.OrderedDict()
     if isinstance(pageId,GetShopBaseClass): 

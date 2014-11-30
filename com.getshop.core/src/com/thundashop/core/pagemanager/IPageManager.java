@@ -275,4 +275,7 @@ public interface IPageManager {
      */
     @Administrator
     public void setCellName(String pageId, String cellId, String cellName) throws ErrorException;
+    
+    @Administrator
+    public void setCellMode(String pageId, String cellId, String mode) throws ErrorException;
 }

@@ -30,7 +30,6 @@ filter: alpha(opacity=50);
 .gscontainer.gsinner { margin: 0px !important; width:100% !important; }
 .gstabrow { display:none;   }
 .gstabrow.gscount_0 { display:block;   }
-.gstabrow { border-bottom: solid 1px #BBB; position:relative; }
 .gstabbtn { border: solid 1px #BBB; margin-right: 10px;  padding: 3px; cursor:pointer;  bottom: 0px; cursor:pointer; display:inline-block;  }
 
 .gstabname { width: 60px; }
@@ -1780,6 +1779,6 @@ a img {
     line-height: 30px;
 }
 
-.carouselsettingspanel,.tabsettingspanel { position:absolute; border: solid 1px; padding: 10px; background-color:#FFF; z-index: 20; display:none; padding-top: 30px; }
+.carouselsettingspanel,.tabsettingspanel { position:fixed; border: solid 1px; padding: 10px; background-color:#FFF; z-index: 20; display:none; padding-top: 30px; }
 .carouselsettingspanel input { width: 40px; }
 .carouselsettingspanel .fa,.tabsettingspanel .fa { cursor: pointer; }

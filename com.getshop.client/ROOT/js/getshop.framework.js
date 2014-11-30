@@ -115,7 +115,8 @@ thundashop.framework = {
         return result;
     },
     updateTabName : function() {
-        var cellid = thundashop.framework.getActiveContainerCellId();
+        var containercellid = $(this).closest('.gscontainercell').attr('cellid');
+        var cellid = thundashop.framework.getActiveContainerCellId(containercellid);
         var name = $(this).val();
         $('.gstabbtn[cellid="'+cellid+'"]').text(name);
         var event = thundashop.Ajax.createEvent('','updateCellName',$(this),{"cellid" : cellid, "name" : name});
@@ -191,28 +192,30 @@ thundashop.framework = {
         });
         $(this).attr('pushed', null);
         var cell = $(this).closest('.gscontainercell');
+        var containerId = cell.attr('cellid');
 
         thundashop.framework.resetCarouselTimer(cell);
         thundashop.framework.rotateCellDirection(cell, offsetcount);
-        var rotatecell = $('.gscell[cellid="' + thundashop.framework.getActiveContainerCellId() + '"]');
+        var rotatecell = $('.gscell[cellid="' + thundashop.framework.getActiveContainerCellId(containerId) + '"]');
         if (rotatecell.hasClass('gseditrowouter')) {
             thundashop.framework.loadResizing(rotatecell, true);
-            thundashop.framework.lastRotatedCell[cell.attr('cellid')] = thundashop.framework.getActiveContainerCellId();
+            thundashop.framework.lastRotatedCell[cell.attr('cellid')] = thundashop.framework.getActiveContainerCellId(containerId);
         }
 
     },
     rotateCell: function () {
         var cell = $(this).closest('.gscontainercell');
+        var containerId = cell.attr('cellid');
         thundashop.framework.resetCarouselTimer(cell);
         if ($(this).hasClass('gsrotateright')) {
             thundashop.framework.rotateCellDirection(cell, "right");
         } else {
             thundashop.framework.rotateCellDirection(cell, "left");
         }
-        var rotatecell = $('.gscell[cellid="' + thundashop.framework.getActiveContainerCellId() + '"]');
+        var rotatecell = $('.gscell[cellid="' + thundashop.framework.getActiveContainerCellId(containerId) + '"]');
         if (rotatecell.hasClass('gseditrowouter')) {
             thundashop.framework.loadResizing(rotatecell, true);
-            thundashop.framework.lastRotatedCell[cell.attr('cellid')] = thundashop.framework.getActiveContainerCellId();
+            thundashop.framework.lastRotatedCell[cell.attr('cellid')] = thundashop.framework.getActiveContainerCellId(containerId);
         }
     },
     saveCarouselSettings: function () {
@@ -226,17 +229,17 @@ thundashop.framework = {
         thundashop.Ajax.post(event);
     },
     showCarouselSettings: function () {
-        thundashop.framework.updateOperateOnCellId(thundashop.framework.getActiveContainerCellId());
-        var cellid = $(this).closest('.gscontainer').attr('cellid');
-        $('.carouselsettingspanel').css('left', $(this).offset().left);
-        $('.carouselsettingspanel').css('top', $(this).offset().top + 15);
-        $('.carouselsettingspanel').css('top', $(this).offset().top + 15);
-        $('.carouselsettingspanel').attr('cellid', cellid);
+        var cellid = $(this).closest('.gscontainercell').attr('cellid');
+        thundashop.framework.updateOperateOnCellId(thundashop.framework.getActiveContainerCellId(cellid));
+        var panel =  $(this).closest('.gscontainercell').find('.carouselsettingspanel');
+        panel.css('left', $(this).offset().left);
+        panel.css('top', $(this).offset().top + 15);
+        panel.attr('cellid', cellid);
 
         //populate values
-        $('.carouselsettingspanel').find('.gscarouselheight').val($(this).closest('.gscontainercell').attr('height'))
-        $('.carouselsettingspanel').find('.gscarouseltimer').val($(this).closest('.gscontainercell').attr('timer'))
-        $('.carouselsettingspanel').find('.gscarouseltype').val($(this).closest('.gscontainercell').attr('type'))
+        panel.find('.gscarouselheight').val($(this).closest('.gscontainercell').attr('height'))
+        panel.find('.gscarouseltimer').val($(this).closest('.gscontainercell').attr('timer'))
+        panel.find('.gscarouseltype').val($(this).closest('.gscontainercell').attr('type'))
         $(this).closest('.gscontainercell').attr('timer')
         $(this).closest('.gscontainercell').attr('timertype')
 
@@ -250,13 +253,15 @@ thundashop.framework = {
         var container = $(this).closest('.gscontainercell');
         var cellid = container.find('.gsactivetab').attr('cellid');
         var tabtext = $('.gstabbtn[cellid="'+cellid+'"]').text();
+        var panel = container.find('.tabsettingspanel');
         
         thundashop.framework.setActiveContainerCellId(cellid, container.attr('cellid'));
         thundashop.framework.updateOperateOnCellId(cellid);
-        $('.tabsettingspanel').css('left', $(this).offset().left);
-        $('.tabsettingspanel').css('top', $(this).offset().top + 15);
-        $('.tabsettingspanel').css('top', $(this).offset().top + 15);
-        $('.tabsettingspanel').fadeIn();
+        panel.show();
+        $('.tabsettingspanel').css('left', $(this).position().left);
+        $('.tabsettingspanel').css('top', $(this).position().top + 15);
+//        $('.tabsettingspanel').css('top', $(this).offset().top + 15);
+//        $('.tabsettingspanel').fadeIn();
         $('.gstabname').val(tabtext);
     },
     
@@ -615,13 +620,14 @@ thundashop.framework = {
         }
 
         var cellid = thundashop.framework.operatingCellId;
+        var containerId = $(this).closest('.gscontainercell').attr('cellid');
         
         if($(this).attr('target') && $(this).attr('target') === "selectedcell") {
-            cellid = thundashop.framework.getActiveContainerCellId();
+            cellid = thundashop.framework.getActiveContainerCellId(containerId);
         }
         
         if($(this).attr('target') && $(this).attr('target') === "container") {
-            cellid = $(this).closest('.gscontainercell').attr('cellid');
+            cellid = containerId;
         }
 
         if (type === "delete" && !confirm("Are you sure you want to delete this cell and all its content?")) {

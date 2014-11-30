@@ -65,8 +65,6 @@ class Page {
         if ($editedCellid != null) {
             $this->addCellConfigPanel();
             $this->addCellResizingPanel();
-            $this->addCarouselSettingsPanel();
-            $this->addTabPanel();
             $this->displayResizing();
             $this->printLoaderForContainers();
             ?>
@@ -100,11 +98,7 @@ class Page {
         ?>  
         <div class="tabsettingspanel">
             <div style="width:100%; position:absolute; top:0px; left: 0px; height: 20px; background-color:#bbb; text-align: center; padding-top: 10px;">
-                <i class="fa fa-arrow-left gsoperatecell" type="moveup" target="selectedcell" style="position:absolute; top: 10px; left: 10px;" title="Move tab to the left"></i>
-                <i class="fa fa-image gs_resizing" target="selectedcell" title="Show styling on open tab"></i>
-                <i class="fa fa-arrow-right gsoperatecell" type="movedown" target="selectedcell" style="position:absolute; top: 10px; right: 10px;" title="Move tab to the right"></i>
-                <i class="fa fa-trash-o gsoperatecell" type="delete" target="selectedcell" title="Delete open tab"></i>
-                <i class="fa fa-minus gsoperatecell" target="selectedcell" type="addrow"  title="Show styling on open page"></i>
+                Tab settings
             </div>
             <table>
                 <tr>
@@ -113,6 +107,13 @@ class Page {
                 </tr>
             </table>
             <input type="button" value="Done modifying" class="gsdonemodifytab"></input>
+            <div class="gsoperatecell" type="moveup" target="selectedcell"> Move tab to the left</div>
+            <div class="gs_resizing" target="selectedcell"> Show styling on open tab</div>
+            <div class="gsoperatecell" type="movedown" target="selectedcell"> Move tab to the right</div>
+            <div class="gsoperatecell" target="selectedcell" type="addrow"> Show styling on open page</div>
+            <div class="gsoperatecell" target="container" type="delete"> Remove all tabs</div>
+            <div class="gsoperatecell" target="container" type="addbefore">Create row above</div>
+            <div class="gsoperatecell" target="container" type="addafter">Create row below</div>
         </div>
         <?
     }
@@ -240,6 +241,10 @@ class Page {
             }
         }
         echo "<div class='$gscellinner gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
+        
+        if($cell->mode == "TAB") {
+            $this->addTabPanel();
+        }
 
         if ($parent != null && $parent->mode == "TAB") {
             $this->displayTabRow($parent, $edit, $cell);
@@ -276,6 +281,9 @@ class Page {
         }
         if ($parent != null && $parent->mode === "ROTATING") {
             $this->printCarouselDots($totalcells, $edit, $count);
+        }
+        if($cell->mode == "ROTATING") {
+            $this->addCarouselSettingsPanel();
         }
 
         echo "</div>";

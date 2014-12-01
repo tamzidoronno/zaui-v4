@@ -133,6 +133,8 @@ if ($this->isCompany() || $this->isPrivate()) {
                     <span class='contact_text'><? echo $this->__w("Reference number"); ?></span>
                     <span class='contact_input'><input type='text' gsname="referencenumber" value='<? echo $this->getPost("referencenumber"); ?>' class='<? echo $this->validateInput("referencenumber"); ?>'></span>
                     <div><? echo $this->__w("Please enter the reference number provided by") . " " . $this->getProjectName(); ?></div>
+                    <? if($this->isEditorMode()) { echo "<span style='float:right;color:blue; cursor:pointer;' class='searchexisting'>Search for existing customer</span><br>"; } ?> 
+                    
                     <div class="continue_to_cart_button" gstype="submit"><? echo $this->__w("Complete the order"); ?></div>
                 </div>
                 <? } ?>

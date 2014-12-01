@@ -73,9 +73,32 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function showReferenceNumber() {
+        if($this->isEditorMode()) {
+            return true;
+        }
         return $this->getConfig()->showReferenceNumber;
     }
+    
+    public function searchCustomerBox() {
+        echo "<br>";
+        echo "Skriv inn navn på kunde:<br> ";
+        echo "<input type='text' class='searchcustomerinput'><input type='button' class='searchcustomerbutton' value='Søk opp kunde'></span>";
+        echo "<div class='searchresultarea'>";
+        echo "</div>";
+    }
 
+    function searchingCustomer() {
+        $users = $this->getApi()->getUserManager()->getAllUsers();
+        $searchval = $_POST['data']['value'];
+        foreach($users as $user) {
+            /* @var $user \core_usermanager_data_User */
+            $name = $user->fullName;
+            if(stristr($name, $searchval)) {
+                echo "<input type='button' value='Velg' class='selectcustomer' name='$name' referenceid='".$user->referenceKey."' phone='".$user->cellPhone."'> - " . $name . "<br>";
+            }
+        }
+    }
+    
     public function getParkingSpots() {
         return $this->getConfig()->parkingSpots;
     }
@@ -558,9 +581,13 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             if ($name != "referencenumber") {
                 return;
             } else {
-                $this->startAdminImpersonation("UserManager", "getAllUsers");
+                if(!$this->isEditorMode()) {
+                    $this->startAdminImpersonation("UserManager", "getAllUsers");
+                }
                 $allUsers = $this->getApi()->getUserManager()->getAllUsers();
-                $this->stopImpersionation();
+                if(!$this->isEditorMode()) {
+                    $this->stopImpersionation();
+                }
                 $referenceUser = null;
                 foreach ($allUsers as $user) {
                     if ($user->referenceKey == $_POST['data']['referencenumber']) {

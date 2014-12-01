@@ -88,9 +88,6 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     }
 
     private Month getMonth(int year, int month) {
-		
-//		TheReport report = new TheReport(months, (UserManager) getManager(UserManager.class), holder.getSearchEngine(storeId));
-		
         for (Month mountObject : months.values()) {
             if (mountObject.is(year, month)) {
                 return mountObject;
@@ -1192,10 +1189,10 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         return period;
     }
 
-    private DiplomaPeriod getDiplomaPeriod(String dimplomaId) {
+    private DiplomaPeriod getDiplomaPeriod(String dimplomaId) throws ErrorException {
         for (DiplomaPeriod period : diplomaPeriods) {
             if (period.id.equals(dimplomaId)) {
-                return period;
+                return finalizePeriod(period);
             }
         }
         
@@ -1224,7 +1221,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     public DiplomaPeriod getDiplomaPeriod(Date date) throws ErrorException {
         for (DiplomaPeriod period : diplomaPeriods) {
             if (period.startDate.before(date) && period.stopDate.after(date)) {
-                return period;
+                return finalizePeriod(period);
             }
         }
         

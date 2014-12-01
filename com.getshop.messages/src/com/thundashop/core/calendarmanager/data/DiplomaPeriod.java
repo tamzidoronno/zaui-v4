@@ -22,25 +22,26 @@ public class DiplomaPeriod extends DataCommon {
     @Transient
     public List<Signature> signatures = new ArrayList();
     
-    public Map<String, Signature> allSignatures = new HashMap();
+    private Map<String, Signature> allSignatures = new HashMap();
     public String backgroundImage;
     public String textColor;
     public Date startDate;
     public Date stopDate;
     
     public void addUser(User user) {
-        for (Signature signature : allSignatures.values()) {
-            if (signature.userid.equals(user.id)) {
-                return;
-            }
+        if (allSignatures.get(user.id) != null) {
+            return;
         }
         
         Signature signature = new Signature();
         signature.userid = user.id;
+         
+        allSignatures.remove(user.id);
         allSignatures.put(user.id, signature);
     }
 
     public void addSignature(String userid, String signature) {
+        System.out.println("H");
         Signature sign = allSignatures.get(userid);
         if (sign != null) {
             sign.signature = signature;

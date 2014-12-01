@@ -172,6 +172,8 @@ public class Database {
                 if (dataCommon.deleted == null) {
                     all.add(dataCommon);
                 }
+            } catch (ClassCastException ex) {
+                // Probably just removed DataCommon from object, or object has been deleted.
             } catch (Exception ex) {
                 System.out.println("Figure out this : " + collection.getName() + " " + collection.getDB().getName());
                 System.out.println(dbObject);

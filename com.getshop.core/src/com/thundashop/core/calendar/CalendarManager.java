@@ -80,10 +80,6 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                 EventPartitipated evp = (EventPartitipated) dataObject;
                 eventData.put(evp.pageId, evp);
             }
-            if (dataObject instanceof Signature) {
-                Signature signature = (Signature) dataObject;
-                signatures.put(signature.userid, signature);
-            }
             if (dataObject instanceof DiplomaPeriod) {
                 DiplomaPeriod diploma = (DiplomaPeriod) dataObject;
                 diplomaPeriods.add(diploma);

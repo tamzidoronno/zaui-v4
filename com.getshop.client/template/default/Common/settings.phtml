@@ -19,6 +19,9 @@ $activatedApps = $factory->getApi()->getStoreApplicationPool()->getApplications(
         
         <?
         $activatedModules = $factory->getApi()->getStoreApplicationPool()->getActivatedModules();
+        if (!is_array($activatedModules)) {
+            $activatedModules = array();
+        }
         foreach ($activatedModules as $module) {
             if (!$module->needToShowInMenu)
                 continue;

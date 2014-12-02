@@ -1,0 +1,29 @@
+<?
+/* @var $this \ns_f245b8ae_f3ba_454e_beb4_ecff5ec328d6\ProductLists */
+$products = $this->searchForProducts();
+if (isset($_POST['value'])) {
+    $productList = $this->getProductList($_POST['value']);
+}
+
+if (isset($_POST['listid'])) {
+    $productList = $this->getProductList($_POST['listid']);
+}
+
+$foundProducts = false;
+foreach ($products as $product) {
+    if (in_array($product->id, $productList->productIds)) {
+        continue;
+    }
+    
+    $foundProducts = true;
+    echo "<div class='gss_add_product_row'>";
+    echo $product->name;
+    echo "<div listId='$productList->id' productId='$product->id' class='gss_button gss_addToList'>".$this->__f("Add to list above")."</div>";
+    echo "</div>";
+}
+
+if (!$foundProducts) {
+    echo $this->__f("No result, please search for something else");
+    return;
+}
+?>

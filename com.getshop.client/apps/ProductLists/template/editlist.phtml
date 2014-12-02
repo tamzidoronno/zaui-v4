@@ -1,0 +1,52 @@
+<?
+$productList = $this->getProductList($_POST['value']);
+if (!is_array($productList->productIds)) {
+    $productList->productIds = array();
+}
+?>
+
+<div class="gss_new_productlist">
+    <div class="textfield gss_setting" id="name" style="border-bottom: solid 0px;">
+        <span class="title"><? echo $this->__f("List") . " " . $productList->listName; ?></span>
+
+    </div>
+
+    <div class="gss_products_in_list">
+        <?
+        $productsInList = "";
+        $products = $this->getProductsFromList($productList);
+        
+        if (!is_array($products)) {
+            $products = array();
+        }
+        
+        if (count($products)) {
+            $productsInList = "gss_no_products_in_list_hidden";
+        } 
+        
+        echo "<div class='gss_no_products_in_list $productsInList'><i class='fa fa-warning'></i>" . $this->__f("There are no products in this list") . "</div>";
+
+        
+        foreach ($products as $product) {
+            echo "<div class='gss_add_product_row'>";
+            echo $product->name;
+            echo "<div listId='$productList->id' productId='$product->id'  class='gss_button gss_removeFromList'>" . $this->__f("Remove") . "</div>";
+            echo "</div>";
+        }
+        ?>
+    </div>
+
+    <br/>
+
+    <div class="textfield gss_setting" id="filterlist">
+        <span class="title"><? echo $this->__f("Add products to list above"); ?></span>
+        <input id="gss_filter_list_box_productlist" type='textfield' gs_model='gssproductsearch' gs_model_attr='searchword' placeholder="Filter list"/>
+        <input type='hidden' gs_model='gssproductsearch' gs_model_attr='listid' value="<? echo $_POST['value']; ?>"/>
+        <div id='gss_search_for_products_in_list' gss_loadsilent='true' gss_method='search' gss_model='gssproductsearch' gss_fragment='editlist_product_searchresult' gss_view='gss_products_list_search_result'><i class='fa fa-search'></i></div>
+    </div>
+    <div class="gss_products_list_search_result">
+        <?
+        $this->includefile("editlist_product_searchresult");
+        ?>
+    </div>
+</div>

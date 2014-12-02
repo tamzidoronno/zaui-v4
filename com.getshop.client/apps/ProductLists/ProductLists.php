@@ -44,5 +44,57 @@ class ProductLists extends \ApplicationBase implements \Application {
     public function setList() {
         $this->setConfigurationSetting("productlist", $_POST['data']);
     }
+    
+    public function getProductList($id) {
+        return $this->getApi()->getProductManager()->getProductList($id);
+    }
+    
+    public function search() {
+        
+    }
+    
+    public function removeFromProductList() {
+        $listId = $_POST['listId'];
+        $productId = $_POST['productId'];
+        
+        $list = $this->getApi()->getProductManager()->getProductList($listId);
+        $keep = array();
+        foreach ($list->productIds as $id) {
+            if ($id != $productId) {
+                $keep[] = $id;
+            }
+        }
+        
+        $list->productIds = $keep;
+        $this->getApi()->getProductManager()->saveProductList($list);    
+    }
+
+    public function addProductToList() {
+        $listId = $_POST['listId'];
+        $productId = $_POST['productId'];
+        $list = $this->getApi()->getProductManager()->getProductList($listId);
+        if (!in_array($productId, $list->productIds)) {
+            $list->productIds[] = $productId;
+            $this->getApi()->getProductManager()->saveProductList($list);
+        }
+    }
+    
+    public function getProductsFromList($productList) {
+        $search = new \core_productmanager_data_ProductCriteria();
+        $search->ids = $productList->productIds;
+        $products = $this->getApi()->getProductManager()->getProducts($search);
+        return $products;
+    }
+    
+    public function searchForProducts() {
+        if (!isset($_POST['searchword']) || $_POST['searchword'] == "") {
+            return $this->getApi()->getProductManager()->getLatestProducts(10);
+        }
+        
+        $search = new \core_productmanager_data_ProductCriteria();
+        $search->search = $_POST['searchword'];
+        $products = $this->getApi()->getProductManager()->getProducts($search);
+        return $products;
+    }
 }
 ?>

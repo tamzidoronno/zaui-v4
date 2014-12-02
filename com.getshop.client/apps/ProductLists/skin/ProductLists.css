@@ -58,7 +58,7 @@
 
 .ProductLists .products.row_view .image {
     display: inline-block;
-    width: 400px;
+    width: 200px;
 }
 
 
@@ -84,9 +84,78 @@
     vertical-align: top;
     padding-left: 10px;
     position: absolute; 
-    left: 400px;
+    left: 200px;
     right: 0px;
     bottom: 45px;
     top: 0px;
     overflow: hidden;
+}
+
+.gss_editlist {
+    padding: 15px;
+}
+
+.gss_products_in_list i {
+    font-size: 20px;
+    color: yellowgreen;
+    margin-right: 10px;
+}
+.gss_products_in_list {
+    margin-top: 5px;
+    padding: 10px;
+    border: solid 1px #F1F1F1;
+}
+.gss_products_add_to_list {
+    
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.gss_products_list_search_result {
+    padding: 15px;
+    border-left: solid 1px #F1F1F1;
+    border-right: solid 1px #F1F1F1;
+    border-bottom: solid 1px #F1F1F1;
+}
+
+#gss_filter_list_box_productlist {
+    right: 35px !important;
+    
+}
+
+#gss_search_for_products_in_list {
+    position: absolute;
+    right: 0px;
+    font-size: 20px;
+    border: solid 1px #F1F1F1;
+    top: 13px;
+    padding: 5px;
+    border-radius: 5px;
+    background: linear-gradient(to bottom, #17f800, #328e00);
+    color: #FFF;
+}
+
+#gss_product_list_name {
+    right: 0px !important;
+}
+
+.gss_add_product_row {
+    border-bottom: solid 1px #F1F1F1;
+    position: relative;
+    height: 20px;
+    padding: 10px;
+}
+
+.gss_add_product_row:last-child {
+    border-bottom: solid 0px;
+}
+.gss_button.gss_removeFromList,
+.gss_button.gss_addToList {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}
+
+.gss_no_products_in_list_hidden {
+    display: none;
 }

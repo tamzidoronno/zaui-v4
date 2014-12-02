@@ -3,24 +3,12 @@ getshop.Settings = {
         var me = this;
         $(document).on('click', '.store_settings_button', getshop.Settings.showSettings);
         $(document).on('click', '.gss_backtopage', getshop.Settings.showPage);
-        $(document).on('click', '[gss_goto_app]', function () {
-            me.setApplicationId(this);
-        });
-        $(document).on('click', '[gss_method]', function () {
-            me.gssMethodInvoke(this);
-        });
-        $(document).on('click', '[gss_fragment]', function () {
-            me.gssShowFragment(this);
-        });
-        $(document).on('click', '.gss_tab', function () {
-            me.gssSelectTab(this);
-        });
-        $(document).on('mouseenter', '.gss_topmenu-button', function () {
-            me.showSubMenu(this);
-        });
-        $(document).on('mouseleave', '.gss_topmenu-button', function () {
-            me.hideSubMenu(this)
-        });
+        $(document).on('click', '[gss_goto_app]', function () { me.setApplicationId(this); });
+        $(document).on('click', '[gss_method]', function () { me.gssMethodInvoke(this); });
+        $(document).on('click', '[gss_fragment]:not([gss_method])', function () { me.gssShowFragment(this); });
+        $(document).on('click', '.gss_tab', function () { me.gssSelectTab(this); });
+        $(document).on('mouseenter', '.gss_topmenu-button', function () { me.showSubMenu(this); });
+        $(document).on('mouseleave', '.gss_topmenu-button', function () { me.hideSubMenu(this) });
     },
     showSubMenu: function (element) {
         $(element).find('.gss_menu_submenu').show();
@@ -61,7 +49,7 @@ getshop.Settings = {
         this.post();
     },
     reload: function () {
-        this.post();
+        this.post(false, null, null, true);
     },
     getCurrentAppId: function () {
         var appId = localStorage.getItem("currentApp");
@@ -72,16 +60,22 @@ getshop.Settings = {
 
         return appId;
     },
-    post: function (data, method, field) {
+    post: function (data, method, field, loadFragment) {
         if (!data) {
             data = {};
         }
 
-        data['appid'] = this.getCurrentAppId();
-        data['gss_method'] = method;
-
-        data['gss_fragment'] = $(field).attr('gss_fragment');
-        data['gss_view']  = $(field).attr('gss_view');
+        if (method) {
+            data['gss_method'] = method;
+        }
+        
+        if ( $(field).attr('gss_fragment')) {
+            data['gss_fragment'] = $(field).attr('gss_fragment');
+        }
+        
+        if ($(field).attr('gss_view')) {
+            data['gss_view'] = $(field).attr('gss_view');
+        }
     
         if (field && $(field).attr("gss_value")) {
             data.value = $(field).attr("gss_value");
@@ -90,7 +84,53 @@ getshop.Settings = {
         if (field && $(field).attr("gss_value_2")) {
             data.value2 = $(field).attr("gss_value_2");
         }
+        
+        if (!loadFragment && !$(field).attr('gss_loadsilent')) {
+            localStorage.setItem("current_gss_data", JSON.stringify(data));
+        }
+        
+        var successFirstLoad = function(response, field, data) {
+            getshop.Settings.successfully(response,field, data);
+            
+            if (loadFragment) {
+                var jsonData = localStorage.getItem("current_gss_data");
+                var data = JSON.parse(jsonData);
+                getshop.Settings.doPost(data, null, getshop.Settings.successfully);
+            }
+        }
+        
+        this.doPost(data, field, successFirstLoad);
+    },
+    successfully: function(response, field, data) {
+        var view = data['gss_view'];
+        var successMessage = $(field).attr('gss_success_message');
 
+        var successMethod = $(field).attr('gss_success_method');
+        if (successMethod) {
+            var appScope = app[$(field).closest('.app').attr('app')];
+
+            if (appScope) {
+                var fn = appScope[successMethod];
+                if(typeof fn === 'function') {
+                    fn(field);
+                }
+            }
+        }
+        else if (successMessage) {
+            getshop.Settings.showSuccessMessage(successMessage);
+        } else if (view) {
+            $('.' + view).html(response['data']);
+            $('#' + view).html(response['data']);
+        } else {
+            $('.gss_settings_inner.apparea').html(response['data']);
+        }
+
+        getshop.Models.addWatchers(response['data']);
+    },
+    doPost: function(data, field, success) {
+        data['appid'] = this.getCurrentAppId();
+      
+        
         $.ajax({
             type: "POST",
             url: "/settingsnav.php",
@@ -98,36 +138,14 @@ getshop.Settings = {
             data: data,
             context: document.body,
             success: function (response) {
-                var view = $(field).attr('gss_view');
-                var successMessage = $(field).attr('gss_success_message');
-
-                var successMethod = $(field).attr('gss_success_method');
-                if (successMethod) {
-                    var appScope = app[$(field).closest('.app').attr('app')];
-                    
-                    if (appScope) {
-                        var fn = appScope[successMethod];
-                        if(typeof fn === 'function') {
-                            fn(field);
-                        }
-                    }
-                }
-                else if (successMessage) {
-                    getshop.Settings.showSuccessMessage(successMessage);
-                } else if (view) {
-                    $('.' + view).html(response['data']);
-                    $('#' + view).html(response['data']);
-                } else {
-                    $('.gss_settings_inner.apparea').html(response['data']);
-                }
-
-                getshop.Models.addWatchers(response['data']);
+                success(response, field, data);
             },
             error: function (failure) {
                 alert("Failed");
             }
         });
     },
+    
     showSettings: function (fadeIn) {
         var speed = 300;
         if (!fadeIn) {

@@ -8,7 +8,7 @@
     foreach ($products as $product) {
         ?>
         <div class="product_row">
-            <div class="image"><img src="/displayImage.php?id=<? echo $product->imagesAdded[0]; ?>&width=400"/></div>
+            <div class="image"><img src="/displayImage.php?id=<? echo $product->imagesAdded[0]; ?>&width=200"/></div>
             <div class="content">
                 <div class="product_title"><? echo $product->name; ?></div>
                 <div class="short_description"><? echo nl2br($product->shortDescription); ?></div>

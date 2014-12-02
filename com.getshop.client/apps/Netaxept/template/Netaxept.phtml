@@ -42,6 +42,18 @@
         <?php  echo $this->__f("Link to your payment failed page."); ?>
     </div>
 </div>
+<div class="textfield setting"  id="emailpaymentfailedtitle">
+    <span class="title">Payment failed email title</span>
+    <input type="textfield" class="config">
+    <div class="description">
+        <?php  echo $this->__f("Payment failed / betaling feilet."); ?>
+    </div>
+</div>
+<div class="textarea setting"  id="emailpaymentfailedbody">
+    <span class="title">Payment failed email body</span><br><br>
+    <textarea class="config" type="textfield" style="width:100%;height:200px;"></textarea>
+    <div style="clear:both;"></div>
+</div>
 
 <div class="setting onoff" id="debugmode">
     <span class="title"><?php echo $this->__("Test mode"); ?></span>

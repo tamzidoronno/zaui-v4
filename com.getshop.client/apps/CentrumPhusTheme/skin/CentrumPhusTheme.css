@@ -27,8 +27,10 @@ html {
     display: none;
 }
 
+.Login {
+    display: none;
+}
 .Footer {
-    border: solid 1px #CCC;
     padding: 10px;
     max-width: 1170px;
     min-height: 25px;

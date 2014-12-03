@@ -28,9 +28,7 @@ if (count($day->entries) == 0) {
         $lockedForSignup = $entry->lockedForSignup;
         
         $eventDate = date('M d, Y h:m:s A', strtotime($entry->day."-".$entry->month."-".$entry->year));
-        $diplomaPeriod = $this->getApi()->getCalendarManager()->getDiplomaPeriod($eventDate);
-        $courceScript = $diplomaPeriod->textColor;
-        
+    
         $link = "";
         if ($entry->linkToPage != "") {
             $link = "?page=".$entry->linkToPage;
@@ -68,7 +66,11 @@ if (count($day->entries) == 0) {
             <div><? echo $availablePositions; ?></div>
             <div class="text"><? echo $this->__w("Available positions"); ?></div>
         </div>
-        <?php if ($this->hasWriteAccess() && $entry->isOriginal) {?>
+        <?php if ($this->hasWriteAccess() && $entry->isOriginal) {
+            $diplomaPeriod = $this->getApi()->getCalendarManager()->getDiplomaPeriod($eventDate);
+            $courceScript = $diplomaPeriod->textColor;
+        
+            ?>
             <div class="configuration">
                 <div class="entries">
                     <div class="entry deleteentry" entryid="<?php echo $entry->entryId;?>"><?php echo $this->__("delete", "common"); ?></div>

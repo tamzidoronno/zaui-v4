@@ -1,5 +1,5 @@
 <?php
-class core_calendarmanager_data_Signature extends core_common_DataCommon  {
+class core_calendarmanager_data_Signature {
 	/** @var String */
 	public $userid;
 

@@ -35,7 +35,7 @@ html {
 }
 
 .TopMenu {
-    bottom: 13px; 
+    bottom: 15px; 
     left: 140px;
 }
 
@@ -54,7 +54,7 @@ html {
 .TopMenu a {
     color: #FFF;
     font-size: 14px;
-    font-weight: bold;
+    font-weight: 500;
     padding-right: 10px; 
     padding-left: 10px; 
 }

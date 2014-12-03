@@ -52,7 +52,7 @@ class Booking extends MarketingApplication implements Application {
 
     public function isExtraDepActivated() {
         if ($this->getConfigurationSetting("extradep") == "true" && isset($_SESSION['group'])) {
-            if ($_SESSION['group'] == "b66cf951-0ede-4be8-9e13-73f6069a9566" || $_SESSION['group'] == "ddcdcab9-dedf-42e1-a093-667f1f091311") {
+            if ($_SESSION['group'] == "b66cf951-0ede-4be8-9e13-73f6069a9566" || $_SESSION['group'] == "b5240471-3033-48fc-873e-e6db52c6550f") {
                 return true;
             }
         }
@@ -65,7 +65,7 @@ class Booking extends MarketingApplication implements Application {
             return "Kundnummer";
         }
 
-        if ($_SESSION['group'] != "ddcdcab9-dedf-42e1-a093-667f1f091311") {
+        if ($_SESSION['group'] != "b5240471-3033-48fc-873e-e6db52c6550f") {
             return "Meko-Id";
         }
 

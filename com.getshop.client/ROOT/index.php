@@ -164,7 +164,6 @@ if(isset($factory->getSettings()->languages)) {
 		
         $factory->loadJavascriptFiles();
         $factory->showCssFiles();
-        echo $factory->loadInitializationData();
 
         if ($factory->getPage()->skeletonType == 5)
             echo "<style>body { overflow: auto; } </style>";

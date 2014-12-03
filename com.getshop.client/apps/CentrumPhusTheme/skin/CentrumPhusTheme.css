@@ -1,0 +1,84 @@
+.gs_inner {
+    max-width: 1170px;
+    margin: 0 auto;
+}
+
+html {
+    background-color: #FFF;
+    font-family: 'Open Sans', sans-serif;
+}
+
+#apparea-header {
+    min-height: 135px;
+    height: 135px;  
+}
+
+.gs_outer.header {
+    background-color: #244d9e;
+}
+
+.gs_outer.header .gs_inner {
+    height: 135px; 
+    max-width: 1170px;
+    background-image: url('{IMAGEFOLDER}/headerbackground.png');
+}
+
+.gs_outer.breadcrumb {
+    display: none;
+}
+
+.Footer {
+    border: solid 1px #CCC;
+    padding: 10px;
+    max-width: 1170px;
+    min-height: 25px;
+}
+
+.TopMenu {
+    bottom: 13px; 
+    left: 140px;
+}
+
+.TopMenu i {
+    margin-right: 5px;
+}
+
+.TopMenu li {
+    border-right: solid 1px #0075e2;
+}
+
+.TopMenu li:last-child {
+   border-right: solid 0px;
+}
+
+.TopMenu a {
+    color: #FFF;
+    font-size: 14px;
+    font-weight: bold;
+    padding-right: 10px; 
+    padding-left: 10px; 
+}
+
+.header .ImageDisplayer {
+    position: absolute;
+    top: 0px;
+    width: 200px;
+    right: 0px;
+    background-color: #FFF;
+    padding: 10px;
+}
+
+.mainarea .gs_row {
+    margin-top: 20px;
+}
+
+.mainarea .gs_row:last-child {
+    margin-bottom: 20px;
+}
+
+.gs_margin_right {
+    padding-right: 10px;
+}
+.gs_margin_left {
+    padding-left: 10px;
+}

@@ -55,23 +55,16 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        ApplicationSettings netaxcept = createSettings(
-                "Netaxept",
-                "def1e922-972f-4557-a315-a751a9b9eff1",
+        ApplicationSettings CentruPhusTheme = createSettings(
+                "CentrumPhusTheme",
+                "20e72915-74c3-4972-a0c9-88921ac3604f",
                 allowed,
                 "",
-                ApplicationSettings.Type.Payment, true);
-        netaxcept.isPublic = true;
-        apps.add(netaxcept);
-
-        ApplicationSettings questBack = createSettings(
-                "QuestBack",
-                "97cb6953_6b7f_4e99_99d8_5764ffed18b5",
-                allowed2,
-                "",
-                ApplicationSettings.Type.Marketing, false);
-        questBack.isPublic = true;
-        apps.add(questBack);
+                ApplicationSettings.Type.Theme, true);
+        CentruPhusTheme.allowedStoreIds = new ArrayList();
+        CentruPhusTheme.allowedStoreIds.add("8a4f8955-5ebc-4a04-b3c9-a0bf243b19f8");
+        CentruPhusTheme.isPublic = false;
+        apps.add(CentruPhusTheme);
 
 //        
 //        ApplicationSettings hotelvask = createSettings(
@@ -161,11 +154,11 @@ public class AddApplicationsToDatabase {
         for (ApplicationSettings app : addApplications()) {
             app.storeId = "all";
 
-			DataCommon data = null;
-			if (app.id != null) {
-				data = database.getObject(credentials, app.id);
-			}
-            
+            DataCommon data = null;
+            if (app.id != null) {
+                data = database.getObject(credentials, app.id);
+            }
+
             if (data == null) {
                 database.save(app, credentials);
             } else {

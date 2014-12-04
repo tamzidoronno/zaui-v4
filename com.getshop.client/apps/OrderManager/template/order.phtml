@@ -110,7 +110,7 @@ $taxes = $this->getApi()->getOrderManager()->getTaxes($order);
     <?
     if (isset($order->payment->paymentType) && $order->payment->paymentType) {
         ?>
-        <div class="boxed inline">
+        <div class="products inline" style="padding:10px;">
             <b><?php echo $this->__w('Payment information'); ?></b>
             <div class='entry'>
                 <span class="shipmenttext"><? echo $this->__f("Payment application"); ?></span> <?php echo substr($order->payment->paymentType, 40) ?>
@@ -121,16 +121,22 @@ $taxes = $this->getApi()->getOrderManager()->getTaxes($order);
                 </div>
         <? } 
         if($status  == 7) {
-            echo "<a class='collectionOrder' orderId='".$order->id."'>Collect this transaction</a><br>";
+            echo "<span class='collectionOrder' orderId='".$order->id."'>Collect this transaction</span><br>";
         }
         echo "<br>";
+        echo "<table id='paymentlog' width='100%'>";
+        echo "<thead><tr><td width='200'>Time</td><td>Entry</td></tr></thead>";
+        echo "<tbody>";
         foreach($order->payment->transactionLog as $date => $text) {
             $date = date("Y-m-d H:i", $date/1000);
-            echo $date . " - " . $text . "<br>";
+            echo "<tr><td style='padding-right: 10px;'>" . $date . "</td><td>" . $text . "</td></tr>";
         }
-        
+        echo "</tbody>";
+        echo "</table>";
+        echo "<script>$('#paymentlog').DataTable()</script>"
         ?>
         </div>
+        
         <?
     }
     ?>

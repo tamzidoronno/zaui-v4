@@ -27,7 +27,7 @@ class OrderManager extends \SystemApplication implements \Application {
 
         /* @var $paymentApp \PaymentApplication */
         $namespace = substr($order->payment->paymentType, 0, strpos($order->payment->paymentType, "\\"));
-        echo $namespace;
+
         $apps = $this->getFactory()->getApplicationPool()->getApplicationsInstancesByNamespace($namespace);
         $app = $apps[0];
         $app->order = $order;

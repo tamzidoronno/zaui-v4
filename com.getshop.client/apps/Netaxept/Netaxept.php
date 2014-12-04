@@ -124,9 +124,28 @@ class Netaxept extends \PaymentApplication implements \Application {
     public function collectOrder() {
         $order = $this->order;
         $orderId = $this->order->id;
-        $amount = 10000000;
+        $amount = $this->getAmount();
+        
+        
         /* var $order \core_ordermanager_data_Order */
-        $this->processPayment($amount, $order->paymentTransactionId, $orderId, "CAPTURE");
+        $result = $this->processPayment($amount, $order->paymentTransactionId, $orderId, "CAPTURE");
+        if (!$result) {
+            $settings = $this->getSettings();
+            $user = $this->getApi()->getUserManager()->getUserById($this->order->userId);
+            $email = $user->emailAddress;
+            $name = $user->fullName;
+            $fromName = "Payment Handler";
+            $fromMail = $this->getFactory()->getSettings()->{"mainemailaddress"}->value;
+            if (isset($settings->emailpaymentfailedbody)) {
+                $emailbody = $settings->emailpaymentfailedbody->value;
+                $emailtitle = $settings->emailpaymentfailedtitle->value;
+                $this->getApi()->getMessageManager()->sendMail($email, $name, $emailtitle, $emailbody, $fromMail, $fromName);
+                $this->getApi()->getMessageManager()->sendMail($fromMail, $name, $emailtitle, $emailbody, $fromMail, $fromName);
+            }
+        } else {
+            $this->order->status = 4;
+            $this->getApi()->getOrderManager()->saveOrder($this->order);
+        }
     }
 
     public function paymentCallback() {
@@ -147,15 +166,15 @@ class Netaxept extends \PaymentApplication implements \Application {
         }
         $found = false;
         if ($code == "OK") {
-            $authing = $this->processPayment(123, $_GET['transactionId'], $orderId, "AUTH");
-            if(!$authing) {
+            $authing = $this->processPayment($this->getAmount(), $_GET['transactionId'], $orderId, "AUTH");
+            if (!$authing) {
                 $this->getApi()->getOrderManager()->updateOrderStatusInsecure($orderId, 3);
                 if ($paymentfailed) {
                     header('Location: ' . $paymentfailed);
                     $found = true;
                 }
             }
-            if(isset($authing) && $authing->ResponseCode == "OK") {
+            if (isset($authing) && $authing->ResponseCode == "OK") {
                 $this->getApi()->getOrderManager()->updateOrderStatusInsecure($orderId, 7);
                 if ($okpage) {
                     header('Location: ' . $okpage);
@@ -167,7 +186,7 @@ class Netaxept extends \PaymentApplication implements \Application {
         } else {
             $this->getApi()->getOrderManager()->updateOrderStatusInsecure($orderId, 5);
             if ($canceledpage) {
-//                header('Location: ' . $canceledpage);
+                header('Location: ' . $canceledpage);
                 $found = true;
             }
         }
@@ -209,24 +228,7 @@ class Netaxept extends \PaymentApplication implements \Application {
         $merchid = $this->getConfiguration()->settings->{"merchantid"}->value;
         $currency = $this->getFactory()->getCurrency();
         $orderId = $this->getOrder()->incrementOrderId;
-        $amount = 0;
-
-        $items = array();
-        foreach ($this->getOrder()->cart->items as $cartItem) {
-            /* @var $cartItem core_cartmanager_data_CartItem */
-            /** @var product \core_productmanager_data_Product */
-            $product = $cartItem->product;
-            $item = new Item();
-            $item->VAT = ($product->taxGroupObject->taxRate + 100) / 100;
-            $item->Amount = (int) (($product->price * $cartItem->count * $item->VAT) * 100);
-            $item->Handling = true;
-            $item->IsVatIncluded = true;
-            $item->Quantity = $cartItem->count;
-            $item->Shipping = true;
-            $item->Title = $product->name;
-            $amount += $item->Amount;
-//            $items[] = $item;
-        }
+        $amount = $this->getAmount();
 
         $Order = new Order();
         $Order->Amount = $amount; // The amount described as the lowest monetary unit, example: 100,00 NOK is noted as "10000", 9.99 USD is noted as "999".
@@ -269,11 +271,11 @@ class Netaxept extends \PaymentApplication implements \Application {
 
         ####  PROCESS OBJECT  ####
         $ProcessRequest = new ProcessRequest();
-        $ProcessRequest->Description          = "order id : " . $orderId;
-        $ProcessRequest->Operation            = $operation;
-        $ProcessRequest->TransactionAmount    = $transactionAmount;
-        $ProcessRequest->TransactionId        = $transactionId;
-        $ProcessRequest->TransactionReconRef  = "";
+        $ProcessRequest->Description = "order id : " . $orderId;
+        $ProcessRequest->Operation = $operation;
+        $ProcessRequest->TransactionAmount = $transactionAmount;
+        $ProcessRequest->TransactionId = $transactionId;
+        $ProcessRequest->TransactionReconRef = "";
 
         $InputParametersOfProcess = array
             (
@@ -281,27 +283,54 @@ class Netaxept extends \PaymentApplication implements \Application {
             "merchantId" => $this->getMerchantId(),
             "request" => $ProcessRequest
         );
-        
+
         try {
+            $logentry = $ProcessRequest->Description . " : " . $ProcessRequest->Operation . " : " . $ProcessRequest->TransactionAmount . " : " . $ProcessRequest->TransactionId;
+            $this->getApi()->getOrderManager()->logTransactionEntry($orderId, $logentry);
+
             $client = new \SoapClient($this->getWsdl(), array('trace' => true, 'exceptions' => true));
             $OutputParametersOfProcess = $client->__call('Process', array("parameters" => $InputParametersOfProcess));
             $result = $OutputParametersOfProcess->ProcessResult;
             $this->logTransaction($result, $orderId);
             return $result;
-        }catch(\SoapFault $fault) {
+        } catch (\SoapFault $fault) {
             $this->logTransaction($fault, $orderId);
+            return false;
         }
     }
 
     public function logTransaction($fault, $orderId) {
-        echo "<pre>";
-        if($fault instanceof \SoapFault) {
-            $error = $fault->detail->BBSException->Result->ResponseCode . " " . $fault->detail->BBSException->Result->ResponseText;
-            echo $error;
+        if ($fault instanceof \SoapFault) {
+            $error = $fault->getCode() . " " . $fault->getMessage();
         } else {
             $error = $fault->{'AuthorizationId'} . " responsecode: " . $fault->{'ResponseCode'};
         }
         $this->getApi()->getOrderManager()->logTransactionEntry($orderId, $error);
+    }
+
+    public function getAmount() {
+        $items = array();
+        $amount = 0;
+        foreach ($this->order->cart->items as $cartItem) {
+            /* @var $cartItem core_cartmanager_data_CartItem */
+            /** @var product \core_productmanager_data_Product */
+            $product = $cartItem->product;
+            $item = new Item();
+            if (isset($product->taxGroupObject)) {
+                $item->VAT = ($product->taxGroupObject->taxRate + 100) / 100;
+            } else {
+                $item->VAT = 1;
+            }
+            $item->Amount = (int) (($product->price * $cartItem->count * $item->VAT) * 100);
+            $item->Handling = true;
+            $item->IsVatIncluded = true;
+            $item->Quantity = $cartItem->count;
+            $item->Shipping = true;
+            $item->Title = $product->name;
+            $amount += $item->Amount;
+//            $items[] = $item;
+        }
+        return $amount;
     }
 
 }

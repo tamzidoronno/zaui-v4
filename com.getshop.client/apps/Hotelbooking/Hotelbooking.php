@@ -895,17 +895,22 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return $this->getApi()->getUserManager()->createUser($user);
     }
 
-    public function createOrder($user, $i) {
+    public function createOrder($user, $i = null) {
         if ($this->partnerShipChecked()) {
             $order = $this->getApi()->getOrderManager()->createOrderByCustomerReference($this->getReferenceKey());
         } else {
             $order = $this->getApi()->getOrderManager()->createOrderByCustomerReference($user->referenceKey);
         }
         
-        $startDate = date('M d, Y h:m:s A', strtotime("+".$i." months", $this->getStart()));
-        $endDate = date('M d, Y h:m:s A', strtotime("-1 day",strtotime("+".($i+1)." months", $this->getStart())));
-        $order->startDate = $startDate;
-        $order->endDate = $endDate;
+        if($i != null) {
+            $startDate = date('M d, Y h:m:s A', strtotime("+".$i." months", $this->getStart()));
+            $endDate = date('M d, Y h:m:s A', strtotime("-1 day",strtotime("+".($i+1)." months", $this->getStart())));
+            $order->startDate = $startDate;
+            $order->endDate = $endDate;
+        } else {
+            $order->startDate = date('M d, Y h:m:s A', $this->getStart());
+            $order->endDate = date('M d, Y h:m:s A', $this->getEnd());
+        }
         
         $this->startAdminImpersonation("OrderManager", "saveOrder");
         $this->getApi()->getOrderManager()->saveOrder($order);

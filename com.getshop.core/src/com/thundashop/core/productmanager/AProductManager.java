@@ -14,6 +14,7 @@ import com.thundashop.core.productmanager.data.AttributeSummary;
 import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
+import com.thundashop.core.productmanager.data.ProductImage;
 import com.thundashop.core.productmanager.data.ProductList;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import java.util.ArrayList;
@@ -79,6 +80,11 @@ public abstract class AProductManager extends ManagerBase {
                 product.price = product.original_price;
             }
             
+        }
+        for (ProductImage image : product.images.values()) {
+            if (!product.imagesAdded.contains(image.fileId)) {
+                product.imagesAdded.add(image.fileId);
+            }
         }
         return product;
     }

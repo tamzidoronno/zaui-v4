@@ -10,6 +10,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
+import com.thundashop.core.databasemanager.Database;
 import java.net.UnknownHostException;
 
 /**
@@ -19,7 +20,7 @@ import java.net.UnknownHostException;
 public class RenameAppConfigrationToApplicationInstance {
 
     public static void main(String[] args) throws UnknownHostException {
-        Mongo m = new Mongo("localhost", 27017);
+        Mongo m = new Mongo("localhost", Database.mongoPort);
         DB db = m.getDB("PageManager");
         for (String name : db.getCollectionNames()) {
             DBCollection col = db.getCollection(name);

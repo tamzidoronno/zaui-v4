@@ -6,6 +6,11 @@
     padding: 15px;
 }
 
+.gss_add_product_row .editproduct {
+    cursor: pointer;
+    color: #0010C4;
+}
+
 .ProductLists .productlists_add_title {
     font-size: 16px;
 }
@@ -13,10 +18,11 @@
     margin-top: 15px;
     font-size: 16px;
 }
+
 .ProductLists .available_lists .gs_productlist .product_count {
     position: absolute; 
-    right: 7px;
     top: 7px;
+    right: 7px;
     padding: 5px;
     background-color: #3da73b;
     background: linear-gradient(to top, #05c100 , #06ec00); /* Standard syntax */
@@ -25,13 +31,28 @@
     padding-right: 10px;
     padding-left: 10px;
 }
+
+.ProductLists .available_lists  .manage_list {
+    background-color: #3da73b;
+    background: linear-gradient(to top, #05c100 , #06ec00); /* Standard syntax */
+    position: relative;
+    top: 7px;
+    position: absolute;
+    padding: 5px;
+    right: 0px;
+    font-size: 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
 .ProductLists .available_lists .gs_productlist {
     font-size: 16px;
     position: relative;
     height: 36px;
-    border-bottom: solid 1px #DDD;
     padding: 3px;
     cursor: pointer;
+    margin-right: 30px;
 }
 
 .ProductLists .available_lists .gs_productlist:hover {
@@ -91,6 +112,8 @@
     overflow: hidden;
 }
 
+
+
 .gss_editlist {
     padding: 15px;
 }
@@ -109,6 +132,18 @@
     
     margin-top: 10px;
     padding: 10px;
+}
+
+.gss_products_list_search_result .gss_no_products_exists  {
+    text-align: center;
+    font-size: 16px;
+}
+.gss_products_list_search_result .gss_no_products_exists .fa-warning {
+    color: red;
+    font-size: 40px;
+    margin-right: 20px;
+    display: block;
+    
 }
 
 .gss_products_list_search_result {

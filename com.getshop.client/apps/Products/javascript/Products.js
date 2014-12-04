@@ -85,4 +85,21 @@ app.Products = {
     },
 }
 
+
+app.Products.gssinterface = {
+    editProduct: function(productId) {
+        getshop.Settings.showSettings();
+        getshop.Settings.setApplicationId('e073a75a-87c9-4d92-a73a-bc54feb7317f', function() {
+            var data = {
+                gss_fragment : 'editproduct',
+                gss_view : 'gss_productwork_area',
+                gss_value : productId
+            }
+            
+            getshop.Settings.post({}, "gs_show_fragment", data);
+        });
+    }
+}
+
+
 app.Products.init();

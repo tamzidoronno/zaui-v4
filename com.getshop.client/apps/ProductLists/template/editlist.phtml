@@ -30,6 +30,7 @@ if (!is_array($productList->productIds)) {
         foreach ($products as $product) {
             echo "<div class='gss_add_product_row'>";
             echo $product->name;
+            echo "<span class='editproduct' onclick='app.Products.gssinterface.editProduct(\"$product->id\");'> ( ".$this->__f("edit")." )</span>";
             echo "<div listId='$productList->id' productId='$product->id'  class='gss_button gss_removeFromList'>" . $this->__f("Remove") . "</div>";
             echo "</div>";
         }

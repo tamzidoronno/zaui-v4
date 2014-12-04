@@ -10,6 +10,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
+import com.thundashop.core.databasemanager.Database;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.List;
 public class SetDefaultActivatedFlag {
 
     public static void main(String[] args) throws UnknownHostException {
-        Mongo m = new Mongo("localhost", 27017);
+        Mongo m = new Mongo("localhost", Database.mongoPort);
         DB db = m.getDB("ApplicationPool");
         for (String name : db.getCollectionNames()) {
             DBCollection col = db.getCollection(name);

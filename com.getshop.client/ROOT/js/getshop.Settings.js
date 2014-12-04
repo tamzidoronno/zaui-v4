@@ -40,13 +40,26 @@ getshop.Settings = {
 
         this.post(model, method, field);
     },
-    setApplicationId: function (button) {
-        var appId = $(button).attr('gss_goto_app');
+    setApplicationId: function (button, callback) {
+        var appId = button;
+        
+        if ($(button).attr('gss_goto_app')) {
+            appId = $(button).attr('gss_goto_app');
+        }
+        
         localStorage.setItem("currentApp", appId);
 
         $('.gss_topmenu').find('.gss_active').removeClass('gss_active');
         $('.gss_topmenu').find('[gss_goto_app="' + appId + '"]').addClass('gss_active');
-        this.post();
+        
+        
+        successMethod = function(response, field, data) {
+            getshop.Settings.successfully(response, field, data);
+            if (typeof(callback) === "function") 
+                callback(response, field, data);
+        }
+
+        this.doPost({}, false, successMethod);
     },
     reload: function () {
         this.post(false, null, null, true);

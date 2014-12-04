@@ -1,4 +1,4 @@
-<div class="products row_view">
+<div class="products row_view" listid="<? echo $this->getConfigurationSetting("productlist"); ?>">
     <?
     $products = $this->getAllProducts();
     if (!count($products)) {
@@ -6,15 +6,22 @@
         return;
     }
     foreach ($products as $product) {
+        $linkName = \GetShopHelper::makeSeoUrl($product->name);
+        $pageId = $product->pageId;
         ?>
-        <div class="product_row">
-            <div class="image"><img src="/displayImage.php?id=<? echo $product->imagesAdded[0]; ?>&width=200"/></div>
-            <div class="content">
-                <div class="product_title"><? echo $product->name; ?></div>
-                <div class="short_description"><? echo nl2br($product->shortDescription); ?></div>
+    <div style='position: relative;'>
+        <a ajaxlink='/?page=<? echo $pageId; ?>' href='<? echo $linkName;?>'>
+            <div class="product_row">
+                <div class="image"><img src="/displayImage.php?id=<? echo $product->imagesAdded[0]; ?>&width=200"/></div>
+                <div class="content">
+                    <div class="product_title"><? echo $product->name; ?></div>
+                    <div class="short_description"><? echo nl2br($product->shortDescription); ?></div>
+                </div>
+                
             </div>
-            <div class="webshop_button"><? echo $this->__f("Add to cart"); ?></div>
-        </div>
+        </a>
+        <div class="webshop_button"><? echo $this->__f("Add to cart"); ?></div>
+    </div>
         <?
     }
     ?>

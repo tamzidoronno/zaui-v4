@@ -9,6 +9,15 @@ if (isset($_POST['listid'])) {
     $productList = $this->getProductList($_POST['listid']);
 }
 
+if (!is_array($products)) {
+    $products = array();
+    $productCount = count($this->getApi()->getProductManager()->getAllProducts());
+    if (!$productCount) {
+        echo "<div class='gss_no_products_exists'><i class='fa fa-warning'></i> <br/>".$this->__f("You have not created any products, thats why you can not see them here.")."<br/>". $this->__f("Go to E-Commerce->Products and create something.")."<div>";
+        return;
+    }
+}
+
 $foundProducts = false;
 foreach ($products as $product) {
     if (in_array($product->id, $productList->productIds)) {
@@ -18,6 +27,7 @@ foreach ($products as $product) {
     $foundProducts = true;
     echo "<div class='gss_add_product_row'>";
     echo $product->name;
+    echo "<span class='editproduct' onclick='app.Products.gssinterface.editProduct(\"$product->id\");'> ( ".$this->__f("edit")." )</span>";
     echo "<div listId='$productList->id' productId='$product->id' class='gss_button gss_addToList'>".$this->__f("Add to list above")."</div>";
     echo "</div>";
 }

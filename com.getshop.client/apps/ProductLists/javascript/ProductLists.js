@@ -6,6 +6,37 @@ app.ProductLists = {
         $(document).on('click', '.gss_removeFromList', app.ProductLists.removeProductFromList);
     },
     
+    loadSettings : function(element, application) {
+         var config = {
+            draggable: true,
+            app : true,
+            application: application,
+            title: "Settings",
+            items: [
+                {
+                    icontype: "awesome",
+                    icon: "fa-list",
+                    iconsize : "30",
+                    title: __f("Manage products in this list"),
+                    click: app.ProductLists.goToList
+                }            
+            ]
+        }
+
+        var toolbox = new GetShopToolbox(config, application);
+        toolbox.show();
+        toolbox.attachToElement(application, 2);
+    },
+    
+    goToList: function(a,b,c) {
+        var listId = $($(b).find('[listid]')[0]).attr('listid');
+        if (!listId) {
+            thundashop.common.Alert(__f("No list selected yet"), __f("Please select a list from the the list first"), true);
+        } else {
+            app.ProductLists.gssinterface.manageList(listId);
+        }
+    },
+    
     removeProductFromList: function() {
         var data = {
             listId : $(this).attr('listId'),
@@ -55,6 +86,26 @@ app.ProductLists = {
     setList: function() {
         var event = thundashop.Ajax.createEvent(null, "setList", this, $(this).attr('listid'));
         thundashop.Ajax.post(event);
+    }
+}
+
+app.ProductLists.gssinterface = {
+    manageList: function(listid) {
+        getshop.Settings.showSettings();
+        getshop.Settings.setApplicationId('f245b8ae-f3ba-454e-beb4-ecff5ec328d6', function() {
+            var data = {
+                gss_fragment : 'editlist',
+                gss_view : 'gss_productwork_area',
+                gss_value : listid
+            }
+            
+            getshop.Settings.post({}, "gs_show_fragment", data);
+        });
+    },
+    
+    showListManagement: function() {
+        getshop.Settings.showSettings();
+        getshop.Settings.setApplicationId('f245b8ae-f3ba-454e-beb4-ecff5ec328d6', false);
     }
 }
 

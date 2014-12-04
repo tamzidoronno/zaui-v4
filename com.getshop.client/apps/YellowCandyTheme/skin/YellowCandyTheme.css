@@ -60,3 +60,17 @@ body {
 .products.row_view .product_row:last-child {
     border-bottom: solid 0px;
 }
+
+.ProductLists {
+    padding: 20px;
+}
+
+.gs_button {
+    background-color: pink;
+    background: linear-gradient(to bottom, #FFF, #CCC);
+    line-height: 30px;
+}
+
+.gs_button:hover {
+    background: linear-gradient(to bottom, #FFF, #BBB);
+}

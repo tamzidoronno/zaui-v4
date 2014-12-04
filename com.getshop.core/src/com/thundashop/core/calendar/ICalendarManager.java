@@ -263,24 +263,24 @@ public interface ICalendarManager {
     @Administrator
     public void addUserSilentlyToEvent(String eventId, String userId) throws ErrorException;
     
-    @Administrator
+    @Editor
     public void createANewDiplomaPeriod(Date startDate, Date stopDate) throws ErrorException;
     
-    @Administrator
+    @Editor
     public List<DiplomaPeriod> getDiplomaPeriods() throws ErrorException;
     
-    @Administrator
+    @Editor
     public void deleteDiplomaPeriode(String id) throws ErrorException;
     
-    @Administrator
+    @Editor
     public void setDiplomaPeriodeBackground(String diplomaId, String background) throws ErrorException;
     
-    @Administrator
+    @Editor
     public DiplomaPeriod getDiplomaPeriod(Date date) throws ErrorException;
     
-    @Administrator
+    @Editor
     public void removeSignature(String userId, String diplomId) throws ErrorException;
     
-    @Administrator
+    @Editor
     public void setDiplomaTextColor(String diplomaId, String textColor) throws ErrorException;
 }

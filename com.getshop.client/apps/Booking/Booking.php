@@ -49,7 +49,7 @@ class Booking extends MarketingApplication implements Application {
     
 	public function isExtraDepActivated() {
 		if ($this->getConfigurationSetting("extradep") == "true" && isset($_SESSION['group'])) {
-			if ($_SESSION['group'] == "b66cf951-0ede-4be8-9e13-73f6069a9566" || $_SESSION['group'] == "ddcdcab9-dedf-42e1-a093-667f1f091311") {
+			if ($_SESSION['group'] == "1cdd1d93-6d1b-4db3-8e91-3c30cfe38a4a" || $_SESSION['group'] == "ddcdcab9-dedf-42e1-a093-667f1f091311") {
 				return true;
 			}	
 		}
@@ -58,7 +58,7 @@ class Booking extends MarketingApplication implements Application {
 	}
 	
 	public function getTextForExtraDep() {
-		if ($_SESSION['group'] != "b66cf951-0ede-4be8-9e13-73f6069a9566") {
+		if ($_SESSION['group'] != "1cdd1d93-6d1b-4db3-8e91-3c30cfe38a4a") {
 			return "Kundnummer";
 		}
 		

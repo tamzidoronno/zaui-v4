@@ -1,0 +1,61 @@
+<?
+/* @var $this \ns_8b42b5cf_189c_4382_ba52_c1919841aad4\HotelBookingStatistic */
+?>
+
+<div style="padding-top: 20px; font-size: 24px;">
+    Oversikt over ordrer i en gitt tidsperiode.
+</div>
+
+<div style="padding-top: 20px;">
+    Start <input id="start_date" type="textfield" value="<? echo $_SESSION['hotel_statistic_start']; ?>"><br/> 
+    Stop <input id="end_date" type="textfield" value="<? echo $_SESSION['hotel_statistic_end']; ?>"><br/><br/>
+    <div class="gs_button" id="searchforstatistic">Søk</div>
+</div>
+
+<div class="result" style="padding-top: 20px; padding-bottom: 20px;">
+        <?
+//        echo $_SESSION['hotel_statistic_start']."<br/>";
+//        echo $_SESSION['hotel_statistic_end'];
+        $orders = $this->getOrders();
+        echo "<b>Orders: </b>".count($orders)."<hr/>";
+        
+        echo "<table cellspacing='20'><th>Ordreid</th><th>Navn</th><th>Produkt</th><th>Pris</th><th>Periode</th><th>Bod</th><th>Visma</th><th>MVA Pliktig</th><th>Addresse</th>";
+        foreach ($orders as $order) {
+            $amount = $this->getApi()->getCartManager()->calculateTotalCost($order->cart).",00";
+            $user = $this->getApi()->getUserManager()->getUserById($order->userId);
+            $productName = "";
+            $name = $user->fullName;
+            $period = date("d.m.y",strtotime($order->startDate))." - ".date("d.m.y",strtotime($order->endDate));
+            $fakturert = $order->transferedToAccountingSystem ? "Overført" : "Nei";
+            $mva = $user->mvaRegistered ? "Ja" : "Nei";
+            $reference = $order->reference;
+            $room = false;
+            $address = $user->address->address ." ".$user->address->postCode." ".$user->address->city;
+            foreach ($order->cart->items as $item) {
+                $productName = $item->product->name;
+                if (!$room && $order->reference) {
+                    $room = $this->getApi()->getHotelBookingManager()->getRoomForCartItem($order->reference, $item->cartItemId);
+                }
+//                $bodid = $this->getApi()->getHotelBookingManager()->get
+            }
+            
+            $bodId = "";
+            if ($room) {
+                $bodId = $room->roomName;
+            }
+            echo "<div>";
+            $id = $order->incrementOrderId;
+            echo "<tr><td>$id</td><td>$name</td><td>$productName</td><td>$amount</td><td>$period</td><td>$bodId</td><td>$fakturert</td><td>$mva</td><td>$address</td></tr>" ;
+            echo "</div>";
+        }
+        echo "</table>";
+        
+        ?>
+    </pre>
+</div>
+
+
+<script>
+    $('#start_date').datepicker({ dateFormat: "dd.mm.yy"});
+    $('#end_date').datepicker({ dateFormat: "dd.mm.yy"});
+</script>

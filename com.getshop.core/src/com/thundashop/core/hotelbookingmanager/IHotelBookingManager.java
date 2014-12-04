@@ -123,4 +123,7 @@ public interface IHotelBookingManager {
     public void markReferenceAsStopped(int referenceId, Date stoppedDate) throws ErrorException;
     
     public void setCartItemIds(int referenceId, List<String> ids) throws ErrorException;
+    
+    @Administrator
+    public Room getRoomForCartItem(Integer reference, String cartItemId) throws ErrorException;
 }

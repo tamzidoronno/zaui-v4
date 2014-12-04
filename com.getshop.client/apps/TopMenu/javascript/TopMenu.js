@@ -72,4 +72,3 @@ $('.TopMenu .addnew').live('click', function() {
 
 $(document).on('mouseover', '.TopMenu li', thundashop.app.TopMenu.mouseOver);
 $(document).on('mouseout', '.TopMenu li', thundashop.app.TopMenu.mouseOut);
-$(document).on('click','.TopMenu .mobile_button', thundashop.app.TopMenu.showMobileMenu);

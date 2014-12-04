@@ -1,0 +1,144 @@
+.gs_inner {
+    max-width: 1170px;
+    margin: 0 auto;
+}
+
+html {
+    background-color: #FFF;
+    font-family: 'Open Sans', sans-serif;
+}
+
+#apparea-header {
+    min-height: 135px;
+    height: 135px;  
+}
+
+.gs_outer.header {
+    background-color: #244d9e;
+}
+
+.gs_outer.header .gs_inner {
+    height: 135px; 
+    max-width: 1170px;
+    background-image: url('{IMAGEFOLDER}/headerbackground.png');
+}
+
+.gs_outer.breadcrumb {
+    display: none;
+}
+
+.Login {
+    display: none;
+}
+.Footer {
+    padding: 10px;
+    max-width: 1170px;
+    min-height: 25px;
+}
+
+.TopMenu {
+    bottom: 15px; 
+    left: 140px;
+}
+
+.TopMenu i {
+    margin-right: 5px;
+}
+
+.TopMenu li {
+    border-right: solid 1px #0075e2;
+}
+
+.TopMenu li:last-child {
+   border-right: solid 0px;
+}
+
+.TopMenu a {
+    color: #FFF;
+    font-size: 14px;
+    font-weight: 500;
+    padding-right: 10px; 
+    padding-left: 10px; 
+}
+
+.header .ImageDisplayer {
+    position: absolute;
+    top: 0px;
+    width: 200px;
+    right: 0px;
+    background-color: #FFF;
+    padding: 20px;
+    padding-top: 35px;
+    padding-bottom: 35px;
+}
+
+.mainarea .gs_row {
+    margin-top: 20px;
+}
+
+.gs_margin_right {
+    padding-right: 10px;
+}
+.gs_margin_left {
+    padding-left: 10px;
+}
+
+
+.TopMenu {
+    bottom: 0px;
+}
+.TopMenu li {
+    border-right: solid 0px;
+    border-right: Solid 1px #244d9e;
+    background-color: #2855b0;
+    
+}
+
+.TopMenu li a {
+    padding: 10px;
+}
+
+.footer {
+    background-color: #f1f1f1;
+}
+
+.footer .app {
+    padding-top: 20px;
+}
+
+@media screen and (max-width:800px) {
+    .gs_margin_left {
+        padding-left: 0px !important;
+    }
+
+    .gs_margin_right {
+        padding-right: 0px !important;
+    }
+    
+    .Logo {
+        left: -13px !important;
+    }
+    
+    .app {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    
+    .TopMenu .mobile_button {
+        border: solid 2px #666;
+        padding: 10px;
+        right: 10px;
+    }
+    .TopMenu {
+        position: relative !important;
+        left: 0px;
+        right: 10px;
+        font-size: 20px;
+        padding: 10px;
+        color: #666;
+    }
+    
+    .TopMenu li:not(.mobile) {
+        width: inherit;
+    }
+}

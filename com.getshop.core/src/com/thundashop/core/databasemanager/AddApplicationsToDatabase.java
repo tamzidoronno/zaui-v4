@@ -55,23 +55,16 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        ApplicationSettings netaxcept = createSettings(
-                "Netaxept",
-                "def1e922-972f-4557-a315-a751a9b9eff1",
+        ApplicationSettings hotelBookingStatistic = createSettings(
+                "HotelBookingStatistic",
+                "8b42b5cf-189c-4382-ba52-c1919841aad4",
                 allowed,
                 "",
-                ApplicationSettings.Type.Payment, true);
-        netaxcept.isPublic = true;
-        apps.add(netaxcept);
-
-        ApplicationSettings questBack = createSettings(
-                "QuestBack",
-                "97cb6953_6b7f_4e99_99d8_5764ffed18b5",
-                allowed2,
-                "",
-                ApplicationSettings.Type.Marketing, false);
-        questBack.isPublic = true;
-        apps.add(questBack);
+                ApplicationSettings.Type.Webshop, false);
+        hotelBookingStatistic.allowedStoreIds = new ArrayList();
+        hotelBookingStatistic.allowedStoreIds.add("3292fa74-32a2-4d52-b88f-6be6f3dff813");
+        hotelBookingStatistic.isPublic = false;
+        apps.add(hotelBookingStatistic);
 
 //        
 //        ApplicationSettings hotelvask = createSettings(
@@ -161,11 +154,11 @@ public class AddApplicationsToDatabase {
         for (ApplicationSettings app : addApplications()) {
             app.storeId = "all";
 
-			DataCommon data = null;
-			if (app.id != null) {
-				data = database.getObject(credentials, app.id);
-			}
-            
+            DataCommon data = null;
+            if (app.id != null) {
+                data = database.getObject(credentials, app.id);
+            }
+
             if (data == null) {
                 database.save(app, credentials);
             } else {

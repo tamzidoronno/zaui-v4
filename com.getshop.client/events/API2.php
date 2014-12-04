@@ -2015,6 +2015,22 @@ class APIHotelBookingManager {
 
 	/**
 	* Get all references
+	* @return core_hotelbookingmanager_Room
+	* @throws ErrorException
+	*/
+
+	public function getRoomForCartItem($reference, $cartItemId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["reference"] = json_encode($this->transport->object_unset_nulls($reference));
+	     $data['args']["cartItemId"] = json_encode($this->transport->object_unset_nulls($cartItemId));
+	     $data["method"] = "getRoomForCartItem";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->cast(new core_hotelbookingmanager_Room(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Get all references
 	* @return List
 	* @throws ErrorException
 	*/

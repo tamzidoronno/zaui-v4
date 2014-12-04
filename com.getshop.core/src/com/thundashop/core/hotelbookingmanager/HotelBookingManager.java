@@ -390,8 +390,12 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         checkForArxUpdate();
     }
 
+    @Override
     public Room getRoomForCartItem(Integer reference, String cartItemId) throws ErrorException {
         BookingReference reservation = getReservationByReferenceId(reference);
+        if (reservation == null) {
+            return null;
+        }
         String roomId = reservation.getRoomIdOnCartItem(cartItemId);
         
         saveObject(reservation);

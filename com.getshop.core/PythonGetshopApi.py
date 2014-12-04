@@ -2069,6 +2069,28 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getRoomForCartItem(self, reference, cartItemId):
+    args = collections.OrderedDict()
+    if isinstance(reference,GetShopBaseClass): 
+      args["reference"]=json.dumps(reference.__dict__)
+    else:
+      try:
+        args["reference"]=json.dumps(reference)
+      except (ValueError, AttributeError):
+        args["reference"]=reference
+    if isinstance(cartItemId,GetShopBaseClass): 
+      args["cartItemId"]=json.dumps(cartItemId.__dict__)
+    else:
+      try:
+        args["cartItemId"]=json.dumps(cartItemId)
+      except (ValueError, AttributeError):
+        args["cartItemId"]=cartItemId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getRoomForCartItem"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getRoomTypes(self):
     args = collections.OrderedDict()
     data = EmptyClass()

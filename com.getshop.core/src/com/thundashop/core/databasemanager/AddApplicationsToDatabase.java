@@ -55,16 +55,16 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        ApplicationSettings CentruPhusTheme = createSettings(
-                "CentrumPhusTheme",
-                "20e72915-74c3-4972-a0c9-88921ac3604f",
+        ApplicationSettings hotelBookingStatistic = createSettings(
+                "HotelBookingStatistic",
+                "8b42b5cf-189c-4382-ba52-c1919841aad4",
                 allowed,
                 "",
-                ApplicationSettings.Type.Theme, true);
-        CentruPhusTheme.allowedStoreIds = new ArrayList();
-        CentruPhusTheme.allowedStoreIds.add("8a4f8955-5ebc-4a04-b3c9-a0bf243b19f8");
-        CentruPhusTheme.isPublic = false;
-        apps.add(CentruPhusTheme);
+                ApplicationSettings.Type.Webshop, false);
+        hotelBookingStatistic.allowedStoreIds = new ArrayList();
+        hotelBookingStatistic.allowedStoreIds.add("3292fa74-32a2-4d52-b88f-6be6f3dff813");
+        hotelBookingStatistic.isPublic = false;
+        apps.add(hotelBookingStatistic);
 
 //        
 //        ApplicationSettings hotelvask = createSettings(

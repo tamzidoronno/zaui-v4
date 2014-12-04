@@ -85,6 +85,7 @@ class Page {
         foreach ($areas as $area) {
 
             if (isset($area->styles) && $area->styles) {
+                $area->styles = str_replace("{incrementcellid}", $area->incrementalCellId, $area->styles);
                 echo "<style cellid='" . $area->cellId . "'>" . $area->styles . "</style>";
             }
 

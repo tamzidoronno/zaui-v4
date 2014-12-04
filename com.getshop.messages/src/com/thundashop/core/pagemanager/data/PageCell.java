@@ -10,6 +10,7 @@ public class PageCell implements Serializable {
     void clear() {
         appId = "";
         cells = new ArrayList();
+        styles = "";
     }
 
     static class PageMode {
@@ -49,9 +50,10 @@ public class PageCell implements Serializable {
     }
 
     void extractDataFrom(PageCell cell, boolean includeCells) {
-        styles = cell.styles;
+//        styles = cell.styles;
         mode = cell.mode;
         appId = cell.appId;
+        cell.appId = "";
         if(includeCells) {
             cells = cell.cells;
         }

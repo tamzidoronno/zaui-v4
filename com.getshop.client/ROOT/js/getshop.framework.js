@@ -466,8 +466,12 @@ thundashop.framework = {
         });
         
         
-        
+        var incrementcellid = cell.attr('incrementcellid');
         var styles = cssEditorForCell.getSession().getValue();
+        
+        styles = styles.replace(".gscell_" + incrementcellid + ".gscell", ".gscell_{incrementcellid}.gscell");
+        styles = styles.replace(".gscell_" + incrementcellid + ".gsinner", ".gscell_{incrementcellid}.gsinner");
+        
         var data = {
             "cellid": cellid,
             "styles": styles,

@@ -66,6 +66,9 @@ foreach ($entries as $year => $months) {
                 if (!$lockedForSignup && $bookingLink != "" && $availablePositions > 0) {
                     $booking = "<a href='$bookingLink'><div style='text-align: center;' class='gs_button'>" . $this->__w("Sign up") . "</div></a>";
                 }
+                if (!$lockedForSignup && $bookingLink != "" && $availablePositions <= 0 ) { 
+                    $booking = "<a href='$bookingLink&waiting=true'><div style='text-align: center;' class='gs_button'>" . $this->__w("Waiting list") . "</div></a>";
+                }
                 echo "<td style='width: 70px; text-align: center;'>$readMore</td>";
                 echo "<td style='width: 100px;'>$booking</td>";
             }

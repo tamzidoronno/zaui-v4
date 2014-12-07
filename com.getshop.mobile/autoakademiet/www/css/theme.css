@@ -6,11 +6,6 @@
         Purpose of the stylesheet follows.
 */
 
-body,
-html {
-    background-color: #000;
-}
-
 .col1,
 .col2 { 
     display: inline-block;
@@ -50,9 +45,15 @@ html {
 .kursentry {
     position: relative;
     padding: 10px;
-    border: dashed 2px #CCC; 
+    border: solid 1px #DDD; 
     margin-bottom: 20px;
-    background-color: #333;
+    background-image: -webkit-linear-gradient(#fefefe, #cecece) !important; /* Chrome 10+, Saf5.1+ */
+    background-image:    -moz-linear-gradient(#fefefe, #cecece) !important; /* FF3.6 */
+    background-image:     -ms-linear-gradient(#fefefe, #cecece) !important; /* IE10 */
+    background-image:      -o-linear-gradient(#fefefe, #cecece) !important; /* Opera 11.10+ */
+    background-image:         linear-gradient(#fefefe, #cecece) !important;
+    margin-right: 20px !important;
+    margin-left: 20px !important;
 }
 
 .disabled {
@@ -248,8 +249,8 @@ label.error {
 }
 
 #news .newsentry {
-    border: solid 1px #333;
-    background-color: rgba(0,0,0,0.3);
+    border: solid 1px #DDD;
+    background: linear-gradient(to bottom, #fefefe, #cecece);
     margin-bottom: 20px;
     position: relative;
     padding: 10px;
@@ -260,10 +261,10 @@ label.error {
     border-left: dashed 1px #444;
     position: absolute;
     right: 0px;
-    top: 1px;
+    top: 0px;
     bottom: 0px;
     width: 35px;
-    background-color: #333;
+    background-color: #333333;
     background-image: url('images/right.png');
     background-repeat: no-repeat;
     background-position: center center;
@@ -300,6 +301,11 @@ label.error {
     text-align: left;
 }
 
+#home .ui-header {
+    text-align: center;
+    padding-top: 20px;
+}
+
 .mainmenu_outer {
     text-align: center;
 }
@@ -313,11 +319,15 @@ label.error {
     position: relative;
     display: inline-block;
     font-size: 50px;
-    color: #BBB;
+    color: #006e63;
     margin-top: 30px;
     margin-right: 5px;
     margin-left: 5px;
     text-align: center;
+}
+
+.mainmenu .menu_entry .name {
+    color: #000;
 }
 
 #courselistoverview {
@@ -329,31 +339,35 @@ label.error {
     width: 80px;   
 }
 
-.ui-mobile-viewport {
-    background: url('images/bkg_1.gif') ;
-    
-    
-}
+
 
 .ui-page {
     background-image: inherit;
     background-color: inherit;
-    color: #FFF;
+    color: #000;
+    text-align: center;
 }
 
+html {
+    background: url('images/bkg_1.png');
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    background-attachment: fixed;
+    
+}
+
+.ui-page-theme-a .ui-footer .ui-btn,
 .backbutton {
     border: solid 0px !important;
-    border-top: solid 1px #666;
     color: #FFF !important;
-}
-.backbutton  {
-    background-image: -webkit-gradient(linear, left top, left bottom, from( #333), to( #000000)) !important; /* Saf4+, Chrome */
-    background-image: -webkit-linear-gradient(#333, #000000) !important; /* Chrome 10+, Saf5.1+ */
-    background-image:    -moz-linear-gradient(#333, #000000) !important; /* FF3.6 */
-    background-image:     -ms-linear-gradient(#333, #000000) !important; /* IE10 */
-    background-image:      -o-linear-gradient(#333, #000000) !important; /* Opera 11.10+ */
-    background-image:         linear-gradient(#333, #000000) !important;
-    color: #DDD;
+
+    /*background-image: -webkit-gradient(linear, left top, left bottom, from( #333), to( #000000)) !important;  Saf4+, Chrome */
+    background-image: -webkit-linear-gradient(#006e63, #004d45) !important; /* Chrome 10+, Saf5.1+ */
+    background-image:    -moz-linear-gradient(#006e63, #004d45) !important; /* FF3.6 */
+    background-image:     -ms-linear-gradient(#006e63, #004d45) !important; /* IE10 */
+    background-image:      -o-linear-gradient(#006e63, #004d45) !important; /* Opera 11.10+ */
+    background-image:         linear-gradient(#006e63, #004d45) !important;
+    border-radius: 0px !important;
 }
 
 .ui-bar-a,
@@ -376,18 +390,22 @@ html body .ui-group-theme-a .ui-bar-inherit {
 #courselistoverview .month_list_entries {
     padding-left: 10px;
     margin-top: 10px;
-    border-top: solid 1px #666;
+    border-top: solid 1px #DDD;
     padding-top: 10px;
 }
 
 #courselistoverview .month_list_entries .list_view_entry_entry {
     padding: 5px;
     margin-bottom: 2px;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0, 0.8));
-    border-top: solid 1px #222;
-    border-left: solid 1px #222;
-    border-bottom: solid 1px #333;
-    border-right: solid 1px #333;
+    
+    background-image: -webkit-linear-gradient(#fefefe, #cecece) !important; /* Chrome 10+, Saf5.1+ */
+    background-image:    -moz-linear-gradient(#fefefe, #cecece) !important; /* FF3.6 */
+    background-image:     -ms-linear-gradient(#fefefe, #cecece) !important; /* IE10 */
+    background-image:      -o-linear-gradient(#fefefe, #cecece) !important; /* Opera 11.10+ */
+    background-image:         linear-gradient(#fefefe, #cecece) !important;
+
+    border: solid 1px #DDD;
+    
 }
 
 #courselistoverview .month_list_entries .list_view_entry_entry .extrainfo {

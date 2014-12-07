@@ -38,9 +38,9 @@ and open the template in the editor.
         <link rel="stylesheet" href="css/theme.css" type="text/css" media="screen" charset="utf-8" />
     </head>
     <body>
-        <div class='disconnected'><div><img src='css/images/ajax-loader.gif'/><br>Venter på at tilkoblingen skal gjennopprettes</div></div>
-        <div class='connecting'><div><img src='css/images/ajax-loader.gif'/><br>Kobler til server</div></div>
-        <div class='loading'><div><img src='css/images/ajax-loader.gif'/><br>Laster data</div></div>
+        <div class='disconnected'><div><img src='css/images/ajax-loader.gif'/><br><span id="waitingforconnection" translate="true">Venter på at tilkoblingen skal gjennopprettes</span></div></div>
+        <div class='connecting'><div><img src='css/images/ajax-loader.gif'/><br><span id="connectorindicator" translate="true">Kobler til server</span></div></div>
+        <div class='loading'><div><img src='css/images/ajax-loader.gif'/><br><span id="dataloader" translate="true">Laster data</span></div></div>
         <div data-role="page" id="home">
             <div data-role="header" data-theme="asd">
                 <img border="0" src="css/images/logo.png" class="logo"/>
@@ -48,12 +48,12 @@ and open the template in the editor.
             <div data-role="content">
                 <div class="mainmenu_outer">
                     <div class="mainmenu">
-                        <div class='menu_entry gotolistview'><i class='fa fa-list'></i><div class='name'>Kurs liste</div></div>
-                        <div class='menu_entry gotocalendar'><i class='fa fa-calendar'></i><div class='name'>Kurs kalender</div></div>
-                        <div class='menu_entry newsbutton'><i class='fa fa-twitter'></i><div class='name'>Nyheter</div><div class='counter'>12</div></div>
-                        <div class='menu_entry gotocourses'><i class='fa fa-mortar-board'></i><div class='name'>Kurs oversikt</div></div>
-                        <div class='menu_entry gotosignup'><i class='fa fa-check'></i><div class='name'>Påmelding</div></div>
-                        <div class='menu_entry infobutton'><i class='fa fa-info'></i><div class='name'>Informasjon</div></div>
+                        <div class='menu_entry gotolistview'><i class='fa fa-list'></i><div class='name' translate="true">Kurs liste</div></div>
+                        <div class='menu_entry gotocalendar'><i class='fa fa-calendar'></i><div class='name' translate="true">Kurs kalender</div></div>
+                        <div class='menu_entry newsbutton'><i class='fa fa-twitter'></i><div class='name' translate="true">Nyheter</div><div class='counter'>12</div></div>
+                        <div class='menu_entry gotocourses'><i class='fa fa-mortar-board'></i><div class='name' translate="true">Kurs oversikt</div></div>
+                        <div class='menu_entry gotosignup'><i class='fa fa-check'></i><div class='name' translate="true">Påmelding</div></div>
+                        <div class='menu_entry infobutton'><i class='fa fa-info'></i><div class='name' translate="true">Informasjon</div></div>
                     </div>
                 </div>
             </div>
@@ -68,9 +68,9 @@ and open the template in the editor.
                 <div data-role="navbar" data-tap-toggle="false" data-fullscreen="true"  data-position="fixed" >
                     <ul>
                         <li>
-                            <a class='backbutton' href="#" data-role="button" data-rel="back">Tilbake</a>
+                            <a class='backbutton' href="#" data-role="button" data-rel="back" translate="true">Tilbake</a>
                         </li>
-                        <li><a class='backbutton' href="#filter" data-rel="dialog">Velg sted</a></li>
+                        <li><a class='backbutton' href="#filter" data-rel="dialog"  translate="true">Velg sted</a></li>
                     </ul>
                 </div>
             </div>
@@ -85,7 +85,7 @@ and open the template in the editor.
                 <div data-role="navbar" data-tap-toggle="false" data-fullscreen="true"  data-position="fixed" >
                     <ul>
                         <li>
-                            <a class='backbutton' href="#" data-role="button" data-rel="back">Tilbake</a>
+                            <a class='backbutton' href="#" data-role="button" data-rel="back" translate="true">Tilbake</a>
                         </li>
                     </ul>
                 </div>
@@ -94,28 +94,28 @@ and open the template in the editor.
 
         <div data-role="page" id="calendar">
             <div data-role="content">
-                <div class="displayActiveFilter">Kalenderfilter: <span id="displayActiveFilter"></span></div>
-                <h2>Kurs kalender</h2>
+                <div class="displayActiveFilter"><span translate="true">Kalenderfilter</span>: <span id="displayActiveFilter"></span></div>
+                <h2 translate="true">Kurs kalender</h2>
                 <div id="calender"></div>
             </div>
 
 
             <div data-role="popup" id="noCalenderEventBack">
-                <p>Det finnes ikke noe kurstilbud lengre tilbake i tid.</p>
+                <p tranlsate="true">Det finnes ikke noe kurstilbud lengre tilbake i tid.</p>
             </div>
             <div data-role="popup" id="noCalenderEventForward">
-                <p>For å se kalenderen lengre fram i tid, vennligst benytt websiden.</p>
+                <p translate="true">For å se kalenderen lengre fram i tid, vennligst benytt websiden.</p>
             </div>
 
             <div data-role="footer" data-tap-toggle="false"  data-position="fixed" >
                 <div data-role="navbar" data-position="fixed" data-tap-toggle="false" >
                     <ul>
                         <li>
-                            <a class='backbutton' href="#" data-role="button" data-rel="back">Tilbake</a>
+                            <a class='backbutton' href="#" data-role="button" data-rel="back" translate="true">Tilbake</a>
                         </li>
-                        <li><a class='backbutton' id="prev" href="#">Forrige</a></li>
-                        <li><a class='backbutton' href="#filter" data-rel="dialog">Velg sted</a></li>
-                        <li><a class='backbutton' id="next" href="#">Neste</a></li>
+                        <li><a class='backbutton' id="prev" href="#" translate="true">Forrige</a></li>
+                        <li><a class='backbutton' href="#filter" data-rel="dialog" translate="true">Velg sted</a></li>
+                        <li><a class='backbutton' id="next" href="#" translate="true">Neste</a></li>
                     </ul>
                 </div>
             </div>
@@ -123,7 +123,7 @@ and open the template in the editor.
 
         <div data-role="page" id="courses">
             <div data-role="content" id="courselist">
-                <p>Kurs oversikt</p>
+                <p translate="true">Kurs oversikt</p>
                 <div class='contentcourselist'></div>
             </div>
 
@@ -131,7 +131,7 @@ and open the template in the editor.
                 <div data-role="navbar" data-position="fixed" data-tap-toggle="false" >
                     <ul>
                         <li>
-                            <a class='backbutton' href="#" data-role="button" data-rel="back">Tilbake</a>
+                            <a class='backbutton' href="#" data-role="button" data-rel="back" translate="true">Tilbake</a>
                         </li>
                     </ul>
                 </div>
@@ -140,7 +140,7 @@ and open the template in the editor.
 
         <div data-role="page" id="news">
             <div data-role="content" style="text-align:left">
-                Nyheter:
+                <span translate="true">Nyheter</span>:
                 <br>
                 <br>
                 <div class="newsentries"></div>
@@ -150,7 +150,7 @@ and open the template in the editor.
                 <div data-role="navbar" data-position="fixed" data-tap-toggle="false" >
                     <ul>
                         <li>
-                            <a class='backbutton' href="#" data-role="button" data-rel="back">Tilbake</a>
+                            <a class='backbutton' href="#" data-role="button" data-rel="back" translate="true">Tilbake</a>
                         </li>
                     </ul>
                 </div>
@@ -160,29 +160,27 @@ and open the template in the editor.
         <div data-role="page" id="signup">
             <div data-role="content" style="text-align:left">
                 <form>
-                    <label for="name">Navn:</label>
+                    <label for="name"><span translate="true">Navn</span></label>
                     <input type="text" data-clear-btn="true" name="text-6" id="name" value="" >
-                    <label for="email">E-post</label>
+                    <label for="email"><span translate="true">Deltakers e-post</span></label>
                     <input type="text" data-clear-btn="true" name="text-6" id="email" value="" >
-                    <label for="emailinvoice">E-post Teknisk Leder</label>
+                    <label for="emailinvoice" translate="true">E-post Teknisk Leder</label>
                     <input type="text" data-clear-btn="true" name="text-6" id="invoiceemail" value="" >
-                    <label for="phone">Mob.Tlf.</label>
+                    <label for="phone" translate="true">Mob.Tlf.</label>
                     <input type="text" data-clear-btn="true" name="text-6" id="phone" value="" >
-                    <label for="vatnr">Org.nr.</label>
+                    <label for="vatnr" translate="true">Org.nr.</label>
                     <input type="text" data-clear-btn="true" onkeypress='TextValidator.validate(event)' name="text-6" id="vatnr" value="" >
-                    <label for="company">Firma.</label>
-                    <div class="companyinformation">
-                        Skriv inn org.nr, så vil informasjonen fylles ut automatisk.
-                    </div>
+                    <label for="company" translate="true">Firma</label>
+                    <div class="companyinformation" translate="true">Skriv inn org.nr, så vil informasjonen fylles ut automatisk.</div>
 
                     <div data-role="fieldcontain">
-                        <label for="select-native-1">Velg kurs: </label>
+                        <label for="select-native-1" translate="true">Velg kurs</label>
                         <select name="select-native-1" id="select-native-1">
                         </select>
                     </div>
 
                     <div data-role="fieldcontain">
-                        <label for="select-native-2">Velg grossist: </label>
+                        <label for="select-native-2" translate="true">Velg grossist</label>
                         <select name="select-native-1" id="select-native-2"></select>
                     </div>
 
@@ -195,7 +193,7 @@ and open the template in the editor.
                 <div data-role="navbar" data-position="fixed" data-tap-toggle="false" >
                     <ul>
                         <li>
-                            <a class='backbutton' href="#" data-role="button" data-rel="back">Tilbake</a>
+                            <a class='backbutton' href="#" data-role="button" data-rel="back" translate="true">Tilbake</a>
                         </li>
                     </ul>
                 </div>
@@ -205,7 +203,7 @@ and open the template in the editor.
         <div data-role="page" id="filter">
             <div class="header"></div>
             <div data-role="content"> 
-                Velg sted for filtrering på kalenderen.
+                <span translate="true">Velg sted for filtrering på kalenderen.</span>
                 <div data-role="controlgroup" id="filterholdergroup"></div>
             </div>
         </div>
@@ -213,15 +211,20 @@ and open the template in the editor.
 </html>
 
 <script type="text/javascript">
-                        $.mobile.defaultPageTransition = "none";
+    
+    App.doTranslationForDom($('#waitingforconnection').parent());
+    App.doTranslationForDom($('#connectorindicator').parent());
+    App.doTranslationForDom($('#dataloader').parent());
+    
+    $.mobile.defaultPageTransition = "none";
 
-                        //App.start();
-                        var app = document.URL.indexOf('http://') === -1 && document.URL.indexOf('https://') === -1;
-                        if (app) {
-                            papp.initialize();
-                        } else {
-                            App.start();
-                        }
+    //App.start();
+    var app = document.URL.indexOf('http://') === -1 && document.URL.indexOf('https://') === -1;
+    if (app) {
+        papp.initialize();
+    } else {
+        App.start();
+    }
 
 
 </script>

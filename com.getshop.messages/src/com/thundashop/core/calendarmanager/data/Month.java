@@ -76,6 +76,9 @@ public class Month extends DataCommon implements Comparable<Month> {
         cal.setTime(new Date());
         int curyear = cal.get(Calendar.YEAR);
         int curmonth = cal.get(Calendar.MONTH) + 1;
+        if (this.year > curyear) {
+            return false;
+        }
         if (this.year >= curyear && this.month >= curmonth) {
             return false;
         }

@@ -235,7 +235,7 @@ class Page {
         $mode = "gs" . strtolower($cell->mode);
 
         $marginsclasses = "";
-        if (!$isColumn && ($totalcells > ($count+1))) {
+        if ($isColumn && ($totalcells > ($count+1))) {
             $marginsclasses .= "gs_margin_right ";
         }
         

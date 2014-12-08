@@ -60,11 +60,6 @@ body {
     margin-bottom: 10px;
 }
 
-
-.ProductLists {
-    padding: 20px;
-}
-
 .gs_button {
     background-color: pink;
     background: linear-gradient(to bottom, #FFF, #CCC);
@@ -126,7 +121,7 @@ body {
     padding-left: 20px;
 }
 
-.gsarea[area="body"] .gsrow {
+.gsarea[area="body"] .gsdepth_0.gsrow {
     margin-top: 40px;
 }
 

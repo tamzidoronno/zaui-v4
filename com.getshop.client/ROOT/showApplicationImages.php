@@ -7,6 +7,10 @@ ob_start();
 include '../loader.php';
 session_cache_limiter('none');
 
+header("Content-type: image/png");
+header("Cache-Control: private, max-age=10800, pre-check=10800");
+header("Pragma: private");
+
 $namespace = $_GET['appNamespace'];
 $image = $_GET['image'];
 

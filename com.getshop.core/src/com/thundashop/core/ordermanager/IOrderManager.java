@@ -2,6 +2,7 @@ package com.thundashop.core.ordermanager;
 
 import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.ordermanager.data.Order;
@@ -119,4 +120,28 @@ public interface IOrderManager {
      * @throws ErrorException 
      */
     public List<CartTax> getTaxes(Order order) throws ErrorException;
+    
+    /**
+     * Returns how many pages there is for this store with the given pagesize
+     * @return 
+     */
+    @Editor
+    public int getPageCount(int pageSize, String searchWord);
+    
+    /**
+     * Returns how many pages there is for this store with the given pagesize
+     * @return 
+     */
+    @Editor
+    public  List<Order>  searchForOrders(String searchWord, Integer page, Integer pageSize);
+    
+    /**
+     * Returns the total amount of sales for a given year. If you year is left blank you 
+     * will get the total amount for all years.
+     * 
+     * @param year
+     * @return 
+     */
+    @Editor
+    public  double getTotalSalesAmount(Integer year);
 }

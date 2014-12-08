@@ -54,12 +54,15 @@ $activatedApps = $factory->getApi()->getStoreApplicationPool()->getApplications(
     </div>
 </div>
 
+
 <div class='gss_settings_inner apparea'>
 <?
     $settingsFactory = IocContainer::getSettingsFactorySingleton();
     $settingsFactory->renderContent();
 ?>
 </div>
+
+<div id='gss_loading_icon'><i class='fa fa-cog fa-spin'></i> Loading...</div>
 
 <script>
 	getshop.Settings.reload();

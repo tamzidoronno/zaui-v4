@@ -86,11 +86,25 @@ public class PageManager extends ManagerBase implements IPageManager {
             return null;
         }
 
-        page.finalizePage(commonPageData);
-        page.dumpLayout();
-        return page;
+//        page.dumpLayout();        
+        return finalizePage(page);
+
     }
 
+    private Page finalizePage(Page page) {
+        page.finalizePage(commonPageData);
+        List<PageCell> cellsWithoutIncrementalId = page.getCellsFlatList().stream()
+                .filter( cell -> cell.incrementalCellId == null)
+                .collect(Collectors.toList());
+        
+        if (cellsWithoutIncrementalId.size() > 0) {
+            cellsWithoutIncrementalId.stream().forEach(cell -> cell.incrementalCellId = getNextCellId());
+            savePage(page);
+        }
+        
+        return page;
+    }
+    
     @Override
     public void deleteApplication(String id) throws ErrorException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -257,5 +271,19 @@ public class PageManager extends ManagerBase implements IPageManager {
         Page page = getPage(pageId);
         page.layout.switchMode(cellId, mode);
         savePage(page);
+    }
+
+    private int getNextCellId() {
+        String cellIds = getManagerSetting("cell_id_counter");
+        int cellCount = 0;
+        
+        if (cellIds != null) {
+            cellCount = Integer.valueOf(cellIds);
+        }
+        
+        cellCount++;
+        
+        setManagerSetting("cell_id_counter", ""+cellCount);
+        return cellCount;
     }
 }

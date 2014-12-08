@@ -1,0 +1,24 @@
+<?
+/* @var $this ns_27716a58_0749_4601_a1bc_051a43a16d14\OrderManager */
+?>
+<div class='gss_imagebox'>
+    <i class="fa fa-credit-card gs_fa-icon"></i>
+</div>
+<div class='gss_description'>
+    <div class='title'><? echo $this->__f("Orders"); ?></div>
+    <div>
+        <?
+        
+        echo $this->__f("Total orders") . ": " . count($this->getApi()->getOrderManager()->getOrders(null,null,null));
+        $year = date("Y");
+        
+        echo "<br/>".$this->__f("Sales ($year)") . ": Kr " . number_format($this->getApi()->getOrderManager()->getTotalSalesAmount($year), 0);
+        $year--;
+        echo "<br/>".$this->__f("Sales ($year)") . ": Kr " . number_format($this->getApi()->getOrderManager()->getTotalSalesAmount($year), 0);
+        $year--;
+        echo "<br/>".$this->__f("Sales ($year)") . ": Kr " . number_format($this->getApi()->getOrderManager()->getTotalSalesAmount($year), 0);
+        echo "<div style='border-top: solid 1px #EEE;margin-top: 3px; padding-top: 3px;'>".$this->__f("Total sales") . ": Kr " . number_format($this->getApi()->getOrderManager()->getTotalSalesAmount(null), 0)."</div>";
+        ?>
+    </div>
+</div>
+<div class='gss_activate_button' gss_goto_app="27716a58-0749-4601-a1bc-051a43a16d14"> <? echo $this->__f("more"); ?></div>

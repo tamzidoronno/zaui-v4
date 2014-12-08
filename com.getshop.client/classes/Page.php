@@ -185,6 +185,7 @@ class Page {
     }
 
     function printCell($cell, $count, $depth, $totalcells, $edit, $parent) {
+        
         $rowedit = "";
         $roweditouter = "";
         if ($edit) {
@@ -224,16 +225,24 @@ class Page {
 
         $gsrotatingrow = "";
 
-        if ($parent != null && $parent->mode == "ROTATING") {
+        if (!$isColumn && $parent != null && $parent->mode == "ROTATING") {
             $gsrotatingrow = "gsrotatingrow";
         }
-        if ($parent != null && $parent->mode == "TAB") {
+        if (!$isColumn && $parent != null && $parent->mode == "TAB") {
             $gsrotatingrow = "gstabrow";
         }
 
         $mode = "gs" . strtolower($cell->mode);
 
-        echo "<div $additionalinfo $styles width='$width' class='$gscell $gsrotatingrow $container $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "'>";
+        $marginsclasses = "";
+        if ($totalcells > ($count+1)) {
+            $marginsclasses .= "gs_margin_right ";
+        }
+        
+        if ($count > 0) {
+            $marginsclasses .= " gs_margin_left";
+        }
+        echo "<div $additionalinfo $styles width='$width' class='$gscell $gsrotatingrow $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "'>";
         if ($parent != null && $parent->mode === "ROTATING") {
             if ($count > 0) {
                 echo "<i class='fa fa-arrow-circle-left gsrotateleft gsrotatearrow'></i>";
@@ -273,12 +282,20 @@ class Page {
             if ($cell->mode == "TAB" || $cell->mode == "ROTATING") {
                 $depthprint--;
             }
+            
+            if ($parent != null && $parent->mode == "TAB") {
+                echo "<div class='gs_tab_conte_container'>";
+            }
 
             foreach ($cell->cells as $innercell) {
                 $this->printCell($innercell, $counter, $depthprint, sizeof($cell->cells), $edit, $cell);
                 $counter++;
             }
 
+            if ($parent != null && $parent->mode == "TAB") {
+                echo "</div>";
+            }
+            
             if ($cell->mode == "ROTATING" || $cell->mode == "TAB") {
                 $this->printContainerSettings((!$edit && $cell->mode == "ROTATING"), $cell, $depth);
             }

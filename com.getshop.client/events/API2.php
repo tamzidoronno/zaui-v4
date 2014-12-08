@@ -2666,6 +2666,21 @@ class APIOrderManager {
 	}
 
 	/**
+	* Returns how many pages there is for this store with the given pagesize
+	* @return int
+	*/
+
+	public function getPageCount($pageSize, $searchWord) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["pageSize"] = json_encode($this->transport->object_unset_nulls($pageSize));
+	     $data['args']["searchWord"] = json_encode($this->transport->object_unset_nulls($searchWord));
+	     $data["method"] = "getPageCount";
+	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Returns a list over taxes
 	* for the specified order.
 	*
@@ -2700,6 +2715,23 @@ class APIOrderManager {
 	}
 
 	/**
+	* Returns the total amount of sales for a given year. If you year is left blank you
+	* will get the total amount for all years.
+	*
+	* @param year
+	* @return double
+	*/
+
+	public function getTotalSalesAmount($year) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["year"] = json_encode($this->transport->object_unset_nulls($year));
+	     $data["method"] = "getTotalSalesAmount";
+	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Update or modify an existing order.
 	* @param order The order to modify
 	* @return void
@@ -2711,6 +2743,22 @@ class APIOrderManager {
 	     $data['args'] = array();
 	     $data['args']["core_ordermanager_data_Order"] = json_encode($this->transport->object_unset_nulls($core_ordermanager_data_Order));
 	     $data["method"] = "saveOrder";
+	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Returns how many pages there is for this store with the given pagesize
+	* @return List
+	*/
+
+	public function searchForOrders($searchWord, $page, $pageSize) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["searchWord"] = json_encode($this->transport->object_unset_nulls($searchWord));
+	     $data['args']["page"] = json_encode($this->transport->object_unset_nulls($page));
+	     $data['args']["pageSize"] = json_encode($this->transport->object_unset_nulls($pageSize));
+	     $data["method"] = "searchForOrders";
 	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->sendMessage($data);
 	}

@@ -108,4 +108,5 @@ class Products extends \WebshopApplication implements \Application {
         $this->getApi()->getProductManager()->saveProductList($list);
     }
 
+    
 }

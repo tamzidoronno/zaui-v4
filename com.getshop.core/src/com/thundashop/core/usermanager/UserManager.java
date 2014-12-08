@@ -233,6 +233,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     public List<User> getAllUsers() throws ErrorException {
         UserStoreCollection collection = getUserStoreCollection(storeId);
         List<User> allUsers = collection.getAllUsers();
+        System.out.println("Users: " + allUsers.size());
         for(User user : allUsers) {
             finalizeUser(user);
         }

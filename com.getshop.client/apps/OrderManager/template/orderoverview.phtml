@@ -1,79 +1,41 @@
 <?
+$searchtext = isset($_SESSION['gss_orders_filter']) ? $_SESSION['gss_orders_filter'] : "";
+?>
+<div>
+    <div class="gss_settings_header">
+        <i class="fa fa-credit-card"></i>
 
- namespace ns_27716a58_0749_4601_a1bc_051a43a16d14; ?> 
-<div class="overview">
-    <?
-    if (count($this->getOrders()) == 0) {
-        echo "<center><b>" . $this->__w("You do not have any orders.") . "</b></center>";
-        return;
-    }
-    ?>
-    <table id="orderoverviewtable" width='100%'>
-        <thead>
-            <tr>
-                <th><? echo $this->__w('Order date'); ?></th>
-                <th><? echo $this->__w('Full name'); ?></th>
-                <th><? echo $this->__w('Product count'); ?></th>
-                <th><? echo $this->__w('Price'); ?></th>
-                <th><? echo $this->__w('Status'); ?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            foreach ($this->getOrders() as $order) {
-                /* @var $order core_ordermanager_data_Order */
-                $name = @$order->cart->address->fullName;
-                $productCount = @count($order->cart->items);
-                $orderdate = $order->createdDate;
-                $totalPrice = $this->getApi()->getCartManager()->calculateTotalCost($order->cart);
-                $totalPrice += $order->shipping != null ? $order->shipping->cost : 0;
-                
-                $status = $order->status;
-                $statustext = $this->translateStatusText($status);
-
-                $id = $order->id;
+        <div class="gss_settings_header_description">
+            <div class="gss_settings_header_title"><? echo $this->__f("Orders"); ?></div>
+            <div class="gss_settings_header_description_inner">
+                <?
+                echo $this->__f("Below you see a list of all of the orders that has been placed on your e-commerce solution. To see more information about a sepecific order you can simply click on it.");
                 ?>
-                <tr id='<? echo $id; ?>'>
-                    <td><? echo $orderdate; ?></td>
-                    <td><? echo $name; ?></td>
-                    <td align='center'><? echo $productCount; ?></td>
-                    <td align='center'><? echo $totalPrice; ?></td>
-                    <td align='center'><? echo $statustext; ?></td>
-                </tr>
-                <?php
-            }
-            ?>
-        </tbody>
-    </table>
-    <script>
-        $('#orderoverviewtable').dataTable({
-            "bJQueryUI": true
-        });
+            </div>
+        </div>	
+    </div>
 
-        $("#orderoverviewtable").delegate("tr", "click", function(event) {
-            var id = $(this).attr('id');
-            if(id) {
-                navigate("?page=orderoverview&action=showorder&orderid=" + id);
-            }
-        });
-    </script>
+    <div class="gss_settings_header">
+        <i class="fa fa-search"></i>
+
+        <div class="gss_settings_header_description" >
+            <div class="gss_settings_header_title"><? echo $this->__f("Search (leave blank to see all)"); ?></div>
+            <div class="gss_settings_header_description_inner" style="position: relative; width: 1000px;">
+                <input id='gss_order_filter_search_text' gs_model='orders' gs_model_attr='order_filter' type="textfield" style="left: 0px; top: 0px;" placeholder="<? echo $this->__f("Filter orders"); ?>" value='<? echo $searchtext; ?>'/>
+                <div id='gss_order_filter_search_button' gss_method='filterOrders' gss_view='gss_outer_orderoverview' gss_fragment='ordersearchresult' gss_model='orders' style='position: absolute; right: 644px;height: 11px;line-height: 11px;top: 2px;' class='gss_button'><? echo $this->__f("Search"); ?></div>
+            </div>
+        </div>	
+    </div>
+
+    <div class='gss_outer_orderoverview gss_settings_content'>
+        <? $this->includefile("ordersearchresult"); ?>
+    </div>    
+    
+    <div class='gss_outer_order_content gss_settings_content'>
+        <div class='gss_button gss_order_back_to_orders'><i class='fa fa-arrow-left'> </i> <? echo $this->__f("Back to orders"); ?></div>
+        <div class='gss_orderview'>
+            <? $this->includefile("orderview"); ?>
+        </div>
+    </div>
 </div>
-</div>
 
-<center>
-    <?
-    $pageCount = $this->getPageCount();
-    $currentPage = $this->getCurrentPage();
-    $start = $currentPage - 5;
-
-    if ($start < 1)
-        $start = 1;
-
-    $stop = $pageCount >= 10 ? $start + 10 : $pageCount;
-
-    for ($i = $start; $i < $stop; $i++) {
-        $text = ($i == $currentPage) ? "<b>$i</b>" : $i;
-        echo "<a href='?page=orderoverview&showPage=$i'>$text</a> ";
-    }
-    ?>
-</center>

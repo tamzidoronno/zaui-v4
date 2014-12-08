@@ -485,8 +485,6 @@ public class APIPageManager {
      * @return
      * @throws ErrorException
      */
-<<<<<<< HEAD
-=======
      public void setCellMode(java.lang.String pageId, java.lang.String cellId, java.lang.String mode)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new LinkedHashMap();
@@ -504,7 +502,6 @@ public class APIPageManager {
      * @return
      * @throws ErrorException
      */
->>>>>>> ffb271abea94719c7aa1b424de77856b58789f58
      public void setCellName(java.lang.String pageId, java.lang.String cellId, java.lang.String cellName)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new LinkedHashMap();

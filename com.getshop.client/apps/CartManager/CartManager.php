@@ -116,6 +116,11 @@ class CartManager extends \SystemApplication implements \Application {
     
     public function render() {
         $this->init();
+        echo "<div class='small_cart_dom'>";
+        $this->includefile("smallcartoverview");
+        echo "</div>";
+        
+        echo "<div class='main_cart_dom'>";
         if(isset($_GET['subpage'])) {
             if($_GET['subpage'] == "paymentform") {
                 $this->includefile("paymentform");
@@ -126,6 +131,7 @@ class CartManager extends \SystemApplication implements \Application {
         } else {
             $this->includefile("cartmain");
         }
+        echo "</div>";
     }
         
     public function getTotalAmount() {

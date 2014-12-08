@@ -2734,6 +2734,28 @@ class OrderManager(object):
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getPageCount(self, pageSize, searchWord):
+    args = collections.OrderedDict()
+    if isinstance(pageSize,GetShopBaseClass): 
+      args["pageSize"]=json.dumps(pageSize.__dict__)
+    else:
+      try:
+        args["pageSize"]=json.dumps(pageSize)
+      except (ValueError, AttributeError):
+        args["pageSize"]=pageSize
+    if isinstance(searchWord,GetShopBaseClass): 
+      args["searchWord"]=json.dumps(searchWord.__dict__)
+    else:
+      try:
+        args["searchWord"]=json.dumps(searchWord)
+      except (ValueError, AttributeError):
+        args["searchWord"]=searchWord
+    data = EmptyClass()
+    data.args = args
+    data.method = "getPageCount"
+    data.interfaceName = "core.ordermanager.IOrderManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getTaxes(self, order):
     args = collections.OrderedDict()
     if isinstance(order,GetShopBaseClass): 
@@ -2764,6 +2786,21 @@ class OrderManager(object):
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getTotalSalesAmount(self, year):
+    args = collections.OrderedDict()
+    if isinstance(year,GetShopBaseClass): 
+      args["year"]=json.dumps(year.__dict__)
+    else:
+      try:
+        args["year"]=json.dumps(year)
+      except (ValueError, AttributeError):
+        args["year"]=year
+    data = EmptyClass()
+    data.args = args
+    data.method = "getTotalSalesAmount"
+    data.interfaceName = "core.ordermanager.IOrderManager"
+    return self.communicationHelper.sendMessage(data)
+
   def saveOrder(self, order):
     args = collections.OrderedDict()
     if isinstance(order,GetShopBaseClass): 
@@ -2776,6 +2813,35 @@ class OrderManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "saveOrder"
+    data.interfaceName = "core.ordermanager.IOrderManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def searchForOrders(self, searchWord, page, pageSize):
+    args = collections.OrderedDict()
+    if isinstance(searchWord,GetShopBaseClass): 
+      args["searchWord"]=json.dumps(searchWord.__dict__)
+    else:
+      try:
+        args["searchWord"]=json.dumps(searchWord)
+      except (ValueError, AttributeError):
+        args["searchWord"]=searchWord
+    if isinstance(page,GetShopBaseClass): 
+      args["page"]=json.dumps(page.__dict__)
+    else:
+      try:
+        args["page"]=json.dumps(page)
+      except (ValueError, AttributeError):
+        args["page"]=page
+    if isinstance(pageSize,GetShopBaseClass): 
+      args["pageSize"]=json.dumps(pageSize.__dict__)
+    else:
+      try:
+        args["pageSize"]=json.dumps(pageSize)
+      except (ValueError, AttributeError):
+        args["pageSize"]=pageSize
+    data = EmptyClass()
+    data.args = args
+    data.method = "searchForOrders"
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 

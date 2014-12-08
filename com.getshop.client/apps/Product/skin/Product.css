@@ -1,0 +1,90 @@
+.Product .product_title {
+    font-size: 24px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.Product .images img {
+    width: 100%;
+}
+.Product .images .mainimage {
+    border: solid 1px #DDD;
+    width: 325px;
+}
+
+.Product .images {
+    display: inline-block;
+    width: 328px;
+    
+    vertical-align: top;
+}
+
+.Product .product_contentbox {
+    display: inline-block;
+    width: 200px;
+    margin-top: 40px;
+    padding-left: 20px;
+    padding-top: 20px;
+    position: relative;
+}
+
+.Product .images .subimages {
+    width: 328px;
+}
+
+
+.Product .images .subimages .subimage {
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+    margin-right: 10px;
+    margin-top: 10px;
+    border: solid 1px #DDD;
+    vertical-align: top;
+}
+
+.Product .images .subimages .subimage.last_in_row {
+    margin-right: 0px;
+}
+
+.Product .product_price {
+    position: absolute;
+    right: 0px;
+    top: 70px;
+    font-size: 24px;
+}
+
+.Product .short_description_title {
+    font-size: 20px;
+    border-bottom: solid 1px #DDD;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+.Product .short_description {
+    font-size: 16px;
+    font-weight: normal;
+    padding: 20px;
+}
+
+.Product .webshop_button {
+    display: inline-block;
+    padding: 10px;
+    font-size: 16px;
+    background-color: green;
+    color: #333;
+    border: solid 1px #DDD;
+    background: linear-gradient(to bottom, #FFF, #EEE);
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    cursor: pointer;
+}
+
+.Product .webshop_button:hover {
+    background: linear-gradient(to bottom, #FFF, #DDD);
+}
+
+.Product {
+    padding-bottom: 20px;
+}
+

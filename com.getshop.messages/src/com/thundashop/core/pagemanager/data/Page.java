@@ -31,7 +31,7 @@ public class Page extends DataCommon implements Cloneable {
 
     public Page() {
     }
-
+    
     public void clear() {
         layout.clear();
     }

@@ -44,10 +44,12 @@ public class SetApplicationModules {
 
         List<String> webshopAppsMandatory = new ArrayList();
         webshopAppsMandatory.add("Taxes");
+        webshopAppsMandatory.add("Product");
         webshopAppsMandatory.add("Products");
         webshopAppsMandatory.add("Shipper");
         webshopAppsMandatory.add("OrderManager");
         webshopAppsMandatory.add("ProductLists");
+        webshopAppsMandatory.add("CartManager");
 
         apps.stream().filter(app -> webshopApps.contains(app.appName)).forEach(app -> app.moduleId = "WebShop");
         apps.stream().filter(app -> webshopAppsMandatory.contains(app.appName)).forEach(app -> app.moduleId = "WebShop");

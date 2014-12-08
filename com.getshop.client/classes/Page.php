@@ -225,21 +225,21 @@ class Page {
 
         $gsrotatingrow = "";
 
-        if (!$isColumn && $parent != null && $parent->mode == "ROTATING") {
+        if ($parent != null && $parent->mode == "ROTATING") {
             $gsrotatingrow = "gsrotatingrow";
         }
-        if (!$isColumn && $parent != null && $parent->mode == "TAB") {
+        if ($parent != null && $parent->mode == "TAB") {
             $gsrotatingrow = "gstabrow";
         }
 
         $mode = "gs" . strtolower($cell->mode);
 
         $marginsclasses = "";
-        if ($totalcells > ($count+1)) {
+        if (!$isColumn && ($totalcells > ($count+1))) {
             $marginsclasses .= "gs_margin_right ";
         }
         
-        if ($count > 0) {
+        if ($isColumn && ($count > 0)) {
             $marginsclasses .= " gs_margin_left";
         }
         echo "<div $additionalinfo $styles width='$width' class='$gscell $gsrotatingrow $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "'>";

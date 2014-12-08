@@ -334,13 +334,15 @@ class Factory extends FactoryBase {
     private function runPreprocess() {
         $apps = $this->getApplicationPool()->getAllAddedInstances();
         foreach ($apps as $app) {
-            $app->preProcess();
+            if (method_exists($app, "preProcess"))
+                $app->preProcess();
         }
     }
 
     private function runPostProcess() {
         foreach ($this->getApplicationPool()->getAllAddedInstances() as $app) {
-            $app->postProcess();
+            if (method_exists($app, "postProcess"))
+                $app->postProcess();
         }
     }
 

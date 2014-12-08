@@ -51,7 +51,7 @@ if (count($notActivatedModuels)) {
                         <? echo $module->description; ?>
                     </div>
 
-                    <div gss_method="activateModule" gss_value="<? echo $module->id; ?>" class="gss_activate_button"> <? echo $this->__f("Activate"); ?></div>
+                    <div moduleId="<? echo $module->id; ?>" class="gss_activate_button gss_activateModule"> <? echo $this->__f("Activate"); ?></div>
                     <div class="free">
                         <? echo $this->__f("Free"); ?>
                     </div>

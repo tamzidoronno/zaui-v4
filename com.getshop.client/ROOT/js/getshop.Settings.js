@@ -135,10 +135,49 @@ getshop.Settings = {
             $('.' + view).html(response['data']);
             $('#' + view).html(response['data']);
         } else {
+            $('.gss_topmenu').html(response['topMenu']);
             $('.gss_settings_inner.apparea').html(response['data']);
         }
 
         getshop.Models.addWatchers(response['data']);
+    },
+    reloadCss: function() {
+        $.ajax('/StyleSheet.php', {
+            success: function(response) {
+                var alreadyLoaded = $('html .appstylesheet');
+                var checkThisCss = $("<div>"+response+"</div>").find('.appstylesheet');
+                checkThisCss.each(function() {
+                    if (!getshop.Settings.isCssLoaded(this, alreadyLoaded)) {
+                        $('html').append(this);
+                    } 
+                })
+                
+            }
+        })
+    },
+    reloadJavascripts: function() {
+        $.ajax('/StyleSheet.php', {
+            success: function(response) {
+                var alreadyLoaded = $('html .appstylesheet');
+                var checkThisCss = $("<div>"+response+"</div>").find('.appstylesheet');
+                checkThisCss.each(function() {
+                    if (!getshop.Settings.isCssLoaded(this, alreadyLoaded)) {
+                        $('html').append(this);
+                    } 
+                })
+                
+            }
+        })
+    },
+    isCssLoaded: function(checkCss, checkThisCsss) {
+        var index;
+        for (index = 0; index < checkThisCsss.length; ++index) {
+            if ($(checkThisCsss[index]).attr('href') == $(checkCss).attr('href')) {
+                return true;
+            }
+        }
+        
+        return false;
     },
     doPost: function(data, field, success) {
         data['appid'] = this.getCurrentAppId();

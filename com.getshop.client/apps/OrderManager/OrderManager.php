@@ -4,11 +4,7 @@ namespace ns_27716a58_0749_4601_a1bc_051a43a16d14;
 
 class OrderManager extends \WebshopApplication implements \Application {
 
-    public $orders;
-    public $showOrder = false;
-    public $showInvoice = false;
-    public $pageSize = 10;
-    public $currentPage = 0;
+    public $totalPageCount = false;
 
     public function getDescription() {
         
@@ -22,105 +18,84 @@ class OrderManager extends \WebshopApplication implements \Application {
         
     }
 
-    public function isOrderOverviewSelected() {
-        return !($this->showOrder || $this->showInvoice);
-    }
-
-    private function cancelOrder() {
-        if (isset($_GET['cancel']) && $_GET['cancel'] == "true") {
-            $order = $this->getCurrentOrder();
-            $order->status = 5;
-            $this->getApi()->getOrderManager()->saveOrder($order);
-        }
-    }
-
-    public function ChangeOrderStatus() {
-        $orderId = $_POST['data']['orderid'];
-        $status = $_POST['data']['status'];
-        $this->getApi()->getOrderManager()->changeOrderStatus($orderId, $status);
+    
+    public function renderConfig() {
+        $this->includefile("orderoverview");
     }
     
-    public function translateStatusText($status) {
-        $statustext = ($status == 1 || $status == 0) ? $this->__w("Order Created") : "";
-        $statustext = ($status == 2) ? $this->__w("Waiting for payment") : $statustext;
-        $statustext = ($status == 3) ? $this->__w("Payment failed") : $statustext;
-        $statustext = ($status == 4) ? $this->__w("Completed") : $statustext;
-        $statustext = ($status == 5) ? $this->__w("Canceled") : $statustext;
-        $statustext = ($status == 6) ? $this->__w("Order sent") : $statustext;
-        return $statustext;
-    }
-
-    public function preProcess() {
-        if (!isset($_GET['showPage'])) {
-            $_GET['showPage'] = 1;
-        }
-
-        $this->currentPage = $_GET['showPage'];
-        $this->showOrder = (isset($_GET['action']) && $_GET['action'] == 'showorder');
-        $this->showInvoice = (isset($_GET['action']) && $_GET['action'] == 'showinvoice');
-    }
-
-    private function populateAnswers() {
-        $orderIds = array();
-        if ($this->showOrder) {
-            $orderIds[] = $_GET['orderid'];
-        }
-        $this->orders = $this->getApi()->getOrderManager()->getOrders($orderIds, $this->currentPage - 1, 10);
-    }
-
-    public function renderConfig() {
-        echo "ORDERS";
+    public function renderDashBoardWidget() {
+        $this->includefile("dashboardwidget");
     }
     
     public function render() {
-        $this->populateAnswers();
-        $this->cancelOrder();
-        $this->includefile('index');
+  
     }
 
     public function getOrders() {
-        return $this->orders;
-    }
-
-    public function getCurrentOrder() {
-        if (!is_array($this->orders)) {
-            $this->orders = array();
+        if (isset($_SESSION['gss_orders_filter']) && $_SESSION['gss_orders_filter'] != "") {
+            $orders = $this->getApi()->getOrderManager()->searchForOrders($_SESSION['gss_orders_filter'], $this->getPageNumber(), $this->getPageSize());
+        } else {
+            $orders = $this->getApi()->getOrderManager()->getOrders([], $this->getPageNumber(), $this->getPageSize());
         }
-
-        if (!isset($_GET['orderid']))
-            return null;
-
-        foreach ($this->orders as $order) {
-            if ($order->id == $_GET['orderid'])
-                return $order;
-        }
-
-        return null;
+        
+        
+        return $orders;
     }
-
-    public function getYoutubeId() {
+    
+    public function getPageNumber() {
+        if (!isset($_SESSION['gss_orders_currentPageNumber'])) {
+            return 1;
+        }
+        
+        return $_SESSION['gss_orders_currentPageNumber'];   
+    }
+    
+    public function nextOrderPage() {
+        $pageNumber = $this->getPageNumber();
+        $pageNumber++;
+        $_SESSION['gss_orders_currentPageNumber'] = $pageNumber;
+    }
+    
+    public function prevOrderPage() {
+        $pageNumber = $this->getPageNumber();
+        $pageNumber--;
+        if ($pageNumber < 1) {
+            $pageNumber = 1;
+        }
+        $_SESSION['gss_orders_currentPageNumber'] = $pageNumber;
+    }
+    
+    public function hasPrevPage() {
+        return $this->getPageNumber() > 1;
+    }
+    
+    public function hasNextPage() {
+        if ($this->getPageNumber() < $this->getTotalPageCount()) {
+            return true;
+        }
         return false;
     }
 
-    public function getPageCount() {
-        return 1;
+    public function getPageSize() {
+        return 30;
     }
 
-    public function getCurrentPage() {
-        return $this->currentPage;
+    public function getTotalPageCount() {
+        if (!$this->totalPageCount) {
+            $searchWord = isset($_SESSION['gss_orders_filter']) ? $_SESSION['gss_orders_filter'] : null;
+            $this->totalPageCount = $this->totalPageCount = $this->getApi()->getOrderManager()->getPageCount($this->getPageSize(), $searchWord);
+        }
+        return $this->totalPageCount;
+    }
+
+    public function filterOrders() {
+        $_SESSION['gss_orders_currentPageNumber'] = 1;
+        $_SESSION['gss_orders_filter'] = $_POST['order_filter'];
     }
     
-    public function getPriceWithTaxSpecifed($price, $product) {
-        if (isset($this->getFactory()->getSettings()->remove_taxes) && $this->getFactory()->getSettings()->remove_taxes->value === "true") {
-            if (isset($product->taxGroupObject) && $product->taxGroupObject->taxRate > 0 ) {
-                $factor = ($product->taxGroupObject->taxRate/100)+1;
-                $price = $price / $factor;
-            }
-        }
+    public function showOrder() {
         
-        return $price;
     }
-
 }
 
 ?>

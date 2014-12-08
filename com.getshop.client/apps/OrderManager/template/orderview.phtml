@@ -1,0 +1,56 @@
+<?
+/* @var $this ns_27716a58_0749_4601_a1bc_051a43a16d14\OrderManager */
+/* @var $address core_usermanager_data_Address */
+/* @var $order core_ordermanager_data_Order */
+/* @var $cartItem core_cartmanager_data_CartItem */
+if (!isset($_POST['value'])) {
+    return;
+}
+
+$order = $this->getApi()->getOrderManager()->getOrder($_POST['value']);
+if (!$order) {
+    echo $this->__f("Order not found");
+    return;
+}
+$cart = $order->cart;
+?>
+<div class='orderoverview'>
+    <div class='customerdetails'>
+        <?
+        $address = $order->cart->address;
+        ?>
+        <div class='gss_label'><? echo $this->__f("Name"); ?></div>
+        <div class='gss_label_content'><? echo $address->fullName; ?></div>
+        <div class='gss_label'><? echo $this->__f("Email"); ?></div>
+        <div class='gss_label_content'><? echo $address->emailAddress; ?></div>
+        <div class='gss_label'><? echo $this->__f("Phone"); ?></div>
+        <div class='gss_label_content'><? echo $address->phone; ?></div>
+        <div class='gss_label'><? echo $this->__f("Order date"); ?></div>
+        <div class='gss_label_content'><? echo $order->createdDate; ?></div>
+        <div class='gss_label'><? echo $this->__f("Shipping"); ?></div>
+        <div class='gss_label_content'>
+            <? 
+            echo $address->fullName."<br/>";
+            echo $address->address."<br/>"; 
+            echo $address->postCode." ".$address->city."<br/>"; 
+            ?>
+        </div>
+    </div>
+    
+    <div class='gss_label'>
+        <? echo $this->__f("Order"); ?>
+    </div>
+    <?
+    foreach ($cart->items as $cartItem) {
+//        echo "<div class='gss_label_content'>";
+        echo "<div class='gss_order_line'>".$cartItem->count." x ".$cartItem->product->name."<span class='gss_order_line_price'>".$cartItem->product->price."</span></div>";
+//        echo "</div>";
+    }
+    ?>
+    <div class='gss_label'>
+        <? echo $this->__f("Total price"); ?>
+    </div>
+    <div class='gss_label_content'>
+        <? echo $this->getApi()->getCartManager()->calculateTotalCost($cart); ?>
+    </div>
+</div>

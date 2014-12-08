@@ -96,5 +96,10 @@ class ProductLists extends \ApplicationBase implements \Application {
         $products = $this->getApi()->getProductManager()->getProducts($search);
         return $products;
     }
+    
+    public function addProductToCart() {
+        $productId = $_POST['data']['productId'];
+        $this->getApi()->getCartManager()->addProduct($productId, 1, []);
+    }
 }
 ?>

@@ -1,6 +1,7 @@
 package com.thundashop.core.ordermanager;
 
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
@@ -48,6 +49,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Autowired
     private PageManager pageManager;
     
+    @Autowired
+    private StoreApplicationInstancePool storeApplicationInstancePool;
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -69,6 +72,28 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 orders.put(order.id, order);
             }
         }
+        
+        printTest();
+    }
+    
+    private void printTest() {
+        int i = 0;
+        while(i<10) {
+            double weekData = 0;
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.YEAR, 2014);
+            cal.set(Calendar.DAY_OF_YEAR, i*28);
+            Date start = cal.getTime();
+            cal.set(Calendar.DAY_OF_YEAR, ((i*28)+28));
+            Date end = cal.getTime();
+            for (Order order : orders.values()) {
+               if (order.rowCreatedDate.after(start) && order.rowCreatedDate.before(end)) {
+                   weekData += cartManager.calculateTotalCost(order.cart);
+               }
+            }
+            System.out.print(weekData+",");
+            i++;
+        }
     }
 
     private void saveOrderInternal(Order order) throws ErrorException {
@@ -84,7 +109,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private HashMap<String, Setting> getSettings(String phpApplicationName) throws ErrorException {
-        throw new NotImplementedException();
+        return storeApplicationInstancePool.getApplicationInstanceSettingsByPhpName(phpApplicationName);
     }
     
     private void updateStockQuantity(Order order, String key) throws ErrorException {
@@ -234,6 +259,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         User user = getSession().currentUser;
         List<Order> result = new ArrayList();
         for (Order order : orders.values()) {
+            if (orderIds != null && orderIds.size() > 0) {
+                if (!orderIds.contains(order.id)) {
+                    continue;
+                }
+            }
             if (user == null) {
                 if (order.session != null && order.session.equals(getSession().id)) {
                     result.add(order);
@@ -247,6 +277,23 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
         Collections.sort(result);
         Collections.reverse(result);
+        
+        if (page != null && pageSize != null) {
+            int from = (page-1)*pageSize;
+            int to = pageSize*page;
+            
+            if (to > result.size()) {
+                to = result.size();
+            }
+            
+            try {
+                List<Order> retOrders = result.subList(from, to);
+                return new ArrayList<Order>(retOrders);
+            } catch (IllegalArgumentException ex) {
+                return new ArrayList();
+            }
+        }
+        
         return result;
     }
 
@@ -424,4 +471,84 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return returnOrders;
     }
 
+    @Override
+    public int getPageCount(int pageSize, String searchWord) {
+        List<Order> orders = null;
+        if (searchWord != null) {
+            orders = searchForOrders(searchWord, null, null);
+        } else {
+            orders = getOrders(null, null, null);
+        }
+         
+        if (orders.size() == 0) {
+            return 1;
+        }
+        
+        return (int) Math.ceil((double)orders.size()/(double)pageSize);
+     }
+
+    @Override
+    public List<Order> searchForOrders(String searchWord, Integer page, Integer pageSize) {
+        String[] inSearchWords = searchWord.split(" ");
+        
+        Set<String> orderIds = new HashSet();
+        
+        for (String search : inSearchWords) {
+            String searchLower = search.toLowerCase();
+            
+            // add orders with name
+            orders.values().stream()
+                    .filter(o -> o.cart != null)
+                    .filter(o -> o.cart.address != null)
+                    .filter(o -> o.cart.address.fullName != null)
+                    .filter(o -> o.cart.address.fullName.toLowerCase().contains(searchLower))
+                    .forEach(o -> orderIds.add(o.id));
+            
+            if (isInteger(searchLower)) {
+                // Add orders that has the integer
+                orders.values().stream()
+                        .filter(o -> o.incrementOrderId == Integer.valueOf(searchLower))
+                        .forEach(o -> orderIds.add(o.id));
+            }
+        }
+        
+        ArrayList<String> listOrderIds = new ArrayList(orderIds);
+        
+        if (listOrderIds.size() == 0) {
+            return new ArrayList<Order>();
+        }
+        
+        return getOrders(listOrderIds, page, pageSize);
+        
+    }
+
+    private boolean isInteger(String search) {
+        try { 
+            Integer.parseInt(search); 
+        } catch(NumberFormatException e) { 
+            return false; 
+        }
+        // only got here if we didn't return false
+        return true;
+    }
+
+    @Override
+    public double getTotalSalesAmount(Integer year) {
+        double amount = 0;
+        for (Order order : orders.values()) {
+            if (year != null) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(order.createdDate);
+                if (cal.get(Calendar.YEAR) != year) {
+                    continue;
+                }
+            }
+            
+            amount += cartManager.calculateTotalCost(order.cart);
+        }
+        
+        return amount;
+    }
+
+    
 }

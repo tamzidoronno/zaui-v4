@@ -120,7 +120,8 @@ public class Product extends DataCommon implements Comparable<Product>  {
             return true;
         
         if (searchCriteria.search != null 
-                && !searchCriteria.search.equals("") 
+                && !searchCriteria.search.equals("")
+                && name != null
                 && name.toLowerCase().matches("(.*)"+searchCriteria.search.toLowerCase()+"(.*)"))
             return true;
         

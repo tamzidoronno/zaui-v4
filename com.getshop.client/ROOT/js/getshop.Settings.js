@@ -142,7 +142,10 @@ getshop.Settings = {
     },
     doPost: function(data, field, success) {
         data['appid'] = this.getCurrentAppId();
-      
+        getshop.Settings.loadingTimer = setTimeout(function() {
+            $('#gss_loading_icon').show();
+        }, 300);
+        
         
         $.ajax({
             type: "POST",
@@ -151,10 +154,23 @@ getshop.Settings = {
             data: data,
             context: document.body,
             success: function (response) {
+                clearTimeout(getshop.Settings.loadingTimer);
+                $('#gss_loading_icon').hide();
                 success(response, field, data);
             },
             error: function (failure) {
-                alert("Failed");
+                $('#gss_loading_icon').hide();
+                
+                
+                var json = localStorage.getItem("current_gss_data");
+                if (json) {
+                    var jsonData = JSON.parse(json);
+                    if (jsonData['gss_method'] == data['gss_method']) {
+                        localStorage.setItem("current_gss_data", "");
+                    }
+                }
+                
+                throw exception(failure);
             }
         });
     },
@@ -162,6 +178,7 @@ getshop.Settings = {
     showSettings: function (fadeIn) {
         var speed = 300;
         if (!fadeIn) {
+            $('.gss_settings_inner.apparea').html("");
             speed = 0;
         }
         $('#gsbody').fadeOut(speed, function () {
@@ -173,9 +190,10 @@ getshop.Settings = {
     showPage: function () {
         $('#backsidesettings').fadeOut(300, function () {
             $('#gsbody').fadeIn(300);
+            var event = thundashop.Ajax.createEvent(null, "unsetShowingSettings", null, {});
+            thundashop.Ajax.post(event);
         });
-        var event = thundashop.Ajax.createEvent(null, "unsetShowingSettings", null, {});
-        thundashop.Ajax.post(event);
+        
     },
 }
 

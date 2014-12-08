@@ -133,11 +133,11 @@ foreach ($activatedModules as $module) {
                             echo "<div class='configapp' gss_goto_app='$appId'><span class='config-text'>" . $this->__f("Configure") . "</span><i class='fa fa-gear'></i></div>";
                         }
                         ?>
-                        <div gss_method="deactivate_application" gss_value="<? echo $app->id; ?>" class="gss_activate_button activated"> <span>  <? echo $this->__f("Click to remove application"); ?> </span></div>
+                        <div gss_method="deactivate_application" gss_value="<? echo $app->id; ?>" class="gss_activate_button activated" gss_loadsilent='true'> <span>  <? echo $this->__f("Click to remove application"); ?> </span></div>
                         <?
                     } else {
                         ?>
-                        <div gss_method="activate_application" gss_value="<? echo $app->id; ?>" class="gss_activate_button"><span> <? echo $this->__f("Click to activate application"); ?></span></div>
+                        <div gss_method="activate_application" gss_value="<? echo $app->id; ?>" class="gss_activate_button" gss_loadsilent='true'><span> <? echo $this->__f("Click to activate application"); ?></span></div>
                     <?
                     }
                 }

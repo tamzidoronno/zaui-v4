@@ -1782,3 +1782,5 @@ a img {
 .carouselsettingspanel,.tabsettingspanel { position:fixed; border: solid 1px; padding: 10px; background-color:#FFF; z-index: 20; display:none; padding-top: 30px; }
 .carouselsettingspanel input { width: 40px; }
 .carouselsettingspanel .fa,.tabsettingspanel .fa { cursor: pointer; }
+
+.gsactivetab { font-weight: bold; }

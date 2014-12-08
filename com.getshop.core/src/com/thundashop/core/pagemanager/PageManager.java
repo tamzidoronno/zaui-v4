@@ -87,7 +87,7 @@ public class PageManager extends ManagerBase implements IPageManager {
         }
 
         page.finalizePage(commonPageData);
-        page.dumpLayout();
+//        page.dumpLayout();
         return page;
     }
 

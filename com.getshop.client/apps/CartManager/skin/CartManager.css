@@ -309,3 +309,29 @@
     padding-left: 20px;
     display: none;
 }
+
+.small_cart_dom {
+    display: none;
+}
+
+
+.gsarea[area="header"] .CartManager .small_cart_dom {
+    display: block;
+}
+
+.gsarea[area="header"] .CartManager .main_cart_dom {
+    display: none;
+}
+
+.CartManager .checkout_area .checkout {
+    cursor: pointer;
+}
+
+.CartManager .small_cart_dom {
+    z-index: 1;
+}
+
+.ui-effects-transfer {
+    border: 1px solid #EEE;
+    background: rgba(0,0,0, 0.2);
+} 

@@ -265,12 +265,20 @@ class Page {
             if ($cell->mode == "TAB" || $cell->mode == "ROTATING") {
                 $depthprint--;
             }
+            
+            if ($parent != null && $parent->mode == "TAB") {
+                echo "<div class='gs_tab_conte_container'>";
+            }
 
             foreach ($cell->cells as $innercell) {
                 $this->printCell($innercell, $counter, $depthprint, sizeof($cell->cells), $edit, $cell);
                 $counter++;
             }
 
+            if ($parent != null && $parent->mode == "TAB") {
+                echo "</div>";
+            }
+            
             if ($cell->mode == "ROTATING" || $cell->mode == "TAB") {
                 $this->printContainerSettings((!$edit && $cell->mode == "ROTATING"), $cell, $depth);
             }

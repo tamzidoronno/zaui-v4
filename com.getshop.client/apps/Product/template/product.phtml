@@ -1,0 +1,75 @@
+<?php
+/* @var $this ns_06f9d235_9dd3_4971_9b91_88231ae0436b\Product */
+$product = $this->getApi()->getProductManager()->getProductByPage($this->getPage()->getId());
+?>
+
+<input type="hidden" id="productId" value="<? echo $product->id; ?>"/>
+<div class="product_title">
+    <? echo $product->name; ?>
+</div>
+
+<div class="product_price">
+    <? echo $this->__w("Price") . " " . $product->price; ?>
+</div>
+
+<div class="images">
+    <div class="mainimage">
+        <?
+        $fistImage = $product->imagesAdded[0];
+        echo "<img src='/displayImage.php?id=$fistImage'/>";
+        ?>
+    </div>
+    <div class="subimages">
+        <?
+        $i = 0;
+        foreach ($product->imagesAdded as $image) {
+            if ($image == $fistImage) {
+                continue;
+            }
+
+            if ($i == 0) {
+                echo "<div>";
+            }
+
+            $i++;
+
+            $class = "";
+            if ($i == 1) {
+                $class = "first_in_row";
+            }
+            if ($i == 3) {
+                $class = "last_in_row";
+            }
+
+            echo "<div class='subimage $class'><img src='/displayImage.php?id=$image'/></div>";
+
+
+            if ($i == 3) {
+                $i = 0;
+                echo "</div>";
+            }
+        }
+        ?>
+    </div>
+</div>
+<div class="product_contentbox">
+
+    <div class="short_description_title"><? echo $this->__w("Short description"); ?></div>
+    <div class="short_description">
+        <?
+        echo $product->shortDescription;
+        ?>
+    </div>
+
+    <div productId='<? echo $product->id; ?>' class="webshop_button addProductToCart"><? echo $this->__f("Add to cart"); ?></div>
+</div>
+
+<script>
+    var parent = $('.product_contentbox').parent();
+    var containerWidth = parent.innerWidth();
+    var imagecontainerwidth = parent.find('.images').outerWidth();
+    var contentBoxWidth = containerWidth - imagecontainerwidth - 5;
+    $('.product_contentbox').outerWidth(contentBoxWidth);
+
+
+</script>

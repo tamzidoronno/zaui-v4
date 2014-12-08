@@ -17,7 +17,7 @@ echo -e " # Syncing online database to local #";
 echo -e " ####################################";
 echo -e "";
 echo -e " Deleting local database";
-mongo <<< 'db.adminCommand("listDatabases").databases.forEach( function (d) {   if (d.name != "local" && d.name != "admin" && d.name != "config") db.getSiblingDB(d.name).dropDatabase(); });' > /dev/null;
+mongo --port 27018 <<< 'db.adminCommand("listDatabases").databases.forEach( function (d) {   if (d.name != "local" && d.name != "admin" && d.name != "config") db.getSiblingDB(d.name).dropDatabase(); });' > /dev/null;
 
 #Dumping online database and compressing it.
 echo -e " Dumping and compressing database on server";
@@ -36,7 +36,7 @@ rm -rf batchfile;
 
 echo -e " Importing database to local";
 tar xzvf dump.tar.gz > /dev/null
-mongorestore &> /dev/null
+mongorestore --port 27018  &> /dev/null
 rm -rf dump.tar.gz
 
 #transfer images

@@ -301,34 +301,45 @@ class Page {
 
     private function addCellConfigPanel() {
         echo "<span class='gscellsettingspanel'>";
-        echo "<div class='gscellsettingsheading'>New areas</div>";
+        echo "<div class='gscellsettingspanelheading'>";
+        echo "<i class='gs_closecelledit fa fa-times' style='float:right; margin-right:0px;'></i>";
+        echo "Cell / row settings";
+        echo "</div>";
+        echo "<div style='margin-top:0px;' class='gscellsettingsheading'>New areas</div>";
+        echo "<div class='gsinnercellsettingspanel'>";
         echo "<div class='gsoperatecell' type='addrow'><i class='fa fa-arrows-v'></i>" . $this->factory->__w("Insert row") . "</div>";
         echo "<div class='gsoperatecell' type='addcolumn'><i class='fa fa-arrows-h'></i>" . $this->factory->__w("Insert column") . "</div>";
         echo "<span class='gsrowmenu'>";
-        echo "<div class='gsoperatecell' type='addbefore'><i class='fa fa-long-arrow-up'></i>" . $this->factory->__w("Create row above") . "</div>";
-        echo "<div class='gsoperatecell' type='addafter'><i class='fa fa-long-arrow-down'></i>" . $this->factory->__w("Create row below") . "</div>";
+        echo "<div class='gsoperatecell' type='addbefore'><i class='fa fa-arrow-up'></i>" . $this->factory->__w("Create row above") . "</div>";
+        echo "<div class='gsoperatecell' type='addafter'><i class='fa fa-arrow-down'></i>" . $this->factory->__w("Create row below") . "</div>";
         echo "</span>";
         echo "<span class='gscolumnmenu'>";
-        echo "<div class='gsoperatecell' type='addbefore'><i class='fa fa-long-arrow-left'></i>" . $this->factory->__w("Create left column") . "</div>";
-        echo "<div class='gsoperatecell' type='addafter'><i class='fa fa-long-arrow-right'></i>" . $this->factory->__w("Create right column") . "</div>";
+        echo "<div class='gsoperatecell' type='addbefore'><i class='fa fa-arrow-left'></i>" . $this->factory->__w("Create left column") . "</div>";
+        echo "<div class='gsoperatecell' type='addafter'><i class='fa fa-arrow-right'></i>" . $this->factory->__w("Create right column") . "</div>";
         echo "</span>";
+        echo "</div>";
         echo "<div class='gscellsettingsheading'>Move area</div>";
+        echo "<div class='gsinnercellsettingspanel'>";
         echo "<span class='gsrowmenu'>";
-        echo "<div class='gsoperatecell' type='moveup'><i class='fa fa-long-arrow-up'></i>" . $this->factory->__w("Move row up") . "</div>";
-        echo "<div class='gsoperatecell' type='movedown'><i class='fa fa-long-arrow-down'></i>" . $this->factory->__w("Move row down") . "</div>";
+        echo "<div class='gsoperatecell' type='moveup'><i class='fa fa-arrow-up'></i>" . $this->factory->__w("Move row up") . "</div>";
+        echo "<div class='gsoperatecell' type='movedown'><i class='fa fa-arrow-down'></i>" . $this->factory->__w("Move row down") . "</div>";
         echo "</span>";
         echo "<span class='gscolumnmenu'>";
-        echo "<div class='gsoperatecell' type='moveup'><i class='fa fa-long-arrow-left'></i>" . $this->factory->__w("Move cell to the left") . "</div>";
-        echo "<div class='gsoperatecell' type='movedown'><i class='fa fa-long-arrow-right'></i>" . $this->factory->__w("Move cell to the right") . "</div>";
+        echo "<div class='gsoperatecell' type='moveup'><i class='fa fa-arrow-left'></i>" . $this->factory->__w("Move cell to the left") . "</div>";
+        echo "<div class='gsoperatecell' type='movedown'><i class='fa fa-arrow-right'></i>" . $this->factory->__w("Move cell to the right") . "</div>";
         echo "</span>";
+        echo "</div>";
         echo "<div class='gscellsettingsheading'>Other</div>";
+        echo "<div class='gsinnercellsettingspanel'>";
         echo "<div class='gs_resizing'><i class='fa fa-image'></i>" . $this->factory->__w("Styling") . "</div>";
         echo "<div class='gsoperatecell' type='delete'><i class='fa fa-trash-o'></i>" . $this->factory->__w("Delete") . "</div>";
-        echo "<i class='gs_closecelledit fa fa-times' style='position:absolute;right: 5px; top: 5px; cursor:pointer;'></i>";
 
         echo "<div class='gsoperatecell' subtype='carousel' type='setcarouselmode'><i class='fa fa-sitemap'></i>" . $this->factory->__w("Change to carousel mode") . "</div>";
         echo "<div class='gsoperatecell' subtype='tab' type='settabmode'><i class='fa fa-ellipsis-h'></i>" . $this->factory->__w("Change to tab mode") . "</div>";
+        echo "</div>";
         echo "</span>";
+        echo "</div>";
+        echo "<script>$('.gscellsettingspanel').draggable();</script>";
     }
 
     private function addCellResizingPanel() {

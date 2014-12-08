@@ -10,24 +10,19 @@ app.Product = {
         }
         
         var button = $(this).parent();
-//        $('.small_cart_dom').css('position', 'fixed');
-//        var event = thundashop.Ajax.createEvent(null, "addProductToCart", this, data);
-//        thundashop.Ajax.post(event, function() {
-            $('.checkout_area').each(function() {
-                var width = $(this).parent().width();
-                $(this).parent().width(width);
-                $(this).parent().css('position', 'fixed');
-                var dom = this;
-                button.effect( "transfer", { to: $(this) }, 1000 , function() {
-                    $(dom).parent().css('position', 'relative'); 
-               });
-                
 
-//                
-            });
-//            
-//            
-//        });
+        
+        $('.checkout_area').each(function() {
+            var width = $(this).parent().width();
+            $(this).parent().width(width);
+            $(this).parent().css('position', 'fixed');
+            var dom = this;
+            button.effect( "transfer", { to: $(this) }, 1000 , function() {
+                $(dom).parent().css('position', 'relative'); 
+                var event = thundashop.Ajax.createEvent(null, "addProductToCart", this, data);
+                thundashop.Ajax.post(event);
+           });
+        });
     },
     
     loadSettings : function(element, application) {

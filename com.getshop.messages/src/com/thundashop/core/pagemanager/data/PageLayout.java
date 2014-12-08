@@ -7,8 +7,6 @@ import java.util.ArrayList;
 
 public class PageLayout implements Serializable {
 
-    Integer cellCount = 0;
-
     HashMap<String, ArrayList<PageCell>> areas = new HashMap();
 
     void clear() {
@@ -94,8 +92,7 @@ public class PageLayout implements Serializable {
             PageCell cell = findCell(getAllCells(), incell);
             double newwidth = -1;
             if (cell.cells.isEmpty()) {
-                PageCell newcell = cell.createCell(before, cellCount);
-                cellCount++;
+                PageCell newcell = cell.createCell(before);
                 newcell.extractDataFrom(cell, false);
                 newcell.mode = mode;
             } else {
@@ -108,8 +105,7 @@ public class PageLayout implements Serializable {
                 }
             }
 
-            PageCell newcell = cell.createCell(before, cellCount);
-            cellCount++;
+            PageCell newcell = cell.createCell(before);
             newcell.mode = mode;
             newcell.width = newwidth;
             cellId = newcell.cellId;
@@ -336,8 +332,6 @@ public class PageLayout implements Serializable {
             }
         }
         double returning = 100 - total;
-        System.out.println("Returning: " + returning);
-        System.out.println("Total: " + total);
         if (returning == 100) {
             return -1;
         }
@@ -349,9 +343,7 @@ public class PageLayout implements Serializable {
 
     private PageCell initNewCell(String mode) {
         PageCell cell = new PageCell();
-        cell.incrementalCellId = cellCount;
         cell.mode = mode;
-        cellCount++;
         return cell;
     }
 
@@ -395,4 +387,5 @@ public class PageLayout implements Serializable {
         cell.mode = mode;
 
     }
+
 }

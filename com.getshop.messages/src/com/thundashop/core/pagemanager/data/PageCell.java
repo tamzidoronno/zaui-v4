@@ -22,7 +22,7 @@ public class PageCell implements Serializable {
     }
 
     String cellName = "";
-    public int incrementalCellId;
+    public Integer incrementalCellId;
     public String cellId = UUID.randomUUID().toString();
     public String mode = PageMode.column;
     public ArrayList<PageCell> cells = new ArrayList();
@@ -31,9 +31,8 @@ public class PageCell implements Serializable {
     public CarouselConfig carouselConfig = new CarouselConfig();
     public Double width = -1.0;
 
-    PageCell createCell(String before, Integer incrementId) {
+    PageCell createCell(String before) {
         PageCell newcell = new PageCell();
-        newcell.incrementalCellId = incrementId;
         if (before == null || before.isEmpty()) {
             cells.add(newcell);
         } else {

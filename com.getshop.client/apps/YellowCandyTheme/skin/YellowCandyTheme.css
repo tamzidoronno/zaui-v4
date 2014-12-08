@@ -60,9 +60,6 @@ body {
     margin-bottom: 10px;
 }
 
-.products.row_view .product_row:last-child {
-    border-bottom: solid 0px;
-}
 
 .ProductLists {
     padding: 20px;
@@ -120,4 +117,27 @@ body {
 .CartManager .checkout_area i {
     padding-right: 10px;
     font-size: 25px;
+}
+
+.gsarea[area="body"] .gs_margin_right {
+    padding-right: 20px;
+}
+.gsarea[area="body"] .gs_margin_left {
+    padding-left: 20px;
+}
+
+.gsarea[area="body"] .gsrow {
+    margin-top: 40px;
+}
+
+.ProductLists .products.row_view .webshop_button  {
+    bottom: 10px;
+    right: 0px;
+    color: #FFF;
+    background-color: green;
+}
+
+.ProductLists .product_row {
+    border-bottom: solid 1px #EEE;
+    padding-bottom: 20px;
 }

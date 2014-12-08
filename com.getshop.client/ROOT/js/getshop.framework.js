@@ -546,6 +546,11 @@ thundashop.framework = {
         $('.tabsettingspanel').hide();
         var resizingpanel = $('.gsresizingpanel');
         var cellid = thundashop.framework.operatingCellId;
+        var target = $(this).attr('target');
+        if(target) {
+            cellid = $(this).closest('.'+target).attr('cellid');
+            thundashop.framework.operatingCellId = cellid;
+        }
         resizingpanel.attr('cellid', cellid);
         $('.gsoverlay').remove();
         var cell = $('.gscell[cellid="' + cellid + '"]');
@@ -633,6 +638,12 @@ thundashop.framework = {
         if($(this).attr('target') && $(this).attr('target') === "container") {
             cellid = containerId;
         }
+        if($(this).attr('target') && $(this).attr('target') === "gseasymode") {
+            cellid = $(this).closest('.gseasymode').attr('cellid');
+        }
+        if($(this).attr('target') && $(this).attr('target') === "gseasyrowmode") {
+            cellid = $(this).closest('.gseasyrowmode').attr('cellid');
+        }
 
         if (type === "delete" && !confirm("Are you sure you want to delete this cell and all its content?")) {
             return;
@@ -668,7 +679,15 @@ thundashop.framework = {
 
             data['before'] = before;
             data['cellid'] = newcellid;
+            if(!data['before']) {
+                if(cellobj.hasClass('gscolumn')) {
+                    data['type'] = "addcolumn";
+                } else {
+                    data['type'] = "addrow";
+                }
+            }
         }
+        
 
         var event = thundashop.Ajax.createEvent('', 'operateCell', $(this), data);
         thundashop.Ajax.post(event);

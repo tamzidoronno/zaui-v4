@@ -82,6 +82,7 @@ class ApplicationManager extends FactoryBase {
         if(isset($_POST['data']['before'])) {
             $before = $_POST['data']['before'];
         }
+        
         switch ($type) {
             case "movedown":
                 $this->getApi()->getPageManager()->moveCell($this->getPage()->javapage->id, $cellId, false);

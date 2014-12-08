@@ -99,6 +99,10 @@ public class PageLayout implements Serializable {
                 newcell.extractDataFrom(cell, false);
                 newcell.mode = mode;
             } else {
+                if(before != null && !before.isEmpty()) {
+                    mode = findCell(getAllCells(), before).mode;
+                }
+                
                 //Each cell as a subcell need to be the same.
                 if(!cell.cells.get(0).mode.equals(mode)) {
                     PageCell newcell = initNewCell(mode);

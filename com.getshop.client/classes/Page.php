@@ -67,6 +67,7 @@ class Page {
             $this->addCellResizingPanel();
             $this->displayResizing();
             $this->printLoaderForContainers();
+            $this->printEditingInfo();
             ?>
             <style>
                 .dragtable { background-image: url('http://quocity.com/colresizable/img/rangeBar.png'); background-position: 10px 10px; background-repeat-y: no-repeat;}
@@ -119,6 +120,12 @@ class Page {
         <?
     }
 
+    private function printEditingInfo() {
+        echo "<div class='gseditinginfo'>";
+        echo "You are now editing the selected row, <span class='gsdoneeditbutton' done='true'true'>done editing</span>";
+        echo "</div>";
+    }
+    
     private function addCarouselSettingsPanel() {
         ?>  
         <div class="carouselsettingspanel">
@@ -253,6 +260,7 @@ class Page {
 
 
         if ($edit) {
+            $this->printEasyModeEdit($cell);
             echo "<span class='gscellsettings'>";
             echo "<i class='fa fa-image'  title='Styling' style='display:none;'></i> ";
             echo "<i class='fa fa-cogs'  title='Cell settings'></i>";
@@ -371,7 +379,7 @@ class Page {
                         </table>
                     </div>
                 </div>
-                <div class='gsoutercolorselectionpanel'>
+                <div class='gsoutercolorselectionpanel' style="display:none;">
                     <div class='gsheading'>Inner background</div>
                     <div class='gscolorselectionpanel' level='.gsinner'>
                         <table width='100%'>
@@ -546,31 +554,26 @@ class Page {
 
             if (isset($_SESSION['gseditcell']) && $_SESSION['gseditcell'] === $row->cellId) {
                 $editedCellid = $cellid;
-                echo "<div class='gscell gsdepth_0 gseditinfo' style='height: 38px;'>";
-                echo "<div class='gsinner gsdepth_0'>";
-                echo "<div class='gseditrowheading' cellid='" . $cellid . "'>";
-                echo "<label style='float:left;'>";
-                echo "<input type='checkbox' style='background-color:#FFF;' class='gsdisplaygridcheckbox'> Add spacing to grid";
-                echo "</label>";
-                echo "You are now in edit mode for this row." . " - " . "<span class='gsdoneeditbutton' done='true'true'>done editing</span>";
-                echo "</div>";
-                echo "</div>";
-                echo "</div>";
+//                echo "<div class='gscell gsdepth_0 gseditinfo' style='height: 38px;'>";
+//                echo "<div class='gsinner gsdepth_0'>";
+//                echo "<div class='gseditrowheading' cellid='" . $cellid . "'>";
+//                echo "<label style='float:left;'>";
+//                echo "<input type='checkbox' style='background-color:#FFF;' class='gsdisplaygridcheckbox'> Add spacing to grid";
+//                echo "</label>";
+//                echo "You are now in edit mode for this row." . " - " . "<span class='gsdoneeditbutton' done='true'true'>done editing</span>";
+//                echo "</div>";
+//                echo "</div>";
+//                echo "</div>";
                 $isedit = true;
             }
 
+            if($isedit) {
+                $this->printEasyRowMode($row);
+            }
             $this->printCell($row, $count, 0, 0, $isedit, null);
 
             $count++;
-            if ($isedit) {
-                echo "<div class='gscell gsdepth_0 gsendedit gseditinfo'>";
-                echo "<div class='gsinner gsdepth_0'>";
-                echo "<div class='gseditrowheading'>";
-                echo "End of row to edit.";
-                echo "</div>";
-                echo "</div>";
-                echo "</div>";
-            }
+            
         }
         return $editedCellid;
     }
@@ -639,6 +642,45 @@ class Page {
             });
         </script>
         <?
+    }
+
+    public function printEasyModeEdit($cell) {
+        if(sizeof($cell->cells) > 0) {
+            return;
+        }
+        if($cell->mode != "COLUMN") {
+        echo "<div class='gseasymode' cellid='".$cell->cellId."'>";
+        echo "<div class='gseasymodeinner'>";
+        echo "You are now in edit mode for this row";
+        echo "</div></div>";
+            return;
+        }
+        
+        echo "<div class='gseasymode' cellid='".$cell->cellId."'>";
+        echo "<div class='gseasymodeinner'>";
+        echo "<i class='fa fa-arrow-left gsoperatecell' type='moveup' target='gseasymode' title='Move column to the left'></i> ";
+        echo "<i class='fa fa-plus gsoperatecell' type='addbefore' target='gseasymode'  title='Insert column to the left'></i> ";
+        echo "<i class='fa fa-image gs_resizing' type='delete' target='gseasymode' title='Open styling'></i> ";
+        echo "<i class='fa fa-trash-o gsoperatecell' type='delete' target='gseasymode' title='Delete column'></i> ";
+        echo "<i class='fa fa-plus gsoperatecell' type='addafter' target='gseasymode'  title='Insert column to the right'></i> ";
+        echo "<i class='fa fa-arrow-right gsoperatecell' type='movedown' target='gseasymode' title='Move column to the right'></i> ";
+        echo "</div>";
+        echo "</div>";
+    }
+
+    public function printEasyRowMode($row) {
+        echo "<div class='gseasyrowmode' cellid='".$row->cellId."'>";
+        echo "<div class='gseasyrowmodeinnser'>";
+        echo "<i class='fa fa-arrow-up gsoperatecell' type='moveup' target='gseasyrowmode' title='Move row up'></i> ";
+        echo "<i class='fa fa-plus gsoperatecell' type='addbefore' target='gseasyrowmode'  title='Create row above'></i> ";
+        echo "<i class='fa fa-image gs_resizing' type='delete' target='gseasyrowmode' title='Open styling'></i> ";
+        echo "<i class='fa fa-arrows-h gsoperatecell' type='addcolumn' target='gseasyrowmode' title='Insert column'></i> ";
+        echo "<i class='fa fa-trash-o gsoperatecell' type='delete' target='gseasyrowmode' title='Delete row'></i> ";
+        echo "<i class='fa fa-plus gsoperatecell' type='addafter' target='gseasyrowmode'  title='Create row after'></i> ";
+        echo "<i class='fa fa-arrow-down gsoperatecell' type='movedown' target='gseasyrowmode' title='Move row down'></i> ";
+        echo "</div>";
+        echo "</div>";
+        
     }
 
 }

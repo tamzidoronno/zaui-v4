@@ -101,5 +101,26 @@ class ProductLists extends \ApplicationBase implements \Application {
         $productId = $_POST['data']['productId'];
         $this->getApi()->getCartManager()->addProduct($productId, 1, []);
     }
+    
+    public function isRowView() {
+        return $this->getColumnSize() == 1;
+    }
+
+    public function isGridView() {
+        return $this->getColumnSize() > 1;
+    }
+    
+    public function getColumnSize() {
+        $value = $this->getConfigurationSetting("column_size");
+        if (!$value) {
+            return 1;
+        }
+        return $value;
+    }
+    
+    public function setColumns() {
+        $this->setConfigurationSetting("column_size", $_POST['data']);
+    }
+
 }
 ?>

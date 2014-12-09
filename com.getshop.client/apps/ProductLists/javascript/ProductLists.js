@@ -19,7 +19,40 @@ app.ProductLists = {
                     iconsize : "30",
                     title: __f("Manage products in this list"),
                     click: app.ProductLists.goToList
-                }            
+                },
+                
+                {
+                    text: "<span style='font-size: 22px;'>1</span>",
+                    click: function(papp1, papp) { app.ProductLists.setColumns(papp, 1); }
+                },
+                {
+                    text: "<span style='font-size: 22px;'>2</span>",
+                    click: function(papp, papp) { app.ProductLists.setColumns(papp, 2); }
+                },
+                {
+                    text: "<span style='font-size: 22px;'>3</span>",
+                    click: function(papp, papp) { app.ProductLists.setColumns(papp, 3); }
+                },
+                {
+                    text: "<span style='font-size: 22px;'>4</span>",
+                    click: function(papp, papp) { app.ProductLists.setColumns(papp, 4); }
+                },
+                {
+                    text: "<span style='font-size: 22px;'>5</span>",
+                    click: function(papp, papp) { app.ProductLists.setColumns(papp, 5); }
+                },
+                {
+                    text: "<span style='font-size: 22px;'>6</span>",
+                    click: function(papp, papp) { app.ProductLists.setColumns(papp, 6); }
+                },
+                {
+                    text: "<span style='font-size: 22px;'>7</span>",
+                    click: function(papp, papp) { app.ProductLists.setColumns(papp, 7); }
+                },
+                {
+                    text: "<span style='font-size: 22px;'>8</span>",
+                    click: function(papp, papp) { app.ProductLists.setColumns(papp, 8); }
+                }
             ]
         }
 
@@ -28,6 +61,10 @@ app.ProductLists = {
         toolbox.attachToElement(application, 2);
     },
     
+    setColumns: function(app, columnsize) {
+        var event = thundashop.Ajax.createEvent(null, "setColumns", app, columnsize);
+        thundashop.Ajax.post(event);
+    },
     goToList: function(a,b,c) {
         var listId = $($(b).find('[listid]')[0]).attr('listid');
         if (!listId) {

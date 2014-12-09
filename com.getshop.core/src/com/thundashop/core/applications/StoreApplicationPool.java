@@ -48,7 +48,7 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
                 .collect(Collectors.toSet());
 
         addActivatedApplications();
-//        addActivatedModules();
+        addActivatedModules();
     }
 
     @Override

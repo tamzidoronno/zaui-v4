@@ -142,37 +142,47 @@ getshop.Settings = {
         getshop.Models.addWatchers(response['data']);
     },
     reloadCss: function() {
+        getshop.Settings.loadJavascripts();
+        
         $.ajax('/StyleSheet.php', {
             success: function(response) {
                 var alreadyLoaded = $('html .appstylesheet');
                 var checkThisCss = $("<div>"+response+"</div>").find('.appstylesheet');
                 checkThisCss.each(function() {
-                    if (!getshop.Settings.isCssLoaded(this, alreadyLoaded)) {
+                    if (!getshop.Settings.isCssLoaded(this, alreadyLoaded, 'href')) {
                         $('html').append(this);
                     } 
-                })
+                });
                 
+                alreadyLoaded.each(function() {
+                    if (!getshop.Settings.isCssLoaded(this, checkThisCss, 'href')) {
+                        console.log("Removing");
+                        console.log(this);
+                        $(this).remove();
+                    } 
+                });   
             }
         })
     },
-    reloadJavascripts: function() {
-        $.ajax('/StyleSheet.php', {
+    
+    loadJavascripts: function() {
+        $.ajax('/javascripts.php', {
             success: function(response) {
-                var alreadyLoaded = $('html .appstylesheet');
-                var checkThisCss = $("<div>"+response+"</div>").find('.appstylesheet');
+                var alreadyLoaded = $('html .javascript_app_file');
+                var checkThisCss = $("<div>"+response+"</div>").find('.javascript_app_file');
                 checkThisCss.each(function() {
-                    if (!getshop.Settings.isCssLoaded(this, alreadyLoaded)) {
-                        $('html').append(this);
+                    if (!getshop.Settings.isCssLoaded(this, alreadyLoaded, 'src')) {
+                        $('head').append(this);
                     } 
-                })
-                
+                });
             }
-        })
+        });
     },
-    isCssLoaded: function(checkCss, checkThisCsss) {
+    
+    isCssLoaded: function(checkCss, checkThisCsss, attr) {
         var index;
         for (index = 0; index < checkThisCsss.length; ++index) {
-            if ($(checkThisCsss[index]).attr('href') == $(checkCss).attr('href')) {
+            if ($(checkThisCsss[index]).attr(attr) == $(checkCss).attr('href')) {
                 return true;
             }
         }

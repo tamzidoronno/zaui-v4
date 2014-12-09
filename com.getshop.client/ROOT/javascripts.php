@@ -1,7 +1,9 @@
 <?php
 
-function endsWith($haystack, $needle)
-{
+include_once '../loader.php';
+
+
+function endsWith($haystack, $needle) {
     $length = strlen($needle);
     if ($length == 0) {
         return true;
@@ -22,7 +24,7 @@ if (!$factory->isEditorMode()) {
 
 foreach ($apps as $app) {
     $appInstance = $factory->getApplicationPool()->createInstace($app);
-    if($appInstance) {
+    if ($appInstance) {
         if (method_exists($appInstance, "includeExtraJavascript")) {
             $extraJavascript = $appInstance->includeExtraJavascript();
             if (is_array($extraJavascript)) {
@@ -32,22 +34,23 @@ foreach ($apps as $app) {
             }
         }
     }
-    
-    $namespace = $this->convertUUIDtoString($app->id);
+
+    $namespace = $factory->convertUUIDtoString($app->id);
     $javascriptFolder = "../app/$namespace/javascript";
-	
+
 
     if (is_dir($javascriptFolder) && $handle = opendir($javascriptFolder)) {
-        echo "<script>";
         
         while (false !== ($entry = readdir($handle))) {
             if (endsWith(strtolower($entry), ".js")) {
-				echo file_get_contents($javascriptFolder."/".$entry);	
-			}
+                $filecontent = file_get_contents($javascriptFolder . "/" . $entry);
+                $fileName = "javascripts/".$namespace."_".$entry;
+                file_put_contents($fileName, $filecontent);
+                echo '<script type="text/javascript" class="javascript_app_file" src="'.$fileName.'"></script>';
+            }
         }
-        echo "</script>";
+        
     }
-    
 }
 ?>
  

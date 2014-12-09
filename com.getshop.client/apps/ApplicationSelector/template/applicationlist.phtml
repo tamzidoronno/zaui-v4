@@ -177,7 +177,7 @@ foreach ($activatedModules as $module) {
             <div class="gss_app_desc">
                 <div style="font-size: 16px; font-weight: 300; margin-bottom: 3px;"><? echo $theme->appName; ?></div>
             </div>
-            <div gss_method="activateTheme" gss_value="<? echo $theme->id; ?>" class="gss_activate_button <? echo $activated; ?>"><span> <? echo $this->__f("Click to activate theme"); ?></span></div>
+            <div themeId="<? echo $theme->id; ?>" class="gss_activate_button <? echo $activated; ?> gss_activate_theme"><span> <? echo $this->__f("Click to activate theme"); ?></span></div>
         </div>
     <? } ?>
 </div>

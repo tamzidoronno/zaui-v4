@@ -27,7 +27,7 @@ html {
     display: none;
 }
 
-.Login {
+.Login .notloggedon {
     display: none;
 }
 .Footer {

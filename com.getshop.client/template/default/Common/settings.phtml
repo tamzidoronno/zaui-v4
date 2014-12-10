@@ -1,7 +1,7 @@
 <?
 /* @var $factory \Factory */
-$activatedApps = $factory->getApi()->getStoreApplicationPool()->getApplications();
 
+//$activatedApps = $factory->getApi()->getStoreApplicationPool()->getApplications();
 ?>
 <link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 
@@ -10,48 +10,10 @@ $activatedApps = $factory->getApi()->getStoreApplicationPool()->getApplications(
     <span class="message"></span>
 </div>
 <div class='gss_topmenu'>
-    <div class='gss_settings_inner' style='vertical-align: top;'>
-        <div class='gss_topmenu-button gss_backtopage'><i class='fa fa-arrow-left'></i> Til min side</div>
-        <div id="dashboardbutton" class='gss_topmenu-button' gss_goto_app="b81bfb16-8066-4bea-a3c6-c155fa7119f8"><i class='fa fa-tachometer'></i> Dashboard</div>
-        <div class='gss_topmenu-button' gss_goto_app="d755efca-9e02-4e88-92c2-37a3413f3f41"><i class='fa fa-gears'></i> Instillinger</div>
-        <div class='gss_topmenu-button' gss_goto_app="ba6f5e74-87c7-4825-9606-f2d3c93d292f"><i class='fa fa-users'></i> Users </div>
-        <div class='gss_topmenu-button active' gss_goto_app='f1fc4af3-656e-4294-a268-40d2a82d0aa1'><i class='fa fa-cube'></i> Applikasjoner</div>
-        
-        <?
-        $activatedModules = $factory->getApi()->getStoreApplicationPool()->getActivatedModules();
-        if (!is_array($activatedModules)) {
-            $activatedModules = array();
-        }
-        foreach ($activatedModules as $module) {
-            if (!$module->needToShowInMenu)
-                continue;
-            
-        ?>
-            <div class='gss_topmenu-button'><i class='fa <? echo $module->faIcon; ?>'></i> <? echo $module->moduleName; ?>
-            
-                <div class="gss_menu_submenu">
-                    <?
-                    foreach ($activatedApps as $app) {
-                        /* @var $app \core_common_AppConfiguration */
-                        if ($app->moduleId != $module->id) {
-                            continue;
-                        }
-                        
-                        $emptyInstance = $factory->getApplicationPool()->createInstace($app);
-                        $hasConfig = method_exists($emptyInstance, "renderConfig");
-                        if ($hasConfig) {
-                            echo "<div class='gss_submenu_entry' gss_goto_app='$app->id'>$app->appName</div>";
-                        }
-                    }
-                    ?>
-                </div>
-            </div>
-        <?
-        }
-        ?>
-        <div class='gss_topmenu-button active' gss_goto_app='f1fc4af3-656e-4294-a268-40d2a82d0aa1'><i class='fa fa-star'></i> Badges</div>
-        <div class='gss_topmenu-button'><i class='fa fa-lightbulb-o'></i> GetShop admin</div>    
-    </div>
+    <? 
+        $settingsFactory = IocContainer::getSettingsFactorySingleton();
+        $settingsFactory->renderTopMenu();
+    ?>
 </div>
 
 

@@ -135,10 +135,59 @@ getshop.Settings = {
             $('.' + view).html(response['data']);
             $('#' + view).html(response['data']);
         } else {
+            $('.gss_topmenu').html(response['topMenu']);
             $('.gss_settings_inner.apparea').html(response['data']);
         }
 
         getshop.Models.addWatchers(response['data']);
+    },
+    reloadCss: function() {
+        getshop.Settings.loadJavascripts();
+        
+        $.ajax('/StyleSheet.php', {
+            success: function(response) {
+                var alreadyLoaded = $('html .appstylesheet');
+                var checkThisCss = $("<div>"+response+"</div>").find('.appstylesheet');
+                checkThisCss.each(function() {
+                    if (!getshop.Settings.isCssLoaded(this, alreadyLoaded, 'href')) {
+                        $('html').append(this);
+                    } 
+                });
+                
+                alreadyLoaded.each(function() {
+                    if (!getshop.Settings.isCssLoaded(this, checkThisCss, 'href')) {
+                        console.log("Removing");
+                        console.log(this);
+                        $(this).remove();
+                    } 
+                });   
+            }
+        })
+    },
+    
+    loadJavascripts: function() {
+        $.ajax('/javascripts.php', {
+            success: function(response) {
+                var alreadyLoaded = $('html .javascript_app_file');
+                var checkThisCss = $("<div>"+response+"</div>").find('.javascript_app_file');
+                checkThisCss.each(function() {
+                    if (!getshop.Settings.isCssLoaded(this, alreadyLoaded, 'src')) {
+                        $('head').append(this);
+                    } 
+                });
+            }
+        });
+    },
+    
+    isCssLoaded: function(checkCss, checkThisCsss, attr) {
+        var index;
+        for (index = 0; index < checkThisCsss.length; ++index) {
+            if ($(checkThisCsss[index]).attr(attr) == $(checkCss).attr('href')) {
+                return true;
+            }
+        }
+        
+        return false;
     },
     doPost: function(data, field, success) {
         data['appid'] = this.getCurrentAppId();

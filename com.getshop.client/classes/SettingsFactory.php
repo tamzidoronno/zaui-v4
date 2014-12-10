@@ -28,6 +28,10 @@ class SettingsFactory extends FactoryBase {
     public function includefile($filename, $overrideappname = NULL, $printError = true) {
         
     }
+    
+    public function renderTopMenu() {
+        include '../template/default/Common/settingstopmenu.phtml';
+    }
 
     public function json() {
         $data = [];
@@ -49,8 +53,16 @@ class SettingsFactory extends FactoryBase {
             $this->currentApplication->gs_show_fragment();
         }
         $html = ob_get_contents();
+        
+        ob_end_clean();
+        
+        ob_start();
+        $this->renderTopMenu();
+        $topMenu = ob_get_contents();
         ob_end_clean();
         $data['data'] = $html;
+        $data['topMenu'] = $topMenu;
+        
         return json_encode($data);
     }
 

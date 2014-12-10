@@ -1,4 +1,12 @@
-<div class="products row_view" listid="<? echo $this->getConfigurationSetting("productlist"); ?>">
+<?
+ /* @var $this ns_f245b8ae_f3ba_454e_beb4_ecff5ec328d6\ProductLists */
+
+$columnSize = $this->getColumnSize();
+$view = $this->isGridView() ? "grid_view" : "";
+$view = $this->isRowView() ? "row_view" : $view;
+
+?>
+<div class="products <? echo $view; ?>"  listid="<? echo $this->getConfigurationSetting("productlist"); ?>">
     <?
     $products = $this->getAllProducts();
     if (!count($products)) {
@@ -8,21 +16,42 @@
     foreach ($products as $product) {
         $linkName = \GetShopHelper::makeSeoUrl($product->name);
         $pageId = $product->pageId;
+        $image = '<div class="image"><img src="/displayImage.php?id='.$product->imagesAdded[0].'&width=200"/></div>';
         ?>
-    <div style='position: relative;'>
-        <a ajaxlink='/?page=<? echo $pageId; ?>' href='<? echo $linkName;?>'>
-            <div class="product_row">
-                <div class="image"><img src="/displayImage.php?id=<? echo $product->imagesAdded[0]; ?>&width=200"/></div>
-                <div class="content">
-                    <div class="product_title"><? echo $product->name; ?></div>
-                    <div class="short_description"><? echo nl2br($product->shortDescription); ?></div>
+            <div class='productbox_outer'>
+                <div class='productbox'>
+                <a ajaxlink='/?page=<? echo $pageId; ?>' href='<? echo $linkName;?>'>
+                    <div class="product_row">
+                        <?
+                        if ($this->isRowView()) {
+                            echo $image;
+                        }
+                        ?>
+                        <div class="content">
+                            <div class="product_title"><? echo $product->name; ?></div>
+                            <?
+                                if ($this->isGridView()) {
+                                    echo $image;
+                                }
+                            ?>
+                            <div class="short_description"><? echo nl2br($product->shortDescription); ?></div>
+                        </div>
+                    </div>
+                </a>
+                <div class="product_price" ><? echo $this->__f("Price")." ".$product->price; ?></div>
+                <div class="webshop_button addProductToCart" productId='<? echo $product->id; ?>'><? echo $this->__f("Add to cart"); ?></div>
                 </div>
-                
             </div>
-        </a>
-        <div class="webshop_button addProductToCart" productId='<? echo $product->id; ?>'><? echo $this->__f("Add to cart"); ?></div>
-    </div>
         <?
     }
     ?>
 </div>
+<script>
+    $(document).ready(function() {
+        var innerWidth = $('.products.grid_view[listid="<? echo $this->getConfigurationSetting("productlist"); ?>"]').innerWidth();
+        if (innerWidth) {
+            $('.productbox_outer').outerWidth(Math.floor(innerWidth/<? echo $columnSize; ?>))
+        }
+    });
+    
+</script>

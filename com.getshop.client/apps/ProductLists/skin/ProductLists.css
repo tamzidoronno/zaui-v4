@@ -72,7 +72,29 @@
 }
 
 
-/* Start of listview */
+.ProductLists .products {
+    font-size: 0px;
+}
+.ProductLists .products .content {
+    font-size: 16px;
+}
+
+.ProductLists .product_price {
+    font-size: 22px;
+}
+.ProductLists .productbox {
+    position: relative;
+    box-sizing: border-box;
+}
+
+.ProductLists .no_products_added_to_list {
+    font-size: 24px;
+    padding: 20px;
+    text-align: center;
+    color: red;
+}
+
+/* Start of rowview */
 .ProductLists .products.row_view .product_row {
     position: relative;
 }
@@ -94,12 +116,6 @@
     font-size: 20px;
 }
 
-.ProductLists .no_products_added_to_list {
-    font-size: 24px;
-    padding: 20px;
-    text-align: center;
-    color: red;
-}
 .ProductLists .products.row_view .content {
     display: inline-block;
     vertical-align: top;
@@ -112,6 +128,50 @@
     overflow: hidden;
 }
 
+.ProductLists .products.row_view  .product_price {
+    position: absolute;
+    right: 10px;
+    top: 0px;
+}
+
+/* Start of gridview */
+
+.ProductLists .products.grid_view .productbox {
+    border: solid 1px #EEE;
+    padding: 10px;
+    height: 600px;
+}
+
+.ProductLists .products.grid_view .productbox .product_title {
+    height: 50px;
+}
+
+.ProductLists .products.grid_view .productbox .short_description { 
+    height: 260px;
+    overflow: hidden;
+}
+.ProductLists .products.grid_view .productbox img {
+    height: 150px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    max-width: 100%;
+}
+
+.ProductLists .products.grid_view .product_price {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.ProductLists .products.grid_view .productbox_outer {
+    display: inline-block;
+    width: 300px;
+    vertical-align: top;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+
+/* end of gridview */
 
 
 .gss_editlist {
@@ -194,3 +254,4 @@
 .gss_no_products_in_list_hidden {
     display: none;
 }
+

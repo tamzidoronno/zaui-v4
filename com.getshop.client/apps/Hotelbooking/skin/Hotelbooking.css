@@ -17,7 +17,7 @@
 .Hotelbooking .cal_header { text-align: center; padding: 5px; border: solid 1px #a4ae95; background-color:#f5f5f5 !important; color: #000 !important; }
 .Hotelbooking .cal_header.second { border: solid 1px #b2b6bc; background-color:#cbcbcb; }
 .Hotelbooking .cal_field { border: solid 1px #e5e5e5; display:inline-block; width: 23px; height: 23px; line-height: 23px; cursor:pointer; }
-.Hotelbooking .cal_field.selected { background-color: #b4bac4; }
+.Hotelbooking .cal_field.selected { background-color: #f29400; }
 .Hotelbooking .booking_count_box td { font-size: 18px; font-weight: bold; }
 .Hotelbooking .booking_count_box input { border: solid 1px #BDC7D8; width: 40px; margin-left: 20px; }
 .Hotelbooking .booking_count_box select { width: 100%; background-color:#FFF; border: solid 1px #e5e5e5; }

@@ -86,77 +86,76 @@ App = {
     },
     translateText: function (text) {
         var se = {
-            'Venter på at tilkoblingen skal gjennopprettes': 'Venter på at tilkoblingen skal gjennopprettes!',
-            'Kobler til server': 'Kobler til server!',
-            'Laster data': 'Laster data!',
-            'Kalenderfilter': 'Kalenderfilter!',
-            'Det finnes ikke noe kurstilbud lengre tilbake i tid.': 'Det finnes ikke noe kurstilbud lengre tilbake i tid.!',
-            'For å se kalenderen lengre fram i tid, vennligst benytt websiden.': 'For å se kalenderen lengre fram i tid, vennligst benytt websiden.!',
-            'Velg sted for filtrering på kalenderen.': 'Velg sted for filtrering på kalenderen.!',
-            'Ledige plasser på valgt kurs': 'Ledige plasser på valgt kurs!',
-            'Sett meg på venteliste': 'Sett meg på venteliste!',
-            'Meld på': 'Meld på!',
-            'Ledige plasser': 'Ledige plasser!',
-            'Mer informasjon': 'Mer informasjon!',
-            'Påmelding venteliste': 'Påmelding venteliste!',
-            'Fjern filter': 'Fjern filter!',
-            'Du har ikke oppgitt et gyldig org nr, det må være 9 tegn, du har oppgitt' : 'Du har ikke oppgitt et gyldig org nr, det må være 10 tegn, du har oppgitt!',
-            'Dag' : 'Dag!',
-            'NB! Dette er et {dager} dagers kurs.' : 'NB! Dette er et {dager} dagers kurs.!',
-            'Tidspunkt' : 'Tidspunkt!',
-            'Det finnes ingen nyheter akkurat nå, kom tilbake senere.' : 'Det finnes ingen nyheter akkurat nå, kom tilbake senere.!',
-            'Trykk for å velge' : 'Trykk for å velge!',
-            'Epost addressen er ikke gyldig.' : 'Epost addressen er ikke gyldig.!',
-            'Epost teknisk leder er ikke gyldig.' : 'Epost teknisk leder er ikke gyldig.!',
-            'Du har ikke oppgitt riktig telefonnr, det må være 8 siffer.' : 'Du har ikke oppgitt riktig telefonnr, det må være 8 siffer.!',
-            'Vennligst rett feltene i rødt' : 'Vennligst rett feltene i rødt!',
-            'klarte ikke å finne firma med oppgitt org.nr, vennligst sjekk' : 'klarte ikke å finne firma med oppgitt org.nr, vennligst sjekk!',
-            'Du er nå meldt på ventelisten' : 'Du er nå meldt på ventelisten!',
-            'Du er nå påmeldt kurset' : 'Du er nå påmeldt kurset!',
-            'Laster data, vennligst vent' : 'Laster data, vennligst vent!',
-            'Fant ingen treff på oppgitt org.nr, vennligst sjekk og prøv på nytt.' : 'Fant ingen treff på oppgitt org.nr, vennligst sjekk og prøv på nytt.',
-            
-            'Kurs': 'Kurs!',
-            'Sted': 'Plats!',
-            'Skriv inn org.nr, så vil informasjonen fylles ut automatisk.': 'Hitta dit företag genom att fylla i hela org.nr i fältet ovan.!',
-            'Navn': 'Deltagarens namn!',
-            'Deltakers e-post': 'Deltagarens e-post!',
-            'E-post Teknisk Leder': 'Verkstadens e-post!',
-            'Mob.Tlf.': 'Deltagarens mobiltelefon!',
-            'Org.nr.': 'Orgnr!',
-            'Firma': 'Företag!',
-            'Nyheter': 'Nyheter!',
-            'Velg kurs': 'Kurs!',
-            'Kurs liste': 'Kurslista!',
-            'Velg grossist': 'Välj avtalspartner!',
-            'Kurs kalender': 'Kurskalender!',
-            'Kurs oversikt': 'Kursöversikt!',
-            'Påmelding': 'Anmälan!',
-            'Informasjon': 'Information!',
-            'Tilbake': 'Tillbaka!',
-            'Velg sted': 'Välj plats!',
-            'Fjern filter': 'Ta bort filter!',
-            'Forrige': 'Föregående!',
-            'Neste': 'Nästa!',
-            'Januar': 'Januari!',
-            'Februar': 'Februari!',
-            'Mars': 'Mars!',
-            'April': 'April!',
-            'Mai': 'Maj!',
-            'Juni': 'Juni!',
-            'Juli': 'Juli!',
-            'August': 'Augusti!',
-            'September': 'September!',
-            'Oktober': 'Oktober!',
-            'November': 'November!',
-            'Desember': 'December!',
-            'Man': 'Mån!',
-            'Tir': 'Tis!',
-            'Ons': 'Ons!',
-            'Tor': 'Tor!',
-            'Fre': 'Fre!',
-            'Lør': 'Lör!',
-            'Søn': 'Sön!',
+            'Venter på at tilkoblingen skal gjennopprettes': 'Väntar på uppkoppling',
+            'Kobler til server': 'Ansluter till server',
+            'Laster data': 'Laddar',
+            'Kalenderfilter': 'Kalenderfilter',
+            'Det finnes ikke noe kurstilbud lengre tilbake i tid.' : 'Det finns inga tidigare kurstillfällen',
+            'For å se kalenderen lengre fram i tid, vennligst benytt websiden.': 'För att se kurskalendern längre fram i  tiden, använd hemsidan.',
+            'Velg sted for filtrering på kalenderen.': 'Välj ort för att filtrera kalendern.',
+            'Ledige plasser på valgt kurs': 'Lediga platser på vald kurs',
+            'Sett meg på venteliste': 'Sätt mig på väntelista',
+            'Meld på': 'Anmälan',
+            'Ledige plasser': 'Lediga platser',
+            'Mer informasjon': 'Mer info',
+            'Påmelding venteliste': 'Anmälan väntelista',
+            'Fjern filter': 'Rensa filter',
+            'Du har ikke oppgitt et gyldig org nr, det må være 9 tegn, du har oppgitt' : 'Du har inte fyllt ett giltigt org.nr, 10 tecken krävs. Du har angett',
+            'Dag' : 'Dag',
+            'NB! Dette er et {dager} dagers kurs.' : 'Detta är en {dager} dagars kurs',
+            'Tidspunkt' : 'Tidpunkt',
+            'Det finnes ingen nyheter akkurat nå, kom tilbake senere.' : 'Det finns inga nyheter just nu, välkommen tillbaka senare.',
+            'Trykk for å velge' : 'Tryck för att välja',
+            'Epost addressen er ikke gyldig.' : 'Epostadressen är inte giltigt.',
+            'Epost teknisk leder er ikke gyldig.' : 'Epost Verkstaden är inte giltig.',
+            'Du har ikke oppgitt riktig telefonnr, det må være 8 siffer.' : 'Du har inte angett ett giltigt telefonnr, det måste innehålla 8 siffror.',
+            'Vennligst rett feltene i rødt' : 'Vänligen korrigera rödmarkerade fält',
+            'klarte ikke å finne firma med oppgitt org.nr, vennligst sjekk' : 'Hittade inget företag med angivet org.nr. Kontrollera numret',
+            'Du er nå meldt på ventelisten' : 'Du står nu på väntelista',
+            'Du er nå påmeldt kurset' : 'Du är nu anmäld till kursen',
+            'Laster data, vennligst vent' : 'Laddar, vänligen vänta',
+            'Fant ingen treff på oppgitt org.nr, vennligst sjekk og prøv på nytt.' : 'Fick ingen träff på angivet org.nr, kontrollera uppgifterna och prova igen.',
+            'Kurs': 'Kurs',
+            'Sted': 'Plats',
+            'Skriv inn org.nr, så vil informasjonen fylles ut automatisk.': 'Hitta dit företag genom att fylla i hela org.nr i fältet ovan.',
+            'Navn': 'Deltagarens namn',
+            'Deltakers e-post': 'Deltagarens e-post',
+            'E-post Teknisk Leder': 'Verkstadens e-post',
+            'Mob.Tlf.': 'Deltagarens mobiltelefon',
+            'Org.nr.': 'Orgnr',
+            'Firma': 'Företag',
+            'Nyheter': 'Nyheter',
+            'Velg kurs': 'Kurs',
+            'Kurs liste': 'Kurslista',
+            'Velg grossist': 'Välj avtalspartner',
+            'Kurs kalender': 'Kurskalender',
+            'Kurs oversikt': 'Kursöversikt',
+            'Påmelding': 'Anmälan',
+            'Informasjon': 'Information',
+            'Tilbake': 'Tillbaka',
+            'Velg sted': 'Välj plats',
+            'Fjern filter': 'Rensa filter',
+            'Forrige': 'Föregående',
+            'Neste': 'Nästa',
+            'Januar': 'Januari',
+            'Februar': 'Februari',
+            'Mars': 'Mars',
+            'April': 'April',
+            'Mai': 'Maj',
+            'Juni': 'Juni',
+            'Juli': 'Juli',
+            'August': 'Augusti',
+            'September': 'September',
+            'Oktober': 'Oktober',
+            'November': 'November',
+            'Desember': 'December',
+            'Man': 'Mån',
+            'Tir': 'Tis',
+            'Ons': 'Ons',
+            'Tor': 'Tor',
+            'Fre': 'Fre',
+            'Lør': 'Lör',
+            'Søn': 'Sön',
         }
 
         // No is default language
@@ -529,6 +528,8 @@ App = {
                 var positions = $('#select-native-1').find(':selected').attr('availablepositions')
                 App.showFreePositions(positions);
             }
+            
+            App.groupChanged();
         });
     },
     nextClicked: function () {
@@ -580,7 +581,8 @@ App = {
         var company = $('#company').val();
         var courseId = $('#select-native-1').find(':selected').val();
         var groupId = $('#select-native-2').find(':selected').val()
-
+        var groupInformation = $('#extrainformationforgroup').val(); 
+        
         $('label').removeClass('error');
 
         if (name === "")
@@ -621,6 +623,16 @@ App = {
             alert(App.translateText('Epost teknisk leder er ikke gyldig.'));
             return;
         }
+        
+        if (App.lang === "se" && $('.extrainformationforgroup').is(':visible')) {
+            var groupId = $('#select-native-2').find(':selected').val(); 
+            
+            if (!groupInformation) {
+                $('label[for=extrainformationforgroup]').addClass('error');
+                alert($('label[for=extrainformationforgroup]').html()+ ' är inte giltigt.');
+                return;
+            }
+        }
 
         if (phone.length !== 8) {
             alert(App.translateText("Du har ikke oppgitt riktig telefonnr, det må være 8 siffer."));
@@ -646,7 +658,8 @@ App = {
                     cellPhone: phone,
                     groups: [groupId],
                     company: company,
-                    emailAddressToInvoice: invoiceemail
+                    emailAddressToInvoice: invoiceemail,
+                    referenceKey: groupInformation
                 };
 
                 me.getshopApi.UserManager.createUser(user).done(function (createUser) {
@@ -713,7 +726,25 @@ App = {
 
         $('#signon').click($.proxy(this.signOnClicked, this));
         $('#vatnr').keyup($.proxy(this.vatnumberupdated, this));
+        $(document).on('change', '#select-native-2', App.groupChanged);
     },
+    groupChanged: function() {
+        var groupId = $('#select-native-2').find(':selected').val(); 
+        
+        $('.extrainformationforgroup').hide();
+        
+        // Meca
+        if (groupId === "ddcdcab9-dedf-42e1-a093-667f1f091311" && App.lang === "se") {
+            $('.extrainformationforgroup').find('label').html("Kundnummer");
+            $('.extrainformationforgroup').show();
+        }
+        
+        // Mekonomen
+        if (groupId === "1cdd1d93-6d1b-4db3-8e91-3c30cfe38a4a" && App.lang === "se") {
+            $('.extrainformationforgroup').find('label').html("Meko-Id");
+            $('.extrainformationforgroup').show();
+        }
+   },
     vatnumberupdated: function () {
         var value = $('#vatnr').val();
         var informationPage = $('.companyinformation');

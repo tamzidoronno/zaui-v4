@@ -429,3 +429,7 @@ html body .ui-group-theme-a .ui-bar-inherit {
 }
 
 #infopage { text-align: left; }
+
+.extrainformationforgroup {
+    margin-top: 10px;
+}

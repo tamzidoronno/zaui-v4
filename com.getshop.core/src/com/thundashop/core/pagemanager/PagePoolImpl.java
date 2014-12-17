@@ -106,8 +106,21 @@ public class PagePoolImpl {
     public AppConfiguration addApplicationToPage(String pageId, String pageArea, String applicationSettingsId) throws ErrorException {
         AppConfiguration app = applicationPool.createNewApplication(applicationSettingsId);
         Page page = get(pageId);
-        page.getPageArea(pageArea).applicationsList.add(app.id);
-        databaseSaver.saveObject(page, credentials);
+        
+        if(pageArea.equals("header")) {
+            commonPageData.header.applicationsList.add(app.id);
+            commonPageData.storeId = storeId;
+            databaseSaver.saveObject(commonPageData, credentials);
+        } else if(pageArea.equals("footer")) {
+            commonPageData.footer.applicationsList.add(app.id);
+            commonPageData.storeId = storeId;
+            databaseSaver.saveObject(commonPageData, credentials);
+        } else {
+            PageArea pagearea = page.getPageArea(pageArea);        
+            pagearea.applicationsList.add(app.id);
+            databaseSaver.saveObject(page, credentials);
+        }
+
         return app;
     }
 

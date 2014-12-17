@@ -521,6 +521,19 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return $vasking;
     }
 
+    public function sortRoomByPrice($a, $b) {
+
+        if ($a->price > $b->price) {
+            return 1;
+        }
+        
+        if ($a->price < $b->price) {
+            return -1;
+        }
+        
+        return 0;
+    }
+    
     public function getHotelRooms() {
         $rooms = $this->getApi()->getProductManager()->getAllProducts();
         $types = $this->getApi()->getHotelBookingManager()->getRoomTypes();
@@ -540,11 +553,19 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         }
 
         $sortedRooms = array();
+        $noPrices = array();
+        
         foreach ($prices as $index => $price) {
-            $sortedRooms[] = $allrooms[$index];
+            if ($price) {
+                $sortedRooms[] = $allrooms[$index];
+            } else {
+                $noPrices[] = $allrooms[index];
+            }
         }
-
-
+        
+        usort($sortedRooms, array("ns_d16b27d9_579f_4d44_b90b_4223de0eb6f2\Hotelbooking","sortRoomByPrice"));
+        $sortedRooms = array_merge($sortedRooms, $noPrices);
+        
         return $sortedRooms;
     }
 

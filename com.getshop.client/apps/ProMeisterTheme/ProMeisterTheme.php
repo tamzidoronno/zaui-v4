@@ -20,6 +20,11 @@ class ProMeisterTheme extends \ThemeApplication {
         $this->setVariable('ns_974beda7_eb6e_4474_b991_5dbc9d24db8e', 'height', 100);
         $this->setVariable('ns_974beda7_eb6e_4474_b991_5dbc9d24db8e', 'width', 900);        
     }
+
+    public function renderFonts() {
+        echo '<script src="//use.typekit.net/tdn7qln.js"></script>';
+    }
+
 }
 
 ?>

@@ -559,7 +559,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             if ($price) {
                 $sortedRooms[] = $allrooms[$index];
             } else {
-                $noPrices[] = $allrooms[index];
+                $noPrices[] = $allrooms[$index];
             }
         }
         

@@ -69,7 +69,7 @@
                  width: 15px;
                  background-color:#bbb;
                  position: absolute; border-radius: 3px;
-                 right: 0px; z-index: 2; }
+                 right: 0px; z-index: 21; }
 .gseasyrowmode i { margin: 3px; cursor:pointer; }
 .gseasymode i:hover,.gseasyrowmode i:hover { color:#FFF; cursor:pointer; }
 .inputWrapper {

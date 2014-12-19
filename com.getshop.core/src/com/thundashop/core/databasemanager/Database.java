@@ -34,7 +34,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class Database {
-    public static int mongoPort = 27018;
+    public static int mongoPort = 27017;
     
     private Mongo mongo;
     private Morphia morphia;

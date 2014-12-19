@@ -130,8 +130,14 @@
 
 .ProductLists .products.row_view  .product_price {
     position: absolute;
-    right: 10px;
+    left: 0px;
     top: 0px;
+    background: rgba(255,255,255,0.8);
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    border-right: solid 1px #DDD;
+    border-bottom: solid 1px #DDD;
 }
 
 /* Start of gridview */

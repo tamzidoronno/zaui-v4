@@ -2660,6 +2660,21 @@ class OrderManager(object):
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getMostSoldProducts(self, numberOfProducts):
+    args = collections.OrderedDict()
+    if isinstance(numberOfProducts,GetShopBaseClass): 
+      args["numberOfProducts"]=json.dumps(numberOfProducts.__dict__)
+    else:
+      try:
+        args["numberOfProducts"]=json.dumps(numberOfProducts)
+      except (ValueError, AttributeError):
+        args["numberOfProducts"]=numberOfProducts
+    data = EmptyClass()
+    data.args = args
+    data.method = "getMostSoldProducts"
+    data.interfaceName = "core.ordermanager.IOrderManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getOrder(self, orderId):
     args = collections.OrderedDict()
     if isinstance(orderId,GetShopBaseClass): 
@@ -2753,6 +2768,21 @@ class OrderManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getPageCount"
+    data.interfaceName = "core.ordermanager.IOrderManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getSalesNumber(self, year):
+    args = collections.OrderedDict()
+    if isinstance(year,GetShopBaseClass): 
+      args["year"]=json.dumps(year.__dict__)
+    else:
+      try:
+        args["year"]=json.dumps(year)
+      except (ValueError, AttributeError):
+        args["year"]=year
+    data = EmptyClass()
+    data.args = args
+    data.method = "getSalesNumber"
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 

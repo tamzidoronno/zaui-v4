@@ -2,79 +2,89 @@
 
 namespace ns_deab499e_b133_4cb6_a1b2_532018c31d46;
 
+$taxes = $this->getApi()->getProductManager()->getTaxes();
+if (!is_array($taxes)) {
+    $taxes = [];
+}
+
+$shipment = isset($taxes[0]) ? $taxes[0]->taxRate : "";
+$group1 = isset($taxes[1]) ? $taxes[1]->taxRate : "";
+$group2 = isset($taxes[2]) ? $taxes[2]->taxRate : "";
+$group3 = isset($taxes[3]) ? $taxes[3]->taxRate : "";
+$group4 = isset($taxes[4]) ? $taxes[4]->taxRate : "";
+$group5 = isset($taxes[5]) ? $taxes[5]->taxRate : "";
+
 /* @var $this \ns_deab499e_b133_4cb6_a1b2_532018c31d46\Taxes */
 ?>
-<div class="information">
-<?
-echo $this->getDescription();
-?>
+
+<div class="gss_settings_header">
+    <i class="fa fa-dollar"></i>
+
+    <div class="gss_settings_header_description">
+        <div class="gss_settings_header_title"> <? echo $this->__f("Taxes"); ?></div>
+
+        <div class="gss_settings_header_description_inner">
+            <? echo $this->getDescription(); ?>
+        </div>
+    </div>	
 </div>
 
-<div appid='<? echo $this->getConfiguration()->id; ?>' class='app'>
-    <div class="textfield setting"  id="shipmentent">
+
+<div class='gss_settings_content'>
+    <div class="textfield gss_setting"  id="admin">
+        <span class="title"><?php echo $this->__f("Activated"); ?></span>
+        <div class="gss_onoff" gs_model="taxmodel" gs_model_attr="isactivated">
+            <? echo $this->__f("Off"); ?><i class="fa fa-toggle-off"></i><? echo $this->__f("On"); ?>
+        </div>
+        <div class="description">
+            <?php echo $this->__("Please activate this if you want to use taxes in the e-commerce solution"); ?>
+        </div>
+    </div>
+
+    <div class="textfield gss_setting" id="title">
         <span class="title"><?php echo $this->__("Shipment taxes"); ?></span>
-        <span style="float:right">
-            <span class="value" style="width:27px;display:inline-block;text-align: right;">0</span>%
-        </span>
-        <input type="range" min="0" max="100" step="1" class="config" id="selenium_title" value="0">
-        <div class="description">
-<?php echo $this->__f("What is the shipment taxes?"); ?>
-        </div>
+        <input type="textfield" gs_model="taxmodel" gs_model_attr="shipment" value="<? echo $shipment; ?>">
+        <div class="description"><?php echo $this->__f("What is the shipment taxes?"); ?></div>
     </div>
 
-    <div class="textfield setting"  id="tax_group_1">
-        <span class="title"><?php echo $this->__("Taxgroup") . " 1"; ?></span>
-        <span style="float:right">
-            <span class="value" style="width:27px;display:inline-block;text-align: right;">0</span>%
-        </span>
-        <input type="range" min="0" max="100" step="1" class="config" id="selenium_title" value="0">
-        <div class="description">
-<?php echo $this->__f("This tax group will be possible to select in your product management."); ?>
-        </div>
+    <div class="textfield gss_setting" id="title">
+        <span class="title"><?php echo $this->__("Taxgroup") . " 1 (". $this->__f("Default").")"; ?></span>
+        <input type="textfield" gs_model="taxmodel" gs_model_attr="group1" value="<? echo $group1; ?>" value="<? echo $group2; ?>">
+        <div class="description"><?php echo $this->__f("This tax group will be possible to select in your product management."); ?></div>
     </div>
 
-    <div class="textfield setting"  id="tax_group_2">
+
+    <div class="textfield gss_setting" id="title">
         <span class="title"><?php echo $this->__("Taxgroup") . " 2"; ?></span>
-        <span style="float:right">
-            <span class="value" style="width:27px;display:inline-block;text-align: right;">0</span>%
-        </span>
-        <input type="range" min="0" max="100" step="1" class="config" id="selenium_title" value="0">
-        <div class="description">
-<?php echo $this->__f("This tax group will be possible to select in your product management."); ?>
-        </div>
+        <input type="textfield" gs_model="taxmodel" gs_model_attr="group2" value="<? echo $group2; ?>">
+        <div class="description"><?php echo $this->__f("This tax group will be possible to select in your product management."); ?></div>
     </div>
 
-    <div class="textfield setting"  id="tax_group_3">
+
+    <div class="textfield gss_setting" id="title">
         <span class="title"><?php echo $this->__("Taxgroup") . " 3"; ?></span>
-        <span style="float:right">
-            <span class="value" style="width:27px;display:inline-block;text-align: right;">0</span>%
-        </span>
-        <input type="range" min="0" max="100" step="1" class="config" id="selenium_title" value="0">
-        <div class="description">
-<?php echo $this->__f("This tax group will be possible to select in your product management."); ?>
-        </div>
+        <input type="textfield" gs_model="taxmodel" gs_model_attr="group3"  value="<? echo $group3; ?>">
+        <div class="description"><?php echo $this->__f("This tax group will be possible to select in your product management."); ?></div>
     </div>
 
-    <div class="textfield setting"  id="tax_group_4">
+
+    <div class="textfield gss_setting" id="title">
         <span class="title"><?php echo $this->__("Taxgroup") . " 4"; ?></span>
-        <span style="float:right">
-            <span class="value" style="width:27px;display:inline-block;text-align: right;">0</span>%
-        </span>
-        <input type="range" min="0" max="100" step="1" class="config" id="selenium_title" value="0">
-        <div class="description">
-<?php echo $this->__f("This tax group will be possible to select in your product management."); ?>
-        </div>
+        <input type="textfield" gs_model="taxmodel" gs_model_attr="group4"  value="<? echo $group4; ?>">
+        <div class="description"><?php echo $this->__f("This tax group will be possible to select in your product management."); ?></div>
     </div>
 
-    <div class="textfield setting"  id="tax_group_5">
+
+    <div class="textfield gss_setting" id="title">
         <span class="title"><?php echo $this->__("Taxgroup") . " 5"; ?></span>
-        <span style="float:right">
-            <span class="value" style="width:27px;display:inline-block;text-align: right;">0</span>%
-        </span>
-        <input type="range" min="0" max="100" step="1" class="config" id="selenium_title" value="0">
-        <div class="description">
-<?php echo $this->__f("This tax group will be possible to select in your product management."); ?>
-        </div>
+        <input type="textfield" gs_model="taxmodel" gs_model_attr="group5"  value="<? echo $group5; ?>">
+        <div class="description"><?php echo $this->__f("This tax group will be possible to select in your product management."); ?></div>
     </div>
-    <div class="button savebutton"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__("Save settings"); ?></ins></div>
+
+
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="saveTaxes" gss_model="taxmodel"><i class='fa fa-save'></i><?php echo $this->__("Save taxes"); ?></div>
+    </div>
+
+
 </div>

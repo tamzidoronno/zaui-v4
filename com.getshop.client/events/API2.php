@@ -2600,6 +2600,23 @@ class APIOrderManager {
 	}
 
 	/**
+	* Returns the total amount of sales for a given year. If you year is left blank you
+	* will get the total amount for all years.
+	*
+	* @param year
+	* @return Map
+	*/
+
+	public function getMostSoldProducts($numberOfProducts) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["numberOfProducts"] = json_encode($this->transport->object_unset_nulls($numberOfProducts));
+	     $data["method"] = "getMostSoldProducts";
+	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Fetch a single order based on its id.
 	* @param orderId
 	* @return core_ordermanager_data_Order
@@ -2676,6 +2693,23 @@ class APIOrderManager {
 	     $data['args']["pageSize"] = json_encode($this->transport->object_unset_nulls($pageSize));
 	     $data['args']["searchWord"] = json_encode($this->transport->object_unset_nulls($searchWord));
 	     $data["method"] = "getPageCount";
+	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Returns the total amount of sales for a given year. If you year is left blank you
+	* will get the total amount for all years.
+	*
+	* @param year
+	* @return List
+	*/
+
+	public function getSalesNumber($year) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["year"] = json_encode($this->transport->object_unset_nulls($year));
+	     $data["method"] = "getSalesNumber";
 	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->sendMessage($data);
 	}

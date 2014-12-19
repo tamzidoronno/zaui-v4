@@ -19,5 +19,23 @@ class DashBoard extends \ApplicationBase implements \Application {
     public function renderConfig() {
         $this->includefile("dashboard");
     }
+    
+    public function getDashboardChart($year=false) {
+        
+        return ['fa-area-chart', 'app.DashBoard.drawChart', $this->__f("Overview")];
+    }
+
+    public function setDashBoardChart() {
+        $_SESSION['gss_dashboard_chart_app'] = $_POST['value'];
+    }
+    
+    public function getCurrentChartApp() {
+        if (!isset($_SESSION['gss_dashboard_chart_app'])) {
+            return $this;
+        }
+        
+        $app = $this->getApi()->getStoreApplicationPool()->getApplication($_SESSION['gss_dashboard_chart_app']);
+        return $this->getFactory()->getApplicationPool()->createInstace($app);
+    }
 }
 ?>

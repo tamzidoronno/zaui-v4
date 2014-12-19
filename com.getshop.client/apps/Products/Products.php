@@ -29,6 +29,45 @@ class Products extends \WebshopApplication implements \Application {
     public function render() {
         
     }
+    
+    public function getDashboardChart($year=false) {       
+        if ($year) {
+            $this->createGoogleChartResultList($year);
+        }
+        
+        return ['fa-shopping-cart', 'app.Products.drawChart', $this->__f("Products")];
+    }
+    
+    private function createGoogleChartResultList($year) {
+        $products = $this->getApi()->getOrderManager()->getMostSoldProducts(5);
+        $productCount = array();
+        
+        foreach ($products as $productId => $list) {
+            $product = $this->getApi()->getProductManager()->getProduct($productId);
+            if (!$product) {
+                continue;
+            }
+            
+            if (!isset($productCount[$productId])) {
+                $productCount[$productId] = array();
+            }
+            
+            foreach ($list as $statistic) {
+                if ($statistic->year != $year) {
+                    continue;
+                }
+                
+                $productCount[$productId][$statistic->month] = $statistic->count;
+            }
+            
+            $productCount[$productId][13] = $product->name;
+        }
+        
+        echo "<script>";
+        echo "app.Products.googleChartsData = ".json_encode($productCount).";";
+        echo "</script>";
+        
+    }
 
     public function updateProduct() {
         $product = $this->getApi()->getProductManager()->getProduct($_POST['productid']);

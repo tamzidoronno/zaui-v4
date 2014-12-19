@@ -20,7 +20,7 @@ class Taxes extends \ApplicationBase implements \Application {
             $setting = new \core_common_Settings();
             $setting->id = "shipmentent";
             $setting->value = $taxgroups[0]->taxRate;
-            $this->configuration->settings->{"shipmentent"} = $setting;
+            @$this->configuration->settings->{"shipmentent"} = $setting;
             
             foreach($taxgroups as $number => $taxobj) {
                 if($number == 0) {
@@ -49,21 +49,21 @@ class Taxes extends \ApplicationBase implements \Application {
         $taxes = array();
         $this->getApi()->getProductManager()->setTaxes($taxes);
     }
-
-    public function saveSettings() {
-        $data = $_POST['data'];
+    
+    public function saveTaxes() {
         $result = array();
         $grp = new \core_productmanager_data_TaxGroup();
         $grp->groupNumber = 0;
-        $grp->taxRate = $_POST['data']['shipmentent']['value'];
+        $grp->taxRate = $_POST['shipment'];
         $result[] = $grp;
 
         for ($i = 1; $i <= 5; $i++) {
             $grp = new \core_productmanager_data_TaxGroup();
             $grp->groupNumber = $i;
-            $grp->taxRate = $_POST['data']['tax_group_' . $i]['value'];
+            $grp->taxRate = $_POST['group'.$i];
             $result[] = $grp;
         }
+        
         $this->getApi()->getProductManager()->setTaxes($result);
     }
 

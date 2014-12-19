@@ -1,5 +1,6 @@
 <?
 /* @var $this \ns_b81bfb16_8066_4bea_a3c6_c155fa7119f8\DashBoard */
+$apps = $this->getApi()->getStoreApplicationPool()->getApplications();
 ?>
 <div class='gss_settings_main_area'>
     <div class='gss_settings_getshop_logo'>
@@ -7,20 +8,43 @@
         <div class='gss_slogan'>GetShop Admin</div>
     </div>
 
-    <div class='gss_appviews'>
-        
+    <div class="dashboard_statistic_buttons">
         <?
-        $apps = $this->getApi()->getStoreApplicationPool()->getApplications();
+            foreach ($apps as $app) {
+                $instance = $this->getFactory()->getApplicationPool()->createInstace($app);
+                
+                if (!$instance) {
+                    continue;
+                }
+                
+                $chartData = $instance->getDashboardChart();
+                if (is_array($chartData)) {
+                    $icon = $chartData[0];
+                    $text = $chartData[2];
+                    
+                    echo "<div gss_method='setDashBoardChart' gss_value='$app->id' class='gss_statistic_tab_button'><i class='fa $icon'></i> $text </div>";
+                }
+            }
+        ?>
+        </div>
+    <div class='gss_dashboard_statistics'>
+        
+        <div id="gss_chart_div"></div>
+    </div>  
+    <div class='gss_appviews'>
+
+        <?
+        
         foreach ($apps as $app) {
-            
+
             $instance = $this->getFactory()->getApplicationPool()->createInstace($app);
-            
+
             if ($instance) {
                 ob_start();
                 $instance->renderDashBoardWidget();
                 $content = ob_get_contents();
                 ob_end_clean();
-                
+
                 if ($content) {
                     echo "<div class='gss_appview'> ";
                     echo $content;
@@ -31,3 +55,25 @@
         ?>
     </div>
 </div>
+
+<?
+    $chartApp = $this->getCurrentChartApp();
+    if (!$chartApp) {
+        return;
+    }
+    $chartData = $chartApp->getDashboardChart(2014);
+?>
+<script>
+    var theChartFunction =  <? echo $chartData[1]; ?>;
+    var div = document.getElementById('gss_chart_div');
+    
+    var executeChartFucntion = function() {
+        console.log("OK");
+        $(div).html('<div class="gss_chart_loading"><i class="fa fa-cog fa-spin"></i><br/>'+__f("Loading")+'</div>');
+        $('.gss_dashboard_statistics .gss_sub_statistics').remove();
+        theChartFunction(div);
+    }
+    
+    google.setOnLoadCallback(executeChartFucntion);
+    executeChartFucntion();
+</script>

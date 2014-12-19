@@ -1,24 +1,36 @@
 <?
 /* @var $this \ns_e073a75a_87c9_4d92_a73a_bc54feb7317f\Products */
 
-$allProducts = $this->getApi()->getProductManager()->getAllProducts();
-
-if(!count($allProducts)) {
-    $this->includefile("no_products");
-    return;
-} 
+$searchWord = $this->getSearchWord();
+$searchResult = $this->getApi()->getProductManager()->search($searchWord, 20, $this->getGssPageNumber());
+$allProducts = $searchResult->products;
 
 ?>
 
 <div class="textfield gss_setting" style='padding-left: 20px;'>
     <span class="title"><? echo $this->__f("All your products"); ?></span>
-    <input type='textfield' placeholder='<? echo $this->__f("Filter products"); ?>'/>
+    <input type='textfield' id="gss_filterproducts" placeholder='<? echo $this->__f("Filter products"); ?>' value="<? echo $searchWord; ?>"/>
+    
     <div class="description">
         <? echo $this->__f("Below you see a list with all of your products, you can filter it by using the textbox to the right. Click on the product you want to see more information about."); ?>
     </div>
 </div>
-<?
 
+<script>
+    document.getElementById('gss_filterproducts').focus();
+    $("#gss_filterproducts").val($("#gss_filterproducts").val());
+</script>
+
+<?
+if (!count($allProducts) && !count($this->getApi()->getProductManager()->getAllProducts())) {
+    $this->includefile("no_products");
+    return;
+}
+
+if (!count($allProducts)) {
+    $this->includefile("no_products_search");
+    return;
+}
 foreach ($allProducts as $product) {
     ?>
     <div gss_fragment='editproduct' gss_view='gss_productwork_area' gss_value='<? echo $product->id ?>' class='gss_product'>
@@ -27,8 +39,27 @@ foreach ($allProducts as $product) {
             <div class='gss_product_price'><? echo $product->price; ?></div>
             <div class='gss_product_created'><? echo $product->rowCreatedDate; ?></div>    
         </div>
-        
+
     </div>
     <?
 }
 ?>
+<div class="gss_pagenumber_bottom">
+    <? echo $this->__f("Page").": ".$searchResult->pageNumber; ?>/<? echo $searchResult->pages; ?>
+</div>
+<div class="gss_products_nextprevbuttons" >
+    <?
+    if ($searchResult->pageNumber > 1) {
+    ?>
+    <div class="gss_button product_gss_next_buttons" gss_method="setGssPrevPage"><i class="fa fa-arrow-left"></i> <? echo $this->__f("Previouse"); ?></div>
+    <?
+    }
+    
+    if ($searchResult->pages > $searchResult->pageNumber) {
+    ?>
+    <div class="gss_button product_gss_next_buttons gss_product_next" gss_method="setGssNextPage"><i class="fa fa-arrow-right"></i><? echo $this->__f("Next"); ?></div>
+    <?
+    }
+    ?>
+</div>
+

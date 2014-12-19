@@ -3859,6 +3859,35 @@ class ProductManager(object):
     data.interfaceName = "core.productmanager.IProductManager"
     return self.communicationHelper.sendMessage(data)
 
+  def search(self, searchWord, pageSize, page):
+    args = collections.OrderedDict()
+    if isinstance(searchWord,GetShopBaseClass): 
+      args["searchWord"]=json.dumps(searchWord.__dict__)
+    else:
+      try:
+        args["searchWord"]=json.dumps(searchWord)
+      except (ValueError, AttributeError):
+        args["searchWord"]=searchWord
+    if isinstance(pageSize,GetShopBaseClass): 
+      args["pageSize"]=json.dumps(pageSize.__dict__)
+    else:
+      try:
+        args["pageSize"]=json.dumps(pageSize)
+      except (ValueError, AttributeError):
+        args["pageSize"]=pageSize
+    if isinstance(page,GetShopBaseClass): 
+      args["page"]=json.dumps(page.__dict__)
+    else:
+      try:
+        args["page"]=json.dumps(page)
+      except (ValueError, AttributeError):
+        args["page"]=page
+    data = EmptyClass()
+    data.args = args
+    data.method = "search"
+    data.interfaceName = "core.productmanager.IProductManager"
+    return self.communicationHelper.sendMessage(data)
+
   def setMainImage(self, productId, imageId):
     args = collections.OrderedDict()
     if isinstance(productId,GetShopBaseClass): 

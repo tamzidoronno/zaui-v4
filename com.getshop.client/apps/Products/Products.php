@@ -146,6 +146,41 @@ class Products extends \WebshopApplication implements \Application {
         $list->productIds = $keep;
         $this->getApi()->getProductManager()->saveProductList($list);
     }
-
     
+    public function setFilterProducts() {
+        $_SESSION['products_admin_search_word_page'] = 1;
+        $_SESSION['products_admin_search_word'] = $_POST['filterCriteria'];
+    }
+
+    public function getSearchWord() {
+        if (isset($_SESSION['products_admin_search_word'])) {
+            return $_SESSION['products_admin_search_word'];
+        }
+        
+        return "";
+    }
+    
+    public function getGssPageNumber() {
+        if (isset($_SESSION['products_admin_search_word_page'])) {
+            return $_SESSION['products_admin_search_word_page'];
+        }
+        
+        return 1;
+    }
+    
+    public function setGssNextPage() {
+        $pageNumber = $this->getGssPageNumber();
+        $pageNumber++;
+        $_SESSION['products_admin_search_word_page'] = $pageNumber;
+    }
+    
+    public function setGssPrevPage() {
+        $pageNumber = $this->getGssPageNumber();
+        $pageNumber--;
+        if ($pageNumber < 1) {
+            $pageNumber = 1;
+        }
+        $_SESSION['products_admin_search_word_page'] = $pageNumber;
+    }
+
 }

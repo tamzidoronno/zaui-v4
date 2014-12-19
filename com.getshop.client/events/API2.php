@@ -3710,6 +3710,27 @@ class APIProductManager {
 	}
 
 	/**
+	* Returns a list of products for a given searchword,
+	* if blank all products will be returned.
+	*
+	* @param searchWord
+	* @param pageSize
+	* @param page
+	* @return List
+	*/
+
+	public function search($searchWord, $pageSize, $page) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["searchWord"] = json_encode($this->transport->object_unset_nulls($searchWord));
+	     $data['args']["pageSize"] = json_encode($this->transport->object_unset_nulls($pageSize));
+	     $data['args']["page"] = json_encode($this->transport->object_unset_nulls($page));
+	     $data["method"] = "search";
+	     $data["interfaceName"] = "core.productmanager.IProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Method for setting a known product image as main image.
 	*
 	* @param productId

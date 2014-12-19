@@ -171,3 +171,15 @@
     vertical-align: middle;  /* vertical alignment of the inline element */
     font: 16px/1 Arial sans-serif;        
 }
+
+.gss_products_nextprevbuttons {
+    padding-left: 20px;
+    padding-bottom: 20px;
+    position: relative;
+    height: 40px;
+}
+
+.gss_products_nextprevbuttons .gss_product_next {
+    position: absolute;
+    right: 20px;
+}

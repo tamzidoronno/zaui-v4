@@ -6,6 +6,7 @@ import com.thundashop.core.common.ExchangeConvert;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.Entry;
+import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pagemanager.IPageManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
@@ -16,18 +17,24 @@ import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
 import com.thundashop.core.productmanager.data.ProductImage;
 import com.thundashop.core.productmanager.data.ProductList;
+import com.thundashop.core.productmanager.data.SearchResult;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author ktonder
  */
 public abstract class AProductManager extends ManagerBase {
+
     HashMap<String, ProductList> productList = new HashMap();
 
     protected HashMap<String, Product> products = new HashMap();
@@ -37,14 +44,13 @@ public abstract class AProductManager extends ManagerBase {
 
     @Autowired
     public PageManager pageManager;
-    
+
     @Autowired
     private ContentManager contentManager;
-    
+
     @Autowired
     public ListManager listManager;
-    
-    
+
     public Product finalize(Product product) throws ErrorException {
         if (product != null && product.pageId != null && product.page == null) {
             product.page = pageManager.getPage(product.pageId);
@@ -57,29 +63,29 @@ public abstract class AProductManager extends ManagerBase {
                 product.attributesAdded.put(val.groupName, val.value);
             }
         }
-        
+
         if (taxGroups.get(1) != null && product.taxGroupObject == null && product.taxgroup == -1) {
             product.taxGroupObject = taxGroups.get(1);
             product.taxgroup = 1;
         } else {
             product.taxGroupObject = taxGroups.get(product.taxgroup);
         }
-        
+
         Page page = pageManager.getPage(product.pageId);
-        
-        if(product.original_price == null) {
+
+        if (product.original_price == null) {
             product.original_price = product.price;
         }
-        if(product.campaing_start_date > 0 && product.campaing_end_date > 0) {
-            Date startDate = new Date(product.campaing_start_date*1000);
-            Date endDate = new Date(product.campaing_end_date*1000);
+        if (product.campaing_start_date > 0 && product.campaing_end_date > 0) {
+            Date startDate = new Date(product.campaing_start_date * 1000);
+            Date endDate = new Date(product.campaing_end_date * 1000);
             Date now = new Date(System.currentTimeMillis());
-            if(startDate.before(now) && endDate.after(now)) {
+            if (startDate.before(now) && endDate.after(now)) {
                 product.price = product.campaign_price;
             } else {
                 product.price = product.original_price;
             }
-            
+
         }
         for (ProductImage image : product.images.values()) {
             if (!product.imagesAdded.contains(image.fileId)) {
@@ -100,7 +106,7 @@ public abstract class AProductManager extends ManagerBase {
                 pool.addAttributeValue((AttributeValue) object);
             }
             if (object instanceof ProductList) {
-                ProductList list = (ProductList)object;
+                ProductList list = (ProductList) object;
                 productList.put(list.id, list);
             }
             if (object instanceof TaxGroup) {
@@ -109,7 +115,6 @@ public abstract class AProductManager extends ManagerBase {
             }
         }
     }
-
 
     protected Product getProduct(String productId) throws ErrorException {
         Product product = products.get(productId);
@@ -169,7 +174,6 @@ public abstract class AProductManager extends ManagerBase {
             }
         }
 
-
         if (searchCriteria.attributeFilter.size() > 0) {
             ArrayList<Product> filteredProducts = new ArrayList();
             for (Product prod : retProducts) {
@@ -182,7 +186,7 @@ public abstract class AProductManager extends ManagerBase {
                         break;
                     }
                 }
-                if(found) {
+                if (found) {
                     filteredProducts.add(prod);
                     cachedResult.addToSummary(prod);
                 }
@@ -210,13 +214,82 @@ public abstract class AProductManager extends ManagerBase {
         }
         return limitedResult;
     }
-    
+
     public Product findProductByPage(String id) {
-        for(Product product : products.values()) {
-            if(product.pageId!= null && product.pageId.equals(id)) {
+        for (Product product : products.values()) {
+            if (product.pageId != null && product.pageId.equals(id)) {
                 return product;
             }
         }
         return null;
+    }
+
+    public SearchResult search(String searchWord, Integer pageSize, Integer page) {
+        List<Product> filteredProducts = getProductIdsThatMatchSearchWord(searchWord);
+        List<Product> retProducts = new ArrayList(filteredProducts);
+
+        SearchResult result = new SearchResult();
+
+        if (page != null && pageSize != null) {
+            int from = (page - 1) * pageSize;
+            int to = pageSize * page;
+
+            if (to > filteredProducts.size()) {
+                to = filteredProducts.size();
+            }
+
+            try {
+                retProducts = filteredProducts.subList(from, to);
+            } catch (IllegalArgumentException ex) {
+                return null;
+            }
+
+            double pages = (double) filteredProducts.size() / (double) pageSize;
+            if (pages == 0) {
+                pages = 1;
+            }
+
+            result.pages = (int) Math.ceil(pages);
+        }
+
+        List<Product> finalizedProducts = new ArrayList();
+        retProducts.stream().forEach(p -> finalizedProducts.add(finalize(p)));
+        result.products = finalizedProducts;
+        result.pageNumber = page;
+
+        return result;
+    }
+
+    private List<Product> getProductIdsThatMatchSearchWord(String searchWord) {
+        Set<String> filteredProductIds = new HashSet();
+        if (searchWord == null || searchWord.isEmpty()) {
+            products.values().stream().forEach(p -> filteredProductIds.add(p.id));
+        }
+
+        if (searchWord != null) {
+            List<String> splittedSearchWord = Arrays.asList(searchWord.split(" "));
+
+                products.values().stream()
+                    .filter(p -> p.name != null && !p.name.isEmpty())
+                    .filter(p -> matchSearchWords(p.name, splittedSearchWord))
+                    .forEach(p -> filteredProductIds.add(p.id));
+        }
+
+        List<Product> retProducts = new ArrayList();
+        for (String productId : filteredProductIds) {
+            retProducts.add(products.get(productId));
+        }
+
+        return retProducts;
+    }
+
+    private boolean matchSearchWords(String name, List<String> splittedSearchWord) {
+        for (String search : splittedSearchWord) {
+            if (!name.toLowerCase().contains(search.toLowerCase())) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 }

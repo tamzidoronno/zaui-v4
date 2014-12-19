@@ -9,6 +9,7 @@ import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
 import com.thundashop.core.productmanager.data.ProductList;
+import com.thundashop.core.productmanager.data.SearchResult;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -326,4 +327,10 @@ public class ProductManager extends AProductManager implements IProductManager {
         this.productList.put(productList.id, productList);
         saveObject(productList);
     }
+
+    @Override
+    public SearchResult search(String searchWord, Integer pageSize, Integer page) {
+        return super.search(searchWord, pageSize, page); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

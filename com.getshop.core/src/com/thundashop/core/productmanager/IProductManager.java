@@ -9,6 +9,7 @@ import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
 import com.thundashop.core.productmanager.data.ProductList;
+import com.thundashop.core.productmanager.data.SearchResult;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -227,4 +228,15 @@ public interface IProductManager {
      */
     @Administrator
     public void saveProductList(ProductList productList);
+    
+    /**
+     * Returns a list of products for a given searchword, 
+     * if blank all products will be returned.
+     * 
+     * @param searchWord
+     * @param pageSize
+     * @param page
+     * @return 
+     */
+    public SearchResult search(String searchWord, Integer pageSize, Integer page);
 }

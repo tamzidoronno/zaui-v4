@@ -10,6 +10,13 @@ app.Products = {
     currentProductId: null,
     init: function () {
         $(document).on('click', '.gss_product_saveuploadimage', app.Products.uploadBoxClick);
+        $(document).on('change', '#gss_filterproducts', app.Products.filterProducts);
+    },
+    filterProducts: function() {
+       var data = {
+           filterCriteria : $(this).val()
+       }
+       getshop.Settings.post(data, "setFilterProducts");
     },
     productImageRemoved: function (field) {
         $(field).parent().fadeOut(100);

@@ -9,8 +9,13 @@ app.Products = {
     googleChartsData: null,
     currentProductId: null,
     init: function () {
+        $(document).on('click', '#gss_gotoproduct', app.Products.goToProduct);
         $(document).on('click', '.gss_product_saveuploadimage', app.Products.uploadBoxClick);
         $(document).on('change', '#gss_filterproducts', app.Products.filterProducts);
+    },
+    goToProduct: function() {
+        navigate('?page=' + $(this).attr('pageid'));
+        getshop.Settings.showPage();
     },
     filterProducts: function() {
        var data = {

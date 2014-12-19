@@ -45,7 +45,7 @@ foreach ($apps as $app) {
             if (endsWith(strtolower($entry), ".js")) {
                 $filecontent = file_get_contents($javascriptFolder . "/" . $entry);
                 $fileName = "javascripts/".$namespace."_".$entry;
-                file_put_contents($fileName, $filecontent);
+                @file_put_contents($fileName, $filecontent);
                 echo '<script type="text/javascript" class="javascript_app_file" src="'.$fileName.'"></script>';
             }
         }

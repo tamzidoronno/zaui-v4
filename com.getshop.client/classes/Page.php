@@ -66,7 +66,6 @@ class Page {
             $this->addCellConfigPanel();
             $this->addCellResizingPanel();
             $this->displayResizing();
-            $this->printLoaderForContainers();
             $this->printEditingInfo();
             ?>
             <style>
@@ -160,14 +159,15 @@ class Page {
                 </tr>
             </table>
             Cell operations:<br>
-            <div class="gsoperatecell" target="container" type="delete">Delete carousel</div>
-            <div class="gsoperatecell" target="container" type="moveup">Move carousel up</div>
-            <div class="gsoperatecell" target="container" type="movedown">Move carousel down</div>
-            <div class="gsoperatecell" target="container" type="addbefore">Create row above</div>
-            <div class="gsoperatecell" target="container" type="addafter">Create row below</div>
+            <div class="gsoperatecell" target="selectedcell" type="delete">Delete selected slide</div>
             <div class="gsoperatecell" type="moveup" target="selectedcell">Move slide to the left</div>
             <div class="gsoperatecell" type="movedown" target="selectedcell">Move slide to the right</div>
         </div>
+        <script>
+            $(function() {
+                $('.carouselsettingspanel').draggable();
+            });
+        </script>
         <?
     }
 
@@ -540,7 +540,6 @@ class Page {
                     thundashop.framework.lastRotatedCell[cellid] = '<? echo $cell->cells[0]->cellId; ?>';
                 }
         <? } ?>
-
         </script>
 
         <style>
@@ -631,34 +630,6 @@ class Page {
         echo "</div>";
     }
 
-    public function printLoaderForContainers() {
-        ?>
-        <script>
-            PubSub.subscribe('NAVIGATION_COMPLETED', function (a, b) {
-                for (var containerid in thundashop.framework.lastRotatedCell) {
-                    var lastRotatedCell = thundashop.framework.lastRotatedCell[containerid];
-                    console.log("Navigating: " + containerid + " with cell: " + lastRotatedCell);
-                    var cell = $('.gscell[cellid="' + lastRotatedCell + '"]');
-                    var container = cell.closest('.gscontainercell');
-                    if (container.hasClass('gsrotating')) {
-                        container.find('.gsrotatingrow').css('opacity', '0');
-                        cell.css('opacity', '1');
-                        cell.css('z-index', '2');
-                    }
-                    if (container.hasClass('gstab')) {
-                        container.find('.gstabrow').hide();
-                        cell.show();
-                    }
-
-                    setTimeout(function () {
-                        thundashop.framework.loadResizing(cell, true);
-                    }, "200");
-                }
-            });
-        </script>
-        <?
-    }
-
     public function printEasyModeEdit($cell) {
         if (sizeof($cell->cells) > 0) {
             return;
@@ -686,13 +657,14 @@ class Page {
     public function printEasyRowMode($row) {
         echo "<div class='gseasyrowmode' cellid='" . $row->cellId . "'>";
         echo "<div class='gseasyrowmodeinnser'>";
-        if ($row->mode == "TAB") {
-        } else {
-        }
         if ($row->mode == "TAB" || $row->mode == "ROTATING") {
             echo "<i class='fa fa-arrow-up gsoperatecell' type='moveup' target='container' title='Move row up'></i> ";
             echo "<i class='fa fa-plus gsoperatecell' type='addbefore' target='container'  title='Create row above'></i> ";
-            echo "<i class='fa fa-image gs_resizing' type='delete' target='container' title='Open styling'></i> ";
+            if($row->mode == "ROTATING") {
+                echo "<i class='fa fa-image gs_resizing' type='delete' target='selectedcell' title='Open styling'></i> ";
+            } else {
+                echo "<i class='fa fa-image gs_resizing' type='delete' target='container' title='Open styling'></i> ";
+            }
             echo "<i class='fa fa-arrows-h gsoperatecell' type='addcolumn' target='selectedcell' title='Insert column'></i> ";
             echo "<i class='fa fa-trash-o gsoperatecell' type='delete' target='container' title='Delete row'></i> ";
             echo "<i class='fa fa-plus gsoperatecell' type='addafter' target='container'  title='Create row after'></i> ";

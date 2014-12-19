@@ -375,7 +375,7 @@ thundashop.framework = {
     },
     addCss: function (attribute, value, id, level) {
         if (!level) {
-            level = ".gscell";
+            level = ".gsucell";
         }
         var css = thundashop.framework.findCss(id);
         var incrementid = $('.gscell[cellid="' + id + '"]').attr('incrementcellid');

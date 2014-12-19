@@ -395,9 +395,9 @@ class Page {
                         </table>
                     </div>
                 </div>
-                <div class='gsoutercolorselectionpanel' style="display:none;">
+                <div class='gsoutercolorselectionpanel' >
                     <div class='gsheading'>Inner background</div>
-                    <div class='gscolorselectionpanel' level='.gsinner'>
+                    <div class='gscolorselectionpanel' level='.gsuicell'>
                         <table width='100%'>
                             <tr>
                                 <td valign="top">

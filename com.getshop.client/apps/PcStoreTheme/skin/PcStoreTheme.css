@@ -1,0 +1,8 @@
+.gscell.gsdepth_0 { margin:auto; }
+.gsinner.gsdepth_0 {  width: 1024px; margin: auto; background-color:#FFF; }
+body { 
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background: #CCCCCC url(http://www.pcwarehouses.ca/images/background.png) top center no-repeat fixed; }
+.gsarea[area="header"] .gsinner,.gsarea[area="footer"] .gsinner { background-color:#1E1E1E; color:#fff; }
+.Menu .menuentries a { color:#FFF !important; font-size: 19px;  }
+.Menu .menuentries .entry { padding: 10px; }

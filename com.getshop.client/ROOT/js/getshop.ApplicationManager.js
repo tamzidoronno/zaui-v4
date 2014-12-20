@@ -35,7 +35,6 @@ thundashop.ApplicationManager = {
         console.log($(this).offset());
         var left = $(this).offset().left;
         if ((left + 600) > $(document).width()) {
-            alert('test');
             left = $(document).width() - 600;
         }
         $('.gsappstoaddinmodule').hide();

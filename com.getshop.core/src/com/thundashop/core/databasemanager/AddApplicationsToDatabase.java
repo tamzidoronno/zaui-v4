@@ -104,6 +104,15 @@ public class AddApplicationsToDatabase {
         yellowCandyTheme.defaultActivate = true;
         apps.add(yellowCandyTheme);
 		
+        Application pcstoretheme = createSettings("PcStoreTheme",
+                "e70c1a0a-fc3d-4ffe-817f-f09dc679199f",
+                allowed2,
+                "",
+                Application.Type.Theme, true);
+        pcstoretheme.isPublic = true;
+        pcstoretheme.defaultActivate = true;
+        apps.add(pcstoretheme);
+		
         Application productLists = createSettings("ProductLists",
                 "f245b8ae-f3ba-454e-beb4-ecff5ec328d6",
                 allowed2,

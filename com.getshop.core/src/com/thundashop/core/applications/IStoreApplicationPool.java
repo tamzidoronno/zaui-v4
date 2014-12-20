@@ -9,6 +9,7 @@ import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.appmanager.data.ApplicationModule;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.common.Setting;
 import java.util.List;
 
 /**
@@ -103,4 +104,7 @@ public interface IStoreApplicationPool {
     
     @Administrator
     public void deactivateApplication(String applicationId);
+    
+    @Administrator
+    public void setSettings(String applicationId, List<Setting> settings);
 }

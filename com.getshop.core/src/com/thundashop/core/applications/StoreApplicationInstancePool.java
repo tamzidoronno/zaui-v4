@@ -8,11 +8,13 @@ package com.thundashop.core.applications;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.ApplicationInstance;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.common.Settings;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,5 +118,4 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
         
         return null;
     }
-
 }

@@ -1,6 +1,7 @@
 package com.thundashop.core.appmanager.data;
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.Setting;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -19,6 +20,11 @@ public class Application extends DataCommon implements Comparator<Application> {
         public static String Shipment = "ShipmentApplication";
         public static String Theme = "ThemeApplication";
     }
+    
+    /**
+     * This is the settings that is common for all instances.
+     */
+    public HashMap<String, Setting> settings = new HashMap<>();
 
     /**
      * Widgets is allocated spaces in an app. A app is defining the widgets it
@@ -46,7 +52,8 @@ public class Application extends DataCommon implements Comparator<Application> {
     public boolean defaultActivate = false;
     public List<String> allowedStoreIds = new ArrayList();
     public List<ApiCallsInUse> apiCallsInUse = new ArrayList();
-
+    
+    
     @Transient
     public ApplicationModule applicationModule;
 

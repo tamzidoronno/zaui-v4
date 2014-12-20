@@ -125,6 +125,7 @@ class Page {
         echo "<span style='float:left;'><input type='checkbox' style='background-color:#FFF;' class='gsdisplaygridcheckbox'> Add spacing to grid</span>";
         echo "You are now in edit mode for the selected row, from this manipulate your row by adding more columns or add a row above / below, and much more. <input  type='button' class='gsdoneeditbutton' value='Done editing'><br>";
         echo "</div>";
+        echo "<script>$('body').css('margin-top','30px');</script>";
     }
 
     private function addCarouselSettingsPanel() {
@@ -435,11 +436,11 @@ class Page {
             .range{
                 border:none;
                 height:15px;
-                background-image: url('http://quocity.com/colresizable/img/range.png');	
+                background-image: url('/skin/default/range.png');	
             }
 
             #selection{
-                background-image: url('http://quocity.com/colresizable/img/range.png');
+                background-image: url('/skin/default/range.png');
                 background-position: 0px -15px;
                 padding:0px;
                 margin:0px;
@@ -456,7 +457,7 @@ class Page {
             }
 
             #selection span:after{
-                background-image: url('http://quocity.com/colresizable/img/range.png');
+                background-image: url('/skin/default/range.png');
                 background-position: 0px -30px;
                 position:absolute;
                 left:0px;
@@ -470,7 +471,7 @@ class Page {
             }
 
             #selection span:before{
-                background-image: url('http://quocity.com/colresizable/img/range.png');
+                background-image: url('/skin/default/range.png');
                 background-position: 0px -45px;
                 position:absolute;
                 right:0px;
@@ -491,7 +492,7 @@ class Page {
             .rangeGrip{
                 width:14px;
                 height:21px;
-                background-image: url('http://quocity.com/colresizable/img/range.png');
+                background-image: url('/skin/default/range.png');
                 background-position: 0px -60px;
                 position:absolute;
                 left:-3px;

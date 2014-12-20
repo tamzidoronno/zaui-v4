@@ -98,19 +98,19 @@ class Page {
     private function addTabPanel() {
         ?>  
         <div class="tabsettingspanel">
-            <div style="width:100%; position:absolute; top:0px; left: 0px; height: 20px; background-color:#bbb; text-align: center; padding-top: 10px;">
+            <div class="tabsettingspanelheading">
                 Tab settings
+                <i class="fa fa-close gsclosetabsettings"></i>
             </div>
-            <table>
-                <tr>
-                    <td>Name</td>
-                    <td><input type="text" class="gstabname"></td>
-                </tr>
-            </table>
-            <input type="button" value="Done modifying" class="gsdonemodifytab"></input>
-            <div class="gsoperatecell" type="moveup" target="selectedcell"> Move tab to the left</div>
-            <div class="gsoperatecell" type="movedown" target="selectedcell"> Move tab to the right</div>
-            <div class="gsoperatecell" target="selectedcell" type="delete"> Remove selected tab</div>
+            <b>Tab name</b><br>
+            <input type="text" class="gstabname"><br>
+            <bR>
+            <b>Other operations</b><br>
+            <div class="gsoperatecell" type="moveup" target="selectedcell"><i class="fa fa-arrow-left"></i>&nbsp;&nbsp;&nbsp;Move tab to the left</div>
+            <div class="gsoperatecell" type="movedown" target="selectedcell"><i class="fa fa-arrow-right"></i>&nbsp;&nbsp;&nbsp;Move tab to the right</div>
+            <div class="gsoperatecell" target="selectedcell" type="delete"><i class="fa fa-trash-o"></i>&nbsp;&nbsp;&nbsp;Remove selected tab</div>
+            <br>
+            <input type="button" value="Done modifying" class="gsdonemodifytab" style="width:100%;"></input>
         </div>
         <script>$('.tabsettingspanel').draggable();</script>
         <?
@@ -118,53 +118,44 @@ class Page {
 
     private function printEditingInfo() {
         echo "<div class='gseditinginfo'>";
-        echo "<input type='checkbox' style='background-color:#FFF;' class='gsdisplaygridcheckbox'> Add spacing to grid";
-        echo "You are now editing the selected row, <span class='gsdoneeditbutton' done='true'true'>done editing</span>";
+        echo "<span style='float:left;'><input type='checkbox' style='background-color:#FFF;' class='gsdisplaygridcheckbox'> Add spacing to grid</span>";
+        echo "You are now in edit mode for the selected row, from this manipulate your row by adding more columns or add a row above / below, and much more. <input  type='button' class='gsdoneeditbutton' value='Done editing'><br>";
         echo "</div>";
     }
 
     private function addCarouselSettingsPanel() {
         ?>  
         <div class="carouselsettingspanel">
-            <div style="width:100%; position:absolute; top:0px; left: 0px; height: 20px; background-color:#bbb; text-align: center; padding-top: 10px; cursor:pointer;">
+            <div class="carouselsettingsheading">
                 Carousel settings
+                <i class="fa fa-close gs_closecarouselsettings"></i>
             </div>
-            <table>
+            <b>Container operations</b><br>
+            <select style="width: 100%;" class="gscarouseltype">
+                <option value='slideleft'>Slide left</option>
+                <option value='slideright'>Slide right</option>
+                <option value='fade'>Fade</option>
+            </select>
+            <table width="100%">
                 <tr>
-                    <td>Height</td>
-                    <td><input type="text" class="gscarouselheight">px</td>
+                    <td>Height (px)</td>
+                    <td align="right"><input type="text" class="gscarouselheight"></td>
                 </tr>
                 <tr>
-                    <td>Timer</td>
-                    <td><input type="text" class="gscarouseltimer"> milliseconds</td>
-                </tr>
-                <tr>
-                    <td>Carousel type</td>
-                    <td>
-                        <select style="width: 100px;" class="gscarouseltype">
-                            <option value='slideleft'>Slide left</option>
-                            <option value='slideright'>Slide right</option>
-                            <option value='fade'>Fade</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="button" value="Close" class="gs_closecarouselsettings">
-
-                    </td>
-                    <td>
-                        <input style="width: 100px;" class="savecarouselconfig" type="button" value="Save settings">
-                    </td>
+                    <td>Timer (ms)</td>
+                    <td align="right"><input type="text" class="gscarouseltimer"></td>
                 </tr>
             </table>
-            Cell operations:<br>
-            <div class="gsoperatecell" target="selectedcell" type="delete">Delete selected slide</div>
-            <div class="gsoperatecell" type="moveup" target="selectedcell">Move slide to the left</div>
-            <div class="gsoperatecell" type="movedown" target="selectedcell">Move slide to the right</div>
+            <br>
+            <b>Other operations</b><br>
+            <div class="gsoperatecell" target="selectedcell" type="delete"><i class="fa fa-trash-o"></i> Delete selected slide</div>
+            <div class="gsoperatecell" type="moveup" target="selectedcell"><i class="fa fa-arrow-left"></i> Move slide to the left</div>
+            <div class="gsoperatecell" type="movedown" target="selectedcell"><i class="fa fa-arrow-right"></i> Move slide to the right</div>
+            <bR>
+            <input style="width: 100%;" class="savecarouselconfig" type="button" value="Save settings">
         </div>
         <script>
-            $(function() {
+            $(function () {
                 $('.carouselsettingspanel').draggable();
             });
         </script>
@@ -233,10 +224,10 @@ class Page {
         $mode = "gs" . strtolower($cell->mode);
 
         $marginsclasses = "";
-        if ($isColumn && ($totalcells > ($count+1))) {
+        if ($isColumn && ($totalcells > ($count + 1))) {
             $marginsclasses .= "gs_margin_right ";
         }
-        
+
         if ($isColumn && ($count > 0)) {
             $marginsclasses .= " gs_margin_left";
         }
@@ -269,7 +260,7 @@ class Page {
         if ($edit) {
             $this->printEasyModeEdit($cell);
             echo "<span class='gscellsettings'>";
-            echo "<i class='fa fa-cogs'  title='Cell settings'></i>";
+            echo "<i class='fa fa-cogs'  title='Cell settings' style='cursor:pointer;'></i>";
             echo "</span>";
         }
 
@@ -302,11 +293,11 @@ class Page {
         } else {
             $this->printApplicationArea($cell);
         }
-        if ($parent != null && $parent->mode === "ROTATING") {
-            $this->printCarouselDots($totalcells, $edit, $count, $cell->cellId);
-        }
         if ($cell->mode == "ROTATING") {
             $this->addCarouselSettingsPanel();
+        }
+        if ($parent != null && $parent->mode === "ROTATING") {
+            $this->printCarouselDots($totalcells, $edit, $count, $cell->cellId);
         }
 
         echo "</div>";
@@ -317,7 +308,7 @@ class Page {
         ?>
         <span class='gscellsettingspanel'>
             <div class='gscellsettingspanelheading'>
-                <i class='gs_closecelledit fa fa-times' style='float:right; margin-right:0px;'></i>
+                <i class='gs_closecelledit fa fa-times'></i>
                 Cell / row settings
             </div>
             <div style='margin-top:0px;' class='gscellsettingsheading'>New areas</div>
@@ -360,7 +351,10 @@ class Page {
     private function addCellResizingPanel() {
         ?>
         <span class='gsresizingpanel'>
-            <div class="heading" style="cursor:pointer; text-align:center; font-size: 16px; padding: 10px;">Sizing console</div>
+            <i class="fa fa-close gsclosecsseditor"></i>
+            <div class="heading gsresizingheading">Sizing console
+            </div>
+            <div style="height: 7px;"></div>
             <div class='gstabmenu'>
                 <span class='tabbtn' target='css'>Css</span>
                 <span class='tabbtn' target='background'>Background image</span>
@@ -422,7 +416,7 @@ class Page {
             </div>
 
             <div style="border-top: solid 1px #bbb;">
-                <span class="modifybutton gssavechanges" style="float:right;">Save changes</span>
+                <input type="button" value="Save changes" class="modifybutton gssavechanges" style="float:right;">
             </div>
         </span>
         <script>
@@ -609,7 +603,7 @@ class Page {
         }
         if ($this->factory->isEditorMode() && $edit) {
             echo "<i class='fa fa-plus gsoperatecell' type='addrow' target='container' title='Add another tab'></i> ";
-            echo "<i class='fa fa-cogs tabsettings' title='Tab settings'></i>";
+            echo "<i class='fa fa-cogs tabsettings' title='Tab settings' style='cursor:pointer;'></i>";
         }
         echo "</div>";
     }
@@ -625,7 +619,7 @@ class Page {
         }
         if ($this->factory->isEditorMode() && $edit) {
             echo "<i class='fa fa-plus addcarouselrow gsoperatecell' type='addrow' target='container' title='Add another slider'></i>";
-            echo "<i class='fa fa-cogs carouselsettings' title='Carousel settings'></i>";
+            echo "<i class='fa fa-cogs carouselsettings' title='Carousel settings' style='cursor:pointer;'></i>";
         }
         echo "</div>";
     }
@@ -660,7 +654,7 @@ class Page {
         if ($row->mode == "TAB" || $row->mode == "ROTATING") {
             echo "<i class='fa fa-arrow-up gsoperatecell' type='moveup' target='container' title='Move row up'></i> ";
             echo "<i class='fa fa-plus gsoperatecell' type='addbefore' target='container'  title='Create row above'></i> ";
-            if($row->mode == "ROTATING") {
+            if ($row->mode == "ROTATING") {
                 echo "<i class='fa fa-image gs_resizing' type='delete' target='selectedcell' title='Open styling'></i> ";
             } else {
                 echo "<i class='fa fa-image gs_resizing' type='delete' target='container' title='Open styling'></i> ";

@@ -47,6 +47,8 @@ thundashop.framework = {
         $(document).on('mouseup', this.releaseMouse);
         $(document).on('click', '.gs_closecelledit', this.closeCellEdit);
         $(document).on('click', '.gs_closecarouselsettings', this.closeCarouselSettings);
+        $(document).on('click', '.gsclosetabsettings', this.closeTabSettings);
+        $(document).on('click', '.gsclosecsseditor', this.closeCssEditor);
         $(document).on('mouseover', '.gseditrowouter', this.showEditIcon);
         $(document).on('click', '.gseditrowbutton', this.startEditRow);
         $(document).on('click', '.gsdoneeditbutton', this.startEditRow);
@@ -66,6 +68,12 @@ thundashop.framework = {
         /* Cell operations */
         $(document).on('click', '.gsoperatecell', this.operateCell);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
+    },
+    closeTabSettings : function() {
+        $(this).closest('.tabsettingspanel').fadeOut();
+    },
+    closeCssEditor : function() {
+        $(this).closest('.gsresizingpanel').fadeOut();
     },
     releaseMouse: function () {
         thundashop.framework.mousedown = false;
@@ -230,7 +238,7 @@ thundashop.framework = {
         var cellid = $(this).closest('.gscontainercell').attr('cellid');
         var panel = $(this).closest('.gscontainercell').find('.carouselsettingspanel');
         panel.css('left', $(this).offset().left);
-        panel.css('top', $(this).offset().top + 15);
+        panel.css('top', $(this).parent().position().top);
         panel.attr('cellid', cellid);
 
         //populate values
@@ -255,7 +263,7 @@ thundashop.framework = {
 
         thundashop.framework.setActiveContainerCellId(cellid, container.attr('cellid'));
         panel.show();
-        $('.tabsettingspanel').css('left', $(this).position().left);
+        $('.tabsettingspanel').css('left', $(this).offset().left);
         $('.tabsettingspanel').css('top', $(this).position().top + 15);
         $('.gstabname').val(tabtext);
     },
@@ -510,6 +518,8 @@ thundashop.framework = {
     switchtab: function () {
         var target = $(this).attr('target');
         var type = $(this).attr('type');
+        $('.gsresizingpanel .gstabselected').removeClass('gstabselected');
+        $(this).addClass('gstabselected');
         $('.gsresizingpanel .gspage').hide();
         $('.gsresizingpanel .gspage[target="' + target + '"]').show();
         $('.gsresizingpanel .heading').html($(this).html());
@@ -557,9 +567,14 @@ thundashop.framework = {
         resizingpanel.attr('cellid', cellid);
         $('.gsoverlay').remove();
         $('.gscellsettingspanel').fadeOut();
-        if ($(this).offset() !== undefined) {
-            resizingpanel.css('top', 20);
-            resizingpanel.css('left', 20);
+        var offset = thundashop.framework.originObject.offset();
+        if (offset !== undefined) {
+            var left = offset.left;
+            if(left+500 > $(document).width()) {
+                left = $(document).width()-550;
+            }
+            resizingpanel.css('top', offset.top);
+            resizingpanel.css('left', left);
         }
         resizingpanel.fadeIn();
 

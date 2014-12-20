@@ -1,7 +1,6 @@
 /* Common css */
 .gscellsettingspanel { width: 220px; position:absolute; display:inline-block; background-color:#FFF; box-shadow: 0px 0px 4px #a9a9a9; display:none; z-index:10; border-radius: 3px; }
 .gscellsettingspanel .gsinnercellsettingspanel { padding-left: 6px; }
-.gscellsettingspanelheading { background-color:#a9a9a9; border-top-left-radius: 3px; border-top-right-radius: 3px; text-align: center; color:#fff; }
 .gscellsettingspanel div { padding-top: 10px; cursor:pointer; padding: 2px; display:block; }
 .gscellsettingspanel div i { width: 20px; text-align: center; margin-right: 10px; }
 .gscellsettingspanel div div{ opacity:0.8; }
@@ -17,12 +16,12 @@
     filter: alpha(opacity=50);
     opacity:0.5; box-shadow: 0px 0px 2px #bbb; cursor:pointer; background-color:#fff; padding: 2px; padding-left: 5px; padding-right: 5px; border-radius:5px; color:#000; }
 .gseditrow {  box-sizing: border-box; }
-.gsdoneeditbutton { color:blue; cursor:pointer; }
 .gseditrowbutton { cursor:pointer; position:absolute; right: 5px; z-index: 15; font-size: 20px; background-color:rgba(255,255,255,0.4); padding: 5px; border-radius: 5px; display:none; }
 .gseditrowheading .fa { float:right; padding-left: 10px; cursor:pointer; }
 .gscell:hover .gseditrowbutton, .gscontainercell:hover .gseditrowbutton { display:block; }
-.gscell .gscellsettings,.gscontainercell .gscellsettings { z-index:99; position:absolute; color:#000; right: 0px; top: 0px; display:none;background-color:#FFF;cursor:pointer; font-size:9px; padding-left: 2px; padding-bottom: 2px; border: solid 1px rgba(0,0,0,0.1); }
+.gscell .gscellsettings,.gscontainercell .gscellsettings { z-index:5; position:absolute; color:#000; right: 0px; top: 0px; display:none;background-color:#FFF;cursor:pointer; font-size:9px; padding-left: 2px; padding-bottom: 2px; border: solid 1px rgba(0,0,0,0.1); }
 .gscellsettingsheading { border-bottom: solid 1px rgba(0,0,0,0.2); margin-bottom: 5px; margin-top: 5px !important; font-weight: bold; margin-top:10px; padding-left: 10px !important; color:#a9a9a9; }
+.gsclosecsseditor { cursor:pointer; position:absolute; right:3px; top: 0px; color:#fff;z-index:2; }
 
 .gsaddcontent:hover { border: solid 1px rgba(0,0,0,0.1); }
 .gsresizetable { position: absolute; height: 0px !important; }
@@ -35,8 +34,8 @@
 .gstabrow.gscount_0 { display:block;   }
 .gstabbtn { border: solid 1px #BBB; margin-right: 10px;  padding: 3px; cursor:pointer;  bottom: 0px; cursor:pointer; display:inline-block;  }
 
-.gstabname { width: 60px; }
-.gs_closecarouselsettings { width: 50px !important; }
+.gstabname { width: 100%; }
+.gs_closecarouselsettings, .gsclosetabsettings,.gs_closecelledit { position:absolute; right: 4px; color:#fff; top: 1px; margin:0px !important; }
 .gstab.gscount_0 { display:block; }
 .gsrotatearrow {
     z-index: 5;
@@ -49,20 +48,22 @@
 .gsrotateleft { left: 0px; }
 .gsrotateright { right: 0px; }
 .gsinner { position: relative; }
-.gsresizingpanel { position:fixed; z-index: 15; background-color:#FFF; box-shadow:0px 0px 5px #000; display:none; }
-.gsresizingpanel .tabbtn {cursor:pointer; border-right: solid 1px #BBB; padding-right: 5px; height: 20px; padding-left: 5px; float:left; border-top: solid 1px  #BBB; }
+.gsresizingpanel { position:absolute; z-index: 15; background-color:#FFF; box-shadow:0px 0px 5px #000; display:none; border-radius: 3px; width: 500px; }
+.gsresizingpanel .tabbtn {cursor:pointer; border-right: solid 1px #BBB;border-left: solid 1px #BBB; border-top-left-radius: 3px; border-top-right-radius: 3px; padding-right: 5px; height: 20px; padding-left: 5px; float:left; border-top: solid 1px  #BBB; margin-left: 5px; }
 .gsresizingpanel .tabbtn:hover { color:blue; }
+.gsresizingpanel .gstabselected { font-weight: bold; }
 .gsresizingpanel .gstabmenu { border-bottom: solid 1px #BBB; height: 20px; }
 .gsresizingpanel .sizetxt { width: 30px; }
 .gsresizingpanel .gspage { display:none; }
-.gsresizingpanel .modifybutton { cursor: pointer; border: solid 1px; margin: 10px; padding: 5px; background-color:#BBB; display:inline-block; }
+.gsresizingpanel .modifybutton { margin: 5px; }
 .gsresizingpanel .gsbgcolorselection { float:left; padding-left: 4px; padding-right: 4px; border: solid 1px;  }
 .gsresizingpanel .gscolorselectionpanel .fa { cursor: pointer; }
 .gsresizingpanel .gsheading { border-bottom: solid 1px rgba(0,0,0,0.1); margin-bottom: 10px;  }
 .gseasymode { width: 100%; height: 100%;color:#fff; position:absolute; z-index: 2;box-sizing: border-box; padding: 1px; }
 .gseasymode .gseasymodeinner { background-color:rgba(0,0,0,0.2);height:100%;padding: 10px;box-sizing: border-box; text-align:center; border-radius: 3px; }
 .gseasymode i { color: #555555; cursor:pointer; font-size:12px; border-radius:3px; padding: 3px; background-color:#ddd; margin: 1px; border: solid 1px #bbb; }
-.gseditinginfo { position:fixed; top:0px; width: 100%; text-align: center; background-color:#FFF; border-bottom: solid 1px; }
+.gseditinginfo { position:fixed; top:0px; width: 100%; text-align: center; padding: 5px; background-color: #1c6ea2; color:#fff; z-index: 5; }
+.gsdoneeditbutton { position:absolute; right: 15px; top: 3px; }
 .gseasyrowmode { display: inline-block;
                  border: solid 1px #bbb;
                  padding: 10px;
@@ -1792,9 +1793,13 @@ a img {
     font-size: 15px;
     line-height: 30px;
 }
-
-.carouselsettingspanel,.tabsettingspanel { position:fixed; border: solid 1px; padding: 10px; background-color:#FFF; z-index: 20; display:none; padding-top: 30px; }
+.gsoperatecell { cursor:pointer; }
+.gsoperatecell:hover { font-weight:bold; }
+.carouselsettingspanel,.tabsettingspanel { width: 140px; position:absolute; padding: 10px; background-color:#FFF; z-index: 20; display:none; padding-top: 20px; box-shadow: 0px 0px 4px #a9a9a9; border-radius: 5px; }
 .carouselsettingspanel input { width: 40px; }
 .carouselsettingspanel .fa,.tabsettingspanel .fa { cursor: pointer; }
+
+.gsresizingheading, .carouselsettingsheading,.tabsettingspanelheading,.gscellsettingspanelheading { padding:0px !important; top:0px; left:0px; position:absolute; width: 100%; cursor:pointer; color:#fff; text-align:center; background-color:#1c6ea2; border-top-left-radius: 3px; border-top-right-radius: 3px; }
+.gscellsettingspanel,.gsresizingpanel { padding-top: 15px; }
 
 .gsactivetab { font-weight: bold; }

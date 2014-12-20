@@ -195,7 +195,6 @@ getshop.Settings = {
             $('#gss_loading_icon').show();
         }, 300);
         
-        
         $.ajax({
             type: "POST",
             url: "/settingsnav.php",
@@ -208,9 +207,6 @@ getshop.Settings = {
                 success(response, field, data);
             },
             error: function (failure) {
-                $('#gss_loading_icon').hide();
-                
-                
                 var json = localStorage.getItem("current_gss_data");
                 if (json) {
                     var jsonData = JSON.parse(json);
@@ -219,7 +215,9 @@ getshop.Settings = {
                     }
                 }
                 
-                throw exception(failure);
+                $('.gss_settings_inner.apparea').html(failure.responseText);
+                clearTimeout(getshop.Settings.loadingTimer);
+                $('#gss_loading_icon').hide();
             }
         });
     },

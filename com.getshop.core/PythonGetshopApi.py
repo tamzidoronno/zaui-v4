@@ -4861,21 +4861,6 @@ class StoreApplicationInstancePool(object):
     data.interfaceName = "core.applications.IStoreApplicationInstancePool"
     return self.communicationHelper.sendMessage(data)
 
-  def getSingletonInstance(self, appsettingsId):
-    args = collections.OrderedDict()
-    if isinstance(appsettingsId,GetShopBaseClass): 
-      args["appsettingsId"]=json.dumps(appsettingsId.__dict__)
-    else:
-      try:
-        args["appsettingsId"]=json.dumps(appsettingsId)
-      except (ValueError, AttributeError):
-        args["appsettingsId"]=appsettingsId
-    data = EmptyClass()
-    data.args = args
-    data.method = "getSingletonInstance"
-    data.interfaceName = "core.applications.IStoreApplicationInstancePool"
-    return self.communicationHelper.sendMessage(data)
-
   def setApplicationSettings(self, settings):
     args = collections.OrderedDict()
     if isinstance(settings,GetShopBaseClass): 
@@ -5002,11 +4987,41 @@ class StoreApplicationPool(object):
     data.interfaceName = "core.applications.IStoreApplicationPool"
     return self.communicationHelper.sendMessage(data)
 
+  def getShippingApplications(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getShippingApplications"
+    data.interfaceName = "core.applications.IStoreApplicationPool"
+    return self.communicationHelper.sendMessage(data)
+
   def getThemeApplication(self):
     args = collections.OrderedDict()
     data = EmptyClass()
     data.args = args
     data.method = "getThemeApplication"
+    data.interfaceName = "core.applications.IStoreApplicationPool"
+    return self.communicationHelper.sendMessage(data)
+
+  def setSetting(self, applicationId, settings):
+    args = collections.OrderedDict()
+    if isinstance(applicationId,GetShopBaseClass): 
+      args["applicationId"]=json.dumps(applicationId.__dict__)
+    else:
+      try:
+        args["applicationId"]=json.dumps(applicationId)
+      except (ValueError, AttributeError):
+        args["applicationId"]=applicationId
+    if isinstance(settings,GetShopBaseClass): 
+      args["settings"]=json.dumps(settings.__dict__)
+    else:
+      try:
+        args["settings"]=json.dumps(settings)
+      except (ValueError, AttributeError):
+        args["settings"]=settings
+    data = EmptyClass()
+    data.args = args
+    data.method = "setSetting"
     data.interfaceName = "core.applications.IStoreApplicationPool"
     return self.communicationHelper.sendMessage(data)
 

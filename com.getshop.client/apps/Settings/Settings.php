@@ -44,7 +44,7 @@ class Settings extends \SystemApplication implements \Application {
     }
 
     public function saveStoreSettings() {
-        echo "Saving";
+        $this->setConfigurationSetting("language", $_POST['language']);
     }
 
     public function deleteStore() {

@@ -106,5 +106,12 @@ public interface IStoreApplicationPool {
     public void deactivateApplication(String applicationId);
     
     @Administrator
-    public void setSettings(String applicationId, List<Setting> settings);
+    public void setSetting(String applicationId, Setting settings);
+    
+    /**
+     * Returns shipment applications.
+     * 
+     * @return 
+     */
+    public List<Application> getShippingApplications();
 }

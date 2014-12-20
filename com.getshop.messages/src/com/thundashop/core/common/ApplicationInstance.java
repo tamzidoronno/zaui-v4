@@ -19,12 +19,7 @@ public class ApplicationInstance extends DataCommon {
         for (String key : settings.keySet()) {
             Setting setting = settings.get(key);
             
-            Setting clonedSetting = new Setting();
-            clonedSetting.value = setting.value;
-            clonedSetting.type = setting.type;
-            
-            if (setting.secure)
-                clonedSetting.value = "****************";
+            Setting clonedSetting = setting.secureClone();
                 
             appConfig.settings.put(key, clonedSetting);
         }

@@ -310,9 +310,16 @@ class ApplicationBase extends FactoryBase {
     }
     
     public function getConfigurationSetting($key) {
-        if(isset($this->configuration->settings->{$key}->value)) {
-            return $this->configuration->settings->{$key}->value;
+        if ($this->configuration) {
+            if(isset($this->configuration->settings->{$key}->value)) {
+                return $this->configuration->settings->{$key}->value;
+            }
+        } else {
+            if(isset($this->applicationSettings->settings->{$key}->value)) {
+                return $this->applicationSettings->settings->{$key}->value;
+            }
         }
+        
         return null;
     }
 
@@ -327,22 +334,23 @@ class ApplicationBase extends FactoryBase {
     }
 
     public function setConfigurationSetting($key, $value, $secure = false) {
-        $newSettings = array();
-        
         $setting = new core_common_Setting();
         $setting->id = $key;
         $setting->value = $value;
+        $setting->name = $key;
         $setting->secure = $secure;
-        $newSettings[] = $setting;
-        
-        $sendCore = $this->getApiObject()->core_common_Settings();
-        $sendCore->settings = $newSettings; 
-        $sendCore->appId = $this->getConfiguration()->id;
         
         if ($this->configuration) {
+            $newSettings = array();
+            $newSettings[] = $setting;
+            $sendCore = $this->getApiObject()->core_common_Settings();
+            $sendCore->settings = $newSettings; 
+            $sendCore->appId = $this->getConfiguration()->id;
+            $this->getApi()->getStoreApplicationInstancePool()->setApplicationSettings($sendCore);
             $this->configuration->settings->{$key} = $setting;
         } else if($this->applicationSettings) {
             $this->applicationSettings->settings->{$key} = $setting;
+            $this->getApi()->getStoreApplicationPool()->setSetting($this->applicationSettings->id, $setting);
         }
     }
     

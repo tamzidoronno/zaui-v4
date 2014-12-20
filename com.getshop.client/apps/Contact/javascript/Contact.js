@@ -1,30 +1,7 @@
 thundashop.app.contact = {};
 
 app.Contact = {
-    remove: function(element, application) {
-        var appid = application.attr('appid');
-        thundashop.Skeleton.removeApplication(appid, 'middle');
-    },
-    loadSettings: function(element, application) {
-        var config = {
-            draggable: true,
-            title: "Settings",
-            items: [
-                {
-                    icontype: "awesome",
-                    icon: "fa-trash-o",
-                    iconsize : "30",
-                    title: "Remove form",
-                    click: app.Contact.remove,
-                    extraArgs: {}
-                }
-            ]
-        };
-
-        var toolbox = new GetShopToolbox(config, application);
-        toolbox.show();
-        toolbox.attachToElement(application, 2);
-    }
+    
 }
 
 thundashop.app.contact.sendMessage = function(target) {

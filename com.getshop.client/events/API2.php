@@ -4611,20 +4611,6 @@ class APIStoreApplicationInstancePool {
 	* @author ktonder
 	*/
 
-	public function getSingletonInstance($appsettingsId) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["appsettingsId"] = json_encode($this->transport->object_unset_nulls($appsettingsId));
-	     $data["method"] = "getSingletonInstance";
-	     $data["interfaceName"] = "core.applications.IStoreApplicationInstancePool";
-	     return $this->transport->cast(new core_common_ApplicationInstance(), $this->transport->sendMessage($data));
-	}
-
-	/**
-	*
-	* @author ktonder
-	*/
-
 	public function setApplicationSettings($core_common_Settings) {
 	     $data = array();
 	     $data['args'] = array();
@@ -4791,6 +4777,20 @@ class APIStoreApplicationPool {
 	}
 
 	/**
+	* Returns shipment applications.
+	*
+	* @return List
+	*/
+
+	public function getShippingApplications() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getShippingApplications";
+	     $data["interfaceName"] = "core.applications.IStoreApplicationPool";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Return the themeapplication that is currently set.
 	*
 	* @return core_appmanager_data_Application
@@ -4802,6 +4802,22 @@ class APIStoreApplicationPool {
 	     $data["method"] = "getThemeApplication";
 	     $data["interfaceName"] = "core.applications.IStoreApplicationPool";
 	     return $this->transport->cast(new core_appmanager_data_Application(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Actiave a module by a given module id.
+	*
+	* @param module
+	*/
+
+	public function setSetting($applicationId, $core_common_Setting) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["applicationId"] = json_encode($this->transport->object_unset_nulls($applicationId));
+	     $data['args']["core_common_Setting"] = json_encode($this->transport->object_unset_nulls($core_common_Setting));
+	     $data["method"] = "setSetting";
+	     $data["interfaceName"] = "core.applications.IStoreApplicationPool";
+	     return $this->transport->sendMessage($data);
 	}
 
 	/**

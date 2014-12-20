@@ -32,8 +32,7 @@ class Taxes extends \ApplicationBase implements \Application {
                 $this->configuration->settings->{"tax_group_". $number} = $setting;
             }
         }
-        
-//        $this->setConfigurationSetting($applicationSettings);
+
         $this->includefile("taxesconfig");
     }
 

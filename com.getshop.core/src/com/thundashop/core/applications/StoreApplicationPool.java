@@ -8,6 +8,8 @@ package com.thundashop.core.applications;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.appmanager.data.ApplicationModule;
+import com.thundashop.core.appmanager.data.SavedApplicationSettings;
+import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -38,8 +40,8 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
     private Set<Application> activatedApplications = new HashSet();
 
     private Set<ApplicationModule> activatedModules = new HashSet();
-    
-    private Map<String, List<Setting>> settings = new HashMap();
+
+    private Map<String, SavedApplicationSettings> settings = new HashMap();
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -52,13 +54,25 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
                 .filter(app -> app.defaultActivate)
                 .collect(Collectors.toSet());
 
+        for (DataCommon dataCommon : data.data) {
+            if (dataCommon instanceof SavedApplicationSettings) {
+                SavedApplicationSettings set = (SavedApplicationSettings)dataCommon;
+                settings.put(set.applicationId, set);
+            }
+        }
         addActivatedApplications();
         addActivatedModules();
     }
 
     @Override
     public List<Application> getApplications() {
-        List<Application> availableApplications = getAvailableApplications();
+        List<Application> finalizedList = new ArrayList();
+        getApplicationsInternally().forEach(app -> finalizedList.add(finalizeApplication(app)));
+        return finalizedList;
+    }
+
+    private List<Application> getApplicationsInternally() {
+        List<Application> availableApplications = getAvailableApplicationsInternally();
         Set<Application> activatedApps = availableApplications.stream()
                 .filter(o -> activatedApplications.contains(o))
                 .filter(o -> !o.type.equals(Application.Type.Theme))
@@ -67,18 +81,24 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
         activatedApps.addAll(getAllDefaultActivatedApps());
         return new ArrayList(activatedApps);
     }
-
-    @Override
-    public List<Application> getAvailableApplications() {
+    
+    private List<Application> getAvailableApplicationsInternally() {
         List<Application> publicApplications = getAllPublicApplications();
         List<Application> nonePublicButIsAllowed = getApplicationsThatAreExplicitAllowed();
         publicApplications.addAll(nonePublicButIsAllowed);
         return publicApplications;
     }
+    
+    @Override
+    public List<Application> getAvailableApplications() {
+        List<Application> finalizedList = new ArrayList();
+        getAvailableApplicationsInternally().forEach(app -> finalizedList.add(finalizeApplication(app)));
+        return finalizedList;
+    }
 
     @Override
     public void activateApplication(String applicationId) {
-        Application application = getAvailableApplications().stream().filter(app -> app.id.equals(applicationId)).findFirst().get();
+        Application application = getAvailableApplicationsInternally().stream().filter(app -> app.id.equals(applicationId)).findFirst().get();
         if (application != null) {
             activatedApplications.add(application);
             setManagerSetting(application.id, "activated");
@@ -100,9 +120,13 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 
     @Override
     public List<Application> getAvailableThemeApplications() {
-        return getAvailableApplications().stream()
+        List<Application> retList = getAvailableApplicationsInternally().stream()
                 .filter(app -> app.type.equals(Application.Type.Theme))
                 .collect(Collectors.toList());
+
+        List<Application> finalizedList = new ArrayList();
+        retList.forEach(app -> finalizedList.add(finalizeApplication(app)));
+        return finalizedList;
     }
 
     @Override
@@ -110,7 +134,7 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
         String id = getManagerSetting("selectedThemeApplication");
 
         if (id == null) {
-            return getDefaultThemeApplication();
+            return finalizeApplication(getDefaultThemeApplication());
         }
 
         Application app = getAvailableThemeApplications()
@@ -120,10 +144,10 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
                 .orElse(null);
 
         if (app == null) {
-            return getDefaultThemeApplication();
+            return finalizeApplication(getDefaultThemeApplication());
         }
 
-        return app;
+        return finalizeApplication(app);
     }
 
     @Override
@@ -133,10 +157,12 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 
     @Override
     public Application getApplication(String id) {
-        return getApplications().stream()
+        Application retApp = getApplicationsInternally().stream()
                 .filter(app -> app.id.equals(id))
                 .findFirst()
                 .orElse(null);
+
+        return finalizeApplication(retApp);
     }
 
     private Application getDefaultThemeApplication() {
@@ -149,10 +175,14 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 
     @Override
     public List<Application> getAvailableApplicationsThatIsNotActivated() {
-        return getAvailableApplications()
+        List<Application> apps = getAvailableApplicationsInternally()
                 .stream()
                 .filter(a -> !activatedApplications.contains(a))
                 .collect(Collectors.toList());
+        
+        List<Application> finalizedList = new ArrayList();
+        apps.forEach(app -> finalizedList.add(finalizeApplication(app)));
+        return finalizedList;
     }
 
     @Override
@@ -194,7 +224,7 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 
     @Override
     public void deactivateApplication(String applicationId) {
-        Application application = getAvailableApplications().stream().filter(app -> app.id.equals(applicationId)).findFirst().get();
+        Application application = getAvailableApplicationsInternally().stream().filter(app -> app.id.equals(applicationId)).findFirst().get();
         if (application != null) {
             activatedApplications.add(application);
             setManagerSetting(application.id, "deactivated");
@@ -208,15 +238,57 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
                     .filter(app -> app.moduleId != null)
                     .filter(app -> app.moduleId.equals(module.id))
                     .filter(app -> app.activeAppOnModuleActivation)
-                    .forEach(app -> applications.add(app));
+                    .forEach(app -> applications.add(finalizeApplication(app)));
         }
 
         return applications;
     }
 
     @Override
-    public void setSettings(String applicationId, List<Setting> settings) {
+    public void setSetting(String applicationId, Setting inSetting) {
+        Application application = getApplication(applicationId);
+
+        if (application == null) {
+            return;
+        }
+
+        SavedApplicationSettings setting = settings.get(applicationId);
+        if (setting == null) {
+            setting = new SavedApplicationSettings();
+        }
+        setting.applicationId = applicationId;
+        setting.settings.put(inSetting.name, inSetting);
+        settings.put(applicationId, setting);
+        saveObject(setting);
+    }
+
+    private Application finalizeApplication(Application app) {
         
+        if (app == null) {
+            return null;
+        }
+        
+        Application retApp = app.jsonClone();
+
+        SavedApplicationSettings setting = settings.get(app.id);
+        if (setting != null) {
+            for (String settingKey : setting.settings.keySet()) {
+                retApp.settings.put(settingKey, setting.settings.get(settingKey));
+            }
+        }
+
+        return retApp;
+    }
+
+    @Override
+    public List<Application> getShippingApplications() {
+        List<Application> shipmentApplications = getApplicationsInternally().stream()
+                .filter(app -> app.type.equals(Application.Type.Shipment))
+                .collect(Collectors.toList());
+        
+        List<Application> finalizedList = new ArrayList();
+        shipmentApplications.forEach(app -> finalizedList.add(finalizeApplication(app)));
+        return finalizedList;
     }
 
 }

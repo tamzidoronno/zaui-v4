@@ -73,31 +73,6 @@ class Shipper extends \ShipmentApplication implements \Application {
         return ($totalCost == "") ? 0 : $totalCost;
     }
     
-    public function getAdvancedCost($shipmentProduct, $variations) {
-        $cost = $this->getApi()->getCartManager()->getShippingPriceBasis();
-        
-        if($shipmentProduct != null) {
-            $cost = $this->getApi()->getProductManager()->getPrice($shipmentProduct->id, $variations);
-        }
-        
-        $ranges = array();
-        if (isset($this->getConfiguration()->settings->shippingrange) && is_array($this->getConfiguration()->settings->shippingrange->value)) {
-            $ranges = $this->getConfiguration()->settings->shippingrange->value;
-        }
-        
-        foreach ($ranges as $range ) {
-            if ((double)trim($range["col0"]) < $cost && $cost <= (double)trim($range['col1'])) {
-                return $range["col2"];
-            }
-        }
-        
-        if (isset($this->getConfiguration()->settings->outofrangeprice) && $this->getConfiguration()->settings->outofrangeprice->value != "") {
-            return $this->getConfiguration()->settings->outofrangeprice->value;
-        }
-        
-        return 0;
-    }
-    
     public function getShippingType() {
         if (isset($this->getConfiguration()->settings->{"shippingtype"})) {
             return $this->getConfiguration()->settings->{"shippingtype"}->value;
@@ -108,12 +83,7 @@ class Shipper extends \ShipmentApplication implements \Application {
     
     public function getShippingCost($shipmentProduct = null, $variations = array()) {
         $shippingtype = $this->getShippingType();
-        
-        if ($shippingtype == "advanced") {
-            return $this->getAdvancedCost($shipmentProduct, $variations);
-        } else {
-            return $this->getSimpleShippingCost($shipmentProduct, $variations);
-        }
+        return $this->getSimpleShippingCost($shipmentProduct, $variations);
     }
     
     public function additionalInformation() {

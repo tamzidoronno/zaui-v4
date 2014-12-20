@@ -1,5 +1,6 @@
 package com.thundashop.core.appmanager.data;
 
+import com.google.gson.Gson;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Setting;
 import java.util.ArrayList;
@@ -9,7 +10,6 @@ import java.util.List;
 import org.mongodb.morphia.annotations.Transient;
 
 public class Application extends DataCommon implements Comparator<Application> {
-
     public static class Type {
 
         public static String Marketing = "MarketingApplication";
@@ -24,6 +24,7 @@ public class Application extends DataCommon implements Comparator<Application> {
     /**
      * This is the settings that is common for all instances.
      */
+    @Transient
     public HashMap<String, Setting> settings = new HashMap<>();
 
     /**
@@ -53,7 +54,6 @@ public class Application extends DataCommon implements Comparator<Application> {
     public List<String> allowedStoreIds = new ArrayList();
     public List<ApiCallsInUse> apiCallsInUse = new ArrayList();
     
-    
     @Transient
     public ApplicationModule applicationModule;
 
@@ -72,4 +72,11 @@ public class Application extends DataCommon implements Comparator<Application> {
             allowedAreas.add("themes");
         }
     }
+    
+    public Application jsonClone() {
+        Gson gson = new Gson();
+        String json = gson.toJson(this);
+        return gson.fromJson(json, Application.class);
+    }
+
 }

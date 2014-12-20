@@ -297,11 +297,12 @@ class CartManager extends \SystemApplication implements \Application {
     }
 
     public function getShipmentApplications() {
-        $apps = $this->getFactory()->getApplicationPool()->getAllAddedInstances();
+        $shippingApps = $this->getApi()->getStoreApplicationPool()->getShippingApplications();
+        
         $result = array();
-        foreach($apps as $app) {
-            if($app->applicationSettings->type == "ShipmentApplication") {
-                $result[] = $app;
+        if (is_array($shippingApps)) {
+            foreach($shippingApps as $app) {
+                $result[] = $this->getFactory()->getApplicationPool()->createInstace($app);
             }
         }
         
@@ -354,7 +355,6 @@ class CartManager extends \SystemApplication implements \Application {
         }
         
         if (count($this->getShipmentApplications()) == 0 && count($this->getPaymentMethods()) == 0) {
-            
             return true;
         }
         

@@ -15,7 +15,7 @@ class ContentManager extends \WebshopApplication implements \Application {
 
     //put your code here
     public function getDescription() {
-        return $this->__f("A content manager allows you to add content to whatever page you would like to add content to. It supports text, images, and even basic HTML, its like word for web.");
+        return $this->__f("Add text to this area with one of the best text editors on the web for manipulating text.");
     }
 
     public function getAvailablePositions() {
@@ -23,7 +23,7 @@ class ContentManager extends \WebshopApplication implements \Application {
     }
 
     public function getName() {
-        return $this->__("Content Manager");
+        return $this->__("Text editor");
     }
 
     public function postProcess() {

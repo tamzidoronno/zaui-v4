@@ -61,6 +61,10 @@ class Page {
         foreach ($layout->areas as $section) {
             $this->printCss($section);
         }
+        
+        if($this->factory->isEditorMode()) {
+            $this->printApplicationAddCellRow();
+        }
 
         if ($editedCellid != null) {
             $this->addCellConfigPanel();
@@ -97,7 +101,7 @@ class Page {
 
     private function addTabPanel() {
         ?>  
-        <div class="tabsettingspanel">
+        <div class="gsframeworkstandard tabsettingspanel">
             <div class="tabsettingspanelheading">
                 Tab settings
                 <i class="fa fa-close gsclosetabsettings"></i>
@@ -117,7 +121,7 @@ class Page {
     }
 
     private function printEditingInfo() {
-        echo "<div class='gseditinginfo'>";
+        echo "<div class='gseditinginfo gsframeworkstandard'>";
         echo "<span style='float:left;'><input type='checkbox' style='background-color:#FFF;' class='gsdisplaygridcheckbox'> Add spacing to grid</span>";
         echo "You are now in edit mode for the selected row, from this manipulate your row by adding more columns or add a row above / below, and much more. <input  type='button' class='gsdoneeditbutton' value='Done editing'><br>";
         echo "</div>";
@@ -125,7 +129,7 @@ class Page {
 
     private function addCarouselSettingsPanel() {
         ?>  
-        <div class="carouselsettingspanel">
+        <div class="carouselsettingspanel gsframeworkstandard">
             <div class="carouselsettingsheading">
                 Carousel settings
                 <i class="fa fa-close gs_closecarouselsettings"></i>
@@ -162,7 +166,7 @@ class Page {
         <?
     }
 
-    private function printApplicationAddCellRow($cell) {
+    private function printApplicationAddCellRow() {
         $this->factory->includefile("applicationlist", 'Common');
     }
 
@@ -306,7 +310,7 @@ class Page {
 
     private function addCellConfigPanel() {
         ?>
-        <span class='gscellsettingspanel'>
+        <span class='gscellsettingspanel gsframeworkstandard'>
             <div class='gscellsettingspanelheading'>
                 <i class='gs_closecelledit fa fa-times'></i>
                 Cell / row settings
@@ -350,7 +354,7 @@ class Page {
 
     private function addCellResizingPanel() {
         ?>
-        <span class='gsresizingpanel'>
+        <span class='gsresizingpanel gsframeworkstandard'>
             <i class="fa fa-close gsclosecsseditor"></i>
             <div class="heading gsresizingheading">Sizing console
             </div>
@@ -515,7 +519,6 @@ class Page {
             echo "<span class='gsaddcontent'>";
             echo "<i class='fa fa-plus-circle gs_show_application_add_list'></i>";
             echo "</span>";
-            $this->printApplicationAddCellRow($cell);
         } else {
             $this->renderApplication($cell);
         }
@@ -636,7 +639,7 @@ class Page {
             return;
         }
 
-        echo "<div class='gseasymode' cellid='" . $cell->cellId . "'>";
+        echo "<div class='gseasymode gsframeworkstandard' cellid='" . $cell->cellId . "'>";
         echo "<div class='gseasymodeinner'>";
         echo "<i class='fa fa-arrow-left gsoperatecell' type='moveup' target='gseasymode' title='Move column to the left'></i> ";
         echo "<i class='fa fa-plus gsoperatecell' type='addbefore' target='gseasymode'  title='Insert column to the left'></i> ";
@@ -649,7 +652,7 @@ class Page {
     }
 
     public function printEasyRowMode($row) {
-        echo "<div class='gseasyrowmode' cellid='" . $row->cellId . "'>";
+        echo "<div class='gseasyrowmode gsframeworkstandard' cellid='" . $row->cellId . "'>";
         echo "<div class='gseasyrowmodeinnser'>";
         if ($row->mode == "TAB" || $row->mode == "ROTATING") {
             echo "<i class='fa fa-arrow-up gsoperatecell' type='moveup' target='container' title='Move row up'></i> ";

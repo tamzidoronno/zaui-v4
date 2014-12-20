@@ -1,81 +1,75 @@
 <?
-echo "<div class='gs_add_applicationlist'>";
+
+echo "<div class='gsframeworkstandard gs_add_applicationlist'>";
+echo "<div class='gsappaddheading'>Add content to this cell";
+echo "<i class='fa fa-close closeaddappbox'></i>";
+echo "</div>";
+echo "<div class='gsappaddcontent'>";
 $apps = $this->getApi()->getStoreApplicationPool()->getApplications();
 $i = 0;
+/* @var $factory Factory */
+$factory = $this->getFactory();
+
+
+$types = array();
 foreach ($apps as $app) {
-    $id = $app->id;
-    $namespace = $this->convertUUIDtoString($id);
-    $appInstance = $this->getApplicationPool()->createInstace($app);
-    if (!$appInstance) {
-        continue;
-    }
-    
     if ($app->type == "SystemApplication") {
         continue;
     }
-    
-    $i++;
-    if ($i == 1) {
-        echo "<div style=''>";
-    }
-    
-    echo "<div class='gs_add_app_entry' appId='$id'>";
-    echo "<div class='gs_app_image'><img src='/showApplicationImages.php?appNamespace=$namespace&image=".$app->appName.".png'/></div>";
-    echo "<div class='infobox'>";
-        echo "<div class='gs_app_title'>$app->appName</div>";
-        echo "<div class='gs_app_desc'>".$appInstance->getDescription()."</div>";
-    echo "</div>";
-    
-    echo "</div>";
-    
-    if ($i%3 == 0) {
-        echo "</div>";
-        $i = 0 ;
-    }
-}
 
-if ($i%3 != 0) {
-    echo "</div>";
-}
-
-echo "<div style='background-color: #DEDEDE; margin-top: 20px; margin-bottom: 20px; text-align: center; padding: 3px;'> System apps </div>";
-$apps = $this->getApi()->getStoreApplicationPool()->getApplications();
-$i = 0;
-foreach ($apps as $app) {
-    $id = $app->id;
-    $namespace = $this->convertUUIDtoString($id);
-    $appInstance = $this->getApplicationPool()->createInstace($app);
-    if (!$appInstance) {
+    if ($app->isSingleton) {
         continue;
     }
-    
-    if ($app->type != "SystemApplication") {
-        continue;
+
+
+    if (!isset($types[$app->moduleId])) {
+        $types[$app->moduleId] = 0;
     }
-    
-    $i++;
-    if ($i == 1) {
-        echo "<div style=''>";
-    }
-    
-    echo "<div class='gs_add_app_entry' appId='$id'>";
-    echo "<div class='gs_app_image'><img src='/showApplicationImages.php?appNamespace=$namespace&image=".$app->appName.".png'/></div>";
-    echo "<div class='infobox'>";
-        echo "<div class='gs_app_title'>$app->appName</div>";
-        echo "<div class='gs_app_desc'>".$appInstance->getDescription()."</div>";
-    echo "</div>";
-    
-    echo "</div>";
-    
-    if ($i%3 == 0) {
+    $types[$app->moduleId] ++;
+}
+
+echo "<div class='gsselectappmodule'>";
+foreach($types as $type => $count) {
+    echo "<span class='gsselectmoduletab' data-module='$type'> " . $type . " (" . $count . ")" . "</span>";
+}
+echo "</div>";
+
+foreach ($types as $type => $count) {
+    echo "<div class='gsappstoaddinmodule' data-module='$type'>";
+    foreach ($apps as $app) {
+        $id = $app->id;
+        $namespace = $this->convertUUIDtoString($id);
+        $appInstance = $this->getApplicationPool()->createInstace($app);
+        if (!$appInstance) {
+            continue;
+        }
+
+        if ($app->moduleId != $type) {
+            continue;
+        }
+
+        if ($app->type == "SystemApplication") {
+            continue;
+        }
+
+        if ($app->isSingleton) {
+            continue;
+        }
+        
+
+        echo "<div class='gs_add_app_entry' appId='$id'>";
+        echo "<div class='gs_app_image'><img src='/showApplicationImages.php?appNamespace=$namespace&image=" . $app->appName . ".png'/></div>";
+        echo "<div class='infobox'>";
+        echo "<span class='gsaddappbutton'>Add</span>";
+        echo "<div class='gs_app_title'>".$appInstance->getName()."</div>";
+        echo "<div class='gs_app_desc'>" . $appInstance->getDescription() . "</div>";
         echo "</div>";
-        $i = 0 ;
+        echo "</div>";
     }
-}
-
-if ($i%3 != 0) {
     echo "</div>";
 }
-
+echo "</div>";
 echo "</div>";
 ?>
+
+<script>$('.gs_add_applicationlist').draggable();</script>

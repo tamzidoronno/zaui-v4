@@ -4861,6 +4861,21 @@ class StoreApplicationInstancePool(object):
     data.interfaceName = "core.applications.IStoreApplicationInstancePool"
     return self.communicationHelper.sendMessage(data)
 
+  def getSingletonInstance(self, appsettingsId):
+    args = collections.OrderedDict()
+    if isinstance(appsettingsId,GetShopBaseClass): 
+      args["appsettingsId"]=json.dumps(appsettingsId.__dict__)
+    else:
+      try:
+        args["appsettingsId"]=json.dumps(appsettingsId)
+      except (ValueError, AttributeError):
+        args["appsettingsId"]=appsettingsId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getSingletonInstance"
+    data.interfaceName = "core.applications.IStoreApplicationInstancePool"
+    return self.communicationHelper.sendMessage(data)
+
   def setApplicationSettings(self, settings):
     args = collections.OrderedDict()
     if isinstance(settings,GetShopBaseClass): 

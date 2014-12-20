@@ -17,12 +17,11 @@ import com.thundashop.core.common.Settings;
 @GetShopApi
 public interface IStoreApplicationInstancePool {
 
-	@Administrator
-	public ApplicationInstance createNewInstance(String applicationId);
-	
-	
-	public ApplicationInstance getApplicationInstance(String applicationInstanceId);
-	
-	@Administrator
-	public ApplicationInstance setApplicationSettings(Settings settings);
+    @Administrator
+    public ApplicationInstance createNewInstance(String applicationId);
+
+    public ApplicationInstance getApplicationInstance(String applicationInstanceId);
+
+    @Administrator
+    public ApplicationInstance setApplicationSettings(Settings settings);
 }

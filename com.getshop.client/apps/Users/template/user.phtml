@@ -6,136 +6,136 @@ if (!$user->address) {
 }
 ?>
 <div class='gss_settings_header'>
-	<i class='fa fa-edit'></i>
+    <i class='fa fa-edit'></i>
 
-	<div class='gss_settings_header_description'>
-		<div class='gss_settings_header_title'>
-			<? echo $user->fullName; ?>
-		</div>
-		<div class='gss_settings_header_description_inner'>
-			<?
-			echo $this->__f("Change the settings information below?");
-			?>	
-		</div>
-	</div>	
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            <? echo $user->fullName; ?>
+        </div>
+        <div class='gss_settings_header_description_inner'>
+            <?
+            echo $this->__f("Change the settings information below?");
+            ?>	
+        </div>
+    </div>	
 </div>
 
 
 <div class='gss_settings_content'>
-    
+
     <input type="hidden" gs_model='usermodel' gs_model_attr='userid' value="<? echo $user->id; ?>"/>
-    
+
     <div class="gss_settings_title"><? echo $this->__f("General user informational"); ?></div>
     <div class="textfield gss_setting"  id="name">
-		<span class="title"><?php echo $this->__f("Name"); ?></span>
+        <span class="title"><?php echo $this->__f("Name"); ?></span>
         <input type="textfield" gs_model='usermodel' gs_model_attr='name' value="<? echo $user->fullName; ?>">
-		<div class="description">
-			<?php echo $this->__("Name of the person that owns this new account."); ?>
-		</div>
-	</div>
-    
+        <div class="description">
+            <?php echo $this->__("Name of the person that owns this new account."); ?>
+        </div>
+    </div>
+
     <div class="textfield gss_setting"  id="email">
-		<span class="title"><?php echo $this->__f("Mail address"); ?></span>
+        <span class="title"><?php echo $this->__f("Mail address"); ?></span>
         <input type="textfield" gs_model='usermodel' gs_model_attr='email' value="<? echo $user->emailAddress; ?>">
-		<div class="description">
-			<?php echo $this->__("Email address."); ?>
-		</div>
-	</div>
-    
+        <div class="description">
+            <?php echo $this->__("Email address."); ?>
+        </div>
+    </div>
+
     <div class="textfield gss_setting"  id="phone">
-		<span class="title"><?php echo $this->__f("Phone number"); ?></span>
-		<input type="textfield" gs_model='usermodel' gs_model_attr='phone_number' value="<? echo $user->cellPhone; ?>">
-		<div class="description">
-			<?php echo $this->__("The cell phone number to the owner of this account."); ?>
-		</div>
-	</div>
+        <span class="title"><?php echo $this->__f("Phone number"); ?></span>
+        <input type="textfield" gs_model='usermodel' gs_model_attr='phone_number' value="<? echo $user->cellPhone; ?>">
+        <div class="description">
+            <?php echo $this->__("The cell phone number to the owner of this account."); ?>
+        </div>
+    </div>
 
     <div class="textfield gss_setting"  id="admin">
-		<span class="title"><?php echo $this->__f("Administrator"); ?></span>
-		<div class="gss_onoff" gs_model="usermodel" gs_model_attr="isadmin">
+        <span class="title"><?php echo $this->__f("Administrator"); ?></span>
+        <div class="gss_onoff" gs_model="usermodel" gs_model_attr="isadmin">
             <?
             $faclass = $user->type == 100 ? "fa-toggle-on" : "fa-toggle-off";
             ?>
-			Off<i class="fa <? echo $faclass; ?>"></i>On
-		</div>
-		<div class="description">
-			<?php echo $this->__("Is this an administrator account"); ?>
-		</div>
-	</div>
-    
+            Off<i class="fa <? echo $faclass; ?>"></i>On
+        </div>
+        <div class="description">
+            <?php echo $this->__("Is this an administrator account"); ?>
+        </div>
+    </div>
+
     <div class="textfield gss_setting"  id="editor">
-		<span class="title"><?php echo $this->__f("Editor"); ?></span>
-		<div class="gss_onoff" gs_model="usermodel" gs_model_attr="iseditor">
+        <span class="title"><?php echo $this->__f("Editor"); ?></span>
+        <div class="gss_onoff" gs_model="usermodel" gs_model_attr="iseditor">
             <?
             $faclass = $user->type == 50 ? "fa-toggle-on" : "fa-toggle-off";
             ?>
-			Off<i class="fa <? echo $faclass; ?> "></i>On
-		</div>
-		<div class="description">
-			<?php echo $this->__("Is this an editor account?"); ?>
-		</div>
-	</div>
-    
+            Off<i class="fa <? echo $faclass; ?> "></i>On
+        </div>
+        <div class="description">
+            <?php echo $this->__("Is this an editor account?"); ?>
+        </div>
+    </div>
+
     <div class='gss_button_area'>
-		<div class="gss_button" gss_method="updateGeneralInformation" gss_model="usermodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Update"); ?></div>
-	</div>
+        <div class="gss_button" gss_method="updateGeneralInformation" gss_model="usermodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Update"); ?></div>
+    </div>
 
 </div>
 <div class='gss_settings_content'>
     <div class="gss_settings_title">Addresses</div>
-    
+
     <div class="textfield gss_setting"  id="streetaddress">
-		<span class="title"><?php echo $this->__f("Street address"); ?></span>
-		<input type="textfield" gs_model='usermodel' gs_model_attr='address_street' value="<? echo $user->address->address; ?>">
-		<div class="description">
-			<?php echo $this->__("Billing street address."); ?>
-		</div>
-	</div>
+        <span class="title"><?php echo $this->__f("Street address"); ?></span>
+        <input type="textfield" gs_model='usermodel' gs_model_attr='address_street' value="<? echo $user->address->address; ?>">
+        <div class="description">
+            <?php echo $this->__("Billing street address."); ?>
+        </div>
+    </div>
     <div class="textfield gss_setting"  id="postbox">
-		<span class="title"><?php echo $this->__f("Post number"); ?></span>
-		<input type="textfield" gs_model='usermodel' gs_model_attr='address_postcode' value="<? echo $user->address->postCode; ?>">
-		<div class="description">
-			<?php echo $this->__("Billing post number."); ?>
-		</div>
-	</div>
+        <span class="title"><?php echo $this->__f("Post number"); ?></span>
+        <input type="textfield" gs_model='usermodel' gs_model_attr='address_postcode' value="<? echo $user->address->postCode; ?>">
+        <div class="description">
+            <?php echo $this->__("Billing post number."); ?>
+        </div>
+    </div>
     <div class="textfield gss_setting"  id="postplace">
-		<span class="title"><?php echo $this->__f("City"); ?></span>
-		<input type="textfield" gs_model='usermodel' gs_model_attr='address_city' value="<? echo $user->address->city; ?>">
-		<div class="description">
-			<?php echo $this->__("Billing city address."); ?>
-		</div>
-	</div>
-    
+        <span class="title"><?php echo $this->__f("City"); ?></span>
+        <input type="textfield" gs_model='usermodel' gs_model_attr='address_city' value="<? echo $user->address->city; ?>">
+        <div class="description">
+            <?php echo $this->__("Billing city address."); ?>
+        </div>
+    </div>
+
     <div class='gss_button_area'>
-		<div class="gss_button" gss_method="updateAddress" gss_model="usermodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Update"); ?></div>
-	</div>
+        <div class="gss_button" gss_method="updateAddress" gss_model="usermodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Update"); ?></div>
+    </div>
 </div>
 <div class='gss_settings_content'>
     <div class="gss_settings_title"><? echo $this->__f("Update password"); ?></div>
     <div class="textfield gss_setting"  id="password1">
-		<span class="title"><?php echo $this->__f("Password"); ?></span>
+        <span class="title"><?php echo $this->__f("Password"); ?></span>
         <input type="password" gs_model='usermodel' gs_model_attr='password1' value="" placeholder="*******">
-		<div class="description">
-			<?php echo $this->__("Please enter the accounts password."); ?>
-		</div>
-	</div>
-    
+        <div class="description">
+            <?php echo $this->__("Please enter the accounts password."); ?>
+        </div>
+    </div>
+
     <div class="textfield gss_setting"  id="password2">
-		<span class="title"><?php echo $this->__f("Repeat password password"); ?></span>
-		<input type="password" gs_model='usermodel' gs_model_attr='password2' value="" placeholder="*******">
-		<div class="description">
-			<?php echo $this->__("Make sure that the password you wrote above is the correct."); ?>
-		</div>
-	</div>
+        <span class="title"><?php echo $this->__f("Repeat password password"); ?></span>
+        <input type="password" gs_model='usermodel' gs_model_attr='password2' value="" placeholder="*******">
+        <div class="description">
+            <?php echo $this->__("Make sure that the password you wrote above is the correct."); ?>
+        </div>
+    </div>
 
     <div class='gss_button_area'>
-		<div class="gss_button" gss_method="updatePassword" gss_model="usermodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Update"); ?></div>
-	</div>
+        <div class="gss_button" gss_method="updatePassword" gss_model="usermodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Update"); ?></div>
+    </div>
 </div>
 <div class='gss_settings_content'>
     <div class="gss_settings_title"><? echo $this->__f("Dangerous actions"); ?></div>
-    
+
     <div class='gss_button_area'>
-		<div class="gss_button" gss_method="deleteAccount" gss_model="usermodel"><i class='fa fa-remove'></i><?php echo $this->__("Delete account"); ?></div>
-	</div>
+        <div class="gss_button" gss_method="deleteAccount" gss_model="usermodel"><i class='fa fa-remove'></i><?php echo $this->__("Delete account"); ?></div>
+    </div>
 </div>

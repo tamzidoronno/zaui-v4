@@ -3716,7 +3716,7 @@ class APIProductManager {
 	* @param searchWord
 	* @param pageSize
 	* @param page
-	* @return List
+	* @return core_productmanager_data_SearchResult
 	*/
 
 	public function search($searchWord, $pageSize, $page) {
@@ -3727,7 +3727,7 @@ class APIProductManager {
 	     $data['args']["page"] = json_encode($this->transport->object_unset_nulls($page));
 	     $data["method"] = "search";
 	     $data["interfaceName"] = "core.productmanager.IProductManager";
-	     return $this->transport->sendMessage($data);
+	     return $this->transport->cast(new core_productmanager_data_SearchResult(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -4602,6 +4602,20 @@ class APIStoreApplicationInstancePool {
 	     $data['args'] = array();
 	     $data['args']["applicationInstanceId"] = json_encode($this->transport->object_unset_nulls($applicationInstanceId));
 	     $data["method"] = "getApplicationInstance";
+	     $data["interfaceName"] = "core.applications.IStoreApplicationInstancePool";
+	     return $this->transport->cast(new core_common_ApplicationInstance(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function getSingletonInstance($appsettingsId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["appsettingsId"] = json_encode($this->transport->object_unset_nulls($appsettingsId));
+	     $data["method"] = "getSingletonInstance";
 	     $data["interfaceName"] = "core.applications.IStoreApplicationInstancePool";
 	     return $this->transport->cast(new core_common_ApplicationInstance(), $this->transport->sendMessage($data));
 	}

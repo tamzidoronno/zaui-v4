@@ -17,7 +17,13 @@
     min-height: 100%;
     background-color: #3a99d7;
     color: #FFF;
-    /*display: block;*/
+}
+
+/* BETA FLAG */
+#backsidesettings {
+    background-image: url('images/beta_label.png');
+    background-repeat: no-repeat;
+    background-position: -5px 55px;
 }
 
 #backsidesettings .gss_slogan {
@@ -398,7 +404,7 @@ div[gss_method] {
 
 #backsidesettings .successdialoagbacksettings {
     font-size: 20px;
-    z-index: 1;
+    z-index: 12;
     padding: 20px;
     width: 400px;
     position: fixed;

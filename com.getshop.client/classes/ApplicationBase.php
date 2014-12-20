@@ -8,7 +8,7 @@ class ApplicationBase extends FactoryBase {
     /** @var core_common_AppConfiguration */
     public $configuration;
     
-    /** @var core_applicationmanager_ApplicationSettings */
+    /** @var core_applicationmanager_Application */
     public $applicationSettings;
     
     public function getYoutubeId() {
@@ -338,8 +338,12 @@ class ApplicationBase extends FactoryBase {
         $sendCore = $this->getApiObject()->core_common_Settings();
         $sendCore->settings = $newSettings; 
         $sendCore->appId = $this->getConfiguration()->id;
-        $this->getApi()->getStoreApplicationInstancePool()->setApplicationSettings($sendCore);
-        $this->configuration->settings->{$key} = $setting;
+        
+        if ($this->configuration) {
+            $this->configuration->settings->{$key} = $setting;
+        } else if($this->applicationSettings) {
+            $this->applicationSettings->settings->{$key} = $setting;
+        }
     }
     
     public function showConfigurationMenu() {

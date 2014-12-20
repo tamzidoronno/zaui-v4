@@ -35,25 +35,25 @@ class Shipper extends \ShipmentApplication implements \Application {
         return $this->__w("Shipment settings");        
     }
 
+    public function getStartUpCost() {
+        return $this->getConfigurationSetting("shippingstart");
+    }
+    
+    public function getItemPrice() {
+        return $this->getConfigurationSetting("priceeachproduct");
+    }
+    
+    public function getFreeShipmentPrice() {
+        return $this->getConfigurationSetting("freeshipment");
+    }
+    
     private function getSimpleShippingCost($shipmentProduct, $variations) {
-        $totalCost = 0;
-        
-        if (isset($this->getConfiguration()->settings->{"shippingstart"})) {
-            $totalCost = $this->getConfiguration()->settings->{"shippingstart"}->value;
-        } 
+        $totalCost = $this->getStartUpCost();
+        $priceEachProduct = $this->getItemPrice();
+        $freeShipment = $this->getFreeShipmentPrice();
         
         if($shipmentProduct != null) {
             $totalCost = $shipmentProduct->price;
-        }
-        
-        $priceEachProduct = 0;
-        if (isset($this->getConfiguration()->settings->{"priceeachproduct"})) {
-            $priceEachProduct = $this->getConfiguration()->settings->{"priceeachproduct"}->value;
-        }
-        
-        $freeShipment = 0;
-        if (isset($this->getConfiguration()->settings->{"freeshipment"}->value)) {
-            $freeShipment = $this->getConfiguration()->settings->{"freeshipment"}->value;
         }
         
         $cart = $this->getApi()->getCartManager()->getCart();
@@ -98,7 +98,7 @@ class Shipper extends \ShipmentApplication implements \Application {
         return 0;
     }
     
-    private function getShippingType() {
+    public function getShippingType() {
         if (isset($this->getConfiguration()->settings->{"shippingtype"})) {
             return $this->getConfiguration()->settings->{"shippingtype"}->value;
         } else {
@@ -116,7 +116,7 @@ class Shipper extends \ShipmentApplication implements \Application {
         }
     }
     
-     public function additionalInformation() {
+    public function additionalInformation() {
         echo "<div class='section selected' type=''>";
             echo "<div class='title'>";
                 echo $this->__w("Fixed price");
@@ -125,6 +125,12 @@ class Shipper extends \ShipmentApplication implements \Application {
                 echo "</span>";
             echo "</div>";
         echo "</div>";
+     }
+     
+     public function saveSettings() {
+         $this->setConfigurationSetting("shippingstart", $_POST['startupCost']);
+         $this->setConfigurationSetting("priceeachproduct", $_POST['itemPrice']);
+         $this->setConfigurationSetting("freeshipment", $_POST['freeShipping']);
      }
 }
 ?>

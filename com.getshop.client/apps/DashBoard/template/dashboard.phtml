@@ -5,7 +5,7 @@ $apps = $this->getApi()->getStoreApplicationPool()->getApplications();
 <div class='gss_settings_main_area'>
     <div class='gss_settings_getshop_logo'>
         <div class='gss_logo'></div>
-        <div class='gss_slogan'>GetShop Admin</div>
+        <div class='gss_slogan' style="opacity: 0">GetShop Dashboard</div>
     </div>
 
     <div class="dashboard_statistic_buttons">
@@ -56,6 +56,9 @@ $apps = $this->getApi()->getStoreApplicationPool()->getApplications();
     </div>
 </div>
 
+<script>
+$('.gss_slogan').fadeTo(1000, 1);
+</script>
 <?
     $chartApp = $this->getCurrentChartApp();
     if (!$chartApp) {

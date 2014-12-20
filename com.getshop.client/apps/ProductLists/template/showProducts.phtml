@@ -48,9 +48,15 @@ $view = $this->isRowView() ? "row_view" : $view;
 </div>
 <script>
     $(document).ready(function() {
+        
         var innerWidth = $('.products.grid_view[listid="<? echo $this->getConfigurationSetting("productlist"); ?>"]').innerWidth();
+        var columnSize = Math.floor(innerWidth/<? echo $columnSize; ?>);
+        var totalSize = columnSize * <? echo $columnSize; ?>;
+        if (totalSize == innerWidth) {
+            columnSize--;    
+        }
         if (innerWidth) {
-            $('.productbox_outer').outerWidth(Math.floor(innerWidth/<? echo $columnSize; ?>))
+            $('.productbox_outer').outerWidth(columnSize);
         }
     });
     

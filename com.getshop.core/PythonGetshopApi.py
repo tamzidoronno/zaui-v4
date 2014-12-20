@@ -2660,6 +2660,21 @@ class OrderManager(object):
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getMostSoldProducts(self, numberOfProducts):
+    args = collections.OrderedDict()
+    if isinstance(numberOfProducts,GetShopBaseClass): 
+      args["numberOfProducts"]=json.dumps(numberOfProducts.__dict__)
+    else:
+      try:
+        args["numberOfProducts"]=json.dumps(numberOfProducts)
+      except (ValueError, AttributeError):
+        args["numberOfProducts"]=numberOfProducts
+    data = EmptyClass()
+    data.args = args
+    data.method = "getMostSoldProducts"
+    data.interfaceName = "core.ordermanager.IOrderManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getOrder(self, orderId):
     args = collections.OrderedDict()
     if isinstance(orderId,GetShopBaseClass): 
@@ -2753,6 +2768,21 @@ class OrderManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getPageCount"
+    data.interfaceName = "core.ordermanager.IOrderManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getSalesNumber(self, year):
+    args = collections.OrderedDict()
+    if isinstance(year,GetShopBaseClass): 
+      args["year"]=json.dumps(year.__dict__)
+    else:
+      try:
+        args["year"]=json.dumps(year)
+      except (ValueError, AttributeError):
+        args["year"]=year
+    data = EmptyClass()
+    data.args = args
+    data.method = "getSalesNumber"
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -3826,6 +3856,35 @@ class ProductManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "saveProductList"
+    data.interfaceName = "core.productmanager.IProductManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def search(self, searchWord, pageSize, page):
+    args = collections.OrderedDict()
+    if isinstance(searchWord,GetShopBaseClass): 
+      args["searchWord"]=json.dumps(searchWord.__dict__)
+    else:
+      try:
+        args["searchWord"]=json.dumps(searchWord)
+      except (ValueError, AttributeError):
+        args["searchWord"]=searchWord
+    if isinstance(pageSize,GetShopBaseClass): 
+      args["pageSize"]=json.dumps(pageSize.__dict__)
+    else:
+      try:
+        args["pageSize"]=json.dumps(pageSize)
+      except (ValueError, AttributeError):
+        args["pageSize"]=pageSize
+    if isinstance(page,GetShopBaseClass): 
+      args["page"]=json.dumps(page.__dict__)
+    else:
+      try:
+        args["page"]=json.dumps(page)
+      except (ValueError, AttributeError):
+        args["page"]=page
+    data = EmptyClass()
+    data.args = args
+    data.method = "search"
     data.interfaceName = "core.productmanager.IProductManager"
     return self.communicationHelper.sendMessage(data)
 

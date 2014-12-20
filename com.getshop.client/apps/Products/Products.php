@@ -29,6 +29,45 @@ class Products extends \WebshopApplication implements \Application {
     public function render() {
         
     }
+    
+    public function getDashboardChart($year=false) {       
+        if ($year) {
+            $this->createGoogleChartResultList($year);
+        }
+        
+        return ['fa-shopping-cart', 'app.Products.drawChart', $this->__f("Products")];
+    }
+    
+    private function createGoogleChartResultList($year) {
+        $products = $this->getApi()->getOrderManager()->getMostSoldProducts(5);
+        $productCount = array();
+        
+        foreach ($products as $productId => $list) {
+            $product = $this->getApi()->getProductManager()->getProduct($productId);
+            if (!$product) {
+                continue;
+            }
+            
+            if (!isset($productCount[$productId])) {
+                $productCount[$productId] = array();
+            }
+            
+            foreach ($list as $statistic) {
+                if ($statistic->year != $year) {
+                    continue;
+                }
+                
+                $productCount[$productId][$statistic->month] = $statistic->count;
+            }
+            
+            $productCount[$productId][13] = $product->name;
+        }
+        
+        echo "<script>";
+        echo "app.Products.googleChartsData = ".json_encode($productCount).";";
+        echo "</script>";
+        
+    }
 
     public function updateProduct() {
         $product = $this->getApi()->getProductManager()->getProduct($_POST['productid']);
@@ -107,6 +146,41 @@ class Products extends \WebshopApplication implements \Application {
         $list->productIds = $keep;
         $this->getApi()->getProductManager()->saveProductList($list);
     }
-
     
+    public function setFilterProducts() {
+        $_SESSION['products_admin_search_word_page'] = 1;
+        $_SESSION['products_admin_search_word'] = $_POST['filterCriteria'];
+    }
+
+    public function getSearchWord() {
+        if (isset($_SESSION['products_admin_search_word'])) {
+            return $_SESSION['products_admin_search_word'];
+        }
+        
+        return "";
+    }
+    
+    public function getGssPageNumber() {
+        if (isset($_SESSION['products_admin_search_word_page'])) {
+            return $_SESSION['products_admin_search_word_page'];
+        }
+        
+        return 1;
+    }
+    
+    public function setGssNextPage() {
+        $pageNumber = $this->getGssPageNumber();
+        $pageNumber++;
+        $_SESSION['products_admin_search_word_page'] = $pageNumber;
+    }
+    
+    public function setGssPrevPage() {
+        $pageNumber = $this->getGssPageNumber();
+        $pageNumber--;
+        if ($pageNumber < 1) {
+            $pageNumber = 1;
+        }
+        $_SESSION['products_admin_search_word_page'] = $pageNumber;
+    }
+
 }

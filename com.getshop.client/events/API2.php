@@ -2600,6 +2600,23 @@ class APIOrderManager {
 	}
 
 	/**
+	* Returns the total amount of sales for a given year. If you year is left blank you
+	* will get the total amount for all years.
+	*
+	* @param year
+	* @return Map
+	*/
+
+	public function getMostSoldProducts($numberOfProducts) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["numberOfProducts"] = json_encode($this->transport->object_unset_nulls($numberOfProducts));
+	     $data["method"] = "getMostSoldProducts";
+	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Fetch a single order based on its id.
 	* @param orderId
 	* @return core_ordermanager_data_Order
@@ -2676,6 +2693,23 @@ class APIOrderManager {
 	     $data['args']["pageSize"] = json_encode($this->transport->object_unset_nulls($pageSize));
 	     $data['args']["searchWord"] = json_encode($this->transport->object_unset_nulls($searchWord));
 	     $data["method"] = "getPageCount";
+	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Returns the total amount of sales for a given year. If you year is left blank you
+	* will get the total amount for all years.
+	*
+	* @param year
+	* @return List
+	*/
+
+	public function getSalesNumber($year) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["year"] = json_encode($this->transport->object_unset_nulls($year));
+	     $data["method"] = "getSalesNumber";
 	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -3671,6 +3705,27 @@ class APIProductManager {
 	     $data['args'] = array();
 	     $data['args']["core_productmanager_data_ProductList"] = json_encode($this->transport->object_unset_nulls($core_productmanager_data_ProductList));
 	     $data["method"] = "saveProductList";
+	     $data["interfaceName"] = "core.productmanager.IProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Returns a list of products for a given searchword,
+	* if blank all products will be returned.
+	*
+	* @param searchWord
+	* @param pageSize
+	* @param page
+	* @return List
+	*/
+
+	public function search($searchWord, $pageSize, $page) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["searchWord"] = json_encode($this->transport->object_unset_nulls($searchWord));
+	     $data['args']["pageSize"] = json_encode($this->transport->object_unset_nulls($pageSize));
+	     $data['args']["page"] = json_encode($this->transport->object_unset_nulls($page));
+	     $data["method"] = "search";
 	     $data["interfaceName"] = "core.productmanager.IProductManager";
 	     return $this->transport->sendMessage($data);
 	}

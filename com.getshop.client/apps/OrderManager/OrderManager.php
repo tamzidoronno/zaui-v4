@@ -27,6 +27,10 @@ class OrderManager extends \WebshopApplication implements \Application {
         $this->includefile("dashboardwidget");
     }
     
+    public function getDashboardChart() {
+        return ['fa-credit-card', 'app.OrderManager.drawChart', $this->__f("Orders")];
+    }
+    
     public function render() {
   
     }

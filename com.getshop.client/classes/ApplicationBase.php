@@ -129,6 +129,15 @@ class ApplicationBase extends FactoryBase {
         file_put_contents($passwordFile, $addContent."\n");
     }
     
+    /**
+     * Returns a array with the following information
+     * 
+     * @return ['font-awesome-icon', 'javascript.function.to.ChartDrawer', 'title'];
+     */
+    public function getDashboardChart($year=false) {
+        return false;
+    }
+    
     public function renderDashBoardWidget() {
         return false;
     }

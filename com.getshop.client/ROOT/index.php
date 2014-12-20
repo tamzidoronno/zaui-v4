@@ -176,6 +176,8 @@ if(isset($factory->getSettings()->languages)) {
         echo "</script>";
         ?>
 
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
         <title><?php echo $title; ?></title>
     </head>
     <body editormode="<? echo $factory->isEditorMode() ? "true" : "false"?>">
@@ -326,4 +328,9 @@ if (isset($_SESSION['showadmin']) && $_SESSION['showadmin']) {
     echo "<script>getshop.Settings.showSettings(false);</script>";
 }
 ?>
-        
+
+    
+<script>
+    google.load('visualization', '1.0', {'packages':['corechart']});
+</script>
+    

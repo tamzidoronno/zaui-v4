@@ -74,15 +74,7 @@ class Page {
             $this->displayResizing();
             $this->printEditingInfo($editingHeader);
             ?>
-            <style>
-                .dragtable { background-image: url('http://quocity.com/colresizable/img/rangeBar.png'); background-position: 10px 10px; background-repeat-y: no-repeat;}
-            </style>
-            <script>
-                setTimeout(function () {
-                    thundashop.framework.loadResizing($('.gscell[cellid="<? echo $editedCellid; ?>"]'), true);
-                }, "200");
-            </script>
-            <script src="/js/colresize.js"/>
+            <script type="text/javascript" src="/js/colresize.js"></script>
             <?
         } else {
             echo "<script>$('.gsiseditingprepend').remove();</script>";

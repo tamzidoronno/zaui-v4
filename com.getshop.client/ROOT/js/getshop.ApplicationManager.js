@@ -32,7 +32,6 @@ thundashop.ApplicationManager = {
     },
     showApplicationAddList: function () {
         var menu = $('.gs_add_applicationlist');
-        console.log($(this).offset());
         var left = $(this).offset().left;
         if ((left + 600) > $(document).width()) {
             left = $(document).width() - 600;

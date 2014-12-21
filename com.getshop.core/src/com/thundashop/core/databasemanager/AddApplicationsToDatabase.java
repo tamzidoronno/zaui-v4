@@ -1,4 +1,3 @@
-
 package com.thundashop.core.databasemanager;
 
 import com.thundashop.core.appmanager.data.Application;
@@ -39,14 +38,14 @@ public class AddApplicationsToDatabase {
         applicationSettings.isSingleton = isSingleton;
         return applicationSettings;
     }
-    
+
     private List<Application> addApplications() {
         List<Application> apps = new ArrayList();
-        
+
         List<String> allowed = new ArrayList();
         allowed.add("large");
         allowed.add("xlarge");
-        
+
         List<String> allowed2 = new ArrayList();
         allowed2.add("cell");
         allowed2.add("small");
@@ -61,9 +60,9 @@ public class AddApplicationsToDatabase {
                 Application.Type.Marketing, true);
         dashBoard.isSingleton = true;
         dashBoard.isPublic = true;
-		dashBoard.defaultActivate = true;
+        dashBoard.defaultActivate = true;
         apps.add(dashBoard);
-		
+
         Application menu = createSettings("Menu",
                 "a11ac190-4f9a-11e3-8f96-0800200c9a66",
                 allowed2,
@@ -71,9 +70,8 @@ public class AddApplicationsToDatabase {
                 Application.Type.Webshop, true);
         menu.isSingleton = true;
         menu.isPublic = true;
-		menu.defaultActivate = true;
         apps.add(menu);
-		
+
         Application products = createSettings("Products",
                 "e073a75a-87c9-4d92-a73a-bc54feb7317f",
                 allowed2,
@@ -81,10 +79,10 @@ public class AddApplicationsToDatabase {
                 Application.Type.Webshop, true);
         products.isSingleton = true;
         products.isPublic = true;
-		products.moduleId = "WebShop";
-		products.activeAppOnModuleActivation = true;
+        products.moduleId = "WebShop";
+        products.activeAppOnModuleActivation = true;
         apps.add(products);
-		
+
         Application applicationSelector = createSettings("ApplicationSelector",
                 "f1fc4af3-656e-4294-a268-40d2a82d0aa1",
                 allowed2,
@@ -94,25 +92,23 @@ public class AddApplicationsToDatabase {
         applicationSelector.isPublic = true;
         applicationSelector.defaultActivate = true;
         apps.add(applicationSelector);
-		
+
         Application yellowCandyTheme = createSettings("YellowCandyTheme",
                 "efe5640f-64fe-4053-a0de-508349465cdc",
                 allowed2,
                 "",
                 Application.Type.Theme, true);
         yellowCandyTheme.isPublic = true;
-        yellowCandyTheme.defaultActivate = true;
         apps.add(yellowCandyTheme);
-		
+
         Application pcstoretheme = createSettings("PcStoreTheme",
                 "e70c1a0a-fc3d-4ffe-817f-f09dc679199f",
                 allowed2,
                 "",
                 Application.Type.Theme, true);
         pcstoretheme.isPublic = true;
-        pcstoretheme.defaultActivate = true;
         apps.add(pcstoretheme);
-		
+
         Application productLists = createSettings("ProductLists",
                 "f245b8ae-f3ba-454e-beb4-ecff5ec328d6",
                 allowed2,
@@ -121,7 +117,7 @@ public class AddApplicationsToDatabase {
         productLists.isPublic = true;
         productLists.activeAppOnModuleActivation = true;
         apps.add(productLists);
-        
+
         Application ecomerceSettings = createSettings("ECommerceSettings",
                 "9de54ce1-f7a0-4729-b128-b062dc70dcce",
                 new ArrayList(),
@@ -131,8 +127,7 @@ public class AddApplicationsToDatabase {
         ecomerceSettings.moduleId = "WebShop";
         ecomerceSettings.activeAppOnModuleActivation = true;
         apps.add(ecomerceSettings);
-		
-		
+
 //        ApplicationSettings sedoxMenu = createSettings(
 //                "SedoxMenu",
 //                "b23a3767-1f7b-40e3-93c5-65504ebaa73c",
@@ -199,8 +194,6 @@ public class AddApplicationsToDatabase {
 //        sedoxUserPanel.allowedStoreIds = new ArrayList();
 //        sedoxUserPanel.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
 //        apps.add(sedoxUserPanel);
-
-
         return apps;
     }
 
@@ -230,11 +223,13 @@ public class AddApplicationsToDatabase {
     public static void main(String args[]) throws ErrorException, UnknownHostException {
         ApplicationContext context = new ClassPathXmlApplicationContext("All.xml");
         AppContext.appContext = context;
-        
+
         context.getBean(AddApplicationsToDatabase.class).insert();
         context.getBean(AddApplicationsToDatabase.class).showLinks();
-        
-        java.lang.System.exit(1);
+
+        if (args == null) {
+            java.lang.System.exit(1);
+        }
     }
 
 }

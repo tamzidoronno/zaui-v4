@@ -205,11 +205,14 @@
     bottom: 0px;
 }
 
+.Menu .menuentries.horizontal .entries .entries { display:none; position:absolute; z-index: 2; }
+.Menu .menuentries.horizontal .entries .entries .entry { display:block; }
 .Menu .button-large.cancel {
     position: absolute;
     left: 0px;
     bottom: 0px;
 }
+
 /****************************** TreeMenu ****************************/
 .getshopmenu {
     width: 400px;
@@ -357,12 +360,19 @@
     cursor: pointer;
     font-size: 15px;
 }
-/****************************** Menu in header ****************************/
-.gsarea[area="header"] .Menu .menuentries, 
-.gsarea[area="header"] .Menu .menu_simple_menu, 
-.gsarea[area="header"] .Menu .menuentries .entry {
-    display: inline-block;
+
+.Menu .menuentries, 
+.Menu .menu_simple_menu, 
+.Menu .menuentries .entry {
     cursor: pointer;
+}
+
+.Menu .menuentries.horizontal, 
+.Menu .menu_simple_menu, 
+.Menu .menuentries.horizontal .entry {
+    cursor: pointer;
+    display: inline-block;
+
 }
 
 .Menu .hidden_simple_menu {

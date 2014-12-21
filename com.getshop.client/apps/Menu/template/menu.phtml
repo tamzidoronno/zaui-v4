@@ -8,14 +8,9 @@ if (!count($entries)) {
 }
 ?>
 
-<div class="menuentries">
+<div class="menuentries horizontal">
     <?
-    foreach ($entries as $entry) {
-        $name = $entry->name;
-        $linkName = \GetShopHelper::makeSeoUrl($entry->name);
-        $pageId = $entry->pageId;
-        echo "<div class='entry'><a ajaxlink='/?page=$pageId' href='$linkName'><div>$name</div></a></div>";
-    }
+    $this->printEntries($entries, 0);
     ?>
 </div>
 
@@ -37,5 +32,4 @@ if ($this->isEditorMode()) {
         </div>
     <? } ?>
 </div>
-
 <? } ?>

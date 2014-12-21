@@ -8,10 +8,20 @@ getshop.MenuEditor = {
         $(document).on('keyup', ".Menu .titleinformation #itemname", getshop.MenuEditor.nameKeyUp);
         $(document).on('keyup', ".Menu .titleinformation #icontext", getshop.MenuEditor.iconKeyUp);
         $(document).on('keyup', ".Menu .titleinformation #itemlink", getshop.MenuEditor.itemLinkChanged);
+        $(document).on('mouseenter', ".Menu .menuentries.horizontal .entry", getshop.MenuEditor.showSubEntries);
+        $(document).on('mouseleave', ".Menu .menuentries.horizontal .entry", getshop.MenuEditor.hideSubEntries);
         $(document).on('click', ".Menu .save", getshop.MenuEditor.saveMenuEditor);
         $(document).on('click', ".Menu .cancel", getshop.MenuEditor.closeMenuEditor);
         $(document).on('change', ".Menu #userlevel", getshop.MenuEditor.userLevelChanged);
     },
+    
+    showSubEntries : function() {
+        $(this).children('.entries').show();
+    },
+    hideSubEntries : function() {
+        $(this).children('.entries').hide();
+    },
+    
     closeMenuEditor : function() {
         thundashop.common.hideInformationBox();
     },

@@ -53,11 +53,11 @@ thundashop.ApplicationManager = {
         var data = {
             cellId: $(this).closest('.gs_add_applicationlist').attr('cellid'),
             appId: $(this).closest('.gs_add_app_entry').attr('appId')
-        }
+        };
 
         var event = thundashop.Ajax.createEvent(null, "addApplicationToCell", this, data);
         thundashop.Ajax.post(event);
     }
-}
+};
 
 thundashop.ApplicationManager.init();

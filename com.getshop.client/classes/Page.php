@@ -36,7 +36,9 @@ class Page {
         $editedCellid = null;
         echo "<div class='gsarea' area='header'>";
         $edited = $this->printArea($layout->areas->{'header'});
+        $editingHeader = false;
         if ($edited) {
+            $editingHeader = true;
             $editedCellid = $edited;
         }
         echo "</div>";
@@ -61,8 +63,8 @@ class Page {
         foreach ($layout->areas as $section) {
             $this->printCss($section);
         }
-        
-        if($this->factory->isEditorMode()) {
+
+        if ($this->factory->isEditorMode()) {
             $this->printApplicationAddCellRow();
         }
 
@@ -70,7 +72,7 @@ class Page {
             $this->addCellConfigPanel();
             $this->addCellResizingPanel();
             $this->displayResizing();
-            $this->printEditingInfo();
+            $this->printEditingInfo($editingHeader);
             ?>
             <style>
                 .dragtable { background-image: url('http://quocity.com/colresizable/img/rangeBar.png'); background-position: 10px 10px; background-repeat-y: no-repeat;}
@@ -122,12 +124,13 @@ class Page {
         <?
     }
 
-    private function printEditingInfo() {
+    private function printEditingInfo($editingHeader) {
         echo "<div class='gseditinginfo gsframeworkstandard'>";
-        echo "<span style='float:left;'><input type='checkbox' style='background-color:#FFF;' class='gsdisplaygridcheckbox'> Add spacing to grid</span>";
-        echo "You are now in edit mode for the selected row, from this manipulate your row by adding more columns or add a row above / below, and much more. <input  type='button' class='gsdoneeditbutton' value='Done editing'><br>";
         echo "</div>";
-        echo "<script>$('.gsiseditingprepend').remove();$('body').prepend(\"<div class='gsiseditingprepend'></div>\");</script>";
+        echo "<script>$('.gsiseditingprepend').remove();</script>";
+        if ($editingHeader) {
+            echo "<script>$('body').prepend(\"<div class='gsiseditingprepend'></div>\");</script>";
+        }
     }
 
     private function addCarouselSettingsPanel() {
@@ -293,7 +296,7 @@ class Page {
 
             if ($cell->mode == "ROTATING" || $cell->mode == "TAB") {
                 $doCarousel = (!$edit && $cell->mode == "ROTATING");
-                if($this->factory->isEditorMode()) {
+                if ($this->factory->isEditorMode()) {
                     $doCarousel = false;
                 }
                 $this->printContainerSettings($doCarousel, $cell, $depth);
@@ -575,12 +578,16 @@ class Page {
             }
 
             if ($isedit) {
-                echo "<div class='gseditrowseperator'></div>";
+                echo "<div class='gseditrowseperator'><div class='gseditrowseperatorinnertop'>";
+                echo "<span style='float:left;'><input type='checkbox' style='background-color:#FFF;' class='gsdisplaygridcheckbox'> Add spacing to grid</span>";
+                echo "You are now in edit mode for this row, from this manipulate your row by adding more columns or add a row above / below, and much more. <input  type='button' class='gsdoneeditbutton' value='Done editing'><br>";
+
+                echo "</div></div>";
                 $this->printEasyRowMode($row);
             }
             $this->printCell($row, $count, 0, 0, $isedit, null);
-            if($isedit) {
-                echo "<div class='gseditrowseperator'></div>";
+            if ($isedit) {
+                echo "<div class='gseditrowseperator'><div class='gseditrowseperatorinnerbottom'></div></div>";
             }
             $count++;
         }
@@ -622,7 +629,7 @@ class Page {
             echo "<i class='fa fa-plus addcarouselrow gsoperatecell' type='addrow' target='container' title='Add another slider'></i>";
             echo "<i class='fa fa-cogs carouselsettings' title='Carousel settings' style='cursor:pointer;'></i>";
         }
-        if($this->factory->isEditorMode()) {
+        if ($this->factory->isEditorMode()) {
             echo "<i class='fa fa-warning' title='The carousel is not rotating while logged in as administrator.' style='cursor:pointer;'></i>";
         }
         echo "</div>";
@@ -645,7 +652,7 @@ class Page {
         echo "<i class='fa fa-plus gsoperatecell' type='addbefore' target='gseasymode'  title='Insert column to the left'></i> ";
         echo "<i class='fa fa-image gs_resizing' type='delete' target='gseasymode' title='Open styling'></i> ";
         echo "<i class='fa fa-trash-o gsoperatecell' type='delete' target='gseasymode' title='Delete column'></i> ";
-        if($cell->mode == "COLUMN") {
+        if ($cell->mode == "COLUMN") {
             echo "<i class='fa fa-arrows-h gsresizecolumn' title='Resize column'></i> ";
         }
         echo "<i class='fa fa-plus gsoperatecell' type='addafter' target='gseasymode'  title='Insert column to the right'></i> ";

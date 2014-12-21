@@ -1,6 +1,5 @@
 app.ApplicationSelector = {
     init: function() {
-        $(document).on('click', '.gss_activateApplication', app.ApplicationSelector.activateApplication)
         $(document).on('click', '.gss_activateModule', app.ApplicationSelector.activateModele)
         $(document).on('click', '.gss_activate_theme', app.ApplicationSelector.activateTheme)
     },

@@ -71,7 +71,6 @@ $('.gss_slogan').fadeTo(1000, 1);
     var div = document.getElementById('gss_chart_div');
     
     var executeChartFucntion = function() {
-        console.log("OK");
         $(div).html('<div class="gss_chart_loading"><i class="fa fa-cog fa-spin"></i><br/>'+__f("Loading")+'</div>');
         $('.gss_dashboard_statistics .gss_sub_statistics').remove();
         theChartFunction(div);

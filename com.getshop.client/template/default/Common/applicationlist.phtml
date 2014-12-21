@@ -14,11 +14,11 @@ $factory = $this->getFactory();
 $types = array();
 foreach ($apps as $app) {
     if ($app->type == "SystemApplication") {
-//        continue;
+        continue;
     }
 
     if ($app->isSingleton) {
-//        continue;
+        continue;
     }
 
 
@@ -49,11 +49,11 @@ foreach ($types as $type => $count) {
         }
 
         if ($app->type == "SystemApplication") {
-//            continue;
+            continue;
         }
 
         if ($app->isSingleton) {
-//            continue;
+            continue;
         }
         
 

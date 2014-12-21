@@ -14,11 +14,11 @@ $factory = $this->getFactory();
 $types = array();
 foreach ($apps as $app) {
     if ($app->type == "SystemApplication") {
-        continue;
+//        continue;
     }
 
     if ($app->isSingleton) {
-        continue;
+//        continue;
     }
 
 
@@ -41,19 +41,19 @@ foreach ($types as $type => $count) {
         $namespace = $this->convertUUIDtoString($id);
         $appInstance = $this->getApplicationPool()->createInstace($app);
         if (!$appInstance) {
-            continue;
+//            continue;
         }
 
         if ($app->moduleId != $type) {
-            continue;
+//            continue;
         }
 
         if ($app->type == "SystemApplication") {
-            continue;
+//            continue;
         }
 
         if ($app->isSingleton) {
-            continue;
+//            continue;
         }
         
 

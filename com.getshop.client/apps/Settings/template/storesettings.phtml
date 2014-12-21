@@ -22,7 +22,6 @@ $languages['fi_FI'] = "Finish";
             echo $this->__f("GetShop contains of much more then just some basic settings, the information and settings you find here is just the basic one that are unique for everyone. If you wish to change settings regarding e-commerce stuff you need first to activate e-commerce under applications and then change settings that shows up.");
             ?>	
         </div>
-
     </div>	
 </div>
 <div class='gss_settings_content'>
@@ -46,61 +45,15 @@ $languages['fi_FI'] = "Finish";
         </div>
     </div>
 
-
-
     <div class="textfield gss_setting"  id="title">
-        <span class="title"><?php echo $this->__("title"); ?></span>
-        <input type="textfield" gs_model='storesettings' gs_model_attr='title'>
+        <span class="title"><?php echo $this->__("Title"); ?></span>
+        <input type="textfield" gs_model='storesettings' gs_model_attr='title' value="<? echo $this->getTitle(); ?>">
         <div class="description">
-            <?php echo $this->__f("Specify a title for your webshop."); ?>
+            <?php echo $this->__f("Specify a title for your webshop. this will be displayed on the tabs in etc chrome."); ?>
         </div>
     </div>
-
-
-    <div class="textfield gss_setting"  id="favicon">
-        <span class="title"><?php echo $this->__f("Favicon"); ?></span>
-        <input type="textfield" class="config" id="selenium_title">
-        <div class="description">
-            <?php echo $this->__f("Enter an address to your favicon."); ?>
-        </div>
-    </div>
-
-    <div class="onoff gss_setting"  id="fadein">
-        <span class="title"><?php echo $this->__f("Design"); ?></span>
-        <div class="gss_onoff">
-            Off<i class="fa fa-toggle-on"></i>On
-        </div>
-        <div class="description">
-            <?php echo $this->__("Add some eyecandy to your webshop, by activating this. It will show some nice fade in effects."); ?>
-        </div>
-    </div>
-
-    <div class="onoff gss_setting"  id="uniqueusersonemail">
-        <span class="title"><?php echo $this->__f("Unique email addresses"); ?></span>
-        <div class="gss_onoff config">
-            Off<i class="fa fa-toggle-on"></i>On
-        </div>
-        <div class="description">
-            <?php echo $this->__("Force users to be unique be email address, dont allow to create users if email does already exists."); ?>
-        </div>
-    </div>
-
-
-
-    <div class="gss_setting"  id="redirecttohomepage">
-        <span class="title"><?php echo $this->__f("Redirect to home page when not logged in"); ?></span>
-        <div class="gss_onoff" gs_model="storesettings" gs_model_attr="redirecttohomepage">
-            Off<i class="fa fa-toggle-on"></i>On
-        </div>
-        <div class="description">
-            <?php echo $this->__f("Redirect to home page when not logged in"); ?>
-        </div>
-    </div>
-
 
     <div style='display: none'>
-
-
         <div class="onoff gss_setting"  id="remove_taxes">
             <span class="title"><?php echo $this->__f("Show prices without taxes"); ?></span>
             <div class="gss_onoff config">
@@ -220,17 +173,9 @@ $languages['fi_FI'] = "Finish";
         </div>
     </div>
     <div class='gss_button_area'>
-        <? if ($this->getFactory()->getStore()->isDeepFreezed == 1) { ?>
-            <div class="gss_button toogleDeepfreeze needreload"><?php echo $this->__("Deactivate Deepfreeze"); ?></div>
-        <? } else { ?>
-            <div class="gss_button toogleDeepfreeze needreload"><i class='fa fa-unlink'></i><?php echo $this->__("Activate Deepfreeze"); ?></div>
-        <? } ?>
-        <div class="gss_button" gss_method="deleteStore"><i class='fa fa-remove'></i><?php echo $this->__("Delete my store"); ?></div>
+        <div class="gss_button" gss_confirmation="<? echo $this->__f("Are you sure you want to delete your store? You will not be able to revert this action."); ?>" gss_method="deleteStore" gss_success_method="storeDeleted"><i class='fa fa-remove'></i><?php echo $this->__("Delete my store"); ?></div>
 
-        <div class="gss_button" gss_method="saveStoreSettings" gss_model="storesettings"><i class='fa fa-save'></i><?php echo $this->__("Save settings"); ?></div>
+        <div class="gss_button" gss_method="saveStoreSettings" gss_model="storesettings" gss_success_message="<? echo $this->__f("Saved settings"); ?>"><i class='fa fa-save'></i><?php echo $this->__("Save settings"); ?></div>
     </div>
-
-
-
 </div>
 

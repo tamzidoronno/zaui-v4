@@ -42,13 +42,23 @@ class Settings extends \SystemApplication implements \Application {
     public function isAvailable() {
         return false;
     }
+    
+    public function getTitle() {
+        return $this->getConfigurationSetting("title");
+    }
 
     public function saveStoreSettings() {
+        $storeSettings = $this->getFactory()->getStoreConfiguration();
+        $storeSettings->emailAdress = $_POST['emailaddress'];
+        $this->getApi()->getStoreManager()->saveStore($storeSettings);
+        
         $this->setConfigurationSetting("language", $_POST['language']);
+        $this->setConfigurationSetting("title", $_POST['title']);
+        $this->setConfigurationSetting("currencycode", "NOK");
     }
 
     public function deleteStore() {
-        echo "Deleting store";
+        $this->getApi()->getStoreManager()->delete();
     }
 
 }

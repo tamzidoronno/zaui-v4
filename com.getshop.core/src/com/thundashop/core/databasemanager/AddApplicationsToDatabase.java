@@ -119,8 +119,18 @@ public class AddApplicationsToDatabase {
                 "",
                 Application.Type.Webshop, true);
         productLists.isPublic = true;
-        productLists.defaultActivate = true;
+        productLists.activeAppOnModuleActivation = true;
         apps.add(productLists);
+        
+        Application ecomerceSettings = createSettings("ECommerceSettings",
+                "9de54ce1-f7a0-4729-b128-b062dc70dcce",
+                new ArrayList(),
+                "",
+                Application.Type.Webshop, true);
+        ecomerceSettings.isPublic = true;
+        ecomerceSettings.moduleId = "WebShop";
+        ecomerceSettings.activeAppOnModuleActivation = true;
+        apps.add(ecomerceSettings);
 		
 		
 //        ApplicationSettings sedoxMenu = createSettings(

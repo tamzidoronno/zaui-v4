@@ -78,9 +78,17 @@ getshop.Settings = {
             data = {};
         }
 
+        if (field && $(field).attr('gss_confirmation')) {
+            var r = confirm($(field).attr('gss_confirmation'));
+            if (!r) {
+                return;
+            }
+        }
+        
         if (method) {
             data['gss_method'] = method;
         }
+        
         
         if ( $(field).attr('gss_fragment')) {
             data['gss_fragment'] = $(field).attr('gss_fragment');

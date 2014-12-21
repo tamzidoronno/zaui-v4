@@ -49,6 +49,7 @@ thundashop.framework = {
         $(document).on('click', '.gs_closecarouselsettings', this.closeCarouselSettings);
         $(document).on('click', '.gsclosetabsettings', this.closeTabSettings);
         $(document).on('click', '.gsclosecsseditor', this.closeCssEditor);
+        $(document).on('click', '.gsresizecolumn', this.activateResizeColumn);
         $(document).on('mouseover', '.gseditrowouter', this.showEditIcon);
         $(document).on('click', '.gseditrowbutton', this.startEditRow);
         $(document).on('click', '.gsdoneeditbutton', this.startEditRow);
@@ -69,6 +70,12 @@ thundashop.framework = {
         $(document).on('click', '.gsoperatecell', this.operateCell);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
     },
+    
+    activateResizeColumn : function() {
+        var cellid = $(this).closest('.gsrow').attr('cellid');
+        thundashop.framework.loadResizing($('.gscell[cellid="'+cellid+'"]'), true);
+    },
+    
     closeTabSettings : function() {
         $(this).closest('.tabsettingspanel').fadeOut();
     },

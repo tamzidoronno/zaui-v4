@@ -6,3 +6,5 @@ body {
 .gsarea[area="header"] .gsinner,.gsarea[area="footer"] .gsinner { background-color:#1E1E1E; color:#fff; }
 .Menu .menuentries a { color:#FFF !important; font-size: 19px;  }
 .Menu .menuentries .entry { padding: 10px; }
+.Menu .menuentries.horizontal .entries .entries { background-color:#1E1E1E; }
+.Menu .menuentries.horizontal .entries .entries a { font-size:12px !important; }

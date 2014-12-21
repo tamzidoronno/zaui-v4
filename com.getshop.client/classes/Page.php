@@ -292,8 +292,6 @@ class Page {
             if ($cell->mode == "ROTATING" || $cell->mode == "TAB") {
                 $this->printContainerSettings((!$edit && $cell->mode == "ROTATING"), $cell, $depth);
             }
-
-
             echo "<div style='clear:both;'></div>";
         } else {
             $this->printApplicationArea($cell);
@@ -646,6 +644,9 @@ class Page {
         echo "<i class='fa fa-plus gsoperatecell' type='addbefore' target='gseasymode'  title='Insert column to the left'></i> ";
         echo "<i class='fa fa-image gs_resizing' type='delete' target='gseasymode' title='Open styling'></i> ";
         echo "<i class='fa fa-trash-o gsoperatecell' type='delete' target='gseasymode' title='Delete column'></i> ";
+        if($cell->mode == "COLUMN") {
+            echo "<i class='fa fa-arrows-h gsresizecolumn' title='Resize column'></i> ";
+        }
         echo "<i class='fa fa-plus gsoperatecell' type='addafter' target='gseasymode'  title='Insert column to the right'></i> ";
         echo "<i class='fa fa-arrow-right gsoperatecell' type='movedown' target='gseasymode' title='Move column to the right'></i> ";
         echo "</div>";

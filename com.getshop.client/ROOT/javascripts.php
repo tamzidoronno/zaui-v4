@@ -2,7 +2,6 @@
 
 include_once '../loader.php';
 
-
 function endsWith($haystack, $needle) {
     $length = strlen($needle);
     if ($length == 0) {
@@ -40,16 +39,20 @@ foreach ($apps as $app) {
 
 
     if (is_dir($javascriptFolder) && $handle = opendir($javascriptFolder)) {
-        
+
         while (false !== ($entry = readdir($handle))) {
             if (endsWith(strtolower($entry), ".js")) {
                 $filecontent = file_get_contents($javascriptFolder . "/" . $entry);
-                $fileName = "javascripts/".$namespace."_".$entry;
+                $fileName = "javascripts/" . $namespace . "_" . $entry;
                 @file_put_contents($fileName, $filecontent);
-                echo '<script type="text/javascript" class="javascript_app_file" src="'.$fileName.'"></script>';
+                echo '<script type="text/javascript" class="javascript_app_file" src="' . $fileName . '"></script>';
+                echo "<script>";
+                    echo 'if (typeof(getshop) === "undefined") { getshop = {}; }';
+                    echo 'if (typeof(getshop.gs_loaded_javascripts) === "undefined") { getshop.gs_loaded_javascripts = []; }';
+                    echo ' getshop.gs_loaded_javascripts.push("'.$fileName.'");';
+                echo "</script>";
             }
         }
-        
     }
 }
 ?>

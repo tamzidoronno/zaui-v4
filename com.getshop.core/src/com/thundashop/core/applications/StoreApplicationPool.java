@@ -15,11 +15,14 @@ import com.thundashop.core.common.Setting;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -81,8 +84,20 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
                 .filter(o -> !o.type.equals(Application.Type.Theme))
                 .collect(Collectors.toSet());
 
+        
         activatedApps.addAll(getAllDefaultActivatedApps());
-        return new ArrayList(activatedApps);
+        
+        List<Application> retList = new ArrayList(activatedApps);
+        
+        Collections.sort(retList, new Comparator<Application>() {
+
+            @Override
+            public int compare(Application o1, Application o2) {
+                return o1.appName.compareTo(o2.appName);
+            }
+        });
+        
+        return retList;
     }
     
     private List<Application> getAvailableApplicationsInternally() {
@@ -227,9 +242,13 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 
     @Override
     public void deactivateApplication(String applicationId) {
-        Application application = getAvailableApplicationsInternally().stream().filter(app -> app.id.equals(applicationId)).findFirst().get();
+        Application application = getAvailableApplicationsInternally().stream()
+                .filter(app -> app.id.equals(applicationId))
+                .findFirst()
+                .get();
+        
         if (application != null) {
-            activatedApplications.add(application);
+            activatedApplications.remove(application);
             setManagerSetting(application.id, "deactivated");
         }
     }

@@ -136,7 +136,7 @@ foreach ($activatedModules as $module) {
                         <?
                     } else {
                         ?>
-                        <div gss_method="activate_application" gss_value="<? echo $app->id; ?>" class="gss_activate_button" gss_loadsilent='true'><span> <? echo $this->__f("Click to activate application"); ?></span></div>
+                        <div gss_method="activate_application" gss_value="<? echo $app->id; ?>" class="gss_activate_button" gss_loadsilent='true' gss_post_method="addedApplication"><span> <? echo $this->__f("Click to activate application"); ?></span></div>
                     <?
                     }
                 }

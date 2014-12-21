@@ -9,9 +9,13 @@ class CartManager extends \SystemApplication implements \Application {
     private $shippingApplication;
     private $paymentApplication; 
     
-    public function getDescription() {}
+    public function getDescription() {
+        return $this->__f("Add a shoppingcart to your header and it will be visible for you customers");
+    }
     
-    public function getName() {}
+    public function getName() {
+        return $this->__f("Shopping cart");
+    }
     
     public function postProcess() {}
     

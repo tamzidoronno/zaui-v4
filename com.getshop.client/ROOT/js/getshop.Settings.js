@@ -147,6 +147,18 @@ getshop.Settings = {
             $('.gss_settings_inner.apparea').html(response['data']);
         }
 
+        var postMethod = $(field).attr('gss_post_method');
+        if (postMethod) {
+            var appScope = app[$(field).closest('.app').attr('app')];
+
+            if (appScope) {
+                var fn = appScope[postMethod];
+                if(typeof fn === 'function') {
+                    fn(field);
+                }
+            }
+        }
+        
         getshop.Models.addWatchers(response['data']);
     },
     reloadCss: function() {
@@ -158,13 +170,14 @@ getshop.Settings = {
                 var checkThisCss = $("<div>"+response+"</div>").find('.appstylesheet');
                 checkThisCss.each(function() {
                     if (!getshop.Settings.isCssLoaded(this, alreadyLoaded, 'href')) {
+                        console.log("Appending: " + $(this).attr('href'));
                         $('html').append(this);
                     } 
                 });
                 
                 alreadyLoaded.each(function() {
                     if (!getshop.Settings.isCssLoaded(this, checkThisCss, 'href')) {
-                        console.log("Removing");
+                        console.log("Removing: " + $(this).attr('href'));
                         console.log(this);
                         $(this).remove();
                     } 
@@ -179,9 +192,12 @@ getshop.Settings = {
                 var alreadyLoaded = $('html .javascript_app_file');
                 var checkThisCss = $("<div>"+response+"</div>").find('.javascript_app_file');
                 checkThisCss.each(function() {
-                    if (!getshop.Settings.isCssLoaded(this, alreadyLoaded, 'src')) {
+                    
+                    var newJavascriptFile = $(this).attr('src');
+                    if (getshop.gs_loaded_javascripts.indexOf(newJavascriptFile) < 0) {
+                        console.log("Loading: " + this);
                         $('head').append(this);
-                    } 
+                    }
                 });
             }
         });

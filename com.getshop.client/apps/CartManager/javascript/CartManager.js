@@ -286,6 +286,7 @@ $('.checkout .payment .method').live('click', function(e) {
 })
 
 $('.checkout #confirmorder').live('click', function() {
+    debugger;
     var me = this;
     
     if ($(this).closest('.delivery').size() === 1) {

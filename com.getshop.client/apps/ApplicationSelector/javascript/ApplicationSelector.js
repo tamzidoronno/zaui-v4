@@ -1,5 +1,6 @@
 app.ApplicationSelector = {
     init: function() {
+        $(document).on('click', '.gss_activateApplication', app.ApplicationSelector.activateApplication)
         $(document).on('click', '.gss_activateModule', app.ApplicationSelector.activateModele)
         $(document).on('click', '.gss_activate_theme', app.ApplicationSelector.activateTheme)
     },
@@ -26,6 +27,10 @@ app.ApplicationSelector = {
             getshop.Settings.successfully(response, field, data);
             getshop.Settings.reloadCss();
         });
+    },
+    
+    addedApplication: function() {
+        getshop.Settings.reloadCss();
     }
 }
 

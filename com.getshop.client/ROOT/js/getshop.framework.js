@@ -355,11 +355,10 @@ thundashop.framework = {
             table.colResizable({
                 liveDrag: true,
                 dragCursor: 'auto',
+                hoverCursor : 'auto',
                 draggingClass: "rangeDrag",
                 gripInnerHtml: "<div class='rangeGrip'></div>",
                 onResize: function (e) {
-                    document.body.style.cursor = "crosshair";
-
                     var ranges = thundashop.framework.calculateColumnSizes($(e.currentTarget));
                     var i = 0;
                     var columns = {};
@@ -904,10 +903,6 @@ PubSub.subscribe('NAVIGATION_COMPLETED', function (a, b) {
             container.find('.gstabrow').hide();
             cell.show();
         }
-
-        setTimeout(function () {
-            thundashop.framework.loadResizing(cell, true);
-        }, "200");
     }
 });
 

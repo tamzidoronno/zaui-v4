@@ -232,11 +232,8 @@ class Users extends \SystemApplication implements \Application {
         }
     }
     
-    
     public function showCreateNewUser() {
         $_SESSION['navigation_user_app'] = "userlist";
     }
-    
-   
 }
 ?>

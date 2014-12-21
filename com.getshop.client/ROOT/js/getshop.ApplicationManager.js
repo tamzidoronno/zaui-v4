@@ -2,6 +2,7 @@ thundashop.ApplicationManager = {
     init: function () {
         PubSub.subscribe('setting_switch_toggled', this.onMessage, this);
         $(document).on('click', '.gs_show_application_add_list', thundashop.ApplicationManager.showApplicationAddList)
+        $(document).on('click', '.gs_add_applicationlist .gs_add_app_entry .gsaddappbutton', thundashop.ApplicationManager.addApplication)
         $(document).on('click', '.gs_add_applicationlist .closeaddappbox', thundashop.ApplicationManager.closeAppList)
         $(document).on('click', '.gs_add_applicationlist .gsselectmoduletab', thundashop.ApplicationManager.selectModule)
     },
@@ -51,7 +52,7 @@ thundashop.ApplicationManager = {
     addApplication: function () {
         var data = {
             cellId: $(this).closest('.gs_add_applicationlist').attr('cellid'),
-            appId: $(this).attr('appId')
+            appId: $(this).closest('.gs_add_app_entry').attr('appId')
         }
 
         var event = thundashop.Ajax.createEvent(null, "addApplicationToCell", this, data);

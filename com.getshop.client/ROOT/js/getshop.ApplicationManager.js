@@ -2,7 +2,6 @@ thundashop.ApplicationManager = {
     init: function () {
         PubSub.subscribe('setting_switch_toggled', this.onMessage, this);
         $(document).on('click', '.gs_show_application_add_list', thundashop.ApplicationManager.showApplicationAddList)
-        $(document).on('click', '.gs_add_applicationlist .gs_add_app_entry', thundashop.ApplicationManager.addApplication)
         $(document).on('click', '.gs_add_applicationlist .closeaddappbox', thundashop.ApplicationManager.closeAppList)
         $(document).on('click', '.gs_add_applicationlist .gsselectmoduletab', thundashop.ApplicationManager.selectModule)
     },

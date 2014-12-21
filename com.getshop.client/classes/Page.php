@@ -82,6 +82,8 @@ class Page {
             </script>
             <script src="/js/colresize.js"/>
             <?
+        } else {
+            echo "<script>$('.gsiseditingprepend').remove();</script>";
         }
     }
 
@@ -125,7 +127,7 @@ class Page {
         echo "<span style='float:left;'><input type='checkbox' style='background-color:#FFF;' class='gsdisplaygridcheckbox'> Add spacing to grid</span>";
         echo "You are now in edit mode for the selected row, from this manipulate your row by adding more columns or add a row above / below, and much more. <input  type='button' class='gsdoneeditbutton' value='Done editing'><br>";
         echo "</div>";
-        echo "<script>$('body').css('margin-top','30px');</script>";
+        echo "<script>$('body').prepend(\"<div class='gsiseditingprepend'></div>\");</script>";
     }
 
     private function addCarouselSettingsPanel() {

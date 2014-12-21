@@ -8,3 +8,5 @@ body {
 .Menu .menuentries .entry { padding: 10px; }
 .Menu .menuentries.horizontal .entries .entries { background-color:#1E1E1E; }
 .Menu .menuentries.horizontal .entries .entries a { font-size:12px !important; }
+.gsrotating .ContentManager { background-color:rgba(0,0,0,0.4); }
+h1,h2,h3 { margin: 0px; }

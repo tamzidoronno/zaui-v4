@@ -63,7 +63,7 @@
 .gseasymode .gseasymodeinner { background-color:rgba(0,0,0, 0.5);height:100%;padding: 10px;box-sizing: border-box; text-align:center; border-radius: 3px; }
 .gseasymode i { color: #555555; cursor:pointer; font-size:12px; border-radius:3px; padding: 3px; background-color:#ddd; margin: 1px; border: solid 1px #bbb; }
 .gseditinginfo { position:fixed; top:0px; width: 100%; text-align: center; padding: 5px; background-color: #1c6ea2; color:#fff; z-index: 5; }
-.gsdoneeditbutton { position:absolute; right: 50px; top: 3px; }
+.gsdoneeditbutton { position:absolute; right: 15px; top: 3px; }
 .gseasyrowmode { display: inline-block;
                  border: solid 1px #bbb;
                  padding: 10px;
@@ -1802,9 +1802,10 @@ a img {
 .gscellsettingspanel,.gsresizingpanel { padding-top: 20px; }
 
 .gsactivetab { font-weight: bold; }
-.gsframeworkstandard { color:#000; font-size: 14px !important; font-weight: normal !important; font-family: 'Times New Roman' !important; }
+.gsframeworkstandard { color:#000; font-size: 14px !important; font-weight: normal !important; font-family: 'Times New Roman' !important;z-index:25; }
 
 .gscarouseldots { cursor:pointer; position:absolute; text-align: center; z-index: 2; bottom: 10px; left: 49%; }
 .gscarouseldots .fa { margin: 3px; font-size: 10px; text-shadow: 0px 0px 5px #fff; color:#000; }
 .gscarouseldots .fa.activecarousel { color:green;  }
 .gsactivetab {background-color:#BBB; }
+.gsiseditingprepend { height: 40px; display:block;  }

@@ -96,17 +96,26 @@ public class PageLayout implements Serializable {
                 newcell.extractDataFrom(cell, false);
                 newcell.mode = mode;
             } else {
-                if(before != null && !before.isEmpty()) {
+                if (before != null && !before.isEmpty()) {
                     mode = findCell(getAllCells(), before).mode;
                 }
-                
-                //Each cell as a subcell need to be the same.
-                if(!cell.cells.get(0).mode.equals(mode)) {
+
+                    //Each cell as a subcell need to be the same.
+                if (!cell.cells.get(0).mode.equals(mode)) {
                     PageCell newcell = initNewCell(mode);
                     newcell.extractDataFrom(cell, true);
                     cell.clear();
+                    
                     cell.cells.add(newcell);
                 }
+
+            }
+            
+            if (mode.equals(PageCell.PageMode.column)) {
+                int count = cell.cells.size();
+                double percentage = (double) ((100 / count) + 100) / 100;
+                newwidth = resizeCells(cell.cells, true, percentage);
+                cell.width = newwidth;
             }
 
             PageCell newcell = cell.createCell(before);
@@ -150,7 +159,7 @@ public class PageLayout implements Serializable {
                         cell.extractDataFrom(cell.cells.get(0), true);
                         cell.mode = currentMode;
                     }
-                    if(cell.cells.isEmpty() && (cell.isRotating() || cell.isTab())) {
+                    if (cell.cells.isEmpty() && (cell.isRotating() || cell.isTab())) {
                         cell.mode = PageCell.PageMode.row;
                     }
                 }

@@ -10,3 +10,5 @@ body {
 .Menu .menuentries.horizontal .entries .entries a { font-size:12px !important; }
 .gsrotating .ContentManager { background-color:rgba(0,0,0,0.4); }
 h1,h2,h3 { margin: 0px; }
+.ProductLists .short_description { display: none; }
+.ProductLists .productbox { height: 350px !important; }

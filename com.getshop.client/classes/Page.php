@@ -290,7 +290,11 @@ class Page {
             }
 
             if ($cell->mode == "ROTATING" || $cell->mode == "TAB") {
-                $this->printContainerSettings((!$edit && $cell->mode == "ROTATING"), $cell, $depth);
+                $doCarousel = (!$edit && $cell->mode == "ROTATING");
+                if($this->factory->isEditorMode()) {
+                    $doCarousel = false;
+                }
+                $this->printContainerSettings($doCarousel, $cell, $depth);
             }
             echo "<div style='clear:both;'></div>";
         } else {
@@ -622,6 +626,9 @@ class Page {
         if ($this->factory->isEditorMode() && $edit) {
             echo "<i class='fa fa-plus addcarouselrow gsoperatecell' type='addrow' target='container' title='Add another slider'></i>";
             echo "<i class='fa fa-cogs carouselsettings' title='Carousel settings' style='cursor:pointer;'></i>";
+        }
+        if($this->factory->isEditorMode()) {
+            echo "<i class='fa fa-warning' title='The carousel is not rotating while logged in as administrator.' style='cursor:pointer;'></i>";
         }
         echo "</div>";
     }

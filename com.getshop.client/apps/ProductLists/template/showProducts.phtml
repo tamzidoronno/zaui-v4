@@ -38,7 +38,7 @@ $view = $this->isRowView() ? "row_view" : $view;
                         </div>
                     </div>
                 </a>
-                <div class="product_price" ><? echo $this->__f("Price")." ".$product->price; ?></div>
+                <div class="product_price" ><? echo $this->__f("Price")." ".$this->getCurrency().$product->price; ?></div>
                 <div class="webshop_button addProductToCart" productId='<? echo $product->id; ?>'><? echo $this->__f("Add to cart"); ?></div>
                 </div>
             </div>

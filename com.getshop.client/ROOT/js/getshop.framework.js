@@ -517,9 +517,6 @@ thundashop.framework = {
         }
         $('.gscell[cellid="' + cellid + '"]').html(likebefore);
         $('.gscell[cellid="' + cellid + '"]').attr('style', likebeforeStyles);
-        $('.gsoverlay').fadeOut(function () {
-            $(this).remove();
-        });
         $('.gsresizingpanel').fadeOut();
     },
     switchtab: function () {
@@ -572,7 +569,6 @@ thundashop.framework = {
         var cell = thundashop.framework.findCell(cellid);
 
         resizingpanel.attr('cellid', cellid);
-        $('.gsoverlay').remove();
         $('.gscellsettingspanel').fadeOut();
         var offset = thundashop.framework.originObject.offset();
         if (offset !== undefined) {
@@ -594,7 +590,6 @@ thundashop.framework = {
     },
     closeCellEdit: function () {
         $('.gscellsettingspanel').hide();
-        $('.gscell .gsoverlay').remove();
     },
     startEditRow: function () {
         if ($(this).attr('done') === "true") {
@@ -773,10 +768,6 @@ thundashop.framework = {
             panel.find('.modesettings').hide();
             panel.find('.carouselsettings').show();
         }
-
-        $('.gsoverlay').remove();
-        var overlay = $('<span class="gsoverlay" style="filter: blur(5px);width:100%; height:100%; background-color:#bbb; opacity:0.6; position:absolute; left:0px; top:0px;display:inline-block;"></span>');
-        cell.append(overlay);
 
         var offset = $(this).offset();
         panel.css('display', 'inline-block');

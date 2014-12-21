@@ -127,7 +127,7 @@ class Page {
         echo "<span style='float:left;'><input type='checkbox' style='background-color:#FFF;' class='gsdisplaygridcheckbox'> Add spacing to grid</span>";
         echo "You are now in edit mode for the selected row, from this manipulate your row by adding more columns or add a row above / below, and much more. <input  type='button' class='gsdoneeditbutton' value='Done editing'><br>";
         echo "</div>";
-        echo "<script>$('body').prepend(\"<div class='gsiseditingprepend'></div>\");</script>";
+        echo "<script>$('.gsiseditingprepend').remove();$('body').prepend(\"<div class='gsiseditingprepend'></div>\");</script>";
     }
 
     private function addCarouselSettingsPanel() {
@@ -571,24 +571,17 @@ class Page {
 
             if (isset($_SESSION['gseditcell']) && $_SESSION['gseditcell'] === $row->cellId) {
                 $editedCellid = $cellid;
-//                echo "<div class='gscell gsdepth_0 gseditinfo' style='height: 38px;'>";
-//                echo "<div class='gsinner gsdepth_0'>";
-//                echo "<div class='gseditrowheading' cellid='" . $cellid . "'>";
-//                echo "<label style='float:left;'>";
-//                echo "<input type='checkbox' style='background-color:#FFF;' class='gsdisplaygridcheckbox'> Add spacing to grid";
-//                echo "</label>";
-//                echo "You are now in edit mode for this row." . " - " . "<span class='gsdoneeditbutton' done='true'true'>done editing</span>";
-//                echo "</div>";
-//                echo "</div>";
-//                echo "</div>";
                 $isedit = true;
             }
 
             if ($isedit) {
+                echo "<div class='gseditrowseperator'></div>";
                 $this->printEasyRowMode($row);
             }
             $this->printCell($row, $count, 0, 0, $isedit, null);
-
+            if($isedit) {
+                echo "<div class='gseditrowseperator'></div>";
+            }
             $count++;
         }
         return $editedCellid;
@@ -637,12 +630,11 @@ class Page {
 
     public function printEasyModeEdit($cell) {
         if (sizeof($cell->cells) > 0) {
-            return;
+//            return;
         }
         if ($cell->mode != "COLUMN") {
             echo "<div class='gseasymode' cellid='" . $cell->cellId . "'>";
             echo "<div class='gseasymodeinner'>";
-            echo "You are now in edit mode for this row";
             echo "</div></div>";
             return;
         }

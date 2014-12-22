@@ -120,6 +120,7 @@ class GenerateReport {
         $line[] = $companyInformation;
         $line[] = $user->company->vatNumber;
         $line[] = $this->getComments($user, $entry);
+        $line[] = $entry->title;
         return $line;
     }
 

@@ -18,6 +18,7 @@ class Factory extends FactoryBase {
     private $translationMatrix;
     private $styleSheet;
     public $javaPage;
+    private $storeSettings;
 
     /** @var $translation GetShopTranslation */
     public $translation;
@@ -484,8 +485,11 @@ class Factory extends FactoryBase {
     }
 
     public function getSettings() {
-        $app = $this->getApi()->getStoreApplicationPool()->getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
-        return $app->settings;
+        if($this->storeSettings) {
+            return $this->storeSettings;
+        }
+        $this->storeSettings = $this->getApi()->getStoreApplicationPool()->getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
+        return $this->storeSettings;
     }
     
     public function clearCachedPageData() {

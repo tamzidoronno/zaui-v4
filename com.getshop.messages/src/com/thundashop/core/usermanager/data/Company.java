@@ -18,4 +18,6 @@ public class Company extends DataCommon {
     public String type = "";
     public String city = "";
     public String name = "";
+    public String phoneNumber = "";
+    public String email = "";
 }

@@ -43,8 +43,8 @@ class ReturnValue {
 public class BrRegEngine implements CompanySearchEngine {
     private Gson gson = new Gson();
     
-	@Override
-    public Company getCompany(String organisationNumber) {
+    @Override
+    public Company getCompany(String organisationNumber, boolean fetch) {
         
         String content = read(organisationNumber.trim(), false);
         ReturnValue fromJson = gson.fromJson(content, ReturnValue.class);

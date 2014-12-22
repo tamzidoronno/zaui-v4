@@ -69,12 +69,25 @@ Booking = {
         $('.Booking .search_result_area').hide();
     },
     searchBrreg : function(event) {
+        var me = this;
+        
         $('.Booking .search_result_area').show();
-        var value = $(this).val();
-        var event = thundashop.Ajax.createEvent('','findCompanies',$(this),{'name':value});
-        thundashop.Ajax.postWithCallBack(event, function(data)  {
-            $('.Booking .search_result_area').html(data);
-        });
+        $('.Booking .search_result_area').html('<i class="fa fa-refresh fa-spin"></i> '+ __f("Loading"));
+        
+        var search = function() {
+            $('.Booking .search_result_area').show();
+            var value = $(me).val();
+            var event = thundashop.Ajax.createEvent('','findCompanies',$(me),{'name':value});
+            thundashop.Ajax.postWithCallBack(event, function(data)  {
+                $('.Booking .search_result_area').html(data);
+            });
+        };
+        
+        if (app.Booking.delaySearchTimer) {
+            clearTimeout(app.Booking.delaySearchTimer);
+        }
+        
+        app.Booking.delaySearchTimer = setTimeout(search, 500);
     },
     startSearchCompany : function() {
         $('.Booking .selectcompanyform').slideDown();

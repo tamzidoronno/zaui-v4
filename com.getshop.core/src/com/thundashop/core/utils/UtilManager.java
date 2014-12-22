@@ -27,27 +27,27 @@ import org.springframework.stereotype.Component;
 public class UtilManager extends ManagerBase implements IUtilManager {
 
     public HashMap<String, FileObject> files = new HashMap();
-    
-	@Autowired
-	private CompanySearchEngineHolder searchEngineHolder;
-		
+
+    @Autowired
+    private CompanySearchEngineHolder searchEngineHolder;
+
     @Autowired
     public UtilManager(Logger log, DatabaseSaver databaseSaver) {
         super(log, databaseSaver);
     }
-    
+
     @Override
     public void dataFromDatabase(DataRetreived data) {
-        for(DataCommon tmpData : data.data) {
-            if(tmpData instanceof FileObject) {
-                files.put(tmpData.id, (FileObject)tmpData);
+        for (DataCommon tmpData : data.data) {
+            if (tmpData instanceof FileObject) {
+                files.put(tmpData.id, (FileObject) tmpData);
             }
         }
     }
-    
+
     @Override
     public Company getCompanyFromBrReg(String companyVatNumber) throws ErrorException {
-        return searchEngineHolder.getSearchEngine(storeId).getCompany(companyVatNumber);
+        return searchEngineHolder.getSearchEngine(storeId).getCompany(companyVatNumber, true);
     }
 
     @Override
@@ -66,5 +66,10 @@ public class UtilManager extends ManagerBase implements IUtilManager {
     @Override
     public FileObject getFile(String id) throws ErrorException {
         return files.get(id);
+    }
+
+    @Override
+    public Company getCompanyFree(String companyVatNumber) throws ErrorException {
+        return searchEngineHolder.getSearchEngine(storeId).getCompany(companyVatNumber, false);
     }
 }

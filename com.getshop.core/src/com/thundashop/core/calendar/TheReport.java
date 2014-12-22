@@ -119,7 +119,7 @@ class TheReport {
 				List<CalendarCandidate> candidates2 = candiatesMapsInner.get(vatNumber);
 				Company company = null;
 				try {
-					 company = brRegEngine.getCompany(vatNumber);
+					 company = brRegEngine.getCompany(vatNumber, false);
 				} catch (Exception x) {
 				}
 				if (company != null) {

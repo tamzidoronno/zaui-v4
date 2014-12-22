@@ -6058,6 +6058,21 @@ class UtilManager(object):
     data.interfaceName = "core.utils.IUtilManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getCompanyFree(self, companyVatNumber):
+    args = collections.OrderedDict()
+    if isinstance(companyVatNumber,GetShopBaseClass): 
+      args["companyVatNumber"]=json.dumps(companyVatNumber.__dict__)
+    else:
+      try:
+        args["companyVatNumber"]=json.dumps(companyVatNumber)
+      except (ValueError, AttributeError):
+        args["companyVatNumber"]=companyVatNumber
+    data = EmptyClass()
+    data.args = args
+    data.method = "getCompanyFree"
+    data.interfaceName = "core.utils.IUtilManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getCompanyFromBrReg(self, companyVatNumber):
     args = collections.OrderedDict()
     if isinstance(companyVatNumber,GetShopBaseClass): 

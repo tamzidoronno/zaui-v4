@@ -83,6 +83,7 @@
 .Booking .search_result_area {
     color: #333;
     background-color:#FFF;
+    display: none;
     position:absolute;
     width:400px;
     z-index:3;
@@ -99,4 +100,9 @@
     padding-bottom: 3px;
     width: 30px; 
     text-align: center;
+}
+
+.Booking .search_result_area {
+    border: solid 1px #DDD;
+    padding: 10px;
 }

@@ -17,6 +17,8 @@ import java.util.List;
  */
 @GetShopApi
 public interface IUtilManager {
+    public Company getCompanyFree(String companyVatNumber) throws ErrorException;
+    
     public Company getCompanyFromBrReg(String companyVatNumber) throws ErrorException;
     
     public List<Company> getCompaniesFromBrReg(String search) throws ErrorException;

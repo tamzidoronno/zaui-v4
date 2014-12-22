@@ -28,7 +28,7 @@ public class EniroCompanySearchEngine implements CompanySearchEngine {
     private Gson gson = new Gson();
 
     @Override
-    public Company getCompany(String organisationNumber) {
+    public Company getCompany(String organisationNumber, boolean fetch) {
         List<Company> companies = search(organisationNumber);
         if (companies.size() == 1) {
             return companies.iterator().next();

@@ -21,5 +21,11 @@ class core_usermanager_data_Company extends core_common_DataCommon  {
 	/** @var String */
 	public $name;
 
+	/** @var String */
+	public $phoneNumber;
+
+	/** @var String */
+	public $email;
+
 }
 ?>

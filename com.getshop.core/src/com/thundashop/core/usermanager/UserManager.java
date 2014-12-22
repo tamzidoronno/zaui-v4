@@ -12,6 +12,7 @@ import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCounter;
 import com.thundashop.core.usermanager.data.UserPrivilege;
+import com.thundashop.core.utils.CompanySearchEngine;
 import com.thundashop.core.utils.CompanySearchEngineHolder;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -272,10 +273,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             }
         }
         
-		saveUserDirect(user);
+        saveUserDirect(user);
     }
 	
-	public void saveUserDirect(User user) throws ErrorException {
+    public void saveUserDirect(User user) throws ErrorException {
 		UserStoreCollection collection = getUserStoreCollection(storeId);
 		User savedUser = collection.getUser(user.id);
 		
@@ -285,9 +286,12 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         // Keep comments from prev saved user. (has seperated functions for adding and deleting)
         user.comments = savedUser.comments;
         
-        user.company = getCompany(user);
+        if (user.company == null && user.birthDay != null && !user.birthDay.equals("")) {
+            user.company = getCompany(user, true);
+        }
+        
         collection.addUser(user);
-	}
+    }
 
     @Override
     public void sendResetCode(String title, String text, String email) throws ErrorException {
@@ -643,8 +647,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
      * @param user
      * @return 
      */
-    private Company getCompany(User user) {
-        if (!this.storeId.equals("2fac0e57-de1d-4fdf-b7e4-5f93e3225445")) {
+    private Company getCompany(User user, boolean fetch) {
+        CompanySearchEngine searchEngine = searchEngineHolder.getSearchEngine(storeId);
+        
+        if (searchEngine == null) {
             return user.company;
         }
         
@@ -652,7 +658,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             return null;
         }
         
-        Company company = searchEngineHolder.getSearchEngine(storeId).getCompany(user.birthDay);
+        Company company = searchEngine.getCompany(user.birthDay, fetch);
         return company;
     }
 

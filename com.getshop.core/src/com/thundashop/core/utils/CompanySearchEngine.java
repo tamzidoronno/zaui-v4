@@ -14,6 +14,6 @@ import java.util.List;
  */
 public interface CompanySearchEngine {
 	public String getName();
-	public Company getCompany(String organisationNumber);
+	public Company getCompany(String organisationNumber, boolean fetch);
 	public List<Company> search(String search);
 }

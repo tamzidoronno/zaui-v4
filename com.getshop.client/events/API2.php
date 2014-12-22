@@ -5871,6 +5871,20 @@ class APIUtilManager {
 	* @author ktonder
 	*/
 
+	public function getCompanyFree($companyVatNumber) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["companyVatNumber"] = json_encode($this->transport->object_unset_nulls($companyVatNumber));
+	     $data["method"] = "getCompanyFree";
+	     $data["interfaceName"] = "core.utils.IUtilManager";
+	     return $this->transport->cast(new core_usermanager_data_Company(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
 	public function getCompanyFromBrReg($companyVatNumber) {
 	     $data = array();
 	     $data['args'] = array();

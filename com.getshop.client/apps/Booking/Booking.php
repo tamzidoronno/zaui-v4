@@ -115,7 +115,7 @@ class Booking extends MarketingApplication implements Application {
 
         $user->birthDay = isset($data['birthday']) ? $data['birthday'] : "";
         if ($this->isGetCompanyInformationRemoteEnabled()) {
-            $this->setCompany($user->birthDay);
+            $this->setCompany($user->birthDay, true);
             $user->company = $this->company;
             $user->companyName = "";
         } else {
@@ -231,8 +231,12 @@ class Booking extends MarketingApplication implements Application {
         unset($_SESSION['group']);
     }
 
-    private function setCompany($orgNumber) {
-        $this->company = $this->getApi()->getUtilManager()->getCompanyFromBrReg($orgNumber);
+    private function setCompany($orgNumber, $fetch) {
+        if ($fetch) {
+            $this->company = $this->getApi()->getUtilManager()->getCompanyFromBrReg($orgNumber);
+        } else {
+            $this->company = $this->getApi()->getUtilManager()->getCompanyFree($orgNumber);
+        }
     }
 
     public function findCompanies() {
@@ -256,7 +260,7 @@ class Booking extends MarketingApplication implements Application {
     }
 
     public function getCompanyInformation() {
-        $this->setCompany($_POST['data']['vatnumber']);
+        $this->setCompany($_POST['data']['vatnumber'], false);
         $this->includefile('company');
     }
 

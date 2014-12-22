@@ -2,6 +2,7 @@ body {
     border: solid 0px;
     font-family: Ubuntu, sans-serif;
     font-size: 16px;
+    min-width:1366px;
 }
 
 .gsinner.gsdepth_0 {

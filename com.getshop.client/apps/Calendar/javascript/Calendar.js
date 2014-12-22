@@ -58,9 +58,21 @@ app.Calendar = {
             locationName: $('#locationName').val(),
             locationExtra: $('#locationExtra').val(),
             locationId: $('#locationId').val(),
-            commentText: $('#commentText').val()
+            commentText: $('#commentText').val(),
+            contactPerson: $('#contactPerson').val(),
+            locationEmail: $('#locationEmail').val(),
+            locationCellPhone: $('#locationCellPhone').val(),
+            otherinformation: $('#otherinformation').val()
         }
 
+        $('.groupinformation').each(function() {
+            $(this).find('input').each(function() {
+                var id = $(this).attr('id');
+                var val = $(this).val();
+                data[id] = val;
+            });
+        });
+        
         var event = thundashop.Ajax.createEvent(null, "saveLocation", this, data);
         thundashop.common.showInformationBox(event, __f("Locations"));
     }

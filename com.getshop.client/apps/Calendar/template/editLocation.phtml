@@ -1,22 +1,50 @@
 <?
+/* @var $this \ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8\Calendar */
+/* @var $location  \core_calendarmanager_data_Location */
     $locationId = $_POST['data']['locationId'];
     $location = $this->getLocation($locationId);
     
     if ($location == null) {
         $location = new \core_calendarmanager_data_Location();
         $location->id = "";
+        
     }
 ?>
 
 <div class="editlocationscalendar">
     <input type="hidden" value="<? echo $location->id; ?>" id='locationId'/>
     
-    <table>
-        <tr><td><? echo $this->__f("location", "common"); ?></td><td><input id='locationName' style="width: 853px" type="textfield" value="<? echo $location->location; ?>"/></td></tr>
-        <tr><td><? echo $this->__f("Extended location"); ?></td><td><input id='locationExtra' style="width: 853px" type="textfield" value="<? echo $location->locationExtra; ?>"/></td></tr>
-    </table>
+    <div class="contactinformation">
+        <div style="border: solid 1px #AAA; margin-bottom: 10px; padding: 10px; ">
+            <b><? echo $this->__f("Event location"); ?></b>
+            <table>
+                <tr><td style="width: 100px;"><? echo $this->__f("location", "common"); ?></td><td><input id='locationName' style="width: 800px" type="textfield" value="<? echo $location->location; ?>"/></td></tr>
+                <tr><td><? echo $this->__f("Extended location"); ?></td><td><input id='locationExtra' style="width: 800px" type="textfield" value="<? echo $location->locationExtra; ?>"/></td></tr>
+                <tr><td><? echo $this->__f("Contact person"); ?></td><td><input id='contactPerson' style="width: 800px" type="textfield" value="<? echo $location->contactPerson; ?>"/></td></tr>
+                <tr><td><? echo $this->__f("Email"); ?></td><td><input id='locationEmail' style="width: 800px" type="textfield" value="<? echo $location->emailAddress; ?>"/></td></tr>
+                <tr><td><? echo $this->__f("Mobile"); ?></td><td><input id='locationCellPhone' style="width: 800px" type="textfield" value="<? echo $location->mobile; ?>"/></td></tr>
+                <tr><td><? echo $this->__f("Other"); ?></td><td><input id='otherinformation' style="width: 800px" type="textfield" value="<? echo $location->other; ?>"/></td></tr>
+            </table>    
+        </div>
+    </div>
     
-    <hr/>
+    <?
+    $groups = $this->getApi()->getUserManager()->getAllGroups();
+    foreach ($groups as $group) {
+        $locationInfo = $this->getLoctionInfo($group, $location);
+        ?>
+        <div style="border: solid 1px #AAA; margin-bottom: 10px; padding: 10px; ">
+            <b><? echo $group->groupName; ?></b>
+            <table class="groupinformation">
+                <tr><td style="width: 100px;"><? echo $this->__f("Name"); ?></td><td><input id='<? echo $group->id; ?>_contactPerson' style="width: 800px" type="textfield" value="<? echo $locationInfo->name; ?>"/></td></tr>
+                <tr><td><? echo $this->__f("Email"); ?></td><td><input id='<? echo $group->id; ?>_email' style="width: 800px" type="textfield" value="<? echo $locationInfo->email; ?>"/></td></tr>
+                <tr><td><? echo $this->__f("Cellphone"); ?></td><td><input id='<? echo $group->id; ?>_cellPhone' style="width: 800px" type="textfield" value="<? echo $locationInfo->mobile; ?>"/></td></tr>
+                <tr><td><? echo $this->__f("Other"); ?></td><td><input id='<? echo $group->id; ?>_otherInformation' style="width: 800px" type="textfield" value="<? echo $locationInfo->other; ?>"/></td></tr>
+            </table>
+        </div>
+        <?
+    }
+    ?>
     <div class="comments">
         <? 
         

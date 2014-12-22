@@ -245,6 +245,24 @@ class Calendar extends MarketingApplication implements Application {
         $location->location = $_POST['data']['locationName'];
         $location->locationExtra = $_POST['data']['locationExtra'];
         
+        $location->contactPerson = $_POST['data']['contactPerson'];
+        $location->emailAddress = $_POST['data']['locationEmail'];
+        $location->mobile = $_POST['data']['locationCellPhone'];
+        $location->other = $_POST['data']['otherinformation'];
+        
+        
+        $groups = $this->getApi()->getUserManager()->getAllGroups();
+        $location->groupLocationInformation = [];
+        foreach ($groups as $group) {
+            $locationGroupInfo = new \core_calendarmanager_data_GroupLocationInformation();
+            $locationGroupInfo->groupId = $group->id;
+            $locationGroupInfo->name = $_POST['data'][$group->id.'_contactPerson'];
+            $locationGroupInfo->email = $_POST['data'][$group->id.'_email'];
+            $locationGroupInfo->mobile = $_POST['data'][$group->id.'_cellPhone'];
+            $locationGroupInfo->other = $_POST['data'][$group->id.'_otherInformation'];
+            $location->groupLocationInformation[] = $locationGroupInfo;
+        }
+            
         if ($_POST['data']['commentText']) {
             $comment = new \core_usermanager_data_Comment();
             $comment->comment = nl2br($_POST['data']['commentText']);
@@ -801,5 +819,16 @@ class Calendar extends MarketingApplication implements Application {
     public function setDiplomaTextColor() {
         $this->getApi()->getCalendarManager()->setDiplomaTextColor($_POST['data']['diplomid'], $_POST['data']['textColor']);
     }
+
+    public function getLoctionInfo($group, $location) {
+        foreach ($location->groupLocationInformation as $groupInfo) {
+            if ($groupInfo->groupId == $group->id) {
+                return $groupInfo;
+            }
+        }
+        
+        return new \core_calendarmanager_data_GroupLocationInformation();
+    }
+
 }
 ?>

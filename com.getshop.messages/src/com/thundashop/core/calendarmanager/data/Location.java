@@ -14,7 +14,12 @@ import java.util.List;
  * @author ktonder
  */
 public class Location extends DataCommon {
+    public List<GroupLocationInformation> groupLocationInformation = new ArrayList();
     public List<Comment> comments = new ArrayList();
     public String location = "";
     public String locationExtra = "";
+    public String contactPerson = "";
+    public String emailAddress = "";
+    public String mobile = "";
+    public String other = "";
 }

@@ -1,6 +1,9 @@
 <?php
 class core_calendarmanager_data_Location extends core_common_DataCommon  {
 	/** @var String */
+	public $groupLocationInformation;
+
+	/** @var String */
 	public $comments;
 
 	/** @var String */
@@ -8,6 +11,18 @@ class core_calendarmanager_data_Location extends core_common_DataCommon  {
 
 	/** @var String */
 	public $locationExtra;
+
+	/** @var String */
+	public $contactPerson;
+
+	/** @var String */
+	public $emailAddress;
+
+	/** @var String */
+	public $mobile;
+
+	/** @var String */
+	public $other;
 
 }
 ?>

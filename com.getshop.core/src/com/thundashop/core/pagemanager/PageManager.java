@@ -6,6 +6,7 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pagemanager.data.CarouselConfig;
 import com.thundashop.core.pagemanager.data.CommonPageData;
+import com.thundashop.core.pagemanager.data.FloatingData;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageCell;
 import java.util.ArrayList;
@@ -285,5 +286,12 @@ public class PageManager extends ManagerBase implements IPageManager {
         
         setManagerSetting("cell_id_counter", ""+cellCount);
         return cellCount;
+    }
+
+    @Override
+    public void saveCellPosition(String pageId, String cellId, FloatingData data) throws ErrorException {
+        Page page = getPage(pageId);
+        page.getCell(cellId).floatingData = data;
+        savePage(page);
     }
 }

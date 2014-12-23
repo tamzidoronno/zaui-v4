@@ -1823,3 +1823,9 @@ a img {
 .gseditrowseperator { position:relative; }
 .gseditrowseperatorinnertop { padding-top: 5px; position: absolute; top:-31px; border: solid 1px #666666; height: 25px; width:100%; background-color:#bbb;z-index:5; text-align: center; }
 .gseditrowseperatorinnerbottom { position: absolute; top:1px; border: solid 1px #666666; height: 5px; width:100%; background-color:#bbb;z-index:5; }
+.gsfloatingbox { border: solid 3px rgba(0,0,0,0); display:inline-block;  border-radius: 3px; }
+.gsfloatingbox .gsfloatingheader { opacity: 0; text-align: center; background-color:#000; color:#FFF; cursor:pointer; position:absolute; z-index: 10; width: 100%; top: -19px; border-top-left-radius: 3px; border-top-right-radius: 3px; }
+.gsfloatingbox .ui-resizable-handle { display:none !important; }
+.gsfloatingbox:hover { border: solid 3px rgba(0,0,0,0.2); }
+.gsfloatingbox:hover .gsfloatingheader { opacity: 0.2; }
+.gsfloatingbox:hover .ui-resizable-handle { display:block !important; }

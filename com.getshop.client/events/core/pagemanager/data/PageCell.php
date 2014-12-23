@@ -18,6 +18,9 @@ class core_pagemanager_data_PageCell {
 	/** @var String */
 	public $appId;
 
+	/** @var core_pagemanager_data_FloatingData */
+	public $floatingData;
+
 	/** @var String */
 	public $styles;
 

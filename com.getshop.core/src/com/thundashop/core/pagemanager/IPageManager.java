@@ -2,6 +2,7 @@ package com.thundashop.core.pagemanager;
 
 import com.thundashop.core.common.*;
 import com.thundashop.core.pagemanager.data.CarouselConfig;
+import com.thundashop.core.pagemanager.data.FloatingData;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageLayout;
 import java.util.HashMap;
@@ -278,4 +279,7 @@ public interface IPageManager {
     
     @Administrator
     public void setCellMode(String pageId, String cellId, String mode) throws ErrorException;
+    
+    @Administrator
+    public void saveCellPosition(String pageId, String cellId, FloatingData data) throws ErrorException;
 }

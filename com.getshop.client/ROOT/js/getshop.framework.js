@@ -70,20 +70,31 @@ thundashop.framework = {
         $(document).on('click', '.gsoperatecell', this.operateCell);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
     },
-    
-    activateResizeColumn : function() {
+    activateResizeColumn: function () {
         var cellid = $(this).closest('.gsrow').attr('cellid');
-        thundashop.framework.loadResizing($('.gscell[cellid="'+cellid+'"]'), true);
+        thundashop.framework.loadResizing($('.gscell[cellid="' + cellid + '"]'), true);
     },
-    
-    closeTabSettings : function() {
+    closeTabSettings: function () {
         $(this).closest('.tabsettingspanel').fadeOut();
     },
-    closeCssEditor : function() {
+    closeCssEditor: function () {
         $(this).closest('.gsresizingpanel').fadeOut();
     },
     releaseMouse: function () {
         thundashop.framework.mousedown = false;
+    },
+    saveFloating: function (cell) {
+        var data = {
+            cellid: cell.children('.gscell').attr('cellid'),
+            left: cell.position().left,
+            top: cell.position().top,
+            width: cell.width(),
+            height: cell.height()
+        };
+        var event = thundashop.Ajax.createEvent('', 'saveFloatingPosition', $(this), data);
+        thundashop.Ajax.postWithCallBack(event, function () {
+
+        });
     },
     changeTab: function () {
         var newId = $(this).attr('incrementid');
@@ -355,7 +366,7 @@ thundashop.framework = {
             table.colResizable({
                 liveDrag: true,
                 dragCursor: 'auto',
-                hoverCursor : 'auto',
+                hoverCursor: 'auto',
                 draggingClass: "rangeDrag",
                 gripInnerHtml: "<div class='rangeGrip'></div>",
                 onResize: function (e) {
@@ -572,8 +583,8 @@ thundashop.framework = {
         var offset = thundashop.framework.originObject.offset();
         if (offset !== undefined) {
             var left = offset.left;
-            if(left+500 > $(document).width()) {
-                left = $(document).width()-550;
+            if (left + 500 > $(document).width()) {
+                left = $(document).width() - 550;
             }
             resizingpanel.css('top', offset.top);
             resizingpanel.css('left', left);

@@ -31,7 +31,6 @@ thundashop.Skeleton = {
         thundashop.Ajax.post(event);
     },
     settingsRemoveApplication : function(whoot, app) {
-        debugger;
         var id = app.attr('appid');
         var area = app.closest('.applicationarea').attr('area');
         thundashop.Skeleton.removeApplication(id, area);

@@ -201,6 +201,13 @@ class Page {
             $isColumn = true;
         }
 
+        $innerstyles = "";
+        if ($cell->mode == "FLOATING") {
+            $floatData = $cell->floatingData;
+            $innerstyles = "style='min-height:inherit; height:100%;'";
+            $styles .= "height: 100%; min-height:inherit; overflow-y: auto; overflow-x: hidden;";
+        }
+
         $styles .= "'";
 
         $container = "";
@@ -215,7 +222,6 @@ class Page {
         }
 
         $gsrotatingrow = "";
-
         if ($parent != null && $parent->mode == "ROTATING") {
             $gsrotatingrow = "gsrotatingrow";
         }
@@ -233,6 +239,13 @@ class Page {
         if ($isColumn && ($count > 0)) {
             $marginsclasses .= " gs_margin_left";
         }
+
+        if ($cell->mode == "FLOATING") {
+            $style = "position:absolute; width:" . $floatData->width . "px;height: " . $floatData->height . "px;top: " . $floatData->top . "px;left:" . $floatData->left . "px";
+
+            echo "<div style='$style' class='gsfloatingbox' cellid='" . $cell->cellId . "'><div class='gsfloatingheader'>Content</div>";
+        }
+
         echo "<div $additionalinfo $styles width='$width' class='gsucell $gscell $gsrotatingrow $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "'>";
         if ($parent != null && $parent->mode === "ROTATING") {
             if ($count > 0) {
@@ -248,7 +261,8 @@ class Page {
                 echo "<i title='" . $this->factory->__f("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o'></i>";
             }
         }
-        echo "<div class='$gscellinner gsuicell gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
+        echo "<div $innerstyles class='$gscellinner gsuicell gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
+
 
         if ($cell->mode == "TAB") {
             $this->addTabPanel();
@@ -306,6 +320,12 @@ class Page {
 
         echo "</div>";
         echo "</div>";
+
+        if ($cell->mode === "FLOATING") {
+            echo "</div>";
+            //End of floatingbox.
+            $this->makeDraggable($cell);
+        }
     }
 
     private function addCellConfigPanel() {
@@ -623,17 +643,30 @@ class Page {
         }
         if ($this->factory->isEditorMode()) {
             echo "<i class='fa fa-warning' title='The carousel is not rotating while logged in as administrator.' style='cursor:pointer;'></i>";
+            echo "<i class='fa fa-plus gsoperatecell' type='addfloating' title='Add content to slider'></i>";
         }
         echo "</div>";
     }
 
     public function printEasyModeEdit($cell) {
         if (sizeof($cell->cells) > 0) {
-//            return;
+            return;
         }
-        if ($cell->mode != "COLUMN") {
+
+        if ($cell->mode == "FLOATING") {
             echo "<div class='gseasymode' cellid='" . $cell->cellId . "'>";
             echo "<div class='gseasymodeinner'>";
+            echo "<i class='fa fa-image gs_resizing' type='delete' target='gseasymode' title='Open styling'></i> ";
+            echo "<i class='fa fa-trash-o gsoperatecell' type='delete' target='gseasymode' title='Delete column'></i> ";
+            echo "</div></div>";
+            return;
+        } else if ($cell->mode != "COLUMN") {
+            echo "<div class='gseasymode' cellid='" . $cell->cellId . "'>";
+            echo "<div class='gseasymodeinner'>";
+            echo "<i class='fa fa-arrow-up gsoperatecell' type='moveup' target='gseasymode' title='Move row up'></i> ";
+            echo "<i class='fa fa-image gs_resizing' type='delete' target='gseasymode' title='Open styling'></i> ";
+            echo "<i class='fa fa-trash-o gsoperatecell' type='delete' target='gseasymode' title='Delete column'></i> ";
+            echo "<i class='fa fa-arrow-down gsoperatecell' type='movedown' target='gseasymode' title='Move row down'></i> ";
             echo "</div></div>";
             return;
         }
@@ -679,6 +712,29 @@ class Page {
         }
         echo "</div>";
         echo "</div>";
+    }
+
+    public function makeDraggable($cell) {
+        ?>
+        <script>
+            $('.gsfloatingbox[cellid="<? echo $cell->cellId; ?>"]').draggable(
+                    {
+                        handle: '.gsfloatingheader', 
+                        containment: 'parent',
+                        stop: function (e, ui) {
+                            console.log('resizing stopped');
+                            console.log(ui);
+                            var app = $(this);
+                            thundashop.framework.saveFloating($(this));
+                        }
+                    }).resizable({
+                containment: 'parent',
+                stop: function (e, ui) {
+                    thundashop.framework.saveFloating($(this));
+                }
+            });
+        </script>
+        <?
     }
 
 }

@@ -113,9 +113,23 @@ class ApplicationManager extends FactoryBase {
             case "setnormalmode":
                 $this->getApi()->getPageManager()->setCellMode($this->getPage()->javapage->id, $cellId, "ROW");
                 break;
+            case "addfloating":
+                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "FLOATING", $area);
+                break;
         }
     }
 
+    function saveFloatingPosition() {
+        $data = new core_pagemanager_data_FloatingData();
+        $data->height = $_POST['data']['height'];
+        $data->width = $_POST['data']['width'];
+        $data->top = $_POST['data']['top'];
+        $data->left = $_POST['data']['left'];
+        $pageId = $this->getPage()->javapage->id;
+        $cellid = $_POST['data']['cellid'];
+        $this->getApi()->getPageManager()->saveCellPosition($pageId, $cellid, $data);
+    }
+    
     function setProductFromProductPicker() {
         $productIds = $_POST['data']['productids'];
         if (isset($_POST['data']['config']['type']) && $_POST['data']['config']['type'] == "delete") {

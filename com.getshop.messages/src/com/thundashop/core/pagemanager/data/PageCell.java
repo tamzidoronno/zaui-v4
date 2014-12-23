@@ -19,6 +19,7 @@ public class PageCell implements Serializable {
         public static String row = "ROW";
         public static String rotating = "ROTATING";
         public static String tab = "TAB";
+        public static String floating = "FLOATING";
     }
 
     String cellName = "";
@@ -27,6 +28,7 @@ public class PageCell implements Serializable {
     public String mode = PageMode.column;
     public ArrayList<PageCell> cells = new ArrayList();
     public String appId;
+    public FloatingData floatingData = new FloatingData();
     public String styles = "";
     public CarouselConfig carouselConfig = new CarouselConfig();
     public Double width = -1.0;

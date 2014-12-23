@@ -391,6 +391,10 @@ public class PageLayout implements Serializable {
                 PageCell subcell = initNewCell(PageCell.PageMode.row);
                 subcell.extractDataFrom(cell, true);
                 subcell.styles = cell.styles;
+                if(PageCell.PageMode.rotating.equals(mode)) {
+                    PageCell subsubcell = initNewCell(PageCell.PageMode.floating);
+                    subcell.cells.add(subsubcell);
+                }
                 cell.clear();
                 cell.cells.add(subcell);
             }

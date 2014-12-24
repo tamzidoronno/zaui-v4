@@ -146,6 +146,14 @@ body {
     color: #333;
     border-bottom: solid 1px #EEE;
 }
+.ProductLists .products.grid_view .product_line_seperator {
+    height: 0px;
+    border-top: dashed 1px #DDD;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    margin-left: 80px;
+    margin-right: 80px;
+}
 .ProductLists .products.grid_view .productbox {
     height: 400px;
     

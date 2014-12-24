@@ -13,10 +13,18 @@ $view = $this->isRowView() ? "row_view" : $view;
         echo "<div class='no_products_added_to_list'><i class='fa fa-warning'></i> ".$this->__f("There is no products added to this list, manage your productlists from the settings.")."</div>";
         return;
     }
+    $i = 0;
     foreach ($products as $product) {
+        $i++;
         $linkName = \GetShopHelper::makeSeoUrl($product->name);
         $pageId = $product->pageId;
-        $image = '<div class="image"><img src="/displayImage.php?id='.$product->imagesAdded[0].'&width=200"/></div>';
+        $imageId = isset($product->imagesAdded[0]) ? $product->imagesAdded[0] : "";
+        
+        if (!$imageId) {
+            $image = '<div class="image"><i class="fa fa-image"></i></div>';
+        } else {
+            $image = '<div class="image"><img src="/displayImage.php?id='.$imageId.'&width=200"/></div>';
+        }
         ?>
             <div class='productbox_outer'>
                 <div class='productbox'>
@@ -46,6 +54,11 @@ $view = $this->isRowView() ? "row_view" : $view;
                 </div>
             </div>
         <?
+        
+        if ($i == $columnSize) {
+            $i = 0;
+            echo "<div class='product_line_seperator'></div>";
+        }
     }
     ?>
 </div>

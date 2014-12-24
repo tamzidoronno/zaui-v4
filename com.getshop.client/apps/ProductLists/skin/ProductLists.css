@@ -135,6 +135,13 @@
     width: 200px;
 }
 
+.ProductLists .products .productbox .image i {
+    font-size: 150px;
+    color: #EEE;
+    height: 150px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
 
 .ProductLists .products.row_view .webshop_button {
     position: absolute;
@@ -178,6 +185,10 @@
     padding: 10px;
     height: 600px;
     padding-top: 60px;
+}
+
+.ProductLists .products.grid_view .product_line_seperator {
+    height: 20px;
 }
 
 .ProductLists .products.grid_view .productbox .product_title {

@@ -62,15 +62,44 @@
     border-bottom: solid 0px #DDD;
 }
 
+.ProductLists .grid_view .webshop_button_area {
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    height: 95px;
+    background: rgba(255,255,255, 1);
+    border-top: solid 1px #EEE;
+}
+
 .ProductLists .webshop_button {
+    background: rgba(255,255,255,1);
+}
+
+.ProductLists .grid_view .webshop_button {
     font-size: 16px;
-    border: solid 1px;
+    border: solid 1px #DDD;
     display: inline-block;
     padding: 10px;
     border-radius: 4px;
     cursor:pointer;
+    position: absolute;
+    left: 50%;
+    width: 150px;
+    margin-left: -85px;
+    bottom: 10px;
+    
+    /*position: absolute;*/
 }
 
+.ProductLists .grid_view .product_price {
+    position: absolute; 
+    bottom: 55px;
+    z-index: 1;
+    text-align: center;
+    left: 0px;
+    right: 0px;
+}
 
 .ProductLists .products {
     font-size: 0px;
@@ -85,6 +114,8 @@
 .ProductLists .productbox {
     position: relative;
     box-sizing: border-box;
+    padding-bottom: 50px;
+    overflow: hidden;
 }
 
 .ProductLists .no_products_added_to_list {

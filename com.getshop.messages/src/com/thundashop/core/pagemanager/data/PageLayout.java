@@ -11,7 +11,7 @@ public class PageLayout implements Serializable {
 
     void clear() {
         areas.put("body", new ArrayList());
-        areas.get("body").add(initNewCell(PageCell.PageMode.row));
+        areas.get("body").add(initNewCell(PageCell.CellMode.row));
     }
 
     public void moveCell(String cellid, boolean moveUp) {
@@ -92,9 +92,12 @@ public class PageLayout implements Serializable {
             PageCell cell = findCell(getAllCells(), incell);
             double newwidth = -1;
             if (cell.cells.isEmpty()) {
-                PageCell newcell = cell.createCell(before);
-                newcell.extractDataFrom(cell, false);
-                newcell.mode = mode;
+                if(!PageCell.CellType.floating.equals(mode)) {
+                    PageCell newcell = cell.createCell(before);
+                    newcell.extractDataFrom(cell, false);
+                    newcell.mode = mode;
+                    newcell.type = cell.type;
+                }
             } else {
                 if (before != null && !before.isEmpty()) {
                     mode = findCell(getAllCells(), before).mode;
@@ -105,13 +108,12 @@ public class PageLayout implements Serializable {
                     PageCell newcell = initNewCell(mode);
                     newcell.extractDataFrom(cell, true);
                     cell.clear();
-                    
+                    cell.mode = mode;
                     cell.cells.add(newcell);
                 }
-
             }
             
-            if (mode.equals(PageCell.PageMode.column)) {
+            if (mode.equals(PageCell.CellMode.column)) {
                 int count = cell.cells.size();
                 double percentage = (double) ((100 / count) + 100) / 100;
                 newwidth = resizeCells(cell.cells, true, percentage);
@@ -119,6 +121,7 @@ public class PageLayout implements Serializable {
             }
 
             PageCell newcell = cell.createCell(before);
+            newcell.type = cell.type;
             newcell.mode = mode;
             newcell.width = newwidth;
             cellId = newcell.cellId;
@@ -160,7 +163,7 @@ public class PageLayout implements Serializable {
                         cell.mode = currentMode;
                     }
                     if (cell.cells.isEmpty() && (cell.isRotating() || cell.isTab())) {
-                        cell.mode = PageCell.PageMode.row;
+                        cell.mode = PageCell.CellMode.row;
                     }
                 }
             }
@@ -376,7 +379,7 @@ public class PageLayout implements Serializable {
             return;
         }
 
-        if (PageCell.PageMode.rotating.equals(mode) || PageCell.PageMode.tab.equalsIgnoreCase(mode)) {
+        if (PageCell.CellMode.rotating.equals(mode) || PageCell.CellMode.tab.equalsIgnoreCase(mode)) {
             boolean convertToSub = true;
             if (cell.isRotating() || cell.isTab()) {
                 if (!cell.cells.isEmpty()) {
@@ -388,13 +391,10 @@ public class PageLayout implements Serializable {
 
             }
             if (convertToSub) {
-                PageCell subcell = initNewCell(PageCell.PageMode.row);
+                PageCell subcell = initNewCell(PageCell.CellMode.row);
                 subcell.extractDataFrom(cell, true);
                 subcell.styles = cell.styles;
-                if(PageCell.PageMode.rotating.equals(mode)) {
-                    PageCell subsubcell = initNewCell(PageCell.PageMode.floating);
-                    subcell.cells.add(subsubcell);
-                }
+                subcell.type = PageCell.CellType.floating;
                 cell.clear();
                 cell.cells.add(subcell);
             }

@@ -13,19 +13,26 @@ public class PageCell implements Serializable {
         styles = "";
     }
 
-    static class PageMode {
-
+    /* Mode for the cell */
+    static class CellMode {
         public static String column = "COLUMN";
         public static String row = "ROW";
         public static String rotating = "ROTATING";
         public static String tab = "TAB";
         public static String floating = "FLOATING";
     }
+    
+    static class CellType {
+        public static String normal = "NORMAL";
+        public static String floating = "FLOATING";
+    }
+    
 
     String cellName = "";
     public Integer incrementalCellId;
     public String cellId = UUID.randomUUID().toString();
-    public String mode = PageMode.column;
+    public String mode = CellMode.column;
+    public String type = "normal";
     public ArrayList<PageCell> cells = new ArrayList();
     public String appId;
     public FloatingData floatingData = new FloatingData();
@@ -55,17 +62,18 @@ public class PageCell implements Serializable {
         mode = cell.mode;
         appId = cell.appId;
         cell.appId = "";
+        type = cell.type;
         if(includeCells) {
             cells = cell.cells;
         }
     }
 
     public boolean isRotating() {
-        return PageCell.PageMode.rotating.equalsIgnoreCase(mode);
+        return PageCell.CellMode.rotating.equalsIgnoreCase(mode);
     }
 
     public boolean isTab() {   
-        return PageCell.PageMode.tab.equalsIgnoreCase(mode); 
+        return PageCell.CellMode.tab.equalsIgnoreCase(mode); 
     }
     
     
@@ -94,4 +102,4 @@ public class PageCell implements Serializable {
 
         return retCells;
     }
-}
+    }

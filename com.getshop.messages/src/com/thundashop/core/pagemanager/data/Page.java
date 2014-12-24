@@ -75,6 +75,7 @@ public class Page extends DataCommon implements Cloneable {
             System.out.print(row.cellId);
             System.out.print(" subcells: " + row.cells.size());
             System.out.print(", mode: " + row.mode);
+            System.out.print(", type: " + row.type);
             System.out.print(", styles: " + row.styles.replaceAll("\\\n", ""));
             if (row.cellName != null && !row.cellName.isEmpty()) {
                 System.out.println("(" + row.cellName + ")");

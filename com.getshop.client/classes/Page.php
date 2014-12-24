@@ -274,7 +274,7 @@ class Page {
 
 
         if ($edit) {
-            $this->printEasyModeEdit($cell);
+            $this->printEasyModeEdit($cell, $parent);
             echo "<span class='gscellsettings'>";
             echo "<i class='fa fa-cogs'  title='Cell settings' style='cursor:pointer;'></i>";
             echo "</span>";
@@ -534,6 +534,9 @@ class Page {
     }
 
     public function printApplicationArea($cell) {
+        if ($cell->type == "FLOATING") {
+            return;
+        }
         echo "<div class='applicationarea' appid='" . $cell->appId . "' area='" . $cell->cellId . "'>";
         if (!$cell->appId && $this->factory->isEditorMode()) {
             echo "<span class='gsaddcontent'>";
@@ -648,7 +651,8 @@ class Page {
         echo "</div>";
     }
 
-    public function printEasyModeEdit($cell) {
+    public function printEasyModeEdit($cell, $parent) {
+        
         if (sizeof($cell->cells) > 0) {
             return;
         }
@@ -660,13 +664,18 @@ class Page {
             echo "<i class='fa fa-trash-o gsoperatecell' type='delete' target='gseasymode' title='Delete column'></i> ";
             echo "</div></div>";
             return;
-        } else if ($cell->mode != "COLUMN") {
+        } else if ($cell->mode == "ROW") {
             echo "<div class='gseasymode' cellid='" . $cell->cellId . "'>";
             echo "<div class='gseasymodeinner'>";
-            echo "<i class='fa fa-arrow-up gsoperatecell' type='moveup' target='gseasymode' title='Move row up'></i> ";
+            if($parent && sizeof($parent->cells) > 1) {
+                echo "<i class='fa fa-arrow-up gsoperatecell' type='moveup' target='gseasymode' title='Move row up'></i> ";
+            }
             echo "<i class='fa fa-image gs_resizing' type='delete' target='gseasymode' title='Open styling'></i> ";
+            echo "<i class='fa fa-arrows-h gsoperatecell' type='addcolumn' target='gseasymode' title='Insert column'></i> ";
             echo "<i class='fa fa-trash-o gsoperatecell' type='delete' target='gseasymode' title='Delete column'></i> ";
-            echo "<i class='fa fa-arrow-down gsoperatecell' type='movedown' target='gseasymode' title='Move row down'></i> ";
+            if($parent && sizeof($parent->cells) > 1) {
+                echo "<i class='fa fa-arrow-down gsoperatecell' type='movedown' target='gseasymode' title='Move row down'></i> ";
+            }
             echo "</div></div>";
             return;
         }
@@ -692,12 +701,9 @@ class Page {
         if ($row->mode == "TAB" || $row->mode == "ROTATING") {
             echo "<i class='fa fa-arrow-up gsoperatecell' type='moveup' target='container' title='Move row up'></i> ";
             echo "<i class='fa fa-plus gsoperatecell' type='addbefore' target='container'  title='Create row above'></i> ";
-            if ($row->mode == "ROTATING") {
-                echo "<i class='fa fa-image gs_resizing' type='delete' target='selectedcell' title='Open styling'></i> ";
-            } else {
+            if ($row->mode != "ROTATING") {
                 echo "<i class='fa fa-image gs_resizing' type='delete' target='container' title='Open styling'></i> ";
             }
-            echo "<i class='fa fa-arrows-h gsoperatecell' type='addcolumn' target='selectedcell' title='Insert column'></i> ";
             echo "<i class='fa fa-trash-o gsoperatecell' type='delete' target='container' title='Delete row'></i> ";
             echo "<i class='fa fa-plus gsoperatecell' type='addafter' target='container'  title='Create row after'></i> ";
             echo "<i class='fa fa-arrow-down gsoperatecell' type='movedown' target='container' title='Move row down'></i> ";
@@ -719,7 +725,7 @@ class Page {
         <script>
             $('.gsfloatingbox[cellid="<? echo $cell->cellId; ?>"]').draggable(
                     {
-                        handle: '.gsfloatingheader', 
+                        handle: '.gsfloatingheader',
                         containment: 'parent',
                         stop: function (e, ui) {
                             console.log('resizing stopped');
@@ -727,12 +733,13 @@ class Page {
                             var app = $(this);
                             thundashop.framework.saveFloating($(this));
                         }
-                    }).resizable({
-                containment: 'parent',
-                stop: function (e, ui) {
-                    thundashop.framework.saveFloating($(this));
-                }
-            });
+                    }).resizable(
+                    {
+                        containment: 'parent',
+                        stop: function (e, ui) {
+                            thundashop.framework.saveFloating($(this));
+                        }
+                    });
         </script>
         <?
     }

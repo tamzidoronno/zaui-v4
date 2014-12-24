@@ -1829,3 +1829,6 @@ a img {
 .gsfloatingbox:hover { border: solid 3px rgba(0,0,0,0.2); }
 .gsfloatingbox:hover .gsfloatingheader { opacity: 0.2; }
 .gsfloatingbox:hover .ui-resizable-handle { display:block !important; }
+.gsinitrow { text-align: center; }
+.gsmodeselectbox i {display:block; }
+.gsmodeselectbox { border: solid 1px #3a99d7; padding: 10px; display:inline-block; border-radius: 3px; margin: 10px; cursor:pointer; }

@@ -20,6 +20,7 @@ public class PageCell implements Serializable {
         public static String rotating = "ROTATING";
         public static String tab = "TAB";
         public static String floating = "FLOATING";
+        public static String init = "INIT";
     }
     
     static class CellType {

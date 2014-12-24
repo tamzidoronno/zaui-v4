@@ -725,7 +725,7 @@ thundashop.framework = {
             data['cellid'] = newcellid;
         }
 
-        if (type === "addafter") {
+        if (type === "addafter" || type === "initafter") {
             var newcellid = cellobj.parent().closest('.gscell').attr('cellid');
             if (!newcellid) {
                 newcellid = "";
@@ -743,6 +743,10 @@ thundashop.framework = {
                 } else {
                     data['type'] = "addrow";
                 }
+            }
+            
+            if(type === "initbefore" || type === "initafter") {
+                data['type'] = type;
             }
         }
 

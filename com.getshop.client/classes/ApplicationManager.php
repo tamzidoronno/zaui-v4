@@ -98,6 +98,11 @@ class ApplicationManager extends FactoryBase {
                 $cellId = $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "ROW", $area);
                 $_GET['gseditcell'] = $cellId;
                 break;
+            case "initbefore":
+            case "initafter":
+                $cellId = $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "INIT", $area);
+                $_GET['gseditcell'] = $cellId;
+                break;
             case "addcolumn":
                 $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "COLUMN", $area);
                 break;

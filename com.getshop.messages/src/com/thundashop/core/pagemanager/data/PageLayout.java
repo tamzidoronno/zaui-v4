@@ -268,23 +268,6 @@ public class PageLayout implements Serializable {
         return newCellList;
     }
 
-    private String denyRotatingInsideRotating(String incell, String denymode) {
-        PageCell cell = findCell(getAllCells(), incell);
-        if (cell.mode.equals(denymode)) {
-            PageCell parent = findParent(cell);
-            if (parent == null) {
-                return incell;
-            }
-            do {
-                if (!parent.equals(denymode)) {
-                    return parent.cellId;
-                }
-                parent = findParent(parent);
-            } while (parent != null);
-        }
-        return incell;
-    }
-
     private PageCell findParent(PageCell cell) {
         return findParentRecursive(getAllCells(), cell);
     }
@@ -388,11 +371,14 @@ public class PageLayout implements Serializable {
                         convertToSub = false;
                     }
                 }
-
+                
             }
             if (convertToSub) {
                 PageCell subcell = initNewCell(PageCell.CellMode.row);
                 subcell.extractDataFrom(cell, true);
+                if(subcell.mode.equals(PageCell.CellMode.init)) {
+                    subcell.mode = PageCell.CellMode.row;
+                }
                 subcell.styles = cell.styles;
                 subcell.type = PageCell.CellType.floating;
                 cell.clear();

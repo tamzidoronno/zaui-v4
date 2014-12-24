@@ -187,6 +187,7 @@ class Page {
         $width = 100;
         $isColumn = false;
         $additionalinfo = "";
+        
         if ($cell->mode == "ROTATING") {
             $additionalinfo = "height='" . $cell->carouselConfig->height . "' timer='" . $cell->carouselConfig->time . "' type='" . $cell->carouselConfig->type . "'";
             $styles .= "height: " . $cell->carouselConfig->height . "px;";
@@ -262,61 +263,8 @@ class Page {
             }
         }
         echo "<div $innerstyles class='$gscellinner gsuicell gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
-
-
-        if ($cell->mode == "TAB") {
-            $this->addTabPanel();
-        }
-
-        if ($parent != null && $parent->mode == "TAB") {
-            $this->displayTabRow($parent, $edit, $cell);
-        }
-
-
-        if ($edit) {
-            $this->printEasyModeEdit($cell, $parent);
-            echo "<span class='gscellsettings'>";
-            echo "<i class='fa fa-cogs'  title='Cell settings' style='cursor:pointer;'></i>";
-            echo "</span>";
-        }
-
-        if (sizeof($cell->cells) > 0) {
-            $counter = 0;
-            $depthprint = $depth + 1;
-            if ($cell->mode == "TAB" || $cell->mode == "ROTATING") {
-                $depthprint--;
-            }
-
-            if ($parent != null && $parent->mode == "TAB") {
-                echo "<div class='gs_tab_conte_container'>";
-            }
-
-            foreach ($cell->cells as $innercell) {
-                $this->printCell($innercell, $counter, $depthprint, sizeof($cell->cells), $edit, $cell);
-                $counter++;
-            }
-
-            if ($parent != null && $parent->mode == "TAB") {
-                echo "</div>";
-            }
-
-            if ($cell->mode == "ROTATING" || $cell->mode == "TAB") {
-                $doCarousel = (!$edit && $cell->mode == "ROTATING");
-                if ($this->factory->isEditorMode()) {
-                    $doCarousel = false;
-                }
-                $this->printContainerSettings($doCarousel, $cell, $depth);
-            }
-            echo "<div style='clear:both;'></div>";
-        } else {
-            $this->printApplicationArea($cell);
-        }
-        if ($cell->mode == "ROTATING") {
-            $this->addCarouselSettingsPanel();
-        }
-        if ($parent != null && $parent->mode === "ROTATING") {
-            $this->printCarouselDots($totalcells, $edit, $count, $cell->cellId);
-        }
+        
+        $this->printCellContent($cell, $parent, $edit, $totalcells, $count, $depth);
 
         echo "</div>";
         echo "</div>";
@@ -667,13 +615,13 @@ class Page {
         } else if ($cell->mode == "ROW") {
             echo "<div class='gseasymode' cellid='" . $cell->cellId . "'>";
             echo "<div class='gseasymodeinner'>";
-            if($parent && sizeof($parent->cells) > 1) {
+            if($parent && sizeof($parent->cells) > 1 && $parent->mode != "ROTATING" && $parent->cells[0]->cellId != $cell->cellId) {
                 echo "<i class='fa fa-arrow-up gsoperatecell' type='moveup' target='gseasymode' title='Move row up'></i> ";
             }
             echo "<i class='fa fa-image gs_resizing' type='delete' target='gseasymode' title='Open styling'></i> ";
             echo "<i class='fa fa-arrows-h gsoperatecell' type='addcolumn' target='gseasymode' title='Insert column'></i> ";
-            echo "<i class='fa fa-trash-o gsoperatecell' type='delete' target='gseasymode' title='Delete column'></i> ";
-            if($parent && sizeof($parent->cells) > 1) {
+            echo "<i class='fa fa-trash-o gsoperatecell' type='delete' target='gseasymode' title='Delete row'></i> ";
+            if($parent && (sizeof($parent->cells) > 1) && $parent->mode != "ROTATING" && $parent->cells[sizeof($parent->cells)-1]->cellId != $cell->cellId) {
                 echo "<i class='fa fa-arrow-down gsoperatecell' type='movedown' target='gseasymode' title='Move row down'></i> ";
             }
             echo "</div></div>";
@@ -682,7 +630,9 @@ class Page {
 
         echo "<div class='gseasymode gsframeworkstandard' cellid='" . $cell->cellId . "'>";
         echo "<div class='gseasymodeinner'>";
-        echo "<i class='fa fa-arrow-left gsoperatecell' type='moveup' target='gseasymode' title='Move column to the left'></i> ";
+        if($parent != null && $parent->cells[0]->cellId != $cell->cellId) {
+            echo "<i class='fa fa-arrow-left gsoperatecell' type='moveup' target='gseasymode' title='Move column to the left'></i> ";
+        }
         echo "<i class='fa fa-plus gsoperatecell' type='addbefore' target='gseasymode'  title='Insert column to the left'></i> ";
         echo "<i class='fa fa-image gs_resizing' type='delete' target='gseasymode' title='Open styling'></i> ";
         echo "<i class='fa fa-trash-o gsoperatecell' type='delete' target='gseasymode' title='Delete column'></i> ";
@@ -690,7 +640,9 @@ class Page {
             echo "<i class='fa fa-arrows-h gsresizecolumn' title='Resize column'></i> ";
         }
         echo "<i class='fa fa-plus gsoperatecell' type='addafter' target='gseasymode'  title='Insert column to the right'></i> ";
-        echo "<i class='fa fa-arrow-right gsoperatecell' type='movedown' target='gseasymode' title='Move column to the right'></i> ";
+        if($parent != null && $parent->cells[sizeof($parent->cells)-1]->cellId != $cell->cellId) {
+            echo "<i class='fa fa-arrow-right gsoperatecell' type='movedown' target='gseasymode' title='Move column to the right'></i> ";
+        }
         echo "</div>";
         echo "</div>";
     }
@@ -709,11 +661,11 @@ class Page {
             echo "<i class='fa fa-arrow-down gsoperatecell' type='movedown' target='container' title='Move row down'></i> ";
         } else {
             echo "<i class='fa fa-arrow-up gsoperatecell' type='moveup' target='' title='Move row up'></i> ";
-            echo "<i class='fa fa-plus gsoperatecell' type='addbefore' target=''  title='Create row above'></i> ";
+            echo "<i class='fa fa-plus gsoperatecell' type='initbefore' target=''  title='Create row above'></i> ";
             echo "<i class='fa fa-image gs_resizing' type='delete' target='' title='Open styling'></i> ";
             echo "<i class='fa fa-arrows-h gsoperatecell' type='addcolumn' title='Insert column'></i> ";
             echo "<i class='fa fa-trash-o gsoperatecell' type='delete' title='Delete row'></i> ";
-            echo "<i class='fa fa-plus gsoperatecell' type='addafter' title='Create row after'></i> ";
+            echo "<i class='fa fa-plus gsoperatecell' type='initafter' title='Create row after'></i> ";
             echo "<i class='fa fa-arrow-down gsoperatecell' type='movedown' title='Move row down'></i> ";
         }
         echo "</div>";
@@ -742,6 +694,82 @@ class Page {
                     });
         </script>
         <?
+    }
+
+    public function printCellContent($cell, $parent, $edit, $totalcells, $count, $depth) {
+
+        if($cell->mode == "INIT") {
+            echo "<div class='gsinitrow'>";
+            echo "<div class='gsselectcelltype'>Select a type for this row</div>";
+            echo "<span class='gsmodeselectbox gsoperatecell' type='setnormalmode'>";
+            echo "<i class='fa fa-arrows-h'></i>";
+            echo "Row mode";
+            echo "</span>";
+            echo "<span class='gsmodeselectbox gsoperatecell' type='setcarouselmode'>";
+            echo "<i class='fa fa-th'></i>";
+            echo "Carousel mode";
+            echo "</span>";
+            echo "<span class='gsmodeselectbox gsoperatecell' type='settabmode'>";
+            echo "<i class='fa fa-ellipsis-h'></i>";
+            echo "Tab mode";
+            echo "</span>";
+            echo "</div>";
+            return;
+        }
+
+        
+        if ($cell->mode == "TAB") {
+            $this->addTabPanel();
+        }
+
+        if ($parent != null && $parent->mode == "TAB") {
+            $this->displayTabRow($parent, $edit, $cell);
+        }
+
+
+        if ($edit) {
+            $this->printEasyModeEdit($cell, $parent);
+        }
+
+        if (sizeof($cell->cells) > 0) {
+            $counter = 0;
+            $depthprint = $depth + 1;
+            if ($cell->mode == "TAB" || $cell->mode == "ROTATING") {
+                $depthprint--;
+            }
+
+            if ($parent != null && $parent->mode == "TAB") {
+                echo "<div class='gs_tab_conte_container'>";
+            }
+
+            foreach ($cell->cells as $innercell) {
+                $this->printCell($innercell, $counter, $depthprint, sizeof($cell->cells), $edit, $cell);
+                $counter++;
+            }
+
+            if ($parent != null && $parent->mode == "TAB") {
+                echo "</div>";
+            }
+
+            if ($cell->mode == "ROTATING" || $cell->mode == "TAB") {
+                $doCarousel = (!$edit && $cell->mode == "ROTATING");
+                if ($this->factory->isEditorMode()) {
+                    $doCarousel = false;
+                }
+                $this->printContainerSettings($doCarousel, $cell, $depth);
+            }
+            echo "<div style='clear:both;'></div>";
+        } else {
+            $this->printApplicationArea($cell);
+        }
+        if ($cell->mode == "ROTATING") {
+            $this->addCarouselSettingsPanel();
+        }
+        if ($parent != null && $parent->mode === "ROTATING") {
+            $this->printCarouselDots($totalcells, $edit, $count, $cell->cellId);
+        }
+
+        
     }
 
 }

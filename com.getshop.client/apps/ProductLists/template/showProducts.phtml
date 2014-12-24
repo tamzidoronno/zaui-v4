@@ -14,8 +14,10 @@ $view = $this->isRowView() ? "row_view" : $view;
         return;
     }
     $i = 0;
+    $j = 0;
     foreach ($products as $product) {
         $i++;
+        $j++;
         $linkName = \GetShopHelper::makeSeoUrl($product->name);
         $pageId = $product->pageId;
         $imageId = isset($product->imagesAdded[0]) ? $product->imagesAdded[0] : "";
@@ -55,7 +57,7 @@ $view = $this->isRowView() ? "row_view" : $view;
             </div>
         <?
         
-        if ($i == $columnSize) {
+        if ($i == $columnSize && count($products) != $j) {
             $i = 0;
             echo "<div class='product_line_seperator'></div>";
         }

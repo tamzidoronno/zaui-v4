@@ -29,9 +29,6 @@ body {
     padding-left: 10px;
     /*font-weight: 300;*/
 }
-.gsarea[area="footer"] {
-    margin-top: 60px;
-}
 
 .gsarea[area="footer"] .gsdepth_0.gscount_0 {
     background-color: #2b2b2b;

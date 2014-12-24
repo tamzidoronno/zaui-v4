@@ -141,8 +141,14 @@ body {
 }
 
 
+.ProductLists .products.grid_view .product_title {
+    background-color: #FDFDFD;
+    color: #333;
+    border-bottom: solid 1px #EEE;
+}
 .ProductLists .products.grid_view .productbox {
     height: 400px;
+    
 }
 
 .ProductLists .webshop_button  {

@@ -177,10 +177,18 @@
     border: solid 1px #EEE;
     padding: 10px;
     height: 600px;
+    padding-top: 60px;
 }
 
 .ProductLists .products.grid_view .productbox .product_title {
-    height: 50px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    padding: 10px;
+    overflow: hidden;
+    height: 60px;
+    box-sizing: border-box;
 }
 
 .ProductLists .products.grid_view .productbox .short_description { 

@@ -733,6 +733,10 @@ thundashop.framework = {
         }
 
         var cellid = originObject.closest('.gscell').attr('cellid');
+        
+        if (originObject.parent().hasClass('gsfloatingheader')) {
+            cellid = originObject.closest('.gsfloatingbox').attr('cellid');
+        }
 
         if (target === "selectedcell") {
             cellid = originObject.closest('.gscontainercell').find('.gsactivecell:visible').attr('cellid');

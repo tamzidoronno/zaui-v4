@@ -1868,7 +1868,7 @@ a img {
 .gseditrowbuttons { display:none; position:absolute; right: -1px; width: 20px; border: solid 1px #bbb; text-align: center; padding: 2px; border-bottom-left-radius: 3px; border-top-left-radius: 3px; font-size: 16px; background-color:#FFF; }
 .gsrow:hover .gseditrowbuttons { display:inline-block; }
 .gseditrowbuttons i { cursor:pointer;margin: 3px; }
-.gsfloatingbox .gsfloatingheader.gsactiveboxheader { opacity: 0.2; }
+.gsfloatingbox .gsfloatingheader.gsactiveboxheader { opacity: 0.8; }
 .gsleftheading { position:absolute; left: 3px; top: 1px; }
 .gsrightheading { position:absolute; right: 3px; top: 1px; }
 

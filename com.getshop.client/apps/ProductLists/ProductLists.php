@@ -12,7 +12,7 @@ class ProductLists extends \ApplicationBase implements \Application {
     }
     
     private function showLists() {
-        if (!$this->getConfigurationSetting("productlist")) {
+        if (!$this->getConfigurationSetting("productlist") && !$this->isSearchResultList()) {
             $this->includefile("showLists");
             return;
         } 
@@ -21,11 +21,19 @@ class ProductLists extends \ApplicationBase implements \Application {
     }
     
     public function getAllProducts() {
-        $listId = $this->getConfigurationSetting("productlist");
-        $productList = $this->getApi()->getProductManager()->getProductList($listId);
-        $criteria = new \core_productmanager_data_ProductCriteria();
-        $criteria->ids = $productList->productIds;
-        $products = $this->getApi()->getProductManager()->getProducts($criteria);
+        if ($this->isSearchResultList()) {
+            $searchWord = isset($_GET['searchWord']) ? $_GET['searchWord'] : "";
+            $searchWord = isset($_POST['data']['searchWord']) ? $_POST['data']['searchWord'] : $searchWord;
+            $products = $this->getApi()->getProductManager()->search($searchWord, 50, 1);
+            $products = $products->products;
+        } else {
+            $listId = $this->getConfigurationSetting("productlist");
+            $productList = $this->getApi()->getProductManager()->getProductList($listId);
+            $criteria = new \core_productmanager_data_ProductCriteria();
+            $criteria->ids = $productList->productIds;
+            $products = $this->getApi()->getProductManager()->getProducts($criteria);
+        }
+        
         return $products;
     }
 
@@ -124,6 +132,14 @@ class ProductLists extends \ApplicationBase implements \Application {
 
     public function getCurrency() {
         return "$";
+    }
+    
+    public function setAsSearchResultList() {
+        $this->setConfigurationSetting("searchResultList", "true");
+    }
+    
+    public function isSearchResultList() {
+        return $this->getConfigurationSetting("searchResultList") == "true";
     }
 
 }

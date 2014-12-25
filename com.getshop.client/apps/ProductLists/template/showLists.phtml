@@ -5,7 +5,7 @@
         echo $this->__f("Please select what list you want to display here");
     } else {
         echo '<i class="fa fa-warning"></i> ' . $this->__f("You have not created any lists yet, you need to create one first. Click the button below or go to the adminpage.");
-        echo "<br/><br/><div  onclick=\"app.ProductLists.gssinterface.showListManagement()\" class='gs_button'>".$this->__f("Click here to create a list")."</div>";
+        echo "<br/><br/><div  onclick=\"app.ProductLists.gssinterface.showListManagement()\" class='gs_button'>" . $this->__f("Click here to create a list") . "</div>";
         return;
     }
     ?>
@@ -31,7 +31,18 @@
     ?>
 </div>
 <?
+
+if ($this->getPage()->getId() == "productsearch") {
+    ?>
+    <div class="gs_button" id="useForShowingSearchResult"><? echo $this->__f("Show search result here"); ?></div>
+    <?
+}
+
 if ($this->hasWriteAccess()) {
     ?>
     <div class="gs_button" onclick="app.ProductLists.gssinterface.showListManagement()"><? echo $this->__f("Manage lists"); ?></div>
 <? } ?>
+
+<?
+
+?>

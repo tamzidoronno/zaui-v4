@@ -4,6 +4,7 @@ app.ProductLists = {
         $(document).on('change', '#gss_filter_list_box_productlist', app.ProductLists.search);
         $(document).on('click', '.gss_addToList', app.ProductLists.addToList);
         $(document).on('click', '.gss_removeFromList', app.ProductLists.removeProductFromList);
+        $(document).on('click', '#useForShowingSearchResult', app.ProductLists.useForShowingSearchResult);
     },
     
     loadSettings : function(element, application) {
@@ -122,6 +123,11 @@ app.ProductLists = {
     
     setList: function() {
         var event = thundashop.Ajax.createEvent(null, "setList", this, $(this).attr('listid'));
+        thundashop.Ajax.post(event);
+    },
+    
+    useForShowingSearchResult: function() {
+        var event = thundashop.Ajax.createEvent(null, "setAsSearchResultList", this, {});
         thundashop.Ajax.post(event);
     }
 }

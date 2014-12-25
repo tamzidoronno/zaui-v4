@@ -32,11 +32,19 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     @Override
     public Page createPage() throws ErrorException {
+        return createPage(null);
+    }
+    
+    private Page createPage(String pageId) {
         Page page = new Page();
         if (pages.isEmpty()) {
             page.id = "home";
         }
         page.storeId = storeId;
+        
+        if (pageId != null) {
+            page.id = pageId;
+        }
 
         databaseSaver.saveObject(page, credentials);
         pages.put(page.id, page);
@@ -54,6 +62,7 @@ public class PageManager extends ManagerBase implements IPageManager {
                 commonPageData = (CommonPageData) obj;
             }
         }
+        createDefaultPages();
     }
 
     @Override
@@ -293,5 +302,16 @@ public class PageManager extends ManagerBase implements IPageManager {
         Page page = getPage(pageId);
         page.getCell(cellId).floatingData = data;
         savePage(page);
+    }
+
+    private void createDefaultPages() {
+        createDefaultPage("productsearch");
+    }
+
+    private void createDefaultPage(String pageId) {
+        Page page = getPage(pageId);
+        if (page == null) {
+            createPage(pageId);
+        } 
     }
 }

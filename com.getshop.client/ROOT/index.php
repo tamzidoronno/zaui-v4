@@ -333,8 +333,3 @@ if (isset($_SESSION['showadmin']) && $_SESSION['showadmin']) {
 <script>
     google.load('visualization', '1.0', {'packages':['corechart']});
 </script>
-<?
-echo "<pre>";
-print_r($factory->getPage()->javapage);
-echo "</pre>";
-?>

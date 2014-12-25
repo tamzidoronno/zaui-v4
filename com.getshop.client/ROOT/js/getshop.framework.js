@@ -66,6 +66,7 @@ thundashop.framework = {
         $(document).on('keyup', '.gstabname', this.updateTabName);
         $(document).on('click', '.gsdonemodifytab', this.hideTabSettings);
         $(document).on('click', '.gstabbtn', this.changeTab);
+        $(document).on('click', '.gsdoneresizing', this.deleteResizing);
 
         /* Cell operations */
         $(document).on('click', '.gsoperatecell', this.operateCell);
@@ -74,6 +75,11 @@ thundashop.framework = {
     activateResizeColumn: function () {
         var cellid = $(this).closest('.gsrow').attr('cellid');
         thundashop.framework.loadResizing($('.gscell[cellid="' + cellid + '"]'), true);
+    },
+    deleteResizing : function() {
+        $(this).closest('.gscell.gsdepth_0').find('.gsresizetable').remove();
+        $(this).closest('.gscell.gsdepth_0').find('.JCLRgrips').remove();
+        $(this).hide();
     },
     closeTabSettings: function () {
         $(this).closest('.tabsettingspanel').fadeOut();
@@ -362,6 +368,7 @@ thundashop.framework = {
             var tablecontainer = $('<div style="padding:5px;"></div>"');
             tablecontainer.append(table);
             cell.children(".gsinner").prepend(table);
+            cell.children(".gsinner").append("<span class='gsdoneresizing'>Done resizing</span>");
 
 
             table.colResizable({

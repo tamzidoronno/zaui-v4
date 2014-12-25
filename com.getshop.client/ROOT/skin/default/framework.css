@@ -1882,3 +1882,4 @@ a img {
     border: solid 1px; border-radius: 2px; padding: 4px; background-color:#FFF; opacity:0.6;  }
 .gscarouseldotseditmode:hover { opacity: 1; }
 .gscarouseldotseditmode i { font-size: 16px !important; }
+.gsdoneresizing { position:absolute; top: 40px; left: 40px; font-size: 16px; border: solid 1px; border-radius: 3px; padding: 10px; background-color:#FFF; cursor:pointer; }

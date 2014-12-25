@@ -598,8 +598,12 @@ class Page {
         echo "</div>";
     }
 
-    public function printCarouselDots($totalcells, $edit, $count, $cellid) {
-        echo "<div class='gscarouseldots'>";
+    public function printCarouselDots($totalcells, $count, $cellid) {
+        $editdots = "";
+        if($this->factory->isEditorMode()) {
+            $editdots = "gscarouseldotseditmode";
+        }
+        echo "<div class='gscarouseldots $editdots'>";
         for ($i = 0; $i < $totalcells; $i++) {
             $activeCirle = "";
             if ($count == $i) {
@@ -609,10 +613,10 @@ class Page {
         }
         if ($this->factory->isEditorMode()) {
             echo "<i class='fa fa-plus addcarouselrow gsoperatecell' type='addrow' target='container' title='Add another slider'></i>";
+            echo "<i class='fa fa-plus-circle gsoperatecell' type='addfloating' title='Add content to slider'></i>";
             echo "<i class='fa fa-cogs carouselsettings' title='Carousel settings' style='cursor:pointer;'></i>";
-            
             echo "<i class='fa fa-warning' title='The carousel is not rotating while logged in as administrator.' style='cursor:pointer;'></i>";
-            echo "<i class='fa fa-plus gsoperatecell' type='addfloating' title='Add content to slider'></i>";
+            echo '<i class="fa fa-image gs_resizing" type="delete" title="Open styling"></i>';
         }
         echo "</div>";
     }
@@ -632,7 +636,7 @@ class Page {
 
         if ($cell->mode == "FLOATING") {
             echo "<i class='fa fa-image gs_resizing' type='delete' title='Open styling'></i> ";
-            echo "<i class='fa fa-trash-o gsoperatecell' type='delete' title='Delete column'></i> ";
+            echo "<i class='fa fa-trash-o gsoperatecell' type='delete' title='Delete area' target='this' cellid='".$cell->cellId."'></i> ";
         } else if ($cell->mode == "ROW") {
             if ($parent && sizeof($parent->cells) > 1 && $parent->mode != "ROTATING" && $parent->cells[0]->cellId != $cell->cellId && !$simple) {
                 echo "<i class='fa fa-arrow-up gsoperatecell' type='moveup' title='Move row up'></i> ";
@@ -790,7 +794,7 @@ class Page {
             $this->addCarouselSettingsPanel();
         }
         if ($parent != null && $parent->mode === "ROTATING") {
-            $this->printCarouselDots($totalcells, $edit, $count, $cell->cellId);
+            $this->printCarouselDots($totalcells, $count, $cell->cellId);
         }
     }
 

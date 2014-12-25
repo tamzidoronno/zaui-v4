@@ -1872,3 +1872,13 @@ a img {
 .gsfloatingbox:hover .gsfloatingheader { opacity: 0.2; }
 .gsfloatingbox:hover .ui-resizable-handle { display:block !important; }
 .gsfloatingbox .gsfloatingheader:hover { opacity: 1; }
+
+.gscarouseldotseditmode {
+    -webkit-transition: opacity .3s ease-in-out;
+        -moz-transition: opacity .3s ease-in-out;
+        -ms-transition: opacity .3s ease-in-out;
+        -o-transition: opacity .3s ease-in-out;
+        transition: opacity .3s ease-in-out;
+    border: solid 1px; border-radius: 2px; padding: 4px; background-color:#FFF; opacity:0.6;  }
+.gscarouseldotseditmode:hover { opacity: 1; }
+.gscarouseldotseditmode i { font-size: 16px !important; }

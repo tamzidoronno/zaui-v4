@@ -335,9 +335,9 @@ thundashop.framework = {
             before = $(this);
         });
 
-        if ($('.gscell[cellid="' + newcellid + '"]').hasClass('gseditrowouter')) {
+//        if ($('.gscell[cellid="' + newcellid + '"]').hasClass('gseditrowouter')) {
             thundashop.framework.setActiveContainerCellId(newcellid, cell.attr('cellid'));
-        }
+//        }
     },
     loadResizing: function (cell, saveonmove) {
         if (cell.find('.range').length > 0) {
@@ -941,6 +941,7 @@ thundashop.framework = {
 PubSub.subscribe('NAVIGATION_COMPLETED', function (a, b) {
     for (var containerid in thundashop.framework.lastRotatedCell) {
         var lastRotatedCell = thundashop.framework.getActiveContainerCellId(containerid);
+        console.log(lastRotatedCell);
         var cell = $('.gscell[cellid="' + lastRotatedCell + '"]');
         var container = cell.closest('.gscontainercell');
         if (container.hasClass('gsrotating')) {

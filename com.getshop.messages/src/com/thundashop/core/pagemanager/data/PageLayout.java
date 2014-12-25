@@ -121,7 +121,9 @@ public class PageLayout implements Serializable {
             }
 
             PageCell newcell = cell.createCell(before);
-//            newcell.type = cell.type;
+            if(cell.isRotating()) {
+                newcell.type = PageCell.CellType.floating;
+            }
             newcell.mode = mode;
             newcell.width = newwidth;
             cellId = newcell.cellId;
@@ -157,7 +159,7 @@ public class PageLayout implements Serializable {
             } else if (cell.cells.size() > 0) {
                 boolean deleted = deleteCellRecusive(cellId, cell.cells);
                 if (deleted) {
-                    if (cell.cells.size() == 1 && !cell.type.equals(PageCell.CellType.floating)) {
+                    if (cell.cells.size() == 1 && !cell.type.equals(PageCell.CellType.floating) && !cell.isRotating()) {
                         String currentMode = cell.mode;
                         cell.extractDataFrom(cell.cells.get(0), true);
                         cell.mode = currentMode;

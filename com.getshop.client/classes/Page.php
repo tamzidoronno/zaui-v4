@@ -277,6 +277,7 @@ class Page {
         if ($this->shouldPrintCellBox($edit, $cell, $parent)) {
             $style = "position:absolute;width:100%; bottom: -1px;";
             echo "<div style='$style' class='gscellbox' cellid='" . $cell->cellId . "'>";
+            echo "<div class='gscellheadermin'><i class='fa fa-external-link-square'></i></div>"; 
             echo "<div class='gscellboxheader'>";
             echo "<span style='float:left;'>" . $this->printEasyModeEdit($cell, $parent, true) . "</span>";
             echo "</div></div>";

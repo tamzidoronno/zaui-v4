@@ -50,10 +50,12 @@ thundashop.framework = {
         $(document).on('click', '.gsclosetabsettings', this.closeTabSettings);
         $(document).on('click', '.gsclosecsseditor', this.closeCssEditor);
         $(document).on('click', '.gsresizecolumn', this.activateResizeColumn);
-        $(document).on('mouseover', '.gseditrowouter', this.showEditIcon);
-        $(document).on('mouseover', '.gscell', this.showCellPanel);
-        $(document).on('mouseover', '.gsrow', this.showEditRowIcons);
+        $(document).on('mouseenter', '.gseditrowouter', this.showEditIcon);
+        $(document).on('mouseenter', '.gscell:not(.gsdepth_0)', this.showCellPanel);
+        $(document).on('mouseenter', '.gsrow', this.showEditRowIcons);
+        $(document).on('mouseenter', '.gscellheadermin', this.showCellBoxHeader);
         $(document).on('mouseout', '.gscell', this.hideEditRowIcons);
+        $(document).on('mouseleave', '.gscell', this.mouseLeftPanel);
         $(document).on('click', '.gseditrowbutton', this.startEditRow);
         $(document).on('click', '.gsdoneeditbutton', this.startEditRow);
         $(document).on('click', '.gs_resizing', this.showCellResizing);
@@ -74,6 +76,19 @@ thundashop.framework = {
         $(document).on('click', '.gsoperatecell', this.operateCell);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
     },
+    
+    showCellBoxHeader: function(event) {
+        var target = $(event.target);
+        target.parent().parent().find('.gscellboxheader').addClass('gsactiveboxheader');
+        $(this).hide();
+    },
+    
+    mouseLeftPanel: function(event) {
+        $('.gscellbox').removeClass('gsactivebox');
+        $('.gsactiveboxheader').removeClass('gsactiveboxheader');
+        $('.gscellheadermin').show();
+    },
+    
     showEditRowIcons: function () {
         if ($(this).closest('.gsarea').attr('area') !== "body") {
             console.log($(this).closest('.gsarea'));
@@ -657,11 +672,12 @@ thundashop.framework = {
                 }
             }
         }
+        
+        
         if (!target.hasClass('gscell')) {
             return;
         }
 
-        $('.gscellbox').removeClass('gsactivebox');
         target.find('.gscellbox').first().addClass('gsactivebox');
     },
     hideCellPanel: function () {

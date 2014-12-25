@@ -10,6 +10,8 @@ namespace ns_9de54ce1_f7a0_4729_b128_b062dc70dcce;
 
         
 class ECommerceSettings extends \ApplicationBase implements \Application {
+    static $currencyCode = false;
+    
     private $storeSettingsInstance;
     
     public function getDescription() {
@@ -37,8 +39,17 @@ class ECommerceSettings extends \ApplicationBase implements \Application {
         return $this->storeSettingsInstance;
     }
     
+    public static function fetchCurrencyCode() {
+        if (!ECommerceSettings::$currencyCode) {
+            $factory = \IocContainer::getFactorySingelton();
+            $settingsApp = new ECommerceSettings();
+            ECommerceSettings::$currencyCode = $settingsApp->getStoreSettingsApp()->getConfigurationSetting("currencycode");
+        }
+        return ECommerceSettings::$currencyCode;
+    }
+    
     public function getCurrencyCode() {
-        return $this->getStoreSettingsApp()->getConfigurationSetting("currencycode");
+        return ECommerceSettings::fetchCurrencyCode();
     }
 
     public function save() {
@@ -48,5 +59,14 @@ class ECommerceSettings extends \ApplicationBase implements \Application {
     public function isCurrency($currency) {
         $selected = $this->getCurrencyCode() == $currency ? "selected='true'" : "";
         echo $selected;
+    }
+    
+    public static function formatPrice($price) {
+        $code = ECommerceSettings::fetchCurrencyCode();
+        if ($code == "NOK") {
+            return "Kr ".number_format((float)$price, 2, '.', '').",-";
+        }
+        
+        echo "Price $".$price;
     }
 }

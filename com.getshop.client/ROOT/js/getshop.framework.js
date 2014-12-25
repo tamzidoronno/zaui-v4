@@ -733,6 +733,7 @@ thundashop.framework = {
         var data = {
             "cellid": cellid,
             "type": type,
+            "mode" : $(this).attr('mode'),
             "area": cellobj.closest('.gsarea').attr('area')
         }
 
@@ -744,6 +745,12 @@ thundashop.framework = {
             }
             data['before'] = cellid;
             data['cellid'] = newcellid;
+        }
+        
+        if (type === "addcolbefore") {
+            data['type'] = "addcolumn";
+            data['before'] = cellid;
+            data['cellid'] = cellid;
         }
 
         if (type === "addafter" || type === "initafter") {

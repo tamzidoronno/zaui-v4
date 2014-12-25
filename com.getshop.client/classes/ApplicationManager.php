@@ -76,8 +76,13 @@ class ApplicationManager extends FactoryBase {
         $cellId = $_POST['data']['cellid'];
         $before = null;
         $area = "";
+        $mode = "ROW";
+        
         if(isset($_POST['data']['area'])) {
             $area = $_POST['data']['area'];
+        }
+        if(isset($_POST['data']['mode'])) {
+            $mode = $_POST['data']['mode'];
         }
         if(isset($_POST['data']['before'])) {
             $before = $_POST['data']['before'];
@@ -95,19 +100,14 @@ class ApplicationManager extends FactoryBase {
                 break;
             case "addbefore":
             case "addafter":
-                $cellId = $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "ROW", $area);
-                $_GET['gseditcell'] = $cellId;
-                break;
-            case "initbefore":
-            case "initafter":
-                $cellId = $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "INIT", $area);
+                $cellId = $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, $mode, $area);
                 $_GET['gseditcell'] = $cellId;
                 break;
             case "addcolumn":
                 $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "COLUMN", $area);
                 break;
             case "addrow":
-                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "ROW", $area);
+                $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, $mode, $area);
                 break;
             case "setcarouselmode":
                 $this->getApi()->getPageManager()->setCellMode($this->getPage()->javapage->id, $cellId, "ROTATING");

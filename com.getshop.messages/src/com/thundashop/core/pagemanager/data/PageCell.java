@@ -47,12 +47,19 @@ public class PageCell implements Serializable {
             cells.add(newcell);
         } else {
             ArrayList newList = new ArrayList();
+            boolean added = false;
             for (PageCell cell : cells) {
                 if (cell.cellId.equals(before)) {
+                    added = true;
                     newList.add(newcell);
                 }
                 newList.add(cell);
             }
+            
+            if(!added) {
+                newList.add(0, newcell);
+            }
+            
             cells = newList;
         }
         return newcell;

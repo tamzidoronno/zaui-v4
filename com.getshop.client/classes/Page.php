@@ -183,7 +183,7 @@ class Page {
         $width = 100;
         $isColumn = false;
         $additionalinfo = "";
-        
+
         if ($cell->mode == "ROTATING") {
             $additionalinfo = "height='" . $cell->carouselConfig->height . "' timer='" . $cell->carouselConfig->time . "' type='" . $cell->carouselConfig->type . "'";
             $styles .= "height: " . $cell->carouselConfig->height . "px;";
@@ -258,17 +258,17 @@ class Page {
             }
         }
         echo "<div $innerstyles class='$gscellinner gsuicell gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
-        
+
         if (!$edit && sizeof($cell->cells) == 0 && $cell->mode != "INIT" && $this->factory->isEditorMode()) {
             $style = "position:absolute;width:100%; bottom: -1px;";
 //            $style .= " width:" . $floatData->width . "px;height: " . $floatData->height . "px;top: " . $floatData->top . "px;left:" . $floatData->left . "px";
             echo "<div style='$style' class='gsfloatingbox' cellid='" . $cell->cellId . "'>";
             echo "<div class='gsfloatingheader'>";
-            echo "<span style='float:left;'>". $this->printEasyModeEdit($cell, $parent, true) . "</span>";
+            echo "<span style='float:left;'>" . $this->printEasyModeEdit($cell, $parent, true) . "</span>";
 
             echo "</div></div>";
         }
-        
+
         $this->printCellContent($cell, $parent, $edit, $totalcells, $count, $depth);
 
         echo "</div>";
@@ -604,14 +604,14 @@ class Page {
     }
 
     public function printEasyModeEdit($cell, $parent, $simple = false) {
-        
+
         if (sizeof($cell->cells) > 0) {
             return;
         }
-        
+
         $leftClass = "";
         $rightClass = "";
-        if($simple) {
+        if ($simple) {
             $leftClass = "gsleftheading";
             $rightClass = "gsrightheading";
         }
@@ -620,23 +620,23 @@ class Page {
             echo "<i class='fa fa-image gs_resizing' type='delete' title='Open styling'></i> ";
             echo "<i class='fa fa-trash-o gsoperatecell' type='delete' title='Delete column'></i> ";
         } else if ($cell->mode == "ROW") {
-            if($parent && sizeof($parent->cells) > 1 && $parent->mode != "ROTATING" && $parent->cells[0]->cellId != $cell->cellId  && !$simple) {
+            if ($parent && sizeof($parent->cells) > 1 && $parent->mode != "ROTATING" && $parent->cells[0]->cellId != $cell->cellId && !$simple) {
                 echo "<i class='fa fa-arrow-up gsoperatecell' type='moveup' title='Move row up'></i> ";
             }
             echo "<i class='fa fa-plus gsoperatecell $leftClass' type='addcolbefore' mode='COLUMN' title='Insert column to the left'></i> ";
             echo "<i class='fa fa-image gs_resizing' type='delete' title='Open styling'></i> ";
             echo "<i class='fa fa-trash-o gsoperatecell' type='delete' title='Delete row'></i> ";
             echo "<i class='fa fa-plus gsoperatecell $rightClass' type='addcolumn' title='Insert column to the right'></i> ";
-            if($parent && (sizeof($parent->cells) > 1) && $parent->mode != "ROTATING" && $parent->cells[sizeof($parent->cells)-1]->cellId != $cell->cellId  && !$simple) {
+            if ($parent && (sizeof($parent->cells) > 1) && $parent->mode != "ROTATING" && $parent->cells[sizeof($parent->cells) - 1]->cellId != $cell->cellId && !$simple) {
                 echo "<i class='fa fa-arrow-down gsoperatecell' type='movedown' title='Move row down'></i> ";
             }
         } else {
-            if($parent != null && $parent->cells[0]->cellId != $cell->cellId && !$simple) {
+            if ($parent != null && $parent->cells[0]->cellId != $cell->cellId && !$simple) {
                 echo "<i class='fa fa-arrow-left gsoperatecell' type='moveup' title='Move column to the left'></i> ";
             }
             echo "<i class='fa fa-plus gsoperatecell $leftClass' type='addbefore' title='Insert column to the left'></i> ";
             echo "<i class='fa fa-image gs_resizing' type='delete' title='Open styling'></i> ";
-            if($parent != null && $parent->cells[sizeof($parent->cells)-1]->cellId != $cell->cellId && !$simple) {
+            if ($parent != null && $parent->cells[sizeof($parent->cells) - 1]->cellId != $cell->cellId && !$simple) {
                 echo "<i class='fa fa-arrow-down gsoperatecell' type='addrow' title='Insert row'></i> ";
             }
             echo "<i class='fa fa-trash-o gsoperatecell' type='delete' title='Delete column'></i> ";
@@ -644,7 +644,7 @@ class Page {
                 echo "<i class='fa fa-arrows-h gsresizecolumn' title='Resize column'></i> ";
             }
             echo "<i class='fa fa-plus gsoperatecell $rightClass' type='addafter'  title='Insert column to the right'></i> ";
-            if($parent != null && $parent->cells[sizeof($parent->cells)-1]->cellId != $cell->cellId && !$simple) {
+            if ($parent != null && $parent->cells[sizeof($parent->cells) - 1]->cellId != $cell->cellId && !$simple) {
                 echo "<i class='fa fa-arrow-right gsoperatecell' type='movedown' title='Move column to the right'></i> ";
             }
         }
@@ -700,8 +700,11 @@ class Page {
     }
 
     public function printCellContent($cell, $parent, $edit, $totalcells, $count, $depth) {
+        echo "<span class='gscellsettings'>";
+        echo "<i class='fa fa-cogs'  title='Cell settings' style='cursor:pointer;'></i>";
+        echo "</span>";
 
-        if($cell->mode == "INIT") {
+        if ($cell->mode == "INIT") {
             echo "<div class='gsinitrow'>";
             echo "<div class='gsselectcelltype'>Select a type for this row</div>";
             echo "<span class='gsmodeselectbox gsoperatecell' type='setnormalmode'>";
@@ -720,7 +723,7 @@ class Page {
             return;
         }
 
-        
+
         if ($cell->mode == "TAB") {
             $this->addTabPanel();
         }
@@ -775,8 +778,6 @@ class Page {
         if ($parent != null && $parent->mode === "ROTATING") {
             $this->printCarouselDots($totalcells, $edit, $count, $cell->cellId);
         }
-
-        
     }
 
 }

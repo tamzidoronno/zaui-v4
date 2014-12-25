@@ -23,7 +23,6 @@
 .gscellsettingsheading { border-bottom: solid 1px rgba(0,0,0,0.2); margin-bottom: 5px; margin-top: 5px !important; font-weight: bold; margin-top:10px; padding-left: 10px !important; color:#a9a9a9; }
 .gsclosecsseditor { cursor:pointer; position:absolute; right:3px; top: 0px; color:#fff;z-index:2; }
 
-.gsaddcontent:hover { border: solid 1px rgba(0,0,0,0.1); }
 .gsresizetable { position: absolute; height: 0px !important; }
 .gseditrowouter:hover .gsaddcontent { border: solid 1px rgba(0,0,0,0);}
 .gsrotating .gsrotatingrow { opacity:0; position:absolute !important; width:100%; }
@@ -1823,12 +1822,28 @@ a img {
 .gseditrowseperator { position:relative; }
 .gseditrowseperatorinnertop { padding-top: 5px; position: absolute; top:-31px; border: solid 1px #666666; height: 25px; width:100%; background-color:#bbb;z-index:5; text-align: center; }
 .gseditrowseperatorinnerbottom { position: absolute; top:1px; border: solid 1px #666666; height: 5px; width:100%; background-color:#bbb;z-index:5; }
-.gsfloatingbox { border: solid 3px rgba(0,0,0,0); display:inline-block;  border-radius: 3px; }
-.gsfloatingbox .gsfloatingheader { opacity: 0; text-align: center; background-color:#000; color:#FFF; cursor:pointer; position:absolute; z-index: 10; width: 100%; top: -19px; border-top-left-radius: 3px; border-top-right-radius: 3px; }
+.gsfloatingbox { 
+    -webkit-transition: opacity .5s ease-in-out;
+        -moz-transition: opacity .5s ease-in-out;
+        -ms-transition: opacity .5s ease-in-out;
+        -o-transition: opacity .5s ease-in-out;
+        transition: opacity .5s ease-in-out;
+    border: solid 1px rgba(0,0,0,0.85); display:inline-block; opacity:0; }
+.gsfloatingbox .gsfloatingheader {
+    -webkit-transition: opacity .5s ease-in-out;
+        -moz-transition: opacity .5s ease-in-out;
+        -ms-transition: opacity .5s ease-in-out;
+        -o-transition: opacity .5s ease-in-out;
+        transition: opacity .5s ease-in-out;
+    border: solid 1px rgba(0,0,0,0.7); opacity: 0; text-align: center; background-color:#000; color:#FFF; position:absolute; z-index: 10; width: 100%; top: -16px; border-top-left-radius: 3px; border-top-right-radius: 3px; }
 .gsfloatingbox .ui-resizable-handle { display:none !important; }
-.gsfloatingbox:hover { border: solid 3px rgba(0,0,0,0.2); }
-.gsfloatingbox:hover .gsfloatingheader { opacity: 0.2; }
-.gsfloatingbox:hover .ui-resizable-handle { display:block !important; }
+.gsfloatingbox.gsactivebox { opacity: 0.7; 
+
+}
+.gsfloatingbox.gsactivebox .gsfloatingheader { opacity: 0.85; }
+.gsleftheading { position:absolute; left: 3px; top: 1px; }
+.gsrightheading { position:absolute; right: 3px; top: 1px; }
+
 .gsinitrow { text-align: center; }
 .gsmodeselectbox i {display:block; }
 .gsmodeselectbox { border: solid 1px #3a99d7; padding: 10px; display:inline-block; border-radius: 3px; margin: 10px; cursor:pointer; }

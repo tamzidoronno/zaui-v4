@@ -65,18 +65,14 @@ class Page {
         }
 
         if ($this->factory->isEditorMode()) {
+            $this->displayResizing();
             $this->printApplicationAddCellRow();
-        }
-
-        if ($editedCellid != null) {
             $this->addCellConfigPanel();
             $this->addCellResizingPanel();
-            $this->displayResizing();
             $this->printEditingInfo($editingHeader);
-            ?>
-            <script type="text/javascript" src="/js/colresize.js"></script>
-            <?
-        } else {
+        }
+
+        if ($editedCellid == null) {
             echo "<script>$('.gsiseditingprepend').remove();</script>";
         }
     }
@@ -241,11 +237,6 @@ class Page {
             $marginsclasses .= " gs_margin_left";
         }
 
-        if ($cell->mode == "FLOATING") {
-            $style = "position:absolute; width:" . $floatData->width . "px;height: " . $floatData->height . "px;top: " . $floatData->top . "px;left:" . $floatData->left . "px";
-
-            echo "<div style='$style' class='gsfloatingbox' cellid='" . $cell->cellId . "'><div class='gsfloatingheader'>Content</div>";
-        }
 
         echo "<div $additionalinfo $styles width='$width' class='gsucell $gscell $gsrotatingrow $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "'>";
         if ($parent != null && $parent->mode === "ROTATING") {
@@ -264,13 +255,22 @@ class Page {
         }
         echo "<div $innerstyles class='$gscellinner gsuicell gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
         
+        if (!$edit && sizeof($cell->cells) == 0 && $cell->mode != "INIT") {
+            $style = "position:absolute;width:100%; height:99%;";
+//            $style .= " width:" . $floatData->width . "px;height: " . $floatData->height . "px;top: " . $floatData->top . "px;left:" . $floatData->left . "px";
+            echo "<div style='$style' class='gsfloatingbox' cellid='" . $cell->cellId . "'>";
+            echo "<div class='gsfloatingheader'>";
+            echo "<span style='float:left;'>". $this->printEasyModeEdit($cell, $parent, true) . "</span>";
+
+            echo "</div></div>";
+        }
+        
         $this->printCellContent($cell, $parent, $edit, $totalcells, $count, $depth);
 
         echo "</div>";
         echo "</div>";
 
         if ($cell->mode === "FLOATING") {
-            echo "</div>";
             //End of floatingbox.
             $this->makeDraggable($cell);
         }
@@ -599,52 +599,47 @@ class Page {
         echo "</div>";
     }
 
-    public function printEasyModeEdit($cell, $parent) {
+    public function printEasyModeEdit($cell, $parent, $heading = false) {
         
         if (sizeof($cell->cells) > 0) {
             return;
         }
+        
+        $leftClass = "";
+        $rightClass = "";
+        if($heading) {
+            $leftClass = "gsleftheading";
+            $rightClass = "gsrightheading";
+        }
 
         if ($cell->mode == "FLOATING") {
-            echo "<div class='gseasymode' cellid='" . $cell->cellId . "'>";
-            echo "<div class='gseasymodeinner'>";
-            echo "<i class='fa fa-image gs_resizing' type='delete' target='gseasymode' title='Open styling'></i> ";
-            echo "<i class='fa fa-trash-o gsoperatecell' type='delete' target='gseasymode' title='Delete column'></i> ";
-            echo "</div></div>";
-            return;
+            echo "<i class='fa fa-image gs_resizing' type='delete' title='Open styling'></i> ";
+            echo "<i class='fa fa-trash-o gsoperatecell' type='delete' title='Delete column'></i> ";
         } else if ($cell->mode == "ROW") {
-            echo "<div class='gseasymode' cellid='" . $cell->cellId . "'>";
-            echo "<div class='gseasymodeinner'>";
-            if($parent && sizeof($parent->cells) > 1 && $parent->mode != "ROTATING" && $parent->cells[0]->cellId != $cell->cellId) {
-                echo "<i class='fa fa-arrow-up gsoperatecell' type='moveup' target='gseasymode' title='Move row up'></i> ";
+            if($parent && sizeof($parent->cells) > 1 && $parent->mode != "ROTATING" && $parent->cells[0]->cellId != $cell->cellId  && !$heading) {
+                echo "<i class='fa fa-arrow-up gsoperatecell' type='moveup' title='Move row up'></i> ";
             }
-            echo "<i class='fa fa-image gs_resizing' type='delete' target='gseasymode' title='Open styling'></i> ";
-            echo "<i class='fa fa-arrows-h gsoperatecell' type='addcolumn' target='gseasymode' title='Insert column'></i> ";
-            echo "<i class='fa fa-trash-o gsoperatecell' type='delete' target='gseasymode' title='Delete row'></i> ";
-            if($parent && (sizeof($parent->cells) > 1) && $parent->mode != "ROTATING" && $parent->cells[sizeof($parent->cells)-1]->cellId != $cell->cellId) {
-                echo "<i class='fa fa-arrow-down gsoperatecell' type='movedown' target='gseasymode' title='Move row down'></i> ";
+            echo "<i class='fa fa-image gs_resizing' type='delete' title='Open styling'></i> ";
+            echo "<i class='fa fa-arrows-h gsoperatecell' type='addcolumn' title='Insert column'></i> ";
+            echo "<i class='fa fa-trash-o gsoperatecell' type='delete' title='Delete row'></i> ";
+            if($parent && (sizeof($parent->cells) > 1) && $parent->mode != "ROTATING" && $parent->cells[sizeof($parent->cells)-1]->cellId != $cell->cellId  && !$heading) {
+                echo "<i class='fa fa-arrow-down gsoperatecell' type='movedown' title='Move row down'></i> ";
             }
-            echo "</div></div>";
-            return;
+        } else {
+            if($parent != null && $parent->cells[0]->cellId != $cell->cellId && !$heading) {
+                echo "<i class='fa fa-arrow-left gsoperatecell' type='moveup' title='Move column to the left'></i> ";
+            }
+            echo "<i class='fa fa-plus gsoperatecell $leftClass' type='addbefore' title='Insert column to the left'></i> ";
+            echo "<i class='fa fa-image gs_resizing' type='delete' title='Open styling'></i> ";
+            echo "<i class='fa fa-trash-o gsoperatecell' type='delete' title='Delete column'></i> ";
+            if ($cell->mode == "COLUMN") {
+                echo "<i class='fa fa-arrows-h gsresizecolumn' title='Resize column'></i> ";
+            }
+            echo "<i class='fa fa-plus gsoperatecell $rightClass' type='addafter'  title='Insert column to the right'></i> ";
+            if($parent != null && $parent->cells[sizeof($parent->cells)-1]->cellId != $cell->cellId && !$heading) {
+                echo "<i class='fa fa-arrow-right gsoperatecell' type='movedown' title='Move column to the right'></i> ";
+            }
         }
-
-        echo "<div class='gseasymode gsframeworkstandard' cellid='" . $cell->cellId . "'>";
-        echo "<div class='gseasymodeinner'>";
-        if($parent != null && $parent->cells[0]->cellId != $cell->cellId) {
-            echo "<i class='fa fa-arrow-left gsoperatecell' type='moveup' target='gseasymode' title='Move column to the left'></i> ";
-        }
-        echo "<i class='fa fa-plus gsoperatecell' type='addbefore' target='gseasymode'  title='Insert column to the left'></i> ";
-        echo "<i class='fa fa-image gs_resizing' type='delete' target='gseasymode' title='Open styling'></i> ";
-        echo "<i class='fa fa-trash-o gsoperatecell' type='delete' target='gseasymode' title='Delete column'></i> ";
-        if ($cell->mode == "COLUMN") {
-            echo "<i class='fa fa-arrows-h gsresizecolumn' title='Resize column'></i> ";
-        }
-        echo "<i class='fa fa-plus gsoperatecell' type='addafter' target='gseasymode'  title='Insert column to the right'></i> ";
-        if($parent != null && $parent->cells[sizeof($parent->cells)-1]->cellId != $cell->cellId) {
-            echo "<i class='fa fa-arrow-right gsoperatecell' type='movedown' target='gseasymode' title='Move column to the right'></i> ";
-        }
-        echo "</div>";
-        echo "</div>";
     }
 
     public function printEasyRowMode($row) {
@@ -728,7 +723,11 @@ class Page {
 
 
         if ($edit) {
+            echo "<div class='gseasymode' cellid='" . $cell->cellId . "'>";
+            echo "<div class='gseasymodeinner'>";
             $this->printEasyModeEdit($cell, $parent);
+            echo "</div>";
+            echo "</div>";
         }
 
         if (sizeof($cell->cells) > 0) {

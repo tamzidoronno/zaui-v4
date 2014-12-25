@@ -50,10 +50,10 @@ thundashop.framework = {
         $(document).on('click', '.gsclosetabsettings', this.closeTabSettings);
         $(document).on('click', '.gsclosecsseditor', this.closeCssEditor);
         $(document).on('click', '.gsresizecolumn', this.activateResizeColumn);
-        $(document).on('mouseenter', '.gseditrowouter', this.showEditIcon);
-        $(document).on('mouseenter', '.gscell:not(.gsdepth_0)', this.showCellPanel);
-        $(document).on('mouseenter', '.gsrow', this.showEditRowIcons);
-        $(document).on('mouseenter', '.gscellheadermin', this.showCellBoxHeader);
+        $(document).on('mouseover', '.gseditrowouter', this.showEditIcon);
+        $(document).on('mouseover', '.gscell', this.showCellPanel);
+        $(document).on('mouseover', '.gsrow', this.showEditRowIcons);
+        $(document).on('mouseover', '.gscellheadermin', this.showCellBoxHeader);
         $(document).on('mouseout', '.gscell', this.hideEditRowIcons);
         $(document).on('mouseleave', '.gscell', this.mouseLeftPanel);
         $(document).on('click', '.gseditrowbutton', this.startEditRow);
@@ -84,7 +84,6 @@ thundashop.framework = {
     },
     
     mouseLeftPanel: function(event) {
-        $('.gscellbox').removeClass('gsactivebox');
         $('.gsactiveboxheader').removeClass('gsactiveboxheader');
         $('.gscellheadermin').show();
     },
@@ -678,6 +677,7 @@ thundashop.framework = {
             return;
         }
 
+        $('.gscellbox').removeClass('gsactivebox');
         target.find('.gscellbox').first().addClass('gsactivebox');
     },
     hideCellPanel: function () {

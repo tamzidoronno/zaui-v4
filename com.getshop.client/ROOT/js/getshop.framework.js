@@ -629,11 +629,11 @@ thundashop.framework = {
             return;
         }
          
-        $('.gsfloatingbox').removeClass('gsactivebox');
-        target.find('.gsfloatingbox').first().addClass('gsactivebox');
+        $('.gscellbox').removeClass('gsactivebox');
+        target.find('.gscellbox').first().addClass('gsactivebox');
     },
     hideCellPanel : function() {
-        $('.gsfloatingbox').removeClass('gsactivebox');        
+        $('.gscellbox').removeClass('gsactivebox');        
     },
     showEditIcon: function (event) {
         var target = $(event.target);
@@ -714,7 +714,11 @@ thundashop.framework = {
             target = $(this).attr('target');
         }
 
-        var cellid = thundashop.framework.findCellId(target);
+        if(target === "this") {
+            cellid = $(this).attr('cellid');
+        } else {
+            var cellid = thundashop.framework.findCellId(target);
+        }
         var cellobj = thundashop.framework.findCell(cellid);
 
 

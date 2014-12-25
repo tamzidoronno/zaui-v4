@@ -237,7 +237,15 @@ class Page {
             $marginsclasses .= " gs_margin_left";
         }
 
+        if ($cell->mode == "FLOATING") {
+            $style = "position:absolute;width:" . $floatData->width . "px;height: " . $floatData->height . "px;top: " . $floatData->top . "px;left:" . $floatData->left . "px";
+            echo "<div style='$style' class='gsfloatingbox' cellid='" . $cell->cellId . "'>";
+            echo "<div class='gsfloatingheader'>";
+            echo "<span style='float:left;'>" . $this->printEasyModeEdit($cell, $parent, true) . "</span>";
+            echo "</div>";
+        }
 
+        
         echo "<div $additionalinfo $styles width='$width' class='gsucell $gscell $gsrotatingrow $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "'>";
         if ($parent != null && $parent->mode === "ROTATING") {
             if ($count > 0) {
@@ -255,17 +263,22 @@ class Page {
                 echo "<i title='" . $this->factory->__f("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o'></i>";
                 echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addafter' mode='INIT'></i>";
                 echo "</span>";
+            } else if($parent && $parent->mode == "ROTATING") {
+                echo "<span class='gseditrowbuttons'>";
+                echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addbefore' mode='INIT'></i>";
+                echo "<i title='" . $this->factory->__f("Delete carousel") . "' class='fa gsoperatecell fa-trash-o' type='delete' target='container'></i>";
+                echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addafter' mode='INIT'></i>";
+                echo "</span>";
+                
             }
         }
         echo "<div $innerstyles class='$gscellinner gsuicell gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
 
-        if (!$edit && sizeof($cell->cells) == 0 && $cell->mode != "INIT" && $this->factory->isEditorMode()) {
+        if ($this->shouldPrintCellBox($edit, $cell, $parent)) {
             $style = "position:absolute;width:100%; bottom: -1px;";
-//            $style .= " width:" . $floatData->width . "px;height: " . $floatData->height . "px;top: " . $floatData->top . "px;left:" . $floatData->left . "px";
-            echo "<div style='$style' class='gsfloatingbox' cellid='" . $cell->cellId . "'>";
-            echo "<div class='gsfloatingheader'>";
+            echo "<div style='$style' class='gscellbox' cellid='" . $cell->cellId . "'>";
+            echo "<div class='gscellboxheader'>";
             echo "<span style='float:left;'>" . $this->printEasyModeEdit($cell, $parent, true) . "</span>";
-
             echo "</div></div>";
         }
 
@@ -276,6 +289,7 @@ class Page {
 
         if ($cell->mode === "FLOATING") {
             //End of floatingbox.
+            echo "</div>";
             $this->makeDraggable($cell);
         }
     }
@@ -318,6 +332,7 @@ class Page {
 
                 <div class='gsoperatecell' subtype='carousel' type='setcarouselmode'><i class='fa fa-sitemap'></i><? echo $this->factory->__w("Change to carousel mode"); ?></div>
                 <div class='gsoperatecell' subtype='tab' type='settabmode'><i class='fa fa-ellipsis-h'></i><? echo $this->factory->__w("Change to tab mode"); ?></div>
+                <div class='gsoperatecell' subtype='row' type='setrowmode'><i class='fa fa-ellipsis-h'></i><? echo $this->factory->__w("Change to row mode"); ?></div>
             </div>
         </span>
         <script>$('.gscellsettingspanel').draggable();</script>
@@ -592,11 +607,10 @@ class Page {
             }
             echo "<i class='fa fa-circle gscarouseldot $activeCirle' cellid='$cellid'></i>";
         }
-        if ($this->factory->isEditorMode() && $edit) {
+        if ($this->factory->isEditorMode()) {
             echo "<i class='fa fa-plus addcarouselrow gsoperatecell' type='addrow' target='container' title='Add another slider'></i>";
             echo "<i class='fa fa-cogs carouselsettings' title='Carousel settings' style='cursor:pointer;'></i>";
-        }
-        if ($this->factory->isEditorMode()) {
+            
             echo "<i class='fa fa-warning' title='The carousel is not rotating while logged in as administrator.' style='cursor:pointer;'></i>";
             echo "<i class='fa fa-plus gsoperatecell' type='addfloating' title='Add content to slider'></i>";
         }
@@ -778,6 +792,16 @@ class Page {
         if ($parent != null && $parent->mode === "ROTATING") {
             $this->printCarouselDots($totalcells, $edit, $count, $cell->cellId);
         }
+    }
+
+    public function shouldPrintCellBox($edit, $cell, $parent) {
+        if($parent && $parent->mode == "ROTATING") {
+            return false;
+        }
+        
+        $result = !$edit && sizeof($cell->cells) == 0 && $cell->mode != "INIT" && $cell->mode != "FLOATING" && $this->factory->isEditorMode();
+        
+        return $result;
     }
 
 }

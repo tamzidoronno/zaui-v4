@@ -1,0 +1,14 @@
+<?
+/* @var $this \ns_2ff5d77f_4d47_4fbf_8186_c7fbc33cb478\ProductSearch */
+$searchWord = ""; 
+
+if (isset($_POST['data']['searchWord'])) {
+    $searchWord = $_POST['data']['searchWord'];
+}
+if (isset($_GET['searchWord'])) {
+    $searchWord = $_GET['searchWord'];
+}
+?>
+<div class="searchField">
+    <input type="textfield" placeholder="<? echo $this->__f("Search for products"); ?>" value="<? echo $searchWord; ?>"><i class='fa fa-search'></i>
+</div>

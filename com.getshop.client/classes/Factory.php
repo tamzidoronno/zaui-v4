@@ -305,6 +305,7 @@ class Factory extends FactoryBase {
 
         
         $javaPage = $this->pageManager->getPage($pageId);
+        
         if ($javaPage == null) {
             $javaPage = $this->pageManager->getPage($homePageId);
         }

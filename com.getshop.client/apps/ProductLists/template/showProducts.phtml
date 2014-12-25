@@ -9,57 +9,65 @@ $view = $this->isRowView() ? "row_view" : $view;
 <div class="products <? echo $view; ?>"  listid="<? echo $this->getConfigurationSetting("productlist"); ?>">
     <?
     $products = $this->getAllProducts();
-    if (!count($products)) {
-        echo "<div class='no_products_added_to_list'><i class='fa fa-warning'></i> ".$this->__f("There is no products added to this list, manage your productlists from the settings.")."</div>";
-        return;
+    
+    if (!count($products) && $this->isSearchResultList()) {
+        
+        $this->includefile("nosearchresult");
     }
-    $i = 0;
-    $j = 0;
-    foreach ($products as $product) {
-        $i++;
-        $j++;
-        $linkName = \GetShopHelper::makeSeoUrl($product->name);
-        $pageId = $product->pageId;
-        $imageId = isset($product->imagesAdded[0]) ? $product->imagesAdded[0] : "";
-        
-        if (!$imageId) {
-            $image = '<div class="image"><i class="fa fa-image"></i></div>';
-        } else {
-            $image = '<div class="image"><img src="/displayImage.php?id='.$imageId.'&width=200"/></div>';
-        }
-        ?>
-            <div class='productbox_outer'>
-                <div class='productbox'>
-                <a ajaxlink='/?page=<? echo $pageId; ?>' href='<? echo $linkName;?>'>
-                    <div class="product_row">
-                        <?
-                        if ($this->isRowView()) {
-                            echo $image;
-                        }
-                        ?>
-                        <div class="content">
-                            <div class="product_title"><? echo $product->name; ?></div>
+    
+    if (!count($products) && !$this->isSearchResultList()) {
+        echo "<div class='no_products_added_to_list'><i class='fa fa-warning'></i> ".$this->__f("There is no products added to this list, manage your productlists from the settings.")."</div>";
+    }
+    
+    if (count($products)) {
+        $i = 0;
+        $j = 0;
+        foreach ($products as $product) {
+            $i++;
+            $j++;
+            $linkName = \GetShopHelper::makeSeoUrl($product->name);
+            $pageId = $product->pageId;
+            $imageId = isset($product->imagesAdded[0]) ? $product->imagesAdded[0] : "";
+
+            if (!$imageId) {
+                $image = '<div class="image"><i class="fa fa-image"></i></div>';
+            } else {
+                $image = '<div class="image"><img src="/displayImage.php?id='.$imageId.'&width=200"/></div>';
+            }
+            ?>
+                <div class='productbox_outer'>
+                    <div class='productbox'>
+                    <a ajaxlink='/?page=<? echo $pageId; ?>' href='<? echo $linkName;?>'>
+                        <div class="product_row">
                             <?
-                                if ($this->isGridView()) {
-                                    echo $image;
-                                }
+                            if ($this->isRowView()) {
+                                echo $image;
+                            }
                             ?>
-                            <div class="short_description"><? echo nl2br($product->shortDescription); ?></div>
+                            <div class="content">
+                                <div class="product_title"><? echo $product->name; ?></div>
+                                <?
+                                    if ($this->isGridView()) {
+                                        echo $image;
+                                    }
+                                ?>
+                                <div class="short_description"><? echo nl2br($product->shortDescription); ?></div>
+                            </div>
                         </div>
+                    </a>
+                    <div class="product_price" ><? echo $this->__f("Price")." ".$this->getCurrency().$product->price; ?></div>
+                    <div class="webshop_button_area">
+                        <div class="webshop_button addProductToCart" productId='<? echo $product->id; ?>'><? echo $this->__f("Add to cart"); ?></div>
                     </div>
-                </a>
-                <div class="product_price" ><? echo $this->__f("Price")." ".$this->getCurrency().$product->price; ?></div>
-                <div class="webshop_button_area">
-                    <div class="webshop_button addProductToCart" productId='<? echo $product->id; ?>'><? echo $this->__f("Add to cart"); ?></div>
+
+                    </div>
                 </div>
-                
-                </div>
-            </div>
-        <?
-        
-        if ($i == $columnSize && count($products) != $j) {
-            $i = 0;
-            echo "<div class='product_line_seperator'></div>";
+            <?
+
+            if ($i == $columnSize && count($products) != $j) {
+                $i = 0;
+                echo "<div class='product_line_seperator'></div>";
+            }
         }
     }
     ?>

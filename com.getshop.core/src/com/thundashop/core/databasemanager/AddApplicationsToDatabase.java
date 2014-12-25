@@ -53,80 +53,16 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        Application dashBoard = createSettings("DashBoard",
-                "b81bfb16-8066-4bea-a3c6-c155fa7119f8",
-                allowed,
-                "",
-                Application.Type.Marketing, true);
-        dashBoard.isSingleton = true;
-        dashBoard.isPublic = true;
-        dashBoard.defaultActivate = true;
-        apps.add(dashBoard);
-
-        Application menu = createSettings("Menu",
-                "a11ac190-4f9a-11e3-8f96-0800200c9a66",
+        Application productSearch = createSettings("ProductSearch",
+                "2ff5d77f-4d47-4fbf-8186-c7fbc33cb478",
                 allowed2,
                 "",
-                Application.Type.Webshop, true);
-        menu.isSingleton = true;
-        menu.isPublic = true;
-        apps.add(menu);
+                Application.Type.Webshop, false);
+        productSearch.isPublic = true;
+        productSearch.moduleId = "WebShop";
+        productSearch.activeAppOnModuleActivation = true;
+        apps.add(productSearch);
 
-        Application products = createSettings("Products",
-                "e073a75a-87c9-4d92-a73a-bc54feb7317f",
-                allowed2,
-                "",
-                Application.Type.Webshop, true);
-        products.isSingleton = true;
-        products.isPublic = true;
-        products.moduleId = "WebShop";
-        products.activeAppOnModuleActivation = true;
-        apps.add(products);
-
-        Application applicationSelector = createSettings("ApplicationSelector",
-                "f1fc4af3-656e-4294-a268-40d2a82d0aa1",
-                allowed2,
-                "",
-                Application.Type.System, true);
-        applicationSelector.isSingleton = true;
-        applicationSelector.isPublic = true;
-        applicationSelector.defaultActivate = true;
-        apps.add(applicationSelector);
-
-        Application yellowCandyTheme = createSettings("YellowCandyTheme",
-                "efe5640f-64fe-4053-a0de-508349465cdc",
-                allowed2,
-                "",
-                Application.Type.Theme, true);
-        yellowCandyTheme.isPublic = true;
-        apps.add(yellowCandyTheme);
-
-        Application pcstoretheme = createSettings("PcStoreTheme",
-                "e70c1a0a-fc3d-4ffe-817f-f09dc679199f",
-                allowed2,
-                "",
-                Application.Type.Theme, true);
-        pcstoretheme.isPublic = true;
-        apps.add(pcstoretheme);
-
-        Application productLists = createSettings("ProductLists",
-                "f245b8ae-f3ba-454e-beb4-ecff5ec328d6",
-                allowed2,
-                "",
-                Application.Type.Webshop, true);
-        productLists.isPublic = true;
-        productLists.activeAppOnModuleActivation = true;
-        apps.add(productLists);
-
-        Application ecomerceSettings = createSettings("ECommerceSettings",
-                "9de54ce1-f7a0-4729-b128-b062dc70dcce",
-                new ArrayList(),
-                "",
-                Application.Type.Webshop, true);
-        ecomerceSettings.isPublic = true;
-        ecomerceSettings.moduleId = "WebShop";
-        ecomerceSettings.activeAppOnModuleActivation = true;
-        apps.add(ecomerceSettings);
 
 //        ApplicationSettings sedoxMenu = createSettings(
 //                "SedoxMenu",
@@ -227,7 +163,7 @@ public class AddApplicationsToDatabase {
         context.getBean(AddApplicationsToDatabase.class).insert();
         context.getBean(AddApplicationsToDatabase.class).showLinks();
 
-        if (args == null) {
+        if (args == null || args.length == 0) {
             java.lang.System.exit(1);
         }
     }

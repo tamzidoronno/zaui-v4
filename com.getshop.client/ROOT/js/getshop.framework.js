@@ -267,7 +267,7 @@ thundashop.framework = {
         $(this).closest('.gscontainercell').attr('timer')
         $(this).closest('.gscontainercell').attr('timertype')
 
-        $('.carouselsettingspanel').fadeIn();
+        panel.fadeIn();
     },
     hideTabSettings: function () {
         $('.tabsettingspanel').fadeOut();

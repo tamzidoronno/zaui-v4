@@ -263,7 +263,7 @@ class Page {
                 echo "<i title='" . $this->factory->__f("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o'></i>";
                 echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addafter' mode='INIT'></i>";
                 echo "</span>";
-            } else if($parent && $parent->mode == "ROTATING") {
+            } else if($parent && $parent->mode == "ROTATING" || $parent->mode == "TAB") {
                 echo "<span class='gseditrowbuttons'>";
                 echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addbefore' mode='INIT'></i>";
                 echo "<i title='" . $this->factory->__f("Delete carousel") . "' class='fa gsoperatecell fa-trash-o' type='delete' target='container'></i>";
@@ -591,7 +591,7 @@ class Page {
             }
             echo "<span class='gstabbtn $active' incrementid='" . $innercell->incrementalCellId . "' cellid='" . $innercell->cellId . "'>$tabName</span>";
         }
-        if ($this->factory->isEditorMode() && $edit) {
+        if ($this->factory->isEditorMode()) {
             echo "<i class='fa fa-plus gsoperatecell' type='addrow' target='container' title='Add another tab'></i> ";
             echo "<i class='fa fa-cogs tabsettings' title='Tab settings' style='cursor:pointer;'></i>";
         }
@@ -800,6 +800,9 @@ class Page {
 
     public function shouldPrintCellBox($edit, $cell, $parent) {
         if($parent && $parent->mode == "ROTATING") {
+            return false;
+        }
+        if($parent && $parent->mode == "TAB") {
             return false;
         }
         

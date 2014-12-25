@@ -382,7 +382,8 @@ public class PageLayout implements Serializable {
                     subcell.mode = PageCell.CellMode.row;
                 }
                 subcell.styles = cell.styles;
-                subcell.type = PageCell.CellType.floating;
+                if(PageCell.CellMode.rotating.equals(mode))
+                    subcell.type = PageCell.CellType.floating;
                 cell.clear();
                 cell.cells.add(subcell);
             }

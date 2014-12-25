@@ -163,7 +163,7 @@ public class AddApplicationsToDatabase {
         context.getBean(AddApplicationsToDatabase.class).insert();
         context.getBean(AddApplicationsToDatabase.class).showLinks();
 
-        if (args == null) {
+        if (args == null || args.length == 0) {
             java.lang.System.exit(1);
         }
     }

@@ -51,7 +51,9 @@ thundashop.framework = {
         $(document).on('click', '.gsclosecsseditor', this.closeCssEditor);
         $(document).on('click', '.gsresizecolumn', this.activateResizeColumn);
         $(document).on('mouseover', '.gseditrowouter', this.showEditIcon);
-        $(document).on('mouseover', '.gscell', this.showCellPanel);
+        $(document).on('mouseenter', '.gscell', this.showCellPanel);
+        $(document).on('mouseleave', '.gscell', this.mouseLeftPanel);
+        $(document).on('mouseenter', '.gsfloatingheadermin', this.showCellHeader);
         $(document).on('click', '.gseditrowbutton', this.startEditRow);
         $(document).on('click', '.gsdoneeditbutton', this.startEditRow);
         $(document).on('click', '.gs_resizing', this.showCellResizing);
@@ -615,8 +617,20 @@ thundashop.framework = {
         var event = thundashop.Ajax.createEvent('', 'startEditRow', $(this), {"cellid": cellid});
         thundashop.Ajax.post(event);
     },
+    showCellHeader: function(event) {
+        var target = $(event.target);
+        target.parent().parent().find('.gsfloatingheader').addClass('gsactiveboxheader');
+        $(this).fadeOut();
+    },
+    mouseLeftPanel: function(event) {
+        var target = $(event.target);
+        target.parent().parent().find('.gsfloatingheader');
+        $('.gsactiveboxheader').removeClass('gsactiveboxheader');
+        $('.gsfloatingheadermin').show();
+    },
     showCellPanel : function(event) {
         var target = $(event.target);
+        
         if (!target.hasClass('gscell')) {
             for (var i = 0; i < 20; i++) {
                 target = target.parent();
@@ -628,7 +642,7 @@ thundashop.framework = {
         if (!target.hasClass('gscell')) {
             return;
         }
-         
+        
         $('.gsfloatingbox').removeClass('gsactivebox');
         target.find('.gsfloatingbox').first().addClass('gsactivebox');
     },

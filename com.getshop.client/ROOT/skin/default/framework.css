@@ -1833,6 +1833,26 @@ a img {
     top: -1px;
     bottom: -1px;
 }
+
+.gsfloatingbox .gsfloatingheadermin i {
+    padding: 2px;
+    color: #FFF;
+    
+}
+.gsfloatingbox .gsfloatingheadermin {
+    position: absolute;
+    right: -1px;
+    top: -21px;
+    height: 20px;
+    width: 20px;
+    border-top: solid 1px #bbb;
+    border-right: solid 1px #bbb;
+    border-left: solid 1px #bbb;
+    box-sizing: border-box;
+    z-index: 11;
+    background-color: #BBB;
+    text-align: center;
+}
 .gsfloatingbox .gsfloatingheader i { cursor:pointer; }
 .gsfloatingbox .gsfloatingheader {
     -webkit-transition: opacity .3s ease-in-out;
@@ -1848,11 +1868,11 @@ a img {
 .gseditrowbuttons { display:none; position:absolute; right: -1px; width: 20px; border: solid 1px #bbb; text-align: center; padding: 2px; border-bottom-left-radius: 3px; border-top-left-radius: 3px; font-size: 16px; background-color:#FFF; }
 .gsrow:hover .gseditrowbuttons { display:inline-block; }
 .gseditrowbuttons i { cursor:pointer;margin: 3px; }
-.gsfloatingbox.gsactivebox .gsfloatingheader { opacity: 0.2; }
+.gsfloatingbox .gsfloatingheader.gsactiveboxheader { opacity: 0.2; }
 .gsleftheading { position:absolute; left: 3px; top: 1px; }
 .gsrightheading { position:absolute; right: 3px; top: 1px; }
 
 .gsinitrow { text-align: center; }
 .gsmodeselectbox i {display:block; }
 .gsmodeselectbox { border: solid 1px #3a99d7; padding: 10px; display:inline-block; border-radius: 3px; margin: 10px; cursor:pointer; }
-.gsfloatingbox .gsfloatingheader:hover { opacity:1; }
+/*.gsfloatingbox .gsfloatingheader:hover { opacity:1; }*/

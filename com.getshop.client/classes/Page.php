@@ -263,10 +263,11 @@ class Page {
             $style = "position:absolute;width:100%; bottom: -1px;";
 //            $style .= " width:" . $floatData->width . "px;height: " . $floatData->height . "px;top: " . $floatData->top . "px;left:" . $floatData->left . "px";
             echo "<div style='$style' class='gsfloatingbox' cellid='" . $cell->cellId . "'>";
+            echo "<div class='gsfloatingheadermin'><i class='fa fa-external-link-square'></i></div>";
             echo "<div class='gsfloatingheader'>";
             echo "<span style='float:left;'>" . $this->printEasyModeEdit($cell, $parent, true) . "</span>";
-
-            echo "</div></div>";
+            echo "</div>";
+            echo "</div>";
         }
 
         $this->printCellContent($cell, $parent, $edit, $totalcells, $count, $depth);

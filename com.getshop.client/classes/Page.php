@@ -257,7 +257,7 @@ class Page {
         echo "<div $innerstyles class='$gscellinner gsuicell gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
         
         if (!$edit && sizeof($cell->cells) == 0 && $cell->mode != "INIT") {
-            $style = "position:absolute;width:100%; height:99%;";
+            $style = "position:absolute;width:100%; bottom: -1px;";
 //            $style .= " width:" . $floatData->width . "px;height: " . $floatData->height . "px;top: " . $floatData->top . "px;left:" . $floatData->left . "px";
             echo "<div style='$style' class='gsfloatingbox' cellid='" . $cell->cellId . "'>";
             echo "<div class='gsfloatingheader'>";

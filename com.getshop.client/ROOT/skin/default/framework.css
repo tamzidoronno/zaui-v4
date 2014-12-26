@@ -1918,11 +1918,12 @@ a img {
         -ms-transition: opacity .3s ease-in-out;
         -o-transition: opacity .3s ease-in-out;
         transition: opacity .3s ease-in-out;
-        
-    border: solid 1px #bbb; padding: 5px; border-radius: 3px; opacity: 0.2; position: absolute; background-color:#FFF; font-size: 16px; right: 20px;border-top-left-radius: 0px; }
+        left: 10px;
+    border: solid 1px #bbb; top: 25px; padding: 5px; border-radius: 3px; opacity: 0.2; position: absolute; background-color:#FFF; font-size: 16px; border-top-left-radius: 0px;z-index: 5; }
 .gscaraouselmenu:hover { opacity: 1; }
 .gscaraouselmenu i { cursor:pointer; }
 .gscaraouselmenuheader { position: absolute;
+                         cursor:pointer;
 top: -20px;
 background-color:#efefef;
 border: solid 1px #bbb;

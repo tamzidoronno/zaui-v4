@@ -232,7 +232,7 @@ class Page {
             $marginsclasses .= " gs_margin_left";
         }
 
-        if ($cell->mode == "FLOATING") {
+        if ($cell->mode == "FLOATING" && $this->factory->isEditorMode()) {
             $style = "position:absolute;width:" . $floatData->width . "px;height: " . $floatData->height . "px;top: " . $floatData->top . "px;left:" . $floatData->left . "px";
             echo "<div style='$style' class='gsfloatingbox' cellid='" . $cell->cellId . "'>";
             echo "<div class='gsfloatingheader'>";
@@ -282,7 +282,7 @@ class Page {
         echo "</div>";
         echo "</div>";
 
-        if ($cell->mode === "FLOATING") {
+        if ($cell->mode === "FLOATING" && $this->factory->isEditorMode()) {
             //End of floatingbox.
             echo "</div>";
             $this->makeDraggable($cell);
@@ -594,6 +594,9 @@ class Page {
     }
 
     public function printCarourselMenu() {
+        if(!$this->factory->isEditorMode()) {
+            return;
+        }
         ?>
         <span class='gscaraouselmenu'>
             <div class='gscaraouselmenuheader'>Tab menu</div>
@@ -702,6 +705,10 @@ class Page {
     public function makeDraggable($cell) {
         ?>
         <script>
+            $('.gscaraouselmenu').draggable({
+                handle: '.gscaraouselmenuheader',
+                containment: 'parent'
+            });
             $('.gsfloatingbox[cellid="<? echo $cell->cellId; ?>"]').draggable(
                     {
                         handle: '.gsfloatingheader',

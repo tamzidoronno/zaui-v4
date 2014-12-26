@@ -51,7 +51,7 @@ public abstract class AProductManager extends ManagerBase {
     @Autowired
     public ListManager listManager;
 
-    public Product finalize(Product product) throws ErrorException {
+    protected Product finalize(Product product) throws ErrorException {
         if (product != null && product.pageId != null && product.page == null) {
             product.page = pageManager.getPage(product.pageId);
         }

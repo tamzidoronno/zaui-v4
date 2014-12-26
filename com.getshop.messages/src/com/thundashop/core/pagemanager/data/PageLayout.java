@@ -4,6 +4,7 @@ import com.thundashop.core.common.ErrorException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PageLayout implements Serializable {
 
@@ -394,4 +395,12 @@ public class PageLayout implements Serializable {
 
     }
 
+    public void addApplicationToFirstFreeBodyCell(String appId) {
+        List<PageCell> cells =  areas.get("body");
+        if (cells == null || cells.size() == 0) {
+            return;
+        }
+        
+        cells.iterator().next().appId = appId;
+    }
 }

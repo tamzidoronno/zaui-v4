@@ -7,7 +7,8 @@ thundashop.framework = {
     originObject: null,
     activeContainerCellId: {},
     lastRotatedCell: {},
-    activeBoxTimeout : {},
+    activeBoxTimeout: {},
+    cellRotatingWait: {},
     bindEvents: function () {
         $('*[gstype="form"] *[gstype="submit"]').live('click', function (e) {
             thundashop.framework.submitFromEvent(e);
@@ -81,7 +82,7 @@ thundashop.framework = {
         var target = $(event.target);
         $('.gsactiveboxheader').removeClass('gsactiveboxheader');
         $('.gscellheadermin').show();
-        
+
         target.parent().parent().find('.gscellboxheader').addClass('gsactiveboxheader');
         $(this).hide();
     },
@@ -233,15 +234,7 @@ thundashop.framework = {
         return ranges;
     },
     resetCarouselTimer: function (container) {
-        var event = container.attr('timerevent');
-        if (event) {
-            clearTimeout(parseInt(event));
-        } else {
-            return;
-        }
-        setTimeout(function () {
-            thundashop.framework.activateCarousel(container, parseInt(container.attr('timer')));
-        }, "10000");
+        thundashop.framework.cellRotatingWait[container.attr('cellid')] = new Date().getTime() + 10000;
     },
     showCarouselEntry: function () {
         $(this).attr('pushed', 'true');
@@ -511,6 +504,14 @@ thundashop.framework = {
             return;
         }
         var timerevent = setInterval(function () {
+            if (thundashop.framework.cellRotatingWait[container.attr('cellid')]) {
+                var time = thundashop.framework.cellRotatingWait[container.attr('cellid')];
+                if (time > new Date().getTime()) {
+                    return;
+                }
+            }
+
+
             thundashop.framework.rotateCellDirection(container, "right");
         }, timer);
         container.attr('timerevent', timerevent);
@@ -670,33 +671,33 @@ thundashop.framework = {
         if (!target.hasClass('gscell')) {
             return;
         }
-        if(target.find('.gscellbox').length > 1) {
+        if (target.find('.gscellbox').length > 1) {
             return;
         }
-        
+
         var cellid = $(this).attr('cellid');
-        if(thundashop.framework.activeBoxTimeout[cellid]) {
+        if (thundashop.framework.activeBoxTimeout[cellid]) {
             clearTimeout(thundashop.framework.activeBoxTimeout[cellid]);
         }
 
         target.find('.gscellbox').first().addClass('gsactivebox');
-        target.find('.gsactivebox').attr('entered','true');
+        target.find('.gsactivebox').attr('entered', 'true');
     },
     mouseLeftPanel: function (event) {
         var cell = $(this);
         var cellid = cell.attr('cellid');
-        
-        if(thundashop.framework.activeBoxTimeout[cellid]) {
+
+        if (thundashop.framework.activeBoxTimeout[cellid]) {
             clearTimeout(thundashop.framework.activeBoxTimeout[cellid]);
         }
-        
+
         var timer = 0;
-        if(cell.find('.gsactiveboxheader').length > 0) {
+        if (cell.find('.gsactiveboxheader').length > 0) {
             timer = 2000;
         }
-        cell.find('.gsactivebox').attr('entered','false');
-        thundashop.framework.activeBoxTimeout[cellid] = setTimeout(function() {
-            if(cell.find('.gsactivebox').attr('entered') === 'false') {
+        cell.find('.gsactivebox').attr('entered', 'false');
+        thundashop.framework.activeBoxTimeout[cellid] = setTimeout(function () {
+            if (cell.find('.gsactivebox').attr('entered') === 'false') {
                 cell.find('.gsactiveboxheader').first().removeClass('gsactiveboxheader');
                 cell.find('.gscellheadermin').first().show();
                 cell.find('.gsactivebox').removeClass('gsactivebox');
@@ -734,7 +735,6 @@ thundashop.framework = {
         return thundashop.framework.activeContainerCellId[containerid];
     },
     setActiveContainerCellId: function (id, containerid) {
-        console.log('Setting container cell id : ' + containerid + " -> " + id);
         thundashop.framework.lastRotatedCell[containerid] = id;
         thundashop.framework.activeContainerCellId[containerid] = id;
     },

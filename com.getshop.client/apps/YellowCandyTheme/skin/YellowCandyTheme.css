@@ -197,3 +197,17 @@ body {
     width: 650px;
     margin-bottom: 100px;
 }
+
+.CartManager .emptycart i {
+    font-size: 50px;
+    color: #febd11;
+    display: block;
+    padding-bottom: 20px;
+}
+.CartManager .emptycart {
+    padding: 30px;
+    font-size: 24px;
+    color: #333;
+    border: solid 2px #febd11;
+    margin: 0px;
+}

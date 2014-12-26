@@ -3,6 +3,13 @@
 namespace ns_900e5f6b_4113_46ad_82df_8dafe7872c99;
 
 /* @var $this CartManager */
+
+$cartItems = (array) $this->cart->items;
+
+if (count($cartItems) == 0) {
+    $this->includefile("nocartitemss");
+    return;
+}
 ?>
 
 <div class="cart">
@@ -11,12 +18,7 @@ namespace ns_900e5f6b_4113_46ad_82df_8dafe7872c99;
     </div>
 
     <?
-    $cartItems = (array) $this->cart->items;
-
-    if (count($cartItems) == 0) {
-        echo $this->__w("You do not have any products in your cart");
-        return;
-    }
+    
 
     foreach ($cartItems as $cartItem) {
         /* @var $product core_productmanager_data_Product */

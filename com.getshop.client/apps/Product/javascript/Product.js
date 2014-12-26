@@ -12,7 +12,7 @@ app.Product = {
         var button = $(this).parent();
 
         
-        $('.checkout_area').each(function() {
+        $('.gsarea[area="header"] .checkout_area').each(function() {
             var width = $(this).parent().width();
             $(this).parent().width(width);
             $(this).parent().css('position', 'fixed');

@@ -5,9 +5,13 @@
 package com.thundashop.core.messagemanager;
 
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.applications.StoreApplicationPool;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.Logger;
+import com.thundashop.core.common.Setting;
 import com.thundashop.core.common.StoreComponent;
+import com.thundashop.core.pagemanager.PageManager;
 import java.io.File;
 import java.util.Map;
 import java.util.Properties;
@@ -27,6 +31,7 @@ import javax.mail.internet.MimeMultipart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+
 @Component
 @GetShopSession
 public class MailFactoryImpl extends StoreComponent implements MailFactory, Runnable {
@@ -36,21 +41,57 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
     private String content;
     private String storeId;
     
-    @Autowired
-    private MailConfig configuration;
+    private MailSettings mailSettings;
     
     @Autowired
     public FrameworkConfig frameworkConfig;
 
     @Autowired
+    private StoreApplicationPool storeApplicationPool;
+    
+    @Autowired
     public Logger logger;
     private Map<String, String> files;
     private boolean delete;
     
-    public void setMailConfiguration(MailConfig configuration) {
-        this.configuration = configuration;
+    private MailSettings getMailSettings() {
+        Application mailApplication = storeApplicationPool.getApplicationWithSecuredSettings("8ad8243c-b9c1-48d4-96d5-7382fa2e24cd");
+        Map<String, Setting> confSettings = null;
+        
+        if (mailApplication != null) {
+            confSettings = mailApplication.settings;
+        }
+        
+        MailSettings settings = new MailSettings();
+        if (confSettings != null) {
+            if (confSettings.get("hostname") != null) {
+                settings.hostname = confSettings.get("hostname").value;
+            }
+            
+            if (confSettings.get("port") != null) {
+                settings.port = Integer.valueOf(confSettings.get("port").value);
+            }
+            
+            if (confSettings.get("password") != null) {
+                settings.password = confSettings.get("password").value;
+            }
+            
+            if (confSettings.get("username") != null) {
+                settings.username = confSettings.get("username").value;
+                settings.sendMailFrom = confSettings.get("username").value;
+            }
+            
+            if (confSettings.get("enabletls") != null) {
+                String enableTls = confSettings.get("enabletls").value;
+                if (enableTls != null && enableTls.equals("true")) {
+                    settings.enableTls = true;
+                }
+            }
+        }
+        
+        return settings;
     }
-
+ 
     private Session getSession() {
         Authenticator authenticator = new Authenticator();
 
@@ -58,10 +99,10 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
         properties.setProperty("mail.smtp.submitter", authenticator.getPasswordAuthentication().getUserName());
         properties.setProperty("mail.smtp.auth", "true");
 
-        properties.setProperty("mail.smtp.host", configuration.getSettings().hostname);
-        properties.setProperty("mail.smtp.port", "" + configuration.getSettings().port);
+        properties.setProperty("mail.smtp.host", mailSettings.hostname);
+        properties.setProperty("mail.smtp.port", "" + mailSettings.port);
         
-        if (configuration.getSettings().enableTls)
+        if (mailSettings.enableTls)
             properties.setProperty("mail.smtp.starttls.enable", "true");
         
         return Session.getInstance(properties, authenticator);
@@ -74,15 +115,11 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
         mfi.to = to;
         mfi.subject = title;
         mfi.content = content;
-        mfi.configuration = configuration;
+        mfi.mailSettings = getMailSettings();
         mfi.logger = logger;
         mfi.storeId = storeId;
         mfi.frameworkConfig = frameworkConfig;
         
-        if(to == null || to.equals("test@getshop.com")) {
-            //Send this to noone, or the test account.. no way!
-            return;
-        }
         new Thread(mfi).start();
     }
 
@@ -109,7 +146,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
         mfi.delete = delete;
         mfi.subject = title;
         mfi.content = content;
-        mfi.configuration = configuration;
+        mfi.mailSettings = mailSettings;
         mfi.logger = logger;
         mfi.storeId = storeId;
         mfi.frameworkConfig = frameworkConfig;
@@ -126,7 +163,8 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
         private PasswordAuthentication authentication;
 
         public Authenticator() {
-            authentication = new PasswordAuthentication(configuration.getSettings().username, configuration.getSettings().password);
+            System.out.println("Password: " + mailSettings.password);
+            authentication = new PasswordAuthentication(mailSettings.username, mailSettings.password);
         }
 
         @Override
@@ -137,14 +175,13 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
 
     @Override
     public void run() {
-        configuration.setup(storeId);
         MimeMessage message = new MimeMessage(getSession());
         
         try {
             message.setSubject(subject, "UTF-8");
             message.setHeader("Content-Type", "text/plain; charset=UTF-8");
             message.addRecipient(RecipientType.TO, new InternetAddress(to));
-            message.addFrom(new InternetAddress[]{new InternetAddress(configuration.getSettings().sendMailFrom)});
+            message.addFrom(new InternetAddress[]{new InternetAddress(mailSettings.sendMailFrom)});
             message.setReplyTo(new InternetAddress[]{new InternetAddress(from)});
 
             if (files != null) {

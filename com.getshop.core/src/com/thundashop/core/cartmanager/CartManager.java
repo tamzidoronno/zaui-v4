@@ -135,15 +135,8 @@ public class CartManager extends ManagerBase implements ICartManager {
         return cart.getShippingCost();
     }
 
-    private HashMap<String, Setting> getSettings(String phpApplicationName) throws ErrorException {
-        throw new NotImplementedException();
-    }
-    
     @Override
     public void setShippingCost(double shippingCost) throws ErrorException {
-        if (getSession().currentUser == null || !getSession().currentUser.isAdministrator()) {
-            shippingCost = ExchangeConvert.calculateExchangeRate(getSettings("Settings"), shippingCost);
-        } 
         Cart cart = this.getCart();
         
         TaxGroup shippingTaxGroup = productManager.getTaxGroup(0);

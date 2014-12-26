@@ -27,13 +27,12 @@ public class MessageManager extends ManagerBase implements IMessageManager {
 
     @Autowired
     public MailFactory mailFactory;
+    
     private SubscribedToAirgram airgramSubscriptions = new SubscribedToAirgram();
 
     @Autowired
     public SMSFactory smsFactory;
     
-    @Autowired
-    private PageManager pageManager;
 
     @Override
     public void sendMail(String to, String toName, String subject, String content, String from, String fromName) {

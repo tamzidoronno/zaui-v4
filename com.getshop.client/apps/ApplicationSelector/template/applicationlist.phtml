@@ -89,6 +89,7 @@ foreach ($activatedModules as $module) {
 
         <?
         foreach ($apps as $app) {
+            $appId = $app->id;
             $isActivated = $this->isActivated($app, $notActivated);
             $namespace = $this->getFactory()->convertUUIDtoString($app->id);
             $name = $app->appName;
@@ -119,7 +120,7 @@ foreach ($activatedModules as $module) {
         $hasConfig = method_exists($emptyInstance, "renderConfig");
         if ($app->activeAppOnModuleActivation) {
             
-            $appId = $app->id;
+            
             ?>
                     <div class="gss_activate_button mandatory"><span> <? echo $this->__f("Mandatory"); ?></span></div>
                     <?

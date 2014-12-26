@@ -89,7 +89,6 @@ getshop.Settings = {
             data['gss_method'] = method;
         }
         
-        
         if ( $(field).attr('gss_fragment')) {
             data['gss_fragment'] = $(field).attr('gss_fragment');
         }
@@ -106,21 +105,7 @@ getshop.Settings = {
             data.value2 = $(field).attr("gss_value_2");
         }
         
-        if (!loadFragment && !$(field).attr('gss_loadsilent')) {
-            localStorage.setItem("current_gss_data", JSON.stringify(data));
-        }
-        
-        var successFirstLoad = function(response, field, data) {
-            getshop.Settings.successfully(response,field, data);
-            
-            if (loadFragment) {
-                var jsonData = localStorage.getItem("current_gss_data");
-                var data = JSON.parse(jsonData);
-                getshop.Settings.doPost(data, null, getshop.Settings.successfully);
-            }
-        }
-        
-        this.doPost(data, field, successFirstLoad);
+        this.doPost(data, field, getshop.Settings.successfully);
     },
     successfully: function(response, field, data) {
         var view = data['gss_view'];
@@ -231,14 +216,6 @@ getshop.Settings = {
                 success(response, field, data);
             },
             error: function (failure) {
-                var json = localStorage.getItem("current_gss_data");
-                if (json) {
-                    var jsonData = JSON.parse(json);
-                    if (jsonData['gss_method'] == data['gss_method']) {
-                        localStorage.setItem("current_gss_data", "");
-                    }
-                }
-                
                 $('.gss_settings_inner.apparea').html(failure.responseText);
                 clearTimeout(getshop.Settings.loadingTimer);
                 $('#gss_loading_icon').hide();

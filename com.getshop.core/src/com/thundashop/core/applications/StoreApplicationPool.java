@@ -284,22 +284,30 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
         saveObject(setting);
     }
 
-    private Application finalizeApplication(Application app) {
-        
+    private Application finalizeApplication(Application app, boolean secure) {
         if (app == null) {
             return null;
         }
         
         Application retApp = app.jsonClone();
-
+        retApp.settings = new HashMap();
+        
         SavedApplicationSettings setting = settings.get(app.id);
         if (setting != null) {
             for (String settingKey : setting.settings.keySet()) {
-                retApp.settings.put(settingKey, setting.settings.get(settingKey));
+                Setting newsetting = setting.settings.get(settingKey);
+                if (newsetting != null && secure) {
+                    newsetting = newsetting.secureClone();
+                }
+
+                retApp.settings.put(settingKey, newsetting);
             }
         }
 
         return retApp;
+    }
+    private Application finalizeApplication(Application app) {
+        return finalizeApplication(app, true);
     }
 
     @Override
@@ -311,6 +319,11 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
         List<Application> finalizedList = new ArrayList();
         shipmentApplications.forEach(app -> finalizedList.add(finalizeApplication(app)));
         return finalizedList;
+    }
+
+    public Application getApplicationWithSecuredSettings(String appId) {
+        Application app = getApplication(appId);
+        return finalizeApplication(app, false);
     }
 
 }

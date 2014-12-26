@@ -49,10 +49,11 @@ namespace ns_900e5f6b_4113_46ad_82df_8dafe7872c99;
                                 <div class="title"><?php echo $product->name; ?></div>
                                 <div class="cartdesc"><?php echo $product->description[0]; ?></div>
                             </div>
-                            <div class="price"><?php echo $this->getFactory()->getCurrencyName(); ?> <?php
+                            <div class="price"> <?php
                                 $imteprice = $this->getApi()->getProductManager()->getPrice($product->id, $cartItem->variations);
                                 $imteprice = $this->getPriceWithTaxSpecifed($imteprice, $product);
-                                echo sprintf('%0.2f', $imteprice);
+//                                echo sprintf('%0.2f', $imteprice);
+                                echo \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($imteprice);
                                 ?></div>
                                     <? if (count($cartItem->variations) > 0) { ?>
                                 <div>
@@ -91,14 +92,14 @@ namespace ns_900e5f6b_4113_46ad_82df_8dafe7872c99;
     <? if ($this->cart->couponCost) { ?>
         <div class='row'><? echo $this->__w("Coupon discount"); ?><span> <?php echo $this->getFactory()->getCurrencyName(); ?><? echo sprintf('%0.2f', $this->cart->couponCost); ?></span></div>
     <? } ?>
-    <div class='row shipping_price'><? echo $this->__w("Shipping price"); ?><span> <?php echo $this->getFactory()->getCurrencyName(); ?><? echo $price = sprintf('%0.2f', $shippingprice); ?> </span></div>
+    <div class='row shipping_price'><? echo $this->__w("Shipping price"); ?><span><? echo \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($shippingprice); ?> </span></div>
         <? if ($taxes) { ?>
         <div class='row'>
             <?
             echo $this->__w("Taxes");
 
             foreach ($taxes as $tax) {
-                echo "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . $this->__w("Taxes") . " (" . $tax->taxGroup->taxRate . "%) <span>" . $this->getFactory()->getCurrencyName() . sprintf('%0.2f', $tax->sum) . "</span>";
+                echo "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . $this->__w("Taxes") . " (" . $tax->taxGroup->taxRate . "%) <span>" .  \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($tax->sum) . "</span>";
             }
             ?>
             <br> 
@@ -107,6 +108,6 @@ namespace ns_900e5f6b_4113_46ad_82df_8dafe7872c99;
     <div class='row'><? echo $this->__w("Total");
 if ($taxes) {
     echo " (" . $this->__w("included taxes") . ")";
-} ?><span> <?php echo $this->getFactory()->getCurrencyName(); ?><? echo sprintf('%0.2f', $this->getTotalAmount()); ?></span></div>
+} ?><span> <? echo \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($this->getTotalAmount()); ?></span></div>
 </div>
 

@@ -311,7 +311,7 @@ class Factory extends FactoryBase {
         }
         
         if($javaPage == null) {
-            echo "<center><h1>Page not found</h1></center>";
+            echo "<center><h1>Page not found: $homePageId</h1></center>";
             http_response_code(404);
             exit(0);
         }

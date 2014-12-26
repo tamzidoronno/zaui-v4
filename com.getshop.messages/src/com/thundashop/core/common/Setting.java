@@ -19,6 +19,7 @@ public class Setting extends DataCommon {
 
     public Setting secureClone() {
         Setting clonedSetting = new Setting();
+        clonedSetting.name = this.name;
         clonedSetting.value = this.value;
         clonedSetting.type = this.type;
 

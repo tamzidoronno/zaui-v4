@@ -1,45 +1,69 @@
-<? namespace ns_8ad8243c_b9c1_48d4_96d5_7382fa2e24cd; ?>
-<div class="information">
-    <?
-    echo $this->__f("Configure your email sender.");
-    ?>
+
+<? ?>
+<div>
+    <div class="gss_settings_header">
+        <i class="fa fa-envelope-o"></i>
+
+        <div class="gss_settings_header_description">
+            <div class="gss_settings_header_title"><? echo $this->__f("Mail settings"); ?></div>
+            <div class="gss_settings_header_description_inner">
+                <?
+                echo $this->__f("If you want your webshop to send emails from another email account then ours, your need to enter the details in the form below. All username and passwords are stored on a seperated server and encrypted when it leaves that server.");
+                ?>
+            </div>
+        </div>	
+    </div>
+
+
+    <div class='gss_outer_orderoverview gss_settings_content'>
+        <div class="textfield gss_setting"  id="editor">
+            <span class="title"><?php echo $this->__f("Enable tls?"); ?></span>
+            <div class="gss_onoff" gs_model="mailsettingsmodel" gs_model_attr="enabletls">
+                <?
+                $onoffclass = $this->getConfigurationSetting("enabletls") === "true" ? "fa-toggle-on" : "fa-toggle-off";
+                ?>
+                Off<i class="fa <? echo $onoffclass;  ?>"></i>On
+            </div>
+            <div class="description">
+                <?php echo $this->__("Does this mailserver support SSL?"); ?>
+            </div>
+        </div>
+        <div class="textfield gss_setting"  id="hostname">
+            <span class="title"><?php echo $this->__f("Hostname"); ?></span>
+            <input type="textfield" gs_model='mailsettingsmodel' gs_model_attr='hostname' placeholder="" value="<? echo $this->getConfigurationSetting("hostname"); ?>">
+            <div class="description">
+                <?php echo $this->__("Hostname or ipaddress to the mailserver."); ?>
+            </div>
+        </div>
+        <div class="textfield gss_setting"  id="port">
+            <span class="title"><?php echo $this->__f("Port"); ?></span>
+            <input type="textfield" gs_model='mailsettingsmodel' gs_model_attr='port' placeholder="" value="<? echo $this->getConfigurationSetting("port"); ?>">
+            <div class="description">
+                <?php echo $this->__("Port that the mailserver listens on."); ?>
+            </div>
+        </div>
+        <div class="textfield gss_setting"  id="username">
+            <span class="title"><?php echo $this->__f("Username"); ?></span>
+            <input type="textfield" gs_model='mailsettingsmodel' gs_model_attr='username' placeholder="" value="<? echo $this->getConfigurationSetting("username"); ?>">
+            <div class="description">
+                <?php echo $this->__("The username for your smtp server."); ?>
+            </div>
+        </div>
+        <div class="textfield gss_setting"  id="password">
+            <span class="title"><?php echo $this->__f("Password"); ?></span>
+            <input type="textfield" gs_model='mailsettingsmodel' gs_model_attr='password' placeholder="" value="<? echo $this->getConfigurationSetting("password"); ?>">
+            <div class="description">
+                <?php echo $this->__("The password for your smtp server."); ?>
+            </div>
+        </div>
+        
+        <div class='gss_button_area'>
+            <div class="gss_button" gss_method="saveSettings" gss_model="mailsettingsmodel" gss_success_message="<? echo $this->__f("Updated"); ?>"><i class='fa fa-plus'></i><?php echo $this->__("Save"); ?></div>
+        </div>
+
+    </div>    
+    
+
 </div>
 
-<div class="setting onoff" id="enabletls">
-    <span class="title"><?php echo $this->__f("Enable tls?"); ?></span>
-    <div class="onoff config" id="enabletls"></div>
-    <div class="description">
-        <?php echo $this->__f("Should TLS be enabled for this smtp server?"); ?>
-    </div>
-</div>
 
-<div class="textfield setting"  id="hostname">
-    <span class="title"><?php echo $this->__f("Hostname"); ?></span>
-    <input type="textfield" class="config">
-    <div class="description">
-        <?php echo $this->__f("The hostname for your smtp server."); ?>
-    </div>
-</div>
-<div class="textfield setting"  id="port">
-    <span class="title"><?php echo $this->__f("Port"); ?></span>
-    <input type="textfield" class="config">
-    <div class="description">
-        <?php echo $this->__f("The port for your smtp server."); ?>
-    </div>
-</div>
-<div class="textfield setting"  id="username">
-    <span class="title"><?php echo $this->__f("Username / Email"); ?></span>
-    <input type="textfield" class="config">
-    <div class="description">
-        <?php echo $this->__f("The username for your smtp server."); ?>
-    </div>
-</div>
-<div class="textfield setting"  id="password" secure="true">
-    <span class="title"><?php echo $this->__f("Password"); ?></span>
-    <input type="textfield" class="config">
-    <div class="description">
-        <?php echo $this->__f("The password for your smtp server."); ?>
-    </div>
-</div>
-
-<div class="button savebutton"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__f("Save settings"); ?></ins></div>

@@ -24,8 +24,17 @@ class Mail extends \MarketingApplication implements \Application {
         
     }
     
+    
     public function renderConfig() {
         $this->includefile("config");
+    }
+    
+    public function saveSettings() {
+        $this->setConfigurationSetting("hostname", $_POST['hostname']);
+        $this->setConfigurationSetting("port", $_POST['port']);
+        $this->setConfigurationSetting("password", $_POST['password'], true);
+        $this->setConfigurationSetting("username", $_POST['username']);
+        $this->setConfigurationSetting("enabletls", $_POST['enabletls']);
     }
 }
 ?>

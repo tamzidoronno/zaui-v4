@@ -32,7 +32,7 @@ class Login extends \SystemApplication implements \Application {
                 $_SESSION['loggedin'] = serialize($userLoggedIn);
                 // Need to refresh the page in order to make sure that all data is loaded.
                 // This login is after data has been initialized to factory.
-                header("location: index.php?page=".$this->getPage()->id);
+                header("location: index.php?page=login");
             } 
         }
     }
@@ -94,6 +94,10 @@ class Login extends \SystemApplication implements \Application {
         $_SESSION['loggedin'] = serialize($user);
     }
     
+    public function isLoggedIn() {
+        return isset($_SESSION['loggedin']);
+    }
+
     public static function refresh() {
         $factory = \IocContainer::getFactorySingelton();
         $user = $factory->getApi()->getUserManager()->getLoggedOnUser();

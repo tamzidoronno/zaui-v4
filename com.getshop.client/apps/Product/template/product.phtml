@@ -9,7 +9,7 @@ $product = $this->getApi()->getProductManager()->getProductByPage($this->getPage
 </div>
 
 <div class="product_price">
-    <? echo $this->__w("Price") . " " . $product->price; ?>
+    <? echo ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($product->price); ?>
 </div>
 
 <div class="images">

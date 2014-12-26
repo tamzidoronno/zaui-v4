@@ -9,6 +9,8 @@ import com.thundashop.core.pagemanager.data.CommonPageData;
 import com.thundashop.core.pagemanager.data.FloatingData;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageCell;
+import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.productmanager.data.Product;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,18 +32,24 @@ public class PageManager extends ManagerBase implements IPageManager {
     @Autowired
     private StoreApplicationInstancePool instancePool;
 
+    @Autowired
+    private ProductManager productManager;
+
+    @Autowired
+    private StoreApplicationInstancePool storeApplicationPool;
+
     @Override
     public Page createPage() throws ErrorException {
         return createPage(null);
     }
-    
+
     private Page createPage(String pageId) {
         Page page = new Page();
         if (pages.isEmpty()) {
             page.id = "home";
         }
         page.storeId = storeId;
-        
+
         if (pageId != null) {
             page.id = pageId;
         }
@@ -104,17 +112,19 @@ public class PageManager extends ManagerBase implements IPageManager {
     private Page finalizePage(Page page) {
         page.finalizePage(commonPageData);
         List<PageCell> cellsWithoutIncrementalId = page.getCellsFlatList().stream()
-                .filter( cell -> cell.incrementalCellId == null)
+                .filter(cell -> cell.incrementalCellId == null)
                 .collect(Collectors.toList());
-        
+
+        addProductAppIfNeeded(page);
+
         if (cellsWithoutIncrementalId.size() > 0) {
             cellsWithoutIncrementalId.stream().forEach(cell -> cell.incrementalCellId = getNextCellId());
             savePage(page);
         }
-        
+
         return page;
     }
-    
+
     @Override
     public void deleteApplication(String id) throws ErrorException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -166,14 +176,14 @@ public class PageManager extends ManagerBase implements IPageManager {
     @Override
     public List<ApplicationInstance> getApplicationsForPage(String pageId) throws ErrorException {
         Page page = getPage(pageId);
-		List<PageCell> cells = page.getCellsFlatList();
-		
-		return cells.stream()
-				.filter(cell -> cell.appId != null)
-				.map(cell -> instancePool.getApplicationInstance(cell.appId))
-				.filter(appInstance -> appInstance != null)
-				.collect(Collectors.toList());
-	}
+        List<PageCell> cells = page.getCellsFlatList();
+
+        return cells.stream()
+                .filter(cell -> cell.appId != null)
+                .map(cell -> instancePool.getApplicationInstance(cell.appId))
+                .filter(appInstance -> appInstance != null)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public void deletePage(String id) throws ErrorException {
@@ -286,14 +296,14 @@ public class PageManager extends ManagerBase implements IPageManager {
     private int getNextCellId() {
         String cellIds = getManagerSetting("cell_id_counter");
         int cellCount = 0;
-        
+
         if (cellIds != null) {
             cellCount = Integer.valueOf(cellIds);
         }
-        
+
         cellCount++;
-        
-        setManagerSetting("cell_id_counter", ""+cellCount);
+
+        setManagerSetting("cell_id_counter", "" + cellCount);
         return cellCount;
     }
 
@@ -306,12 +316,35 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     private void createDefaultPages() {
         createDefaultPage("productsearch");
+        createDefaultPage("login");
     }
 
     private void createDefaultPage(String pageId) {
         Page page = getPage(pageId);
         if (page == null) {
             createPage(pageId);
-        } 
+        }
+    }
+
+    private void addProductAppIfNeeded(Page page) {
+        Product product = productManager.findProductByPage(page.id);
+
+        if (product != null) {
+            String productApplicationId = "06f9d235-9dd3-4971-9b91-88231ae0436b";
+            page.type = "product";
+            
+            long productAppsCount = page.getCellsFlatList().stream()
+                    .filter(cell -> cell.appId != null)
+                    .map(cell -> storeApplicationPool.getApplicationInstance(cell.appId))
+                    .filter(app -> app != null && app.appSettingsId.equals(productApplicationId))
+                    .count();
+
+            if (productAppsCount == 0) {
+                ApplicationInstance instance = storeApplicationPool.createNewInstance(productApplicationId);
+                page.layout.addApplicationToFirstFreeBodyCell(instance.id);
+                savePage(page);
+                System.out.println("Should have an app");
+            }
+        }
     }
 }

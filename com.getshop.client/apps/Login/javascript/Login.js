@@ -63,6 +63,9 @@ $('.Login #recoverinputbutton').live('click', function(e) {
     }
 });
 
+$('.Login .loginbutton').live('click', function(e) {
+    $(this).closest('form').submit();
+});
 $('.Login .recoverpassword').live('click', function(e) {
     var event = thundashop.Ajax.createEvent("", "recoverPassword", $(this), null);
     thundashop.common.showInformationBox(event, '');

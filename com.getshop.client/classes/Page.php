@@ -500,17 +500,19 @@ class Page {
             return;
         }
         echo "<div class='applicationarea' appid='" . $cell->appId . "' area='" . $cell->cellId . "'>";
-            echo "<span class='gsaddcontent'>";
+            
             if (!$cell->appId) {
-                $show="";
-                if(!$this->factory->isEditorMode()) {
-                    $show = "style='opacity:0;'";
-                }
-                echo "<i class='fa fa-plus-circle gs_show_application_add_list' $show></i>";
+                echo "<span class='gsaddcontent'>";
+                    $show="";
+                    if(!$this->factory->isEditorMode()) {
+                        $show = "style='opacity:0;'";
+                    }
+                    echo "<i class='fa fa-plus-circle gs_show_application_add_list' $show></i>";
+                echo "</span>";
             } else {
                 $this->renderApplication($cell);
             }
-            echo "</span>";
+            
         echo "</div>";
     }
 

@@ -116,9 +116,8 @@ thundashop.framework = {
         thundashop.framework.loadResizing($('.gscell[cellid="' + cellid + '"]'), true);
     },
     deleteResizing: function () {
-        $(this).closest('.gscell.gsdepth_0').find('.gsresizetable').remove();
-        $(this).closest('.gscell.gsdepth_0').find('.JCLRgrips').remove();
-        $(this).hide();
+        var event = thundashop.Ajax.createEvent('','ping',$(document),{});
+        thundashop.Ajax.post(event);
     },
     closeTabSettings: function () {
         $(this).closest('.tabsettingspanel').fadeOut();

@@ -53,7 +53,9 @@ thundashop.framework = {
         $(document).on('mouseover', '.gseditrowouter', this.showEditIcon);
         $(document).on('mouseover', '.gscell', this.showCellPanel);
         $(document).on('mouseover', '.gsrow', this.showEditRowIcons);
+        $(document).on('mouseover', '.gscellheadermin', this.showCellBoxHeader);
         $(document).on('mouseout', '.gscell', this.hideEditRowIcons);
+        $(document).on('mouseleave', '.gscell', this.mouseLeftPanel);
         $(document).on('click', '.gseditrowbutton', this.startEditRow);
         $(document).on('click', '.gsdoneeditbutton', this.startEditRow);
         $(document).on('click', '.gs_resizing', this.showCellResizing);
@@ -74,6 +76,18 @@ thundashop.framework = {
         $(document).on('click', '.gsoperatecell', this.operateCell);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
     },
+    
+    showCellBoxHeader: function(event) {
+        var target = $(event.target);
+        target.parent().parent().find('.gscellboxheader').addClass('gsactiveboxheader');
+        $(this).hide();
+    },
+    
+    mouseLeftPanel: function(event) {
+        $('.gsactiveboxheader').removeClass('gsactiveboxheader');
+        $('.gscellheadermin').show();
+    },
+    
     showEditRowIcons: function () {
         if ($(this).closest('.gsarea').attr('area') !== "body") {
             console.log($(this).closest('.gsarea'));
@@ -657,6 +671,8 @@ thundashop.framework = {
                 }
             }
         }
+        
+        
         if (!target.hasClass('gscell')) {
             return;
         }
@@ -717,6 +733,10 @@ thundashop.framework = {
         }
 
         var cellid = originObject.closest('.gscell').attr('cellid');
+        
+        if (originObject.parent().hasClass('gsfloatingheader')) {
+            cellid = originObject.closest('.gsfloatingbox').attr('cellid');
+        }
 
         if (target === "selectedcell") {
             cellid = originObject.closest('.gscontainercell').find('.gsactivecell:visible').attr('cellid');

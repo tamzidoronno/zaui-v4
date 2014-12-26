@@ -496,7 +496,7 @@ class Page {
     }
 
     public function printApplicationArea($cell) {
-        if ($cell->type == "FLOATING") {d
+        if ($cell->type == "FLOATING") {
             return;
         }
         echo "<div class='applicationarea' appid='" . $cell->appId . "' area='" . $cell->cellId . "'>";

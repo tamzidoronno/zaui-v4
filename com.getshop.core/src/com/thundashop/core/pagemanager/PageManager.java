@@ -316,6 +316,7 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     private void createDefaultPages() {
         createDefaultPage("productsearch");
+        createDefaultPage("login");
     }
 
     private void createDefaultPage(String pageId) {
@@ -330,6 +331,8 @@ public class PageManager extends ManagerBase implements IPageManager {
 
         if (product != null) {
             String productApplicationId = "06f9d235-9dd3-4971-9b91-88231ae0436b";
+            page.type = "product";
+            
             long productAppsCount = page.getCellsFlatList().stream()
                     .filter(cell -> cell.appId != null)
                     .map(cell -> storeApplicationPool.getApplicationInstance(cell.appId))

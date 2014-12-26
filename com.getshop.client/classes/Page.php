@@ -599,7 +599,7 @@ class Page {
         }
         ?>
         <span class='gscaraouselmenu'>
-            <div class='gscaraouselmenuheader'>Tab menu</div>
+            <div class='gscaraouselmenuheader'>Carousel menu</div>
         <i class="gsoperatecell fa fa-arrow-left" type="moveup" target="selectedcell" title='Move slide to the left'></i>
         <i class='fa fa-plus-circle gsoperatecell' type='addfloating' title='Add content to slider'></i>
         <i class="fa fa-image gs_resizing" type="delete" title="Open styling"></i>

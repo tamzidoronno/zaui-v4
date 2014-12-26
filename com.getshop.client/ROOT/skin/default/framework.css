@@ -1835,6 +1835,7 @@ a img {
 }
 .gscellbox .gscellboxheader i { cursor:pointer; }
 .gscellbox .gscellboxheader {
+    display:none;
     -webkit-transition: opacity .3s ease-in-out;
         -moz-transition: opacity .3s ease-in-out;
         -ms-transition: opacity .3s ease-in-out;

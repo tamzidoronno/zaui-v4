@@ -185,3 +185,15 @@ body {
     background: linear-gradient(to bottom,  #eab92d 0%,#c79810 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eab92d', endColorstr='#c79810',GradientType=0 ); /* IE6-9 */
 }
+
+
+.CartManager .shoppingcartheader {
+    font-size: 16px;
+    padding: 10px;
+    background-color: #febd11;
+    color: #FFF;
+}
+.CartManager .leftcart {
+    width: 650px;
+    margin-bottom: 100px;
+}

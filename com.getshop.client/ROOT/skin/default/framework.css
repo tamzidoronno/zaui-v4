@@ -107,7 +107,6 @@
 
 /* sizing css */
 .gsaddcontent { width: 100%; display: inline-block; height: 100%; text-align: center; border: solid 1px rgba(0,0,0,0); }
-.gsaddcontent i { margin-top: 20px; font-size: 30px; margin-bottom: 20px; }
 .gsaddcontent i:hover { opacity: 1; }
 .gscell,.gscontainercell { position:relative; }
 
@@ -1835,6 +1834,7 @@ a img {
 }
 .gscellbox .gscellboxheader i { cursor:pointer; }
 .gscellbox .gscellboxheader {
+    display:none;
     -webkit-transition: opacity .3s ease-in-out;
         -moz-transition: opacity .3s ease-in-out;
         -ms-transition: opacity .3s ease-in-out;
@@ -1880,7 +1880,7 @@ a img {
         -ms-transition: opacity .3s ease-in-out;
         -o-transition: opacity .3s ease-in-out;
         transition: opacity .3s ease-in-out;
-    border: solid 1px; border-radius: 2px; padding: 4px; background-color:#FFF; opacity:0.6;  }
+     border-radius: 2px; padding: 4px; background-color:#FFF; opacity:0.6;  }
 .gscarouseldotseditmode:hover { opacity: 1; }
 .gscarouseldotseditmode i { font-size: 16px !important; }
 .gsdoneresizing { position:absolute; top: 40px; left: 40px; font-size: 16px; border: solid 1px; border-radius: 3px; padding: 10px; background-color:#FFF; cursor:pointer; }
@@ -1912,3 +1912,24 @@ a img {
     opacity: 1 !important;
     display: block !important;
 }
+.gscaraouselmenu { 
+    -webkit-transition: opacity .3s ease-in-out;
+        -moz-transition: opacity .3s ease-in-out;
+        -ms-transition: opacity .3s ease-in-out;
+        -o-transition: opacity .3s ease-in-out;
+        transition: opacity .3s ease-in-out;
+        left: 10px;
+    border: solid 1px #bbb; top: 25px; padding: 5px; border-radius: 3px; opacity: 0.2; position: absolute; background-color:#FFF; font-size: 16px; border-top-left-radius: 0px;z-index: 5; }
+.gscaraouselmenu:hover { opacity: 1; }
+.gscaraouselmenu i { cursor:pointer; }
+.gscaraouselmenuheader { position: absolute;
+                         cursor:pointer;
+top: -20px;
+background-color:#efefef;
+border: solid 1px #bbb;
+left: -1px;
+border-bottom: solid 0px;
+font-size:12px;
+height: 14px;
+border-top-right-radius: 3px;
+padding: 2px; }

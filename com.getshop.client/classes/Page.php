@@ -496,17 +496,21 @@ class Page {
     }
 
     public function printApplicationArea($cell) {
-        if ($cell->type == "FLOATING") {
+        if ($cell->type == "FLOATING") {d
             return;
         }
         echo "<div class='applicationarea' appid='" . $cell->appId . "' area='" . $cell->cellId . "'>";
-        if (!$cell->appId && $this->factory->isEditorMode()) {
             echo "<span class='gsaddcontent'>";
-            echo "<i class='fa fa-plus-circle gs_show_application_add_list'></i>";
+            if (!$cell->appId) {
+                $show="";
+                if(!$this->factory->isEditorMode()) {
+                    $show = "style='opacity:0;'";
+                }
+                echo "<i class='fa fa-plus-circle gs_show_application_add_list' $show></i>";
+            } else {
+                $this->renderApplication($cell);
+            }
             echo "</span>";
-        } else {
-            $this->renderApplication($cell);
-        }
         echo "</div>";
     }
 

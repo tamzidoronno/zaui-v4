@@ -104,7 +104,7 @@ public class PageManager extends ManagerBase implements IPageManager {
             return null;
         }
 
-        page.dumpLayout();        
+//        page.dumpLayout();        
         return finalizePage(page);
 
     }
@@ -263,6 +263,7 @@ public class PageManager extends ManagerBase implements IPageManager {
     public void setStylesOnCell(String pageId, String cellId, String styles, String innerStyles, Double width) {
         Page page = getPage(pageId);
         page.layout.updateStyle(cellId, styles, width, innerStyles);
+        saveCommonAreas();
     }
 
     @Override

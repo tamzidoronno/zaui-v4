@@ -145,11 +145,6 @@ class Page {
                 </tr>
             </table>
             <br>
-            <b>Other operations</b><br>
-            <div class="gsoperatecell" target="selectedcell" type="delete"><i class="fa fa-trash-o"></i> Delete selected slide</div>
-            <div class="gsoperatecell" type="moveup" target="selectedcell"><i class="fa fa-arrow-left"></i> Move slide to the left</div>
-            <div class="gsoperatecell" type="movedown" target="selectedcell"><i class="fa fa-arrow-right"></i> Move slide to the right</div>
-            <bR>
             <input style="width: 100%;" class="savecarouselconfig" type="button" value="Save settings">
         </div>
         <script>
@@ -245,7 +240,7 @@ class Page {
             echo "</div>";
         }
 
-        
+
         echo "<div $additionalinfo $styles width='$width' class='gsucell $gscell $gsrotatingrow $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "'>";
         if ($parent != null && $parent->mode === "ROTATING") {
             if ($count > 0) {
@@ -263,13 +258,12 @@ class Page {
                 echo "<i title='" . $this->factory->__f("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o'></i>";
                 echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addafter' mode='INIT'></i>";
                 echo "</span>";
-            } else if($parent && $parent->mode == "ROTATING" || $parent->mode == "TAB") {
+            } else if ($parent && $parent->mode == "ROTATING" || $parent->mode == "TAB") {
                 echo "<span class='gseditrowbuttons'>";
                 echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addbefore' mode='INIT'></i>";
                 echo "<i title='" . $this->factory->__f("Delete carousel") . "' class='fa gsoperatecell fa-trash-o' type='delete' target='container'></i>";
                 echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addafter' mode='INIT'></i>";
                 echo "</span>";
-                
             }
         }
         echo "<div $innerstyles class='$gscellinner gsuicell gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
@@ -277,7 +271,7 @@ class Page {
         if ($this->shouldPrintCellBox($edit, $cell, $parent)) {
             $style = "position:absolute;width:100%; bottom: -1px;";
             echo "<div style='$style' class='gscellbox' cellid='" . $cell->cellId . "'>";
-            echo "<div class='gscellheadermin'><i class='fa fa-external-link-square'></i></div>"; 
+            echo "<div class='gscellheadermin'><i class='fa fa-external-link-square'></i></div>";
             echo "<div class='gscellboxheader'>";
             echo "<span style='float:left;'>" . $this->printEasyModeEdit($cell, $parent, true) . "</span>";
             echo "</div></div>";
@@ -524,8 +518,8 @@ class Page {
         <? if ($doCarousel) { ?>
                 thundashop.framework.activateCarousel($(".gsrotating[cellid='<? echo $cell->cellId; ?>']"), <? echo $config->time; ?>);
         <? } else { ?>
-                if (!thundashop.framework.lastRotatedCell[cellid]) {
-                    thundashop.framework.lastRotatedCell[cellid] = '<? echo $cell->cells[0]->cellId; ?>';
+                if (!thundashop.framework.activeContainerCellId[cellid]) {
+                    thundashop.framework.setActiveContainerCellId('<? echo $cell->cells[0]->cellId; ?>', cellid);
                 }
         <? } ?>
         </script>
@@ -599,9 +593,23 @@ class Page {
         echo "</div>";
     }
 
+    public function printCarourselMenu() {
+        ?>
+        <span class='gscaraouselmenu'>
+            <div class='gscaraouselmenuheader'>Tab menu</div>
+        <i class="gsoperatecell fa fa-arrow-left" type="moveup" target="selectedcell" title='Move slide to the left'></i>
+        <i class='fa fa-plus-circle gsoperatecell' type='addfloating' title='Add content to slider'></i>
+        <i class="fa fa-image gs_resizing" type="delete" title="Open styling"></i>
+        <i class='fa fa-cogs carouselsettings' title='Carousel settings' style='cursor:pointer;'></i>
+        <i class="gsoperatecell fa fa-trash-o" target="selectedcell" type="delete" title='Delete selected slide'></i>
+        <i class="gsoperatecell fa fa-arrow-right" type="movedown" target="selectedcell" title='Move slide to the right'></i>
+        </span>
+        <?
+    }
+
     public function printCarouselDots($totalcells, $count, $cellid) {
         $editdots = "";
-        if($this->factory->isEditorMode()) {
+        if ($this->factory->isEditorMode()) {
             $editdots = "gscarouseldotseditmode";
         }
         echo "<div class='gscarouseldots $editdots'>";
@@ -614,10 +622,7 @@ class Page {
         }
         if ($this->factory->isEditorMode()) {
             echo "<i class='fa fa-plus addcarouselrow gsoperatecell' type='addrow' target='container' title='Add another slider'></i>";
-            echo "<i class='fa fa-plus-circle gsoperatecell' type='addfloating' title='Add content to slider'></i>";
-            echo "<i class='fa fa-cogs carouselsettings' title='Carousel settings' style='cursor:pointer;'></i>";
             echo "<i class='fa fa-warning' title='The carousel is not rotating while logged in as administrator.' style='cursor:pointer;'></i>";
-            echo '<i class="fa fa-image gs_resizing" type="delete" title="Open styling"></i>';
         }
         echo "</div>";
     }
@@ -637,7 +642,7 @@ class Page {
 
         if ($cell->mode == "FLOATING") {
             echo "<i class='fa fa-image gs_resizing' type='delete' title='Open styling'></i> ";
-            echo "<i class='fa fa-trash-o gsoperatecell' type='delete' title='Delete area' target='this' cellid='".$cell->cellId."'></i> ";
+            echo "<i class='fa fa-trash-o gsoperatecell' type='delete' title='Delete area' target='this' cellid='" . $cell->cellId . "'></i> ";
         } else if ($cell->mode == "ROW") {
             if ($parent && sizeof($parent->cells) > 1 && $parent->mode != "ROTATING" && $parent->cells[0]->cellId != $cell->cellId && !$simple) {
                 echo "<i class='fa fa-arrow-up gsoperatecell' type='moveup' title='Move row up'></i> ";
@@ -795,20 +800,21 @@ class Page {
             $this->addCarouselSettingsPanel();
         }
         if ($parent != null && $parent->mode === "ROTATING") {
+            $this->printCarourselMenu();
             $this->printCarouselDots($totalcells, $count, $cell->cellId);
         }
     }
 
     public function shouldPrintCellBox($edit, $cell, $parent) {
-        if($parent && $parent->mode == "ROTATING") {
+        if ($parent && $parent->mode == "ROTATING") {
             return false;
         }
-        if($parent && $parent->mode == "TAB") {
+        if ($parent && $parent->mode == "TAB") {
             return false;
         }
-        
+
         $result = !$edit && sizeof($cell->cells) == 0 && $cell->mode != "INIT" && $cell->mode != "FLOATING" && $this->factory->isEditorMode();
-        
+
         return $result;
     }
 

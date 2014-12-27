@@ -630,44 +630,6 @@ class ApplicationManager extends FactoryBase {
         return $retval;
     }
 
-    public function syncapplication() {
-        $id = $_POST['data']['id'];
-        $this->getApi()->getAppManager()->setSyncApplication($id);
-
-        $this->displayApplicationManagement();
-    }
-
-    public function displayApplicationManagement() {
-        $appMan = new ApplicationManagement();
-        if (isset($_POST['data']['id'])) {
-            $appMan->setApplicationSettingsId($_POST['data']['id']);
-        }
-        $appMan->display();
-    }
-
-    public function deleteMyApplication() {
-        $id = $_POST['data']['id'];
-        $appMan = new ApplicationManagement();
-        $appMan->deleteApp($id);
-        $appMan->display();
-    }
-
-    public function saveApplication() {
-        $appMan = new ApplicationManagement();
-        $appName = $_POST['data']['appname'];
-        if (!$appName) {
-            $appMan->setErrorMessage($this->__f("Please specify a name"));
-            $appMan->setShowCreatePage();
-        } else {
-            if (isset($_POST['data']['id'])) {
-                $appMan->saveSettingsConfiguration($_POST['data']);
-            } else {
-                $appMan->createApplication($appName);
-            }
-        }
-        $appMan->display();
-    }
-
     public function loadpaymentinfo() {
         $this->includefile("applicationpayment");
     }
@@ -678,49 +640,12 @@ class ApplicationManager extends FactoryBase {
         $this->includefile("applicationpayment");
     }
 
-    public function importExistingApplication() {
-        $appSettingsId = $_POST['data']['appSettingsId'];
-        $area = $_POST['data']['area'];
-        $import = new ImportApplication($appSettingsId, $area);
-        echo $import->getControlPanel();
-    }
-
     /*
      * Dont remove this. it is used for ping!
      */
 
     public function ping() {
         
-    }
-
-    public function selectPredefinedData() {
-        $this->getFactory()->reloadStoreObject();
-        if ($_POST['data']['target'] !== "default") {
-            $page = $this->getApi()->getPageManager()->createPage(-1, "");
-        } else {
-            $page = $this->getPage()->backendPage;
-        }
-        $pb = new PageBuilder(null, null, $page);
-        $page->type = -1;
-        $page->layout = $pb->buildPredefinedPage(json_decode($_POST['data']['config'], true));
-        $page->pageTag = $_POST['data']['pagetype'] . "_" . $_POST['data']['index'];
-        $page->pageTagGroup = $_POST['data']['pagetype'];
-        $page->pageType = 1;
-        if ($_POST['data']['pagetype'] == "product") {
-            $page->pageType = 2;
-        }
-        $this->getApi()->getPageManager()->savePage($page);
-        $pb->addPredefinedContent($_POST['data']['pagetype'], json_decode($_POST['data']['config']));
-
-        $this->addProductData($page);
-
-        $this->getFactory()->clearCachedPageData();
-        $this->getFactory()->reloadStoreObject();
-        $this->getFactory()->initPage();
-    }
-
-    public function deleteStore() {
-        $this->getFactory()->getApi()->getStoreManager()->delete();
     }
 
     public function displayPageSettings() {

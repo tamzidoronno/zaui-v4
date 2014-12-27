@@ -16,26 +16,31 @@ import java.util.List;
  */
 @GetShopApi
 public interface IGetShopApplicationPool {
-	/**
-	 * Returns a list of all available applications.
-	 * 
-	 * @return 
-	 */
-        @GetShopAdministrator	
-        public List<Application> getApplications();
-	
-	/**
-	 * Get an application by an given id.
-	 * 
-	 * @param applicationId
-	 * @return 
-	 */
-	public Application get(String applicationId);
-	
-	/**
-	 * Save an application
-	 * @param application 
-	 */
-	@GetShopAdministrator
-	public void saveApplication(Application application);
+
+    /**
+     * Returns a list of all available applications.
+     *
+     * @return
+     */
+    @GetShopAdministrator
+    public List<Application> getApplications();
+
+    /**
+     * Get an application by an given id.
+     *
+     * @param applicationId
+     * @return
+     */
+    public Application get(String applicationId);
+
+    /**
+     * Save an application
+     *
+     * @param application
+     */
+    @GetShopAdministrator
+    public void saveApplication(Application application);
+
+    @GetShopAdministrator
+    public void deleteApplication(String applicationId);
 }

@@ -86,10 +86,6 @@ if(isset($_GET['setLanguage'])) {
 
 <?
 
-$importApplication = new ImportApplication(null, null);
-$importApplication->showMenu();
-
-
 if (isset($_GET['logonwithkey'])) {
     $key = $_GET['logonwithkey'];
     $factory = IocContainer::getFactorySingelton(false);

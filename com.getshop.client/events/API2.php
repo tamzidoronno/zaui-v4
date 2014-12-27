@@ -1517,6 +1517,21 @@ class APIGetShopApplicationPool {
 	}
 
 	/**
+	* Save an application
+	*
+	* @param application
+	*/
+
+	public function deleteApplication($core_appmanager_data_Application) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_appmanager_data_Application"] = json_encode($this->transport->object_unset_nulls($core_appmanager_data_Application));
+	     $data["method"] = "deleteApplication";
+	     $data["interfaceName"] = "core.applications.IGetShopApplicationPool";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Get an application by an given id.
 	*
 	* @param applicationId
@@ -1548,6 +1563,7 @@ class APIGetShopApplicationPool {
 
 	/**
 	* Save an application
+	*
 	* @param application
 	*/
 

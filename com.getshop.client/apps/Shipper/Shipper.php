@@ -59,7 +59,7 @@ class Shipper extends \ShipmentApplication implements \Application {
         $cart = $this->getApi()->getCartManager()->getCart();
         $cartHelper = new \HelperCart($cart);
         $cost = (double)$this->getApi()->getCartManager()->getShippingPriceBasis();
-        if ($cost > $freeShipment) {
+        if ($freeShipment && $cost > $freeShipment) {
             return 0;
         }
          

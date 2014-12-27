@@ -6,7 +6,7 @@ class Login extends \SystemApplication implements \Application {
     public $errorMessage = "";
 
     public function getDescription() {
-        
+        return $this->__w("Add this to the header or to the body to make a new login form, can be added anywhere on the page.");
     }
 
     public function getName() {

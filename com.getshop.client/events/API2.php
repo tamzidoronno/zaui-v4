@@ -5637,6 +5637,23 @@ class APIUserManager {
 	     return $this->transport->sendMessage($data);
 	}
 
+	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function upgradeUserToGetShopAdmin($password) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+	     $data["method"] = "upgradeUserToGetShopAdmin";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
 }
 class APIUtilManager {
 

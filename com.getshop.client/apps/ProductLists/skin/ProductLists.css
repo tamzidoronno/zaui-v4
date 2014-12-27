@@ -19,45 +19,44 @@
     font-size: 16px;
 }
 
-.ProductLists .available_lists .gs_productlist .product_count {
-    position: absolute; 
-    top: 7px;
-    right: 7px;
+.ProductLists .available_lists .gs_productlist .product_count i ,
+.ProductLists .available_lists  .manage_list i {
+    line-height: line-height: 100%;;
+}
+
+.ProductLists .available_lists .gs_productlist .product_count,
+.ProductLists .available_lists  .manage_list {
+    position: absolute;
+    right: 0px;
     padding: 5px;
-    background-color: #3da73b;
-    background: linear-gradient(to top, #05c100 , #06ec00); /* Standard syntax */
-    color: #333;
-    border-radius: 5px;
-    padding-right: 10px;
-    padding-left: 10px;
+    
+    line-height: 100%;
+    width: 30px;
+    text-align: center;
+    background-color: #F1f1f1;
+ }
+
+.ProductLists .available_lists .gs_productlist .product_count {
+    top: 0px;
+    bottom: 50%;
+    
 }
 
 .ProductLists .available_lists  .manage_list {
-    background-color: #3da73b;
-    background: linear-gradient(to top, #05c100 , #06ec00); /* Standard syntax */
-    position: relative;
-    top: 7px;
-    position: absolute;
-    padding: 5px;
-    right: 0px;
-    font-size: 20px;
-    border-radius: 5px;
-    cursor: pointer;
+    bottom: 0px;
+    top: 50%;
+    border-top: solid 1px #DDD;
+    line-height: 30px;
 }
 
 
 .ProductLists .available_lists .gs_productlist {
     font-size: 16px;
-    position: relative;
-    height: 36px;
     padding: 3px;
     cursor: pointer;
-    margin-right: 30px;
+    padding-bottom: 30px;
 }
 
-.ProductLists .available_lists .gs_productlist:hover {
-    background-color: #F1F1F1;
-}
 .ProductLists .available_lists .gs_productlist:last-child {
     border-bottom: solid 0px #DDD;
 }
@@ -311,3 +310,44 @@
     display: none;
 }
 
+.ProductLists .selectProductList {
+    border: solid 1px #F1F1F1;
+    padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.ProductLists .list_selectable i.iconlist {
+    font-size: 40px;
+    float: left;
+    margin-right: 10px;
+    color: #CCC;
+}
+
+.ProductLists .list_selectable {
+    border: solid 1px #F1F1F1;
+    /*display: inline-block;*/
+    /*width: 150px;*/
+    vertical-align: top;
+    text-align: left;
+    position: relative;
+    padding-right: 30px;
+    margin-bottom: 10px;
+    padding-left: 10px;
+    padding-top: 10px;
+    
+    background: #ffffff; /* Old browsers */
+    background: -moz-linear-gradient(top,  #ffffff 0%, #e5e5e5 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e5e5e5)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#e5e5e5 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #ffffff 0%,#e5e5e5 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #ffffff 0%,#e5e5e5 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #ffffff 0%,#e5e5e5 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
+    color: #333;
+    
+}
+
+.ProductLists .setproductlist {
+    /*padding: 20px;*/
+}

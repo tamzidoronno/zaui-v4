@@ -25,28 +25,28 @@ import org.springframework.beans.BeansException;
  * @author ktonder
  */
 public class StoreHandler {
+
     private List<ManagerBase> messageHandler;
     private String storeId;
     private HashMap<String, Session> sessions = new HashMap();
     private GetShopSessionScope scope;
 
-   
     public StoreHandler(String storeId) {
         this.storeId = storeId;
-		try {
-			scope = AppContext.appContext.getBean(GetShopSessionScope.class);
-		} catch (BeansException ex) {
-			System.out.println("Throws bean exception?");
-		}
+        try {
+            scope = AppContext.appContext.getBean(GetShopSessionScope.class);
+        } catch (BeansException ex) {
+            System.out.println("Throws bean exception?");
+        }
     }
 
     public synchronized Object executeMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
         scope.setStoreId(storeId);
         setSessionObject(inObject.sessionId);
-        
+
         Class aClass = loadClass(inObject.interfaceName);
         Method executeMethod = getMethodToExecute(aClass, inObject.method, types, argumentValues);
-        
+
         try {
             authenticateUserLevel(executeMethod, aClass);
             Object result = invokeMethod(executeMethod, aClass, argumentValues);
@@ -57,31 +57,30 @@ public class StoreHandler {
                 User user = findUser();
                 String userInfo = "";
                 if (user != null) {
-                    userInfo += " id: " +user.id;
-                    userInfo += " name: " +user.fullName;
-                    userInfo += " email: " +user.emailAddress;
+                    userInfo += " id: " + user.id;
+                    userInfo += " name: " + user.fullName;
+                    userInfo += " email: " + user.emailAddress;
                 }
-                
+
                 System.out.println("Access denied, store: " + storeId + " , user={" + userInfo + "} method={" + aClass.getSimpleName() + "." + inObject.method + "}");
             }
             throw ex;
         }
     }
-    
+
     public synchronized boolean isAdministrator(String sessionId) throws ErrorException {
-        
+
         scope.setStoreId(storeId);
-        
+
         UserManager manager = getManager(UserManager.class);
         User user = manager.getUserBySessionId(sessionId);
         if (user != null) {
             return user.isAdministrator();
         }
-        
+
         return false;
     }
 
-    
     private Class loadClass(String objectName) throws ErrorException {
         try {
             ClassLoader classLoader = getClass().getClassLoader();
@@ -109,7 +108,7 @@ public class StoreHandler {
                     return emethod;
                 }
             }
-            
+
             return aClass.getMethod(method, types);
         } catch (NoSuchMethodException ex) {
             throw new ErrorException(82);
@@ -130,14 +129,16 @@ public class StoreHandler {
         } catch (InvocationTargetException ex) {
             Throwable cause = ex.getCause();
             ex.printStackTrace();
-            if (cause instanceof ErrorException) { throw (ErrorException) cause; }
+            if (cause instanceof ErrorException) {
+                throw (ErrorException) cause;
+            }
 
             ErrorException aex = new ErrorException(86);
             aex.additionalInformation = cause.getLocalizedMessage() + " <br> " + stackTraceToString(cause);
             throw aex;
         }
     }
-    
+
     private String stackTraceToString(Throwable e) {
         String stackTrace = "";
         for (StackTraceElement element : e.getStackTrace()) {
@@ -158,14 +159,14 @@ public class StoreHandler {
         } else {
             session = sessions.get(sessionId);
         }
-        
+
         session.lastActive = new Date();
-        
-		try {
-			messageHandler = new ArrayList<ManagerBase>(AppContext.appContext.getBeansOfType(ManagerBase.class).values());
-		} catch (BeansException ex) {
-			System.out.println("Throws bean exception?");
-		}
+
+        try {
+            messageHandler = new ArrayList<ManagerBase>(AppContext.appContext.getBeansOfType(ManagerBase.class).values());
+        } catch (BeansException ex) {
+            System.out.println("Throws bean exception?");
+        }
         for (ManagerBase base : messageHandler) {
             base.session = session;
         }
@@ -204,38 +205,48 @@ public class StoreHandler {
 
     private synchronized Annotation authenticateUserLevel(Method executeMethod, Class aClass) throws ErrorException {
         executeMethod = getCorrectMethod(executeMethod);
-        if(executeMethod.getName().equals("getAllUsers")) {
-            System.out.println("found");
-        }
 
         if (executeMethod.getAnnotation(Internal.class) != null) {
             throw new ErrorException(90);
         }
-        
-        Annotation userLevel = executeMethod.getAnnotation(Administrator.class);
+
+        Annotation userLevel = executeMethod.getAnnotation(GetShopAdministrator.class);
+
+        if (userLevel == null) {
+            userLevel = executeMethod.getAnnotation(Administrator.class);
+        }
+
         if (userLevel == null) {
             userLevel = executeMethod.getAnnotation(Editor.class);
         }
-        
-        
+
         if (userLevel != null) {
             User user = findUser();
-            
-            if(user != null && user.isAdministrator()) {
+
+            if (user == null || userLevel instanceof GetShopAdministrator && !user.isGetShopAdministrator()) {
+                throw new ErrorException(26);
+            }
+
+            if (user != null && user.isGetShopAdministrator()) {
                 return userLevel;
             }
             
-            if(user != null && user.applicationAccessList.size() > 0) {
-                if(checkApplicationsAccessByApp(user, executeMethod, aClass)) {
+            if (user != null && user.isAdministrator()) {
+                return userLevel;
+            }
+
+            if (user != null && user.applicationAccessList.size() > 0) {
+                if (checkApplicationsAccessByApp(user, executeMethod, aClass)) {
                     return userLevel;
                 } else {
                     throw new ErrorException(26);
                 }
             }
-            
+
             if (user != null && (userLevel instanceof Administrator || userLevel instanceof Editor)) {
                 checkUserPrivileges(user, executeMethod, aClass);
             }
+
             if (user == null || userLevel instanceof Administrator && !user.isAdministrator()) {
                 throw new ErrorException(26);
             }
@@ -245,22 +256,21 @@ public class StoreHandler {
         }
         return userLevel;
     }
-    
+
     private void checkUserPrivileges(User user, Method executeMethod, Class aClass) throws ErrorException {
         if (user.privileges.isEmpty()) {
             return;
         }
-        
-        
+
         ManagerBase manager = getManager(aClass);
         String managerName = manager.getClass().getSimpleName();
-        
+
         for (UserPrivilege priv : user.privileges) {
             if (executeMethod.getName().equals(priv.managerFunction) && managerName.equals(priv.managerName)) {
                 return;
             }
         }
-        
+
         throw new ErrorException(26);
     }
 
@@ -277,21 +287,19 @@ public class StoreHandler {
     }
 
     private <T> T getManager(Class aClass) {
-		try {
-			return (T)AppContext.appContext.getBean(aClass);
-		} catch (BeansException ex) {
-			System.out.println("Throws bean exception?");
-		}
-		
-		return null;
+        try {
+            return (T) AppContext.appContext.getBean(aClass);
+        } catch (BeansException ex) {
+            System.out.println("Throws bean exception?");
+        }
+
+        return null;
     }
 
-   
-
     private boolean checkApplicationsAccessByApp(User user, Method executeMethod, Class aClass) {
-        
+
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-		
+
 //        for(ApplicationSettings setting : pool.applications.values()) {
 //            for(String id : user.applicationAccessList.keySet()) {
 //                if(setting.id.equals(id)) {

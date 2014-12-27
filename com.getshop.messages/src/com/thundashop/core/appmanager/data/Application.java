@@ -41,6 +41,7 @@ public class Application extends DataCommon implements Comparator<Application> {
     public boolean isSingleton;
     public boolean renderStandalone;
     public boolean isPublic;
+    public boolean isFrontend = false;
     public boolean isResponsive = false;
     public Double price;
     public String userId;

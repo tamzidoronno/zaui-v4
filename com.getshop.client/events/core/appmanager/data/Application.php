@@ -25,6 +25,9 @@ class core_appmanager_data_Application extends core_common_DataCommon  {
 	public $isPublic;
 
 	/** @var String */
+	public $isFrontend;
+
+	/** @var String */
 	public $isResponsive;
 
 	/** @var String */

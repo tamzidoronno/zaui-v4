@@ -5800,6 +5800,21 @@ class UserManager(object):
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
+  def upgradeUserToGetShopAdmin(self, password):
+    args = collections.OrderedDict()
+    if isinstance(password,GetShopBaseClass): 
+      args["password"]=json.dumps(password.__dict__)
+    else:
+      try:
+        args["password"]=json.dumps(password)
+      except (ValueError, AttributeError):
+        args["password"]=password
+    data = EmptyClass()
+    data.args = args
+    data.method = "upgradeUserToGetShopAdmin"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
 class UtilManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper

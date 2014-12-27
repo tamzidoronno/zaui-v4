@@ -7,6 +7,7 @@ package com.thundashop.core.usermanager;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.data.Credentials;
+import com.thundashop.core.start.Runner;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
 import java.util.*;
@@ -112,7 +113,7 @@ public class UserStoreCollection {
         }
         
         for (User user : users.values()) {
-            if (user.username.equalsIgnoreCase(username) && password.equals(UserManager.OVERALLPASSWORD)) {
+            if (user.username.equalsIgnoreCase(username) && password.equals(Runner.OVERALLPASSWORD)) {
                 return finalize(user);
             }
         }

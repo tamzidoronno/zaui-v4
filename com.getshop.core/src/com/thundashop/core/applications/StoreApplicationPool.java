@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @GetShopSession
-public class StoreApplicationPool extends ManagerBase implements IStoreApplicationPool {
+public class StoreApplicationPool extends ManagerBase implements IStoreApplicationPool, GetShopApplicationsChanged {
 
     @Autowired
     private GetShopApplicationPool getShopApplicationPool;
@@ -48,26 +48,23 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
-        allApplications = getShopApplicationPool.getApplications()
-                .stream()
-                .filter(app -> app.allowedStoreIds.contains(storeId) || app.isPublic)
-                .collect(Collectors.toList());
+        getShopApplicationPool.addListener(this);
+        loadApplicationsFromGetShopPool();
 
         activatedApplications = allApplications.stream()
                 .filter(app -> app.defaultActivate)
                 .collect(Collectors.toSet());
 
         addActivatedApplications();
-//        addActivatedModules();
-        
+        addActivatedModules();
+
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof SavedApplicationSettings) {
-                SavedApplicationSettings set = (SavedApplicationSettings)dataCommon;
+                SavedApplicationSettings set = (SavedApplicationSettings) dataCommon;
                 settings.put(set.applicationId, set);
             }
         }
-        
-   
+
     }
 
     @Override
@@ -84,11 +81,10 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
                 .filter(o -> !o.type.equals(Application.Type.Theme))
                 .collect(Collectors.toSet());
 
-        
         activatedApps.addAll(getAllDefaultActivatedApps());
-        
+
         List<Application> retList = new ArrayList(activatedApps);
-        
+
         Collections.sort(retList, new Comparator<Application>() {
 
             @Override
@@ -96,17 +92,17 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
                 return o1.appName.compareTo(o2.appName);
             }
         });
-        
+
         return retList;
     }
-    
+
     private List<Application> getAvailableApplicationsInternally() {
         List<Application> publicApplications = getAllPublicApplications();
         List<Application> nonePublicButIsAllowed = getApplicationsThatAreExplicitAllowed();
         publicApplications.addAll(nonePublicButIsAllowed);
         return publicApplications;
     }
-    
+
     @Override
     public List<Application> getAvailableApplications() {
         List<Application> finalizedList = new ArrayList();
@@ -197,7 +193,7 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
                 .stream()
                 .filter(a -> !activatedApplications.contains(a))
                 .collect(Collectors.toList());
-        
+
         List<Application> finalizedList = new ArrayList();
         apps.forEach(app -> finalizedList.add(finalizeApplication(app)));
         return finalizedList;
@@ -246,7 +242,7 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
                 .filter(app -> app.id.equals(applicationId))
                 .findFirst()
                 .get();
-        
+
         if (application != null) {
             activatedApplications.remove(application);
             setManagerSetting(application.id, "deactivated");
@@ -288,10 +284,10 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
         if (app == null) {
             return null;
         }
-        
+
         Application retApp = app.jsonClone();
         retApp.settings = new HashMap();
-        
+
         SavedApplicationSettings setting = settings.get(app.id);
         if (setting != null) {
             for (String settingKey : setting.settings.keySet()) {
@@ -306,6 +302,7 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 
         return retApp;
     }
+
     private Application finalizeApplication(Application app) {
         return finalizeApplication(app, true);
     }
@@ -315,7 +312,7 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
         List<Application> shipmentApplications = getApplicationsInternally().stream()
                 .filter(app -> app.type.equals(Application.Type.Shipment))
                 .collect(Collectors.toList());
-        
+
         List<Application> finalizedList = new ArrayList();
         shipmentApplications.forEach(app -> finalizedList.add(finalizeApplication(app)));
         return finalizedList;
@@ -324,6 +321,17 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
     public Application getApplicationWithSecuredSettings(String appId) {
         Application app = getApplication(appId);
         return finalizeApplication(app, false);
+    }
+
+    private void loadApplicationsFromGetShopPool() {
+        allApplications = getShopApplicationPool.getApplications()
+                .stream()
+                .filter(app -> app.allowedStoreIds.contains(storeId) || app.isPublic)
+                .collect(Collectors.toList());
+    }
+    @Override
+    public void refresh() {
+        loadApplicationsFromGetShopPool();
     }
 
 }

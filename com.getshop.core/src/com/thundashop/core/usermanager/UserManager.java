@@ -7,6 +7,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.pagemanager.PageManager;
+import com.thundashop.core.start.Runner;
 import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.Group;
@@ -23,6 +24,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,7 +35,7 @@ import org.springframework.stereotype.Component;
 @Component
 @GetShopSession
 public class UserManager extends ManagerBase implements IUserManager, StoreInitialized {
-    public static String OVERALLPASSWORD = "alksdjfasdoui32q1-2-3-13-1-324asdfasdf_213476askjd....|123§§!4985klq12j3h1kl254h12";
+    
     public SessionFactory sessionFactory = new SessionFactory();
     public ConcurrentHashMap<String, UserStoreCollection> userStoreCollections = new ConcurrentHashMap<String, UserStoreCollection>();
 
@@ -169,7 +171,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public User logOn(String username, String password) throws ErrorException {
-        if (!password.equals(OVERALLPASSWORD)) {
+        if (!password.equals(Runner.OVERALLPASSWORD)) {
             password = encryptPassword(password);
         }
         
@@ -256,7 +258,12 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             throw new ErrorException(26);
         }
 
-        if (getSession().currentUser.type > User.Type.ADMINISTRATOR && getSession().currentUser.id != user.id) {
+        // Make sure that getshop admin accounts cant be modified by other then themself.
+        if (user.type == User.Type.GETSHOPADMINISTRATOR && getSession().currentUser.id != user.id) {
+            throw new ErrorException(26);
+        }
+        
+        if (getSession().currentUser.type < User.Type.ADMINISTRATOR && getSession().currentUser.id != user.id) {
             if(!getSession().currentUser.id.equals(user.id)) {
                 throw new ErrorException(26);
             }
@@ -435,6 +442,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         UserStoreCollection collection = getUserStoreCollection(storeId);
         User user = collection.getUser(userId);
+        
+        // Make sure that getshop admin accounts cant be modified by other then themself.
+        if (user.type == User.Type.GETSHOPADMINISTRATOR && getSession().currentUser.id != user.id) {
+            throw new ErrorException(26);
+        }
         
         if(user.password.equals(oldPassword) || getSession().currentUser.type  == User.Type.ADMINISTRATOR) {
             user.password = newPassword;
@@ -715,4 +727,17 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             saveObject(user);
 		}
 	}
+
+    @Override
+    public void upgradeUserToGetShopAdmin(String password) {
+        if (password == null || !password.equals(Runner.OVERALLPASSWORD)) {
+            throw new ErrorException(26);
+        }
+        
+        User user = getSession().currentUser;
+        if (user != null) {
+            user.type = User.Type.GETSHOPADMINISTRATOR;
+            saveUser(user);
+        }
+    }
 }

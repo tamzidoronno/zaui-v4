@@ -859,5 +859,10 @@ class ApplicationManager extends FactoryBase {
     public function unsetShowingSettings() {
         $_SESSION['showadmin'] = false;
     }
+    
+    public function upgradeToGetShopAdmin() {
+        $this->getApi()->getUserManager()->upgradeUserToGetShopAdmin($_POST['data']['password']);
+        ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::refresh();
+    }
 }
 ?>

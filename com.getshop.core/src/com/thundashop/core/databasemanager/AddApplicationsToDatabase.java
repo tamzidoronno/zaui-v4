@@ -64,16 +64,16 @@ public class AddApplicationsToDatabase {
         apps.add(productSearch);
 
 
-//        ApplicationSettings sedoxMenu = createSettings(
-//                "SedoxMenu",
-//                "b23a3767-1f7b-40e3-93c5-65504ebaa73c",
-//                allowed2,
-//                "",
-//                ApplicationSettings.Type.Webshop, false);
-//        sedoxMenu.isPublic = false;
-//        sedoxMenu.allowedStoreIds = new ArrayList();
-//        sedoxMenu.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
-//        apps.add(sedoxMenu);
+        Application getShopAdmin = createSettings(
+                "GetShopAdmin",
+                "d315510d-198f-4c16-beef-54f979be58cf",
+                allowed,
+                "",
+                Application.Type.Webshop, true);
+        getShopAdmin.isPublic = true;
+        getShopAdmin.defaultActivate = true;
+        getShopAdmin.moduleId = "hidden";
+        apps.add(getShopAdmin);
 //        
 //        ApplicationSettings sedoxLogin = createSettings(
 //                "SedoxLogin",

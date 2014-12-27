@@ -13,6 +13,9 @@ class core_pagemanager_data_PageCell {
 	public $mode;
 
 	/** @var String */
+	public $type;
+
+	/** @var String */
 	public $cells;
 
 	/** @var String */

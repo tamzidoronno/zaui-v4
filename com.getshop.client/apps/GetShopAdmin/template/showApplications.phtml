@@ -1,0 +1,16 @@
+<h1><center>Please select application you want to modify</center></h1>
+
+<div class='show_edit_fragmet_view'>
+
+    <?
+    /* @var $this ns_d315510d_198f_4c16_beef_54f979be58cf\GetShopAdmin */
+
+    $apps = $this->getApi()->getGetShopApplicationPool()->getApplications();
+
+    foreach ($apps as $app) {
+        echo "<div class='gss_admin_app_select' gss_view='show_edit_fragmet_view' gss_value='$app->id' gss_fragment='editApplicattion'>$app->appName</div>";
+    }
+
+    ?>
+
+</div>

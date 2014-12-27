@@ -21,7 +21,8 @@ public interface IGetShopApplicationPool {
 	 * 
 	 * @return 
 	 */
-	public List<Application> getApplications();
+        @GetShopAdministrator	
+        public List<Application> getApplications();
 	
 	/**
 	 * Get an application by an given id.

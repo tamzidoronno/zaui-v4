@@ -6,7 +6,9 @@ package com.thundashop.core.applications;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.appmanager.data.ApplicationModule;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.Database;
+import com.thundashop.core.databasemanager.data.Credentials;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +23,8 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-public class GetShopApplicationPool implements IGetShopApplicationPool {
+public class GetShopApplicationPool extends ManagerBase implements IGetShopApplicationPool {
+    private List<GetShopApplicationsChanged> changeListeners = new ArrayList();
     
     @Autowired
     private ApplicationModulePool modulePool;
@@ -49,7 +52,23 @@ public class GetShopApplicationPool implements IGetShopApplicationPool {
 
     @Override
     public void saveApplication(Application application) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        applications.put(application.id, application);
+        
+        System.out.println(application.appName + " " + application.moduleId);
+        Credentials cred = new Credentials();
+        cred.manangerName = "ApplicationPool";
+        cred.password = "asdfadsf";
+        cred.storeid = "all";
+        database.save(application, cred);
+        
+        finalizeApplications();
+        triggerChangedEvent();
+    }
+    
+    private void triggerChangedEvent() {
+        for (GetShopApplicationsChanged list : changeListeners) {
+            list.refresh();
+        }
     }
     
     private Map<String, Application> finalizeApplications() {
@@ -68,4 +87,7 @@ public class GetShopApplicationPool implements IGetShopApplicationPool {
         return modulePool.getModules();
     }
 
+    public void addListener(GetShopApplicationsChanged listener) {
+        changeListeners.add(listener);
+    }
 }

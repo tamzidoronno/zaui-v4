@@ -1,0 +1,54 @@
+<?
+/* @var $this ns_d315510d_198f_4c16_beef_54f979be58cf\GetShopAdmin */
+
+$application = $this->getApi()->getGetShopApplicationPool()->get($_POST['value']);
+?>
+
+
+<div class="gss_settings_content">
+    <div class="textfield gss_setting" id="name">
+        <span class="title">Name</span>
+        <input type="textfield" gs_model="applicationmodel" gs_model_attr="name" value="<? echo $application->appName; ?> " >
+        <div class="description">
+            Name of the person that owns this new account.        </div>
+    </div>
+    <div class="gss_setting" id="language">
+        <div class="text inline title">Module</div>
+
+        <div class="gss_dropdown">
+            <select class="config" gs_model="applicationmodel" gs_model_attr="module">
+                <option <? echo $application->moduleId == "other" ? "selected='true'" : ""; ?> value="other">Other</option>
+                <option <? echo $application->moduleId == "WebShop" ? "selected='true'" : ""; ?> value="WebShop">E-Commerce</option>
+                <option <? echo $application->moduleId == "Marketing" ? "selected='true'" : ""; ?> value="Marketing">Marketing</option>
+                <option <? echo $application->moduleId == "cms" ? "selected='true'" : ""; ?> value="cms">CMS</option>
+                <option <? echo $application->moduleId == "reporting" ? "selected='true'" : ""; ?> value="reporting">Reporting</option>
+                <option <? echo $application->moduleId == "hidden" ? "selected='true'" : ""; ?> value="hidden">Hidden</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="textfield gss_setting" id="admin">
+        <span class="title">Is public</span>
+        <div class="gss_onoff" gs_model="applicationmodel" gs_model_attr="ispublic">
+            <? $class = $application->isPublic == "true" ? "fa-toggle-on" : "fa-toggle-off"?>
+            Off<i class="fa <? echo $class; ?>"></i>On
+        </div>
+        <div class="description">Is this application public?</div>
+    </div>
+    
+    
+    <div class="textfield gss_setting" id="admin">
+        <span class="title">Is frontend</span>
+        <div class="gss_onoff" gs_model="applicationmodel" gs_model_attr="isfrontend">
+            <? $class = $application->isFrontend == "true" ? "fa-toggle-on" : "fa-toggle-off"?>
+            Off<i class="fa <? echo $class; ?>"></i>On
+        </div>
+        <div class="description">Should this be visible on frontend?</div>
+    </div>
+    
+    
+    <div class="gss_button_area">
+        <div class="gss_button" gss_success_message='Saved' gss_value="<? echo $application->id; ?>"  gss_method="saveApplication" gss_model="applicationmodel"><i class="fa fa-plus"></i>Save</div>
+    </div>
+
+</div>

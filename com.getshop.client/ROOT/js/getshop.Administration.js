@@ -25,5 +25,11 @@ thundashop.Administration = {
             "appId" : appId
         });
         thundashop.Ajax.post(event);
+    },
+    upgradeUserToGetShopAdmin: function(password) {
+        var event = thundashop.Ajax.createEvent('','upgradeToGetShopAdmin',$(this),{
+            "password" : password
+        });
+        thundashop.Ajax.post(event);
     }
 }

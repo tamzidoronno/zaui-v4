@@ -25,8 +25,10 @@ public class User extends DataCommon implements Comparable<User> {
 
     public List<UserPrivilege> privileges = new ArrayList();
 
+
  
     public static class Type {
+        public static int GETSHOPADMINISTRATOR = 200;
         public static int ADMINISTRATOR = 100;
         public static int EDITOR = 50;
         public static int CUSTOMER = 10;
@@ -95,6 +97,10 @@ public class User extends DataCommon implements Comparable<User> {
         }
     }
     
+    public boolean isGetShopAdministrator() {
+        return (type == User.Type.GETSHOPADMINISTRATOR);
+    }
+    
     public boolean isAdministrator() {
         return (type == User.Type.ADMINISTRATOR);
     }
@@ -157,5 +163,8 @@ public class User extends DataCommon implements Comparable<User> {
         }
         return rowCreatedDate.compareTo(o.rowCreatedDate);
     }
+
     
+    
+
 }

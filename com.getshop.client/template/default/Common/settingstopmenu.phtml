@@ -41,5 +41,11 @@ $activatedApps = $factory->getApi()->getStoreApplicationPool()->getApplications(
     }
     ?>
     <div class='gss_topmenu-button active' gss_goto_app='f1fc4af3-656e-4294-a268-40d2a82d0aa1'><i class='fa fa-star'></i> Badges</div>
-    <div class='gss_topmenu-button'><i class='fa fa-lightbulb-o'></i> GetShop admin</div>    
+    <?
+    if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null && ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->type == 200) {
+    ?>
+        <div class='gss_topmenu-button' gss_goto_app='d315510d-198f-4c16-beef-54f979be58cf'><i class='fa fa-lightbulb-o'></i> GetShop admin</div>    
+    <?
+    }
+    ?>
 </div>

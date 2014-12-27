@@ -232,9 +232,10 @@ class Page {
             $marginsclasses .= " gs_margin_left";
         }
 
-        if ($cell->mode == "FLOATING" && $this->factory->isEditorMode()) {
+        if ($cell->mode == "FLOATING") {
+            $floatingClass = $this->factory->isEditorMode() ? "gsfloatingbox" : "";
             $style = "position:absolute;width:" . $floatData->width . "px;height: " . $floatData->height . "px;top: " . $floatData->top . "px;left:" . $floatData->left . "px";
-            echo "<div style='$style' class='gsfloatingbox' cellid='" . $cell->cellId . "'>";
+            echo "<div style='$style' class='$floatingClass' cellid='" . $cell->cellId . "'>";
             echo "<div class='gsfloatingheader'>";
             echo "<span style='float:left;'>" . $this->printEasyModeEdit($cell, $parent, true) . "</span>";
             echo "</div>";
@@ -282,7 +283,7 @@ class Page {
         echo "</div>";
         echo "</div>";
 
-        if ($cell->mode === "FLOATING" && $this->factory->isEditorMode()) {
+        if ($cell->mode === "FLOATING" ) {
             //End of floatingbox.
             echo "</div>";
             $this->makeDraggable($cell);

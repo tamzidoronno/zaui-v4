@@ -1845,7 +1845,7 @@ a img {
     border: solid 1px rgba(0,0,0,0.7); opacity: 0; text-align: center; background-color:#000; color:#FFF; position:absolute; z-index: 10; width: 100%; top: -23px; border-top-left-radius: 3px; border-top-right-radius: 3px; }
 .gscellbox .ui-resizable-handle { display:none !important; }
 .gscellbox.gsactivebox { opacity: 0.9; }
-.gseditrowbuttons { display:none; position:absolute; right: -1px; width: 20px; border: solid 1px #bbb; text-align: center; padding: 2px; border-bottom-left-radius: 3px; border-top-left-radius: 3px; font-size: 16px; background-color:#FFF; }
+.gseditrowbuttons { display:none; position:absolute; right: 0px; width: 20px; border: solid 1px #bbb; text-align: center; padding: 2px; border-bottom-left-radius: 3px; border-top-left-radius: 3px; font-size: 16px; background-color:#FFF; z-index: 1;}
 .gseditrowbuttons i { cursor:pointer;margin: 3px; font-size: 12px; }
 .gscellbox.gsactivebox .gscellboxheader { display: none; }
 .gsleftheading { position:absolute; left: 3px; top: 1px; }
@@ -1858,7 +1858,11 @@ a img {
 
 
 .gsfloatingbox { border: solid 1px rgba(0,0,0,0); display:inline-block;  }
+.gsfloatingheader {
+    display: none;
+}
 .gsfloatingbox .gsfloatingheader { 
+    display: inherit;
     height: 20px; font-size: 16px;
     -webkit-transition: opacity .3s ease-in-out;
         -moz-transition: opacity .3s ease-in-out;

@@ -16,6 +16,20 @@ public class APIGetShopApplicationPool {
       }
 
      /**
+     * Save an application
+     *
+     * @param application
+     */
+     public void deleteApplication(com.thundashop.core.appmanager.data.Application application)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("application",new Gson().toJson(application));
+          data.method = "deleteApplication";
+          data.interfaceName = "core.applications.IGetShopApplicationPool";
+          String result = transport.send(data);
+     }
+
+     /**
      * Get an application by an given id.
      *
      * @param applicationId
@@ -53,6 +67,7 @@ public class APIGetShopApplicationPool {
 
      /**
      * Save an application
+     *
      * @param application
      */
      public void saveApplication(com.thundashop.core.appmanager.data.Application application)  throws Exception  {

@@ -873,7 +873,7 @@ a img {
 .gs_add_applicationlist::-webkit-scrollbar-thumb:hover {  
     background-color: #aaa;  
 }  
-.gs_add_applicationlist .gsappstoaddinmodule { display:none; min-height: 200px; }
+.gs_add_applicationlist .gsappstoaddinmodule { display:none; }
 
 
 .gsresizingpanel .gstabmenu, 

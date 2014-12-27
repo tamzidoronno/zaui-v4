@@ -576,4 +576,20 @@ public class APIUserManager {
           String result = transport.send(data);
      }
 
+     /**
+     * If an administrator is impersonating a lower user,
+     * this function will return true.
+     *
+     * @return
+     * @throws ErrorException
+     */
+     public void upgradeUserToGetShopAdmin(java.lang.String password)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("password",new Gson().toJson(password));
+          data.method = "upgradeUserToGetShopAdmin";
+          data.interfaceName = "core.usermanager.IUserManager";
+          String result = transport.send(data);
+     }
+
 }

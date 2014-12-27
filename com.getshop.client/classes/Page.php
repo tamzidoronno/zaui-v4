@@ -400,6 +400,24 @@ class Page {
                         </table>
                     </div> 
                 </div>
+                
+                <div class='gscssattributes'>
+                    <div class="gscssrow">
+                        Spacing <span class="gscssinput"><input type='text' data-attr="padding" data-prefix="px">px</span>
+                    </div>
+                    <div class="gscssrow">
+                        Left spacing <span class="gscssinput"><input type='text' data-attr="padding-left" data-prefix="px">px</span>
+                    </div>
+                    <div class="gscssrow">
+                        Top spacing <span class="gscssinput"><input type='text' data-attr="padding-top" data-prefix="px">px</span>
+                    </div>
+                    <div class="gscssrow">
+                        Bottom spacing <span class="gscssinput"><input type='text' data-attr="padding-bottom" data-prefix="px">px</span>
+                    </div>
+                    <div class="gscssrow">
+                        Right spacing <span class="gscssinput"><input type='text' data-attr="padding-right" data-prefix="px">px</span>
+                    </div>
+                </div>
             </div>
 
             <div style="border-top: solid 1px #bbb;">
@@ -501,7 +519,6 @@ class Page {
             return;
         }
         echo "<div class='applicationarea' appid='" . $cell->appId . "' area='" . $cell->cellId . "'>";
-            
             if (!$cell->appId) {
                 echo "<span class='gsaddcontent'>";
                     $show="";

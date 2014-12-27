@@ -2009,7 +2009,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00b7ea', end
 .gscellbox .gscellheadermin i {
     padding: 2px;
     color: #FFF;
-    
+    cursor:pointer;
 }
 
 .gscellbox .gscellheadermin {

@@ -922,8 +922,10 @@ a img {
     width:100%;
     vertical-align: top;
     transition: background-color 0.5s ease;
+    border-bottom: solid 1px #efefef;
 }
 .gs_add_applicationlist .gs_add_app_entry:last-child {
+    border-bottom: solid 0px #efefef;
     background-image: -webkit-gradient(
 	linear,
 	right top,

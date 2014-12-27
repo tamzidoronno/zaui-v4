@@ -401,10 +401,9 @@ class Page {
                     </div> 
                 </div>
                 
+                <div class='gsheading'>Spacing</div>
+                
                 <div class='gscssattributes'>
-                    <div class="gscssrow">
-                        Spacing <span class="gscssinput"><input type='text' data-attr="padding" data-prefix="px">px</span>
-                    </div>
                     <div class="gscssrow">
                         Left spacing <span class="gscssinput"><input type='text' data-attr="padding-left" data-prefix="px">px</span>
                     </div>

@@ -14,18 +14,10 @@ $factory = $this->getFactory();
 $types = array();
 foreach ($apps as $app) {
     
-    if (!$app->isFrontend || $app->isFrontend == "false") {
+    if (!$app->isFrontend) {
         continue;
     }
     
-    if ($app->type == "SystemApplication") {
-//        continue;
-    }
-
-    if ($app->isSingleton) {
-//        continue;
-    }
-
 
     if (!isset($types[$app->moduleId])) {
         $types[$app->moduleId] = 0;
@@ -53,14 +45,9 @@ foreach ($types as $type => $count) {
             continue;
         }
 
-        if ($app->type == "SystemApplication") {
-//            continue;
+        if (!$app->isFrontend) {
+            continue;
         }
-
-        if ($app->isSingleton) {
-//            continue;
-        }
-        
 
         echo "<div class='gs_add_app_entry' appId='$id'>";
         echo "<div class='gs_app_image'><img src='/showApplicationImages.php?appNamespace=$namespace&image=" . $app->appName . ".png'/></div>";

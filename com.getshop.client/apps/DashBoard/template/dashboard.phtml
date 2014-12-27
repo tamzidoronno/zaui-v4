@@ -17,12 +17,24 @@ $apps = $this->getApi()->getStoreApplicationPool()->getApplications();
                     continue;
                 }
                 
-                $chartData = $instance->getDashboardChart();
+                $setYear = $this->getSetYear();
+                $chartData = $instance->getDashboardChart($setYear);
                 if (is_array($chartData)) {
                     $icon = $chartData[0];
                     $text = $chartData[2];
+                    $currentAppId = $this->getCurrentChartApp()->applicationSettings->id;
+                    $years = "<div class='gss_statistic_years'>";
                     
-                    echo "<div gss_method='setDashBoardChart' gss_value='$app->id' class='gss_statistic_tab_button'><i class='fa $icon'></i> $text </div>";
+                    
+                    for ($i = 0; $i>-5; $i--) {
+                        $year = date("Y",strtotime("$i year"));
+                        $activeButton = $year == $setYear && $currentAppId == $app->id ? "gss_dashboard_year_active" : "";
+                        $years .= "<div gss_method='setDashBoardChart' gss_value='$app->id' gss_value_2='$year' class='year $activeButton'>$year</div>";
+                    }
+                    $years .= "</div>";
+                    
+                    $activeButton = $currentAppId == $app->id ? "gss_dashboard_year_active" : "";
+                    echo "<div class='gss_statistic_tab_button $activeButton'><i class='fa $icon'></i> $text $years</div>";
                 }
             }
         ?>
@@ -64,7 +76,7 @@ $('.gss_slogan').fadeTo(1000, 1);
     if (!$chartApp) {
         return;
     }
-    $chartData = $chartApp->getDashboardChart(2014);
+    $chartData = $chartApp->getDashboardChart($setYear);
 ?>
 <script>
     var theChartFunction =  <? echo $chartData[1]; ?>;

@@ -17,7 +17,6 @@ class OrderManager extends \WebshopApplication implements \Application {
     public function postProcess() {
         
     }
-
     
     public function renderConfig() {
         $this->includefile("orderoverview");
@@ -27,7 +26,16 @@ class OrderManager extends \WebshopApplication implements \Application {
         $this->includefile("dashboardwidget");
     }
     
-    public function getDashboardChart() {
+    public function getDashboardChart($year) {
+        $statistics = $this->getApi()->getOrderManager()->getSalesNumber($year);
+        $newStat = [];
+        foreach ($statistics as $stat) {
+            $newStat[$stat->month] = $stat->count;
+        }
+        echo "<script>";
+            echo "app.OrderManager.yearStats = ".json_encode($newStat);
+        echo "</script>";
+        
         return ['fa-credit-card', 'app.OrderManager.drawChart', $this->__f("Orders")];
     }
     

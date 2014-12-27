@@ -656,7 +656,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         while (i < 13) {
             int weekData = 0;
             Calendar cal = Calendar.getInstance();
-            cal.set(Calendar.YEAR, 2014);
+            cal.set(Calendar.YEAR, year);
             cal.set(Calendar.DAY_OF_MONTH, 1);
             cal.set(Calendar.MONTH, i);
             Date start = cal.getTime();

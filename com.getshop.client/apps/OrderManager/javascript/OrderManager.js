@@ -38,18 +38,18 @@ app.OrderManager = {
         data.addColumn('number');
         data.addColumn({type: 'string', role: 'style'});
         data.addRows([
-            ['January', 40340, 'color: #008ad2'],
-            ['Feburary', 65710, 'color: #008ad2'],
-            ['March', 52408, 'color: #008ad2'],
-            ['April', 65090, 'color: #008ad2'],
-            ['May', 75440, 'color: #008ad2'],
-            ['June', 90850, 'color: #008ad2'],
-            ['July', 88465, 'color: #008ad2'],
-            ['August', 87040, 'color: #008ad2'],
-            ['September', 80720, 'color: #008ad2'],
-            ['Oktober', 78295, 'color: #008ad2'],
-            ['November', 21680, 'color: #008ad2'],
-            ['December', 11200, 'color: #008ad2']
+            ['January', app.OrderManager.yearStats[1], 'color: #008ad2'],
+            ['Feburary', app.OrderManager.yearStats[2], 'color: #008ad2'],
+            ['March', app.OrderManager.yearStats[3], 'color: #008ad2'],
+            ['April', app.OrderManager.yearStats[4], 'color: #008ad2'],
+            ['May', app.OrderManager.yearStats[5], 'color: #008ad2'],
+            ['June', app.OrderManager.yearStats[6], 'color: #008ad2'],
+            ['July', app.OrderManager.yearStats[7], 'color: #008ad2'],
+            ['August', app.OrderManager.yearStats[8], 'color: #008ad2'],
+            ['September', app.OrderManager.yearStats[9], 'color: #008ad2'],
+            ['Oktober', app.OrderManager.yearStats[10], 'color: #008ad2'],
+            ['November', app.OrderManager.yearStats[11], 'color: #008ad2'],
+            ['December', app.OrderManager.yearStats[12], 'color: #008ad2']
         ]);
 
         // Set chart options

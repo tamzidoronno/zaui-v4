@@ -27,6 +27,11 @@ class DashBoard extends \ApplicationBase implements \Application {
 
     public function setDashBoardChart() {
         $_SESSION['gss_dashboard_chart_app'] = $_POST['value'];
+        $_SESSION['gss_dashboard_chart_app_year'] = $_POST['value2'];
+    }
+    
+    public function getSetYear() {
+        return isset($_SESSION['gss_dashboard_chart_app_year']) ? $_SESSION['gss_dashboard_chart_app_year'] : date("Y",strtotime("0 year"));
     }
     
     public function getCurrentChartApp() {

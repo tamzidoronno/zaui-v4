@@ -66,7 +66,7 @@ class Shipper extends \ShipmentApplication implements \Application {
         if ($priceEachProduct > 0) {
             foreach ($cart->items as $item) {
                 /* @var $item \core_cartmanager_data_CartItem */
-                $totalCost += $item->count*$priceEachProduct;
+                $totalCost += $item->count * $priceEachProduct;
             }
         } 
         

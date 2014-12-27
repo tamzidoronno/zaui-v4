@@ -6,6 +6,8 @@
     text-shadow: 2px 2px #3a99d7;
 }
 
+
+
 .gss_description .title {
     border-bottom: solid 1px #ededed;
     margin-bottom: 3px;
@@ -31,12 +33,21 @@
     background-color: #1c6ea2;
 }
 
+.gss_dashboard_year_active {
+    color: #00FF00 !important;
+}
+
+.gss_statistic_years .year {
+    color: #FFF;
+}
+
 .gss_statistic_tab_button {
     cursor: pointer;
     display: inline-block; 
     padding-left: 10px;
     padding-right: 10px;
     border-right: solid 1px #2a7cb1;
+    position: relative;
 }
 
 .gss_statistic_tab_button:last-child {
@@ -57,4 +68,15 @@
     text-align: center;
     padding-top: 30px;
     color: #CCC;
+}
+
+.gss_statistic_years {
+    position: absolute;
+    z-index: 1;
+    background-color: #1c6ea2;
+    left: 0px;
+    right: 0px;
+    padding-left: 27px;
+    padding-bottom: 10px;
+    display: none;
 }

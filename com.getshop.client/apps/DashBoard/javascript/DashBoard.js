@@ -1,4 +1,14 @@
 app.DashBoard = {
+    init: function() {
+        $(document).on('mouseenter', '.gss_statistic_tab_button', app.DashBoard.showYearsMenu);
+        $(document).on('mouseleave', '.gss_statistic_tab_button', app.DashBoard.hideYearsMenu);
+    },
+    showYearsMenu: function() {
+        $(this).find('.gss_statistic_years').slideDown('fast');
+    },
+    hideYearsMenu: function() {
+        $(this).find('.gss_statistic_years').slideUp('fast');
+    },
     drawChart: function (div) {
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Month');
@@ -31,3 +41,5 @@ app.DashBoard = {
         
     }
 };
+
+app.DashBoard.init();

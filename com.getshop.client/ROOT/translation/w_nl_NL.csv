@@ -1,6 +1,5 @@
 ###### framework ######
 A red theme that can be used when selling exciting things;-;Een rode layout voor verkoop van interessante producten
-Add to cart;-;Aan winkelwagen toevoegen
 Address;-;Straatnaam + huisnummer
 All fields are required;-;Alle velden zijn verplicht in te vullen
 All fields are required.;-;Alle velden moet ingevuld worden
@@ -11,10 +10,8 @@ Apply coupon;-;Korting toevoegen
 April;-;April
 August;-;Augustus
 Birth Date;-;Geboortedatum
-Buy;-;Koop
 By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;Via Payment provider Sisow, laat je je klanten makkelijk betalen met iDeal, Mister Cash en andere betaalmogelijkheden. Meer info via https://www.sisow.nl
 Cancel order;-;Bestelling afbreken
-Canceled;-;Afgebroken
 Cart overview;-;Overzicht winkelwagen
 Cell phone;-;Mobiel
 Change password;-;Wachtwoord aanpassen
@@ -42,10 +39,8 @@ Email sent;-;Email verzonden
 End date;-;Einddatum
 Enter the code sent to your email.;-;Code invoeren die u per sms is gestuurd
 Failed;-;Mislukt
-Featured Product;-;Product in de kijker
 February;-;Februari
 Fixed price;-;Vaste prijs
-Free shipping;-;Gratis verzending
 Friday;-;Vrijdag
 Full name;-;Volledige naam
 Got a coupon from use? Apply it and get discount.;-;Gebruik je korting Code hier
@@ -62,7 +57,6 @@ July;-;Juli
 June;-;Juni
 Les mer;-;?
 Loading data... please wait;-;Data aan het laden, even geduld.
-Login;-;Inloggen
 Logout;-;Uitloggen
 Lost your password?;-;Wachtwoord vergeten?
 March;-;Maart
@@ -70,7 +64,6 @@ May;-;Mei
 Message;-;Bericht
 Message from a customer;-;Bericht van een klant
 Monday;-;Maandag
-My Account;-;Mijn account
 My name is:;-;Mijn naam is:
 Name;-;Naam
 New message;-;Nieuw bericht
@@ -81,10 +74,6 @@ Number of instances added;-;Aantal zaken toegevoegd
 October;-;Oktober
 Old password;-;oude wachtwoord
 Order;-;Bestelling
-Order Created;-;Bestelling aangemaakt
-Order date;-;Besteldatum
-Order sent;-;Bestelling verzonden
-Orders;-;Bestellingen
 Organisation;-;Organisatie
 Organisation name;-;Bedrijfsnaam
 Our local time is:;-;Onze locale tijd is:
@@ -112,11 +101,9 @@ Postal code;-;Postcode
 Previous;-;Vorige
 Price;-;Prijs
 Price and plans;-;Prijs en pakketten
-Product count;-;Aantal producten
 Recover password;-;Wachtwoord achterhalen
 Register;-;Aanmelden
 Registration details;-;Registratie details
-Related products;-;Gerelateerde producten
 Reminder;-;Herinnering
 Reminder sent by email;-;Herinnering verstuurd via email
 Remove;-;Verwijderen
@@ -136,7 +123,6 @@ Shipping price;-;Verzendkosten
 Sign up;-;Registreer
 Sorry;-;Sorry
 Start date;-;Start datum
-Status;-;Status
 Success;-;Succes
 Sunday;-;Zondag
 Taxes;-;BTW
@@ -149,9 +135,6 @@ The email address is invalid.;-;Het emailadres is ongeldig
 The email already exists, please log on to continue.;-;Het emailadres bestaat al, gelieve in te loggen om verder te gaan
 The event has been confirmed.;-;Het event werd bevestigd.
 The passwords does not match.;-;Het wachtwoord komt niet overeen
-This page is only available for adminsitrators;-;Deze pagina is alleen voor beheerders toegangkelijk
-This page is only available for editors.;-;Deze pagina is alleen voor redacteuren toegangkelijk
-This page is only available for registered users.;-;Deze pagina is alleen voor geregistreerde gebruikers toegangkelijk
 Thursday;-;Donderdag
 To be able to serve you we need to store a tiny amount of data about your browser. An identification id is being generated and added to your web browser. This allows us to track you for a two hours periode while you are navigating this site. This data is anonymous and are only being used to identify your web browser and not you as a person.;-;Wij gebruiken cookies om [het gebruik van onze webwinkel te faciliteren/ het inloggen op onze website te vergemakkelijken/ uw instellingen en voorkeuren te onthouden]. U kunt deze cookies uitzetten via uw browser maar dit kan het functioneren van onze webwinkel negatief aantasten.
 Total;-;Totaal
@@ -159,7 +142,6 @@ Tuesday;-;Dinsdag
 Update;-;Updaten
 Use a different email;-;Gebruik een ander emailadres
 Username / Email;-;Gebruikersnaam / E-mail
-Waiting for payment;-;Wachten op betaling
 Was not able to get payment methods, please check your postcode;-;Niet mogelijk een betaalmogelijkheid op te halen, gelieve je postcode na te gaan
 We host events at the following locations, click on the location to filter the calendar by location(s);-;We organiseren events op de volgende locaties. Klik op de locatie om de kalender op locatie te filteren.
 Wednesday;-;Woensdag
@@ -168,7 +150,6 @@ What's on your mind?;-;Waar denk je aan?
 Wrong delivery method;-;Verkeerde verzendmethode
 You are being transferred to paypal, please wait...;-;Je wordt doorgestuurd naar Paypal, even geduld…
 You are here:;-;U bent hier:
-You do not have any orders.;-;U heeft nog geen bestellingen geplaatst
 You do not have any products in your cart;-;U heeft nog geen producten in de winkelwagen
 You need to select at least one to send back message to;-;Je moet op zijn minst 1 selecteren om een bericht terug te sturen
 Your are now signed up for the event;-;Je bent nu ingeschreven voor het event

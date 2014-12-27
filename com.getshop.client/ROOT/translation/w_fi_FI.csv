@@ -1,10 +1,8 @@
 ###### framework ######
-Add to cart;-;Lisää ostoskoriin
 Address;-;Osoite
 All orders;-;Kaikki tilaukset
 Birth Date;-;Syntymäaika
 Cancel order;-;Peruuta tilaus
-Canceled;-;Peruttu
 Cell phone;-;Matkapuhelin
 Change password;-;Vaihta salasanaa
 Chat with us;-;Chattaa meille
@@ -17,18 +15,13 @@ Enter the code sent to your email.;-;Syötä koodi, mikä lähetettiin sinulle s
 Fixed price;-;Kiinteä hinta
 Full name;-;Koko nimi
 How can I help you today ?;-;Kuinka voin auttaa tänään?
-Login;-;Sisään kirjautuminen
 Logout;-;Ulos kirjautuminen
 Lost your password?;-;Salasana hukassa?
-My Account;-;Minun tili
 My name is:;-;Minun nimeni on:
 New password;-;Uusi salasana
 Next;-;Seuraava
 Old password;-;Vanha salasana
 Order;-;Tilaus
-Order Created;-;Tilaus luotu
-Order date;-;Tilauksen päiväys
-Orders;-;Tilaukset
 Organisation name;-;Yrityksen nimi
 Password;-;Salasana
 Payment failed;-;Maksu epäonnistui
@@ -41,7 +34,6 @@ Previous;-;Edellinen
 Price;-;Hinta
 Recover password;-;Palauta salasana
 Register;-;Rekisteröidy
-Related products;-;Vastaavat tuotteet
 Remove;-;Poista
 Repeat password;-;Toista salasana
 Search for a product;-;Etsi tuote
@@ -51,14 +43,9 @@ Set new password;-;Luo uusi salasana
 Shipment information;-;Toimitusehdot
 Shipping;-;Toimitus
 Taxes;-;Verot
-This page is only available for adminsitrators;-;Tämä sivu on saattavilla ainoastaan pääkäyttäjälle.
-This page is only available for editors.;-;Tämä sivu on saattavilla ainoastaan toimittajalle
-This page is only available for registered users.;-;Tämä sivu on saattavilla ainoastaan rekisteröityille käyttäjille
 Update;-;Päivitys
 Username / Email;-;Käyttäjätunnus / Sähköposti
-Waiting for payment;-;Odotettaan maksua
 You are here:;-;Olet tässä:
-You do not have any orders.;-;Sinulla ei ole tilauksia
 You do not have any products in your cart;-;Ostoskorisi on tyhjä
 Your personal information;-;Sinun henkilökohtaiset tiedot
 

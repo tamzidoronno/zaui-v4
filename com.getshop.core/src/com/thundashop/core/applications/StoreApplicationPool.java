@@ -280,24 +280,22 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
             return null;
         }
 
-        
-        return app;
-//        Application retApp = app.jsonClone();
-//        retApp.settings = new HashMap();
-//
-//        SavedApplicationSettings setting = settings.get(app.id);
-//        if (setting != null) {
-//            for (String settingKey : setting.settings.keySet()) {
-//                Setting newsetting = setting.settings.get(settingKey);
-//                if (newsetting != null && secure) {
-//                    newsetting = newsetting.secureClone();
-//                }
-//
-//                retApp.settings.put(settingKey, newsetting);
-//            }
-//        }
-//
-//        return retApp;
+        Application retApp = app.jsonClone();
+        retApp.settings = new HashMap();
+
+        SavedApplicationSettings setting = settings.get(app.id);
+        if (setting != null) {
+            for (String settingKey : setting.settings.keySet()) {
+                Setting newsetting = setting.settings.get(settingKey);
+                if (newsetting != null && secure) {
+                    newsetting = newsetting.secureClone();
+                }
+
+                retApp.settings.put(settingKey, newsetting);
+            }
+        }
+
+        return retApp;
     }
 
     private Application finalizeApplication(Application app) {

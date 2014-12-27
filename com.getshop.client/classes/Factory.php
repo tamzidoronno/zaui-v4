@@ -20,6 +20,8 @@ class Factory extends FactoryBase {
     public $javaPage;
     private $storeSettings;
 
+    private $language;
+    
     /** @var $translation GetShopTranslation */
     public $translation;
 
@@ -38,18 +40,22 @@ class Factory extends FactoryBase {
         return $this->eventHandler;
     }
     
-    public function getMainLanguage() {
-        if(isset($this->getSettings()->language)) {
-            return $this->getSettings()->language->value;
-        }
-        return "en_en";
+    public function getSelectedLanguage() {
+        return $this->getMainLanguage();
     }
     
-    public function getSelectedLanguage() {
-        if(isset($_SESSION['language_selected'])) {
-            return $_SESSION['language_selected'];
+    public function getMainLanguage() {
+        if (!isset($this->language)) {
+            $app = $this->getApi()->getStoreApplicationPool()->getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
+            $instance = $this->applicationPool->createInstace($app);
+            $this->language = $instance->getConfigurationSetting("language"); 
         }
-        return $this->getMainLanguage();
+        
+        if (!$this->language) {
+            $this->language = "en_en";
+        }
+        
+        return $this->language;
     }
 
 
@@ -535,10 +541,14 @@ class Factory extends FactoryBase {
     }
 
     public function getTranslationForKey($app, $key) {
-        if (!isset($this->translationMatrix[$key]) || !$this->translationMatrix[$key]) {
+        if (!count($this->translationMatrix)) {
+            $this->read_csv_translation();
+        }
+        
+        if (!isset($this->translationMatrix[trim($key)]) || !$this->translationMatrix[trim($key)]) {
             return $key;
         }
-        return $this->translationMatrix[$key];
+        return $this->translationMatrix[trim($key)];
     }
 
     /**
@@ -552,6 +562,7 @@ class Factory extends FactoryBase {
     public function read_csv_translation() {
         $translation = $this->getSelectedTranslation();
         $content = "";
+        
         if(file_exists("translation/f_$translation.csv")) {
             $content = file_get_contents("translation/f_$translation.csv");
         }
@@ -584,6 +595,7 @@ class Factory extends FactoryBase {
             }
         }
 
+        
         //Append the english lanugage.
         $content = file_get_contents("translation/f_en_en.csv");
         $line = explode("\n", $content);
@@ -700,14 +712,11 @@ class Factory extends FactoryBase {
             echo "</div>";
         }
     }
-
+    
     public function getSelectedTranslation() {
-        $translation = "en_en";
-        $lang = $this->getSettings();
+        $translation = $this->getSelectedLanguage();
         $this->translation = new GetShopTranslation();
-        if(isset($lang->language->value)) {
-            $translation = $lang->language->value;
-        }
+        
         if(isset($_GET['setLanguage'])) {
             $translation = $_GET['setLanguage'];
             $_SESSION['language_selected'] = $translation;

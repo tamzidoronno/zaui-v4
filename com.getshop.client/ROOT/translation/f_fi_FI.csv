@@ -1,9 +1,7 @@
 ###### framework ######
-A content manager allows you to add content to whatever page you would like to add content to. It supports text, images, and even basic HTML, its like word for web.;-;Sis,??n hallinoijan avulla voit lis$ sis4??*okaiselle sivulle. Se tukee teksti kuvia ja jopa perinteist
 A news application makes you push news to your WebShop. And share to subscribers and push to facebook if the Facebook application has been added.;-;Uutiksien sovelluksen avulla laitat uutiset omaan WebShopiin. My??s jakaa ktt??lle ja laita Facebookiin jos Facebookin sovellus on lis4y.
 Category list;-;Ryhm??ntt??
 Change image;-;Muokkaa kuvaa
-Content Manager;-;Sis,??n hallinnoija
 Create categories and add a list of products to the category, attach images to the categories, and name them as you want.;-;Luo ryhmi*a lis,uettelo tuotteista, liit+uvia ryhmiin ja nimet.e haluamallasi tavalla.
 Create new category;-;Luo uusi ryhm?
 Link to menu;-;Yhdist2yhm???nnettuun valikkoon
@@ -27,8 +25,6 @@ postal;-;Postinumero
 price;-;Hinta
 save;-;Tallenna
 start_time;-;,,
-taxes;-;Verot
 title;-;Otsikko
-users;-;käyttäjille
 
 

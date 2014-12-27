@@ -7,6 +7,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.Mongo;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.databasemanager.Database;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -29,7 +30,7 @@ import java.util.Set;
 public class GenerateTranslation {
 
     private static void loadAppsFromDatabase() throws UnknownHostException {
-        Mongo m = new Mongo("localhost", 27017);
+        Mongo m = new Mongo("localhost", Database.mongoPort);
         DB db = m.getDB("ApplicationPool");
         Morphia morphia = new Morphia();
         morphia.map(DataCommon.class);

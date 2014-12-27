@@ -128,7 +128,7 @@ class FactoryBase {
     public function __($string, $app = null) {
         if (!$app)
             $app = get_class($this);
-
+        
         return trim($this->getFactory()->getTranslationForKey($app, $string));
     }
 

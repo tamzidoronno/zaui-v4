@@ -27,6 +27,10 @@ class GetShopAdmin extends \ApplicationBase implements \Application {
         
         $this->getApi()->getGetShopApplicationPool()->saveApplication($app);
     }
+    
+    public function deleteApplication() {
+        $this->getApi()->getGetShopApplicationPool()->deleteApplication($_POST['value']);
+    }
 
 }
 ?>

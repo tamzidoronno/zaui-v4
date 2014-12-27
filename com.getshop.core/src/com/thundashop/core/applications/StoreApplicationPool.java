@@ -38,7 +38,7 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
     @Autowired
     private GetShopApplicationPool getShopApplicationPool;
 
-    private List<Application> allApplications;
+    private List<Application> allApplications = new ArrayList();
 
     private Set<Application> activatedApplications = new HashSet();
 
@@ -51,12 +51,7 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
         getShopApplicationPool.addListener(this);
         loadApplicationsFromGetShopPool();
 
-        activatedApplications = allApplications.stream()
-                .filter(app -> app.defaultActivate)
-                .collect(Collectors.toSet());
-
-        addActivatedApplications();
-        addActivatedModules();
+        
 
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof SavedApplicationSettings) {
@@ -285,22 +280,24 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
             return null;
         }
 
-        Application retApp = app.jsonClone();
-        retApp.settings = new HashMap();
-
-        SavedApplicationSettings setting = settings.get(app.id);
-        if (setting != null) {
-            for (String settingKey : setting.settings.keySet()) {
-                Setting newsetting = setting.settings.get(settingKey);
-                if (newsetting != null && secure) {
-                    newsetting = newsetting.secureClone();
-                }
-
-                retApp.settings.put(settingKey, newsetting);
-            }
-        }
-
-        return retApp;
+        
+        return app;
+//        Application retApp = app.jsonClone();
+//        retApp.settings = new HashMap();
+//
+//        SavedApplicationSettings setting = settings.get(app.id);
+//        if (setting != null) {
+//            for (String settingKey : setting.settings.keySet()) {
+//                Setting newsetting = setting.settings.get(settingKey);
+//                if (newsetting != null && secure) {
+//                    newsetting = newsetting.secureClone();
+//                }
+//
+//                retApp.settings.put(settingKey, newsetting);
+//            }
+//        }
+//
+//        return retApp;
     }
 
     private Application finalizeApplication(Application app) {
@@ -324,10 +321,30 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
     }
 
     private void loadApplicationsFromGetShopPool() {
+        allApplications.clear();
+        
         allApplications = getShopApplicationPool.getApplications()
                 .stream()
                 .filter(app -> app.allowedStoreIds.contains(storeId) || app.isPublic)
                 .collect(Collectors.toList());
+        
+        
+        activatedApplications.clear();
+        activatedApplications = allApplications.stream()
+                .filter(app -> app.defaultActivate)
+                .collect(Collectors.toSet());
+
+        addActivatedApplications();
+        activatedModules.clear();
+        addActivatedModules();
+        
+        System.out.println("==========");
+        for (Application app : allApplications) {
+            if (app.appName.equals("SedoxMenu")) {
+                System.out.println("App 2: " + app.isFrontend + " Id: " + app.id);
+            }
+        }
+        
     }
     @Override
     public void refresh() {

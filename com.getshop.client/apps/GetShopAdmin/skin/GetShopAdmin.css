@@ -11,9 +11,18 @@ and open the template in the editor.
 .gss_admin_app_select {
     padding: 10px;
     color: #333;
-    background: linear-gradient(to bottom, #FFF, #EEE);
+    background: linear-gradient(to bottom, #666, #333);
     margin-bottom: 10px;
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
+    
+    display: inline-block;
+    width: 250px;
+    text-align: center;
+    height: 50px;
+    margin: 10px;
+    color: #FFF;
+    
+    box-shadow: 0px 0px 10px #FFF;
 }

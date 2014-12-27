@@ -1599,6 +1599,21 @@ class GetShop(object):
 class GetShopApplicationPool(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
+  def deleteApplication(self, application):
+    args = collections.OrderedDict()
+    if isinstance(application,GetShopBaseClass): 
+      args["application"]=json.dumps(application.__dict__)
+    else:
+      try:
+        args["application"]=json.dumps(application)
+      except (ValueError, AttributeError):
+        args["application"]=application
+    data = EmptyClass()
+    data.args = args
+    data.method = "deleteApplication"
+    data.interfaceName = "core.applications.IGetShopApplicationPool"
+    return self.communicationHelper.sendMessage(data)
+
   def get(self, applicationId):
     args = collections.OrderedDict()
     if isinstance(applicationId,GetShopBaseClass): 

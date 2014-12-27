@@ -53,16 +53,25 @@ public class GetShopApplicationPool extends ManagerBase implements IGetShopAppli
     @Override
     public void saveApplication(Application application) {
         applications.put(application.id, application);
-        
-        System.out.println(application.appName + " " + application.moduleId);
+        databaseSave(application);
+        finalizeApplications();
+        triggerChangedEvent();
+    }
+    
+    private void databaseSave(DataCommon application) {
         Credentials cred = new Credentials();
         cred.manangerName = "ApplicationPool";
         cred.password = "asdfadsf";
         cred.storeid = "all";
         database.save(application, cred);
-        
-        finalizeApplications();
-        triggerChangedEvent();
+    }
+    
+    private void databaseDelete(DataCommon application) {
+        Credentials cred = new Credentials();
+        cred.manangerName = "ApplicationPool";
+        cred.password = "asdfadsf";
+        cred.storeid = "all";
+        database.delete(application, cred);
     }
     
     private void triggerChangedEvent() {
@@ -89,5 +98,16 @@ public class GetShopApplicationPool extends ManagerBase implements IGetShopAppli
 
     public void addListener(GetShopApplicationsChanged listener) {
         changeListeners.add(listener);
+    }
+
+    @Override
+    public void deleteApplication(String applicationId) {
+        Application app = applications.remove(applicationId);
+        if (app != null) {
+            databaseDelete(app);
+            finalizeApplications();
+            triggerChangedEvent();    
+        }
+        
     }
 }

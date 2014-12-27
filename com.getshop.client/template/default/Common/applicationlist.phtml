@@ -13,12 +13,11 @@ $factory = $this->getFactory();
 
 $types = array();
 foreach ($apps as $app) {
-    echo"<pre>";
-    echo $app->appName.":".$app->isFrontend."<br/>";
-    echo "</pre>";
+    
     if (!$app->isFrontend || $app->isFrontend == "false") {
         continue;
     }
+    
     if ($app->type == "SystemApplication") {
 //        continue;
     }

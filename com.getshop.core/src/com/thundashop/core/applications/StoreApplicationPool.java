@@ -58,7 +58,7 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
                 .collect(Collectors.toSet());
 
         addActivatedApplications();
-        addActivatedModules();
+//        addActivatedModules();
         
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof SavedApplicationSettings) {

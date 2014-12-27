@@ -8,7 +8,10 @@ app.ApplicationSelector = {
     showLastModule: function() {
         var moduleId = localStorage.getItem("gss_application_module_slected");
         if (!moduleId) {
-            $('.gss_settings_application_modulemenulist_entry').first().attr('moduleid');
+            moduleId = $('.gss_settings_application_modulemenulist_entry').first().attr('moduleid');
+        }
+        if ($('.gss_settings_application_modulemenulist_entry[moduleid="'+moduleId+'"]').length === 0) {
+            moduleId = $('.gss_settings_application_modulemenulist_entry').first().attr('moduleid');
         }
         app.ApplicationSelector.activateModule(moduleId);
     },

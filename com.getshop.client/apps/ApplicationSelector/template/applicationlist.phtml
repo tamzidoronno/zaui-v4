@@ -60,28 +60,31 @@ if (count($notActivatedModuels)) {
             ?>
         </div>
     </div>
+    <div class="gss_module_seperator"></div>
     <?
 }
 
 $apps = $this->getApi()->getStoreApplicationPool()->getAvailableApplications();
 $notActivated = $this->getApi()->getStoreApplicationPool()->getAvailableApplicationsThatIsNotActivated();
 
+if (count($activatedModules)) {
 ?>
-<div class="gss_settings_application_modulemenulist">
-    <div class="gss_settings_application_modulemenulist_header">
-        <? echo $this->__f("Acivated modules"); ?>
+    <div class="gss_settings_application_modulemenulist">
+        <div class="gss_settings_application_modulemenulist_header">
+            <? echo $this->__f("Acivated modules"); ?>
+        </div>
+
+        <?
+        foreach ($activatedModules as $module) {
+            $icon = "<i class='fa $module->faIcon'></i>";
+            $text = $module->moduleName;
+            echo "<div class='gss_settings_application_modulemenulist_entry' moduleid='$module->id'>$icon $text</div>";
+        }
+    ?>
     </div>
-    
+    <div class="gss_settings_application_moduleslist">
     <?
-    foreach ($activatedModules as $module) {
-        $icon = "<i class='fa $module->faIcon'></i>";
-        $text = $module->moduleName;
-        echo "<div class='gss_settings_application_modulemenulist_entry' moduleid='$module->id'>$icon $text</div>";
-    }
-?>
-</div>
-<div class="gss_settings_application_moduleslist">
-<?
+}
 foreach ($activatedModules as $module) {
     ?>
 

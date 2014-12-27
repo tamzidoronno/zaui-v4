@@ -4,10 +4,10 @@ app.DashBoard = {
         $(document).on('mouseleave', '.gss_statistic_tab_button', app.DashBoard.hideYearsMenu);
     },
     showYearsMenu: function() {
-        $(this).find('.gss_statistic_years').slideDown('fast');
+        $(this).find('.gss_statistic_years').show();
     },
     hideYearsMenu: function() {
-        $(this).find('.gss_statistic_years').slideUp('fast');
+        $(this).find('.gss_statistic_years').hide();
     },
     drawChart: function (div) {
         var data = new google.visualization.DataTable();

@@ -63,7 +63,7 @@ thundashop.framework = {
         $(document).on('click', '.gs_resizing', this.showCellResizing);
         $(document).on('click', '.gscellsettings .fa-image', this.switchCellResizing);
         $(document).on('click', '.gsresizingpanel .gstabmenu .tabbtn', this.switchtab);
-        $(document).on('click', '.gsresizingpanel .closeresizing', this.closeResizgsresizingpaneling);
+        $(document).on('click', '.gsresizingpanel .closeresizing', this.closeResizing);
         $(document).on('click', '.gsresizingpanel .gssavechanges', this.saveCellChanges);
         $(document).on('change', '.gsresizingpanel .gsbgimageselection', this.loadImage);
         $(document).on('click', '.gsresizingpanel .gsremovebgimage', this.loadImage);

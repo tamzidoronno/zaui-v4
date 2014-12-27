@@ -341,7 +341,6 @@ class Page {
             <i class="fa fa-close gsclosecsseditor"></i>
             <div class="heading gsresizingheading">Sizing console
             </div>
-            <div style="height: 7px;"></div>
             <div class='gstabmenu'>
                 <span class='tabbtn' target='css'>Css</span>
                 <span class='tabbtn' target='background'>Background image</span>

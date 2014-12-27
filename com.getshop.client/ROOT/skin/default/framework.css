@@ -47,10 +47,7 @@
 .gsrotateright { right: 0px; }
 .gsinner { position: relative; box-sizing:border-box; }
 .gsresizingpanel { position:absolute; z-index: 15; background-color:#FFF; box-shadow:0px 0px 5px #000; display:none; border-radius: 3px; width: 500px; }
-.gsresizingpanel .tabbtn {cursor:pointer; border-right: solid 1px #BBB;border-left: solid 1px #BBB; border-top-left-radius: 3px; border-top-right-radius: 3px; padding-right: 5px; height: 20px; padding-left: 5px; float:left; border-top: solid 1px  #BBB; margin-left: 5px; }
-.gsresizingpanel .tabbtn:hover { color:blue; }
 .gsresizingpanel .gstabselected { font-weight: bold; }
-.gsresizingpanel .gstabmenu { border-bottom: solid 1px #BBB; height: 20px; }
 .gsresizingpanel .sizetxt { width: 30px; }
 .gsresizingpanel .gspage { display:none; }
 .gsresizingpanel .modifybutton { margin: 5px; }
@@ -836,6 +833,7 @@ a img {
     padding-bottom: 2px;
 }
 
+.gsresizingpanel,
 .gs_add_applicationlist {
     padding-top: 34px;
     display: none;
@@ -847,7 +845,7 @@ a img {
     border-radius: 5px;
     
 }
-.closeaddappbox { position:absolute; right: 2px; top: 2px; }
+.closeaddappbox { position:absolute; right: 0px; top: 0px; padding: 10px; border-left: solid 1px #00aad5;}
 
 .gs_add_applicationlist::-webkit-scrollbar {  
     width: 10px;
@@ -865,7 +863,13 @@ a img {
     background-color: #aaa;  
 }  
 .gs_add_applicationlist .gsappstoaddinmodule { display:none; min-height: 200px; }
-.gs_add_applicationlist .gsselectappmodule { border-bottom: solid 1px #bbb; background-color:#EFEFEF; 
+
+
+.gsresizingpanel .gstabmenu, 
+.gs_add_applicationlist .gsselectappmodule { 
+    font-size: 0px;
+    border-bottom: solid 1px #bbb; 
+    background-color:#EFEFEF; 
     background: #ffffff; /* Old browsers */
     background: -moz-linear-gradient(top,  #ffffff 0%, #e5e5e5 100%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e5e5e5)); /* Chrome,Safari4+ */
@@ -877,18 +881,18 @@ a img {
 
 
 }
+
+.gsresizingpanel .tabbtn, 
 .gs_add_applicationlist .gsselectappmodule .gsselectmoduletab { 
     background-color:#FFF;
     cursor:pointer; 
     border: solid 1px #BBB; 
-    border-top-left-radius: 3px; 
-    border-top-right-radius: 3px; 
     border-bottom: solid 0px;  
     display:inline-block; 
     padding: 3px; 
     padding-left: 10px;
     padding-right: 10px;
-    
+    font-size: 14px;
     height: 30px;
     line-height: 30px;
     
@@ -1862,8 +1866,6 @@ a img {
 
 
 }
-.gscellsettingspanel,.gsresizingpanel { padding-top: 20px; }
-
 .gsactivetab { font-weight: bold; }
 .gsframeworkstandard { color:#000; font-size: 14px !important; font-weight: normal !important; font-family: 'Times New Roman' !important;z-index:25; }
 

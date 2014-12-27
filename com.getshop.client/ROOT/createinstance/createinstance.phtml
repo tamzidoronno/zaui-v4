@@ -115,7 +115,7 @@
                     $api->getStoreManager()->initializeStore($_SERVER['SERVER_NAME'], session_id());
 
                     //First page created is the homepage.
-
+                    
                     $user = $this->getApiObject()->core_usermanager_data_User();
                     $user->emailAddress = $email;
                     $user->username = $email;

@@ -63,7 +63,7 @@ thundashop.framework = {
         $(document).on('click', '.gs_resizing', this.showCellResizing);
         $(document).on('click', '.gscellsettings .fa-image', this.switchCellResizing);
         $(document).on('click', '.gsresizingpanel .gstabmenu .tabbtn', this.switchtab);
-        $(document).on('click', '.gsresizingpanel .closeresizing', this.closeResizing);
+        $(document).on('click', '.gsresizingpanel .closeresizing', this.closeResizgsresizingpaneling);
         $(document).on('click', '.gsresizingpanel .gssavechanges', this.saveCellChanges);
         $(document).on('change', '.gsresizingpanel .gsbgimageselection', this.loadImage);
         $(document).on('click', '.gsresizingpanel .gsremovebgimage', this.loadImage);
@@ -73,11 +73,38 @@ thundashop.framework = {
         $(document).on('click', '.gsdonemodifytab', this.hideTabSettings);
         $(document).on('click', '.gstabbtn', this.changeTab);
         $(document).on('click', '.gsdoneresizing', this.deleteResizing);
+        $(document).on('keyup', '.gscssattributes', this.setCssAttributes);
 
         /* Cell operations */
         $(document).on('click', '.gsoperatecell', this.operateCell);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
     },
+    setCssAttributes : function(event) {
+        var target = $(event.target);
+        var val = target.val();
+        var attr = target.attr('data-attr');
+        var level = target.attr('data-level');
+        var prefix = target.attr('data-prefix');
+        if(prefix) {
+            val += prefix;
+        }
+        var cellid = target.closest('.gsresizingpanel').attr('cellid');
+        thundashop.framework.removeCss(attr, cellid);
+        thundashop.framework.addCss(attr, val, cellid, level);
+    },
+    loadCssAttributes : function() {
+        var cellid = $(this).closest('.gsresizingpanel').attr('cellid');
+        $('.gscssattributes input').each(function() {
+            var target = $(this);
+            var attr = target.attr('data-attr');
+            var prefix = target.attr('data-prefix');
+            var val = thundashop.framework.getCssAttr(attr, cellid);
+            val = val.replace(prefix,"");
+            val = val.trim();
+            target.val(val);
+        });
+    },
+    
     showCellBoxHeader: function (event) {
         var target = $(event.target);
         $('.gsactiveboxheader').removeClass('gsactiveboxheader');
@@ -212,7 +239,7 @@ thundashop.framework = {
             cssEditorForCell.getSession().setMode("ace/mode/css");
             cssEditorForCell.on("change", function (event) {
                 var value = cssEditorForCell.getSession().getValue();
-                thundashop.framework.setCss(thundashop.framework.csseditorid, value);
+                thundashop.framework.setCss(id, value);
             });
         } else {
             cssEditorForCell.setValue(css);
@@ -428,9 +455,47 @@ thundashop.framework = {
         }
     },
     removeCss: function (attribute, id) {
-        var css = thundashop.framework.findCss(id);
+        var css = cssEditorForCell.getSession().getValue();
         if (css.indexOf(attribute) >= 0) {
         }
+        var csslines = css.split("\n");
+        var newcss = "";
+        for(var key in csslines) {
+            if(csslines[key].indexOf(attribute + " :") >= 0) {
+                continue;
+            }
+            if(csslines[key].indexOf(attribute + ":") >= 0) {
+                continue;
+            }
+            newcss += csslines[key] + "\n";
+        }
+        cssEditorForCell.setValue(newcss);
+    },
+    getCssAttr: function (attribute, id) {
+        var css = cssEditorForCell.getSession().getValue();
+        if (css.indexOf(attribute) >= 0) {
+        }
+        var csslines = css.split("\n");
+        var newcss = "";
+        var found = false;
+        for(var key in csslines) {
+            if(csslines[key].indexOf(attribute + " :") >= 0) {
+                found = csslines[key];
+                continue;
+            }
+            if(csslines[key].indexOf(attribute + ":") >= 0) {
+                found = csslines[key];
+                continue;
+            }
+            newcss += csslines[key] + "\n";
+        }
+        
+        if(!found) {
+            return "";
+        }
+        
+        found = found.split(":");
+        return found[1].replace(";","");
     },
     addCss: function (attribute, value, id, level) {
         if (!level) {
@@ -638,7 +703,9 @@ thundashop.framework = {
         if (cellcount > 1) {
             thundashop.framework.loadResizing(cell, false);
         }
-        resizingpanel.find('.tabbtn[target="css"]').click();
+        thundashop.framework.loadCssEditor();
+        thundashop.framework.loadCssAttributes();
+        resizingpanel.find('.tabbtn[target="background"]').click();
     },
     closeCellEdit: function () {
         $('.gscellsettingspanel').hide();

@@ -316,6 +316,7 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     private void createDefaultPages() {
+        createDefaultPage("home");
         createDefaultPage("productsearch");
         createDefaultPage("login");
     }

@@ -66,10 +66,10 @@
 .gseasymode i { color: #555555; cursor:pointer; font-size:12px; border-radius:3px; padding: 3px; background-color:#fff; margin: 1px; border: solid 1px #bbb; }
 .gsdoneeditbutton { position:absolute; right: 3px; top: 3px; }
 .gseasyrowmode { display: inline-block;
-                 border: solid 1px #666666;
+                 border: solid 1px #dcdcdc;
+                 background-color:#e5e5e5 ;
                  padding: 10px;
                  width: 15px;
-                 background-color:#bbb;
                  position: absolute;
                  border-top: solid 0px;
                  border-right: solid 0px;
@@ -1921,8 +1921,21 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00b7ea', end
 .gsactivetab {background-color:#BBB; }
 .gsiseditingprepend { height: 30px; display:block;  }
 .gseditrowseperator { position:relative; }
-.gseditrowseperatorinnertop { padding-top: 5px; position: absolute; top:-31px; border: solid 1px #666666; height: 25px; width:100%; background-color:#bbb;z-index:5; text-align: center; }
-.gseditrowseperatorinnerbottom { position: absolute; top:1px; border: solid 1px #666666; height: 5px; width:100%; background-color:#bbb;z-index:5; }
+.gseditrowseperatorinnertop {
+    padding-top: 5px; position: absolute; top:-31px;  height: 25px; width:100%; background-color:#bbb;z-index:5; text-align: center; }
+.gseditrowseperatorinnerbottom { position: absolute; top:1px; height: 5px; width:100%; background-color:#bbb;z-index:5; }
+
+.gseditrowseperatorinnerbottom, .gseditrowseperatorinnertop {
+    background: -moz-linear-gradient(top,  #ffffff 0%, #e5e5e5 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e5e5e5)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#e5e5e5 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #ffffff 0%,#e5e5e5 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #ffffff 0%,#e5e5e5 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #ffffff 0%,#e5e5e5 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
+    border: solid 1px #dcdcdc;
+}
+
 .gscellbox { 
     -webkit-transition: opacity .3s ease-in-out;
         -moz-transition: opacity .3s ease-in-out;

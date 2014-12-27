@@ -261,9 +261,9 @@ class Page {
                 echo "</span>";
             } else if ($parent && $parent->mode == "ROTATING" || $parent->mode == "TAB") {
                 echo "<span class='gseditrowbuttons'>";
-                echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addbefore' mode='INIT'></i>";
+                echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addbefore' mode='INIT' target='container'></i>";
                 echo "<i title='" . $this->factory->__f("Delete carousel") . "' class='fa gsoperatecell fa-trash-o' type='delete' target='container'></i>";
-                echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addafter' mode='INIT'></i>";
+                echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addafter' mode='INIT' target='container'></i>";
                 echo "</span>";
             }
         }
@@ -343,7 +343,7 @@ class Page {
             </div>
             <div class='gstabmenu'>
                 <span class='tabbtn' target='css'>Css</span>
-                <span class='tabbtn' target='background'>Background image</span>
+                <span class='tabbtn' target='background'>Styling</span>
             </div>
             <div class='gspage' target='css'>
                 <div id="cellcsseditor" style="width:500px; height: 400px;">

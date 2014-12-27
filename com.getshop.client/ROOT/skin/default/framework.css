@@ -1949,6 +1949,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00b7ea', end
     bottom: -1px;
 }
 .gscellbox .gscellboxheader i { cursor:pointer; }
+.gscellbox .gscellboxheader i:hover,.gscaraouselmenu i:hover { font-weight: bold; }
 .gscellbox .gscellboxheader {
     display:none;
     -webkit-transition: opacity .3s ease-in-out;
@@ -1956,9 +1957,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00b7ea', end
         -ms-transition: opacity .3s ease-in-out;
         -o-transition: opacity .3s ease-in-out;
         transition: opacity .3s ease-in-out;
-    left: -1px;
-    height: 20px; font-size: 18px;
-    border: solid 1px rgba(0,0,0,0.7); opacity: 0; text-align: center; background-color:#000; color:#FFF; position:absolute; z-index: 10; width: 100%; top: -23px; border-top-left-radius: 3px; border-top-right-radius: 3px; }
+    left: 0px;
+    height: 23px; font-size: 18px;
+    opacity: 0; text-align: center; background-color:#000; color:#FFF; position:absolute; z-index: 10; width: 100%; top: -23px; border-top-left-radius: 3px; border-top-right-radius: 3px; }
 .gscellbox .ui-resizable-handle { display:none !important; }
 .gscellbox.gsactivebox { opacity: 0.9; }
 .gseditrowbuttons { display:none; position:absolute; right: 0px; width: 20px; border: solid 1px #bbb; text-align: center; padding: 2px; border-bottom-left-radius: 3px; border-top-left-radius: 3px; font-size: 16px; background-color:#FFF; z-index: 1;}
@@ -2031,6 +2032,15 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00b7ea', end
     display: block; 
     opacity: 1 !important;
     display: block !important;
+    
+background: #00b7ea; /* Old browsers */
+    background: -moz-linear-gradient(top,  #00b7ea 0%, #009ec3 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#00b7ea), color-stop(100%,#009ec3)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #00b7ea 0%,#009ec3 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #00b7ea 0%,#009ec3 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #00b7ea 0%,#009ec3 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #00b7ea 0%,#009ec3 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00b7ea', endColorstr='#009ec3',GradientType=0 ); /* IE6-9 */    
 }
 .gscaraouselmenu { 
     -webkit-transition: opacity .3s ease-in-out;

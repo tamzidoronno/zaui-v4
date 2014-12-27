@@ -37,6 +37,7 @@ com.getshop.syncserver/nbproject/private/private.xml
 com.getshop.syncclient/build.xml
 com.getshop.combined/build.xml
 com.getshop.syncserver/nbproject/private/config.properties
+com.getshop.core/secret.txt
 
 com.getshop.core/PythonGetshopApi.pyc
 com.getshop.core/config.txt

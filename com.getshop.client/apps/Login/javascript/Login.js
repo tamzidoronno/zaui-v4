@@ -63,6 +63,12 @@ $('.Login #recoverinputbutton').live('click', function(e) {
     }
 });
 
+$('.Login input').live('keydown', function(e) {
+    if (e.keyCode == 13) {
+        $(this).closest('form').submit();
+    }
+});
+
 $('.Login .loginbutton').live('click', function(e) {
     $(this).closest('form').submit();
 });
@@ -73,3 +79,4 @@ $('.Login .recoverpassword').live('click', function(e) {
 $('.Login #resetpasswordbutton').live('click', function(e) {
     thundashop.app.login.resetPassword($(e.target));
 });
+

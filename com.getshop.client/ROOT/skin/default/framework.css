@@ -1850,7 +1850,7 @@ a img {
 }
 .gsoperatecell { cursor:pointer; }
 .gsoperatecell:hover { font-weight:bold; }
-.carouselsettingspanel,.tabsettingspanel { width: 175px; position:absolute; padding: 10px; background-color:#FFF; z-index: 20; display:none; padding-top: 25px; box-shadow: 0px 0px 4px #a9a9a9; border-radius: 5px; }
+.carouselsettingspanel,.tabsettingspanel { width: 175px; position:absolute; padding: 10px; background-color:#FFF; z-index: 20; display:none; padding-top: 45px; box-shadow: 0px 0px 4px #a9a9a9; border-radius: 5px; }
 .carouselsettingspanel input { width: 40px; }
 .carouselsettingspanel .fa,.tabsettingspanel .fa { cursor: pointer; }
 

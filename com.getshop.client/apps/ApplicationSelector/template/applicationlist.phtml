@@ -66,10 +66,26 @@ if (count($notActivatedModuels)) {
 $apps = $this->getApi()->getStoreApplicationPool()->getAvailableApplications();
 $notActivated = $this->getApi()->getStoreApplicationPool()->getAvailableApplicationsThatIsNotActivated();
 
+?>
+<div class="gss_settings_application_modulemenulist">
+    <div class="gss_settings_application_modulemenulist_header">
+        <? echo $this->__f("Acivated modules"); ?>
+    </div>
+    
+    <?
+    foreach ($activatedModules as $module) {
+        $icon = "<i class='fa $module->faIcon'></i>";
+        $text = $module->moduleName;
+        echo "<div class='gss_settings_application_modulemenulist_entry' moduleid='$module->id'>$icon $text</div>";
+    }
+?>
+</div>
+<div class="gss_settings_application_moduleslist">
+<?
 foreach ($activatedModules as $module) {
     ?>
 
-    <div class='innerappview'>
+    <div class='innerappview' moduleid='<? echo $module->id; ?>'>
         <div class='gss_settings_header'>
             <i class='fa <? echo $module->faIcon; ?>'></i>
 
@@ -181,3 +197,9 @@ foreach ($activatedModules as $module) {
         </div>
     <? } ?>
 </div>
+
+</div>
+
+<script>
+    app.ApplicationSelector.showLastModule();
+</script>

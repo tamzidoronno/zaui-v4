@@ -70,7 +70,7 @@ and open the template in the editor.
 
 .innerappview .gss_appview .gss_app_desc {
     display: inline-block;
-    width: 950px;
+    width: 664px;
     vertical-align: top;
     height: 100px;
     overflow: hidden;
@@ -139,4 +139,60 @@ and open the template in the editor.
     width: 80px;
     color: #466585;
     background-color: #FCFCFC;
+}
+
+.gss_settings_application_modulemenulist,
+.gss_settings_application_moduleslist {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.gss_settings_application_moduleslist {
+    width: 971px;
+}
+
+.gss_settings_application_modulemenulist {
+    width: 200px;
+    min-height: 200px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-top: 10px;
+}
+
+.gss_settings_application_modulemenulist_header {
+    background-color: #1c6ea2;
+    padding: 20px;
+    border-radius: 5px 5px 0px 0px;
+    text-align: center;
+    font-weight: bold;
+    line-height: 50px;
+    font-size: 16px;
+}
+
+.gss_settings_application_modulemenulist_entry i {
+    font-size: 25px;
+    float: left;
+    vertical-align: bottom;
+    margin-right: 15px;
+}
+.gss_settings_application_modulemenulist_entry {
+    padding: 20px;
+    background-color: #FFF;
+    color: #333;
+    border-bottom: solid 1px #EEE;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.gss_settings_application_modulemenulist_entry:last-child {
+    border-bottom: solid 0px;
+    border-radius: 0px 0px 5px 5px;
+}
+
+.gss_settings_header .gss_settings_header_description {
+    max-width: 820px;
+}
+
+.gss_module_selected {
+    color: #00731e;
 }

@@ -484,3 +484,7 @@ div[gss_method] {
     padding: 10px;
     padding-top: 5px;
 }
+
+.gss_settings_application_moduleslist .innerappview {
+    display: none;
+}

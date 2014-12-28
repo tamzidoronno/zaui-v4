@@ -1,239 +1,45 @@
-.header {
-    /*box-shadow: 0px 0px 4px #333;*/
-    background: #7abcff; /* Old browsers */
-    background: -moz-linear-gradient(top, #7abcff 0%, #60abf8 44%, #4096ee 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7abcff), color-stop(44%,#60abf8), color-stop(100%,#4096ee)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, #7abcff 0%,#60abf8 44%,#4096ee 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, #7abcff 0%,#60abf8 44%,#4096ee 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, #7abcff 0%,#60abf8 44%,#4096ee 100%); /* IE10+ */
-    background: linear-gradient(to bottom, #7abcff 0%,#60abf8 44%,#4096ee 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7abcff', endColorstr='#4096ee',GradientType=0 );
-    height: 130px;
-    margin-bottom: 40px;
-}
-.breadcrumb .breadcrumb-inner { height: 0px; }
-.breadcrumb-inner .navigation { display:none; }
-.breadcrumb-inner .accounting { position:absolute; top: -20px; z-index: 3;}
+.gsarea[area="header"] .Menu { position: absolute; right: 0px; top: 60px;  }
+.gsarea[area="header"] .Menu a div { padding: 10px; color:#fff; font-size: 16px; }
+.gsinner.gsdepth_0 { width: 900px; margin: auto; }
+h1 { text-align: center;
+     font-size: 30px;
+     margin-top: 30px;
+     margin-bottom: 30px;
+     font-weight: normal;
+     font-family: 'Lobster', cursive; }
 
-.skeleton23 .mainarea .r3 .applicationarea,
-.skeleton23 .mainarea .r2 .applicationarea {
-    border: solid 1px #EEE;
-    background: linear-gradient(#FDFDFD, #F3F3F3);
-    padding-top: 30px; 
-   padding-left: 30px;
-    padding-right: 30px;
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #3a99d7;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    color: #FFF;    
 }
 
-.applicationarea {
-    min-height: 200px;
-
-}
-
-.header .applicationarea {
-    min-height: ihnerit;
-}
-
-.gs_inner {
-    margin: 0 auto;
-    max-width: 1100px;
-}
-.header {
-    position: relative;
-}
-
-.header .TopMenu {
-    right: 0px;  
-    top: 40px;
-}
-
-.header .TopMenu li {
-    line-height: 70px;
-}
-
-.header .Logo {
-
-}
-.header .TopMenu i { margin-right: 10px; }
-.header .TopMenu a {
-    font-size: 18px;
+.gsarea[area="header"] {
+    height: 100px;
+    background-color: rgba(0,0,0,0.6);
     color: #FFF;
-    padding: 10px;
-    padding-left: 20px;
-}
-.TopMenu .subentries li { border-bottom: solid 1px #3886d7;}
-.header .TopMenu .subentries { background-color:#4096ee; border: solid 1px #3886d7 !important; }
-.header .TopMenu .subentries a { font-size: 14px; }
-
-.Logo {
-    top: 20px;
+    margin: 0px;
+    padding-bottom: 10px;
+    box-shadow: 3px 0px 3px #444;
 }
 
-.gs_outer.footer {
-    background-image: url('{IMAGEFOLDER}/footer.png');
-    min-height: 346px;
+.gsarea[area="body"]  .gscolumn.gs_margin_left { 
+    padding-left: 10px;
 }
-
-.skeleton23 .mainarea .r3 .gs_col.c2,
-.skeleton23 .mainarea .r2 .gs_col.c2 {
-    border-left: solid 0px;
+.gsarea[area="body"]  .gscolumn.gs_margin_right { 
+    padding-right: 10px;
 }
-
-.skelholder[page="home"] .gs_row.r4 {
-    background: #fcfff4; /* Old browsers */
-background: -moz-linear-gradient(top, #fcfff4 0%, #dfe5d7 46%, #dfe5d7 46%, #b3bead 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fcfff4), color-stop(46%,#dfe5d7), color-stop(46%,#dfe5d7), color-stop(100%,#b3bead)); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top, #fcfff4 0%,#dfe5d7 46%,#dfe5d7 46%,#b3bead 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top, #fcfff4 0%,#dfe5d7 46%,#dfe5d7 46%,#b3bead 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top, #fcfff4 0%,#dfe5d7 46%,#dfe5d7 46%,#b3bead 100%); /* IE10+ */
-background: linear-gradient(to bottom, #fcfff4 0%,#dfe5d7 46%,#dfe5d7 46%,#b3bead 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfff4', endColorstr='#b3bead',GradientType=0 ); /* IE6-9 */
-}
-
-.skelholder[page="home"] .gs_row.r2 {
-    margin-top: 100px; 
-}
-
-.skelholder[page="home"] .gs_row.r2 .applicationarea,
-.skelholder[page="home"] .gs_row.r3 .applicationarea {
-background: #8fc400; /* Old browsers */
-background: -moz-linear-gradient(top, #7dab22 0%, aecb06 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7dab22), color-stop(100%,aecb06)); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top, #7dab22 0%,aecb06 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top, #7dab22 0%,aecb06 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top, #7dab22 0%,aecb06 100%); /* IE10+ */
-background: linear-gradient(to bottom, #7dab22 0%,aecb06 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8fc400', endColorstr='#8fc400',GradientType=0 ); /* IE6-9 */
-    padding: 20px; 
-    margin: 10px;
-    border-radius: 5px;
-    color:rgba(0,0,0,0.8);
-}
-
-
-.skelholder[page="home"] .gs_row.r3 {
-    padding-bottom: 100px; 
-}
-
-.skelholder[page="home"] .gs_row.r10 {
-    border-top: solid 1px;
-}
-
-.skelholder[page="home"] .gs_row.r2,
-.skelholder[page="home"] .gs_row.r3
-{ background-color:#FFF; color: #A9A9A9; }
-.skelholder[page="home"] .gs_row.r4,
-.skelholder[page="home"] .gs_row.r5,
-.skelholder[page="home"] .gs_row.r6,
-.skelholder[page="home"] .gs_row.r7
-{ 
-    background-color:#b3bead;
-}
-
-.skelholder[page="home"] .gs_row.r5,
-.skelholder[page="home"] .gs_row.r6,
-.skelholder[page="home"] .gs_row.r7
-{ padding-top: 80px; }
-
-.skelholder[page="home"] .gs_row.r7
-{ padding-bottom: 80px;  }
-
-.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row .gs_inner {
-    padding: 40px;
-}
-.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row .applicationarea {
-    margin-left: 40px;
-    margin-right: 40px;
-}
-.skelholder[page="e46fedfd-5c47-4fad-88dc-27f241c48209"] .YouTube {
-    margin-left: 40px; 
-}
-.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row .YouTube {
-    border: solid 1px #BBB; 
-    border-right: solid 2px #BBB; 
-}
-.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row {
-}
-.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row.r2,
-.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row.r3,
-.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row.r4,
-.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row.r5,
-.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row.r6,
-.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row.r7 
-{
-    background-color:#2f383d; color: #A9A9A9;
-    background-image: none;
-}
-.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row.r1 
-{
-    background-image: none;
-}
-.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row.r17,
-.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row.r18,
-.skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row.r19
-{
-    background-color:#FFF; color: #000;
-}
-.skelholder[page="home"] .gs_row.r8,
-.skelholder[page="home"] .gs_row.r9 {
-    color: #A9A9A9;
-    background-color:#2f383d;
-    padding-top: 50px;
-    padding-bottom: 50px;
-}
-
-/* responsive design stuff */
-.Banner .banner img,.Banner .bannerslider { height: auto !important; }
-@media only all and (max-width: 800px) {
-    .gs_inner { padding: 20px; }
-    .skelholder[page="home"] .gs_row.r1 .gs_inner { padding: 0px; }
-    .ProductList .rowview .slidearrow { display:block !important; }
-    td.gs_col.c1 { display: none; }
-    td.gs_col.c3 { display: none; }
-    .Login { display: none; }
-    .gs_row_cell { width: 100% !important; }
-    .gs_margin_left,.gs_margin_right { padding-left: 0px; margin-top: 00px; padding-right: 0px; }
-    .Search { display: none; }
-    .CartManager .cartmain td { display: inline-block; width: 100% !important; }
-    .CartManager .cartmain .product_row_table td { display: table-cell; width:auto !important; }
-    .CartManager .cartmain .product_row_table td.image_area { width:180px !important; }
-    .CartManager .leftcart { width: 100% !important; margin-bottom: 10px; }
-    .CartManager .cart .wrapperright { width:auto !important; }
-    .checkout table td input { width: 95%; }
-    .ContentManager img { width: auto !important; height: auto !important; max-width:100% !important; }
-    #apparea-footer { width: 100%; }
-    .Chat { display:none; }
-    .CartManager .rightcart { margin-left: 0px !important; width: 100% !important; }
-    .ProductList .product .short_description { overflow: hidden; height: 103px; }
-    .mainarea .gs_inner .applicationarea { min-height: 50px !important; }
-    .TopMenu .subentries { width: 100%; }
-    .TopMenu li:not(.mobile) { padding: 0px; }
-    .TopMenu { width: 100%; background-color:#000; }
-    .TopMenu .mobile_button { font-size: 30px; right: 0px; top: 10px; }
-    .breadcrumb-menu { padding-right: 2px !important; }
-    .header .TopMenu li { line-height: 15px; }
-}
-
-@media only all and (max-width: 480px) {
-    .YouTube embed { height: 220px; border: solid 1px #BBB; }
-    .Login { display: none; }
-    .Logo { top: 0px !important; }
-    .ProductList .rowview .product {width: 280px; }
-    .breadcrumb .navigation { display: none; }
-    .header .applicationarea { height: 120px; }
-    .ProductManager .small_product_view { display:none !important; }
-    .ProductManager .dummyproductmanagerclass { display:block; }
-    .ProductList .boxview table { display: inline-block; }
-    .ProductList .boxview table td { float: left; width: 100%; }
-    .ProductList td { padding: 0px; }
-    .Footer { display:none; }
-    .skelholder[page="17cffbb8-2049-42b9-8dac-70b620117532"] .gs_row .applicationarea {
-        margin-left: 0px;
-        margin-right: 0px;
-    }
-    .skelholder[page="home"] .gs_row.r2 .applicationarea,
-    .skelholder[page="home"] .gs_row.r3 .applicationarea {
-        margin: 0px;
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
+.gsarea[area="body"]  .gscolumn .gsinner { 
+    background-color: rgba(255,255,255,1);
+    display: inline-block;
+    color: #333;
+    min-height: 300px;
+    border-radius: 7px;
+    text-align: left;
+    padding: 15px;
+    box-shadow: 0px 0px 3px #444;
+    vertical-align: top; 
 }

@@ -1,6 +1,6 @@
 .gsarea[area="header"] .Menu { position: absolute; right: 0px; top: 60px;  }
 .gsarea[area="header"] .Menu a div { padding: 10px; color:#fff; font-size: 16px; }
-.gsinner.gsdepth_0 { width: 900px; margin: auto; }
+.gsinner.gsdepth_0 { width: 1100px; margin: auto; }
 h1 { text-align: center;
      font-size: 30px;
      margin-top: 30px;
@@ -17,7 +17,7 @@ body {
     color: #FFF;    
 }
 
-.gsarea[area="header"] {
+.gsarea[area="header"],.gsarea[area="footer"] {
     height: 100px;
     background-color: rgba(0,0,0,0.6);
     color: #FFF;
@@ -27,10 +27,10 @@ body {
 }
 
 .gsarea[area="body"]  .gscolumn.gs_margin_left { 
-    padding-left: 10px;
+    padding-left: 20px;
 }
 .gsarea[area="body"]  .gscolumn.gs_margin_right { 
-    padding-right: 10px;
+    padding-right: 20px;
 }
 .gsarea[area="body"]  .gscolumn .gsinner { 
     background-color: rgba(255,255,255,1);

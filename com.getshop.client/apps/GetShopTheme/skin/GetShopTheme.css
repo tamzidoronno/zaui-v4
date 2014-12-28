@@ -18,7 +18,6 @@ body {
 }
 
 .gsarea[area="header"],.gsarea[area="footer"] {
-    height: 100px;
     background-color: rgba(0,0,0,0.6);
     color: #FFF;
     margin: 0px;

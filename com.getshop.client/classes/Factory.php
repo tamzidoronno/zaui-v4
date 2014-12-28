@@ -167,8 +167,10 @@ class Factory extends FactoryBase {
             echo "\n" . '<script type="text/javascript" src="js/getshopwebsocketapi/GetShopApiWebSocket.js"></script>';
         }
 
-        if (method_exists($this->getApplicationPool()->getSelectedThemeApp(), "addScripts")) {
-            $this->getApplicationPool()->getSelectedThemeApp()->addScripts();
+        $appTheme = $this->getApplicationPool()->getSelectedThemeApp();
+        $themeApp = $this->getApplicationPool()->createInstace($appTheme);
+        if (method_exists($themeApp, "addScripts")) {
+            $themeApp->addScripts();
         }
         ?>
         <script>

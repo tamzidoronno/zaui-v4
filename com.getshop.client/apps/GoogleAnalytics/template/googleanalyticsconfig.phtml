@@ -1,12 +1,38 @@
-<? namespace ns_0cf21aa0_5a46_41c0_b5a6_fd52fb90216f; ?>
-<div class="textfield setting"  id="code">
-    <span class="title"><?php echo $this->__("Google analytics code") ?></span>
-    <input type="textfield" class="config">
-    <div class="description">
-        <?php 
-        echo $this->__("This is a code that you need to get from your google analytics account. If you need help to get it we would be more then happy to help you out, just contact our customer support by email and you will have an answer within an hour");
-        ?>
+<?
+/* @var $this ns_0cf21aa0_5a46_41c0_b5a6_fd52fb90216f\GoogleAnalytics */
+
+namespace ns_098bb0fe_eb51_42c6_9fbb_dadb7b52dd56;
+
+$code = $this->getCode();
+
+?>
+<div class='gss_settings_header'>
+    <i class='fa fa-google'></i>
+
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            <? echo $this->__f("Google analythics"); ?>
+        </div>
+        <div class='gss_settings_header_description_inner'>
+            <? echo $this->getDescription(); ?>
+        </div>
+    </div>	
+</div>
+
+<div class='gss_settings_content'>
+
+    <div class="gss_simple_shipping">
+        <div class="textfield gss_setting"  id="googlecode">
+            <span class="title"><?php echo $this->__("Google analytics code") ?></span>
+            <input type="textfield" gs_model='googleanalytics' gs_model_attr='code' value="<? echo $code; ?>">
+            <div class="description"
+                 <? echo $this->__("This is a code that you need to get from your google analytics account. If you need help to get it we would be more then happy to help you out, just contact our customer support by email and you will have an answer within an hour"); ?>
+            </div>
+        </div>
+    </div>
+
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="saveSettings" gss_model="googleanalytics" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Save"); ?></div>
     </div>
 </div>
 
-<div class="button savebutton"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__("Save settings"); ?></ins></div>

@@ -1,16 +1,35 @@
-<div class="information">
-    <?
-        echo $this->getDescription();
-    ?>
+<?
+/* @var $this ns_2da52bbc_a392_4125_92b6_eec1dc4879e9\Bring */
+
+namespace ns_098bb0fe_eb51_42c6_9fbb_dadb7b52dd56;
+
+$paymentfee = $this->getConfigurationSetting("paymentfee");
+?>
+<div class='gss_settings_header'>
+    <i class='fa fa-dollar'></i>
+
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            <? echo $this->__f("Pay on delivery"); ?>
+        </div>
+        <div class='gss_settings_header_description_inner'>
+            <? echo $this->getDescription(); ?>
+        </div>
+    </div>	
 </div>
 
-<div class="textfield setting"  id="paymentfee">
-    <span class="title"><?php echo $this->__("Payment fee"); ?></span>
-    <input type="textfield" class="config">
-    <div class="description">
-        <?php echo $this->__("Fee for payment."); ?>
+<div class='gss_settings_content'>
+
+    <div class="gss_simple_shipping">
+        <div class="textfield gss_setting"  id="paymentfee">
+            <span class="title"><? echo $this->__f("Fee for using this payment method"); ?></span>
+            <input type="textfield" gs_model='payondelivery' gs_model_attr='fee' value="<? echo $paymentfee; ?>">
+            <div class="description"><? echo $this->__f("Do you wish to charge your customer for using this payment method"); ?></div>
+        </div>
+    </div>
+
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="saveSettings" gss_model="payondelivery" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Save"); ?></div>
     </div>
 </div>
 
-
-<div class="button savebutton"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__("Save settings"); ?></ins></div>

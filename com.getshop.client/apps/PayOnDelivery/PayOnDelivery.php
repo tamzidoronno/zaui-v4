@@ -69,5 +69,8 @@ class PayOnDelivery extends \PaymentApplication implements \Application {
         $this->includefile("PayOnDelivery");
     }
 
+    public function saveSettings() {
+        $this->setConfigurationSetting("paymentfee", $_POST['fee']);
+    }
 }
 ?>

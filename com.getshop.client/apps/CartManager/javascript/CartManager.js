@@ -25,6 +25,7 @@ CartManager = {
         thundashop.common.showInformationBox(event, __w("Terms and Conditions"));
     },
     ajaxError: function(msg, error) {
+        debugger;
         if (error.responseText === "FAILED_TO_GET_SHIPMENT_BRING") {
             thundashop.common.Alert(__w("Failed"), __w("Was not able to get payment methods, please check your postcode"), true);
         }
@@ -74,10 +75,11 @@ CartManager = {
         });
         
     },
-    validateAddress : function() {
+    validateAddress : function(button) {
+        var form = $(button).closest('.CartManager');
         var retval = true;
         
-        $('.address input').each(function() {
+        form.find('.address input').each(function() {
             var value = $(this).val();
             if (value == "") {
                 $(this).addClass('validate_error');
@@ -88,13 +90,13 @@ CartManager = {
         });
         
         
-        if($('.address .emailerror').is(':visible')) {
+        if(form.find('.address .emailerror').is(':visible')) {
             $('.address .emailerror').hide();
             $('.address .emailerror').fadeIn();
             retval = false;
         }
         
-        if($('.address .password').is(':visible')) {
+        if(form.find('.address .password').is(':visible')) {
             var password = $('.address input[name="password"]').val();
             var repeat = $('.address input[name="repeat_password"]').val();
             $('.address input[name="password"]').removeClass('validate_error');
@@ -108,8 +110,8 @@ CartManager = {
             }
         }
         
-        var terms = $('.address .termsandconditioncheckbox');
-        $('.CartManager .invalid_terms').hide();
+        var terms = form.find('.address .termsandconditioncheckbox');
+        form.find('.invalid_terms').hide();
         if(terms.is(':visible') && !terms.is(':checked')) {
             $('.CartManager .invalid_terms').show();
             retval = false;
@@ -169,19 +171,21 @@ CartManager = {
     },
     
     placeOrder: function(target) {
+        var form = $(target).closest('.CartManager');
+        
         var data = {
-            appId : $('.checkout .payment').find('.selected').attr('appid'),
-            paymentMethod : $('.checkout .payment').find('.selected').attr('paymentid')
+            appId : form.find('.checkout .payment').find('.selected').attr('appid'),
+            paymentMethod : form.find('.checkout .payment').find('.selected').attr('paymentid')
         };
         
-        if ($('.extendedinfo') && $('.extendedinfo').length > 0 && $('.extendedinfo').is(':visible')) {
-            $('.extendedinfo:visible').find('.selected').each(function() {
+        if (form.find('.extendedinfo') && form.find('.extendedinfo').length > 0 && form.find('.extendedinfo').is(':visible')) {
+            form.find('.extendedinfo:visible').find('.selected').each(function() {
                 var name = $(this).attr('name');
                 var value = $(this).attr('value');
                 data[name] = value;
             });
             
-            $('.extendedinfo:visible').find('input:text').each(function() {
+            form.find('.extendedinfo:visible').find('input:text').each(function() {
                 var name = $(this).attr('name');
                 var value = $(this).attr('value');
                 data[name] = value;
@@ -240,7 +244,7 @@ CartManager = {
 }
 
 $('.address #next').live('click', function() {
-    var retval = CartManager.validateAddress();
+    var retval = CartManager.validateAddress(this);
     
     if (retval === true) {
         var addressInformation = CartManager.generateAddressData();
@@ -251,12 +255,13 @@ $('.address #next').live('click', function() {
 });
 
 $('.delivery #next').live('click', function() {
+    var form = $(this).closest('.CartManager');
     var retval = CartManager.validateMethod('.delivery');
     retval = true;
     if (retval) {
         var data =  {
-            shippingProduct : $('.checkout .delivery .selected').attr('type'),
-            shippingType : $('.checkout .delivery .selected').attr('id')
+            shippingProduct : form.find('.checkout .delivery .selected').attr('type'),
+            shippingType : form.find('.checkout .delivery .selected').attr('id')
         }
         var event = thundashop.Ajax.createEvent("", "saveShipping" , this, data);
         thundashop.Ajax.post(event);
@@ -286,7 +291,6 @@ $('.checkout .payment .method').live('click', function(e) {
 })
 
 $('.checkout #confirmorder').live('click', function() {
-    debugger;
     var me = this;
     
     if ($(this).closest('.delivery').size() === 1) {
@@ -305,7 +309,7 @@ $('.checkout #confirmorder').live('click', function() {
             thundashop.common.Alert(__w("Wrong delivery method"), __w("Please check your delivery options."), true);
         }
     } else {
-        var retval = CartManager.validateAddress();
+        var retval = CartManager.validateAddress(this);
         if(retval) {
             CartManager.placeOrder(me);
         }

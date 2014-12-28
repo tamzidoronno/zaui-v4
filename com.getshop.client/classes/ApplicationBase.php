@@ -22,35 +22,6 @@ class ApplicationBase extends FactoryBase {
         
     }
     
-    public function saveGsInstanceSettings() {
-        $data = $_POST['data'];
-        
-        $settings = array();
-        foreach (array_keys($data) as $key) {
-            if ($key == "appid") continue;
-            
-            $setting =  $this->getApiObject()->core_common_Setting();
-            $setting->id = $key;
-            if (isset($data[$key]['type']) && $data[$key]['type'] == "table") {
-                $setting->value = json_encode($data[$key]['value']);
-            } else {
-                if(is_array($data[$key]['value'])) {
-                    $setting->value = json_encode($data[$key]['value']);
-                } else {
-                    $setting->value = $data[$key]['value'];
-                }
-            }
-            $setting->type = isset($data[$key]['type']) ? $data[$key]['type'] : "";
-            $setting->secure = $data[$key]['secure'];
-            $settings[] = $setting;
-        }
-        
-        $sendCore = $this->getApiObject()->core_common_Settings();
-        $sendCore->settings = $settings; 
-        $sendCore->appId = $this->getConfiguration()->id;
-        $this->getApi()->getPageManager()->setApplicationSettings($sendCore);
-    }
-    
     public function startAdminImpersonation($managerName, $function) {
         $userToImersonate = $this->getCredentials($managerName, $function);
         if ($userToImersonate != null) {
@@ -174,10 +145,6 @@ class ApplicationBase extends FactoryBase {
     
     public function showDescription() {
         $this->includefile('applicationdescription', 'Common');
-    }
-
-    public function setSticky() {
-        $this->getApi()->getPageManager()->setApplicationSticky($this->getConfiguration()->id, $_POST['data']['sticky']);
     }
 
     public function renderApplication() {
@@ -310,7 +277,7 @@ class ApplicationBase extends FactoryBase {
     }
     
     public function getConfigurationSetting($key) {
-        if ($this->configuration) {
+        if (isset($this->configuration)) {
             if(isset($this->configuration->settings->{$key}->value)) {
                 return $this->configuration->settings->{$key}->value;
             }

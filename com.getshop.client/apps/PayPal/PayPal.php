@@ -13,13 +13,13 @@ class PayPal extends \PaymentApplication implements \Application {
     public function getName() {
         return "PayPal";
     }
-    
+
     public function addPaymentMethods() {
         $namespace = __NAMESPACE__;
         $details = $this->getDetails();
         $this->addPaymentMethod("PayPal", "/showApplicationImages.php?appNamespace=$namespace&image=PayPal.png", "paypal", $details);
     }
-    
+
     private function getDetails() {
         return $this->__w("* Can pay with Visa/MasterCard trough PayPal");
     }
@@ -52,29 +52,31 @@ class PayPal extends \PaymentApplication implements \Application {
         $returnAddress = "http://" . $this->getFactory()->getStore()->webAddress . "/index.php?page=home";
         $orderId = $order->id;
 
-        $settings = $this->getConfiguration()->settings;
-        if (isset($settings->{'sandbox'}->value) && $settings->{'sandbox'}->value == "true") {
+        $sandbox = $this->getConfigurationSetting("sandbox");
+        $testEmailAddress = $this->getConfigurationSetting("paypaltestaddress");
+        $payPalEmail = $this->getConfigurationSetting("paypalemailaddress");
+
+        if (isset($sandbox) && $sandbox == "true") {
             $url = "https://www.sandbox.paypal.com/cgi-bin/webscr";
-            $seller = $settings->{'paypaltestaddress'}->value;
+            $seller = $testEmailAddress;
         } else {
             $url = "https://www.paypal.com/cgi-bin/webscr";
-            if(isset($this->getConfiguration()->settings->{"paypalemailaddress"})) {
-                $seller = $this->getConfiguration()->settings->{"paypalemailaddress"}->value;
+            if ($payPalEmail) {
+                $seller = $payPalEmail;
             }
         }
-        if(!isset($seller) || !$seller) {
-            if($this->isEditorMode()) {
+
+        if (!isset($seller) || !$seller) {
+            if ($this->isEditorMode()) {
                 echo $this->__f("The paypal account has not been configured correctly. Go to settings and configure it properly");
             }
             return;
         }
-        
-        $appSettingsId = $this->getConfiguration()->appSettingsId;
-        $callback = $this->curPageURL()."/callback.php?app=".$appSettingsId."&orderid=" . $orderId . "&NO_SHIPPING_OPTION_DETAILS=1";
-        $currency = $this->getFactory()->getCurrency();
 
-        echo "<center><b>".$this->__w("You are being transferred to paypal, please wait...") ."</b></center>";
-        
+        $appSettingsId = $this->getApplicationSettings()->id;
+        $callback = $this->curPageURL() . "/callback.php?app=" . $appSettingsId . "&orderid=" . $orderId . "&NO_SHIPPING_OPTION_DETAILS=1";
+        $currency = \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::fetchCurrencyCode();
+
         echo "<form action='$url' method='POST' id='paypalform'>";
 
         //CALLBACK...
@@ -86,31 +88,33 @@ class PayPal extends \PaymentApplication implements \Application {
         echo '<input type="hidden" name="currency_code" value="' . $currency . '">';
         echo '<input type="hidden" name="business" value="' . $seller . '">';
         $i = 1;
-        foreach($order->cart->items as $cartItem) {
+        foreach ($order->cart->items as $cartItem) {
             $product = $cartItem->product;
-            $variations = isset($cartItem->variations) ? $cartItem->variations : array(); 
+            $variations = isset($cartItem->variations) ? $cartItem->variations : array();
             $price = $this->getApi()->getProductManager()->getPrice($product->id, $variations);
             $count = $cartItem->count;
-            
+
             $helpertext = \HelperCart::getVartionsText($cartItem);
-            if($helpertext) { $helpertext= "(".$helpertext.")"; }
-            
-            echo '<input type="hidden" name="item_name_'.$i.'" value="'.$product->name. ' ' . $helpertext.'">';
-            echo '<input type="hidden" name="amount_'.$i.'" value="' . $price . '">';
-            echo '<input type="hidden" name="quantity_'.$i.'" value="' . $count . '">';
+            if ($helpertext) {
+                $helpertext = "(" . $helpertext . ")";
+            }
+
+            echo '<input type="hidden" name="item_name_' . $i . '" value="' . $product->name . ' ' . $helpertext . '">';
+            echo '<input type="hidden" name="amount_' . $i . '" value="' . $price . '">';
+            echo '<input type="hidden" name="quantity_' . $i . '" value="' . $count . '">';
             $i++;
         }
-        
-        if(isset($order->shipping) && isset($order->shipping->cost) && $order->shipping->cost > 0) {
-            echo '<input type="hidden" name="item_name_'.$i.'" value="'.$this->__w("Shipping cost").'">';
-            echo '<input type="hidden" name="amount_'.$i.'" value="' . $order->shipping->cost . '">';
+
+        if (isset($order->shipping) && isset($order->shipping->cost) && $order->shipping->cost > 0) {
+            echo '<input type="hidden" name="item_name_' . $i . '" value="' . $this->__w("Shipping cost") . '">';
+            echo '<input type="hidden" name="amount_' . $i . '" value="' . $order->shipping->cost . '">';
             $i++;
         }
-        
-        if(isset($order->cart->couponCost) && $order->cart->couponCost > 0) {
+
+        if (isset($order->cart->couponCost) && $order->cart->couponCost > 0) {
             echo '<input type="hidden" name="discount_amount_cart" value="' . $order->cart->couponCost . '">';
         }
-        
+
         echo "</form>";
         echo "<script>";
         echo "$('#paypalform').submit();";
@@ -125,12 +129,18 @@ class PayPal extends \PaymentApplication implements \Application {
         $this->includefile("paypalconfig");
     }
 
-	public function getMode() {
-		return null;
-	}
-	
+    public function getMode() {
+        return null;
+    }
+
     public function render() {
         
+    }
+
+    public function saveSettings() {
+        $this->setConfigurationSetting("paypalemailaddress", $_POST['paypalemail']);
+        $this->setConfigurationSetting("sandbox", $_POST['issandbox']);
+        $this->setConfigurationSetting("paypaltestaddress", $_POST['testpaypalemail']);
     }
 
 }

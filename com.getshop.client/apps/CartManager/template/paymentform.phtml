@@ -11,7 +11,7 @@ $paymentMethods = $this->getPaymentMethods();
                 $appName = $paymentMethod->getName();
                 $logo = $paymentMethod->getLogo();
                 $id = $paymentMethod->getId();
-                $appId = $paymentMethod->getPaymentApplication()->getConfiguration()->id;
+                $appId = $paymentMethod->getPaymentApplication()->getApplicationSettings()->id;
                 echo "
                     <div paymentid='$id' appid='$appId' class='inline method $selected'>
                         <div class='logo'><img src='$logo'/></div>

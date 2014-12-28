@@ -63,15 +63,21 @@ class CartManager extends \SystemApplication implements \Application {
         }
 
         if (isset($_SESSION['shippingtype'])) {
-            $this->shippingApplication = $appPool->getApplicationInstance($_SESSION['shippingtype']);
+            $shippingApp = $this->getApi()->getStoreApplicationPool()->getApplication($_SESSION['shippingtype']);
+            if ($shippingApp) {
+                $this->shippingApplication = $appPool->createInstace($shippingApp);
+            } 
+            
             if ($this->shippingApplication == null) {
                 unset($_SESSION['shippingtype']);
             }
+            
             $this->shippingApplication->cart = $this->cart;
         }
 
         if (isset($_SESSION['appId'])) {
-            $this->paymentApplication = $appPool->getApplicationInstance($_SESSION['appId']);
+            $app = $this->getApi()->getStoreApplicationPool()->getApplication($_SESSION['appId']);
+            $this->paymentApplication = $this->getFactory()->getApplicationPool()->createInstace($app);
         }
         
         $paymentApps = $this->getPaymentApplications();
@@ -272,7 +278,7 @@ class CartManager extends \SystemApplication implements \Application {
     
     public function saveShipping() {
         $_SESSION['checkoutstep'] = "payment";
-        $_SESSION['shippingtype'] = $_POST['data']['shippingType'];
+        $_SESSION['shippingtype'] = isset($_POST['data']['shippingType']) ? $_POST['data']['shippingType'] : "";
         $_SESSION['shippingproduct'] = $_POST['data']['shippingProduct'];        
         $this->init();
     }
@@ -282,12 +288,13 @@ class CartManager extends \SystemApplication implements \Application {
      * @return \PaymentApplication[]
      */
     public function getPaymentApplications() {
-        $apps = $this->getFactory()->getApplicationPool()->getAllAddedInstances();
+        $apps = $this->getFactory()->getApi()->getStoreApplicationPool()->getApplications();
         $result = array();
         foreach($apps as $app) {
-            if($app->applicationSettings->type == "PaymentApplication") {
-                if (count($app->getPaymentMethods()) > 0)
-                    $result[] = $app;
+            if($app->type == "PaymentApplication") {
+                $appInstance = $this->getFactory()->getApplicationPool()->createInstace($app);
+                if (count($appInstance->getPaymentMethods()) > 0)
+                    $result[] = $appInstance;
             }
         }
         
@@ -398,7 +405,7 @@ class CartManager extends \SystemApplication implements \Application {
             if (count($this->getShipmentApplications()) == 0) {
                 return $this->getPaymentCheckoutStep();
             }
-            if (isset($this->shippingApplication) && !$this->shippingApplication->hasSubProducts()) {
+            if (isset($this->shippingApplication) && !$this->shippingApplication->hasSubProducts() && count($this->getShipmentApplications()) == 1) {
                 return $this->getPaymentCheckoutStep();
             }
             return "shipping";

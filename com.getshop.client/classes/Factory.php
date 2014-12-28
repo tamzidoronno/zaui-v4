@@ -505,41 +505,6 @@ class Factory extends FactoryBase {
         
     }
 
-    public function getCurrency() {
-        $settings = $this->getSettings();
-        $currency = "";
-
-        if (isset($settings->currencycode))
-            $currency = $settings->currencycode->value;
-
-        if ($currency == "" || !isset($currency))
-            return "USD";
-
-        return $currency;
-    }
-
-    public function getCurrencyName() {
-        $settings = $this->getSettings();
-        $currency = "";
-        if (isset($settings->currencycode)) {
-            $currency = $settings->currencycode->value;
-        }
-
-        if ($currency == "USD")
-            return "$";
-
-        if ($currency == "EUR")
-            return "€";
-
-        if ($currency == "NOK")
-            return "Kr ";
-
-        if ($currency == "AUD")
-            return "$";
-
-        return "$";
-    }
-
     public function getTranslationForKey($app, $key) {
         if (!count($this->translationMatrix)) {
             $this->read_csv_translation();

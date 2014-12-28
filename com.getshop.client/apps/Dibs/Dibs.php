@@ -26,17 +26,17 @@ class Dibs extends \PaymentApplication implements \Application {
     }
 
     public function preProcess() {
-        $merchid = $this->getConfiguration()->settings->{"merchantid"}->value;
-        $currency = $this->getFactory()->getCurrency();
+        $merchid = $this->getConfigurationSetting("merchantid");
+        $currency = \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::fetchCurrencyCode();
         $orderId = $this->getOrder()->id;
         $amount = $this->getApi()->getCartManager()->calculateTotalCost($this->order->cart)*100;
         if(isset($this->order->shipping)) {
-            $amount += ($this->order->shipping && $this->order->shipping->cost) ? $this->order->shipping : 0;
+            $amount += ($this->order->shipping && $this->order->shipping->cost) ? $this->order->shipping->cost : 0;
         }
         
         $settings = $this->getFactory()->getSettings();
-        $language = $settings->language->value;
-        $callBack = "https://". $_SERVER['SERVER_NAME']."/callback.php?orderid=".$orderId."&app=".$this->getConfiguration()->id;
+        $language = $this->getFactory()->getSelectedLanguage();
+        $callBack = "https://". $_SERVER['SERVER_NAME']."/callback.php?orderid=".$orderId."&app=".$this->getApplicationSettings()->id;
         $exitUrl = "http://". $_SERVER['SERVER_NAME']."/index.php?page=home";
         echo '<form method="post" id="dibsform" action="https://sat1.dibspayment.com/dibspaymentwindow/entrypoint">
             <input value="' . $merchid . '" name="merchant" type="hidden" />
@@ -70,6 +70,9 @@ class Dibs extends \PaymentApplication implements \Application {
         return true;
     }
 
+    public function saveSettings() {
+        $this->setConfigurationSetting("merchantid", $_POST['merchantid']);
+    }
 }
 
 ?>

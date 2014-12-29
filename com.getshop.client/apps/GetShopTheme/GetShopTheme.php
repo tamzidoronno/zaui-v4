@@ -24,6 +24,11 @@ class GetShopTheme extends \ThemeApplication {
         $this->setVariable('ns_00d8f5ce_ed17_4098_8925_5697f6159f66', 'ICON_WIDTH', 40);
         $this->setVariable('ns_00d8f5ce_ed17_4098_8925_5697f6159f66', 'ICON_HEIGHT', 40);
     }
+    
+    public function addScripts() {
+        echo '<link href="http://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">';
+        echo '<link href="http://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" type="text/css">';
+    }
 
 }
 ?>

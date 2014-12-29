@@ -98,6 +98,7 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     @Override
     public Page getPage(String id) throws ErrorException {
+        createDefaultPages();
         Page page = pages.get(id);
 
         if (page == null) {
@@ -322,7 +323,7 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     private void createDefaultPage(String pageId) {
-        Page page = getPage(pageId);
+        Page page = pages.get(pageId);
         if (page == null) {
             createPage(pageId);
         }

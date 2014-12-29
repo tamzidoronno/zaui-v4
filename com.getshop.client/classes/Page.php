@@ -34,16 +34,15 @@ class Page {
         }
 
         $editedCellid = null;
-//        if(!$this->factory->isMobile()) {
-            echo "<div class='gsarea' area='header'>";
-            $edited = $this->printArea($layout->areas->{'header'});
-            $editingHeader = false;
-            if ($edited) {
-                $editingHeader = true;
-                $editedCellid = $edited;
-            }
-            echo "</div>";
-//        }
+        
+        echo "<div class='gsarea' area='header'>";
+        $edited = $this->printArea($layout->areas->{'header'});
+        $editingHeader = false;
+        if ($edited) {
+            $editingHeader = true;
+            $editedCellid = $edited;
+        }
+        echo "</div>";
 
         echo "<div class='gsarea' area='body'>";
         if (isset($layout->areas->{'body'})) {
@@ -83,6 +82,22 @@ class Page {
         foreach ($areas as $area) {
 
             $styles = $area->styles;
+            
+           if($this->factory->isMobile()) {
+                $newStyles = "";
+                foreach(explode("\n", $styles) as $tmpLine) {
+                    if(stristr($tmpLine, "padding")) {
+//                        continue;
+                    }
+                    if(stristr($tmpLine, "margin")) {
+                        continue;
+                    }
+                    $newStyles .= $tmpLine . "\n";
+//                    echo "NEW STYLE";
+//                    echo $newStyles;
+                }
+                $styles = $newStyles;
+            }
             
             if (isset($area->styles) && $area->styles) {
                 $area->styles = str_replace("{incrementcellid}", $area->incrementalCellId, $area->styles);
@@ -247,7 +262,7 @@ class Page {
             echo "<span style='float:left;'>" . $this->printEasyModeEdit($cell, $parent, true) . "</span>";
             echo "</div>";
         }
-
+        
 
         echo "<div $additionalinfo $styles width='$width' class='gsucell $gscell $gsrotatingrow $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "'>";
         if ($parent != null && $parent->mode === "ROTATING") {

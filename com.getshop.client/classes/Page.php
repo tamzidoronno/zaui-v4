@@ -34,14 +34,16 @@ class Page {
         }
 
         $editedCellid = null;
-        echo "<div class='gsarea' area='header'>";
-        $edited = $this->printArea($layout->areas->{'header'});
-        $editingHeader = false;
-        if ($edited) {
-            $editingHeader = true;
-            $editedCellid = $edited;
-        }
-        echo "</div>";
+//        if(!$this->factory->isMobile()) {
+            echo "<div class='gsarea' area='header'>";
+            $edited = $this->printArea($layout->areas->{'header'});
+            $editingHeader = false;
+            if ($edited) {
+                $editingHeader = true;
+                $editedCellid = $edited;
+            }
+            echo "</div>";
+//        }
 
         echo "<div class='gsarea' area='body'>";
         if (isset($layout->areas->{'body'})) {
@@ -182,6 +184,9 @@ class Page {
         $additionalinfo = "";
 
         if ($cell->mode == "ROTATING") {
+            if($this->factory->isMobile()) {
+                return;
+            }
             $additionalinfo = "height='" . $cell->carouselConfig->height . "' timer='" . $cell->carouselConfig->time . "' type='" . $cell->carouselConfig->type . "'";
             $styles .= "height: " . $cell->carouselConfig->height . "px;";
         }

@@ -19,9 +19,8 @@ class Factory extends FactoryBase {
     private $styleSheet;
     public $javaPage;
     private $storeSettings;
-
     private $language;
-    
+
     /** @var $translation GetShopTranslation */
     public $translation;
 
@@ -39,25 +38,33 @@ class Factory extends FactoryBase {
 
         return $this->eventHandler;
     }
-    
+
     public function getSelectedLanguage() {
         return $this->getMainLanguage();
     }
-    
+
+    public function isMobile() {
+        $useragent=$_SERVER['HTTP_USER_AGENT'];
+        if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i',$useragent)||preg_match('/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i',substr($useragent,0,4)))
+            return true;
+        
+        return false;
+    }
+
+
     public function getMainLanguage() {
         if (!isset($this->language)) {
             $app = $this->getApi()->getStoreApplicationPool()->getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
             $instance = $this->applicationPool->createInstace($app);
-            $this->language = $instance->getConfigurationSetting("language"); 
+            $this->language = $instance->getConfigurationSetting("language");
         }
-        
+
         if (!$this->language) {
             $this->language = "en_en";
         }
-        
+
         return $this->language;
     }
-
 
     public function translateKey($key) {
         if (!isset($this->translation))
@@ -158,8 +165,8 @@ class Factory extends FactoryBase {
         echo "\n" . '<script type="text/javascript" src="js/getshop.rotate.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.PagePicker.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/getshop.Settings.js"></script>';
-    
-        
+
+
         echo "\n" . '<!--[if gte IE 8]><script src="js/jquery.xdr-transport.js"></script><![endif]-->';
         echo "\n" . '<link rel="stylesheet" type="text/css" href="js/jcrop/css/jquery.Jcrop.css">';
 
@@ -199,8 +206,8 @@ class Factory extends FactoryBase {
     public function initialize() {
         $this->store = $this->getApi()->getStoreManager()->initializeStore($_SERVER['HTTP_HOST'], session_id());
         $this->store = $this->getApi()->getStoreManager()->getMyStore();
-        
-        if(!$this->store) {
+
+        if (!$this->store) {
             include("createinstance/createinstance.phtml");
             exit(0);
         }
@@ -228,7 +235,6 @@ class Factory extends FactoryBase {
         $this->store->configuration->configurationFlags->{$flag} = $setting;
         $this->getApi()->getStoreManager()->saveStore($this->store->configuration);
     }
-
 
     public function start($loadPages = true) {
         $this->setScopeId();
@@ -300,37 +306,37 @@ class Factory extends FactoryBase {
             }
             $navigation->saveToSession();
         }
-        
+
         $navigation = Navigation::getNavigation();
 
         $homePageId = $this->getHomePageName();
- 
+
         if (!isset($navigation->currentPageId)) {
             $navigation->currentPageId = $homePageId;
         }
 
         $pageId = isset($_POST['data']['getShopPageId']) ? $_POST['data']['getShopPageId'] : $navigation->currentPageId;
 
-        
+
         $javaPage = $this->pageManager->getPage($pageId);
-        
+
         if ($javaPage == null) {
             $javaPage = $this->pageManager->getPage($homePageId);
         }
-        
-        if($javaPage == null) {
+
+        if ($javaPage == null) {
             echo "<center><h1>Page not found: $homePageId</h1></center>";
             http_response_code(404);
             exit(0);
         }
-   
-        $this->page = new Page($javaPage, $this); 
+
+        $this->page = new Page($javaPage, $this);
         $this->getApplicationPool()->initForPage($this->pageManager, $this->page);
-       
+
         $this->javaPage = $javaPage;
         $this->styleSheet = new StyleSheet();
     }
-    
+
     private function getHomePageName() {
         $homePage = @$this->getStoreConfiguration()->homePage;
         if (!$homePage) {
@@ -414,7 +420,7 @@ class Factory extends FactoryBase {
         echo '<link rel="stylesheet" type="text/css" href="/skin/default/skeletons.css">';
         echo '<link rel="stylesheet" type="text/css" href="/skin/default/PagePicker.css">';
         echo '<link rel="stylesheet" type="text/css" href="/skin/default/getshop.ImageEditor.css">';
-        
+
         $styleSheet = new StyleSheet();
         $styleSheet->render(false);
 
@@ -496,13 +502,13 @@ class Factory extends FactoryBase {
     }
 
     public function getSettings() {
-        if($this->storeSettings) {
+        if ($this->storeSettings) {
             return $this->storeSettings;
         }
         $this->storeSettings = $this->getApi()->getStoreApplicationPool()->getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
         return $this->storeSettings;
     }
-    
+
     public function clearCachedPageData() {
         
     }
@@ -546,7 +552,7 @@ class Factory extends FactoryBase {
         if (!count($this->translationMatrix)) {
             $this->read_csv_translation();
         }
-        
+
         if (!isset($this->translationMatrix[trim($key)]) || !$this->translationMatrix[trim($key)]) {
             return $key;
         }
@@ -564,8 +570,8 @@ class Factory extends FactoryBase {
     public function read_csv_translation() {
         $translation = $this->getSelectedTranslation();
         $content = "";
-        
-        if(file_exists("translation/f_$translation.csv")) {
+
+        if (file_exists("translation/f_$translation.csv")) {
             $content = file_get_contents("translation/f_$translation.csv");
         }
         $line = explode("\n", $content);
@@ -582,9 +588,9 @@ class Factory extends FactoryBase {
         }
 
         //Add customer related translation to the matrix.
-        if(file_exists("translation/w_$translation.csv")) 
+        if (file_exists("translation/w_$translation.csv"))
             $content = file_get_contents("translation/w_$translation.csv");
-        
+
         $line = explode("\n", $content);
         $app = "";
         foreach ($line as $entry) {
@@ -597,7 +603,7 @@ class Factory extends FactoryBase {
             }
         }
 
-        
+
         //Append the english lanugage.
         $content = file_get_contents("translation/f_en_en.csv");
         $line = explode("\n", $content);
@@ -714,16 +720,16 @@ class Factory extends FactoryBase {
             echo "</div>";
         }
     }
-    
+
     public function getSelectedTranslation() {
         $translation = $this->getSelectedLanguage();
         $this->translation = new GetShopTranslation();
-        
-        if(isset($_GET['setLanguage'])) {
+
+        if (isset($_GET['setLanguage'])) {
             $translation = $_GET['setLanguage'];
             $_SESSION['language_selected'] = $translation;
             $this->getApi()->getStoreManager()->setSessionLanguage($translation);
-        } else if(isset($_SESSION['language_selected'])) {
+        } else if (isset($_SESSION['language_selected'])) {
             $translation = $_SESSION['language_selected'];
         }
         return $translation;

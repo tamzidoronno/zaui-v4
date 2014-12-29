@@ -1,0 +1,13 @@
+.gscellsettingspanel { width: 220px; position:absolute; display:inline-block; background-color:#FFF; box-shadow: 0px 0px 4px #a9a9a9; display:none; z-index:10; border-radius: 3px; }
+.gscellsettingspanel .gsinnercellsettingspanel { padding-left: 6px; }
+.gscellsettingspanel div { padding-top: 10px; cursor:pointer; padding: 2px; display:block; }
+.gscellsettingspanel div i { width: 20px; text-align: center; margin-right: 10px; }
+.gscellsettingspanel div div{ opacity:0.8; }
+.gscellsettingspanel div div:hover { opacity:1; }
+.gscellsettingsheading { border-bottom: solid 1px rgba(0,0,0,0.2); margin-bottom: 5px; margin-top: 5px !important; font-weight: bold; margin-top:10px; padding-left: 10px !important; color:#a9a9a9; }
+.gscontainer.gscell { width: 100%; }
+.gscell,.gscontainercell { position:relative; }
+.gscell.gscolumn {box-sizing: border-box; }
+.gscell.gsrow .applicationarea { height: auto; }
+.gscontainer.gsinner { margin: 0px !important; width:100% !important; }
+.gsinner { position: relative; box-sizing:border-box; }

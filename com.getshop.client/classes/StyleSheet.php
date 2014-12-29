@@ -86,6 +86,9 @@ class StyleSheet {
         }
 
         echo '<link class=\'frameworkstylesheet\' rel="stylesheet" type="text/css" media="all" href="skin/default/framework.css">';
+//        if(!$this->factory->isMobile()) {
+            echo '<link class=\'frameworkstylesheet\' rel="stylesheet" type="text/css" media="all" href="skin/default/frameworklayout.css">';
+//        }
         echo '<link class=\'frameworkstylesheet\' rel="stylesheet" type="text/css" media="all" href="skin/default/elements.css">';
         echo '<link class=\'frameworkstylesheet\' rel="stylesheet" type="text/css" media="all" href="skin/default/layout.css">';
         echo '<link class=\'frameworkstylesheet\' rel="stylesheet" type="text/css" media="all" href="skin/default/breadcrumb.css">';
@@ -123,15 +126,15 @@ class StyleSheet {
                 if (in_array($appSettingsId, $done)) {
                     continue;
                 }
-                $this->doApp($app);
+                $this->doApp($app, false);
                 $done[] = $appSettingsId;
             }
         }
 
-        $this->doApp($themeApp);
+        $this->doApp($themeApp, true);
     }
 
-    private function doApp($app) {
+    private function doApp($app, $isTheme) {
         $appId = $this->factory->convertUUIDtoString($app->id);
         $cssFileName = $app->appName . ".css";
         $folder = "../app/" . $appId . "/skin/";
@@ -145,6 +148,7 @@ class StyleSheet {
         
         if (file_exists($folder)) {
             $files = scandir($folder);
+
             foreach ($files as $file) {
                 $cssFile = "$folder$file";
                 
@@ -160,7 +164,16 @@ class StyleSheet {
                     $cssFile = str_replace("{TEXTCOLOR}", $this->getColors()->textColor, $cssFile);
                     $cssFile = str_replace("{WIDTHTOTAL}", $this->getWidthTotal(), $cssFile);
                     file_put_contents("cssfolder/$appId/$file", $cssFile);
-                    echo '<link class=\'appstylesheet\' rel="stylesheet" type="text/css" media="all" href="'."cssfolder/$appId/$file".'">';
+                    
+                    if($isTheme) {
+                        if($this->factory->isMobile() && $file != "mobile.css") {
+                            continue;
+                        } else if(!$this->factory->isMobile() && $file == "mobile.css") {
+                            continue;
+                        }
+                    }
+                    
+                    echo '<link class=\'appstylesheet\' rel="stylesheet" type="text/css" media="all" href="'."cssfolder/$appId/$file".'">' . "\n";
                 }
             }
         }

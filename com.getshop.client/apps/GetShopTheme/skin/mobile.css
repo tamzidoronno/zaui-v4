@@ -1,0 +1,40 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #3a99d7;
+    color: #FFF;
+}
+.gsarea[area="header"] .Menu { position: absolute; right: 0px; top: 60px;  }
+.gsarea[area="header"] .Menu a div { padding: 10px; color:#000; font-size: 16px; }
+
+
+.gsinner.gsdepth_0 { width: 2; margin: auto; }
+.gsarea[area="body"] .gscolumn .gsinner { 
+    background-color: rgba(255,255,255,1);
+    color: #333;
+    border-radius: 7px;
+    text-align: left;
+    padding: 15px !important;
+    box-shadow: 0px 0px 3px #444;
+}
+
+.gsarea[area="footer"] .gscolumn .gsinner {
+    text-align: left;
+}
+
+h1 { text-align: center;
+     font-size: 30px;
+     margin-top: 30px;
+     margin-bottom: 30px;
+     font-weight: normal;
+     font-family: 'Lobster', cursive; }
+
+.gstabbtn { font-size: 16px; border-radius: 3px; padding-left: 10px; margin-bottom: 10px; padding-right: 10px; border-color:#2e7bab; }
+.gsactivetab { background-color:#2b3a44; }
+
+.gsarea[area="header"],.gsarea[area="footer"] {
+    background-color: rgba(0,0,0,0.6);
+    color: #FFF;
+    margin: 0px;
+    padding-bottom: 10px;
+    box-shadow: 3px 0px 3px #444;
+}

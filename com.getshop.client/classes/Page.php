@@ -80,9 +80,11 @@ class Page {
     private function printCss($areas) {
         foreach ($areas as $area) {
 
+            $styles = $area->styles;
+            
             if (isset($area->styles) && $area->styles) {
                 $area->styles = str_replace("{incrementcellid}", $area->incrementalCellId, $area->styles);
-                echo "<style cellid='" . $area->cellId . "'>" . $area->styles . "</style>" . "\n";
+                echo "<style cellid='" . $area->cellId . "'>" . $styles . "</style>" . "\n";
             }
 
             if (sizeof($area->cells) > 0) {
@@ -188,7 +190,7 @@ class Page {
             if ($cell->width > 0) {
                 $width = $cell->width;
             }
-
+            
             $styles = "style='width:$width%; float:left;'";
             $isColumn = true;
         }

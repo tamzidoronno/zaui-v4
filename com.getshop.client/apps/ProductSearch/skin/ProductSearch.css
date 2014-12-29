@@ -26,3 +26,8 @@
 .gsarea[area="body"] .searchField {
     display: none;
 }
+
+@media only all and (max-width: 800px) {
+    .ProductSearch .searchField i { display: none; }
+    .ProductSearch .searchField input { padding: 0px !important; width: 100% !important; line-height: 30px;  }
+}

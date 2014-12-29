@@ -378,3 +378,12 @@
 .Menu .hidden_simple_menu {
     
 }
+
+.Menu .mobilenavigatemenu { display:none; }
+
+@media only all and (max-width: 800px) {
+    .Menu .menuentries.horizontal { display:none; }
+     .Menu .menuentries { position:absolute !important; margin-top: 5px; background-color:#FFF !important; z-index: 11 !important; width:100%; border: solid 1px !important; border-radius: 8px !important; }
+     .Menu .menuentries .entry { width: 100% !important; display:block !important;  }
+     .Menu .mobilenavigatemenu { display:block !important; text-align: right !important; }
+}

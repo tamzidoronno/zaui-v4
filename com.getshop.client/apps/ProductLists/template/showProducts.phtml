@@ -79,10 +79,10 @@ $view = $this->isRowView() ? "row_view" : $view;
         var innerWidth = $('.products.grid_view[listid="<? echo $this->getConfigurationSetting("productlist"); ?>"]').innerWidth();
         var columnSize = Math.floor(innerWidth/<? echo $columnSize; ?>);
         var totalSize = columnSize * <? echo $columnSize; ?>;
-        if (totalSize == innerWidth) {
+        if (totalSize === innerWidth) {
             columnSize--;    
         }
-        if (innerWidth) {
+        if (innerWidth && $(window).width() > 800) {
             $('.productbox_outer').outerWidth(columnSize);
         }
     });

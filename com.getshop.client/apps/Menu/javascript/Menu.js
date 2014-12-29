@@ -11,6 +11,7 @@ getshop.MenuEditor = {
         $(document).on('mouseenter', ".Menu .menuentries.horizontal .entry", getshop.MenuEditor.showSubEntries);
         $(document).on('mouseleave', ".Menu .menuentries.horizontal .entry", getshop.MenuEditor.hideSubEntries);
         $(document).on('click', ".Menu .save", getshop.MenuEditor.saveMenuEditor);
+        $(document).on('click', ".Menu .mobilenavigatemenu .fa-navicon", getshop.MenuEditor.showMenu);
         $(document).on('click', ".Menu .cancel", getshop.MenuEditor.closeMenuEditor);
         $(document).on('change', ".Menu #userlevel", getshop.MenuEditor.userLevelChanged);
     },
@@ -21,7 +22,13 @@ getshop.MenuEditor = {
     hideSubEntries : function() {
         $(this).children('.entries').hide();
     },
-    
+    showMenu : function() {
+        if($('.Menu .menuentries').is(':visible')) {
+            $('.Menu .menuentries').slideUp();
+        } else {
+            $('.Menu .menuentries').slideDown();
+        }
+    },
     closeMenuEditor : function() {
         thundashop.common.hideInformationBox();
     },
@@ -106,7 +113,7 @@ getshop.MenuEditor = {
     menuClicked: function() {
         var show = $(this).attr('list');
         getshop.MenuEditor.list = window[show.replace("container_","tree_")];
-        $('.menutree').hide();
+        $('.menutree').slideUp();
         $('#'+show).fadeIn(200);
         $('.disabled').fadeOut(300);
         getshop.MenuEditor.activeItem = null;
@@ -131,9 +138,9 @@ getshop.MenuEditor = {
         if (!getshop.MenuEditor.activeItem) {
             
             $('.iteminformation').show();
-            $('.titleinformation').hide();
+            $('.titleinformation').slideUp();
         } else {
-            $('.iteminformation').hide();
+            $('.iteminformation').slideUp();
             $('.titleinformation').show();
             $('.titleinformation #itemname').val(getshop.MenuEditor.activeItem.name);    
             $('.titleinformation #itemlink').attr('pageId', getshop.MenuEditor.activeItem.pageId);    

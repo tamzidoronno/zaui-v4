@@ -15,25 +15,16 @@
     .ProductList td { padding: 0px; }
 }
 @media only all and (max-width: 800px) {
-    .Banner .banner img,.Banner .bannerslider { height: auto !important; }
-    .ProductList .rowview .slidearrow { display:block !important; }
-    .header .TopMenu { top: 5px; }
-    .Login { display: none; }
-    .gs_row_cell { width: 100% !important; }
-    .gs_margin_left,.gs_margin_right,.gs_margin_left.gs_margin_right { padding-left: 0px; margin-top: 10px; padding-right: 0px; }
-    .Search { display: none; }
-    .CartManager .cartmain td { display: inline-block; width: 100% !important; }
-    .CartManager .cartmain .product_row_table td { display: table-cell; width:auto !important; }
-    .CartManager .cartmain .product_row_table td.image_area { width:180px !important; }
-    .CartManager .leftcart { width: 100% !important; margin-bottom: 10px; }
-    .CartManager .cart .wrapperright { width:auto !important; }
-    .checkout table td input { width: 95%; }
-    .ContentManager img { width: auto !important; height: auto !important; max-width:100% !important; }
-    #apparea-footer { width: 100%; }
-    .Chat { display:none; }
-    .CartManager .rightcart { margin-left: 0px !important; width: 100% !important; }
-    .ProductList .product .short_description { overflow: hidden; height: 103px; }
-    .mainarea .gs_inner .applicationarea { min-height: 50px !important; }
+    .gscell.gsdepth_0 { padding: 10px !important; }
+    .gscell,.gsinner { 
+        width: 100% !important; 
+        display:block !important; 
+        float:none !important;
+        box-sizing: border-box !important;
+        height: auto !important;
+        margin: 0px !important;
+        padding: 0px !important;
+    }
 }
 
 

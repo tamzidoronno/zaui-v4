@@ -7,7 +7,9 @@ if (!count($entries)) {
     $hiddenMenu = "";
 }
 ?>
-
+<div class='mobilenavigatemenu'>
+<i class="fa fa-navicon"> Menu </i>
+</div>
 <div class="menuentries horizontal">
     <?
     $this->printEntries($entries, 0);

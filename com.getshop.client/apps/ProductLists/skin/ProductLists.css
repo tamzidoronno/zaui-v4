@@ -351,3 +351,7 @@
 .ProductLists .setproductlist {
     /*padding: 20px;*/
 }
+
+@media only all and (max-width: 800px) { 
+    .productbox { width: 100% !important; }
+}

@@ -98,7 +98,7 @@ if (isset($_GET['logonwithkey'])) {
 
 $factory = IocContainer::getFactorySingelton();
 
-if (@$factory->getApplicationPool()->getSelectedThemeApp()->applicationSettings->isResponsive) {
+if (@$factory->isMobile()) {
     echo '<meta name="viewport" content="initial-scale=1.0,width=device-width,user-scalable=no;">';
     echo '<link rel="stylesheet" type="text/css" href="skin/default/responsive.css" />';
 }
@@ -177,12 +177,16 @@ if(isset($factory->getSettings()->languages)) {
         <title><?php echo $title; ?></title>
     </head>
     <body editormode="<? echo $factory->isEditorMode() ? "true" : "false"?>">
-        
         <?
             $factory->printTemplateFunctions();
         ?>
-        <? if ($factory->isEditorMode()) {
+        
+        <? if ($factory->isEditorMode() && !$factory->isMobile()) {
             echo "<div class='store_settings_button fa fa-gears'></div>";
+            echo "<div class='store_mobile_view_button fa fa-mobile'></div>";
+            
+            include_once("mobileeditor.phtml");
+            echo '<link rel="stylesheet" type="text/css" href="/skin/default/mobileeditor.css" />';
         }
         
         ?>

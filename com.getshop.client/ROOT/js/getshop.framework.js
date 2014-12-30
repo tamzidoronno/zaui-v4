@@ -74,12 +74,26 @@ thundashop.framework = {
         $(document).on('click', '.gsdonemodifytab', this.hideTabSettings);
         $(document).on('click', '.gstabbtn', this.changeTab);
         $(document).on('click', '.gsdoneresizing', this.deleteResizing);
+        $(document).on('click', '.store_mobile_view_button', this.displayMobileView);
+        $(document).on('click', '.gsmobileeditor', this.hideMobileView);
         $(document).on('keyup', '.gscssattributes', this.setCssAttributes);
 
         /* Cell operations */
         $(document).on('click', '.gsoperatecell', this.operateCell);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
     },
+    hideMobileView : function() {
+        $('.gsmobileeditor').hide();
+    },
+    
+    displayMobileView : function() {
+        $('.gsmobileeditor').fadeIn();
+        var location = document.location.href;
+        location = location.replace("https://", "https://mobile.");
+        location = location.replace("http://", "http://mobile.");
+        $('#gscontentframe').attr('src',  location);
+    },
+    
     setCssAttributes : function(event) {
         var target = $(event.target);
         var val = target.val();

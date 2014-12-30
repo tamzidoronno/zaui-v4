@@ -30,7 +30,7 @@
     font-family: Raleway, sans-serif;
 }
 
-.store_settings_button {
+.store_settings_button,.store_mobile_view_button {
     background-color: #DDD;
     padding: 5px;
     font-size: 20px;
@@ -41,9 +41,10 @@
     position: fixed;
     top: 0px;
     left: 0px;
+    z-index: 2;
 }
-
-.store_settings_button:hover {
+.store_mobile_view_button { left: 30px; font-size: 30px;}
+.store_settings_button:hover,.store_mobile_view_button:hover {
     background-color: #333;
     color: #DDD;
 }

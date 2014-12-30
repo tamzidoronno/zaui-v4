@@ -34,71 +34,87 @@ class Page {
         }
 
         $editedCellid = null;
-        
-        echo "<div class='gsarea' area='header'>";
-        $edited = $this->printArea($layout->areas->{'header'});
-        $editingHeader = false;
-        if ($edited) {
-            $editingHeader = true;
-            $editedCellid = $edited;
-        }
-        echo "</div>";
 
-        echo "<div class='gsarea' area='body'>";
-        if (isset($layout->areas->{'body'})) {
-            $edited = $this->printArea($layout->areas->{'body'});
+        if (!$this->factory->isMobile()) {
+            echo "<div class='gsarea' area='header'>";
+            $edited = $this->printArea($layout->areas->{'header'});
+            $editingHeader = false;
+            if ($edited) {
+                $editingHeader = true;
+                $editedCellid = $edited;
+            }
+            echo "</div>";
+            echo "<div class='gsarea' area='body'>";
+            if (isset($layout->areas->{'body'})) {
+                $edited = $this->printArea($layout->areas->{'body'});
+                if ($edited) {
+                    $editedCellid = $edited;
+                }
+            }
+            echo "</div>";
+
+
+            echo "<div class='gsarea' area='footer'>";
+            $edited = $this->printArea($layout->areas->{'footer'});
             if ($edited) {
                 $editedCellid = $edited;
             }
-        }
-        echo "</div>";
+            echo "</div>";
+            
+            foreach ($layout->areas as $section) {
+                $this->printCss($section);
+            }
 
+            if ($this->factory->isEditorMode()) {
+                $this->displayResizing();
+                $this->printApplicationAddCellRow();
+                $this->addCellConfigPanel();
+                $this->addCellResizingPanel();
+                if(isset($editingHeader)) {
+                    $this->printEditingInfo($editingHeader);
+                }
+            }
 
-        echo "<div class='gsarea' area='footer'>";
-        $edited = $this->printArea($layout->areas->{'footer'});
-        if ($edited) {
-            $editedCellid = $edited;
-        }
-        echo "</div>";
-
-        foreach ($layout->areas as $section) {
-            $this->printCss($section);
-        }
-
-        if ($this->factory->isEditorMode()) {
-            $this->displayResizing();
-            $this->printApplicationAddCellRow();
-            $this->addCellConfigPanel();
-            $this->addCellResizingPanel();
-            $this->printEditingInfo($editingHeader);
-        }
-
-        if ($editedCellid == null) {
-            echo "<script>$('.gsiseditingprepend').remove();</script>";
+            if ($editedCellid == null) {
+                echo "<script>$('.gsiseditingprepend').remove();</script>";
+            }
+            
+        } else {
+            echo "<div class='gsbody'>";
+            $this->printMobile($layout->areas->{'body'}, 0);
+            $this->printCss($layout->areas->{'body'});
+            $this->printMobileMenu();
+            echo "</div>";
         }
     }
+    
+    private function printMobileMenu() {
+        echo  "<div class='gsmobilemenu'>Mobile menu</div>";
+    }
 
+    private function printMobile($cells, $depth) {
+        foreach($cells as $cell) {
+            if (sizeof($cell->cells) > 0) {
+                $this->printMobile($cell->cells, $depth+1);
+            } else {
+                if($cell->appId) {
+ echo "<div class='gsucell gsdepth_$depth gscell gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "'>";
+        echo "<div class='gsuicell gsinner gscell_" . $cell->incrementalCellId . "'>";
+                    echo "<div class='gsrow'>";
+                    $this->printApplicationArea($cell);
+                    echo "</div>";
+                    echo "</div>";
+                    echo "</div>";
+                }
+            }
+        }
+    }
+    
     private function printCss($areas) {
         foreach ($areas as $area) {
 
             $styles = $area->styles;
-            
-           if($this->factory->isMobile()) {
-                $newStyles = "";
-                foreach(explode("\n", $styles) as $tmpLine) {
-                    if(stristr($tmpLine, "padding")) {
-//                        continue;
-                    }
-                    if(stristr($tmpLine, "margin")) {
-                        continue;
-                    }
-                    $newStyles .= $tmpLine . "\n";
-//                    echo "NEW STYLE";
-//                    echo $newStyles;
-                }
-                $styles = $newStyles;
-            }
-            
+
             if (isset($area->styles) && $area->styles) {
                 $area->styles = str_replace("{incrementcellid}", $area->incrementalCellId, $area->styles);
                 echo "<style cellid='" . $area->cellId . "'>" . $styles . "</style>" . "\n";
@@ -199,7 +215,7 @@ class Page {
         $additionalinfo = "";
 
         if ($cell->mode == "ROTATING") {
-            if($this->factory->isMobile()) {
+            if ($this->factory->isMobile()) {
                 return;
             }
             $additionalinfo = "height='" . $cell->carouselConfig->height . "' timer='" . $cell->carouselConfig->time . "' type='" . $cell->carouselConfig->type . "'";
@@ -210,7 +226,7 @@ class Page {
             if ($cell->width > 0) {
                 $width = $cell->width;
             }
-            
+
             $styles = "style='width:$width%; float:left;'";
             $isColumn = true;
         }
@@ -262,7 +278,7 @@ class Page {
             echo "<span style='float:left;'>" . $this->printEasyModeEdit($cell, $parent, true) . "</span>";
             echo "</div>";
         }
-        
+
 
         echo "<div $additionalinfo $styles width='$width' class='gsucell $gscell $gsrotatingrow $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "'>";
         if ($parent != null && $parent->mode === "ROTATING") {
@@ -305,7 +321,7 @@ class Page {
         echo "</div>";
         echo "</div>";
 
-        if ($cell->mode === "FLOATING" ) {
+        if ($cell->mode === "FLOATING") {
             //End of floatingbox.
             echo "</div>";
             $this->makeDraggable($cell);
@@ -421,9 +437,9 @@ class Page {
                         </table>
                     </div> 
                 </div>
-                
+
                 <div class='gsheading'>Spacing</div>
-                
+
                 <div class='gscssattributes'>
                     <div class="gscssrow">
                         Left spacing <span class="gscssinput"><input type='text' data-attr="padding-left" data-prefix="px">px</span>
@@ -539,18 +555,18 @@ class Page {
             return;
         }
         echo "<div class='applicationarea' appid='" . $cell->appId . "' area='" . $cell->cellId . "'>";
-            if (!$cell->appId) {
-                echo "<span class='gsaddcontent'>";
-                    $show="";
-                    if(!$this->factory->isEditorMode()) {
-                        $show = "style='opacity:0;'";
-                    }
-                    echo "<i class='fa fa-plus-circle gs_show_application_add_list' $show></i>";
-                echo "</span>";
-            } else {
-                $this->renderApplication($cell);
+        if (!$cell->appId) {
+            echo "<span class='gsaddcontent'>";
+            $show = "";
+            if (!$this->factory->isEditorMode()) {
+                $show = "style='opacity:0;'";
             }
-            
+            echo "<i class='fa fa-plus-circle gs_show_application_add_list' $show></i>";
+            echo "</span>";
+        } else {
+            $this->renderApplication($cell);
+        }
+
         echo "</div>";
     }
 
@@ -638,18 +654,18 @@ class Page {
     }
 
     public function printCarourselMenu() {
-        if(!$this->factory->isEditorMode()) {
+        if (!$this->factory->isEditorMode()) {
             return;
         }
         ?>
         <span class='gscaraouselmenu'>
             <div class='gscaraouselmenuheader'>Carousel menu</div>
-        <i class="gsoperatecell fa fa-arrow-left" type="moveup" target="selectedcell" title='Move slide to the left'></i>
-        <i class='fa fa-plus-circle gsoperatecell' type='addfloating' title='Add content to slider'></i>
-        <i class="fa fa-image gs_resizing" type="delete" title="Open styling"></i>
-        <i class='fa fa-cogs carouselsettings' title='Carousel settings' style='cursor:pointer;'></i>
-        <i class="gsoperatecell fa fa-trash-o" target="selectedcell" type="delete" title='Delete selected slide'></i>
-        <i class="gsoperatecell fa fa-arrow-right" type="movedown" target="selectedcell" title='Move slide to the right'></i>
+            <i class="gsoperatecell fa fa-arrow-left" type="moveup" target="selectedcell" title='Move slide to the left'></i>
+            <i class='fa fa-plus-circle gsoperatecell' type='addfloating' title='Add content to slider'></i>
+            <i class="fa fa-image gs_resizing" type="delete" title="Open styling"></i>
+            <i class='fa fa-cogs carouselsettings' title='Carousel settings' style='cursor:pointer;'></i>
+            <i class="gsoperatecell fa fa-trash-o" target="selectedcell" type="delete" title='Delete selected slide'></i>
+            <i class="gsoperatecell fa fa-arrow-right" type="movedown" target="selectedcell" title='Move slide to the right'></i>
         </span>
         <?
     }

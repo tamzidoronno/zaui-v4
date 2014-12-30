@@ -177,8 +177,12 @@ if(isset($factory->getSettings()->languages)) {
         <title><?php echo $title; ?></title>
     </head>
     <body editormode="<? echo $factory->isEditorMode() ? "true" : "false"?>">
-        <? if ($factory->isEditorMode()) {
+        <? if ($factory->isEditorMode() && !$factory->isMobile()) {
             echo "<div class='store_settings_button fa fa-gears'></div>";
+            echo "<div class='store_mobile_view_button fa fa-mobile'></div>";
+            
+            include_once("mobileeditor.phtml");
+            echo '<link rel="stylesheet" type="text/css" href="/skin/default/mobileeditor.css" />';
         }
         
         ?>

@@ -262,6 +262,22 @@ public class APIStoreManager {
      }
 
      /**
+     * Setting this store to be a template or not.
+     *
+     * @param storeId
+     * @param isTemplate
+     */
+     public void setIsTemplate(java.lang.String storeId, boolean isTemplate)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("storeId",new Gson().toJson(storeId));
+          data.args.put("isTemplate",new Gson().toJson(isTemplate));
+          data.method = "setIsTemplate";
+          data.interfaceName = "core.storemanager.IStoreManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Set a new domain name to this store / webshop
      * @param domainName The domain name to identify this shop with.
      * @return

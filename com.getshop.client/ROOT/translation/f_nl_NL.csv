@@ -142,7 +142,6 @@ Google Analytics;-;Google Analytics
 Google analytics code;-;Google Analytics code
 Google analytics is by far the best reporting tool for webadministrator, by adding this application you will enable your googla analytics account to communicate with your webshop.;-;Google Analytics is de beste rapportage tool voor webmasters/webwinkeliers. Voeg deze applicatie toe en link je google analytics account aan je webwinkel.
 Handles taxes for products and shipment.;-;Stel hier je BTW tarief in voor producten en verzending.
-Have a look at http://www.dibspayment.com/ for more information.;-;Kijk op dibspayment.com voor meer info
 Here you can configure all the settings required to get sisow to work properly with your account. Enter the fields below and press save, as soon as everything here is set correctly you will see that a new payment options is available in the checkout area.;-;Hier kan je alle instellingen configureren van je Sisow account. Vul de velden in en sla alles op. Als alles goed ingested is zal je de nieuwe betaalmogelijkheden zien in de checkout van je webwinkel.
 Hide cart;-;Toon winkelwagen niet
 Hide search bar;-;Verberg zoekfunctie
@@ -220,9 +219,7 @@ Page name;-;Pagina naam
 Page view summary;-;Pagina bezoekers overzicht
 Page views;-;Page views
 Payment application;-;Betaal applicatie
-Paypal address;-;Paypal emailadres
 Percentage price;-;Korting Percentage
-Please enter your paypal address:;-;Geef je PayPal adres in.
 Please select a shipment method.;-;Kies een verzendmethode
 Please select someone to chat with at the right side;-;Klik iemand aan om mee te chatten
 Please select your language;-;Kies je taal
@@ -245,7 +242,6 @@ Reset code is;-;Reset code is
 Return stock if order is canceled?;-;Pas voorraad aan als bestelling geannuleerd is?
 SMS From;-;sms van
 SMS Text;-;sms tekst
-Sandbox;-;Sandbox
 Save;-;Opslaan
 Save changes;-;Aanpassingen opslaan
 Save product;-;Sla product op
@@ -359,7 +355,6 @@ Warn users that cookies are being stored from this site?;-;Waarschuw bezoekers d
 Warning! this store will automatically be reset to original state each hour;-;Ogelet, de webwinkel zal elk uur naar de originele staat terug gaan
 Warning. you are not connected as a partner yet, please contact getshop support!;-;Opgelet, je bent nog geen aangesloten partner. Neem contact op!
 Web address;-;Webwinkel adres
-What address are you using for the test enviroment to paypal?;-;Welk adres gebruik je als test voor Paypal?
 What countries are you selling to?;-;Naar welke landen verzend je?
 What is deepfreeze? Well, if you activate deepfreeze you basically put all options on hold, all changes made after deepfreezeing will be purged each hour.;-;What is deepfreeze? Well, if you activate deepfreeze you basically put all options on hold, all changes made after deepfreezeing will be purged each hour.
 What is the shipment taxes?;-;Wat zijn de verzending belastingen?
@@ -367,7 +362,6 @@ What should be the sender name?;-;Naam van de afzender?
 What should the text message contain?;-;Inhoud van de tekst
 When;-;Wanneer
 Withdraw from stock when order is created;-;Haal van de voorraad af bij bestelling
-Would you like to use paypal in sandbox mode?;-;Wil je Paypal gebruiken in Sandbox mode?
 You do not want to display the cart.. sure enable this then.;-;Als je de winkelwagen niet wil laten vertonen, zet deze aan.
 You dont have any cupons added.;-;Je hebt geen Codes toegevoegd.
 You have not yet created any web shops, create one and they will be listed here.;-;Je hebt nog geen webwinkels aangemaakt. Van zodra er eentje is aangemaakt zal die in deze lijst verschijnen.

@@ -235,7 +235,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     public List<User> getAllUsers() throws ErrorException {
         UserStoreCollection collection = getUserStoreCollection(storeId);
         List<User> allUsers = collection.getAllUsers();
-        System.out.println("Users: " + allUsers.size());
         for(User user : allUsers) {
             finalizeUser(user);
         }
@@ -251,6 +250,12 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         UserStoreCollection collection = getUserStoreCollection(storeId);
         User savedUser = collection.getUser(user.id);
         
+        // Save the first user
+        if (collection.getAllUsers().size() == 0) {
+            user.password = encryptPassword(user.password);
+            collection.saveFirstUser(user);
+            return;
+        }
         if (getSession().currentUser == null && user.type > User.Type.CUSTOMER) {
             throw new ErrorException(26);
         }
@@ -739,5 +744,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             user.type = User.Type.GETSHOPADMINISTRATOR;
             saveUser(user);
         }
+    }
+
+    private void saveFirstUser(User user) {
+        
     }
 }

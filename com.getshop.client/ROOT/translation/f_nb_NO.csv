@@ -17,6 +17,8 @@ Activate this option if you wish to provide your customer with Podium payment;-;
 Activate this option if you wish to provide your customer with Sofort Banking payment;-;Aktiver dennne om du ønsker å tilby kundene dine Sofort betaling
 Activate this option if you wish to provide your customer with eBill payment;-;Aktiver dennne om du ønsker å tilby kundene dine eBill betaling
 Activate this option if you wish to provide your customer with iDeal payment;-;Aktiver dennne om du ønsker å tilby kundene dine iDeal betaling
+Activated;-;Aktiver
+Activated applications;-;Aktivert applikasjoner
 Activity;-;Aktivitet
 Add;-;Legg til
 Add a new boundary;-;Legg til en ny grense
@@ -155,7 +157,6 @@ Google Analytics;-;Google Analytics
 Google analytics code;-;Google analyse kode
 Google analytics is by far the best reporting tool for webadministrator, by adding this application you will enable your googla analytics account to communicate with your webshop.;-;Google analytics er helt klart det best rapporteringsverkøyet når det kommer til å holde oversikt over bruken på din webside, ved å legge til denne applikasjonen får du mulighet til å benytte deg av google analytics.
 Handles taxes for products and shipment.;-;Oppgi 
-Have a look at http://www.dibspayment.com/ for more information.;-;Sjekk ut http://www.dibspayment.com/ for mer informasjon.
 Here you can configure all the settings required to get sisow to work properly with your account. Enter the fields below and press save, as soon as everything here is set correctly you will see that a new payment options is available in the checkout area.;-;Her kan du sette opp din sisow integrasjon, når du har gjort det så vil den være tilgjengelig i checkouten.
 Hide cart;-;Gjem handlekurv
 Hide search bar;-;Gjem søkefeltet for produkter
@@ -242,10 +243,8 @@ Page name;-;Side navn
 Page view summary;-;Sidevisning oppsummering.
 Page views;-;Side visninger
 Payment application;-;Betalings applikasjon
-Paypal address;-;Paypal adresse
 Percentage price;-;Prosent pris
 Place;-;Sted
-Please enter your paypal address:;-;Vennligst skriv inn din paypal addresse:
 Please select a shipment method.;-;Vennligst velg en betalingsmetode.
 Please select an item, this box will show you all the juice stuff that you can do to the selected item.;-;Vennligst velg et meny valg, denne boksen vil vise deg alle mulighetene du kan gjør med den.
 Please select someone to chat with at the right side;-;Vennligst velg noen å chatte med på høyre side.
@@ -269,7 +268,6 @@ Reset code is;-;Gjensettelse kode er
 Return stock if order is canceled?;-;Returner til lager hvis kanselert?
 SMS From;-;SMS Fra
 SMS Text;-;SMS Melding
-Sandbox;-;Sandbox
 Save;-;Lagre
 Save changes;-;Lagre endringer
 Save image;-;Lagre bilde
@@ -394,7 +392,6 @@ Warn users that cookies are being stored from this site?;-;Advar brukere at cook
 Warning! this store will automatically be reset to original state each hour;-;Advasel! Systemet vil automatisk bli satt tilbake til sin originale stand hver time.
 Warning. you are not connected as a partner yet, please contact getshop support!;-;Advarsel. du er ikke koblet til en partner enda, vennligst kontakt getshop support!
 Web address;-;Web adresse
-What address are you using for the test enviroment to paypal?;-;Hva er adressen til test miljøet ditt i paypal?
 What countries are you selling to?;-;Hvilke land selger du til?
 What is deepfreeze? Well, if you activate deepfreeze you basically put all options on hold, all changes made after deepfreezeing will be purged each hour.;-;Hva er deepfreeze? Deepfreeze fryser ned systemet og gjennoppretter systemet hver time.
 What is the shipment taxes?;-;Hva er forsendelses mvaen?
@@ -402,7 +399,6 @@ What should be the sender name?;-;Hva skal senders navn være?
 What should the text message contain?;-;Hva skal tekst meldingen inneholde?
 When;-;Når
 Withdraw from stock when order is created;-;Trekk fra lagerstatus når ordren blir laget
-Would you like to use paypal in sandbox mode?;-;Ønsker du å bruke paypal i sandbox modus?
 You do not want to display the cart.. sure enable this then.;-;Du ønsker ikke å vise handlekurven... Greit nok, aktivert dette.
 You dont have any cupons added.;-;Du har ikke lagt til noen kuponger.
 You have not yet created any web shops, create one and they will be listed here.;-;Du har ikke enda opprettet en web shop, opprett en og den vil bli listet her.

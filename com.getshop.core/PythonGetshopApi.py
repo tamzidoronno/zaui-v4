@@ -1596,18 +1596,33 @@ class GetShop(object):
     data.interfaceName = "core.getshop.IGetShop"
     return self.communicationHelper.sendMessage(data)
 
+  def startStoreFromStore(self, startData):
+    args = collections.OrderedDict()
+    if isinstance(startData,GetShopBaseClass): 
+      args["startData"]=json.dumps(startData.__dict__)
+    else:
+      try:
+        args["startData"]=json.dumps(startData)
+      except (ValueError, AttributeError):
+        args["startData"]=startData
+    data = EmptyClass()
+    data.args = args
+    data.method = "startStoreFromStore"
+    data.interfaceName = "core.getshop.IGetShop"
+    return self.communicationHelper.sendMessage(data)
+
 class GetShopApplicationPool(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
-  def deleteApplication(self, application):
+  def deleteApplication(self, applicationId):
     args = collections.OrderedDict()
-    if isinstance(application,GetShopBaseClass): 
-      args["application"]=json.dumps(application.__dict__)
+    if isinstance(applicationId,GetShopBaseClass): 
+      args["applicationId"]=json.dumps(applicationId.__dict__)
     else:
       try:
-        args["application"]=json.dumps(application)
+        args["applicationId"]=json.dumps(applicationId)
       except (ValueError, AttributeError):
-        args["application"]=application
+        args["applicationId"]=applicationId
     data = EmptyClass()
     data.args = args
     data.method = "deleteApplication"
@@ -5293,6 +5308,28 @@ class StoreManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "setIntroductionRead"
+    data.interfaceName = "core.storemanager.IStoreManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def setIsTemplate(self, storeId, isTemplate):
+    args = collections.OrderedDict()
+    if isinstance(storeId,GetShopBaseClass): 
+      args["storeId"]=json.dumps(storeId.__dict__)
+    else:
+      try:
+        args["storeId"]=json.dumps(storeId)
+      except (ValueError, AttributeError):
+        args["storeId"]=storeId
+    if isinstance(isTemplate,GetShopBaseClass): 
+      args["isTemplate"]=json.dumps(isTemplate.__dict__)
+    else:
+      try:
+        args["isTemplate"]=json.dumps(isTemplate)
+      except (ValueError, AttributeError):
+        args["isTemplate"]=isTemplate
+    data = EmptyClass()
+    data.args = args
+    data.method = "setIsTemplate"
     data.interfaceName = "core.storemanager.IStoreManager"
     return self.communicationHelper.sendMessage(data)
 

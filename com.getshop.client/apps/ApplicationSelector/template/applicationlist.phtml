@@ -64,6 +64,15 @@ if (count($notActivatedModuels)) {
     <?
 }
 
+
+?>
+
+    <div class="gss_application_more_apps">
+        <i class="fa fa-warning"></i> <?
+        echo $this->__f("Dont find what you are looking for? We have more applications available for you, please contact us and let us know your requirements.");
+        ?>
+    </div>
+<?
 $apps = $this->getApi()->getStoreApplicationPool()->getAvailableApplications();
 $notActivated = $this->getApi()->getStoreApplicationPool()->getAvailableApplicationsThatIsNotActivated();
 
@@ -207,6 +216,8 @@ foreach ($activatedModules as $module) {
 
 </div>
 
+
+    
 <script>
     app.ApplicationSelector.showLastModule();
 </script>

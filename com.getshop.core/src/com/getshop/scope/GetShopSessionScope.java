@@ -22,13 +22,13 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-public class GetShopSessionScope implements Scope, ApplicationContextAware {
+public class GetShopSessionScope implements Scope {
     private Map<Long, String> threadStoreIds = Collections.synchronizedMap(new HashMap<Long, String>());
     private Map<String, Object> objectMap = Collections.synchronizedMap(new HashMap<String, Object>());
-    private ApplicationContext ac;
-    
+
     public Object get(String name, ObjectFactory<?> objectFactory) {
-        String storeId = threadStoreIds.get(Thread.currentThread().getId());
+        long threadId = Thread.currentThread().getId();
+        String storeId = threadStoreIds.get(threadId);
         if (storeId == null) {
             throw new NullPointerException("There is scoped bean created without being in a context of a store, object: " + name);
         }
@@ -76,8 +76,4 @@ public class GetShopSessionScope implements Scope, ApplicationContextAware {
         threadStoreIds.put(threadId, storeId);
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext ac) throws BeansException {
-        this.ac = ac;
-    }
 }

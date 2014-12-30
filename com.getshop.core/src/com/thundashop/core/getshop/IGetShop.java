@@ -4,6 +4,7 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.getshop.data.PartnerData;
+import com.thundashop.core.getshop.data.StartData;
 import com.thundashop.core.getshop.data.StoreCreatedData;
 import com.thundashop.core.getshop.data.WebPageData;
 import com.thundashop.core.storemanager.data.Store;
@@ -71,4 +72,6 @@ public interface IGetShop {
      * @return 
      */
     public Store createWebPage(WebPageData webpageData) throws ErrorException;
+    
+    public String startStoreFromStore(StartData startData);
 }

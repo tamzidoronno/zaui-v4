@@ -198,7 +198,6 @@ class Factory extends FactoryBase {
 
     public function initialize() {
         $this->store = $this->getApi()->getStoreManager()->initializeStore($_SERVER['HTTP_HOST'], session_id());
-        $this->store = $this->getApi()->getStoreManager()->getMyStore();
         
         if(!$this->store) {
             include("createinstance/createinstance.phtml");
@@ -692,6 +691,13 @@ class Factory extends FactoryBase {
             $translation = $_SESSION['language_selected'];
         }
         return $translation;
+    }
+
+    public function printTemplateFunctions() {
+        if ($this->store && $this->store->isTemplate) {
+            $this->includefile("templatefunctions", 'Common');
+        }
+        
     }
 
 }

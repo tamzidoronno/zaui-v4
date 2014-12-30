@@ -1507,6 +1507,20 @@ class APIGetShop {
 	     return $this->transport->sendMessage($data);
 	}
 
+	/**
+	* Create a new webpage
+	* @return String
+	*/
+
+	public function startStoreFromStore($core_getshop_data_StartData) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_getshop_data_StartData"] = json_encode($this->transport->object_unset_nulls($core_getshop_data_StartData));
+	     $data["method"] = "startStoreFromStore";
+	     $data["interfaceName"] = "core.getshop.IGetShop";
+	     return $this->transport->sendMessage($data);
+	}
+
 }
 class APIGetShopApplicationPool {
 
@@ -1522,10 +1536,10 @@ class APIGetShopApplicationPool {
 	* @param application
 	*/
 
-	public function deleteApplication($core_appmanager_data_Application) {
+	public function deleteApplication($applicationId) {
 	     $data = array();
 	     $data['args'] = array();
-	     $data['args']["core_appmanager_data_Application"] = json_encode($this->transport->object_unset_nulls($core_appmanager_data_Application));
+	     $data['args']["applicationId"] = json_encode($this->transport->object_unset_nulls($applicationId));
 	     $data["method"] = "deleteApplication";
 	     $data["interfaceName"] = "core.applications.IGetShopApplicationPool";
 	     return $this->transport->sendMessage($data);
@@ -5091,6 +5105,23 @@ class APIStoreManager {
 	     $data["method"] = "setIntroductionRead";
 	     $data["interfaceName"] = "core.storemanager.IStoreManager";
 	     return $this->transport->cast(new core_storemanager_data_Store(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Setting this store to be a template or not.
+	*
+	* @param storeId
+	* @param isTemplate
+	*/
+
+	public function setIsTemplate($storeId, $isTemplate) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["storeId"] = json_encode($this->transport->object_unset_nulls($storeId));
+	     $data['args']["isTemplate"] = json_encode($this->transport->object_unset_nulls($isTemplate));
+	     $data["method"] = "setIsTemplate";
+	     $data["interfaceName"] = "core.storemanager.IStoreManager";
+	     return $this->transport->sendMessage($data);
 	}
 
 	/**

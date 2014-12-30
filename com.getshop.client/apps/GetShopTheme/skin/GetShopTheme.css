@@ -21,8 +21,6 @@ body {
     background-color: rgba(0,0,0,0.6);
     color: #FFF;
     margin: 0px;
-    padding-bottom: 10px;
-    box-shadow: 3px 0px 3px #444;
 }
 
 .gsarea[area="body"]  .gscolumn.gs_margin_left { 
@@ -39,10 +37,36 @@ body {
     border-radius: 7px;
     text-align: left;
     padding: 15px;
-    box-shadow: 0px 0px 3px #444;
+    box-shadow: 0px 0px 3px #FFF;
     vertical-align: top; 
 }
 
 .gstabbtn { font-size: 16px; border-radius: 3px; padding-left: 10px; padding-right: 10px; border-color:#2e7bab; }
 .gsactivetab { background-color:#2b3a44; }
 .gstabheader { text-align: center; }
+
+.gsarea[area="footer"] {
+    margin-top: 50px;
+}
+
+.gsarea[area="footer"] .gsdepth_0.gscount_0.gsrow {
+    background-color: #1E425A;
+    height: 35px;
+    padding-top: 15px;
+}
+
+.gsarea[area="footer"] .gsdepth_0.gscount_2.gsrow {
+    background-color: #1E425A;
+    height: 40px;
+    padding-top: 20px;
+}
+
+.gsarea[area="header"] .entry.active {
+    background-image: url('{IMAGEFOLDER}/header-triangle.png');
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    background-size: 20px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    
+}

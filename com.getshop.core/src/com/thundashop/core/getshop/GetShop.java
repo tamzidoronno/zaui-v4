@@ -1,5 +1,13 @@
 package com.thundashop.core.getshop;
 
+import com.getshop.scope.GetShopSessionScope;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
+import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
@@ -10,15 +18,20 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.getshop.data.Partner;
 import com.thundashop.core.getshop.data.PartnerData;
+import com.thundashop.core.getshop.data.StartData;
 import com.thundashop.core.getshop.data.WebPageData;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
+import com.thundashop.core.storemanager.data.StoreConfiguration;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import javax.annotation.PostConstruct;
+import org.mongodb.morphia.Morphia;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -256,5 +269,109 @@ public class GetShop extends ManagerBase implements IGetShop {
         Store store = storePool.createStoreObject(address, data.emailAddress, data.password, true);
         store.registrationUser = user;
         return store;
+    }
+
+    @Override
+    public String startStoreFromStore(StartData startData) {
+        Store store = storePool.getStore(startData.storeId);
+        if (store == null) {
+            return "";
+        }
+        
+        if (!store.isTemplate) {
+            throw new ErrorException(26);
+        }
+        
+        
+        int nextStoreId = storePool.incrementStoreCounter();
+        
+        String newAddress = nextStoreId + ".getshop.com";
+        if (!frameworkConfig.productionMode) {
+            newAddress = nextStoreId + ".2.0.local.getshop.com";
+        }
+        
+        
+        try {
+            String newStoreId = copyStore(startData.storeId, newAddress, startData);
+            storePool.loadStore(newStoreId, newAddress);
+            
+            GetShopSessionScope scope = AppContext.appContext.getBean(GetShopSessionScope.class);
+            scope.setStoreId(newStoreId);
+            UserManager userManager = AppContext.appContext.getBean(UserManager.class);
+            User user = new User();
+            user.fullName = startData.name;
+            user.emailAddress = startData.email;
+            user.cellPhone = startData.phoneNumber;
+            user.password = startData.password;
+            
+            userManager.saveUser(user);
+            
+        } catch (UnknownHostException ex) {
+            ex.printStackTrace();
+            return "";
+        } catch (ErrorException ex) {
+            throw ex;
+        }
+       
+        
+        
+        return newAddress;
+    }
+    
+    public String copyStore(String originalStoreId, String newAddress, StartData start) throws UnknownHostException {
+        Database database = AppContext.appContext.getBean(Database.class);
+        String newStoreId = UUID.randomUUID().toString();
+        
+        Mongo m = new MongoClient("localhost", Database.mongoPort);
+
+        for (String databaseName : m.getDatabaseNames()) {
+            if (databaseName.equals("LoggerManager") || databaseName.equals("UserManager")) {
+                continue;
+            }
+
+            String storeId = databaseName.equals("StoreManager") ? "all" : originalStoreId;
+            String newStoreIdi = databaseName.equals("StoreManager") ? "all" : newStoreId;
+            DB db = m.getDB(databaseName);
+            DBCollection collection = db.getCollection("col_" + storeId);
+            DBCursor stores = collection.find();
+
+            Credentials cred = new Credentials(null);
+            cred.manangerName = databaseName;
+            cred.password =  newStoreId;
+            cred.storeid = newStoreId;
+            
+            while (stores.hasNext()) {
+                DBObject data = stores.next();
+                Morphia morphia = new Morphia();
+                morphia.map(DataCommon.class);
+                DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, data);
+                dataCommon.storeId = newStoreId;
+                
+                if (dataCommon instanceof Store) {
+                    Store store = (Store)dataCommon;
+                    
+                    if (!store.id.equals(originalStoreId)) {
+                        continue;
+                    }
+                    
+                    store.webAddressPrimary = newAddress;
+                    store.webAddress = null;
+                    store.storeId = newStoreIdi;
+                    store.id = newStoreId;
+                    store.isTemplate = false;
+                    store.configuration.emailAdress = start.email;
+                    store.configuration.shopName = start.shopName;
+                    
+                    store.additionalDomainNames = new ArrayList();
+                    database.save(store, cred);
+                } else {
+                    database.save(dataCommon, cred);
+                }
+            }
+        }
+        
+        m.close();
+        
+        return newStoreId;
     }
 }

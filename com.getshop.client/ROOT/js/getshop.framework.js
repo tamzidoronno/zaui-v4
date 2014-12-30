@@ -49,6 +49,7 @@ thundashop.framework = {
         $(document).on('mouseup', this.releaseMouse);
         $(document).on('click', '.gs_closecelledit', this.closeCellEdit);
         $(document).on('click', '.gs_closecarouselsettings', this.closeCarouselSettings);
+        $(document).on('click', '.gs_start_template_button', this.startTemplateClicked);
         $(document).on('click', '.gsclosetabsettings', this.closeTabSettings);
         $(document).on('click', '.gsclosecsseditor', this.closeCssEditor);
         $(document).on('click', '.gsresizecolumn', this.activateResizeColumn);
@@ -137,6 +138,33 @@ thundashop.framework = {
     activateResizeColumn: function () {
         var cellid = $(this).closest('.gsrow').attr('cellid');
         thundashop.framework.loadResizing($('.gscell[cellid="' + cellid + '"]'), true);
+    },
+    startFromCurrentStore: function() {
+        var data = {
+            'storeId' : $('input[name="storeid"]').val(),
+            'gs_start_store_name'          : $('#gs_start_store_name').val(),
+            'gs_start_store_email'         : $('#gs_start_store_email').val(),
+            'gs_start_store_phonenumber'   : $('#gs_start_store_phonenumber').val(),
+            'gs_start_store_shopname'      : $('#gs_start_store_shopname').val(),
+            'gs_start_store_password1'     : $('#gs_start_store_password1').val(),
+            'gs_start_store_password2'     : $('#gs_start_store_password2').val()
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, 'startStore', null, data);
+        event['synchron'] = 'true';
+        thundashop.Ajax.postWithCallBack(event, function(response) {
+            document.location = response;
+//            alert(response);
+        });
+        
+    },
+    startTemplateClicked: function() {
+        if ($(this).html() === __w("Start")) {
+            thundashop.framework.startFromCurrentStore();
+            return;
+        }
+        $('.gs_start_template_text_form').slideDown();
+        $(this).html(__w("Start"));
     },
     deleteResizing: function () {
         var event = thundashop.Ajax.createEvent('', 'ping', $(document), {});

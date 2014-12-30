@@ -167,7 +167,13 @@ thundashop.framework = {
         var event = thundashop.Ajax.createEvent(null, 'startStore', null, data);
         event['synchron'] = 'true';
         thundashop.Ajax.postWithCallBack(event, function(response) {
-            document.location = response;
+            var form = $('<form/>');
+            form.attr('action', response);
+            form.attr('method', 'post');
+            form.append('<input type="hidden" name="loginbutton" value="submit"/>');
+            form.append('<input type="hidden" name="username" value="'+data.gs_start_store_email+'"/>');
+            form.append('<input type="hidden" name="password" value="'+data.gs_start_store_password1+'"/>');
+            form.submit();
 //            alert(response);
         });
         

@@ -285,7 +285,7 @@ public class GetShop extends ManagerBase implements IGetShop {
         
         int nextStoreId = storePool.incrementStoreCounter();
         
-        String newAddress = nextStoreId + ".getshop.com";
+        String newAddress = nextStoreId + ".2.0.getshop.com";
         if (!frameworkConfig.productionMode) {
             newAddress = nextStoreId + ".2.0.local.getshop.com";
         }

@@ -112,6 +112,14 @@ class Menu extends \SystemApplication implements \Application {
         }
         return $entry;
     }
+    
+    public function setHomePage() {
+        $entryId = $_POST['data']['entryId'];
+        $entry = $this->getApi()->getListManager()->getListEntry($entryId);
+        $storeConfig = $this->getApi()->getStoreManager()->getMyStore();
+        $storeConfig->homePage = $entry->pageId;
+        $this->getApi()->getStoreManager()->saveStore($storeConfig);
+    }
 
     public function applicationAdded() {
         $this->getApi()->getListManager()->createMenuList($this->getConfiguration()->id);

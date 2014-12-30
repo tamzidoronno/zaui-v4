@@ -264,6 +264,7 @@ public class PageManager extends ManagerBase implements IPageManager {
     public void setStylesOnCell(String pageId, String cellId, String styles, String innerStyles, Double width) {
         Page page = getPage(pageId);
         page.layout.updateStyle(cellId, styles, width, innerStyles);
+        savePage(page);
         saveCommonAreas();
     }
 

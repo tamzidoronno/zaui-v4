@@ -1,16 +1,43 @@
-<h1><center>Please select application you want to modify</center></h1>
+<?
+/* @var $this \ns_d315510d_198f_4c16_beef_54f979be58cf\GetShopAdmin */
+$isTemplate = $this->getFactory()->getStore()->isTemplate;
+?>
 
-<div class='show_edit_fragmet_view'>
+<div class="gss_settings_content">
+    <div class='show_edit_fragmet_view'>
+        <h1><center>Store settings</center></h1>  
+        
+        <div class="textfield gss_setting" id="admin">
+            <span class="title">Is this store a  template?</span>
+            <div class="gss_onoff" gs_model="getshopadminmodel" gs_model_attr="isTemplate">
+                <?
+                $class = $isTemplate ? "fa-toggle-on" : "fa-toggle-off";
+                ?>
+                Off<i class="fa <? echo $class; ?>"></i>On        </div>
+            <div class="description">When this is activated the store will be able to be used as a template, need to reload page to take effect</div>
+        </div>
+        
+        
+        <div class='gss_button_area'>
+            <div class="gss_button" gss_success_message="Saved" gss_method="saveStoreSettings" gss_model="getshopadminmodel"><i class='fa fa-save'></i><?php echo $this->__("Save"); ?></div>
+        </div>
+        
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <h1><center>Please select application you want to modify</center></h1>  
+        
+        <?
+        /* @var $this ns_d315510d_198f_4c16_beef_54f979be58cf\GetShopAdmin */
 
-    <?
-    /* @var $this ns_d315510d_198f_4c16_beef_54f979be58cf\GetShopAdmin */
+        $apps = $this->getApi()->getGetShopApplicationPool()->getApplications();
 
-    $apps = $this->getApi()->getGetShopApplicationPool()->getApplications();
+        foreach ($apps as $app) {
+            echo "<div class='gss_admin_app_select' gss_view='show_edit_fragmet_view' gss_value='$app->id' gss_fragment='editApplicattion'>$app->appName</div>";
+        }
+        ?>
 
-    foreach ($apps as $app) {
-        echo "<div class='gss_admin_app_select' gss_view='show_edit_fragmet_view' gss_value='$app->id' gss_fragment='editApplicattion'>$app->appName</div>";
-    }
-
-    ?>
-
+    </div>
 </div>

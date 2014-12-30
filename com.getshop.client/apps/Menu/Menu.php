@@ -138,7 +138,8 @@ class Menu extends \SystemApplication implements \Application {
             $name = $entry->name;
             $linkName = \GetShopHelper::makeSeoUrl($entry->name);
             $pageId = $entry->pageId;
-            echo "<div class='entry'><a ajaxlink='/?page=$pageId' href='$linkName'><div>$name</div></a>";
+            $activate = $this->getPage()->getId() == $pageId ? "active" : "";
+            echo "<div class='entry $activate'><a ajaxlink='/?page=$pageId' href='$linkName'><div>$name</div></a>";
             if ($entry->subentries) {
                 $this->printEntries($entry->subentries, $level+1);
             }

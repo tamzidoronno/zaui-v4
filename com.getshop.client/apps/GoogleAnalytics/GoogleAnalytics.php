@@ -29,17 +29,19 @@ class GoogleAnalytics extends \ReportingApplication implements \Application {
     }
 
     public function getCode() {
-        $settings = $this->getConfiguration()->settings;
-        if ($settings->code)
-            return $settings->code->value;
-        
-        return "";
+        return $this->getConfigurationSetting("code");
     }
     
     public function render() {
         $this->includefile("analytics");
     }
 
+    public function saveSettings() {
+        $this->setConfigurationSetting("code", $_POST['code']);
+    }
+    
+  
 }
 
 ?>
+

@@ -56,6 +56,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         }
         
         Store store = getMyStore();
+        
         store.configuration = config;
         store.registrationUser = null;
         storePool.saveStore(store);
@@ -203,6 +204,15 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     @Override
     public void setSessionLanguage(String id) throws ErrorException {
         getSession().language = id;
+    }
+
+    @Override
+    public void setIsTemplate(String storeId, boolean isTemplate) {
+        Store store = storePool.getStore(storeId);
+        if (store != null) {
+            store.isTemplate = isTemplate;
+            storePool.saveStore(store);
+        }
     }
 
   

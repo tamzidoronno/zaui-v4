@@ -10,8 +10,8 @@ class ApplicationHelper {
         $pool = IocContainer::getFactorySingelton(false)->getApplicationPool();
         
         if (method_exists($app,"getConfiguration")) {
-            $id = $app->getConfiguration()->appSettingsId;
-            $appName = $app->getConfiguration()->appName;
+            $id = $app->getApplicationSettings()->id;
+            $appName = $app->getApplicationSettings()->appName;
         } else {
             $id = $app->id;
             $appName = $app->appName;

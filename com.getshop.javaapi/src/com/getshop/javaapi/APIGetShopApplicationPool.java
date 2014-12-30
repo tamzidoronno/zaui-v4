@@ -20,10 +20,10 @@ public class APIGetShopApplicationPool {
      *
      * @param application
      */
-     public void deleteApplication(com.thundashop.core.appmanager.data.Application application)  throws Exception  {
+     public void deleteApplication(java.lang.String applicationId)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new LinkedHashMap();
-          data.args.put("application",new Gson().toJson(application));
+          data.args.put("applicationId",new Gson().toJson(applicationId));
           data.method = "deleteApplication";
           data.interfaceName = "core.applications.IGetShopApplicationPool";
           String result = transport.send(data);

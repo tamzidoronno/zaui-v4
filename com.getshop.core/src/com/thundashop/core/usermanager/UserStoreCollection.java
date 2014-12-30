@@ -254,4 +254,11 @@ public class UserStoreCollection {
             }
         }
     }
+
+    void saveFirstUser(User user) {
+        user.storeId = storeId;
+        user.type = User.Type.ADMINISTRATOR;
+        databaseSaver.saveObject(user, credentials);
+        users.put(user.id, user);
+    }
 }

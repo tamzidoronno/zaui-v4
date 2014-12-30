@@ -130,10 +130,6 @@ class ProductLists extends \ApplicationBase implements \Application {
         $this->setConfigurationSetting("column_size", $_POST['data']);
     }
 
-    public function getCurrency() {
-        return "$";
-    }
-    
     public function setAsSearchResultList() {
         $this->setConfigurationSetting("searchResultList", "true");
     }

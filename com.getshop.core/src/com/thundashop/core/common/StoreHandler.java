@@ -39,7 +39,7 @@ public class StoreHandler {
             System.out.println("Throws bean exception?");
         }
     }
-
+        
     public synchronized Object executeMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
         scope.setStoreId(storeId);
         setSessionObject(inObject.sessionId);

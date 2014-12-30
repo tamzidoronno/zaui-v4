@@ -12,14 +12,14 @@ $shipmentApps = $this->getShipmentApplications();
             $selected =  (isset($_SESSION['shippingtype'])) ? "" : "selected";
             
             foreach ($shipmentApps as $shipmentApp) {
-                if (isset($_SESSION['shippingtype']) && $shipmentApp->getConfiguration()->id == $_SESSION['shippingtype']) {
+                if (isset($_SESSION['shippingtype']) && $shipmentApp->getApplicationSettings()->id == $_SESSION['shippingtype']) {
                     $selected = "selected";
                 }
                 $shipmentApp->cart = $this->cart;
-                $appName = $shipmentApp->configuration->id;
+                $appName = $shipmentApp->getApplicationSettings()->id;
                 $name = $shipmentApp->getName();
                 $logo = \ApplicationHelper::getApplicationImage($shipmentApp);
-                $price = $this->getFactory()->getCurrencyName() . $shipmentApp->getShippingCost();
+                $price = \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($shipmentApp->getShippingCost());
 
                 echo "
                         <div id='$appName' class='inline method $selected' type='" . $shipmentApp->getDefaultShipmentType() . "'>
@@ -34,10 +34,10 @@ $shipmentApps = $this->getShipmentApplications();
         <?php
         $selectedMethod = (isset($_SESSION['shippingtype'])) ? "" : "selectedMethod";
         foreach ($shipmentApps as $shipmentApp) {
-            if (isset($_SESSION['shippingtype']) && $shipmentApp->getConfiguration()->id == $_SESSION['shippingtype']) {
+            if (isset($_SESSION['shippingtype']) && $shipmentApp->getApplicationSettings()->id == $_SESSION['shippingtype']) {
                 $selectedMethod = "selectedMethod";
             }
-            $appName = $shipmentApp->configuration->id;
+            $appName = $shipmentApp->getApplicationSettings()->id;
             echo "<div class='checked_additional $selectedMethod' method='" . $appName . "'>";
             if (method_exists($shipmentApp, "additionalInformation")) {
                 $products = $shipmentApp->additionalInformation();

@@ -19,5 +19,11 @@ public class Store extends DataCommon {
     public boolean isVIS = false; //Very important shop.
     public boolean isDeepFreezed = false;
     public String deepFreezePassword = "";
+    
+    /**
+     * This specifies if this store is setup as a template
+     * If it is a template it can be cloned into another store :D
+     */
+    public boolean isTemplate = false;
     public User registrationUser;
 }

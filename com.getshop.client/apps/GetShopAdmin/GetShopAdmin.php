@@ -16,6 +16,7 @@ class GetShopAdmin extends \ApplicationBase implements \Application {
     
     public function renderConfig() {
         $this->includefile("showApplications");
+        $this->includefile("showStoreSettings");
     }
     
     public function saveApplication() {
@@ -30,6 +31,10 @@ class GetShopAdmin extends \ApplicationBase implements \Application {
     
     public function deleteApplication() {
         $this->getApi()->getGetShopApplicationPool()->deleteApplication($_POST['value']);
+    }
+    
+    public function saveStoreSettings() {
+        $store = $this->getFactory()->getApi()->getStoreManager()->setIsTemplate($this->getFactory()->getStore()->id, $_POST['isTemplate']);
     }
 
 }

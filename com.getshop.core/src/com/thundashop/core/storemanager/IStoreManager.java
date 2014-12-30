@@ -121,7 +121,16 @@ public interface IStoreManager {
     
     @Administrator
     public void delete() throws ErrorException;
+ 
     
+    /**
+     * Setting this store to be a template or not.
+     * 
+     * @param storeId
+     * @param isTemplate 
+     */
+    @Administrator
+    public void setIsTemplate(String storeId, boolean isTemplate);
     /**
      * This option will enable / disable the deepfreeze mode.
      * if a websolution is set to deepfreeze, it will automatically be 

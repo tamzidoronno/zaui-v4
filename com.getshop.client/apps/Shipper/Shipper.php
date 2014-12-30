@@ -74,11 +74,7 @@ class Shipper extends \ShipmentApplication implements \Application {
     }
     
     public function getShippingType() {
-        if (isset($this->getConfiguration()->settings->{"shippingtype"})) {
-            return $this->getConfiguration()->settings->{"shippingtype"}->value;
-        } else {
-            return "simple";
-        }
+        return "simple";
     }
     
     public function getShippingCost($shipmentProduct = null, $variations = array()) {

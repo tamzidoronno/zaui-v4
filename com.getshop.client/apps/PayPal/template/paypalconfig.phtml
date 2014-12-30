@@ -1,29 +1,60 @@
 <?
+/* @var $this \ns_c7736539_4523_4691_8453_a6aa1e784fc1\PayPal */
 
- namespace ns_c7736539_4523_4691_8453_a6aa1e784fc1; ?>
-<div class="information">
-    <?php echo $this->getDescription(); ?>
+$payPalEmailAddress = $this->getConfigurationSetting("paypalemailaddress");
+$sandbox = $this->getConfigurationSetting("sandbox");
+$testPayPal = $this->getConfigurationSetting("paypaltestaddress");
+?>
+
+<div class='gss_settings_header'>
+    <i class='fa fa-paypal'></i>
+
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            <? echo $this->__f("PayPal settings"); ?>
+        </div>
+        <div class='gss_settings_header_description_inner'>
+            <?
+            echo $this->__f("Enter the fields below to activate PayPal for your webshop");
+            ?>	
+        </div>
+    </div>	
 </div>
 
-<div class="textfield setting" id="paypalemailaddress">
-    <div class="title"><? echo $this->__f("Paypal address"); ?></div>
-    <div class="text inline"> <?php echo $this->__("Please enter your paypal address:"); ?> </div>
-    <input type="textfield" value="" class="config"/>
-</div>
+<div class='gss_settings_content'>
 
-<div class="onoff setting" id="sandbox">
-    <span class="title"><? echo $this->__f("Sandbox"); ?></span>
-    <div class="onoff config"></div>
-    <div class="description">
-        <? echo $this->__f("Would you like to use paypal in sandbox mode?"); ?>   
+    <div class="gss_simple_shipping">
+        <div class="textfield gss_setting"  id="paypalemail">
+            <span class="title"><?php echo $this->__f("PayPal email address"); ?></span>
+            <input type="textfield" gs_model='paypalmodel' gs_model_attr='paypalemail' value="<? echo $payPalEmailAddress; ?>">
+            <div class="description">
+                <?php echo $this->__("Should there be a fixed "); ?>
+            </div>
+        </div>
+    </div>
+
+    <div class="textfield gss_setting"  id="sanbox">
+        <span class="title"><?php echo $this->__f("Sandbox?"); ?></span>
+        <div class="gss_onoff" gs_model="usermodel" gs_model_attr="issandbox">
+            <? $sanboxClass = $sandbox == "true" ? "fa-toggle-on" : "fa-toggle-off"; ?>
+            Off<i class="fa <? echo $sanboxClass; ?>"></i>On
+        </div>
+        <div class="description">
+            <?php echo $this->__("Should paypal be used in test mode?"); ?>
+        </div>
+    </div>
+
+    <div class="gss_simple_shipping">
+        <div class="textfield gss_setting"  id="testpaypalemail">
+            <span class="title"><?php echo $this->__f("Test email account"); ?></span>
+            <input type="textfield" gs_model='paypalmodel' gs_model_attr='testpaypalemail' value="<? echo $testPayPal; ?>">
+            <div class="description">
+                <?php echo $this->__("Should there be a fixed "); ?>
+            </div>
+        </div>
+    </div>
+
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="saveSettings" gss_model="paypalmodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Save"); ?></div>
     </div>
 </div>
-
-<div class="textfield setting" id="paypaltestaddress">
-    <div class="text inline"> <?php echo $this->__("Please enter your paypal address:"); ?> </div>
-    <input type="textfield" value="" class="config"/>
-    <div class="description">
-        <? echo $this->__f("What address are you using for the test enviroment to paypal?"); ?></div>
-</div>
-
-<div class="button savebutton"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__("Save settings"); ?></ins></div>

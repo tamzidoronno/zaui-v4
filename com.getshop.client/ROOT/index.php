@@ -177,6 +177,10 @@ if(isset($factory->getSettings()->languages)) {
         <title><?php echo $title; ?></title>
     </head>
     <body editormode="<? echo $factory->isEditorMode() ? "true" : "false"?>">
+        <?
+            $factory->printTemplateFunctions();
+        ?>
+        
         <? if ($factory->isEditorMode() && !$factory->isMobile()) {
             echo "<div class='store_settings_button fa fa-gears'></div>";
             echo "<div class='store_mobile_view_button fa fa-mobile'></div>";
@@ -235,9 +239,7 @@ if(isset($factory->getSettings()->languages)) {
         <div id="gsbody">
             <?php echo $html; ?>
         </div>
-
     </body>
-
 </html>
 
 <?
@@ -327,9 +329,7 @@ if (isset($_GET['showlogin']) || $factory->isEditorMode()) {
 if (isset($_SESSION['showadmin']) && $_SESSION['showadmin']) {
     echo "<script>getshop.Settings.showSettings(false);</script>";
 }
-?>
-
-    
+?>    
 <script>
     google.load('visualization', '1.0', {'packages':['corechart']});
 </script>

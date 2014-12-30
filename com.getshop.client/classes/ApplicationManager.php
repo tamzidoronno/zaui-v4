@@ -299,6 +299,21 @@ class ApplicationManager extends FactoryBase {
         echo "</style>";
     }
 
+    public function startStore() {
+        $startData = new core_getshop_data_StartData();
+        $startData->storeId = $_POST['data']['storeId'];
+        $startData->name = $_POST['data']['gs_start_store_name'];
+        $startData->email = $_POST['data']['gs_start_store_email'];
+        $startData->phoneNumber = $_POST['data']['gs_start_store_phonenumber'];
+        $startData->shopName = $_POST['data']['gs_start_store_shopname'];
+        $startData->password =  $_POST['data']['gs_start_store_password1'];
+        
+        $newAddress = $this->getApi()->getGetShop()->startStoreFromStore($startData);
+        
+        echo 'http://'.$newAddress;
+        die();
+    }
+    
     public function previewApplication() {
         $appId = $_POST['data']['appId'];
         $api = IocContainer::getFactorySingelton()->getApi();

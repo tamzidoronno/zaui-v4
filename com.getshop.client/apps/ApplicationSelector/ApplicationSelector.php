@@ -28,6 +28,11 @@ class ApplicationSelector extends \SystemApplication implements \Application {
 
     public function activate_application() {
         $this->getApi()->getStoreApplicationPool()->activateApplication($_POST['value']);
+        
+        $app = $this->getApi()->getStoreApplicationPool()->getApplication($_POST['value']);
+        if ($app->type == "ShipmentApplication" || $app->type == "PaymentApplication") {
+            \HelperCart::clearSession(false);
+        }
     }
     
     public function deactivate_application() {

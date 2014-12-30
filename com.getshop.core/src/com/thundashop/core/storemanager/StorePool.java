@@ -59,7 +59,7 @@ public class StorePool {
             }
         }
     }
-    
+   
     public synchronized Store getStoreByWebaddress(String webAddress) throws ErrorException {
         Store store = null;
 
@@ -248,5 +248,17 @@ public class StorePool {
         counter.storeId = "all";
         database.save(counter, credentials);
         return counter.counter;
+    }
+
+    public void loadStore(String arg, String newAddress) {
+        List<DataCommon> datas = database.retreiveData(credentials);
+        for (DataCommon dataCommon : datas) {
+            if (dataCommon instanceof Store) {
+                Store store = (Store) dataCommon;
+                if (store.id != null && store.id.equals(arg)) {
+                    stores.put(store.id, store);
+                }
+            }
+        }
     }
 }

@@ -4,7 +4,7 @@ body {
     font-size: 16px;
 }
 
-.gsdepth_0.gsrow {
+.gsarea [area="body"] .gsdepth_0.gsrow {
     margin-top: 30px;
 }
 

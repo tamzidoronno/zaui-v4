@@ -1,47 +1,34 @@
-<?php
-namespace ns_2da52bbc_a392_4125_92b6_eec1dc4879e9;
+<?
+/* @var $this ns_2da52bbc_a392_4125_92b6_eec1dc4879e9\Bring */
 
-/* @var $fg FraktGuiden */
-$fg = $this;
-$settings = $this->getStoreSettings();
+namespace ns_098bb0fe_eb51_42c6_9fbb_dadb7b52dd56;
 
-if(!isset($settings->postal_code) || strlen($settings->postal_code->value) < 4) {
-    ?>
-<div class="information" style="font-size:16px;">
-    <div><b>Advarsel</b></div>
-    Du har ikke lagt inn ditt postnummer under Butikk instillinger, dette må gjøres for få brukt denne applikasjonen.
-</div>
-    <?php
-} else {
-    ?>
-<div class="information" style="font-size:16px;">
-    <div><b>OK</b></div>
-    Du er nå klar for å benytte deg av fraktguiden, priser blir nå automatisk utregnet ettersom hvor den skal sendes.
-</div>
-
-<div class="textfield setting"  id="oversizedpackageprice">
-    <span class="title">For stor pakke.</span>
-    <input type="textfield" class="config">
-    <div class="description">
-        Hvis produktet overstiger en vekt som bring klarer å levere, så kan du så kan du oppgi et beløp her, det beløpet vil være en fallback hvis bring ikke klarer å levere.
-    </div>
-</div>
-
-<div class="setting onoff" id="displayerror">
-    <span class="title"><?php echo $this->__("Show errormessage"); ?></span>
-    <div class="onoff config" id="sendmail"></div>
-    <div class="description">
-        <?php echo $this->__("Display the errormessage below if the error weight is to heavy."); ?>
-    </div>
-</div>
-
-<div class="textarea setting"  id="errormessage">
-    <span class="title"><?php echo $this->__f("This is the errormessage that will be displayed if above is on."); ?></span>
-    <br><br>
-    <textarea style="width:100%; height: 200px;" type="textfield" class="config"></textarea>
-</div>
-    <?php
-}
+$postnumber = $this->getConfigurationSetting("postnumber");
 ?>
+<div class='gss_settings_header'>
+    <i class='fa fa-truck'></i>
 
-<div class="button savebutton"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__("Save settings"); ?></ins></div>
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            Bring
+        </div>
+        <div class='gss_settings_header_description_inner'>
+            Bring leverer pakker i Norden, med denne applikasjonen henter vi forsendelsesprisene direkte fra Bring.
+        </div>
+    </div>	
+</div>
+
+<div class='gss_settings_content'>
+
+    <div class="gss_simple_shipping">
+        <div class="textfield gss_setting"  id="postbox">
+            <span class="title">Ditt postnummer</span>
+            <input type="textfield" gs_model='bringmodel' gs_model_attr='postnumber' value="<? echo $postnumber; ?>">
+            <div class="description">Skriv inn the postnummeret du ønsker å sende varene dine fra.</div>
+        </div>
+    </div>
+
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="saveSettings" gss_model="bringmodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Save"); ?></div>
+    </div>
+</div>

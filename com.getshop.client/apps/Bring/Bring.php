@@ -42,7 +42,7 @@ class Bring extends \ShipmentApplication implements \Application {
     }
     
     public function getFromPostalCode() {
-		throw new Exception("This part has not yet been implemented in 2.0.0 version");
+        return $this->getConfigurationSetting("postnumber");
     }
 
     public function getShippingCost($shipmentProduct = "") {
@@ -84,6 +84,7 @@ class Bring extends \ShipmentApplication implements \Application {
             unset($_SESSION['shippingproduct']);
             unset($_SESSION['shippingtype']);
             
+            header('HTTP/1.1 500 Internal Server Error');
             die("FAILED_TO_GET_SHIPMENT_BRING");
         } else {
             $this->additionalInfo = json_decode($content, true);
@@ -151,11 +152,15 @@ class Bring extends \ShipmentApplication implements \Application {
     }
 
     public function getStoreSettings() {
-        throw new Exception("This function is not yet available in 2.0.0 version");
+        
     }
     
     public function hasSubProducts() {
         return true;
+    }
+    
+    public function saveSettings() {
+        $this->setConfigurationSetting("postnumber", $_POST['postnumber']);
     }
 }
 

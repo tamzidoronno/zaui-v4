@@ -29,6 +29,7 @@ $menuLists = $this->getMenuLists();
                             <li><? echo $this->__f("Create new pages by dragging \"New Page\" to where you want the new page to be in the menu."); ?><br><br></li>
                             <li><? echo $this->__f("Delete pages by dragging the menu entry to the garbage box."); ?><br><br></li>
                             <li><? echo $this->__f("To move pages, move them from the menu to the loose page area, then drag the loose page into another menu."); ?></li>
+                            <li><? echo $this->__f("Drag a entry to HOME and it will become your landingpage."); ?></li>
                         </ul>
                         <?
                         echo $this->__f("");
@@ -58,6 +59,10 @@ $menuLists = $this->getMenuLists();
                             </div>
                             <div class="menu delete">
                                 <span>Delete</span>
+                            </div>
+                            <div class="menu setashomepage">
+                                <i class='fa fa-home' style='padding: 20px; text-align: center; font-size: 40px;'></i>
+                                <span>Home</span>
                             </div>
                             <div class="disabled"></div>
                         </div>

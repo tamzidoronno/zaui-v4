@@ -4,8 +4,11 @@ body {
     font-size: 16px;
 }
 
-.gsarea [area="body"] .gsdepth_0.gsrow {
+.gsarea[area="header"] .gsdepth_0.gscount_1.gsrow {
     margin-top: 30px;
+}
+.gsarea[area="body"] .gsdepth_0.gsrow {
+    padding-top: 20px;
 }
 
 .gsinner.gsdepth_0 {
@@ -209,4 +212,12 @@ body {
     color: #333;
     border: solid 2px #febd11;
     margin: 0px;
+}
+
+.gsarea[area="footer"] .gsdepth_0.gscount_1.gsrow {
+    padding-top: 20px;
+}
+.gsarea[area="footer"] .gsdepth_0.gscount_0.gsrow {
+    padding-top: 20px;
+    height: 40px;
 }

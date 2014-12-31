@@ -43,7 +43,6 @@ getshop.MenuEditor = {
         } else {
             getshop.MenuEditor.activeItem.userLevel = 0;
         }
-        console.log(getshop.MenuEditor.activeItem.userLevel);
     },
     saveMenuEditor : function() {
         var data = {};
@@ -59,13 +58,40 @@ getshop.MenuEditor = {
             
         });
         
-        console.log(data);
         var event = thundashop.Ajax.createEvent('','updateLists', $('.MenuEditor'),data);
         thundashop.Ajax.post(event);
         thundashop.common.hideInformationBox();
     },
 
+    setHomePage: function(entry) {
+        var name = $(entry).find('.text').html();
+        var data = {
+            entryId: $(entry).attr('entryid')
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "setHomePage", entry, data);
+        event['synchron'] = true;
+        thundashop.Ajax.postWithCallBack(event, function() {
+            alert(name+__f(' page is now set as home page'));
+            getshop.MenuEditor.list.refresh();
+        });
+    },
     editorStarted: function(appId) {
+        $('.menueditorcontainer .menu.setashomepage').droppable({
+            accept: '.dropaccept',
+            drop: function(event, ui) {
+                getshop.MenuEditor.setHomePage(ui.draggable);
+                $(this).removeClass('active');
+            },
+            over: function( event, ui ) {
+                $(this).addClass('active');
+            },
+            out: function( event, ui ) {
+                $(this).removeClass('active');
+            },
+            tolerance: 'pointer'
+        });
+        
         $('.menueditorcontainer .menu.delete').droppable({
             accept: '.dropaccept',
             drop: function(event, ui) {

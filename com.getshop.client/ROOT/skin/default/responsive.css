@@ -32,3 +32,10 @@ body { padding-bottom: 100px; }
 
 
 .gsmobilemenu { position: fixed; width: 100%; bottom: 0px; height: 100px; background-color:rgba(0,0,0,0.8); left: 0px; color: #fff; text-align:center; border-top: solid 1px; padding-top: 10px; }
+.gsmobileoptions { position:relative; margin-top: 30px; display:block; text-align: right; padding: 5px; background-color:rgba(0,0,0,0.7); }
+.gsmobileoptions .gsoperatecell { margin-right: 10px; }
+.gsmobileoptions .gsoperatecell:hover { color:#bbb; font-weight: bold; cursor:pointer; }
+.gsmobileoptions .gscaretleft { left: 15px;  }
+.gsmobileoptions .gscaretright { right: 15px;  }
+.gsmobileoptions .gscaret { position: absolute; font-size: 30px; top: 12px; color:rgba(0,0,0,0.8);}
+.gshiddenonmobile { color:red; }

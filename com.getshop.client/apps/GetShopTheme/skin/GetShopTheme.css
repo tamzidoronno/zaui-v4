@@ -42,11 +42,14 @@ body {
 
 .gstabbtn { font-size: 16px; border-radius: 3px; padding-left: 10px; padding-right: 10px; border-color:#2e7bab; }
 .gsactivetab { background-color:#2b3a44; }
-.gstabheader { text-align: center; }
+.gstabheader { text-align: center; padding-bottom: 20px; }
 
 .gsarea[area="footer"] {
     margin-top: 50px;
 }
+
+.Banner .dots .dot.selected { background-image: none; background-color: #000; border-radius: 20px; height: 15px; width: 15px; margin-top: 4px; }
+.Banner .dots .dot.selected { }
 
 .gsarea[area="footer"] .gsdepth_0.gscount_0.gsrow {
     background-color: #1E425A;

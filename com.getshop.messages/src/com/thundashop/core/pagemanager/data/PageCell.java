@@ -30,6 +30,7 @@ public class PageCell implements Serializable {
     
 
     String cellName = "";
+    boolean hideOnMobile = false;
     public Integer incrementalCellId;
     public String cellId = UUID.randomUUID().toString();
     public String mode = CellMode.column;

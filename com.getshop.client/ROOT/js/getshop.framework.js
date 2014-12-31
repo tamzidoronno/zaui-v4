@@ -88,9 +88,9 @@ thundashop.framework = {
     
     displayMobileView : function() {
         $('.gsmobileeditor').fadeIn();
-        var location = document.location.href;
-        location = location.replace("https://", "https://mobile.");
-        location = location.replace("http://", "http://mobile.");
+
+        var sid = document.cookie.match('PHPSESSID=([^;]*)')[1];
+        var location = window.location.protocol + "//mobile." + window.location.host + "/?page=" + $('#gspageid').val() + "&PHPSESSID=" + sid;
         $('#gscontentframe').attr('src',  location);
     },
     

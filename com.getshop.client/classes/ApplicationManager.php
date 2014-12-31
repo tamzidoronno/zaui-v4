@@ -121,6 +121,18 @@ class ApplicationManager extends FactoryBase {
             case "addfloating":
                 $this->getApi()->getPageManager()->addLayoutCell($this->getPage()->javapage->id, $cellId, $before, "FLOATING", $area);
                 break;
+            case "mobilemovedown":
+                $this->getApi()->getPageManager()->moveCellMobile($this->getPage()->javapage->id, $cellId, false);
+                break;
+            case "mobilemoveup":
+                $this->getApi()->getPageManager()->moveCellMobile($this->getPage()->javapage->id, $cellId, true);
+                break;
+            case "mobilehideon":
+                $this->getApi()->getPageManager()->toggleHiddenOnMobile($this->getPage()->javapage->id, $cellId, true);
+                break;
+            case "mobilehideoff":
+                $this->getApi()->getPageManager()->toggleHiddenOnMobile($this->getPage()->javapage->id, $cellId, false);
+                break;
         }
     }
 

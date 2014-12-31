@@ -1,6 +1,10 @@
 <?php
 ob_start();
 
+if(isset($_GET['PHPSESSID'])) {
+    session_id($_GET['PHPSESSID']);
+}
+
 function getBrowser() {
     $u_agent = $_SERVER['HTTP_USER_AGENT'];
     $ub = '';
@@ -204,6 +208,7 @@ if(isset($factory->getSettings()->languages)) {
                 ?>
             </div>
         <? } ?>
+            <input name="pageid" type="hidden" id="gspageid" value="<?php echo $factory->getPage()->javapage->id; ?>"/>
         <input name="storeid" type="hidden"  value="<?php echo $factory->getStore()->id; ?>"/>
         <input name="userid" type="hidden"  value="<?php echo  \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null ? \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id : ""; ?>"/>
 

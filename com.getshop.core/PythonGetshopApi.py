@@ -3343,6 +3343,35 @@ class PageManager(object):
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
+  def moveCellMobile(self, pageId, cellId, moveUp):
+    args = collections.OrderedDict()
+    if isinstance(pageId,GetShopBaseClass): 
+      args["pageId"]=json.dumps(pageId.__dict__)
+    else:
+      try:
+        args["pageId"]=json.dumps(pageId)
+      except (ValueError, AttributeError):
+        args["pageId"]=pageId
+    if isinstance(cellId,GetShopBaseClass): 
+      args["cellId"]=json.dumps(cellId.__dict__)
+    else:
+      try:
+        args["cellId"]=json.dumps(cellId)
+      except (ValueError, AttributeError):
+        args["cellId"]=cellId
+    if isinstance(moveUp,GetShopBaseClass): 
+      args["moveUp"]=json.dumps(moveUp.__dict__)
+    else:
+      try:
+        args["moveUp"]=json.dumps(moveUp)
+      except (ValueError, AttributeError):
+        args["moveUp"]=moveUp
+    data = EmptyClass()
+    data.args = args
+    data.method = "moveCellMobile"
+    data.interfaceName = "core.pagemanager.IPageManager"
+    return self.communicationHelper.sendMessage(data)
+
   def removeAppFromCell(self, pageId, cellid):
     args = collections.OrderedDict()
     if isinstance(pageId,GetShopBaseClass): 
@@ -3595,6 +3624,35 @@ class PageManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "setStylesOnCell"
+    data.interfaceName = "core.pagemanager.IPageManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def toggleHiddenOnMobile(self, pageId, cellId, moveUp):
+    args = collections.OrderedDict()
+    if isinstance(pageId,GetShopBaseClass): 
+      args["pageId"]=json.dumps(pageId.__dict__)
+    else:
+      try:
+        args["pageId"]=json.dumps(pageId)
+      except (ValueError, AttributeError):
+        args["pageId"]=pageId
+    if isinstance(cellId,GetShopBaseClass): 
+      args["cellId"]=json.dumps(cellId.__dict__)
+    else:
+      try:
+        args["cellId"]=json.dumps(cellId)
+      except (ValueError, AttributeError):
+        args["cellId"]=cellId
+    if isinstance(moveUp,GetShopBaseClass): 
+      args["moveUp"]=json.dumps(moveUp.__dict__)
+    else:
+      try:
+        args["moveUp"]=json.dumps(moveUp)
+      except (ValueError, AttributeError):
+        args["moveUp"]=moveUp
+    data = EmptyClass()
+    data.args = args
+    data.method = "toggleHiddenOnMobile"
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 

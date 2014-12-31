@@ -282,4 +282,10 @@ public interface IPageManager {
     
     @Administrator
     public void saveCellPosition(String pageId, String cellId, FloatingData data) throws ErrorException;
+    
+    @Administrator
+    public void moveCellMobile(String pageId, String cellId, Boolean moveUp) throws ErrorException;
+    
+    @Administrator
+    public void toggleHiddenOnMobile(String pageId, String cellId, Boolean hide) throws ErrorException;
 }

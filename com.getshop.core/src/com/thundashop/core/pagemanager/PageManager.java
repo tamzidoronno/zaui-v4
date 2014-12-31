@@ -122,6 +122,12 @@ public class PageManager extends ManagerBase implements IPageManager {
             cellsWithoutIncrementalId.stream().forEach(cell -> cell.incrementalCellId = getNextCellId());
             savePage(page);
         }
+        
+//        page.layout.clearMobileList();
+        if(page.layout.needMobileList()) {
+            page.layout.updateMobileList();
+            savePage(page);
+        }
 
         return page;
     }
@@ -350,5 +356,19 @@ public class PageManager extends ManagerBase implements IPageManager {
                 System.out.println("Should have an app");
             }
         }
+    }
+
+    @Override
+    public void moveCellMobile(String pageId, String cellId, Boolean moveUp) throws ErrorException {
+        Page page = getPage(pageId);
+        page.layout.moveCellMobile(cellId, moveUp);
+        savePage(page);
+    }
+
+    @Override
+    public void toggleHiddenOnMobile(String pageId, String cellId, Boolean hidden) throws ErrorException {
+        Page page = getPage(pageId);
+        page.layout.toggleHiddenOnMobile(cellId, hidden);
+        savePage(page);
     }
 }

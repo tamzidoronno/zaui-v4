@@ -4,11 +4,14 @@ import com.thundashop.core.common.ErrorException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class PageLayout implements Serializable {
 
     HashMap<String, ArrayList<PageCell>> areas = new HashMap();
+    List<String> mobileList = new ArrayList();
+    private List<String> mobileTmpList;
 
     void clear() {
         areas.put("body", new ArrayList());
@@ -19,7 +22,7 @@ public class PageLayout implements Serializable {
         String area = findAreaForCell(cellid);
         areas.put(area, moveCellRecursive(areas.get(area), cellid, moveUp));
     }
-
+    
     public void addToList(PageCell cell, String area) {
         if (area == null || area.isEmpty()) {
             area = "body";
@@ -130,6 +133,8 @@ public class PageLayout implements Serializable {
             cellId = newcell.cellId;
         }
 
+        finalizeMobileList();
+        
         return cellId;
     }
 
@@ -150,6 +155,7 @@ public class PageLayout implements Serializable {
 
     public void deleteCell(String cellId) {
         deleteCellRecusive(cellId, getAllCells());
+        finalizeMobileList();
     }
 
     private boolean deleteCellRecusive(String cellId, ArrayList<PageCell> cells) {
@@ -402,5 +408,89 @@ public class PageLayout implements Serializable {
         }
         
         cells.iterator().next().appId = appId;
+    }
+    
+    public void updateMobileList() {
+        if(mobileList.isEmpty()) {
+            buildMobileList(areas.get("body"), false);
+        }
+    }
+    
+    private void buildMobileList(ArrayList<PageCell> cells, Boolean tmpList) {
+        for(PageCell cell : cells) {
+            if(!cell.cells.isEmpty() && !cell.isRotating() && !cell.isTab()) {
+                buildMobileList(cell.cells, tmpList);
+            } else {
+                if(tmpList) {
+                    mobileTmpList.add(cell.cellId);
+                } else {
+                    mobileList.add(cell.cellId);
+                }
+            }
+        }
+    }
+
+    public boolean needMobileList() {
+        return mobileList.isEmpty();
+    }
+
+    public void moveCellMobile(String cellId, Boolean moveUp) {
+        updateMobileList();
+        
+        int pos = mobileList.indexOf(cellId);
+        if(moveUp) {
+            Collections.swap(mobileList, pos, pos-1);
+        } else {
+            Collections.swap(mobileList, pos, pos+1);
+        }
+    }
+
+    public void toggleHiddenOnMobile(String cellId, boolean hidden) {
+        PageCell cell = getCell(cellId);
+        cell.hideOnMobile = hidden;
+    }
+
+    private void updateMobileListWithEntry(String cellId) {
+       
+       if(!mobileTmpList.contains(cellId)) {
+           return;
+       }
+       
+       int index = mobileTmpList.indexOf(cellId);
+       if(index == 0) {
+           mobileList.add(0, cellId);
+           return;
+       }
+       
+       String aboveCellId = mobileTmpList.get(index-1);
+       int newIndex = mobileList.indexOf(aboveCellId);
+       if(mobileList.contains(cellId)) {
+           return;
+       }
+       mobileList.add(newIndex+1, cellId);
+       
+    }
+
+    public void clearMobileList() {
+        mobileList = new ArrayList();
+    }
+
+    private void finalizeMobileList() {
+        mobileTmpList = new ArrayList();
+        buildMobileList(areas.get("body"), true);
+        
+        //Any elements been removed?
+        List<String> toRemove = new ArrayList();
+        mobileList.stream().filter((cellId) -> (!mobileTmpList.contains(cellId))).forEach((cellId) -> {
+            toRemove.add(cellId);
+        });
+        mobileList.removeAll(toRemove);
+        
+        //Any elemts forgotten?
+        mobileTmpList.stream().filter((cellId) -> (!mobileList.contains(cellId))).forEach((cellId) -> {
+            updateMobileListWithEntry(cellId);
+        });
+        
+        mobileTmpList = null;
     }
 }

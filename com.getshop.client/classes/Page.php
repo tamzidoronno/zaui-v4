@@ -5,6 +5,7 @@ class Page {
     var $javapage;
     /*  @var $factory Factory */
     var $factory;
+    var $flatCellList = array();
 
     /**
      * 
@@ -60,7 +61,7 @@ class Page {
                 $editedCellid = $edited;
             }
             echo "</div>";
-            
+
             foreach ($layout->areas as $section) {
                 $this->printCss($section);
             }
@@ -70,7 +71,7 @@ class Page {
                 $this->printApplicationAddCellRow();
                 $this->addCellConfigPanel();
                 $this->addCellResizingPanel();
-                if(isset($editingHeader)) {
+                if (isset($editingHeader)) {
                     $this->printEditingInfo($editingHeader);
                 }
             }
@@ -78,38 +79,83 @@ class Page {
             if ($editedCellid == null) {
                 echo "<script>$('.gsiseditingprepend').remove();</script>";
             }
-            
         } else {
             echo "<div class='gsbody'>";
-            $this->printMobile($layout->areas->{'body'}, 0);
+
+            $cells = array();
+            $this->flattenCells($layout->areas->{'body'});
+            
+            foreach ($layout->mobileList as $id) {
+                $cells[] = $this->flatCellList[$id];
+            }
+
+            $this->printMobile($cells, 0, null);
             $this->printCss($layout->areas->{'body'});
             $this->printMobileMenu();
             echo "</div>";
         }
     }
-    
+
     private function printMobileMenu() {
-        echo  "<div class='gsmobilemenu'>Mobile menu</div>";
+        echo "<div class='gsmobilemenu'>Mobile menu</div>";
     }
 
-    private function printMobile($cells, $depth) {
-        foreach($cells as $cell) {
+    private function printMobile($cells, $depth, $parent) {
+        $count = 0;
+        foreach ($cells as $cell) {
+            if ($cell->hideOnMobile && !$this->factory->isEditorMode()) {
+                continue;
+            }
+
+
             if (sizeof($cell->cells) > 0) {
-                $this->printMobile($cell->cells, $depth+1);
-            } else {
-                if($cell->appId) {
- echo "<div class='gsucell gsdepth_$depth gscell gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "'>";
-        echo "<div class='gsuicell gsinner gscell_" . $cell->incrementalCellId . "'>";
-                    echo "<div class='gsrow'>";
-                    $this->printApplicationArea($cell);
-                    echo "</div>";
-                    echo "</div>";
+                if ($cell->mode == "TAB") {
+                    echo "<div class='gscontainercell'>";
+                }
+                $this->printMobile($cell->cells, $depth + 1, $cell);
+                if ($cell->mode == "TAB") {
                     echo "</div>";
                 }
+            } else {
+                $gstabrow = "";
+                if (isset($parent) && $parent->mode == "TAB") {
+                    $gstabrow = "gstabrow";
+                }
+
+                if ($depth == 0 && $this->factory->isEditorMode()) {
+                    echo "<span class='gsmobileoptions'>";
+                    echo "<span style='position:absolute; left: 5px; top: 2px;'>" . $this->factory->__f("Row options") . "</span>";
+                    echo "<i class='fa fa-caret-down gscaretleft gscaret'></i>";
+                    echo "<i class='fa fa-arrow-up gsoperatecell' cellid='" . $cell->cellId . "' type='mobilemoveup' title='" . $this->factory->__f("Move up on mobile") . "' target='this'></i>";
+                    if ($cell->hideOnMobile) {
+                        echo "<i class='fa fa-trash-o gsoperatecell gshiddenonmobile' cellid='" . $cell->cellId . "' type='mobilehideoff' title='" . $this->factory->__f("Row is not displayed on mobile, click for make it reappear") . "' target='this'></i>";
+                    } else {
+                        echo "<i class='fa fa-trash-o gsoperatecell' cellid='" . $cell->cellId . "' type='mobilehideon' title='" . $this->factory->__f("Hide on mobile") . "' target='this'></i>";
+                    }
+                    echo "<i class='fa fa-arrow-down gsoperatecell' cellid='" . $cell->cellId . "' type='mobilemovedown' title='" . $this->factory->__f("Move down on mobile") . "' target='this'></i>";
+                    echo "<i class='fa fa-caret-down gscaretright gscaret'></i>";
+                    echo "</span>";
+                }
+
+                echo "<div class='gsucell gscount_$count $gstabrow gsdepth_$depth gscell gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "'>";
+                echo "<div class='gsuicell gsinner gscell_" . $cell->incrementalCellId . "'>";
+                echo "<div class='gsrow'>";
+
+
+                if (isset($parent) && $parent->mode == "TAB") {
+                    $this->displayTabRow($parent, FALSE, $cell);
+                }
+                if ($cell->appId) {
+                    $this->printApplicationArea($cell);
+                }
+                echo "</div>";
+                echo "</div>";
+                echo "</div>";
             }
+            $count++;
         }
     }
-    
+
     private function printCss($areas) {
         foreach ($areas as $area) {
 
@@ -646,7 +692,7 @@ class Page {
             }
             echo "<span class='gstabbtn $active' incrementid='" . $innercell->incrementalCellId . "' cellid='" . $innercell->cellId . "'>$tabName</span>";
         }
-        if ($this->factory->isEditorMode()) {
+        if ($this->factory->isEditorMode() && !$this->factory->isMobile()) {
             echo "<i class='fa fa-plus gsoperatecell' type='addrow' target='container' title='Add another tab'></i> ";
             echo "<i class='fa fa-cogs tabsettings' title='Tab settings' style='cursor:pointer;'></i>";
         }
@@ -883,6 +929,15 @@ class Page {
         $result = !$edit && sizeof($cell->cells) == 0 && $cell->mode != "INIT" && $cell->mode != "FLOATING" && $this->factory->isEditorMode();
 
         return $result;
+    }
+
+    private function flattenCells($cells) {
+        foreach ($cells as $cell) {
+            $this->flatCellList[$cell->cellId] = $cell;
+            if (sizeof($cell->cells) > 0) {
+                $this->flattenCells($cell->cells);
+            }
+        }
     }
 
 }

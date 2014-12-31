@@ -4,6 +4,9 @@ class core_pagemanager_data_PageCell {
 	public $cellName;
 
 	/** @var String */
+	public $hideOnMobile;
+
+	/** @var String */
 	public $incrementalCellId;
 
 	/** @var String */

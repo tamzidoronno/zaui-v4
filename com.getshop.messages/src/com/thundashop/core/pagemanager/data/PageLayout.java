@@ -19,8 +19,28 @@ public class PageLayout implements Serializable {
     }
 
     public void moveCell(String cellid, boolean moveUp) {
+        boolean identical = true;
+        mobileTmpList = new ArrayList();
+        buildMobileList(areas.get("body"), true);
+        if(mobileList.size() != mobileTmpList.size()) {
+            identical = false;
+        } else {
+            for(int i = 0; i < mobileList.size(); i++) {
+                if(!mobileList.get(i).equals(mobileTmpList.get(i))) {
+                    identical = false;
+                    break;
+                }
+            }
+        }
+        
         String area = findAreaForCell(cellid);
         areas.put(area, moveCellRecursive(areas.get(area), cellid, moveUp));
+        
+        if(identical) {
+            mobileTmpList = new ArrayList();
+            buildMobileList(areas.get("body"), true);
+            mobileList = mobileTmpList;
+        }
     }
     
     public void addToList(PageCell cell, String area) {
@@ -439,9 +459,13 @@ public class PageLayout implements Serializable {
         
         int pos = mobileList.indexOf(cellId);
         if(moveUp) {
-            Collections.swap(mobileList, pos, pos-1);
+            if(pos-1 >= 0) {
+                Collections.swap(mobileList, pos, pos-1);
+            }
         } else {
-            Collections.swap(mobileList, pos, pos+1);
+            if((pos+1) < mobileList.size()-1) {
+                Collections.swap(mobileList, pos, pos+1);
+            }
         }
     }
 

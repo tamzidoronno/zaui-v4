@@ -414,7 +414,9 @@ class Page {
         if ($cell->mode === "FLOATING") {
             //End of floatingbox.
             echo "</div>";
-            $this->makeDraggable($cell);
+            if(!$cell->floatingData->pinned) {
+                $this->makeDraggable($cell);
+            }
         }
     }
 
@@ -796,6 +798,11 @@ class Page {
         if ($cell->mode == "FLOATING") {
             echo "<i class='fa fa-image gs_resizing' type='delete' title='Open styling'></i> ";
             echo "<i class='fa fa-trash-o gsoperatecell' type='delete' title='Delete area' target='this' cellid='" . $cell->cellId . "'></i> ";
+            if(!$cell->floatingData->pinned) {
+                echo "<i class='fa fa-eyedropper gsoperatecell' type='pinarea' title='Pin area' target='this' cellid='" . $cell->cellId . "'></i> ";
+            } else {
+                echo "<i class='fa fa-eyedropper gsoperatecell' style='color:#bbb'; type='pinarea' title='Unpin area' target='this' cellid='" . $cell->cellId . "'></i> ";
+            }
         } else if ($cell->mode == "ROW") {
             if ($parent && sizeof($parent->cells) > 1 && $parent->mode != "ROTATING" && $parent->cells[0]->cellId != $cell->cellId && !$simple) {
                 echo "<i class='fa fa-arrow-up gsoperatecell' type='moveup' title='Move row up'></i> ";

@@ -133,6 +133,9 @@ class ApplicationManager extends FactoryBase {
             case "mobilehideoff":
                 $this->getApi()->getPageManager()->toggleHiddenOnMobile($this->getPage()->javapage->id, $cellId, false);
                 break;
+            case "pinarea":
+                $this->getApi()->getPageManager()->togglePinArea($this->getPage()->javapage->id, $cellId);
+                break;
         }
     }
 

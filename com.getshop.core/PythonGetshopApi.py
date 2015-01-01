@@ -3627,7 +3627,7 @@ class PageManager(object):
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
-  def toggleHiddenOnMobile(self, pageId, cellId, moveUp):
+  def toggleHiddenOnMobile(self, pageId, cellId, hide):
     args = collections.OrderedDict()
     if isinstance(pageId,GetShopBaseClass): 
       args["pageId"]=json.dumps(pageId.__dict__)
@@ -3643,16 +3643,38 @@ class PageManager(object):
         args["cellId"]=json.dumps(cellId)
       except (ValueError, AttributeError):
         args["cellId"]=cellId
-    if isinstance(moveUp,GetShopBaseClass): 
-      args["moveUp"]=json.dumps(moveUp.__dict__)
+    if isinstance(hide,GetShopBaseClass): 
+      args["hide"]=json.dumps(hide.__dict__)
     else:
       try:
-        args["moveUp"]=json.dumps(moveUp)
+        args["hide"]=json.dumps(hide)
       except (ValueError, AttributeError):
-        args["moveUp"]=moveUp
+        args["hide"]=hide
     data = EmptyClass()
     data.args = args
     data.method = "toggleHiddenOnMobile"
+    data.interfaceName = "core.pagemanager.IPageManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def togglePinArea(self, pageId, cellId):
+    args = collections.OrderedDict()
+    if isinstance(pageId,GetShopBaseClass): 
+      args["pageId"]=json.dumps(pageId.__dict__)
+    else:
+      try:
+        args["pageId"]=json.dumps(pageId)
+      except (ValueError, AttributeError):
+        args["pageId"]=pageId
+    if isinstance(cellId,GetShopBaseClass): 
+      args["cellId"]=json.dumps(cellId.__dict__)
+    else:
+      try:
+        args["cellId"]=json.dumps(cellId)
+      except (ValueError, AttributeError):
+        args["cellId"]=cellId
+    data = EmptyClass()
+    data.args = args
+    data.method = "togglePinArea"
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 

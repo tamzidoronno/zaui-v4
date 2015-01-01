@@ -12,5 +12,8 @@ class core_pagemanager_data_FloatingData {
 	/** @var String */
 	public $height;
 
+	/** @var String */
+	public $pinned;
+
 }
 ?>

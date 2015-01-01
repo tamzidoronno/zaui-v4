@@ -517,4 +517,9 @@ public class PageLayout implements Serializable {
         
         mobileTmpList = null;
     }
+
+    public void togglePinArea(String cellId) {
+        PageCell cell = getCell(cellId);
+        cell.floatingData.pinned = !cell.floatingData.pinned;
+    }
 }

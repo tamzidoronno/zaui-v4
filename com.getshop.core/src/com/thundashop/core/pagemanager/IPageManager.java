@@ -288,4 +288,7 @@ public interface IPageManager {
     
     @Administrator
     public void toggleHiddenOnMobile(String pageId, String cellId, Boolean hide) throws ErrorException;
+    
+    @Administrator
+    public void togglePinArea(String pageId, String cellId) throws ErrorException;
 }

@@ -3417,13 +3417,30 @@ class APIPageManager {
 	* @throws ErrorException
 	*/
 
-	public function toggleHiddenOnMobile($pageId, $cellId, $moveUp) {
+	public function toggleHiddenOnMobile($pageId, $cellId, $hide) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
 	     $data['args']["cellId"] = json_encode($this->transport->object_unset_nulls($cellId));
-	     $data['args']["moveUp"] = json_encode($this->transport->object_unset_nulls($moveUp));
+	     $data['args']["hide"] = json_encode($this->transport->object_unset_nulls($hide));
 	     $data["method"] = "toggleHiddenOnMobile";
+	     $data["interfaceName"] = "core.pagemanager.IPageManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Set the carousel configuration.
+	* @param pageId
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function togglePinArea($pageId, $cellId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data['args']["cellId"] = json_encode($this->transport->object_unset_nulls($cellId));
+	     $data["method"] = "togglePinArea";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
 	     return $this->transport->sendMessage($data);
 	}

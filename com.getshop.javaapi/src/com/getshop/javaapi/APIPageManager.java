@@ -415,6 +415,23 @@ public class APIPageManager {
      }
 
      /**
+     * Set the carousel configuration.
+     * @param pageId
+     * @return
+     * @throws ErrorException
+     */
+     public void moveCellMobile(java.lang.String pageId, java.lang.String cellId, java.lang.Boolean moveUp)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("pageId",new Gson().toJson(pageId));
+          data.args.put("cellId",new Gson().toJson(cellId));
+          data.args.put("moveUp",new Gson().toJson(moveUp));
+          data.method = "moveCellMobile";
+          data.interfaceName = "core.pagemanager.IPageManager";
+          String result = transport.send(data);
+     }
+
+     /**
      * Remove an application
      *
      * @param pageAreaId The id of the page area to remove.
@@ -578,6 +595,39 @@ public class APIPageManager {
           data.args.put("innerStyles",new Gson().toJson(innerStyles));
           data.args.put("width",new Gson().toJson(width));
           data.method = "setStylesOnCell";
+          data.interfaceName = "core.pagemanager.IPageManager";
+          String result = transport.send(data);
+     }
+
+     /**
+     * Set the carousel configuration.
+     * @param pageId
+     * @return
+     * @throws ErrorException
+     */
+     public void toggleHiddenOnMobile(java.lang.String pageId, java.lang.String cellId, java.lang.Boolean hide)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("pageId",new Gson().toJson(pageId));
+          data.args.put("cellId",new Gson().toJson(cellId));
+          data.args.put("hide",new Gson().toJson(hide));
+          data.method = "toggleHiddenOnMobile";
+          data.interfaceName = "core.pagemanager.IPageManager";
+          String result = transport.send(data);
+     }
+
+     /**
+     * Set the carousel configuration.
+     * @param pageId
+     * @return
+     * @throws ErrorException
+     */
+     public void togglePinArea(java.lang.String pageId, java.lang.String cellId)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("pageId",new Gson().toJson(pageId));
+          data.args.put("cellId",new Gson().toJson(cellId));
+          data.method = "togglePinArea";
           data.interfaceName = "core.pagemanager.IPageManager";
           String result = transport.send(data);
      }

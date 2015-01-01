@@ -371,4 +371,11 @@ public class PageManager extends ManagerBase implements IPageManager {
         page.layout.toggleHiddenOnMobile(cellId, hidden);
         savePage(page);
     }
+
+    @Override
+    public void togglePinArea(String pageId, String cellId) throws ErrorException {
+        Page page = getPage(pageId);
+        page.layout.togglePinArea(cellId);
+        savePage(page);
+    }
 }

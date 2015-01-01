@@ -116,6 +116,9 @@ class Page {
             echo "</span>";
         }
 
+        echo "<span class='gsmobilesearchbox'>";
+        echo "<input type='text' class='gsmobilsearchfield' placeholder='Enter the name of the product to search for'></input><i class='fa fa-search'></i>";
+        echo "</span>";
         echo "<div class='gsmobilemenu'>";
         echo "<span class='gsmobilemenuentry gsslideleft'>";
         echo "<i class='fa fa-caret-left'></i>";
@@ -131,12 +134,10 @@ class Page {
         echo "Cart";
         echo "</span>";
         echo "</a>";
-        echo "<a href='?page=productsearch'>";
-        echo "<span class='gsmobilemenuentry gsmobilemenubox'>";
+        echo "<span class='gsmobilemenuentry gsmobilemenubox gsmobilesearch'>";
         echo "<i class='fa fa-search'></i>";
         echo "Search";
         echo "</span>";
-        echo "</a>";
         echo "<span class='gsmobilemenuentry gsmobilemenubox gsslideright'>";
         echo "<i class='fa fa-caret-right'></i>";
         echo "Hide";

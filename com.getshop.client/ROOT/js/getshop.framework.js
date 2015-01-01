@@ -79,11 +79,24 @@ thundashop.framework = {
         $(document).on('click', '.gsmobilemenu .gsslideleft', this.slideMobileMenu);
         $(document).on('click', '.gsmobilemenu .gsslideright', this.slideMobileMenu);
         $(document).on('click', '.gsmobilemenu .gsmobiletopmenu', this.showMobileTopMenu);
+        $(document).on('click', '.gsmobilemenu .gsmobilesearch', this.showMobileSearch);
+        $(document).on('keyup', '.gsmobilsearchfield', this.doMobileSearch);
+        $(document).on('click', '.gsmobilesearchbox .fa-search', this.doMobileSearch);
         $(document).on('keyup', '.gscssattributes', this.setCssAttributes);
 
         /* Cell operations */
         $(document).on('click', '.gsoperatecell', this.operateCell);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
+    },
+    showMobileSearch : function() {
+        $('.gsmobilesearchbox').fadeIn();
+        $('.gsmobilsearchfield').focus();
+    },
+    doMobileSearch : function(event) {
+        var code = event.keyCode;
+        if(code === 13 || $(this).hasClass('fa-search')) {
+            window.location.href='page=productsearch&searchWord=' + $(this).val();
+        }
     },
     slideMobileMenu: function () {
         var target = $(this);

@@ -1174,17 +1174,18 @@ thundashop.framework = {
 
 
 PubSub.subscribe('NAVIGATION_COMPLETED', function (a, b) {
-    for (var containerid in thundashop.framework.lastRotatedCell) {
-        var lastRotatedCell = thundashop.framework.getActiveContainerCellId(containerid);
-        console.log(lastRotatedCell);
-        var cell = $('.gscell[cellid="' + lastRotatedCell + '"]');
-        var container = cell.closest('.gscontainercell');
-        if (container.hasClass('gsrotating')) {
-            thundashop.framework.displayCarouselEntry(cell);
-        }
-        if (container.hasClass('gstab')) {
-            container.find('.gstabrow').hide();
-            cell.show();
+    if(isAdministrator) {
+        for (var containerid in thundashop.framework.lastRotatedCell) {
+            var lastRotatedCell = thundashop.framework.getActiveContainerCellId(containerid);
+            var cell = $('.gscell[cellid="' + lastRotatedCell + '"]');
+            var container = cell.closest('.gscontainercell');
+            if (container.hasClass('gsrotating')) {
+                thundashop.framework.displayCarouselEntry(cell);
+            }
+            if (container.hasClass('gstab')) {
+                container.find('.gstabrow').hide();
+                cell.show();
+            }
         }
     }
 });

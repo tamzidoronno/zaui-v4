@@ -89,15 +89,25 @@ class Page {
                 $cells[] = $this->flatCellList[$id];
             }
 
+            $this->printMobileHeader($layout->areas->{'header'});
             $this->printMobile($cells, 0, null);
             $this->printCss($layout->areas->{'body'});
             $this->printMobileMenu($layout->areas->{'header'});
             echo "</div>";
         }
     }
+    
+    private function printMobileHeader($headerCells) {
+        echo "<div class='gsmobileheader'>";
+        $logo = $this->findInstance($headerCells, "ImageDisplayer");
+        if($logo) {
+            $logo->renderApplication();
+        }
+        echo "</div>";
+    }
 
     private function printMobileMenu($headerCells) {
-        $topMenu = $this->findHeaderMenu($headerCells);
+        $topMenu = $this->findInstance($headerCells, "Menu");
 
         if($topMenu) {
             echo "<span class='gsmobilemenuinstance'>";
@@ -974,17 +984,24 @@ class Page {
         }
     }
 
-    public function findHeaderMenu($headerCells) {
+    public function findInstance($headerCells, $type) {
         foreach($headerCells as $cell) {
             if(sizeof($cell->cells) > 0) {
-                $app = $this->findHeaderMenu($cell->cells);
+                $app = $this->findInstance($cell->cells, $type);
                 if($app) {
                     return $app;
                 }
             } else {
                 $instance = $this->factory->getApplicationPool()->getApplicationInstance($cell->appId);
-                if ($instance && $instance instanceof \ns_a11ac190_4f9a_11e3_8f96_0800200c9a66\Menu) {
-                    return $instance;
+                if($type == "Menu") {
+                    if ($instance && $instance instanceof \ns_a11ac190_4f9a_11e3_8f96_0800200c9a66\Menu) {
+                        return $instance;
+                    }
+                }
+                if($type == "ImageDisplayer") {
+                    if ($instance && $instance instanceof ns_831647b5_6a63_4c46_a3a3_1b4a7c36710a\ImageDisplayer) {
+                        return $instance;
+                    }
                 }
             }
         }

@@ -166,6 +166,7 @@ class Page {
                     $gstabrow = "gstabrow";
                 }
 
+                echo "<div class='gsucell gscount_$count $gstabrow gsdepth_$depth gscell gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "'>";
                 if ($depth == 0 && $this->factory->isEditorMode()) {
                     echo "<span class='gsmobileoptions'>";
                     echo "<span style='position:absolute; left: 5px; top: 2px;'>" . $this->factory->__f("Row options") . "</span>";
@@ -181,7 +182,6 @@ class Page {
                     echo "</span>";
                 }
 
-                echo "<div class='gsucell gscount_$count $gstabrow gsdepth_$depth gscell gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "'>";
                 echo "<div class='gsuicell gsinner gscell_" . $cell->incrementalCellId . "'>";
                 echo "<div class='gsrow'>";
 

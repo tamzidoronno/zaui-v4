@@ -46,9 +46,10 @@ body { padding-bottom: 100px; }
     margin-right: 10px;
 }
 .gsmobilemenu a { color:#fff; }
+.gsucell:hover .gsmobileoptions { opacity:1; }
 .gsmobilemenu .gsslideleft { position:absolute; }
 .gsmobilemenuentry i { font-size: 30px; display:block; }
-.gsmobileoptions { position:relative; margin-top: 30px; display:block; text-align: right; padding: 5px; background-color:rgba(0,0,0,0.7); }
+.gsmobileoptions { position:relative; margin-top: 30px; display:block; opacity:0; text-align: right; padding: 5px; background-color:rgba(0,0,0,0.7); }
 .gsmobileoptions .gsoperatecell { margin-right: 10px; }
 .gsmobileoptions .gsoperatecell:hover { color:#bbb; font-weight: bold; cursor:pointer; }
 .gsmobileoptions .gscaretleft { left: 15px;  }

@@ -76,50 +76,93 @@ thundashop.framework = {
         $(document).on('click', '.gsdoneresizing', this.deleteResizing);
         $(document).on('click', '.store_mobile_view_button', this.displayMobileView);
         $(document).on('click', '.gsmobileeditor', this.hideMobileView);
+        $(document).on('click', '.gsmobilemenu .gsslideleft', this.slideMobileMenu);
+        $(document).on('click', '.gsmobilemenu .gsslideright', this.slideMobileMenu);
+        $(document).on('click', '.gsmobilemenu .gsmobiletopmenu', this.showMobileTopMenu);
         $(document).on('keyup', '.gscssattributes', this.setCssAttributes);
 
         /* Cell operations */
         $(document).on('click', '.gsoperatecell', this.operateCell);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
     },
-    hideMobileView : function() {
-        $('.gsmobileeditor').hide();
+    slideMobileMenu: function () {
+        var target = $(this);
+        if (!$(this).hasClass('gsmobilemenuentry')) {
+            target = $(this).closest('.gsmobilemenuentry');
+        }
+
+        var width = $(window).width() - 80;
+        var options = {
+            right: "+=" + width
+        };
+
+        var slideRight = true;
+        if (!target.hasClass('gsslideleft')) {
+            options['right'] = "-=" + width;
+            slideRight = false;
+        }
+        if (slideRight) {
+            $('.gsmobilemenubox').hide();
+        }
+        $('.gsmobilemenu').animate(options, 200, function () {
+            $('.gsslideleft').hide();
+            if (slideRight) {
+                $('.gsmobilemenubox').fadeIn();
+            } else {
+                $('.gsmobilemenubox').hide();
+                $('.gsslideleft').fadeIn();
+            }
+        });
+    },
+    showMobileTopMenu : function() {
+        var height = $('.gsmobilemenuinstance').height();
+        $('.gsmobilemenuinstance').css('bottom', "-" + height + "px");
+        $('.gsmobilemenuinstance').show();
+            height += $('.gsmobilemenu').outerHeight();
+
+        var options = {
+            bottom: "+=" + height
+        };
+         $('.gsmobilemenuinstance').animate(options, 200, function () {
+             
+         });
     },
     
-    displayMobileView : function() {
+    hideMobileView: function () {
+        $('.gsmobileeditor').hide();
+    },
+    displayMobileView: function () {
         $('.gsmobileeditor').fadeIn();
 
         var sid = document.cookie.match('PHPSESSID=([^;]*)')[1];
         var location = window.location.protocol + "//mobile." + window.location.host + "/?page=" + $('#gspageid').val() + "&PHPSESSID=" + sid;
-        $('#gscontentframe').attr('src',  location);
+        $('#gscontentframe').attr('src', location);
     },
-    
-    setCssAttributes : function(event) {
+    setCssAttributes: function (event) {
         var target = $(event.target);
         var val = target.val();
         var attr = target.attr('data-attr');
         var level = target.attr('data-level');
         var prefix = target.attr('data-prefix');
-        if(prefix) {
+        if (prefix) {
             val += prefix;
         }
         var cellid = target.closest('.gsresizingpanel').attr('cellid');
         thundashop.framework.removeCss(attr, cellid);
         thundashop.framework.addCss(attr, val, cellid, level);
     },
-    loadCssAttributes : function() {
+    loadCssAttributes: function () {
         var cellid = $(this).closest('.gsresizingpanel').attr('cellid');
-        $('.gscssattributes input').each(function() {
+        $('.gscssattributes input').each(function () {
             var target = $(this);
             var attr = target.attr('data-attr');
             var prefix = target.attr('data-prefix');
             var val = thundashop.framework.getCssAttr(attr, cellid);
-            val = val.replace(prefix,"");
+            val = val.replace(prefix, "");
             val = val.trim();
             target.val(val);
         });
     },
-    
     showCellBoxHeader: function (event) {
         var target = $(event.target);
         $('.gsactiveboxheader').removeClass('gsactiveboxheader');
@@ -153,32 +196,32 @@ thundashop.framework = {
         var cellid = $(this).closest('.gsrow').attr('cellid');
         thundashop.framework.loadResizing($('.gscell[cellid="' + cellid + '"]'), true);
     },
-    startFromCurrentStore: function() {
+    startFromCurrentStore: function () {
         var data = {
-            'storeId' : $('input[name="storeid"]').val(),
-            'gs_start_store_name'          : $('#gs_start_store_name').val(),
-            'gs_start_store_email'         : $('#gs_start_store_email').val(),
-            'gs_start_store_phonenumber'   : $('#gs_start_store_phonenumber').val(),
-            'gs_start_store_shopname'      : $('#gs_start_store_shopname').val(),
-            'gs_start_store_password1'     : $('#gs_start_store_password1').val(),
-            'gs_start_store_password2'     : $('#gs_start_store_password2').val()
+            'storeId': $('input[name="storeid"]').val(),
+            'gs_start_store_name': $('#gs_start_store_name').val(),
+            'gs_start_store_email': $('#gs_start_store_email').val(),
+            'gs_start_store_phonenumber': $('#gs_start_store_phonenumber').val(),
+            'gs_start_store_shopname': $('#gs_start_store_shopname').val(),
+            'gs_start_store_password1': $('#gs_start_store_password1').val(),
+            'gs_start_store_password2': $('#gs_start_store_password2').val()
         }
-        
+
         var event = thundashop.Ajax.createEvent(null, 'startStore', null, data);
         event['synchron'] = 'true';
-        thundashop.Ajax.postWithCallBack(event, function(response) {
+        thundashop.Ajax.postWithCallBack(event, function (response) {
             var form = $('<form/>');
             form.attr('action', response);
             form.attr('method', 'post');
             form.append('<input type="hidden" name="loginbutton" value="submit"/>');
-            form.append('<input type="hidden" name="username" value="'+data.gs_start_store_email+'"/>');
-            form.append('<input type="hidden" name="password" value="'+data.gs_start_store_password1+'"/>');
+            form.append('<input type="hidden" name="username" value="' + data.gs_start_store_email + '"/>');
+            form.append('<input type="hidden" name="password" value="' + data.gs_start_store_password1 + '"/>');
             form.submit();
 //            alert(response);
         });
-        
+
     },
-    startTemplateClicked: function() {
+    startTemplateClicked: function () {
         if ($(this).html() === __w("Start")) {
             thundashop.framework.startFromCurrentStore();
             return;
@@ -508,11 +551,11 @@ thundashop.framework = {
         }
         var csslines = css.split("\n");
         var newcss = "";
-        for(var key in csslines) {
-            if(csslines[key].indexOf(attribute + " :") >= 0) {
+        for (var key in csslines) {
+            if (csslines[key].indexOf(attribute + " :") >= 0) {
                 continue;
             }
-            if(csslines[key].indexOf(attribute + ":") >= 0) {
+            if (csslines[key].indexOf(attribute + ":") >= 0) {
                 continue;
             }
             newcss += csslines[key] + "\n";
@@ -526,24 +569,24 @@ thundashop.framework = {
         var csslines = css.split("\n");
         var newcss = "";
         var found = false;
-        for(var key in csslines) {
-            if(csslines[key].indexOf(attribute + " :") >= 0) {
+        for (var key in csslines) {
+            if (csslines[key].indexOf(attribute + " :") >= 0) {
                 found = csslines[key];
                 continue;
             }
-            if(csslines[key].indexOf(attribute + ":") >= 0) {
+            if (csslines[key].indexOf(attribute + ":") >= 0) {
                 found = csslines[key];
                 continue;
             }
             newcss += csslines[key] + "\n";
         }
-        
-        if(!found) {
+
+        if (!found) {
             return "";
         }
-        
+
         found = found.split(":");
-        return found[1].replace(";","");
+        return found[1].replace(";", "");
     },
     addCss: function (attribute, value, id, level) {
         if (!level) {

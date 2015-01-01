@@ -17,7 +17,7 @@ if (!count($entries)) {
 </div>
 
 <?
-if ($this->isEditorMode()) {
+if ($this->isEditorMode() && !$this->getFactory()->isMobile()) {
 ?>
 <div class="menu_simple_menu <? echo $hiddenMenu; ?>">
     <div class="simpleadd">

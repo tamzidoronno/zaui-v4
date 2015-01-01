@@ -163,7 +163,7 @@ class ApplicationBase extends FactoryBase {
         }
         
         echo "<div appid='$id' app='" . $className . "' class='app $changeable " . $className . "' appsettingsid='$appSettingsId'>";
-        if($this->isEditorMode()) {
+        if($this->isEditorMode() && !$this->getFactory()->isMobile()) {
             echo "<div class='mask'><div class='inner'>".$this->__f("Click to delete")."</div></div>";
             echo "<div class='order_mask'>";
 

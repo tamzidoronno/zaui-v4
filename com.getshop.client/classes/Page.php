@@ -91,13 +91,47 @@ class Page {
 
             $this->printMobile($cells, 0, null);
             $this->printCss($layout->areas->{'body'});
-            $this->printMobileMenu();
+            $this->printMobileMenu($layout->areas->{'header'});
             echo "</div>";
         }
     }
 
-    private function printMobileMenu() {
-        echo "<div class='gsmobilemenu'>Mobile menu</div>";
+    private function printMobileMenu($headerCells) {
+        $topMenu = $this->findHeaderMenu($headerCells);
+
+        if($topMenu) {
+            echo "<span class='gsmobilemenuinstance'>";
+            $topMenu->renderApplication();
+            echo "</span>";
+        }
+        
+        echo "<div class='gsmobilemenu'>";
+        echo "<span class='gsmobilemenuentry gsslideleft'>";
+        echo "<i class='fa fa-caret-left'></i>";
+        echo "Menu";
+        echo "</span>";
+        echo "<span class='gsmobilemenuentry gsmobilemenubox gsmobiletopmenu'>";
+        echo "<i class='fa fa-navicon'></i>";
+        echo "Menu";
+        echo "</span>";
+        echo "<a href='?page=cart'>";
+        echo "<span class='gsmobilemenuentry gsmobilemenubox'>";
+        echo "<i class='fa fa-shopping-cart'></i>";
+        echo "Cart";
+        echo "</span>";
+        echo "</a>";
+        echo "<a href='?page=productsearch'>";
+        echo "<span class='gsmobilemenuentry gsmobilemenubox'>";
+        echo "<i class='fa fa-search'></i>";
+        echo "Search";
+        echo "</span>";
+        echo "</a>";
+        echo "<span class='gsmobilemenuentry gsmobilemenubox gsslideright'>";
+        echo "<i class='fa fa-caret-right'></i>";
+        echo "Hide";
+        echo "</span>";
+        echo "</div>";
+        
     }
 
     private function printMobile($cells, $depth, $parent) {
@@ -936,6 +970,22 @@ class Page {
             $this->flatCellList[$cell->cellId] = $cell;
             if (sizeof($cell->cells) > 0) {
                 $this->flattenCells($cell->cells);
+            }
+        }
+    }
+
+    public function findHeaderMenu($headerCells) {
+        foreach($headerCells as $cell) {
+            if(sizeof($cell->cells) > 0) {
+                $app = $this->findHeaderMenu($cell->cells);
+                if($app) {
+                    return $app;
+                }
+            } else {
+                $instance = $this->factory->getApplicationPool()->getApplicationInstance($cell->appId);
+                if ($instance && $instance instanceof \ns_a11ac190_4f9a_11e3_8f96_0800200c9a66\Menu) {
+                    return $instance;
+                }
             }
         }
     }

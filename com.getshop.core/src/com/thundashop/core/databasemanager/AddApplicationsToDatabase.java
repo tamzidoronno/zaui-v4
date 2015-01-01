@@ -74,6 +74,17 @@ public class AddApplicationsToDatabase {
         getShopAdmin.defaultActivate = true;
         getShopAdmin.moduleId = "hidden";
         apps.add(getShopAdmin);
+
+        Application applicationpromotor = createSettings(
+                "ApplicationPromotor",
+                "b6b0d74f-c802-401e-9bb7-facf3e420f61",
+                allowed,
+                "",
+                Application.Type.Webshop, true);
+        applicationpromotor.isPublic = true;
+        applicationpromotor.defaultActivate = true;
+        applicationpromotor.moduleId = "hidden";
+        apps.add(applicationpromotor);
 //        
 //        ApplicationSettings sedoxLogin = createSettings(
 //                "SedoxLogin",

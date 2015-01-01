@@ -1,0 +1,51 @@
+<?php
+
+namespace ns_b6b0d74f_c802_401e_9bb7_facf3e420f61;
+
+/* @var $this \ns_b0db6ad0_8cc2_11e2_9e96_0800200c9a66\HelloWorld */
+$apps = $this->getApi()->getGetShopApplicationPool()->getApplications();
+
+$modules = array();
+echo "<div class='apparea'>";
+foreach ($apps as $app) {
+    if (!isset($modules[$app->moduleId])) {
+        $modules[$app->moduleId] = array();
+    }
+    $modules[$app->moduleId][] = $app;
+}
+
+foreach ($modules as $title => $apps) {
+    echo "<h1>" . $title . "</h1>";
+    foreach ($apps as $app) {
+        $id = $app->id;
+        $namespace = $this->convertUUIDtoString($id);
+        $appInstance = $this->getFactory()->getApplicationPool()->createInstace($app);
+        if (!$appInstance) {
+            continue;
+        }
+
+        if ($app->moduleId != $title) {
+            continue;
+        }
+
+        if (!$app->isFrontend) {
+            continue;
+        }
+        echo "<div class='appentryouter'>";
+        echo "<div class='gs_add_app_entry' appId='$id'>";
+        echo "<div class='gs_app_image'><img src='/showApplicationImages.php?appNamespace=$namespace&image=" . $app->appName . ".png'/></div>";
+        echo "<div class='infobox'>";
+        echo "<div class='gs_app_title'>" . $appInstance->getName() . "</div>";
+        echo "<div class='gs_app_desc'>" . $appInstance->getDescription() . "</div>";
+        echo "</div>";
+        echo "</div>";
+        echo "</div>";
+    }
+        echo "<div class='appseperator'></div>";
+}
+echo "</div>";
+//echo "<pre>";
+//print_r($modules);
+//echo "</pre>";
+//echo "hello world, kind regards: " . $this->getApi()->getUserManager()->getLoggedOnUser()->fullName;
+?>

@@ -15,7 +15,7 @@ $types = array();
 foreach ($apps as $app) {
     
     if (!$app->isFrontend) {
-        continue;
+//        continue;
     }
     
 
@@ -38,15 +38,16 @@ foreach ($types as $type => $count) {
         $namespace = $this->convertUUIDtoString($id);
         $appInstance = $this->getApplicationPool()->createInstace($app);
         if (!$appInstance) {
+            echo "NOT FOUND: " . $namespace;
             continue;
         }
 
         if ($app->moduleId != $type) {
-            continue;
+//            continue;
         }
 
         if (!$app->isFrontend) {
-            continue;
+//            continue;
         }
 
         echo "<div class='gs_add_app_entry' appId='$id'>";

@@ -820,7 +820,7 @@ class Page {
             }
             echo "<i class='fa fa-plus gsoperatecell $leftClass' type='addbefore' title='Insert column to the left'></i> ";
             echo "<i class='fa fa-image gs_resizing' type='delete' title='Open styling'></i> ";
-            if ($parent != null && $parent->cells[sizeof($parent->cells) - 1]->cellId != $cell->cellId && !$simple) {
+            if ($parent != null && !$simple) {
                 echo "<i class='fa fa-arrow-down gsoperatecell' type='addrow' title='Insert row'></i> ";
             }
             echo "<i class='fa fa-trash-o gsoperatecell' type='delete' title='Delete column'></i> ";

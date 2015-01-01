@@ -74,6 +74,7 @@ class Page {
                 if (isset($editingHeader)) {
                     $this->printEditingInfo($editingHeader);
                 }
+                $this->makeCarouselMenuDraggable();
             }
 
             if ($editedCellid == null) {
@@ -84,7 +85,7 @@ class Page {
 
             $cells = array();
             $this->flattenCells($layout->areas->{'body'});
-            
+
             foreach ($layout->mobileList as $id) {
                 $cells[] = $this->flatCellList[$id];
             }
@@ -96,11 +97,11 @@ class Page {
             echo "</div>";
         }
     }
-    
+
     private function printMobileHeader($headerCells) {
         echo "<div class='gsmobileheader'>";
         $logo = $this->findInstance($headerCells, "ImageDisplayer");
-        if($logo) {
+        if ($logo) {
             $logo->renderApplication();
         }
         echo "</div>";
@@ -109,12 +110,12 @@ class Page {
     private function printMobileMenu($headerCells) {
         $topMenu = $this->findInstance($headerCells, "Menu");
 
-        if($topMenu) {
+        if ($topMenu) {
             echo "<span class='gsmobilemenuinstance'>";
             $topMenu->renderApplication();
             echo "</span>";
         }
-        
+
         echo "<div class='gsmobilemenu'>";
         echo "<span class='gsmobilemenuentry gsslideleft'>";
         echo "<i class='fa fa-caret-left'></i>";
@@ -141,7 +142,6 @@ class Page {
         echo "Hide";
         echo "</span>";
         echo "</div>";
-        
     }
 
     private function printMobile($cells, $depth, $parent) {
@@ -414,7 +414,7 @@ class Page {
         if ($cell->mode === "FLOATING") {
             //End of floatingbox.
             echo "</div>";
-            if(!$cell->floatingData->pinned) {
+            if (!$cell->floatingData->pinned) {
                 $this->makeDraggable($cell);
             }
         }
@@ -798,7 +798,7 @@ class Page {
         if ($cell->mode == "FLOATING") {
             echo "<i class='fa fa-image gs_resizing' type='delete' title='Open styling'></i> ";
             echo "<i class='fa fa-trash-o gsoperatecell' type='delete' title='Delete area' target='this' cellid='" . $cell->cellId . "'></i> ";
-            if(!$cell->floatingData->pinned) {
+            if (!$cell->floatingData->pinned) {
                 echo "<i class='fa fa-eyedropper gsoperatecell' type='pinarea' title='Pin area' target='this' cellid='" . $cell->cellId . "'></i> ";
             } else {
                 echo "<i class='fa fa-eyedropper gsoperatecell' style='color:#bbb'; type='pinarea' title='Unpin area' target='this' cellid='" . $cell->cellId . "'></i> ";
@@ -862,17 +862,11 @@ class Page {
     public function makeDraggable($cell) {
         ?>
         <script>
-            $('.gscaraouselmenu').draggable({
-                handle: '.gscaraouselmenuheader',
-                containment: 'parent'
-            });
             $('.gsfloatingbox[cellid="<? echo $cell->cellId; ?>"]').draggable(
                     {
                         handle: '.gsfloatingheader',
                         containment: 'parent',
                         stop: function (e, ui) {
-                            console.log('resizing stopped');
-                            console.log(ui);
                             var app = $(this);
                             thundashop.framework.saveFloating($(this));
                         }
@@ -992,26 +986,37 @@ class Page {
     }
 
     public function findInstance($headerCells, $type) {
-        foreach($headerCells as $cell) {
-            if(sizeof($cell->cells) > 0) {
+        foreach ($headerCells as $cell) {
+            if (sizeof($cell->cells) > 0) {
                 $app = $this->findInstance($cell->cells, $type);
-                if($app) {
+                if ($app) {
                     return $app;
                 }
             } else {
                 $instance = $this->factory->getApplicationPool()->getApplicationInstance($cell->appId);
-                if($type == "Menu") {
+                if ($type == "Menu") {
                     if ($instance && $instance instanceof \ns_a11ac190_4f9a_11e3_8f96_0800200c9a66\Menu) {
                         return $instance;
                     }
                 }
-                if($type == "ImageDisplayer") {
+                if ($type == "ImageDisplayer") {
                     if ($instance && $instance instanceof ns_831647b5_6a63_4c46_a3a3_1b4a7c36710a\ImageDisplayer) {
                         return $instance;
                     }
                 }
             }
         }
+    }
+
+    public function makeCarouselMenuDraggable() {
+        ?>
+        <script>
+            $('.gscaraouselmenu').draggable({
+                handle: '.gscaraouselmenuheader',
+                containment: 'parent'
+            });
+        </script>
+        <?
     }
 
 }

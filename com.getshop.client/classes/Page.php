@@ -387,7 +387,14 @@ class Page {
                 echo "<i title='" . $this->factory->__f("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o'></i>";
                 echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addafter' mode='INIT'></i>";
                 echo "</span>";
-            } else if ($parent && $parent->mode == "ROTATING" || $parent->mode == "TAB") {
+            } else if ($parent && $parent->mode == "TAB") {
+                echo "<span class='gseditrowbuttons'>";
+                echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addbefore' mode='INIT' target='container'></i>";
+                echo "<i title='" . $this->factory->__f("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o' target='container'></i>";
+                echo "<i title='" . $this->factory->__f("Delete carousel") . "' class='fa gsoperatecell fa-trash-o' type='delete' target='container'></i>";
+                echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addafter' mode='INIT' target='container'></i>";
+                echo "</span>";
+            } else if ($parent && $parent->mode == "ROTATING") {
                 echo "<span class='gseditrowbuttons'>";
                 echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addbefore' mode='INIT' target='container'></i>";
                 echo "<i title='" . $this->factory->__f("Delete carousel") . "' class='fa gsoperatecell fa-trash-o' type='delete' target='container'></i>";
@@ -395,6 +402,22 @@ class Page {
                 echo "</span>";
             }
         }
+        
+
+        if ($edit) {
+            echo "<div class='gseasymode' cellid='" . $cell->cellId . "'>";
+            echo "<div class='gseasymodeinner'>";
+            $this->printEasyModeEdit($cell, $parent);
+            echo "</div>";
+            echo "</div>";
+            
+        echo "<span class='gscellsettings'>";
+        echo "<i class='fa fa-cogs'  title='Cell settings' style='cursor:pointer;'></i>";
+        echo "</span>";
+            
+        }
+
+        
         echo "<div $innerstyles class='$gscellinner gsuicell gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
 
         if ($this->shouldPrintCellBox($edit, $cell, $parent)) {
@@ -809,6 +832,9 @@ class Page {
             }
             echo "<i class='fa fa-plus gsoperatecell $leftClass' type='addcolbefore' mode='COLUMN' title='Insert column to the left'></i> ";
             echo "<i class='fa fa-image gs_resizing' type='delete' title='Open styling'></i> ";
+            if ($parent != null && !$simple) {
+                echo "<i class='fa fa-arrow-down gsoperatecell' type='addrow' title='Insert row'></i> ";
+            }
             echo "<i class='fa fa-trash-o gsoperatecell' type='delete' title='Delete row'></i> ";
             echo "<i class='fa fa-plus gsoperatecell $rightClass' type='addcolumn' title='Insert column to the right'></i> ";
             if ($parent && (sizeof($parent->cells) > 1) && $parent->mode != "ROTATING" && $parent->cells[sizeof($parent->cells) - 1]->cellId != $cell->cellId && !$simple) {
@@ -882,9 +908,6 @@ class Page {
     }
 
     public function printCellContent($cell, $parent, $edit, $totalcells, $count, $depth) {
-        echo "<span class='gscellsettings'>";
-        echo "<i class='fa fa-cogs'  title='Cell settings' style='cursor:pointer;'></i>";
-        echo "</span>";
 
         if ($cell->mode == "INIT") {
             echo "<div class='gsinitrow'>";
@@ -912,15 +935,6 @@ class Page {
 
         if ($parent != null && $parent->mode == "TAB") {
             $this->displayTabRow($parent, $edit, $cell);
-        }
-
-
-        if ($edit) {
-            echo "<div class='gseasymode' cellid='" . $cell->cellId . "'>";
-            echo "<div class='gseasymodeinner'>";
-            $this->printEasyModeEdit($cell, $parent);
-            echo "</div>";
-            echo "</div>";
         }
 
         if (sizeof($cell->cells) > 0) {

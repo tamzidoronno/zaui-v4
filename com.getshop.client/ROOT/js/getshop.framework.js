@@ -807,7 +807,7 @@ thundashop.framework = {
         } else {
             cellid = $(this).closest('.gscell').attr('cellid');
         }
-        if (!cellid) {
+        if (!cellid  || $(this).attr('target') === "container") {
             cellid = $(this).closest('.gscontainercell').attr('cellid');
         }
 

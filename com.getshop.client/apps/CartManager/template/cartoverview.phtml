@@ -4,7 +4,7 @@ namespace ns_900e5f6b_4113_46ad_82df_8dafe7872c99;
 
 /* @var $this CartManager */
 
-$cartItems = (array) $this->cart->items;
+$cartItems = (array) $this->getApi()->getCartManager()->getCart()->items;
 
 if (count($cartItems) == 0) {
     $this->includefile("nocartitemss");
@@ -24,7 +24,10 @@ if (count($cartItems) == 0) {
         /* @var $product core_productmanager_data_Product */
         $product = $cartItem->product;
 
-        $variations = implode(":", $cartItem->variations);
+        if (isset($cartItem->variations)) {
+            $variations = implode(":", $cartItem->variations);
+        }
+        
         ?>
         <div class="product" productid="<?php echo $product->id; ?>">
             <table class='product_row_table'>
@@ -91,7 +94,7 @@ if (count($cartItems) == 0) {
 </div>
 
 <div class='summary'>
-    <? if ($this->cart->couponCost) { ?>
+    <? if (isset($this->cart->couponCost) && $this->cart->couponCost) { ?>
         <div class='row'><? echo $this->__w("Coupon discount"); ?><span> <?php echo $this->getFactory()->getCurrencyName(); ?><? echo sprintf('%0.2f', $this->cart->couponCost); ?></span></div>
     <? } ?>
     <div class='row shipping_price'><? echo $this->__w("Shipping price"); ?><span><? echo \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($shippingprice); ?> </span></div>

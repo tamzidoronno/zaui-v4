@@ -1,5 +1,5 @@
 <?
-$paymentMethods = $this->getPaymentMethods();
+$paymentMethods = $this->getPaymentMethods(true);
 ?>
 <div class="payment">
     <div class='shoppingcartheader'><?php echo $this->__w("Please select a payment method."); ?></div>
@@ -34,7 +34,14 @@ $paymentMethods = $this->getPaymentMethods();
                 $first = false;
                 $add = "style='display:block;'";
             }
+            
             $details = $paymentMethod->getPaymentDetails();
+            if (!$details) {
+                $app = $paymentMethod->getPaymentApplication();
+                if ($app != null && method_exists($app, "getDetails")) {
+                    $details = $app->getDetails();
+                }
+            }
             echo "<div $add class='extendedinfo' extendedid='$id'>$html</div>";
             echo "<div $add class='paymentdetails $id'>$details<br><br></div>";
         }

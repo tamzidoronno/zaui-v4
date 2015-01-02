@@ -263,6 +263,39 @@ class BigStock(object):
     data.interfaceName = "core.bigstock.IBigStock"
     return self.communicationHelper.sendMessage(data)
 
+class BrainTreeManager(object):
+  def __init__(self, communicationHelper):
+    self.communicationHelper = communicationHelper
+  def getClientToken(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getClientToken"
+    data.interfaceName = "core.braintree.IBrainTreeManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def pay(self, paymentMethodNonce, orderId):
+    args = collections.OrderedDict()
+    if isinstance(paymentMethodNonce,GetShopBaseClass): 
+      args["paymentMethodNonce"]=json.dumps(paymentMethodNonce.__dict__)
+    else:
+      try:
+        args["paymentMethodNonce"]=json.dumps(paymentMethodNonce)
+      except (ValueError, AttributeError):
+        args["paymentMethodNonce"]=paymentMethodNonce
+    if isinstance(orderId,GetShopBaseClass): 
+      args["orderId"]=json.dumps(orderId.__dict__)
+    else:
+      try:
+        args["orderId"]=json.dumps(orderId)
+      except (ValueError, AttributeError):
+        args["orderId"]=orderId
+    data = EmptyClass()
+    data.args = args
+    data.method = "pay"
+    data.interfaceName = "core.braintree.IBrainTreeManager"
+    return self.communicationHelper.sendMessage(data)
+
 class CalendarManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
@@ -6033,6 +6066,7 @@ class GetShopApi(object):
     self.communicationHelper = CommunicationHelper(address)
     self.BannerManager = BannerManager(self.communicationHelper)
     self.BigStock = BigStock(self.communicationHelper)
+    self.BrainTreeManager = BrainTreeManager(self.communicationHelper)
     self.CalendarManager = CalendarManager(self.communicationHelper)
     self.CarTuningManager = CarTuningManager(self.communicationHelper)
     self.CartManager = CartManager(self.communicationHelper)

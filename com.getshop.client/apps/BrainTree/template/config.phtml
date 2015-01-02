@@ -1,0 +1,81 @@
+<div class='gss_settings_header'>
+    <i class='fa fa-cc-visa'></i>
+
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            <? echo $this->__f("BrainTree"); ?>
+        </div>
+        <div class='gss_settings_header_description_inner'>
+            <?
+            echo $this->getDescription();
+            ?>	
+        </div>
+    </div>	
+</div>
+<div class='gss_settings_content'>
+    <div class="textfield gss_setting">
+        <span class="title">Merchant id</span>
+        <input type="textfield" gs_model='braintreemodel' gs_model_attr='merchantid' value="<? echo $this->getConfigurationSetting("merchantid"); ?>" placeholder="">
+        <div class="description">
+            <?php echo $this->__("Merchant ID is found in braintree account."); ?>
+        </div>
+    </div>
+    
+    <div class="textfield gss_setting"  id="">
+        <span class="title">Public key</span>
+        <input type="textfield" gs_model='braintreemodel' gs_model_attr='publickey' value="<? echo $this->getConfigurationSetting("publickey"); ?>" placeholder="">
+        <div class="description">
+            <?php echo $this->__("Public key is found in braintree account."); ?>
+        </div>
+    </div>
+    
+    <div class="textfield gss_setting"  id="">
+        <span class="title">Public key</span>
+        <input type="textfield" gs_model='braintreemodel' gs_model_attr='privatekey' value="<? echo $this->getConfigurationSetting("privatekey"); ?>" placeholder="">
+        <div class="description">
+            <?php echo $this->__("Public key is found in braintree account."); ?>
+        </div>
+    </div>
+
+    <div class="textfield gss_setting"  id="editor">
+        <span class="title"><?php echo $this->__f("Sandbox"); ?></span>
+        <div class="gss_onoff" gs_model="braintreemodel" gs_model_attr="isSandBox">
+            <?
+            $class = $this->getConfigurationSetting("isSandBox") == "true" ? "fa-toggle-on" : "fa-toggle-off";
+            ?>
+            <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
+        </div>
+        <div class="description">
+            <?php echo $this->__("Run account in sandbox?"); ?>
+        </div>
+    </div>
+    
+    <div class="textfield gss_setting">
+        <span class="title">Sandbox Merchant id</span>
+        <input type="textfield" gs_model='braintreemodel' gs_model_attr='sandbox_merchantid' value="<? echo $this->getConfigurationSetting("sandbox_merchantid"); ?>" placeholder="">
+        <div class="description">
+            <?php echo $this->__("Merchant ID is found in braintree account."); ?>
+        </div>
+    </div>
+    
+    <div class="textfield gss_setting"  id="">
+        <span class="title">Sandbox Public key</span>
+        <input type="textfield" gs_model='braintreemodel' gs_model_attr='sandbox_publickey' value="<? echo $this->getConfigurationSetting("sandbox_publickey"); ?>" placeholder="">
+        <div class="description">
+            <?php echo $this->__("Public key is found in braintree account."); ?>
+        </div>
+    </div>
+    
+    <div class="textfield gss_setting"  id="">
+        <span class="title">Sandbox Public key</span>
+        <input type="textfield" gs_model='braintreemodel' gs_model_attr='sandbox_privatekey' value="<? echo $this->getConfigurationSetting("sandbox_privatekey"); ?>" placeholder="">
+        <div class="description">
+            <?php echo $this->__("Public key is found in braintree account."); ?>
+        </div>
+    </div>
+
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="saveSettings" gss_model="braintreemodel" gss_success_message="<? echo $this->__f("Saved settings"); ?>"><i class='fa fa-save'></i><?php echo $this->__("Save settings"); ?></div>
+    </div>
+</div>
+

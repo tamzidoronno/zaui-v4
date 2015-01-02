@@ -5,6 +5,7 @@
 package com.thundashop.core.cartmanager.data;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.ordermanager.data.Shipping;
@@ -138,7 +139,7 @@ public class Cart extends DataCommon {
 
     @Override
     public Cart clone() {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().serializeNulls().disableInnerClassSerialization().create();
         String json = gson.toJson(this);
         Cart copied = gson.fromJson(json, Cart.class);
         return copied;

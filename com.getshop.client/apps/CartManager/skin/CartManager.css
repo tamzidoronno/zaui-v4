@@ -310,19 +310,6 @@
     display: none;
 }
 
-.small_cart_dom {
-    display: none;
-}
-
-
-.gsarea[area="header"] .CartManager .small_cart_dom {
-    display: block;
-}
-
-.gsarea[area="header"] .CartManager .main_cart_dom {
-    display: none;
-}
-
 .CartManager .checkout_area .checkout {
     cursor: pointer;
 }
@@ -335,3 +322,22 @@
     border: 1px solid #EEE;
     background: rgba(0,0,0, 0.2);
 } 
+
+.paymentfailed {
+    margin: 10px;
+    padding: 20px;
+    border: solid 1px #EEE;
+    text-align: center;
+    color: #FFF;
+    font-weight: bold;
+    
+    background: #ff3019; /* Old browsers */
+    background: -moz-linear-gradient(top,  #ff3019 0%, #cf0404 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ff3019), color-stop(100%,#cf0404)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #ff3019 0%,#cf0404 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #ff3019 0%,#cf0404 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #ff3019 0%,#cf0404 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #ff3019 0%,#cf0404 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff3019', endColorstr='#cf0404',GradientType=0 ); /* IE6-9 */
+
+}

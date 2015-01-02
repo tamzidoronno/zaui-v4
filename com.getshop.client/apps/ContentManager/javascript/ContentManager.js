@@ -37,7 +37,6 @@ app.ContentManager = {
         thundashop.common.activateCKEditor(id, {
             "notdestroyonblur" : true
         });
-//        contentArea.focus();
     },
     
     loadSettings : function(element, application) {

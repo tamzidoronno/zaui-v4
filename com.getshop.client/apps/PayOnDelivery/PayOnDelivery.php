@@ -56,9 +56,7 @@ class PayOnDelivery extends \PaymentApplication implements \Application {
     }
 
     public function preProcess() {
-        echo "<div style='text-align:center; font-size: 16px;'>";
-        echo $this->__w("Thank you for your order.");
-        echo "</div>";
+        return true;
     }
 
     public function getStarted() {

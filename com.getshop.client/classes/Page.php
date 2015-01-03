@@ -129,7 +129,7 @@ class Page {
         echo "Menu";
         echo "</span>";
         echo "<a href='?page=cart'>";
-        echo "<span class='gsmobilemenuentry gsmobilemenubox'>";
+        echo "<span class='gsmobilemenuentry gsmobilemenubox gsmobilemenucart'>";
         echo "<i class='fa fa-shopping-cart'></i>";
         echo "Cart";
         echo "</span>";

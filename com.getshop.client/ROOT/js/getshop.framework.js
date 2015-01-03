@@ -104,7 +104,7 @@ thundashop.framework = {
             target = $(this).closest('.gsmobilemenuentry');
         }
 
-        var width = $(window).width() - 80;
+        var width = $(window).width() - 70;
         var options = {
             right: "+=" + width
         };

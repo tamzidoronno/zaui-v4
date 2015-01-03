@@ -134,6 +134,7 @@ if(isset($factory->getSettings()->languages)) {
 
 <html xmlns:fb="http://ogp.me/ns/fb#">
     <head>
+        
         <script>
 
             if (typeof(console) == "undefined") {
@@ -179,6 +180,7 @@ if(isset($factory->getSettings()->languages)) {
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
         <title><?php echo $title; ?></title>
+    <script>CKEDITOR.dtd.$removeEmpty['span'] = false;</script>
     </head>
     <body editormode="<? echo $factory->isEditorMode() ? "true" : "false"?>">
         <?

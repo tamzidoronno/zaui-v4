@@ -335,6 +335,7 @@ thundashop.common.activateCKEditor = function(id, config) {
         filebrowserImageUploadUrl: 'uploadFile.php',
         enterMode: CKEDITOR.ENTER_BR,
         removePlugins: toBeRemoved,
+//        extraPlugins : 'fontawesome',
         on: {
             blur: function(event) {
                 var data = event.editor.getData();

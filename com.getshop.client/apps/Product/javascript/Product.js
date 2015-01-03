@@ -13,7 +13,6 @@ app.Product = {
                     var event = thundashop.Ajax.createEvent(null, "addProductToCart", this, data);
                     thundashop.Ajax.post(event);
                 });
-            alert('adding to cart');
         } else {
             $('.gsarea[area="header"] .checkout_area').each(function () {
                 var width = $(this).parent().width();

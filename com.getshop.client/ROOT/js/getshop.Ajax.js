@@ -199,7 +199,7 @@ thundashop.Ajax = {
     navigateWithJavascript: function(scope) {
         var variables = "";
         data = {};
-
+        
         if ($(scope).is('form')) {
             var formName = $(scope).attr('name');
             if (!formName) {

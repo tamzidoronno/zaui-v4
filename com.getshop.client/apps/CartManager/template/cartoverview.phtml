@@ -70,11 +70,7 @@ if (count($cartItems) == 0) {
                                 </div>
     <? } ?>
                         </a>
-                        <div class="button removebutton">
-                            <div class="rightglare"></div>
-                            <div class="filler"></div>
-                            <a href="?page=cart&action=removeproduct&cartItemId=<? echo $cartItem->cartItemId; ?>"><ins><?php echo $this->__w('Remove'); ?></ins></a>
-                        </div>
+                            <a class='removeproductfromcart' data-avoidscroll='true' href="?page=cart&action=removeproduct&cartItemId=<? echo $cartItem->cartItemId; ?>"><i class='fa fa-trash-o'></i></a>
 
                     </td>
                 </tr>

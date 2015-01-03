@@ -130,6 +130,15 @@ class Page {
         echo "</span>";
         echo "<a href='?page=cart'>";
         echo "<span class='gsmobilemenuentry gsmobilemenubox gsmobilemenucart'>";
+        
+        $count = 0;
+        $cart = $this->factory->getApi()->getCartManager()->getCart();
+        foreach ($cart->items as $cartItem) {
+            $count += $cartItem->count;
+        }
+        
+        
+        echo "<span class='gsshopcartcount'>".$count."</span>";
         echo "<i class='fa fa-shopping-cart'></i>";
         echo "Cart";
         echo "</span>";

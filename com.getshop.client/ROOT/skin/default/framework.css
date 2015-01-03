@@ -2034,7 +2034,7 @@ background: #00b7ea; /* Old browsers */
         transition: opacity .3s ease-in-out;
         left: 10px;
         color:#333;
-    border: solid 1px #bbb; top: 25px; padding: 5px; border-radius: 3px; opacity: 0.2; position: absolute; background-color:#FFF; font-size: 16px; border-top-left-radius: 0px;z-index: 5; }
+    border: solid 1px #bbb; top: 25px; padding: 5px; border-radius: 3px; opacity: 0.7; position: absolute; background-color:#FFF; font-size: 16px; border-top-left-radius: 0px;z-index: 5; }
 .gscaraouselmenu:hover { opacity: 1; }
 .gscaraouselmenu i { cursor:pointer; }
 .gscaraouselmenuheader { position: absolute;
@@ -2134,3 +2134,6 @@ padding: 2px; }
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff3019', endColorstr='#cf0404',GradientType=0 ); /* IE6-9 */
 
 }
+
+.gsfloating { margin: 0px !important; }
+.gsfloating .gsinner { padding: 0px !important; margin: 0px !important; }

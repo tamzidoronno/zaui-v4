@@ -28,6 +28,9 @@ class ApplicationManager extends FactoryBase {
 
     function updateCarouselConfig() {
         $cellId = $_POST['data']['cellid'];
+        $outerWidth = $_POST['data']['outerWidth'];
+        $outerWidthWithMargins = $_POST['data']['outerWidthWithMargins'];
+        
         $pageId = $this->getPage()->javapage->id;
         
         $config = new core_pagemanager_data_CarouselConfig();
@@ -35,6 +38,7 @@ class ApplicationManager extends FactoryBase {
         $config->time = $_POST['data']['timer'];
         $config->type = $_POST['data']['type'];
         $this->getApi()->getPageManager()->setCarouselConfig($pageId, $cellId, $config);
+        $this->getApi()->getPageManager()->setWidth($pageId, $cellId, $outerWidth, $outerWidthWithMargins);
     }
     
     function saveColChanges() {
@@ -138,8 +142,8 @@ class ApplicationManager extends FactoryBase {
                 break;
         }
     }
-
-    function saveFloatingPosition() {
+ 
+   function saveFloatingPosition() {
         $data = new core_pagemanager_data_FloatingData();
         $data->height = $_POST['data']['height'];
         $data->width = $_POST['data']['width'];

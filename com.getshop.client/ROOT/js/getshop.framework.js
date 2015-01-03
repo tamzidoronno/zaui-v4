@@ -79,11 +79,24 @@ thundashop.framework = {
         $(document).on('click', '.gsmobilemenu .gsslideleft', this.slideMobileMenu);
         $(document).on('click', '.gsmobilemenu .gsslideright', this.slideMobileMenu);
         $(document).on('click', '.gsmobilemenu .gsmobiletopmenu', this.showMobileTopMenu);
+        $(document).on('click', '.gsmobilemenu .gsmobilesearch', this.showMobileSearch);
+        $(document).on('keyup', '.gsmobilsearchfield', this.doMobileSearch);
+        $(document).on('click', '.gsmobilesearchbox .fa-search', this.doMobileSearch);
         $(document).on('keyup', '.gscssattributes', this.setCssAttributes);
 
         /* Cell operations */
         $(document).on('click', '.gsoperatecell', this.operateCell);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
+    },
+    showMobileSearch : function() {
+        $('.gsmobilesearchbox').fadeIn();
+        $('.gsmobilsearchfield').focus();
+    },
+    doMobileSearch : function(event) {
+        var code = event.keyCode;
+        if(code === 13 || $(this).hasClass('fa-search')) {
+            window.location.href='page=productsearch&searchWord=' + $(this).val();
+        }
     },
     slideMobileMenu: function () {
         var target = $(this);
@@ -91,7 +104,7 @@ thundashop.framework = {
             target = $(this).closest('.gsmobilemenuentry');
         }
 
-        var width = $(window).width() - 80;
+        var width = $(window).width() - 70;
         var options = {
             right: "+=" + width
         };
@@ -398,8 +411,12 @@ thundashop.framework = {
             height: $('.carouselsettingspanel').find('.gscarouselheight').val(),
             timer: $('.carouselsettingspanel').find('.gscarouseltimer').val(),
             type: $('.carouselsettingspanel').find('.gscarouseltype').val(),
-            cellid: $(this).closest('.carouselsettingspanel').attr('cellid')
+            cellid: $(this).closest('.carouselsettingspanel').attr('cellid'),
         }
+
+        data['outerWidth'] = $('.gscontainercell[cellid="'+data['cellid']+'"] .gsinner').outerWidth();
+        data['outerWidthWithMargins'] = $('.gscontainercell[cellid="'+data['cellid']+'"] .gsinner').outerWidth(true);
+        
         var event = thundashop.Ajax.createEvent('', 'updateCarouselConfig', $(this), data);
         thundashop.Ajax.post(event);
     },

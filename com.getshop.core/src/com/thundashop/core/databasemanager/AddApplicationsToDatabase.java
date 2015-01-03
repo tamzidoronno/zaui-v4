@@ -75,6 +75,83 @@ public class AddApplicationsToDatabase {
         button.activeAppOnModuleActivation = false;
         apps.add(button);
 
+     Application applicationpromotor = createSettings(
+                "ApplicationPromotor",
+                "b6b0d74f-c802-401e-9bb7-facf3e420f61",
+                allowed,
+                "",
+                Application.Type.Webshop, true);
+        applicationpromotor.isPublic = true;
+        applicationpromotor.defaultActivate = true;
+        applicationpromotor.moduleId = "hidden";
+        apps.add(applicationpromotor);
+
+//        Application getShopAdmin = createSettings(
+//                "GetShopAdmin",
+//                "d315510d-198f-4c16-beef-54f979be58cf",
+//                allowed,
+//                "",
+//                Application.Type.Webshop, true);
+//        getShopAdmin.isPublic = true;
+//        getShopAdmin.defaultActivate = true;
+//        getShopAdmin.moduleId = "hidden";
+//        apps.add(getShopAdmin);
+//        
+//        ApplicationSettings sedoxLogin = createSettings(
+//                "SedoxLogin",
+//                "05b2baef-5fba-4f01-9fcb-04a8c80b2907",
+//                allowed2,
+//                "",
+//                ApplicationSettings.Type.Webshop, false);
+//        sedoxLogin.isPublic = false;
+//        sedoxLogin.allowedStoreIds = new ArrayList();
+//        sedoxLogin.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
+//        apps.add(sedoxLogin);
+//        
+//        ApplicationSettings sedoxHeaderApp = createSettings(
+//                "SedoxHeaderApp",
+//                "264b0edf-b654-4ce0-9be2-0ebb3d2887af",
+//                new ArrayList(),
+//                "",
+//                ApplicationSettings.Type.Webshop, false);
+//        sedoxHeaderApp.isPublic = false;
+//        sedoxHeaderApp.allowedStoreIds = new ArrayList();
+//        sedoxHeaderApp.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
+//        apps.add(sedoxHeaderApp);
+//        
+//        
+//        ApplicationSettings sedoxAdmin = createSettings(
+//                "SedoxAdmin",
+//                "e22e25dd-8000-471c-89a3-6927d932165e",
+//                allowed,
+//                "",
+//                ApplicationSettings.Type.Webshop, false);
+//        sedoxAdmin.isPublic = false;
+//        sedoxAdmin.allowedStoreIds = new ArrayList();
+//        sedoxAdmin.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
+//        apps.add(sedoxAdmin);
+//        
+//        ApplicationSettings sedoxProductView = createSettings(
+//                "SedoxProductView",
+//                "23fac58b-5066-4222-860c-a9e88196b8a1",
+//                allowed,
+//                "",
+//                ApplicationSettings.Type.Webshop, false);
+//        sedoxProductView.isPublic = false;
+//        sedoxProductView.allowedStoreIds = new ArrayList();
+//        sedoxProductView.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
+//        apps.add(sedoxProductView);
+//        
+//        ApplicationSettings sedoxUserPanel = createSettings(
+//                "SedoxUserPanel",
+//                "32b5f680-dd8d-11e3-8b68-0800200c9a66",
+//                allowed,
+//                "",
+//                ApplicationSettings.Type.Webshop, false);
+//        sedoxUserPanel.isPublic = false;
+//        sedoxUserPanel.allowedStoreIds = new ArrayList();
+//        sedoxUserPanel.allowedStoreIds.add("608afafe-fd72-4924-aca7-9a8552bc6c81");
+//        apps.add(sedoxUserPanel);
         return apps;
     }
 

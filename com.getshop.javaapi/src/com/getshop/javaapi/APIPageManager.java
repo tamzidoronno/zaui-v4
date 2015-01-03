@@ -605,6 +605,24 @@ public class APIPageManager {
      * @return
      * @throws ErrorException
      */
+     public void setWidth(java.lang.String pageId, java.lang.String cellId, java.lang.Integer outerWidth, java.lang.Integer outerWidthWithMargins)  throws Exception  {
+          JsonObject2 data = new JsonObject2();
+          data.args = new LinkedHashMap();
+          data.args.put("pageId",new Gson().toJson(pageId));
+          data.args.put("cellId",new Gson().toJson(cellId));
+          data.args.put("outerWidth",new Gson().toJson(outerWidth));
+          data.args.put("outerWidthWithMargins",new Gson().toJson(outerWidthWithMargins));
+          data.method = "setWidth";
+          data.interfaceName = "core.pagemanager.IPageManager";
+          String result = transport.send(data);
+     }
+
+     /**
+     * Set the carousel configuration.
+     * @param pageId
+     * @return
+     * @throws ErrorException
+     */
      public void toggleHiddenOnMobile(java.lang.String pageId, java.lang.String cellId, java.lang.Boolean hide)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new LinkedHashMap();

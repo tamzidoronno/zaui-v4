@@ -91,7 +91,7 @@ class Page {
             }
 
             $this->printMobileHeader($layout->areas->{'header'});
-            $this->printMobile($cells, 0, null);
+            $this->printArea($cells, 0, null);
             $this->printCss($layout->areas->{'body'});
             $this->printMobileMenu($layout->areas->{'header'});
             echo "</div>";
@@ -116,6 +116,9 @@ class Page {
             echo "</span>";
         }
 
+        echo "<span class='gsmobilesearchbox'>";
+        echo "<input type='text' class='gsmobilsearchfield' placeholder='Enter the name of the product to search for'></input><i class='fa fa-search'></i>";
+        echo "</span>";
         echo "<div class='gsmobilemenu'>";
         echo "<span class='gsmobilemenuentry gsslideleft'>";
         echo "<i class='fa fa-caret-left'></i>";
@@ -126,78 +129,20 @@ class Page {
         echo "Menu";
         echo "</span>";
         echo "<a href='?page=cart'>";
-        echo "<span class='gsmobilemenuentry gsmobilemenubox'>";
+        echo "<span class='gsmobilemenuentry gsmobilemenubox gsmobilemenucart'>";
         echo "<i class='fa fa-shopping-cart'></i>";
         echo "Cart";
         echo "</span>";
         echo "</a>";
-        echo "<a href='?page=productsearch'>";
-        echo "<span class='gsmobilemenuentry gsmobilemenubox'>";
+        echo "<span class='gsmobilemenuentry gsmobilemenubox gsmobilesearch'>";
         echo "<i class='fa fa-search'></i>";
         echo "Search";
         echo "</span>";
-        echo "</a>";
         echo "<span class='gsmobilemenuentry gsmobilemenubox gsslideright'>";
         echo "<i class='fa fa-caret-right'></i>";
         echo "Hide";
         echo "</span>";
         echo "</div>";
-    }
-
-    private function printMobile($cells, $depth, $parent) {
-        $count = 0;
-        foreach ($cells as $cell) {
-            if ($cell->hideOnMobile && !$this->factory->isEditorMode()) {
-                continue;
-            }
-
-
-            if (sizeof($cell->cells) > 0) {
-                if ($cell->mode == "TAB") {
-                    echo "<div class='gscontainercell'>";
-                }
-                $this->printMobile($cell->cells, $depth + 1, $cell);
-                if ($cell->mode == "TAB") {
-                    echo "</div>";
-                }
-            } else {
-                $gstabrow = "";
-                if (isset($parent) && $parent->mode == "TAB") {
-                    $gstabrow = "gstabrow";
-                }
-
-                echo "<div class='gsucell gscount_$count $gstabrow gsdepth_$depth gscell gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "'>";
-                if ($depth == 0 && $this->factory->isEditorMode()) {
-                    echo "<span class='gsmobileoptions'>";
-                    echo "<span style='position:absolute; left: 5px; top: 2px;'>" . $this->factory->__f("Row options") . "</span>";
-                    echo "<i class='fa fa-caret-down gscaretleft gscaret'></i>";
-                    echo "<i class='fa fa-arrow-up gsoperatecell' cellid='" . $cell->cellId . "' type='mobilemoveup' title='" . $this->factory->__f("Move up on mobile") . "' target='this'></i>";
-                    if ($cell->hideOnMobile) {
-                        echo "<i class='fa fa-trash-o gsoperatecell gshiddenonmobile' cellid='" . $cell->cellId . "' type='mobilehideoff' title='" . $this->factory->__f("Row is not displayed on mobile, click for make it reappear") . "' target='this'></i>";
-                    } else {
-                        echo "<i class='fa fa-trash-o gsoperatecell' cellid='" . $cell->cellId . "' type='mobilehideon' title='" . $this->factory->__f("Hide on mobile") . "' target='this'></i>";
-                    }
-                    echo "<i class='fa fa-arrow-down gsoperatecell' cellid='" . $cell->cellId . "' type='mobilemovedown' title='" . $this->factory->__f("Move down on mobile") . "' target='this'></i>";
-                    echo "<i class='fa fa-caret-down gscaretright gscaret'></i>";
-                    echo "</span>";
-                }
-
-                echo "<div class='gsuicell gsinner gscell_" . $cell->incrementalCellId . "'>";
-                echo "<div class='gsrow'>";
-
-
-                if (isset($parent) && $parent->mode == "TAB") {
-                    $this->displayTabRow($parent, FALSE, $cell);
-                }
-                if ($cell->appId) {
-                    $this->printApplicationArea($cell);
-                }
-                echo "</div>";
-                echo "</div>";
-                echo "</div>";
-            }
-            $count++;
-        }
     }
 
     private function printCss($areas) {
@@ -305,9 +250,6 @@ class Page {
         $additionalinfo = "";
 
         if ($cell->mode == "ROTATING") {
-            if ($this->factory->isMobile()) {
-                return;
-            }
             $additionalinfo = "height='" . $cell->carouselConfig->height . "' timer='" . $cell->carouselConfig->time . "' type='" . $cell->carouselConfig->type . "'";
             $styles .= "height: " . $cell->carouselConfig->height . "px;";
         }
@@ -322,10 +264,11 @@ class Page {
         }
 
         $innerstyles = "";
+        $floatData = false;
         if ($cell->mode == "FLOATING") {
             $floatData = $cell->floatingData;
             $innerstyles = "style='min-height:inherit; height:100%;'";
-            $styles .= "height: 100%; min-height:inherit; overflow-y: auto; overflow-x: hidden;";
+            $styles .= "height: 100%; min-height:inherit; overflow-y: hidden; overflow-x: hidden;";
         }
 
         $styles .= "'";
@@ -341,12 +284,12 @@ class Page {
             $rowedit = "";
         }
 
-        $gsrotatingrow = "";
+        $gsrowmode = "";
         if ($parent != null && $parent->mode == "ROTATING") {
-            $gsrotatingrow = "gsrotatingrow";
+            $gsrowmode = "gsrotatingrow";
         }
         if ($parent != null && $parent->mode == "TAB") {
-            $gsrotatingrow = "gstabrow";
+            $gsrowmode = "gstabrow";
         }
 
         $mode = "gs" . strtolower($cell->mode);
@@ -359,18 +302,14 @@ class Page {
         if ($isColumn && ($count > 0)) {
             $marginsclasses .= " gs_margin_left";
         }
+        $this->printFloatingHeader($cell, $floatData, $parent);
+        
+        echo "<div $additionalinfo $styles width='$width' class='gsucell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
 
-        if ($cell->mode == "FLOATING") {
-            $floatingClass = $this->factory->isEditorMode() ? "gsfloatingbox" : "";
-            $style = "position:absolute;width:" . $floatData->width . "px;height: " . $floatData->height . "px;top: " . $floatData->top . "px;left:" . $floatData->left . "px";
-            echo "<div style='$style' class='$floatingClass' cellid='" . $cell->cellId . "'>";
-            echo "<div class='gsfloatingheader'>";
-            echo "<span style='float:left;'>" . $this->printEasyModeEdit($cell, $parent, true) . "</span>";
-            echo "</div>";
+        if ($this->factory->isMobile() && $gsrowmode == "") {
+            $this->printMobileAdminMenu($depth, $cell);
         }
 
-
-        echo "<div $additionalinfo $styles width='$width' class='gsucell $gscell $gsrotatingrow $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "'>";
         if ($parent != null && $parent->mode === "ROTATING") {
             if ($count > 0) {
                 echo "<i class='fa fa-arrow-circle-left gsrotateleft gsrotatearrow'></i>";
@@ -380,66 +319,20 @@ class Page {
             }
         }
 
-        if ($depth === 0 && !$edit && $this->factory->isEditorMode()) {
-            if ($parent == null || ($parent->mode != "TAB" && $parent->mode != "ROTATING")) {
-                echo "<span class='gseditrowbuttons'>";
-                echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addbefore' mode='INIT'></i>";
-                echo "<i title='" . $this->factory->__f("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o'></i>";
-                echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addafter' mode='INIT'></i>";
-                echo "</span>";
-            } else if ($parent && $parent->mode == "TAB") {
-                echo "<span class='gseditrowbuttons'>";
-                echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addbefore' mode='INIT' target='container'></i>";
-                echo "<i title='" . $this->factory->__f("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o' target='container'></i>";
-                echo "<i title='" . $this->factory->__f("Delete carousel") . "' class='fa gsoperatecell fa-trash-o' type='delete' target='container'></i>";
-                echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addafter' mode='INIT' target='container'></i>";
-                echo "</span>";
-            } else if ($parent && $parent->mode == "ROTATING") {
-                echo "<span class='gseditrowbuttons'>";
-                echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addbefore' mode='INIT' target='container'></i>";
-                echo "<i title='" . $this->factory->__f("Delete carousel") . "' class='fa gsoperatecell fa-trash-o' type='delete' target='container'></i>";
-                echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addafter' mode='INIT' target='container'></i>";
-                echo "</span>";
-            }
-        }
-        
+        $this->printRowEditButtons($depth, $edit, $parent);
+        $this->printEasyModeLayer($edit, $cell, $parent);
 
-        if ($edit) {
-            echo "<div class='gseasymode' cellid='" . $cell->cellId . "'>";
-            echo "<div class='gseasymodeinner'>";
-            $this->printEasyModeEdit($cell, $parent);
-            echo "</div>";
-            echo "</div>";
-            
-        echo "<span class='gscellsettings'>";
-        echo "<i class='fa fa-cogs'  title='Cell settings' style='cursor:pointer;'></i>";
-        echo "</span>";
-            
-        }
-
-        
         echo "<div $innerstyles class='$gscellinner gsuicell gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
 
-        if ($this->shouldPrintCellBox($edit, $cell, $parent)) {
-            $style = "position:absolute;width:100%; bottom: -1px;";
-            echo "<div style='$style' class='gscellbox' cellid='" . $cell->cellId . "'>";
-            echo "<div class='gscellheadermin'><i class='fa fa-external-link-square'></i></div>";
-            echo "<div class='gscellboxheader'>";
-            echo "<span style='float:left;'>" . $this->printEasyModeEdit($cell, $parent, true) . "</span>";
-            echo "</div></div>";
-        }
-
+        $this->printCellBox($edit, $cell, $parent);
         $this->printCellContent($cell, $parent, $edit, $totalcells, $count, $depth);
 
         echo "</div>";
         echo "</div>";
 
-        if ($cell->mode === "FLOATING") {
-            //End of floatingbox.
-            echo "</div>";
-            if (!$cell->floatingData->pinned) {
-                $this->makeDraggable($cell);
-            }
+        $this->printFloatingEnd($cell);
+        if ($cell->mode == "ROTATING" && $this->factory->isMobile()) {
+            $this->resizeContainer($cell);
         }
     }
 
@@ -700,8 +593,8 @@ class Page {
         </script>
 
         <style>
-            .gsrotating[cellid='<? echo $cell->cellId; ?>'] {  width: 100%; height: <? echo $config->height; ?>px !important; }
-            .gsrotating[cellid='<? echo $cell->cellId; ?>'] .gscell.gsdepth_<? echo $depth; ?> { width:100%; min-height: <? echo $config->height; ?>px !important; height: <? echo $config->height; ?>px !important; }
+            .gsrotating[cellid='<? echo $cell->cellId; ?>'] {  width: 100%; height: <? echo $config->height; ?>px; }
+            .gsrotating[cellid='<? echo $cell->cellId; ?>'] .gscell.gsdepth_<? echo $depth; ?> { width:100%; min-height: <? echo $config->height; ?>px; height: <? echo $config->height; ?>px; }
             .gsrotating[cellid='<? echo $cell->cellId; ?>'] .gsinner.gsdepth_<? echo $depth; ?> { height: 100%; }
             <? if (($config->type === "fade" || !$config->type) && $doCarousel) { ?>
                 .gsrotating[cellid='<? echo $cell->cellId; ?>'] .gscell {
@@ -769,7 +662,7 @@ class Page {
     }
 
     public function printCarourselMenu() {
-        if (!$this->factory->isEditorMode()) {
+        if (!$this->factory->isEditorMode() || $this->factory->isMobile()) {
             return;
         }
         ?>
@@ -777,7 +670,7 @@ class Page {
             <div class='gscaraouselmenuheader'>Carousel menu</div>
             <i class="gsoperatecell fa fa-arrow-left" type="moveup" target="selectedcell" title='Move slide to the left'></i>
             <i class='fa fa-plus-circle gsoperatecell' type='addfloating' title='Add content to slider'></i>
-            <i class="fa fa-image gs_resizing" type="delete" title="Open styling"></i>
+            <i class="fa fa-image gs_resizing" type="delete" title="Background image / styling"></i>
             <i class='fa fa-cogs carouselsettings' title='Carousel settings' style='cursor:pointer;'></i>
             <i class="gsoperatecell fa fa-trash-o" target="selectedcell" type="delete" title='Delete selected slide'></i>
             <i class="gsoperatecell fa fa-arrow-right" type="movedown" target="selectedcell" title='Move slide to the right'></i>
@@ -787,7 +680,7 @@ class Page {
 
     public function printCarouselDots($totalcells, $count, $cellid) {
         $editdots = "";
-        if ($this->factory->isEditorMode()) {
+        if ($this->factory->isEditorMode() && !$this->factory->isMobile()) {
             $editdots = "gscarouseldotseditmode";
         }
         echo "<div class='gscarouseldots $editdots'>";
@@ -798,7 +691,7 @@ class Page {
             }
             echo "<i class='fa fa-circle gscarouseldot $activeCirle' cellid='$cellid'></i>";
         }
-        if ($this->factory->isEditorMode()) {
+        if ($this->factory->isEditorMode() && !$this->factory->isMobile()) {
             echo "<i class='fa fa-plus addcarouselrow gsoperatecell' type='addrow' target='container' title='Add another slider'></i>";
             echo "<i class='fa fa-warning' title='The carousel is not rotating while logged in as administrator.' style='cursor:pointer;'></i>";
         }
@@ -977,7 +870,10 @@ class Page {
         }
     }
 
-    public function shouldPrintCellBox($edit, $cell, $parent) {
+    public function printCellBox($edit, $cell, $parent) {
+        if ($this->factory->isMobile()) {
+            return false;
+        }
         if ($parent && $parent->mode == "ROTATING") {
             return false;
         }
@@ -987,7 +883,14 @@ class Page {
 
         $result = !$edit && sizeof($cell->cells) == 0 && $cell->mode != "INIT" && $cell->mode != "FLOATING" && $this->factory->isEditorMode();
 
-        return $result;
+        if($result) {
+            $style = "position:absolute;width:100%; bottom: -1px;";
+            echo "<div style='$style' class='gscellbox' cellid='" . $cell->cellId . "'>";
+            echo "<div class='gscellheadermin'><i class='fa fa-external-link-square'></i></div>";
+            echo "<div class='gscellboxheader'>";
+            echo "<span style='float:left;'>" . $this->printEasyModeEdit($cell, $parent, true) . "</span>";
+            echo "</div></div>";            
+        }
     }
 
     private function flattenCells($cells) {
@@ -1031,6 +934,134 @@ class Page {
             });
         </script>
         <?
+    }
+
+    public function printMobileAdminMenu($depth, $cell) {
+        if ($depth == 0 && $this->factory->isEditorMode()) {
+            echo "<span class='gsmobileoptions'>";
+            echo "<span style='position:absolute; left: 5px; top: 2px;'>" . $this->factory->__f("Row options") . "</span>";
+            echo "<i class='fa fa-caret-down gscaretleft gscaret'></i>";
+            echo "<i class='fa fa-arrow-up gsoperatecell' cellid='" . $cell->cellId . "' type='mobilemoveup' title='" . $this->factory->__f("Move up on mobile") . "' target='this'></i>";
+            if ($cell->hideOnMobile) {
+                echo "<i class='fa fa-trash-o gsoperatecell gshiddenonmobile' cellid='" . $cell->cellId . "' type='mobilehideoff' title='" . $this->factory->__f("Row is not displayed on mobile, click for make it reappear") . "' target='this'></i>";
+            } else {
+                echo "<i class='fa fa-trash-o gsoperatecell' cellid='" . $cell->cellId . "' type='mobilehideon' title='" . $this->factory->__f("Hide on mobile") . "' target='this'></i>";
+            }
+            echo "<i class='fa fa-arrow-down gsoperatecell' cellid='" . $cell->cellId . "' type='mobilemovedown' title='" . $this->factory->__f("Move down on mobile") . "' target='this'></i>";
+            echo "<i class='fa fa-caret-down gscaretright gscaret'></i>";
+            echo "</span>";
+        }
+    }
+
+    public function printRowEditButtons($depth, $edit, $parent) {
+        if ($depth === 0 && !$edit && $this->factory->isEditorMode()) {
+            if ($parent == null || ($parent->mode != "TAB" && $parent->mode != "ROTATING")) {
+                echo "<span class='gseditrowbuttons'>";
+                echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addbefore' mode='INIT'></i>";
+                echo "<i title='" . $this->factory->__f("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o'></i>";
+                echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addafter' mode='INIT'></i>";
+                echo "</span>";
+            } else if ($parent && $parent->mode == "TAB") {
+                echo "<span class='gseditrowbuttons'>";
+                echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addbefore' mode='INIT' target='container'></i>";
+                echo "<i title='" . $this->factory->__f("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o' target='container'></i>";
+                echo "<i title='" . $this->factory->__f("Delete carousel") . "' class='fa gsoperatecell fa-trash-o' type='delete' target='container'></i>";
+                echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addafter' mode='INIT' target='container'></i>";
+                echo "</span>";
+            } else if ($parent && $parent->mode == "ROTATING") {
+                echo "<span class='gseditrowbuttons'>";
+                echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addbefore' mode='INIT' target='container'></i>";
+                echo "<i title='" . $this->factory->__f("Delete carousel") . "' class='fa gsoperatecell fa-trash-o' type='delete' target='container'></i>";
+                echo "<i title='" . $this->factory->__f("Add row below") . "' class='fa fa-plus gsoperatecell' type='addafter' mode='INIT' target='container'></i>";
+                echo "</span>";
+            }
+        }
+    }
+
+    public function printEasyModeLayer($edit, $cell, $parent) {
+        if ($edit) {
+            echo "<div class='gseasymode' cellid='" . $cell->cellId . "'>";
+            echo "<div class='gseasymodeinner'>";
+            $this->printEasyModeEdit($cell, $parent);
+            echo "</div>";
+            echo "</div>";
+
+            echo "<span class='gscellsettings'>";
+            echo "<i class='fa fa-cogs'  title='Cell settings' style='cursor:pointer;'></i>";
+            echo "</span>";
+        }
+    }
+
+    public function resizeContainer($cell) {
+        ?>
+        <script>
+            var container = $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"]');
+            var origwidth = container.attr('outerwidth');
+            var ratio = $(window).width() / origwidth;
+            var newheight = parseInt(container.height() * ratio);
+            container.css('height', newheight);
+            container.css('min-height', newheight);
+            container.find('.gsrotatingrow').css('height', newheight);
+            container.find('.gsrotatingrow').css('min-height', newheight);
+
+            container.find('.gsfloatingframe').each(function () {
+                var position = $(this).position();
+                var left = parseInt(position.left * ratio);
+                var top = parseInt(position.top * ratio);
+                var width = parseInt($(this).width() * ratio);
+                var height = parseInt($(this).height() * ratio);
+                
+                console.log("Orig width: " + $(this).width());
+                console.log("Orig height: " + $(this).height());
+                console.log("width: " + width);
+                console.log("ratio: " + ratio);
+                console.log("Height: " + height);
+                console.log("left: " + left);
+                console.log("top: " + top);
+                $(this).css('left', left + "px");
+                $(this).css('top', top + "px");
+                $(this).css('width', width + "px");
+                $(this).css('height', height + "px");
+                
+                $(this).find('.ContentManager span').each(function() {
+                    var size = $(this).css('font-size');
+                    size = size.replace("px", "");
+                    size = parseInt(size * ratio);
+                    console.log("Font size: " + size);
+                    $(this).css('font-size',size);
+                });
+                console.log("------------------");
+            });
+        </script>
+        <?
+    }
+
+    public function printFloatingHeader($cell, $floatData, $parent) {
+        if ($cell->mode == "FLOATING") {
+            
+            $floatingClass = "";
+            if($this->factory->isEditorMode() && !$this->factory->isMobile()) {
+                $floatingClass = "gsfloatingbox";
+            }
+            
+            $style = "position:absolute;width:" . $floatData->width . "px;height: " . $floatData->height . "px;top: " . $floatData->top . "px;left:" . $floatData->left . "px";
+            echo "<div style='$style' class='$floatingClass gsfloatingframe' cellid='" . $cell->cellId . "'>";
+            echo "<div class='gsfloatingheader'>";
+            echo "<span style='float:left;'>" . $this->printEasyModeEdit($cell, $parent, true) . "</span>";
+            echo "</div>";
+        }
+        
+    }
+
+    public function printFloatingEnd($cell) {
+        if ($cell->mode === "FLOATING") {
+            //End of floatingbox.
+            echo "</div>";
+            if (!$cell->floatingData->pinned) {
+                $this->makeDraggable($cell);
+            }
+        }
+        
     }
 
 }

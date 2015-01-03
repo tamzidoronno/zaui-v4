@@ -3,7 +3,8 @@ body {
     background-color: #3a99d7;
     color: #FFF;
 }
-.gsbody { padding: 10px; }
+.gsbody .gscell.gsdepth_0 { padding: 10px; }
+.gscontainercell.gsrotating .gscell.gsdepth_0 { padding: 0px; }
 .gsarea[area="header"] { height: 100px; }
 .gsarea[area="header"] .Menu { position: absolute; right: 0px; top: 60px;  }
 .gsarea[area="header"] .Menu a div { padding: 10px; color:#000; font-size: 16px; }

@@ -174,7 +174,7 @@ class ApplicationBase extends FactoryBase {
         }
         
         echo "<div class='applicationinner'>";
-        if($this->isEditorMode() && !$changeable) {
+        if($this->isEditorMode() && !$changeable && !$this->getFactory()->isMobile()) {
             if($this->hasWriteAccess()) {
                 echo "<div class='application_settings inline gs_icon'><i class='fa fa-cog' style='font-size:18px;'></i></div>";
             }
@@ -196,7 +196,7 @@ class ApplicationBase extends FactoryBase {
         echo "<div appid='$id' app='" . $className . "' class='app bottom_app $changeable " . $className . "' appsettingsid='$appSettingsId'>";
         echo "<div class='applicationinner'>";
         if($this->isEditorMode()) {
-            if($this->hasWriteAccess()) {
+            if($this->hasWriteAccess() && !$this->getFactory()->isMobile()) {
                 echo "<div class='application_settings inline gs_icon'><i class='fa fa-cog' style='font-size:20px;'></i></div>";
             }
         }

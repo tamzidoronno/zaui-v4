@@ -291,4 +291,7 @@ public interface IPageManager {
     
     @Administrator
     public void togglePinArea(String pageId, String cellId) throws ErrorException;
+    
+    @Administrator
+    public void setWidth(String pageId, String cellId, Integer outerWidth, Integer outerWidthWithMargins) throws ErrorException;
 }

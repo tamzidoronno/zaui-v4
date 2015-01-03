@@ -33,9 +33,14 @@ app.ContentManager = {
                     s4() + '-' + s4() + s4() + s4();
         }
         var id = guid();
+        var simpleMode = false;
+        if(application.closest('.gsrotatingrow').length > 0) {
+            simpleMode = true;
+        }
         contentArea.attr('id', id);
         thundashop.common.activateCKEditor(id, {
-            "notdestroyonblur" : true
+            "notdestroyonblur" : true,
+            "simpleMode" : simpleMode
         });
     },
     

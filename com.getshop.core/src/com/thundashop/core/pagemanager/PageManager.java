@@ -378,4 +378,13 @@ public class PageManager extends ManagerBase implements IPageManager {
         page.layout.togglePinArea(cellId);
         savePage(page);
     }
+
+    @Override
+    public void setWidth(String pageId, String cellId, Integer outerWidth, Integer outerWidthWithMargins) throws ErrorException {
+        Page page = getPage(pageId);
+        PageCell cell = page.layout.getCell(cellId);
+        cell.outerWidth = outerWidth;
+        cell.outerWidthWithMargins = outerWidthWithMargins;
+        savePage(page);
+    }
 }

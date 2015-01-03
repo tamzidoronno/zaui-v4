@@ -41,6 +41,9 @@ public class PageCell implements Serializable {
     public String styles = "";
     public CarouselConfig carouselConfig = new CarouselConfig();
     public Double width = -1.0;
+    public int outerWidth = -1;
+    public int outerWidthWithMargins = -1;
+    
 
     PageCell createCell(String before) {
         PageCell newcell = new PageCell();
@@ -111,4 +114,4 @@ public class PageCell implements Serializable {
 
         return retCells;
     }
-    }
+}

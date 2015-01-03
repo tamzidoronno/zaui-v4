@@ -3627,6 +3627,42 @@ class PageManager(object):
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
+  def setWidth(self, pageId, cellId, outerWidth, outerWidthWithMargins):
+    args = collections.OrderedDict()
+    if isinstance(pageId,GetShopBaseClass): 
+      args["pageId"]=json.dumps(pageId.__dict__)
+    else:
+      try:
+        args["pageId"]=json.dumps(pageId)
+      except (ValueError, AttributeError):
+        args["pageId"]=pageId
+    if isinstance(cellId,GetShopBaseClass): 
+      args["cellId"]=json.dumps(cellId.__dict__)
+    else:
+      try:
+        args["cellId"]=json.dumps(cellId)
+      except (ValueError, AttributeError):
+        args["cellId"]=cellId
+    if isinstance(outerWidth,GetShopBaseClass): 
+      args["outerWidth"]=json.dumps(outerWidth.__dict__)
+    else:
+      try:
+        args["outerWidth"]=json.dumps(outerWidth)
+      except (ValueError, AttributeError):
+        args["outerWidth"]=outerWidth
+    if isinstance(outerWidthWithMargins,GetShopBaseClass): 
+      args["outerWidthWithMargins"]=json.dumps(outerWidthWithMargins.__dict__)
+    else:
+      try:
+        args["outerWidthWithMargins"]=json.dumps(outerWidthWithMargins)
+      except (ValueError, AttributeError):
+        args["outerWidthWithMargins"]=outerWidthWithMargins
+    data = EmptyClass()
+    data.args = args
+    data.method = "setWidth"
+    data.interfaceName = "core.pagemanager.IPageManager"
+    return self.communicationHelper.sendMessage(data)
+
   def toggleHiddenOnMobile(self, pageId, cellId, hide):
     args = collections.OrderedDict()
     if isinstance(pageId,GetShopBaseClass): 

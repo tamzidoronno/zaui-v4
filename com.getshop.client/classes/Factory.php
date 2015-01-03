@@ -712,6 +712,9 @@ class Factory extends FactoryBase {
             $this->includefile("templatefunctions", 'Common');
         }
         
+        if ($this->store && $this->store->expiryDate) {
+            $this->includefile("expirywarning", 'Common');
+        }
     }
 
 }

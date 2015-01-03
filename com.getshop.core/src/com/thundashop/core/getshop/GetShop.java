@@ -12,6 +12,7 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.Session;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -27,6 +28,7 @@ import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -296,15 +298,13 @@ public class GetShop extends ManagerBase implements IGetShop {
             storePool.loadStore(newStoreId, newAddress);
             
             GetShopSessionScope scope = AppContext.appContext.getBean(GetShopSessionScope.class);
+            User user = createUser(startData, newStoreId);
+            
             scope.setStoreId(newStoreId);
             UserManager userManager = AppContext.appContext.getBean(UserManager.class);
-            User user = new User();
-            user.fullName = startData.name;
-            user.emailAddress = startData.email;
-            user.cellPhone = startData.phoneNumber;
-            user.password = startData.password;
-            
             userManager.saveUser(user);
+            
+            saveCustomerToGetShop(user, scope);
             
         } catch (UnknownHostException ex) {
             ex.printStackTrace();
@@ -362,6 +362,10 @@ public class GetShop extends ManagerBase implements IGetShop {
                     store.configuration.emailAdress = start.email;
                     store.configuration.shopName = start.shopName;
                     
+                    Calendar cal = Calendar.getInstance(); 
+                    cal.add(Calendar.MONTH, 1);
+                    store.expiryDate = cal.getTime();
+                    
                     store.additionalDomainNames = new ArrayList();
                     database.save(store, cred);
                 } else {
@@ -373,5 +377,25 @@ public class GetShop extends ManagerBase implements IGetShop {
         m.close();
         
         return newStoreId;
+    }
+
+    private User createUser(StartData startData, String storeId) {
+        User user = new User();
+        user.id = storeId;
+        user.fullName = startData.name;
+        user.emailAddress = startData.email;
+        user.cellPhone = startData.phoneNumber;
+        user.password = startData.password;
+        return user;
+    }
+
+    private void saveCustomerToGetShop(User user, GetShopSessionScope scope) {
+        String getshopStoreId = "efad5b1f-b679-4c2b-8774-8c2475c20137";
+        User customer = user.jsonClone();
+        customer.type = User.Type.CUSTOMER;
+
+        scope.setStoreId(getshopStoreId);
+        UserManager getShopUserManager = AppContext.appContext.getBean(UserManager.class);
+        getShopUserManager.saveCustomerDirect(customer);
     }
 }

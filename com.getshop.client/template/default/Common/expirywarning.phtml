@@ -1,0 +1,29 @@
+<?
+$daysToWarn = 60;
+
+$store = $this->getStore();
+$expiryDate = $store->expiryDate;
+$now = time();
+//echo date("Y-m-d",$now);
+
+
+
+$diff = $now - strtotime($expiryDate);
+$days = (int)($diff / (60*60*24));
+
+$linkToPayment = "<a target='_blank' href='http://getshop.no.2.0.local.getshop.com/index.php?page=67d84c25-fc71-4678-bfde-5cb70933ab56&customerId=$store->id'><div class='gs_button' style='margin-left: 20px;'>".$this->__f("Payment")."</div></a>";
+if ($days < -$daysToWarn) {
+    return;
+}
+
+echo "<div class='gs_paymentwarning'>";
+if ($days == 0) {
+    echo $this->__f("<i class='fa fa-warning'></i> Your subscription ends today, please choose a new payment plan. $linkToPayment");
+} else if ($days > 0) {
+    echo $this->__f("<i class='fa fa-warning'></i> Your $days overdue on your license payment plan, please choose a new payment plan as soon as possible to make sure your system stay available. $linkToPayment");
+} else {
+    $days *= -1;
+    echo $this->__f("<i class='fa fa-warning'></i> Your subscription expires in $days day(s) $linkToPayment");
+}
+echo "</div>";
+?>

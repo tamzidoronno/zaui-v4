@@ -2,6 +2,7 @@ package com.thundashop.core.storemanager.data;
 
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.usermanager.data.User;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,6 +20,8 @@ public class Store extends DataCommon {
     public boolean isVIS = false; //Very important shop.
     public boolean isDeepFreezed = false;
     public String deepFreezePassword = "";
+    
+    public Date expiryDate;
     
     /**
      * This specifies if this store is setup as a template

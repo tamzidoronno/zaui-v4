@@ -64,16 +64,6 @@ body {
     margin-bottom: 10px;
 }
 
-.gs_button {
-    background-color: pink;
-    background: linear-gradient(to bottom, #FFF, #CCC);
-    line-height: 30px;
-}
-
-.gs_button:hover {
-    background: linear-gradient(to bottom, #FFF, #BBB);
-}
-
 .gstabrow .gstabheader {
     border-bottom: solid 1px #DDD;
     margin-bottom: 20px;

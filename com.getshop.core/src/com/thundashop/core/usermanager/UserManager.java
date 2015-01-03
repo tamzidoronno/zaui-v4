@@ -256,19 +256,21 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             collection.saveFirstUser(user);
             return;
         }
-        if (getSession().currentUser == null && user.type > User.Type.CUSTOMER) {
+        
+        Session session = getSession();
+        if (session.currentUser == null && user.type > User.Type.CUSTOMER) {
             throw new ErrorException(26);
         }
-        if (getSession().currentUser.type < user.type) {
+        if (session.currentUser.type < user.type) {
             throw new ErrorException(26);
         }
 
         // Make sure that getshop admin accounts cant be modified by other then themself.
-        if (user.type == User.Type.GETSHOPADMINISTRATOR && getSession().currentUser.id != user.id) {
+        if (user.type == User.Type.GETSHOPADMINISTRATOR && session.currentUser.id != user.id) {
             throw new ErrorException(26);
         }
         
-        if (getSession().currentUser.type < User.Type.ADMINISTRATOR && getSession().currentUser.id != user.id) {
+        if (getSession().currentUser.type < User.Type.ADMINISTRATOR && session.currentUser.id != user.id) {
             if(!getSession().currentUser.id.equals(user.id)) {
                 throw new ErrorException(26);
             }
@@ -746,7 +748,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
     }
 
-    private void saveFirstUser(User user) {
-        
+    public void saveCustomerDirect(User customer) {
+        customer.type = User.Type.CUSTOMER;
+        UserStoreCollection collection = getUserStoreCollection(storeId);
+        collection.addUser(customer);
     }
 }

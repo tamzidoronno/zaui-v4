@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class GetShopSessionScope implements Scope {
+
     private Map<Long, String> threadStoreIds = Collections.synchronizedMap(new HashMap<Long, String>());
     private Map<String, Object> objectMap = Collections.synchronizedMap(new HashMap<String, Object>());
 
@@ -34,19 +35,19 @@ public class GetShopSessionScope implements Scope {
         }
         String nameWithStoreId = name + "_" + storeId;
         if (!objectMap.containsKey(nameWithStoreId)) {
-			try {
-				Object object = objectFactory.getObject();
-				if (object instanceof ManagerBase) {
-					ManagerBase managerBase = (ManagerBase)object;
-					managerBase.storeId = storeId;
-					managerBase.initialize();
-				}
-				objectMap.put(nameWithStoreId, object);
-			} catch (BeansException exception) {
-				System.out.println("Got an bean exception ? ");
-			}
+            try {
+                Object object = objectFactory.getObject();
+                if (object instanceof ManagerBase) {
+                    ManagerBase managerBase = (ManagerBase) object;
+                    managerBase.storeId = storeId;
+                    managerBase.initialize();
+                }
+                objectMap.put(nameWithStoreId, object);
+            } catch (BeansException exception) {
+                System.out.println("Got an bean exception ? ");
+            }
         }
-        
+
         return objectMap.get(nameWithStoreId);
 
     }
@@ -70,7 +71,7 @@ public class GetShopSessionScope implements Scope {
     public void vaporize() {
         objectMap.clear();
     }
-    
+
     public void setStoreId(String storeId) {
         long threadId = Thread.currentThread().getId();
         threadStoreIds.put(threadId, storeId);

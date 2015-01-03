@@ -109,6 +109,10 @@ $(function() {
             thundashop.common.stopNextNavigation = false;
             return;
         }
+        
+        if($(this).attr('data-avoidscroll') !== "true") {
+            $(window).scrollTop(0);
+        }
 
         var target = $(event.target);
 

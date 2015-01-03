@@ -294,6 +294,7 @@ thundashop.common.activateCKEditor = function(id, config) {
     var saveCallback = false;
     var pushToBackend = true;
     var destroyOnSave = true;
+    var simpleMode = false;
 
     if (config !== undefined) {
         if (config.autogrow !== undefined)
@@ -312,6 +313,8 @@ thundashop.common.activateCKEditor = function(id, config) {
             pushToBackend = config.pushToBackend;
         if (config.destroyOnSave !== undefined)
             destroyOnSave = config.destroyOnSave;
+        if (config.simpleMode !== undefined)
+            simpleMode = config.simpleMode;
     }
 
     var target = $('#' + id);
@@ -391,6 +394,12 @@ thundashop.common.activateCKEditor = function(id, config) {
     if (showMenu === false) {
         config.toolbar = [];
     }
+    if (simpleMode) {
+        config.toolbar = [
+		{ name: 'document', items: [ 'Save','FontSize', 'TextColor', 'BGColor','JustifyLeft', 'JustifyCenter', 'JustifyRight' ] }
+        ]
+    }
+    
     if (autogrow === false) {
         config.autoGrow_onStartup = false;
         config.resize_enabled = false;

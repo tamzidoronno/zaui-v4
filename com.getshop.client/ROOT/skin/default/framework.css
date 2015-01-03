@@ -2107,3 +2107,5 @@ padding: 2px; }
     width: 330px;
     margin: 10px auto;
 }
+.gsfloating { margin: 0px !important; }
+.gsfloating .gsinner { padding: 0px !important; margin: 0px !important; }

@@ -264,10 +264,11 @@ class Page {
         }
 
         $innerstyles = "";
+        $floatData = false;
         if ($cell->mode == "FLOATING") {
             $floatData = $cell->floatingData;
             $innerstyles = "style='min-height:inherit; height:100%;'";
-            $styles .= "height: 100%; min-height:inherit; overflow-y: auto; overflow-x: hidden;";
+            $styles .= "height: 100%; min-height:inherit; overflow-y: hidden; overflow-x: hidden;";
         }
 
         $styles .= "'";
@@ -301,17 +302,8 @@ class Page {
         if ($isColumn && ($count > 0)) {
             $marginsclasses .= " gs_margin_left";
         }
-
-        if ($cell->mode == "FLOATING") {
-            $floatingClass = $this->factory->isEditorMode() ? "gsfloatingbox" : "";
-            $style = "position:absolute;width:" . $floatData->width . "px;height: " . $floatData->height . "px;top: " . $floatData->top . "px;left:" . $floatData->left . "px";
-            echo "<div style='$style' class='$floatingClass' cellid='" . $cell->cellId . "'>";
-            echo "<div class='gsfloatingheader'>";
-            echo "<span style='float:left;'>" . $this->printEasyModeEdit($cell, $parent, true) . "</span>";
-            echo "</div>";
-        }
-
-
+        $this->printFloatingHeader($cell, $floatData, $parent);
+        
         echo "<div $additionalinfo $styles width='$width' class='gsucell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
 
         if ($this->factory->isMobile() && $gsrowmode == "") {
@@ -332,28 +324,13 @@ class Page {
 
         echo "<div $innerstyles class='$gscellinner gsuicell gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
 
-        if ($this->shouldPrintCellBox($edit, $cell, $parent)) {
-            $style = "position:absolute;width:100%; bottom: -1px;";
-            echo "<div style='$style' class='gscellbox' cellid='" . $cell->cellId . "'>";
-            echo "<div class='gscellheadermin'><i class='fa fa-external-link-square'></i></div>";
-            echo "<div class='gscellboxheader'>";
-            echo "<span style='float:left;'>" . $this->printEasyModeEdit($cell, $parent, true) . "</span>";
-            echo "</div></div>";
-        }
-
+        $this->printCellBox($edit, $cell, $parent);
         $this->printCellContent($cell, $parent, $edit, $totalcells, $count, $depth);
 
         echo "</div>";
         echo "</div>";
 
-        if ($cell->mode === "FLOATING") {
-            //End of floatingbox.
-            echo "</div>";
-            if (!$cell->floatingData->pinned) {
-                $this->makeDraggable($cell);
-            }
-        }
-        
+        $this->printFloatingEnd($cell);
         if ($cell->mode == "ROTATING" && $this->factory->isMobile()) {
             $this->resizeContainer($cell);
         }
@@ -893,8 +870,8 @@ class Page {
         }
     }
 
-    public function shouldPrintCellBox($edit, $cell, $parent) {
-        if($this->factory->isMobile()) {
+    public function printCellBox($edit, $cell, $parent) {
+        if ($this->factory->isMobile()) {
             return false;
         }
         if ($parent && $parent->mode == "ROTATING") {
@@ -906,7 +883,14 @@ class Page {
 
         $result = !$edit && sizeof($cell->cells) == 0 && $cell->mode != "INIT" && $cell->mode != "FLOATING" && $this->factory->isEditorMode();
 
-        return $result;
+        if($result) {
+            $style = "position:absolute;width:100%; bottom: -1px;";
+            echo "<div style='$style' class='gscellbox' cellid='" . $cell->cellId . "'>";
+            echo "<div class='gscellheadermin'><i class='fa fa-external-link-square'></i></div>";
+            echo "<div class='gscellboxheader'>";
+            echo "<span style='float:left;'>" . $this->printEasyModeEdit($cell, $parent, true) . "</span>";
+            echo "</div></div>";            
+        }
     }
 
     private function flattenCells($cells) {
@@ -992,7 +976,6 @@ class Page {
                 echo "</span>";
             }
         }
-        
     }
 
     public function printEasyModeLayer($edit, $cell, $parent) {
@@ -1006,7 +989,7 @@ class Page {
             echo "<span class='gscellsettings'>";
             echo "<i class='fa fa-cogs'  title='Cell settings' style='cursor:pointer;'></i>";
             echo "</span>";
-        }        
+        }
     }
 
     public function resizeContainer($cell) {
@@ -1016,13 +999,69 @@ class Page {
             var origwidth = container.attr('outerwidth');
             var ratio = $(window).width() / origwidth;
             var newheight = parseInt(container.height() * ratio);
-            container.css('height',newheight);
-            container.css('min-height',newheight);
-            container.find('.gsrotatingrow').css('height',newheight);
-            container.find('.gsrotatingrow').css('min-height',newheight);
-            alert(newheight);
+            container.css('height', newheight);
+            container.css('min-height', newheight);
+            container.find('.gsrotatingrow').css('height', newheight);
+            container.find('.gsrotatingrow').css('min-height', newheight);
+
+            container.find('.gsfloatingframe').each(function () {
+                var position = $(this).position();
+                var left = parseInt(position.left * ratio);
+                var top = parseInt(position.top * ratio);
+                var width = parseInt($(this).width() * ratio);
+                var height = parseInt($(this).height() * ratio);
+                
+                console.log("Orig width: " + $(this).width());
+                console.log("Orig height: " + $(this).height());
+                console.log("width: " + width);
+                console.log("ratio: " + ratio);
+                console.log("Height: " + height);
+                console.log("left: " + left);
+                console.log("top: " + top);
+                $(this).css('left', left + "px");
+                $(this).css('top', top + "px");
+                $(this).css('width', width + "px");
+                $(this).css('height', height + "px");
+                
+                $(this).find('.ContentManager span').each(function() {
+                    var size = $(this).css('font-size');
+                    size = size.replace("px", "");
+                    size = parseInt(size * ratio);
+                    console.log("Font size: " + size);
+                    $(this).css('font-size',size);
+                });
+                console.log("------------------");
+            });
         </script>
         <?
+    }
+
+    public function printFloatingHeader($cell, $floatData, $parent) {
+        if ($cell->mode == "FLOATING") {
+            
+            $floatingClass = "";
+            if($this->factory->isEditorMode() && !$this->factory->isMobile()) {
+                $floatingClass = "gsfloatingbox";
+            }
+            
+            $style = "position:absolute;width:" . $floatData->width . "px;height: " . $floatData->height . "px;top: " . $floatData->top . "px;left:" . $floatData->left . "px";
+            echo "<div style='$style' class='$floatingClass gsfloatingframe' cellid='" . $cell->cellId . "'>";
+            echo "<div class='gsfloatingheader'>";
+            echo "<span style='float:left;'>" . $this->printEasyModeEdit($cell, $parent, true) . "</span>";
+            echo "</div>";
+        }
+        
+    }
+
+    public function printFloatingEnd($cell) {
+        if ($cell->mode === "FLOATING") {
+            //End of floatingbox.
+            echo "</div>";
+            if (!$cell->floatingData->pinned) {
+                $this->makeDraggable($cell);
+            }
+        }
+        
     }
 
 }

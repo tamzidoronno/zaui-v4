@@ -70,9 +70,9 @@ class PaymentApplication extends ApplicationBase {
         $this->paymentMethods[$name] = $paymentMethod;
     }
     
-    public function getPaymentMethods() {
+    public function getPaymentMethods($tryRun=true) {
         if (method_exists($this, "addPaymentMethods"))
-            $this->addPaymentMethods();
+            $this->addPaymentMethods($tryRun);
         return $this->paymentMethods; 
     }
     

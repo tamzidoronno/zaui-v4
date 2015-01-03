@@ -5,6 +5,7 @@ class CartManager extends \SystemApplication implements \Application {
     /** @var APICartManager */
     public $cart;
     public $order;
+    public $oldOrder;
     
     private $shippingApplication;
     private $paymentApplication; 
@@ -53,6 +54,10 @@ class CartManager extends \SystemApplication implements \Application {
      * preprocessing function is not called 
      */
     private function init() {
+        if(isset($_POST['data']['appId'])) {
+            $_SESSION['appId'] = $_POST['data']['appId'];
+        }
+        
         $this->cart = $this->getApi()->getCartManager()->getCart();
         
         $appPool = $this->getFactory()->getApplicationPool();
@@ -78,12 +83,14 @@ class CartManager extends \SystemApplication implements \Application {
         if (isset($_SESSION['appId'])) {
             $app = $this->getApi()->getStoreApplicationPool()->getApplication($_SESSION['appId']);
             $this->paymentApplication = $this->getFactory()->getApplicationPool()->createInstace($app);
+            
         }
         
         $paymentApps = $this->getPaymentApplications();
         if (count($paymentApps) == 1) {
-            $this->paymentApplication = $paymentApps[0];
+            $this->paymentApplication = $paymentApps[0];   
         }
+        
         $this->initAddress();
     }
     
@@ -114,36 +121,63 @@ class CartManager extends \SystemApplication implements \Application {
     }
     
     private function doPayment() {
-        if (!$this->paymentApplication) {
-            echo $this->__w("Thank you for your order.");
-        } else {
-            echo $this->__w("Please wait while you are being transferred to dibs payment service.");
+        if (!isset($this->paymentApplication) || $this->paymentApplication == null) {
+            $this->redirectToSuccessPaymentPage();
+        } else if (isset($this->paymentApplication) && method_exists($this->paymentApplication, "preProcessPayment")) {
             $this->paymentApplication->order = $this->order;
             $this->paymentApplication->initPaymentMethod();
-            $this->paymentApplication->preProcess();
+            $this->doPaymentWithPreProcessing();
+        } else {             
+            $this->paymentApplication->order = $this->order;
+            $this->paymentApplication->initPaymentMethod();
+            $finished = $this->paymentApplication->preProcess();
+            if (!isset($finished) || !$finished) {
+                $this->showRedirectInformation();
+            } else {
+                $this->redirectToSuccessPaymentPage();
+            }
         }
     }
     
     public function render() {
         $this->init();
-        echo "<div class='small_cart_dom'>";
-        $this->includefile("smallcartoverview");
-        echo "</div>";
-        
-        echo "<div class='main_cart_dom'>";
-        if(isset($_GET['subpage'])) {
-            if($_GET['subpage'] == "paymentform") {
-                $this->includefile("paymentform");
-            }
-            if($_GET['subpage'] == "gotopayment") {
-                $this->SaveOrder();
-            }
+        if ($this->isSmallCartView()) {
+            echo "<div class='small_cart_dom'>";
+            $this->includefile("smallcartoverview");
+            echo "</div>";
         } else {
-            $this->includefile("cartmain");
+
+            echo "<div class='main_cart_dom'>";
+            if(isset($_GET['subpage'])) {
+                if($_GET['subpage'] == "paymentform") {
+                    $this->includefile("paymentform");
+                }
+                if($_GET['subpage'] == "gotopayment") {
+                    $this->SaveOrder();
+                }
+            } else {
+                $this->includefile("cartmain");
+            }
+            echo "</div>";
         }
-        echo "</div>";
+    }
+    
+    private function doPaymentWithPreProcessing() {
+        if (!$this->paymentApplication->preProcessPayment()) {
+            echo "<div class='paymentfailed'> Please recheck your payment details.</div>";
+            $this->includefile("cartmain");
+        } else {
+            $this->redirectToSuccessPaymentPage();
+        }       
     }
         
+    private function redirectToSuccessPaymentPage() {
+        \HelperCart::clearSession();
+        $this->getApi()->getCartManager()->clear();
+        echo $this->__w("Thank you for your order.");
+    }
+    
+    
     public function getTotalAmount() {
         $cartTotal = $this->getApi()->getCartManager()->getCartTotalAmount();
         $shipping = $this->canCalculateShippingPrice() ? $this->getShippingPrice() : 0;
@@ -167,7 +201,7 @@ class CartManager extends \SystemApplication implements \Application {
     }
     
     public function getShippingPrice($fromJava=false) {
-        if($this->cart->isShippingFree) {
+        if(isset($this->cart->isShippingFree) && $this->cart->isShippingFree) {
             return 0;
         }
         
@@ -221,11 +255,18 @@ class CartManager extends \SystemApplication implements \Application {
         return $address;
     }
     
-    public function SaveOrder() {
-        if(isset($_POST['data']['appId'])) {
-            $_SESSION['appId'] = $_POST['data']['appId'];
+    private function isSmallCartView() {
+        return $this->getConfigurationSetting("smallcartview") == "true";
+    }
+    
+    public function toggleHeaderMode() {
+        if ($this->isSmallCartView()) {
+            $this->setConfigurationSetting("smallcartview", "false");
+        } else {
+            $this->setConfigurationSetting("smallcartview", "true");
         }
-        
+    }
+    public function SaveOrder() {
         $this->init();
         
         if(isset($_SESSION['tempaddress']['password'])) {
@@ -234,6 +275,7 @@ class CartManager extends \SystemApplication implements \Application {
             $_SESSION['loggedin'] = serialize($this->getApi()->getUserManager()->logOn($user->emailAddress, $user->password));
         }
         
+ 
         if (count($this->getPaymentApplications()) > 0 && !isset($this->paymentApplication)) {
             ob_clean();
             ob_start();
@@ -250,6 +292,7 @@ class CartManager extends \SystemApplication implements \Application {
         
         $address = $this->createAddress();
         $this->order = $this->getApi()->getOrderManager()->createOrder($address);
+        
         if (isset($this->shippingApplication)) {
             $this->order->shipping = $this->shippingApplication;
             $this->order->shipping->cost = $this->getShippingPrice();
@@ -264,8 +307,6 @@ class CartManager extends \SystemApplication implements \Application {
             $this->getApi()->getOrderManager()->saveOrder($this->order);
         }
         
-        \HelperCart::clearSession();
-        $this->getApi()->getCartManager()->clear();
         $this->doPayment();
     }
     
@@ -287,13 +328,13 @@ class CartManager extends \SystemApplication implements \Application {
      * 
      * @return \PaymentApplication[]
      */
-    public function getPaymentApplications() {
+    public function getPaymentApplications($fromCheckout=false) {
         $apps = $this->getFactory()->getApi()->getStoreApplicationPool()->getApplications();
         $result = array();
         foreach($apps as $app) {
             if($app->type == "PaymentApplication") {
                 $appInstance = $this->getFactory()->getApplicationPool()->createInstace($app);
-                if (count($appInstance->getPaymentMethods()) > 0)
+                if (count($appInstance->getPaymentMethods($fromCheckout=false)) > 0)
                     $result[] = $appInstance;
             }
         }
@@ -355,6 +396,7 @@ class CartManager extends \SystemApplication implements \Application {
                 && !$this->shippingApplication->hasSubProducts()
                 && (isset($this->paymentApplication) && !$fromShipping)
                 && !$this->paymentApplication->hasSubProducts()) {
+            
             return true;
         }
 
@@ -376,8 +418,13 @@ class CartManager extends \SystemApplication implements \Application {
             return true;
         }
         
+        foreach ($this->getPaymentMethods() as $paymentMethod) {
+            if ($paymentMethod->getPaymentApplication()->hasSubProducts()) {
+                return false;
+            }
+        }
+        
         if (count($this->getPaymentMethods()) < 2 && $fromShipping) {
-            
             return true;
         }
         
@@ -416,14 +463,31 @@ class CartManager extends \SystemApplication implements \Application {
         return "address";
     }
 
-    public function getPaymentMethods() {
+    public function getPaymentMethods($fromCheckout=false) {
         $paymentMethods = array();
-        foreach ($this->getPaymentApplications() as $paymentApplication) {
+        foreach ($this->getPaymentApplications($fromCheckout) as $paymentApplication) {
             $paymentMethods = array_merge($paymentMethods, $paymentApplication->getPaymentMethods());
         }
         
         return $paymentMethods;
     }
+    
+     public function getPaymentApplication($id) {
+        foreach ($this->getPaymentApplications() as $paymentApp) {
+            if ($paymentApp->applicationSettings->id == $id) {
+                return $paymentApp;
+            }
+        }
+        
+        return null;
+    }
+
+    public function showRedirectInformation() {
+        \HelperCart::clearSession();
+        $this->getApi()->getCartManager()->clear();
+        echo $this->__w("Please wait while you are being transferred to dibs payment service.");
+    }
+
 }   
 
 ?>

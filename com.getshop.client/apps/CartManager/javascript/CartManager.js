@@ -1,3 +1,32 @@
+app.CartManager = {
+     loadSettings : function(element, application) {
+         var config = {
+            draggable: true,
+            app : true,
+            application: application,
+            title: "Settings",
+            items: [
+                {
+                    icontype: "awesome",
+                    icon: "fa-cube",
+                    iconsize : "30",
+                    title: __f("Toggle small cartview"),
+                    click: app.CartManager.toggleHeaderMode
+                }
+            ]
+        }
+
+        var toolbox = new GetShopToolbox(config, application);
+        toolbox.show();
+        toolbox.attachToElement(application, 2);
+    },
+    
+    toggleHeaderMode: function(extra, application) {
+        var event = thundashop.Ajax.createEvent(null, "toggleHeaderMode", application, {});
+        thundashop.Ajax.post(event);
+    }
+};
+
 CartManager = {
     init : function() {
         PubSub.subscribe("AJAXERROR", this.ajaxError, this);
@@ -177,6 +206,21 @@ CartManager = {
             appId : form.find('.checkout .payment').find('.selected').attr('appid'),
             paymentMethod : form.find('.checkout .payment').find('.selected').attr('paymentid')
         };
+        
+        var posted = false;
+        $(form).find('form').each(function() {
+            if ($(this).is(':visible')) {
+                $(this).append('<input type="hidden" name="data[appId]" value="'+data.appId+'"/>')
+                $(this).append('<input type="hidden" name="paymentMethod" value="'+data.paymentMethod+'"/>')
+                $(this).find('#submit').click();
+                posted = true;
+            }
+        });
+            
+        if (posted) {
+            $(target).html(__w('Please wait...'));
+            return;
+        }
         
         if (form.find('.extendedinfo') && form.find('.extendedinfo').length > 0 && form.find('.extendedinfo').is(':visible')) {
             form.find('.extendedinfo:visible').find('.selected').each(function() {

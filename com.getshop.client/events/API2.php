@@ -224,6 +224,43 @@ class APIBigStock {
 	}
 
 }
+class APIBrainTreeManager {
+
+	var $transport;
+	
+	function APIBrainTreeManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function getClientToken() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getClientToken";
+	     $data["interfaceName"] = "core.braintree.IBrainTreeManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function pay($paymentMethodNonce, $orderId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["paymentMethodNonce"] = json_encode($this->transport->object_unset_nulls($paymentMethodNonce));
+	     $data['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $data["method"] = "pay";
+	     $data["interfaceName"] = "core.braintree.IBrainTreeManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+}
 class APICalendarManager {
 
 	var $transport;
@@ -5882,6 +5919,12 @@ class GetShopApi {
       */
       public function getBigStock() {
            return new APIBigStock($this->transport);
+      }
+      /**
+      * @return BrainTreeManager
+      */
+      public function getBrainTreeManager() {
+           return new APIBrainTreeManager($this->transport);
       }
       /**
       * @return CalendarManager

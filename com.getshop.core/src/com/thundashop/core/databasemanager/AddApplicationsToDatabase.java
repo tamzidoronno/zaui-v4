@@ -53,38 +53,28 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        Application productSearch = createSettings("ProductSearch",
-                "2ff5d77f-4d47-4fbf-8186-c7fbc33cb478",
+        Application brainTree = createSettings("BrainTree",
+                "542e6a1e-9927-495c-9b6d-bb52af4ea9be",
                 allowed2,
                 "",
-                Application.Type.Webshop, false);
-        productSearch.isPublic = true;
-        productSearch.moduleId = "WebShop";
-        productSearch.activeAppOnModuleActivation = true;
-        apps.add(productSearch);
+                Application.Type.Payment, true);
+        brainTree.isPublic = true;
+        brainTree.moduleId = "WebShop";
+        brainTree.type = "PaymentApplication";
+        brainTree.activeAppOnModuleActivation = false;
+        apps.add(brainTree);
 
 
-        Application getShopAdmin = createSettings(
-                "GetShopAdmin",
-                "d315510d-198f-4c16-beef-54f979be58cf",
-                allowed,
-                "",
-                Application.Type.Webshop, true);
-        getShopAdmin.isPublic = true;
-        getShopAdmin.defaultActivate = true;
-        getShopAdmin.moduleId = "hidden";
-        apps.add(getShopAdmin);
-
-        Application applicationpromotor = createSettings(
-                "ApplicationPromotor",
-                "b6b0d74f-c802-401e-9bb7-facf3e420f61",
-                allowed,
-                "",
-                Application.Type.Webshop, true);
-        applicationpromotor.isPublic = true;
-        applicationpromotor.defaultActivate = true;
-        applicationpromotor.moduleId = "hidden";
-        apps.add(applicationpromotor);
+//        Application getShopAdmin = createSettings(
+//                "GetShopAdmin",
+//                "d315510d-198f-4c16-beef-54f979be58cf",
+//                allowed,
+//                "",
+//                Application.Type.Webshop, true);
+//        getShopAdmin.isPublic = true;
+//        getShopAdmin.defaultActivate = true;
+//        getShopAdmin.moduleId = "hidden";
+//        apps.add(getShopAdmin);
 //        
 //        ApplicationSettings sedoxLogin = createSettings(
 //                "SedoxLogin",

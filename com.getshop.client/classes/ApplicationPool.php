@@ -86,7 +86,7 @@ class ApplicationPool {
      */
     public function createInstace($applicationSetting) {
         if (!$applicationSetting) {
-            throw new Exception("Empty application");
+            return null;
         }
         $instance = $this->factory->convertUUIDtoString($applicationSetting->id) . "\\" . $applicationSetting->appName;
         if (class_exists($instance)) {

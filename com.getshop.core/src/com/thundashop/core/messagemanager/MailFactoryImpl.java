@@ -163,8 +163,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
         private PasswordAuthentication authentication;
 
         public Authenticator() {
-            System.out.println("Password: " + mailSettings.password);
-            authentication = new PasswordAuthentication(mailSettings.username, mailSettings.password);
+             authentication = new PasswordAuthentication(mailSettings.username, mailSettings.password);
         }
 
         @Override

@@ -30,4 +30,21 @@ class Button extends \ApplicationBase implements \Application {
         $this->setConfigurationSetting("text", $_POST['data']['text']);
     }
 
+    public function showSetup() {
+        $this->includefile("setup");
+    }
+    
+    public function searchForProduct() {
+        $this->includefile("product_search_result");
+    }
+    
+    public function setProductId() {
+        $this->setConfigurationSetting("type", "add_to_cart");
+        $this->setConfigurationSetting("product_id", $_POST['data']['product_id']);
+    }
+    
+    public function addProductToCart() {
+        $productId = $_POST['data']['productId'];
+        $this->getApi()->getCartManager()->addProduct($productId, 1, []);
+    }
 }

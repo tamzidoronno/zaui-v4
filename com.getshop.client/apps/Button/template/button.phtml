@@ -1,7 +1,15 @@
 <? /* @var $this \ns_2996287a_c23e_41ad_a801_c77502372789\Button */ 
-    $text = $this->getConfigurationSetting("text") ? $this->getConfigurationSetting("text") : $this->__f("Button")
+    $text = $this->getConfigurationSetting("text") ? $this->getConfigurationSetting("text") : $this->__f("Button");
+    $type = $this->getConfigurationSetting("type");
+    
+    $extraClass = "";
+    $extraAttributes = "";
+    if ($type && $type=="add_to_cart") {
+        $extraClass = "addProductToCart";
+        $extraAttributes = " productId='".$this->getConfigurationSetting("product_id")."'";
+    }
 ?>
-<div class="shop_button radius green">
+<div class="shop_button radius green <? echo $extraClass; ?>" <? echo $extraAttributes; ?>>
     <div class='button_text_content'><? echo $text; ?></div>
     <div class="shop_button_saveNewText"><i class='fa fa-save'></i></div>
 </div>

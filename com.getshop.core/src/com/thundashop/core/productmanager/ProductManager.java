@@ -2,9 +2,7 @@ package com.thundashop.core.productmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.productmanager.data.AttributeSummary;
-import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.Logger;
 import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
@@ -17,7 +15,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**

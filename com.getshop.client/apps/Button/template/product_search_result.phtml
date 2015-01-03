@@ -1,0 +1,16 @@
+<?
+
+$searchWord = isset($_POST['data']['search']) ? $_POST['data']['search'] : "";
+/* @var $this \ns_2996287a_c23e_41ad_a801_c77502372789\Button */
+$products = $this->getApi()->getProductManager()->search($searchWord, 50, 1)->products;
+$productId = $this->getConfigurationSetting("product_id");
+if (count($products) == 0) {
+    echo $this->__f("No products available");
+}
+
+foreach ($products as $product) {
+    $id = $product->id;
+    $buttonText = $productId == $id ? $this->__f("selected") : $this->__f("select");
+    echo "<div style='background-color: #777; border-bottom: solid 1px #666;'><div class='gs_button small select_product_add_to_cart_button_setup' product_id='$id'>$buttonText</div> $product->name</div>";
+}
+?>

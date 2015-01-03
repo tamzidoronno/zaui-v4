@@ -1,0 +1,31 @@
+<div class="setup_button_box">
+    <div>
+        <? echo $this->__f("What type of button is this?"); ?>
+        &nbsp;&nbsp;<select id='setup_button_type_selector'>
+            <option show_view='setup_add_to_cart_button' value='add_to_cart'><? echo $this->__f("Add to cart"); ?></option>
+<!--            <option show_view='setup_internal_page' value='go_to_page_internal'><? echo $this->__f("Go to a internal page"); ?></option>
+            <option show_view='setup_external_page' value='go_to_page_external'><? echo $this->__f("Go to a external page"); ?></option>-->
+        </select>
+    </div>
+    
+    <div class="select_options">
+        <div class="setup_add_to_cart_button select_option_setup_button">
+            <? 
+            echo $this->__f("Please search for product").":";
+            ?>
+            <br/>
+            <input id='setup_button_search_field' style='margin-top: 5px;' type='textfield'/> ( <? echo $this->__f("Press enter to search"); ?> )
+            
+            <div class='button_setup_searchresult'>
+                <? $this->includefile("product_search_result"); ?>
+            </div>
+        </div>
+        
+<!--        <div class="setup_internal_page select_option_setup_button">
+            b
+        </div>
+        <div class="setup_external_page select_option_setup_button">
+            c
+        </div>-->
+    </div>
+</div>

@@ -1,6 +1,31 @@
 app.Button = {
     init: function() {
+        $(document).on('click', '.Button .select_product_add_to_cart_button_setup', app.Button.setProduct);
         $(document).on('click', '.Button .shop_button_saveNewText', app.Button.saveText);
+        $(document).on('change', '.Button #setup_button_search_field', app.Button.searchForProducts);
+        $(document).on('change', '.Button #setup_button_type_selector', app.Button.show);
+    },
+    
+    setProduct: function() {
+        var data = {
+            product_id: $(this).attr('product_id')
+        };
+        var event = thundashop.Ajax.createEvent(null, "setProductId", this, data);
+        thundashop.Ajax.post(event, function() {
+            app.Button.searchForProducts();
+        });
+    },
+    
+    searchForProducts: function() {
+        var textField = $('.Button #setup_button_search_field');
+        var data = {
+            search: textField.val()
+        };
+        var event = thundashop.Ajax.createEvent(null, "searchForProduct", textField, data);
+        event['sychron'] = true;
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            $('.Button .button_setup_searchresult').html(result);
+        });
     },
     
     saveText: function() {
@@ -23,6 +48,13 @@ app.Button = {
                     iconsize : "30",
                     title: __f("Change text of button"),
                     click: app.Button.changeText
+                },
+                {
+                    icontype: "awesome",
+                    icon: "fa-gear",
+                    iconsize : "30",
+                    title: __f("Setup button"),
+                    click: app.Button.setupButton
                 }
             ]
         }
@@ -30,6 +62,17 @@ app.Button = {
         var toolbox = new GetShopToolbox(config, application);
         toolbox.show();
         toolbox.attachToElement(application, 2);
+    },
+    
+    show: function() {
+        var name =  $(this).find(':selected').attr('show_view')
+        $('.Button .select_option_setup_button').hide();
+        $('.Button .'+name).show();
+    },
+    
+    setupButton: function(extra, application) {
+        var event = thundashop.Ajax.createEvent(null, "showSetup", application, {});
+        thundashop.common.showInformationBox(event, __f("Setup button"));
     },
     
     changeText: function(extra, application) {

@@ -3417,6 +3417,25 @@ class APIPageManager {
 	* @throws ErrorException
 	*/
 
+	public function setWidth($pageId, $cellId, $outerWidth, $outerWidthWithMargins) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data['args']["cellId"] = json_encode($this->transport->object_unset_nulls($cellId));
+	     $data['args']["outerWidth"] = json_encode($this->transport->object_unset_nulls($outerWidth));
+	     $data['args']["outerWidthWithMargins"] = json_encode($this->transport->object_unset_nulls($outerWidthWithMargins));
+	     $data["method"] = "setWidth";
+	     $data["interfaceName"] = "core.pagemanager.IPageManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Set the carousel configuration.
+	* @param pageId
+	* @return void
+	* @throws ErrorException
+	*/
+
 	public function toggleHiddenOnMobile($pageId, $cellId, $hide) {
 	     $data = array();
 	     $data['args'] = array();

@@ -411,8 +411,12 @@ thundashop.framework = {
             height: $('.carouselsettingspanel').find('.gscarouselheight').val(),
             timer: $('.carouselsettingspanel').find('.gscarouseltimer').val(),
             type: $('.carouselsettingspanel').find('.gscarouseltype').val(),
-            cellid: $(this).closest('.carouselsettingspanel').attr('cellid')
+            cellid: $(this).closest('.carouselsettingspanel').attr('cellid'),
         }
+
+        data['outerWidth'] = $('.gscontainercell[cellid="'+data['cellid']+'"] .gsinner').outerWidth();
+        data['outerWidthWithMargins'] = $('.gscontainercell[cellid="'+data['cellid']+'"] .gsinner').outerWidth(true);
+        
         var event = thundashop.Ajax.createEvent('', 'updateCarouselConfig', $(this), data);
         thundashop.Ajax.post(event);
     },

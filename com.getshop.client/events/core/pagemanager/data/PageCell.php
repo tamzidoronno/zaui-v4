@@ -36,5 +36,11 @@ class core_pagemanager_data_PageCell {
 	/** @var String */
 	public $width;
 
+	/** @var String */
+	public $outerWidth;
+
+	/** @var String */
+	public $outerWidthWithMargins;
+
 }
 ?>

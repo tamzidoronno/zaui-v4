@@ -103,7 +103,7 @@ if (isset($_GET['logonwithkey'])) {
 $factory = IocContainer::getFactorySingelton();
 
 if (@$factory->isMobile()) {
-    echo '<meta name="viewport" content="initial-scale=1.0,width=device-width,user-scalable=no;">';
+    echo '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes", target-densitydpi="device-dpi, minimal-ui" />';
     echo '<link rel="stylesheet" type="text/css" href="skin/default/responsive.css" />';
 }
 

@@ -26,4 +26,5 @@ display:inline-block;
 
 @media only all and (max-width: 800px) {
     .ApplicationPromotor .appentryouter { width: 100%; }
+    .ApplicationPromotor .gs_app_desc { height: auto; }
 }

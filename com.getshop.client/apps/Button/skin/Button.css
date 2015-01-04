@@ -1,0 +1,61 @@
+.Button .shop_button {
+    height: 50px;
+    
+    background: -moz-linear-gradient(top,  rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0.6)), color-stop(100%,rgba(255,255,255,0.1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#99ffffff', endColorstr='#1affffff',GradientType=0 ); /* IE6-9 */
+
+    text-align: center;
+    line-height: 50px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.Button .shop_button.red {
+    background-color: red;
+    color: #FFF;
+}
+
+.Button .shop_button.green {
+    background-color: green;
+    color: #FFF;
+}
+
+.Button .shop_button.radius {
+    border-radius: 7px;
+}
+
+.Button .shop_button_saveNewText i {
+    
+}
+.Button .shop_button_saveNewText {
+    cursor: pointer;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 20px;
+    display: none;
+    border-left: solid 1px;
+    border-top: solid 1px;
+    padding: 5px;
+}
+
+.Button .setup_button_box {
+    padding: 20px;
+}
+
+.Button .select_options .button_setup_searchresult {
+    margin-top: 10px;
+    border: solid 1px #777;
+    padding: 10px;
+}
+.Button .select_options {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: solid 1px #777;
+    padding-left: 20px;
+}

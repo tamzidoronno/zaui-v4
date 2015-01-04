@@ -9,10 +9,10 @@ app.Product = {
 
         var button = $(this).parent();
         if ($('.gsmobilemenu').is(':visible')) {
-                button.effect("transfer", {to: $('.gsmobilemenucart')}, 1000, function () {
-                    var event = thundashop.Ajax.createEvent(null, "addProductToCart", this, data);
-                    thundashop.Ajax.post(event);
-                });
+            button.effect("transfer", {to: $('.gsmobilemenucart')}, 1000, function () {
+                var event = thundashop.Ajax.createEvent(null, "addProductToCart", this, data);
+                thundashop.Ajax.post(event);
+            });
         } else {
             $('.gsarea[area="header"] .checkout_area').each(function () {
                 var width = $(this).parent().width();

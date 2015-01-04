@@ -277,7 +277,10 @@ public abstract class AProductManager extends ManagerBase {
 
         List<Product> retProducts = new ArrayList();
         for (String productId : filteredProductIds) {
-            retProducts.add(products.get(productId));
+            Product product = products.get(productId);
+            if (product != null) {
+                retProducts.add(product);
+            }
         }
 
         return retProducts;

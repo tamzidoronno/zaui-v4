@@ -54,7 +54,6 @@ CartManager = {
         thundashop.common.showInformationBox(event, __w("Terms and Conditions"));
     },
     ajaxError: function(msg, error) {
-        debugger;
         if (error.responseText === "FAILED_TO_GET_SHIPMENT_BRING") {
             thundashop.common.Alert(__w("Failed"), __w("Was not able to get payment methods, please check your postcode"), true);
         }

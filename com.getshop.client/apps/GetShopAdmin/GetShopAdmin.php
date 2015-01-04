@@ -25,7 +25,7 @@ class GetShopAdmin extends \ApplicationBase implements \Application {
         $app->isFrontend = $_POST['isfrontend'];
         $app->isFrontend = $_POST['isfrontend'];
         $app->moduleId = $_POST['module'];
-        
+        $app->allowedStoreIds = explode(",", $_POST['storeids']);
         $this->getApi()->getGetShopApplicationPool()->saveApplication($app);
     }
     

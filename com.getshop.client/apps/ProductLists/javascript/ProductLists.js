@@ -26,7 +26,7 @@ app.ProductLists = {
                     icon: "fa-folder-open",
                     iconsize : "30",
                     title: __f("Go to product managment"),
-                    click: app.ProductLists.goToList
+                    click: app.Products.gssinterface.showProductManagement
                 },
                 
                 {

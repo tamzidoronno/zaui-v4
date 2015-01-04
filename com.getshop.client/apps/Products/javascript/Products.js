@@ -170,6 +170,11 @@ app.Products.gssinterface = {
 
             getshop.Settings.post({}, "gs_show_fragment", data);
         });
+    },
+    
+    showProductManagement: function() {
+        getshop.Settings.showSettings();
+        getshop.Settings.setApplicationId('e073a75a-87c9-4d92-a73a-bc54feb7317f');
     }
 }
 

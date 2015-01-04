@@ -118,7 +118,7 @@ getshop.Settings = {
             if (appScope) {
                 var fn = appScope[successMethod];
                 if(typeof fn === 'function') {
-                    fn(field);
+                    fn(field, response);
                 }
             }
         }

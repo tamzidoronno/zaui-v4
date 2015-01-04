@@ -15,8 +15,12 @@ $product = $this->getApi()->getProductManager()->getProductByPage($this->getPage
 <div class="images">
     <div class="mainimage">
         <?
-        $fistImage = $product->imagesAdded[0];
-        echo "<img src='/displayImage.php?id=$fistImage'/>";
+        if (isset($product->imagesAdded[0])) {
+            $fistImage = $product->imagesAdded[0];
+            echo "<img src='/displayImage.php?id=$fistImage'/>";
+        } else {
+            echo '<i class="fa fa-image"></i>';
+        }
         ?>
     </div>
     <div class="subimages">

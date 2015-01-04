@@ -100,7 +100,9 @@ class Products extends \WebshopApplication implements \Application {
         $product->name = $_POST['title'];
         $product->price = $_POST['price'];
         $product->sku = $_POST['sku'];
-        $this->getApi()->getProductManager()->saveProduct($product);
+        $createdProduct = $this->getApi()->getProductManager()->saveProduct($product);
+        echo json_encode($createdProduct->id);
+        die();
     }
     
     public function deleteProduct() {
@@ -127,6 +129,10 @@ class Products extends \WebshopApplication implements \Application {
             }
         }
         
+        print_r($keepImages);
+       
+        
+        $product->images = $keepImages;
         $product->imagesAdded = $keepImages;
         $this->getApi()->getProductManager()->saveProduct($product);
     }

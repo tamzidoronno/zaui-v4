@@ -89,6 +89,7 @@ thundashop.framework = {
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
     },
     showMobileSearch : function() {
+        $('.gsmobilemenuinstance').hide();
         $('.gsmobilesearchbox').fadeIn();
         $('.gsmobilsearchfield').focus();
     },
@@ -100,6 +101,7 @@ thundashop.framework = {
     },
     slideMobileMenu: function () {
         var target = $(this);
+        $('.gsmobilemenuinstance').hide();
         if (!$(this).hasClass('gsmobilemenuentry')) {
             target = $(this).closest('.gsmobilemenuentry');
         }
@@ -128,6 +130,12 @@ thundashop.framework = {
         });
     },
     showMobileTopMenu : function() {
+        
+        if($('.gsmobilemenuinstance').is(':visible')) {
+            $('.gsmobilemenuinstance').hide();
+            return;
+        }
+        
         var height = $('.gsmobilemenuinstance').height();
         $('.gsmobilemenuinstance').css('bottom', "-" + height + "px");
         $('.gsmobilemenuinstance').show();

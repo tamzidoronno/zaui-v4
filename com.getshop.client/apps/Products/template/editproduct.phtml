@@ -62,9 +62,6 @@ $product = $this->getApi()->getProductManager()->getProduct($_POST['value']);
                 <div class="gss_image_box1">
                     <i class="fa fa-picture-o"></i>
                     <? echo $this->__f("Below you can see all the pictures, if you want to upload a picture to this product you can simply upload by using the options to the right"); ?>
-                </div><div class="gss_image_box2">
-                    <i class="fa fa-arrow-down"></i>
-                    <? echo $this->__f("Drag your images and drop them directly into this window"); ?>
                 </div><div class="gss_image_box3">
                     <i class="fa fa-save gss_product_saveuploadimage" productid="<? echo $product->id; ?>"></i>
                     <? echo $this->__f("Click on the disk above to upload a file."); ?>

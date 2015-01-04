@@ -498,8 +498,3 @@ class CartManager extends \SystemApplication implements \Application {
 }
 
 ?>
-        
-        if (isset($_SESSION['cartCustomerId'])) {
-            return $this->getPaymentCheckoutStep();
-        }
-        

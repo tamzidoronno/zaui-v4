@@ -17,6 +17,9 @@ app.Products = {
         navigate('?page=' + $(this).attr('pageid'));
         getshop.Settings.showPage();
     },
+    navigateToProduct: function(button, response) {
+        app.Products.gssinterface.editProduct(response);
+    },
     filterProducts: function() {
        var data = {
            filterCriteria : $(this).val()

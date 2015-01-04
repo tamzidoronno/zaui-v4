@@ -250,11 +250,19 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         UserStoreCollection collection = getUserStoreCollection(storeId);
         User savedUser = collection.getUser(user.id);
         
+        
         // Save the first user
         if (collection.getAllUsers().size() == 0) {
             user.password = encryptPassword(user.password);
             collection.saveFirstUser(user);
             return;
+        }
+        
+        // Avoid degradation of the same user.
+        if (getSession().currentUser != null && getSession().currentUser.id.equals(user.id)) {
+            if ((user.type < getSession().currentUser.type) && getSession().currentUser.type < User.Type.GETSHOPADMINISTRATOR) {
+                user.type = getSession().currentUser.type;
+            }
         }
         
         Session session = getSession();
@@ -350,6 +358,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     public void deleteUser(String userId) throws ErrorException {
         User user = getUserById(userId);
 
+        // Delete yourself?
+        if (getSession().currentUser != null && getSession().currentUser.id.equals(userId)) {
+            return;
+        }
+        
         if (getSession().currentUser == null && user.type > User.Type.CUSTOMER) {
             throw new ErrorException(26);
         }

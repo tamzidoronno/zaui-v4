@@ -46,6 +46,10 @@ class Settings extends \SystemApplication implements \Application {
     public function getTitle() {
         return $this->getConfigurationSetting("title");
     }
+    
+    public function getUrl() {
+        return $this->getApi()->getStoreManager()->getMyStore()->webAddressPrimary;
+    }
 
     public function saveStoreSettings() {
         $storeSettings = $this->getFactory()->getStoreConfiguration();
@@ -54,6 +58,7 @@ class Settings extends \SystemApplication implements \Application {
         
         $this->setConfigurationSetting("language", $_POST['language']);
         $this->setConfigurationSetting("title", $_POST['title']);
+        $this->getApi()->getStoreManager()->setPrimaryDomainName($_POST['url']);
         $this->setConfigurationSetting("currencycode", "NOK");
     }
 

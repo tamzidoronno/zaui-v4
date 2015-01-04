@@ -1,4 +1,4 @@
-.gscellsettingspanel { width: 220px; position:absolute; display:inline-block; background-color:#FFF; box-shadow: 0px 0px 4px #a9a9a9; display:none; z-index:10; border-radius: 3px; }
+.gscellsettingspanel { width: 220px; position:absolute; display:inline-block; background-color:#FFF; box-shadow: 0px 0px 4px #a9a9a9; display:none; z-index:10; border-radius: 3px; padding-top: 40px; }
 .gscellsettingspanel .gsinnercellsettingspanel { padding-left: 6px; }
 .gscellsettingspanel div { padding-top: 10px; cursor:pointer; padding: 2px; display:block; }
 .gscellsettingspanel div i { width: 20px; text-align: center; margin-right: 10px; }

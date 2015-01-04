@@ -632,8 +632,8 @@ class Page {
 
             if ($isedit) {
                 echo "<div class='gseditrowseperator'><div class='gseditrowseperatorinnertop'>";
-                echo "<span style='float:left;'><input type='checkbox' style='background-color:#FFF;' class='gsdisplaygridcheckbox'> Add spacing to grid</span>";
-                echo "You are now in edit mode for this row, from this manipulate your row by adding more columns or add a row above / below, and much more. <input  type='button' class='gsdoneeditbutton' value='Done editing'><br>";
+                echo "<span style='float:left;'><input type='checkbox' style='background-color:#FFF;' class='gsdisplaygridcheckbox'> ".$this->factory->__w("Add spacing to grid")."</span>";
+                echo $this->factory->__w("You are now in edit mode for this row, from this manipulate your row by adding more columns or add a row above / below, and much more.")."<input  type='button' class='gsdoneeditbutton' value='".$this->factory->__w("Done editing")."'><br>";
 
                 echo "</div></div>";
                 $this->printEasyRowMode($row);

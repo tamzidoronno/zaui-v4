@@ -15,6 +15,7 @@ Add content to slider;-;Innhold på slideren
 Add google maps to your page, pin point locatins and restrict it to a given area, and even connect the locations to a given page.;-;Legg inn kart på websiden din, pin lokasjoner og begrens områdene for hvor du kan se, du kan til og med knytte opp lokasjoner mot andre websider.
 Add menus to your page and administrate them. Menus are the root of all pages, adding a new menu entry is the same as creating a new page.;-;Legg til menyer og administrer dem. Menyer er selve roten til alle sidene, det å legge til et nytt meny entry er det samme som å opprette en ny side.
 Add row below;-;Legg til en rad under
+Add spacing to grid;-;Legg til midlertidig spacing
 Add text to your page with one of the best text editors on the web for manipulating text.;-;Legg inn tekst på websiden din med en av de beste tekst editorene for web.
 Add this to the header or to the body to make a new login form, can be added anywhere on the page.;-;Legge denne i headeren eller på hoveddelen av siden for å lage en ny pålogginsområde. 
 Add this to the page and you can allow your customers to search for products.;-;Legg til et produktsøk på siden din, og du gir deretter dine kunder mulighet til å søke opp dine produkter.
@@ -105,6 +106,7 @@ Delete selected slide;-;Slett valgte slide
 Did not find the specified company, please check your company number;-;Fant ikke det angitte firmaet, vennligst sjekk organisasjonret
 Display product lists in your webshop;-;Vis produkt lister i din nettbutikk.
 Disploma is disabled;-;Diploma er deaktivert
+Done editing;-;Ferdig å editere
 Download as pdf;-;Last ned som PDF
 Download ebill;-;Last ned ebill
 END;-;SLUTT
@@ -366,6 +368,7 @@ What's on your mind?;-;Hva ønsker du å formidle?
 Wrong delivery method;-;Feil forsendelses metode.
 Yes;-;Ja
 You are here:;-;Du er her:
+You are now in edit mode for this row, from this manipulate your row by adding more columns or add a row above / below, and much more.;-;Du er nå i edit modus for denne raden, du kan nå legge til kolonner, rader over og under, og mye mer.
 You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
 You have selected the following duration for your stay;-;Du har valgt følgende tidsperiode før besøket
 You have selected the following start date for your rental periode;-;Ønsket startdato for lagerbod.

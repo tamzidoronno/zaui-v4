@@ -2,6 +2,7 @@
 /* @var $this ns_d315510d_198f_4c16_beef_54f979be58cf\GetShopAdmin */
 
 $application = $this->getApi()->getGetShopApplicationPool()->get($_POST['value']);
+$storeids = implode(",", $application->allowedStoreIds);
 ?>
 
 
@@ -44,6 +45,14 @@ $application = $this->getApi()->getGetShopApplicationPool()->get($_POST['value']
             Off<i class="fa <? echo $class; ?>"></i>On
         </div>
         <div class="description">Should this be visible on frontend?</div>
+    </div>
+    
+    <div class="textfield gss_setting"  id="price">
+        <span class="title"><?php echo $this->__f("Store ids"); ?></span>
+        <input type="textfield" gs_model='applicationmodel' gs_model_attr='storeids' value="<? echo $storeids; ?>" placeholder="">
+        <div class="description">
+            <?php echo $this->__("What stores should it be allowed for?"); ?>
+        </div>
     </div>
     
     

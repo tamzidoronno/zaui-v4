@@ -24,6 +24,7 @@ Add;-;Legg til
 Add a new boundary;-;Legg til en ny grense
 Add a new marker;-;Legg til en ny markør
 Add application;-;Legg til en applikasjon
+Add content to this cell;-;Legg til innhold for denne cellen.
 Add coupons;-;Legg til kuponger
 Add more coupons;-;Legg til flere kuponger
 Add this application and get started adding content to your page.;-;Legg til denne applikasjonen og kom i gang med å legge inn innhold.
@@ -70,6 +71,7 @@ By turning on this feature you will set this application to be visible on all pa
 Category list;-;Kategori liste
 Change image;-;Endre bilde
 Chat;-;Chat
+Check out;-;Utsjekk
 Chrome?;-;Chrome?
 Click on the chat icon in the top menu and start translating.;-;Trykk på chat iconet i toppen menyen for å starte oversettingen.
 Click on the icon in the top admin menu under category More to gain access to your reporting page.;-;Trykk på ikonet i toppmenyen under kategorien "Mer" for å få tilgang til rapportsiden.
@@ -269,10 +271,8 @@ Return stock if order is canceled?;-;Returner til lager hvis kanselert?
 SMS From;-;SMS Fra
 SMS Text;-;SMS Melding
 Save;-;Lagre
-Save changes;-;Lagre endringer
 Save image;-;Lagre bilde
 Save product;-;Lagre produkt
-Save settings;-;Lagre instillinger
 Save translation;-;Lagre oversetting
 Save your settings;-;Lagre dine instillinger
 Saved;-;Lagre

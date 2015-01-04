@@ -1,7 +1,7 @@
 <?
 
 echo "<div class='gsframeworkstandard gs_add_applicationlist'>";
-echo "<div class='gsappaddheading'>Add content to this cell";
+echo "<div class='gsappaddheading'>".$this->__f("Add content to this cell");
 echo "<i class='fa fa-close closeaddappbox'></i>";
 echo "</div>";
 echo "<div class='gsappaddcontent'>";
@@ -53,7 +53,7 @@ foreach ($types as $type => $count) {
         echo "<div class='gs_add_app_entry' appId='$id'>";
         echo "<div class='gs_app_image'><img src='/showApplicationImages.php?appNamespace=$namespace&image=" . $app->appName . ".png'/></div>";
         echo "<div class='infobox'>";
-        echo "<span class='gsaddappbutton'>Add</span>";
+        echo "<span class='gsaddappbutton'>".$this->__f("Add")."</span>";
         echo "<div class='gs_app_title'>".$appInstance->getName()."</div>";
         echo "<div class='gs_app_desc'>" . $appInstance->getDescription() . "</div>";
         echo "</div>";

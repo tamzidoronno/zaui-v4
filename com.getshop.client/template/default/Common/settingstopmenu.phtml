@@ -15,11 +15,19 @@ $activatedApps = $factory->getApi()->getStoreApplicationPool()->getApplications(
     if (!is_array($activatedModules)) {
         $activatedModules = array();
     }
+    /**
+     * Need for translation to find it. (please do not remove this comment)
+     * $this->__f("E-Commerce");
+     * $this->__f("ECommerceSettings");
+     * $this->__f("OrderManager");
+     * $this->__f("ProductLists");
+     * $this->__f("Shipper");
+     */
     foreach ($activatedModules as $module) {
         if (!$module->needToShowInMenu)
             continue;
         ?>
-        <div class='gss_topmenu-button'><i class='fa <? echo $module->faIcon; ?>'></i> <? echo $module->moduleName; ?>
+        <div class='gss_topmenu-button'><i class='fa <? echo $module->faIcon; ?>'></i> <? echo $this->__f($module->moduleName); ?>
 
             <div class="gss_menu_submenu">
                 <?
@@ -33,7 +41,7 @@ $activatedApps = $factory->getApi()->getStoreApplicationPool()->getApplications(
                     $hasConfig = method_exists($emptyInstance, "renderConfig");
                     $gss_active = $appId == $app->id ? "gss_active" : "";
                     if ($hasConfig) {
-                        echo "<div class='gss_submenu_entry $gss_active' gss_goto_app='$app->id'>$app->appName</div>";
+                        echo "<div class='gss_submenu_entry $gss_active' gss_goto_app='$app->id'>".$this->__f($app->appName)."</div>";
                     }
                 }
                 ?>
@@ -42,7 +50,7 @@ $activatedApps = $factory->getApi()->getStoreApplicationPool()->getApplications(
         <?
     }
     ?>
-    <div class='gss_topmenu-button active' gss_goto_app='f1fc4af3-656e-4294-a268-40d2a82d0aa1'><i class='fa fa-star'></i> Badges</div>
+<!--    <div class='gss_topmenu-button active' gss_goto_app='f1fc4af3-656e-4294-a268-40d2a82d0aa1'><i class='fa fa-star'></i> Badges</div>-->
     <?
     if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null && ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->type == 200) {
     ?>

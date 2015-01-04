@@ -52,126 +52,15 @@ $languages['fi_FI'] = "Finish";
             <?php echo $this->__f("Specify a title for your webshop. this will be displayed on the tabs in etc chrome."); ?>
         </div>
     </div>
-
-    <div style='display: none'>
-        <div class="onoff gss_setting"  id="remove_taxes">
-            <span class="title"><?php echo $this->__f("Show prices without taxes"); ?></span>
-            <div class="gss_onoff config">
-                Off<i class="fa fa-toggle-off"></i>On
-            </div>
-            <div class="description">
-                <?php echo $this->__f("If you turn this feature on, all prices displayed on webshop will be shown with taxes removed."); ?>
-            </div>
-        </div>
-
-
-        <div class="onoff gss_setting"  id="display_product_shipping_price">
-            <span class="title"><?php echo $this->__("Display shipping price on products"); ?></span>
-            <div class="gss_onoff config">
-                Off<i class="fa fa-toggle-on"></i>On
-            </div>
-            <div class="description">
-                <?php echo $this->__f("Do you want to display the shipping price in the detailed product view?"); ?>
-            </div>
-        </div>
-
-        <div class="textfield gss_setting"  id="postal_code">
-            <span class="title"><?php echo $this->__("postal", "contact"); ?></span>
-            <input type="textfield" class="config" id="selenium_title">
-            <div class="description">
-                <?php echo $this->__f("Specify your postal code."); ?>
-            </div>
-        </div>
-        <div class="textfield gss_setting"  id="conversion_addition">
-            <span class="title"><?php echo $this->__f("Conversion rate addition"); ?></span>
-            <input type="textfield" class="config" id="selenium_title">
-            <div class="description">
-                <?php echo $this->__("If converting to a different currency, you can specify a percentage of how much more you would like to append to conversion when the conversion calculation is done. For example 10 will give you a 10% higher conversion rate."); ?>
-            </div>
-        </div>
-
-        <div class="onoff gss_setting"  id="hide_cart">
-            <span class="title"><?php echo $this->__("Hide cart"); ?></span>
-            <div class="gss_onoff config">
-                Off<i class="fa fa-toggle-off"></i>On
-            </div>
-            <div class="description">
-                <?php echo $this->__f("You do not want to display the cart.. sure enable this then."); ?>
-            </div>
-        </div>
-
-        <div class="onoff gss_setting"  id="hide_search">
-            <span class="title"><?php echo $this->__f("Hide search bar"); ?></span>
-            <div class="gss_onoff config">
-                Off<i class="fa fa-toggle-on"></i>On
-            </div>
-            <div class="description">
-                <?php echo $this->__f("Disable or enable the search bar in the top middle area."); ?>
-            </div>
-        </div>
-
-        <div class="onoff gss_setting"  id="registration">
-            <span class="title"><?php echo $this->__f("Registration"); ?></span>
-            <div class="gss_onoff config">
-                Off<i class="fa fa-toggle-on"></i>On
-            </div>
-            <div class="description">
-                <?php echo $this->__f("Are customers required to register to order?"); ?>
-            </div>
-        </div>
-
-        <div class="onoff gss_setting"  id="cookiewarning">
-            <span class="title"><?php echo $this->__f("Cookie warning"); ?></span>
-            <div class="gss_onoff config">
-                Off<i class="fa fa-toggle-on"></i>On
-            </div>
-            <div class="description">
-                <?php echo $this->__f("Warn users that cookies are being stored from this site?"); ?>
-            </div>
-        </div>
-
-        <div class="onoff gss_setting"  id="stoporderemail">
-            <span class="title"><?php echo $this->__f("Avoid sending emails on order"); ?></span>
-            <div class="gss_onoff config">
-                Off<i class="fa fa-toggle-off"></i>On
-            </div>
-            <div class="description">
-                <?php echo $this->__f("A reciept is being sent per email when an order is created, stop it from being sent."); ?>
-            </div>
-        </div>
-
-        <div class="list gss_setting"  id="selltocountries">
-            <?
-            foreach ($countrycodes as $code => $name) {
-                echo "<span class='listentry' value='$code' name='" . $name . "'></span>";
-            }
-            ?>
-            <span class="title"><?php echo $this->__f("Shipping to country"); ?></span>
-            <span class="listentry"></span>
-            <input type='text' class=" config text">
-            <div class="description">
-                <?php echo $this->__f("What countries are you selling to?"); ?>
-            </div>
-            <div class='selected_entries'></div>
-        </div>
-
-        <div class="list gss_setting"  id="languages">
-
-            <?
-            foreach ($languages as $lang_code => $lang_name) {
-                echo "<span class='listentry' value='$lang_code' name='" . $lang_name . "'></span>";
-            }
-            ?>
-
-            <span class="title"><?php echo $this->__f("Supported languages"); ?></span>
-            <span class="listentry"></span>
-            <input type='text' class=" config text">
-            <div class="description">
-                <?php echo $this->__f("What languages are you supporting?"); ?>
-            </div>
-            <div class='selected_entries'></div>
+    
+    <div class="textfield gss_setting"  id="title">
+        <span class="title"><?php echo $this->__("Url"); ?></span>
+        <input type="textfield" gs_model='storesettings' gs_model_attr='url' value="<? echo $this->getUrl(); ?>">
+        <div class="description">
+            <?php echo $this->__f("Enter the address you wish users should be able to access, example (yourdomein.com)."); ?>
         </div>
     </div>
+
     <div class='gss_button_area'>
         <div class="gss_button" gss_confirmation="<? echo $this->__f("Are you sure you want to delete your store? You will not be able to revert this action."); ?>" gss_method="deleteStore" gss_success_method="storeDeleted"><i class='fa fa-remove'></i><?php echo $this->__("Delete my store"); ?></div>
 

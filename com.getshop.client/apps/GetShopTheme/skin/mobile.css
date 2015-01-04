@@ -42,3 +42,10 @@ h1 { text-align: center;
     padding-bottom: 10px;
     box-shadow: 3px 0px 3px #444;
 }
+.shop_button {
+     background-color: #3a99d7;
+     color: #FFF;
+     width:100%;
+    padding-left:0px;
+    padding-right:0px;
+}

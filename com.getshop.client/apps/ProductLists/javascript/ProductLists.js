@@ -18,41 +18,56 @@ app.ProductLists = {
                     icontype: "awesome",
                     icon: "fa-list",
                     iconsize : "30",
-                    title: __f("Manage products in this list"),
+                    title: __f("Add / Remove products to this list"),
+                    click: app.ProductLists.goToList
+                },
+                {
+                    icontype: "awesome",
+                    icon: "fa-folder-open",
+                    iconsize : "30",
+                    title: __f("Go to product managment"),
                     click: app.ProductLists.goToList
                 },
                 
                 {
                     text: "<span style='font-size: 22px;'>1</span>",
-                    click: function(papp1, papp) { app.ProductLists.setColumns(papp, 1); }
+                    click: function(papp1, papp) { app.ProductLists.setColumns(papp, 1)},
+                    title: __f("Show as list")
                 },
                 {
                     text: "<span style='font-size: 22px;'>2</span>",
-                    click: function(papp, papp) { app.ProductLists.setColumns(papp, 2); }
+                    click: function(papp, papp) { app.ProductLists.setColumns(papp, 2); },
+                    title: __f("Show as boxes")
                 },
                 {
                     text: "<span style='font-size: 22px;'>3</span>",
-                    click: function(papp, papp) { app.ProductLists.setColumns(papp, 3); }
+                    click: function(papp, papp) { app.ProductLists.setColumns(papp, 3); },
+                    title: __f("Show as boxes")
                 },
                 {
                     text: "<span style='font-size: 22px;'>4</span>",
-                    click: function(papp, papp) { app.ProductLists.setColumns(papp, 4); }
+                    click: function(papp, papp) { app.ProductLists.setColumns(papp, 4); },
+                    title: __f("Show as boxes")
                 },
                 {
                     text: "<span style='font-size: 22px;'>5</span>",
-                    click: function(papp, papp) { app.ProductLists.setColumns(papp, 5); }
+                    click: function(papp, papp) { app.ProductLists.setColumns(papp, 5); },
+                    title: __f("Show as boxes")
                 },
                 {
                     text: "<span style='font-size: 22px;'>6</span>",
-                    click: function(papp, papp) { app.ProductLists.setColumns(papp, 6); }
+                    click: function(papp, papp) { app.ProductLists.setColumns(papp, 6); },
+                    title: __f("Show as boxes")
                 },
                 {
                     text: "<span style='font-size: 22px;'>7</span>",
-                    click: function(papp, papp) { app.ProductLists.setColumns(papp, 7); }
+                    click: function(papp, papp) { app.ProductLists.setColumns(papp, 7); },
+                    title: __f("Show as boxes")
                 },
                 {
                     text: "<span style='font-size: 22px;'>8</span>",
-                    click: function(papp, papp) { app.ProductLists.setColumns(papp, 8); }
+                    click: function(papp, papp) { app.ProductLists.setColumns(papp, 8); },
+                    title: __f("Show as boxes")
                 }
             ]
         }

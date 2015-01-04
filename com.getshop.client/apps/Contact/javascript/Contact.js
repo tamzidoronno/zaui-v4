@@ -43,11 +43,8 @@ thundashop.app.contact.sendMessage = function(target) {
             thundashop.common.Alert(__w('Success'), __w('Your message has been delivered'), false);
 
             var data = target.closest('.app');
-            data.find('#name').val('');
-            data.find('#phone').val('');
-            data.find('#email').val('');
-            data.find('#content').val('');
-            data.find('#company').val('');
+            data.find('input.tobecleared').each(function() { $(this).val('') });
+            data.find('textarea.tobecleared').each(function() { $(this).text('') });
             $('.Contact .selected').removeClass('selected');
 
         }

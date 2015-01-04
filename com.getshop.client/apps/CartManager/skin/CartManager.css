@@ -27,7 +27,10 @@
     font-size: 14px;
 }
 
-
+.CartManager .checkout .previouse {
+    left: 10px;
+    right: inherit;
+}
 .CartManager .summary .row span {
     position: absolute;
     right: 0px;
@@ -39,6 +42,11 @@
     border-bottom: solid 1px #DDD;
 }
 
+.CartManager .checkout_button_area {
+    position:relative; 
+    height: 60px;
+}
+
 
 .CartManager .rightcart {
     border: solid 1px #DDD;
@@ -48,6 +56,7 @@
     width: 45%;
     box-sizing: border-box;    
     float:right;
+    position: relative;
 }
 
 .CartManager .leftcart {
@@ -87,7 +96,7 @@
     right: 5px;
 }
 
-.cart .summary .button-large {
+.cart .summary .shop_button {
     position: absolute; 
     top: 30px;
     right: 0px;
@@ -181,10 +190,10 @@
     margin-right: 10px;
 }
 
-.checkout .button-large {
+.checkout .shop_button {
     position: absolute;
-    right: 0px;
-    bottom: 0px;
+    right: 10px;
+    bottom: 10px;
 
 }
 
@@ -293,15 +302,6 @@
     padding-top: 20px;
 }
 
-.checkout .prevouter {
-    position: absolute;
-    left: 0px;
-    bottom: 0px;
-}
-
-.checkout .prevouter .button-large {
-    position: relative !important;
-}
 .CartManager .removeproductfromcart { position:absolute; right: 10px; top: 10px; }
 
 .CartManager .termsarea { padding: 20px; }

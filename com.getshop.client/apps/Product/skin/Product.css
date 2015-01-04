@@ -66,22 +66,11 @@
     padding: 20px;
 }
 
-.Product .webshop_button {
+.Product .shop_button {
     display: inline-block;
-    padding: 10px;
-    font-size: 16px;
-    background-color: green;
-    color: #333;
-    border: solid 1px #DDD;
-    background: linear-gradient(to bottom, #FFF, #EEE);
     position: absolute;
     right: 0px;
     top: 0px;
-    cursor: pointer;
-}
-
-.Product .webshop_button:hover {
-    background: linear-gradient(to bottom, #FFF, #DDD);
 }
 
 .Product {

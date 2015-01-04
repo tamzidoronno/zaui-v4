@@ -61,36 +61,31 @@
     border-bottom: solid 0px #DDD;
 }
 
+.ProductLists .row_view .webshop_button_area {
+    position: absolute;
+    bottom: 20px;
+    right: 0px;
+    height: 95px;
+    background: rgba(255,255,255, 1);
+    border-top: solid 1px #EEE;
+    width: 180px;
+    
+}
 .ProductLists .grid_view .webshop_button_area {
     position: absolute;
     left: 0px;
     bottom: 0px;
     right: 0px;
-    height: 95px;
+    height: 90px;
     background: rgba(255,255,255, 1);
     border-top: solid 1px #EEE;
 }
 
-.ProductLists .webshop_button {
-    background: rgba(255,255,255,1);
+.ProductLists .grid_view .shop_button {
+    margin-top: 35px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
-
-.ProductLists .grid_view .webshop_button {
-    font-size: 16px;
-    border: solid 1px #DDD;
-    display: inline-block;
-    padding: 10px;
-    border-radius: 4px;
-    cursor:pointer;
-    position: absolute;
-    left: 50%;
-    width: 150px;
-    margin-left: -85px;
-    bottom: 10px;
-    
-    /*position: absolute;*/
-}
-
 .ProductLists .grid_view .product_price {
     position: absolute; 
     bottom: 55px;

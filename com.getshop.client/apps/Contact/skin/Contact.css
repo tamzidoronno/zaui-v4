@@ -46,3 +46,10 @@
 .medium .Contact .medium_contact_form { padding-bottom: 20px; }
 .medium .Contact .medium_contact_form input, .small .Contact .medium_contact_form input { padding: 13px; }
 .medium .Contact .medium_contact_form .text, .small .Contact .medium_contact_form .text { padding: 13px; }
+
+.Contact .shop_button {
+    display: inline-block;
+    padding-right: 20px;
+    padding-left: 20px;
+    float: right;
+}

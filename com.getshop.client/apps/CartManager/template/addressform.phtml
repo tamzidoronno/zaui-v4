@@ -92,9 +92,9 @@ if (isset($_SESSION['tempaddress'])) {
             <? } ?>
         </table>
         <?php if ($this->canGoToPayment()) { ?>
-            <div id='confirmorder' class="button-large"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__w("Place order"); ?></ins></div>
+            <div id='confirmorder' class="shop_button"><?php echo $this->__w("Place order"); ?></div>
         <?php } else { ?>
-            <div id="next" class="button-large"><div class="rightglare"></div><div class="filler"></div><ins><?php echo $this->__w("Next"); ?></ins></div>
+            <div id="next" class="shop_button"><?php echo $this->__w("Next"); ?></div>
         <?php } ?>
     </div>
 </div>

@@ -25,6 +25,15 @@ public interface IOrderManager {
      * @throws ErrorException 
      */
     public Order createOrder(Address address) throws ErrorException;
+
+    /**
+     * This will create a order for a given userId.
+     * To avoid fraud, shipment address and etc will only be
+     * able to set to the already registered user in the database.
+     * 
+     * @param userId 
+     */
+    public Order createOrderForUser(String userId);
     
     /**
      * If a customer is providing a customer reference id, it should be possible to create order by it.

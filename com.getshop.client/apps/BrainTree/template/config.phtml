@@ -30,10 +30,10 @@
     </div>
     
     <div class="textfield gss_setting"  id="">
-        <span class="title">Public key</span>
+        <span class="title">Private key</span>
         <input type="textfield" gs_model='braintreemodel' gs_model_attr='privatekey' value="<? echo $this->getConfigurationSetting("privatekey"); ?>" placeholder="">
         <div class="description">
-            <?php echo $this->__("Public key is found in braintree account."); ?>
+            <?php echo $this->__("Private key is found in braintree account."); ?>
         </div>
     </div>
 
@@ -67,10 +67,10 @@
     </div>
     
     <div class="textfield gss_setting"  id="">
-        <span class="title">Sandbox Public key</span>
+        <span class="title">Sandbox Private key</span>
         <input type="textfield" gs_model='braintreemodel' gs_model_attr='sandbox_privatekey' value="<? echo $this->getConfigurationSetting("sandbox_privatekey"); ?>" placeholder="">
         <div class="description">
-            <?php echo $this->__("Public key is found in braintree account."); ?>
+            <?php echo $this->__("Private key is found in braintree account."); ?>
         </div>
     </div>
 

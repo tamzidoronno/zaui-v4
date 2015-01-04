@@ -25,6 +25,7 @@ import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
 import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -298,7 +299,7 @@ public class GetShop extends ManagerBase implements IGetShop {
             storePool.loadStore(newStoreId, newAddress);
             
             GetShopSessionScope scope = AppContext.appContext.getBean(GetShopSessionScope.class);
-            User user = createUser(startData, newStoreId);
+            User user = createUser(startData, newStoreId, newAddress);
             
             scope.setStoreId(newStoreId);
             UserManager userManager = AppContext.appContext.getBean(UserManager.class);
@@ -379,13 +380,18 @@ public class GetShop extends ManagerBase implements IGetShop {
         return newStoreId;
     }
 
-    private User createUser(StartData startData, String storeId) {
+    private User createUser(StartData startData, String storeId, String webshopAddress) {
         User user = new User();
         user.id = storeId;
         user.fullName = startData.name;
         user.emailAddress = startData.email;
         user.cellPhone = startData.phoneNumber;
         user.password = startData.password;
+        user.address = new Address();
+        user.address.fullName = startData.name;
+        user.address.emailAddress = startData.email;
+        user.address.address = webshopAddress;
+        user.address.phone = user.cellPhone;
         return user;
     }
 

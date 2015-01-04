@@ -2708,6 +2708,21 @@ class OrderManager(object):
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 
+  def createOrderForUser(self, userId):
+    args = collections.OrderedDict()
+    if isinstance(userId,GetShopBaseClass): 
+      args["userId"]=json.dumps(userId.__dict__)
+    else:
+      try:
+        args["userId"]=json.dumps(userId)
+      except (ValueError, AttributeError):
+        args["userId"]=userId
+    data = EmptyClass()
+    data.args = args
+    data.method = "createOrderForUser"
+    data.interfaceName = "core.ordermanager.IOrderManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getAllOrdersForUser(self, userId):
     args = collections.OrderedDict()
     if isinstance(userId,GetShopBaseClass): 

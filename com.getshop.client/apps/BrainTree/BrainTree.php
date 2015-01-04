@@ -62,7 +62,7 @@ class BrainTree extends \PaymentApplication implements \Application {
         $this->setConfigurationSetting("merchantid", $_POST['merchantid']);
         $this->setConfigurationSetting("publickey", $_POST['publickey']);
         if (strpos($_POST['privatekey'], '****') === FALSE) {
-            $this->setConfigurationSetting("sandbox_privatekey", $_POST['privatekey'], true);
+            $this->setConfigurationSetting("privatekey", $_POST['privatekey'], true);
         }
         
         $this->setConfigurationSetting("isSandBox", $_POST['isSandBox']);

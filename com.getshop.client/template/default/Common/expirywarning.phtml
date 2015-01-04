@@ -11,7 +11,7 @@ $now = time();
 $diff = $now - strtotime($expiryDate);
 $days = (int)($diff / (60*60*24));
 
-$linkToPayment = "<a target='_blank' href='http://getshop.no.2.0.local.getshop.com/index.php?page=67d84c25-fc71-4678-bfde-5cb70933ab56&customerId=$store->id'><div class='gs_button' style='margin-left: 20px;'>".$this->__f("Payment")."</div></a>";
+$linkToPayment = "<a target='_blank' href='http://getshop.no.2.0.local.getshop.com/index.php?page=67d84c25-fc71-4678-bfde-5cb70933ab56&cartCustomerId=$store->id'><div class='gs_button' style='margin-left: 20px;'>".$this->__f("Payment")."</div></a>";
 if ($days < -$daysToWarn) {
     return;
 }

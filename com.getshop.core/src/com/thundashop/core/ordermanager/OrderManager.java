@@ -229,6 +229,21 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         updateStockAndSendConfirmation(order);
         return order;
     }
+
+    @Override
+    public Order createOrderForUser(String userId) {
+        User user = userManager.getUserById(userId);
+        if (user == null) {
+            throw new ErrorException(26);
+        }
+            
+        Address address = user.address;
+        Order order = createOrderInternally(address);
+        order.userId = user.id;
+        saveOrder(order);
+        updateStockAndSendConfirmation(order);
+        return order;
+    }
     
     @Override
     public Order createOrderByCustomerReference(String referenceKey) throws ErrorException {
@@ -677,5 +692,5 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         return statistics;
     }
-    
+
 }

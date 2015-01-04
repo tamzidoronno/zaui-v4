@@ -139,4 +139,5 @@ public interface ICartManager {
      * @throws ErrorException 
      */
     public void setReference(String reference) throws ErrorException;
+    
 }

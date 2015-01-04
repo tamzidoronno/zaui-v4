@@ -2651,6 +2651,23 @@ class APIOrderManager {
 	}
 
 	/**
+	* This will create a order for a given userId.
+	* To avoid fraud, shipment address and etc will only be
+	* able to set to the already registered user in the database.
+	*
+	* @param userId
+	*/
+
+	public function createOrderForUser($userId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $data["method"] = "createOrderForUser";
+	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->cast(new core_ordermanager_data_Order(), $this->transport->sendMessage($data));
+	}
+
+	/**
 	* Fetch all orders for a user.
 	* @param userId
 	* @return List

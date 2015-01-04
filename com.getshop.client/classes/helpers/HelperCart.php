@@ -15,6 +15,7 @@ class HelperCart {
         unset($_SESSION['checkoutstep']);
         unset($_SESSION['appId']);
         unset($_SESSION['shippingtype']);
+        unset($_SESSION['cartCustomerId']);
         unset($_SESSION['shippingproduct']);
     }
 

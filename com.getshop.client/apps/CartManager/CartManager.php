@@ -21,6 +21,10 @@ class CartManager extends \SystemApplication implements \Application {
     public function postProcess() {}
     
     public function preProcess() {
+        if (isset($_GET['cartCustomerId'])) {
+            $_SESSION['cartCustomerId'] = $_GET['cartCustomerId'];
+        }
+        
         if (isset($_GET['action'])) {
             $action = $_GET['action'];
             $this->sendAddProductToCartEvent($action);
@@ -54,6 +58,9 @@ class CartManager extends \SystemApplication implements \Application {
      * preprocessing function is not called 
      */
     private function init() {
+        if (isset($_SESSION['cartCustomerId'])) {
+            $this->initAddress();
+        }
         if(isset($_POST['data']['appId'])) {
             $_SESSION['appId'] = $_POST['data']['appId'];
         }
@@ -96,6 +103,10 @@ class CartManager extends \SystemApplication implements \Application {
     
     private function initAddress() {
         $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+        
+        if (isset($_SESSION['cartCustomerId'])) {
+            $user = $this->getApi()->getUserManager()->getUserById($_SESSION['cartCustomerId']);
+        }
         
         if ($user != null && !isset($_SESSION['tempaddress']) && $user->address != null) {
             $address = $user->address;
@@ -290,8 +301,13 @@ class CartManager extends \SystemApplication implements \Application {
             }
         }
         
-        $address = $this->createAddress();
-        $this->order = $this->getApi()->getOrderManager()->createOrder($address);
+        if (isset($_SESSION['cartCustomerId'])) {
+            $this->order = $this->getApi()->getOrderManager()->createOrderForUser($_SESSION['cartCustomerId']);
+        } else {
+            $address = $this->createAddress();
+            $this->order = $this->getApi()->getOrderManager()->createOrder($address);
+        }
+        
         
         if (isset($this->shippingApplication)) {
             $this->order->shipping = $this->shippingApplication;
@@ -457,6 +473,10 @@ class CartManager extends \SystemApplication implements \Application {
             }
             return "shipping";
         } else if ( isset($_SESSION['checkoutstep']) && $_SESSION['checkoutstep'] == "payment") {
+            return $this->getPaymentCheckoutStep();
+        }
+        
+        if (isset($_SESSION['cartCustomerId'])) {
             return $this->getPaymentCheckoutStep();
         }
         

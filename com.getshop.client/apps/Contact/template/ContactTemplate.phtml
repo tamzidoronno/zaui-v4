@@ -26,11 +26,7 @@ if (isset($_POST['allfiedsrequired'])) {
     <input type="textfield" class="max_length tobecleared" id="phone" placeholder='<?php echo $this->__w("Phone"); ?>'></input>
     <input type="textfield" class="max_length tobecleared" id="email" placeholder='<?php echo $this->__w('Email'); ?>'></input>
     <textarea class="max_length subject_textarea" id="content tobecleared" placeholder="<?php echo $this->__w("What's on your mind?"); ?>"></textarea>
-    <div class="button edit_contact_button">
-        <div class="rightglare"></div>
-        <div class="filler"></div>
-        <ins class="send_email" id="send_email"><?php echo $this->__w("Send message"); ?></ins>
-    </div>
+    <span class="send_email shop_button" id="send_email"><?php echo $this->__w("Send message"); ?></span>
 </div>
 
 <div class='normal_contact_form contact_form'>

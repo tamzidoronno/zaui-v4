@@ -116,7 +116,6 @@ Connected;-;Tilkoblet
 Contact email;-;Kontakt epost
 Contact form;-;Kontaktskjema
 Contact form configuration;-;Kontakt skjema konfigurasjon
-Conversion rate addition;-;Tillegg til valutta omregning
 Cookie warning;-;Cookie advarsel
 Count;-;Antall
 Coupon name;-;Kupong navn
@@ -150,11 +149,8 @@ Delete this image;-;Slett dette bildet.
 Delete user;-;Slett bruker
 Description when adding;-;beskrivelse når du legger til
 Different variables that is available;-;Forskjellige variabler som er er tilgengelige
-Disable or enable the search bar in the top middle area.;-;Skru av eller skru på søkefeltet.
 Discount in percentage?;-;Avslag i prosent?
 Display 'X in stock' or 'out of stock' on product?;-;Vis 'X på lager' eller 'ikke på lager' på produktet?
-Display shipping price on products;-;Vis frakt kostnader på produktet
-Do you want to display the shipping price in the detailed product view?;-;Ønsker du å vise frakt kostnader på det utvidede produkt bildet?
 Domain name;-;Domenenavn
 Domain overview;-;Domene oversikt
 Dont find what you are looking for? We have more applications available for you, please contact us and let us know your requirements.;-;Finner du ikke det du leter etter? ta kontakt med oss så gir vi deg et hint om hvor du finner det. Vi har også mange spesialtilpasset apper for de som ønsker noe ekstra
@@ -194,19 +190,15 @@ Google analytics code;-;Google analyse kode
 Google analytics is by far the best reporting tool for webadministrator, by adding this application you will enable your googla analytics account to communicate with your webshop.;-;Google analytics er helt klart det best rapporteringsverkøyet når det kommer til å holde oversikt over bruken på din webside, ved å legge til denne applikasjonen får du mulighet til å benytte deg av google analytics.
 Handles taxes for products and shipment.;-;Still inn moms og avgifter for produkter og forsendelse.
 Here you can configure all the settings required to get sisow to work properly with your account. Enter the fields below and press save, as soon as everything here is set correctly you will see that a new payment options is available in the checkout area.;-;Her kan du sette opp din sisow integrasjon, når du har gjort det så vil den være tilgjengelig i checkouten.
-Hide cart;-;Gjem handlekurv
-Hide search bar;-;Gjem søkefeltet for produkter
 History;-;Hostorikk
 Hostname;-;Hostname
 How many times can this coupon be used?;-;Hvor mange ganger skal denne kupongen være gyldig?
 If a order is canceled, should the items from the order be put back in stock?;-;Hvis en ordre blir kanselert, skal produktet legges tilbake i lagerstatusen?
-If converting to a different currency, you can specify a percentage of how much more you would like to append to conversion when the conversion calculation is done. For example 10 will give you a 10% higher conversion rate.;-;Hvis du konverterer til en annen valutta, så kan du spesifisere hvor mange prosent du ønsker å legge til i konverteringen. For eksempel 10 vil gi deg en 10% høyere konverterings valutta.
 If this email address is specified, it will send notificition to this one if a requested event has been made.;-;Hvis denne epost adressen er spesifisert, vil det bli sendt en informasjons mail til denne eposten når en event har blitt etterspurt.
 If this function is enabled, it will show filter left for the calendar.;-;Hvis denne funksjonen er aktivert, vil du et filter bli vist til venstre for kalenderen.
 If this function is enabled, it will show the company field.;-;Hvis denne funksjonen er aktivert, vil du vise selskaps feltet. 
 If this option has been enabled the attendee will receive an sms.;-;Hvis dette valget har blitt aktivert, vil de påmeldte motta en sms.
 If you turn on this feature, it will try to get the company information from  brreg. Simplify the form significantly.;-;Hvis du aktiverer denne funksjonen, så vil systemet prøve å hente ut informasjonen fra BrReg.
-If you turn this feature on, all prices displayed on webshop will be shown with taxes removed.;-;Ved å aktivere denne funksjonen, vil prisen på din webshop vist uten moms og avgifter.
 Import an existing application;-;Importer en eksisterende applikasjon
 Import an existing application.;-;Importer en eksisterende applikasjon
 Import application;-;Importert en applikasjon
@@ -362,7 +354,6 @@ Set date;-;Sett dato
 Settings;-;Instillinger
 Shipment taxes;-;Forsendelses mva
 Shipper;-;Forsendelser
-Shipping to country;-;Send til land
 Should Fjincadeau be activated?;-;Skal Fjincadeau være aktivert?
 Should Mister Cash be activated?;-;Skal Mister Cash være aktivert?
 Should Podium be activated?;-;Skal Podium være aktivert?
@@ -372,7 +363,6 @@ Should eBill be activated?;-;Skal eBill være aktivert?
 Should iDeal be activated?;-;Skal iDeal være aktivert?
 Show company field;-;Vi selskaps felt.
 Show location filter left for calendar;-;Vi lokasjons filter til venstre for kalenderen
-Show prices without taxes;-;Vis pris uten moms og avgifter
 Show stock status on product?;-;Vis lagerstatus på produktet?
 Show the description for days.;-;Vis beskrivelse for dagen
 Sms Statistic;-;Sms statistikk
@@ -383,7 +373,6 @@ South west corner longitude;-;Sør vest longitude hjørne
 Specify a title for your webshop. this will be displayed on the tabs in etc chrome.;-;Legg inn en tittel på din nettbutikk, denne vises i tabbene på nettleserene.
 Specify an airgram account.;-;Spesifiser din airgram konto
 Specify boundaries the map should restrict itself to. Leave it empty to avoid boundaries. Or add multiple rectangular fields as constraints.;-;Specifiser grenser på karetet. Hvis du ønsker at det ikke skal være begrensninger i karetet så la dette være tomt, eventuelt legg inn flere for å lage en rektaktulær grense.
-Specify your postal code.;-;Spesifiser ditt postnummer
 Start adding pictures to your webshop, create this application and start uploading images.;-;Legg til bilder til din webshop, opprett denne applikasjonen og start å last opp bilder.
 Start hour;-;Start time
 Start hour when people should be able to request booking (example: 16);-;Start time når du ønsker at folk skal kan legge inn requests booking (example: 16)
@@ -473,7 +462,6 @@ Warn users that cookies are being stored from this site?;-;Advar brukere at cook
 Warning! this store will automatically be reset to original state each hour;-;Advasel! Systemet vil automatisk bli satt tilbake til sin originale stand hver time.
 Warning. you are not connected as a partner yet, please contact getshop support!;-;Advarsel. du er ikke koblet til en partner enda, vennligst kontakt getshop support!
 Web address;-;Web adresse
-What countries are you selling to?;-;Hvilke land selger du til?
 What is deepfreeze? Well, if you activate deepfreeze you basically put all options on hold, all changes made after deepfreezeing will be purged each hour.;-;Hva er deepfreeze? Deepfreeze fryser ned systemet og gjennoppretter systemet hver time.
 What is the shipment taxes?;-;Hva er forsendelses mvaen?
 What should be the sender name?;-;Hva skal senders navn være?
@@ -481,7 +469,6 @@ What should the text message contain?;-;Hva skal tekst meldingen inneholde?
 When;-;Når
 Withdraw from stock when order is created;-;Trekk fra lagerstatus når ordren blir laget
 Work with your lists below or create one. Lists are used for categorizing, filtering and etc in products overview.;-;Velg en av dine lister under, eller opprett en ny. Når du har lister kan du legge produkter i dem og vise dem på din netthandelside.
-You do not want to display the cart.. sure enable this then.;-;Du ønsker ikke å vise handlekurven... Greit nok, aktivert dette.
 You dont have any cupons added.;-;Du har ikke lagt til noen kuponger.
 You have not yet created any web shops, create one and they will be listed here.;-;Du har ikke enda opprettet en web shop, opprett en og den vil bli listet her.
 Your email can not be empty;-;Epost kan ikke være blank
@@ -524,7 +511,6 @@ like_button_desc;-;Aktiver eller dekativer lik knappen på alle dine produkter.
 longitide;-;longditude
 max_atandees;-;Maks deltagere
 no_activites;-;Ingen aktiviterer eksisterer for denne dagen
-postal;-;Postnummer
 price;-;Pris
 profile_url;-;Url til din profil
 profile_url_desc;-;Url til din profile. For eksempel: http://www.facebook.com/zuck

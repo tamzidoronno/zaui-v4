@@ -194,7 +194,7 @@
     position: absolute;
     right: 10px;
     bottom: 10px;
-
+    width:100px;
 }
 
 .checkout .headercheckout {
@@ -361,4 +361,5 @@
     .CartManager .cart .productcount .counter { line-height: 60px; }
     .CartManager .cart .productcount { height: 60px; }
     .CartManager .rightcart { margin-left:0px; }
+    .CartManager .removeitemtext { display:none; }
 }

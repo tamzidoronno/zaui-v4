@@ -49,3 +49,7 @@ h1 { text-align: center;
     padding-left:0px;
     padding-right:0px;
 }
+
+
+.Contact .shop_button { padding-left:0px; padding-right:0px; float:none; margin-top: 10px; }
+.checkout table td input { width: 100%; margin-right: 10px; }

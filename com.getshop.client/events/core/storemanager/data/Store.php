@@ -31,6 +31,9 @@ class core_storemanager_data_Store extends core_common_DataCommon  {
 	public $deepFreezePassword;
 
 	/** @var String */
+	public $expiryDate;
+
+	/** @var String */
 	public $isTemplate;
 
 	/** @var core_usermanager_data_User */

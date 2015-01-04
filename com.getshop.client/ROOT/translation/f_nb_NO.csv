@@ -30,7 +30,6 @@ Add this application and get started adding content to your page.;-;Legg til den
 Add this contact form, configure it, and you are ready to start receiving questions and feedback from your users per email.;-;Legg til dette kontakt skjemaet, konfigurer det, og du er da klar til å motta spørsmål og tilbakemeldinger fra dine kunder per epost.
 Add to cart;-;Legg i handlekurv
 Add to your page;-;Legg til din side
-Add videos to your page.;-;Legg til en video for din side
 Additional domain names;-;Ekstra domenenavn
 Additional info;-;Ekstra informasjon
 Admin functions;-;Admin funksjoner
@@ -82,6 +81,7 @@ Close;-;Lukk
 Colors;-;Farger
 Column;-;Kolonne
 Company Name;-;Selskapsnavn
+Configure this application if you want to send email from a different email provider en the default one for GetShop;-;Konfigurer denne applikasjonen hvis du ønsker å sende eposter fra en annen epost leverandør enn den som er brukt for GetShop.
 Configure your starting point;-;Konfigurer dinn start punkt
 Confirm entry;-;Bekreft innlegg
 Congratulation, you have added your first image.;-;Gratulerer, du har lagt til ditt første bilde
@@ -156,7 +156,7 @@ Get started, add this application and start adding news and updates to your page
 Google Analytics;-;Google Analytics
 Google analytics code;-;Google analyse kode
 Google analytics is by far the best reporting tool for webadministrator, by adding this application you will enable your googla analytics account to communicate with your webshop.;-;Google analytics er helt klart det best rapporteringsverkøyet når det kommer til å holde oversikt over bruken på din webside, ved å legge til denne applikasjonen får du mulighet til å benytte deg av google analytics.
-Handles taxes for products and shipment.;-;Oppgi 
+Handles taxes for products and shipment.;-;Still inn skatter og avgifter for produkter og forsendelse.
 Here you can configure all the settings required to get sisow to work properly with your account. Enter the fields below and press save, as soon as everything here is set correctly you will see that a new payment options is available in the checkout area.;-;Her kan du sette opp din sisow integrasjon, når du har gjort det så vil den være tilgjengelig i checkouten.
 Hide cart;-;Gjem handlekurv
 Hide search bar;-;Gjem søkefeltet for produkter
@@ -196,8 +196,8 @@ MailManager;-;Epost behandler
 Manually select a color;-;Manuelt velg en farge
 Mark as done;-;Merk som ferdig
 Markers;-;Markører
-Menu Editor;-;Menu Oppsetter
-Menu editor;-;Menu oppsetter
+Menu Editor;-;Meny editor
+Menu editor;-;Meny editor
 Merchant id;-;Merchant id
 Merchant key;-;Merchant key
 Method;-;Metode
@@ -402,7 +402,6 @@ Withdraw from stock when order is created;-;Trekk fra lagerstatus når ordren bl
 You do not want to display the cart.. sure enable this then.;-;Du ønsker ikke å vise handlekurven... Greit nok, aktivert dette.
 You dont have any cupons added.;-;Du har ikke lagt til noen kuponger.
 You have not yet created any web shops, create one and they will be listed here.;-;Du har ikke enda opprettet en web shop, opprett en og den vil bli listet her.
-You need this application if you want this webshop send emails from your email account;-;Du må konfigurere denne applikasjonen hvis du ønsker å sende epost gjennom din epost konto.
 Your menus;-;Dine menyer.
 Your merchant account is deactivated, please check with sisow to get it activated.;-;Din merchan account er deaktivert, kontakt sisow for å få den aktivert.
 Your merchant id, this id is something that sisow is providing you.;-;Din merchant id, dette før du fra sisow.

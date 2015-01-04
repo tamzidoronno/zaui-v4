@@ -4,7 +4,7 @@ namespace ns_f245b8ae_f3ba_454e_beb4_ecff5ec328d6;
 
 class ProductLists extends \ApplicationBase implements \Application {
     public function getDescription() {
-        return $this->__f("Display product lists in your webshop");
+        return $this->__w("Display product lists in your webshop");
     }
 
     public function getName() {

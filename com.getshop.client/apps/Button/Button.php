@@ -15,11 +15,11 @@ namespace ns_2996287a_c23e_41ad_a801_c77502372789;
 
 class Button extends \ApplicationBase implements \Application {
     public function getDescription() {
-        return $this->__f("A button that can be used for multiple purposes, for instance it can be used for going to a page, add a produc to cart etc.");
+        return $this->__w("Add a button to your page. This button can be a add to cart button, go to page button, etc");
     }
 
     public function getName() {
-        return $this->__f("Button");
+        return $this->__w("Button");
     }
 
     public function render() {

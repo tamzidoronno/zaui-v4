@@ -16,7 +16,7 @@ class GoogleMaps extends \WebshopApplication implements \Application {
     }
 
     public function getDescription() {
-        return "Add google maps to your page, pin point locatins and restrict it to a given area, and even connect the locations to a given page.";
+        return $this->__w("Add google maps to your page, pin point locatins and restrict it to a given area, and even connect the locations to a given page.");
     }
     
     public function configure() {
@@ -28,7 +28,7 @@ class GoogleMaps extends \WebshopApplication implements \Application {
     }
     
     public function getName() {
-        return "GoogleMaps";
+        return "Google Maps";
     }
 
     public function postProcess() {

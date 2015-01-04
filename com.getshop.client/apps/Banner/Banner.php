@@ -13,7 +13,7 @@ class Banner extends \WebshopApplication implements \Application {
     }
     
     public function getName() {
-        return $this->__("Image carousel");
+        return $this->__w("Image carousel");
     }
     
     public function isShowDots() {

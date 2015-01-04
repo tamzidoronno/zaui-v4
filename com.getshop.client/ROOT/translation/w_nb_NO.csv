@@ -6,8 +6,14 @@ A confirmation email has been sent to your email, and your storage room has been
 A confirmation email has been sent to your email.;-;En bekreftelse er sendt til din e-post.
 A confirmation email has been sent to your email. Enjoy your stay at {hotel}.;-;En bekreftelse er sendt til din e-post. Ha et hyggelig opphold hos {hotel}.
 A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
+Add a button to your page. This button can be a add to cart button, go to page button, etc;-;Legg til en knapp på websiden din. Knapper som legg i handlekurv, gå til en annen side, osv.
 Add a room;-;Legg til et rom
+Add google maps to your page, pin point locatins and restrict it to a given area, and even connect the locations to a given page.;-;Legg inn kart på websiden din, pin lokasjoner og begrens områdene for hvor du kan se, du kan til og med knytte opp lokasjoner mot andre websider.
+Add menus to your page and administrate them. Menus are the root of all pages, adding a new menu entry is the same as creating a new page.;-;Legg til menyer og administrer dem. Menyer er selve roten til alle sidene, det å legge til et nytt meny entry er det samme som å opprette en ny side.
+Add text to your page with one of the best text editors on the web for manipulating text.;-;Legg inn tekst på websiden din med en av de beste tekst editorene for web.
 Add this to the header or to the body to make a new login form, can be added anywhere on the page.;-;Legge denne i headeren eller på hoveddelen av siden for å lage en ny pålogginsområde. 
+Add this to the page and you can allow your customers to search for products.;-;Legg til et produktsøk på siden din, og du gir deretter dine kunder mulighet til å søke opp dine produkter.
+Add youtube vidoes to your page. Just search for the video you want to add and click add.;-;Legg inn youtube videor på websiden din. Bare søk etter den filmen du ønsker og trykk på legg til.
 Additional contact data;-;Ekstra kontaktinformasjon
 Address;-;Adresse
 All fields are required;-;Alle felt er påkrevd
@@ -26,6 +32,7 @@ Birth date;-;Fødselsdato
 Birth date has to be formatted like dd.mm.yy;-;Fødselsdato må være av format: dd.mm.åå.
 Booked time periode;-;Booket tidsperiode
 Booking;-;Påmelding
+BrainTree is a international payment method offering VISA / MasterCard / PayPal etc. Very simple to use and gets you started with visa payment immediatly;-;BrainTree er en internasjonal betalingsmetode som eies av PayPal. De tilbyr betaling med Visa, MasterCard, PayPal, osv. Veldig enkel å bruke og gir det mulighet til å ta imot betaling online med gang.
 Building your store;-;Lag din webbutikk
 Button;-;Knapp
 By calendar;-;Som kalendar
@@ -75,10 +82,12 @@ December;-;Desember
 Delete;-;Slett
 Delete image;-;Slett bilde
 Did not find the specified company, please check your company number;-;Fant ikke det angitte firmaet, vennligst sjekk organisasjonret
+Display product lists in your webshop;-;Vis produkt lister i din nettbutikk.
 Disploma is disabled;-;Diploma er deaktivert
 Download as pdf;-;Last ned som PDF
 Download ebill;-;Last ned ebill
 END;-;SLUTT
+Ecommerce settings;-;Netthandel instillinger
 Email;-;Epost
 Email address;-;Epost adresse
 Email sent;-;Epost sendt
@@ -97,6 +106,8 @@ How can I help you today ?;-;Hva kan jeg hjelpe deg med?
 I agree to the terms and conditions;-;Jeg godtar bruksvilkårene
 I am sorry, but all fields are required before sending a message.;-;Beklager, men alle felt må fylles ut før du sender en melding.
 I have a partnership deal;-;Jeg har et referansenummer
+Image;-;Bilde
+Image carousel;-;Bilde karusell
 Insert column;-;Sett inn kolonne
 Insert row;-;Sett inn rad
 Invalid email address;-;Ugyldig epost adresse
@@ -104,7 +115,7 @@ Invalid payment method;-;Ugyldig betalings metode
 Invoice email;-;Epost Teknisk Leder
 InvoicePayment;-;Faktura
 Is private person;-;Er privat person
-Items in your basket;-;Produkter i handlekurven
+Items;-;Elementer
 January;-;Januar
 July;-;Juli
 June;-;Juni
@@ -128,12 +139,14 @@ Mva registered;-;Registrert i mva registeret
 My account;-;Min konto
 My name is:;-;Mitt navn er
 Name;-;Navn
+Name of your shop;-;Navn på din nettbutikk
 New message;-;Ny melding
 New password;-;Nytt passord
 New room type;-;Ny rom type
+NewsLetter;-;Nyhetsbrev
 Next;-; Neste
 No;-;Nei
-No items added;-;Handlerkurven er tom
+No items;-;Ingen elementer
 No rooms are available for this time periode.;-;Ingen rom er tilgjengelig i valgt tidsperiode.
 November;-;November
 Number of instances added;-;Antall av instanser lagt til
@@ -177,6 +190,7 @@ Please select a valid payment method;-;Vennligst velg en gyldig betalings metode
 Please select department;-;Velg en avdeling
 Please start typing to search for page, must be more then 2 chars;-;Start å søk etter en side, må ha minst 3 bokstaver
 Please wait while you are being transferred to dibs payment service.;-;-Vennligst vent til du blir overført til betaling siden.
+Please wait...;-;Vennligst vent...
 Post code;-;Post.nr
 Postal code;-;Postnummer
 Postal place;-;Poststed
@@ -184,6 +198,9 @@ Previous;-;Forrige
 Price;-;Pris
 Price and plans;-;Priser og oversikter
 Product List;-;Produktliste
+Product Search;-;Produkt søk
+Product view for your store.;-;Produkt visningen for din nettbutikk.
+Products;-;Produkter
 ROOM TYPE;-;Størrelse
 Read more;-;Les mer
 Recover password;-;Gjennopprett passord
@@ -193,7 +210,6 @@ Register;-;Registrer
 Registration details;-;Registrerings detaljer.
 Reminder;-;Påminnelse
 Reminder sent by email;-;En påmindelse har blitt sendt per epost.
-Remove;-;Fjern
 Rental time periode;-;Din leieperiode
 Repeat password;-;Gjenta passord
 SELECT ROOM;-;VELG ROM
@@ -213,6 +229,7 @@ Send message;-;Send melding
 Send us mail;-;Send oss en epost
 September;-;September
 Set new password;-;Sett nytt passord
+Setup and manage your products;-;Legg inn og administrer dine produkter.
 Shipment information;-;Forsendelse informasjon
 Shipment settings;-;Forsendelse
 Shipping;-;Utsendelse
@@ -232,6 +249,7 @@ Stage 2 (hp):;-;Stage 2 hp:
 Stage 2 (nm):;-;Stage 2 nm:
 Stage 3 (hp):;-;Stage 3 hp:
 Stage 3 (nm):;-;Stage 3 nm:
+Start;-;Start
 Start date;-;Start dato
 Start your 30 days free trial;-;Start din 30 dagers fri prøveperiode
 Stop;-;Stopp
@@ -242,6 +260,7 @@ Summary;-;Oppsummering
 Sunday;-;Søndag
 Taxes;-;Skatter
 Terms and Conditions;-;Bruksvilkår
+Text editor;-;Tekst editor
 Th;-;To
 Thank you for checking into our hotel. A confirmation mail has been sent to your email.;-;Takk for at du sjekker inn på vårt hotel. En bekreftelse er sendt til din e-post.
 Thank you for ordering with Sisow ebill;-;Takk for at du bestilte med Sisow ebill
@@ -256,6 +275,7 @@ The company you have selected could not be found in brreg.;-;Firmaet du har valg
 The email address is invalid.;-;Eposten din er ugyldig.
 The email already exists, please log on to continue.;-;Eposten eksisterer allerede, vennligst logg på for å fortsette.
 The event has been confirmed.;-;Eventent har blitt bekreftet.
+The newsletter application allowes you to send emails to all of your customers without. Create a news letter, select your customers and send.;-;Denne nyhetsbrev applikasjonen gjør det mulig for deg å sende epost til alle dine kunder. Opprett et nyhetsbrev og send det til dine registrerte kunder.
 The passwords does not match.;-;Passordet stemmer ikke overens.
 There is no entries for this event;-;Finnes inne noe for akkurat dette kurset
 This event has the following entries;-;Dette kurset finner du i kalenderen på følgende dager
@@ -268,7 +288,9 @@ Total;-;Total
 Total price;-;Total pris
 Tu;-;Ti
 Tuesday;-;Tirsdag
+Tune your online store by setting currency, does customers need to register to buy from your store, show cookie warning, etc;-;Finjuster nettbutikken din ved å f.eks velge valutta, bestemme om kundene dine må registrere seg for å handle, vis cookie advarsel, osv.
 Update;-;Oppdater
+Upload and manipulate on images or add this to be able to search for professional images trough our image stock.;-;Last og behandle bilder, eventuelt så kan du søke opp profesjonelle bilder gjennom vår bildebank.
 Use a different email;-;Bruk en annen epost
 Username / Email;-;Brukernavn / Epost
 Visitor information;-;Besøksinformasjon
@@ -298,6 +320,7 @@ Your order has been canceled due to incorrect payment information, please try ag
 Your order has now been completed and is waiting to be shipped.;-;Orderen din har blitt gjennomført og venter på å bli sendt.
 Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;Du vil snart motta en epost med din ebill, eller så kan du last den ned på følgende link
 Your personal information;-;Din personlige informasjon
+Your phonenumber;-;Ditt tlf nr
 available room;-;tilgjengelige rom
 available rooms;-;tilgjengelige rom
 change;-;endre

@@ -3,7 +3,13 @@
 namespace ns_b6b0d74f_c802_401e_9bb7_facf3e420f61;
 
 /* @var $this \ns_b0db6ad0_8cc2_11e2_9e96_0800200c9a66\HelloWorld */
-$apps = $this->getApi()->getGetShopApplicationPool()->getApplications();
+$availableModules = $this->getApi()->getStoreApplicationPool()->getAllAvailableModules();
+$apps = $this->getApi()->getStoreApplicationPool()->getAvailableApplications();
+
+$allModules = array();
+foreach($availableModules as $availableModule) {
+    $allModules[$availableModule->id] = $availableModule;
+}
 
 $modules = array();
 echo "<div class='apparea'>";
@@ -15,7 +21,8 @@ foreach ($apps as $app) {
 }
 
 foreach ($modules as $title => $apps) {
-    echo "<h1>" . $title . "</h1>";
+    $container = "<h1>" . $title . "</h1>";
+    $found = false;
     foreach ($apps as $app) {
         $id = $app->id;
         $namespace = $this->convertUUIDtoString($id);
@@ -27,21 +34,36 @@ foreach ($modules as $title => $apps) {
         if ($app->moduleId != $title) {
             continue;
         }
-
-        if (!$app->isFrontend) {
+        if(!isset($allModules[$app->moduleId])) {
             continue;
         }
-        echo "<div class='appentryouter'>";
-        echo "<div class='gs_add_app_entry' appId='$id'>";
-        echo "<div class='gs_app_image'><img src='/showApplicationImages.php?appNamespace=$namespace&image=" . $app->appName . ".png'/></div>";
-        echo "<div class='infobox'>";
-        echo "<div class='gs_app_title'>" . $appInstance->getName() . "</div>";
-        echo "<div class='gs_app_desc'>" . $appInstance->getDescription() . "</div>";
-        echo "</div>";
-        echo "</div>";
-        echo "</div>";
+        
+        if (!$app->isPublic) {
+            continue;
+        }
+        
+        if($app->type == "SystemApplication") {
+            continue;
+        }
+        if($app->type == "ThemeApplication") {
+            continue;
+        }
+        $found = true;
+        
+        $container .= "<div class='appentryouter'>";
+        $container .= "<div class='gs_add_app_entry' appId='$id'>";
+        $container .= "<div class='gs_app_image'><img src='/showApplicationImages.php?appNamespace=$namespace&image=" . $app->appName . ".png'/></div>";
+        $container .= "<div class='infobox'>";
+        $container .= "<div class='gs_app_title'>" . $appInstance->getName() . "</div>";
+        $container .= "<div class='gs_app_desc'>" . $appInstance->getDescription() . "</div>";
+        $container .= "</div>";
+        $container .= "</div>";
+        $container .= "</div>";
     }
+    if($found) {
+        echo $container;
         echo "<div class='appseperator'></div>";
+    }
 }
 echo "</div>";
 //echo "<pre>";

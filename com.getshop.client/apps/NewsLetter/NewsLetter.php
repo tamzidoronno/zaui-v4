@@ -10,7 +10,7 @@ class NewsLetter extends \ApplicationBase implements \Application {
     }
 
     public function getDescription() {
-        return $this->__f("The newsletter application allowes you to send emails to all of your customers without. Create a news letter, select your customers and send.");
+        return $this->__w("The newsletter application allowes you to send emails to all of your customers without. Create a news letter, select your customers and send.");
     }
 
     public function getAvailablePositions() {
@@ -18,7 +18,7 @@ class NewsLetter extends \ApplicationBase implements \Application {
     }
     
     public function getName() {
-        return "NewsLetter";
+        return $this->__w("NewsLetter");
     }
     
     public function attachFile() {

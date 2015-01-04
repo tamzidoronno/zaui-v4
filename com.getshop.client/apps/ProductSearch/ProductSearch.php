@@ -10,11 +10,11 @@ namespace ns_2ff5d77f_4d47_4fbf_8186_c7fbc33cb478;
 
 class ProductSearch extends \ApplicationBase implements \Application {
     public function getDescription() {
-        return $this->__f("Add this to the page and you can allow your customers to search for products.");
+        return $this->__w("Add this to the page and you can allow your customers to search for products.");
     }
 
     public function getName() {
-        return $this->__f("Product Search");
+        return $this->__w("Product Search");
     }
 
     public function render() {

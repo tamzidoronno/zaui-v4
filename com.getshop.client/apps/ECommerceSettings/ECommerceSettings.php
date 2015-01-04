@@ -15,11 +15,11 @@ class ECommerceSettings extends \ApplicationBase implements \Application {
     private $storeSettingsInstance;
     
     public function getDescription() {
-        
+        return $this->__w("Tune your online store by setting currency, does customers need to register to buy from your store, show cookie warning, etc");
     }
 
     public function getName() {
-        
+        return $this->__w("Ecommerce settings");
     }
 
     public function render() {

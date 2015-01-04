@@ -10,7 +10,7 @@ class YouTube extends \ApplicationBase implements \Application {
     }
 
     public function getDescription() {
-        return $this->__f("Add videos to your page.");
+        return $this->__w("Add youtube vidoes to your page. Just search for the video you want to add and click add.");
     }
 
     public function getAvailablePositions() {

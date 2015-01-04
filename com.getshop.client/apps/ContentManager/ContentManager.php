@@ -15,7 +15,7 @@ class ContentManager extends \WebshopApplication implements \Application {
 
     //put your code here
     public function getDescription() {
-        return $this->__f("Add text to this area with one of the best text editors on the web for manipulating text.");
+        return $this->__w("Add text to your page with one of the best text editors on the web for manipulating text.");
     }
 
     public function getAvailablePositions() {
@@ -23,7 +23,7 @@ class ContentManager extends \WebshopApplication implements \Application {
     }
 
     public function getName() {
-        return $this->__("Text editor");
+        return $this->__w("Text editor");
     }
 
     public function postProcess() {

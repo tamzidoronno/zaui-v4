@@ -13,7 +13,7 @@ class ImageDisplayer extends \ApplicationBase implements \Application {
     }
 
     public function getDescription() {
-        return $this->__f("Upload and manipulate on images or add this to be able to search for professional images trough our image stock.");
+        return $this->__w("Upload and manipulate on images or add this to be able to search for professional images trough our image stock.");
     }
 
     public function getAvailablePositions() {
@@ -21,7 +21,7 @@ class ImageDisplayer extends \ApplicationBase implements \Application {
     }
 
     public function getName() {
-        return "Image";
+        return $this->__w("Image");
     }
 
     public function postProcess() {

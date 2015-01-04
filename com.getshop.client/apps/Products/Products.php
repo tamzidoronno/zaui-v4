@@ -15,11 +15,11 @@ namespace ns_e073a75a_87c9_4d92_a73a_bc54feb7317f;
 
 class Products extends \WebshopApplication implements \Application {
     public function getDescription() {
-        return $this->__f("Setup and manage your products");
+        return $this->__w("Setup and manage your products");
     }
 
     public function getName() {
-        return $this->__f("Products");
+        return $this->__w("Products");
     }
 
     public function renderConfig() {

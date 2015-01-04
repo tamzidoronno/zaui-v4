@@ -9,7 +9,7 @@ namespace ns_06f9d235_9dd3_4971_9b91_88231ae0436b;
 
 class Product extends \ApplicationBase implements \Application {
     public function getDescription() {
-        return $this->__f("Display a product for the given page.");
+        return $this->__w("Product view for your store.");
     }
 
     public function getName() {

@@ -11,7 +11,7 @@ namespace ns_542e6a1e_9927_495c_9b6d_bb52af4ea9be;
 class BrainTree extends \PaymentApplication implements \Application {
     
     public function getDescription() {
-        return $this->__f("BrainTree is a international payment method offering VISA / MasterCard / PayPal etc. Supersimple to use and gets you started with visa payment immediatly");
+        return $this->__w("BrainTree is a international payment method offering VISA / MasterCard / PayPal etc. Very simple to use and gets you started with visa payment immediatly");
     }
 
     public function getName() {

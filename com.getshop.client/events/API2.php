@@ -5514,6 +5514,23 @@ class APIUserManager {
 	}
 
 	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function getLogins($year) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["year"] = json_encode($this->transport->object_unset_nulls($year));
+	     $data["method"] = "getLogins";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Fetch a user
 	* @param id
 	* @return core_usermanager_data_User

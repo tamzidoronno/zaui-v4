@@ -127,6 +127,10 @@ class Products extends \WebshopApplication implements \Application {
             }
         }
         
+        print_r($keepImages);
+       
+        
+        $product->images = $keepImages;
         $product->imagesAdded = $keepImages;
         $this->getApi()->getProductManager()->saveProduct($product);
     }

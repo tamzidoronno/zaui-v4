@@ -3,6 +3,8 @@ package com.thundashop.core.productmanager;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.productmanager.data.AttributeSummary;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.pagemanager.PageManager;
+import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
@@ -15,6 +17,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -30,7 +33,9 @@ import org.springframework.stereotype.Component;
 @Component
 @GetShopSession
 public class ProductManager extends AProductManager implements IProductManager {
-
+    @Autowired
+    private PageManager pageManager;
+    
     @Override
     public Product saveProduct(Product product) throws ErrorException {
         if (product.id == null || product.id.equals("")) {
@@ -82,8 +87,11 @@ public class ProductManager extends AProductManager implements IProductManager {
         Product product = new Product();
         product.storeId = storeId;
         product.id = UUID.randomUUID().toString();
+        
+        Page page = pageManager.createPage();
+        product.pageId = page.id;
         saveProduct(product);
-
+        
         return product;
     }
 

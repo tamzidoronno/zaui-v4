@@ -11,9 +11,9 @@ body {
 .gsucell .gsinner { padding: 10px; border-radius: 3px; }
 .gscell { margin-top: 20px; }
 
-.gsinner.gsdepth_0 { width: 2; margin: auto; }
+.gsinner.gsdepth_0 { width: 100%; margin: 0px; }
+
 .gsarea[area="body"] .gscolumn .gsinner { 
-    background-color: rgba(255,255,255,1);
     color: #333;
     border-radius: 7px;
     text-align: left;

@@ -77,3 +77,11 @@
     padding-bottom: 20px;
 }
 
+.mainimage i {
+    color: #DDD;
+    font-size: 150px;
+    width: 100%;
+    text-align: center;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}

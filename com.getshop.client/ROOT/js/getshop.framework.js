@@ -210,6 +210,7 @@ thundashop.framework = {
         thundashop.framework.loadResizing($('.gscell[cellid="' + cellid + '"]'), true);
     },
     startFromCurrentStore: function () {
+        
         var data = {
             'storeId': $('input[name="storeid"]').val(),
             'gs_start_store_name': $('#gs_start_store_name').val(),
@@ -220,6 +221,32 @@ thundashop.framework = {
             'gs_start_store_password2': $('#gs_start_store_password2').val()
         }
 
+        if (!data.gs_start_store_name) {
+            alert(__f("Your name can not be empty"));
+            return;
+        }
+        if (!data.gs_start_store_email) {
+            alert(__f("Your email can not be empty"));
+            return;
+        }
+        if (!data.gs_start_store_phonenumber) {
+            alert(__f("Your phonenumber can not be empty"));
+            return;
+        }
+        if (!data.gs_start_store_shopname) {
+            alert(__f("Your shopname can not be empty"));
+            return;
+        }
+        if (!data.gs_start_store_password1 || !data.gs_start_store_password2) {
+            alert(__f("Your shopname can not be empty"));
+            return;
+        }
+        
+        if (data.gs_start_store_password2 != data.gs_start_store_password1) {
+            alert(__f("Please check your password"));
+            return;
+        }
+        
         var event = thundashop.Ajax.createEvent(null, 'startStore', null, data);
         event['synchron'] = 'true';
         thundashop.Ajax.postWithCallBack(event, function (response) {

@@ -380,6 +380,7 @@
 }
 
 .Menu .mobilenavigatemenu { display:none; }
+#informationbox.Menu { color:#000; }
 
 @media only all and (max-width: 800px) {
     .Menu .menuentries { width: 100%; }

@@ -188,9 +188,11 @@ public class PageLayout implements Serializable {
                 if (deleted) {
                     if (cell.cells.size() == 1 && !cell.type.equals(PageCell.CellType.floating) && !cell.isRotating()) {
                         String currentMode = cell.mode;
-                        cell.extractDataFrom(cell.cells.get(0), true);
-                        cell.mode = currentMode;
-                    }
+                        if(!cell.isRotating() && !cell.isTab()) {
+                            cell.extractDataFrom(cell.cells.get(0), true);
+                                cell.mode = currentMode;
+                            }
+                        }
                     if (cell.cells.isEmpty() && (cell.isTab())) {
                         cell.mode = PageCell.CellMode.row;
                     }

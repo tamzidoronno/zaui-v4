@@ -408,9 +408,9 @@ thundashop.framework = {
     },
     saveCarouselSettings: function () {
         var data = {
-            height: $('.carouselsettingspanel').find('.gscarouselheight').val(),
-            timer: $('.carouselsettingspanel').find('.gscarouseltimer').val(),
-            type: $('.carouselsettingspanel').find('.gscarouseltype').val(),
+            height: $(this).closest('.carouselsettingspanel').find('.gscarouselheight').val(),
+            timer: $(this).closest('.carouselsettingspanel').find('.gscarouseltimer').val(),
+            type: $(this).closest('.carouselsettingspanel').find('.gscarouseltype').val(),
             cellid: $(this).closest('.carouselsettingspanel').attr('cellid'),
         }
 

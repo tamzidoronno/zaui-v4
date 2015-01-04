@@ -80,7 +80,6 @@ Connected;-;Aangesloten
 Contact email;-;Contact email
 Contact form;-;Contact formulier
 Contact form configuration;-;Contact forumlier configuratie
-Conversion rate addition;-;Conversie percentage
 Cookie warning;-;Cookie waarschuwing
 Count;-;Som
 Coupon name;-;Korting code
@@ -108,11 +107,8 @@ Delete this image;-;Verwijder deze afbeelding
 Delete user;-;Verwijder gebruiker
 Description when adding;-;Omschrijving bij het toevoegen
 Different variables that is available;-;Verschillende opties mogelijk
-Disable or enable the search bar in the top middle area.;-;Zet de zoekfunctie aan of uit.
 Discount in percentage?;-;Korting Percentage?
 Display 'X in stock' or 'out of stock' on product?;-;Vertoon 'X' of 'Niet in voorraad' bij product?
-Display shipping price on products;-;Toon verzendkosten bij producten
-Do you want to display the shipping price in the detailed product view?;-;Wil je dat de verzendkosten vertoond worden op de product pagina?
 Domain name;-;Domeinnaam
 Domain overview;-;Domein overzicht
 Due days;-;Aantal dagen
@@ -142,18 +138,14 @@ Google analytics code;-;Google Analytics code
 Google analytics is by far the best reporting tool for webadministrator, by adding this application you will enable your googla analytics account to communicate with your webshop.;-;Google Analytics is de beste rapportage tool voor webmasters/webwinkeliers. Voeg deze applicatie toe en link je google analytics account aan je webwinkel.
 Handles taxes for products and shipment.;-;Stel hier je BTW tarief in voor producten en verzending.
 Here you can configure all the settings required to get sisow to work properly with your account. Enter the fields below and press save, as soon as everything here is set correctly you will see that a new payment options is available in the checkout area.;-;Hier kan je alle instellingen configureren van je Sisow account. Vul de velden in en sla alles op. Als alles goed ingested is zal je de nieuwe betaalmogelijkheden zien in de checkout van je webwinkel.
-Hide cart;-;Toon winkelwagen niet
-Hide search bar;-;Verberg zoekfunctie
 History;-;Geschiedenis
 Hostname;-;Hostnaam
 How many times can this coupon be used?;-;Hoeveel keer mag deze gebruikt worden?
 If a order is canceled, should the items from the order be put back in stock?;-;Als een bestelling geannuleerd is, moet de stockvoorraad terug aangevuld worden?
-If converting to a different currency, you can specify a percentage of how much more you would like to append to conversion when the conversion calculation is done. For example 10 will give you a 10% higher conversion rate.;-;Indien je omzet naar een andere munteenheid, kan je een omzetpercentage ingeven. Bijvoorbeeld 10 zal je 10% hogere omzetfee geven.
 If this email address is specified, it will send notificition to this one if a requested event has been made.;-;Als dit emailadres is ingesteld, zal je een bericht ontvangen als een aangevraagd event is gemaakt.
 If this function is enabled, it will show filter left for the calendar.;-;Als deze functie aan staat, dan vertoont de filter links van de kalender.
 If this function is enabled, it will show the company field.;-;Als deze functie aan staat, dan zie je het bedrijfs info veld.
 If this option has been enabled the attendee will receive an sms.;-;Als deze aan staat ontvangt de deelnemer een sms.
-If you turn this feature on, all prices displayed on webshop will be shown with taxes removed.;-;Zet deze aan om prijzen van alle artikelen zonder BTW te vertonen
 Import an existing application;-;Importeer een Applicatie
 Import an existing application.;-;Importeer een bestaande applicatie
 Import application;-;Importeer App
@@ -259,7 +251,6 @@ Set application sticky;-;Maak applicatie sticky
 Set date;-;Stel datum in
 Settings;-;Settings
 Shipment taxes;-;Verzending belastingen
-Shipping to country;-;Verzend naar
 Should Fjincadeau be activated?;-;Activeer Fjincadeau?
 Should Mister Cash be activated?;-;Activeer Mister Cash?
 Should Podium be activated?;-;Activeer Podium?
@@ -268,7 +259,6 @@ Should eBill be activated?;-;Activeer eBill?
 Should iDeal be activated?;-;Activeer iDeal?
 Show company field;-;Toon bedrijfsveld
 Show location filter left for calendar;-;Toon locatie filter links van kalender
-Show prices without taxes;-;Vertoon prijzen exclusief BTW
 Show stock status on product?;-;Vertoon voorraad status bij product?
 Sms Statistic;-;Sms statistieken
 Some settings are important for google and other search engines, and this is where you can configure them.;-;Sommige settings zijn belangrijk voor Google en andere zoekmachines. Hier kan je ze instellen.
@@ -277,7 +267,6 @@ South west corner latitude;-;Zuid – west corner latitude
 South west corner longitude;-;Zuid – west corner longitude
 Specify an airgram account.;-;Stel een airgram account in
 Specify boundaries the map should restrict itself to. Leave it empty to avoid boundaries. Or add multiple rectangular fields as constraints.;-;Specifieer grenzen voor de map. Leeg laten kan ook.
-Specify your postal code.;-;Postcode
 Start adding pictures to your webshop, create this application and start uploading images.;-;Voeg afbeeldingen toe aan je webshop. Voeg deze applicatie toe en start het toevoegen van afbeeldingen.
 Start hour;-;Begin uur
 Start hour when people should be able to request booking (example: 16);-;Begin uur wanneer bezoekers kunnen boeken (Bvb 16)
@@ -352,14 +341,12 @@ Warn users that cookies are being stored from this site?;-;Waarschuw bezoekers d
 Warning! this store will automatically be reset to original state each hour;-;Ogelet, de webwinkel zal elk uur naar de originele staat terug gaan
 Warning. you are not connected as a partner yet, please contact getshop support!;-;Opgelet, je bent nog geen aangesloten partner. Neem contact op!
 Web address;-;Webwinkel adres
-What countries are you selling to?;-;Naar welke landen verzend je?
 What is deepfreeze? Well, if you activate deepfreeze you basically put all options on hold, all changes made after deepfreezeing will be purged each hour.;-;What is deepfreeze? Well, if you activate deepfreeze you basically put all options on hold, all changes made after deepfreezeing will be purged each hour.
 What is the shipment taxes?;-;Wat zijn de verzending belastingen?
 What should be the sender name?;-;Naam van de afzender?
 What should the text message contain?;-;Inhoud van de tekst
 When;-;Wanneer
 Withdraw from stock when order is created;-;Haal van de voorraad af bij bestelling
-You do not want to display the cart.. sure enable this then.;-;Als je de winkelwagen niet wil laten vertonen, zet deze aan.
 You dont have any cupons added.;-;Je hebt geen Codes toegevoegd.
 You have not yet created any web shops, create one and they will be listed here.;-;Je hebt nog geen webwinkels aangemaakt. Van zodra er eentje is aangemaakt zal die in deze lijst verschijnen.
 Your merchant account is deactivated, please check with sisow to get it activated.;-;Je Merchant account is gedeactiveerd, kijk je Sisow account na om deze te activeren.
@@ -381,7 +368,6 @@ give your customers ability to book into your events or appointments;-;Geef je k
 is available.;-; is verkrijgbaar.
 is not a valid domain name.;-;Is geen geldige domeinnaam.
 is not available, please try another one.;-;Is niet verkrijgbaar, gelieve een ander te proberen.
-postal;-;Postcode
 price;-;Prijs
 save;-;Opslaan
 this application gives you the ability to setup fixed shipping price;-;Met deze applicatie kan je een vaste verzendkost instellen

@@ -346,16 +346,22 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         Entry retentry = null;
 
         for (Month month : months.values()) {
+            boolean changed = false;
             for (Day day : month.days.values()) {
                 for (Entry entry : day.entries) {
                     if (entryId.equals("")) {
                         entry.attendees.remove(userId);
+                        changed = true;
                     } else if (entry.entryId.equals(entryId)) {
                         retentry = entry;
                         entry.attendees.remove(userId);
+                        changed = true;
                     }
-                    databaseSaver.saveObject(month, credentials);
                 }
+            }
+            
+            if (changed) {
+                databaseSaver.saveObject(month, credentials);
             }
         }
 
@@ -364,18 +370,25 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
 
     private Entry removeUserWaitingList(String userId, String entryId) throws ErrorException {
         Entry retentry = null;
-
+        
         for (Month month : months.values()) {
+            boolean changed = false;
+            
             for (Day day : month.days.values()) {
                 for (Entry entry : day.entries) {
                     if (entryId.equals("")) {
                         entry.waitingList.remove(userId);
+                        changed = true;
                     } else if (entry.entryId.equals(entryId)) {
                         retentry = entry;
                         entry.waitingList.remove(userId);
+                        changed = true;
                     }
-                    databaseSaver.saveObject(month, credentials);
                 }
+            }
+            
+            if (changed) {
+                databaseSaver.saveObject(month, credentials);
             }
         }
 

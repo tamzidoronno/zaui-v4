@@ -50,7 +50,10 @@ public class AllaBolagSearchEngine implements CompanySearchEngine {
             String url = "http://www.allabolag.se/ws/BIWS/service.php?key=BIWSfc1a0c54b394d513754c6223537b&type="+urlAddition+"&query=nummer:"+organisationNumber;
             Map<String, Company> companies = new HashMap();
             companies.putAll(getCompaniesFromContent(getContent(url)));
-            return companies.values().iterator().next();
+            if (companies.size() > 0) {
+                return companies.values().iterator().next();
+            }
+            
         } catch (SAXException ex) {
             Logger.getLogger(AllaBolagSearchEngine.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParserConfigurationException ex) {

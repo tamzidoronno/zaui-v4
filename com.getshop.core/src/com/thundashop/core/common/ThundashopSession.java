@@ -37,7 +37,8 @@ public class ThundashopSession  implements Serializable {
         Date curTime = new Date();
         long timePassed = lastActive.getTime();
         long diff = curTime.getTime()-timePassed;
-        if(diff > (1000*60*60*12)) {
+        int oneHourInMs = 1000*60*60;
+        if(diff > oneHourInMs) {
             return true;
         }
         return false;

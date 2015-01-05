@@ -41,6 +41,8 @@ public class SessionFactory extends DataCommon {
         ThundashopSession session = getSession(sessionId);
         session.addObject(name, object);
         sessions.put(sessionId, session);
+        
+        cleanUp();
     }
     
     public <T> T getObject(String sessionId, String name) throws ErrorException {
@@ -83,21 +85,26 @@ public class SessionFactory extends DataCommon {
         }
         return true;
     }
-    
-    /**
-     * Cleaning the session dead sessions.
-     */
-    public void prepareForSaving() {
-        List<String> removeKeys = new ArrayList<String>();
-        for(String sessionId : sessions.keySet()) {
-            ThundashopSession session = getSession(sessionId);
-            if(session.hasExpired()) {
-                removeKeys.add(sessionId);
+
+    private void cleanUp() {
+        List<String> removeSessions = new ArrayList();
+        for (String sessionId : sessions.keySet()) {
+            ThundashopSession session = sessions.get(sessionId);
+            if (session.hasExpired()) {
+                removeSessions.add(sessionId);
             }
         }
         
-        for (String key : removeKeys)
-            sessions.remove(key);
+        for (String sessionId : removeSessions) {
+            sessions.remove(sessionId);
+        }
+    }
+
+    public void ping(String sessionId) {
+        ThundashopSession session = sessions.get(sessionId);
+        if (session != null) {
+            session.updateLastActive();
+        }
     }
 
     

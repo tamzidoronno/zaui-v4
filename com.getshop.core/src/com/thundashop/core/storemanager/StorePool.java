@@ -7,7 +7,6 @@ package com.thundashop.core.storemanager;
 import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.SessionFactory;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
@@ -15,7 +14,6 @@ import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
 import com.thundashop.core.storemanager.data.StoreCounter;
-import com.thundashop.core.usermanager.data.User;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -309,5 +307,9 @@ public class StorePool {
         counter.storeId = "all";
         database.save(counter, credentials);
         return counter.counter;
+    }
+
+    public void ping(String sessionId) {
+        sessionFactory.ping(sessionId);
     }
 }

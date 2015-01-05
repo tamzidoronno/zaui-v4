@@ -4,18 +4,14 @@
  */
 package com.thundashop.core.common;
 
-import com.getshop.scope.GetShopSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import org.springframework.stereotype.Component;
 
 /**
  *
  * @author ktonder
  */
-@Component
-@GetShopSession
 public class SessionFactory extends DataCommon {
     private ConcurrentHashMap<String, ThundashopSession> sessions = new ConcurrentHashMap<String, ThundashopSession>();
     public boolean ready;
@@ -41,6 +37,8 @@ public class SessionFactory extends DataCommon {
         ThundashopSession session = getSession(sessionId);
         session.addObject(name, object);
         sessions.put(sessionId, session);
+        
+        cleanUp();
     }
     
     public <T> T getObject(String sessionId, String name) throws ErrorException {
@@ -56,6 +54,7 @@ public class SessionFactory extends DataCommon {
             object = session.getObject("impersonatedUser");
         }
         
+        ping(sessionId);
         return (T)object;
     }
     
@@ -83,22 +82,25 @@ public class SessionFactory extends DataCommon {
         }
         return true;
     }
-    
-    /**
-     * Cleaning the session dead sessions.
-     */
-    public void prepareForSaving() {
-        List<String> removeKeys = new ArrayList<String>();
-        for(String sessionId : sessions.keySet()) {
-            ThundashopSession session = getSession(sessionId);
-            if(session.hasExpired()) {
-                removeKeys.add(sessionId);
+
+    private void cleanUp() {
+        List<String> removeSessions = new ArrayList();
+        for (String sessionId : sessions.keySet()) {
+            ThundashopSession session = sessions.get(sessionId);
+            if (session.hasExpired()) {
+                removeSessions.add(sessionId);
             }
         }
         
-        for (String key : removeKeys)
-            sessions.remove(key);
+        for (String sessionId : removeSessions) {
+            sessions.remove(sessionId);
+        }
     }
 
-    
+    private void ping(String sessionId) {
+        ThundashopSession session = sessions.get(sessionId);
+        if (session != null) {
+            session.updateLastActive();
+        }
+    }
 }

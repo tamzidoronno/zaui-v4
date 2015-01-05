@@ -14,8 +14,6 @@ import org.springframework.stereotype.Component;
  *
  * @author ktonder
  */
-@Component
-@Scope("prototype")
 public class SessionFactory extends DataCommon {
     private ConcurrentHashMap<String, ThundashopSession> sessions = new ConcurrentHashMap<String, ThundashopSession>();
     public boolean ready;
@@ -58,6 +56,7 @@ public class SessionFactory extends DataCommon {
             object = session.getObject("impersonatedUser");
         }
         
+        ping(sessionId);
         return (T)object;
     }
     
@@ -100,12 +99,10 @@ public class SessionFactory extends DataCommon {
         }
     }
 
-    public void ping(String sessionId) {
+    private void ping(String sessionId) {
         ThundashopSession session = sessions.get(sessionId);
         if (session != null) {
             session.updateLastActive();
         }
     }
-
-    
 }

@@ -308,8 +308,4 @@ public class StorePool {
         database.save(counter, credentials);
         return counter.counter;
     }
-
-    public void ping(String sessionId) {
-        sessionFactory.ping(sessionId);
-    }
 }

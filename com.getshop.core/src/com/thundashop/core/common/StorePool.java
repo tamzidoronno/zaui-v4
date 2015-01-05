@@ -257,7 +257,6 @@ public class StorePool {
         } else if (object.interfaceName.equals("core.storemanager.StoreManager") && object.method.equals("createStore")) {
             res = storePool.createStoreObject((String) argumentValues[0], (String) argumentValues[1], (String) argumentValues[2], (boolean) argumentValues[3]);
         } else {
-            storePool.ping(object.sessionId);
             StoreHandler handler = getStoreHandler(object.sessionId);
             if (handler == null) {
                 throw new ErrorException(1000010);

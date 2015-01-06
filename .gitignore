@@ -100,3 +100,5 @@ com.getshop.mobile/autoakademiet/platforms/android/ant-build
 com.getshop.mobile/autoakademiet/platforms/android/ant-gen
 com.getshop.mobile/autoakademiet/platforms/android/AndroidManifest.xml
 com.getshop.mobile/autoakademiet/apk/
+com.getshop.mobile/autoakademiet/platforms/android/CordovaLib/bin/
+com.getshop.mobile/autoakademiet/platforms/android/CordovaLib/gen/

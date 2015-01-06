@@ -30,15 +30,16 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 public class MailFactoryImpl extends StoreComponent implements MailFactory, Runnable {
+
     private String from;
     private String to;
     private String subject;
     private String content;
     private String storeId;
-    
+
     @Autowired
     private MailConfig configuration;
-    
+
     @Autowired
     public FrameworkConfig frameworkConfig;
 
@@ -46,7 +47,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
     public Logger logger;
     private Map<String, String> files;
     private boolean delete;
-    
+
     public void setMailConfiguration(MailConfig configuration) {
         this.configuration = configuration;
     }
@@ -60,10 +61,11 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
 
         properties.setProperty("mail.smtp.host", configuration.getSettings().hostname);
         properties.setProperty("mail.smtp.port", "" + configuration.getSettings().port);
-        
-        if (configuration.getSettings().enableTls)
+
+        if (configuration.getSettings().enableTls) {
             properties.setProperty("mail.smtp.starttls.enable", "true");
-        
+        }
+
         return Session.getInstance(properties, authenticator);
     }
 
@@ -78,8 +80,8 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
         mfi.logger = logger;
         mfi.storeId = storeId;
         mfi.frameworkConfig = frameworkConfig;
-        
-        if(to == null || to.equals("test@getshop.com")) {
+
+        if (to == null || to.equals("test@getshop.com")) {
             //Send this to noone, or the test account.. no way!
             return;
         }
@@ -92,13 +94,13 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
     }
 
     /**
-     * 
+     *
      * @param from
      * @param to
      * @param title
      * @param content
      * @param files Filepath, filename.
-     * @param delete 
+     * @param delete
      */
     @Override
     public void sendWithAttachments(String from, String to, String title, String content, Map<String, String> files, boolean delete) {
@@ -113,12 +115,16 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
         mfi.logger = logger;
         mfi.storeId = storeId;
         mfi.frameworkConfig = frameworkConfig;
-        
-        if(to == null || to.equals("test@getshop.com")) {
+
+        if (to == null || to.equals("test@getshop.com")) {
             //Send this to noone, or the test account.. no way!
             return;
         }
         new Thread(mfi).start();
+    }
+
+    private void warnNotDelivered() {
+        System.out.println("WARNING:!!!!!!!!!!!!!!!! MAIL NOT DELIVERED: " + subject + " from: " + from +  " to  " + to);
     }
 
     private class Authenticator extends javax.mail.Authenticator {
@@ -139,44 +145,59 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
     public void run() {
         configuration.setup(storeId);
         MimeMessage message = new MimeMessage(getSession());
-        
-        try {
-            message.setSubject(subject, "UTF-8");
-            message.setHeader("Content-Type", "text/plain; charset=UTF-8");
-            message.addRecipient(RecipientType.TO, new InternetAddress(to));
-            message.addFrom(new InternetAddress[]{new InternetAddress(configuration.getSettings().sendMailFrom)});
-            message.setReplyTo(new InternetAddress[]{new InternetAddress(from)});
+        boolean delivered = false;
+        for (int i = 0; i < 10; i++) {
+            try {
+                message.setSubject(subject, "UTF-8");
+                message.setHeader("Content-Type", "text/plain; charset=UTF-8");
+                message.addRecipient(RecipientType.TO, new InternetAddress(to));
+                message.addFrom(new InternetAddress[]{new InternetAddress(configuration.getSettings().sendMailFrom)});
+                message.setReplyTo(new InternetAddress[]{new InternetAddress(from)});
 
-            if (files != null) {
-                Multipart multipart = new MimeMultipart("mixed");
-                
-                BodyPart messageBodyPart = new MimeBodyPart();
-                messageBodyPart.setContent(content, "text/html; charset=UTF-8");
-                multipart.addBodyPart(messageBodyPart);
-                
-                for (String file : files.keySet()) {
-                    DataSource source = new FileDataSource(file);
-                    messageBodyPart = new MimeBodyPart();
-                    messageBodyPart.setDataHandler(new DataHandler(source));
-                    messageBodyPart.setFileName(files.get(file));
+                if (files != null) {
+                    Multipart multipart = new MimeMultipart("mixed");
+
+                    BodyPart messageBodyPart = new MimeBodyPart();
+                    messageBodyPart.setContent(content, "text/html; charset=UTF-8");
                     multipart.addBodyPart(messageBodyPart);
+
+                    for (String file : files.keySet()) {
+                        DataSource source = new FileDataSource(file);
+                        messageBodyPart = new MimeBodyPart();
+                        messageBodyPart.setDataHandler(new DataHandler(source));
+                        messageBodyPart.setFileName(files.get(file));
+                        multipart.addBodyPart(messageBodyPart);
+                    }
+
+                    message.setContent(multipart);
+                } else {
+                    message.setContent(content, "text/html; charset=UTF-8");
                 }
-                
-                message.setContent(multipart);
-            } else {
-                message.setContent(content, "text/html; charset=UTF-8");
+
+                if (frameworkConfig.productionMode) {
+                    Transport.send(message);
+                    delivered = true;
+                    break;
+                } else {
+                    System.out.println("Mail sent to: " + to + ", from: " + from + ", subject: " + subject + ", content: " + content);
+                    break;
+                }
+            } catch (Exception ex) {
+                logger.error(this, "Was not able to send email to" + to + " from: " + from + " subject: " + subject);
+                ex.printStackTrace();
             }
-            
-            if (frameworkConfig.productionMode) {
-                Transport.send(message);
-            } else {
-                System.out.println("Mail sent to: " + to + ", from: "+from+", subject: " + subject + ", content: " + content);
+            try {
+                Thread.sleep(1000*60*30);
+            }catch(Exception e) {
+                e.printStackTrace();
             }
-            
-        } catch (Exception ex) {
-            logger.error(this, "Was not able to send email... ", ex);
         }
         
+        if(!delivered) {
+            warnNotDelivered();
+        }
+        
+
         if (delete && !files.isEmpty()) {
             for (String file : files.keySet()) {
                 try {

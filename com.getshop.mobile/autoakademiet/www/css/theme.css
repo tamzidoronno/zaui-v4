@@ -54,6 +54,7 @@
     background-image:         linear-gradient(#fefefe, #cecece) !important;
     margin-right: 20px !important;
     margin-left: 20px !important;
+    padding-top: 65px;
 }
 
 .disabled {
@@ -284,6 +285,7 @@ label.error {
     margin-top: 10px;
     margin-left: 10px;
     left: 10px;
+    width: 300px;
 }
 
 #news .newsentry .content {
@@ -432,4 +434,13 @@ html body .ui-group-theme-a .ui-bar-inherit {
 
 .extrainformationforgroup {
     margin-top: 10px;
+}
+
+.mainmenu .menu_entry {
+    /*font-size: 0px;*/
+}
+
+.mainmenu .menu_entry img {
+    padding: 0px; 
+    margin-bottom: -5px;
 }

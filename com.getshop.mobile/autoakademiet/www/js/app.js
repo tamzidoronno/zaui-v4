@@ -13,7 +13,7 @@ App = {
     token: "",
     firstConnected: false,
     numberOfMonthToShowInCalendar: 6,
-    lang: 'se',
+    lang: 'no',
     start: function () {
         this.setLanguageMode();
         this.getshopApi = new GetShopApiWebSocket(this.address);
@@ -27,7 +27,7 @@ App = {
     },
     setLanguageMode: function () {
         if (App.lang === 'se') {
-            App.address = "promeisterse.local.getshop.com";
+            App.address = "promeisterse.getshop.com";
             App.appName = "ProMeisterAcademeySe";
         } else {
             App.address = "mecademo.getshop.com";
@@ -95,7 +95,7 @@ App = {
             'Velg sted for filtrering på kalenderen.': 'Välj ort för att filtrera kalendern.',
             'Ledige plasser på valgt kurs': 'Lediga platser på vald kurs',
             'Sett meg på venteliste': 'Sätt mig på väntelista',
-            'Meld på': 'Anmälan',
+            'Meld på': 'Anmäl',
             'Ledige plasser': 'Lediga platser',
             'Mer informasjon': 'Mer info',
             'Påmelding venteliste': 'Anmälan väntelista',
@@ -108,7 +108,7 @@ App = {
             'Trykk for å velge' : 'Tryck för att välja',
             'Epost addressen er ikke gyldig.' : 'Epostadressen är inte giltigt.',
             'Epost teknisk leder er ikke gyldig.' : 'Epost Verkstaden är inte giltig.',
-            'Du har ikke oppgitt riktig telefonnr, det må være 8 siffer.' : 'Du har inte angett ett giltigt telefonnr, det måste innehålla 8 siffror.',
+            'Du har ikke oppgitt riktig telefonnr, det må være 8 siffer.' : 'Du har inte angett ett giltigt telefonnr, det måste innehålla 10 siffror.',
             'Vennligst rett feltene i rødt' : 'Vänligen korrigera rödmarkerade fält',
             'klarte ikke å finne firma med oppgitt org.nr, vennligst sjekk' : 'Hittade inget företag med angivet org.nr. Kontrollera numret',
             'Du er nå meldt på ventelisten' : 'Du står nu på väntelista',
@@ -594,7 +594,10 @@ App = {
         if (email === "" || !this.validateEmail(invoiceemail))
             $('label[for=emailinvoice]').addClass('error');
 
-        if (phone === "" || phone.length !== 8)
+        if (App.lang == "no" && (phone === "" || phone.length !== 8))
+            $('label[for=phone]').addClass('error');
+        
+        if (App.lang == "se" && (phone === "" || phone.length !== 10))
             $('label[for=phone]').addClass('error');
 
         if (vatnr === "")
@@ -634,7 +637,7 @@ App = {
             }
         }
 
-        if (phone.length !== 8) {
+        if ((App.lang == "no" && phone.length !== 8) || (App.lang == "se" && phone.length !== 10) ) {
             alert(App.translateText("Du har ikke oppgitt riktig telefonnr, det må være 8 siffer."));
             return;
         }
@@ -760,7 +763,7 @@ App = {
             outer.css('text-align', 'center');
             informationPage.html(outer);
             var emptyRow = $('<div><div class="description"/><div class="value"/></div>');
-            this.getshopApi.UtilManager.getCompanyFromBrReg(value).done(function (company) {
+            this.getshopApi.UtilManager.getCompanyFree(value).done(function (company) {
                 informationPage.html("");
 
                 if (!company.name) {

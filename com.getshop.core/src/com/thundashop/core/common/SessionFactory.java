@@ -6,6 +6,7 @@ package com.thundashop.core.common;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -87,7 +88,8 @@ public class SessionFactory extends DataCommon {
 
     private void cleanUp() {
         List<String> removeSessions = new ArrayList();
-        for (String sessionId : sessions.keySet()) {
+        Set<String> keys = sessions.keySet();
+        for (String sessionId : keys) {
             ThundashopSession session = sessions.get(sessionId);
             if (session.hasExpired()) {
                 removeSessions.add(sessionId);

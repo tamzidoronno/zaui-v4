@@ -108,7 +108,14 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
             return;
         }
         
+        if (to != null && to.length() > 1 && to.startsWith("0")) {
+            to = to.substring(1);
+        }
+        
+        String urlString = "http://api.clickatell.com/http/sendmsg?user="+config.getUsername()+"&password="+config.getPassword()+"&api_id="+config.getApiId()+"&concat=3&to="+config.getNumberprefix()+to+"&"+"&text="+message;
+        
         if (!frameworkConfig.productionMode) {
+            System.out.println("Url for sms: " + urlString);
             System.out.println("Sent SMS [ to: " + to + ", from: " + from +", Message: " + message + " ]");
             return;
         }
@@ -125,7 +132,7 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         try {
             message = URLEncoder.encode(message, "ISO-8859-1");
 //            String urlString = "http://api.clickatell.com/http/sendmsg?user=boggibill&password=RKCDcOSAECbKeY&from=ProMeister&api_id=3492637&to=47"+to+"&text="+message;
-            String urlString = "http://api.clickatell.com/http/sendmsg?user="+config.getUsername()+"&password="+config.getPassword()+"&api_id="+config.getApiId()+"&concat=3&to="+config.getNumberprefix()+to+"&"+"&text="+message;
+            
             url = new URL(urlString);
             dis = new DataInputStream(new BufferedInputStream(is));
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));

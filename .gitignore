@@ -92,3 +92,11 @@ com.getshop.mobile/autoakademiet/www/nbproject/private/private.properties
 
 com.getshop.client/ROOT/diplomapictures
 *private/*
+
+
+#phonegap - autoakademiet
+com.getshop.mobile/autoakademiet/platforms/android/CordovaLib/ant-build
+com.getshop.mobile/autoakademiet/platforms/android/ant-build
+com.getshop.mobile/autoakademiet/platforms/android/ant-gen
+com.getshop.mobile/autoakademiet/platforms/android/AndroidManifest.xml
+com.getshop.mobile/autoakademiet/apk/

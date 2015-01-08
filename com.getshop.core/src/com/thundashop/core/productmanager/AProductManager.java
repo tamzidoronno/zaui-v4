@@ -56,6 +56,10 @@ public abstract class AProductManager extends ManagerBase {
             product.page = pageManager.getPage(product.pageId);
         }
 
+        if (product.pageId == null) {
+            product.pageId = pageManager.createPage().id;
+        }
+        
         product.attributesAdded = new HashMap();
         for (String attrid : product.attributes) {
             AttributeValue val = pool.getAttributeByValueId(attrid);

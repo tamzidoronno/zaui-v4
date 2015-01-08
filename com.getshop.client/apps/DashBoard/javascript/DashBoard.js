@@ -13,20 +13,19 @@ app.DashBoard = {
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Month');
         data.addColumn('number', 'Logins');
-        data.addColumn('number', 'Badges');
         data.addRows([
-            ['January', 2, 1],
-            ['Feburary', 6, 0],
-            ['March', 5, 12],
-            ['April', 7, 5],
-            ['May', 10, 0],
-            ['June', 15, 2],
-            ['July', 12, 5],
-            ['August', 25, 2],
-            ['September', 30, 0],
-            ['Oktober', 33, 0],
-            ['November', 25, 0],
-            ['December', 12, 10]
+            ['January', app.DashBoard.logins[0]],
+            ['Feburary', app.DashBoard.logins[1]],
+            ['March', app.DashBoard.logins[2]],
+            ['April', app.DashBoard.logins[3]],
+            ['May', app.DashBoard.logins[4]],
+            ['June', app.DashBoard.logins[5]],
+            ['July', app.DashBoard.logins[6]],
+            ['August', app.DashBoard.logins[7]],
+            ['September', app.DashBoard.logins[8]],
+            ['Oktober', app.DashBoard.logins[9]],
+            ['November', app.DashBoard.logins[10]],
+            ['December', app.DashBoard.logins[11]]
         ]);
 
         // Set chart options

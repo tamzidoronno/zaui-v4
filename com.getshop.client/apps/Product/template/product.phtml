@@ -13,48 +13,58 @@ $product = $this->getApi()->getProductManager()->getProductByPage($this->getPage
 </div>
 
 <div class="images">
-    <div class="mainimage">
-        <?
-        if (isset($product->imagesAdded[0])) {
-            $fistImage = $product->imagesAdded[0];
-            echo "<img src='/displayImage.php?id=$fistImage'/>";
-        } else {
-            echo '<i class="fa fa-image"></i>';
-        }
-        ?>
-    </div>
-    <div class="subimages">
-        <?
-        $i = 0;
-        foreach ($product->imagesAdded as $image) {
-            if ($image == $fistImage) {
-                continue;
+    <section id="gallery">
+        <div class="mainimage">
+            <?
+            if (isset($product->imagesAdded[0])) {
+                $fistImage = $product->imagesAdded[0];
+                echo "<a class='gs_ignorenavigate fluidbox' rel='sample-gallery' href='/displayImage.php?id=$fistImage'><img src='/displayImage.php?id=$fistImage'/></a>";
+            } else {
+                echo '<i class="fa fa-image"></i>';
+            }
+            ?>
+        </div>
+
+        <div class="subimages">
+            <?
+            $i = 0;
+            $subImagesExists = false;
+            foreach ($product->imagesAdded as $image) {
+                if ($image == $fistImage) {
+                    continue;
+                }
+                
+                $subImagesExists = true;
+                if ($i == 0) {
+                    echo "<div>";
+                }
+
+                $i++;
+
+                $class = "";
+                if ($i == 1) {
+                    $class = "first_in_row";
+                }
+                if ($i == 3) {
+                    $class = "last_in_row";
+                }
+
+                echo "<div class='subimage $class'><a class='gs_ignorenavigate fluidbox' rel='sample-gallery' href='/displayImage.php?id=$image'><img src='/displayImage.php?id=$image'/></a></div>";
+
+
+                if ($i == 3) {
+                    $i = 0;
+                    echo "</div>";
+                }
             }
 
-            if ($i == 0) {
-                echo "<div>";
-            }
-
-            $i++;
-
-            $class = "";
-            if ($i == 1) {
-                $class = "first_in_row";
-            }
-            if ($i == 3) {
-                $class = "last_in_row";
-            }
-
-            echo "<div class='subimage $class'><img src='/displayImage.php?id=$image'/></div>";
-
-
-            if ($i == 3) {
+            if ($i != 0 && $subImagesExists) {
                 $i = 0;
                 echo "</div>";
             }
-        }
-        ?>
-    </div>
+            ?>
+        </div>
+    </section>
 </div>
 <div class="product_contentbox">
 
@@ -74,6 +84,9 @@ $product = $this->getApi()->getProductManager()->getProductByPage($this->getPage
     var imagecontainerwidth = parent.find('.images').outerWidth();
     var contentBoxWidth = containerWidth - imagecontainerwidth - 5;
     $('.product_contentbox').outerWidth(contentBoxWidth);
-
-
+    
+    $(document).ready(function() {
+        $('.fluidbox').fluidbox();
+    });
+    
 </script>

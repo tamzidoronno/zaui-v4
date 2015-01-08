@@ -11,6 +11,7 @@ import com.thundashop.core.start.Runner;
 import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.Group;
+import com.thundashop.core.usermanager.data.LoginHistory;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCounter;
 import com.thundashop.core.usermanager.data.UserPrivilege;
@@ -35,15 +36,16 @@ import org.springframework.stereotype.Component;
 @Component
 @GetShopSession
 public class UserManager extends ManagerBase implements IUserManager, StoreInitialized {
-    
     public SessionFactory sessionFactory = new SessionFactory();
     public ConcurrentHashMap<String, UserStoreCollection> userStoreCollections = new ConcurrentHashMap<String, UserStoreCollection>();
 
-	private List<UserDeletedEventListener> userDeletedListeners = new ArrayList();
+    private List<UserDeletedEventListener> userDeletedListeners = new ArrayList();
     
     private UserCounter counter = new UserCounter();
 
     private SecureRandom random = new SecureRandom();
+    
+    private LoginHistory loginHistory = new LoginHistory();
     
     @Autowired
     private PageManager pageManager;
@@ -64,6 +66,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 UserStoreCollection userStoreCollection = getUserStoreCollection(dataCommon.storeId);
                 if (dataCommon instanceof User) {
                     userStoreCollection.addUserDirect((User) dataCommon);
+                }
+                if (dataCommon instanceof LoginHistory) {
+                    loginHistory = (LoginHistory) dataCommon;
                 }
                 if (dataCommon instanceof Group) {
                     userStoreCollection.addGroup((Group)dataCommon);
@@ -189,6 +194,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         addUserToSession(user);
         
+        loginHistory.markLogin(user);
+        saveObject(loginHistory);
         return user;
     }
 
@@ -765,5 +772,14 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         customer.type = User.Type.CUSTOMER;
         UserStoreCollection collection = getUserStoreCollection(storeId);
         collection.addUser(customer);
+    }
+
+    @Override
+    public List<Integer> getLogins(int year) {
+        List<Integer> logins = new ArrayList();
+        for (int i=0; i<12; i++) {
+            logins.add(loginHistory.getLogins(year, i));
+        }
+        return logins;
     }
 }

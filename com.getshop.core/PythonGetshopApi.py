@@ -5712,6 +5712,21 @@ class UserManager(object):
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getLogins(self, year):
+    args = collections.OrderedDict()
+    if isinstance(year,GetShopBaseClass): 
+      args["year"]=json.dumps(year.__dict__)
+    else:
+      try:
+        args["year"]=json.dumps(year)
+      except (ValueError, AttributeError):
+        args["year"]=year
+    data = EmptyClass()
+    data.args = args
+    data.method = "getLogins"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getUserById(self, id):
     args = collections.OrderedDict()
     if isinstance(id,GetShopBaseClass): 

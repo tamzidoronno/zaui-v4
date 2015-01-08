@@ -21,7 +21,9 @@ class DashBoard extends \ApplicationBase implements \Application {
     }
     
     public function getDashboardChart($year=false) {
-        
+        echo "<script>";
+        echo "app.DashBoard.logins=".json_encode($this->getApi()->getUserManager()->getLogins($year));
+        echo "</script>";
         return ['fa-area-chart', 'app.DashBoard.drawChart', $this->__f("Overview")];
     }
 

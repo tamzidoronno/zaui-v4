@@ -312,4 +312,7 @@ public interface IUserManager {
     
     @Administrator
     public void upgradeUserToGetShopAdmin(String password);
+    
+    @Editor
+    public List<Integer> getLogins(int year);
 }

@@ -25,6 +25,11 @@ class Login extends \SystemApplication implements \Application {
     
     public function preProcess() {
         if (isset($_POST['loginbutton'])) {
+            $loggedIn = Login::getUserObject();
+            if ($loggedIn) {
+                return;
+            }
+            
             $userLoggedIn = $this->getApi()->getUserManager()->logOn($_POST['username'], $_POST['password']);
             
             if ($userLoggedIn != null && isset($userLoggedIn)) {

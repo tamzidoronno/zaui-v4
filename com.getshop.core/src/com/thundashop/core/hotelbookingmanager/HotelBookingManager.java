@@ -44,6 +44,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -661,6 +662,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                     messageManager.sendMail("post@getshop.com", "GetShop", "failed to log on to ftp visma server..", "Failed to connect to ftp server: " + vismaSettings.address + " with username: " + vismaSettings.username + " to upload file. ", "post@getshop.com", "Internal process");
                     return;
                 }
+
                 String filename = "orders_" + new SimpleDateFormat("yyyyMMdd-k_m").format(new Date()) + ".edi";
                 String path = "/tmp/" + filename;
                 PrintWriter writer = new PrintWriter(path, "ISO-8859-1");
@@ -672,11 +674,21 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 if (!done) {
                     messageManager.sendMail("post@getshop.com", "GetShop", "failed to upload file to visma.", "Failed to connect to ftp server: " + vismaSettings.username + " to upload file. ( " + client.getReplyString() + ")", "post@getshop.com", "Internal process");
                 }
+                client.disconnect();
             } catch (Exception e) {
+                if (client.isConnected()) {
+                    try {
+                        client.disconnect();
+                    } catch (IOException ex) {
+                        Logger.getLogger(HotelBookingManager.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
                 messageManager.sendMail("post@getshop.com", "GetShop", "failed to upload file to visma.", "something failed when uploading visma file. ", "post@getshop.com", "Internal process");
                 e.printStackTrace();
             }
         }
+        
+        
     }
 
     @Override
@@ -884,4 +896,6 @@ private void finalizeRoom(Room tmpRoom) throws ErrorException {
             }
         }
     }
+
+    
 }

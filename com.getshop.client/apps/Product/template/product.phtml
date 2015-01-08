@@ -18,7 +18,7 @@ $product = $this->getApi()->getProductManager()->getProductByPage($this->getPage
             <?
             if (isset($product->imagesAdded[0])) {
                 $fistImage = $product->imagesAdded[0];
-                echo "<a class='gs_ignorenavigate' rel='lightbox' href='/displayImage.php?id=$fistImage'><img src='/displayImage.php?id=$fistImage'/></a>";
+                echo "<a class='gs_ignorenavigate fluidbox' rel='sample-gallery' href='/displayImage.php?id=$fistImage'><img src='/displayImage.php?id=$fistImage'/></a>";
             } else {
                 echo '<i class="fa fa-image"></i>';
             }
@@ -49,7 +49,7 @@ $product = $this->getApi()->getProductManager()->getProductByPage($this->getPage
                     $class = "last_in_row";
                 }
 
-                echo "<div class='subimage $class'><a class='gs_ignorenavigate ' rel='lightbox' href='/displayImage.php?id=$image'><img src='/displayImage.php?id=$image'/></a></div>";
+                echo "<div class='subimage $class'><a class='gs_ignorenavigate fluidbox' rel='sample-gallery' href='/displayImage.php?id=$image'><img src='/displayImage.php?id=$image'/></a></div>";
 
 
                 if ($i == 3) {
@@ -84,5 +84,9 @@ $product = $this->getApi()->getProductManager()->getProductByPage($this->getPage
     var imagecontainerwidth = parent.find('.images').outerWidth();
     var contentBoxWidth = containerWidth - imagecontainerwidth - 5;
     $('.product_contentbox').outerWidth(contentBoxWidth);
-    $('.Product #gallery a[rel="lightbox"]').fluidbox();
+    
+    $(document).ready(function() {
+        $('.fluidbox').fluidbox();
+    });
+    
 </script>

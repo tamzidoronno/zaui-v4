@@ -146,9 +146,9 @@ class Factory extends FactoryBase {
         echo "\n" . '<script type="text/javascript" src="js/jcrop/js/jquery.Jcrop.min.js"></script>';
         echo "\n" . '<script type="text/javascript" src="/js/colresize.js"></script>';
         
-        //LightBox
+        // FluidBox
         echo "\n" . '<script type="text/javascript" src="js/imagelightbox.min.js"></script>';
-        echo "\n" . '<link href="js/lighbox/css/lightbox.css" rel="stylesheet" />';
+        echo "\n" . '<link href="skin/default/fluidbox.css" rel="stylesheet" />';
 
 
         echo "\n" . '<script type="text/javascript" src="js/jquery.ui/js/jquery-ui-1.9.2.custom.min.js"></script>';

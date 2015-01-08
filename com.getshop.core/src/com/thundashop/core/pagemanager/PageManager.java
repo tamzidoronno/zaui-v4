@@ -100,7 +100,7 @@ public class PageManager extends ManagerBase implements IPageManager {
     public Page getPage(String id) throws ErrorException {
         createDefaultPages();
         Page page = pages.get(id);
-                
+
         if (page == null) {
             return null;
         }

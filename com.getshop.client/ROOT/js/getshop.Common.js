@@ -102,6 +102,10 @@ $(function() {
             return;
         }
         
+        if ($(this).hasClass('gs_ignorenavigate')) {
+            return;
+        }
+        
         event.stopPropagation();
         event.preventDefault();
 

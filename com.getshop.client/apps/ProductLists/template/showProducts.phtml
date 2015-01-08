@@ -5,6 +5,10 @@ $columnSize = $this->getColumnSize();
 $view = $this->isGridView() ? "grid_view" : "";
 $view = $this->isRowView() ? "row_view" : $view;
 
+if($this->getFactory()->isMobile()) {
+    $view = "grid_view";
+}
+
 ?>
 <div class="products <? echo $view; ?>"  listid="<? echo $this->getConfigurationSetting("productlist"); ?>">
     <?

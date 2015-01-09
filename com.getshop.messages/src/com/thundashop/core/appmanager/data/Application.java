@@ -80,4 +80,16 @@ public class Application extends DataCommon implements Comparator<Application> {
         return gson.fromJson(json, Application.class);
     }
 
+    public String getSetting(String key) {
+        Setting setting = settings.get(key);
+        if (setting == null) {
+            return "";
+        }
+        
+        if (setting.value == null) {
+            return "";
+        }
+        
+        return setting.value;
+    }
 }

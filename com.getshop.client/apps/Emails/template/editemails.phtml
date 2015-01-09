@@ -1,0 +1,14 @@
+<?
+$app = $this->getEmailApp($_POST['value']);
+?>
+
+<div class='gss_settings_content'>
+    <input type='hidden' gs_model='emailmodel' gs_model_attr='gsEmailAppId' value='<? echo $app->getApplicationSettings()->id;?>' />
+    <? $app->gsEmailSetup(false); ?>
+    <br/>
+    <br/>
+    
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="saveEmailSettings" gss_model="emailmodel" gss_success_message='Saved'><i class='fa fa-save'></i><?php echo $this->__("Save"); ?></div>
+    </div>
+</div>

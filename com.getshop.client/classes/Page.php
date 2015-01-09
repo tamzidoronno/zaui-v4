@@ -247,6 +247,10 @@ class Page {
 
     function printCell($cell, $count, $depth, $totalcells, $edit, $parent) {
 
+        if ($cell->hideOnMobile && !$this->factory->isEditorMode()) {
+            return;
+        }
+        
         $rowedit = "";
         $roweditouter = "";
         if ($edit) {

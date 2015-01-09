@@ -53,3 +53,11 @@
     padding-left: 20px;
     float: right;
 }
+
+@media only all and (max-width: 800px) {
+    .Contact .shop_button {
+        padding: 0px;
+        float:none;
+        margin-top: 10px;
+    }
+}

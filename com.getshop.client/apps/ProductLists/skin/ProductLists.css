@@ -348,5 +348,17 @@
 }
 
 @media only all and (max-width: 800px) { 
-    .productbox { width: 100% !important; }
+    .productbox { width: 100% !important; margin-bottom: 20px; }
+    .productbox_outer { width: 100% !important; }
+    .ProductLists .products.grid_view .productbox { width: 100% !important; height: auto; padding-bottom: 100px; }
+    .ProductLists .products.grid_view .productbox .short_description { height: auto; font-size: 12px; padding-bottom: 5px; }
+    .ProductLists .product_title { padding-top: 120px; }
+    .ProductLists .grid_view .shop_button { margin-top: 35px !important; }
+    .ProductLists .product_price { color:green; }
+    
+    .ProductLists .webshop_button_area {
+        padding-top: 10px;
+        padding-left: 3px;
+        padding-right: 3px;
+    }
 }

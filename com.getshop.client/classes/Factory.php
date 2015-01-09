@@ -712,7 +712,7 @@ class Factory extends FactoryBase {
     }
 
     public function printTemplateFunctions() {
-        if ($this->store && $this->store->isTemplate) {
+        if ($this->store && $this->store->isTemplate && !$this->isMobile()) {
             $this->includefile("templatefunctions", 'Common');
         }
         

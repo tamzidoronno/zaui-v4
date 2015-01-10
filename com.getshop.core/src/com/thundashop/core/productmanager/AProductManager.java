@@ -14,6 +14,7 @@ import com.thundashop.core.productmanager.data.AttributeData;
 import com.thundashop.core.productmanager.data.AttributeSummary;
 import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.ProductConfiguration;
 import com.thundashop.core.productmanager.data.ProductCriteria;
 import com.thundashop.core.productmanager.data.ProductImage;
 import com.thundashop.core.productmanager.data.ProductList;
@@ -40,6 +41,7 @@ public abstract class AProductManager extends ManagerBase {
     protected HashMap<String, Product> products = new HashMap();
     AttributeData pool = new AttributeData();
     AttributeSummary cachedResult;
+    public ProductConfiguration productConfiguration = new ProductConfiguration();
     public HashMap<Integer, TaxGroup> taxGroups = new HashMap();
 
     @Autowired

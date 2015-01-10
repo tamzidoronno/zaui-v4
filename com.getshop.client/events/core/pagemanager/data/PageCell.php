@@ -7,6 +7,12 @@ class core_pagemanager_data_PageCell {
 	public $hideOnMobile;
 
 	/** @var String */
+	public $isHidden;
+
+	/** @var String */
+	public $systemCellName;
+
+	/** @var String */
 	public $incrementalCellId;
 
 	/** @var String */

@@ -14,7 +14,7 @@ public class PageCell implements Serializable {
     }
 
     /* Mode for the cell */
-    static class CellMode {
+    public static class CellMode {
         public static String column = "COLUMN";
         public static String row = "ROW";
         public static String rotating = "ROTATING";
@@ -23,14 +23,16 @@ public class PageCell implements Serializable {
         public static String init = "INIT";
     }
     
-    static class CellType {
+    public static class CellType {
         public static String normal = "NORMAL";
         public static String floating = "FLOATING";
     }
     
 
-    String cellName = "";
+    public String cellName = "";
     boolean hideOnMobile = false;
+    public boolean isHidden = false;
+    public String systemCellName = "";
     public Integer incrementalCellId;
     public String cellId = UUID.randomUUID().toString();
     public String mode = CellMode.column;

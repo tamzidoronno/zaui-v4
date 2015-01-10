@@ -115,7 +115,7 @@ public class PageLayout implements Serializable {
         } else {
             PageCell cell = findCell(getAllCells(), incell);
             double newwidth = -1;
-            if (cell.cells.isEmpty()) {
+            if (cell.cells.isEmpty() && !cell.isTab() && !cell.isRotating()) {
                 if(!PageCell.CellType.floating.equals(mode)) {
                     PageCell newcell = cell.createCell(before);
                     newcell.extractDataFrom(cell, false);
@@ -128,7 +128,7 @@ public class PageLayout implements Serializable {
                 }
 
                     //Each cell as a subcell need to be the same.
-                if (!cell.cells.get(0).mode.equals(mode)) {
+                if (!cell.cells.isEmpty() && !cell.cells.get(0).mode.equals(mode)) {
                     PageCell newcell = initNewCell(mode);
                     newcell.extractDataFrom(cell, true);
                     cell.clear();
@@ -523,5 +523,9 @@ public class PageLayout implements Serializable {
     public void togglePinArea(String cellId) {
         PageCell cell = getCell(cellId);
         cell.floatingData.pinned = !cell.floatingData.pinned;
+    }
+
+    public List<PageCell> getCells(String area) {
+        return areas.get(area);
     }
 }

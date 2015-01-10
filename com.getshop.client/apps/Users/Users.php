@@ -19,7 +19,7 @@ class Users extends \SystemApplication implements \Application {
     }
     
     public function renderConfig() {
-        $this->includefile("overview");        
+        $this->includefile("overview");
     }
 
     public function postProcess() {

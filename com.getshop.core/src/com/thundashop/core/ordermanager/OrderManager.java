@@ -2,6 +2,8 @@ package com.thundashop.core.ordermanager;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.applications.StoreApplicationInstancePool;
+import com.thundashop.core.applications.StoreApplicationPool;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
@@ -53,6 +55,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Autowired
     private StoreApplicationInstancePool storeApplicationInstancePool;
+    
+    @Autowired
+    private StoreApplicationPool storeApplicationPool;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -116,8 +121,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
     
     private String formatText(Order order, String text) throws ErrorException {
-        text = text.replace("/displayImage", "http://" + storeManager.getMyStore().webAddress + "/displayImage");
+        text = text.replace("\n", "<br/>");
+//        text = text.replace("/displayImage", "http://" + storeManager.getMyStore().webAddress + "/displayImage");
         text = text.replace("{Order.Id}", order.id);
+        text = text.replace("{Order.IncrementalOrderId}", ""+order.incrementOrderId);
         text = text.replace("{Order.Lines}", getOrderLines(order));
         
         if (order.cart.address.fullName != null) {
@@ -147,14 +154,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return text;
     }
     
-    public String getCustomerOrderText(Order order) throws ErrorException {
-        HashMap<String, Setting> settings = getSettings("MailManager");
-        if (settings != null && settings.get("ordermail") != null) {
-            Setting setting = settings.get("ordermail");
-            String value = setting.value;
-            if (value != null && !value.equals("")) {
-                return formatText(order, value);
-            }
+    private String getCustomerOrderText(Order order, String textTemplate) throws ErrorException {
+        if (textTemplate != null && !textTemplate.isEmpty()) {
+            return formatText(order, textTemplate);
         }
         return getDefaultOrderText(order);
     }
@@ -208,20 +210,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             item.getProduct().price = price;
         }
     }
-    
-    private String getSubject() throws ErrorException {
-        HashMap<String, Setting> settings = getSettings("MailManager");
-        if (settings != null && settings.get("ordermail_subject") != null) {
-            Setting setting = settings.get("ordermail_subject");
-            String value = setting.value;
-            if (value != null) {
-                return value;
-            }
-        }
-        
-        return "Thank you for your order";
-    }
-    
+
     @Override
     public Order createOrder(Address address) throws ErrorException {
         Order order = createOrderInternally(address);
@@ -433,10 +422,21 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         updateStockQuantity(order, "trackControl");
         updateCouponsCount(order);
         
-        Store store = storeManager.getMyStore();
-        String orderText = getCustomerOrderText(order);
+        Application orderManagerApplication = storeApplicationPool.getApplication("27716a58-0749-4601-a1bc-051a43a16d14");
+        if (!orderManagerApplication.getSetting("shouldSendEmail").equals("true")) {
+            return;
+        }
         
-        String subject = getSubject();
+        Store store = storeManager.getMyStore();
+        String orderText = getCustomerOrderText(order, orderManagerApplication.getSetting("orderemail"));
+       
+        String subject = orderManagerApplication.getSetting("ordersubject");
+        if (subject.isEmpty()) {
+            subject = "Thanks for your order";
+        }
+        
+        subject = formatText(order, subject);
+        
         HashMap<String, Setting> settings = getSettings("Settings");
         
         if (settings != null && settings.containsKey("stoporderemail") && settings.get("stoporderemail").value.equals("true")) {
@@ -444,10 +444,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         if (!subject.isEmpty()) {
-            mailFactory.send(store.configuration.emailAdress, order.cart.address.emailAddress, getSubject(), orderText);
+            mailFactory.send(store.configuration.emailAdress, order.cart.address.emailAddress, subject, orderText);
             
             if (store.configuration.emailAdress != null && !store.configuration.emailAdress.equals(order.cart.address.emailAddress)) {
-                mailFactory.send(store.configuration.emailAdress, store.configuration.emailAdress, getSubject(), orderText);
+                mailFactory.send(store.configuration.emailAdress, store.configuration.emailAdress, subject, orderText);
             }
         }
     }

@@ -53,17 +53,17 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-//        Application brainTree = createSettings("BrainTree",
-//                "542e6a1e-9927-495c-9b6d-bb52af4ea9be",
-//                allowed2,
-//                "",
-//                Application.Type.Payment, true);
-//        brainTree.isPublic = true;
-//        brainTree.moduleId = "WebShop";
-//        brainTree.type = "PaymentApplication";
-//        brainTree.activeAppOnModuleActivation = false;
-//        apps.add(brainTree);
-//        
+        Application emails = createSettings("Emails",
+                "6ad9d19a-ccc7-4549-bec1-b240a95366bc",
+                allowed2,
+                "",
+                Application.Type.System, true);
+        emails.isPublic = true;
+        emails.moduleId = "hidden";
+        emails.type = "System";
+        emails.defaultActivate = true;
+        apps.add(emails);
+        
 //        Application button = createSettings("Button",
 //                "2996287a-c23e-41ad-a801-c77502372789",
 //                allowed2,

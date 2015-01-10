@@ -11,7 +11,7 @@ class OrderManager extends \WebshopApplication implements \Application {
     }
 
     public function getName() {
-        
+        return $this->__f("OrderManager");
     }
 
     public function postProcess() {
@@ -103,6 +103,17 @@ class OrderManager extends \WebshopApplication implements \Application {
     public function filterOrders() {
         $_SESSION['gss_orders_currentPageNumber'] = 1;
         $_SESSION['gss_orders_filter'] = $_POST['order_filter'];
+    }
+    
+    public function gsEmailSetup($model) {
+        if (!$model) {
+            $this->includefile("emailsettings");
+            return;
+        } 
+        
+        $this->setConfigurationSetting("ordersubject", $_POST['ordersubject']);
+        $this->setConfigurationSetting("orderemail", $_POST['emailconfig']);
+        $this->setConfigurationSetting("shouldSendEmail", $_POST['shouldSendEmail']);
     }
     
     public function showOrder() {

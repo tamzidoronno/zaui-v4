@@ -353,7 +353,6 @@ public class PageManager extends ManagerBase implements IPageManager {
                 ApplicationInstance instance = storeApplicationPool.createNewInstance(productApplicationId);
                 page.layout.addApplicationToFirstFreeBodyCell(instance.id);
                 savePage(page);
-                System.out.println("Should have an app");
             }
         }
     }

@@ -41,6 +41,12 @@ if($this->getFactory()->isMobile()) {
             ?>
                 <div class='productbox_outer'>
                     <div class='productbox'>
+                    <?
+                    if ($this->showRemoveButton()) {
+                        echo "<div class='remove_product_from_list' product_id='$product->id'><i class='fa fa-trash' title='".$this->__f("Remove from list")."'></i></div>";
+                    }
+                    ?>
+                    
                     <a ajaxlink='/?page=<? echo $pageId; ?>' href='<? echo $linkName;?>'>
                         <div class="product_row">
                             <?
@@ -79,7 +85,6 @@ if($this->getFactory()->isMobile()) {
 </div>
 <script>
     $(document).ready(function() {
-        
         var innerWidth = $('.products.grid_view[listid="<? echo $this->getConfigurationSetting("productlist"); ?>"]').innerWidth();
         var columnSize = Math.floor(innerWidth/<? echo $columnSize; ?>);
         var totalSize = columnSize * <? echo $columnSize; ?>;

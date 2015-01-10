@@ -247,7 +247,13 @@ class Page {
 
     function printCell($cell, $count, $depth, $totalcells, $edit, $parent) {
 
-        if ($cell->hideOnMobile && !$this->factory->isEditorMode()) {
+        if($this->factory->isMobile()) {
+            if ($cell->hideOnMobile && !$this->factory->isEditorMode()) {
+                return;
+            }
+        }
+
+        if($cell->isHidden == true) {
             return;
         }
         
@@ -652,6 +658,13 @@ class Page {
     }
 
     public function displayTabRow($parent, $edit, $cell) {
+        
+        $names = array();
+        $names['info'] = $this->factory->__w("Information");
+        $names['relatedProducts'] = $this->factory->__w("Related products");
+        $names['comments'] = $this->factory->__w("Comments");
+        $names['attributes'] = $this->factory->__w("Attributes");
+        
         echo "<div class='gstabheader'>";
         $first = true;
         foreach ($parent->cells as $innercell) {
@@ -664,6 +677,15 @@ class Page {
             if ($innercell->cellName) {
                 $tabName = $innercell->cellName;
             }
+            
+            if($innercell->isHidden) {
+                continue;
+            }
+            
+            if(isset($names[$tabName])) {
+                $tabName = $names[$tabName];
+            }
+            
             echo "<span class='gstabbtn $active' incrementid='" . $innercell->incrementalCellId . "' cellid='" . $innercell->cellId . "'>$tabName</span>";
         }
         if ($this->factory->isEditorMode() && !$this->factory->isMobile()) {

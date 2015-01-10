@@ -15,10 +15,12 @@ import com.thundashop.core.pagemanager.PageManager;
 import java.io.File;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.mail.BodyPart;
+import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
@@ -175,42 +177,58 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
     @Override
     public void run() {
         MimeMessage message = new MimeMessage(getSession());
-        
-        try {
-            message.setSubject(subject, "UTF-8");
-            message.setHeader("Content-Type", "text/plain; charset=UTF-8");
-            message.addRecipient(RecipientType.TO, new InternetAddress(to));
-            message.addFrom(new InternetAddress[]{new InternetAddress(mailSettings.sendMailFrom)});
-            message.setReplyTo(new InternetAddress[]{new InternetAddress(from)});
+        boolean delivered = false;
+        for(int i = 0; i < 24; i++) {
+            try {
+                message.setSubject(subject, "UTF-8");
+                message.setHeader("Content-Type", "text/plain; charset=UTF-8");
+                message.addRecipient(RecipientType.TO, new InternetAddress(to));
+                message.addFrom(new InternetAddress[]{new InternetAddress(mailSettings.sendMailFrom)});
+                message.setReplyTo(new InternetAddress[]{new InternetAddress(from)});
 
-            if (files != null) {
-                Multipart multipart = new MimeMultipart("mixed");
-                
-                BodyPart messageBodyPart = new MimeBodyPart();
-                messageBodyPart.setContent(content, "text/html; charset=UTF-8");
-                multipart.addBodyPart(messageBodyPart);
-                
-                for (String file : files.keySet()) {
-                    DataSource source = new FileDataSource(file);
-                    messageBodyPart = new MimeBodyPart();
-                    messageBodyPart.setDataHandler(new DataHandler(source));
-                    messageBodyPart.setFileName(files.get(file));
+                if (files != null) {
+                    Multipart multipart = new MimeMultipart("mixed");
+
+                    BodyPart messageBodyPart = new MimeBodyPart();
+                    messageBodyPart.setContent(content, "text/html; charset=UTF-8");
                     multipart.addBodyPart(messageBodyPart);
+
+                    for (String file : files.keySet()) {
+                        DataSource source = new FileDataSource(file);
+                        messageBodyPart = new MimeBodyPart();
+                        messageBodyPart.setDataHandler(new DataHandler(source));
+                        messageBodyPart.setFileName(files.get(file));
+                        multipart.addBodyPart(messageBodyPart);
+                    }
+
+                    message.setContent(multipart);
+                } else {
+                    message.setContent(content, "text/html; charset=UTF-8");
                 }
-                
-                message.setContent(multipart);
-            } else {
-                message.setContent(content, "text/html; charset=UTF-8");
+
+                if (frameworkConfig.productionMode) {
+                    Transport.send(message);
+                } else {
+                    System.out.println("Mail sent to: " + to + ", from: "+from+", subject: " + subject + ", content: " + content);
+                }
+                delivered = true;
+                break;
+            } catch (Exception ex) {
+                logger.error(this, "Was not able to send email on try: " + i + "( message: " + from + " - " + to + " " + subject + content + "");
             }
-            
-            if (frameworkConfig.productionMode) {
-                Transport.send(message);
-            } else {
-                System.out.println("Mail sent to: " + to + ", from: "+from+", subject: " + subject + ", content: " + content);
+            try {
+                Thread.sleep(1000);
+            }catch(Exception e) {
+                e.printStackTrace();
             }
-            
-        } catch (Exception ex) {
-            logger.error(this, "Was not able to send email... ", ex);
+        }
+        if(!delivered) {
+            logger.error(this, "Giving up sending email to -> message: " + from + " - " + to + " " + subject + content + "");
+            try {
+                message.setSubject("Failed on: " + subject);
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
         }
         
         if (delete && !files.isEmpty()) {

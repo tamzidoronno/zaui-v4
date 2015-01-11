@@ -65,6 +65,18 @@ class ApplicationManager extends FactoryBase {
         $data = substr($data, strrpos($data, ";base64,")+8);
         $content = base64_decode($data);
         $imgId = \FileUpload::storeFile($content);
+        
+        if(isset($_POST['data']['type'])) {
+            $store = $this->getFactory()->getStore();
+            if($_POST['data']['type'] == "mobile_portrait") {
+                $store->configuration->mobileImagePortrait = $imgId;
+            }
+            if($_POST['data']['type'] == "mobile_landscape") {
+                $store->configuration->mobileImageLandscape = $imgId;
+            }
+            $this->getApi()->getStoreManager()->saveStore($store->configuration);
+        }
+        
         echo $imgId;
     }
     

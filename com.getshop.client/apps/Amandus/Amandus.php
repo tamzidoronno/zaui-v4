@@ -37,7 +37,8 @@ class Amandus extends \ThemeApplication implements \Application {
     } 
     
     public function addScripts() {
-        echo "\n" . '<link id="google_webfont_1" rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,600">';
+        echo "\n" . "<link href='http://fonts.googleapis.com/css?family=Roboto:400,300italic,300,100italic,100,700,700italic,500,400italic,500italic' rel='stylesheet' type='text/css'>";
+        echo "\n" . "<link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>";
     }    
 
     public function postProcess() {

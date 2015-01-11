@@ -100,10 +100,24 @@ class Page {
 
     private function printMobileHeader($headerCells) {
         echo "<div class='gsmobileheader'>";
-        $logo = $this->findInstance($headerCells, "ImageDisplayer");
-        if ($logo) {
-            $logo->renderApplication();
+        $config = $this->factory->getStore()->configuration;
+        
+        echo "<div class='gsportraitimage'>";
+        if($config->mobileImagePortrait) {
+            echo "<img src='displayImage.php?id=" . $config->mobileImagePortrait . "' style='width:100%'>";
+        } else {
+            echo $this->factory->__w("No header uploaded for mobile potrait mode yet, please upload one.");
         }
+        echo "</div>";
+        
+        echo "<div class='gslandscapeimage'>";
+        if($config->mobileImageLandscape) {
+            echo "<img src='displayImage.php?id=" . $config->mobileImageLandscape . "' style='width:100%'>";
+        } else {
+            echo $this->factory->__w("No header uploaded for mobile landscape mode yet, please upload one.");
+        }
+        echo "</div>";
+        
         echo "</div>";
     }
 

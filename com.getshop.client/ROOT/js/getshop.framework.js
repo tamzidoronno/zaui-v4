@@ -67,6 +67,7 @@ thundashop.framework = {
         $(document).on('click', '.gsresizingpanel .closeresizing', this.closeResizing);
         $(document).on('click', '.gsresizingpanel .gssavechanges', this.saveCellChanges);
         $(document).on('change', '.gsresizingpanel .gsbgimageselection', this.loadImage);
+        $(document).on('change', '.gsmobileupload', this.loadImage);
         $(document).on('click', '.gsresizingpanel .gsremovebgimage', this.loadImage);
         $(document).on('change', '.gsdisplaygridcheckbox', this.toggleVisualization);
         $(document).on('click', '.gsresizingpanel .tabbtn[target="css"]', this.loadCssEditor);
@@ -149,7 +150,10 @@ thundashop.framework = {
          });
     },
     
-    hideMobileView: function () {
+    hideMobileView: function (event) {
+        if($(event.target).closest('.gsmobileconfiguration').length > 0 || $(this).hasClass('gsmobileconfiguration')) {
+            return;
+        }
         $('.gsmobileeditor').hide();
     },
     displayMobileView: function () {
@@ -158,6 +162,7 @@ thundashop.framework = {
         var sid = document.cookie.match('PHPSESSID=([^;]*)')[1];
         var location = window.location.protocol + "//mobile." + window.location.host + "/?page=" + $('#gspageid').val() + "&PHPSESSID=" + sid;
         $('#gscontentframe').attr('src', location);
+        $('#gscontentframelandscape').attr('src', location);
     },
     setCssAttributes: function (event) {
         var target = $(event.target);
@@ -674,8 +679,12 @@ thundashop.framework = {
             cell.css('background-color', "");
 
             var target = $(this);
-            target.closest('.gscolorselectionpanel').find('.gschoosebgimagebutton').hide();
-            target.closest('.gscolorselectionpanel').find('.gsuploadimage').show();
+            var type = "";
+            if(target.attr('data-type')) {
+                type = target.attr('data-type');
+            }
+            target.parent().find('.gschoosebgimagebutton').hide();
+            target.parent().find('.gsuploadimage').show();
             var files = evt.target.files; // FileList object
             var file = files[0];
             // Only process image files.
@@ -687,16 +696,27 @@ thundashop.framework = {
             reader.onload = (function (theFile) {
                 return function (e) {
                     var data = {
+                        "type" : type,
                         "data": e.target.result
                     }
                     var event = thundashop.Ajax.createEvent('', 'saveBackgroundImage', target, data);
                     thundashop.Ajax.postWithCallBack(event, function (id) {
-                        thundashop.framework.addCss('background-repeat', 'no-repeat', cellid, level);
-                        thundashop.framework.addCss('background-position', 'center', cellid, level);
-                        thundashop.framework.addCss('background-size', '100%', cellid, level);
-                        thundashop.framework.addCss('background-image', 'url("/displayImage.php?id=' + id + '")', cellid, level);
-                        target.closest('.gscolorselectionpanel').find('.gschoosebgimagebutton').show();
-                        target.closest('.gscolorselectionpanel').find('.gsuploadimage').hide();
+                        target.parent().find('.gschoosebgimagebutton').show();
+                        target.parent().find('.gsuploadimage').hide();
+                        target.val('');
+                        if(!type || type === "") {
+                            thundashop.framework.addCss('background-repeat', 'no-repeat', cellid, level);
+                            thundashop.framework.addCss('background-position', 'center', cellid, level);
+                            thundashop.framework.addCss('background-size', '100%', cellid, level);
+                            thundashop.framework.addCss('background-image', 'url("/displayImage.php?id=' + id + '")', cellid, level);
+                            target.closest('.gscolorselectionpanel').find('.gschoosebgimagebutton').show();
+                            target.closest('.gscolorselectionpanel').find('.gsuploadimage').hide();
+                        } else {
+                            var sid = document.cookie.match('PHPSESSID=([^;]*)')[1];
+                            var location = window.location.protocol + "//mobile." + window.location.host + "/?page=" + $('#gspageid').val() + "&PHPSESSID=" + sid;
+                            $('#gscontentframe').attr('src', location);
+                            $('#gscontentframelandscape').attr('src', location);
+                        }
                     });
                 };
             })(file);

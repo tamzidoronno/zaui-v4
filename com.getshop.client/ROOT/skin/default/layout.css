@@ -10,7 +10,7 @@ body,table,td,th  {
     font-size: 13px;
 }
 
-body {
+html {
     overflow-y:scroll;
 }
 

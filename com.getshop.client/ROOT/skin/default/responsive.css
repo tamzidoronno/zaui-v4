@@ -31,7 +31,7 @@
 body { padding-bottom: 100px; }
 
 
-.gsmobilemenu { position: fixed; width: 100%; bottom: 0px; height: 45px; background-color:#78b6e6; right:0px; color: #fff;z-index:6; padding-bottom: 20px; }
+.gsmobilemenu { position: fixed; width: 100%; bottom: 0px; height: 45px; background-color:#78b6e6; right:0px; color: #fff;z-index:6; }
 .gsmobilemenuentry { 
     display:inline-block; width: 60px; font-size: 10px; padding-bottom: 3px; padding-top: 3px; cursor:pointer; 
     text-align: center;
@@ -68,7 +68,18 @@ border-bottom: solid 1px rgba(255,255,255,0.5);
     height: 22px;
     background-color:rgba(0,0,0,0.8);
 }
-.gsmobilesearchbox { position: fixed; height: 20px; width:100%; left: 0px; bottom:70px; display:none;padding: 5px;
+
+.gsmobileheader .gsportraitimage { display:none; }
+.gsmobileheader .gslandscapeimage { display:none; }
+
+@media (max-width:800px) and (min-width:450px) { 
+    .gsmobileheader .gslandscapeimage { display:block; }
+}
+@media (max-width:450px) and (min-width:0px) { 
+    .gsmobileheader .gsportraitimage { display:block; }
+}
+
+.gsmobilesearchbox { position: fixed; height: 20px; width:100%; left: 0px; bottom:45px; display:none;padding: 5px;
 height: 30px;
 background-color: rgba(0,0,0,0.8); }
 .gsmobilemenu a { color:#fff; }

@@ -34,6 +34,8 @@ public class StoreConfiguration extends DataCommon {
     public List<TranslationObject> translationMatrix = new ArrayList();
     public HashMap<String, String> configurationFlags;
     public String customCss = "";
+    public String mobileImagePortrait = "";
+    public String mobileImageLandscape = "";
     
     public Colors colors = new Colors();
     

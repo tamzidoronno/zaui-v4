@@ -22,9 +22,9 @@
     position: absolute; 
     left: 390px;
     top: 340px;
-    width: 600px;
+    width: 630px;
     height: 318px;
-    background-size: 600px 318px;
+    background-size: 630px 318px;
     background-image: url("/skin/default/IPhone_5_landscape.png");
 }
 
@@ -36,7 +36,7 @@
     position: absolute;
     left: 88px;
     border: 0px;
-    width: 422px;
+    width: 452px;
     top: 40px;
     height: 240px;
 }

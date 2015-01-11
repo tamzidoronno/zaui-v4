@@ -16,10 +16,12 @@
 .ProductLists .grid_view .shop_button {
     margin: 0px;
 }
-.gsmobileheader { border-bottom: solid 1px #bbb; margin-bottom: 20px;}
+.gsmobileheader { border-bottom: solid 1px #bbb; }
+
 .ProductLists .product_title {  padding: 0px; height: auto !important;
 }
 
+.gsmobileoptions { position:absolute; width: 100%; top:-20px; z-index: 10; color: #fff; }
 
 .ProductLists .product_title {
 background: rgba(255,255,255,1);

@@ -80,6 +80,7 @@ thundashop.framework = {
         $(document).on('click', '.gsmobilemenu .gsslideleft', this.slideMobileMenu);
         $(document).on('click', '.gsmobilemenu .gsslideright', this.slideMobileMenu);
         $(document).on('click', '.gsmobilemenu .gsmobiletopmenu', this.showMobileTopMenu);
+        $(document).on('click', '.gssetslidemodemobile', this.setSlideViewMode);
         $(document).on('click', '.gsmobilemenu .gsmobilesearch', this.showMobileSearch);
         $(document).on('keyup', '.gsmobilsearchfield', this.doMobileSearch);
         $(document).on('click', '.gsmobilesearchbox .fa-search', this.doMobileSearch);
@@ -89,6 +90,12 @@ thundashop.framework = {
         $(document).on('click', '.gsoperatecell', this.operateCell);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
     },
+    
+    setSlideViewMode : function() {
+        var event = thundashop.Ajax.createEvent('','setSlideMode',$(this),{});
+        thundashop.Ajax.post(event);
+    },
+    
     showMobileSearch : function() {
         $('.gsmobilemenuinstance').hide();
         $('.gsmobilesearchbox').fadeIn();
@@ -449,6 +456,7 @@ thundashop.framework = {
     saveCarouselSettings: function () {
         var data = {
             height: $(this).closest('.carouselsettingspanel').find('.gscarouselheight').val(),
+            heightMobile: $(this).closest('.carouselsettingspanel').find('.gscarouselheightmobile').val(),
             timer: $(this).closest('.carouselsettingspanel').find('.gscarouseltimer').val(),
             type: $(this).closest('.carouselsettingspanel').find('.gscarouseltype').val(),
             cellid: $(this).closest('.carouselsettingspanel').attr('cellid'),
@@ -466,14 +474,6 @@ thundashop.framework = {
         panel.css('left', $(this).offset().left);
         panel.css('top', $(this).parent().position().top);
         panel.attr('cellid', cellid);
-
-        //populate values
-        panel.find('.gscarouselheight').val($(this).closest('.gscontainercell').attr('height'))
-        panel.find('.gscarouseltimer').val($(this).closest('.gscontainercell').attr('timer'))
-        panel.find('.gscarouseltype').val($(this).closest('.gscontainercell').attr('type'))
-        $(this).closest('.gscontainercell').attr('timer')
-        $(this).closest('.gscontainercell').attr('timertype')
-
         panel.fadeIn();
     },
     hideTabSettings: function () {

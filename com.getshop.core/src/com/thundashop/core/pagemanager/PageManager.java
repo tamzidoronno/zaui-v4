@@ -249,7 +249,20 @@ public class PageManager extends ManagerBase implements IPageManager {
     @Override
     public String addLayoutCell(String pageId, String incell, String beforecell, String mode, String area) throws ErrorException {
         Page page = getPage(pageId);
+        
+        boolean onlyMobile = false;
+        if(mode != null && mode.equals("rowmobile")) {
+            mode = PageCell.CellMode.row;
+            onlyMobile = true;
+        }
+        
         String cell = page.layout.createCell(incell, beforecell, mode, area);
+        
+        if(onlyMobile) {
+            page.layout.getCell(cell).hideOnDesktop = true;
+            page.layout.getCell(cell).hideOnMobile = false;
+        }
+        
         savePage(page);
         return cell;
     }

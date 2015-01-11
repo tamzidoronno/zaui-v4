@@ -89,7 +89,7 @@ class Page {
                 echo "<script>$('.gsiseditingprepend').remove();</script>";
             }
         } else {
-            echo "<div class='gsbody'>";
+            echo "<div class='gsbody' pageId='".$this->getId()."'>";
 
             $cells = array();
             $this->flattenCells($layout->areas->{'body'});

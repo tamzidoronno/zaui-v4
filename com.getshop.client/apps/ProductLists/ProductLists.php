@@ -17,7 +17,18 @@ class ProductLists extends \ApplicationBase implements \Application {
             return;
         } 
         
+        $this->showProducts();
+    }
+    
+    public function showProducts($showProductIds=false, $columnSize=false, $showRemoveButton = false) {
+        $this->showProductIds = $showProductIds;
+        $this->showColumnSize = $columnSize;
+        $this->showRemoveButton = $showRemoveButton;
         $this->includefile("showProducts");
+    }
+    
+    public function showRemoveButton() {
+        return $this->showRemoveButton;
     }
     
     public function getAllProducts() {
@@ -27,10 +38,16 @@ class ProductLists extends \ApplicationBase implements \Application {
             $products = $this->getApi()->getProductManager()->search($searchWord, 50, 1);
             $products = $products->products;
         } else {
-            $listId = $this->getConfigurationSetting("productlist");
-            $productList = $this->getApi()->getProductManager()->getProductList($listId);
-            $criteria = new \core_productmanager_data_ProductCriteria();
-            $criteria->ids = $productList->productIds;
+            if ($this->showProductIds) {
+                $criteria = new \core_productmanager_data_ProductCriteria();
+                $criteria->ids = $this->showProductIds;    
+            } else {
+                $listId = $this->getConfigurationSetting("productlist");
+                $productList = $this->getApi()->getProductManager()->getProductList($listId);
+                $criteria = new \core_productmanager_data_ProductCriteria();
+                $criteria->ids = $productList->productIds;    
+            }
+            
             $products = $this->getApi()->getProductManager()->getProducts($criteria);
         }
         
@@ -119,6 +136,10 @@ class ProductLists extends \ApplicationBase implements \Application {
     }
     
     public function getColumnSize() {
+        if (isset($this->showColumnSize) && $this->showColumnSize) {
+            return $this->showColumnSize;
+        }
+        
         $value = $this->getConfigurationSetting("column_size");
         if (!$value) {
             return 1;

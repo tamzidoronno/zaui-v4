@@ -53,16 +53,16 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        Application emails = createSettings("Emails",
-                "6ad9d19a-ccc7-4549-bec1-b240a95366bc",
+        Application releatedProducts = createSettings("RelatedProducts",
+                "3cdcd5e5-b3e8-4fa1-9125-bef44fa6a082",
                 allowed2,
                 "",
-                Application.Type.System, true);
-        emails.isPublic = true;
-        emails.moduleId = "hidden";
-        emails.type = "System";
-        emails.defaultActivate = true;
-        apps.add(emails);
+                Application.Type.Webshop, false);
+        releatedProducts.isPublic = true;
+        releatedProducts.moduleId = "WebShop";
+        releatedProducts.activeAppOnModuleActivation = true;
+        releatedProducts.isFrontend = true;
+        apps.add(releatedProducts);
         
 //        Application button = createSettings("Button",
 //                "2996287a-c23e-41ad-a801-c77502372789",

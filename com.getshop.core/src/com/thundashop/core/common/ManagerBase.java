@@ -117,7 +117,6 @@ public class ManagerBase {
                 .replace("'", "_")
                 .toLowerCase();
         
-        System.out.println(newAddress);
         return newAddress;
     }
 

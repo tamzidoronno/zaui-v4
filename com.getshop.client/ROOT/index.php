@@ -243,7 +243,7 @@ if(isset($factory->getSettings()->languages)) {
         </script>
         
         <div id="errorbox"></div>
-        <div id="gsbody">
+        <div id="gsbody" pageId="<? echo $factory->getPage()->getId();?>">
             <?php echo $html; ?>
         </div>
     </body>

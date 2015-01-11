@@ -38,7 +38,7 @@ foreach ($types as $type => $count) {
         $namespace = $this->convertUUIDtoString($id);
         $appInstance = $this->getApplicationPool()->createInstace($app);
         if (!$appInstance) {
-            echo "NOT FOUND: " . $namespace;
+            echo "NOT FOUND: " . $app->id;
             continue;
         }
 

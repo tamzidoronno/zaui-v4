@@ -21,6 +21,19 @@ body {
     height: 54px;
 }
 
+.gsarea[area="header"] .Menu .entry .entries {
+    background-color: #fafafa;
+    top: 40px;
+    border-left: solid 1px #c9c9c9;
+    border-bottom: solid 1px #c9c9c9;
+    border-right: solid 1px #c9c9c9;
+    margin-left: -1px;
+}
+
+.gsarea[area="header"] .Menu .entry .entries .entry div {
+    border-right: solid 0px;
+}
+
 .gsarea[area="header"] .Menu .entry a div {
     font-size: 16px;
     line-height: 25px;
@@ -44,6 +57,7 @@ body {
 }
 
 .gsarea[area="footer"] {
+    margin-top: 20px;
     background-color: #DDD;
 }
 
@@ -208,3 +222,4 @@ body {
     background-color: #ffba00;
     color: #333;
 }
+

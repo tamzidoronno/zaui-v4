@@ -70,7 +70,7 @@ class Page {
 
                 if ($this->editCarouselForMobile()) {
                     echo "<style>";
-                    echo ".gscontainer.gsrotating .gscell.gsdepth_0 { background-color:#bbb; }";
+                    echo ".gscontainer.gsrotating .gscell.gsdepth_0 { background-color:#bbb; padding-top: 20px; padding-bottom: 20px; }";
                     echo ".gscontainer.gsrotating .gsinner.gsdepth_0 { max-width: 500px !important; background-color:#fff; }";
                     echo "</style>";
                 }
@@ -353,6 +353,11 @@ class Page {
         }
         $this->printFloatingHeader($cell, $floatData, $parent);
 
+        if($cell->mode == "ROTATING" && $this->editCarouselForMobile() && !$this->factory->isMobile()) {
+            echo "<div class='gsmobilecarouseleditdesc'>".$this->factory->__w("Add slides for carousel to mobile view")."</div>";
+        }
+        
+        
         echo "<div $additionalinfo $styles width='$width' class='gsucell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
 
         if ($this->factory->isMobile() && $gsrowmode == "") {
@@ -446,7 +451,7 @@ class Page {
 
             </div>
             <div class='gspage' target='background' style="padding: 10px;">
-                <div class='gsoutercolorselectionpanel'>
+                <div class='gsoutercolorselectionpanel gsoutercolorselectionbg'>
                     <div class='gsheading'><? echo $this->factory->__w("Outer background"); ?></div>
                     <div class='gscolorselectionpanel' level=''>
                         <table width='100%'>
@@ -741,7 +746,7 @@ class Page {
             <div class='gscaraouselmenuheader'><? echo $this->factory->__w("Carousel menu"); ?></div>
             <i class="gsoperatecell fa fa-arrow-left" type="moveup" target="selectedcell" title='<? echo $this->factory->__w("Move slide to the left"); ?>'></i>
             <i class='fa fa-plus-circle gsoperatecell' type='addfloating' title='<? echo $this->factory->__w("Add content to slider"); ?>'></i>
-            <i class="fa fa-image gs_resizing" type="delete" title="<? echo $this->factory->__w("Background image / styling"); ?>"></i>
+            <i class="fa fa-image gs_resizing" data-hideouterbg='true' type="delete" title="<? echo $this->factory->__w("Background image / styling"); ?>"></i>
             <i class='fa fa-cogs carouselsettings' title='<? echo $this->factory->__w("Carousel settings"); ?>' style='cursor:pointer;'></i>
             <i class="gsoperatecell fa fa-trash-o" target="selectedcell" type="delete" title='<? echo $this->factory->__w("Delete selected slide"); ?>'></i>
             <i class="gssetslidemodemobile fa fa-mobile" title='<? echo $this->factory->__w("Configure mobile slides"); ?>'></i>
@@ -924,7 +929,10 @@ class Page {
 
             if (sizeof($cellsToPrint) == 0) {
                 echo "<div class='gsinner' style='text-align:center;clear:both;'>";
-                echo "<i class='fa fa-plus gsoperatecell' type='addrow' mode='rowmobile' target='container' title='" . $this->factory->__w("Add another slide") . "'></i> ";
+                echo "<br>";
+                echo "You do not have any slides created yet..";
+                echo "<br><br>";
+                echo "<i class='fa fa-plus gsoperatecell shop_button' type='addrow' mode='rowmobile' target='container' title='" . $this->factory->__w("Add another slide") . "'> Create a new slide</i> ";
                 echo "</div>";
             }
 

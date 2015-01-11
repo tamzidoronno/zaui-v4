@@ -845,6 +845,12 @@ thundashop.framework = {
             thundashop.framework.originObject = $(this);
         }
 
+        $('.gsoutercolorselectionbg').show();
+        
+        if($(this).attr('data-hideouterbg')) {
+            $('.gsoutercolorselectionbg').hide();
+        }
+
         var cellid = thundashop.framework.findCellId(target);
         var cell = thundashop.framework.findCell(cellid);
 

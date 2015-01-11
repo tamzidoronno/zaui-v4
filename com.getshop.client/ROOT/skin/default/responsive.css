@@ -27,6 +27,8 @@
         height: auto !important;
         margin-top: 10px;
     }
+    
+    .gscontainer .gstabrow .gscolumn { padding: 3px; }
 }
 body { padding-bottom: 100px; }
 

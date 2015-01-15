@@ -318,6 +318,7 @@ label.error {
     text-align: left;
 }
 .mainmenu .menu_entry {
+    vertical-align: top;
     position: relative;
     display: inline-block;
     font-size: 50px;
@@ -396,7 +397,7 @@ html body .ui-group-theme-a .ui-bar-inherit {
     padding-top: 10px;
 }
 
-#courselistoverview .month_list_entries .list_view_entry_entry {
+.list_view_entry_entry {
     padding: 5px;
     margin-bottom: 2px;
     
@@ -407,10 +408,12 @@ html body .ui-group-theme-a .ui-bar-inherit {
     background-image:         linear-gradient(#fefefe, #cecece) !important;
 
     border: solid 1px #DDD;
-    
+    text-align: left;
+    padding-left: 20px;
+    position: relative;
 }
 
-#courselistoverview .month_list_entries .list_view_entry_entry .extrainfo {
+.list_view_entry_entry .extrainfo {
     text-align: right;
     font-size: 11px;
     padding: 4px;
@@ -425,6 +428,16 @@ html body .ui-group-theme-a .ui-bar-inherit {
     background: inherit !important;
 }
 
+#regions .waiting_for_gps,
+#regions .gps_failed,
+#regions .region_failed {
+    border: solid 1px #DDD;
+    border-radius: 5px;
+    margin: 20px auto;
+    padding: 20px;
+    width: 150px;
+    
+}
 .contentcourselist {
     margin-left: 10px;
     margin-right: 10px;
@@ -443,4 +456,52 @@ html body .ui-group-theme-a .ui-bar-inherit {
 .mainmenu .menu_entry img {
     padding: 0px; 
     margin-bottom: -5px;
+}
+
+.company_search_row_result {
+    border: solid 1px #EEE;
+    padding-top: 10px;
+    padding-left: 10px;
+    height: 46px;
+    position: relative;
+    background: linear-gradient(to bottom, #FFF, #EEE);
+}
+
+
+.company_search_row_result span {
+    position: absolute;
+    font-size: 12px;
+    color: #888;
+    bottom: 10px;
+    right: 10px;
+}
+
+
+.availablemark {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    width: 10px;
+}
+
+.availablemark.available { background-color: green; }
+.availablemark.notAvailable { background-color: red; }
+.availablemark.waitingList { background-color: yellow; }
+
+.filter_checked {
+    background-image: url('images/check.png');
+    background-repeat: no-repeat;
+    background-size: 30px 30px;
+}
+
+.filter_selection {
+    background-color: #EEE;
+    padding: 10px;
+    border-bottom: solid 1px #DDD;
+    background-position: 5px;
+}
+
+.filter_selection:last-child {
+    border-bottom: solid 0px;
 }

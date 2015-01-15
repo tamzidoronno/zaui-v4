@@ -1,3 +1,4 @@
+run:
 GetShopApiWebSocket = function(address) {
     this.sentMessages =  [];
     this.address = address;
@@ -103,8 +104,18 @@ GetShopApiWebSocket.prototype = {
             this.transferStarted();
         }
         this.sentMessages.push(deferred);
-        if (this.socket.OPEN)
-            this.socket.send(messageJson);
+        if (this.socket.OPEN) {
+            try {
+                this.socket.send(messageJson);
+            } catch (e) {
+                this.getMessage(deferred.messageId);
+                deferred.resolve(null);
+                if (this.sentMessages.length === 0 && this.transferCompleted) {
+                   this.transferCompleted();
+                }
+            }
+        }
+           
         return deferred;
     },
 
@@ -765,6 +776,16 @@ GetShopApiWebSocket.CalendarManager.prototype = {
         return this.communication.send(data, silent);
     },
 
+    'getArea' : function(silent) {
+        data = {
+            args : {
+            },
+            method: 'getArea',
+            interfaceName: 'core.calendar.ICalendarManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
     'getDiplomaPeriod' : function(date, silent) {
         data = {
             args : {
@@ -795,6 +816,17 @@ GetShopApiWebSocket.CalendarManager.prototype = {
                 filters : JSON.stringify(filters),
             },
             method: 'getEntries',
+            interfaceName: 'core.calendar.ICalendarManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'getEntriesByPosition' : function(point, silent) {
+        data = {
+            args : {
+                point : JSON.stringify(point),
+            },
+            method: 'getEntriesByPosition',
             interfaceName: 'core.calendar.ICalendarManager',
         };
         return this.communication.send(data, silent);
@@ -951,6 +983,17 @@ GetShopApiWebSocket.CalendarManager.prototype = {
                 location : JSON.stringify(location),
             },
             method: 'saveLocation',
+            interfaceName: 'core.calendar.ICalendarManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'saveLocationArea' : function(area, silent) {
+        data = {
+            args : {
+                area : JSON.stringify(area),
+            },
+            method: 'saveLocationArea',
             interfaceName: 'core.calendar.ICalendarManager',
         };
         return this.communication.send(data, silent);

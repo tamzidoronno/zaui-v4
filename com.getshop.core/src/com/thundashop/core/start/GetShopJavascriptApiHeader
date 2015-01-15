@@ -103,8 +103,18 @@ GetShopApiWebSocket.prototype = {
             this.transferStarted();
         }
         this.sentMessages.push(deferred);
-        if (this.socket.OPEN)
-            this.socket.send(messageJson);
+        if (this.socket.OPEN) {
+            try {
+                this.socket.send(messageJson);
+            } catch (e) {
+                this.getMessage(deferred.messageId);
+                deferred.resolve(null);
+                if (this.sentMessages.length === 0 && this.transferCompleted) {
+                   this.transferCompleted();
+                }
+            }
+        }
+           
         return deferred;
     },
 

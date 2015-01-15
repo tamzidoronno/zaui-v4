@@ -3,7 +3,7 @@
 $id = $this->getConfiguration()->id;
 $pageId = $this->getPage()->id;
 
-if ($this->isShowTabsForViewMode()) { ?>
+if ($this->isShowTabsForViewMode() && $this->isEditorMode()) { ?>
     <div class="calendar_tabs">
         <a href="?page=<?echo $this->getPage()->id?>&asList=true"><div byname="list" class="calender_tab_entry"><? echo $this->__w("By list"); ?></div></a>
         <a href="?page=<?echo $this->getPage()->id?>&asList=false"><div byname="calendar" class="calender_tab_entry"><? echo $this->__w("By calendar"); ?></div></a>

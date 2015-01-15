@@ -1,0 +1,47 @@
+<?
+/* @var $this \ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8\Calendar */
+
+$area = null;
+if (isset($_POST['data']['areaId'])) {
+    $areas = $this->getApi()->getCalendarManager()->getArea();
+    foreach ($areas as $iArea) {
+        if ($iArea->id == $_POST['data']['areaId']) {
+            $area = $iArea;
+        }
+    }
+}
+
+$name = $area ? $area->name : "";
+$id = $area ? $area->id : "";
+$northWest = $area && $area->northWest ? ((int)$area->northWest->x/100000).",".((int)$area->northWest->y/100000) : "";
+$northEast = $area && $area->northEast ? ((int)$area->northEast->x/100000).",".((int)$area->northEast->y/100000) : "";
+$southWest = $area && $area->southWest ? ((int)$area->southWest->x/100000).",".((int)$area->southWest->y/100000) : "";
+$southEast = $area && $area->southEast ? ((int)$area->southEast->x/100000).",".((int)$area->southEast->y/100000) : "";
+// TODO
+// Divide number by 100 000.
+?>
+<input type="hidden" id='LocationAreaId' value="<? echo $id; ?>"/>
+
+<div style='width: 958px; text-align: center;' class="gs_button calendar_location_back"><? echo $this->__f("Back"); ?></div>
+<br><br>
+<div class="editlocationscalendar">
+    <table>
+        <tr><td style="width: 130px">Name</td><td><input id='areaName' style="width: 800px" type="textfield" value="<? echo $name; ?>" placeholder='Name of region'/></td></tr>
+        <tr><td>Northern-West</td><td><input id='northWest' style="width: 800px" type="textfield" value="<? echo $northWest;  ?>" placeholder='xx.xxxxx,yy.yyyyyy'/></td></tr>
+        <tr><td>Northern-East</td><td><input id='northEast' style="width: 800px" type="textfield" value="<? echo $northEast; ?>" placeholder='xx.xxxxx,yy.yyyyyy'/></td></tr>
+        <tr><td>South-West</td><td><input id='southWest' style="width: 800px" type="textfield" value="<? echo $southWest; ?>" placeholder='xx.xxxxx,yy.yyyyyy'/></td></tr>
+        <tr><td>South-East</td><td><input id='southEast' style="width: 800px" type="textfield" value="<? echo $southEast; ?>" placeholder='xx.xxxxx,yy.yyyyy'/></td></tr>
+    </table>
+
+    <br/>
+    Please check the location(s) that are in this area.
+    <?
+    foreach ($this->getApi()->getCalendarManager()->getAllLocations() as $location) {
+        $checked = ($area && $area->locations && in_array($location->id, $area->locations)) ? "checked='trued'" : "";
+        echo "<br/><input $checked type='checkbox' class='locationInArea' value='$location->id'/> $location->location";
+    }
+    ?>
+    <br/>
+</div>
+
+<div style='width: 958px; text-align: center;' class="gs_button calendar_locationarea_save"><? echo $this->__f("Save"); ?></div>

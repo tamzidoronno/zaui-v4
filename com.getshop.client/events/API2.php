@@ -617,6 +617,19 @@ class APICalendarManager {
 	* has been attending to
 	*/
 
+	public function getArea() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getArea";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* return a list of entires that a specified user
+	* has been attending to
+	*/
+
 	public function getDiplomaPeriod($date) {
 	     $data = array();
 	     $data['args'] = array();
@@ -658,6 +671,21 @@ class APICalendarManager {
 	     $data["method"] = "getEntries";
 	     $data["interfaceName"] = "core.calendar.ICalendarManager";
 	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all entries in a region based on the point
+	* @param point
+	* @return core_calendarmanager_data_LocationArea
+	*/
+
+	public function getEntriesByPosition($point) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["point"] = json_encode($this->transport->object_unset_nulls($point));
+	     $data["method"] = "getEntriesByPosition";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->cast(new core_calendarmanager_data_LocationArea(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -876,6 +904,20 @@ class APICalendarManager {
 	     $data["method"] = "saveLocation";
 	     $data["interfaceName"] = "core.calendar.ICalendarManager";
 	     return $this->transport->cast(new core_calendarmanager_data_Location(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* return a list of entires that a specified user
+	* has been attending to
+	*/
+
+	public function saveLocationArea($core_calendarmanager_data_LocationArea) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_calendarmanager_data_LocationArea"] = json_encode($this->transport->object_unset_nulls($core_calendarmanager_data_LocationArea));
+	     $data["method"] = "saveLocationArea";
+	     $data["interfaceName"] = "core.calendar.ICalendarManager";
+	     return $this->transport->sendMessage($data);
 	}
 
 	/**

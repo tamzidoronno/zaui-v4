@@ -643,6 +643,14 @@ class CalendarManager(object):
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getArea(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getArea"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getDiplomaPeriod(self, date):
     args = collections.OrderedDict()
     if isinstance(date,GetShopBaseClass): 
@@ -699,6 +707,21 @@ class CalendarManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getEntries"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getEntriesByPosition(self, point):
+    args = collections.OrderedDict()
+    if isinstance(point,GetShopBaseClass): 
+      args["point"]=json.dumps(point.__dict__)
+    else:
+      try:
+        args["point"]=json.dumps(point)
+      except (ValueError, AttributeError):
+        args["point"]=point
+    data = EmptyClass()
+    data.args = args
+    data.method = "getEntriesByPosition"
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -923,6 +946,21 @@ class CalendarManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "saveLocation"
+    data.interfaceName = "core.calendar.ICalendarManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def saveLocationArea(self, area):
+    args = collections.OrderedDict()
+    if isinstance(area,GetShopBaseClass): 
+      args["area"]=json.dumps(area.__dict__)
+    else:
+      try:
+        args["area"]=json.dumps(area)
+      except (ValueError, AttributeError):
+        args["area"]=area
+    data = EmptyClass()
+    data.args = args
+    data.method = "saveLocationArea"
     data.interfaceName = "core.calendar.ICalendarManager"
     return self.communicationHelper.sendMessage(data)
 

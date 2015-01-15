@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
  */
 @Component
 public class AllaBolagSearchEngine implements CompanySearchEngine {
-
+    private String key = "BIWSa34c782cbc10a0da3e9770a974f4";
     @Override
     public String getName() {
         return "allabolag";
@@ -47,7 +47,7 @@ public class AllaBolagSearchEngine implements CompanySearchEngine {
     public Company getCompany(String organisationNumber, boolean fetch) {
         try {
             String urlAddition = fetch ? "fetch" : "find";
-            String url = "http://www.allabolag.se/ws/BIWS/service.php?key=BIWSfc1a0c54b394d513754c6223537b&type="+urlAddition+"&query=nummer:"+organisationNumber;
+            String url = "http://www.allabolag.se/ws/BIWS/service.php?key="+key+"&type="+urlAddition+"&query=nummer:"+organisationNumber;
             Map<String, Company> companies = new HashMap();
             companies.putAll(getCompaniesFromContent(getContent(url)));
             if (companies.size() > 0) {
@@ -69,8 +69,8 @@ public class AllaBolagSearchEngine implements CompanySearchEngine {
     public List<Company> search(String search) {
         try {
             search = URLEncoder.encode(search, "UTF-8");
-            String url = "http://www.allabolag.se/ws/BIWS/service.php?key=BIWSfc1a0c54b394d513754c6223537b&type=find&query=jurnamn:"+search;
-            String url2 = "http://www.allabolag.se/ws/BIWS/service.php?key=BIWSfc1a0c54b394d513754c6223537b&type=find&query=nummer:"+search+"%20OR%20orgnr:"+search;
+            String url = "http://www.allabolag.se/ws/BIWS/service.php?key="+key+"&type=find&query=jurnamn:"+search;
+            String url2 = "http://www.allabolag.se/ws/BIWS/service.php?key="+key+"&type=find&query=nummer:"+search+"%20OR%20orgnr:"+search;
 
             Map<String, Company> companies = new HashMap();
             companies.putAll(getCompaniesFromContent(getContent(url)));

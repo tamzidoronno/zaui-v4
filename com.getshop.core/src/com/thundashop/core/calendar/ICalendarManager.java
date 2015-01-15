@@ -5,6 +5,7 @@ import com.thundashop.core.calendarmanager.data.Entry;
 import com.thundashop.core.calendarmanager.data.EventPartitipated;
 import com.thundashop.core.calendarmanager.data.FilterResult;
 import com.thundashop.core.calendarmanager.data.Location;
+import com.thundashop.core.calendarmanager.data.LocationArea;
 import com.thundashop.core.calendarmanager.data.Month;
 import com.thundashop.core.calendarmanager.data.ReminderHistory;
 import com.thundashop.core.common.Administrator;
@@ -12,6 +13,7 @@ import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Writing;
+import java.awt.Point;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -283,4 +285,16 @@ public interface ICalendarManager {
     
     @Editor
     public void setDiplomaTextColor(String diplomaId, String textColor) throws ErrorException;
+    
+    @Editor
+    public void saveLocationArea(LocationArea area) throws ErrorException;
+    
+    public List<LocationArea> getArea();
+    
+    /**
+     * Get all entries in a region based on the point
+     * @param point
+     * @return 
+     */
+    public LocationArea getEntriesByPosition(Point point) throws ErrorException;
 }

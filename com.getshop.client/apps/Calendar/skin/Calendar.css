@@ -289,6 +289,7 @@ td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1p
     padding-bottom: 50px;
 }
 
+.editlocationscalendar .selectarea,
 .editlocationscalendar .selectlcoation {
     display: inline-block;
     border: solid 1px #FFF;

@@ -829,6 +829,34 @@ class Calendar extends MarketingApplication implements Application {
         
         return new \core_calendarmanager_data_GroupLocationInformation();
     }
+    
+    public function showEditArea() {
+        $this->includefile("editArea");
+    }
 
+    public function saveLocationArea() {
+        
+        $northWest = explode(",", $_POST['data']['northWest']);
+        $northEast = explode(",", $_POST['data']['northEast']);
+        $southWest = explode(",", $_POST['data']['southWest']);
+        $southEast = explode(",", $_POST['data']['southEast']);
+        
+        
+        $locationArea = new \core_calendarmanager_data_LocationArea();
+        $locationArea->id = $_POST['data']['locationAreaId'];
+        $locationArea->name = $_POST['data']['name'];
+        $locationArea->locations = $_POST['data']['locations'];
+        $locationArea->northWest = [];
+        $locationArea->northWest['x'] = count($northWest) == 2 ? $northWest[0]*100000 : 0;
+        $locationArea->northWest['y'] = count($northWest) == 2 ? $northWest[1]*100000 : 0;
+        $locationArea->northEast['x'] = count($northEast) == 2 ? $northEast[0]*100000 : 0;
+        $locationArea->northEast['y'] = count($northEast) == 2 ? $northEast[1]*100000 : 0;
+        $locationArea->southWest['x'] = count($southWest) == 2 ? $southWest[0]*100000 : 0;
+        $locationArea->southWest['y'] = count($southWest) == 2 ? $southWest[1]*100000 : 0;
+        $locationArea->southEast['x'] = count($southEast) == 2 ? $southEast[0]*100000 : 0;
+        $locationArea->southEast['y'] = count($southEast) == 2 ? $southEast[1]*100000 : 0;
+        
+        $this->getApi()->getCalendarManager()->saveLocationArea($locationArea);
+    }
 }
 ?>

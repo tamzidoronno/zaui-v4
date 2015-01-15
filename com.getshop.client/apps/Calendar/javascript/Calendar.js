@@ -89,6 +89,11 @@ Calendar = {
         $(document).on('click', '.calendar_location_delete', Calendar.deleteLocation);
         $(document).on('click', '.calendar_location_createnew', Calendar.showEditLocation);
         $(document).on('click', '.Calendar .add_comment_to_event', Calendar.addCommentToEvent);
+        $(document).on('click', '.Calendar .calendar_location_createarea', Calendar.showEditArea);
+        $(document).on('click', '.Calendar .selectarea', Calendar.showEditArea);
+        
+        $(document).on('click', '.Calendar .calendar_locationarea_save', Calendar.saveLocationArea);
+        
         $(document).on('click', '.Calendar .delete_comment', Calendar.deleteComment);
         $(document).on('click', '.Calendar .createforperiod .gs_button', Calendar.createPeriode);
         $(document).on('click', '.Calendar .diplomasettings .deletediploma', Calendar.deletePeriod);
@@ -96,6 +101,36 @@ Calendar = {
         $(document).on('change', '.Calendar .diplomasettings input.usersignature', Calendar.addSignature);
         $(document).on('change', '.Calendar .diplomasettings input#diploma_background', Calendar.addBackground);
         $(document).on('change', '.Calendar .diplomasettings input#textColor', Calendar.setTextColorDiploma);
+    },
+    saveLocationArea: function() {
+        var selectedLocations = $('input:checkbox:checked.locationInArea').map(function () {
+            return this.value;
+        }).get();
+        
+        var data = {
+            name : $('.Calendar #areaName').val(),
+            locationAreaId: $('.Calendar #LocationAreaId').val(),
+            northWest : $('.Calendar #northWest').val(),
+            northEast : $('.Calendar #northEast').val(),
+            southWest : $('.Calendar #southWest').val(),
+            southEast : $('.Calendar #southEast').val(),
+            locations : selectedLocations
+        };
+        
+        var event = thundashop.Ajax.createEvent(null, "saveLocationArea", this, data);
+        thundashop.Ajax.post(event, function() {
+            alert('saved');
+        });
+    }, 
+    showEditArea: function() {
+        var data = {};
+
+        if ($(this).attr('value')) {
+            data.areaId = $(this).attr('value')
+        }
+
+        var event = thundashop.Ajax.createEvent(null, "showEditArea", this, data);
+        thundashop.common.showInformationBox(event, __f("Edit area"));
     },
     setTextColorDiploma: function() {
         var data = {

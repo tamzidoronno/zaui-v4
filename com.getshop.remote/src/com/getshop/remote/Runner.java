@@ -86,9 +86,9 @@ public class Runner {
             password = br.readLine();
         }
 
-        String serveraddr = "backend.getshop.com";
-        System.out.println("Connecting to : " + serveraddr + " port : " + 25554);
-        api = new GetShopApi(25554, serveraddr, sessid, address);
+        String serveraddr = "backend20.getshop.com";
+        System.out.println("Connecting to : " + serveraddr + " port : " + 3224);
+        api = new GetShopApi(3224, serveraddr, sessid, address);
         try {
             User result = api.getUserManager().logOn(username, password);
             if (!api.getUserManager().isLoggedIn()) {

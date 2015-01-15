@@ -42,6 +42,7 @@ import javax.net.ssl.X509TrustManager;
 import org.apache.axis.encoding.Base64;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -746,7 +747,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             if (!FTPReply.isPositiveCompletion(reply)) {
                 throw new IOException("Failed to connect to FTP Server, " + vismaSettings.address);
             }
-
+            
+            deleteAllFilesOnServer(client);
             String filename = "orders_" + new SimpleDateFormat("yyyyMMdd-k_m").format(new Date()) + ".edi";
             String path = "/tmp/" + filename;
             PrintWriter writer = new PrintWriter(path, "ISO-8859-1");
@@ -755,6 +757,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             InputStream inputStream = new FileInputStream(new File(path));
             boolean done = client.storeFile("./" + filename, inputStream);
             inputStream.close();
+            client.disconnect();
             if (!done) {
                 throw new IOException("Failed to transfer file to VISMA FTP server");
             }
@@ -764,6 +767,15 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
     }
 
+    private void deleteAllFilesOnServer(FTPClient client) throws IOException {
+        FTPFile[] files = client.listFiles();
+        if (files  != null) {
+            for (FTPFile file : files) {
+                client.deleteFile(file.getName());
+            }
+        }   
+    }
+    
     @Override
     public void setVismaConfiguration(VismaSettings settings) throws ErrorException {
         settings.id = vismaSettings.id;

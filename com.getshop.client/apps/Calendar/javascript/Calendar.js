@@ -62,7 +62,8 @@ app.Calendar = {
             contactPerson: $('#contactPerson').val(),
             locationEmail: $('#locationEmail').val(),
             locationCellPhone: $('#locationCellPhone').val(),
-            otherinformation: $('#otherinformation').val()
+            otherinformation: $('#otherinformation').val(),
+            commentText: $('#commentText').val()
         }
 
         $('.groupinformation').each(function() {

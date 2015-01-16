@@ -271,6 +271,8 @@ class Calendar extends MarketingApplication implements Application {
         
         $location = $this->getApi()->getCalendarManager()->saveLocation($location);
         $_POST['data']['locationId'] = $location->id;
+        
+        $this->setConfigurationSetting("comment_".$location->id, $_POST['data']['commentText']);
     }
     
     public function saveLocation() {
@@ -857,6 +859,22 @@ class Calendar extends MarketingApplication implements Application {
         $locationArea->southEast['y'] = count($southEast) == 2 ? $southEast[1]*100000 : 0;
         
         $this->getApi()->getCalendarManager()->saveLocationArea($locationArea);
+    }
+    
+    public function moveCommentsToCommentField($location) {
+        if (!sizeof($location->comments)) {
+            return;
+        }
+        
+        $textComments = "";
+        foreach ($location->comments as $comment) {
+            $textComments .= preg_replace('#<br\s*/?>#i', "", $comment->comment)."\n\n";
+        }
+        
+        $location->comments = [];
+        $this->getApi()->getCalendarManager()->saveLocation($location);
+        
+        $this->setConfigurationSetting("comment_".$location->id, $textComments);
     }
 }
 ?>

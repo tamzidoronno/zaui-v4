@@ -45,10 +45,8 @@ public class MobileManager extends ManagerBase implements IMobileManager {
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof Token) {
-                System.out.println("Skipping token: " + ((Token)dataCommon).id);
-                continue;
-//                Token token = (Token)dataCommon;
-//                tokens.put(token.tokenId, token);
+                Token token = (Token)dataCommon;
+                tokens.put(token.tokenId, token);
             }
         }
     }

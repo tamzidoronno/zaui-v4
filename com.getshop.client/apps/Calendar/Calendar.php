@@ -263,12 +263,6 @@ class Calendar extends MarketingApplication implements Application {
             $location->groupLocationInformation[] = $locationGroupInfo;
         }
             
-        if ($_POST['data']['commentText']) {
-            $comment = new \core_usermanager_data_Comment();
-            $comment->comment = nl2br($_POST['data']['commentText']);
-            $location->comments[] = $comment;
-        }
-        
         $location = $this->getApi()->getCalendarManager()->saveLocation($location);
         $_POST['data']['locationId'] = $location->id;
         

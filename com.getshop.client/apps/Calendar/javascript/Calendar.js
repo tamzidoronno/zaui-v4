@@ -101,6 +101,18 @@ Calendar = {
         $(document).on('change', '.Calendar .diplomasettings input.usersignature', Calendar.addSignature);
         $(document).on('change', '.Calendar .diplomasettings input#diploma_background', Calendar.addBackground);
         $(document).on('change', '.Calendar .diplomasettings input#textColor', Calendar.setTextColorDiploma);
+        $(document).on('click', '.Calendar .list_showextrainformation', Calendar.showListExtraInformation);
+    },
+    showListExtraInformation: function() {
+        var entryId = $(this).attr('entry_id');
+        var calendarEntry = $('.extrainformation_calendar_list_entry[entry_id="'+entryId+'"]');
+
+        if (calendarEntry.is(':visible')) {
+            calendarEntry.hide();
+        } else {
+            calendarEntry.show();
+        }
+        
     },
     saveLocationArea: function() {
         var selectedLocations = $('input:checkbox:checked.locationInArea').map(function () {

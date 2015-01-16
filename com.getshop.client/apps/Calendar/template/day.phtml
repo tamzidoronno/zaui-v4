@@ -91,10 +91,10 @@ if (count($day->entries) == 0) {
                 if ($daysCount > 1) {
                     echo str_replace("{}", $daysCount, $this->__w("This is a {} days event."));
                     $i = 1;
-                    echo "<br>".str_replace("{}", $i, $this->__f("Day {}")).": ".$entry->day."/".$entry->month."-".$entry->year." ".$this->__("start_time").":".$entry->starttime."-".$entry->stoptime; 
+                    echo "<br>".str_replace("{}", $i, $this->__f("Day")).": ".$entry->day."/".$entry->month."-".$entry->year." ".$this->__("start_time").":".$entry->starttime."-".$entry->stoptime; 
                     $i++;
                     foreach ($entry->otherDays as $ientry) {
-                        echo "<br>".str_replace("{}", $i, $this->__f("Day {}")).": ".$ientry->day."/".$ientry->month."-".$ientry->year." ".$this->__("start_time").":".$ientry->starttime."-".$ientry->stoptime; 
+                        echo "<br>".str_replace("{}", $i, $this->__f("Day")).": ".$ientry->day."/".$ientry->month."-".$ientry->year." ".$this->__("start_time").":".$ientry->starttime."-".$ientry->stoptime; 
                         $i++;
                     }
                 } else {
@@ -183,7 +183,7 @@ if (count($day->entries) == 0) {
                 $remove = $this->hasWriteAccess() ? "<i userid='$userid' entryid='$entryid' class='remove fa fa-trash-o'></i>" : "";
                 $activeComment = $this->isActiveComment($user, $entryid) ? "activeComment" : "";
                 $comment = $this->hasWriteAccess() ? "<i userid='$userid' entryid='$entryid' class='addcomment $activeComment fa fa-comments' title='".$this->__f("Comments"). "'></i>" : "";
-                $companyName = $this->hasReadAccess() ? $user->company->name : "";
+                $companyName = $this->hasReadAccess() && $user->company ? $user->company->name : "";
                 $link = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() ? "?page=users_all_users&userid=$userid" : "#";
                 $settings = $this->hasWriteAccess() ? "<div class='candidate_setting fa fa-cogs' userid='$userid' entryid='$entryid' title='".$this->__f("User settings"). "'></div>" : "";
                 echo "<tr class='dayrow'><td width='22' >$remove</td><td><div class='attendee'><a href='$link'> $i. ".$user->fullName.$group."<br/> $companyName</a></div></td><td width='50'>$transfer</td><td width='22'>$comment</td><td>$dropdiploma</td><td width='22'>$settings</td><td width='22'>$source</td></tr>";

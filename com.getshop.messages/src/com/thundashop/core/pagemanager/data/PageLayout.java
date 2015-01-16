@@ -147,6 +147,7 @@ public class PageLayout implements Serializable {
             PageCell newcell = cell.createCell(before);
             if(cell.isRotating()) {
                 newcell.type = PageCell.CellType.floating;
+                newcell.hideOnMobile = true;
             }
             newcell.mode = mode;
             newcell.width = newwidth;
@@ -337,8 +338,10 @@ public class PageLayout implements Serializable {
     public ArrayList<PageCell> getCellsFlatList() {
         ArrayList<PageCell> arrayList = new ArrayList();
         for (String area : areas.keySet()) {
-            for (PageCell row : areas.get(area)) {
-                arrayList.addAll(row.getCellsFlatList());
+            if(areas != null && areas.get(area) != null) {
+                for (PageCell row : areas.get(area)) {
+                    arrayList.addAll(row.getCellsFlatList());
+                }
             }
         }
         return arrayList;

@@ -1,5 +1,29 @@
 <div class='gsmobileeditor'>
-    <div class='gsiphone'>
-       <iframe id='gscontentframe' ></iframe>
+    <div style='margin:auto;'>
+        <div style='width: 1000px;position: relative;margin: auto;'>
+            <div class='gsiphone'>
+               <iframe id='gscontentframe' ></iframe>
+
+                <span class="gsmobileconfiguration">
+                    <b>Mobile configuration</b><br><br>
+                    Header image portrait mode<br>
+                    <span>
+                        <input type='file' class='gsmobileupload' data-type='mobile_portrait'>
+                        <span class='gsuploadimage' style='display:none;'><i class='fa fa-spin fa-spinner'></i></span>
+                    </span>
+                    <br>
+                    <br>
+                    <span>
+                        Header image landscape mode<br>
+                        <input type='file'  class='gsmobileupload' data-type='mobile_landscape'>
+                        <span class='gsuploadimage' style='display:none;'><i class='fa fa-spin fa-spinner'></i></span>
+                    </span>
+                </span>    
+            </div>
+            <div class='gsiphone_landscape'>
+                <iframe id='gscontentframelandscape' ></iframe>
+                
+            </div>
+        </div>
     </div>
 </div>

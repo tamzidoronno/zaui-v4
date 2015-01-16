@@ -7,6 +7,9 @@ class core_pagemanager_data_PageCell {
 	public $hideOnMobile;
 
 	/** @var String */
+	public $hideOnDesktop;
+
+	/** @var String */
 	public $isHidden;
 
 	/** @var String */

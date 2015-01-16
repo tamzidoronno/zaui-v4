@@ -30,7 +30,8 @@ public class PageCell implements Serializable {
     
 
     public String cellName = "";
-    boolean hideOnMobile = false;
+    public boolean hideOnMobile = false;
+    public boolean hideOnDesktop = false;
     public boolean isHidden = false;
     public String systemCellName = "";
     public Integer incrementalCellId;

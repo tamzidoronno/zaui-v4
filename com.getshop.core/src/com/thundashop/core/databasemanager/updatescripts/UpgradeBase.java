@@ -33,7 +33,7 @@ public class UpgradeBase {
 
     public HashMap<String, ApplicationInstance> getAppAplications() throws UnknownHostException {
         HashMap<String, ApplicationInstance> retval = new HashMap();
-        Mongo m = new Mongo("localhost", 27017);
+        Mongo m = new Mongo("localhost", 27018);
         DB db = m.getDB("PageManager");
 
         Morphia morphia = new Morphia();
@@ -60,7 +60,7 @@ public class UpgradeBase {
         Morphia morphia = new Morphia();
         morphia.map(DataCommon.class);
         
-        Mongo m = new Mongo("localhost", 27017);
+        Mongo m = new Mongo("localhost", 27018);
         DB db = m.getDB(manager.getSimpleName());
         DBCollection collection = db.getCollection("col_"+storeId);
         List<DataCommon> retstores = new ArrayList();
@@ -80,7 +80,7 @@ public class UpgradeBase {
         Morphia morphia = new Morphia();
         morphia.map(DataCommon.class);
         
-        Mongo m = new Mongo("localhost", 27017);
+        Mongo m = new Mongo("localhost", 27018);
         DB db = m.getDB("ApplicationPool");
         DBCollection collection = db.getCollection("col_all");
         List<Application> retstores = new ArrayList();
@@ -103,7 +103,7 @@ public class UpgradeBase {
         Morphia morphia = new Morphia();
         morphia.map(DataCommon.class);
         
-        Mongo m = new Mongo("localhost", 27017);
+        Mongo m = new Mongo("localhost", 27018);
         DB db = m.getDB("StoreManager");
         DBCollection collection = db.getCollection("col_all");
         List<Store> retstores = new ArrayList();
@@ -122,7 +122,7 @@ public class UpgradeBase {
     }
      
     public void saveObject(DataCommon object, String manager) throws UnknownHostException {
-        Mongo m = new Mongo("localhost", 27017);
+        Mongo m = new Mongo("localhost", 27018);
         DB db = m.getDB(manager);
         Morphia morphia = new Morphia();
         morphia.map(DataCommon.class);
@@ -141,7 +141,7 @@ public class UpgradeBase {
 
     public HashMap<String, HashMap<String, Page>> getAllPages() throws UnknownHostException {
         HashMap<String, HashMap<String, Page>> retval = new HashMap();
-        Mongo m = new Mongo("localhost", 27017);
+        Mongo m = new Mongo("localhost", 27018);
         DB db = m.getDB("PageManager");
 
         Morphia morphia = new Morphia();
@@ -153,13 +153,17 @@ public class UpgradeBase {
             DBCursor documents = colectioninstance.find();
             while (documents.hasNext()) {
                 DBObject document = documents.next();
-                DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, document);
-                if (dataCommon instanceof Page) {
-                    Page page = (Page) dataCommon;
-                    if(!retval.containsKey(colection)) {
-                        retval.put(colection, new HashMap());
+                try {
+                    DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, document);
+                    if (dataCommon instanceof Page) {
+                        Page page = (Page) dataCommon;
+                        if(!retval.containsKey(colection)) {
+                            retval.put(colection, new HashMap());
+                        }
+                        retval.get(colection).put(page.id, page);
                     }
-                    retval.get(colection).put(page.id, page);
+                }catch(Exception e) {
+                    continue;
                 }
             }
         }
@@ -169,7 +173,7 @@ public class UpgradeBase {
 
     public HashMap<String, Product> getAllProducts() throws UnknownHostException {
         HashMap<String, Product> retval = new HashMap();
-        Mongo m = new Mongo("localhost", 27017);
+        Mongo m = new Mongo("localhost", 27018);
         DB db = m.getDB("ProductManager");
 
         Morphia morphia = new Morphia();

@@ -26,6 +26,17 @@ class ApplicationManager extends FactoryBase {
         include("initdata/themeselection.phtml");
     }
 
+    
+    function setSlideMode() {
+        if(!isset($_SESSION['gsrotatingmodemobile'])) {
+            $_SESSION['gsrotatingmodemobile'] = true;
+            return;
+        }
+        if($_SESSION['gsrotatingmodemobile']) {
+            unset($_SESSION['gsrotatingmodemobile']);
+        }
+    }
+    
     function updateCarouselConfig() {
         $cellId = $_POST['data']['cellid'];
         $outerWidth = $_POST['data']['outerWidth'];
@@ -37,6 +48,7 @@ class ApplicationManager extends FactoryBase {
         $config->height = $_POST['data']['height'];
         $config->time = $_POST['data']['timer'];
         $config->type = $_POST['data']['type'];
+        $config->heightMobile = $_POST['data']['heightMobile'];
         $this->getApi()->getPageManager()->setCarouselConfig($pageId, $cellId, $config);
         $this->getApi()->getPageManager()->setWidth($pageId, $cellId, $outerWidth, $outerWidthWithMargins);
     }
@@ -65,6 +77,18 @@ class ApplicationManager extends FactoryBase {
         $data = substr($data, strrpos($data, ";base64,")+8);
         $content = base64_decode($data);
         $imgId = \FileUpload::storeFile($content);
+        
+        if(isset($_POST['data']['type'])) {
+            $store = $this->getFactory()->getStore();
+            if($_POST['data']['type'] == "mobile_portrait") {
+                $store->configuration->mobileImagePortrait = $imgId;
+            }
+            if($_POST['data']['type'] == "mobile_landscape") {
+                $store->configuration->mobileImageLandscape = $imgId;
+            }
+            $this->getApi()->getStoreManager()->saveStore($store->configuration);
+        }
+        
         echo $imgId;
     }
     

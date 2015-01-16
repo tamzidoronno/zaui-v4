@@ -45,7 +45,8 @@ class GenerateReport {
         $line["Kommentar"] = "";
 
         $rows[] = $line;
-        $rows[] = array("" => "Påmeldte");
+        
+        $rows[] = ["Name", "Email", "Phone number", "Address", "Vat number", "Comments", "Event name", "Group reference id" ];
         foreach ($attendees as $attandee) {
             $user = $this->factory->getApi()->getUserManager()->getUserById($attandee);
             if (is_array($user->groups)) {
@@ -121,6 +122,7 @@ class GenerateReport {
         $line[] = $user->company->vatNumber;
         $line[] = $this->getComments($user, $entry);
         $line[] = $entry->title;
+        $line[] = $user->referenceKey;
         return $line;
     }
 

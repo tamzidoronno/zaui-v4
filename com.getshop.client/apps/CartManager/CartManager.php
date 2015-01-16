@@ -409,7 +409,7 @@ class CartManager extends \SystemApplication implements \Application {
 
     public function canGoToPayment($fromShipping = false) {
         // one shipment method added and one paymentmethod
-        if (count($this->getShipmentApplications()) == 1 && isset($this->shippingApplication) && !$this->shippingApplication->hasSubProducts() && (isset($this->paymentApplication) && !$fromShipping) && !$this->paymentApplication->hasSubProducts()) {
+        if (count($this->getShipmentApplications()) == 1 && isset($this->shippingApplication) && !$this->shippingApplication->hasSubProducts() && (isset($this->paymentApplication) && !$fromShipping)) {
 
             return true;
         }

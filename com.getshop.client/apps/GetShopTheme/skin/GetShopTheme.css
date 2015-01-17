@@ -23,6 +23,10 @@ body {
     margin: 0px;
 }
 
+.gsarea[area="header"] {
+    background: linear-gradient(to bottom, #2f6083, #173c55) !important;
+}
+
 .gsarea[area="body"]  .gscolumn.gs_margin_left { 
     padding-left: 20px;
 }

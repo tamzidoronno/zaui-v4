@@ -738,15 +738,19 @@ class Page {
     }
 
     public function printCarourselMenu() {
+        $hideBg = "";
         if (!$this->factory->isEditorMode() || $this->factory->isMobile()) {
             return;
+        }
+        if($this->editCarouselForMobile()) {
+            $hideBg = "data-hideouterbg='true'";
         }
         ?>
         <span class='gscaraouselmenu'>
             <div class='gscaraouselmenuheader'><? echo $this->factory->__w("Carousel menu"); ?></div>
             <i class="gsoperatecell fa fa-arrow-left" type="moveup" target="selectedcell" title='<? echo $this->factory->__w("Move slide to the left"); ?>'></i>
             <i class='fa fa-plus-circle gsoperatecell' type='addfloating' title='<? echo $this->factory->__w("Add content to slider"); ?>'></i>
-            <i class="fa fa-image gs_resizing" data-hideouterbg='true' type="delete" title="<? echo $this->factory->__w("Background image / styling"); ?>"></i>
+            <i class="fa fa-image gs_resizing" <? echo $hideBg; ?> type="delete" title="<? echo $this->factory->__w("Background image / styling"); ?>"></i>
             <i class='fa fa-cogs carouselsettings' title='<? echo $this->factory->__w("Carousel settings"); ?>' style='cursor:pointer;'></i>
             <i class="gsoperatecell fa fa-trash-o" target="selectedcell" type="delete" title='<? echo $this->factory->__w("Delete selected slide"); ?>'></i>
             <i class="gssetslidemodemobile fa fa-mobile" title='<? echo $this->factory->__w("Configure mobile slides"); ?>'></i>

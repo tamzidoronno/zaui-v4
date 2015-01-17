@@ -63,13 +63,9 @@
 
 .ProductLists .row_view .webshop_button_area {
     position: absolute;
-    bottom: 20px;
+    bottom: 10px;
     right: 0px;
-    height: 95px;
     background: rgba(255,255,255, 1);
-    border-top: solid 1px #EEE;
-    width: 180px;
-    
 }
 .ProductLists .grid_view .webshop_button_area {
     position: absolute;

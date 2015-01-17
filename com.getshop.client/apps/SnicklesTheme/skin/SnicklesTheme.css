@@ -10,6 +10,10 @@ body {
     box-sizing: border-box;
 }
 
+.gsare[area=""] {
+    
+}
+
 .shop_button {
     background-color: red;
     color: #FFF;
@@ -61,7 +65,7 @@ body {
     line-height: 25px;
     margin-top: 15px;
     margin-bottom: 15px;
-    border-right: solid 1px #c9c9c9; 
+    border-right: solid 1px #555; 
     padding-right: 10px;
     padding-left: 10px;
 }
@@ -94,11 +98,11 @@ body {
 .CartManager .checkout_area .checkout {
     position: absolute;
     right: 0px;
-    bottom: 0px;
+    bottom: 1px;
     color: #333;
-    top: 0px;
+    top: 1px;
     width: 100px;
-    border-left: solid 2px #ffce4a;
+    border-left: solid 2px #555;
     color: #FFF;
     text-align: center;
 }
@@ -117,6 +121,7 @@ body {
 .gstabrow .gstabheader {
     border-bottom: solid 1px #DDD;
     margin-bottom: 20px;
+    font-size: 16px;
 }
 .gstabrow .gsinner.gsdepth_0 {
     box-sizing: border-box;
@@ -130,4 +135,24 @@ body {
     padding-left: 20px;
     padding-right: 20px;
     padding-bottom: 10px;
+}
+
+.products.grid_view .productbox .image {
+    border: solid 1px #DDD;
+    background-color: #FFF;
+}
+
+.products.grid_view .productbox .webshop_button_area {
+    background: linear-gradient(to bottom, #f1f1f1, #f9f9f9)
+}
+.products.grid_view .productbox {
+    background-color: #F9f9f9;
+}
+
+.products.row_view .productbox {
+    border-bottom: solid 1px #DDD;
+}
+
+.gsarea[area="body"] .gsrow .gsinner.gsdepth_0 {
+    padding-top: 30px;
 }

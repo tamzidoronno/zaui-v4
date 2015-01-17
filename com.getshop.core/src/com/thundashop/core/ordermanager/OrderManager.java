@@ -536,7 +536,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
     
     @Override
-    public double getTotalSalesAmount(Integer year) {
+    public Double getTotalSalesAmount(Integer year) {
         double amount = 0;
         for (Order order : orders.values()) {
             if (year != null) {

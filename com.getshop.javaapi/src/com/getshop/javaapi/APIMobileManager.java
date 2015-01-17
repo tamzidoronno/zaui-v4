@@ -21,12 +21,12 @@ public class APIMobileManager {
      * @param tokenId
      */
      public void clearBadged(java.lang.String tokenId)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("tokenId",new Gson().toJson(tokenId));
-          data.method = "clearBadged";
-          data.interfaceName = "core.mobilemanager.IMobileManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("tokenId",new Gson().toJson(tokenId));
+          gs_json_object_data.method = "clearBadged";
+          gs_json_object_data.interfaceName = "core.mobilemanager.IMobileManager";
+          String result = transport.send(gs_json_object_data);
      }
 
      /**
@@ -37,12 +37,12 @@ public class APIMobileManager {
      * @param token
      */
      public void registerToken(com.thundashop.core.mobilemanager.data.Token token)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("token",new Gson().toJson(token));
-          data.method = "registerToken";
-          data.interfaceName = "core.mobilemanager.IMobileManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("token",new Gson().toJson(token));
+          gs_json_object_data.method = "registerToken";
+          gs_json_object_data.interfaceName = "core.mobilemanager.IMobileManager";
+          String result = transport.send(gs_json_object_data);
      }
 
      /**
@@ -51,12 +51,12 @@ public class APIMobileManager {
      * @param message
      */
      public void sendMessageToAll(java.lang.String message)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("message",new Gson().toJson(message));
-          data.method = "sendMessageToAll";
-          data.interfaceName = "core.mobilemanager.IMobileManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("message",new Gson().toJson(message));
+          gs_json_object_data.method = "sendMessageToAll";
+          gs_json_object_data.interfaceName = "core.mobilemanager.IMobileManager";
+          String result = transport.send(gs_json_object_data);
      }
 
      /**
@@ -65,12 +65,12 @@ public class APIMobileManager {
      * @param message
      */
      public void sendMessageToAllTestUnits(java.lang.String message)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("message",new Gson().toJson(message));
-          data.method = "sendMessageToAllTestUnits";
-          data.interfaceName = "core.mobilemanager.IMobileManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("message",new Gson().toJson(message));
+          gs_json_object_data.method = "sendMessageToAllTestUnits";
+          gs_json_object_data.interfaceName = "core.mobilemanager.IMobileManager";
+          String result = transport.send(gs_json_object_data);
      }
 
 }

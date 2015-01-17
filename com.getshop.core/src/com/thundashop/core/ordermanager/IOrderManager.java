@@ -154,7 +154,7 @@ public interface IOrderManager {
      * @return 
      */
     @Editor
-    public  double getTotalSalesAmount(Integer year);
+    public Double getTotalSalesAmount(Integer year);
     
     @Editor
     public Map<String, List<Statistic>> getMostSoldProducts(int numberOfProducts);

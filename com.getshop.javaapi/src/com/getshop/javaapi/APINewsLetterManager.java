@@ -20,12 +20,12 @@ public class APINewsLetterManager {
      * @param group
      */
      public void sendNewsLetter(com.thundashop.core.messagemanager.NewsLetterGroup group)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("group",new Gson().toJson(group));
-          data.method = "sendNewsLetter";
-          data.interfaceName = "core.messagemanager.INewsLetterManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("group",new Gson().toJson(group));
+          gs_json_object_data.method = "sendNewsLetter";
+          gs_json_object_data.interfaceName = "core.messagemanager.INewsLetterManager";
+          String result = transport.send(gs_json_object_data);
      }
 
      /**
@@ -33,12 +33,12 @@ public class APINewsLetterManager {
      * @param group
      */
      public void sendNewsLetterPreview(com.thundashop.core.messagemanager.NewsLetterGroup group)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("group",new Gson().toJson(group));
-          data.method = "sendNewsLetterPreview";
-          data.interfaceName = "core.messagemanager.INewsLetterManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("group",new Gson().toJson(group));
+          gs_json_object_data.method = "sendNewsLetterPreview";
+          gs_json_object_data.interfaceName = "core.messagemanager.INewsLetterManager";
+          String result = transport.send(gs_json_object_data);
      }
 
 }

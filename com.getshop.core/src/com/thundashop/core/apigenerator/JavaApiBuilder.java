@@ -47,15 +47,15 @@ public class JavaApiBuilder {
         String content = "";
         returnClass = returnClass.replace("[]", "");
 
-        content += "          JsonObject2 data = new JsonObject2();\r\n";
-        content += "          data.args = new LinkedHashMap();\r\n";
+        content += "          JsonObject2 gs_json_object_data = new JsonObject2();\r\n";
+        content += "          gs_json_object_data.args = new LinkedHashMap();\r\n";
         for (String method : args.keySet()) {
-            content += "          data.args.put(\"" + method + "\",new Gson().toJson(" + method + "));\n";
+            content += "          gs_json_object_data.args.put(\"" + method + "\",new Gson().toJson(" + method + "));\n";
         }
 
-        content += "          data.method = \"" + methodName + "\";\r\n";
-        content += "          data.interfaceName = \"" + interfaceName + "\";\r\n";
-        content += "          String result = transport.send(data);\n";
+        content += "          gs_json_object_data.method = \"" + methodName + "\";\r\n";
+        content += "          gs_json_object_data.interfaceName = \"" + interfaceName + "\";\r\n";
+        content += "          String result = transport.send(gs_json_object_data);\n";
         if (!returnClass.equals("void")) {
             content += "          Gson gson = new GsonBuilder().serializeNulls().create();\n";
 

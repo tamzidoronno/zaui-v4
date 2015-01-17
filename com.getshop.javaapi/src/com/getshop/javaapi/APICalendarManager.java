@@ -20,13 +20,13 @@ public class APICalendarManager {
      * has been attending to
      */
      public void addUserSilentlyToEvent(java.lang.String eventId, java.lang.String userId)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("eventId",new Gson().toJson(eventId));
-          data.args.put("userId",new Gson().toJson(userId));
-          data.method = "addUserSilentlyToEvent";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
+          gs_json_object_data.args.put("userId",new Gson().toJson(userId));
+          gs_json_object_data.method = "addUserSilentlyToEvent";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
      }
 
      /**
@@ -39,16 +39,16 @@ public class APICalendarManager {
      * @throws ErrorException
      */
      public void addUserToEvent(java.lang.String userId, java.lang.String eventId, java.lang.String password, java.lang.String username, java.lang.String source)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("userId",new Gson().toJson(userId));
-          data.args.put("eventId",new Gson().toJson(eventId));
-          data.args.put("password",new Gson().toJson(password));
-          data.args.put("username",new Gson().toJson(username));
-          data.args.put("source",new Gson().toJson(source));
-          data.method = "addUserToEvent";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("userId",new Gson().toJson(userId));
+          gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
+          gs_json_object_data.args.put("password",new Gson().toJson(password));
+          gs_json_object_data.args.put("username",new Gson().toJson(username));
+          gs_json_object_data.args.put("source",new Gson().toJson(source));
+          gs_json_object_data.method = "addUserToEvent";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
      }
 
      /**
@@ -58,13 +58,13 @@ public class APICalendarManager {
      * @throws ErrorException
      */
      public void addUserToPageEvent(java.lang.String userId, java.lang.String bookingAppId)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("userId",new Gson().toJson(userId));
-          data.args.put("bookingAppId",new Gson().toJson(bookingAppId));
-          data.method = "addUserToPageEvent";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("userId",new Gson().toJson(userId));
+          gs_json_object_data.args.put("bookingAppId",new Gson().toJson(bookingAppId));
+          gs_json_object_data.method = "addUserToPageEvent";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
      }
 
      /**
@@ -73,12 +73,12 @@ public class APICalendarManager {
      * that does not match the filter criteria.
      */
      public void applyFilter(java.util.List filters)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("filters",new Gson().toJson(filters));
-          data.method = "applyFilter";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("filters",new Gson().toJson(filters));
+          gs_json_object_data.method = "applyFilter";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
      }
 
      /**
@@ -88,12 +88,12 @@ public class APICalendarManager {
      * @throws ErrorException
      */
      public void confirmEntry(java.lang.String entryId)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("entryId",new Gson().toJson(entryId));
-          data.method = "confirmEntry";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("entryId",new Gson().toJson(entryId));
+          gs_json_object_data.method = "confirmEntry";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
      }
 
      /**
@@ -106,14 +106,14 @@ public class APICalendarManager {
      * @throws ErrorException
      */
      public com.thundashop.core.calendarmanager.data.Entry createEntry(int year, int month, int day)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("year",new Gson().toJson(year));
-          data.args.put("month",new Gson().toJson(month));
-          data.args.put("day",new Gson().toJson(day));
-          data.method = "createEntry";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("year",new Gson().toJson(year));
+          gs_json_object_data.args.put("month",new Gson().toJson(month));
+          gs_json_object_data.args.put("day",new Gson().toJson(day));
+          gs_json_object_data.method = "createEntry";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
           Type typeJson_3323322222_autogenerated = new TypeToken<com.thundashop.core.calendarmanager.data.Entry>() {}.getType();
           com.thundashop.core.calendarmanager.data.Entry object = gson.fromJson(result, typeJson_3323322222_autogenerated);
@@ -126,12 +126,12 @@ public class APICalendarManager {
      * @throws ErrorException
      */
      public void deleteEntry(java.lang.String id)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("id",new Gson().toJson(id));
-          data.method = "deleteEntry";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("id",new Gson().toJson(id));
+          gs_json_object_data.method = "deleteEntry";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
      }
 
      /**
@@ -141,12 +141,12 @@ public class APICalendarManager {
      * @throws ErrorException
      */
      public void deleteLocation(java.lang.String locationId)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("locationId",new Gson().toJson(locationId));
-          data.method = "deleteLocation";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("locationId",new Gson().toJson(locationId));
+          gs_json_object_data.method = "deleteLocation";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
      }
 
      /**
@@ -157,11 +157,11 @@ public class APICalendarManager {
      * @return
      */
      public java.util.List getActiveFilters()  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.method = "getActiveFilters";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.method = "getActiveFilters";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
           Type typeJson_3323322222_autogenerated = new TypeToken<java.util.List<java.lang.String>>() {}.getType();
           java.util.List object = gson.fromJson(result, typeJson_3323322222_autogenerated);
@@ -172,12 +172,12 @@ public class APICalendarManager {
      * Returns a list of
      */
      public java.util.List getAllEventsConnectedToPage(java.lang.String pageId)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("pageId",new Gson().toJson(pageId));
-          data.method = "getAllEventsConnectedToPage";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("pageId",new Gson().toJson(pageId));
+          gs_json_object_data.method = "getAllEventsConnectedToPage";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
           Type typeJson_3323322222_autogenerated = new TypeToken<java.util.List<com.thundashop.core.calendarmanager.data.Entry>>() {}.getType();
           java.util.List object = gson.fromJson(result, typeJson_3323322222_autogenerated);
@@ -190,11 +190,11 @@ public class APICalendarManager {
      * @return List<Location>
      */
      public java.util.List getAllLocations()  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.method = "getAllLocations";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.method = "getAllLocations";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
           Type typeJson_3323322222_autogenerated = new TypeToken<java.util.List<com.thundashop.core.calendarmanager.data.Location>>() {}.getType();
           java.util.List object = gson.fromJson(result, typeJson_3323322222_autogenerated);
@@ -210,15 +210,15 @@ public class APICalendarManager {
      * @throws ErrorException
      */
      public java.util.List getEntries(int year, int month, int day, java.util.List filters)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("year",new Gson().toJson(year));
-          data.args.put("month",new Gson().toJson(month));
-          data.args.put("day",new Gson().toJson(day));
-          data.args.put("filters",new Gson().toJson(filters));
-          data.method = "getEntries";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("year",new Gson().toJson(year));
+          gs_json_object_data.args.put("month",new Gson().toJson(month));
+          gs_json_object_data.args.put("day",new Gson().toJson(day));
+          gs_json_object_data.args.put("filters",new Gson().toJson(filters));
+          gs_json_object_data.method = "getEntries";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
           Type typeJson_3323322222_autogenerated = new TypeToken<java.util.List<com.thundashop.core.calendarmanager.data.Entry>>() {}.getType();
           java.util.List object = gson.fromJson(result, typeJson_3323322222_autogenerated);
@@ -230,12 +230,12 @@ public class APICalendarManager {
      * has been attending to
      */
      public java.util.List getEntriesByUserId(java.lang.String userId)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("userId",new Gson().toJson(userId));
-          data.method = "getEntriesByUserId";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("userId",new Gson().toJson(userId));
+          gs_json_object_data.method = "getEntriesByUserId";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
           Type typeJson_3323322222_autogenerated = new TypeToken<java.util.List<com.thundashop.core.calendarmanager.data.Entry>>() {}.getType();
           java.util.List object = gson.fromJson(result, typeJson_3323322222_autogenerated);
@@ -249,12 +249,12 @@ public class APICalendarManager {
      * @return
      */
      public com.thundashop.core.calendarmanager.data.Entry getEntry(java.lang.String entryId)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("entryId",new Gson().toJson(entryId));
-          data.method = "getEntry";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("entryId",new Gson().toJson(entryId));
+          gs_json_object_data.method = "getEntry";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
           Type typeJson_3323322222_autogenerated = new TypeToken<com.thundashop.core.calendarmanager.data.Entry>() {}.getType();
           com.thundashop.core.calendarmanager.data.Entry object = gson.fromJson(result, typeJson_3323322222_autogenerated);
@@ -266,12 +266,12 @@ public class APICalendarManager {
      * has been attending to
      */
      public com.thundashop.core.calendarmanager.data.EventPartitipated getEventPartitipatedData(java.lang.String pageId)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("pageId",new Gson().toJson(pageId));
-          data.method = "getEventPartitipatedData";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("pageId",new Gson().toJson(pageId));
+          gs_json_object_data.method = "getEventPartitipatedData";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
           Type typeJson_3323322222_autogenerated = new TypeToken<com.thundashop.core.calendarmanager.data.EventPartitipated>() {}.getType();
           com.thundashop.core.calendarmanager.data.EventPartitipated object = gson.fromJson(result, typeJson_3323322222_autogenerated);
@@ -286,11 +286,11 @@ public class APICalendarManager {
      * @throws ErrorException
      */
      public java.util.List getEventsGroupedByPageId()  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.method = "getEventsGroupedByPageId";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.method = "getEventsGroupedByPageId";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
           Type typeJson_3323322222_autogenerated = new TypeToken<java.util.List<com.thundashop.core.calendarmanager.data.FilterResult>>() {}.getType();
           java.util.List object = gson.fromJson(result, typeJson_3323322222_autogenerated);
@@ -302,11 +302,11 @@ public class APICalendarManager {
      * can be applied to the Calendar.
      */
      public java.util.List getFilters()  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.method = "getFilters";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.method = "getFilters";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
           Type typeJson_3323322222_autogenerated = new TypeToken<java.util.List<java.lang.String>>() {}.getType();
           java.util.List object = gson.fromJson(result, typeJson_3323322222_autogenerated);
@@ -321,12 +321,12 @@ public class APICalendarManager {
      * @return
      */
      public java.util.List getHistory(java.lang.String eventId)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("eventId",new Gson().toJson(eventId));
-          data.method = "getHistory";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
+          gs_json_object_data.method = "getHistory";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
           Type typeJson_3323322222_autogenerated = new TypeToken<java.util.List<com.thundashop.core.calendarmanager.data.ReminderHistory>>() {}.getType();
           java.util.List object = gson.fromJson(result, typeJson_3323322222_autogenerated);
@@ -342,14 +342,14 @@ public class APICalendarManager {
      * @throws ErrorException
      */
      public com.thundashop.core.calendarmanager.data.Month getMonth(int year, int month, boolean includeExtraEvents)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("year",new Gson().toJson(year));
-          data.args.put("month",new Gson().toJson(month));
-          data.args.put("includeExtraEvents",new Gson().toJson(includeExtraEvents));
-          data.method = "getMonth";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("year",new Gson().toJson(year));
+          gs_json_object_data.args.put("month",new Gson().toJson(month));
+          gs_json_object_data.args.put("includeExtraEvents",new Gson().toJson(includeExtraEvents));
+          gs_json_object_data.method = "getMonth";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
           Type typeJson_3323322222_autogenerated = new TypeToken<com.thundashop.core.calendarmanager.data.Month>() {}.getType();
           com.thundashop.core.calendarmanager.data.Month object = gson.fromJson(result, typeJson_3323322222_autogenerated);
@@ -364,11 +364,11 @@ public class APICalendarManager {
      * @throws ErrorException
      */
      public java.util.List getMonths()  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.method = "getMonths";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.method = "getMonths";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
           Type typeJson_3323322222_autogenerated = new TypeToken<java.util.List<com.thundashop.core.calendarmanager.data.Month>>() {}.getType();
           java.util.List object = gson.fromJson(result, typeJson_3323322222_autogenerated);
@@ -379,13 +379,13 @@ public class APICalendarManager {
      * Get all entries
      */
      public java.util.List getMonthsAfter(int year, int month)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("year",new Gson().toJson(year));
-          data.args.put("month",new Gson().toJson(month));
-          data.method = "getMonthsAfter";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("year",new Gson().toJson(year));
+          gs_json_object_data.args.put("month",new Gson().toJson(month));
+          gs_json_object_data.method = "getMonthsAfter";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
           Type typeJson_3323322222_autogenerated = new TypeToken<java.util.List<com.thundashop.core.calendarmanager.data.Month>>() {}.getType();
           java.util.List object = gson.fromJson(result, typeJson_3323322222_autogenerated);
@@ -397,12 +397,12 @@ public class APICalendarManager {
      * has been attending to
      */
      public java.lang.String getSignature(java.lang.String id)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("id",new Gson().toJson(id));
-          data.method = "getSignature";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("id",new Gson().toJson(id));
+          gs_json_object_data.method = "getSignature";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
           Type typeJson_3323322222_autogenerated = new TypeToken<java.lang.String>() {}.getType();
           java.lang.String object = gson.fromJson(result, typeJson_3323322222_autogenerated);
@@ -417,13 +417,13 @@ public class APICalendarManager {
      * @throws ErrorException
      */
      public void removeUserFromEvent(java.lang.String userId, java.lang.String eventId)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("userId",new Gson().toJson(userId));
-          data.args.put("eventId",new Gson().toJson(eventId));
-          data.method = "removeUserFromEvent";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("userId",new Gson().toJson(userId));
+          gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
+          gs_json_object_data.method = "removeUserFromEvent";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
      }
 
      /**
@@ -432,12 +432,12 @@ public class APICalendarManager {
      * @throws ErrorException
      */
      public void saveEntry(com.thundashop.core.calendarmanager.data.Entry entry)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("entry",new Gson().toJson(entry));
-          data.method = "saveEntry";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("entry",new Gson().toJson(entry));
+          gs_json_object_data.method = "saveEntry";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
      }
 
      /**
@@ -447,12 +447,12 @@ public class APICalendarManager {
      * @throws ErrorException
      */
      public com.thundashop.core.calendarmanager.data.Location saveLocation(com.thundashop.core.calendarmanager.data.Location location)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("location",new Gson().toJson(location));
-          data.method = "saveLocation";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("location",new Gson().toJson(location));
+          gs_json_object_data.method = "saveLocation";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
           Type typeJson_3323322222_autogenerated = new TypeToken<com.thundashop.core.calendarmanager.data.Location>() {}.getType();
           com.thundashop.core.calendarmanager.data.Location object = gson.fromJson(result, typeJson_3323322222_autogenerated);
@@ -471,19 +471,19 @@ public class APICalendarManager {
      * @throws ErrorException
      */
      public void sendReminderToUser(boolean byEmail, boolean bySMS, java.util.List users, java.lang.String text, java.lang.String subject, java.lang.String eventId, java.lang.String attachment, java.lang.String sendReminderToUser)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("byEmail",new Gson().toJson(byEmail));
-          data.args.put("bySMS",new Gson().toJson(bySMS));
-          data.args.put("users",new Gson().toJson(users));
-          data.args.put("text",new Gson().toJson(text));
-          data.args.put("subject",new Gson().toJson(subject));
-          data.args.put("eventId",new Gson().toJson(eventId));
-          data.args.put("attachment",new Gson().toJson(attachment));
-          data.args.put("sendReminderToUser",new Gson().toJson(sendReminderToUser));
-          data.method = "sendReminderToUser";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("byEmail",new Gson().toJson(byEmail));
+          gs_json_object_data.args.put("bySMS",new Gson().toJson(bySMS));
+          gs_json_object_data.args.put("users",new Gson().toJson(users));
+          gs_json_object_data.args.put("text",new Gson().toJson(text));
+          gs_json_object_data.args.put("subject",new Gson().toJson(subject));
+          gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
+          gs_json_object_data.args.put("attachment",new Gson().toJson(attachment));
+          gs_json_object_data.args.put("sendReminderToUser",new Gson().toJson(sendReminderToUser));
+          gs_json_object_data.method = "sendReminderToUser";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
      }
 
      /**
@@ -491,12 +491,12 @@ public class APICalendarManager {
      * has been attending to
      */
      public void setEventPartitipatedData(com.thundashop.core.calendarmanager.data.EventPartitipated eventData)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("eventData",new Gson().toJson(eventData));
-          data.method = "setEventPartitipatedData";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("eventData",new Gson().toJson(eventData));
+          gs_json_object_data.method = "setEventPartitipatedData";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
      }
 
      /**
@@ -504,13 +504,13 @@ public class APICalendarManager {
      * has been attending to
      */
      public void setSignature(java.lang.String userid, java.lang.String signature)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("userid",new Gson().toJson(userid));
-          data.args.put("signature",new Gson().toJson(signature));
-          data.method = "setSignature";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("userid",new Gson().toJson(userid));
+          gs_json_object_data.args.put("signature",new Gson().toJson(signature));
+          gs_json_object_data.method = "setSignature";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
      }
 
      /**
@@ -518,13 +518,13 @@ public class APICalendarManager {
      * course.
      */
      public void transferFromWaitingList(java.lang.String entryId, java.lang.String userId)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("entryId",new Gson().toJson(entryId));
-          data.args.put("userId",new Gson().toJson(userId));
-          data.method = "transferFromWaitingList";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("entryId",new Gson().toJson(entryId));
+          gs_json_object_data.args.put("userId",new Gson().toJson(userId));
+          gs_json_object_data.method = "transferFromWaitingList";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
      }
 
      /**
@@ -535,14 +535,14 @@ public class APICalendarManager {
      * @param evenId
      */
      public void transferUser(java.lang.String fromEventId, java.lang.String toEventId, java.lang.String userId)  throws Exception  {
-          JsonObject2 data = new JsonObject2();
-          data.args = new LinkedHashMap();
-          data.args.put("fromEventId",new Gson().toJson(fromEventId));
-          data.args.put("toEventId",new Gson().toJson(toEventId));
-          data.args.put("userId",new Gson().toJson(userId));
-          data.method = "transferUser";
-          data.interfaceName = "core.calendar.ICalendarManager";
-          String result = transport.send(data);
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("fromEventId",new Gson().toJson(fromEventId));
+          gs_json_object_data.args.put("toEventId",new Gson().toJson(toEventId));
+          gs_json_object_data.args.put("userId",new Gson().toJson(userId));
+          gs_json_object_data.method = "transferUser";
+          gs_json_object_data.interfaceName = "core.calendar.ICalendarManager";
+          String result = transport.send(gs_json_object_data);
      }
 
 }

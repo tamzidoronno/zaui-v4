@@ -656,11 +656,11 @@ class Page {
             .gsrotating[cellid='<? echo $cell->cellId; ?>'] .gsinner.gsdepth_<? echo $depth; ?> { height: 100%; }
             <? if (($config->type === "fade" || !$config->type) && $doCarousel) { ?>
                 .gsrotating[cellid='<? echo $cell->cellId; ?>'] .gscell {
-                    -webkit-transition: opacity .5s ease-in-out;
-                    -moz-transition: opacity .5s ease-in-out;
-                    -ms-transition: opacity .5s ease-in-out;
-                    -o-transition: opacity .5s ease-in-out;
-                    transition: opacity .5s ease-in-out;
+                    -webkit-transition: opacity 1s ease-in-out;
+                    -moz-transition: opacity 1s ease-in-out;
+                    -ms-transition: opacity 1s ease-in-out;
+                    -o-transition: opacity 1s ease-in-out;
+                    transition: opacity 1s ease-in-out;
                 }
             <? } ?>
         </style>

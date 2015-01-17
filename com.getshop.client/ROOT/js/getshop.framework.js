@@ -76,6 +76,7 @@ thundashop.framework = {
         $(document).on('click', '.gstabbtn', this.changeTab);
         $(document).on('click', '.gsdoneresizing', this.deleteResizing);
         $(document).on('click', '.store_mobile_view_button', this.displayMobileView);
+        $(document).on('click', '.store_design_button', this.loadGlobalCssEditor);
         $(document).on('click', '.gsmobileeditor', this.hideMobileView);
         $(document).on('click', '.gsmobilemenu .gsslideleft', this.slideMobileMenu);
         $(document).on('click', '.gsmobilemenu .gsslideright', this.slideMobileMenu);
@@ -94,6 +95,36 @@ thundashop.framework = {
     setSlideViewMode : function() {
         var event = thundashop.Ajax.createEvent('','setSlideMode',$(this),{});
         thundashop.Ajax.post(event);
+    },
+    
+    loadGlobalCssEditor : function() {
+        var pageId = $('#gspageid').val();
+        var box = window.open("cssbox.php?page="+pageId,'popUpWindow','height=500,width=800,left=100,addressbar=no,top=100,resizable=no,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no, status=yes');
+        thundashop.framework.checkCss(box);
+    },
+    
+    checkCss : function(box) {
+        if(!box) {
+            return;
+        }
+        if(box.top === null) {
+            return;
+        }
+        var oDom = box.document;
+        var elem = oDom.getElementById("styles");
+        var pageElem = oDom.getElementById("styles_colors");
+        var pageInput = oDom.getElementById("current_pageid");
+        if (elem) {
+            var curpage =  $('.skelholder').attr('page');
+            pageInput.setAttribute("pageid",curpage);
+            var globalstyles = elem.value;
+            var colorcss = pageElem.value;
+            $('#gs_customcss').html("<style>" + globalstyles + "</style>");
+            $('#gs_color_css').html("<style>" + colorcss + "</style>");
+        }
+        setTimeout(function() {
+            thundashop.framework.checkCss(box);
+        }, "300");
     },
     
     showMobileSearch : function() {

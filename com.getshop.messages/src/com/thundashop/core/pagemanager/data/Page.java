@@ -28,7 +28,7 @@ public class Page extends DataCommon implements Cloneable {
     @Translation
     public String title;
     public String customCss = "";
-
+    
     public Page() {
     }
     

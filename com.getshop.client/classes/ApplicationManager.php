@@ -199,15 +199,20 @@ class ApplicationManager extends FactoryBase {
     }
 
     function savePageDetails() {
-        $page_css = $_POST['data']['page_css'];
         $global_css = $_POST['data']['global_css'];
         $page_text = $_POST['data']['page_text'];
-
+        $selected_color_template = $_POST['data']['selected_color_template'];
+        $color_templates = $_POST['data']['color_templates'];
         $store = $this->getFactory()->getStore();
         $store->configuration->customCss = $global_css;
+        if($color_templates) {
+            $store->configuration->colorTemplates = $color_templates;
+        }
+        $store->configuration->selectedColorTemplate = $selected_color_template;
+        
         $this->getApi()->getStoreManager()->saveStore($store->configuration);
 
-        $page = $this->getFactory()->getPage()->backendPage;
+        $page = $this->getFactory()->getPage()->javapage;
         $page->customCss = $page_css;
         $page->description = $page_text;
         $this->getApi()->getPageManager()->savePage($page);

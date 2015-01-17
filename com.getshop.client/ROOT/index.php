@@ -190,6 +190,7 @@ if(isset($factory->getSettings()->languages)) {
         <? if ($factory->isEditorMode() && !$factory->isMobile()) {
             echo "<div class='store_settings_button fa fa-gears'></div>";
             echo "<div class='store_mobile_view_button fa fa-mobile'></div>";
+            echo "<div class='store_design_button fa fa-image'></div>";
             
             include_once("mobileeditor.phtml");
             echo '<link rel="stylesheet" type="text/css" href="/skin/default/mobileeditor.css" />';
@@ -320,6 +321,15 @@ if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
 <div id="gs_customcss">
     <style>
         <? echo $factory->getStoreConfiguration()->customCss; ?>
+    </style>
+</div>
+<div id="gs_color_css">
+    <style>
+        <? 
+        if($factory->getStoreConfiguration()->selectedColorTemplate) {
+            echo $factory->getStoreConfiguration()->colorTemplates->{$factory->getStoreConfiguration()->selectedColorTemplate};
+        }
+        ?>
     </style>
 </div>
 <? if (isset($_GET['logout'])) { ?>

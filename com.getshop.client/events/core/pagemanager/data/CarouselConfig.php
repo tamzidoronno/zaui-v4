@@ -4,6 +4,9 @@ class core_pagemanager_data_CarouselConfig {
 	public $height;
 
 	/** @var String */
+	public $heightMobile;
+
+	/** @var String */
 	public $time;
 
 	/** @var String */

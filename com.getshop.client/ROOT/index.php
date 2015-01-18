@@ -325,9 +325,21 @@ if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
 </div>
 <div id="gs_color_css">
     <style>
-        <? 
-        if($factory->getStoreConfiguration()->selectedColorTemplate) {
-            echo $factory->getStoreConfiguration()->colorTemplates->{$factory->getStoreConfiguration()->selectedColorTemplate};
+        <?
+        
+        $color = $factory->getStoreConfiguration()->selectedColorTemplate;
+        
+        if(isset($_GET['colorselection'])) {
+            $color = $_GET['colorselection'];
+            $_SESSION['gscolorselection'] = $color;
+        }
+        
+        if(isset($_SESSION['gscolorselection'])) {
+            $color = $_SESSION['gscolorselection'];
+        }
+        
+        if($color) {
+            echo $factory->getStoreConfiguration()->colorTemplates->{$color};
         }
         ?>
     </style>

@@ -1,5 +1,9 @@
 body {
     background: url('{IMAGEFOLDER}/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+html {
+    font-family: ubuntu;
 }
 .gsinner.gsdepth_0 {
     max-width: 1266px;

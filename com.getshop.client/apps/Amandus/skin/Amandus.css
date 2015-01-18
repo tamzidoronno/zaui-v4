@@ -18,7 +18,7 @@ background: linear-gradient(to bottom, #00b7ea 0%,#009ec3 100%); /* W3C */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00b7ea', endColorstr='#009ec3',GradientType=0 ); /* IE6-9 */
 font-size: 13px; color:#FFF; 
 }
-
+.products.row_view .productbox { border-bottom: solid 1px #EEE; }
 
 .ProductLists .products.grid_view .productbox .product_title { }
 
@@ -32,9 +32,6 @@ h1,h2,h3,h4,h5,h6,.ProductLists .short_description { max-height: 100px; overflow
 .gsarea[area="body"] .gscontainer .gsinner.gsdepth_0 { box-shadow: none; }
 
 .gscell .gsinner { padding: 10px; }
-.gsarea[area="body"] .gscell.gsdepth_0 {
-    background-color:#efefef;
-}
 
 .gsarea[area="footer"] .gsdepth_0.gscount_1.gsrow {
     padding-top: 20px;

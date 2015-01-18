@@ -2225,6 +2225,7 @@ padding: 2px; }
     position: fixed;
     width: 60px;
     z-index: 2;
+    border-right: solid 1px;
 }
 
 .gs_advanced_mode_activated i {

@@ -50,6 +50,7 @@ thundashop.framework = {
         $(document).on('click', '.gs_closecelledit', this.closeCellEdit);
         $(document).on('click', '.gs_closecarouselsettings', this.closeCarouselSettings);
         $(document).on('click', '.gs_start_template_button', this.startTemplateClicked);
+        $(document).on('click', '.gs_toggle_advanced_mode', this.toggleAdvancedMode);
         $(document).on('click', '.gsclosetabsettings', this.closeTabSettings);
         $(document).on('click', '.gsclosecsseditor', this.closeCssEditor);
         $(document).on('click', '.gsresizecolumn', this.activateResizeColumn);
@@ -96,6 +97,18 @@ thundashop.framework = {
     setSlideViewMode : function() {
         var event = thundashop.Ajax.createEvent('','setSlideMode',$(this),{});
         thundashop.Ajax.post(event);
+    },
+    
+    toggleAdvancedMode: function() {
+        var isActive = $(this).hasClass('gs_advanced_mode_activated');
+        
+        if (isActive) {
+            $(this).removeClass('gs_advanced_mode_activated');
+            alert('Advanced mode deactivated');
+        } else {
+            $(this).addClass('gs_advanced_mode_activated');
+            alert('Advanced mode activated');
+        }
     },
     
     loadGlobalCssEditor : function() {

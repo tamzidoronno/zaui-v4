@@ -1104,8 +1104,10 @@ thundashop.framework = {
                 "metaData" : metaData
             }
             var event = thundashop.Ajax.createEvent('','simpleAddRow',$(this),data);
-            thundashop.Ajax.post(event);
-            alert('Make box slide back here....');
+            thundashop.Ajax.post(event, function() {
+                thundashop.framework.rowPicker.close();
+            });
+            
         }
         
         thundashop.framework.rowPicker.toggleRowPicker('left', this, selected, metaData);

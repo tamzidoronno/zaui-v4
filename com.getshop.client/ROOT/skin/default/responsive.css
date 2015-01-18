@@ -88,7 +88,15 @@ background-color: rgba(0,0,0,0.8); }
 .gsucell:hover .gsmobileoptions { opacity:1; }
 .gsmobilemenu .gsslideleft { position:absolute; display:none; }
 .gsmobilemenuentry i { font-size: 30px; display:block; }
-.gsmobileoptions { position:relative; display:block; opacity:0; text-align: right; padding: 5px; background-color:rgba(0,0,0,0.7); }
+.gsmobileoptions { position: absolute;
+display: block;
+opacity: 0;
+text-align: right;
+padding: 5px;
+background-color: rgba(0,0,0,0.9);
+width: 100%;
+z-index: 1;
+color: #fff;}
 .gsmobileoptions .gsoperatecell { margin-right: 10px; }
 .gsmobileoptions .gsoperatecell:hover { color:#bbb; font-weight: bold; cursor:pointer; }
 .gsmobileoptions .gscaretleft { left: 15px;  }

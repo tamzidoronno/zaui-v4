@@ -13,6 +13,8 @@ overflow:hidden;
 /* colors */
 .gstabheader .gstabbtn,.gstabheader {  border-color: #bbb; }
 
+body { background-color:#fff !important; }
+
 .ProductLists .grid_view .product_title, .gsmobilemenuentry,.gstabheader .gstabbtn.gsactivetab,.shop_button { 
     background: #f2f5f6; /* Old browsers */
     background: -moz-linear-gradient(top, #f2f5f6 0%, #e3eaed 37%, #c8d7dc 100%); /* FF3.6+ */

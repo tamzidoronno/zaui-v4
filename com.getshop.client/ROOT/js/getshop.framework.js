@@ -1338,6 +1338,15 @@ thundashop.framework.rowPicker = {
     
     init: function() {
         $(document).on('click', '.gs_rowpicker_box .gs_row_box_to_select', thundashop.framework.rowPicker.selected);
+        $(document).on('click', '.gs_rowpicker_box .gs_row_mode_select', thundashop.framework.rowPicker.modeChange);
+    },
+    
+    modeChange: function() {
+        $('.gs_rowpicker_box .gs_row_mode_select_active').removeClass('gs_row_mode_select_active');
+        $('.gs_rowpicker_box .gs_row_selection_box').hide();
+        $(this).addClass('gs_row_mode_select_active');
+        var mode = $(this).attr('rowmode');
+        $('.gs_rowpicker_box .gs_row_selection_box[type="'+mode+'"]').show();
     },
     
     selected: function() {

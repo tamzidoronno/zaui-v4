@@ -1333,6 +1333,8 @@ thundashop.framework.bindEvents();
 
 
 thundashop.framework.rowPicker = {
+    lastx : null,
+    lasty : null,
     callBackFunction: null,
     lastCallBackData : {},
     slidedirection: null,
@@ -1378,10 +1380,7 @@ thundashop.framework.rowPicker = {
         
         var pickerDom = $('.gs_rowpicker_box');
         
-        if (pickerDom.is(':visible')) {
-            thundashop.framework.rowPicker.close();
-            return;
-        }
+        
         
         
         pickerDom.removeClass('shadowsadded');
@@ -1418,6 +1417,17 @@ thundashop.framework.rowPicker = {
             startx = target.offset().left + padding + target.outerWidth(true);
             starty = target.offset().top + target.outerHeight(true)/2 - (pickerDom.outerHeight(true)/2);
         }
+        
+        if (pickerDom.is(':visible') &&  thundashop.framework.rowPicker.lastx === startx && thundashop.framework.rowPicker.lasty === starty) {
+            thundashop.framework.rowPicker.close();
+            return;
+        }
+        
+        $(pickerDom).hide();
+        thundashop.framework.rowPicker.lastx = startx;
+        thundashop.framework.rowPicker.lasty = starty;
+        
+        
         
         thundashop.framework.rowPicker.slidedirection = slidedirection;
         pickerDom.css('top', starty);

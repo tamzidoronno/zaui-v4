@@ -719,6 +719,10 @@ class Factory extends FactoryBase {
         if ($this->store && $this->store->expiryDate && !$this->store->isTemplate) {
             $this->includefile("expirywarning", 'Common');
         }
+        
+        if ($this->isEditorMode()) {
+            $this->includefile("rowpicker", 'Common');
+        }
     }
 
 }

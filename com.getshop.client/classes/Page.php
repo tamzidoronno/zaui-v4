@@ -1054,6 +1054,7 @@ class Page {
                 echo "<i title='" . $this->factory->__w("Add row below") . "' class='fa fa-plus gsoperatecell' type='addbefore' mode='INIT'></i>";
                 echo "<i title='" . $this->factory->__w("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o'></i>";
                 echo "<i title='" . $this->factory->__w("Add row below") . "' class='fa fa-plus gsoperatecell' type='addafter' mode='INIT'></i>";
+                echo "<i title='" . $this->factory->__w("Simple add row") . "' class='fa fa-info simpleaddrow' type='addafter' mode='INIT'></i>";
                 echo "</span>";
             } else if ($parent && $parent->mode == "TAB") {
                 echo "<span class='gseditrowbuttons'>";

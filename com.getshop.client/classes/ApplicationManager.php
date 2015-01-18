@@ -210,12 +210,9 @@ class ApplicationManager extends FactoryBase {
         }
         $store->configuration->selectedColorTemplate = $selected_color_template;
         
+        unset($_SESSION['gscolorselection']);
+        
         $this->getApi()->getStoreManager()->saveStore($store->configuration);
-
-        $page = $this->getFactory()->getPage()->javapage;
-        $page->customCss = $page_css;
-        $page->description = $page_text;
-        $this->getApi()->getPageManager()->savePage($page);
     }
 
     function validateArea($areas, $area, $size, $type, $app = null) {

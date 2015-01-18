@@ -267,7 +267,9 @@ thundashop.framework = {
             }
         }
         thundashop.framework.showAdvancedOptions();
-        $(this).find('.gseditrowbuttons').show();
+        var buttons = $(this).find('.gseditrowbuttons');
+        buttons.show();
+        
     },
     isAdvancedMode: function () {
         if (!localStorage.getItem('gsadvancedcombo')) {
@@ -1100,8 +1102,9 @@ thundashop.framework = {
         
         var selected = function(result) {
             
+            var before = cellobj.next().attr('cellid');
             if(result.addafter) {
-                var before = cellobj.next().attr('cellid');
+                before = cellobj.next().attr('cellid');
                 if (cellobj.next().hasClass("gseditinfo")) {
                     before = cellobj.next().next().attr('cellid');
                 }

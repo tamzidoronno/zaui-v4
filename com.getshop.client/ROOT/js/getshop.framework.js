@@ -1335,10 +1335,21 @@ thundashop.framework.bindEvents();
 thundashop.framework.rowPicker = {
     callBackFunction: null,
     lastCallBackData : {},
+    slidedirection: null,
     
     init: function() {
         $(document).on('click', '.gs_rowpicker_box .gs_row_box_to_select', thundashop.framework.rowPicker.selected);
         $(document).on('click', '.gs_rowpicker_box .gs_row_mode_select', thundashop.framework.rowPicker.modeChange);
+        $(document).on('click', '.gs_rowpicker_box .close_gs_row_picker', thundashop.framework.rowPicker.close);
+    },
+    
+    close: function() {
+        var pickerDom = $('.gs_rowpicker_box');
+        if (thundashop.framework.rowPicker.slidedirection) {
+            pickerDom.hide("slide", { direction: thundashop.framework.rowPicker.slidedirection }, 250);
+        } else {
+            pickerDom.hide();
+        }
     },
     
     modeChange: function() {
@@ -1366,7 +1377,13 @@ thundashop.framework.rowPicker = {
         thundashop.framework.rowPicker.lastCallBackData = callbackData;
         
         var pickerDom = $('.gs_rowpicker_box');
-        pickerDom.hide();
+        
+        if (pickerDom.is(':visible')) {
+            thundashop.framework.rowPicker.close();
+            return;
+        }
+        
+        
         pickerDom.removeClass('shadowsadded');
         var target = $(target);
         var startx = 250;
@@ -1402,6 +1419,7 @@ thundashop.framework.rowPicker = {
             starty = target.offset().top + target.outerHeight(true)/2 - (pickerDom.outerHeight(true)/2);
         }
         
+        thundashop.framework.rowPicker.slidedirection = slidedirection;
         pickerDom.css('top', starty);
         pickerDom.css('left', startx);
         pickerDom.show("slide", { direction: slidedirection, complete: addShadow }, 250);

@@ -181,7 +181,7 @@ h1 {
     box-shadow: 0px 0px 10px #2f8dc9;
 }
 .gs_rowpicker_box {
-    display: none;
+    /*display: none;*/
     position: absolute;
     left: 50px;
     top: 50px;
@@ -195,7 +195,23 @@ h1 {
     z-index: 12;
     padding-top: 5px;
     z-index: 991;
-    
+    position: absolute;
+}
+.gs_rowpicker_box .gs_rowpicker_box_content {
+    position: relative;
+}
+
+.gs_rowpicker_box .close_gs_row_picker {
+    border: solid 1px #FFF;
+    border-radius: 10px;
+    padding: 3px;
+    padding-left: 5px;
+    padding-right: 5px;
+    position: absolute;
+    right: -11px;
+    top: -16px;
+    background-color: #2f8dc9;
+    cursor: pointer;
 }
 
 .gs_rowpicker_box .gs_select_row_mode_information {

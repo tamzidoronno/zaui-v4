@@ -89,6 +89,7 @@ thundashop.framework = {
 
         /* Cell operations */
         $(document).on('click', '.gsoperatecell', this.operateCell);
+        $(document).on('click', '.simpleaddrow', this.simpleaddrow);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
     },
     
@@ -1043,8 +1044,21 @@ thundashop.framework = {
         }
         return element;
     },
+    simpleaddrow: function() {
+        var metaData = {
+            rowId : "",
+            name : "",
+            someThingElse : ""
+        };
+        
+        var selected = function(result) {
+            console.log(result);
+            debugger;
+        }
+        
+        thundashop.framework.rowPicker.toggleRowPicker('left', this, selected, metaData);
+    },
     operateCell: function () {
-
         if ($(this).closest('.gscellsettingspanel').length === 0) {
             thundashop.framework.originObject = $(this);
         }
@@ -1316,3 +1330,72 @@ $(document).on('keyup', function (event) {
 });
 
 thundashop.framework.bindEvents();
+
+
+thundashop.framework.rowPicker = {
+    callBackFunction: null,
+    lastCallBackData : {},
+    
+    init: function() {
+        $(document).on('click', '.gs_rowpicker_box .gs_row_box_to_select', thundashop.framework.rowPicker.selected);
+    },
+    
+    selected: function() {
+        if (typeof(thundashop.framework.rowPicker.callBackFunction) === "function") {
+            if (!thundashop.framework.rowPicker.lastCallBackData) {
+                thundashop.framework.rowPicker.lastCallBackData = {};
+            }
+            
+            thundashop.framework.rowPicker.lastCallBackData.rowtype = $(this).attr('rowtype');
+            thundashop.framework.rowPicker.callBackFunction(thundashop.framework.rowPicker.lastCallBackData);
+        }
+    },
+    
+    toggleRowPicker: function(direction, target, callback, callbackData) {
+        thundashop.framework.rowPicker.callBackFunction = callback;
+        thundashop.framework.rowPicker.lastCallBackData = callbackData;
+        
+        var pickerDom = $('.gs_rowpicker_box');
+        pickerDom.hide();
+        pickerDom.removeClass('shadowsadded');
+        var target = $(target);
+        var startx = 250;
+        var starty = 250;
+        var padding = 20;
+        var slidedirection = "";
+        
+        var addShadow = function() {
+            $(this).addClass('shadowsadded');
+        }
+        
+        if (direction === "up") {
+            slidedirection = "down";
+            startx = target.offset().left + ( target.outerWidth(true)/2) - (pickerDom.outerWidth(true)/2);
+            starty = target.offset().top - (pickerDom.outerHeight(true)) - padding;
+        }
+        
+        if (direction === "down") {
+            slidedirection = "up";
+            startx = target.offset().left + ( target.outerWidth(true)/2) - (pickerDom.outerWidth(true)/2);
+            starty = target.offset().top + target.outerHeight(true) + padding;
+        }
+        
+        if (direction === "left") {
+            slidedirection = "right";
+            startx = target.offset().left - padding - pickerDom.outerWidth(true);
+            starty = target.offset().top + target.outerHeight(true)/2 - (pickerDom.outerHeight(true)/2);
+        }
+        
+        if (direction === "right") {
+            slidedirection = "left";
+            startx = target.offset().left + padding + target.outerWidth(true);
+            starty = target.offset().top + target.outerHeight(true)/2 - (pickerDom.outerHeight(true)/2);
+        }
+        
+        pickerDom.css('top', starty);
+        pickerDom.css('left', startx);
+        pickerDom.show("slide", { direction: slidedirection, complete: addShadow }, 250);
+    }
+};
+
+thundashop.framework.rowPicker.init();

@@ -1049,27 +1049,34 @@ class Page {
 
     public function printRowEditButtons($depth, $edit, $parent) {
         if ($depth === 0 && !$edit && $this->factory->isEditorMode()) {
-            if ($parent == null || ($parent->mode != "TAB" && $parent->mode != "ROTATING")) {
                 echo "<span class='gseditrowbuttons'>";
-                echo "<i title='" . $this->factory->__w("Add row below") . "' class='fa fa-plus gsoperatecell' type='addbefore' mode='INIT'></i>";
-                echo "<i title='" . $this->factory->__w("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o'></i>";
-                echo "<i title='" . $this->factory->__w("Add row below") . "' class='fa fa-plus gsoperatecell' type='addafter' mode='INIT'></i>";
-                echo "<i title='" . $this->factory->__w("Simple add row") . "' class='fa fa-info simpleaddrow' type='addafter' mode='INIT'></i>";
+                echo "<span class='fa-stack'>";
+                echo '<i class="fa fa-circle fa-stack-2x"></i>';
+                echo "<i title='" . $this->factory->__w("Move row up") . "' class='fa fa-arrow-up gsoperatecell fa-stack-1x' type='moveup' mode='INIT'></i>";
                 echo "</span>";
-            } else if ($parent && $parent->mode == "TAB") {
-                echo "<span class='gseditrowbuttons'>";
-                echo "<i title='" . $this->factory->__w("Add row below") . "' class='fa fa-plus gsoperatecell' type='addbefore' mode='INIT' target='container'></i>";
-                echo "<i title='" . $this->factory->__w("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o' target='container'></i>";
-                echo "<i title='" . $this->factory->__w("Delete carousel") . "' class='fa gsoperatecell fa-trash-o' type='delete' target='container'></i>";
-                echo "<i title='" . $this->factory->__w("Add row below") . "' class='fa fa-plus gsoperatecell' type='addafter' mode='INIT' target='container'></i>";
+                
+                echo "<span class='fa-stack'>";
+                echo '<i class="fa fa-circle fa-stack-2x"></i>';
+                echo "<i title='" . $this->factory->__w("Delete row") . "' class='fa gsoperatecell fa-trash-o  fa-stack-1x'  type='delete'></i>";
                 echo "</span>";
-            } else if ($parent && $parent->mode == "ROTATING") {
-                echo "<span class='gseditrowbuttons'>";
-                echo "<i title='" . $this->factory->__w("Add row below") . "' class='fa fa-plus gsoperatecell' type='addbefore' mode='INIT' target='container'></i>";
-                echo "<i title='" . $this->factory->__w("Delete carousel") . "' class='fa gsoperatecell fa-trash-o' type='delete' target='container'></i>";
-                echo "<i title='" . $this->factory->__w("Add row below") . "' class='fa fa-plus gsoperatecell' type='addafter' mode='INIT' target='container'></i>";
+                
+//                echo "<span class='fa-stack'>";
+//                echo '<i class="fa fa-circle fa-stack-2x"></i>';
+//                echo "<i title='" . $this->factory->__w("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o  fa-stack-1x'></i>";
+//                echo "</span>";
+                
+                echo "<span class='fa-stack'>";
+                echo '<i class="fa fa-circle fa-stack-2x"></i>';
+                echo "<i title='" . $this->factory->__w("Add row below") . "' class='fa fa-plus simpleaddrow fa-stack-1x' type='addafter' mode='INIT'></i>";
                 echo "</span>";
-            }
+                
+                echo "<span class='fa-stack'>";
+                echo '<i class="fa fa-circle fa-stack-2x"></i>';
+                echo "<i title='" . $this->factory->__w("Move row down") . "' class='fa fa-arrow-down gsoperatecell fa-stack-1x' type='movedown' mode='INIT'></i>";
+                echo "</span>";
+                
+                
+                echo "</span>";
         }
     }
 

@@ -252,7 +252,13 @@ thundashop.framework = {
 
         return true;
     },
-    hideEditRowIcons: function () {
+    hideEditRowIcons: function (event) {
+        if($(event.relatedTarget).hasClass('gs_row_selection_box')) {
+            return;
+        }
+        if($(event.relatedTarget).closest('.gs_row_selection_box').length > 0) {
+            return;
+        }
         $(this).find('.gseditrowbuttons').hide();
     },
     activateResizeColumn: function () {
@@ -1045,15 +1051,30 @@ thundashop.framework = {
         return element;
     },
     simpleaddrow: function() {
+        
+        var button = $(this);
         var metaData = {
             rowId : "",
             name : "",
             someThingElse : ""
         };
         
+        var cellobj = $(this).closest('.gscell');
+        var before = cellobj.next().attr('cellid');
+        if (cellobj.next().hasClass("gseditinfo")) {
+            before = cellobj.next().next().attr('cellid');
+        }
+
+        
         var selected = function(result) {
-            console.log(result);
-            debugger;
+            var data = {
+                "area" : button.closest('.gsarea').attr('area'),
+                "cellid" : before,
+                "metaData" : metaData
+            }
+            var event = thundashop.Ajax.createEvent('','simpleAddRow',$(this),data);
+            thundashop.Ajax.post(event);
+            alert('Make box slide back here....');
         }
         
         thundashop.framework.rowPicker.toggleRowPicker('left', this, selected, metaData);

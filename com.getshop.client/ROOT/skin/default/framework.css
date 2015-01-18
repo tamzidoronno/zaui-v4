@@ -1682,7 +1682,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00b7ea', end
 .designselectionbox .advanced-color.selected { font-weight: bold; }
 .designselectionbox .colorselection .colorselectbox .preview { margin: 3px; border:solid 1px #BBB; height:7px; width: 7px; float:left; display:inline-block; }
 .designselectionbox .colorselection .colorselectbox .colortext { cursor:pointer; line-height: 14px; display:inline-block; height: 15px; color: #4d4d4d; }
-.designselectionbox .colorselection .background { display: inline-block; width: 30px; height: 25px; margin: 1px; float; left; border:solid 1px #BBB; cursor:pointer; }
+.designselectionbox .colorselection .background { display: inline-block; width: 30px; height: 25px; margin: 1px; float: left; border:solid 1px #BBB; cursor:pointer; }
 .designselectionbox .colorselection .designattributes_color { display: none; }
 .designselectionbox .colorselection .active { display: block; }
 .designselectionbox .designpreviews { overflow:hidden; position:absolute; width: 100000px; }
@@ -2061,8 +2061,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00b7ea', end
     opacity: 0; text-align: center; background-color:#000; color:#FFF; position:absolute; z-index: 10; width: 100%; top: -23px; border-top-left-radius: 3px; border-top-right-radius: 3px; }
 .gscellbox .ui-resizable-handle { display:none !important; }
 .gscellbox.gsactivebox { opacity: 0.9; }
-.gseditrowbuttons { color:#000; display:none; position:absolute; right: 0px; width: 20px; border: solid 1px #bbb; text-align: center; padding: 2px; border-bottom-left-radius: 3px; border-top-left-radius: 3px; font-size: 16px; background-color:#FFF; z-index: 1;}
-.gseditrowbuttons i { cursor:pointer;margin: 3px; font-size: 12px; }
+.gseditrowbuttons { color:#000; display:none; position:absolute; right: 10px; width: 20px; text-align: center; padding: 2px; border-bottom-left-radius: 3px; border-top-left-radius: 3px; font-size: 16px; z-index: 1;}
+.gseditrowbuttons i { cursor:pointer; }
+.gseditrowbuttons .fa-stack { height: 27px; }
+.gseditrowbuttons .fa-stack-1x { color:#fff; }
+.gseditrowbuttons .fa-stack-2x { color:#2f8dc9; }
 .gscellbox.gsactivebox .gscellboxheader { display: none; }
 .gsleftheading { position:absolute; left: 3px; top: 1px; }
 .gsrightheading { position:absolute; right: 3px; top: 1px; }
@@ -2274,15 +2277,4 @@ padding: 2px; }
     background: linear-gradient(to bottom,  rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.3) 50%,rgba(255,255,255,0.15) 53%,rgba(255,255,255,0.1) 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#99ffffff', endColorstr='#1affffff',GradientType=0 ); /* IE6-9 */
 }
-.gsmobilecarouseleditdesc { width: 100%; clear:both; padding: 10px; font-size: 20px; text-align: center; border: solid 1px; color:#000; background-color:#fff; }
-
-/*    background: -moz-linear-gradient(top,  rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.1) 100%);  FF3.6+ 
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0.6)), color-stop(100%,rgba(255,255,255,0.1)));  Chrome,Safari4+ 
-    background: -webkit-linear-gradient(top,  rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.1) 100%);  Chrome10+,Safari5.1+ 
-    background: -o-linear-gradient(top,  rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.1) 100%);  Opera 11.10+ 
-    background: -ms-linear-gradient(top,  rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.1) 100%);  IE10+ 
-    background: linear-gradient(to bottom,  rgba(255,255,255,0.6) 0%,rgba(255,255,255,0.1) 100%);  W3C 
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#99ffffff', endColorstr='#1affffff',GradientType=0 );  IE6-9 */
-}
-  
- 
+.gsmobilecarouseleditdesc { width: 100%; clear:both; padding: 10px; font-size: 20px; text-align: center; border: solid 1px; color:#000; background-color:#fff; } 

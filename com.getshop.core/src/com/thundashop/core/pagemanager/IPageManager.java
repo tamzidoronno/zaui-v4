@@ -4,6 +4,7 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.pagemanager.data.CarouselConfig;
 import com.thundashop.core.pagemanager.data.FloatingData;
 import com.thundashop.core.pagemanager.data.Page;
+import com.thundashop.core.pagemanager.data.PageCell;
 import com.thundashop.core.pagemanager.data.PageLayout;
 import java.util.HashMap;
 import java.util.List;
@@ -294,4 +295,7 @@ public interface IPageManager {
     
     @Administrator
     public void setWidth(String pageId, String cellId, Integer outerWidth, Integer outerWidthWithMargins) throws ErrorException;
+    
+    @Administrator
+    public PageCell getCell(String pageId, String cellId) throws ErrorException;
 }

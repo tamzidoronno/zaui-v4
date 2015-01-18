@@ -3192,6 +3192,23 @@ class APIPageManager {
 	}
 
 	/**
+	* Set the carousel configuration.
+	* @param pageId
+	* @return core_pagemanager_data_PageCell
+	* @throws ErrorException
+	*/
+
+	public function getCell($pageId, $cellId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data['args']["cellId"] = json_encode($this->transport->object_unset_nulls($cellId));
+	     $data["method"] = "getCell";
+	     $data["interfaceName"] = "core.pagemanager.IPageManager";
+	     return $this->transport->cast(new core_pagemanager_data_PageCell(), $this->transport->sendMessage($data));
+	}
+
+	/**
 	* fetch an existing page.
 	* @param id The id for the page to fetch.
 	* @return core_pagemanager_data_Page

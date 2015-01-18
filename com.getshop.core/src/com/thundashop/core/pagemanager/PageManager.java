@@ -492,4 +492,9 @@ public class PageManager extends ManagerBase implements IPageManager {
             cell.appId = instance.id;
         }
     }
+
+    @Override
+    public PageCell getCell(String pageId, String cellId) throws ErrorException {
+        return getPage(pageId).getCell(cellId);
+    }
 }

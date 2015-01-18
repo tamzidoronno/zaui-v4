@@ -18,5 +18,8 @@ class core_getshop_data_StartData {
 	/** @var String */
 	public $password;
 
+	/** @var String */
+	public $language;
+
 }
 ?>

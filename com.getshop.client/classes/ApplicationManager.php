@@ -25,7 +25,36 @@ class ApplicationManager extends FactoryBase {
     function showThemeSelection() {
         include("initdata/themeselection.phtml");
     }
-
+            
+    function simpleAddRow() {
+        $pageManager = $this->getFactory()->getApi()->getPageManager();
+        
+        $cellid = "";
+        if(isset($_POST['data']['cellid'])) {
+            $cellid = $_POST['data']['cellid'];
+        }
+        $area = $_POST['data']['area'];
+        $pageId = $this->getPage()->javapage->id;
+        $mode = $_POST['data']["metaData"]["mode"];
+        
+        //First create the row.
+        $id = $pageManager->addLayoutCell($pageId, "", $cellid, "ROW", $area);
+        if($mode != "ROW") {
+            $pageManager->setCellMode($pageId, $id, $mode);
+        } else {
+            $config = $_POST['data']['metaData']['rowconfig'];
+            for($i = 0; $i < sizeof($config)-1; $i++) {
+                $newId = $pageManager->addLayoutCell($pageId, $id, "", "COLUMN", $area);
+            }
+            $cell = $pageManager->getCell($pageId, $id);
+            $i = 0;
+            foreach($cell->cells as $tmpCell) {
+                $this->getApi()->getPageManager()->setStylesOnCell($pageId, $tmpCell->cellId, "notset", "notset", $config[$i]);
+                $i++;
+            }
+        }
+        
+    }    
     
     function setSlideMode() {
         if(!isset($_SESSION['gsrotatingmodemobile'])) {

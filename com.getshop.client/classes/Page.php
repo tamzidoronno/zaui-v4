@@ -101,8 +101,8 @@ class Page {
             $this->printMobileHeader($layout->areas->{'header'});
             $this->printArea($cells, 0, null);
             $this->printCss($layout->areas->{'body'});
-            $this->printMobileMenu($layout->areas->{'header'});
             echo "</div>";
+            $this->printMobileMenu($layout->areas->{'header'});
         }
     }
 

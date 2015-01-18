@@ -169,17 +169,15 @@ thundashop.framework = {
         });
     },
     showMobileTopMenu : function() {
-        
+        $(window).scrollTop(0);
         if($('.gsmobilemenuinstance').is(':visible')) {
+            $('.gsbody').show();
             $('.gsmobilemenuinstance').hide();
             return;
         }
-        
-        var height = $('.gsmobilemenuinstance').height();
-        $('.gsmobilemenuinstance').css('bottom', "-" + height + "px");
-        $('.gsmobilemenuinstance').show();
-            height += $('.gsmobilemenu').outerHeight();
-
+        $('.gsmobilemenuinstance').fadeIn(function() {
+            $('.gsbody').hide();
+        });
         var options = {
             bottom: "+=" + height
         };

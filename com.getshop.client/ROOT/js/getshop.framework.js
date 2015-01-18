@@ -1091,13 +1091,22 @@ thundashop.framework = {
         };
         
         var cellobj = $(this).closest('.gscell');
-        var before = cellobj.next().attr('cellid');
-        if (cellobj.next().hasClass("gseditinfo")) {
-            before = cellobj.next().next().attr('cellid');
+        
+        if($(this).attr('target') === "container") {
+            cellobj = $(this).closest('.gscontainercell');
         }
+        
 
         
         var selected = function(result) {
+            
+            if(result.addafter) {
+                var before = cellobj.next().attr('cellid');
+                if (cellobj.next().hasClass("gseditinfo")) {
+                    before = cellobj.next().next().attr('cellid');
+                }
+            }
+            
             var data = {
                 "area" : button.closest('.gsarea').attr('area'),
                 "cellid" : before,

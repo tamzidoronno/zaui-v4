@@ -1049,30 +1049,38 @@ class Page {
 
     public function printRowEditButtons($depth, $edit, $parent) {
         if ($depth === 0 && !$edit && $this->factory->isEditorMode()) {
+            $target = "";
+            if ($parent && $parent->mode == "TAB") {
+                $target = "target='container'";
+            }
+            if ($parent && $parent->mode == "ROTATING") {
+                $target = "target='container'";
+            }
+            
                 echo "<span class='gseditrowbuttons'>";
                 echo "<span class='fa-stack'>";
                 echo '<i class="fa fa-circle fa-stack-2x"></i>';
-                echo "<i title='" . $this->factory->__w("Move row up") . "' class='fa fa-arrow-up gsoperatecell fa-stack-1x' type='moveup' mode='INIT'></i>";
+                echo "<i title='" . $this->factory->__w("Move row up") . "' class='fa fa-arrow-up gsoperatecell fa-stack-1x' type='moveup' mode='INIT' $target></i>";
                 echo "</span>";
                 
                 echo "<span class='fa-stack'>";
                 echo '<i class="fa fa-circle fa-stack-2x"></i>';
-                echo "<i title='" . $this->factory->__w("Delete row") . "' class='fa gsoperatecell fa-trash-o  fa-stack-1x'  type='delete'></i>";
+                echo "<i title='" . $this->factory->__w("Delete row") . "' class='fa gsoperatecell fa-trash-o  fa-stack-1x'  type='delete' $target></i>";
                 echo "</span>";
                 
                 echo "<span class='fa-stack gsadvancedlayoutmode'>";
                 echo '<i class="fa fa-circle fa-stack-2x"></i>';
-                echo "<i title='" . $this->factory->__w("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o  fa-stack-1x'></i>";
+                echo "<i title='" . $this->factory->__w("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o  fa-stack-1x' $target></i>";
                 echo "</span>";
                 
                 echo "<span class='fa-stack'>";
                 echo '<i class="fa fa-circle fa-stack-2x"></i>';
-                echo "<i title='" . $this->factory->__w("Add row below") . "' class='fa fa-plus simpleaddrow fa-stack-1x' type='addafter' mode='INIT'></i>";
+                echo "<i title='" . $this->factory->__w("Add row below") . "' class='fa fa-plus simpleaddrow fa-stack-1x' type='addafter' mode='INIT' $target></i>";
                 echo "</span>";
                 
                 echo "<span class='fa-stack'>";
                 echo '<i class="fa fa-circle fa-stack-2x"></i>';
-                echo "<i title='" . $this->factory->__w("Move row down") . "' class='fa fa-arrow-down gsoperatecell fa-stack-1x' type='movedown' mode='INIT'></i>";
+                echo "<i title='" . $this->factory->__w("Move row down") . "' class='fa fa-arrow-down gsoperatecell fa-stack-1x' type='movedown' mode='INIT' $target></i>";
                 echo "</span>";
                 
                 

@@ -1355,7 +1355,8 @@ thundashop.framework.rowPicker = {
                 thundashop.framework.rowPicker.lastCallBackData = {};
             }
             
-            thundashop.framework.rowPicker.lastCallBackData.rowtype = $(this).attr('rowtype');
+            thundashop.framework.rowPicker.lastCallBackData.mode = $(this).attr('rowmode');
+            thundashop.framework.rowPicker.lastCallBackData.rowconfig = JSON.parse($(this).attr('rowconfig'));
             thundashop.framework.rowPicker.callBackFunction(thundashop.framework.rowPicker.lastCallBackData);
         }
     },

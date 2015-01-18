@@ -9,6 +9,7 @@ thundashop.framework = {
     lastRotatedCell: {},
     activeBoxTimeout: {},
     cellRotatingWait: {},
+    advancedMode : false,
     bindEvents: function () {
         $('*[gstype="form"] *[gstype="submit"]').live('click', function (e) {
             thundashop.framework.submitFromEvent(e);
@@ -94,6 +95,14 @@ thundashop.framework = {
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
     },
     
+    showAdvancedOptions : function() {
+        if(thundashop.framework.advancedMode) {
+            console.log('showing');
+            $('.gsadvancedlayoutmode').show();
+        } else {
+            $('.gsadvancedlayoutmode').hide();
+        }
+    },
     setSlideViewMode : function() {
         var event = thundashop.Ajax.createEvent('','setSlideMode',$(this),{});
         thundashop.Ajax.post(event);
@@ -104,10 +113,10 @@ thundashop.framework = {
         
         if (isActive) {
             $(this).removeClass('gs_advanced_mode_activated');
-            alert('Advanced mode deactivated');
+            thundashop.framework.advancedMode = false;
         } else {
             $(this).addClass('gs_advanced_mode_activated');
-            alert('Advanced mode activated');
+            thundashop.framework.advancedMode = true;
         }
     },
     
@@ -240,6 +249,10 @@ thundashop.framework = {
         });
     },
     showCellBoxHeader: function (event) {
+        if(!thundashop.framework.advancedMode) {
+            return;
+        }
+        
         var target = $(event.target);
         $('.gsactiveboxheader').removeClass('gsactiveboxheader');
         $('.gscellheadermin').show();
@@ -253,6 +266,7 @@ thundashop.framework = {
                 return;
             }
         }
+        thundashop.framework.showAdvancedOptions();
         $(this).find('.gseditrowbuttons').show();
     },
     isAdvancedMode: function () {
@@ -942,6 +956,10 @@ thundashop.framework = {
         thundashop.Ajax.post(event);
     },
     showCellPanel: function (event) {
+        if(!thundashop.framework.advancedMode) {
+            return;
+        }
+        
         var target = $(event.target);
         if (!target.hasClass('gscell')) {
             for (var i = 0; i < 20; i++) {

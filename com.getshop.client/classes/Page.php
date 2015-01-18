@@ -1060,10 +1060,10 @@ class Page {
                 echo "<i title='" . $this->factory->__w("Delete row") . "' class='fa gsoperatecell fa-trash-o  fa-stack-1x'  type='delete'></i>";
                 echo "</span>";
                 
-//                echo "<span class='fa-stack'>";
-//                echo '<i class="fa fa-circle fa-stack-2x"></i>';
-//                echo "<i title='" . $this->factory->__w("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o  fa-stack-1x'></i>";
-//                echo "</span>";
+                echo "<span class='fa-stack gsadvancedlayoutmode'>";
+                echo '<i class="fa fa-circle fa-stack-2x"></i>';
+                echo "<i title='" . $this->factory->__w("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o  fa-stack-1x'></i>";
+                echo "</span>";
                 
                 echo "<span class='fa-stack'>";
                 echo '<i class="fa fa-circle fa-stack-2x"></i>';

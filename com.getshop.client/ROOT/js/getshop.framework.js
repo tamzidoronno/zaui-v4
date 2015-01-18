@@ -527,13 +527,13 @@ thundashop.framework = {
     displayCarouselEntry: function (cell) {
         cell.closest('.gscontainerinner').children('.gsrotatingrow').each(function () {
             $(this).css('opacity', '0');
-            $(this).css('z-index', '-1');
+            $(this).css('z-index', '0');
         });
 
 
         cell.closest('.gscontainerinner').find('.gscarouseldots').hide();
         cell.css('opacity', '1');
-        cell.css('z-index', '0');
+        cell.css('z-index', '1');
         cell.find('.gscarouseldots').show();
         return cell.attr('cellid');
     },
@@ -545,7 +545,7 @@ thundashop.framework = {
         var curoffset = 0;
         var counter = 0;
         cell.find('.gscontainerinner').children('.gsrotatingrow').each(function () {
-            if ($(this).css('z-index') === "0") {
+            if ($(this).css('z-index') === "1") {
                 curoffset = counter;
             }
             counter++;

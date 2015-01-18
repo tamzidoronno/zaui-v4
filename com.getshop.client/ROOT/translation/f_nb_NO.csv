@@ -373,9 +373,11 @@ South west corner longitude;-;Sør vest longitude hjørne
 Specify a title for your webshop. this will be displayed on the tabs in etc chrome.;-;Legg inn en tittel på din nettbutikk, denne vises i tabbene på nettleserene.
 Specify an airgram account.;-;Spesifiser din airgram konto
 Specify boundaries the map should restrict itself to. Leave it empty to avoid boundaries. Or add multiple rectangular fields as constraints.;-;Specifiser grenser på karetet. Hvis du ønsker at det ikke skal være begrensninger i karetet så la dette være tomt, eventuelt legg inn flere for å lage en rektaktulær grense.
+Start a new webshop with this template;-;Start en ny side med denne malen
 Start adding pictures to your webshop, create this application and start uploading images.;-;Legg til bilder til din webshop, opprett denne applikasjonen og start å last opp bilder.
 Start hour;-;Start time
 Start hour when people should be able to request booking (example: 16);-;Start time når du ønsker at folk skal kan legge inn requests booking (example: 16)
+Start my store now;-;Start min butikk nå
 Start up price;-;Oppstarts pris
 Stock Control;-;Lagerstatus
 Subject;-;Tittel

@@ -19,7 +19,7 @@
 .CartManager .emptycart {
     font-size: 16px;
     text-align: center;
-    margin: 20px;
+    padding: 20px;
 }
 
 .CartManager .summary {

@@ -355,6 +355,7 @@ class ApplicationManager extends FactoryBase {
         $startData->phoneNumber = $_POST['data']['gs_start_store_phonenumber'];
         $startData->shopName = $_POST['data']['gs_start_store_shopname'];
         $startData->password =  $_POST['data']['gs_start_store_password1'];
+        $startData->language =  $this->getFactory()->getMainLanguage();
         
         $newAddress = $this->getApi()->getGetShop()->startStoreFromStore($startData);
         

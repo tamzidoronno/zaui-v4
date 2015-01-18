@@ -18,12 +18,12 @@ if ($days < -$daysToWarn) {
 
 echo "<div class='gs_paymentwarning'>";
 if ($days == 0) {
-    echo $this->__f("<i class='fa fa-warning'></i> Your subscription ends today, please choose a new payment plan. $linkToPayment");
+    echo "<i class='fa fa-warning'></i> ".$this->__f("Your subscription ends today, please choose a new payment plan.")." ".$linkToPayment;
 } else if ($days > 0) {
-    echo $this->__f("<i class='fa fa-warning'></i> Your $days overdue on your license payment plan, please choose a new payment plan as soon as possible to make sure your system stay available. $linkToPayment");
+    echo "<i class='fa fa-warning'></i> ".str_replace("{days}", $days, $this->__f("Your {days} overdue on your license payment plan, please choose a new payment plan as soon as possible to make sure your system stay available."))." ".$linkToPayment;
 } else {
     $days *= -1;
-    echo $this->__f("<i class='fa fa-warning'></i> Your subscription expires in $days day(s) $linkToPayment");
+    echo "<i class='fa fa-warning'></i> ".str_replace("{days}", $days, $this->__f("Your subscription expires in {days} day(s)"))." ".$linkToPayment;
 }
 echo "</div>";
 ?>

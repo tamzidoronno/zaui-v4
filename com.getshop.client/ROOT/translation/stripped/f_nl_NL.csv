@@ -1,8 +1,5 @@
 ###### framework ######
 * Minimum rental periode is {days};-;
-<i class='fa fa-warning'></i> Your $days overdue on your license payment plan, please choose a new payment plan as soon as possible to make sure your system stay available. $linkToPayment;-;
-<i class='fa fa-warning'></i> Your subscription ends today, please choose a new payment plan. $linkToPayment;-;
-<i class='fa fa-warning'></i> Your subscription expires in $days day(s) $linkToPayment;-;
 A application for selecting applications;-;
 A bookingform can be connected to the page its added to, meaning that the content of this page is the content that are being sold, not an event or course itself.;-;
 A dashboad application;-;
@@ -435,6 +432,9 @@ Your name can not be empty;-;
 Your phonenumber can not be empty;-;
 Your product lists;-;
 Your shopname can not be empty;-;
+Your subscription ends today, please choose a new payment plan.;-;
+Your subscription expires in {days} day(s);-;
+Your {days} overdue on your license payment plan, please choose a new payment plan as soon as possible to make sure your system stay available.;-;
 Youtube;-;
 add entry;-;
 add_event;-;

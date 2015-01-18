@@ -4,7 +4,6 @@ h1 {
     width: 100%;
 }
 .gscell .gscellsettings,.gscontainercell .gscellsettings { z-index:5; position:absolute; color:#000; right: 0px; top: 0px; display:none;background-color:#FFF;cursor:pointer; font-size:9px; padding-left: 2px; padding-bottom: 2px; border: solid 1px rgba(0,0,0,0.1); }
-.store_settings_button { position: absolute; z-index: 1;}
 .gsvisualizeedit { border-color:red; }
 .gsaddcontent i {
     -webkit-transition: opacity .15s ease-in-out;
@@ -2222,6 +2221,37 @@ padding: 2px; }
     border-bottom: solid 1px #DDD;
     font-size: 18px !important;
     padding-bottom: 10px;
+}
+
+.gs_site_main_buttons_view {
+    background-color: #333;
+    position: fixed;
+    width: 60px;
+    z-index: 2;
+    border-right: solid 1px;
+}
+
+.gs_advanced_mode_activated i {
+    color: #7bff5c !important;
+}
+
+.gs_site_main_buttons_view .gs_site_main_button {
+    text-align: center;
+    height: 50px;
+    border-bottom: solid 1px;
+    background: linear-gradient(to bottom, #2f8dc9, #146da6);
+    cursor: pointer;
+}
+
+.gs_site_main_buttons_view .gs_site_main_button:last-child {
+    border-bottom: solid 0px;
+}
+
+.gs_site_main_buttons_view .gs_site_main_button i {
+    color: #FFF;
+    width: 100%;
+    font-size: 25px;
+    padding-top: 10px;
 }
 
 .gs_start_template_text_form input {

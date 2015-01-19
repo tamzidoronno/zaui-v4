@@ -505,3 +505,8 @@ html body .ui-group-theme-a .ui-bar-inherit {
 .filter_selection:last-child {
     border-bottom: solid 0px;
 }
+
+.gps_month_header {
+    padding-top: 30px;
+    padding-bottom: 10px;
+}

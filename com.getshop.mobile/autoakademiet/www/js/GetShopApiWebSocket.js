@@ -1,4 +1,3 @@
-run:
 GetShopApiWebSocket = function(address) {
     this.sentMessages =  [];
     this.address = address;

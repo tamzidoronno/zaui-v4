@@ -849,8 +849,14 @@ App = {
             $('#regions').find('.regionas_page_content').show();
             $('#regions').find('.regionname').html(location.name);
             $('#regiondata').html("");
+            var monthName = "";
             for ( var i in location.entries) {
                 var entry = location.entries[i];
+                var currentMonthName = App.getNameForMonth(entry.month);
+                if (currentMonthName !== monthName) {
+                    $('#regiondata').append("<div class='gps_month_header' style='monthName'>"+currentMonthName+" - " + entry.year + " </div>");
+                    monthName = currentMonthName;
+                }
                 var html = App.getEntryHtml(entry);
                 $('#regiondata').append(html);
             }

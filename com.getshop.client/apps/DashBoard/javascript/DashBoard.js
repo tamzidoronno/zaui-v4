@@ -10,6 +10,10 @@ app.DashBoard = {
         $(this).find('.gss_statistic_years').hide();
     },
     drawChart: function (div) {
+        if (typeof(google) === "undefined" || typeof(google.visualization) === "undefined" || typeof(google.visualization.DataTable) === "undefined") {
+            return;
+        }
+        
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Month');
         data.addColumn('number', 'Logins');

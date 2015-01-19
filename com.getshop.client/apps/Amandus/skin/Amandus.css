@@ -3,22 +3,14 @@
 .gsarea[area="header"] .ImageDisplayer { text-align: center; }
 .gsarea[area="header"] .Menu { text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px; margin-bottom: 10px; }
 .gsarea[area="header"] .Menu .entry a div { padding: 10px; text-transform: uppercase; font-size: 16px;font-family: 'Roboto', sans-serif; }
-.gsarea[area="header"] .Menu .entry.active { font-weight: normal; border-bottom: solid 2px #00b7ea; }
+.gsarea[area="header"] .Menu .entry.active { font-weight: normal; border-bottom: solid 2px; }
 .gscell.gsdepth_0 { margin:auto; }
-.gsinner.gsdepth_0 {  width: 1100px; margin: auto; background-color:#FFF; }
+.gsinner.gsdepth_0 {  width: 1100px; margin: auto;  }
 h1,h2,h3,h4,h5,h6,.ProductLists .product_title { font-family: 'Droid Serif', serif; font-weight: bold; }
 .ProductLists .grid_view .product_title { 
-    background: #00b7ea; /* Old browsers */
-background: -moz-linear-gradient(top, #00b7ea 0%, #009ec3 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#00b7ea), color-stop(100%,#009ec3)); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top, #00b7ea 0%,#009ec3 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top, #00b7ea 0%,#009ec3 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top, #00b7ea 0%,#009ec3 100%); /* IE10+ */
-background: linear-gradient(to bottom, #00b7ea 0%,#009ec3 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00b7ea', endColorstr='#009ec3',GradientType=0 ); /* IE6-9 */
-font-size: 13px; color:#FFF; 
+    font-size: 13px;
 }
-
+.products.row_view .productbox { border-bottom: solid 1px #EEE; }
 
 .ProductLists .products.grid_view .productbox .product_title { }
 
@@ -26,15 +18,11 @@ h1,h2,h3,h4,h5,h6,.ProductLists .short_description { max-height: 100px; overflow
 .ProductLists .products.grid_view .productbox { height: 360px; }
 
 .gsrotating .ContentManager { text-shadow: 2px 2px 2px #fff; }
-.shop_button { background-color: #00b7ea; color:#000; }
 
 .gsarea[area="body"] .gsinner.gsdepth_0 { padding: 5px;  }
 .gsarea[area="body"] .gscontainer .gsinner.gsdepth_0 { box-shadow: none; }
 
 .gscell .gsinner { padding: 10px; }
-.gsarea[area="body"] .gscell.gsdepth_0 {
-    background-color:#efefef;
-}
 
 .gsarea[area="footer"] .gsdepth_0.gscount_1.gsrow {
     padding-top: 20px;
@@ -63,15 +51,6 @@ h1,h2,h3,h4,h5,h6,.ProductLists .short_description { max-height: 100px; overflow
 
 
 .Product .product_title {
-background: #88bfe8; /* Old browsers */
-background: -moz-linear-gradient(top, #88bfe8 0%, #70b0e0 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#88bfe8), color-stop(100%,#70b0e0)); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top, #88bfe8 0%,#70b0e0 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top, #88bfe8 0%,#70b0e0 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top, #88bfe8 0%,#70b0e0 100%); /* IE10+ */
-background: linear-gradient(to bottom, #88bfe8 0%,#70b0e0 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#88bfe8', endColorstr='#70b0e0',GradientType=0 ); /* IE6-9 */
-
     text-align: center;
     padding: 10px;
     border-radius: 5px;
@@ -79,13 +58,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#88bfe8', end
     margin-bottom: 20px;
 }
 
-.Product .short_description_title { border-bottom: solid 1px #00b7ea; }
-.Product .images .mainimage,.Product .images .subimages .subimage { border-color: #00b7ea; }
+.Product .short_description_title { border-bottom: solid 1px; }
 
 
-.gstabheader { border-bottom: solid 1px #00b7ea; }
-.gstabheader .gstabbtn { font-size: 16px; border-color: #00b7ea; border-bottom: solid 0px; border-top-left-radius: 3px; border-top-right-radius: 3px; padding-left: 20px; padding-right: 20px; }
-.gstabheader .gstabbtn.gsactivetab { background-color:#00b7ea; }
+.gstabheader { border-bottom: solid 1px; }
+.gstabheader .gstabbtn { font-size: 16px; border-bottom: solid 0px; border-top-left-radius: 3px; border-top-right-radius: 3px; padding-left: 20px; padding-right: 20px; }
 .CartManager .small_cart_dom { text-align: right; }
 .CartManager .small_cart_dom .checkout_area { font-size: 20px; }
 .CartManager .small_cart_dom .checkout { color:blue; }

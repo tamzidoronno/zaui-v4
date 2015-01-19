@@ -105,6 +105,10 @@ thundashop.app.GoogleMaps.prototype = {
 
             var me = this;
             PubSub.subscribe('POSTED_DATA_WITHOUT_PRINT', function() {
+                if (!me.config) {
+                    return;
+                }
+                
                 var container = $('#' + me.config.container);
                 me.curSize = 0;
                 container.height(1);

@@ -1292,8 +1292,10 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
                 }
             }
             
+            Collections.sort(retList);
+            Collections.reverse(retList);
             foundArea.entries = retList;
-        
+            
             return foundArea;
         }
         

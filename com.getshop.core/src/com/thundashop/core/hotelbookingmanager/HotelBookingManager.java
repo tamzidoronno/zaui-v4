@@ -218,6 +218,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
         databaseSaver.saveObject(reference, credentials);
         bookingReferences.put(reference.bookingReference, reference);
+        sendSmsToKnutMartin(contact, roomtype);
         return new Integer(reference.bookingReference).toString();
     }
 
@@ -1147,5 +1148,21 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         BookingReference reservation = getReservationByReferenceId(referenceId);
         reservation.setCartItemIds(ids);
         saveObject(reservation);
+    }
+
+    private void sendSmsToKnutMartin(ContactData contactData, RoomType roomtype) {
+        String name = "Ukjent";
+        if (contactData.names != null&& contactData.names.size() > 0) {
+            name = contactData.names.get(0);
+        }
+         
+        String roomType = "ukjent";
+        if (roomType != null) {
+            roomType = roomtype.name;
+        }
+                
+        if (storeId != null && storeId.equals("3292fa74-32a2-4d52-b88f-6be6f3dff813")) {
+            getMsgManager().smsFactory.send("Sem Lagerhotell", "004796190000", "Ny bestilling opprettet, Navn: " + name + ", Rom: " + roomType);
+        }
     }
 }

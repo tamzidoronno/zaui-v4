@@ -927,6 +927,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                     if (copyadress != null && !copyadress.isEmpty()) {
                         getMsgManager().mailFactory.send(copyadress, user.emailAddress, title, message);
                         logMailSent(copyadress, "System owner", true, reference.bookingReference);
+                        // Apperently Fastnames mailservers does not support to send two emails at the same time. Need to sleep a bit so the mailservers dont crashes.
+                        try { Thread.sleep(1000); } catch (InterruptedException ex) {}
                         getMsgManager().mailFactory.send(copyadress, copyadress, title, message);
                         reference.sentWelcomeMessages = "true";
                         logMailSent(user.emailAddress, user.fullName, true, reference.bookingReference);

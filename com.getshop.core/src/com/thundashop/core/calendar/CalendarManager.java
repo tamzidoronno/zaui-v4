@@ -179,6 +179,9 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         if (entry.location != null) {
             text = text.replace("{EVENT_LOCATION}", entry.location.replaceAll("\n", "<BR />"));
         }
+        if (entry.locationExtended != null) {
+            text = text.replace("{EVENT_LOCATION_EXTENDED}", entry.locationExtended.replaceAll("\n", "<BR />"));
+        }
         if (entry.description != null) {
             text = text.replace("{EVENT_DESCRIPTION}", entry.description.replaceAll("\n", "<BR />"));
         }
@@ -292,7 +295,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         text = mutateText(password, text, entry, user);
 
         mailFactory.send(getFromAddress(null), user.emailAddress, subject, text);
-        if (user.emailAddressToInvoice != null && !user.emailAddressToInvoice.equals("")) {
+        if (user.emailAddressToInvoice != null && !user.emailAddressToInvoice.equals("") && !user.emailAddress.equals(user.emailAddressToInvoice)) {
             mailFactory.send(getFromAddress(null), user.emailAddressToInvoice, subject, text);
         }
     }

@@ -121,16 +121,16 @@ public class DatabaseSocketHandler implements Runnable {
     }
     
     private void saveMessageQueueToDisk() {
-        try (
-            FileOutputStream outFileStream = new FileOutputStream(messageQueueFile);
-            ObjectOutputStream outStream = new ObjectOutputStream(outFileStream);
-        ) {
-            outStream.writeObject(messageQueue);
-        } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-        } catch (IOException ex2) {
-            ex2.printStackTrace();
-        }
+//        try (
+//            FileOutputStream outFileStream = new FileOutputStream(messageQueueFile);
+//            ObjectOutputStream outStream = new ObjectOutputStream(outFileStream);
+//        ) {
+//            outStream.writeObject(messageQueue);
+//        } catch (FileNotFoundException ex) {
+//            ex.printStackTrace();
+//        } catch (IOException ex2) {
+//            ex2.printStackTrace();
+//        }
     }
     
     private void loadMessageQueueFromDisk() {

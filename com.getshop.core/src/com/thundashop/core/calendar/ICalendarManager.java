@@ -6,6 +6,7 @@ import com.thundashop.core.calendarmanager.data.EventPartitipated;
 import com.thundashop.core.calendarmanager.data.FilterResult;
 import com.thundashop.core.calendarmanager.data.Location;
 import com.thundashop.core.calendarmanager.data.LocationArea;
+import com.thundashop.core.calendarmanager.data.LocationPoint;
 import com.thundashop.core.calendarmanager.data.Month;
 import com.thundashop.core.calendarmanager.data.ReminderHistory;
 import com.thundashop.core.common.Administrator;
@@ -296,5 +297,5 @@ public interface ICalendarManager {
      * @param point
      * @return 
      */
-    public LocationArea getEntriesByPosition(Point point) throws ErrorException;
+    public LocationArea getEntriesByPosition(LocationPoint point) throws ErrorException;
 }

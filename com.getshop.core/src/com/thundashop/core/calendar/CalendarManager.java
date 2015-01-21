@@ -10,6 +10,7 @@ import com.thundashop.core.calendarmanager.data.ExtraDay;
 import com.thundashop.core.calendarmanager.data.FilterResult;
 import com.thundashop.core.calendarmanager.data.Location;
 import com.thundashop.core.calendarmanager.data.LocationArea;
+import com.thundashop.core.calendarmanager.data.LocationPoint;
 import com.thundashop.core.calendarmanager.data.Month;
 import com.thundashop.core.calendarmanager.data.ReminderHistory;
 import com.thundashop.core.calendarmanager.data.Signature;
@@ -1269,9 +1270,11 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     }
 
     @Override
-    public LocationArea getEntriesByPosition(Point point) throws ErrorException {
+    public LocationArea getEntriesByPosition(LocationPoint pointFromDevice) throws ErrorException {
+        savePoint(pointFromDevice);
         LocationArea foundArea = null;
         
+        Point point = new Point((int)pointFromDevice.x, (int)pointFromDevice.y);
         for (LocationArea area : areas.values()) {
             if (area.contains(point)) {
                 foundArea = area;
@@ -1303,5 +1306,9 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         }
         
         return null;
+    }
+
+    private void savePoint(LocationPoint pointFromDevice) throws ErrorException {
+        saveObject(pointFromDevice);
     }
 }

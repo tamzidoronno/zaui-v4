@@ -712,11 +712,15 @@ class Factory extends FactoryBase {
     }
 
     public function printTemplateFunctions() {
-        if ($this->store && $this->store->isTemplate && !$this->isMobile()) {
+        if (!$this->isExtendedMode()) {
+            return;
+        }
+        
+        if ($this->store && $this->store->isTemplate && !$this->isMobile() && !$this->getFactory()->isMobile()) {
             $this->includefile("templatefunctions", 'Common');
         }
         
-        if ($this->store && $this->store->expiryDate && !$this->store->isTemplate) {
+        if ($this->store && $this->store->expiryDate && !$this->store->isTemplate && !$this->getFactory()->isMobile()) {
             $this->includefile("expirywarning", 'Common');
         }
         

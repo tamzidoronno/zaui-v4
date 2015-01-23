@@ -1,4 +1,5 @@
-.gsinner.gsdepth_0 {  width: 1100px; margin: auto; }
+.gs_page_width {  width: 1100px; margin: auto; }
+body { min-width: 1100px; }
 #gsbody { width: 1100px; margin: auto; margin-top: 10px; margin-bottom: 10px; }
 .gsarea[area="header"] .ImageDisplayer img { max-height: 60px; width: auto; }
 .gsarea[area="header"] .ImageDisplayer { text-align: center; }

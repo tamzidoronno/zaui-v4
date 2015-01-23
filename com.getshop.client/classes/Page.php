@@ -335,6 +335,11 @@ class Page {
             $rowedit = "";
         }
 
+        $pagewidthclass ="";
+        if(($depth == 0 && $cell->mode != "ROTATING") || ($depth == 1 && $parent->mode == "ROTATING")) {
+            $pagewidthclass = "gs_page_width";
+        }
+        
         $gsrowmode = "";
         if ($parent != null && $parent->mode == "ROTATING") {
             $gsrowmode = "gsrotatingrow";
@@ -360,7 +365,7 @@ class Page {
         }
         
         
-        echo "<div $additionalinfo $styles width='$width' class='gsucell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
+        echo "<div $additionalinfo $styles width='$width' class='gsucell  $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
 
         if ($this->factory->isMobile() && $gsrowmode == "") {
             $this->printMobileAdminMenu($depth, $cell);
@@ -378,7 +383,7 @@ class Page {
         $this->printRowEditButtons($depth, $edit, $parent);
         $this->printEasyModeLayer($edit, $cell, $parent);
 
-        echo "<div $innerstyles class='$gscellinner gsuicell gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
+        echo "<div $innerstyles class='$gscellinner gsuicell $pagewidthclass gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
 
         $this->printCellBox($edit, $cell, $parent);
         $this->printCellContent($cell, $parent, $edit, $totalcells, $count, $depth);
@@ -920,9 +925,6 @@ class Page {
         if (sizeof($cell->cells) > 0) {
             $counter = 0;
             $depthprint = $depth + 1;
-            if ($cell->mode == "TAB" || $cell->mode == "ROTATING") {
-                $depthprint--;
-            }
 
             if ($parent != null && $parent->mode == "TAB") {
                 echo "<div class='gs_tab_conte_container'>";
@@ -951,7 +953,7 @@ class Page {
                 if ($this->factory->isEditorMode()) {
                     $doCarousel = false;
                 }
-                $this->printContainerSettings($doCarousel, $cell, $depth);
+                $this->printContainerSettings($doCarousel, $cell, $depthprint);
             }
             echo "<div style='clear:both;'></div>";
         } else {

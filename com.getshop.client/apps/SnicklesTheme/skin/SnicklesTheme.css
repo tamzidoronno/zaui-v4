@@ -5,9 +5,13 @@ body {
 html {
     font-family: ubuntu;
 }
-.gsinner.gsdepth_0 {
+
+.gs_page_width {
     max-width: 1266px;
     margin: 0 auto;
+}
+
+.gsinner.gsdepth_0 {
     background-color: #FFF;
     padding-left: 30px;
     padding-right: 30px;

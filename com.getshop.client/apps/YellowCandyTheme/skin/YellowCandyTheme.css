@@ -1,4 +1,5 @@
 body {
+    min-width: 1366px;
     border: solid 0px;
     font-family: Ubuntu, sans-serif;
     font-size: 16px;
@@ -13,7 +14,7 @@ body {
     padding-top: 20px;
 }
 
-.gsinner.gsdepth_0 {
+.gs_page_width {
     max-width: 1366px;
     margin: 0 auto;
 }

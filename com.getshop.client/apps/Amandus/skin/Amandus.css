@@ -28,28 +28,42 @@ h1,h2,h3,h4,h5,h6,.ProductLists .short_description { max-height: 100px; overflow
     padding-top: 20px;
 }
 .gsarea[area="footer"] .gsdepth_0.gscount_0.gsrow {
-    padding-top: 20px;
-    height: 40px;
+    height: 60px;
 }
 
-.gsarea[area="footer"] .gsdepth_0.gscount_0 {
-    background-color: #a6ab84;
+
+.gsarea[area="footer"] .gsdepth_0.gscount_0.gsrow {
+    background: rgba(255,255,255,0.5);
+    
     color:#333;
 }
 .gsarea[area="footer"] .gsdepth_0.gscount_1 {
-    background-color: #b8bd98;
-    min-height: 264px;
-    color:#333;
+    
 }
-.gsarea[area="footer"] .gsdepth_0.gscount_2 {
-    background-color: #a6ab84;
+.gsarea[area="footer"] .gsdepth_0.gscount_2.gsrow {
+    border-top: dashed 1px rgba(0,0,0,0.3);
 }
 
 .gsarea[area="footer"] {
-    background-color: #DDD;
+    background: linear-gradient(to bottom, #EEE, #F9F9F9);
 }
 
+.gsbody_inner[gspagetype='product']  .gsarea[area="body"] .gsdepth_0.gscount_0.gsrow {
+    background-color: #f9f9f9;
+    border-bottom: solid 1px #EEE;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+}
 
+.gscontainer.gsdepth_0.gscount_1.gstab .gscontainerinner .gsinner.gsuicell.gsdepth_0 {
+    border: solid 1px #EEE;
+    margin-bottom: 20px;
+}
+   
+.gstabheader {
+    margin-bottom: 20px;
+}
 .Product .product_title {
     text-align: center;
     padding: 10px;

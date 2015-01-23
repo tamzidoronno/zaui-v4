@@ -35,7 +35,8 @@ class Page {
         }
 
         $editedCellid = null;
-        echo "<div class='gsbody_inner' pageId='".$this->getId()."'>";
+        $gs_page_type = $this->javapage->type;
+        echo "<div class='gsbody_inner' pageId='".$this->getId()."' gspagetype='$gs_page_type'>";
         if (!$this->factory->isMobile()) {
             echo "<div class='gsarea' area='header'>";
             $edited = $this->printArea($layout->areas->{'header'});

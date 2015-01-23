@@ -6,6 +6,7 @@
 .gsarea[area="header"] .Menu .entry.active { font-weight: normal; border-bottom: solid 2px; }
 .gscell.gsdepth_0 { margin:auto; }
 .gsinner.gsdepth_0 {  width: 1100px; margin: auto;  }
+body { min-width: 1100px; }
 h1,h2,h3,h4,h5,h6,.ProductLists .product_title { font-family: 'Droid Serif', serif; font-weight: bold; }
 .ProductLists .grid_view .product_title { 
     font-size: 13px;

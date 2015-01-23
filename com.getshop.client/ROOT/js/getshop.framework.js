@@ -89,6 +89,7 @@ thundashop.framework = {
         $(document).on('click', '.gsmobilesearchbox .fa-search', this.doMobileSearch);
         $(document).on('keyup', '.gscssattributes', this.setCssAttributes);
         $(document).on('mouseenter', '.gs_templatehaeaderfunctions .selectcolors', this.showColors);
+        $(document).on('click', '.gs_templatehaeaderfunctions .color_select.close', this.hideColors);
 
         /* Cell operations */
         $(document).on('click', '.gsoperatecell', this.operateCell);
@@ -98,6 +99,10 @@ thundashop.framework = {
     
     showColors: function() {
         $('.gs_templatehaeaderfunctions .colors_menu').slideDown('fast');
+    },
+    
+    hideColors: function() {
+        $('.gs_templatehaeaderfunctions .colors_menu').slideUp('fast');
     },
 
     

@@ -382,6 +382,7 @@ class ApplicationManager extends FactoryBase {
         $startData->shopName = $_POST['data']['gs_start_store_shopname'];
         $startData->password =  $_POST['data']['gs_start_store_password1'];
         $startData->language =  $this->getFactory()->getMainLanguage();
+        $startData->color =  isset($_SESSION['gscolorselection']) ? $_SESSION['gscolorselection'] : "";
         
         $newAddress = $this->getApi()->getGetShop()->startStoreFromStore($startData);
         

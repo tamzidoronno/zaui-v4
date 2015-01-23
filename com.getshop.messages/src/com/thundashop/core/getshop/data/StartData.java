@@ -16,5 +16,6 @@ public class StartData {
     public String shopName;
     public String phoneNumber;
     public String password;
+    public String color = "";
     public String language = "";
 }

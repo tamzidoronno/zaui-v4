@@ -368,6 +368,10 @@ public class GetShop extends ManagerBase implements IGetShop {
                     store.configuration.emailAdress = start.email;
                     store.configuration.shopName = start.shopName;
                     
+                    if (start.color != null && !start.color.equals("")) {
+                        store.configuration.selectedColorTemplate = start.color;
+                    }
+                    
                     Calendar cal = Calendar.getInstance(); 
                     cal.add(Calendar.MONTH, 1);
                     store.expiryDate = cal.getTime();

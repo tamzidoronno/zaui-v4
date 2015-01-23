@@ -2208,6 +2208,43 @@ padding: 2px; }
     color: #FFF;
 }
 
+.gs_templatehaeaderfunctions .selectcolors {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+.gs_templatehaeaderfunctions .selectcolors .colors_menu {
+    background-color: #FFF;
+    border-right: solid 1px #DDD;
+    display: none;
+    cursor: pointer;
+    position: absolute;
+    z-index: 2;
+    width: 162px;
+}
+
+.gs_templatehaeaderfunctions .selectcolors .colors_menu .color_select {
+    line-height: 25px;
+    border-bottom: solid 1px #DDD;
+}
+.gs_templatehaeaderfunctions .selectcolors .select_arrow_down_indicator {
+    position: absolute;
+    top: 55px;
+    left: 50%;
+    margin-left: -7px;
+    color: #CCC;
+}
+.gs_templatehaeaderfunctions .selectcolors .select_color_header i {
+    padding-left: 10px; padding-right: 10px; 
+}
+.gs_templatehaeaderfunctions .selectcolors .select_color_header {
+    line-height: 72px;
+    border-right: solid 1px #DDD;
+    padding-right: 10px;
+    background-color: #FFF;
+}
+
 .gs_templatehaeaderfunctions {
     
     min-height: 50px;

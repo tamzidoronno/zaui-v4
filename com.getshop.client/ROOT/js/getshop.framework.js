@@ -88,6 +88,7 @@ thundashop.framework = {
         $(document).on('keyup', '.gsmobilsearchfield', this.doMobileSearch);
         $(document).on('click', '.gsmobilesearchbox .fa-search', this.doMobileSearch);
         $(document).on('keyup', '.gscssattributes', this.setCssAttributes);
+        $(document).on('mouseenter', '.gs_templatehaeaderfunctions .selectcolors', this.showColors);
 
         /* Cell operations */
         $(document).on('click', '.gsoperatecell', this.operateCell);
@@ -95,9 +96,13 @@ thundashop.framework = {
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
     },
     
+    showColors: function() {
+        $('.gs_templatehaeaderfunctions .colors_menu').slideDown('fast');
+    },
+
+    
     showAdvancedOptions : function() {
         if(thundashop.framework.advancedMode) {
-            console.log('showing');
             $('.gsadvancedlayoutmode').show();
         } else {
             $('.gsadvancedlayoutmode').hide();

@@ -715,7 +715,7 @@ class Factory extends FactoryBase {
         if (!$this->isExtendedMode()) {
             return;
         }
-        
+       
         if ($this->store && $this->store->isTemplate && !$this->isMobile() && !$this->getFactory()->isMobile()) {
             $this->includefile("templatefunctions", 'Common');
         }

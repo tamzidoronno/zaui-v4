@@ -19,7 +19,6 @@ body {
 }
 
 .gsarea[area="header"] .gsdepth_0.gscount_1 {
-    background-color: #fafafa;
     height: 54px;
 }
 
@@ -101,8 +100,6 @@ body {
 .CartManager .checkout_area {
     line-height: 50px;
     font-size: 16px;
-    background-color: #febd11;
-    color: #333;
     padding-left: 20px;
     border-radius: 10px;
     /*position: relative;*/
@@ -115,7 +112,6 @@ body {
     color: #333;
     top: 0px;
     width: 100px;
-    border-left: solid 2px #ffce4a;
     color: #FFF;
     text-align: center;
 }
@@ -167,22 +163,6 @@ body {
 
 }
 
-.Login .login_header_type_1 a,
-.Login .login_header_type_1 i {
-    color: #FFF !important;
-}
-.Login .login_header_type_1  {
-    background: #eab92d; /* Old browsers */
-    background: -moz-linear-gradient(top,  #eab92d 0%, #c79810 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eab92d), color-stop(100%,#c79810)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  #eab92d 0%,#c79810 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  #eab92d 0%,#c79810 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  #eab92d 0%,#c79810 100%); /* IE10+ */
-    background: linear-gradient(to bottom,  #eab92d 0%,#c79810 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eab92d', endColorstr='#c79810',GradientType=0 ); /* IE6-9 */
-}
-
-
 .CartManager .shoppingcartheader {
     font-size: 16px;
     padding: 10px;
@@ -216,8 +196,37 @@ body {
     height: 40px;
 }
 
+/* colors */
 .shop_button {
     background-color: #ffba00;
     color: #333;
 }
 
+.CartManager .checkout_area {
+    background-color: #febd11;
+    color: #333;
+}
+
+.Login .login_header_type_1  {
+    background: #eab92d; /* Old browsers */
+    background: -moz-linear-gradient(top,  #eab92d 0%, #c79810 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eab92d), color-stop(100%,#c79810)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #eab92d 0%,#c79810 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #eab92d 0%,#c79810 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #eab92d 0%,#c79810 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #eab92d 0%,#c79810 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eab92d', endColorstr='#c79810',GradientType=0 ); /* IE6-9 */
+}
+
+.Login .login_header_type_1 a,
+.Login .login_header_type_1 i {
+    color: #FFF !important;
+}
+
+.gsarea[area="header"] .gsdepth_0.gscount_1 {
+    background-color: #fafafa;
+}
+
+.CartManager .checkout_area .checkout {
+    border-left: solid 2px #ffce4a;
+}

@@ -62,8 +62,13 @@ h1,h2,h3,h4,h5,h6,.ProductLists .short_description { max-height: 100px; overflow
     margin-bottom: 20px;
 }
    
-.gstabheader {
-    margin-bottom: 20px;
+.gstabcontent {
+    padding: 20px;
+    border-left: solid 1px #DDD;
+    border-bottom: solid 1px #DDD;
+    border-right: solid 1px #DDD;
+    margin-bottom: 30px;
+    
 }
 .Product .product_title {
     text-align: center;

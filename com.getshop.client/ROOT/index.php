@@ -192,7 +192,7 @@ if(isset($factory->getSettings()->languages)) {
                 echo "<div title='".$factory->__f("Open settings")."' class='gs_site_main_button store_settings_button'><i class='fa fa-gears'></i></div>";
                 echo "<div title='".$factory->__f("Preview mobile and settings")."' class='gs_site_main_button store_mobile_view_button '><i class='fa fa-mobile'></i></div>";
                 echo "<div title='".$factory->__f("Global CSS editing")."' class='gs_site_main_button store_design_button'><i class='fa fa-image'></i></div>";
-                echo "<div title='".$factory->__f("Toggle advanced mode")."' class='gs_site_main_button gs_toggle_advanced_mode'><i class='fa fa-bomb'></i></div>";
+                echo "<div title='".$factory->__f("Toggle advanced mode")."' class='gs_site_main_button gs_toggle_advanced_mode'><i class='fa fa-rocket'></i></div>";
             echo "</div>";
             
             include_once("mobileeditor.phtml");

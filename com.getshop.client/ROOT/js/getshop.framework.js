@@ -10,6 +10,7 @@ thundashop.framework = {
     activeBoxTimeout: {},
     cellRotatingWait: {},
     advancedMode : false,
+    cssEditorCount : 0,
     bindEvents: function () {
         $('*[gstype="form"] *[gstype="submit"]').live('click', function (e) {
             thundashop.framework.submitFromEvent(e);
@@ -72,6 +73,7 @@ thundashop.framework = {
         $(document).on('change', '.gsmobileupload', this.loadImage);
         $(document).on('click', '.gsresizingpanel .gsremovebgimage', this.loadImage);
         $(document).on('change', '.gsdisplaygridcheckbox', this.toggleVisualization);
+        $(document).on('click', '.gsresizingpanel .tabbtn[target="css"]', this.loadCssEditor);
         $(document).on('keyup', '.gstabname', this.updateTabName);
         $(document).on('click', '.gsdonemodifytab', this.hideTabSettings);
         $(document).on('click', '.gstabbtn', this.changeTab);
@@ -458,9 +460,12 @@ thundashop.framework = {
         }
         var id = thundashop.framework.findCellId(target);
         var css = thundashop.framework.findCss(id);
-        if (!$('#cellcsseditor').hasClass('ace_editor')) {
-            $('#cellcsseditor').html(css);
-            cssEditorForCell = ace.edit("cellcsseditor");
+        
+        if(typeof(cssEditorForCell) === "undefined" || cssEditorForCell === null) {
+            var tmpeditor = $('<div id="innercsseditor_'+thundashop.framework.cssEditorCount+'" style="width:500px; height: 400px"></div>');
+            tmpeditor.html(css);
+            $('#cellcsseditor').html(tmpeditor);
+            cssEditorForCell = ace.edit("innercsseditor_"+thundashop.framework.cssEditorCount);
             cssEditorForCell.setTheme("ace/theme/github");
             cssEditorForCell.getSession().setMode("ace/mode/css");
             cssEditorForCell.on("change", function (event) {
@@ -468,7 +473,6 @@ thundashop.framework = {
                 thundashop.framework.setCss(id, value);
             });
         } else {
-            console.log('Setting value');
             cssEditorForCell.setValue(css);
         }
     },
@@ -915,9 +919,9 @@ thundashop.framework = {
     showCellResizing: function () {
         if(typeof(cssEditorForCell) !== "undefined") {
             cssEditorForCell.destroy();
-            $('#cellcsseditor').removeClass('ace_editor');
-            $('#cellcsseditor').removeClass('ace-github');
+            cssEditorForCell = null;
         }
+        
         $('.tabsettingspanel').hide();
         var resizingpanel = $('.gsresizingpanel');
         var target = $(this).attr('target');
@@ -953,9 +957,9 @@ thundashop.framework = {
         if (cellcount > 1) {
             thundashop.framework.loadResizing(cell, false);
         }
+        resizingpanel.find('.tabbtn[target="background"]').click();
         thundashop.framework.loadCssEditor();
         thundashop.framework.loadCssAttributes();
-        resizingpanel.find('.tabbtn[target="background"]').click();
     },
     closeCellEdit: function () {
         $('.gscellsettingspanel').hide();

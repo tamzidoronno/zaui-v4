@@ -35,7 +35,8 @@ class Page {
         }
 
         $editedCellid = null;
-        echo "<div class='gsbody_inner' pageId='".$this->getId()."'>";
+        $gs_page_type = $this->javapage->type;
+        echo "<div class='gsbody_inner' pageId='".$this->getId()."' gspagetype='$gs_page_type'>";
         if (!$this->factory->isMobile()) {
             echo "<div class='gsarea' area='header'>";
             $edited = $this->printArea($layout->areas->{'header'});
@@ -921,13 +922,14 @@ class Page {
             $this->displayTabRow($parent, $edit, $cell);
         }
 
+        if ($parent != null && $parent->mode == "TAB") {
+            echo "<div class='gstabcontent'>";
+        }
+            
         if (sizeof($cell->cells) > 0) {
             $counter = 0;
             $depthprint = $depth + 1;
 
-            if ($parent != null && $parent->mode == "TAB") {
-                echo "<div class='gs_tab_conte_container'>";
-            }
             $cellsToPrint = $this->getCellsToPrint($cell->cells, $cell->mode);
             foreach ($cellsToPrint as $innercell) {
                 $this->printCell($innercell, $counter, $depthprint, sizeof($cellsToPrint), $edit, $cell);
@@ -942,11 +944,6 @@ class Page {
                 echo "<i class='fa fa-plus gsoperatecell shop_button' type='addrow' mode='rowmobile' target='container' title='" . $this->factory->__w("Add another slide") . "'> Create a new slide</i> ";
                 echo "</div>";
             }
-
-            if ($parent != null && $parent->mode == "TAB") {
-                echo "</div>";
-            }
-
             if ($cell->mode == "ROTATING" || $cell->mode == "TAB") {
                 $doCarousel = (!$edit && $cell->mode == "ROTATING");
                 if ($this->factory->isEditorMode()) {
@@ -957,6 +954,9 @@ class Page {
             echo "<div style='clear:both;'></div>";
         } else {
             $this->printApplicationArea($cell);
+        }
+        if ($parent != null && $parent->mode == "TAB") {
+            echo "</div>";
         }
         if ($cell->mode == "ROTATING") {
             $this->addCarouselSettingsPanel($cell);

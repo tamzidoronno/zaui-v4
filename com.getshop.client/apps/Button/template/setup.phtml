@@ -3,8 +3,8 @@
         <? echo $this->__f("What type of button is this?"); ?>
         &nbsp;&nbsp;<select id='setup_button_type_selector'>
             <option show_view='setup_add_to_cart_button' value='add_to_cart'><? echo $this->__f("Add to cart"); ?></option>
-<!--            <option show_view='setup_internal_page' value='go_to_page_internal'><? echo $this->__f("Go to a internal page"); ?></option>
-            <option show_view='setup_external_page' value='go_to_page_external'><? echo $this->__f("Go to a external page"); ?></option>-->
+            <option show_view='setup_internal_page' value='go_to_page_internal'><? echo $this->__f("Go to a internal page"); ?></option>
+            <!--<option show_view='setup_external_page' value='go_to_page_external'><? echo $this->__f("Go to a external page"); ?></option>-->
         </select>
     </div>
     
@@ -21,11 +21,20 @@
             </div>
         </div>
         
-<!--        <div class="setup_internal_page select_option_setup_button">
-            b
+        <div class="setup_internal_page select_option_setup_button">
+            <? 
+            echo $this->__f("Please search for a page").":";
+            ?>
+            <br/>
+            <input id='filter_pages_list' style='margin-top: 5px;' type='textfield'/> 
+            <br/>
+            <br/>
+            <? $this->includefile("page_search_result"); ?>
         </div>
+        <!--
         <div class="setup_external_page select_option_setup_button">
             c
-        </div>-->
+        </div>
+        -->
     </div>
 </div>

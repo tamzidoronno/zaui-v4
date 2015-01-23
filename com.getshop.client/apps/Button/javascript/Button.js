@@ -4,6 +4,33 @@ app.Button = {
         $(document).on('click', '.Button .shop_button_saveNewText', app.Button.saveText);
         $(document).on('change', '.Button #setup_button_search_field', app.Button.searchForProducts);
         $(document).on('change', '.Button #setup_button_type_selector', app.Button.show);
+        $(document).on('keyup', '.Button #filter_pages_list', app.Button.filterPages);
+        $(document).on('click', '.Button .select_button_set_link_to_internal_page', app.Button.selectInternalPage);
+    },
+    
+    filterPages: function() {
+        var searchword = $(this).val();
+        $('.Button').find('.outer_select_button_link_to_page').each(function() {
+            $(this).show();
+        });
+        
+        $('.Button').find('.outer_select_button_link_to_page').each(function() {
+            var text = $(this).find('span').html();
+            var result= text.search(new RegExp(searchword, "i"));
+            if (result < 0) {
+                $(this).hide();
+            }
+        });
+    },
+    
+    selectInternalPage: function() {
+        var data = {
+            page_id: $(this).attr('page_id')
+        };
+        var event = thundashop.Ajax.createEvent(null, "setInternalPage", this, data);
+        thundashop.Ajax.post(event, function() {
+            alert(__f('Success, the button now links to the selected page'));
+        });        
     },
     
     setProduct: function() {

@@ -29,3 +29,7 @@
     border-top: solid 1px #777;
     padding-left: 20px;
 }
+
+.Button .setup_internal_page {
+    display: none;
+}

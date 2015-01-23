@@ -1,0 +1,14 @@
+<?
+/* @var $this ns_2996287a_c23e_41ad_a801_c77502372789\Button */
+$lists = $this->getApi()->getListManager()->getLists();
+foreach ($lists as $listId) {
+    $list = $this->getApi()->getListManager()->getList($listId);
+    foreach ($list as $etry) {
+        $this->printEntry($etry);
+    }
+//    echo "<pre>";
+//    print_r($list);
+//    echo "</pre>";
+//    echo $list."</br>";
+}
+?>

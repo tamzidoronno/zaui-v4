@@ -47,4 +47,21 @@ class Button extends \ApplicationBase implements \Application {
         $productId = $_POST['data']['productId'];
         $this->getApi()->getCartManager()->addProduct($productId, 1, []);
     }
+
+    public function printEntry($etry) {
+        $pageId = $etry->pageId;
+        $buttonText = $this->getConfigurationSetting("page_id") == $pageId ? $this->__f("selected") : $this->__f("select");
+        echo "<div style='background-color: #777; border-bottom: solid 1px #666;' class='outer_select_button_link_to_page'><div class='gs_button small select_button_set_link_to_internal_page' page_id='$pageId'>$buttonText</div><span> $etry->name</span></div>";
+        if (count($etry->subentries)) {
+            foreach ($etry->subentries as $subEntry) {
+                $this->printEntry($subEntry);
+            }
+        }
+    }
+    
+    public function setInternalPage() {
+        $this->setConfigurationSetting("type", "link_to_interal_page");
+        $this->setConfigurationSetting("page_id", $_POST['data']['page_id']);
+    }
+
 }

@@ -35,7 +35,7 @@ class Page {
         }
 
         $editedCellid = null;
-
+        echo "<div class='gsbody_inner' pageId='".$this->getId()."'>";
         if (!$this->factory->isMobile()) {
             echo "<div class='gsarea' area='header'>";
             $edited = $this->printArea($layout->areas->{'header'});
@@ -104,6 +104,7 @@ class Page {
             echo "</div>";
             $this->printMobileMenu($layout->areas->{'header'});
         }
+        echo "</div>";
     }
 
     private function printMobileHeader($headerCells) {

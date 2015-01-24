@@ -1352,7 +1352,8 @@ thundashop.framework = {
         $('.gs_overlay_row_highlighter.gs_overlay_row_highlighter_bottom').css('top', (top+rowHeight)+'px');
         $('.gs_overlay_row_highlighter.gs_overlay_row_highlighter_bottom').css('left', '0px');
         $('.gs_overlay_row_highlighter.gs_overlay_row_highlighter_bottom').css('right', '0px');
-        $('.gs_overlay_row_highlighter.gs_overlay_row_highlighter_bottom').css('bottom', '0px');
+        var bottomHeight = $(document).outerHeight(true) - (top+rowHeight);
+        $('.gs_overlay_row_highlighter.gs_overlay_row_highlighter_bottom').css('height', bottomHeight+'px');
         $('.gs_overlay_row_highlighter.gs_overlay_row_highlighter_bottom').show();
         
         

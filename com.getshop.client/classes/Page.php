@@ -53,12 +53,14 @@ class Page {
                     $editedCellid = $edited;
                 }
             } else {
-                    echo "<div class='gscell'>";
-                    echo "<div class='gsemptyarea gsinner'>";
-                    echo "<span class='shop_button'>".$this->factory->__f("Create your first row for the page")."</span>";
-                    echo "</div>";
-                    echo "</div>";
+                if($this->factory->isEditorMode()) {
+                        echo "<div class='gscell'>";
+                        echo "<div class='gsemptyarea gsinner'>";
+                        echo "<span class='shop_button'>".$this->factory->__f("Create your first row for the page")."</span>";
+                        echo "</div>";
+                        echo "</div>";
                 }
+            }
             echo "</div>";
 
 

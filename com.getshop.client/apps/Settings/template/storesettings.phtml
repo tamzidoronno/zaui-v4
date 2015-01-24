@@ -30,8 +30,10 @@ $languages['fi_FI'] = "Finish";
 
         <div class="gss_dropdown">
             <select class="config" gs_model='storesettings' gs_model_attr='language'>
-                <? foreach ($languages as $key => $lang) { ?>
-                    <option value="<? echo $key; ?>"><? echo $lang; ?></option>
+                <? foreach ($languages as $key => $lang) { 
+                    $selected = $this->getFactory()->getMainLanguage() == $key ? "selected='true'" : "";
+                    ?>
+                    <option <? echo $selected; ?> value="<? echo $key; ?>"><? echo $lang; ?></option>
                 <? } ?>
             </select>
         </div>

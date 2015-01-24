@@ -412,6 +412,7 @@ thundashop.framework = {
         $('.gstabrow.gscell_' + newId).show();
         var cellid = $('.gscell.gscell_' + newId).attr('cellid');
         thundashop.framework.setActiveContainerCellId(cellid, container.attr('cellid'));
+        PubSub.publish("GS_TAB_NAVIGATED", {"rowid": cellid});
     },
     switchCellResizing: function () {
         thundashop.framework.saveCellChanges(true);

@@ -1018,7 +1018,6 @@ $(document).on('click', '.gs_tab', function() {
     app.find('.gs_tab').removeClass('gs_tab_selected');
     $(this).addClass('gs_tab_selected');
     var target = $(this).attr('target');
-    console.log(target);
     app.find('.gs_tab_area').removeClass('gs_tab_area_active');
     app.find('.' + target).addClass('gs_tab_area_active');
     var route = $(this).attr('route');

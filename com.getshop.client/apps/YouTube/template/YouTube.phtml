@@ -13,6 +13,12 @@ if ($id) {
         PubSub.subscribe('POSTED_DATA_WITHOUT_PRINT', function() {
             app.YouTube.setHeight('<? echo $id; ?>');
         });
+        PubSub.subscribe('GS_TAB_NAVIGATED', function(action, data) {
+            var rowId = data.rowid;
+            if($('#youtube_<? echo $id; ?>').closest('.gstabrow').attr('cellid') === rowId) {
+                app.YouTube.setHeight('<? echo $id; ?>');
+            }
+        });
     </script>
     <?
 } else if ($this->isEditorMode()) {

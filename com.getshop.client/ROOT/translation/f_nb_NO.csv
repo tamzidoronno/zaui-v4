@@ -202,6 +202,7 @@ Gallery;-;Galleri
 Get Started;-;Kom i gang
 Get started, add this application and start adding news and updates to your page.;-;Kom i gang, legg til denne applikasjonen og start å legg til nyheter og oppdateringer to din side.
 GetShop contains of much more then just some basic settings, the information and settings you find here is just the basic one that are unique for everyone. If you wish to change settings regarding e-commerce stuff you need first to activate e-commerce under applications and then change settings that shows up.;-;GetShop består av mye mer enn bare noen få instillinger som du ser under. Hver applikasjon kan ha noen innstillinger og noen moduler har også instillinger. For å finne ut mer se på applikasjoner.
+Global CSS editing;-;Globale CSS instillinger
 Go to product lists;-;Gå til produktlistene.
 Google Analytics;-;Google Analytics
 Google analytics code;-;Google analyse kode
@@ -298,6 +299,7 @@ Number of products;-;Antall produkter
 Number of views;-;Antall visninger
 Off;-;Av
 On;-;På
+Open settings;-;Gå til instillinger
 Order email;-;Bestillings epost
 Order lines;-;Ordre linjer
 Order number;-;Ordre nummer
@@ -329,6 +331,7 @@ Please select your currency;-;Velg din valutta
 Please select your language;-;Vennligst velg ditt språk
 Point your domain name to the following ip address:;-;Pek ditt domenenavn til følgende ip adresse:
 Port;-;Port
+Preview mobile and settings;-;Forhåndvisning på mobiltelefon
 Price (inc taxes);-;Pris (ink mva)
 Primary domain name;-;Ditt primære domenenavn
 Product list;-;Produkt liste
@@ -467,6 +470,7 @@ Title when sending emails;-;Tittel når epost sendes.
 Title when sending emails to waitinglist;-;Emne mail venteliste
 To move pages, move them from the menu to the loose page area, then drag the loose page into another menu.;-;For å flytte sider, dra dem fra menyen til området "løse sider", deretter dra dem til den menyen du ønsker dem skal ligge på.
 To translate all visible text for your users, translate the entries below, and hit the save translation button.;-;For å lagre all tekst som er viselig for kundene dine, oversett radene under, og trykk på lagre knappen.
+Toggle advanced mode;-;Bytt til/fra avansert modus
 Total orders;-;Alle ordre
 Total orders registered;-;Totalt ordrer registrert
 Total page views;-;Totalt sidevisninger

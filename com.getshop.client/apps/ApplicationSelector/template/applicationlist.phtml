@@ -158,7 +158,7 @@ foreach ($activatedModules as $module) {
 
                 <div class="gss_app_desc">
                     <div style="font-size: 16px; font-weight: 700; margin-bottom: 3px;"><? echo $app->appName; ?></div>
-        <? echo $emptyInstance->getDescription(); ?>
+        <? echo $this->__f($emptyInstance->getDescription()); ?>
 
                 </div>
         <?

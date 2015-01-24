@@ -82,7 +82,16 @@ body {
 
 .gstabrow .gstabheader {
     border-bottom: solid 1px #DDD;
-    margin-bottom: 20px;
+}
+.gstabcontent {
+    padding: 20px;
+    background-color: #FEFEFE;
+    border-left: solid 1px #DDD;
+    border-right: solid 1px #DDD;
+    border-bottom: solid 1px #DDD;
+}
+.gsactivetab {
+    background-color: #DDD;
 }
 .gstabrow .gsinner.gsdepth_0 {
     box-sizing: border-box;

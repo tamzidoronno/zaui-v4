@@ -74,7 +74,6 @@ Are you sure that you want to remove this application?;-;Er du sikker på at du 
 Are you sure you want to delete this logo?;-;Er du sikker på at du vil slette denen logoen?
 Attendees;-;Påmeldte
 Automatic location;-;Automatisk lokasjon
-Background color;-;Bakgrunsfarge
 Backgrounds;-;Bakgrunn
 Base color;-;Base farge
 Base text color;-;Base tekst farge
@@ -92,12 +91,14 @@ By clicking the button above you will be able to add an application to this area
 By enabling testmode for sisow, you will be able to test the payment solutions in sandbox mode.;-;Når du aktiverer testmode, så vil sisow betalingsmetoden settes i en sandbox mode. Ingen betalinger vil bli registrert
 By enabling this function the stock quantities will be modified when a customer has done the checkout routine.;-;Ved å aktivere denne funksjonen vil du få muligheten til å vise antall produkter på lager.
 By turning on this feature you will set this application to be visible on all pages.;-;Ved å skru på denne funksjonen vil denne applikasjonen bly synlig på alle sider.
+Cancel;-;Avbryt
 Category list;-;Kategori liste
 Change image;-;Endre bilde
 Change the settings information below?;-;Ender informasjonen for en bruker?
 Chat;-;Chat
 Check out;-;Utsjekk
 Chrome?;-;Chrome?
+Click here to create a list;-;Trykk her for å lage en liste.
 Click on the chat icon in the top menu and start translating.;-;Trykk på chat iconet i toppen menyen for å starte oversettingen.
 Click on the icon in the top admin menu under category More to gain access to your reporting page.;-;Trykk på ikonet i toppmenyen under kategorien "Mer" for å få tilgang til rapportsiden.
 Click the create application button and you will automatically get a form which sends you email directly to your email address when someone use this form.;-;Trykk på opprett applikasjons knappen og du vil automatisk få ett skjema hvor epost blir sendt til deg automatisk når noen bruker den.
@@ -191,6 +192,7 @@ Google analytics is by far the best reporting tool for webadministrator, by addi
 Handles taxes for products and shipment.;-;Still inn moms og avgifter for produkter og forsendelse.
 Here you can configure all the settings required to get sisow to work properly with your account. Enter the fields below and press save, as soon as everything here is set correctly you will see that a new payment options is available in the checkout area.;-;Her kan du sette opp din sisow integrasjon, når du har gjort det så vil den være tilgjengelig i checkouten.
 History;-;Hostorikk
+Home;-;Hjem
 Hostname;-;Hostname
 How many times can this coupon be used?;-;Hvor mange ganger skal denne kupongen være gyldig?
 If a order is canceled, should the items from the order be put back in stock?;-;Hvis en ordre blir kanselert, skal produktet legges tilbake i lagerstatusen?
@@ -245,6 +247,7 @@ More...;-;Mer...
 Name of the person that owns this new account.;-;Navn på brukeren
 Need to display your realestates? well, here is the application that allows you to do that, simply add the application to your page and start editing your realestate;-;Med denne applikasjonen kan du vise dine eiendommer.
 New entry;-;Ny
+New page;-;Ny side
 New text;-;Ny tekst
 New user;-;Ny bruker
 News;-;Nyheter
@@ -472,6 +475,7 @@ When;-;Når
 Withdraw from stock when order is created;-;Trekk fra lagerstatus når ordren blir laget
 Work with your lists below or create one. Lists are used for categorizing, filtering and etc in products overview.;-;Velg en av dine lister under, eller opprett en ny. Når du har lister kan du legge produkter i dem og vise dem på din netthandelside.
 You dont have any cupons added.;-;Du har ikke lagt til noen kuponger.
+You have not created any lists yet, you need to create one first. Click the button below or go to the adminpage.;-;Du har ikke laget noen lister enda, trykk på knappen under for å lage en ny liste.
 You have not yet created any web shops, create one and they will be listed here.;-;Du har ikke enda opprettet en web shop, opprett en og den vil bli listet her.
 Your email can not be empty;-;Epost kan ikke være blank
 Your image list;-;Dine bildelister

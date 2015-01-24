@@ -52,17 +52,17 @@ $menuLists = $this->getMenuLists();
                     <div class="menueditorcontent">
                         <div class="toolbox">
                             <div style="display:none;" class="menu new_menu">
-                                <span>New menu</span>
+                                <span><? echo $this->__f("New menu"); ?></span>
                             </div>
                             <div class="menu new dropaccept">
-                                <span>New page</span>
+                                <span><? echo $this->__f("New page"); ?></span>
                             </div>
                             <div class="menu delete">
-                                <span>Delete</span>
+                                <span><? echo $this->__f("Delete"); ?></span>
                             </div>
                             <div class="menu setashomepage">
                                 <i class='fa fa-home' style='padding: 20px; text-align: center; font-size: 40px;'></i>
-                                <span>Home</span>
+                                <span><? echo $this->__f("Home"); ?></span>
                             </div>
                             <div class="disabled"></div>
                         </div>
@@ -115,12 +115,12 @@ $menuLists = $this->getMenuLists();
         <div class="button-large cancel">
             <div class="rightglare"></div>
             <div class="filler"></div>
-            <ins>Cancel</ins>
+            <ins><? echo $this->__f("Cancel"); ?></ins>
         </div>
         <div class="button-large save">
             <div class="rightglare"></div>
             <div class="filler"></div>
-            <ins>Save</ins>
+            <ins><? echo $this->__f("Save"); ?></ins>
         </div>
 
     </div>

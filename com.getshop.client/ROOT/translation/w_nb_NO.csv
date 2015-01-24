@@ -98,7 +98,6 @@ Day;-;Dag
 December;-;Desember
 Delete;-;Slett
 Delete area;-;Slett området
-Delete carousel;-;Slett karusellen
 Delete column;-;Slett kolonnen
 Delete image;-;Slett bilde
 Delete row;-;Slett raden
@@ -297,7 +296,6 @@ Slide right;-;Slide til høyre
 Sorry;-;Beklager
 Sorry, we are out of this type of storage, please select a different one.;-;Beklager, men vi har ikke flere av denne typen igjen, velg en annen en.
 Sorry, your rental is too short, it has to be longer then {days} days of rental.;-;Beklager, men din leieperiode er for kort, den må være lengere enn {days} dager.
-Spacing;-;Spacing
 Stage 1 (hp):;-;Stage 1 hp:
 Stage 1 (nm):;-;Stage 1 nm:
 Stage 2 (hp):;-;Stage 2 hp:

@@ -8,10 +8,17 @@
         } else {
             echo '<i class="fa fa-warning"></i> ' . $this->__f("You have not created any lists yet, you need to create one first. Click the button below or go to the adminpage.");
             echo "<br/><br/><div  onclick=\"app.ProductLists.gssinterface.showListManagement()\" class='gs_button'>" . $this->__f("Click here to create a list") . "</div>";
-            return;
         }
         ?>
     </div>
+    
+    <?
+    if (!count($productLists)) {
+        echo "</div>";
+        return;
+    }
+    
+    ?>
 
     <div class="available_lists" gstype="form" method="setList">
         <?

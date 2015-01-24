@@ -55,11 +55,7 @@ app.YouTube = {
         if(ratio >= 1.59 && ratio <= 1.61) {
             return;
         }
-        if (ratio > 1.6) {
-            frame.height(width / 1.6);
-        } else {
-            frame.height("100%");
-        }
+        frame.height(width / 1.6);
         thundashop.common.resizeOrderMask();
     },
     init: function() {

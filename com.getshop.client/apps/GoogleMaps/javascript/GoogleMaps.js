@@ -132,7 +132,7 @@ thundashop.app.GoogleMaps.prototype = {
         var container = $('#' + this.config.container);
         var appid = container.closest('.app').attr('appid');
         var maxHeight = 0;
-        container.closest('.gs_inner').find('.app').each(function() {
+        container.closest('.gscell').find('.app').each(function() {
             if (appid !== $(this).attr('appid')) {
                 if (maxHeight < $(this).innerHeight()) {
                     maxHeight = $(this).innerHeight();
@@ -140,14 +140,13 @@ thundashop.app.GoogleMaps.prototype = {
             }
         });
         
-        if(container.closest('.gs_inner').find('.app').length === 1) {
-            maxHeight = container.closest('.gs_inner').innerHeight();
+        if(container.closest('.gscell').find('.app').length === 1) {
+            maxHeight = container.closest('.gscell').innerHeight();
         }
-        
-        if (maxHeight > 0) {
+         if (maxHeight > 0) {
             
             if(this.map !== null) {
-                if(container.closest('.gs_inner').innerHeight() > maxHeight) {
+                if(container.closest('.gsinner').innerHeight() > maxHeight) {
                     maxHeight = container.closest('.gs_inner').innerHeight();
                 }
                 $(this.mapDiv).height(maxHeight);

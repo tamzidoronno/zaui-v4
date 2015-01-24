@@ -9,8 +9,8 @@ $product = $this->getApi()->getProductManager()->getProduct($_POST['value']);
 
 <div class='gss_tabbar'> 
     <div class='gss_tab gss_tab_active' gss_tab='1'><? echo $this->__f("Product info"); ?></div>
-    <div class='gss_tab' gss_tab='3'>Images</div>
-    <div class='gss_tab' gss_tab='2'>Lists</div>
+    <div class='gss_tab' gss_tab='3'><? echo $this->__f("Images"); ?></div>
+    <div class='gss_tab' gss_tab='2'><? echo $this->__f("Lists"); ?></div>
     <div class='gss_tab_content'>
         <input type="hidden" gs_model='productmodel' gs_model_attr='productid' value="<? echo $product->id; ?>">
         <div class='gss_tab_view gss_tab_active' gss_tab='1'>
@@ -47,7 +47,7 @@ $product = $this->getApi()->getProductManager()->getProduct($_POST['value']);
             </div>
 
             <div class='gss_product_more_options_info'>
-                <i class='fa fa-info-circle'></i> Looking for more options? You can add much more information to your product by going to the frontend of the product and use GetShop's entire application sortiment like, Images Carousel, YouTube, Facebook etc. The possibilites are endless.
+                <i class='fa fa-info-circle'></i><? echo $this->__f("Looking for more options? You can add much more information to your product by going to the frontend of the product and use GetShop's entire application sortiment like, Images Carousel, YouTube, Facebook etc. The possibilites are endless."); ?>
             </div>
         </div>
 

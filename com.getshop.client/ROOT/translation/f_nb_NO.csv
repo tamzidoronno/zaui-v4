@@ -6,6 +6,7 @@ A description to the image;-;En beskrivelse av bildet
 A news application makes you push news to your WebShop. And share to subscribers and push to facebook if the Facebook application has been added.;-;En nyhetsapplikasjon gjør det enkelt for deg å legge inn nyheter på din webshop. Del så deretter dine nyheter med de som har abbonneere
 A quick tip; when the mouse is hovering the image, you will see a settings box where you can configure the image.;-;A lite tips; Når musen er over bildet, vil du se en innstillings boks hvor du kan konfigurere bildet.
 A single users browsing activity.;-;En enkels bruker browser aktivitet.
+A unique identifier for the product.;-;En unik identifikasjonskode
 Accept;-;Godta
 Accessed when;-;Aksesert siden:
 Account number;-;Konto nummer
@@ -55,9 +56,12 @@ Airgram allows you to push important notifications to your phone, use this appli
 All fields are required, email need to be valid.;-;All felter er påkrevd, eposten må være ekte.
 All fields need to be filled before you continue;-;Alle felter må fylles ut før du kan fortsette.
 All lists;-;Alle lister
+All lists hare are setup from the Product Lists in the menu.;-;Alle listene her er opprettet fra listmenuen.
 All page views listed;-;Alle sidevisninger listet
+All products;-;Alle produkter
 All text that you enter in the box below will be sent out as order confirmation emails. You can write anything you wish here, and enter variables. See bottom of page for variable defenitions.;-;All teksten som blir lagt til i boksen under vil bli sendt som bestilling bekreftelses eposten. Du kan skrive hva som helst her, og legg til variabler. Se nederst på siden for variabel definisjonen.
 All users;-;Alle brukere
+All your products;-;Alle dine produkter
 Allow guests to add events.;-;La gjester legge til eventer.
 Allows customers to pay by invoice.;-;Tillater kunder å betaler per faktura.
 Allows you to create a terms and condition page which has to be accepted by your customers before ordering.;-;Gir deg muligheten til å sette opp en Brukervilkår avtale, denne må alltid godkjennes før en eventuell bestilling.
@@ -71,14 +75,21 @@ Application management;-;Applikasjons styring
 Applications;-;Applikasjoner
 Are customers required to register to order?;-;Er det påkrevd at kundene skal registere seg for å handle?
 Are you sure that you want to remove this application?;-;Er du sikker på at du ønsker å fjerne denne applikasjonen?
+Are you sure want to delete this list?;-;Er du sikker på at du ønsker å slette denne listen?
+Are you sure you want to delete the account?;-;Er du sikker på at du ønsker å slette denne kontoen?
+Are you sure you want to delete the location?;-;Er du sikker på at du ønsker å slette denne posisjonen?
 Are you sure you want to delete this logo?;-;Er du sikker på at du vil slette denen logoen?
+Are you sure you want to delete this product?;-;Er du sikker på at du ønsker å slette dette produktet?
 Attendees;-;Påmeldte
 Automatic location;-;Automatisk lokasjon
+Available applications;-;Tilgjengelige applikasjoner
 Backgrounds;-;Bakgrunn
 Base color;-;Base farge
 Base text color;-;Base tekst farge
+Below you can see all the pictures, if you want to upload a picture to this product you can simply upload by using the options to the right;-;Nedenfor ser du alle bildene som er tilgjenglig for produktet, disse kommer automatisk opp på hovedsiden for bildet. 
 Below you see a list of all of the orders that has been placed on your e-commerce solution. To see more information about a sepecific order you can simply click on it.;-;Nedenfor ser du en liste over alle dine ordrer, klikke på en ordre for mer informasjon.
 Below you see a list of all users registered in this system. To see more information about a user you can simply click on it.;-;Nedenfor ser du en liste over alle brukerene som ligger i nettbutikkløsningen din.
+Below you see a list with all of your products, you can filter it by using the textbox to the right. Click on the product you want to see more information about.;-;Nedenfor ser du en liste over alle dine produkter.
 Billing city address.;-;By for faktura
 Billing post number.;-;Postaddresse for faktura
 Billing street address.;-;Addresse for faktura
@@ -100,6 +111,7 @@ Check out;-;Utsjekk
 Chrome?;-;Chrome?
 Click here to create a list;-;Trykk her for å lage en liste.
 Click on the chat icon in the top menu and start translating.;-;Trykk på chat iconet i toppen menyen for å starte oversettingen.
+Click on the disk above to upload a file.;-;Trykk på disketten over for å laste opp flere bilder til produktet.
 Click on the icon in the top admin menu under category More to gain access to your reporting page.;-;Trykk på ikonet i toppmenyen under kategorien "Mer" for å få tilgang til rapportsiden.
 Click the create application button and you will automatically get a form which sends you email directly to your email address when someone use this form.;-;Trykk på opprett applikasjons knappen og du vil automatisk få ett skjema hvor epost blir sendt til deg automatisk når noen bruker den.
 Click to add application;-;Legg til ny applikasjon
@@ -123,6 +135,7 @@ Coupon name;-;Kupong navn
 Create a new product;-;Opprett et nytt produkt
 Create categories and add a list of products to the category, attach images to the categories, and name them as you want.;-;Opprett kategorier og legg til en liste av produkter for kategorien, legg til bilder til dine kategorier og navgi de med hva du vil.
 Create event;-;Opprett en event
+Create list;-;Opprett liste
 Create new category;-;Lag en ny kategori
 Create new pages by dragging "New Page" to where you want the new page to be in the menu.;-;Lag en ny side med å dra "Ny side" til der du ønsker den.
 Create new user;-;Opprett ny bruker
@@ -147,6 +160,7 @@ Delete my store;-;Slett min butikk
 Delete pages by dragging the menu entry to the garbage box.;-;Slett sider med å dra et menyvalg hit.
 Delete selected application;-;Slett valgte applikasjon
 Delete this image;-;Slett dette bildet.
+Delete this list;-;Slett denne listen
 Delete user;-;Slett bruker
 Description when adding;-;beskrivelse når du legger til
 Different variables that is available;-;Forskjellige variabler som er er tilgengelige
@@ -169,6 +183,7 @@ Enable test mode for sisow;-;Aktiver test modus for Sisow
 Enable this option to send email when a booking has been made.;-;Aktivert dette valget for å sende epost til når en booking har blitt gjort.
 Enable tls?;-;Aktivert tls?
 End hour;-;Slutt time
+Enter the address you wish users should be able to access, example (yourdomein.com).;-;Legg inn domenet ditt, eksempel dittdomene.no
 Enter the name of the page;-;Gi nytt navn for siden
 Enter the terms and condition text in the field below.;-;Skriv inn brukervilkårene i boksen under.
 Error;-;Feil
@@ -186,6 +201,7 @@ Gallery;-;Galleri
 Get Started;-;Kom i gang
 Get started, add this application and start adding news and updates to your page.;-;Kom i gang, legg til denne applikasjonen og start å legg til nyheter og oppdateringer to din side.
 GetShop contains of much more then just some basic settings, the information and settings you find here is just the basic one that are unique for everyone. If you wish to change settings regarding e-commerce stuff you need first to activate e-commerce under applications and then change settings that shows up.;-;GetShop består av mye mer enn bare noen få instillinger som du ser under. Hver applikasjon kan ha noen innstillinger og noen moduler har også instillinger. For å finne ut mer se på applikasjoner.
+Go to product lists;-;Gå til produktlistene.
 Google Analytics;-;Google Analytics
 Google analytics code;-;Google analyse kode
 Google analytics is by far the best reporting tool for webadministrator, by adding this application you will enable your googla analytics account to communicate with your webshop.;-;Google analytics er helt klart det best rapporteringsverkøyet når det kommer til å holde oversikt over bruken på din webside, ved å legge til denne applikasjonen får du mulighet til å benytte deg av google analytics.
@@ -201,6 +217,7 @@ If this function is enabled, it will show filter left for the calendar.;-;Hvis d
 If this function is enabled, it will show the company field.;-;Hvis denne funksjonen er aktivert, vil du vise selskaps feltet. 
 If this option has been enabled the attendee will receive an sms.;-;Hvis dette valget har blitt aktivert, vil de påmeldte motta en sms.
 If you turn on this feature, it will try to get the company information from  brreg. Simplify the form significantly.;-;Hvis du aktiverer denne funksjonen, så vil systemet prøve å hente ut informasjonen fra BrReg.
+Images;-;Bilder
 Import an existing application;-;Importer en eksisterende applikasjon
 Import an existing application.;-;Importer en eksisterende applikasjon
 Import application;-;Importert en applikasjon
@@ -227,10 +244,14 @@ Link to page.;-;Link til siden.
 List;-;Liste
 List has been saved;-;Listen har blitt lagret
 List name;-;Listens navn
+Lists;-;Lister
+Listview description;-;Kort beskrivelse for listevisning
+Looking for more options? You can add much more information to your product by going to the frontend of the product and use GetShop's entire application sortiment like, Images Carousel, YouTube, Facebook etc. The possibilites are endless.;-;Ser du etter mer du kan gjøre på produktet? Hvis du går til framsiden hvor produktet ligger så kan du legge til alle applikasjonene osv som GetShop tilbyr. Her kan du legge inn filmer, text, bilder, rader, karuseller osv.
 Mail;-;E-post
 Mail address;-;Epost
 MailManager;-;Epost behandler
 Main email address;-;Hoved epostaddresse
+Main order email;-;Hvordan skal mailen se ut?
 Make sure that the password you wrote above is the correct.;-;Må gjenta passordet for å være sikker på at du har skrevet inn riktig passord
 Manually select a color;-;Manuelt velg en farge
 Mark as done;-;Merk som ferdig
@@ -247,7 +268,9 @@ More...;-;Mer...
 Name of the person that owns this new account.;-;Navn på brukeren
 Need to display your realestates? well, here is the application that allows you to do that, simply add the application to your page and start editing your realestate;-;Med denne applikasjonen kan du vise dine eiendommer.
 New entry;-;Ny
+New list;-;Ny liste
 New page;-;Ny side
+New product;-;Nytt produkt
 New text;-;Ny tekst
 New user;-;Ny bruker
 News;-;Nyheter
@@ -272,9 +295,12 @@ Number of columns;-;Antall kolonner
 Number of days the customer have to pay the invoice, example 14;-;Antall dager til forfall, eksempel 14
 Number of products;-;Antall produkter
 Number of views;-;Antall visninger
+Off;-;Av
+On;-;På
 Order email;-;Bestillings epost
 Order lines;-;Ordre linjer
 Order number;-;Ordre nummer
+Order subject;-;Emne på eposten
 OrderId;-;Orderid
 OrderManager;-;Ordrebehandling
 Orders;-;Ordrer
@@ -302,6 +328,7 @@ Please select your currency;-;Velg din valutta
 Please select your language;-;Vennligst velg ditt språk
 Point your domain name to the following ip address:;-;Pek ditt domenenavn til følgende ip adresse:
 Port;-;Port
+Price (inc taxes);-;Pris (ink mva)
 Primary domain name;-;Ditt primære domenenavn
 Product list;-;Produkt liste
 Product lists;-;Produktlister
@@ -350,6 +377,7 @@ Select application;-;Velg applikasjon
 Select page layout;-;Velg en layout
 Select your theme;-;Velg et tema
 Send email;-;Send epost
+Send email to customers;-;Send epost til kundene
 Send reminder;-;Påmindelse sendt
 Send sms to attendee?;-;Send sms til påmeldte?
 Set application sticky;-;Sett applikasjonen klebelig.
@@ -399,12 +427,16 @@ The paypal account has not been configured correctly. Go to settings and configu
 The percentage must be between 0 and 100;-;Prosenten må være mellom 0 og 100
 The subject of the email that goes to the attendees set on waitinglist.;-;Emnet på eposten som sendes til de som blir satt på ventelisten
 The text has been saved;-;Teksten har blitt lagret
+The total cost of the product, included taxes.;-;Den totale prisen på produktet.
 The translation has been saved;-;Oversettingen har blitt oppdatert
 The username for your smtp server.;-;Brukernavn for smtp server.
+There are multiple emails sent from your system and we have gather them all here so you can explore them, modify them and add the content you want. Unformatunally emails are not that easy so it requires a bit html skills to set them up. Dont be afraid to test it for yourself and let us know if you need help to modify them.;-;Det er mange forskjellige eposter som blir sendt ut fra dine GetShop side, her kan du stilling hvordan du ønsker epostene skal se ut. Trykk på epostene til venstre for å stille dem inn.
+There are no products in this list;-;Det finnes ingen produkter i denne listen
 There are two different types of coupons, fixed price and percentage price. Fixed price is giving your valued customers a fixed rate off for each time they buy something from the store. The Percentage price gives a percentage discount to your total cost of the cart.;-;Vi støtter 2 forskjellige typer kuponger, fast pris eller prosentvis pris. Dersom du velger fast pris vil du gi kundene dine et fast avslag ved bruk av kupongen. Dersom du setter opp en med prosentvis avslag så vil kundene dine få et prosentvis avslag iforhold til varene som ligger i handlekurven.
 There is no new entries;-;Tomt, ingenting å se her.
 This application gives you the ability to control your stocks, simply change how many you have in stock on each product.;-;Denne applikasjonen gir deg muligheten til å spesifisere antallet som er på lager for hvert av produktene dine.
 This category displayer is currently empty. To create a new category please click the create new category button below.;-;Denne kategorien er for tiden tom. For å opprette en kategori vennligst trykk på opprett kategori knappen.
+This description will show up in list views, if blank it will take the first part of the larger description.;-;Denne beskrivelsen kommer opp i listevisning på produktet og på selve produktsiden.
 This footer application contains the footer information for your webshop, all menu entries are sorted.;-;Denne footer applikasjonen inneholder footer informasjon for din webshop, din meny er også sortert.
 This gallery gives you the ability to display images into a gallery, and even connect the images to products, categorise them by combining a category displayer, or by using a left menu.;-;Dette galleriet gir deg muligheten til å vise bilder I ditt galleri, og til og med knytte bildene opp mot produkter, kategoriser disse ved å kombinere denne applikasjonen med categori viser, eller eventuelt en venstremeny / topp meny.
 This is a code that you need to get from your google analytics account. If you need help to get it we would be more then happy to help you out, just contact our customer support by email and you will have an answer within an hour;-;Dette er en kode som får får utlvert fra din google analytics kontor.
@@ -419,9 +451,11 @@ This is the mail that will be sent upon booking;-;Denne eposten blir sendt ved e
 This is the main email address, if you change this all orders, contact forms and etc will be sent to this email address.;-;Dette er hovedepostaddressen, denne brukes til å sende en kopi av ordremailer, kontaktskjema osv.
 This is the perfect application if you need to stash your page a bit more, simply create banners and add them to this application and then it will rotate;-;Denne applikasjonen er perfekt for deg som ønsker å ""stæsje"" opp siden din litt mer, enkelt legg til reklamesnutter som roterer på de sidene du ønsker.
 This is the post code that will be printed on the invoice, example 4380;-;Dette er postnummeret som vises på fakturaen, eksempel 4380
+This is the title of the product, example "White cute teddy bear";-;Navnet på produktet, f.eks "Søt hvit teddybjørn"
 This is the vat number that will be printed on the invoice, example 123456789;-;Dette er mva nummeret som blir vist på din faktura, eksempel 123456789
 This is the web address that will be printed on the invoice, example http://www.getshop.com;-; Dette er web adressen som blir vist på fakturaen, eksempel http://www.getshop.com
 This is where you can configure your current page, special settings like search engine optimization for the current page you are browser;-;Dette er hvor du kan konfigurere siden du er på, spesielle instillinger for søkemotor optimaliser, osv.
+This name is used to identify the list when you add it to the frontend;-;Navnet du oppgir her brukes på framsiden når du skal legge til listen.
 This tax group will be possible to select in your product management.;-;Mva gruppen vil være mulig å velge fra produktadminsitrasjonen.
 This will be displayed as description if someone adds event;-;Dette vil bli vist som en beskrivelse hvis noen legger til en event.
 This will be displayed as the location if someone adds event;-;Dette vil bli vist som en lokasjon når noen legger til en event.
@@ -432,9 +466,12 @@ Title when sending emails;-;Tittel når epost sendes.
 Title when sending emails to waitinglist;-;Emne mail venteliste
 To move pages, move them from the menu to the loose page area, then drag the loose page into another menu.;-;For å flytte sider, dra dem fra menyen til området "løse sider", deretter dra dem til den menyen du ønsker dem skal ligge på.
 To translate all visible text for your users, translate the entries below, and hit the save translation button.;-;For å lagre all tekst som er viselig for kundene dine, oversett radene under, og trykk på lagre knappen.
+Total orders;-;Alle ordre
 Total orders registered;-;Totalt ordrer registrert
 Total page views;-;Totalt sidevisninger
 Total product views;-;Totalt produkter vist
+Total products;-;Totalt antall produkter
+Total sales;-;Total omsetning
 Total users created;-;Totalt brukere opprettet
 Total views;-;Totalt visninger
 Tracking number;-;Sporings nummber
@@ -467,13 +504,17 @@ Warn users that cookies are being stored from this site?;-;Advar brukere at cook
 Warning! this store will automatically be reset to original state each hour;-;Advasel! Systemet vil automatisk bli satt tilbake til sin originale stand hver time.
 Warning. you are not connected as a partner yet, please contact getshop support!;-;Advarsel. du er ikke koblet til en partner enda, vennligst kontakt getshop support!
 Web address;-;Web adresse
+Welcome to email settings.;-;Velkommen til epost-instillinger
 What is deepfreeze? Well, if you activate deepfreeze you basically put all options on hold, all changes made after deepfreezeing will be purged each hour.;-;Hva er deepfreeze? Deepfreeze fryser ned systemet og gjennoppretter systemet hver time.
 What is the shipment taxes?;-;Hva er forsendelses mvaen?
 What should be the sender name?;-;Hva skal senders navn være?
+What should the subject be?;-;Dette blir da skrevet i emnefeltet, f.eks "Takk for din bestilling"
 What should the text message contain?;-;Hva skal tekst meldingen inneholde?
 When;-;Når
+When a customer places a order, should he/she receive an email with a confirmation?;-;Når en kunde legger inn en odre, skal det da sendes en epost til dem?
 Withdraw from stock when order is created;-;Trekk fra lagerstatus når ordren blir laget
 Work with your lists below or create one. Lists are used for categorizing, filtering and etc in products overview.;-;Velg en av dine lister under, eller opprett en ny. Når du har lister kan du legge produkter i dem og vise dem på din netthandelside.
+You are probably eager to get started with setting up your products. GetShop is a two-phase product process. First you create a product and put all of your products into the pool. Then you can go to the frontend and place your products where you want.;-;Du er sikkert interssert i å komme i gang så fort som mulig med å legge inn produkter, og det forstår vi godt. Nedenfor ser du en liste over alle produktene du har og disse kan du legge inn i lister som du så legger inn på forsiden.
 You dont have any cupons added.;-;Du har ikke lagt til noen kuponger.
 You have not created any lists yet, you need to create one first. Click the button below or go to the adminpage.;-;Du har ikke laget noen lister enda, trykk på knappen under for å lage en ny liste.
 You have not yet created any web shops, create one and they will be listed here.;-;Du har ikke enda opprettet en web shop, opprett en og den vil bli listet her.

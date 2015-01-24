@@ -692,5 +692,4 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         return statistics;
     }
-
 }

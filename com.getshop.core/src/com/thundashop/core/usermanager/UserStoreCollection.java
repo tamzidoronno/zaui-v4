@@ -107,7 +107,6 @@ public class UserStoreCollection {
  
     public User login(String username, String password) throws ErrorException {
         for (User user : users.values()) {
-            System.out.println("Username: " + user.username + " " + user.emailAddress);
             if (user.username.equalsIgnoreCase(username) && user.password.equalsIgnoreCase(password)) {
                 return finalize(user);
             }

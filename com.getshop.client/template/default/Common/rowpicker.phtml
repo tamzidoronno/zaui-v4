@@ -1,105 +1,116 @@
 <div class='gs_rowpicker_box'>
     <div class='gs_rowpicker_box_content'>
         <div class="fa fa-close close_gs_row_picker"></div>
-        <div class='gs_row_modeselection'>
-            <div rowmode='cells' class='gs_row_mode_select gs_row_mode_select_active'><? echo $this->__f("Cells"); ?></div>
-            <div rowmode='carousel' class='gs_row_mode_select'><? echo $this->__f("Carousel"); ?></div>
-            <div rowmode='tabs' class='gs_row_mode_select'><? echo $this->__f("Tabs"); ?></div>
-        </div>
-
-        <div class='gs_row_selection_box' type='tabs' style='display: none'>
-            <div class='gs_select_row_mode_information'>
-                <?
-                echo $this->__f("You can use tabmode if you wish to add content in multiple tabs, adding this will allow you to create as many tabs as you wish and add a variouse of content to it.");
-                ?>
+        
+        <div class='gs_row_picker_modes'> 
+            <div class='gs_row_modeselection'>
+                <div rowmode='cells' class='gs_row_mode_select gs_row_mode_select_active'><? echo $this->__f("Cells"); ?></div>
+                <div rowmode='carousel' class='gs_row_mode_select'><? echo $this->__f("Carousel"); ?></div>
+                <div rowmode='tabs' class='gs_row_mode_select'><? echo $this->__f("Tabs"); ?></div>
             </div>
-            <div class='gs_row_box_to_select' rowmode="TAB" rowconfig="[]" style='width: 780px; line-height: 50px; text-align: center; background: linear-gradient(to bottom, #22cb10, #10a600); border: solid 1px;'>
-                <div class=''>
-                    <? 
-                    echo $this->__f("Insert as tab mode");
+            
+            <div class='gs_row_selection_box' type='tabs' style='display: none'>
+                <div class='gs_select_row_mode_information'>
+                    <?
+                    echo $this->__f("You can use tabmode if you wish to add content in multiple tabs, adding this will allow you to create as many tabs as you wish and add a variouse of content to it.");
                     ?>
                 </div>
+                <div class='gs_row_box_to_select' rowmode="TAB" rowconfig="[]" style='width: 780px; line-height: 50px; text-align: center; background: linear-gradient(to bottom, #22cb10, #10a600); border: solid 1px;'>
+                    <div class=''>
+                        <? 
+                        echo $this->__f("Insert as tab mode");
+                        ?>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div class='gs_row_selection_box' type='carousel' style='display: none'>
-            <div class='gs_select_row_mode_information'>
-                <?
-                echo $this->__f("Carousel mode is great if you wish to add sliding content, this means that you can add multiple slider and let your customers make a choice on what they want to view. Great for banners and advertisment.");
-                ?>
-            </div>
-            <div class='gs_row_box_to_select' rowmode="ROTATING" rowconfig="[]" style='width: 780px; line-height: 50px; text-align: center; background: linear-gradient(to bottom, #22cb10, #10a600); border: solid 1px;'>
-                <div class=''>
-                    <? 
-                    echo $this->__f("Insert as carousel mode");
+            <div class='gs_row_selection_box' type='carousel' style='display: none'>
+                <div class='gs_select_row_mode_information'>
+                    <?
+                    echo $this->__f("Carousel mode is great if you wish to add sliding content, this means that you can add multiple slider and let your customers make a choice on what they want to view. Great for banners and advertisment.");
                     ?>
                 </div>
+                <div class='gs_row_box_to_select' rowmode="ROTATING" rowconfig="[]" style='width: 780px; line-height: 50px; text-align: center; background: linear-gradient(to bottom, #22cb10, #10a600); border: solid 1px;'>
+                    <div class=''>
+                        <? 
+                        echo $this->__f("Insert as carousel mode");
+                        ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class='gs_row_selection_box' type='cells'>
+                <div class='gs_select_row_mode_information'>
+                    <?
+                    echo $this->__f("Rows are created by multiple cells, you can combine them in any way you like. To do more options you need to learn the advanced mode. Click on the layout you wish to use.");
+                    ?>
+                </div>
+                <div class='gs_row_box_to_select' rowmode="ROW" rowconfig="[100]">
+                    <div class='gs_illustration_row gs_illustration_row_1'>
+                        <div class='gs_illustration_column gs_illustration_column_size_1'><div class='gs_illustratration_inner'></div></div>
+                    </div>
+                </div>
+                <div class='gs_row_box_to_select' rowmode="ROW" rowconfig="[50,50]">
+                    <div class='gs_illustration_row gs_illustration_row_1'>
+                        <div class='gs_illustration_column gs_illustration_column_size_2'><div class='gs_illustratration_inner'></div></div>
+                        <div class='gs_illustration_column gs_illustration_column_size_2'><div class='gs_illustratration_inner'></div></div>
+                    </div>
+                </div>
+                <div class='gs_row_box_to_select' rowmode="ROW" rowconfig="[33.33,33.33,33.33]">
+                    <div class='gs_illustration_row gs_illustration_row_1'>
+                        <div class='gs_illustration_column gs_illustration_column_size_3'><div class='gs_illustratration_inner'></div></div>
+                        <div class='gs_illustration_column gs_illustration_column_size_3'><div class='gs_illustratration_inner'></div></div>
+                        <div class='gs_illustration_column gs_illustration_column_size_3'><div class='gs_illustratration_inner'></div></div>
+                    </div>
+                </div>
+                <div class='gs_row_box_to_select' rowmode="ROW" rowconfig="[25,25,25,25]">
+                    <div class='gs_illustration_row gs_illustration_row_1'>
+                        <div class='gs_illustration_column gs_illustration_column_size_4'><div class='gs_illustratration_inner'></div></div>
+                        <div class='gs_illustration_column gs_illustration_column_size_4'><div class='gs_illustratration_inner'></div></div>
+                        <div class='gs_illustration_column gs_illustration_column_size_4'><div class='gs_illustratration_inner'></div></div>
+                        <div class='gs_illustration_column gs_illustration_column_size_4'><div class='gs_illustratration_inner'></div></div>
+                    </div>
+                </div>
+
+
+                <div class='gs_row_box_to_select' rowmode="ROW" rowconfig="[25,75]">
+                    <div class='gs_illustration_row gs_illustration_row_1'>
+                        <div class='gs_illustration_column gs_illustration_column_size_4'><div class='gs_illustratration_inner'></div></div>
+                        <div class='gs_illustration_column ' style='width: 129px;'><div class='gs_illustratration_inner'></div></div>
+                    </div>
+                </div>
+                <div class='gs_row_box_to_select' rowmode="ROW" rowconfig="[25,25,50]">
+                    <div class='gs_illustration_row gs_illustration_row_1'>
+                        <div class='gs_illustration_column gs_illustration_column_size_4'><div class='gs_illustratration_inner'></div></div>
+                        <div class='gs_illustration_column gs_illustration_column_size_4'><div class='gs_illustratration_inner'></div></div>
+                        <div class='gs_illustration_column ' style='width: 86px;'><div class='gs_illustratration_inner'></div></div>
+                    </div>
+                </div>
+
+                <div class='gs_row_box_to_select' rowmode="ROW" rowconfig="[50,25,25]">
+                    <div class='gs_illustration_row gs_illustration_row_1'>
+                        <div class='gs_illustration_column ' style='width: 86px;'><div class='gs_illustratration_inner'></div></div>
+                        <div class='gs_illustration_column gs_illustration_column_size_4'><div class='gs_illustratration_inner'></div></div>
+                        <div class='gs_illustration_column gs_illustration_column_size_4'><div class='gs_illustratration_inner'></div></div>
+                    </div>
+                </div>
+
+                <div class='gs_row_box_to_select' rowmode="ROW" rowconfig="[75,25]">
+                    <div class='gs_illustration_row gs_illustration_row_1'>
+                        <div class='gs_illustration_column ' style='width: 129px;'><div class='gs_illustratration_inner'></div></div>
+                        <div class='gs_illustration_column gs_illustration_column_size_4'><div class='gs_illustratration_inner'></div></div>
+
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class='gs_row_selection_box' type='cells'>
-            <div class='gs_select_row_mode_information'>
-                <?
-                echo $this->__f("Rows are created by multiple cells, you can combine them in any way you like. To do more options you need to learn the advanced mode. Click on the layout you wish to use.");
-                ?>
-            </div>
-            <div class='gs_row_box_to_select' rowmode="ROW" rowconfig="[100]">
-                <div class='gs_illustration_row gs_illustration_row_1'>
-                    <div class='gs_illustration_column gs_illustration_column_size_1'><div class='gs_illustratration_inner'></div></div>
-                </div>
-            </div>
-            <div class='gs_row_box_to_select' rowmode="ROW" rowconfig="[50,50]">
-                <div class='gs_illustration_row gs_illustration_row_1'>
-                    <div class='gs_illustration_column gs_illustration_column_size_2'><div class='gs_illustratration_inner'></div></div>
-                    <div class='gs_illustration_column gs_illustration_column_size_2'><div class='gs_illustratration_inner'></div></div>
-                </div>
-            </div>
-            <div class='gs_row_box_to_select' rowmode="ROW" rowconfig="[33.33,33.33,33.33]">
-                <div class='gs_illustration_row gs_illustration_row_1'>
-                    <div class='gs_illustration_column gs_illustration_column_size_3'><div class='gs_illustratration_inner'></div></div>
-                    <div class='gs_illustration_column gs_illustration_column_size_3'><div class='gs_illustratration_inner'></div></div>
-                    <div class='gs_illustration_column gs_illustration_column_size_3'><div class='gs_illustratration_inner'></div></div>
-                </div>
-            </div>
-            <div class='gs_row_box_to_select' rowmode="ROW" rowconfig="[25,25,25,25]">
-                <div class='gs_illustration_row gs_illustration_row_1'>
-                    <div class='gs_illustration_column gs_illustration_column_size_4'><div class='gs_illustratration_inner'></div></div>
-                    <div class='gs_illustration_column gs_illustration_column_size_4'><div class='gs_illustratration_inner'></div></div>
-                    <div class='gs_illustration_column gs_illustration_column_size_4'><div class='gs_illustratration_inner'></div></div>
-                    <div class='gs_illustration_column gs_illustration_column_size_4'><div class='gs_illustratration_inner'></div></div>
-                </div>
-            </div>
-
-
-            <div class='gs_row_box_to_select' rowmode="ROW" rowconfig="[25,75]">
-                <div class='gs_illustration_row gs_illustration_row_1'>
-                    <div class='gs_illustration_column gs_illustration_column_size_4'><div class='gs_illustratration_inner'></div></div>
-                    <div class='gs_illustration_column ' style='width: 129px;'><div class='gs_illustratration_inner'></div></div>
-                </div>
-            </div>
-            <div class='gs_row_box_to_select' rowmode="ROW" rowconfig="[25,25,50]">
-                <div class='gs_illustration_row gs_illustration_row_1'>
-                    <div class='gs_illustration_column gs_illustration_column_size_4'><div class='gs_illustratration_inner'></div></div>
-                    <div class='gs_illustration_column gs_illustration_column_size_4'><div class='gs_illustratration_inner'></div></div>
-                    <div class='gs_illustration_column ' style='width: 86px;'><div class='gs_illustratration_inner'></div></div>
-                </div>
-            </div>
-
-            <div class='gs_row_box_to_select' rowmode="ROW" rowconfig="[50,25,25]">
-                <div class='gs_illustration_row gs_illustration_row_1'>
-                    <div class='gs_illustration_column ' style='width: 86px;'><div class='gs_illustratration_inner'></div></div>
-                    <div class='gs_illustration_column gs_illustration_column_size_4'><div class='gs_illustratration_inner'></div></div>
-                    <div class='gs_illustration_column gs_illustration_column_size_4'><div class='gs_illustratration_inner'></div></div>
-                </div>
-            </div>
-
-            <div class='gs_row_box_to_select' rowmode="ROW" rowconfig="[75,25]">
-                <div class='gs_illustration_row gs_illustration_row_1'>
-                    <div class='gs_illustration_column ' style='width: 129px;'><div class='gs_illustratration_inner'></div></div>
-                    <div class='gs_illustration_column gs_illustration_column_size_4'><div class='gs_illustratration_inner'></div></div>
-
-                </div>
-            </div>
+        <div class="select_row_picker_direction">
+            <? 
+            echo $this->__f("Where do you want this row?");
+            ?>
+            <div class="select_row_picker_direction_button" direction="above"><i class="fa fa-arrow-up"></i> <? echo $this->__f("Above"); ?></div>
+            <div class="select_row_picker_direction_button" direction="below"><i class="fa fa-arrow-down"></i> <? echo $this->__f("Below"); ?></div>
         </div>
     </div>
 </div>

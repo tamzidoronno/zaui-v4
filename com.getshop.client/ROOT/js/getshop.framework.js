@@ -1430,9 +1430,10 @@ thundashop.framework.rowPicker = {
     slidedirection: null,
     
     init: function() {
-        $(document).on('click', '.gs_rowpicker_box .gs_row_box_to_select', thundashop.framework.rowPicker.selected);
+        $(document).on('click', '.gs_rowpicker_box .gs_row_box_to_select', thundashop.framework.rowPicker.showDirection);
         $(document).on('click', '.gs_rowpicker_box .gs_row_mode_select', thundashop.framework.rowPicker.modeChange);
         $(document).on('click', '.gs_rowpicker_box .close_gs_row_picker', thundashop.framework.rowPicker.close);
+        $(document).on('click', '.gs_rowpicker_box .select_row_picker_direction_button', thundashop.framework.rowPicker.selected);
     },
     
     close: function() {
@@ -1444,6 +1445,21 @@ thundashop.framework.rowPicker = {
         }
     },
     
+    showDirection: function() {
+        if (typeof(thundashop.framework.rowPicker.callBackFunction) === "function") {
+            if (!thundashop.framework.rowPicker.lastCallBackData) {
+                thundashop.framework.rowPicker.lastCallBackData = {};
+            }
+            
+            thundashop.framework.rowPicker.lastCallBackData.mode = $(this).attr('rowmode');
+            thundashop.framework.rowPicker.lastCallBackData.rowconfig = JSON.parse($(this).attr('rowconfig'));
+            
+        }
+        
+        $('.gs_rowpicker_box .select_row_picker_direction').show();
+        $('.gs_rowpicker_box .gs_row_picker_modes').hide();
+    },
+    
     modeChange: function() {
         $('.gs_rowpicker_box .gs_row_mode_select_active').removeClass('gs_row_mode_select_active');
         $('.gs_rowpicker_box .gs_row_selection_box').hide();
@@ -1453,25 +1469,17 @@ thundashop.framework.rowPicker = {
     },
     
     selected: function() {
-        if (typeof(thundashop.framework.rowPicker.callBackFunction) === "function") {
-            if (!thundashop.framework.rowPicker.lastCallBackData) {
-                thundashop.framework.rowPicker.lastCallBackData = {};
-            }
-            
-            thundashop.framework.rowPicker.lastCallBackData.mode = $(this).attr('rowmode');
-            thundashop.framework.rowPicker.lastCallBackData.rowconfig = JSON.parse($(this).attr('rowconfig'));
-            thundashop.framework.rowPicker.callBackFunction(thundashop.framework.rowPicker.lastCallBackData);
-        }
+        thundashop.framework.rowPicker.lastCallBackData.direction = $(this).attr('direction');
+        thundashop.framework.rowPicker.callBackFunction(thundashop.framework.rowPicker.lastCallBackData);
     },
     
     toggleRowPicker: function(direction, target, callback, callbackData) {
+        $('.gs_rowpicker_box .select_row_picker_direction').hide();
+        $('.gs_rowpicker_box .gs_row_picker_modes').show();
         thundashop.framework.rowPicker.callBackFunction = callback;
         thundashop.framework.rowPicker.lastCallBackData = callbackData;
         
         var pickerDom = $('.gs_rowpicker_box');
-        
-        
-        
         
         pickerDom.removeClass('shadowsadded');
         var target = $(target);

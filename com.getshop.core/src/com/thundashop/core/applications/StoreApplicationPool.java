@@ -336,7 +336,6 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
         activatedModules.clear();
         addActivatedModules();
         
-        System.out.println("==========");
         for (Application app : allApplications) {
             if (app.appName.equals("SedoxMenu")) {
                 System.out.println("App 2: " + app.isFrontend + " Id: " + app.id);

@@ -1,6 +1,6 @@
 .gsarea[area="header"] .Menu { position: absolute; right: 0px; top: 60px;  }
 .gsarea[area="header"] .Menu a div { padding: 10px; color:#fff; font-size: 16px; }
-.gsinner.gsdepth_0 { width: 1100px; margin: auto; }
+.gs_page_width { width: 1100px; margin: auto; }
 h1 { text-align: center;
      font-size: 30px;
      margin-top: 30px;

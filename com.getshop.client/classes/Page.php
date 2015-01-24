@@ -36,7 +36,7 @@ class Page {
 
         $editedCellid = null;
         $gs_page_type = $this->javapage->type;
-        echo "<div class='gsbody_inner' pageId='".$this->getId()."' gspagetype='$gs_page_type'>";
+        echo "<div class='gsbody_inner' pageId='" . $this->getId() . "' gspagetype='$gs_page_type'>";
         if (!$this->factory->isMobile()) {
             echo "<div class='gsarea' area='header'>";
             $edited = $this->printArea($layout->areas->{'header'});
@@ -90,7 +90,7 @@ class Page {
                 echo "<script>$('.gsiseditingprepend').remove();</script>";
             }
         } else {
-            echo "<div class='gsbody' pageId='".$this->getId()."'>";
+            echo "<div class='gsbody' pageId='" . $this->getId() . "'>";
 
             $cells = array();
             $this->flattenCells($layout->areas->{'body'});
@@ -298,7 +298,7 @@ class Page {
 
         if ($cell->mode == "ROTATING") {
             $additionalinfo = "height='" . $cell->carouselConfig->height . "' timer='" . $cell->carouselConfig->time . "' type='" . $cell->carouselConfig->type . "'";
-            if($this->editCarouselForMobile() || $this->factory->isMobile()) {
+            if ($this->editCarouselForMobile() || $this->factory->isMobile()) {
                 $styles .= "height: " . $cell->carouselConfig->heightMobile . "px;";
             } else {
                 $styles .= "height: " . $cell->carouselConfig->height . "px;";
@@ -335,11 +335,11 @@ class Page {
             $rowedit = "";
         }
 
-        $pagewidthclass ="";
-        if(($depth == 0 && $cell->mode != "ROTATING") || ($depth == 1 && $parent->mode == "ROTATING")) {
+        $pagewidthclass = "";
+        if (($depth == 0 && $cell->mode != "ROTATING") || ($depth == 1 && $parent->mode == "ROTATING")) {
             $pagewidthclass = "gs_page_width";
         }
-        
+
         $gsrowmode = "";
         if ($parent != null && $parent->mode == "ROTATING") {
             $gsrowmode = "gsrotatingrow";
@@ -360,11 +360,11 @@ class Page {
         }
         $this->printFloatingHeader($cell, $floatData, $parent);
 
-        if($cell->mode == "ROTATING" && $this->editCarouselForMobile() && !$this->factory->isMobile()) {
-            echo "<div class='gsmobilecarouseleditdesc'>".$this->factory->__w("Add slides for carousel to mobile view")."</div>";
+        if ($cell->mode == "ROTATING" && $this->editCarouselForMobile() && !$this->factory->isMobile()) {
+            echo "<div class='gsmobilecarouseleditdesc'>" . $this->factory->__w("Add slides for carousel to mobile view") . "</div>";
         }
-        
-        
+
+
         echo "<div $additionalinfo $styles width='$width' class='gsucell  $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
 
         if ($this->factory->isMobile() && $gsrowmode == "") {
@@ -464,12 +464,13 @@ class Page {
                         <table width='100%'>
                             <tr>
                                 <td valign="top">
-                                    <select>
+                                    <? echo $this->factory->__w("Select a background image for the outer area of this cell."); ?>
+        <!--                                    <select>
                                         <option><? echo $this->factory->__w("Cover"); ?></option>
                                         <option><? echo $this->factory->__w("Center"); ?></option>
                                         <option><? echo $this->factory->__w("100% width"); ?></option>
                                         <option><? echo $this->factory->__w("Normal"); ?></option>
-                                    </select>
+                                    </select>-->
                                 </td>
                                 <td align='right'>
                                     <div class="inputWrapper">
@@ -488,12 +489,13 @@ class Page {
                         <table width='100%'>
                             <tr>
                                 <td valign="top">
-                                    <select>
+                                    <? echo $this->factory->__w("Select a background image for the inner area of this cell."); ?>
+        <!--                                    <select>
                                         <option><? echo $this->factory->__w("Cover"); ?></option>
                                         <option><? echo $this->factory->__w("Center"); ?></option>
                                         <option><? echo $this->factory->__w("100% width"); ?></option>
                                         <option><? echo $this->factory->__w("Normal"); ?></option>
-                                    </select>
+                                    </select>-->
                                 </td>                                
                                 <td align='right'>
                                     <div class="inputWrapper">
@@ -507,21 +509,46 @@ class Page {
                     </div> 
                 </div>
 
-                <div class='gsheading'><? echo $this->factory->__w("Spacing"); ?></div>
+                <div class='gsheading'><? echo $this->factory->__w("Other attributes"); ?></div>
 
                 <div class='gscssattributes'>
                     <div class="gscssrow">
+                        <? echo $this->factory->__w("Background color"); ?> <span class="gscssinput">
+                            <input type='text' data-attr="background-color" style='width:60px; padding:0px;'>
+                            <div id="colorSelector" style='display:inline-block; width: 20px; height: 15px; border: solid 1px #bbb;padding: 1px;text-align: center;'>
+                                <div>
+                                    <i class="fa fa-eyedropper"></i>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="gscssrow">
+                        <? echo $this->factory->__w("Text color"); ?> <span class="gscssinput">
+                            <input type='text' data-attr="color" style='width:60px; padding:0px;'>
+                            <div id="colorSelector2" style='display:inline-block; width: 20px; height: 15px; border: solid 1px #bbb;padding: 1px;text-align: center;'>
+                                <div>
+                                    <i class="fa fa-eyedropper"></i>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                    <div style='clear:both;'></div>
+                    <div class="gscssrow">
                         <? echo $this->factory->__w("Left spacing"); ?> <span class="gscssinput"><input type='text' data-attr="padding-left" data-prefix="px">px</span>
                     </div>
+                    <div style='clear:both;'></div>
                     <div class="gscssrow">
                         <? echo $this->factory->__w("Top spacing"); ?> <span class="gscssinput"><input type='text' data-attr="padding-top" data-prefix="px">px</span>
                     </div>
+                    <div style='clear:both;'></div>
                     <div class="gscssrow">
                         <? echo $this->factory->__w("Bottom spacing"); ?> <span class="gscssinput"><input type='text' data-attr="padding-bottom" data-prefix="px">px</span>
                     </div>
+                    <div style='clear:both;'></div>
                     <div class="gscssrow">
                         <? echo $this->factory->__w("Right spacing"); ?> <span class="gscssinput"><input type='text' data-attr="padding-right" data-prefix="px">px</span>
                     </div>
+                    <div style='clear:both;'></div>
                 </div>
             </div>
 
@@ -531,6 +558,18 @@ class Page {
         </span>
         <script>
             $('.gsresizingpanel').draggable({handle: ".heading"});
+            $('#colorSelector').ColorPicker({ onChange: function (hsb, hex, rgb) {
+                var field = $('[data-attr="background-color"]');
+                field.val("#" + hex);
+                field.ColorPickerHide();
+                field.keyup();
+            }});
+            $('#colorSelector2').ColorPicker({ onChange: function (hsb, hex, rgb) {
+                var field = $('[data-attr="color"]');
+                field.val("#" + hex);
+                field.ColorPickerHide();
+                field.keyup();
+            }});
         </script>
         <?
     }
@@ -613,8 +652,7 @@ class Page {
             #text{
                 color:#034a92;
                 float:right;
-
-            }                    
+            }
         </style>
         <?
     }
@@ -642,7 +680,7 @@ class Page {
     public function printContainerSettings($doCarousel, $cell, $depth) {
         $config = $cell->carouselConfig;
         $height = $config->height;
-        if($this->factory->isMobile() || $this->editCarouselForMobile()) {
+        if ($this->factory->isMobile() || $this->editCarouselForMobile()) {
             $height = $config->heightMobile;
         }
         ?>
@@ -749,7 +787,7 @@ class Page {
         if (!$this->factory->isEditorMode() || $this->factory->isMobile()) {
             return;
         }
-        if($this->editCarouselForMobile()) {
+        if ($this->editCarouselForMobile()) {
             $hideBg = "data-hideouterbg='true'";
         }
         ?>
@@ -780,7 +818,7 @@ class Page {
             echo "<i class='fa fa-circle gscarouseldot $activeCirle' cellid='$cellid'></i>";
         }
         if ($this->factory->isEditorMode() && !$this->factory->isMobile()) {
-            if($this->editCarouselForMobile()) {
+            if ($this->editCarouselForMobile()) {
                 echo "<i class='fa fa-plus addcarouselrow gsoperatecell' type='addrow' target='container' mode='rowmobile' title='" . $this->factory->__w("Add another slider") . "'></i>";
             } else {
                 echo "<i class='fa fa-plus addcarouselrow gsoperatecell' type='addrow' target='container' title='" . $this->factory->__w("Add another slider") . "'></i>";
@@ -925,7 +963,7 @@ class Page {
         if ($parent != null && $parent->mode == "TAB") {
             echo "<div class='gstabcontent'>";
         }
-            
+
         if (sizeof($cell->cells) > 0) {
             $counter = 0;
             $depthprint = $depth + 1;
@@ -1059,35 +1097,35 @@ class Page {
             if ($parent && $parent->mode == "ROTATING") {
                 $target = "target='container'";
             }
-            
-                echo "<span class='gseditrowbuttons'>";
-                echo "<span class='fa-stack'>";
-                echo '<i class="fa fa-circle fa-stack-2x"></i>';
-                echo "<i title='" . $this->factory->__w("Move row up") . "' class='fa fa-arrow-up gsoperatecell fa-stack-1x' type='moveup' mode='INIT' $target></i>";
-                echo "</span>";
-                
-                echo "<span class='fa-stack'>";
-                echo '<i class="fa fa-circle fa-stack-2x"></i>';
-                echo "<i title='" . $this->factory->__w("Delete row") . "' class='fa gsoperatecell fa-trash-o  fa-stack-1x'  type='delete' $target></i>";
-                echo "</span>";
-                
-                echo "<span class='fa-stack gsadvancedlayoutmode'>";
-                echo '<i class="fa fa-circle fa-stack-2x"></i>';
-                echo "<i title='" . $this->factory->__w("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o  fa-stack-1x' $target></i>";
-                echo "</span>";
-                
-                echo "<span class='fa-stack'>";
-                echo '<i class="fa fa-circle fa-stack-2x"></i>';
-                echo "<i title='" . $this->factory->__w("Add row below") . "' class='fa fa-plus simpleaddrow fa-stack-1x' type='addafter' mode='INIT' $target></i>";
-                echo "</span>";
-                
-                echo "<span class='fa-stack'>";
-                echo '<i class="fa fa-circle fa-stack-2x"></i>';
-                echo "<i title='" . $this->factory->__w("Move row down") . "' class='fa fa-arrow-down gsoperatecell fa-stack-1x' type='movedown' mode='INIT' $target></i>";
-                echo "</span>";
-                
-                
-                echo "</span>";
+
+            echo "<span class='gseditrowbuttons'>";
+            echo "<span class='fa-stack'>";
+            echo '<i class="fa fa-circle fa-stack-2x"></i>';
+            echo "<i title='" . $this->factory->__w("Move row up") . "' class='fa fa-arrow-up gsoperatecell fa-stack-1x' type='moveup' mode='INIT' $target></i>";
+            echo "</span>";
+
+            echo "<span class='fa-stack'>";
+            echo '<i class="fa fa-circle fa-stack-2x"></i>';
+            echo "<i title='" . $this->factory->__w("Delete row") . "' class='fa gsoperatecell fa-trash-o  fa-stack-1x'  type='delete' $target></i>";
+            echo "</span>";
+
+            echo "<span class='fa-stack gsadvancedlayoutmode'>";
+            echo '<i class="fa fa-circle fa-stack-2x"></i>';
+            echo "<i title='" . $this->factory->__w("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o  fa-stack-1x' $target></i>";
+            echo "</span>";
+
+            echo "<span class='fa-stack'>";
+            echo '<i class="fa fa-circle fa-stack-2x"></i>';
+            echo "<i title='" . $this->factory->__w("Add row below") . "' class='fa fa-plus simpleaddrow fa-stack-1x' type='addafter' mode='INIT' $target></i>";
+            echo "</span>";
+
+            echo "<span class='fa-stack'>";
+            echo '<i class="fa fa-circle fa-stack-2x"></i>';
+            echo "<i title='" . $this->factory->__w("Move row down") . "' class='fa fa-arrow-down gsoperatecell fa-stack-1x' type='movedown' mode='INIT' $target></i>";
+            echo "</span>";
+
+
+            echo "</span>";
         }
     }
 
@@ -1171,35 +1209,35 @@ class Page {
     }
 
     public function getCellsToPrint($cells, $mode) {
-        
-        if($this->factory->isMobile()) {
+
+        if ($this->factory->isMobile()) {
             $result = array();
-            foreach($cells as $innercell) {
-                if(!$innercell->hideOnMobile) {
+            foreach ($cells as $innercell) {
+                if (!$innercell->hideOnMobile) {
                     $result[] = $innercell;
                 }
             }
 
             return $result;
         }
-        
-        if($mode == "ROTATING" && $this->editCarouselForMobile()) {
+
+        if ($mode == "ROTATING" && $this->editCarouselForMobile()) {
             $result = array();
-            foreach($cells as $innercell) {
-                if(!$innercell->hideOnMobile) {
+            foreach ($cells as $innercell) {
+                if (!$innercell->hideOnMobile) {
                     $result[] = $innercell;
                 }
             }
             return $result;
         }
-        
+
         $result = array();
-        foreach($cells as $cell) {
-            if(!$cell->hideOnDesktop) {
+        foreach ($cells as $cell) {
+            if (!$cell->hideOnDesktop) {
                 $result[] = $cell;
             }
         }
-        
+
         return $result;
     }
 

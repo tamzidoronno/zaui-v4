@@ -499,9 +499,15 @@ a img {
     font-size: 16px;    */
 }
 
+.gs_overlay_row_highlighter_bottom {
+    border-top: solid 1px #DDD;
+}
+.gs_overlay_row_highlighter_top {
+    border-bottom: solid 1px #DDD;
+}
 .gs_overlay_row_highlighter {
     position: absolute;
-    background-color: rgba(0,0,0,0.9);
+    background-color: rgba(255,255,255,0.97);
     z-index: 20;
     background-image: url('hatched.png');
 }

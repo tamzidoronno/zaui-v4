@@ -499,6 +499,13 @@ a img {
     font-size: 16px;    */
 }
 
+.gs_overlay_row_highlighter {
+    position: absolute;
+    background-color: rgba(0,0,0,0.9);
+    z-index: 20;
+    background-image: url('hatched.png');
+}
+
 .errorform .description,
 .errorform .title {
     width: 600px;
@@ -612,7 +619,7 @@ a img {
     background-position: right;
     padding-left: 5px;
 }
-body { overflow: hidden !important; }
+body { overflow: hidden !important; position: relative; }
 .helpbox .close_feedback {
     display:none;
     padding-left: 5px;

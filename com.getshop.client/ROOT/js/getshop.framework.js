@@ -1167,11 +1167,18 @@ thundashop.framework = {
         }
         var cellobj = thundashop.framework.findCell(cellid);
 
-
-        if (type === "delete" && !confirm("Are you sure you want to delete this cell and all its content?")) {
-            return;
+        if (type === "delete" && $(cellobj).hasClass('gsdepth_0')) {
+            thundashop.framework.highlightRow(cellid);
         }
-
+        
+        if (type === "delete" && !confirm("Are you sure you want to delete this cell and all its content?")) {
+            thundashop.framework.stopHighlightRow();
+            return;
+        } else {
+            thundashop.framework.stopHighlightRow();
+        }
+        
+        
         if (cellobj.length === 0) {
             cellobj = $('.gscontainercell[cellid="' + cellid + '"]');
         }
@@ -1322,6 +1329,29 @@ thundashop.framework = {
             }
         }
     },
+    highlightRow: function(cellid) {
+        var cell = $('div[cellid="'+cellid+'"]');
+        
+        var top = cell.offset().top;
+        $('.gs_overlay_row_highlighter.gs_overlay_row_highlighter_top').css('height', top+'px');
+        $('.gs_overlay_row_highlighter.gs_overlay_row_highlighter_top').css('top', '0px');
+        $('.gs_overlay_row_highlighter.gs_overlay_row_highlighter_top').css('left', '0px');
+        $('.gs_overlay_row_highlighter.gs_overlay_row_highlighter_top').css('right', '0px');
+        $('.gs_overlay_row_highlighter.gs_overlay_row_highlighter_top').show();
+        
+        var rowHeight = cell.outerHeight(true);
+        $('.gs_overlay_row_highlighter.gs_overlay_row_highlighter_bottom').css('top', (top+rowHeight)+'px');
+        $('.gs_overlay_row_highlighter.gs_overlay_row_highlighter_bottom').css('left', '0px');
+        $('.gs_overlay_row_highlighter.gs_overlay_row_highlighter_bottom').css('right', '0px');
+        $('.gs_overlay_row_highlighter.gs_overlay_row_highlighter_bottom').css('bottom', '0px');
+        $('.gs_overlay_row_highlighter.gs_overlay_row_highlighter_bottom').show();
+        
+        
+    },
+    stopHighlightRow: function() {
+        $('.gs_overlay_row_highlighter.gs_overlay_row_highlighter_bottom').hide();
+        $('.gs_overlay_row_highlighter.gs_overlay_row_highlighter_top').hide();
+    },
     submitFromEvent: function (event) {
         var target = $(event.target);
         thundashop.framework.submitFromElement(target);
@@ -1437,6 +1467,7 @@ thundashop.framework.rowPicker = {
     },
     
     close: function() {
+        thundashop.framework.stopHighlightRow();
         var pickerDom = $('.gs_rowpicker_box');
         if (thundashop.framework.rowPicker.slidedirection) {
             pickerDom.hide("slide", { direction: thundashop.framework.rowPicker.slidedirection }, 250);
@@ -1469,6 +1500,7 @@ thundashop.framework.rowPicker = {
     },
     
     selected: function() {
+        thundashop.framework.stopHighlightRow();
         thundashop.framework.rowPicker.lastCallBackData.direction = $(this).attr('direction');
         thundashop.framework.rowPicker.callBackFunction(thundashop.framework.rowPicker.lastCallBackData);
     },
@@ -1479,6 +1511,7 @@ thundashop.framework.rowPicker = {
         thundashop.framework.rowPicker.callBackFunction = callback;
         thundashop.framework.rowPicker.lastCallBackData = callbackData;
         
+        var rowCellId = $(target).closest('.gsrow').attr('cellid');
         var pickerDom = $('.gs_rowpicker_box');
         
         pickerDom.removeClass('shadowsadded');
@@ -1521,6 +1554,7 @@ thundashop.framework.rowPicker = {
             return;
         }
         
+        thundashop.framework.highlightRow(rowCellId);
         $(pickerDom).hide();
         thundashop.framework.rowPicker.lastx = startx;
         thundashop.framework.rowPicker.lasty = starty;

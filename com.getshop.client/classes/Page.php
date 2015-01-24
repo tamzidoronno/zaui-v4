@@ -1089,7 +1089,7 @@ class Page {
     }
 
     public function printRowEditButtons($depth, $edit, $parent) {
-        if ($depth === 0 && !$edit && $this->factory->isEditorMode()) {
+        if ($depth < 2 && !$edit && $this->factory->isEditorMode()) {
             $target = "";
             if ($parent && $parent->mode == "TAB") {
                 $target = "target='container'";
@@ -1098,6 +1098,10 @@ class Page {
                 $target = "target='container'";
             }
 
+            if($depth == 1 && ($parent->mode != "TAB" &&  $parent->mode != "ROTATING")) {
+                return;
+            }
+            
             echo "<span class='gseditrowbuttons'>";
             echo "<span class='fa-stack'>";
             echo '<i class="fa fa-circle fa-stack-2x"></i>';

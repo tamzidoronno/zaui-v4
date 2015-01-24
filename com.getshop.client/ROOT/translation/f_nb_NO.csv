@@ -10,7 +10,7 @@ A unique identifier for the product.;-;En unik identifikasjonskode
 Accept;-;Godta
 Accessed when;-;Aksesert siden:
 Account number;-;Konto nummer
-Acivated modules;-;Aktiver moduler
+Acivated modules;-;Aktiverte moduler
 Action;-;Handling
 Activate;-;Aktiver
 Activate / Deactivate pdf button;-;Aktiver / Dekativer pdf-knapp
@@ -36,6 +36,7 @@ Add comment;-;Legg til kommentar
 Add content to this cell;-;Legg til innhold for denne cellen.
 Add coupons;-;Legg til kuponger
 Add image;-;Legg til bilde
+Add more attraction to your website by activeting our marketing module;-;Bruk applikasjonene i denne modulen for å få mer oppmerksomhet rundt din nettside.
 Add more coupons;-;Legg til flere kuponger
 Add product(s) to this area;-;Legg til produkter i dette området
 Add products to list above;-;Legg til produkter i listen over
@@ -74,6 +75,7 @@ Answering your customers questions, means more sale. By adding this excellent ch
 Application management;-;Applikasjons styring
 Applications;-;Applikasjoner
 Are customers required to register to order?;-;Er det påkrevd at kundene skal registere seg for å handle?
+Are you interested in numbers? how are you performing, how many sms have you sent etc.;-;Er du instressert i tall? Bruk appene her for å få litt statistikk over din side.
 Are you sure that you want to remove this application?;-;Er du sikker på at du ønsker å fjerne denne applikasjonen?
 Are you sure want to delete this list?;-;Er du sikker på at du ønsker å slette denne listen?
 Are you sure you want to delete the account?;-;Er du sikker på at du ønsker å slette denne kontoen?
@@ -102,6 +104,7 @@ By clicking the button above you will be able to add an application to this area
 By enabling testmode for sisow, you will be able to test the payment solutions in sandbox mode.;-;Når du aktiverer testmode, så vil sisow betalingsmetoden settes i en sandbox mode. Ingen betalinger vil bli registrert
 By enabling this function the stock quantities will be modified when a customer has done the checkout routine.;-;Ved å aktivere denne funksjonen vil du få muligheten til å vise antall produkter på lager.
 By turning on this feature you will set this application to be visible on all pages.;-;Ved å skru på denne funksjonen vil denne applikasjonen bly synlig på alle sider.
+CMS, activate this module to get all the tools you need to add text, images, movies etc.;-;Denne modulen gir deg alt du trenger for å sette opp innholdet på din nettside.
 Cancel;-;Avbryt
 Category list;-;Kategori liste
 Change image;-;Endre bilde
@@ -114,13 +117,17 @@ Click on the chat icon in the top menu and start translating.;-;Trykk på chat i
 Click on the disk above to upload a file.;-;Trykk på disketten over for å laste opp flere bilder til produktet.
 Click on the icon in the top admin menu under category More to gain access to your reporting page.;-;Trykk på ikonet i toppmenyen under kategorien "Mer" for å få tilgang til rapportsiden.
 Click the create application button and you will automatically get a form which sends you email directly to your email address when someone use this form.;-;Trykk på opprett applikasjons knappen og du vil automatisk få ett skjema hvor epost blir sendt til deg automatisk når noen bruker den.
+Click to activate application;-;Trykk for å aktivere
+Click to activate theme;-;Trykk for å aktivere
 Click to add application;-;Legg til ny applikasjon
 Click to change subject;-;Trykk får i endre tittel
 Click to delete;-;Trykk for å slette
+Click to remove application;-;Trykk for å fjern applikasjon
 Close;-;Lukk
 Colors;-;Farger
 Column;-;Kolonne
 Company Name;-;Selskapsnavn
+Configure;-;Konfigurer
 Configure this application if you want to send email from a different email provider en the default one for GetShop;-;Konfigurer denne applikasjonen hvis du ønsker å sende eposter fra en annen epost leverandør enn den som er brukt for GetShop.
 Configure your starting point;-;Konfigurer dinn start punkt
 Confirm entry;-;Bekreft innlegg
@@ -129,6 +136,7 @@ Connected;-;Tilkoblet
 Contact email;-;Kontakt epost
 Contact form;-;Kontaktskjema
 Contact form configuration;-;Kontakt skjema konfigurasjon
+Content Management;-;Applikasjoner for innhold
 Cookie warning;-;Cookie advarsel
 Count;-;Antall
 Coupon name;-;Kupong navn
@@ -255,9 +263,11 @@ MailManager;-;Epost behandler
 Main email address;-;Hoved epostaddresse
 Main order email;-;Hvordan skal mailen se ut?
 Make sure that the password you wrote above is the correct.;-;Må gjenta passordet for å være sikker på at du har skrevet inn riktig passord
+Mandatory;-;Obligatorisk
 Manually select a color;-;Manuelt velg en farge
 Mark as done;-;Merk som ferdig
 Markers;-;Markører
+Marketing;-;Markedsføring
 Menu Editor;-;Meny editor
 Menu editor;-;Meny editor
 Merchant id;-;Merchant id
@@ -309,6 +319,7 @@ OrderManager;-;Ordrebehandling
 Orders;-;Ordrer
 Orders added;-;Ordrer lagt til
 Orders created summary;-;Oppsummering over ordrer opprettet
+Other applications;-;Andre applikasjoner
 Overall;-;Overalt
 Overview;-;Oversikt
 Page;-;Side
@@ -353,6 +364,7 @@ Remove image;-;Fjern bilde
 Rename;-;Gi nytt navn
 Repeat password password;-;Gjenta passordet
 Reporting;-;Rapportering
+Reports;-;Rapporter
 Reset code is;-;Gjensettelse kode er
 Reset permissions;-;Fjern rettighetene
 Return stock if order is canceled?;-;Returner til lager hvis kanselert?
@@ -490,6 +502,7 @@ UA;-;UA
 Unlink entry;-;Frakoble element
 Unlock complete modules ready for use. A module contains multiple applications and is a larger piece that can be used in you webpage.;-;Ta i bruk noen av våre moduler. En modul innholder flere applikasjoner og utgjør derfor en større del av systemet som kan benyttes på din webside.
 Updating;-;Oppdaterer
+Upgrade your website to become a fully customizable e-commerce solution. We offer a variouse of payment methods!;-;Oppgrader nettsiden din til å bli en fullverdig plattform for nettbutikk.
 Uplaod image;-;Last opp bilde
 Upload image;-;Last opp bilde
 Uploading logo;-;Last opp logo
@@ -508,6 +521,7 @@ Viewed when;-;Vist sist
 Warn users that cookies are being stored from this site?;-;Advar brukere at cookies blir brukt på denne siten?
 Warning! this store will automatically be reset to original state each hour;-;Advasel! Systemet vil automatisk bli satt tilbake til sin originale stand hver time.
 Warning. you are not connected as a partner yet, please contact getshop support!;-;Advarsel. du er ikke koblet til en partner enda, vennligst kontakt getshop support!
+We have not found a module that this applications fits into. If you have a suggestion where this applications belongs, please let us know by emailing post@getshop.com.;-;Denne modulen innholder alle appene som ikke ligger i den andre modulene.
 Web address;-;Web adresse
 Welcome to email settings.;-;Velkommen til epost-instillinger
 What is deepfreeze? Well, if you activate deepfreeze you basically put all options on hold, all changes made after deepfreezeing will be purged each hour.;-;Hva er deepfreeze? Deepfreeze fryser ned systemet og gjennoppretter systemet hver time.

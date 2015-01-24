@@ -428,7 +428,6 @@ public class PageManager extends ManagerBase implements IPageManager {
             }
             
             if(tabcell == null) {
-                System.out.println("Tab area not found.... need to add one");
                 String cell = page.layout.createCell("", "", PageCell.CellMode.tab, "body");
                 tabcell = page.layout.getCell(cell);
                 tabcell.cells = new ArrayList();

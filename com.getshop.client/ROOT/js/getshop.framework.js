@@ -241,11 +241,14 @@ thundashop.framework = {
         var attr = target.attr('data-attr');
         var level = target.attr('data-level');
         var prefix = target.attr('data-prefix');
+        thundashop.framework.removeCss(attr, cellid);
+        if(!val) {
+            return;
+        }
         if (prefix) {
             val += prefix;
         }
         var cellid = target.closest('.gsresizingpanel').attr('cellid');
-        thundashop.framework.removeCss(attr, cellid);
         thundashop.framework.addCss(attr, val, cellid, level);
     },
     loadCssAttributes: function () {
@@ -735,6 +738,7 @@ thundashop.framework = {
         var endPos = css.indexOf("}", startPos);
         css = css.substring(0, endPos) + "\t" + attribute + " : " + value + ";\n " + css.substring(endPos);
         thundashop.framework.setCss(id, css);
+        css = css.trim();
         cssEditorForCell.setValue(css);
 
     },
@@ -747,11 +751,11 @@ thundashop.framework = {
             cell = cell.find(level).first();
         }
 
+        thundashop.framework.removeCss('background-repeat', cellid);
+        thundashop.framework.removeCss('background-position', cellid);
+        thundashop.framework.removeCss('background-size', cellid);
+        thundashop.framework.removeCss('background-image', cellid);
         if ($(this).hasClass('gsremovebgimage')) {
-            thundashop.framework.removeCss('background-repeat', cellid);
-            thundashop.framework.removeCss('background-position', cellid);
-            thundashop.framework.removeCss('background-size', cellid);
-            thundashop.framework.removeCss('background-image', cellid);
             return;
         }
 

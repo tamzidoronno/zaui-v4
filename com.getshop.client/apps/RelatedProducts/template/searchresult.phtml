@@ -1,7 +1,8 @@
 <?
 /* @var $this \ns_3cdcd5e5_b3e8_4fa1_9125_bef44fa6a082\RelatedProducts */
 
-$res = $this->getApi()->getProductManager()->search($_SESSION['add_related_products_seachword'], 50, 1);
+$searchword = isset($_SESSION['add_related_products_seachword']) ? $_SESSION['add_related_products_seachword'] : "";
+$res = $this->getApi()->getProductManager()->search($searchword, 10, 1);
 
 if (!count($res->products)) {
     echo $this->__f("No result found");

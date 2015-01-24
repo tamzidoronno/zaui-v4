@@ -9,12 +9,14 @@ A confirmation email has been sent to your email. Enjoy your stay at {hotel}.;-;
 A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
 Add a button to your page. This button can be a add to cart button, go to page button, etc;-;Legg til en knapp på websiden din. Knapper som legg i handlekurv, gå til en annen side, osv.
 Add a room;-;Legg til et rom
+Add another slide;-;Legg til en til slider
 Add another slider;-;Legg inn til slider
 Add another tab;-;Legg inn en til tab
 Add content to slider;-;Innhold på slideren
 Add google maps to your page, pin point locatins and restrict it to a given area, and even connect the locations to a given page.;-;Legg inn kart på websiden din, pin lokasjoner og begrens områdene for hvor du kan se, du kan til og med knytte opp lokasjoner mot andre websider.
 Add menus to your page and administrate them. Menus are the root of all pages, adding a new menu entry is the same as creating a new page.;-;Legg til menyer og administrer dem. Menyer er selve roten til alle sidene, det å legge til et nytt meny entry er det samme som å opprette en ny side.
 Add row below;-;Legg til en rad under
+Add slides for carousel to mobile view;-;Legg til slidere som skal vises i mobil visning
 Add spacing to grid;-;Legg til midlertidig spacing
 Add text to your page with one of the best text editors on the web for manipulating text.;-;Legg inn tekst på websiden din med en av de beste tekst editorene for web.
 Add this to the header or to the body to make a new login form, can be added anywhere on the page.;-;Legge denne i headeren eller på hoveddelen av siden for å lage en ny pålogginsområde. 
@@ -30,9 +32,11 @@ An email has been sent to you with the confirmation code.;-;En godkjennings kode
 Application;-;Applikasjoner
 Apply coupon;-;Bruk kupong
 April;-;April
+Attributes;-;Attributter
 August;-;August
 Available positions;-;Ledige plasser
 BOOK A ROOM AT;-;BOOK ET ROM HOS
+Background color;-;Bakgrunns farger
 Background image / styling;-;Bakgrunnsbilde / Styling
 Birth Date;-;Fødselsdato
 Birth date;-;Fødselsdato
@@ -71,10 +75,12 @@ Choose;-;Velg
 City;-;By
 Cleaning 49,- each clean;-;Vask 49,- per gang.
 Click next to select shipping options;-;Trykk neste for å velge en betalings metode
+Comments;-;Kommentarer
 Company;-;Selskap
 Company name;-;Firmanavn
 Complete the order;-;Fullfør reservasjon
 Completed;-;Gjennomført
+Configure mobile slides;-;Konfigurer mobil slidere
 Confirm order;-;Bekreft ordre
 Contact information;-;Kontaktinformasjon
 Container operations;-;Operasjoner for kontaineren
@@ -127,6 +133,7 @@ Full name;-;Hele navnet
 Got a coupon from use? Apply it and get discount.;-;Har du en kupong? bruk den her
 Group;-;Gruppe
 Height (px);-;Høyde (px)
+Height (px) mobile;-;Høyde (px) mobil
 Hide on mobile;-;Ikke vis på mobilen
 How can I help you today ?;-;Hva kan jeg hjelpe deg med?
 I agree to the terms and conditions;-;Jeg godtar bruksvilkårene
@@ -134,6 +141,7 @@ I am sorry, but all fields are required before sending a message.;-;Beklager, me
 I have a partnership deal;-;Jeg har et referansenummer
 Image;-;Bilde
 Image carousel;-;Bilde karusell
+Information;-;Informasjon
 Inner background;-;Indre bakgrunn
 Insert column;-;Sett inn kolonne
 Insert column to the left;-;Legg inn en kolonne til venstre
@@ -144,6 +152,7 @@ Invalid payment method;-;Ugyldig betalings metode
 Invoice email;-;Epost Teknisk Leder
 InvoicePayment;-;Faktura
 Is private person;-;Er privat person
+It's all about selling products online, GetShop is where you start!;-;Det handler å selge produkter online, GetShop er hvor du starter!
 Items;-;Elementer
 January;-;Januar
 July;-;Juli
@@ -176,6 +185,7 @@ Move tab to the right;-;Flytt tab til høyre
 Move up on mobile;-;Flytt opp på mobilen
 Mva registered;-;Registrert i mva registeret
 My account;-;Min konto
+My images speeks for itself;-;Mine bilder snakker for seg selv
 My name is:;-;Mitt navn er
 Name;-;Navn
 Name of your shop;-;Navn på din nettbutikk
@@ -184,7 +194,11 @@ New password;-;Nytt passord
 New room type;-;Ny rom type
 NewsLetter;-;Nyhetsbrev
 Next;-; Neste
+Nice modern theme. Could be used for clothing, skateboarding, snowboarding etc.;-;Fint moderne tema. Kan bli brukt for klær, skateboards, snowbards, osv.
+Nice modern theme. Suitable for different carmarkeds.;-;Pent og moderne tema. Godt brukbart i bil markedet.
 No;-;Nei
+No header uploaded for mobile landscape mode yet, please upload one.;-;Ingen header har blitt lastet opp for landskaps modus på mobil enda, vennligst last opp et.
+No header uploaded for mobile potrait mode yet, please upload one.;-;Ingen header har blitt lastet opp for potrait modus på mobil enda, vennligst last opp et.
 No items;-;Ingen elementer
 No rooms are available for this time periode.;-;Ingen rom er tilgjengelig i valgt tidsperiode.
 Normal;-;Normal
@@ -203,6 +217,7 @@ Organisation number;-;Organisasjonsnummer
 Organisation number has to be 9 digits long.;-;Organisasjonsnummeret må bestå av 9 siffer 
 Original (hp);-;Orginal hp
 Original (nm);-;Original nm
+Other attributes;-;Ingen attributter
 Other operations;-;Andre operasjoner
 Our local time is:;-;Vår lokale tid er
 Outer background;-;Ytre bakgrunn
@@ -222,6 +237,7 @@ Payment information;-;Betalings informasjon
 Payment successfully completed;-;Betalingen gjennomført
 Phone;-;Telefon
 Pin area;-;Pin til område
+PixelateTheme1;-;PixelateTheme1
 Place order;-;Legg inn ordre
 Please check your delivery options.;-;Vennligst sjekk dine leveringsmetoder.
 Please enter the reference number provided by;-;Vennligst skriv inn referansenummeret du har fått utdelt.
@@ -254,6 +270,7 @@ Reference key;-;Referanse nummer
 Reference number;-;Referanse nummer
 Register;-;Registrer
 Registration details;-;Registrerings detaljer.
+Related products;-;Relaterte produkter
 Reminder;-;Påminnelse
 Reminder sent by email;-;En påmindelse har blitt sendt per epost.
 Remove item;-;Fjern vare
@@ -274,6 +291,8 @@ Save settings;-;Lagre instillinger
 Search for a product;-;Søk etter et produkt
 Search for the company you want to enter by clicking the button above, and this box will be filled automatically.;-;Søk etter firma ved å trykke på knappen over.
 Searching....;-;Søker....
+Select a background image for the inner area of this cell.;-;Velg et bakgrunds bilde for den indre cellen.
+Select a background image for the outer area of this cell.;-;Velg et bakgrunds bilde for den ytre cellen.
 Select a room;-;Velg et rom
 Select size;-;Velg størrelse
 Select start date;-;Velg start dato
@@ -319,6 +338,7 @@ Tab name;-;Tab navn
 Tab settings;-;Tab instillinger
 Taxes;-;Skatter
 Terms and Conditions;-;Bruksvilkår
+Text color;-;Tekst farge
 Text editor;-;Tekst editor
 Th;-;To
 Thank you for checking into our hotel. A confirmation mail has been sent to your email.;-;Takk for at du sjekker inn på vårt hotel. En bekreftelse er sendt til din e-post.
@@ -342,6 +362,7 @@ This event has the following entries;-;Dette kurset finner du i kalenderen på f
 This is a {} days event.;-;Dette er et {} dagers event.
 This user has not attended any events yet;-;Denne brukeren har ikke deltatt på noen eventer enda
 Thursday;-;Torsdag
+Timeless black and white design.;-;Tidsløst svart og hvitt design
 Timer (ms);-;Timer (ms)
 To be able to serve you we need to store a tiny amount of data about your browser. An identification id is being generated and added to your web browser. This allows us to track you for a two hours periode while you are navigating this site. This data is anonymous and are only being used to identify your web browser and not you as a person.;-;For at det skal være mulig bruke denne web siden må vi lagre en liten bit av data på din nettleser. Dette er en identifikasjons id som gjør det mulig å identifisere deg som en bruker mens du surfer på denne siden. Denne dataen blir lagret i 20 timer og er 100% anonym.
 Top spacing;-;Øvre spacing
@@ -385,6 +406,7 @@ Your order has now been completed and is waiting to be shipped.;-;Orderen din ha
 Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;Du vil snart motta en epost med din ebill, eller så kan du last den ned på følgende link
 Your personal information;-;Din personlige informasjon
 Your phonenumber;-;Ditt tlf nr
+Your you for your order;-;Deg du for dine ordrer
 available room;-;tilgjengelige rom
 available rooms;-;tilgjengelige rom
 change;-;endre

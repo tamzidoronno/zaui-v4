@@ -21,6 +21,7 @@ import com.thundashop.core.getshop.data.PartnerData;
 import com.thundashop.core.getshop.data.StartData;
 import com.thundashop.core.getshop.data.WebPageData;
 import com.thundashop.core.messagemanager.MailFactory;
+import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;

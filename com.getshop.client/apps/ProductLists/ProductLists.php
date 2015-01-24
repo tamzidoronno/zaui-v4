@@ -17,6 +17,12 @@ class ProductLists extends \ApplicationBase implements \Application {
             return;
         } 
         
+        $productList = $this->getApi()->getProductManager()->getProductList($this->getConfigurationSetting("productlist"));
+        if (!$productList) {
+            $this->includefile("showLists");
+            return;
+        }
+        
         $this->showProducts();
     }
     
@@ -159,5 +165,8 @@ class ProductLists extends \ApplicationBase implements \Application {
         return $this->getConfigurationSetting("searchResultList") == "true";
     }
 
+    public function deleteList() {
+        $this->getApi()->getProductManager()->deleteProductList($_POST['value']);
+    }
 }
 ?>

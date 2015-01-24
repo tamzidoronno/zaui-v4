@@ -1125,9 +1125,9 @@ thundashop.framework = {
 
         
         var selected = function(result) {
-            
-            var before = cellobj.next().attr('cellid');
-            if(result.addafter) {
+            console.log(result);
+            var before = cellobj.attr('cellid');
+            if(result.direction === "below") {
                 before = cellobj.next().attr('cellid');
                 if (cellobj.next().hasClass("gseditinfo")) {
                     before = cellobj.next().next().attr('cellid');

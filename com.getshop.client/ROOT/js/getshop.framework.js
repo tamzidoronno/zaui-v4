@@ -63,6 +63,7 @@ thundashop.framework = {
         $(document).on('mouseover', '.gscontainercell', this.showEditRowIcons);
         $(document).on('click', '.gscellheadermin', this.showCellBoxHeader);
         $(document).on('mouseout', '.gscell', this.hideEditRowIcons);
+        $(document).on('mouseout', '.gscontainercell', this.hideEditRowIcons);
         $(document).on('click', '.gseditrowbutton', this.startEditRow);
         $(document).on('click', '.gsdoneeditbutton', this.startEditRow);
         $(document).on('click', '.gs_resizing', this.showCellResizing);

@@ -60,6 +60,7 @@ thundashop.framework = {
         $(document).on('mouseenter', '.gscell', this.showCellPanel);
         $(document).on('mouseleave', '.gscell', this.mouseLeftPanel);
         $(document).on('mouseover', '.gsrow', this.showEditRowIcons);
+        $(document).on('mouseover', '.gscontainercell', this.showEditRowIcons);
         $(document).on('click', '.gscellheadermin', this.showCellBoxHeader);
         $(document).on('mouseout', '.gscell', this.hideEditRowIcons);
         $(document).on('click', '.gseditrowbutton', this.startEditRow);
@@ -1531,6 +1532,9 @@ thundashop.framework.rowPicker = {
         thundashop.framework.rowPicker.lastCallBackData = callbackData;
         
         var rowCellId = $(target).closest('.gsrow').attr('cellid');
+        if(!rowCellId) {
+            rowCellId = $(target).closest('.gscontainercell').attr('cellid');
+        }
         var pickerDom = $('.gs_rowpicker_box');
         
         pickerDom.removeClass('shadowsadded');

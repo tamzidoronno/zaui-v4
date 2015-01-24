@@ -2097,7 +2097,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00b7ea', end
     opacity: 0; text-align: center; background-color:#000; color:#FFF; position:absolute; z-index: 10; width: 100%; top: -23px; border-top-left-radius: 3px; border-top-right-radius: 3px; }
 .gscellbox .ui-resizable-handle { display:none !important; }
 .gscellbox.gsactivebox { opacity: 0.9; }
-.gseditrowbuttons { color:#000; display:none; position:absolute; right: 10px; width: 20px; text-align: center; padding: 2px; border-bottom-left-radius: 3px; border-top-left-radius: 3px; font-size: 16px; z-index: 1;}
+.gseditrowbuttons { color:#000; display:none; position:absolute; right: 10px; width: 20px; text-align: center; padding: 2px; border-bottom-left-radius: 3px; border-top-left-radius: 3px; font-size: 16px; z-index: 3;}
 .gseditrowbuttons i { cursor:pointer; }
 .gseditrowbuttons .fa-stack { height: 27px; }
 .gseditrowbuttons .fa-stack-1x { color:#fff; }

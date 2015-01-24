@@ -388,7 +388,7 @@ class Page {
             }
         }
 
-        $this->printRowEditButtons($depth, $edit, $parent);
+        $this->printRowEditButtons($depth, $edit, $cell);
         $this->printEasyModeLayer($edit, $cell, $parent);
 
         echo "<div $innerstyles class='$gscellinner gsuicell $pagewidthclass gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
@@ -1097,7 +1097,7 @@ class Page {
     }
 
     public function printRowEditButtons($depth, $edit, $parent) {
-        if ($depth < 2 && !$edit && $this->factory->isEditorMode()) {
+        if ($depth < 1 && !$edit && $this->factory->isEditorMode()) {
             $target = "";
             if ($parent && $parent->mode == "TAB") {
                 $target = "target='container'";

@@ -237,18 +237,27 @@ thundashop.framework = {
     },
     setCssAttributes: function (event) {
         var target = $(event.target);
+        var cellid = target.closest('.gsresizingpanel').attr('cellid');
+        
         var val = target.val();
         var attr = target.attr('data-attr');
         var level = target.attr('data-level');
         var prefix = target.attr('data-prefix');
         thundashop.framework.removeCss(attr, cellid);
+        
+        if(attr === "background-color") {
+            thundashop.framework.removeCss('background-repeat', cellid);
+            thundashop.framework.removeCss('background-position', cellid);
+            thundashop.framework.removeCss('background-size', cellid);
+            thundashop.framework.removeCss('background-image', cellid);
+        }
+        
         if(!val) {
             return;
         }
         if (prefix) {
             val += prefix;
         }
-        var cellid = target.closest('.gsresizingpanel').attr('cellid');
         thundashop.framework.addCss(attr, val, cellid, level);
     },
     loadCssAttributes: function () {
@@ -692,10 +701,8 @@ thundashop.framework = {
         var csslines = css.split("\n");
         var newcss = "";
         for (var key in csslines) {
-            if (csslines[key].indexOf(attribute + " :") >= 0) {
-                continue;
-            }
-            if (csslines[key].indexOf(attribute + ":") >= 0) {
+            var attr = csslines[key].split(":");
+            if (attr[0].trim() === attribute) {
                 continue;
             }
             newcss += csslines[key] + "\n";
@@ -710,11 +717,9 @@ thundashop.framework = {
         var newcss = "";
         var found = false;
         for (var key in csslines) {
-            if (csslines[key].indexOf(attribute + " :") >= 0) {
-                found = csslines[key];
-                continue;
-            }
-            if (csslines[key].indexOf(attribute + ":") >= 0) {
+            var attr = csslines[key].split(":");
+            console.log(attribute + " " + attr[0]);
+            if (attr[0].trim() === attribute) {
                 found = csslines[key];
                 continue;
             }
@@ -755,6 +760,7 @@ thundashop.framework = {
         thundashop.framework.removeCss('background-position', cellid);
         thundashop.framework.removeCss('background-size', cellid);
         thundashop.framework.removeCss('background-image', cellid);
+        thundashop.framework.removeCss('background-color', cellid);
         if ($(this).hasClass('gsremovebgimage')) {
             return;
         }
@@ -1125,7 +1131,6 @@ thundashop.framework = {
 
         
         var selected = function(result) {
-            console.log(result);
             var before = cellobj.attr('cellid');
             if(result.direction === "below") {
                 before = cellobj.next().attr('cellid');

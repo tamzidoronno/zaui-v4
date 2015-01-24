@@ -1154,7 +1154,7 @@ thundashop.framework = {
         if(cellobj.attr('cellid')) {
             thundashop.framework.rowPicker.toggleRowPicker('left', this, selected, metaData);
         } else {
-            thundashop.framework.rowPicker.toggleRowPicker('down', this, selected, metaData);
+            thundashop.framework.rowPicker.toggleRowPicker('down', this, selected, metaData, false);
         }
     },
     operateCell: function () {
@@ -1496,6 +1496,10 @@ thundashop.framework.rowPicker = {
             
         }
         
+        if (!thundashop.framework.rowPicker.showDirections) {
+            thundashop.framework.rowPicker.selected();
+            return;
+        }
         $('.gs_rowpicker_box .select_row_picker_direction').show();
         $('.gs_rowpicker_box .gs_row_picker_modes').hide();
     },
@@ -1514,7 +1518,11 @@ thundashop.framework.rowPicker = {
         thundashop.framework.rowPicker.callBackFunction(thundashop.framework.rowPicker.lastCallBackData);
     },
     
-    toggleRowPicker: function(direction, target, callback, callbackData) {
+    toggleRowPicker: function(direction, target, callback, callbackData, showDirections) {
+        if (typeof(showDirections) === "undefined") {
+            showDirections = true;
+        }
+        
         $('.gs_rowpicker_box .select_row_picker_direction').hide();
         $('.gs_rowpicker_box .gs_row_picker_modes').show();
         thundashop.framework.rowPicker.callBackFunction = callback;
@@ -1569,8 +1577,7 @@ thundashop.framework.rowPicker = {
         thundashop.framework.rowPicker.lastx = startx;
         thundashop.framework.rowPicker.lasty = starty;
         
-        
-        
+        thundashop.framework.rowPicker.showDirections = showDirections;
         thundashop.framework.rowPicker.slidedirection = slidedirection;
         pickerDom.css('top', starty);
         pickerDom.css('left', startx);

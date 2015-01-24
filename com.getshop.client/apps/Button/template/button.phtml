@@ -18,6 +18,12 @@
         $ahref = "<a href='/index.php?page=$pageid'>";
         $ahrefEnd = "</a>";
     }
+    
+    if ($type && $type == "link_to_external_page") {
+        $link = $this->getConfigurationSetting("url");
+        $ahref = "<a href='$link'>";
+        $ahrefEnd = "</a>";
+    }
 ?>
 
 <?

@@ -2,10 +2,22 @@ app.Button = {
     init: function() {
         $(document).on('click', '.Button .select_product_add_to_cart_button_setup', app.Button.setProduct);
         $(document).on('click', '.Button .shop_button_saveNewText', app.Button.saveText);
+        $(document).on('click', '.Button .save_external_page_setup_button', app.Button.saveExternalPage);
         $(document).on('change', '.Button #setup_button_search_field', app.Button.searchForProducts);
         $(document).on('change', '.Button #setup_button_type_selector', app.Button.show);
         $(document).on('keyup', '.Button #filter_pages_list', app.Button.filterPages);
         $(document).on('click', '.Button .select_button_set_link_to_internal_page', app.Button.selectInternalPage);
+    },
+    
+    saveExternalPage: function() {
+        var data = {
+            link: $('.Button #button_link_to_external_url').val()
+        };
+        
+        var event = thundashop.Ajax.createEvent(null, "setExternalPage", this, data);
+        thundashop.Ajax.post(event, function() {
+            alert(__f('Success, the button now links to the selected page'));
+        });
     },
     
     filterPages: function() {

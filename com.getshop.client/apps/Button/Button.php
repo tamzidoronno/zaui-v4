@@ -59,6 +59,11 @@ class Button extends \ApplicationBase implements \Application {
         }
     }
     
+    public function setExternalPage() {
+        $this->setConfigurationSetting("type", "link_to_external_page");
+        $this->setConfigurationSetting("url", $_POST['data']['link']);
+    }
+    
     public function setInternalPage() {
         $this->setConfigurationSetting("type", "link_to_interal_page");
         $this->setConfigurationSetting("page_id", $_POST['data']['page_id']);

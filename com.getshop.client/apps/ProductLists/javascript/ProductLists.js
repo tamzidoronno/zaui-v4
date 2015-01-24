@@ -126,7 +126,7 @@ app.ProductLists = {
     
     addedSuccesfully : function(response, field, data) {
         var button = $(field).find('.gss_addToList');
-        button.html('Remove');
+        button.html(__f('Remove'));
         button.removeClass('gss_addToList');
         button.addClass('gss_removeFromList');
         $('.gss_products_in_list').append(field);

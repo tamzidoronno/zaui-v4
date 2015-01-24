@@ -1167,19 +1167,17 @@ thundashop.framework = {
         }
         var cellobj = thundashop.framework.findCell(cellid);
 
-        if (type === "delete" && $(this).closest('.gsrow').hasClass('gsdepth_0')) {
-            var cellid = $(this).closest('.gsrow').attr('cellid');
+        if (type === "delete" && $(cellobj).hasClass('gsdepth_0')) {
             thundashop.framework.highlightRow(cellid);
         }
         
         if (type === "delete" && !confirm("Are you sure you want to delete this cell and all its content?")) {
             thundashop.framework.stopHighlightRow();
             return;
-        }
-
-        if (type === "delete" && $(this).closest('.gsrow').hasClass('gsdepth_0')) {
+        } else {
             thundashop.framework.stopHighlightRow();
         }
+        
         
         if (cellobj.length === 0) {
             cellobj = $('.gscontainercell[cellid="' + cellid + '"]');

@@ -250,6 +250,9 @@ if(isset($factory->getSettings()->languages)) {
         <div id="gsbody">
             <?php echo $html; ?>
         </div>
+        
+        <div class="gs_overlay_row_highlighter gs_overlay_row_highlighter_top"></div>
+        <div class="gs_overlay_row_highlighter gs_overlay_row_highlighter_bottom"></div>
     </body>
 </html>
 

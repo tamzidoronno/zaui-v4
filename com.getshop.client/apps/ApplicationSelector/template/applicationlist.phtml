@@ -46,8 +46,8 @@ if (count($notActivatedModuels)) {
                         <i class="fa <? echo $module->faIcon; ?> gs_fa-icon"></i>
                     </div>
                     <div class="gss_app_desc">
-                        <div style="font-size: 16px; font-weight: 700; margin-bottom: 3px;"><? echo $module->moduleName; ?> </div>
-                        <? echo $module->description; ?>
+                        <div style="font-size: 16px; font-weight: 700; margin-bottom: 3px;"><? echo $this->__f($module->moduleName); ?> </div>
+                        <? echo $this->__f($module->description); ?>
                     </div>
 
                     <div moduleId="<? echo $module->id; ?>" class="gss_activate_button gss_activateModule"> <? echo $this->__f("Activate"); ?></div>
@@ -83,10 +83,23 @@ if (count($activatedModules)) {
             <? echo $this->__f("Acivated modules"); ?>
         </div>
 
+        
         <?
+        /*
+        Added for translation:
+          $this->__f("Content Management");
+          $this->__f("Other applications");
+          $this->__f("Reports");
+          $this->__f("Marketing");
+          $this->__f("Upgrade your website to become a fully customizable e-commerce solution. We offer a variouse of payment methods!");
+          $this->__f("CMS, activate this module to get all the tools you need to add text, images, movies etc.");
+          $this->__f("We have not found a module that this applications fits into. If you have a suggestion where this applications belongs, please let us know by emailing post@getshop.com.");
+          $this->__f("Are you interested in numbers? how are you performing, how many sms have you sent etc.");
+          $this->__f("Add more attraction to your website by activeting our marketing module");
+        */
         foreach ($activatedModules as $module) {
             $icon = "<i class='fa $module->faIcon'></i>";
-            $text = $module->moduleName;
+            $text = $this->__f($module->moduleName);
             echo "<div class='gss_settings_application_modulemenulist_entry' moduleid='$module->id'>$icon $text</div>";
         }
         
@@ -111,7 +124,7 @@ foreach ($activatedModules as $module) {
                 </div>
                 <div class='gss_settings_header_description_inner'>
                     <?
-                    echo $module->description;
+                    echo $this->__f($module->description);
                     ?>	
                 </div>
 

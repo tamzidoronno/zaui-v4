@@ -156,6 +156,7 @@ Logout;-;Logg ut
 Lost your password?;-;Glemt ditt passord?
 March;-;Mars
 May;-;Mai
+Merchant ID is found in braintree account.;-;Merchant ID er noe du finner på kontoen din hos braintree.
 Message;-;Melding
 Message from a customer;-;Melding fra en kunde
 Mo;-;Ma
@@ -240,10 +241,12 @@ Postal place;-;Poststed
 Previous;-;Forrige
 Price;-;Pris
 Price and plans;-;Priser og oversikter
+Private key is found in braintree account.;-;Den privat nøkkelen er noe du finner på kontoen din hos braintree.
 Product List;-;Produktliste
 Product Search;-;Produkt søk
 Product view for your store.;-;Produkt visningen for din nettbutikk.
 Products;-;Produkter
+Public key is found in braintree account.;-;Den offentlig nøkkelen er noe du finner på kontoen din hos braintree.
 ROOM TYPE;-;Størrelse
 Read more;-;Les mer
 Recover password;-;Gjennopprett passord
@@ -261,6 +264,7 @@ Resize column;-;Endre størrelse på kolonnen
 Right spacing;-;Høyre spacing
 Row is not displayed on mobile, click for make it reappear;-;Raden vises ikke på mobiltelefon, trykk her for å vise den.
 Row options;-;Rad instillinger
+Run account in sandbox?;-;Kjør kontoen i sandbox modus?
 SELECT ROOM;-;VELG ROM
 SELECT STORAGE ROOM;-;VELG BOD
 Sa;-;Lø

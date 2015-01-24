@@ -25,7 +25,7 @@ h1 {
 .gstabrow { display:none;   }
 .gstabrow.gscount_0 { display:block;   }
 .gstabbtn { border: solid 1px #BBB; margin-right: 10px;  padding: 3px; cursor:pointer;  bottom: 0px; cursor:pointer; display:inline-block;  }
-
+.gsemptyarea {width:100%; text-align:center; display:inline-block; padding-top: 50px; padding-bottom: 50px; }
 .gstabname { width: 100%; }
 .gs_closecarouselsettings, .gsclosetabsettings,.gs_closecelledit { position:absolute; right: 4px; color:#fff; top: 1px; margin:0px !important; }
 .gstab.gscount_0 { display:block; }

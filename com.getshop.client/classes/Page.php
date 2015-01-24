@@ -47,12 +47,18 @@ class Page {
             }
             echo "</div>";
             echo "<div class='gsarea' area='body'>";
-            if (isset($layout->areas->{'body'})) {
+            if (isset($layout->areas->{'body'}) && sizeof($layout->areas->{'body'})) {
                 $edited = $this->printArea($layout->areas->{'body'});
                 if ($edited) {
                     $editedCellid = $edited;
                 }
-            }
+            } else {
+                    echo "<div class='gscell'>";
+                    echo "<div class='gsemptyarea gsinner'>";
+                    echo "<span class='shop_button'>".$this->factory->__f("Create your first row for the page")."</span>";
+                    echo "</div>";
+                    echo "</div>";
+                }
             echo "</div>";
 
 

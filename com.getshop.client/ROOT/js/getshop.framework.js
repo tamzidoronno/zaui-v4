@@ -96,6 +96,7 @@ thundashop.framework = {
         /* Cell operations */
         $(document).on('click', '.gsoperatecell', this.operateCell);
         $(document).on('click', '.simpleaddrow', this.simpleaddrow);
+        $(document).on('click', '.gsemptyarea .shop_button', this.simpleaddrow);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
     },
     
@@ -1150,8 +1151,11 @@ thundashop.framework = {
             });
             
         }
-        
-        thundashop.framework.rowPicker.toggleRowPicker('left', this, selected, metaData);
+        if(cellobj.attr('cellid')) {
+            thundashop.framework.rowPicker.toggleRowPicker('left', this, selected, metaData);
+        } else {
+            thundashop.framework.rowPicker.toggleRowPicker('down', this, selected, metaData);
+        }
     },
     operateCell: function () {
         if ($(this).closest('.gscellsettingspanel').length === 0) {
@@ -1558,8 +1562,9 @@ thundashop.framework.rowPicker = {
             thundashop.framework.rowPicker.close();
             return;
         }
-        
-        thundashop.framework.highlightRow(rowCellId);
+        if(rowCellId) {
+            thundashop.framework.highlightRow(rowCellId);
+        }
         $(pickerDom).hide();
         thundashop.framework.rowPicker.lastx = startx;
         thundashop.framework.rowPicker.lasty = starty;

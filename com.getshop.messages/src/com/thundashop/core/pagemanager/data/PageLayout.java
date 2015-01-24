@@ -15,7 +15,7 @@ public class PageLayout implements Serializable {
 
     void clear() {
         areas.put("body", new ArrayList());
-        areas.get("body").add(initNewCell(PageCell.CellMode.row));
+//        areas.get("body").add(initNewCell(PageCell.CellMode.row));
     }
 
     public void moveCell(String cellid, boolean moveUp) {

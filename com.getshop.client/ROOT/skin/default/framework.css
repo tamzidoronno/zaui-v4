@@ -534,9 +534,10 @@ a img {
 }
 
 .errorform {
+    border-radius: 3px;
+     box-shadow: 0px 0px 2px red;
     position: relative;
-    border: solid 2px red;
-    background-color: #fbf9ee;
+    background-color: #efefef;
     padding: 10px;
 }
 

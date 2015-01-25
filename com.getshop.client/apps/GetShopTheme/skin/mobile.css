@@ -8,7 +8,7 @@ body {
 .gsarea[area="header"] { height: 100px; }
 .gsarea[area="header"] .Menu { position: absolute; right: 0px; top: 60px;  }
 .gsarea[area="header"] .Menu a div { padding: 10px; color:#000; font-size: 16px; }
-.gsucell .gsinner { padding: 10px; border-radius: 3px; }
+.gsucell .gsinner.gsdepth_0 { padding: 10px; border-radius: 3px; }
 .gscell { margin-top: 20px; }
 
 .gsinner.gsdepth_0 { width: 100%; margin: 0px; }

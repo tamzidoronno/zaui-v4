@@ -62,8 +62,8 @@ thundashop.framework = {
         $(document).on('mouseover', '.gsrow', this.showEditRowIcons);
         $(document).on('mouseover', '.gscontainercell', this.showEditRowIcons);
         $(document).on('click', '.gscellheadermin', this.showCellBoxHeader);
-        $(document).on('mouseout', '.gscell', this.hideEditRowIcons);
-        $(document).on('mouseout', '.gscontainercell', this.hideEditRowIcons);
+//        $(document).on('mouseout', '.gscell', this.hideEditRowIcons);
+//        $(document).on('mouseout', '.gscontainercell', this.hideEditRowIcons);
         $(document).on('click', '.gseditrowbutton', this.startEditRow);
         $(document).on('click', '.gsdoneeditbutton', this.startEditRow);
         $(document).on('click', '.gs_resizing', this.showCellResizing);
@@ -225,7 +225,7 @@ thundashop.framework = {
         $('.gsmobileeditor').fadeIn();
 
         var sid = document.cookie.match('PHPSESSID=([^;]*)')[1];
-        var location = window.location.protocol + "//mobile." + window.location.host + "/?page=" + $('#gspageid').val() + "&PHPSESSID=" + sid;
+        var location = "http://mobile." + window.location.host + "/?page=" + $('#gspageid').val() + "&PHPSESSID=" + sid;
         $('#gscontentframe').attr('src', location);
         $('#gscontentframelandscape').attr('src', location);
     },
@@ -284,10 +284,15 @@ thundashop.framework = {
                 return;
             }
         }
+        $('.gseditrowbuttons').hide();
         thundashop.framework.showAdvancedOptions();
         var buttons = $(this).find('.gseditrowbuttons');
+        buttons.css('position','fixed');
+        buttons.css('right','10px');
+        var top = $(this).offset().top - $(window).scrollTop();
+        buttons.css('top',top);
+        buttons.attr('data-startpos',$(this).offset().top);
         buttons.show();
-
     },
     isAdvancedMode: function () {
         if (!localStorage.getItem('gsadvancedcombo')) {
@@ -690,6 +695,10 @@ thundashop.framework = {
         }
     },
     removeCss: function (attribute, id) {
+        if(typeof(cssEditorForCell) === "undefined") {
+            return;
+        }
+        
         var css = cssEditorForCell.getSession().getValue();
         if (css.indexOf(attribute) >= 0) {
         }
@@ -798,7 +807,7 @@ thundashop.framework = {
                             target.closest('.gscolorselectionpanel').find('.gsuploadimage').hide();
                         } else {
                             var sid = document.cookie.match('PHPSESSID=([^;]*)')[1];
-                            var location = window.location.protocol + "//mobile." + window.location.host + "/?page=" + $('#gspageid').val() + "&PHPSESSID=" + sid;
+                            var location = "http://mobile." + window.location.host + "/?page=" + $('#gspageid').val() + "&PHPSESSID=" + sid;
                             $('#gscontentframe').attr('src', location);
                             $('#gscontentframelandscape').attr('src', location);
                         }
@@ -1578,3 +1587,11 @@ thundashop.framework.rowPicker = {
 };
 
 thundashop.framework.rowPicker.init();
+$(document).on('scroll', function() {
+    var button = $('.gseditrowbuttons:visible');
+    if(button) {
+        var startpos = button.attr('data-startpos');
+        var newpos = startpos - $(window).scrollTop();
+        button.css('top',newpos);
+    }
+});

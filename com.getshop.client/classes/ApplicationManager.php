@@ -393,7 +393,7 @@ class ApplicationManager extends FactoryBase {
         
         $newAddress = $this->getApi()->getGetShop()->startStoreFromStore($startData);
         
-        echo 'http://'.$newAddress."/login.php";
+        echo 'https://'.$newAddress."/login.php";
         die();
     }
     

@@ -79,8 +79,8 @@ class Page {
 
                 if ($this->editCarouselForMobile()) {
                     echo "<style>";
-                    echo ".gscontainer.gsrotating .gscell.gsdepth_0 { background-color:#bbb; padding-top: 20px; padding-bottom: 20px; }";
-                    echo ".gscontainer.gsrotating .gsinner.gsdepth_0 { max-width: 500px !important; background-color:#fff; }";
+                    echo ".gscontainer.gsrotating .gscell.gsdepth_1 { background-color:#bbb !important; padding-top: 20px; padding-bottom: 20px; }";
+                    echo ".gscontainer.gsrotating .gsinner.gsdepth_1 { max-width: 500px !important; background-color:#fff; }";
                     echo "</style>";
                 }
 

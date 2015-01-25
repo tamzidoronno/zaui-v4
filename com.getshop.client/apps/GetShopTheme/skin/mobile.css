@@ -11,6 +11,7 @@ body {
 .gsucell .gsinner.gsdepth_0 { padding: 10px; border-radius: 3px; }
 .gscell { margin-top: 20px; }
 
+.gsbody[pageid="11aae406-ca2c-40e6-90b6-340558501b92"] .gsdepth_0.gscount_0 .gscell { margin-top: 0px; }
 .gsinner.gsdepth_0 { width: 100%; margin: 0px; }
 
 .gsarea[area="body"] .gscolumn .gsinner { 

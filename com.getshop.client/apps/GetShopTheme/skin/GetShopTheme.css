@@ -28,6 +28,14 @@ body {
     background: linear-gradient(to bottom, #2f6083, #173c55) !important;
 }
 
+.gsarea[area="body"]  .CartManager { 
+    color: #000;
+}
+
+#confirmorder {
+    width: 250px;
+}
+
 .gsarea[area="body"]  .gscolumn.gs_margin_left { 
     padding-left: 20px;
 }

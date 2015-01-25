@@ -608,7 +608,7 @@ thundashop.framework = {
         var curoffset = 0;
         var counter = 0;
         cell.find('.gscontainerinner').children('.gsrotatingrow').each(function () {
-            if ($(this).css('z-index') === "1") {
+            if ($(this).hasClass('gsselectedcarouselrow')) {
                 curoffset = counter;
             }
             counter++;

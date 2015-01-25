@@ -136,7 +136,6 @@ public class StorePool {
             webAddress = webAddress.replace(".mpal.", ".");
             webAddress = webAddress.replace(".dev.", ".");
             store = getStoreByWebaddress(webAddress);
-            
             if (store == null) {
                 webAddress = webAddress.replace(".2.0", "");
                 store = getStoreByWebaddress(webAddress);

@@ -26,6 +26,13 @@ class ApplicationManager extends FactoryBase {
         include("initdata/themeselection.phtml");
     }
             
+    function saveContainerPosition() {
+        $cellid = $_POST['data']['cellid'];
+        $containerid = $_POST['data']['containerid'];
+        
+        $_SESSION['gscontainerposition'][$containerid] = $cellid;
+    }
+    
     function simpleAddRow() {
         $pageManager = $this->getFactory()->getApi()->getPageManager();
         

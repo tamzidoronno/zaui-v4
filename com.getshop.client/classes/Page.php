@@ -303,7 +303,8 @@ class Page {
         $width = 100;
         $isColumn = false;
         $additionalinfo = "";
-
+        $selectedCell = "";
+        
         if ($cell->mode == "ROTATING") {
             $additionalinfo = "height='" . $cell->carouselConfig->height . "' timer='" . $cell->carouselConfig->time . "' type='" . $cell->carouselConfig->type . "'";
             if ($this->editCarouselForMobile() || $this->factory->isMobile()) {
@@ -350,9 +351,11 @@ class Page {
 
         $gsrowmode = "";
         if ($parent != null && $parent->mode == "ROTATING") {
+            $selectedCell = $this->isCarouselSelected($cell, $parent, "gsselectedcarouselrow");
             $gsrowmode = "gsrotatingrow";
         }
         if ($parent != null && $parent->mode == "TAB") {
+            $selectedCell = $this->isCarouselSelected($cell, $parent, "gstabrowselected");
             $gsrowmode = "gstabrow";
         }
 
@@ -376,7 +379,7 @@ class Page {
             $styles = "";
         }
 
-        echo "<div $additionalinfo $styles width='$width' class='gsucell  $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
+        echo "<div $additionalinfo $styles width='$width' class='gsucell $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
 
         if ($this->factory->isMobile() && $gsrowmode == "") {
             $this->printMobileAdminMenu($depth, $cell);
@@ -1257,6 +1260,31 @@ class Page {
         }
 
         return $result;
+    }
+
+    public function isCarouselSelected($cell, $parent, $className) {
+        $selectedPosition = false;
+        if(isset($_SESSION['gscontainerposition'][$parent->cellId])) {
+            $selectedPosition = $_SESSION['gscontainerposition'][$parent->cellId];
+        }
+        $found = false;
+        if($selectedPosition) {
+            foreach($parent->cells as $tmpcell) {
+                if($tmpcell->cellId == $_SESSION['gscontainerposition'][$parent->cellId]) {
+                    $found = true;
+                }
+            }
+            if($cell->cellId == $selectedPosition) {
+                return $className;
+            }
+        }        
+        
+        if(!$found) {
+            if($parent->cells[0]->cellId == $cell->cellId) {
+                return $className;
+            }
+        }
+        return "";
     }
 
 }

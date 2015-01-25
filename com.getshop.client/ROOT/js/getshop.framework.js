@@ -406,10 +406,15 @@ thundashop.framework = {
     changeTab: function () {
         var newId = $(this).attr('incrementid');
         var container = $(this).closest('.gscontainercell');
-        container.find('.gstabrow').hide();
-        $('.gstabrow.gscell_' + newId).show();
+        container.find('.gstabrow').removeClass('gstabrowselected');
+        $('.gstabrow.gscell_' + newId).addClass('gstabrowselected');
         var cellid = $('.gscell.gscell_' + newId).attr('cellid');
         thundashop.framework.setActiveContainerCellId(cellid, container.attr('cellid'));
+        
+        if (isAdministrator) {
+            thundashop.framework.saveContainerPosition(container.attr('cellid'), cellid);
+        }
+        
         PubSub.publish("GS_TAB_NAVIGATED", {"rowid": cellid});
     },
     switchCellResizing: function () {
@@ -526,7 +531,6 @@ thundashop.framework = {
         var rotatecell = $('.gscell[cellid="' + thundashop.framework.getActiveContainerCellId(containerId) + '"]');
         if (rotatecell.hasClass('gseditrowouter')) {
             thundashop.framework.loadResizing(rotatecell, true);
-            thundashop.framework.lastRotatedCell[cell.attr('cellid')] = thundashop.framework.getActiveContainerCellId(containerId);
         }
 
     },
@@ -542,7 +546,6 @@ thundashop.framework = {
         var rotatecell = $('.gscell[cellid="' + thundashop.framework.getActiveContainerCellId(containerId) + '"]');
         if (rotatecell.hasClass('gseditrowouter')) {
             thundashop.framework.loadResizing(rotatecell, true);
-            thundashop.framework.lastRotatedCell[cell.attr('cellid')] = thundashop.framework.getActiveContainerCellId(containerId);
         }
     },
     saveCarouselSettings: function () {
@@ -587,14 +590,13 @@ thundashop.framework = {
     },
     displayCarouselEntry: function (cell) {
         cell.closest('.gscontainerinner').children('.gsrotatingrow').each(function () {
-            $(this).css('opacity', '0');
-            $(this).css('z-index', '0');
+            $(this).removeClass('gsselectedcarouselrow');
         });
 
 
         cell.closest('.gscontainerinner').find('.gscarouseldots').hide();
-        cell.css('opacity', '1');
-        cell.css('z-index', '1');
+        cell.addClass('gsselectedcarouselrow');
+        
         cell.find('.gscarouseldots').show();
         return cell.attr('cellid');
     },
@@ -634,9 +636,21 @@ thundashop.framework = {
             before = $(this);
         });
 
-//        if ($('.gscell[cellid="' + newcellid + '"]').hasClass('gseditrowouter')) {
+        if (isAdministrator) {
+            thundashop.framework.saveContainerPosition(cell.attr('cellid'), newcellid);
+        }
+        
         thundashop.framework.setActiveContainerCellId(newcellid, cell.attr('cellid'));
-//        }
+    },
+    saveContainerPosition : function(containerId, cellId) {
+        var data = {
+            "containerid" : containerId,
+            "cellid" : cellId
+        }
+        var event = thundashop.Ajax.createEvent('','saveContainerPosition',$(this), data);
+        thundashop.Ajax.postWithCallBack(event, function() {
+            console.log('Updated');
+        });
     },
     loadResizing: function (cell, saveonmove) {
         if (cell.find('.range').length > 0) {
@@ -1074,7 +1088,6 @@ thundashop.framework = {
         return thundashop.framework.activeContainerCellId[containerid];
     },
     setActiveContainerCellId: function (id, containerid) {
-        thundashop.framework.lastRotatedCell[containerid] = id;
         thundashop.framework.activeContainerCellId[containerid] = id;
     },
     findActiveCell: function (container) {
@@ -1425,24 +1438,6 @@ thundashop.framework = {
         });
     }
 };
-
-
-PubSub.subscribe('NAVIGATION_COMPLETED', function (a, b) {
-    if (isAdministrator) {
-        for (var containerid in thundashop.framework.lastRotatedCell) {
-            var lastRotatedCell = thundashop.framework.getActiveContainerCellId(containerid);
-            var cell = $('.gscell[cellid="' + lastRotatedCell + '"]');
-            var container = cell.closest('.gscontainercell');
-            if (container.hasClass('gsrotating')) {
-                thundashop.framework.displayCarouselEntry(cell);
-            }
-            if (container.hasClass('gstab')) {
-                container.find('.gstabrow').hide();
-                cell.show();
-            }
-        }
-    }
-});
 
 var gssstepp = 0;
 $(document).on('keyup', function (event) {

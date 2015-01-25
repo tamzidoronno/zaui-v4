@@ -225,7 +225,7 @@ thundashop.framework = {
         $('.gsmobileeditor').fadeIn();
 
         var sid = document.cookie.match('PHPSESSID=([^;]*)')[1];
-        var location = "http://mobile." + window.location.host + "/?page=" + $('#gspageid').val() + "&PHPSESSID=" + sid;
+        var location = window.location.protocol + "//gsmobile" + window.location.host + "/?page=" + $('#gspageid').val() + "&PHPSESSID=" + sid;
         $('#gscontentframe').attr('src', location);
         $('#gscontentframelandscape').attr('src', location);
     },
@@ -807,7 +807,7 @@ thundashop.framework = {
                             target.closest('.gscolorselectionpanel').find('.gsuploadimage').hide();
                         } else {
                             var sid = document.cookie.match('PHPSESSID=([^;]*)')[1];
-                            var location = "http://mobile." + window.location.host + "/?page=" + $('#gspageid').val() + "&PHPSESSID=" + sid;
+                            var location = window.location.protocol + "//gsmobile" + window.location.host + "/?page=" + $('#gspageid').val() + "&PHPSESSID=" + sid;
                             $('#gscontentframe').attr('src', location);
                             $('#gscontentframelandscape').attr('src', location);
                         }

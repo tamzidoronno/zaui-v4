@@ -372,6 +372,9 @@ class Page {
             echo "<div class='gsmobilecarouseleditdesc'>" . $this->factory->__w("Add slides for carousel to mobile view") . "</div>";
         }
 
+        if($this->factory->isMobile()) {
+            $styles = "";
+        }
 
         echo "<div $additionalinfo $styles width='$width' class='gsucell  $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
 
@@ -982,12 +985,12 @@ class Page {
                 $counter++;
             }
 
-            if (sizeof($cellsToPrint) == 0) {
+            if (sizeof($cellsToPrint) == 0 && $this->editCarouselForMobile()) {
                 echo "<div class='gsinner' style='text-align:center;clear:both;'>";
                 echo "<br>";
                 echo "You do not have any slides created yet..";
                 echo "<br><br>";
-                echo "<i class='fa fa-plus gsoperatecell shop_button' type='addrow' mode='rowmobile' target='container' title='" . $this->factory->__w("Add another slide") . "'> Create a new slide</i> ";
+                echo "<i class='fa fa-plus gsoperatecell shop_button' type='addrow' mode='rowmobile' target='container' title='" . $this->factory->__w("Add another slide") . "'>".$this->factory->__w("Create a new slide")."</i> ";
                 echo "</div>";
             }
             if ($cell->mode == "ROTATING" || $cell->mode == "TAB") {
@@ -1097,6 +1100,9 @@ class Page {
     }
 
     public function printRowEditButtons($depth, $edit, $parent) {
+        if($this->factory->isMobile()) {
+            return;
+        }
         if ($depth < 1 && !$edit && $this->factory->isEditorMode()) {
             $target = "";
             if ($parent && $parent->mode == "TAB") {

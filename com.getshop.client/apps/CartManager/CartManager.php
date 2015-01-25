@@ -92,14 +92,16 @@ class CartManager extends \SystemApplication implements \Application {
             
         if (isset($_SESSION['appId'])) {
             $app = $this->getApi()->getStoreApplicationPool()->getApplication($_SESSION['appId']);
-            $this->paymentApplication = $this->getFactory()->getApplicationPool()->createInstace($app);
+            if ($app && $app->type == "PaymentApplication") {
+                $this->paymentApplication = $this->getFactory()->getApplicationPool()->createInstace($app);
+            }
         }
             
         $paymentApps = $this->getPaymentApplications();
         if (count($paymentApps) == 1) {
             $this->paymentApplication = $paymentApps[0];
         }
-            
+
         $this->initAddress();
     }
         
@@ -496,9 +498,7 @@ class CartManager extends \SystemApplication implements \Application {
         echo $this->__w("Please wait while you are being transferred to dibs payment service.");
     }
     
-    public function hasSubProducts() {
-        return false;
-    }
+ 
         
 }
     

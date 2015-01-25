@@ -495,6 +495,10 @@ class CartManager extends \SystemApplication implements \Application {
         $this->getApi()->getCartManager()->clear();
         echo $this->__w("Please wait while you are being transferred to dibs payment service.");
     }
+    
+    public function hasSubProducts() {
+        return false;
+    }
         
 }
     

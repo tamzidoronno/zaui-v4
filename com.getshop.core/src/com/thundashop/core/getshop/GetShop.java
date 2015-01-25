@@ -291,7 +291,7 @@ public class GetShop extends ManagerBase implements IGetShop {
         
         int nextStoreId = storePool.incrementStoreCounter();
         
-        String newAddress = nextStoreId + ".2.0.getshop.com";
+        String newAddress = nextStoreId + ".getshop.com";
         if (!frameworkConfig.productionMode) {
             newAddress = nextStoreId + ".2.0.local.getshop.com";
         }
@@ -307,6 +307,9 @@ public class GetShop extends ManagerBase implements IGetShop {
             scope.setStoreId(newStoreId);
             UserManager userManager = AppContext.appContext.getBean(UserManager.class);
             userManager.saveUser(user);
+            
+            OrderManager orderManager = AppContext.appContext.getBean(OrderManager.class);
+            orderManager.clear();
             
             saveCustomerToGetShop(user, scope);
             if (startData.language.equals("nb_NO")) {

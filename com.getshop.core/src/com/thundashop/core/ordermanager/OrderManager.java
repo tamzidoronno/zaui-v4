@@ -692,4 +692,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         return statistics;
     }
+
+    public void clear() {
+        for (Order order : orders.values()) {
+            deleteObject(order);
+        }
+        
+        incrementingOrderId = 100000;
+        orders.clear();
+    }
 }

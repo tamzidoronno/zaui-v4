@@ -803,7 +803,7 @@ thundashop.framework = {
                             target.closest('.gscolorselectionpanel').find('.gsuploadimage').hide();
                         } else {
                             var sid = document.cookie.match('PHPSESSID=([^;]*)')[1];
-                            var location = window.location.protocol + "//mobile." + window.location.host + "/?page=" + $('#gspageid').val() + "&PHPSESSID=" + sid;
+                            var location = window.location.protocol + "//" + window.location.host + "/?page=" + $('#gspageid').val() + "&PHPSESSID=" + sid + "&mobileview=preview";
                             $('#gscontentframe').attr('src', location);
                             $('#gscontentframelandscape').attr('src', location);
                         }

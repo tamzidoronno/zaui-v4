@@ -44,8 +44,7 @@ class Factory extends FactoryBase {
     }
 
     public function isMobile() {
-        
-        if(stristr($_SERVER['HTTP_HOST'], "mobile.") || (isset($_SERVER['HTTP_REFERER']) && stristr($_SERVER['HTTP_REFERER'], "mobileview=preview"))) {
+        if(stristr($_SERVER['HTTP_HOST'], "mobile.")) {
             return true;
         }
         

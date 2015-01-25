@@ -23,11 +23,6 @@ html {
     
 }
 
-.shop_button {
-    background-color: red;
-    color: #FFF;
-}
-
 .gsdepth_0.gsrow  {
    /*background-color: rgba(255,255,255,0.1);*/
 }
@@ -35,22 +30,6 @@ html {
 .gsarea[area="header"] {
     background-color: rgba(0,0,0,0.3);
 }
-
-
-.gsarea[area="header"] .gsinner.gsdepth_0 {
-    background: linear-gradient(to bottom, #333, #222);
-}
-
-.Login .login_header_type_1 {
-    background: linear-gradient(to bottom, #888, #333);
-    border: solid 1px #333;
-    color: #999;
-}
-
-.Login .login_header_type_1 a {
-    color: #999;
-}
-
 
 .gsarea[area="header"] .Menu a {
     color: #CCC;
@@ -97,11 +76,7 @@ html {
 .CartManager .checkout_area {
     line-height: 50px;
     font-size: 16px;
-    background-color: #333;
-    color: #FFF;
     padding-left: 20px;
-    border: solid 1px #111;
-    /*position: relative;*/
 }
 
 .CartManager .checkout_area .checkout {
@@ -165,3 +140,4 @@ html {
 .gsarea[area="body"] .gsrow .gsinner.gsdepth_0 {
     padding-top: 30px;
 }
+

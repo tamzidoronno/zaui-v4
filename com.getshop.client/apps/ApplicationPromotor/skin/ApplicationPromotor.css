@@ -49,4 +49,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#49c0f0', end
 @media only all and (max-width: 800px) {
     .ApplicationPromotor .appentryouter { width: 100%; }
     .ApplicationPromotor .gs_app_desc { height: auto; }
+    .ApplicationPromotor .gs_app_image { width: 50px; }
+    .ApplicationPromotor .infobox { padding-left: 90px; }
 }

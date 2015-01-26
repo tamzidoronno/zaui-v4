@@ -44,6 +44,9 @@ if ($_GET['file'] == 13)
 if ($_GET['file'] == 14)
     $file = "4.2 Klima Deltagere jan 2015.pdf";
 
+if ($_GET['file'] == 15)
+    $file = "1.3 Diagnose og Måleteknikk.pptx";
+
 if (!isset($file)) {
     return;
 }

@@ -306,7 +306,7 @@ public class APICalendarManager {
      * @param point
      * @return
      */
-     public com.thundashop.core.calendarmanager.data.LocationArea getEntriesByPosition(java.awt.Point point)  throws Exception  {
+     public com.thundashop.core.calendarmanager.data.LocationArea getEntriesByPosition(com.thundashop.core.calendarmanager.data.LocationPoint point)  throws Exception  {
           JsonObject2 data = new JsonObject2();
           data.args = new LinkedHashMap();
           data.args.put("point",new Gson().toJson(point));

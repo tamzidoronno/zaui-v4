@@ -1,0 +1,103 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jan 27, 2015, 12:35:41 PM
+    Author     : ktonder
+*/
+
+.PkkControl .pkk_header {
+    font-size: 18px;
+}
+
+.PkkControl input {
+    line-height: 24px;
+    padding-left: 5px;
+}
+.PkkControl .pkk_searchresult {
+    margin-top: 5px;
+}
+.PkkControl .pkk_search_button {
+    background: #499bea; /* Old browsers */
+/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzQ5OWJlYSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMyMDdjZTUiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+    background: -moz-linear-gradient(top, #499bea 0%, #207ce5 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#499bea), color-stop(100%,#207ce5)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #499bea 0%,#207ce5 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #499bea 0%,#207ce5 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #499bea 0%,#207ce5 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #499bea 0%,#207ce5 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#499bea', endColorstr='#207ce5',GradientType=0 ); /* IE6-8 */
+    
+    line-height: 30px;
+    display: inline-block;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 16px;
+    color: #FFF;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.PkkControl .pkk_search_result_data {
+    padding-top: 20px;
+    margin-top: 20px;
+    border-top: 1px solid #DDD;
+    padding-left: 20px;
+}
+
+.PkkControl table td {
+    font-size: 16px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.PkkControl .pkk_signoninfo i {
+    font-size: 30px;
+}
+
+.PkkControl .pkk_signoninfo {
+    font-size: 16px;
+    padding-top: 20px;
+    margin-top: 20px;
+    border-top: 1px solid #DDD;
+    vertical-align: middle;
+    padding-left: 20px;
+}
+
+.PkkControl .pkk_row .pkk_row_col1 {
+    width: 200px;
+}
+
+.PkkControl .pkk_row .pkk_row_col2 {
+    width: 400px;
+}
+
+.PkkControl .pkk_row div {
+    display: inline-block;
+    font-size: 16px;
+    padding-bottom: 5px;
+}
+
+.PkkControl .successmessage_pkk_controll {
+    text-align: center;
+    color: green;
+    font-size: 20px;
+    padding: 20px;
+}
+
+.PkkControl .removepkk {
+    cursor: pointer;
+}
+
+.PkkControl .pkk_list {
+    font-size: 16px;
+    color: #444;
+    padding: 5px;
+    padding-left: 0px;
+    border-bottom: solid 1px #DDD;
+    margin-left: 20px;
+}
+

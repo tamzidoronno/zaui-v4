@@ -4066,6 +4066,62 @@ class PageManager(object):
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
+class PkkControlManager(object):
+  def __init__(self, communicationHelper):
+    self.communicationHelper = communicationHelper
+  def getPkkControlData(self, licensePlate):
+    args = collections.OrderedDict()
+    if isinstance(licensePlate,GetShopBaseClass): 
+      args["licensePlate"]=json.dumps(licensePlate.__dict__)
+    else:
+      try:
+        args["licensePlate"]=json.dumps(licensePlate)
+      except (ValueError, AttributeError):
+        args["licensePlate"]=licensePlate
+    data = EmptyClass()
+    data.args = args
+    data.method = "getPkkControlData"
+    data.interfaceName = "core.pkk.IPkkControlManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getPkkControls(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getPkkControls"
+    data.interfaceName = "core.pkk.IPkkControlManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def registerPkkControl(self, data):
+    args = collections.OrderedDict()
+    if isinstance(data,GetShopBaseClass): 
+      args["data"]=json.dumps(data.__dict__)
+    else:
+      try:
+        args["data"]=json.dumps(data)
+      except (ValueError, AttributeError):
+        args["data"]=data
+    data = EmptyClass()
+    data.args = args
+    data.method = "registerPkkControl"
+    data.interfaceName = "core.pkk.IPkkControlManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def removePkkControl(self, id):
+    args = collections.OrderedDict()
+    if isinstance(id,GetShopBaseClass): 
+      args["id"]=json.dumps(id.__dict__)
+    else:
+      try:
+        args["id"]=json.dumps(id)
+      except (ValueError, AttributeError):
+        args["id"]=id
+    data = EmptyClass()
+    data.args = args
+    data.method = "removePkkControl"
+    data.interfaceName = "core.pkk.IPkkControlManager"
+    return self.communicationHelper.sendMessage(data)
+
 class ProductManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
@@ -6198,6 +6254,7 @@ class GetShopApi(object):
     self.NewsManager = NewsManager(self.communicationHelper)
     self.OrderManager = OrderManager(self.communicationHelper)
     self.PageManager = PageManager(self.communicationHelper)
+    self.PkkControlManager = PkkControlManager(self.communicationHelper)
     self.ProductManager = ProductManager(self.communicationHelper)
     self.ReportingManager = ReportingManager(self.communicationHelper)
     self.SedoxProductManager = SedoxProductManager(self.communicationHelper)

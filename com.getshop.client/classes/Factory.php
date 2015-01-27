@@ -184,6 +184,13 @@ class Factory extends FactoryBase {
 
         $appTheme = $this->getApplicationPool()->getSelectedThemeApp();
         $themeApp = $this->getApplicationPool()->createInstace($appTheme);
+        $apps = $this->getApi()->getStoreApplicationPool()->getApplications();
+        foreach($apps as $app) {
+            $appInstance = $this->getApplicationPool()->createInstace($app);
+            if (method_exists($appInstance, "renderOnStartup")) {
+                $appInstance->renderOnStartup();
+            }
+        }
         if (method_exists($themeApp, "addScripts")) {
             $themeApp->addScripts();
         }

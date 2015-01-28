@@ -33,6 +33,9 @@ class GoogleAnalytics extends \ReportingApplication implements \Application {
     }
     
     public function render() {
+    }
+    
+    public function renderOnStartup() {
         $this->includefile("analytics");
     }
 

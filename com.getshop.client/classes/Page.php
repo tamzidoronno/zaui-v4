@@ -1268,8 +1268,24 @@ class Page {
             $selectedPosition = $_SESSION['gscontainerposition'][$parent->cellId];
         }
         $found = false;
+        
+        $firstId = $parent->cells[0]->cellId;
+        if(($this->factory->isMobile() || $this->editCarouselForMobile())) {
+            foreach($parent->cells as $tmpcell) {
+                if(($this->factory->isMobile() || $this->editCarouselForMobile()) && !$tmpcell->hideOnMobile) {
+                    $firstId = $tmpcell->cellId;
+                    break;
+                }
+            }
+        }
+        
         if($selectedPosition) {
             foreach($parent->cells as $tmpcell) {
+                /* @var $tmpcell core_pagemanager_data_PageCell */
+                if(($this->factory->isMobile() || $this->editCarouselForMobile()) && $tmpcell->hideOnMobile) {
+                    continue;
+                }
+                
                 if($tmpcell->cellId == $_SESSION['gscontainerposition'][$parent->cellId]) {
                     $found = true;
                 }
@@ -1280,7 +1296,7 @@ class Page {
         }        
         
         if(!$found) {
-            if($parent->cells[0]->cellId == $cell->cellId) {
+            if($firstId == $cell->cellId) {
                 return $className;
             }
         }

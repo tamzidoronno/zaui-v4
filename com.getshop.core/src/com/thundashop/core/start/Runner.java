@@ -6,8 +6,10 @@ import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.StorePool;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.socket.WebInterface2;
+import com.thundashop.core.socket.WebSocketServerImpl;
 import java.io.PrintWriter;
 import java.util.UUID;
+import org.java_websocket.server.WebSocketServer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -22,6 +24,10 @@ public class Runner {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws InterruptedException, Exception {  
+        
+        java.lang.System.setProperty("java.net.preferIPv6Addresses", "false");
+        java.lang.System.setProperty("java.net.preferIPv4Stack", "true");
+
         PrintWriter out = new PrintWriter("secret.txt");
         out.write(OVERALLPASSWORD+"\n");
         out.close();
@@ -46,5 +52,7 @@ public class Runner {
         }
 
         new WebInterface2(log, storePool, port); //Version 2.        
+        
+        context.getBean(WebSocketServerImpl.class).start();
     }
 }

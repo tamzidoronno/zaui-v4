@@ -10,6 +10,7 @@ import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -33,13 +34,13 @@ public class WebSocketServerImpl extends WebSocketServer implements Runnable, Ap
 
     @Override
     public void onOpen(WebSocket ws, ClientHandshake ch) {
-		try {
-			WebSocketClient client = applicationContext.getBean(WebSocketClient.class);
-			client.setWs(ws);
-			clients.put(ws, client);
-		} catch (BeansException ex) {
-			System.out.println("Got a bean exception?");
-		}
+        try {
+            WebSocketClient client = applicationContext.getBean(WebSocketClient.class);
+            client.setWs(ws);
+            clients.put(ws, client);
+        } catch (BeansException ex) {
+            System.out.println("Got a bean exception?");
+        }
     }
 
     @Override

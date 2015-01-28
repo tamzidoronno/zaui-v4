@@ -12,6 +12,7 @@
 }
 .CartManager .checkoutarea {
     width: 100%;
+    z-index: 3;
 }
 
 .CartManager .loginform { display:none; }

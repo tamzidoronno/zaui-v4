@@ -15,6 +15,7 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 import org.java_websocket.WebSocket;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,7 +23,7 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-@GetShopSession
+@Scope("prototype")
 public class WebSocketClient {
     private WebSocket ws;
     private String sessionId;

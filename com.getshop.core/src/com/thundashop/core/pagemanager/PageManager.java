@@ -371,6 +371,7 @@ public class PageManager extends ManagerBase implements IPageManager {
                     .count();
 
             if (productAppsCount == 0) {
+                page.layout.createCell("", "", PageCell.CellMode.row, "body");
                 ApplicationInstance instance = storeApplicationPool.createNewInstance(productApplicationId);
                 page.layout.addApplicationToFirstFreeBodyCell(instance.id);
                 savePage(page);

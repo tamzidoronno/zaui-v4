@@ -53,17 +53,17 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        Application netAxept = createSettings("Netaxept",
-                "def1e922-972f-4557-a315-a751a9b9eff1",
-                allowed2,
-                "",
-                "PaymentApplication", true);
-        netAxept.isPublic = true;
-        
-        netAxept.moduleId = "WebShop";
-        netAxept.activeAppOnModuleActivation = false;
-        netAxept.isFrontend = false;
-        apps.add(netAxept);
+//        Application netAxept = createSettings("Netaxept",
+//                "def1e922-972f-4557-a315-a751a9b9eff1",
+//                allowed2,
+//                "",
+//                "PaymentApplication", true);
+//        netAxept.isPublic = true;
+//        
+//        netAxept.moduleId = "WebShop";
+//        netAxept.activeAppOnModuleActivation = false;
+//        netAxept.isFrontend = false;
+//        apps.add(netAxept);
         
 //        Application button = createSettings("Button",
 //                "2996287a-c23e-41ad-a801-c77502372789",

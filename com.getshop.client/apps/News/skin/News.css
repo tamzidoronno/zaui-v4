@@ -43,10 +43,10 @@
     position: relative;
 }
 
-.News .gs_button {
-    position: absolute;
-    right: 0px;
-    bottom: 10px;
+.News .button_area_news {
+    padding-top: 10px;
+    text-align: right;
+    padding-bottom: 10px;
 }
 
 .News .news_entry_header {

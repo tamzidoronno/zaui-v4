@@ -4,15 +4,15 @@
 if ($this->hasWriteAccess()) {
     ?>
     <div class="outeraddnewscontainer">
-        <? echo $this->__f("Subject"); ?> <input id="subject" type="text"/>
-        <br><br> <? echo $this->__f("Extended description"); ?> 
+        <? echo $this->__f("Notification title"); ?> <input id="subject" type="text" placeholder="<? echo $this->__f("Title of the news"); ?>"/>
+        <br><br> <? echo $this->__f("Notification description"); ?> 
         <br>
         
-        <textarea style="width: 100%; height: 100px; padding: 10px;" placeholder="<? echo $this->__f("Click on me to edit"); ?>"></textarea>
-        <div class="gs_button addevent">
-            <? echo $this->__f("Add"); ?>
+        <textarea style="width: 98%; height: 100px; padding: 10px;" placeholder="<? echo $this->__f("This is a small text that shows up in the notification message."); ?>"></textarea>
+        <div class="button_area_news">
+            <div class="gs_button addevent"><? echo $this->__f("Add"); ?></div>     
         </div>
-    </div>
+   </div>
     <?php
 } 
 
@@ -22,6 +22,11 @@ foreach($entries as $entry) {
     /* @var $entry app_newsmanager_data_NewsEntry */
     $last = (sizeof($entries)-1) == $i ? "last" : "";
     $id = $entry->id;
+    
+    if ($entry->isPublished) {
+        continue;
+    }
+    
     echo "<div class='news_container news_container_$i $last' id='".$id."'>";
     
     if ($this->hasWriteAccess()) {
@@ -40,4 +45,30 @@ foreach($entries as $entry) {
 
     $i++;
 }
+
+echo "<div class='button_area_news'><center><div class='gs_button show_old_news'>Vis allerede publiserte nyheter</div></center></div>";
+echo "<div class='oldnews' style='display: none'>";
+foreach($entries as $entry) {
+    if (!$entry->isPublished) {
+        continue;
+    }
+    
+    echo "<div class='news_container news_container_$i $last' id='".$id."'>";
+    
+    if ($this->hasWriteAccess()) {
+        if (!$entry->isPublished) {
+            echo "<div class='gs_button small publish'>".$this->__f("Publish")."</div>";
+        }
+        echo "<div class='gs_button small delete'>".$this->__f("Delete")."</div>";
+    }
+    echo "<div class='news_entry_header'>" . $entry->subject . "</div>";
+    echo "<div class='content'>";
+    echo $entry->content;
+    echo "</div>";
+    echo "<div class='news_entry_footer'>" . $entry->date ."</div>";
+    echo "<a href='?page=$id'><div class='readmore'>".$this->__w("Read more")."</div></a>";
+    echo "</div>";
+
+}
+echo "</div>";
 ?>

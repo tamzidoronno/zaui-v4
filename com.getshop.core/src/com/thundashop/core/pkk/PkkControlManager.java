@@ -104,8 +104,10 @@ public class PkkControlManager extends ManagerBase implements IPkkControlManager
 
     @Override
     public PkkControlData getPkkControlData(String licensePlate) throws ErrorException {
+        PkkControlData data = null;
+        
         try {
-            PkkControlData data = getData(licensePlate);
+            data = getData(licensePlate);
             if (data == null) {
                 data = new PkkControlData();
                 data.vineNumber = "sn1235781982XX";
@@ -114,7 +116,6 @@ public class PkkControlManager extends ManagerBase implements IPkkControlManager
                 data.lastControl = "10/03-2013";
                 data.nextControl = "10/03-2015";
                 data.licensePlate = licensePlate;
-                return data;
             }
         } catch (IOException ex) {
             Logger.getLogger(PkkControlManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -124,7 +125,7 @@ public class PkkControlManager extends ManagerBase implements IPkkControlManager
             Logger.getLogger(PkkControlManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        return null;
+        return data;
     }
 
     @Override

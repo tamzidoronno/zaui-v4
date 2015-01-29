@@ -2,10 +2,15 @@ app.News = {
     
     init: function() {
         $(document).on('click', '.News .addevent', $.proxy(this.addEvent, app.News))
+        $(document).on('click', '.News .show_old_news', $.proxy(this.showOldNews, app.News))
         $(document).on('click', '.News .delete', this.deleteEvent )
         $(document).on('click', '.News .publish', this.publishEvent )
     },
             
+    showOldNews: function() {
+        $('.oldnews').slideDown();
+    },
+    
     publishEvent: function() {
         var id = $(this).closest('.news_container').attr('id');
         var data = {
@@ -32,7 +37,10 @@ app.News = {
             text: text,
         }
         var event = thundashop.Ajax.createEvent('', 'addEntry', $('.News'), data);
-        thundashop.Ajax.post(event);
+        event['synchron'] = true;
+        thundashop.Ajax.postWithCallBack(event, function(response) {
+            document.location = '/?page='+response;
+        });
     },
             
     removeApplication: function(data, app) {

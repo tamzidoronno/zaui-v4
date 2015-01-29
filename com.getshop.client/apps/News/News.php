@@ -42,8 +42,14 @@ class News extends \MarketingApplication implements \Application {
         $news->content = $_POST['data']['text'];
         $news->content = nl2br($news->content);
         $newsId = $this->getApi()->getNewsManager()->addNews($news);
-        $this->getApi()->getPageManager()->createPageWithId(0, "", $newsId);
-       
+        $this->getApi()->getPageManager()->createPageWithId(4, "", $newsId);
+        $rowId = $this->getApi()->getPageManager()->createNewRow($newsId);
+        $page = $this->getApi()->getPageManager()->getPage($newsId);
+        $page->layout->rows[0]->numberOfCells = 5;
+        $this->getApi()->getPageManager()->savePage($page);
+        
+        echo $page->id;
+        die();
     }
     
     public function removeEntry() {

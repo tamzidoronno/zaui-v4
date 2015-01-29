@@ -53,16 +53,17 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        Application releatedProducts = createSettings("RelatedProducts",
-                "3cdcd5e5-b3e8-4fa1-9125-bef44fa6a082",
+        Application netAxept = createSettings("Netaxept",
+                "def1e922-972f-4557-a315-a751a9b9eff1",
                 allowed2,
                 "",
-                Application.Type.Webshop, false);
-        releatedProducts.isPublic = true;
-        releatedProducts.moduleId = "WebShop";
-        releatedProducts.activeAppOnModuleActivation = true;
-        releatedProducts.isFrontend = true;
-        apps.add(releatedProducts);
+                "PaymentApplication", true);
+        netAxept.isPublic = true;
+        
+        netAxept.moduleId = "WebShop";
+        netAxept.activeAppOnModuleActivation = false;
+        netAxept.isFrontend = false;
+        apps.add(netAxept);
         
 //        Application button = createSettings("Button",
 //                "2996287a-c23e-41ad-a801-c77502372789",

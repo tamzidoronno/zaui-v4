@@ -16,3 +16,48 @@
     color: #FFF;
     background-color: black;
 }
+
+.gsarea[area="header"] .Menu .active a,
+.gsarea[area="header"] .Menu .active {
+    color: #FFF;
+}
+
+.gsarea[area="header"] .Menu  a,
+.gsarea[area="header"] .Menu {
+    color: #BBB;
+}
+
+.gsarea[area="header"] .Menu .entry {
+    padding-right: 10px;
+    font-size: 12px;
+}
+
+.gsarea[area="header"] .Menu .entry i {
+    padding-right: 5px;
+}
+
+.gsarea[area="header"] .Menu .entry .entries .entry {
+    background-color: rgba(255,255,255,0.8);
+    border-bottom: solid 1px #FFF;
+    padding: 8px;
+}
+
+.gsarea[area="header"] .Menu .entry .entries a {
+    color: #000;
+    
+}
+
+.Facebook .newsentry {
+    border-bottom: solid 1px #F1F1F1;
+}
+
+.Facebook .newsentry .message {
+    padding-left: 170px;
+    font-size: 16px;
+    color: #333;
+    /*min-height: 250px;*/
+}
+.Facebook .newsentry .picture {
+    float: left;
+    
+}

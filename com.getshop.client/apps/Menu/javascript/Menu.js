@@ -171,7 +171,17 @@ getshop.MenuEditor = {
             $('.titleinformation #itemname').val(getshop.MenuEditor.activeItem.name);    
             $('.titleinformation #itemlink').attr('pageId', getshop.MenuEditor.activeItem.pageId);    
             $('.titleinformation #itemlink').val(getshop.MenuEditor.activeItem.link);    
+            if (getshop.MenuEditor.activeItem.link) {
+                $('.titleinformation #itemlink').attr('pageId', getshop.MenuEditor.activeItem.link);
+                $('.titleinformation #itemlink').val(getshop.MenuEditor.activeItem.link);
+            }
+            if (getshop.MenuEditor.activeItem.linke) {
+                $('.titleinformation #itemlink').attr('pageId', getshop.MenuEditor.activeItem.linke);
+                $('.titleinformation #itemlink').val(getshop.MenuEditor.activeItem.linke);
+            }
+
             $('.titleinformation #icontext').val(getshop.MenuEditor.activeItem.icon);    
+            
             var userLevel = this.activeItem.userLevel;
             if (!userLevel) {
                 $('#userlevel').val("public");

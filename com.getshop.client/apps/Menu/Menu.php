@@ -65,6 +65,7 @@ class Menu extends \SystemApplication implements \Application {
             $entryItem->name = $item->name;
             $entryItem->pageId = $item->pageId;
             $entryItem->linke = $item->hardLink;
+            $entryItem->fontAwsomeIcon = $item->fontAwsomeIcon;
             $entryItem->userLevel = $item->userLevel;
             $entryItem->items = $this->createItems($item->subentries);
             $retItems[] = $entryItem;
@@ -72,6 +73,7 @@ class Menu extends \SystemApplication implements \Application {
 
         return $retItems;
     }
+
 
     public function getJSonEncodedList($listEntry) {
         $entryList = new EntryList();
@@ -81,9 +83,9 @@ class Menu extends \SystemApplication implements \Application {
     }
 
     public function convertToEntry($item) {
-        $entry = $this->getApi()->getListManager()->getListEntry($item['id']);
+                $entry = $this->getApi()->getListManager()->getListEntry($item['id']);
         if (!$entry) {
-            $entry = new \core_listmanager_data_Entry();
+             $entry = new \core_listmanager_data_Entry();
         }
         $entry->name = $item['name'];
         if (isset($item['linke'])) {
@@ -104,13 +106,19 @@ class Menu extends \SystemApplication implements \Application {
         if (isset($item['icon'])) {
             $entry->fontAwsomeIcon = $item['icon'];
         }
+
+        if (isset($item['linke']) && (!isset($item['link']) || $item['link'] == "")) {
+            $entry->hardLink = $item['linke'];
+        }
+
         $entry->subentries = array();
-        if (isset($item['items'])) {
-            foreach ($item['items'] as $subitem) {
+        if(isset($item['items'])) {
+            foreach($item['items'] as $subitem) {
                 $entry->subentries[] = $this->convertToEntry($subitem);
             }
         }
         return $entry;
+
     }
     
     public function setHomePage() {
@@ -143,18 +151,35 @@ class Menu extends \SystemApplication implements \Application {
     public function printEntries($entries, $level) {
         echo "<div class='entries'>";
         foreach ($entries as $entry) {
+            if (isset($entry->userLevel) && $entry->userLevel) {
+                $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+                if ($user == null) {
+                    continue;
+                }
+                
+                if ($user->type < $entry->userLevel) {
+                    continue;
+                }
+            } 
+            
+            
             $name = $entry->name;
             $linkName = \GetShopHelper::makeSeoUrl($entry->name);
             $pageId = $entry->pageId;
-//            echo "<pre>";
-//            print_r($entry);
-//            echo "</pre>";
+
             $fontAwesome = "";
             if (isset($entry->fontAwsomeIcon) && $entry->fontAwsomeIcon)  {
                 $fontAwesome = "<i class='fa ".$entry->fontAwsomeIcon."'></i> ";
             }
             $activate = $this->getPage()->getId() == $pageId ? "active" : "";
-            echo "<div class='entry $activate'><a ajaxlink='/?page=$pageId' href='$linkName'><div>$fontAwesome $name</div></a>";
+            
+            $link = "/?page=$pageId";
+            if (isset($entry->hardLink) && $entry->hardLink) {
+                $link = $entry->hardLink;
+                $linkName = $entry->hardLink;
+            }
+            
+            echo "<div class='entry $activate'><a ajaxlink='$link' href='$linkName'><div>$fontAwesome $name</div></a>";
             if ($entry->subentries) {
                 $this->printEntries($entry->subentries, $level+1);
             }
@@ -166,14 +191,14 @@ class Menu extends \SystemApplication implements \Application {
 }
 
 class EntryItem {
-
     public $id = "";
     public $name = "";
+    public $link = "";
     public $linke = "";
     public $pageId = "";
+    public $fontAwsomeIcon = "";
     public $userLevel;
     public $items;
-
 }
 
 class EntryList {

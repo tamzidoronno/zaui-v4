@@ -201,7 +201,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         if(isset($_GET['set_order_page'])) {
             $this->setConfigurationSetting("contine_page", $_GET['set_order_page']);
         }
-        if($this->getPage()->id == "home") {
+        if($this->getPage()->javapage->id == "home") {
             $this->includefile("Hotelbooking");
         } else {
             if(((isset($_GET['subpage']) && $_GET['subpage'] == "summary") || isset($_POST['data']['partnershipdeal'])) && $this->hasValidSelection()) {

@@ -16,6 +16,7 @@ thundashop.app.account.registerUser = function(target) {
     var birthDay = container.find('#birthDay').val();
     var companyName = container.find('#companyName').val();
     var cellPhone = container.find('#cellPhone').val();
+    var invoiceemail = container.find('#invoiceemail').val();
     
     var event = thundashop.Ajax.createEvent('Account', 'registerUser', target, {
         "set_update_user" : "1",
@@ -24,6 +25,7 @@ thundashop.app.account.registerUser = function(target) {
         user_id : userId,
         password : password,
         streetAddress : streetAddress,
+        invoiceemail : invoiceemail,
         postalCode : postalCode,
         city : city,
         expireDate : expireDate,

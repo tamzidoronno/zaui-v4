@@ -1,10 +1,41 @@
 .gscell.gsdepth_0 { margin:auto; }
-.gsinner.gsdepth_0 {  width: 1024px; margin: auto; background-color:#FFF; }
+.gs_page_width {  width: 1166px; margin: auto; background-color:#FFF; }
 body { 
     font-family: Georgia, 'Times New Roman', Times, serif;
-    background: #CCCCCC url(http://www.pcwarehouses.ca/images/background.png) top center no-repeat fixed; }
-.gsarea[area="header"] .gsinner,.gsarea[area="footer"] .gsinner { background-color:#1E1E1E; color:#fff; }
-.Menu .menuentries a { color:#FFF !important; font-size: 19px;  }
+    background: #CCCCCC url(http://www.pcwarehouses.ca/images/background.png) top center no-repeat fixed;
+    background-size: cover;
+}
+
+.gsarea[area="header"] {
+    background-color: rgba(0,0,0,0.3);
+}
+
+.gsarea[area="footer"] .gsinner {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.gsarea[area="header"] .gsinner,
+.gsarea[area="footer"] .gsinner { 
+    background-color: #1E1E1E; 
+    color:#fff; 
+    
+}
+
+.gsarea[area="header"] .gsdepth_1.gscount_2 {
+    background: linear-gradient(to bottom, #6F6F6F, #000);
+}
+
+.Menu .menuentries a { 
+    color:#FFF !important; 
+    font-size: 16px;  
+    line-height: 30px;
+}
+
+.Menu .menuentries .entry { 
+    border-right: solid 1px #666; 
+}
+
 .Menu .menuentries .entry { padding: 10px; }
 .Menu .menuentries.horizontal .entries .entries { background-color:#1E1E1E; }
 .Menu .menuentries.horizontal .entries .entries a { font-size:12px !important; }
@@ -12,3 +43,13 @@ body {
 h1,h2,h3 { margin: 0px; }
 .ProductLists .short_description { display: none; }
 .ProductLists .productbox { height: 350px !important; }
+
+.gsarea[area="body"] .gsdepth_0.gsrow .gsinner {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.shop_button {
+    color: #FFF;
+    background-color: green;
+}

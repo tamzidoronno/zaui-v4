@@ -7,7 +7,8 @@ body {
 }
 
 .gsarea[area="header"] {
-    background-color: rgba(0,0,0,0.3);
+    background-color: rgba(0,0,0,0.5);
+    background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.1));
 }
 
 .gsarea[area="footer"] .gsinner {
@@ -15,7 +16,8 @@ body {
     padding-right: 20px;
 }
 
-.gsarea[area="header"] .gsinner,
+.gsarea[area="header"] .gsuicell.gsdepth_2.gscount_2 .gsinner,
+.gsarea[area="header"] .gsinner.gsdepth_0.gscount_0,
 .gsarea[area="footer"] .gsinner { 
     background-color: #1E1E1E; 
     color:#fff; 
@@ -39,7 +41,8 @@ body {
 .Menu .menuentries .entry { padding: 10px; }
 .Menu .menuentries.horizontal .entries .entries { background-color:#1E1E1E; }
 .Menu .menuentries.horizontal .entries .entries a { font-size:12px !important; }
-.gsrotating .ContentManager { background-color:rgba(0,0,0,0.4); }
+.gsrotating .ContentManager { background-color:rgba(0,0,0,0.7); height: 306px; line-height: 306px;}
+.gsrotating .ContentManager { background-color:rgba(0,0,0,0.7); height: 306px; line-height: 306px;}
 h1,h2,h3 { margin: 0px; }
 .ProductLists .short_description { display: none; }
 .ProductLists .productbox { height: 350px !important; }
@@ -52,4 +55,33 @@ h1,h2,h3 { margin: 0px; }
 .shop_button {
     color: #FFF;
     background-color: green;
+}
+
+.gscell_11 {
+    padding-top: 2px;
+    padding-left: 3px;
+}
+.gscell_12 .ContentManager,
+.gscell_13 .ContentManager {
+    line-height: 42px;
+    padding-left: 10px; 
+    padding-right: 10px;
+}
+
+.gscontainercell.gsdepth_0 .gstabrow .gstabcontent {
+    border: solid 1px #DDD;
+    
+}
+.gscontainercell.gsdepth_0 .gstabbtn.gsactivetab {
+    background-color: #DDD;
+}
+.gscontainercell.gsdepth_0 .gstabbtn {
+    line-height: 30px;
+    font-size: 16px;
+    border: solid 0px;
+}
+
+.gscontainercell.gsdepth_0 .gstabrow .gstabcontent,
+.gscontainercell.gsdepth_0 .gstabrow {
+    padding: 20px;
 }

@@ -85,3 +85,26 @@ h1,h2,h3 { margin: 0px; }
 .gscontainercell.gsdepth_0 .gstabrow {
     padding: 20px;
 }
+
+.CartManager .checkout_area {
+    line-height: 50px;
+    font-size: 16px;
+    padding-left: 20px;
+    border-radius: 10px;
+    /*position: relative;*/
+}
+
+.CartManager .checkout_area .checkout {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    color: #333;
+    top: 0px;
+    width: 100px;
+    color: #FFF;
+    text-align: center;
+}
+.CartManager .checkout_area i {
+    padding-right: 10px;
+    font-size: 25px;
+}

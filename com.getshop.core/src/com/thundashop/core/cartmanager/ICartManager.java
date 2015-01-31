@@ -1,6 +1,7 @@
 package com.thundashop.core.cartmanager;
 
 import com.thundashop.core.cartmanager.data.Cart;
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.common.Administrator;
@@ -25,6 +26,7 @@ public interface ICartManager {
      */
     public Cart addProduct(String productId, int count, List<String> variations) throws ErrorException;
     
+    public CartItem addProductItem(String productId, int count) throws ErrorException;
     
     /**
      * Fetch the total amount of price to use when calculating shipping price.

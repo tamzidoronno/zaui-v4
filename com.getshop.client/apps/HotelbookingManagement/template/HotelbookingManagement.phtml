@@ -10,16 +10,6 @@ foreach($rooms as $room) {
 }
 $rooms = $newRoom;
 
-$types = $hmanager->getRoomTypes();
-$selectedType = new \core_hotelbookingmanager_RoomType();
-if(isset($_POST['data']['typeId'])) {
-    foreach($types as $type) {
-        if($type->id == $_POST['data']['typeId']) {
-            $selectedType = $type;
-        }
-    }
-}
-
 if(isset($_POST['data']['updated'])) { 
     echo "<span class='updatedtext' style='float:right;'>Data har blitt oppdatert.</span>";
     ?>
@@ -119,8 +109,9 @@ Existing rooms:<br>
             <td>Lock id</td>
         </tr>
         <?
+        $products = $this->getApi()->getProductManager()->getAllProducts();
         foreach($rooms as $room) {
-            $this->printRoomRow($room, $types);
+            $this->printRoomRow($room,$products);
         }
         ?>
         <tr>
@@ -129,31 +120,6 @@ Existing rooms:<br>
     </table>
 </div>
 <br>
-<br>
-<br>
-<br>
-
-<? echo $this->__w("New room type"); ?>
-<div style="padding:10px; border: solid 1px;background-color:#EFEFEF;">
-    <div>
-        <select id="type">
-            <?
-                foreach($types as $type) {
-                    echo "<option value='" . $type->id . "'>" . $type->name . "</option>";
-                }
-            ?>
-        </select>
-        <span class="edit_type">Edit</span>
-        <span class="delete_type">Delete</span>
-    </div>
-    <div gstype="form" method="addType">
-        <input type="hidden" gsname="id" value="<? echo $selectedType->id; ?>">
-        <input gstype="value" type="txt" gsname='name' placeholder="Enter a name for the room type" style="width:50%;" value="<? echo $selectedType->name; ?>"><br>
-        <input gstype="value" type="txt" gsname='en_desc' placeholder="Enter the norwegian description" style="width:50%;"  value="<? echo $selectedType->description_no; ?>"><br>
-        <input gstype="value" type="txt" gsname='no_desc' placeholder="Enter the english description" style="width:50%;"  value="<? echo $selectedType->description_en; ?>"><br>
-        <input gstype="submit" type="button" value="save">
-    </div>
-</div>
 <br>
 <? if($this->getFactory()->getStore()->id == "3292fa74-32a2-4d52-b88f-6be6f3dff813") { ?>
 
@@ -211,9 +177,6 @@ Existing rooms:<br>
 <b>Arx server</b>
 <div>Variabler: {code}, {room}, {checkin_time}, {checkout_time}, {name}, {checkin_date}, {referenceNumber, {contacts}, {roomName}, {email}, {address}, {postCode}, {city}</div>
 <table gstype="form" method="saveArxData">
-    <tr><td>Server address</td><td><input type="text" gsname="arx_server" value="<? echo $this->getConfigurationSetting("arx_server"); ?>"></td><tr>
-    <tr><td>Server username</td><td><input type="text" gsname="arx_username" value="<? echo $this->getConfigurationSetting("arx_username"); ?>"></td><tr>
-    <tr><td>Server password</td><td><input type="text" gsname="arx_password" value="<? echo $this->getConfigurationSetting("arx_password"); ?>"></td><tr>
     <tr><td>Sms from</td><td><input type="text" gsname="arx_smsfrom" value="<? echo $this->getConfigurationSetting("arx_smsfrom"); ?>"></td><tr>
     <tr><td>Sms welcome</td><td><input style="width: 800px;" type="text" gsname="arx_smswelcome" value="<? echo $this->getConfigurationSetting("arx_smswelcome"); ?>"></td><tr>
     <tr><td>Sms ready</td><td><input style="width: 800px;" type="text" gsname="arx_smsready" value="<? echo $this->getConfigurationSetting("arx_smsready"); ?>"></td><tr>

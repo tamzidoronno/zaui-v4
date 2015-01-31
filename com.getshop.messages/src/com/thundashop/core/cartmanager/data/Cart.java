@@ -41,6 +41,14 @@ public class Cart extends DataCommon {
         return null;
     }
     
+    public CartItem createCartItem(Product product, int count) {
+        CartItem cartItem = new CartItem();
+        cartItem.setProduct(product);
+        cartItem.setCount(count);
+        items.add(cartItem);
+        return cartItem;
+    }
+
     public CartItem getCartItem(String cartItemId) {
         for (CartItem cartItem : items) {
             if (cartItem.getCartItemId().equals(cartItemId)) {

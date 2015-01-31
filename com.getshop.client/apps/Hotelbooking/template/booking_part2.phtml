@@ -6,58 +6,66 @@ $priceText = $this->__w("PRICE PER NIGHT");
 $selectRoomButton = $this->__w("SELECT ROOM");
 $endText = $this->__w("WHEN DO YOU LEAVE?");
 $headingtext = $this->__w("You have selected the following duration for your stay");
-if($this->getServiceType() == "storage") {
+if ($this->getServiceType() == "storage") {
     $selectRoomText = $this->__w("Select your storage room");
     $priceText = $this->__w("PRICE PER MONTH");
     $selectRoomButton = $this->__w("SELECT STORAGE ROOM");
     $endText = $this->__w("END");
     $headingtext = $this->__w("You have selected the following start date for your rental periode");
 }
-
 ?>
 <div class="top_row_container">
     <div class='title'><? echo $headingtext; ?></div>
     <div class='seperator'></div>
     <div class='top_box'>
-        <? if($this->getServiceType() == "hotel") { ?>
+        <? if ($this->getServiceType() == "hotel") { ?>
             <span class='booking_count_box'>
                 <table>
-                    <tr>
-                        <td><? echo $this->__w("Number of persons"); ?></td>
-                        <td align='right'><input type='number' min="1" max="10" id="numberofpersons" value="<? echo $this->getPersonCount(); ?>"></td>
-                    </tr>
                     <tr>
                         <td><? echo $this->__w("Number of rooms"); ?></td>
                         <td align='right'><input class='number_of_rooms' type='number' min="1" max="10" value='<? echo $this->getRoomCount(); ?>'></td>
                     </tr>
-                    <tr>
-                        <td colspan='2'>
-                            <br>
-                            <? echo $this->__w("Campaign code"); ?>
-                            <input type='text' style='width:100%; margin:0px;'>
-                        </td>
-                    </tr>
-                    <?  
-                    if($this->getDayCount() > 3) { 
+                    <?
+                    if ($this->getDayCount() > 3) {
                         ?>
                         <tr>
                             <td colspan='2'>
                                 <br>
-                                <? echo $this->__w("Cleaning 49,- each clean"); ?>
+                                <? echo $this->__w("Cleaning 49,- each clean");
+                                $vasking = $this->getCleaningProudcts();
+                                $selectedOption = $this->getCleaningOption();
+
+                                
+                                ?>
                                 <div>
                                     <select class="cleaning_option">
                                         <option value="no"><? echo $this->__f("No cleaning"); ?></option>
                                         <?
-                                        $vasking = $this->getCleaningProudcts();
-                                        foreach($vasking as $vask) {
+                                        foreach ($vasking as $vask) {
                                             $selected = "";
-                                            if($this->getCleaningOption() == $vask->id) {
+                                            if ($selectedOption == $vask->id) {
                                                 $selected = "SELECTED";
                                             }
-                                            echo "<option value='".$vask->id."' $selected>" . $vask->name . "</option>";
+                                            echo "<option value='" . $vask->id . "' $selected>" . $vask->name . "</option>";
                                         }
                                         ?>
                                     </select>
+                                </div>
+                            </td>
+                        </tr>
+                    <? } ?>
+                    <?
+                    if ($this->hasAvailableParkingSpots()) {
+                        $price = $this->getParkingProduct()->price;
+                        ?>
+                        <tr>
+                            <td colspan='2'>
+                                <br>
+                                <div>
+                                    <label>
+                                        <input type="checkbox" class="parking_option" style="width:15px; margin:0px;padding:4px;" <? if($this->getParking()) { echo "CHECKED"; } ?>>
+                                        <? echo $this->__w("Parking slot"); ?> + <? echo $this->getParkingPrice(); ?> kr
+                                    </label>
                                 </div>
                             </td>
                         </tr>
@@ -70,7 +78,7 @@ if($this->getServiceType() == "storage") {
             <? $this->printCalendar($this->getStart(), false, "startDate"); ?>
         </span>
 
-        <? if($this->getServiceType() == "hotel") { ?>
+        <? if ($this->getServiceType() == "hotel") { ?>
             <span class='calendar right'>
                 <? echo $this->printCalendar($this->getEnd(), $this->getStart(), "endDate"); ?>
             </span>
@@ -79,73 +87,93 @@ if($this->getServiceType() == "storage") {
     </div>
     <?
     $days = $this->getMinumRentalTexted();
-    if($days) {
+    if ($this->getShowExtraInformation()) {
+        echo $this->getShowExtraInformation();
+    } else if ($days) {
         $minimum = $this->__f("* Minimum rental periode is {days}");
         $minimum = str_replace("{days}", $days, $minimum);
         echo "<div class='error_text'>" . $minimum . "</div>";
     }
     ?>
     <?
-            foreach($this->errors as $error) {
-                echo "<div class='error_text'>" . $error . "</div>";
-            }
+    foreach ($this->errors as $error) {
+        echo "<div class='error_text'>" . $error . "</div>";
+    }
     ?>
 </div>
 <div class="bottom_row_container">
     <div class='title'><? echo $selectRoomText; ?></div>
-     <div class='room_selection_2 heading'>
-         <span class='firstbox selection_box'>
-             <div class='name'><? echo $this->__w("ROOM TYPE"); ?></div>
-         </span> 
-         <? if($this->getServiceType() == "hotel") { ?>
+    <div class='room_selection_2 heading'>
+        <span class='firstbox selection_box'>
+            <div class='name'><? echo $this->__w("ROOM TYPE"); ?></div>
+        </span> 
+        <? if ($this->getServiceType() == "hotel") { ?>
             <span class='secondbox selection_box'>
                 <div><? echo $this->__w("COUNT"); ?></div>
             </span>
-         <? } ?>
-         <span class='price_box'><? echo $priceText; ?></span>
-         <div style='clear:both;'></div>
-     </div>
+        <? } ?>
+        <span class='price_box'><? echo $priceText; ?></span>
+        <div style='clear:both;'></div>
+    </div>
     <div style="height:5px;"></div>
 
     <?
     $products = $this->getHotelRooms();
     $foundroom = 0;
-    foreach($products as $product) {
+    foreach ($products as $product) {
         $selectedclass = "";
-        $avroom = $this->getNumberOfAvailableRooms($product->sku);
-        if($product->id === $this->getProduct()->id) {
+        $avroom = $this->getNumberOfAvailableRooms($product->id);
+        if ($product->id === $this->getProduct()->id) {
             $selectedclass = "selected";
         }
-        if($avroom <= 0) {
-            continue;
+        $disabled = "";
+        if ($avroom <= 0) {
+            $selectedclass .= " disabled";
         }
+        $images = $product->imagesAdded;
+
         $foundroom = true;
         echo "<div class='room_selection_2 product $selectedclass'>";
         /* @var $product core_productmanager_data_Product */
-        echo "<span class='firstbox selection_box' productid='".$product->id."'>";
-        echo "<div class='name'>" . $product->name . "</div>";
-        if(isset($product->descriptions[0])) {
+        echo "<span class='firstbox selection_box' productid='" . $product->id . "'>";
+        if (sizeof($images) > 0 && $this->getDisplayRoomThumbnail()) {
+            echo '<a href="displayImage.php?id=' . $images[0] . '" data-lightbox="' . $product->id . '" data-title=""><img class="imagepreview" src="displayImage.php?id=' . $images[0] . '"></a>';
+            foreach ($images as $index => $image) {
+                if ($index == 0) {
+                    continue;
+                }
+                echo '<a href="displayImage.php?id=' . $image . '" data-lightbox="' . $product->id . '" data-title=""></a>';
+            }
+        }
+        echo "<div class='name' >" . $product->name . "</div>";
+        if (isset($product->descriptions[0])) {
             echo trim($product->descriptions[0] ? strip_tags($product->descriptions[0]) : '');
         }
         echo "</span>";
 
         echo "<span class='secondbox selection_box'>";
-        if($this->getServiceType() == "hotel") {
+        if ($this->getServiceType() == "hotel") {
             echo "<div><i class='fa fa-user'></i></div>";
             echo "<div class='personalcount'>2x</div>";
         }
         echo "</span>";
-        echo "<span class='price_box'><span class='price_text'>".$product->price.",-";
-        if($product->price < $product->original_price) {
-                 echo "<span class='rebated_product'> (-". (100-(int)(($product->price / $product->original_price)*100)) . "%)</span>";
+        if($product->price != 0) {
+            echo "<span class='price_box'><span class='price_text'>" . $product->price . ",-";
+        }
+        if ($product->price < $product->original_price) {
+            echo "<span class='rebated_product'> (-" . (100 - (int) (($product->price / $product->original_price) * 100)) . "%)</span>";
         }
         echo "</span>";
-        echo "<span class='selectbutton' gstype='clicksubmit' method='changeProduct' gsname='productid' gsvalue='".$product->id."'>".$selectRoomButton."</span>";
+        if ($avroom <= 0) {
+            echo "<span class='sold_out'>" . $this->__w("Sold out") . "</span>";
+        } else {
+            echo "<span class='selectbutton' gstype='clicksubmit' method='changeProduct' gsname='productid' gsvalue='" . $product->id . "'>" . $selectRoomButton . "</span>";
+        }
         echo "</span>";
         echo "<div style='clear:both;'></div>";
         echo "<span class='available_rooms'>";
         echo $avroom;
-        if($avroom > 1) {
+        if ($avroom > 1) {
             echo " " . $this->__w("available rooms");
         } else {
             echo " " . $this->__w("available room");
@@ -153,17 +181,16 @@ if($this->getServiceType() == "storage") {
         echo "</span>";
         echo "</div>";
     }
-    if(!$foundroom) {
+    if (!$foundroom) {
         echo "<div class='no_room_available'>" . $this->__w("No rooms are available for this time periode.") . "</div>";
         echo "<script>$('.room_selection_2').hide();</script>";
     } else {
-        if(!$this->errors) {
+        if (!$this->errors) {
             ?>
             <div class="to_checkout">
-                <a href='?page=<? echo $this->getPage()->id; ?>&subpage=summary'><div class="continue_to_cart_button"><? echo $this->__w("CONTINUE"); ?></div></a>
+                <a href='?page=<? echo $this->getPage()->javapage->id; ?>&subpage=summary'><div class="continue_to_cart_button"><? echo $this->__w("CONTINUE"); ?></div></a>
             </div>
         <? } ?>
     <? } ?>
 </div>
 <div style="clear:both;"></div>
-<br><br><br><br><br><br>

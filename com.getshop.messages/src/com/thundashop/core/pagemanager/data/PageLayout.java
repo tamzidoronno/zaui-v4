@@ -84,7 +84,10 @@ public class PageLayout implements Serializable {
     private ArrayList<PageCell> getAllCells() {
         ArrayList<PageCell> cells = new ArrayList();
         for (String area : areas.keySet()) {
-            cells.addAll(areas.get(area));
+            ArrayList<PageCell> areastoadd = areas.get(area);
+            if(areastoadd != null) {
+                cells.addAll(areastoadd);
+            }
         }
         return cells;
     }

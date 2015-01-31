@@ -122,10 +122,9 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
                    $id = str_replace("id_", "", $id);
                    $room = $this->getApi()->getHotelBookingManager()->getRoom($id);
 
-                   $room->roomType = $_POST['data']['roomtype_'.$id];
                    $room->roomName = $_POST['data']['roomname_'.$id];
                    $room->lockId = $_POST['data']['lockid_'.$id];
-                   $room->currentCode = $_POST['data']['lockcode_'.$id];
+                   $room->productId = $_POST['data']['productid_'.$id];
 
                    if($_POST['data']['available_'.$id] == "false") {
                        $room->isActive = "false";
@@ -193,9 +192,8 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
     /**
      * 
      * @param \core_hotelbookingmanager_Room $room
-     * @param \core_hotelbookingmanager_RoomType[] $types
      */
-    public function printRoomRow($room, $types) {
+    public function printRoomRow($room, $products) {
         
         $falseselected = "";
         $unavclass = "";
@@ -210,14 +208,16 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         echo "<input type='hidden' value='". $room->id."' gsname='id_".$room->id."'>";
         echo "<i class='fa fa-trash-o' roomid='".$room->id."'></i></td>";
         echo "<td width='10'>";
-        echo "<select gsname='roomtype_".$room->id."'>";
-        echo "<option value=''>Set a room type</option>";
-        foreach($types as $type) {
+        echo "<select gsname='productid_".$room->id."'>";
+        echo "<option value=''>Connect to product</option>";
+        foreach($products as $product) {
+            /* @var $product \core_productmanager_data_Product */
             $selected = "";
-            if($type->id == $room->roomType) {
+            if($room->productId == $product->id) {
                 $selected = "SELECTED";
             }
-            echo "<option value='".$type->id."' $selected>".$type->name."</option>";
+            
+            echo "<option value='".$product->id."' $selected>" . $product->name . "</option>";
         }
         echo "</select>";
         echo "</td>";

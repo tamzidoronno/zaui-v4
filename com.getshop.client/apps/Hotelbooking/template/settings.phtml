@@ -3,6 +3,8 @@ $types = array();
 $types["hotel"] = "Hotel";
 $types["storage"] = "Storage";
 
+/* @var $config core_hotelbookingmanager_GlobalBookingSettings */
+$config = $this->getConfig();
 ?>
 <div style='padding: 20px;'>
     <table width='40%' gstype="form" method="setConfig">
@@ -46,6 +48,63 @@ $types["storage"] = "Storage";
             </td>
             <td>
                 <input type='text' gsname='rental_days' value="<? echo $this->getMinumRental(); ?>">
+            </td>
+        </tr>
+        <tr>
+            <td>
+               Maximum number of days from starting rental
+            </td>
+            <td>
+                <input type='text' gsname='start_max_days' value="<? echo $config->maxRentalDaysAhead; ?>">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Display thumbnails on rooms
+            </td>
+            <td>
+                <select gsname="display_room_thumbnail">
+                    <option value="false">No</option>
+                    <option value="true" <? if($config->roomThumbNails) { echo " SELECTED"; } ?>>Yes</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Show reference number
+            </td>
+            <td>
+                <select gsname="show_referencenumber">
+                    <option value="false">No</option>
+                    <option value="true" <? if($this->showReferenceNumber()) { echo " SELECTED"; } ?>>Yes</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Display heard about us
+            </td>
+            <td>
+                <select gsname="show_heardaboutus">
+                    <option value="false">No</option>
+                    <option value="true" <? if($this->getConfig()->displayHeardAboutUs) { echo " SELECTED"; } ?>>Yes</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Parking spots
+            </td>
+            <td>
+                <input type='text' gsname='parking_spots' value="<? echo $config->parkingSpots; ?>">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Extra information
+            </td>
+            <td>
+                <textarea gsname='extra_booking_information' ><? echo $config->extraBookingInformation; ?></textarea>
             </td>
         </tr>
         <tr>

@@ -19,6 +19,9 @@ class core_getshop_data_StartData {
 	public $password;
 
 	/** @var String */
+	public $color;
+
+	/** @var String */
 	public $language;
 
 }

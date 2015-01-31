@@ -4,7 +4,7 @@ class core_hotelbookingmanager_Room extends core_common_DataCommon  {
 	public $bookedDates;
 
 	/** @var String */
-	public $roomType;
+	public $productId;
 
 	/** @var String */
 	public $currentCode;

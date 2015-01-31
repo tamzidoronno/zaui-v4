@@ -4,6 +4,7 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
+import java.util.ArrayList;
 import java.util.List;
 
 @GetShopApi
@@ -27,6 +28,8 @@ public interface IHotelBookingManager {
      * @throws ErrorException 
      */
     public String reserveRoom(String roomType, long startDate, long endDate, int count, ContactData contact, boolean markAsInctive, String language) throws ErrorException;
+    
+    public GlobalBookingSettings getBookingConfiguration() throws ErrorException;
     
     /**
      * Add new room to the manager.
@@ -74,20 +77,15 @@ public interface IHotelBookingManager {
     @Administrator
     public void deleteReference(int reference) throws ErrorException;
     
-    
-    public List<RoomType> getRoomTypes() throws ErrorException;
-
-    @Administrator
-    public void saveRoomType(RoomType type) throws ErrorException;
-    
-    @Administrator
-    public void removeRoomType(String id) throws ErrorException;
+    public ArrayList getRoomProductIds() throws ErrorException;
     
     @Administrator
     public void updateReservation(BookingReference reference) throws ErrorException;
     
     @Administrator
     public void setArxConfiguration(ArxSettings settings) throws ErrorException;
+    
+    public Integer checkAvailableParkingSpots(long startDate, long endDate) throws ErrorException;
     
     @Administrator
     public void setVismaConfiguration(VismaSettings settings) throws ErrorException;
@@ -96,7 +94,10 @@ public interface IHotelBookingManager {
     public void markRoomAsReady(String roomId) throws ErrorException;
     
     public BookingReference getReservationByReferenceId(Integer referenceId) throws ErrorException;
-    
+
+    @Administrator
+    public void setBookingConfiguration(GlobalBookingSettings settings) throws ErrorException;
+
     public List<ArxLogEntry> getArxLog() throws ErrorException;
     
     public void checkForVismaTransfer() throws ErrorException;

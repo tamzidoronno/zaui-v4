@@ -1,6 +1,7 @@
 package com.thundashop.core.cartmanager;
 
 import com.getshop.scope.GetShopSession;
+import com.google.gson.Gson;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
@@ -50,6 +51,18 @@ public class CartManager extends ManagerBase implements ICartManager {
         }
     }
 
+
+    @Override
+    public CartItem addProductItem(String productId, int count) throws ErrorException {
+        Product product = getProduct(productId, null);
+        if (product != null) {
+            Cart cart = getCart(getSession().id);
+            return cart.createCartItem(product, count);
+        } else {
+            throw new ErrorException(1011);
+        }
+    }
+        
     private Cart getCart(String sessionId) {
         if (!carts.containsKey(sessionId)) {
             carts.put(sessionId, new Cart());

@@ -47,10 +47,12 @@ if($this->getServiceType($text) == "storage") {
     </tr>
 </table>
 <div class='space_betweenroom'></div>
-<? echo $roomtypetext; ?><br>
+<? 
+echo $roomtypetext; 
+$products = $this->getHotelRooms();
+?><br>
 <select class='room_selection'>
     <?
-        $products = $this->getHotelRooms();
         foreach($products as $product) {
             /* @var $product \core_productmanager_data_Product */
             

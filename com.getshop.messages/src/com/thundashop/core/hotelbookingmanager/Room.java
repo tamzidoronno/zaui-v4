@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class Room extends DataCommon {
     List<BookedDate> bookedDates = new ArrayList();
-    public String roomType;
+    public String productId;
     public String currentCode;
     public String roomName;
     public Boolean isActive = true;

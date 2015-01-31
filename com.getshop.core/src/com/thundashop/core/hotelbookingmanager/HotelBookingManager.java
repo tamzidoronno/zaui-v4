@@ -189,7 +189,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Override
     public void deleteReference(int reference) throws ErrorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        BookingReference todelete = getReservationByReferenceId(reference);
+        databaseSaver.deleteObject(todelete, credentials);
+        bookingReferences.remove(reference);
     }
 
     @Override

@@ -16,10 +16,14 @@ public class BookingReference extends DataCommon {
     public List<RoomInformation> roomsReserved = new ArrayList();
     public HashMap<String, Boolean> isApprovedForCheckIn = new HashMap();
     public ContactData contact = new ContactData();
+    public boolean active = true;
     public Double bookingFee = 0.0;
     public boolean updateArx = true;
-    public boolean sentWelcomeMessages = true;
+    public boolean confirmed = false;
+    public String sentWelcomeMessages = "true";
     public Integer parkingSpots = 0;
+    public String heardAboutUs = "";
+    Date failed = null;
     
     public boolean isApprovedForCheckin(String roomId) {
         if(isApprovedForCheckIn.containsKey(roomId)) {

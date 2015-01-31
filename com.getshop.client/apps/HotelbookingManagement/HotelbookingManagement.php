@@ -101,7 +101,10 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         $id = $_POST['data']['id'];
         $this->getApi()->getHotelBookingManager()->deleteReference($id);
     }
-    
+       
+    public function activateBooking() {
+        $this->getApi()->getHotelBookingManager()->confirmReservation($_POST['data']['referenceid']);
+    }
     
     public function deleteType() {
         $id = $_POST['data']['typeId'];
@@ -122,9 +125,10 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
                    $id = str_replace("id_", "", $id);
                    $room = $this->getApi()->getHotelBookingManager()->getRoom($id);
 
+                   $room->roomType = $_POST['data']['roomtype_'.$id];
                    $room->roomName = $_POST['data']['roomname_'.$id];
                    $room->lockId = $_POST['data']['lockid_'.$id];
-                   $room->productId = $_POST['data']['productid_'.$id];
+                   $room->currentCode = $_POST['data']['lockcode_'.$id];
 
                    if($_POST['data']['available_'.$id] == "false") {
                        $room->isActive = "false";
@@ -159,6 +163,15 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         
     }
     
+    public function showStopReference() {
+        $this->includefile("stopreference");
+    }
+    
+    public function stopReference() {
+        $stoppedDate = date("M d, Y h:m:s A", strtotime($_POST['data']['stopDate']));
+        $this->getApi()->getHotelBookingManager()->markReferenceAsStopped($_POST['data']['refid'], $stoppedDate);
+    }
+    
     public function getStarted() {
     }
 
@@ -189,9 +202,20 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         }
     }
     
+    public function getStoppedReferenceDate($referenceId) {
+        $res = $this->getApi()->getHotelBookingManager()->getReservationByReferenceId($referenceId);
+        if ($res) {
+            $time = strtotime($res->endDate);
+            return date("d.m.Y", $time);
+        }
+        
+        return "";
+    }
+    
     /**
      * 
      * @param \core_hotelbookingmanager_Room $room
+     * @param \core_hotelbookingmanager_RoomType[] $types
      */
     public function printRoomRow($room, $products) {
         

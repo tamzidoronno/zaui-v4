@@ -3,6 +3,7 @@ namespace ns_15e67fa1_c862_4bc3_9b17_dfd818f30712;
 
 /* @var $this HotelbookingManagement */
 $hmanager = $this->getApi()->getHotelBookingManager();
+$config = $this->getConfiguration();
 $rooms = $hmanager->getAllRooms();
 $newRoom = array();
 foreach($rooms as $room) {
@@ -26,45 +27,59 @@ if(isset($_POST['data']['updated'])) {
 <br>
     
 Existing booking references
-<div style="padding:10px; border: solid 1px;background-color:#EFEFEF;">
-    <table width="100%">
-        <tr>
-            <th>Remove</th>
-            <th>Registration date</th>
-            <th>Reserved by</th>
-            <th>Reservation number</th>
-            <th>Room (code)</th>
-            <th>Start date</th>
-            <th>End date</th>
-            <? if($this->getFactory()->getStore()->id == "3292fa74-32a2-4d52-b88f-6be6f3dff813") { ?>
-                <th>Gebyr</th>
-                <th>Contract</th>
-            <? } ?>
-        </tr>
+<div style="">
+    <table width="100%" id="datatableadmin">
+        <thead>
+            <tr>
+                <th>Ref id</th>
+                <th>Different actions</th>
+                <th>Registration date</th>
+                <th>Reserved by</th>
+                <th>Start date</th>
+                <th>End date</th>
+                <? if($this->getFactory()->getStore()->id == "3292fa74-32a2-4d52-b88f-6be6f3dff813") { ?>
+                    <th>Gebyr</th>
+                    <th>Contract</th>
+                <? } ?>
+            </tr>
+        </thead>
+        <tbody>
         <?
         $reservations = $this->getApi()->getHotelBookingManager()->getAllReservations();
         foreach($reservations as $reservation) {
             $roomarray = array();
             /* $rooms \core_hotelbookingmanager_Room[] */
-            foreach($reservation->roomIds as $index => $id) {
-                $roomarray[] = "<span class='editroom' style='cursor:pointer;' refid='".$reservation->bookingReference."' roomid='$id'>" . $rooms[$id]->roomName . " (" . $reservation->codes[$index] . ")</span>";
+            foreach($reservation->roomsReserved as $roomsReserved) {
+                $roomarray[] = "<span class='editroom' style='cursor:pointer;' refid='".$reservation->bookingReference."' roomid='$roomsReserved->roomId'>" . $rooms[$roomsReserved->roomId]->roomName . "</span>";
             }
 
             $order = $this->getApi()->getOrderManager()->getOrderByReference($reservation->bookingReference);
+            $active = $reservation->active ? "" : "color: red";
+            $alreadyConfirmed = $reservation->confirmed;
+            
             /* @var $reservation \core_hotelbookingmanager_BookingReference */
             echo "<tr reservation='".$reservation->bookingReference."'>";
-            echo "<td style='text-align:center;' valign='top'><i style='cursor:pointer' refid='".$reservation->bookingReference."' class='fa fa-trash-o delete_reference'></td>";
-            echo "<td valign='top'>" . $reservation->rowCreatedDate . "</td>";
-            echo "<td valign='top'>";
-            if($order && $order->userId) {
-                $user = $this->getApi()->getUserManager()->getUserById($order->userId);
-                echo "<a href='?page=users_all_users&userid=".$order->userId."'>";
-                echo join("<br>", $reservation->contact->names);
-                echo "</a>";
+            echo "<td style='text-align:center;' valign='top'>" . $reservation->bookingReference . "</td>";
+            echo "<td style='text-align:center;' valign='top'>"
+            . "<i style='cursor:pointer' refid='".$reservation->bookingReference."' class='fa fa-trash-o delete_reference'></i>";
+
+            if ($alreadyConfirmed) {
+                echo "&nbsp;&nbsp;<i style='cursor:pointer; $active' refid='".$reservation->bookingReference."' class='fa fa-stop stop_reference'></i>";
+            }
+            
+            if (!$alreadyConfirmed) {
+                echo "&nbsp;&nbsp;<i style='cursor:pointer;' refid='".$reservation->bookingReference."' class='fa fa-play go_live'></i>";
             }
             echo "</td>";
-            echo "<td style='text-align:center;' valign='top'>" . $reservation->bookingReference . "</td>";
-            echo "<td style='text-align:center;' valign='top'>" . join("<br>", $roomarray) . "</td>";
+            echo "<td valign='top'>" . $reservation->rowCreatedDate . "</td>";
+            echo "<td valign='top'>";
+            foreach($reservation->roomsReserved as $reservedRoom) {
+                /* @var $reservedRoom \core_hotelbookingmanager_RoomInformation */
+                foreach($reservedRoom->visitors as $visitor) {
+                    echo "rom: ". $rooms[$reservedRoom->roomId]->roomName. "&nbsp;" . $visitor->name  . ", " . $visitor->phone . "<bR>";
+                }
+            }
+            echo "</td>";
             echo "<td style='text-align:center;' valign='top'>" . $reservation->startDate . "</td>";
             echo "<td style='text-align:center;' valign='top'>" . $reservation->endDate . "</td>";
             if($this->getFactory()->getStore()->id == "3292fa74-32a2-4d52-b88f-6be6f3dff813") {
@@ -78,11 +93,19 @@ Existing booking references
             echo "</tr>";
         }
         ?>
+        </tbody>
     </table>
 </div>
 <br>
 <br>
 <br>
+<script>
+    $('#datatableadmin').DataTable({
+            "bJQueryUI": true,
+            "aLengthMenu": [[10, 25, 50, 100, 200, -1], [10, 25, 50, 100, 200, "All"]],
+            "iDisplayLength": 1000
+        });
+</script>
 <br>
 
 <? echo $this->__w("Add a room"); ?>
@@ -120,6 +143,31 @@ Existing rooms:<br>
     </table>
 </div>
 <br>
+<br>
+<br>
+<br>
+
+<? echo $this->__w("New room type"); ?>
+<div style="padding:10px; border: solid 1px;background-color:#EFEFEF;">
+    <div>
+        <select id="type">
+            <?
+                foreach($types as $type) {
+                    echo "<option value='" . $type->id . "'>" . $type->name . "</option>";
+                }
+            ?>
+        </select>
+        <span class="edit_type">Edit</span>
+        <span class="delete_type">Delete</span>
+    </div>
+    <div gstype="form" method="addType">
+        <input type="hidden" gsname="id" value="<? echo $selectedType->id; ?>">
+        <input gstype="value" type="txt" gsname='name' placeholder="Enter a name for the room type" style="width:50%;" value="<? echo $selectedType->name; ?>"><br>
+        <input gstype="value" type="txt" gsname='en_desc' placeholder="Enter the norwegian description" style="width:50%;"  value="<? echo $selectedType->description_no; ?>"><br>
+        <input gstype="value" type="txt" gsname='no_desc' placeholder="Enter the english description" style="width:50%;"  value="<? echo $selectedType->description_en; ?>"><br>
+        <input gstype="submit" type="button" value="save">
+    </div>
+</div>
 <br>
 <? if($this->getFactory()->getStore()->id == "3292fa74-32a2-4d52-b88f-6be6f3dff813") { ?>
 
@@ -177,6 +225,9 @@ Existing rooms:<br>
 <b>Arx server</b>
 <div>Variabler: {code}, {room}, {checkin_time}, {checkout_time}, {name}, {checkin_date}, {referenceNumber, {contacts}, {roomName}, {email}, {address}, {postCode}, {city}</div>
 <table gstype="form" method="saveArxData">
+    <tr><td>Server address</td><td><input type="text" gsname="arx_server" value="<? echo $this->getConfigurationSetting("arx_server"); ?>"></td><tr>
+    <tr><td>Server username</td><td><input type="text" gsname="arx_username" value="<? echo $this->getConfigurationSetting("arx_username"); ?>"></td><tr>
+    <tr><td>Server password</td><td><input type="text" gsname="arx_password" value="<? echo $this->getConfigurationSetting("arx_password"); ?>"></td><tr>
     <tr><td>Sms from</td><td><input type="text" gsname="arx_smsfrom" value="<? echo $this->getConfigurationSetting("arx_smsfrom"); ?>"></td><tr>
     <tr><td>Sms welcome</td><td><input style="width: 800px;" type="text" gsname="arx_smswelcome" value="<? echo $this->getConfigurationSetting("arx_smswelcome"); ?>"></td><tr>
     <tr><td>Sms ready</td><td><input style="width: 800px;" type="text" gsname="arx_smsready" value="<? echo $this->getConfigurationSetting("arx_smsready"); ?>"></td><tr>

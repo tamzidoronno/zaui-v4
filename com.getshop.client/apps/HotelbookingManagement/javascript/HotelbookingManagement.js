@@ -66,6 +66,30 @@ app.HotelbookingManagement = {
             
         });
     },
+    doStopReference: function() {
+        var data = {
+            "refid" : $(this).attr('ref'),
+            "stopDate" : $('#stopdate').val()
+        }
+        
+        if (!data.stopDate) {
+            alert('Date cant be blank');
+            return;
+        }
+        
+        var event = thundashop.Ajax.createEvent("", "stopReference", $(this), data);
+        thundashop.Ajax.post(event, function() {
+            thundashop.common.hideInformationBox();
+        });
+        
+    },
+    showStopReference: function() {
+        var data = {
+            "refid" : $(this).attr('refid')
+        }
+        var event = thundashop.Ajax.createEvent('','showStopReference',$(this), data);
+        thundashop.common.showInformationBox(event, "Stop reference");
+    },
     initEvents : function() {
         $(document).on('click', '.HotelbookingManagement .edit_type', app.HotelbookingManagement.loadEditType);
         $(document).on('click', '.HotelbookingManagement .delete_type', app.HotelbookingManagement.deleteType);
@@ -73,9 +97,20 @@ app.HotelbookingManagement = {
         $(document).on('click', '.HotelbookingManagement .delete_reference', app.HotelbookingManagement.deleteReference);
         $(document).on('click', '.HotelbookingManagement .editroom', app.HotelbookingManagement.loadMoveRoom);
         $(document).on('click', '.HotelbookingManagement #doChangeRoom', app.HotelbookingManagement.updateRoom);
+        $(document).on('click', '.HotelbookingManagement .stop_reference', app.HotelbookingManagement.showStopReference);
         $(document).on('keyup', '.HotelbookingManagement .adminfee', app.HotelbookingManagement.updateAdminFee);
-    }
+        $(document).on('click', '.HotelbookingManagement .stop_reference_action', app.HotelbookingManagement.doStopReference);
+        $(document).on('click', '.HotelbookingManagement .go_live', app.HotelbookingManagement.confirmReservation);
+    },
     
+    confirmReservation: function() {
+        var data = {
+            referenceid : $(this).attr('refid')
+        };
+        
+        var event = thundashop.Ajax.createEvent(null, "activateBooking", this, data);
+        thundashop.Ajax.post(event);
+    }
 }
 
 app.HotelbookingManagement.initEvents();

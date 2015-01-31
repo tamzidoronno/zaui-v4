@@ -83,10 +83,7 @@ getshop.MenuEditor = {
         }
         
         var event = thundashop.Ajax.createEvent(null, "setPageHomePage", $('.Menu')[0], data);
-        event['synchron'] = true;
-        thundashop.Ajax.postWithCallBack(event, function() {
-            getshop.MenuEditor.list.refresh();
-        });
+        thundashop.Ajax.postWithCallBack(event);
     },
     
     editorStarted: function(appId) {

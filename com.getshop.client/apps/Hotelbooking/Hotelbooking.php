@@ -8,7 +8,8 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     var $failedReservation = false;
     var $invalid = false;
     var $errors = array();
-    
+    var $config;
+
     function __construct() {
     }
  
@@ -20,11 +21,46 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $this->includefile("settings");
     }
     
+    public function getParking() {
+        return $this->getConfig()->parkingSpots;
+    }
+    
+    public function showReferenceNumber() {
+        if($this->isEditorMode()) {
+            return true;
+        }
+        return $this->getConfig()->showReferenceNumber;
+    }
+    
+    /**
+     * 
+     * @return \core_hotelbookingmanager_GlobalBookingSettings
+     */
+    public function getConfig() {
+        if(!$this->config) {
+            $this->config = $this->getApi()->getHotelBookingManager()->getBookingConfiguration();
+        }
+        return $this->config;
+    }
+    
+    
+    public function getParkingPrice() {
+        return $this->getParkingProduct()->price * $this->getDayCount();
+    }
+    
     public function setConfig() {
-        $this->setConfigurationSetting("name", $_POST['data']['name']);
-        $this->setConfigurationSetting("type", $_POST['data']['type']);
+        $settings = new \core_hotelbookingmanager_GlobalBookingSettings();
+        $settings->name = $_POST['data']['name'];
+        $settings->type = $_POST['data']['type'];
+        $settings->minRentalDays = $_POST['data']['rental_days'];
+        $settings->maxRentalDaysAhead = $_POST['data']['start_max_days'];
+        $settings->roomThumbNails = $_POST['data']['display_room_thumbnail'];
+        $settings->showReferenceNumber = $_POST['data']['show_referencenumber'];
+        $settings->displayHeardAboutUs = $_POST['data']['show_heardaboutus'];
+        $settings->parkingSpots = $_POST['data']['parking_spots'];
+        $settings->extraBookingInformation = $_POST['data']['extra_booking_information'];
+        $this->getFactory()->getApi()->getHotelBookingManager()->setBookingConfiguration($settings);
         $this->setConfigurationSetting("contine_page", $_POST['data']['contine_page']);
-        $this->setConfigurationSetting("minumum_rental_days", $_POST['data']['rental_days']);
     }
     
     public function getRoomTaxes() {
@@ -70,8 +106,8 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return "left";
     }
     
-    function getNumberOfAvailableRooms($type) {
-        return $this->getApi()->getHotelBookingManager()->checkAvailable($this->getStart(),$this->getEnd(),$type);
+    function getNumberOfAvailableRooms($productId) {
+        return $this->getApi()->getHotelBookingManager()->checkAvailable($this->getStart(),$this->getEnd(),$productId);
     }
     
     function getDayCount() {
@@ -421,20 +457,15 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
     
     public function getHotelRooms() {
-        $rooms = $this->getApi()->getProductManager()->getAllProducts();
-        $types = $this->getApi()->getHotelBookingManager()->getRoomTypes();
-        $roomtypes = [];
+        $products = $this->getApi()->getProductManager()->getAllProducts();
+        $roomProductIds = $this->getApi()->getHotelBookingManager()->getRoomProductIds();
         $allrooms = array();
-        foreach($types as $type) {
-            /* @var $type \core_hotelbookingmanager_RoomType */
-            $roomtypes[$type->name] = true;
-        }
         $prices = array();
-        foreach($rooms as $room) {
-            /* @var $room \core_productmanager_data_Product */
-            if(isset($roomtypes[$room->sku])) {
-                $prices[] = $room->price;
-                $allrooms[] = $room;
+        foreach($products as $product) {
+            /* @var $product \core_productmanager_data_Product */
+            if(in_array($product->id, $roomProductIds)) {
+                $prices[] = $product->price;
+                $allrooms[] = $product;
             }
         }
         asort($prices);
@@ -634,10 +665,29 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         }
         return $isvalid;
     }
+    
+    public function hasAvailableParkingSpots() {
+        $spots = $this->getApi()->getHotelBookingManager()->checkAvailableParkingSpots($this->getStart(), $this->getEnd());
+        return $spots;
+    }
+    
+    public function getShowExtraInformation() {
+        return "";
+    }
 
+    public function getParkingProduct() {
+        $products = $this->getApi()->getProductManager()->getAllProducts();
+        foreach($products as $product) {
+            if($product->sku == "parking") {
+                return $product;
+            }
+        }
+        return null;
+    }
+    
     public function checkavailabilityFromSelection() {
         $product = $this->getProduct();
-        return $this->getApi()->getHotelBookingManager()->checkAvailable($this->getStart(),$this->getEnd(),$product->sku);
+        return $this->getApi()->getHotelBookingManager()->checkAvailable($this->getStart(),$this->getEnd(),$product->id);
     }
 
     public function hasPaymentAppAdded() {

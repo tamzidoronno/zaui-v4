@@ -125,10 +125,9 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
                    $id = str_replace("id_", "", $id);
                    $room = $this->getApi()->getHotelBookingManager()->getRoom($id);
 
-                   $room->roomType = $_POST['data']['roomtype_'.$id];
+                   $room->productId = $_POST['data']['productid_'.$id];
                    $room->roomName = $_POST['data']['roomname_'.$id];
                    $room->lockId = $_POST['data']['lockid_'.$id];
-                   $room->currentCode = $_POST['data']['lockcode_'.$id];
 
                    if($_POST['data']['available_'.$id] == "false") {
                        $room->isActive = "false";

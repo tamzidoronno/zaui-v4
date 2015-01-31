@@ -44,6 +44,9 @@ if ($this->getServiceType() == "storage") {
         $cart = $this->getApi()->getCartManager()->getCart();
         $total = 0;
         $taxes = array();
+//        echo "<pre>";
+//        print_r($cart->items);
+//        echo "</pre>";
         foreach ($cart->items as $cartItem) {
             /* @var $cartItem core_cartmanager_data_CartItem */
             $product = $cartItem->product;

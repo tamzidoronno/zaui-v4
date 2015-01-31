@@ -13,13 +13,18 @@ class ProductLists extends \ApplicationBase implements \Application {
     
     private function showLists() {
         if (!$this->getConfigurationSetting("productlist") && !$this->isSearchResultList()) {
-            $this->includefile("showLists");
+            if ($this->isEditorMode()) {
+                $this->includefile("showLists");
+            }
             return;
         } 
         
         $productList = $this->getApi()->getProductManager()->getProductList($this->getConfigurationSetting("productlist"));
-        if (!$productList) {
-            $this->includefile("showLists");
+        if (!$productList && !$this->isSearchResultList()) {
+            if ($this->isEditorMode()) {
+                $this->includefile("showLists");
+            }
+            
             return;
         }
         

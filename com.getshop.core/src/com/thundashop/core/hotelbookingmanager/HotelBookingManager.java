@@ -8,58 +8,17 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.ordermanager.OrderManager;
-import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.usermanager.UserManager;
-import com.thundashop.core.usermanager.data.User;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPReply;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 @Component
 @GetShopSession
@@ -116,7 +75,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         List<String> takenRooms = new ArrayList();
         for(BookingReference reference :bookingReferences.values()) {
             if(reference.isBetweenDates(startDate, endDate)) {
-                takenRooms.addAll(reference.roomIds);
+                for(RoomInformation info : reference.roomsReserved) {
+                    takenRooms.add(info.roomId);
+                }
             }
         }
         
@@ -133,10 +94,52 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     @Override
-    public String reserveRoom(String roomType, long startDate, long endDate, int count, ContactData contact, boolean markAsInctive, String language) throws ErrorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String reserveRoom(String roomProductId, long startDate, long endDate, List<RoomInformation> roomInfo, AdditionalBookingInformation additionalInfo) throws ErrorException {
+        startDate *= 1000;
+        endDate *= 1000;
+        List<Room> allRooms = findAllRoomsOnProduct(roomProductId);
+        List<Room> roomsToBook = new ArrayList();
+        for(Room room : allRooms) {
+            if(isAvailable(room, startDate, endDate)) {
+                roomsToBook.add(room);
+            }
+            
+            if(roomsToBook.size() == roomInfo.size()) {
+                break;
+            }
+        }
+        
+        if(roomsToBook.size() < roomInfo.size()) {
+            throw new ErrorException(1032);
+        }
+        
+        for(int i = 0; i < roomInfo.size(); i++) {
+            roomInfo.get(i).roomId = roomsToBook.get(i).id;
+        }
+        
+        BookingReference reference = new BookingReference();
+        reference.startDate = new Date();
+        reference.startDate.setTime(startDate);
+        reference.bookingReference = genereateReferenceId();
+        reference.endDate = new Date();
+        reference.endDate.setTime(endDate);
+        
+        reference.roomsReserved = roomInfo;
+        
+        saveObject(reference);
+        bookingReferences.put(reference.bookingReference, reference);
+        return new Integer(reference.bookingReference).toString();
     }
+    
+    
 
+    private int genereateReferenceId() throws ErrorException {
+        booksettings.referenceCount++;
+        int count = booksettings.referenceCount;
+        saveObject(booksettings);
+        return count;
+    }
+    
     @Override
     public void saveRoom(Room room) throws ErrorException {
         saveObject(room);
@@ -216,7 +219,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Override
     public BookingReference getReservationByReferenceId(Integer referenceId) throws ErrorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return bookingReferences.get(referenceId);
     }
 
     @Override
@@ -340,5 +343,16 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     @Override
     public GlobalBookingSettings getBookingConfiguration() throws ErrorException {
         return settings;
+    }
+
+
+    private boolean isAvailable(Room room, long startDate, long endDate) {
+        for(BookingReference reference : bookingReferences.values()) {
+            if(reference.isBetweenDates(startDate, endDate) && reference.getAllRooms().contains(room.id)) {
+                return false;
+            } 
+        }
+        
+        return true;
     }
 }

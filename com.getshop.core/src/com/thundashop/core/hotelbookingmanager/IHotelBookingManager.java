@@ -27,7 +27,7 @@ public interface IHotelBookingManager {
      * @param count The number of rooms to book.
      * @throws ErrorException 
      */
-    public String reserveRoom(String roomType, long startDate, long endDate, int count, ContactData contact, boolean markAsInctive, String language) throws ErrorException;
+    public String reserveRoom(String roomType, long startDate, long endDate, List<RoomInformation> info, AdditionalBookingInformation additionalInfo) throws ErrorException;
     
     public GlobalBookingSettings getBookingConfiguration() throws ErrorException;
     

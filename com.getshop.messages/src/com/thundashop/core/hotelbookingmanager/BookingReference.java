@@ -13,7 +13,7 @@ public class BookingReference extends DataCommon {
     public Date endDate;
     public String language = "nb_NO";
     public List<Integer> codes = new ArrayList();
-    public List<String> roomIds = new ArrayList();
+    public List<RoomInformation> roomsReserved = new ArrayList();
     public HashMap<String, Boolean> isApprovedForCheckIn = new HashMap();
     public ContactData contact = new ContactData();
     public Double bookingFee = 0.0;
@@ -81,4 +81,13 @@ public class BookingReference extends DataCommon {
         
         return false;
     }
+    
+    public List<String> getAllRooms() {
+        List<String> allRooms = new ArrayList();
+        for(RoomInformation room : roomsReserved) {
+            allRooms.add(room.roomId);
+        }
+        return allRooms;
+    }
+
 }

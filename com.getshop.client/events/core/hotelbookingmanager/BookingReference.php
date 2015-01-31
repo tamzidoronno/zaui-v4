@@ -16,7 +16,7 @@ class core_hotelbookingmanager_BookingReference extends core_common_DataCommon  
 	public $codes;
 
 	/** @var String */
-	public $roomIds;
+	public $roomsReserved;
 
 	/** @var String */
 	public $isApprovedForCheckIn;

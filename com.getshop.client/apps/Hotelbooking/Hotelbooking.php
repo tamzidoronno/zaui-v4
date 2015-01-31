@@ -440,7 +440,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             return;
         }
 
-        $type = $this->getProduct()->sku;
+        $productId = $this->getProduct()->id;
         $start = $this->getStart();
         $end = $this->getEnd();
 
@@ -450,8 +450,34 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         if ($this->getServiceType() == "storage") {
             $inactive = true;
         }
+        
+        $infodata = array();
+        $cart = $this->getApi()->getCartManager()->getCart();
+        $cartItems = array();
+        
+        foreach($cart->items as $item) {
+            /* @var $item core_cartmanager_data_CartItem */
+            if($item->product->id == $productId) {
+                $cartItems[] = $item->cartItemId;
+            }
+        }
 
-        $reference = $this->getApi()->getHotelBookingManager()->reserveRoom($type, $start, $end, $count, $contact, $inactive, $this->getFactory()->getSelectedLanguage());
+        for($i = 1; $i <= $count; $i++) {
+            $info = new \core_hotelbookingmanager_RoomInformation();
+            $info->cartItemId = $cartItems[$i-1];
+            $visitor = new \core_hotelbookingmanager_Visitors();
+            $visitor->name = $_POST['data']['name_' . $i];
+            $visitor->phone = $_POST['data']['phone_' . $i];
+            
+            $info->visitors = array();
+            $info->visitors[] = $visitor;
+            $infodata[] = $info;
+        }
+        
+        
+        $additionaldata = new \core_hotelbookingmanager_AdditionalBookingInformation();
+        
+        $reference = $this->getApi()->getHotelBookingManager()->reserveRoom($productId, $start, $end, $infodata, $additionaldata);
         if (($reference) > 0) {
             $reservation = $this->getApi()->getHotelBookingManager()->getReservationByReferenceId($reference);
             $cartmgr = $this->getApi()->getCartManager();
@@ -463,7 +489,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                     $ids[] = $item->cartItemId;
                 }
             }
-            $this->getApi()->getHotelBookingManager()->setCartItemIds($reference, $ids);
             
             
             $user = null;

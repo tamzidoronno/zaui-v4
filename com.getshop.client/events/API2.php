@@ -1923,16 +1923,14 @@ class APIHotelBookingManager {
 	* @throws ErrorException
 	*/
 
-	public function reserveRoom($roomType, $startDate, $endDate, $count, $core_hotelbookingmanager_ContactData, $markAsInctive, $language) {
+	public function reserveRoom($roomType, $startDate, $endDate, $info, $core_hotelbookingmanager_AdditionalBookingInformation) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["roomType"] = json_encode($this->transport->object_unset_nulls($roomType));
 	     $data['args']["startDate"] = json_encode($this->transport->object_unset_nulls($startDate));
 	     $data['args']["endDate"] = json_encode($this->transport->object_unset_nulls($endDate));
-	     $data['args']["count"] = json_encode($this->transport->object_unset_nulls($count));
-	     $data['args']["core_hotelbookingmanager_ContactData"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_ContactData));
-	     $data['args']["markAsInctive"] = json_encode($this->transport->object_unset_nulls($markAsInctive));
-	     $data['args']["language"] = json_encode($this->transport->object_unset_nulls($language));
+	     $data['args']["info"] = json_encode($this->transport->object_unset_nulls($info));
+	     $data['args']["core_hotelbookingmanager_AdditionalBookingInformation"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_AdditionalBookingInformation));
 	     $data["method"] = "reserveRoom";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);

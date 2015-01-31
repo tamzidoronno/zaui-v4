@@ -1959,7 +1959,7 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
-  def reserveRoom(self, roomType, startDate, endDate, count, contact, markAsInctive, language):
+  def reserveRoom(self, roomType, startDate, endDate, info, additionalInfo):
     args = collections.OrderedDict()
     if isinstance(roomType,GetShopBaseClass): 
       args["roomType"]=json.dumps(roomType.__dict__)
@@ -1982,34 +1982,20 @@ class HotelBookingManager(object):
         args["endDate"]=json.dumps(endDate)
       except (ValueError, AttributeError):
         args["endDate"]=endDate
-    if isinstance(count,GetShopBaseClass): 
-      args["count"]=json.dumps(count.__dict__)
+    if isinstance(info,GetShopBaseClass): 
+      args["info"]=json.dumps(info.__dict__)
     else:
       try:
-        args["count"]=json.dumps(count)
+        args["info"]=json.dumps(info)
       except (ValueError, AttributeError):
-        args["count"]=count
-    if isinstance(contact,GetShopBaseClass): 
-      args["contact"]=json.dumps(contact.__dict__)
+        args["info"]=info
+    if isinstance(additionalInfo,GetShopBaseClass): 
+      args["additionalInfo"]=json.dumps(additionalInfo.__dict__)
     else:
       try:
-        args["contact"]=json.dumps(contact)
+        args["additionalInfo"]=json.dumps(additionalInfo)
       except (ValueError, AttributeError):
-        args["contact"]=contact
-    if isinstance(markAsInctive,GetShopBaseClass): 
-      args["markAsInctive"]=json.dumps(markAsInctive.__dict__)
-    else:
-      try:
-        args["markAsInctive"]=json.dumps(markAsInctive)
-      except (ValueError, AttributeError):
-        args["markAsInctive"]=markAsInctive
-    if isinstance(language,GetShopBaseClass): 
-      args["language"]=json.dumps(language.__dict__)
-    else:
-      try:
-        args["language"]=json.dumps(language)
-      except (ValueError, AttributeError):
-        args["language"]=language
+        args["additionalInfo"]=additionalInfo
     data = EmptyClass()
     data.args = args
     data.method = "reserveRoom"

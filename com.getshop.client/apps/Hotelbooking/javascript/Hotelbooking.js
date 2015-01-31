@@ -75,7 +75,7 @@ app.Hotelbooking = {
                 }
                 app.Hotelbooking.setSize();
             } else {
-                document.location.href = '/?page=' + nextpage;
+                thundashop.common.goToPage(nextpage);
             }
         });
     },

@@ -65,17 +65,14 @@ public class BookingReference extends DataCommon {
     }
 
     boolean isBetweenDates(long startDate, long endDate) {
-        Date start = new Date();
-        start.setTime(startDate);
-        
-        Date stop = new Date();
-        stop.setTime(endDate);
-        
-        if(start.after(this.startDate) && start.before(this.endDate)) {
+        if(startDate >= this.startDate.getTime() && startDate < this.endDate.getTime()) {
             return true;
         }
         
-        if(stop.after(this.startDate) && stop.before(this.endDate)) {
+        if(endDate > this.startDate.getTime() && endDate <= this.endDate.getTime()) {
+            return true;
+        }
+        if(startDate <= this.startDate.getTime() && endDate >= this.endDate.getTime()) {
             return true;
         }
         

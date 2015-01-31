@@ -74,7 +74,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     public Integer checkAvailable(long startDate, long endDate, String productId) throws ErrorException {
         List<String> takenRooms = new ArrayList();
         for(BookingReference reference :bookingReferences.values()) {
-            if(reference.isBetweenDates(startDate, endDate)) {
+            if(reference.isBetweenDates(startDate*1000, endDate*1000)) {
                 for(RoomInformation info : reference.roomsReserved) {
                     takenRooms.add(info.roomId);
                 }

@@ -37,6 +37,14 @@ $product = $this->getApi()->getProductManager()->getProduct($_POST['value']);
                     <?php echo $this->__("A unique identifier for the product."); ?>
                 </div>
             </div>
+            
+            <div class="textfield gss_setting"  id="stockQuantity">
+                <span class="title"><?php echo $this->__f("Stock Quantity"); ?></span>
+                <input type="textfield" gs_model='productmodel' gs_model_attr='stockQuantity' value="<? echo $product->stockQuantity; ?>" placeholder=''>
+                <div class="description">
+                    <?php echo $this->__("The current stock quantity."); ?>
+                </div>
+            </div>
 
             <div class="textarea gss_setting"  id="listviewdescription">
                 <span class="title"><?php echo $this->__f("Listview description"); ?></span>

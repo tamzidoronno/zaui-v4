@@ -76,6 +76,19 @@ getshop.MenuEditor = {
             getshop.MenuEditor.list.refresh();
         });
     },
+    
+    setAsHomePage: function(pageName) {
+        var data = {
+            pageName: pageName
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "setPageHomePage", $('.Menu')[0], data);
+        event['synchron'] = true;
+        thundashop.Ajax.postWithCallBack(event, function() {
+            getshop.MenuEditor.list.refresh();
+        });
+    },
+    
     editorStarted: function(appId) {
         $('.menueditorcontainer .menu.setashomepage').droppable({
             accept: '.dropaccept',

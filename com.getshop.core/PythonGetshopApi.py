@@ -2932,28 +2932,6 @@ class OrderManager(object):
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 
-  def logTransactionEntry(self, orderId, entry):
-    args = collections.OrderedDict()
-    if isinstance(orderId,GetShopBaseClass): 
-      args["orderId"]=json.dumps(orderId.__dict__)
-    else:
-      try:
-        args["orderId"]=json.dumps(orderId)
-      except (ValueError, AttributeError):
-        args["orderId"]=orderId
-    if isinstance(entry,GetShopBaseClass): 
-      args["entry"]=json.dumps(entry.__dict__)
-    else:
-      try:
-        args["entry"]=json.dumps(entry)
-      except (ValueError, AttributeError):
-        args["entry"]=entry
-    data = EmptyClass()
-    data.args = args
-    data.method = "logTransactionEntry"
-    data.interfaceName = "core.ordermanager.IOrderManager"
-    return self.communicationHelper.sendMessage(data)
-
   def saveOrder(self, order):
     args = collections.OrderedDict()
     if isinstance(order,GetShopBaseClass): 

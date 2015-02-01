@@ -303,23 +303,6 @@ public class APIOrderManager {
      }
 
      /**
-     * Returns the total amount of sales for a given year. If you year is left blank you
-     * will get the total amount for all years.
-     *
-     * @param year
-     * @return
-     */
-     public void logTransactionEntry(java.lang.String orderId, java.lang.String entry)  throws Exception  {
-          JsonObject2 gs_json_object_data = new JsonObject2();
-          gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("orderId",new Gson().toJson(orderId));
-          gs_json_object_data.args.put("entry",new Gson().toJson(entry));
-          gs_json_object_data.method = "logTransactionEntry";
-          gs_json_object_data.interfaceName = "core.ordermanager.IOrderManager";
-          String result = transport.send(gs_json_object_data);
-     }
-
-     /**
      * Update or modify an existing order.
      * @param order The order to modify
      * @return

@@ -2884,24 +2884,6 @@ class APIOrderManager {
 	}
 
 	/**
-	* Returns the total amount of sales for a given year. If you year is left blank you
-	* will get the total amount for all years.
-	*
-	* @param year
-	* @return void
-	*/
-
-	public function logTransactionEntry($orderId, $entry) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
-	     $data['args']["entry"] = json_encode($this->transport->object_unset_nulls($entry));
-	     $data["method"] = "logTransactionEntry";
-	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
-	     return $this->transport->sendMessage($data);
-	}
-
-	/**
 	* Update or modify an existing order.
 	* @param order The order to modify
 	* @return void

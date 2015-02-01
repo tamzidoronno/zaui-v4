@@ -75,6 +75,7 @@ class Products extends \WebshopApplication implements \Application {
         $product->shortDescription = $_POST['lisviewdescription'];
         $product->price = $_POST['price'];
         $product->sku = $_POST['sku'];
+        $product->taxgroup = $_POST['taxgroup'];
         $product->stockQuantity = $_POST['stockQuantity'];
         
         

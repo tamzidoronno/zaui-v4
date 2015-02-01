@@ -240,8 +240,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                 $this->clearBookingData();
                 $this->includeEcommerceTransaction();
             } else {
-                //Send the user to the payment view.
-                $payment = $this->getFactory()->getApplicationPool()->getAllPaymentInstances();
+                $cartManager = new \ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager();
+                $payment = $cartManager->getPaymentApplications();
+          
                 if (sizeof($payment) > 0) {
                     //Orderid is set in $this->continueToPayment()
                     $payment[0]->order = $this->getApi()->getOrderManager()->getOrder($_GET['orderId']);
@@ -787,7 +788,8 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function hasPaymentAppAdded() {
-        $payment = $this->getFactory()->getApplicationPool()->getAllPaymentInstances();
+        $cartManager = new \ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager();
+        $payment = $cartManager->getPaymentApplications();
         return sizeof($payment) > 0;
     }
 

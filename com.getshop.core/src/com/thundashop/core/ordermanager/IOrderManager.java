@@ -161,4 +161,6 @@ public interface IOrderManager {
     
     @Editor
     public List<Statistic> getSalesNumber(int year);
+    
+    public void logTransactionEntry(String orderId, String entry) throws ErrorException;
 }

@@ -153,31 +153,35 @@ class Netaxept extends \PaymentApplication implements \Application {
     public function paymentCallback() {
         $orderId = $_GET['orderId'];
         $code = $_GET['responseCode'];
+        
+        if (isset($_GET['orderId'])) {
+            $this->order = $this->getApi()->getOrderManager()->getOrder($_GET['orderId']);
+        }
 
         $okpage = false;
         $canceledpage = false;
         $paymentfailed = false;
         if ($this->getConfigurationSetting("okpage")) {
-            $okpage = $this->getConfigurationSetting("okpage");
+            $okpage = "/?page=".$this->getConfigurationSetting("okpage");
         }
         if ($this->getConfigurationSetting("paymentfailed")) {
-            $paymentfailed = $this->getConfigurationSetting("paymentfailed");
+            $paymentfailed = "/?page=".$this->getConfigurationSetting("paymentfailed");
         }
         if ($this->getConfigurationSetting("canceledpage")) {
-            $canceledpage = $this->getConfigurationSetting("canceledpage");
+            $canceledpage = "/?page=".$this->getConfigurationSetting("canceledpage");
         }
         $found = false;
         if ($code == "OK") {
             $authing = $this->processPayment($this->getAmount(), $_GET['transactionId'], $orderId, "AUTH");
             if (!$authing) {
-                $this->getApi()->getOrderManager()->updateOrderStatusInsecure($orderId, 3);
+                $this->saveOrderStatus(3);
                 if ($paymentfailed) {
                     header('Location: ' . $paymentfailed);
                     $found = true;
                 }
             }
             if (isset($authing) && $authing->ResponseCode == "OK") {
-                $this->getApi()->getOrderManager()->updateOrderStatusInsecure($orderId, 7);
+                $this->saveOrderStatus(7);
                 if ($okpage) {
                     header('Location: ' . $okpage);
                     $found = true;
@@ -186,7 +190,7 @@ class Netaxept extends \PaymentApplication implements \Application {
                 echo "Sorry, but your payment did not validate.";
             }
         } else {
-            $this->getApi()->getOrderManager()->updateOrderStatusInsecure($orderId, 5);
+            $this->saveOrderStatus(5);
             if ($canceledpage) {
                 header('Location: ' . $canceledpage);
                 $found = true;
@@ -245,7 +249,7 @@ class Netaxept extends \PaymentApplication implements \Application {
     }
 
     public function createTerminal() {
-        $redirect_url = "http://" . $_SERVER["HTTP_HOST"] . "/callback.php?app=" . $this->getConfiguration()->id . "&orderId=" . $this->order->id;
+        $redirect_url = "http://" . $_SERVER["HTTP_HOST"] . "/callback.php?app=" . $this->applicationSettings->id. "&orderId=" . $this->order->id;
 
         $Terminal = new Terminal();
         $Terminal->AutoAuth = null; // Optional parameter
@@ -346,6 +350,14 @@ class Netaxept extends \PaymentApplication implements \Application {
         $this->setConfigurationSetting("debugmode", $_POST['debugmode']);
 
     }
+
+    public function saveOrderStatus($status) {
+        if (isset($this->order)) {
+            $this->order->status = $status;
+            $this->getApi()->getOrderManager()->saveOrder($this->order);
+        }
+    }
+
 }
 
 ?>

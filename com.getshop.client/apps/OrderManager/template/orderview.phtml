@@ -12,6 +12,17 @@ if (!$order) {
     echo $this->__f("Order not found");
     return;
 }
+
+$orderStatusText = "";
+$orderStatusText = $order->status == 1 ? $this->__f("Created") : $orderStatusText;
+$orderStatusText = $order->status == 2 ? $this->__f("Waiting for payment") : $orderStatusText;
+$orderStatusText = $order->status == 3 ? $this->__f("Payment failed") : $orderStatusText;
+$orderStatusText = $order->status == 4 ? $this->__f("Completed") : $orderStatusText;
+$orderStatusText = $order->status == 5 ? $this->__f("Canceled") : $orderStatusText;
+$orderStatusText = $order->status == 6 ? $this->__f("Sent") : $orderStatusText;
+$orderStatusText = $order->status == 7 ? $this->__f("Payment completed") : $orderStatusText;
+        
+        
 $cart = $order->cart;
 ?>
 <div class='orderoverview'>
@@ -27,6 +38,8 @@ $cart = $order->cart;
         <div class='gss_label_content'><? echo $address->phone; ?></div>
         <div class='gss_label'><? echo $this->__f("Order date"); ?></div>
         <div class='gss_label_content'><? echo $order->createdDate; ?></div>
+        <div class='gss_label'><? echo $this->__f("Order status"); ?></div>
+        <div class='gss_label_content'><? echo $orderStatusText; ?></div>
         <div class='gss_label'><? echo $this->__f("Shipping"); ?></div>
         <div class='gss_label_content'>
             <? 

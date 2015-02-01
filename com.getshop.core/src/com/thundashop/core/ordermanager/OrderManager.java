@@ -120,6 +120,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
     }
     
+    @Override
+    public void logTransactionEntry(String orderId, String entry) throws ErrorException {
+        Order order = getOrder(orderId);
+        order.payment.transactionLog.put(new Date().getTime(), entry);
+        saveOrder(order);
+    }
+
     private String formatText(Order order, String text) throws ErrorException {
         text = text.replace("\n", "<br/>");
 //        text = text.replace("/displayImage", "http://" + storeManager.getMyStore().webAddress + "/displayImage");

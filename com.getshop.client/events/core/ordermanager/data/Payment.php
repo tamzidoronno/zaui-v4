@@ -9,5 +9,8 @@ class core_ordermanager_data_Payment {
 	/** @var core_productmanager_data_TaxGroup */
 	public $paymentFeeTaxGroup;
 
+	/** @var String */
+	public $transactionLog;
+
 }
 ?>

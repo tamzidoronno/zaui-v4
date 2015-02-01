@@ -163,16 +163,4 @@ public interface IOrderManager {
     public List<Statistic> getSalesNumber(int year);
     
     public void logTransactionEntry(String orderId, String entry) throws ErrorException;
-    
-    /**
-     * This can be used in the cases where it does not mather if someone is trying to set the status of the order.
-     * It will be verified in a different way. 4 (completed) will not be possible to set in this case.
-     * 
-     * @param orderId
-     * @param status
-     * @throws ErrorException 
-     */
-    public void updateOrderStatusInsecure(String orderId, int status) throws ErrorException;
-
-
 }

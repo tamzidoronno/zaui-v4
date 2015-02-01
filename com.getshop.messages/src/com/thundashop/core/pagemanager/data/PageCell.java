@@ -28,7 +28,7 @@ public class PageCell implements Serializable {
         public static String floating = "FLOATING";
     }
     
-
+    public String link = "";
     public String cellName = "";
     public boolean hideOnMobile = false;
     public boolean hideOnDesktop = false;

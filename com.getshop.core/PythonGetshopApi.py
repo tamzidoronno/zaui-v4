@@ -3407,6 +3407,35 @@ class PageManager(object):
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
+  def linkPageCell(self, pageId, cellId, link):
+    args = collections.OrderedDict()
+    if isinstance(pageId,GetShopBaseClass): 
+      args["pageId"]=json.dumps(pageId.__dict__)
+    else:
+      try:
+        args["pageId"]=json.dumps(pageId)
+      except (ValueError, AttributeError):
+        args["pageId"]=pageId
+    if isinstance(cellId,GetShopBaseClass): 
+      args["cellId"]=json.dumps(cellId.__dict__)
+    else:
+      try:
+        args["cellId"]=json.dumps(cellId)
+      except (ValueError, AttributeError):
+        args["cellId"]=cellId
+    if isinstance(link,GetShopBaseClass): 
+      args["link"]=json.dumps(link.__dict__)
+    else:
+      try:
+        args["link"]=json.dumps(link)
+      except (ValueError, AttributeError):
+        args["link"]=link
+    data = EmptyClass()
+    data.args = args
+    data.method = "linkPageCell"
+    data.interfaceName = "core.pagemanager.IPageManager"
+    return self.communicationHelper.sendMessage(data)
+
   def moveCell(self, pageId, cellId, up):
     args = collections.OrderedDict()
     if isinstance(pageId,GetShopBaseClass): 

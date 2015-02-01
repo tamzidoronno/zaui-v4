@@ -34,10 +34,19 @@ class core_hotelbookingmanager_BookingReference extends core_common_DataCommon  
 	public $updateArx;
 
 	/** @var String */
+	public $confirmed;
+
+	/** @var String */
 	public $sentWelcomeMessages;
 
 	/** @var String */
 	public $parkingSpots;
+
+	/** @var String */
+	public $heardAboutUs;
+
+	/** @var String */
+	public $failed;
 
 }
 ?>

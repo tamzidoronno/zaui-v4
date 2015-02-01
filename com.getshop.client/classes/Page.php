@@ -282,7 +282,10 @@ class Page {
     }
 
     function printCell($cell, $count, $depth, $totalcells, $edit, $parent) {
-
+        if(!$this->factory->isEditorMode() && $cell->link) {
+            echo "<a href='" . $cell->link . "'>";
+        }
+        
         if ($this->factory->isMobile()) {
             if ($cell->hideOnMobile && !$this->factory->isEditorMode()) {
                 return false;
@@ -409,6 +412,11 @@ class Page {
         if ($cell->mode == "ROTATING" && $this->factory->isMobile()) {
             $this->resizeContainer($cell);
         }
+        
+        if(!$this->factory->isEditorMode() && $cell->link) {
+            echo "</a>";
+        }
+        
         return true;
     }
 
@@ -451,6 +459,7 @@ class Page {
                 <div class='gsoperatecell' subtype='carousel' type='setcarouselmode'><i class='fa fa-sitemap'></i><? echo $this->factory->__w("Change to carousel mode"); ?></div>
                 <div class='gsoperatecell' subtype='tab' type='settabmode'><i class='fa fa-ellipsis-h'></i><? echo $this->factory->__w("Change to tab mode"); ?></div>
                 <div class='gsoperatecell' subtype='row' type='setrowmode'><i class='fa fa-ellipsis-h'></i><? echo $this->factory->__w("Change to row mode"); ?></div>
+                <div class='gslinkcell'><i class='fa fa-link'></i><? echo $this->factory->__w("Navigate on cell"); ?></div>
             </div>
         </span>
         <script>$('.gscellsettingspanel').draggable();</script>

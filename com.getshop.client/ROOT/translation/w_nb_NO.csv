@@ -35,7 +35,6 @@ April;-;April
 Attributes;-;Attributter
 August;-;August
 Available positions;-;Ledige plasser
-BOOK A ROOM AT;-;BOOK ET ROM HOS
 Background color;-;Bakgrunns farger
 Background image / styling;-;Bakgrunnsbilde / Styling
 Birth Date;-;Fødselsdato
@@ -54,7 +53,6 @@ CHECK IN;-;SJEKK INN
 CHECK OUT;-;SJEKK UT
 CONTINUE;-;FORTSETT
 COUNT;-;ANTALL
-Campaign code;-;Kampanjekode
 Cancel order;-;Kanselert ordre
 Candidate name;-;Navn
 Carousel menu;-;Karusell meny
@@ -204,7 +202,6 @@ No rooms are available for this time periode.;-;Ingen rom er tilgjengelig i valg
 Normal;-;Normal
 November;-;November
 Number of instances added;-;Antall av instanser lagt til
-Number of persons;-;Antall personer
 Number of rooms;-;Antall rom
 ORDER STORAGE ROOM;-;BESTILL LAGERBOD
 October;-;Oktober
@@ -263,6 +260,7 @@ Product Search;-;Produkt søk
 Product view for your store.;-;Produkt visningen for din nettbutikk.
 Products;-;Produkter
 Public key is found in braintree account.;-;Den offentlig nøkkelen er noe du finner på kontoen din hos braintree.
+RESERVE YOUR STAY;-;RESERVER DITT OPPHOLD
 ROOM TYPE;-;Størrelse
 Read more;-;Les mer
 Recover password;-;Gjennopprett passord
@@ -378,7 +376,6 @@ Upload and manipulate on images or add this to be able to search for professiona
 Use a different email;-;Bruk en annen epost
 Username / Email;-;Brukernavn / Epost
 Visitor information;-;Besøksinformasjon
-Visitor no {count};-;Besøkende nummer {count}
 WHEN DO YOU LEAVE?;-;NÅR DRAR DU
 Waiting list;-;Venteliste
 Was not able to get payment methods, please check your postcode;-;Klarte ikke å oppdrive betalings metoder, vennligst sjekk ditt postnummer.
@@ -414,11 +411,9 @@ course;-;kurs
 day;-;dag
 days;-;dager
 description;-;Beskrivelse
-each cleaning;-;per vask
 email;-;E-post
 forgot?;-;Glemt?
 if we dont answer, please leave your email here and we will return your message asap.;-;Hvis vi ikke svarer, legg igjen en din epost, og vi vil kontakte deg så snart som mulig.
-in;-;i
 included taxes;-;Inkludert mva
 location;-;Sted
 login;-;logg inn

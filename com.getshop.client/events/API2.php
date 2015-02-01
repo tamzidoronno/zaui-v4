@@ -3306,6 +3306,23 @@ class APIPageManager {
 	}
 
 	/**
+	* Remove all content on all page areas for this page.
+	* @param pageId
+	* @throws ErrorException
+	*/
+
+	public function linkPageCell($pageId, $cellId, $link) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data['args']["cellId"] = json_encode($this->transport->object_unset_nulls($cellId));
+	     $data['args']["link"] = json_encode($this->transport->object_unset_nulls($link));
+	     $data["method"] = "linkPageCell";
+	     $data["interfaceName"] = "core.pagemanager.IPageManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Move a cell either up or down.
 	* @param pageId
 	* @return void

@@ -26,6 +26,13 @@ class ApplicationManager extends FactoryBase {
         include("initdata/themeselection.phtml");
     }
             
+    
+    function doLinkCell() {
+        $cellid = $_POST['data']['cellid'];
+        $url = $_POST['data']['url'];
+        $this->getApi()->getPageManager()->linkPageCell($this->getPage()->javapage->id, $cellid, $url);
+    }
+    
     function saveContainerPosition() {
         $cellid = $_POST['data']['cellid'];
         $containerid = $_POST['data']['containerid'];

@@ -94,6 +94,7 @@ thundashop.framework = {
         $(document).on('mouseenter', '.gs_templatehaeaderfunctions .selectcolors', this.showColors);
         $(document).on('click', '.gs_templatehaeaderfunctions .selectcolors', this.showColors);
         $(document).on('click', '.gs_templatehaeaderfunctions .color_select.close', this.hideColors);
+        $(document).on('click', '.gslinkcell', this.doLinkCell);
 
         /* Cell operations */
         $(document).on('click', '.gsoperatecell', this.operateCell);
@@ -101,6 +102,16 @@ thundashop.framework = {
         $(document).on('click', '.gsemptyarea .shop_button', this.simpleaddrow);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
     },
+    doLinkCell : function() {
+        var url = prompt("Please enter the url for the link", "http://www.google.no");
+        var data = {
+            "cellid" : $(this).closest('.gscellsettingspanel').attr('cellid'),
+            "url" : url
+        }
+        var event = thundashop.Ajax.createEvent('','doLinkCell',$(this), data);
+        thundashop.Ajax.post(event);
+    },
+    
     showColors: function () {
         $('.gs_templatehaeaderfunctions .colors_menu').slideDown('fast');
     },

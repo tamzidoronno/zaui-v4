@@ -1,6 +1,9 @@
 <?php
 class core_pagemanager_data_PageCell {
 	/** @var String */
+	public $link;
+
+	/** @var String */
 	public $cellName;
 
 	/** @var String */

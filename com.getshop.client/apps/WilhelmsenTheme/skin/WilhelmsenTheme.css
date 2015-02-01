@@ -16,7 +16,19 @@
     color: #FFF;
     background-color: black;
 }
-
+.gsarea[area="header"] .Menu {
+    text-align:right;
+}
+.gsarea[area="header"] .Menu a div {
+    line-height: 35px;
+}
+.gsarea[area="header"] .Menu a div {
+    line-height: 35px;
+}
+.gsarea[area="header"] .Menu .entry .entries a div {
+    line-height: 20px;
+    text-align: left;
+}
 .gsarea[area="header"] .Menu .active a,
 .gsarea[area="header"] .Menu .active {
     color: #FFF;

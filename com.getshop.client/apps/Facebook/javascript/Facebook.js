@@ -109,7 +109,7 @@ gs_app.Facebook.prototype = {
 
         var when = date.getDate() + "-" + month + "-" + date.getFullYear() + " " + date.getHours() + ":" + minutes;
         var entry = $("<div class='newsentry'></div>");
-        entry.append($("<div class='created_time'>" + when + "</div>"));
+//        entry.append($("<div class='created_time'>" + when + "</div>"));
         if (newsentry.picture !== undefined) {
             entry.append("<img class='picture' src='" + newsentry.picture + "'>");
         }

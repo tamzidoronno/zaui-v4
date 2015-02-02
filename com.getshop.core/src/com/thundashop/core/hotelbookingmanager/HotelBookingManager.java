@@ -8,8 +8,11 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.ordermanager.OrderManager;
+import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -196,7 +199,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Override
     public void updateReservation(BookingReference reference) throws ErrorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        saveObject(reference);
+        bookingReferences.put(reference.bookingReference, reference);
     }
 
     @Override
@@ -216,7 +220,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Override
     public void markRoomAsReady(String roomId) throws ErrorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Room room = getRoom(roomId);
+        room.isClean = true;
+        saveObject(room);
     }
 
     @Override
@@ -356,5 +362,38 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         
         return true;
+    }
+
+    private String formatMessage(BookingReference reference, String message, String roomName, Integer code, String name) throws ErrorException {
+        if (code != null) {
+            message = message.replaceAll("\\{code\\}", code + "");
+        }
+        if (roomName != null) {
+            message = message.replaceAll("\\{room\\}", roomName);
+        }
+        String startMinute = new SimpleDateFormat("m").format(reference.startDate).toString();
+        if (startMinute.length() < 2) {
+            startMinute = "0" + startMinute;
+        }
+        String endMinute = new SimpleDateFormat("m").format(reference.endDate).toString();
+        if (endMinute.length() < 2) {
+            endMinute = "0" + endMinute;
+        }
+        message = message.replaceAll("\\{checkin_time\\}", new SimpleDateFormat("dd-MM-yyyy H:").format(reference.startDate) + startMinute);
+        message = message.replaceAll("\\{checkin_date\\}", new SimpleDateFormat("dd-MM-yyyy").format(reference.startDate));
+        message = message.replaceAll("\\{checkout_time\\}", new SimpleDateFormat("dd-MM-yyyy H:").format(reference.endDate) + endMinute);
+        message = message.replaceAll("\\{name\\}", name);
+        message = message.replaceAll("\\{referenceNumber\\}", reference.bookingReference + "");
+        return message;
+    }
+    
+    
+    @Override
+    public void notifyUserAboutRoom(BookingReference reference, RoomInformation roomInfo, Integer code) throws ErrorException {
+        String origMessage = arxSettings.smsReady;
+        Room room = getRoom(roomInfo.roomId);
+        Visitors visitor = roomInfo.visitors.get(0);
+        String message = formatMessage(reference, origMessage, room.roomName, code, visitor.name);
+        messageManager.smsFactory.send(arxSettings.smsFrom, visitor.phone, message);
     }
 }

@@ -39,7 +39,7 @@ public class BookingReference extends DataCommon {
         return false;
     }
     
-    boolean isToday() {
+    public boolean isToday() {
         Calendar cal = Calendar.getInstance();
         cal.setTime(startDate);
         int dayofyear = cal.get(Calendar.DAY_OF_YEAR);
@@ -56,7 +56,7 @@ public class BookingReference extends DataCommon {
     }
     
     
-    boolean isNow() {
+    public boolean isNow() {
         if(isToday()) {
             return true;
         }
@@ -68,7 +68,7 @@ public class BookingReference extends DataCommon {
         return false;
     }
 
-    boolean isBetweenDates(long startDate, long endDate) {
+    public boolean isBetweenDates(long startDate, long endDate) {
         if(startDate >= this.startDate.getTime() && startDate < this.endDate.getTime()) {
             return true;
         }
@@ -89,6 +89,23 @@ public class BookingReference extends DataCommon {
             allRooms.add(room.roomId);
         }
         return allRooms;
+    }
+
+    public boolean isStarted() {
+        Date now = new Date();
+        if(now.after(startDate)) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    public boolean isEnded() {
+        Date now = new Date();
+        if(now.after(endDate)) {
+            return true;
+        }
+        return false;
     }
 
 }

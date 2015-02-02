@@ -1944,6 +1944,35 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def notifyUserAboutRoom(self, reference, roomInfo, code):
+    args = collections.OrderedDict()
+    if isinstance(reference,GetShopBaseClass): 
+      args["reference"]=json.dumps(reference.__dict__)
+    else:
+      try:
+        args["reference"]=json.dumps(reference)
+      except (ValueError, AttributeError):
+        args["reference"]=reference
+    if isinstance(roomInfo,GetShopBaseClass): 
+      args["roomInfo"]=json.dumps(roomInfo.__dict__)
+    else:
+      try:
+        args["roomInfo"]=json.dumps(roomInfo)
+      except (ValueError, AttributeError):
+        args["roomInfo"]=roomInfo
+    if isinstance(code,GetShopBaseClass): 
+      args["code"]=json.dumps(code.__dict__)
+    else:
+      try:
+        args["code"]=json.dumps(code)
+      except (ValueError, AttributeError):
+        args["code"]=code
+    data = EmptyClass()
+    data.args = args
+    data.method = "notifyUserAboutRoom"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def removeRoom(self, id):
     args = collections.OrderedDict()
     if isinstance(id,GetShopBaseClass): 
@@ -2929,6 +2958,28 @@ class OrderManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getTotalSalesAmount"
+    data.interfaceName = "core.ordermanager.IOrderManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def logTransactionEntry(self, orderId, entry):
+    args = collections.OrderedDict()
+    if isinstance(orderId,GetShopBaseClass): 
+      args["orderId"]=json.dumps(orderId.__dict__)
+    else:
+      try:
+        args["orderId"]=json.dumps(orderId)
+      except (ValueError, AttributeError):
+        args["orderId"]=orderId
+    if isinstance(entry,GetShopBaseClass): 
+      args["entry"]=json.dumps(entry.__dict__)
+    else:
+      try:
+        args["entry"]=json.dumps(entry)
+      except (ValueError, AttributeError):
+        args["entry"]=entry
+    data = EmptyClass()
+    data.args = args
+    data.method = "logTransactionEntry"
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 

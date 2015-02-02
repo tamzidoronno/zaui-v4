@@ -98,6 +98,9 @@ public interface IHotelBookingManager {
     @Administrator
     public void setBookingConfiguration(GlobalBookingSettings settings) throws ErrorException;
 
+    @Administrator
+    public void notifyUserAboutRoom(BookingReference reference, RoomInformation roomInfo, Integer code) throws ErrorException;
+    
     public List<ArxLogEntry> getArxLog() throws ErrorException;
     
     public void checkForVismaTransfer() throws ErrorException;

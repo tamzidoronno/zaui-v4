@@ -256,7 +256,12 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         }
         echo "</td>";
         echo "<td><input gsname='roomname_".$room->id."' value='" . $room->roomName . "'></td>";
-        echo "<td><input gsname='lockid_".$room->id."' value='" . $room->lockId . "'></td>";
+        
+        $cleaned = "";
+        if($room->isClean) {
+            $cleaned = "style='color:green'";
+        }
+        echo "<td align='right'><i class='fa fa-eraser' $cleaned  roomid='".$room->id."'></i></td>";
         echo "</tr>";
     }
 }

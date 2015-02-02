@@ -1900,6 +1900,23 @@ class APIHotelBookingManager {
 	}
 
 	/**
+	* Get all references
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function notifyUserAboutRoom($core_hotelbookingmanager_BookingReference, $core_hotelbookingmanager_RoomInformation, $code) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_hotelbookingmanager_BookingReference"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_BookingReference));
+	     $data['args']["core_hotelbookingmanager_RoomInformation"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_RoomInformation));
+	     $data['args']["code"] = json_encode($this->transport->object_unset_nulls($code));
+	     $data["method"] = "notifyUserAboutRoom";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Add new room to the manager.
 	* @param room
 	* @throws ErrorException
@@ -2879,6 +2896,24 @@ class APIOrderManager {
 	     $data['args'] = array();
 	     $data['args']["year"] = json_encode($this->transport->object_unset_nulls($year));
 	     $data["method"] = "getTotalSalesAmount";
+	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Returns the total amount of sales for a given year. If you year is left blank you
+	* will get the total amount for all years.
+	*
+	* @param year
+	* @return void
+	*/
+
+	public function logTransactionEntry($orderId, $entry) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $data['args']["entry"] = json_encode($this->transport->object_unset_nulls($entry));
+	     $data["method"] = "logTransactionEntry";
 	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->sendMessage($data);
 	}

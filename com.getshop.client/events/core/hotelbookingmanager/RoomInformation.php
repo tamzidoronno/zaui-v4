@@ -9,5 +9,8 @@ class core_hotelbookingmanager_RoomInformation {
 	/** @var String */
 	public $visitors;
 
+	/** @var String */
+	public $roomState;
+
 }
 ?>

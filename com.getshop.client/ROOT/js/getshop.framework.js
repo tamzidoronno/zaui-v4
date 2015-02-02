@@ -435,7 +435,12 @@ thundashop.framework = {
         var incrementid = cellobject.attr('incrementcellid');
         var includeOuter = false;
 
-        if ($('.gsucell[cellid="' + id + '"]').hasClass('gsdepth_0')) {
+        var tmpcell = $('.gsucell[cellid="' + id + '"]');
+
+        if (tmpcell.hasClass('gsdepth_0')) {
+            includeOuter = true;
+        }
+        if (tmpcell.hasClass('gsrotatingrow') && tmpcell.hasClass('gsdepth_1')) {
             includeOuter = true;
         }
 

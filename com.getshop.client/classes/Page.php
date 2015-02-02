@@ -561,15 +561,15 @@ class Page {
                     </div>
                     <div style='clear:both;'></div>
                     <div class="gscssrow">
+                        <? echo $this->factory->__w("Right spacing"); ?> <span class="gscssinput"><input type='text' data-attr="padding-right" data-prefix="px">px</span>
+                    </div>
+                    <div style='clear:both;'></div>
+                    <div class="gscssrow">
                         <? echo $this->factory->__w("Top spacing"); ?> <span class="gscssinput"><input type='text' data-attr="padding-top" data-prefix="px">px</span>
                     </div>
                     <div style='clear:both;'></div>
                     <div class="gscssrow">
                         <? echo $this->factory->__w("Bottom spacing"); ?> <span class="gscssinput"><input type='text' data-attr="padding-bottom" data-prefix="px">px</span>
-                    </div>
-                    <div style='clear:both;'></div>
-                    <div class="gscssrow">
-                        <? echo $this->factory->__w("Right spacing"); ?> <span class="gscssinput"><input type='text' data-attr="padding-right" data-prefix="px">px</span>
                     </div>
                     <div style='clear:both;'></div>
                 </div>

@@ -212,3 +212,10 @@ body {
 .gsmobilemenucart {
     display: none;
 }
+
+.shop_button {
+    background-color: green;
+    color: #FFF;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+}

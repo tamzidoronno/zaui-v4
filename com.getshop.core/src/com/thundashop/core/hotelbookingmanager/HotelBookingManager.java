@@ -394,6 +394,6 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         Room room = getRoom(roomInfo.roomId);
         Visitors visitor = roomInfo.visitors.get(0);
         String message = formatMessage(reference, origMessage, room.roomName, code, visitor.name);
-        messageManager.smsFactory.send(arxSettings.smsFrom, visitor.phone, message);
+        messageManager.sendSms(visitor.phone, message);
     }
 }

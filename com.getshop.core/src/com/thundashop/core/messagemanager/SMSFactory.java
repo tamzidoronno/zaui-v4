@@ -11,4 +11,6 @@ package com.thundashop.core.messagemanager;
 public interface SMSFactory {
     public void send(String from, String to, String message);
     public int messageCount(int year, int month);
+
+    public void setStoreId(String storeId);
 }

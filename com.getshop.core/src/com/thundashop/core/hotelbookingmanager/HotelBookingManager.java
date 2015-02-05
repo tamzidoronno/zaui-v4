@@ -42,6 +42,7 @@ import javax.net.ssl.X509TrustManager;
 import org.apache.axis.encoding.Base64;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -217,6 +218,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
         databaseSaver.saveObject(reference, credentials);
         bookingReferences.put(reference.bookingReference, reference);
+        sendSmsToKnutMartin(contact, roomtype);
         return new Integer(reference.bookingReference).toString();
     }
 
@@ -746,7 +748,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             if (!FTPReply.isPositiveCompletion(reply)) {
                 throw new IOException("Failed to connect to FTP Server, " + vismaSettings.address);
             }
-
+            
+            deleteAllFilesOnServer(client);
             String filename = "orders_" + new SimpleDateFormat("yyyyMMdd-k_m").format(new Date()) + ".edi";
             String path = "/tmp/" + filename;
             PrintWriter writer = new PrintWriter(path, "ISO-8859-1");
@@ -755,6 +758,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             InputStream inputStream = new FileInputStream(new File(path));
             boolean done = client.storeFile("./" + filename, inputStream);
             inputStream.close();
+            client.disconnect();
             if (!done) {
                 throw new IOException("Failed to transfer file to VISMA FTP server");
             }
@@ -764,6 +768,15 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
     }
 
+    private void deleteAllFilesOnServer(FTPClient client) throws IOException {
+        FTPFile[] files = client.listFiles();
+        if (files  != null) {
+            for (FTPFile file : files) {
+                client.deleteFile(file.getName());
+            }
+        }   
+    }
+    
     @Override
     public void setVismaConfiguration(VismaSettings settings) throws ErrorException {
         settings.id = vismaSettings.id;
@@ -914,6 +927,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                     if (copyadress != null && !copyadress.isEmpty()) {
                         getMsgManager().mailFactory.send(copyadress, user.emailAddress, title, message);
                         logMailSent(copyadress, "System owner", true, reference.bookingReference);
+                        // Apperently Fastnames mailservers does not support to send two emails at the same time. Need to sleep a bit so the mailservers dont crashes.
+                        try { Thread.sleep(1000); } catch (InterruptedException ex) {}
                         getMsgManager().mailFactory.send(copyadress, copyadress, title, message);
                         reference.sentWelcomeMessages = "true";
                         logMailSent(user.emailAddress, user.fullName, true, reference.bookingReference);
@@ -1135,5 +1150,21 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         BookingReference reservation = getReservationByReferenceId(referenceId);
         reservation.setCartItemIds(ids);
         saveObject(reservation);
+    }
+
+    private void sendSmsToKnutMartin(ContactData contactData, RoomType roomtype) {
+        String name = "Ukjent";
+        if (contactData.names != null&& contactData.names.size() > 0) {
+            name = contactData.names.get(0);
+        }
+         
+        String roomType = "ukjent";
+        if (roomType != null) {
+            roomType = roomtype.name;
+        }
+                
+        if (storeId != null && storeId.equals("3292fa74-32a2-4d52-b88f-6be6f3dff813")) {
+            getMsgManager().smsFactory.send("Sem Lagerhotell", "+4746190000", "Ny bestilling opprettet, Navn: " + name + ", Rom: " + roomType);
+        }
     }
 }

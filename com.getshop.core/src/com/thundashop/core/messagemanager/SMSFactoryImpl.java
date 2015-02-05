@@ -26,6 +26,7 @@ import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -110,6 +111,12 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         
         if (to != null && to.length() > 1 && to.startsWith("0")) {
             to = to.substring(1);
+        }
+        
+        try {
+            message = URLEncoder.encode(message, "ISO-8859-1");
+        } catch (UnsupportedEncodingException ex) {
+            java.util.logging.Logger.getLogger(SMSFactoryImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         String urlString = "http://api.clickatell.com/http/sendmsg?user="+config.getUsername()+"&password="+config.getPassword()+"&api_id="+config.getApiId()+"&concat=3&to="+config.getNumberprefix()+to+"&"+"&text="+message;

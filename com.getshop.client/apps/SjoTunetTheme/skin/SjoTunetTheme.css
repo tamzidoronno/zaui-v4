@@ -5,106 +5,116 @@ body {
 }
 
 .gs_inner {
-	width: 1024px;
-	margin: 0 auto;
+    width: 1024px;
+    margin: 0 auto;
 }
 
-
 .applicationarea {
-	min-height: 50px;
+    min-height: 50px;
 }
 
 .gs_outer.footer {
-	color: #FFF;
-	padding-top: 15px;
-	padding-bottom: 20px;
-	margin-top: 20px;
-	border-top: solid 1px #e38c10;
-	background-color: #f8a223;
-        height: 75px;
+    color: #FFF;
+    padding-top: 15px;
+    padding-bottom: 20px;
+    margin-top: 20px;
+    border-top: solid 1px #f8a223;
+    background-color: #f8a223;
+    height: 75px;
+
+
+    background: #f8a223; 
+    background: -moz-linear-gradient(top,  #ffb954 0%, #f8a223 100%); 
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffb954), color-stop(100%,#f8a223));  
+    background: -webkit-linear-gradient(top,  #ffb954 0%,#f8a223 100%);  
+    background: -o-linear-gradient(top,  #ffb954 0%,#f8a223 100%);  
+    background: -ms-linear-gradient(top,  #ffb954 0%,#f8a223 100%);  
+    background: linear-gradient(to bottom, #ffb954 0%, #f8a223 100%); 
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffb954', endColorstr='#f8a223',GradientType=0 );
 }
 
 .header,
 #apparea-header {
-	height: 100px;
+    height: 100px;
 }
 
 .gs_outer.header {
-	background-color: #f8a223;
-	margin-bottom: 20px;
-	background: linear-gradient(#f8a223 0px, #f8a223 50px, #ac201a 51px, #ac201a 100%);
+    background-color: #f8a223;
+    margin-bottom: 20px;
+    background: linear-gradient(#ffb954 0px, #f8a223 50px, #ac201a 51px, #c33e37 100%);
 }
 
 .Logo {
     top: 0px;
 }
 .Logo img {
-	position: absolute;
-	top: 0px;
-	padding: 5px;
-	background-color: #f8a223;
-        height: 80px;
+    position: absolute;
+    top: 0px;
+    padding: 5px;
+    background-color: #f8a223;
+    height: 80px;
+    background: linear-gradient(#ffb954 0px, #f8a223 50px, #f8a223 51px, #f8a223 100%);
 }
 
 .gs_outer.breadcrumb {
-	display: none;
+    display: none;
 }
 
 .gs_margin_left {
-	padding-left: 8px;
+    padding-left: 8px;
 }
 
 .gs_margin_right {
-	padding-right: 8px;
+    padding-right: 8px;
 }
 
 .mainarea .gs_row.gs_outer {
-	margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 
 .TopMenu {
-	right: 0px;
-	bottom: 8px;
-	font-family: "arial";
-	font-weight: 130;
-	font-size: 15px;
+    right: 0px;
+    bottom: 8px;
+    font-family: "arial";
+    font-weight: 130;
+    font-size: 15px;
 }
 
 .TopMenu .entry i {
-	padding-right: 5px;
-	padding-top: 7px;
-	vertical-align: top;
+    padding-right: 5px;
+    padding-top: 7px;
+    vertical-align: top;
 }
 
 
 
 .TopMenu .entry a {
-	color: #FFF;
+    color: #FFF;
 }
 
 .TopMenu .entry {
-	height: 35px;
-	line-height: 35px;
-	vertical-align: bottom;
-	font-size: 15px;
-	margin-left: 40px;
-	
+    height: 35px;
+    line-height: 35px;
+    vertical-align: bottom;
+    font-size: 15px;
+    margin-left: 40px;
+
 }
 
 .TopMenu .subentries .entry {
-	background-color: #f8a223;
-	font-size: 13px;
-	margin-left: 0px;
+    background-color: #f8a223;
+    font-size: 13px;
+    margin-left: 0px;
 }
 
 .Login .notloggedon {
-	display: none;
+    display: none;
 }
 
 .ImageDisplayer,
 .Banner {
-	box-shadow: 0px 0px 4px rgba(0,0,0,0.3);
+    box-shadow: 0px 0px 4px rgba(0,0,0,0.3);
 }
 
 .lang_inner {

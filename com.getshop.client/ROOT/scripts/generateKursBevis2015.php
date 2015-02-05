@@ -26,7 +26,7 @@ if (isset($_GET['showpicture'])) {
 
 
 include '../loader.php';
-$factory = IocContainer::getFactorySingelton(false, false);
+$factory = IocContainer::getFactorySingelton(true, false);
 
 $entry = $factory->getApi()->getCalendarManager()->getEntry($_GET['entry']);
 

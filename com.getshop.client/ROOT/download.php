@@ -41,6 +41,12 @@ if ($_GET['file'] == 12)
 if ($_GET['file'] == 13)
     $file = "7.2 - Hybrid og EV Teknikk.pdf";
 
+if ($_GET['file'] == 14)
+    $file = "4.2 Klima Deltagere jan 2015.pdf";
+
+if ($_GET['file'] == 15)
+    $file = "1.3 diagnose og maleteknikk.pdf";
+
 if (!isset($file)) {
     return;
 }

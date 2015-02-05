@@ -55,16 +55,14 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        ApplicationSettings hotelBookingStatistic = createSettings(
-                "HotelBookingStatistic",
-                "8b42b5cf-189c-4382-ba52-c1919841aad4",
+        ApplicationSettings pkkControl = createSettings(
+                "PkkControl",
+                "2b06f7a7-8301-4582-a9ea-1005e9248257",
                 allowed,
                 "",
                 ApplicationSettings.Type.Webshop, false);
-        hotelBookingStatistic.allowedStoreIds = new ArrayList();
-        hotelBookingStatistic.allowedStoreIds.add("3292fa74-32a2-4d52-b88f-6be6f3dff813");
-        hotelBookingStatistic.isPublic = false;
-        apps.add(hotelBookingStatistic);
+        pkkControl.isPublic = true;
+        apps.add(pkkControl);
 
 //        
 //        ApplicationSettings hotelvask = createSettings(

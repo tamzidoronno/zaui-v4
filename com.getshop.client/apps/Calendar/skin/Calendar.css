@@ -289,6 +289,7 @@ td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1p
     padding-bottom: 50px;
 }
 
+.editlocationscalendar .selectarea,
 .editlocationscalendar .selectlcoation {
     display: inline-block;
     border: solid 1px #FFF;
@@ -365,7 +366,7 @@ td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1p
 .listview_month_location { margin-bottom: 20px; margin-left: 10px; padding: 3px; margin-top: 5px; }
 .listview_month_location td { vertical-align: top; font-size: 15px; padding: 5px; }
 .listview_month_location th {  background-color: #EEE; padding: 5px; }
-.listview_month_location tr:nth-child(odd) td { background-color: #EEE; }
+.listview_month_location tr:nth-child(4n+4) td { background-color: #EEE; }
 
 
 .Calendar .save_candidate_setting {
@@ -395,3 +396,15 @@ td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1p
 .Calendar .diplomasettings .col1 { width: 50px; vertical-align: top; }
 .Calendar .diplomasettings .col2 { width: 230px; vertical-align: top; }
 .Calendar .diplomasettings .col3 { width: 230px; vertical-align: top;}
+
+.Calendar .extrainformation_calendar_list_entry { display: none; }
+
+.Calendar .list_showextrainformation {
+    color: #6e7edc; 
+    padding: 3px; 
+    border: solid 1px; 
+    padding-left: 7px; 
+    padding-right: 7px; 
+    border-radius: 3px;
+    
+}

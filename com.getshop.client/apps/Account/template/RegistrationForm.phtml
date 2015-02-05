@@ -71,7 +71,7 @@ echo "<input type='hidden' value='$userId' id='user_id'>";
                 <?php echo $this->__w("Invoice email"); ?>
             </td>
             <td>
-                <? echo $user->emailAddressToInvoice; ?>
+                <input type="txt" id="invoiceemail" value="<? echo $user->emailAddressToInvoice; ?>"></input>
             </td>
         </tr>
     <? } ?>

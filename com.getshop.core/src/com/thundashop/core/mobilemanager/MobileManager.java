@@ -45,17 +45,15 @@ public class MobileManager extends ManagerBase implements IMobileManager {
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof Token) {
-				System.out.println("Skipping token: " + ((Token)dataCommon).id);
-				continue;
-//                Token token = (Token)dataCommon;
-//                tokens.put(token.tokenId, token);
+                Token token = (Token)dataCommon;
+                tokens.put(token.tokenId, token);
             }
         }
     }
 
     @Override
     public void registerToken(Token token) throws ErrorException {
-		System.out.println("Registering token: " + token.id);
+        System.out.println("Registering token: " + token.tokenId);
         token.storeId = storeId;
         databaseSaver.saveObject(token, credentials);
         tokens.put(token.tokenId, token);
@@ -106,7 +104,7 @@ public class MobileManager extends ManagerBase implements IMobileManager {
     
     private void sendAndroidMessage(Token token, String message) {
         if (!frameworkConfig.productionMode) {
-            System.out.println("WARNING: Did not send push notification to android device, framework is set to DEVELOPMENT mode. Be careful!");
+            System.out.println("WARNING: Did not send push notification to android device, framework is set to DEVELOPMENT mode. Be careful :) !");
             return;
         }
         
@@ -128,7 +126,7 @@ public class MobileManager extends ManagerBase implements IMobileManager {
 
     @Override
     public void clearBadged(String tokenId) {
-		System.out.println("Clearing badget :  " + tokenId);
+        System.out.println("Clearing badget :  " + tokenId);
         badges.put(tokenId, 0);
     }
 }

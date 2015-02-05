@@ -23,7 +23,7 @@ App = {
         this.getshopApi.disconnectedCallback = $.proxy(this.isDisconnected, this);
         this.getshopApi.connectedCallback = $.proxy(this.onData, this);
         this.setupListeners();
-        this.startTranslation();   
+        this.startTranslation();
     },
     setLanguageMode: function () {
         if (App.lang === 'se') {
@@ -75,7 +75,7 @@ App = {
         $('[data-role="page"]').on('pageshow', function (event, page) {
             App.doTranslationForDom(event.delegateTarget)
         });
-        
+
     },
     doTranslationForDom: function (dom) {
         $(dom).find('[translate="true"]').each(function () {
@@ -90,7 +90,7 @@ App = {
             'Kobler til server': 'Ansluter till server',
             'Laster data': 'Laddar',
             'Kalenderfilter': 'Kalenderfilter',
-            'Det finnes ikke noe kurstilbud lengre tilbake i tid.' : 'Det finns inga tidigare kurstillfällen',
+            'Det finnes ikke noe kurstilbud lengre tilbake i tid.': 'Det finns inga tidigare kurstillfällen',
             'For å se kalenderen lengre fram i tid, vennligst benytt websiden.': 'För att se kurskalendern längre fram i  tiden, använd hemsidan.',
             'Velg sted for filtrering på kalenderen.': 'Välj ort för att filtrera kalendern.',
             'Ledige plasser på valgt kurs': 'Lediga platser på vald kurs',
@@ -100,21 +100,21 @@ App = {
             'Mer informasjon': 'Mer info',
             'Påmelding venteliste': 'Anmälan väntelista',
             'Fjern filter': 'Rensa filter',
-            'Du har ikke oppgitt et gyldig org nr, det må være 9 tegn, du har oppgitt' : 'Du har inte fyllt ett giltigt org.nr, 10 tecken krävs. Du har angett',
-            'Dag' : 'Dag',
-            'NB! Dette er et {dager} dagers kurs.' : 'Detta är en {dager} dagars kurs',
-            'Tidspunkt' : 'Tidpunkt',
-            'Det finnes ingen nyheter akkurat nå, kom tilbake senere.' : 'Det finns inga nyheter just nu, välkommen tillbaka senare.',
-            'Trykk for å velge' : 'Tryck för att välja',
-            'Epost addressen er ikke gyldig.' : 'Epostadressen är inte giltigt.',
-            'Epost teknisk leder er ikke gyldig.' : 'Epost Verkstaden är inte giltig.',
-            'Du har ikke oppgitt riktig telefonnr, det må være 8 siffer.' : 'Du har inte angett ett giltigt telefonnr, det måste innehålla 10 siffror.',
-            'Vennligst rett feltene i rødt' : 'Vänligen korrigera rödmarkerade fält',
-            'klarte ikke å finne firma med oppgitt org.nr, vennligst sjekk' : 'Hittade inget företag med angivet org.nr. Kontrollera numret',
-            'Du er nå meldt på ventelisten' : 'Du står nu på väntelista',
-            'Du er nå påmeldt kurset' : 'Du är nu anmäld till kursen',
-            'Laster data, vennligst vent' : 'Laddar, vänligen vänta',
-            'Fant ingen treff på oppgitt org.nr, vennligst sjekk og prøv på nytt.' : 'Fick ingen träff på angivet org.nr, kontrollera uppgifterna och prova igen.',
+            'Du har ikke oppgitt et gyldig org nr, det må være 9 tegn, du har oppgitt': 'Du har inte fyllt ett giltigt org.nr, 10 tecken krävs. Du har angett',
+            'Dag': 'Dag',
+            'NB! Dette er et {dager} dagers kurs.': 'Detta är en {dager} dagars kurs',
+            'Tidspunkt': 'Tidpunkt',
+            'Det finnes ingen nyheter akkurat nå, kom tilbake senere.': 'Det finns inga nyheter just nu, välkommen tillbaka senare.',
+            'Trykk for å velge': 'Tryck för att välja',
+            'Epost addressen er ikke gyldig.': 'Epostadressen är inte giltigt.',
+            'Epost teknisk leder er ikke gyldig.': 'Epost Verkstaden är inte giltig.',
+            'Du har ikke oppgitt riktig telefonnr, det må være 8 siffer.': 'Du har inte angett ett giltigt telefonnr, det måste innehålla 10 siffror.',
+            'Vennligst rett feltene i rødt': 'Vänligen korrigera rödmarkerade fält',
+            'klarte ikke å finne firma med oppgitt org.nr, vennligst sjekk': 'Hittade inget företag med angivet org.nr. Kontrollera numret',
+            'Du er nå meldt på ventelisten': 'Du står nu på väntelista',
+            'Du er nå påmeldt kurset': 'Du är nu anmäld till kursen',
+            'Laster data, vennligst vent': 'Laddar, vänligen vänta',
+            'Fant ingen treff på oppgitt org.nr, vennligst sjekk og prøv på nytt.': 'Fick ingen träff på angivet org.nr, kontrollera uppgifterna och prova igen.',
             'Kurs': 'Kurs',
             'Sted': 'Plats',
             'Skriv inn org.nr, så vil informasjonen fylles ut automatisk.': 'Hitta dit företag genom att fylla i hela org.nr i fältet ovan.',
@@ -134,7 +134,6 @@ App = {
             'Informasjon': 'Information',
             'Tilbake': 'Tillbaka',
             'Velg sted': 'Välj plats',
-            'Fjern filter': 'Rensa filter',
             'Forrige': 'Föregående',
             'Neste': 'Nästa',
             'Januar': 'Januari',
@@ -200,37 +199,63 @@ App = {
             var day = month.days[j];
             for (var i in day.entries) {
                 var entry = day.entries[i];
-
-                var entryContainer = $('<div/>');
-                entryContainer.addClass('list_view_entry_entry');
-                entryContainer.html(entry.title);
+                var entryContainer = this.getEntryHtml(entry);
                 entiresContainer.append(entryContainer);
-                entryContainer.attr('location', entry.location);
 
-                var extraInfoContainer = $('<div/>');
-                extraInfoContainer.addClass('extrainfo');
-                var date = entry.day + " / " + entry.month;
-                if (entry.otherDays.length > 0) {
-                    date += " ( " + (entry.otherDays.length + 1) + " dager)";
-                }
-                extraInfoContainer.html(entry.location + " - " + date);
-                entryContainer.append(extraInfoContainer);
-
-                entryContainer.attr('year', entry.year);
-                entryContainer.attr('day', entry.day);
-                entryContainer.attr('month', entry.month);
-                entryContainer.attr('entry', entry.entryId);
-
-                entryContainer.tap(function () {
-                    var pageId = 'daypage_' + $(this).attr('year') + "_" + $(this).attr('month') + "_" + $(this).attr('day');
-                    var entryId = $(this).attr('entry');
-                    $.mobile.changePage("#" + pageId, {transition: 'slide' });
-                    outerMe.hideOtherEvents(entryId, pageId);
-                });
             }
         }
 
         return entiresContainer;
+    },
+    getEntryHtml: function (entry) {
+        var freePositions = entry.maxAttendees - entry.attendees.length;
+        if (freePositions < 0) {
+            freePositions = 0;
+        }
+        
+        var availableClass = "available";
+        var unavilable = !entry.availableForBooking || entry.lockedForSignup;
+        
+        if (unavilable) {
+            availableClass = "notAvailable";
+        }
+        
+        if (!unavilable && !freePositions) {
+            availableClass = "waitingList";
+        }
+       
+        
+        var availableMark = $('<div/>');
+        availableMark.addClass('availablemark '+availableClass);
+        
+        var entryContainer = $('<div/>');
+        entryContainer.addClass('list_view_entry_entry');
+        entryContainer.html(entry.title);
+        entryContainer.attr('location', entry.location);
+
+        var extraInfoContainer = $('<div/>');
+        extraInfoContainer.addClass('extrainfo');
+        var date = entry.day + " / " + entry.month;
+        if (entry.otherDays.length > 0) {
+            date += " ( " + (entry.otherDays.length + 1) + " dager)";
+        }
+        extraInfoContainer.html(entry.location + " - " + date);
+        entryContainer.append(extraInfoContainer);
+
+        entryContainer.attr('year', entry.year);
+        entryContainer.attr('day', entry.day);
+        entryContainer.attr('month', entry.month);
+        entryContainer.attr('entry', entry.entryId);
+
+        entryContainer.tap(function () {
+            var pageId = 'daypage_' + $(this).attr('year') + "_" + $(this).attr('month') + "_" + $(this).attr('day');
+            var entryId = $(this).attr('entry');
+            $.mobile.changePage("#" + pageId, {transition: 'slide' });
+            App.hideOtherEvents(entryId, pageId);
+        });
+        
+        entryContainer.append(availableMark);
+        return entryContainer;
     },
     hideOtherEvents: function (entry, pageId) {
         var page = $("#" + pageId);
@@ -407,7 +432,7 @@ App = {
                 contentHtml.find('img').css('height', 'auto');
                 contentHtml.find('img').css('width', '100%');
                 contentHtml.find('td span').css('font-size', '8px');
-                
+
                 App.doTranslationForDom(page);
                 page.find('.innercontent').html(contentHtml);
             });
@@ -528,8 +553,11 @@ App = {
                 var positions = $('#select-native-1').find(':selected').attr('availablepositions')
                 App.showFreePositions(positions);
             }
-            
+
             App.groupChanged();
+            
+            $('#signup .basic_signon_information').show();
+            $('#signup .signon_find_company').hide();
         });
     },
     nextClicked: function () {
@@ -571,18 +599,16 @@ App = {
         var me = this;
         $('.calendar[year=' + this.showingYear + '][month=' + this.showingMonth + ']').fadeIn(300);
     },
-    signOnClicked: function () {
-        var me = this;
+    
+    checkAllSignonFields: function() {
         var name = $('#name').val();
         var email = $('#email').val();
         var invoiceemail = $('#invoiceemail').val();
         var phone = $('#phone').val();
-        var vatnr = $('#vatnr').val();
-        var company = $('#company').val();
         var courseId = $('#select-native-1').find(':selected').val();
         var groupId = $('#select-native-2').find(':selected').val()
-        var groupInformation = $('#extrainformationforgroup').val(); 
-        
+        var groupInformation = $('#extrainformationforgroup').val();
+
         $('label').removeClass('error');
 
         if (name === "")
@@ -596,13 +622,11 @@ App = {
 
         if (App.lang == "no" && (phone === "" || phone.length !== 8))
             $('label[for=phone]').addClass('error');
-        
+
         if (App.lang == "se" && (phone === "" || phone.length !== 10))
             $('label[for=phone]').addClass('error');
 
-        if (vatnr === "")
-            $('label[for=vatnr]').addClass('error');
-
+  
         if (courseId === "")
             $('label[for=courseId]').addClass('error');
 
@@ -615,73 +639,126 @@ App = {
         if (groupId === "")
             $('label[for=select-native-2]').addClass('error');
 
-        var positions = $('#select-native-1').find(':selected').attr('availablepositions');
-
         if (!this.validateEmail(email)) {
             alert(App.translateText('Epost addressen er ikke gyldig.'));
-            return;
+            return false;
         }
 
         if (!this.validateEmail(invoiceemail)) {
             alert(App.translateText('Epost teknisk leder er ikke gyldig.'));
-            return;
+            return false;
         }
         
         if (App.lang === "se" && $('.extrainformationforgroup').is(':visible')) {
-            var groupId = $('#select-native-2').find(':selected').val(); 
-            
+            var groupId = $('#select-native-2').find(':selected').val();
+
             if (!groupInformation) {
                 $('label[for=extrainformationforgroup]').addClass('error');
-                alert($('label[for=extrainformationforgroup]').html()+ ' är inte giltigt.');
-                return;
+                alert($('label[for=extrainformationforgroup]').html() + ' är inte giltigt.');
+                return  false;
             }
         }
 
-        if ((App.lang == "no" && phone.length !== 8) || (App.lang == "se" && phone.length !== 10) ) {
+        if ((App.lang == "no" && phone.length !== 8) || (App.lang == "se" && phone.length !== 10)) {
             alert(App.translateText("Du har ikke oppgitt riktig telefonnr, det må være 8 siffer."));
-            return;
+            return false;
         }
-
+        
         if ($('label.error').length > 0) {
             alert(App.translateText('Vennligst rett feltene i rødt'));
-        } else {
-            this.getshopApi.UtilManager.getCompanyFromBrReg(vatnr).done(function (company) {
-                if (!company.name) {
-                    alert(App.translateText('klarte ikke å finne firma med oppgitt org.nr, vennligst sjekk'));
-                    return;
-                }
+            return false;
+        }
+        
+        return true;
+    },
+    
+    signOnClicked: function (vatNumber) {
+        var me = this;
+        var name = $('#name').val();
+        var email = $('#email').val();
+        var invoiceemail = $('#invoiceemail').val();
+        var phone = $('#phone').val();
+        var courseId = $('#select-native-1').find(':selected').val();
+        var groupId = $('#select-native-2').find(':selected').val()
+        var groupInformation = $('#extrainformationforgroup').val();
+        var positions = $('#select-native-1').find(':selected').attr('availablepositions');
+        
+        this.getshopApi.UtilManager.getCompanyFromBrReg(vatNumber).done(function (company) {
+            if (!company.name) {
+                alert(App.translateText('klarte ikke å finne firma med oppgitt org.nr, vennligst sjekk'));
+                return;
+            }
 
-                var password = Math.floor(Math.random() * 90000) + 10000;
-                var user = {
-                    fullName: name,
-                    emailAddress: email,
-                    type: 10,
-                    password: password,
-                    birthDay: vatnr,
-                    cellPhone: phone,
-                    groups: [groupId],
-                    company: company,
-                    emailAddressToInvoice: invoiceemail,
-                    referenceKey: groupInformation
-                };
+            var password = Math.floor(Math.random() * 90000) + 10000;
+            var user = {
+                fullName: name,
+                emailAddress: email,
+                type: 10,
+                password: password,
+                birthDay: vatNumber,
+                cellPhone: phone,
+                groups: [groupId],
+                company: company,
+                emailAddressToInvoice: invoiceemail,
+                referenceKey: groupInformation
+            };
 
-                me.getshopApi.UserManager.createUser(user).done(function (createUser) {
-                    me.getshopApi.CalendarManager.addUserToEvent(createUser.id, courseId, password, createUser.username, 'mobile').done(function () {
-                        if (positions <= 0) {
-                            alert(App.translateText('Du er nå meldt på ventelisten'));
-                        } else {
-                            alert(App.translateText('Du er nå påmeldt kurset'));
-                        }
-                        document.location.href = document.URL.substring(0, document.URL.indexOf("#"));
-                    });
+            me.getshopApi.UserManager.createUser(user).done(function (createUser) {
+                me.getshopApi.CalendarManager.addUserToEvent(createUser.id, courseId, password, createUser.username, 'mobile').done(function () {
+                    if (positions <= 0) {
+                        alert(App.translateText('Du er nå meldt på ventelisten'));
+                    } else {
+                        alert(App.translateText('Du er nå påmeldt kurset'));
+                    }
+                    document.location.href = document.URL.substring(0, document.URL.indexOf("#"));
                 });
             });
+        });
+
+    },
+    goToCompanyFinding: function() {
+        if (!this.checkAllSignonFields()) {
+            return;
         }
+        $('#signup .basic_signon_information').hide();
+        $('#signup .signon_find_company').show(); 
+        window.scrollTo(0,0);
+    },
+    searchForCompany: function() {
+        var me = this;
+        var text = $('#companyname').val();
+        this.getshopApi.UtilManager.getCompaniesFromBrReg(text).done(function(result) {
+            $('#signup .searchresult').html("");
+            if (!result.length) {
+                $('#signup .searchresult').html(App.translateText('Fant desverre ingen firma ved angitt søkeord, sjekk søkeordet og prøv igjen.'));
+                return;
+            } else {
+                $('#signup .searchresult').html("<center>"+App.translateText('Trykk på selskapet under for å velge det')+"</center><br/><br/>");
+            }
+            
+            $(result).each(function() {
+                var result = '<div class="company_search_row_result" vatnumber="'+this.vatNumber+'">'+ this.name +' <span> ' + this.vatNumber + ' </span></div>';
+                $('#signup .searchresult').append(result);
+            });
+        });
     },
     setupListeners: function () {
         var me = this;
+        $(document).on('click', '#signup .company_search_row_result', function() {
+            var vatNumber = $(this).attr('vatnumber');
+                var exec = function(){
+                App.signOnClicked(vatNumber);
+            }
+
+            var run = $.proxy(exec, this);
+            run();
+        });
+        
+        $('#signup #next_signon').click($.proxy(this.goToCompanyFinding, this));
+        $('#signup #searchcompany').click($.proxy(this.searchForCompany, this));
         $('#next').click($.proxy(this.nextClicked, this));
         $('#prev').click($.proxy(this.prevClicked, this));
+        $('#regions .region_failed').click($.proxy(this.checkGps, this));
 
         $(document).on('tap', '.infobutton', function (e) {
             $.mobile.changePage('#infopage');
@@ -721,33 +798,88 @@ App = {
         });
 
         $(document).on('tap', '.gotocalendar', function (e) {
-            $.mobile.changePage('#calendar');
+            App.checkGps();
+            $.mobile.changePage('#regions');
             e.preventDefault();
             e.stopPropagation();
             $(this).off('click');
+            
         });
 
-        $('#signon').click($.proxy(this.signOnClicked, this));
         $('#vatnr').keyup($.proxy(this.vatnumberupdated, this));
         $(document).on('change', '#select-native-2', App.groupChanged);
     },
-    groupChanged: function() {
-        var groupId = $('#select-native-2').find(':selected').val(); 
+    
+    checkGps: function() {
+        $('#regions').find('.waiting_for_gps').show();
+        $('#regions').find('.region_failed').hide();
+        $('#regions').find('.gps_failed').hide();
+        $('#regions').find('.regionas_page_content').hide();
+                
+        var onSuccess = function(position) {
+            $('#regions').find('.waiting_for_gps').hide();
+            var lat = position.coords.latitude.toFixed(5);
+            var alt = position.coords.longitude.toFixed(5);
+            App.findRegions(lat,alt);
+        };
         
+        var onError = function(error) {
+            $('#regions').find('.waiting_for_gps').hide();
+            $('#regions').find('.gps_failed').show();
+        };
+        
+        navigator.geolocation.getCurrentPosition(onSuccess, onError);
+
+    },
+    
+    findRegions: function (lat, alt) {
+        var data = {
+            x: (lat*100000),
+            y: (alt*100000)
+        }
+        
+
+        App.getshopApi.CalendarManager.getEntriesByPosition(data).done(function (location) {
+            if (!location || typeof(location.name) === "undefined") {
+                $('#regions').find('.region_failed').show();
+                return;
+            }
+
+            $('#regions').find('.region_failed').hide();
+            $('#regions').find('.regionas_page_content').show();
+            $('#regions').find('.regionname').html(location.name);
+            $('#regiondata').html("");
+            var monthName = "";
+            for ( var i in location.entries) {
+                var entry = location.entries[i];
+                var currentMonthName = App.getNameForMonth(entry.month);
+                if (currentMonthName !== monthName) {
+                    $('#regiondata').append("<div class='gps_month_header' style='monthName'>"+currentMonthName+" - " + entry.year + " </div>");
+                    monthName = currentMonthName;
+                }
+                var html = App.getEntryHtml(entry);
+                $('#regiondata').append(html);
+            }
+
+        });
+    },
+    groupChanged: function () {
+        var groupId = $('#select-native-2').find(':selected').val();
+
         $('.extrainformationforgroup').hide();
-        
+
         // Meca
         if (groupId === "ddcdcab9-dedf-42e1-a093-667f1f091311" && App.lang === "se") {
             $('.extrainformationforgroup').find('label').html("Kundnummer");
             $('.extrainformationforgroup').show();
         }
-        
+
         // Mekonomen
         if (groupId === "1cdd1d93-6d1b-4db3-8e91-3c30cfe38a4a" && App.lang === "se") {
             $('.extrainformationforgroup').find('label').html("Meko-Id");
             $('.extrainformationforgroup').show();
         }
-   },
+    },
     vatnumberupdated: function () {
         var value = $('#vatnr').val();
         var informationPage = $('.companyinformation');
@@ -792,7 +924,7 @@ App = {
                 informationPage.append(row);
             });
         } else {
-            var invalidText = App.translateText("Du har ikke oppgitt et gyldig org nr, det må være 9 tegn, du har oppgitt")+": " + value.length;
+            var invalidText = App.translateText("Du har ikke oppgitt et gyldig org nr, det må være 9 tegn, du har oppgitt") + ": " + value.length;
             informationPage.html(invalidText);
         }
     },
@@ -825,7 +957,7 @@ App = {
             $(entries).each(function () {
                 $(this.subentries).each(function () {
                     var page = $('#' + this.pageId);
-                    
+
                     if (page.length === 0) {
                         var getShopPage = new GetShop.Page(me.getshopApi, this.pageId);
                         getShopPage.ready = function () {
@@ -834,7 +966,7 @@ App = {
                             App.doTranslationForDom(this.page);
                             $('html .ui-mobile-viewport').append(this.page);
                         }
-                        
+
                         getShopPage.load();
                     }
                 });
@@ -847,16 +979,24 @@ App = {
             var filterHolder = $('#filterholdergroup');
             filterHolder.html("");
 
-            var filter = $("<a href='#' data-rel='back' data-role='button'>"+App.translateText("Fjern filter")+"</a>");
+            var filter = $("<a href='#' data-rel='back'  data-role='button'>" + App.translateText("Ferdig") + "</a>");
             filter.click(function () {
-                me.activateFilter("")
+                me.activateFilter();
             });
             filterHolder.append(filter);
+            
+            
+            filterHolder.append(filter);
             $(filters).each(function () {
-                var filter = $("<a href='#' data-rel='back' data-role='button'>" + this + "</a>");
+                var filter = $("<div href='#' class='filter_selection' data-rel='back' data-role='button'>" + this + "</div>");
                 var filterName = this;
+                
                 filter.click(function () {
-                    me.activateFilter(filterName)
+                    if ($(this).hasClass('filter_checked')) {
+                        $(this).removeClass('filter_checked');
+                    } else {
+                        $(this).addClass('filter_checked');
+                    }
                 });
                 filterHolder.append(filter);
             });
@@ -866,31 +1006,34 @@ App = {
         });
     },
     activateFilter: function (filter) {
-        filter = filter.replace(/'/g, "\\'");
-
-        if (filter === "" && !this.filterIsSet) {
-            return;
+        if (filter === "") {
+            $('#filter').find('.filter_checked').removeClass('.filter_checked');
         }
-
-        $('td.date_has_event').removeClass('disabled');
-        $('td.date_has_event').each(function () {
-            if ($(this).attr('locations').toUpperCase().indexOf(filter.toUpperCase()) < 0) {
-                $(this).addClass('disabled');
-            }
+        
+        var filters = [];
+        
+        $('#filter').find('.filter_checked').each(function() {
+            filters.push($(this).html().toUpperCase());
         });
-
+        
+//        console.log(filters);
         $('.list_view_entry_entry').removeClass('hidden');
         $('.monthcontainer').show();
-        $('.list_view_entry_entry').each(function () {
-            if ($(this).attr('location').toUpperCase().indexOf(filter.toUpperCase()) < 0) {
-                $(this).addClass('hidden');
-            }
-        });
+        if (filters.length > 0) {
+            $('.list_view_entry_entry').each(function () {
+    //            console.log(filters.indexOf($(this).attr('location').toUpperCase()));
+                if (filters.indexOf($(this).attr('location').toUpperCase()) < 0) {
+                    $(this).addClass('hidden');
+                } 
+            });
+        }
 
         $('.monthcontainer').each(function () {
             var subs = $(this).find('.list_view_entry_entry:not(.hidden)');
             if (subs.length === 0) {
                 $(this).hide();
+            } else {
+                $(this).show();
             }
         });
 
@@ -906,19 +1049,13 @@ App = {
             this.options = $('#select-native-1').find('option');
         }
 
-        var selectValue = $('<div/>').html(this.options).find('option[value=]');
-        $('#select-native-1').html("");
-        $('#select-native-1').append(selectValue.clone());
-        $(this.options).each(function () {
-
-            if ($(this).attr('location') && $(this).attr('location').toUpperCase() === filter.toUpperCase() || filter === "") {
-                $(this).removeAttr('selected');
-                $('#select-native-1').append(this);
-            }
-        });
-
-        $('#select-native-1').selectmenu();
-        $('#select-native-1').selectmenu('refresh', true);
+//        var selectValue = $('<div/>').html(this.options).find('option[value=]');
+//        $('#select-native-1').html("");
+//        $('#select-native-1').append(selectValue.clone());
+//  
+//
+//        $('#select-native-1').selectmenu();
+//        $('#select-native-1').selectmenu('refresh', true);
         if (filter !== "") {
             this.filterIsSet = true;
         } else {
@@ -976,6 +1113,8 @@ App = {
         }
     },
     onNotificationGCM: function (e) {
+        console.log("My token" + e.regid);
+        
         switch (e.event)
         {
             case 'registered':
@@ -1158,7 +1297,7 @@ App.Calendar.prototype = {
                     var entryDetails = $('<div/>');
                     entryDetails.attr('id', entry.entryId);
                     entryDetails.addClass('kursentry');
-                    entryDetails.append("<h4>"+App.translateText("Kurs")+": " + entry.title + "</h4>");
+                    entryDetails.append("<h4>" + App.translateText("Kurs") + ": " + entry.title + "</h4>");
                     var endTime = "";
                     if (entry.stoptime) {
                         endTime = " - " + entry.stoptime;
@@ -1167,18 +1306,19 @@ App.Calendar.prototype = {
                     if (entry.otherDays.length > 0) {
                         var courseDays = entry.otherDays.length;
                         courseDays++;
-                        var nbText =  App.translateText("NB! Dette er et {dager} dagers kurs.");
+                        var nbText = App.translateText("NB! Dette er et {dager} dagers kurs.");
                         nbText = nbText.replace("{dager}", courseDays);
-                        
-                        entryDetails.append("<b>"+nbText+"</b>");
-                        entryDetails.append("<br> "+App.translateText("Dag")+" 1: " + entry.day + " / " + entry.month + " - " + entry.year + " : " + entry.starttime + endTime);
+
+                        entryDetails.append("<b>" + nbText + "</b>");
+                        entryDetails.append("<br> " + App.translateText("Dag") + " 1: " + entry.day + " / " + entry.month + " - " + entry.year + " : " + entry.starttime + endTime);
                         for (var i in entry.otherDays) {
                             var otherDay = entry.otherDays[i];
                             var j = parseInt(i) + 2;
-                            entryDetails.append("<br> "+App.translateText("Dag")+" " + j + ": " + otherDay.day + " / " + otherDay.month + " - " + otherDay.year + " : " + otherDay.starttime + " - " + otherDay.stoptime);
+                            entryDetails.append("<br> " + App.translateText("Dag") + " " + j + ": " + otherDay.day + " / " + otherDay.month + " - " + otherDay.year + " : " + otherDay.starttime + " - " + otherDay.stoptime);
                         }
                     } else {
-                        entryDetails.append("<b>"+App.translateText("Tidspunkt")+":</b> " + entry.starttime + endTime);
+                        entryDetails.append("<b>" + App.translateText("Dato") + ":</b> " + entry.day + " / " + entry.month + " - " + entry.year + " : " + entry.starttime + endTime);
+                        entryDetails.append("<br/><b>" + App.translateText("Tidspunkt") + ":</b> " + entry.starttime + endTime);
                     }
                     var availablePositions = entry.maxAttendees - entry.attendees.length;
 
@@ -1194,9 +1334,9 @@ App.Calendar.prototype = {
                         clazz = "available";
                     }
 
-                    entryDetails.append("<div class='freespots " + clazz + "'><div class='label'>"+App.translateText('Ledige plasser')+"</div><div class='number'>" + (availablePositions > 0 ? availablePositions : 0) + "</div></div>");
+                    entryDetails.append("<div class='freespots " + clazz + "'><div class='label'>" + App.translateText('Ledige plasser') + "</div><div class='number'>" + (availablePositions > 0 ? availablePositions : 0) + "</div></div>");
                     entryDetails.append("<br>");
-                    entryDetails.append("<br><b>"+App.translateText("Sted")+": </b>" + entry.location);
+                    entryDetails.append("<br><b>" + App.translateText("Sted") + ": </b>" + entry.location);
 
                     if (entry.locationExtended) {
                         entryDetails.append("<br>&nbsp;&nbsp;&nbsp;&nbsp;- " + entry.locationExtended);
@@ -1206,13 +1346,13 @@ App.Calendar.prototype = {
                     buttons.html("<br/>");
 
                     if (entry.linkToPage && entry.linkToPage != "") {
-                        var linkToPage = $("<a data-theme='a' data-role='button' data-inline='true' href='#" + entry.linkToPage + "'>"+App.translateText('Mer informasjon')+"</a>");
+                        var linkToPage = $("<a data-theme='a' data-role='button' data-inline='true' href='#" + entry.linkToPage + "'>" + App.translateText('Mer informasjon') + "</a>");
                         buttons.append(linkToPage);
                         linkToPage.button();
                     }
 
-                    if (availablePositions > 0) {
-                        var linkToSignup = $("<a data-theme='a' entry='" + entry.entryId + "' data-role='button' data-inline='true' href='#signup'>"+App.translateText("Påmelding")+"</a>");
+                    if (availablePositions > 0 && !entry.lockedForSignup) {
+                        var linkToSignup = $("<a data-theme='a' entry='" + entry.entryId + "' data-role='button' data-inline='true' href='#signup'>" + App.translateText("Påmelding") + "</a>");
                         buttons.append(linkToSignup);
                         linkToSignup.click(function () {
                             App.filterToEntryId = $(this).attr('entry');
@@ -1221,8 +1361,8 @@ App.Calendar.prototype = {
                         linkToSignup.button();
                     }
 
-                    if (!inThePast && availablePositions <= 0) {
-                        var linkToSignup = $("<a data-theme='a' entry='" + entry.entryId + "' data-role='button' data-inline='true' href='#signup'>"+App.translateText('Påmelding venteliste')+"</a>");
+                    if (!inThePast && availablePositions <= 0 && !entry.lockedForSignup) {
+                        var linkToSignup = $("<a data-theme='a' entry='" + entry.entryId + "' data-role='button' data-inline='true' href='#signup'>" + App.translateText('Påmelding venteliste') + "</a>");
                         buttons.append(linkToSignup);
                         linkToSignup.click(function () {
                             App.filterToEntryId = $(this).attr('entry');

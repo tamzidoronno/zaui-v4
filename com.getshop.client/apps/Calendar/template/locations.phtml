@@ -1,5 +1,10 @@
 <?
+
+function sortLocationsByName($a, $b) {
+    return strcmp($a->location, $b->location);
+}
     $locations = $this->getApi()->getCalendarManager()->getAllLocations();
+    usort($locations, 'sortLocationsByName');
 ?>
 <div class="editlocationscalendar">
     <? echo $this->__f("Select one of your current location") ?>:
@@ -14,5 +19,20 @@
     <? echo $this->__f("Or create a new one by clicking on the button below") ?>:
     <br/><br/><div class="gs_button calendar_location_createnew" value="createnew">
         <? echo $this->__f("Create new"); ?>
+    </div>
+    
+    
+    <div class="locationarea">
+        <h1>Areas</h1>
+        <?
+        $areas = $this->getApi()->getCalendarManager()->getArea();
+        foreach ($areas as $area) {
+            echo "<div class='selectarea' value='".$area->id."'>".$area->name."</div>";
+        }
+        ?>
+        <br/><br/><div class="gs_button calendar_location_createarea" value="createnew">
+            <? echo $this->__f("Create new area"); ?>
+        </div>
+        
     </div>
 </div>

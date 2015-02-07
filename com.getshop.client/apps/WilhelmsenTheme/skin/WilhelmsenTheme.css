@@ -7,6 +7,10 @@
     src: url(/fonts/Museo700-Regular.ttf) format("truetype");
 }
 
+body {
+    font-family: helvetica;
+}
+
 .gs_page_width {
     margin: 0 auto;
     width: 1000px;
@@ -73,6 +77,6 @@ h1,h2,h3,h4,h5 { font-family: 'Droid Serif', serif; }
 
 .Facebook .picture { width: 100px; }
 .Facebook .picture.nopicture { width: 100px; }
-.Facebook .newsentry .message { font-size: 16px; color: #333; overflow: hidden; height: 65px; line-height: 16px; }
+.Facebook .newsentry .message { font-size: 13px; color: #333; overflow: hidden; height: 66px; line-height: 13px; }
 .MailChimp .incorrectinput { color:#fda0a0; }
 .MailChimp .emailAdded { color:#51bf78; }

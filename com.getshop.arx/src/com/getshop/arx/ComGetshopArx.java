@@ -15,6 +15,7 @@ import com.thundashop.core.usermanager.data.User;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,15 +49,15 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
  */
 public class ComGetshopArx {
 
-    private String hostname = "https://10.0.0.13/arx/import";
+    private String hostname = "https://localhost:5002/arx/import";
     private String username = "master";
     private String password = "master";
 
-    private String apiAddress = "localhost";
+    private String apiAddress = "backend20.getshop.com";
     private String apiUsername = "kai@getshop.com";
-    private String apiPassword = "gakkgakk";
-    private String website = "wilhelmsenhouse.2.0.local.getshop.com";
-    private Integer backendport = 25554;
+    private String apiPassword = "g4kkg4kk";
+    private String website = "20164.getshop.com";
+    private Integer backendport = 3224;
     private boolean notifiedGetshop = false;
     
     /**
@@ -80,7 +81,7 @@ public class ComGetshopArx {
     
     private void connectToBackend() throws Exception {
 
-        System.out.println("Connecting to : " + apiAddress + " port : " + 25554);
+        System.out.println("Connecting to : " + apiAddress + " port : " + backendport);
         api = new GetShopApi(backendport, apiAddress, sessid, website);
         try {
             User result = api.getUserManager().logOn(apiUsername, apiPassword);
@@ -147,14 +148,18 @@ public class ComGetshopArx {
         }
     }
 
-    private boolean sendUserToArx(ArxUser user) {
+    private boolean sendUserToArx(ArxUser user) throws UnsupportedEncodingException {
         String toPost = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
+        String firstName = new String(user.firstName.toString().getBytes("ISO-8859-1"), "UTF-8");
+        String lastName = new String(user.lastName.toString().getBytes("ISO-8859-1"), "UTF-8");
+        
         toPost += "<arxdata timestamp=\"" + new SimpleDateFormat("yyyy-MM-dd+HH:mm:ss").format(new Date()) + "\">\n";
         toPost += "<persons>\n";
         toPost += "<person>\n";
         toPost += "<id>" + user.id + "</id>\n";
-        toPost += "<first_name>" + user.firstName + "</first_name>\n";
-        toPost += "<last_name>" + user.lastName + "</last_name>\n";
+        
+        toPost += "<first_name>" + firstName + "</first_name>\n";
+        toPost += "<last_name>" + lastName + "</last_name>\n";
         toPost += "<description>reference: " + user.reference + "</description>\n";
         toPost += "<pin_code></pin_code>\n";
         toPost += "<extra_fields/>\n";

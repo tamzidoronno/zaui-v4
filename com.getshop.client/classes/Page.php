@@ -832,6 +832,11 @@ class Page {
         if ($this->factory->isEditorMode() && !$this->factory->isMobile()) {
             $editdots = "gscarouseldotseditmode";
         }
+        
+        if(!$this->factory->isEditorMode() && $totalcells == 1) {
+            return;
+        }
+        
         echo "<div class='gscarouseldots $editdots'>";
         for ($i = 0; $i < $totalcells; $i++) {
             $activeCirle = "";

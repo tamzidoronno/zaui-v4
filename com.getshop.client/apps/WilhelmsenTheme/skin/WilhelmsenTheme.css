@@ -61,17 +61,16 @@
 
 .Facebook .newsentry {
     border-bottom: solid 1px #F1F1F1;
+    overflow: hidden !important; height: 86px; padding-bottom: 20px; 
 }
 
-.Facebook .newsentry .message {
-    padding-left: 170px;
-    font-size: 16px;
-    color: #333;
-    /*min-height: 250px;*/
-}
 .Facebook .newsentry .picture {
     float: left;
 }
 
 .Hotelbooking .to_checkout { padding-bottom: 40px; }
 h1,h2,h3,h4,h5 { font-family: 'Droid Serif', serif; }
+
+.Facebook .picture { width: 100px; }
+.Facebook .picture.nopicture { width: 100px; }
+.Facebook .newsentry .message { font-size: 16px; color: #333; overflow: hidden; height: 65px; line-height: 16px; }

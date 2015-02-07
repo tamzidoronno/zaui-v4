@@ -48,8 +48,9 @@ public class StoreHandler {
         Method executeMethod = getMethodToExecute(aClass, inObject.method, types, argumentValues);
 
         try {
-            authenticateUserLevel(executeMethod, aClass);
+            Annotation userLevel = authenticateUserLevel(executeMethod, aClass);
             Object result = invokeMethod(executeMethod, aClass, argumentValues);
+            logUserLevelActivity(userLevel);
             clearSessionObject();
             return result;
         } catch (ErrorException ex) {
@@ -331,5 +332,20 @@ public class StoreHandler {
 //            }
 //        }
 //        return false;
+    }
+
+    private void logUserLevelActivity(Annotation userLevel) {
+        if (userLevel == null) {
+            return;
+        }
+        
+        UserManager manager = getManager(UserManager.class);
+        if (userLevel instanceof Editor) {
+            manager.markEditorActionExecuted();
+        }
+        
+        if (userLevel instanceof Administrator) {
+            manager.markAdminActionExecuted();
+        }
     }
 }

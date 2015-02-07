@@ -189,7 +189,6 @@ Name;-;Navn
 Name of your shop;-;Navn på din nettbutikk
 New message;-;Ny melding
 New password;-;Nytt passord
-New room type;-;Ny rom type
 NewsLetter;-;Nyhetsbrev
 Next;-; Neste
 Nice modern theme. Could be used for clothing, skateboarding, snowboarding etc.;-;Fint moderne tema. Kan bli brukt for klær, skateboards, snowbards, osv.
@@ -329,6 +328,7 @@ Start your 30 days free trial;-;Start din 30 dagers fri prøveperiode
 Stop;-;Stopp
 Styling;-;Design
 Su;-;Sø
+Subscribe;-;Registrer
 Success;-;Success
 Summary;-;Oppsummering
 Sunday;-;Søndag
@@ -342,6 +342,7 @@ Th;-;To
 Thank you for checking into our hotel. A confirmation mail has been sent to your email.;-;Takk for at du sjekker inn på vårt hotel. En bekreftelse er sendt til din e-post.
 Thank you for ordering with Sisow ebill;-;Takk for at du bestilte med Sisow ebill
 Thank you for renting a storage room from us. A confirmation mail has been sent to your email.;-;Takk for at du benytter deg av en våre boder. En bekreftelse er sendt til din e-post.
+Thank you for subscribing to our newsletter, your email has been added;-;Takk for at du har valgt å registrere deg på vårt nyhetsbrev, din epost er nå lagt til.
 Thank you for your booking a room at;-;Takk for at du reserverer et room hos
 Thank you for your booking a storage room at;-;Takk for at du reserverer en bod hos
 Thank you for your order, an email has been sent to you with the invoice attached. We will ship the items as soon as we have received the payment.;-;Takk for din bestilling, en epost har blitt sendt med fakturaen vedlagt. Vi sender bestillingen når vi har mottat betalingen.
@@ -352,6 +353,7 @@ The company is mva registered;-;Firmaet er registrert i mva registeret
 The company you have selected could not be found in brreg.;-;Firmaet du har valgt eksisterer ikke i brønnøysundregisteret.
 The email address is invalid.;-;Eposten din er ugyldig.
 The email already exists, please log on to continue.;-;Eposten eksisterer allerede, vennligst logg på for å fortsette.
+The email in invalid, please enter a valid email;-;Eposten er ikke gyldig, vennligst skriv inn en gyldig adresse.
 The event has been confirmed.;-;Eventent har blitt bekreftet.
 The newsletter application allowes you to send emails to all of your customers without. Create a news letter, select your customers and send.;-;Denne nyhetsbrev applikasjonen gjør det mulig for deg å sende epost til alle dine kunder. Opprett et nyhetsbrev og send det til dine registrerte kunder.
 The passwords does not match.;-;Passordet stemmer ikke overens.
@@ -428,6 +430,7 @@ read;-;les
 select;-;velg
 to;-;til
 will be added to your invoice.;-;vil bli lagt på sluttsummen.
+your@email.com;-;din@epost.no
 {percentage}% taxes on cleaning;-;{percentage}% MVA
 {percentage}% taxes on room;-;{percentage}% MVA
 

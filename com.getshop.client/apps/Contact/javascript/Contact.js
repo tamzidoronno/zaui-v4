@@ -1,39 +1,76 @@
 thundashop.app.contact = {};
 
 app.Contact = {
+    initEvents : function() {
+      $(document).on('change','.Contact select[name="numberOfFields"]', app.Contact.updateFormFields);
+      $(document).on('click','.Contact .saveContactConfiguration', app.Contact.saveConfiguration);
+    },
+    loadConfiguration : function() {
+        var event = thundashop.Ajax.createEvent('','loadConfiguration',$(this));
+        thundashop.common.showInformationBox(event, 'Contact configuration');
+    },
+    updateFormFields : function() {
+        var numberOfFields = parseInt($('#informationbox.Contact select[name="numberOfFields"]').val());
+        $('#informationbox.Contact .contactfield').hide();
+        for(var i = 0; i <= numberOfFields; i++) {
+            $('#informationbox.Contact .fieldName_'+i).show();
+        }
+    },
+    saveConfiguration : function() {
+        var data = {};
+        
+        $('.contactConfigTable input').each(function() {
+            data[$(this).attr('name')] = $(this).val();
+        });
+        $('.contactConfigTable select').each(function() {
+            data[$(this).attr('name')] = $(this).val();
+        });
+        
+        var event = thundashop.Ajax.createEvent('','saveContactConfig',$(this),data);
+        thundashop.Ajax.post(event);
+        thundashop.common.hideInformationBox();
+    },
     
+    loadSettings : function(element, application) {
+         var config = {
+            draggable: true,
+            app : true,
+            application: application,
+            title: "Settings",
+            items: [
+                {
+                    icontype: "awesome",
+                    icon: "fa-edit",
+                    iconsize : "30",
+                    title: __f("Edit contact form"),
+                    click: app.Contact.loadConfiguration
+                }
+            ]
+        }
+
+        var toolbox = new GetShopToolbox(config, application);
+        toolbox.show();
+        toolbox.attachToElement(application, 2);
+    }
 }
+
+app.Contact.initEvents();
 
 thundashop.app.contact.sendMessage = function(target) {
     var data = target.closest('.contact_form');
-    var name = data.find('#name').val();
-    var phone = data.find('#phone').val();
-    var email = data.find('#email').val();
-    var company = data.find('#company').val();
-    var subject = data.find('#content').val();
-
-    var groupName = "";
-
-    if ($('.Contact .group').length !== 0) {
-        if ($('.Contact .group.selected').length !== 0) {
-            groupName = $('.Contact .group.selected').attr('groupname');
+    var fields = {};
+    var dataToSend = {};
+    data.find('.contactfield').each(function() {
+        if($(this).attr('id')) {
+            fields[$(this).attr('id')] = $(this).val();
         }
-    }
+    });
 
-    data = {
-        "email": email,
-        "phone": phone,
-        "name": name,
-        "company": company,
-        "content": subject,
-        "groupname": groupName
-    };
+    fields['content'] = data.find('.content').val();
 
-    if ($('.Contact #invoiceemail').length > 0) {
-        data.invoiceemail = $('.Contact #invoiceemail').val();
-    }
+    dataToSend['field'] = fields;
 
-    var event = thundashop.Ajax.createEvent('Contact', 'sendMessage', target, data);
+    var event = thundashop.Ajax.createEvent('Contact', 'sendMessage', target, dataToSend);
     var callback = function(data) {
         if (data === "Required") {
             thundashop.common.Alert(__w('Sorry'), __w('All fields are required.'), true);
@@ -44,7 +81,7 @@ thundashop.app.contact.sendMessage = function(target) {
 
             var data = target.closest('.app');
             data.find('input.tobecleared').each(function() { $(this).val('') });
-            data.find('textarea.tobecleared').each(function() { $(this).text('') });
+            data.find('textarea.tobecleared').each(function() { $(this).val('') });
             $('.Contact .selected').removeClass('selected');
 
         }

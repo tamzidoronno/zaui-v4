@@ -564,6 +564,8 @@ thundashop.framework = {
             timer: $(this).closest('.carouselsettingspanel').find('.gscarouseltimer').val(),
             type: $(this).closest('.carouselsettingspanel').find('.gscarouseltype').val(),
             cellid: $(this).closest('.carouselsettingspanel').attr('cellid'),
+            carouselnumber: $(this).closest('.carouselsettingspanel').find('.gscarouselnumberconfig').is(':checked'),
+            avoidrotate: $(this).closest('.carouselsettingspanel').find('.gsavoidrotate').is(':checked'),
         }
 
         data['outerWidth'] = $('.gscontainercell[cellid="' + data['cellid'] + '"] .gsinner').outerWidth();

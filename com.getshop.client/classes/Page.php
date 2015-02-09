@@ -258,6 +258,26 @@ class Page {
                     <td><? echo $this->factory->__w("Timer (ms)"); ?></td>
                     <td align="right"><input type="text" class="gscarouseltimer" value='<? echo $cell->carouselConfig->time; ?>'></td>
                 </tr>
+                <tr>
+                    <td><? echo $this->factory->__w("Display numbers on dots"); ?></td>
+                    <?
+                    $displayNumbers= "";
+                    if($cell->carouselConfig->displayNumbersOnDots) {
+                        $displayNumbers = "CHECKED";
+                    }
+                    ?>
+                    <td align="right"><input type="checkbox" class="gscarouselnumberconfig" <? echo $displayNumbers; ?>></td>
+                </tr>
+                <tr>
+                    <td><? echo $this->factory->__w("Do not rotate"); ?></td>
+                    <?
+                    $displayNumbers= "";
+                    if($cell->carouselConfig->avoidRotate) {
+                        $displayNumbers = "CHECKED";
+                    }
+                    ?>
+                    <td align="right"><input type="checkbox" class="gsavoidrotate" <? echo $displayNumbers; ?>></td>
+                </tr>
             </table>
             <br>
             <input style="width: 100%;" class="savecarouselconfig" type="button" value="<? echo $this->factory->__w("Save settings"); ?>">
@@ -722,7 +742,7 @@ class Page {
             .gsrotating[cellid='<? echo $cell->cellId; ?>'] {  width: 100%; height: <? echo $height; ?>px; }
             .gsrotating[cellid='<? echo $cell->cellId; ?>'] .gscell.gsdepth_<? echo $depth; ?> { width:100%; min-height: <? echo $height; ?>px; height: <? echo $height; ?>px; }
             .gsrotating[cellid='<? echo $cell->cellId; ?>'] .gsinner.gsdepth_<? echo $depth; ?> { height: 100%; }
-            <? if (($config->type === "fade" || !$config->type) && $doCarousel) { ?>
+            <? if (($config->type === "fade" || !$config->type)) { ?>
                 .gsrotating[cellid='<? echo $cell->cellId; ?>'] .gscell {
                     -webkit-transition: opacity 1s ease-in-out;
                     -moz-transition: opacity 1s ease-in-out;
@@ -827,7 +847,7 @@ class Page {
         <?
     }
 
-    public function printCarouselDots($totalcells, $count, $cellid) {
+    public function printCarouselDots($totalcells, $count, $cellid, $printNumbers) {
         $editdots = "";
         if ($this->factory->isEditorMode() && !$this->factory->isMobile()) {
             $editdots = "gscarouseldotseditmode";
@@ -838,12 +858,18 @@ class Page {
         }
         
         echo "<div class='gscarouseldots $editdots'>";
+        $number = 0;
         for ($i = 0; $i < $totalcells; $i++) {
+            $number++;
             $activeCirle = "";
             if ($count == $i) {
                 $activeCirle = "activecarousel gsactivecell";
             }
-            echo "<i class='fa fa-circle gscarouseldot $activeCirle' cellid='$cellid'></i>";
+            echo "<i class='fa fa-circle gscarouseldot $activeCirle' cellid='$cellid'>";
+            if($printNumbers) {
+                echo  "<span class='gscarouselnumber'>". $number . "</span>";
+            }
+           echo "</i>";
         }
         if ($this->factory->isEditorMode() && !$this->factory->isMobile()) {
             if ($this->editCarouselForMobile()) {
@@ -1015,6 +1041,10 @@ class Page {
                 if ($this->factory->isEditorMode()) {
                     $doCarousel = false;
                 }
+                if($cell->carouselConfig->avoidRotate) {
+                    $doCarousel = false;
+                }
+                
                 $this->printContainerSettings($doCarousel, $cell, $depthprint);
             }
             echo "<div style='clear:both;'></div>";
@@ -1028,8 +1058,9 @@ class Page {
             $this->addCarouselSettingsPanel($cell);
         }
         if ($parent != null && $parent->mode === "ROTATING") {
+            $displayNumbers = $parent->carouselConfig->displayNumbersOnDots;
             $this->printCarourselMenu();
-            $this->printCarouselDots($totalcells, $count, $cell->cellId);
+            $this->printCarouselDots($totalcells, $count, $cell->cellId, $displayNumbers);
         }
     }
 

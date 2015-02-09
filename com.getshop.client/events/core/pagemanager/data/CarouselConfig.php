@@ -12,5 +12,11 @@ class core_pagemanager_data_CarouselConfig {
 	/** @var String */
 	public $type;
 
+	/** @var String */
+	public $displayNumbersOnDots;
+
+	/** @var String */
+	public $avoidRotate;
+
 }
 ?>

@@ -92,6 +92,14 @@ class ApplicationManager extends FactoryBase {
         $config->time = $_POST['data']['timer'];
         $config->type = $_POST['data']['type'];
         $config->heightMobile = $_POST['data']['heightMobile'];
+        $config->displayNumbersOnDots = false;
+        if($_POST['data']['carouselnumber'] == "true") {
+            $config->displayNumbersOnDots = true;
+        }
+        $config->avoidRotate = false;
+        if($_POST['data']['avoidrotate'] == "true") {
+            $config->avoidRotate = true;
+        }
         $this->getApi()->getPageManager()->setCarouselConfig($pageId, $cellId, $config);
         $this->getApi()->getPageManager()->setWidth($pageId, $cellId, $outerWidth, $outerWidthWithMargins);
     }

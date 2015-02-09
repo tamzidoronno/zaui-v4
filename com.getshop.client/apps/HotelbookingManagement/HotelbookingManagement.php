@@ -128,6 +128,8 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
                    $room->productId = $_POST['data']['productid_'.$id];
                    $room->roomName = $_POST['data']['roomname_'.$id];
                    $room->lockId = $_POST['data']['lockid_'.$id];
+                   $room->isHandicap = $_POST['data']['handicap_'.$id];
+                   $room->suitedForLongTerm = $_POST['data']['longterm_'.$id];
 
                    if($_POST['data']['available_'.$id] == "false") {
                        $room->isActive = "false";
@@ -257,11 +259,28 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         echo "</td>";
         echo "<td><input gsname='roomname_".$room->id."' value='" . $room->roomName . "'></td>";
         
+        
+        echo "<td align='right'>";
         $cleaned = "";
+        $longterm = "";
+        $handicap = "";
+        
         if($room->isClean) {
-            $cleaned = "style='color:green'";
+            $cleaned = "CHECKED";
         }
-        echo "<td align='right'><i class='fa fa-eraser' $cleaned  roomid='".$room->id."'></i></td>";
+        
+        if($room->suitedForLongTerm) {
+            $longterm = "CHECKED";
+        }
+        
+        if($room->isHandicap) {
+            $handicap = "CHECKED";
+        }
+        
+        echo "<input type='checkbox' style='display:inline; width:12px; font-size:14px;' disabled title='Clean' $cleaned> ";
+        echo "<input type='checkbox' style='display:inline; width:12px;' gsname='longterm_".$room->id."' $longterm title='Long term'> ";
+        echo "<input type='checkbox' style='display:inline; width:12px;' gsname='handicap_".$room->id."' $handicap title='Handicap'>";
+        echo "</td>";
         echo "</tr>";
     }
 }

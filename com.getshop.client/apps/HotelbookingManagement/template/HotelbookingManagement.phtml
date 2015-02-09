@@ -37,10 +37,7 @@ Existing booking references
                 <th>Reserved by</th>
                 <th>Start date</th>
                 <th>End date</th>
-                <? if($this->getFactory()->getStore()->id == "3292fa74-32a2-4d52-b88f-6be6f3dff813") { ?>
-                    <th>Gebyr</th>
-                    <th>Contract</th>
-                <? } ?>
+                <th>Payed for</th>
             </tr>
         </thead>
         <tbody>
@@ -82,14 +79,13 @@ Existing booking references
             echo "</td>";
             echo "<td style='text-align:center;' valign='top'>" . $reservation->startDate . "</td>";
             echo "<td style='text-align:center;' valign='top'>" . $reservation->endDate . "</td>";
-            if($this->getFactory()->getStore()->id == "3292fa74-32a2-4d52-b88f-6be6f3dff813") {
-                echo "<td style='text-align:center;' valign='top'><input type='text' style='width: 40px;' class='adminfee' value='".$reservation->bookingFee."'></td>";
-                echo "<td style='text-align:center;' valign='top'>";
-                echo "<a target='_new' onclick=\"window.open('/scripts/generateContract.php?userid=".@$user->id."&refid=".$reservation->bookingReference."&type=standard')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".@$user->referenceKey."' class='fa fa-file-pdf-o'></i></a> ";
-                echo "<a target='_new' onclick=\"window.open('http://".$_SERVER['SERVER_NAME']."/scripts/generateContract.php?userid=".@$user->id."&refid=".$reservation->bookingReference."&type=bilag')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".@$user->referenceKey."' class='fa fa-plus'></i></a> ";
-                echo "<a target='_new' onclick=\"window.open('http://".$_SERVER['SERVER_NAME']."/scripts/generateContract.php?userid=".@$user->id."&refid=".$reservation->bookingReference."&type=autogiro')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".@$user->referenceKey."' class='fa fa-car'></i></a>";
-                echo "</td>";
+            echo "<td align='center'>";
+            if($reservation->payedFor) {
+                echo "Yes";
+            } else {
+                echo "No";
             }
+            echo "</td>";
             echo "</tr>";
         }
         ?>
@@ -129,7 +125,11 @@ Existing rooms:<br>
             <td width='10'>Active</td>
             <td>Last reservation</td>
             <td>Room name</td>
-            <td align="right">Cleaned</td>
+            <td align="right">
+                <i class='fa fa-eraser' style='display:inline-block; width:14px; margin-right:3px;'></i>
+                <i class='fa fa-bed' style='display:inline-block; width:14px; margin-right:3px;'></i>
+                <i class='fa fa-wheelchair' style='display:inline-block; width:14px; margin-right:3px;'></i>
+            </td>
         </tr>
         <?
         $products = $this->getApi()->getProductManager()->getAllProducts();

@@ -100,13 +100,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     public String reserveRoom(String roomProductId, long startDate, long endDate, List<RoomInformation> roomInfo, AdditionalBookingInformation additionalInfo) throws ErrorException {
         startDate *= 1000;
         endDate *= 1000;
-        List<Room> allRooms = findAllRoomsOnProduct(roomProductId);
+        List<Room> availableRoom = getAvailableRooms(roomProductId, startDate, endDate, additionalInfo);
         List<Room> roomsToBook = new ArrayList();
-        for(Room room : allRooms) {
-            if(isAvailable(room, startDate, endDate)) {
-                roomsToBook.add(room);
-            }
-            
+        for(Room room : availableRoom) {
+            roomsToBook.add(room);
             if(roomsToBook.size() == roomInfo.size()) {
                 break;
             }
@@ -187,7 +184,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Override
     public List<BookingReference> getAllReservations() throws ErrorException {
-        return new ArrayList(bookingReferences.values());
+        List<BookingReference> reservations = new ArrayList(bookingReferences.values());
+        for(BookingReference reservation : reservations) {
+            finalize(reservation);
+        }
+        return reservations;
     }
 
     @Override
@@ -395,5 +396,43 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         Visitors visitor = roomInfo.visitors.get(0);
         String message = formatMessage(reference, origMessage, room.roomName, code, visitor.name);
         messageManager.sendSms(visitor.phone, message);
+    }
+    
+    private List<Room> getAvailableRooms(String roomProductId, long startDate, long endDate, AdditionalBookingInformation additionalInfo) {
+        List<Room> allRooms = findAllRoomsOnProduct(roomProductId);
+        List<Room> allRoomsToBook = new ArrayList();
+        List<Room> shortTerm = new ArrayList();
+        List<Room> longTerm = new ArrayList();
+
+        
+        for(Room room : allRooms) {
+            if(isAvailable(room, startDate, endDate)) {
+                if(room.suitedForLongTerm) {
+                    longTerm.add(room);
+                } else {
+                    shortTerm.add(room);
+                }
+            }
+        }
+        
+        long diff = (endDate-startDate)/1000/86400;
+        if(diff > 14) {
+            allRoomsToBook.addAll(longTerm);
+            allRoomsToBook.addAll(shortTerm);
+        } else {
+            allRoomsToBook.addAll(shortTerm);
+            allRoomsToBook.addAll(longTerm);
+        }
+        
+        return allRoomsToBook;
+    }
+
+    private void finalize(BookingReference reservation) {
+        Order order = orderManager.getOrderByReference(reservation.bookingReference+"");
+        if(order.status == Order.Status.PAYMENT_COMPLETED) {
+            reservation.payedFor = true;
+        } else {
+            reservation.payedFor = false;
+        }
     }
 }

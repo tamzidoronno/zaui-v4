@@ -4,6 +4,8 @@
 .HotelbookingManagement .existingroomrow.unavailable { background-color:red; }
 .HotelbookingManagement .existingroomrow.unavailable .fa-trash-o { color:#ffffff; }
 .HotelbookingManagement .fa-floppy-o { font-size: 30px; }
+.HotelbookingManagement .existingroomrow i { cursor:pointer; }
+.HotelbookingManagement .existingroomrow i.active { color:green; }
 
 .HotelbookingManagement .fa {
     vertical-align: top;

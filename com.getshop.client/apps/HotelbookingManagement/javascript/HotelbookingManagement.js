@@ -101,6 +101,18 @@ app.HotelbookingManagement = {
         $(document).on('keyup', '.HotelbookingManagement .adminfee', app.HotelbookingManagement.updateAdminFee);
         $(document).on('click', '.HotelbookingManagement .stop_reference_action', app.HotelbookingManagement.doStopReference);
         $(document).on('click', '.HotelbookingManagement .go_live', app.HotelbookingManagement.confirmReservation);
+        $(document).on('click', '.HotelbookingManagement .existingroomrow i', app.HotelbookingManagement.toggleOptions);
+    },
+    
+    toggleOptions : function() {
+        if($(this).hasClass('fa-eraser')) {
+            return;
+        }
+        if($(this).hasClass('active')) {
+            $(this).removeClass('active');
+        } else {
+            $(this).addClass('active');
+        }
     },
     
     confirmReservation: function() {

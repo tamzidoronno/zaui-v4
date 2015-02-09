@@ -112,6 +112,9 @@ public class ComGetshopArx {
             if (reference.isEnded() || (!reference.isStarted() && !reference.isToday())) {
                 continue;
             }
+            if (!reference.payedFor) {
+                continue;
+            }
             
             int count = 0;
             for(RoomInformation roomInfo : reference.roomsReserved) {

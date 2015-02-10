@@ -20,6 +20,12 @@ class SjoTunetTheme extends \ThemeApplication {
     public function getDescription() {
         
     }
+    public function addScripts() {
+        ?>
+        <script src="//use.typekit.net/yda1aff.js"></script>
+        <script>try{Typekit.load();}catch(e){}</script>
+        <?
+    }    
 
     function __construct() {
         $this->api = $this->getApi();

@@ -285,6 +285,16 @@ class Page {
                     ?>
                     <td align="right"><input type="checkbox" class="gsavoidrotate" <? echo $displayNumbers; ?>></td>
                 </tr>
+                <tr>
+                    <td><? echo $this->factory->__w("Navigate on mouseover"); ?></td>
+                    <?
+                    $displayNumbers= "";
+                    if($cell->carouselConfig->navigateOnMouseOver) {
+                        $displayNumbers = "CHECKED";
+                    }
+                    ?>
+                    <td align="right"><input type="checkbox" class="gsnavonmouseover" <? echo $displayNumbers; ?>></td>
+                </tr>
             </table>
             <br>
             <input style="width: 100%;" class="savecarouselconfig" type="button" value="<? echo $this->factory->__w("Save settings"); ?>">
@@ -854,7 +864,15 @@ class Page {
         <?
     }
 
-    public function printCarouselDots($totalcells, $count, $cellid, $printNumbers) {
+    /**
+     * 
+     * @param type $totalcells
+     * @param type $count
+     * @param type $cellid
+     * @param core_pagemanager_data_CarouselConfig $config
+     * @return type
+     */
+    public function printCarouselDots($totalcells, $count, $cellid, $config) {
         $editdots = "";
         if ($this->factory->isEditorMode() && !$this->factory->isMobile()) {
             $editdots = "gscarouseldotseditmode";
@@ -872,8 +890,14 @@ class Page {
             if ($count == $i) {
                 $activeCirle = "activecarousel gsactivecell";
             }
-            echo "<i class='fa fa-circle gscarouseldot $activeCirle' cellid='$cellid'>";
-            if($printNumbers) {
+            
+            $navmouseover = "";
+            if($config->navigateOnMouseOver) {
+                $navmouseover = "gsnavcarouselonmouseover";
+            }
+            
+            echo "<i class='fa fa-circle gscarouseldot $activeCirle $navmouseover' cellid='$cellid'>";
+            if($config->displayNumbersOnDots) {
                 echo  "<span class='gscarouselnumber'>". $number . "</span>";
             }
            echo "</i>";
@@ -1067,7 +1091,7 @@ class Page {
         if ($parent != null && $parent->mode === "ROTATING") {
             $displayNumbers = $parent->carouselConfig->displayNumbersOnDots;
             $this->printCarourselMenu();
-            $this->printCarouselDots($totalcells, $count, $cell->cellId, $displayNumbers);
+            $this->printCarouselDots($totalcells, $count, $cell->cellId, $parent->carouselConfig);
         }
     }
 

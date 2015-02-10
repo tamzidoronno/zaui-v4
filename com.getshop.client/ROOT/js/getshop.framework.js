@@ -44,6 +44,7 @@ thundashop.framework = {
         $(document).on('click', '.gsrotateleft', this.rotateCell);
         $(document).on('click', '.gsrotateright', this.rotateCell);
         $(document).on('click', '.gscarouseldot', this.showCarouselEntry);
+        $(document).on('mouseover', '.gsnavcarouselonmouseover', this.showCarouselEntry);
         $(document).on('click', '.carouselsettings', this.showCarouselSettings);
         $(document).on('click', '.tabsettings', this.showTabSettings);
         $(document).on('click', '.savecarouselconfig', this.saveCarouselSettings);
@@ -566,6 +567,7 @@ thundashop.framework = {
             cellid: $(this).closest('.carouselsettingspanel').attr('cellid'),
             carouselnumber: $(this).closest('.carouselsettingspanel').find('.gscarouselnumberconfig').is(':checked'),
             avoidrotate: $(this).closest('.carouselsettingspanel').find('.gsavoidrotate').is(':checked'),
+            gsnavonmouseover: $(this).closest('.carouselsettingspanel').find('.gsnavonmouseover').is(':checked'),
         }
 
         data['outerWidth'] = $('.gscontainercell[cellid="' + data['cellid'] + '"] .gsinner').outerWidth();

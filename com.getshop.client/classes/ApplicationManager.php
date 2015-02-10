@@ -100,6 +100,10 @@ class ApplicationManager extends FactoryBase {
         if($_POST['data']['avoidrotate'] == "true") {
             $config->avoidRotate = true;
         }
+        $config->navigateOnMouseOver = false;
+        if($_POST['data']['gsnavonmouseover'] == "true") {
+            $config->navigateOnMouseOver = true;
+        }
         $this->getApi()->getPageManager()->setCarouselConfig($pageId, $cellId, $config);
         $this->getApi()->getPageManager()->setWidth($pageId, $cellId, $outerWidth, $outerWidthWithMargins);
     }

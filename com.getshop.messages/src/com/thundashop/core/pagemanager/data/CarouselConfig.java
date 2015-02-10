@@ -7,4 +7,5 @@ public class CarouselConfig {
     public String type = "fade";
     public Boolean displayNumbersOnDots = false;
     public Boolean avoidRotate = false;
+    public Boolean navigateOnMouseOver = false;
 }

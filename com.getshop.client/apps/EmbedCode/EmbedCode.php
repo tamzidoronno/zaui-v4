@@ -10,9 +10,17 @@ class EmbedCode extends \ApplicationBase implements \Application {
     public function getName() {
         return "EmbedCode";
     }
+    
+     public function renderOnStartup() {
+         echo $this->getCodeStartup();
+     }
+    
 
     public function getCode() {
         return $this->getConfigurationSetting("code");
+    }
+    public function getCodeStartup() {
+        return $this->applicationSettings->settings->{"code_startup"}->value;
     }
     
     public function render() {
@@ -30,7 +38,13 @@ class EmbedCode extends \ApplicationBase implements \Application {
     
     public function saveCode() {
         $code = $_POST['data']['code'];
+        $code_startup = $_POST['data']['code_startup'];
         $this->setConfigurationSetting("code", $code);
+
+        $config = $this->getConfiguration();
+        $this->setConfiguration(null);
+        $this->setConfigurationSetting("code_startup", $code_startup);
+        $this->setConfiguration($config);
     }
 
 }

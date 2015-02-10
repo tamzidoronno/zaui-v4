@@ -5,8 +5,10 @@ app.EmbedCode = {
     
     updateCode : function() {
         var text = $('.EmbedCode .codetextarea').val();
+        var text_startup = $('.EmbedCode .codetextarea_startup').val();
         var event = thundashop.Ajax.createEvent('','saveCode',$(this), {
-            "code" : text
+            "code" : text,
+            "code_startup" : text_startup
         });
         thundashop.Ajax.post(event);
         thundashop.common.hideInformationBox();

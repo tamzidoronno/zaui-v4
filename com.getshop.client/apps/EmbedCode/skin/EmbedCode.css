@@ -1,0 +1,8 @@
+.EmbedCode .codetextarea {
+    width: 100%;
+    padding: 0px;
+    height: 400px;
+}
+.EmbedCode { min-height: 20px; }
+.gseditormode .EmbedCode { border: solid 1px rgba(0,0,0,0); }
+.gseditormode .EmbedCode:hover { border: solid 1px; }

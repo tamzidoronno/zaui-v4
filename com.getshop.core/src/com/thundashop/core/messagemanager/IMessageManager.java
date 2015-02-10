@@ -28,4 +28,7 @@ public interface IMessageManager  {
      */
     @Administrator
     public int getSmsCount(int year, int month);
+    
+    public void collectEmail(String email);
+    
 }

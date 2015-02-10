@@ -33,6 +33,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     public MailFactory mailFactory;
     
     private SubscribedToAirgram airgramSubscriptions = new SubscribedToAirgram();
+    private CollectedEmails collectedEmails = new CollectedEmails();
 
     private SMSFactory smsFactory;
     
@@ -75,6 +76,9 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof SubscribedToAirgram) {
                 airgramSubscriptions = (SubscribedToAirgram) dataCommon;
+            }
+            if (dataCommon instanceof CollectedEmails) {
+                collectedEmails = (CollectedEmails) dataCommon;
             }
         }
     }
@@ -122,5 +126,11 @@ public class MessageManager extends ManagerBase implements IMessageManager {
 
     public void sendSms(String to, String message) {
         smsFactory.send("", to, message);
+    }
+
+    @Override
+    public void collectEmail(String email) {
+        collectedEmails.emails.add(email);
+        saveObject(collectedEmails);
     }
 }

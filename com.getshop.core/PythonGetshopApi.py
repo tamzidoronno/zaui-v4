@@ -2443,6 +2443,21 @@ class LogoManager(object):
 class MessageManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
+  def collectEmail(self, email):
+    args = collections.OrderedDict()
+    if isinstance(email,GetShopBaseClass): 
+      args["email"]=json.dumps(email.__dict__)
+    else:
+      try:
+        args["email"]=json.dumps(email)
+      except (ValueError, AttributeError):
+        args["email"]=email
+    data = EmptyClass()
+    data.args = args
+    data.method = "collectEmail"
+    data.interfaceName = "core.messagemanager.IMessageManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getSmsCount(self, year, month):
     args = collections.OrderedDict()
     if isinstance(year,GetShopBaseClass): 

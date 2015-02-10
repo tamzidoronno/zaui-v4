@@ -16,15 +16,9 @@ class MailChimp extends \ApplicationBase implements \Application {
     }
     
     public function addEmail() {
-        $emails = $this->getConfigurationSetting("emails");
-        if(!$emails) {
-            $emails = array();
-        } else {
-            $emails = json_decode($emails, true);
-        }
-        
-        $emails[$_POST['data']['email']] = "";
-        $this->setConfigurationSetting("emails", json_encode($emails));
+        $email = $_POST['data']['email'];
+        echo $email;
+        $this->getApi()->getMessageManager()->collectEmail($email);
     }
 
 }

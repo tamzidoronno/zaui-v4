@@ -32,7 +32,7 @@
 .Hotelbooking .room_selection_2 .price_text { font-size: 22px; font-weight: bold; margin-left: 20px; }
 
 .Hotelbooking .no_room_available { font-size: 22px; text-align: center; }
-.Hotelbooking .room_selection_2 .price_box { float:right;display:inline-block; width: 30%; padding-top:10px; }
+.Hotelbooking .room_selection_2 .price_box { float:right;display:inline-block; width: 30%;  }
 .Hotelbooking .room_selection_2 .selectbutton { cursor:pointer; border: solid 1px #c2c7cf; padding: 5px; float: right; background-color:#b7bdc7; color:#FFF; }
 .Hotelbooking .room_selection_2 .available_rooms { position:absolute; bottom:5px; left:20px; color:#c2c7cf; }
 

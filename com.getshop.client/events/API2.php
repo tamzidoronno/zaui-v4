@@ -2383,6 +2383,23 @@ class APIMessageManager {
 	*
 	* @param year
 	* @param month
+	* @return void
+	*/
+
+	public function collectEmail($email) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["email"] = json_encode($this->transport->object_unset_nulls($email));
+	     $data["method"] = "collectEmail";
+	     $data["interfaceName"] = "core.messagemanager.IMessageManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get how many messages a user has sent.
+	*
+	* @param year
+	* @param month
 	* @return int
 	*/
 

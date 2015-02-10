@@ -53,14 +53,14 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        Application mailchimp = createSettings("MailChimp",
-                "d73698c6-7fda-4154-97c5-b3b6d0927abe",
+        Application mailchimp = createSettings("EmbedCode",
+                "78dcce17-a1c5-4368-94e9-948788235c4e",
                 allowed2,
                 "",
-                "MarketingApplication", false);
+                Application.Type.Webshop, false);
         mailchimp.isPublic = true;
         mailchimp.isFrontend = true;
-        mailchimp.moduleId = "Marketing";
+        mailchimp.moduleId = "cms";
 //        
         apps.add(mailchimp);
         

@@ -88,7 +88,7 @@ app.Hotelbooking = {
         $(this).addClass('selected');
 
         var event = thundashop.Ajax.createEvent("", "updateCalendarDate", $(this), {
-            "type": cal.prev().attr('type'),
+            "type": cal.closest('.calendar').find('.cal_header').attr('type'),
             "time": $(this).attr('time')
         });
 

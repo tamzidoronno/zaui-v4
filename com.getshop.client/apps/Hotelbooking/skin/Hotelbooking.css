@@ -4,6 +4,7 @@
 .Hotelbooking .fa-calendar { margin: 3px; cursor:pointer; }
 .Hotelbooking .check_available_button, .Hotelbooking .continue_to_cart_button { color:#FFF; text-align: center; margin-top: 20px; background-color:#d2684f; padding:3px; cursor: pointer; padding-top: 7px;  padding-bottom: 7px; }
 .Hotelbooking .continue_button { display:block;  width: 175px;text-align: center; background-color:#d2684f; padding:3px; cursor: pointer; padding-top: 7px;  padding-bottom: 7px; }
+.gsarea[area="body"] a { text-decoration: underline !important; }
 
 .Hotelbooking .boxontop { width: 90%; height: 90%; position:absolute; z-index: 1; left: 17px; top: 12px; }
 .Hotelbooking .bookingbox { box-sizing:border-box;-moz-box-sizing:border-box; color:#EFEFEF; width: 350px; height: 245px;  }

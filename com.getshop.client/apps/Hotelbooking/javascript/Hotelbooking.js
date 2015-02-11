@@ -34,6 +34,15 @@ app.Hotelbooking = {
             });
         }, "500");
     },
+    updateNeedHandicap : function() {
+        var need = $(this).is(':checked');
+
+        var event = thundashop.Ajax.createEvent("", "updateNeedHandicap", $(this), {
+            "need": need
+        });
+
+        thundashop.Ajax.post(event);
+    },
     setNumberOfPersons: function () {
         var count = $(this).val();
         var event = thundashop.Ajax.createEvent("", "updatePersonCount", $(this), {"count": count});
@@ -253,8 +262,9 @@ app.Hotelbooking = {
         $(document).on('change', '.Hotelbooking #ordertype', app.Hotelbooking.changeOrderType);
         $(document).on('change', '.Hotelbooking .number_of_rooms', app.Hotelbooking.updateNumberOfRooms);
         $(document).on('click', '.Hotelbooking .cal_field', app.Hotelbooking.changeBookingDate);
+        $(document).on('click', '.Hotelbooking .cal_field', app.Hotelbooking.changeBookingDate);
         $(document).on('change', '.Hotelbooking .number_of_rooms', app.Hotelbooking.updateRoomCount);
-        $(document).on('blur', '.Hotelbooking .number_of_rooms', app.Hotelbooking.updateRoomCount);
+        $(document).on('click', '.Hotelbooking .need_handicat', app.Hotelbooking.updateNeedHandicap);
         $(document).on('change', '.Hotelbooking .cleaning_option', app.Hotelbooking.updateCleaningCount);
         $(document).on('click', '.Hotelbooking .parking_option', app.Hotelbooking.updateParking);
         $(document).on('change', '.Hotelbooking #numberofpersons', app.Hotelbooking.setNumberOfPersons);

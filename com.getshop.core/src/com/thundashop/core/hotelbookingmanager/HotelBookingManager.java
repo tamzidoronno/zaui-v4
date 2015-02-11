@@ -74,7 +74,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
     
     @Override
-    public Integer checkAvailable(long startDate, long endDate, String productId) throws ErrorException {
+    public Integer checkAvailable(long startDate, long endDate, String productId, AdditionalBookingInformation additional) throws ErrorException {
         List<String> takenRooms = new ArrayList();
         for(BookingReference reference :bookingReferences.values()) {
             if(reference.isBetweenDates(startDate*1000, endDate*1000)) {
@@ -89,7 +89,13 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         Integer count = 0;
         for(Room room : allRoomsOnProduct) {
             if(!takenRooms.contains(room.id)) {
-                count++;
+                if(additional.needHandicap) {
+                    if(room.isHandicap) {
+                        count++;
+                    }
+                } else {
+                    count++;
+                }
             }
         }
         

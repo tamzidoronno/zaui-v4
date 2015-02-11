@@ -45,6 +45,10 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $this->setConfigurationSetting("contine_page", $_POST['data']['contine_page']);
     }
 
+    public function updateNeedHandicap() {
+        $this->setNeedHandicap($_POST['data']['need']);
+    }
+    
     public function getRoomTaxes() {
 
         if ($this->getProduct()->privateExcluded && !$this->isMvaRegistered()) {
@@ -120,7 +124,11 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     function getNumberOfAvailableRooms($type) {
-        return $this->getApi()->getHotelBookingManager()->checkAvailable($this->getStart(), $this->getEnd(), $type);
+        $product = $this->getProduct();
+        $additonal = new \core_hotelbookingmanager_AdditionalBookingInformation();
+        $additonal->needHandicap = $this->getNeedHandicap();
+
+        return $this->getApi()->getHotelBookingManager()->checkAvailable($this->getStart(), $this->getEnd(), $type, $additonal);
     }
 
     function getDayCount($realDayCount=false) {
@@ -483,6 +491,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         
         
         $additionaldata = new \core_hotelbookingmanager_AdditionalBookingInformation();
+        $additionaldata->needHandicap = $this->getNeedHandicap();
         
         $reference = $this->getApi()->getHotelBookingManager()->reserveRoom($productId, $start, $end, $infodata, $additionaldata);
         if (($reference) > 0) {
@@ -681,6 +690,17 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $_SESSION['hotelbooking']['roomCount'] = $count;
     }
 
+    public function setNeedHandicap($need) {
+        $_SESSION['hotelbooking']['needHandicap'] = $need;
+    }
+    
+    public function getNeedHandicap() {
+        if(isset($_SESSION['hotelbooking']['needHandicap'])) {
+            return $_SESSION['hotelbooking']['needHandicap'] == "true";
+        }
+        return false;
+    }
+
     public function getPersonCount() {
         if (isset($_SESSION['hotelbooking']['roomCount'])) {
             return $_SESSION['hotelbooking']['roomCount'];
@@ -790,7 +810,10 @@ class Hotelbooking extends \ApplicationBase implements \Application {
 
     public function checkavailabilityFromSelection() {
         $product = $this->getProduct();
-        return $this->getApi()->getHotelBookingManager()->checkAvailable($this->getStart(), $this->getEnd(), $product->id);
+        $additonal = new \core_hotelbookingmanager_AdditionalBookingInformation();
+        $additonal->needHandicap = $this->getNeedHandicap();
+        
+        return $this->getApi()->getHotelBookingManager()->checkAvailable($this->getStart(), $this->getEnd(), $product->id, $additonal);
     }
 
     public function hasPaymentAppAdded() {

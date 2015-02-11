@@ -23,12 +23,13 @@ public class APIHotelBookingManager {
      * @return Number of avilable rooms. -1, the date is set before todays date, -2 end date is before the start date.
      * @throws ErrorException
      */
-     public java.lang.Integer checkAvailable(long startDate, long endDate, java.lang.String type)  throws Exception  {
+     public java.lang.Integer checkAvailable(long startDate, long endDate, java.lang.String type, com.thundashop.core.hotelbookingmanager.AdditionalBookingInformation additional)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
           gs_json_object_data.args.put("startDate",new Gson().toJson(startDate));
           gs_json_object_data.args.put("endDate",new Gson().toJson(endDate));
           gs_json_object_data.args.put("type",new Gson().toJson(type));
+          gs_json_object_data.args.put("additional",new Gson().toJson(additional));
           gs_json_object_data.method = "checkAvailable";
           gs_json_object_data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager";
           String result = transport.send(gs_json_object_data);

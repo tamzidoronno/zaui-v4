@@ -1725,7 +1725,7 @@ class GetShopApplicationPool(object):
 class HotelBookingManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
-  def checkAvailable(self, startDate, endDate, type):
+  def checkAvailable(self, startDate, endDate, type, additional):
     args = collections.OrderedDict()
     if isinstance(startDate,GetShopBaseClass): 
       args["startDate"]=json.dumps(startDate.__dict__)
@@ -1748,6 +1748,13 @@ class HotelBookingManager(object):
         args["type"]=json.dumps(type)
       except (ValueError, AttributeError):
         args["type"]=type
+    if isinstance(additional,GetShopBaseClass): 
+      args["additional"]=json.dumps(additional.__dict__)
+    else:
+      try:
+        args["additional"]=json.dumps(additional)
+      except (ValueError, AttributeError):
+        args["additional"]=additional
     data = EmptyClass()
     data.args = args
     data.method = "checkAvailable"

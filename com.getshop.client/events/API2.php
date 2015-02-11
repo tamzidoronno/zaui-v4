@@ -1663,12 +1663,13 @@ class APIHotelBookingManager {
 	* @throws ErrorException
 	*/
 
-	public function checkAvailable($startDate, $endDate, $type) {
+	public function checkAvailable($startDate, $endDate, $type, $core_hotelbookingmanager_AdditionalBookingInformation) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["startDate"] = json_encode($this->transport->object_unset_nulls($startDate));
 	     $data['args']["endDate"] = json_encode($this->transport->object_unset_nulls($endDate));
 	     $data['args']["type"] = json_encode($this->transport->object_unset_nulls($type));
+	     $data['args']["core_hotelbookingmanager_AdditionalBookingInformation"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_AdditionalBookingInformation));
 	     $data["method"] = "checkAvailable";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);

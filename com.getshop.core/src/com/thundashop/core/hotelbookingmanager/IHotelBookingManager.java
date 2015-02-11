@@ -17,7 +17,7 @@ public interface IHotelBookingManager {
      * @return Number of avilable rooms. -1, the date is set before todays date, -2 end date is before the start date.
      * @throws ErrorException 
      */
-    public Integer checkAvailable(long startDate, long endDate, String type) throws ErrorException;
+    public Integer checkAvailable(long startDate, long endDate, String type, AdditionalBookingInformation additional) throws ErrorException;
     
     /**
      * 

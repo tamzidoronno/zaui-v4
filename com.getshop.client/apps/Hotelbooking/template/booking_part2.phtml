@@ -18,6 +18,17 @@ $headingtext = $this->__w("You have selected the following duration for your sta
                         <td><? echo $this->__w("Number of rooms"); ?></td>
                         <td align='right'><input class='number_of_rooms' type='number' min="1" max="10" value='<? echo $this->getRoomCount(); ?>'></td>
                     </tr>
+                    <tr>
+                        <td><? echo $this->__w("I need a handicap room"); ?></td>
+                        <? 
+                        $checked = ""; 
+                        if($this->getNeedHandicap()) {
+                            $checked = "CHECKED";
+                        }
+                        ?>
+                        
+                        <td align='right'><input class='need_handicat' type='checkbox' <? echo $checked; ?>></td>
+                    </tr>
                     <?
                     if ($this->getDayCount() > 3) {
                         ?>

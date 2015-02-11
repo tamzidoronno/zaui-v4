@@ -20,7 +20,10 @@ class EmbedCode extends \ApplicationBase implements \Application {
         return $this->getConfigurationSetting("code");
     }
     public function getCodeStartup() {
-        return $this->applicationSettings->settings->{"code_startup"}->value;
+        if(isset($this->applicationSettings->settings->{"code_startup"})) {
+            return $this->applicationSettings->settings->{"code_startup"}->value;
+        }
+        return "";
     }
     
     public function render() {

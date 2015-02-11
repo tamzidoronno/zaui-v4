@@ -308,10 +308,16 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             $startday = 7;
         }
         $monthText = date("M", $time) . " " . $year;
+        $text = $this->__w("When do you check in?");
 
-        echo "<div class='cal_header' type='$id' year='$year' month='$month'><i class='fa fa-arrow-left calnav' style='float:left;cursor:pointer;' navigation='prev'></i>" . $monthText . "<i class='fa fa-arrow-right calnav' style='float:right;cursor:pointer;' navigation='next'></i></div>";
-
-        echo "<table width='100%' class='booking_table'>";
+        if($id == "endDate") {
+            $text = $this->__w("When do you check out?");
+        }
+        //Guess navigating between months was a bad idea, why do something that does not look good design wise.
+//        echo "<div class='cal_header cal_nav' type='$id' year='$year' month='$month'><i class='fa fa-arrow-left calnav' style='float:left;cursor:pointer;' navigation='prev'></i>" . $monthText . "<i class='fa fa-arrow-right calnav' style='float:right;cursor:pointer;' navigation='next'></i></div>";
+        echo "<div class='cal_header' type='$id' year='$year' month='$month'>$text</div>";
+        echo "<div class='calspacing'></div>";
+        echo "<table width='100%' class='booking_table' cellspacing='0' cellpadding='0'>";
         echo "<tr>";
         echo "<th>" . $this->__w("Mo") . "</th>";
         echo "<th>" . $this->__w("Tu") . "</th>";

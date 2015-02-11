@@ -52,7 +52,6 @@ By using sisow as your payment provider, you will simply offer your customers to
 CHECK IN;-;SJEKK INN
 CHECK OUT;-;SJEKK UT
 CONTINUE;-;FORTSETT
-COUNT;-;ANTALL
 Cancel order;-;Kanselert ordre
 Candidate name;-;Navn
 Carousel menu;-;Karusell meny
@@ -139,6 +138,7 @@ I am sorry, but all fields are required before sending a message.;-;Beklager, me
 I have a partnership deal;-;Jeg har en partneravtale
 Image;-;Bilde
 Image carousel;-;Bilde karusell
+Included in all rooms:;-;Inkludert i alle rom:
 Information;-;Informasjon
 Inner background;-;Indre bakgrunn
 Insert column;-;Sett inn kolonne
@@ -161,6 +161,7 @@ Loading;-;Laster
 Loading data... please wait;-;Laster, vennligst vent...
 Logout;-;Logg ut
 Lost your password?;-;Glemt ditt passord?
+MAX COUNT;-;MAX ANTALL
 March;-;Mars
 May;-;Mai
 Merchant ID is found in braintree account.;-;Merchant ID er noe du finner på kontoen din hos braintree.
@@ -217,7 +218,6 @@ Other attributes;-;Andre attributter
 Other operations;-;Andre operasjoner
 Our local time is:;-;Vår lokale tid er
 Outer background;-;Ytre bakgrunn
-PRICE PER MONTH;-;PRIS PER MÅNED
 PRICE PER NIGHT;-;PRIS PER NATT
 Password;-;Passord
 Password cannot be empty;-;Passordet kan ikke være tomt.
@@ -260,7 +260,6 @@ Product view for your store.;-;Produkt visningen for din nettbutikk.
 Products;-;Produkter
 Public key is found in braintree account.;-;Den offentlig nøkkelen er noe du finner på kontoen din hos braintree.
 RESERVE YOUR STAY;-;RESERVER DITT OPPHOLD
-Apartment / room;-;Apartment / rom
 Read more;-;Les mer
 Recover password;-;Gjennopprett passord
 Reference key;-;Referanse nummer
@@ -276,11 +275,11 @@ Rental time periode;-;Din leieperiode
 Repeat password;-;Gjenta passord
 Resize column;-;Endre størrelse på kolonnen
 Right spacing;-;Høyre spacing
+Room type;-;ROMTYPE
 Row is not displayed on mobile, click for make it reappear;-;Raden vises ikke på mobiltelefon, trykk her for å vise den.
 Row options;-;Rad instillinger
 Run account in sandbox?;-;Kjør kontoen i sandbox modus?
-SELECT ROOM;-;VELG ROM
-SELECT STORAGE ROOM;-;VELG BOD
+SELECT ROOM;-;VALGT ROM
 Sa;-;Lø
 Saturday;-;Lørdag
 Save changes;-;Lagre endringer
@@ -294,7 +293,6 @@ Select a room;-;Velg et rom
 Select size;-;Velg størrelse
 Select start date;-;Velg start dato
 Select your car;-;Velg din bil
-Select your storage room;-;Velg størrelse på lagerbod.
 Send me a code;-;Send meg koden
 Send message;-;Send melding
 Send us mail;-;Send oss en epost
@@ -378,7 +376,6 @@ Upload and manipulate on images or add this to be able to search for professiona
 Use a different email;-;Bruk en annen epost
 Username / Email;-;Brukernavn / Epost
 Visitor information;-;Besøksinformasjon
-WHEN DO YOU LEAVE?;-;NÅR DRAR DU
 Waiting list;-;Venteliste
 Was not able to get payment methods, please check your postcode;-;Klarte ikke å oppdrive betalings metoder, vennligst sjekk ditt postnummer.
 We;-;On
@@ -388,13 +385,14 @@ Wednesday;-;Onsdag
 Welcome to my page;-;Velkommen til min side
 What email address do you want the ebill to be sent to?;-;Hvilken epost ønsker du at ebill skal sendes til?
 What's on your mind?;-;Hva ønsker du å formidle?
+When do you check in?;-;NÅR VIL DU SJEKKE <b>INN</b>?
+When do you check out?;-;NÅR VIL DU SJEKKE <b>UT</b>?
 Wrong delivery method;-;Feil forsendelses metode.
 Yes;-;Ja
 You are here:;-;Du er her:
 You are now in edit mode for this row, from this manipulate your row by adding more columns or add a row above / below, and much more.;-;Du er nå i edit modus for denne raden, du kan nå legge til kolonner, rader over og under, og mye mer.
 You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
 You have selected the following duration for your stay;-;Du har valgt følgende tidsperiode for besøket
-You have selected the following start date for your rental periode;-;Ønsket startdato for lagerbod.
 You need to select at least one to send back message to;-;Du må velge minium en som du kan sende en melding til.
 Your are now signed up for the event;-;Du er nå registert inn på denne eventen.
 Your email;-;Din epost

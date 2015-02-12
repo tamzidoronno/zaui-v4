@@ -1,0 +1,17 @@
+<table cellspacing="0" cellpadding="0">
+    <tr>
+        <td>
+            <input type="email" class="mailinputfield" placeholder="<? echo $this->__w("your@email.com"); ?>">
+        </td>
+        <td>
+            <span class="shop_button small mailchimpaddbutton"><? echo $this->__w("Subscribe"); ?></span>            
+        </td>
+    </tr>
+</table>
+
+<span class="incorrectinput" style='display:none;'>
+    * <? echo $this->__w("The email in invalid, please enter a valid email"); ?>
+</span>
+<span class="emailAdded" style='display:none;'>
+    * <? echo $this->__w("Thank you for subscribing to our newsletter, your email has been added"); ?>
+</span>

@@ -47,7 +47,7 @@ gs_app.Facebook.prototype = {
     },
     validateAddress: function() {
         this.address = this.address.replace("www.facebook", "graph.facebook");
-        this.address = this.address.replace("http://", "https://", this.address);
+        this.address = this.address.replace("http://", "https://");
         if (this.address.indexOf("https:") < 0) {
             this.address = "https://" + this.address;
         }
@@ -109,12 +109,17 @@ gs_app.Facebook.prototype = {
 
         var when = date.getDate() + "-" + month + "-" + date.getFullYear() + " " + date.getHours() + ":" + minutes;
         var entry = $("<div class='newsentry'></div>");
-        entry.append($("<div class='created_time'>" + when + "</div>"));
+//        entry.append($("<div class='created_time'>" + when + "</div>"));
         if (newsentry.picture !== undefined) {
             entry.append("<img class='picture' src='" + newsentry.picture + "'>");
+        } else {
+            entry.append("<span class='picture nopicture'></span>");
         }
         entry.append($("<div class='message'>" + message + "</div>"));
         entry.append($('<div class="newsbottom"></div>"'));
+        if(newsentry.link !== undefined) {
+            entry.append('<a href="'+newsentry.link+'" target="_new" class="readmorelink">Les mer<a>');
+        }
         return entry;
     },
     init: function() {

@@ -19,6 +19,12 @@ class core_hotelbookingmanager_Room extends core_common_DataCommon  {
 	public $lastReservation;
 
 	/** @var String */
+	public $isHandicap;
+
+	/** @var String */
+	public $suitedForLongTerm;
+
+	/** @var String */
 	public $lockId;
 
 }

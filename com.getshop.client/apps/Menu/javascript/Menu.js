@@ -15,7 +15,6 @@ getshop.MenuEditor = {
         $(document).on('click', ".Menu .cancel", getshop.MenuEditor.closeMenuEditor);
         $(document).on('change', ".Menu #userlevel", getshop.MenuEditor.userLevelChanged);
     },
-    
     showSubEntries : function() {
         $(this).children('.entries').show();
     },
@@ -232,7 +231,30 @@ app.Menu = {
         }
         
     },
-    
+    loadSettings : function(element, application) {
+         var config = {
+            draggable: true,
+            app : true,
+            application: application,
+            title: "Settings",
+            items: [
+                {
+                    icontype: "awesome",
+                    icon: "fa-edit",
+                    iconsize : "30",
+                    title: __f("Edit menu"),
+                    click: function() {
+                        getshop.MenuEditor.open(application);
+                    }
+                }
+                
+            ]
+        }
+
+        var toolbox = new GetShopToolbox(config, application);
+        toolbox.show();
+        toolbox.attachToElement(application, 2);
+    },
     removeSimpleAdd: function() {
         
         if (app.Menu.ignoreRemovalOfSimpleMenu) {

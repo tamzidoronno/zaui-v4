@@ -29,13 +29,13 @@ All fields are required, please fill in the fields in red.;-;Alle felt er påkre
 All fields are required.;-;Alle felt er påkrevd
 All orders;-;Alle bestilinger
 An email has been sent to you with the confirmation code.;-;En godkjennings kode er sendt til din epost.
+Apartment / room;-;Apartment / rom
 Application;-;Applikasjoner
 Apply coupon;-;Bruk kupong
 April;-;April
 Attributes;-;Attributter
 August;-;August
 Available positions;-;Ledige plasser
-BOOK A ROOM AT;-;BOOK ET ROM HOS
 Background color;-;Bakgrunns farger
 Background image / styling;-;Bakgrunnsbilde / Styling
 Birth Date;-;Fødselsdato
@@ -53,8 +53,6 @@ By using sisow as your payment provider, you will simply offer your customers to
 CHECK IN;-;SJEKK INN
 CHECK OUT;-;SJEKK UT
 CONTINUE;-;FORTSETT
-COUNT;-;ANTALL
-Campaign code;-;Kampanjekode
 Cancel order;-;Kanselert ordre
 Candidate name;-;Navn
 Carousel menu;-;Karusell meny
@@ -139,8 +137,10 @@ How can I help you today ?;-;Hva kan jeg hjelpe deg med?
 I agree to the terms and conditions;-;Jeg godtar bruksvilkårene
 I am sorry, but all fields are required before sending a message.;-;Beklager, men alle felt må fylles ut før du sender en melding.
 I have a partnership deal;-;Jeg har en partneravtale
+I need a handicap room;-;Jeg trenger et handicap rom
 Image;-;Bilde
 Image carousel;-;Bilde karusell
+Included in all rooms:;-;Inkludert i alle rom:
 Information;-;Informasjon
 Inner background;-;Indre bakgrunn
 Insert column;-;Sett inn kolonne
@@ -163,6 +163,7 @@ Loading;-;Laster
 Loading data... please wait;-;Laster, vennligst vent...
 Logout;-;Logg ut
 Lost your password?;-;Glemt ditt passord?
+MAX COUNT;-;MAX ANTALL
 March;-;Mars
 May;-;Mai
 Merchant ID is found in braintree account.;-;Merchant ID er noe du finner på kontoen din hos braintree.
@@ -191,7 +192,6 @@ Name;-;Navn
 Name of your shop;-;Navn på din nettbutikk
 New message;-;Ny melding
 New password;-;Nytt passord
-New room type;-;Ny rom type
 NewsLetter;-;Nyhetsbrev
 Next;-; Neste
 Nice modern theme. Could be used for clothing, skateboarding, snowboarding etc.;-;Fint moderne tema. Kan bli brukt for klær, skateboards, snowbards, osv.
@@ -204,7 +204,6 @@ No rooms are available for this time periode.;-;Ingen rom er tilgjengelig i valg
 Normal;-;Normal
 November;-;November
 Number of instances added;-;Antall av instanser lagt til
-Number of persons;-;Antall personer
 Number of rooms;-;Antall rom
 ORDER STORAGE ROOM;-;BESTILL LAGERBOD
 October;-;Oktober
@@ -217,12 +216,11 @@ Organisation number;-;Organisasjonsnummer
 Organisation number has to be 9 digits long.;-;Organisasjonsnummeret må bestå av 9 siffer 
 Original (hp);-;Orginal hp
 Original (nm);-;Original nm
-Other attributes;-;Ingen attributter
+Other attributes;-;Andre attributter
 Other operations;-;Andre operasjoner
 Our local time is:;-;Vår lokale tid er
 Outer background;-;Ytre bakgrunn
-PRICE PER MONTH;-;PRIS PER MÅNED
-PRICE PER NIGHT;-;PRIS PER NATT
+PRICE PER NIGHT;-;PRIS PR NATT
 Password;-;Passord
 Password cannot be empty;-;Passordet kan ikke være tomt.
 Password does not match, please re enter password;-;Passordet stemmer ikke oversens, prøv på nytt.
@@ -263,7 +261,7 @@ Product Search;-;Produkt søk
 Product view for your store.;-;Produkt visningen for din nettbutikk.
 Products;-;Produkter
 Public key is found in braintree account.;-;Den offentlig nøkkelen er noe du finner på kontoen din hos braintree.
-ROOM TYPE;-;Størrelse
+RESERVE YOUR STAY;-;RESERVER DITT OPPHOLD
 Read more;-;Les mer
 Recover password;-;Gjennopprett passord
 Reference key;-;Referanse nummer
@@ -279,11 +277,11 @@ Rental time periode;-;Din leieperiode
 Repeat password;-;Gjenta passord
 Resize column;-;Endre størrelse på kolonnen
 Right spacing;-;Høyre spacing
+Room type;-;ROMTYPE
 Row is not displayed on mobile, click for make it reappear;-;Raden vises ikke på mobiltelefon, trykk her for å vise den.
 Row options;-;Rad instillinger
 Run account in sandbox?;-;Kjør kontoen i sandbox modus?
-SELECT ROOM;-;VELG ROM
-SELECT STORAGE ROOM;-;VELG BOD
+SELECT ROOM;-;VALGT ROM
 Sa;-;Lø
 Saturday;-;Lørdag
 Save changes;-;Lagre endringer
@@ -297,7 +295,6 @@ Select a room;-;Velg et rom
 Select size;-;Velg størrelse
 Select start date;-;Velg start dato
 Select your car;-;Velg din bil
-Select your storage room;-;Velg størrelse på lagerbod.
 Send me a code;-;Send meg koden
 Send message;-;Send melding
 Send us mail;-;Send oss en epost
@@ -316,6 +313,7 @@ Sign up with facebook;-;Logg inn me facebook
 Sign up with google;-;Logg inn med google
 Slide left;-;Slide til venstre
 Slide right;-;Slide til høyre
+Sold out;-;Utsolgt
 Sorry;-;Beklager
 Sorry, we are out of this type of storage, please select a different one.;-;Beklager, men vi har ikke flere av denne typen igjen, velg en annen en.
 Sorry, your rental is too short, it has to be longer then {days} days of rental.;-;Beklager, men din leieperiode er for kort, den må være lengere enn {days} dager.
@@ -331,6 +329,7 @@ Start your 30 days free trial;-;Start din 30 dagers fri prøveperiode
 Stop;-;Stopp
 Styling;-;Design
 Su;-;Sø
+Subscribe;-;Registrer
 Success;-;Success
 Summary;-;Oppsummering
 Sunday;-;Søndag
@@ -344,6 +343,7 @@ Th;-;To
 Thank you for checking into our hotel. A confirmation mail has been sent to your email.;-;Takk for at du sjekker inn på vårt hotel. En bekreftelse er sendt til din e-post.
 Thank you for ordering with Sisow ebill;-;Takk for at du bestilte med Sisow ebill
 Thank you for renting a storage room from us. A confirmation mail has been sent to your email.;-;Takk for at du benytter deg av en våre boder. En bekreftelse er sendt til din e-post.
+Thank you for subscribing to our newsletter, your email has been added;-;Takk for at du har valgt å registrere deg på vårt nyhetsbrev, din epost er nå lagt til.
 Thank you for your booking a room at;-;Takk for at du reserverer et room hos
 Thank you for your booking a storage room at;-;Takk for at du reserverer en bod hos
 Thank you for your order, an email has been sent to you with the invoice attached. We will ship the items as soon as we have received the payment.;-;Takk for din bestilling, en epost har blitt sendt med fakturaen vedlagt. Vi sender bestillingen når vi har mottat betalingen.
@@ -354,6 +354,7 @@ The company is mva registered;-;Firmaet er registrert i mva registeret
 The company you have selected could not be found in brreg.;-;Firmaet du har valgt eksisterer ikke i brønnøysundregisteret.
 The email address is invalid.;-;Eposten din er ugyldig.
 The email already exists, please log on to continue.;-;Eposten eksisterer allerede, vennligst logg på for å fortsette.
+The email in invalid, please enter a valid email;-;Eposten er ikke gyldig, vennligst skriv inn en gyldig adresse.
 The event has been confirmed.;-;Eventent har blitt bekreftet.
 The newsletter application allowes you to send emails to all of your customers without. Create a news letter, select your customers and send.;-;Denne nyhetsbrev applikasjonen gjør det mulig for deg å sende epost til alle dine kunder. Opprett et nyhetsbrev og send det til dine registrerte kunder.
 The passwords does not match.;-;Passordet stemmer ikke overens.
@@ -378,8 +379,6 @@ Upload and manipulate on images or add this to be able to search for professiona
 Use a different email;-;Bruk en annen epost
 Username / Email;-;Brukernavn / Epost
 Visitor information;-;Besøksinformasjon
-Visitor no {count};-;Besøkende nummer {count}
-WHEN DO YOU LEAVE?;-;NÅR DRAR DU
 Waiting list;-;Venteliste
 Was not able to get payment methods, please check your postcode;-;Klarte ikke å oppdrive betalings metoder, vennligst sjekk ditt postnummer.
 We;-;On
@@ -389,13 +388,14 @@ Wednesday;-;Onsdag
 Welcome to my page;-;Velkommen til min side
 What email address do you want the ebill to be sent to?;-;Hvilken epost ønsker du at ebill skal sendes til?
 What's on your mind?;-;Hva ønsker du å formidle?
+When do you check in?;-;NÅR VIL DU SJEKKE <b>INN</b>?
+When do you check out?;-;NÅR VIL DU SJEKKE <b>UT</b>?
 Wrong delivery method;-;Feil forsendelses metode.
 Yes;-;Ja
 You are here:;-;Du er her:
 You are now in edit mode for this row, from this manipulate your row by adding more columns or add a row above / below, and much more.;-;Du er nå i edit modus for denne raden, du kan nå legge til kolonner, rader over og under, og mye mer.
 You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
 You have selected the following duration for your stay;-;Du har valgt følgende tidsperiode for besøket
-You have selected the following start date for your rental periode;-;Ønsket startdato for lagerbod.
 You need to select at least one to send back message to;-;Du må velge minium en som du kan sende en melding til.
 Your are now signed up for the event;-;Du er nå registert inn på denne eventen.
 Your email;-;Din epost
@@ -414,11 +414,9 @@ course;-;kurs
 day;-;dag
 days;-;dager
 description;-;Beskrivelse
-each cleaning;-;per vask
 email;-;E-post
 forgot?;-;Glemt?
 if we dont answer, please leave your email here and we will return your message asap.;-;Hvis vi ikke svarer, legg igjen en din epost, og vi vil kontakte deg så snart som mulig.
-in;-;i
 included taxes;-;Inkludert mva
 location;-;Sted
 login;-;logg inn
@@ -433,6 +431,7 @@ read;-;les
 select;-;velg
 to;-;til
 will be added to your invoice.;-;vil bli lagt på sluttsummen.
+your@email.com;-;din@epost.no
 {percentage}% taxes on cleaning;-;{percentage}% MVA
 {percentage}% taxes on room;-;{percentage}% MVA
 

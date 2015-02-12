@@ -418,6 +418,22 @@ public class APIPageManager {
      }
 
      /**
+     * Remove all content on all page areas for this page.
+     * @param pageId
+     * @throws ErrorException
+     */
+     public void linkPageCell(java.lang.String pageId, java.lang.String cellId, java.lang.String link)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("pageId",new Gson().toJson(pageId));
+          gs_json_object_data.args.put("cellId",new Gson().toJson(cellId));
+          gs_json_object_data.args.put("link",new Gson().toJson(link));
+          gs_json_object_data.method = "linkPageCell";
+          gs_json_object_data.interfaceName = "core.pagemanager.IPageManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
      * Move a cell either up or down.
      * @param pageId
      * @return

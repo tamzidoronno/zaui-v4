@@ -44,6 +44,7 @@ thundashop.framework = {
         $(document).on('click', '.gsrotateleft', this.rotateCell);
         $(document).on('click', '.gsrotateright', this.rotateCell);
         $(document).on('click', '.gscarouseldot', this.showCarouselEntry);
+        $(document).on('mouseover', '.gsnavcarouselonmouseover', this.showCarouselEntry);
         $(document).on('click', '.carouselsettings', this.showCarouselSettings);
         $(document).on('click', '.tabsettings', this.showTabSettings);
         $(document).on('click', '.savecarouselconfig', this.saveCarouselSettings);
@@ -94,6 +95,7 @@ thundashop.framework = {
         $(document).on('mouseenter', '.gs_templatehaeaderfunctions .selectcolors', this.showColors);
         $(document).on('click', '.gs_templatehaeaderfunctions .selectcolors', this.showColors);
         $(document).on('click', '.gs_templatehaeaderfunctions .color_select.close', this.hideColors);
+        $(document).on('click', '.gslinkcell', this.doLinkCell);
 
         /* Cell operations */
         $(document).on('click', '.gsoperatecell', this.operateCell);
@@ -101,6 +103,16 @@ thundashop.framework = {
         $(document).on('click', '.gsemptyarea .shop_button', this.simpleaddrow);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
     },
+    doLinkCell : function() {
+        var url = prompt("Please enter the url for the link", "http://www.google.no");
+        var data = {
+            "cellid" : $(this).closest('.gscellsettingspanel').attr('cellid'),
+            "url" : url
+        }
+        var event = thundashop.Ajax.createEvent('','doLinkCell',$(this), data);
+        thundashop.Ajax.post(event);
+    },
+    
     showColors: function () {
         $('.gs_templatehaeaderfunctions .colors_menu').slideDown('fast');
     },
@@ -424,7 +436,12 @@ thundashop.framework = {
         var incrementid = cellobject.attr('incrementcellid');
         var includeOuter = false;
 
-        if ($('.gsucell[cellid="' + id + '"]').hasClass('gsdepth_0')) {
+        var tmpcell = $('.gsucell[cellid="' + id + '"]');
+
+        if (tmpcell.hasClass('gsdepth_0')) {
+            includeOuter = true;
+        }
+        if (tmpcell.hasClass('gsrotatingrow') && tmpcell.hasClass('gsdepth_1')) {
             includeOuter = true;
         }
 
@@ -548,6 +565,9 @@ thundashop.framework = {
             timer: $(this).closest('.carouselsettingspanel').find('.gscarouseltimer').val(),
             type: $(this).closest('.carouselsettingspanel').find('.gscarouseltype').val(),
             cellid: $(this).closest('.carouselsettingspanel').attr('cellid'),
+            carouselnumber: $(this).closest('.carouselsettingspanel').find('.gscarouselnumberconfig').is(':checked'),
+            avoidrotate: $(this).closest('.carouselsettingspanel').find('.gsavoidrotate').is(':checked'),
+            gsnavonmouseover: $(this).closest('.carouselsettingspanel').find('.gsnavonmouseover').is(':checked'),
         }
 
         data['outerWidth'] = $('.gscontainercell[cellid="' + data['cellid'] + '"] .gsinner').outerWidth();

@@ -1,0 +1,52 @@
+<? 
+$config = $this->getContactConfig();
+$number = 0;
+if(isset($config)) {
+    $number = $config['numberOfFields'];
+}
+?>
+
+
+<br>
+<table width="80%" class="contactConfigTable">
+    <tr>
+        <td width="50%"><? echo $this->__w("Email to this address"); ?></td>
+        <td width="50%"><input type="text" name="emailAddress" style='width:100%;' value="<? echo $this->getEmail(); ?>"></td>
+    </tr>
+    <tr>
+        <td width="50%"><? echo $this->__w("Subject to recipient"); ?></td>
+        <td width="50%"><input type="text" name="emailSubject" style='width:100%;' value="<? echo $this->getSubject(); ?>"></td>
+    </tr>
+    <tr>
+        <td width="50%"><? echo $this->__w("Number of fields"); ?></td>
+        <td width="50%">
+        <select name="numberOfFields">
+        <? for($i = 0; $i <= 10; $i++) {
+            $selected = "";
+            if($number == $i) {
+                $selected = " SELECTED";
+            }
+            echo "<option value='$i' $selected>$i</option>";
+        } ?>
+        </select>
+        </td>
+    </tr>
+    <tr>
+        <td><? echo $this->__w("Body title"); ?></td>
+        <td><input type="text" style='width:100%;' name="bodyTitle" value='<? echo $this->getBodyTitle(); ?>'></td>
+    </tr>
+    <? 
+    for($i = 1; $i <= 10; $i++) {
+        echo "<tr  class='contactfield fieldName_$i'>";
+        echo "<td>Name of field $i</td>";
+        $value = "";
+        if(isset($config)) {
+            $value = $config['fieldName_'.$i];
+        }
+        echo "<td><input type='text' name='fieldName_$i' style='width:100%;' value='$value'></td>";
+        echo "</tr>";
+    }
+    ?>
+</table>
+<span class="saveContactConfiguration"><? echo $this->__w("Save"); ?></span>
+<script>app.Contact.updateFormFields();</script>

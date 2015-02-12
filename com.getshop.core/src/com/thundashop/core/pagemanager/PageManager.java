@@ -497,4 +497,9 @@ public class PageManager extends ManagerBase implements IPageManager {
     public PageCell getCell(String pageId, String cellId) throws ErrorException {
         return getPage(pageId).getCell(cellId);
     }
+
+    @Override
+    public void linkPageCell(String pageId, String cellId, String link) throws ErrorException {
+        getPage(pageId).getCell(cellId).link = link;
+    }
 }

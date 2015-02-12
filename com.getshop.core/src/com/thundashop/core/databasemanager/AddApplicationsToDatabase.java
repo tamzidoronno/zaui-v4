@@ -53,13 +53,17 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-//        Application netAxept = createSettings("Netaxept",
-//                "def1e922-972f-4557-a315-a751a9b9eff1",
-//                allowed2,
-//                "",
-//                "PaymentApplication", true);
-//        netAxept.isPublic = true;
+        Application mailchimp = createSettings("EmbedCode",
+                "78dcce17-a1c5-4368-94e9-948788235c4e",
+                allowed2,
+                "",
+                Application.Type.Webshop, false);
+        mailchimp.isPublic = true;
+        mailchimp.isFrontend = true;
+        mailchimp.moduleId = "cms";
 //        
+        apps.add(mailchimp);
+        
 //        netAxept.moduleId = "WebShop";
 //        netAxept.activeAppOnModuleActivation = false;
 //        netAxept.isFrontend = false;

@@ -54,6 +54,14 @@ public interface IPageManager {
     public void clearPage(String pageId) throws ErrorException;
     
     /**
+     * Remove all content on all page areas for this page.
+     * @param pageId
+     * @throws ErrorException 
+     */
+    @Administrator
+    public void linkPageCell(String pageId, String cellId, String link) throws ErrorException;
+    
+    /**
      * Add an cell to an specific earea.
      * @param pageId
      * @param incell

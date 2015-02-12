@@ -10,6 +10,9 @@ $postalCode = $this->getPostalCode();
 $phone = $this->getPhone();
 $header = $this->getHeader();
 
+
+$fields = $this->getFields();
+
 if (isset($_POST['allfiedsrequired'])) {
     echo $this->__w("I am sorry, but all fields are required before sending a message.");
 } else {
@@ -22,97 +25,39 @@ if (isset($_POST['allfiedsrequired'])) {
 ?>
 
 <div class='medium_contact_form contact_form'>
-    <input type="textfield" class="max_length tobecleared" id="name" placeholder='<? echo $this->__w("My name is:"); ?>'></input>
-    <input type="textfield" class="max_length tobecleared" id="phone" placeholder='<?php echo $this->__w("Phone"); ?>'></input>
-    <input type="textfield" class="max_length tobecleared" id="email" placeholder='<?php echo $this->__w('Email'); ?>'></input>
-    <textarea class="max_length subject_textarea" id="content tobecleared" placeholder="<?php echo $this->__w("What's on your mind?"); ?>"></textarea>
+    <? 
+    foreach($fields as $field => $text) {
+        echo "<input type='textfield' class='max_length tobecleared contactfield' id='$field' placeholder='$text'></input>";
+    }
+    ?>
+    <textarea class="max_length subject_textarea tobecleared content"  placeholder="<?php echo $this->getBodyTitle(); ?>"></textarea>
     <span class="send_email shop_button" id="send_email"><?php echo $this->__w("Send message"); ?></span>
 </div>
 
 <div class='normal_contact_form contact_form'>
     <table style="width:100%;">
-        <tr>
-            <td>
-    <?php echo $this->__w("My name is:"); ?>
-            </td>
-            <td>
-                <input type="textfield" class="max_length tobecleared" id="name"></input>
-            </td>
-        </tr>
-
-    <?php if ($this->isCompanyFieldActivated()) { ?>
-            <tr>
-                <td>
-        <?php echo $this->__w("Company"); ?>
-                </td>
-                <td>
-                    <input type="textfield" class="max_length tobecleared" id="company"></input>
-                </td>
-            </tr>
-    <?php } ?>
-
-        <tr>
-            <td>
-    <?php echo $this->__w("Phone"); ?>
-            </td>
-            <td>
-                <input type="textfield" class="max_length tobecleared" id="phone"></input>
-            </td>
-        </tr>
-        <tr>
-            <td>
-    <?php echo $this->__w('Email'); ?>
-            </td>
-            <td>
-                <input type="textfield" class="max_length tobecleared" id="email"></input>
-            </td>
-        </tr>
-
+        
         <?
-        if (isset($_GET['showgroup'])) {
-            ?>
-            <tr>
-                <td>
-        <?php echo $this->__w("Invoice email"); ?>
-                </td>
-                <td>
-                    <input type="textfield" class="max_length tobecleared" id="invoiceemail"></input>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-        <? echo $this->__w("Please select department", 'Booking'); ?>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" align="center">
-                    <?
-                    $groups = $this->getApi()->getUserManager()->getAllGroups();
-                    shuffle($groups);
-                    foreach ($groups as $group) {
-                        $groupName = $group->groupName;
-                        $imageId = $group->imageId;
-                        if ($imageId == "") {
-                            $image = $group->groupName;
-                        } else {
-                            $image = "<img src='displayImage.php?id=$imageId'/>";
-                        }
-                        echo "<div groupname='$groupName' class='group inline'>$image</div>";
-                    }
-                    ?>
-
-                </td>
-            </tr>
-    <? } ?>
+        foreach($fields as $field => $text) {
+        ?> 
+        <tr>
+            <td>
+            <?php echo $text; ?>
+            </td>
+            <td>
+                <input type="textfield" class="max_length tobecleared contactfield" id="<? echo $field; ?>"></input>
+            </td>
+        </tr>
+        <? } ?>
 
         <tr>
             <td colspan="2">
-    <?php echo $this->__w("What's on your mind?"); ?>
+                <?php echo $this->getBodyTitle(); ?>
             </td>
         </tr>
 
         <tr>
-            <td colspan="2"><textarea class="max_length subject_textarea tobecleared" id="content"><?php echo isset($_GET['prefilled']) ? $_GET['prefilled'] : ""; ?></textarea></td>
+            <td colspan="2"><textarea class="max_length subject_textarea tobecleared contactfield content"><?php echo isset($_GET['prefilled']) ? $_GET['prefilled'] : ""; ?></textarea></td>
         </tr>
 
         <tr>

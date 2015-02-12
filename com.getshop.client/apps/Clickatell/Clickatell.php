@@ -27,5 +27,12 @@ class Clickatell extends \MarketingApplication implements \Application {
     public function renderConfig() {
         $this->includefile("config");
     }
+    
+    public function saveSettings() {
+        $this->setConfigurationSetting("username", $_POST['username']);
+        $this->setConfigurationSetting("apiid", $_POST['apiid']);
+        $this->setConfigurationSetting("numberprefix", $_POST['numberprefix']);
+        $this->setConfigurationSetting("password", $_POST['password']);
+    }
 }
 ?>

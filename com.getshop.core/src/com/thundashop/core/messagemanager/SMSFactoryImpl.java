@@ -5,6 +5,7 @@
 package com.thundashop.core.messagemanager;
 
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
@@ -26,6 +27,7 @@ import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,11 +35,8 @@ import org.springframework.stereotype.Component;
  *
  * @author ktonder
  */
-@Component
-@GetShopSession
+
 public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnable {
-    @Autowired
-    public Logger logger;
     
     private String message;
     private String to;
@@ -45,25 +44,37 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
     
     private Credentials credentials;
 
-    @Autowired
-    public Database database;
-    
-    @Autowired
-    public FrameworkConfig frameworkConfig;
-    
-    @Autowired
-    public DatabaseSaver databaseSaver;
+    private Logger logger;
+    private Database database;
+    private FrameworkConfig frameworkConfig;
+    private DatabaseSaver databaseSaver;
+    private StorePool storeManager;
+    private StoreApplicationPool storeApplicationPool;
+    private String username;
+    private String apiId;
+    private String password;
+    private String prefix;
 
-    @Autowired
-    public StorePool storeManager;
+    public SMSFactoryImpl(Logger logger, Database database, FrameworkConfig frameworkConfig, DatabaseSaver databaseSaver, StorePool storeManager, StoreApplicationPool storeApplicationPool) {
+        this.logger = logger;
+        this.database = database;
+        this.frameworkConfig = frameworkConfig;
+        this.databaseSaver = databaseSaver;
+        this.storeManager = storeManager;
+        this.storeApplicationPool = storeApplicationPool;
+    }
     
-    @Autowired
-    public SmsConfiguration config;
+    
     
     public SMSFactoryImpl() {
         credentials = new Credentials(MessageManager.class);
         credentials.manangerName = "MessageManager";
         credentials.storeid = storeId;
+    }
+    
+    @PostConstruct
+    public void setStoreId() {
+        storeId = storeApplicationPool.storeId;
     }
     
     @Override
@@ -78,34 +89,17 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         impl.logger = logger;
         impl.frameworkConfig = frameworkConfig;
         impl.storeManager = storeManager;
-        impl.config = config;
+        impl.storeApplicationPool = storeApplicationPool;
         impl.setStoreId(storeId);
+        impl.username = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("username");
+        impl.apiId = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("apiid");
+        impl.password = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("password");
+        impl.prefix = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("numberprefix");
+        
         new Thread(impl).start();
     }
     
-    private void saveMessageSent() throws ErrorException {
-        Message message = new Message();
-        message.from = from;
-        message.to = to;
-        message.type = Message.Type.SMS;
-        message.content = this.message;
-        message.storeId = storeId;
-        databaseSaver.saveObject(message, credentials);
-    }
-    
     public void run() {
-        
-        try {
-            config.setup(storeId);
-        } catch (ErrorException ex) {
-            logger.error(this, "Could not fetch the configuration for the store.", ex);
-            return;
-        }
-        
-        if (storeId == null || storeId.equals("")) {
-            logger.error(this, "Could not send sms, the storeId is empty for the component.");
-            return;
-        }
         
         if (!frameworkConfig.productionMode) {
             System.out.println("Sent SMS [ to: " + to + ", from: " + from +", Message: " + message + " ]");
@@ -123,8 +117,8 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         DataInputStream dis;
         try {
             message = URLEncoder.encode(message, "ISO-8859-1");
-//            String urlString = "http://api.clickatell.com/http/sendmsg?user=boggibill&password=RKCDcOSAECbKeY&from=ProMeister&api_id=3492637&to=47"+to+"&text="+message;
-            String urlString = "http://api.clickatell.com/http/sendmsg?user="+config.getUsername()+"&password="+config.getPassword()+"&api_id="+config.getApiId()+"&concat=3&to="+config.getNumberprefix()+to+"&"+"&text="+message;
+            String urlString = "http://api.clickatell.com/http/sendmsg?user="+username+"&password="+password+"&api_id="+apiId+"&concat=3&to="+prefix+to+"&"+"&text="+message;
+            
             url = new URL(urlString);
             dis = new DataInputStream(new BufferedInputStream(is));
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -150,11 +144,6 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
             } catch (IOException ioe) {}
         }
         
-        try {
-            saveMessageSent();
-        } catch (ErrorException ex) {
-            logger.error(this, "Was not able to save sent sms message", ex);
-        }
     }
 
     @Override

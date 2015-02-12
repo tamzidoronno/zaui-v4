@@ -86,7 +86,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     @Autowired
     public SedoxMagentoIntegration sedoxMagentoIntegration;
 
-    @Autowired
     public SMSFactory smsFactory;
 
     @Autowired

@@ -60,7 +60,50 @@ class Contact extends \WebshopApplication implements \Application {
         }
         return false;
     }
+    
+    public function saveContactConfig() {
+        $config = $_POST['data'];
+        $this->setConfigurationSetting("emailConfig", json_encode($config));
+    }
 
+    public function getContactConfig() {
+        $config = $this->getConfigurationSetting("emailConfig");
+        if($config) {
+            $config = json_decode($config, true);
+        }
+        return $config;
+    }
+    
+    public function getBodyTitle() {
+        $config = $this->getContactConfig();
+        if(isset($config) && $config['bodyTitle']) {
+            return $config['bodyTitle'];
+        }
+        
+        return $this->__w("What's on your mind?");
+    }
+    
+    public function getFields() {
+        $fields = [];
+        $fields['name'] = $this->__w("My name is:");
+        $fields['phone'] = $this->__w("Phone");
+        $fields['email'] = $this->__w('Email');
+        
+        $config = $this->getContactConfig();
+        if(isset($config)) {
+            $number = $config['numberOfFields'];
+            if($number > 0) {
+                $fields = array();
+                for($i = 1; $i <= $number; $i++) {
+                    $fields['field'.$i] = $config['fieldName_'.$i];
+                }
+            }
+        }
+        
+        return $fields;
+    }
+    
+    
     public function getPostalCode() {
         if(isset($this->getFactory()->getStoreConfiguration()->postalCode)) {
             return $this->getFactory()->getStoreConfiguration()->postalCode;
@@ -77,6 +120,12 @@ class Contact extends \WebshopApplication implements \Application {
     }
 
     public function getEmail() {
+        $config = $this->getContactConfig();
+        if(isset($config) && $config['emailAddress']) {
+            return $config['emailAddress'];
+        }
+
+        
         if(isset($this->getFactory()->getStoreConfiguration()->emailAdress)) {
             return $this->getFactory()->getStoreConfiguration()->emailAdress;
         }
@@ -90,6 +139,10 @@ class Contact extends \WebshopApplication implements \Application {
         return "";
     }
 
+    public function loadConfiguration() {
+        $this->includefile("editform");
+    }
+    
     public function isCompanyFieldActivated() {
         $showCompany = $this->getConfigurationSetting("showcompany");
         return (isset($showCompany) && $showCompany == "true");
@@ -103,46 +156,34 @@ class Contact extends \WebshopApplication implements \Application {
         return $content;
     }
     
+    public function getSubject() {
+        $config = $this->getContactConfig();
+        if(isset($config) && isset($config['emailSubject'])) {
+            return $config['emailSubject'];
+        }
+        
+        return $this->__w("Message from a customer");
+    }
+    
     public function sendMessage() {
         $this->config = $this->getFactory()->getStoreConfiguration();
-        
-        $email = $_POST['data']['email'];
-        $phone = $_POST['data']['phone'];
-        $name = $_POST['data']['name'];
-        
-        $content = $this->__w("Name"). ": " . $name . "<br>";
-        $content .= $this->__w("Phone").": " . $phone . "<br>";
-        $content .= $this->__w("Email").": " . $email . "<br>";
-        if (isset($_POST['data']['invoiceemail'])) {
-            $content .= $this->__w("Invoice email").": " . $_POST['data']['invoiceemail'] . "<br>";
-        }
-        if ($this->isCompanyFieldActivated()) {
-            $content .= "Company: " . $_POST['data']['company'] . "<br>";
+        $fields = $this->getFields();
+        $content = "";
+        foreach($_POST['data']['field'] as $field => $val) {
+            if(!isset($fields[$field])) {
+                continue;
+            }
+            $content .= $fields[$field].": " . $val . "<br>";
         }
         
-        if (isset($_POST['data']['groupname']) && $_POST['data']['groupname'] != "") {
-            $content .= "Avdeling: " . $_POST['data']['groupname'] . "<br>";
-        }
-        
-        if(!$email || !$phone || !$name || !$_POST['data']['content']) {
-            echo "Required";
-            return;
-        }
-        if(!stristr($email, "@")) {
-            
-            echo "email";
-            return;
-        }
-        
-        $content .= "<br><br>".$this->__w("Message").":<br>" . $_POST['data']['content'];
+        $content .= "<br><br>".$this->__w("Message").":<br>" . $_POST['data']['field']['content'];
         $content = nl2br($content);
         
-        $from = $email;
-        $title = $this->__w("Message from a customer");
+        $title = $this->getSubject();
 
         $to = $this->getEmail();
         
-        $this->getApi()->getMessageManager()->sendMail($to, "Webshop owner", $title, $content, $from, $name);
+        $this->getApi()->getMessageManager()->sendMail($to, "Webshop owner", $title, $content, "noreply@gethsop.com", "GetShop Backend");
     }
     
 }

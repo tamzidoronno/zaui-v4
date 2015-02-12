@@ -407,7 +407,7 @@ thundashop.common.activateCKEditor = function(id, config) {
     }
     if (simpleMode) {
         config.toolbar = [
-		{ name: 'document', items: [ 'Save','FontSize', 'TextColor', 'BGColor','JustifyLeft', 'JustifyCenter', 'JustifyRight' ] }
+		{ name: 'document', items: [ 'Save','FontSize','Format', 'TextColor', 'BGColor','JustifyLeft', 'JustifyCenter', 'JustifyRight' ] }
         ]
     }
     

@@ -1,9 +1,10 @@
-.Hotelbooking .bookingbox .heading { border-bottom: solid 1px; font-size: 16px; display:block; width: 100%; text-align:center;  }
+.Hotelbooking .bookingbox .heading { border-bottom: solid 1px; font-size: 16px; display:block; width: 100%; text-align:center; margin-bottom: 20px; }
 .Hotelbooking .room_selection { width:100%; background-color:#FFF; padding: 5px; }
 .Hotelbooking .date_selection_room { width:100%; border: solid 1px #b0bda4; margin:0px;padding: 3px;filter:alpha(opacity=2); opacity:2; }
 .Hotelbooking .fa-calendar { margin: 3px; cursor:pointer; }
 .Hotelbooking .check_available_button, .Hotelbooking .continue_to_cart_button { color:#FFF; text-align: center; margin-top: 20px; background-color:#d2684f; padding:3px; cursor: pointer; padding-top: 7px;  padding-bottom: 7px; }
 .Hotelbooking .continue_button { display:block;  width: 175px;text-align: center; background-color:#d2684f; padding:3px; cursor: pointer; padding-top: 7px;  padding-bottom: 7px; }
+.gsarea[area="body"] a { text-decoration: underline !important; }
 
 .Hotelbooking .boxontop { width: 90%; height: 90%; position:absolute; z-index: 1; left: 17px; top: 12px; }
 .Hotelbooking .bookingbox { box-sizing:border-box;-moz-box-sizing:border-box; color:#EFEFEF; width: 350px; height: 245px;  }
@@ -13,11 +14,11 @@
 .Hotelbooking .error_on_check { display:none; padding-top: 20px; font-size: 16px; }
 .Hotelbooking .booking_page.page_2 input,.Hotelbooking .booking_page.page_2 select { border: solid 1px#BDC7D8; margin:0px; padding: 5px; width: 170px; }
 .Hotelbooking .booking_page.page_2 select { width: 182px; }
-.Hotelbooking .title { font-weight: bold; font-size: 27px;  border-bottom: solid 3px #f7f7f7; padding-bottom: 10px; margin-bottom: 20px;  }
-.Hotelbooking .cal_header { text-align: center; padding: 5px; border: solid 1px #a4ae95; background-color:#b9c4a9; }
+.Hotelbooking .cal_header { text-align: center; padding: 5px; border: solid 1px #a4ae95; background-color:#b9c4a9; text-transform: uppercase; }
 .Hotelbooking .cal_header.second { border: solid 1px #b2b6bc; background-color:#cbcbcb; }
-.Hotelbooking .cal_field { border: solid 1px #e5e5e5; display:inline-block; width: 23px; height: 23px; line-height: 23px; cursor:pointer; }
+.Hotelbooking .cal_field { border: solid 1px #e5e5e5; display:inline-block; width: 27px; height: 27px; line-height: 23px; cursor:pointer; margin-bottom: 2px; }
 .Hotelbooking .cal_field.selected { background-color: #b4bac4; }
+.Hotelbooking .top_cal_header { border-bottom: solid 1px rgba(0,0,0,0.2) !important; }
 .Hotelbooking .booking_count_box td { font-size: 18px; font-weight: bold; }
 .Hotelbooking .booking_count_box input { border: solid 1px #BDC7D8; width: 40px; margin-left: 20px; }
 .Hotelbooking .booking_count_box select { width: 100%; background-color:#FFF; border: solid 1px #e5e5e5; }
@@ -30,9 +31,11 @@
 .Hotelbooking .room_selection_2 .selection_box { float:left; }
 .Hotelbooking .room_selection_2 .personalcount { font-size: 14px; font-weight: bold; }
 .Hotelbooking .room_selection_2 .price_text { font-size: 22px; font-weight: bold; margin-left: 20px; }
+.Hotelbooking .seperator {border-bottom: solid 1px #dbdee3; border-top: solid 1px #dbdee3; margin-bottom: 30px; height: 1px; display:inline-block;  width: 100%; }
+.Hotelbooking .sold_out { float:right; }
 
 .Hotelbooking .no_room_available { font-size: 22px; text-align: center; }
-.Hotelbooking .room_selection_2 .price_box { float:right;display:inline-block; width: 30%; padding-top:10px; }
+.Hotelbooking .room_selection_2 .price_box { float:right;display:inline-block; width: 30%;  }
 .Hotelbooking .room_selection_2 .selectbutton { cursor:pointer; border: solid 1px #c2c7cf; padding: 5px; float: right; background-color:#b7bdc7; color:#FFF; }
 .Hotelbooking .room_selection_2 .available_rooms { position:absolute; bottom:5px; left:20px; color:#c2c7cf; }
 
@@ -49,15 +52,19 @@
 .Hotelbooking .price_row { padding: 3px; }
 .Hotelbooking .bookingsummary input { border: solid 1px #BDC7D8; border-radius: 2px; padding: 3px; }
 .Hotelbooking .invalid { background-color:#ffd9d9; }
-.Hotelbooking .calendar { width:200px; }
+.Hotelbooking .calendar { width:220px; }
+.Hotelbooking .calspacing { margin-top: 15px; height: 15px; }
+.Hotelbooking .cal_nav { font-size: 10px; }
+.Hotelbooking .booking_table tbody th { padding-bottom: 15px; }
 .Hotelbooking .top_box { min-height: 260px; }
 .Hotelbooking .calendar { margin-right: 30px; }
 .Hotelbooking .rebated_product { color:#BBB; font-size: 15px; }
 .Hotelbooking .formation_page { font-size: 30px; text-align: center; padding-top: 20px; }
 .Hotelbooking .error_text { color:#ab5f22; font-weight: bold; font-size: 14px; }
 .Hotelbooking .check_available_button { text-transform: uppercase; }
+.Hotelbooking .roomdesc { font-size: 10px; color:#5c6060; }
 @media only all and (min-width: 800px) {
-    .Hotelbooking .calendar { float:left; margin-bottom: 20px; }
+    .Hotelbooking .calendar { float:left; }
     .Hotelbooking .booking_count_box { float:right; }
     .Hotelbooking .booking_contact_data { display:inline-block; float:right; width: 45%; }
     .Hotelbooking .summaryview { display:inline-block; float:left; width: 45%; }

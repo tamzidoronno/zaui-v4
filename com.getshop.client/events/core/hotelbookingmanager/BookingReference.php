@@ -46,6 +46,9 @@ class core_hotelbookingmanager_BookingReference extends core_common_DataCommon  
 	public $heardAboutUs;
 
 	/** @var String */
+	public $payedFor;
+
+	/** @var String */
 	public $failed;
 
 }

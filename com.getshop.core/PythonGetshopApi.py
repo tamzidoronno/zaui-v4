@@ -1725,7 +1725,7 @@ class GetShopApplicationPool(object):
 class HotelBookingManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
-  def checkAvailable(self, startDate, endDate, type):
+  def checkAvailable(self, startDate, endDate, type, additional):
     args = collections.OrderedDict()
     if isinstance(startDate,GetShopBaseClass): 
       args["startDate"]=json.dumps(startDate.__dict__)
@@ -1748,6 +1748,13 @@ class HotelBookingManager(object):
         args["type"]=json.dumps(type)
       except (ValueError, AttributeError):
         args["type"]=type
+    if isinstance(additional,GetShopBaseClass): 
+      args["additional"]=json.dumps(additional.__dict__)
+    else:
+      try:
+        args["additional"]=json.dumps(additional)
+      except (ValueError, AttributeError):
+        args["additional"]=additional
     data = EmptyClass()
     data.args = args
     data.method = "checkAvailable"
@@ -1941,6 +1948,35 @@ class HotelBookingManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "moveRoomOnReference"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def notifyUserAboutRoom(self, reference, roomInfo, code):
+    args = collections.OrderedDict()
+    if isinstance(reference,GetShopBaseClass): 
+      args["reference"]=json.dumps(reference.__dict__)
+    else:
+      try:
+        args["reference"]=json.dumps(reference)
+      except (ValueError, AttributeError):
+        args["reference"]=reference
+    if isinstance(roomInfo,GetShopBaseClass): 
+      args["roomInfo"]=json.dumps(roomInfo.__dict__)
+    else:
+      try:
+        args["roomInfo"]=json.dumps(roomInfo)
+      except (ValueError, AttributeError):
+        args["roomInfo"]=roomInfo
+    if isinstance(code,GetShopBaseClass): 
+      args["code"]=json.dumps(code.__dict__)
+    else:
+      try:
+        args["code"]=json.dumps(code)
+      except (ValueError, AttributeError):
+        args["code"]=code
+    data = EmptyClass()
+    data.args = args
+    data.method = "notifyUserAboutRoom"
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -2414,6 +2450,21 @@ class LogoManager(object):
 class MessageManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
+  def collectEmail(self, email):
+    args = collections.OrderedDict()
+    if isinstance(email,GetShopBaseClass): 
+      args["email"]=json.dumps(email.__dict__)
+    else:
+      try:
+        args["email"]=json.dumps(email)
+      except (ValueError, AttributeError):
+        args["email"]=email
+    data = EmptyClass()
+    data.args = args
+    data.method = "collectEmail"
+    data.interfaceName = "core.messagemanager.IMessageManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getSmsCount(self, year, month):
     args = collections.OrderedDict()
     if isinstance(year,GetShopBaseClass): 
@@ -3426,6 +3477,35 @@ class PageManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getSecuredSettingsInternal"
+    data.interfaceName = "core.pagemanager.IPageManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def linkPageCell(self, pageId, cellId, link):
+    args = collections.OrderedDict()
+    if isinstance(pageId,GetShopBaseClass): 
+      args["pageId"]=json.dumps(pageId.__dict__)
+    else:
+      try:
+        args["pageId"]=json.dumps(pageId)
+      except (ValueError, AttributeError):
+        args["pageId"]=pageId
+    if isinstance(cellId,GetShopBaseClass): 
+      args["cellId"]=json.dumps(cellId.__dict__)
+    else:
+      try:
+        args["cellId"]=json.dumps(cellId)
+      except (ValueError, AttributeError):
+        args["cellId"]=cellId
+    if isinstance(link,GetShopBaseClass): 
+      args["link"]=json.dumps(link.__dict__)
+    else:
+      try:
+        args["link"]=json.dumps(link)
+      except (ValueError, AttributeError):
+        args["link"]=link
+    data = EmptyClass()
+    data.args = args
+    data.method = "linkPageCell"
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 

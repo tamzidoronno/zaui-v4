@@ -1663,12 +1663,13 @@ class APIHotelBookingManager {
 	* @throws ErrorException
 	*/
 
-	public function checkAvailable($startDate, $endDate, $type) {
+	public function checkAvailable($startDate, $endDate, $type, $core_hotelbookingmanager_AdditionalBookingInformation) {
 	     $data = array();
 	     $data['args'] = array();
 	     $data['args']["startDate"] = json_encode($this->transport->object_unset_nulls($startDate));
 	     $data['args']["endDate"] = json_encode($this->transport->object_unset_nulls($endDate));
 	     $data['args']["type"] = json_encode($this->transport->object_unset_nulls($type));
+	     $data['args']["core_hotelbookingmanager_AdditionalBookingInformation"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_AdditionalBookingInformation));
 	     $data["method"] = "checkAvailable";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
@@ -1895,6 +1896,23 @@ class APIHotelBookingManager {
 	     $data['args']["oldRoom"] = json_encode($this->transport->object_unset_nulls($oldRoom));
 	     $data['args']["newRoomId"] = json_encode($this->transport->object_unset_nulls($newRoomId));
 	     $data["method"] = "moveRoomOnReference";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function notifyUserAboutRoom($core_hotelbookingmanager_BookingReference, $core_hotelbookingmanager_RoomInformation, $code) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_hotelbookingmanager_BookingReference"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_BookingReference));
+	     $data['args']["core_hotelbookingmanager_RoomInformation"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_RoomInformation));
+	     $data['args']["code"] = json_encode($this->transport->object_unset_nulls($code));
+	     $data["method"] = "notifyUserAboutRoom";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -2359,6 +2377,23 @@ class APIMessageManager {
 	
 	function APIMessageManager($transport) {
 		$this->transport = $transport;
+	}
+
+	/**
+	* Get how many messages a user has sent.
+	*
+	* @param year
+	* @param month
+	* @return void
+	*/
+
+	public function collectEmail($email) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["email"] = json_encode($this->transport->object_unset_nulls($email));
+	     $data["method"] = "collectEmail";
+	     $data["interfaceName"] = "core.messagemanager.IMessageManager";
+	     return $this->transport->sendMessage($data);
 	}
 
 	/**
@@ -3319,6 +3354,23 @@ class APIPageManager {
 	     $data['args'] = array();
 	     $data['args']["appName"] = json_encode($this->transport->object_unset_nulls($appName));
 	     $data["method"] = "getSecuredSettingsInternal";
+	     $data["interfaceName"] = "core.pagemanager.IPageManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Remove all content on all page areas for this page.
+	* @param pageId
+	* @throws ErrorException
+	*/
+
+	public function linkPageCell($pageId, $cellId, $link) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data['args']["cellId"] = json_encode($this->transport->object_unset_nulls($cellId));
+	     $data['args']["link"] = json_encode($this->transport->object_unset_nulls($link));
+	     $data["method"] = "linkPageCell";
 	     $data["interfaceName"] = "core.pagemanager.IPageManager";
 	     return $this->transport->sendMessage($data);
 	}

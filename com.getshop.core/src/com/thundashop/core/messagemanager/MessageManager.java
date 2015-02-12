@@ -1,23 +1,27 @@
 package com.thundashop.core.messagemanager;
 
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.chatmanager.SubscribedToAirgram;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Setting;
+import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.pagemanager.PageManager;
+import com.thundashop.core.storemanager.StorePool;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 
 /**
  */
@@ -29,10 +33,33 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     public MailFactory mailFactory;
     
     private SubscribedToAirgram airgramSubscriptions = new SubscribedToAirgram();
+    private CollectedEmails collectedEmails = new CollectedEmails();
 
-    @Autowired
-    public SMSFactory smsFactory;
+    private SMSFactory smsFactory;
     
+    @Autowired
+    private Logger logger;
+    
+    @Autowired
+    private Database database;
+    
+    @Autowired
+    private FrameworkConfig frameworkConfig;
+    
+    @Autowired
+    private DatabaseSaver databaseSaver;
+    
+    @Autowired
+    private StorePool storeManager;
+    
+    @Autowired
+    private StoreApplicationPool storeApplicationPool;
+    
+    @PostConstruct
+    public void createSmsFactory() {
+        smsFactory = new SMSFactoryImpl(logger, database, frameworkConfig, databaseSaver, storeManager, storeApplicationPool);
+        smsFactory.setStoreId(storeId);
+    }
 
     @Override
     public void sendMail(String to, String toName, String subject, String content, String from, String fromName) {
@@ -50,6 +77,9 @@ public class MessageManager extends ManagerBase implements IMessageManager {
             if (dataCommon instanceof SubscribedToAirgram) {
                 airgramSubscriptions = (SubscribedToAirgram) dataCommon;
             }
+            if (dataCommon instanceof CollectedEmails) {
+                collectedEmails = (CollectedEmails) dataCommon;
+            }
         }
     }
 
@@ -63,27 +93,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
             databaseSaver.saveObject(airgramSubscriptions, credentials);
         }
     }
-    
-    private HashMap<String, Setting> getSettings(String phpApplicationName) throws ErrorException {
-        throw new NotImplementedException();
-    }
-    
-    
-    public void sendToAirgram(String url, String message) throws ErrorException {
-        HashMap<String, Setting> airgramsettings = this.getSettings("Airgram");
-        if (airgramsettings != null) {
-            for (String key : airgramsettings.keySet()) {
-                String account = airgramsettings.get(key).value;
-                if (account != null && account.trim().length() > 0) {
-                    System.out.println("Want to push to airgram(" + account + "): " + message);
-                    checkIfSubscribed(account);
-                    String data = "email=" + account + "&msg=" + message + "&url=" + url;
-                    String sendurl = "http://api.airgramapp.com/1/send";
-                    sendToAirgramHttp(data, sendurl);
-                }
-            }
-        }
-    }
+  
 
     private void sendToAirgramHttp(String data, String sendurl) throws ErrorException {
         try {
@@ -114,4 +124,13 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         }
     }
 
+    public void sendSms(String to, String message) {
+        smsFactory.send("", to, message);
+    }
+
+    @Override
+    public void collectEmail(String email) {
+        collectedEmails.emails.add(email);
+        saveObject(collectedEmails);
+    }
 }

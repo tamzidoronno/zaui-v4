@@ -22,6 +22,22 @@ public class APIMessageManager {
      * @param month
      * @return
      */
+     public void collectEmail(java.lang.String email)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("email",new Gson().toJson(email));
+          gs_json_object_data.method = "collectEmail";
+          gs_json_object_data.interfaceName = "core.messagemanager.IMessageManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     * Get how many messages a user has sent.
+     *
+     * @param year
+     * @param month
+     * @return
+     */
      public int getSmsCount(int year, int month)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();

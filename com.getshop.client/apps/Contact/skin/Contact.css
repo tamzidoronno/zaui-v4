@@ -16,6 +16,9 @@
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
+.Contact .saveContactConfiguration { float: right; border: solid 1px; padding: 10px; margin-right:10px; background-color:#bBB; cursor:pointeR; }
+
 .Contact .contact_container input {
     width:100px;
 }

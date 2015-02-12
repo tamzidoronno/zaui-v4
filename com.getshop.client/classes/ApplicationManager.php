@@ -26,6 +26,13 @@ class ApplicationManager extends FactoryBase {
         include("initdata/themeselection.phtml");
     }
             
+    
+    function doLinkCell() {
+        $cellid = $_POST['data']['cellid'];
+        $url = $_POST['data']['url'];
+        $this->getApi()->getPageManager()->linkPageCell($this->getPage()->javapage->id, $cellid, $url);
+    }
+    
     function saveContainerPosition() {
         $cellid = $_POST['data']['cellid'];
         $containerid = $_POST['data']['containerid'];
@@ -85,6 +92,18 @@ class ApplicationManager extends FactoryBase {
         $config->time = $_POST['data']['timer'];
         $config->type = $_POST['data']['type'];
         $config->heightMobile = $_POST['data']['heightMobile'];
+        $config->displayNumbersOnDots = false;
+        if($_POST['data']['carouselnumber'] == "true") {
+            $config->displayNumbersOnDots = true;
+        }
+        $config->avoidRotate = false;
+        if($_POST['data']['avoidrotate'] == "true") {
+            $config->avoidRotate = true;
+        }
+        $config->navigateOnMouseOver = false;
+        if($_POST['data']['gsnavonmouseover'] == "true") {
+            $config->navigateOnMouseOver = true;
+        }
         $this->getApi()->getPageManager()->setCarouselConfig($pageId, $cellId, $config);
         $this->getApi()->getPageManager()->setWidth($pageId, $cellId, $outerWidth, $outerWidthWithMargins);
     }

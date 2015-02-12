@@ -46,7 +46,6 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
     @Autowired
     public MailFactory mailFactory;
     
-    @Autowired
     public SMSFactory smsFactory;
     
     private List<ReminderHistory> reminderHistory = new ArrayList();

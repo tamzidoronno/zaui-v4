@@ -45,6 +45,10 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $this->setConfigurationSetting("contine_page", $_POST['data']['contine_page']);
     }
 
+    public function updateNeedHandicap() {
+        $this->setNeedHandicap($_POST['data']['need']);
+    }
+    
     public function getRoomTaxes() {
 
         if ($this->getProduct()->privateExcluded && !$this->isMvaRegistered()) {
@@ -120,7 +124,11 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     function getNumberOfAvailableRooms($type) {
-        return $this->getApi()->getHotelBookingManager()->checkAvailable($this->getStart(), $this->getEnd(), $type);
+        $product = $this->getProduct();
+        $additonal = new \core_hotelbookingmanager_AdditionalBookingInformation();
+        $additonal->needHandicap = $this->getNeedHandicap();
+
+        return $this->getApi()->getHotelBookingManager()->checkAvailable($this->getStart(), $this->getEnd(), $type, $additonal);
     }
 
     function getDayCount($realDayCount=false) {
@@ -308,10 +316,16 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             $startday = 7;
         }
         $monthText = date("M", $time) . " " . $year;
+        $text = $this->__w("When do you check in?");
 
-        echo "<div class='cal_header' type='$id' year='$year' month='$month'><i class='fa fa-arrow-left calnav' style='float:left;cursor:pointer;' navigation='prev'></i>" . $monthText . "<i class='fa fa-arrow-right calnav' style='float:right;cursor:pointer;' navigation='next'></i></div>";
-
-        echo "<table width='100%' class='booking_table'>";
+        if($id == "endDate") {
+            $text = $this->__w("When do you check out?");
+        }
+        //Guess navigating between months was a bad idea, why do something that does not look good design wise.
+//        echo "<div class='cal_header cal_nav' type='$id' year='$year' month='$month'><i class='fa fa-arrow-left calnav' style='float:left;cursor:pointer;' navigation='prev'></i>" . $monthText . "<i class='fa fa-arrow-right calnav' style='float:right;cursor:pointer;' navigation='next'></i></div>";
+        echo "<div class='cal_header' type='$id' year='$year' month='$month'>$text</div>";
+        echo "<div class='calspacing'></div>";
+        echo "<table width='100%' class='booking_table' cellspacing='0' cellpadding='0'>";
         echo "<tr>";
         echo "<th>" . $this->__w("Mo") . "</th>";
         echo "<th>" . $this->__w("Tu") . "</th>";
@@ -477,6 +491,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         
         
         $additionaldata = new \core_hotelbookingmanager_AdditionalBookingInformation();
+        $additionaldata->needHandicap = $this->getNeedHandicap();
         
         $reference = $this->getApi()->getHotelBookingManager()->reserveRoom($productId, $start, $end, $infodata, $additionaldata);
         if (($reference) > 0) {
@@ -675,6 +690,17 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $_SESSION['hotelbooking']['roomCount'] = $count;
     }
 
+    public function setNeedHandicap($need) {
+        $_SESSION['hotelbooking']['needHandicap'] = $need;
+    }
+    
+    public function getNeedHandicap() {
+        if(isset($_SESSION['hotelbooking']['needHandicap'])) {
+            return $_SESSION['hotelbooking']['needHandicap'] == "true";
+        }
+        return false;
+    }
+
     public function getPersonCount() {
         if (isset($_SESSION['hotelbooking']['roomCount'])) {
             return $_SESSION['hotelbooking']['roomCount'];
@@ -784,7 +810,10 @@ class Hotelbooking extends \ApplicationBase implements \Application {
 
     public function checkavailabilityFromSelection() {
         $product = $this->getProduct();
-        return $this->getApi()->getHotelBookingManager()->checkAvailable($this->getStart(), $this->getEnd(), $product->id);
+        $additonal = new \core_hotelbookingmanager_AdditionalBookingInformation();
+        $additonal->needHandicap = $this->getNeedHandicap();
+        
+        return $this->getApi()->getHotelBookingManager()->checkAvailable($this->getStart(), $this->getEnd(), $product->id, $additonal);
     }
 
     public function hasPaymentAppAdded() {

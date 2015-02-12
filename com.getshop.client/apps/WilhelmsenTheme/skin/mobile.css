@@ -1,0 +1,221 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Feb 4, 2015, 8:38:37 AM
+    Author     : boggi
+*/
+
+body {
+    
+}
+
+.gs_page_width {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.gs_page_width.gscell_70,
+.gs_page_width.gscell_5 {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+/* box1 */
+.gscell_53 .gsinner,
+.gscell_55 .gsinner,
+.gscell_56 .gsinner {
+    background-color: #EEE;
+}
+
+.gscell_53 .gsinner {
+    margin-top: 20px;
+}
+
+.gscell_56 .gsinner {
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+/* box2 */
+.gscell_47 .gsinner,
+.gscell_49 .gsinner,
+.gscell_50 .gsinner {
+    background-color: #EEE;
+}
+
+.gscell_47 .gsinner {
+    margin-top: 20px;
+}
+
+.gscell_50 .gsinner {
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+/* box 3 */
+.gscell_41 .gsinner,
+.gscell_43 .gsinner,
+.gscell_44 .gsinner {
+    background-color: #EEE;
+}
+
+.gscell_41 .gsinner {
+    margin-top: 20px;
+}
+
+.gscell_44 .gsinner {
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+
+/* box 3 */
+.gscell_284 .gsinner,
+.gscell_285 .gsinner,
+.gscell_312 .gsinner,
+.gscell_313 .gsinner {
+    background-color: #EEE;
+}
+
+.gscell_284 .gsinner {
+    margin-top: 20px;
+}
+
+.gscell_313 .gsinner {
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+/* box 3 */
+.gscell_288 .gsinner,
+.gscell_289 .gsinner,
+.gscell_314 .gsinner,
+.gscell_315 .gsinner {
+    background-color: #EEE;
+}
+
+.gscell_288 .gsinner {
+    margin-top: 20px;
+}
+
+.gscell_315 .gsinner {
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+/* box 3 */
+.gscell_292 .gsinner,
+.gscell_293 .gsinner,
+.gscell_316 .gsinner,
+.gscell_317 .gsinner {
+    background-color: #EEE;
+}
+
+.gscell_292 .gsinner {
+    margin-top: 20px;
+}
+
+.gscell_317 .gsinner {
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+/* box 3 */
+.gscell_306 .gsinner,
+.gscell_310 .gsinner,
+.gscell_318 .gsinner,
+.gscell_319 .gsinner {
+    background-color: #EEE;
+}
+
+.gscell_306 .gsinner {
+    margin-top: 20px;
+}
+
+.gscell_319 .gsinner {
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+/* box 3 */
+.gscell_304 .gsinner,
+.gscell_305 .gsinner,
+.gscell_320 .gsinner,
+.gscell_321 .gsinner {
+    background-color: #EEE;
+}
+
+.gscell_304 .gsinner {
+    margin-top: 20px;
+}
+
+.gscell_321 .gsinner {
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+/* box 3 */
+.gscell_300 .gsinner,
+.gscell_301 .gsinner,
+.gscell_322 .gsinner,
+.gscell_323 .gsinner {
+    background-color: #EEE;
+}
+
+.gscell_300 .gsinner {
+    margin-top: 20px;
+}
+
+.gscell_323 .gsinner {
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+/* other */
+.gscell_183 .gsinner,
+.gscell_185 .gsinner,
+.gscell_186 .gsinner {
+    background-color: #EEE;
+    padding: 20px;
+}
+
+.gscell_187 .gsinner {
+    margin-top: 20px;
+}
+.gscell_187 .gsinner,
+.gscell_188 .gsinner {
+    background-color: #EEE;
+    padding: 20px;
+}
+
+
+.Facebook {
+    background-color: #EEE;
+    font-size: 16px;
+}
+
+.Facebook .picture {
+    display: block;
+    width: 100%;
+}
+
+.gsmobiletopmenu {
+    width: 100%;
+    background: linear-gradient( to bottom, #333, #222);
+}
+
+.gsmobilesearch,
+.gsslideright,
+.gsmobilemenucart {
+    display: none;
+}
+
+.shop_button {
+    background-color: green;
+    color: #FFF;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+}

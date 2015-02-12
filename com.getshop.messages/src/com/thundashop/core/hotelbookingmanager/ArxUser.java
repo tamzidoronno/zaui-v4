@@ -13,6 +13,6 @@ public class ArxUser extends DataCommon {
     public Date endDate;
     public Integer code;
     public Boolean needUpdate = true;
-    List<String> doorsToAccess = new ArrayList();
-    String reference;
+    public List<String> doorsToAccess = new ArrayList();
+    public String reference;
 }

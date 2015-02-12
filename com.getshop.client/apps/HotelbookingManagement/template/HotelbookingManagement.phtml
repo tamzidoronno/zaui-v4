@@ -37,10 +37,7 @@ Existing booking references
                 <th>Reserved by</th>
                 <th>Start date</th>
                 <th>End date</th>
-                <? if($this->getFactory()->getStore()->id == "3292fa74-32a2-4d52-b88f-6be6f3dff813") { ?>
-                    <th>Gebyr</th>
-                    <th>Contract</th>
-                <? } ?>
+                <th>Payed for</th>
             </tr>
         </thead>
         <tbody>
@@ -82,14 +79,13 @@ Existing booking references
             echo "</td>";
             echo "<td style='text-align:center;' valign='top'>" . $reservation->startDate . "</td>";
             echo "<td style='text-align:center;' valign='top'>" . $reservation->endDate . "</td>";
-            if($this->getFactory()->getStore()->id == "3292fa74-32a2-4d52-b88f-6be6f3dff813") {
-                echo "<td style='text-align:center;' valign='top'><input type='text' style='width: 40px;' class='adminfee' value='".$reservation->bookingFee."'></td>";
-                echo "<td style='text-align:center;' valign='top'>";
-                echo "<a target='_new' onclick=\"window.open('/scripts/generateContract.php?userid=".@$user->id."&refid=".$reservation->bookingReference."&type=standard')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".@$user->referenceKey."' class='fa fa-file-pdf-o'></i></a> ";
-                echo "<a target='_new' onclick=\"window.open('http://".$_SERVER['SERVER_NAME']."/scripts/generateContract.php?userid=".@$user->id."&refid=".$reservation->bookingReference."&type=bilag')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".@$user->referenceKey."' class='fa fa-plus'></i></a> ";
-                echo "<a target='_new' onclick=\"window.open('http://".$_SERVER['SERVER_NAME']."/scripts/generateContract.php?userid=".@$user->id."&refid=".$reservation->bookingReference."&type=autogiro')\"><i style='cursor:pointer' refid='".$reservation->bookingReference."' userkey='".@$user->referenceKey."' class='fa fa-car'></i></a>";
-                echo "</td>";
+            echo "<td align='center'>";
+            if($reservation->payedFor) {
+                echo "Yes";
+            } else {
+                echo "No";
             }
+            echo "</td>";
             echo "</tr>";
         }
         ?>
@@ -125,11 +121,15 @@ Existing rooms:<br>
 
         <tr>
             <td></td>
-            <td>Room type</td>
-            <td>Active</td>
+            <td width='10'>Room type</td>
+            <td width='10'>Active</td>
             <td>Last reservation</td>
             <td>Room name</td>
-            <td>Lock id</td>
+            <td align="right">
+                <i class='fa fa-eraser' style='display:inline-block; width:14px; margin-right:3px;'></i>
+                <i class='fa fa-bed' style='display:inline-block; width:14px; margin-right:3px;'></i>
+                <i class='fa fa-wheelchair' style='display:inline-block; width:14px; margin-right:3px;'></i>
+            </td>
         </tr>
         <?
         $products = $this->getApi()->getProductManager()->getAllProducts();
@@ -145,29 +145,6 @@ Existing rooms:<br>
 <br>
 <br>
 <br>
-<br>
-
-<? echo $this->__w("New room type"); ?>
-<div style="padding:10px; border: solid 1px;background-color:#EFEFEF;">
-    <div>
-        <select id="type">
-            <?
-                foreach($types as $type) {
-                    echo "<option value='" . $type->id . "'>" . $type->name . "</option>";
-                }
-            ?>
-        </select>
-        <span class="edit_type">Edit</span>
-        <span class="delete_type">Delete</span>
-    </div>
-    <div gstype="form" method="addType">
-        <input type="hidden" gsname="id" value="<? echo $selectedType->id; ?>">
-        <input gstype="value" type="txt" gsname='name' placeholder="Enter a name for the room type" style="width:50%;" value="<? echo $selectedType->name; ?>"><br>
-        <input gstype="value" type="txt" gsname='en_desc' placeholder="Enter the norwegian description" style="width:50%;"  value="<? echo $selectedType->description_no; ?>"><br>
-        <input gstype="value" type="txt" gsname='no_desc' placeholder="Enter the english description" style="width:50%;"  value="<? echo $selectedType->description_en; ?>"><br>
-        <input gstype="submit" type="button" value="save">
-    </div>
-</div>
 <br>
 <? if($this->getFactory()->getStore()->id == "3292fa74-32a2-4d52-b88f-6be6f3dff813") { ?>
 
@@ -225,9 +202,6 @@ Existing rooms:<br>
 <b>Arx server</b>
 <div>Variabler: {code}, {room}, {checkin_time}, {checkout_time}, {name}, {checkin_date}, {referenceNumber, {contacts}, {roomName}, {email}, {address}, {postCode}, {city}</div>
 <table gstype="form" method="saveArxData">
-    <tr><td>Server address</td><td><input type="text" gsname="arx_server" value="<? echo $this->getConfigurationSetting("arx_server"); ?>"></td><tr>
-    <tr><td>Server username</td><td><input type="text" gsname="arx_username" value="<? echo $this->getConfigurationSetting("arx_username"); ?>"></td><tr>
-    <tr><td>Server password</td><td><input type="text" gsname="arx_password" value="<? echo $this->getConfigurationSetting("arx_password"); ?>"></td><tr>
     <tr><td>Sms from</td><td><input type="text" gsname="arx_smsfrom" value="<? echo $this->getConfigurationSetting("arx_smsfrom"); ?>"></td><tr>
     <tr><td>Sms welcome</td><td><input style="width: 800px;" type="text" gsname="arx_smswelcome" value="<? echo $this->getConfigurationSetting("arx_smswelcome"); ?>"></td><tr>
     <tr><td>Sms ready</td><td><input style="width: 800px;" type="text" gsname="arx_smsready" value="<? echo $this->getConfigurationSetting("arx_smsready"); ?>"></td><tr>

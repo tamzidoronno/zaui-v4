@@ -2,7 +2,8 @@
 .Facebook .activation_area { font-size: 15px; text-align:center; }
 .Facebook .activation_area input { width: 100%; }
 .Facebook .infobox { padding-bottom: 10px; }
-.Facebook .newsentry { padding: 10px; border-bottom: solid 1px #BBB; }
+.Facebook .newsentry { padding: 10px; border-bottom: solid 1px #BBB; position:relative; }
 .Facebook .newsentry .created_time { color:#BBB; }
 .Facebook .newsentry .newsbottom { clear: both; }
 .Facebook .newsentry .picture { float: left; margin-right: 10px; margin-bottom: 10px; }
+.Facebook .newsentry .readmorelink { position:absolute; right: 5px; bottom: 5px; }

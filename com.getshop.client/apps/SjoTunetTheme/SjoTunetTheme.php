@@ -23,7 +23,11 @@ class SjoTunetTheme extends \ThemeApplication {
     public function addScripts() {
         ?>
         <script src="//use.typekit.net/yda1aff.js"></script>
-        <script>try{Typekit.load();}catch(e){}</script>
+        <script>
+            $(document).ready(function() {
+                Typekit.load();
+            });
+        </script>
         <?
     }    
 

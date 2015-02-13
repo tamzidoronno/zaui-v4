@@ -71,13 +71,19 @@ if (!history.pushState) {
     });
 }
 
+$(document).ready(function() {    
+    if (history.pushState) {
+        var pageId = $('.gsbody_inner').attr('pageId');
+        window.history.pushState({ajaxLink: "?page="+pageId}, "Title", "");
+    }    
+});
+
+
 if (history.pushState) {
     window.onpopstate = function(event) {
         if (event.state) {
             var url = event.state.ajaxLink ? event.state.ajaxLink : event.state.url;
             thundashop.Ajax.doJavascriptNavigation(url, null, true);
-        } else {
-            thundashop.Ajax.doJavascriptNavigation("?page={HOMEPAGE}", null, true);
         }
     }
 }

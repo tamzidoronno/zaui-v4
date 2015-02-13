@@ -69,6 +69,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 }
                 if (dataCommon instanceof LoginHistory) {
                     loginHistory = (LoginHistory) dataCommon;
+                    loginHistory.printIt();
                 }
                 if (dataCommon instanceof Group) {
                     userStoreCollection.addGroup((Group)dataCommon);
@@ -194,7 +195,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         addUserToSession(user);
         
-        loginHistory.markLogin(user);
+        loginHistory.markLogin(user, getSession().id);
         saveObject(loginHistory);
         return user;
     }
@@ -781,5 +782,19 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             logins.add(loginHistory.getLogins(year, i));
         }
         return logins;
+    }
+
+    public void markAdminActionExecuted() {
+        if (getSession() != null) {
+            loginHistory.markAdmin(getSession().currentUser, getSession().id);
+            saveObject(loginHistory);
+        }
+    }
+
+    public void markEditorActionExecuted() {
+        if (getSession() != null) {
+            loginHistory.markEditor(getSession().currentUser, getSession().id);
+            saveObject(loginHistory);
+        }
     }
 }

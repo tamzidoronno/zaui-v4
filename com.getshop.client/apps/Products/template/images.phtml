@@ -10,10 +10,16 @@ if (count($product->imagesAdded)) {
         if ($i == 0) {
             echo "<div class='gss_product_thumbnails_outer_container'>";
         }
+        
+        $imageismain = "";
+        if ($imageId == $product->mainImage) {
+            $imageismain = "imageismain";
+        }
 
         echo "<div class='outerimagestuff'><div class='gss_product_thumbnail_container'>";
         echo "<img class='gss_product_thumbnail' src='/displayImage.php?id=$imageId'/>";
         echo "<i gss_method='removeImage' gss_success_method='productImageRemoved' gss_value_2='$imageId' gss_value='$product->id' class='fa fa-trash remove_image'></i>";
+        echo "<i gss_method='setImageAsMainImage' gss_success_method='setPrimary' gss_value_2='$imageId' gss_value='$product->id' class='fa fa-star main_image $imageismain'></i>";
         echo "</div></div>";
 
         $i++;

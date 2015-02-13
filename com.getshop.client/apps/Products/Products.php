@@ -131,10 +131,7 @@ class Products extends \WebshopApplication implements \Application {
             }
         }
         
-        print_r($keepImages);
-       
-        
-        $product->images = $keepImages;
+        $product->images = null;
         $product->imagesAdded = $keepImages;
         $this->getApi()->getProductManager()->saveProduct($product);
     }
@@ -189,6 +186,12 @@ class Products extends \WebshopApplication implements \Application {
             $pageNumber = 1;
         }
         $_SESSION['products_admin_search_word_page'] = $pageNumber;
+    }
+    
+    public function setImageAsMainImage() {
+        $product = $this->getApi()->getProductManager()->getProduct($_POST['value']);
+        $product->mainImage =  $_POST['value2'];
+        $this->getApi()->getProductManager()->saveProduct($product);
     }
 
 }

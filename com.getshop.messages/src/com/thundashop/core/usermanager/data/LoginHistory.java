@@ -18,16 +18,19 @@ import java.util.Map;
  * @author ktonder
  */
 public class LoginHistory extends DataCommon {
+    /** Old Logins before 7 feb 2014 */
     private Map<String, List<Date>> logins = new HashMap();
     
-    public void markLogin(User user) {
-        List<Date> dates = logins.get(user.id);
-        if (dates == null) {
-            dates = new ArrayList();
+    private Map<String, List<LoginSession>> loginUserList = new HashMap();
+    
+    public void markLogin(User user, String sessionId) {
+        List<LoginSession> loginSessions = loginUserList.get(user.id);
+        if (loginSessions == null) {
+            loginSessions = new ArrayList();
         }
         
-        dates.add(new Date());
-        logins.put(user.id, dates);
+        loginSessions.add(new LoginSession(user, sessionId));
+        loginUserList.put(user.id, loginSessions);
     }
 
     public int getLogins(int year, int month) {
@@ -41,8 +44,9 @@ public class LoginHistory extends DataCommon {
         calendar.add(Calendar.MONTH, 1);
         Date endDate = calendar.getTime();
         
-        for (List<Date> dates : logins.values()) {
-            for (Date date : dates) {
+        for (List<LoginSession> histories : loginUserList.values()) {
+            for (LoginSession loginSession : histories) {
+                Date date = loginSession.loginDate;
                 if (date.before(endDate) && date.after(startDate)) {
                     i++;
                 }
@@ -50,5 +54,62 @@ public class LoginHistory extends DataCommon {
         }
         
         return i;
+    }
+
+
+    public void markAdmin(User user, String sessionId) {
+        if (user == null) {
+            return;
+        }
+        
+        List<LoginSession> loginsessions = loginUserList.get(user.id);
+        for (LoginSession loginsession : loginsessions) {
+            if (loginsession.sessionId != null && loginsession.sessionId.equals(sessionId)) {
+                loginsession.adminActionsCount++;
+                break;
+            }
+        }
+    }
+
+    public void markEditor(User user, String sessionId) {
+        if (user == null) {
+            return;
+        }
+        
+        List<LoginSession> loginsessions = loginUserList.get(user.id);
+        for (LoginSession loginsession : loginsessions) {
+            if (loginsession.sessionId != null && loginsession.sessionId.equals(sessionId)) {
+                loginsession.editorActionsCount++;
+                break;
+            }
+        }
+    }
+
+    public void printIt() {
+        for (String userId : logins.keySet()) {
+            if (!userId.equals("e368ee9a-6f95-474c-a63c-5d3d27ae1550")) {
+                continue;
+            }
+            List<Date> dates = logins.get(userId);
+            System.out.println("User: " + userId);
+            
+            for (Date date : dates) {
+                System.out.println("  Date: " + date);
+            }
+        }
+        
+        for (String userId : loginUserList.keySet()) {
+            if (!userId.equals("e368ee9a-6f95-474c-a63c-5d3d27ae1550")) {
+                continue;
+            }
+            List<LoginSession> loginsessions = loginUserList.get(userId);
+            System.out.println("User: " + userId);
+            
+            for (LoginSession loginsession : loginsessions) {
+                System.out.println("  Date: " + loginsession.loginDate);
+                System.out.println("  Admin count: " + loginsession.userId + " " + loginsession.adminActionsCount);
+                System.out.println("  Editor count: " + loginsession.userId + " " + loginsession.editorActionsCount);
+            }
+        }
     }
 }

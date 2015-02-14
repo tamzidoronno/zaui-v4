@@ -37,4 +37,4 @@ public class Entry extends TranslationHandler implements Serializable {
     
     @Transient
     public String uniqueId;
-}
+    }

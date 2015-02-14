@@ -31,12 +31,21 @@ if($this->getFactory()->isMobile()) {
             $j++;
             $linkName = \GetShopHelper::makeSeoUrl($product->name);
             $pageId = $product->pageId;
-            $imageId = isset($product->imagesAdded[0]) ? $product->imagesAdded[0] : "";
+            $mainImage = false;
 
-            if (!$imageId) {
+            if ($product->mainImage && in_array($product->mainImage, $product->imagesAdded)) {
+                $mainImage = $product->mainImage;
+            }
+
+            if (!$mainImage && count($product->imagesAdded)) {
+                $mainImage = $product->imagesAdded[0];
+            }
+
+            
+            if (!$mainImage) {
                 $image = '<div class="image"><i class="fa fa-image"></i></div>';
             } else {
-                $image = '<div class="image"><img src="/displayImage.php?id='.$imageId.'&width=200"/></div>';
+                $image = '<div class="image"><img src="/displayImage.php?id='.$mainImage.'&width=200"/></div>';
             }
             ?>
                 <div class='productbox_outer'>

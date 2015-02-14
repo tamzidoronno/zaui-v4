@@ -1,6 +1,18 @@
 <?php
 /* @var $this ns_06f9d235_9dd3_4971_9b91_88231ae0436b\Product */
 $product = $this->getApi()->getProductManager()->getProductByPage($this->getPage()->getId());
+
+$mainImage = false;
+
+if ($product->mainImage && in_array($product->mainImage, $product->imagesAdded)) {
+    $mainImage = $product->mainImage;
+}
+
+if (!$mainImage && count($product->imagesAdded)) {
+    $mainImage = $product->imagesAdded[0];
+}
+
+
 ?>
 
 <input type="hidden" id="productId" value="<? echo $product->id; ?>"/>
@@ -16,9 +28,8 @@ $product = $this->getApi()->getProductManager()->getProductByPage($this->getPage
     <section id="gallery">
         <div class="mainimage">
             <?
-            if (isset($product->imagesAdded[0])) {
-                $fistImage = $product->imagesAdded[0];
-                echo "<a class='gs_ignorenavigate fluidbox' rel='sample-gallery' href='/displayImage.php?id=$fistImage'><img src='/displayImage.php?id=$fistImage'/></a>";
+            if (isset($mainImage)) {
+                echo "<a class='gs_ignorenavigate fluidbox' rel='sample-gallery' href='/displayImage.php?id=$mainImage'><img src='/displayImage.php?id=$mainImage'/></a>";
             } else {
                 echo '<i class="fa fa-image"></i>';
             }
@@ -30,7 +41,7 @@ $product = $this->getApi()->getProductManager()->getProductByPage($this->getPage
             $i = 0;
             $subImagesExists = false;
             foreach ($product->imagesAdded as $image) {
-                if ($image == $fistImage) {
+                if ($image == $mainImage) {
                     continue;
                 }
                 

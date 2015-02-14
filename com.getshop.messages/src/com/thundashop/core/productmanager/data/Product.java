@@ -18,10 +18,13 @@ import java.util.Map;
  * @author ktonder
  */
 public class Product extends DataCommon implements Comparable<Product>  {
+    /* This variable is no longer in use, using only imagesAdded */
     public Map<String, ProductImage> images = new HashMap<String, ProductImage>();    
+    
     public List<String> imagesAdded = new LinkedList();
     public List<ProductVariation> variations = new ArrayList();
     public List<String> descriptions = new ArrayList();
+    
     @Translation
     public String description;
     @Translation

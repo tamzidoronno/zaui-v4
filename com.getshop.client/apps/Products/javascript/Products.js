@@ -29,6 +29,10 @@ app.Products = {
     productImageRemoved: function (field) {
         $(field).parent().fadeOut(100);
     },
+    setPrimary: function(field) {
+        $('.imageismain').removeClass('imageismain');
+        $(field).addClass('imageismain');
+    },
     drawChart: function (div) {
 
 //        ['January', 2, 1, 3],

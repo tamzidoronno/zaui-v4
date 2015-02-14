@@ -68,13 +68,13 @@ public class ManagerBase {
             DataRetreived dataRetreived = new DataRetreived();
             dataRetreived.data = database.retreiveData(credentials);
             
-			for (DataCommon common : dataRetreived.data) {
-				if (common instanceof ManagerSetting) {
-					this.managerSettings = (ManagerSetting)common;
-				}
-			}
-			
-			((ManagerBase) this).dataFromDatabase(dataRetreived);
+            for (DataCommon common : dataRetreived.data) {
+                if (common instanceof ManagerSetting) {
+                    this.managerSettings = (ManagerSetting)common;
+                }
+            }
+
+            ((ManagerBase) this).dataFromDatabase(dataRetreived);
         }
 		
         this.ready = true;
@@ -136,12 +136,16 @@ public class ManagerBase {
         databaseSaver.deleteObject(data, credentials);
     }
 
-	protected void setManagerSetting(String key, String value) {
-		managerSettings.keys.put(key, value);
-		saveObject(managerSettings);
-	}
-	
-	protected String getManagerSetting(String key) {
-		return managerSettings.keys.get(key);
-	}
+    protected void setManagerSetting(String key, String value) {
+        managerSettings.keys.put(key, value);
+        saveObject(managerSettings);
+    }
+
+    protected String getManagerSetting(String key) {
+        return managerSettings.keys.get(key);
+    }
+
+    private void updateTranslation(DataCommon data) {
+        
+    }
 }

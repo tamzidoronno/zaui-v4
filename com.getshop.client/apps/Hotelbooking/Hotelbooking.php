@@ -41,6 +41,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $settings->displayHeardAboutUs = $_POST['data']['show_heardaboutus'];
         $settings->parkingSpots = $_POST['data']['parking_spots'];
         $settings->extraBookingInformation = $_POST['data']['extra_booking_information'];
+        $settings->summaryPage = $_POST['data']['summaryPage'];
         $this->getFactory()->getApi()->getHotelBookingManager()->setBookingConfiguration($settings);
         $this->setConfigurationSetting("contine_page", $_POST['data']['contine_page']);
     }

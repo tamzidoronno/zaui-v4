@@ -12,4 +12,5 @@ public class GlobalBookingSettings extends DataCommon {
     public boolean displayHeardAboutUs = false;
     public Integer parkingSpots = 0;
     public String extraBookingInformation = "";
+    public String summaryPage = "";
 }

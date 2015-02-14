@@ -951,7 +951,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $address->phone = $_POST['data']['phone_1'];
 
         $user = new \core_usermanager_data_User();
-        $user->emailAddress = $_POST['data']['email'];
+        $user->emailAddress = $_POST['data']['email_1'];
         $user->birthDay = $_POST['data']['birthday'];
         $user->password = "dfsafasd#¤#cvsdfgdfasdfasf";
         $user->fullName = $_POST['data']['name_1'];

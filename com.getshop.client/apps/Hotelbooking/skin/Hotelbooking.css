@@ -11,6 +11,7 @@
 .Hotelbooking .background-box { background-color:#000; position:absolute;z-index: 0; width: 100%; height: 100%; opacity:0.7; filter:alpha(opacity=70); }
 .Hotelbooking .room_available { font-size: 16px; display:block; }
 .Hotelbooking .space_betweenroom { height: 20px; }
+.Hotelbooking .spacer { height: 20px; }
 .Hotelbooking .error_on_check { display:none; padding-top: 20px; font-size: 16px; }
 .Hotelbooking .booking_page.page_2 input,.Hotelbooking .booking_page.page_2 select { border: solid 1px#BDC7D8; margin:0px; padding: 5px; width: 170px; }
 .Hotelbooking .booking_page.page_2 select { width: 182px; }
@@ -31,23 +32,28 @@
 .Hotelbooking .room_selection_2 .selection_box { float:left; }
 .Hotelbooking .room_selection_2 .personalcount { font-size: 14px; font-weight: bold; }
 .Hotelbooking .room_selection_2 .price_text { font-size: 22px; font-weight: bold; margin-left: 20px; }
-.Hotelbooking .seperator {border-bottom: solid 1px #dbdee3; border-top: solid 1px #dbdee3; margin-bottom: 30px; height: 1px; display:inline-block;  width: 100%; }
+.Hotelbooking .seperator {border-bottom: solid 1px #dbdee3; border-top: solid 1px #dbdee3; margin-bottom: 20px; height: 1px; display:inline-block;  width: 100%; }
 .Hotelbooking .sold_out { float:right; }
+.Hotelbooking .referencecheckline { padding-bottom: 20px; }
 
 .Hotelbooking .no_room_available { font-size: 22px; text-align: center; }
 .Hotelbooking .room_selection_2 .price_box { float:right;display:inline-block; width: 30%;  }
 .Hotelbooking .room_selection_2 .selectbutton { cursor:pointer; border: solid 1px #c2c7cf; padding: 5px; float: right; background-color:#b7bdc7; color:#FFF; }
 .Hotelbooking .room_selection_2 .available_rooms { position:absolute; bottom:5px; left:20px; color:#c2c7cf; }
+.Hotelbooking .col-33 { width: 33.33%; box-sizing: border-box; float:left; padding: 10px;  }
+.Hotelbooking .col-33 input { width: 100%; border-radius: 3px;  line-height: 30px; font-size: 20px;}
+.Hotelbooking .col-50 { width: 50%; box-sizing: border-box; float:left; padding: 10px;  }
+.Hotelbooking .col-50 input { width: 100%; border-radius: 3px;  line-height: 30px; font-size: 20px;}
+.Hotelbooking .col-100 input { width: 100%; border-radius: 3px;  line-height: 30px; font-size: 20px;}
+.Hotelbooking .row_seperator { clear:both; }
 
 .Hotelbooking .room_selection_2.selected { border: solid 2px #b1bea0; }
 .Hotelbooking .room_selection_2.selected .selectbutton { background-color: #b1bea0; border: solid 1px #cbd3c0; }
-.Hotelbooking .to_checkout { text-align: right; }
-.Hotelbooking .continue_to_cart_button { padding-left: 20px; padding-right: 20px; display: inline-block; }
+.Hotelbooking .to_checkout { text-align: right; width:100%; }
+.Hotelbooking .continue_to_cart_button { padding-left: 20px; padding-right: 20px; display: inline-block; width: 150px; }
 .Hotelbooking .booking_table .disabled { color:#bBB; }
 .Hotelbooking .contact_text { display:inline-block; width: 150px; }
 .Hotelbooking .right_aligned_price { float:right; }
-.Hotelbooking .booking_contact_data { float:right; }
-.Hotelbooking .summary_heading { border-bottom: solid 1px #BBB; padding-bottom: 5px; margin-bottom: 5px; font-size: 16px; }
 .Hotelbooking .summary_total { border-top: solid 1px #BBB; border-bottom: solid 1px #BBB; margin-top: 10px; padding-top: 5px; padding-bottom: 5px; font-weight:bold; }
 .Hotelbooking .price_row { padding: 3px; }
 .Hotelbooking .bookingsummary input { border: solid 1px #BDC7D8; border-radius: 2px; padding: 3px; }
@@ -66,12 +72,9 @@
 @media only all and (min-width: 800px) {
     .Hotelbooking .calendar { float:left; }
     .Hotelbooking .booking_count_box { float:right; }
-    .Hotelbooking .booking_contact_data { display:inline-block; float:right; width: 45%; }
-    .Hotelbooking .summaryview { display:inline-block; float:left; width: 45%; }
 }
 
 @media only all and (max-width: 800px) {
-    .Hotelbooking .booking_contact_data { padding-bottom: 40px;width: 100%;  }
     .Hotelbooking .summaryview { padding-bottom: 40px; }
     .Hotelbooking .contact_text { width: 100px; }
     .Hotelbooking .contact_input input { width: 100%; }

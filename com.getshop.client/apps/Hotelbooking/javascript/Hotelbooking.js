@@ -126,7 +126,7 @@ app.Hotelbooking = {
         }
     },
     changeToPartnership: function () {
-        if ($('.partnership').is(":visible")) {
+        if (!$('[gsname="partnershipdeal"]').is(":checked")) {
             $('input[gsname="referencenumber"]').val('');
             $('.common_input').show();
             $('.partnership').hide();
@@ -257,6 +257,10 @@ app.Hotelbooking = {
         thundashop.common.hideInformationBox();
     },
     
+    animateNext : function() {
+        $(this).html('<i class="fa fa-spin fa-spinner">');
+    },
+    
     initEvents: function () {
         $(document).on('click', '.Hotelbooking .check_available_button', app.Hotelbooking.checkAvailability);
         $(document).on('change', '.Hotelbooking #ordertype', app.Hotelbooking.changeOrderType);
@@ -276,10 +280,12 @@ app.Hotelbooking = {
         $(document).on('click', '.Hotelbooking input[gsname="mvaregistered"]', app.Hotelbooking.saveCurrentData);
         $(document).on('click', '.Hotelbooking input[gsname="customer_type"]', app.Hotelbooking.saveCurrentData);
         $(document).on('keyup', '.Hotelbooking input[gsname="postal_code"]', app.Hotelbooking.updatePostalPlace);
+        $(document).on('blur', '.Hotelbooking input[gsname="postal_code"]', app.Hotelbooking.updatePostalPlace);
         $(document).on('keyup', '.Hotelbooking input[gsname="birthday"]', app.Hotelbooking.updateBrreg);
         $(document).on('keyup', '.Hotelbooking .searchcustomerinput', app.Hotelbooking.searchCustomer);
         $(document).on('click', '.Hotelbooking .searchcustomerbutton', app.Hotelbooking.searchCustomer);
         $(document).on('click', '.Hotelbooking .selectcustomer', app.Hotelbooking.selectCustomer);
+        $(document).on('click', '.Hotelbooking .continue_to_cart_button', app.Hotelbooking.animateNext);
     }
 };
 

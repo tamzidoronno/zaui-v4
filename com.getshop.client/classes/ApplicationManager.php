@@ -27,6 +27,10 @@ class ApplicationManager extends FactoryBase {
     }
             
     
+    function createFooter() {
+        $this->getApi()->getPageManager()->createHeaderFooter($_POST['data']['type']);
+    }
+    
     function doLinkCell() {
         $cellid = $_POST['data']['cellid'];
         $url = $_POST['data']['url'];

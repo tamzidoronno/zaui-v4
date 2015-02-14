@@ -3112,6 +3112,26 @@ class APIPageManager {
 	}
 
 	/**
+	* Add an cell to an specific earea.
+	* @param pageId
+	* @param incell
+	* @param beforecell
+	* @param direction
+	* @param area header/footer/body if nothing set it will default to body.
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function createHeaderFooter($type) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["type"] = json_encode($this->transport->object_unset_nulls($type));
+	     $data["method"] = "createHeaderFooter";
+	     $data["interfaceName"] = "core.pagemanager.IPageManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Create a new row to add application areas to for a given page.
 	* @param pageId
 	* @return String

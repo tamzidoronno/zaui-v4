@@ -73,6 +73,9 @@ class Page {
 
             echo "<div class='gsarea' area='footer'>";
             $edited = $this->printArea($layout->areas->{'footer'});
+            if(sizeof($layout->areas->{'footer'}) == 0 && $this->factory->isEditorMode()) {
+                echo "<center><a style='color:blue; cursor:pointer;' gstype='clicksubmit' method='createFooter' gsname='type' gsvalue='FOOTER'>Create footer.</a></center>";
+            }
             if ($edited) {
                 $editedCellid = $edited;
             }

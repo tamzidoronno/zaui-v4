@@ -49,18 +49,11 @@ thundashop.app.GoogleMaps.prototype = {
             }, "500");
         }
     },
-    checkFitToContainer: function() {
-        if (this.countCheck === 12) {
-            return;
-        }
-        this.fitToContainer();
-    },
     initialize: function(draggable) {
         var loaded = $.Deferred();
         this.waitForGoogleMapsToLoad(loaded);
         var scope = this;
         loaded.done(function() {
-            scope.checkFitToContainer();
             directionsDisplay = new google.maps.DirectionsRenderer();
             if (scope.config === undefined) {
                 scope.config = {};
@@ -86,7 +79,10 @@ thundashop.app.GoogleMaps.prototype = {
             scope.mapOptions = mapOptions;
             scope.mapDiv = document.getElementById(scope.config.container);
             scope.map = new google.maps.Map(scope.mapDiv, scope.mapOptions);
-            $(scope.mapDiv).css('height', "200px");
+            var height = $(scope.mapDiv).closest('.gsucell').height() + "px";
+            $(scope.mapDiv).css('height',height);
+            google.maps.event.trigger(scope.map,'resize');            
+            scope.map.setCenter(center);
             directionsDisplay.setMap(scope.map);
             scope.initializeMarkers();
 
@@ -111,14 +107,8 @@ thundashop.app.GoogleMaps.prototype = {
                 
                 var container = $('#' + me.config.container);
                 me.curSize = 0;
-                container.height(1);
                 $(me.mapDiv).height(1);
 
-
-                me.countCheck = 0;
-                setTimeout(function() {
-                    me.checkFitToContainer();
-                }, "200");
             });
         });
     },
@@ -127,39 +117,6 @@ thundashop.app.GoogleMaps.prototype = {
             var entry = this.config.markers[key];
             this.addpoint(entry);
         }
-    },
-    fitToContainer: function() {
-        var container = $('#' + this.config.container);
-        var appid = container.closest('.app').attr('appid');
-        var maxHeight = 0;
-        container.closest('.gscell').find('.app').each(function() {
-            if (appid !== $(this).attr('appid')) {
-                if (maxHeight < $(this).innerHeight()) {
-                    maxHeight = $(this).innerHeight();
-                }
-            }
-        });
-        
-        if(container.closest('.gscell').find('.app').length === 1) {
-            maxHeight = container.closest('.gscell').innerHeight();
-        }
-         if (maxHeight > 0) {
-            
-            if(this.map !== null) {
-                if(container.closest('.gsinner').innerHeight() > maxHeight) {
-                    maxHeight = container.closest('.gs_inner').innerHeight();
-                }
-                $(this.mapDiv).height(maxHeight);
-                google.maps.event.trigger(this.map,'resize');
-                return;
-            }
-        }
-
-        var check = this;
-        setTimeout(function() {
-            check.countCheck++;
-            check.checkFitToContainer();
-        }, "150");
     },
     addpoint: function(entry) {
         var point = new google.maps.LatLng(parseFloat(entry.latitude), parseFloat(entry.longitude));

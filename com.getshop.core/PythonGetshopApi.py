@@ -3248,6 +3248,21 @@ class PageManager(object):
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
+  def createHeaderFooter(self, type):
+    args = collections.OrderedDict()
+    if isinstance(type,GetShopBaseClass): 
+      args["type"]=json.dumps(type.__dict__)
+    else:
+      try:
+        args["type"]=json.dumps(type)
+      except (ValueError, AttributeError):
+        args["type"]=type
+    data = EmptyClass()
+    data.args = args
+    data.method = "createHeaderFooter"
+    data.interfaceName = "core.pagemanager.IPageManager"
+    return self.communicationHelper.sendMessage(data)
+
   def createNewRow(self, pageId):
     args = collections.OrderedDict()
     if isinstance(pageId,GetShopBaseClass): 

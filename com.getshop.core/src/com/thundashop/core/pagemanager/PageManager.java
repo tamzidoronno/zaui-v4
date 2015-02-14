@@ -502,4 +502,16 @@ public class PageManager extends ManagerBase implements IPageManager {
     public void linkPageCell(String pageId, String cellId, String link) throws ErrorException {
         getPage(pageId).getCell(cellId).link = link;
     }
+
+    @Override
+    public void createHeaderFooter(String type) throws ErrorException {
+        PageCell cell = new PageCell();
+        cell.mode = PageCell.CellMode.row;
+        if(type.equals("FOOTER")) {
+            commonPageData.footer.add(cell);
+            saveObject(commonPageData);
+        } else {
+            commonPageData.header.add(cell);            
+        }
+    }
 }

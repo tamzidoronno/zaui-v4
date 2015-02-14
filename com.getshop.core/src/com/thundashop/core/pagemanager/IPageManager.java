@@ -77,6 +77,9 @@ public interface IPageManager {
     @Administrator
     public Page dropCell(String pageId, String cellId) throws ErrorException;
     
+    @Administrator
+    public void createHeaderFooter(String type) throws ErrorException;
+    
     /**
      * Set the page description.
      * @param description The description to add.

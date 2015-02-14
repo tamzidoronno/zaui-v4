@@ -1,23 +1,17 @@
 <?
 /* @var $this \ns_d16b27d9_579f_4d44_b90b_4223de0eb6f2\Hotelbooking */
-$text = $this->__w("RESERVE YOUR STAY");
 $checkintext = $this->__w("CHECK IN");
 $checkouttext = $this->__w("CHECK OUT");
 $roomtypetext = $this->__w("Apartment / room");
 $displayEnd = "display:inline-block;";
-if($this->getServiceType($text) == "storage") {
-    $displayEnd = "display:none;";
-    $text = $this->__w("ORDER STORAGE ROOM");
-    $checkintext = $this->__w("Select start date");
-    $checkouttext = $this->__w("END");
-    $roomtypetext = $this->__w("Select size");
-}
+$products = $this->getHotelRooms();
 ?>
 
-<span class='heading'><? echo $text; ?></span>
+
+
 <table width='100%'>
     <tr>
-        <td>
+        <td width="25%">
             <? echo $checkintext; ?><br>
             <span style='background-color:#b0bda4; display:inline-block;' class='start_cal'>
                 <table width='100%' border='0' cellspacing='0' cellpadding='0'>
@@ -30,7 +24,7 @@ if($this->getServiceType($text) == "storage") {
                 </table>
             </span>
         </td>
-        <td align='right'>
+        <td align='right' width="25%">
             <span style='text-align:left;<? echo $displayEnd; ?>'>
                 <? echo $checkouttext; ?><br>
                 <span style='background-color:#b0bda4; display:inline-block;' class='end_cal'>
@@ -44,28 +38,29 @@ if($this->getServiceType($text) == "storage") {
                 </span>
             </span>
         </td>
+        <td width="25%">
+            <? echo $roomtypetext; ?>
+            <select class='room_selection'>
+                <?
+                    foreach($products as $product) {
+                        /* @var $product \core_productmanager_data_Product */
+
+
+                        $pricetext = $product->price . " NOK ";
+                        if($product->price < $product->original_price) {
+                            $pricetext .= " (-". (100-(int)(($product->price / $product->original_price)*100)) . "%)";
+                        }
+
+                        echo "<option value='".$product->id."'>" . $pricetext . " " . $product->name . "</option>";
+                    }
+                ?>
+            </select>
+        </td>
+        <td width="25%"><br>
+            <div class='check_available_button' nextpage="<? echo $this->getContinuePage(); ?>"><? echo $this->__w("Check availability and continue"); ?></div>
+        </td>
     </tr>
 </table>
-<div class='space_betweenroom'></div>
-<? 
-echo $roomtypetext; 
-$products = $this->getHotelRooms();
-?><br>
-<select class='room_selection'>
-    <?
-        foreach($products as $product) {
-            /* @var $product \core_productmanager_data_Product */
-            
-            
-            $pricetext = $product->price . " NOK ";
-            if($product->price < $product->original_price) {
-                $pricetext .= " (-". (100-(int)(($product->price / $product->original_price)*100)) . "%)";
-            }
-            
-            echo "<option value='".$product->id."'>" . $pricetext . " " . $product->name . "</option>";
-        }
-    ?>
-</select>
 <?
 $days = $this->getMinumRentalTexted();
 if($days) {
@@ -75,7 +70,6 @@ if($days) {
 }
 ?>
 
-<div class='check_available_button' nextpage="<? echo $this->getContinuePage(); ?>"><? echo $this->__w("Check availability and continue"); ?></div>
 <div style='padding-top:20px;'>
     <span class='error_on_check date_before_start'>
         <? echo $this->__f("Sorry, but the start date is before todays date."); ?>

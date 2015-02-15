@@ -27,98 +27,97 @@ public class VismaUsers extends DataCommon {
 
     private static Integer getVismaId(ProductManager prodManager, CartItem item) throws ErrorException {
         Product currentProduct = prodManager.getProduct(item.getProduct().id);
-        
+
         if (currentProduct == null) {
             return item.getProduct().vismaId;
         }
-        
+
         return currentProduct.vismaId;
     }
-    
+
     public HashMap<String, String> transfereddUserIds = new HashMap();
-    
-    
+
     public boolean checkTransferred(User user) {
-        if(transfereddUserIds.containsKey(user.id) && transfereddUserIds.get(user.id).equals(user.toString())) {
+        if (transfereddUserIds.containsKey(user.id) && transfereddUserIds.get(user.id).equals(user.toString())) {
             return true;
         }
         return false;
     }
-    
-	static boolean containsError(ProductManager prodManager, MessageManager messageManager, OrderManager ordermgr, Order order) throws ErrorException {
-		for(CartItem item : order.cart.getItems()) {
-			Integer vismaId = getVismaId(prodManager, item);
-			if (vismaId == null || vismaId == 0) {
-				if (!order.triedTransferredToAccountingSystem) {
-					messageManager.sendMail(
-							"post@getshop.com", 
-							"Visma order transferred failed", 
-							"failed to transfer order: " + order.incrementOrderId + " id: " + order.id, "Product: " + item.getProduct().name + " does not have a visma id, this orderline can not be transferred", 
-							"post@getshop.com", 
-							"GetShop system");
-					ordermgr.setTriedToSendOrderToAccountingSystem(order);
-				}
 
-				return true;
-			}	
-		}
+    static boolean containsError(ProductManager prodManager, MessageManager messageManager, OrderManager ordermgr, Order order) throws ErrorException {
+        for (CartItem item : order.cart.getItems()) {
+            Integer vismaId = getVismaId(prodManager, item);
+            if (vismaId == null || vismaId == 0) {
+                if (!order.triedTransferredToAccountingSystem) {
+                    messageManager.sendMail(
+                            "post@getshop.com",
+                            "Visma order transferred failed",
+                            "failed to transfer order: " + order.incrementOrderId + " id: " + order.id, "Product: " + item.getProduct().name + " does not have a visma id, this orderline can not be transferred",
+                            "post@getshop.com",
+                            "GetShop system");
+                    ordermgr.setTriedToSendOrderToAccountingSystem(order);
+                }
 
-		return false;
-	}
-    
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     static String generateOrderLines(
-			List<Order> orders, 
-			User user, 
-			HashMap<Integer, BookingReference> references, 
-			ProductManager prodManager, 
-			HotelBookingManager bookingManager, 
-			Map<String, Setting> settingsFromVismaApp,
-			MessageManager messageManager, 
-			OrderManager ordermgr) throws ErrorException, ClassNotFoundException, SQLException {
-        
-		String result = "";
-        for(Order order : orders) {
+            List<Order> orders,
+            User user,
+            HashMap<Integer, BookingReference> references,
+            ProductManager prodManager,
+            HotelBookingManager bookingManager,
+            Map<String, Setting> settingsFromVismaApp,
+            MessageManager messageManager,
+            OrderManager ordermgr) throws ErrorException, ClassNotFoundException, SQLException {
+
+        String result = "";
+        for (Order order : orders) {
             if (!order.activated) {
-				continue;
-			}
-			
+                continue;
+            }
+
             if (order.transferedToAccountingSystem) {
-				continue;
-			}
-			
-			if (bookingManager.orderExistsInVisma(order.incrementOrderId)) {
-				ordermgr.setDontSendToAccountSystem(order);
                 continue;
             }
-            
-            if(order.reference == null) {
+
+            if (bookingManager.orderExistsInVisma(order.incrementOrderId)) {
+                ordermgr.setDontSendToAccountSystem(order);
                 continue;
             }
-            
+
+            if (order.reference == null) {
+                continue;
+            }
+
             BookingReference reference = references.get(new Integer(order.reference));
-            if(reference == null) {
+            if (reference == null) {
                 continue;
             }
-			
-			if (containsError(prodManager, messageManager, ordermgr, order)) {
-				continue;
-			}
-			
+
+            if (containsError(prodManager, messageManager, ordermgr, order)) {
+                continue;
+            }
+
             String ordrehode = "H;"; // Fast H
             ordrehode += "1;"; // Fast 1 for salg
-            ordrehode += settingsFromVismaApp.get("ordertype").value+";"; // Fast 1 for normalordre
-            ordrehode += order.incrementOrderId+";"; // GetShop ordre id
-            ordrehode += user.customerId+";"; // Kundenr 
-            ordrehode += new SimpleDateFormat("yyyyMMdd").format(order.createdDate)+";"; // Ordredato
+            ordrehode += settingsFromVismaApp.get("ordertype").value + ";"; // Fast 1 for normalordre
+            ordrehode += order.incrementOrderId + ";"; // GetShop ordre id
+            ordrehode += user.customerId + ";"; // Kundenr 
+            ordrehode += new SimpleDateFormat("yyyyMMdd").format(order.createdDate) + ";"; // Ordredato
             ordrehode += new SimpleDateFormat("yyyyMMdd").format(reference.startDate) + ";"; // Leveringsdato
-            ordrehode += settingsFromVismaApp.get("paymentterm").value+";"; //Betalingsbetingelse
-            ordrehode += settingsFromVismaApp.get("paymenttype").value+";"; //Betalingsmåte ( 10 = avtalegiro )
+            ordrehode += settingsFromVismaApp.get("paymentterm").value + ";"; //Betalingsbetingelse
+            ordrehode += settingsFromVismaApp.get("paymenttype").value + ";"; //Betalingsmåte ( 10 = avtalegiro )
             ordrehode += ";"; // avgiftskode ( tom = bruk fra kunde )
-            result += ordrehode+ "\r\n";
-            
-            for(CartItem item : order.cart.getItems()) {
+            result += ordrehode + "\r\n";
+
+            for (CartItem item : order.cart.getItems()) {
                 Integer vismaId = getVismaId(prodManager, item);
-				String orderline = "L;"; // Fast L for orderline
+                String orderline = "L;"; // Fast L for orderline
                 orderline += vismaId + ";"; // ProdNO
                 orderline += ";"; // Avgiftskode ( hentes fra kunden )
                 orderline += item.getProduct().name + ";"; // Produkt beskrivelse
@@ -127,54 +126,54 @@ public class VismaUsers extends DataCommon {
                 orderline += ";"; // ikke i bruk
                 orderline += ";"; // Bod id ( denne får vi ikke satt pr nå)
                 orderline += ";"; // 
-                result += orderline+ "\r\n";
+                result += orderline + "\r\n";
             }
-			
+
         }
         return result;
     }
-    
+
     static String generateVismaUserString(User user) {
         /*
-            c,RecType,1,1,0,,,,,,,,,S,		'Fast A som forteller at det er Aktør
-            c,Actor.CustNo,2,10,0,,,,,,,,,I,	'Kundenummer
-            c,Actor.Nm,3,40,0,,,,,,,,,S,	'Kundenavn
-            c,Actor.Ad1,4,40,0,,,,,,,,,S,	'Kunde adresse 1
-            c,Actor.PNo,5,10,0,,,,,,,,,S,	'Kunde Postnummer
-            c,Actor.PArea,6,40,0,,,,,,,,,S,	'Kunde Poststed
-            c,Actor.MailAd,7,40,0,,,,,,,,,S,	'Kunde e-post
-            c,Actor.MobPh,8,40,0,,,,,,,,,S,	'Kunde mobil tlf.
-            c,Actor.BsNo,9,40,0,,,,,,,,,S,	'Kunde Org nr el fødselsnr.
-            c,Actor.cVatNo,10,40,0,,,,,,,,,S,	'Kunde avgiftskode hvis tom = mva pliktig
-            c,Actor.CPmtTrm,11,40,0,,,,,,,,,S,	'Kunde Betalingsbetingelse
-            c,Actor.CPmtMt,12,40,0,,,,,,,,,S,	'Kunde Betalingsmåte
-        */
-        
-        if(user.fullName == null) {
+         c,RecType,1,1,0,,,,,,,,,S,		'Fast A som forteller at det er Aktør
+         c,Actor.CustNo,2,10,0,,,,,,,,,I,	'Kundenummer
+         c,Actor.Nm,3,40,0,,,,,,,,,S,	'Kundenavn
+         c,Actor.Ad1,4,40,0,,,,,,,,,S,	'Kunde adresse 1
+         c,Actor.PNo,5,10,0,,,,,,,,,S,	'Kunde Postnummer
+         c,Actor.PArea,6,40,0,,,,,,,,,S,	'Kunde Poststed
+         c,Actor.MailAd,7,40,0,,,,,,,,,S,	'Kunde e-post
+         c,Actor.MobPh,8,40,0,,,,,,,,,S,	'Kunde mobil tlf.
+         c,Actor.BsNo,9,40,0,,,,,,,,,S,	'Kunde Org nr el fødselsnr.
+         c,Actor.cVatNo,10,40,0,,,,,,,,,S,	'Kunde avgiftskode hvis tom = mva pliktig
+         c,Actor.CPmtTrm,11,40,0,,,,,,,,,S,	'Kunde Betalingsbetingelse
+         c,Actor.CPmtMt,12,40,0,,,,,,,,,S,	'Kunde Betalingsmåte
+         */
+
+        if (user.fullName == null) {
             user.fullName = "";
         }
-        if(user.address == null) {
+        if (user.address == null) {
             user.address = new Address();
         }
-        if(user.address.address == null) {
+        if (user.address.address == null) {
             user.address.address = "";
         }
-        if(user.address.postCode == null) {
+        if (user.address.postCode == null) {
             user.address.postCode = "";
         }
-        if(user.address.city == null) {
+        if (user.address.city == null) {
             user.address.city = "";
         }
-        if(user.emailAddress == null) {
+        if (user.emailAddress == null) {
             user.emailAddress = "";
         }
-        if(user.cellPhone == null) {
+        if (user.cellPhone == null) {
             user.cellPhone = "";
         }
-        if(user.birthDay == null) {
+        if (user.birthDay == null) {
             user.birthDay = "";
         }
-        
+
         String result = "A;"; //Fast A som forteller at det er Aktør
         result += user.customerId + ";"; //Kundenummer
         result += user.fullName + ";"; //Kundenavn
@@ -183,37 +182,37 @@ public class VismaUsers extends DataCommon {
         result += user.address.city + ";"; //Kunde Poststed
         result += user.emailAddress + ";"; //Kunde e-post
         result += user.cellPhone + ";"; //Kunde mobil tlf.
-        
-        if(user.isPrivatePerson) {
+
+        if (user.isPrivatePerson) {
             Date date = null;
             try {
-                if(user.birthDay.contains(".")) {
-                    SimpleDateFormat dt = new SimpleDateFormat("dd.MM.yy"); 
-                    date = dt.parse(user.birthDay); 
+                if (user.birthDay.contains(".")) {
+                    SimpleDateFormat dt = new SimpleDateFormat("dd.MM.yy");
+                    date = dt.parse(user.birthDay);
                 } else {
-                    if(user.birthDay.length() == 6) {
-                        SimpleDateFormat dt = new SimpleDateFormat("ddMMyy"); 
+                    if (user.birthDay.length() == 6) {
+                        SimpleDateFormat dt = new SimpleDateFormat("ddMMyy");
                         date = dt.parse(user.birthDay);
                     } else {
-                        SimpleDateFormat dt = new SimpleDateFormat("ddMMyy"); 
+                        SimpleDateFormat dt = new SimpleDateFormat("ddMMyy");
                         date = dt.parse(user.birthDay);
                     }
                 }
-            }catch(Exception e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
             result += new SimpleDateFormat("ddMMyyyy").format(date) + ";"; //Kunde Org nr el fødselsnr.
         } else {
             result += user.birthDay + ";"; //Kunde Org nr el fødselsnr.
         }
-        if(user.mvaRegistered) {
+        if (user.mvaRegistered) {
             result += "1;"; //Kunde avgiftskode hvis tom = mva pliktig
         } else {
             result += ";"; //ingen avgift.
         }
         result += "30;"; //Betaling per 30 dag.
         result += "10;"; //Autogiro.
-        
+
         return result;
     }
 }

@@ -145,10 +145,12 @@ class Factory extends FactoryBase {
         echo "\n" . '<script type="text/javascript" src="js/jcrop/js/jquery.Jcrop.min.js"></script>';
         echo "\n" . '<script type="text/javascript" src="/js/colresize.js"></script>';
         
-        // FluidBox
-        echo "\n" . '<script type="text/javascript" src="js/imagelightbox.min.js"></script>';
-        echo "\n" . '<link href="skin/default/fluidbox.css" rel="stylesheet" />';
-
+        // Photoswipe
+        echo "\n" . '<link rel="stylesheet" href="/js/photoswipe/photoswipe.css">';
+        echo "\n" . '<link rel="stylesheet" href="/js/photoswipe/default-skin/default-skin.css">';
+        echo "\n" . '<script src="/js/photoswipe/photoswipe.min.js"></script>';
+        echo "\n" . '<script src="/js/photoswipe/photoswipe-ui-default.min.js"></script>';
+        echo "\n" . '<script src="/js/getshop.photoswipe.js"></script>';        
 
         echo "\n" . '<script type="text/javascript" src="js/jquery.ui/js/jquery-ui-1.9.2.custom.min.js"></script>';
         echo "\n" . '<script type="text/javascript" src="js/jquery.ui/js/timepickeraddon.js"></script>';

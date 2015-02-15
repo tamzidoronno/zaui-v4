@@ -2383,3 +2383,4 @@ padding: 2px; }
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#99ffffff', endColorstr='#1affffff',GradientType=0 ); /* IE6-9 */
 }
 .gsmobilecarouseleditdesc { width: 100%; clear:both; padding: 10px; font-size: 20px; text-align: center; border: solid 1px; color:#000; background-color:#fff; } 
+.gsgallery { cursor:pointer; }

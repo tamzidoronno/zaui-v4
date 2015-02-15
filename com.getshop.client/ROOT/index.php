@@ -101,6 +101,7 @@ if (isset($_GET['logonwithkey'])) {
 
 
 $factory = IocContainer::getFactorySingelton();
+include_once("js/photoswipe/photoswiperoot.html");
 
 if (@$factory->isMobile()) {
     echo '<meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1.0, maximum-scale=1.0, user-scalable=no", target-densitydpi="device-dpi" />';

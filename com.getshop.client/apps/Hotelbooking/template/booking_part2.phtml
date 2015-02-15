@@ -147,13 +147,17 @@ $headingtext = $this->__w("You have selected the following duration for your sta
         /* @var $product core_productmanager_data_Product */
         echo "<span class='firstbox selection_box' productid='" . $product->id . "'>";
         if (sizeof($images) > 0 && $this->getDisplayRoomThumbnail()) {
-            echo '<span href="displayImage.php?id=' . $images[0] . '" data-lightbox="' . $product->id . '" data-title=""><img class="imagepreview" src="displayImage.php?id=' . $images[0] . '"></span>';
+            $size = getimagesize("../uploadedfiles/" . $images[0]);
+            echo "<span class='gsgalleryroot'>";
+            echo '<span img="displayImage.php?id=' . $images[0] . '" class="gsgallery" width="'.$size[0].'" height="'.$size[1].'"><img class="imagepreview" src="displayImage.php?id=' . $images[0] . '"></span>';
             foreach ($images as $index => $image) {
                 if ($index == 0) {
                     continue;
                 }
-                echo '<a href="displayImage.php?id=' . $image . '" data-lightbox="' . $product->id . '" data-title=""></a>';
+                $size = getimagesize("../uploadedfiles/" . $image);
+                echo '<a img="displayImage.php?id=' . $image . '" class="gsgallery" width="'.$size[0].'" height="'.$size[1].'"></a>';
             }
+            echo "</span>";
         }
         echo "<div class='name' >" . $product->name . "</div>";
         echo "<div class='roomdesc'>";

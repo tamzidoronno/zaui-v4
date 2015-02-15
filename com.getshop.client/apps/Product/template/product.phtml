@@ -24,19 +24,20 @@ if (!$mainImage && count($product->imagesAdded)) {
     <? echo ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($product->price); ?>
 </div>
 
-<div class="images">
+<div class="images gsgalleryroot">
     <section id="gallery">
         <div class="mainimage">
             <?
             if (isset($mainImage)) {
-                echo "<a class='gs_ignorenavigate fluidbox' rel='sample-gallery' href='/displayImage.php?id=$mainImage'><img src='/displayImage.php?id=$mainImage'/></a>";
+                list($width, $height) = getimagesize("../uploadedfiles/" . $mainImage);
+                echo "<span class='gs_ignorenavigate gsgallery' img='/displayImage.php?id=$mainImage' width='$width' height='$height' index='0'><img src='/displayImage.php?id=$mainImage'/></span>";
             } else {
                 echo '<i class="fa fa-image"></i>';
             }
             ?>
         </div>
 
-        <div class="subimages">
+        <div class="subimages ">
             <?
             $i = 0;
             $subImagesExists = false;
@@ -60,7 +61,9 @@ if (!$mainImage && count($product->imagesAdded)) {
                     $class = "last_in_row";
                 }
 
-                echo "<div class='subimage $class'><a class='gs_ignorenavigate fluidbox' rel='sample-gallery' href='/displayImage.php?id=$image'><img src='/displayImage.php?id=$image'/></a></div>";
+                list($width, $height) = getimagesize("../uploadedfiles/" . $mainImage);
+                
+                echo "<div class='subimage $class'><a class='gs_ignorenavigate gsgallery' width='$width' height='$height' img='/displayImage.php?id=$image' index='$i'><img src='/displayImage.php?id=$image'/></a></div>";
 
 
                 if ($i == 3) {
@@ -95,9 +98,4 @@ if (!$mainImage && count($product->imagesAdded)) {
     var imagecontainerwidth = parent.find('.images').outerWidth();
     var contentBoxWidth = containerWidth - imagecontainerwidth - 5;
     $('.product_contentbox').outerWidth(contentBoxWidth);
-    
-    $(document).ready(function() {
-        productFluidBox = $('.fluidbox').fluidbox();
-    });
-    
 </script>

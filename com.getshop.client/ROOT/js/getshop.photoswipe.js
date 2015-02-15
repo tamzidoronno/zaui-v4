@@ -16,8 +16,13 @@ getshop.photoswipe = {
                 "h" : $(this).attr('height')
             });
         });
+        var index = 0;
+        if($(this).attr('index')) {
+            index = parseInt($(this).attr('index'));
+        }
+        
         var options = {
-            index: 0,
+            index: index,
             getThumbBoundsFn: function(index) {
                 // See Options -> getThumbBoundsFn section of documentation for more info
                 var pageYScroll = window.pageYOffset || document.documentElement.scrollTop,

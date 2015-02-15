@@ -99,6 +99,7 @@ public class CartManager extends ManagerBase implements ICartManager {
     public Cart updateProductCount(String cartItemId, int count) throws ErrorException {
         Cart cart = getCart(getSession().id);
         cart.setProductCount(cartItemId, count);
+        orderManager.finalizeCart(cart);
         return cart;
     }
 
@@ -106,12 +107,14 @@ public class CartManager extends ManagerBase implements ICartManager {
     public Cart removeProduct(String cartItemId) throws ErrorException {
         Cart cart = getCart(getSession().id);
         cart.removeItem(cartItemId);
+        orderManager.finalizeCart(cart);
         return cart;
     }
 
     @Override
     public Cart getCart() throws ErrorException {
         Cart cart = getCart(getSession().id);
+        orderManager.finalizeCart(cart);
         return cart;
     }
 

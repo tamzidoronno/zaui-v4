@@ -4295,6 +4295,28 @@ class ProductManager(object):
     data.interfaceName = "core.productmanager.IProductManager"
     return self.communicationHelper.sendMessage(data)
 
+  def setProductDynamicPrice(self, productId, count):
+    args = collections.OrderedDict()
+    if isinstance(productId,GetShopBaseClass): 
+      args["productId"]=json.dumps(productId.__dict__)
+    else:
+      try:
+        args["productId"]=json.dumps(productId)
+      except (ValueError, AttributeError):
+        args["productId"]=productId
+    if isinstance(count,GetShopBaseClass): 
+      args["count"]=json.dumps(count.__dict__)
+    else:
+      try:
+        args["count"]=json.dumps(count)
+      except (ValueError, AttributeError):
+        args["count"]=count
+    data = EmptyClass()
+    data.args = args
+    data.method = "setProductDynamicPrice"
+    data.interfaceName = "core.productmanager.IProductManager"
+    return self.communicationHelper.sendMessage(data)
+
   def setTaxes(self, group):
     args = collections.OrderedDict()
     if isinstance(group,GetShopBaseClass): 

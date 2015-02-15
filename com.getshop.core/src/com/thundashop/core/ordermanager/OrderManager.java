@@ -16,6 +16,7 @@ import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.ProductDynamicPrice;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
@@ -215,6 +216,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for (CartItem item : cart.getItems()) {
             double price = productManager.getPrice(item.getProduct().id, item.getVariations());
             item.getProduct().price = price;
+            
+            if (item.getProduct().prices != null && item.getProduct().prices.size() > 0) {
+                for (ProductDynamicPrice iprice : item.getProduct().prices) {
+                    int count = item.getCount();
+                    if (count >= iprice.from && count < iprice.to ) {
+                        item.getProduct().price = iprice.price;
+                    }
+                }
+            }
         }
     }
 

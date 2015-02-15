@@ -25,6 +25,12 @@ class core_productmanager_data_Product extends core_common_DataCommon  {
 	public $price;
 
 	/** @var String */
+	public $discountedPrice;
+
+	/** @var String */
+	public $prices;
+
+	/** @var String */
 	public $campaign_price;
 
 	/** @var String */

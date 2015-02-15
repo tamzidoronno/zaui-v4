@@ -301,4 +301,7 @@ public abstract class AProductManager extends ManagerBase {
         
         return true;
     }
+    
+    public void setProductDynamicPrice(String productId, int count) {
+    }
 }

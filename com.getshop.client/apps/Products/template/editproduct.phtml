@@ -32,6 +32,17 @@ $product = $this->getApi()->getProductManager()->getProduct($_POST['value']);
                         
                         echo "<div class='dynamicpricing'>";
                         echo "Dynamic pricemodel";
+                        ?>
+                        <div class="textfield gss_setting"  id="admin">
+                            <span class="title"><?php echo $this->__f("Progressive pricemodel?"); ?></span>
+                            <div class="gss_onoff" gs_model="productmodel" gs_model_attr="isProgressive">
+                                <?
+                                $faclass = $product->progressivePriceModel ? "fa-toggle-on" : "fa-toggle-off";
+                                ?>
+                                Off<i class="fa <? echo $faclass; ?>"></i>On
+                            </div>
+                        </div>
+                        <?
                         echo "<table><th>".$this->__f("From")."</th><th>".$this->__f("To")."</th><th>".$this->__f("Price")."</th>";
                         foreach ($product->prices as $dynamicePrice) {
                             echo "<tr>"

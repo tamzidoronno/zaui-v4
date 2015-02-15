@@ -260,6 +260,17 @@ app.Hotelbooking = {
     animateNext : function() {
         $(this).html('<i class="fa fa-spin fa-spinner">');
     },
+    hideToolTip : function() {
+        var productId = $(this).attr('data-productid');
+        var tooltip = $('.Hotelbooking .tooltip[data-productid="'+productId+'"]');
+        tooltip.hide();
+    },
+    
+    showToolTip : function() {
+        var productId = $(this).attr('data-productid');
+        var tooltip = $('.Hotelbooking .tooltip[data-productid="'+productId+'"]');
+        tooltip.show();
+    },
     
     initEvents: function () {
         $(document).on('click', '.Hotelbooking .check_available_button', app.Hotelbooking.checkAvailability);
@@ -286,6 +297,8 @@ app.Hotelbooking = {
         $(document).on('click', '.Hotelbooking .searchcustomerbutton', app.Hotelbooking.searchCustomer);
         $(document).on('click', '.Hotelbooking .selectcustomer', app.Hotelbooking.selectCustomer);
         $(document).on('click', '.Hotelbooking .continue_to_cart_button', app.Hotelbooking.animateNext);
+        $(document).on('mouseover', '.Hotelbooking .room_selection_2 .fa-info-circle', this.showToolTip);
+        $(document).on('mouseout', '.Hotelbooking .room_selection_2 .fa-info-circle', this.hideToolTip);
     }
 };
 

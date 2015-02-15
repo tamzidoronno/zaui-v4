@@ -134,6 +134,38 @@ class Hotelbooking extends \ApplicationBase implements \Application {
 
         return $this->getApi()->getHotelBookingManager()->checkAvailable($this->getStart(), $this->getEnd(), $type, $additonal);
     }
+    
+    function fetchAppids($cells, $apps) {
+        foreach($cells as $cell) {
+            if($cell->appId) {
+                $apps[] = $cell->appId;
+            }
+            if(sizeof($cell->cells)) {
+                $apps = array_merge($apps, $this->fetchAppids($cell->cells, $apps));
+            }
+        }
+        return $apps;
+    }
+    
+    function printToolTip($product) {
+        $page = $this->getApi()->getPageManager()->getPage($product->pageId);
+        
+        $layout = $page->layout;
+        $appIds = $this->fetchAppids($layout->areas->body, []);
+        
+        echo "<span class='tooltip' data-productid='".$product->id."'>";
+        foreach($appIds as $app) {
+            if(!$app) {
+                continue;
+            }
+            $appConfig = $this->getApi()->getStoreApplicationInstancePool()->getApplicationInstance($app);
+            $appInstance = $this->getFactory()->getApplicationPool()->createAppInstance($appConfig);
+            if($appInstance instanceof \ns_320ada5b_a53a_46d2_99b2_9b0b26a7105a\ContentManager) {
+                echo $this->getApi()->getContentManager()->getContent($app);
+            }
+        }
+        echo "</span>";
+    }
 
     function getDayCount($realDayCount=false) {
         if ($realDayCount && $this->getServiceType() == "storage") {

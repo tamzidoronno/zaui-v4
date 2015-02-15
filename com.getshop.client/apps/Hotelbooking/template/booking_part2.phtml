@@ -142,8 +142,12 @@ $headingtext = $this->__w("You have selected the following duration for your sta
         }
         $images = $product->imagesAdded;
 
+        
         $foundroom = true;
         echo "<div class='room_selection_2 product $selectedclass'>";
+        
+        $this->printToolTip($product);
+        
         /* @var $product core_productmanager_data_Product */
         echo "<span class='firstbox selection_box' productid='" . $product->id . "'>";
         if (sizeof($images) > 0 && $this->getDisplayRoomThumbnail()) {
@@ -159,7 +163,7 @@ $headingtext = $this->__w("You have selected the following duration for your sta
             }
             echo "</span>";
         }
-        echo "<div class='name' >" . $product->name . "</div>";
+        echo "<div class='name' ><i class='fa fa-info-circle' style='cursor:pointer' data-productid='".$product->id."'></i> " . $product->name . "</div>";
         echo "<div class='roomdesc'>";
         if (isset($product->shortDescription)) {
             echo trim($product->shortDescription ? strip_tags($product->shortDescription) : '');

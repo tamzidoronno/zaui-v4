@@ -94,6 +94,17 @@ class Products extends \WebshopApplication implements \Application {
             }
         }
         echo $product->shortDescription;
+        
+        
+        $prices = [];
+        foreach ($product->prices as $dynamicPrice) {
+            $dynamicPrice->from = $_POST['price_from_'.$dynamicPrice->id];
+            $dynamicPrice->to = $_POST['price_to_'.$dynamicPrice->id];
+            $dynamicPrice->price = $_POST['price_price_'.$dynamicPrice->id];
+            $prices[] = $dynamicPrice;
+        }
+        
+        $product->prices = $prices;
         $this->getApi()->getProductManager()->saveProduct($product);
     }
     
@@ -194,4 +205,7 @@ class Products extends \WebshopApplication implements \Application {
         $this->getApi()->getProductManager()->saveProduct($product);
     }
 
+    public function changeProductPriceModel() {
+        $this->getApi()->getProductManager()->setProductDynamicPrice($_POST['value'], $_POST['dynamicPrices']);
+    }
 }

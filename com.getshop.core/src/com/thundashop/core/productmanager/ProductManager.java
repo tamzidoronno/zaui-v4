@@ -8,6 +8,7 @@ import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.productmanager.data.AttributeValue;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCriteria;
+import com.thundashop.core.productmanager.data.ProductDynamicPrice;
 import com.thundashop.core.productmanager.data.ProductList;
 import com.thundashop.core.productmanager.data.SearchResult;
 import com.thundashop.core.productmanager.data.TaxGroup;
@@ -338,4 +339,16 @@ public class ProductManager extends AProductManager implements IProductManager {
         return super.search(searchWord, pageSize, page); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public void setProductDynamicPrice(String productId, int count) {
+        Product product = getProduct(productId);
+        if (product != null) {
+            product.prices.clear();
+            for (int i=0; i<count; i++) {
+                product.prices.add(new ProductDynamicPrice(i));
+            }
+        } 
+   }
+
+ 
 }

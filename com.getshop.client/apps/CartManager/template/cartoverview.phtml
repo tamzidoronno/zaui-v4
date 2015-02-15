@@ -55,7 +55,7 @@ if (count($cartItems) == 0) {
                                 <div class="cartdesc"><?php echo $product->description[0]; ?></div>
                             </div>
                             <div class="price"> <?php
-                                $imteprice = $this->getApi()->getProductManager()->getPrice($product->id, $cartItem->variations);
+                                $imteprice = $cartItem->product->price; 
                                 $imteprice = $this->getPriceWithTaxSpecifed($imteprice, $product);
 //                                echo sprintf('%0.2f', $imteprice);
                                 echo \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($imteprice);

@@ -239,4 +239,7 @@ public interface IProductManager {
      * @return 
      */
     public SearchResult search(String searchWord, Integer pageSize, Integer page);
+    
+    @Administrator
+    public void setProductDynamicPrice(String productId, int count);
 }

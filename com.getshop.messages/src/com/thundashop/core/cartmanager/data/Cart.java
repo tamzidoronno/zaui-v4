@@ -10,6 +10,7 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.ordermanager.data.Shipping;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.ProductDynamicPrice;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.usermanager.data.Address;
 import java.util.ArrayList;
@@ -111,7 +112,9 @@ public class Cart extends DataCommon {
     }
     
     private Double getCartItemTotal(CartItem cartItem) {
-        return cartItem.getProduct().price * cartItem.getCount();
+        Product product = cartItem.getProduct();
+        double usePrice = product.price;
+        return usePrice * cartItem.getCount();
     }
     
     public Double getTotal(boolean excludeFreeShipping) {

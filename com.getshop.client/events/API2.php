@@ -4064,6 +4064,26 @@ class APIProductManager {
 	}
 
 	/**
+	* Returns a list of products for a given searchword,
+	* if blank all products will be returned.
+	*
+	* @param searchWord
+	* @param pageSize
+	* @param page
+	* @return void
+	*/
+
+	public function setProductDynamicPrice($productId, $count) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $data['args']["count"] = json_encode($this->transport->object_unset_nulls($count));
+	     $data["method"] = "setProductDynamicPrice";
+	     $data["interfaceName"] = "core.productmanager.IProductManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Set the tax groups for the the products, (0-5).
 	* @param group
 	* @throws ErrorException

@@ -11,7 +11,18 @@ app.Products = {
     init: function () {
         $(document).on('click', '#gss_gotoproduct', app.Products.goToProduct);
         $(document).on('click', '.gss_product_saveuploadimage', app.Products.uploadBoxClick);
+        $(document).on('click', '.setupDynamicPricing', app.Products.setupDynamicPricing);
         $(document).on('change', '#gss_filterproducts', app.Products.filterProducts);
+    },
+    setupDynamicPricing: function() {
+        var ans = prompt(__f("How many different prices do you wish to use? 0 = disabled"));
+        var data = {
+            gss_view: 'gss_productwork_area',
+            gss_fragment: 'editproduct',
+            value : $(this).attr('productId'),
+            dynamicPrices : ans
+        }
+        getshop.Settings.post(data, "changeProductPriceModel");
     },
     goToProduct: function() {
         navigate('?page=' + $(this).attr('pageid'));

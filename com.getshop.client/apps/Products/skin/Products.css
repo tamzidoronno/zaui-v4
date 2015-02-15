@@ -199,3 +199,18 @@
     position: absolute;
     right: 20px;
 }
+
+.dynamicpricing input {
+    position: initial !important;
+
+}
+
+.dynamicpricing {
+    width: 917px;
+    padding-left: 40px;
+    padding-top: 15px;
+    margin-top: 15px;
+    border: solid 1px #DDD;
+    padding-bottom: 15px;
+    text-align: center;
+}

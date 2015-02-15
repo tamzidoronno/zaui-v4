@@ -447,6 +447,25 @@ public class APIProductManager {
      }
 
      /**
+     * Returns a list of products for a given searchword,
+     * if blank all products will be returned.
+     *
+     * @param searchWord
+     * @param pageSize
+     * @param page
+     * @return
+     */
+     public void setProductDynamicPrice(java.lang.String productId, int count)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("productId",new Gson().toJson(productId));
+          gs_json_object_data.args.put("count",new Gson().toJson(count));
+          gs_json_object_data.method = "setProductDynamicPrice";
+          gs_json_object_data.interfaceName = "core.productmanager.IProductManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
      * Set the tax groups for the the products, (0-5).
      * @param group
      * @throws ErrorException

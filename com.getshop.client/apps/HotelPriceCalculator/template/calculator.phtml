@@ -2,6 +2,7 @@
 /* @var $this ns_66112a2c_92c9_47c6_ae5b_bb35121e6654\HotelPriceCalculator
  */
 $roomProductIds = $this->getApi()->getHotelBookingManager()->getRoomProductIds();
+echo $this->__w("Apartment / room");
 ?>
 <select class="selectroom">
     <? 
@@ -13,12 +14,14 @@ $roomProductIds = $this->getApi()->getHotelBookingManager()->getRoomProductIds()
 <table cellspacing="0" cellpadding="0" width="100%">
     <tr>
         <td width="50%">
+            <? echo $this->__w("Check in"); ?><br>
             <span class="calcontainer">
                 <input type='text' class='date_selection_room start_date' value='<? echo date('d.m.Y'); ?>'>
                 <span class="calpicker"><i class='fa fa-calendar'></i></span>
             </span>
         </td>
         <td width="50%" style="text-align:right;">
+            <? echo $this->__w("Check out"); ?><br>
             <span class="calcontainer">
                 <input type='text' class='date_selection_room end_date' value='<? echo date('d.m.Y', time() + 86400); ?>'>
                 <span class="calpicker"><i class='fa fa-calendar'></i></span>

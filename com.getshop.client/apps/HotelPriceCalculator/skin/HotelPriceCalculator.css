@@ -1,0 +1,5 @@
+.HotelPriceCalculator .date_selection_room { width: 100px; }
+.HotelPriceCalculator .selectroom { width: 100%; }
+.HotelPriceCalculator .calpicker { width:20px;display:inline-block;text-align:center; position:absolute; right: 0px; top: 0px; }
+.HotelPriceCalculator .calcontainer { position: relative; }
+.HotelPriceCalculator .calpicker { cursor:pointer; }

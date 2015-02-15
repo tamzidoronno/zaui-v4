@@ -20,6 +20,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import jdk.nashorn.internal.runtime.regexp.joni.Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -422,7 +423,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
         
         long diff = (endDate-startDate)/1000/86400;
-        if(diff > 14) {
+        if(diff > settings.longTermRentalDays) {
             allRoomsToBook.addAll(longTerm);
             allRoomsToBook.addAll(shortTerm);
         } else {

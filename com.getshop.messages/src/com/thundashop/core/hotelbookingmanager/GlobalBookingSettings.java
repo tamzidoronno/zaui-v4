@@ -13,4 +13,5 @@ public class GlobalBookingSettings extends DataCommon {
     public Integer parkingSpots = 0;
     public String extraBookingInformation = "";
     public String summaryPage = "";
+    public Integer longTermRentalDays = 30;
 }

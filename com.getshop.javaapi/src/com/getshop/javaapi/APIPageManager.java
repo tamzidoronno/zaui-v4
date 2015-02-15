@@ -134,6 +134,25 @@ public class APIPageManager {
      }
 
      /**
+     * Add an cell to an specific earea.
+     * @param pageId
+     * @param incell
+     * @param beforecell
+     * @param direction
+     * @param area header/footer/body if nothing set it will default to body.
+     * @return
+     * @throws ErrorException
+     */
+     public void createHeaderFooter(java.lang.String type)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("type",new Gson().toJson(type));
+          gs_json_object_data.method = "createHeaderFooter";
+          gs_json_object_data.interfaceName = "core.pagemanager.IPageManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
      * Create a new row to add application areas to for a given page.
      * @param pageId
      * @return

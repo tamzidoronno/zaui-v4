@@ -53,16 +53,16 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        Application mailchimp = createSettings("EmbedCode",
-                "78dcce17-a1c5-4368-94e9-948788235c4e",
+        Application priceCalc = createSettings("HotelPriceCalculator",
+                "66112a2c-92c9-47c6-ae5b-bb35121e6654",
                 allowed2,
                 "",
                 Application.Type.Webshop, false);
-        mailchimp.isPublic = true;
-        mailchimp.isFrontend = true;
-        mailchimp.moduleId = "cms";
+        priceCalc.isPublic = true;
+        priceCalc.isFrontend = true;
+        priceCalc.moduleId = "WebShop";
 //        
-        apps.add(mailchimp);
+        apps.add(priceCalc);
         
 //        netAxept.moduleId = "WebShop";
 //        netAxept.activeAppOnModuleActivation = false;

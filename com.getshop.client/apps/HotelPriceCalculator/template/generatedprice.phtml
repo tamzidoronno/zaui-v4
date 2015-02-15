@@ -1,0 +1,35 @@
+<?
+    $product = $this->getApi()->getProductManager()->getProduct($_POST['data']['product']);
+    $start = $_POST['data']['start'];
+    $end = $_POST['data']['end'];
+    $days = (strtotime($end) - strtotime($start)) / 86400;
+    $price = 0;
+    $discount = 0;
+?>
+<table>
+    <tr>
+        <td><? echo $this->__w("Check in"); ?></td>
+        <td><? echo $start; ?></td>
+    </tr>
+    <tr>
+        <td><? echo $this->__w("Check out"); ?></td>
+        <td><? echo $end; ?></td>
+    </tr>
+    <tr>
+        <td><? echo $this->__w("Room"); ?></td>
+        <td><? echo $product->name; ?></td>
+    </tr>
+    <tr>
+        <td><? echo $this->__w("Days"); ?></td>
+        <td><? echo $days; ?></td>
+    </tr>
+    <tr>
+        <td><? echo $this->__w("Price"); ?></td>
+        <td><? echo $price; ?></td>
+    </tr>
+    <tr>
+        <td><? echo $this->__w("Discount"); ?></td>
+        <td><? echo $discount; ?></td>
+    </tr>
+</table>
+<a class='tryagain'><? echo $this->__w("Try again"); ?></a>

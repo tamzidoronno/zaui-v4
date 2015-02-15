@@ -3,6 +3,9 @@ getshop.photoswipe = {
         $(document).on('click','.gsgallery',getshop.photoswipe.loadGallery);
     },
     loadGallery: function () {
+        if(!$('.pswp').is(':visible')) {
+            $('.pswp').show();
+        }
         var pswpElement = document.querySelectorAll('.pswp')[0];
         var items = [];
         var thumbnail = $(this);

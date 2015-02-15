@@ -33,6 +33,9 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public double price;
     @Transient
     public double discountedPrice;
+    
+    public boolean progressivePriceModel = false;
+    
     public List<ProductDynamicPrice> prices = new ArrayList();
     public double campaign_price;
     public Double original_price;

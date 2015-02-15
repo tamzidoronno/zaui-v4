@@ -214,16 +214,18 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     public void finalizeCart(Cart cart) throws ErrorException {
         for (CartItem item : cart.getItems()) {
+            Product product = item.getProduct();
             double price = productManager.getPrice(item.getProduct().id, item.getVariations());
-            item.getProduct().price = price;
+            product.price = price;
             
-            if (item.getProduct().prices != null && item.getProduct().prices.size() > 0) {
-                for (ProductDynamicPrice iprice : item.getProduct().prices) {
-                    int count = item.getCount();
-                    if (count >= iprice.from && count < iprice.to ) {
-                        item.getProduct().price = iprice.price;
-                    }
+            if (product.prices != null && product.prices.size() > 0) {
+                if (product.progressivePriceModel) {
+                    product.price = getPriceBasedOnProgressiveModel(item);
+                } else {
+                    product.price = getPriceBasedOnCount(item);
                 }
+                
+                product.original_price = productManager.getPrice(product.id, item.getVariations());
             }
         }
     }
@@ -717,5 +719,37 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         incrementingOrderId = 100000;
         orders.clear();
+    }
+
+    private double getPriceBasedOnProgressiveModel(CartItem item) {
+        double totalPrice = 0;
+        Product product = item.getProduct();
+        for (int i=1; i<=item.getCount(); i++) {
+            boolean found = false;
+            for (ProductDynamicPrice iprice : product.prices) {
+                if (i >= iprice.from && i <= iprice.to ) {
+                     totalPrice += iprice.price;
+                     found = true;
+                }
+            }
+            
+            if (!found) {
+                totalPrice += productManager.getPrice(product.id, item.getVariations());
+            }
+        }
+        
+        return totalPrice / (double)item.getCount();
+    }
+    
+    private double getPriceBasedOnCount(CartItem item) {
+        Product product = item.getProduct();
+        for (ProductDynamicPrice iprice : product.prices) {
+            int count = item.getCount();
+            if (count >= iprice.from && count <= iprice.to ) {
+                 return iprice.price;
+            }
+        }
+        
+        return productManager.getPrice(item.getProduct().id, item.getVariations());
     }
 }

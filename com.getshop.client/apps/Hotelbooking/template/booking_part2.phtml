@@ -5,7 +5,6 @@ $selectRoomText = $this->__w("Select a room");
 $priceText = $this->__w("PRICE PER NIGHT");
 $selectRoomButton = $this->__w("SELECT ROOM");
 $headingtext = $this->__w("You have selected the following duration for your stay");
-
 ?>
 <div class="top_row_container">
     <div class='title'><h1><? echo $headingtext; ?></h1></div>
@@ -125,9 +124,18 @@ $headingtext = $this->__w("You have selected the following duration for your sta
     foreach ($products as $product) {
         $selectedclass = "";
         $avroom = $this->getNumberOfAvailableRooms($product->id);
+        $avroomHandicap = $this->getNumberOfAvailableRooms($product->id, true);
         if ($product->id === $this->getProduct()->id) {
             $selectedclass = "selected";
         }
+        
+        if($avroomHandicap == 1) {
+            $handicapText = $this->__w("{room} room is fitted for handicap.");
+        } else {
+            $handicapText = $this->__w("{room} rooms are fitted for handicap.");
+        }
+        $handicapText = str_replace("{room}", $avroomHandicap, $handicapText);
+        
         $disabled = "";
         if ($avroom <= 0) {
             $selectedclass .= " disabled";
@@ -139,7 +147,7 @@ $headingtext = $this->__w("You have selected the following duration for your sta
         /* @var $product core_productmanager_data_Product */
         echo "<span class='firstbox selection_box' productid='" . $product->id . "'>";
         if (sizeof($images) > 0 && $this->getDisplayRoomThumbnail()) {
-            echo '<a href="displayImage.php?id=' . $images[0] . '" data-lightbox="' . $product->id . '" data-title=""><img class="imagepreview" src="displayImage.php?id=' . $images[0] . '"></a>';
+            echo '<span href="displayImage.php?id=' . $images[0] . '" data-lightbox="' . $product->id . '" data-title=""><img class="imagepreview" src="displayImage.php?id=' . $images[0] . '"></span>';
             foreach ($images as $index => $image) {
                 if ($index == 0) {
                     continue;
@@ -156,10 +164,10 @@ $headingtext = $this->__w("You have selected the following duration for your sta
         echo "</span>";
 
         echo "<span class='secondbox selection_box'>";
-        if ($this->getServiceType() == "hotel") {
-            echo "<div><i class='fa fa-user'></i></div>";
-            echo "<div class='personalcount'>2x</div>";
-        }
+        
+        echo "<div><i class='fa fa-user'></i></div>";
+        echo "<div class='personalcount'>2x</div>";
+        
         echo "</span>";
         if($product->price != 0) {
             echo "<span class='price_box'><span class='price_text'>" . $product->price . ",-";
@@ -182,6 +190,10 @@ $headingtext = $this->__w("You have selected the following duration for your sta
         } else {
             echo " " . $this->__w("available room");
         }
+        if($avroomHandicap) {
+            echo ", <i class='fa fa-wheelchair' title='".$handicapText."'></i> " . $handicapText;
+        }
+        
         echo "</span>";
         echo "</div>";
     }
@@ -195,9 +207,9 @@ $headingtext = $this->__w("You have selected the following duration for your sta
         <? echo $this->__w("Included in all rooms:"); ?> <i class="fa fa-wifi"></i> WI-FI
     </div>
     </div>
-            <div class="to_checkout">
-                <a href='?page=<? echo $this->getConfig()->summaryPage; ?>&subpage=summary'><div class="continue_to_cart_button"><? echo $this->__w("CONTINUE"); ?></div></a>
-            </div>
+        <div class="to_checkout">
+            <a href='?page=<? echo $this->getConfig()->summaryPage; ?>&subpage=summary'><div class="continue_to_cart_button"><? echo $this->__w("CONTINUE"); ?></div></a>
+        </div>
         <? } ?>
     <? } ?>
 </div>

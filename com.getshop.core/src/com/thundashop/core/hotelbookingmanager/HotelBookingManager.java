@@ -66,10 +66,15 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 BookingReference reference = (BookingReference) dbobj;
                 bookingReferences.put(reference.bookingReference, reference);
             }
-            
-            
             if (dbobj instanceof ArxSettings) {
                 arxSettings = (ArxSettings) dbobj;
+            }            
+            if (dbobj instanceof GlobalBookingSettings) {
+                if(settings.id != null && !settings.id.isEmpty()) {
+                    deleteObject(dbobj);
+                } else {
+                    settings = (GlobalBookingSettings) dbobj;
+                }
             }            
         }
     }
@@ -351,7 +356,6 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Override
     public void setBookingConfiguration(GlobalBookingSettings settings) throws ErrorException {
-        settings.storeId = storeId;
         this.settings = settings;
         saveObject(settings);
     }

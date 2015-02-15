@@ -31,7 +31,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function setConfig() {
-        $settings = new \core_hotelbookingmanager_GlobalBookingSettings();
+        $settings = $this->getApi()->getHotelBookingManager()->getBookingConfiguration();
         $settings->name = $_POST['data']['name'];
         $settings->type = $_POST['data']['type'];
         $settings->minRentalDays = $_POST['data']['rental_days'];
@@ -124,10 +124,13 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return "left";
     }
 
-    function getNumberOfAvailableRooms($type) {
+    function getNumberOfAvailableRooms($type, $needHandicap=false) {
         $product = $this->getProduct();
         $additonal = new \core_hotelbookingmanager_AdditionalBookingInformation();
         $additonal->needHandicap = $this->getNeedHandicap();
+        if($needHandicap) {
+            $additonal->needHandicap = true;
+        }
 
         return $this->getApi()->getHotelBookingManager()->checkAvailable($this->getStart(), $this->getEnd(), $type, $additonal);
     }

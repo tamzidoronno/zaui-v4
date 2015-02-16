@@ -13,7 +13,7 @@ App = {
     token: "",
     firstConnected: false,
     numberOfMonthToShowInCalendar: 6,
-    lang: 'no',
+    lang: 'se',
     start: function () {
         this.setLanguageMode();
         this.getshopApi = new GetShopApiWebSocket(this.address);
@@ -90,15 +90,20 @@ App = {
             'Kobler til server': 'Ansluter till server',
             'Laster data': 'Laddar',
             'Kalenderfilter': 'Kalenderfilter',
+            'Vi holder dette kurset på følgende datoer': 'Följande tillfällen är tillgängliga',
             'Det finnes ikke noe kurstilbud lengre tilbake i tid.': 'Det finns inga tidigare kurstillfällen',
             'For å se kalenderen lengre fram i tid, vennligst benytt websiden.': 'För att se kurskalendern längre fram i  tiden, använd hemsidan.',
             'Velg sted for filtrering på kalenderen.': 'Välj ort för att filtrera kalendern.',
             'Ledige plasser på valgt kurs': 'Lediga platser på vald kurs',
             'Sett meg på venteliste': 'Sätt mig på väntelista',
             'Meld på': 'Anmäl',
+            'Deltakers navn': 'Deltagarens namn',
+            'Ingen tilgjengelige kurs': 'Det finns inga tillgängliga tillfällen ',
             'Ledige plasser': 'Lediga platser',
             'Mer informasjon': 'Mer info',
             'Påmelding venteliste': 'Anmälan väntelista',
+            'E-post deltaker': 'Deltagarens e-post',
+            'E-post teknisk leder': 'Verkstadens e-post',
             'Fjern filter': 'Rensa filter',
             'Du har ikke oppgitt et gyldig org nr, det må være 9 tegn, du har oppgitt': 'Du har inte fyllt ett giltigt org.nr, 10 tecken krävs. Du har angett',
             'Dag': 'Dag',
@@ -133,6 +138,7 @@ App = {
             'Påmelding': 'Anmälan',
             'Informasjon': 'Information',
             'Tilbake': 'Tillbaka',
+            'Kurs i din region': 'Kurslista efter avstånd',
             'Velg sted': 'Välj plats',
             'Forrige': 'Föregående',
             'Neste': 'Nästa',
@@ -155,6 +161,15 @@ App = {
             'Fre': 'Fre',
             'Lør': 'Lör',
             'Søn': 'Sön',
+            'Søk' : 'Sök',
+            'Firmanavn': 'Orgnr/Företag',
+            'Kursliste etter avstand' : 'Kurslista sorterad utifrån avstånd till din position',
+            
+            'Leter etter gps signaler, vennligst vent.': 'Vänligen vänta, söker GPS-position',
+            'Klarte ikke å finne et GPS signal, kontroller at appen har tilgang til GPSen.': 'Kan inte finna GPS-position, kontrollera att appen har tillgång till GPS-position i Inställningar',
+            'Fant ikke din region, trykk her for å prøve igjen': 'Hittar inget i ditt område, klicka här för att göra ny sökning',
+            'Trykk på selskapet under for å velge det': 'Klicka på rätt företag i listan nedan',
+            'Skriv inn ditt firmanavn og trykk på søk, da vil resultatet vises her og du kan velge selskapet du tilhører.': 'Hitta dit företag genom att fylla i hela org.nr i fältet ovan. I vissa fall går det även bra att söka på företagsnamn'
         }
 
         // No is default language
@@ -255,6 +270,7 @@ App = {
         });
         
         entryContainer.append(availableMark);
+        
         return entryContainer;
     },
     hideOtherEvents: function (entry, pageId) {
@@ -832,6 +848,23 @@ App = {
 
     },
     
+    getDistanceFromLatLonInKm: function(lat1,lon1,lat2,lon2) {
+        var R = 6371;
+        var dLat = App.deg2rad(lat2-lat1); 
+        var dLon = App.deg2rad(lon2-lon1); 
+        var a = 
+            Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(App.deg2rad(lat1)) * Math.cos(App.deg2rad(lat2)) * 
+            Math.sin(dLon/2) * Math.sin(dLon/2); 
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+        var d = R * c; 
+        return d;
+    },
+
+    deg2rad: function(deg) {
+        return deg * (Math.PI/180);
+    },
+
     findRegions: function (lat, alt) {
         var data = {
             x: (lat*100000),
@@ -848,21 +881,77 @@ App = {
             $('#regions').find('.region_failed').hide();
             $('#regions').find('.regionas_page_content').show();
             $('#regions').find('.regionname').html(location.name);
+            if (App.lang == "se") {
+                $('#regions').find('.kurslocationheader').html(App.translateText("Kursliste etter avstand"));
+            }
             $('#regiondata').html("");
             var monthName = "";
+            var distance = "";
+            
+            if (App.lang == "se") 
+                location = App.sortLocationByDistance(location, lat, alt);
+            
             for ( var i in location.entries) {
                 var entry = location.entries[i];
-                var currentMonthName = App.getNameForMonth(entry.month);
-                if (currentMonthName !== monthName) {
-                    $('#regiondata').append("<div class='gps_month_header' style='monthName'>"+currentMonthName+" - " + entry.year + " </div>");
-                    monthName = currentMonthName;
+                
+                if (App.lang == "no") {
+                    var currentMonthName = App.getNameForMonth(entry.month);
+                    if (currentMonthName !== monthName) {
+                        $('#regiondata').append("<div class='gps_month_header' style='monthName'>"+currentMonthName+" - " + entry.year + " </div>");
+                        monthName = currentMonthName;
+                    }
                 }
+                
+                if (App.lang == "se") {
+                    var currentDistance = App.getDistanceFromLatLonInKm(lat, alt, entry.locationObject.lat, entry.locationObject.lon);
+                    if (currentDistance !== distance) {
+                        distance = currentDistance;
+                        
+                        var printDistance = "";
+                        if (!isNaN(distance)) {
+                            printDistance =  " - " + distance.toFixed(2)+ " km";
+                        }
+                        $('#regiondata').append("<div class='gps_month_header' style='monthName'>"+ entry.locationObject.location + printDistance + " </div>");
+                    }
+                }
+                
                 var html = App.getEntryHtml(entry);
                 $('#regiondata').append(html);
             }
 
         });
     },
+    
+    sortLocationByDistance: function(location, lat, alt) {
+        location.entries.sort(function(a, b) {
+            var distanceA = App.getDistanceFromLatLonInKm(lat, alt, a.locationObject.lat, a.locationObject.lon);
+            var distanceB = App.getDistanceFromLatLonInKm(lat, alt, b.locationObject.lat, b.locationObject.lon);
+            
+            if (isNaN(distanceA)) {
+                distanceA = 999999;
+            }
+            
+            if (isNaN(distanceB)) {
+                distanceB = 999999;
+            }
+            
+            if (distanceA === distanceB) {
+                return 0;
+            }
+            
+            if (distanceA > distanceB) {
+                return 1;
+            }
+            
+            if (distanceA < distanceB) {
+                return -1;
+            }
+        });
+        
+        
+        return location;
+    },
+    
     groupChanged: function () {
         var groupId = $('#select-native-2').find(':selected').val();
 

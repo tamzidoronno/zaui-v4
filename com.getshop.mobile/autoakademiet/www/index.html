@@ -20,10 +20,11 @@ and open the template in the editor.
         <script type="text/javascript" src="js/GetShop.Page.js"></script>
         <script type="text/javascript" src="js/GetShop.ContentManager.js"></script>
         <script type="text/javascript" src="js/GetShop.ImageDisplayer.js"></script>
+        <script type="text/javascript" src="js/GetShop.CalendarEventViewer.js"></script>
         <script type="text/javascript" src="js/GetShop.YouTube.js"></script>
         <!-- End -->
 
-        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="cordova.js"></script> 
         <script type="text/javascript" src="PushNotification.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
 
@@ -52,7 +53,6 @@ and open the template in the editor.
                         <div class='menu_entry gotocalendar'><img  src="css/images/calendaricon.png"/><div class='name' translate="true">Kurs i din region</div></div>
                         <div class='menu_entry newsbutton'><img  src="css/images/twittericon.png"/><div class='name' translate="true">Nyheter</div><div class='counter'>12</div></div>
                         <div class='menu_entry gotocourses'><img  src="css/images/haticon.png"/><div class='name' translate="true">Kurs oversikt</div></div>
-                        <div class='menu_entry gotosignup'><img  src="css/images/checkicon.png"/><div class='name' translate="true">Påmelding</div></div>
                         <div class='menu_entry infobutton'><img  src="css/images/infoicon.png"/><div class='name' translate="true">Informasjon</div></div>
                     </div>
                 </div>
@@ -99,7 +99,7 @@ and open the template in the editor.
                 <div class="gps_failed" translate="true">Klarte ikke å finne et GPS signal, kontroller at appen har tilgang til GPSen.</div>
                 <div class="region_failed" translate="true">Fant ikke din region, trykk her for å prøve igjen</div>
                 <div class="regionas_page_content">
-                    <h2 translate="true">Kurs i <span class="regionname"></span></h2>
+                    <h2 class='kurslocationheader' translate="true">Kurs i <span class="regionname"></span></h2>
                     <div id="regiondata">
 
                     </div>
@@ -212,17 +212,15 @@ and open the template in the editor.
 
                         <div class="availablepositions_course_selected"></div>
                         <br>
-                        <a id="next_signon" href="#" data-role="button"><span>Neste</span></a>
+                        <a id="next_signon" href="#" data-role="button"><span translate="true">Neste</span></a>
                     </div>
                     <div class="signon_find_company">
-                        <label for="companyname" translate="true">Firmanavn.</label>
+                        <label for="companyname" translate="true">Firmanavn</label>
                         <input type="text" data-clear-btn="true" name="text-6" id="companyname" value="" >
                         
-                        <a id="searchcompany" href="#" data-role="button" style="margin-bottom: 20px;"><span>Søk</span></a>
+                        <a id="searchcompany" href="#" data-role="button" style="margin-bottom: 20px;"><span translate='true'>Søk</span></a>
                         
-                        <div class="searchresult" translate="true">
-                            Skriv inn ditt firmanavn og trykk på søk, da vil resultatet vises her og du kan velge selskapet du tilhører.
-                        </div>
+                        <div class="searchresult" translate="true">Skriv inn ditt firmanavn og trykk på søk, da vil resultatet vises her og du kan velge selskapet du tilhører.</div>
                         <!--<a id="signon" href="#" data-role="button"><span>Meld på</span></a>-->
                     </div>
                 </form>

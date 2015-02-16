@@ -67,6 +67,7 @@ GetShop.Page.prototype = {
             this.loadContentManager(appInstance, dom);
             this.loadImageDisplayer(appInstance, dom);
             this.loadYouTube(appInstance, dom);
+            this.loadCalendarEventViewer(appInstance, dom);
         }
     },
             
@@ -97,6 +98,18 @@ GetShop.Page.prototype = {
                 dom.html(content);
             };
             youTube.load();
+        }
+    },
+            
+    loadCalendarEventViewer: function(appInstance, dom) {
+        if (appInstance.appSettingsId === "ab5378d0-9d6c-11e3-a5e2-0800200c9a66") {
+            var calendarEventViewer = new GetShop.CalendarEventViewer(this.api, appInstance, this);
+            calendarEventViewer.ready = function(content) {
+                console.log("Loaded: " + content);
+                dom.html(content);
+            };
+            calendarEventViewer.load();
+            
         }
     },
             

@@ -81,6 +81,7 @@ if (count($day->entries) == 0) {
                     <? } ?>
                     <div class="entry" entryid="<?php echo $entry->entryId;?>"><a href='scripts/<? echo $courceScript; ?>?entry=<? echo $entry->entryId; ?>'><?php echo $this->__f("Print diploma"); ?></a></div>
                     <div class="entry addusertoevent" entryid="<?php echo $entry->entryId;?>"><? echo $this->__f("Add user"); ?></div>
+                    <div class="entry showCheckList" entryid="<?php echo $entry->entryId;?>"><? echo $this->__f("Checklist"); ?></div>
                 </div>
             </div>
         <?php } ?>

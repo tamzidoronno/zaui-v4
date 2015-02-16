@@ -249,6 +249,8 @@ class Calendar extends MarketingApplication implements Application {
         $location->emailAddress = $_POST['data']['locationEmail'];
         $location->mobile = $_POST['data']['locationCellPhone'];
         $location->other = $_POST['data']['otherinformation'];
+        $location->lon = $_POST['data']['lon'];
+        $location->lat = $_POST['data']['lat'];
         
         
         $groups = $this->getApi()->getUserManager()->getAllGroups();
@@ -869,6 +871,17 @@ class Calendar extends MarketingApplication implements Application {
         $this->getApi()->getCalendarManager()->saveLocation($location);
         
         $this->setConfigurationSetting("comment_".$location->id, $textComments);
+    }
+    
+    public function showCheckList() {
+        $this->includefile("checklist");
+    }
+    
+    public function saveCheckList() {
+        for ($i=1; $i <= 8; $i++) {
+            $listName = "checklist_$i";
+            $this->setConfigurationSetting($listName.$_POST['data']['entryId'], $_POST['data'][$listName]);
+        }
     }
 }
 ?>

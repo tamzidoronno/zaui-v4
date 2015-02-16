@@ -1272,8 +1272,33 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     @Override
     public LocationArea getEntriesByPosition(LocationPoint pointFromDevice) throws ErrorException {
         savePoint(pointFromDevice);
-        LocationArea foundArea = null;
         
+        PageManager pageManager = getManager(PageManager.class);
+        HashMap<String, Setting> settings = pageManager.getSecuredSettingsInternal("Settings");
+        if (settings.get("promeisterAppBasedOnDistanceInsteadOfRegion") != null && settings.get("promeisterAppBasedOnDistanceInsteadOfRegion").value.equals("true")) {
+            return getEntriesBasedOnDistance(pointFromDevice);
+        } else {
+            return getRegionsList(pointFromDevice);
+        }
+    }
+    
+    private LocationArea getEntriesBasedOnDistance(LocationPoint pointFromDevice) throws ErrorException {
+        LocationArea area = new LocationArea();
+        area.name = "Distance";
+        for (Month month : getMonths()) {
+            for (Day day : month.days.values()) {
+                for (Entry entry : day.entries) {
+                    finalizeEntry(entry);
+                    area.entries.add(entry);
+                }
+            }
+        }
+        
+        return area;
+    }
+    
+    private LocationArea getRegionsList(LocationPoint pointFromDevice) throws ErrorException {
+        LocationArea foundArea = null;
         Point point = new Point((int)pointFromDevice.x, (int)pointFromDevice.y);
         for (LocationArea area : areas.values()) {
             if (area.contains(point)) {

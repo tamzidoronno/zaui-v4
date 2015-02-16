@@ -577,6 +577,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
     }
 
     private void remindUserInternal(boolean byEmail, boolean bySMS, List<String> users, String text, String subject, String eventId, String attachment, String filename) throws ErrorException {
+        
         ReminderHistory smsHistory = createReminderHistory(text, subject, eventId, byEmail);
         ReminderHistory emailHistory = createReminderHistory(text, subject, eventId, byEmail);
 
@@ -585,14 +586,17 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
         for (String userId : users) {
             UserManager usrmgr = getManager(UserManager.class);
             User user = usrmgr.getUserById(userId);
-
+            
+            Entry entry = getEntry(eventId);
+            String mutatedText = text;
+            mutatedText = mutateText("", mutatedText, entry, user);
             if (byEmail) {
                 if (files != null) {
-                    mailFactory.sendWithAttachments(getFromAddress(null), user.emailAddress, subject, text, files, true);
-                    mailFactory.sendWithAttachments(getFromAddress(null), user.emailAddressToInvoice, subject, text, files, true);
+                    mailFactory.sendWithAttachments(getFromAddress(null), user.emailAddress, subject, mutatedText, files, true);
+                    mailFactory.sendWithAttachments(getFromAddress(null), user.emailAddressToInvoice, subject, mutatedText, files, true);
                 } else {
-                    mailFactory.send(getFromAddress(null), user.emailAddress, subject, text);
-                    mailFactory.send(getFromAddress(null), user.emailAddressToInvoice, subject, text);
+                    mailFactory.send(getFromAddress(null), user.emailAddress, subject, mutatedText);
+                    mailFactory.send(getFromAddress(null), user.emailAddressToInvoice, subject, mutatedText);
                 }
 
                 emailHistory.users.add(user);
@@ -601,7 +605,7 @@ public class CalendarManager extends ManagerBase implements ICalendarManager {
             if (bySMS) {
                 HashMap<String, Setting> settings = getSettings("Booking");
                 String from = settings.get("smsfrom").value;
-                String message = text;
+                String message = mutatedText;
                 String phoneNumber = user.cellPhone;
                 smsFactory.send(from, phoneNumber, message);
                 smsHistory.users.add(user);

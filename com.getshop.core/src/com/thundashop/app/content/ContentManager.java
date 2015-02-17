@@ -66,6 +66,7 @@ public class ContentManager extends ManagerBase implements IContentManager {
     @Override
     public String getContent(String id) throws ErrorException {
         ContentData object = getContentData(id);
+        updateTranslation(object, true);
         return object.content;
     }
 

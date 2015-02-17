@@ -122,6 +122,7 @@ public class StoreHandler {
         try {
             ManagerBase manager = getManager(aClass);
             Object result = executeMethod.invoke(manager, argObjects);
+            manager.updateTranslation(result, true);
             return result;
         } catch (IllegalAccessException ex) {
             throw new ErrorException(84);

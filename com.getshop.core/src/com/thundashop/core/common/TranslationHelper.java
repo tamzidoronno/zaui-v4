@@ -1,5 +1,6 @@
 package com.thundashop.core.common;
 
+import com.thundashop.app.contentmanager.data.ContentData;
 import com.thundashop.core.productmanager.data.Product;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -44,6 +45,7 @@ public class TranslationHelper {
         if(data == null || !data.getClass().getCanonicalName().startsWith("com.thundashop")) {
             return;
         }
+        
         
         try {
             Method method = data.getClass().getMethod("updateTranslation", String.class, String.class, boolean.class);

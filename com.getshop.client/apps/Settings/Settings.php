@@ -23,6 +23,19 @@ class Settings extends \SystemApplication implements \Application {
     public function render() {
         
     }
+    
+    public function addLanguage() {
+        
+        $languages = $this->getConfigurationSetting("languages");
+        if (!$languages) {
+            $languages = [];
+        } else {
+            $languages = json_decode($languages);
+        }
+        $languages[] = $_POST['value'];
+        $languages = json_encode($languages);
+        $this->setConfigurationSetting("languages", $languages);
+    }
 
     public function renderDashBoardWidget() {
         $this->includefile("dashboardwidget");
@@ -30,6 +43,22 @@ class Settings extends \SystemApplication implements \Application {
 
     public function renderConfig() {
         $this->includefile("storesettings");
+    }
+    
+    public function removeLanguage() {
+        $languages = $this->getConfigurationSetting("languages");
+        $saveLanagues =  [];
+        if ($languages) {
+            $languages = json_decode($languages);
+            foreach ($languages as $lang) {
+                if ($lang != $_POST['value']) {
+                    $saveLanagues[] = $lang;
+                }
+            }
+        }
+        
+        $languages = json_encode($saveLanagues);
+        $this->setConfigurationSetting("languages", $languages);
     }
 
     public function getMainEmailAddress() {

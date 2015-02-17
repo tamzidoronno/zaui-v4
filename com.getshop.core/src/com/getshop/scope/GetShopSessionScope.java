@@ -34,6 +34,7 @@ public class GetShopSessionScope implements Scope {
             throw new NullPointerException("There is scoped bean created without being in a context of a store, object: " + name);
         }
         String nameWithStoreId = name + "_" + storeId;
+        
         if (!objectMap.containsKey(nameWithStoreId)) {
             try {
                 Object object = objectFactory.getObject();
@@ -50,6 +51,16 @@ public class GetShopSessionScope implements Scope {
 
         return objectMap.get(nameWithStoreId);
 
+    }
+    
+    /**
+     * There must be a very good reason for using this function.
+     * @param name
+     * @param storeId
+     * @return 
+     */
+    public Object getManagerBasedOnNameAndStoreId(String name, String storeId) {
+        return objectMap.get(name + "_" + storeId);
     }
 
     public Object remove(String name) {

@@ -737,5 +737,23 @@ class Factory extends FactoryBase {
         }
     }
 
+    public function getLanguageCodes() {
+        if (!isset($this->languageCodes)) {
+            $app = $this->getApi()->getStoreApplicationPool()->getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
+            $instance = $this->applicationPool->createInstace($app);
+            $this->languageCodes = [];
+            $codesInJson = $instance->getConfigurationSetting("languages");
+            if ($codesInJson) {
+                $this->languageCodes = json_decode($codesInJson);
+            }
+        }
+
+        if (!$this->languageCodes) {
+            $this->languageCodes = [];
+        }
+
+        return $this->languageCodes;
+    }
+
 }
 ?>

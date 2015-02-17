@@ -5,9 +5,12 @@ As soon as this action is taken there will be no more renewed invoices, all invo
 Canceled;-;
 Clickatell;-;
 Created;-;
+Dynamic pricing;-;
 Edit code;-;
 Edit contact form;-;
 Edit menu;-;
+From;-;
+How many different prices do you wish to use? 0 = disabled;-;
 Link to your cancelled you page.;-;
 Link to your payment failed page.;-;
 Link to your thank you page.;-;
@@ -17,12 +20,14 @@ Order status;-;
 Payment completed;-;
 Payment failed / betaling feilet.;-;
 Please select the date you wish to stop this reference;-;
+Progressive pricemodel?;-;
 Sent;-;
 Stock Quantity;-;
 Tax group;-;
 Test mode;-;
 The Merchant-ID is provided by NetAxept, please contact us for more information.;-;
 The current stock quantity.;-;
+To;-;
 Waiting for payment;-;
 
 

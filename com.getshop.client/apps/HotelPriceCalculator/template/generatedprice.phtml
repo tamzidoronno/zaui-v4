@@ -1,10 +1,21 @@
 <?
+/* @var $this \ns_66112a2c_92c9_47c6_ae5b_bb35121e6654\HotelPriceCalculator */
+
     $product = $this->getApi()->getProductManager()->getProduct($_POST['data']['product']);
     $start = $_POST['data']['start'];
     $end = $_POST['data']['end'];
-    $days = (strtotime($end) - strtotime($start)) / 86400;
-    $price = 0;
-    $discount = 0;
+    $datetime1 = new DateTime($start);
+    $datetime2 = new DateTime($end);
+    $difference = $datetime1->diff($datetime2);
+    $days = $difference->days;
+
+    $mgr = $this->getApi()->getCartManager();
+    $mgr->clear();
+    $mgr->addProduct($product->id, $days, []);
+    $cart = $mgr->getCart();
+    $price = $cart->items[0]->product->price * $days;
+    $origprice = $cart->items[0]->product->original_price * $days;
+    $discount = $price - $origprice;
 ?>
 <table>
     <tr>
@@ -24,12 +35,16 @@
         <td><? echo $days; ?></td>
     </tr>
     <tr>
-        <td><? echo $this->__w("Price"); ?></td>
-        <td><? echo $price; ?></td>
+        <td><? echo $this->__w("Original price"); ?></td>
+        <td><? echo $origprice; ?></td>
     </tr>
     <tr>
         <td><? echo $this->__w("Discount"); ?></td>
         <td><? echo $discount; ?></td>
+    </tr>
+    <tr>
+        <td><? echo $this->__w("Discounted price"); ?></td>
+        <td><? echo $price; ?></td>
     </tr>
 </table>
 <a class='tryagain'><? echo $this->__w("Try again"); ?></a>

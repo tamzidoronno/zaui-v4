@@ -327,7 +327,7 @@ class Netaxept extends \PaymentApplication implements \Application {
             } else {
                 $item->VAT = 1;
             }
-            $item->Amount = (int) (($product->price * $cartItem->count * $item->VAT) * 100);
+            $item->Amount = (int) (($product->price * 10) * 100);
             $item->Handling = true;
             $item->IsVatIncluded = true;
             $item->Quantity = $cartItem->count;

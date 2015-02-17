@@ -1,13 +1,35 @@
 <div style="padding: 30px;">
-    <br/><input type="checkbox" id="checklist_1" <? echo $this->getConfigurationSetting("checklist_1".$_POST['data']['entryId']) == "true" ? "checked='checked'" : ""; ?> /> Lokal bokad
-    <br/><input type="checkbox" id="checklist_2" <? echo $this->getConfigurationSetting("checklist_2".$_POST['data']['entryId']) == "true" ? "checked='checked'" : ""; ?> /> Ev elearning
-    <br/><input type="checkbox" id="checklist_3" <? echo $this->getConfigurationSetting("checklist_3".$_POST['data']['entryId']) == "true" ? "checked='checked'" : ""; ?> /> Kursmaterial beställt
-    <br/><input type="checkbox" id="checklist_4" <? echo $this->getConfigurationSetting("checklist_4".$_POST['data']['entryId']) == "true" ? "checked='checked'" : ""; ?> /> Pennor
-    <br/><input type="checkbox" id="checklist_5" <? echo $this->getConfigurationSetting("checklist_5".$_POST['data']['entryId']) == "true" ? "checked='checked'" : ""; ?> /> Förevisningsmateriel/datorer
-    <br/><input type="checkbox" id="checklist_6" <? echo $this->getConfigurationSetting("checklist_6".$_POST['data']['entryId']) == "true" ? "checked='checked'" : ""; ?> /> Praktikobjekt
-    <br/><input type="checkbox" id="checklist_7" <? echo $this->getConfigurationSetting("checklist_7".$_POST['data']['entryId']) == "true" ? "checked='checked'" : ""; ?> /> Fika/lunch
-    <br/><input type="checkbox" id="checklist_8" <? echo $this->getConfigurationSetting("checklist_8".$_POST['data']['entryId']) == "true" ? "checked='checked'" : ""; ?> /> Kursintyg
+    <br/><input type="checkbox" id="checklist_1" <? echo $this->getConfigurationSetting("checklist_1".$_POST['data']['entryId']) == "true" ? "checked='checked'" : ""; ?> /> <? echo $this->__f("Room booked"); ?>
+    <br/><input type="checkbox" id="checklist_2" <? echo $this->getConfigurationSetting("checklist_2".$_POST['data']['entryId']) == "true" ? "checked='checked'" : ""; ?> /> <? echo $this->__f("Ev elearning"); ?>
+    <br/><input type="checkbox" id="checklist_3" <? echo $this->getConfigurationSetting("checklist_3".$_POST['data']['entryId']) == "true" ? "checked='checked'" : ""; ?> /> <? echo $this->__f("Event materials ordered"); ?>
+    <br/><input type="checkbox" id="checklist_4" <? echo $this->getConfigurationSetting("checklist_4".$_POST['data']['entryId']) == "true" ? "checked='checked'" : ""; ?> /> <? echo $this->__f("Pens"); ?>
+    <br/><input type="checkbox" id="checklist_5" <? echo $this->getConfigurationSetting("checklist_5".$_POST['data']['entryId']) == "true" ? "checked='checked'" : ""; ?> /> <? echo $this->__f("Course materials / computers"); ?>
+    <br/><input type="checkbox" id="checklist_6" <? echo $this->getConfigurationSetting("checklist_6".$_POST['data']['entryId']) == "true" ? "checked='checked'" : ""; ?> /> <? echo $this->__f("Learningobject"); ?>
+    <br/><input type="checkbox" id="checklist_7" <? echo $this->getConfigurationSetting("checklist_7".$_POST['data']['entryId']) == "true" ? "checked='checked'" : ""; ?> /> <? echo $this->__f("Lunch"); ?>
+    <br/><input type="checkbox" id="checklist_8" <? echo $this->getConfigurationSetting("checklist_8".$_POST['data']['entryId']) == "true" ? "checked='checked'" : ""; ?> /> <? echo $this->__f("Coursediplom"); ?>
+    <br/><input type="checkbox" id="checklist_8" <? echo $this->getConfigurationSetting("checklist_8".$_POST['data']['entryId']) == "true" ? "checked='checked'" : ""; ?> /> <? echo $this->__f("Event holder decieded"); ?>
     <br/>
     <br/>
-    <div class="gs_button saveCheckList"  entryid='<? echo $_POST['data']['entryId']; ?>' > Save </div>
+    
+    Comment:
+    <br/><br/><textarea style='width: 930px; height: 200px;' id='checklist_comment' placeholder='Enter a comment and press save to add a comment below.'></textarea>
+    <br/><br/><div class="gs_button saveCheckList"  entryid='<? echo $_POST['data']['entryId']; ?>' > Save </div>
+    
+    <div>
+        <pre>
+        <?
+        $comments = $this->getComments($_POST['data']['entryId']);
+        if (count($comments)) {
+            foreach ($comments as $comment) {
+                echo "<div style='border: solid 1px; margin-bottom: 20px; padding: 20px;'>";
+                echo nl2br($comment->comment);
+                echo "<br>Date: ".$comment->date;
+                echo "</div>";
+            }
+        }
+        
+        ?>
+        </pre>
+    </div>
 </div>
+

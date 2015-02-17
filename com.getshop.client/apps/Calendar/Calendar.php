@@ -882,6 +882,37 @@ class Calendar extends MarketingApplication implements Application {
             $listName = "checklist_$i";
             $this->setConfigurationSetting($listName.$_POST['data']['entryId'], $_POST['data'][$listName]);
         }
+        
+        if ($_POST['data']['comment']) {
+            $comments = $this->getComments($_POST['data']['entryId']);
+            
+            $comment = new checkListComment();
+            $comment->userId = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id;
+            $comment->date = date("Y-m-d H:i:s");
+            $comment->comment = $_POST['data']['comment'];
+            $comment->commentId = uniqid();
+            
+            $comments[] = $comment;
+            
+            $json = json_encode($comments);
+            $this->setConfigurationSetting("comments_".$_POST['data']['entryId'], $json);
+        }
     }
+    
+    public function getComments($entryId) {
+        $jsonCommand = $this->getConfigurationSetting("comments_".$_POST['data']['entryId']);
+        if ($jsonCommand) {
+            return json_decode($jsonCommand);
+        }
+        
+        return [];
+    }
+}
+
+class checkListComment {
+    public $commentId;
+    public $userId;
+    public $date;
+    public $omment;
 }
 ?>

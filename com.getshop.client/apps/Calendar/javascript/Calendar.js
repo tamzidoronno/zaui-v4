@@ -108,6 +108,7 @@ Calendar = {
         $(document).on('click', '.Calendar .list_showextrainformation', Calendar.showListExtraInformation);
     },
     saveCheckList: function() {
+        var me = this;
         var data = {
             entryId : $(this).attr('entryid'),
             checklist_1 : $('#checklist_1').is(':checked'),
@@ -117,19 +118,26 @@ Calendar = {
             checklist_5 : $('#checklist_5').is(':checked'),
             checklist_6 : $('#checklist_6').is(':checked'),
             checklist_7 : $('#checklist_7').is(':checked'),
-            checklist_8 : $('#checklist_8').is(':checked')
+            checklist_8 : $('#checklist_8').is(':checked'),
+            comment : $('#checklist_comment').val()
         };
         
         var event = thundashop.Ajax.createEvent("", "saveCheckList", $(this), data);
         thundashop.Ajax.post(event, function() {
             alert('Saved');
+            Calendar.showCheckList(data.entryId, me);
         });
     },
-    showCheckList: function() {
+    showCheckList: function(entryiId, target) {
+        var me = this;
+        if (typeof(target) !== "undefined") {
+            me = target;
+        }
+        var entryId = $(this).attr('entryid') ? $(this).attr('entryid') : entryiId;
         var data = {
-            entryId : $(this).attr('entryid')
+            entryId : entryId
         };
-        var event = thundashop.Ajax.createEvent("", "showCheckList", $(this), data);
+        var event = thundashop.Ajax.createEvent("", "showCheckList", $(me), data);
         thundashop.common.showInformationBox(event, "Checklist");
     },
     showListExtraInformation: function() {

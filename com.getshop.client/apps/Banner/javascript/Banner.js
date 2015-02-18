@@ -349,9 +349,6 @@ app.Banner.Slider = {
         app.Banner.Slider.banners[id].currentImageCounter = 0;
         app.Banner.Slider.banners[id].banners = $("#" + id).find('.banner');
         app.Banner.Slider.banners[id].interval = $("#" + id).attr("interval");
-        if (app.Banner.Slider.banners[id].banners.length === 1) {
-            app.Banner.Slider.banners[id].interval = 1000000000;
-        }
         app.Banner.Slider.runner(id);
     },
 
@@ -399,7 +396,7 @@ app.Banner.Slider = {
             app.Banner.Slider.banners[id].nextImageCounter = nextImageCounter;
         }
 
-        this.startTimeout(id);
+//        this.startTimeout(id);
     },
           
     addTextToImage: function(imageContainer, config) {

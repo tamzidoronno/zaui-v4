@@ -2113,6 +2113,39 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+class InvoiceManager(object):
+  def __init__(self, communicationHelper):
+    self.communicationHelper = communicationHelper
+  def createInvoice(self, orderId):
+    args = collections.OrderedDict()
+    if isinstance(orderId,GetShopBaseClass): 
+      args["orderId"]=json.dumps(orderId.__dict__)
+    else:
+      try:
+        args["orderId"]=json.dumps(orderId)
+      except (ValueError, AttributeError):
+        args["orderId"]=orderId
+    data = EmptyClass()
+    data.args = args
+    data.method = "createInvoice"
+    data.interfaceName = "core.pdf.IInvoiceManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getBase64EncodedInvoice(self, orderId):
+    args = collections.OrderedDict()
+    if isinstance(orderId,GetShopBaseClass): 
+      args["orderId"]=json.dumps(orderId.__dict__)
+    else:
+      try:
+        args["orderId"]=json.dumps(orderId)
+      except (ValueError, AttributeError):
+        args["orderId"]=orderId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getBase64EncodedInvoice"
+    data.interfaceName = "core.pdf.IInvoiceManager"
+    return self.communicationHelper.sendMessage(data)
+
 class ListManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
@@ -2898,6 +2931,14 @@ class OrderManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getOrders"
+    data.interfaceName = "core.ordermanager.IOrderManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getOrdersNotTransferredToAccountingSystem(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getOrdersNotTransferredToAccountingSystem"
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -6327,6 +6368,7 @@ class GetShopApi(object):
     self.GetShop = GetShop(self.communicationHelper)
     self.GetShopApplicationPool = GetShopApplicationPool(self.communicationHelper)
     self.HotelBookingManager = HotelBookingManager(self.communicationHelper)
+    self.InvoiceManager = InvoiceManager(self.communicationHelper)
     self.ListManager = ListManager(self.communicationHelper)
     self.LogoManager = LogoManager(self.communicationHelper)
     self.MessageManager = MessageManager(self.communicationHelper)

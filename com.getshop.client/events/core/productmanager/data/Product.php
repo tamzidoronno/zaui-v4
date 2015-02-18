@@ -28,6 +28,9 @@ class core_productmanager_data_Product extends core_common_DataCommon  {
 	public $discountedPrice;
 
 	/** @var String */
+	public $progressivePriceModel;
+
+	/** @var String */
 	public $prices;
 
 	/** @var String */
@@ -65,6 +68,9 @@ class core_productmanager_data_Product extends core_common_DataCommon  {
 
 	/** @var String */
 	public $campaing_end_date;
+
+	/** @var String */
+	public $accountingSystemId;
 
 	/** @var String */
 	public $attributes;

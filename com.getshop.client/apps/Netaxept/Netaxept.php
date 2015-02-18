@@ -234,7 +234,7 @@ class Netaxept extends \PaymentApplication implements \Application {
         $merchid = $this->getConfigurationSetting("merchantid");
         $currency = \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::fetchCurrencyCode();;
         $orderId = $this->getOrder()->incrementOrderId;
-        $amount = $this->getAmount();
+        $amount = $this->getApi()->getOrderManager()->getTotalAmount($this->getOrder()) * 100;
 
         $Order = new Order();
         $Order->Amount = $amount; // The amount described as the lowest monetary unit, example: 100,00 NOK is noted as "10000", 9.99 USD is noted as "999".

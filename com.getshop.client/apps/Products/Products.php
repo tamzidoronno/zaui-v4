@@ -78,6 +78,7 @@ class Products extends \WebshopApplication implements \Application {
         $product->taxgroup = $_POST['taxgroup'];
         $product->stockQuantity = $_POST['stockQuantity'];
         $product->progressivePriceModel = $_POST['isProgressive'];
+        $product->accountingSystemId = $_POST['accountingSystemId'];
         
         
         foreach ($this->getApi()->getProductManager()->getProductLists() as $list) {

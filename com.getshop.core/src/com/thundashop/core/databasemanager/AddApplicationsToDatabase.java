@@ -64,6 +64,19 @@ public class AddApplicationsToDatabase {
 //        
         apps.add(priceCalc);
         
+        Application wilhelmsenHouseVisma = createSettings("WilhelmsenHouseVisma",
+                "37d409be-1207-45e8-bf3b-6465442b58d9",
+                allowed2,
+                "",
+                Application.Type.Webshop, false);
+        wilhelmsenHouseVisma.isPublic = false;
+        wilhelmsenHouseVisma.isFrontend = false;
+        wilhelmsenHouseVisma.allowedStoreIds = new ArrayList();
+        wilhelmsenHouseVisma.allowedStoreIds.add("123865ea-3232-4b3b-9136-7df23cf896c6");
+        wilhelmsenHouseVisma.moduleId = "WebShop";
+//        
+        apps.add(wilhelmsenHouseVisma);
+        
 //        netAxept.moduleId = "WebShop";
 //        netAxept.activeAppOnModuleActivation = false;
 //        netAxept.isFrontend = false;

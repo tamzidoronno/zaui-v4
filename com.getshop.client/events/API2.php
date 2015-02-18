@@ -2030,6 +2030,43 @@ class APIHotelBookingManager {
 	}
 
 }
+class APIInvoiceManager {
+
+	var $transport;
+	
+	function APIInvoiceManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function createInvoice($orderId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $data["method"] = "createInvoice";
+	     $data["interfaceName"] = "core.pdf.IInvoiceManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function getBase64EncodedInvoice($orderId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $data["method"] = "getBase64EncodedInvoice";
+	     $data["interfaceName"] = "core.pdf.IInvoiceManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+}
 class APIListManager {
 
 	var $transport;
@@ -2831,6 +2868,22 @@ class APIOrderManager {
 	     $data['args']["page"] = json_encode($this->transport->object_unset_nulls($page));
 	     $data['args']["pageSize"] = json_encode($this->transport->object_unset_nulls($pageSize));
 	     $data["method"] = "getOrders";
+	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Returns the total amount of sales for a given year. If you year is left blank you
+	* will get the total amount for all years.
+	*
+	* @param year
+	* @return List
+	*/
+
+	public function getOrdersNotTransferredToAccountingSystem() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getOrdersNotTransferredToAccountingSystem";
 	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -6180,6 +6233,12 @@ class GetShopApi {
       */
       public function getHotelBookingManager() {
            return new APIHotelBookingManager($this->transport);
+      }
+      /**
+      * @return InvoiceManager
+      */
+      public function getInvoiceManager() {
+           return new APIInvoiceManager($this->transport);
       }
       /**
       * @return ListManager

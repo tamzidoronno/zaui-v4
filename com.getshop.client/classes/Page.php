@@ -42,10 +42,21 @@ class Page {
             $editormodeclass = "gseditormode";
         }
 
+        $languages = $this->factory->getLanguageCodes();
+        if (count($languages)) {
+            $mainLangCode = $this->factory->getMainLanguage();
+            echo "<div class='gs_language_selection'>";
+            echo "<a href='?setLanguage=$mainLangCode'><div class='gs_language_code gs_lang_code_$mainLangCode'>".$mainLangCode."</div></a>";
+            foreach ($languages as $lang) {
+                echo "<a href='?setLanguage=$lang'><div class='gs_language_code gs_lang_code_$lang'>".$lang."</div></a>";
+            }
+            echo "</div>";
+        }
         
         echo "<div class='gsbody_inner $editormodeclass' pageId='" . $this->getId() . "' gspagetype='$gs_page_type'>";
         if (!$this->factory->isMobile()) {
             echo "<div class='gsarea' area='header'>";
+            
             $edited = $this->printArea($layout->areas->{'header'});
             $editingHeader = false;
             if ($edited) {

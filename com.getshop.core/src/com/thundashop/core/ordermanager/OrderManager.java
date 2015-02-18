@@ -26,7 +26,6 @@ import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 @Component
 @GetShopSession
@@ -751,5 +750,19 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         return productManager.getPrice(item.getProduct().id, item.getVariations());
+    }
+
+    @Override
+    public List<Order> getOrdersNotTransferredToAccountingSystem() {
+        List<Order> allOrders = getOrders(new ArrayList(), null, null);
+        List<Order> notTransferred = new ArrayList();
+        
+        for (Order order : allOrders) {
+            if (!order.transferredToAccountingSystem && order.status == Order.Status.PAYMENT_COMPLETED) {
+                notTransferred.add(order);
+            }
+        }
+        
+        return notTransferred;
     }
 }

@@ -39,5 +39,17 @@ class InvoicePayment extends \PaymentApplication implements \Application{
     public function renderConfig() {
         $this->includeFile("config");
     }
+    
+    public function saveSettings() {
+        $this->setConfigurationSetting("accountNumber", $_POST['accountNumber']);
+        $this->setConfigurationSetting("vatNumber", $_POST['vatNumber']);
+        $this->setConfigurationSetting("address", $_POST['address']);
+        $this->setConfigurationSetting("companyName", $_POST['companyName']);
+        $this->setConfigurationSetting("postCode", $_POST['postCode']);
+        $this->setConfigurationSetting("city", $_POST['city']);
+        $this->setConfigurationSetting("contactEmail", $_POST['contactEmail']);
+        $this->setConfigurationSetting("webAddress", $_POST['webAddress']);
+        $this->setConfigurationSetting("duedays", $_POST['duedays']);
+    }
 }
 ?>

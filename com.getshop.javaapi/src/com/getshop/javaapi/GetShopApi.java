@@ -38,6 +38,12 @@ public class GetShopApi {
            return new APIUtilManager(transport);
       }
      /**
+      * @return APIInvoiceManager
+      */
+      public APIInvoiceManager getInvoiceManager() {
+           return new APIInvoiceManager(transport);
+      }
+     /**
       * @return APIUserManager
       */
       public APIUserManager getUserManager() {

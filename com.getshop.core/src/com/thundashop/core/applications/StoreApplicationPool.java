@@ -22,7 +22,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -310,7 +309,7 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 
         List<Application> finalizedList = new ArrayList();
         shipmentApplications.forEach(app -> finalizedList.add(finalizeApplication(app)));
-        return finalizedList;
+        return finalizedList; 
     }
 
     public Application getApplicationWithSecuredSettings(String appId) {

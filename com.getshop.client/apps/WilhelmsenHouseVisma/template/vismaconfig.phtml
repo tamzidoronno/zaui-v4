@@ -1,0 +1,94 @@
+<?
+/* @var $this ns_d02f8b7a_7395_455d_b754_888d7d701db8\Dibs */
+
+$dibs = $this->getConfigurationSetting("merchantid");
+?>
+
+<div class='gss_settings_header'>
+    <i class='fa fa-chain'></i>
+
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            <?php echo $this->getName(); ?>
+        </div>
+        <div class='gss_settings_header_description_inner'>
+            <?php echo $this->getDescription(); ?>
+        </div>
+    </div>	
+</div>
+
+<div class='gss_settings_content'>
+
+    <center><h1> General settings </h1></center>
+    <div class="textfield gss_setting"  id="ordertype">
+        <span class="title"><?php echo $this->__f("Visma address"); ?></span>
+        <input type="textfield" gs_model='vismamodel' gs_model_attr='vismaaddress' value="<? echo $this->getConfigurationSetting("vismaaddress"); ?>">
+        <div class="description">
+            <?php  echo $this->__f("Ip address to the SQL visma server."); ?>
+        </div>
+    </div>
+    <div class="textfield gss_setting"  id="ordertype">
+        <span class="title"><?php echo $this->__f("Visma username"); ?></span>
+        <input type="textfield" gs_model='vismamodel' gs_model_attr='vismausername' value="<? echo $this->getConfigurationSetting("vismausername"); ?>">
+        <div class="description">
+            <?php  echo $this->__f("The username to the SQL visma server."); ?>
+        </div>
+    </div>
+    <div class="textfield gss_setting"  id="ordertype">
+        <span class="title"><?php echo $this->__f("Visma database"); ?></span>
+        <input type="textfield" gs_model='vismamodel' gs_model_attr='vismadb' value="<? echo $this->getConfigurationSetting("vismadb"); ?>">
+        <div class="description">
+            <?php  echo $this->__f("The databasename to the SQL visma server."); ?>
+        </div>
+    </div>
+    <div class="textfield gss_setting"  id="ordertype">
+        <span class="title"><?php echo $this->__f("Save file location"); ?></span>
+        <input type="textfield" gs_model='vismamodel' gs_model_attr='vismafilelocation' value="<? echo $this->getConfigurationSetting("vismafilelocation"); ?>">
+        <div class="description">
+            <?php  echo $this->__f("Where should the file be saved?"); ?>
+        </div>
+    </div>
+
+    <center><h1> Payment with invoice settings </h1></center>
+    <div class="gss_simple_shipping">
+        <div class="textfield gss_setting"  id="ordertype">
+            <span class="title"><?php echo $this->__f("Order type"); ?></span>
+            <input type="textfield" gs_model='vismamodel' gs_model_attr='ordertype' value="<? echo $this->getConfigurationSetting("ordertype"); ?>">
+            <div class="description">
+                <?php  echo $this->__f("Fast 1 for normalordr."); ?>
+            </div>
+        </div>
+    </div>
+    
+    <div class="gss_simple_shipping">
+        <div class="textfield gss_setting"  id="paymentterm">
+            <span class="title"><?php echo $this->__f("Payment term"); ?></span>
+            <input type="textfield" gs_model='vismamodel' gs_model_attr='paymentterm' value="<? echo $this->getConfigurationSetting("paymentterm"); ?>">
+            <div class="description">
+                <?php  echo $this->__f("How many days payment term should be made?"); ?>
+            </div>
+        </div>
+    </div>
+    
+    <div class="gss_simple_shipping">
+        <div class="textfield gss_setting"  id="paymenttype">
+            <span class="title"><?php echo $this->__f("Payment type"); ?></span>
+            <input type="textfield" gs_model='vismamodel' gs_model_attr='paymenttype' value="<? echo $this->getConfigurationSetting("paymenttype"); ?>">
+            <div class="description">
+                <?php  echo $this->__f("What is the visma payment type."); ?>
+            </div>
+        </div>
+    </div>
+
+    <center><h1> Payment with credit card </h1></center>
+    <div class="textfield gss_setting"  id="paymenttype">
+        <span class="title"><?php echo $this->__f("Visma account to debit"); ?></span>
+        <input type="textfield" gs_model='vismamodel' gs_model_attr='vismadebitaccount' value="<? echo $this->getConfigurationSetting("vismadebitaccount"); ?>">
+        <div class="description">
+            <?php  echo $this->__f("Enter the number of what visma account should be debited."); ?>
+        </div>
+    </div>
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="saveSettings" gss_model="vismamodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Save"); ?></div>
+    </div>
+</div>

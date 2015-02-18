@@ -16,7 +16,7 @@
     top: 30px;
 }
 .Banner .thumbnail { margin-right: 2px; margin-top: 2px; cursor: pointer; }
-.Banner .thumbnail img,.Banner .thumbnail { max-width: 90px; height: auto; float:left; }
+.Banner .thumbnail img,.Banner .thumbnail { width: auto; height: auto; display:inline-block; max-height: 90px; }
 
 .Banner .informationboxbannersettings {
     padding: 20px;

@@ -171,7 +171,8 @@ app.Banner = {
         imageEditor.hideSaveButton();
         imageEditor.hideAspectRatioButton();
         imageEditor.hideChangeButton();
-        imageEditor.enableAspectRatio();
+        imageEditor.disableCropping();
+//        imageEditor.enableAspectRatio();
         imageEditor.onImageChanged(app.Banner.imageChanged);
         imageEditor.onUploadStarted(app.Banner.uploadStarted);
         imageEditor.addMenuEntry("Delete", 'fa-trash-o', $.proxy(app.Banner.deleteImage, imageEditor));

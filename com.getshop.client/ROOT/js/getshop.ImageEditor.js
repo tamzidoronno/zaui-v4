@@ -82,6 +82,10 @@ getshop.ImageEditor.prototype = {
     hideAspectRatioButton: function() {
         this.menu.find('.fa-lock').closest('.entry').hide();
     },
+    disableCropping: function() {
+        this.menu.find('.fa-lock').closest('.entry').hide();
+        this.config.cropDisabled=true;
+    },
     enableAspectRatio: function() {
         this.menu.find('.fa-lock').addClass('active');
     },
@@ -626,7 +630,9 @@ getshop.ImageEditor.prototype = {
             this.rotateImageInitially();
         } else {
             var doCompression = this.imageJustRotated === true ? false : true;
-            this.refeshCropArea(doCompression);
+            if(!this.config.cropDisabled) {
+                this.refeshCropArea(doCompression);
+            }
             this.imageJustRotated = null;
         }
         

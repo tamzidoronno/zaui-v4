@@ -95,12 +95,6 @@ if (isset($_GET['logonwithkey'])) {
 
 $factory = IocContainer::getFactorySingelton();
 
-if(isset($_GET['setLanguage'])) {
-    $_SESSION['language_selected'] = $_GET['setLanguage'];
-     $factory->getApi()->getStoreManager()->setSessionLanguage($_GET['setLanguage']);
-     $factory->reloadStoreObject();
-    $factory->loadLanguage();
-}
 if (@$factory->getApplicationPool()->getSelectedThemeApp()->applicationSettings->isResponsive) {
     echo '<meta name="viewport" content="initial-scale=1.0,width=device-width,user-scalable=no;">';
     echo '<link rel="stylesheet" type="text/css" href="skin/default/responsive.css" />';

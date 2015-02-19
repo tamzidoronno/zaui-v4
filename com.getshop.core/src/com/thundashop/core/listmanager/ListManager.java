@@ -1,5 +1,6 @@
 package com.thundashop.core.listmanager;
 
+import com.google.gson.Gson;
 import com.thundashop.core.common.AppConfiguration;
 import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
@@ -614,7 +615,7 @@ public class ListManager extends ManagerBase implements IListManager {
 
     private String getPageIdByName(String name, List<Entry> entries) {
         for (Entry entry : entries) {
-                
+            
             String found = "";
             if (entry.subentries != null && !entry.subentries.isEmpty()) {
                 found = getPageIdByName(name, entry.subentries);
@@ -624,10 +625,19 @@ public class ListManager extends ManagerBase implements IListManager {
                 return found;
             }
             
-            String entryName = makeSeoUrl(entry.name);
+            Gson gson = new Gson();
+            
+            Entry clonedEntry = gson.fromJson(gson.toJson(entry), Entry.class);
+            try {
+                updateTranslation(clonedEntry, true);
+            } catch (ErrorException ex) {
+                ex.printStackTrace();
+            }
+            
+            String entryName = makeSeoUrl(clonedEntry.name);
             
             if (entryName.equals(name.toLowerCase())) {
-                return entry.pageId;
+                return clonedEntry.pageId;
             }
         }
         

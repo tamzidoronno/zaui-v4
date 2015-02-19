@@ -55,14 +55,14 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        ApplicationSettings pkkControl = createSettings(
-                "PkkControl",
-                "2b06f7a7-8301-4582-a9ea-1005e9248257",
-                allowed,
+        ApplicationSettings embedCode = createSettings(
+                "EmbedCode",
+                "78dcce17-a1c5-4368-94e9-948788235c4e",
+                allowed2,
                 "",
                 ApplicationSettings.Type.Webshop, false);
-        pkkControl.isPublic = true;
-        apps.add(pkkControl);
+        embedCode.isPublic = true;
+        apps.add(embedCode);
 
 //        
 //        ApplicationSettings hotelvask = createSettings(

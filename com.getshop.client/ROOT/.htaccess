@@ -7,6 +7,8 @@ ErrorDocument 404 /
 RewriteRule ^/?generatePDF.php$ - [L]
 RewriteRule ^/?filedownload.php$ - [L]
 
+RewriteRule ^/?download.php$ - [L]
+
 # SEO LANGUAGES
 RewriteRule ^(.*).html_(de)$ index.php?setLanguage=$2&rewrite=$1 [L,NE]
 RewriteRule ^(.*).html_(nb_NO)$ index.php?setLanguage=$2&rewrite=$1 [L,NE]

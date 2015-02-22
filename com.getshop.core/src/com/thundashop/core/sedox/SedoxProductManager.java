@@ -1216,7 +1216,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 UserManager userManager = getManager(UserManager.class);
                 User masterGetshopUser = userManager.getUserById(sedoxUser.id);
                 SedoxCreditOrder kickbackCreditOrder = new SedoxCreditOrder();
-                kickbackCreditOrder.amount = order.credit;
+                kickbackCreditOrder.amount = creditToAdd;
                 kickbackCreditOrder.magentoOrderId = order.orderId;
                 
                 SedoxUser master = getSedoxUserAccountById(sedoxUser.masterUserId);

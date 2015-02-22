@@ -53,29 +53,31 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        Application priceCalc = createSettings("HotelPriceCalculator",
-                "66112a2c-92c9-47c6-ae5b-bb35121e6654",
+        Application priceCalc = createSettings("GetShopDonate",
+                "1d2fa300-bd01-464f-b3b6-d77758e3fb25",
                 allowed2,
                 "",
                 Application.Type.Webshop, false);
-        priceCalc.isPublic = true;
+        priceCalc.isPublic = false;
         priceCalc.isFrontend = true;
         priceCalc.moduleId = "WebShop";
+        priceCalc.allowedStoreIds = new ArrayList();
+        priceCalc.allowedStoreIds.add("c5e3eac2-c338-4e84-b64f-77fac15b6cd6");
 //        
         apps.add(priceCalc);
         
-        Application wilhelmsenHouseVisma = createSettings("WilhelmsenHouseVisma",
-                "37d409be-1207-45e8-bf3b-6465442b58d9",
-                allowed2,
-                "",
-                Application.Type.Webshop, false);
-        wilhelmsenHouseVisma.isPublic = false;
-        wilhelmsenHouseVisma.isFrontend = false;
-        wilhelmsenHouseVisma.allowedStoreIds = new ArrayList();
-        wilhelmsenHouseVisma.allowedStoreIds.add("123865ea-3232-4b3b-9136-7df23cf896c6");
-        wilhelmsenHouseVisma.moduleId = "WebShop";
+//        Application wilhelmsenHouseVisma = createSettings("WilhelmsenHouseVisma",
+//                "37d409be-1207-45e8-bf3b-6465442b58d9",
+//                allowed2,
+//                "",
+//                Application.Type.Webshop, false);
+//        wilhelmsenHouseVisma.isPublic = false;
+//        wilhelmsenHouseVisma.isFrontend = false;
+//        wilhelmsenHouseVisma.allowedStoreIds = new ArrayList();
+//        wilhelmsenHouseVisma.allowedStoreIds.add("123865ea-3232-4b3b-9136-7df23cf896c6");
+//        wilhelmsenHouseVisma.moduleId = "WebShop";
 //        
-        apps.add(wilhelmsenHouseVisma);
+//        apps.add(wilhelmsenHouseVisma);
         
 //        netAxept.moduleId = "WebShop";
 //        netAxept.activeAppOnModuleActivation = false;

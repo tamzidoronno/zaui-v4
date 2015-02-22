@@ -23,7 +23,7 @@ echo $this->__w("Apartment / room");
         <td width="50%" style="text-align:right;">
             <? echo $this->__w("Check out"); ?><br>
             <span class="calcontainer">
-                <input type='text' class='date_selection_room end_date' value='<? echo date('d.m.Y', time() + 86400); ?>'>
+                <input type='text' class='date_selection_room end_date' value='<? echo date('d.m.Y', time() + (86400*7)); ?>'>
                 <span class="calpicker"><i class='fa fa-calendar'></i></span>
             </span>
         </td>

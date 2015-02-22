@@ -18,6 +18,9 @@ class HotelPriceCalculator extends \ApplicationBase implements \Application {
         echo '<div class="pricecalcarea">';
         $this->includefile("calculator");
         echo '</div>';
+        echo "<div class='pricecalcarearesult'>";
+        echo "</div>";
+        echo "<div style='clear:both;'></div>";
     }
     
     public function generatePrice() {

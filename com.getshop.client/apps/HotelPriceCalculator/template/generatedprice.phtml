@@ -17,7 +17,7 @@
     $origprice = $cart->items[0]->product->original_price * $days;
     $discount = $price - $origprice;
 ?>
-<table>
+<table width="100%">
     <tr>
         <td><? echo $this->__w("Check in"); ?></td>
         <td><? echo $start; ?></td>
@@ -47,4 +47,3 @@
         <td><? echo $price; ?></td>
     </tr>
 </table>
-<a class='tryagain'><? echo $this->__w("Try again"); ?></a>

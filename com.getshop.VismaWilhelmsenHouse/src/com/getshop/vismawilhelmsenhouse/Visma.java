@@ -15,8 +15,6 @@ import com.thundashop.core.hotelbookingmanager.RoomInformation;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.data.User;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
@@ -24,7 +22,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import sun.misc.IOUtils;
 
 /**
  *

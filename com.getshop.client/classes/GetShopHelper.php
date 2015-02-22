@@ -20,7 +20,7 @@ class GetShopHelper {
         $name = str_replace('\'', "_", $name);
 
         
-        $name = strtolower($name);
+        $name = mb_strtolower($name, 'UTF-8');
         return "/$name.html";
     }
 }

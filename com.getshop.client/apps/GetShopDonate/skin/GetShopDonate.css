@@ -1,0 +1,22 @@
+.GetShopDonate .donate {
+    display: inline-block;
+    height: 70px;
+    width: 70px;
+    line-height: 70px;
+    font-size: 16px;
+    text-align: center;
+    margin-right: 4px;
+    color: #FFF;
+    background-image: url('{IMAGEFOLDER}/blue.png');
+    cursor: pointer;
+}
+
+.GetShopDonate .donate.donate_active {
+    background-image: url('{IMAGEFOLDER}/green.png');
+    color: #333;
+}
+
+.GetShopDonate .shop_button {
+    width: 150px;
+    margin-top: 20px;
+}

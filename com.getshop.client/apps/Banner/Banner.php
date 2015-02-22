@@ -9,11 +9,11 @@ class Banner extends \WebshopApplication implements \Application {
     public $products;
     
     public function getDescription() {
-        return $this->__("This is the perfect application if you need to stash your page a bit more, simply create banners and add them to this application and then it will rotate");
+        return $this->__("This application enables you to upload images and display them as a gallery with thumbnails.");
     }
     
     public function getName() {
-        return $this->__w("Image carousel");
+        return $this->__w("Gallery");
     }
     
     public function isShowDots() {

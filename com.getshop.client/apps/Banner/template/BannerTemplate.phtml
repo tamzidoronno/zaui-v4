@@ -27,51 +27,41 @@
             
         </div>
     </div>
-    <div style='<? echo $height; ?>' class="bannerslider" id="<? echo $id; ?>" interval="<? echo $interval; ?>">
-        <?
-        foreach ($this->getBanners() as $banner) {
-            $imageId = $banner->imageId;
-            $texts[$imageId] = $banner->imagetext;
-            
-            echo "<div class='banner' style='$height' imageId='$imageId'>";
-           
-            if (isset($banner->productId) && strlen(trim($banner->productId)) > 0) {
-                echo "<a href='" . $this->getProductLink($banner->productId) . "'>";
+    <div class="gsgalleryroot">
+        <div class="bannerslider" id="<? echo $id; ?>" interval="<? echo $interval; ?>">
+            <?
+            foreach ($this->getBanners() as $banner) {
+                $imageId = $banner->imageId;
+                $crop = json_decode($banner->crop_cordinates);
+                list($width, $height) = getimagesize("../uploadedfiles/" . $imageId);
+                $img = "displayImage.php?id=$imageId";
+                echo "<div class='banner gsgallery' height='$height' width='$width' img='$img' index='0'>";
+                echo "<img  width='100%' src='$img'/>";
+                echo "</div>";
             }
-            
-            if (isset($banner->link) && strlen(trim($banner->link)) > 0) {
-                echo "<a href='" . $banner->link . "'>";
-            }
-            $crop = json_decode($banner->crop_cordinates);
-            $cropData = "";
-            
-            if ($crop) {
-                $cropData = "&crop=true&x=" . $crop->x . "&x2=" . $crop->x2 . "&y=" . $crop->y . "&y2=" . $crop->y2 . "&rotation=".$banner->rotation;
-            }
-            echo "<img style='".$height."' width='100%' src='displayImage.php?id=$imageId" . $cropData . "'/>";
-            if (isset($banner->productId) && strlen(trim($banner->productId)) > 0) {
-                echo "</a>";
-            }
-            if (isset($banner->link) && strlen(trim($banner->link)) > 0) {
-                echo "</a>";
-            }
-            echo "</div>";
-        }
-        $i = 0;
-        if ($this->isShowDots()) {
             ?>
-            <div class="dots">
-                <?
-                foreach ($this->getBanners() as $banner) {
-                    $imageId = $banner->imageId;
-                    ?>
-                    <div onclick="app.Banner.Slider.goToImage('<? echo $id; ?>', <? echo $i; ?>)" imageid="<? echo $imageId; ?>" class="dot inline"></div>
-                    <?
-                    $i++;
+        </div>
+        <div>
+            <?
+            $index = 1;
+            $first = true;
+            foreach ($this->getBanners() as $banner) {
+                if($first) {
+                    $first = false;
+                    continue;
                 }
-                ?>
-            </div>
-<? } ?>
+                $imageId = $banner->imageId;
+                echo "<div class='thumbnail' imageId='$imageId'>";
+                list($width, $height) = getimagesize("../uploadedfiles/" . $imageId);
+                $img = "displayImage.php?id=$imageId";
+                echo "<span class='gsgallery'  height='$height' width='$width' img='$img' index='$index'>";
+                echo "<img width='100%' src='displayImage.php?id=$imageId&height=90'/>";
+                echo "</span>";
+                echo "</div>";
+                $index++;
+            }
+            ?>
+        </div>
     </div>
 
 <?

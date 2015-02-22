@@ -919,6 +919,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         SedoxProduct product = getProductById(productId);
 
         HashMap<String, String> fileMap = new HashMap();
+        if (product.isCmdEncryptedProduct && files.size() != 2) {
+            throw new ErrorException(1031);
+        }
         if (product.isCmdEncryptedProduct) {
             String fileName = encryptProductAndZipToTmpFolder(product, files);
             fileMap.put(fileName, product.toString() + ".mod");
@@ -930,7 +933,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                     String fileName = "/tmp/" + UUID.randomUUID().toString();
                     File tmpFile = new File(fileName);
                     copyFile(origFile, tmpFile);
-                    fileMap.put(fileName, product.toString() + ".mod");
+                    String extentions = binFile.fileType != null && binFile.fileType.equals("Original") ? ".orig" : ".mod";
+                    String fileNameInEmail = product.toString() + extentions;
+                    fileMap.put(fileName, fileNameInEmail);
                     break;
                 }
 

@@ -11,7 +11,7 @@ app.GetShopDonate = {
         
         var event = thundashop.Ajax.createEvent(null, "addProductToCart", this, data);
         thundashop.Ajax.postWithCallBack(event, function() {
-            thundashop.common.goToPage("cart");
+            thundashop.common.goToPage("cart&cartCustomerId=401fef3c-0eed-4e5a-b4a5-126d48274829");
         });
     },
     

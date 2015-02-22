@@ -455,6 +455,10 @@ class CartManager extends \SystemApplication implements \Application {
     }
         
     public function getCheckoutStep() {
+        if (isset($_SESSION['cartCustomerId'])) {
+            return $this->getPaymentCheckoutStep();
+        }
+        
         if (isset($this->shippingApplication) && !$this->shippingApplication->hasSubProducts() && isset($_SESSION['checkoutstep']) && $_SESSION['checkoutstep'] == "shipping" && $this->canGoToPayment()) {
             return $this->getPaymentCheckoutStep();
         }

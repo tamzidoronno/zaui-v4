@@ -49,7 +49,13 @@ $paymentMethods = $this->getPaymentMethods(true);
     </div>
 
     <div class='checkout_button_area'>
-        <div id="previouse" class="shop_button previouse"><?php echo $this->__w("Previous"); ?></div>
+        <?
+        if (!isset($_SESSION['cartCustomerId'])) {
+        ?>
+            <div id="previouse" class="shop_button previouse"><?php echo $this->__w("Previous"); ?></div>    
+        <?
+        }
+        ?>
         <div id="confirmorder" class="shop_button"><?php echo $this->__w("Confirm order"); ?></div>
     </div>
 </div>

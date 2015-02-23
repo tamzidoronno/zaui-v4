@@ -21,7 +21,7 @@ app.HotelPriceCalculator = {
         
         var event = thundashop.Ajax.createEvent('','generatePrice',$(this), data);
         thundashop.Ajax.postWithCallBack(event, function(result) {
-            $('.pricecalcarea').html(result);
+            $('.pricecalcarearesult').html(result);
         });
     }
 };

@@ -169,5 +169,13 @@ class SedoxProductView extends \ApplicationBase implements \Application {
 		
 		return $sedoxProduct->reference->{\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id};
 	}
+        
+        public function showUserInformation() {
+            echo "<div class='SedoxAdmin'>";
+            $sedoxAdmin = new \ns_e22e25dd_8000_471c_89a3_6927d932165e\SedoxAdmin();
+            $sedoxAdmin->showUserInformation();
+            echo "</div>";
+            
+        }
 }
 ?>

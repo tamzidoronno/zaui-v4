@@ -122,6 +122,7 @@ if (!$this->hasWriteAccess()) {
 
 $sedoxUser = $this->getUploadedSedoxUser($sedoxProduct);
 $uploadedByUser = $this->getUploadedUserName($sedoxProduct);
+$slaveWarning = $sedoxUser->masterUserId ? "<div  title='This is a slave' class='slavewarning showUserInformationSedox' userid='".$sedoxUser->masterUserId."'><i class='fa fa-warning'></i><br/>Slave</div>" : "";
 ?>
 <div class='admintools'>
     <div class='userinfo'>
@@ -139,6 +140,9 @@ $uploadedByUser = $this->getUploadedUserName($sedoxProduct);
         </div>
 
         <div class="box122 additional_info">
+            <?
+            echo $slaveWarning;
+            ?>
             <b>User comment: </b>
             <br><? echo $sedoxProduct->comment; ?>
             <br>
@@ -173,6 +177,7 @@ $class3 = array_key_exists("sendProductByMail", $sedoxProduct->states) ? "active
 $class4 = $sedoxProduct->saleAble ? "saleable" : "";
 $text = $sedoxProduct->saleAble ? "Make product NOT salable" : "Make product saleable";
 $badCustomer = $sedoxUser->badCustomer == "true" ? "<div><i class='fa fa-warning' style='color: #CC0000;'></i> <b>THIS IS A BAD CUSTOMER!</b></div> <br/>" : "";
+
 echo $badCustomer;
 ?>
         <div class="adminbottons">

@@ -145,17 +145,23 @@ app.SedoxAdmin = {
         })
     },
             
-    updateInfoBox: function(userId) {
+    updateInfoBox: function(userId, isapp) {
         var data = {
             userId: userId
         }
         
-        var event = thundashop.Ajax.createEvent("", "showUserInformation", $('.SedoxAdmin'), data);
+        sapp = $('.SedoxAdmin:not("#informationbox") .applicationinner');
+       
+        if ($('.SedoxAdmin:not("#informationbox")').length === 0) {
+            sapp = isapp;
+        }
+       
+        var event = thundashop.Ajax.createEvent("", "showUserInformation", sapp, data);
         thundashop.common.showInformationBox(event, "User information");
     },
             
     showUserInformation: function() {
-        app.SedoxAdmin.updateInfoBox($(this).attr('userId'));
+        app.SedoxAdmin.updateInfoBox($(this).attr('userId'), this);
     },
     searchUsers: function() {
         var data = {

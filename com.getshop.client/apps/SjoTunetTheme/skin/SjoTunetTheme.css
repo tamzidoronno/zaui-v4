@@ -136,7 +136,7 @@ html {
 }
 
 
-@media screen and (max-width:500px) {
+@media screen and (max-width:800px) {
     table { width: 100% !important; }
     table td { width: 100%; }
     .gs_col { width: 100% !important; }

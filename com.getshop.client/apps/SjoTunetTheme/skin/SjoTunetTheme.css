@@ -217,8 +217,10 @@ html {
         
     }
     .TopMenu {
-        top: 70px !important;
-        left: 150px;
+        top: 60px !important;
+        right: inherit !important;
+        left: 145px !important;
+        bottom: inherit !important;
     }
     
     .TopMenu .subentries { display:block; position: initial; border: solid 0px; }
@@ -236,8 +238,10 @@ html {
         background-color: #af231d;
         overflow: hidden;
         width: 300px;
+        
+        left: -134px;
+        position: absolute;
+        top: 39px;
     }
-    
-    .
 }
 

@@ -1,237 +1,116 @@
-.editormode .applicationinner {
-    border: solid 0px;
+.gs_page_width {
+    width: 1200px;
+    margin: 0 auto;
 }
 
-.header {
-    background-image: url('{IMAGEFOLDER}/headerbackground.jpg');
+html {
+    font-family: 'Roboto', sans-serif;
+    background-image: url('{IMAGEFOLDER}/background.jpg');
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-attachment: fixed;
 }
-
-.right {
-    border-left: solid 1px #bbb; 
-}
-
-.mainareacontent {
-    min-height: 455px;
-}
-
-.Logo {
-    left: 8px;
-    top: 0px;
-}
-
-.TopMenu {
-    right: 0px;
-    top: 105px;
-    height: 29px;
-    width: 900px;
-}
-
-.breadcrumb-menu {
-    text-align: right;
-}
-
-.middle {
-    padding-top: 5px;
-    padding-left: 5px;
-    padding-right: 5px;
-}
-
-.skeleton4 .mainarea .middle {
-    width: 885px;
-}
-
-.TopMenu a {
-    line-height: 26px;
+.ContentManager {
     color: #FFF;
-    font-size: 13px;
-    padding-left: 10px;
-    padding-right: 10px;
-}
-.breadcrumb-inner {
-    height: 25px !important;
-}
-
-.TopMenu a.selected {
-    background-color: #7e99ba;
-    color: #333;
-    display:block;
-}
-
-
-.left {
-    padding-top: 5px;
-}
-
-.LeftMenu {
-    border: solid 1px;
-    background-color: #ac0008;
-}
-
-.LeftMenu a {
-    color: #FFF;
-    font-weight: bold;
-    font-size: 13px;
-}
-
-.LeftMenu .menu_0 .menuEntry {
-    height: 40px;
-}
-.LeftMenu .menu_0 {
-    height: 40px;
-    line-height: 40px;
-    padding-left: 10px;
-    background-image: url('{IMAGEFOLDER}/TopMenuBg.png');
-}
-
-
-.LeftMenu .menu_1,
-.LeftMenu .menu_2,
-.LeftMenu .menu_3,
-.LeftMenu .menu_4,
-.LeftMenu .menu_5,
-.LeftMenu .menu_6 {
-    line-height: 20px;
-    height: 20px;   
-}
-
-.LeftMenu .menu_1 { padding-left: 15px; }
-.LeftMenu .menu_2 { padding-left: 25px; }
-.LeftMenu .menu_3 { padding-left: 35px; }
-.LeftMenu .menu_4 { padding-left: 45px; }
-.LeftMenu .menu_5 { padding-left: 55px; }
-.LeftMenu .menu_6 { padding-left: 65px; }
-
-.LeftMenu .menuName {
-    border-top: dashed 1px #ce888c;
-}
-
-.accounting {
-    background-image: url('{IMAGEFOLDER}/shopping-cart-icon.png');
-    padding-left: 30px;
-    background-repeat: no-repeat;
-    top: 2px;
-    padding-right: 10px;
-    line-height: 20px;
-}
-
-.CategoryList .category_list.last_in_row  {
-    margin-right: 0px;
-}
-.CategoryList .category_list {
-    border: solid 1px;
-    background-color: #CA3A43;
-    text-align: center;
-    margin-bottom: 10px;
-    margin-right: 10px;
-}
-
-.CategoryList .text {
-    width: 150px !important;
-    border-top: dashed 1px #FFF;
-    padding-top: 3px;
-}
-
-.CategoryList .product_image_inner {
-    margin: 3px;
-    padding: 3px;
-    background-color: #FFF;
-    height: 147px;
-}
-
-.CategoryList .category_list_inner {
-    width: 150px;
-    height: 180px;
-}
-
-.ProductManager .descheader {
-    border-bottom: solid 1px #bbb !important;
-}
-
-.ProductManager .title {
-    height: 25px;
-    font-weight: bold;
-    line-height: 25px;
-    color: #000;
     font-size: 16px;
-    padding-left: 5px;
-    margin-bottom: 5px;
 }
 
-.bannerslider {
-    margin-left: 3px;
+.gsarea[area="body"] {
+    margin-top: 120px;
+}
+.gsarea[area="header"] {
+    background-color: #222;
+    border-bottom: solid 1px #333;
+    position: fixed;
+    top: 0px;
+    z-index: 1;
+    width: 100%;
+    height: 100px;
 }
 
-.skeleton2 .mainarea .middle {
-    width: 698px;
+.gsarea[area="header"] .Menu {
+    margin-top: 20px;
+    text-align: center;
+}
+.gsarea[area="header"] .Menu .entry {
+    margin-left: 20px;
+    margin-right: 20px;   
 }
 
-.skeleton3 .ProductManager .right-wrapper {
-    width: 410px !important;
+.gsarea[area="header"] .Menu .entry.active {
+    border-bottom: solid 3px #8f8fcb !important;
+}
+.gsarea[area="header"] .Menu .entry a {
+    color: #FFF;
+    font-size: 16px;
+    line-height: 60px;
 }
 
-.skeleton2 .ProductManager .right-wrapper,
-.ProductManager .right-wrapper {
-    width: 410px !important;
+
+.gsbody_inner[gspagetype="product"] .gsarea[area="body"] .ContentManager {
+    color: #000;
+}
+.gsbody_inner[gspagetype="product"] .gsarea[area="body"] {
+    margin-bottom: 20px;
+    border-solid 1px #333;
 }
 
-.skeleton4 .ProductManager .right-wrapper {
-    width: 610px;
+.gstabcontent {
+    padding: 20px;
+}
+.gsbody_inner[gspagetype="product"] .gsarea[area="body"] .gs_page_width {
+    background-color: #FFF;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
 }
 
-.skeleton1 .ProductManager .right-wrapper {
-    width: 210px;
-}
-
-.ProductList .product {
-    border-bottom: dashed 1px #BBB;
+.productbox {
+    background-color: #FFF;
     margin-bottom: 20px;
 }
 
-.header .Login .form  {
-    width: 230px;
-} 
-
-.Login {
-    background-color: #FFF;
-    margin-right: 6px;
+.shop_button {
+    border: solid 2px #333;
+    border-radius: 0px;
 }
 
-.Login a {
-    color: #000 !important;
+.products.row_view .webshop_button_area {
+    right: 10px;
 }
 
-.Account .personal_information {
-    padding-left: inherit;
-    margin-right: inherit;
-    width: 440px;
+.Contact {
+    background-color: rgba(255,255,255,0.1);
+    padding: 20px;
+    margin: 20px;
+    border: solid 1px #333;
+    color: #FFF;
 }
 
-.Account .change_passord {
-    padding-left: 10px;
+.CartManager .checkout_area {
+    line-height: 50px;
+    font-size: 16px;
+    padding-left: 20px;
+    border-radius: 10px;
+    color: #FFF;
+    background-color: rgba(255,255,255,0.1);
+    margin-top: 25px;
+    /*position: relative;*/
 }
 
-.Account .change_passord .registration_heading {
-    margin-bottom: 14px;
+.CartManager .checkout_area .checkout {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    color: #333;
+    top: 0px;
+    width: 100px;
+    color: #FFF;
+    text-align: center;
 }
-
-.breadcrumbentry a {
-    color: #000000 !important;
+.CartManager .checkout_area i {
+    padding-right: 10px;
+    font-size: 25px;
 }
-
-.app.Users {
-    padding: 10px;
-    border: solid 1px #DDD;
-}
-
-.LeftMenu .menuName { color: #eaeaea; }
-
-
-.gs_margin_left, .gs_margin_right{ padding-left: 7px; }
-.gs_inner {
-    margin:auto;
-    width: 900px;
-}
-
-.footer {height:30px; background-color: #22518a; margin-top: 30px; position: fixed; bottom: 0px; width: 100%; }
-#apparea-bottom { display:none; }
-#skeleton { padding-bottom: 60px; }

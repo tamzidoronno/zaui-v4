@@ -4,7 +4,7 @@ $factory = IocContainer::getFactorySingelton();
 $activatedApps = $factory->getApi()->getStoreApplicationPool()->getApplications();
 ?>
 <div class='gss_settings_inner' style='vertical-align: top;'>
-    <div class='gss_topmenu-button gss_backtopage'><i class='fa fa-arrow-left'></i> Til min side</div>
+    <div class='gss_topmenu-button gss_backtopage'><i class='fa fa-arrow-left'></i> <? echo $factory->__w("Back to page"); ?></div>
     <div id="dashboardbutton" class='gss_topmenu-button  <? echo $appId == "b81bfb16-8066-4bea-a3c6-c155fa7119f8" ? "gss_active" : ""; ?>' gss_goto_app="b81bfb16-8066-4bea-a3c6-c155fa7119f8"><i class='fa fa-tachometer'></i> <? echo $this->__f("Dashboard") ?></div>
     <div class='gss_topmenu-button <? echo $appId == "d755efca-9e02-4e88-92c2-37a3413f3f41" ? "gss_active" : ""; ?>' gss_goto_app="d755efca-9e02-4e88-92c2-37a3413f3f41"><i class='fa fa-gears'></i> <? echo $this->__f("Instillinger"); ?></div>
     <div class='gss_topmenu-button <? echo $appId == "6ad9d19a-ccc7-4549-bec1-b240a95366bc" ? "gss_active" : ""; ?>' gss_goto_app="6ad9d19a-ccc7-4549-bec1-b240a95366bc"><i class='fa fa-envelope'></i> <? echo $this->__f("Emails"); ?> </div>

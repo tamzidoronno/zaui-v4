@@ -403,20 +403,31 @@ class ApplicationManager extends FactoryBase {
         echo "</style>";
     }
 
+    function randomPassword() {
+        $alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
+        $pass = array(); //remember to declare $pass as an array
+        $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+        for ($i = 0; $i < 8; $i++) {
+            $n = rand(0, $alphaLength);
+            $pass[] = $alphabet[$n];
+        }
+        return implode($pass); //turn the array into a string
+    }
+    
     public function startStore() {
         $startData = new core_getshop_data_StartData();
         $startData->storeId = $_POST['data']['storeId'];
-        $startData->name = $_POST['data']['gs_start_store_name'];
+        $startData->name = "";
         $startData->email = $_POST['data']['gs_start_store_email'];
-        $startData->phoneNumber = $_POST['data']['gs_start_store_phonenumber'];
-        $startData->shopName = $_POST['data']['gs_start_store_shopname'];
-        $startData->password =  $_POST['data']['gs_start_store_password1'];
+        $startData->phoneNumber = "";
+        $startData->shopName = "";
+        $startData->password =  $this->randomPassword();
         $startData->language =  $this->getFactory()->getMainLanguage();
         $startData->color =  isset($_SESSION['gscolorselection']) ? $_SESSION['gscolorselection'] : "";
         
         $newAddress = $this->getApi()->getGetShop()->startStoreFromStore($startData);
         
-        echo 'https://'.$newAddress."/login.php";
+        echo 'https://'.$newAddress."/login.php?username=" . $startData->email . "&password=" . $startData->password . "&autologin=true";
         die();
     }
     

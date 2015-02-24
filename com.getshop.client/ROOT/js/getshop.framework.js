@@ -96,6 +96,7 @@ thundashop.framework = {
         $(document).on('click', '.gs_templatehaeaderfunctions .selectcolors', this.showColors);
         $(document).on('click', '.gs_templatehaeaderfunctions .color_select.close', this.hideColors);
         $(document).on('click', '.gslinkcell', this.doLinkCell);
+        $(document).on('keyup', '#gs_start_store_email', this.startFromCurrentStore);
 
         /* Cell operations */
         $(document).on('click', '.gsoperatecell', this.operateCell);
@@ -329,48 +330,24 @@ thundashop.framework = {
         var cellid = $(this).closest('.gsrow').attr('cellid');
         thundashop.framework.loadResizing($('.gscell[cellid="' + cellid + '"]'), true);
     },
-    startFromCurrentStore: function () {
+    startFromCurrentStore: function (event) {
+        if(event && event.keyCode !== 13 && event.type === "keyup") {
+            return;
+        }
 
         var data = {
             'storeId': $('input[name="storeid"]').val(),
-            'gs_start_store_name': $('#gs_start_store_name').val(),
             'gs_start_store_email': $('#gs_start_store_email').val(),
-            'gs_start_store_phonenumber': $('#gs_start_store_phonenumber').val(),
-            'gs_start_store_shopname': $('#gs_start_store_shopname').val(),
-            'gs_start_store_password1': $('#gs_start_store_password1').val(),
-            'gs_start_store_password2': $('#gs_start_store_password2').val()
         }
 
-        if (!data.gs_start_store_name) {
-            alert(__f("Your name can not be empty"));
-            return;
-        }
         if (!data.gs_start_store_email) {
             alert(__f("Your email can not be empty"));
             return;
         }
-        if (!data.gs_start_store_phonenumber) {
-            alert(__f("Your phonenumber can not be empty"));
-            return;
-        }
-        if (!data.gs_start_store_shopname) {
-            alert(__f("Your shopname can not be empty"));
-            return;
-        }
-        if (!data.gs_start_store_password1 || !data.gs_start_store_password2) {
-            alert(__f("Your shopname can not be empty"));
-            return;
-        }
-
-        if (data.gs_start_store_password2 != data.gs_start_store_password1) {
-            alert(__f("Please check your password"));
-            return;
-        }
-
         var event = thundashop.Ajax.createEvent(null, 'startStore', null, data);
         event['synchron'] = 'true';
         thundashop.Ajax.postWithCallBack(event, function (response) {
-            window.location.href=response+ "?username=" + data.gs_start_store_email + "&password=" + data.gs_start_store_password1 + "&autologin=true";
+            window.location.href=response;
         });
 
     },

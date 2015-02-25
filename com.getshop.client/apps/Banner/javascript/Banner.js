@@ -18,14 +18,19 @@ app.Banner = {
         mainimgdiv.css('background-color','#333');
         var mainimg = $(this).closest('.gsgalleryroot').find('.gallerymainimg');
         var currentwidth = mainimg.css('max-height');
+        var height = mainimg.height();
+        var width = mainimg.width();
         if(currentwidth === "none" || !currentwidth) {
-            mainimg.css('max-height',mainimg.height());
-            mainimgdiv.css('height',mainimg.height());
+            mainimg.css('max-height',height);
+            mainimgdiv.css('height',height);
             mainimg.css('width',"auto");
-            mainimg.css('max-width',mainimg.width());
+            mainimg.css('max-width',width);
+        } else {
+            height = mainimgdiv.height();
+            width = mainimgdiv.width();
         }
         var newimage = $(this).closest('.gsgallery').attr('img');
-        mainimg.attr('src',newimage);
+        mainimg.attr('src',newimage + "&width=" + width + "&height=" + height);
     },
     
     setHeight: function() {

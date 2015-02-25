@@ -99,7 +99,7 @@ Current users added to this booking;-;Brukere som er lagt til
 Customer information;-;Kunde detaljer
 Date;-;Dato
 Day;-;Dag
-Days;-;Antall dager
+Days;-;Antall døgn
 December;-;Desember
 Delete;-;Slett
 Delete area;-;Slett området
@@ -218,7 +218,9 @@ Organisation number;-;Organisasjonsnummer
 Organisation number has to be 9 digits long.;-;Organisasjonsnummeret må bestå av 9 siffer 
 Original (hp);-;Orginal hp
 Original (nm);-;Original nm
-Original price;-;Original pris
+Ordinary price;-;Ordinær pris
+Average price;-;Snitt pris
+Your savings;-;Du sparer
 Other attributes;-;Andre attributter
 Other operations;-;Andre operasjoner
 Our local time is:;-;Vår lokale tid er

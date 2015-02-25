@@ -49,14 +49,14 @@ function getLanguagesEntries($entry, $altLanguages) {
     return $retEntries;
 }
 
-function printEntries($entries, $address, $altLanguages) {
+function printEntries($entries, $address, $altLanguages, $mainLanguage) {
     foreach($entries as $entry) {
         if($entry->pageId != "home" && strlen($entry->pageId) < 20) {
             continue;
         }
         
         if ($entry->subentries && count($entry->subentries)) {
-            printEntries($entry->subentries, $address, $altLanguages);
+            printEntries($entry->subentries, $address, $altLanguages, $mainLanguage);
         }
         
         echo "<url>\n";
@@ -64,7 +64,12 @@ function printEntries($entries, $address, $altLanguages) {
         echo "<loc>" . $address . GetShopHelper::makeSeoUrl($entry->name) . "</loc>\n";
         $langEntries = getLanguagesEntries($entry, $altLanguages);
         foreach ($langEntries as $lang => $langEntry) {
-            $addressLang = $address . GetShopHelper::makeSeoUrl($langEntry->name)."_$lang";
+            if ($mainLanguage == $lang) {
+                $addressLang = $address . GetShopHelper::makeSeoUrl($langEntry->name);
+            } else {
+                $addressLang = $address . GetShopHelper::makeSeoUrl($langEntry->name) . "_$lang";
+            }
+            
             echo '<xhtml:link rel="alternate" hreflang="'.$lang.'" href="'.$addressLang.'"/>'."\n";
         }
         echo "</url>\n";
@@ -77,7 +82,8 @@ function printEntries($entries, $address, $altLanguages) {
 }
 
 foreach ($lists as $list) {
-    $factory->getApi()->getStoreManager()->setSessionLanguage($factory->getMainLanguage());
+    $mainLanguage = $factory->getMainLanguage();
+    $factory->getApi()->getStoreManager()->setSessionLanguage($mainLanguage);
     $entries = $factory->getApi()->getListManager()->getList($list);
     $altLanguages = [];
     
@@ -87,7 +93,7 @@ foreach ($lists as $list) {
     }
     
     if(isset($entries)) {
-        printEntries($entries, $address, $altLanguages);
+        printEntries($entries, $address, $altLanguages, $mainLanguage);
     }
 }
 echo "</urlset>";

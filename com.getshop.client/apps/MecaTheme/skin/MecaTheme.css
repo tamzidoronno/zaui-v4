@@ -45,7 +45,6 @@ html {
 .gsarea[area="header"] .Menu .entries .entries {
     background-color: rgba(0, 30, 80, 0.9);
     width: 200px;
-    left: 0px;
     box-shadow: 3px 2px 5px rgba(0,0,0,0.2);
 }
 
@@ -67,20 +66,26 @@ html {
 }
 
 .gsarea[area="body"] .gsdepth_0 .gsinner .gsuicell {
+    
+    
+    
+}
+
+.gsarea[area="body"] .gsdepth_0.gsrow .gsdepth_1.gsinner {
+    padding: 15px;
+    box-shadow: rgba(0, 0, 0, 0.2) 1px 1px 4px 0px;
     background-color: #FFF;
     margin: 10px;
     margin-left: 20px;
     margin-right: 20px;
     border-radius: 4px;
-    box-shadow: rgba(0, 0, 0, 0.2) 1px 1px 4px 0px;
-    padding: 15px;
 }
 
-.gs_margin_left .gsuicell {
+.gsdepth_0.gsrow .gsdepth_1.gs_margin_left .gsdepth_1.gsuicell {
     margin-left: 10px !important;
 }
 
-.gs_margin_right .gsuicell {
+.gsdepth_0.gsrow .gsdepth_1.gs_margin_right .gsdepth_1.gsuicell {
     margin-right: 10px !important;
 }
 

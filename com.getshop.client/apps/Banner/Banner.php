@@ -23,6 +23,18 @@ class Banner extends \WebshopApplication implements \Application {
         
         return $this->getConfigurationSetting("showDots") == true;
     }
+    
+    public function hasMouseOver() {
+        return $this->getConfigurationSetting("mouseover") == "true";
+    }
+    
+    public function toggleMouseOver() {
+        if($this->hasMouseOver()) {
+            $this->setConfigurationSetting("mouseover", "false");
+        } else {
+            $this->setConfigurationSetting("mouseover", "true");
+        }
+    }
 
     public function getBanners() {
         $this->loadBannerSet();

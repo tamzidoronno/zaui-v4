@@ -9,6 +9,28 @@ app.Banner = {
         $(document).on('click', '.Banner .saveset', app.Banner.saveSet);
         $(document).on('click', '.Banner .banner_settings_images .imageholder', app.Banner.imageClicked);
         $(document).on('change', '.Banner #height', $.proxy(app.Banner.heightChanged, app.Banner));
+        $(document).on('mouseenter', '.Banner .gallerythumbnailswap', app.Banner.swapImage);
+    },
+    
+    swapImage : function() {
+        var mainimgdiv =  $(this).closest('.gsgalleryroot').find('.gallerymainimgdiv');
+        mainimgdiv.css('text-align','center');
+        mainimgdiv.css('background-color','#333');
+        var mainimg = $(this).closest('.gsgalleryroot').find('.gallerymainimg');
+        var currentwidth = mainimg.css('max-height');
+        var height = mainimg.height();
+        var width = mainimg.width();
+        if(currentwidth === "none" || !currentwidth) {
+            mainimg.css('max-height',height);
+            mainimgdiv.css('height',height);
+            mainimg.css('width',"auto");
+            mainimg.css('max-width',width);
+        } else {
+            height = mainimgdiv.height();
+            width = mainimgdiv.width();
+        }
+        var newimage = $(this).closest('.gsgallery').attr('img');
+        mainimg.attr('src',newimage + "&width=" + width + "&height=" + height);
     },
     
     setHeight: function() {
@@ -288,7 +310,10 @@ app.Banner = {
         var event = thundashop.Ajax.createEvent('','toggleDots',invokingApp, {});
         thundashop.Ajax.post(event);
     },
-    
+    toggleMouseOver : function(event, invokingApp) {
+        var event = thundashop.Ajax.createEvent('','toggleMouseOver',invokingApp, {});
+        thundashop.Ajax.post(event);
+    },
     loadSettings : function(element, application) {
          var config = {
             draggable: true,
@@ -309,6 +334,13 @@ app.Banner = {
                     iconsize : "30",
                     title: __f("Show dots"),
                     click: app.Banner.toggleDots
+                },
+                {
+                    icontype: "awesome",
+                    icon: "fa-toggle-on",
+                    iconsize : "30",
+                    title: __f("Active mouseover effect"),
+                    click: app.Banner.toggleMouseOver
                 }
             ]
         }

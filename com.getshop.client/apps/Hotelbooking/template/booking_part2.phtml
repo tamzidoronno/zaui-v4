@@ -29,35 +29,6 @@ $headingtext = $this->__w("You have selected the following duration for your sta
                         <td align='right'><input class='need_handicat' type='checkbox' <? echo $checked; ?>></td>
                     </tr>
                     <?
-                    if ($this->getDayCount() > 3) {
-                        ?>
-                        <tr>
-                            <td colspan='2'>
-                                <br>
-                                <? echo $this->__w("Cleaning 49,- each clean");
-                                $vasking = $this->getCleaningProudcts();
-                                $selectedOption = $this->getCleaningOption();
-
-                                
-                                ?>
-                                <div>
-                                    <select class="cleaning_option">
-                                        <option value="no"><? echo $this->__f("No cleaning"); ?></option>
-                                        <?
-                                        foreach ($vasking as $vask) {
-                                            $selected = "";
-                                            if ($selectedOption == $vask->id) {
-                                                $selected = "SELECTED";
-                                            }
-                                            echo "<option value='" . $vask->id . "' $selected>" . $vask->name . "</option>";
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                            </td>
-                        </tr>
-                    <? } ?>
-                    <?
                     if ($this->hasAvailableParkingSpots()) {
                         $price = $this->getParkingProduct()->price;
                         ?>
@@ -153,14 +124,16 @@ $headingtext = $this->__w("You have selected the following duration for your sta
         if (sizeof($images) > 0 && $this->getDisplayRoomThumbnail()) {
             $size = getimagesize("../uploadedfiles/" . $images[0]);
             echo "<span class='gsgalleryroot'>";
-            echo '<span img="displayImage.php?id=' . $images[0] . '" class="gsgallery" width="'.$size[0].'" height="'.$size[1].'"><img class="imagepreview" src="displayImage.php?id=' . $images[0] . '"></span>';
+            echo '<span img="displayImage.php?id=' . $images[0] . '" class="gsgallery" width="'.$size[0].'" height="'.$size[1].'" index="0"><img class="imagepreview" src="displayImage.php?id=' . $images[0] . '"></span>';
+            echo "<span class='hotelthumbnails'>";
             foreach ($images as $index => $image) {
                 if ($index == 0) {
                     continue;
                 }
                 $size = getimagesize("../uploadedfiles/" . $image);
-                echo '<a img="displayImage.php?id=' . $image . '" class="gsgallery" width="'.$size[0].'" height="'.$size[1].'"></a>';
+                echo '<span img="displayImage.php?id=' . $image . '" class="gsgallery" width="'.$size[0].'" height="'.$size[1].'" index="'.$index.'"><img class="imagepreviewthumb" src="displayImage.php?id=' . $images[$index] . '"></span>';
             }
+            echo "</span>";
             echo "</span>";
         }
         echo "<div class='name' ><i class='fa fa-info-circle' style='cursor:pointer' data-productid='".$product->id."'></i> " . $product->name . "</div>";

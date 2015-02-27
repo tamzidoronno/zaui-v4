@@ -16,6 +16,10 @@ class MecaTheme extends \ThemeApplication {
         return $this->__f("this is restricted to owner only");
     }
     
+    function addScripts() {
+        echo "<link href='http://fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>";
+    }
+    
     function __construct() {
         $this->setTotalWidth(1100);
         $this->setWidthLeft(210);

@@ -30,7 +30,7 @@ html {
 .gsarea[area="header"] .Menu .entry  {
     padding-left: 10px;
     padding-right: 10px;
-    text-shadow: 0px -1px 0px #000;
+    
 }
 .gsarea[area="header"] .Menu .entries .entries .entry {
     line-height: 15px;
@@ -50,8 +50,9 @@ html {
 
 .gsarea[area="header"] .Menu a {
     color: #FFF;
-    font-size: 16px;
-    line-height: 33px;
+    font-size: 15px;
+    line-height: 32px;
+    text-shadow: 0px -1px 2px #000;
 }
 
 .gsarea[area="header"] .Menu .entries .entries .entry a { 

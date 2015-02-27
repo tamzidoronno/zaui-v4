@@ -43,6 +43,15 @@ public interface IPageManager {
      * @throws ErrorException 
      */
     @Administrator
+    public void updateCellLayout(List<Integer> layout, String pageId, String cellId);
+    
+    /**
+     * Add application
+     * @param id
+     * @return
+     * @throws ErrorException 
+     */
+    @Administrator
     public void setStylesOnCell(String pageId, String cellId, String styles, String innerStyles, Double width);
     
     /**

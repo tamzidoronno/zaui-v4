@@ -10,6 +10,9 @@ class core_hotelbookingmanager_GlobalBookingSettings extends core_common_DataCom
 	public $minRentalDays;
 
 	/** @var String */
+	public $referenceCount;
+
+	/** @var String */
 	public $maxRentalDaysAhead;
 
 	/** @var String */

@@ -514,4 +514,19 @@ public class PageManager extends ManagerBase implements IPageManager {
             commonPageData.header.add(cell);            
         }
     }
+
+    @Override
+    public void updateCellLayout(List<Integer> layout, String pageId, String cellId) {
+        Page page = getPage(pageId);
+        PageCell cell = page.getCell(cellId);
+        for(Integer count : layout) {
+            String row = page.layout.createCell(cellId, "", PageCell.CellMode.row, "body");
+            if(count > 1) {
+                for(int i = 0; i < count-1; i++) {
+                    page.layout.createCell(row, "", PageCell.CellMode.column, "body");
+                }
+            }
+        }
+        cell.cells.remove(0);
+    }
 }

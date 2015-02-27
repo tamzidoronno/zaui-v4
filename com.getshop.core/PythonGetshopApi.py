@@ -3980,6 +3980,35 @@ class PageManager(object):
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
+  def updateCellLayout(self, layout, pageId, cellId):
+    args = collections.OrderedDict()
+    if isinstance(layout,GetShopBaseClass): 
+      args["layout"]=json.dumps(layout.__dict__)
+    else:
+      try:
+        args["layout"]=json.dumps(layout)
+      except (ValueError, AttributeError):
+        args["layout"]=layout
+    if isinstance(pageId,GetShopBaseClass): 
+      args["pageId"]=json.dumps(pageId.__dict__)
+    else:
+      try:
+        args["pageId"]=json.dumps(pageId)
+      except (ValueError, AttributeError):
+        args["pageId"]=pageId
+    if isinstance(cellId,GetShopBaseClass): 
+      args["cellId"]=json.dumps(cellId.__dict__)
+    else:
+      try:
+        args["cellId"]=json.dumps(cellId)
+      except (ValueError, AttributeError):
+        args["cellId"]=cellId
+    data = EmptyClass()
+    data.args = args
+    data.method = "updateCellLayout"
+    data.interfaceName = "core.pagemanager.IPageManager"
+    return self.communicationHelper.sendMessage(data)
+
 class ProductManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper

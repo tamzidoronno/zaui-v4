@@ -26,6 +26,13 @@ class ApplicationManager extends FactoryBase {
         include("initdata/themeselection.phtml");
     }
             
+    function setLayoutOnCell() {
+        $layout = $_POST['data']['layout'];
+        $cellid = $_POST['data']['cellid'];
+        $pageId = $this->getPage()->javapage->id;
+        $this->getApi()->getPageManager()->updateCellLayout($layout, $pageId, $cellid);
+    }
+    
     
     function createFooter() {
         $this->getApi()->getPageManager()->createHeaderFooter($_POST['data']['type']);

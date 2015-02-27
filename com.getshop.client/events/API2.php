@@ -3728,6 +3728,24 @@ class APIPageManager {
 	     return $this->transport->sendMessage($data);
 	}
 
+	/**
+	* Add application
+	* @param id
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function updateCellLayout($layout, $pageId, $cellId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["layout"] = json_encode($this->transport->object_unset_nulls($layout));
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data['args']["cellId"] = json_encode($this->transport->object_unset_nulls($cellId));
+	     $data["method"] = "updateCellLayout";
+	     $data["interfaceName"] = "core.pagemanager.IPageManager";
+	     return $this->transport->sendMessage($data);
+	}
+
 }
 class APIProductManager {
 

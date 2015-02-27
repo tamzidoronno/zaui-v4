@@ -724,4 +724,21 @@ public class APIPageManager {
           return object;
      }
 
+     /**
+     * Add application
+     * @param id
+     * @return
+     * @throws ErrorException
+     */
+     public void updateCellLayout(java.util.List layout, java.lang.String pageId, java.lang.String cellId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("layout",new Gson().toJson(layout));
+          gs_json_object_data.args.put("pageId",new Gson().toJson(pageId));
+          gs_json_object_data.args.put("cellId",new Gson().toJson(cellId));
+          gs_json_object_data.method = "updateCellLayout";
+          gs_json_object_data.interfaceName = "core.pagemanager.IPageManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
 }

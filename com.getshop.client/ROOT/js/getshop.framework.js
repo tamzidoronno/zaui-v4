@@ -98,6 +98,7 @@ thundashop.framework = {
         $(document).on('click', '.gslinkcell', this.doLinkCell);
         $(document).on('click', '.gs_change_cell_layoutbutton', this.showChangeLayoutOption);
         $(document).on('click', '.gs_close_cell_layoutbutton', this.hideChangeLayoutOption);
+        $(document).on('click', '.gscelllayoutbox', this.changeCellLayout);
         $(document).on('keyup', '#gs_start_store_email', this.startFromCurrentStore);
 
         /* Cell operations */
@@ -105,6 +106,26 @@ thundashop.framework = {
         $(document).on('click', '.simpleaddrow', this.simpleaddrow);
         $(document).on('click', '.gsemptyarea .shop_button', this.simpleaddrow);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
+    },
+    changeCellLayout : function() {
+        var rownumber = 0;
+        var layout = [];
+        $(this).children().each(function() {
+            var count = $(this).children().length;
+            if(count === 0) {
+                count = 1;
+            }
+            layout.push(count);
+            rownumber++;
+        });
+        var cellid = $(this).closest('.gscelllayouts').attr('cellid');
+        var data = {
+            "layout" : layout,
+            "cellid" : cellid
+        }
+        
+        var event = thundashop.Ajax.createEvent('','setLayoutOnCell',$(this), data);
+        thundashop.Ajax.post(event);
     },
     hideChangeLayoutOption : function() {
         var panel = $('.gscelllayouts');
@@ -117,6 +138,7 @@ thundashop.framework = {
         panel.css('left', button.offset().left-150);
         panel.css('top', button.offset().top + 50);
         panel.fadeIn();
+        panel.attr('cellid',$(this).closest('.gscell').attr('cellid'));
     },
     
     doLinkCell : function() {
@@ -1008,16 +1030,7 @@ thundashop.framework = {
     },
     showCellPanel: function (event) {
 
-        var target = $(event.target);
-        if (!target.hasClass('gscell')) {
-            for (var i = 0; i < 20; i++) {
-                target = target.parent();
-                if (target.hasClass('gscell')) {
-                    break;
-                }
-            }
-        }
-
+        var target = $(this).closest('.gscell');
 
         if (!target.hasClass('gscell')) {
             return;

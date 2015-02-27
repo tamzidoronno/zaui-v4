@@ -446,4 +446,27 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             reservation.payedFor = false;
         }
     }
+
+    @Override
+    public String getUserIdForRoom(String roomNumber) {
+        for (BookingReference ref : bookingReferences.values()) {
+            if (!ref.isBetweenCheckinAndCheckout()) {
+                continue;
+            }
+            
+            if (!ref.containsRoom(roomNumber, rooms)) {
+                continue;
+            }
+            
+            System.out.println("Ref: " + ref.bookingReference);
+            Order order = orderManager.getOrderByReference(""+ref.bookingReference);
+            if (order != null) {
+                return order.userId;
+            }
+        }
+        
+        return "";
+    }
+    
+    
 }

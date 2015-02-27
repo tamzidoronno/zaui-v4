@@ -97,3 +97,8 @@ html {
 .Menu .active td, .Menu .active {
     font-weight: normal;
 }
+
+.shop_button {
+    background-color: #003b81;
+    color: #FFF;
+}

@@ -1907,6 +1907,21 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getUserIdForRoom(self, roomNumber):
+    args = collections.OrderedDict()
+    if isinstance(roomNumber,GetShopBaseClass): 
+      args["roomNumber"]=json.dumps(roomNumber.__dict__)
+    else:
+      try:
+        args["roomNumber"]=json.dumps(roomNumber)
+      except (ValueError, AttributeError):
+        args["roomNumber"]=roomNumber
+    data = EmptyClass()
+    data.args = args
+    data.method = "getUserIdForRoom"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def markRoomAsReady(self, roomId):
     args = collections.OrderedDict()
     if isinstance(roomId,GetShopBaseClass): 

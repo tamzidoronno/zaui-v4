@@ -314,6 +314,8 @@ public class GetShop extends ManagerBase implements IGetShop {
             saveCustomerToGetShop(user, scope);
             if (startData.language.equals("nb_NO")) {
                 sendWelcomeEmailNorwegian(startData, newAddress);
+            } else {
+                sendWelcomeEmailEnglish(startData, newAddress);
             }
            
         } catch (UnknownHostException ex) {
@@ -469,5 +471,59 @@ public class GetShop extends ManagerBase implements IGetShop {
         
         mailFactory.send("post@getshop.com", "post@getshop.com", "Din GetShop side er nå klar", emailTemplate);
         mailFactory.send("post@getshop.com", startData.email, "Din GetShop side er nå klar", emailTemplate);
+    }
+    
+    private void sendWelcomeEmailEnglish(StartData startData, String newAddress) {
+        String emailTemplate = "";
+        emailTemplate += "<html >";
+        emailTemplate += "    <head>";
+        emailTemplate += "        <meta http-equiv='content-type' content='text/html; charset=UTF-8'>";
+        emailTemplate += "        <meta charset='UTF-8'>";
+        emailTemplate += "        ";
+        emailTemplate += "        <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin'>";
+        emailTemplate += "    </head>";
+        emailTemplate += "    <body style='margin: 0px; padding: 0px;'>";
+        emailTemplate += "        <div style='min-width: 100%; min-height: 100%; background-color: #419bcd; text-align: center; font-family: Ubuntu, sans-serif;'>";
+        emailTemplate += "        <br/>";
+        emailTemplate += "        <center>";
+        emailTemplate += "            <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABXCAYAAADyDOBXAAAWtElEQVR4nO2df5RcRZXHP7fqdU/P70lnMhkHCAk/NAQE5NcGJJhgjBDxx6LJwfBDUQlmURd23WVldw/jImL0ZBHdLETAACooWUXJCizrnmTZSCLGEJBkMcYQAhIyhEwyP3u636u7f7zX051kfnRP98zEs3zPqTMzr/vVu1XfV/feunWrBt7CW3gLg0PGW4BDsYW/aa7GzujmD8+czKqu8ZZnrGHHW4B8/I6/bqyh8hYP+604DQfqWbd+Leh4yzWWOGJGyBY+naxm8lIP+5lQKG0LCK6Zwm2PjrNoYwoz3gIAbODzdXEa7xDkM+EVRaHJYG58ib+bOq7CjTHGnZAtLKhJUnmvwVwRXgk1lACCOU+Qj21hQXz8JBxbjCshG/lglTD1IZCPhVeULBVZw2HxltRw/NHjJOKYY9yM+kYWV8Vo/rFF5hsMBgh/SkRJaEkEJig8X4/97Vp2uvGSd6wwLiPkYRbUCJU/Nph5GCE3Mg6FAxSLLPgEp9eMrZTjgzEn5PtcXDeVlh8YYy6KBgaDO3uGUH3JvBjx/xeEeGP5sDV8sqHC1K4Q+BAAqgU43oogxmFOAV4dbRnHG2M2Qlbz8UbPVN4hsBCIyChkGhSqNIec3srsMX2BxgNjQsh/cGVTtalfCnIVUAQZWQgWc+wCJo27mz7aGPU37gE+22Rxtwp8CojIGEm/arK8kh2ZGFVCvjjv5qa69W3foIurRAGKHRk5KGZM1NXDEO8GUw1uIaTH4pn5GL1G/vPTyRO++dPlFangY4iAUzAj0zgahlLKHvltBXNeLHaqxO2MwMSmBtZNdkZrYr41KoFbZaXLV7MnILNT1G69fH/35nLLcChGh5CVLzVc/dDj9zfv2X+JCRyoGaGaCiEIFl5r442yTAyfgGRVVf1CEZ2TIZjurD3aCklRS6AgHgRqEcCgBOrtC9BXH0xWbgsC+c/2Az0//AJ0lEOWQ1F+QlofqzvmdztXvWfjlrnxtI+KCdXUiIPoGt2a+d//Zm1JhLSCuaSqfrGv7mqE6QHUecbiVHFIGLBxAiYS1inRxDWJSNJhTw2Mzq1PVl1zv5r7P9He9S+lyDMQykpI8vPfr9tXP+1nH33s0dnJ9i5UbIlkQHaiksJuag2n7iPCehJTK+PxO4NAZ8c8kwiy0YHARQGkvGhBlhRjch6hc4gRMDQEyFkOffv9yeoP93X71y3u69tWSgvzUTY3cur1Kxv2HXXKz1r27Lng7N9uQ5ERG/BDIfAipNtGev9WKmc2xL1feshFHpIwDqyG6siKwToJ+5+QBwvRNcWKYFQwxoSfObCqGKTOqM6NVcUev7e26kNlaShlIqTu0w8nX2k6/UdUVMy+eMOzJpbxo6FeKrJDyz1q2Tsinf17amZbsf9t1LZYFOscxoFBsEhICoLVkICBSSEkRSS6z2BFMWLwRI+LxeXu+yckrihDg0snpOaLP2nqPv74lYFn5xH4nPnbbRhXDtsbqhBFcWR+PI37UsXWsJ2aC2PIf8XExo1TjEadqWCCqONVMIQjJkuAQaPP6B89VhSDRCW8L7ymiEqTir1j5eTEolJbXRohf7Omua9x2rcD630Ia5mx42Uq+8rlukcLubjvd5DZXuzdu6ifF4f/tBhjnUYjgFznZ0khq77CERMSkBstNlJTIZkajpKoLhsRbHBYJCkZ79v3J+MfK6XVIyak6m+fbIlNqF+WEbMQETCGE1/ZjecHpcgTIVRVDt3vY+49mdv3FXP3y1RdorifgTVRcDLU/Y5hSInUV6TShiRFJKfa+kkhqcRWPNAUv3SkLR8RIVV/+2RLZsKkpRlrF4VeVOiRHNW2Fy8olZCcS+bQb/Xwu6eLuXsnlZcq3g8MJhGGJbMLXgxPSr5NGY4UHYwUSTo/dvdISSmakOrWnzdnGiYuyxhzRT8ZEnpUyc7OEu1H/hKuPipkVpzMqoJ14EvUXGawKyxSl60vf/lrWFJcEaREhl4QJMgWgwSKUUk6P373ysbKy4rtgeLmITc8nUwlKpYH4l16EBmEra3s6cPoSCcdSvb9cAQb+uDvT+DrrxV69ytUL3LIMpDGXH39y8AHrUna7Dtj8j4MHxxdz7sjOznsb6uCLzgNf/USEGtw2ISiFjI+9HYq3R0mqdjl906sjn/6ze4HCm1H4YQseDhOU/XKQPjQYWSUjBwZitsMXHsCX32h0Lt3Ur0owCyzmOawrsOXhIclJSvGEKRoAJoRYnXKxBN9qo8NqEw6vIRiYuGQcwFk+oSe/ULbTi+563+927+bSLhPpVLfL6QthRNyxon3YiVvpe9wMlKJOCqCFD1I+j2qrT2kP/4Olr1Y6J07qFlokTvANB48JgZ+yqCk5H/hEFJUBdcDiSbHxJlp6t6eIVanxKqjGHS2vfm60cHk6T5Tz7LJP/wq9o1vrkvsup7UU8O1pzBClj73BZSF+fbiMDilvb6WwBhMMXZdsx6V255GPnASy3YWeutL1H5EkLtB6jSyF8OtCRdHiqJOkDhMuriPhrPTxBscJpYTXQd7pIVEPSTqA2qbXPOkE73lC1Zy7qphotbDG/XW9VNBb8QQH1JFOcerkxrxbRGZRRHBCjsC9D0n8bWdhd66k7r5gj5kkbqQ0sEyVw5HPimGQwy9gkWxqkifUDUlYOp13TTPT1E52WEropsMiB26ZL9XWa9MOzMz/Vu3mW8MJ9vwhFQlbkFpGraxzvGHKW/D9wokJCLDuWBniuDc6UUY8JdJzDW41TY0pWFeSpEOY74tP5gUxbhwkthwXoajr+um6kQfYqA2LBRZ1IKpwKud6Oa3Lef0oeQaWmXd+twpOC7AyPCqLQjYMm0KqUScup4hPNVspokI6tz2XtpnncN9BQcOd1E9T/D+I/zLFU1EPvJtuQmrAxUk7qiZk6HhslS/YyXlSClUjq6OswS4drCvDN2amFyOSDOFuLKquFgFm6cfjxsqsBipvcAFL/bQOecc7nt9+MpDrIGEYu7Pq6zQW4eERGsuBkDpqjjFf2bC1amUiUXqxytTiWEwzGxfydTBZBmckNlrPJw7HxnGdvS3SsDP8MTMd5GOxQZeA4mIDZxrc/R+fCb3FJVnNQdSAf6HHW4rZB+hDPywQhFak9AxCl734LZ7N/ae26HmrkzWFpSzxDg6HuPCwaQZnJC5DecAzUW1LXC8fEwLz558/MAz9ohYB7c8xt3PF1V3hOPofSZN5/sV/aEi+3N+ZrHE5M9XHOCedsiSKRz4aqvgHo3H7txeUbk57Qm2jKPEeiSJceZgUg1OiJXpiCk+9Sbt8715szhQX4W4gztIEJzTF6DvF60lrP6dCK9+l47LA/y/VPQJoCdHDAxMjjvkWugKONikyFd8Oj86jc6fZj9dfGnftvXxmh9tqqgl7YGJ3vDhPKtCio0xpW05A6bGDk6ImmNRV1dUT0VLnXsmJrnvAxdg1eVNmiIFY9zaN9m9q6h6B0AruOPofqAd94kA/xpH8B2FaNQNpGLzp+S8GsBPFP3LgN6rp9Dxj9PgMFu2L/A2PSvVbb/26vFtjpRSixgaExNpGahdg3tPNmhEbPFr7iIQBPzXaScxpW0/V/9iPSlJgJjQdDr5/QdZ3VN0vYPgNLragAe3wKOVxI8zJI4GN1WxxwokLS7hwDe4jgy8YnE708ReFTp2nABDenfGpF7LaPXOTVLXFDjnZsU6jaH0TY+q1HgVNAz02RAdbuK5ZOgivRlVVAw/uuBMalIZFq37DSmpDGslGJX0mZOhC9LPhwU2QtVEiHeAqQM6IL0KelrBQW9BdZrOii6vVjp8DJtMg3G+uAsTHZEzNnKoIy6WAXeFDU6IA+wI3crIeHcnEtz33j/DICxa9yx9JPCxY5Kfexb0EJYRI1GrJhBnjAo+ho3aYGwG5iQ6KGXVRwRndWAbOjghQlcx4YjDEM3EO6or+e57z8FzcNnTv6UPr3FkFY4DNGiw4jU6CM0/hl/2JUl6PqcmenAjHSaWlDoGzBEY4m0N9hBI0YkF/cibu3TUVPKd9/8Z/372SVTgn7aaxX8apEhsKuJOQLJBVRAD/97VxH71sB6YkRRDR3eaAZelhyDE7MBoR1m27Tulo6qSOz5wHj+d+c7ZLbgTylDrqKK1lYR4/iwjUiVRJDm7lhkgPNIxCfEYmafl0bb5VwNvPhqcEJd6AdG2ESxuHI7IHW6vqebe957Z8rUFcxesZnFV6RWPHurPbJzpwWWS1/7smBdRdqUTbO2rwnjFzUGw4JTtc1rxB3ru4ITcNHMrgdlVrnhR1h3ePaGWx955wvVX3/zJj5Sn4vLjjtWVUxIJ/tpYaQ7VVc7ZlNxQ4akDDf0h9kKKhmnOr1nL+sGePYzH4x7HRQsqI14rz4OEubTdibjZW1W5nKW/LimHaTSw/OfVzZWViVuskUsIk+CywWlyhxoIqPBGOs6uVMVBJA1WNEumYccBYe1gzx+akD7/h+B2RVKUB/3r8bYBqVjB154tOduvXFixhsbKam+Z9eSq3KjIhWH6uyB6OX2EF7qqww4f5n0VQB0pVR6fOHPwrQxDE9J61l4w96POLx8j0L/IAEmM/TZf3/Sp8lU+MtzzBMlKU7PCM7IofKkdSN7okBwpIoqI4qvwSioRXh+qe3Kcbu/KcNdQcgw/SfvNi99E2VT+U5L6W5DE2W9w2+bPlvkBBWPlGhpqaqq+53lcCmFnh2QcYtDz1VCE7sDSkTFDvq4RH77vWFp/3sDubhbDE7JqYZogfW3/nKQctiQfChhJYriF2zZ/rryVD4/bH6GhNuGtEqvzIXz7+wWT7PQjb3REn2bX4zMqtPuxoR8ioI4HK2YybCpQYWGMvz9nM8a/Mqy8jKoLIuWqgDRiuJmlY0fK7Y/QMKXF/lg9LgxVkusXKddKzc4Jc5/lpfs4hJ7ADqjR+/PvAja2tbGkEJkKjyvdeMa/Eeg15VddkHsVTSNqvsxtm0Zdfa1cQ8MxR9lVInKhRaLtqNkjb/KNeKRw8lzefIIUIaOHs6GExPmwvaed97d8sLC4WnGBvi+ddg9BsKTkVdNDkd8eQxLr3cptz36yjE84CA+uprG2Jv4DETM33IwaNihrvGWAzs/O1rPkZMUWFJvXGZr3lYywfW8n59ZfNLTdyEfxkdcvnXEXTq8rp9N1MCLvS+T20XCJH/glTfHJdoWB+ZKfoZU3z4AsAYrkDwfy1Vn4XStKZZRtlx0VCGTgxQOdzGqZw95i5BtZKLzvkbvQzA04N+D0vzRErTemATHLuXXzwnLV/NCTtFR5sdsNNtoqkJd8eshIyO/4rKvb/+pnR44onlHqPD/8SMMJYEZ5fl8nFzfNOXwVcjiMjJDWVkfv6n/BuRtxrqf0zI9BIDQQ0xV89bmSZ/QPraMlVhdbaowsyk328l591Wh+ARAdVUDWw8pTaf2ihUgYx8SYH34jjA5t7Eux4G1z2DkSOUe+WNTa6vPkgW+B3ExAV76ZKx8E1DTg6d3c+lzRey2yWLmG5op4bKmxckVOvoN17kGd3W9D8l3f3F3Z3z1RJsdSSLR7OgjY0Odzdd0sRrxNurTVu7VzfJ7Y903UvwV1PTmRy4gwANRATO/ka89dVezty39e3VxbFbsDCcnQgbKjlf5Zef5oz5mVvAAjoS8mAp5xTK/uBYXAsaFbWFL7bgreRjEQSl9OXTvH58mOfyaQmwlcKkwJH40iDeDu4Cu/ub5Q0ebdc9Mpkxr1bmPot0MywDxKJaea+r2rftsR3RcZiVwYRam1Ae+o6iHjeCatXDvhHEo+C6V8r3Nrq4f3wc8hugwp4WCToSACgXYh+hiZ3jtpnbV2wO998fWmlqPWf/Ifz7z+8qbE7lP7DfKQ75/iB5bAGQJn8V3e74EhCEz/NT8A54RZde2cX9+xqTPN5XXnUfCeliGbWI5Kcmg1/NP8z2LN8vLWOwAcr4HuQHQjTv8ApIAmgsS7ahJvzLjp7C9OeXvdizVGgmh5f7imKoGzeR2f7XwT/nQW3xmCwOI7qJOAqyf/8QURPpw4mx3latbozCZaNyzGyIpRqftQONIIPuoc6nmV8QPxm876B3PShGcx4gokA0JCwg4P1ESjJSKlnxhL4IR0YLm47vVtp9X1zZEzKHgbRSEYHdXSOvM7OHcNzoFz4QEvrowlyKsTF0ddFc7WVMfaEzeefhMzJvwGI1FcqojYW39onQFC7gA4nBpOrOja3tTZ9+5yk5F91ujhpqc+gzV39/9dQlbR0LDUVrRz/WlfcWc0/8oopoiRkZVNcYS2IhwVXqSyLIED33n4gaHK6bZ3293nnlxEOKQYjG7S2lcvuAfXs8RoJtye6gIIgtzvZSlKMr6bvzj165zd8vTIyCDraeW7ttHo6A/tKqL+80Ff56zRIgPG4Kjx1vd+b9NLifftTzk7NwiswWXXO0t0g6O8v2Nqd/LpU5dz/tFPkXGxEZEBeXFeFaIjZaLHmHAXrrqNvX3dl1z/591Fh0OKwagTsnYt2v6Ln2x8ZvtR3b5zF/Skq7wgE4/0/wiJCAwJr5szmn/N4tOXc0bzJlJ+HJARkZGPkIiwODzUga88LeIvumF+V8lZ+8NhTA7j//KXcb979Olnert399V6Hef6mPibPRMgE23y1mAYIoBAIPCoiHUxfdIWLjlhNVee+l0mV++mzw/zlsu1dhaOCIuqEDh9Ct+/Zsm8jt+Xp/ahMbpG/RDoGrzHa/irbe3vuPn5tlOrtrSdxMvtx/F6ZwtkKkAcByXmqQEVvEQXLXV/ZNqEl5jRtIV3vW0jx9S9Rsr3cGrKSERY/CA06Gln12pX73Wfmp/eWp4nDI8xJQRgdiveFy6qvD4W7731zZ5J8T8eaKGtezJv9kxiX88EejLVBCp4JqAm3k2ych+N1W8wuWYPx9Tvoq6ig0w0ccuPL5UDqopGnpbv23Vdfvqaa+ekyzIDLxRjTghAa+ts7+3zNn8uHutcFjfOCIrv4vRmEmRcPDpaRInbNJWxXqz4ODX9pdzL+lmEcUTBz8iGdGfqyisvouiD00rFuPxDl7Vrd7p3HpN6pvbY5JvWBvOdMyCKZzMkvBQJL0WF14c1QbgPUC1OwxNOR4uMcD1EwOmmvr70pVe+b2TrGaViXEZIPh5Y1/jZ6orOO0WD8OCacRBJCR0HdTz/xoHM+5a8f+itbqOJcf9vA1edv/eunlTyWhWLqKLlzvsaFtkz53jhld2Z94wnGXAEjJAsvvc/jYurEp0rBAcanmBS6pxiaOTiOKr6Qu/ezLuvmD86x4cXg3EfIVlcOWvvd3pT9ddplLOfW8suP8JRmF0f1E3Bvsx7jgQy4AgiBOCKWW3/2pOu+XygpKNjmyg/KXk5VM5tCLoyH1g4irGpYjEuXtZQeGRK78aPTqtqF5M5XzAV0p8pX6r6iujVUBUG6tZ29vhXXjHnyPq/VkeMDTkUq35lrxKxNxvhuPCK9icjFI8coU6DNGr+zWUyX1p4PqMemyoWRywhAA9v4Hxj4jeouI9YjCn0GL8BEcYldxjfv/PlPe6eG/6c/WUWtyw4ogmBMPWzOmbnK3K5ETMXyDuDcwBVlnf6RDi/EBReN+Ie9HvlRwsvyDwzxk0oCkc8IVk8vI4p6nGKtfZinLnQGJkxkGXJXnPqOhCzzjl9HMmsa9/DtmsLzEAfT/zJEJLF8jXUTIqRNB4NgXCcldgU52SiKEbE7xYjrwcu2O4ytLX3sH/Peva1DrIF+UjEnxwhh6K1FY8Zofs+A9i6Fb+1deRncb2Ft3AQ/g/McNEeArjJPwAAAABJRU5ErkJggg=='/>";
+        emailTemplate += "        </center>";
+        emailTemplate += "        <br/>";
+        emailTemplate += "        ";
+        emailTemplate += "        <div style='background-color: #FFF; border-radius: 10px; width: 500px; text-align: center; padding: 20px; margin: 0 auto; text-align: left; color: #333;'>";
+        emailTemplate += "            <h1 style='text-align: center;'>Welcome to GetShop </h1>";
+        emailTemplate += "            <br/> GetShop welcomes you to your new e-commerce platform!";
+        emailTemplate += "            <br/> ";
+        emailTemplate += "            <br/> <b>Your ecommerce is ready</b>";
+        emailTemplate += "            <br/> Address: http://"+newAddress;
+        emailTemplate += "            <br/> Username: " + startData.email;
+        emailTemplate += "            <br/> Password: " + startData.password;
+        emailTemplate += "            <br/> ";
+        emailTemplate += "            <br/> Please print this document, your email account should not be used as a secure password box.";
+        emailTemplate += "            <br/> ";
+        emailTemplate += "            <br/> <b>Need help to get started?</b>";
+        emailTemplate += "            <br/> Relax, we will help you and it will not cost you any extra. This is beacuse its not as hard as you might think. Contact us and we can help you to get the best out of your solution.";
+        emailTemplate += "            <br/> ";
+        emailTemplate += "            <br/> <b>Documentation:</b>";
+        emailTemplate += "            <br/> Click on the following link to access our documentation <a target='_blank' href='https://www.getshop.com/documentation.htmll'>Link here</a>";
+        emailTemplate += "            <br/> ";
+        emailTemplate += "            <br/> <b>Best regards GetShop</b>";
+        emailTemplate += "            <br/> Epost: canada@getshop.com";
+        emailTemplate += "            <br/> Tlf: +47 940 10 704";
+        emailTemplate += "            <br/>";
+        emailTemplate += "            <br/> Address:";
+        emailTemplate += "            <br/> 106 spruceside cres";
+        emailTemplate += "            <br/> fonthill, ontario canada los 1E1";
+        emailTemplate += "            <br/> Canada";
+        emailTemplate += "        </div>";
+        emailTemplate += "        <br/><div style='color: #173d56'> A piece of GetShop @ <a href='http://www.getshop.com'>www.getshop.com</a></div><br/><br/>";
+        emailTemplate += "        </div>";
+        emailTemplate += "    </body>";
+        emailTemplate += "</html>";
+
+        
+        mailFactory.send("post@getshop.com", "post@getshop.com", "Your GetShop account is ready", emailTemplate);
+        mailFactory.send("post@getshop.com", "canada@getshop.com", "Your GetShop account is ready", emailTemplate);
+        mailFactory.send("post@getshop.com", startData.email, "Your GetShop account is ready", emailTemplate);
     }
 }

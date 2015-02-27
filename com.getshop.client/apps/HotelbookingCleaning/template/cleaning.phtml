@@ -18,7 +18,59 @@ printGuestTable($reservations, $roomlist, true);
 echo "<br><br>";
 echo "<h1>Guests leaving today</h1>";
 printGuestTable($reservations, $roomlist, false);
-printIntervalCleaning($reservations, $roomlist, $this);
+echo "<br><br>";
+printCleaningRows($reservations, $roomlist, 5);
+
+
+function printCleaningRows($reservations, $roomlist, $interval) {
+    echo "<h1>Cleaning table</h1>";
+    echo "<i class='fa fa-sign-out'></i> leaving the room.<br>";
+    echo "<i class='fa fa-refresh'></i> interval cleaning (each 5th day).<br>";
+    echo "<br><table width='100%'>";
+    echo "<tr>";
+    for($i = 0; $i < 7; $i++) {
+        echo "<td valign='top'>";
+        $day = date(time()+(86400)*$i);
+        echo "<b>" . date("d-m-Y", $day) . "</b><br>";
+        foreach($reservations as $reservation) {
+            $startDate = strtotime($reservation->startDate);
+            $endDate = strtotime($reservation->endDate);
+            
+            if($endDate < date(time()+(86400)*($i-1))) {
+                continue;
+            }
+            if(!$reservation->payedFor) {
+                continue;
+            }
+            
+            
+            $diff = ceil(($day - $startDate)/86400)-1;
+            $doPrint = false;
+            $icon = "";
+            if($diff % $interval == 0 && $diff != 0) {
+                $doPrint = true;
+                $icon = "<i class='fa fa-refresh'></i>";
+            }
+            if(date("y-m-d", $day) == date("y-m-d", $endDate)) {
+                $doPrint = true;
+                $icon = "<i class='fa fa-sign-out'></i>";
+            }
+            if(date("y-m-d", $day) == date("y-m-d", $endDate)) {
+                $doPrint = true;
+                $icon = "<i class='fa fa-sign-out'></i>";
+            }
+
+            if($doPrint) {
+                foreach($reservation->roomsReserved as $resroom) {
+                    echo "$icon <span title='".$resroom->visitors[0]->phone ."'>" . $roomlist[$resroom->roomId]->roomName . " - ".$resroom->visitors[0]->name ."</span><br>";
+                }
+            }
+        }
+        echo "</td>";
+    }
+    echo "</tr>";
+    echo "</table>";
+}
 
 function printGuestTable($reservations, $roomlist, $arriving) {
 
@@ -30,6 +82,11 @@ function printGuestTable($reservations, $roomlist, $arriving) {
     echo "<th align='left' width='20%'>Action</th>";
     echo "<th align='left'>Name of guest</th>";
     foreach ($reservations as $reservation) {
+        if(!$reservation->payedFor) {
+            continue;
+        }
+            
+        
         if ($arriving) {
             $startdate = strtotime($reservation->startDate);
         } else {

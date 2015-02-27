@@ -20,10 +20,12 @@ public class BookingReference extends DataCommon {
     public Double bookingFee = 0.0;
     public boolean updateArx = true;
     public boolean confirmed = false;
-    public String sentWelcomeMessages = "true";
+    public boolean sentWelcomeMessages = false;
+    public boolean sentCheckInMessages = false;
     public Integer parkingSpots = 0;
     public String heardAboutUs = "";
     public boolean payedFor = false;
+    public long orderId;
     Date failed = null;
     
     public boolean isApprovedForCheckin(String roomId) {

@@ -38,6 +38,7 @@ Existing booking references
                 <th>Start date</th>
                 <th>End date</th>
                 <th>Payed for</th>
+                <th>Order id</th>
             </tr>
         </thead>
         <tbody>
@@ -77,8 +78,8 @@ Existing booking references
                 }
             }
             echo "</td>";
-            echo "<td style='text-align:center;' valign='top'>" . $reservation->startDate . "</td>";
-            echo "<td style='text-align:center;' valign='top'>" . $reservation->endDate . "</td>";
+            echo "<td style='text-align:center;' valign='top'>" . date("d-m-Y", strtotime($reservation->startDate)) . "</td>";
+            echo "<td style='text-align:center;' valign='top'>" . date("d-m-Y", strtotime($reservation->endDate)) . "</td>";
             echo "<td align='center'>";
             if($reservation->payedFor) {
                 echo "Yes";
@@ -86,6 +87,7 @@ Existing booking references
                 echo "No";
             }
             echo "</td>";
+            echo "<td style='text-align:center;' valign='top'>" . $reservation->orderId . "</td>";
             echo "</tr>";
         }
         ?>

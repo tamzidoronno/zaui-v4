@@ -340,8 +340,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if (!order.id.equals(orderId)) {
                 continue;
             }
+            String currentSession = getSession().id;
             if (user == null) {
-                if (order.session != null && order.session.equals(getSession().id)) {
+                if (order.session != null && order.session.equals(currentSession)) {
                     return order;
                 }
             } else if (user.isAdministrator() || user.isEditor()) {

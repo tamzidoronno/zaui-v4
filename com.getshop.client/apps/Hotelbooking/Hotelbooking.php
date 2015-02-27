@@ -519,6 +519,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             $visitor = new \core_hotelbookingmanager_Visitors();
             $visitor->name = $_POST['data']['name_' . $i];
             $visitor->phone = $_POST['data']['phone_' . $i];
+            $visitor->email = $_POST['data']['email_' . $i];
             
             $info->visitors = array();
             $info->visitors[] = $visitor;
@@ -554,14 +555,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                 }
             } else {
                 $order = $this->createOrder($user);
-            }
-            
-            
-            if(isset($_POST['data']['heardaboutus'])) {
-                $reservation->heardAboutUs = $_POST['data']['heardaboutus'];
-                $this->startAdminImpersonation("HotelBookingManager", "updateReservation");
-                $this->getApi()->getHotelBookingManager()->updateReservation($reservation);
-                $this->stopImpersionation();
             }
             
             $_GET['orderProcessed'] = true;

@@ -96,6 +96,8 @@ thundashop.framework = {
         $(document).on('click', '.gs_templatehaeaderfunctions .selectcolors', this.showColors);
         $(document).on('click', '.gs_templatehaeaderfunctions .color_select.close', this.hideColors);
         $(document).on('click', '.gslinkcell', this.doLinkCell);
+        $(document).on('click', '.gs_change_cell_layoutbutton', this.showChangeLayoutOption);
+        $(document).on('click', '.gs_close_cell_layoutbutton', this.hideChangeLayoutOption);
         $(document).on('keyup', '#gs_start_store_email', this.startFromCurrentStore);
 
         /* Cell operations */
@@ -104,6 +106,19 @@ thundashop.framework = {
         $(document).on('click', '.gsemptyarea .shop_button', this.simpleaddrow);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
     },
+    hideChangeLayoutOption : function() {
+        var panel = $('.gscelllayouts');
+        panel.fadeOut();
+    },
+    
+    showChangeLayoutOption : function() {
+        var button = $(this);
+        var panel = $('.gscelllayouts');
+        panel.css('left', button.offset().left-150);
+        panel.css('top', button.offset().top + 50);
+        panel.fadeIn();
+    },
+    
     doLinkCell : function() {
         var url = prompt("Please enter the url for the link", "http://www.google.no");
         var data = {
@@ -280,10 +295,6 @@ thundashop.framework = {
         });
     },
     showCellBoxHeader: function (event) {
-        if (!thundashop.framework.advancedMode) {
-            return;
-        }
-
         var target = $(event.target);
         $('.gsactiveboxheader').removeClass('gsactiveboxheader');
         $('.gscellheadermin').show();
@@ -996,9 +1007,6 @@ thundashop.framework = {
         thundashop.Ajax.post(event);
     },
     showCellPanel: function (event) {
-        if (!thundashop.framework.advancedMode) {
-            return;
-        }
 
         var target = $(event.target);
         if (!target.hasClass('gscell')) {

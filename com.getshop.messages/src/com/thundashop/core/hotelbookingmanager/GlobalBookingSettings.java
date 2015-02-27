@@ -6,6 +6,7 @@ public class GlobalBookingSettings extends DataCommon {
     public String name = "";
     public String type = "hotel";
     public Integer minRentalDays = 1;
+    public Integer referenceCount = 1000;
     public Integer maxRentalDaysAhead = 1000;
     public boolean roomThumbNails = false;
     public boolean showReferenceNumber = false;

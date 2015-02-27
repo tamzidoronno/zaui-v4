@@ -8,11 +8,6 @@ if(!$entries) {
 echo "<table bgcolor='#EFEFEF' cellspacing='1' cellpadding='1' width='100%'>";
 echo "<tr bgcolor='#FFF'>";
 echo "<th>time</th>";
-echo "<th>Code</th>";
-echo "<th>Navn</th>";
-echo "<th>Doors</th>";
-echo "<th>Start date</th>";
-echo "<th>End date</th>";
 echo "<th>msg</th>";
 echo "</tr>";
 foreach($entries as $entry) {
@@ -20,21 +15,7 @@ foreach($entries as $entry) {
     $user = $entry->user;
     echo "<tr bgcolor='#FFF'>";
     echo "<td style='width:120px'>" . date("d.M - H:i", strtotime($entry->rowCreatedDate)) . "</td>";
-    
-    if($entry->type === "sms" || $entry->type === "email") {
-        echo "<td colspan='6'>" . $entry->message . "</td>";
-    } else {
-        echo "<td>" . $user->code . "</td>";
-        echo "<td>" . $user->firstName . " " . $user->lastName . "</td>";
-        echo "<td>";
-        foreach($user->doorsToAccess as $door) {
-            echo $door . " ";
-        }
-        echo "</td>";
-        echo "<td>" . $user->startDate . "</td>";
-        echo "<td>" . $user->endDate . "</td>";
-        echo "<td>" . $entry->message . "</td>";
-    }
+    echo "<td>" . $entry->message . "</td>";
     echo "</tr>";
 }
 echo "</table>";

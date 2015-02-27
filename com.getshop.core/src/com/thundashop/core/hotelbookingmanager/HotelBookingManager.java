@@ -28,7 +28,6 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class HotelBookingManager extends ManagerBase implements IHotelBookingManager {
 
-    public BookingSettings booksettings = new BookingSettings();
     public GlobalBookingSettings settings = new GlobalBookingSettings();
     public ArxSettings arxSettings = new ArxSettings();
     public VismaSettings vismaSettings = new VismaSettings();
@@ -54,6 +53,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Autowired
     private PageManager pageManager;
+    
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -146,9 +146,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     
 
     private int genereateReferenceId() throws ErrorException {
-        booksettings.referenceCount++;
-        int count = booksettings.referenceCount;
-        saveObject(booksettings);
+        settings.referenceCount++;
+        int count = settings.referenceCount;
+        saveObject(settings);
         return count;
     }
     
@@ -269,7 +269,23 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Override
     public void checkForWelcomeMessagesToSend() throws ErrorException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<BookingReference> reservations = getAllReservations();
+        
+        for(BookingReference reference : reservations) {
+            if(reference.payedFor && !reference.sentWelcomeMessages) {
+                System.out.println("Welcome message needs to be sent for: " + reference.bookingReference);
+                for(RoomInformation room : reference.roomsReserved) {
+                    Visitors visitor = room.visitors.get(0);
+                    String title = formatMessage(reference, arxSettings.emailWelcomeTitleNO, getRoom(room.roomId).roomName, 0, visitor.name);
+                    String message = formatMessage(reference, arxSettings.emailWelcomeNO, getRoom(room.roomId).roomName, 0, visitor.name);
+                    String sms = formatMessage(reference, arxSettings.smsWelcomeNO, getRoom(room.roomId).roomName, 0, visitor.name);
+                    sendEmail(visitor, title, message);
+                    sendSms(visitor,sms);
+                }
+                reference.sentWelcomeMessages = true;
+                saveObject(reference);
+            }
+        }
     }
 
     @Override
@@ -440,10 +456,39 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     private void finalize(BookingReference reservation) {
         Order order = orderManager.getOrderByReference(reservation.bookingReference+"");
+        reservation.orderId = order.incrementOrderId;
         if(order.status == Order.Status.PAYMENT_COMPLETED) {
             reservation.payedFor = true;
         } else {
             reservation.payedFor = false;
         }
+    }
+
+    private void sendEmail(Visitors visitor, String title, String message) {
+        String msg = "Sending mail to " + visitor.email + " title: " + title + " message: " + message;
+        messageManager.sendMail(visitor.email, visitor.name, title, message, arxSettings.smsFrom, "");
+        ArxLogEntry newEntry = new ArxLogEntry();
+        newEntry.message = msg;
+        saveObject(newEntry);
+        logEntries.add(newEntry);
+    }
+
+    private void sendSms(Visitors visitor, String sms) {
+        String msg = "";
+        try {
+            msg = "Sending sms to " + visitor.phone + " title: " + visitor.name + " message: " + sms;
+            messageManager.sendSms(visitor.phone, sms);
+            ArxLogEntry newEntry = new ArxLogEntry();
+            newEntry.message = msg;
+            saveObject(newEntry);
+        }catch(Exception e) {
+            msg = "Failed sending sms to " + visitor.phone + " title: " + visitor.name + " message: " + sms;
+        }
+        
+        ArxLogEntry newEntry = new ArxLogEntry();
+        newEntry.message = msg;
+        saveObject(newEntry);
+        logEntries.add(newEntry);
+        
     }
 }

@@ -25,7 +25,7 @@ app.WilhemsenHouseWashingOrder = {
         var event = thundashop.Ajax.createEvent("", "canOrderWash", this, data);
         thundashop.Ajax.postWithCallBack(event, function(customerId) {
             if (!customerId) {
-                alert(__w("Please check your room number, you can only order wash while you are staying at the hotel"));
+                alert(__w("Please check your room number, you can only order cleaning while you are checked in."));
             } else {
                 data = {
                     productId: "8dd279a2-4949-45ce-83c5-1d329f938179"

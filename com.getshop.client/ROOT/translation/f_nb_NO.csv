@@ -218,7 +218,6 @@ Default on, turn off if you dont want to show the full description.;-;Standard p
 Delay (ms);-;Opphold (ms)
 Delete account;-;Slett konto
 Delete comment;-;Slett kommentar
-Delete my store;-;Slett min butikk
 Delete pages by dragging the menu entry to the garbage box.;-;Slett sider med å dra et menyvalg hit.
 Delete selected application;-;Slett valgte applikasjon
 Delete this image;-;Slett dette bildet.
@@ -265,7 +264,6 @@ End hour;-;Slutt time
 Enter name of the person to search for;-;Skriv inn navnet til personen du ønsker å søke på.
 Enter product name here to search for a product to add as related;-;Skriv inn relatert produkt her og søk etter det.
 Enter the address to your page in the field below to activate this news feed.;-;Skriv inn adressen til siden din her og aktiver det i din nyhetsfeed.
-Enter the address you wish users should be able to access, example (yourdomein.com).;-;Legg inn domenet ditt, eksempel dittdomene.no
 Enter the fields below to activate PayPal for your webshop;-;Fyll inn feltene under for å aktivere PayPal på din webshop.
 Enter the name of the page;-;Gi nytt navn for siden
 Enter the pageid to the page where the booking form is.;-;Skriv inn side id'en for hvor booking formen er .
@@ -298,11 +296,9 @@ Footer;-;Footer
 Found on backside, last 3 digits.;-;Funnet på baksiden av kortet, siste tre siffer
 Free;-;Gratis
 Free shipment;-;Gratisk frakt
-Gallery;-;Galleri
 General user informational;-;Generell bruker informasjon
 Get Started;-;Kom i gang
 Get started, add this application and start adding news and updates to your page.;-;Kom i gang, legg til denne applikasjonen og start å legg til nyheter og oppdateringer to din side.
-GetShop contains of much more then just some basic settings, the information and settings you find here is just the basic one that are unique for everyone. If you wish to change settings regarding e-commerce stuff you need first to activate e-commerce under applications and then change settings that shows up.;-;GetShop består av mye mer enn bare noen få instillinger som du ser under. Hver applikasjon kan ha noen innstillinger og noen moduler har også instillinger. For å finne ut mer se på applikasjoner.
 Global CSS editing;-;Globale CSS instillinger
 Global css;-;Global css
 Go to E-Commerce->Products and create something.;-;Gå til E-Commerce->Produkter og opprett noe
@@ -380,7 +376,6 @@ Mail;-;E-post
 Mail address;-;Epost
 Mail settings;-;Mail instilinger
 MailManager;-;Epost behandler
-Main email address;-;Hoved epostaddresse
 Main order email;-;Hvordan skal mailen se ut?
 Make sure that the password you wrote above is the correct.;-;Må gjenta passordet for å være sikker på at du har skrevet inn riktig passord
 Manage lists;-;Behandle lister
@@ -419,7 +414,6 @@ News;-;Nyheter
 Next page;-;Neste side
 No advanced color options for this design;-;Ingen avanserte farger tilgjengelig for dette designet.
 No background selection available for this design.;-;Ingen bakgrunsvalg tilgengelig for dette designet.
-No cleaning;-;Ingen rengjøring
 No colors available for this design.;-;Ingen farger tilgjengelig for dette designet.
 No comments added yet;-;Ingen kommentarer lagt til enda.
 No image added for this product;-;Ingen blider har blitt lagt til for dette produktet.
@@ -488,7 +482,6 @@ Phone number;-;Telefonnr
 Phonenumber to the customer;-;Tlf nr på din kunde
 Place;-;Sted
 Please activate this if you want to use taxes in the e-commerce solution;-;Vennligst aktiver denne hvis du ønsker å benytte deg av skatter og avgifter
-Please check your password;-;Vennligst sjekk passordet ditt
 Please enter the accounts password.;-;Legg inn passordet til kontoen
 Please enter the address you wish this button should direct you to;-;Skriv inn adressen du ønsker denne knappen skal sendes til
 Please search for a page;-;Vennligst søk etter en side
@@ -625,11 +618,9 @@ Sorry, no result found.;-;Sorry, ingen resultater ble funnet
 Sorry, we do not have any related products to this product;-;Sorry, vi har ingen relaterte produkter for dette produkter
 South west corner latitude;-;Sør vest latitude hjørne
 South west corner longitude;-;Sør vest longitude hjørne
-Specify a title for your webshop. this will be displayed on the tabs in etc chrome.;-;Legg inn en tittel på din nettbutikk, denne vises i tabbene på nettleserene.
 Specify an airgram account.;-;Spesifiser din airgram konto
 Specify boundaries the map should restrict itself to. Leave it empty to avoid boundaries. Or add multiple rectangular fields as constraints.;-;Specifiser grenser på karetet. Hvis du ønsker at det ikke skal være begrensninger i karetet så la dette være tomt, eventuelt legg inn flere for å lage en rektaktulær grense.
 Standard page;-;Standard side
-Start a new webshop with this template;-;Start en ny side med denne malen
 Start adding pictures to your webshop, create this application and start uploading images.;-;Legg til bilder til din webshop, opprett denne applikasjonen og start å last opp bilder.
 Start entering the page name you want this button to link to.;-;Skriv inn siden du ønsker denne knappen skal linkes til
 Start hour;-;Start time
@@ -691,8 +682,6 @@ This is the email address that will be printed on the invoice, example post@gets
 This is the lists that is available to be displayed in your webshop. All products in a list will be available for search engines, customers and etc.;-;Dette er listene av produkter som er tilgjengelige på din nettbutikk.
 This is the mail that will be sent to attendees under the category waiting list.;-;Denne mailen blir sendt til de som blir satt på ventelisten
 This is the mail that will be sent upon booking;-;Denne eposten blir sendt ved en booking.
-This is the main email address, if you change this all orders, contact forms and etc will be sent to this email address.;-;Dette er hovedepostaddressen, denne brukes til å sende en kopi av ordremailer, kontaktskjema osv.
-This is the perfect application if you need to stash your page a bit more, simply create banners and add them to this application and then it will rotate;-;Denne applikasjonen er perfekt for deg som ønsker å ""stæsje"" opp siden din litt mer, enkelt legg til reklamesnutter som roterer på de sidene du ønsker.
 This is the post code that will be printed on the invoice, example 4380;-;Dette er postnummeret som vises på fakturaen, eksempel 4380
 This is the title of the product, example "White cute teddy bear";-;Navnet på produktet, f.eks "Søt hvit teddybjørn"
 This is the username you receive from Clickatell when you create an account.;-;Dette er et brukernavn du har fått fra clickatell når du opprettet kontoen din hos clickatell.
@@ -755,7 +744,6 @@ Upload image from your computer;-;Last opp bilder fra din pc
 Upload in progress, please wait.;-;Laster opp, vennligst vent.
 Uploading files;-;Laster opp filer
 Uploading logo;-;Last opp logo
-Url;-;Url
 Use this application to setup the emails sent from your webshop, like order confirmation etc.;-;Bruk denne applikasjonen for å stille inn eposter som sendes fra din webshop.
 Use your GetShop credit to buy this picture.;-;Bruk dine GetShop kreditter forå  kjøpe bilder
 Used for configuring different emails sent from the system;-;Brukt for å konfigurere forskjellige eposter som sendes fra systemet-
@@ -820,12 +808,9 @@ Your merchant key and id is correct;-;Din merchant key og id er korrekt.
 Your merchant key or id is incorrect, please recheck it;-;Din merchant key eller id er feil, vennligst sjekk den igjen
 Your merchant key, this id is something that sisow is providing you.;-;Din merchant key, denne får du fra sisow
 Your message has been sent!;-;Din melding har blitt sendt!
-Your name can not be empty;-;Navn kan ikke være tomt
 Your personal information has been updated.;-;Din personlige informasjon har blitt oppdatert.
-Your phonenumber can not be empty;-;Telefonnret kan ikke være blank
 Your product lists;-;Dine produktlister
 Your reset code;-;Din kode for tilbakesetting
-Your shopname can not be empty;-;Butikknavnet kan ikke være blank
 Your site has been deleted;-;Din side har blitt slettet
 Your subscription ends today, please choose a new payment plan.;-;Ditt abonnement slutter idag, du må kjøpe en ny produkt pakke for å fortsette.
 Your subscription expires in {days} day(s);-;Ditt abonnement går ut om {days} dage(r).

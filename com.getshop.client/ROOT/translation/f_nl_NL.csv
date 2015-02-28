@@ -100,7 +100,6 @@ Customer email;-;Klant email
 Customer name;-;Klant naam
 Customer phone;-;Telefoonnummer
 Customers;-;Klanten
-Delete my store;-;Verwijder mijn webwinkel
 Delete selected application;-;Verwijder geselecteerde applicatie
 Delete this image;-;Verwijder deze afbeelding
 Delete user;-;Verwijder gebruiker
@@ -129,7 +128,6 @@ Extra invoice email field, can be useful if candidate is not the same as the one
 First Page;-;Eerste pagina
 Fixed price discount?;-;Korting prijs
 Footer;-;Footer
-Gallery;-;Gallery
 Get Started;-;Start
 Get started, add this application and start adding news and updates to your page.;-;Voeg deze applicatie toe en voeg nieuws en updates toe aan je pagina.
 Google Analytics;-;Google Analytics
@@ -297,7 +295,6 @@ This is the city that will be printed on the invoice, example Las Vegas;-;Stad v
 This is the company name that will be printed on the invoice, example GetShop;-;Bedrijfsnaam vermeld op de factuur
 This is the email address that will be printed on the invoice, example post@getshop.com;-;Email adres vermeld op de factuur
 This is the mail that will be sent upon booking;-;Dit is de email die verzonden zal worden bij een booking.
-This is the perfect application if you need to stash your page a bit more, simply create banners and add them to this application and then it will rotate;-;Met deze applicatie kan je je pagina wat meer invullen. Maak banners aan, voeg ze toe en laat ze roteren op de webwinkel
 This is the post code that will be printed on the invoice, example 4380;-;Postcode vermeld op de factuur
 This is the vat number that will be printed on the invoice, example 123456789;-;BTW nummer vermeld op de factuur
 This is the web address that will be printed on the invoice, example http://www.getshop.com;-;Website vermeld op de factuur

@@ -36,7 +36,10 @@ April;-;April
 Attributes;-;Attributter
 August;-;August
 Available positions;-;Ledige plasser
-Background color;-;Bakgrunns farger
+Average price;-;Snitt pris
+Back to page;-;Tilbake til siden
+Background color inner;-;Indre bakgrundsfarge
+Background color outer;-;Ytre bakgrundsfarge
 Background image / styling;-;Bakgrunnsbilde / Styling
 Birth Date;-;Fødselsdato
 Birth date;-;Fødselsdato
@@ -72,7 +75,6 @@ Check out;-;Utsjekk
 Checkout;-;Utsjekking
 Choose;-;Velg
 City;-;By
-Cleaning 49,- each clean;-;Vask 49,- per gang.
 Click next to select shipping options;-;Trykk neste for å velge en betalings metode
 Comments;-;Kommentarer
 Company;-;Selskap
@@ -108,7 +110,6 @@ Delete image;-;Slett bilde
 Delete row;-;Slett raden
 Delete selected slide;-;Slett valgte slide
 Did not find the specified company, please check your company number;-;Fant ikke det angitte firmaet, vennligst sjekk organisasjonret
-Discount;-;Rabatt
 Discounted price;-;Rabattert pris
 Display product lists in your webshop;-;Vis produkt lister i din nettbutikk.
 Disploma is disabled;-;Diploma er deaktivert
@@ -121,6 +122,7 @@ Email;-;Epost
 Email address;-;Epost adresse
 Email sent;-;Epost sendt
 End date;-;Slutt dato
+Enter room number;-;Skriv inn nom nummeret ditt
 Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.L
 Fade;-;Fade
 Failed;-;Feilet
@@ -131,8 +133,10 @@ Fixed price;-;Fast pris
 Fr;-;Fr
 Friday;-;Fredag
 Full name;-;Hele navnet
+Gallery;-;Galleri
 Got a coupon from use? Apply it and get discount.;-;Har du en kupong? bruk den her
 Group;-;Gruppe
+Height;-;Høyde
 Height (px);-;Høyde (px)
 Height (px) mobile;-;Høyde (px) mobil
 Hide on mobile;-;Ikke vis på mobilen
@@ -142,7 +146,6 @@ I am sorry, but all fields are required before sending a message.;-;Beklager, me
 I have a partnership deal;-;Jeg har en partneravtale
 I need a handicap room;-;Jeg trenger et handicap rom
 Image;-;Bilde
-Image carousel;-;Bilde karusell
 Included in all rooms:;-;Inkludert i alle rom:
 Information;-;Informasjon
 Inner background;-;Indre bakgrunn
@@ -192,7 +195,6 @@ My account;-;Min konto
 My images speeks for itself;-;Mine bilder snakker for seg selv
 My name is:;-;Mitt navn er
 Name;-;Navn
-Name of your shop;-;Navn på din nettbutikk
 New message;-;Ny melding
 New password;-;Nytt passord
 NewsLetter;-;Nyhetsbrev
@@ -212,15 +214,14 @@ October;-;Oktober
 Old password;-;Gammelt passord
 Open styling;-;Åpne styling
 Order;-;Ordre
+Order cleaning;-;Bestill vask
+Ordinary price;-;Ordinær pris
 Organisation;-;Organisasjon
 Organisation name;-;Selskapnavn
 Organisation number;-;Organisasjonsnummer
 Organisation number has to be 9 digits long.;-;Organisasjonsnummeret må bestå av 9 siffer 
 Original (hp);-;Orginal hp
 Original (nm);-;Original nm
-Ordinary price;-;Ordinær pris
-Average price;-;Snitt pris
-Your savings;-;Du sparer
 Other attributes;-;Andre attributter
 Other operations;-;Andre operasjoner
 Our local time is:;-;Vår lokale tid er
@@ -243,8 +244,11 @@ Pin area;-;Pin til område
 PixelateTheme1;-;PixelateTheme1
 Place order;-;Legg inn ordre
 Please check your delivery options.;-;Vennligst sjekk dine leveringsmetoder.
+Please check your room number, you can only order cleaning while you are checked in.;-;Sjekk om romnret du har oppgitt er korrekt. Du kan kun bestille vask mens du holder til hos Wilhelmsen House.
+Please check your room number, you can only order wash while you are staying at the hotel;-;Sjekk om romnret du har oppgitt er korrekt. Du kan kun bestille vask mens du holder til hos Wilhelmsen House.
 Please enter the reference number provided by;-;Vennligst skriv inn referansenummeret du har fått utdelt.
 Please enter your email address:;-;Vennligst skriv inn din epost
+Please enter your room number;-;Skriv inn nom nummeret ditt
 Please enter your username and password;-;Skriv inn ditt brukernavn og passord
 Please following theese steps to recover your password.;-;Vennligst følgt instruksjonen under.
 Please select a payment method.;-;Vennligst velg en betalingsmetode
@@ -329,6 +333,7 @@ Start;-;Start
 Start date;-;Start dato
 Start your 30 days free trial;-;Start din 30 dagers fri prøveperiode
 Stop;-;Stopp
+Style row;-;Styling på rad
 Styling;-;Design
 Su;-;Sø
 Subscribe;-;Registrer
@@ -371,7 +376,6 @@ Top spacing;-;Øvre spacing
 Top speed;-;Topp hastighet
 Total;-;Total
 Total price;-;Total pris
-Try again;-;Prøv igjen
 Tu;-;Ti
 Tuesday;-;Tirsdag
 Tune your online store by setting currency, does customers need to register to buy from your store, show cookie warning, etc;-;Finjuster nettbutikken din ved å f.eks velge valutta, bestemme om kundene dine må registrere seg for å handle, vis cookie advarsel, osv.
@@ -407,7 +411,7 @@ Your order has been canceled due to incorrect payment information, please try ag
 Your order has now been completed and is waiting to be shipped.;-;Orderen din har blitt gjennomført og venter på å bli sendt.
 Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;Du vil snart motta en epost med din ebill, eller så kan du last den ned på følgende link
 Your personal information;-;Din personlige informasjon
-Your phonenumber;-;Ditt tlf nr
+Your savings;-;Du sparer
 Your you for your order;-;Deg du for dine ordrer
 available room;-;tilgjengelige rom
 available rooms;-;tilgjengelige rom

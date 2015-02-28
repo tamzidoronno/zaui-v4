@@ -45,7 +45,7 @@ $languages['fi_FI'] = "Finish";
                 if (count($extraLanguagesCodes)) {
                     echo $this->__f("Extra languages displayed on  your webpage").":";
                     foreach ($extraLanguagesCodes as $code) {
-                        echo '<div class=""><i gss_confirmation="'.$this->__f("Are you sure you want to remove this language?")."\" gss_method='removeLanguage' gss_value='$code' class='fa fa-remove removelanguage'></i> $code</div>";
+                        echo "<div class=''><i gss_confirmation='". $this->__f("Are you sure you want to remove this language?") ."' gss_method='removeLanguage' gss_value='$code' class='fa fa-remove removelanguage'></i> $code</div>";
                     }
                 }
             }

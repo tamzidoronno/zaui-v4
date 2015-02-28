@@ -470,7 +470,9 @@ class Page {
 
         echo "<div $innerstyles class='$gscellinner gsuicell $pagewidthclass gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
 
-        $this->printCellBox($edit, $cell, $parent, $depth);
+        if($this->factory->isEditorMode()) {
+            $this->printCellBox($edit, $cell, $parent, $depth);
+        }
         $this->printCellContent($cell, $parent, $edit, $totalcells, $count, $depth);
 
         echo "</div>";

@@ -9,58 +9,55 @@ $products = $this->getHotelRooms();
 
 
 
-<table width='100%'>
-    <tr>
-        <td width="25%">
-            <? echo $checkintext; ?><br>
-            <span style='background-color:#b0bda4; display:inline-block;' class='start_cal'>
-                <table width='100%' border='0' cellspacing='0' cellpadding='0'>
-                    <tr>
-                        <td width='100%'>
-                            <input type='text' class='date_selection_room' value='<? echo date('d.m.Y'); ?>' id='start_date'>
-                        </td>
-                        <td><span style='width:25px;display:inline-block;text-align:right;'><i class='fa fa-calendar'></i></span></td>
-                    </tr>
-                </table>
-            </span>
-        </td>
-        <td align='right' width="25%">
-            <span style='text-align:left;<? echo $displayEnd; ?>'>
-                <? echo $checkouttext; ?><br>
-                <span style='background-color:#b0bda4; display:inline-block;' class='end_cal'>
-                    <table width="100%" width='100%' border='0' cellspacing='0' cellpadding='0'>
-                        <tr>
-                            <td width='100%'>
-                                <input type='text' class='date_selection_room' value='<? echo date('d.m.Y', time()+86400); ?>' id='end_date'>
-                            </td>
-                        <td><span style='width:25px;display:inline-block;text-align:right;'><i class='fa fa-calendar'></i></span></td>
-                    </table>
-                </span>
-            </span>
-        </td>
-        <td width="25%">
-            <? echo $roomtypetext; ?>
-            <select class='room_selection'>
-                <?
-                    foreach($products as $product) {
-                        /* @var $product \core_productmanager_data_Product */
+<span class='bookingcol datecol firstcalcol'>
+<? echo $checkintext; ?><br>
+    <span style='background-color:#b0bda4; display:inline-block;' class='start_cal'>
+        <table width='100%' border='0' cellspacing='0' cellpadding='0'>
+            <tr>
+                <td width='100%'>
+                    <input type='text' class='date_selection_room' value='<? echo date('d.m.Y'); ?>' id='start_date'>
+                </td>
+                <td><span class='calbackground'><i class='fa fa-calendar'></i></span></td>
+            </tr>
+        </table>
+    </span>
+</span>
+<span class='bookingcol datecol'>
+    <span style='text-align:left;<? echo $displayEnd; ?>'>
+        <? echo $checkouttext; ?><br>
+        <span style='background-color:#b0bda4; display:inline-block;' class='end_cal'>
+            <table width="100%" width='100%' border='0' cellspacing='0' cellpadding='0'>
+                <tr>
+                    <td width='100%'>
+                        <input type='text' class='date_selection_room' value='<? echo date('d.m.Y', time() + 86400); ?>' id='end_date'>
+                    </td>
+                    <td><span class='calbackground'><i class='fa fa-calendar'></i></span></td>
+            </table>
+        </span>
+    </span>
+</span>
+<span class='bookingcol'>
+    <? echo $roomtypetext; ?>
+    <select class='room_selection'>
+        <?
+        foreach ($products as $product) {
+            /* @var $product \core_productmanager_data_Product */
 
 
-                        $pricetext = $product->price . " NOK ";
-                        if($product->price < $product->original_price) {
-                            $pricetext .= " (-". (100-(int)(($product->price / $product->original_price)*100)) . "%)";
-                        }
+            $pricetext = $product->price . " NOK ";
+            if ($product->price < $product->original_price) {
+                $pricetext .= " (-" . (100 - (int) (($product->price / $product->original_price) * 100)) . "%)";
+            }
 
-                        echo "<option value='".$product->id."'>" . $pricetext . " " . $product->name . "</option>";
-                    }
-                ?>
-            </select>
-        </td>
-        <td width="25%"><br>
-            <div class='check_available_button' nextpage="<? echo $this->getContinuePage(); ?>"><? echo $this->__w("Continue"); ?></div>
-        </td>
-    </tr>
-</table>
+            echo "<option value='" . $product->id . "'>" . $pricetext . " " . $product->name . "</option>";
+        }
+        ?>
+    </select>
+</span>
+<span class='bookingcol'>
+    <br>
+    <div class='check_available_button' nextpage="<? echo $this->getContinuePage(); ?>"><? echo $this->__w("Continue"); ?></div>
+</span>
 <?
 $days = $this->getMinumRentalTexted();
 if($days) {

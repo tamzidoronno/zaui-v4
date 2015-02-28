@@ -217,7 +217,7 @@ class Page {
                     if(stristr($line, ".gsucell")) {
                         $found = true;
                     }
-                    if((stristr($line, "padding") || stristr($line, "margin")) && $found) {
+                    if((stristr($line, "padding-left") || stristr($line, "padding-right")) && $found) {
                         continue;
                     }
                     $newstyle .= $line . "\n";

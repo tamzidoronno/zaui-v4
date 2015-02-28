@@ -433,8 +433,12 @@ class Page {
         if($this->factory->isMobile()) {
             $styles = "";
         }
+        $gslayoutbox = "";
+        if($depth == 1) {
+            $gslayoutbox = "gslayoutbox";
+        }
 
-        echo "<div $additionalinfo $styles width='$width' class='gsucell $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
+        echo "<div $additionalinfo $styles width='$width' class='gsucell $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
 
         if ($this->factory->isMobile() && $gsrowmode == "") {
             $this->printMobileAdminMenu($depth, $cell);
@@ -454,7 +458,9 @@ class Page {
 
         echo "<div $innerstyles class='$gscellinner gsuicell $pagewidthclass gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
 
-        $this->printCellBox($edit, $cell, $parent);
+        if($depth == 1) {
+            $this->printCellBox($edit, $cell, $parent);
+        }
         $this->printCellContent($cell, $parent, $edit, $totalcells, $count, $depth);
 
         echo "</div>";
@@ -589,7 +595,7 @@ class Page {
                 <div class='gscssattributes'>
                     <div class="gscssrow">
                         <? echo $this->factory->__w("Background color"); ?> <span class="gscssinput">
-                            <input type='text' data-attr="background-color" style='width:60px; padding:0px;'>
+                            <input type='text' data-attr="background-color"  data-level='.gsuicell' style='width:60px; padding:0px;'>
                             <div id="colorSelector" style='display:inline-block; width: 20px; height: 15px; border: solid 1px #bbb;padding: 1px;text-align: center;'>
                                 <div>
                                     <i class="fa fa-eyedropper"></i>
@@ -609,22 +615,41 @@ class Page {
                     </div>
                     <div style='clear:both;'></div>
                     <div class="gscssrow">
-                        <? echo $this->factory->__w("Height"); ?> <span class="gscssinput"><input type='text' data-attr="height" data-prefix="px">px</span>
+                        <? echo $this->factory->__w("Height"); ?> <span class="gscssinput"><input type='text' data-attr="height" data-prefix="px" data-level='.gsuicell'>px</span>
                     </div>
+                    <div style='clear:both;'></div>
+                    <span style='float:right;padding-right:23px; font-size: 10px; padding-top: 5px;'>Inner - Outer</span>
+                    <div style='clear:both;'></div>
                     <div class="gscssrow">
-                        <? echo $this->factory->__w("Left spacing"); ?> <span class="gscssinput"><input type='text' data-attr="padding-left" data-prefix="px">px</span>
+                        <? echo $this->factory->__w("Left spacing"); ?> 
+                        <span class="gscssinput">
+                            <input type='text' data-attr="padding-left" data-prefix="px" data-level='.gsuicell'> 
+                            <input type='text' data-attr="padding-left" data-prefix="px">px
+                        </span>
                     </div>
                     <div style='clear:both;'></div>
                     <div class="gscssrow">
-                        <? echo $this->factory->__w("Right spacing"); ?> <span class="gscssinput"><input type='text' data-attr="padding-right" data-prefix="px">px</span>
+                        <? echo $this->factory->__w("Right spacing"); ?> 
+                        <span class="gscssinput">
+                            <input type='text' data-attr="padding-right" data-prefix="px" data-level='.gsuicell'> 
+                            <input type='text' data-attr="padding-right" data-prefix="px">px
+                        </span>
                     </div>
                     <div style='clear:both;'></div>
                     <div class="gscssrow">
-                        <? echo $this->factory->__w("Top spacing"); ?> <span class="gscssinput"><input type='text' data-attr="padding-top" data-prefix="px">px</span>
+                        <? echo $this->factory->__w("Top spacing"); ?> 
+                        <span class="gscssinput">
+                            <input type='text' data-attr="padding-top" data-prefix="px" data-level='.gsuicell'> 
+                            <input type='text' data-attr="padding-top" data-prefix="px">px
+                        </span>
                     </div>
                     <div style='clear:both;'></div>
                     <div class="gscssrow">
-                        <? echo $this->factory->__w("Bottom spacing"); ?> <span class="gscssinput"><input type='text' data-attr="padding-bottom" data-prefix="px">px</span>
+                        <? echo $this->factory->__w("Bottom spacing"); ?> 
+                        <span class="gscssinput">
+                            <input type='text' data-attr="padding-bottom" data-prefix="px" data-level='.gsuicell'> 
+                            <input type='text' data-attr="padding-bottom" data-prefix="px">px
+                        </span>
                     </div>
                     <div style='clear:both;'></div>
                 </div>
@@ -938,9 +963,6 @@ class Page {
 
     public function printEasyModeEdit($cell, $parent, $simple = false) {
 
-        if (sizeof($cell->cells) > 0) {
-            return;
-        }
 
         $leftClass = "";
         $rightClass = "";
@@ -1129,16 +1151,12 @@ class Page {
             return false;
         }
 
-        $result = !$edit && sizeof($cell->cells) == 0 && $cell->mode != "INIT" && $cell->mode != "FLOATING" && $this->factory->isEditorMode();
-
-        if ($result) {
-            $style = "position:absolute;width:100%; bottom: -1px;";
-            echo "<div style='$style' class='gscellbox' cellid='" . $cell->cellId . "'>";
-            echo "<div class='gscellheadermin'><i class='fa fa-external-link-square'></i></div>";
-            echo "<div class='gscellboxheader'>";
-            echo "<span style='float:left;'>" . $this->printEasyModeEdit($cell, $parent, true) . "</span>";
-            echo "</div></div>";
-        }
+        $style = "position:absolute;width:100%; bottom: -1px;";
+        echo "<div style='$style' class='gscellbox' cellid='" . $cell->cellId . "'>";
+        echo "<div class='gscellheadermin'><i class='fa fa-external-link-square'></i></div>";
+        echo "<div class='gscellboxheader'>";
+        echo "<span style='float:left;'>" . $this->printEasyModeEdit($cell, $parent, true) . "</span>";
+        echo "</div></div>";
     }
 
     private function flattenCells($cells) {
@@ -1232,6 +1250,11 @@ class Page {
             echo "<span class='fa-stack gsadvancedlayoutmode'>";
             echo '<i class="fa fa-circle fa-stack-2x"></i>';
             echo "<i title='" . $this->factory->__w("Edit row") . "' class='fa gseditrowbutton fa-pencil-square-o  fa-stack-1x' $target></i>";
+            echo "</span>";
+
+            echo "<span class='fa-stack'>";
+            echo '<i class="fa fa-circle fa-stack-2x"></i>';
+            echo "<i title='" . $this->factory->__w("Style row") . "' class='fa fa-image gs_resizing fa-stack-1x' type='addafter' mode='INIT' $target></i>";
             echo "</span>";
 
             echo "<span class='fa-stack'>";

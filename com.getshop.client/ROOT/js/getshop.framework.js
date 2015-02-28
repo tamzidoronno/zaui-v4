@@ -287,20 +287,20 @@ thundashop.framework = {
         var attr = target.attr('data-attr');
         var level = target.attr('data-level');
         var prefix = target.attr('data-prefix');
-        thundashop.framework.removeCss(attr, cellid);
+        thundashop.framework.removeCss(attr, cellid, level);
 
         if (attr === "background-color") {
-            thundashop.framework.removeCss('background-repeat', cellid);
-            thundashop.framework.removeCss('background-position', cellid);
-            thundashop.framework.removeCss('background-size', cellid);
-            thundashop.framework.removeCss('background-image', cellid);
+            thundashop.framework.removeCss('background-repeat', cellid, level);
+            thundashop.framework.removeCss('background-position', cellid, level);
+            thundashop.framework.removeCss('background-size', cellid, level);
+            thundashop.framework.removeCss('background-image', cellid, level);
         }
 
         if (!val) {
             return;
         }
         if (prefix) {
-            val += prefix;
+            val += prefix + " !important";
         }
         thundashop.framework.addCss(attr, val, cellid, level);
     },
@@ -310,7 +310,8 @@ thundashop.framework = {
             var target = $(this);
             var attr = target.attr('data-attr');
             var prefix = target.attr('data-prefix');
-            var val = thundashop.framework.getCssAttr(attr, cellid);
+            var level = target.attr('data-level');
+            var val = thundashop.framework.getCssAttr(attr, cellid, level);
             val = val.replace(prefix, "");
             val = val.trim();
             target.val(val);
@@ -448,12 +449,7 @@ thundashop.framework = {
 
         var tmpcell = $('.gsucell[cellid="' + id + '"]');
 
-        if (tmpcell.hasClass('gsdepth_0')) {
-            includeOuter = true;
-        }
-        if (tmpcell.hasClass('gsrotatingrow') && tmpcell.hasClass('gsdepth_1')) {
-            includeOuter = true;
-        }
+        includeOuter = true;
 
         if ($('style[cellid="' + id + '"]').length > 0) {
             return $('style[cellid="' + id + '"]').html();
@@ -731,9 +727,13 @@ thundashop.framework = {
             });
         }
     },
-    removeCss: function (attribute, id) {
+    removeCss: function (attribute, id, level) {
         if(typeof(cssEditorForCell) === "undefined") {
             return;
+        }
+        
+        if(!level) {
+            level = ".gsucell";
         }
         
         var css = cssEditorForCell.getSession().getValue();
@@ -741,26 +741,50 @@ thundashop.framework = {
         }
         var csslines = css.split("\n");
         var newcss = "";
+        var levelfound = false;
+        
         for (var key in csslines) {
+            
+            if(csslines[key].indexOf("gscell_") > 0) {
+                levelfound = false;
+            }
+            
+            if(csslines[key].indexOf(level) > 0) {
+                levelfound = true;
+            }
+            
             var attr = csslines[key].split(":");
-            if (attr[0].trim() === attribute) {
+            if (attr[0].trim() === attribute && levelfound) {
                 continue;
             }
             newcss += csslines[key] + "\n";
         }
         cssEditorForCell.setValue(newcss);
     },
-    getCssAttr: function (attribute, id) {
+    getCssAttr: function (attribute, id, level) {
         var css = cssEditorForCell.getSession().getValue();
         if (css.indexOf(attribute) >= 0) {
         }
+        if(!level) {
+            level = ".gsucell";
+        }
+        console.log(attribute + " - " + id + " - " + level);
+        
         var csslines = css.split("\n");
         var newcss = "";
         var found = false;
+        var levelfound = false;
         for (var key in csslines) {
+            if(csslines[key].indexOf("gscell_") > 0) {
+                levelfound = false;
+            }
+            
+            if(csslines[key].indexOf(level) > 0) {
+                levelfound = true;
+            }
+
             var attr = csslines[key].split(":");
-            console.log(attribute + " " + attr[0]);
-            if (attr[0].trim() === attribute) {
+            if (attr[0].trim() === attribute && levelfound) {
                 found = csslines[key];
                 continue;
             }
@@ -771,6 +795,7 @@ thundashop.framework = {
             return "";
         }
 
+        found = found.replace("!important", "");
         found = found.split(":");
         return found[1].replace(";", "");
     },
@@ -1030,15 +1055,7 @@ thundashop.framework = {
     },
     showCellPanel: function (event) {
 
-        var target = $(this).closest('.gscell');
-
-        if (!target.hasClass('gscell')) {
-            return;
-        }
-        if (target.find('.gscellbox').length > 1) {
-            return;
-        }
-
+        var target = $(this).closest('.gslayoutbox');
         var cellid = $(this).attr('cellid');
         if (thundashop.framework.activeBoxTimeout[cellid]) {
             clearTimeout(thundashop.framework.activeBoxTimeout[cellid]);

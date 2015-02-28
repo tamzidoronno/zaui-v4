@@ -86,6 +86,14 @@ public class BookingReference extends DataCommon {
         return false;
     }
     
+    public boolean isBetweenCheckinAndCheckout() {
+        Date now = new Date();
+        if(now.after(startDate) && now.before(endDate)) {
+            return true;
+        }
+        return false;
+    }
+    
     public List<String> getAllRooms() {
         List<String> allRooms = new ArrayList();
         for(RoomInformation room : roomsReserved) {
@@ -108,6 +116,17 @@ public class BookingReference extends DataCommon {
         if(now.after(endDate)) {
             return true;
         }
+        return false;
+    }
+
+    public boolean containsRoom(String roomNumber, HashMap<String, Room> rooms) {
+        for (RoomInformation roomInfo : roomsReserved) {
+            Room room = rooms.get(roomInfo.roomId);
+            if (room != null && room.roomName.equals(roomNumber)) {
+                return true;
+            }
+        }
+       
         return false;
     }
 

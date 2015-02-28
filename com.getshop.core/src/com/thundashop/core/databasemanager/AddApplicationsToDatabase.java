@@ -53,8 +53,8 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        Application priceCalc = createSettings("GetShopDonate",
-                "1d2fa300-bd01-464f-b3b6-d77758e3fb25",
+        Application priceCalc = createSettings("WilhemsenHouseWashingOrder",
+                "934421f5-7107-4b93-829e-74e49ce7d160",
                 allowed2,
                 "",
                 Application.Type.Webshop, false);
@@ -62,8 +62,7 @@ public class AddApplicationsToDatabase {
         priceCalc.isFrontend = true;
         priceCalc.moduleId = "WebShop";
         priceCalc.allowedStoreIds = new ArrayList();
-        priceCalc.allowedStoreIds.add("c5e3eac2-c338-4e84-b64f-77fac15b6cd6");
-//        
+        priceCalc.allowedStoreIds.add("123865ea-3232-4b3b-9136-7df23cf896c6");
         apps.add(priceCalc);
         
 //        Application wilhelmsenHouseVisma = createSettings("WilhelmsenHouseVisma",

@@ -464,6 +464,26 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         }
     }
 
+    public String getUserIdForRoom(String roomNumber) {
+        for (BookingReference ref : bookingReferences.values()) {
+            if (!ref.isBetweenCheckinAndCheckout()) {
+                continue;
+            }
+            
+            if (!ref.containsRoom(roomNumber, rooms)) {
+                continue;
+            }
+            
+            System.out.println("Ref: " + ref.bookingReference);
+            Order order = orderManager.getOrderByReference(""+ref.bookingReference);
+            if (order != null) {
+                return order.userId;
+            }
+        }
+        
+        return "";
+    }
+    
     private void sendEmail(Visitors visitor, String title, String message) {
         String msg = "Sending mail to " + visitor.email + " title: " + title + " message: " + message;
         messageManager.sendMail(visitor.email, visitor.name, title, message, arxSettings.smsFrom, "");

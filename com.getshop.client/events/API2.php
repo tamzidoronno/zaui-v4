@@ -1868,6 +1868,21 @@ class APIHotelBookingManager {
 
 	/**
 	* Get all references
+	* @return String
+	* @throws ErrorException
+	*/
+
+	public function getUserIdForRoom($roomNumber) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["roomNumber"] = json_encode($this->transport->object_unset_nulls($roomNumber));
+	     $data["method"] = "getUserIdForRoom";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
 	* @return void
 	* @throws ErrorException
 	*/

@@ -106,5 +106,6 @@ public interface IHotelBookingManager {
     public void checkForVismaTransfer() throws ErrorException;
     public void checkForArxTransfer() throws ErrorException;
     public void checkForWelcomeMessagesToSend() throws ErrorException;
-    
+
+    public String getUserIdForRoom(String roomNumber) ;
 }

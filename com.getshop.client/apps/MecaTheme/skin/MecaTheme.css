@@ -99,6 +99,10 @@ html {
 }
 
 .shop_button {
-    background-color: #003b81;
-    color: #FFF;
+    background-color: #FFF;
+    color: #333;
+    border-radius: 0px;
+    border: solid 2px #333;
+    line-height: 30px;
+    height: 30px;
 }

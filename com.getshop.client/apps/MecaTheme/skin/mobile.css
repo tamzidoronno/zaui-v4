@@ -1,3 +1,33 @@
 body {
-    background-color: #fafafa;
+    background-color: #4d4d4f;
+}
+
+.gslayoutbox:not(.gsrotatingrow) {
+
+    padding: 15px;
+    box-shadow: rgba(0, 0, 0, 0.2) 1px 1px 4px 0px;
+    background-color: #FFF;
+    margin: 10px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    border-radius: 4px;
+}
+
+.gsrotatingrow {
+    margin-left: 0px;
+    margin-right: 0px;
+    border-radius: 0px;
+    background-color: #e0e0e0;
+}
+
+.gsmobilemenu .gsmobilemenuentry {
+    display: none;
+}
+
+.gsmobilemenu .gsmobilemenuentry.gsmobilemenubox {
+    display: block;
+    width: 100%;
+    background: #023f88;
+    background-color: #023f88;
 }

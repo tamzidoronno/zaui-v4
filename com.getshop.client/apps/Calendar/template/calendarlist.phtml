@@ -79,51 +79,53 @@ foreach ($entries as $year => $months) {
 
             echo "</tr>";
             
-            $dayContent = "";
-            echo "<tr class='extrainformation_calendar_list_entry' entry_id='$entry->entryId'><td colspan='7'><div style='border: solid 1px #DDD; margin-bottom: 20px; padding: 20px'>";
+            if (!$this->downloadingListAsPdf) {
+                $dayContent = "";
+                echo "<tr class='extrainformation_calendar_list_entry' entry_id='$entry->entryId'><td colspan='7'><div style='border: solid 1px #DDD; margin-bottom: 20px; padding: 20px'>";
             
             ?>
-            
-            
-                <div class="time">
-                    <?php 
-                        $daysCount = $this->getDaysCount($this->monthObject, $entry);
-                        if ($daysCount > 1) {
-                            echo str_replace("{}", $daysCount, $this->__w("This is a {} days event."));
-                            $i = 1;
-                            echo "<br>".str_replace("{}", $i, $this->__f("Day")).": ".$entry->day."/".$entry->month."-".$entry->year." ".$this->__("start_time").":".$entry->starttime."-".$entry->stoptime; 
-                            $i++;
-                            foreach ($entry->otherDays as $ientry) {
-                                echo "<br>".str_replace("{}", $i, $this->__f("Day")).": ".$ientry->day."/".$ientry->month."-".$ientry->year." ".$this->__("start_time").":".$ientry->starttime."-".$ientry->stoptime; 
+
+
+                    <div class="time">
+                        <?php 
+                            $daysCount = $this->getDaysCount($this->monthObject, $entry);
+                            if ($daysCount > 1) {
+                                echo str_replace("{}", $daysCount, $this->__w("This is a {} days event."));
+                                $i = 1;
+                                echo "<br>".str_replace("{}", $i, $this->__f("Day")).": ".$entry->day."/".$entry->month."-".$entry->year." ".$this->__("start_time").":".$entry->starttime."-".$entry->stoptime; 
                                 $i++;
+                                foreach ($entry->otherDays as $ientry) {
+                                    echo "<br>".str_replace("{}", $i, $this->__f("Day")).": ".$ientry->day."/".$ientry->month."-".$ientry->year." ".$this->__("start_time").":".$ientry->starttime."-".$ientry->stoptime; 
+                                    $i++;
+                                }
+                            } else {
+                                echo $this->__("start_time").": ".$entry->day."/".$entry->month."-".$entry->year." ".$entry->starttime."-".$entry->stoptime; 
                             }
-                        } else {
-                            echo $this->__("start_time").": ".$entry->day."/".$entry->month."-".$entry->year." ".$entry->starttime."-".$entry->stoptime; 
-                        }
 
 
-                    ?>
-                </div>
-                <div class="attendees"><?php echo $this->__("free_positions")." ".$availablePositions; ?></div>
-                <div class="location"><b><?php echo $this->__w("location"); ?></b><div class='content'> <?php echo nl2br($entry->location); ?></div></div>
-                <? if ($entry->locationExtended) { ?>
-                <div class="extendedLocation">&nbsp;&nbsp; - <?php echo $entry->locationExtended; ?></div>
-                <? } ?>
+                        ?>
+                    </div>
+                    <div class="attendees"><?php echo $this->__("free_positions")." ".$availablePositions; ?></div>
+                    <div class="location"><b><?php echo $this->__w("location"); ?></b><div class='content'> <?php echo nl2br($entry->location); ?></div></div>
+                    <? if ($entry->locationExtended) { ?>
+                    <div class="extendedLocation">&nbsp;&nbsp; - <?php echo $entry->locationExtended; ?></div>
+                    <? } ?>
 
-                <? if ($entry->extraText) { ?>
-                    <div class="extraText"><?php echo $entry->extraText; ?></div>
-                <? } ?>
-                <? if ($this->getConfigurationSetting("showDescription") == null || $this->getConfigurationSetting("showDescription") === true) { ?>
-                    <div class="description"><b><?php echo $this->__w("description"); ?></b><div class='content'> <?php echo nl2br($entry->description); ?></div></div>
-                <? } 
+                    <? if ($entry->extraText) { ?>
+                        <div class="extraText"><?php echo $entry->extraText; ?></div>
+                    <? } ?>
+                    <? if ($this->getConfigurationSetting("showDescription") == null || $this->getConfigurationSetting("showDescription") === true) { ?>
+                        <div class="description"><b><?php echo $this->__w("description"); ?></b><div class='content'> <?php echo nl2br($entry->description); ?></div></div>
+                    <? } 
 
-            
-            
-            
-            
-            
-            
-            echo "</div></td></tr>";
+
+
+
+
+
+
+                echo "</div></td></tr>";
+            }
         }
         echo "</table>";
     }

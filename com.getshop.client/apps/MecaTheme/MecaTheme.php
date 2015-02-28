@@ -17,7 +17,7 @@ class MecaTheme extends \ThemeApplication {
     }
     
     function addScripts() {
-        echo "<link href='http://fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>";
+        echo "<link href='https://fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>";
     }
     
     function __construct() {

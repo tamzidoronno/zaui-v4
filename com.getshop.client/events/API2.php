@@ -3693,6 +3693,24 @@ class APIPageManager {
 	}
 
 	/**
+	* Add application
+	* @param id
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function swapAppWithCell($pageId, $fromCellId, $toCellId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data['args']["fromCellId"] = json_encode($this->transport->object_unset_nulls($fromCellId));
+	     $data['args']["toCellId"] = json_encode($this->transport->object_unset_nulls($toCellId));
+	     $data["method"] = "swapAppWithCell";
+	     $data["interfaceName"] = "core.pagemanager.IPageManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Set the carousel configuration.
 	* @param pageId
 	* @return void

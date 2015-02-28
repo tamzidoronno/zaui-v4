@@ -42,7 +42,6 @@ public class GenerateTranslation {
             while (allDocs.hasNext()) {
                 DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, allDocs.next());
                 if(dataCommon instanceof Application) {
-                    System.out.println("found");
                     Application dbobj = (Application) dataCommon;
                     applicationNames.put(dbobj.id.replace("-", "_"), dbobj);
                 }
@@ -56,26 +55,36 @@ public class GenerateTranslation {
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
 
+        System.out.println("0.1");
         loadAppsFromDatabase();
+        System.out.println("0.2");
         
         GenerateTranslation gt = new GenerateTranslation();
+        System.out.println("0.3");
         gt.parsePath("../com.getshop.client/");
-
+        System.out.println("0.4");
+        
+        System.out.println("1");
         ArrayList<String> webShopTranslation = gt.createKeyList("webshop");
         ArrayList<String> frameworkTranslation = gt.createKeyList("framework");
+        System.out.println("2");
 
         TranslationFile w_base = new TranslationFile("w_base");
         TranslationFile f_base = new TranslationFile("f_base");
-
+        System.out.println("3");
+        
         w_base.compareWithArray(webShopTranslation);
         f_base.compareWithArray(frameworkTranslation);
 
+        System.out.println("4");
         gt.writeTranslationFile("w_base", webShopTranslation, true);
         gt.writeTranslationFile("f_base", frameworkTranslation, true);
 
+        System.out.println("5");
         TranslationComparor tc = new TranslationComparor();
         tc.finalizeTranslationFiles();
 
+        System.out.println("6");
         System.out.println(gt.fileCount + " files parsed");
         System.out.println(frameworkTranslation.size() + " framework text lines found");
         System.out.println(webShopTranslation.size() + " webshop text lines found");
@@ -115,10 +124,14 @@ public class GenerateTranslation {
         for (File f : list) {
             String filePath = f.getAbsolutePath().toString().toLowerCase();
             String fileOriginal = f.getCanonicalPath().toString();
+            System.out.print(f.getAbsolutePath());
             if (f.isDirectory()) {
+                System.out.println(" isdir.");
                 parsePath(f.getAbsolutePath());
             } else if (filePath.endsWith(".php") || filePath.endsWith(".phtml") || filePath.endsWith(".js")) {
+                System.out.print(" parsing...");
                 parseFile(fileOriginal);
+                System.out.println(" - done.");
                 fileCount++;
             }
         }

@@ -154,6 +154,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $appIds = $this->fetchAppids($layout->areas->body, []);
         
         echo "<span class='tooltip' data-productid='".$product->id."'>";
+        echo "<i class='fa fa-close' style='position:absolute; right: 10px; top: 10px;'></i>";
         foreach($appIds as $app) {
             if(!$app) {
                 continue;

@@ -10,51 +10,62 @@ $headingtext = $this->__w("You have selected the following duration for your sta
     <div class='title'><h1><? echo $headingtext; ?></h1></div>
     <div class='seperator'></div>
     <div class='top_box'>
-        <? if ($this->getServiceType() == "hotel") { ?>
-            <span class='booking_count_box'>
-                <table>
-                    <tr>
-                        <td><? echo $this->__w("Number of rooms"); ?></td>
-                        <td align='right'><input class='number_of_rooms' type='number' min="1" max="10" value='<? echo $this->getRoomCount(); ?>'></td>
-                    </tr>
-                    <tr>
-                        <td><? echo $this->__w("I need a handicap room"); ?></td>
-                        <? 
-                        $checked = ""; 
-                        if($this->getNeedHandicap()) {
-                            $checked = "CHECKED";
-                        }
-                        ?>
-                        
-                        <td align='right'><input class='need_handicat' type='checkbox' <? echo $checked; ?>></td>
-                    </tr>
-                    <?
-                    if ($this->hasAvailableParkingSpots()) {
-                        $price = $this->getParkingProduct()->price;
-                        ?>
-                        <tr>
-                            <td colspan='2'>
-                                <br>
-                                <div>
-                                    <label>
-                                        <input type="checkbox" class="parking_option" style="width:15px; margin:0px;padding:4px;" <? if($this->getParking()) { echo "CHECKED"; } ?>>
-                                        <? echo $this->__w("Parking slot"); ?> + <? echo $this->getParkingPrice(); ?> kr
-                                    </label>
-                                </div>
-                            </td>
-                        </tr>
-                    <? } ?>
-                </table>
+        
+        <? if($this->getFactory()->isMobile()) { ?>
+            <span class='calendar left'>
+                <? $this->printCalendar($this->getStart(), false, "startDate"); ?>
+            </span>
+
+            <span class='calendar right'>
+                <? echo $this->printCalendar($this->getEnd(), $this->getStart(), "endDate"); ?>
             </span>
         <? } ?>
+        
+        <span class='booking_count_box'>
+            <table>
+                <tr>
+                    <td><? echo $this->__w("Number of rooms"); ?></td>
+                    <td align='right'><input class='number_of_rooms' type='number' min="1" max="10" value='<? echo $this->getRoomCount(); ?>'></td>
+                </tr>
+                <tr>
+                    <td><? echo $this->__w("I need a handicap room"); ?></td>
+                    <? 
+                    $checked = ""; 
+                    if($this->getNeedHandicap()) {
+                        $checked = "CHECKED";
+                    }
+                    ?>
 
-        <span class='calendar left'>
-            <? $this->printCalendar($this->getStart(), false, "startDate"); ?>
+                    <td align='right'><input class='need_handicat' type='checkbox' <? echo $checked; ?>></td>
+                </tr>
+                <?
+                if ($this->hasAvailableParkingSpots()) {
+                    $price = $this->getParkingProduct()->price;
+                    ?>
+                    <tr>
+                        <td colspan='2'>
+                            <br>
+                            <div>
+                                <label>
+                                    <input type="checkbox" class="parking_option" style="width:15px; margin:0px;padding:4px;" <? if($this->getParking()) { echo "CHECKED"; } ?>>
+                                    <? echo $this->__w("Parking slot"); ?> + <? echo $this->getParkingPrice(); ?> kr
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                <? } ?>
+            </table>
         </span>
 
-        <span class='calendar right'>
-            <? echo $this->printCalendar($this->getEnd(), $this->getStart(), "endDate"); ?>
-        </span>
+        <? if(!$this->getFactory()->isMobile()) { ?>
+            <span class='calendar left'>
+                <? $this->printCalendar($this->getStart(), false, "startDate"); ?>
+            </span>
+
+            <span class='calendar right'>
+                <? echo $this->printCalendar($this->getEnd(), $this->getStart(), "endDate"); ?>
+            </span>
+        <? } ?>
     </div>
     <?
     $days = $this->getMinumRentalTexted();
@@ -75,6 +86,7 @@ $headingtext = $this->__w("You have selected the following duration for your sta
 <div class="bottom_row_container">
     <div class='title'><h1><? echo $selectRoomText; ?></h1></div>
     <div class="seperator"></div>
+    <? if(!$this->getFactory()->isMobile()) { ?>
     <div class='room_selection_2 heading'>
         <span class='firstbox selection_box'>
             <div class='name'><? echo $this->__w("Room type"); ?></div>
@@ -88,7 +100,7 @@ $headingtext = $this->__w("You have selected the following duration for your sta
         <div style='clear:both;'></div>
     </div>
     <div style="height:5px;"></div>
-
+    <? } ?>
     <?
     $products = $this->getHotelRooms();
     $foundroom = 0;
@@ -115,7 +127,12 @@ $headingtext = $this->__w("You have selected the following duration for your sta
 
         
         $foundroom = true;
+        
         echo "<div class='room_selection_2 product $selectedclass'>";
+        if($this->getFactory()->isMobile()) {
+            echo "<div class='name' ><span class='price_box'><span class='price_text' style='float:right;'>" . $product->price . ",-</span></span>";
+            echo "<i class='fa fa-info-circle' style='cursor:pointer' data-productid='".$product->id."'></i> " . $product->name . "</div>";
+        }
         
         $this->printToolTip($product);
         
@@ -136,7 +153,10 @@ $headingtext = $this->__w("You have selected the following duration for your sta
             echo "</span>";
             echo "</span>";
         }
-        echo "<div class='name' ><i class='fa fa-info-circle' style='cursor:pointer' data-productid='".$product->id."'></i> " . $product->name . "</div>";
+
+        if(!$this->getFactory()->isMobile()) {
+            echo "<div class='name' ><i class='fa fa-info-circle' style='cursor:pointer' data-productid='".$product->id."'></i> " . $product->name . "</div>";
+        }
         echo "<div class='roomdesc'>";
         if (isset($product->shortDescription)) {
             echo trim($product->shortDescription ? strip_tags($product->shortDescription) : '');
@@ -150,8 +170,10 @@ $headingtext = $this->__w("You have selected the following duration for your sta
         echo "<div class='personalcount'>2x</div>";
         
         echo "</span>";
-        if($product->price != 0) {
-            echo "<span class='price_box'><span class='price_text'>" . $product->price . ",-";
+        if(!$this->getFactory()->isMobile()) {
+            if($product->price != 0) {
+                echo "<span class='price_box'><span class='price_text'>" . $product->price . ",-";
+            }
         }
         if ($product->price < $product->original_price) {
             echo "<span class='rebated_product'> (-" . (100 - (int) (($product->price / $product->original_price) * 100)) . "%)</span>";

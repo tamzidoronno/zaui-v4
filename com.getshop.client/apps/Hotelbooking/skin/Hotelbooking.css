@@ -79,6 +79,8 @@
     top: 0px;
     height: 90px;
 }
+.Hotelbooking .bookingcol { width: 25%; display:inline-block; float:left; height: 40px; box-sizing: border-box; padding-right: 10px; }
+.Hotelbooking .calbackground { width:32px;display:inline-block;text-align:right; padding-right: 5px; }
 
 .Hotelbooking .hotelthumbnails { position:absolute; left: 0px; bottom: 0px; }
 .Hotelbooking .imagepreviewthumb {
@@ -93,8 +95,21 @@
 }
 
 @media only all and (max-width: 800px) {
+    .Hotelbooking { min-height: 190px; }
+    .Hotelbooking .bookingcol { display:inline-block; width: 100%; float:none;  height: 50px; padding-right: 0px; }
+    .Hotelbooking .bookingcol.firstcalcol { padding-right: 10px; }
+    .Hotelbooking .bookingcol.datecol { width: 50%;float:left; }
     .Hotelbooking .summaryview { padding-bottom: 40px; }
     .Hotelbooking .contact_text { width: 100px; }
-    .Hotelbooking .contact_input input { width: 100%; }
-    .Hotelbooking .top_box table { width: 100%; margin-bottom: 120px; }
+    .Hotelbooking .contact_input input { width: 100%; font-size: 14px !important; }
+    .Hotelbooking .top_box table { width: 100%; margin-bottom: 20px; }
+    .Hotelbooking .room_selection_2.product { height: auto; min-height: 105px; padding-left: 0px; padding-top: 35px; margin-bottom: 15px; }
+    .Hotelbooking .secondbox.selection_box { position:absolute; right:0px; bottom: 0px; font-size: 12px !important; }
+    .Hotelbooking .room_selection_2 .available_rooms { bottom: auto; top: 75px; left: 160px; padding-right: 10px; }
+    .Hotelbooking .name { font-size: 16px; margin-top: 40px; margin-bottom: 10px; position: absolute; top: -35px; width:100%; padding-left: 5px; font-size: 15px !important; }
+    .Hotelbooking .room_selection_2 .selectbutton { width: 102px; text-align: center; }
+    .Hotelbooking .continue_to_cart_button { width: 100%; padding-left:0px; padding-right: 0px; }
+    .Hotelbooking .imagepreview { top: 35px; left: 2px; }
+    .Hotelbooking .room_selection_2 .price_text { font-size: 15px !important; padding-right:10px;}
+    .Hotelbooking .tooltip { left: 30px !important; }
 }

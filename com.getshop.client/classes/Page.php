@@ -217,7 +217,7 @@ class Page {
                     if(stristr($line, ".gsucell")) {
                         $found = true;
                     }
-                    if((stristr($line, "padding") || stristr($line, "margin")) && $found) {
+                    if((stristr($line, "padding-left") || stristr($line, "padding-right")) && $found) {
                         continue;
                     }
                     $newstyle .= $line . "\n";
@@ -470,7 +470,9 @@ class Page {
 
         echo "<div $innerstyles class='$gscellinner gsuicell $pagewidthclass gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
 
-        $this->printCellBox($edit, $cell, $parent, $depth);
+        if($this->factory->isEditorMode()) {
+            $this->printCellBox($edit, $cell, $parent, $depth);
+        }
         $this->printCellContent($cell, $parent, $edit, $totalcells, $count, $depth);
 
         echo "</div>";
@@ -956,7 +958,9 @@ class Page {
             return;
         }
         
-        echo "<div class='gscarouseldots $editdots'>";
+        $spaceleft = "style='margin-left:-" . ($totalcells*15)/2 . "px;'";
+        
+        echo "<div class='gscarouseldots $editdots' $spaceleft>";
         $number = 0;
         for ($i = 0; $i < $totalcells; $i++) {
             $number++;

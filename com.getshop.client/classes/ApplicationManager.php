@@ -26,6 +26,13 @@ class ApplicationManager extends FactoryBase {
         include("initdata/themeselection.phtml");
     }
             
+    function swapAppIds() {
+        $fromCell = $_POST['data']['fromCellId'];
+        $toCell = $_POST['data']['toCellId'];
+        $pageId = $this->getFactory()->getPage()->javapage->id;
+        $this->getApi()->getPageManager()->swapAppWithCell($pageId, $fromCell, $toCell);
+    }
+    
     function setLayoutOnCell() {
         $layout = $_POST['data']['layout'];
         $cellid = $_POST['data']['cellid'];

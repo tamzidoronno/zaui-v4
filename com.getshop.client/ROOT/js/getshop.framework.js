@@ -2,6 +2,7 @@ GetShop = {};
 
 likebefore = null;
 likebeforeStyles = null;
+moveappmodeactive = 0;
 
 thundashop.framework = {
     originObject: null,
@@ -11,6 +12,7 @@ thundashop.framework = {
     cellRotatingWait: {},
     advancedMode: false,
     cssEditorCount: 0,
+    firstCellIdToMove : null,
     bindEvents: function () {
         $('*[gstype="form"] *[gstype="submit"]').live('click', function (e) {
             thundashop.framework.submitFromEvent(e);
@@ -99,6 +101,7 @@ thundashop.framework = {
         $(document).on('click', '.gs_change_cell_layoutbutton', this.showChangeLayoutOption);
         $(document).on('click', '.gs_close_cell_layoutbutton', this.hideChangeLayoutOption);
         $(document).on('click', '.gscelllayoutbox', this.changeCellLayout);
+        $(document).on('click', '.gscell', this.checkMoveApp);
         $(document).on('keyup', '#gs_start_store_email', this.startFromCurrentStore);
 
         /* Cell operations */
@@ -107,6 +110,29 @@ thundashop.framework = {
         $(document).on('click', '.gsemptyarea .shop_button', this.simpleaddrow);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
     },
+    
+    checkMoveApp : function() {
+        if($(this).find('.gscell').length > 0) {
+            return;
+        }
+        if(moveappmodeactive === 2) {
+            if(thundashop.framework.firstCellIdToMove) {
+                var data = {
+                    "fromCellId" : thundashop.framework.firstCellIdToMove,
+                    "toCellId" : $(this).attr('cellid')
+                }
+                
+                var event = thundashop.Ajax.createEvent('','swapAppIds', $(this), data);
+                thundashop.Ajax.post(event);
+                thundashop.framework.firstCellIdToMove = false;
+                moveappmodeactive = 0;
+            } else {
+                thundashop.framework.firstCellIdToMove = $(this).attr('cellid');
+            }
+            
+        }
+    },
+    
     changeCellLayout : function() {
         var rownumber = 0;
         var layout = [];
@@ -1477,7 +1503,13 @@ thundashop.framework = {
 };
 
 var gssstepp = 0;
+
 $(document).on('keyup', function (event) {
+    if(event.keyCode === 16) {
+        moveappmodeactive++;
+    } else {
+        moveappmodeactive = 0;
+    }
     if (event.keyCode === 71) {
         gssstepp = 1;
     } else if (event.keyCode === 83) {

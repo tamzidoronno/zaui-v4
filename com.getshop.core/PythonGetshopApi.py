@@ -3929,6 +3929,35 @@ class PageManager(object):
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
+  def swapAppWithCell(self, pageId, fromCellId, toCellId):
+    args = collections.OrderedDict()
+    if isinstance(pageId,GetShopBaseClass): 
+      args["pageId"]=json.dumps(pageId.__dict__)
+    else:
+      try:
+        args["pageId"]=json.dumps(pageId)
+      except (ValueError, AttributeError):
+        args["pageId"]=pageId
+    if isinstance(fromCellId,GetShopBaseClass): 
+      args["fromCellId"]=json.dumps(fromCellId.__dict__)
+    else:
+      try:
+        args["fromCellId"]=json.dumps(fromCellId)
+      except (ValueError, AttributeError):
+        args["fromCellId"]=fromCellId
+    if isinstance(toCellId,GetShopBaseClass): 
+      args["toCellId"]=json.dumps(toCellId.__dict__)
+    else:
+      try:
+        args["toCellId"]=json.dumps(toCellId)
+      except (ValueError, AttributeError):
+        args["toCellId"]=toCellId
+    data = EmptyClass()
+    data.args = args
+    data.method = "swapAppWithCell"
+    data.interfaceName = "core.pagemanager.IPageManager"
+    return self.communicationHelper.sendMessage(data)
+
   def toggleHiddenOnMobile(self, pageId, cellId, hide):
     args = collections.OrderedDict()
     if isinstance(pageId,GetShopBaseClass): 

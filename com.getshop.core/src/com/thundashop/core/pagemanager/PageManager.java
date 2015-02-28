@@ -536,4 +536,17 @@ public class PageManager extends ManagerBase implements IPageManager {
         }
         cell.cells.remove(0);
     }
+
+    @Override
+    public void swapAppWithCell(String pageId, String fromCellId, String toCellId) {
+        Page page = getPage(pageId);
+        PageCell fromCell = page.getCell(fromCellId);
+        PageCell toCell = page.getCell(toCellId);
+        
+        String tmpAppId = fromCell.appId;
+        fromCell.appId = toCell.appId;
+        toCell.appId = tmpAppId;
+        
+        saveObject(page);
+    }
 }

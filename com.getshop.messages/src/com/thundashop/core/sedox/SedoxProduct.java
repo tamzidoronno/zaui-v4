@@ -58,6 +58,8 @@ public class SedoxProduct extends DataCommon implements Comparable<SedoxProduct>
     public Map<String,String> reference = new HashMap();
     
     public Map<String, Date> states = new HashMap();
+    public String startedByUserId = "";
+    Date startedDate;
 
     @Override
     public int compareTo(SedoxProduct o) {

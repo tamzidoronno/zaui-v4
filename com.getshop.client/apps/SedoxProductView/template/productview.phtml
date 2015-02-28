@@ -125,6 +125,19 @@ $uploadedByUser = $this->getUploadedUserName($sedoxProduct);
 $slaveWarning = $sedoxUser->masterUserId ? "<div  title='This is a slave' class='slavewarning showUserInformationSedox' userid='".$sedoxUser->masterUserId."'><i class='fa fa-warning'></i><br/>Slave</div>" : "";
 ?>
 <div class='admintools'>
+    <div class='startedbyinfo'>
+        <?
+        if ($sedoxProduct->started) {
+            $startedByUser = $this->getApi()->getUserManager()->getUserById($sedoxProduct->startedByUserId);
+            if ($startedByUser != null) {
+                $time = $sedoxProduct->startedDate;
+                echo "Started by $startedByUser->fullName<br/> Time: $time";
+            }
+        } else {
+            echo "Not started yet";
+        }
+        ?>
+    </div>
     <div class='userinfo'>
         <div class='subcontainer' style="margin-bottom: 0px; padding: 5px; ">
             <? echo $uploadedByUser->fullName . " (id: $uploadedByUser->id) (Credit: " . $sedoxUser->creditAccount->balance . ")"; ?>
@@ -178,6 +191,12 @@ $class4 = $sedoxProduct->saleAble ? "saleable" : "";
 $text = $sedoxProduct->saleAble ? "Make product NOT salable" : "Make product saleable";
 $badCustomer = $sedoxUser->badCustomer == "true" ? "<div><i class='fa fa-warning' style='color: #CC0000;'></i> <b>THIS IS A BAD CUSTOMER!</b></div> <br/>" : "";
 
+if ($sedoxProduct->started) {
+    $startedByUser = $this->getApi()->getUserManager()->getUserById($sedoxProduct->startedByUserId);
+    if ($startedByUser != null && \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id != $startedByUser->id) {
+        echo "<div class='started_warning_not_you'> <i class='fa fa-warning'></i> This product is started, but not by you! Maybe someone else is working on this?</div>";
+    }
+}
 echo $badCustomer;
 ?>
         <div class="adminbottons">

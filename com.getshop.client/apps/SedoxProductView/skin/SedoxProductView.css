@@ -331,3 +331,20 @@
     right: 0px;
     text-align: center;
 }
+.SedoxProductView .startedbyinfo {
+    position: absolute;
+    background-color: blueviolet;
+    left: 300px;
+    padding: 10px;
+    color: #FFF;
+}
+
+.SedoxProductView .started_warning_not_you {
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: red;
+    border: solid 2px #333;
+    color: #FFF;
+    font-size: 16px;
+    text-align: center;
+}

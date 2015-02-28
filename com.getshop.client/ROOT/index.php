@@ -177,7 +177,14 @@ if(isset($factory->getSettings()->languages)) {
 
         <title><?php echo $title; ?></title>
     </head>
-    <body editormode="<? echo $factory->isEditorMode() ? "true" : "false"?>">
+    <?
+        $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+        $userId = "";
+        if ($user != null) {
+            $userId = $user->id;
+        }
+    ?>
+    <body editormode="<? echo $factory->isEditorMode() ? "true" : "false"?>" currentUserId="<? echo $userId; ?>">
         <? if (@$factory->getStore()->isDeepFreezed) { ?>
             <div class='deepfreezedActivated'><? echo $factory->__f("Warning! this store will automatically be reset to original state each hour") ?></div>
         <? } ?>

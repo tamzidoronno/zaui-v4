@@ -15,6 +15,7 @@ import com.thundashop.core.messagemanager.MailFactoryImpl;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.SMSFactory;
 import com.thundashop.core.sedox.autocryptoapi.FilesMessage;
+import com.thundashop.core.socket.WebSocketServerImpl;
 import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
@@ -86,6 +87,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     @Autowired
     public SedoxMagentoIntegration sedoxMagentoIntegration;
 
+    @Autowired
+    public WebSocketServerImpl webSocketServer;
+    
     @Autowired
     public SMSFactory smsFactory;
 
@@ -292,6 +296,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         databaseSaver.saveObject(sedoxProduct, credentials);
         sendFileCreatedNotification(sedoxProduct);
         sendNotificationToUploadedUser(sedoxProduct);
+        notifyOnSocket(sedoxProduct);
 
         return sedoxProduct;
     }
@@ -349,6 +354,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         sedoxProduct.setParametersBasedOnFileString(fileName);
         sedoxProduct.addFileAddedHistory(getSession().currentUser.id, fileType);
         databaseSaver.saveObject(sedoxProduct, credentials);
+        notifyOnSocket(sedoxProduct);
     }
 
     private SedoxOrder purchaseProductInternalForUser(String productId, SedoxUser user, List<Integer> files) throws ErrorException {
@@ -960,8 +966,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         }
 
         product.addProductSentToEmail(getSession().id, getshopUser);
-
+        
         saveObject(product);
+        notifyOnSocket(product);
     }
 
     private String zipProductToTmpFolder(SedoxProduct sedoxProduct, List<Integer> files) throws ErrorException {
@@ -1086,6 +1093,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         if (sedoxProduct != null) {
             sedoxProduct.removeBinaryFile(fileId);
             databaseSaver.saveObject(sedoxProduct, credentials);
+            notifyOnSocket(sedoxProduct);
         }
     }
 
@@ -1236,8 +1244,19 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         SedoxProduct product = getProductById(productId);
         if (product != null) {
             product.started = toggle;
+            product.startedByUserId = getSession().currentUser.id;
+            product.startedDate = new Date();
             product.addMarkedAsStarted(getSession().currentUser.id, toggle);
             saveObject(product);
+            
+            notifyOnSocket(product);
+        }
+    }
+    
+    public void notifyOnSocket(SedoxProduct sedoxProduct) {
+        if (getSession() != null && getSession().currentUser != null) {
+            String userid = getSession().currentUser.id;
+            webSocketServer.sendMessage("{ \"action\": \"startstoptoggled\", \"userId\": \""+userid+"\" , \"productId\": \""+sedoxProduct.id+"\" }");    
         }
     }
 
@@ -1264,6 +1283,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             }
 
             saveObject(product);
+            notifyOnSocket(product);
         }
 
     }
@@ -1315,6 +1335,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         if (product != null) {
             product.saleAble = saleable;
             saveObject(product);
+            notifyOnSocket(product);
         }
     }
 
@@ -1331,7 +1352,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 i++;
                 productImporter.updateSoftwareVersion(sedoxProduct);
                 saveObject(sedoxProduct);
-                System.out.println("Progress: " + i + "/" + products.size());
             }
             productImporter.close();
         } catch (ClassNotFoundException ex) {
@@ -1395,6 +1415,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         User user = getSession().currentUser;
         product.reference.put(user.id, reference);
         saveObject(product);
+        notifyOnSocket(product);
     }
 
 }

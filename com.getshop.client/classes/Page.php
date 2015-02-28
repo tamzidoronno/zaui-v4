@@ -458,9 +458,7 @@ class Page {
 
         echo "<div $innerstyles class='$gscellinner gsuicell $pagewidthclass gsdepth_$depth $container $rowedit gscount_$count gscell_" . $cell->incrementalCellId . "' totalcells='$totalcells'>";
 
-        if($depth == 1) {
-            $this->printCellBox($edit, $cell, $parent);
-        }
+        $this->printCellBox($edit, $cell, $parent, $depth);
         $this->printCellContent($cell, $parent, $edit, $totalcells, $count, $depth);
 
         echo "</div>";
@@ -615,7 +613,7 @@ class Page {
                     </div>
                     <div style='clear:both;'></div>
                     <div class="gscssrow">
-                        <? echo $this->factory->__w("Height"); ?> <span class="gscssinput"><input type='text' data-attr="height" data-prefix="px" data-level='.gsuicell'>px</span>
+                        <? echo $this->factory->__w("Height"); ?> <span class="gscssinput"><input type='text' data-attr="min-height" data-prefix="px" data-level='.gsuicell'>px</span>
                     </div>
                     <div style='clear:both;'></div>
                     <span style='float:right;padding-right:23px; font-size: 10px; padding-top: 5px;'>Inner - Outer</span>
@@ -1140,7 +1138,7 @@ class Page {
         }
     }
 
-    public function printCellBox($edit, $cell, $parent) {
+    public function printCellBox($edit, $cell, $parent, $depth) {
         if ($this->factory->isMobile()) {
             return false;
         }
@@ -1151,12 +1149,16 @@ class Page {
             return false;
         }
 
-        $style = "position:absolute;width:100%; bottom: -1px;";
-        echo "<div style='$style' class='gscellbox' cellid='" . $cell->cellId . "'>";
-        echo "<div class='gscellheadermin'><i class='fa fa-external-link-square'></i></div>";
-        echo "<div class='gscellboxheader'>";
-        echo "<span style='float:left;'>" . $this->printEasyModeEdit($cell, $parent, true) . "</span>";
-        echo "</div></div>";
+        if($depth == 1) {
+            echo "<div style='position:absolute;width:100%; bottom: -1px;' class='gscellbox' cellid='" . $cell->cellId . "'>";
+            echo "<div class='gscellheadermin'><i class='fa fa-external-link-square'></i></div>";
+            echo "<div class='gscellboxheader'>";
+            echo "<span style='float:left;'>" . $this->printEasyModeEdit($cell, $parent, true) . "</span>";
+            echo "</div></div>";
+        } else if($depth > 1) {
+            echo "<div class='gscellboxinner gs_resizing' cellid='" . $cell->cellId . "'><i class='fa fa-image'></i></div>";
+            
+        }
     }
 
     private function flattenCells($cells) {

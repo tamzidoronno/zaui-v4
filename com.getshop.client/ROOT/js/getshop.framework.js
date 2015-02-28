@@ -1063,6 +1063,13 @@ thundashop.framework = {
 
         target.find('.gscellbox').first().addClass('gsactivebox');
         target.find('.gsactivebox').attr('entered', 'true');
+        
+        if($(this).find('.gscell').length === 0 && target.find('.gsactiveboxheader').is(':visible')) {
+            $('.gscellboxinner').hide();
+            $(this).find('.gscellboxinner').first().show();
+        }
+
+        
     },
     mouseLeftPanel: function (event) {
         var cell = $(this);
@@ -1084,6 +1091,8 @@ thundashop.framework = {
                 cell.find('.gsactivebox').removeClass('gsactivebox');
             }
         }, timer);
+        
+        $('.gscellboxinner').hide();
     },
     showEditIcon: function (event) {
         if (!thundashop.framework.isAdvancedMode()) {

@@ -52,6 +52,15 @@ public interface IPageManager {
      * @throws ErrorException 
      */
     @Administrator
+    public void swapAppWithCell(String pageId, String fromCellId, String toCellId);
+    
+    /**
+     * Add application
+     * @param id
+     * @return
+     * @throws ErrorException 
+     */
+    @Administrator
     public void setStylesOnCell(String pageId, String cellId, String styles, String innerStyles, Double width);
     
     /**

@@ -958,7 +958,9 @@ class Page {
             return;
         }
         
-        echo "<div class='gscarouseldots $editdots'>";
+        $spaceleft = "style='margin-left:-" . ($totalcells*15)/2 . "px;'";
+        
+        echo "<div class='gscarouseldots $editdots' $spaceleft>";
         $number = 0;
         for ($i = 0; $i < $totalcells; $i++) {
             $number++;

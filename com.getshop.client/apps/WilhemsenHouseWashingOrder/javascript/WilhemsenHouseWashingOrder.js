@@ -33,9 +33,10 @@ app.WilhemsenHouseWashingOrder = {
                 
                 var event = thundashop.Ajax.createEvent(null, "addProductToCart", me, data);
                 thundashop.Ajax.postWithCallBack(event, function() {
-                    thundashop.common.goToPage("cart&cartCustomerId="+customerId);
+                    thundashop.common.goToPage("cart&cartCustomerId="+customerId, function() {
+                        $('#confirmorder').click();
+                    });
                 });
-                
             }
         });
         

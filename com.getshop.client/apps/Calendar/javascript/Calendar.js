@@ -446,6 +446,7 @@ $('.Calendar .addevent #save').live('click', function() {
     data.eventdescription = $('#eventdescription').val();
     data.linkToPage = $('#linkToPage').attr('pageid');
     data.locationId = $('#location').val();
+    data.deffered = $('#deffered').is(":checked");
     data.extraText = $('#extraText').val();
     data.extraDays = extraDaysData;
     data.lockedForSignup = $('#lockEvent').is(":checked");

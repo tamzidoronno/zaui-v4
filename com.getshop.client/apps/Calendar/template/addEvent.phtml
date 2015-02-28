@@ -16,6 +16,7 @@ $max = isset($entry) ? $entry->maxAttendees : '';
 $description = isset($entry) ? $entry->description : '';
 $extraText = isset($entry) ? $entry->extraText : '';
 $locked = isset($entry) && $entry->lockedForSignup ? ' checked ' : "";
+$deffered = isset($entry) && $entry->deffered ? ' checked ' : "";
 $entryid = isset($entry) ? $entry->entryId : '';
 $locations = $this->getApi()->getCalendarManager()->getAllLocations();
 
@@ -96,6 +97,7 @@ if (!$locations) {
             <tr><td colspan="2"><?php echo $this->__("event_desc"); ?></td></tr>
             <tr><td colspan="2"><textarea id="eventdescription" cols="50" rows="10"><?php echo $description; ?></textarea></td></tr>
             <tr><td colspan="2"><div><input <? echo $locked; ?> style="width: 20px;" type="checkbox" id="lockEvent"/><?php echo $this->__("Lock event for signups"); ?></div></td></tr>
+            <tr><td colspan="2"><div><input <? echo $deffered; ?> style="width: 20px;" type="checkbox" id="deffered"/><?php echo $this->__("Deffered"); ?></div></td></tr>
             <tr><td colspan="2" align="right">
                     <div entryid="<?php echo $entryid; ?>" day="<?php echo $this->day; ?>" year="<?php echo $this->year; ?>" month="<?php echo $this->month; ?>" id="save" class="button">
                         <div class="rightglare"></div>

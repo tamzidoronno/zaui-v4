@@ -396,6 +396,11 @@ class Calendar extends MarketingApplication implements Application {
         $entry->linkToPage = $_POST['data']['linkToPage'];
         $entry->lockedForSignup = $_POST['data']['lockedForSignup'];
         $entry->eventHelder = $_POST['data']['eventHelder'];
+        $entry->deffered = $_POST['data']['deffered'];
+        
+        if ($entry->deffered === "true") {
+            $entry->lockedForSignup = true;
+        }
         
         return $entry;
     }

@@ -408,3 +408,15 @@ td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1p
     border-radius: 3px;
     
 }
+
+
+.Calendar .event_deffered {
+    font-weight: bold;
+    color: red;
+    border: solid 2px;
+    text-align: center;
+    line-height: 25px;
+    display: inline-block;
+    padding-left: 10px;
+    padding-right: 10px;
+}

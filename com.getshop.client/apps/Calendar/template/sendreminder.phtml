@@ -4,6 +4,11 @@ namespace ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8;
 
 /* @var $this Calendar */
 $attendees = $this->getAttendees($this->currentEntry);
+$defaultText = $this->getConfigurationSetting("defaultreminder");
+
+if (!$defaultText) {
+    $defaultText = $this->currentEntry->title;
+}
 ?>
 <div class='reminderform'>
     <b>Subject:</b>
@@ -12,7 +17,7 @@ $attendees = $this->getAttendees($this->currentEntry);
     <br><br>
     <b>Message:</b>
     <div>
-        <textarea style='width: 925px; height: 150px; margin-left: 8px;'><?php echo $this->currentEntry->title; ?></textarea>
+        <textarea style='width: 925px; height: 150px; margin-left: 8px;'><?php echo $defaultText; ?></textarea>
     </div>
     <br>
     <b>Send message to the following:</b>

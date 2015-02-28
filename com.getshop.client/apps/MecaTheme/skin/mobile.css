@@ -31,3 +31,12 @@ body {
     background: #023f88;
     background-color: #023f88;
 }
+
+.shop_button {
+    background-color: #FFF;
+    color: #333;
+    border-radius: 0px;
+    border: solid 2px #333;
+    line-height: 30px;
+    height: 30px;
+}

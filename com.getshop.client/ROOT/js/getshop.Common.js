@@ -241,14 +241,14 @@ thundashop.common.saveCKEditor = function(data, target, notify) {
     return notified;
 };
 thundashop.common.lastPushId = null;
-thundashop.common.goToPage = function(id) {
+thundashop.common.goToPage = function(id, callback) {
     var link = "?page="+id;
     if(thundashop.common.lastPushId === null || thundashop.common.lastPushId !== id) {
         if(window.history.pushState !== undefined) {
             window.history.pushState({url: link, ajaxLink: link}, "Title", link);
         }
     }
-    thundashop.Ajax.doJavascriptNavigation(link, null, true);
+    thundashop.Ajax.doJavascriptNavigation(link, null, callback);
 }
 
 thundashop.common.selectPredefinedConent = function() {

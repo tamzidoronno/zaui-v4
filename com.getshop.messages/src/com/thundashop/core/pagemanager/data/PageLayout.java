@@ -420,6 +420,7 @@ public class PageLayout implements Serializable {
                 if(PageCell.CellMode.rotating.equals(mode))
                     subcell.type = PageCell.CellType.floating;
                 cell.clear();
+                subcell.hideOnMobile = true;
                 cell.cells.add(subcell);
             }
 

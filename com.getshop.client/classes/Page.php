@@ -1316,34 +1316,43 @@ class Page {
     public function resizeContainer($cell) {
         ?>
         <script>
-            var container = $('.gscontainercell[cellid="<? echo $cell->cellId; ?>"]');
-            var origwidth = container.attr('outerwidth');
-            var ratio = $(window).width() / 500;
-            var newheight = parseInt(container.height() * ratio);
-            container.css('height', newheight);
-            container.css('min-height', newheight);
-            container.find('.gsrotatingrow').css('height', newheight);
-            container.find('.gsrotatingrow').css('min-height', newheight);
+            function resizeContainerCell(cellid) {
+                var container = $('.gscontainercell[cellid="'+cellid+'"]');
+                var origwidth = container.attr('outerwidth');
+                var ratio = $(window).width() / 500;
+                var newheight = parseInt(container.height() * ratio);
+                container.css('height', newheight);
+                container.css('min-height', newheight);
+                container.find('.gsrotatingrow').css('height', newheight);
+                container.find('.gsrotatingrow').css('min-height', newheight);
 
-            container.find('.gsfloatingframe').each(function () {
-                var position = $(this).position();
-                var left = parseInt(position.left * ratio);
-                var top = parseInt(position.top * ratio);
-                var width = parseInt($(this).width() * ratio);
-                var height = parseInt($(this).height() * ratio);
+                container.find('.gsfloatingframe').each(function () {
+                    var position = $(this).position();
+                    var left = parseInt(position.left * ratio);
+                    var top = parseInt(position.top * ratio);
+                    var width = parseInt($(this).width() * ratio);
+                    var height = parseInt($(this).height() * ratio);
 
-                $(this).css('left', left + "px");
-                $(this).css('top', top + "px");
-                $(this).css('width', width + "px");
-                $(this).css('height', height + "px");
+                    $(this).css('left', left + "px");
+                    $(this).css('top', top + "px");
+                    $(this).css('width', width + "px");
+                    $(this).css('height', height + "px");
 
-                $(this).find('.ContentManager span').each(function () {
-                    var size = $(this).css('font-size');
-                    size = size.replace("px", "");
-                    size = parseInt(size * ratio);
-                    $(this).css('font-size', size);
+                    $(this).find('.ContentManager span').each(function () {
+                        var size = $(this).css('font-size');
+                        size = size.replace("px", "");
+                        size = parseInt(size * ratio);
+                        $(this).css('font-size', size);
+                    });
                 });
+            }
+            
+            resizeContainerCell('<? echo $cell->cellId; ?>');
+            
+            window.addEventListener('orientationchange', function() {
+                resizeContainerCell('<? echo $cell->cellId; ?>');
             });
+            
         </script>
         <?
     }

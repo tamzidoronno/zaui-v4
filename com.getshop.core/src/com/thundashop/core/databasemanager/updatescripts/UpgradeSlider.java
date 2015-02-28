@@ -43,8 +43,10 @@ public class UpgradeSlider extends UpgradeBase {
             for(PageCell cell : flatlist) {
                 if(cell.isRotating()) {
                     for(PageCell innercell : cell.cells) {
-                        innercell.hideOnMobile = true;
-                        modified = true;
+                        if(!innercell.hideOnMobile && !innercell.hideOnDesktop) {
+                            innercell.hideOnMobile = true;
+                            modified = true;
+                        }
                     }
                 }
             }

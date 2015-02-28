@@ -258,6 +258,13 @@ public class PageManager extends ManagerBase implements IPageManager {
         
         String cell = page.layout.createCell(incell, beforecell, mode, area);
         
+        if(incell != null && !incell.isEmpty()) {
+            if(page.getCell(incell).mode.equals(PageCell.CellMode.rotating)) {
+                page.layout.getCell(cell).hideOnDesktop = false;
+                page.layout.getCell(cell).hideOnMobile = true;
+            }
+        }
+        
         if(onlyMobile) {
             page.layout.getCell(cell).hideOnDesktop = true;
             page.layout.getCell(cell).hideOnMobile = false;

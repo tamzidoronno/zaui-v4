@@ -121,14 +121,7 @@ class Page {
             }
         } else {
             echo "<div class='gsbody' pageId='" . $this->getId() . "'>";
-
-            $cells = array();
-            $this->flattenCells($layout->areas->{'body'});
-
-            foreach ($layout->mobileList as $id) {
-                $cells[] = $this->flatCellList[$id];
-            }
-
+            $cells = $layout->areas->{'body'};
             $this->printMobileHeader($layout->areas->{'header'});
             $this->printArea($cells, 0, null);
             $this->printCss($layout->areas->{'body'});
@@ -213,6 +206,25 @@ class Page {
 
             $styles = $area->styles;
 
+            if($this->factory->isMobile()) {
+                $lines = explode("\n", $styles);
+                $newstyle = "";
+                $found = false;
+                foreach($lines as $line) {
+                    if(stristr($line, ".gscell")) {
+                        $found = false;
+                    }
+                    if(stristr($line, ".gsucell")) {
+                        $found = true;
+                    }
+                    if((stristr($line, "padding") || stristr($line, "margin")) && $found) {
+                        continue;
+                    }
+                    $newstyle .= $line . "\n";
+                }
+                $styles = $newstyle;
+            }
+            
             if (isset($area->styles) && $area->styles) {
                 $area->styles = str_replace("{incrementcellid}", $area->incrementalCellId, $area->styles);
                 echo "<style cellid='" . $area->cellId . "'>" . $styles . "</style>" . "\n";
@@ -592,9 +604,19 @@ class Page {
 
                 <div class='gscssattributes'>
                     <div class="gscssrow">
-                        <? echo $this->factory->__w("Background color"); ?> <span class="gscssinput">
-                            <input type='text' data-attr="background-color"  data-level='.gsuicell' style='width:60px; padding:0px;'>
+                        <? echo $this->factory->__w("Background color inner"); ?> <span class="gscssinput">
+                            <input type='text' data-attr="background-color"  data-level='.gsuicell' class='gsinnerbgcolor' style='width:60px; padding:0px;'>
                             <div id="colorSelector" style='display:inline-block; width: 20px; height: 15px; border: solid 1px #bbb;padding: 1px;text-align: center;'>
+                                <div>
+                                    <i class="fa fa-eyedropper"></i>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="gscssrow">
+                        <? echo $this->factory->__w("Background color outer"); ?> <span class="gscssinput">
+                            <input type='text' data-attr="background-color"  data-level='.gsucell' class='gsouterbgcolor' style='width:60px; padding:0px;'>
+                            <div id="colorSelector3" style='display:inline-block; width: 20px; height: 15px; border: solid 1px #bbb;padding: 1px;text-align: center;'>
                                 <div>
                                     <i class="fa fa-eyedropper"></i>
                                 </div>
@@ -660,13 +682,19 @@ class Page {
         <script>
             $('.gsresizingpanel').draggable({handle: ".heading"});
             $('#colorSelector').ColorPicker({ onChange: function (hsb, hex, rgb) {
-                var field = $('[data-attr="background-color"]');
+                var field = $('.gsinnerbgcolor');
                 field.val("#" + hex);
                 field.ColorPickerHide();
                 field.keyup();
             }});
             $('#colorSelector2').ColorPicker({ onChange: function (hsb, hex, rgb) {
                 var field = $('[data-attr="color"]');
+                field.val("#" + hex);
+                field.ColorPickerHide();
+                field.keyup();
+            }});
+            $('#colorSelector3').ColorPicker({ onChange: function (hsb, hex, rgb) {
+                var field = $('.gsouterbgcolor');
                 field.val("#" + hex);
                 field.ColorPickerHide();
                 field.keyup();
@@ -1164,9 +1192,6 @@ class Page {
     private function flattenCells($cells) {
         foreach ($cells as $cell) {
             $this->flatCellList[$cell->cellId] = $cell;
-            if (sizeof($cell->cells) > 0) {
-                $this->flattenCells($cell->cells);
-            }
         }
     }
 

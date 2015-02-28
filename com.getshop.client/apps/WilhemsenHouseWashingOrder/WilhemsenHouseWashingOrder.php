@@ -31,5 +31,11 @@ class WilhemsenHouseWashingOrder extends \ApplicationBase implements \Applicatio
         echo $this->getApi()->getHotelBookingManager()->getUserIdForRoom($_POST['data']['room']);
         die();
     }
+    
+    public function addProductToCart() {
+        $productId = $_POST['data']['productId'];
+        $this->getApi()->getCartManager()->addProduct($productId, 1, []);
+    }
+
 //put your code here
 }

@@ -11,6 +11,7 @@ app.WilhemsenHouseWashingOrder = {
     },
     
     orderWash: function() {
+        var me = this;
         var room = $(this).closest('.app').find('.washingroomnumber').val();
         if (!room) {
             alert(__w("Please enter your room number"));
@@ -22,11 +23,19 @@ app.WilhemsenHouseWashingOrder = {
         };
         
         var event = thundashop.Ajax.createEvent("", "canOrderWash", this, data);
-        thundashop.Ajax.postWithCallBack(event, function(result) {
-            if (!result) {
+        thundashop.Ajax.postWithCallBack(event, function(customerId) {
+            if (!customerId) {
                 alert(__w("Please check your room number, you can only order wash while you are staying at the hotel"));
             } else {
-                alert("Succcess: " + result);
+                data = {
+                    productId: "8dd279a2-4949-45ce-83c5-1d329f938179"
+                };
+                
+                var event = thundashop.Ajax.createEvent(null, "addProductToCart", me, data);
+                thundashop.Ajax.postWithCallBack(event, function() {
+                    thundashop.common.goToPage("cart&cartCustomerId="+customerId);
+                });
+                
             }
         });
         

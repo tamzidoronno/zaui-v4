@@ -466,7 +466,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     public String getUserIdForRoom(String roomNumber) {
         for (BookingReference ref : bookingReferences.values()) {
-            if (!ref.isBetweenCheckinAndCheckout()) {
+            if (!ref.isActive()) {
                 continue;
             }
             
@@ -474,7 +474,6 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
                 continue;
             }
             
-            System.out.println("Ref: " + ref.bookingReference);
             Order order = orderManager.getOrderByReference(""+ref.bookingReference);
             if (order != null) {
                 return order.userId;

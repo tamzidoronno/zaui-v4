@@ -86,7 +86,7 @@ public class BookingReference extends DataCommon {
         return false;
     }
     
-    public boolean isBetweenCheckinAndCheckout() {
+    public boolean isActive() {
         Date now = new Date();
         if(now.after(startDate) && now.before(endDate)) {
             return true;

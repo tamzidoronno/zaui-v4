@@ -212,8 +212,8 @@ body {
     background: linear-gradient( to bottom, #333, #222);
 }
 .shop_button {
-    color: #FFF;
-    background-color: black;
+    color: #FFF !important;
+    background-color: black !important;
 }
 .gsmobilesearch,
 .gsslideright,

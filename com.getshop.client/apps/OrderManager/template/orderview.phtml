@@ -56,7 +56,8 @@ $cart = $order->cart;
     <?
     foreach ($cart->items as $cartItem) {
 //        echo "<div class='gss_label_content'>";
-        echo "<div class='gss_order_line'>".$cartItem->count." x ".$cartItem->product->name."<span class='gss_order_line_price'>".$cartItem->product->price."</span></div>";
+        $metaText = $cartItem->product->metaData ? " ( " .$cartItem->product->metaData." )" : "";
+        echo "<div class='gss_order_line'>".$cartItem->count." x ".$cartItem->product->name." $metaText<span class='gss_order_line_price'>".$cartItem->product->price."</span></div>";
 //        echo "</div>";
     }
     ?>

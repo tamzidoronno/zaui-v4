@@ -89,6 +89,8 @@ public class Product extends DataCommon implements Comparable<Product>  {
     private double taxes;
     
     public String sku;
+    
+    public String metaData = "";
 
     public void setMainImage(String fileId) {
         mainImage = fileId;

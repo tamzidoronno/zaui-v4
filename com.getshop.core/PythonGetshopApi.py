@@ -947,6 +947,28 @@ class CartManager(object):
     data.interfaceName = "core.cartmanager.ICartManager"
     return self.communicationHelper.sendMessage(data)
 
+  def addMetaDataToProduct(self, productId, metaData):
+    args = collections.OrderedDict()
+    if isinstance(productId,GetShopBaseClass): 
+      args["productId"]=json.dumps(productId.__dict__)
+    else:
+      try:
+        args["productId"]=json.dumps(productId)
+      except (ValueError, AttributeError):
+        args["productId"]=productId
+    if isinstance(metaData,GetShopBaseClass): 
+      args["metaData"]=json.dumps(metaData.__dict__)
+    else:
+      try:
+        args["metaData"]=json.dumps(metaData)
+      except (ValueError, AttributeError):
+        args["metaData"]=metaData
+    data = EmptyClass()
+    data.args = args
+    data.method = "addMetaDataToProduct"
+    data.interfaceName = "core.cartmanager.ICartManager"
+    return self.communicationHelper.sendMessage(data)
+
   def addProduct(self, productId, count, variations):
     args = collections.OrderedDict()
     if isinstance(productId,GetShopBaseClass): 

@@ -28,7 +28,8 @@ app.WilhemsenHouseWashingOrder = {
                 alert(__w("Please check your room number, you can only order cleaning while you are checked in."));
             } else {
                 data = {
-                    productId: "8dd279a2-4949-45ce-83c5-1d329f938179"
+                    productId: "8dd279a2-4949-45ce-83c5-1d329f938179", 
+                    roomNumber : room
                 };
                 
                 var event = thundashop.Ajax.createEvent(null, "addProductToCart", me, data);

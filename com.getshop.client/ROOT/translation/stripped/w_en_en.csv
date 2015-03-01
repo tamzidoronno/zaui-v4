@@ -3,9 +3,7 @@
 * PayOnDelivery fee;-;
 0-100 km/h;-;
 100% width;-;
-A confirmation email has been sent to your email, and your storage room has been reserved. Please note that the storage room might not be final and could be changed to a different one with the same size if needed.;-;
 A confirmation email has been sent to your email.;-;
-A confirmation email has been sent to your email. Enjoy your stay at {hotel}.;-;
 A red theme that can be used when selling exciting things;-;
 Add a button to your page. This button can be a add to cart button, go to page button, etc;-;
 Add a room;-;
@@ -260,6 +258,7 @@ PixelateTheme1;-;
 Place order;-;
 Please check your delivery options.;-;
 Please check your room number, you can only order cleaning while you are checked in.;-;
+Please check your room number, you can only order wash while you are staying at the hotel;-;
 Please enter the reference number provided by;-;
 Please enter your email address:;-;
 Please enter your room number;-;
@@ -367,8 +366,6 @@ Thank you for checking into our hotel. A confirmation mail has been sent to your
 Thank you for ordering with Sisow ebill;-;
 Thank you for renting a storage room from us. A confirmation mail has been sent to your email.;-;
 Thank you for subscribing to our newsletter, your email has been added;-;
-Thank you for your booking a room at;-;
-Thank you for your booking a storage room at;-;
 Thank you for your order, an email has been sent to you with the invoice attached. We will ship the items as soon as we have received the payment.;-;
 Thank you for your order.;-;
 Thank you, you will now be redirected to the payment service;-;

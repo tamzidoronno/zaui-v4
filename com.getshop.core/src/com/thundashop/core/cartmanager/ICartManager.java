@@ -142,4 +142,5 @@ public interface ICartManager {
      */
     public void setReference(String reference) throws ErrorException;
     
+    public void addMetaDataToProduct(String productId, String metaData);
 }

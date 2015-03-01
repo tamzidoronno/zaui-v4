@@ -105,5 +105,8 @@ class core_productmanager_data_Product extends core_common_DataCommon  {
 	/** @var String */
 	public $sku;
 
+	/** @var String */
+	public $metaData;
+
 }
 ?>

@@ -766,4 +766,23 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         return notTransferred;
     }
+
+    @Override
+    public List<Order> getAllOrdersOnProduct(String productId) throws ErrorException {
+        List<Order> result = new ArrayList();
+        for(Order order : orders.values()) {
+            boolean found = false;
+            for(CartItem item : order.cart.getItems()) {
+                if(item != null && item.getProduct() != null) {
+                    if(item.getProduct().id.equals(productId)) {
+                        found = true;
+                    }
+                }
+            }
+            if(found) {
+                result.add(order);
+            }
+        }
+        return result;
+    }
 }

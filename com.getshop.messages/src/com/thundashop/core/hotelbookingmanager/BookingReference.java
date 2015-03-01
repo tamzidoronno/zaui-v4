@@ -72,6 +72,18 @@ public class BookingReference extends DataCommon {
     }
 
     public boolean isBetweenDates(long startDate, long endDate) {
+        Calendar calstart = Calendar.getInstance();
+        calstart.setTimeInMillis(startDate);
+        calstart.set(Calendar.HOUR_OF_DAY, 16);
+        calstart.set(Calendar.MINUTE, 00);
+        startDate = calstart.getTimeInMillis();
+        
+        Calendar calend = Calendar.getInstance();
+        calend.setTimeInMillis(startDate);
+        calend.set(Calendar.HOUR_OF_DAY, 11);
+        calend.set(Calendar.MINUTE, 00);
+        startDate = calend.getTimeInMillis();
+        
         if(startDate >= this.startDate.getTime() && startDate < this.endDate.getTime()) {
             return true;
         }

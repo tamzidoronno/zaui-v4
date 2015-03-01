@@ -80,6 +80,15 @@ public interface IOrderManager {
     public List<Order> getAllOrdersForUser(String userId) throws ErrorException;
     
     /**
+     * Fetch all orders on product.
+     * @param userId
+     * @return
+     * @throws ErrorException 
+     */
+    @Administrator
+    public List<Order> getAllOrdersOnProduct(String productId) throws ErrorException;
+    
+    /**
      * Update or modify an existing order. 
      * @param order The order to modify
      * @return

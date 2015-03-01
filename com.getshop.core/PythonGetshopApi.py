@@ -2882,6 +2882,21 @@ class OrderManager(object):
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getAllOrdersOnProduct(self, productId):
+    args = collections.OrderedDict()
+    if isinstance(productId,GetShopBaseClass): 
+      args["productId"]=json.dumps(productId.__dict__)
+    else:
+      try:
+        args["productId"]=json.dumps(productId)
+      except (ValueError, AttributeError):
+        args["productId"]=productId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getAllOrdersOnProduct"
+    data.interfaceName = "core.ordermanager.IOrderManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getMostSoldProducts(self, numberOfProducts):
     args = collections.OrderedDict()
     if isinstance(numberOfProducts,GetShopBaseClass): 

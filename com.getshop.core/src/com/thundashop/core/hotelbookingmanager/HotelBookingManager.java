@@ -36,6 +36,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     public HashMap<String, RoomType> roomTypes = new HashMap();
     public HashMap<Integer, BookingReference> bookingReferences = new HashMap();
     private VismaUsers transferredUsers = new VismaUsers();
+    private Date lastPulled = null;
+    private boolean warnedAboutArxDown = false;
 
     public List<ArxLogEntry> logEntries = new ArrayList();
     
@@ -281,6 +283,17 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Override
     public void checkForWelcomeMessagesToSend() throws ErrorException {
+        
+        if(lastPulled != null) {
+            if (new Date().getTime() - lastPulled.getTime() >= 5*60*1000) {
+                warnAboutArxDown();
+            } else {
+                if(warnedAboutArxDown) {
+                    notifyArxUp();
+                }
+            }
+        }
+        
         List<BookingReference> reservations = getAllReservations();
         
         for(BookingReference reference : reservations) {
@@ -564,5 +577,23 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         saveObject(newEntry);
         logEntries.add(newEntry);
         
+    }
+
+    @Override
+    public List<BookingReference> getAllReservationsArx() throws ErrorException {
+        lastPulled = new Date();
+        return getAllReservations();
+    }
+
+    private void warnAboutArxDown() {
+        if(!warnedAboutArxDown) {
+            warnedAboutArxDown = true;
+            messageManager.sendMail("post@getshop.com", "GetShop Support", "arx down", "Not getting pull messages from arx anymore. seems to be down.", "post@getshop.com", "post@getshop.com");
+        }
+    }
+
+    private void notifyArxUp() {
+        warnedAboutArxDown = false;
+        messageManager.sendMail("post@getshop.com", "GetShop Support", "arx back up", "Yez.", "post@getshop.com", "post@getshop.com");
     }
 }

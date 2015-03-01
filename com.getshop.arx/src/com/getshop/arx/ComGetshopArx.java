@@ -49,15 +49,15 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
  */
 public class ComGetshopArx {
 
-    private String hostname = "https://localhost:5002/arx/import";
+    private String hostname = "https://10.0.0.8:5002/arx/import";
     private String username = "master";
     private String password = "master";
 
-    private String apiAddress = "backend20.getshop.com";
+    private String apiAddress = "localhost";
     private String apiUsername = "kai@getshop.com";
     private String apiPassword = "g4kkg4kk";
-    private String website = "20164.getshop.com";
-    private Integer backendport = 3224;
+    private String website = "wilhelmsenhouse.getshop.com";
+    private Integer backendport = 25554;
     private boolean notifiedGetshop = false;
     
     /**
@@ -75,7 +75,7 @@ public class ComGetshopArx {
         connectToBackend();
         while(true) {
             checkForArxUpdate();
-            try { Thread.sleep(5000); }catch(Exception e) {}
+            try { Thread.sleep(60000); }catch(Exception e) {}
         }
     }
     
@@ -99,7 +99,7 @@ public class ComGetshopArx {
     void checkForArxUpdate() throws Exception {
         System.out.println("Checking for arx update");
         HashMap<String, BookingReference> bookingReferences = new HashMap();
-        List<BookingReference> reservations = api.getHotelBookingManager().getAllReservations();
+        List<BookingReference> reservations = api.getHotelBookingManager().getAllReservationsArx();
         List<Room> rooms = api.getHotelBookingManager().getAllRooms();
         
         Map<String,Room> allRooms = new HashMap();
@@ -167,6 +167,22 @@ public class ComGetshopArx {
         toPost += "<pin_code></pin_code>\n";
         toPost += "<extra_fields/>\n";
         toPost += "<access_categories>\n";
+        
+        String startday = new SimpleDateFormat("d").format(user.startDate);
+        String startmonth = new SimpleDateFormat("M").format(user.startDate);
+        String startyear = new SimpleDateFormat("y").format(user.startDate);
+        String endday = new SimpleDateFormat("d").format(user.endDate);
+        String endmonth = new SimpleDateFormat("M").format(user.endDate);
+        String endyear = new SimpleDateFormat("y").format(user.endDate);
+        
+        if(startday.length() == 1) { startday = "0" + startday; }
+        if(startmonth.length() == 1) { startmonth = "0" + startmonth; }
+        if(startyear.length() == 1) { startyear = "0" + startyear; }
+        if(endday.length() == 1) { endday = "0" + endday; }
+        if(endmonth.length() == 1) { endmonth = "0" + endmonth; }
+        if(endyear.length() == 1) { endyear = "0" + endyear; }
+        
+        
         for (String room : user.doorsToAccess) {
             toPost += "<access_category>\n";
             toPost += "<name>" + room + "</name>\n";
@@ -192,7 +208,7 @@ public class ComGetshopArx {
         toPost += "</arxdata>";
 
         String result = httpLoginRequest(hostname, username, password, toPost);
-        return !result.equals("failed");
+        return result.equals("failed");
     }
 
     public String httpLoginRequest(String address, String username, String password, String content) {

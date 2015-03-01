@@ -73,6 +73,14 @@ public interface IHotelBookingManager {
     @Administrator
     public List<BookingReference> getAllReservations() throws ErrorException;
     
+    /**
+     * Get all references
+     * @return
+     * @throws ErrorException 
+     */
+    @Administrator
+    public List<BookingReference> getAllReservationsArx() throws ErrorException;
+    
     
     @Administrator
     public void deleteReference(int reference) throws ErrorException;

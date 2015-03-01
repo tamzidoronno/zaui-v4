@@ -1778,6 +1778,20 @@ class APIHotelBookingManager {
 	}
 
 	/**
+	* Get all references
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function getAllReservationsArx() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getAllReservationsArx";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	*
 	* @return List
 	* @throws ErrorException

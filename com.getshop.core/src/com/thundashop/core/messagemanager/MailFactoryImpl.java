@@ -215,6 +215,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
                 break;
             } catch (Exception ex) {
                 logger.error(this, "Was not able to send email on try: " + i + "( message: " + from + " - " + to + " " + subject + content + "");
+                ex.printStackTrace();
             }
             try {
                 Thread.sleep(1000);

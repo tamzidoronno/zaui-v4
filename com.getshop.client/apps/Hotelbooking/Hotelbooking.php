@@ -185,10 +185,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $end = strtotime($_POST['data']['stop']);
         $product = $this->getApi()->getProductManager()->getProduct($_POST['data']['roomProduct']);
 
-        if ($this->getServiceType() == "storage") {
-            $end = $start + 86400;
-        }
-
         $this->setStartDate($start);
         $this->setEndDate($end);
         $this->setProductId($product->id);
@@ -241,38 +237,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         
     }
 
-    public function sendConfirmationEmail() {
-        $orderId = $_GET['orderId'];
-
-        $message = "test";
-        $title = "test title";
-        $mainemail = false;
-        if (isset($this->getFactory()->getSettings()->{"mainemailaddress"})) {
-            $mainemail = $this->getFactory()->getSettings()->{"mainemailaddress"}->value;
-        }
-
-        $order = $this->getApi()->getOrderManager()->getOrder($orderId);
-        $address = $order->cart->address;
-        $name = $address->fullName;
-        $reference = $order->reference;
-        $user = $this->getApi()->getUserManager()->getUserById($order->userId);
-        if ($this->getServiceType() == "hotel") {
-            $title = $this->__w("Thank you for your booking a room at") . " " . $this->getProjectName() . ".";
-        } else {
-            $title = $this->__w("Thank you for your booking a storage room at") . " " . $this->getProjectName() . ".";
-        }
-        echo "<br><br>";
-        echo "<h1>" . $title . "</h1>";
-        if ($this->getServiceType() == "hotel") {
-            $stay = $this->__w("A confirmation email has been sent to your email. Enjoy your stay at {hotel}.");
-            $stay = str_replace("{hotel}", $this->getProjectName(), $stay);
-            echo $stay;
-        } else {
-            echo $this->__w("A confirmation email has been sent to your email, and your storage room has been reserved. Please note that the storage room might not be final and could be changed to a different one with the same size if needed.");
-        }
-        echo "<br><br><br><br>";
-    }
-
     public function getContinuePage() {
         return $this->getConfigurationSetting("contine_page");
     }
@@ -281,7 +245,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         //this variable is set from $this->continueToCart();
         if (isset($_GET['orderProcessed'])) {
             if ($this->partnerShipChecked() || !$this->hasPaymentAppAdded()) {
-                $this->sendConfirmationEmail();
                 $this->clearBookingData();
                 $this->includeEcommerceTransaction();
             } else {
@@ -1016,9 +979,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             $order->endDate = date('M d, Y h:m:s A', $this->getEnd());
         }
         
-        $this->startAdminImpersonation("OrderManager", "saveOrder");
+//        $this->startAdminImpersonation("OrderManager", "saveOrder");
         $this->getApi()->getOrderManager()->saveOrder($order);
-        $this->stopImpersionation();
+//        $this->stopImpersionation();
         return $order;
     }
 

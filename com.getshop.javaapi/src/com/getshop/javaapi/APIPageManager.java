@@ -673,6 +673,23 @@ public class APIPageManager {
      }
 
      /**
+     * Add application
+     * @param id
+     * @return
+     * @throws ErrorException
+     */
+     public void swapAppWithCell(java.lang.String pageId, java.lang.String fromCellId, java.lang.String toCellId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("pageId",new Gson().toJson(pageId));
+          gs_json_object_data.args.put("fromCellId",new Gson().toJson(fromCellId));
+          gs_json_object_data.args.put("toCellId",new Gson().toJson(toCellId));
+          gs_json_object_data.method = "swapAppWithCell";
+          gs_json_object_data.interfaceName = "core.pagemanager.IPageManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
      * Set the carousel configuration.
      * @param pageId
      * @return

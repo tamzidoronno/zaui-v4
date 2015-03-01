@@ -110,8 +110,8 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Override
     public String reserveRoom(String roomProductId, long startDate, long endDate, List<RoomInformation> roomInfo, AdditionalBookingInformation additionalInfo) throws ErrorException {
-        startDate *= 1000;
-        endDate *= 1000;
+//        startDate *= 1000;
+//        endDate *= 1000;
         List<Room> availableRoom = getAvailableRooms(roomProductId, startDate, endDate, additionalInfo);
         List<Room> roomsToBook = new ArrayList();
         for(Room room : availableRoom) {
@@ -125,16 +125,28 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             throw new ErrorException(1032);
         }
         
+        Date start = new Date(startDate * 1000);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(start);
+        cal.set(Calendar.HOUR_OF_DAY, 15);
+        cal.set(Calendar.MINUTE, 0);
+        start = cal.getTime();
+
+        Date end = new Date(endDate * 1000);
+        cal.setTime(end);
+        cal.set(Calendar.HOUR_OF_DAY, 12);
+        cal.set(Calendar.MINUTE, 0);
+        end = cal.getTime();
+
+        
         for(int i = 0; i < roomInfo.size(); i++) {
             roomInfo.get(i).roomId = roomsToBook.get(i).id;
         }
         
         BookingReference reference = new BookingReference();
-        reference.startDate = new Date();
-        reference.startDate.setTime(startDate);
         reference.bookingReference = genereateReferenceId();
-        reference.endDate = new Date();
-        reference.endDate.setTime(endDate);
+        reference.startDate = start;
+        reference.endDate = end;
         
         reference.roomsReserved = roomInfo;
         
@@ -384,7 +396,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     private boolean isAvailable(Room room, long startDate, long endDate) {
         for(BookingReference reference : bookingReferences.values()) {
-            if(reference.isBetweenDates(startDate, endDate) && reference.getAllRooms().contains(room.id)) {
+            if(reference.isBetweenDates(startDate*1000, endDate*1000) && reference.getAllRooms().contains(room.id)) {
                 return false;
             } 
         }
@@ -393,7 +405,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     private String formatMessage(BookingReference reference, String message, String roomName, Integer code, String name) throws ErrorException {
-        if (code != null) {
+       if (code != null) {
             message = message.replaceAll("\\{code\\}", code + "");
         }
         if (roomName != null) {
@@ -407,11 +419,45 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         if (endMinute.length() < 2) {
             endMinute = "0" + endMinute;
         }
-        message = message.replaceAll("\\{checkin_time\\}", new SimpleDateFormat("dd-MM-yyyy H:").format(reference.startDate) + startMinute);
-        message = message.replaceAll("\\{checkin_date\\}", new SimpleDateFormat("dd-MM-yyyy").format(reference.startDate));
-        message = message.replaceAll("\\{checkout_time\\}", new SimpleDateFormat("dd-MM-yyyy H:").format(reference.endDate) + endMinute);
+        
+        String startday = new SimpleDateFormat("d").format(reference.startDate);
+        String startmonth = new SimpleDateFormat("M").format(reference.startDate);
+        String startyear = new SimpleDateFormat("y").format(reference.startDate);
+        String endday = new SimpleDateFormat("d").format(reference.endDate);
+        String endmonth = new SimpleDateFormat("M").format(reference.endDate);
+        String endyear = new SimpleDateFormat("y").format(reference.endDate);
+        
+        if(startday.length() == 1) { startday = "0" + startday; }
+        if(startmonth.length() == 1) { startmonth = "0" + startmonth; }
+        if(startyear.length() == 1) { startyear = "0" + startyear; }
+        if(endday.length() == 1) { endday = "0" + endday; }
+        if(endmonth.length() == 1) { endmonth = "0" + endmonth; }
+        if(endyear.length() == 1) { endyear = "0" + endyear; }
+        
+        message = message.replaceAll("\\{checkin_time\\}", new SimpleDateFormat("H:").format(reference.startDate) + startMinute);
+        message = message.replaceAll("\\{checkin_date\\}", startday + "-" + startmonth + "-" + startyear);
+        message = message.replaceAll("\\{checkout_date\\}",  endday + "-" + endmonth + "-" + endyear);
+        message = message.replaceAll("\\{checkout_time\\}", new SimpleDateFormat("H:").format(reference.endDate) + endMinute);
         message = message.replaceAll("\\{name\\}", name);
         message = message.replaceAll("\\{referenceNumber\\}", reference.bookingReference + "");
+        String contacts = "";
+        for (int i = 0; i < reference.contact.names.size(); i++) {
+            contacts += reference.contact.names.get(i) + "<br>";
+            contacts += reference.contact.phones.get(i) + "<br>";
+        }
+        message = message.replaceAll("\\{contacts\\}", contacts);
+
+        Order order = orderManager.getOrderByReference(reference.bookingReference + "");
+        if (order != null) {
+            message = message.replaceAll("\\{roomName\\}", order.cart.getItems().get(0).getProduct().name + "");
+            User user = userManager.getUserById(order.userId);
+            if (user != null) {
+                message = message.replaceAll("\\{email\\}", user.emailAddress);
+                message = message.replaceAll("\\{address\\}", user.address.address);
+                message = message.replaceAll("\\{postCode\\}", user.address.postCode);
+                message = message.replaceAll("\\{city\\}", user.address.city);
+            }
+        }
         return message;
     }
     
@@ -455,12 +501,17 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     }
 
     private void finalize(BookingReference reservation) {
+        if(reservation == null) {
+            System.out.println("Tried to finalize null resverence");
+            return;
+        }
         Order order = orderManager.getOrderByReference(reservation.bookingReference+"");
-        reservation.orderId = order.incrementOrderId;
-        if(order.status == Order.Status.PAYMENT_COMPLETED) {
-            reservation.payedFor = true;
-        } else {
-            reservation.payedFor = false;
+        reservation.payedFor = false;
+        if(order != null) {
+            reservation.orderId = order.incrementOrderId;
+            if(order.status == Order.Status.PAYMENT_COMPLETED) {
+                reservation.payedFor = true;
+            }
         }
     }
 
@@ -485,7 +536,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     
     private void sendEmail(Visitors visitor, String title, String message) {
         String msg = "Sending mail to " + visitor.email + " title: " + title + " message: " + message;
-        messageManager.sendMail(visitor.email, visitor.name, title, message, arxSettings.smsFrom, "");
+            
+         String copyadress = "toreplaced@test.no";       
+//        String copyadress = getSettings("Settings").get("mainemailaddress").value;
+        
+        messageManager.sendMail(visitor.email, visitor.name, title, message, copyadress, copyadress);
         ArxLogEntry newEntry = new ArxLogEntry();
         newEntry.message = msg;
         saveObject(newEntry);

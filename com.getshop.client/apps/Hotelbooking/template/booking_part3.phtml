@@ -38,13 +38,13 @@ $periode = $this->__w("night");
             /* @var $cartItem core_cartmanager_data_CartItem */
             $product = $cartItem->product;
             if ($cartItem->product->sku == "vask" || $cartItem->product->sku == "parking") {
-                $text = $cartItem->count . " x " . strtolower($product->name) . "<br>";
+                $text = $cartItem->count . " " . strtolower($product->name) . "<br>";
             } else {
                 $nightTextToPrint = $nightText;
                 if ($cartItem->count > 1) {
                     $nightTextToPrint = $nightsText; 
                 }
-                $text = $cartItem->count . " x " . $nightTextToPrint . " " . $inText . " " . strtolower($product->name) . "<br>";
+                $text = $cartItem->count . " " . $nightTextToPrint . " " . $inText . " " . strtolower($product->name) . "<br>";
             }
             $price = $cartItem->product->original_price * $cartItem->count;
             $discountedPrice = $cartItem->product->price * $cartItem->count;
@@ -136,42 +136,42 @@ $periode = $this->__w("night");
         <div style="padding-bottom:10px;">
             <input type="radio" name="customer_type" gsname="customer_type" value="private" <? if ($this->isPrivate()) echo "CHECKED"; ?>> Privatperson
             <input type="radio" name="customer_type" gsname="customer_type" value="firma" <? if ($this->isCompany()) echo "CHECKED"; ?>> Firma
-        </div>
-        <? if ($this->showReferenceNumber()) { ?>
-            <div class='contact_entry referencecheckline'>
-                <input type='checkbox' gsname="partnershipdeal" <?
+            <? if ($this->showReferenceNumber()) { ?>
+                <span class='contact_entry referencecheckline'>
+                    <input type='checkbox' gsname="partnershipdeal" <?
+                    if ($this->partnerShipChecked()) {
+                        echo "checked";
+                    }
+                    ?>>
+                           <? echo $this->__w("I have a partnership deal"); ?>
+                </span>
+                <?
+                $hide = "";
+                $hideStandards = "";
                 if ($this->partnerShipChecked()) {
-                    echo "checked";
+                    $hide = "style='display:none;'";
+                } else {
+                    $hideStandards = "style='display:none;'";
                 }
-                ?>>
-                       <? echo $this->__w("I have a partnership deal"); ?>
-            </div>
-            <?
-            $hide = "";
-            $hideStandards = "";
-            if ($this->partnerShipChecked()) {
-                $hide = "style='display:none;'";
-            } else {
-                $hideStandards = "style='display:none;'";
+                ?>
+                <div class='contact_entry partnership common_input' <? echo $hideStandards; ?>>
+                    <div class="col-100">
+                        <span class='contact_text'>
+                            <? echo $this->__w("Reference number"); ?>
+                        </span>
+                        <span class='contact_input'><input type='text' gsname="referencenumber" value='<? echo $this->getPost("referencenumber"); ?>' class='<? echo $this->validateInput("referencenumber"); ?>'></span>
+                        <div><? echo $this->__w("Please enter the reference number provided by") . " " . $this->getProjectName(); ?></div>
+                        <?
+                        if ($this->isEditorMode()) {
+                            echo "<span style='float:right;color:blue; cursor:pointer;' class='searchexisting'>Search for existing customer</span><br>";
+                        }
+                        ?> 
+                    </div>
+                </div>
+                <?
             }
             ?>
-            <div class='contact_entry partnership common_input' <? echo $hideStandards; ?>>
-                <div class="col-100">
-                    <span class='contact_text'>
-                        <? echo $this->__w("Reference number"); ?>
-                    </span>
-                    <span class='contact_input'><input type='text' gsname="referencenumber" value='<? echo $this->getPost("referencenumber"); ?>' class='<? echo $this->validateInput("referencenumber"); ?>'></span>
-                    <div><? echo $this->__w("Please enter the reference number provided by") . " " . $this->getProjectName(); ?></div>
-                    <?
-                    if ($this->isEditorMode()) {
-                        echo "<span style='float:right;color:blue; cursor:pointer;' class='searchexisting'>Search for existing customer</span><br>";
-                    }
-                    ?> 
-                </div>
-            </div>
-            <?
-        }
-        ?>
+        </div>
         <div class="common_input" <? echo $hide; ?>>
             <?
             $hideCompany = "";

@@ -25,10 +25,22 @@ $headingtext = $this->__w("You have selected the following duration for your sta
             <table>
                 <tr>
                     <td><? echo $this->__w("Number of rooms"); ?></td>
-                    <td align='right'><input class='number_of_rooms' type='number' min="1" max="10" value='<? echo $this->getRoomCount(); ?>'></td>
+                    <td align='right'>
+                        <select class='number_of_rooms' type='number' min="1" max="10">
+                            <? 
+                            for($i = 1; $i <= 10; $i++) {
+                                $selected = "";
+                                if($this->getRoomCount() == $i) {
+                                   $selected = "SELECTED";
+                                }
+                                echo "<option value='$i' $selected>$i</option>";
+                            }
+                                ?>
+                        </select>
+                    </td>
                 </tr>
                 <tr>
-                    <td><? echo $this->__w("I need a handicap room"); ?></td>
+                    <td valign='top'><? echo $this->__w("I need a handicap room"); ?></td>
                     <? 
                     $checked = ""; 
                     if($this->getNeedHandicap()) {
@@ -36,7 +48,46 @@ $headingtext = $this->__w("You have selected the following duration for your sta
                     }
                     ?>
 
-                    <td align='right'><input class='need_handicat' type='checkbox' <? echo $checked; ?>></td>
+                    <td align='right'><input class='need_handicat' type='checkbox' <? echo $checked; ?>><br><br><br></td>
+                </tr>
+                <tr>
+                    <td class='checkininfo'><? echo $this->__w("Check in date"); ?></td>
+                    <? 
+                    $checked = ""; 
+                    if($this->getNeedHandicap()) {
+                        $checked = "CHECKED";
+                    }
+                    ?>
+
+                    <td align='right' class='checkininfo'>
+                        <? echo date("d-m-Y", $this->getStart()); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class='checkininfo'><? echo $this->__w("Check out date"); ?></td>
+                    <? 
+                    $checked = ""; 
+                    if($this->getNeedHandicap()) {
+                        $checked = "CHECKED";
+                    }
+                    ?>
+
+                    <td align='right' class='checkininfo'>
+                        <? echo date("d-m-Y", $this->getEnd()); ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class='checkininfo'><? echo $this->__w("Number of nights"); ?></td>
+                    <? 
+                    $checked = ""; 
+                    if($this->getNeedHandicap()) {
+                        $checked = "CHECKED";
+                    }
+                    ?>
+
+                    <td align='right' class='checkininfo'>
+                        <? echo $this->getDayCount(); ?>
+                    </td>
                 </tr>
                 <?
                 if ($this->hasAvailableParkingSpots()) {

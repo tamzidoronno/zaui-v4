@@ -71,7 +71,9 @@ Change to tab mode;-;Bytt til tab modus
 Changes has been saved!;-;Innstillingene har blitt lagret!
 Chat with us;-;Chat med oss
 Check in;-;Innsjekk
+Check in date;-;Dato for innsjekk
 Check out;-;Utsjekk
+Check out date;-;Dato for utsjekk
 Checkout;-;Utsjekking
 Choose;-;Velg
 City;-;By
@@ -83,6 +85,7 @@ Complete the order;-;Fullfør reservasjon
 Completed;-;Gjennomført
 Configure mobile slides;-;Konfigurer mobil slidere
 Confirm order;-;Bekreft ordre
+Contact person for room no. {count};-;Kontakperson for rom {count}
 Container operations;-;Operasjoner for kontaineren
 Continue;-;Fortsett
 Continue to payment;-;Fortsett til betaling
@@ -144,7 +147,7 @@ How can I help you today ?;-;Hva kan jeg hjelpe deg med?
 I agree to the terms and conditions;-;Jeg godtar bruksvilkårene
 I am sorry, but all fields are required before sending a message.;-;Beklager, men alle felt må fylles ut før du sender en melding.
 I have a partnership deal;-;Jeg har en partneravtale
-I need a handicap room;-;Jeg trenger et handicap rom
+I need a handicap room;-;Tilpasset handicap
 Image;-;Bilde
 Included in all rooms:;-;Inkludert i alle rom:
 Information;-;Informasjon
@@ -209,6 +212,7 @@ No rooms are available for this time periode.;-;Ingen rom er tilgjengelig i valg
 Normal;-;Normal
 November;-;November
 Number of instances added;-;Antall av instanser lagt til
+Number of nights;-;Antall netter
 Number of rooms;-;Antall rom
 October;-;Oktober
 Old password;-;Gammelt passord
@@ -245,7 +249,6 @@ PixelateTheme1;-;PixelateTheme1
 Place order;-;Legg inn ordre
 Please check your delivery options.;-;Vennligst sjekk dine leveringsmetoder.
 Please check your room number, you can only order cleaning while you are checked in.;-;Sjekk om romnret du har oppgitt er korrekt. Du kan kun bestille vask mens du holder til hos Wilhelmsen House.
-Please check your room number, you can only order wash while you are staying at the hotel;-;Sjekk om romnret du har oppgitt er korrekt. Du kan kun bestille vask mens du holder til hos Wilhelmsen House.
 Please enter the reference number provided by;-;Vennligst skriv inn referansenummeret du har fått utdelt.
 Please enter your email address:;-;Vennligst skriv inn din epost
 Please enter your room number;-;Skriv inn nom nummeret ditt
@@ -437,6 +440,7 @@ read;-;les
 select;-;velg
 to;-;til
 will be added to your invoice.;-;vil bli lagt på sluttsummen.
+with;-;med
 your@email.com;-;din@epost.no
 {percentage}% taxes on cleaning;-;{percentage}% MVA
 {percentage}% taxes on room;-;{percentage}% MVA

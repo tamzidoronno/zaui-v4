@@ -90,7 +90,7 @@ h1 { font-size: 24px; }
 .MailChimp .emailAdded { color:#51bf78; }
 .Menu .menuentries.horizontal .entries .entries { z-index: 3; }
 
-.gsarea[area="footer"] { background-color:#373d3d; padding-top: 70px; padding-bottom: 70px; }
+.gsarea[area="footer"] { background-color:#373d3d; padding-top: 42px; }
 
 .HotelPriceCalculator .selectroom { width: 100%; background-color: #FFF; padding: 5px; }
 

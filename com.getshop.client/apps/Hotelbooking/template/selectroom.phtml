@@ -11,29 +11,14 @@ $products = $this->getHotelRooms();
 
 <span class='bookingcol datecol firstcalcol'>
 <? echo $checkintext; ?><br>
-    <span style='background-color:#b0bda4; display:inline-block;' class='start_cal'>
-        <table width='100%' border='0' cellspacing='0' cellpadding='0'>
-            <tr>
-                <td width='100%'>
-                    <input type='text' class='date_selection_room' value='<? echo date('d.m.Y'); ?>' id='start_date'>
-                </td>
-                <td><span class='calbackground'><i class='fa fa-calendar'></i></span></td>
-            </tr>
-        </table>
-    </span>
+    <input type='text' class='date_selection_room' value='<? echo date('d.m.Y'); ?>' id='start_date'>
+    <span class='calbackground start_cal'><i class='fa fa-calendar'></i></span>
 </span>
 <span class='bookingcol datecol'>
     <span style='text-align:left;<? echo $displayEnd; ?>'>
         <? echo $checkouttext; ?><br>
-        <span style='background-color:#b0bda4; display:inline-block;' class='end_cal'>
-            <table width="100%" width='100%' border='0' cellspacing='0' cellpadding='0'>
-                <tr>
-                    <td width='100%'>
-                        <input type='text' class='date_selection_room' value='<? echo date('d.m.Y', time() + 86400); ?>' id='end_date'>
-                    </td>
-                    <td><span class='calbackground'><i class='fa fa-calendar'></i></span></td>
-            </table>
-        </span>
+        <input type='text' class='date_selection_room' value='<? echo date('d.m.Y', time() + 86400); ?>' id='end_date'>
+        <span class='calbackground end_cal'><i class='fa fa-calendar'></i></span>
     </span>
 </span>
 <span class='bookingcol'>

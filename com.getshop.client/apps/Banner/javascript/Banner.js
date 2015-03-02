@@ -10,7 +10,6 @@ app.Banner = {
         $(document).on('click', '.Banner .banner_settings_images .imageholder', app.Banner.imageClicked);
         $(document).on('change', '.Banner #height', $.proxy(app.Banner.heightChanged, app.Banner));
         $(document).on('mouseenter', '.Banner .gallerythumbnailswap', app.Banner.swapImage);
-        $(document).on('click', '.Banner .gallerythumbnailswap', app.Banner.swapImage);
     },
     
     swapImage : function() {
@@ -30,7 +29,7 @@ app.Banner = {
             height = mainimgdiv.height();
             width = mainimgdiv.width();
         }
-        var newimage = $(this).closest('.galimg').attr('img');
+        var newimage = $(this).closest('.gsgallery').attr('img');
         mainimg.attr('src',newimage + "&width=" + width + "&height=" + height);
     },
     

@@ -30,7 +30,7 @@ app.Banner = {
             height = mainimgdiv.height();
             width = mainimgdiv.width();
         }
-        var newimage = $(this).closest('.gsgallery').attr('img');
+        var newimage = $(this).closest('.galimg').attr('img');
         mainimg.attr('src',newimage + "&width=" + width + "&height=" + height);
     },
     

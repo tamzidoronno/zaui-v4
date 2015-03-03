@@ -53,17 +53,17 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        Application priceCalc = createSettings("WilhemsenHouseWashingOrder",
-                "934421f5-7107-4b93-829e-74e49ce7d160",
+        Application pkkControlApp = createSettings("PkkControl",
+                "2b06f7a7-8301-4582-a9ea-1005e9248257",
                 allowed2,
                 "",
-                Application.Type.Webshop, false);
-        priceCalc.isPublic = false;
-        priceCalc.isFrontend = true;
-        priceCalc.moduleId = "WebShop";
-        priceCalc.allowedStoreIds = new ArrayList();
-        priceCalc.allowedStoreIds.add("123865ea-3232-4b3b-9136-7df23cf896c6");
-        apps.add(priceCalc);
+                Application.Type.Marketing, false);
+        pkkControlApp.isPublic = true;
+        pkkControlApp.isFrontend = true;
+        pkkControlApp.moduleId = "Marketing";
+        pkkControlApp.allowedStoreIds = new ArrayList();
+        pkkControlApp.allowedStoreIds.add("4c6bb26d-cce1-40e9-9a59-b41dfd46d47e");
+        apps.add(pkkControlApp);
         
 //        Application wilhelmsenHouseVisma = createSettings("WilhelmsenHouseVisma",
 //                "37d409be-1207-45e8-bf3b-6465442b58d9",

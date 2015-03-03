@@ -1,0 +1,31 @@
+<div class="pkk_header">
+    Når skal din bil inn til EU-Kontroll?
+</div>
+<div class="pkk_searchresult">
+    <input type="textfield" id="pkk_search_license_plate" placeholder="Regnr, eksempel AA00000"/>
+    <div class="pkk_search_button pkk_do_search">Søk</div>
+</div>
+
+<div class="responsePrinter">
+    
+</div>
+
+<?
+if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+    echo "<h1> Påmeldinger </h1>";
+    $controls = $this->getApi()->getPkkControlManager()->getPkkControls();
+    if (!count($controls)) {
+        echo "<div class='pkk_list'>Ingen påmeldinger enda</div>";
+    } else {
+        foreach ($controls as $control) {
+            $id = $control->id;
+            echo "<div class='pkk_list'><i class='fa fa-trash removepkk' id='$id'></i> ".$control->licensePlate." - ".$control->name." ( neste kontroll: ".$control->nextControl." )</div>";
+        }    
+    }
+    
+?>
+<div>
+    
+</div>
+
+<? } ?>

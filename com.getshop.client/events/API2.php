@@ -3795,6 +3795,70 @@ class APIPageManager {
 	}
 
 }
+class APIPkkControlManager {
+
+	var $transport;
+	
+	function APIPkkControlManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function getPkkControlData($licensePlate) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["licensePlate"] = json_encode($this->transport->object_unset_nulls($licensePlate));
+	     $data["method"] = "getPkkControlData";
+	     $data["interfaceName"] = "core.pkk.IPkkControlManager";
+	     return $this->transport->cast(new core_pkkcontrol_PkkControlData(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function getPkkControls() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getPkkControls";
+	     $data["interfaceName"] = "core.pkk.IPkkControlManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function registerPkkControl($core_pkkcontrol_PkkControlData) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_pkkcontrol_PkkControlData"] = json_encode($this->transport->object_unset_nulls($core_pkkcontrol_PkkControlData));
+	     $data["method"] = "registerPkkControl";
+	     $data["interfaceName"] = "core.pkk.IPkkControlManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function removePkkControl($id) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $data["method"] = "removePkkControl";
+	     $data["interfaceName"] = "core.pkk.IPkkControlManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+}
 class APIProductManager {
 
 	var $transport;
@@ -6353,6 +6417,12 @@ class GetShopApi {
       */
       public function getPageManager() {
            return new APIPageManager($this->transport);
+      }
+      /**
+      * @return PkkControlManager
+      */
+      public function getPkkControlManager() {
+           return new APIPkkControlManager($this->transport);
       }
       /**
       * @return ProductManager

@@ -1,0 +1,25 @@
+<?
+$data = $this->getApi()->getPkkControlManager()->getPkkControlData($_POST['data']['licensePlate']);
+?>
+
+<div class="pkk_search_result_data">
+    <table >
+        <div class="pkk_row"><div class="pkk_row_col1">Modell og merke</div><div class="pkk_row_col2 brand"><? echo $data->modelAndBrand; ?></div></div>
+        <div class="pkk_row"><div class="pkk_row_col1">Regnr</div><div class="pkk_row_col2 licenseplate"><? echo $data->licensePlate; ?></div></div>
+        <div class="pkk_row"><div class="pkk_row_col1">Understellsnummer</div><div class="pkk_row_col2 vinenumber"><? echo $data->vineNumber; ?></div></div>
+        <div class="pkk_row"><div class="pkk_row_col1">År registrert</div><div class="pkk_row_col2 registredyear"><? echo $data->registedYear; ?></div></div>
+        <div class="pkk_row"><div class="pkk_row_col1">Sist godkjent</div><div class="pkk_row_col2 lastcontrol"><? echo $data->lastControl; ?></div></div>
+        <div class="pkk_row"><div class="pkk_row_col1">Neste kontroll</div><div class="pkk_row_col2 nextcontrol"><? echo $data->nextControl; ?></div></div>
+    </table>
+</div>
+
+<div class="pkk_signoninfo">
+    Ønsker du oppfølging fra oss? Vi sender sms og mail når bilen din skal inn på eu-kontroll.
+    <br/>
+    <br/>
+    <div class="pkk_row"><div class="pkk_row_col1">Ditt navn</div><div class="pkk_row_col2"><input id="pkk_name_of_user" type="textfield"/></div></div>
+    <div class="pkk_row"><div class="pkk_row_col1">Ditt mobilnr.</div><div class="pkk_row_col2"><input id="pkk_cellphone_number" type="textfield"/></div></div>
+    <div class="pkk_row"><div class="pkk_row_col1">Din epostaddresse</div><div class="pkk_row_col2"><input id="pkk_email_address" type="textfield"/></div></div>
+    <br/>
+    <div class="pkk_search_button followup">Følg meg opp!</div>
+</div>

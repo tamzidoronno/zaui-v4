@@ -68,6 +68,12 @@ public class GetShopApi {
            return new APICalendarManager(transport);
       }
      /**
+      * @return APIPkkControlManager
+      */
+      public APIPkkControlManager getPkkControlManager() {
+           return new APIPkkControlManager(transport);
+      }
+     /**
       * @return APIBigStock
       */
       public APIBigStock getBigStock() {

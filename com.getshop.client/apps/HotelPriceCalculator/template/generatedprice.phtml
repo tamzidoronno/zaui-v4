@@ -15,7 +15,7 @@
     $cart = $mgr->getCart();
     $price = $cart->items[0]->product->price * $days;
     $origprice = $cart->items[0]->product->original_price * $days;
-    $discount = $price - $origprice;
+    $discount = $origprice - $price;
 ?>
 <table width="100%">
     <tr>

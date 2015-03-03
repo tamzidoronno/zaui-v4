@@ -1852,6 +1852,14 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getAllReservationsArx(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getAllReservationsArx"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getAllRooms(self):
     args = collections.OrderedDict()
     data = EmptyClass()
@@ -2879,6 +2887,21 @@ class OrderManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "getAllOrdersForUser"
+    data.interfaceName = "core.ordermanager.IOrderManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getAllOrdersOnProduct(self, productId):
+    args = collections.OrderedDict()
+    if isinstance(productId,GetShopBaseClass): 
+      args["productId"]=json.dumps(productId.__dict__)
+    else:
+      try:
+        args["productId"]=json.dumps(productId)
+      except (ValueError, AttributeError):
+        args["productId"]=productId
+    data = EmptyClass()
+    data.args = args
+    data.method = "getAllOrdersOnProduct"
     data.interfaceName = "core.ordermanager.IOrderManager"
     return self.communicationHelper.sendMessage(data)
 

@@ -1778,6 +1778,20 @@ class APIHotelBookingManager {
 	}
 
 	/**
+	* Get all references
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function getAllReservationsArx() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getAllReservationsArx";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	*
 	* @return List
 	* @throws ErrorException
@@ -2815,6 +2829,22 @@ class APIOrderManager {
 	     $data['args'] = array();
 	     $data['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
 	     $data["method"] = "getAllOrdersForUser";
+	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Fetch all orders on product.
+	* @param userId
+	* @return List
+	* @throws ErrorException
+	*/
+
+	public function getAllOrdersOnProduct($productId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $data["method"] = "getAllOrdersOnProduct";
 	     $data["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->sendMessage($data);
 	}

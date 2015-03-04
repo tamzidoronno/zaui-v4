@@ -142,7 +142,7 @@ body {
 }
 
 .gsarea[area="body"] .gscontainer.gsdepth_0.gscount_0 .gscontainerinner {
-    height: 550px;
+    min-height: 550px;
     background-repeat: no-repeat;
     background-position: center;
 

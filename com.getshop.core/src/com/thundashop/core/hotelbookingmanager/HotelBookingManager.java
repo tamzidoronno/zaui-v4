@@ -205,7 +205,15 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Override
     public List<Room> getAllRooms() throws ErrorException {
-        return new ArrayList(rooms.values());
+        
+        List<Room> rooms = new ArrayList(this.rooms.values());
+        Collections.sort(rooms,new Comparator<Room>() { 
+            public int compare(Room a, Room b) {
+                return a.roomName.compareTo(b.roomName);
+            }
+        });
+        
+        return rooms;
     }
 
     @Override

@@ -2074,6 +2074,112 @@ class APIHotelBookingManager {
 	}
 
 }
+class APIInformationScreenManager {
+
+	var $transport;
+	
+	function APIInformationScreenManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function addSlider($core_informationscreen_Slider, $tvId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_informationscreen_Slider"] = json_encode($this->transport->object_unset_nulls($core_informationscreen_Slider));
+	     $data['args']["tvId"] = json_encode($this->transport->object_unset_nulls($tvId));
+	     $data["method"] = "addSlider";
+	     $data["interfaceName"] = "core.informationscreenmanager.IInformationScreenManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function deleteSlider($sliderId, $tvId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["sliderId"] = json_encode($this->transport->object_unset_nulls($sliderId));
+	     $data['args']["tvId"] = json_encode($this->transport->object_unset_nulls($tvId));
+	     $data["method"] = "deleteSlider";
+	     $data["interfaceName"] = "core.informationscreenmanager.IInformationScreenManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function getHolders() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getHolders";
+	     $data["interfaceName"] = "core.informationscreenmanager.IInformationScreenManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function getInformationScreens() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getInformationScreens";
+	     $data["interfaceName"] = "core.informationscreenmanager.IInformationScreenManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function getScreen($id) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $data["method"] = "getScreen";
+	     $data["interfaceName"] = "core.informationscreenmanager.IInformationScreenManager";
+	     return $this->transport->cast(new core_informationscreen_InfoScreen(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function getTypes() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getTypes";
+	     $data["interfaceName"] = "core.informationscreenmanager.IInformationScreenManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function registerTv($customerId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["customerId"] = json_encode($this->transport->object_unset_nulls($customerId));
+	     $data["method"] = "registerTv";
+	     $data["interfaceName"] = "core.informationscreenmanager.IInformationScreenManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+}
 class APIInvoiceManager {
 
 	var $transport;
@@ -6393,6 +6499,12 @@ class GetShopApi {
       */
       public function getHotelBookingManager() {
            return new APIHotelBookingManager($this->transport);
+      }
+      /**
+      * @return InformationScreenManager
+      */
+      public function getInformationScreenManager() {
+           return new APIInformationScreenManager($this->transport);
       }
       /**
       * @return InvoiceManager

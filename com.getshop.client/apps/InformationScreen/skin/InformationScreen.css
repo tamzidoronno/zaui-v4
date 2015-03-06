@@ -1,0 +1,74 @@
+.InformationScreen .mainview {
+    background-color: #FFF;
+    color: #333;
+}
+
+
+.InformationScreen .mainview .tvs .tv_selector {
+   width: 50px;
+   background: linear-gradient(to bottom, #EEE, #CCC);
+   text-align: center;
+   border-right: solid 1px #BBB;
+   display: inline-block;
+   cursor: pointer;
+}
+
+.InformationScreen .mainview .tvs .tv_selector.tv_active {
+   color: #FFF;
+   background: linear-gradient(to bottom, #00c813, #008e0d); 
+}
+
+.InformationScreen .mainview .tvs {
+    min-height: 50px;
+    background-color: #EEE;
+    border-bottom: solid 1px #EEE;
+    font-size: 0px;
+}
+
+.InformationScreen .tv_information_top {
+    background-color: #CCC;
+    padding: 5px;
+    text-align: center;
+    
+}
+.InformationScreen .mainview .tvs .tv_title {
+    font-size: 10px;
+    text-align: center;
+}
+.InformationScreen .mainview .tvs i {
+    font-size: 30px;
+    margin: 5px;
+}
+.InformationScreen .mainview .workarea {
+    min-height: 350px;
+    padding: 20px;
+}
+
+.InformationScreen .workarea .slider {
+    display: inline-block;
+    border: solid 1px #EEE;
+    height: 150px;
+    width: 150px;
+    padding: 20px;
+    font-size: 17px;
+    text-align: center;
+}
+
+.InformationScreen .workarea td {
+    font-size: 16px;
+}
+
+.InformationScreen .slider {
+    position: relative;
+    vertical-align: top;
+}
+
+.InformationScreen .slider .delete_slider {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    padding: 5px;
+    border-left: solid 1px #DDD;
+    border-bottom: solid 1px #DDD;
+    cursor: pointer;
+}

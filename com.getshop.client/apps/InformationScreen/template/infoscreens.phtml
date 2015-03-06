@@ -1,0 +1,69 @@
+<?
+/* @var $this \ns_b01e9b84_f8d3_46f8_87c3_07eeaf964e20\InformationScreen */
+
+$selectedSlider = $this->getSelectedSlider();
+
+?>
+<div class="mainview">
+    <div class='tv_information_top'><? echo $this->__f("Select the TV you wish to adjust"); ?></div>
+    
+    <?
+    if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+        $holders = $this->getApi()->getInformationScreenManager()->getHolders();
+        foreach ($holders as $holder) {
+            $user = $this->getApi()->getUserManager()->getUserById($holder->customerId);
+            if ($user) {
+                echo "<div><center>$user->fullName</center></div>";
+                $this->printInfoScreensSelectors($holder->screens, $holder);
+            }
+        }
+    } else {
+        $screens = $this->getApi()->getInformationScreenManager()->getInformationScreens();
+        $this->printInfoScreensSelectors($holder->screens);
+    }
+    ?>
+    
+    <div class="workarea">
+        <?
+        $currentTv = $this->getCurrentTv();
+        if ($currentTv != null) {
+            echo "Info Screen ID: ". $currentTv->infoScreenId; 
+            if (count($currentTv->sliders)) {
+            ?>
+                <h1><? echo $this->__f("Sliders"); ?></h1>
+                <?
+
+                foreach ($currentTv->sliders as $slider) {
+                    echo '<div slider_id="'.$slider->id.'" class="slider select_slider_class"><i class="fa fa-trash delete_slider"></i>'.$slider->name.'</div>';
+                }
+            }
+            
+           
+            ?>
+            
+            <div style="margin-top: 20px; border-top: solid 1px #EEE; padding-top: 20px;">
+                <?
+                $sliderId = $selectedSlider ? $selectedSlider->id : "";
+                echo "<input type='hidden' class='current_slider_id' value='$sliderId'/>";
+                ?>
+                
+                <div class="slider_setting type1">
+                    <table>
+                        <tr><td>Slider title</td><td><input class="slider_title_text" value='<? echo $selectedSlider ? $selectedSlider->name : ""; ?>'/></td></tr>
+                        <tr><td>Header line 1</td><td><input slider_text_id="title_line_1" value='<? echo $selectedSlider ? $selectedSlider->texts->title_line_1 : ""; ?>'/></td></tr>
+                        <tr><td>Header line 2</td><td><input slider_text_id="title_line_2" value='<? echo $selectedSlider ? $selectedSlider->texts->title_line_2 : ""; ?>'/></td></tr>
+                        <tr><td>Bullet 1</td><td><input slider_text_id="bullet_1" value='<? echo $selectedSlider ? $selectedSlider->texts->bullet_1 : ""; ?>'/></td></tr>
+                        <tr><td>Bullet 2</td><td><input slider_text_id="bullet_2" value='<? echo $selectedSlider ? $selectedSlider->texts->bullet_2 : ""; ?>'/></td></tr>
+                        <tr><td>Bullet 3</td><td><input slider_text_id="bullet_3" value='<? echo $selectedSlider ? $selectedSlider->texts->bullet_3 : ""; ?>'/></td></tr>
+                        <tr><td>Bullet 4</td><td><input slider_text_id="bullet_4" value='<? echo $selectedSlider ? $selectedSlider->texts->bullet_4 : ""; ?>'/></td></tr>
+                        <tr><td>Bullet 5</td><td><input slider_text_id="bullet_5" value='<? echo $selectedSlider ? $selectedSlider->texts->bullet_5 : ""; ?>'/></td></tr>
+                    </table>
+                </div>
+                <br/>
+                <div class="shop_button save_slider"> Save </div>
+            </div>
+        <?
+        }
+        ?>
+    </div>
+</div>

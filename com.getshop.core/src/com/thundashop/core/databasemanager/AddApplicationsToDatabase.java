@@ -53,17 +53,17 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        Application pkkControlApp = createSettings("PkkControl",
-                "2b06f7a7-8301-4582-a9ea-1005e9248257",
+        Application informationScreen = createSettings("InformationScreen",
+                "b01e9b84-f8d3-46f8-87c3-07eeaf964e20",
                 allowed2,
                 "",
                 Application.Type.Marketing, false);
-        pkkControlApp.isPublic = true;
-        pkkControlApp.isFrontend = true;
-        pkkControlApp.moduleId = "Marketing";
-        pkkControlApp.allowedStoreIds = new ArrayList();
-        pkkControlApp.allowedStoreIds.add("4c6bb26d-cce1-40e9-9a59-b41dfd46d47e");
-        apps.add(pkkControlApp);
+        informationScreen.isPublic = false;
+        informationScreen.isFrontend = true;
+        informationScreen.moduleId = "other";
+        informationScreen.allowedStoreIds = new ArrayList();
+        informationScreen.allowedStoreIds.add("cf103c26-a672-4a6e-bd3c-67ed24b3360e");
+        apps.add(informationScreen);
         
 //        Application wilhelmsenHouseVisma = createSettings("WilhelmsenHouseVisma",
 //                "37d409be-1207-45e8-bf3b-6465442b58d9",

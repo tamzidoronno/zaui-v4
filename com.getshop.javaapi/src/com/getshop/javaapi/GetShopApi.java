@@ -50,6 +50,12 @@ public class GetShopApi {
            return new APIUserManager(transport);
       }
      /**
+      * @return APIInformationScreenManager
+      */
+      public APIInformationScreenManager getInformationScreenManager() {
+           return new APIInformationScreenManager(transport);
+      }
+     /**
       * @return APIMessageManager
       */
       public APIMessageManager getMessageManager() {

@@ -2158,6 +2158,107 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+class InformationScreenManager(object):
+  def __init__(self, communicationHelper):
+    self.communicationHelper = communicationHelper
+  def addSlider(self, slider, tvId):
+    args = collections.OrderedDict()
+    if isinstance(slider,GetShopBaseClass): 
+      args["slider"]=json.dumps(slider.__dict__)
+    else:
+      try:
+        args["slider"]=json.dumps(slider)
+      except (ValueError, AttributeError):
+        args["slider"]=slider
+    if isinstance(tvId,GetShopBaseClass): 
+      args["tvId"]=json.dumps(tvId.__dict__)
+    else:
+      try:
+        args["tvId"]=json.dumps(tvId)
+      except (ValueError, AttributeError):
+        args["tvId"]=tvId
+    data = EmptyClass()
+    data.args = args
+    data.method = "addSlider"
+    data.interfaceName = "core.informationscreenmanager.IInformationScreenManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def deleteSlider(self, sliderId, tvId):
+    args = collections.OrderedDict()
+    if isinstance(sliderId,GetShopBaseClass): 
+      args["sliderId"]=json.dumps(sliderId.__dict__)
+    else:
+      try:
+        args["sliderId"]=json.dumps(sliderId)
+      except (ValueError, AttributeError):
+        args["sliderId"]=sliderId
+    if isinstance(tvId,GetShopBaseClass): 
+      args["tvId"]=json.dumps(tvId.__dict__)
+    else:
+      try:
+        args["tvId"]=json.dumps(tvId)
+      except (ValueError, AttributeError):
+        args["tvId"]=tvId
+    data = EmptyClass()
+    data.args = args
+    data.method = "deleteSlider"
+    data.interfaceName = "core.informationscreenmanager.IInformationScreenManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getHolders(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getHolders"
+    data.interfaceName = "core.informationscreenmanager.IInformationScreenManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getInformationScreens(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getInformationScreens"
+    data.interfaceName = "core.informationscreenmanager.IInformationScreenManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getScreen(self, id):
+    args = collections.OrderedDict()
+    if isinstance(id,GetShopBaseClass): 
+      args["id"]=json.dumps(id.__dict__)
+    else:
+      try:
+        args["id"]=json.dumps(id)
+      except (ValueError, AttributeError):
+        args["id"]=id
+    data = EmptyClass()
+    data.args = args
+    data.method = "getScreen"
+    data.interfaceName = "core.informationscreenmanager.IInformationScreenManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def getTypes(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getTypes"
+    data.interfaceName = "core.informationscreenmanager.IInformationScreenManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def registerTv(self, customerId):
+    args = collections.OrderedDict()
+    if isinstance(customerId,GetShopBaseClass): 
+      args["customerId"]=json.dumps(customerId.__dict__)
+    else:
+      try:
+        args["customerId"]=json.dumps(customerId)
+      except (ValueError, AttributeError):
+        args["customerId"]=customerId
+    data = EmptyClass()
+    data.args = args
+    data.method = "registerTv"
+    data.interfaceName = "core.informationscreenmanager.IInformationScreenManager"
+    return self.communicationHelper.sendMessage(data)
+
 class InvoiceManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
@@ -6542,6 +6643,7 @@ class GetShopApi(object):
     self.GetShop = GetShop(self.communicationHelper)
     self.GetShopApplicationPool = GetShopApplicationPool(self.communicationHelper)
     self.HotelBookingManager = HotelBookingManager(self.communicationHelper)
+    self.InformationScreenManager = InformationScreenManager(self.communicationHelper)
     self.InvoiceManager = InvoiceManager(self.communicationHelper)
     self.ListManager = ListManager(self.communicationHelper)
     self.LogoManager = LogoManager(self.communicationHelper)

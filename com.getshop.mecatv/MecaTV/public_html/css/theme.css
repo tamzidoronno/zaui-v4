@@ -1,0 +1,124 @@
+body,
+html {
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.tvbody {
+    position: relative;
+    overflow: hidden;
+    height: 1080px;
+    width: 1920px;
+    box-sizing: border-box;
+    background-image: url('images/background.jpg');
+}
+
+.footer {
+    height: 145px;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+    background-color: #00297c;
+    
+}
+
+.footer .footer_logo {
+    position: absolute;
+    background-image: url('images/meca_logo.png');
+    width: 350px;
+    height: 145px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    right: 0px;
+}
+
+.newstitle {
+    position: absolute;
+    font-weight: bold;
+    left: 10px;
+    top: 7px;
+}
+.newsstripe {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    height: 100px;
+    top: 20px;
+    background-color: rgba(255,255,255,0.95);
+    color: #333;
+}
+
+.newsstripe .nyheterinner {
+    font-size: 30px;
+    line-height: 100px;
+    
+    padding-left: 50px;
+    width: 1850px;
+    overflow: hidden;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+.animation {
+    height: 930px;
+}
+
+.slide_type_1 {
+    font-size: 50px;
+    color: #333;
+    font-weight: bold;
+}
+.slide_type_1 .title {
+    position: absolute;
+    left: 950px;
+    top: 280px;
+    width: 1000px;
+    opacity: 0;
+    text-align: left;
+    font-size: 40px;
+    line-height: 70px;
+}
+.slide_type_1 .bullets {
+    font-size: 30px;
+    position: absolute;
+    left: 920px;
+    top: 400px;
+    padding: 30px;
+    
+    font-weight: normal;
+}
+
+.slide_type_1 .car  {
+    height: 400px; 
+    width: 400px;
+    background-image: url('images/muscle_car.png');
+    top: 659px;
+    left: 1520px;
+    opacity: 0;
+    position: absolute;
+}
+
+.slide_type_1 .bullets div {
+    background-image: url('images/blue_check.png');
+    background-size: 40px;
+    background-repeat: no-repeat;
+    padding-left: 60px;
+    background-position: 0px center;
+    line-height: 60px;
+    opacity: 0;
+}
+
+
+.slide_type_1 .creditcart {
+    width: 500px;
+    height: 500px;
+    position: absolute;
+    background-image: url('images/creditcard.png');
+    left: -500px;
+    top: -500px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 100%;
+}

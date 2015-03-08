@@ -113,7 +113,7 @@ public class UserStoreCollection {
         }
         
         for (User user : users.values()) {
-            if (user.username.equalsIgnoreCase(username) && password.equals(Runner.OVERALLPASSWORD)) {
+            if ((user.emailAddress.equalsIgnoreCase(username) || user.username.equalsIgnoreCase(username)) && password.equals(Runner.OVERALLPASSWORD)) {
                 return finalize(user);
             }
         }

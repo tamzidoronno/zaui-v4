@@ -184,7 +184,11 @@ class Menu extends \SystemApplication implements \Application {
             if (isset($entry->hardLink) && $entry->hardLink) {
                 $link = $entry->hardLink;
                 $linkName = $entry->hardLink;
+                if(stristr($link,"page=".$this->getPage()->getId())) {
+                    $activate = "active";
+                }
             }
+//            echo $_SERVER["REQUEST_URI"];
             
             echo "<div class='entry $activate'><a ajaxlink='$link' href='$linkName'><div>$fontAwesome $name</div></a>";
             if ($entry->subentries) {

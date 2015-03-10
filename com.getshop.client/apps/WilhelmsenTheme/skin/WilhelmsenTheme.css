@@ -39,6 +39,15 @@ body {
 .gsarea[area="header"] .Menu .active {
     color: #FFF;
 }
+.gscarouseldots .fa { font-size: 8px; color:#000; text-shadow: 0px 0px 1px #fff; }
+.gscarouseldots .fa.activecarousel { color:#fff; text-shadow: 0px 0px 1px #000; }
+
+.gsarea[area="header"] .Menu .entries .entries .active a,
+.gsarea[area="header"] .Menu .entries .entries .active {
+    color: #999;
+}
+
+
 
 .gsarea[area="header"] .Menu  a,
 .gsarea[area="header"] .Menu {
@@ -48,6 +57,10 @@ body {
 .gsarea[area="header"] .Menu .entry {
     padding-right: 10px;
     font-size: 12px;
+}
+
+.Menu .active td, .Menu .active {
+    font-weight: normal; 
 }
 
 .gsarea[area="header"] .Menu .entry i {
@@ -61,7 +74,7 @@ body {
 }
 
 .gsarea[area="header"] .Menu .entry .entries a {
-    color: #000;
+    color: #333;
     
 }
 

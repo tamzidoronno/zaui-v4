@@ -16,5 +16,6 @@ public class InfoScreen {
     public String backgroundImage = "";
     public Map<String, Slider> sliders = new HashMap();
     public String infoScreenId;
+    public boolean showNewsFeed = false;
     public String name = "";
 }

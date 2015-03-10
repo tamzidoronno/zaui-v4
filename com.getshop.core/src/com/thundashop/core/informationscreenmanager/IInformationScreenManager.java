@@ -9,8 +9,7 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.informationscreen.CustomerInfoScreenHolder;
-import com.thundashop.core.informationscreen.CustomerInfoScreenHolder;
-import com.thundashop.core.informationscreen.InfoScreen;
+import com.thundashop.core.informationscreen.Feed;
 import com.thundashop.core.informationscreen.InfoScreen;
 import com.thundashop.core.informationscreen.Slider;
 import com.thundashop.core.informationscreen.SliderType;
@@ -39,4 +38,8 @@ interface IInformationScreenManager {
     public void deleteSlider(String sliderId, String tvId);
     
     public InfoScreen getScreen(String id);
+    
+    public void saveTv(InfoScreen tv);
+    
+    public Feed getNews();
 }

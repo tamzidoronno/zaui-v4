@@ -2221,6 +2221,14 @@ class InformationScreenManager(object):
     data.interfaceName = "core.informationscreenmanager.IInformationScreenManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getNews(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getNews"
+    data.interfaceName = "core.informationscreenmanager.IInformationScreenManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getScreen(self, id):
     args = collections.OrderedDict()
     if isinstance(id,GetShopBaseClass): 
@@ -2256,6 +2264,21 @@ class InformationScreenManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "registerTv"
+    data.interfaceName = "core.informationscreenmanager.IInformationScreenManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def saveTv(self, tv):
+    args = collections.OrderedDict()
+    if isinstance(tv,GetShopBaseClass): 
+      args["tv"]=json.dumps(tv.__dict__)
+    else:
+      try:
+        args["tv"]=json.dumps(tv)
+      except (ValueError, AttributeError):
+        args["tv"]=tv
+    data = EmptyClass()
+    data.args = args
+    data.method = "saveTv"
     data.interfaceName = "core.informationscreenmanager.IInformationScreenManager"
     return self.communicationHelper.sendMessage(data)
 

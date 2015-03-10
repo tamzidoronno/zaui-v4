@@ -7,7 +7,9 @@ package com.thundashop.core.informationscreen;
 
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -17,10 +19,10 @@ import java.util.UUID;
 public class CustomerInfoScreenHolder extends DataCommon  {
     private String customerId = "";
     private int tvCounter = 0;
-    private List<InfoScreen> screens = new ArrayList();
+    private Map<String, InfoScreen> screens = new HashMap();
     
     public List<InfoScreen> getScreens() {
-        return screens;
+        return new ArrayList(screens.values());
     }
 
     public CustomerInfoScreenHolder() {
@@ -39,7 +41,7 @@ public class CustomerInfoScreenHolder extends DataCommon  {
         InfoScreen screen = new InfoScreen();
         screen.infoScreenId = infoScreenId;
         screen.name = ""+tvCounter;
-        screens.add(screen);
+        screens.put(screen.infoScreenId, screen);
     }
 
     public void addSlider(Slider slider, String tvId) {
@@ -47,7 +49,7 @@ public class CustomerInfoScreenHolder extends DataCommon  {
             slider.id = UUID.randomUUID().toString();
         }
         
-        for (InfoScreen screen : screens) {
+        for (InfoScreen screen : screens.values()) {
             if (screen.infoScreenId.equals(tvId)) {
                 screen.sliders.put(slider.id, slider);
             }
@@ -55,8 +57,12 @@ public class CustomerInfoScreenHolder extends DataCommon  {
     }
 
     public void deleteSlider(String sliderId) {
-        for (InfoScreen screen : screens) {
+        for (InfoScreen screen : screens.values()) {
             screen.sliders.remove(sliderId);
         }
+    }
+
+    public void saveTv(InfoScreen tv) {
+        screens.put(tv.infoScreenId, tv);
     }
 }

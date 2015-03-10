@@ -19,50 +19,149 @@ $selectedSlider = $this->getSelectedSlider();
         }
     } else {
         $screens = $this->getApi()->getInformationScreenManager()->getInformationScreens();
-        $this->printInfoScreensSelectors($holder->screens);
+        $this->printInfoScreensSelectors($screens);
     }
     ?>
     
     <div class="workarea">
         <?
         $currentTv = $this->getCurrentTv();
+        
         if ($currentTv != null) {
-            echo "Info Screen ID: ". $currentTv->infoScreenId; 
+            ?>
+            <h1><? echo $this->__f("TV Settings"); ?></h1>
+            <div class='tv_settings_outer'>
+                <?
+                echo "<div class='tv_setting'> TV-ID: <br/>". $currentTv->infoScreenId."</div>"; 
+                
+                $checked = $currentTv->showNewsFeed ? "checked='checked'" : "";
+                echo "<div class='tv_setting'> <input class='show_news_feed_checkbox' type='Checkbox' $checked/> Show news feed? : </div>";
+                echo "<div class='tv_setting'> Background image: <br/>";
+                ?>
+            
+                <div class='uploadpicture' pictureType='gs_background_image_for_tv'>
+                    <?
+                    if ($currentTv->backgroundImage) {
+                        echo "<img src='/displayImage.php?id=".$currentTv->backgroundImage."'/>";
+                    }
+                    ?>
+
+                    <span class='upload_help'>Click here to upload picture</span>
+
+                    <div class='progressbar'></div>
+                    <? echo "</div>"; ?>
+                </div>
+            </div>
+            <?
             if (count($currentTv->sliders)) {
             ?>
                 <h1><? echo $this->__f("Sliders"); ?></h1>
                 <?
 
                 foreach ($currentTv->sliders as $slider) {
-                    echo '<div slider_id="'.$slider->id.'" class="slider select_slider_class"><i class="fa fa-trash delete_slider"></i>'.$slider->name.'</div>';
+                    $activeSlider = $selectedSlider && $selectedSlider->id == $slider->id ? "active_slider" : "";
+                    echo '<div slider_id="'.$slider->id.'" class="slider select_slider_class '.$activeSlider.'"><i class="fa fa-trash delete_slider"></i>'.$slider->name.'<div class="type_icon '.$slider->sliderType.'"></div></div>';
                 }
+                
+                $activeSlider = $selectedSlider && $selectedSlider->id == "new" ? "active_slider" : "";
+                echo '<div slider_id="new" class="slider select_slider_class '.$activeSlider.'">'.$this->__f("New slider").'</div>';
             }
             
-           
+            if ($selectedSlider && !$selectedSlider->sliderType) {
             ?>
-            
-            <div style="margin-top: 20px; border-top: solid 1px #EEE; padding-top: 20px;">
-                <?
-                $sliderId = $selectedSlider ? $selectedSlider->id : "";
-                echo "<input type='hidden' class='current_slider_id' value='$sliderId'/>";
-                ?>
-                
-                <div class="slider_setting type1">
-                    <table>
-                        <tr><td>Slider title</td><td><input class="slider_title_text" value='<? echo $selectedSlider ? $selectedSlider->name : ""; ?>'/></td></tr>
-                        <tr><td>Header line 1</td><td><input slider_text_id="title_line_1" value='<? echo $selectedSlider ? $selectedSlider->texts->title_line_1 : ""; ?>'/></td></tr>
-                        <tr><td>Header line 2</td><td><input slider_text_id="title_line_2" value='<? echo $selectedSlider ? $selectedSlider->texts->title_line_2 : ""; ?>'/></td></tr>
-                        <tr><td>Bullet 1</td><td><input slider_text_id="bullet_1" value='<? echo $selectedSlider ? $selectedSlider->texts->bullet_1 : ""; ?>'/></td></tr>
-                        <tr><td>Bullet 2</td><td><input slider_text_id="bullet_2" value='<? echo $selectedSlider ? $selectedSlider->texts->bullet_2 : ""; ?>'/></td></tr>
-                        <tr><td>Bullet 3</td><td><input slider_text_id="bullet_3" value='<? echo $selectedSlider ? $selectedSlider->texts->bullet_3 : ""; ?>'/></td></tr>
-                        <tr><td>Bullet 4</td><td><input slider_text_id="bullet_4" value='<? echo $selectedSlider ? $selectedSlider->texts->bullet_4 : ""; ?>'/></td></tr>
-                        <tr><td>Bullet 5</td><td><input slider_text_id="bullet_5" value='<? echo $selectedSlider ? $selectedSlider->texts->bullet_5 : ""; ?>'/></td></tr>
-                    </table>
+                <div class='slider_types'>
+                    <? echo $this->__f("Please select type for this slider"); ?>
+                    <br/>
+                    <div class="select_slider_type" type='type1'><? echo $this->__f("Type 1"); ?></div>
+                    <div class="select_slider_type" type='type2'><? echo $this->__f("Type 2"); ?></div>
+                    <div class="select_slider_type" type='type3'><? echo $this->__f("Type 3"); ?></div>
+                    <div class="select_slider_type" type='type4'><? echo $this->__f("Type 4"); ?></div>
                 </div>
-                <br/>
-                <div class="shop_button save_slider"> Save </div>
-            </div>
-        <?
+            
+            <?
+            } 
+            
+            
+            if ($selectedSlider && $selectedSlider->sliderType == "type1") {
+            ?>
+                
+                <div style="margin-top: 20px; border-top: solid 1px #EEE; padding-top: 20px;">
+                    <?
+                    $sliderId = $selectedSlider ? $selectedSlider->id : "";
+                    echo "<input type='hidden' class='current_slider_id' value='$sliderId'/>";
+                    ?>
+
+                    <div class="slider_setting type1">
+                        <table>
+                            <tr><td>Slider title</td><td><input class="slider_title_text" value='<? echo $selectedSlider ? $selectedSlider->name : ""; ?>'/></td></tr>
+                            <tr><td>Header line 1</td><td><input slider_text_id="title_line_1" value='<? echo $selectedSlider ? @$selectedSlider->texts->title_line_1 : ""; ?>'/></td></tr>
+                            <tr><td>Header line 2</td><td><input slider_text_id="title_line_2" value='<? echo $selectedSlider ? @$selectedSlider->texts->title_line_2 : ""; ?>'/></td></tr>
+                            <tr><td>Bullet 1</td><td><input slider_text_id="bullet_1" value='<? echo $selectedSlider ? @$selectedSlider->texts->bullet_1 : ""; ?>'/></td></tr>
+                            <tr><td>Bullet 2</td><td><input slider_text_id="bullet_2" value='<? echo $selectedSlider ? @$selectedSlider->texts->bullet_2 : ""; ?>'/></td></tr>
+                            <tr><td>Bullet 3</td><td><input slider_text_id="bullet_3" value='<? echo $selectedSlider ? @$selectedSlider->texts->bullet_3 : ""; ?>'/></td></tr>
+                            <tr><td>Bullet 4</td><td><input slider_text_id="bullet_4" value='<? echo $selectedSlider ? @$selectedSlider->texts->bullet_4 : ""; ?>'/></td></tr>
+                            <tr><td>Bullet 5</td><td><input slider_text_id="bullet_5" value='<? echo $selectedSlider ? @$selectedSlider->texts->bullet_5 : ""; ?>'/></td></tr>
+                        </table>
+                        <br/>
+                        Pictures:<br/><br/>
+                        <div class='uploadpicture' pictureType='picture_1'>
+                            <?
+                            if ($selectedSlider->images->picture_1) {
+                                echo "<img src='/displayImage.php?id=".$selectedSlider->images->picture_1."'/>";
+                            }
+                            ?>
+                            
+                            <span class='upload_help'>Click here to upload picture</span>
+                            
+                            <div class='progressbar'></div>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="shop_button save_slider"> Save </div>
+                </div>
+            <?
+            }
+        
+        
+            if ($selectedSlider && $selectedSlider->sliderType == "type2") {
+            ?>
+                
+                <div style="margin-top: 20px; border-top: solid 1px #EEE; padding-top: 20px;">
+                    <?
+                    $sliderId = $selectedSlider ? $selectedSlider->id : "";
+                    echo "<input type='hidden' class='current_slider_id' value='$sliderId'/>";
+                    ?>
+
+                    <div class="slider_setting type1">
+                        <table>
+                            <tr><td>Slider title</td><td><input class="slider_title_text" value='<? echo $selectedSlider ? $selectedSlider->name : ""; ?>'/></td></tr>
+                            <tr><td>Header line 1</td><td><input slider_text_id="title_line_1" value='<? echo $selectedSlider ? @$selectedSlider->texts->title_line_1 : ""; ?>'/></td></tr>
+                            <tr><td>Header line 2</td><td><input slider_text_id="title_line_2" value='<? echo $selectedSlider ? @$selectedSlider->texts->title_line_2 : ""; ?>'/></td></tr>
+                            <tr><td>Bullet 1</td><td><input slider_text_id="bullet_1" value='<? echo $selectedSlider ? @$selectedSlider->texts->bullet_1 : ""; ?>'/></td></tr>
+                            <tr><td>Bullet 2</td><td><input slider_text_id="bullet_2" value='<? echo $selectedSlider ? @$selectedSlider->texts->bullet_2 : ""; ?>'/></td></tr>
+                            <tr><td>Bullet 3</td><td><input slider_text_id="bullet_3" value='<? echo $selectedSlider ? @$selectedSlider->texts->bullet_3 : ""; ?>'/></td></tr>
+                            <tr><td>Bullet 4</td><td><input slider_text_id="bullet_4" value='<? echo $selectedSlider ? @$selectedSlider->texts->bullet_4 : ""; ?>'/></td></tr>
+                            <tr><td>Bullet 5</td><td><input slider_text_id="bullet_5" value='<? echo $selectedSlider ? @$selectedSlider->texts->bullet_5 : ""; ?>'/></td></tr>
+                        </table>
+                        <br/>
+                        Pictures:<br/><br/>
+                        <div class='uploadpicture' pictureType='picture_1'>
+                            <?
+                            if (isset($selectedSlider->images->picture_1) && $selectedSlider->images->picture_1) {
+                                echo "<img src='/displayImage.php?id=".$selectedSlider->images->picture_1."'/>";
+                            }
+                            ?>
+                            
+                            <span class='upload_help'>Click here to upload picture</span>
+                            
+                            <div class='progressbar'></div>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="shop_button save_slider"> Save </div>
+                </div>
+            <?
+            }
         }
         ?>
     </div>

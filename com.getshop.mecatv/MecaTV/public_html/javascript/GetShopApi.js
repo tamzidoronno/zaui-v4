@@ -127,7 +127,7 @@ GetShopApiWebSocket.prototype = {
 
         return text;
     }
-};
+}
 
 GetShopApiWebSocket.BannerManager = function(communication) {
     this.communication = communication;
@@ -1921,6 +1921,18 @@ GetShopApiWebSocket.InformationScreenManager.prototype = {
         return this.communication.send(data, silent);
     },
 
+    'deleteSlider' : function(sliderId,tvId, silent) {
+        data = {
+            args : {
+                sliderId : JSON.stringify(sliderId),
+                tvId : JSON.stringify(tvId),
+            },
+            method: 'deleteSlider',
+            interfaceName: 'core.informationscreenmanager.IInformationScreenManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
     'getHolders' : function(silent) {
         data = {
             args : {
@@ -1936,6 +1948,16 @@ GetShopApiWebSocket.InformationScreenManager.prototype = {
             args : {
             },
             method: 'getInformationScreens',
+            interfaceName: 'core.informationscreenmanager.IInformationScreenManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'getNews' : function(silent) {
+        data = {
+            args : {
+            },
+            method: 'getNews',
             interfaceName: 'core.informationscreenmanager.IInformationScreenManager',
         };
         return this.communication.send(data, silent);
@@ -1968,6 +1990,17 @@ GetShopApiWebSocket.InformationScreenManager.prototype = {
                 customerId : JSON.stringify(customerId),
             },
             method: 'registerTv',
+            interfaceName: 'core.informationscreenmanager.IInformationScreenManager',
+        };
+        return this.communication.send(data, silent);
+    },
+
+    'saveTv' : function(tv, silent) {
+        data = {
+            args : {
+                tv : JSON.stringify(tv),
+            },
+            method: 'saveTv',
             interfaceName: 'core.informationscreenmanager.IInformationScreenManager',
         };
         return this.communication.send(data, silent);

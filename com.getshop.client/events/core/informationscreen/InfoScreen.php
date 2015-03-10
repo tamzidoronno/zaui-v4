@@ -10,6 +10,9 @@ class core_informationscreen_InfoScreen {
 	public $infoScreenId;
 
 	/** @var String */
+	public $showNewsFeed;
+
+	/** @var String */
 	public $name;
 
 }

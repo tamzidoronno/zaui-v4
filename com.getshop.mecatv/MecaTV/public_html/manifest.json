@@ -15,7 +15,10 @@
     }
   },
   "permissions": [
-    "webview"
+    "webview",
+    "storage",
+    "management",
+    "<all_urls>"
   ],
   "kiosk_enabled": true
 }

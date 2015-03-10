@@ -91,18 +91,22 @@ class InformationScreen extends \ApplicationBase implements \Application {
             $screens = $this->getApi()->getInformationScreenManager()->getInformationScreens();
             foreach ($screens as $screen) {
                 if ($screen->infoScreenId == $id) {
-                    return $screens;
+                    return $screen;
                 }
             }
         }
     }
 
     public function saveSlider() {
-        $slider = new \core_informationscreen_Slider();
-        $slider->texts = [];
+        $slider = $this->getSelectedSlider();
+        
+        if (!$slider) {
+            $slider = new \core_informationscreen_Slider();
+            $slider->texts = [];
+        }
         
         foreach ($_POST['data']['texts'] as $text) {
-            $slider->texts[$text['key']] = $text['value'];
+            $slider->texts->{$text['key']} = $text['value'];
         }
         
         $slider->id = $_POST['data']['gs_slider_id'];
@@ -115,23 +119,74 @@ class InformationScreen extends \ApplicationBase implements \Application {
             return null;
         }
         
+        $retSlider = null;
+        
+        if ($_SESSION['slider_info_selected'] == "new") {
+            $slider = new \core_informationscreen_Slider();
+            $slider->id = "new";
+            $retSlider = $slider;
+        }
+        
         $tv = $this->getCurrentTv();
         if ($tv) {
             foreach ($tv->sliders as $slider) {
                 if ($slider->id == $_SESSION['slider_info_selected']) {
-                    return $slider;
+                    $retSlider = $slider;
                 }
             }
         }
         
-        return null;
+        return $retSlider;
     }
     
     public function selectSlider() {
         $_SESSION['slider_info_selected'] = $_POST['data']['sliderId'];
+        
+    }
+    
+    public function setSliderType() {
+        $slider = $this->getSelectedSlider();
+        if ($slider->id == "new") {
+            $slider->name = $this->__f("New slider");
+            $slider->id = "";
+        }
+        
+        if ($slider) {
+            $slider->sliderType = $_POST['data']['type'];
+            $this->getApi()->getInformationScreenManager()->addSlider($slider, $this->getCurrentTvId());
+        }
+        
     }
     
     public function deleteSlider() {
         $this->getApi()->getInformationScreenManager()->deleteSlider($_POST['data']['sliderId'], $this->getCurrentTvId());
+    }
+    
+    public function savePicture() {
+        $base64 = substr($_POST['data']['fileBase64'], strpos($_POST['data']['fileBase64'], "base64,")+7);
+        $content = base64_decode($base64);
+        $imgId = \FileUpload::storeFile($content);
+        
+        if (isset($_POST['data']['pictureType']) && $_POST['data']['pictureType'] == "gs_background_image_for_tv") {
+            $tv = $this->getCurrentTv();
+            if ($tv) {
+                $tv->backgroundImage = $imgId;
+                $this->getApi()->getInformationScreenManager()->saveTv($tv);
+            }
+        } else {
+            $slider = $this->getSelectedSlider();
+            if ($slider) {
+                $slider->images->{$_POST['data']['pictureType']} = $imgId;
+                $this->getApi()->getInformationScreenManager()->addSlider($slider, $this->getCurrentTvId());
+            }
+        }
+    }
+    
+    public function changeShowNewsFeed() {
+        $tv = $this->getCurrentTv();
+        if ($tv) {
+            $tv->showNewsFeed = $_POST['data']['showNewsFeed'];
+            $this->getApi()->getInformationScreenManager()->saveTv($tv);
+        }
     }
 }

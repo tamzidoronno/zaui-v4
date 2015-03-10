@@ -10,6 +10,7 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.informationscreen.CustomerInfoScreenHolder;
+import com.thundashop.core.informationscreen.Feed;
 import com.thundashop.core.informationscreen.InfoScreen;
 import com.thundashop.core.informationscreen.Slider;
 import com.thundashop.core.informationscreen.SliderType;
@@ -52,7 +53,11 @@ public class InformationScreenManager extends ManagerBase implements IInformatio
     @Override
     public List<InfoScreen> getInformationScreens() {
         CustomerInfoScreenHolder holder = getHolder();
-        return holder.getScreens();
+        if (holder != null) {
+            return holder.getScreens();
+        } 
+        
+        return null;
     }
 
     private CustomerInfoScreenHolder getHolder() {
@@ -144,5 +149,20 @@ public class InformationScreenManager extends ManagerBase implements IInformatio
             holder.deleteSlider(sliderId);
             saveObject(holder);
         }
+    }
+
+    @Override
+    public void saveTv(InfoScreen tv) {
+        CustomerInfoScreenHolder holder = getByCustomerHolderByTvId(tv.infoScreenId);
+        if (holder != null) {
+            holder.saveTv(tv);
+            saveObject(holder);
+        }
+    }
+
+    @Override
+    public Feed getNews() {
+        RSSFeedParser parser = new RSSFeedParser("http://www.nrk.no/verden/toppsaker.rss");
+        return parser.readFeed();
     }
 }

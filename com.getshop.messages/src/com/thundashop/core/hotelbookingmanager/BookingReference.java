@@ -79,16 +79,16 @@ public class BookingReference extends DataCommon {
         startDate = calstart.getTimeInMillis();
         
         Calendar calend = Calendar.getInstance();
-        calend.setTimeInMillis(startDate);
+        calend.setTimeInMillis(endDate);
         calend.set(Calendar.HOUR_OF_DAY, 11);
         calend.set(Calendar.MINUTE, 00);
-        startDate = calend.getTimeInMillis();
+        endDate = calend.getTimeInMillis();
         
-        if(startDate >= this.startDate.getTime() && startDate < this.endDate.getTime()) {
+        if((startDate >= this.startDate.getTime()) && (startDate < this.endDate.getTime())) {
             return true;
         }
         
-        if(endDate > this.startDate.getTime() && endDate <= this.endDate.getTime()) {
+        if((endDate > this.startDate.getTime()) && (endDate <= this.endDate.getTime())) {
             return true;
         }
         if(startDate <= this.startDate.getTime() && endDate >= this.endDate.getTime()) {

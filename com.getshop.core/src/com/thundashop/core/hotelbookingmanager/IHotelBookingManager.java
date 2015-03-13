@@ -107,6 +107,9 @@ public interface IHotelBookingManager {
     public void setBookingConfiguration(GlobalBookingSettings settings) throws ErrorException;
 
     @Administrator
+    public boolean isRoomAvailable(String roomId, long startDate, long endDate) throws ErrorException;
+
+    @Administrator
     public void notifyUserAboutRoom(BookingReference reference, RoomInformation roomInfo, Integer code) throws ErrorException;
     
     public List<ArxLogEntry> getArxLog() throws ErrorException;

@@ -604,4 +604,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         warnedAboutArxDown = false;
         messageManager.sendMail("post@getshop.com", "GetShop Support", "arx back up", "Yez.", "post@getshop.com", "post@getshop.com");
     }
+
+    @Override
+    public boolean isRoomAvailable(String roomId, long startDate, long endDate) throws ErrorException {
+        Room room = getRoom(roomId);
+        return isAvailable(room, startDate, endDate);
+    }
 }

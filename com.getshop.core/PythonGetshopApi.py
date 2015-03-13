@@ -1952,6 +1952,35 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def isRoomAvailable(self, roomId, startDate, endDate):
+    args = collections.OrderedDict()
+    if isinstance(roomId,GetShopBaseClass): 
+      args["roomId"]=json.dumps(roomId.__dict__)
+    else:
+      try:
+        args["roomId"]=json.dumps(roomId)
+      except (ValueError, AttributeError):
+        args["roomId"]=roomId
+    if isinstance(startDate,GetShopBaseClass): 
+      args["startDate"]=json.dumps(startDate.__dict__)
+    else:
+      try:
+        args["startDate"]=json.dumps(startDate)
+      except (ValueError, AttributeError):
+        args["startDate"]=startDate
+    if isinstance(endDate,GetShopBaseClass): 
+      args["endDate"]=json.dumps(endDate.__dict__)
+    else:
+      try:
+        args["endDate"]=json.dumps(endDate)
+      except (ValueError, AttributeError):
+        args["endDate"]=endDate
+    data = EmptyClass()
+    data.args = args
+    data.method = "isRoomAvailable"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def markRoomAsReady(self, roomId):
     args = collections.OrderedDict()
     if isinstance(roomId,GetShopBaseClass): 

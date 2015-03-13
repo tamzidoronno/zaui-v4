@@ -41,7 +41,16 @@ if(isset($configuration->draggable) && $configuration->draggable == "false") {
         <input type="text" class="description" placeholder="<? echo $this->__f("Text description"); ?>">
         <input type="text" class="longitude positionright" placeholder="<? echo $this->__f("longitide"); ?>">
         <input type="text" class="latitude positionright" placeholder="<? echo $this->__f("latitude"); ?>"> 
-    </div>
+        <? 
+         $checked = "";
+         if(@$marker->displayDefault) {
+            $checked = " CHECKED"; 
+         }
+         ?>
+         <div style="padding-left:20px;">
+         <input type="checkbox" class="latitude opendefault" <? echo $checked; ?>><? echo $this->__w("Leave label open"); ?>
+         </div>
+  </div>
 
     <? foreach ($configuration->markers as $marker) { ?>
         <? if(isset($marker->id)) { continue; } ?>
@@ -52,6 +61,16 @@ if(isset($configuration->draggable) && $configuration->draggable == "false") {
             <input type="text" class="description" value="<? echo str_replace("\"", "'", @$marker->description); ?>">
             <input type="text" class="longitude positionright" value='<? echo @$marker->longitude; ?>'>
             <input type="text" class="latitude positionright" value='<? echo @$marker->latitude; ?>'>
+            <? 
+            $checked = "";
+            if(@$marker->leaveOpen == "true") {
+               $checked = " CHECKED"; 
+            }
+            ?>
+            <div style="padding-left:20px;">
+            <input type="checkbox" class="latitude opendefault" <? echo $checked; ?>><? echo $this->__w("Leave label open"); ?>
+            </div>
+            
         </div>
     <? } ?>
 </div>

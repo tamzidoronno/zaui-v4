@@ -129,9 +129,13 @@ thundashop.app.GoogleMaps.prototype = {
         var iw = new google.maps.InfoWindow({
             content: entry.description
         });
-        google.maps.event.addListener(marker, "click", function(e) {
+        if(entry.leaveOpen && entry.leaveOpen === "true") {
             iw.open(this.map, marker);
-        });
+        } else {
+            google.maps.event.addListener(marker, "click", function(e) {
+                iw.open(this.map, marker);
+            });
+        }
         google.maps.event.addListener(marker, "mouseover", function(e) {
             $('.GoogleMaps .googlemaptooltip').tooltip({track: true, content: entry.title, hide: {duration: 0}});
             $('.GoogleMaps .googlemaptooltip').mouseover();
@@ -220,7 +224,8 @@ thundashop.app.GoogleMapsCommon = {
                 description: $(this).find('.description').val(),
                 longitude: $(this).find('.longitude').val(),
                 latitude: $(this).find('.latitude').val(),
-                title: $(this).find('.markertitle').val()
+                title: $(this).find('.markertitle').val(),
+                leaveOpen : $(this).find('.opendefault').is(':checked')
             }
             entries.push(entry);
         });

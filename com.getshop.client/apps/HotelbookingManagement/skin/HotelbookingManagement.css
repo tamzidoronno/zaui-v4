@@ -14,3 +14,7 @@
     color: green;
     font-size: 20px;
 }
+
+.HotelbookingManagement .roombox { display: inline-block; height: 30px; width: 100px; margin: 10px; float:left; border: solid 1px; text-align: center; line-height: 30px; color:#fff; }
+.HotelbookingManagement .roombox.notavailable { background-color:red; color:#fff; }
+.HotelbookingManagement .roombox.available { background-color:green; }

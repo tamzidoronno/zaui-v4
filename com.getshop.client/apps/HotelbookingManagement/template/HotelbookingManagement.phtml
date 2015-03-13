@@ -23,6 +23,16 @@ if(isset($_POST['data']['updated'])) {
 }
 ?>
 <br>
+    
+    Check availability<br>
+    <div gstype="form" method="displayHotelBookingOverview">
+        <input type="text" gsname="startdate" value='<? echo date("d-m-Y", $this->getStartDate()); ?>'>
+        <input type="text" gsname="enddate" value='<? echo date("d-m-Y", $this->getEndDate()); ?>'> 
+    <input type="button" gstype="submit" value="Oppdater">
+    </div>
+    <? $this->displayRoomAvailability(); ?>
+<br>
+<div style="clear:both;"></div>
 <br>
 <br>
     

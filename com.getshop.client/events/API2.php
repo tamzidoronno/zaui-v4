@@ -1912,6 +1912,23 @@ class APIHotelBookingManager {
 
 	/**
 	* Get all references
+	* @return boolean
+	* @throws ErrorException
+	*/
+
+	public function isRoomAvailable($roomId, $startDate, $endDate) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["roomId"] = json_encode($this->transport->object_unset_nulls($roomId));
+	     $data['args']["startDate"] = json_encode($this->transport->object_unset_nulls($startDate));
+	     $data['args']["endDate"] = json_encode($this->transport->object_unset_nulls($endDate));
+	     $data["method"] = "isRoomAvailable";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
 	* @return void
 	* @throws ErrorException
 	*/

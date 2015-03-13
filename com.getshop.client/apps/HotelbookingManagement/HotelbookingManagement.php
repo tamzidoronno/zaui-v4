@@ -6,6 +6,7 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
     var $dept;
     var $currentMenuEntry;
     
+    
     function __construct() {
     }
 
@@ -15,6 +16,47 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
     
     public function getAvailablePositions() {
         return "left";
+    }
+    
+    public function getEndDate() {
+        if(isset($_POST['data'])) {
+            return strtotime($_POST['data']['enddate']);
+        }
+        return time()+86400;
+    }
+    
+    public function getStartDate() {
+        if(isset($_POST['data'])) {
+            return strtotime($_POST['data']['startdate']);
+        }
+        return time();
+    }
+    
+    public function displayRoomAvailability() {
+        $startDate = $this->getStartDate();
+        $endDate = $this->getEndDate();
+        $totalavialable = 0;
+        if(isset($_POST['data'])) {
+            $rooms = $this->getApi()->getHotelBookingManager()->getAllRooms();
+            foreach($rooms as $room) {
+                $avilableclass = "notavailable";
+                if($this->getApi()->getHotelBookingManager()->isRoomAvailable($room->id, $startDate, $endDate)) {
+                    $avilableclass = "available";
+                    $totalavialable++;
+                }
+                
+                echo "<span class='roombox $avilableclass'>";
+                echo $room->roomName . "<br>";
+                echo "</span>";
+            }
+        }
+        echo "<div style='clear:both;'></div>";
+        echo "Total number of available rooms: $totalavialable";
+    }
+    
+    public function displayHotelBookingOverview() {
+//        echo "TEST";
+//        $this->render();
     }
     
     public function saveArxData() {

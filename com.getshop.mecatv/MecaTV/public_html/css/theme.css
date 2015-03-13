@@ -12,6 +12,7 @@ html {
     width: 1920px;
     box-sizing: border-box;
     background-image: url('images/background.jpg');
+    background-size: cover;
 }
 
 .footer {
@@ -21,7 +22,6 @@ html {
     right: 0px;
     left: 0px;
     background-color: #00297c;
-    
 }
 
 .footer .footer_logo {
@@ -48,77 +48,56 @@ html {
     top: 20px;
     background-color: rgba(255,255,255,0.95);
     color: #333;
+    display: none;
 }
 
 .newsstripe .nyheterinner {
     font-size: 30px;
     line-height: 100px;
-    
     padding-left: 50px;
-    width: 1850px;
     overflow: hidden;
     white-space: nowrap;
     box-sizing: border-box;
+    position: absolute;
 }
 
 .animation {
     height: 930px;
 }
 
-.slide_type_1 {
-    font-size: 50px;
-    color: #333;
-    font-weight: bold;
-}
-.slide_type_1 .title {
+.getshop_tv_id {
+    display: none;
+    text-align: center;
+    border: solid 1px #DDD;
+    background-color: #FFF;
     position: absolute;
-    left: 950px;
-    top: 280px;
-    width: 1000px;
-    opacity: 0;
-    text-align: left;
-    font-size: 40px;
-    line-height: 70px;
-}
-.slide_type_1 .bullets {
-    font-size: 30px;
-    position: absolute;
-    left: 920px;
-    top: 400px;
-    padding: 30px;
-    
-    font-weight: normal;
-}
-
-.slide_type_1 .car  {
-    height: 400px; 
+    left: 50%;
     width: 400px;
-    background-image: url('images/muscle_car.png');
-    top: 659px;
-    left: 1520px;
-    opacity: 0;
-    position: absolute;
+    margin-left: -200px;
+    top: 50px;
+    z-index: 10;
+    padding: 30px;
+    border-radius: 5px;
+    box-sizing: border-box;
 }
 
-.slide_type_1 .bullets div {
-    background-image: url('images/blue_check.png');
-    background-size: 40px;
-    background-repeat: no-repeat;
-    padding-left: 60px;
-    background-position: 0px center;
-    line-height: 60px;
-    opacity: 0;
+input[type="text"] {
+    padding: 10px;
+    border: solid 5px #c9c9c9;
+    transition: border 0.3s;
+    margin: 10px;
+    width: 250px;
+    text-align: center;
+}
+    
+input[type="text"]:focus,
+input[type="text"].focus {
+    box-shadow: inset 1px 1px 2px 0 #c9c9c9;
 }
 
-
-.slide_type_1 .creditcart {
-    width: 500px;
-    height: 500px;
-    position: absolute;
-    background-image: url('images/creditcard.png');
-    left: -500px;
-    top: -500px;
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: 100%;
+.savebutton {
+    display: inline-block;
+    background: green;
+    color: #FFF;
+    padding: 10px;
 }

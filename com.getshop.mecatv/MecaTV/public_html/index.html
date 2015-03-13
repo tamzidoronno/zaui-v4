@@ -10,13 +10,24 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="css/theme.css">
-        <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="css/sliders/type1/type1.css">
+        <link rel="stylesheet" type="text/css" href="css/sliders/type2/type2.css">
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
         <script src="bower_components/jquery/dist/jquery.min.js"></script>
-        <script src="javascript/GetShopApi.js"></script>
-        <script src="javascript/GetShopTV.js"></script>
     </head>
     <body>
+        
         <div class="tvbody">
+            
+            <div class='getshop_tv_id'>
+                Please enter your tv id:<br/>
+                <input id='getshop_tv_id_text' type='text' placeholder="Found at your page">
+                <br/>
+                <div class='savebutton'>
+                    Save
+                </div>
+            </div>
+            
             <div class="newsstripe">
                 <div class="newstitle">
                     Nyheter - 19 febrauar 2015.
@@ -29,8 +40,10 @@ and open the template in the editor.
             <div class="animation">
                 <div class="animation_inner" >
                     <div id="slide_type_1_template" class='animationslide slide_type_1'>
-                        <div class="creditcart"></div>
-                        <div class="title"><span class="title_line1"> DYR VERKSTEDSREGNINGEN? </span><br/> <span class="title_line2">HENT BILEN UTEN Å BETALE</span></div>
+                        <div class="creditcart">
+                            <div class='inner_image'></div>
+                        </div>
+                        <div class="title"><span class="title_line1"></span><br/> <span class="title_line2"></span></div>
                         <div class="bullets">
                             <div class="bullet1">Inntil 60 dagers rentefri kreditt (fri måned + 30 dager)</div>
                             <div class="bullet2">Inntil 24 måneders rentefri avbetaling.</div>
@@ -41,15 +54,31 @@ and open the template in the editor.
                         <div class="car"></div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="footer">
-                <div class="footer_logo"></div>
+                
+                <div id="slide_type_2_template" class='animationslide slide_type_2'>
+                    <div class="creditcart">
+                        <div class='inner_image'></div>
+                    </div>
+                    <div class="title"><span class="title_line1"></span><br/> <span class="title_line2"></span></div>
+                    <div class="bullets">
+                        <div class="bullet1">Inntil 60 dagers rentefri kreditt (fri måned + 30 dager)</div>
+                        <div class="bullet2">Inntil 24 måneders rentefri avbetaling.</div>
+                        <div class="bullet3">Konto er gratis.</div>
+                        <div class="bullet4">Ingen årsavgifter.</div>
+                        <div class="bullet5">Kortet gjelder hos alle MECA-verksteder i Norge.</div>
+                    </div>
+                    <div class="car"></div>
+                </div>    
             </div>
         </div>
     </body>
     
     <script src="javascript/move.js"></script>
-    <script src="javascript/MecaCard.js"></script>
+    <script src="javascript/GetShopTV.js"></script>
+    <script src="javascript/sliders/type1.js"></script>
+    <script src="javascript/sliders/type2.js"></script>
+    <script src="javascript/GetShopApi.js"></script>
+    
+    
 </html>
 

@@ -2160,6 +2160,19 @@ class APIInformationScreenManager {
 	* @author ktonder
 	*/
 
+	public function getNews() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getNews";
+	     $data["interfaceName"] = "core.informationscreenmanager.IInformationScreenManager";
+	     return $this->transport->cast(new core_informationscreen_Feed(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
 	public function getScreen($id) {
 	     $data = array();
 	     $data['args'] = array();
@@ -2192,6 +2205,20 @@ class APIInformationScreenManager {
 	     $data['args'] = array();
 	     $data['args']["customerId"] = json_encode($this->transport->object_unset_nulls($customerId));
 	     $data["method"] = "registerTv";
+	     $data["interfaceName"] = "core.informationscreenmanager.IInformationScreenManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function saveTv($core_informationscreen_InfoScreen) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["core_informationscreen_InfoScreen"] = json_encode($this->transport->object_unset_nulls($core_informationscreen_InfoScreen));
+	     $data["method"] = "saveTv";
 	     $data["interfaceName"] = "core.informationscreenmanager.IInformationScreenManager";
 	     return $this->transport->sendMessage($data);
 	}

@@ -72,3 +72,70 @@
     border-bottom: solid 1px #DDD;
     cursor: pointer;
 }
+
+.InformationScreen .slider_types .select_slider_type {
+    border: Solid 1px #DDD;
+    margin: 10px;
+    display: inline-block;
+    background: linear-gradient(to bottom, #EEE, #DDD); 
+    margin: 10px;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.InformationScreen .select_slider_class {
+    background: linear-gradient(to bottom, #EEE, #DDD); 
+    margin: 10px;
+    cursor: pointer;
+    
+}
+
+.InformationScreen .active_slider {
+    background: linear-gradient(to bottom, #00c813, #008e0d); 
+    color: #FFF;
+}
+
+.InformationScreen .type_icon {
+    width: 177px;
+    height: 115px;
+    position: absolute;
+    left: 6px;
+    bottom: 6px;
+}
+
+.InformationScreen .type_icon.type1 { background-image: url('{IMAGEFOLDER}/type1.jpg'); }
+.InformationScreen .type_icon.type2 { background-image: url('{IMAGEFOLDER}/type2.jpg'); }
+
+.InformationScreen .uploadpicture {
+    position: relative;
+    display: inline-block;
+    border: solid 1px;
+    min-height: 200px;
+    min-width: 200px;
+    cursor: pointer;
+}
+
+.InformationScreen .uploadpicture img {max-width: 200px; max-height: 200px;}
+
+.InformationScreen .uploadpicture .upload_help {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    background: rgba(255,255,255,0.5);
+}
+
+.InformationScreen .tv_setting {
+    color: #666;
+    border-bottom: solid 1px #DDD;
+    margin-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+.InformationScreen .tv_settings_outer {
+    border: solid 1px #DDD;
+    border-bottom: solid 0px #DDD;
+}

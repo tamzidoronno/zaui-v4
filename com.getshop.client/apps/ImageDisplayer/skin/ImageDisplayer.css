@@ -16,3 +16,7 @@
 .ImageDisplayer .progressbar_outer .progressbar { background-color: rgba(32,131,93,1.0); position:absolute; height:100%; }
 .ImageDisplayer .pictureicon { font-size: 100px; }
 .ImageDisplayer .imagecontainer img { width: 100%; height: auto; }
+.ImageDisplayer .imagecontainer.originalSize img { width: auto; height: auto; }
+.ImageDisplayer .imagecontainer.adjust_left { text-align: left; width: 100%; display:block;}
+.ImageDisplayer .imagecontainer.adjust_center { text-align: center; width: 100%; display:block;}
+.ImageDisplayer .imagecontainer.adjust_right { text-align: right; width: 100%;  display:block;}

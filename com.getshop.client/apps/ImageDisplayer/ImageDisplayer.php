@@ -62,6 +62,15 @@ class ImageDisplayer extends \ApplicationBase implements \Application {
         $this->setConfigurationSetting("image_cords".$prefix, $serialized);
         $this->setConfigurationSetting("compression".$prefix, $_POST['data']['compression']);
         $this->setConfigurationSetting("new_type".$prefix, "1");
+        $this->setConfigurationSetting("link".$prefix, $_POST['data']['link']);
+        $this->setConfigurationSetting("adjustment".$prefix, $_POST['data']['adjustment']);
+        $this->setConfigurationSetting("originalSize".$prefix, $_POST['data']['originalSize']);
+        if($_POST['data']['originalSize'] == "true") {
+            $this->setConfigurationSetting("compression".$prefix, "");
+        }
+        if(!$this->getConfigurationSetting("zoom_able")) {
+            $this->setConfigurationSetting("zoom_able", "false");
+        }
     }
 
     public function saveOriginalImage() {        
@@ -76,6 +85,15 @@ class ImageDisplayer extends \ApplicationBase implements \Application {
         $this->setConfigurationSetting("image_cords".$prefix, $serialized);
         $this->setConfigurationSetting("compression".$prefix, $_POST['data']['compression']);
         $this->setConfigurationSetting("rotation".$prefix, $_POST['data']['rotation']);
+        $this->setConfigurationSetting("link".$prefix, $_POST['data']['link']);
+        $this->setConfigurationSetting("adjustment".$prefix, $_POST['data']['adjustment']);
+        $this->setConfigurationSetting("originalSize".$prefix, $_POST['data']['originalSize']);
+        if($_POST['data']['originalSize'] == "true") {
+            $this->setConfigurationSetting("compression".$prefix, "");
+        }
+        if(!$this->getConfigurationSetting("zoom_able")) {
+            $this->setConfigurationSetting("zoom_able", "false");
+        }
         echo $imgId;
     }
     

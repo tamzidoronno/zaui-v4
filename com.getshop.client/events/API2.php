@@ -6434,28 +6434,6 @@ class APIUtilManager {
 	}
 
 }
-class APIYouTubeManager {
-
-	var $transport;
-	
-	function APIYouTubeManager($transport) {
-		$this->transport = $transport;
-	}
-
-	/**
-	* The youtube manager handles the communication between the google youtube api and the frontend.
-	*/
-
-	public function searchYoutube($searchword) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["searchword"] = json_encode($this->transport->object_unset_nulls($searchword));
-	     $data["method"] = "searchYoutube";
-	     $data["interfaceName"] = "core.youtubemanager.IYouTubeManager";
-	     return $this->transport->sendMessage($data);
-	}
-
-}
 class GetShopApi {
 
       var $transport;
@@ -6657,12 +6635,6 @@ class GetShopApi {
       */
       public function getUtilManager() {
            return new APIUtilManager($this->transport);
-      }
-      /**
-      * @return YouTubeManager
-      */
-      public function getYouTubeManager() {
-           return new APIYouTubeManager($this->transport);
       }
 }
 ?>

@@ -9,6 +9,10 @@ if($this->getFactory()->getMainLanguage() != $this->getFactory()->getSelectedLan
 }
 
 
+$link = $this->getConfigurationSetting("link".$prefix);
+$adjust = $this->getConfigurationSetting("adjustment".$prefix);
+$originalSize = $this->getConfigurationSetting("originalSize".$prefix);
+
 $id = $this->getImageId();
 $cords = $this->getTranslatedConfigurationSettings("image_cords");
 $original = $this->getTranslatedConfigurationSettings("original_image");
@@ -22,17 +26,35 @@ if($this->getTranslatedConfigurationSettings("new_type") == "1") {
     $id = $original;
     $compress = $this->getTranslatedConfigurationSettings("compression");
     $cordSplitted = explode(":", $cords);
-    $crop = "&crop=true&x=".$cordSplitted[0]/$compress."&x2=".$cordSplitted[1]/$compress."&y=".$cordSplitted[2]/$compress."&y2=".$cordSplitted[3]/$compress."&rotation=".$rotation;
+    if($compress) {
+        $crop = "&crop=true&x=".$cordSplitted[0]/$compress."&x2=".$cordSplitted[1]/$compress."&y=".$cordSplitted[2]/$compress."&y2=".$cordSplitted[3]/$compress."&rotation=".$rotation;
+    }
+}
+
+if($link) {
+    $target = "";
+    $length = strlen("http");
+    if((substr($link, 0, $length) === "http")) {
+        $target = "target='_NEW'";
+    }
+    echo "<a href='$link' $target>";
+}
+
+$origSize = "";
+$adjustment = "adjust_" . $adjust;
+if($originalSize == "true") {
+    $origSize = "originalSize";
 }
 
 ?>
 <div class='displayimagecontainer'>
-    <span class='imagecontainer' >
+    <span class='imagecontainer <? echo $origSize .  " " . $adjustment; ?>' >
         <? if ($id) { ?>
             <img zoomable='<? echo $this->isZoomAble() ? "true" : "false"; ?>' src="/displayImage.php?id=<? echo $id . $crop; ?>"/>
         <? } ?>
     </span>
 </div>
+<? echo "</a>"; ?>
 <? if (!$id) { ?>
     <script>
         var appId = '<? echo $this->getConfiguration()->id; ?>';

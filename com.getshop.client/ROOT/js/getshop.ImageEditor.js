@@ -299,6 +299,54 @@ getshop.ImageEditor.prototype = {
             this.config.rotation = 0;
         }
     },
+    setOriginalSize : function() {
+        this.config.originalSize = "true";
+        this.removeCropping();
+        var button = this.menu.find('.fa-arrows');
+        this.setActive(button);
+        
+    },
+    adjustLeft : function() {
+        this.config.adjust = "left";
+        var buttons = this.menu.find('.fa-align-left,.fa-align-right,.fa-align-center');
+        buttons.removeClass('active');
+        var button = this.menu.find('.fa-align-left');
+        this.setActive(button);
+    },
+    adjustCenter : function() {
+        this.config.adjust = "center";
+        var buttons = this.menu.find('.fa-align-left,.fa-align-right,.fa-align-center');
+        buttons.removeClass('active');
+        var button = this.menu.find('.fa-align-center');
+        this.setActive(button);
+    },
+    adjustRight : function() {
+        this.config.adjust = "right";
+        var buttons = this.menu.find('.fa-align-left,.fa-align-right,.fa-align-center');
+        buttons.removeClass('active');
+        var button = this.menu.find('.fa-align-right');
+        this.setActive(button);
+    },
+    setActive : function(button) {
+        var isActive = button.hasClass('active');
+        if (isActive) {
+            button.removeClass('active');
+        } else {
+            button.addClass('active');
+        }        
+    },
+    setLink : function() {
+        var button = this.menu.find('.fa-link');
+        if(button.hasClass('active')) {
+            this.config.link = "";
+            this.setActive(button);
+            return;
+        }
+        var link = window.prompt("Add your link", "");
+        this.config.link = link;
+        button.removeClass('active');
+        this.setActive(button);
+    },
     addMenu: function() {
         this.menu = $('<div/>');
         this.menu.addClass('gs_image_editor_menu');
@@ -310,15 +358,21 @@ getshop.ImageEditor.prototype = {
         this.addMenuEntry("Rotate right", 'fa-rotate-right', $.proxy(this.rotateRight, this));
         this.addMenuEntry("Aspect ratio", 'fa-lock', $.proxy(this.toggleAspectRation, this));
         this.addMenuEntry("Change", 'fa-trash-o', $.proxy(this.deleteImage, this));
+        this.addMenuEntry("Link", 'fa-link', $.proxy(this.setLink, this));
+        this.addMenuEntry("Original size", 'fa-arrows', $.proxy(this.setOriginalSize, this));
+        this.addMenuEntry("", 'fa-align-left', $.proxy(this.adjustLeft, this), 'small');        
+        this.addMenuEntry("", 'fa-align-center', $.proxy(this.adjustCenter, this), 'small');        
+        this.addMenuEntry("", 'fa-align-right', $.proxy(this.adjustRight, this), 'small last');        
         this.addMenuEntry("Add text", 'fa-bold', function() {
             me.addTextField({});
         });
         this.addMenuEntry("Save", 'fa-save', $.proxy(this.saveImage, this));
     },
     
-    addMenuEntry: function(text, classes, func) {
+    addMenuEntry: function(text, classes, func, size) {
+        console.log(this.config);
         var disableAspectRatio = this.createMenuEntry(__f(text), classes);
-        var menuEntry = this.addEntryToMenu(disableAspectRatio);
+        var menuEntry = this.addEntryToMenu(disableAspectRatio, size);
         menuEntry.click(func);
 
     },
@@ -397,6 +451,9 @@ getshop.ImageEditor.prototype = {
             cords: this.getCropsForFullSizeImage(),
             rotation: this.config.rotation,
             'getShopPageId': currentPageId,
+            'adjustment' : this.config.adjust,
+            'originalSize' : this.config.originalSize,
+            'link' : this.config.link,
             textFields : []
         };
 
@@ -445,10 +502,29 @@ getshop.ImageEditor.prototype = {
     uploadProgress: function(progress) {
         this.progressDiv.find('.gs_image_editor_progress_bar').css('width', progress + "%");
     },
-    addEntryToMenu: function(entry) {
+    addEntryToMenu: function(entry, size) {
         var outer = $('<div/>');
         outer.append(entry);
+        if(size) {
+            outer.addClass(size);
+        }
         outer.addClass('entry');
+
+        if(outer.find('.fa-arrows').length > 0 && this.config.originalSize === "true") {
+            entry.find('i').addClass('active');
+        }
+        if(outer.find('.fa-align-left').length > 0 && this.config.adjust === "left") {
+            entry.find('i').addClass('active');
+        }
+        if(outer.find('.fa-align-center').length > 0 && this.config.adjust === "center") {
+            entry.find('i').addClass('active');
+        }
+        if(outer.find('.fa-align-right').length > 0 && this.config.adjust === "right") {
+            entry.find('i').addClass('active');
+        }
+        if(outer.find('.fa-link').length > 0 && this.config.link && this.config.link !== "") {
+            entry.find('i').addClass('active');
+        }
 
         var disabled = $('<div/>');
         disabled.addClass('disabled');
@@ -538,12 +614,7 @@ getshop.ImageEditor.prototype = {
     },
     toggleAspectRation: function() {
         var aspectButton = this.menu.find('.fa-lock');
-        var isActive = aspectButton.hasClass('active');
-        if (isActive) {
-            aspectButton.removeClass('active');
-        } else {
-            aspectButton.addClass('active');
-        }
+        this.setActive(aspectButton);
         this.refeshCropArea(false);
     },
     createMenuEntry: function(text, iconClass) {
@@ -557,10 +628,10 @@ getshop.ImageEditor.prototype = {
         var textDiv = $('<div/>');
         textDiv.addClass('menu_text_image_editor');
         textDiv.html(text);
-
+        
         entry.append(icon);
         entry.append(textDiv);
-
+        
         return entry;
     },
     showImageLoader: function() {

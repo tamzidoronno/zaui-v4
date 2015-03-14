@@ -2,8 +2,14 @@
 <center><div id="imagedisplayer" style="position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px;"> </div></center>
 
 <?
-    $serCrops = $this->getTranslatedConfigurationSettings("image_cords");
-    $rotation = $this->getTranslatedConfigurationSettings("rotation");
+$prefix = $this->getPrefix();
+    $serCrops = $this->getTranslatedConfigurationSettings("image_cords".$prefix);
+    $rotation = $this->getTranslatedConfigurationSettings("rotation".$prefix);
+    
+    $link = $this->getConfigurationSetting("link".$prefix);
+    $adjust = $this->getConfigurationSetting("adjustment".$prefix);
+    $originalSize = $this->getConfigurationSetting("originalSize".$prefix);
+    
     $textFields = $this->getTexts();
     
     if ($rotation == null) {
@@ -30,8 +36,11 @@
             echo ",imageId : '$id'";
         }
         ?>,
-        'rotation' : <? echo $rotation ?>,
-        'textFields' : <? echo $textFields ?>
+        'adjust' : '<? echo $adjust; ?>',
+        'originalSize' : '<? echo $originalSize; ?>',
+        'link' : '<? echo $link; ?>',
+        'rotation' : '<? echo $rotation ?>',
+        'textFields' : '<? echo $textFields ?>'
     }
 
     var div = $('#imagedisplayer');

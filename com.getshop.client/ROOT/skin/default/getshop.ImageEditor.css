@@ -40,6 +40,26 @@
     margin-left: 5px;
 }
 
+
+
+.gs_image_editor_menu .small.entry {
+    width: 20px;
+    height: 20px;
+    margin-right: 6px;
+}
+
+.gs_image_editor_menu .small.entry.last {
+    margin-right:0px;
+}
+
+.gs_image_editor_menu .small.entry .icon {
+    font-size: 12px;
+    width: 20px;
+    height: 20px;
+    margin-left: 0px;
+    margin-top: 5px;
+}
+
 .gs_image_editor_menu .entry .icon.active {
     color: green;
 }

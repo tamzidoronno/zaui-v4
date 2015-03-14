@@ -300,9 +300,14 @@ getshop.ImageEditor.prototype = {
         }
     },
     setOriginalSize : function() {
-        this.config.originalSize = "true";
-        this.removeCropping();
         var button = this.menu.find('.fa-arrows');
+        this.config.originalSize = "true";
+        if(button.hasClass('active')) {
+            this.config.originalSize = "false";
+            this.refeshCropArea(true);
+        } else {
+            this.removeCropping();
+        }
         this.setActive(button);
         
     },

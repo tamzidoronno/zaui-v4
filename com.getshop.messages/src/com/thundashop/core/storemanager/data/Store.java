@@ -20,6 +20,8 @@ public class Store extends DataCommon {
     public boolean isVIS = false; //Very important shop.
     public boolean isDeepFreezed = false;
     public String deepFreezePassword = "";
+    public boolean premium = false;
+    public boolean mobileApp = false;
     
     public Date expiryDate;
     

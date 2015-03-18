@@ -3873,6 +3873,28 @@ class PageManager(object):
     data.interfaceName = "core.pagemanager.IPageManager"
     return self.communicationHelper.sendMessage(data)
 
+  def saveCell(self, pageId, cell):
+    args = collections.OrderedDict()
+    if isinstance(pageId,GetShopBaseClass): 
+      args["pageId"]=json.dumps(pageId.__dict__)
+    else:
+      try:
+        args["pageId"]=json.dumps(pageId)
+      except (ValueError, AttributeError):
+        args["pageId"]=pageId
+    if isinstance(cell,GetShopBaseClass): 
+      args["cell"]=json.dumps(cell.__dict__)
+    else:
+      try:
+        args["cell"]=json.dumps(cell)
+      except (ValueError, AttributeError):
+        args["cell"]=cell
+    data = EmptyClass()
+    data.args = args
+    data.method = "saveCell"
+    data.interfaceName = "core.pagemanager.IPageManager"
+    return self.communicationHelper.sendMessage(data)
+
   def saveCellPosition(self, pageId, cellId, data):
     args = collections.OrderedDict()
     if isinstance(pageId,GetShopBaseClass): 
@@ -5759,6 +5781,14 @@ class StoreApplicationPool(object):
     data = EmptyClass()
     data.args = args
     data.method = "getAvailableThemeApplications"
+    data.interfaceName = "core.applications.IStoreApplicationPool"
+    return self.communicationHelper.sendMessage(data)
+
+  def getPaymentSettingsApplication(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getPaymentSettingsApplication"
     data.interfaceName = "core.applications.IStoreApplicationPool"
     return self.communicationHelper.sendMessage(data)
 

@@ -13,6 +13,7 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.storemanager.data.SettingsRow;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -346,6 +347,18 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
     @Override
     public void refresh() {
         loadApplicationsFromGetShopPool();
+    }
+
+    @Override
+    public HashMap<String, List<SettingsRow>> getPaymentSettingsApplication() {
+        HashMap<String, List<SettingsRow>> rows = new HashMap();
+        
+        List<SettingsRow> settings = new ArrayList();
+        settings.add(new SettingsRow("paypalemailaddress", "Your email address registered on paypal", "string", "PayPal email address"));
+        settings.add(new SettingsRow("sandbox", "Run your account in sandbox mode? (for testing only)", "boolean", "Sandbox mode"));
+        settings.add(new SettingsRow("paypaltestaddress", "What is your paypal test address when running in sandbox mode?", "string", "Paypal test address"));
+        rows.put("c7736539-4523-4691-8453-a6aa1e784fc1", settings);
+        return rows;
     }
 
 }

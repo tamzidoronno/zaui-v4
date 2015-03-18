@@ -3735,6 +3735,23 @@ class APIPageManager {
 	* @throws ErrorException
 	*/
 
+	public function saveCell($pageId, $core_pagemanager_data_PageCell) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["pageId"] = json_encode($this->transport->object_unset_nulls($pageId));
+	     $data['args']["core_pagemanager_data_PageCell"] = json_encode($this->transport->object_unset_nulls($core_pagemanager_data_PageCell));
+	     $data["method"] = "saveCell";
+	     $data["interfaceName"] = "core.pagemanager.IPageManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Set the carousel configuration.
+	* @param pageId
+	* @return void
+	* @throws ErrorException
+	*/
+
 	public function saveCellPosition($pageId, $cellId, $core_pagemanager_data_FloatingData) {
 	     $data = array();
 	     $data['args'] = array();
@@ -5470,6 +5487,20 @@ class APIStoreApplicationPool {
 	     $data = array();
 	     $data['args'] = array();
 	     $data["method"] = "getAvailableThemeApplications";
+	     $data["interfaceName"] = "core.applications.IStoreApplicationPool";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Activate an application.
+	*
+	* @param applicationId
+	*/
+
+	public function getPaymentSettingsApplication() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getPaymentSettingsApplication";
 	     $data["interfaceName"] = "core.applications.IStoreApplicationPool";
 	     return $this->transport->sendMessage($data);
 	}

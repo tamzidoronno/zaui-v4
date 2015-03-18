@@ -137,12 +137,17 @@ class ApplicationManager extends FactoryBase {
         
         $this->getApi()->getPageManager()->setStylesOnCell($pageid, $cellid, $styles, "", -1);
         
+        $cell = $this->getApi()->getPageManager()->getCell($pageid, $cellid);
+        $cell->keepOriginalLayoutOnMobile = ($_POST['data']['keepOriginalLayout'] == "true");
+        $this->getApi()->getPageManager()->saveCell($pageid, $cell);
+        
         if(isset($_POST['data']['colsizes'])) {
             $colsizes = $_POST['data']['colsizes'];
             foreach($colsizes as $cellid => $width) {
                 $this->getApi()->getPageManager()->setStylesOnCell($pageid, $cellid, "notset", "notset", $width);
             }
         }
+        
     }
     
     function saveBackgroundImage() {

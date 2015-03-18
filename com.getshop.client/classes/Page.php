@@ -442,7 +442,7 @@ class Page {
             echo "<div class='gsmobilecarouseleditdesc'>" . $this->factory->__w("Add slides for carousel to mobile view") . "</div>";
         }
 
-        if($this->factory->isMobile()) {
+        if($this->factory->isMobile() && (!$parent || !$parent->keepOriginalLayoutOnMobile)) {
             $styles = "";
         }
         $gslayoutbox = "";
@@ -450,7 +450,12 @@ class Page {
             $gslayoutbox = "gslayoutbox";
         }
 
-        echo "<div $additionalinfo $styles width='$width' class='gsucell $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
+        $keepMobile = "data-keepOnMobile='true'";
+        if(!$cell->keepOriginalLayoutOnMobile) {
+            $keepMobile = "data-keepOnMobile='false'";
+        }
+        
+        echo "<div $additionalinfo $styles width='$width' $keepMobile class='gsucell $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "'>";
 
         if ($this->factory->isMobile() && $gsrowmode == "") {
             $this->printMobileAdminMenu($depth, $cell);
@@ -551,6 +556,9 @@ class Page {
 
             </div>
             <div class='gspage' target='background' style="padding: 10px;">
+                <div class='gsheading'><? echo $this->factory->__w("Mobile settings"); ?></div>
+                <input type="checkbox" class='gskeepOriginalLayout'> <? echo $this->factory->__w("Keep original layout in mobile view."); ?>
+                <br><br>
                 <div class='gsoutercolorselectionpanel gsoutercolorselectionbg'>
                     <div class='gsheading'><? echo $this->factory->__w("Outer background"); ?></div>
                     <div class='gscolorselectionpanel' level=''>

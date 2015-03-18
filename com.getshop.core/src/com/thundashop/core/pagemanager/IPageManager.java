@@ -327,4 +327,8 @@ public interface IPageManager {
     
     @Administrator
     public PageCell getCell(String pageId, String cellId) throws ErrorException;
+    
+    @Administrator
+    public void saveCell(String pageId, PageCell cell) throws ErrorException;
+    
 }

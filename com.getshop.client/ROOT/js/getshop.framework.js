@@ -951,7 +951,8 @@ thundashop.framework = {
         var data = {
             "cellid": cellid,
             "styles": styles,
-            "colsizes": colsizes
+            "colsizes": colsizes,
+            "keepOriginalLayout" : $('.gskeepOriginalLayout').is(':checked')
         };
         var event = thundashop.Ajax.createEvent('', 'saveColChanges', $(this), data);
         if (avoidreprint === true) {
@@ -1040,7 +1041,10 @@ thundashop.framework = {
 
         var cellid = thundashop.framework.findCellId(target);
         var cell = thundashop.framework.findCell(cellid);
-
+        $('.gskeepOriginalLayout').css('checked','checked');
+        if(cell.attr('data-keeponmobile') === "true") {
+            $('.gskeepOriginalLayout').attr('checked','checked');
+        }
         resizingpanel.attr('cellid', cellid);
         $('.gscellsettingspanel').fadeOut();
         var offset = thundashop.framework.originObject.offset();

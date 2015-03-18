@@ -54,5 +54,8 @@ class core_pagemanager_data_PageCell {
 	/** @var String */
 	public $outerWidthWithMargins;
 
+	/** @var String */
+	public $keepOriginalLayoutOnMobile;
+
 }
 ?>

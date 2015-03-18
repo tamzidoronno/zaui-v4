@@ -380,7 +380,11 @@ public class PageManager extends ManagerBase implements IPageManager {
             if (productAppsCount == 0) {
                 page.layout.createCell("", "", PageCell.CellMode.row, "body");
                 ApplicationInstance instance = storeApplicationPool.createNewInstance(productApplicationId);
-                page.layout.addApplicationToFirstFreeBodyCell(instance.id);
+                if(instance == null) {
+                    System.out.println("Instance missing?");
+                } else {
+                    page.layout.addApplicationToFirstFreeBodyCell(instance.id);
+                }
                 savePage(page);
             }
         }
@@ -547,6 +551,14 @@ public class PageManager extends ManagerBase implements IPageManager {
         fromCell.appId = toCell.appId;
         toCell.appId = tmpAppId;
         
+        saveObject(page);
+    }
+
+    @Override
+    public void saveCell(String pageId, PageCell cell) throws ErrorException {
+        Page page = getPage(pageId);
+        PageCell cellToChange = page.getCell(cell.cellId);
+        cellToChange.overWrite(cell);
         saveObject(page);
     }
 }

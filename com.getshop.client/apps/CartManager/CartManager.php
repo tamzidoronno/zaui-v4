@@ -81,8 +81,8 @@ class CartManager extends \SystemApplication implements \Application {
             $shippingApp = $this->getApi()->getStoreApplicationPool()->getApplication($_SESSION['shippingtype']);
             if ($shippingApp) {
                 $this->shippingApplication = $appPool->createInstace($shippingApp);
-            }
-                
+            } 
+               
             if ($this->shippingApplication == null) {
                 unset($_SESSION['shippingtype']);
             }
@@ -102,6 +102,14 @@ class CartManager extends \SystemApplication implements \Application {
             $this->paymentApplication = $paymentApps[0];
         }
 
+        if (isset($_SESSION['cartCustomerId']) && \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::fetchDefaultPaymentAppWhenCustomerIdIsSet()) {
+            foreach ($paymentApps as $paymentApp) {
+                if ($paymentApp->applicationSettings->id == \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::fetchDefaultPaymentAppWhenCustomerIdIsSet()) {
+                    $this->paymentApplication = $paymentApp;
+                }
+            }
+        }
+        
         $this->initAddress();
     }
         

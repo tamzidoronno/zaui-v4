@@ -21,9 +21,6 @@ public class Run {
     private String apiPassword = "g4kkg4kk";
     private String website = "20164.getshop.com";
     
-    private String vismaAddress;
-    private String vismaDatabaseName;
-    private String vismaUserName;
     private String vismaPassword;
     /**
      * @param args the command line arguments

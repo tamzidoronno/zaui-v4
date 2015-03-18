@@ -28,6 +28,18 @@ class WilhelmsenHouseVisma extends \ApplicationBase implements \Application {
         $this->setConfigurationSetting("vismadb", $_POST['vismadb']);
         $this->setConfigurationSetting("vismafilelocation", $_POST['vismafilelocation']);
         $this->setConfigurationSetting("vismadebitaccount", $_POST['vismadebitaccount']);
+        
+        $taxGroups = $this->getApi()->getProductManager()->getTaxes();
+        foreach ($this->getApi()->getProductManager()->getAllProducts() as $product) {
+            foreach ($taxGroups as $taxgroup) {
+                $id = $product->id;
+                $mvaid = $taxgroup->groupNumber;
+                $key = "product_".$id."_".$mvaid;
+                if (isset($_POST[$key])) {
+                    $this->setConfigurationSetting($key, $_POST[$key]);
+                }
+            }
+        }
     }
 }
 

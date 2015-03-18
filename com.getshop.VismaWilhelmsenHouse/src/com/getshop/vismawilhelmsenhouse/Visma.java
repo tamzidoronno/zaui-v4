@@ -6,7 +6,7 @@
 package com.getshop.vismawilhelmsenhouse;
 
 import com.getshop.javaapi.GetShopApi;
-import com.sun.org.apache.xml.internal.security.utils.Base64;
+import org.apache.commons.codec.binary.Base64;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.hotelbookingmanager.BookingReference;
@@ -21,7 +21,9 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -33,8 +35,8 @@ public class Visma {
     private final List<Order> ordersToTranser = new ArrayList();
     private final List<Order> ordersToTranserCreditCard = new ArrayList();
     private final List<Order> orderWithErrors = new ArrayList();
-    private final List<User> usersToTransfer = new ArrayList();
-    private final List<User> usersToTransferCreditCard = new ArrayList();
+    private final Map<String, User> usersToTransfer = new HashMap();
+    private final Map<String, User> usersToTransferCreditCard = new HashMap();
     private final VismaSql vismaSql;
     private final Application application;
 
@@ -91,9 +93,9 @@ public class Visma {
             User user = api.getUserManager().getUserById(order.userId);
             if (!vismaSql.checkIfUserExists(user)) {
                 if (order.payment.paymentType.equals("ns_def1e922_972f_4557_a315_a751a9b9eff1\\Netaxept")) {
-                    usersToTransferCreditCard.add(user);
+                    usersToTransferCreditCard.put(user.id, user);
                 } else {
-                    usersToTransfer.add(user);
+                    usersToTransfer.put(user.id, user);
                 }
             }
         }
@@ -102,7 +104,7 @@ public class Visma {
     private void createEdiFile() throws Exception {
         String result = "";
         
-        for (User user : usersToTransfer) {
+        for (User user : usersToTransfer.values()) {
             result += getActor(user);
         }
         
@@ -139,7 +141,7 @@ public class Visma {
             }
         }
         
-        Files.write(Paths.get(application.getSetting("vismafilelocation")+"OrdersrAct.EDI"), result.getBytes());
+        Files.write(Paths.get(application.getSetting("vismafilelocation")+"OrdersrAct2.EDI"), result.getBytes());
     }
     
     private String getProductVismaProductId(CartItem cartItem) throws Exception {
@@ -176,6 +178,10 @@ public class Visma {
     }
 
     private String getRoomId(BookingReference reference, CartItem item) throws Exception {
+        if (item.getProduct() != null && item.getProduct().metaData != null && !item.getProduct().metaData.isEmpty()) {
+            return item.getProduct().metaData;
+        }
+        
         for (RoomInformation info : reference.roomsReserved) {
             if (info.cartItemId.equals(item.getCartItemId())) {
                 Room room = api.getHotelBookingManager().getRoom(info.roomId);
@@ -197,45 +203,51 @@ public class Visma {
     private void createEdiFileCreditCard() throws Exception {
         String result = "";
         
-        for (User user : usersToTransferCreditCard) {
+        for (User user : usersToTransferCreditCard.values()) {
             result += getActor(user);
         }
         
        
-
+        result += "H;";
+        result += new SimpleDateFormat("yyyyMMdd").format(new Date())+";";
+        result += "5;"; // 
+        result += "Overføring fra GetShop";
+        result += "\r\n";
+        
         for (Order order : ordersToTranserCreditCard) {
-            BookingReference reference = api.getHotelBookingManager().getReservationByReferenceId(Integer.valueOf(order.reference));
+            BookingReference reference;
+            try {
+                reference = api.getHotelBookingManager().getReservationByReferenceId(Integer.valueOf(order.reference));
+            } catch (com.google.gson.JsonSyntaxException ex) {
+                continue;
+            }
+            
             User user = api.getUserManager().getUserById(order.userId);
             
-            result += "H;";
-            result += new SimpleDateFormat("yyyyMMdd").format(new Date())+";";
-            result += order.incrementOrderId+";"; // 
-            result += "GetShop order: "+order.incrementOrderId+";";
-            result += "\r\n";
-            
+            String textDesc = "GetShop order: "+ order.incrementOrderId; 
             result += "L;"; //Fixed value L
-            result += ";"; // Voucher no (If Voucher serie no is used,this can be empty)
+            result += order.incrementOrderId+";"; // Voucher no (If Voucher serie no is used,this can be empty)
             result += new SimpleDateFormat("yyyyMMdd").format(new Date())+";"; // Voucher date
             result += ";"; // Value date (Usees from Batch if empty)
             result += user.customerId+";"; // Debit account
-            result += application.getSetting("vismadebitaccount")+";"; // Credit account
+            result += ";"; // Credit account
             result += api.getOrderManager().getTotalAmount(order)+";"; // Total amount
             result += ";"; // R3 Oppdrag ID
-            result += ";"; // R4 Gjenstand ID
-            result += ";"; // LinjeText hvis nødvendig. f.eks Salg, Betaling, Refnr fra FV. Hvis tomt, hentes tekst fra bilagsart.
+            result += ";"+textDesc; // LinjeText hvis nødvendig. f.eks Salg, Betaling, Refnr fra FV. Hvis tomt, hentes tekst fra bilagsart.
+            result += ";"+ order.paymentTransactionId; // LinjeText hvis nødvendig. f.eks Salg, Betaling, Refnr fra FV. Hvis tomt, hentes tekst fra bilagsart.
             result += "\r\n";
             
             for (CartItem item : order.cart.getItems()) {
                 result += "L;"; //Fixed value L
-                result += ";"; // Voucher no (If Voucher serie no is used,this can be empty)
+                result += order.incrementOrderId+";"; // Voucher no (If Voucher serie no is used,this can be empty)
                 result += new SimpleDateFormat("yyyyMMdd").format(new Date())+";"; // Voucher date
                 result += ";"; // Value date (Usees from Batch if empty)
-                result += getProductDebitNumber(item.getProduct())+";"; // Debit account
-                result += user.customerId+";"; // Credit account
+                result += ";"; // Debit account
+                result += getProductDebitNumber(item.getProduct())+";"; // Credit account
                 result += getProductTotalAmount(item)+";"; // Total amount
                 result += ";"; // R3 Oppdrag ID
                 result += getRoomId(reference, item)+";"; // R4 Gjenstand ID
-                result += ";"; // LinjeText hvis nødvendig. f.eks Salg, Betaling, Refnr fra FV. Hvis tomt, hentes tekst fra bilagsart.
+                result += textDesc;
                 result += "\r\n";
             }
             result += "\r\n";
@@ -290,7 +302,12 @@ public class Visma {
     }
 
     private String getProductDebitNumber(Product product) {
-        return "xxxx";
+        String accountId = application.getSetting("product_"+product.id+"_"+product.taxgroup);
+        if (accountId != null && !accountId.isEmpty()) {
+            return accountId;
+        }
+        
+        return "";
     }
 
     private Double getProductTotalAmount(CartItem item) {
@@ -300,7 +317,7 @@ public class Visma {
     private void savePdfInvoice(Order order) throws Exception {
         String base64 = api.getInvoiceManager().getBase64EncodedInvoice(order.id);
 //        System.out.println(base64);
-        byte[] bytes = Base64.decode(base64);
+        byte[] bytes = Base64.decodeBase64(base64);
         String targetFile = application.getSetting("vismafilelocation") + order.incrementOrderId+".pdf";
         Files.write(Paths.get(targetFile), bytes);
     }

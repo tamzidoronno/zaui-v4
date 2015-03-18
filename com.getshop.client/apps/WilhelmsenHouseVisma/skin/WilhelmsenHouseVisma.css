@@ -1,0 +1,9 @@
+.gss_product_boxed_visma_setting {
+    border: solid 1px #DDD;
+    padding: 20px;
+    margin-bottom: 10px;
+}
+
+.gss_product_boxed_visma_setting:nth-child(odd)  {
+    background-color: #EEE;
+}

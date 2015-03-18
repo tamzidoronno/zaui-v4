@@ -171,7 +171,8 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
                 .findFirst()
                 .orElse(null);
 
-        return finalizeApplication(retApp);
+        retApp = finalizeApplication(retApp);
+        return retApp; 
     }
 
     private Application getDefaultThemeApplication() {

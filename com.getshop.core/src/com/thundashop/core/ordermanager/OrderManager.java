@@ -762,6 +762,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if (!order.transferredToAccountingSystem && order.status == Order.Status.PAYMENT_COMPLETED) {
                 notTransferred.add(order);
             }
+            
+            if (!order.transferredToAccountingSystem && order.payment != null && order.payment.paymentType.equals("ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\\InvoicePayment")) {
+                notTransferred.add(order);
+            }
         }
         
         return notTransferred;

@@ -690,6 +690,7 @@ This is the accounting number that will be printed on the invoice, example XXXX 
 This is the address that will be printed on the invoice, example GetShop street 13;-;
 This is the city that will be printed on the invoice, example Las Vegas;-;
 This is the company name that will be printed on the invoice, example GetShop;-;
+This is the default reminder text;-;
 This is the email address that will be printed on the invoice, example post@getshop.com;-;
 This is the errormessage that will be displayed if above is on.;-;
 This is the mail that will be sent to attendees under the category waiting list.;-;

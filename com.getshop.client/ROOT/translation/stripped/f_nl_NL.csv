@@ -305,6 +305,7 @@ There is no comments added to this user yet.;-;
 There is no new entries;-;
 This is a small text that shows up in the notification message.;-;
 This is normally the payment type, 10 = autopay for?;-;
+This is the default reminder text;-;
 This is the errormessage that will be displayed if above is on.;-;
 This is the mail that will be sent to attendees under the category waiting list.;-;
 This is the main email address, if you change this all orders, contact forms and etc will be sent to this email address.;-;

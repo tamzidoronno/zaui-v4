@@ -10,6 +10,8 @@ import com.thundashop.core.appmanager.data.ApplicationModule;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Setting;
+import com.thundashop.core.storemanager.data.SettingsRow;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -49,6 +51,14 @@ public interface IStoreApplicationPool {
      */
     @Administrator
     public void activateApplication(String applicationId);
+
+    /**
+     * Activate an application.
+     *
+     * @param applicationId
+     */
+    @Administrator
+    public HashMap<String, List<SettingsRow>> getPaymentSettingsApplication();
 
     /**
      * Returns a list of all available theme applications.

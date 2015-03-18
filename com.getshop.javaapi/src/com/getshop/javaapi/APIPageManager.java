@@ -528,6 +528,22 @@ public class APIPageManager {
      * @return
      * @throws ErrorException
      */
+     public void saveCell(java.lang.String pageId, com.thundashop.core.pagemanager.data.PageCell cell)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("pageId",new Gson().toJson(pageId));
+          gs_json_object_data.args.put("cell",new Gson().toJson(cell));
+          gs_json_object_data.method = "saveCell";
+          gs_json_object_data.interfaceName = "core.pagemanager.IPageManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     * Set the carousel configuration.
+     * @param pageId
+     * @return
+     * @throws ErrorException
+     */
      public void saveCellPosition(java.lang.String pageId, java.lang.String cellId, com.thundashop.core.pagemanager.data.FloatingData data)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();

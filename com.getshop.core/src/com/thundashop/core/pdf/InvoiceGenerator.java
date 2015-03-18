@@ -137,6 +137,7 @@ public class InvoiceGenerator {
     }
 
     private void addTexts() throws IOException {
+        String INVOICEORRECEIPT = order.status == Order.Status.PAYMENT_COMPLETED ? "KVITTERING" : "FAKTURA";
         contentStream.setNonStrokingColor(new Color(0, 0, 0));
         writeText("Betalingsinformasjon", 40, 280, true, 8);
         writeText("Betalt av", 40, 180, true, 8);
@@ -150,10 +151,9 @@ public class InvoiceGenerator {
         writeText("Kroner", 230, 68, true, 8);
         writeText("Øre", 310, 68, true, 8);
         writeText("Til konto", 400, 68, true, 8);
-        writeText("GIRO", 300, 270, true, 14);
         writeText("Betalings-", 450, 280, true, 8);
         writeText("frist", 450, 270, true, 8);
-        writeText("FAKTURA", 485, 810, true, 15);
+        writeText(INVOICEORRECEIPT, 485, 810, true, 15);
         writeText("BESKRIVELSE", 45, 645, true, 8);
         writeText("PRIS", 335, 645, true, 8);
         writeText("ANTALL", 385, 645, true, 8);

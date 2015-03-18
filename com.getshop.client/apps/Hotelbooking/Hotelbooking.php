@@ -249,13 +249,19 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                 $this->includeEcommerceTransaction();
             } else {
                 $cartManager = new \ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager();
-                $payment = $cartManager->getPaymentApplications();
+                $payment = null;
           
-                if (sizeof($payment) > 0) {
+                foreach ($cartManager->getPaymentApplications() as $paymenti) {
+                    if ($paymenti->applicationSettings->id === "def1e922-972f-4557-a315-a751a9b9eff1") {
+                        $payment = $paymenti;
+                    }
+                }
+
+                if ($payment) {
                     //Orderid is set in $this->continueToPayment()
-                    $payment[0]->order = $this->getApi()->getOrderManager()->getOrder($_GET['orderId']);
-                    $payment[0]->initPaymentMethod();
-                    $payment[0]->preProcess();
+                    $payment->order = $this->getApi()->getOrderManager()->getOrder($_GET['orderId']);
+                    $payment->initPaymentMethod();
+                    $payment->preProcess();
                 }
             }
             return;

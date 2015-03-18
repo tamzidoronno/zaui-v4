@@ -13,7 +13,7 @@ $cartManager = new ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager();
 $application = null;
 
 foreach ($cartManager->getPaymentApplications() as $paymentApp) {
-    if ($paymentApp->applicationSettings->id = $_GET['app']) {
+    if ($paymentApp->applicationSettings->id == $_GET['app']) {
         $application = $paymentApp;
         break;
     }

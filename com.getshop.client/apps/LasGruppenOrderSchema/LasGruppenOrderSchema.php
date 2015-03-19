@@ -26,5 +26,11 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
     public function render() {
         $this->includefile("orderingschema");
     }
+    
+    public function getBrReg() {
+        $company = $this->getApi()->getUtilManager()->getCompanyFromBrReg($_POST['data']['number']);
+        echo json_encode($company);
+        die();
+    }
 
 }

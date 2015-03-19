@@ -104,13 +104,19 @@ and open the template in the editor.
     padding: 10px;
     background-color: #ff6e00;
     color: #FFF;
-    text-align: center;
+    text-align: left;
+}
+
+.LasGruppenOrderSchema .pagetitle .stepof {
+    float: right;
 }
 
 .LasGruppenOrderSchema td input[type="text"] {
     width: 100%;
 }
 
+.LasGruppenOrderSchema .shippinginformation,
+.LasGruppenOrderSchema .extratext_shipping,
 .LasGruppenOrderSchema .specialsending,
 .LasGruppenOrderSchema .select_stores {
     display: none;
@@ -149,7 +155,7 @@ and open the template in the editor.
     display: none;
 }
 
-.LasGruppenOrderSchema .order_page1 {
+.LasGruppenOrderSchema .order_page2 {
     display: block;
 }
 
@@ -162,4 +168,8 @@ and open the template in the editor.
     border-radius: 0px;
     height: 35px;
     line-height: 35px;
+}
+
+.LasGruppenOrderSchema .required:not([disabled="disabled"]) {
+    border: solid 1px red;
 }

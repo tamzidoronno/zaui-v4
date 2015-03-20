@@ -169,7 +169,8 @@ App = {
             'Klarte ikke å finne et GPS signal, kontroller at appen har tilgang til GPSen.': 'Kan inte finna GPS-position, kontrollera att appen har tillgång till GPS-position i Inställningar',
             'Fant ikke din region, trykk her for å prøve igjen': 'Hittar inget i ditt område, klicka här för att göra ny sökning',
             'Trykk på selskapet under for å velge det': 'Klicka på rätt företag i listan nedan',
-            'Skriv inn ditt firmanavn og trykk på søk, da vil resultatet vises her og du kan velge selskapet du tilhører.': 'Hitta dit företag genom att fylla i hela org.nr i fältet ovan. I vissa fall går det även bra att söka på företagsnamn'
+            'Skriv inn ditt firmanavn og trykk på søk, da vil resultatet vises her og du kan velge selskapet du tilhører.': 'Hitta dit företag genom att fylla i hela org.nr i fältet ovan. I vissa fall går det även bra att söka på företagsnamn',
+            'Trykk på kursstedene for å velge, når du har valgt stedene du ønsker å se trykk så ferdig' : 'Välj önskade kursorter och tryck sedan Färdig'
         }
 
         // No is default language

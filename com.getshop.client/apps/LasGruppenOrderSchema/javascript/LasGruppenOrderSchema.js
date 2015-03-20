@@ -1,8 +1,12 @@
 app.LasGruppenOrderSchema = {
+    addedRows: false,
+    isCompany: false,
+    
     init: function() {
         $(document).on('change', '.LasGruppenOrderSchema [name="security"]', app.LasGruppenOrderSchema.securityChanged);
         $(document).on('change', '.LasGruppenOrderSchema [name="shippingtype"]', app.LasGruppenOrderSchema.shipmentChanged);
         $(document).on('change', '.LasGruppenOrderSchema input[required]', app.LasGruppenOrderSchema.requiredFieldChanged);
+        $(document).on('change', '.LasGruppenOrderSchema .radio_required input', app.LasGruppenOrderSchema.requiredFieldChanged);
         $(document).on('change', '.LasGruppenOrderSchema #samedeliveryasinvoice', app.LasGruppenOrderSchema.changeDeliveryInformation);
         $(document).on('change', '.LasGruppenOrderSchema .keyandcylinders', app.LasGruppenOrderSchema.keyandcylinders);
         $(document).on('change', '.LasGruppenOrderSchema #companyid', app.LasGruppenOrderSchema.checkCompany);
@@ -43,6 +47,10 @@ app.LasGruppenOrderSchema = {
                     
                     if (!$('#invoice_emailaddress').val())
                         $('#invoice_cellphone').val()
+                    
+                    app.LasGruppenOrderSchema.isCompany = true;
+                } else {
+                    app.LasGruppenOrderSchema.isCompany = false;
                 }
             });
         }
@@ -67,6 +75,7 @@ app.LasGruppenOrderSchema = {
     
     requiredFieldChanged: function() {
         $(this).removeClass('required');
+        $(this).closest('.radio_required').removeClass('radio_required');
     },
     
     keyandcylinders: function() {
@@ -99,11 +108,63 @@ app.LasGruppenOrderSchema = {
             return;
         }
         
+        app.LasGruppenOrderSchema.addFirstRows();
+        
+        if (pageNumber === 3) {
+            app.LasGruppenOrderSchema.setupShippinhOptions();
+        }
+        
+        if (pageNumber === 5) {
+            
+            
+            if (!$('#pincode').is(':checked')) {
+                alert('PDF Kommer');
+                return;
+            } else {
+                if (!app.LasGruppenOrderSchema.checkPinCodeLength()) {
+                    alert('Pinkoden må være minimum 6 tall/bokstaver');
+                    return;
+                }
+            }
+        }
+        
         if ($('.LasGruppenOrderSchema [pageNumer="'+pageNumber+'"').length) {
             $(this).closest('.orderpage').hide();
             $('.LasGruppenOrderSchema [pageNumer="'+pageNumber+'"').show();
-        } else {
-            alert('Ferdig?');
+        }
+    },
+    
+    checkPinCodeLength: function() {
+        var pinCode = $('#pincode_textfield').val();
+        
+        if (pinCode.length > 5) {
+            return true;
+        }
+        
+        return false;
+    },
+    
+    setupShippinhOptions: function() {
+       $('.order_page3 .shipping_div_option').show();
+       
+       if (app.LasGruppenOrderSchema.isCompany) {
+           $('#shipping_mypack').hide();
+       } else {
+           $('#shipping_express').hide();
+           $('#shipping_rekomandert').hide();
+           $('#shipping_bedriftspakke').hide();
+       }
+       
+       if ($('#cylindersoption').is(':checked')) {
+           $('#shipping_rekomandert').hide();
+       }
+    },
+    
+    addFirstRows: function() {
+        if (!app.LasGruppenOrderSchema.addedRows) {
+            app.LasGruppenOrderSchema.addKeyRow();
+            app.LasGruppenOrderSchema.addCylinderRow();
+            app.LasGruppenOrderSchema.addedRows = true;
         }
     },
     
@@ -111,11 +172,33 @@ app.LasGruppenOrderSchema = {
         var validated = true;
         
         page.find('input').each(function() {
-            if ($(this).attr('required') && !$(this).val()) {
+            if ($(this).attr('required') && $(this).is(':visible') && !$(this).val()) {
                 $(this).addClass('required');
                 validated = false;
             }
         });
+        
+        
+        page.find('div[radio_required="true"]').each(function() {
+            var radioValidated = false;
+            
+            if (!$(this).is(':visible')) {
+                return;
+            }
+            
+            $(this).find('input[type="radio"]').each(function() {
+                if ($(this).is(':checked') && $(this).is(':visible')) {
+                    radioValidated = true;
+                }
+            });
+            
+            if (!radioValidated) {
+                $(this).addClass('radio_required');
+                validated = false;
+            }
+        });
+        
+        
         
         return validated;
         
@@ -140,7 +223,7 @@ app.LasGruppenOrderSchema = {
             $('.pincodesetup').show();
         }
         if (selectedval === "2") {
-            $('.order_page4 .next').html('Print');
+            $('.order_page4 .next').html('Last ned PDF');
             $('.signaturesecurity').show();
         }
     },
@@ -148,6 +231,7 @@ app.LasGruppenOrderSchema = {
     addKeyRow: function() {
         var row = $('table tr.keys_template_row').clone();
         row.removeClass('keys_template_row');
+        row.find('.systemnumber').val($('#main_system_number').val());
         $('.keys_setup table').append(row);
     },
     
@@ -158,6 +242,11 @@ app.LasGruppenOrderSchema = {
         $('.shippinginformation').hide();
         
         var selectedval = $(this).attr('gs_value');
+        
+        if (selectedval === "0") {
+            $('.extratext_shipping_0').show();
+            $('.shippinginformation').show();
+        }
         
         if (selectedval === "1") {
             $('.extratext_shipping_1').show();
@@ -174,7 +263,6 @@ app.LasGruppenOrderSchema = {
             $('.shippinginformation').show();
         }
         
-        
         if (selectedval === "4") {
             $('.select_stores').show();
         }
@@ -186,6 +274,7 @@ app.LasGruppenOrderSchema = {
     addCylinderRow: function() {
         var row = $('table tr.cylinder_template_row').clone();
         row.removeClass('cylinder_template_row');
+        row.find('.systemnumber').val($('#main_system_number').val());
         $('.cylinder_setup table').append(row);
     }
 }

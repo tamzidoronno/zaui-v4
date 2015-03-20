@@ -155,7 +155,7 @@ and open the template in the editor.
     display: none;
 }
 
-.LasGruppenOrderSchema .order_page2 {
+.LasGruppenOrderSchema .order_page4 {
     display: block;
 }
 
@@ -168,6 +168,10 @@ and open the template in the editor.
     border-radius: 0px;
     height: 35px;
     line-height: 35px;
+}
+
+.LasGruppenOrderSchema .radio_required {
+    color: red;
 }
 
 .LasGruppenOrderSchema .required:not([disabled="disabled"]) {

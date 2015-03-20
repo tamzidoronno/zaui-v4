@@ -7,6 +7,7 @@
         <div class='col col1'>
             <table>
                 <tr><td class='td_col_1' colspan='2'><b>Informasjon om rekvirent</b></td></tr>
+                <tr><td class='td_col_1'>Systemnummer*</td><td><input required='true' type='text'id="main_system_number"/></td></tr>
                 <tr><td class='td_col_1'>Navn*</td><td><input required='true' type='text'/></td></tr>
                 <tr><td>Epost*</td><td><input required='true' type='text'/></td></tr>
                 <tr><td>Mobiltelefon*</td><td><input required='true' type='text'/></td></tr>
@@ -42,6 +43,14 @@
     </div>
 </div>
 
+
+
+
+
+
+
+<!-- PAGE 2 -->
+
 <div class='orderpage order_page2'  pageNumer='2'>
     <div class="pagetitle">
         Nøkler og Sylindrer
@@ -52,15 +61,14 @@
         Vennligst velg hva du ønsker
         <br/>
         <input class='keyandcylinders' gs_value='1' type='checkbox' value='keys'/> Nøkler
-        <br/><input class='keyandcylinders' gs_value='2' type='checkbox' value='cylinders'/> Sylindrer
+        <br/><input class='keyandcylinders' id='cylindersoption' gs_value='2' type='checkbox' value='cylinders'/> Sylindrer
     </div>
 
     <div class='col col_0 keys_setup'>
         Legg til nøklene
         <table>
             <tr><th>Systemnr.</th><th>Antall</th><th>Merking</th></tr>
-            <tr class='keys_template_row'><td><input type='textfield'></td><td><input type='textfield'></td><td><input type='textfield'></td></tr>
-            <tr><td><input type='textfield'></td><td><input type='textfield'></td><td><input type='textfield'></td></tr>
+            <tr class='keys_template_row'><td><input type='textfield' class="systemnumber"></td><td><input type='textfield'></td><td><input type='textfield'></td></tr>
         </table>
         <div class='shop_button add_key_row'>
             +1 Linje
@@ -74,43 +82,24 @@
                 <th>Antall</th>
                 <th>Type sylinder</th>
                 <th>Dørtykkelse</th>
-                <th>Merking</th>
-                <th>Lik sylinder</th>
+                <th>Angi hvilke nøkler som skal passe</th>
                 <th>Overflate</th>
                 <th>Beskrivelse i låsplan</th>
             </tr>
             <tr class='cylinder_template_row'>
+                <td><input type='textfield' class="systemnumber"></td>
+                <td><input type='textfield' style="width: 25px;"></td>
                 <td><input type='textfield'></td>
                 <td><input type='textfield'></td>
-                <td><input type='textfield'></td>
-                <td>dropboxes</td>
-                <td><input type='textfield'></td>
-                <td><input type='textfield'></td>
+                <td><input type='textfield' style="width: 240px"></td>
                 <td>
                     <select>
                         <option>Overflate</option>
                         <option>Forkrommet matt</option>
                         <option>Forkrommet</option>
                         <option>Messing matt</option>
-                        <option>Annen* Må beskrives i info felt</option>
-                    </select>
-                </td>
-                <td><input type='textfield'></td>
-            </tr>
-            <tr >
-                <td><input type='textfield'></td>
-                <td><input type='textfield'></td>
-                <td><input type='textfield'></td>
-                <td>dropboxes</td>
-                <td><input type='textfield'></td>
-                <td><input type='textfield'></td>
-                <td>
-                    <select>
-                        <option>Overflate</option>
-                        <option>Forkrommet matt</option>
-                        <option>Forkrommet</option>
-                        <option>Messing matt</option>
-                        <option>Annen* Må beskrives i info felt</option>
+                        <option>Messing polert</option>
+                        <option>Sortrustikk</option>
                     </select>
                 </td>
                 <td><input type='textfield'></td>
@@ -127,19 +116,26 @@
     </div>
 </div>
 
+
+
+
+
+<!-- PAGE 3 -->
+
 <div class='orderpage order_page3'  pageNumer='3'>
     <div class="pagetitle">Forsendelse
         <div class='stepof'>Steg 3 / 4</div>
     </div>
-    <div class='col col1'>
-        <input type='radio' name="shippingtype" gs_value='1' value='Bedriftspakke'/> Bedriftspakke
-        <br/><input type='radio' name="shippingtype" gs_value='2' value='Rekommandert' /> Rekommandert
-        <br/><input type='radio' name="shippingtype" gs_value='3' value='Express over natt' /> Express over natt
-        <br/><input type='radio' name="shippingtype" gs_value='4' value='Hentes i butikk' /> Hentes i butikk
-        <br/><input type='radio' name="shippingtype" gs_value='5' value='Annet leveringsmåte' /> Annen leveringsmåte
+    <div class='col col1' radio_required='true'>
+        <div class="shipping_div_option" id="shipping_mypack"><input type='radio' name="shippingtype" gs_value='0' value='MyPack'/> MyPack</div>
+        <div class="shipping_div_option" id="shipping_bedriftspakke"><input type='radio' name="shippingtype" gs_value='1' value='Bedriftspakke'/> Bedriftspakke</div>
+        <div class="shipping_div_option" id="shipping_rekomandert"><input type='radio' name="shippingtype" gs_value='2' value='Rekommandert' /> Rekommandert</div>
+        <div class="shipping_div_option" id="shipping_express"><input type='radio' name="shippingtype" gs_value='3' value='Express over natt' /> Express over natt</div>
+        <div class="shipping_div_option" id="shipping_store"><input type='radio' name="shippingtype" gs_value='4' value='Hentes i butikk' /> Hentes i butikk</div>
+        <div class="shipping_div_option" id="shipping_other"><input type='radio' name="shippingtype" gs_value='5' value='Annet leveringsmåte' /> Annen leveringsmåte</div>
     </div>
     <div class='col col2'>
-        <div class="select_stores">
+        <div class="select_stores" radio_required='true'>
             Velg butikk
             <table>
                 <tr><td><input type='radio' name="selectedstore" /> Tromsø</td><td><input type='radio' name="selectedstore" /> Moss</td></tr>
@@ -153,8 +149,16 @@
                 <tr><td><input type='radio' name="selectedstore" /> Bærum</td><td><input type='radio' name="selectedstore" /> Gardermoen</td></tr>
                 <tr><td><input type='radio' name="selectedstore" /> Oslo</td><td></td></tr>
             </table>
+            <div>
+                <b>Informasjon om person som skal hente i butikk</b>
+                <table>
+                    <tr><td>Navn*</td><td><input type='text' required='true'/></td></tr>
+                    <tr><td>Mobiltelefon*</td><td><input type='text' required='true'/></td></tr>
+                </table>
+            </div>
         </div>
 
+        <div class="extratext_shipping extratext_shipping_0">Text MyPack</div>
         <div class="extratext_shipping extratext_shipping_1">Text bedriftspakke</div>
         <div class="extratext_shipping extratext_shipping_2">Text Rekommandert</div>
         <div class="extratext_shipping extratext_shipping_3">Text express over natten</div>
@@ -164,7 +168,6 @@
         </div>
     </div>
     <div class='shippinginformation' style="border-top: solid 1px #DDD;">
-
             <div class='col col1 deliveryinformationdiv'>
             <input type='checkbox' id='samedeliveryasinvoice'/> Leveringsaddresse lik fakturaaddresse
 
@@ -191,21 +194,24 @@
 </div>
 
 <div class='orderpage order_page4'  pageNumer='4'>    
-    <div class="pagetitle">Sikkerhetsprosedyre</div>
+    <div class="pagetitle">
+        Sikkerhetsprosedyre
+        <div class='stepof'>Steg 4 / 4</div>
+    </div>
     
-    <div class='col col_0'>
+    <div class='col col_1'>
     
         Velg ønsket sikkerhetsprosedyre
-        <br/><input type='radio' name='security' gs_value='1' value='pincode'/> Pinkode
+        <br/><input type='radio' name='security' gs_value='1' value='pincode' id='pincode'/> Pinkode
         <br/><input type='radio' name='security' gs_value='2' value='signature'/>Signatur
 
         <div class='pincodesetup'>
             Pinkode:
-            <br/><input type='text'/>
+            <br/><input type='text' style='width: 300px;' id='pincode_textfield'/>
             <br/>
             <br/>
             Send kvittering til e-mail
-            <br/> <input type='text'/>
+            <br/> <input type='text' style='width: 300px;'/>
             <br/>
             
         </div>
@@ -214,14 +220,37 @@
             Skannes og sendes til system@certego.no eller post
             <br/>Certego AS, Postboks 454, 3002 Drammen
             <br/>
-            <br/>
-            Send kvittering til e-mail
-            <br/> <input type='text'/>
         </div>
     </div>
     
+    
+    <div class='col col_2'>
+        <textarea placeholder='Informasjon til systemavdelingen'></textarea>
+    </div>
     <div class='button_area'>
         <div class='shop_button prev'>Tilbake</div>
         <div class='shop_button next' style='display: none'> Neste </div>
     </div>
+</div>
+
+<div class='orderpage order_page5'  pageNumer='5'>    
+    <div class="pagetitle">
+        Bekreftelse
+    </div>
+    
+    <div class='col col_0'>
+    Din bestilling er nå sendt til CERTEGO AS for videre behandling.
+    <br/>
+    <br/>Normal leveringstid er 3 – 5 virkedager
+    <br/>
+    <br/>Kopi av bestillingen er sendt til følgende e-post adresse xxxx@dsds.no
+
+    <br/>
+    <br/>
+    <b>Vil du sende kopi til annen adresse</b>
+    <br/><input type='text' style='width: 300px;'/>
+    <br/><div class='shop_button'>Send</div>
+    </div>
+    
+    
 </div>

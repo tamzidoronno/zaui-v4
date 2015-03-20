@@ -155,6 +155,10 @@ and open the template in the editor.
     display: none;
 }
 
+.LasGruppenOrderSchema .order_page1 {
+    display: block;
+}
+
 .LasGruppenOrderSchema .button_area .next {
     float: right;
 }

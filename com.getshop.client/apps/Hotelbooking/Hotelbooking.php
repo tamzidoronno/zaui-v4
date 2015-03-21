@@ -42,6 +42,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $settings->parkingSpots = $_POST['data']['parking_spots'];
         $settings->extraBookingInformation = $_POST['data']['extra_booking_information'];
         $settings->summaryPage = $_POST['data']['summaryPage'];
+        $settings->companyPage = $_POST['data']['companyPage'];
         $this->getFactory()->getApi()->getHotelBookingManager()->setBookingConfiguration($settings);
         $this->setConfigurationSetting("contine_page", $_POST['data']['contine_page']);
     }
@@ -272,8 +273,14 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         }
         if($this->getPage()->javapage->id == "home") {
             $this->includefile("Hotelbooking");
+        } else if($this->getPage()->javapage->id == $this->getConfig ()->companyPage) {
+            $this->includefile("companybooking");
         } else {
             if (((isset($_GET['subpage']) && $_GET['subpage'] == "summary") || isset($_POST['data']['customer_type'])) && $this->hasValidSelection()) {
+                if(isset($_GET['partner'])) {
+                    $_SESSION['partner'] = $_GET['partner'];
+                }
+                
                 $this->updateCartObject();
                 $this->includefile("booking_part3");
             } else {
@@ -460,70 +467,13 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             $this->failedReservation = true;
             return;
         }
-
-        $productId = $this->getProduct()->id;
-        $start = $this->getStart();
-        $end = $this->getEnd();
-
-        $contact = $this->getContactData();
-
-        $inactive = false;
-        if ($this->getServiceType() == "storage") {
-            $inactive = true;
-        }
-        
-        $infodata = array();
-        $cart = $this->getApi()->getCartManager()->getCart();
-        $cartItems = array();
-        
-        foreach($cart->items as $item) {
-            /* @var $item core_cartmanager_data_CartItem */
-            if($item->product->id == $productId) {
-                $cartItems[] = $item->cartItemId;
-            }
-        }
-
-        for($i = 1; $i <= $count; $i++) {
-            $info = new \core_hotelbookingmanager_RoomInformation();
-            $info->cartItemId = $cartItems[$i-1];
-            $visitor = new \core_hotelbookingmanager_Visitors();
-            $visitor->name = $_POST['data']['name_' . $i];
-            $visitor->phone = $_POST['data']['phone_' . $i];
-            $visitor->email = $_POST['data']['email_' . $i];
-            
-            $info->visitors = array();
-            $info->visitors[] = $visitor;
-            $infodata[] = $info;
-        }
-        
-        
-        $additionaldata = new \core_hotelbookingmanager_AdditionalBookingInformation();
-        $additionaldata->needHandicap = $this->getNeedHandicap();
-        
-        $reference = $this->getApi()->getHotelBookingManager()->reserveRoom($productId, $start, $end, $infodata, $additionaldata);
+        $reference = $this->createReservation();
         if (($reference) > 0) {
-            $reservation = $this->getApi()->getHotelBookingManager()->getReservationByReferenceId($reference);
-            $cartmgr = $this->getApi()->getCartManager();
-            $cartmgr->setReference($reference);
-            
-            $cart = $cartmgr->getCart();
-            foreach($cart->items as $item) {
-                if($item->product->id == $this->getProductId()) {
-                    $ids[] = $item->cartItemId;
-                }
-            }
-            
-            
-            $user = null;
             if (!$this->partnerShipChecked()) {
+                $this->getApi()->getHotelBookingManager()->getReservationByReferenceId($reference);
+                $cartmgr = $this->getApi()->getCartManager();
+                $cartmgr->setReference($reference);
                 $user = $this->createUser();
-            }
-            
-            if ($this->getServiceType() == "storage") {
-                for ($i = 0; $i < $this->getDayCount(true); $i++) {
-                    $order = $this->createOrder($user, $i);
-                }
-            } else {
                 $order = $this->createOrder($user);
             }
             
@@ -770,8 +720,8 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function partnerShipChecked() {
-        if (isset($_POST['data']['partnershipdeal']) && $_POST['data']['partnershipdeal'] == "true") {
-            return true;
+        if (isset($_SESSION['partner'])) {
+            return $_SESSION['partner']=="true";
         }
         return false;
     }
@@ -994,6 +944,41 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     public function getShowExtraInformation() {
         return $this->getConfig()->extraBookingInformation;
     }
-}
 
+    public function createReservation() {
+        $productId = $this->getProduct()->id;
+        $start = $this->getStart();
+        $end = $this->getEnd();
+
+        $infodata = array();
+        $cart = $this->getApi()->getCartManager()->getCart();
+        $cartItems = array();
+        
+        foreach($cart->items as $item) {
+            /* @var $item core_cartmanager_data_CartItem */
+            if($item->product->id == $productId) {
+                $cartItems[] = $item->cartItemId;
+            }
+        }
+
+        for($i = 1; $i <= $count; $i++) {
+            $info = new \core_hotelbookingmanager_RoomInformation();
+            $info->cartItemId = $cartItems[$i-1];
+            $visitor = new \core_hotelbookingmanager_Visitors();
+            $visitor->name = $_POST['data']['name_' . $i];
+            $visitor->phone = $_POST['data']['phone_' . $i];
+            $visitor->email = $_POST['data']['email_' . $i];
+            
+            $info->visitors = array();
+            $info->visitors[] = $visitor;
+            $infodata[] = $info;
+        }
+        
+        $additionaldata = new \core_hotelbookingmanager_AdditionalBookingInformation();
+        $additionaldata->needHandicap = $this->getNeedHandicap();
+        
+        $reference = $this->getApi()->getHotelBookingManager()->reserveRoom($productId, $start, $end, $infodata, $additionaldata);        
+        return $reference;
+    }
+}
 ?>

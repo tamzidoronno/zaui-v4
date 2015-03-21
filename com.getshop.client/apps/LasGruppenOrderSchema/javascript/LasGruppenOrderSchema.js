@@ -6,6 +6,7 @@ app.LasGruppenOrderSchema = {
         $(document).on('change', '.LasGruppenOrderSchema [name="security"]', app.LasGruppenOrderSchema.securityChanged);
         $(document).on('change', '.LasGruppenOrderSchema [name="shippingtype"]', app.LasGruppenOrderSchema.shipmentChanged);
         $(document).on('change', '.LasGruppenOrderSchema input[required]', app.LasGruppenOrderSchema.requiredFieldChanged);
+        $(document).on('change', '.LasGruppenOrderSchema input[type_email]', app.LasGruppenOrderSchema.requiredFieldChanged);
         $(document).on('change', '.LasGruppenOrderSchema .radio_required input', app.LasGruppenOrderSchema.requiredFieldChanged);
         $(document).on('change', '.LasGruppenOrderSchema #samedeliveryasinvoice', app.LasGruppenOrderSchema.changeDeliveryInformation);
         $(document).on('change', '.LasGruppenOrderSchema .keyandcylinders', app.LasGruppenOrderSchema.keyandcylinders);
@@ -22,6 +23,11 @@ app.LasGruppenOrderSchema = {
         $(document).on('change', '#invoice_emailaddress', app.LasGruppenOrderSchema.changeDeliveryInformation);
     },
     
+    validateEmail: function(email) {
+        var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+    },
+    
     checkCompany: function() {
         var text = $('#companyid').val();
         if (text.length === 9) {
@@ -33,6 +39,7 @@ app.LasGruppenOrderSchema = {
                 if (res) {
                     var company = JSON.parse(res);
                     
+                    console.log(company);
                     if (!$('#invoice_company_name').val())
                         $('#invoice_company_name').val(company.name);
                     
@@ -40,7 +47,7 @@ app.LasGruppenOrderSchema = {
                         $('#invoice_address').val(company.streetAddress);
                     
                     if (!$('#invoice_postcode').val())
-                        $('#invoice_postcode').val(company.postnumber);
+                        $('#invoice_postcode').val(company.postnumber + " " + company.city);
                         
                     if (!$('#invoice_cellphone').val())
                         $('#invoice_cellphone').val()
@@ -61,6 +68,7 @@ app.LasGruppenOrderSchema = {
             app.LasGruppenOrderSchema.shangeDeliveryInformation(); 
         } else {
             $('.deliveryinformationdiv table input').removeAttr('disabled');
+            $('.deliveryinformationdiv table input').val("");
         }
     }, 
     
@@ -98,6 +106,23 @@ app.LasGruppenOrderSchema = {
         }
     },
     
+    isValidOrderLines: function() {
+        return $('.keyandcylinders').is(':checked');
+    },
+    
+    setupSecurityPage: function() {
+        $('.nosecurityneeded').hide();
+        $('.securityneeded').hide();
+        
+        if ($('#selection_key').is(':checked')) {
+            $('.securityneeded').show();
+        } else {
+            $('.nosecurityneeded').show();
+            $('.order_page4 .next').html('Send');
+            $('.order_page4 .next').show();
+        }
+    },
+    
     next: function() {
         var currentPage = $(this).closest('.orderpage');
         var pageNumber = currentPage.attr('pageNumer');
@@ -111,14 +136,22 @@ app.LasGruppenOrderSchema = {
         app.LasGruppenOrderSchema.addFirstRows();
         
         if (pageNumber === 3) {
+            if (!app.LasGruppenOrderSchema.isValidOrderLines()) {
+                alert('Du må minst velge nøkler, sylindrer eller begge');
+                return;
+            }
             app.LasGruppenOrderSchema.setupShippinhOptions();
+        }
+        
+        if (pageNumber === 4) {
+            app.LasGruppenOrderSchema.setupSecurityPage();
         }
         
         if (pageNumber === 5) {
             
             
-            if (!$('#pincode').is(':checked')) {
-                alert('PDF Kommer');
+            if ($('#signature').is(':checked')) {
+                alert('Last ned pdf  Kommer');
                 return;
             } else {
                 if (!app.LasGruppenOrderSchema.checkPinCodeLength()) {
@@ -135,6 +168,9 @@ app.LasGruppenOrderSchema = {
     },
     
     checkPinCodeLength: function() {
+        if (!$('#pincode_textfield').is(':visible')) {
+            return true;
+        }
         var pinCode = $('#pincode_textfield').val();
         
         if (pinCode.length > 5) {
@@ -145,19 +181,18 @@ app.LasGruppenOrderSchema = {
     },
     
     setupShippinhOptions: function() {
-       $('.order_page3 .shipping_div_option').show();
-       
-       if (app.LasGruppenOrderSchema.isCompany) {
-           $('#shipping_mypack').hide();
-       } else {
-           $('#shipping_express').hide();
-           $('#shipping_rekomandert').hide();
-           $('#shipping_bedriftspakke').hide();
-       }
-       
-       if ($('#cylindersoption').is(':checked')) {
-           $('#shipping_rekomandert').hide();
-       }
+        $('.order_page3 .shipping_div_option').show();
+
+        if (app.LasGruppenOrderSchema.isCompany) {
+            $('#shipping_mypack').hide();
+        } else {
+            $('#shipping_express').hide();
+            $('#shipping_bedriftspakke').hide();
+        }
+
+        if ($('#cylindersoption').is(':checked')) {
+            $('#shipping_rekomandert').hide();
+        }
     },
     
     addFirstRows: function() {
@@ -171,13 +206,26 @@ app.LasGruppenOrderSchema = {
     validatePage: function(page) {
         var validated = true;
         
+        $('.helptext').remove();
+        
         page.find('input').each(function() {
             if ($(this).attr('required') && $(this).is(':visible') && !$(this).val()) {
                 $(this).addClass('required');
                 validated = false;
             }
+            
+            if ($(this).val() && $(this).attr('type_email') && !app.LasGruppenOrderSchema.validateEmail($(this).val())) {
+                $(this).addClass('required');
+                $(this).parent().append('<span class="helptext">* Sett inn en gyldig epost addresse</span>');
+                validated = false;
+            }
+            
+            if ($(this).val() && $(this).attr('type_number') && isNaN($(this).val())) {
+                $(this).addClass('required');
+                $(this).parent().append('<span class="helptext">* Kun tall</span>');
+                validated = false;
+            }
         });
-        
         
         page.find('div[radio_required="true"]').each(function() {
             var radioValidated = false;
@@ -198,10 +246,7 @@ app.LasGruppenOrderSchema = {
             }
         });
         
-        
-        
         return validated;
-        
     },
     
     prev: function() {
@@ -243,11 +288,6 @@ app.LasGruppenOrderSchema = {
         
         var selectedval = $(this).attr('gs_value');
         
-        if (selectedval === "0") {
-            $('.extratext_shipping_0').show();
-            $('.shippinginformation').show();
-        }
-        
         if (selectedval === "1") {
             $('.extratext_shipping_1').show();
             $('.shippinginformation').show();
@@ -268,6 +308,7 @@ app.LasGruppenOrderSchema = {
         }
         if (selectedval === "5") {
             $('.specialsending').show();
+            $('.shippinginformation').show();
         }
     },
     

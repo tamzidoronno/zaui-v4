@@ -177,3 +177,16 @@ and open the template in the editor.
 .LasGruppenOrderSchema .required:not([disabled="disabled"]) {
     border: solid 1px red;
 }
+
+.LasGruppenOrderSchema .helptext {
+    display: inline-block;
+    font-size: 12px;
+    color: grey;
+    padding-top: 2px;
+    padding-left: 5px;
+    padding-bottom: 5px;
+}
+
+.LasGruppenOrderSchema .systemnumber_uppercase {
+    text-transform: uppercase;
+}

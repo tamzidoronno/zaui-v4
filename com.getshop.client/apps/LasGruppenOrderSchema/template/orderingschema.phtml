@@ -7,10 +7,10 @@
         <div class='col col1'>
             <table>
                 <tr><td class='td_col_1' colspan='2'><b>Informasjon om rekvirent</b></td></tr>
-                <tr><td class='td_col_1'>Systemnummer*</td><td><input required='true' type='text'id="main_system_number"/></td></tr>
+                <tr><td class='td_col_1'>Systemnummer*</td><td><input class='systemnumber_uppercase' required='true' type='text'id="main_system_number"/></td></tr>
                 <tr><td class='td_col_1'>Navn*</td><td><input required='true' type='text'/></td></tr>
-                <tr><td>Epost*</td><td><input required='true' type='text'/></td></tr>
-                <tr><td>Mobiltelefon*</td><td><input required='true' type='text'/></td></tr>
+                <tr><td>Epost*</td><td><input required='true' type='text' type_email='true'/></td></tr>
+                <tr><td>Mobiltelefon*</td><td><input required='true' type='text' type_number='true'/></td></tr>
             </table>
         </div>
     </div>
@@ -18,7 +18,7 @@
         <div class='col col1'>
             <table>
                 <tr><td class='td_col_1' colspan='2'><b>Fakturainformasjon</b></td></tr>
-                <tr><td class='td_col_1'>Org. Nr / Fødselsdato*</td><td><input required='true' type='text' id="companyid"/></td></tr>
+                <tr><td class='td_col_1'>Org. Nr / Fødselsdato*</td><td><input required='true' type='text' id="companyid" type_number='true'/></td></tr>
                 <tr><td>Navn / Firma*</td><td><input id="invoice_company_name" required='true' type='text'/></td></tr>
                 <tr><td>Adresse*</td><td><input id="invoice_address" required='true' type='text'/></td></tr>
                 <tr><td>Postnr / Sted*</td><td><input id="invoice_postcode" required='true' type='text'/></td></tr>
@@ -30,13 +30,11 @@
                 <tr><td class='td_col_1' colspan='2'><b>&nbsp;</b></td></tr>
                 <tr><td>Referanse*</td><td><input required='true' type='text'/></td></tr>
                 <tr><td>Mobiltelefon*</td><td><input id="invoice_cellphone" required='true' type='text'/></td></tr>
-                <tr><td>E-post adresse</td><td><input type='text'id="invoice_emailaddress" /></td></tr>
+                <tr><td>E-post adresse</td><td><input type='text'id="invoice_emailaddress" type_email='true'/></td></tr>
                 <tr><td>Kundenr</td><td><input type='text'/></td></tr>
             </table>
         </div>
     </div>
-    
-    
     
     <div class='button_area'>
         <div class='shop_button next'>Neste</div>
@@ -60,7 +58,7 @@
     <div class='col col_0'>
         Vennligst velg hva du ønsker
         <br/>
-        <input class='keyandcylinders' gs_value='1' type='checkbox' value='keys'/> Nøkler
+        <input id='selection_key' class='keyandcylinders' gs_value='1' type='checkbox' value='keys'/> Nøkler
         <br/><input class='keyandcylinders' id='cylindersoption' gs_value='2' type='checkbox' value='cylinders'/> Sylindrer
     </div>
 
@@ -68,7 +66,7 @@
         Legg til nøklene
         <table>
             <tr><th>Systemnr.</th><th>Antall</th><th>Merking</th></tr>
-            <tr class='keys_template_row'><td><input type='textfield' class="systemnumber"></td><td><input type='textfield'></td><td><input type='textfield'></td></tr>
+            <tr class='keys_template_row'><td><input type='textfield' class="systemnumber systemnumber_uppercase"></td><td><input type='textfield'></td><td><input type='textfield'></td></tr>
         </table>
         <div class='shop_button add_key_row'>
             +1 Linje
@@ -87,7 +85,7 @@
                 <th>Beskrivelse i låsplan</th>
             </tr>
             <tr class='cylinder_template_row'>
-                <td><input type='textfield' class="systemnumber"></td>
+                <td><input type='textfield' class="systemnumber systemnumber_uppercase"></td>
                 <td><input type='textfield' style="width: 25px;"></td>
                 <td><input type='textfield'></td>
                 <td><input type='textfield'></td>
@@ -99,7 +97,7 @@
                         <option>Forkrommet</option>
                         <option>Messing matt</option>
                         <option>Messing polert</option>
-                        <option>Sortrustikk</option>
+                        <option>Sort rustikk</option>
                     </select>
                 </td>
                 <td><input type='textfield'></td>
@@ -127,7 +125,6 @@
         <div class='stepof'>Steg 3 / 4</div>
     </div>
     <div class='col col1' radio_required='true'>
-        <div class="shipping_div_option" id="shipping_mypack"><input type='radio' name="shippingtype" gs_value='0' value='MyPack'/> MyPack</div>
         <div class="shipping_div_option" id="shipping_bedriftspakke"><input type='radio' name="shippingtype" gs_value='1' value='Bedriftspakke'/> Bedriftspakke</div>
         <div class="shipping_div_option" id="shipping_rekomandert"><input type='radio' name="shippingtype" gs_value='2' value='Rekommandert' /> Rekommandert</div>
         <div class="shipping_div_option" id="shipping_express"><input type='radio' name="shippingtype" gs_value='3' value='Express over natt' /> Express over natt</div>
@@ -158,7 +155,6 @@
             </div>
         </div>
 
-        <div class="extratext_shipping extratext_shipping_0">Text MyPack</div>
         <div class="extratext_shipping extratext_shipping_1">Text bedriftspakke</div>
         <div class="extratext_shipping extratext_shipping_2">Text Rekommandert</div>
         <div class="extratext_shipping extratext_shipping_3">Text express over natten</div>
@@ -182,7 +178,7 @@
             <table>
                 <tr><td>Postnr / Sted*</td><td><input type='text' required='true' id="delivery_postcode"/></td></tr>
                 <tr><td>Mobiltelefon*</td><td><input type='text' required='true' id="delivery_cellphone"/></td></tr>
-                <tr><td>E-post adresse</td><td><input type='text' id="delivery_emailaddress"/></td></tr>
+                <tr><td>E-post adresse</td><td><input type='text' id="delivery_emailaddress" type_email='true'/></td></tr>
             </table>
         </div>
     </div>
@@ -193,17 +189,32 @@
     </div>
 </div>
 
+
+
+
+
+<!---- PAGE 5 ---->
+
 <div class='orderpage order_page4'  pageNumer='4'>    
     <div class="pagetitle">
         Sikkerhetsprosedyre
         <div class='stepof'>Steg 4 / 4</div>
     </div>
     
-    <div class='col col_1'>
+    <div class='col col_1 nosecurityneeded'>
+        Din bestilling er nå klar til å sendes.
+        
+        <br/>
+        <br/>
+        Send kvittering til e-mail
+        <br/> <input type='text' style='width: 300px;'/>
+    </div>
+    
+    <div class='col col_1 securityneeded'>
     
         Velg ønsket sikkerhetsprosedyre
         <br/><input type='radio' name='security' gs_value='1' value='pincode' id='pincode'/> Pinkode
-        <br/><input type='radio' name='security' gs_value='2' value='signature'/>Signatur
+        <br/><input type='radio' name='security' gs_value='2' value='signature' id='signature'/>Signatur
 
         <div class='pincodesetup'>
             Pinkode:
@@ -241,7 +252,7 @@
     <div class='col col_0'>
     Din bestilling er nå sendt til CERTEGO AS for videre behandling.
     <br/>
-    <br/>Normal leveringstid er 3 – 5 virkedager
+    <br/>Normal leveringstid er 5 – 7 virkedager
     <br/>
     <br/>Kopi av bestillingen er sendt til følgende e-post adresse xxxx@dsds.no
 
@@ -249,8 +260,16 @@
     <br/>
     <b>Vil du sende kopi til annen adresse</b>
     <br/><input type='text' style='width: 300px;'/>
-    <br/><div class='shop_button'>Send</div>
+    <br/>
+    <br/>
+    <div class='button_area'>
+        <div class='shop_button next'>Fullfør</div>
     </div>
-    
-    
+    </div>
+</div>
+
+<div class='orderpage order_page6'  pageNumer='6'>    
+    <div class='col col_0'>
+        <center><h1>Takk for din henvendelse </h1></center>
+    </div>
 </div>

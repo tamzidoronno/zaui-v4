@@ -194,7 +194,7 @@ and open the template in the editor.
 @media only all and (max-width: 948px) {
     .LasGruppenOrderSchema .col {
         width: 100%;
-    }    
+    }
     
     .LasGruppenOrderSchema td input[type="text"] {
         width: 95%;

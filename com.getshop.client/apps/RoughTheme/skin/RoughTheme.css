@@ -12,3 +12,8 @@ body { font-family: 'Open Sans', 'HelveticaNeue', 'Helvetica Neue', 'Helvetica',
 .gsarea[area="header"] {
     display: none;
 }
+
+html {
+    overflow-x: auto;
+    overflow-y: auto;
+}

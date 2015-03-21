@@ -9,7 +9,7 @@ and open the template in the editor.
 */
 
 .LasGruppenOrderSchema {
-    width: 950px;
+    max-width: 950px;
     color: #333;
 }
 .LasGruppenOrderSchema .header {
@@ -189,4 +189,20 @@ and open the template in the editor.
 
 .LasGruppenOrderSchema .systemnumber_uppercase {
     text-transform: uppercase;
+}
+
+@media only all and (max-width: 948px) {
+    .LasGruppenOrderSchema .col {
+        width: 100%;
+    }    
+    
+    .LasGruppenOrderSchema td input[type="text"] {
+        width: 95%;
+    }
+    
+    .button_area {
+        position: relative;
+        margin-right: 20px;
+        margin-bottom: 20px;
+    }
 }

@@ -5951,6 +5951,23 @@ class APIUserManager {
 	}
 
 	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @return boolean
+	* @throws ErrorException
+	*/
+
+	public function doesUserExistsOnReferenceNumber($number) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["number"] = json_encode($this->transport->object_unset_nulls($number));
+	     $data["method"] = "doesUserExistsOnReferenceNumber";
+	     $data["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Find all users with a given search criteria.
 	* @param searchCriteria The criteria to search for
 	* @return List

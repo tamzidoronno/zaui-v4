@@ -28,7 +28,7 @@
     <div class='col-50'>
         <?
         echo "<span $hideCompany class='common_text company'>" . $this->__w("Organisation number") . "</span>";
-        echo "<span $hidePrivate class='common_text private' >" . $this->__w("Birth date") . "</span>";
+        echo "<span $hidePrivate class='common_text private' >" . $this->__w("Birth date (mm.dd.yy)") . "</span>";
         ?>
         <span class='contact_input'><input type='text' placeholder='<? echo $placeholder; ?>' gsname="birthday" value='<? echo $this->getPost("birthday"); ?>' class='<? echo $this->validateInput("birthday"); ?>'></span>
     </div>

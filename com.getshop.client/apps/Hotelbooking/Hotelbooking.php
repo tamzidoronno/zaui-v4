@@ -198,7 +198,13 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         //this variable is set from $this->complete*Checkout()
         if (isset($_GET['orderProcessed'])) {
             if($this->partnerShipChecked()) {
-                echo "No payment required... checkout completed";
+                echo "<h1 style='text-align:center;text-transform:uppercase;'>";
+                if($this->failedReservation) {
+                    echo $this->__w("Something went wrong while ordering, please contact us");
+                } else {
+                    echo $this->__w("Your reservations has now been completed");
+                }
+                echo "</h1>";
             } else {
                 $this->completeCheckout();
             }
@@ -406,6 +412,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     public function doPartnerBooking() {
         $days = $_POST['data']['days'];
         $_SESSION['bookedPartnerDays'] = $days;
+        $this->setRoomCount(1);
         $year = date("Y", time());
         $productId = $_POST['data']['product'];
         $this->setProductId($productId);
@@ -523,14 +530,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return $sortedRooms;
     }
 
-    public function validateAndContinueToPayment() {
-        $this->setBookingData();
-        $valid = $this->validateBookingData();
-        if ($valid) {
-            $this->continueToPayment();
-        }
-    }
-
     public function getPost($name) {
         if (isset($_POST['data'][$name])) {
             return $_POST['data'][$name];
@@ -589,11 +588,13 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function setBookingData() {
-        print_r($_POST['data']);
         $_SESSION['booking_data'] = serialize($_POST['data']);
     }
 
     public function getBookingData() {
+        if(!isset($_SESSION['booking_data'])) {
+            return array();
+        }
         return unserialize($_SESSION['booking_data']);
     }
 
@@ -601,22 +602,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         if (isset($_SESSION['booking_data'])) {
             $_POST['data'] = unserialize($_SESSION['booking_data']);
         }
-    }
-
-    public function getContactData() {
-        $booked = $this->getBookingData();
-        $names = array();
-        $phones = array();
-        for ($i = 0; $i < 10; $i++) {
-            if (isset($booked['name_' . $i])) {
-                $names[] = $booked['name_' . $i];
-                $phones[] = $booked['phone_' . $i];
-            }
-        }
-        $contact = new \core_hotelbookingmanager_ContactData();
-        $contact->names = $names;
-        $contact->phones = $phones;
-        return $contact;
     }
 
     public function partnerShipChecked() {
@@ -837,12 +822,11 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return $this->getConfig()->extraBookingInformation;
     }
 
-    public function createReservation() {
+    public function createReservation($userId) {
         $productId = $this->getProduct()->id;
         $start = $this->getStart();
         $end = $this->getEnd();
 
-        $infodata = array();
         $cart = $this->getApi()->getCartManager()->getCart();
         $cartItems = array();
         
@@ -852,22 +836,10 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                 $cartItems[] = $item->cartItemId;
             }
         }
-
-        for($i = 1; $i <= $count; $i++) {
-            $info = new \core_hotelbookingmanager_RoomInformation();
-            $info->cartItemId = $cartItems[$i-1];
-            $visitor = new \core_hotelbookingmanager_Visitors();
-            $visitor->name = $_POST['data']['name_' . $i];
-            $visitor->phone = $_POST['data']['phone_' . $i];
-            $visitor->email = $_POST['data']['email_' . $i];
-            
-            $info->visitors = array();
-            $info->visitors[] = $visitor;
-            $infodata[] = $info;
-        }
-        
+        $infodata = $this->getVisitorData();
         $additionaldata = new \core_hotelbookingmanager_AdditionalBookingInformation();
         $additionaldata->needHandicap = $this->getNeedHandicap();
+        $additionaldata->userId = $userId;
         
         $reference = $this->getApi()->getHotelBookingManager()->reserveRoom($productId, $start, $end, $infodata, $additionaldata);        
         return $reference;
@@ -880,6 +852,12 @@ class Hotelbooking extends \ApplicationBase implements \Application {
 
     public function validateBookingData() {
         $this->validationNeeded = true;
+        
+        $bookingData = $this->getBookingData();
+        if(sizeof($bookingData) == 0) {
+            return false;
+        }
+        
         foreach ($this->getBookingData() as $index => $test) {
             $valid = true;
             if ($this->validateInput($index)) {
@@ -887,6 +865,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                 break;
             }
         }
+        
         return $valid;
     }
 
@@ -898,8 +877,20 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         
         $bookingData = $this->getBookingData();
         
-        $referenceNumber = $bookingData['referenceNumber'];
+        $additional = new \core_hotelbookingmanager_AdditionalBookingInformation();
+        $additional->customerReference = $bookingData['referenceNumber'];
         
+        $infodata = $this->getVisitorData();
+        $productId = $this->getProductId();
+        
+        $reservations = $this->getpartnerReservatations();
+        foreach($reservations as $reservation) {
+            $reference = $this->getApi()->getHotelBookingManager()->reserveRoom($productId, $reservation->start, $reservation->end, $infodata, $additional);
+            if($reference <= 0) {
+                $_GET['failedreservation'] = true;
+                $this->failedReservation = true;
+            }
+        }
         
         $_GET['orderProcessed'] = true;
     }
@@ -910,16 +901,12 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             return;
         }
         
-        $reference = $this->createReservation();
+        $user = $this->createUser();
+        $reference = $this->createReservation($user->id);
         if (($reference) > 0) {
-            if (!$this->partnerShipChecked()) {
-                $this->getApi()->getHotelBookingManager()->getReservationByReferenceId($reference);
-                $cartmgr = $this->getApi()->getCartManager();
-                $cartmgr->setReference($reference);
-                $user = $this->createUser();
-                $order = $this->createOrder($user);
-            }
-            
+            $cartmgr = $this->getApi()->getCartManager();
+            $cartmgr->setReference($reference);
+            $order = $this->createOrder($user);
             $_GET['orderProcessed'] = true;
             $_GET['orderId'] = $order->id;
         } else {
@@ -945,5 +932,24 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             $payment->preProcess();
         }
     }
+
+    public function getVisitorData() {
+        $bookingData = $this->getBookingData();
+        $count = $this->getRoomCount();
+        $infodata = array();
+        for($i = 1; $i <= $count; $i++) {
+            $info = new \core_hotelbookingmanager_RoomInformation();
+            $visitor = new \core_hotelbookingmanager_Visitors();
+            $visitor->name = $bookingData['name_' . $i];
+            $visitor->phone = $bookingData['phone_' . $i];
+            $visitor->email = $bookingData['email_' . $i];
+
+            $info->visitors = array();
+            $info->visitors[] = $visitor;
+            $infodata[] = $info;
+        }
+        return $infodata;
+    }
+
 }
 ?>

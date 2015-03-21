@@ -798,4 +798,14 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             saveObject(loginHistory);
         }
     }
+
+    @Override
+    public boolean doesUserExistsOnReferenceNumber(String number) {
+        for(User user : getAllUsers()) {
+            if(user.referenceKey.equals(number)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

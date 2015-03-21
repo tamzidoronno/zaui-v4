@@ -112,8 +112,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Override
     public String reserveRoom(String roomProductId, long startDate, long endDate, List<RoomInformation> roomInfo, AdditionalBookingInformation additionalInfo) throws ErrorException {
-//        startDate *= 1000;
-//        endDate *= 1000;
+        
+        if((additionalInfo.userId == null || additionalInfo.userId.isEmpty()) && (additionalInfo.customerReference == null || additionalInfo.customerReference.isEmpty())) {
+            System.out.println("Userid and customerReference is missing");
+        }
+        
         List<Room> availableRoom = getAvailableRooms(roomProductId, startDate, endDate, additionalInfo);
         List<Room> roomsToBook = new ArrayList();
         for(Room room : availableRoom) {
@@ -151,8 +154,17 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         reference.endDate = end;
         
         reference.roomsReserved = roomInfo;
+        if(additionalInfo.customerReference != null && !additionalInfo.customerReference.isEmpty()) {
+            reference.userId = userManager.getUserByReference(additionalInfo.customerReference).id;
+        }
+        if(additionalInfo.userId != null && !additionalInfo.userId.isEmpty()) {
+            reference.userId = userManager.getUserById(additionalInfo.userId).id;
+        }
         
         saveObject(reference);
+        if(reference.userId.isEmpty()) {
+            System.out.println("Failed to set user id on reference " + reference.bookingReference);
+        }
         bookingReferences.put(reference.bookingReference, reference);
         return new Integer(reference.bookingReference).toString();
     }

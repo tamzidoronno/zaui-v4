@@ -5,14 +5,11 @@ import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Writing;
-import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
-import com.thundashop.core.usermanager.data.UserPrivilege;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @GetShopApi
 
@@ -312,6 +309,8 @@ public interface IUserManager {
     
     @Administrator
     public void upgradeUserToGetShopAdmin(String password);
+    
+    public boolean doesUserExistsOnReferenceNumber(String number);
     
     @Editor
     public List<Integer> getLogins(int year);

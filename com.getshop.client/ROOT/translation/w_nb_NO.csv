@@ -40,8 +40,6 @@ Background color inner;-;Indre bakgrundsfarge
 Background color outer;-;Ytre bakgrundsfarge
 Background image / styling;-;Bakgrunnsbilde / Styling
 Birth Date;-;Fødselsdato
-Birth date;-;Fødselsdato
-Birth date has to be formatted like dd.mm.yy;-;Fødselsdato må være av format: dd.mm.åå.
 Booked time periode;-;Booket tidsperiode
 Booking;-;Påmelding
 Bottom spacing;-;Nedre spacing
@@ -79,7 +77,6 @@ Click next to select shipping options;-;Trykk neste for å velge en betalings me
 Comments;-;Kommentarer
 Company;-;Selskap
 Company name;-;Firmanavn
-Complete the order;-;Fullfør reservasjon
 Completed;-;Gjennomført
 Configure mobile slides;-;Konfigurer mobil slidere
 Confirm order;-;Bekreft ordre
@@ -144,7 +141,6 @@ Hide on mobile;-;Ikke vis på mobilen
 How can I help you today ?;-;Hva kan jeg hjelpe deg med?
 I agree to the terms and conditions;-;Jeg godtar bruksvilkårene
 I am sorry, but all fields are required before sending a message.;-;Beklager, men alle felt må fylles ut før du sender en melding.
-I have a partnership deal;-;Jeg har en partneravtale
 I need a handicap room;-;Tilpasset handicap
 Image;-;Bilde
 Included in all rooms:;-;Inkludert i alle rom:
@@ -170,7 +166,6 @@ Loading;-;Laster
 Loading data... please wait;-;Laster, vennligst vent...
 Logout;-;Logg ut
 Lost your password?;-;Glemt ditt passord?
-MAX COUNT;-;MAX ANTALL
 March;-;Mars
 May;-;Mai
 Merchant ID is found in braintree account.;-;Merchant ID er noe du finner på kontoen din hos braintree.
@@ -221,7 +216,6 @@ Ordinary price;-;Ordinær pris
 Organisation;-;Organisasjon
 Organisation name;-;Selskapnavn
 Organisation number;-;Organisasjonsnummer
-Organisation number has to be 9 digits long.;-;Organisasjonsnummeret må bestå av 9 siffer 
 Original (hp);-;Orginal hp
 Original (nm);-;Original nm
 Other attributes;-;Andre attributter
@@ -247,7 +241,6 @@ PixelateTheme1;-;PixelateTheme1
 Place order;-;Legg inn ordre
 Please check your delivery options.;-;Vennligst sjekk dine leveringsmetoder.
 Please check your room number, you can only order cleaning while you are checked in.;-;Sjekk om romnret du har oppgitt er korrekt. Du kan kun bestille vask mens du holder til hos Wilhelmsen House.
-Please enter the reference number provided by;-;Vennligst skriv inn referansenummeret du har fått utdelt.
 Please enter your email address:;-;Vennligst skriv inn din epost
 Please enter your room number;-;Skriv inn nom nummeret ditt
 Please enter your username and password;-;Skriv inn ditt brukernavn og passord
@@ -274,7 +267,6 @@ Public key is found in braintree account.;-;Den offentlig nøkkelen er noe du fi
 Read more;-;Les mer
 Recover password;-;Gjennopprett passord
 Reference key;-;Referanse nummer
-Reference number;-;Referanse nummer
 Register;-;Registrer
 Registration details;-;Registrerings detaljer.
 Related products;-;Relaterte produkter
@@ -322,8 +314,6 @@ Slide left;-;Slide til venstre
 Slide right;-;Slide til høyre
 Sold out;-;Utsolgt
 Sorry;-;Beklager
-Sorry, we are out of this type of storage, please select a different one.;-;Beklager, men vi har ikke flere av denne typen igjen, velg en annen en.
-Sorry, your rental is too short, it has to be longer then {days} days of rental.;-;Beklager, men din leieperiode er for kort, den må være lengere enn {days} dager.
 Stage 1 (hp):;-;Stage 1 hp:
 Stage 1 (nm):;-;Stage 1 nm:
 Stage 2 (hp):;-;Stage 2 hp:

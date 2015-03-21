@@ -6216,6 +6216,21 @@ class UserManager(object):
     data.interfaceName = "core.usermanager.IUserManager"
     return self.communicationHelper.sendMessage(data)
 
+  def doesUserExistsOnReferenceNumber(self, number):
+    args = collections.OrderedDict()
+    if isinstance(number,GetShopBaseClass): 
+      args["number"]=json.dumps(number.__dict__)
+    else:
+      try:
+        args["number"]=json.dumps(number)
+      except (ValueError, AttributeError):
+        args["number"]=number
+    data = EmptyClass()
+    data.args = args
+    data.method = "doesUserExistsOnReferenceNumber"
+    data.interfaceName = "core.usermanager.IUserManager"
+    return self.communicationHelper.sendMessage(data)
+
   def findUsers(self, searchCriteria):
     args = collections.OrderedDict()
     if isinstance(searchCriteria,GetShopBaseClass): 

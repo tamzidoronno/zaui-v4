@@ -1,6 +1,7 @@
 package com.thundashop.core.hotelbookingmanager;
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,6 +28,7 @@ public class BookingReference extends DataCommon {
     public boolean payedFor = false;
     public long orderId;
     Date failed = null;
+    public String userId = "";
     
     public boolean isApprovedForCheckin(String roomId) {
         if(isApprovedForCheckIn.containsKey(roomId)) {

@@ -1,10 +1,73 @@
-fsdafs
 <?
-for($i = 0; $i < 12; $i++) {
-    echo "Mnd $i<br>";
-}
-?>Room type
-<select> </select>
+$time = time();
+$dates = array();
+$time = time();
 
-<a href='?page=<? echo $this->getConfig()->summaryPage; ?>&subpage=summary&partner=true'><div class="continue_to_summary" nextpage="">Fortsett</div>
-</a>
+$alreadySelected = $this->getBookedPartnerDays();
+
+for($i = 0; $i < 18; $i++) {
+    $year = date("Y", $time);
+    $month = date("m", $time);
+    if(!isset($dates[$year])) {
+        $dates[$year] = $this->getDates($year);
+    }
+    $days = $dates[$year][$month];
+    
+    echo "<span class='outer_company_calendar'>";
+    echo "<span class='company_calendar'>";
+    echo "<span class='company_cal_header'>";
+    echo date("M - Y", $time) ."</span>";
+    $time = strtotime("+1 month", $time);
+    $first = true;
+    echo "<span class='caldate' style='float:left; padding-top: 5px;'><input type='checkbox' class='monthcheckbox checkbox'></span>";
+    echo "<span class='caldate datelabel'>" . $this->__w("Mo") . "</span>";
+    echo "<span class='caldate datelabel'>" . $this->__w("Tu") . "</span>";
+    echo "<span class='caldate datelabel'>" . $this->__w("We") . "</span>";
+    echo "<span class='caldate datelabel'>" . $this->__w("Th") . "</span>";
+    echo "<span class='caldate datelabel'>" . $this->__w("Fr") . "</span>";
+    echo "<span class='caldate datelabel'>" . $this->__w("Sa") . "</span>";
+    echo "<span class='caldate datelabel lastone'>" . $this->__w("Su") . "</span>";
+    
+    foreach($days as $week => $weekDays) {
+        echo "<span class='calweek'>";
+        $diff = 7 - sizeof($weekDays);
+            echo "<span class='caldate checkbox'><input type='checkbox' class='weekcheckbox'></span>";
+        if($first) {
+            for($j = 0; $j < $diff; $j++) {
+                echo "<span class='caldate emptypadding'>&nbsp;</span>";
+            }
+        }
+        $originalWeekDays = $weekDays;
+        $weekDays = array_keys($weekDays);
+        foreach($weekDays as $weekDay) {
+            $lastOne = "";
+            if(((sizeof($weekDays) == 7) || $first) && $weekDays[sizeof($weekDays)-1] == $weekDay) {
+                $lastOne = "lastone";
+            }
+            $selected = "";
+            if(in_array($originalWeekDays[$weekDay] . "-" . $year, $alreadySelected)) {
+                $selected = "selected";
+            }
+            echo "<span class='caldate $lastOne $selected' day='".$originalWeekDays[$weekDay]."' year='".$year."'>".$weekDay."</span>";
+        }
+        $first= false;
+        echo "</span>";
+   }
+    echo "</span>";
+    echo "</span>";
+    
+}
+echo "<div style='clear:both;'></div>";
+?>
+<? echo $this->__w("Room type"); ?><br>
+<select class='company_room_selection'>
+    <?
+    $products = $this->getHotelRooms();
+    $foundroom = 0;
+    foreach ($products as $product) {
+        echo "<option value='".$product->id."'>".  $product->price . " NOK ". $product->name . "</option>";
+    }
+    ?>
+</select>
+<br><br>
+<div class="continue_to_summary" summarypage='<? echo $this->getConfig()->summaryPage; ?>' nextpage="" >Fortsett</div>

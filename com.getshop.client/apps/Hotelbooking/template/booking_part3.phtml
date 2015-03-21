@@ -18,7 +18,7 @@ $periode = $this->__w("night");
             <h1>REFERANSEKODE</h1><div class="seperator"></div>
            <div class="col-33">
                <span class="contact_text">Skriv din referansekode</span>
-               <span class="contact_input"><input type="text" gsname="name_1" value="" class=""></span>
+               <span class="contact_input"><input type="text" gsname="referenceNumber" value="<? echo $this->getPost("referenceNumber"); ?>" class="<? echo $this->validateInput("referenceNumber"); ?>"></span>
            </div><br>
             <?
         }
@@ -46,7 +46,7 @@ $periode = $this->__w("night");
                 if(!$this->partnerShipChecked()) {
                     echo '<div class="continue_to_cart_button common_input" gstype="submit">'.$continueCartButtonText.'</div>';
                 } else {
-                    echo '<div class="continue_to_cart_button common_input" gstype="submit">'.$this->__w("Complete").'</div>';
+                    echo '<div class="complete_partner_checkout">'.$this->__w("Complete").'</div>';
                 }
                 ?>
             </div>

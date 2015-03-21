@@ -72,20 +72,7 @@ app.Hotelbooking = {
         };
         var event = thundashop.Ajax.createEvent('', 'checkavailability', $(this), data);
         thundashop.Ajax.postWithCallBack(event, function (result) {
-            result = parseInt(result);
-            if (result <= 0) {
-                $('.Hotelbooking .room_available').css('padding-top', '20px');
-                $('.Hotelbooking .error_on_check').hide();
-                if (result === -1) {
-                    $('.Hotelbooking .date_before_start').show();
-                }
-                if (result === -2) {
-                    $('.Hotelbooking .end_before_start').show();
-                }
-                app.Hotelbooking.setSize();
-            } else {
-                thundashop.common.goToPage(nextpage);
-            }
+            thundashop.common.goToPage(nextpage);
         });
     },
     changeBookingDate: function () {
@@ -114,8 +101,6 @@ app.Hotelbooking = {
             data[name] = $(this).val();
         });
 
-        data['mvaregistered'] = $('.booking_contact_data [gsname="mvaregistered"]').is(':checked');
-        data['partnershipdeal'] = $('.booking_contact_data [gsname="partnershipdeal"]').is(':checked');
         data['customer_type'] = $('.booking_contact_data [gsname="customer_type"]:checked').val();
         var event = thundashop.Ajax.createEvent('', 'setBookingData', $(this), data);
         if ($(this).attr('gsname') === "mvaregistered" || $(this).attr('gsname') === "customer_type") {
@@ -272,6 +257,86 @@ app.Hotelbooking = {
         tooltip.show();
     },
     
+    selectMonth : function() {
+        var checked = $(this).is(':checked');
+        var cal = $(this).closest('.company_calendar');
+        cal.find('.weekcheckbox').each(function() {
+            if(checked) {
+                $(this).attr('checked','checked');
+            } else {
+                $(this).attr('checked',null);
+            }
+            $(this).change();
+        });
+    },
+    
+    weekCheckBox : function() {
+        var checked = $(this).is(':checked');
+        $(this).closest('.calweek').find('.caldate').each(function() {
+            if($(this).hasClass('emptypadding')) {
+                return;
+            }
+        if($(this).find('input[type="checkbox"]').length > 0) {
+            return;
+        }
+            if(checked) {
+                $(this).addClass('selected');
+            } else {
+                $(this).removeClass('selected');
+            }
+        });
+    },
+    
+    selectDay : function() {
+        if($(this).find('input[type="checkbox"]').length > 0) {
+            return;
+        }
+        if($(this).hasClass('emptypadding')) {
+            return;
+        }
+        if($(this).hasClass('datelabel')) {
+            return;
+        }
+        if($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        } else {
+            $(this).addClass('selected');
+        }
+    },
+    
+    continueToSummary : function() {
+        var days = [];
+        
+        $('.caldate').each(function() {
+            if($(this).hasClass('selected')) {
+                var day = $(this).attr('day');
+                var year = $(this).attr('year');
+                days.push(day + "-" + year);
+            }
+        });
+        var pageId = $(this).attr('summarypage');
+        
+        var data = {
+            "days" : days,
+            "product" : $('.company_room_selection').val()
+        }
+        
+        var event = thundashop.Ajax.createEvent('','doPartnerBooking',$(this), data);
+        
+        thundashop.Ajax.postWithCallBack(event, function(data) {
+            if(data === "ok") {
+                
+                thundashop.common.goToPage(pageId+"&subpage=summary&partner=true");
+            } else {
+                alert('Can not check in');
+            }
+        });
+    },
+    complete_partner_checkout: function() {
+        var event = thundashop.Ajax.createEvent('','completePartnerCheckout',$(this),{});
+        thundashop.Ajax.post(event);
+    },
+    
     initEvents: function () {
         $(document).on('click', '.Hotelbooking .check_available_button', app.Hotelbooking.checkAvailability);
         $(document).on('change', '.Hotelbooking #ordertype', app.Hotelbooking.changeOrderType);
@@ -296,6 +361,11 @@ app.Hotelbooking = {
         $(document).on('keyup', '.Hotelbooking .searchcustomerinput', app.Hotelbooking.searchCustomer);
         $(document).on('click', '.Hotelbooking .searchcustomerbutton', app.Hotelbooking.searchCustomer);
         $(document).on('click', '.Hotelbooking .selectcustomer', app.Hotelbooking.selectCustomer);
+        $(document).on('click', '.Hotelbooking .monthcheckbox', app.Hotelbooking.selectMonth);
+        $(document).on('click', '.Hotelbooking .caldate', app.Hotelbooking.selectDay);
+        $(document).on('click', '.Hotelbooking .continue_to_summary', app.Hotelbooking.continueToSummary);
+        $(document).on('click', '.Hotelbooking .complete_partner_checkout', app.Hotelbooking.complete_partner_checkout);
+        $(document).on('change', '.Hotelbooking .weekcheckbox', app.Hotelbooking.weekCheckBox);
         $(document).on('click', '.Hotelbooking .continue_to_cart_button', app.Hotelbooking.animateNext);
         $(document).on('mouseover', '.Hotelbooking .room_selection_2 .fa-info-circle', this.showToolTip);
         $(document).on('mouseout', '.Hotelbooking .room_selection_2 .fa-info-circle', this.hideToolTip);

@@ -1,4 +1,5 @@
 <?
+/* @var $this \ns_d16b27d9_579f_4d44_b90b_4223de0eb6f2\Hotelbooking */
 $nightText = $this->__w("night");
 $nightsText = $this->__w("nights");
 $inText = $this->__w("with");
@@ -10,16 +11,17 @@ $bookTime = $this->__w("Booked time periode");
         <h1><? echo $this->__w("Summary"); ?></h1>
     </div>
     <div class="seperator"></div>
-    <div class='price_row'>
-        <? echo $bookTime; ?>
-        <span class='right_aligned_price'>
-            <?
-            echo date("d. M Y", $this->getStart()) . " " . $this->__w("to") . " " . date("d. M Y", $this->getEnd());
-            ?>
-        </span>
-    </div>
-
+    <? if(!$this->partnerShipChecked()) { ?>
+        <div class='price_row'>
+            <? echo $bookTime; ?>
+            <span class='right_aligned_price'>
+                <?
+                echo date("d. M Y", $this->getStart()) . " " . $this->__w("to") . " " . date("d. M Y", $this->getEnd());
+                ?>
+            </span>
+        </div>
     <?
+    }
     $total = 0;
     $totalDiff = 0;
     $cart = $this->getApi()->getCartManager()->getCart();
@@ -81,5 +83,8 @@ $bookTime = $this->__w("Booked time periode");
     echo "<div class='summary_total'>";
     echo "<div class='price_summary'>" . $this->__w("Total price") . "<span class='right_aligned_price'>" . $total . " kr" . "</span></div>";
     echo "</div>";
+    if($this->partnerShipChecked()) {
+        echo $this->__w("* The rooms are being billed monthly in advanced");
+    }
     ?>
 </div>

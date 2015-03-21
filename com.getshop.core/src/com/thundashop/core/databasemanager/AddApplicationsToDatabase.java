@@ -53,17 +53,17 @@ public class AddApplicationsToDatabase {
         allowed2.add("large");
         allowed2.add("xlarge");
 
-        Application informationScreen = createSettings("InformationScreen",
-                "b01e9b84-f8d3-46f8-87c3-07eeaf964e20",
+        Application lasgruppen = createSettings("LasGruppenOrderSchema",
+                "7004f275-a10f-4857-8255-843c2c7fb3ab",
                 allowed2,
                 "",
                 Application.Type.Marketing, false);
-        informationScreen.isPublic = false;
-        informationScreen.isFrontend = true;
-        informationScreen.moduleId = "other";
-        informationScreen.allowedStoreIds = new ArrayList();
-        informationScreen.allowedStoreIds.add("cf103c26-a672-4a6e-bd3c-67ed24b3360e");
-        apps.add(informationScreen);
+        lasgruppen.isPublic = false;
+        lasgruppen.isFrontend = true;
+        lasgruppen.moduleId = "other";
+        lasgruppen.allowedStoreIds = new ArrayList();
+        lasgruppen.allowedStoreIds.add("1e647711-6624-40fd-807e-7673250accc4");
+        apps.add(lasgruppen);
         
 //        Application wilhelmsenHouseVisma = createSettings("WilhelmsenHouseVisma",
 //                "37d409be-1207-45e8-bf3b-6465442b58d9",

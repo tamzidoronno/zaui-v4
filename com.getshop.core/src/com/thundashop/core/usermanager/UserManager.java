@@ -65,6 +65,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             try {
                 UserStoreCollection userStoreCollection = getUserStoreCollection(dataCommon.storeId);
                 if (dataCommon instanceof User) {
+                    System.out.println(((User)dataCommon).emailAddress);
                     userStoreCollection.addUserDirect((User) dataCommon);
                 }
                 if (dataCommon instanceof LoginHistory) {

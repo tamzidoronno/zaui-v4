@@ -156,6 +156,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         reference.roomsReserved = roomInfo;
         if(additionalInfo.customerReference != null && !additionalInfo.customerReference.isEmpty()) {
             reference.userId = userManager.getUserByReference(additionalInfo.customerReference).id;
+            reference.partnerReference = true;
         }
         if(additionalInfo.userId != null && !additionalInfo.userId.isEmpty()) {
             reference.userId = userManager.getUserById(additionalInfo.userId).id;
@@ -474,12 +475,15 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         message = message.replaceAll("\\{name\\}", name);
         message = message.replaceAll("\\{referenceNumber\\}", reference.bookingReference + "");
         String contacts = "";
-        for (int i = 0; i < reference.contact.names.size(); i++) {
-            contacts += reference.contact.names.get(i) + "<br>";
-            contacts += reference.contact.phones.get(i) + "<br>";
+        for(RoomInformation roomReserved : reference.roomsReserved) {
+            for(Visitors visitor : roomReserved.visitors) {
+                contacts += visitor.name + "<br>";
+                contacts += visitor.phone + "<br>";
+                contacts += visitor.email + "<br>";
+            }
         }
+        
         message = message.replaceAll("\\{contacts\\}", contacts);
-
         Order order = orderManager.getOrderByReference(reference.bookingReference + "");
         if (order != null) {
             message = message.replaceAll("\\{roomName\\}", order.cart.getItems().get(0).getProduct().name + "");

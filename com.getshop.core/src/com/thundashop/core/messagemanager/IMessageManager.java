@@ -2,6 +2,8 @@ package com.thundashop.core.messagemanager;
 
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Send emails using the messagemanager.
@@ -18,6 +20,21 @@ public interface IMessageManager  {
      * @param fromName The name of the sender.
      */
     public void sendMail(String to, String toName, String subject, String content, String from, String fromName);
+    
+    /**
+     * Sending a mail with attachments, 
+     * 
+     * Map<Key, Value> - Key = FileName in attchments, Value = Base64 encoded stuff
+     * 
+     * @param to
+     * @param toName
+     * @param subject
+     * @param content
+     * @param from
+     * @param fromName
+     * @param attachments 
+     */
+    public void sendMailWithAttachments(String to, String toName, String subject, String content, String from, String fromName, HashMap<String,String> attachments);
     
     /**
      * Get how many messages a user has sent.

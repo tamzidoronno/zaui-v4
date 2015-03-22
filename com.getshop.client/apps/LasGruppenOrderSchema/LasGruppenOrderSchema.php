@@ -15,6 +15,7 @@
 namespace ns_7004f275_a10f_4857_8255_843c2c7fb3ab;
 
 class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
+    public static $url = "http://20192.getshop.com";
     public function getDescription() {
         return "TEST";
     }
@@ -31,6 +32,19 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
         $company = $this->getApi()->getUtilManager()->getCompanyFromBrReg($_POST['data']['number']);
         echo json_encode($company);
         die();
+    }
+    
+    public function downloadPdf() {
+        $_SESSION['lasgruppen_pdf_data'] = json_encode($_POST);
+        
+        if (isset($_POST['data']['page4']['emailCopy']) && $_POST['data']['page4']['emailCopy']) {
+            $address = LasGruppenOrderSchema::$url."/scripts/generatePdfLasgruppen.php?id=" . session_id();
+            session_write_close();
+            $content = $this->getApi()->getUtilManager()->getBase64EncodedPDFWebPage($address);
+            $attachments = [];
+            $attachments['bestilling.pdf'] = htmlentities($content);
+            $this->getApi()->getMessageManager()->sendMailWithAttachments($_POST['data']['page4']['emailCopy'], $_POST['data']['page4']['emailCopy'], "Bestilling fra Certego", "", "Certego", "No_replay@certego.no", $attachments);
+        }
     }
 
 }

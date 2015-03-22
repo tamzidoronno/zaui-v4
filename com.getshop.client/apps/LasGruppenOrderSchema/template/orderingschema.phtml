@@ -8,9 +8,9 @@
             <table>
                 <tr><td class='td_col_1' colspan='2'><b>Informasjon om rekvirent</b></td></tr>
                 <tr><td class='td_col_1'>Systemnummer*</td><td><input class='systemnumber_uppercase' required='true' type='text'id="main_system_number"/></td></tr>
-                <tr><td class='td_col_1'>Navn*</td><td><input required='true' type='text'/></td></tr>
-                <tr><td>Epost*</td><td><input required='true' type='text' type_email='true'/></td></tr>
-                <tr><td>Mobiltelefon*</td><td><input required='true' type='text' type_number='true'/></td></tr>
+                <tr><td class='td_col_1'>Navn*</td><td><input required='true' type='text' id="main_name"/></td></tr>
+                <tr><td>Epost*</td><td><input required='true' type='text' type_email='true' id="main_email"/></td></tr>
+                <tr><td>Mobiltelefon*</td><td><input required='true' type='text' type_number='true' id="main_cell"/></td></tr>
             </table>
         </div>
     </div>
@@ -28,10 +28,10 @@
         <div class='col col2'>
             <table>
                 <tr><td class='td_col_1' colspan='2'><b>&nbsp;</b></td></tr>
-                <tr><td>Referanse*</td><td><input required='true' type='text'/></td></tr>
+                <tr><td>Referanse*</td><td><input required='true' type='text' id="invoice_reference"/></td></tr>
                 <tr><td>Mobiltelefon*</td><td><input id="invoice_cellphone" required='true' type_number='true' type='text'/></td></tr>
                 <tr><td>E-post adresse</td><td><input type='text'id="invoice_emailaddress" type_email='true'/></td></tr>
-                <tr><td>Kundenr</td><td><input type='text'/></td></tr>
+                <tr><td>Kundenr</td><td><input type='text' id="invoice_cusomer_number"/></td></tr>
             </table>
         </div>
     </div>
@@ -42,13 +42,7 @@
 </div>
 
 
-
-
-
-
-
 <!-- PAGE 2 -->
-
 <div class='orderpage order_page2'  pageNumer='2'>
     <div class="pagetitle">
         Nøkler og Sylindrer
@@ -64,9 +58,9 @@
 
     <div class='col col_0 keys_setup'>
         Legg til nøklene
-        <table>
+        <table id="keys_setup_table">
             <tr><th>Systemnr.</th><th>Antall</th><th>Merking</th></tr>
-            <tr class='keys_template_row'><td><input type='textfield' class="systemnumber systemnumber_uppercase"></td><td><input type='textfield'></td><td><input type='textfield'></td></tr>
+            <tr class='keys_template_row'><td><input type='textfield' class="systemnumber systemnumber_uppercase"></td><td><input type='textfield' class="keys_count"></td><td><input class="keys_marking" type='textfield'></td></tr>
         </table>
         <div class='shop_button add_key_row'>
             +1 Linje
@@ -86,21 +80,21 @@
             </tr>
             <tr class='cylinder_template_row'>
                 <td><input type='textfield' class="systemnumber systemnumber_uppercase"></td>
-                <td><input type='textfield' style="width: 25px;"></td>
-                <td><input type='textfield'></td>
-                <td><input type='textfield'></td>
-                <td><input type='textfield' style="width: 240px"></td>
+                <td><input type='textfield' style="width: 25px;" class='cylinder_count'></td>
+                <td><input type='textfield' class='cylinder_type'></td>
+                <td><input type='textfield' class='door_thickness'></td>
+                <td><input type='textfield' style="width: 240px" class='keys_that_fits'></td>
                 <td>
-                    <select>
-                        <option>Overflate</option>
-                        <option>Forkrommet matt</option>
-                        <option>Forkrommet</option>
-                        <option>Messing matt</option>
-                        <option>Messing polert</option>
-                        <option>Sort rustikk</option>
+                    <select class='texture'>
+                        <option value='overflate'>Overflate</option>
+                        <option value='Forkrommet matt'>Forkrommet matt</option>
+                        <option value='Forkrommet'>Forkrommet</option>
+                        <option value='Messing matt'>Messing matt</option>
+                        <option value='Messing polert'>Messing polert</option>
+                        <option value='Sort rustikk'>Sort rustikk</option>
                     </select>
                 </td>
-                <td><input type='textfield'></td>
+                <td><input type='textfield' class='cylinder_description'></td>
             </tr>
         </table>
         <div class='shop_button add_cylinder_row'>
@@ -135,22 +129,22 @@
         <div class="select_stores" radio_required='true'>
             Velg butikk
             <table>
-                <tr><td><input type='radio' name="selectedstore" /> Tromsø</td><td><input type='radio' name="selectedstore" /> Moss</td></tr>
-                <tr><td><input type='radio' name="selectedstore" /> Trondheim</td><td><input type='radio' name="selectedstore" /> Fredrikstad</td></tr>
-                <tr><td><input type='radio' name="selectedstore" /> Bergen</td><td><input type='radio' name="selectedstore" /> Halden</td></tr>
-                <tr><td><input type='radio' name="selectedstore" /> Stavanger</td><td><input type='radio' name="selectedstore" /> Gjøvik</td></tr>
-                <tr><td><input type='radio' name="selectedstore" /> Kristiansand</td><td><input type='radio' name="selectedstore" /> Hamar</td></tr>
-                <tr><td><input type='radio' name="selectedstore" /> Sandefjord</td><td><input type='radio' name="selectedstore" /> Kongsvinger</td></tr>
-                <tr><td><input type='radio' name="selectedstore" /> Drammen</td><td><input type='radio' name="selectedstore" /> Lillehammer</td></tr>
-                <tr><td><input type='radio' name="selectedstore" /> Asker</td><td><input type='radio' name="selectedstore" /> Otta</td></tr>
-                <tr><td><input type='radio' name="selectedstore" /> Bærum</td><td><input type='radio' name="selectedstore" /> Gardermoen</td></tr>
-                <tr><td><input type='radio' name="selectedstore" /> Oslo</td><td></td></tr>
+                <tr><td><input type='radio' name="selectedstore" value="Tromsø"/> Tromsø</td><td><input type='radio' name="selectedstore" value="Moss"/> Moss</td></tr>
+                <tr><td><input type='radio' name="selectedstore" value="Trondheim"/> Trondheim</td><td><input type='radio' name="selectedstore" value="Fredrikstad"/> Fredrikstad</td></tr>
+                <tr><td><input type='radio' name="selectedstore" value="Bergen"/> Bergen</td><td><input type='radio' name="selectedstore" value="Halden"/> Halden</td></tr>
+                <tr><td><input type='radio' name="selectedstore" value="Stavanger"/> Stavanger</td><td><input type='radio' name="selectedstore" value="Gjøvik"/> Gjøvik</td></tr>
+                <tr><td><input type='radio' name="selectedstore" value="Kristiansand"/> Kristiansand</td><td><input type='radio' name="selectedstore" value="Hamar"/> Hamar</td></tr>
+                <tr><td><input type='radio' name="selectedstore" value="Sandefjord"/> Sandefjord</td><td><input type='radio' name="selectedstore" value="Kongsvinger"/> Kongsvinger</td></tr>
+                <tr><td><input type='radio' name="selectedstore" value="Drammen"/> Drammen</td><td><input type='radio' name="selectedstore" value="Lillehammer"/> Lillehammer</td></tr>
+                <tr><td><input type='radio' name="selectedstore" value="Asker"/> Asker</td><td><input type='radio' name="selectedstore" value="Otta"/> Otta</td></tr>
+                <tr><td><input type='radio' name="selectedstore" value="Bærum"/> Bærum</td><td><input type='radio' name="selectedstore" value="Gardermoen"/> Gardermoen</td></tr>
+                <tr><td><input type='radio' name="selectedstore" value="Oslo"/> Oslo</td><td></td></tr>
             </table>
             <div>
                 <b>Informasjon om person som skal hente i butikk</b>
                 <table>
-                    <tr><td>Navn*</td><td><input type='text' required='true'/></td></tr>
-                    <tr><td>Mobiltelefon*</td><td><input type='text' required='true' type_number='true'/></td></tr>
+                    <tr><td>Navn*</td><td><input type='text' required='true' id='store_deliver_name'/></td></tr>
+                    <tr><td>Mobiltelefon*</td><td><input type='text' required='true' type_number='true' id='store_delivery_cellphone'/></td></tr>
                 </table>
             </div>
         </div>
@@ -160,7 +154,7 @@
         <div class="extratext_shipping extratext_shipping_3">Text express over natten</div>
         
         <div class="specialsending">
-            <textarea placeholder="Oppgi ekstrainformasjon om forsendelsen"></textarea>
+            <textarea id="shipment_extra_description" placeholder="Oppgi ekstrainformasjon om forsendelsen"></textarea>
         </div>
     </div>
     <div class='shippinginformation' style="border-top: solid 1px #DDD;">
@@ -194,7 +188,6 @@
 
 
 <!---- PAGE 5 ---->
-
 <div class='orderpage order_page4'  pageNumer='4'>    
     <div class="pagetitle">
         Sikkerhetsprosedyre
@@ -207,7 +200,7 @@
         <br/>
         <br/>
         Send kvittering til e-mail
-        <br/> <input type='text' style='width: 300px;'/>
+        <br/> <input type='text' style='width: 300px;' class="send_copy_email"/>
     </div>
     
     <div class='col col_1 securityneeded'>
@@ -222,9 +215,8 @@
             <br/>
             <br/>
             Send kvittering til e-mail
-            <br/> <input type='text' style='width: 300px;'/>
+            <br/> <input type='text' style='width: 300px;' class="send_copy_email"/>
             <br/>
-            
         </div>
 
         <div class='signaturesecurity'>
@@ -234,13 +226,12 @@
         </div>
     </div>
     
-    
     <div class='col col_2'>
-        <textarea placeholder='Informasjon til systemavdelingen'></textarea>
+        <textarea id="order_extra_info" placeholder='Informasjon til systemavdelingen'></textarea>
     </div>
     <div class='button_area'>
         <div class='shop_button prev'>Tilbake</div>
-        <div class='shop_button next' style='display: none'> Neste </div>
+        <div class='shop_button next' style='display: none'>Neste</div>
     </div>
 </div>
 
@@ -268,7 +259,7 @@
     </div>
 </div>
 
-<div class='orderpage order_page6'  pageNumer='6'>    
+<div class='orderpage order_page6'  pageNumer='6'>
     <div class='col col_0'>
         <center><h1>Takk for din henvendelse </h1></center>
     </div>

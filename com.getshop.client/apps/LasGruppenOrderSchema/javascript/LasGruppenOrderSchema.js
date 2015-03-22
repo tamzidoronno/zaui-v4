@@ -1,5 +1,6 @@
 app.LasGruppenOrderSchema = {
     addedRows: false,
+    inProgress: false,
     isCompany: false,
     
     init: function() {
@@ -21,6 +22,118 @@ app.LasGruppenOrderSchema = {
         $(document).on('change', '#invoice_postcode', app.LasGruppenOrderSchema.changeDeliveryInformation);
         $(document).on('change', '#invoice_cellphone', app.LasGruppenOrderSchema.changeDeliveryInformation);
         $(document).on('change', '#invoice_emailaddress', app.LasGruppenOrderSchema.changeDeliveryInformation);
+    },
+
+    saveData: function(target, callback, silent) {
+        if (app.LasGruppenOrderSchema.inProgress) {
+            return;
+        }
+        
+        app.LasGruppenOrderSchema.inProgress = true;
+        var keys = [];
+        
+        if ($('#selection_key').is(':checked')) {
+            $('#keys_setup_table .order_key_row_to_add').each(function() {
+                var keySetting = {
+                    systemNumber : $(this).find('.systemnumber').val(),
+                    count : $(this).find('.keys_count').val(),
+                    marking : $(this).find('.keys_marking').val()
+                };
+
+                keys.push(keySetting);
+            });
+        }
+        
+        var cylinders = [];
+        
+        if ($('#cylindersoption').is(':checked')) {
+            $('.cylinder_setup .order_cylinder_row_to_add').each(function() {
+                var cylinder = {
+                    systemNumber : $(this).find('.systemnumber').val(),
+                    count : $(this).find('.cylinder_count').val(),
+                    cylinder_type : $(this).find('.cylinder_type').val(),
+                    door_thickness : $(this).find('.door_thickness').val(),
+                    keys_that_fits : $(this).find('.keys_that_fits').val(),
+                    texture : $(this).find('.texture').val(),
+                    cylinder_description : $(this).find('.cylinder_description').val()
+                };
+
+                cylinders.push(cylinder);
+            });
+        }
+        
+        var copyEmail = "";
+        $('.send_copy_email').each(function() {
+            if ($(this).val()) {
+                copyEmail = $(this).val();
+            }
+        });
+        
+        var data = {
+            page1 : {
+                contact: {
+                    systemnumber: $('#main_system_number').val(),
+                    name: $('#main_name').val(),
+                    email: $('#main_email').val(),
+                    cellphone: $('#main_cell').val(),
+                },
+                invoice: {
+                    vatnumber: $('#companyid').val(),
+                    companyName: $('#invoice_company_name').val(),
+                    address: $('#invoice_address').val(),
+                    postnumer: $('#invoice_postcode').val(),
+                    reference: $('#invoice_reference').val(),
+                    cellphone: $('#invoice_cellphone').val(),
+                    email: $('#invoice_emailaddress').val(),
+                    customerNumber: $('#invoice_cusomer_number').val()
+                }
+            },
+            
+            page2: {
+                keys : $('#selection_key').is(':checked'),
+                cylinders : $('#cylindersoption').is(':checked'),
+                keys_setup : keys,
+                cylinder_setup : cylinders
+            },
+            
+            page3: {
+                shipping: $("input[name=shippingtype]:checked").val(),
+                
+                deliveryInfo: {
+                    name: $('#delivery_company_name').val(),
+                    address: $('#delivery_address').val(),
+                    postnumber: $('#delivery_postcode').val(),
+                    cellphone: $('#delivery_cellphone').val(),
+                    emailaddress: $('#delivery_emailaddress').val(),
+                },
+                
+                storeDeliveryInformation: {
+                    name: $('#store_deliver_name').val(),
+                    cellphone: $('#store_delivery_cellphone').val(),
+                    store: $("input[name=selectedstore]:checked").val()
+                },
+                
+                extrainformation : $('#shipment_extra_description').val()
+            },
+            
+            page4: {
+                securityNeeded: $('#selection_key').is(':checked'),
+                emailCopy: copyEmail,
+                orderExtraInfo : $("#order_extra_info").val(),
+                securitytype : $("input[name=security]:checked").val(),
+                pincode: $('#pincode_textfield').val()         
+            }
+        };
+        
+        data.silent = silent;
+        
+        var event = thundashop.Ajax.createEvent("", "downloadPdf", target, data);
+        thundashop.Ajax.postWithCallBack(event, function() {
+            app.LasGruppenOrderSchema.inProgress = false;
+            if (callback) {
+                callback();
+            }
+        });
     },
     
     validateEmail: function(email) {
@@ -148,17 +261,22 @@ app.LasGruppenOrderSchema = {
         }
         
         if (pageNumber === 5) {
-            
-            
             if ($('#signature').is(':checked')) {
-                alert('Last ned pdf  Kommer');
+                app.LasGruppenOrderSchema.saveData(this, function() {
+                    window.location = "/scripts/downloadPdfLasGruppen.php";
+                }, true);
+                
                 return;
             } else {
                 if (!app.LasGruppenOrderSchema.checkPinCodeLength()) {
                     alert('Pinkoden må være minimum 6 tall/bokstaver');
                     return;
                 }
+                
+                app.LasGruppenOrderSchema.saveData(this);
             }
+            
+            return;
         }
         
         if ($('.LasGruppenOrderSchema [pageNumer="'+pageNumber+'"').length) {
@@ -276,6 +394,7 @@ app.LasGruppenOrderSchema = {
     addKeyRow: function() {
         var row = $('table tr.keys_template_row').clone();
         row.removeClass('keys_template_row');
+        row.addClass('order_key_row_to_add');
         row.find('.systemnumber').val($('#main_system_number').val());
         $('.keys_setup table').append(row);
     },
@@ -315,6 +434,7 @@ app.LasGruppenOrderSchema = {
     addCylinderRow: function() {
         var row = $('table tr.cylinder_template_row').clone();
         row.removeClass('cylinder_template_row');
+        row.addClass('order_cylinder_row_to_add');
         row.find('.systemnumber').val($('#main_system_number').val());
         $('.cylinder_setup table').append(row);
     }

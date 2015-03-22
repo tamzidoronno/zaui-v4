@@ -133,6 +133,7 @@
 "1030","No mode set."
 "1031","Tried to retreive a singelton application that is not singleton."
 "1032","Not enough rooms available"
+"1033","Klarte ikke å genere PDF."
 
 "1000001","The name attribute is invalid",
 "1000002","The entry you are trying to fecth does not exists.",

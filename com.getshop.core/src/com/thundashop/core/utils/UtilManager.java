@@ -4,16 +4,21 @@
  */
 package com.thundashop.core.utils;
 
+import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.utilmanager.data.FileObject;
-import com.thundashop.core.common.DatabaseSaver;
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.usermanager.data.Company;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,19 +31,19 @@ import org.springframework.stereotype.Component;
 public class UtilManager extends ManagerBase implements IUtilManager {
 
     public HashMap<String, FileObject> files = new HashMap();
-    
+
     @Autowired
     public BrRegEngine brRegEngine;
-    
+
     @Override
     public void dataFromDatabase(DataRetreived data) {
-        for(DataCommon tmpData : data.data) {
-            if(tmpData instanceof FileObject) {
-                files.put(tmpData.id, (FileObject)tmpData);
+        for (DataCommon tmpData : data.data) {
+            if (tmpData instanceof FileObject) {
+                files.put(tmpData.id, (FileObject) tmpData);
             }
         }
     }
-    
+
     @Override
     public Company getCompanyFromBrReg(String companyVatNumber) throws ErrorException {
         return brRegEngine.getCompany(companyVatNumber);
@@ -60,5 +65,62 @@ public class UtilManager extends ManagerBase implements IUtilManager {
     @Override
     public FileObject getFile(String id) throws ErrorException {
         return files.get(id);
+    }
+
+    @Override
+    public String getBase64EncodedPDFWebPage(String urlToPage) {
+        System.out.println(urlToPage);
+        String tmpPdfName = "/tmp/"+UUID.randomUUID().toString() + ".pdf";
+        boolean executed = executeCommand("/usr/bin/xvfb-run --server-args='-screen 10, 1920x1080x24' wkhtmltopdf -B 0 -L 0 -R 0 -T 0 " + urlToPage + " " + tmpPdfName);
+        
+        if (!executed) {
+            executed = executeCommand("wkhtmltopdf -B 0 -L 0 -R 0 -T 0  " + urlToPage + " " + tmpPdfName);
+        }
+        
+        if (!executed) {
+            throw new ErrorException(1033);
+        }
+        
+        File file = new File(tmpPdfName);
+        byte[] bytes;
+        try {
+            bytes = InvoiceManager.loadFile(file);
+            byte[] encoded = Base64.encodeBase64(bytes);
+            String encodedString = new String(encoded);
+            file.delete();
+            return encodedString;
+        } catch (IOException ex) {
+            throw new ErrorException(1033);
+        }
+    }
+    
+    private boolean executeCommand(String command) {
+        
+        try {
+            Process p = Runtime.getRuntime().exec(command);
+            
+            BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+            
+            System.out.println("=== 1 =====");
+            String d = "";
+            while ((d = stdInput.readLine()) != null) {
+                System.out.println(d);
+            }
+            
+            System.out.println("=====");
+            
+            while ((d = stdError.readLine()) != null) {
+                System.out.println(d);
+                if (d.contains("error"))
+                    return false;
+            }
+            
+            return true;
+        } catch (IOException e) {
+            System.out.println("exception happened - here's what I know: ");
+            e.printStackTrace();
+            return false;
+        }
     }
 }

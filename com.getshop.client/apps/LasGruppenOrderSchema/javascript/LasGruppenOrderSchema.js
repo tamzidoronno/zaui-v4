@@ -274,7 +274,22 @@ app.LasGruppenOrderSchema = {
                 }
                 
                 app.LasGruppenOrderSchema.saveData(this);
+            } 
+       }
+        
+        if (pageNumber === 6) {
+            var data = {
+                confirmationEmail : $($('.order_page5 input')[0]).val()
             }
+            
+            var me = this;
+            var event = thundashop.Ajax.createEvent("", "sendConfirmation", this, data);
+            thundashop.Ajax.postWithCallBack(event, function() {
+                if ($('.LasGruppenOrderSchema [pageNumer="'+pageNumber+'"').length) {
+                    $(me).closest('.orderpage').hide();
+                    $('.LasGruppenOrderSchema [pageNumer="'+pageNumber+'"').show();
+                }        
+            });
             
             return;
         }

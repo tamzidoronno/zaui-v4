@@ -28,6 +28,10 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
         $this->includefile("orderingschema");
     }
     
+    public function sendConfirmation() {
+        $this->sendMail($_POST['data']['confirmationEmail']);
+    }
+    
     public function getBrReg() {
         $company = $this->getApi()->getUtilManager()->getCompanyFromBrReg($_POST['data']['number']);
         echo json_encode($company);
@@ -38,13 +42,17 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
         $_SESSION['lasgruppen_pdf_data'] = json_encode($_POST);
         
         if (isset($_POST['data']['page4']['emailCopy']) && $_POST['data']['page4']['emailCopy']) {
-            $address = LasGruppenOrderSchema::$url."/scripts/generatePdfLasgruppen.php?id=" . session_id();
-            session_write_close();
-            $content = $this->getApi()->getUtilManager()->getBase64EncodedPDFWebPage($address);
-            $attachments = [];
-            $attachments['bestilling.pdf'] = htmlentities($content);
-            $this->getApi()->getMessageManager()->sendMailWithAttachments($_POST['data']['page4']['emailCopy'], $_POST['data']['page4']['emailCopy'], "Bestilling fra Certego", "", "Certego", "No_replay@certego.no", $attachments);
+            $this->sendMail($_POST['data']['page4']['emailCopy']);
         }
+    }
+    
+    private function sendMail($mailAddress) {
+        $address = LasGruppenOrderSchema::$url."/scripts/generatePdfLasgruppen.php?id=" . session_id();
+        session_write_close();
+        $content = $this->getApi()->getUtilManager()->getBase64EncodedPDFWebPage($address);
+        $attachments = [];
+        $attachments['bestilling.pdf'] = htmlentities($content);
+        $this->getApi()->getMessageManager()->sendMailWithAttachments($mailAddress, $mailAddress, "Bestilling fra Certego", "", "Certego", "No_replay@certego.no", $attachments);
     }
 
 }

@@ -1913,6 +1913,14 @@ class HotelBookingManager(object):
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 
+  def getAllTempAccesses(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "getAllTempAccesses"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getArxLog(self):
     args = collections.OrderedDict()
     data = EmptyClass()
@@ -2229,6 +2237,28 @@ class HotelBookingManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "stopReservation"
+    data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def tempGrantAccess(self, reference, roomId):
+    args = collections.OrderedDict()
+    if isinstance(reference,GetShopBaseClass): 
+      args["reference"]=json.dumps(reference.__dict__)
+    else:
+      try:
+        args["reference"]=json.dumps(reference)
+      except (ValueError, AttributeError):
+        args["reference"]=reference
+    if isinstance(roomId,GetShopBaseClass): 
+      args["roomId"]=json.dumps(roomId.__dict__)
+    else:
+      try:
+        args["roomId"]=json.dumps(roomId)
+      except (ValueError, AttributeError):
+        args["roomId"]=roomId
+    data = EmptyClass()
+    data.args = args
+    data.method = "tempGrantAccess"
     data.interfaceName = "core.hotelbookingmanager.IHotelBookingManager"
     return self.communicationHelper.sendMessage(data)
 

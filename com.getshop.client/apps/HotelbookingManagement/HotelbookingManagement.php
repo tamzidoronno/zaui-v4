@@ -212,7 +212,7 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
     
     public function stopReference() {
         $stoppedDate = date("M d, Y h:m:s A", strtotime($_POST['data']['stopDate']));
-        $this->getApi()->getHotelBookingManager()->markReferenceAsStopped($_POST['data']['refid'], $stoppedDate);
+        $this->getApi()->getHotelBookingManager()->stopReservation($_POST['data']['refid']);
     }
     
     public function getStarted() {

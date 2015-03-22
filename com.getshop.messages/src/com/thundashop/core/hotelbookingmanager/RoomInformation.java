@@ -2,7 +2,9 @@ package com.thundashop.core.hotelbookingmanager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RoomInformation implements Serializable {
     
@@ -14,7 +16,6 @@ public class RoomInformation implements Serializable {
     }
     
     public String roomId = "";
-    public String cartItemId = "";
     public List<Visitors> visitors = new ArrayList();
     public int roomState = 0;
 }

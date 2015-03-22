@@ -466,18 +466,18 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                     $start = strtotime("1 Jan " . ($start[1]) . " +" . ($start[0]-1) . " day");
                     $end = $dateRange[sizeof($dateRange)-1];
                     $end = explode("-", $end);
-                    $end = strtotime("1 Jan " . ($end[1]) . " +" . $end[0] . " day");
+                    $end = strtotime("1 Jan " . ($end[1]) . " +" . ($end[0]-1) . " day");
                     if(!$this->checkAvailabilityOnRange($start, $end, $productId)) {
                         $text = $this->__w("Sorry, we do not have any room available between {start} and {end} of this type. Try another one.");
-                        $text = str_replace("{start}", date("m-d-Y", $start),$text);
-                        $text = str_replace("{end}", date("m-d-Y", $end), $text);
+                        $text = str_replace("{start}", date("d-m-Y", $start),$text);
+                        $text = str_replace("{end}", date("d-m-Y", $end), $text);
                         echo $text . "<br>";
                         $errors = true;
                     } else {
                         $toReserve = new \stdClass();
                         $toReserve->start = $start;
                         $toReserve->end = $end;
-                        $toReserve->count = sizeof($dateRange);
+                        $toReserve->count = sizeof($dateRange)-1;
                         $reservations[] = $toReserve;
                     }
                     $dateRange = [];
@@ -794,11 +794,11 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         if($this->partnerShipChecked()) {
             $partnerReservations = $this->getpartnerReservatations();
             foreach($partnerReservations as $reservation) {
-                $mgr->addProductItem($this->getProductId(), $reservation->count, null);
+                $mgr->addProductItem($this->getProductId(), $reservation->count);
             }
         } else {
             for($i = 0; $i < $this->getRoomCount(); $i++) {
-                $mgr->addProductItem($this->getProductId(), $this->getDayCount(), null);
+                $mgr->addProductItem($this->getProductId(), $this->getDayCount());
             }
         }
     }
@@ -837,19 +837,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             $order = $this->getApi()->getOrderManager()->createOrderByCustomerReference($user->referenceKey);
         }
         
-        if($i != null) {
-            $startDate = date('M d, Y h:m:s A', strtotime("+".$i." months", $this->getStart()));
-            $endDate = date('M d, Y h:m:s A', strtotime("-1 day",strtotime("+".($i+1)." months", $this->getStart())));
-            $order->startDate = $startDate;
-            $order->endDate = $endDate;
-        } else {
-            $order->startDate = date('M d, Y h:m:s A', $this->getStart());
-            $order->endDate = date('M d, Y h:m:s A', $this->getEnd());
-        }
-        
-//        $this->startAdminImpersonation("OrderManager", "saveOrder");
-        $this->getApi()->getOrderManager()->saveOrder($order);
-//        $this->stopImpersionation();
         return $order;
     }
 
@@ -861,16 +848,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $productId = $this->getProduct()->id;
         $start = $this->getStart();
         $end = $this->getEnd();
-
-        $cart = $this->getApi()->getCartManager()->getCart();
-        $cartItems = array();
         
-        foreach($cart->items as $item) {
-            /* @var $item core_cartmanager_data_CartItem */
-            if($item->product->id == $productId) {
-                $cartItems[] = $item->cartItemId;
-            }
-        }
         $infodata = $this->getVisitorData();
         $additionaldata = new \core_hotelbookingmanager_AdditionalBookingInformation();
         $additionaldata->needHandicap = $this->getNeedHandicap();
@@ -946,11 +924,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $user = $this->createUser();
         $reference = $this->createReservation($user->id);
         if (($reference) > 0) {
-            $cartmgr = $this->getApi()->getCartManager();
-            $cartmgr->setReference($reference);
-            $order = $this->createOrder($user);
+            $orderId = $this->getApi()->getHotelBookingManager()->buildOrderForReservation($reference);
             $_GET['orderProcessed'] = true;
-            $_GET['orderId'] = $order->id;
+            $_GET['orderId'] = $orderId;
         } else {
             $_GET['failedreservation'] = true;
             $this->failedReservation = true;

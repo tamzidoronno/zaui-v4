@@ -829,10 +829,10 @@ class APICartManager {
 	* @throws ErrorException
 	*/
 
-	public function addMetaDataToProduct($productId, $metaData) {
+	public function addMetaDataToProduct($cartItemId, $metaData) {
 	     $data = array();
 	     $data['args'] = array();
-	     $data['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $data['args']["cartItemId"] = json_encode($this->transport->object_unset_nulls($cartItemId));
 	     $data['args']["metaData"] = json_encode($this->transport->object_unset_nulls($metaData));
 	     $data["method"] = "addMetaDataToProduct";
 	     $data["interfaceName"] = "core.cartmanager.ICartManager";
@@ -1670,6 +1670,37 @@ class APIHotelBookingManager {
 	}
 
 	/**
+	* Get all references
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function appendOrderToReservation($orderId, $referenceId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $data['args']["referenceId"] = json_encode($this->transport->object_unset_nulls($referenceId));
+	     $data["method"] = "appendOrderToReservation";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
+	* @return String
+	* @throws ErrorException
+	*/
+
+	public function buildOrderForReservation($reservationNumber) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["reservationNumber"] = json_encode($this->transport->object_unset_nulls($reservationNumber));
+	     $data["method"] = "buildOrderForReservation";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Check if a room is available in the given time periode.
 	* @param startDate The first day unix timestamp.
 	* @param endDate The last day unix timestamp.
@@ -1716,6 +1747,20 @@ class APIHotelBookingManager {
 	     $data = array();
 	     $data['args'] = array();
 	     $data["method"] = "checkForArxTransfer";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function checkForOrdersToGenerate() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "checkForOrdersToGenerate";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -2071,6 +2116,21 @@ class APIHotelBookingManager {
 	     $data['args'] = array();
 	     $data['args']["core_hotelbookingmanager_VismaSettings"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_VismaSettings));
 	     $data["method"] = "setVismaConfiguration";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Get all references
+	* @return void
+	* @throws ErrorException
+	*/
+
+	public function stopReservation($reservationNumber) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["reservationNumber"] = json_encode($this->transport->object_unset_nulls($reservationNumber));
+	     $data["method"] = "stopReservation";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
 	}

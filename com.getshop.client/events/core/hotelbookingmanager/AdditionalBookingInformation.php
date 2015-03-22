@@ -9,5 +9,8 @@ class core_hotelbookingmanager_AdditionalBookingInformation extends core_common_
 	/** @var String */
 	public $customerReference;
 
+	/** @var String */
+	public $userId;
+
 }
 ?>

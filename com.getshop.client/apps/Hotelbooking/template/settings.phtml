@@ -39,7 +39,7 @@ $config = $this->getConfig();
                Continue page id
             </td>
             <td>
-                <input type='text' gsname='contine_page' value="<? echo $this->getOrderPageId(); ?>">
+                <input type='text' gsname='contine_page' value="<? echo $this->getConfig()->continuePage; ?>">
             </td>
         </tr>
         <tr>
@@ -48,6 +48,14 @@ $config = $this->getConfig();
             </td>
             <td>
                 <input type='text' gsname='summaryPage' value="<? echo $this->getConfig()->summaryPage; ?>">
+            </td>
+        </tr>
+        <tr>
+            <td>
+               Company page id
+            </td>
+            <td>
+                <input type='text' gsname='companyPage' value="<? echo $this->getConfig()->companyPage; ?>">
             </td>
         </tr>
         <tr>

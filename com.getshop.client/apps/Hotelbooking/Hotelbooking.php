@@ -12,7 +12,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     var $errors = array();
     var $config;
     var $parkingProduct = null;
-
+    var $validationNeeded = null;
 
     function __construct() {
         
@@ -42,8 +42,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $settings->parkingSpots = $_POST['data']['parking_spots'];
         $settings->extraBookingInformation = $_POST['data']['extra_booking_information'];
         $settings->summaryPage = $_POST['data']['summaryPage'];
+        $settings->companyPage = $_POST['data']['companyPage'];
+        $settings->continuePage = $_POST['data']['contine_page'];
         $this->getFactory()->getApi()->getHotelBookingManager()->setBookingConfiguration($settings);
-        $this->setConfigurationSetting("contine_page", $_POST['data']['contine_page']);
     }
 
     public function updateNeedHandicap() {
@@ -62,46 +63,14 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return 0;
     }
 
+    /**
+     * @return \core_hotelbookingmanager_GlobalBookingSettings 
+     */
     public function getConfig() {
         if(!$this->config) {
             $this->config = $this->getApi()->getHotelBookingManager()->getBookingConfiguration();
         }
         return $this->config;
-    }
-    
-    public function getMinumRental() {
-        return $this->getConfig()->minRentalDays;
-    }
-
-    public function getDisplayRoomThumbnail() {
-        return $this->getConfig()->roomThumbNails;
-    }
-
-    public function showReferenceNumber() {
-        if($this->isEditorMode()) {
-            return true;
-        }
-        return $this->getConfig()->showReferenceNumber;
-    }
-    
-    public function searchCustomerBox() {
-        echo "<br>";
-        echo "Skriv inn navn på kunde:<br> ";
-        echo "<input type='text' class='searchcustomerinput'><input type='button' class='searchcustomerbutton' value='Søk opp kunde'></span>";
-        echo "<div class='searchresultarea'>";
-        echo "</div>";
-    }
-
-    function searchingCustomer() {
-        $users = $this->getApi()->getUserManager()->getAllUsers();
-        $searchval = $_POST['data']['value'];
-        foreach($users as $user) {
-            /* @var $user \core_usermanager_data_User */
-            $name = $user->fullName;
-            if(stristr($name, $searchval)) {
-                echo "<input type='button' value='Velg' class='selectcustomer' name='$name' referenceid='".$user->referenceKey."' phone='".$user->cellPhone."'> - " . $name . "<br>";
-            }
-        }
     }
     
     public function getParkingSpots() {
@@ -112,16 +81,8 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return $this->getConfig()->name;
     }
 
-    public function getServiceType() {
-        return $this->getConfig()->type;
-    }
-
     public function getDescription() {
         return "Hotelbooking";
-    }
-
-    public function getAvailablePositions() {
-        return "left";
     }
 
     function getNumberOfAvailableRooms($type, $needHandicap=false) {
@@ -169,14 +130,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     function getDayCount($realDayCount=false) {
-        if ($realDayCount && $this->getServiceType() == "storage") {
-            return $this->getMinumRental();
-        }
-        
-        if ($this->getServiceType() == "storage") {
-            return 1;
-        }
-        
         return round(($this->getEnd() - $this->getStart()) / 86400);
     }
 
@@ -188,12 +141,64 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $this->setStartDate($start);
         $this->setEndDate($end);
         $this->setProductId($product->id);
-
-        $numbers = $this->checkavailabilityFromSelection();
-        if ($numbers) {
-            echo $numbers;
-        }
     }
+    
+    function validateInput($name) {
+        if(!$this->validationNeeded) {
+            return "";
+        }
+        
+        $bookingData = $this->getBookingData();
+        if(!isset($bookingData[$name]) || $bookingData[$name] == "") {
+            return "invalid";
+        }
+        
+        $value = $bookingData[$name];
+        
+        if($name == "referenceNumber") {
+            if(!$this->getApi()->getUserManager()->doesUserExistsOnReferenceNumber($value)) {
+                return "invalid";
+            }
+            return "";
+        }
+        
+        if(stristr($name, "phone_")) {
+            if(!$this->startsWith($value, "9") && !$this->startsWith($value, "4")) {
+                return "invalid";
+            }
+            if(strlen($value) != 8) {
+                return "invalid";
+            }
+        }
+        
+        if(stristr($name, "email_")) {
+            if(!stristr($value, "@")) {
+                return "invalid";
+            }
+        }
+        
+        if(stristr($name, "name_")) {
+            if(!stristr($value, " ")) {
+                return "invalid";
+            }
+        }
+        
+        return "";
+    }
+    
+    function startsWith($haystack, $needle) {
+         $length = strlen($needle);
+         return (substr($haystack, 0, $length) === $needle);
+    }
+
+    function endsWith($haystack, $needle) {
+        $length = strlen($needle);
+        if ($length == 0) {
+            return true;
+        }
+        return (substr($haystack, -$length) === $needle);
+    }
+    
     
     public function getProductId() {
         return $_SESSION['hotelbooking']['product'];
@@ -209,16 +214,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
 
     public function getEnd($realEndCount=false) {
         // End-date is always x number of days after startdate when servicetype = storage
-        if ($realEndCount && $this->getServiceType() == "storage") {
-            $_SESSION['hotelbooking']['end'] = $this->getStart() + (($this->getMinumRental()-1)*60*60*24);
-            return $_SESSION['hotelbooking']['end'];
-        }
-        
         return $_SESSION['hotelbooking']['end'];
-    }
-
-    public function getType() {
-        return $_SESSION['hotelbooking']['type'];
     }
 
     public function getName() {
@@ -233,62 +229,39 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $this->config = $this->getApi()->getHotelBookingManager()->getBookingConfiguration();
     }
 
-    public function getStarted() {
-        
-    }
-
-    public function getContinuePage() {
-        return $this->getConfigurationSetting("contine_page");
-    }
-
     public function render() {
-        //this variable is set from $this->continueToCart();
+        //this variable is set from $this->complete*Checkout()
         if (isset($_GET['orderProcessed'])) {
-            if ($this->partnerShipChecked() || !$this->hasPaymentAppAdded()) {
-                $this->clearBookingData();
-                $this->includeEcommerceTransaction();
+            if($this->partnerShipChecked()) {
+                echo "<h1 style='text-align:center;text-transform:uppercase;'>";
+                if($this->failedReservation) {
+                    echo $this->__w("Something went wrong while ordering, please contact us");
+                } else {
+                    echo $this->__w("Your reservations has now been completed");
+                }
+                echo "</h1>";
             } else {
-                $cartManager = new \ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager();
-                $payment = null;
-          
-                foreach ($cartManager->getPaymentApplications() as $paymenti) {
-                    if ($paymenti->applicationSettings->id === "def1e922-972f-4557-a315-a751a9b9eff1") {
-                        $payment = $paymenti;
-                    }
-                }
-
-                if ($payment) {
-                    //Orderid is set in $this->continueToPayment()
-                    $payment->order = $this->getApi()->getOrderManager()->getOrder($_GET['orderId']);
-                    $payment->initPaymentMethod();
-                    $payment->preProcess();
-                }
+                $this->completeCheckout();
             }
             return;
         }
-
-        if (isset($_GET['set_order_page'])) {
-            $this->setConfigurationSetting("contine_page", $_GET['set_order_page']);
+        
+        if(isset($_GET['partner'])) {
+            $_SESSION['partner'] = $_GET['partner'];
         }
+        
         if($this->getPage()->javapage->id == "home") {
-            $this->includefile("Hotelbooking");
+            $this->includefile("booking_part1");
+        } else if($this->getPage()->javapage->id == $this->getConfig()->continuePage) {
+            $this->includefile("booking_part2");
+        } else if($this->getPage()->javapage->id == $this->getConfig()->summaryPage) {
+            $this->updateCartObject();
+            $this->includefile("booking_part3");
+        } else if($this->getPage()->javapage->id == $this->getConfig()->companyPage) {
+            $this->includefile("companybooking");
         } else {
-            if (((isset($_GET['subpage']) && $_GET['subpage'] == "summary") || isset($_POST['data']['customer_type'])) && $this->hasValidSelection()) {
-                $this->updateCartObject();
-                $this->includefile("booking_part3");
-            } else {
-                $this->hasValidSelection();
-                $this->includefile("booking_part2");
-            }
+            echo "Page not configured";
         }
-    }
-
-    public function getOrderPageId() {
-        $contpage = $this->getConfigurationSetting("contine_page");
-        if (!$contpage) {
-            return "none";
-        }
-        return $contpage;
     }
 
     public function updateCalendarDate() {
@@ -309,6 +282,22 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $time = strtotime("20" . $_POST['data']['year'] . "-" . $_POST['data']['month'] . "-01");
         $type = $_POST['data']['type'];
         $this->printCalendar($time, $this->getStart(), $type, false);
+    }
+
+    
+    function getDates($year) {
+        $dates = array();
+
+        for ($i = 1; $i <= 366; $i++) {
+            $month = date('m', mktime(0, 0, 0, 1, $i, $year));
+            $wk = date('W', mktime(0, 0, 0, 1, $i, $year));
+            $wkDay = date('D', mktime(0, 0, 0, 1, $i, $year));
+            $day = date('d', mktime(0, 0, 0, 1, $i, $year));
+
+            $dates[$month][$wk][$day] = $i;
+        }
+
+        return $dates;
     }
 
     public function printCalendar($time, $checkbefore, $id, $setSelected = true) {
@@ -367,7 +356,6 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                         $class .= " disabled";
                     }
                 }
-
 
                 $fieldtime = strtotime($year . "-" . $month . "-" . $day);
 
@@ -448,93 +436,66 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return $this->parkingProduct;
     }
     
+    public function getBookedPartnerDays() {
+        if(isset($_SESSION['bookedPartnerDays'])) {
+            return $_SESSION['bookedPartnerDays'];
+        }
+        
+        return array();
+    }
+    
+    public function doPartnerBooking() {
+        $days = $_POST['data']['days'];
+        $_SESSION['bookedPartnerDays'] = $days;
+        $this->setRoomCount(1);
+        $year = date("Y", time());
+        $productId = $_POST['data']['product'];
+        $this->setProductId($productId);
+        
+        $dateRange = [];
+        $reservations = array();
+        $errors = false;
+        for($j = 0; $j < 2; $j++) {
+            for($i = 1; $i <= 365; $i++) {
+                $offset = date("$i-$year");
+                if(in_array($offset, $days)) {
+                    $dateRange[] = $offset;
+                } else if(sizeof($dateRange) > 0) {
+                    $start = $dateRange[0];
+                    $start = explode("-", $start);
+                    $start = strtotime("1 Jan " . ($start[1]) . " +" . ($start[0]-1) . " day");
+                    $end = $dateRange[sizeof($dateRange)-1];
+                    $end = explode("-", $end);
+                    $end = strtotime("1 Jan " . ($end[1]) . " +" . ($end[0]-1) . " day");
+                    if(!$this->checkAvailabilityOnRange($start, $end, $productId)) {
+                        $text = $this->__w("Sorry, we do not have any room available between {start} and {end} of this type. Try another one.");
+                        $text = str_replace("{start}", date("d-m-Y", $start),$text);
+                        $text = str_replace("{end}", date("d-m-Y", $end), $text);
+                        echo $text . "<br>";
+                        $errors = true;
+                    } else {
+                        $toReserve = new \stdClass();
+                        $toReserve->start = $start;
+                        $toReserve->end = $end;
+                        $toReserve->count = sizeof($dateRange)-1;
+                        $reservations[] = $toReserve;
+                    }
+                    $dateRange = [];
+                }
+            }
+            $year++;
+        }
+        if(!$errors) {
+            $this->setpartnerReservatations($reservations);
+            echo "ok";
+        }
+    }
+    
     public function hasAvailableParkingSpots() {
         $spots = $this->getApi()->getHotelBookingManager()->checkAvailableParkingSpots($this->getStart(), $this->getEnd());
         return $spots;
     }
     
-    public function continueToPayment() {
-        $count = $this->getRoomCount();
-
-        if ($count < $this->getRoomCount()) {
-            $this->failedReservation = true;
-            return;
-        }
-
-        $productId = $this->getProduct()->id;
-        $start = $this->getStart();
-        $end = $this->getEnd();
-
-        $contact = $this->getContactData();
-
-        $inactive = false;
-        if ($this->getServiceType() == "storage") {
-            $inactive = true;
-        }
-        
-        $infodata = array();
-        $cart = $this->getApi()->getCartManager()->getCart();
-        $cartItems = array();
-        
-        foreach($cart->items as $item) {
-            /* @var $item core_cartmanager_data_CartItem */
-            if($item->product->id == $productId) {
-                $cartItems[] = $item->cartItemId;
-            }
-        }
-
-        for($i = 1; $i <= $count; $i++) {
-            $info = new \core_hotelbookingmanager_RoomInformation();
-            $info->cartItemId = $cartItems[$i-1];
-            $visitor = new \core_hotelbookingmanager_Visitors();
-            $visitor->name = $_POST['data']['name_' . $i];
-            $visitor->phone = $_POST['data']['phone_' . $i];
-            $visitor->email = $_POST['data']['email_' . $i];
-            
-            $info->visitors = array();
-            $info->visitors[] = $visitor;
-            $infodata[] = $info;
-        }
-        
-        
-        $additionaldata = new \core_hotelbookingmanager_AdditionalBookingInformation();
-        $additionaldata->needHandicap = $this->getNeedHandicap();
-        
-        $reference = $this->getApi()->getHotelBookingManager()->reserveRoom($productId, $start, $end, $infodata, $additionaldata);
-        if (($reference) > 0) {
-            $reservation = $this->getApi()->getHotelBookingManager()->getReservationByReferenceId($reference);
-            $cartmgr = $this->getApi()->getCartManager();
-            $cartmgr->setReference($reference);
-            
-            $cart = $cartmgr->getCart();
-            foreach($cart->items as $item) {
-                if($item->product->id == $this->getProductId()) {
-                    $ids[] = $item->cartItemId;
-                }
-            }
-            
-            
-            $user = null;
-            if (!$this->partnerShipChecked()) {
-                $user = $this->createUser();
-            }
-            
-            if ($this->getServiceType() == "storage") {
-                for ($i = 0; $i < $this->getDayCount(true); $i++) {
-                    $order = $this->createOrder($user, $i);
-                }
-            } else {
-                $order = $this->createOrder($user);
-            }
-            
-            $_GET['orderProcessed'] = true;
-            $_GET['orderId'] = $order->id;
-        } else {
-            $_GET['failedreservation'] = true;
-            $this->failedReservation = true;
-        }
-    }
-
     public function checkFailedReservation() {
         if (isset($_GET['failedreservation'])) {
             return true;
@@ -604,83 +565,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return $sortedRooms;
     }
 
-    public function validateAndContinueToPayment() {
-        $this->setBookingData();
-        foreach ($this->getBookingData() as $index => $test) {
-            $valid = true;
-            if ($this->validateInput($index)) {
-                $valid = false;
-                break;
-            }
-        }
-        if ($valid) {
-            $this->continueToPayment();
-        }
-    }
-
     public function getPost($name) {
         if (isset($_POST['data'][$name])) {
             return $_POST['data'][$name];
-        }
-        return "";
-    }
-
-    public function validateInput($name) {
-        if (isset($_GET['subpage']) && $_GET['subpage'] == "summary" || (isset($_POST['event']) && $_POST['event'] == 'setBookingData')) {
-            return "";
-        }
-        if($this->getUser() == null && $name == "heardaboutus") {
-            return "";
-        }
-
-        if ($this->partnerShipChecked()) {
-            if ($name != "referencenumber") {
-                return;
-            } else {
-                if(!$this->isEditorMode()) {
-                    $this->startAdminImpersonation("UserManager", "getAllUsers");
-                }
-                $allUsers = $this->getApi()->getUserManager()->getAllUsers();
-                if(!$this->isEditorMode()) {
-                    $this->stopImpersionation();
-                }
-                $referenceUser = null;
-                foreach ($allUsers as $user) {
-                    if ($user->referenceKey == $_POST['data']['referencenumber']) {
-                        $referenceUser = $user;
-                        break;
-                    }
-                }
-
-                if (!$referenceUser) {
-                    $this->invalid = true;
-                    return "invalid";
-                }
-            }
-        }
-
-        if ($_POST['data']['customer_type'] == "private") {
-            if ($name === "birthday" && (strlen($_POST['data']['birthday']) != 8 || substr_count($_POST['data']['birthday'], ".") != 2)) {
-                $this->invalid = true;
-                $this->errors[] = $this->__w("Birth date has to be formatted like dd.mm.yy") . " <b>ex: 13.06.84</b>";
-                return "invalid";
-            }
-        } else {
-            if ($name === "birthday" && strlen($_POST['data']['birthday']) != 9) {
-                $this->invalid = true;
-                $this->errors[] = $this->__w("Organisation number has to be 9 digits long.");
-                return "invalid";
-            }
-        }
-
-        if (isset($_POST['data'][$name]) && !$this->partnerShipChecked()) {
-            if ($name == "referencenumber") {
-                return "";
-            }
-            if (strlen(trim($_POST['data'][$name])) == 0) {
-                $this->invalid = true;
-                return "invalid";
-            }
         }
         return "";
     }
@@ -736,14 +623,13 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function setBookingData() {
-        if ($this->isPrivate()) {
-            $_POST['data']['mvaregistered'] = "false";
-        }
-
         $_SESSION['booking_data'] = serialize($_POST['data']);
     }
 
     public function getBookingData() {
+        if(!isset($_SESSION['booking_data'])) {
+            return array();
+        }
         return unserialize($_SESSION['booking_data']);
     }
 
@@ -753,25 +639,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         }
     }
 
-    public function getContactData() {
-        $booked = $this->getBookingData();
-        $names = array();
-        $phones = array();
-        for ($i = 0; $i < 10; $i++) {
-            if (isset($booked['name_' . $i])) {
-                $names[] = $booked['name_' . $i];
-                $phones[] = $booked['phone_' . $i];
-            }
-        }
-        $contact = new \core_hotelbookingmanager_ContactData();
-        $contact->names = $names;
-        $contact->phones = $phones;
-        return $contact;
-    }
-
     public function partnerShipChecked() {
-        if (isset($_POST['data']['partnershipdeal']) && $_POST['data']['partnershipdeal'] == "true") {
-            return true;
+        if (isset($_SESSION['partner'])) {
+            return $_SESSION['partner']=="true";
         }
         return false;
     }
@@ -784,25 +654,18 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function hasValidSelection() {
+        if($this->partnerShipChecked()) {
+            return true;
+        }
+        
         $count = $this->checkavailabilityFromSelection();
         $isvalid = true;
         $this->errors = array();
         $numberOfDays = $this->getDayCount();
         if (((int) $count < (int) $this->getRoomCount())) {
             $errorText = $this->__w("We are sorry, but there is not enough available rooms for your selection, please select a different one.");
-            if ($this->getServiceType() == "storage") {
-                $errorText = $this->__w("Sorry, we are out of this type of storage, please select a different one.");
-            }
             $this->errors[] = $errorText;
             $isvalid = false;
-        }
-        if ((int) $this->getMinumRental() > (int) $numberOfDays) {
-            if (!$this->getServiceType() == "storage") {
-                $errorText = $this->__w("Sorry, your rental is too short, it has to be longer then {days} days of rental.");
-                $errorText = str_replace("{days}", $this->getMinumRental(), $errorText);
-                $this->errors[] = $errorText;
-                $isvalid = false;
-            }
         }
         return $isvalid;
     }
@@ -844,13 +707,9 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function getMinumRentalTexted() {
-        $days = $this->getMinumRental();
+        $days = $this->getConfig()->minRentalDays;
         if (!$days || $days == 1) {
             return "";
-        }
-        
-        if ($this->getServiceType() == "storage") {
-            return $days .= " " .$this->__w("months");
         }
         
         if ($days > 30) {
@@ -917,27 +776,30 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         return $this->getParkingProduct()->price * $this->getDayCount();
     }
 
+    public function getpartnerReservatations() {
+        if(!isset($_SESSION['partnerReservations'])) {
+            return array();
+        }
+        return unserialize($_SESSION['partnerReservations']);
+    }
+
+    public function setpartnerReservatations($object) {
+        $_SESSION['partnerReservations'] = serialize($object);
+    }
+    
     public function updateCartObject() {
         $mgr = $this->getApi()->getCartManager();
         $mgr->clear();
 
-        for($i = 0; $i < $this->getRoomCount(); $i++) {
-            $mgr->addProductItem($this->getProductId(), $this->getDayCount(), null);
-        }
-        
-        $cleaningid = $this->getCleaningOption();
-        if ($cleaningid && $this->getDayCount() > 3) {
-            $cleaningproduct = $this->getApi()->getProductManager()->getProduct($cleaningid);
-            $interval = $cleaningproduct->stockQuantity;
-            if($interval) {
-                $cleaningcount = floor($this->getDayCount() / $interval);
-                $mgr->addProduct($cleaningid, $cleaningcount, array());
+        if($this->partnerShipChecked()) {
+            $partnerReservations = $this->getpartnerReservatations();
+            foreach($partnerReservations as $reservation) {
+                $mgr->addProductItem($this->getProductId(), $reservation->count);
             }
-        }
-
-        $parking = $this->getParking();
-        if($parking) {
-            $mgr->addProduct($this->getParkingProduct()->id, $this->getDayCount(), null);
+        } else {
+            for($i = 0; $i < $this->getRoomCount(); $i++) {
+                $mgr->addProductItem($this->getProductId(), $this->getDayCount());
+            }
         }
     }
 
@@ -975,25 +837,138 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             $order = $this->getApi()->getOrderManager()->createOrderByCustomerReference($user->referenceKey);
         }
         
-        if($i != null) {
-            $startDate = date('M d, Y h:m:s A', strtotime("+".$i." months", $this->getStart()));
-            $endDate = date('M d, Y h:m:s A', strtotime("-1 day",strtotime("+".($i+1)." months", $this->getStart())));
-            $order->startDate = $startDate;
-            $order->endDate = $endDate;
-        } else {
-            $order->startDate = date('M d, Y h:m:s A', $this->getStart());
-            $order->endDate = date('M d, Y h:m:s A', $this->getEnd());
-        }
-        
-//        $this->startAdminImpersonation("OrderManager", "saveOrder");
-        $this->getApi()->getOrderManager()->saveOrder($order);
-//        $this->stopImpersionation();
         return $order;
     }
 
     public function getShowExtraInformation() {
         return $this->getConfig()->extraBookingInformation;
     }
-}
 
+    public function createReservation($userId) {
+        $productId = $this->getProduct()->id;
+        $start = $this->getStart();
+        $end = $this->getEnd();
+        
+        $infodata = $this->getVisitorData();
+        $additionaldata = new \core_hotelbookingmanager_AdditionalBookingInformation();
+        $additionaldata->needHandicap = $this->getNeedHandicap();
+        $additionaldata->userId = $userId;
+        
+        $reference = $this->getApi()->getHotelBookingManager()->reserveRoom($productId, $start, $end, $infodata, $additionaldata);        
+        return $reference;
+    }
+
+    public function checkAvailabilityOnRange($start, $end, $productId) {
+        $additional = new \core_hotelbookingmanager_AdditionalBookingInformation();
+        return $this->getApi()->getHotelBookingManager()->checkAvailable($start, $end, $productId, $additional);
+    }
+
+    public function validateBookingData() {
+        $this->validationNeeded = true;
+        
+        $bookingData = $this->getBookingData();
+        if(sizeof($bookingData) == 0) {
+            return false;
+        }
+        
+        if($this->partnerShipChecked()) {
+            if(!isset($bookingData['referenceNumber'])) {
+                return false;
+            }
+        }
+        
+        
+        foreach ($this->getBookingData() as $index => $test) {
+            $valid = true;
+            if ($this->validateInput($index)) {
+                $valid = false;
+                break;
+            }
+        }
+        
+        return $valid;
+    }
+
+    public function completePartnerCheckout() {
+        $valid = $this->validateBookingData();
+        if(!$valid) {
+            return;
+        }
+        
+        $bookingData = $this->getBookingData();
+        
+        $additional = new \core_hotelbookingmanager_AdditionalBookingInformation();
+        $additional->customerReference = $bookingData['referenceNumber'];
+        
+        $infodata = $this->getVisitorData();
+        $productId = $this->getProductId();
+        
+        $reservations = $this->getpartnerReservatations();
+        foreach($reservations as $reservation) {
+            $reference = $this->getApi()->getHotelBookingManager()->reserveRoom($productId, $reservation->start, $reservation->end, $infodata, $additional);
+            if($reference <= 0) {
+                $_GET['failedreservation'] = true;
+                $this->failedReservation = true;
+            }
+        }
+        
+        $_GET['orderProcessed'] = true;
+    }
+    
+    public function completeRegularCheckout() {
+        $valid = $this->validateBookingData();
+        if(!$valid) {
+            return;
+        }
+        
+        $user = $this->createUser();
+        $reference = $this->createReservation($user->id);
+        if (($reference) > 0) {
+            $orderId = $this->getApi()->getHotelBookingManager()->buildOrderForReservation($reference);
+            $_GET['orderProcessed'] = true;
+            $_GET['orderId'] = $orderId;
+        } else {
+            $_GET['failedreservation'] = true;
+            $this->failedReservation = true;
+        }
+    }
+    
+    public function completeCheckout() {
+        $cartManager = new \ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager();
+        $payment = null;
+
+        foreach ($cartManager->getPaymentApplications() as $paymenti) {
+            if ($paymenti->applicationSettings->id === "def1e922-972f-4557-a315-a751a9b9eff1") {
+                $payment = $paymenti;
+            }
+        }
+
+        if ($payment) {
+            //Orderid is set in $this->continueToPayment()
+            $payment->order = $this->getApi()->getOrderManager()->getOrder($_GET['orderId']);
+            $payment->initPaymentMethod();
+            $payment->preProcess();
+        }
+    }
+
+    public function getVisitorData() {
+        $bookingData = $this->getBookingData();
+        $count = $this->getRoomCount();
+        $infodata = array();
+        for($i = 1; $i <= $count; $i++) {
+            $info = new \core_hotelbookingmanager_RoomInformation();
+            $visitor = new \core_hotelbookingmanager_Visitors();
+            if(isset($bookingData['name_' . $i])) {
+                $visitor->name = $bookingData['name_' . $i];
+                $visitor->phone = $bookingData['phone_' . $i];
+                $visitor->email = $bookingData['email_' . $i];
+            }
+            $info->visitors = array();
+            $info->visitors[] = $visitor;
+            $infodata[] = $info;
+        }
+        return $infodata;
+    }
+
+}
 ?>

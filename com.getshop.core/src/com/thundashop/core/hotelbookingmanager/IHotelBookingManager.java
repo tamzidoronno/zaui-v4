@@ -4,6 +4,7 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.ordermanager.OrderManager;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,6 +108,9 @@ public interface IHotelBookingManager {
     public void setBookingConfiguration(GlobalBookingSettings settings) throws ErrorException;
 
     @Administrator
+    public void stopReservation(Integer reservationNumber) throws ErrorException;
+
+    @Administrator
     public boolean isRoomAvailable(String roomId, long startDate, long endDate) throws ErrorException;
 
     @Administrator
@@ -114,9 +118,14 @@ public interface IHotelBookingManager {
     
     public List<ArxLogEntry> getArxLog() throws ErrorException;
     
+    public String buildOrderForReservation(Integer reservationNumber) throws ErrorException;
+    
+    
     public void checkForVismaTransfer() throws ErrorException;
     public void checkForArxTransfer() throws ErrorException;
     public void checkForWelcomeMessagesToSend() throws ErrorException;
+    public void checkForOrdersToGenerate() throws ErrorException;
+    public void appendOrderToReservation(String orderId, int referenceId) throws ErrorException;
 
     public String getUserIdForRoom(String roomNumber) ;
 }

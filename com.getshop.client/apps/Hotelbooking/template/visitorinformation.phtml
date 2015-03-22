@@ -1,0 +1,48 @@
+
+<div class='summary_heading'>
+    <div class="spacer"></div>
+    <h1>
+        <? echo $this->__w("Visitor information"); ?>
+    </h1>
+    <div class="seperator"></div>
+</div>
+<?
+for ($i = 1; $i <= $this->getRoomCount(); $i++) {
+    if ($this->getRoomCount() > 1) {
+        $var = $this->__w("Contact person for room no. {count}");
+        $var = str_replace("{count}", $i, $var);
+        echo "<div class='visitor_heading'>$var</div>";
+    }
+    ?>
+    <div class='col-33'>
+        <span class='contact_text'><? echo $this->__w("Name"); ?></span>
+        <span class='contact_input'><input type='text' gsname='name_<? echo $i; ?>' value='<? echo $this->getPost("name_$i"); ?>' class='<? echo $this->validateInput("name_$i"); ?>'>
+        <? 
+        if($this->validateInput("name_$i")) {
+            echo "* " . $this->__w("Your name is not valid, it need to consist of first and last name.");
+        }
+        ?>
+        </span>
+    </div>
+    <div class='col-33'>
+        <span class='contact_text'><? echo $this->__w("Phone"); ?></span>
+        <span class='contact_input'><input type='text' gsname='phone_<? echo $i; ?>' value='<? echo $this->getPost("phone_$i"); ?>'  class='<? echo $this->validateInput("phone_$i"); ?>'></span>
+        <? 
+        if($this->validateInput("phone_$i")) {
+            echo "* " . $this->__w("Phone number need to be a valid mobile number.");
+        }
+        ?>
+    </div>
+    <div class='col-33'>
+        <span class='contact_text'><? echo $this->__w("Email"); ?></span>
+        <span class='contact_input'><input type='text' gsname='email_<? echo $i; ?>' value='<? echo $this->getPost("email_$i"); ?>'  class='<? echo $this->validateInput("email_$i"); ?>'></span>
+        <? 
+        if($this->validateInput("email_$i")) {
+            echo "* " . $this->__w("The email address is not valid.");
+        }
+        ?>
+    </div>
+    <div class="row_seperator"></div>
+    <?
+}
+?>

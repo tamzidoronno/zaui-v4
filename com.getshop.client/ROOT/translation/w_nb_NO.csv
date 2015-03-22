@@ -1,6 +1,7 @@
 ###### framework ######
 * Can pay with Visa/MasterCard trough PayPal;-;* Kan også betale med Visa/MasterCard igjennom PayPal.
 * PayOnDelivery fee;-;Gebyr henting 
+* The rooms are being billed monthly in advanced;-;* Rommene blir forhånds fakturert hver påbegynte måned.
 0-100 km/h;-;0-100 km/h
 100% width;-;100% bredde
 A confirmation email has been sent to your email.;-;En bekreftelse er sendt til din e-post.
@@ -40,8 +41,8 @@ Background color inner;-;Indre bakgrundsfarge
 Background color outer;-;Ytre bakgrundsfarge
 Background image / styling;-;Bakgrunnsbilde / Styling
 Birth Date;-;Fødselsdato
-Birth date;-;Fødselsdato
-Birth date has to be formatted like dd.mm.yy;-;Fødselsdato må være av format: dd.mm.åå.
+Birth date (mm.dd.yy);-;Fødselsdato (mm.dd.åå)
+Body title;-;Tittel
 Booked time periode;-;Booket tidsperiode
 Booking;-;Påmelding
 Bottom spacing;-;Nedre spacing
@@ -79,7 +80,7 @@ Click next to select shipping options;-;Trykk neste for å velge en betalings me
 Comments;-;Kommentarer
 Company;-;Selskap
 Company name;-;Firmanavn
-Complete the order;-;Fullfør reservasjon
+Complete;-;Fullfør
 Completed;-;Gjennomført
 Configure mobile slides;-;Konfigurer mobil slidere
 Confirm order;-;Bekreft ordre
@@ -92,6 +93,7 @@ Country;-;Land
 Coupon;-;Kupong
 Coupon discount;-;Kupong avslag
 Cover;-;Cover
+Create a new slide;-;Opprett en ny slide
 Create left column;-;Lag en ny venstrekolonne
 Create right column;-;Lag en ny høyrekolonne
 Create row above;-;Lag ny rad over
@@ -112,8 +114,10 @@ Delete row;-;Slett raden
 Delete selected slide;-;Slett valgte slide
 Did not find the specified company, please check your company number;-;Fant ikke det angitte firmaet, vennligst sjekk organisasjonret
 Discounted price;-;Rabattert pris
+Display numbers on dots;-;Vis tall på dottene
 Display product lists in your webshop;-;Vis produkt lister i din nettbutikk.
 Disploma is disabled;-;Diploma er deaktivert
+Do not rotate;-;Ikke roter
 Done editing;-;Ferdig å editere
 Download as pdf;-;Last ned som PDF
 Download ebill;-;Last ned ebill
@@ -122,9 +126,12 @@ Edit row;-;Editer raden
 Email;-;Epost
 Email address;-;Epost adresse
 Email sent;-;Epost sendt
+Email to this address;-;E-post til denne adressen
+Embed your own code into the page;-;Embed din egen kode på websiden
 End date;-;Slutt dato
 Enter room number;-;Skriv inn nom nummeret ditt
 Enter the code sent to your email.;-;Skriv inn koden som ble sendt per mail.L
+Enter your reference number;-;Skriv inn din avtalekode
 Fade;-;Fade
 Failed;-;Feilet
 Failed to reserve room... please contact us.;-;Det oppstod en feil ved reservasjon av rommene, vennligst kontakt oss.
@@ -144,7 +151,6 @@ Hide on mobile;-;Ikke vis på mobilen
 How can I help you today ?;-;Hva kan jeg hjelpe deg med?
 I agree to the terms and conditions;-;Jeg godtar bruksvilkårene
 I am sorry, but all fields are required before sending a message.;-;Beklager, men alle felt må fylles ut før du sender en melding.
-I have a partnership deal;-;Jeg har en partneravtale
 I need a handicap room;-;Tilpasset handicap
 Image;-;Bilde
 Included in all rooms:;-;Inkludert i alle rom:
@@ -164,19 +170,21 @@ Items;-;Varer
 January;-;Januar
 July;-;Juli
 June;-;Juni
+Keep original layout in mobile view.;-;Behold original layout på mobilen
+Leave label open;-;La teksten stå åpen
 Left spacing;-;Venstre spacing
 Les mer;-;Les mer
 Loading;-;Laster
 Loading data... please wait;-;Laster, vennligst vent...
 Logout;-;Logg ut
 Lost your password?;-;Glemt ditt passord?
-MAX COUNT;-;MAX ANTALL
 March;-;Mars
 May;-;Mai
 Merchant ID is found in braintree account.;-;Merchant ID er noe du finner på kontoen din hos braintree.
 Message;-;Melding
 Message from a customer;-;Melding fra en kunde
 Mo;-;Ma
+Mobile settings;-;Mobil instillinger
 Monday;-;Mandag
 More information;-;Mer informasjon
 Move cell to the left;-;Flytt celle til venstre
@@ -196,6 +204,8 @@ My account;-;Min konto
 My images speeks for itself;-;Mine bilder snakker for seg selv
 My name is:;-;Mitt navn er
 Name;-;Navn
+Navigate on cell;-;Naviger på cellen
+Navigate on mouseover;-;Naviger når musen er over
 New message;-;Ny melding
 New password;-;Nytt passord
 NewsLetter;-;Nyhetsbrev
@@ -203,12 +213,14 @@ Next;-; Neste
 Nice modern theme. Could be used for clothing, skateboarding, snowboarding etc.;-;Fint moderne tema. Kan bli brukt for klær, skateboards, snowbards, osv.
 Nice modern theme. Suitable for different carmarkeds.;-;Pent og moderne tema. Godt brukbart i bil markedet.
 No;-;Nei
+No code added yet;-;Ingen kode er lagt til enda
 No header uploaded for mobile landscape mode yet, please upload one.;-;Ingen header har blitt lastet opp for landskaps modus på mobil enda, vennligst last opp et.
 No header uploaded for mobile potrait mode yet, please upload one.;-;Ingen header har blitt lastet opp for potrait modus på mobil enda, vennligst last opp et.
 No items;-;Ingen elementer
 No rooms are available for this time periode.;-;Ingen rom er tilgjengelig i valgt tidsperiode.
 Normal;-;Normal
 November;-;November
+Number of fields;-;Antall felt
 Number of instances added;-;Antall av instanser lagt til
 Number of nights;-;Antall netter
 Number of rooms;-;Antall rom
@@ -221,7 +233,6 @@ Ordinary price;-;Ordinær pris
 Organisation;-;Organisasjon
 Organisation name;-;Selskapnavn
 Organisation number;-;Organisasjonsnummer
-Organisation number has to be 9 digits long.;-;Organisasjonsnummeret må bestå av 9 siffer 
 Original (hp);-;Orginal hp
 Original (nm);-;Original nm
 Other attributes;-;Andre attributter
@@ -229,6 +240,7 @@ Other operations;-;Andre operasjoner
 Our local time is:;-;Vår lokale tid er
 Outer background;-;Ytre bakgrunn
 PRICE PER NIGHT;-;PRIS PR NATT
+Parking slot;-;Parkeringsplasser
 Password;-;Passord
 Password cannot be empty;-;Passordet kan ikke være tomt.
 Password does not match, please re enter password;-;Passordet stemmer ikke oversens, prøv på nytt.
@@ -242,12 +254,12 @@ Payment fee;-;Betalingsgebyr
 Payment information;-;Betalings informasjon
 Payment successfully completed;-;Betalingen gjennomført
 Phone;-;Telefon
+Phone number need to be a valid mobile number.;-;Nummeret må være et gyldig mobilnummer.
 Pin area;-;Pin til område
 PixelateTheme1;-;PixelateTheme1
 Place order;-;Legg inn ordre
 Please check your delivery options.;-;Vennligst sjekk dine leveringsmetoder.
 Please check your room number, you can only order cleaning while you are checked in.;-;Sjekk om romnret du har oppgitt er korrekt. Du kan kun bestille vask mens du holder til hos Wilhelmsen House.
-Please enter the reference number provided by;-;Vennligst skriv inn referansenummeret du har fått utdelt.
 Please enter your email address:;-;Vennligst skriv inn din epost
 Please enter your room number;-;Skriv inn nom nummeret ditt
 Please enter your username and password;-;Skriv inn ditt brukernavn og passord
@@ -274,7 +286,6 @@ Public key is found in braintree account.;-;Den offentlig nøkkelen er noe du fi
 Read more;-;Les mer
 Recover password;-;Gjennopprett passord
 Reference key;-;Referanse nummer
-Reference number;-;Referanse nummer
 Register;-;Registrer
 Registration details;-;Registrerings detaljer.
 Related products;-;Relaterte produkter
@@ -293,6 +304,7 @@ Run account in sandbox?;-;Kjør kontoen i sandbox modus?
 SELECT ROOM;-;VALGT ROM
 Sa;-;Lø
 Saturday;-;Lørdag
+Save;-;Lagre
 Save changes;-;Lagre endringer
 Save settings;-;Lagre instillinger
 Search for a product;-;Søk etter et produkt
@@ -321,9 +333,9 @@ Sign up with google;-;Logg inn med google
 Slide left;-;Slide til venstre
 Slide right;-;Slide til høyre
 Sold out;-;Utsolgt
+Something went wrong while ordering, please contact us;-;Noe gikk galt ved bestillingen, vennligst kontakt oss.
 Sorry;-;Beklager
-Sorry, we are out of this type of storage, please select a different one.;-;Beklager, men vi har ikke flere av denne typen igjen, velg en annen en.
-Sorry, your rental is too short, it has to be longer then {days} days of rental.;-;Beklager, men din leieperiode er for kort, den må være lengere enn {days} dager.
+Sorry, we do not have any room available between {start} and {end} of this type. Try another one.;-;Beklager, men vi har ingen rom av denne typen tilgjengelig mellom {start} og {end}.
 Stage 1 (hp):;-;Stage 1 hp:
 Stage 1 (nm):;-;Stage 1 nm:
 Stage 2 (hp):;-;Stage 2 hp:
@@ -337,6 +349,7 @@ Stop;-;Stopp
 Style row;-;Styling på rad
 Styling;-;Design
 Su;-;Sø
+Subject to recipient;-;Tittel på motaker
 Subscribe;-;Registrer
 Success;-;Success
 Summary;-;Oppsummering
@@ -358,6 +371,7 @@ Thank you, you will now be redirected to the payment service;-;Takk, du blir nå
 The carousel is not rotating while logged in as administrator.;-;Karusellen roterer ikke når man er logget inn som administrator.
 The company you have selected could not be found in brreg.;-;Firmaet du har valgt eksisterer ikke i brønnøysundregisteret.
 The email address is invalid.;-;Eposten din er ugyldig.
+The email address is not valid.;-;E-post adressene er ikke gyldig.
 The email already exists, please log on to continue.;-;Eposten eksisterer allerede, vennligst logg på for å fortsette.
 The email in invalid, please enter a valid email;-;Eposten er ikke gyldig, vennligst skriv inn en gyldig adresse.
 The event has been confirmed.;-;Eventent har blitt bekreftet.
@@ -406,10 +420,13 @@ Your are now signed up for the event;-;Du er nå registert inn på denne eventen
 Your email;-;Din epost
 Your message has been delivered;-;Din melding har blitt sendt.
 Your name;-;Ditt navn
+Your name is not valid, it need to consist of first and last name.;-;Navnet er ikke gyldig, det må bestå av et fornavn og etternavn.
 Your order has been canceled due to incorrect payment information, please try again.;-;Orderen din har blitt avbrutt pga manglende betaling.
 Your order has now been completed and is waiting to be shipped.;-;Orderen din har blitt gjennomført og venter på å bli sendt.
 Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;Du vil snart motta en epost med din ebill, eller så kan du last den ned på følgende link
 Your personal information;-;Din personlige informasjon
+Your reference number is not correct.;-;Din avtalekode er ikke gyldig
+Your reservations has now been completed;-;Din reservasjon er nå registrert.
 Your savings;-;Du sparer
 Your you for your order;-;Deg du for dine ordrer
 available room;-;tilgjengelige rom

@@ -31,10 +31,16 @@ class core_hotelbookingmanager_GlobalBookingSettings extends core_common_DataCom
 	public $extraBookingInformation;
 
 	/** @var String */
-	public $summaryPage;
+	public $longTermRentalDays;
 
 	/** @var String */
-	public $longTermRentalDays;
+	public $companyPage;
+
+	/** @var String */
+	public $continuePage;
+
+	/** @var String */
+	public $summaryPage;
 
 }
 ?>

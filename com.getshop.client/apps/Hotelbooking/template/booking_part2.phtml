@@ -142,11 +142,6 @@ $headingtext = $this->__w("You have selected the following duration for your sta
         <span class='firstbox selection_box'>
             <div class='name'><? echo $this->__w("Room type"); ?></div>
         </span> 
-        <? if ($this->getServiceType() == "hotel") { ?>
-            <span class='secondbox selection_box'>
-                <div><? echo $this->__w("MAX COUNT"); ?></div>
-            </span>
-        <? } ?>
         <span class='price_box'><? echo $priceText; ?></span>
         <div style='clear:both;'></div>
     </div>
@@ -189,7 +184,7 @@ $headingtext = $this->__w("You have selected the following duration for your sta
         
         /* @var $product core_productmanager_data_Product */
         echo "<span class='firstbox selection_box' productid='" . $product->id . "'>";
-        if (sizeof($images) > 0 && $this->getDisplayRoomThumbnail()) {
+        if (sizeof($images) > 0 && $this->getConfig()->roomThumbNails) {
             $size = getimagesize("../uploadedfiles/" . $images[0]);
             echo "<span class='gsgalleryroot'>";
             echo '<span img="displayImage.php?id=' . $images[0] . '" class="gsgallery" width="'.$size[0].'" height="'.$size[1].'" index="0"><img class="imagepreview" src="displayImage.php?id=' . $images[0] . '"></span>';
@@ -262,7 +257,7 @@ $headingtext = $this->__w("You have selected the following duration for your sta
     </div>
     </div>
         <div class="to_checkout">
-            <a href='?page=<? echo $this->getConfig()->summaryPage; ?>&subpage=summary'><div class="continue_to_cart_button"><? echo $this->__w("CONTINUE"); ?></div></a>
+            <a href='?page=<? echo $this->getConfig()->summaryPage; ?>&subpage=summary&partner=false'><div class="continue_to_cart_button"><? echo $this->__w("CONTINUE"); ?></div></a>
         </div>
         <? } ?>
     <? } ?>

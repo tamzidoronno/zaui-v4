@@ -21,14 +21,11 @@ class core_hotelbookingmanager_BookingReference extends core_common_DataCommon  
 	/** @var String */
 	public $isApprovedForCheckIn;
 
-	/** @var core_hotelbookingmanager_ContactData */
-	public $contact;
+	/** @var String */
+	public $bookingFee;
 
 	/** @var String */
 	public $active;
-
-	/** @var String */
-	public $bookingFee;
 
 	/** @var String */
 	public $updateArx;
@@ -52,10 +49,16 @@ class core_hotelbookingmanager_BookingReference extends core_common_DataCommon  
 	public $payedFor;
 
 	/** @var String */
-	public $orderId;
+	public $partnerReference;
+
+	/** @var String */
+	public $orderIds;
 
 	/** @var String */
 	public $failed;
+
+	/** @var String */
+	public $userId;
 
 }
 ?>

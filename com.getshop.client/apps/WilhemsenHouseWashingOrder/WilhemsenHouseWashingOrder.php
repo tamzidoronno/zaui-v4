@@ -34,8 +34,8 @@ class WilhemsenHouseWashingOrder extends \ApplicationBase implements \Applicatio
     
     public function addProductToCart() {
         $productId = $_POST['data']['productId'];
-        $this->getApi()->getCartManager()->addProduct($productId, 1, []);
-        $this->getApi()->getCartManager()->addMetaDataToProduct($productId, $_POST['data']['roomNumber']);
+        $item = $this->getApi()->getCartManager()->addProductItem($productId, 1);
+        $this->getApi()->getCartManager()->addMetaDataToProduct($item->cartItemId, $_POST['data']['roomNumber']);
     }
 
 //put your code here

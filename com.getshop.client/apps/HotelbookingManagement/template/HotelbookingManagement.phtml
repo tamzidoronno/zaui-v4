@@ -48,7 +48,6 @@ Existing booking references
                 <th>Start date</th>
                 <th>End date</th>
                 <th>Payed for</th>
-                <th>Order id</th>
             </tr>
         </thead>
         <tbody>
@@ -71,12 +70,14 @@ Existing booking references
             echo "<td style='text-align:center;' valign='top'>"
             . "<i style='cursor:pointer' refid='".$reservation->bookingReference."' class='fa fa-trash-o delete_reference'></i>";
 
-            if ($alreadyConfirmed) {
-                echo "&nbsp;&nbsp;<i style='cursor:pointer; $active' refid='".$reservation->bookingReference."' class='fa fa-stop stop_reference'></i>";
-            }
-            
-            if (!$alreadyConfirmed) {
-                echo "&nbsp;&nbsp;<i style='cursor:pointer;' refid='".$reservation->bookingReference."' class='fa fa-play go_live'></i>";
+            if($reservation->partnerReference) {
+                if ($alreadyConfirmed) {
+                    echo "&nbsp;&nbsp;<i style='cursor:pointer; $active' refid='".$reservation->bookingReference."' class='fa fa-stop stop_reference'></i>";
+                }
+
+                if (!$alreadyConfirmed) {
+                    echo "&nbsp;&nbsp;<i style='cursor:pointer;' refid='".$reservation->bookingReference."' class='fa fa-play go_live'></i>";
+                }
             }
             echo "</td>";
             echo "<td valign='top'>" . $reservation->rowCreatedDate . "</td>";
@@ -97,7 +98,6 @@ Existing booking references
                 echo "No";
             }
             echo "</td>";
-            echo "<td style='text-align:center;' valign='top'>" . $reservation->orderId . "</td>";
             echo "</tr>";
         }
         ?>

@@ -253,9 +253,9 @@ public class CartManager extends ManagerBase implements ICartManager {
     }
 
     @Override
-    public void addMetaDataToProduct(String productId, String metaData) {
+    public void addMetaDataToProduct(String cartItemId, String metaData) {
         for (CartItem cartItem : getCart().getItems()) {
-            if (cartItem != null && cartItem.getProduct() != null && cartItem.getProduct().id.equals(productId)) {
+            if (cartItem != null && cartItem.getCartItemId().equals(cartItemId)) {
                 cartItem.getProduct().metaData = metaData;
             }
         }

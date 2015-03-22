@@ -1,6 +1,8 @@
 package com.thundashop.core.hotelbookingmanager;
 
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.cartmanager.CartManager;
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
@@ -55,8 +57,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Autowired
     private PageManager pageManager;
-    
 
+    @Autowired
+    private CartManager cartManager;
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dbobj : data.data) {
@@ -85,6 +89,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     public Integer checkAvailable(long startDate, long endDate, String productId, AdditionalBookingInformation additional) throws ErrorException {
         List<String> takenRooms = new ArrayList();
         for(BookingReference reference :bookingReferences.values()) {
+            if(!reference.active) {
+                continue;
+            }
             if(reference.isBetweenDates(startDate*1000, endDate*1000)) {
                 for(RoomInformation info : reference.roomsReserved) {
                     takenRooms.add(info.roomId);
@@ -112,8 +119,11 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     @Override
     public String reserveRoom(String roomProductId, long startDate, long endDate, List<RoomInformation> roomInfo, AdditionalBookingInformation additionalInfo) throws ErrorException {
-//        startDate *= 1000;
-//        endDate *= 1000;
+        
+        if((additionalInfo.userId == null || additionalInfo.userId.isEmpty()) && (additionalInfo.customerReference == null || additionalInfo.customerReference.isEmpty())) {
+            System.out.println("Userid and customerReference is missing");
+        }
+        
         List<Room> availableRoom = getAvailableRooms(roomProductId, startDate, endDate, additionalInfo);
         List<Room> roomsToBook = new ArrayList();
         for(Room room : availableRoom) {
@@ -151,8 +161,20 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         reference.endDate = end;
         
         reference.roomsReserved = roomInfo;
+        if(additionalInfo.customerReference != null && !additionalInfo.customerReference.isEmpty()) {
+            reference.userId = userManager.getUserByReference(additionalInfo.customerReference).id;
+            reference.partnerReference = true;
+            reference.active = true;
+            reference.confirmed = true;
+        }
+        if(additionalInfo.userId != null && !additionalInfo.userId.isEmpty()) {
+            reference.userId = userManager.getUserById(additionalInfo.userId).id;
+        }
         
         saveObject(reference);
+        if(reference.userId.isEmpty()) {
+            System.out.println("Failed to set user id on reference " + reference.bookingReference);
+        }
         bookingReferences.put(reference.bookingReference, reference);
         return new Integer(reference.bookingReference).toString();
     }
@@ -417,6 +439,9 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
 
     private boolean isAvailable(Room room, long startDate, long endDate) {
         for(BookingReference reference : bookingReferences.values()) {
+            if(!reference.active) {
+                continue;
+            }
             if(reference.isBetweenDates(startDate*1000, endDate*1000) && reference.getAllRooms().contains(room.id)) {
                 return false;
             } 
@@ -462,12 +487,15 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         message = message.replaceAll("\\{name\\}", name);
         message = message.replaceAll("\\{referenceNumber\\}", reference.bookingReference + "");
         String contacts = "";
-        for (int i = 0; i < reference.contact.names.size(); i++) {
-            contacts += reference.contact.names.get(i) + "<br>";
-            contacts += reference.contact.phones.get(i) + "<br>";
+        for(RoomInformation roomReserved : reference.roomsReserved) {
+            for(Visitors visitor : roomReserved.visitors) {
+                contacts += visitor.name + "<br>";
+                contacts += visitor.phone + "<br>";
+                contacts += visitor.email + "<br>";
+            }
         }
+        
         message = message.replaceAll("\\{contacts\\}", contacts);
-
         Order order = orderManager.getOrderByReference(reference.bookingReference + "");
         if (order != null) {
             message = message.replaceAll("\\{roomName\\}", order.cart.getItems().get(0).getProduct().name + "");
@@ -526,14 +554,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             System.out.println("Tried to finalize null resverence");
             return;
         }
-        Order order = orderManager.getOrderByReference(reservation.bookingReference+"");
         reservation.payedFor = false;
-        if(order != null) {
-            reservation.orderId = order.incrementOrderId;
-            if(order.status == Order.Status.PAYMENT_COMPLETED) {
-                reservation.payedFor = true;
-            }
-        }
     }
 
     public String getUserIdForRoom(String roomNumber) {
@@ -609,5 +630,127 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     public boolean isRoomAvailable(String roomId, long startDate, long endDate) throws ErrorException {
         Room room = getRoom(roomId);
         return isAvailable(room, startDate, endDate);
+    }
+
+    @Override
+    public void checkForOrdersToGenerate() throws ErrorException {
+        List<BookingReference> reservations = getAllReservations();
+        Calendar nowCal = Calendar.getInstance();
+        Date nowDate = new Date();
+        nowCal.setTime(nowDate);
+        String now = nowCal.get(Calendar.MONTH) + "-" + nowCal.get(Calendar.YEAR);
+        
+        for(BookingReference reservation : reservations) {
+            if(!reservation.active) {
+                continue;
+            }
+            if(!reservation.partnerReference) {
+                continue;
+            }
+            
+            Calendar rescalstart = Calendar.getInstance();
+            rescalstart.setTime(reservation.startDate);
+            rescalstart.set(Calendar.DAY_OF_MONTH, 1);
+            rescalstart.set(Calendar.HOUR_OF_DAY, 1);
+            
+            if(nowDate.before(rescalstart.getTime()) || nowDate.after(reservation.endDate)) {
+                continue;
+            }
+            
+            boolean found = false;
+            if(reservation.partnerReference) {
+                List<Order> orders = getOrdersForReservations(reservation.bookingReference);
+                for(Order order :orders) {
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(order.createdDate);
+                    String orderDate = cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.YEAR);
+                    if(orderDate.equals(now)) {
+                        found = true;
+                    }
+                }
+            }
+            
+            if(!found) {
+                generateOrderOnReservation(reservation.bookingReference);
+            }
+            
+        }
+    }
+
+    @Override
+    public void appendOrderToReservation(String orderId, int referenceId) throws ErrorException {
+        BookingReference reservation = getReservationByReferenceId(referenceId);
+        if(reservation.orderIds.isEmpty()) {
+            Order order = orderManager.getOrder(orderId);
+            
+            if(order != null) {
+                reservation.orderIds.add(orderId);
+                saveObject(reservation);
+            }
+        }
+    }
+
+    @Override
+    public void stopReservation(Integer reservationNumber) throws ErrorException {
+        BookingReference reservation = getReservationByReferenceId(reservationNumber);
+        reservation.active = false;
+        saveObject(reservation);
+    }
+
+    private List<Order> getOrdersForReservations(int bookingReference) {
+        BookingReference reservation = getReservationByReferenceId(bookingReference);
+        List<Order> orders = new ArrayList();
+        for(String orderId : reservation.orderIds) {
+            orders.add(orderManager.getOrder(orderId));
+        }
+        return orders;
+    }
+
+    private String generateOrderOnReservation(int bookingReference) {
+        BookingReference reservation = getReservationByReferenceId(bookingReference);
+        List<String> allRooms = reservation.getAllRooms();
+        Calendar checking = Calendar.getInstance();
+        checking.setTime(new Date());
+        checking.set(Calendar.HOUR_OF_DAY, 18);
+        checking.set(Calendar.DAY_OF_MONTH, 1);
+        checking.set(Calendar.MINUTE, 0);
+        checking.set(Calendar.SECOND, 0);
+        int currentMonth = checking.get(Calendar.MONTH);
+        int days = 0;
+        
+        while(true) {
+            Date toCheckOn = checking.getTime();
+            if(toCheckOn.after(reservation.startDate) && toCheckOn.before(reservation.endDate)) {
+                days++;
+            }
+            checking.add(Calendar.DAY_OF_YEAR, 1);
+            System.out.println("\tChecking: " + checking.getTime());
+            if(checking.get(Calendar.MONTH) != currentMonth) {
+                break;
+            }
+        }
+        
+        cartManager.clear();
+        for(String roomId : allRooms) {
+            Room room = getRoom(roomId);
+            String productId = room.productId;
+            CartItem item = cartManager.addProductItem(productId, days);
+            cartManager.addMetaDataToProduct(item.getCartItemId(), room.roomName);
+        }
+        
+        Order order = orderManager.createOrderForUser(reservation.userId);
+        System.out.println("Order genreated: " + order.id + " days: " + days);
+        reservation.orderIds.add(order.id);
+        saveObject(reservation);
+        return order.id;
+    }
+
+    @Override
+    public String buildOrderForReservation(Integer reservationNumber) throws ErrorException {
+        BookingReference reservation = getReservationByReferenceId(reservationNumber);
+        if(!reservation.orderIds.isEmpty()) {
+            return "";
+        }
+        return generateOrderOnReservation(reservationNumber);
     }
 }

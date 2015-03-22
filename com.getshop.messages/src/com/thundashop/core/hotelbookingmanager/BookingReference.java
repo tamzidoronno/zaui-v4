@@ -15,9 +15,8 @@ public class BookingReference extends DataCommon {
     public List<Integer> codes = new ArrayList();
     public List<RoomInformation> roomsReserved = new ArrayList();
     public HashMap<String, Boolean> isApprovedForCheckIn = new HashMap();
-    public ContactData contact = new ContactData();
-    public boolean active = true;
     public Double bookingFee = 0.0;
+    public boolean active = true;
     public boolean updateArx = true;
     public boolean confirmed = false;
     public boolean sentWelcomeMessages = false;
@@ -25,8 +24,10 @@ public class BookingReference extends DataCommon {
     public Integer parkingSpots = 0;
     public String heardAboutUs = "";
     public boolean payedFor = false;
-    public long orderId;
+    public boolean partnerReference = false;
+    public List<String> orderIds = new ArrayList();
     Date failed = null;
+    public String userId = "";
     
     public boolean isApprovedForCheckin(String roomId) {
         if(isApprovedForCheckIn.containsKey(roomId)) {

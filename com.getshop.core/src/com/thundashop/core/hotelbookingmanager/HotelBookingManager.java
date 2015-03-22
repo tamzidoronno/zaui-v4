@@ -40,6 +40,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
     private VismaUsers transferredUsers = new VismaUsers();
     private Date lastPulled = null;
     private boolean warnedAboutArxDown = false;
+    private List<TempAccess> tempAccessList = new ArrayList();
 
     public List<ArxLogEntry> logEntries = new ArrayList();
     
@@ -555,6 +556,20 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             return;
         }
         reservation.payedFor = false;
+        if(!reservation.active) {
+            return;
+        }
+        if(reservation.partnerReference) {
+            reservation.payedFor = true;
+        } else {
+            if(!reservation.orderIds.isEmpty()) {
+                Order order = orderManager.getOrder(reservation.orderIds.get(0));
+                if(order.status == Order.Status.PAYMENT_COMPLETED) {
+                    reservation.payedFor = true;
+                }
+            }
+        }
+        
     }
 
     public String getUserIdForRoom(String roomNumber) {
@@ -752,5 +767,18 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
             return "";
         }
         return generateOrderOnReservation(reservationNumber);
+    }
+
+    @Override
+    public void tempGrantAccess(Integer reference, String roomId) throws ErrorException {
+        TempAccess toRecover = new TempAccess();
+        toRecover.referenceNumber = reference;
+        toRecover.roomName = getRoom(roomId).roomName;
+        tempAccessList.add(toRecover);
+    }
+
+    @Override
+    public List<TempAccess> getAllTempAccesses() throws ErrorException {
+        return tempAccessList;
     }
 }

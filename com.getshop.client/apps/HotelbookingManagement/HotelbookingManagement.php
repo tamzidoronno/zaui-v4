@@ -32,6 +32,76 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
         return time();
     }
     
+    public function displayRoomBoxInfo() {
+        echo "<span style='padding:10px; display:inline-block;'>";
+        $selectedStart = strtotime($_POST['data']['startDate']);
+        $selectedEnd = strtotime($_POST['data']['endDate']);
+        $users = $this->getApi()->getUserManager()->getAllUsers();
+        $allUsers = array();
+        foreach($users as $user) {
+            $allUsers[$user->id] = $user;
+        }
+        
+        $reservations = $this->getApi()->getHotelBookingManager()->getAllReservations();
+        $rooms = $this->getApi()->getHotelBookingManager()->getAllRooms();
+        $allRooms = array();
+        foreach($rooms as $room) {
+            $allRooms[$room->id] = $room;
+        }
+        
+        foreach($reservations as $reservation) {
+            /* @var $reservation \core_hotelbookingmanager_BookingReference */
+            $reservationStart = strtotime($reservation->startDate);
+            $reservationStop = strtotime($reservation->endDate);
+            
+            /* @var $reservedRoom core_hotelbookingmanager_RoomInformation */
+            $found = false;
+            foreach($reservation->roomsReserved as $reservedRoom) {
+                if($reservedRoom->roomId != $_POST['data']['room']) {
+                    continue;
+                }
+                $found = true;
+            }
+            
+            if(!$found) {
+                continue;
+            }
+            
+            if($selectedEnd < $reservationStart) {
+                continue;
+            }
+            if($selectedStart > $reservationStop) {
+                continue;
+            }
+            $this->printResevationRow($reservation, $allUsers, $allRooms);
+        }
+        echo "</span>";
+    }
+    
+    /**
+     * @param core_hotelbookingmanager_BookingReference $reservation
+     */
+    function printResevationRow($reservation,$allUsers,$rooms) {
+            /* @var $reservation \core_hotelbookingmanager_BookingReference */
+        echo "Booked for: " . $reservation->startDate . " - " . $reservation->endDate . "<br>";
+        echo "Booked at: " . $reservation->rowCreatedDate . "<br>";
+        $bookedRooms = $reservation->roomsReserved;
+        echo "<br>";
+        echo "Room booked<br>";
+        foreach($bookedRooms as $bookedRoom) {
+            echo "&nbsp;&nbsp;&nbsp;" . $rooms[$bookedRoom->roomId]->roomName;
+            $vistor = $bookedRoom->visitors[0];
+            echo " - " . $vistor->name . " - " . $vistor->phone . " - " . $vistor->email . " - <span style='color:#fff; cursor:pointer;' class='tempgrantaccess' roomId='".$bookedRoom->roomId."' refid='".$reservation->bookingReference."'>Temporary grant access</span><br>";
+            echo "<br>";
+        }
+    }
+    
+    public function tempGrantAccess() {
+        $refId = $_POST['data']['refId'];
+        $room = $_POST['data']['room'];
+        $this->getApi()->getHotelBookingManager()->tempGrantAccess($refId, $room);
+    }
+    
     public function displayRoomAvailability() {
         $startDate = $this->getStartDate();
         $endDate = $this->getEndDate();
@@ -45,7 +115,7 @@ class HotelbookingManagement extends \ApplicationBase implements \Application {
                     $totalavialable++;
                 }
                 
-                echo "<span class='roombox $avilableclass'>";
+                echo "<span class='roombox $avilableclass' room='$room->id'>";
                 echo $room->roomName . "<br>";
                 echo "</span>";
             }

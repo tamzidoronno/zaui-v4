@@ -90,6 +90,26 @@ app.HotelbookingManagement = {
         var event = thundashop.Ajax.createEvent('','showStopReference',$(this), data);
         thundashop.common.showInformationBox(event, "Stop reference");
     },
+    displayRoomBoxSettings : function() {
+        var data = {
+            startDate : $('input[gsname="startdate"').val(),
+            endDate : $('input[gsname="enddate"').val(),
+            room : $(this).attr('room')
+        }
+        
+        var event =thundashop.Ajax.createEvent('','displayRoomBoxInfo',$(this),data);
+        thundashop.common.showInformationBox(event);
+    },
+    tempGrantAccess : function() {
+        var data = {
+            refId : $(this).attr('refid'),
+            room : $(this).attr('roomId')
+        }
+        var event = thundashop.Ajax.createEvent('','tempGrantAccess', $(this), data);
+        thundashop.Ajax.postWithCallBack(event, function() {
+            alert('Grant access sent, it can take up to one minute before access has been granted.');
+        });
+    },
     initEvents : function() {
         $(document).on('click', '.HotelbookingManagement .edit_type', app.HotelbookingManagement.loadEditType);
         $(document).on('click', '.HotelbookingManagement .delete_type', app.HotelbookingManagement.deleteType);
@@ -102,6 +122,8 @@ app.HotelbookingManagement = {
         $(document).on('click', '.HotelbookingManagement .stop_reference_action', app.HotelbookingManagement.doStopReference);
         $(document).on('click', '.HotelbookingManagement .go_live', app.HotelbookingManagement.confirmReservation);
         $(document).on('click', '.HotelbookingManagement .existingroomrow i', app.HotelbookingManagement.toggleOptions);
+        $(document).on('click', '.HotelbookingManagement .roombox', app.HotelbookingManagement.displayRoomBoxSettings);
+        $(document).on('click', '.HotelbookingManagement .tempgrantaccess', app.HotelbookingManagement.tempGrantAccess);
     },
     
     toggleOptions : function() {

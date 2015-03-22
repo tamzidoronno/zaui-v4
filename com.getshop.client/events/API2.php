@@ -1851,6 +1851,22 @@ class APIHotelBookingManager {
 	}
 
 	/**
+	* Change a room for a reference.
+	* @param reference
+	* @param oldRoom the old room
+	* @param newRoomId
+	* @throws ErrorException
+	*/
+
+	public function getAllTempAccesses() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getAllTempAccesses";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
 	* Get all references
 	* @return List
 	* @throws ErrorException
@@ -2131,6 +2147,24 @@ class APIHotelBookingManager {
 	     $data['args'] = array();
 	     $data['args']["reservationNumber"] = json_encode($this->transport->object_unset_nulls($reservationNumber));
 	     $data["method"] = "stopReservation";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Change a room for a reference.
+	* @param reference
+	* @param oldRoom the old room
+	* @param newRoomId
+	* @throws ErrorException
+	*/
+
+	public function tempGrantAccess($reference, $roomId) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["reference"] = json_encode($this->transport->object_unset_nulls($reference));
+	     $data['args']["roomId"] = json_encode($this->transport->object_unset_nulls($roomId));
+	     $data["method"] = "tempGrantAccess";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
 	}

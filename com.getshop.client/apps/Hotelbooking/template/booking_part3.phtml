@@ -17,8 +17,15 @@ $periode = $this->__w("night");
         <bR><br>
             <h1>REFERANSEKODE</h1><div class="seperator"></div>
            <div class="col-33">
-               <span class="contact_text">Skriv din referansekode</span>
+               <span class="contact_text"><? echo $this->__w("Enter your reference number"); ?></span>
                <span class="contact_input"><input type="text" gsname="referenceNumber" value="<? echo $this->getPost("referenceNumber"); ?>" class="<? echo $this->validateInput("referenceNumber"); ?>"></span>
+               
+               <?
+               if($this->validateInput("referenceNumber")) {
+                   echo "* " . $this->__w("Your reference number is not correct.");
+               }
+               ?>
+               
            </div><br>
             <?
         }

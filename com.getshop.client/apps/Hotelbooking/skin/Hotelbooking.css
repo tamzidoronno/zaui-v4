@@ -72,7 +72,7 @@
 .Hotelbooking .to_checkout { text-align: right; width:100%; }
 .Hotelbooking .continue_to_cart_button { padding-left: 20px; padding-right: 20px; display: inline-block; width: 150px; }
 .Hotelbooking .booking_table .disabled { color:#bBB; }
-.Hotelbooking .contact_text { display:inline-block; width: 150px; }
+.Hotelbooking .contact_text { display:inline-block;  }
 .Hotelbooking .right_aligned_price { float:right; }
 .Hotelbooking .summary_total { border-top: solid 1px #BBB; border-bottom: solid 1px #BBB; margin-top: 10px; padding-top: 5px; padding-bottom: 5px; font-weight:bold; }
 .Hotelbooking .price_row { padding: 3px; }

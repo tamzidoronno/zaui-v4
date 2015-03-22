@@ -27,18 +27,22 @@ $bookTime = $this->__w("Booked time periode");
     $cart = $this->getApi()->getCartManager()->getCart();
     $total = 0;
     $taxes = array();
+    $partnerReservations = $this->getpartnerReservatations();
+ 
+    $i = 0;
     foreach ($cart->items as $cartItem) {
         /* @var $cartItem core_cartmanager_data_CartItem */
         $product = $cartItem->product;
-        if ($cartItem->product->sku == "vask" || $cartItem->product->sku == "parking") {
-            $text = $cartItem->count . " " . strtolower($product->name) . "<br>";
-        } else {
-            $nightTextToPrint = $nightText;
-            if ($cartItem->count > 1) {
-                $nightTextToPrint = $nightsText;
-            }
-            $text = $cartItem->count . " " . $nightTextToPrint . " " . $inText . " " . strtolower($product->name) . "<br>";
+        $nightTextToPrint = $nightText;
+        if ($cartItem->count > 1) {
+            $nightTextToPrint = $nightsText;
         }
+        $text = $cartItem->count . " " . $nightTextToPrint . " " . $inText . " " . strtolower($product->name);
+        if($this->partnerShipChecked()) {
+            $text .= " (" . date("m-d-Y", $partnerReservations[$i]->start) . " - " . date("m-d-Y", $partnerReservations[$i]->end) . ")";
+        }
+        $text .= "<br>";
+        
         $price = $cartItem->product->original_price * $cartItem->count;
         $discountedPrice = $cartItem->product->price * $cartItem->count;
         $diff = $discountedPrice - $price;
@@ -58,6 +62,7 @@ $bookTime = $this->__w("Booked time periode");
         echo "<span class='right_aligned_price'><span class='right_aligned_price'>" . $price . " kr</span></span>";
         echo $text;
         echo "</div>";
+        $i++;
     }
     if ($totalDiff < 0) {
         $totalDiff = number_format((float) $totalDiff, 2, '.', '');

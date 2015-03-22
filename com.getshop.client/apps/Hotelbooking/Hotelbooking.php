@@ -156,11 +156,10 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $value = $bookingData[$name];
         
         if($name == "referenceNumber") {
-            $number = $this->getPost($name);
-            if(!$this->getApi()->getUserManager()->doesUserExistsOnReferenceNumber($number)) {
-                return "";
+            if(!$this->getApi()->getUserManager()->doesUserExistsOnReferenceNumber($value)) {
+                return "invalid";
             }
-            return "invalid";
+            return "";
         }
         
         if(stristr($name, "phone_")) {
@@ -894,6 +893,13 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             return false;
         }
         
+        if($this->partnerShipChecked()) {
+            if(!isset($bookingData['referenceNumber'])) {
+                return false;
+            }
+        }
+        
+        
         foreach ($this->getBookingData() as $index => $test) {
             $valid = true;
             if ($this->validateInput($index)) {
@@ -976,10 +982,11 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         for($i = 1; $i <= $count; $i++) {
             $info = new \core_hotelbookingmanager_RoomInformation();
             $visitor = new \core_hotelbookingmanager_Visitors();
-            $visitor->name = $bookingData['name_' . $i];
-            $visitor->phone = $bookingData['phone_' . $i];
-            $visitor->email = $bookingData['email_' . $i];
-
+            if(isset($bookingData['name_' . $i])) {
+                $visitor->name = $bookingData['name_' . $i];
+                $visitor->phone = $bookingData['phone_' . $i];
+                $visitor->email = $bookingData['email_' . $i];
+            }
             $info->visitors = array();
             $info->visitors[] = $visitor;
             $infodata[] = $info;

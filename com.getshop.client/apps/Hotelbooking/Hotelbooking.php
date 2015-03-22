@@ -153,6 +153,8 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             return "invalid";
         }
         
+        $value = $bookingData[$name];
+        
         if($name == "referenceNumber") {
             $number = $this->getPost($name);
             if(!$this->getApi()->getUserManager()->doesUserExistsOnReferenceNumber($number)) {
@@ -161,9 +163,43 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             return "invalid";
         }
         
+        if(stristr($name, "phone_")) {
+            if(!$this->startsWith($value, "9") && !$this->startsWith($value, "4")) {
+                return "invalid";
+            }
+            if(strlen($value) != 8) {
+                return "invalid";
+            }
+        }
+        
+        if(stristr($name, "email_")) {
+            if(!stristr($value, "@")) {
+                return "invalid";
+            }
+        }
+        
+        if(stristr($name, "name_")) {
+            if(!stristr($value, " ")) {
+                return "invalid";
+            }
+        }
         
         return "";
     }
+    
+    function startsWith($haystack, $needle) {
+         $length = strlen($needle);
+         return (substr($haystack, 0, $length) === $needle);
+    }
+
+    function endsWith($haystack, $needle) {
+        $length = strlen($needle);
+        if ($length == 0) {
+            return true;
+        }
+        return (substr($haystack, -$length) === $needle);
+    }
+    
     
     public function getProductId() {
         return $_SESSION['hotelbooking']['product'];

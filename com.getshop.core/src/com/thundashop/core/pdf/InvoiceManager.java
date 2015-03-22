@@ -103,7 +103,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
         return encodedString;
     }
 
-    private static byte[] loadFile(File file) throws IOException {
+    public static byte[] loadFile(File file) throws IOException {
         InputStream is = new FileInputStream(file);
 
         long length = file.length();

@@ -1,5 +1,6 @@
 package com.thundashop.core.messagemanager;
 
+import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.chatmanager.SubscribedToAirgram;
@@ -13,11 +14,17 @@ import com.thundashop.core.common.Setting;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.storemanager.StorePool;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -132,5 +139,30 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     public void collectEmail(String email) {
         collectedEmails.emails.add(email);
         saveObject(collectedEmails);
+    }
+
+    @Override
+    public void sendMailWithAttachments(String to, String toName, String subject, String content, String from, String fromName, HashMap<String,String> attachments) {
+        try {
+            Map<String, String> files = new HashMap();
+            
+            for (String fileName : attachments.keySet()) {
+                String tmpFile = "/tmp/"+UUID.randomUUID().toString();
+                byte[] data = Base64.decodeBase64(attachments.get(fileName));
+                
+                FileOutputStream fos = new FileOutputStream(tmpFile);
+                fos.write(data);
+                fos.close();
+                
+                files.put(tmpFile, fileName);
+            }
+            
+            mailFactory.sendWithAttachments(from, to, toName, content, files, true);
+        
+        } catch (FileNotFoundException ex) {
+            java.util.logging.Logger.getLogger(MessageManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(MessageManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

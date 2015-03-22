@@ -2344,6 +2344,17 @@ class InvoiceManager(object):
     data.interfaceName = "core.pdf.IInvoiceManager"
     return self.communicationHelper.sendMessage(data)
 
+class LasGruppenPDFGenerator(object):
+  def __init__(self, communicationHelper):
+    self.communicationHelper = communicationHelper
+  def generatePdf(self):
+    args = collections.OrderedDict()
+    data = EmptyClass()
+    data.args = args
+    data.method = "generatePdf"
+    data.interfaceName = "core.pdf.ILasGruppenPDFGenerator"
+    return self.communicationHelper.sendMessage(data)
+
 class ListManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
@@ -2765,6 +2776,63 @@ class MessageManager(object):
     data = EmptyClass()
     data.args = args
     data.method = "sendMail"
+    data.interfaceName = "core.messagemanager.IMessageManager"
+    return self.communicationHelper.sendMessage(data)
+
+  def sendMailWithAttachments(self, to, toName, subject, content, fromm, fromName, attachments):
+    args = collections.OrderedDict()
+    if isinstance(to,GetShopBaseClass): 
+      args["to"]=json.dumps(to.__dict__)
+    else:
+      try:
+        args["to"]=json.dumps(to)
+      except (ValueError, AttributeError):
+        args["to"]=to
+    if isinstance(toName,GetShopBaseClass): 
+      args["toName"]=json.dumps(toName.__dict__)
+    else:
+      try:
+        args["toName"]=json.dumps(toName)
+      except (ValueError, AttributeError):
+        args["toName"]=toName
+    if isinstance(subject,GetShopBaseClass): 
+      args["subject"]=json.dumps(subject.__dict__)
+    else:
+      try:
+        args["subject"]=json.dumps(subject)
+      except (ValueError, AttributeError):
+        args["subject"]=subject
+    if isinstance(content,GetShopBaseClass): 
+      args["content"]=json.dumps(content.__dict__)
+    else:
+      try:
+        args["content"]=json.dumps(content)
+      except (ValueError, AttributeError):
+        args["content"]=content
+    if isinstance(fromm,GetShopBaseClass): 
+      args["from"]=json.dumps(fromm.__dict__)
+    else:
+      try:
+        args["from"]=json.dumps(fromm)
+      except (ValueError, AttributeError):
+        args["from"]=fromm
+    if isinstance(fromName,GetShopBaseClass): 
+      args["fromName"]=json.dumps(fromName.__dict__)
+    else:
+      try:
+        args["fromName"]=json.dumps(fromName)
+      except (ValueError, AttributeError):
+        args["fromName"]=fromName
+    if isinstance(attachments,GetShopBaseClass): 
+      args["attachments"]=json.dumps(attachments.__dict__)
+    else:
+      try:
+        args["attachments"]=json.dumps(attachments)
+      except (ValueError, AttributeError):
+        args["attachments"]=attachments
+    data = EmptyClass()
+    data.args = args
+    data.method = "sendMailWithAttachments"
     data.interfaceName = "core.messagemanager.IMessageManager"
     return self.communicationHelper.sendMessage(data)
 
@@ -6631,6 +6699,21 @@ class UserManager(object):
 class UtilManager(object):
   def __init__(self, communicationHelper):
     self.communicationHelper = communicationHelper
+  def getBase64EncodedPDFWebPage(self, urlToPage):
+    args = collections.OrderedDict()
+    if isinstance(urlToPage,GetShopBaseClass): 
+      args["urlToPage"]=json.dumps(urlToPage.__dict__)
+    else:
+      try:
+        args["urlToPage"]=json.dumps(urlToPage)
+      except (ValueError, AttributeError):
+        args["urlToPage"]=urlToPage
+    data = EmptyClass()
+    data.args = args
+    data.method = "getBase64EncodedPDFWebPage"
+    data.interfaceName = "core.utils.IUtilManager"
+    return self.communicationHelper.sendMessage(data)
+
   def getCompaniesFromBrReg(self, search):
     args = collections.OrderedDict()
     if isinstance(search,GetShopBaseClass): 
@@ -6727,6 +6810,7 @@ class GetShopApi(object):
     self.HotelBookingManager = HotelBookingManager(self.communicationHelper)
     self.InformationScreenManager = InformationScreenManager(self.communicationHelper)
     self.InvoiceManager = InvoiceManager(self.communicationHelper)
+    self.LasGruppenPDFGenerator = LasGruppenPDFGenerator(self.communicationHelper)
     self.ListManager = ListManager(self.communicationHelper)
     self.LogoManager = LogoManager(self.communicationHelper)
     self.MessageManager = MessageManager(self.communicationHelper)

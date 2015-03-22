@@ -2261,6 +2261,28 @@ class APIInvoiceManager {
 	}
 
 }
+class APILasGruppenPDFGenerator {
+
+	var $transport;
+	
+	function APILasGruppenPDFGenerator($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
+	public function generatePdf() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "generatePdf";
+	     $data["interfaceName"] = "core.pdf.ILasGruppenPDFGenerator";
+	     return $this->transport->sendMessage($data);
+	}
+
+}
 class APIListManager {
 
 	var $transport;
@@ -2665,6 +2687,35 @@ class APIMessageManager {
 	     $data['args']["from"] = json_encode($this->transport->object_unset_nulls($from));
 	     $data['args']["fromName"] = json_encode($this->transport->object_unset_nulls($fromName));
 	     $data["method"] = "sendMail";
+	     $data["interfaceName"] = "core.messagemanager.IMessageManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Sending a mail with attachments,
+	*
+	* Map<Key, Value> - Key = FileName in attchments, Value = Base64 encoded stuff
+	*
+	* @param to
+	* @param toName
+	* @param subject
+	* @param content
+	* @param from
+	* @param fromName
+	* @param attachments
+	*/
+
+	public function sendMailWithAttachments($to, $toName, $subject, $content, $from, $fromName, $attachments) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["to"] = json_encode($this->transport->object_unset_nulls($to));
+	     $data['args']["toName"] = json_encode($this->transport->object_unset_nulls($toName));
+	     $data['args']["subject"] = json_encode($this->transport->object_unset_nulls($subject));
+	     $data['args']["content"] = json_encode($this->transport->object_unset_nulls($content));
+	     $data['args']["from"] = json_encode($this->transport->object_unset_nulls($from));
+	     $data['args']["fromName"] = json_encode($this->transport->object_unset_nulls($fromName));
+	     $data['args']["attachments"] = json_encode($this->transport->object_unset_nulls($attachments));
+	     $data["method"] = "sendMailWithAttachments";
 	     $data["interfaceName"] = "core.messagemanager.IMessageManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -6413,6 +6464,20 @@ class APIUtilManager {
 	* @author ktonder
 	*/
 
+	public function getBase64EncodedPDFWebPage($urlToPage) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["urlToPage"] = json_encode($this->transport->object_unset_nulls($urlToPage));
+	     $data["method"] = "getBase64EncodedPDFWebPage";
+	     $data["interfaceName"] = "core.utils.IUtilManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	*
+	* @author ktonder
+	*/
+
 	public function getCompaniesFromBrReg($search) {
 	     $data = array();
 	     $data['args'] = array();
@@ -6586,6 +6651,12 @@ class GetShopApi {
       */
       public function getInvoiceManager() {
            return new APIInvoiceManager($this->transport);
+      }
+      /**
+      * @return LasGruppenPDFGenerator
+      */
+      public function getLasGruppenPDFGenerator() {
+           return new APILasGruppenPDFGenerator($this->transport);
       }
       /**
       * @return ListManager

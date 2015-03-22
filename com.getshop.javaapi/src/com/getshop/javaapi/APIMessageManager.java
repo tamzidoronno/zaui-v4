@@ -75,4 +75,32 @@ public class APIMessageManager {
           String result = transport.send(gs_json_object_data);
      }
 
+     /**
+     * Sending a mail with attachments,
+     *
+     * Map<Key, Value> - Key = FileName in attchments, Value = Base64 encoded stuff
+     *
+     * @param to
+     * @param toName
+     * @param subject
+     * @param content
+     * @param from
+     * @param fromName
+     * @param attachments
+     */
+     public void sendMailWithAttachments(java.lang.String to, java.lang.String toName, java.lang.String subject, java.lang.String content, java.lang.String from, java.lang.String fromName, java.util.HashMap attachments)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("to",new Gson().toJson(to));
+          gs_json_object_data.args.put("toName",new Gson().toJson(toName));
+          gs_json_object_data.args.put("subject",new Gson().toJson(subject));
+          gs_json_object_data.args.put("content",new Gson().toJson(content));
+          gs_json_object_data.args.put("from",new Gson().toJson(from));
+          gs_json_object_data.args.put("fromName",new Gson().toJson(fromName));
+          gs_json_object_data.args.put("attachments",new Gson().toJson(attachments));
+          gs_json_object_data.method = "sendMailWithAttachments";
+          gs_json_object_data.interfaceName = "core.messagemanager.IMessageManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
 }

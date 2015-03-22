@@ -38,6 +38,12 @@ public class GetShopApi {
            return new APIUtilManager(transport);
       }
      /**
+      * @return APILasGruppenPDFGenerator
+      */
+      public APILasGruppenPDFGenerator getLasGruppenPDFGenerator() {
+           return new APILasGruppenPDFGenerator(transport);
+      }
+     /**
       * @return APIInvoiceManager
       */
       public APIInvoiceManager getInvoiceManager() {

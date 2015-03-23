@@ -71,7 +71,7 @@ public class UtilManager extends ManagerBase implements IUtilManager {
     public String getBase64EncodedPDFWebPage(String urlToPage) {
         System.out.println(urlToPage);
         String tmpPdfName = "/tmp/"+UUID.randomUUID().toString() + ".pdf";
-        boolean executed = executeCommand("/usr/bin/xvfb-run --server-args='-screen 10, 1920x1080x24' wkhtmltopdf -B 0 -L 0 -R 0 -T 0 " + urlToPage + " " + tmpPdfName);
+        boolean executed = executeCommand("/usr/local/bin/wkhtmltopdf.sh " + urlToPage + " " + tmpPdfName);
         
         if (!executed) {
             executed = executeCommand("wkhtmltopdf -B 0 -L 0 -R 0 -T 0  " + urlToPage + " " + tmpPdfName);
@@ -110,13 +110,14 @@ public class UtilManager extends ManagerBase implements IUtilManager {
             
             System.out.println("=====");
             
+            boolean ok = true;
             while ((d = stdError.readLine()) != null) {
                 System.out.println(d);
                 if (d.contains("error"))
-                    return false;
+                    ok = false;
             }
             
-            return true;
+            return ok;
         } catch (IOException e) {
             System.out.println("exception happened - here's what I know: ");
             e.printStackTrace();

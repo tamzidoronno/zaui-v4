@@ -47,7 +47,7 @@
 
     <div class="textfield gss_setting"  id="password1">
         <span class="title"><?php echo $this->__f("Password"); ?></span>
-        <input type="password" gs_model='usermodel' gs_model_attr='password1' value="" placeholder="*******">
+        <input id='gss_new_user_password1' type="password" gs_model='usermodel' gs_model_attr='password1' value="" placeholder="*******">
         <div class="description">
             <?php echo $this->__("Please enter the accounts password."); ?>
         </div>
@@ -55,7 +55,7 @@
 
     <div class="textfield gss_setting"  id="password2">
         <span class="title"><?php echo $this->__f("Repeat password password"); ?></span>
-        <input type="password" gs_model='usermodel' gs_model_attr='password2' value="" placeholder="*******">
+        <input id='gss_new_user_password2' type="password" gs_model='usermodel' gs_model_attr='password2' value="" placeholder="*******">
         <div class="description">
             <?php echo $this->__("Make sure that the password you wrote above is the correct."); ?>
         </div>
@@ -82,7 +82,7 @@
     </div>
 
     <div class='gss_button_area'>
-        <div class="gss_button" gss_method="createUser" gss_model="usermodel"><i class='fa fa-plus'></i><?php echo $this->__("Create account"); ?></div>
+        <div class="gss_button" gss_pre_post="validatePassword" gss_fragment="user" gss_view="gs_user_workarea" gss_method="createUser" gss_model="usermodel"><i class='fa fa-plus'></i><?php echo $this->__("Create account"); ?></div>
     </div>
 
 </div>

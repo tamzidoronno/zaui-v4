@@ -101,7 +101,9 @@ class Users extends \SystemApplication implements \Application {
             $user->type = 100;
         }
         
-        $this->getApi()->getUserManager()->createUser($user);
+        $user = $this->getApi()->getUserManager()->createUser($user);
+        $this->getApi()->getUserManager()->updatePassword($user->id, "", $_POST['password1']);
+        $_POST['value'] = $user->id;
     }
     
     public function preProcess() {

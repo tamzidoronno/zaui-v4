@@ -110,7 +110,7 @@ getshop.Settings = {
     successfully: function(response, field, data) {
         var view = data['gss_view'];
         var successMessage = $(field).attr('gss_success_message');
-
+        
         var successMethod = $(field).attr('gss_success_method');
         if (successMethod) {
             var appScope = app[$(field).closest('.app').attr('app')];
@@ -199,6 +199,23 @@ getshop.Settings = {
         return false;
     },
     doPost: function(data, field, success) {
+        if (field) {
+            var prePostMethod = $(field).attr('gss_pre_post');
+            if (prePostMethod) {
+                var appScope = app[$(field).closest('.app').attr('app')];
+
+                if (appScope) {
+                    var fn = appScope[prePostMethod];
+                    if(typeof fn === 'function') {
+                        var res = fn(field);
+                        if (!res) {
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        
         data['appid'] = this.getCurrentAppId();
         getshop.Settings.loadingTimer = setTimeout(function() {
             $('#gss_loading_icon').show();

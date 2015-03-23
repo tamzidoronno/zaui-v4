@@ -145,7 +145,7 @@ $data = $data['data'];
             <b>Informasjon om rekvirent</b>
             <div style="padding-left: 20px; padding-top: 10px;">
                 <?
-                echo $data['page1']['contact']['systemnumber'];
+                echo strtoupper($data['page1']['contact']['systemnumber']);
                 echo "<br>".$data['page1']['contact']['name'];
                 echo "<br>".$data['page1']['contact']['email'];
                 echo "<br>".$data['page1']['contact']['cellphone'];

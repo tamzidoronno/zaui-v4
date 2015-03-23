@@ -142,7 +142,7 @@ $data = $data['data'];
     
     <div class="row row_2">
         <div class="col">
-            <b>Fakturainformasjon</b>
+            <b>Informasjon om rekvirent</b>
             <div style="padding-left: 20px; padding-top: 10px;">
                 <?
                 echo $data['page1']['contact']['systemnumber'];

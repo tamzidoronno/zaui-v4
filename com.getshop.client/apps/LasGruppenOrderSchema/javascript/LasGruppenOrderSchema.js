@@ -2,6 +2,7 @@ app.LasGruppenOrderSchema = {
     addedRows: false,
     inProgress: false,
     isCompany: false,
+    addedCount: 0,
     
     init: function() {
         $(document).on('change', '.LasGruppenOrderSchema [name="security"]', app.LasGruppenOrderSchema.securityChanged);
@@ -126,6 +127,12 @@ app.LasGruppenOrderSchema = {
         };
         
         data.silent = silent;
+
+        if (!data.page4.emailCopy) {
+            $('#email_copy_sent_to').hide()
+        } else {
+            $('#email_copy_sent_to span').html(data.page4.emailCopy);
+        }
         
         var event = thundashop.Ajax.createEvent("", "downloadPdf", target, data);
         thundashop.Ajax.postWithCallBack(event, function() {
@@ -240,6 +247,9 @@ app.LasGruppenOrderSchema = {
         var currentPage = $(this).closest('.orderpage');
         var pageNumber = currentPage.attr('pageNumer');
         pageNumber++;
+        
+        var me = this;
+        
         var validated = app.LasGruppenOrderSchema.validatePage(currentPage);
         if (!validated) {
             alert('For å kunne gå videre må du først rette opp i de røde feltene');
@@ -264,6 +274,7 @@ app.LasGruppenOrderSchema = {
             if ($('#signature').is(':checked')) {
                 app.LasGruppenOrderSchema.saveData(this, function() {
                     window.location = "/scripts/downloadPdfLasGruppen.php";
+                    app.LasGruppenOrderSchema.goToNextPage(pageNumber, me);
                 }, true);
                 
                 return;
@@ -282,20 +293,20 @@ app.LasGruppenOrderSchema = {
                 confirmationEmail : $($('.order_page5 input')[0]).val()
             }
             
-            var me = this;
             var event = thundashop.Ajax.createEvent("", "sendConfirmation", this, data);
             thundashop.Ajax.postWithCallBack(event, function() {
-                if ($('.LasGruppenOrderSchema [pageNumer="'+pageNumber+'"').length) {
-                    $(me).closest('.orderpage').hide();
-                    $('.LasGruppenOrderSchema [pageNumer="'+pageNumber+'"').show();
-                }        
+                app.LasGruppenOrderSchema.goToNextPage(pageNumber, me);
             });
-            
+                
             return;
         }
         
+        app.LasGruppenOrderSchema.goToNextPage(pageNumber, this);
+    },
+    
+    goToNextPage: function(pageNumber, target) {
         if ($('.LasGruppenOrderSchema [pageNumer="'+pageNumber+'"').length) {
-            $(this).closest('.orderpage').hide();
+            $(target).closest('.orderpage').hide();
             $('.LasGruppenOrderSchema [pageNumer="'+pageNumber+'"').show();
         }
     },
@@ -323,7 +334,7 @@ app.LasGruppenOrderSchema = {
             $('#shipping_bedriftspakke').hide();
         }
 
-        if ($('#cylindersoption').is(':checked')) {
+        if ($('#cylindersoption').is(':checked') && app.LasGruppenOrderSchema.isCompany) {
             $('#shipping_rekomandert').hide();
         }
     },
@@ -407,6 +418,14 @@ app.LasGruppenOrderSchema = {
     },
     
     addKeyRow: function() {
+        app.LasGruppenOrderSchema.addedCount++;
+        
+        if (app.LasGruppenOrderSchema.addedCount > 10) {
+            alert('Du kan maksimalt legge inn 10 ordrelinjer');
+            return;
+        }
+        
+        
         var row = $('table tr.keys_template_row').clone();
         row.removeClass('keys_template_row');
         row.addClass('order_key_row_to_add');
@@ -447,6 +466,13 @@ app.LasGruppenOrderSchema = {
     },
     
     addCylinderRow: function() {
+        app.LasGruppenOrderSchema.addedCount++;
+        
+        if (app.LasGruppenOrderSchema.addedCount > 10) {
+            alert('Du kan maksimalt legge inn 10 ordrelinjer');
+            return;
+        }
+        
         var row = $('table tr.cylinder_template_row').clone();
         row.removeClass('cylinder_template_row');
         row.addClass('order_cylinder_row_to_add');

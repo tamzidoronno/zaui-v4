@@ -15,7 +15,8 @@
 namespace ns_7004f275_a10f_4857_8255_843c2c7fb3ab;
 
 class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
-    public static $url = "http://20192.getshop.com";
+    public static $url = "http://20192.2.0.local.getshop.com";
+    
     public function getDescription() {
         return "TEST";
     }
@@ -29,7 +30,10 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
     }
     
     public function sendConfirmation() {
-        $this->sendMail($_POST['data']['confirmationEmail']);
+        if (isset($_POST['data']['confirmationEmail']) && $_POST['data']['confirmationEmail']) {
+            $attachments = $this->getAttachments();
+            $this->sendMail($_POST['data']['confirmationEmail'], $attachments);
+        }
     }
     
     public function getBrReg() {
@@ -40,19 +44,24 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
     
     public function downloadPdf() {
         $_SESSION['lasgruppen_pdf_data'] = json_encode($_POST);
+        $attachments = $this->getAttachments();
         
+//        $this->sendMail("system@certego.no", $attachments);
         if (isset($_POST['data']['page4']['emailCopy']) && $_POST['data']['page4']['emailCopy']) {
-            $this->sendMail($_POST['data']['page4']['emailCopy']);
+            $this->sendMail($_POST['data']['page4']['emailCopy'], $attachments);
         }
     }
     
-    private function sendMail($mailAddress) {
+    private function getAttachments() {
         $address = LasGruppenOrderSchema::$url."/scripts/generatePdfLasgruppen.php?id=" . session_id();
         session_write_close();
         $content = $this->getApi()->getUtilManager()->getBase64EncodedPDFWebPage($address);
         $attachments = [];
-        $attachments['bestilling.pdf'] = htmlentities($content);
-        $this->getApi()->getMessageManager()->sendMailWithAttachments($mailAddress, $mailAddress, "Bestilling fra Certego", "", "Certego", "No_replay@certego.no", $attachments);
+        $attachments['bestilling.pdf'] = $content;
+        return $attachments;
     }
-
+    
+    private function sendMail($mailAddress, $attachments) {
+        $this->getApi()->getMessageManager()->sendMailWithAttachments($mailAddress, $mailAddress, "Bestilling fra Certego", "", "Certego", "no_replay@certego.no", $attachments);
+    }
 }

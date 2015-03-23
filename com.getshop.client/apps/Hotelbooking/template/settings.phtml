@@ -16,24 +16,7 @@ $config = $this->getConfig();
                 <input type='text' gsname='name' value='<? echo $this->getProjectName(); ?>'>
             </td>
         </tr>
-        <tr>
-            <td>
-                Type
-            </td>
-            <td>
-                <select gsname='type'>
-                    <? 
-                    foreach($types as $index => $type) {
-                        $selected = "";
-                        if($index == $this->getServiceType()) {
-                            $selected = "SELECTED"; 
-                        }
-                        echo "<option value='" . $index . "' $selected>" . $type . "</option>";
-                    }
-                    ?>
-                </select>
-            </td>
-        </tr>
+        
         <tr>
             <td>
                Continue page id
@@ -63,7 +46,7 @@ $config = $this->getConfig();
                Minumum rental periode
             </td>
             <td>
-                <input type='text' gsname='rental_days' value="<? echo $this->getMinumRental(); ?>">
+                <input type='text' gsname='rental_days' value="<? echo $this->getConfig()->minRentalDays; ?>">
             </td>
         </tr>
         <tr>
@@ -92,7 +75,7 @@ $config = $this->getConfig();
             <td>
                 <select gsname="show_referencenumber">
                     <option value="false">No</option>
-                    <option value="true" <? if($this->showReferenceNumber()) { echo " SELECTED"; } ?>>Yes</option>
+                    <option value="true" <? if($this->getConfig()->displayHeardAboutUs) { echo " SELECTED"; } ?>>Yes</option>
                 </select>
             </td>
         </tr>
@@ -103,7 +86,7 @@ $config = $this->getConfig();
             <td>
                 <select gsname="show_heardaboutus">
                     <option value="false">No</option>
-                    <option value="true" <? if($this->getConfig()->displayHeardAboutUs) { echo " SELECTED"; } ?>>Yes</option>
+                    <option value="true" <? if($this->getConfig()->showReferenceNumber) { echo " SELECTED"; } ?>>Yes</option>
                 </select>
             </td>
         </tr>

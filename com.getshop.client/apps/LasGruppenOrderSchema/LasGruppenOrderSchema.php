@@ -15,7 +15,7 @@
 namespace ns_7004f275_a10f_4857_8255_843c2c7fb3ab;
 
 class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
-    public static $url = "http://20192.2.0.local.getshop.com";
+    public static $url = "http://20192.getshop.com";
     
     public function getDescription() {
         return "TEST";

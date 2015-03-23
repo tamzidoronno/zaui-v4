@@ -46,7 +46,7 @@ class LasGruppenOrderSchema extends \ApplicationBase implements \Application {
         $_SESSION['lasgruppen_pdf_data'] = json_encode($_POST);
         $attachments = $this->getAttachments();
         
-//        $this->sendMail("system@certego.no", $attachments);
+        $this->sendMail("system@certego.no", $attachments);
         if (isset($_POST['data']['page4']['emailCopy']) && $_POST['data']['page4']['emailCopy']) {
             $this->sendMail($_POST['data']['page4']['emailCopy'], $attachments);
         }

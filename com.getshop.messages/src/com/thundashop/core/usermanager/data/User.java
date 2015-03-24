@@ -74,6 +74,8 @@ public class User extends DataCommon implements Comparable<User> {
     
     public Integer customerId = -1;
     
+    public double discount = 0;
+    
     //ApplicationId, int = 0 rw, 1=r, 2=w
     public HashMap<String, Integer> applicationAccessList = new HashMap();
 

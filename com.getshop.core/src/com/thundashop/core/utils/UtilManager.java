@@ -102,13 +102,13 @@ public class UtilManager extends ManagerBase implements IUtilManager {
             BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
             BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
             
-            System.out.println("=== 1 =====");
+//            System.out.println("=== 1 =====");
             String d = "";
             while ((d = stdInput.readLine()) != null) {
-                System.out.println(d);
+//                System.out.println(d);
             }
             
-            System.out.println("=====");
+//            System.out.println("=====");
             
             boolean ok = true;
             while ((d = stdError.readLine()) != null) {

@@ -212,12 +212,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
     
     public void finalizeCart(Cart cart) throws ErrorException {
+        User user = getSession() != null && getSession().currentUser != null ? getSession().currentUser : null;
+        
         for (CartItem item : cart.getItems()) {
             Product product = item.getProduct();
             double price = productManager.getPrice(item.getProduct().id, item.getVariations());
             product.price = price;
             
-            if (product.prices != null && product.prices.size() > 0) {
+            if (user != null && user.discount > 0) {
+                product.price = getPriceBasedOnUserDiscount(item, user);
+            } else if (product.prices != null && product.prices.size() > 0) {
                 if (product.progressivePriceModel) {
                     product.price = getPriceBasedOnProgressiveModel(item);
                 } else {
@@ -721,6 +725,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         orders.clear();
     }
 
+    private double getPriceBasedOnUserDiscount(CartItem item, User user) {
+        double price = productManager.getPrice(item.getProduct().id, item.getVariations());
+        price = price * (user.discount / 100);
+        return price;
+    }
+    
     private double getPriceBasedOnProgressiveModel(CartItem item) {
         double totalPrice = 0;
         Product product = item.getProduct();

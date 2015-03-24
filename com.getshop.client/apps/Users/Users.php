@@ -84,6 +84,8 @@ class Users extends \SystemApplication implements \Application {
             $user->type = 100;
         }
         
+        $user->discount = $_POST['discount'];
+        
         $user = $this->getApi()->getUserManager()->saveUser($user);
     }
     

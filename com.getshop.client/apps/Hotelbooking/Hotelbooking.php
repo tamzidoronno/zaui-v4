@@ -466,7 +466,11 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                     $start = strtotime("1 Jan " . ($start[1]) . " +" . ($start[0]-1) . " day");
                     $end = $dateRange[sizeof($dateRange)-1];
                     $end = explode("-", $end);
-                    $end = strtotime("1 Jan " . ($end[1]) . " +" . ($end[0]-1) . " day");
+                    $endDay = $end[0]-1;
+                    if(sizeof($dateRange) == 1) {
+                        $endDay++;
+                    }
+                    $end = strtotime("1 Jan " . ($end[1]) . " +" . ($endDay) . " day");
                     if(!$this->checkAvailabilityOnRange($start, $end, $productId)) {
                         $text = $this->__w("Sorry, we do not have any room available between {start} and {end} of this type. Try another one.");
                         $text = str_replace("{start}", date("d-m-Y", $start),$text);
@@ -475,9 +479,13 @@ class Hotelbooking extends \ApplicationBase implements \Application {
                         $errors = true;
                     } else {
                         $toReserve = new \stdClass();
+                        $count = sizeof($dateRange)-1;
+                        if($count == 0) {
+                            $count = 1;
+                        }
                         $toReserve->start = $start;
                         $toReserve->end = $end;
-                        $toReserve->count = sizeof($dateRange)-1;
+                        $toReserve->count = $count;
                         $reservations[] = $toReserve;
                     }
                     $dateRange = [];

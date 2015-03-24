@@ -29,8 +29,8 @@ $data = $data['data'];
             padding-right: 0px;
             padding-top: 0px;
             color:#000;
-            height:1485px;
-            width: 1050px;
+            height:1487px;
+            width: 1060px;
             padding-left: 60px;
             padding-right: 60px;
             box-sizing: border-box;
@@ -56,33 +56,32 @@ $data = $data['data'];
         }
         
         .row {
+            margin-top: 10px;
             font-size: 0px;
         }
         
         .row_1 {
             margin-top: 20px;
-            height: 280px;
             overflow: hidden;
         }
 
         .row_2 {
-            height: 160px;
             overflow: hidden;
         }
         .row_3 {
             margin-top: 20px;
-            height: 150px;
             overflow: hidden;
         }
         
         .row_4 {
-            height: 550px;
             font-size: 22px;
         }
         
         .row_5 {
             color: #888;
             font-size: 16px;
+            position: absolute;
+            bottom: 10px;
         }
         
         
@@ -96,7 +95,8 @@ $data = $data['data'];
         
         th,
         td {
-            font-size: 20px;
+            font-size: 19px;
+            line-height: 20px;
         }
         
     </style>
@@ -196,8 +196,7 @@ $data = $data['data'];
         <div>
             <?
             if (isset($data['page2']['keys']) && $data['page2']['keys'] == "true") {
-                echo "<br/>";
-                echo "<b>Nøkler</b>";
+                echo "<div style='margin-top: 5px; '><b>Nøkler</b></div>";
                 echo "<table>";
                 echo "<th style='width: 200px; text-align: left;' >Systemnummer</th><th style='width: 100px; text-align: center;'>Antall</th><th style='width: 100px; text-align: center;'>Merking</th>";
                 foreach ($data['page2']['keys_setup'] as $keysetup) {
@@ -207,31 +206,28 @@ $data = $data['data'];
             }
             
             if (isset($data['page2']['cylinders']) && $data['page2']['cylinders'] == "true") {
-                echo "<br/>";
-                echo "<b>Sylindrer</b>";
-                echo "<table width='100%'>";
-                echo "<th style='width: 60px; text-align: left;'>Systemnr.</th>";
-                echo "<th style='width: 80px; text-align: center;' >Antall</th>";
-                echo "<th style='width: 140px; text-align: left;'>Type</th>";
-                echo "<th style='width: 140px;'>Dørtykkelse</th>";
-                echo "<th style='width: 100px; text-align: left;'>Merking</th>";
-                echo "<th style='width: 150px; text-align: left;'>Overflate</th>";
-                echo "<th>Beskrivelse</th>";
-                echo "</table>";
+                echo "<div style='margin-top: 15px;'><b>Sylindrer</b></div>";
+                echo "<table width='100%'><tr>";
+                echo "<td style='font-weight: bold; width: 90px; text-align: left; vertical-align: top; '>Systemnr.</td>";
+                echo "<td style='font-weight: bold; width: 75px; text-align: center; vertical-align: top; ' >Antall</td>";
+                echo "<td style='font-weight: bold; width: 155px; text-align: left; vertical-align: top; '>Type</td>";
+                echo "<td style='font-weight: bold; width: 125px; vertical-align: top; '>Dørtykkelse</td>";
+                echo "<td style='font-weight: bold; width: 175px; text-align: left; vertical-align: top; '>Merking</td>";
+                echo "<td style='font-weight: bold; width: 180px; text-align: left; vertical-align: top; '>Overflate</td>";
+                echo "<td style='font-weight: bold; '>Beskrivelse</td>";
+                echo "</tr></table>";
                 
                 
                 foreach ($data['page2']['cylinder_setup'] as $cylindersetup) {
-                    echo "<div style='height: 30px; overflow: hidden;'><table width='100%'>";
-                    echo "<tr>";
-                        echo "<td style='width: 100px; text-align: left;'> ".$cylindersetup['systemNumber']."</td>";
-                        echo "<td style='width: 70px; text-align: left;'>".$cylindersetup['count']."</td>";
-                        echo "<td style='width: 155px; text-align: left;'>".$cylindersetup['cylinder_type']."</td>";
-                        echo "<td style='width: 120px;'>".$cylindersetup['door_thickness']."</td>";
-                        echo "<td style='width: 100px; text-align: left;'> ".$cylindersetup['keys_that_fits']."</td>";
-                        echo "<td style='width: 205px; text-align: left;'>".$cylindersetup['texture']."</td>";
-                        echo "<td>".$cylindersetup['cylinder_description']."</td>";
-                    echo "</tr>";
-                    echo "</table></div>";
+                    echo "<div >";
+                        echo "<div style='display: inline-block; vertical-align: top; width: 110px; text-align: left;'> ".$cylindersetup['systemNumber']."</div>";
+                        echo "<div style='display: inline-block; vertical-align: top; width: 70px; text-align: left;'>".$cylindersetup['count']."</div>";
+                        echo "<div style='display: inline-block; vertical-align: top; width: 155px; text-align: left;'>".$cylindersetup['cylinder_type']."</div>";
+                        echo "<div style='display: inline-block; vertical-align: top; width: 130px;'>".$cylindersetup['door_thickness']."</div>";
+                        echo "<div style='display: inline-block; vertical-align: top; width: 180px; text-align: left;'> ".$cylindersetup['keys_that_fits']."</div>";
+                        echo "<div style='display: inline-block; vertical-align: top; width: 180px; text-align: left;'>".$cylindersetup['texture']."</div>";
+                        echo "<div style='display: inline-block; width: 100px;'>".$cylindersetup['cylinder_description']."</td>";
+                    echo "</div>";
                 }
                 
             }

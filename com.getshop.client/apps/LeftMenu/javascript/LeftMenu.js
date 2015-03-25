@@ -3,12 +3,39 @@ thundashop.Namespace.Register('thundashop.app.LeftMenu');
 thundashop.app.LeftMenu = {
     init: function() {
         PubSub.subscribe('IMAGE_UPLOADED', this.imageUploaded, this);
+        $(document).on('click', '.LeftMenu .menu_0', thundashop.app.LeftMenu.topLevelClicked);
     },
     
     imageUploaded: function(msg, data) {
         if(data.appname == "LeftMenu") {
             thundashop.framework.reprintPage();
         }
+    },
+    
+    topLevelClicked: function() {
+        var toplevel = $(this).attr('toplevel');
+        var subs = $('[toplevel="'+toplevel+'"]:not(.menu_0)');
+        
+        if (subs.length === 0) {
+            return;
+        }
+        
+        var data = {
+            topLevel :toplevel
+        };
+        
+        if ($(subs[0]).is(':visible')) {
+            subs.slideUp();
+            data.show = false;
+        } else {
+            subs.slideDown();
+            data.show = true;
+        }
+        
+        var event = thundashop.Ajax.createEvent("", "setShowHideEntries", this, data);
+        thundashop.Ajax.postWithCallBack(event, function() {
+            
+        }, true);
     }
 };
 

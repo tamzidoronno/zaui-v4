@@ -215,6 +215,35 @@ class LeftMenu extends \WebshopApplication implements \Application {
         return $foundOnSubLevel;
     }
 
+    public function isCollapsingActivated() {
+        return $this->getFactory()->getStore()->id == "2fac0e57-de1d-4fdf-b7e4-5f93e3225445" && $this->getFactory()->getPage()->id == "352c3073-3f29-4bce-ae49-0e7ab9a0cfa3";
+    }
+    
+    public function shouldShow($entry) {
+        if (!$this->isCollapsingActivated()) {
+            return true;
+        }
+        
+        $sessionKey = $this->getConfiguration()->id."_".$this->getTopLevelDepth();
+        
+        if (isset($_SESSION[$sessionKey]) && $this->getDept() > 0) {
+            if ($_SESSION[$sessionKey] == "true") {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        
+        if ($this->getDept() > 0) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public function setShowHideEntries() {
+        $_SESSION[$this->getConfiguration()->id."_".$_POST['data']['topLevel']] = $_POST['data']['show'];
+    }
 }
 
 ?>

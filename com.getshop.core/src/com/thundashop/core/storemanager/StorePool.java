@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.storemanager;
 
+import com.getshop.scope.GetShopSessionScope;
 import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
@@ -12,6 +13,7 @@ import com.thundashop.core.common.SessionFactory;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.messagemanager.MailFactory;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
 import com.thundashop.core.storemanager.data.StoreCounter;
@@ -38,6 +40,9 @@ public class StorePool {
     
     @Autowired
     public Database database;
+    
+    @Autowired
+    public MessageManager messageManager;
     
     @PostConstruct
     public void loadData() {
@@ -122,6 +127,12 @@ public class StorePool {
 
         database.save(store, credentials);
         stores.put(store.id, store);
+        
+        //MEssage usself about creation.
+        GetShopSessionScope scope = AppContext.appContext.getBean(GetShopSessionScope.class);
+        scope.setStoreId(store.id);
+        messageManager.sendMail("post@getshop.com", "post@getshop.com", "Instance created", "shopname, String email; " + shopname + ", " +  email, email, "post@getshop.com");
+        
         return store;
     }
     

@@ -8,9 +8,7 @@ import com.thundashop.core.pagemanager.data.CarouselConfig;
 import com.thundashop.core.pagemanager.data.CommonPageData;
 import com.thundashop.core.pagemanager.data.FloatingData;
 import com.thundashop.core.pagemanager.data.Page;
-import com.thundashop.core.pagemanager.data.Page.PageType;
 import com.thundashop.core.pagemanager.data.PageCell;
-import com.thundashop.core.pagemanager.data.PageLayout;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductConfiguration;
@@ -500,7 +498,9 @@ public class PageManager extends ManagerBase implements IPageManager {
         if(cell.cellName.equals("info")) {
             String contentManager = "320ada5b-a53a-46d2-99b2-9b0b26a7105a";
             ApplicationInstance instance = storeApplicationPool.createNewInstance(contentManager);
-            cell.appId = instance.id;
+            if(instance != null) {
+                cell.appId = instance.id;
+            }
         }
     }
 

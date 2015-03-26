@@ -165,8 +165,10 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         if(additionalInfo.customerReference != null && !additionalInfo.customerReference.isEmpty()) {
             reference.userId = userManager.getUserByReference(additionalInfo.customerReference).id;
             reference.partnerReference = true;
-            reference.active = true;
-            reference.confirmed = true;
+            if(additionalInfo.autoStart) {
+                reference.active = true;
+                reference.confirmed = true;
+            }
         }
         if(additionalInfo.userId != null && !additionalInfo.userId.isEmpty()) {
             reference.userId = userManager.getUserById(additionalInfo.userId).id;
@@ -384,7 +386,7 @@ public class HotelBookingManager extends ManagerBase implements IHotelBookingMan
         endCal.set(Calendar.SECOND, 0);
         end = endCal.getTime();
         return end;
-    }    
+    }
 
     @Override
     public Integer checkAvailableParkingSpots(long startDate, long endDate) throws ErrorException {

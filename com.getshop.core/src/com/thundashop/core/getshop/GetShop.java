@@ -522,7 +522,6 @@ public class GetShop extends ManagerBase implements IGetShop {
         emailTemplate += "</html>";
 
         
-        mailFactory.send("post@getshop.com", "post@getshop.com", "Your GetShop account is ready", emailTemplate);
         mailFactory.send("post@getshop.com", "canada@getshop.com", "Your GetShop account is ready", emailTemplate);
         mailFactory.send("post@getshop.com", startData.email, "Your GetShop account is ready", emailTemplate);
     }

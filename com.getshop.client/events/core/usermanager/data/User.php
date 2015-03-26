@@ -73,6 +73,9 @@ class core_usermanager_data_User extends core_common_DataCommon  {
 	public $customerId;
 
 	/** @var String */
+	public $discount;
+
+	/** @var String */
 	public $applicationAccessList;
 
 	/** @var String */

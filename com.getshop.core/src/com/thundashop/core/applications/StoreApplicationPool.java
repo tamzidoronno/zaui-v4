@@ -342,8 +342,8 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
                 System.out.println("App 2: " + app.isFrontend + " Id: " + app.id);
             }
         }
-        
     }
+    
     @Override
     public void refresh() {
         loadApplicationsFromGetShopPool();
@@ -355,9 +355,30 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
         
         List<SettingsRow> settings = new ArrayList();
         settings.add(new SettingsRow("paypalemailaddress", "Your email address registered on paypal", "string", "PayPal email address"));
-        settings.add(new SettingsRow("sandbox", "Run your account in sandbox mode? (for testing only)", "boolean", "Sandbox mode"));
         settings.add(new SettingsRow("paypaltestaddress", "What is your paypal test address when running in sandbox mode?", "string", "Paypal test address"));
+        settings.add(new SettingsRow("sandbox", "Run your account in sandbox mode? (for testing only)", "boolean", "Sandbox mode"));
         rows.put("c7736539-4523-4691-8453-a6aa1e784fc1", settings);
+        
+        settings = new ArrayList();
+        settings.add(new SettingsRow("merchantid", "The merchant id provided by nets", "string", "Merchant id"));
+        settings.add(new SettingsRow("token", "The token id provided by nets", "string", "Token"));
+        settings.add(new SettingsRow("debugmode", "Running this payment application in test mode?", "boolean", "Debug mode"));
+        rows.put("def1e922-972f-4557-a315-a751a9b9eff1", settings);
+        
+        settings = new ArrayList();
+        settings.add(new SettingsRow("merchantid", "The merchant id provided by dibs", "string", "Merchant id"));
+        rows.put("d02f8b7a-7395-455d-b754-888d7d701db8", settings);
+
+        settings = new ArrayList();
+        settings.add(new SettingsRow("merchantid", "The merchant id provided by braintree", "string", "Merchant id"));
+        settings.add(new SettingsRow("publickey", "Your public key", "string", "Public key"));
+        settings.add(new SettingsRow("privatekey", "Your private key", "string", "Private key"));
+        settings.add(new SettingsRow("isSandBox", "Debug mode", "boolean", "Sandbox mode"));
+        settings.add(new SettingsRow("sandbox_merchantid", "The merchant test id provided by braintree", "string", "Sandbox merchant id"));
+        settings.add(new SettingsRow("sandbox_publickey", "Your public test key", "string", "Sandbox public key"));
+        settings.add(new SettingsRow("sandbox_privatekey", "Your private test key", "string", "Sandbox private key"));
+        rows.put("542e6a1e-9927-495c-9b6d-bb52af4ea9be", settings);
+        
         return rows;
     }
 

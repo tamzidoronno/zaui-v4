@@ -7,4 +7,5 @@ public class AdditionalBookingInformation extends DataCommon {
     public Boolean needHandicap = false;
     public String customerReference = "";
     public String userId = "";
+    public Boolean autoStart = false;
 }

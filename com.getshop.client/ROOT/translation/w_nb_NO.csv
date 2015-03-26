@@ -301,7 +301,8 @@ Room type;-;ROMTYPE
 Row is not displayed on mobile, click for make it reappear;-;Raden vises ikke på mobiltelefon, trykk her for å vise den.
 Row options;-;Rad instillinger
 Run account in sandbox?;-;Kjør kontoen i sandbox modus?
-SELECT ROOM;-;VALGT ROM
+SELECT ROOM;-;VELG ROM
+SELECTED ROOM;-;VALGT ROM
 Sa;-;Lø
 Saturday;-;Lørdag
 Save;-;Lagre

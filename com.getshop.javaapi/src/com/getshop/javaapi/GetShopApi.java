@@ -38,17 +38,7 @@ public class GetShopApi {
            return new APIFooterManager(transport);
       }
      /**
-<<<<<<< HEAD
-      * @return APILasGruppenPDFGenerator
-      */
-      public APILasGruppenPDFGenerator getLasGruppenPDFGenerator() {
-           return new APILasGruppenPDFGenerator(transport);
-      }
-     /**
-      * @return APIInvoiceManager
-=======
       * @return APILogoManager
->>>>>>> 067365ffd2cd833802ab89f81a10ee1059f898f2
       */
       public APILogoManager getLogoManager() {
            return new APILogoManager(transport);
@@ -190,6 +180,12 @@ public class GetShopApi {
       */
       public APIInvoiceManager getInvoiceManager() {
            return new APIInvoiceManager(transport);
+      }
+     /**
+      * @return APILasGruppenPDFGenerator
+      */
+      public APILasGruppenPDFGenerator getLasGruppenPDFGenerator() {
+           return new APILasGruppenPDFGenerator(transport);
       }
      /**
       * @return APICartManager

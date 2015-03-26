@@ -31,10 +31,10 @@ public class APICartManager {
      * Need to attach a reference number manually to the cart?
      * @throws ErrorException
      */
-     public void addMetaDataToProduct(java.lang.String productId, java.lang.String metaData)  throws Exception  {
+     public void addMetaDataToProduct(java.lang.String cartItemId, java.lang.String metaData)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("productId",new Gson().toJson(productId));
+          gs_json_object_data.args.put("cartItemId",new Gson().toJson(cartItemId));
           gs_json_object_data.args.put("metaData",new Gson().toJson(metaData));
           gs_json_object_data.method = "addMetaDataToProduct";
           gs_json_object_data.interfaceName = "core.cartmanager.ICartManager";

@@ -4,7 +4,15 @@
 $selectRoomText = $this->__w("Select a room");
 $priceText = $this->__w("PRICE PER NIGHT");
 $selectRoomButton = $this->__w("SELECT ROOM");
+$selectedRoomButton = $this->__w("SELECTED ROOM");
 $headingtext = $this->__w("You have selected the following duration for your stay");
+    
+if($this->getDayCount() > $this->getConfig()->maxRentalDays) {
+    echo $this->getPartnerText();
+    echo "<br><bR>";
+    echo "<br><bR>";
+    return;
+}
 ?>
 <div class="top_row_container">
     <div class='title'><h1><? echo $headingtext; ?></h1></div>
@@ -135,7 +143,12 @@ $headingtext = $this->__w("You have selected the following duration for your sta
     ?>
 </div>
 <div class="bottom_row_container">
-    <div class='title'><h1><? echo $selectRoomText; ?></h1></div>
+    <div class='title'>
+        <h1>
+            <? echo $selectRoomText; ?>
+        </h1>
+    </div>
+    
     <div class="seperator"></div>
     <? if(!$this->getFactory()->isMobile()) { ?>
     <div class='room_selection_2 heading'>
@@ -228,7 +241,11 @@ $headingtext = $this->__w("You have selected the following duration for your sta
         if ($avroom <= 0) {
             echo "<span class='sold_out'>" . $this->__w("Sold out") . "</span>";
         } else {
-            echo "<span class='selectbutton' gstype='clicksubmit' method='changeProduct' gsname='productid' gsvalue='" . $product->id . "'>" . $selectRoomButton . "</span>";
+            $text = $selectRoomButton;
+            if($selectedclass) {
+                $text = $selectedRoomButton;
+            }
+            echo "<span class='selectbutton' gstype='clicksubmit' method='changeProduct' gsname='productid' gsvalue='" . $product->id . "'>" . $text . "</span>";
         }
         echo "</span>";
         echo "<div style='clear:both;'></div>";

@@ -41,7 +41,6 @@ if(isset($_GET['pagenumber'])) {
                     foreach ($products as $product) {
                         /* @var $product \core_productmanager_data_Product */
 
-
                         $pricetext = $product->price . " NOK ";
                         if ($product->price < $product->original_price) {
                             $pricetext .= " (-" . (100 - (int) (($product->price / $product->original_price) * 100)) . "%)";
@@ -72,6 +71,13 @@ if(isset($_GET['pagenumber'])) {
                 <span class='error_on_check end_before_start'>
                     <? echo $this->__f("Sorry, but the start date is before todays date."); ?>
                 </span>
+            </div>
+            <div style='clear:both;'></div>
+            <div style='padding-top: 20px;'>
+                <? 
+                    $partnerText = $this->getPartnerText();
+                    echo $this->__w($partnerText); 
+                ?>
             </div>
         </div>
     </div>

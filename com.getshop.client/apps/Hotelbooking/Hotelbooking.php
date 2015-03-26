@@ -44,6 +44,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $settings->summaryPage = $_POST['data']['summaryPage'];
         $settings->companyPage = $_POST['data']['companyPage'];
         $settings->continuePage = $_POST['data']['contine_page'];
+        $settings->maxRentalDays = $_POST['data']['max_rental_days'];
         $this->getFactory()->getApi()->getHotelBookingManager()->setBookingConfiguration($settings);
     }
 
@@ -71,6 +72,13 @@ class Hotelbooking extends \ApplicationBase implements \Application {
             $this->config = $this->getApi()->getHotelBookingManager()->getBookingConfiguration();
         }
         return $this->config;
+    }
+    
+    public function getPartnerText() {
+        $partnerText = "* Maximum number of days of rental is {maxDays} days, if you need an extended stay or have a partnership deal with us, click <a href='?page={partnerPage}' style='color:#bebee3;text-decoration:none !important;'>here</a> to use our specially designed form for that.";
+        $partnerText = str_replace("{partnerPage}", $this->getConfig()->companyPage, $partnerText);
+        $partnerText = str_replace("{maxDays}", $this->getConfig()->maxRentalDays, $partnerText);
+        return $partnerText;
     }
     
     public function getParkingSpots() {
@@ -812,19 +820,20 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function createUser() {
+        $data = $this->getBookingData();
         $address = $this->getApiObject()->core_usermanager_data_Address();
-        $address->fullName = $_POST['data']['name_1'];
-        $address->city = $_POST['data']['city'];
-        $address->postCode = $_POST['data']['postal_code'];
-        $address->address = $_POST['data']['address'];
-        $address->phone = $_POST['data']['phone_1'];
+        $address->fullName = $data['name_1'];
+        $address->city = $data['city'];
+        $address->postCode = $data['postal_code'];
+        $address->address = $data['address'];
+        $address->phone = $data['phone_1'];
 
         $user = new \core_usermanager_data_User();
-        $user->emailAddress = $_POST['data']['email_1'];
-        $user->birthDay = $_POST['data']['birthday'];
+        $user->emailAddress = $data['email_1'];
+        $user->birthDay = $data['birthday'];
         $user->password = "dfsafasd#¤#cvsdfgdfasdfasf";
-        $user->fullName = $_POST['data']['name_1'];
-        $user->cellPhone = $_POST['data']['phone_1'];
+        $user->fullName = $data['name_1'];
+        $user->cellPhone = $data['phone_1'];
         $user->address = $address;
         
         if (isset($_POST['data']['mvaregistered'])) {
@@ -880,7 +889,11 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         }
         
         if($this->partnerShipChecked()) {
-            if(!isset($bookingData['referenceNumber'])) {
+            if(!isset($bookingData['partner_type'])) {
+                return false;
+            }
+            $partnerType = $bookingData['partner_type'];
+            if(!isset($bookingData['referenceNumber']) && $partnerType == "existing") {
                 return false;
             }
         }
@@ -906,7 +919,13 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $bookingData = $this->getBookingData();
         
         $additional = new \core_hotelbookingmanager_AdditionalBookingInformation();
-        $additional->customerReference = $bookingData['referenceNumber'];
+        if($bookingData['partner_type'] == "new") {
+            $user = $this->createUser();
+            $additional->customerReference = $user->referenceKey;
+        } else {
+            $additional->customerReference = $bookingData['referenceNumber'];
+            $additional->autoStart = true;
+        }
         
         $infodata = $this->getVisitorData();
         $productId = $this->getProductId();

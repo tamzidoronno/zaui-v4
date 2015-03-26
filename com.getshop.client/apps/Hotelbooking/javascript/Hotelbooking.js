@@ -97,13 +97,18 @@ app.Hotelbooking = {
     saveCurrentData: function () {
         var data = {};
         $('.booking_contact_data').find('[gsname]').each(function () {
+            if($(this).is(':radio') && !$(this).is(':checked')) {
+                return;
+            }
+            
             var name = $(this).attr('gsname');
             data[name] = $(this).val();
         });
 
         data['customer_type'] = $('.booking_contact_data [gsname="customer_type"]:checked').val();
         var event = thundashop.Ajax.createEvent('', 'setBookingData', $(this), data);
-        if ($(this).attr('gsname') === "mvaregistered" || $(this).attr('gsname') === "customer_type") {
+        var gsname = $(this).attr('gsname');
+        if (gsname === "mvaregistered" || gsname === "customer_type" || gsname === "partner_type") {
             thundashop.Ajax.post(event);
         } else {
             thundashop.Ajax.postWithCallBack(event, function () {
@@ -355,6 +360,7 @@ app.Hotelbooking = {
         $(document).on('click', '.Hotelbooking .searchexisting', app.Hotelbooking.searchExistingButton);
         $(document).on('click', '.Hotelbooking input[gsname="mvaregistered"]', app.Hotelbooking.saveCurrentData);
         $(document).on('click', '.Hotelbooking input[gsname="customer_type"]', app.Hotelbooking.saveCurrentData);
+        $(document).on('click', '.Hotelbooking input[gsname="partner_type"]', app.Hotelbooking.saveCurrentData);
         $(document).on('keyup', '.Hotelbooking input[gsname="postal_code"]', app.Hotelbooking.updatePostalPlace);
         $(document).on('blur', '.Hotelbooking input[gsname="postal_code"]', app.Hotelbooking.updatePostalPlace);
         $(document).on('keyup', '.Hotelbooking input[gsname="birthday"]', app.Hotelbooking.updateBrreg);

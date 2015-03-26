@@ -24,10 +24,10 @@ $periode = $this->__w("night");
             
             <div>
                 <label>
-                    <input type='radio' gsname='partner_type' name='partner_type' value='existing' <? if($partnertype == "existing") { echo "CHECKED"; } ?>>I have a partnership code
+                    <input type='radio' gsname='partner_type' name='partner_type' value='existing' <? if($partnertype == "existing") { echo "CHECKED"; } ?>><? echo $this->__w("I have a partnership code"); ?>
                 </label>
                 <label>
-                    <input type='radio' gsname='partner_type' name='partner_type' value='new' <? if($partnertype == "new") { echo "CHECKED"; } ?>>I want to become a partnership member
+                    <input type='radio' gsname='partner_type' name='partner_type' value='new' <? if($partnertype == "new") { echo "CHECKED"; } ?>><? echo $this->__w("I want to become a partnership member"); ?>
                 </label>
             </div>
             <br>

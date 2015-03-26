@@ -44,7 +44,9 @@ $bookTime = $this->__w("Booked time periode");
         $text .= "<br>";
         
         $price = $cartItem->product->original_price * $cartItem->count;
+        $originalPrice = $price;
         $discountedPrice = $cartItem->product->price * $cartItem->count;
+        $originalDiscountPrice = $discountedPrice;
         $diff = $discountedPrice - $price;
         $totalDiff += $diff;
         if ($product->taxGroupObject) {
@@ -65,10 +67,14 @@ $bookTime = $this->__w("Booked time periode");
         $i++;
     }
     if ($totalDiff < 0) {
+        $percentage = (double)($originalDiscountPrice/$originalPrice)*100;
+        $percentage = 100 - $percentage;
+        $percentage = round($percentage, 1);
+
         $totalDiff = number_format((float) $totalDiff, 2, '.', '');
         echo "<div class='price_row'>";
         echo "<span class='right_aligned_price'><span class='right_aligned_price'>" . $totalDiff . " kr</span></span>";
-        echo "Rabatt for lengere opphold";
+        echo "Rabatt for lengere opphold ($percentage%)";
         echo "</div>";
         $total += $totalDiff;
     }

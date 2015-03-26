@@ -229,11 +229,24 @@ if($this->getDayCount() > $this->getConfig()->maxRentalDays) {
         echo "<div class='personalcount'>2x</div>";
         
         echo "</span>";
+        
+        $progressivePrice = $this->calculateProgressivePrice($product->id);
+        $price = $product->price;
+        
         if(!$this->getFactory()->isMobile()) {
             if($product->price != 0) {
-                echo "<span class='price_box'><span class='price_text'>" . $product->price . ",-";
+                $progressivePrice = round($progressivePrice,2);
+                echo "<span class='price_box'><span class='price_text'>" . $progressivePrice . ",-";
+                if($price != $progressivePrice) {
+                    $percentage = (double)100-(($progressivePrice/$price)*100);
+                    $percentage = round($percentage, 1);
+                    echo "<br><span style='font-size: 12px;font-weight:normal; margin-top: 5px; display:inline-block;'>$percentage% avslag</span>";
+                }
             }
         }
+        
+        
+
         if ($product->price < $product->original_price) {
             echo "<span class='rebated_product'> (-" . (100 - (int) (($product->price / $product->original_price) * 100)) . "%)</span>";
         }

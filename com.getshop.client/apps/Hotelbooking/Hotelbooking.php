@@ -75,7 +75,7 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
     
     public function getPartnerText() {
-        $partnerText = "* Maximum number of days of rental is {maxDays} days, if you need an extended stay or have a partnership deal with us, click <a href='?page={partnerPage}' style='color:#bebee3;text-decoration:none !important;'>here</a> to use our specially designed form for that.";
+        $partnerText = $this->__w("* Maximum number of days of rental is {maxDays} days, if you need an extended stay or have a partnership deal with us, click <a href='?page={partnerPage}' class='partnerlink'>here</a> to use our specially designed form for that.");
         $partnerText = str_replace("{partnerPage}", $this->getConfig()->companyPage, $partnerText);
         $partnerText = str_replace("{maxDays}", $this->getConfig()->maxRentalDays, $partnerText);
         return $partnerText;
@@ -149,6 +149,14 @@ class Hotelbooking extends \ApplicationBase implements \Application {
         $this->setStartDate($start);
         $this->setEndDate($end);
         $this->setProductId($product->id);
+    }
+    
+    function calculateProgressivePrice($productId) {
+        $dayCount = $this->getDayCount();
+        $cartMgr = $this->getApi()->getCartManager();
+        $cartMgr->clear();
+        $cartMgr->addProductItem($productId, $dayCount);
+        return $cartMgr->getCartTotalAmount() / $dayCount;
     }
     
     function validateInput($name) {

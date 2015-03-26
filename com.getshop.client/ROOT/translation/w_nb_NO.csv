@@ -1,5 +1,6 @@
 ###### framework ######
 * Can pay with Visa/MasterCard trough PayPal;-;* Kan også betale med Visa/MasterCard igjennom PayPal.
+* Maximum number of days of rental is {maxDays} days, if you need an extended stay or have a partnership deal with us, click <a href='?page={partnerPage}' class='partnerlink'>here</a> to use our specially designed form for that.;-;* Maksimum antall dager du kan leie er {maxDays} dager, hvis du har behov for et lengere opphold enn dette, eventuelt periodisk leie, trykk <a href='?page={partnerPage}' class='partnerlink'>her</a> for å legge inn en bestilling via vårt partner booking skjema.
 * PayOnDelivery fee;-;Gebyr henting 
 * The rooms are being billed monthly in advanced;-;* Rommene blir forhånds fakturert hver påbegynte måned.
 0-100 km/h;-;0-100 km/h
@@ -151,7 +152,9 @@ Hide on mobile;-;Ikke vis på mobilen
 How can I help you today ?;-;Hva kan jeg hjelpe deg med?
 I agree to the terms and conditions;-;Jeg godtar bruksvilkårene
 I am sorry, but all fields are required before sending a message.;-;Beklager, men alle felt må fylles ut før du sender en melding.
+I have a partnership code;-;Jeg har en avtalekode
 I need a handicap room;-;Tilpasset handicap
+I want to become a partnership member;-;Jeg ønsker å få en partneravtale
 Image;-;Bilde
 Included in all rooms:;-;Inkludert i alle rom:
 Information;-;Informasjon
@@ -239,6 +242,7 @@ Other attributes;-;Andre attributter
 Other operations;-;Andre operasjoner
 Our local time is:;-;Vår lokale tid er
 Outer background;-;Ytre bakgrunn
+PARTNERSHIP CODE;-;AVTALE KODE
 PRICE PER NIGHT;-;PRIS PR NATT
 Parking slot;-;Parkeringsplasser
 Password;-;Passord

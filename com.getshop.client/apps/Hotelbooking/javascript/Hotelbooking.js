@@ -105,10 +105,10 @@ app.Hotelbooking = {
             data[name] = $(this).val();
         });
 
-        data['customer_type'] = $('.booking_contact_data [gsname="customer_type"]:checked').val();
+        data['customer_type'] = $('.booking_contact_data [gsname="userData][customer_type]"]:checked').val();
         var event = thundashop.Ajax.createEvent('', 'setBookingData', $(this), data);
         var gsname = $(this).attr('gsname');
-        if (gsname === "mvaregistered" || gsname === "customer_type" || gsname === "partner_type") {
+        if (gsname === "mvaregistered" || gsname === "userData][customer_type]" || gsname === "partner_type") {
             thundashop.Ajax.post(event);
         } else {
             thundashop.Ajax.postWithCallBack(event, function () {
@@ -193,12 +193,16 @@ app.Hotelbooking = {
     },
     updatePostalPlace: function () {
         var val = $(this).val();
+        console.log(val);
+        if(val.length !== 4) {
+            return;
+        }
         $.ajax({
             "dataType" : "jsonp",
             "url": "https://api.bring.com/shippingguide/api/postalCode.json?clientUrl=insertYourClientUrlHere&country=no&pnr=" + val,
             "success": function (data) {
                 if(data.valid) {
-                    $('.Hotelbooking input[gsname="city"]').val(data.result);
+                    $('.Hotelbooking input[gsname="userData][city]"]').val(data.result);
                 }
             }
         }
@@ -206,16 +210,18 @@ app.Hotelbooking = {
     },
     updateBrreg : function() {
         var val = $(this).val();
+        if(val.indexOf(".") >= 0) {
+            return;
+        } 
         if(val.length === 9) {
             $.ajax({
                 "url" : "http://hotell.difi.no/api/json/brreg/enhetsregisteret?query=" + val,
                 "success" : function(data) {
                     var data = data.entries[0];
-                    console.log(data);
-                    $('.Hotelbooking input[gsname="birthday"]').val(data.orgnr);
-                    $('.Hotelbooking input[gsname="address"]').val(data.forretningsadr);
-                    $('.Hotelbooking input[gsname="postal_code"]').val(data.forradrpostnr);
-                    $('.Hotelbooking input[gsname="city"]').val(data.forradrpoststed);
+                    $('.Hotelbooking input[gsname="userData][birthday]"]').val(data.orgnr);
+                    $('.Hotelbooking input[gsname="userData][address]"]').val(data.forretningsadr);
+                    $('.Hotelbooking input[gsname="userData][postal_code]"]').val(data.forradrpostnr);
+                    $('.Hotelbooking input[gsname="userData][city]"]').val(data.forradrpoststed);
                 }
             });
         }
@@ -248,6 +254,9 @@ app.Hotelbooking = {
     },
     
     animateNext : function() {
+        if($(this).find('.fa').length > 0) {
+            return;
+        }
         $(this).html('<i class="fa fa-spin fa-spinner">');
     },
     hideToolTip : function() {
@@ -347,7 +356,6 @@ app.Hotelbooking = {
         $(document).on('change', '.Hotelbooking #ordertype', app.Hotelbooking.changeOrderType);
         $(document).on('change', '.Hotelbooking .number_of_rooms', app.Hotelbooking.updateNumberOfRooms);
         $(document).on('click', '.Hotelbooking .cal_field', app.Hotelbooking.changeBookingDate);
-        $(document).on('click', '.Hotelbooking .cal_field', app.Hotelbooking.changeBookingDate);
         $(document).on('change', '.Hotelbooking .number_of_rooms', app.Hotelbooking.updateRoomCount);
         $(document).on('click', '.Hotelbooking .need_handicat', app.Hotelbooking.updateNeedHandicap);
         $(document).on('change', '.Hotelbooking .cleaning_option', app.Hotelbooking.updateCleaningCount);
@@ -359,11 +367,10 @@ app.Hotelbooking = {
         $(document).on('click', '.Hotelbooking .fa.calnav', app.Hotelbooking.navigateMonth);
         $(document).on('click', '.Hotelbooking .searchexisting', app.Hotelbooking.searchExistingButton);
         $(document).on('click', '.Hotelbooking input[gsname="mvaregistered"]', app.Hotelbooking.saveCurrentData);
-        $(document).on('click', '.Hotelbooking input[gsname="customer_type"]', app.Hotelbooking.saveCurrentData);
+        $(document).on('click', '.Hotelbooking input[gsname="userData][customer_type]"]', app.Hotelbooking.saveCurrentData);
         $(document).on('click', '.Hotelbooking input[gsname="partner_type"]', app.Hotelbooking.saveCurrentData);
-        $(document).on('keyup', '.Hotelbooking input[gsname="postal_code"]', app.Hotelbooking.updatePostalPlace);
-        $(document).on('blur', '.Hotelbooking input[gsname="postal_code"]', app.Hotelbooking.updatePostalPlace);
-        $(document).on('keyup', '.Hotelbooking input[gsname="birthday"]', app.Hotelbooking.updateBrreg);
+        $(document).on('keyup', '.Hotelbooking input[gsname="userData][postal_code]"]', app.Hotelbooking.updatePostalPlace);
+        $(document).on('keyup', '.Hotelbooking input[gsname="userData][birthday]"]', app.Hotelbooking.updateBrreg);
         $(document).on('keyup', '.Hotelbooking .searchcustomerinput', app.Hotelbooking.searchCustomer);
         $(document).on('click', '.Hotelbooking .searchcustomerbutton', app.Hotelbooking.searchCustomer);
         $(document).on('click', '.Hotelbooking .selectcustomer', app.Hotelbooking.selectCustomer);

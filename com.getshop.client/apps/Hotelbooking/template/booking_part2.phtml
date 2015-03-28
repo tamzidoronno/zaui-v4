@@ -97,22 +97,6 @@ if($this->getDayCount() > $this->getConfig()->maxRentalDays) {
                         <? echo $this->getDayCount(); ?>
                     </td>
                 </tr>
-                <?
-                if ($this->hasAvailableParkingSpots()) {
-                    $price = $this->getParkingProduct()->price;
-                    ?>
-                    <tr>
-                        <td colspan='2'>
-                            <br>
-                            <div>
-                                <label>
-                                    <input type="checkbox" class="parking_option" style="width:15px; margin:0px;padding:4px;" <? if($this->getParking()) { echo "CHECKED"; } ?>>
-                                    <? echo $this->__w("Parking slot"); ?> + <? echo $this->getParkingPrice(); ?> kr
-                                </label>
-                            </div>
-                        </td>
-                    </tr>
-                <? } ?>
             </table>
         </span>
 
@@ -126,16 +110,6 @@ if($this->getDayCount() > $this->getConfig()->maxRentalDays) {
             </span>
         <? } ?>
     </div>
-    <?
-    $days = $this->getMinumRentalTexted();
-    if ($this->getShowExtraInformation()) {
-        echo $this->getShowExtraInformation();
-    } else if ($days) {
-        $minimum = $this->__f("* Minimum rental periode is {days}");
-        $minimum = str_replace("{days}", $days, $minimum);
-        echo "<div class='error_text'>" . $minimum . "</div>";
-    }
-    ?>
     <?
     foreach ($this->errors as $error) {
         echo "<div class='error_text'>" . $error . "</div>";

@@ -1,6 +1,5 @@
 <?
 /* @var $this ns_d16b27d9_579f_4d44_b90b_4223de0eb6f2\Hotelbooking */
-$this->loadBookingData();
 $continueCartButtonText = $this->__w("Continue to payment");
 $roomTaxPrice = $this->__w("{percentage}% taxes on room");
 $cleaningTaxPrice = $this->__w("{percentage}% taxes on cleaning");
@@ -86,7 +85,9 @@ $periode = $this->__w("night");
                 <div style="text-align:right;">
                     <?
                     if(!$this->partnerShipChecked()) {
-                        echo '<div class="continue_to_cart_button common_input" gstype="submit">'.$continueCartButtonText.'</div>';
+                        if($this->getCustomerType()) {
+                            echo '<div class="continue_to_cart_button common_input" gstype="submit">'.$continueCartButtonText.'</div>';
+                        }
                     } else {
                         echo '<div class="complete_partner_checkout">'.$this->__w("Complete").'</div>';
                     }

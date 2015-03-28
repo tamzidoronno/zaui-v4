@@ -27,8 +27,8 @@ $bookTime = $this->__w("Booked time periode");
     $cart = $this->getApi()->getCartManager()->getCart();
     $total = 0;
     $taxes = array();
-    $partnerReservations = $this->getpartnerReservatations();
- 
+
+    
     $i = 0;
     foreach ($cart->items as $cartItem) {
         /* @var $cartItem core_cartmanager_data_CartItem */
@@ -79,16 +79,15 @@ $bookTime = $this->__w("Booked time periode");
         $total += $totalDiff;
     }
 
-    if (($this->isMvaRegistered() && $product->privateExcluded) || !$product->privateExcluded) {
-        foreach ($taxes as $taxgroup => $value) {
-            $value = number_format((float) $value, 2, '.', '');
-            echo "<div class='price_row'>";
-            echo "<span class='right_aligned_price'><span class='right_aligned_price'>" . $value . " kr</span></span>";
-            echo $taxgroup . "% MVA";
-            echo "</div>";
-            $total += $value;
-        }
+    foreach ($taxes as $taxgroup => $value) {
+        $value = number_format((float) $value, 2, '.', '');
+        echo "<div class='price_row'>";
+        echo "<span class='right_aligned_price'><span class='right_aligned_price'>" . $value . " kr</span></span>";
+        echo $taxgroup . "% MVA";
+        echo "</div>";
+        $total += $value;
     }
+    
     $total = number_format((float) $total, 2, '.', '');
 
     echo "<div class='summary_total'>";

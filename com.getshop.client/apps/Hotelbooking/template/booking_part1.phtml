@@ -55,14 +55,6 @@ if(isset($_GET['pagenumber'])) {
                 <br>
                 <div class='check_available_button' nextpage="<? echo $this->getConfig()->continuePage; ?>"><? echo $this->__w("Continue"); ?></div>
             </span>
-            <?
-            $days = $this->getMinumRentalTexted();
-            if($days) {
-                $minimum = $this->__f("* Minimum rental periode is {days}");
-                $minimum = str_replace("{days}", $days, $minimum);
-                echo "<div>" . $minimum . "</div>";
-            }
-            ?>
 
             <div style='padding-top:20px;'>
                 <span class='error_on_check date_before_start'>

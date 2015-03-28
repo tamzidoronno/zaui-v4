@@ -49,7 +49,7 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
  */
 public class ComGetshopArx {
 
-    private String hostname = "https://10.0.0.8:5002/arx/import";
+    private String hostname = "https://92.220.61.142:5002/arx/import";
     private String username = "master";
     private String password = "master";
 
@@ -110,9 +110,6 @@ public class ComGetshopArx {
         for (BookingReference reference : reservations) {
             //No need to check / update arx on reservation not valid for the time span.
             if (reference.isEnded() || (!reference.isStarted() && !reference.isToday())) {
-                continue;
-            }
-            if (!reference.payedFor) {
                 continue;
             }
             
@@ -208,7 +205,7 @@ public class ComGetshopArx {
         toPost += "</arxdata>";
 
         String result = httpLoginRequest(hostname, username, password, toPost);
-        return result.equals("failed");
+        return result.equals("OK");
     }
 
     public String httpLoginRequest(String address, String username, String password, String content) {
@@ -249,7 +246,7 @@ public class ComGetshopArx {
                     sb.append((char) ch);
                 }
                 String result = sb.toString();
-                return result;
+                return result.trim();
             }
         } catch (ClientProtocolException e) {
             client.getConnectionManager().shutdown();
@@ -314,7 +311,6 @@ public class ComGetshopArx {
 
     private void notifyUserAboutUpdate(BookingReference reference, RoomInformation roomInfo, Integer code) throws Exception {
         addToLog("Notifying user about room: state, " + roomInfo.roomState + " roomid: " + roomInfo.roomId + ", name: " + roomInfo.visitors.get(0).name + " (" + roomInfo.visitors.get(0).phone + ")");
-        api.getHotelBookingManager().updateReservation(reference);
         if(roomInfo.roomState == RoomInfoState.accessGranted) {
             api.getHotelBookingManager().notifyUserAboutRoom(reference, roomInfo, code);
         }
@@ -332,7 +328,7 @@ public class ComGetshopArx {
         String[] names = name.split(" ");
         user.firstName = names[0];
         user.lastName = name.substring(user.firstName.length()).trim();
-        user.id = reference.id + "-" + count;
+//        user.id = reference.id + "-" + count;
         user.startDate = reference.startDate;
         user.endDate = reference.endDate;
         user.code = code;

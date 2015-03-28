@@ -12,5 +12,8 @@ class core_hotelbookingmanager_AdditionalBookingInformation extends core_common_
 	/** @var String */
 	public $userId;
 
+	/** @var String */
+	public $autoStart;
+
 }
 ?>

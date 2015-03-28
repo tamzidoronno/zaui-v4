@@ -1670,37 +1670,6 @@ class APIHotelBookingManager {
 	}
 
 	/**
-	* Get all references
-	* @return void
-	* @throws ErrorException
-	*/
-
-	public function appendOrderToReservation($orderId, $referenceId) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
-	     $data['args']["referenceId"] = json_encode($this->transport->object_unset_nulls($referenceId));
-	     $data["method"] = "appendOrderToReservation";
-	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
-	     return $this->transport->sendMessage($data);
-	}
-
-	/**
-	* Get all references
-	* @return String
-	* @throws ErrorException
-	*/
-
-	public function buildOrderForReservation($reservationNumber) {
-	     $data = array();
-	     $data['args'] = array();
-	     $data['args']["reservationNumber"] = json_encode($this->transport->object_unset_nulls($reservationNumber));
-	     $data["method"] = "buildOrderForReservation";
-	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
-	     return $this->transport->sendMessage($data);
-	}
-
-	/**
 	* Check if a room is available in the given time periode.
 	* @param startDate The first day unix timestamp.
 	* @param endDate The last day unix timestamp.
@@ -1789,6 +1758,22 @@ class APIHotelBookingManager {
 	     $data = array();
 	     $data['args'] = array();
 	     $data["method"] = "checkForWelcomeMessagesToSend";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->sendMessage($data);
+	}
+
+	/**
+	* Add new room to the manager.
+	* @param room
+	* @throws ErrorException
+	*/
+
+	public function completeOrder($referenceKey, $partner) {
+	     $data = array();
+	     $data['args'] = array();
+	     $data['args']["referenceKey"] = json_encode($this->transport->object_unset_nulls($referenceKey));
+	     $data['args']["partner"] = json_encode($this->transport->object_unset_nulls($partner));
+	     $data["method"] = "completeOrder";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -1895,6 +1880,20 @@ class APIHotelBookingManager {
 	     $data["method"] = "getBookingConfiguration";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->cast(new core_hotelbookingmanager_GlobalBookingSettings(), $this->transport->sendMessage($data));
+	}
+
+	/**
+	* Get all references
+	* @return core_hotelbookingmanager_UsersBookingData
+	* @throws ErrorException
+	*/
+
+	public function getCurrentUserBookingData() {
+	     $data = array();
+	     $data['args'] = array();
+	     $data["method"] = "getCurrentUserBookingData";
+	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
+	     return $this->transport->cast(new core_hotelbookingmanager_UsersBookingData(), $this->transport->sendMessage($data));
 	}
 
 	/**
@@ -2063,13 +2062,13 @@ class APIHotelBookingManager {
 	* @throws ErrorException
 	*/
 
-	public function reserveRoom($roomType, $startDate, $endDate, $info, $core_hotelbookingmanager_AdditionalBookingInformation) {
+	public function reserveRoom($roomProductId, $startDate, $endDate, $count, $core_hotelbookingmanager_AdditionalBookingInformation) {
 	     $data = array();
 	     $data['args'] = array();
-	     $data['args']["roomType"] = json_encode($this->transport->object_unset_nulls($roomType));
+	     $data['args']["roomProductId"] = json_encode($this->transport->object_unset_nulls($roomProductId));
 	     $data['args']["startDate"] = json_encode($this->transport->object_unset_nulls($startDate));
 	     $data['args']["endDate"] = json_encode($this->transport->object_unset_nulls($endDate));
-	     $data['args']["info"] = json_encode($this->transport->object_unset_nulls($info));
+	     $data['args']["count"] = json_encode($this->transport->object_unset_nulls($count));
 	     $data['args']["core_hotelbookingmanager_AdditionalBookingInformation"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_AdditionalBookingInformation));
 	     $data["method"] = "reserveRoom";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
@@ -2137,16 +2136,16 @@ class APIHotelBookingManager {
 	}
 
 	/**
-	* Get all references
-	* @return void
+	* Add new room to the manager.
+	* @param room
 	* @throws ErrorException
 	*/
 
-	public function stopReservation($reservationNumber) {
+	public function setVistorData($visitors) {
 	     $data = array();
 	     $data['args'] = array();
-	     $data['args']["reservationNumber"] = json_encode($this->transport->object_unset_nulls($reservationNumber));
-	     $data["method"] = "stopReservation";
+	     $data['args']["visitors"] = json_encode($this->transport->object_unset_nulls($visitors));
+	     $data["method"] = "setVistorData";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
 	}
@@ -2170,16 +2169,15 @@ class APIHotelBookingManager {
 	}
 
 	/**
-	* Get all references
-	* @return void
+	* Add new room to the manager.
+	* @param room
 	* @throws ErrorException
 	*/
 
-	public function updateReservation($core_hotelbookingmanager_BookingReference) {
+	public function updateCart() {
 	     $data = array();
 	     $data['args'] = array();
-	     $data['args']["core_hotelbookingmanager_BookingReference"] = json_encode($this->transport->object_unset_nulls($core_hotelbookingmanager_BookingReference));
-	     $data["method"] = "updateReservation";
+	     $data["method"] = "updateCart";
 	     $data["interfaceName"] = "core.hotelbookingmanager.IHotelBookingManager";
 	     return $this->transport->sendMessage($data);
 	}

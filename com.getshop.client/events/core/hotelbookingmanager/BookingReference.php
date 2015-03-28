@@ -1,5 +1,5 @@
 <?php
-class core_hotelbookingmanager_BookingReference extends core_common_DataCommon  {
+class core_hotelbookingmanager_BookingReference {
 	/** @var String */
 	public $bookingReference;
 
@@ -13,19 +13,7 @@ class core_hotelbookingmanager_BookingReference extends core_common_DataCommon  
 	public $language;
 
 	/** @var String */
-	public $codes;
-
-	/** @var String */
 	public $roomsReserved;
-
-	/** @var String */
-	public $isApprovedForCheckIn;
-
-	/** @var String */
-	public $bookingFee;
-
-	/** @var String */
-	public $active;
 
 	/** @var String */
 	public $updateArx;
@@ -46,19 +34,7 @@ class core_hotelbookingmanager_BookingReference extends core_common_DataCommon  
 	public $heardAboutUs;
 
 	/** @var String */
-	public $payedFor;
-
-	/** @var String */
-	public $partnerReference;
-
-	/** @var String */
-	public $orderIds;
-
-	/** @var String */
 	public $failed;
-
-	/** @var String */
-	public $userId;
 
 }
 ?>

@@ -6,6 +6,7 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.ordermanager.OrderManager;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @GetShopApi
@@ -28,7 +29,7 @@ public interface IHotelBookingManager {
      * @param count The number of rooms to book.
      * @throws ErrorException 
      */
-    public String reserveRoom(String roomType, long startDate, long endDate, List<RoomInformation> info, AdditionalBookingInformation additionalInfo) throws ErrorException;
+    public void reserveRoom(String roomProductId, long startDate, long endDate, Integer count, AdditionalBookingInformation additionalInfo) throws ErrorException;
     
     public GlobalBookingSettings getBookingConfiguration() throws ErrorException;
     
@@ -45,8 +46,13 @@ public interface IHotelBookingManager {
     
     public Room getRoom(String id) throws ErrorException;
     
+    public void updateCart();
+    
+    public void setVistorData(HashMap<Integer,List<Visitors>> visitors) throws ErrorException;
     
     public String getEmailMessage(String language) throws ErrorException;
+    
+    public String completeOrder(String referenceKey, boolean partner);
     
     /**
      * Change a room for a reference.
@@ -102,9 +108,6 @@ public interface IHotelBookingManager {
     public ArrayList getRoomProductIds() throws ErrorException;
     
     @Administrator
-    public void updateReservation(BookingReference reference) throws ErrorException;
-    
-    @Administrator
     public void setArxConfiguration(ArxSettings settings) throws ErrorException;
     
     public Integer checkAvailableParkingSpots(long startDate, long endDate) throws ErrorException;
@@ -121,24 +124,19 @@ public interface IHotelBookingManager {
     public void setBookingConfiguration(GlobalBookingSettings settings) throws ErrorException;
 
     @Administrator
-    public void stopReservation(Integer reservationNumber) throws ErrorException;
-
-    @Administrator
     public boolean isRoomAvailable(String roomId, long startDate, long endDate) throws ErrorException;
 
     @Administrator
     public void notifyUserAboutRoom(BookingReference reference, RoomInformation roomInfo, Integer code) throws ErrorException;
     
+    public UsersBookingData getCurrentUserBookingData();
+    
     public List<ArxLogEntry> getArxLog() throws ErrorException;
-    
-    public String buildOrderForReservation(Integer reservationNumber) throws ErrorException;
-    
     
     public void checkForVismaTransfer() throws ErrorException;
     public void checkForArxTransfer() throws ErrorException;
     public void checkForWelcomeMessagesToSend() throws ErrorException;
     public void checkForOrdersToGenerate() throws ErrorException;
-    public void appendOrderToReservation(String orderId, int referenceId) throws ErrorException;
 
     public String getUserIdForRoom(String roomNumber) ;
 }

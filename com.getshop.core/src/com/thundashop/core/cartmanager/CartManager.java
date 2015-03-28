@@ -126,7 +126,11 @@ public class CartManager extends ManagerBase implements ICartManager {
     public Double getCartTotalAmount() throws ErrorException {
         Cart cart  = getCart(getSession().id).clone();
         orderManager.finalizeCart(cart);
-        return cart.getTotal(false);
+        Double total = cart.getTotal(false);
+        if(total == null || total.isNaN()) {
+            total = 0.0;
+        }
+        return total;
     }
 
     @Override

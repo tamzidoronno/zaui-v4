@@ -230,6 +230,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 
                 product.original_price = productManager.getPrice(product.id, item.getVariations());
             }
+            
+            
+            if(new Double(product.price).isNaN()) {
+                product.price = 0;
+            }
         }
     }
 

@@ -6,41 +6,31 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
-public class BookingReference extends DataCommon {
+public class BookingReference {
     public int bookingReference;
     public Date startDate;
     public Date endDate;
     public String language = "nb_NO";
-    public List<Integer> codes = new ArrayList();
     public List<RoomInformation> roomsReserved = new ArrayList();
-    public HashMap<String, Boolean> isApprovedForCheckIn = new HashMap();
-    public Double bookingFee = 0.0;
-    public boolean active = true;
     public boolean updateArx = true;
     public boolean confirmed = false;
     public boolean sentWelcomeMessages = false;
     public boolean sentCheckInMessages = false;
     public Integer parkingSpots = 0;
     public String heardAboutUs = "";
-    public boolean payedFor = false;
-    public boolean partnerReference = false;
-    public List<String> orderIds = new ArrayList();
     Date failed = null;
-    public String userId = "";
     
-    public boolean isApprovedForCheckin(String roomId) {
-        if(isApprovedForCheckIn.containsKey(roomId)) {
-            return isApprovedForCheckIn.get(roomId);
-        }
-        return false;
-    }
-
     boolean isBetween(Date start, Date end) {
         if(start.before(startDate) && end.after(endDate)) {
             return true;
         }
         return false;
+    }
+    
+    public Integer getNumberOfNights() {
+         return (int)( (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))+1;
     }
     
     public boolean isToday() {

@@ -144,11 +144,12 @@ public class ProductManager extends AProductManager implements IProductManager {
     @Override
     public Double getPrice(String productId, List<String> variations) throws ErrorException {
         Product product = getProduct(productId);
-        if (variations == null || variations.isEmpty() || product == null) {
-            return product.price;
-        }
-
         return product.getPrice(variations);
+    }
+    
+    public Double getPriceWithoutDiscount(String productId, List<String> variations) throws ErrorException {
+        Product product = getProduct(productId);
+        return product.price;
     }
 
     @Override

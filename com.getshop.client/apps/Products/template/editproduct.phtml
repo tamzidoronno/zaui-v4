@@ -68,6 +68,14 @@ $product = $this->getApi()->getProductManager()->getProduct($_POST['value']);
                 </div>
             </div>
 
+            <div class="textfield gss_setting"  id="title">
+                <span class="title"><?php echo $this->__f("Current discounted price (exlusive taxes)"); ?></span>
+                <input type="textfield" gs_model='productmodel' gs_model_attr='discountedPrice' value="<? echo $product->discountedPrice; ?>" placeholder="">
+                <div class="description">
+                    <?php echo $this->__("Enter the discounted price you want to sell this product for."); ?>
+                </div>
+            </div>
+            
             <div class="textfield gss_setting"  id="sku">
                 <span class="title"><?php echo $this->__f("SKU"); ?></span>
                 <input type="textfield" gs_model='productmodel' gs_model_attr='sku' value="<? echo $product->sku; ?>" placeholder=''>

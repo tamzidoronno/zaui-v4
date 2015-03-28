@@ -31,7 +31,7 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public String shortDescription;
     public String mainImage = "";
     public double price;
-    @Transient
+
     public double discountedPrice;
     
     public boolean progressivePriceModel = false;
@@ -163,13 +163,19 @@ public class Product extends DataCommon implements Comparable<Product>  {
     
     public double getPrice(List<String> variations) {
         double retprice = this.price;
-        for (String variation : variations) {
-            ProductVariation productVariation = getVariation(variation);
-            if (productVariation != null) {
-                retprice *= 100;
-                retprice = Math.round(retprice);
-                retprice /= 100;
+        if (variations != null) {
+            for (String variation : variations) {
+                ProductVariation productVariation = getVariation(variation);
+                if (productVariation != null) {
+                    retprice *= 100;
+                    retprice = Math.round(retprice);
+                    retprice /= 100;
+                }
             }
+        }
+    
+        if (this.discountedPrice > 0) {
+            return this.discountedPrice;
         }
         
         return retprice;

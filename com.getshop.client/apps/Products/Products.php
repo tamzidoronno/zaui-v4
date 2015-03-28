@@ -80,6 +80,7 @@ class Products extends \WebshopApplication implements \Application {
         $product->progressivePriceModel = $_POST['isProgressive'];
         $product->dynamicPriceInPercent = $_POST['dynamicPriceInPercent'];
         $product->accountingSystemId = $_POST['accountingSystemId'];
+        $product->discountedPrice = $_POST['discountedPrice'];
         
         
         foreach ($this->getApi()->getProductManager()->getProductLists() as $list) {

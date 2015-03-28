@@ -228,7 +228,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     product.price = getPriceBasedOnCount(item);
                 }
                 
-                product.original_price = productManager.getPrice(product.id, item.getVariations());
+                product.original_price = productManager.getPriceWithoutDiscount(product.id, item.getVariations());
             }
             
             

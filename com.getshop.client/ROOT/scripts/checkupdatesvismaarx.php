@@ -2,6 +2,6 @@
 chdir("../");
 include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
-$factory->getApi()->getHotelBookingManager()->checkForWelcomeMessagesToSend();
 $factory->getApi()->getHotelBookingManager()->checkForOrdersToGenerate();
+$factory->getApi()->getHotelBookingManager()->checkForWelcomeMessagesToSend();
 ?>

@@ -61,7 +61,6 @@ Existing booking references
             }
 
             $order = $this->getApi()->getOrderManager()->getOrderByReference($reservation->bookingReference);
-            $active = $reservation->active ? "" : "color: red";
             $alreadyConfirmed = $reservation->confirmed;
             
             /* @var $reservation \core_hotelbookingmanager_BookingReference */
@@ -70,17 +69,8 @@ Existing booking references
             echo "<td style='text-align:center;' valign='top'>"
             . "<i style='cursor:pointer' refid='".$reservation->bookingReference."' class='fa fa-trash-o delete_reference'></i>";
 
-            if($reservation->partnerReference) {
-                if ($alreadyConfirmed) {
-                    echo "&nbsp;&nbsp;<i style='cursor:pointer; $active' refid='".$reservation->bookingReference."' class='fa fa-stop stop_reference'></i>";
-                }
-
-                if (!$alreadyConfirmed) {
-                    echo "&nbsp;&nbsp;<i style='cursor:pointer;' refid='".$reservation->bookingReference."' class='fa fa-play go_live'></i>";
-                }
-            }
             echo "</td>";
-            echo "<td valign='top'>" . $reservation->rowCreatedDate . "</td>";
+            echo "<td valign='top'></td>";
             echo "<td valign='top'>";
             foreach($reservation->roomsReserved as $reservedRoom) {
                 /* @var $reservedRoom \core_hotelbookingmanager_RoomInformation */
@@ -92,11 +82,6 @@ Existing booking references
             echo "<td style='text-align:center;' valign='top'>" . date("d-m-Y", strtotime($reservation->startDate)) . "</td>";
             echo "<td style='text-align:center;' valign='top'>" . date("d-m-Y", strtotime($reservation->endDate)) . "</td>";
             echo "<td align='center'>";
-            if($reservation->payedFor) {
-                echo "Yes";
-            } else {
-                echo "No";
-            }
             echo "</td>";
             echo "</tr>";
         }

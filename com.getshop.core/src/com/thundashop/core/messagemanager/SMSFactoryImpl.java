@@ -80,7 +80,6 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
     @Override
     public void send(String from, String to, String message) {
         SMSFactoryImpl impl = new SMSFactoryImpl();
-        impl.from = from;
         impl.to = to;
         impl.message = message;
         impl.databaseSaver = databaseSaver;
@@ -95,6 +94,7 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         impl.apiId = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("apiid");
         impl.password = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("password");
         impl.prefix = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("numberprefix");
+        impl.from = storeApplicationPool.getApplication("12fecb30-4e5c-49d8-aa3b-73f37f0712ee").getSetting("from");
         
         new Thread(impl).start();
     }
@@ -117,7 +117,11 @@ public class SMSFactoryImpl extends StoreComponent implements SMSFactory, Runnab
         DataInputStream dis;
         try {
             message = URLEncoder.encode(message, "ISO-8859-1");
-            String urlString = "http://api.clickatell.com/http/sendmsg?user="+username+"&password="+password+"&api_id="+apiId+"&concat=3&to="+prefix+to+"&"+"&text="+message;
+            String urlString = "http://api.clickatell.com/http/sendmsg?user="+username+"&password="+password+"&api_id="+apiId+"&concat=3&to="+prefix+to;
+            if(from != null && !from.isEmpty()) {
+                urlString += "&from="+from;
+            }
+            urlString += "&text="+message;
             
             url = new URL(urlString);
             dis = new DataInputStream(new BufferedInputStream(is));

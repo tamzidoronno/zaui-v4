@@ -19,7 +19,7 @@ public interface IHotelBookingManager {
      * @return Number of avilable rooms. -1, the date is set before todays date, -2 end date is before the start date.
      * @throws ErrorException 
      */
-    public Integer checkAvailable(long startDate, long endDate, String productId) throws ErrorException;
+    public Integer checkAvailable(long startDate, long endDate, String productId, AdditionalBookingInformation additional) throws ErrorException;
     
     /**
      * 
@@ -99,7 +99,7 @@ public interface IHotelBookingManager {
      * @throws ErrorException 
      */
     @Administrator
-    public List<BookingReference> getAllReservationsArx() throws ErrorException;
+    public List<UsersBookingData> getAllReservationsArx() throws ErrorException;
     
     
     @Administrator
@@ -128,6 +128,12 @@ public interface IHotelBookingManager {
 
     @Administrator
     public void notifyUserAboutRoom(BookingReference reference, RoomInformation roomInfo, Integer code) throws ErrorException;
+
+    @Editor
+    public List<UsersBookingData> getAllUsersBookingData();
+    
+    @Administrator
+    public void updateUserBookingData(UsersBookingData userdata) throws ErrorException;
     
     public UsersBookingData getCurrentUserBookingData();
     

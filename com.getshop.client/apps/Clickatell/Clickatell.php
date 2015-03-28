@@ -33,6 +33,7 @@ class Clickatell extends \MarketingApplication implements \Application {
         $this->setConfigurationSetting("apiid", $_POST['apiid']);
         $this->setConfigurationSetting("numberprefix", $_POST['numberprefix']);
         $this->setConfigurationSetting("password", $_POST['password']);
+        $this->setConfigurationSetting("from", $_POST['from']);
     }
 }
 ?>

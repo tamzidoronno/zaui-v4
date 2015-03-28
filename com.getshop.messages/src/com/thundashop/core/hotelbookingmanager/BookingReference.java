@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class BookingReference {
+public class BookingReference extends DataCommon {
     public int bookingReference;
     public Date startDate;
     public Date endDate;

@@ -810,7 +810,10 @@ class Hotelbooking extends \ApplicationBase implements \Application {
     }
 
     public function partnerShipChecked() {
-        return $this->getAdditionalInfo()->isPartner;
+        if(isset($this->getAdditionalInfo()->isPartner)) {
+            return $this->getAdditionalInfo()->isPartner;
+        }
+        return false;
     }
 
 }
